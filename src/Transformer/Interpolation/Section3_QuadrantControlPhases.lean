@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_WeakConcatenation
+
+/-!
 # Bounded two-phase controls and their original weak solutions
 
 ArXiv:2411.04551v3, §3.1, time rescaling in `lem: first.quadrant`.
@@ -10,7 +14,7 @@ Every original weak solution transports its support by the same two
 characteristic maps, including at the switch and the final time.
 -/
 
-import Transformer.Interpolation.Section1_WeakConcatenation
+@[expose] public section
 
 open Real MeasureTheory
 

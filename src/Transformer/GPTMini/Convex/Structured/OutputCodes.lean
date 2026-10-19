@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallCodes
+module
+
+public import Transformer.GPTMini.Semantics.RecallCodes
 
 /-!
 # Ten-coordinate decoder for the whole Basis vocabulary
@@ -14,6 +16,8 @@ channel assignments have bounded decoder scores, which lets actual
 normalized model confidence imply strict whole-vocabulary margins.
 The residual/tied embedding implementation remains a separate step.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

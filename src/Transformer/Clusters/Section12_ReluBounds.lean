@@ -1,4 +1,6 @@
-import Transformer.Clusters.Section12_ReluScalar
+module
+
+public import Transformer.Clusters.Section12_ReluScalar
 
 /-!
 # An integrable drift bound and three frozen ReLU tokens
@@ -20,6 +22,8 @@ nonpositive differences. ReLU therefore freezes all three.
 All estimates concern the literal exponential weights; no
 asymptotic replacement of the attention matrix is used.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Real

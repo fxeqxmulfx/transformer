@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Optimization.Basic
+
+/-!
 # Sufficient decrease of the actual safeguarded training recurrence
 
 Training extension of arXiv:2502.16982, §2.1–2.2, and
@@ -7,7 +11,7 @@ the executable guard; neither is an assumption about the original
 momentum, grafting direction or finite inverse-root approximation.
 -/
 
-import Transformer.Optimization.Basic
+@[expose] public section
 
 open scoped InnerProductSpace BigOperators
 

@@ -1,5 +1,7 @@
-import Transformer.GPTMini.TokenInterface.Control
-import Transformer.Basis.Tasks
+module
+
+public import Transformer.GPTMini.TokenInterface.Control
+public import Transformer.Basis.Tasks
 
 /-!
 # Certificates connecting raw Basis semantics to the actual model
@@ -17,6 +19,8 @@ that architectural laws alone do not establish the task logit property.
 Specification states that property for given parameters on all valid inputs.
 Optimizer convergence and floating-point execution are not certified.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.TokenInterface
 

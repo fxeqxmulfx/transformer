@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.MonomialGradientBound
+public import Transformer.Landscape.Lojasiewicz.ModulatedCritical
+
+/-!
 # The local gradient inequality for normal-crossing energy germs
 
 This proves the monomial-times-unit case of the analytic input in
@@ -6,8 +11,7 @@ Appendix D.1 of arXiv:2510.22026v2, including multivariable degenerate
 critical points and positive-dimensional critical loci.
 -/
 
-import Transformer.Landscape.Lojasiewicz.MonomialGradientBound
-import Transformer.Landscape.Lojasiewicz.ModulatedCritical
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators

@@ -1,10 +1,16 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Interpolation.Basic
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Measure-to-measure interpolation — The flow is the identity off the support
 
 Formalization of `eq: identity.flow` of §3 of arXiv:2411.04551v3.
 
 The paper's statement is `Φ^T(x) = x` for every
-`x ∈ 𝕊^{d-1} \ (conv_g supp μ_0 ∪ conv_g supp ν_0)`.  What makes it true in
+`x ∈ 𝕊^{d-1} \ (conv_g supp μ_0 ∪ conv_g supp ν_0)`. What makes it true in
 the construction of §3 is not the geometry of the geodesic hulls — which this
 development does not define — but the fact that the parameters are chosen so
 that the vector field `eq: vf` vanishes identically off those hulls: `𝐕` is
@@ -13,13 +19,11 @@ coordinate, so the ReLU kills the perceptron term as well.
 
 That implication is what is proved here, in two steps: the field vanishes
 under those two conditions, and a characteristic along which the field
-vanishes is constant.  The geometric input — that the two conditions hold
+vanishes is constant. The geometric input — that the two conditions hold
 exactly off the hulls — is the part that is not formalized.
 -/
 
-import Transformer.Basic
-import Transformer.Interpolation.Basic
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

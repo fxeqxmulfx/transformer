@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.CRASP.PositionalPrefix
+public import Transformer.CRASP.PositionalStateInduction
+public import Transformer.CRASP.PrefixSums
+
+/-!
 # Finite attention tables for periodic position encodings
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLClmod`.
@@ -7,9 +13,7 @@ position. The rounded numerator and denominator are functions on this
 finite set, even when the unrounded rotation entries are irrational.
 -/
 
-import Transformer.CRASP.PositionalPrefix
-import Transformer.CRASP.PositionalStateInduction
-import Transformer.CRASP.PrefixSums
+@[expose] public section
 
 namespace Transformer.CRASP.PeriodicAttention
 

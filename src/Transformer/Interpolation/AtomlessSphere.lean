@@ -1,16 +1,20 @@
-/-
+module
+
+public import Transformer.Causal.UniformAtoms
+public import Transformer.MeanField.UniformLaw
+public import Transformer.Interpolation.Basic
+
+/-!
 # Measure-to-measure interpolation — diffuse measures with separated hulls
 
 The hypotheses of the clustering propositions of arXiv:2411.04551v3, §2, ask for initial measures
-without atoms whose supports have disjoint geodesic convex hulls (`prop: compression`).  This module
+without atoms whose supports have disjoint geodesic convex hulls (`prop: compression`). This module
 meets them: the uniform law on the sphere, restricted to two opposite closed caps and normalized.
 It is what makes the satisfiability examples of those propositions non-degenerate — an empty family
 of initial measures satisfies every hypothesis of the kind vacuously.
 -/
 
-import Transformer.Causal.UniformAtoms
-import Transformer.MeanField.UniformLaw
-import Transformer.Interpolation.Basic
+@[expose] public section
 
 open Real MeasureTheory
 

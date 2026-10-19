@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianCoordinateLaw
+public import Transformer.Homogenized.HeadConj
+public import Transformer.Homogenized.Simplex
+public import Transformer.Perspective.Softmax
+
+/-!
 # The actual Gaussian query and key features of the original head
 
 ArXiv:2604.01978v1, §7, `eq:SIGMA_R` and the scores preceding it,
@@ -17,10 +24,7 @@ probability is therefore the original softmax of their bilinear scores.
 No covariance or score identity is assumed in the feature definition.
 -/
 
-import Transformer.Homogenized.Section7_GaussianCoordinateLaw
-import Transformer.Homogenized.HeadConj
-import Transformer.Homogenized.Simplex
-import Transformer.Perspective.Softmax
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

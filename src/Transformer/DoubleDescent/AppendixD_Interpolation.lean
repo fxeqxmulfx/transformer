@@ -1,6 +1,8 @@
-import Transformer.DoubleDescent.AppendixD_RandomFeatures
-import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+module
+
+public import Transformer.DoubleDescent.AppendixD_RandomFeatures
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 
 /-!
 # Exact interpolation in a fixed feature model
@@ -11,6 +13,8 @@ Uniqueness at a square interpolation threshold additionally needs full
 rank. These are exact linear-algebra statements, distinct from Definition 1's
 distribution-dependent expected approximate interpolation.
 -/
+
+@[expose] public section
 
 namespace Transformer.DoubleDescent
 

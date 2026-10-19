@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.PositionalTransformers
+
+/-!
 # The BOS state and sums over a masked prefix
 
 arXiv:2506.16055v3, Appendix F, simulation on `BOS · w`.
@@ -6,7 +10,7 @@ The initial position has the same activation on every word; later
 attention sums split into this one BOS contribution and past counts.
 -/
 
-import Transformer.CRASP.PositionalTransformers
+@[expose] public section
 
 namespace Transformer.CRASP.PTfr
 

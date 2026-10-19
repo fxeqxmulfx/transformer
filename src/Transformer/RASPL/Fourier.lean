@@ -1,8 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+
+/-!
 # Fourier analysis on the boolean hypercube
 
 Zhou, Bradley, Littwin, Razin, Saremi, Susskind, Bengio, Nakkiran —
-arXiv:2310.16028v1, "What Algorithms can Transformers Learn?  A Study in
+arXiv:2310.16028v1, "What Algorithms can Transformers Learn? A Study in
 Length Generalization" (ICLR 2024).
 
 §4 and Appendix E of that paper compare a trained transformer against the
@@ -15,14 +19,14 @@ natural total ordering which refines the standard polynomial degree"
 Mathlib has Fourier analysis on the circle but not on the hypercube, so this
 file builds the little that is needed: the characters `χ_S`, their
 orthogonality, the coefficients `coeff f S`, and the expansion of a function
-in them.  The degree profile itself is `RASPL.Degree`.
+in them. The degree profile itself is `RASPL.Degree`.
 
 The cube is `{±1}^n` throughout, "as is standard in boolean function
 analysis" (Appendix E), and a point of it is recorded by its sign bits:
 `false ↦ +1` and `true ↦ -1`.
 -/
 
-import Transformer.Basic
+@[expose] public section
 
 namespace Transformer
 namespace RASPL

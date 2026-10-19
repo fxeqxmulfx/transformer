@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_BinaryButterflyProgram
+
+/-!
 # Transposing binary butterfly factors
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: kaleidoscope`.
@@ -7,7 +11,7 @@ coefficient at the partner coordinate. The partner is an involution on
 the full row-major layout, so the adjoint identity is exact.
 -/
 
-import Transformer.Zoology.Appendix_BinaryButterflyProgram
+@[expose] public section
 
 open scoped BigOperators
 

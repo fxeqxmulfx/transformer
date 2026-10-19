@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.SectionA_TrainingConvergence
+public import Transformer.Optimization.StrongConvergence
+
+/-!
 # Convergence of corrected MD weights to a strongly convex minimum
 
 User-requested training extension of arXiv:2606.25971v2, §3.1 and
@@ -8,8 +13,7 @@ concern fused weights and loss; redundant gains and optimizer memories
 are not asserted to converge.
 -/
 
-import Transformer.MagnitudeDirection.SectionA_TrainingConvergence
-import Transformer.Optimization.StrongConvergence
+@[expose] public section
 
 open scoped Topology
 open Filter

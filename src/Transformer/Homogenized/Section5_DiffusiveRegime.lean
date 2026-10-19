@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.WeakError
+
+/-!
 # Homogenized Transformers — the conditional diffusive corollary
 
 The finite grid-time estimate of arXiv:2604.01978v1, §5, `cor:SDE`, follows
@@ -15,7 +19,7 @@ A constant observable supplies a genuine witness for the weak-estimate
 hypothesis; its expectation is one on either probability space.
 -/
 
-import Transformer.Homogenized.WeakError
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory ProbabilityTheory

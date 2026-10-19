@@ -1,20 +1,24 @@
-/-
+module
+
+public import Transformer.Precision.Basic
+
+/-!
 # Quantized attention has a finite context length
 
 Store the softmax weights of an attention row in a format with `b` fractional
-bits.  With scores confined to a window of width `D`, every weight is at most
+bits. With scores confined to a window of width `D`, every weight is at most
 `e^D / n` (`softmax_le`), and the format rounds everything below `2^{-(b+1)}`
-to zero (`quantize_eq_zero`).  So once
+to zero (`quantize_eq_zero`). So once
 
   `n > 2^{b+1} · e^D`
 
 every stored weight is `0`, and the head outputs `0` whatever the values are:
-the signal is lost, not merely attenuated (`qAttn_bits_eq_zero`).  Below
+the signal is lost, not merely attenuated (`qAttn_bits_eq_zero`). Below
 
   `n ≤ 2^{b+1} · e^{-D}`
 
 every weight survives rounding, and each token's value is still read off
-exactly (`qAttn_bits_injective`).  The critical length is therefore
+exactly (`qAttn_bits_injective`). The critical length is therefore
 `2^{b+1}` up to a factor `e^{±D}`: one bit fewer halves the context.
 
 The bound on the score window is what makes this true, not a convenience:
@@ -24,12 +28,12 @@ scores whose window grows like `log n` keep one token visible at every length
 The argument is the dispersion of softmax (Veličković, Perivolaropoulos,
 Barbero, Pascanu, arXiv:2410.01104, §2) composed with the dead zone of
 round-to-nearest; the threshold and its two-sided form are this repository's
-own statements, not a paper's.  `qAttn_eq_zero` needs of the rounding only its
+own statements, not a paper's. `qAttn_eq_zero` needs of the rounding only its
 dead zone `[0, θ)`, so it applies to any format, floating point included, with
 `θ` half its smallest positive number.
 -/
 
-import Transformer.Precision.Basic
+@[expose] public section
 
 open scoped BigOperators
 

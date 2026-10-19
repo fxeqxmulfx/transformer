@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.GPTMini.CausalMHA
+public import Transformer.Causal.Basic
+public import Transformer.GPTMini.Bridge.SphereResidence
+
+/-!
 # Bridge: GPTMini's causal attention matches paper 2411.04990's `eq: csa`
 
 Connects `Transformer.GPTMini.CausalMHA.causalAttnWeights` with the
@@ -6,7 +13,7 @@ causal self-attention dynamics `Causal.CSA` of `Transformer.Causal.Basic`.
 
 The first two theorems are about the weights alone: `causalAttnWeights` has
 the algebraic form of the `eq: csa` coefficient, with `β = e^{α_h}` and the
-QK-normalized vectors in place of `Q x`, `K x`.  They do not mention
+QK-normalized vectors in place of `Q x`, `K x`. They do not mention
 `Causal.CSA`, and they cannot put its theorems in scope by themselves: QK-norm
 is not linear, so `normL2 eps (q i)` is `Q x_i` for no fixed matrix `Q` in
 general, and in the head `q` and `k` are rotated by RoPE at each token's own
@@ -14,14 +21,11 @@ position, which no fixed `Q, K` reproduces.
 
 `csa_of_causalAttn` is the bridge proper, in the regime where it holds: tokens
 on the unit sphere (so QK-norm is the identity), no RoPE, and value matrix
-`V = I`.  A trajectory moved by the projected head output is then a `Causal.CSA`
+`V = I`. A trajectory moved by the projected head output is then a `Causal.CSA`
 trajectory at `β = e^{α_h}`, `Q = K = V = I`.
 -/
 
-import Transformer.Basic
-import Transformer.GPTMini.CausalMHA
-import Transformer.Causal.Basic
-import Transformer.GPTMini.Bridge.SphereResidence
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -62,7 +66,7 @@ theorem causalAttnWeights_matches_eq_csa
 /-- **The weight is the CSA coefficient, at the temperature QK-norm sets.**
 
 `Causal.Basic.CSA` weighs token `j` at position `k` by `Z_k⁻¹ e^{β ⟨Q x_k,
-K x_j⟩}`.  This head weighs it by `causalAttnWeights`, and the two are the
+K x_j⟩}`. This head weighs it by `causalAttnWeights`, and the two are the
 same expression once the dictionary is read off: `β = e^{α_h}` is the
 per-head inverse temperature, and the vectors CSA writes as `Q x` and `K x`
 are the QK-normalized `normL2 eps (q i)` and `normL2 eps (k j)`.
@@ -130,7 +134,7 @@ theorem csa_of_causalAttn (cfg : Config) {n : ℕ} (alpha eps : ℝ) (heps : eps
   · simp only [hjk, lt_of_not_ge hjk, ↓reduceIte, zero_smul, smul_zero]
 
 /-- The hypothesis of `csa_of_causalAttn` is satisfiable: a single token at
-rest.  Its causal weight is `1`, so the head output is the token itself, whose
+rest. Its causal weight is `1`, so the head output is the token itself, whose
 tangential part is `0`. -/
 example (cfg : Config) (x : SSphere cfg.head_dim) :
     ∀ (t : ℝ) (k : Idx 1), HasDerivAt (fun _ : ℝ => (x : EucSpace cfg.head_dim))

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_SoftmaxHessian
+
+/-!
 # Summed actual softmax Hessians without a factor from the number of scores
 
 ArXiv:2604.01978v1, §7, `eq:estimate_bound_h` and
@@ -16,7 +20,7 @@ outside the expectation. The pointwise estimates here are the inputs to
 an aggregate estimate before taking the original Gaussian expectation.
 -/
 
-import Transformer.Homogenized.Section7_SoftmaxHessian
+@[expose] public section
 
 open Real
 open scoped BigOperators

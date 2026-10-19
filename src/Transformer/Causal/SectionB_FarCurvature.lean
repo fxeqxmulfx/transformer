@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.SectionB_CurvaturePolynomial
+
+/-!
 # The increasing far branch of the original interaction curvature
 
 ArXiv:2411.04990v2, Appendix B and §5, proof of `thm:fixed_centers`.
@@ -16,7 +20,7 @@ when the indicated interval is empty. A unit-temperature example
 below realizes a nonempty interval and both comparison distances.
 -/
 
-import Transformer.Causal.SectionB_CurvaturePolynomial
+@[expose] public section
 
 open Real Set
 

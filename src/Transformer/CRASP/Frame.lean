@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Data.Bool.Count
+public import Transformer.CRASP.Affine
+
+/-!
 # Formulas constant on the middles of a frame
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -7,12 +12,12 @@ appendix, "if the Parikh vector of a word is fixed we can rewrite `▷#` in
 terms of `◁#` and `n⃗`".
 
 `lem:cropping` is false as stated (`cropping_unsound`): a count reads the
-positions before the interval, and a future count those after it too.  Here
-both are fixed.  A *frame* is a prefix `u`, a suffix `v` and a Parikh vector
+positions before the interval, and a future count those after it too. Here
+both are fixed. A *frame* is a prefix `u`, a suffix `v` and a Parikh vector
 `(X, Y)`; its *middles* are the words `m` with `X` letters `a` and `Y` letters
-`b`, and there is always one (`exists_middle`).  `ConstOnMiddle ψ u v X Y` says
+`b`, and there is always one (`exists_middle`). `ConstOnMiddle ψ u v X Y` says
 that on `u ++ m ++ v` the value of `ψ` at a position of `m` depends on the
-letter alone, and at a position of `u` or `v` does not depend on `m` at all.  A
+letter alone, and at a position of `u` or `v` does not depend on `m` at all. A
 formula of depth `0` without PNPs is constant on the middles of every frame
 (`Form.constOnMiddle_of_depth_eq_zero`).
 
@@ -21,8 +26,7 @@ a formula of `TL[◁#,▷#]_{d+1}` lie in `TL[◁#,▷#]_d`
 (`Form.mem_TLC_of_mem_countSubs`).
 -/
 
-import Mathlib.Data.Bool.Count
-import Transformer.CRASP.Affine
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -82,7 +86,7 @@ example : ([false] : List Bool)[1 - 1]? = ([false, true] : List Bool)[1 - 1]? �
     (Form.sym false : Form Bool).pnpFree = true ∧ (Form.sym false : Form Bool).depth = 0 :=
   ⟨rfl, rfl, rfl⟩
 
-/-- A **frame** `(u, v, X, Y)` holds `ψ` constant on its middles.  On
+/-- A **frame** `(u, v, X, Y)` holds `ψ` constant on its middles. On
 `u ++ m ++ v`, where `m` holds `X` letters `a` (`false`) and `Y` letters `b`
 (`true`), the value of `ψ` at the position of `m[i]` is `g m[i]`, and at a
 position of `u` or of `v` it is the same for every such `m` (Appendix D,

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CyclicCircuitEquivalence
+
+/-!
 # Causal Coyote cannot return information from a later input position
 
 Arora et al., arXiv:2312.04927v1, §4 equation `eq: coyote-recursion`
@@ -8,7 +12,7 @@ With strictly causal convolution, row zero cannot depend on later rows,
 regardless of depth or inner dimensions.
 -/
 
-import Transformer.Zoology.Appendix_CyclicCircuitEquivalence
+@[expose] public section
 
 namespace Transformer.Zoology
 

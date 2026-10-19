@@ -1,4 +1,10 @@
-import Transformer.AMSGrad.Section4_Lemmas
+module
+
+public import Transformer.AMSGrad.Section4_Lemmas
+
+/-! ### The instances of Algorithm 1 -/
+
+@[expose] public section
 
 /-
 # Adam and beyond — §2 and §3: the adaptive methods and `Γ_t`
@@ -44,16 +50,14 @@ open AMSGrad
 
 variable {d : ℕ}
 
-/-! ### The instances of Algorithm 1 -/
-
 /-- Adam, without the debiasing step: `V_t = diag(v_t)`.
 arXiv:1904.09237, §2, (Adam). -/
 def adamRule : Rule d := fun _ _ b => b
 
-/-- SGD: `V_t = I`.  Run with `β_{1,t} = 0`.  arXiv:1904.09237, §2, (SGD). -/
+/-- SGD: `V_t = I`. Run with `β_{1,t} = 0`. arXiv:1904.09237, §2, (SGD). -/
 def sgdRule : Rule d := fun _ _ _ => 1
 
-/-- AdaGrad: `v̂_t = ((t-1)v̂_{t-1} + v_t)/t`.  Run with `β₂ = 0`, so that
+/-- AdaGrad: `v̂_t = ((t-1)v̂_{t-1} + v_t)/t`. Run with `β₂ = 0`, so that
 `v_t = g_t²` and `v̂_t = Σ_{j≤t} g_j²/t` (`adagrad_vhat`).
 arXiv:1904.09237, §2, (AdaGrad). -/
 noncomputable def adagradRule : Rule d :=
@@ -133,7 +137,7 @@ theorem gamma_nonneg_of {S : Setup d} {α : ℝ} (hα : S.α = fun t : ℕ => α
   | zero => simp [Gamma]
   | succ n => rw [gamma_succ hα]; exact div_nonneg (sub_nonneg.mpr (h n)) hα₀.le
 
-/-- **SGD.**  With `α_t = α/√t`, `Γ_t ⪰ 0`.  arXiv:1904.09237, §3, after eq:gamma-t. -/
+/-- **SGD.**  With `α_t = α/√t`, `Γ_t ⪰ 0`. arXiv:1904.09237, §3, after eq:gamma-t. -/
 theorem gamma_sgd_nonneg {S : Setup d} {α : ℝ} (hα : S.α = fun t : ℕ => α / Real.sqrt t)
     (hα₀ : 0 < α) (t : ℕ) : 0 ≤ Gamma S sgdRule t := fun i => by
   refine gamma_nonneg_of hα hα₀ _ i (fun n => ?_) t

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianFactorDelta
+public import Transformer.Homogenized.Section7_CorrelationDeviation
+
+/-!
 # Actual intermediate Gaussian correlation and cubic-bias estimates
 
 ArXiv:2604.01978v1, §7.3, `lem:delta_method`, composition
@@ -21,8 +26,7 @@ These estimates concern one actual independent Gaussian factor.
 They do not assign a Gaussian law to the original product matrix.
 -/
 
-import Transformer.Homogenized.Section7_GaussianFactorDelta
-import Transformer.Homogenized.Section7_CorrelationDeviation
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_BallFlow
+public import Transformer.Interpolation.Monge
+public import Transformer.Interpolation.Section3_CapCenter
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+
+/-!
 # From almost-everywhere spherical attraction to a collapsed probability
 
 Auxiliaries for arXiv:2411.04551v3, Appendix, `lem: two.balls`,
@@ -15,10 +22,7 @@ zero. The sphere supplies the uniform squared-distance bound `4`.
 No atomicity assumption on the initial probability is made.
 -/
 
-import Transformer.Interpolation.Section3_BallFlow
-import Transformer.Interpolation.Monge
-import Transformer.Interpolation.Section3_CapCenter
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+@[expose] public section
 
 open Real Set MeasureTheory Filter
 open scoped Topology ENNReal

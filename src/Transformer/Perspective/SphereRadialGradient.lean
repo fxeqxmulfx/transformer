@@ -1,16 +1,21 @@
-/-
+module
+
+public import Transformer.Perspective.SphereRadial
+public import Transformer.Perspective.AppendixB_EBeta
+
+/-!
 # The radial extensions of `USA` and `SA` are rescaled Euclidean gradients
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
 Let `g(x) = 𝖤_β(x/‖x‖)` on tuples of vectors of `ℝ^d`, with
-`𝖤_β(X) = (2β)⁻¹ Σ_i Σ_j e^{β⟨x_i, x_j⟩}` (`selfEnergy`).  For `β ≠ 0` and
+`𝖤_β(X) = (2β)⁻¹ Σ_i Σ_j e^{β⟨x_i, x_j⟩}` (`selfEnergy`). For `β ≠ 0` and
 `x_i ≠ 0`, with `u = x/‖x‖`, its gradient in the `i`-th vector is the round
 gradient of `𝖤_β` at `u` divided by `‖x_i‖`:
 `∇_i g(x) = ‖x_i‖⁻¹ Proj_{u_i} Σ_j e^{β⟨u_i, u_j⟩} u_j`
 (`hasGradientAt_selfEnergy_update`, through the derivative `‖y‖⁻¹ Proj_{y/‖y‖}`
-of `y ↦ y/‖y‖`, `hasFDerivAt_normalize`).  So the radial extensions of
+of `y ↦ y/‖y‖`, `hasFDerivAt_normalize`). So the radial extensions of
 `Perspective.SphereRadial` are rescaled gradient fields:
 
 * for `USA`, `F_i(x) = n⁻¹ ‖x_i‖² ∇_i g(x)` (`radialField_usaField_eq`);
@@ -25,8 +30,7 @@ times the round gradient of `𝖤_β`, there normalized by `n⁻²`), and §3.4
 (`e:scalarproduct`: `SA` is the gradient of `𝖤_β` for `Σ_i Z_{β,i} ⟨a_i, b_i⟩`).
 -/
 
-import Transformer.Perspective.SphereRadial
-import Transformer.Perspective.AppendixB_EBeta
+@[expose] public section
 
 namespace Transformer
 namespace Perspective
@@ -55,7 +59,7 @@ theorem hasFDerivAt_normalize {y : EucSpace d} (hy : y ≠ 0) :
   `∇_{x_i} 𝖤_β(x/‖x‖) = ‖x_i‖⁻¹ Proj_{u_i} Σ_j e^{β⟨u_i, u_j⟩} u_j`.
 
 Near `x_i` only the `i`-th direction moves, by `hasFDerivAt_normalize`; the
-terms `(i, j)` and `(j, i)` of the double sum contribute equally.  At `β = 0`
+terms `(i, j)` and `(j, i)` of the double sum contribute equally. At `β = 0`
 the factor `(2β)⁻¹` makes `selfEnergy` vanish, hence `β ≠ 0`. -/
 theorem hasGradientAt_selfEnergy_update (hd : 1 ≤ d) {β : ℝ} (hβ : β ≠ 0)
     {x : Idx n → EucSpace d} {i : Idx n} (hx : x i ≠ 0) :

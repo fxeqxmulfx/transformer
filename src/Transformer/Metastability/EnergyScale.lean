@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Metastability.Basic
+
+/-!
 # Metastability — the scale of the printed energy
 
 arXiv:2410.06833v1 prints the interaction energy as
 
   `𝖤_β(x_1,…,x_n) = (1/(2 β e^β n²)) Σ_i Σ_j e^{β⟨x_i, x_j⟩}`
 
-(`Metastability.Eβ`).  Every summand is at most `e^β`, so `0 ≤ 𝖤_β ≤ 1/(2β)`
+(`Metastability.Eβ`). Every summand is at most `e^β`, so `0 ≤ 𝖤_β ≤ 1/(2β)`
 (`Eβ_le`): the printed energy tends to `0` uniformly in the configuration as
-`β → ∞`.  That is harmless for the gradient flow, which it only rescales, but
+`β → ∞`. That is harmless for the gradient flow, which it only rescales, but
 not for the statements of §6 that take the limit `β → ∞` of `𝖤_β` itself.
 `conj: saddle-to-saddle` and `thm: staircase` ask the energy along the flow to
 converge to a staircase `φ_∞` with values in `[0, 1]`, and the caption of the
@@ -24,7 +28,7 @@ which is what `HasStaircaseProfile` and `staircase_profile` (through
 `circleEnergy`) are stated with.
 -/
 
-import Transformer.Metastability.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -73,7 +77,7 @@ theorem Eβ_le {β : ℝ} (hβ : 0 < β) (X : SphereTuple d n) : Eβ d n β X �
 
 For every family of trajectories `X β` and every family of time changes
 `τ β` whatsoever, the printed energy along them converges, uniformly in time,
-to `φ_∞ ≡ 0`: one jump time `T_1 = 1`, and `|𝖤_β - 0| ≤ 1/(2β)`.  This is the
+to `φ_∞ ≡ 0`: one jump time `T_1 = 1`, and `|𝖤_β - 0| ≤ 1/(2β)`. This is the
 conclusion of `conj: saddle-to-saddle` read with the printed `𝖤_β`, proved
 without the dynamics; it is why `HasStaircaseProfile` is stated with `2β 𝖤_β`.
 

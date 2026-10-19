@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_OnlyOne
+
+/-!
 # The emergence of clusters in self-attention dynamics — `l:boundedxn`, the estimates
 
 The pointwise and one-token estimates of the proof of `l:boundedxn` (§7 of
@@ -6,7 +10,7 @@ arXiv:2305.05465v6), on the scalar curves of `e:Idnonresca`:
 
 * `mul_exp_neg_antitoneOn` — `ḟ ≤ f` makes `f e^{-t}` nonincreasing;
 * `nonneg_of_bounded_max` — a largest token bounded from below is never
-  negative: `ẋ_n ≤ x_n`, so once negative it would decay like `-e^t`.  This is
+  negative: `ẋ_n ≤ x_n`, so once negative it would decay like `-e^t`. This is
   point (1) of the source with `≥` in place of `>`, for every `t ≥ 0`;
 * `mul_exp_le_of_min` — the smallest token is at least `x_1(0) e^t`;
 * `deriv_mul_sub_le` — the estimate `e:epsxjxn` on
@@ -15,7 +19,7 @@ arXiv:2305.05465v6), on the scalar curves of `e:Idnonresca`:
 Source: arXiv:2305.05465v6, proof of `l:boundedxn`.
 -/
 
-import Transformer.Clusters.Section7_OnlyOne
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -45,7 +49,7 @@ theorem le_drift (y : Idx (m + 1) → ℝ) (i L : Idx (m + 1)) (hmin : ∀ j, y 
         mul_le_mul_of_nonneg_left (hmin j) (Perspective.softmaxWeight_nonneg _ _)
 
 /-- **Point (1) of `l:boundedxn`, in the form used.**  A largest token that
-stays above `-R` is nonnegative at every time `t ≥ 0`.  The source states
+stays above `-R` is nonnegative at every time `t ≥ 0`. The source states
 `x_n(t) > 0` for large `t`; the proof of point (3) only uses `x_n ≥ 0`, which
 is what is proved, and for every `t ≥ 0` rather than eventually.
 

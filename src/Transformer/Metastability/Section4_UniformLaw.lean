@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.MeanField.UniformLaw
+public import Transformer.Metastability.InitialUniform
+public import Transformer.Perspective.SphereInvariant
+
+/-!
 # A uniform spherical law with all hypotheses exhibited
 
 The expectation in arXiv:2410.06833v1, §4, `sec: energy.levels`, is over a
@@ -19,9 +25,7 @@ construction gives zero mass; only the probability claim requires `d ≥ 1`.
 No uniqueness theorem is needed to exhibit these hypotheses.
 -/
 
-import Transformer.MeanField.UniformLaw
-import Transformer.Metastability.InitialUniform
-import Transformer.Perspective.SphereInvariant
+@[expose] public section
 
 open MeasureTheory
 open scoped Pointwise

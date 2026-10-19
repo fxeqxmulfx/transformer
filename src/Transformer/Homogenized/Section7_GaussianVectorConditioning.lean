@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianVectorStein
+
+/-!
 # Vector Gaussian integration by parts with the original independent parameter
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -16,7 +20,7 @@ probability space with the original covariance entries. The independent
 parameter need not be Gaussian or have a density.
 -/
 
-import Transformer.Homogenized.Section7_GaussianVectorStein
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators

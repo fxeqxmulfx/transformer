@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AMSGrad.Section4_Corollary
+public import Transformer.AMSGrad.Section4_OfflineWitness
+
+/-!
 # AMSGrad — genuine average-gap convergence for a fixed convex objective
 
 arXiv:1904.03590v4, Theorem 4.1 and Corollary 4.5. The printed claim
@@ -8,8 +13,7 @@ so the already proved upper bound supplies the missing lower half.
 The original projected AMSGrad update is used without any new guard.
 -/
 
-import Transformer.AMSGrad.Section4_Corollary
-import Transformer.AMSGrad.Section4_OfflineWitness
+@[expose] public section
 
 open scoped Topology
 open Filter Finset

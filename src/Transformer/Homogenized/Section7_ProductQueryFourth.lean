@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_ConditionalQueryMoments
+public import Transformer.Homogenized.Section7_GaussianQueryMoments
+
+/-!
 # Fourth moments of the actual original product-matrix query
 
 ArXiv:2604.01978v1, §2.3.3, initialization (G), and §7.3,
@@ -19,8 +24,7 @@ asserts `2/d + O(d⁻²)`. The normalized comparison is proved in the
 next module; no normalized-correlation remainder is assumed here.
 -/
 
-import Transformer.Homogenized.Section7_ConditionalQueryMoments
-import Transformer.Homogenized.Section7_GaussianQueryMoments
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

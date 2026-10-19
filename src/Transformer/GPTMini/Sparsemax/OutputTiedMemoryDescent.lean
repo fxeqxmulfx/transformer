@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.OutputTiedMemoryGrowth
+module
+
+public import Transformer.GPTMini.Sparsemax.OutputTiedMemoryGrowth
 
 /-!
 # Quantitative feasible descent toward the proved trained point
@@ -16,6 +18,8 @@ guarantees, rather than a numerical method for computing that endpoint.
 The possible local mask, fixed affine readout and full observations remain
 the stated restrictions of this constant-width jointly learned block.
 -/
+
+@[expose] public section
 
 noncomputable section
 

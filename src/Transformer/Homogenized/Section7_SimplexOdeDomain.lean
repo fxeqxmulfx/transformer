@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_SimplexScalarBarriers
+public import Transformer.Homogenized.Section7_SimplexRealization
+
+/-!
 # The original scalar ODE remains in its realizable simplex domain
 
 ArXiv:2604.01978v1, §7, eq:f_g_def_selfcontained,
@@ -15,8 +20,7 @@ identities for f and g on actual simplex configurations.
 The witness uses uniform attention and a nonconstant scalar solution.
 -/
 
-import Transformer.Homogenized.Section7_SimplexScalarBarriers
-import Transformer.Homogenized.Section7_SimplexRealization
+@[expose] public section
 
 open scoped BigOperators
 open MeasureTheory Set

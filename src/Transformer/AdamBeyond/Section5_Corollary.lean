@@ -1,8 +1,10 @@
-import Transformer.AdamBeyond.Section5_Regret
-import Transformer.AdamBeyond.Section4_Corollary
-import Transformer.AMSGrad.Section4_Rate
+module
 
-/-
+public import Transformer.AdamBeyond.Section5_Regret
+public import Transformer.AdamBeyond.Section4_Corollary
+public import Transformer.AMSGrad.Section4_Rate
+
+/-!
 # Adam and beyond — §5: Corollary 2
 
 Corollary 2 of arXiv:1904.09237 and the remark that `β_{1,t} = β₁/t` still
@@ -10,11 +12,11 @@ gives `O(√T)`, both from Theorem 5 (`adamNC_regret`, `Section5_Regret`).
 
 **What the source says and what is carried here.**
 
-* Corollary 2 is missing its left-hand side "`R_T ≤`", restored here.  Its
+* Corollary 2 is missing its left-hand side "`R_T ≤`", restored here. Its
   second term is `β₁D²G/((1-β₁)²(1-λ)²)`; Theorem 5 gives it with the factor
-  `d/α`, as for Corollary 1, restored here.  Its `ζ` is left implicit; the
+  `d/α`, as for Corollary 1, restored here. Its `ζ` is left implicit; the
   setting satisfies both conditions with `ζ = α` (`adamNC_inv_cond`), which is
-  the `ζ` stated.  With `v_{T,i} = ‖g_{1:T,i}‖²/T` the first term of
+  the `ζ` stated. With `v_{T,i} = ‖g_{1:T,i}‖²/T` the first term of
   Theorem 5 is `D²/(2α(1-β₁)) Σᵢ ‖g_{1:T,i}‖₂`, as the source writes.
 
 * The remark "one can use `β_{1t} = β₁/t` and still ensure a data-dependent
@@ -25,6 +27,8 @@ of `β_{2t}`", which names no statement.
 
 Source: arXiv:1904.09237, §5, Corollary 2 and the paragraph after it.
 -/
+
+@[expose] public section
 
 open Finset
 
@@ -63,7 +67,7 @@ theorem sqrt_vhat_inv_le {S : Setup d} {F : Set (Vec d)} {D G : ℝ}
     exact le_of_mul_le_mul_left h (Real.sqrt_pos.2 (by exact_mod_cast ht))
 
 /-- **Corollary 2**, with "`R_T ≤`" and the factor `d/α` of its second term
-restored and `ζ = α`.  For AdamNC with `β_{2,t} = 1 - 1/t`, `α_t = α/√t` and
+restored and `ζ = α`. For AdamNC with `β_{2,t} = 1 - 1/t`, `α_t = α/√t` and
 `β_{1,t} = β₁λ^{t-1}`, `0 ≤ β₁ < 1`, `0 ≤ λ < 1`, for every `x* ∈ F`,
 
   `R_T ≤ D²/(2α(1-β₁)) Σᵢ ‖g_{1:T,i}‖₂ + dβ₁D²G/(α(1-β₁)²(1-λ)²)`

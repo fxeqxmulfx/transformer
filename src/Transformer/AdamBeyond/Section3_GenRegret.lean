@@ -1,16 +1,20 @@
-import Transformer.AdamBeyond.Section3_GenStep
+module
 
-/-
+public import Transformer.AdamBeyond.Section3_GenStep
+
+/-!
 # Adam and beyond — §3: the regret of Theorem 2, and its constants
 
 Every block starts at `x = 1` (`gen_start`, from `gen_block`), so against
 `x* = -1` a block costs `2C` at its first step and gains back at most `2` at each
 of the `C - 1` others: at least `2` per block (`gen_block_regret`), and
-`R_T ≥ T/C` once `T ≥ 4C` (`gen_regret`).  The constants exist for every
+`R_T ≥ T/C` once `T ≥ 4C` (`gen_regret`). The constants exist for every
 `0 ≤ β₁ < √β₂`, `β₂ < 1` (`gen_constants`).
 
 Source: arXiv:1904.09237, Appendix, proof of Theorem 2.
 -/
+
+@[expose] public section
 
 open Finset Filter
 
@@ -107,7 +111,7 @@ theorem gen_regret {T : ℕ} (hT : 4 * C ≤ T) :
 
 omit hC hβ₁ hβ₁' hβ₂0 hβ₂1 hα hCN hN hγ1 hγ in
 /-- The constants of the proof of Theorem 2: `N ≥ 1` with `β₂^N (2N)² ≤ 1` and
-`N √(1-β₂)(1-γ) ≥ 4`, `γ = β₁/√β₂`.  arXiv:1904.09237, Appendix, proof of
+`N √(1-β₂)(1-γ) ≥ 4`, `γ = β₁/√β₂`. arXiv:1904.09237, Appendix, proof of
 Theorem 2, eq:p-condition. -/
 theorem gen_constants {β₁ β₂ : ℝ} (hβ₁ : 0 ≤ β₁) (hβ₂ : β₂ < 1) (hγ : β₁ < Real.sqrt β₂) :
     ∃ N : ℕ, 1 ≤ N ∧ β₂ ^ N * ((2 * N : ℕ) : ℝ) ^ 2 ≤ 1 ∧

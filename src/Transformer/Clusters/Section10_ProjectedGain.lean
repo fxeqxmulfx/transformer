@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section10_CorrectedEnergy
+public import Transformer.Clusters.Section8_GainLimit
+
+/-!
 # The maximal leading attention gain vanishes
 
 ArXiv:2305.05465v6, §10, Step 2' and the adaptation of Steps 3--4
@@ -14,8 +19,7 @@ vanish, without assuming the source's quantitative candidate-distance
 claim or the false projected-root remainder estimate.
 -/
 
-import Transformer.Clusters.Section10_CorrectedEnergy
-import Transformer.Clusters.Section8_GainLimit
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

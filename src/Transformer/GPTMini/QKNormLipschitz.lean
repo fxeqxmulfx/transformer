@@ -1,10 +1,15 @@
-/-
+module
+
+public import Transformer.GPTMini.QKNorm
+public import Transformer.GPTMini.RoPE
+
+/-!
 # How much the QK-normalized score moves
 
-`GPTMini.QKNorm` bounds the score; this module bounds its *variation*.  Two
+`GPTMini.QKNorm` bounds the score; this module bounds its *variation*. Two
 ingredients, both elementary:
 
-  - `normL2 eps` is Lipschitz with constant `2 / eps`.  As for `rmsNormEps`,
+  - `normL2 eps` is Lipschitz with constant `2 / eps`. As for `rmsNormEps`,
     the scaling factor `1 / max(‖x‖, eps)` moves with `x`, and the second term
     of `c(x)·x - c(y)·y = c(x)·(x - y) + (c(x) - c(y))·y` is controlled by
     `‖y‖ / max(‖y‖, eps) ≤ 1` and by `max` being 1-Lipschitz.
@@ -15,8 +20,7 @@ Together with `RoPE.applyRope_dist` — the rotation is an isometry, so it drops
 out — this is everything the head's Lipschitz estimate needs about the scores.
 -/
 
-import Transformer.GPTMini.QKNorm
-import Transformer.GPTMini.RoPE
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -97,7 +101,7 @@ theorem abs_inner_sub_inner_le {d : ℕ} (a b a' b' : EucSpace d)
 /-- **The score is `e^α`-Lipschitz in the normalized queries and keys.**
 
 Both arguments have norm at most one after `normL2`, so the bilinear form is
-1-Lipschitz in each; the temperature multiplies it.  Source:
+1-Lipschitz in each; the temperature multiplies it. Source:
 `reference/model.py` (`CausalMHA.forward`, `scores = (q @ k^T) * alpha`). -/
 theorem score_lipschitz (alpha eps : ℝ) (heps : 0 ≤ eps) (q k q' k' : EucSpace d_head) :
     |score alpha eps q k - score alpha eps q' k'|

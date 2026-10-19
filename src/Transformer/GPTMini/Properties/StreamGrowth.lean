@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.GPTMini.Model
+
+/-!
 # Property: the residual stream grows at most linearly in depth
 
 Under Pre-LN with the choices of `reference/model.py` (RMSNorm without `γ`,
 QK-norm, bounded `‖W_*‖_op`), each sub-layer's contribution to the residual
 stream is bounded by a constant depending only on the weight norms — not on
-the stream's current magnitude.  Hence the stream grows at most linearly:
+the stream's current magnitude. Hence the stream grows at most linearly:
 
   `‖x_L i‖ ≤ ‖x_0 i‖ + L · C(weights)`,
 
 which is `residual_stream_linear_growth` below, proved by induction on the
-depth from `Block.blockForward_growth`.  The constant is the largest of the
+depth from `Block.blockForward_growth`. The constant is the largest of the
 per-block constants `blockGrowth`, so it does not depend on the depth, and
 this is what rules out the Pre-LN "exploding residual stream":
 
@@ -29,7 +33,7 @@ Both rest on `Transformer.GPTMini.Block` and `Transformer.GPTMini.RMSNorm`,
 which is where the per-block bounds live.
 -/
 
-import Transformer.GPTMini.Model
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -126,7 +130,7 @@ theorem residual_stream_linear_growth
 The last RMSNorm is applied to the stream before the unembedding, and its
 output has norm at most `√d_model` whatever the parameters, the tokens and the
 depth — `rmsNormEps` scales any vector to that sphere up to the `eps` in the
-denominator.  Source: `reference/model.py` (`GPTMini.forward`, `norm_final`),
+denominator. Source: `reference/model.py` (`GPTMini.forward`, `norm_final`),
 through `GPTMini.rmsNormEps_norm_le`. -/
 theorem final_representation_norm_le
     (heps : 0 < eps)

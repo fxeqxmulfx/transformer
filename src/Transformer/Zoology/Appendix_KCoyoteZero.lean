@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_KCoyote
+
+/-!
 # The zero projection is a permitted K-matrix
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: W-kmat` and
@@ -7,7 +11,7 @@ We exhibit an expanded kaleidoscope representation of that weight, so the
 constructions need not appeal to an unrestricted dense matrix.
 -/
 
-import Transformer.Zoology.Appendix_KCoyote
+@[expose] public section
 
 namespace Transformer.Zoology
 

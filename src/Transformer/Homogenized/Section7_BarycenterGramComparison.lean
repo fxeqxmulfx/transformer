@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianGramCoupling
+public import Transformer.Homogenized.SimplexBary
+public import Transformer.Homogenized.AttnAverage
+public import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
+
+/-!
 # The original barycenter correlation is Lipschitz in its Gram matrix
 
 ArXiv:2604.01978v1, §7, eq:SIGMA_R and the overlap comparison after
@@ -14,10 +21,7 @@ scaling for arbitrary unit configurations, including singular Grams.
 The original initialization A = WW′ᵀ is retained throughout.
 -/
 
-import Transformer.Homogenized.Section7_GaussianGramCoupling
-import Transformer.Homogenized.SimplexBary
-import Transformer.Homogenized.AttnAverage
-import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Set
 open scoped BigOperators NNReal

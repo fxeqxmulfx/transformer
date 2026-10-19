@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.AttentionKernel
+public import Transformer.CRASP.RoundedCounts
+
+/-!
 # Temporal predicates for the rounded attention vector
 
 arXiv:2506.16055v3, Appendix B.2, division and its zero-denominator
@@ -6,8 +11,7 @@ fallback in `thm:rtfr_to_TLCl`. The tests distinguish every possible
 attention value at one more counting level than the source states.
 -/
 
-import Transformer.CRASP.AttentionKernel
-import Transformer.CRASP.RoundedCounts
+@[expose] public section
 
 namespace Transformer.CRASP.RTfr
 

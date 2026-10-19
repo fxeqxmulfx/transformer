@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Section5_WeightedInteraction
+
+/-!
 # Aggregate curvature of an original frozen interaction cluster
 
 ArXiv:2411.04990v2, §5, the same-cluster contribution in the
@@ -20,7 +24,7 @@ explicit; interactions with other clusters cannot be dropped
 from the original full criticality equation.
 -/
 
-import Transformer.Causal.Section5_WeightedInteraction
+@[expose] public section
 
 open scoped BigOperators
 open Real Set

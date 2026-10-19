@@ -1,25 +1,29 @@
-/-
+module
+
+public import Transformer.ALM.SoftmaxTieInt
+public import Transformer.ALM.SoftmaxLatest
+
+/-!
 # The other tie-break mode, priced by the data too
 
 `Transformer.ALM.SoftmaxMass` and `Transformer.ALM.SoftmaxTieInt` discharge the
 mass hypothesis of the averaging head bound — first from a score gap, then from
-the integer lattice, where no gap has to be supplied.  `TieBreak::LATEST` was
+the integer lattice, where no gap has to be supplied. `TieBreak::LATEST` was
 left where it started: `softmax_head_resolves_latest` still took `1 - ε ≤ w b +
 w c` on faith, so of the machine's two tie-break modes one was priced by the
 keys and the other by an assumption.
 
-The two theorems here remove that asymmetry.  `softmax_head_resolves_latest_of_gap`
+The two theorems here remove that asymmetry. `softmax_head_resolves_latest_of_gap`
 is the `LATEST` bound with `ε = (n-2)e^{-βδ}/2` supplied by a gap, and
 `softmax_head_resolves_latest_of_int` is it on distinct integer keys, where the
-gap is `1` by `sScore_tie_gap_one`.  In both, the extra `‖V b - V c‖/2` stays:
+gap is `1` by `sScore_tie_gap_one`. In both, the extra `‖V b - V c‖/2` stays:
 that term is not an error at all but the exact price of returning one payload
 where the head returns their mean.
 
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 70-83 and 276-306.
 -/
 
-import Transformer.ALM.SoftmaxTieInt
-import Transformer.ALM.SoftmaxLatest
+@[expose] public section
 
 open scoped BigOperators
 

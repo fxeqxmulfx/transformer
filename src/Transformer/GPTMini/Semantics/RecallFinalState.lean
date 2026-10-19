@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallRetrievalBlock
+module
+
+public import Transformer.GPTMini.Semantics.RecallRetrievalBlock
 
 /-!
 # A uniformly accurate genuine final recall state and protected raw readout channels
@@ -18,6 +20,8 @@ the model. Protected query/type/constant coordinates retain their
 raw embeddings. Strict tied-logit comparisons, final RMS/decoder
 and full validated-parser discharge remain separate obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

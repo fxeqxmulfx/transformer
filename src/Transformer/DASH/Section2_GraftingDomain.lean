@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section3_InverseRootCorrectness
+
+/-!
 # DASH — the nonzero-gradient domain of regularized grafting
 
 arXiv:2602.02016v2, §2.2–2.3. Positive regularization makes the exact
@@ -6,7 +10,7 @@ inverse roots invertible. Consequently a nonzero gradient produces a
 nonzero Shampoo direction and the norm-matching scale is well defined.
 -/
 
-import Transformer.DASH.Section3_InverseRootCorrectness
+@[expose] public section
 
 open scoped Matrix
 

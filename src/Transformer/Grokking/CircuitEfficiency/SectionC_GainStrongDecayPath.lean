@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMassDecay
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMassDecay
 
 /-!
 # Initialized actual strong-decay paths collapse in absolute mass
@@ -33,6 +35,8 @@ Fixed physical tables, exact reals, zero betas and uniform decoupled
 native decay differ from appendix C's coupled norm/GD and preserved
 learned nonzero-beta GPTMini. No floating-point transfer is claimed.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

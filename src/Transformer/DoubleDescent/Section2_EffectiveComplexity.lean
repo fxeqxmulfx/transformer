@@ -1,5 +1,7 @@
-import Transformer.DoubleDescent.Section2_Risk
-import Mathlib.Data.ENat.Lattice
+module
+
+public import Transformer.DoubleDescent.Section2_Risk
+public import Mathlib.Data.ENat.Lattice
 
 /-!
 # Effective model complexity
@@ -10,6 +12,8 @@ every existing maximum, gives zero for an empty feasible set, and gives
 infinity for unbounded feasible sample sizes. No monotonicity in sample size
 is assumed: the definition does not imply that the feasible sizes form an interval.
 -/
+
+@[expose] public section
 
 namespace Transformer.DoubleDescent
 

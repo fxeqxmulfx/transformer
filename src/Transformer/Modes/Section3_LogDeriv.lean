@@ -1,14 +1,16 @@
-import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+module
 
-/-
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+
+/-!
 # The number of modes of a Gaussian KDE — the derivatives of a log-MGF
 
 The cumulants of arXiv:2412.09080v3, §3.1, are mixed derivatives at `0` of
-`log 𝔼 e^{⟨u, Y⟩}`.  Differentiating a logarithm produces a quotient and then
+`log 𝔼 e^{⟨u, Y⟩}`. Differentiating a logarithm produces a quotient and then
 a quotient of quotients, and at the origin of a *standardized* law almost all
 of it collapses: the moment generating function is `1` there and its first
-derivatives vanish.  This module is the one-variable calculus that records the
+derivatives vanish. This module is the one-variable calculus that records the
 collapse, stated for a chain of derivative functions rather than for the
 moments themselves:
 
@@ -24,6 +26,8 @@ the integral sign supplies.
 
 Source: arXiv:2412.09080v3, §3.1, after `eq:psi`.
 -/
+
+@[expose] public section
 
 open Real Filter
 open scoped Topology

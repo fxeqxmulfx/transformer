@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianGradientMoments
+
+/-!
 # The original Gaussian interpolation covariance–Hessian derivative
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -17,7 +21,7 @@ The construction retains both original vectors and includes singular
 original covariance matrices without a density assumption.
 -/
 
-import Transformer.Homogenized.Section7_GaussianGradientMoments
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Set
 open scoped BigOperators

@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.GPTMini.Config
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+/-!
 # RMSNorm (without trainable scale)
 
 Formalization of the `RMSNorm` class from `reference/model.py`:
@@ -21,10 +28,7 @@ We define both the `eps`-perturbed and the ideal version, and prove the
 post-norm L2 norm.
 -/
 
-import Transformer.Basic
-import Transformer.GPTMini.Config
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -78,13 +82,13 @@ theorem rmsNormEps_norm_le (eps : ℝ) (heps : 0 < eps) (hd : 0 < d) (x : EucSpa
 /-- **`rmsNormEps` is globally Lipschitz, with constant `2 / √eps`.**
 
 Writing `c(x) = √d / √(‖x‖² + d·eps)`, the difference splits as
-`c(x)·(x - y) + (c(x) - c(y))·y`.  The first term is controlled by
+`c(x)·(x - y) + (c(x) - c(y))·y`. The first term is controlled by
 `c(x) ≤ √d / √(d·eps) = 1/√eps`; for the second,
 `|√b - √a| = |b - a| / (√a + √b)` with `|b - a| ≤ ‖x - y‖(‖x‖ + ‖y‖)`, and
 `(‖x‖ + ‖y‖)‖y‖ ≤ (√a + √b)√b`, leaving `√d/√a ≤ 1/√eps` again.
 
 This is the factor that every Lipschitz estimate for a Pre-LN sub-layer must
-carry: `eps` small makes the normalization steep.  Source:
+carry: `eps` small makes the normalization steep. Source:
 `reference/model.py` (`RMSNorm.forward`, `F.rms_norm` with `eps`). -/
 theorem rmsNormEps_lipschitz (eps : ℝ) (heps : 0 < eps) (hd : 0 < d)
     (x y : EucSpace d) :

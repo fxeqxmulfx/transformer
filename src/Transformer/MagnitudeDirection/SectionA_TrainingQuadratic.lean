@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.SectionA_TrainingMinimum
+
+/-!
 # Nonconstant quadratic witnesses for MD training
 
 User-requested convergence extension of arXiv:2606.25971v2, §3.1 and
@@ -7,7 +11,7 @@ smoothness and strong convexity. A minimum opposite the initial scalar
 direction exposes a limitation of normalized positive-gain MD steps.
 -/
 
-import Transformer.MagnitudeDirection.SectionA_TrainingMinimum
+@[expose] public section
 
 open scoped InnerProductSpace
 

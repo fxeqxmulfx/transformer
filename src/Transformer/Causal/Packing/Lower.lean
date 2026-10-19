@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Packing.Upper
+
+/-!
 # Sphere packing — the lower ledger
 
 A maximal `δ`-separated set `S` of unit vectors covers the sphere at scale `δ`,
@@ -10,7 +14,7 @@ As in `Packing.Upper`, the shell is handled without a set difference:
 the inner ball stays in the ledger as one more piece.
 -/
 
-import Transformer.Causal.Packing.Upper
+@[expose] public section
 
 open MeasureTheory Metric
 open scoped ENNReal
@@ -22,7 +26,7 @@ namespace Packing
 /-- **Packing ledger (lower).**  A maximal `δ`-separated set `S` of unit
 vectors covers the sphere at scale `δ`, hence the shell
 `1 - δ < ‖y‖ < 1 + δ` at scale `2 δ`: every `z` of the shell is within `2 δ`
-of the point of `S` nearest to `z / ‖z‖`.  Adding the inner ball back,
+of the point of `S` nearest to `z / ‖z‖`. Adding the inner ball back,
 
   `(1 + δ)^d ≤ (1 - δ)^d + card S · (2 δ)^d`.
 

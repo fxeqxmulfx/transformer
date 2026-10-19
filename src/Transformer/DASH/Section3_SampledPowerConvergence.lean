@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section3_PoolProbability
+
+/-!
 # DASH — connect the sampling event to the actual PI implementation
 
 arXiv:2602.02016v2, §3.5. Bad candidates have zero projection onto the
@@ -6,7 +10,7 @@ entire maximal eigenspace. A pool containing any other candidate converges;
 the finite uniform model counts pools missing every successful candidate.
 -/
 
-import Transformer.DASH.Section3_PoolProbability
+@[expose] public section
 
 open scoped Matrix
 

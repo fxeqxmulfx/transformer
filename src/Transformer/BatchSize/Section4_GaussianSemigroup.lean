@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_GaussianSmoothness
+
+/-!
 # Gaussian transition semigroup
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3).
@@ -7,7 +11,7 @@ Gaussian semigroup: sequential independent transitions add their variances.
 No semigroup identity is included as an unproved premise.
 -/
 
-import Transformer.BatchSize.Section4_GaussianSmoothness
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

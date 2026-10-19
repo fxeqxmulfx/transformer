@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_CovarianceBound
+public import Transformer.Kinetic.Section3_ThirdCumulantSplit
+public import Transformer.Kinetic.Section3_PairTotal
+
+/-!
 # The third cumulant of three observables of the flow
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 4, `eq:est-kap3-th`: under a
@@ -10,9 +16,7 @@ product law of the initial angles, for `k < j < i`, the third cumulant of
 (`abs_obs_second_diff_le_env`).
 -/
 
-import Transformer.Kinetic.Section3_CovarianceBound
-import Transformer.Kinetic.Section3_ThirdCumulantSplit
-import Transformer.Kinetic.Section3_PairTotal
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Real
 

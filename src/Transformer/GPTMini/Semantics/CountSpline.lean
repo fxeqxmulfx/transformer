@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.ParityFeatures
+module
+
+public import Transformer.GPTMini.Semantics.ParityFeatures
 
 /-!
 # A homogeneous bounded-count decoder using ordinary ReLU2
@@ -17,6 +19,8 @@ require 68 ReLU2 units, within the original 256-unit FFN. Realizing the
 corresponding matrices and verifying EOS/tied readout are later steps;
 this scalar result makes no convex-training or convergence claim.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_PhysicalGain
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_PhysicalGain
 
 /-!+# True CE derivatives of the physical gained forward
 
@@ -18,6 +20,8 @@ convergence, rule selection, learned GPTMini circuits or a bridge to
 floating-point autograd. Optimizer state enters only as current
 parameters when evaluating these mathematical CE derivatives.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

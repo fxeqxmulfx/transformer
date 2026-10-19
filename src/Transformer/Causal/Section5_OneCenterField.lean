@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section5_RowDerivative
+public import Transformer.Causal.Section5_CriticalSets
+
+/-!
 # Exact limiting rows for one original frozen center
 
 ArXiv:2411.04990v2, §5 and Appendix A, the single-center
@@ -20,8 +25,7 @@ circular distance, without any modified field or extra
 separation premise. They hold at every real temperature.
 -/
 
-import Transformer.Causal.Section5_RowDerivative
-import Transformer.Causal.Section5_CriticalSets
+@[expose] public section
 
 open Real Set Filter
 

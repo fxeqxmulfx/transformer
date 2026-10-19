@@ -1,14 +1,18 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.ModulatedEnergy
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.DerivIntegrable
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.Analysis.Calculus.ContDiff.Comp
+
+/-!
 # The divergent clock and criticality of a limiting trajectory
 
 Appendix D.1 of arXiv:2510.22026v2: divergence of the primitive forces
 local integrability, and a bounded-energy limit must be critical.
 -/
 
-import Transformer.Landscape.Lojasiewicz.ModulatedEnergy
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.DerivIntegrable
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.Analysis.Calculus.ContDiff.Comp
+@[expose] public section
 
 open MeasureTheory
 

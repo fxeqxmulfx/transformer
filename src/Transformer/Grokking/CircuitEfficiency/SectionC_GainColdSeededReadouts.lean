@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdSeededNativeLimits
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdSeededNativeLimits
 
 /-!
 # Actual critical weighted mass, CE coefficient and physical scores
@@ -33,6 +35,8 @@ appendix C's assigned coupled norm-cost GD and learned GPTMini.
 Stochastic/numerical and thermodynamic system-size transfer remain
 separate. Frozen measurements, optimizers and checkpoints are unchanged.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

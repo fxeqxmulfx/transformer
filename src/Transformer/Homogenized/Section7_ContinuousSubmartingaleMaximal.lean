@@ -1,8 +1,10 @@
-import Transformer.Homogenized.Section7_ContinuousVille
-import Transformer.Homogenized.Section7_LogisticAngle
-import Mathlib.MeasureTheory.Function.ConditionalExpectation.CondJensen
-import Mathlib.Analysis.Convex.Mul
-import Mathlib.Probability.Martingale.OptionalStopping
+module
+
+public import Transformer.Homogenized.Section7_ContinuousVille
+public import Transformer.Homogenized.Section7_LogisticAngle
+public import Mathlib.MeasureTheory.Function.ConditionalExpectation.CondJensen
+public import Mathlib.Analysis.Convex.Mul
+public import Mathlib.Probability.Martingale.OptionalStopping
 
 /-!
 # A continuous maximal bound for the actual squared martingale increments
@@ -21,6 +23,8 @@ or continuous-time probability bound is an extra hypothesis.
 This bound will control excursions between the logistic angle's
 integer sampling times in the long-time convergence argument.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology ENNReal

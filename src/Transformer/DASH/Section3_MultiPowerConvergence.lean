@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section3_PowerConvergence
+
+/-!
 # DASH — convergence and eventual safety of a pool of PI starts
 
 arXiv:2602.02016v2, §3.4–3.5. One successful starting vector suffices
@@ -6,7 +10,7 @@ for convergence of the pool maximum. A fixed finite iteration count
 still has no unconditional factor-two safety guarantee.
 -/
 
-import Transformer.DASH.Section3_PowerConvergence
+@[expose] public section
 
 open scoped BigOperators Matrix
 

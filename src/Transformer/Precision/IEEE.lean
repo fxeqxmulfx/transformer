@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Precision.Accumulate
+public import Mathlib.Data.Set.Finite.Lemmas
+
+/-!
 # IEEE binary floating point
 
 The binary interchange formats of IEEE 754-2008, §3.4: a pattern of `1 + E + M`
@@ -12,8 +17,7 @@ nonzero number is closer to `0` than the smallest subnormal (`minSub_le_abs`),
 and every number has `M + 1` significant bits (`grid_hasSignificand`).
 -/
 
-import Transformer.Precision.Accumulate
-import Mathlib.Data.Set.Finite.Lemmas
+@[expose] public section
 
 namespace Transformer
 namespace Precision
@@ -22,7 +26,7 @@ namespace Precision
 def bias (E : ℕ) : ℤ := 2 ^ (E - 1) - 1
 
 /-- **IEEE binary decoding.**  A pattern of `1 + E + M` bits: sign, biased
-exponent `e`, mantissa `m`.  `e = 0` is subnormal, `m · 2^{1 - bias - M}`;
+exponent `e`, mantissa `m`. `e = 0` is subnormal, `m · 2^{1 - bias - M}`;
 `0 < e < 2^E - 1` is normal, `(2^M + m) · 2^{e - bias - M}`; `e = 2^E - 1` is an
 infinity or a NaN and has no real value (IEEE 754-2008, §3.4). -/
 noncomputable def ieee (E M bits : ℕ) : Option ℝ :=

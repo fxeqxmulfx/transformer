@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_RowMajorKaleidoscope
+
+/-!
 # Expanded primary-form K matrices as externally shaped Coyote models
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: kaleidoscope` and
@@ -8,7 +12,7 @@ the feature dimension is unchanged. The construction proves workspace
 6w log₂(2^e nd), and all layer weights are actual K representations.
 -/
 
-import Transformer.Zoology.Appendix_RowMajorKaleidoscope
+@[expose] public section
 
 namespace Transformer.Zoology
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_FiniteTransport
+public import Mathlib.MeasureTheory.Measure.Support
+
+/-!
 # Removing the finite-net error in original weak transport
 
 Auxiliary to arXiv:2411.04551v3, §1, the Lipschitz well-posedness
@@ -16,8 +21,7 @@ small. This proves the original characteristic inequality for arbitrary
 initial probabilities, with no spatial derivative of the flow assumed.
 -/
 
-import Transformer.Interpolation.Section1_FiniteTransport
-import Mathlib.MeasureTheory.Measure.Support
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal BigOperators

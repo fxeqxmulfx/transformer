@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Kinetic.Section6_HardyKernel
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Kinetic theory for Transformers — uniqueness on a short time interval
 
 Differences of actual classical solutions in arXiv:2605.09213v1, §6,
@@ -10,8 +15,7 @@ The bound is taken over the actual solution values; the mean value
 theorem and the original spatial integral give the contraction.
 -/
 
-import Transformer.Kinetic.Section6_HardyKernel
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open Real Set MeasureTheory
 

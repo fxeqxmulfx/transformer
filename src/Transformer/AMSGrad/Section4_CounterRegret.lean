@@ -1,7 +1,9 @@
-import Transformer.AMSGrad.Section4_CounterRun
-import Mathlib.Algebra.Field.GeomSum
+module
 
-/-
+public import Transformer.AMSGrad.Section4_CounterRun
+public import Mathlib.Algebra.Field.GeomSum
+
+/-!
 # AMSGrad — Corollary 4.5 is false as stated
 
 §4 of arXiv:1904.03590v4, Corollary 4.5: on `signSetup`, summing the block
@@ -11,6 +13,8 @@ bounds of `sign_term` up to `T = 2^{2j+1} - 1`,
 
 Source: arXiv:1904.03590v4, §4, Corollary 4.5.
 -/
+
+@[expose] public section
 
 open Finset Filter
 
@@ -71,7 +75,7 @@ theorem sum_half_pow_le (j : ℕ) : ∑ k ∈ range (2 * j + 1), 2 ^ (k / 2) ≤
 /-- **Corollary 4.5 is false as stated.**  On `signSetup`, which satisfies its
 hypotheses in both settings (`isOnlineConvex_sign`, `sign_hyp`), `R(T) ≤ -T/2`
 for infinitely many `T` and every `x* ∈ F`, the minimizer of `Σ_{t≤T} f_t`
-included; so `R(T)/T` does not tend to `0`.  Only the upper half, `cor_lambda`
+included; so `R(T)/T` does not tend to `0`. Only the upper half, `cor_lambda`
 and `cor_inv`, is kept.
 
 Source: arXiv:1904.03590v4, §4, Corollary 4.5. -/

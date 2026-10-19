@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_SphereUniqueness
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Actual vector-field uniqueness and constancy on the sphere
 
 ArXiv:2601.21366v2, §6, proof of `prop: unified.log`, part (a),
@@ -21,9 +27,7 @@ The mean-value theorem compares the original endpoint values.
 All derivative and uniform-law hypotheses have actual witnesses below.
 -/
 
-import Transformer.Perceptron.Section6_SphereUniqueness
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open Real MeasureTheory Set
 

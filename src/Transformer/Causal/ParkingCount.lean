@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Constructions.HaarToSphere
+public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
+
+/-!
 # Causal attention — Counting strong R'enyi centers (§ "R'enyi centers vs
 strong R'enyi centers" of 2411.04990v2)
 
@@ -11,15 +19,11 @@ cap mass.
 The unlabelled lemma of that subsection is proved here: by independence, the
 `k`-th point is a strong centre exactly when its `k` predecessors all avoid its
 cap, an event of probability `(1 - σ^{d-1}(B_δ))^k`, and the expected count is
-the geometric series of those probabilities.  The cap masses it specializes to
+the geometric series of those probabilities. The cap masses it specializes to
 in dimensions two and three are `Transformer.Causal.CapMass`.
 -/
 
-import Transformer.Basic
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Constructions.HaarToSphere
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -30,7 +34,7 @@ namespace Causal
 variable (d : ℕ)
 
 /-- The **geodesic distance** on the unit sphere: the angle between two unit
-vectors, `arccos ⟨x, y⟩`.  This is the `dist` of the survey's R'enyi parking
+vectors, `arccos ⟨x, y⟩`. This is the `dist` of the survey's R'enyi parking
 definitions, as opposed to the ambient distance used in
 `Transformer.Causal.isStrongRenyiCenters`.
 

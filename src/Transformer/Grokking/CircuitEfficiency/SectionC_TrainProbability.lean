@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_TableLoss
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_TableLoss
 
 /-!
 # Actual finite-class training confidence and CE order
@@ -27,6 +29,8 @@ Fixed circuit tables differ from learned stochastic/floating-point
 GPTMini heads; no grokking event is inferred from a training measurement.
 The source's coupled penalty is kept outside the actual CE throughout.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

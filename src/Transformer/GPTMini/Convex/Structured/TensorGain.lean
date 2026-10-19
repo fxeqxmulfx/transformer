@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.TensorBasisStackTraining
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorBasisStackTraining
 
 /-!
 # Fixed linear gain on every free tensor potential
@@ -20,6 +22,8 @@ does not remove gauge directions, prove AdamW convergence, or assert
 that the proposed gain eight repairs the measured failure. Its extra
 arithmetic and empirical success must be checked in the lab.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

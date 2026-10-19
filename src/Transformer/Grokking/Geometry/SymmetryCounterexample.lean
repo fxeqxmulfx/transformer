@@ -1,4 +1,6 @@
-import Transformer.Grokking.Geometry.Decisions
+module
+
+public import Transformer.Grokking.Geometry.Decisions
 
 /-!
 # A balanced incorrect classifier with perfect structural energy
@@ -19,6 +21,8 @@ to a metric interpretation, not a claim that GPTMini weights or native
 AdamW generate this particular classifier. It explains the need for a
 correct margin or restricted loss alongside structural measurements.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Geometry
 

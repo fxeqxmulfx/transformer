@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.CompactMonomialCharts
+
+/-!
 # A degenerate isolated critical point prepared by two blowup charts
 
 The quartic `(x²+y²)²` becomes `r⁴(1+s²)²` in either of the maps
@@ -7,7 +11,7 @@ neighborhood of the origin, proving a concrete instance of the compact
 parametrization route to Appendix D.1 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.CompactMonomialCharts
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators

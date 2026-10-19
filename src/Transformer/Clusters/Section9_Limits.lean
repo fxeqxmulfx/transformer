@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section9_Eigen
+
+/-!
 # The emergence of clusters in self-attention dynamics — the limits `a` and
   `b`, and bounded trajectories
 
@@ -10,18 +14,18 @@ produces, and the corollary `c:bounded` that reads them back on the tokens.
 * Both statements are consequences of `l:fj`, and both are proved here from
   its conclusion taken as an explicit hypothesis — the monotonicity on
   `[0,+∞)` for `e:defab`, the uniform bound on each coordinate for
-  `c:bounded`.  `l:fj` itself is in `Transformer.Clusters.Section9_Fj`.
+  `c:bounded`. `l:fj` itself is in `Transformer.Clusters.Section9_Fj`.
 
-* `c:bounded` assumes that `V` has only real non-negative eigenvalues.  That
+* `c:bounded` assumes that `V` has only real non-negative eigenvalues. That
   hypothesis is used twice: to put each `φ*_k` under `l:fj` (`λ_k ≥ 0`), and
-  to expand a vector in the eigenbasis, `z = Σ_k φ*_k(z) φ_k`.  The first is
+  to expand a vector in the eigenbasis, `z = Σ_k φ*_k(z) φ_k`. The first is
   the coordinate bound below, the second is `hexp`; together they are the
   source's one-line proof.
 
 Source: arXiv:2305.05465v6, `e:defab`, `c:bounded`.
 -/
 
-import Transformer.Clusters.Section9_Eigen
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -34,7 +38,7 @@ variable {d n m : ℕ}
 /-! ### Bounded monotone convergence on a half-line -/
 
 /-- A function antitone on `[0,+∞)` and bounded below there converges, and its
-limit is a lower bound.  This is what turns the monotonicity of `l:fj` into
+limit is a lower bound. This is what turns the monotonicity of `l:fj` into
 the limit `b` of `e:defab`. -/
 theorem exists_tendsto_of_antitoneOn {g : ℝ → ℝ} (hg : AntitoneOn g (Set.Ici 0))
     {c : ℝ} (hc : ∀ t : ℝ, 0 ≤ t → c ≤ g t) :

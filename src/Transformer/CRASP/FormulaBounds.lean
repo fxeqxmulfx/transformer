@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.CRASP.Conjunctions
+
+/-!
 # Boolean formulas in the past-counting fragment
 
 arXiv:2506.16055v3, Appendix B.2, `lem:finite_function` and the
 finite-state normal forms in `thm:rtfr_to_TLCl`.
 -/
 
-import Transformer.CRASP.Conjunctions
+@[expose] public section
 
 namespace Transformer.CRASP.Form
 

@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_AtomicMixture
+
+/-!
 # Four-factor weight decay obstructs exact convexification
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §2–§3.1, equations
-`eq:attention_only` and `eq:attention_only_obj`.  On a two-token sample,
+`eq:attention_only` and `eq:attention_only_obj`. On a two-token sample,
 the attainable prediction-budget epigraph is nonconvex even when any finite
 number of ordinary softmax heads with trainable Q, K, V, and O is allowed.
 -/
 
-import Transformer.Convexifying.Section3_AtomicMixture
+@[expose] public section
 
 namespace Transformer.Convexifying
 
@@ -25,7 +29,7 @@ noncomputable def scalarFourWeightCost (h : ScalarFourWeights) : ℝ :=
   (h.q ^ 2 + h.k ^ 2 + h.v ^ 2 + h.o ^ 2) / 2
 
 /-- AM–GM shows that four-matrix weight decay is at least the cost of the
-two product parameters.  Source: equation `eq:attention_only_obj`. -/
+two product parameters. Source: equation `eq:attention_only_obj`. -/
 theorem scalarFourWeightCost_ge_reduced (h : ScalarFourWeights) :
     reducedHeadCost (h.q * h.k) (h.v * h.o) ≤ scalarFourWeightCost h := by
   have hq : 2 * (|h.q| * |h.k|) ≤ h.q ^ 2 + h.k ^ 2 := by
@@ -36,7 +40,7 @@ theorem scalarFourWeightCost_ge_reduced (h : ScalarFourWeights) :
   linarith
 
 /-- The difference between the two output rows of the paper's genuine
-softmax head equals the reduced nonuniform component.  The input is the
+softmax head equals the reduced nonuniform component. The input is the
 two-token matrix `[1, 0]` from `toyData 0`.
 Source: equation `eq:attention_only`, specialized. -/
 theorem toyOutput_difference (h : ScalarFourWeights) :
@@ -53,14 +57,14 @@ noncomputable def originalMixtureDifference (heads : List ScalarFourWeights) : �
     toyOutput 0 1 h.q h.k h.v h.o).sum
 
 /-- The full two-row output of a finite collection of genuine softmax
-heads on the input `[1, 0]`.  Source: equation `eq:attention_only`, finite
+heads on the input `[1, 0]`. Source: equation `eq:attention_only`, finite
 width extension. -/
 noncomputable def originalMixtureRows (heads : List ScalarFourWeights) :
     Fin 2 → ℝ :=
   fun r => (heads.map fun h => toyOutput 0 r h.q h.k h.v h.o).sum
 
 /-- The projected output used below is exactly the difference of the two
-rows of the full genuine-softmax prediction.  Source: equation
+rows of the full genuine-softmax prediction. Source: equation
 `eq:attention_only`, specialized. -/
 theorem originalMixtureDifference_eq_rows (heads : List ScalarFourWeights) :
     originalMixtureDifference heads =
@@ -78,7 +82,7 @@ noncomputable def originalMixturePenalty (heads : List ScalarFourWeights) : ℝ 
   (heads.map scalarFourWeightCost).sum
 
 /-- Product reduction of genuine, trainable-score heads preserves their
-nonuniform output.  Source: equation `eq:attention_only`, specialized. -/
+nonuniform output. Source: equation `eq:attention_only`, specialized. -/
 theorem originalMixtureDifference_eq_reduced (heads : List ScalarFourWeights) :
     originalMixtureDifference heads =
       reducedMixtureDifference (heads.map fun h => (h.q * h.k, h.v * h.o)) := by
@@ -90,7 +94,7 @@ theorem originalMixtureDifference_eq_reduced (heads : List ScalarFourWeights) :
       rw [toyOutput_difference, ih]
 
 /-- The nonuniform-output hypothesis used below is realized by an actual
-head with all four matrices trainable.  Source: equation
+head with all four matrices trainable. Source: equation
 `eq:attention_only`, specialized. -/
 example : ∃ heads : List ScalarFourWeights,
     originalMixtureDifference heads = 1 / 600 := by
@@ -101,7 +105,7 @@ example : ∃ heads : List ScalarFourWeights,
   norm_num
 
 /-- The actual four-matrix weight decay dominates its product reduction for
-every finite collection of heads.  Source: `eq:attention_only_obj`. -/
+every finite collection of heads. Source: `eq:attention_only_obj`. -/
 theorem originalMixturePenalty_ge_reduced (heads : List ScalarFourWeights) :
     reducedMixtureCost (heads.map fun h => (h.q * h.k, h.v * h.o)) ≤
       originalMixturePenalty heads := by
@@ -114,7 +118,7 @@ theorem originalMixturePenalty_ge_reduced (heads : List ScalarFourWeights) :
 
 /-- The row-output difference is bounded by the square of the paper's
 actual four-matrix weight decay, for any finite number of trainable-score
-heads.  Source: arXiv:2211.11052v1, equations `eq:attention_only`–
+heads. Source: arXiv:2211.11052v1, equations `eq:attention_only`–
 `eq:attention_only_obj`, specialized. -/
 theorem originalMixtureDifference_quadratic (heads : List ScalarFourWeights) :
     |originalMixtureDifference heads| ≤ originalMixturePenalty heads ^ 2 := by
@@ -136,9 +140,9 @@ theorem originalMixtureDifference_quadratic (heads : List ScalarFourWeights) :
 /-- **Original weight-decay gap at arbitrary finite width.**  To produce
 the nonuniform output `1/600` on `[1, 0]`, genuine softmax attention with
 any finite number of heads and all four matrices trainable must pay more
-than `1/50` in the paper's weight decay.  `smallAtomicDifference` and
+than `1/50` in the paper's weight decay. `smallAtomicDifference` and
 `smallAtomicCost` give a genuine softmax atom with the same output projection
-and atomic cost at most `1/50`.  Any exact match of the full output would
+and atomic cost at most `1/50`. Any exact match of the full output would
 also match this projection, so the positive-homogeneous atomic mixture
 cannot preserve equation `eq:attention_only_obj`'s regularizer. -/
 theorem originalMixturePenalty_gap (heads : List ScalarFourWeights)

@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.ALM.OrthVectors
+
+/-!
 # An exact lookup index, and what one query already decides
 
 `Transformer.ALM.OrthVectors` shows that a single exact lookup decides a whole
-Orthogonal Vectors instance for one left-hand vector.  To turn that into a
+Orthogonal Vectors instance for one left-hand vector. To turn that into a
 statement about *data structures* we need a name for the thing that answers
-lookups.  This file gives one: an `NNIndex` is anything that returns an exact
+lookups. This file gives one: an `NNIndex` is anything that returns an exact
 argmax of the paraboloid score, together with a declared build and query cost.
 
-Nothing here models computation.  `ans` is data and `ans_isGreatest` is its
+Nothing here models computation. `ans` is data and `ans_isGreatest` is its
 specification; the costs are abstract reals, constrained only by whatever the
-user of the structure proves about them.  What *is* proved here is the part
+user of the structure proves about them. What *is* proved here is the part
 that is pure geometry: the procedure that queries the index once per left-hand
 vector and inspects only the returned key decides Orthogonal Vectors
 correctly (`NNIndex.reduce_iff`).
@@ -18,14 +22,14 @@ Source of the reduction: V. Vassilevska Williams, *On some fine-grained
 questions in algorithms and complexity*, ICM 2018, §3.
 -/
 
-import Transformer.ALM.OrthVectors
+@[expose] public section
 
 namespace Transformer
 namespace ALM
 
 /-- An exact lookup index: for every finite family of keys and every query it
 names a key of maximal score, and it declares what building and querying
-cost.  The costs are abstract; only `ans_isGreatest` has content on its own. -/
+cost. The costs are abstract; only `ans_isGreatest` has content on its own. -/
 structure NNIndex where
   /-- The key the index returns for a given family and query. -/
   ans : ∀ {m n : ℕ} [Nonempty (Fin n)], (Fin n → EucSpace m) → EucSpace m → Fin n
@@ -43,14 +47,14 @@ variable (I : NNIndex) {d n : ℕ} [Nonempty (Fin n)]
 
 /-- **The reduction as a procedure.**  Embed the right-hand vectors as keys,
 then for each left-hand vector ask the index for its nearest key and test that
-one key for orthogonality.  The remaining `n - 1` keys are never examined. -/
+one key for orthogonality. The remaining `n - 1` keys are never examined. -/
 def reduce (A B : Fin n → BVec d) : Prop :=
   ∃ i, Orth (A i) (B (I.ans (fun j => kvec (B j)) (qvec (A i))))
 
 /-- **The procedure is correct.**  Testing only the returned key loses
 nothing: it is orthogonal to the query exactly when some key is.
 
-This is the whole geometric content of the hardness argument.  Everything
+This is the whole geometric content of the hardness argument. Everything
 downstream is cost accounting. -/
 theorem reduce_iff (A B : Fin n → BVec d) :
     I.reduce A B ↔ ∃ i j, Orth (A i) (B j) := by
@@ -66,7 +70,7 @@ end NNIndex
 
 /-! ### Brute force is an index
 
-Scanning all keys satisfies the specification, with query cost `n · m`.  It
+Scanning all keys satisfies the specification, with query cost `n · m`. It
 witnesses that `NNIndex` is inhabited, so nothing proved about indices is
 vacuous.
 -/

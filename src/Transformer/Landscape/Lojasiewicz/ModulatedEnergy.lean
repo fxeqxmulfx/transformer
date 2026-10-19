@@ -1,16 +1,20 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.InnerProductSpace.Rayleigh
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.Calculus.FDeriv.Analytic
+public import Mathlib.Topology.Order.MonotoneConvergence
+
+/-!
 # Operator bounds and energy dissipation for modulated gradient descent
 
 Appendix D.1 of arXiv:2510.22026v2: quadratic matrix bounds give an angle
 condition, and the energy of a compact gradient trajectory has a finite limit.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.InnerProductSpace.Rayleigh
-import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.Calculus.FDeriv.Analytic
-import Mathlib.Topology.Order.MonotoneConvergence
+@[expose] public section
 
 namespace Transformer.Landscape.Lojasiewicz
 

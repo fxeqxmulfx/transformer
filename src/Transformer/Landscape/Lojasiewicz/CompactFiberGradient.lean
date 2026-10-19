@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.GradientPullback
+public import Mathlib.Data.Finset.Lattice.Fold
+
+/-!
 # Uniform estimates near the image of a compact fiber
 
 Local image-gradient bounds on a compact fiber give a common power bound
@@ -6,8 +11,7 @@ for all nearby images of its compact ambient set. This supplies the compact
 step of a parametrization route to Appendix D.1 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.GradientPullback
-import Mathlib.Data.Finset.Lattice.Fold
+@[expose] public section
 
 open Filter Set
 

@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_ReflectionPaths
+public import Transformer.Perceptron.Section6_RotationZeroSets
+public import Transformer.Perceptron.Hyperplane
+public import Transformer.Metastability.Section4_UniformLaw
+
+/-!
 # Positive-measure analytic uniqueness on the actual sphere
 
 ArXiv:2601.21366v2, §6, proof of `prop: unified.log`, part (a),
@@ -21,10 +28,7 @@ The ambient function need not vanish off the sphere; the conclusion
 does not silently replace spherical uniqueness by ambient uniqueness.
 -/
 
-import Transformer.Perceptron.Section6_ReflectionPaths
-import Transformer.Perceptron.Section6_RotationZeroSets
-import Transformer.Perceptron.Hyperplane
-import Transformer.Metastability.Section4_UniformLaw
+@[expose] public section
 
 open Real MeasureTheory Set
 

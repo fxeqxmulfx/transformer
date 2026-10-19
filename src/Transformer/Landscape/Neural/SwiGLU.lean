@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Neural.SiLU
+
+/-!
 # The tied Rotate90 classifier with a full SwiGLU branch
 
 Source: `landscape_grokking_plan.md`, Activation comparisons, and the browser
@@ -11,7 +15,7 @@ intermediate index H controls their parameter count; SwiGLU is not merely
 SiLU applied to the original dense output.
 -/
 
-import Transformer.Landscape.Neural.SiLU
+@[expose] public section
 
 namespace Transformer.Landscape.Neural
 

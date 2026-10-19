@@ -1,4 +1,16 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.FDeriv.WithLp
+
+public import Transformer.Perspective.CircleLojasiewicz
+public import Transformer.Perspective.CircleSAFlow
+public import Transformer.Perspective.StrictSaddle
+public import Transformer.Landscape.SaddleAvoidance.FlowLandscape
+public import Transformer.Landscape.SaddleAvoidance.LocalInequality
+public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Almost every solution of `eq:onangles` synchronizes
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5, §7.
@@ -12,9 +24,9 @@ common limit as `t → +∞`."
 `strict_saddle` gives the positive answer for every `β > 0`: each critical
 point of `-𝖤_β` is a global minimizer or a strict saddle
 (`isMinOn_or_isStrictSaddle_neg_eucTorusEnergy`), and
-`ae_tendsto_synchronized_of_angularUSA` draws the conclusion.  The solutions
+`ae_tendsto_synchronized_of_angularUSA` draws the conclusion. The solutions
 of `eq:onangles` are the gradient flow of `-𝖤_β` on `EucSpace n` run at speed
-`n` (`angularUSA_eq_gradientFlow`, `angularUSA_gradientFlow`).  `-𝖤_β` is
+`n` (`angularUSA_eq_gradientFlow`, `angularUSA_gradientFlow`). `-𝖤_β` is
 invariant under the periods `2π e_k`, which span the space (`span_periods`),
 so `Landscape.SaddleAvoidance.ae_exists_tendsto_gradientFlow_isMinOn_of_span_eq_top`
 applies, and the minimizers of `-𝖤_β` are synchronized
@@ -24,16 +36,12 @@ The classical arguments of Appendix A use the Łojasiewicz theorem for
 real-analytic functions (`lojasiewicz1963propriete`): `-𝖤_β` is analytic
 (`analyticAt_neg_eucTorusEnergy`), so it satisfies the Łojasiewicz inequality
 at every point (`exists_isLojasiewiczAt_neg_eucTorusEnergy`, from
-`Landscape.SaddleAvoidance.exists_isLojasiewiczAt_of_analyticAt`).  At the synchronized
+`Landscape.SaddleAvoidance.exists_isLojasiewiczAt_of_analyticAt`). At the synchronized
 states, and for two tokens at every critical point, the exponent is `1/2`
 (`isLojasiewiczAt_of_synchronized`, `isLojasiewiczAt_of_isCritical_two`).
 -/
-import Transformer.Perspective.CircleLojasiewicz
-import Transformer.Perspective.CircleSAFlow
-import Transformer.Perspective.StrictSaddle
-import Transformer.Landscape.SaddleAvoidance.FlowLandscape
-import Transformer.Landscape.SaddleAvoidance.LocalInequality
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+
+@[expose] public section
 
 open scoped BigOperators Topology
 open Real Filter MeasureTheory
@@ -44,7 +52,7 @@ namespace Perspective
 variable (n : ℕ)
 
 /-- **Every critical point of `-𝖤_β` is a global minimizer or a strict saddle**,
-for `β > 0`.  A critical point that is not a global maximum of `𝖤_β` has a
+for `β > 0`. A critical point that is not a global maximum of `𝖤_β` has a
 line of positive second derivative (`strict_saddle`), so it is a strict
 saddle of `-𝖤_β` (`isStrictSaddle_of_isStrictSaddleTorusEnergy`). -/
 theorem isMinOn_or_isStrictSaddle_neg_eucTorusEnergy {β : ℝ} (hβ : 0 < β) {z : EucSpace n}
@@ -58,7 +66,7 @@ theorem isMinOn_or_isStrictSaddle_neg_eucTorusEnergy {β : ℝ} (hβ : 0 < β) {
       (strict_saddle n β hβ z.ofLp hcrit hmax))
 
 /-- **A solution of `eq:onangles` is the gradient flow of `-𝖤_β` run at speed
-`n`**: `θ(t) = Φ^{n t}(θ(0))`.  The curve `s ↦ θ(s/n)` solves
+`n`**: `θ(t) = Φ^{n t}(θ(0))`. The curve `s ↦ θ(s/n)` solves
 `ẋ = ∇𝖤_β(x) = -∇(-𝖤_β)(x)`, as `angularUSA_is_gradient_flow` says up to the
 factor `n`, and the gradient of `-𝖤_β` is Lipschitz and bounded
 (`Landscape.SaddleAvoidance.exists_lipschitzWith_gradient_of_periodic`), so this
@@ -137,15 +145,15 @@ theorem exists_isLojasiewiczAt_neg_eucTorusEnergy (β : ℝ) (z : EucSpace n) :
 /-- **Almost every solution of `eq:onangles` synchronizes**, for every
 `β > 0`: for Lebesgue-almost every initial angle vector `θ₀ ∈ ℝⁿ` there is a
 `θ'` with `θ'_i - θ'_j ∈ 2πℤ` to which every solution with `θ(0) = θ₀`
-converges.  A solution exists (`angularUSA_gradientFlow`).
+converges. A solution exists (`angularUSA_gradientFlow`).
 
 Source: arXiv:2312.10794v5, §7, after `o:strictsaddle`: a positive answer to
 that problem "would imply that for all initial conditions except a set of
 measure zero, all `θ_i(t)` converge under the dynamics `eq:onangles` to a
 common limit as `t → +∞`", by the arguments of Appendix A (`l:nosaddleconv`
-and the Łojasiewicz theorem).  The answer is `strict_saddle` (arXiv:2507.22857v1,
+and the Łojasiewicz theorem). The answer is `strict_saddle` (arXiv:2507.22857v1,
 §5), and the Łojasiewicz inequality is
-`exists_isLojasiewiczAt_neg_eucTorusEnergy`.  The common limit on `𝕋` is a
+`exists_isLojasiewiczAt_neg_eucTorusEnergy`. The common limit on `𝕋` is a
 limit `θ'` in `ℝⁿ` whose coordinates agree modulo `2π`. -/
 theorem ae_tendsto_synchronized_of_angularUSA {β : ℝ} (hβ : 0 < β) :
     ∀ᵐ θ₀ : Angles n, ∃ θ' : Angles n, (∀ i j, ∃ k : ℤ, θ' i - θ' j = k * (2 * π)) ∧

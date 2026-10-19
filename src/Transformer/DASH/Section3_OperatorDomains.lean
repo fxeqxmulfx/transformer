@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section3_OperatorNorm
+public import Transformer.DASH.Section3_MatrixConvergence
+
+/-!
 # DASH — solver convergence from the printed operator-norm conditions
 
 arXiv:2602.02016v2, §3.2–3.4. The Euclidean operator-norm conditions
@@ -6,8 +11,7 @@ are converted to the verified spectral domains, so the CN and NDB
 convergence theorems apply directly to the source's mathematical criteria.
 -/
 
-import Transformer.DASH.Section3_OperatorNorm
-import Transformer.DASH.Section3_MatrixConvergence
+@[expose] public section
 
 open scoped Matrix Matrix.Norms.L2Operator
 

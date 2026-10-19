@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_TwoRidgeExtension
+
+/-!
 # Actual complete flow of two original ReLU neurons
 
 ArXiv:2411.04551v3, §1, `eq: vf` and `eq: neural.ode.sphere`,
@@ -15,7 +19,7 @@ are inactive is fixed as well. These properties use the original particle
 equation; no flow or fixed-point premise is assumed.
 -/
 
-import Transformer.Interpolation.Section3_TwoRidgeExtension
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal BigOperators

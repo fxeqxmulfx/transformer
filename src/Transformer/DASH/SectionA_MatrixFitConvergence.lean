@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_FitConvergence
+public import Transformer.DASH.SectionA_Approximation
+
+/-!
 # DASH — convergence from fitted samples to optimized matrix powers
 
 arXiv:2602.02016v2, Appendix A. The actual cosine coefficient fit and
@@ -7,8 +12,7 @@ The original-scale version includes the documented regularization
 and output-scaling corrections.
 -/
 
-import Transformer.DASH.SectionA_FitConvergence
-import Transformer.DASH.SectionA_Approximation
+@[expose] public section
 
 open scoped Matrix
 

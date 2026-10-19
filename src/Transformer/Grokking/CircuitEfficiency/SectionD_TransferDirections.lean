@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionD_PowerDerivative
-import Transformer.Grokking.CircuitEfficiency.SectionD_EfficientAllocation
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionD_PowerDerivative
+public import Transformer.Grokking.CircuitEfficiency.SectionD_EfficientAllocation
 
 /-!
 # Actual loss derivatives along constant-logit reallocations
@@ -19,6 +21,8 @@ limit, with a state-dependent increment. The source's incorrect
 delta-multiplied estimate is not used. These are possible objective
 improvements, not visited gradient or AdamW trajectories.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

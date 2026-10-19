@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.ModulatedLength
+public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
+public import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+public import Transformer.Landscape.Lojasiewicz.ModulatedCritical
+
+/-!
 # The gradient inequality implies convergence of a modulated flow
 
 The desingularizing power potential of Appendix D.1 of arXiv:2510.22026v2
@@ -6,10 +13,7 @@ controls displacement, including the finite-time stationary branch.
 The gradient inequality is always an explicit hypothesis.
 -/
 
-import Transformer.Landscape.Lojasiewicz.ModulatedLength
-import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
-import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
-import Transformer.Landscape.Lojasiewicz.ModulatedCritical
+@[expose] public section
 
 namespace Transformer.Landscape.Lojasiewicz
 

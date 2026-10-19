@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.RussianTrick
+
+/-!
 # The Russian trick, with the cross terms
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -6,12 +10,12 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 `Perspective.russian_trick` produces a family of skew generators with
 `Σ_k B_k² = -(d-1) I`, which is all Appendix A needs: `e:helpcl` is linear in
-`B²`.  Appendix B sums `eq: dr1`, which is *quadratic* in `B` as well, so the
+`B²`. Appendix B sums `eq: dr1`, which is *quadratic* in `B` as well, so the
 family must also compute
 
   `Σ_k ⟨B_k x, y⟩² = ‖x‖² ‖y‖² - ⟨x, y⟩²`,
 
-the squared area of the parallelogram on `x` and `y`.  The cycle of rank-two
+the squared area of the parallelogram on `x` and `y`. The cycle of rank-two
 generators used there does not: in `d = 4` it misses the pairs `(e_0, e_2)`
 and `(e_1, e_3)`, and the left-hand side then depends on the basis.
 
@@ -23,13 +27,13 @@ The family that does is the full set of elementary generators, indexed by
 The diagonal `p = q` contributes nothing, each off-diagonal pair is counted
 twice, `B_{pq}²` is `-c²` times the projection onto `span{e_p, e_q}` — every
 basis vector lying in `2(d-1)` of them — and `⟨B_{pq} x, y⟩` is `c` times the
-`(p,q)` entry of `x ∧ y`, whose squares add up to Lagrange's identity.  The
+`(p,q)` entry of `x ∧ y`, whose squares add up to Lagrange's identity. The
 normalisation `c² = 1/2` is what makes *both* constants come out right, and it
 does not depend on `d`, so — unlike `russian_trick` — this needs no hypothesis
 at all: at `d ≤ 1` both sides of both identities are `0`.
 -/
 
-import Transformer.Perspective.RussianTrick
+@[expose] public section
 
 open scoped BigOperators
 

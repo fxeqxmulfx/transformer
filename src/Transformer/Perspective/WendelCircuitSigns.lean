@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.WendelCircuit
+public import Transformer.Perspective.WendelConvexHull
+public import Transformer.Perspective.WendelSignAverage
+
+/-!
 # Sign patterns of a minimal linear circuit
 
 For `d + 1` points in `d` dimensions, the unique linear relation controls
@@ -7,9 +13,7 @@ which coordinatewise sign choices put the origin in the sample's convex hull.
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962).
 -/
 
-import Transformer.Perspective.WendelCircuit
-import Transformer.Perspective.WendelConvexHull
-import Transformer.Perspective.WendelSignAverage
+@[expose] public section
 
 namespace Transformer.Perspective
 

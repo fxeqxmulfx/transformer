@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.RealAnalyticGerms.Coordinates
+public import Transformer.Landscape.Lojasiewicz.WeierstrassCoordinates
+
+/-!
 # Regularizing coordinates for real analytic germs
 
 The existing real directional preparation supplies regular coordinates for
@@ -6,8 +11,7 @@ nonconstant germs. A nonzero central value gives the degree-zero unit case.
 This joins both cases without an isolated-zero or Hessian hypothesis.
 -/
 
-import Transformer.Landscape.RealAnalyticGerms.Coordinates
-import Transformer.Landscape.Lojasiewicz.WeierstrassCoordinates
+@[expose] public section
 
 open Filter
 open scoped Topology

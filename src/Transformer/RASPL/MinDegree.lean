@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.RASPL.Degree
+
+/-!
 # The minimum-degree interpolator ignores the coordinates its train set fixes
 
 Zhou et al. — arXiv:2310.16028v1, "What Algorithms can Transformers Learn?",
@@ -7,13 +11,13 @@ of Lemma E.1: "if an interpolator depends on bits which are always constant
 on the train set `S`, then its degree-profile could be reduced without
 changing its output on `S`, and thus it cannot be a min-degree-interpolator."
 
-This is the formal side of §4's experiment.  The trained transformer computes
+This is the formal side of §4's experiment. The trained transformer computes
 the boolean AND of *all* its input bits, including the ones the training set
 never varied; the minimum-degree interpolator provably cannot, which is what
 `RASPL.Gotu` draws out of this file.
 -/
 
-import Transformer.RASPL.Degree
+@[expose] public section
 
 namespace Transformer
 namespace RASPL
@@ -24,7 +28,7 @@ variable {n : ℕ}
 def InterpolatesOn (T : Finset (Cube n)) (f g : Cube n → ℝ) : Prop := ∀ x ∈ T, g x = f x
 
 /-- `g` is a minimum-degree interpolator of `f` on `T`: it interpolates, and
-no interpolator has a strictly smaller degree profile.  This is the `argmin`
+no interpolator has a strictly smaller degree profile. This is the `argmin`
 of `lem:mindegree`. -/
 def MinDegInterpolator (T : Finset (Cube n)) (f g : Cube n → ℝ) : Prop :=
   InterpolatesOn T f g ∧ ∀ h : Cube n → ℝ, InterpolatesOn T f h → ¬ DegPLt h g

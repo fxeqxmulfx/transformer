@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainSourceLimits
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainSourceLimits
 
 /-!
 # Actual cold CE coefficient and a nonempty decay regime
@@ -28,6 +30,8 @@ equal competitors. At zero score the CE slope is the competitor
 count divided by total count. The raw product partials vanish,
 so the clip multiplier still includes its explicit numerical strip.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

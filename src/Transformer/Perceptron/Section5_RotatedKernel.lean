@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_CircleRotation
+public import Transformer.Perceptron.Section5_InteractionCurvature
+public import Transformer.Perceptron.Section5_FiniteVariation
+
+/-!
 # Pair-kernel derivatives along arbitrary angular transports
 
 ArXiv:2601.21366v2, §5.2, `eq:Hess-bilinear.std`. The angular
@@ -12,9 +18,7 @@ is proved below. Continuous bounded speeds give global domination,
 which will justify differentiation against an arbitrary measure.
 -/
 
-import Transformer.Perceptron.Section5_CircleRotation
-import Transformer.Perceptron.Section5_InteractionCurvature
-import Transformer.Perceptron.Section5_FiniteVariation
+@[expose] public section
 
 open Real
 

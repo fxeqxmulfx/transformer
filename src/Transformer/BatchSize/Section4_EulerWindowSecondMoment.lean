@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerIncrementMoments
+
+/-!
 # Mean-square bounds on arbitrary Brownian Euler path windows
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The bounded drift and exact adapted vector Ito isometry control even
 partial grid intervals, uniformly in the grid resolution.
 -/
 
-import Transformer.BatchSize.Section4_EulerIncrementMoments
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal BigOperators

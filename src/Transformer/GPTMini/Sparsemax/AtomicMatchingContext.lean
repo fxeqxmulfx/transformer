@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.AtomicMatchingSelection
+module
+
+public import Transformer.GPTMini.Sparsemax.AtomicMatchingSelection
 
 /-!
 # Ordinary answer data can require genuine query-key matching
@@ -16,6 +18,8 @@ feasible mixture must contain an actual head that distinguishes these
 orders. Matching therefore reaches the output criterion without a
 supervised route label or an attention-canceling value inverse.
 -/
+
+@[expose] public section
 
 noncomputable section
 

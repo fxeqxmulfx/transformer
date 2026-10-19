@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_RidgeFlowContinuity
+public import Transformer.Interpolation.Section1_CompactTests
+
+/-!
 # Actual weak solutions transported by the single-neuron flow
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb` and `eq: vf`, and
@@ -15,8 +20,7 @@ This constructs the measure-valued solutions required by the original
 perturbation lemma. Separation of all weak solutions is a further step.
 -/
 
-import Transformer.Interpolation.Section3_RidgeFlowContinuity
-import Transformer.Interpolation.Section1_CompactTests
+@[expose] public section
 
 open Real MeasureTheory
 

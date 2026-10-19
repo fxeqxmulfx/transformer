@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_LogMeanUpperBarrier
+
+/-!
 # A deterministic logarithmic lower barrier for the original mean
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -16,7 +20,7 @@ the original bounded range and relative logistic growth later.
 All drift and noise inputs are explicit deterministic hypotheses here.
 -/
 
-import Transformer.Homogenized.Section7_LogMeanUpperBarrier
+@[expose] public section
 
 open Set MeasureTheory
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Muon.Section2_PolarIdentities
+public import Mathlib.LinearAlgebra.Matrix.Rank
+
+/-!
 # Muon — rank and the matrix-level RMS statement
 
 arXiv:2502.16982, §2.1–2.2 and Appendix A. Exact polar orthogonalization is
@@ -7,8 +12,7 @@ The rank formula connects the singular-coordinate result with the
 paper's full-rank condition on the momentum matrix itself.
 -/
 
-import Transformer.Muon.Section2_PolarIdentities
-import Mathlib.LinearAlgebra.Matrix.Rank
+@[expose] public section
 
 open scoped BigOperators Matrix
 

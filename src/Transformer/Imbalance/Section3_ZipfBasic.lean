@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_Model
+public import Mathlib.NumberTheory.Harmonic.Bounds
+
+/-!
 # The Zipf-law mass argument
 
 arXiv:2402.19449v2, Section 1 and Appendix H's opening paragraph.
@@ -8,8 +13,7 @@ cπ_k≥log(c) also drops harmonic-number and rounding terms; the exact
 lower bound below retains them. The asymptotic consequences are proved in Section3_Zipf.
 -/
 
-import Transformer.Imbalance.Section3_Model
-import Mathlib.NumberTheory.Harmonic.Bounds
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

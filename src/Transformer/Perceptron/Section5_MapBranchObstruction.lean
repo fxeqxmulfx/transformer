@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_MapReLUBranches
+public import Transformer.Perceptron.Section6_AntipodalFields
+public import Transformer.Perceptron.Section6_SignedQuadratic
+
+/-!
 # Complementary unnormalized matrix branches under non-degeneracy
 
 ArXiv:2601.21366v2, §3.1, `rem: ext` (ii), §5.3, and §6,
@@ -15,9 +21,7 @@ Antipodal invariance carries actual support points between the two patterns.
 The original probability, matrix, neurons and stationary field are retained.
 -/
 
-import Transformer.Perceptron.Section5_MapReLUBranches
-import Transformer.Perceptron.Section6_AntipodalFields
-import Transformer.Perceptron.Section6_SignedQuadratic
+@[expose] public section
 
 open Real MeasureTheory Set
 

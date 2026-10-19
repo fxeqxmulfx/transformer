@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AMSGrad.Section4_OfflineAverage
+
+/-!
 # AMSGrad — convergence of the original algorithm's averaged losses
 
 arXiv:1904.03590v4, Theorem 4.1 and Corollary 4.5, specialized to a
@@ -7,7 +11,7 @@ schedules give an actual minimum-loss limit for averaged parameters.
 The strict gamma condition corrects the source's division by `1-gamma`.
 -/
 
-import Transformer.AMSGrad.Section4_OfflineAverage
+@[expose] public section
 
 open scoped Topology
 open Filter

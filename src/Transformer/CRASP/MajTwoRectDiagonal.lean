@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.MajTwoRectBounds
+public import Transformer.CRASP.BooleanFormula
+
+/-!
 # Reading a binary representation on the diagonal
 
 arXiv:2506.16055v3, Appendix E, `thm:majtwo_to_tlc`: if only one variable
@@ -6,8 +11,7 @@ is free, assigning both variables the same position leaves the answer
 unchanged. Boolean normalization then gives a unary temporal formula.
 -/
 
-import Transformer.CRASP.MajTwoRectBounds
-import Transformer.CRASP.BooleanFormula
+@[expose] public section
 
 namespace Transformer.CRASP
 

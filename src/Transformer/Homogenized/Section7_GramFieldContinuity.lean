@@ -1,5 +1,7 @@
-import Transformer.Homogenized.Section7_ExponentialDriftBounds
-import Mathlib.Topology.MetricSpace.Lipschitz
+module
+
+public import Transformer.Homogenized.Section7_ExponentialDriftBounds
+public import Mathlib.Topology.MetricSpace.Lipschitz
 
 /-!
 # Continuity of the original Gaussian overlap fields
@@ -19,6 +21,8 @@ The proofs include singular Gram matrices and arbitrary temperature.
 The final composition lemma transfers this regularity through
 an adapted process whose actual range lies in the unit configurations.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory
 open scoped NNReal

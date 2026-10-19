@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdCeiling
-import Transformer.Grokking.AdamW.PairContraction
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdCeiling
+public import Transformer.Grokking.AdamW.PairContraction
 
 /-!
 # Actual complete denominator floors for cold contraction
@@ -28,6 +30,8 @@ plain CE and uniform decoupled native decay differ from the source's
 assigned coupled norm-cost GD. No optimizer or checkpoint is modified,
 and no thermodynamic system-size scaling is encoded.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

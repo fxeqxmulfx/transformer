@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryCollapse
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryCollapse
 
 /-!
 # Actual retained buffers, denominator and cold feedback under strong decay
@@ -31,6 +33,8 @@ circuit formation or stochastic/numerical GPTMini convergence. Fixed
 physical tables and uniform decoupled native decay differ from appendix
 C's coupled assigned norm/GD; no floating-point transfer is asserted.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

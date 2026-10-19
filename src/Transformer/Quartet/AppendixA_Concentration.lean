@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Quartet.SeedSums
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Topology.UniformSpace.Real
+
+/-!
 # What the concentration plot measures
 
 arXiv:2601.22813v2, "Quartet II: Accurate LLM Pre-Training in NVFP4 by
@@ -13,13 +19,11 @@ Theorem" — while a biased estimator plateaus, which is how Figure 5 separates
 
 Both halves of that reading are stated below for one coordinate of the
 gradient: a draw is a uniform seed out of `N`, `g` is the quantized value it
-produces, and `G` is the exact one.  The slope and the plateau are the two
+produces, and `G` is the exact one. The slope and the plateau are the two
 statements; the figure is the evidence the paper offers for them.
 -/
 
-import Transformer.Quartet.SeedSums
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Topology.UniformSpace.Real
+@[expose] public section
 
 namespace Transformer
 namespace Quartet
@@ -73,7 +77,7 @@ example : 0 < 1 ∧ 0 < 1 ∧ seedMean (fun _ : Fin 1 => (2 : ℝ)) = 2 := by
 
 /-- **The bias-variance decomposition of the plot** (Appendix A): whatever the
 estimator, the expected squared error of the `B`-fold average is the variance
-of one draw over `B` plus the square of the bias.  The two readings the paper
+of one draw over `B` plus the square of the bias. The two readings the paper
 gives of Figure 5 are the two halves of this identity. -/
 theorem meanSqErr_eq (hN : 0 < N) (hB : 0 < B) (g : Fin N → ℝ) (G : ℝ) :
     meanSqErr B g G = seedVar g / B + (seedMean g - G) ^ 2 := by
@@ -110,7 +114,7 @@ example : 0 < 1 ∧ 0 < 1 := ⟨Nat.one_pos, Nat.one_pos⟩
 
 /-- **A biased estimator plateaus** at the square of its bias, however many
 draws are averaged (Appendix A, "Plateauing methods (NVIDIA+4/6) introduce
-bias").  Together with the statement above, this is what makes the plot a
+bias"). Together with the statement above, this is what makes the plot a
 test: the slope, not the height, is what unbiasedness shows up as. -/
 theorem tendsto_meanSqErr {g : Fin N → ℝ} {G : ℝ} (hN : 0 < N) :
     Filter.Tendsto (fun B => meanSqErr B g G) Filter.atTop

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.CircleGapSum
+
+/-!
 # `lemma:taumax`
 
 Polyanskiy, Rigollet, Yao — arXiv:2507.22857v1, *Synchronization of mean-field
@@ -10,7 +14,7 @@ synchronized satisfies
   `∫_{-π}^{π} |f'''|₊ ≥ 4 (1/τ + 1/τ_max) f'(0)`
 
 (`taumax_sharp`), and so the source's `min(8/τ, 4/τ + 4/τ_max) f'(0)` bound
-(`taumax`).  Each gap gives `4 (N_k + N_{k+1}) f'(0)/Δ_k ≤ ∫_{θ_k}^{θ_{k+1}} |φ''|₊`
+(`taumax`). Each gap gives `4 (N_k + N_{k+1}) f'(0)/Δ_k ≤ ∫_{θ_k}^{θ_{k+1}} |φ''|₊`
 (`circleMult_add_mul_le_integral`); the gaps add up to at most
 `n ∫_{-π}^{π} |f'''|₊` (`sum_integral_circleSite_le`), and the counting step
 `le_sum_div_of_le` bounds `Σ_k (N_k + N_{k+1})/Δ_k` below by `n/τ + n/τ_max`,
@@ -18,7 +22,7 @@ since every gap but the largest is at most `τ` (`circleGap_le_of_lt_circleGap`)
 and at most `τ_max`.
 -/
 
-import Transformer.Perspective.CircleGapSum
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -30,17 +34,17 @@ variable {n : ℕ}
 
 /-- **Lemma (lemma:taumax), sharp form.**  Let `f` be `2π`-periodic with
 `f' = f₁`, `f'' = f₂`, `f''' = f₃` continuous, and `f' < 0` off `[-τ, τ]` on
-`𝕋`, that is on `(τ, 2π - τ)`.  If `x` is stationary (C1), cut-stable (C2) for
+`𝕋`, that is on `(τ, 2π - τ)`. If `x` is stationary (C1), cut-stable (C2) for
 every `S`, and not synchronized, then
 
   `4 (1/τ + 1/τ_max(x)) f'(0) ≤ ∫_{-π}^{π} |f'''|₊`.
 
-Source: arXiv:2507.22857v1, §3, proof of `lemma:taumax`.  For `f'(0) ≥ 0`
+Source: arXiv:2507.22857v1, §3, proof of `lemma:taumax`. For `f'(0) ≥ 0`
 the bound is at least the source's `min(8/τ, 4/τ + 4/τ_max) f'(0)`; the
 source's proof gives it with the counting step of `le_sum_div_of_le`, and
-`cor:main` needs it when `M ≤ τ`.  Changed as in
+`cor:main` needs it when `M ≤ τ`. Changed as in
 `lemma:twoconsecutive_general`: (C2) for every `S`, and `τ ≤ π` is not
-needed.  No sign of `f'(0)` is needed. -/
+needed. No sign of `f'(0)` is needed. -/
 theorem taumax_sharp {f f₁ f₂ f₃ : ℝ → ℝ} (hf : Function.Periodic f (2 * π))
     (h₁ : ∀ y, HasDerivAt f (f₁ y) y) (h₂ : ∀ y, HasDerivAt f₁ (f₂ y) y)
     (h₃ : ∀ y, HasDerivAt f₂ (f₃ y) y) (hc₃ : Continuous f₃) {τ : ℝ} (hτ : 0 < τ)
@@ -97,7 +101,7 @@ theorem taumax_sharp {f f₁ f₂ f₃ : ℝ → ℝ} (hf : Function.Periodic f 
   `min(8/τ, 4/τ + 4/τ_max(x)) f'(0) ≤ ∫_{-π}^{π} |f'''|₊`.
 
 Source: arXiv:2507.22857v1, §3, `lemma:taumax`, where `⟨1, |f'''|₊⟩_{L_2}` is
-`∫_{-π}^{π} |f'''|₊`.  Changed as in `lemma:twoconsecutive_general`: (C2) for
+`∫_{-π}^{π} |f'''|₊`. Changed as in `lemma:twoconsecutive_general`: (C2) for
 every `S`, and `τ ≤ π` is not needed. -/
 theorem taumax {f f₁ f₂ f₃ : ℝ → ℝ} (hf : Function.Periodic f (2 * π))
     (h₁ : ∀ y, HasDerivAt f (f₁ y) y) (h₂ : ∀ y, HasDerivAt f₁ (f₂ y) y)

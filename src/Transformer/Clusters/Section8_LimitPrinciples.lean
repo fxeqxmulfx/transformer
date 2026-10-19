@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Topology.Order.IntermediateValue
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+public import Mathlib.Topology.Compactness.Compact
+
+/-!
 # Two limit principles for the identity-value proof
 
 ArXiv:2305.05465v6, §8.1, Steps 2--4 of the proof of `t:Idcase11`.
@@ -18,11 +26,7 @@ Both principles are proved independently of a particular ODE. Their
 inputs are verified for the actual dynamics in subsequent modules.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Topology.Order.IntermediateValue
-import Mathlib.Topology.MetricSpace.Pseudo.Defs
-import Mathlib.Topology.Compactness.Compact
+@[expose] public section
 
 open Real Filter Topology
 

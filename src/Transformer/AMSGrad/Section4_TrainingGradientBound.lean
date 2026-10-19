@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AMSGrad.Section4_TrainingDescent
+public import Transformer.Optimization.Descent
+
+/-!
 # AMSGrad — derive gradient bounds from the objective
 
 Training extension of arXiv:1904.03590v4, Algorithm 1 and §4.
@@ -7,8 +12,7 @@ objective on all of Euclidean space. Smoothness and the lower loss
 bound instead bound gradients on the actual Lyapunov-controlled run.
 -/
 
-import Transformer.AMSGrad.Section4_TrainingDescent
-import Transformer.Optimization.Descent
+@[expose] public section
 
 open scoped BigOperators
 

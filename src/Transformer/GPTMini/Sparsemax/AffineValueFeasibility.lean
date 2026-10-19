@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.AffineValueDecoder
+module
+
+public import Transformer.GPTMini.Sparsemax.AffineValueDecoder
 
 /-!
 # Size-independent scalar constraints for generated sparse attention
@@ -15,6 +17,8 @@ These are sufficient scalar constraints, not the entire old edge domain.
 The conservative normalization keeps local weights bounded as the number
 of prototypes grows; supports still change between zero and positive rho.
 -/
+
+@[expose] public section
 
 noncomputable section
 

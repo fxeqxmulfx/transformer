@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadNegativePart
+public import Transformer.Clusters.Section12_MultiHeadSymmetry
+
+/-!
 # A bounded original token cannot stay uniformly positive under vanishing negative head terms
 
 ArXiv:2305.05465v6, §7, proof of `l:onlyone`, from
@@ -15,8 +20,7 @@ The joint witness has three actual original tokens, the middle one
 identically zero and the others escaping in opposite directions.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadNegativePart
-import Transformer.Clusters.Section12_MultiHeadSymmetry
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

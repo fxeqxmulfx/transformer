@@ -1,4 +1,36 @@
-/-
+module
+
+public import Transformer.Magma.Section2_MaskLaw
+public import Transformer.Magma.Section2_Moments
+public import Transformer.Magma.Section2_Expectations
+public import Transformer.Magma.Section2_BlockExpansion
+public import Transformer.Magma.Section2_Taylor
+public import Transformer.Magma.Section2_Granularity
+public import Transformer.Magma.Section3_Algorithm
+public import Transformer.Magma.Section3_DampingBounds
+public import Transformer.Magma.Section3_MomentumVariance
+public import Transformer.Magma.Section3_GaussianAlignment
+public import Transformer.Magma.Section3_UnbiasedAlternative
+public import Transformer.Magma.Section4_C4Results
+public import Transformer.Magma.Section4_Ablations
+public import Transformer.Magma.Section4_GammaDensity
+public import Transformer.Magma.Section4_GammaRefutation
+public import Transformer.Magma.Section5_SmoothnessRefutation
+public import Transformer.Magma.Section5_AlignmentRefutation
+public import Transformer.Magma.Section5_MainRefutation
+public import Transformer.Magma.Section5_AlignmentBound
+public import Transformer.Magma.Section5_MaskDescent
+public import Transformer.Magma.Section5_BlockOperators
+public import Transformer.Magma.Section5_EffectiveCurvature
+public import Transformer.Magma.Section5_EfficiencyCoefficients
+public import Transformer.Magma.Section5_StochasticDescent
+public import Transformer.Magma.Section5_Transition
+public import Transformer.Magma.Section5_Convergence
+public import Transformer.Magma.Section5_ConvergenceWitness
+public import Transformer.Magma.Section5_MagmaTransition
+public import Transformer.Magma.Section5_MagmaConvergence
+
+/-!
 # Magma: masking updates in adaptive optimizers
 
 Formalization of arXiv:2602.15322v1, On Surprising Effectiveness of Masking
@@ -29,32 +61,4 @@ The open stable-unbiased-masking direction is addressed by a precise
 quadratic contraction result; neural-network stability remains empirical.
 -/
 
-import Transformer.Magma.Section2_MaskLaw
-import Transformer.Magma.Section2_Moments
-import Transformer.Magma.Section2_Expectations
-import Transformer.Magma.Section2_BlockExpansion
-import Transformer.Magma.Section2_Taylor
-import Transformer.Magma.Section2_Granularity
-import Transformer.Magma.Section3_Algorithm
-import Transformer.Magma.Section3_DampingBounds
-import Transformer.Magma.Section3_MomentumVariance
-import Transformer.Magma.Section3_GaussianAlignment
-import Transformer.Magma.Section3_UnbiasedAlternative
-import Transformer.Magma.Section4_C4Results
-import Transformer.Magma.Section4_Ablations
-import Transformer.Magma.Section4_GammaDensity
-import Transformer.Magma.Section4_GammaRefutation
-import Transformer.Magma.Section5_SmoothnessRefutation
-import Transformer.Magma.Section5_AlignmentRefutation
-import Transformer.Magma.Section5_MainRefutation
-import Transformer.Magma.Section5_AlignmentBound
-import Transformer.Magma.Section5_MaskDescent
-import Transformer.Magma.Section5_BlockOperators
-import Transformer.Magma.Section5_EffectiveCurvature
-import Transformer.Magma.Section5_EfficiencyCoefficients
-import Transformer.Magma.Section5_StochasticDescent
-import Transformer.Magma.Section5_Transition
-import Transformer.Magma.Section5_Convergence
-import Transformer.Magma.Section5_ConvergenceWitness
-import Transformer.Magma.Section5_MagmaTransition
-import Transformer.Magma.Section5_MagmaConvergence
+@[expose] public section

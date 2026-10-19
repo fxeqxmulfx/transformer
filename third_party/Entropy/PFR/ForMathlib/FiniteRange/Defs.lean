@@ -2,6 +2,12 @@ module
 
 public import Mathlib.MeasureTheory.Measure.Map
 
+/-!
+# Finite-range random variables
+
+Finite images, their finite-set representations, and closure under arithmetic operations.
+-/
+
 @[expose] public section
 
 /-- The property of having a finite range. -/

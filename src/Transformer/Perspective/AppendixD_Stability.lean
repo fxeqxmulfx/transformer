@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.SALipschitz
+public import Mathlib.Analysis.ODE.Gronwall
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Appendix D — the Grönwall stability estimate `eq: stability.4ortho`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -9,7 +15,7 @@ The constant `c(β) = e^{10 max(1, β)}` of Appendix D, the stability estimate
   `‖x_i(t) - y_i(t)‖ ≤ c(β)^{n t} ‖x_i(0) - y_i(0)‖`
 
 for two solutions of `eq: SA`, and its specialization `e:shortdist` to the
-orthogonal approximation.  The estimate is Grönwall's lemma applied to the
+orthogonal approximation. The estimate is Grönwall's lemma applied to the
 vector field `Transformer.Perspective.saField`, whose Lipschitz constant
 `10 n max(1, β)` is `Perspective.lipschitzOnWith_saField`.
 
@@ -18,9 +24,7 @@ The rest of the first half of Appendix D — `eq: almost.ortho.vec`,
 `Perspective.AppendixD_PhaseTransition`.
 -/
 
-import Transformer.Perspective.SALipschitz
-import Mathlib.Analysis.ODE.Gronwall
-import Mathlib.Analysis.Calculus.Deriv.Prod
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real
@@ -61,7 +65,7 @@ constant `10 n max{1, β}` on tuples of unit vectors, which is exactly
 `log c(β)^n`, so the Grönwall factor `e^{K t}` *is* `c(β)^{n t}`.
 
 **What the source says and what is changed here.**  The sign condition
-`0 ≤ β` is added, as it is in `lipschitzOnWith_saField`.  The survey's `β` is
+`0 ≤ β` is added, as it is in `lipschitzOnWith_saField`. The survey's `β` is
 an inverse temperature and is positive throughout; the constant
 `c(β) = e^{10 max{1, β}}` does not see `β < 0` at all, while the drift's actual
 Lipschitz constant grows like `8 |β|`, so the statement is false for `β`
@@ -138,7 +142,7 @@ example :
   `‖x_i(t) - y_i(t)‖ ≤ c(β)^{n t} √(log d / d)`,
 
 where `y` is the solution started from the orthogonal approximation supplied by
-`eq: almost.ortho.vec`.  It is `eq: stability.4ortho` at `M = √(log d / d)`.
+`eq: almost.ortho.vec`. It is `eq: stability.4ortho` at `M = √(log d / d)`.
 
 It is `stability_orthogonal` at `M = √(log d / d)`, and carries that theorem's
 added hypothesis `0 ≤ β`.

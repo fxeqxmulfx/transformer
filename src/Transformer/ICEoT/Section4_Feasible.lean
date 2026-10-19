@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section4_Objective
+
+/-!
 # IC-EoT: convexity of the MPC feasible set
 
 arXiv:2603.22095v2, §4.1, Corollary 2, Eqs. (41), (43).
@@ -6,7 +10,7 @@ The temperature upper bound is softened by an affine slack. Both control
 bounds and both slack bounds are retained, including the finite slack cap.
 -/
 
-import Transformer.ICEoT.Section4_Objective
+@[expose] public section
 
 noncomputable section
 

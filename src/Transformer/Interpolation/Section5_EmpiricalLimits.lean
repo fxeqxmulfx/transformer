@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section5_PureAttention
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Metrizable
+public import Mathlib.Analysis.Real.Sqrt
+
+/-!
 # From empirical weak limits to the measurable cluster map
 
 ArXiv:2411.04551v3, §5, `prop:generic-discrete`;
@@ -16,9 +22,7 @@ so the limit is almost-everywhere measurable. Measurability of the
 cluster map is derived, rather than added to the source's assumptions.
 -/
 
-import Transformer.Interpolation.Section5_PureAttention
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Metrizable
-import Mathlib.Analysis.Real.Sqrt
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory Filter Topology

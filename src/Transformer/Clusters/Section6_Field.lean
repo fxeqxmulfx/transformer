@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.Clusters.Section3_Rescaled
+public import Transformer.Landscape.GlobalFlow.Existence
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.Calculus.ContDiff.RCLike
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # The emergence of clusters in self-attention dynamics — the vector field of
   `eq:trans_dyn`
 
@@ -6,17 +15,13 @@
 the right-hand side `F(x)_i = Σ_j P_ij(x) V x_j` of `eq:trans_dyn`, seen as a
 vector field on `(ℝ^d)^n`: it is smooth, and it grows at most linearly,
 `‖F(x)‖ ≤ ‖V‖ ‖x‖`, because each `F(x)_i` is `V` applied to a convex
-combination of the tokens.  This file proves both, and that a solution of
+combination of the tokens. This file proves both, and that a solution of
 `eq:trans_dyn` is a solution of the ODE `x' = F(x)` on `(ℝ^d)^n` and back.
 
 Source: arXiv:2305.05465v6, §6, `p:wellposedparticles`.
 -/
 
-import Transformer.Clusters.Section3_Rescaled
-import Transformer.Landscape.GlobalFlow.Existence
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Calculus.ContDiff.RCLike
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Set
@@ -41,8 +46,8 @@ theorem contDiff_attentionMatrix (Q K : ParamMatrix d) (i j : Idx n) :
     ContDiff ℝ 1 fun X : Idx n → EucSpace d => attentionMatrix Q K X i j := by
   have hs : ∀ l, ContDiff ℝ 1 fun X : Idx n → EucSpace d =>
       Real.exp (inner (𝕜 := ℝ) (Q (X i)) (K (X l))) := fun l =>
-    (ContDiff.inner ℝ (Q.contDiff.comp (contDiff_apply ℝ (EucSpace d) i))
-      (K.contDiff.comp (contDiff_apply ℝ (EucSpace d) l))).exp
+    (ContDiff.inner ℝ (Q.contDiff.comp (contDiff_apply ℝ (fun _ : Idx n => EucSpace d) i))
+      (K.contDiff.comp (contDiff_apply ℝ (fun _ : Idx n => EucSpace d) l))).exp
   unfold attentionMatrix Perspective.softmaxWeight
   exact (hs j).div (ContDiff.sum fun l _ => hs l) fun X =>
     (Finset.sum_pos (fun l _ => Real.exp_pos _) ⟨i, Finset.mem_univ _⟩).ne'
@@ -51,7 +56,8 @@ theorem contDiff_attentionMatrix (Q K : ParamMatrix d) (i j : Idx n) :
 theorem contDiff_transformerField (Q K V : ParamMatrix d) :
     ContDiff ℝ 1 (transformerField (n := n) Q K V) :=
   contDiff_pi.2 fun i => ContDiff.sum fun j _ =>
-    (contDiff_attentionMatrix Q K i j).smul (V.contDiff.comp (contDiff_apply ℝ (EucSpace d) j))
+    (contDiff_attentionMatrix Q K i j).smul
+      (V.contDiff.comp (contDiff_apply ℝ (fun _ : Idx n => EucSpace d) j))
 
 /-- **The field of `eq:trans_dyn` grows linearly**: `‖F(x)‖ ≤ ‖V‖ ‖x‖`, each
 `F(x)_i` being `V` applied to a convex combination of the tokens. -/

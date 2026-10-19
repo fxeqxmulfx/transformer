@@ -1,9 +1,15 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Descent
+public import Transformer.Landscape.SaddleAvoidance.GradientDescent
+public import Mathlib.Topology.MetricSpace.Thickening
+
+/-!
 # Saddle avoidance — gradient descent from a compact sublevel set
 
 `measure_tendsto_strictSaddle_eq_zero` asks for a bound `‖∇²f‖ ≤ L` on all of
 `E`, which a function growing faster than quadratically, such as the square
-loss `‖W₂W₁ - Y‖²` of a two-layer linear network, does not have.  A
+loss `‖W₂W₁ - Y‖²` of a two-layer linear network, does not have. A
 forward-invariant set replaces it.
 
 * If gradient descent maps a set `K` into itself and `‖∇²f‖ ≤ L` on `K`, with
@@ -18,7 +24,7 @@ forward-invariant set replaces it.
   (`mapsTo_gradientStep_sublevel`): a step moves a point by at most `δ`, and
   the descent lemma on the ball of radius `δ` about it
   (`le_add_inner_add_mul_norm_sq_of_convex`) shows that the step does not raise
-  `f`.  Hence the avoidance theorem on `{f ≤ c}`
+  `f`. Hence the avoidance theorem on `{f ≤ c}`
   (`measure_sublevel_tendsto_strictSaddle_eq_zero`).
 * When `{f ≤ c}` is compact these bounds exist, so for every step size below
   some `η₀ > 0` gradient descent maps `{f ≤ c}` into itself and the starts in
@@ -30,9 +36,7 @@ The gradient-descent corollary in §5.1 of arXiv:1710.07406 assumes a globally
 size `α < 1/L`; here the bounds are needed only near a sublevel set.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Descent
-import Transformer.Landscape.SaddleAvoidance.GradientDescent
-import Mathlib.Topology.MetricSpace.Thickening
+@[expose] public section
 
 open Set Metric Filter MeasureTheory InnerProductSpace
 open scoped Topology
@@ -87,7 +91,7 @@ variable [MeasurableSpace E] [BorelSpace E]
 /-- **Gradient descent almost never converges to a strict saddle from a
 forward-invariant set.**  If `f` is `C²`, gradient descent maps `K` into
 itself, `‖∇²f‖ ≤ L` on `K`, `0 < η` and `η L < 1`, the starts in `K` from
-which gradient descent converges to a strict saddle form a null set.  No bound
+which gradient descent converges to a strict saddle form a null set. No bound
 on `∇²f` off `K` is needed. -/
 theorem measure_inter_tendsto_strictSaddle_eq_zero (μ : Measure E) [μ.IsAddHaarMeasure]
     {f : E → ℝ} (hf : ContDiff ℝ 2 f) {K : Set E} {L η : ℝ}
@@ -102,7 +106,7 @@ theorem measure_inter_tendsto_strictSaddle_eq_zero (μ : Measure E) [μ.IsAddHaa
   exact ⟨hxK, z, hz.isSymmetricUnstable hf hη, hlim⟩
 
 /-- **Gradient descent from a sublevel set almost never converges to a strict
-saddle**, with bounds near the sublevel set only.  If `‖∇f‖ ≤ M` on
+saddle**, with bounds near the sublevel set only. If `‖∇f‖ ≤ M` on
 `{f ≤ c}`, `‖∇²f‖ ≤ L` on its closed `δ`-thickening, `0 < η`, `η M ≤ δ` and
 `η L < 1`, the starts in `{f ≤ c}` from which gradient descent converges to a
 strict saddle form a null set. -/
@@ -120,7 +124,7 @@ theorem measure_sublevel_tendsto_strictSaddle_eq_zero (μ : Measure E) [μ.IsAdd
 /-- **A compact sublevel set replaces the global Lipschitz constant.**  If `f`
 is `C²` and `{f ≤ c}` is compact, there is `η₀ > 0` such that for every step
 size `0 < η < η₀` gradient descent maps `{f ≤ c}` into itself and the starts
-in `{f ≤ c}` from which it converges to a strict saddle form a null set.  A
+in `{f ≤ c}` from which it converges to a strict saddle form a null set. A
 bound `M` on `‖∇f‖` over `{f ≤ c}` and a bound `L` on `‖∇²f‖` over its closed
 `1`-thickening, compact as well, give `η₀ = 1/(|M| + |L| + 1)`. -/
 theorem exists_pos_measure_sublevel_tendsto_strictSaddle_eq_zero (μ : Measure E)
@@ -169,7 +173,7 @@ example : let f := fun x : ℝ => (1 / 2 : ℝ) * ‖x‖ ^ 2
 
 /-- The hypotheses of `exists_pos_measure_sublevel_tendsto_strictSaddle_eq_zero`
 hold for the double well `f(x) = x⁴/4 - x²/2` on the line and `c = 0`:
-`{f ≤ 0} = [-√2, √2]` is compact.  The Hessian `3x² - 1` of `f` is unbounded,
+`{f ≤ 0} = [-√2, √2]` is compact. The Hessian `3x² - 1` of `f` is unbounded,
 so `measure_tendsto_strictSaddle_eq_zero` does not apply, and `0` is a strict
 saddle of `f`, with Hessian `-1`. -/
 example : let f := fun x : ℝ => x ^ 4 / 4 - x ^ 2 / 2

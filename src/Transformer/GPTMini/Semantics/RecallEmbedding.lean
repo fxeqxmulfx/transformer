@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallSlots
+module
+
+public import Transformer.GPTMini.Semantics.RecallSlots
 
 /-!
 # Simultaneous raw key, value and type embeddings for recall
@@ -16,6 +18,8 @@ paired record, table boundary or desired answer. Copying neighboring
 keys and gating the table are subsequent actual block computations.
 These are given ordinary baseline weights, not a convexity assertion.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

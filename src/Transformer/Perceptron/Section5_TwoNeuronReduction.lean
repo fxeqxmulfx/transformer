@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_MapDegenerateBranches
+
+/-!
 # Primitive and rank-one reductions for two original ReLU neurons
 
 ArXiv:2601.21366v2, §2, `eq:primitive.field`, §5.2, `thm: circle`,
@@ -15,7 +19,7 @@ are used to analyze the zero scalar alternative of the continued
 matrix branches, without imposing non-degeneracy on the source claim.
 -/
 
-import Transformer.Perceptron.Section5_MapDegenerateBranches
+@[expose] public section
 
 open Real Set
 open scoped BigOperators

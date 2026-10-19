@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.GPTMini.Bridge.SphereResidence
+public import Transformer.GPTMini.Bridge.XSAEquivalence
+public import Transformer.GPTMini.Bridge.CausalConnection
+public import Transformer.GPTMini.Bridge.RoPEAsTimeVarying
+public import Transformer.GPTMini.Bridge.RoPENoClustering
+public import Transformer.GPTMini.Bridge.ALMLookup
+
+/-!
 # Bridges from `GPTMini` to the formalized theory
 
 This module collects the structural lemmas linking the `gpt-mini`
@@ -31,9 +40,4 @@ not an instance of it at any temperature; but on a common sphere the two rank
 the keys identically, so only the lattice gap, a constant, is lost.
 -/
 
-import Transformer.GPTMini.Bridge.SphereResidence
-import Transformer.GPTMini.Bridge.XSAEquivalence
-import Transformer.GPTMini.Bridge.CausalConnection
-import Transformer.GPTMini.Bridge.RoPEAsTimeVarying
-import Transformer.GPTMini.Bridge.RoPENoClustering
-import Transformer.GPTMini.Bridge.ALMLookup
+@[expose] public section

@@ -1,4 +1,6 @@
-import Transformer.Modes.Section5_StationaryPhase
+module
+
+public import Transformer.Modes.Section5_StationaryPhase
 
 /-!
 # The second derivative test for oscillatory integrals
@@ -24,6 +26,8 @@ source satisfies all these regularity hypotheses.
 
 Source: arXiv:2412.09080v3, §5.5, proof of `eq:uniform-decay`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 open scoped Interval

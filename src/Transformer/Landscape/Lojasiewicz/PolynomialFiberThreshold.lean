@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.PolynomialFiberArithmetic
+public import Transformer.Landscape.Sturm.Thresholds
+
+/-!
 # Common objective thresholds on prepared scalar fibers
 
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.PolynomialFiberArithmetic
-import Transformer.Landscape.Sturm.Thresholds
+@[expose] public section
 
 noncomputable section
 open scoped BigOperators

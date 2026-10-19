@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.Blocks
+public import Transformer.CRASP.FrameShrink
+
+/-!
 # The lower bound of the two-sided depth hierarchy
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -6,25 +11,24 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 `lem:reduction`.
 
 The paper derives that `L_{2k+3}` needs depth `k + 2` in `TL[◁#,▷#]` from
-`lem:cropping` and `lem:reduction`, both false as stated.  The argument here
+`lem:cropping` and `lem:reduction`, both false as stated. The argument here
 keeps the cropping, with the positions around the interval fixed to a frame,
 and adds one block on each side per level of depth in place of the reduction.
 
 Formulas of `TL[◁#,▷#]_d` are all constant on the middles with `V` letters `a`
 and `V` letters `b` of a frame `(u, v)` with `u` and `v` words of `L_{d+1}`
-(`exists_constOnMiddle_altPlus`).  By induction, the formulas under their
+(`exists_constOnMiddle_altPlus`). By induction, the formulas under their
 counts are constant on the middles of a larger frame; shrinking gives a box on
 which the formulas themselves are constant (`exists_constOnBox_list`); and
 putting its corner `μ₁` after `u` and the rest `μ₂` of the Parikh vector before
 `v` lengthens a block of each and adds one, and turns the box into the middles
-of the new frame (`ConstOnBox.constOnMiddle`).  A formula of depth `d + 1`
+of the new frame (`ConstOnBox.constOnMiddle`). A formula of depth `d + 1`
 then gives the same value at the last position of `u·s s̄ s̄ s·v`, a word of
 `L_{2d+3}`, and of `u·s̄ s s s̄·v`, a word of `L_{2d+5}`
 (`exists_models_iff_altPlusDouble`).
 -/
 
-import Transformer.CRASP.Blocks
-import Transformer.CRASP.FrameShrink
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

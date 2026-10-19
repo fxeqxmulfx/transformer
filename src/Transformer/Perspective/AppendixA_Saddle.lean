@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_Convergence
+public import Transformer.Perspective.AppendixA_Rotation
+public import Transformer.Perspective.AppendixA_SaddleNull
+
+/-!
 # Appendix A — Proof of Theorem (p:beta0), part 2
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -26,9 +32,7 @@ from `no_saddle_convergence` and the convergence of every trajectory
 (`exists_tendsto_isCriticalE0`, in `Perspective.AppendixA_Convergence`) as well.
 -/
 
-import Transformer.Perspective.AppendixA_Convergence
-import Transformer.Perspective.AppendixA_Rotation
-import Transformer.Perspective.AppendixA_SaddleNull
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -43,26 +47,26 @@ a strict saddle.*
 
 Strictness is spelled out as: there is a rotation direction `B` and a subset
 `𝒮` whose perturbation has *positive* second derivative of the energy at
-`t = 0`.  Since `𝖤_0` is being maximized along `e:gradfl`, such a direction
+`t = 0`. Since `𝖤_0` is being maximized along `e:gradfl`, such a direction
 means the critical point is not a local maximum — and hence, by
-`no_saddle_convergence`, is reached from a null set of initial data.  In
+`no_saddle_convergence`, is reached from a null set of initial data. In
 particular every local maximum of `𝖤_0` is a consensus configuration, hence a
 global maximum.
 
-The proof is the paper's, in three moves.  `taylor_eq` produces a block `𝒮`
+The proof is the paper's, in three moves. `taylor_eq` produces a block `𝒮`
 whose cross-energy `T = Σ_{i ∈ 𝒮} Σ_{j ∈ 𝒮^c} ⟨x_i, x_j⟩` is negative.
 `hessian_at_critical` says the rotation of that block by `e^{tB}` has second
 derivative `(2/n) Σ_{i ∈ 𝒮} Σ_{j ∈ 𝒮^c} ⟨B² x_i, x_j⟩`, and
-`exists_perturbationBy` says the rotation exists.  Summing that over the
+`exists_perturbationBy` says the rotation exists. Summing that over the
 `russian_trick` family `B_1, …, B_d`, where `Σ_k B_k² = -(d-1) I`, gives
 `-(d-1) T > 0`, so at least one direction `B_k` has a positive second
 derivative — which is the assertion.
 
 **What the source says and what is changed here.**  The survey states the
-lemma with no restriction on `d`.  It is false at `d = 1`: the only skew
+lemma with no restriction on `d`. It is false at `d = 1`: the only skew
 endomorphism of `ℝ` is `0`, so `B² = 0` and the second derivative of every
 admissible perturbation is `0`, never positive — while non-trivial critical
-points do exist there (the antipodal pair).  The hypothesis `2 ≤ d` is added;
+points do exist there (the antipodal pair). The hypothesis `2 ≤ d` is added;
 it is the same one `russian_trick` needs, and Appendix A works in `d ≥ 2`
 throughout, `p:beta0` itself assuming `d, n ≥ 2`.
 
@@ -129,18 +133,18 @@ example : 2 ≤ 2 ∧ IsCriticalE0 2 2 (antipodalPair 2 (basePoint 1)) ∧
 `d ≥ 2` the set of initial sequences whose `β = 0` trajectory does *not*
 converge to a single point is null for the uniform law on `(𝕊^{d-1})^n`.
 
-The proof is Appendix A's.  The flow of `e:gradfl` from `X₀` converges to a
+The proof is Appendix A's. The flow of `e:gradfl` from `X₀` converges to a
 critical point `Z` of `𝖤_0` (`exists_tendsto_isCriticalE0`, from the finite
 length of the trajectories, in place of Łojasiewicz's theorem), and every
 solution of `e:Snonres0` from `X₀` is that flow at half speed, so it tends to
-`Z` as well (`tendsto_of_beta0Dynamics`).  If the points of `Z` coincide, their
-common value is `x⋆`.  Otherwise `X₀` lies in the null set of
+`Z` as well (`tendsto_of_beta0Dynamics`). If the points of `Z` coincide, their
+common value is `x⋆`. Otherwise `X₀` lies in the null set of
 `no_saddle_convergence`, the non-trivial critical points being the strict
 saddles (`yury_lemma`).
 
 **What the source says and what is changed here.**  The source assumes
-`d, n ≥ 2`.  The hypothesis `n ≥ 2` is dropped: for `n ≤ 1` no critical point
-is non-trivial, and the argument goes through unchanged.  `d ≥ 2` stays, as in
+`d, n ≥ 2`. The hypothesis `n ≥ 2` is dropped: for `n ≤ 1` no critical point
+is non-trivial, and the argument goes through unchanged. `d ≥ 2` stays, as in
 `no_saddle_convergence`.
 
 Source: arXiv:2312.10794v5, §4, `p:beta0`; Appendix A for the proof. -/
@@ -180,7 +184,7 @@ and all `i`.
 
 The almost-everywhere quantifier is necessary: the antipodal pair is a
 stationary point of `e:Snonres0` that never reaches consensus
-(`antipodalPair_not_mem_consensusSet0`).  The theorem is
+(`antipodalPair_not_mem_consensusSet0`). The theorem is
 `almost_sure_consensus_beta0`, read as an almost-everywhere statement.
 
 **What the source says and what is changed here.**  The source assumes

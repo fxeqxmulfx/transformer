@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.PositionalTransformers
+public import Transformer.CRASP.FixedSign
+
+/-!
 # Plain transformers inside zero-parameter encoding families
 
 arXiv:2506.16055v3, Appendix F, the positive halves of the three
@@ -6,8 +11,7 @@ transformer depth hierarchies. Zero-angle RoPE and zero-slope ALiBi leave
 the plain embedding and logits unchanged.
 -/
 
-import Transformer.CRASP.PositionalTransformers
-import Transformer.CRASP.FixedSign
+@[expose] public section
 
 namespace Transformer.CRASP
 

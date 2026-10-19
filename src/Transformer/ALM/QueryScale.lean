@@ -1,31 +1,36 @@
-/-
+module
+
+public import Transformer.ALM.DriftMargin
+public import Transformer.ALM.Duality
+
+/-!
 # The scale the compiler puts on a query, and the division that takes it off
 
 `todo3.md` §0: the compiler multiplies every hard-attention query by
 `HARD_K · √2 = 1.41 · 10^10`, a softmax temperature left on a path that takes an
-argmax.  `vm-rs/alm-model/src/cache.rs::on_the_grid` divides it back out before
+argmax. `vm-rs/alm-model/src/cache.rs::on_the_grid` divides it back out before
 the query reaches a head, and its docstring gives the reason in one line —
 `argmax_k ⟨q, k⟩` is invariant under `q ↦ q / s` — and then relies on it
 everywhere, because every float statement in this development is written at
 `qy = 1`.
 
-Nothing here had said that line.  This file says it, and says what the two ends
+Nothing here had said that line. This file says it, and says what the two ends
 of the division are.
 
 `dot_scaleQuery_int` is the first end: at the compiler's query the head's score
 is `σ · sScore q k`, which is the exact expression `Transformer.ALM.GuardSep`
 and `Transformer.ALM.ScoreGap` are stated over, so their `σ` is the model's
-scale and not a convenience.  `onTheGrid_scaleQuery` is the other: dividing by
+scale and not a convenience. `onTheGrid_scaleQuery` is the other: dividing by
 `|qy|` returns the lifted query `(q, 1)` on the nose, and
 `onTheGrid_score_isInt` is what that buys — the score is an integer again,
 which is the grid hypothesis `ALM.FloatGrid.fp_exact_of_grid` needs and the
-only thing the scale ever took away.  `gridScale` is the divisor the code
+only thing the scale ever took away. `gridScale` is the divisor the code
 really picks, `|qy|` or, when that is zero, `|qx|`, so the degenerate branch is
 the one query with no divisor at all rather than a whole half-plane.
 
 Between them, `order_scale_invariant` and `maximizers_scale_invariant`: a
 positive rescaling of the query changes no comparison and no set of maximizers,
-so the division is free.  Free in exact arithmetic — the division itself
+so the division is free. Free in exact arithmetic — the division itself
 rounds, and `rounded_normalization_keeps_the_winner` is the price, which
 `Transformer.ALM.DriftMargin` had already bounded and which is paid in the
 margin rather than in exactness.
@@ -33,8 +38,7 @@ margin rather than in exactness.
 Source: `todo3.md` §0 and §8; `vm-rs/alm-model/src/cache.rs`, `on_the_grid`.
 -/
 
-import Transformer.ALM.DriftMargin
-import Transformer.ALM.Duality
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -91,7 +95,7 @@ theorem maximizers_scale_invariant {c : ℝ} (hc : 0 < c) (q : ℝ × ℝ)
 /-! ### What the division returns -/
 
 /-- The divisor `on_the_grid` picks: the query's second coordinate when that is
-nonzero, and its first coordinate when it is not.  The second branch is the one
+nonzero, and its first coordinate when it is not. The second branch is the one
 `head.rs` takes on its `qy == 0` shortcut, where the score is linear in `qx` and
 `qx` is the margin the guard is handed. -/
 noncomputable def gridScale (q : ℝ × ℝ) : ℝ := if q.2 = 0 then |q.1| else |q.2|
@@ -110,7 +114,7 @@ lemma gridScale_eq_zero_iff (q : ℝ × ℝ) : gridScale q = 0 ↔ q = (0, 0) :=
     simp [h2]
 
 /-- `on_the_grid`: divide both coordinates by that divisor, and hand back the
-zero query — the one query with no divisor — unchanged.  Every key ties there
+zero query — the one query with no divisor — unchanged. Every key ties there
 and the tie-break answers. -/
 noncomputable def onTheGrid (q : ℝ × ℝ) : ℝ × ℝ :=
   if gridScale q = 0 then q else (q.1 / gridScale q, q.2 / gridScale q)
@@ -168,7 +172,7 @@ theorem dot_liftQuery_eq_qScore (r : ℝ) (k : ℤ) :
 
 /-- **The division rounds, and the margin absorbs it.**  `on_the_grid` is the
 only rounding `cache.rs` introduces, so the query that reaches the head is
-within some `ε` of the integer one rather than equal to it.  While the keys
+within some `ε` of the integer one rather than equal to it. While the keys
 stay inside `4Kε < 1` the winner is unchanged — the cost is paid out of the
 unit gap between distinct keys and not out of exactness, which is
 `Transformer.ALM.DriftMargin`'s whole point, here attached to the division that
@@ -186,7 +190,7 @@ theorem rounded_normalization_keeps_the_winner {r : ℝ} {q₀ b : ℤ} {K ε : 
 /-! ### The hypotheses are satisfiable -/
 
 /-- The shipped scale, on `gap.rs`'s own query: `σ = √2 · 10^10` at `q = 7`
-scores `σ · sScore 7 k`, and the division returns `(7, 1)`.  These are the
+scores `σ · sScore 7 k`, and the division returns `(7, 1)`. These are the
 hypotheses of `dot_scaleQuery_int`, `onTheGrid_scaleQuery`,
 `onTheGrid_preserves_order` and `onTheGrid_score_isInt`. -/
 example : (0 : ℝ) < 14142135623.730951 ∧
@@ -200,7 +204,7 @@ example : (0 : ℝ) < 14142135623.730951 ∧
 
 /-- And the rounded division that still lands on the right key: the query
 `1 + 10⁻⁹`, rounded from `q₀ = 1`, over the keys `{0, 1}`, where `1` wins and
-a drift of `10⁻⁹` against keys bounded by `1` is well inside the margin.  Every
+a drift of `10⁻⁹` against keys bounded by `1` is well inside the margin. Every
 hypothesis of `rounded_normalization_keeps_the_winner` is discharged at the
 same `ε`. -/
 example : ∀ k ∈ ({0, 1} : Finset ℤ), k ≠ 1 →

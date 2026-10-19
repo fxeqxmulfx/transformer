@@ -1,17 +1,21 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+
+/-!
 # Sphere packing — separated sets of unit vectors, and the volume of a ball
 
 The R'enyi centers of §5 of 2411.04990v2 are, once the indexing is stripped
 away, a `δ`-separated set of unit vectors, so their number is the packing
-number of `𝕊^{d-1}` at scale `δ`.  This file carries the two predicates that
+number of `𝕊^{d-1}` at scale `δ`. This file carries the two predicates that
 say so, and the one Mathlib fact the volume estimates of
 `Packing.Upper` and `Packing.Lower` run on: a ball of
 `EucSpace d` has volume `r^d` times the unit ball's.
 -/
 
-import Transformer.Basic
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+@[expose] public section
 
 open MeasureTheory Metric
 

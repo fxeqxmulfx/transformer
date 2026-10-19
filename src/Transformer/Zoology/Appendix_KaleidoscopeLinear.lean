@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_Kaleidoscope
+
+/-!
 # Linearity of butterfly and kaleidoscope operators
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: butterfly`,
@@ -7,7 +11,7 @@ that the stored butterfly operators and their products are linear maps,
 as required when they represent weight matrices in `def: W-kmat`.
 -/
 
-import Transformer.Zoology.Appendix_Kaleidoscope
+@[expose] public section
 
 namespace Transformer.Zoology
 

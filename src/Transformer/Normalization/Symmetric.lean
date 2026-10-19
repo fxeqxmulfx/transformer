@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Normalization.Basic
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
 # Normalization — Symmetric (equiangular) initialization (§4.1 of 2510.22026v2)
 
 * `Theorem thm: symmetric` — initial velocity of the cosine similarity
@@ -8,9 +14,7 @@
   schemes at `t = 0`, which is what the proof below isolates.
 -/
 
-import Transformer.Basic
-import Transformer.Normalization.Basic
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -76,9 +80,9 @@ leaves with velocity
   `γ̇(t₀) = (s_j⁻¹ + s_k⁻¹) / (e^β + n - 1)`.
 
 The tangential correction `Proj_{θ_j}` contributes nothing: it subtracts a
-multiple of `θ_j`, and `⟨θ_j, θ_k⟩ = 0`.  So the six rows of the paper's table
+multiple of `θ_j`, and `⟨θ_j, θ_k⟩ = 0`. So the six rows of the paper's table
 differ only in the speed factor `s`, which is what the corollaries below read
-off.  Source: arXiv:2510.22026v2, §4.1. -/
+off. Source: arXiv:2510.22026v2, §4.1. -/
 theorem hasDerivAt_similarity_symmetricInit {d n : ℕ} (β : ℝ)
     (s : ℝ → Idx n → ℝ) (θ : ℝ → Idx n → EucSpace d) (t₀ : ℝ)
     (hNA : NA d n β (fun _ => ContinuousLinearMap.id ℝ (EucSpace d))
@@ -143,7 +147,7 @@ example (n : ℕ) : SymmetricInit (fun j : Idx n => (EuclideanSpace.single j (1 
 /-- **And all of them at once.**  Give the speed factor the value `0`: in Lean
 `(0 : ℝ)⁻¹ = 0`, so `NA` asks for a stationary configuration, a constant
 orthonormal frame is one, the two tokens are distinct, and the velocity the
-theorem returns is `0` -- which is what the dynamics does.  The hypotheses are
+theorem returns is `0` -- which is what the dynamics does. The hypotheses are
 therefore jointly satisfiable. -/
 example : ∃ (s : ℝ → Idx 2 → ℝ) (θ : ℝ → Idx 2 → EucSpace 2),
     NA 2 2 1 (fun _ => ContinuousLinearMap.id ℝ (EucSpace 2))

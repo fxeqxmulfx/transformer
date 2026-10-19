@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Magma.Section3_DampingBounds
+public import Transformer.Magma.Section5_MaskDescent
+
+/-!
 # Positive damping on an orthogonal block decomposition
 
 Formalization of arXiv:2602.15322v1, Section 5, S_t = s_t tensor I.
@@ -7,8 +12,7 @@ orthogonal images on every input. These are genuine properties of a
 disjoint parameter partition, not assumptions about descent.
 -/
 
-import Transformer.Magma.Section3_DampingBounds
-import Transformer.Magma.Section5_MaskDescent
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 

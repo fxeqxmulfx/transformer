@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_ConeForm
+
+/-!
 # Appendix A — the linearization error at the saddle
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -7,13 +11,13 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 For two configurations `x`, `y`, the projected difference `P(F x - F y)` of the
 vector field `F` of `e:gradfl` is the linearization `coneLin` of
 `Perspective.AppendixA_ConeForm` applied to `u = P(x - y)`, plus an error
-`coneErr` (`proj_e0Field_sub`).  Near `Z = signedTuple e S` the difference
+`coneErr` (`proj_e0Field_sub`). Near `Z = signedTuple e S` the difference
 `x - y` is almost tangent (`norm_sub_le_two_mul_norm_proj`), and the polarized
 form is bounded by the size of its direction (`abs_coneBil_le`); the error is
 estimated in `Perspective.AppendixA_ConeGrowth`.
 -/
 
-import Transformer.Perspective.AppendixA_ConeForm
+@[expose] public section
 
 open scoped BigOperators
 open Real

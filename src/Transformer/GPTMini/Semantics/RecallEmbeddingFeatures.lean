@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallEmbedding
+module
+
+public import Transformer.GPTMini.Semantics.RecallEmbedding
 
 /-!
 # Read all raw recall channels with simultaneous ordinary projections
@@ -16,6 +18,8 @@ token-local entries; it must still be derived from a causal BOS head.
 Original RMSNorm scales every projection by the already proved common
 multiplier. No correct logits or desired recall answer is a premise.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

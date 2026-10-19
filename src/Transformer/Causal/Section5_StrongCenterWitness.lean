@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Metastability
+
+/-!
 # An actual strong center with a nonempty predecessor set
 
 ArXiv:2411.04990v2, §5, `lemma:meta`, `eq:renyi`, and `eq:time_bd`.
@@ -9,7 +13,7 @@ This witnesses the velocity and barrier application as well as the
 original metastability lemma.
 -/
 
-import Transformer.Causal.Metastability
+@[expose] public section
 
 open scoped BigOperators
 open Real

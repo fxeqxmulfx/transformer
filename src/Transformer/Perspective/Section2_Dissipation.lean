@@ -1,20 +1,24 @@
-/-
+module
+
+public import Transformer.Perspective.Section2_EnergyDerivative
+public import Transformer.Perspective.Section2_GradientFlow
+public import Transformer.Perspective.AppendixA_Beta0
+
+/-!
 # §3.2–§3.3 — Energy dissipation along `SA` and `USA`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*, §3.2 `eq: dissipation.softmax`
 and §3.3 `lem: dissipation`.
 
-Both are `hasDerivAt_interactionEnergy` at a particular velocity.  Writing
+Both are `hasDerivAt_interactionEnergy` at a particular velocity. Writing
 `w(x) = ∫ e^{β⟨x,y⟩} y dμ(y)` and `Z = Z_{β,μ}(x)`, the `SA` field is
 `Proj_x(Z⁻¹ w)` and `⟨w, Proj_x(Z⁻¹ w)⟩ = Z⁻¹ ‖Proj_x w‖² = Z ‖𝒳[μ](x)‖²`; the
-`USA` field is `Proj_x w` and `⟨w, Proj_x w⟩ = ‖𝒳^{USA}[μ](x)‖²`.  What remains
+`USA` field is `Proj_x w` and `⟨w, Proj_x w⟩ = ‖𝒳^{USA}[μ](x)‖²`. What remains
 is that both fields are continuous and bounded on the sphere.
 -/
 
-import Transformer.Perspective.Section2_EnergyDerivative
-import Transformer.Perspective.Section2_GradientFlow
-import Transformer.Perspective.AppendixA_Beta0
+@[expose] public section
 
 open Real MeasureTheory
 

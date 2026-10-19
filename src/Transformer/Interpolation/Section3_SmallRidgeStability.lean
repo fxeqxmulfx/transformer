@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_RidgeWellPosed
+public import Transformer.Interpolation.Section3_ProjectionTransport
+public import Transformer.Interpolation.Section3_PositiveBarycenters
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+
+/-!
 # Small actual ridge phases preserve finite geometric data
 
 ArXiv:2411.04551v3, §3.2, the perturbation steps in `prop: separation`.
@@ -14,10 +21,7 @@ positive-quadrant supports at once. This replaces the source's false
 fixed-outside-hulls requirement by continuity of the original laws.
 -/
 
-import Transformer.Interpolation.Section3_RidgeWellPosed
-import Transformer.Interpolation.Section3_ProjectionTransport
-import Transformer.Interpolation.Section3_PositiveBarycenters
-import Mathlib.Analysis.Normed.Module.FiniteDimension
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

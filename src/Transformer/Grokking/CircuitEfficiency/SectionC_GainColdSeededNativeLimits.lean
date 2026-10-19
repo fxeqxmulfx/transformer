@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdSeededCollapse
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdSeededCollapse
 
 /-!
 # Complete initialized native limits including critical equality
@@ -31,6 +33,8 @@ differ from appendix C's assigned coupled norm-cost GD. Learned
 stochastic/numerical GPTMini and thermodynamic size scaling remain
 unproved. Frozen model, optimizer, runs and checkpoints are unchanged.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

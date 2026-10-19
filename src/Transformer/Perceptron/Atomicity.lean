@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Analytic
+public import Transformer.Perceptron.Dirac
+public import Mathlib.MeasureTheory.Measure.Support
+public import Mathlib.MeasureTheory.Measure.Dirac.Basic
+
+/-!
 # Perceptrons and attention's mean-field landscape — atomicity on the circle
 
 Formalization of `thm: circle` and `thm: circle.gelu` of arXiv:2601.21366v2,
@@ -10,7 +17,7 @@ cannot spread out.
 **What the source says and what is carried here.**
 
 * "purely atomic and has finite support" is `IsFinitelyAtomic`: `μ` is a finite
-  combination of Dirac masses.  For a probability measure this is the same as
+  combination of Dirac masses. For a probability measure this is the same as
   being carried by a finite set, and it is the source's own phrasing.
 
 * `σ(s) = s_+` is substituted into the statement, and `φ` is left as *any*
@@ -26,10 +33,7 @@ cannot spread out.
 Source: arXiv:2601.21366v2, `thm: circle`, `thm: circle.gelu`.
 -/
 
-import Transformer.Perceptron.Analytic
-import Transformer.Perceptron.Dirac
-import Mathlib.MeasureTheory.Measure.Support
-import Mathlib.MeasureTheory.Measure.Dirac.Basic
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -133,7 +137,7 @@ example : (0 : Measure (SSphere d)) (Measure.support (0 : Measure (SSphere d))) 
 /-! ### A concrete frame of `ℝ²`
 
 `basePoint 1` is the first standard basis vector of `ℝ²`; `secondAxis` is the
-second.  The witnesses below need a great circle through the atom, hence an
+second. The witnesses below need a great circle through the atom, hence an
 orthonormal pair. -/
 
 /-- The second standard basis vector of `ℝ²`. -/

@@ -1,4 +1,6 @@
-import Transformer.Memorization.Section2_Shannon
+module
+
+public import Transformer.Memorization.Section2_Shannon
 
 /-!
 # Dataset entropy
@@ -6,6 +8,8 @@ import Transformer.Memorization.Section2_Shannon
 arXiv:2505.24832v3, Section 2.1 and Appendix A.6: finite-vector entropy
 is subadditive, and is additive for independent coordinates.
 -/
+
+@[expose] public section
 
 namespace Transformer.Memorization
 

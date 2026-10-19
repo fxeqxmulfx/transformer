@@ -1,4 +1,8 @@
-/-
+module
+
+public import Mathlib.Probability.Independence.Integration
+
+/-!
 # Homogenized Transformers — the second moments of linear forms
 
 If the coordinates `X_p` are uncorrelated with common variance `σ²` and
@@ -7,9 +11,9 @@ independent of `Y`, and the coefficients `c_p(Y)`, `c'_p(Y)` are bounded, then
   `E[(Σ_p X_p c_p(Y)) (Σ_q X_q c'_q(Y))] = σ² E Σ_p c_p(Y) c'_p(Y)`
 
 (`integral_sum_mul_mul_sum_mul`): expanding the product, independence splits
-each term into `E[c_p c'_q] E[X_p X_q]`, and only the diagonal survives.  At
+each term into `E[c_p c'_q] E[X_p X_q]`, and only the diagonal survives. At
 `c' = c` this is `E(Σ_p X_p c_p(Y))² = σ² E Σ_p c_p(Y)²`
-(`integral_sum_mul_sq`).  These are the computations behind consequence (i) of
+(`integral_sum_mul_sq`). These are the computations behind consequence (i) of
 assumption (G) and behind `lem:lemma_app`, made in
 `Homogenized.GaussianMoments` and `Homogenized.GaussianCrossMoments` for a
 Gaussian value matrix.
@@ -17,7 +21,7 @@ Gaussian value matrix.
 Source: arXiv:2604.01978v1, §2.3.3, item (i), and the proof of `lem:lemma_app`.
 -/
 
-import Mathlib.Probability.Independence.Integration
+@[expose] public section
 
 open scoped BigOperators
 open MeasureTheory ProbabilityTheory

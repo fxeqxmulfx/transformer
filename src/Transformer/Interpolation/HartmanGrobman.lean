@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.SeparationField
+
+/-!
 # Measure-to-measure interpolation — the separation flow settles exponentially
 
 Step 2 of the proof of the interpolation theorem of arXiv:2411.04551v3 (§4)
@@ -12,7 +16,7 @@ and `eq: Hartman.Grobman` asserts that every trajectory started in
 
   `d_g(x(t), ω_+) ≤ K e^{-λ t}`,   `t ≥ 0`,   `λ > 0`, `K ≥ 1`.
 
-This file proves it from the equation alone.  The argument is not the paper's
+This file proves it from the equation alone. The argument is not the paper's
 linearization but the three invariants the paper's geodesic picture rests on,
 each obtained by a fencing argument (`nonpos_of_deriv_le_mul`):
 
@@ -23,7 +27,7 @@ each obtained by a fencing argument (`nonpos_of_deriv_le_mul`):
 Then the gate is open at least `ε/2`, `1 + u ≥ 1 + u_0 > 0` because `x_0` and
 `ω_+` cannot be antipodal inside `𝒮_+`, and the field contracts towards `ω_+`
 at the rate `λ = ε (1 + u_0)/4` — the hypothesis of
-`norm_sub_le_of_contraction`, here proved.  The geodesic distance
+`norm_sub_le_of_contraction`, here proved. The geodesic distance
 `arccos ⟨x, ω_+⟩` is at most `π/2` times the chordal one (Jordan's
 inequality).
 
@@ -31,7 +35,7 @@ Source: arXiv:2411.04551v3, §4, proof of the main theorem, Step 2,
 `eq: neural.ode.separation`, `eq: estimate.neural`, `eq: Hartman.Grobman`.
 -/
 
-import Transformer.Interpolation.SeparationField
+@[expose] public section
 
 open Real
 
@@ -44,17 +48,17 @@ variable (d : ℕ)
 flow.*
 
 Let `‖γ‖ = 1`, `ε > 0`, and `ω_+` a unit vector of
-`𝒮_+ = {⟨γ, ·⟩ ≥ ε}`.  Every solution of `eq: neural.ode.separation` started
+`𝒮_+ = {⟨γ, ·⟩ ≥ ε}`. Every solution of `eq: neural.ode.separation` started
 at a unit vector `x_0 ∈ 𝒮_+` satisfies
 
   `d_g(x(t), ω_+) = arccos ⟨x(t), ω_+⟩ ≤ K e^{-λ t}`   for all `t ≥ 0`,
 
-for some `λ > 0` and `K ≥ 1`.  The trajectory is not assumed to stay on the
+for some `λ > 0` and `K ≥ 1`. The trajectory is not assumed to stay on the
 sphere or in `𝒮_+`: both are proved (see the module header).
 
 **What the source says and what is changed here.**  The paper sets
 `ε := min{ε, π/4}`; the bound `π/4` is not used and is dropped, so the
-statement covers every `ε > 0`.  The paper obtains the rate from the
+statement covers every `ε > 0`. The paper obtains the rate from the
 Hartman-Grobman theorem; here it is explicit, `λ = ε (1 + ⟨x_0, ω_+⟩)/4`, and
 `K = max(1, (π/2) ‖x_0 - ω_+‖)`.
 

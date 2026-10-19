@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_TestModulus
+public import Transformer.Interpolation.Section3_RidgeLaw
+public import Transformer.Interpolation.Clustering
+
+/-!
 # Uniform first variations of barycenters and determinant estimates
 
 ArXiv:2411.04551v3, §3.2, `lem: perturbation`, Part 2, from
@@ -16,9 +22,7 @@ leading coefficient supplies one tolerance and time radius for all
 moment pairs satisfying the proved bounds.
 -/
 
-import Transformer.Interpolation.Section1_TestModulus
-import Transformer.Interpolation.Section3_RidgeLaw
-import Transformer.Interpolation.Clustering
+@[expose] public section
 
 open Real MeasureTheory Filter Set
 

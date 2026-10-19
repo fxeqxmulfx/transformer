@@ -1,19 +1,26 @@
-/-
+module
+
+public import Transformer.Clusters.Section6_KernelDeriv
+public import Transformer.Clusters.Section6_KernelLip
+public import Transformer.Landscape.GlobalFlow.Flow
+public import Transformer.SmoothApprox
+
+/-!
 # The emergence of clusters in self-attention dynamics — the attention
   kernel along a curve of measures
 
 Along a curve `t ↦ μ_t` the velocity field of `e:conteq` is
-`w(t, x) = 𝒳[μ_t](x)`.  When the curve is weakly continuous and its measures
+`w(t, x) = 𝒳[μ_t](x)`. When the curve is weakly continuous and its measures
 are carried near each time by a fixed ball, `w` and its spatial derivative
 are continuous in `(t, x)` (`continuous_attentionKernel_curve`,
 `continuous_attentionKernelDeriv_curve`): each is assembled from integrals
 `∫ f(x, y) dμ_t(y)` of jointly continuous `f`
 (`SmoothApprox.continuous_integral_param`), and the normalization
-`∫ e^{⟨Qx, Ky⟩} dμ_t` is positive.  When all the measures are carried by one
+`∫ e^{⟨Qx, Ky⟩} dμ_t` is positive. When all the measures are carried by one
 ball `B̄(0, R)`, `w` is moreover `2 ‖QᵀK‖ ‖V‖ R²`-Lipschitz in `x` by
 `e:lipinx` and bounded by `‖V‖ R` by `e:bddinx`: it is a
 `Landscape.GlobalFlow.IsFlowField` (`isFlowField_attentionKernel`), whose flow
-transports the solutions of `e:conteq`.  With `e:lipinmu`, `𝒳[μ](x)` is
+transports the solutions of `e:conteq`. With `e:lipinmu`, `𝒳[μ](x)` is
 jointly Lipschitz in `x` and in `μ` for the distance `W₂`
 (`exists_norm_attentionKernel_sub_le`), the estimate behind both the
 existence and the stability of solutions.
@@ -22,10 +29,7 @@ Source: arXiv:2305.05465v6, `lem: vectorfield.properties`, as used in the
 proof of `c:wellposedtransformers`.
 -/
 
-import Transformer.Clusters.Section6_KernelDeriv
-import Transformer.Clusters.Section6_KernelLip
-import Transformer.Landscape.GlobalFlow.Flow
-import Transformer.SmoothApprox
+@[expose] public section
 
 open Set Metric Filter Topology MeasureTheory
 open scoped NNReal

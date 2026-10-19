@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_CommonTransverseAxis
+
+/-!
 # Common original unit axes transverse to a prescribed plane
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, and §3.2,
@@ -16,7 +20,7 @@ The selected directions may be linearly dependent; the same construction
 then treats their one-dimensional span.
 -/
 
-import Transformer.Interpolation.Section3_CommonTransverseAxis
+@[expose] public section
 
 open Real MeasureTheory Set
 

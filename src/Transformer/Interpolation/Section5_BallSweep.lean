@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section5_BallGeometry
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
+
+/-!
 # Distances and parking points for the actual spherical sweep
 
 ArXiv:2411.04551v3, §5, `cl: balls`. The inner product of two
@@ -15,8 +20,7 @@ source's parking-point clause for the whole remaining segment, rather
 than assuming it follows merely from equality of the radii.
 -/
 
-import Transformer.Interpolation.Section5_BallGeometry
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
+@[expose] public section
 
 open Real Metric Set
 

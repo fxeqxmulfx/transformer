@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_DiagonalLinearK
+
+/-!
 # Identity butterfly matrices and unexpanded butterfly weights
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: butterfly`,
@@ -7,7 +11,7 @@ width-one K matrix by taking the right butterfly to be the identity.
 One extra level gives a common expansion type with the zero-weight layers.
 -/
 
-import Transformer.Zoology.Appendix_DiagonalLinearK
+@[expose] public section
 
 namespace Transformer.Zoology
 

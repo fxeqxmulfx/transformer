@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_Factorization
+
+/-!
 # Sparse convex combinations of token response vectors
 
-Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, Appendix A.4.  The paper
+Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, Appendix A.4. The paper
 uses Carathéodory's theorem to bound the number of active token directions
-by the sample count plus one.  This file proves the finite-dimensional
+by the sample count plus one. This file proves the finite-dimensional
 weight-reduction step used by the sparse-optimum theorem.
 -/
 
-import Transformer.Convexifying.Section3_Factorization
+@[expose] public section
 
 open scoped BigOperators
 
@@ -81,7 +85,7 @@ private theorem sparse_weights_from_affine {N n : ℕ} {ι : Type} [Fintype ι]
 
 /-- Carathéodory reduction for a convex combination of `n` response vectors
 in `ℝ^N`: the same vector has nonnegative weights on at most `N + 1`
-tokens.  The bound concerns the actual support of the new weights.
+tokens. The bound concerns the actual support of the new weights.
 Source: arXiv:2211.11052v1, Appendix A.4, paragraph after
 `eq:dual_cons_multihead_bidual`. -/
 theorem sparse_convex_weights {N n : ℕ} (a : Fin n → Vec N)

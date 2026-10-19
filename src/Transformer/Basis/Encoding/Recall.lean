@@ -1,4 +1,6 @@
-import Transformer.Basis.Encoding.Basic
+module
+
+public import Transformer.Basis.Encoding.Basic
 
 /-!
 # Every accepted raw MQAR prefix is encodable
@@ -9,6 +11,8 @@ validated, then every query and filler is validated, then BOS is checked.
 It covers arbitrary valid prefix lengths and rewrite parameters, without
 assuming that the model predicts the selected value.
 -/
+
+@[expose] public section
 
 namespace Transformer.Basis.Encoding
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_ConeError
+
+/-!
 # Appendix A — near the saddle the cone form of a difference grows
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -8,12 +12,12 @@ Let `x`, `y` be configurations within `r` of the saddle `Z = signedTuple e {i₀
 The error `coneErr` of the linearization of `e:gradfl` at `Z` is at most
 `12 r Σ_k ‖P(x_k - y_k)‖` (`norm_coneErr_le`): the coefficients of the field
 differ from those of `Z` by `O(n r)`, and the difference `x - y` is almost
-tangent.  For `n ≥ 3` and `60 n r ≤ 1` the error is absorbed by the growth of
+tangent. For `n ≥ 3` and `60 n r ≤ 1` the error is absorbed by the growth of
 the linearization, so the derivative of the cone form `q(x - y)` along the flow
 is at least `2 q(x - y)` (`two_mul_coneForm_le`).
 -/
 
-import Transformer.Perspective.AppendixA_ConeError
+@[expose] public section
 
 open scoped BigOperators
 open Real

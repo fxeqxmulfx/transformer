@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_DiscreteOrthogonality
+public import Transformer.DASH.SectionA_DenseCoefficients
+
+/-!
 # DASH — exact recovery by the cosine coefficient fit
 
 arXiv:2602.02016v2, Appendix A, coefficient fitting and scalar Clenshaw.
@@ -6,8 +11,7 @@ With degree below the number of samples, fitting recovers every polynomial
 in the selected Chebyshev span exactly, including the constant coefficient.
 -/
 
-import Transformer.DASH.SectionA_DiscreteOrthogonality
-import Transformer.DASH.SectionA_DenseCoefficients
+@[expose] public section
 
 open scoped BigOperators
 

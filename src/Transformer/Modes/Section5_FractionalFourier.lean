@@ -1,5 +1,7 @@
-import Transformer.Modes.Section5_FractionalEnvelope
-import Transformer.Modes.Section5_FourierIntegral
+module
+
+public import Transformer.Modes.Section5_FractionalEnvelope
+public import Transformer.Modes.Section5_FourierIntegral
 
 /-!
 # Fourier decay with a bandwidth-dependent exponent
@@ -30,6 +32,8 @@ source's fixed five. This module establishes the Fourier estimate itself;
 the power integrability statement is in `Section5_PowerIntegrability`.
 Source: arXiv:2412.09080v3, §5.5, repairing `eq:uniform-decay`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.TemporalProgramEvaluate
+public import Transformer.CRASP.Frame
+
+/-!
 # The truth-value invariant and its base case
 
 arXiv:2506.16055v3, Appendix B.2, `thm:TLCl_to_rtfr`.
@@ -6,8 +11,7 @@ After `ℓ` layers all subformulas of counting depth at most `ℓ` are
 correct. At BOS the logical word is empty, as there are no ordinary tokens.
 -/
 
-import Transformer.CRASP.TemporalProgramEvaluate
-import Transformer.CRASP.Frame
+@[expose] public section
 
 namespace Transformer.CRASP.TemporalProgram
 

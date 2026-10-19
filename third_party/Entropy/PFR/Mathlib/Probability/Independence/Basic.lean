@@ -4,6 +4,12 @@ public import Mathlib.MeasureTheory.Constructions.Pi
 public import Mathlib.Probability.Independence.Basic
 public import PFR.Mathlib.Probability.Independence.Kernel.IndepFun
 
+/-!
+# Independence of finite families
+
+Independence identities for finite sums, finite coordinate families and point probabilities.
+-/
+
 public section
 
 open Function MeasureTheory MeasurableSpace Measure Set

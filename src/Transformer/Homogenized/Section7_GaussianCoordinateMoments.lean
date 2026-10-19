@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianCoordinateLaw
+
+/-!
 # Actual independent Gaussian coordinate moments and their linear images
 
 ArXiv:2604.01978v1, §7, the covariance computation in `eq:SIGMA_R`,
@@ -16,7 +20,7 @@ No covariance identity is built into the definitions or supplied as a
 hypothesis. Zero variances and empty finite sums are included.
 -/
 
-import Transformer.Homogenized.Section7_GaussianCoordinateLaw
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

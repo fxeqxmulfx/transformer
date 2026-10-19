@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
-import Mathlib.Topology.Order.Compact
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
+public import Mathlib.Topology.Order.Compact
 
 /-!
 # Attainment of the actual multiclass CE budget
@@ -19,6 +21,8 @@ The source-specific example uses appendix D's multiplier alpha/p:
 0.005/2=1/400. Appendix C's displayed LossWD omits this factor; the
 example is therefore not identified with an exact simulator normalization.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

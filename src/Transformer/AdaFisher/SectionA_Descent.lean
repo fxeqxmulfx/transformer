@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_Algorithm
+
+/-!
 # AdaFisher: corrected preconditioned descent
 
 arXiv:2405.16397v3, Proposition 3.3, Appendix A.2, `eq:upper_bound1`.
@@ -6,7 +10,7 @@ The Hessian bounds of the loss and the spectral bounds of the Fisher
 preconditioner are separate. Damping δ requires the step η L ≤ δ.
 -/
 
-import Transformer.AdaFisher.Section3_Algorithm
+@[expose] public section
 
 open scoped BigOperators
 

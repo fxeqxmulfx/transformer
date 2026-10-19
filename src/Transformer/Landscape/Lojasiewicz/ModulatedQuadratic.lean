@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.QuadraticEnergy
+
+/-!
 # Convergence for a modulated quadratic loss
 
 The complete conclusion of Appendix D.1 of arXiv:2510.22026v2 holds for
@@ -6,7 +10,7 @@ quadratic energy without any unproved analytic input. The trajectory's
 compact containment follows from energy monotonicity.
 -/
 
-import Transformer.Landscape.Lojasiewicz.QuadraticEnergy
+@[expose] public section
 
 namespace Transformer.Landscape.Lojasiewicz
 

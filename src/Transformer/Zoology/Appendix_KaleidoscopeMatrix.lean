@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_KaleidoscopeLinear
+
+/-!
 # Expanded kaleidoscope operators as genuine matrices
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: kaleidoscope` and
@@ -7,7 +11,7 @@ butterfly factors, and cropping. We prove this remains linear and identify
 its matrix through its action on coordinate basis vectors.
 -/
 
-import Transformer.Zoology.Appendix_KaleidoscopeLinear
+@[expose] public section
 
 open scoped BigOperators
 

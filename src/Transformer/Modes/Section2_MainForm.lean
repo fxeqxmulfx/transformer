@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Modes.Section2_Degenerate
+public import Transformer.Modes.Section1_Sketch
+
+/-!
 # The number of modes of a Gaussian KDE — `eq:main-eq-form`
 
 §2.1 of arXiv:2412.09080v3, `eq:main-eq-form`: the three bounds on the expected
@@ -8,22 +13,21 @@ equivalent to".
 **What the source says and what is carried here.**
 
 * The equivalence runs through the identity mode `=` upcrossing, which holds in
-  expectation (`Section2_Degenerate.lean`) and not pathwise.  That identity is
+  expectation (`Section2_Degenerate.lean`) and not pathwise. That identity is
   unproved, so it is carried here as an explicit hypothesis `hid`, one per
   interval, and so are the three conclusions of `prop:main-int` and
-  `prop:main-tail`.  What is proved is the passage from the one to the other.
+  `prop:main-tail`. What is proved is the passage from the one to the other.
 
-* Lines 1 and 3 are the identity read off.  Line 2 is not: `prop:main-int` gives
+* Lines 1 and 3 are the identity read off. Line 2 is not: `prop:main-int` gives
   `E #modes(T') = O(√β)`, and the source's `≲ e^{-ω(β)/4}√(β log β)` is *weaker*
   than that, because `e^{ω(β)/4} ≪ √(log β)` — which is exactly what the right
-  half of the window `ω(β) ≪ log log β` buys.  `isLittleO_sqrt_window` proves it,
+  half of the window `ω(β) ≪ log log β` buys. `isLittleO_sqrt_window` proves it,
   and line 2 comes out with `o` in place of the source's `≲`.
 
 Source: arXiv:2412.09080v3, `eq:main-eq-form`, `sec: sketch`.
 -/
 
-import Transformer.Modes.Section2_Degenerate
-import Transformer.Modes.Section1_Sketch
+@[expose] public section
 
 open Filter Asymptotics MeasureTheory
 open scoped Topology ENNReal
@@ -87,8 +91,8 @@ theorem main_eq_form_T (N : ℕ → ℕ) (B : ℕ → ℝ) (ω : ℝ → ℝ)
   exact hint
 
 /-- **Line 2 of `eq:main-eq-form`, in the sharper form the hypotheses give:**
-`E U₀(F_n, T')` is finite and `o(e^{-ω(β)/4}√(β log β))`.  The source writes
-`≲`; what `prop:main-int` point 2 and the window give is `o`.  Finiteness is
+`E U₀(F_n, T')` is finite and `o(e^{-ω(β)/4}√(β log β))`. The source writes
+`≲`; what `prop:main-int` point 2 and the window give is `o`. Finiteness is
 carried in and out, since `toReal` reads `∞` as `0`.
 
 Source: arXiv:2412.09080v3, `eq:main-eq-form`. -/

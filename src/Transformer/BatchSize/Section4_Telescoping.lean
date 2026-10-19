@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_ErrorFunction
+
+/-!
 # Accumulating local weak errors
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1.
@@ -7,7 +11,7 @@ on a finite horizon. The comparison operator and its local error are
 explicit hypotheses; no unproved diffusion theorem is used here.
 -/
 
-import Transformer.BatchSize.Section4_ErrorFunction
+@[expose] public section
 
 open MeasureTheory
 

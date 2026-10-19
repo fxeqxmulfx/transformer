@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.GramRouting
+module
+
+public import Transformer.GPTMini.Sparsemax.GramRouting
 
 /-!
 # Jointly convex embedding and attention projection energy
@@ -15,6 +17,8 @@ energy. Adding a future task objective depending on free row weights can
 change that conditional optimizer; this is not a theorem about ordinary
 backpropagation through the sparsemax output. No task loss is chosen here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

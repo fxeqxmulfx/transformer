@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_DyadicEuler
+public import Mathlib.MeasureTheory.Function.LpSpace.Complete
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.MeasureTheory.Function.ConditionalExpectation.AEMeasurable
+public import Mathlib.Topology.Algebra.InfiniteSum.Real
+
+/-!
 # Actual L2 limits from geometric mean-square refinement estimates
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,11 +14,7 @@ These completeness lemmas turn proved Euler comparison estimates into
 square-integrable random limits, rather than assuming a diffusion law.
 -/
 
-import Transformer.BatchSize.Section4_DyadicEuler
-import Mathlib.MeasureTheory.Function.LpSpace.Complete
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Function.ConditionalExpectation.AEMeasurable
-import Mathlib.Topology.Algebra.InfiniteSum.Real
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal Topology

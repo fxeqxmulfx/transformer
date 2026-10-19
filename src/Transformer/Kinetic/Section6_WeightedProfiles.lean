@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Kinetic.Section6_WeightedCoefficients
+public import Transformer.Kinetic.Section6_SeriesProfiles
+public import Mathlib.Topology.Algebra.InfiniteSum.Real
+
+/-!
 # Kinetic theory for Transformers — the sum of the original output modes
 
 For the positive summable weights and uniformly bounded nonnegative mode
@@ -8,9 +14,7 @@ be interchanged. The source's aggregate `ℋ` is the actual weighted sum
 of `h_{c_n}`, and its endpoint slope is the sum of the original slopes.
 -/
 
-import Transformer.Kinetic.Section6_WeightedCoefficients
-import Transformer.Kinetic.Section6_SeriesProfiles
-import Mathlib.Topology.Algebra.InfiniteSum.Real
+@[expose] public section
 
 open scoped BigOperators
 

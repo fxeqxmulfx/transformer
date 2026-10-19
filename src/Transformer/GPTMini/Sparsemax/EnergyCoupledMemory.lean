@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.IncidentJointMemory
-import Mathlib.Data.Matrix.Block
+module
+
+public import Transformer.GPTMini.Sparsemax.IncidentJointMemory
+public import Mathlib.Data.Matrix.Block
 
 /-!
 # Jointly convex attention and common-value energy constraints
@@ -16,6 +18,8 @@ but its feasible outputs now depend on geometry. Subsequent finite witnesses
 show ordinary output error selecting different attention edges for different
 answers, without an additional geometry criterion or attention labels.
 -/
+
+@[expose] public section
 
 noncomputable section
 

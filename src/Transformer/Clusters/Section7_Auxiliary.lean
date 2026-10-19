@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_Drift
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+
+/-!
 # The emergence of clusters in self-attention dynamics — `l:auxiliary`
 
 §7 of arXiv:2305.05465v6: in `d = 1`, a token that is once above the constant
@@ -8,24 +13,23 @@ decreases at least like `-c e^t`.
 The proof is the source's, on the scalar curve `a(t) = x_i(t)`
 (`exp_le_of_auxiliary_lt`): `e:pypyly` gives a positive speed above `A`, a
 barrier turns it into linear growth, and then `(log a)' ≥ 1 - n/a²` has an
-integrable defect.  A token below `-A` is a token above `A` of `-x`, which
+integrable defect. A token below `-A` is a token above `A` of `-x`, which
 solves the same equation: the scores `x_i x_l` are unchanged by `x ↦ -x`.
 This is the source's involution, without the relabelling `i ↦ n + 1 - i`.
 
 **Deviation from the source, a strengthening.**  `l:auxiliary` is stated for
 the extreme tokens `x_n` and `x_1`, under the ordering of §7 and with
-`t₀ ≥ 0`.  None of this is needed: both drift bounds (`sub_le_drift`,
+`t₀ ≥ 0`. None of this is needed: both drift bounds (`sub_le_drift`,
 `div_sub_le_drift`) hold for any token with `x_i > 0`, since the weight of the
-largest coordinate is at least `1/n` whichever token looks at it.  The lemma is
+largest coordinate is at least `1/n` whichever token looks at it. The lemma is
 therefore stated here for every token `i` and every `t₀`, which is also the
-form in which `l:unboundedparticles` uses it.  The conclusion is proved for
+form in which `l:unboundedparticles` uses it. The conclusion is proved for
 every `t ≥ t₀` and stated, as in the source, for every sufficiently large `t`.
 
 Source: arXiv:2305.05465v6, `l:auxiliary`.
 -/
 
-import Transformer.Clusters.Section7_Drift
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -155,7 +159,7 @@ example : ∃ A : ℝ, 0 < A ∧ A ^ 2 = ((0 + 1 : ℕ) : ℝ) ^ 2 * Real.exp (-
   exact (Real.hasDerivAt_exp t).mul_const _
 
 /-- **Lemma (l:auxiliary), above `A`.**  Let `A > 0` satisfy
-`A² = n² exp(-A²)`.  If `x_i(t₀) > A`, then there is `c₁ > 0` with
+`A² = n² exp(-A²)`. If `x_i(t₀) > A`, then there is `c₁ > 0` with
 `x_i(t) ≥ c₁ e^t` for every sufficiently large `t`.
 
 The source states this for `i = n` and `t₀ ≥ 0`, under the ordering of §7;

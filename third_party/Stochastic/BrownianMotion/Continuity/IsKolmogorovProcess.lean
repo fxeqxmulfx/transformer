@@ -745,7 +745,6 @@ lemma finite_set_bound_of_edist_le_of_diam_le (hJ : HasBoundedCoveringNumber J c
     norm_cast
   simp only [ε₀, ENNReal.coe_toNNReal hε'.ne]
   grw [hδ_le']
-  swap; · positivity
   refine le_of_eq ?_
   calc 2 ^ d * M * c * (2 * δ) ^ (q - d) * Cp d p q
   _ = 2 ^ d * 2 ^ (q - d) * M * c * δ ^ (q - d) * Cp d p q := by
@@ -918,7 +917,6 @@ lemma finite_set_bound_of_edist_le_of_le_diam (hJ : HasBoundedCoveringNumber J c
       have hmδ'' : ((ε₀ * 2⁻¹ ^ m : ℝ≥0) : ℝ≥0∞) ≤ δ := mod_cast hmδ
       simpa [ENNReal.inv_pow] using hmδ''
     grw [hmδ']
-    swap; · positivity
     gcongr ?_ * _
     rw [ENNReal.mul_rpow_of_nonneg _ _ (by bound)]
     calc 2 ^ d * M * c * (2 ^ (q - d) * δ ^ (q - d))

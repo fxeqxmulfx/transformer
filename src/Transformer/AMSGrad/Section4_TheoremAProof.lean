@@ -1,6 +1,8 @@
-import Transformer.AMSGrad.Section4_TheoremAPotential
+module
 
-/-
+public import Transformer.AMSGrad.Section4_TheoremAPotential
+
+/-!
 # AMSGrad — the global-schedule core of Theorem A
 
 The printed bound of Theorem A of arXiv:1904.03590v4, §1 (Theorem 4 of
@@ -12,6 +14,8 @@ uses the schedule-free projection potential and pays for the difference
 between the gradient and first moment from the printed schedule and gradient
 terms. The original paper's §3 critique of the old proof remains valid.
 -/
+
+@[expose] public section
 
 open Finset
 

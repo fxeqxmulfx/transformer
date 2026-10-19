@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.CompletionFFN
+module
+
+public import Transformer.GPTMini.Semantics.CompletionFFN
 
 /-!
 # A complete original-model parameter family for the parity construction
@@ -17,6 +19,8 @@ full two-layer hidden state is connected below to the actual first block.
 Readout margins and universal integer task correctness are later results;
 neither is assumed as a hypothesis here. There is no optimizer assertion.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

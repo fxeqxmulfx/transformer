@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.TensorObservations
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorObservations
 
 /-!
 # Full learned inference and likelihood follow actual tensor observations
@@ -16,6 +18,8 @@ premise. This transfers a derived low-level residual preservation law
 to complete computations; arbitrary learned head-global weights remain
 unchanged and free. Full stack induction is a subsequent obligation.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

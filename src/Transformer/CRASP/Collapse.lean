@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.ConstantLayer
+
+/-!
 # Representation collapse caps the useful depth
 
 **Not a statement of any paper.**  A conjecture posed here to join two lines
@@ -9,8 +13,8 @@ dynamics of arXiv:2312.10794v5 (§§3–5), arXiv:2410.06833v1 and
 arXiv:2512.01868v4.
 
 The clustering papers say that, in their regime, the representations after
-many layers lie in an `ε`-cluster.  The hierarchy says that a transformer of
-depth `k` recognizes no more than a `TL[◁#]` formula of depth `k`.  The
+many layers lie in an `ε`-cluster. The hierarchy says that a transformer of
+depth `k` recognizes no more than a `TL[◁#]` formula of depth `k`. The
 conjecture joins them: **once every position sits in an `ε`-cluster after `L`
 layers, the layers above add nothing** — the whole transformer, however deep,
 recognizes a language of `TL[◁#]` depth `L` (`exists_mem_TLCl_of_clustered`),
@@ -18,19 +22,19 @@ and so, by the hierarchy, not `L_{L+1}` (`not_recognizes_altPlus_of_clustered`).
 
 It is stated for the future-masked rounded transformers of
 `Transformer.CRASP.Transformers`, the one model where "depth of a formula" is
-defined.  There `ε` below one grid step `2^{-s}` makes the cluster a single
+defined. There `ε` below one grid step `2^{-s}` makes the cluster a single
 point, and the reason to expect the conjecture is then exact: identical
 activations give identical attention scores, an average of identical values
 is that value whatever the prefix length, so every later layer computes one
 function of the common vector, which is the last activation of a depth-`L`
-transformer.  The continuous reading — softmax dynamics on the sphere, `ε`
+transformer. The continuous reading — softmax dynamics on the sphere, `ε`
 above the resolution, an output margin paid for with the Lipschitz constants
 of `Transformer.GPTMini` — is the harder and more interesting one, and is not
 stated: rounding is not Lipschitz, and no model in this development carries
 both a margin and a formula depth.
 -/
 
-import Transformer.CRASP.ConstantLayer
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -97,7 +101,7 @@ example {p s d M : ℕ} (T : RTfr (Option Bool) p s d (0 + M)) (hE : T.E = fun _
 
 /-- The reverse simulation also holds at dimension `0`: every
 activation is the empty tuple, so the output does not depend on the input and
-the language recognized is `∅` or every string.  Both are defined at every
+the language recognized is `∅` or every string. Both are defined at every
 depth, by `1 < 1` and its negation. -/
 example (p s L : ℕ) (T' : RTfr (Option σ) p s 0 L) :
     ∃ φ ∈ TLCl σ L, φ.lang = {w : List σ | T'.Accepts (bos w)} := by
@@ -128,7 +132,7 @@ example (p s L : ℕ) (T' : RTfr (Option σ) p s 0 L) :
     exact iff_of_false (hbot w) hpos
 
 /-- **Corollary: a transformer that collapses after `L` layers does not
-recognize `L_{L+1}`,** however many layers sit above the collapse.  This is
+recognize `L_{L+1}`,** however many layers sit above the collapse. This is
 `exists_mem_TLCl_of_clustered` against `thm:TLCl_depth` (arXiv:2506.16055v3),
 the lower half of `thm:rtfr_depth_hierarchy` with the depth of the transformer
 replaced by the depth at which it collapses.

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.UniformHemisphere
+
+/-!
 # Two-point sphere and invariant law in dimension one
 
 The one-dimensional unit sphere has two points. A rotation-invariant
@@ -8,7 +12,7 @@ the union of the two constant configurations.
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962).
 -/
 
-import Transformer.Perspective.UniformHemisphere
+@[expose] public section
 
 open MeasureTheory
 

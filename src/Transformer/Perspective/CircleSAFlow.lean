@@ -1,9 +1,18 @@
-/-
+module
+
+public import Transformer.Perspective.CircleSAGradient
+public import Transformer.Perspective.CircleCritical
+public import Transformer.Landscape.SaddleAvoidance.MetricAvoidance
+public import Transformer.Landscape.SaddleAvoidance.Periodic
+public import Transformer.Landscape.SaddleAvoidance.Necessary
+public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+
+/-!
 # SA on the circle avoids strict saddles
 
 SA in angles is `θ̇ = -G(θ) ∇f(θ)` on `EucSpace n`, with `f = -𝖤_β` and
 `G = diag(n²/Z_i)` (`saGain_gradient_apply`), both invariant under the
-periods `2π e_k` (`cos_sub_add_period`), which span the space.  So `G ∇f` is
+periods `2π e_k` (`cos_sub_add_period`), which span the space. So `G ∇f` is
 bounded and globally Lipschitz (`exists_lipschitzWith_saField`), and the
 solutions of SA in angles are the trajectories of
 `Landscape.SaddleAvoidance.metricGradientFlow` (`angularSA_iff`): one from every start
@@ -15,16 +24,11 @@ Lebesgue-almost every start no solution converges to one
 
 Source: arXiv:2312.10794v5, Appendix A, Lemma `l:nosaddleconv` with Remark
 `r:extensiontoSAcase`: SA is a gradient flow for another metric, and the
-saddle property does not depend on the metric.  The time-one map of
+saddle property does not depend on the metric. The time-one map of
 `Landscape.SaddleAvoidance.MetricAvoidance` replaces the center-stable manifold theorem.
 -/
 
-import Transformer.Perspective.CircleSAGradient
-import Transformer.Perspective.CircleCritical
-import Transformer.Landscape.SaddleAvoidance.MetricAvoidance
-import Transformer.Landscape.SaddleAvoidance.Periodic
-import Transformer.Landscape.SaddleAvoidance.Necessary
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+@[expose] public section
 
 open Filter MeasureTheory
 open scoped BigOperators Topology NNReal
@@ -129,7 +133,7 @@ theorem isStrictSaddle_of_isStrictSaddleTorusEnergy (β : ℝ) (hβ : β ≠ 0) 
 /-- **SA in angles almost never converges to a strict saddle of `𝖤_β`**: for
 Lebesgue-almost every start `θ₀`, no solution of `angularSA` from `θ₀`
 converges to a critical point of `𝖤_β` with a line of positive second
-derivative.  Such a point is a strict saddle of `f = -𝖤_β`, `G` is symmetric
+derivative. Such a point is a strict saddle of `f = -𝖤_β`, `G` is symmetric
 positive definite and `G ∇f` bounded and Lipschitz, so
 `ae_not_tendsto_metricGradientFlow_of_isStrictSaddle` applies to the flow,
 whose trajectories the solutions are; Lebesgue measure on `ℝⁿ` is that of

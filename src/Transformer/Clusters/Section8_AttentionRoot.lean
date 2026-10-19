@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section1_Dynamics
+public import Mathlib.Analysis.InnerProductSpace.Spectrum
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+
+/-!
 # The positive attention root
 
 ArXiv:2305.05465v6, §8.1, `eq: A`: positive definiteness of `QᵀK`
@@ -13,9 +19,7 @@ bilinear identity explicitly. Thus the root is derived from the paper's
 original hypothesis rather than added as a convergence assumption.
 -/
 
-import Transformer.Clusters.Section1_Dynamics
-import Mathlib.Analysis.InnerProductSpace.Spectrum
-import Mathlib.Analysis.InnerProductSpace.Adjoint
+@[expose] public section
 
 open scoped BigOperators
 open Real

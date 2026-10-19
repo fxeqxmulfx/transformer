@@ -1,10 +1,19 @@
-/-
+module
+
+public import Transformer.Perspective.SphereHyperplane
+public import Transformer.Perspective.Section3_SmallBeta
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+public import Mathlib.LinearAlgebra.LinearIndependent.Lemmas
+public import Mathlib.MeasureTheory.Constructions.Pi
+
+/-!
 # `n ≤ d` uniform points lie in an open hemisphere almost surely
 
 The survey proves `thm: d.infty` by cone collapse, and justifies its
 hypothesis in a footnote: when `d ≥ n`, `n` uniform points lie in an open
 hemisphere with probability one, a "weak version of Wendel's theorem" that
-"is easy to see directly".  Directly: they are almost surely linearly
+"is easy to see directly". Directly: they are almost surely linearly
 independent (`ae_linearIndependent_of_uniformTuple`, by Fubini from
 `measure_mem_submodule_eq_zero`), and independent points lie in a common open
 hemisphere (`exists_common_hemisphere_of_linearIndependent`); together, this
@@ -14,12 +23,7 @@ Source: arXiv:2312.10794v5, §6.1, the paragraph after `thm: d.infty` and its
 footnote; arXiv:2512.01868v4, §4, `cor: d-ge-n`.
 -/
 
-import Transformer.Perspective.SphereHyperplane
-import Transformer.Perspective.Section3_SmallBeta
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.LinearAlgebra.LinearIndependent.Lemmas
-import Mathlib.MeasureTheory.Constructions.Pi
+@[expose] public section
 
 open MeasureTheory
 
@@ -38,7 +42,7 @@ theorem measurableSet_linearIndependent (k : ℕ) :
 /-- **`k ≤ d` i.i.d. points of a rotation-invariant law on `𝕊^{d-1}` are
 almost surely linearly independent.**
 
-By induction on `k`.  Split the last point off: the product measure on
+By induction on `k`. Split the last point off: the product measure on
 `(𝕊^{d-1})^{k+1}` is `σ ⊗ σ^{⊗k}` (`measurePreserving_piFinSuccAbove`), and a
 tuple `(Y, x)` with `Y` independent is dependent only if `x` lies in the span
 of `Y` (`linearIndependent_finSnoc`), a subspace of dimension `k < d`, which
@@ -103,7 +107,7 @@ example : 1 ≤ 1 := le_rfl
 /-- **Linearly independent points lie in a common open hemisphere.**
 
 If `x_1, …, x_n` are linearly independent — which forces `n ≤ d` — there is a
-unit vector `w` with `⟨x_i, w⟩ > 0` for every `i`.  The map
+unit vector `w` with `⟨x_i, w⟩ > 0` for every `i`. The map
 `u ↦ (⟨x_i, u⟩)_i` from the span of the `x_i` to `ℝ^n` is injective, because a
 vector of the span orthogonal to every `x_i` is orthogonal to itself; the span
 has dimension `n`, so the map is onto, and the preimage of the all-ones vector
@@ -166,7 +170,7 @@ example : LinearIndependent ℝ (fun _ : Idx 1 => EuclideanSpace.single (0 : Fin
   simp
 
 /-- **`n ≤ d` uniform points lie in an open hemisphere almost surely**: there
-is `w ∈ 𝕊^{d-1}` with `⟨x_i, w⟩ > 0` for every `i`.  The survey's "weak
+is `w ∈ 𝕊^{d-1}` with `⟨x_i, w⟩ > 0` for every `i`. The survey's "weak
 version of Wendel's theorem", seen directly: the points are almost surely
 linearly independent (`ae_linearIndependent_of_uniformTuple`), and independent
 points lie in a common open hemisphere

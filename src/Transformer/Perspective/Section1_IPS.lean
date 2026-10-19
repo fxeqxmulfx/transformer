@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.Basic
+
+/-!
 # §2 — Interacting particle system
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
-This file formalizes the equations from §2 of the survey.  The main objects:
+This file formalizes the equations from §2 of the survey. The main objects:
 
 * `eq: resnet`           — discrete-time ResNet,
 * `eq: neural.ode`       — its continuous-time limit (neural ODE),
@@ -21,7 +25,7 @@ analytic results (existence/uniqueness of the ODE flow, etc.) appear
 in later sections and the appendices.
 -/
 
-import Transformer.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -131,7 +135,7 @@ def SA
 
 When every token sits at the same point `x`, the attention average is `x`
 itself — the weights are equal and sum to one — and `Proj_x x = 0`, so the
-constant curve solves `eq: SA`.  It is the one solution of `SA` available in
+constant curve solves `eq: SA`. It is the one solution of `SA` available in
 closed form, and it is what makes the hypotheses of the Appendix D estimates
 satisfiable. -/
 theorem SA_const_consensus (hn : 0 < n) (β : ℝ) (x : SSphere d) :
@@ -164,7 +168,7 @@ example : 0 < 1 := one_pos
 /-! ### §2.2 — Boundedness of the partition function
 
 The text right after `eq: dissipation.softmax` notes that
-`e^{-β} ≤ Z_{β,μ}(x) ≤ e^{β}` for all `x ∈ 𝕊^{d-1}`.  We record the
+`e^{-β} ≤ Z_{β,μ}(x) ≤ e^{β}` for all `x ∈ 𝕊^{d-1}`. We record the
 particle-system analogue. -/
 
 /-- **Boundedness of the partition function.**

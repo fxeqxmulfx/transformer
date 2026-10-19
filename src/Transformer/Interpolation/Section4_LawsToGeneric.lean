@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_RobustQuadrantFamily
+
+/-!
 # Moving finite original quadrant laws to generic concentration caps
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, §3.2,
@@ -18,7 +22,7 @@ strictly positive-quadrant supports at each completed replacement,
 without assuming that contraction preserves a selected mean ray.
 -/
 
-import Transformer.Interpolation.Section4_RobustQuadrantFamily
+@[expose] public section
 
 open Real MeasureTheory Set
 

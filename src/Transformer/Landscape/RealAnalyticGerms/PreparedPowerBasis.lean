@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.RealAnalyticGerms.PreparedQuotient
+
+/-!
 # Real analytic germs: PreparedPowerBasis
 
 Adapted from Bochao Kong's LocalComplexGeometry, revision
@@ -8,7 +12,7 @@ dependency closure is retained. Apache-2.0 license:
 third_party/LocalComplexGeometry/LICENSE.
 -/
 
-import Transformer.Landscape.RealAnalyticGerms.PreparedQuotient
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology
@@ -93,7 +97,7 @@ theorem preparedQuotient_moduleFinite {n d : ℕ}
   Module.Finite.of_basis (preparedQuotientBasis a ha ha0)
 
 /-- Combined finite-free conclusion for the quotient by a prepared
-polynomial.  The preceding `preparedQuotientBasis` specifies its rank-`d`
+polynomial. The preceding `preparedQuotientBasis` specifies its rank-`d`
 power basis.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2. -/
 theorem preparedQuotient_finiteFree {n d : ℕ}

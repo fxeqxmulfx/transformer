@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section4_AnisotropicMargins
+public import Transformer.Causal.Section5_GapBarrier
+
+/-!
 # A genuine forward-invariant region away from the leading axis
 
 Source: arXiv:2411.04990v2, §4, Conjecture `thm1.5` and
@@ -16,8 +21,7 @@ The positive-measure argument for the source's almost-everywhere
 quantifier is separate; no conclusion about that measure is assumed here.
 -/
 
-import Transformer.Causal.Section4_AnisotropicMargins
-import Transformer.Causal.Section5_GapBarrier
+@[expose] public section
 
 open Real Set Filter Topology
 

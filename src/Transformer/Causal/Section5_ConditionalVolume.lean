@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section5_FrozenDefs
+public import Mathlib.MeasureTheory.Measure.Prod
+
+/-!
 # Lebesgue conditioning on the original frozen-system prefix
 
 ArXiv:2411.04990v2, §5 and Appendix A, the initialization
@@ -18,8 +23,7 @@ Measurability is an explicit premise of the conditioning
 statements; no null-set property is built into a definition.
 -/
 
-import Transformer.Causal.Section5_FrozenDefs
-import Mathlib.MeasureTheory.Measure.Prod
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 
@@ -57,7 +61,7 @@ theorem measurePreserving_frozenAngleSplit (n : ℕ) :
 /-- The actual original prefix projection pulls back every original prefix-volume null exceptional set to an original full-volume null set.
 Source: arXiv:2411.04990v2, §5 and Appendix A, lifting the original almost-everywhere prefix induction in `thm:fixed_centers`. -/
 theorem quasiMeasurePreserving_frozenPrefix (n : ℕ) :
-    Measure.QuasiMeasurePreserving (fun φ : Idx (n + 1) → ℝ => fun j : Idx n => φ j.castSucc)
+    QuasiMeasurePreserving (fun φ : Idx (n + 1) → ℝ => fun j : Idx n => φ j.castSucc)
       volume volume := by
   have h := (Measure.quasiMeasurePreserving_fst (μ := (volume : Measure (Idx n → ℝ)))
     (ν := (volume : Measure ℝ))).comp (measurePreserving_frozenAngleSplit n).quasiMeasurePreserving

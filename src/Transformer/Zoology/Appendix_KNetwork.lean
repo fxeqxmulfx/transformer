@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_KCoyoteGates
+public import Transformer.Zoology.Appendix_Network
+
+/-!
 # Stacking K-constrained Coyote layers
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: W-kmat`,
@@ -7,8 +12,7 @@ model uses K-matrix projections in every layer. This module gives stacks
 of such layers an exact functional and parameter-count semantics.
 -/
 
-import Transformer.Zoology.Appendix_KCoyoteGates
-import Transformer.Zoology.Appendix_Network
+@[expose] public section
 
 namespace Transformer.Zoology
 

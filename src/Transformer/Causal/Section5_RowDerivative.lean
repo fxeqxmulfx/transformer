@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Section5_RowField
+
+/-!
 # The actual derivative of the original normalized frozen row
 
 ArXiv:2411.04990v2, §5, the diagonal scalar derivative used
@@ -17,7 +21,7 @@ in the formula. Joint continuity also gives the derivative
 limit along converging actual predecessor and last trajectories.
 -/
 
-import Transformer.Causal.Section5_RowField
+@[expose] public section
 
 open Real Set Filter
 

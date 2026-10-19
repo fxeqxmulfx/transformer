@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_LawsToGeneric
+public import Transformer.Interpolation.Section4_LawsToTargets
+public import Transformer.Interpolation.Section3_RidgeClassSequence
+
+/-!
 # Original quadrant law matching with a linear phase count
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, §3.2,
@@ -18,9 +24,7 @@ existence and phase-count statements; the quantitative parameter-norm
 estimate is a further part of the source's main theorem.
 -/
 
-import Transformer.Interpolation.Section4_LawsToGeneric
-import Transformer.Interpolation.Section4_LawsToTargets
-import Transformer.Interpolation.Section3_RidgeClassSequence
+@[expose] public section
 
 open Real MeasureTheory Set
 

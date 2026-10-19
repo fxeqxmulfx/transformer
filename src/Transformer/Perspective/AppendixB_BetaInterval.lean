@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+
+/-!
 # Appendix B — the angle `τ_β^*`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -13,8 +18,7 @@ The block Hessian on the circle (`eq: taylor2`, `eq: taylor3`) is in
 `eq: metric.hess`) are in `Perspective.AppendixB_HighD`.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
+@[expose] public section
 
 open scoped BigOperators
 open Real

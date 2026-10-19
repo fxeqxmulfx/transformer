@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section5_MetaTail
+public import Transformer.FrankWolfe.Section5_BinomialExp
+
+/-!
 # Attention's forward pass and Frank-Wolfe — proved dynamic metastability
 
 The corrected theorem is assembled from the actual attention transition
@@ -9,8 +14,7 @@ bound in the stated formula and is included without division assumptions.
 Source: arXiv:2508.09628v1, §5, `lem: metastab.1`.
 -/
 
-import Transformer.FrankWolfe.Section5_MetaTail
-import Transformer.FrankWolfe.Section5_BinomialExp
+@[expose] public section
 
 open scoped BigOperators Pointwise
 open Real MeasureTheory
@@ -21,7 +25,7 @@ namespace FrankWolfe
 /-- **Theorem (lem: metastab.1) — metastability, as repaired.**
 
 In the setup of `lem: first.phase` — a polytope `𝒦` with vertices `v`, particles `X₀ ∈ 𝒦ⁿ`
-attached to vertices by `σ`, each within `ρ` of its own vertex — let `ε > 0` and `γ ∈ (0,1)`.  The
+attached to vertices by `σ`, each within `ρ` of its own vertex — let `ε > 0` and `γ ∈ (0,1)`. The
 exit time
 
   `T₂ = inf{t : x_{ji}^t ∉ conv{x_{ji}^0}_j + B(0,ε) for some i, j}`
@@ -30,18 +34,18 @@ then satisfies, for `t > 1`,
 
   `ℙ[T₂ ≥ t] ≥ 1 - exp(M (1 + log(t n² / M) - β c₀ / 2))`,   `M = ⌈ε / (γ 𝖽(𝒦))⌉`,
 
-where `𝖽(𝒦)` is the diameter.  The right-hand side is close to `1` up to `t ∼ e^{β c₀ / 2}`.
+where `𝖽(𝒦)` is the diameter. The right-hand side is close to `1` up to `t ∼ e^{β c₀ / 2}`.
 
 **What the source says and what is changed here.**  The printed bound
 
   `ℙ[T₂ ≥ t] ≥ 1 - exp((1 + ε/γ) log(γt/ε) + (1 + ε/γ) log n - β c₀ ε / (2γ))`
 
-is not what the proof gives, and the two differ in the exponent.  The proof shows that a particle
+is not what the proof gives, and the two differ in the exponent. The proof shows that a particle
 cannot leave its group's `ε`-neighbourhood in fewer than `M ≈ ε/(γ𝖽(𝒦))` steps in which some
 particle attends to another group, each such step having probability at most `n² e^{-λβ}`; the
 printed exponent `β c₀ ε / (2γ)` drops the factor `1/𝖽(𝒦)` and puts `c₀` in place of `λ ≤ c₀`.
 It is not invariant under rescaling the polytope, which the dynamics is (at inverse temperature
-`β s²`), so it cannot be right as printed.  Four repairs, each a missing hypothesis or a wrong
+`β s²`), so it cannot be right as printed. Four repairs, each a missing hypothesis or a wrong
 constant:
 
 * the number of exits needed is `M`, not `ε/γ`, and the tail estimate is the binomial one,
@@ -49,7 +53,7 @@ constant:
 * `cl: group.cluster.bound` bounds `⟨x, v_m⟩ ≤ ⟨v_ℓ, v_m⟩ + ‖x - v_ℓ‖ ‖v_m‖`, so the norm `R` of
   the vertices enters, not `𝖽(𝒦)`; with `r = ρ + ε` the score of another group is at most
   `e^{-β (c₀ - 4Rr - r²)}` relative to the particle's own, and `λ = c₀ - 4Rr - r²` is positive only
-  when `r` is small.  The printed statement asks for that of `ε` alone (`ε_*`), while `Cτ` may be as
+  when `r` is small. The printed statement asks for that of `ε` alone (`ε_*`), while `Cτ` may be as
   large as `C c₀ / (2 max_j ‖v_i - v_j‖)`, so the smallness of `ρ + ε` is a hypothesis here:
   `4R(ρ + ε) + 2(ρ + ε)² ≤ c₀/2`, which gives `λ ≥ c₀/2`;
 * `C`, `τ`, `ε_*` and `β_*` only ever served to make `ρ = Cτ` and `ε` small enough for that
@@ -59,9 +63,9 @@ constant:
   statement stronger, not weaker. A separate `ρ > 0` input is also unnecessary: the initial
   ball membership already implies it when a particle exists, and the empty case is included.
 
-`T₂` is not introduced as an `ℕ∞`-valued random variable.  The event `{T₂ ≥ t}` is the event that
+`T₂` is not introduced as an `ℕ∞`-valued random variable. The event `{T₂ ≥ t}` is the event that
 no particle has left its group's `ε`-neighbourhood at any step `s < t`, and that is what the
-conclusion is stated about — the same set, without the extra definition.  Relabelling `x_ℓ^0` as
+conclusion is stated about — the same set, without the extra definition. Relabelling `x_ℓ^0` as
 `x_{ji}^0` is the fibre `σ⁻¹(i)`, so `conv{x_{ji}^0}_j` is `groupHull X₀ σ (σ i)`.
 
 **Proof.** Count a bad step only while all particles are within `ρ + ε` of

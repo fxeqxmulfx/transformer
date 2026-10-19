@@ -1,5 +1,7 @@
-import Transformer.Grokking.AdamW.LossDescent
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
+module
+
+public import Transformer.Grokking.AdamW.LossDescent
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
 
 /-!
 # Finite descent requires control along the update interval
@@ -17,6 +19,8 @@ The envelope covers the whole open update interval, not just its initial
 Hessian. A negative starting slope alone does not certify a prescribed
 rate. No optimizer, learning rate or original training run is modified.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

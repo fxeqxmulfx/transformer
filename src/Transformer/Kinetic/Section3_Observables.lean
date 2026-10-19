@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_SecondDifferenceBound
+
+/-!
 # Differences of a periodic test of the flow
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, `eq:chain-rule-Glaub` and
@@ -11,7 +15,7 @@ when token `l` alone moves, by at most `κ π e^{L₁T} Ĝ^l_a(T)`
 `π` (`exists_periodic_update`, `exists_periodic_update_two`).
 -/
 
-import Transformer.Kinetic.Section3_SecondDifferenceBound
+@[expose] public section
 
 open Real
 

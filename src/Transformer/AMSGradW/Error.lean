@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AMSGradW.Contraction
+
+/-!
 # Contracting error of the actual AMSGradW state
 
 arXiv:1904.03590v4, Algorithm 1 and §4, AMSGradW extension.
@@ -6,7 +10,7 @@ Weights and actual momentum contract toward the frozen-metric
 equilibrium, up to a forcing caused by the real denominator history.
 -/
 
-import Transformer.AMSGradW.Contraction
+@[expose] public section
 
 noncomputable section
 

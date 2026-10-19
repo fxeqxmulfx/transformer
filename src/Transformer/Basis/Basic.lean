@@ -1,6 +1,8 @@
-import Mathlib.Data.List.Basic
-import Mathlib.Data.Fin.Basic
-import Mathlib.Tactic
+module
+
+public import Mathlib.Data.List.Basic
+public import Mathlib.Data.Fin.Basic
+public import Mathlib.Tactic
 
 /-!
 # Basis tasks on lists of integer tokens
@@ -17,6 +19,8 @@ total on List Int. Task correctness will be stated on valid prefixes.
 Encoding into Fin V checks both bounds, so a negative integer is never
 silently turned into vocabulary token zero.
 -/
+
+@[expose] public section
 
 namespace Transformer.Basis
 

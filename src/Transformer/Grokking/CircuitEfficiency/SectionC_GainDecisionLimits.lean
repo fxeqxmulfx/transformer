@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainSeedSequence
-import Mathlib.Topology.Separation.Hausdorff
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainSeedSequence
+public import Mathlib.Topology.Separation.Hausdorff
 
 /-!
 # Noncommuting small-initialization and long-time actual decision limits
@@ -28,6 +30,8 @@ distribution. It does not establish a thermodynamic phase transition,
 learned GPTMini transfer, loss convergence or numerical seed viability.
 Fixed gained tables and decoupled native AdamW differ from coupled-cost GD.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

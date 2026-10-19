@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Normalization.InitialBias
+public import Transformer.Normalization.Velocities
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+
+/-!
 # Deterministic attention estimates at initialization
 
 The softmax denominator and contracted query used in the proof of
 Theorem 4.2, §4.2 and Appendix B of arXiv:2510.22026v2.
 -/
 
-import Transformer.Normalization.InitialBias
-import Transformer.Normalization.Velocities
-import Mathlib.Analysis.InnerProductSpace.Adjoint
+@[expose] public section
 
 open scoped BigOperators
 open MeasureTheory

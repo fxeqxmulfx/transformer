@@ -1,12 +1,17 @@
-/-
+module
+
+public import Transformer.ALM.Query
+public import Transformer.ALM.Basic
+
+/-!
 # The hull answers the lookup: joining the two halves of ALM
 
 `Transformer.ALM.Query` proves that `lower_bound` returns a maximizer of
-`lineEval` — a statement about lines in the plane.  `Transformer.ALM.Basic`
+`lineEval` — a statement about lines in the plane. `Transformer.ALM.Basic`
 proves that `score` is maximized at the matching key — a statement about
-`EucSpace m`.  Nothing connected the two, so the geometry of
+`EucSpace m`. Nothing connected the two, so the geometry of
 `transformer_vm/attention/hull2d_cht.h` and the lookup it implements were
-still separate theories.  This file joins them in dimension one, which is the
+still separate theories. This file joins them in dimension one, which is the
 dimension the published construction runs in
 (`Transformer.ALM.Defs`, `sScore`).
 
@@ -19,7 +24,7 @@ Two facts do the work.
 The midpoint formula has a consequence the implementation does not state:
 the breakpoints of a sorted key list are automatically sorted, so the
 invariant `hull2d_cht.h` maintains by an erase loop (lines 95-98) holds for
-free, and `liftKey_not_dominated` shows the loop can never fire.  Lifted keys
+free, and `liftKey_not_dominated` shows the loop can never fire. Lifted keys
 are points of a strictly convex parabola, and every point of a strictly
 convex curve is extreme.
 
@@ -27,8 +32,7 @@ Source: `transformer_vm/attention/hull2d_cht.h`, lines 11-17 (the reduction)
 and 95-98, 203-215 (the invariant and the query).
 -/
 
-import Transformer.ALM.Query
-import Transformer.ALM.Basic
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -36,7 +40,7 @@ namespace ALM
 /-! ### The scalar score is a line value -/
 
 /-- **The bridge.**  In dimension one the paraboloid score of a key against a
-query is the value at `q` of the line the hull stores for that key.  No
+query is the value at `q` of the line the hull stores for that key. No
 division occurs, because a lifted query has second coordinate `1`
 (`liftQuery_snd`). -/
 theorem score_eq_lineEval (q k : EucSpace 1) :
@@ -126,8 +130,8 @@ lemma hbp_liftKey {n : ℕ} {K : ℕ → ℝ} (hstep : ∀ j, j < n → K j < K 
 /-- **What the machine computes is what the lookup asks for.**  Let the keys
 be sorted, and let `i` be the index `lower_bound(q)` yields — every earlier
 midpoint is at or left of `q`, and `i`'s own midpoint is at or right of it,
-with `i = n` the `it == end` fallback.  Then key `i` maximizes the scalar
-paraboloid score over the whole list.  A query sitting exactly on a midpoint
+with `i = n` the `it == end` fallback. Then key `i` maximizes the scalar
+paraboloid score over the whole list. A query sitting exactly on a midpoint
 is allowed: there the two keys score the same, so either branch is right.
 
 This is the statement `hull2d_cht.h` assumes and never proves. -/

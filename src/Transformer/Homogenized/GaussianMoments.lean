@@ -1,9 +1,16 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Homogenized.LinearFormMoments
+public import Mathlib.Analysis.Matrix.MeasurableSpace
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+
+/-!
 # Homogenized Transformers — second moments of a random linear map
 
 The computation behind consequence (i) of assumption (G) of arXiv:2604.01978v1.
 Under (G) the value matrix `V` is independent of the query-key matrix `A`, and
-its entries are uncorrelated with variance `σ_V²`.  For a bounded vector `m(A)`
+its entries are uncorrelated with variance `σ_V²`. For a bounded vector `m(A)`
 that sees only `A`,
 
   `E⟨u, V m(A)⟩² = σ_V² ‖u‖² E‖m(A)‖²`  and
@@ -17,10 +24,7 @@ The first is the linear form `Σ_{ik} V_{ik} u_i m_k` of
 Source: arXiv:2604.01978v1, §2.3.3, item (i).
 -/
 
-import Transformer.Basic
-import Transformer.Homogenized.LinearFormMoments
-import Mathlib.Analysis.Matrix.MeasurableSpace
-import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+@[expose] public section
 
 open scoped BigOperators
 open MeasureTheory ProbabilityTheory

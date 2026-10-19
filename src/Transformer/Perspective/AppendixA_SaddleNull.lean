@@ -1,26 +1,30 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_Barycenter
+public import Transformer.Perspective.AppendixA_Flow
+public import Transformer.Perspective.AppendixA_StayNear
+public import Transformer.Perspective.UniformLipschitz
+
+/-!
 # Appendix A — the trajectories converging to a saddle start in a null set
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*, Appendix A, `l:nosaddleconv`.
 
 A solution of `e:gradfl` converging to a non-trivial critical point `Z` falls
-under one of three cases (`tendsto_critical_cases`).  If `Z` has zero
+under one of three cases (`tendsto_critical_cases`). If `Z` has zero
 barycentre, so had the start (`sum_eq_zero_of_tendsto`); if two particles sit
 together opposite to the barycentre, they started together
 (`coord_eq_of_tendsto`); otherwise `Z` is the saddle `signedTuple e {i₀}` of a
-single particle `i₀` opposite to the others, `n ≥ 3`.  The last case is the
+single particle `i₀` opposite to the others, `n ≥ 3`. The last case is the
 source's argument (`measure_tendsto_signedTuple`): the countably many local
 center-stable sets `stayNear e' i₀ r`, `e'` in a countable dense set, cover the
 trajectory from an integer time `ℓ` on, so the start lies in their images under
-the backward flow `Φ^{-ℓ}`, which are null since that flow is Lipschitz.  So
+the backward flow `Φ^{-ℓ}`, which are null since that flow is Lipschitz. So
 the lemma itself, `no_saddle_convergence`, holds.
 -/
 
-import Transformer.Perspective.AppendixA_Barycenter
-import Transformer.Perspective.AppendixA_Flow
-import Transformer.Perspective.AppendixA_StayNear
-import Transformer.Perspective.UniformLipschitz
+@[expose] public section
 
 open Set Filter MeasureTheory
 open scoped Topology
@@ -31,7 +35,7 @@ namespace Perspective
 variable {d n : ℕ}
 
 /-- **The trajectories converging to a saddle with one particle apart start in a
-null set** (`d ≥ 2`, `n ≥ 3`).  With `r = 1/(60 n)` and `D` countable and dense
+null set** (`d ≥ 2`, `n ≥ 3`). With `r = 1/(60 n)` and `D` countable and dense
 in the sphere, such a trajectory enters `stayNear e' i₀ r` at an integer time
 `ℓ` for some `e' ∈ D` (`exists_nat_mem_stayNear`), so its start lies in the
 image of the closure of `stayNear e' i₀ r`, a null set
@@ -121,9 +125,9 @@ variable (d n) in
 
 On a compact Riemannian manifold the set of initial conditions whose
 gradient-ascent trajectory converges to a strict saddle of a smooth `f` has
-zero volume (center-stable manifold theorem).  It is stated here in the only
+zero volume (center-stable manifold theorem). It is stated here in the only
 instance the survey uses it: `ℳ = (𝕊^{d-1})^n`, `f = 𝖤_0`, and — by
-`yury_lemma` — the strict saddles are the non-trivial critical points.  Volume
+`yury_lemma` — the strict saddles are the non-trivial critical points. Volume
 is the uniform measure `UniformTuple`.
 
 The proof is the source's for the saddles `signedTuple e {i₀}`, one particle
@@ -131,17 +135,17 @@ opposite to the others (`measure_tendsto_signedTuple`): countably many local
 center-stable sets `stayNear e' i₀ r` cover the trajectory from an integer time
 `ℓ` on, each is null, its slices along `i₀` having at most one point
 (`measure_closure_stayNear`), and the backward flow `Φ^{-ℓ}`, Lipschitz, keeps
-it null.  The other non-trivial critical points are reached only from the null
+it null. The other non-trivial critical points are reached only from the null
 sets of zero barycentre and of two coincident particles
 (`tendsto_critical_cases`).
 
 **What the source says and what is changed here.**  The source states the
 lemma for every compact Riemannian manifold; on `(𝕊⁰)^n`, of dimension `0`, it
-holds vacuously, there being no strict saddles.  The instance here puts the
+holds vacuously, there being no strict saddles. The instance here puts the
 non-trivial critical points in place of the strict saddles, which
-`yury_lemma` justifies only for `d ≥ 2`.  At `d = 1` every configuration is
+`yury_lemma` justifies only for `d ≥ 2`. At `d = 1` every configuration is
 critical and stationary, so the non-trivial ones, of mass `1 - 2^{1-n} > 0`
-for `n ≥ 2`, converge to non-trivial critical points.  The hypothesis
+for `n ≥ 2`, converge to non-trivial critical points. The hypothesis
 `2 ≤ d` is added, as in `yury_lemma`.
 
 Source: arXiv:2312.10794v5, Appendix A, `l:nosaddleconv`. -/

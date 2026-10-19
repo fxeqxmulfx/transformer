@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section5_FirstExit
+
+/-!
 # Attention's forward pass and Frank-Wolfe — the survival probability
 
 The actual transition law supplies a conditional bound for stopped bad
@@ -18,7 +22,7 @@ Source: arXiv:2508.09628v1, §5, `cl: group.cluster.bound`,
 `lem: metastab.1`, `eq: union.bound`, `eq: binomial.2`.
 -/
 
-import Transformer.FrankWolfe.Section5_FirstExit
+@[expose] public section
 
 open scoped ENNReal BigOperators Pointwise
 open MeasureTheory

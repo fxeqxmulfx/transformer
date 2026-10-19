@@ -1,21 +1,27 @@
-/-
+module
+
+public import Transformer.Perspective.SphereInvariant
+public import Mathlib.Algebra.Polynomial.Roots
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+
+/-!
 # Rotation-invariant measures do not charge great spheres
 
 `Perspective.UniformTuple` pins the uniform law on `𝕊^{d-1}` down by rotation
-invariance.  `Perspective.SphereInvariant` draws from that description that
+invariance. `Perspective.SphereInvariant` draws from that description that
 points are null; this file draws the next fact, that great spheres are: a
 rotation-invariant finite measure `σ` gives `{x ∈ 𝕊^{d-1} : ⟨x, u⟩ = 0}` mass
 `0` for every `u ≠ 0` (`measure_greatSphere_eq_zero`), hence every proper
 subspace of `ℝ^d` meets the sphere in a null set
 (`measure_mem_submodule_eq_zero`).
 
-The argument is the one for points, with great spheres in place of points.  A
+The argument is the one for points, with great spheres in place of points. A
 reflection carries any unit vector to any other, and with it the great sphere
-orthogonal to it, so all great spheres carry one mass `c`.  The vectors
+orthogonal to it, so all great spheres carry one mass `c`. The vectors
 `(1, t, t², …, t^{d-1})`, `t = 0, 1, …, N - 1`, are in general position: a
 nonzero `x` orthogonal to one of them has that `t` as a root of the nonzero
 polynomial `Σ_k x_k t^k` of degree `< d`, so `x` lies on at most `d - 1` of
-their great spheres.  Integrating the count, `N c ≤ (d - 1) σ(𝕊^{d-1})` for
+their great spheres. Integrating the count, `N c ≤ (d - 1) σ(𝕊^{d-1})` for
 every `N`, and `c = 0`.
 
 Source: arXiv:2312.10794v5, §6.1 (the footnote to `thm: d.infty`: that `n ≤ d`
@@ -23,9 +29,7 @@ uniform points lie in an open hemisphere almost surely "is easy to see
 directly").
 -/
 
-import Transformer.Perspective.SphereInvariant
-import Mathlib.Algebra.Polynomial.Roots
-import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open MeasureTheory Polynomial

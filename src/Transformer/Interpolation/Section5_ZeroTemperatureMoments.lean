@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_WeakContinuity
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+
+/-!
 # Moment equations at zero temperature
 
 ArXiv:2411.04551v3, §1, `eq: vf` and `eq: cauchy.pb`, and §5,
@@ -15,8 +20,7 @@ rather than merely the particular solution induced by a particle trajectory.
 All integrals here are the actual probability-measure integrals on the sphere.
 -/
 
-import Transformer.Interpolation.Section1_WeakContinuity
-import Mathlib.Analysis.InnerProductSpace.PiL2
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

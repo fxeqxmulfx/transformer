@@ -1,28 +1,32 @@
-/-
+module
+
+public import Transformer.ALM.BinSearch
+
+/-!
 # The sorted key list, derived rather than assumed
 
 `Transformer.ALM.Hull` answers a lookup only for keys that arrive strictly
 increasing: `hull_isGreatest` and `hull_bsearch_isGreatest` both take
-`hstep : K j < K (j + 1)` as a hypothesis.  The machine gets that ordering
+`hstep : K j < K (j + 1)` as a hypothesis. The machine gets that ordering
 from its container — `_HullCHT` stores lines in a `std::set` ordered by slope
 (`transformer_vm/attention/hull2d_cht.h`, lines 95-98) — and duplicate keys
 collapse there, since two equal slopes keep one line (lines 132-139).
 
 Taking the ordering as a hypothesis leaves a gap: nothing said that an
-arbitrary family of keys *can* be presented that way.  This module closes it.
+arbitrary family of keys *can* be presented that way. This module closes it.
 From any finite family `K : Fin n → ℝ` it builds `sortedKey K`, the distinct
 values in increasing order, continued past the last one by unit steps so that
 the sequence is strictly increasing on all of `ℕ` and the hull results apply
-verbatim.  `exists_sortedKey_eq` says nothing is lost: every original key is
+verbatim. `exists_sortedKey_eq` says nothing is lost: every original key is
 one of the first `keyCard K` entries.
 
 What the container does in C++ — order and deduplicate — is here a function
 with a proof, so `hstep` is no longer an assumption about the input but a
-fact about the build.  `Transformer.ALM.HullIndex` uses it to make the hull
+fact about the build. `Transformer.ALM.HullIndex` uses it to make the hull
 an index.
 -/
 
-import Transformer.ALM.BinSearch
+@[expose] public section
 
 namespace Transformer
 namespace ALM

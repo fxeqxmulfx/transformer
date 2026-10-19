@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Basic
+
+/-!
 # Parikh vectors, intervals, and affix restrictions
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -7,20 +11,20 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 
 The depth-hierarchy proof works with the counts of symbols rather than with
 strings: a string is a monotone path through `ℕ^|Σ|`, a prefix is a point on
-that path, and a minimal depth-1 formula is a half-space.  This file fixes
+that path, and a minimal depth-1 formula is a half-space. This file fixes
 the vocabulary.
 
 An *interval* `[i⃗, j⃗]` is a box of Parikh vectors, and a *family of
-intervals* attaches one to each `n⃗`.  An *affix restriction* `(λ, ϱ)` pins a
+intervals* attaches one to each `n⃗`. An *affix restriction* `(λ, ϱ)` pins a
 prefix and a suffix that depend only on `n⃗`, leaving free only the *middle*
 of the string; its middle, as a family of intervals, is
-`n⃗ ↦ [ℙ(λ(n⃗)), n⃗ - ℙ(ϱ(n⃗))]`.  The restriction is *accommodating* when that
+`n⃗ ↦ [ℙ(λ(n⃗)), n⃗ - ℙ(ϱ(n⃗))]`. The restriction is *accommodating* when that
 middle is not too tight — "for any `s⃗` there is an interval `[i⃗, j⃗]` in the
 image of `I` such that `s⃗ ≤ j⃗ - i⃗`" — which is what lets the depth-reduction
 step be iterated.
 -/
 
-import Transformer.CRASP.Basic
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -66,7 +70,7 @@ def Accommodating (I : IntervalFamily σ) : Prop :=
   ∀ s : PVec σ, ∃ n : PVec σ, ∀ a, s a + (I n).lo a ≤ (I n).hi a
 
 /-- An interval *sticks to the top of* another when it sits inside it and
-their upper corners agree at `b` (§4.4).  The paper takes `Σ = {a, b}` there
+their upper corners agree at `b` (§4.4). The paper takes `Σ = {a, b}` there
 and reads a Parikh vector as a point of the plane; the definition is stated
 here for whichever symbol is named. -/
 def SticksTo (b : σ) (I' I : Interval σ) : Prop := I'.Subset I ∧ I'.hi b = I.hi b
@@ -116,7 +120,7 @@ def prefixVec (w : List σ) (i : ℕ) : PVec σ := parikh (w.take i)
 /-- A formula is *constant* on a family of intervals when its truth value
 depends on neither the string nor the position, as long as the string has the
 given Parikh vector and the position sits inside the interval (Definition
-`def:constant`).  "Positions" are those of the strings, `1 ≤ i ≤ |w|`, as in
+`def:constant`). "Positions" are those of the strings, `1 ≤ i ≤ |w|`, as in
 the paper; `prefixVec` alone would also admit `i = 0` and `i > |w|`. -/
 def ConstantOn (φ : Form σ) (I : IntervalFamily σ) : Prop :=
   ∀ (n : PVec σ) (w w' : List σ) (i i' : ℕ), parikh w = n → parikh w' = n →
@@ -183,7 +187,7 @@ theorem accommodating_trivial : (⟨fun _ => [], fun _ => []⟩ : Affix σ).Acco
 
 /-- A formula with no counting is constant on every family of intervals only
 when it also cannot read the current symbol; the constant predicates of the
-paper are the ones a PNP can express.  Here is the simplest nontrivial
+paper are the ones a PNP can express. Here is the simplest nontrivial
 witness that `ConstantOn` is satisfiable: a PNP that ignores its arguments. -/
 example (I : IntervalFamily σ) : ConstantOn (.pnp fun _ _ => true) I :=
   fun _ _ _ _ _ _ _ _ _ _ _ _ _ => rfl

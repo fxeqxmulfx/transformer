@@ -1,4 +1,8 @@
-/-
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Gaussian.PoissonSummation
+
+/-!
 # Kinetic theory for Transformers — the periodic Gaussian
 
 The Poisson summation formula for the periodic Gaussian that mollifies the
@@ -12,7 +16,7 @@ Source: arXiv:2605.09213v1, `eq:Acc-soft-Fourier` ("By the Poisson summation
 formula").
 -/
 
-import Mathlib.Analysis.SpecialFunctions.Gaussian.PoissonSummation
+@[expose] public section
 
 open Real Complex
 

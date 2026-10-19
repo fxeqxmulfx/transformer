@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_UniformTail
+
+/-!
 # A fixed finite net for the original projection estimate
 
 ArXiv:2410.06833v1, §4, `prop: concentration unif`, and
@@ -15,7 +19,7 @@ The detection factor two is proved by normalizing the actual nonzero
 coordinate vector and applying Cauchy–Schwarz to a nearby net point.
 -/
 
-import Transformer.Metastability.Section4_UniformTail
+@[expose] public section
 
 open Real Set
 

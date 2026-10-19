@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.MeanField.Basic
+public import Transformer.Perspective.Section2_FlowMap
+
+/-!
 # Mean-Field Dynamics — the pairing phase (§5 of 2512.01868v4)
 
 * `eq: init_clust`      — a discrete multi-cluster initial datum
@@ -18,15 +24,13 @@ of the survey's footnote forbids it, and `hardmaxPair` — where each of the two
 merging clusters follows the *other* one — is that limit.
 
 `thm: agazzi_merge`, the convergence of the first to the second as `β → ∞`, is
-false as the survey prints it: `MeanField.not_agazzi_merge`.  What
+false as the survey prints it: `MeanField.not_agazzi_merge`. What
 `hardmaxPair` itself does — the clusters outside the pair standing still, and
 the pair approaching each other without ever arriving — is proved in
 `MeanField.PairMerge`.
 -/
 
-import Transformer.Basic
-import Transformer.MeanField.Basic
-import Transformer.Perspective.Section2_FlowMap
+@[expose] public section
 
 open scoped BigOperators
 open Real

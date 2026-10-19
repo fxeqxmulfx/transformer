@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Normalization.InitialProduct
+public import Mathlib.Analysis.InnerProductSpace.LinearMap
+
+/-!
 # Second moments of independent vector sums
 
 The mean-norm input for vector concentration in Appendix B, proof of
 Theorem 4.2 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Normalization.InitialProduct
-import Mathlib.Analysis.InnerProductSpace.LinearMap
+@[expose] public section
 
 open scoped BigOperators
 open MeasureTheory

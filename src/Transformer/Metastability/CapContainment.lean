@@ -1,18 +1,23 @@
-/-
+module
+
+public import Transformer.Metastability.AttnComparison
+public import Transformer.Metastability.CapGeometry
+
+/-!
 # Metastability — Step 1 of the direct proof: the particles stay in their caps
 
 Item 1 of `thm: metastability` in arXiv:2410.06833v1: a particle that starts in `𝒮_q(ε)`
 is in `𝒮_q(2ε)` for all `t ∈ [0, T₂]`, `T₂ = (ε/n) e^{(1-α)β}`.
 
 Let `q : Idx n → Idx k` assign to each token the cap of its initial position, and put
-`E = e^{-(1-α)β}`.  For the finite family
+`E = e^{-(1-α)β}`. For the finite family
 
   `f_j(t) = ⟨x_j(t), w_{q(j)}⟩ - (1 - ε) + n E t`
 
-the barrier argument (`finite_nonneg_of_boundary_deriv_on`) applies.  Suppose all `f_i(t) ≥ 0`
-at some `t ≤ T₂`.  Then `⟨x_i(t), w_{q(i)}⟩ ≥ 1 - ε - n E t ≥ 1 - 2ε` for every `i`, so every
+the barrier argument (`finite_nonneg_of_boundary_deriv_on`) applies. Suppose all `f_i(t) ≥ 0`
+at some `t ≤ T₂`. Then `⟨x_i(t), w_{q(i)}⟩ ≥ 1 - ε - n E t ≥ 1 - 2ε` for every `i`, so every
 token is in its cap `𝒮_{q(i)}(2ε)` and, by the definition of `α`, tokens of different caps
-satisfy `⟨x_i, x_k⟩ ≤ α`: their attention weights are at most `E`.  If moreover `f_j(t) = 0`,
+satisfy `⟨x_i, x_k⟩ ≤ α`: their attention weights are at most `E`. If moreover `f_j(t) = 0`,
 then `x_j` attains the minimum of `⟨x_k, w_{q(j)}⟩` over its own cap, so
 `cap_velocity_ge` gives `d/dt ⟨x_j, w⟩ ≥ -(n-1) E` and `f_j' ≥ E > 0`: no `f_j` can cross zero.
 
@@ -22,8 +27,7 @@ the margin `E` that makes the barrier strict, so the endpoint `T₂` needs no li
 Source: arXiv:2410.06833v1, §2, proof of `thm: metastability`, Step 1.
 -/
 
-import Transformer.Metastability.AttnComparison
-import Transformer.Metastability.CapGeometry
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 open Real Set
@@ -33,8 +37,8 @@ namespace Metastability
 
 variable {d n : ℕ}
 
-/-- **Cap containment** (item 1 of `thm: metastability`).  Let `X` be an attention flow
-(`SA` or `USA`) and `q i` a cap containing `x_i(0)` in `𝒮_{q(i)}(ε)`.  With
+/-- **Cap containment** (item 1 of `thm: metastability`). Let `X` be an attention flow
+(`SA` or `USA`) and `q i` a cap containing `x_i(0)` in `𝒮_{q(i)}(ε)`. With
 `α = α(ε)`, `T₂ = ε / (n e^{-(1-α)β})`, every `x_i(t)` with `t ∈ [0, T₂]` lies in
 `𝒮_{q(i)}(2ε)`.
 

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.MeanField.Merging
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # Mean-Field Dynamics — two explicit trajectories on a great circle (§5 of 2512.01868v4)
 
 For orthonormal `e, f`, two closed-form solutions on the circle they span:
@@ -14,9 +20,7 @@ For orthonormal `e, f`, two closed-form solutions on the circle they span:
 They are the witnesses of `MeanField.not_agazzi_merge`.
 -/
 
-import Transformer.MeanField.Merging
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open Real
 
@@ -97,7 +101,7 @@ theorem hasDerivAt_pairPath (e f : EucSpace d) (he : ‖e‖ = 1) (hf : ‖f‖ 
   match_scalars <;> field_simp <;> rw [hsq] <;> ring
 
 /-- `tanh 2s ≤ 1/2` for `s ≤ 1/4`, written without division:
-`2 sinh s cosh s ≤ (cosh² s + sinh² s)/2`, since `e^{4s} ≤ e < 3`.  The bound
+`2 sinh s cosh s ≤ (cosh² s + sinh² s)/2`, since `e^{4s} ≤ e < 3`. The bound
 `⟨y_ī, y_j̄⟩ ≤ 1 - ε` of `thm: agazzi_merge` at `ε = 1/2`, `T = 1/4`.
 
 Source: arXiv:2512.01868v4, §5, `thm: agazzi_merge`. -/

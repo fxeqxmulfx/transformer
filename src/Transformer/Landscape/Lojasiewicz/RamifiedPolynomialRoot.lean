@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.PolynomialDegreeReduction
+public import Transformer.Landscape.Lojasiewicz.PolynomialRootCluster
+public import Transformer.Landscape.Lojasiewicz.PreparedRootAccumulation
+
+/-!
 # Real Newton--Puiseux root lifting in arbitrary degree
 
 A real analytic monic polynomial family with central polynomial `y^d`
@@ -7,9 +13,7 @@ after a positive integral power substitution. The proof uses centering,
 Newton scaling, compactness, and real preparation to decrease the degree.
 -/
 
-import Transformer.Landscape.Lojasiewicz.PolynomialDegreeReduction
-import Transformer.Landscape.Lojasiewicz.PolynomialRootCluster
-import Transformer.Landscape.Lojasiewicz.PreparedRootAccumulation
+@[expose] public section
 
 open Filter Set
 

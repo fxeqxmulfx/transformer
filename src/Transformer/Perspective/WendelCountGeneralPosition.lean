@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.WendelCountBinomial
+
+/-!
 # Wendel's deterministic sign-pattern count
 
 In linear general position, the number of strict sign patterns of `n` vectors
@@ -8,7 +12,7 @@ slice recurrence, the dimension-reduced projected family, and Pascal's rule.
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962).
 -/
 
-import Transformer.Perspective.WendelCountBinomial
+@[expose] public section
 
 namespace Transformer.Perspective
 

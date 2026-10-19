@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdWeightedLimit
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdWeightedLimit
 
 /-!
 # Actual retained weighted dissipation at the cold threshold
@@ -31,6 +33,8 @@ exact reals and non-AMSGrad AdamW. No frozen optimizer or checkpoint
 is modified, and no learned GPTMini or thermodynamic size transfer
 is asserted by this four-coordinate current law.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

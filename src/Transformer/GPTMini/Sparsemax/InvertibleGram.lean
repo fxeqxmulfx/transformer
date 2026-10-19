@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.NormalizedGram
+module
+
+public import Transformer.GPTMini.Sparsemax.NormalizedGram
 
 /-!
 # Convex constraints guaranteeing invertible causal attention
@@ -17,6 +19,8 @@ vocabulary, and it does not prove a uniform inverse norm bound. Earlier
 sub-half entry caps cannot normalize the first causal row; the present
 domain therefore leaves the cap explicit and permits that forced self row.
 -/
+
+@[expose] public section
 
 noncomputable section
 

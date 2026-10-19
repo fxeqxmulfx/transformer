@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.DASH.Section3_Rayleigh
+public import Mathlib.Data.Finset.Lattice.Fold
+
+/-!
 # DASH — Power Iteration, pooling, and the unsafe factor-two claim
 
 arXiv:2602.02016v2, §3.4–3.5. A pool improves the best observed
 Rayleigh quotient but does not turn it into a certified upper bound.
 -/
 
-import Transformer.DASH.Section3_Rayleigh
-import Mathlib.Data.Finset.Lattice.Fold
+@[expose] public section
 
 open scoped BigOperators Matrix
 

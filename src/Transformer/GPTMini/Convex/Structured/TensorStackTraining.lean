@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.TensorStack
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorStack
 
 /-!
 # Genuine full-stack complete likelihood is jointly convex
@@ -18,6 +20,8 @@ requires shared attention across layers and zero fixed FFN matrices.
 Output-only CE, independent deep matrices, floating-point equivalence,
 AdamW convergence and benchmark-training success are not asserted.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

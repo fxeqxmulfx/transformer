@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Precision.Nearest
+public import Transformer.Precision.Significand
+public import Mathlib.Tactic.IntervalCases
+
+/-!
 # A running sum in `p` significant bits is capped
 
 The format is any one with `p` significant bits (`HasSignificand`, in
@@ -11,26 +17,24 @@ Beyond `2^{p-1} · 2^s` consecutive numbers of the format are `2^s` apart, so an
 increment in `[0, 2^{s-1})` is absorbed (`accum_stall`); strictly beyond it, in
 absolute value, so is an increment of either sign with `|t| < 2^{s-1}`
 (`accum_stall_abs`), though not at `2^{p-1} · 2^s` itself, where the format
-towards `0` can be twice as dense (`not_accum_stall_abs_le`).  A sum of
+towards `0` can be twice as dense (`not_accum_stall_abs_le`). A sum of
 increments at most `u = 2^s` never exceeds `2^{p+1} u` however many there are
-(`accum_le`).  The exact sum of `n` increments `u` is `n u`, so the computed one
+(`accum_le`). The exact sum of `n` increments `u` is `n u`, so the computed one
 is off by a factor of at least `n / 2^{p+1}`: in binary16 (`p = 11`) past
 `4096` terms, in bfloat16 (`p = 8`) past `512`.
 
-This is a property of the order of summation, not of the format.  The same
+This is a property of the order of summation, not of the format. The same
 format sums `2^K` increments `2^s` exactly in a balanced tree
 (`pairwise_exact`), whatever `K`, as long as `2^{s+K}` is a number of the
-format.  What is fundamental is the cap on the sequential sum.
+format. What is fundamental is the cap on the sequential sum.
 
 Round-to-nearest is IEEE 754-2008, §4.3.1; recursive and pairwise summation
 are Higham, *Accuracy and Stability of Numerical Algorithms*, 2nd ed., §4.1,
-and their error analysis is §4.2.  The cap `accum_le` in this form is this
+and their error analysis is §4.2. The cap `accum_le` in this form is this
 repository's own statement.
 -/
 
-import Transformer.Precision.Nearest
-import Transformer.Precision.Significand
-import Mathlib.Tactic.IntervalCases
+@[expose] public section
 
 namespace Transformer
 namespace Precision
@@ -130,7 +134,7 @@ theorem not_accum_stall_abs_le : ¬ ∀ (M : ℕ) (G : Set ℝ) (Q : ℝ → ℝ
 /-- **A sequential sum in `M + 1` significant bits is capped at `2^{M+2} u`.**
 With increments at most `u = 2^s`, a start at most `T = 2^{M+2} · 2^s`, and `T`
 a number of the format, the running sum stays at most `T` forever, whatever
-the number of terms.  Near `T` the format is `4u` apart, and a nearest
+the number of terms. Near `T` the format is `4u` apart, and a nearest
 rounding of `a + t ≤ T + u` cannot reach the next number. -/
 theorem accum_le (hG : HasSignificand (M + 1) G) (hQ : IsNearest G Q) {a t : ℕ → ℝ}
     (ha : ∀ k, a (k + 1) = Q (a k + t k)) {s : ℤ} (hT : (2 : ℝ) ^ (M + 2) * 2 ^ s ∈ G)

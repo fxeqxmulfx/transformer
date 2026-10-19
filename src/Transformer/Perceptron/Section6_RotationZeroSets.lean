@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_BranchIdentity
+public import Mathlib.MeasureTheory.Measure.Prod
+public import Mathlib.MeasureTheory.Measure.Support
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+public import Mathlib.MeasureTheory.Measure.Typeclasses.NullSingletonClass
+
+/-!
 # Analytic zero sets under a measure-preserving family
 
 ArXiv:2601.21366v2, §6, proof of `prop: unified.log`, part (a),
@@ -19,11 +27,7 @@ No analytic-manifold structure or spherical density is assumed. Its
 application to actual orthogonal sphere rotations is a separate step.
 -/
 
-import Transformer.Perceptron.Section6_BranchIdentity
-import Mathlib.MeasureTheory.Measure.Prod
-import Mathlib.MeasureTheory.Measure.Support
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-import Mathlib.MeasureTheory.Measure.Typeclasses.NullSingletonClass
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped ENNReal

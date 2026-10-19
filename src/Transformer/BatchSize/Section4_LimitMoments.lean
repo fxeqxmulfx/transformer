@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_L2Limits
+public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
+
+/-!
 # Lower semicontinuity of fourth moments at actual Euler limits
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ Mean-square convergence yields convergence in measure. An almost-everywhere
 convergent subsequence and Fatou's lemma preserve proved moment bounds.
 -/
 
-import Transformer.BatchSize.Section4_L2Limits
-import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal ENNReal Topology

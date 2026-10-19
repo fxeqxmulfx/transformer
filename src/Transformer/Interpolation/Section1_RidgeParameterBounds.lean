@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_PhaseSequenceControls
+public import Transformer.Interpolation.Section3_ProjectionControls
+
+/-!
 # Original parameter norms and balanced ReLU clock scaling
 
 ArXiv:2411.04551v3, §1, `eq: vf`, and §5, the norm
@@ -15,8 +20,7 @@ This is a redistribution of actual original parameters, not a change
 to the vector field or to the time assigned to a phase.
 -/
 
-import Transformer.Interpolation.Section1_PhaseSequenceControls
-import Transformer.Interpolation.Section3_ProjectionControls
+@[expose] public section
 
 open Real MeasureTheory Set
 

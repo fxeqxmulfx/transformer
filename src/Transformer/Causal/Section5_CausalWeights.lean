@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Causal.Section5_InteractionDecay
+public import Mathlib.Order.Interval.Finset.Fin
+public import Mathlib.Algebra.Order.BigOperators.Group.LocallyFinite
+
+/-!
 # The actual normalized causal velocity and its separated-token bound
 
 ArXiv:2411.04990v2, §5, `lemma:meta` and `eq:bddotphi`.
@@ -12,9 +18,7 @@ The change of normalization is proved by cancellation, and no speed or
 separation assumption is placed in the definition of the field.
 -/
 
-import Transformer.Causal.Section5_InteractionDecay
-import Mathlib.Order.Interval.Finset.Fin
-import Mathlib.Algebra.Order.BigOperators.Group.LocallyFinite
+@[expose] public section
 
 open scoped BigOperators
 open Real

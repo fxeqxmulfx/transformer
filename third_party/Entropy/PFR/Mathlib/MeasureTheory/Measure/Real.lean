@@ -3,6 +3,12 @@ module
 public import Mathlib.MeasureTheory.Measure.Real
 public import PFR.Mathlib.MeasureTheory.Measure.Prod
 
+/-!
+# Real-valued probabilities
+
+Real-valued measure identities under scalar multiplication, pullbacks and products.
+-/
+
 public section
 
 open Function Set

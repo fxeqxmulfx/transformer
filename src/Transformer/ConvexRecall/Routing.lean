@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.ConvexRecall.Simplex
+public import Transformer.Zoology.Section4_PairedRecall
+
+/-!
 # Content-dependent convex routing on a causal MQAR prefix
 
 Extension of arXiv:2211.11052v1, §3.1: a separate simplex program for
@@ -8,8 +13,7 @@ arXiv:2312.04927v1, Appendix `prop: app-attention` and `app:synthetic`.
 The null slot gives a zero output when no earlier key matches.
 -/
 
-import Transformer.ConvexRecall.Simplex
-import Transformer.Zoology.Section4_PairedRecall
+@[expose] public section
 
 open scoped BigOperators
 

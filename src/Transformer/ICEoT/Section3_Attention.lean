@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section3_AttentionModel
+
+/-!
 # IC-EoT: convexity of the multi-head additive attention layer
 
 arXiv:2603.22095v2, §3.3, Proposition 1. These proofs use the actual
@@ -6,7 +10,7 @@ query, key, shared latent, diagonal gate/value, averaging and projection
 equations, rather than assuming the attention layer's desired properties.
 -/
 
-import Transformer.ICEoT.Section3_AttentionModel
+@[expose] public section
 
 noncomputable section
 

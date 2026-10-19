@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.Factor
+
+/-!
 # Local uniformization: comparable exponents
 
 If a difference `U (x - w)^A - V (x - w)^B` of two units times monomials has
@@ -9,7 +13,7 @@ monomials have disjoint supports; if both were nontrivial, it would vanish at
 vanishes. Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Uniformization.Factor
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators Topology

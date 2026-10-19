@@ -1,4 +1,22 @@
-/-
+module
+
+public import Transformer.NoiseScale.Section2_Batches
+public import Transformer.NoiseScale.Section2_Quadratic
+public import Transformer.NoiseScale.Section2_NoiseScale
+public import Transformer.NoiseScale.Section2_Implications
+public import Transformer.NoiseScale.Section2_Tradeoff
+public import Transformer.NoiseScale.Section2_Patterns
+public import Transformer.NoiseScale.Section2_WithoutReplacement
+public import Transformer.NoiseScale.SectionA_Estimators
+public import Transformer.NoiseScale.SectionA_RatioBias
+public import Transformer.NoiseScale.SectionC_ToyModel
+public import Transformer.NoiseScale.SectionC_Temperature
+public import Transformer.NoiseScale.SectionD_ExchangeRate
+public import Transformer.NoiseScale.SectionD_ParetoFront
+public import Transformer.NoiseScale.SectionD_Variation
+public import Transformer.NoiseScale.SectionE_Optimization
+
+/-!
 Formalization of:
   McCandlish, Kaplan, Amodei, OpenAI Dota Team,
   "An Empirical Model of Large-Batch Training",
@@ -62,18 +80,4 @@ the observations of line searches in §E.1, the `β₂` that "pushes `α` back
 towards 1.0" in §E.2, and the dip of `B_crit` on the test set in §E.3.
 -/
 
-import Transformer.NoiseScale.Section2_Batches
-import Transformer.NoiseScale.Section2_Quadratic
-import Transformer.NoiseScale.Section2_NoiseScale
-import Transformer.NoiseScale.Section2_Implications
-import Transformer.NoiseScale.Section2_Tradeoff
-import Transformer.NoiseScale.Section2_Patterns
-import Transformer.NoiseScale.Section2_WithoutReplacement
-import Transformer.NoiseScale.SectionA_Estimators
-import Transformer.NoiseScale.SectionA_RatioBias
-import Transformer.NoiseScale.SectionC_ToyModel
-import Transformer.NoiseScale.SectionC_Temperature
-import Transformer.NoiseScale.SectionD_ExchangeRate
-import Transformer.NoiseScale.SectionD_ParetoFront
-import Transformer.NoiseScale.SectionD_Variation
-import Transformer.NoiseScale.SectionE_Optimization
+@[expose] public section

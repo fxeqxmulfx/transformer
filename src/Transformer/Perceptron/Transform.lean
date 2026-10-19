@@ -1,10 +1,16 @@
-/-
+module
+
+public import Transformer.Perceptron.Basic
+public import Transformer.Perspective.PositiveDefinite
+public import Transformer.Perspective.SphereInvariant
+
+/-!
 # Perceptrons and attention's mean-field landscape — the exponential transform
 
 Formalization of `lem: quadpol` of arXiv:2601.21366v2: the map `μ ↦ f^μ`,
 `f^μ(x) = ∫ e^{β x·y} dμ(y)`, is injective on `𝒫(𝕊^{d-1})`, and `f^μ` is even
-exactly when `μ` is antipodally symmetric.  Part (i) of the lemma, on
-polynomial transforms, is `TransformPoly`.  The general attention matrix of
+exactly when `μ` is antipodally symmetric. Part (i) of the lemma, on
+polynomial transforms, is `TransformPoly`. The general attention matrix of
 `rem: general-attention` is `TransformMap`; the transform `f_B^μ` it studies,
 and the parity argument both cases share, are defined and proved here.
 
@@ -13,11 +19,11 @@ and the parity argument both cases share, are defined and proved here.
 * The source's standing `d ≥ 2` is dropped: injectivity and the parity
   characterization hold in every dimension (`𝕊^0 = {±1}`, where `f^μ(1)` is
   strictly increasing in `μ({1})`, and `𝕊^{-1} = ∅`, where `𝒫(𝕊^{-1})` is
-  empty).  Dropping a hypothesis only strengthens a statement.
+  empty). Dropping a hypothesis only strengthens a statement.
 
 * The source's `β > 0` is relaxed to `β ≠ 0` in injectivity and in the parity
   characterization: `f^μ` at `-β` is `f^μ` at `β` read at the antipode
-  (`attentionTransform_neg`).  At `β = 0` both fail once `d ≥ 1`: `f^μ ≡ 1`.
+  (`attentionTransform_neg`). At `β = 0` both fail once `d ≥ 1`: `f^μ ≡ 1`.
 
 * "`μ(A) = μ(-A)` for every Borel `A`" is the pushforward equality
   `μ ∘ (-id)^{-1} = μ`, the tree's idiom for an invariance — the same one
@@ -30,9 +36,7 @@ and the parity argument both cases share, are defined and proved here.
 Source: arXiv:2601.21366v2, `lem: quadpol`, `rem: general-attention`.
 -/
 
-import Transformer.Perceptron.Basic
-import Transformer.Perspective.PositiveDefinite
-import Transformer.Perspective.SphereInvariant
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -120,7 +124,7 @@ theorem attentionTransform_neg (β : ℝ) (μ : Perspective.ProbSphere d) (x : S
 injective on `𝒫(𝕊^{d-1})`.
 
 The source states `β > 0`, and that case is
-`Perspective.eq_of_integral_exp_inner_eq`.  `β < 0` is added: there `f^μ(x)`
+`Perspective.eq_of_integral_exp_inner_eq`. `β < 0` is added: there `f^μ(x)`
 is `f^μ(-x)` at `-β > 0` (`attentionTransform_neg`), and `x ↦ -x` is onto.
 
 Source: arXiv:2601.21366v2, `lem: quadpol`. -/
@@ -157,7 +161,7 @@ example : (1 : ℝ) ≠ 0 := one_ne_zero
 
 /-- **The parity argument of `lem: quadpol` (ii)**, for any `B` whose transform
 is injective: `f_B^μ` is even if and only if `μ(A) = μ(-A)` for every Borel
-`A`.  Injectivity holds for `B = β · id`, `β ≠ 0`
+`A`. Injectivity holds for `B = β · id`, `β ≠ 0`
 (`injective_attentionTransformMap_smul_id`), and for every invertible `B`
 (`injective_attentionTransformMap`, in `TransformMap`).
 

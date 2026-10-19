@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianAttentionProduct
+
+/-!
 # The actual key-block Hessian trace of an original Gaussian attention pair
 
 ArXiv:2604.01978v1, §7, the key-block trace calculation preceding
@@ -14,7 +18,7 @@ original features and pairs of tokens, including equal tokens.
 The biased self-pair example gives a nonzero actual full trace.
 -/
 
-import Transformer.Homogenized.Section7_GaussianAttentionProduct
+@[expose] public section
 
 open scoped BigOperators
 
@@ -187,4 +191,3 @@ example : ∃ z : EuclideanSpace ℝ (GaussianFeatureIdx 2 2), (0 : ℕ) < 2 ∧
   norm_num [z, PiLp.single_apply, hw, hw']
 
 end Transformer.Homogenized
-

@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section1_Models
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+
+/-!
 # Attention's forward pass and Frank-Wolfe — finite `β`
 
 Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
@@ -7,14 +14,11 @@ Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
 At finite `β` the hardmax step is replaced by a softmax one, `eq: softmax.ODE`,
 whose weights are the attention scores (`attWeight`); the Gumbel trick
 rewrites the same step as a Markov chain `eq: softmax.process`, whose jump
-probabilities are those scores.  That `eq: softmax.ODE` itself collapses to a
+probabilities are those scores. That `eq: softmax.ODE` itself collapses to a
 single point (`prop: origin`) is `Section5_Collapse`.
 -/
 
-import Transformer.FrankWolfe.Section1_Models
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -64,11 +68,11 @@ measurable `A`,
 Taking `S` to be the whole space and `A` a point gives the displayed
 transition probability of the source; taking `S` in the past says that the
 jump depends on the past only through `x^t`, which is the source's "clearly
-this process is a Markov chain".  The law of `x_i^{t+1}` is written as a
+this process is a Markov chain". The law of `x_i^{t+1}` is written as a
 kernel, not event by event: when two particles `j ≠ j'` sit at the same point,
 the events `{x_i^{t+1} = (1-γ)x_i^t + γ x_j^t}` for `j` and `j'` coincide and
 carry `attWeight … j + attWeight … j'`, which a condition per `j` would get
-wrong.  The source constrains each particle separately and says nothing of the
+wrong. The source constrains each particle separately and says nothing of the
 joint law of one step, so neither is anything said here.
 
 This is a predicate of `β`, `γ`, `X₀` and `P`, not a claim: it says which

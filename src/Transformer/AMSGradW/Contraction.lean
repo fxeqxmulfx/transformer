@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AMSGradW.Bounds
+
+/-!
 # Frozen-metric equilibrium and momentum contraction
 
 arXiv:1904.03590v4, Algorithm 1 and §4, AMSGradW extension.
@@ -6,7 +10,7 @@ The limiting equation is `gradient f x + decay*D*x = 0`, not
 stationarity of the unregularized loss.
 -/
 
-import Transformer.AMSGradW.Bounds
+@[expose] public section
 
 noncomputable section
 

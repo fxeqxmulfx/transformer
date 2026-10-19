@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_TrainingEnergy
+
+/-!
 # AdaFisher — finite dissipation budget of the full actual trajectory
 
 arXiv:2405.16397v3, §3.4 and Appendix A.2, deterministic extension.
@@ -6,7 +10,7 @@ The budget is proved by telescoping actual state transitions and is
 not the unestablished stochastic budget of the source's Proposition 3.4.
 -/
 
-import Transformer.AdaFisher.Section3_TrainingEnergy
+@[expose] public section
 
 open scoped BigOperators
 

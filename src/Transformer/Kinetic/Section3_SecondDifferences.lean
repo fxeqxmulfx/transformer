@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_FirstDifferences
+
+/-!
 # Second differences of the flow
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 3, `eq:est-Glaub-2nd`:
@@ -18,7 +22,7 @@ The four-point inequality `abs_four_point_le` is the deterministic form of
 `eq:chain-rule-Glaub-2nd`.
 -/
 
-import Transformer.Kinetic.Section3_FirstDifferences
+@[expose] public section
 
 open Real
 

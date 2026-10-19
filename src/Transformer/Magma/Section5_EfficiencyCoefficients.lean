@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Magma.Section3_DampingBounds
+public import Mathlib.Analysis.Real.Sqrt
+
+/-!
 # Valid algebraic properties of the proof's efficiency coefficients
 
 Formalization of arXiv:2602.15322v1, Appendix A.3, intem4. The interval
@@ -6,8 +11,7 @@ bounds and square-root inequality are true as algebraic statements.
 They do not establish the false momentum-alignment lower-bound lemma.
 -/
 
-import Transformer.Magma.Section3_DampingBounds
-import Mathlib.Analysis.Real.Sqrt
+@[expose] public section
 
 noncomputable section
 

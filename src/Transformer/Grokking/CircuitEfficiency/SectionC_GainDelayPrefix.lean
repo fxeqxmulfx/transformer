@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainGrowthBounds
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainGrowthBounds
 
 /-!
 # A train-correct, uniquely wrong-test native prefix
@@ -20,6 +22,8 @@ are introduced. Uniform decoupled decay and physical gains differ
 from the source's coupled assigned norm cost and GD. The fixed-table
 exact-real result is not a learned or floating-point GPTMini claim.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section6_SoftLimits
+
+/-!
 # Kinetic theory for Transformers — the original U-shape theorem
 
 Formalization of arXiv:2605.09213v1, §6, proof of `thm:U-shape`.
@@ -14,7 +18,7 @@ attainment and uniqueness, and `Section6_SourcePosition` proves both
 inverse identities on the original source-position domain.
 -/
 
-import Transformer.Kinetic.Section6_SoftLimits
+@[expose] public section
 
 open Set Filter Real
 open scoped Topology

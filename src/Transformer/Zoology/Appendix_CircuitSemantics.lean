@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CircuitDefs
+
+/-!
 # Determinacy of well-formed arithmetic circuits
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: circuit-tuple` and
@@ -7,7 +11,7 @@ The existential evaluation relation is single-valued when every gate reads
 only earlier nodes; this is needed before comparing its output to Coyote.
 -/
 
-import Transformer.Zoology.Appendix_CircuitDefs
+@[expose] public section
 
 namespace Transformer.Zoology
 

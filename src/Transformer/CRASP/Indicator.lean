@@ -1,24 +1,28 @@
-/-
+module
+
+public import Transformer.CRASP.Basic
+
+/-!
 # Sums and indicators in a comparison cost no depth
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 (COLM 2025), Appendix A.3: the conditional term `φ ? t : t'` "does not increase
 [the] expressive power or affect the depth of formulas", the elimination lemma
-of Yang & Chiang.  The proof of `lem:tlclpos_reduction` in Appendix F compares
+of Yang & Chiang. The proof of `lem:tlclpos_reduction` in Appendix F compares
 sums of counts, constants and indicators `φ ? 1 : 0`.
 
 This is the case of that lemma the reduction needs: a comparison
 
     c₁ + Σ S₁ + Σ_{ψ ∈ L₁} (ψ ? 1 : 0)  <  c₂ + Σ S₂ + Σ_{ψ ∈ L₂} (ψ ? 1 : 0)
 
-of constants, sums of terms and indicators is a plain formula.  Splitting on
+of constants, sums of terms and indicators is a plain formula. Splitting on
 each `ψ` in turn, `(ψ ∧ ⋯ + 1 < ⋯) ∨ (¬ψ ∧ ⋯ < ⋯)`, removes the indicators one
 at a time, and the depth of the result is the largest depth among the terms
-and the `ψ`s.  There is no constant `0`, so a sum is started from `c + 1` on
+and the `ψ`s. There is no constant `0`, so a sum is started from `c + 1` on
 both sides.
 -/
 
-import Transformer.CRASP.Basic
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

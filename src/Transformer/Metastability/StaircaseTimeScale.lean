@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Basic
+
+/-!
 # Metastability — `lem: exact time scale of clustering` (§6 of 2410.06833v1)
 
 The scalar lemma the proof of `thm: staircase` rests on: the time a pair of
 particles, driven by `u̇ = -c log β sin u + c(β)`, takes to come within
-`√(log β / β)` and then within `1/√(β log β)` of each other.  As printed it
+`√(log β / β)` and then within `1/√(β log β)` of each other. As printed it
 is false (`not_exact_time_scale`).
 -/
 
-import Transformer.Basic
+@[expose] public section
 
 open Real
 
@@ -35,16 +39,16 @@ satisfy
 admits.**  The equilibrium `u ≡ 0` solves the Cauchy problem with `c(β) = 0`,
 it is already below the threshold at `t = 0`, so `t(β) = 0` and the left-hand
 side is `2/c > 0`; the right-hand side is `2 log tan(0) / (c log β)`, which is
-`-∞` on paper and `0` in Lean, where `log 0 = 0`.  Either way the inequality
+`-∞` on paper and `0` in Lean, where `log 0 = 0`. Either way the inequality
 fails, and it fails at `β = e` and at every larger `β`.
 
 Two further things are wrong with it, and neither is repaired by excluding
-`u_0 = 0`.  *The centre is wrong.*  Separating variables in
+`u_0 = 0`. *The centre is wrong.*  Separating variables in
 `u̇ = -c log β sin u` gives `log tan(u(t)/2) = log tan(u_0/2) - c t log β`, so
 the crossing of `√(log β / β)` happens at `1/(2c) + O(1/log β)`, not at `2/c`;
 the survey's own proof writes `v̇ = u̇/(2 sin u)` for `v = log tan(u/2)`, whose
 derivative is `u̇ / sin u`, and even its own display then gives `1/c` rather
-than the `2/c` it reports.  *And the claim is asymptotic* — the source reads
+than the `2/c` it reports. *And the claim is asymptotic* — the source reads
 "as `β → +∞`" — while the inequality is stated at a fixed `β`; a faithful
 formalization is a statement about the family `β ↦ t(β)`, not this one.
 

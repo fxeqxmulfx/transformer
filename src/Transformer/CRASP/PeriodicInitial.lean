@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.PeriodicAttentionStep
+
+/-!
 # Embedding predicates for periodic position encodings
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLClmod`.
@@ -6,7 +10,7 @@ At an ordinary position the initial state depends only on its letter and
 the residue of its position. Both are depth-zero positional predicates.
 -/
 
-import Transformer.CRASP.PeriodicAttentionStep
+@[expose] public section
 
 namespace Transformer.CRASP.PeriodicAttention
 

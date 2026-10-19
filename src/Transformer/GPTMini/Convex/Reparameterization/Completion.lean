@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Reparameterization.Boundary
+module
+
+public import Transformer.GPTMini.Convex.Reparameterization.Boundary
 
 /-!
 # A small convex likelihood completion of the finite head control
@@ -18,6 +20,8 @@ token encoder, a variable-context attention block, joint value training,
 or the requested compact drop-in model. A per-query categorical table
 grows with the number of query/category pairs when generalized directly.
 -/
+
+@[expose] public section
 
 noncomputable section
 

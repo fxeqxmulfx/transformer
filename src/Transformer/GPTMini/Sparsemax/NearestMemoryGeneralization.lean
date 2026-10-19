@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.NearestPrototypeCodes
+module
+
+public import Transformer.GPTMini.Sparsemax.NearestPrototypeCodes
 
 /-!
 # Conditional unseen-query guarantees for sparse nearest memory
@@ -16,6 +18,8 @@ Two concrete target functions agree on every registered observation but
 disagree at an unseen one, recording why an unconditional guarantee fails.
 No model task loss or FFN is selected by these forward-map results.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_MeanAxisClockSpeed
+public import Transformer.Landscape.GlobalFlow.TimeDependent
+
+/-!
 # Complete scalar clocks for original rank-one mean attention
 
 ArXiv:2411.04551v3, §3.2, `eq: cauchy.pb.reloaded`, proof of
@@ -13,8 +18,7 @@ gives the actual clock `q(t)=κ t`. Negative factors are retained for
 the source's reversal of the attention phase.
 -/
 
-import Transformer.Interpolation.Section3_MeanAxisClockSpeed
-import Transformer.Landscape.GlobalFlow.TimeDependent
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology NNReal

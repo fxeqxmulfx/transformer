@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Optimization.Basic
+
+/-!
 # Strong-convexity consequences for the training correction
 
 Additional objective assumptions for arXiv:2502.16982, §2.1–2.2,
@@ -7,7 +11,7 @@ neural-network training losses. It identifies the regime in which the
 corrected algorithms converge to a unique global minimizer.
 -/
 
-import Transformer.Optimization.Basic
+@[expose] public section
 
 open scoped InnerProductSpace
 

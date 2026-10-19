@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Normalization.Basic
+public import Transformer.Perspective.Softmax
+public import Mathlib.Analysis.Complex.Exponential
+
+/-!
 # Attention weights inside a local cluster
 
 Appendix C, proof of Theorem 4.3 of arXiv:2510.22026v2: a small
@@ -6,9 +12,7 @@ score diameter makes attention close to the uniform probability vector.
 Absolute inverse temperature also covers negative beta.
 -/
 
-import Transformer.Normalization.Basic
-import Transformer.Perspective.Softmax
-import Mathlib.Analysis.Complex.Exponential
+@[expose] public section
 
 open Set
 open scoped BigOperators

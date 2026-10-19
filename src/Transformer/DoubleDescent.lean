@@ -1,4 +1,17 @@
-/-
+module
+
+public import Transformer.DoubleDescent.Section2_EffectiveComplexity
+public import Transformer.DoubleDescent.Section2_Hypothesis
+public import Transformer.DoubleDescent.Section4_LabelNoise
+public import Transformer.DoubleDescent.Section5_TranslationResults
+public import Transformer.DoubleDescent.Section6_ResNetResults
+public import Transformer.DoubleDescent.Section7_TranslationResults
+public import Transformer.DoubleDescent.Section8_EarlyStopping
+public import Transformer.DoubleDescent.AppendixB_Translation
+public import Transformer.DoubleDescent.AppendixD_Interpolation
+public import Transformer.DoubleDescent.AppendixD_FourierFeatures
+
+/-!
 # Deep double descent
 
 Formalization of arXiv:1912.02292v1, Nakkiran, Kaplun, Bansal, Yang,
@@ -43,13 +56,4 @@ fractions, records source hashes, and supports --check. The data's plotting
 labels and duplicated training-error column are documented where relevant.
 -/
 
-import Transformer.DoubleDescent.Section2_EffectiveComplexity
-import Transformer.DoubleDescent.Section2_Hypothesis
-import Transformer.DoubleDescent.Section4_LabelNoise
-import Transformer.DoubleDescent.Section5_TranslationResults
-import Transformer.DoubleDescent.Section6_ResNetResults
-import Transformer.DoubleDescent.Section7_TranslationResults
-import Transformer.DoubleDescent.Section8_EarlyStopping
-import Transformer.DoubleDescent.AppendixB_Translation
-import Transformer.DoubleDescent.AppendixD_Interpolation
-import Transformer.DoubleDescent.AppendixD_FourierFeatures
+@[expose] public section

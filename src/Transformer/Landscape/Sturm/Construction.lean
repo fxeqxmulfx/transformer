@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.RootFlanks
+public import Transformer.Landscape.Sturm.Infinity
+
+/-!
 # Constructing Sturm chains for polynomials with simple real roots
 
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.RootFlanks
-import Transformer.Landscape.Sturm.Infinity
+@[expose] public section
 
 noncomputable section
 open Polynomial

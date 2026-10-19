@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section6_Field
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # The emergence of clusters in self-attention dynamics — well-posedness of the
   ODEs
 
@@ -9,10 +14,10 @@
 **What the source says and what is carried here.**
 
 * Both propositions assert a *unique Lipschitz continuous* `t ↦ x(t)` defined
-  on all of `ℝ`.  "Lipschitz continuous" cannot be read globally on `ℝ`: for
+  on all of `ℝ`. "Lipschitz continuous" cannot be read globally on `ℝ`: for
   `n = 1` the only attention weight is `1`, the dynamics is the linear
   `ẋ = Vx`, and its solution `x(t) = e^{tV}x⁰` grows exponentially, so it is
-  not Lipschitz on `ℝ` for any `V` with a positive eigenvalue.  It is read
+  not Lipschitz on `ℝ` for any `V` with a positive eigenvalue. It is read
   here as Lipschitz on every compact interval, which is what the proof of
   `c:wellposedtransformers` delivers and what the uniqueness argument uses.
   This is the only deviation from the source.
@@ -21,7 +26,7 @@
   inside the `∃!`.
 
 * The source postpones the proof of `p:wellposedparticles` to the
-  well-posedness of the continuity equation.  It is proved here directly:
+  well-posedness of the continuity equation. It is proved here directly:
   the field of `eq:trans_dyn` is smooth and grows linearly
   (`Section6_Field.lean`), so `Landscape.GlobalFlow.exists_global` and
   `Landscape.GlobalFlow.eq_of_hasDerivAt` apply.
@@ -34,7 +39,7 @@ Source: arXiv:2305.05465v6, `p:wellposedparticles`,
 `p:wellposednessrescaledparticles`.
 -/
 
-import Transformer.Clusters.Section6_Field
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real

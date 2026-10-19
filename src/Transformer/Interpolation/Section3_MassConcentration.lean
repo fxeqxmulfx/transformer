@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_CollapseLaws
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+
+/-!
 # Mass concentration under actual spherical attraction
 
 Auxiliaries for arXiv:2411.04551v3, Appendix, `lem: two.balls`,
@@ -14,8 +19,7 @@ zero. It can be achieved simultaneously with the quadratic Wasserstein
 bound, with one strictly positive terminal time for the given initial law.
 -/
 
-import Transformer.Interpolation.Section3_CollapseLaws
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+@[expose] public section
 
 open Real Set MeasureTheory Filter
 open scoped Topology ENNReal

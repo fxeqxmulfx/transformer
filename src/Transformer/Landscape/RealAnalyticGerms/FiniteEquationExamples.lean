@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.RealAnalyticGerms.BasicExamples
+
+/-!
 # Infinite nonconstant equation families with finite germ bases
 
 All positive powers of the last coordinate generate one proper ideal.
@@ -7,7 +11,7 @@ nonlinear pullbacks are covered by the same finite basis. Auxiliary
 examples for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.RealAnalyticGerms.BasicExamples
+@[expose] public section
 
 open Set
 

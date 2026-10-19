@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.MajTwoToTemporal
+
+/-!
 # `MAJ²`: the translations to and from `TL[◁#, ▷#]`
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -18,7 +22,7 @@ It sits inside an `\iffalse` block in the source and so is not part of the
 paper; like `lem:bb` it is deliberately left out here.
 -/
 
-import Transformer.CRASP.MajTwoToTemporal
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -77,7 +81,7 @@ example (a : σ) (k : ℕ) :
 languages are `MAJ²_{k+1}` languages; the extra level pays for the end
 satisfaction of the temporal logic, which becomes `∃x[¬∃y[y > x] ∧ φ'(x)]`.
 
-Two things the paper leaves implicit are hypotheses here.  The depth has to be
+Two things the paper leaves implicit are hypotheses here. The depth has to be
 positive, because "the position is the last one" — `Form.atEnd`, the `¬∃y[y>x]`
 of the statement — is itself of depth `1`, and conjoining it is what turns end
 satisfaction into the existential form `exists_closed_majTwo` produces; at

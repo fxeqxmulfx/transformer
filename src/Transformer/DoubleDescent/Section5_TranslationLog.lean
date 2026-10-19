@@ -1,4 +1,6 @@
-import Transformer.DoubleDescent.Section5_RecordedCurves
+module
+
+public import Transformer.DoubleDescent.Section5_RecordedCurves
 
 /-!
 # Published model-wise translation losses
@@ -13,6 +15,8 @@ Source SHA-256:
 nlp-model-dd.csv: c07b98b900259ee25999838d6dafecf199798994990bb92d745306da9ca3b236
 dd-translation-model-french.csv: 539435d69d6f00d672a1f3c9fa3afa7d8b3581d77badda43d61e1e4dd8039c3c
 -/
+
+@[expose] public section
 
 namespace Transformer.DoubleDescent
 

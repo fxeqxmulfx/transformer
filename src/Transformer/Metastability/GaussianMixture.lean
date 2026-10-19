@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.GaussianIntegral
+public import Mathlib.MeasureTheory.Constructions.Pi
+
+/-!
 # The normalized Gaussian mixture law
 
 The manuscript's `eq: gaussian.mixture` prints a one-dimensional normalizer
@@ -9,8 +14,7 @@ probability measures when `r ≥ 1` and `σ > 0`.
 Source: arXiv:2410.06833v1, §4, `eq: gaussian.mixture`.
 -/
 
-import Transformer.Metastability.GaussianIntegral
-import Mathlib.MeasureTheory.Constructions.Pi
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory ProbabilityTheory

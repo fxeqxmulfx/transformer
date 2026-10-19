@@ -1,5 +1,7 @@
-import Transformer.Basis.Basic
-import Transformer.CRASP.Parity
+module
+
+public import Transformer.Basis.Basic
+public import Transformer.CRASP.Parity
 
 /-!
 # Basis parity as two integer-list continuations
@@ -14,6 +16,8 @@ tokens. Invalid inputs, including an incorrect supplied answer, yield
 PAD. This total-function convention replaces Python's input exceptions;
 claims about task correctness use well-formed supervised prefixes.
 -/
+
+@[expose] public section
 
 namespace Transformer.Basis
 

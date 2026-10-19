@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.PeriodicMemoryQueries
-import Transformer.GPTMini.Sparsemax.ClosedForm
+module
+
+public import Transformer.GPTMini.Sparsemax.PeriodicMemoryQueries
+public import Transformer.GPTMini.Sparsemax.ClosedForm
 
 /-!
 # Actual sparsemax attention from bounded width-three Q/K
@@ -15,6 +17,8 @@ identity same-family blocks. The old affine lift is used only to reuse
 the proved inverse guarantee; it is not the physical embedding Gram.
 The fixed mask is essential to this architecture and is stated explicitly.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.DrivenSpread
+
+/-!
 # A residual block as a driven flow
 
 **Not a statement of any paper.**  The drive of one block of a residual
@@ -7,7 +11,7 @@ network,
   `v_i(t) = Σ_h Σ_j a_{hij}(t) V_h(t) x_j + G(t, x_i) + z_i(t)`   (`blockDrive`),
 
 `H` heads with weights `a` and values `V_h`, a feed-forward term `G` applied
-token by token, and an injection `z_i`.  Over a window on which the heads'
+token by token, and an injection `z_i`. Over a window on which the heads'
 rows have one common sum, the absolute row sums are at most `A`, `‖V_h‖ ≤ N`,
 and `G` is bounded by `B` and `L_G`-Lipschitz on the sphere
 (`IsBoundedBlockOn`), the drive is bounded (`norm_blockDrive_le`) and its
@@ -21,11 +25,11 @@ only, and every row still sums to one); several heads, with the output map and
 any gain on the attention absorbed into `V_h`; a feed-forward term that is
 Lipschitz on the sphere (that of parameter-golf is, `Perspective.BlockMLP`);
 a residual weight `mix[0] ≠ 1`, as the token-wise linear term
-`(mix[0] - 1) ⊙ x_i` inside `G`.  Every one of `a`, `V`, `G`, `z` is a
+`(mix[0] - 1) ⊙ x_i` inside `G`. Every one of `a`, `V`, `G`, `z` is a
 function of time, so the blocks of a stack may all differ.
 -/
 
-import Transformer.Perspective.DrivenSpread
+@[expose] public section
 
 open scoped BigOperators
 

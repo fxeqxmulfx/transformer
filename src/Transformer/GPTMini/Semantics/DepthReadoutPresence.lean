@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthReadoutLayout
+module
+
+public import Transformer.GPTMini.Semantics.DepthReadoutLayout
 
 /-!
 # Quantitative visible occurrences in genuine depth readout
@@ -17,6 +19,8 @@ state invariant, then instantiated by the actual raw-word encoder.
 This conclusion does not define the attention state by a label oracle.
 Final original FFN, tied logits and integer decoding remain obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

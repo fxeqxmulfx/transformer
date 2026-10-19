@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_ComposedDerivativeLipschitz
+
+/-!
 # The actual deterministic Euler comparison map
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1's finite-horizon weak comparison.
@@ -6,7 +10,7 @@ The map uses precisely the optimizer's mean drift. Its derivative constants
 approach one and zero respectively as the step size tends to zero.
 -/
 
-import Transformer.BatchSize.Section4_ComposedDerivativeLipschitz
+@[expose] public section
 
 open scoped NNReal
 

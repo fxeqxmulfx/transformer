@@ -1,23 +1,27 @@
-/-
+module
+
+public import Transformer.Landscape.GlobalFlow.Basic
+
+/-!
 # Global flows of autonomous ODEs — existence and uniqueness for all time
 
 An autonomous field `F` on a Banach space, Lipschitz on every ball and of
 linear growth `‖F x‖ ≤ C ‖x‖`, has exactly one solution through each point,
-and it is defined on all of `ℝ`.  On a finite-dimensional space a locally
+and it is defined on all of `ℝ`. On a finite-dimensional space a locally
 Lipschitz field is Lipschitz on every ball (`exists_global`,
 `eq_of_hasDerivAt`).
 
 The proof: on `[-T, T]`, Picard–Lindelöf applies to `F ∘ ballRetract R`,
 which is Lipschitz and bounded everywhere; by Grönwall that solution never
 leaves the ball of radius `‖x₀‖ e^{C T} < R`, where the retraction is the
-identity, so it solves `x' = F x` (`exists_local`).  Local uniqueness
+identity, so it solves `x' = F x` (`exists_local`). Local uniqueness
 (`eqOn_Ioo`) glues the solutions on `[-N-1, N+1]` into one on `ℝ`.
 
 Source: the standard proof of global existence under linear growth, as used by
 arXiv:2305.05465v6, `p:wellposedparticles`.
 -/
 
-import Transformer.Landscape.GlobalFlow.Basic
+@[expose] public section
 
 open Set Metric Filter Topology
 open scoped NNReal

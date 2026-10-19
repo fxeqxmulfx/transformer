@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerLimitLaw
+
+/-!
 # First-moment optimizer increments on one learning-rate interval
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -7,7 +11,7 @@ noise term. On an interval of length at most eta, this yields an O(eta)
 first-moment increment for the actual continuous optimizer path.
 -/
 
-import Transformer.BatchSize.Section4_EulerLimitLaw
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal

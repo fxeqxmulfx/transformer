@@ -1,25 +1,29 @@
-/-
+module
+
+public import Transformer.XSA
+
+/-!
 # The projection of exclusive self-attention
 
 `P_v^⊥ y = y - (⟨y, v⟩ / ‖v‖²) v` (`xsaProj`), the one operation exclusive
 self-attention adds to a head (`eq:xsa`, arXiv:2603.09078v1, §3): the output
-`y_i` of the head with its component along its own value `v_i` removed.  It is
+`y_i` of the head with its component along its own value `v_i` removed. It is
 `Transformer.XSA.XSAOutput` read as a function of the two vectors
 (`xsaOutput_eq_xsaProj`).
 
-Four properties, and the fourth is the one a residual block needs.  It removes
+Four properties, and the fourth is the one a residual block needs. It removes
 exactly what it claims (`inner_xsaProj_self`), for every `v`, `0` included; it
 does not lengthen (`norm_xsaProj_le`); it is homogeneous in `y`
 (`smul_xsaProj`), so a gate on the output of a head is a gate on its weights;
 and — since it forgets the direction `v` entirely (`xsaProj_add_smul_self`) —
 it turns a head into a difference: `P_{u_i}^⊥ (Σ_j a_{ij} u_j)` is
 `P_{u_i}^⊥ (Σ_j a_{ij} (u_j - u_i))`, of norm at most `A r` whenever the values
-lie within `r` of `u_i` and `Σ_j |a_{ij}| ≤ A` (`norm_xsaProj_sum_le`).  The
+lie within `r` of `u_i` and `Σ_j |a_{ij}| ≤ A` (`norm_xsaProj_sum_le`). The
 rows are free there: no common sum, which `norm_sum_smul_sub_sum_smul_le` needs
 for a head without the projection.
 -/
 
-import Transformer.XSA
+@[expose] public section
 
 open scoped BigOperators
 
@@ -108,7 +112,7 @@ theorem norm_xsaProj_le {e : ℕ} (v y : EucSpace e) : ‖xsaProj v y‖ ≤ ‖
 `‖P_{u₀}^⊥ (Σ_j b_j u_j)‖ ≤ A r`.
 
 Source: none — posed here; `eq:xsa` (arXiv:2603.09078v1, §3) applied to
-`y_i = Σ_j a_{ij} v_j` at `u₀ = v_i`.  Unlike `norm_sum_smul_sub_sum_smul_le`,
+`y_i = Σ_j a_{ij} v_j` at `u₀ = v_i`. Unlike `norm_sum_smul_sub_sum_smul_le`,
 which compares two rows of equal sum, one row suffices and its sum is free: the
 projection kills `(Σ_j b_j) u₀` whatever `Σ_j b_j` is. -/
 theorem norm_xsaProj_sum_le {e : ℕ} {b : Idx n → ℝ} {u : Idx n → EucSpace e}

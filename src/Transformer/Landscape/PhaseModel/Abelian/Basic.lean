@@ -1,24 +1,28 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Abelian.Defs
+public import Transformer.Landscape.PhaseModel.Basic
+
+/-!
 # Phase model over a finite abelian group — rows, periods and characters
 
 For an integer row `a`, `⟪a, v⟫ = Σ_x a_x v_x` (`inner_intVec`), a multiple
 of `2π` when `v` is a period, so the periods leave a phase energy with
-integer rows invariant (`phaseEnergy_add_of_mem_periods`).  The inner product
+integer rows invariant (`phaseEnergy_add_of_mem_periods`). The inner product
 with the row of `x / y` is `ψ_x - ψ_y - ψ_{x-y}` (`inner_intVec_divisionRow`),
 and only `0` is orthogonal to every row of the full table
 (`eq_zero_of_forall_inner_divisionRow`): such a vector is a homomorphism
-from the finite group `G` to `ℝ`.  A character `χ` has `e^{i arg χ(x)} = χ(x)`
+from the finite group `G` to `ℝ`. A character `χ` has `e^{i arg χ(x)} = χ(x)`
 (`exp_characterPhase`), so its phases keep every relation
 (`exists_inner_intVec_divisionRow_characterPhase`) and leave the energy of
-every set of rows invariant (`divisionEnergy_add_characterPhase`).  Up to
+every set of rows invariant (`divisionEnergy_add_characterPhase`). Up to
 periods they are the only zeros of the energy `V_full` of the full table
 (`divisionEnergy_univ_eq_zero_iff`): where every relation holds,
-`x ↦ e^{iψ_x}` is a character.  Every row has norm at most `3`
+`x ↦ e^{iψ_x}` is a character. Every row has norm at most `3`
 (`norm_intVec_divisionRow_le`).
 -/
 
-import Transformer.Landscape.PhaseModel.Abelian.Defs
-import Transformer.Landscape.PhaseModel.Basic
+@[expose] public section
 
 open Real
 
@@ -130,7 +134,7 @@ theorem divisionEnergy_add_characterPhase (S : Finset (G × G)) (χ : AddChar G 
 
 /-- **The zeros of the energy of the full division table are the phases of
 the characters up to periods**: `V_full(ψ) = 0` exactly when
-`ψ - (arg χ(x))_x ∈ 2πℤ^G` for some character `χ`.  Where every relation
+`ψ - (arg χ(x))_x ∈ 2πℤ^G` for some character `χ`. Where every relation
 holds, `x ↦ e^{iψ_x}` is a character. -/
 theorem divisionEnergy_univ_eq_zero_iff (ψ : EuclideanSpace ℝ G) :
     divisionEnergy (Finset.univ : Finset (G × G)) ψ = 0 ↔

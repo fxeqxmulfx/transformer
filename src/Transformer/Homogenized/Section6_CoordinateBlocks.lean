@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_SubgaussianGaussianComparison
+
+/-!
 # Actual independent coordinate blocks
 
 Source: arXiv:2604.01978v1, §6.3, `lem:Hanson_wright`.
@@ -10,7 +14,7 @@ are zero. This includes empty blocks and keeps the original centering
 and random vector rather than postulating a conditional MGF.
 -/
 
-import Transformer.Homogenized.Section6_SubgaussianGaussianComparison
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

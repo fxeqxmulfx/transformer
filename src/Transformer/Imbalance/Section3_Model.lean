@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perspective.Softmax
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+public import Mathlib.Analysis.Calculus.Deriv.Inv
+public import Mathlib.Tactic
+
+/-!
 # Linear softmax classification under class imbalance
 
 Kunstner, Yadav, Milligan, Schmidt, Bietti, arXiv:2402.19449v2,
@@ -6,10 +13,7 @@ Heavy-Tailed Class Imbalance and Why Adam Outperforms Gradient Descent
 on Language Models. Section 3.2, equations preceding Assumption 1.
 -/
 
-import Transformer.Perspective.Softmax
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Analysis.Calculus.Deriv.Inv
-import Mathlib.Tactic
+@[expose] public section
 
 open scoped BigOperators
 

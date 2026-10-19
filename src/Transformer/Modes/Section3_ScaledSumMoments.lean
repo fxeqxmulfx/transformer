@@ -1,21 +1,25 @@
-import Transformer.Modes.Section3_ScaledSumCube
+module
 
-/-
+public import Transformer.Modes.Section3_ScaledSumCube
+
+/-!
 # The number of modes of a Gaussian KDE — the mixed third moments of a
 normalized sum
 
 `Section3_ScaledSumCube.lean` proves the scaling law for every linear form at
-once, `𝔼 (s (S_n)₁ + t (S_n)₂)³ = n^{-1/2} 𝔼 (s Y₁ + t Y₂)³`.  Here the four
+once, `𝔼 (s (S_n)₁ + t (S_n)₂)³ = n^{-1/2} 𝔼 (s Y₁ + t Y₂)³`. Here the four
 mixed third moments are read off it.
 
 Both sides are cubic forms in `(s, t)`:
-`𝔼 (s x₁ + t x₂)³ = s³ m₃₀ + 3s²t m₂₁ + 3st² m₁₂ + t³ m₀₃`.  Evaluating at
+`𝔼 (s x₁ + t x₂)³ = s³ m₃₀ + 3s²t m₂₁ + 3st² m₁₂ + t³ m₀₃`. Evaluating at
 `(1,0)`, `(0,1)`, `(1,1)` and `(1,-1)` gives four linear equations whose only
 solution identifies the coefficients one by one — the cubic form determines its
 coefficients, which is why the linear form loses nothing.
 
 Source: arXiv:2412.09080v3, §3.1, the display after `eq:psi`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 

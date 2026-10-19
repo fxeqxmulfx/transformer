@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section2_MarginalDensity
+
+/-!
 # The actual probability regularity of the oscillating field
 
 Source: arXiv:2412.09080v3, §2.1, hypotheses one and four
@@ -22,7 +26,7 @@ condition uses the measure of that precise event, and the
 estimate applies to it directly.
 -/
 
-import Transformer.Modes.Section2_MarginalDensity
+@[expose] public section
 
 open Real Set Filter MeasureTheory Topology Asymptotics
 open scoped ENNReal

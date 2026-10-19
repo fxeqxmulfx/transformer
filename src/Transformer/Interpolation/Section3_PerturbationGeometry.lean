@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Interpolation.Basic
+public import Transformer.Interpolation.Clustering
+public import Transformer.Interpolation.HypPropagationFalse
+public import Mathlib.Analysis.SpecificLimits.Basic
+
+/-!
 # A continuous sphere map cannot move points only inside a plane
 
 Geometry behind the counterexample to Part 1 of `lem: perturbation` in
@@ -14,10 +21,7 @@ it requires neither a flow existence theorem nor an unproved PDE input.
 meeting all the source's equal-barycenter hypotheses in this plane.
 -/
 
-import Transformer.Interpolation.Basic
-import Transformer.Interpolation.Clustering
-import Transformer.Interpolation.HypPropagationFalse
-import Mathlib.Analysis.SpecificLimits.Basic
+@[expose] public section
 
 open scoped Topology
 open Filter MeasureTheory

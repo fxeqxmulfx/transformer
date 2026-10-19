@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.AnalyticPreparedSlice
+public import Transformer.Landscape.Lojasiewicz.PolynomialFiberMinimum
+
+/-!
 # Lifting minima over the distinguished-variable analytic fibers
 
 Real preparation, complete root coverage, and stable analytic branch
@@ -6,8 +11,7 @@ comparisons construct actual constrained minima on the scalar fibers
 over an arbitrary analytic base curve in any parameter dimension.
 -/
 
-import Transformer.Landscape.Lojasiewicz.AnalyticPreparedSlice
-import Transformer.Landscape.Lojasiewicz.PolynomialFiberMinimum
+@[expose] public section
 
 open Filter Set
 

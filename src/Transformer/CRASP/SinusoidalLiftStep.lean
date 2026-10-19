@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.SinusoidalLift
+
+/-!
 # A sinusoidal layer preserves the reserved ordinary coordinates
 
 arXiv:2506.16055v3, Appendix F, the positive sinusoidal hierarchy, and
@@ -6,7 +10,7 @@ Appendix B.2, the uniform-attention construction. The unused coordinates
 do not affect queries, values, or feed-forward evaluation.
 -/
 
-import Transformer.CRASP.SinusoidalLift
+@[expose] public section
 
 namespace Transformer.CRASP.SinusoidalLift
 

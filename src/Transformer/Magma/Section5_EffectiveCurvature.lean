@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Magma.Section5_FiniteLaw
+
+/-!
 # Effective curvature factors and missing moment assumptions
 
 Formalization of arXiv:2602.15322v1, Section 5, eq:eff_smoothness and
@@ -6,7 +10,7 @@ assumption:layerwise_second_moment. Ratio formulas require a nonzero
 raw second moment; a zero-gradient block needs a separate convention.
 -/
 
-import Transformer.Magma.Section5_FiniteLaw
+@[expose] public section
 
 open scoped BigOperators
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.GramSupport
+module
+
+public import Transformer.GPTMini.Sparsemax.GramSupport
 
 /-!
 # An exact convex attention restriction with trainable embeddings
@@ -16,6 +18,8 @@ the specified finite contexts, and feasibility for arbitrary context
 families is not asserted. Small fixed-width recovery and trainable value
 mixtures are separate questions. No task loss or FFN is defined here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,6 @@
-import Transformer.Perceptron.Section5_SphericalMapCancellation
+module
+
+public import Transformer.Perceptron.Section5_SphericalMapCancellation
 
 /-!
 # Actual mixed spherical Hessian for matrix attention
@@ -19,6 +21,8 @@ No density, atomic presentation or assumed Hessian identity is used.
 The original primitive needs only continuity because the actual
 constant first variation determines its transport integral exactly.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 namespace Transformer.Perceptron

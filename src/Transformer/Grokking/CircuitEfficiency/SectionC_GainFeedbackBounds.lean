@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainBounds
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainBounds
 
 /-!
 # Actual raw CE and logit ceilings from a physical parameter box
@@ -22,6 +24,8 @@ example remains compatible with these estimates. Physical gains,
 fixed tables and uniform decoupled AdamW differ from appendix C's
 assigned coupled norm cost and from learned GPTMini features.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

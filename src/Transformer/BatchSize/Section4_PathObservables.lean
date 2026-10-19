@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_OptimizerMartingale
+
+/-!
 # Measurable compensated and past-cylinder path observables
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -7,7 +11,7 @@ an assumed SDE law. The adapted cylinder representative uses the proved
 Euler state limits at the finitely many specified past times.
 -/
 
-import Transformer.BatchSize.Section4_OptimizerMartingale
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal

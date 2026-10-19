@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_BranchCalculus
+public import Mathlib.Analysis.InnerProductSpace.Symmetric
+
+/-!
 # The signed quadratic obstruction in normalized stationarity
 
 ArXiv:2601.21366v2, §6, `eq: nondeg.normalized` and
@@ -12,8 +17,7 @@ of the two complementary half potentials, retaining the source's
 normalization. Thus non-degeneracy rules out a constant difference.
 -/
 
-import Transformer.Perceptron.Section6_BranchCalculus
-import Mathlib.Analysis.InnerProductSpace.Symmetric
+@[expose] public section
 
 open Real
 open scoped BigOperators

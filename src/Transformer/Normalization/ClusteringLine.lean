@@ -1,7 +1,12 @@
-/-
+module
+
+public import Transformer.Normalization.Clustering
+public import Transformer.Normalization.Line
+
+/-!
 # Normalization — `thm: convergence` is false on the line
 
-The source states `thm: convergence` and its corollary for every `d`.  At
+The source states `thm: convergence` and its corollary for every `d`. At
 `d = 1` the tangent space of `𝕊⁰` is `0` (`proj_one_eq_zero`), so every
 configuration of directions is a rest point of `eq: NA` (`na_const_one`), and
 two tokens of opposite signs stay apart forever (`not_synchronizes_const`):
@@ -18,8 +23,7 @@ in dimension two for zero-step nGPT, as proved in `Section3_NGPTZeroStep`.
 Source: arXiv:2510.22026v2, §3, `thm: convergence` and its corollary.
 -/
 
-import Transformer.Normalization.Clustering
-import Transformer.Normalization.Line
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 
@@ -155,7 +159,7 @@ theorem pre_line_counter (β : ℝ) (hβ : 0 < β) (hn : ((2 : ℕ) : ℝ) ≤ R
 /-- **`thm: convergence` fails on `ℝ¹`: Pre-LN from a Gaussian start.**
 
 `clusters_or_stalls_from_gaussian` without its `d ≥ 2`, at `d = 1`, `n = 2`,
-Pre-LN, `β = 1`.  arXiv:2510.22026v2, §3, `thm: convergence`, second half. -/
+Pre-LN, `β = 1`. arXiv:2510.22026v2, §3, `thm: convergence`, second half. -/
 theorem not_clusters_or_stalls_from_gaussian_one :
     ¬ ∀ (β : ℝ) (α : ℝ → ℝ) (τ : ℝ),
       ∀ᵐ X₀ ∂(Measure.pi fun _ : Idx 2 => stdGaussian (EucSpace 1)), (∀ j : Idx 2, X₀ j ≠ 0) →
@@ -171,7 +175,7 @@ theorem not_clusters_or_stalls_from_gaussian_one :
 /-- **The corollary to `thm: convergence` fails on `ℝ¹`.**
 
 `unconditional_synchronization` without its `d ≥ 2`, at `d = 1`, Pre-LN,
-`n = 2 ≤ e^β`, `β = 1`.  arXiv:2510.22026v2, §3, the corollary to
+`n = 2 ≤ e^β`, `β = 1`. arXiv:2510.22026v2, §3, the corollary to
 `thm: convergence`. -/
 theorem not_unconditional_synchronization_one :
     ¬ ∀ (β : ℝ) (α : ℝ → ℝ) (τ : ℝ), 0 < β → ((2 : ℕ) : ℝ) ≤ Real.exp β →

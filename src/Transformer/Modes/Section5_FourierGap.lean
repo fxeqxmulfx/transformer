@@ -1,7 +1,9 @@
-import Transformer.Modes.Section5_PowerIntegrability
-import Transformer.Modes.Section3_YCharFun
-import Mathlib.Analysis.Convex.Integral
-import Mathlib.Analysis.InnerProductSpace.Convex
+module
+
+public import Transformer.Modes.Section5_PowerIntegrability
+public import Transformer.Modes.Section3_YCharFun
+public import Mathlib.Analysis.Convex.Integral
+public import Mathlib.Analysis.InnerProductSpace.Convex
 
 /-!
 # A strict characteristic-function bound away from zero
@@ -33,6 +35,8 @@ norm identity therefore gives the same pointwise strict inequality
 for the actual standardized law `lawY β t` used in §3.
 Source: arXiv:2412.09080v3, §5.4, definition of `ε`, and §3 `thm:br`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped Topology

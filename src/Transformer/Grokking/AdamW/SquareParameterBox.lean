@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.SquareDirection
+module
+
+public import Transformer.Grokking.AdamW.SquareDirection
 
 /-!
 # Native parameter boxes independent of epsilon and input magnitudes
@@ -24,6 +26,8 @@ clock remain native; clipping need not be changed or even assumed.
 Exact-real recurrence bounds do not certify floating-point kernels,
 stochastic convergence or the transformer-to-recurrence bridge.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

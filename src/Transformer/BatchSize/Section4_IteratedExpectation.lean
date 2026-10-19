@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_ExpectationOperator
+
+/-!
 # Markov expectations equal the actual finite-step sampler
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1.
@@ -7,7 +11,7 @@ recursion; iteration of the Markov operator is not a replacement definition
 of the optimizer law.
 -/
 
-import Transformer.BatchSize.Section4_ExpectationOperator
+@[expose] public section
 
 open MeasureTheory
 

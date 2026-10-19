@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
 
 /-!
 # Gradients of the actual CE budget in product subweights
@@ -17,6 +19,8 @@ factor of each circuit receives a nonzero CE gradient. This models
 fixed lookup tables and coupled regularization, not learned GPTMini
 circuits or native AdamW's persistent moments.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

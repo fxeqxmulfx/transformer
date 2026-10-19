@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Homogenized.RademacherLaw
+public import Transformer.Homogenized.GaussianProductTail
+public import Mathlib.Analysis.Matrix.MeasurableSpace
+public import Mathlib.MeasureTheory.Constructions.Pi
+
+/-!
 # Homogenized Transformers — independent sparse Gaussian query/key weights
 
 A fair coin supplies the centered value entry `V₀₀ = ±1`. Independent
@@ -12,10 +19,7 @@ This is a concrete source allowed by arXiv:2604.01978v1,
 `ass:high_order_short`, for testing `eq:Lipschitz_measure`.
 -/
 
-import Transformer.Homogenized.RademacherLaw
-import Transformer.Homogenized.GaussianProductTail
-import Mathlib.Analysis.Matrix.MeasurableSpace
-import Mathlib.MeasureTheory.Constructions.Pi
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open Real MeasureTheory ProbabilityTheory

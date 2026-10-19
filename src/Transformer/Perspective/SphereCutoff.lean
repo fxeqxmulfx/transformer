@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.SphereConvergence
+public import Transformer.Landscape.SaddleAvoidance.Cutoff
+public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+
+/-!
 # Smooth cut-offs of tuples away from the zero vectors
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -6,11 +12,11 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 `g = 𝖤_β ∘ normalize` and the rescalings `‖x_i‖²` of `USA` and `SA` are smooth only
 off the tuples with a zero vector, and they are unbounded, while saddle avoidance asks
-for a `C²` energy and a bounded, Lipschitz field on the whole space.  A cut-off mends
-both.  On the shell `ε < ‖x_i‖² < K` (`blockShell`), `χ(x) = Π_i φ(‖x_i‖²)` is `1`
+for a `C²` energy and a bounded, Lipschitz field on the whole space. A cut-off mends
+both. On the shell `ε < ‖x_i‖² < K` (`blockShell`), `χ(x) = Π_i φ(‖x_i‖²)` is `1`
 for a bump `φ` of `ℝ` equal to `1` on `[ε, K]` (`blockCutoff`); `χ` is smooth with
 compact support away from the zero vectors (`hasCompactSupport_blockCutoff`,
-`tsupport_blockCutoff_subset`).  A product `χ • φ` is then smooth wherever `φ` is
+`tsupport_blockCutoff_subset`). A product `χ • φ` is then smooth wherever `φ` is
 smooth near the support of `χ` (`Landscape.SaddleAvoidance.contDiff_smul_of_tsupport_subset`),
 and block scalings depend linearly on their scales (`blockScaleCLM`).
 
@@ -18,9 +24,7 @@ Source: arXiv:2312.10794v5, Appendix A, `l:nosaddleconv` (the center-stable mani
 theorem, applied here on a shell), for `thm: boumal` of §6.
 -/
 
-import Transformer.Perspective.SphereConvergence
-import Transformer.Landscape.SaddleAvoidance.Cutoff
-import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+@[expose] public section
 
 open Filter
 open scoped Topology

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_GaussianTransition
+
+/-!
 # Propagation of smooth observables by Gaussian transitions
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3).
@@ -7,7 +11,7 @@ bound through any finite order. The proof identifies its actual iterated
 derivatives with expectations of the original iterated derivatives.
 -/
 
-import Transformer.BatchSize.Section4_GaussianTransition
+@[expose] public section
 
 noncomputable section
 

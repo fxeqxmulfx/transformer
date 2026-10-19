@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.MetricFlow
+
+/-!
 # Saddle avoidance — flows `ẋ = -G(x) ∇f(x)`
 
 Let `f` be a `C²` function and `G` a `C¹` field of linear maps on a
 finite-dimensional real inner product space such that `G ∇f` is
 `L`-Lipschitz and bounded by `M`, and `G` is symmetric positive definite at
-the strict saddles of `f`.  The flow `ẋ = -G(x) ∇f(x)` converges to a strict
+the strict saddles of `f`. The flow `ẋ = -G(x) ∇f(x)` converges to a strict
 saddle of `f` only from a null set of starts
 (`measure_tendsto_metricGradientFlow_strictSaddle_eq_zero`); started from a
 law with a density, it almost surely converges to none
@@ -13,7 +17,7 @@ law with a density, it almost surely converges to none
 The field does not depend on time, so the flow is a one-parameter group
 (`metricGradientFlow_metricGradientFlow`), and its value at the integer time
 `k` is the `k`-th iterate of the time-one map
-(`iterate_metricGradientFlow_one`).  The time-one map is `C¹` with an
+(`iterate_metricGradientFlow_one`). The time-one map is `C¹` with an
 invertible derivative, and every strict saddle is a symmetrizable unstable
 fixed point of it (`Landscape.SaddleAvoidance.MetricFlow`), so
 `measure_tendsto_symmetrizableUnstable_eq_zero` concludes, as
@@ -26,7 +30,7 @@ of §4 of arXiv:1710.07406, applied to the time-one map, in place of the
 center-stable manifold theorem for flows.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.MetricFlow
+@[expose] public section
 
 open Filter MeasureTheory
 open scoped Topology NNReal
@@ -48,7 +52,7 @@ theorem hasDerivAt_metricGradientFlow (hL : LipschitzWith L fun x => G x (gradie
   (isFlowField_neg_metricGradient hL hM).hasDerivAt_flow 0 t x
 
 /-- **The flow is a one-parameter group**: flowing for time `t` and then for
-time `s` is flowing for time `s + t`.  The field does not depend on time, so
+time `s` is flowing for time `s + t`. The field does not depend on time, so
 `τ ↦ Φ^{τ + t}(x)` is the trajectory through `Φ^t(x)`. -/
 theorem metricGradientFlow_metricGradientFlow
     (hL : LipschitzWith L fun x => G x (gradient f x)) (hM : ∀ x, ‖G x (gradient f x)‖ ≤ M)
@@ -78,7 +82,7 @@ variable [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E]
 For `f` of class `C²` and `G` of class `C¹` with `G ∇f` `L`-Lipschitz and
 bounded by `M`, and `G` symmetric positive definite at the strict saddles of
 `f`, the starts from which the flow converges to a strict saddle as `t → ∞`
-form a null set.  Along the integer times such a trajectory is an orbit of
+form a null set. Along the integer times such a trajectory is an orbit of
 the time-one map converging to a symmetrizable unstable fixed point of it. -/
 theorem measure_tendsto_metricGradientFlow_strictSaddle_eq_zero (μ : Measure E)
     [μ.IsAddHaarMeasure] (hf : ContDiff ℝ 2 f) (hG : ContDiff ℝ 1 G)

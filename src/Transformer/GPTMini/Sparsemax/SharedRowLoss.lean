@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.SquaredSegment
+module
+
+public import Transformer.GPTMini.Sparsemax.SquaredSegment
 
 /-!
 # Summed ordinary loss along the actual shared matrix segment
@@ -14,6 +16,8 @@ If the common endpoint realizes all ordinary output targets, its exact
 loss is `(1-t)^2` times the initial summed loss. Targets are readout
 values and provide no desired sparse attention distributions.
 -/
+
+@[expose] public section
 
 noncomputable section
 

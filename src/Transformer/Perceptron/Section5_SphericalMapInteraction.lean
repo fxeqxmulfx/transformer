@@ -1,4 +1,6 @@
-import Transformer.Perceptron.Section5_SphericalMapVariation
+module
+
+public import Transformer.Perceptron.Section5_SphericalMapVariation
 
 /-!
 # Integrated actual spherical matrix variations
@@ -17,6 +19,8 @@ measure stays fixed throughout each differentiation. These actual
 derivative identities will supply the Hessian input of the source's
 conditional strict-SOPD predicate after diagonal cancellation.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 

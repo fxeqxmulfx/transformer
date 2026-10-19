@@ -1,6 +1,8 @@
-import Transformer.Homogenized.Section7_LogisticArcsinBounds
-import Transformer.Homogenized.Section7_LogisticMartingaleLimits
-import Transformer.Homogenized.Section7_LogisticMartingaleAlgebra
+module
+
+public import Transformer.Homogenized.Section7_LogisticArcsinBounds
+public import Transformer.Homogenized.Section7_LogisticMartingaleLimits
+public import Transformer.Homogenized.Section7_LogisticMartingaleAlgebra
 
 /-!
 # The logistic angle martingale and its actual quadratic variation
@@ -26,6 +28,8 @@ The original equation, state interval, filtration, initial random
 angle and compensator are retained. Neither limiting martingale
 identity nor quadratic variation is an input to the proof.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

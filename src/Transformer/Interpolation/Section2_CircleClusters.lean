@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_CircleSweep
+public import Transformer.Interpolation.Section2_ClusterCoupling
+public import Mathlib.Data.Fin.Tuple.Sort
+
+/-!
 # Clustering one law on the circle
 
 ArXiv:2411.04551v3, §2.2, proof of `prop: compression`, Steps 1–3, for
@@ -11,9 +17,7 @@ first point in angle order and then swept along the window. The masses
 near the points bound the distance to the atomic target.
 -/
 
-import Transformer.Interpolation.Section2_CircleSweep
-import Transformer.Interpolation.Section2_ClusterCoupling
-import Mathlib.Data.Fin.Tuple.Sort
+@[expose] public section
 
 open scoped ENNReal NNReal Topology
 open Real MeasureTheory Set Filter

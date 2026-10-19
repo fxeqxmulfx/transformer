@@ -1,4 +1,6 @@
-import Transformer.Grokking.Composition.Basic
+module
+
+public import Transformer.Grokking.Composition.Basic
 
 /-!
 # Actual curvature of a regularized compositional CE model
@@ -19,6 +21,8 @@ The threshold `lambda = 1/2` concerns local finite-dimensional curvature.
 No thermodynamic limit, learned transformer circuit, full AdamW dynamics
 or delayed generalization is inferred from this calculation.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Composition
 

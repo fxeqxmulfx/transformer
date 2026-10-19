@@ -1,12 +1,19 @@
-/-
+module
+
+public import Transformer.NoiseScale.Section2_Tradeoff
+public import Transformer.Surge.Section2_LossDrop
+public import Transformer.Surge.Section2_PeakRate
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+/-!
 # The tradeoff between steps and examples
 
-arXiv:2405.14578, §2.2, after Theorem 5, and Appendix F.  Eq. (18) has the form of eq. (2.7) of
+arXiv:2405.14578, §2.2, after Theorem 5, and Appendix F. Eq. (18) has the form of eq. (2.7) of
 arXiv:1812.06162: `δS` steps of batch `B` make the progress `ΔL_max` of one step of batch
 `B → ∞` if and only if `δS = 1 + B_noise/B` (`mul_lossDropSign_eq_iff`), at `BδS` examples,
 the integrands of eq. (44): `totalSteps` and `totalExamples` of `NoiseScale.Section2_Tradeoff`,
 with the noise scale `B_noise(s)` along a run carried by `ν`, the paper's `ds`
-(`runNoiseBatch`).  Their conclusions "still hold": a run takes at least `S_min = ∫ds` steps and
+(`runNoiseBatch`). Their conclusions "still hold": a run takes at least `S_min = ∫ds` steps and
 `E_min = ∫B_noise ds` examples, eq. (45) (`le_totalSteps_runNoiseBatch`), the limits as a
 constant batch grows and shrinks (`tendsto_totalSteps`, `tendsto_totalExamples`), and at a
 constant batch `(S/S_min - 1)(E/E_min - 1) = 1`, eq. (20) (`totalSteps_mul_totalExamples`).
@@ -14,14 +21,11 @@ constant batch `(S/S_min - 1)(E/E_min - 1) = 1`, eq. (20) (`totalSteps_mul_total
 At constant `μ, σ, H` the critical batch `B_crit = E_min/S_min` of eq. (21) is `B_noise`, so a
 batch is the peak `B_peak` of the learning rate of eq. (13) if and only if it is this balance
 point (`lrSign_signLin_eq_lrPeak_iff`); in general `B_crit` is the mean of `B_noise` over the run
-(`critBatch`), the paper's "≈".  Under the fit `B_crit ≈ B_*/L^{1/α_B}` of eq. (21), taken as a
+(`critBatch`), the paper's "≈". Under the fit `B_crit ≈ B_*/L^{1/α_B}` of eq. (21), taken as a
 hypothesis on `B_noise`, `B_peak` grows as the loss falls (`strictAntiOn_noiseBatch`).
 -/
 
-import Transformer.NoiseScale.Section2_Tradeoff
-import Transformer.Surge.Section2_LossDrop
-import Transformer.Surge.Section2_PeakRate
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+@[expose] public section
 
 open MeasureTheory Real
 
@@ -101,7 +105,7 @@ example := totalSteps_mul_totalExamples (ν := Measure.dirac ()) (μ := fun _ (_
 variable {μ σ : ι → ℝ} {H : Matrix ι ι ℝ} {B : ℝ}
 
 /-- §2.2, after eq. (21): "`B_peak = B_noise` is not only the local maximum of the optimal
-learning rate, but also the balance point between training speed and data efficiency".  Over a
+learning rate, but also the balance point between training speed and data efficiency". Over a
 run at constant `μ, σ, H` with `∫ds ≠ 0`, when `ΣH_ii > 0`, `S > 0` and `M > 0`, the learning
 rate of eq. (13) at `B > 0` is its maximum `ε_max` if and only if `B` is the critical batch
 `B_crit = E_min/S_min` of eq. (21), at which a run takes twice the least steps and twice the
@@ -121,7 +125,7 @@ example := lrSign_signLin_eq_lrPeak_iff (ν := Measure.dirac ()) (μ := fun _ : 
   (by simp [offSum, Fin.sum_univ_two]) (by simp [snrSum]) one_pos
 
 /-- §2.2, after eq. (21), and §2.3: "as the training progresses and the loss decreases,
-according to Eq. (21), `B_peak` will gradually become larger".  Under the fit
+according to Eq. (21), `B_peak` will gradually become larger". Under the fit
 `B_noise ≈ B_crit ≈ B_*/L^{1/α_B}` of eq. (21), after Kaplan et al., eq. (1.4), taken as a
 hypothesis on the statistics `μ(L), σ(L), H(L)` at the loss `L > 0`, with `B_*, α_B > 0`, the
 peak `B_peak = B_noise` (`lrSign_signLin_noiseBatch`) grows as `L` falls. -/

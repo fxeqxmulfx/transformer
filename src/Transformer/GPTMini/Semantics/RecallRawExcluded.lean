@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallRawScoreGap
+module
+
+public import Transformer.GPTMini.Semantics.RecallRawScoreGap
 
 /-!
 # Excluded raw positions cannot defeat the selected table record
@@ -17,6 +19,8 @@ The full causal-row theorem still has to combine these cases and
 bind the raw adjacency/latest-write conditions to validated parsing.
 Actual finite retrieval and tied readout are subsequent obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

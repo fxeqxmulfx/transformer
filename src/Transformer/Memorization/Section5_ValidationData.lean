@@ -1,5 +1,7 @@
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Rat.Defs
+module
+
+public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.Data.Rat.Defs
 
 /-!
 # Printed membership-inference validation
@@ -11,6 +13,8 @@ SHA256: 54fa9d167bf7ff5d6a6ad48a31f9fe47714d45abff2689e3966a66178630a37a
 The rational values represent the printed, rounded measurements exactly;
 they are not identified with unknown unrounded experimental values.
 -/
+
+@[expose] public section
 
 namespace Transformer.Memorization
 

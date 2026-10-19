@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_TrainingErrorLimit
+public import Transformer.AdaFisher.Section3_TrainingGradientEnergy
+
+/-!
 # AdaFisher — convergence of true gradients along full training
 
 arXiv:2405.16397v3, §3.4, deterministic constant-step extension.
@@ -7,8 +12,7 @@ This is a learning convergence theorem, not merely a bounded-metric
 premise or a conditional stochastic energy extraction.
 -/
 
-import Transformer.AdaFisher.Section3_TrainingErrorLimit
-import Transformer.AdaFisher.Section3_TrainingGradientEnergy
+@[expose] public section
 
 open scoped Topology
 open Filter

@@ -1,18 +1,22 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Descent
+public import Transformer.Landscape.SaddleAvoidance.GradientDescent
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+
+/-!
 # Saddle avoidance — the second-order test
 
 A critical point where the derivative `A` of the gradient satisfies
 `c ‖h‖² ≤ ⟪A h, h⟫` with `c > 0` is a local minimizer
 (`isLocalMin_of_mul_norm_sq_le_inner`): along each short segment from it,
-`f` increases.  For `f` of class `C²` such a `c` exists at every critical
+`f` increases. For `f` of class `C²` such a `c` exists at every critical
 point that is not a strict saddle and where the Hessian `D∇f` is injective
 (`exists_pos_mul_norm_sq_le_inner`): the Hessian is symmetric, and its
 eigenvalues are neither negative nor zero.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Descent
-import Transformer.Landscape.SaddleAvoidance.GradientDescent
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
+@[expose] public section
 
 open Filter Metric
 open scoped Topology

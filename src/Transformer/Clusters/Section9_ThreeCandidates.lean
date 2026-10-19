@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section9_LeadingGain
+public import Transformer.Clusters.Section9_Limits
+
+/-!
 # The leading coordinate has only three possible cluster values
 
 ArXiv:2305.05465v6, §9, the proof of `l:3hyperplanes11` and
@@ -17,8 +22,7 @@ This is a limit-transfer lemma. The actual dynamics supplies every
 gain and extreme-coordinate limit in the following convergence module.
 -/
 
-import Transformer.Clusters.Section9_LeadingGain
-import Transformer.Clusters.Section9_Limits
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

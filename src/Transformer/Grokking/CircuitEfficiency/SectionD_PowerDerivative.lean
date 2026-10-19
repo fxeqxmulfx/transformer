@@ -1,5 +1,7 @@
-import Transformer.Grokking.AdamW.LossDescent
-import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
+module
+
+public import Transformer.Grokking.AdamW.LossDescent
+public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 
 /-!
 # Repair the power-difference estimate used for circuit allocation
@@ -21,6 +23,8 @@ The source uses the flawed bound in the proof of Theorem case 2.
 These proofs repair the local ingredient; they neither endorse that
 printed proof nor claim that GPTMini/AdamW follows this scalar model.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

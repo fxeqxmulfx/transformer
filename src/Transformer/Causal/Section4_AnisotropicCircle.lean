@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Causal.Basic
+public import Transformer.Perceptron.Section5_CircleGeodesics
+public import Mathlib.Analysis.CStarAlgebra.Matrix
+public import Mathlib.Analysis.Calculus.ContDiff.RCLike
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # An actual anisotropic two-token causal field
 
 Source: arXiv:2411.04990v2, §4, Conjecture `thm1.5`, and
@@ -14,11 +22,7 @@ self term, which the identity-value angular equation does not have.
 No convergence or stability property is included in a definition.
 -/
 
-import Transformer.Causal.Basic
-import Transformer.Perceptron.Section5_CircleGeodesics
-import Mathlib.Analysis.CStarAlgebra.Matrix
-import Mathlib.Analysis.Calculus.ContDiff.RCLike
-import Mathlib.Analysis.Calculus.Deriv.Prod
+@[expose] public section
 
 open Real
 open scoped BigOperators

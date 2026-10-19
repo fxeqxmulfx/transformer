@@ -1,6 +1,8 @@
-import Transformer.Homogenized.Section7_ExponentialObservable
-import Transformer.Homogenized.MvGenerator
-import Transformer.Homogenized.GaussianEnsemble
+module
+
+public import Transformer.Homogenized.Section7_ExponentialObservable
+public import Transformer.Homogenized.MvGenerator
+public import Transformer.Homogenized.GaussianEnsemble
 
 /-!
 # The finite-horizon sphere martingale problem
@@ -22,6 +24,8 @@ fields vanish. The examples include orthonormal tokens under the
 zero head law and antipodal tokens under positive Gaussian value
 variance at uniform attention. All smooth tests are checked.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped BigOperators NNReal

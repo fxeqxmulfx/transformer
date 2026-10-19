@@ -1,6 +1,8 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_TableLoss
-import Transformer.Grokking.CircuitEfficiency.SectionD_TransferDirections
-import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_TableLoss
+public import Transformer.Grokking.CircuitEfficiency.SectionD_TransferDirections
+public import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
 
 /-!
 # The actual multiclass CE budget: continuity and boundary descent
@@ -16,6 +18,8 @@ the origin has zero first-order penalty and strictly improves actual
 CE. This removes the zero-sum equilibrium obstruction for this loss,
 without assuming a learned table or a visited optimizer trajectory.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

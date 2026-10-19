@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Neural.Loss
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+
+/-!
 # Shared embedding, pairwise rotation and dense maps
 
 Source: `grokking_abmod/web/own-channel/README.md`, Architecture and
@@ -10,8 +15,7 @@ quarter-turn is exactly the lab's adjacent-coordinate operation. The same
 embedding argument is used for input lookup and for the final readout.
 -/
 
-import Transformer.Landscape.Neural.Loss
-import Mathlib.Analysis.InnerProductSpace.PiL2
+@[expose] public section
 
 open scoped BigOperators
 

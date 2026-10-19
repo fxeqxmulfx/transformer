@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.RASP.Basic
+public import Mathlib.Order.Prod.Lex.Basic
+
+/-!
 # RASP: the sorting program
 
 Weiss, Goldberg, Yahav — arXiv:2106.06981v2, "Thinking Like Transformers",
@@ -16,7 +21,7 @@ Figure 12 (Appendix, `sort`):
 This is the program §4 leans on: sorting is realizable in RASP for arbitrary
 length and alphabet, at a fixed number of heads and layers, hence "a standard
 transformer can take full advantage of `Ω(n log n)` of the `n²` operations it
-performs in every attention head".  The combinatorial core is that
+performs in every attention head". The combinatorial core is that
 `num_smaller` — the rank in the tie-broken order, index breaking ties — is a
 *bijection* of the positions, so `sel_new` selects exactly one position in
 every row and `aggregate` is a permutation of `vals`.
@@ -26,8 +31,7 @@ architectures, which are not modelled here; what is formalized is the program
 and its correctness.
 -/
 
-import Transformer.RASP.Basic
-import Mathlib.Data.Prod.Lex
+@[expose] public section
 
 namespace Transformer
 namespace RASP
@@ -37,7 +41,7 @@ variable {n : ℕ} {α : Type*}
 /-! ### Rank in a linear order
 
 `selector_width(smaller)` is the rank of a position in a strict linear order
-on the positions.  The two facts that make the program work — the rank is a
+on the positions. The two facts that make the program work — the rank is a
 position, and ranking is injective — hold for any injective key map. -/
 
 section Rank
@@ -164,7 +168,7 @@ lemma selected_selNew (keys : Seq n ℝ) (i : Fin n) :
   · rintro rfl
     exact rank_rankEquiv_symm _ _ i
 
-/-- `sort = aggregate(sel_new, vals)` (Figure 12).  Each row of `sel_new`
+/-- `sort = aggregate(sel_new, vals)` (Figure 12). Each row of `sel_new`
 selects exactly one position, so this is the token-transporting aggregation
 of the footnote to §3. -/
 noncomputable def sortProg (keys : Seq n ℝ) (vals : Seq n α) (d : α) : Seq n α :=

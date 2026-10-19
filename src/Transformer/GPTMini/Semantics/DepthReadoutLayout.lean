@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthEncoding
+module
+
+public import Transformer.GPTMini.Semantics.DepthEncoding
 
 /-!
 # Original depth readout layout and genuine residual probes
@@ -17,6 +19,8 @@ No desired answer or Boolean presence defines the computed state.
 Quantitative visible-occurrence detection and the final FFN/readout are
 subsequent obligations on this actual residual array.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_SubgaussianLinearForms
+public import Mathlib.Probability.Independence.Integration
+public import Mathlib.Data.Matrix.Diagonal
+
+/-!
 # The original quadratic form and its actual subgaussian expectation
 
 ArXiv:2604.01978v1, §6.3, `lem:Hanson_wright`. The original
@@ -17,9 +23,7 @@ integrable. These facts justify the genuine centering in the original
 quadratic-form tail inequality, before its exponential estimates.
 -/
 
-import Transformer.Homogenized.Section6_SubgaussianLinearForms
-import Mathlib.Probability.Independence.Integration
-import Mathlib.Data.Matrix.Diagonal
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

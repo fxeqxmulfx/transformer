@@ -1,38 +1,42 @@
-/-
+module
+
+public import Transformer.ALM.ScoreGuard
+public import Transformer.ALM.FloatHull
+
+/-!
 # What passing the guard buys: the separation the comparison needs
 
 `Transformer.ALM.ScoreGuard` says what `grid.rs::off_the_grid` measures and how
-little of it depends on the query scale.  It does not say what a query that
+little of it depends on the query scale. It does not say what a query that
 passes it has *earned*, and that is the only reason the check is in the
 runtime: the chain is supposed to run from "the guard returned `false`" to "the
 retrieval is the specified one", and until now it stopped one link short.
 
-`Transformer.ALM.FloatHull.cmp_of_sep` is the other end of that link.  It
+`Transformer.ALM.FloatHull.cmp_of_sep` is the other end of that link. It
 decides a comparison correctly as soon as the two operands are farther apart
 than the two rounding errors put together, `δ₁ + δ₂ < |a - b|`, and asks no
-questions about where the numbers came from.  This file discharges that
-hypothesis from the guard.  Two ingredients and nothing else: the errors of
+questions about where the numbers came from. This file discharges that
+hypothesis from the guard. Two ingredients and nothing else: the errors of
 round-to-nearest are each at most half the spacing at that magnitude
 (`ulpOf p E / 2`), and two distinct parabolic integer scores scaled by `σ` are
 at least `σ` apart, because `one_le_sScore_sub` puts them a unit apart before
-the scale.  A guard that passes says `ulp(score) ≤ σ`; the sum of the errors is
+the scale. A guard that passes says `ulp(score) ≤ σ`; the sum of the errors is
 then at most `σ`, and the operands are at least `σ` apart.
 
-At most, and at least.  The shipped test is `ulp(score) > margin`, so passing
+At most, and at least. The shipped test is `ulp(score) > margin`, so passing
 it leaves the two bounds able to meet, and on that boundary the comparison can
 return a tie where the exact one is strict — `guard_le_no_inversion` is what
 survives there, and it is not nothing: the order is never *inverted*, only
 flattened, so the merge walk collects one key too many and never the wrong
-one.  One bit of room, `ulp(score) < margin`, and `cmp_of_guard` gives the full
-equivalence.  `clean_strict_at_every_scale` says where that bit comes from: a
+one. One bit of room, `ulp(score) < margin`, and `cmp_of_guard` gives the full
+equivalence. `clean_strict_at_every_scale` says where that bit comes from: a
 query with a factor of two to spare at unit scale has it at every scale.
 
 Source: `todo3.md` §4 and §4a; `vm-rs/alm-hull/src/grid.rs`, `off_the_grid` and
 its docstring's appeal to `ALM.FloatGrid.fp_eval_exact_of_grid`.
 -/
 
-import Transformer.ALM.ScoreGuard
-import Transformer.ALM.FloatHull
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -102,7 +106,7 @@ theorem scaled_unit_sep {q j k : ℤ} {σ : ℝ} (hσ : 0 < σ)
 /-- **A guard passed with a bit to spare decides the comparison.**  The two
 rounding errors are each at most half the spacing at the winner's magnitude, so
 together at most `ulp(score)`; the guard says that is below the margin, and the
-margin is below the true separation.  That is `cmp_of_sep`'s hypothesis, and
+margin is below the true separation. That is `cmp_of_sep`'s hypothesis, and
 the computed comparison is therefore the exact one. -/
 theorem cmp_of_guard {p : ℕ} {E : ℤ} {σ a b a' b' δ₁ δ₂ : ℝ}
     (hguard : ulpOf p E < σ) (ha : |a' - a| ≤ δ₁) (hb : |b' - b| ≤ δ₂)
@@ -113,7 +117,7 @@ theorem cmp_of_guard {p : ℕ} {E : ℤ} {σ a b a' b' δ₁ δ₂ : ℝ}
 /-- **And the machine's own comparison, end to end.**  Two stored integer keys,
 the scores the head computes for them at a scale `σ`, the rounding the runtime
 does, and a guard that passed: the computed scores are then in the order the
-exact ones are.  This is the statement `grid.rs::off_the_grid` exists to make,
+exact ones are. This is the statement `grid.rs::off_the_grid` exists to make,
 written out — from the runtime check to "the retrieval is the specified one",
 with `clean_strict_at_every_scale` supplying the guard from the unit-scale
 wall of `Transformer.ALM.ScoreWall`. -/
@@ -130,8 +134,8 @@ theorem retrieval_survives_the_guard {p : ℕ} {E : ℤ} {q j k : ℤ} {σ aj ak
 
 /-- **What the shipped non-strict guard still gives.**  `off_the_grid` fires on
 `ulp(score) > |margin|`, so passing it allows `δ₁ + δ₂ = σ = |a - b|` and the
-two computed scores can land equal where the exact ones are not.  The order is
-never inverted, though: the loser never comes out strictly ahead.  So on that
+two computed scores can land equal where the exact ones are not. The order is
+never inverted, though: the loser never comes out strictly ahead. So on that
 boundary the merge walk collects a key too many — a tie where there is none,
 which `Transformer.ALM.TieBreak` then resolves — and never answers with the
 wrong key. -/
@@ -162,7 +166,7 @@ example : IsExp 50 ((2 : ℝ) ^ (50 : ℤ)) ∧ IsExp 34 ((2 : ℝ) ^ (34 : ℤ)
 /-- And the whole chain at unit scale on the two smallest keys: `q = 1` scores
 `0` at `k = 0` and `1` at `k = 1`, the guard at `E = 0` reports a spacing of
 `2^-52` against a margin of `1`, and a half-ulp of rounding on each score
-leaves the order alone.  These are the hypotheses of `scaled_unit_sep`,
+leaves the order alone. These are the hypotheses of `scaled_unit_sep`,
 `cmp_of_guard`, `retrieval_survives_the_guard` and `guard_le_no_inversion`. -/
 example : (0 : ℝ) < 1 ∧ sScore 1 0 < sScore 1 1 ∧ ulpOf 53 0 < 1 ∧
     |(0 : ℝ) - 1 * sScore 1 0| ≤ ulpOf 53 0 / 2 ∧

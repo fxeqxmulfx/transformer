@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.GradientInequalityCoordinates
+public import Transformer.Landscape.Lojasiewicz.GradientPullback
+public import Mathlib.Analysis.Calculus.LocalExtr.Basic
+
+/-!
 # The gradient inequality in analytic normal-crossing coordinates
 
 The monomial-times-unit estimate transfers through an analytic chart with
@@ -6,9 +12,7 @@ a continuous local inverse. These charts cover nonlinear as well as linear
 prepared germs in the analytic step of Appendix D.1 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.GradientInequalityCoordinates
-import Transformer.Landscape.Lojasiewicz.GradientPullback
-import Mathlib.Analysis.Calculus.LocalExtr.Basic
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators

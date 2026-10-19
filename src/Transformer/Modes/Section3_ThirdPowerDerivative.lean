@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_PowerDerivatives
-import Mathlib.Analysis.Calculus.ContDiff.Comp
+module
+
+public import Transformer.Modes.Section3_PowerDerivatives
+public import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-!
 # Third derivatives of characteristic powers and frequency scaling
@@ -17,6 +19,8 @@ derivative. Finite moment of that order also gives the corresponding
 continuous derivatives of the actual normalized-sum characteristic
 function. These facts are independent of Fourier integrability.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

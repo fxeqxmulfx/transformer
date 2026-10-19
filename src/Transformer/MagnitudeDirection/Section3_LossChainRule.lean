@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.Section3_Gradients
+public import Transformer.MagnitudeDirection.Section4_PositiveGains
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Loss chain rule for magnitude--direction decoupling
 
 arXiv:2606.25971v2, §3.1 and Appendix A, Algorithms 1–2.
@@ -6,9 +13,7 @@ The input is the actual Fréchet derivative of the loss at the fused
 weight, not an assumed gradient-splitting identity.
 -/
 
-import Transformer.MagnitudeDirection.Section3_Gradients
-import Transformer.MagnitudeDirection.Section4_PositiveGains
-import Mathlib.Analysis.Calculus.Deriv.Comp
+@[expose] public section
 
 open scoped BigOperators Matrix.Norms.Elementwise
 

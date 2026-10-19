@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Transform
+public import Transformer.Metastability.Section4_UniformLaw
+public import Mathlib.Algebra.MvPolynomial.Degrees
+public import Mathlib.Topology.Algebra.MvPolynomial
+
+/-!
 # Original finite quadratic functions as actual spherical polynomials
 
 ArXiv:2601.21366v2, §5.1, `lem: quadpol` (i), and §5.3,
@@ -19,10 +26,7 @@ lemmas establish the degree of the actual candidate produced by the
 quadratic-kernel inverse, rather than declaring it polynomial by fiat.
 -/
 
-import Transformer.Perceptron.Transform
-import Transformer.Metastability.Section4_UniformLaw
-import Mathlib.Algebra.MvPolynomial.Degrees
-import Mathlib.Topology.Algebra.MvPolynomial
+@[expose] public section
 
 open Real MeasureTheory
 open scoped BigOperators

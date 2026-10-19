@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerPaths
+public import Transformer.BatchSize.Section4_VectorFourthMoment
+
+/-!
 # Separating the bounded drift and martingale part of Euler chains
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The drift sum is bounded by the model bound times elapsed time.
 The remaining term is the actual adapted vector Brownian sum.
 -/
 
-import Transformer.BatchSize.Section4_EulerPaths
-import Transformer.BatchSize.Section4_VectorFourthMoment
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal BigOperators

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.CountSpline
+module
+
+public import Transformer.GPTMini.Semantics.CountSpline
 
 /-!
 # Ordinary homogeneous ReLU2 gates for bounded-depth prefix existence
@@ -18,6 +20,8 @@ This scalar construction fits three ordinary FFN units per detector;
 simultaneous matrices, raw encoder recurrence and the complete depth
 readout are still needed. No convexity or AdamW success is claimed.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

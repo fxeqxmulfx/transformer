@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CircuitParallel
+public import Transformer.Zoology.Appendix_ShiftUp
+public import Transformer.Zoology.Appendix_PaddedModel
+
+/-!
 # Cyclic Coyote networks for arithmetic-circuit simulation
 
 Arora et al., arXiv:2312.04927v1, §4 and Appendix Theorem `thm: gen-ac`.
@@ -7,9 +13,7 @@ verified one-token circuit compiler to independent rows of an arbitrary
 sequence, retaining the precise layer count.
 -/
 
-import Transformer.Zoology.Appendix_CircuitParallel
-import Transformer.Zoology.Appendix_ShiftUp
-import Transformer.Zoology.Appendix_PaddedModel
+@[expose] public section
 
 namespace Transformer.Zoology
 

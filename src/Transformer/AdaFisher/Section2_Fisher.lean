@@ -1,4 +1,10 @@
-/-
+module
+
+public import Mathlib.LinearAlgebra.Matrix.Kronecker
+public import Mathlib.Probability.Independence.Basic
+public import Mathlib.Tactic
+
+/-!
 # AdaFisher: Fisher blocks and empirical second moments
 
 Gomes et al., arXiv:2405.16397v3, §2, equation `eq:fishermatrix`.
@@ -7,9 +13,7 @@ an expectation is proved for the product sampling law, not assumed for
 arbitrary coupled activations and sensitivities.
 -/
 
-import Mathlib.LinearAlgebra.Matrix.Kronecker
-import Mathlib.Probability.Independence.Basic
-import Mathlib.Tactic
+@[expose] public section
 
 open scoped BigOperators Matrix Kronecker
 

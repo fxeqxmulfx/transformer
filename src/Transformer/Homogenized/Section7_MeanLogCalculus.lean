@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_MeanOverlapCalculus
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+
+/-!
 # Genuine calculus of the regularized logarithmic empirical mean
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -20,8 +25,7 @@ correction required for logarithmic control of the original mean;
 neither a noise estimate nor a martingale identity is postulated.
 -/
 
-import Transformer.Homogenized.Section7_MeanOverlapCalculus
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+@[expose] public section
 
 open Real
 open scoped BigOperators

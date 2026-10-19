@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_WeakConcatenation
+public import Transformer.Interpolation.Section3_TwoRidgeLaw
+
+/-!
 # Actual weak transport before the first control switch
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and Appendix,
@@ -15,8 +20,7 @@ The same complete particle flow gives composition and inverse identities
 for the original probability solution maps, without atomicity assumptions.
 -/
 
-import Transformer.Interpolation.Section1_WeakConcatenation
-import Transformer.Interpolation.Section3_TwoRidgeLaw
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal

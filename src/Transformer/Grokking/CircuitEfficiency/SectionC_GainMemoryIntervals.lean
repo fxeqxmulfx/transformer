@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryWeights
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryWeights
 
 /-!
 # Generated numerical intervals for actual retained pair coefficients
@@ -24,6 +26,8 @@ not prove physical pair balance, held-out correctness or confidence.
 Fixed tables and uniform native decay differ from appendix C coupled-cost
 GD. Learned stochastic/floating-point GPTMini transfer remains open.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthDetector
+module
+
+public import Transformer.GPTMini.Semantics.DepthDetector
 
 /-!
 # Fixed original depth detector blocks and their working layout
@@ -18,6 +20,8 @@ These are actual BlockParams records and actual blockForward identities.
 Signal gaps, feature meanings and bounded state induction remain proof
 obligations; no oracle is used to define a block or its residual stream.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

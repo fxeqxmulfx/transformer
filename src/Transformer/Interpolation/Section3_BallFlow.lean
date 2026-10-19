@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Interpolation.Basic
+public import Transformer.Interpolation.Clustering
+public import Transformer.Interpolation.NeuralODE
+
+/-!
 # Measure-to-measure interpolation — Transporting mass through balls
 
 Formalization of Appendix "Transporting mass through overlapping balls" of
@@ -14,22 +21,19 @@ collapse operations formalized here.
 Both lemmas use only the perceptron part of `eq: vf`, which is `eq: vf` with
 `𝐕 ≡ 0`; the `eq: neural.pde.sphere` of the source is therefore `cauchyPB`
 at `neuralParams`, and its flow map is that of `eq: neural.ode.sphere`
-(`IsNeuralFlow`).  The source's geodesic balls are ambient balls here: on the
+(`IsNeuralFlow`). The source's geodesic balls are ambient balls here: on the
 unit sphere the two families coincide, only the radius being reparametrized.
 
 **Quantifier order.**  The source chooses the parameters first, "such that for
-any `μ_0 ∈ 𝒫(𝕊^{d-1})`", and its flow map `φ^t` is then fixed with them.  In
+any `μ_0 ∈ 𝒫(𝕊^{d-1})`", and its flow map `φ^t` is then fixed with them. In
 that order both lemmas are false whenever the mass must actually move
 (`BallTransportFalse`): a bijection which is the identity off `𝓑_0` maps `𝓑_0`
-onto itself, so Dirac data forces `𝓑_0 ⊆ 𝓑_1`.  The proof chooses its
+onto itself, so Dirac data forces `𝓑_0 ⊆ 𝓑_1`. The proof chooses its
 radius `R - δ` after `μ_0`, and the lemmas are stated here in that order:
 `μ_0` first, then the parameters.
 -/
 
-import Transformer.Basic
-import Transformer.Interpolation.Basic
-import Transformer.Interpolation.Clustering
-import Transformer.Interpolation.NeuralODE
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory Set

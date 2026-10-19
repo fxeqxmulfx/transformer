@@ -1,7 +1,9 @@
-import Transformer.Homogenized.Logistic
-import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.InverseDeriv
-import Mathlib.Analysis.Calculus.ContDiff.Deriv
+module
+
+public import Transformer.Homogenized.Logistic
+public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.InverseDeriv
+public import Mathlib.Analysis.Calculus.ContDiff.Deriv
 
 /-!
 # Globally smooth approximations of the logistic angle test
@@ -24,6 +26,8 @@ The square identity retains the original diffusion contribution
 The concrete smooth test below has nonzero first derivative
 and strictly negative residual drift at an interior state.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

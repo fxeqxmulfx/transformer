@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Likelihood.QueryKeyBoundary
+module
+
+public import Transformer.GPTMini.Convex.Likelihood.QueryKeyBoundary
 
 /-!
 # Compact nonlinear likelihood controls for the joint attention search
@@ -14,3 +16,5 @@ These are proved mathematical search criteria, not a compact drop-in
 embedding/attention implementation, a trained Basis result, or a guarantee
 for nonlinear downstream FFN and tied readout training.
 -/
+
+@[expose] public section

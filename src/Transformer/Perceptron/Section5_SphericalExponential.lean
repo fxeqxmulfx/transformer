@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_CircleRotation
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Sinc
+
+/-!
 # Actual spherical exponential curves in arbitrary dimension
 
 ArXiv:2601.21366v2, §2.2, the exponential-map geodesic, and §5.3,
@@ -15,8 +20,7 @@ initial speed. These facts precede construction of the actual pushforward
 geodesics and the second differentiation of the original energy.
 -/
 
-import Transformer.Perceptron.Section5_CircleRotation
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Sinc
+@[expose] public section
 
 open Real
 

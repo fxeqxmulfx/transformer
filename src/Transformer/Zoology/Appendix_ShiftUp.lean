@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_Shift
+public import Transformer.Zoology.Appendix_Network
+
+/-!
 # Upward shift using a cyclic impulse and output mask
 
 Arora et al., arXiv:2312.04927v1, Appendix Proposition `prop: prim-shift`.
@@ -9,8 +14,7 @@ negative offset and mask the wrapped output rows. This proves the corrected
 one-layer construction below.
 -/
 
-import Transformer.Zoology.Appendix_Shift
-import Transformer.Zoology.Appendix_Network
+@[expose] public section
 
 open scoped BigOperators
 
@@ -32,7 +36,7 @@ theorem cyclicConvolution_impulse {n d : ℕ} (u : RealSequence n d)
     exact (hs (Finset.mem_univ s)).elim
 
 /-- Shift values toward smaller indices by `s` positions, filling the last
-`s` rows with zeros.  Source: Appendix Proposition `prop: prim-shift`. -/
+`s` rows with zeros. Source: Appendix Proposition `prop: prim-shift`. -/
 def shiftUp {n d : ℕ} (u : RealSequence n d)
     (s : Fin n) : RealSequence n d :=
   fun i q => if i.val + s.val < n then u (i + s) q else 0

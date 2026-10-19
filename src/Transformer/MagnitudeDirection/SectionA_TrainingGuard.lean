@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Optimization.Basic
+
+/-!
 # Checking the complete fused MD step
 
 User-requested training correction to arXiv:2606.25971v2, §3.1 and
@@ -8,7 +12,7 @@ halves a step that would hit zero, because positive softplus gains on a
 positive sphere cannot store a zero matrix at a finite training time.
 -/
 
-import Transformer.Optimization.Basic
+@[expose] public section
 
 open scoped InnerProductSpace
 

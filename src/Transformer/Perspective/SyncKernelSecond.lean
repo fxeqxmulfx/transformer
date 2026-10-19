@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.SyncKernel
+public import Transformer.Perspective.SyncKernelExp
+
+/-!
 # The substitution of `lemma:beta1`
 
 Polyanskiy, Rigollet, Yao — arXiv:2507.22857v1, Appendix A, proof of `lemma:beta1`.
@@ -10,29 +15,28 @@ On `[0, π]` the proof substitutes `z = β(1 - cos x) ∈ [0, 2β]`, so that
 
 With `t = 1/β` and `B = 2z - 3 + t(3z - 1 - z²)`,
 `f_β''(x) = β sin x · B · e^{-z}` and `sin² x = tz(2 - tz)`
-(`f_β''_substitution`).  So `f_β''(x)² = β z(2 - tz)B² e^{-2z}`.  For
+(`f_β''_substitution`). So `f_β''(x)² = β z(2 - tz)B² e^{-2z}`. For
 `t ∈ [0, 1]`, `z ≥ 0` and `tz ≤ 2` this file bounds `z(2 - tz)B² e^{-2z}` by
 `(2/5)²` where `B ≥ 0` (`beta1_upper_core`) and by `(8/5)²` where `B ≤ 0`
-(`beta1_lower_core`).  `Perspective.SyncKernelBetaOne` turns this into
-`-(8/5)√β ≤ f_β'' ≤ (2/5)√β` on `[0, π]`.  Numerically `sup g_β ≈ 0.375` and
+(`beta1_lower_core`). `Perspective.SyncKernelBetaOne` turns this into
+`-(8/5)√β ≤ f_β'' ≤ (2/5)√β` on `[0, π]`. Numerically `sup g_β ≈ 0.375` and
 `inf g_β ≈ -1.498` over `β ≥ 1`.
 
-* `B ≥ 0` forces `z ≥ 1`.  For `z ≤ 11/5`, AM–GM `27XY² ≤ (X + 2Y)³` with
+* `B ≥ 0` forces `z ≥ 1`. For `z ≤ 11/5`, AM–GM `27XY² ≤ (X + 2Y)³` with
   `X = 2r(2 - tz)`, `Y = zB` and `r = 3z - 1 - z²` removes `t`, since
-  `X + 2Y = 2(3z - 2)`.  For `z ≥ 11/5`, `(2 - tz)B² ≤ 2(2z - 3)²`.
-* `B ≤ 0` forces `z ≤ 3/2`.  Then `|B| ≤ 3 - 2z` if `r ≥ 0`.  If `r < 0`,
+  `X + 2Y = 2(3z - 2)`. For `z ≥ 11/5`, `(2 - tz)B² ≤ 2(2z - 3)²`.
+* `B ≤ 0` forces `z ≤ 3/2`. Then `|B| ≤ 3 - 2z` if `r ≥ 0`. If `r < 0`,
   then `z ≤ 2/5` and `|B| ≤ 4 - 5z + z²`.
 
 The bounds against `e^{2z}` are in `Perspective.SyncKernelExp`.
 
-The source bounds `g_β` only at the sign changes `b < a` of `f_β'''`.  It
+The source bounds `g_β` only at the sign changes `b < a` of `f_β'''`. It
 locates `0.18 < β(1 - cos b) < 1.4 < β(1 - cos a)` and uses `g¹ > -1.381`,
-`g¹ < 0.375`, `g²(0.18) > -0.247` and `g²(1.4) < 0.512`.  Here the bounds hold
+`g¹ < 0.375`, `g²(0.18) > -0.247` and `g²(1.4) < 0.512`. Here the bounds hold
 on all of `[0, π]`, and their difference is `2`.
 -/
 
-import Transformer.Perspective.SyncKernel
-import Transformer.Perspective.SyncKernelExp
+@[expose] public section
 
 open Real
 

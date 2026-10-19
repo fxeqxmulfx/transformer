@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.AnalyticDirection
+public import Transformer.Landscape.Lojasiewicz.DirectionalCoordinates
+public import Transformer.Landscape.AnalyticPreparation
+
+/-!
 # Preparation of an arbitrary nonconstant real analytic energy germ
 
 A finite-order direction is extended to invertible coordinates. Real
@@ -7,9 +13,7 @@ variable with analytic parameter coefficients. No Hessian or isolated
 critical-point hypothesis is needed.
 -/
 
-import Transformer.Landscape.Lojasiewicz.AnalyticDirection
-import Transformer.Landscape.Lojasiewicz.DirectionalCoordinates
-import Transformer.Landscape.AnalyticPreparation
+@[expose] public section
 
 open Filter
 

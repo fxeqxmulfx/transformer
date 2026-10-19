@@ -1,9 +1,13 @@
-/-
+module
+
+public import Transformer.Causal.CapPolar
+
+/-!
 # Causal attention — The meridian section of the cone over a cap on `𝕊^2`
 
 In cylindrical coordinates `(a, ρ, θ)` around the axis `e₀` of `ℝ³`, the cone
 over the cap of radius `δ` is invariant under rotation in `θ`, and its volume is
-`2π ∫∫ ρ da dρ` over its section by the half-plane `ρ > 0`.  That section is
+`2π ∫∫ ρ da dρ` over its section by the half-plane `ρ > 0`. That section is
 the circular sector `s < 1, 0 < φ ≤ δ` in polar coordinates `(a, ρ) =
 (s cos φ, s sin φ)`, and the integral is
 
@@ -13,7 +17,7 @@ Source: arXiv:2411.04990v2, §"R'enyi centers vs strong R'enyi centers" (the
 cap mass on `𝕊^2`).
 -/
 
-import Transformer.Causal.CapPolar
+@[expose] public section
 
 open scoped ENNReal
 open Real MeasureTheory

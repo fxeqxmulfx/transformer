@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_BinaryButterflyStage
+
+/-!
 # Products of row-major butterfly factors
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: butterfly`,
@@ -7,7 +11,7 @@ those mixing feature coordinates, share exactly 9n rows and d features.
 The construction uses three layers per factor with explicit K weights.
 -/
 
-import Transformer.Zoology.Appendix_BinaryButterflyStage
+@[expose] public section
 
 namespace Transformer.Zoology
 

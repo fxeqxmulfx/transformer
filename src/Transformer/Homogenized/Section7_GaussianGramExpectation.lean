@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianBlendMoments
+public import Transformer.Homogenized.Section7_GaussianGramCovarianceTrace
+public import Transformer.Homogenized.Section7_GaussianIndexedInterpolation
+
+/-!
 # The actual Gram observable expectation bound
 
 ArXiv:2604.01978v1, §7, eq:gaussian_interp_0 through
@@ -15,9 +21,7 @@ unit original tokens and entrywise Gram difference. No Hessian bound
 or expectation-difference estimate is assumed.
 -/
 
-import Transformer.Homogenized.Section7_GaussianBlendMoments
-import Transformer.Homogenized.Section7_GaussianGramCovarianceTrace
-import Transformer.Homogenized.Section7_GaussianIndexedInterpolation
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Set
 open scoped BigOperators NNReal

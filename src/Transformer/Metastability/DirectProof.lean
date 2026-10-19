@@ -1,8 +1,15 @@
-/-
+module
+
+public import Transformer.Metastability.CapContainment
+public import Transformer.Metastability.CollapseParams
+public import Transformer.Metastability.CollapseTimeBounds
+public import Transformer.Metastability.DirectAssemble
+
+/-!
 # Metastability — `thm: metastability` (§2 of arXiv:2410.06833v1), with its direct proof
 
 The proof follows §2 ("A direct proof") of the paper, and is written once for `(SA)` and `(USA)`
-through `IsAttnFlow`.  Its ingredients, in the order of the paper:
+through `IsAttnFlow`. Its ingredients, in the order of the paper:
 
 * Step 1, the particles stay in the caps `𝒮_q(2ε)` up to `T₂ = (ε/n) e^{(1-α)β}`:
   `cap_containment`, with the barrier principle of `PropagationBarrier` in place of a
@@ -14,10 +21,7 @@ through `IsAttnFlow`.  Its ingredients, in the order of the paper:
 * the assembly, `metastability_assemble`.
 -/
 
-import Transformer.Metastability.CapContainment
-import Transformer.Metastability.CollapseParams
-import Transformer.Metastability.CollapseTimeBounds
-import Transformer.Metastability.DirectAssemble
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 open Real Set
@@ -30,8 +34,8 @@ variable {d n : ℕ}
 /-- **Theorem (thm: metastability).** *Dynamic metastability.*
 
 Let `β > 1`, `ε ∈ (0, 1/16)`, and let `w_1, …, w_k` be centres such that every `x_i(0)` lies in
-some cap `𝒮_q(ε)` and `γ(β) > 0` (that is, the configuration is `(β, ε)`-separated).  Let
-`0 < λ` satisfy the two bounds of `eq: lambda.3`.  Then there are `T₂ > T₁ > 0`, with
+some cap `𝒮_q(ε)` and `γ(β) > 0` (that is, the configuration is `(β, ε)`-separated). Let
+`0 < λ` satisfy the two bounds of `eq: lambda.3`. Then there are `T₂ > T₁ > 0`, with
 `T₁ ≤ 2 n e^{8εβ} + e n λ β²/(β-1)` and `T₂ ≥ (ε/n) e^{(1-α)β}` (`MetastabilityTimes`), such that
 for every solution of `(SA)` or of `(USA)` with this initial condition
 
@@ -43,42 +47,42 @@ for every solution of `(SA)` or of `(USA)` with this initial condition
 
 *`isSeparated` and the free `k`, `w`.*  The statement of the source takes a `(β, ε)`-separated
 configuration — one for which *some* `k ≤ n` centres exist — and then speaks of `𝒮_q(2ε)` for
-the centres of the separation.  The earlier version of this theorem had `isSeparated` and,
-beside it, a `k` and a `w` unrelated to the witnesses of `isSeparated`.  The witnesses are now
+the centres of the separation. The earlier version of this theorem had `isSeparated` and,
+beside it, a `k` and a `w` unrelated to the witnesses of `isSeparated`. The witnesses are now
 the hypotheses: `k`, `w`, the cover `hcover` and `γ(β) > 0` (`hγ`).
 
 *The first bound of `eq: lambda.3` has a sign error.*  The source prints
-`e^{(1-α-β⁻¹ log((β-1)ε/(β²n²e)))β}(1 - e^{-γβ})`.  It is used to make
-`2 n e^{8εβ} + e n λ β²/(β-1)` smaller than `T₂ = (ε/n) e^{(1-α)β}`.  Since
+`e^{(1-α-β⁻¹ log((β-1)ε/(β²n²e)))β}(1 - e^{-γβ})`. It is used to make
+`2 n e^{8εβ} + e n λ β²/(β-1)` smaller than `T₂ = (ε/n) e^{(1-α)β}`. Since
 `(ε/n) e^{(1-α)β} e^{-γβ} = 2 n e^{8εβ}` by the definition of `γ`, this needs
 `λ < e^{(1-α)β} · c · (1 - e^{-γβ})`, `c = (β-1)ε/(β²n²e) < 1`, i.e. a `+` in front of
-`β⁻¹ log`.  With the printed `-` the bound is `c⁻²` times the corrected one, and the inequality
-`T₁ < T₂` that the proof draws from it does not follow.  `hlam₁` carries the `+`.  (The proof's
+`β⁻¹ log`. With the printed `-` the bound is `c⁻²` times the corrected one, and the inequality
+`T₁ < T₂` that the proof draws from it does not follow. `hlam₁` carries the `+`. (The proof's
 `T_*(q)` also prints `e^{β(1-ρ_q)}` where `e^{β(ρ_q-1)}` is meant; the formal proof does not go
 through `T_*`.)
 
 *`Ω(1)`.*  `γ = Ω(1)` and `λ = Ω(1)` are statements about families indexed by `β`; at fixed
-`β` they have no content.  They are not encoded; the conclusion does not use them, they serve
+`β` they have no content. They are not encoded; the conclusion does not use them, they serve
 in the source only to make `T₂` exponentially long and `e^{-λβ}` exponentially small.
 
 *One cap.*  For `k = 1` the maximum defining `α` is over the empty set, and `αDist` is `0`
 (`alphaDist_one`); the proof uses only `α < 1`, which follows from `γ > 0`.
 
-*Dimension and number of tokens.*  The source has `d, n ≥ 2` and `k ≤ n`.  Neither `d ≥ 2` nor
+*Dimension and number of tokens.*  The source has `d, n ≥ 2` and `k ≤ n`. Neither `d ≥ 2` nor
 `k ≤ n` is used, and `n ≥ 2` is weakened to `n ≥ 1` (`n ≥ 1` is needed: `T₂` divides by `n`).
 
 *The case `λ ≤ λ_*`.*  The source assumes `λ > λ_* = β⁻¹ log(1/(8ε))` "without loss of
-generality, since the bound holds for all smaller `λ`".  That reduction does not preserve the
-bound on `T₁`, which grows with `λ`.  Here the case `λ ≤ λ_*` is handled directly: then
+generality, since the bound holds for all smaller `λ`". That reduction does not preserve the
+bound on `T₁`, which grows with `λ`. Here the case `λ ≤ λ_*` is handled directly: then
 `e^{-λβ} ≥ 8ε`, and two tokens of one cap `𝒮_q(2ε)` satisfy `‖x - y‖² ≤ 16ε ≤ 2 e^{-λβ}` by the
 geometry of the cap (`inner_ge_of_mem_cap`) at every time.
 
 *`(USA)`.*  The theorem is proved for `(SA)` (`Perspective.SA`) and for `(USA)` in the form
-printed in the source, with `e^{β(⟨x_i,x_j⟩-1)}/n` weights (`unnormalizedSA`).  `T₂` is
+printed in the source, with `e^{β(⟨x_i,x_j⟩-1)}/n` weights (`unnormalizedSA`). `T₂` is
 exactly `(ε/n) e^{(1-α)β}`: the source's `T_esc ≥ ε/(n e^{-(1-α)β})` is an equality here.
 
 *Solutions.*  A solution is a map `ℝ → (𝕊^{d-1})^n`; solutions of the Cauchy problem on
-`[0, ∞)` extend to `ℝ` since the sphere is compact.  Only `t ≥ 0` enters the conclusion.
+`[0, ∞)` extend to `ℝ` since the sphere is compact. Only `t ≥ 0` enters the conclusion.
 
 Source: arXiv:2410.06833v1, §2, `thm: metastability`, `eq: lambda.3`, and its proof
 ("A direct proof"). -/

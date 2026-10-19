@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.GlobalFlow.Interval
+public import Mathlib.Analysis.Calculus.ContDiff.RCLike
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # §6.2 — Global existence of the scalar angle equation
 
 Auxiliary to arXiv:2312.10794v5, *A mathematical perspective on Transformers*,
@@ -9,9 +15,7 @@ between those equilibria contains zero. `Landscape.GlobalFlow.exists_global_Icc`
 a genuine solution for every real time, with no assumed ODE solution.
 -/
 
-import Transformer.Landscape.GlobalFlow.Interval
-import Mathlib.Analysis.Calculus.ContDiff.RCLike
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open Real Set
 

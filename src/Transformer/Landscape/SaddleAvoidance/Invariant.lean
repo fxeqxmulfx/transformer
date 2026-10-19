@@ -1,13 +1,18 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.CriticalPoints
+public import Mathlib.Analysis.Calculus.LineDeriv.Basic
+
+/-!
 # Saddle avoidance — the Łojasiewicz inequality under a translation symmetry
 
-Let `f` be invariant under the translations by a subspace `W`.  Its gradient
+Let `f` be invariant under the translations by a subspace `W`. Its gradient
 is then orthogonal to `W` (`inner_gradient_eq_zero_of_invariant`), so the
 derivative of the gradient maps into `Wᗮ`
 (`mem_orthogonal_of_hasFDerivAt_gradient`), and it vanishes on `W`: no
-critical point is nondegenerate when `W ≠ 0`.  The Łojasiewicz inequality
+critical point is nondegenerate when `W ≠ 0`. The Łojasiewicz inequality
 with exponent `1/2` still holds at a critical point `z` where the Hessian is
-injective on `Wᗮ` (`isLojasiewiczAt_of_invariant`).  The proof restricts `f`
+injective on `Wᗮ` (`isLojasiewiczAt_of_invariant`). The proof restricts `f`
 to the slice `z + Wᗮ`, where the Hessian is injective, applies
 `isLojasiewiczAt_of_injective` there, and carries the inequality back along
 the orthogonal projection onto the slice, which changes neither the value of
@@ -17,8 +22,7 @@ This covers the synchronized states of `𝖤_β` on angles, which is invariant
 under adding one constant to every angle, `W = ℝ𝟙`.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.CriticalPoints
-import Mathlib.Analysis.Calculus.LineDeriv.Basic
+@[expose] public section
 
 open Filter Metric InnerProductSpace
 open scoped Topology
@@ -61,10 +65,10 @@ theorem mem_orthogonal_of_hasFDerivAt_gradient [CompleteSpace E] (hf : Different
   simpa using this.symm
 
 /-- **The Łojasiewicz inequality at a critical point nondegenerate
-transversally to a symmetry**, with exponent `1/2`.  Let `f` be
-differentiable and invariant under the translations by a subspace `W`.  If
+transversally to a symmetry**, with exponent `1/2`. Let `f` be
+differentiable and invariant under the translations by a subspace `W`. If
 `∇f(z) = 0` and the derivative `A` of the gradient at `z` is injective on
-`Wᗮ`, then `IsLojasiewiczAt f z (1/2)`.  This is `isLojasiewiczAt_of_injective`
+`Wᗮ`, then `IsLojasiewiczAt f z (1/2)`. This is `isLojasiewiczAt_of_injective`
 applied to the restriction of `f` to the slice `z + Wᗮ`. -/
 theorem isLojasiewiczAt_of_invariant [FiniteDimensional ℝ E] (hf : Differentiable ℝ f)
     (hW : ∀ w ∈ W, ∀ y, f (y + w) = f y) {z : E} {A : E →L[ℝ] E}

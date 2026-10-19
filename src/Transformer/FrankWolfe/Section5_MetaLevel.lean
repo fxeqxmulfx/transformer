@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section5_Metastability
+
+/-!
 # Attention's forward pass and Frank-Wolfe — how far a path can drift
 
 `lem: metastab.1`: along a path, each step in which every particle moves to a convex combination
 of itself and a particle of its own group keeps all particles inside the `r`-neighbourhood of their
-group's hull, and any other step moves a particle by at most `γ 𝖽(𝒦)`.  So after `m` "bad" steps
+group's hull, and any other step moves a particle by at most `γ 𝖽(𝒦)`. So after `m` "bad" steps
 every particle lies within `γ 𝖽(𝒦) m` of its group's hull — pathwise, with no probability.
 -/
 
-import Transformer.FrankWolfe.Section5_Metastability
+@[expose] public section
 
 open scoped BigOperators Pointwise
 open Real MeasureTheory

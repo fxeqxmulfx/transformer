@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_FitStability
+
+/-!
 # DASH — approximation bounds for the coefficient-fitting algorithm
 
 arXiv:2602.02016v2, Appendix A. Exact polynomial reproduction and
@@ -6,7 +10,7 @@ sample stability give an error bound for the fitted array itself,
 in terms of any verified degree-`d` reference approximation.
 -/
 
-import Transformer.DASH.SectionA_FitStability
+@[expose] public section
 
 open scoped BigOperators
 

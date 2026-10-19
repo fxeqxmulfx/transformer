@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perspective.SphereCutoffFlow
+public import Transformer.Perspective.SphereFlowLimit
+public import Transformer.Perspective.SphereSaddle
+public import Transformer.Perspective.SphereNull
+
+/-!
 # Almost no rescaled sphere flow converges to an unsynchronized critical point
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -9,7 +16,7 @@ For a start `x ∈ (ℝ^d)^n` with nonzero vectors and a curve `X` of configurat
 If the lift solves `ẏ = M(y) ∇g(y)` for a block scaling `M` by positive `C¹` scales, as
 `USA` and `SA` do, then for `d ≥ 3`, `β > 0` and almost every `x`, `X` converges to no
 critical point of `𝖤_β` with two distinct tokens
-(`ae_not_tendsto_nonTrivial_of_blockScale`).  There the lifted limit is a strict saddle
+(`ae_not_tendsto_nonTrivial_of_blockScale`). There the lifted limit is a strict saddle
 of `-g` (`exists_secondDerivEBetaAt_pos_of_nonTrivial`, `g` being constant along rays),
 and the shells `1/(k+2) < ‖x_i‖² < k+2` cover the tuples of nonzero vectors with
 countably many applications of `ae_not_tendsto_of_cutoff`.
@@ -18,10 +25,7 @@ Source: arXiv:2312.10794v5, §6, `thm: boumal`, and the outline of the gradient-
 proofs at the end of §5; arXiv:2405.18273, `thm:spheres`, for the strict saddles.
 -/
 
-import Transformer.Perspective.SphereCutoffFlow
-import Transformer.Perspective.SphereFlowLimit
-import Transformer.Perspective.SphereSaddle
-import Transformer.Perspective.SphereNull
+@[expose] public section
 
 open Filter MeasureTheory
 open scoped Topology

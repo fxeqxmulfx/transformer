@@ -4,6 +4,12 @@ public import Mathlib.Analysis.Normed.Module.Ball.Pointwise
 public import Mathlib.Order.CompletePartialOrder
 public import Mathlib.Topology.MetricSpace.MetricSeparated
 
+/-!
+# Metric balls and separation
+
+Disjointness of balls around separated points and identities for closed extended-metric balls.
+-/
+
 @[expose] public section
 
 open ENNReal NNReal

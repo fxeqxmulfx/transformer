@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.ParityBounds
+module
+
+public import Transformer.GPTMini.Semantics.ParityBounds
 
 /-!
 # Strict tied readout for the complete original parity parameter family
@@ -11,6 +13,8 @@ correct output logits are premises of the task-specific theorems below.
 Prompt and completion comparisons cover every vocabulary competitor.
 The integer interface is connected separately in ParityCorrectness.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_LocalPhases
+
+/-!
 # Perceptron control curves for finite phase sequences
 
 ArXiv:2411.04551v3, §2.2, `prop: compression`, whose controls have
@@ -9,7 +13,7 @@ so phases with `𝐕 = 0` give a curve with `𝐕 ≡ 0`. The zero ridge of
 the induction base has `𝐕 = 0` too.
 -/
 
-import Transformer.Interpolation.Section2_LocalPhases
+@[expose] public section
 
 open Real MeasureTheory Set
 

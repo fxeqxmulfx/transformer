@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_MeanLogGenerator
+
+/-!
 # Uniform actual noise bound for a regularized logarithmic mean
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -21,7 +25,7 @@ one. All probabilistic bounds concern the genuine differential on
 the original Gaussian noise field, with no variance identity assumed.
 -/
 
-import Transformer.Homogenized.Section7_MeanLogGenerator
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped NNReal

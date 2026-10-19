@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdLimits
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryMass
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdLimits
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryMass
 
 /-!
 # Static weak decay excludes actual cold parameter collapse
@@ -30,6 +32,8 @@ a learned-head certificate for the ordinary transformer. Uniform native
 decoupled decay/plain CE differ from the source's coupled norm-cost GD.
 All statements concern exact reals, not floating-point kernel errors.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

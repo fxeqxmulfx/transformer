@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Algebra.Order.Round
+
+/-!
 # Softmax weights under bounded scores, and the fixed-point quantizer
 
 Two elementary facts that the context-length threshold of
@@ -6,18 +11,17 @@ Two elementary facts that the context-length threshold of
 
 *Dispersion.*  If the attention scores of `n` tokens lie within a window of
 width `D` (`s i - s j ≤ D` for all `i, j`), every softmax weight lies in
-`[e^{-D}/n, e^{D}/n]`.  This is the dispersion of softmax of Veličković,
+`[e^{-D}/n, e^{D}/n]`. This is the dispersion of softmax of Veličković,
 Perivolaropoulos, Barbero, Pascanu, arXiv:2410.01104, "softmax is not enough
 (for sharp out-of-distribution)", §2: with bounded logits, attention
 coefficients spread out as the number of items grows.
 
 *The dead zone of a rounding.*  The `b`-bit fixed-point format stores a number
-in `[0, 1]` as a multiple of `δ = 2^{-b}`, rounded to nearest.  Everything
+in `[0, 1]` as a multiple of `δ = 2^{-b}`, rounded to nearest. Everything
 below `δ/2` rounds to `0`, and nothing at or above `δ/2` does.
 -/
 
-import Transformer.Basic
-import Mathlib.Algebra.Order.Round
+@[expose] public section
 
 open scoped BigOperators
 
@@ -101,7 +105,7 @@ example : (0 : ℝ) < 1 ∧ (0 : ℝ) ≤ 1 / 4 ∧ (1 : ℝ) / 4 < 1 / 2 ∧ (1
   norm_num
 
 /-- Attention whose weights are stored through a rounding `Q`: the value of
-token `i` enters with weight `Q (σ(s)_i)`.  With `Q = id` this is one row of
+token `i` enters with weight `Q (σ(s)_i)`. With `Q = id` this is one row of
 softmax attention (arXiv:2410.01104, §2). -/
 noncomputable def qAttn {E : Type*} [AddCommGroup E] [Module ℝ E] (Q : ℝ → ℝ)
     (s : Idx n → ℝ) (v : Idx n → E) : E :=

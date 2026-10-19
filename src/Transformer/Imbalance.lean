@@ -1,4 +1,15 @@
-/-
+module
+
+public import Transformer.Imbalance.Section2_Datasets
+public import Transformer.Imbalance.Section2_Algorithms
+public import Transformer.Imbalance.Section3_CorrelationEquivalent
+public import Transformer.Imbalance.Section3_HessianBlocks
+public import Transformer.Imbalance.Section3_LambertSolution
+public import Transformer.Imbalance.Section3_Objective
+public import Transformer.Imbalance.Section3_RateRefutation
+public import Transformer.Imbalance.Section3_Zipf
+
+/-!
 # Heavy-tailed class imbalance
 
 Formalization of arXiv:2402.19449v2, Kunstner, Yadav, Milligan, Schmidt,
@@ -33,11 +44,4 @@ observations and research suggestions. They do not specify universal
 mathematical guarantees, and no optimizer ranking is asserted here.
 -/
 
-import Transformer.Imbalance.Section2_Datasets
-import Transformer.Imbalance.Section2_Algorithms
-import Transformer.Imbalance.Section3_CorrelationEquivalent
-import Transformer.Imbalance.Section3_HessianBlocks
-import Transformer.Imbalance.Section3_LambertSolution
-import Transformer.Imbalance.Section3_Objective
-import Transformer.Imbalance.Section3_RateRefutation
-import Transformer.Imbalance.Section3_Zipf
+@[expose] public section

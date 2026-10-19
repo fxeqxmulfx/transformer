@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.SharedSlots
-import Transformer.GPTMini.Convex.Structured.OutputMargins
+module
+
+public import Transformer.GPTMini.Convex.Structured.SharedSlots
+public import Transformer.GPTMini.Convex.Structured.OutputMargins
 
 /-!
 # Actual shared finite weights for causal state/value capacity
@@ -17,6 +19,8 @@ the learned model whose finite confidence was proved. This is a head
 capacity construction; raw Basis semantics and residual/tied realization
 are still independent obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

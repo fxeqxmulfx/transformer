@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.SectionA_TrainingQuadratic
+
+/-!
 # Positive scalar MD directions cannot cross their sphere component
 
 arXiv:2606.25971v2, §3.1 and Appendix A, Algorithm 2, training extension.
@@ -8,7 +12,7 @@ positive component when the direction gradient is positive. Arbitrary
 finite raw-gain optimizer outputs remain positive after softplus.
 -/
 
-import Transformer.MagnitudeDirection.SectionA_TrainingQuadratic
+@[expose] public section
 
 noncomputable section
 

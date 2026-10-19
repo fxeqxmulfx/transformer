@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.OutputTiedMemory
+module
+
+public import Transformer.GPTMini.Sparsemax.OutputTiedMemory
 
 /-!
 # Nontrivial ordinary-answer fits under affine parameter sharing
@@ -14,6 +16,8 @@ their midpoint inhabit the same convex architectural domain. Thus the
 new injectivity restriction is not a singleton domain or a requirement
 that every output equal a prescribed attention-label table.
 -/
+
+@[expose] public section
 
 noncomputable section
 

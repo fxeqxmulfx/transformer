@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Section4_SecondOverlap
+
+/-!
 # Scalar barriers and expansion for the causal convergence proof
 
 ArXiv:2411.04990v2, §4, proof of `thm1`.
@@ -16,7 +20,7 @@ between two actual followers with the same original prefix, after
 establishing the required expansion from the original causal field.
 -/
 
-import Transformer.Causal.Section4_SecondOverlap
+@[expose] public section
 
 open Real Set Filter
 

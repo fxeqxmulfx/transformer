@@ -1,16 +1,20 @@
-/-
+module
+
+public import Transformer.Modes.Section3_PsiRate
+public import Transformer.Modes.Section3_ErrorHigher
+public import Transformer.Modes.Section2_MainIntPhiT
+
+/-!
 # The number of modes of a Gaussian KDE — `lem:error-3` on `T`
 
 The absolute Edgeworth contribution is `O(exp(-ω/4) √(β log β))` throughout
-the original regime.  Its moment prefactor is uniformly `O(exp(-ω/4))`,
+the original regime. Its moment prefactor is uniformly `O(exp(-ω/4))`,
 and its Gaussian majorant integrates to `√β` times the window length plus
-a constant.  The linear Hermite term and Gaussian shift are both retained.
+a constant. The linear Hermite term and Gaussian shift are both retained.
 Source: arXiv:2412.09080v3, §3.1, `lem:error-3` and its proof.
 -/
 
-import Transformer.Modes.Section3_PsiRate
-import Transformer.Modes.Section3_ErrorHigher
-import Transformer.Modes.Section2_MainIntPhiT
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped ENNReal
@@ -37,7 +41,7 @@ theorem eventually_window_nonneg {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ}
 example := eventually_window_nonneg isRegime_succ isSlowGrowth_sqrt_log_log
 
 /-- On `T`, the third-moment prefactor of the Edgeworth term is
-`O(exp(-ω/4))`.  Source: arXiv:2412.09080v3, §3.1, `lem:eta`,
+`O(exp(-ω/4))`. Source: arXiv:2412.09080v3, §3.1, `lem:eta`,
 `lem:error-3`, and §3.2, `eq:rate` with `s = 2`. -/
 theorem eventually_eta_three_scaled_le_T {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ}
     (hreg : IsRegime c N B) {ω : ℝ → ℝ} (hω : IsSlowGrowth ω) :
@@ -138,7 +142,7 @@ example := eventually_psiKR_T_le isRegime_succ isSlowGrowth_sqrt_log_log
 /-- **Lemma (lem:error-3), on `T`.** In the regime `n^c ≲ β ≲ n^{2-c}`,
 `∫_T ∫_{Δ_t}^∞ y (n det Σ_t)^{-1/2} |ψ|(…) dy dt ≲ exp(-ω(β)/4) √(β log β)`.
 The source states a signed integral; this proves the absolute contribution
-required by `eq:error-goal`.  The corrected global Hermite bound and exact
+required by `eq:error-goal`. The corrected global Hermite bound and exact
 Gaussian shift preserve the original hypotheses and rate.
 Source: arXiv:2412.09080v3, §3.1, `lem:error-3`. -/
 theorem error_three_T {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hreg : IsRegime c N B)

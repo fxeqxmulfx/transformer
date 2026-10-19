@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_MeanLogCalculus
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # Actual exponential tests of the original regularized log mean
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -19,8 +24,7 @@ of the exponential parameter. The test remains globally smooth on
 the whole ambient space, even at an original zero centroid.
 -/
 
-import Transformer.Homogenized.Section7_MeanLogCalculus
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open Real
 open scoped BigOperators

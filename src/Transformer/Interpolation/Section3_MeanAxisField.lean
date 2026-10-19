@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_ProjectionLaw
+public import Transformer.Interpolation.Section1_AutonomousWeakTests
+public import Transformer.Interpolation.Clustering
+
+/-!
 # The original rank-one mean-attention field
 
 ArXiv:2411.04551v3, §3.2, `lem: induction.barycenter`, proof Step 1,
@@ -13,9 +19,7 @@ The factor `κ` includes the source's forward phase, its reverse phase,
 and the constant rescaling needed for a prescribed horizon.
 -/
 
-import Transformer.Interpolation.Section3_ProjectionLaw
-import Transformer.Interpolation.Section1_AutonomousWeakTests
-import Transformer.Interpolation.Clustering
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology

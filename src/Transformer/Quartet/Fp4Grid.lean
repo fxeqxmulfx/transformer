@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.Quartet.Section3_Grids
+
+/-!
 # `RTN_FP4` at the top of the E2M1 grid
 
-Support for arXiv:2601.22813v2, §3.1 and §3.3.  Rounding to nearest onto the E2M1 grid
+Support for arXiv:2601.22813v2, §3.1 and §3.3. Rounding to nearest onto the E2M1 grid
 `±{0, 0.5, 1, 1.5, 2, 3, 4, 6}` is a finite computation between two consecutive grid points,
 and the two gaps at the top, `(4, 6)` and `(-6, -4)`, are the ones the `MS-EDEN` counterexample
 of `Transformer.Quartet.Section3_EdenBias` lives in: an argument above `5` rounds to `±6`, one
-between `4` and `5` to `±4`.  `floorOn_ceilOn_of_bracket` is the general statement: between two
+between `4` and `5` to `±4`. `floorOn_ceilOn_of_bracket` is the general statement: between two
 consecutive grid points the floor is the lower one and the ceiling the upper.
 -/
 
-import Transformer.Quartet.Section3_Grids
+@[expose] public section
 
 namespace Transformer
 namespace Quartet

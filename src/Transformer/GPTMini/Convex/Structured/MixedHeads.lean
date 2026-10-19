@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.RawBinding
-import Transformer.GPTMini.Convex.Structured.SharedReference
+module
+
+public import Transformer.GPTMini.Convex.Structured.RawBinding
+public import Transformer.GPTMini.Convex.Structured.SharedReference
 
 /-!
 # Genuine compact learned mixture of state and binding heads
@@ -19,6 +21,8 @@ position. Tensor/prenorm/residual/tied realization and complete mixture
 training convexity are subsequent obligations. Output-only CE and AdamW
 convergence are not asserted by these probability/operator identities.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

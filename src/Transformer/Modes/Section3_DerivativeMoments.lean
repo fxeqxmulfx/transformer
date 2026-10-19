@@ -1,4 +1,7 @@
-import Transformer.Modes.Section3_CharacteristicDerivatives
+module
+
+public import Transformer.Modes.Section3_CharacteristicDerivatives
+
 /-!
 # The first two characteristic derivatives and standardization
 
@@ -15,6 +18,7 @@ The resulting derivatives agree with those of `exp(-|ξ|²/2)` at zero;
 quantitative derivative remainders require further moment estimates.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

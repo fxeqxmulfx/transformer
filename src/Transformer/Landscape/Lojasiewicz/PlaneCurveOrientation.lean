@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.ZeroAxisProjection
+
+/-!
 # Orienting accumulation in a prepared plane zero set
 
 The isolated central-axis zero forces nonzero projected parameters. One of
@@ -6,7 +10,7 @@ the two parameter signs accumulates, so reflection gives positive-side
 accumulation suitable for constrained analytic root lifting.
 -/
 
-import Transformer.Landscape.Lojasiewicz.ZeroAxisProjection
+@[expose] public section
 
 open Filter Set
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_AttentionCharacteristics
+public import Transformer.Interpolation.Section1_TimeDependentFlowBounds
+
+/-!
 # Regularity of the actual attention characteristic flow
 
 ArXiv:2411.04551v3, §1, `eq: ips` and `eq: cauchy.pb`, and §2,
@@ -14,8 +19,7 @@ The finite smooth-cone comparison applies to its genuine particle
 centers and arbitrary Lipschitz terminal tests.
 -/
 
-import Transformer.Interpolation.Section2_AttentionCharacteristics
-import Transformer.Interpolation.Section1_TimeDependentFlowBounds
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology NNReal

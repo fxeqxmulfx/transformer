@@ -1,4 +1,11 @@
-/-
+module
+
+public import Mathlib.Data.List.Sort
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Tactic
+
+/-!
 # DASH — greedy layer allocation to workers
 
 arXiv:2602.02016v2, §2.3, “Load Balancing”. Layers are sorted by
@@ -6,10 +13,7 @@ parameter count, then assigned to a worker of minimum current load.
 The allocation neither drops nor duplicates layer occurrences.
 -/
 
-import Mathlib.Data.List.Sort
-import Mathlib.Data.Finset.Max
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Tactic
+@[expose] public section
 
 open scoped BigOperators
 

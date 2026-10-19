@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthLayout
+module
+
+public import Transformer.GPTMini.Semantics.DepthLayout
 
 /-!
 # Genuine depth attention residual and detector input conditions
@@ -20,6 +22,8 @@ The real attention residual has norm at most M+32, and its protected
 constant gives norm at least one. Full FFN transition and ordered
 semantics are subsequent obligations. No training claim is made.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

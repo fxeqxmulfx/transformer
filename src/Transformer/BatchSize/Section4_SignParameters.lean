@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_ModelParameterBounds
+
+/-!
 # Smooth signed drift on its true positive-noise parameter domain
 
 arXiv:2506.12543v1, Section 4.3, equation (3), Theorem 1.
@@ -6,7 +10,7 @@ The error-function response is evaluated on the actual gradient/noise pair.
 The compact parameter range stays away from every zero denominator.
 -/
 
-import Transformer.BatchSize.Section4_ModelParameterBounds
+@[expose] public section
 
 open scoped NNReal
 

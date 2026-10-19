@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_ConcentratedReplacement
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+public import Mathlib.LinearAlgebra.LinearIndependent.Lemmas
+
+/-!
 # Stable original plane exclusions and concentrated barycenters
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, and §3.2,
@@ -17,9 +23,7 @@ within the same Euclidean radius of that center. This links the open
 plane exclusion to actual original concentrated probabilities.
 -/
 
-import Transformer.Interpolation.Section4_ConcentratedReplacement
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.LinearAlgebra.LinearIndependent.Lemmas
+@[expose] public section
 
 open Real MeasureTheory Set
 

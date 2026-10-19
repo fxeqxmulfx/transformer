@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.Section3_SharpTaylor
+public import Transformer.Metastability.Section3_EnergyAlgebra
+
+/-!
 # A global energy remainder bound uniform in temperature
 
 ArXiv:2410.06833v1, §3.2, `eq: otto.attention` and the pairwise
@@ -11,8 +16,7 @@ rotation: the square of the sum is subtracted explicitly. The bound
 therefore remains valid for arbitrary lifted angle representatives.
 -/
 
-import Transformer.Metastability.Section3_SharpTaylor
-import Transformer.Metastability.Section3_EnergyAlgebra
+@[expose] public section
 
 open scoped BigOperators
 open Real

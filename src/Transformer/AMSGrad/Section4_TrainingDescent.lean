@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.AMSGrad.Section4_TrainingScalarEnergy
+public import Transformer.AMSGrad.Section4_TrainingKinetic
+public import Transformer.Optimization.Quadratic
+
+/-!
 # AMSGrad — sufficient decrease of the actual Lyapunov energy
 
 Training extension of arXiv:1904.03590v4, Algorithm 1, §4 and §6.
@@ -8,9 +14,7 @@ Loss itself need not decrease at every momentum step; its Lyapunov
 energy does, and the resulting displacement budget is proved here.
 -/
 
-import Transformer.AMSGrad.Section4_TrainingScalarEnergy
-import Transformer.AMSGrad.Section4_TrainingKinetic
-import Transformer.Optimization.Quadratic
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 

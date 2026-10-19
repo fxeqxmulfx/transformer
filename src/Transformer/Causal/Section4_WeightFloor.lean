@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Section4_ParticleWeights
+
+/-!
 # Uniform positive weights in the original spherical causal system
 
 ArXiv:2411.04990v2, §4, proof of `thm1`.
@@ -15,7 +19,7 @@ temperature. The original mask is unchanged, so only predecessor
 and current-token entries satisfy its positivity conclusion.
 -/
 
-import Transformer.Causal.Section4_ParticleWeights
+@[expose] public section
 
 open scoped BigOperators
 open Real

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section4_BatchedFitConvergence
+public import Transformer.DASH.Section3_GuardedScaling
+
+/-!
 # DASH — automatic domain and sample repair for batched Chebyshev powers
 
 arXiv:2602.02016v2, §3.4, §4 and Appendix A. The complete solver
@@ -7,8 +12,7 @@ rescales by `c^exponent`, and raises an undersized sample count above
 the requested degree. Accuracy is proved for the actual fitted array.
 -/
 
-import Transformer.DASH.Section4_BatchedFitConvergence
-import Transformer.DASH.Section3_GuardedScaling
+@[expose] public section
 
 open scoped Matrix Topology
 open Filter

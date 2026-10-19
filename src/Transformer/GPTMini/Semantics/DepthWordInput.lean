@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthFeatureBounds
+module
+
+public import Transformer.GPTMini.Semantics.DepthFeatureBounds
 
 /-!
 # Actual token-local depth inputs, with every neutral position retained
@@ -18,6 +20,8 @@ This supplies the base of the real hidden-state induction. Subsequent
 blocks must derive alternating occurrences, and the final original
 model/checked integer interface must still be coupled to raw Basis.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

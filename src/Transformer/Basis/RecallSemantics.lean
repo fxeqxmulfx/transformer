@@ -1,4 +1,6 @@
-import Transformer.Basis.Recall
+module
+
+public import Transformer.Basis.Recall
 
 /-!
 # The last raw binding behind a supervised recall answer
@@ -13,6 +15,8 @@ The chronological decomposition is the semantic target for a retrieval
 head. It permits repeated writes and unrelated records after the selected
 write; selecting the first match would not satisfy the theorem.
 -/
+
+@[expose] public section
 
 namespace Transformer.Basis
 

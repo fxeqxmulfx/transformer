@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.GPTMini.Convex.Attention
+public import Transformer.GPTMini.Model
+
+/-!
 # The gpt-mini stack with causal sparsemax heads
 
 New modification of `Block.forward` and `GPTMini.forward` in
@@ -12,8 +17,7 @@ does not establish joint training convexity. Motivation:
 arXiv:2211.11052v1, §3.1, with depth outside its single-block guarantees.
 -/
 
-import Transformer.GPTMini.Convex.Attention
-import Transformer.GPTMini.Model
+@[expose] public section
 
 open scoped BigOperators
 

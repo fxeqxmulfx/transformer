@@ -1,21 +1,25 @@
-import Transformer.AMSGrad.Section4_TheoremAAbel
+module
 
-/-
+public import Transformer.AMSGrad.Section4_TheoremAAbel
+
+/-!
 # AMSGrad — the printed Abel bound fails even with the initial maximum
 
 The scalar estimate needed by the printed proof of Theorem A still fails when
-`β = β₁ = β_{1,1}`, as required by that theorem.  The counterexample uses
+`β = β₁ = β_{1,1}`, as required by that theorem. The counterexample uses
 `a_t = t`, `β = 1/2`, `β_t = 1/2` at `t = 1` and at even times, and `0` at
-other odd times.  Set `u_t = 1` at even times and `0` at odd times.  At `T = 16`
+other odd times. Set `u_t = 1` at even times and `0` at odd times. At `T = 16`
 the two sides of the asserted estimate are `143/2` and `137/2`.
 
 This refutes a scalar proof step, not Theorem A itself: the values `u_t` are
-not shown to arise from an AMSGrad run.  In particular, the theorem
+not shown to arise from an AMSGrad run. In particular, the theorem
 `Transformer.AMSGrad.theorem_A` is now proved by a different argument.
 
 Source: arXiv:1904.03590v4, §3, the discussion of the telescoping step in
 the proof of Theorem A.
 -/
+
+@[expose] public section
 
 open Finset
 
@@ -23,10 +27,10 @@ namespace Transformer
 namespace AMSGrad
 
 /-- The scalar estimate with Theorem A's printed constants is false even when
-the schedule starts at its stated maximum, `β₁ = β_{1,1}`.  Unlike the simpler
+the schedule starts at its stated maximum, `β₁ = β_{1,1}`. Unlike the simpler
 counterexample `not_abel_printed`, this witness has `a_t = t`, so its weights
-increase strictly.  This is a counterexample to the proof step, not to the
-regret theorem.  Source: arXiv:1904.03590v4, §3, Theorem A proof audit. -/
+increase strictly. This is a counterexample to the proof step, not to the
+regret theorem. Source: arXiv:1904.03590v4, §3, Theorem A proof audit. -/
 theorem not_abel_printed_initial_max :
     ¬ ∀ (a b u : ℕ → ℝ) (β E : ℝ), β < 1 → β = b 1 →
       (∀ t, 1 ≤ t → 0 ≤ a t) →

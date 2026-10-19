@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_ZeroScalarCircle
+
+/-!
 # Full support and the original potential for conformal matrix attention
 
 ArXiv:2601.21366v2, §5.3, the full-support contradiction after
@@ -16,7 +20,7 @@ original perceptron potential. Thus a non-analytic original potential
 excludes full support, with its original primitive and neurons retained.
 -/
 
-import Transformer.Perceptron.Section5_ZeroScalarCircle
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

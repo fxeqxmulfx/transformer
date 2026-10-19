@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Analysis.MeanInequalities
+public import Mathlib.Tactic
+
+/-!
 # DASH — scalar Coupled Newton
 
 arXiv:2602.02016v2, §3.2, `equation:CN-init`, `equation:CN-C`,
@@ -7,8 +12,7 @@ initial spectral interval; the convergence theorem requires the
 open interval, as the endpoint counterexamples demonstrate.
 -/
 
-import Mathlib.Analysis.MeanInequalities
-import Mathlib.Tactic
+@[expose] public section
 
 noncomputable section
 

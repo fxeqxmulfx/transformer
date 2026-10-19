@@ -1,8 +1,14 @@
-/-
+module
+
+public import Transformer.Quartet.Section3_Eden
+public import Transformer.Quartet.Section3_EdenPair
+public import Transformer.Quartet.Fp4Grid
+
+/-!
 # `MS-EDEN` on a two-valued rotation
 
 Support for the counterexample of `Transformer.Quartet.Section3_EdenBias` to the Corollary of
-§3.3.  When the rotation `y = RHT(x)` of a tensor takes two values only — `P` at even positions
+§3.3. When the rotation `y = RHT(x)` of a tensor takes two values only — `P` at even positions
 and `R` at odd ones (`twoValued`), with `M = max(|P|, |R|)` — every number Algorithm 1 computes
 is explicit:
 
@@ -18,9 +24,7 @@ the first entry then reads `± c · 8 (q_P + q_R) · M/(256 s) · Σ_g SR_FP8(25
 Source: arXiv:2601.22813v2, §3.1 (`Q_RTN`), §3.3 and Algorithm 1 (`MS-EDEN`).
 -/
 
-import Transformer.Quartet.Section3_Eden
-import Transformer.Quartet.Section3_EdenPair
-import Transformer.Quartet.Fp4Grid
+@[expose] public section
 
 namespace Transformer
 namespace Quartet

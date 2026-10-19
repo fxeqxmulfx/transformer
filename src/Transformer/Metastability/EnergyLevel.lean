@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.EnergyScale
+public import Transformer.Metastability.InitialUniform
+
+/-!
 # Metastability — the energy window of §4 can be empty
 
 The problem of `sec: energy.levels` (arXiv:2410.06833v1, §4) asks for `1 > c₂ > c₁ > 0`, depending
@@ -6,15 +11,14 @@ on `β`, such that every configuration with
 
   `c₂ ≥ 𝖤_β(x) - 𝔼[𝖤_β(U)] ≥ c₁`
 
-is metastable.  The source does not say how large the window `[c₁, c₂]` has to be, and read
+is metastable. The source does not say how large the window `[c₁, c₂]` has to be, and read
 literally the question has the trivial answer "yes, an empty window": the printed energy is at
 most `1/(2β)` (`Eβ_le`) and the mean is nonnegative, so for `β > 1/2` a `c₁ ≥ 1/(2β)` leaves no
-configuration in the window (`printed_energy_level_trivial`).  This is why
+configuration in the window (`printed_energy_level_trivial`). This is why
 `energy_level_metastability` asks in addition that the window be nonempty.
 -/
 
-import Transformer.Metastability.EnergyScale
-import Transformer.Metastability.InitialUniform
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -26,7 +30,7 @@ namespace Metastability
 
 For `β > 1/2` there are `1 > c₂ > c₁ > 0` such that *no* configuration `x` has
 `c₁ ≤ 𝖤_β(x) - 𝔼[𝖤_β(U)] ≤ c₂`: `𝖤_β(x) ≤ 1/(2β) < c₁` (`Eβ_le`), and the mean of the
-nonnegative `𝖤_β` is nonnegative.  Any statement of the form "every configuration of the window
+nonnegative `𝖤_β` is nonnegative. Any statement of the form "every configuration of the window
 is metastable" is then true for this window without saying anything about the dynamics.
 
 Source: arXiv:2410.06833v1, §4, `sec: energy.levels`, with `𝖤_β` of §1. -/

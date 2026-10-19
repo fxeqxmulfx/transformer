@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.SoftmaxDerivatives
+
+/-!
 # Actual first and second coordinate derivatives of the softmax
 
 ArXiv:2604.01978v1, §7, the computations preceding
@@ -16,7 +20,7 @@ summed estimates are needed for the actual covariance contraction in
 Gram stability, rather than a separate bound on each Hessian entry.
 -/
 
-import Transformer.Homogenized.SoftmaxDerivatives
+@[expose] public section
 
 open Real
 open scoped BigOperators

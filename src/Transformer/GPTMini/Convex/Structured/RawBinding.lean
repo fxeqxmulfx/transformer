@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.Binding
-import Transformer.GPTMini.Convex.Structured.PointerDecoder
+module
+
+public import Transformer.GPTMini.Convex.Structured.Binding
+public import Transformer.GPTMini.Convex.Structured.PointerDecoder
 
 /-!
 # Actual raw-prefix all-pair learned binding inference and loss
@@ -21,6 +23,8 @@ weights must still derive semantic correctness and selected mass.
 These raw head computations do not yet establish the full tensor,
 prenorm/residual/tied model realization or successful AdamW training.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

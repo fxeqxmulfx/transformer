@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Metastability.Section6_Profile
+public import Transformer.Metastability.Section6_UniformEndpoints
+public import Transformer.Metastability.Section6_TwoTokenEnergy
+
+/-!
 # An actual attention counterexample to the full uniform staircase
 
 ArXiv:2410.06833v1, §6, `conj: saddle-to-saddle`.
@@ -28,9 +34,7 @@ with the first one, including the height of the final unbounded plateau.
 The two explicit endpoint limits then contradict the required agreement.
 -/
 
-import Transformer.Metastability.Section6_Profile
-import Transformer.Metastability.Section6_UniformEndpoints
-import Transformer.Metastability.Section6_TwoTokenEnergy
+@[expose] public section
 
 open Real Filter Topology
 

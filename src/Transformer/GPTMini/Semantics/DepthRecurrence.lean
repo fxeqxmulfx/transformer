@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.DepthMatrices
-import Transformer.GPTMini.Semantics.Order
+module
+
+public import Transformer.GPTMini.Semantics.DepthMatrices
+public import Transformer.GPTMini.Semantics.Order
 
 /-!
 # Ordered depth recurrence at actual positions including neutral tokens
@@ -23,6 +25,8 @@ These are data-side predicates and proven recurrence laws. They are
 not substituted for the model's computed hidden states; the original
 raw embedding, head/FFN matrices and layer induction must realize them.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

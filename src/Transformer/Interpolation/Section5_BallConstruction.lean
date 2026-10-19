@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section5_BallRadius
+
+/-!
 # Equal-mass balls for separated small carriers
 
 ArXiv:2411.04551v3, §5, `cl: balls`. The actual common-radius
@@ -13,7 +17,7 @@ This explicitly uses both source inputs: separation and support
 smallness. Absolute continuity is used only through null spheres.
 -/
 
-import Transformer.Interpolation.Section5_BallRadius
+@[expose] public section
 
 open Real MeasureTheory Metric Set
 

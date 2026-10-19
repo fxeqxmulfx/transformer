@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallGateSignals
+module
+
+public import Transformer.GPTMini.Semantics.RecallGateSignals
 
 /-!
 # Exact outcomes of the genuine table-gating FFN
@@ -16,6 +18,8 @@ as a prepared encoder. Protected coordinates stay available to the
 second block and tied readout. These conditional operator lemmas do
 not yet constitute full raw Basis correctness or a convexity claim.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

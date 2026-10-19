@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_CapError
+public import Transformer.Interpolation.Section3_CapBoundary
+
+/-!
 # Contraction of actual two-neuron trajectories in the inner cap
 
 Auxiliaries for arXiv:2411.04551v3, Appendix, `lem: two.balls`,
@@ -13,8 +18,7 @@ the prescribed target and convergence as time tends to infinity.
 The field retains both true ReLU activations throughout this argument.
 -/
 
-import Transformer.Interpolation.Section3_CapError
-import Transformer.Interpolation.Section3_CapBoundary
+@[expose] public section
 
 open Real Set Filter
 open scoped Topology NNReal

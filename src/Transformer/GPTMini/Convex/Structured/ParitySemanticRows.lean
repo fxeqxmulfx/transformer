@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.ParityRows
+module
+
+public import Transformer.GPTMini.Convex.Structured.ParityRows
 
 /-!
 # Finite learned rows derive actual raw parity path confidence
@@ -21,6 +23,8 @@ correctness, without assuming a correct encoder or correct output logits.
 The predicate is a property of its explicit weights and deficit bounds;
 it neither contains a theorem claim nor fixes any row to a hard rule.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

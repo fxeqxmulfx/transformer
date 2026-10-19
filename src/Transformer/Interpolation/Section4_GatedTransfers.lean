@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_RidgeClocks
+public import Transformer.Interpolation.Section4_ProjectionSegments
+public import Transformer.Interpolation.Section3_RidgeTransport
+
+/-!
 # Exact local transfers under one original gated neuron
 
 ArXiv:2411.04551v3, §4, the point matching step in
@@ -15,9 +21,7 @@ and fixes every unit point outside that cap. This local construction
 retains the original neuron and its actual global flow.
 -/
 
-import Transformer.Interpolation.Section4_RidgeClocks
-import Transformer.Interpolation.Section4_ProjectionSegments
-import Transformer.Interpolation.Section3_RidgeTransport
+@[expose] public section
 
 open Real MeasureTheory Set
 

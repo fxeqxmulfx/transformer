@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthAttention
+module
+
+public import Transformer.GPTMini.Semantics.DepthAttention
 
 /-!
 # Actual normalized depth features and whole attention bounds
@@ -19,6 +21,8 @@ visible absence gives exactly zero even when future coordinates are
 nonzero. Raw feature induction and the ordered recurrence must still
 derive these local representation conditions for the full model.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

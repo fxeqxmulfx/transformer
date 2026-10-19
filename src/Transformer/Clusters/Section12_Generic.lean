@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Clusters.Section3_IdCase
+public import Transformer.Clusters.Section5_Mix
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+
+/-!
 # The emergence of clusters in self-attention dynamics — beyond `QᵀK ≻ 0`
 
 §12 of arXiv:2305.05465v6, `sec: first.new`: the two open problems the source
@@ -14,9 +21,9 @@ raises by dropping the positive-definiteness of `QᵀK` from `t:Idcase11int` and
   and the conclusions verbatim from `Section3_IdCase` and `Section5_Mix`.
 
 * "Generic" is read as: outside a Lebesgue-null set of matrices `QᵀK`, as in
-  §2's "for almost all initial sequences".  The source's own illustration is a
+  §2's "for almost all initial sequences". The source's own illustration is a
   matrix "with entries drawn from the uniform distribution on `[-1,1]`", and a
-  property witnessed by sampling is one that holds off a null set.  The
+  property witnessed by sampling is one that holds off a null set. The
   exceptional set is allowed to depend on `d` and on the number of tokens.
 
 * The parameter that genericity is asserted of is the matrix `QᵀK`, not the
@@ -29,10 +36,7 @@ Source: arXiv:2305.05465v6, `sec: first.new`, Figures `f: first.new` and
 `f: second.new`; `t:Idcase11int`, `t:multiplicity`.
 -/
 
-import Transformer.Clusters.Section3_IdCase
-import Transformer.Clusters.Section5_Mix
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory Filter Topology
@@ -75,7 +79,7 @@ theorem inner_eq_sum_qkMatrix (Q K : ParamMatrix d) (u v : EucSpace d) :
   ring
 
 /-- **The dynamics sees `(Q,K)` only through `QᵀK`**: two pairs with the same
-matrix have the same self-attention matrix, hence the same trajectories.  This
+matrix have the same self-attention matrix, hence the same trajectories. This
 is what makes "generic `QᵀK`" a condition on the dynamics. -/
 theorem attentionMatrix_congr_qkMatrix {Q K Q' K' : ParamMatrix d}
     (h : qkMatrix Q K = qkMatrix Q' K') (X : Idx n → EucSpace d) :

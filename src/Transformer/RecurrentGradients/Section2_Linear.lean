@@ -1,10 +1,15 @@
-/-
+module
+
+public import Transformer.RecurrentGradients.Section2_Counterexample
+public import Mathlib.Analysis.Normed.Algebra.GelfandFormula
+
+/-!
 # The linear model
 
 arXiv:1211.5063, §2.1 and the supplementary "Analytical analysis of the
-exploding and vanishing gradients problem".  With `σ` the identity, eq. (2) is
+exploding and vanishing gradients problem". With `σ` the identity, eq. (2) is
 linear and `∂x_{k+l}/∂x_k = W_rec^l` (`factor_id`); the supplementary's
-eq. (`prod_wk`) writes `(W_recᵀ)^l`, the transpose of §1.1's eq. (5).  §2.1:
+eq. (`prod_wk`) writes `(W_recᵀ)^l`, the transpose of §1.1's eq. (5). §2.1:
 "It is sufficient for the largest eigenvalue `λ₁` of the recurrent weight matrix
 to be smaller than 1 for long term components to vanish (as `t → ∞`) and
 necessary for it to be larger than 1 for gradients to explode."  Both hold,
@@ -17,8 +22,7 @@ so `λ₁ > 1` when `α > 1` (`one_lt_spectralRadius`), the supplementary's
 "necessary condition for gradients to grow".
 -/
 
-import Transformer.RecurrentGradients.Section2_Counterexample
-import Mathlib.Analysis.Normed.Algebra.GelfandFormula
+@[expose] public section
 
 open scoped Matrix Matrix.Norms.L2Operator
 open Filter Topology

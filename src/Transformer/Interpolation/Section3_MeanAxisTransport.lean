@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_MeanAxisPullback
+public import Transformer.Interpolation.Section1_TimeTranslation
+
+/-!
 # Transport, uniqueness and reversal for every rank-one mean law
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §3.2,
@@ -14,8 +19,7 @@ and reversing actual original weak curves gives the probability flow's
 group law and exact inverse, including for negative control factors.
 -/
 
-import Transformer.Interpolation.Section3_MeanAxisPullback
-import Transformer.Interpolation.Section1_TimeTranslation
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

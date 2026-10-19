@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_PolynomialBranches
+public import Transformer.Perceptron.Section5_ReLUObstruction
+
+/-!
 # Non-analytic original potentials obstruct every zero polynomial branch
 
 ArXiv:2601.21366v2, §5.2, `rem:piecewise-poly`, and §5.3,
@@ -15,8 +20,7 @@ non-analyticity hypothesis. The primitive of twice the original activation
 is arbitrary and unchanged in this final contradiction.
 -/
 
-import Transformer.Perceptron.Section5_PolynomialBranches
-import Transformer.Perceptron.Section5_ReLUObstruction
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

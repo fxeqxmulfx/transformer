@@ -1,5 +1,7 @@
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Integral.Lebesgue.Countable
+module
+
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Countable
 
 /-!
 # Training procedures and risks
@@ -9,6 +11,8 @@ arXiv:1912.02292v1, Section 2, Definition 1. Samples retain multiplicity:
 Nonnegative extended losses cover classification error and unbounded losses.
 For measurable losses the lower integral is the usual nonnegative expectation.
 -/
+
+@[expose] public section
 
 namespace Transformer.DoubleDescent
 

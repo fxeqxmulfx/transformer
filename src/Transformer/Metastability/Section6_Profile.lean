@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+
+/-!
 # The staircase profile and its proposed gradient clock
 
 ArXiv:2410.06833v1, §6, `conj: saddle-to-saddle` and
@@ -24,8 +29,7 @@ as well as the energy identity and the clock equation. This also records
 the behavior of the totalized clock formula when its denominator vanishes.
 -/
 
-import Transformer.Metastability.Basic
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+@[expose] public section
 
 open Real
 
@@ -36,14 +40,14 @@ variable (d n : ℕ)
 /-- The **staircase profile** of `conj: saddle-to-saddle`.
 
 `X β` is the solution of `SA` at inverse temperature `β`, and `τ β` the
-reparametrization at that temperature.  The profile asks for jump times
+reparametrization at that temperature. The profile asks for jump times
 `0 = T_0 < T_1 < ⋯ < T_k < T_{k+1} = +∞` and a piecewise-constant
 `φ_∞ ∈ L^∞(ℝ_{≥0}; [0,1])`, constant on each `[T_i, T_{i+1})`, such that
 
   `φ_β(t) := 2β 𝖤_β(x_1(τ_β(t)),…,x_n(τ_β(t)))`
 
 converges to `φ_∞` uniformly on each `(T_i, T_{i+1})`, `i ∈ {0,…,k}`, as
-`β → ∞`.  The uniform convergence is written out with an `ε`/`B` pair so
+`β → ∞`. The uniform convergence is written out with an `ε`/`B` pair so
 that the threshold `B` is common to all plateaux; `T_{k+1} = +∞` is encoded
 by dropping the upper bound when `i = k`.
 
@@ -51,14 +55,14 @@ by dropping the upper bound when `i = k`.
 
 * The source defines `φ_β` with `𝖤_β` itself, whose printed normalization
   `1/(2β e^β n²)` makes it at most `1/(2β)`: then every family converges to
-  `φ_∞ ≡ 0` and the problem is empty (`printed_staircase_trivial`).  The
+  `φ_∞ ≡ 0` and the problem is empty (`printed_staircase_trivial`). The
   factor `2β` gives the energy the maximum `1` that the section's figure
   assigns to the last step.
 * The source asks for uniform convergence on `(T_i, T_{i+1})` for
-  `i ∈ {0,…,k-1}` only, leaving out the last plateau `(T_k, +∞)`.  Then a
+  `i ∈ {0,…,k-1}` only, leaving out the last plateau `(T_k, +∞)`. Then a
   time change slow enough — `τ_β(t) = t e^{-β²}` — keeps every trajectory at
   its initial energy on the bounded window `[0, T_k]`, and the question is
-  again empty.  `thm: staircase`, the one case the source proves, quantifies
+  again empty. `thm: staircase`, the one case the source proves, quantifies
   over the last plateau (`i ∈ {1,…,k}` there), and so does this profile.
 
 Source: arXiv:2410.06833v1, §6, `conj: saddle-to-saddle`. -/
@@ -78,7 +82,7 @@ def HasStaircaseProfile
 
   `τ̇_β(t) = log β / ‖∇𝖤_β(τ_β(t))‖`,   `τ_β(0) = 0`,
 
-so that the dynamics is accelerated wherever the gradient is small.  The
+so that the dynamics is accelerated wherever the gradient is small. The
 Riemannian gradient of `𝖤_β` on `(𝕊^{d-1})^n` is not constructed here: its
 norm is carried as a parameter `gradNorm β`, as in `OttoReznikoff`.
 
@@ -152,7 +156,7 @@ example : ∃ (gradNorm : ℝ → SphereTuple 2 2 → ℝ)
 
 Does the staircase conclusion hold for the explicit reparametrization
 `IsGradientReparam`, rather than for some reparametrization produced by the
-proof?  Writing `φ_β(t) := 𝖤_β(u(τ_β(t)))`, the candidate is the one for
+proof? Writing `φ_β(t) := 𝖤_β(u(τ_β(t)))`, the candidate is the one for
 which `φ̇_β(t) = log β · ‖∇𝖤_β(u(τ_β(t)))‖`, the hope being that a jump in
 the energy then takes a time independent of `β`.
 
@@ -169,7 +173,7 @@ theorem saddle_to_saddle_gradient_reparam (hd : 2 ≤ d) (hn : 2 ≤ n) :
   sorry
 
 /-- The hypotheses of `saddle_to_saddle_gradient_reparam` are satisfiable:
-`d = n = 2`.  The complete stationary consensus witness, including
+`d = n = 2`. The complete stationary consensus witness, including
 its actual gradient norm and its clock, is in `Section6_Profile`. -/
 example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
 

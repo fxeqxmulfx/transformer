@@ -1,18 +1,22 @@
-/-
+module
+
+public import Transformer.ALM.HullCover
+
+/-!
 # What the arrival order costs, and what it cannot cost
 
 `Transformer.ALM.HullBuild` prices a build of the hull: two ordered-container
 searches per key and one unit per erase, amortized to `3n(log₂ n + 1)` by
-`buildCost_le`.  That theorem is stated of *one* pop sequence, and a pop
-sequence is what one arrival order produced.  Nothing in it said the next
+`buildCost_le`. That theorem is stated of *one* pop sequence, and a pop
+sequence is what one arrival order produced. Nothing in it said the next
 order could not be worse, and the question is not idle — `cache.rs` reads its
 keys from a learned projection, so no order is guaranteed, and
 `vm-rs/alm-hull/src/bin/alm-stress.rs` measures five of them on the same
-262 144 keys and finds a four-fold spread, `0.030 s` to `0.123 s`.  The old
+262 144 keys and finds a four-fold spread, `0.030 s` to `0.123 s`. The old
 `Vec` port spread thirty-one-fold on the same table, which is why it is gone.
 
 `buildPrices m n` is every price a build of `m` keys can be charged, over every
-pop sequence of that length and so over every arrival order.  Three statements
+pop sequence of that length and so over every arrival order. Three statements
 about it: `buildPrices_le`, no order escapes the bound; `buildPrices_spread`,
 two orders differ by at most one unit per key; and `buildPrices_ratio`, so the
 worst order costs at most `1 + 1/(2(log₂ n + 1))` of the best — under three
@@ -20,20 +24,20 @@ per cent at the size the stress test drives (`stress_spread_le`).
 `buildPrices_nontrivial` is there so that none of this is vacuous: the order
 does move the price, just not far.
 
-And on the paraboloid it does not move it at all.  `Transformer.ALM.HullCover`
+And on the paraboloid it does not move it at all. `Transformer.ALM.HullCover`
 proves the erase test never fires on lifted keys, so the pop sequence is forced
 to be zeros and `buildPrices_paraboloid` collapses the whole set to a single
-number.  The five orders of the stress table are charged *the same price*.
+number. The five orders of the stress table are charged *the same price*.
 
 That is a fact about this tariff and not about the port, and the difference
-matters.  `buildCost` charges a search per key unconditionally; `tree.rs` holds
+matters. `buildCost` charges a search per key unconditionally; `tree.rs` holds
 the two ends of the envelope in a field and runs no search at all when the
 arriving slope falls outside them, which `alm-stress` now counts and finds is
-the case on every key of three of the five orders.  So the collapse above says
+the case on every key of three of the five orders. So the collapse above says
 only that the tariff cannot see the fast path.
 `Transformer.ALM.BuildFinger` prices the port instead, and there the set does
 not collapse: the same lifted keys cost `m` in one order and `m(log₂ n + 1)` in
-another.  Most of the measured spread is comparisons this file cannot count,
+another. Most of the measured spread is comparisons this file cannot count,
 and the rest — two orders that descend on the same keys and still differ by
 half again — is the memory the comparisons walk.
 
@@ -42,7 +46,7 @@ Source: `vm-rs/alm-hull/src/bin/alm-stress.rs` (the measured table) and
 lines 143-195.
 -/
 
-import Transformer.ALM.HullCover
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -80,7 +84,7 @@ theorem buildPrices_le {m n c : ℕ} (h : c ∈ buildPrices m n) (hm : m ≤ n) 
 
 /-- **The whole of the order-dependence is one unit per key.**  Two builds of
 the same keys in different orders perform the same searches; only the erase
-term moves, and `pops_le_length` caps it at one erase per key.  So the spread
+term moves, and `pops_le_length` caps it at one erase per key. So the spread
 between orders is additive in `m` and cannot grow with `log n`. -/
 theorem buildPrices_spread {m n c d : ℕ} (hc : c ∈ buildPrices m n)
     (hd : d ∈ buildPrices m n) : c ≤ d + m := by
@@ -135,7 +139,7 @@ theorem log_two_stress : Nat.log 2 262144 = 18 := by
 
 /-- **Under three per cent, against a measured four-fold.**  At the size
 `alm-stress` reports, the tariff permits the worst arrival order to cost
-`39/38` of the best.  The measured spread is `0.123 / 0.030`, a factor of
+`39/38` of the best. The measured spread is `0.123 / 0.030`, a factor of
 `4.1`, so whatever the five orders differ in, it is not the comparisons *this*
 model counts — `Transformer.ALM.BuildFinger.stress_port_ratio` counts more of
 them and permits twenty. -/
@@ -162,7 +166,7 @@ example : buildCost (List.replicate 262144 0) 262144 ∈ buildPrices 262144 2621
 
 /-- **One price, not a band.**  `Transformer.ALM.HullCover` proves the erase
 test never fires on lifted keys, so every arrival order produces the same pop
-sequence — zeros — and the set of prices collapses to a point.  The five orders
+sequence — zeros — and the set of prices collapses to a point. The five orders
 of the stress table are charged identically, which is a limit of this tariff
 and not a property of the port: it counts a search per key whether or not one
 is run, and `Transformer.ALM.BuildFinger.portCost_moves_on_the_paraboloid`

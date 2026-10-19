@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.SoftmaxDerivatives
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Genuine temperature derivatives of normalized softmax weights
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -16,8 +21,7 @@ assumption and precede the source's Gaussian expectation and Taylor
 remainder estimate.
 -/
 
-import Transformer.Homogenized.SoftmaxDerivatives
-import Mathlib.Analysis.Calculus.Deriv.Prod
+@[expose] public section
 
 open Real
 open scoped BigOperators

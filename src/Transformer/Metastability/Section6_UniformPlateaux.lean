@@ -1,4 +1,10 @@
-/-
+module
+
+public import Mathlib.Topology.Algebra.Order.Group
+public import Mathlib.Topology.Order.DenselyOrdered
+public import Mathlib.Tactic
+
+/-!
 # Uniform convergence across the staircase jump times
 
 ArXiv:2410.06833v1, §6, `conj: saddle-to-saddle` and `thm: staircase`.
@@ -13,9 +19,7 @@ It does not replace the source's uniform convergence by convergence on compact
 subintervals away from the jump times.
 -/
 
-import Mathlib.Topology.Algebra.Order.Group
-import Mathlib.Topology.Order.DenselyOrdered
-import Mathlib.Tactic
+@[expose] public section
 
 namespace Transformer.Metastability
 

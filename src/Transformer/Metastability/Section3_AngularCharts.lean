@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.AngularEnergy
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Angle
+
+/-!
 # Angular chart representatives preserve the actual energy and gradient
 
 ArXiv:2410.06833v1, §3.2, `eq: cones_2`, `eq: tau.small`, and
@@ -8,8 +13,7 @@ representative within `π` of that cap's center. This changes neither the
 interaction energy nor any angular gradient component.
 -/
 
-import Transformer.Metastability.AngularEnergy
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Angle
+@[expose] public section
 
 open scoped BigOperators
 open Real

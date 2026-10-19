@@ -1,19 +1,23 @@
-/-
+module
+
+public import Transformer.ALM.HullErase
+
+/-!
 # The erase keeps the value and can drop the winner
 
 `Transformer.ALM.HullErase` proves that what `add_line` erases costs the
 machine no exactness, and `Transformer.ALM.HullPrune` carries that through a
 whole build: the container standing at the end holds a line that is highest at
-every query among all the lines ever inserted.  Both are statements about the
-*value*.  The head does not return a value.  It returns a payload, merged over
+every query among all the lines ever inserted. Both are statements about the
+*value*. The head does not return a value. It returns a payload, merged over
 every line that attains the maximum — `HullHalf::query` walks left and right
 from the winner while the score is equal and merges each neighbour's `vsum`,
 `vlast` and `last_seq` — so what a query depends on is the whole tie set, and
 nothing so far says the erase preserves *that*.
 
-It does not.  When three stored lines meet at one point the middle one is a
+It does not. When three stored lines meet at one point the middle one is a
 maximizer there and the breakpoint test fires on it anyway: the value at that
-query survives in its two neighbours, the payload does not.  `todo3.md` §3a
+query survives in its two neighbours, the payload does not. `todo3.md` §3a
 measures it on three collinear keys — `Latest` answers `101` where the brute
 head answers the erased line's `102`, `Average` answers `100.5` where the
 brute head answers `101` — and `vm-rs/alm-hull/tests/differential.rs` is the
@@ -27,7 +31,7 @@ Source: `todo3.md` §3a; `transformer_vm/attention/hull2d_cht.h`, lines 143-195
 (the erase loops) and 276-306 (the merge walk).
 -/
 
-import Transformer.ALM.HullErase
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -59,7 +63,7 @@ lemma eq_interX_of_lineEval_eq {l l' : ℝ × ℝ} (h : l.1 ≠ l'.1) {x : ℝ}
   linear_combination hx
 
 /-- Three lines are *concurrent* when one query sees all three at the same
-height.  This is the degenerate case the erase loops do not distinguish. -/
+height. This is the degenerate case the erase loops do not distinguish. -/
 def Concurrent (l₁ l₂ l₃ : ℝ × ℝ) : Prop :=
   ∃ x, lineEval l₁ x = lineEval l₂ x ∧ lineEval l₂ x = lineEval l₃ x
 
@@ -97,7 +101,7 @@ lemma interX_eq_of_concurrent {l₁ l₂ l₃ : ℝ × ℝ} (h₁₂ : l₁.1 < 
 three stored lines agree, the middle one is a maximizer, the breakpoint test
 fires on it, and afterwards the envelope has the same value at that query —
 `sup'_erase_of_le`, the theorem `Transformer.ALM.HullErase` exists for — while
-the tie set the payloads are merged over has lost a member.  Two heads told to
+the tie set the payloads are merged over has lost a member. Two heads told to
 merge over the maximizers therefore answer differently, which is what
 `todo3.md` §3a measured between `HullKVCache` and `BruteAttentionHead`. -/
 theorem erase_keeps_the_value_and_drops_the_winner

@@ -1,23 +1,27 @@
-/-
+module
+
+public import Transformer.CRASP.MajTwoCount
+
+/-!
 # `TL[◁#, ▷#]` inside `MAJ²`
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 (COLM 2025), Appendix E, proof of `thm:tlc_to_majtwo`.
 
 A formula read at the position a variable `p` names becomes a `MAJ²` formula
-whose only free variable is `p` (`Form.toMaj`).  A term becomes the list of
+whose only free variable is `p` (`Form.toMaj`). A term becomes the list of
 formulas it counts, over the other variable `u` (`Term.toMajs`): `◁#[ψ]` is
 `ψ(u) ∧ u ≤ p`, `▷#[ψ]` is `ψ(u) ∧ p ≤ u`, `1` is `u = p`, and `+` appends,
-so the mass of the list is the value of the term (`Term.mass_toMajs`).  A
+so the mass of the list is the value of the term (`Term.mass_toMajs`). A
 comparison `t₁ < t₂` is one majority quantifier over `u` (`Maj2.cmpList`),
 which is what keeps the depth: the formulas under it are one level below.
 
-A comparison of depth `0` compares two constants.  The paper translates it
+A comparison of depth `0` compares two constants. The paper translates it
 like any other, which costs a quantifier; here it is `⊤` or `⊥` outright, since
 otherwise a depth-`0` formula would land at depth `1`.
 -/
 
-import Transformer.CRASP.MajTwoCount
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -36,7 +40,7 @@ def Term.ones : Term σ → ℕ
 mutual
 
 /-- The translation of a formula read at the position `p` names (Appendix E,
-proof of `thm:tlc_to_majtwo`).  Parikh numerical predicates are outside
+proof of `thm:tlc_to_majtwo`). Parikh numerical predicates are outside
 `TL[◁#,▷#]` and go to `⊥`. -/
 def Form.toMaj (p : Var) : Form σ → Maj2 σ
   | .sym a => .sym a p

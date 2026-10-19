@@ -1,7 +1,9 @@
-import Transformer.AMSGrad.Section1_TheoremA
-import Transformer.AMSGrad.Section2_Prelim
+module
 
-/-
+public import Transformer.AMSGrad.Section1_TheoremA
+public import Transformer.AMSGrad.Section2_Prelim
+
+/-!
 # AMSGrad — one step of the proof of Lemma 3.1
 
 §3 of arXiv:1904.03590v4: the pieces of the proof of Lemma 3.1 that concern a
@@ -11,7 +13,7 @@ single step `t`: the projection bound, the inequality (tvheq) for
 **What the source says and what is carried here.**
 
 * The source applies Lemma 2.7 (McMahan and Streeter) with `Q = √V̂_t`, which
-  asks `Q` to be positive definite.  `v̂_{t,i}` may vanish; the projection
+  asks `Q` to be positive definite. `v̂_{t,i}` may vanish; the projection
   bound is proved here for every weight `w ≥ 0` straight from the minimizing
   property of the projection, `proj_le`.
 
@@ -24,6 +26,8 @@ single step `t`: the projection bound, the inequality (tvheq) for
 
 Source: arXiv:1904.03590v4, §3, proof of Lemma 3.1.
 -/
+
+@[expose] public section
 
 open Finset
 
@@ -77,7 +81,7 @@ theorem m_eq_zero_of_vhat {S : Setup d} {R : Rule d} (hR : ∀ t a b, b ≤ R t 
 
 /-- The weighted projection does not increase the weighted distance to a point
 of `F`: `Σᵢ wᵢ(Π(y)ᵢ - x*ᵢ)² ≤ Σᵢ wᵢ(yᵢ - x*ᵢ)²` for `w ≥ 0`, `x* ∈ F`, `F`
-convex.  arXiv:1904.03590v4, §3, proof of Lemma 3.1, via Lemma 2.7. -/
+convex. arXiv:1904.03590v4, §3, proof of Lemma 3.1, via Lemma 2.7. -/
 theorem proj_le {F : Set (Vec d)} {proj : Vec d → Vec d → Vec d} (hP : IsWeightedProj F proj)
     (hF : Convex ℝ F) {w : Vec d} (hw : ∀ i, 0 ≤ w i) (y : Vec d) {z : Vec d} (hz : z ∈ F) :
     ∑ i, w i * (proj w y i - z i) ^ 2 ≤ ∑ i, w i * (y i - z i) ^ 2 := by

@@ -1,5 +1,7 @@
-import Transformer.Basis.Basic
-import Transformer.GPTMini.TokenInterface.Decoding
+module
+
+public import Transformer.Basis.Basic
+public import Transformer.GPTMini.TokenInterface.Decoding
 
 /-!
 # The real softmax GPTMini as List Int to List Int
@@ -20,6 +22,8 @@ QKNorm and XSA. Python's defaults instead use 1e-5 for RMSNorm and 1e-6
 for the head normalizations. This shared-epsilon family is explicit here;
 this adapter does not assert equality with those unequal-default numerics.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.TokenInterface
 

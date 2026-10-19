@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.GradientMinimumPolar
+public import Mathlib.Topology.Sequences
+
+/-!
 # Critical limits of compact energy-level gradient minima
 
 Energy levels approaching a critical point have gradient minimizers with
@@ -7,8 +12,7 @@ the base point for analytic curve selection in the general case of
 Appendix D.1 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.GradientMinimumPolar
-import Mathlib.Topology.Sequences
+@[expose] public section
 
 open Filter Set
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section2_DiskCoordinates
+
+/-!
 # The actual joint-law slice kernel
 
 Source: arXiv:2412.09080v3, §2.1, hypothesis three of
@@ -21,7 +25,7 @@ latent coordinate is integrated out. No final joint density
 is assumed here.
 -/
 
-import Transformer.Modes.Section2_DiskCoordinates
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 open scoped ENNReal

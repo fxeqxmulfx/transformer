@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Convex.Structured.SharedReference
-import Transformer.GPTMini.TokenInterface.Decoding
-import Transformer.Basis.Basic
+module
+
+public import Transformer.GPTMini.Convex.Structured.SharedReference
+public import Transformer.GPTMini.TokenInterface.Decoding
+public import Transformer.Basis.Basic
 
 /-!
 # Actual shared causal head through List Int to List Int
@@ -18,6 +20,8 @@ prenorm, residuals, tied embeddings or the complete stack are realized.
 The likelihood's unrestricted shared-parameter convexity is already
 proved; task-specific raw correctness must discharge reference semantics.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

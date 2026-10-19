@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Normalization.InitialProduct
+public import Mathlib.Probability.Moments.SubGaussian
+
+/-!
 # Bounded-difference concentration for finite product laws
 
 The scalar concentration input for the vector Hoeffding step of Appendix B,
@@ -6,8 +11,7 @@ proof of Theorem 4.2 of arXiv:2510.22026v2. Iterating Hoeffding's lemma over
 the product law avoids a separate martingale construction.
 -/
 
-import Transformer.Normalization.InitialProduct
-import Mathlib.Probability.Moments.SubGaussian
+@[expose] public section
 
 open MeasureTheory Set
 

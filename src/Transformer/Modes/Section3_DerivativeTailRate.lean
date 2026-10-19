@@ -1,6 +1,9 @@
-import Transformer.Modes.Section3_DerivativeTail
-import Transformer.Modes.Section3_FrequencyMoments
-import Transformer.Modes.Section3_FirstDerivativeFrequency
+module
+
+public import Transformer.Modes.Section3_DerivativeTail
+public import Transformer.Modes.Section3_FrequencyMoments
+public import Transformer.Modes.Section3_FirstDerivativeFrequency
+
 /-!
 # Quantitative exterior rates for characteristic derivatives
 
@@ -17,6 +20,7 @@ standard Gaussian derivatives, without an additional derivative model.
 Their integrability follows from the genuine normalized-sum identity.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

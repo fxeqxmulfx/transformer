@@ -1,28 +1,32 @@
-/-
+module
+
+public import Transformer.ALM.Basic
+
+/-!
 # When tie-breaking matters
 
 A hull line in `transformer_vm/attention/hull2d_cht.h` carries a `HullMeta`
 (lines 41-84): the running sum, count, last value and largest sequence number
-of every stored value that landed on that line.  `HullHalf::query` (lines
+of every stored value that landed on that line. `HullHalf::query` (lines
 252-310) walks left and right from the argmax, merges the metas of every line
 whose score equals the best one, and calls `resolve` on the result.
 
 Two questions the file leaves open, and this module answers:
 
 * **Is that path reachable on the lookup path?**  No, when the query is one of
-  the stored keys: `argmax_unique_of_query_mem`.  It is reachable otherwise,
+  the stored keys: `argmax_unique_of_query_mem`. It is reachable otherwise,
   and `sScore_eq_iff` says exactly where — the tie locus of two integer keys
   is the single query `2q = k₁ + k₂`.
 * **Do the two tie-break modes agree?**  The file comment (lines 26-28) says
   `TieBreak::LATEST` "is accepted but behaves like AVERAGE", but `resolve`
-  (lines 71-84) branches on the mode and returns `vlast` for `LATEST`.  They
+  (lines 71-84) branches on the mode and returns `vlast` for `LATEST`. They
   agree on an unmerged line (`resolve_eq_of_single`) and, as the final example
   records, differ as soon as a tie merges two distinct values.
 
 The scores are `Transformer.ALM.sScore` from `Transformer.ALM.Defs`.
 -/
 
-import Transformer.ALM.Basic
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -47,7 +51,7 @@ theorem sScore_eq_iff (q k₁ k₂ : ℤ) (hne : k₁ ≠ k₂) :
     have hr : 2 * (q : ℝ) = (k₁ : ℝ) + (k₂ : ℝ) := by exact_mod_cast h
     linear_combination ((k₁ : ℝ) - (k₂ : ℝ)) * hr
 
-/-- The scalar score is strictly maximized at an exact key match.  This is
+/-- The scalar score is strictly maximized at an exact key match. This is
 `score_lt_of_ne` of `Transformer.ALM.Basic` in the scalar integer case that
 `LookUp` compiles to. -/
 theorem sScore_lt_of_ne (q k : ℤ) (hne : k ≠ q) : sScore q k < sScore q q := by

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_RadialError
+
+/-!
 # The source's modified one-step estimate is false
 
 Source: arXiv:2604.01978v1, §6.1, `lem:stability_generator`.
@@ -30,7 +34,7 @@ law, full ambient derivative, normalization, exact chain,
 modified SDE, and quantitative discrepancy independently.
 -/
 
-import Transformer.Homogenized.Section6_RadialError
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory ProbabilityTheory

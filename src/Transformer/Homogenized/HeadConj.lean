@@ -1,4 +1,10 @@
-/-
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+
+public import Transformer.Homogenized.Barycenter
+
+/-!
 # Homogenized Transformers — rotating a configuration and a head
 
 The two deterministic halves of the proof of `lem:drift_on_simplex_selfcontained`
@@ -14,7 +20,7 @@ of arXiv:2604.01978v1:
 Source: arXiv:2604.01978v1, proof of `lem:drift_on_simplex_selfcontained`.
 -/
 
-import Transformer.Homogenized.Barycenter
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -41,7 +47,7 @@ theorem norm_linearCombination_eq {d n : ℕ} {X Y : Idx n → EucSpace d}
   simp only [hgram]
 
 /-- **Two configurations with the same Gram matrix differ by an orthogonal
-map**: `x̃_k = O x_k` for a linear isometry `O` of `ℝ^d`.  The source's "there
+map**: `x̃_k = O x_k` for a linear isometry `O` of `ℝ^d`. The source's "there
 exists an orthogonal `d × d` matrix `O` such that `x_i = O x̃_i`".
 
 Source: arXiv:2604.01978v1, proof of `lem:drift_on_simplex_selfcontained`. -/

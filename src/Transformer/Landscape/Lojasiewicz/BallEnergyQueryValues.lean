@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.BallEnergyPatchSource
+public import Transformer.Landscape.Lojasiewicz.PolynomialFiberThreshold
+
+/-!
 # Exact scalar queries on prepared closed-ball energy patches
 
 Both the original ball constraint and the actual squared gradient norm
@@ -6,8 +11,7 @@ retain their values at every prepared root on the whole box.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.BallEnergyPatchSource
-import Transformer.Landscape.Lojasiewicz.PolynomialFiberThreshold
+@[expose] public section
 
 noncomputable section
 open scoped BigOperators

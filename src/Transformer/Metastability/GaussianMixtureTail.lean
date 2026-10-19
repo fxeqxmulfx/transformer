@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.GaussianMixture
+public import Transformer.Metastability.GaussianTail
+
+/-!
 # A radius tail bound for the corrected Gaussian mixture
 
 A sample far from every component centre is, in particular, far from the
@@ -11,8 +16,7 @@ it does not replace the sharper concentration bound needed for that result.
 Source: arXiv:2410.06833v1, §4, `prop: mixture.of.gaussians`.
 -/
 
-import Transformer.Metastability.GaussianMixture
-import Transformer.Metastability.GaussianTail
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

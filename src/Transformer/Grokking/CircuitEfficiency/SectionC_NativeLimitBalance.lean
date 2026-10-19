@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativeGradientLimits
-import Transformer.Grokking.AdamW.ScalarLimits
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativeGradientLimits
+public import Transformer.Grokking.AdamW.ScalarLimits
 
 /-!
 # Finite limits of the closed clipped native product-CE trajectory
@@ -20,6 +22,8 @@ separate dynamics analysis. Plain CE/native decay is distinct from
 appendix C's coupled penalty/GD. No stochastic GPTMini convergence
 or floating-point kernel bridge is asserted.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,25 +1,29 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Basic
+
+/-!
 # Saddle avoidance — the cone estimate
 
 Let `A` be a linear map with an expanding splitting `P` (`IsExpandingSplitting
 A P c`, `c > 1`), and let `g` differ from `A` on the closed ball `B̄(z, r)` by a
-map of Lipschitz constant `(c - 1)/4`.  Call a difference `v` *steep* when
-`‖v - P v‖ ≤ ‖P v‖`.  If `x - y` is steep and `x, y ∈ B̄(z, r)`, then
+map of Lipschitz constant `(c - 1)/4`. Call a difference `v` *steep* when
+`‖v - P v‖ ≤ ‖P v‖`. If `x - y` is steep and `x, y ∈ B̄(z, r)`, then
 `g x - g y` is steep and `‖P (g x - g y)‖ ≥ (c + 1)/2 · ‖P (x - y)‖`
-(`cone_step`).  Two starts whose orbits both stay in the ball therefore never
+(`cone_step`). Two starts whose orbits both stay in the ball therefore never
 differ by a nonzero steep vector (`eq_of_mem_stayNear_of_steep`): the steep
 part of their difference would grow like `((c + 1)/2)ᵏ` while the ball bounds
-it.  In particular, `stayNear g z r` meets each line in a direction `e` with
+it. In particular, `stayNear g z r` meets each line in a direction `e` with
 `P e = e` at most once (`line_meets_stayNear_once`).
 
 This is the graph property of the local center-stable set: `stayNear g z r`
-is the graph of a Lipschitz map over the range of `1 - P`.  The center-stable
+is the graph of a Lipschitz map over the range of `1 - P`. The center-stable
 manifold theorem (Shub, Theorem III.7, cited as `thm:stable-center-manifold`
 in arXiv:1710.07406) gives more, a `C¹` disk tangent to that range, but the
 proof of saddle avoidance uses only that the set is null.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Basic
+@[expose] public section
 
 open Metric
 

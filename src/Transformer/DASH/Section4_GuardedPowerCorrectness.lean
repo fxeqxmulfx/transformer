@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section4_GuardedChebyshev
+public import Transformer.DASH.Section3_InverseRootCorrectness
+
+/-!
 # DASH — guarded fitted powers specified on the original PSD input
 
 arXiv:2602.02016v2, §2.2, §3.4, §4 and Appendix A. The EVD supplies
@@ -7,8 +12,7 @@ fitted algorithm uses no eigendecomposition and receives no eigenframe
 or spectral upper bound as an input.
 -/
 
-import Transformer.DASH.Section4_GuardedChebyshev
-import Transformer.DASH.Section3_InverseRootCorrectness
+@[expose] public section
 
 open scoped Matrix
 

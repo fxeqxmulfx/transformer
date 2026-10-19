@@ -1,8 +1,12 @@
-/-
+module
+
+public import Transformer.Modes.Section3_Standardized
+
+/-!
 # The number of modes of a Gaussian KDE — the change of variables `eq:qt`
 
 `eq:qt` of arXiv:2412.09080v3 relates the density `p_t` of
-`n^{-1/2} Σ (Gᵢ(t), Gᵢ'(t))` to the density `q_t` of `n^{-1/2} Σ Yᵢ(t)`.  The
+`n^{-1/2} Σ (Gᵢ(t), Gᵢ'(t))` to the density `q_t` of `n^{-1/2} Σ Yᵢ(t)`. The
 two sums differ by the affine bijection `z ↦ Σ_t^{-1/2}(z - μ_t)`
 (`scaledSum_singleY`), whose Jacobian is `(det Σ_t)^{-1/2}`
 (`map_whitenAffine_volume`).
@@ -10,7 +14,7 @@ two sums differ by the affine bijection `z ↦ Σ_t^{-1/2}(z - μ_t)`
 Source: arXiv:2412.09080v3, `eq:qt`.
 -/
 
-import Transformer.Modes.Section3_Standardized
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped ENNReal
@@ -112,7 +116,7 @@ theorem scaledSum_singleY {β : ℝ} (hβ : 0 < β) (t : ℝ) {n : ℕ} (hn : 1 
 /-- **Equation (eq:qt)**, as the change of variables it is:
 `p_t(x, y) = (det Σ_t)^{-1/2} q_t(Σ_t^{-1/2}[(x, y) - μ_t])`, in the form
 "`q` is a density of `n^{-1/2} Σ Yᵢ(t)` iff this `p` is a density of
-`n^{-1/2} Σ (Gᵢ, Gᵢ')`".  arXiv:2412.09080v3, `eq:qt`.  The source presupposes that `q_t` exists, which
+`n^{-1/2} Σ (Gᵢ, Gᵢ')`". arXiv:2412.09080v3, `eq:qt`. The source presupposes that `q_t` exists, which
 for a single summand it does not (`Y(t)` lives on a curve); stated as an
 equivalence, the identity carries `eq:qt` in both directions without that. -/
 theorem isDensityOf_scaledSum_iff {β : ℝ} (hβ : 0 < β) (t : ℝ) {n : ℕ} (hn : 1 ≤ n)

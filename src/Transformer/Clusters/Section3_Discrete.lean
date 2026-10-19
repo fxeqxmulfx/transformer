@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section3_Rescaled
+
+/-!
 # The emergence of clusters in self-attention dynamics — the discrete rescaled
   tokens
 
@@ -14,7 +18,7 @@
 Source: arXiv:2305.05465v6, `r:discreterescaling`.
 -/
 
-import Transformer.Clusters.Section3_Rescaled
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -50,7 +54,7 @@ same equation.
 
 As in the source: `V` commutes with `R`, so `R^{-(k+1)}VR^k = R^{-1}V`, and
 `R^{-1} = I_d - ΔtR^{-1}V`; the rows of `eq:P` summing to one turn
-`Σ_j P_ij z_j - z_i` into `Σ_j P_ij (z_j - z_i)`.  Applied to both sides,
+`Σ_j P_ij z_j - z_i` into `Σ_j P_ij (z_j - z_i)`. Applied to both sides,
 `R^{k+1}` is injective, which gives the two directions at once.
 
 Source: arXiv:2305.05465v6, `r:discreterescaling`. -/

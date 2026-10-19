@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_AmbientBranches
+public import Transformer.Perceptron.Section6_SphericalFields
+public import Transformer.Perceptron.Section5_SignedTransform
+public import Transformer.Perceptron.Section5_QuadraticPolynomials
+public import Transformer.Perceptron.Section5_QuadraticDensity
+
+/-!
 # The original quadratic transform forced by linear stationarity
 
 ArXiv:2601.21366v2, §5.3, `rem:genericity-vacuity`.
@@ -20,11 +28,7 @@ never divides by the temperature. Density inversion still requires
 the source's positive-temperature hypothesis in the following result.
 -/
 
-import Transformer.Perceptron.Section6_AmbientBranches
-import Transformer.Perceptron.Section6_SphericalFields
-import Transformer.Perceptron.Section5_SignedTransform
-import Transformer.Perceptron.Section5_QuadraticPolynomials
-import Transformer.Perceptron.Section5_QuadraticDensity
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

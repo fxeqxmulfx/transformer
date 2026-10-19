@@ -1,6 +1,12 @@
-import Transformer.Modes.Section3_ErrorThird
-import Transformer.Modes.Section3_EtaMoment
-import Transformer.Modes.Section3_PointwiseFalse
+module
+
+public import Transformer.Modes.Section3_ErrorThird
+public import Transformer.Modes.Section3_EtaMoment
+public import Transformer.Modes.Section3_PointwiseFalse
+
+/-! ### `lem:error-higher` -/
+
+@[expose] public section
 
 /-
 # The number of modes of a Gaussian KDE — higher-order errors, pointwise
@@ -35,8 +41,6 @@ open scoped ENNReal
 
 namespace Transformer
 namespace Modes
-
-/-! ### `lem:error-higher` -/
 
 /-- **Counterexample to `lem:error-higher`, `s = 2`.** In the allowed regime
 `n = β = k+1`, even densities without continuity cannot satisfy the source's
@@ -109,7 +113,7 @@ theorem sq_le_of_mem_intervalT {n : ℕ} {β w t : ℝ}
     _ = _ := Real.sq_sqrt hT
 
 /-- **Equation (eq:rate), on `T`:**
-`(n^{-1}β^{1/2}e^{t²/2})^{(s-1)/2} ≤ e^{-(s-1)ω(β)/4}`.  The source's
+`(n^{-1}β^{1/2}e^{t²/2})^{(s-1)/2} ≤ e^{-(s-1)ω(β)/4}`. The source's
 "by definition of `T`" needs `T` not to be degenerate,
 `2 log n - log β - ω(β) ≥ 0`, which the regime gives eventually.
 
@@ -129,7 +133,7 @@ theorem rate_T {n : ℕ} (hn : 0 < n) {β w t : ℝ} (hβ : 0 < β)
     _ = _ := by rw [← Real.exp_mul]; congr 1; ring
 
 /-- **Equation (eq:rate), on `T'`:**
-`(n^{-1}β^{1/2}e^{t²/2})^{(s-1)/2} ≤ β^{-(s-1)/2}`.  No hypothesis on `T'` is
+`(n^{-1}β^{1/2}e^{t²/2})^{(s-1)/2} ≤ β^{-(s-1)/2}`. No hypothesis on `T'` is
 needed: it is empty unless `β ≤ n^{2/3}`, and then `2 log n - 3 log β ≥ 0`.
 
 Source: arXiv:2412.09080v3, `eq:rate`. -/

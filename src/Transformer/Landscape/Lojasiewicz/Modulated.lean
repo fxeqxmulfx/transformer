@@ -1,4 +1,29 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Landscape.Lojasiewicz.LojasiewiczConditional
+public import Transformer.Landscape.Lojasiewicz.ModulatedQuadratic
+public import Transformer.Landscape.Lojasiewicz.ModulatedScalar
+public import Transformer.Landscape.Lojasiewicz.NondegenerateGradientInequality
+public import Transformer.Landscape.Lojasiewicz.BlowupGradientInequality
+public import Transformer.Landscape.Lojasiewicz.MinimumCurveSelection
+public import Transformer.Landscape.Lojasiewicz.AnalyticDirection
+public import Transformer.Landscape.Lojasiewicz.AnalyticImplicitBranch
+public import Transformer.Landscape.Lojasiewicz.EnergyLevelPreparation
+public import Transformer.Landscape.Lojasiewicz.QuadraticCurveLifting
+public import Transformer.Landscape.Lojasiewicz.AnalyticPlaneCurveSelection
+public import Transformer.Landscape.Lojasiewicz.EnergyGradientMinimumLifting
+public import Transformer.Landscape.Lojasiewicz.GlobalMinimumLiftingExamples
+public import Transformer.Landscape.Lojasiewicz.AnalyticAtlasQueryExamples
+public import Transformer.Landscape.Lojasiewicz.CompactBallGradientQueries
+public import Transformer.Landscape.Lojasiewicz.AnalyticFiberValueRelation
+public import Transformer.Landscape.Lojasiewicz.AnalyticMonomialCharts
+public import Transformer.Landscape.RealAnalyticGerms
+public import Transformer.Landscape.Sturm
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+
+/-!
 # Łojasiewicz convergence of modulated gradient flows
 
 `Lemma lem: loj` of Appendix D.1 of arXiv:2510.22026v2: a trajectory of
@@ -19,28 +44,7 @@ dynamics `eq: NA` and stay with it: `Proposition sprop: time_change`, the chain 
 `Transformer.Normalization.UnstableProduct`.
 -/
 
-import Transformer.Basic
-import Transformer.Landscape.Lojasiewicz.LojasiewiczConditional
-import Transformer.Landscape.Lojasiewicz.ModulatedQuadratic
-import Transformer.Landscape.Lojasiewicz.ModulatedScalar
-import Transformer.Landscape.Lojasiewicz.NondegenerateGradientInequality
-import Transformer.Landscape.Lojasiewicz.BlowupGradientInequality
-import Transformer.Landscape.Lojasiewicz.MinimumCurveSelection
-import Transformer.Landscape.Lojasiewicz.AnalyticDirection
-import Transformer.Landscape.Lojasiewicz.AnalyticImplicitBranch
-import Transformer.Landscape.Lojasiewicz.EnergyLevelPreparation
-import Transformer.Landscape.Lojasiewicz.QuadraticCurveLifting
-import Transformer.Landscape.Lojasiewicz.AnalyticPlaneCurveSelection
-import Transformer.Landscape.Lojasiewicz.EnergyGradientMinimumLifting
-import Transformer.Landscape.Lojasiewicz.GlobalMinimumLiftingExamples
-import Transformer.Landscape.Lojasiewicz.AnalyticAtlasQueryExamples
-import Transformer.Landscape.Lojasiewicz.CompactBallGradientQueries
-import Transformer.Landscape.Lojasiewicz.AnalyticFiberValueRelation
-import Transformer.Landscape.Lojasiewicz.AnalyticMonomialCharts
-import Transformer.Landscape.RealAnalyticGerms
-import Transformer.Landscape.Sturm
-import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -52,7 +56,7 @@ namespace Landscape.Lojasiewicz
 flow.*
 
 Let `M(t)` be symmetric with `C λ(t) I ≻ M(t) ≻ λ(t) I`, `λ(t) > 0` and
-`∫_0^∞ λ = ∞`, and let `E` be analytic on an open `U ⊆ ℝ^N`.  Then any
+`∫_0^∞ λ = ∞`, and let `E` be analytic on an open `U ⊆ ℝ^N`. Then any
 trajectory of
 
   `ẋ = -M(t) ∇_x E(x)`

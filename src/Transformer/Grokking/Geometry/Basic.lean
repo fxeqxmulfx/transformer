@@ -1,6 +1,8 @@
-import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.BigOperators.Field
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Tactic
 
 /-!
 # The actual finite-cell projection used by grokking probes
@@ -21,6 +23,8 @@ classes and cells will justify the probe's energy decomposition even when
 held-out cell sizes differ. No property of a learned classifier follows
 from squared energy alone; target labels do not enter the projection.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Geometry
 

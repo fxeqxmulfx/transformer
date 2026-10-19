@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.DASH.Section3_Spectral
+
+/-!
 # DASH — spectral bounds and inverse-root rescaling
 
 arXiv:2602.02016v2, §3.4. Frobenius scaling bounds the entire
 spectrum. The scaling factor must also be removed from the output.
 -/
 
-import Transformer.DASH.Section3_Spectral
+@[expose] public section
 
 open scoped BigOperators Matrix
 

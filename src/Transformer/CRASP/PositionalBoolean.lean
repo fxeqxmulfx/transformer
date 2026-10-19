@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.CRASP.Positional
+
+/-!
 # Finite Boolean tests in positional logic
 
 arXiv:2506.16055v3, Appendix F, finite-function constructions for position
 encodings. Boolean combinations do not add counting depth or operators.
 -/
 
-import Transformer.CRASP.Positional
+@[expose] public section
 
 namespace Transformer.CRASP.FormP
 

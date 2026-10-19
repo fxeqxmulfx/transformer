@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.MajTwoEquiv
+
+/-!
 # Closed `MAJ²` formulas for piecewise-testable languages
 
 arXiv:2506.16055v3, Appendix E, proof of `thm:ltc0_hierarchy`.
@@ -7,7 +11,7 @@ combinations of these closed tests handle the separating languages, including
 `D_1`, which is not a single existential depth-zero test.
 -/
 
-import Transformer.CRASP.MajTwoEquiv
+@[expose] public section
 
 namespace Transformer.CRASP
 

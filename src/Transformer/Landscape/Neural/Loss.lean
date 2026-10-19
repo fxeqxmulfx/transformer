@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Neural.Basic
+
+/-!
 # Finite classification and regression losses
 
 Sources: `landscape_grokking_plan.md`, Model and protocol and Mechanisms to
@@ -10,7 +14,7 @@ This closure result makes no claim about which minima generalize. Finite
 logits with a competing answer always have strictly positive cross-entropy.
 -/
 
-import Transformer.Landscape.Neural.Basic
+@[expose] public section
 
 open scoped BigOperators
 

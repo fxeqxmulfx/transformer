@@ -1,6 +1,8 @@
-import Transformer.Homogenized.Section7_AttentionMomentContinuity
-import Transformer.Homogenized.Section7_OverlapNoiseMaximal
-import Transformer.Homogenized.Section7_SimplexSourceEnvelope
+module
+
+public import Transformer.Homogenized.Section7_AttentionMomentContinuity
+public import Transformer.Homogenized.Section7_OverlapNoiseMaximal
+public import Transformer.Homogenized.Section7_SimplexSourceEnvelope
 
 /-!
 # The actual ODE compensator in the original simplex comparison
@@ -19,6 +21,8 @@ The final pathwise estimate therefore needs only the bound on
 this fixed actual residual. The finite-dimension bias remains in
 the existing deterministic estimate and its source-radius budget.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped BigOperators NNReal

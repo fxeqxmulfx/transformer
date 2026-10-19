@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.NoiseScale.Section2_Quadratic
+
+/-!
 # The best step of a batch and the noise scale
 
 arXiv:1812.06162, §2.2, eqs. (2.6)–(2.8), in the model (2.4) of `Section2_Quadratic`.
@@ -6,7 +10,7 @@ Minimizing eq. (2.5) over `ε` gives the best step `ε_opt(B) = ε_max/(1 + B_no
 eq. (2.6) (`stepOpt`, `integral_quadModel_stepOpt_lt`) and the best expected drop
 `ΔL_opt(B) = ΔL_max/(1 + B_noise/B)`, `ΔL_max = ½|G|⁴/GᵀHG`, of eq. (2.7)
 (`lossDropMax`, `sub_integral_quadModel_stepOpt`), with the noise scale
-`B_noise = tr(HΣ)/GᵀHG` of eq. (2.8) (`noiseScale`).  A step beyond `2ε_opt` raises the
+`B_noise = tr(HΣ)/GᵀHG` of eq. (2.8) (`noiseScale`). A step beyond `2ε_opt` raises the
 expected loss (`lt_integral_quadModel_of_two_mul_stepOpt_lt`): the paper's "may increase".
 
 The paper states (2.6) and (2.7) without hypotheses; they need the curvature
@@ -14,7 +18,7 @@ The paper states (2.6) and (2.7) without hypotheses; they need the curvature
 and `tr(HΣ) ≥ 0`, which holds for a positive semidefinite `H`; both are assumed here.
 -/
 
-import Transformer.NoiseScale.Section2_Quadratic
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped Matrix

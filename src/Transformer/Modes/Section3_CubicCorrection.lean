@@ -1,5 +1,8 @@
-import Transformer.Modes.Section3_CubicCumulant
-import Transformer.Modes.Section3_FrequencyMoments
+module
+
+public import Transformer.Modes.Section3_CubicCumulant
+public import Transformer.Modes.Section3_FrequencyMoments
+
 /-!
 # The cubic characteristic correction and its Gaussian integrability
 
@@ -19,6 +22,7 @@ Identifying its inverse integral with the density correction `ψ`, and
 bounding the remaining normalized-sum error, are further proof steps.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

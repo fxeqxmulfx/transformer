@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section8_ClusterLimits
+
+/-!
 # Identity-value clustering toward the limiting polytope
 
 ArXiv:2305.05465v6, §8.1, `t:Idcase11` and `e:Ax15`.
@@ -12,7 +16,7 @@ convergence; no quantitative candidate-distance claim is assumed.
 The full paper theorem retains its original hypotheses and conclusion.
 -/
 
-import Transformer.Clusters.Section8_ClusterLimits
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

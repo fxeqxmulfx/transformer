@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_ReciprocalSqrtTaylor
+
+/-!
 # The actual quadratic correlation expansion and its cubic remainder
 
 ArXiv:2604.01978v1, §7.3, `lem:delta_method`, the Taylor-Lagrange
@@ -25,7 +29,7 @@ In particular, this module does not assert the source's final `1/d`
 coefficient, whose covariance calculation needs correction.
 -/
 
-import Transformer.Homogenized.Section7_ReciprocalSqrtTaylor
+@[expose] public section
 
 open Real
 

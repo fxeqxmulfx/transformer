@@ -1,7 +1,9 @@
-import Transformer.Modes.Section3_MixedMoments
-import Transformer.Modes.Section3_LogDeriv
+module
 
-/-
+public import Transformer.Modes.Section3_MixedMoments
+public import Transformer.Modes.Section3_LogDeriv
+
+/-!
 # The number of modes of a Gaussian KDE — third cumulants are third moments
 
 The first equality of the moment identity of arXiv:2412.09080v3, §3.1:
@@ -13,10 +15,10 @@ Both sides reduce to the same plain moment `∫ x₁^k x₂^{3-k} dμ`.
   vanishes because the law is centred (`integral_hermite3_eq`).
 
 * On the left, the cumulant is the mixed derivative at `0` of
-  `log ∫ e^{u x₁ + v x₂} dμ`.  Each derivative of the logarithm produces a
+  `log ∫ e^{u x₁ + v x₂} dμ`. Each derivative of the logarithm produces a
   quotient whose correction terms carry a factor of the moment generating
   function's first derivatives, and those vanish at the origin of a centred
-  law, while the function itself is `1` there.  What is left is the mixed
+  law, while the function itself is `1` there. What is left is the mixed
   moment, one differentiation under the integral sign per index.
 
 The proof therefore runs over the four indices separately: `k = 0` and `k = 3`
@@ -27,6 +29,8 @@ derivative of a logarithm differentiated once more
 
 Source: arXiv:2412.09080v3, §3.1, the display after `eq:psi`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped Topology
@@ -39,7 +43,7 @@ variable {μ : Measure (ℝ × ℝ)} {ε : ℝ}
 /-- **The third Hermite integrals of a centred law are its third moments.**
 `H^{(k,3-k)}` is `x₁^k x₂^{3-k}` plus a multiple of a single coordinate, so
 only the centring of the law enters; the unit variances and the zero covariance
-of `IsStandardized` play no part at order three.  Stated for a centred law
+of `IsStandardized` play no part at order three. Stated for a centred law
 because the law of a normalized sum is one, and proving it standardized would
 be extra work for nothing (`Section3_ScaledSumDensity.lean`).
 
@@ -105,15 +109,15 @@ standardized law, `κ^α = 𝔼[H^α(Y)]`.
 
 The source states it for `α` ranging over the multi-indices of order three,
 which are the `(k, 3-k)` of `eq:psi`, and for "our normalization", which is
-`IsStandardized`.  Two differences from the source, both recorded rather than
+`IsStandardized`. Two differences from the source, both recorded rather than
 silent:
 
-* `hexp` is an added hypothesis.  The source calls `κ^α` "the `α`-th mixed
+* `hexp` is an added hypothesis. The source calls `κ^α` "the `α`-th mixed
   derivative at `0` of the cumulant generating function", which presupposes
   that the generating function is finite near `0`; in Lean `cumulantOf` is
   total, so without exponential moments the statement is false as written.
 
-* Of the normalization only the centring is used.  Unit variances and zero
+* Of the normalization only the centring is used. Unit variances and zero
   covariance play no part at order three, so the theorem holds under the
   weaker hypothesis of a centred law; it is stated with the source's
   `IsStandardized` all the same.

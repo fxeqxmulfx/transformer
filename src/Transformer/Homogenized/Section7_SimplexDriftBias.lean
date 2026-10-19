@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_OverlapDriftGramComparison
+public import Transformer.Homogenized.SimplexDrift
+
+/-!
 # The finite-dimension bias of the simplex ODE
 
 ArXiv:2604.01978v1, §7, eq:f_g_def_selfcontained,
@@ -16,8 +21,7 @@ stated moments; Gaussian shape is unnecessary for this step.
 The example computes a nonzero gap of -1/2.
 -/
 
-import Transformer.Homogenized.Section7_OverlapDriftGramComparison
-import Transformer.Homogenized.SimplexDrift
+@[expose] public section
 
 open MeasureTheory Set
 open scoped BigOperators NNReal

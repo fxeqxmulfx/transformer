@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_SecondDifferences
+
+/-!
 # The field's mixed second differences
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 3, `eq:est-Glaub-2nd`:
@@ -8,7 +12,7 @@ first differences (`abs_gptField_second_diff_le`), from the four-point
 inequality `abs_four_point_le` for `w_β'`.
 -/
 
-import Transformer.Kinetic.Section3_SecondDifferences
+@[expose] public section
 
 namespace Transformer
 namespace Kinetic

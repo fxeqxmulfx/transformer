@@ -1,9 +1,11 @@
-import Transformer.AdamBeyond.Section5_AdamNC
-import Transformer.AdamBeyond.AppendixG_Auxiliary
-import Transformer.AMSGrad.Section4_MainLemma
-import Transformer.AMSGrad.Section1_TheoremA
+module
 
-/-
+public import Transformer.AdamBeyond.Section5_AdamNC
+public import Transformer.AdamBeyond.AppendixG_Auxiliary
+public import Transformer.AMSGrad.Section4_MainLemma
+public import Transformer.AMSGrad.Section1_TheoremA
+
+/-!
 # Adam and beyond — §5: the lemma of the proof of Theorem 5
 
 The lemma of the appendix, §"Proof of Theorem 5":
@@ -12,17 +14,19 @@ under condition 1 of Theorem 5 (at `α_t`, see `Section5_Regret`).
 
 **The proof carried here.**  The source bounds `m²_{t,i}` by Cauchy–Schwarz,
 `m²_{t,i} ≤ (Σ_j β₁^{t-j})(Σ_j β₁^{t-j} g²_{j,i})`, which costs a factor
-`1/(1-β₁)`.  Convexity of the square, `m²_t ≤ β_{1,t} m²_{t-1} + (1-β_{1,t}) g²_t`,
+`1/(1-β₁)`. Convexity of the square, `m²_t ≤ β_{1,t} m²_{t-1} + (1-β_{1,t}) g²_t`,
 gives `m²_{t,i} ≤ Σ_j β₁^{t-j} g²_{j,i}` without it, so the proof gives
 `2ζ/(1-β₁)`; the statement keeps the source's `2ζ/(1-β₁)²`, which follows.
 Otherwise the proof is the source's: condition 1 turns `α_t/√v_{t,i}` into
 `ζ/‖g_{1:t,i}‖₂`, the sum over `t` is exchanged with the geometric weights,
-and lem:simple-grad-bound closes.  The hypotheses `0 ≤ β_{2,t} ≤ 1` and
+and lem:simple-grad-bound closes. The hypotheses `0 ≤ β_{2,t} ≤ 1` and
 `β₂ = 0` of the source are not needed: `m_t` and `g_t` do not depend on `v_t`,
 and condition 1 already forces `v_{t,i} > 0` wherever `g_{1:t,i} ≠ 0`.
 
 Source: arXiv:1904.09237, appendix, §"Proof of Theorem 5", Lemma.
 -/
+
+@[expose] public section
 
 open Finset
 

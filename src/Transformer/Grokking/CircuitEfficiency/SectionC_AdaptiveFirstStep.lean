@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_SubweightGradient
-import Transformer.Grokking.AdamW.FirstStep
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_SubweightGradient
+public import Transformer.Grokking.AdamW.FirstStep
 
 /-!
 # Native adaptive first update of the fixed-table product model
@@ -18,6 +20,8 @@ with all competing classes retained. These are exact-real update
 identities from zero moments, not persistent-moment convergence,
 rounded GPTMini kernel outputs or a general grokking prediction.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

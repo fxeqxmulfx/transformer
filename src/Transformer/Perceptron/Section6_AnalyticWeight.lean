@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_AnalyticIntegral
+public import Transformer.Perceptron.Section5_MapKernel
+public import Transformer.Perceptron.Section5_DominatedVariation
+public import Transformer.Perceptron.NormalizedMap
+public import Mathlib.Analysis.Calculus.FDeriv.Analytic
+
+/-!
 # Analyticity of the actual circle interaction weight
 
 ArXiv:2601.21366v2, §6, proof of `prop: unified.log` and
@@ -13,11 +21,7 @@ real interaction. The actual angular derivative is also computed
 directly against the original probability measure.
 -/
 
-import Transformer.Perceptron.Section6_AnalyticIntegral
-import Transformer.Perceptron.Section5_MapKernel
-import Transformer.Perceptron.Section5_DominatedVariation
-import Transformer.Perceptron.NormalizedMap
-import Mathlib.Analysis.Calculus.FDeriv.Analytic
+@[expose] public section
 
 open Real MeasureTheory Set
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.TensorReadout
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorReadout
 
 /-!
 # Causal tensor attention with the ordinary prenorm residual
@@ -17,6 +19,8 @@ leaves the genuine code-supported output. For actual embeddings its
 last-row tied/final-RMS greedy result is the verified mixed decoder
 for all parameters. FFN and multilayer preservation are deferred.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

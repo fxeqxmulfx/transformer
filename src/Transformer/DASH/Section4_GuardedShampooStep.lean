@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section4_GuardedDirection
+
+/-!
 # DASH — corrected numerical roots through the complete grafted update
 
 arXiv:2602.02016v2, §2–4. The entire finite multi-PI/NDB pipeline
@@ -7,7 +11,7 @@ EMA invariant derive the root domain. Nonzero gradients derive the
 grafting denominator; zero gradients give exactly zero directions.
 -/
 
-import Transformer.DASH.Section4_GuardedDirection
+@[expose] public section
 
 open scoped Matrix Topology
 open Filter

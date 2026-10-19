@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Modes.Section2_ScoreInverses
+public import Mathlib.Analysis.Calculus.FDeriv.Pi
+
+/-!
 # Actual sample-coordinate charts of the Gaussian KDE zero set
 
 ArXiv:2412.09080v3, §2.1, the original field `eq:Fn`.
@@ -14,8 +19,7 @@ not an assumed implicit function. Query-critical points will
 give a nontrivial kernel of the chart derivative in the next step.
 -/
 
-import Transformer.Modes.Section2_ScoreInverses
-import Mathlib.Analysis.Calculus.FDeriv.Pi
+@[expose] public section
 
 open Real Set
 

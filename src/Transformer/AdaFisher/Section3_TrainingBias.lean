@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_TrainingModels
+
+/-!
 # AdaFisher — the effective coefficient of corrected momentum
 
 arXiv:2405.16397v3, §3.3, Algorithm 1 and Table 1.
@@ -6,7 +10,7 @@ Bias correction turns constant raw momentum into a time-dependent
 coefficient between zero and beta. The first coefficient is zero.
 -/
 
-import Transformer.AdaFisher.Section3_TrainingModels
+@[expose] public section
 
 noncomputable section
 

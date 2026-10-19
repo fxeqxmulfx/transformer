@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.RealAnalyticGerms.FunctionPullback
+
+/-!
 # Real analytic germs: Pullback
 
 Adapted from Bochao Kong's LocalComplexGeometry, revision
@@ -8,7 +12,7 @@ dependency closure is retained. Apache-2.0 license:
 third_party/LocalComplexGeometry/LICENSE.
 -/
 
-import Transformer.Landscape.RealAnalyticGerms.FunctionPullback
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+public import Mathlib.Analysis.Analytic.Uniqueness
+
+/-!
 # Perceptrons and attention's mean-field landscape — analyticity on the sphere
 
 `thm: circle` and `thm: any.d` (i) are about weights `ϑ` for which the
@@ -9,7 +15,7 @@ have a witness.
 **What the source says and what is carried here.**
 
 * "`v_ϑ` is real-analytic on `𝕊^{d-1}`" is carried as: `v_ϑ` agrees on the
-  sphere with a function analytic on a neighbourhood of it.  For a compact
+  sphere with a function analytic on a neighbourhood of it. For a compact
   real-analytic submanifold the two are the same — the restriction of an
   ambient analytic function is analytic in charts, and an analytic function on
   a compact analytic submanifold extends analytically to a neighbourhood — and
@@ -24,9 +30,7 @@ have a witness.
 Source: arXiv:2601.21366v2, `thm: circle`, `thm: any.d`.
 -/
 
-import Transformer.Perceptron.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import Mathlib.Analysis.Analytic.Uniqueness
+@[expose] public section
 
 open scoped BigOperators
 open Real

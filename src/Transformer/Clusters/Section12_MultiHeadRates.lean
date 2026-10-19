@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadClusterGap
+
+/-!
 # Actual normalized rate configurations for the original multi-head dynamics
 
 ArXiv:2305.05465v6, §7, `l:exactasymptotic`, with §3's discrete
@@ -18,7 +22,7 @@ iteration; no normalized configuration or escape rate is supplied as
 a new premise of the existence theorem.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadClusterGap
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

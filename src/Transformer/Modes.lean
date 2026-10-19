@@ -1,4 +1,164 @@
-/-
+module
+
+public import Transformer.Modes.Growth
+public import Transformer.Modes.Section1_KDE
+public import Transformer.Modes.Section1_Mammen
+public import Transformer.Modes.Section1_Main
+public import Transformer.Modes.Section1_Belt
+public import Transformer.Modes.Section1_Sketch
+public import Transformer.Modes.Section2_KacRice
+public import Transformer.Modes.Section2_RandomLine
+public import Transformer.Modes.Section2_OscillatingField
+public import Transformer.Modes.Section2_OscillatingModulus
+public import Transformer.Modes.Section2_DiskProbability
+public import Transformer.Modes.Section2_DiskRotations
+public import Transformer.Modes.Section2_DiskCoordinates
+public import Transformer.Modes.Section2_SliceKernel
+public import Transformer.Modes.Section2_JointDensity
+public import Transformer.Modes.Section2_SliceWidth
+public import Transformer.Modes.Section2_DensityContinuity
+public import Transformer.Modes.Section2_MarginalDensity
+public import Transformer.Modes.Section2_ProbabilityRegularity
+public import Transformer.Modes.Section2_KacRiceRefutation
+public import Transformer.Modes.Section2_Field
+public import Transformer.Modes.Section2_ParameterTransversality
+public import Transformer.Modes.Section2_GaussianTransversality
+public import Transformer.Modes.Section2_GaussianCriticalImages
+public import Transformer.Modes.Section2_ScoreBranches
+public import Transformer.Modes.Section2_ScoreInverses
+public import Transformer.Modes.Section2_ZeroCharts
+public import Transformer.Modes.Section2_RegularDegenerate
+public import Transformer.Modes.Section2_CriticalCharts
+public import Transformer.Modes.Section2_Morse
+public import Transformer.Modes.Section2_ModeUpcrossings
+public import Transformer.Modes.Section2_Degenerate
+public import Transformer.Modes.Section2_MainForm
+public import Transformer.Modes.Section2_Gt
+public import Transformer.Modes.Section2_GaussianInt
+public import Transformer.Modes.Section5_GaussMoments
+public import Transformer.Modes.Section5_Moments
+public import Transformer.Modes.Section5_MomentsAsymp
+public import Transformer.Modes.Section5_CovAsymp
+public import Transformer.Modes.Section2_MomentsP
+public import Transformer.Modes.Section2_MomentsPCov
+public import Transformer.Modes.Section2_PhiT
+public import Transformer.Modes.Section2_PhiTQuot
+public import Transformer.Modes.Section2_PhiTUniform
+public import Transformer.Modes.Section2_PhiTAsymp
+public import Transformer.Modes.Section2_PhiTDelta
+public import Transformer.Modes.Section2_IntPhiFinal
+public import Transformer.Modes.Section2_MainIntPhi
+public import Transformer.Modes.Section2_IntPhiB
+public import Transformer.Modes.Section2_MainIntPhiT
+public import Transformer.Modes.Section3_Hermite
+public import Transformer.Modes.Section3_GaussianHermite
+public import Transformer.Modes.Section3_ScalarGaussianFourier
+public import Transformer.Modes.Section3_HermiteFourier
+public import Transformer.Modes.Section3_Cumulants
+public import Transformer.Modes.Section3_ExpMoments
+public import Transformer.Modes.Section3_MixedMoments
+public import Transformer.Modes.Section3_LogDeriv
+public import Transformer.Modes.Section3_PowDeriv
+public import Transformer.Modes.Section3_ScalarMGF
+public import Transformer.Modes.Section3_ScaledSumMGF
+public import Transformer.Modes.Section3_ScaledSumCube
+public import Transformer.Modes.Section3_ScaledSumMoments
+public import Transformer.Modes.Section3_ScaledSumDensity
+public import Transformer.Modes.Section3_CumulantMoment
+public import Transformer.Modes.Section3_BR
+public import Transformer.Modes.Section3_Edgeworth
+public import Transformer.Modes.Section3_SigmaPos
+public import Transformer.Modes.Section3_Standardized
+public import Transformer.Modes.Section3_EtaMoment
+public import Transformer.Modes.Section3_ChangeOfVar
+public import Transformer.Modes.Section3_ErrorThird
+public import Transformer.Modes.Section3_ErrorThirdTPrime
+public import Transformer.Modes.Section3_ErrorHigher
+public import Transformer.Modes.Section3_ErrorKR
+public import Transformer.Modes.Section4_KacRiceAppl
+public import Transformer.Modes.Section4_ScaleSpace
+public import Transformer.Modes.Section4_Tail
+public import Transformer.Modes.Section5_PtBdd
+public import Transformer.Modes.Section5_PtBddFourier
+public import Transformer.Modes.Section5_PowerIntegrability
+public import Transformer.Modes.Section3_YCharFun
+public import Transformer.Modes.Section3_SumCharFun
+public import Transformer.Modes.Section3_PhaseTaylor
+public import Transformer.Modes.Section3_WeightedPhase
+public import Transformer.Modes.Section3_FourthOrderPhase
+public import Transformer.Modes.Section3_CharacteristicTaylor
+public import Transformer.Modes.Section3_CharacteristicCubic
+public import Transformer.Modes.Section3_CubicCumulant
+public import Transformer.Modes.Section3_CubicCorrection
+public import Transformer.Modes.Section3_CubicDerivatives
+public import Transformer.Modes.Section3_CubicHigherDerivatives
+public import Transformer.Modes.Section3_WeightedDotMoments
+public import Transformer.Modes.Section3_CubicHigherTaylor
+public import Transformer.Modes.Section3_CubicHigherGaussianComparison
+public import Transformer.Modes.Section3_CubicDerivativeTaylor
+public import Transformer.Modes.Section3_CubicFourier
+public import Transformer.Modes.Section3_CubicFourierInversion
+public import Transformer.Modes.Section3_SmallFrequency
+public import Transformer.Modes.Section3_GaussianComparison
+public import Transformer.Modes.Section3_FourierRegularization
+public import Transformer.Modes.Section3_DensityInversion
+public import Transformer.Modes.Section3_CharacteristicGap
+public import Transformer.Modes.Section3_LargeFrequency
+public import Transformer.Modes.Section3_FourierTail
+public import Transformer.Modes.Section3_FrequencyMoments
+public import Transformer.Modes.Section3_IntegralComparison
+public import Transformer.Modes.Section3_DensityComparison
+public import Transformer.Modes.Section3_GaussianDensity
+public import Transformer.Modes.Section3_CubicGaussianComparison
+public import Transformer.Modes.Section3_CubicPower
+public import Transformer.Modes.Section3_CubicFrequency
+public import Transformer.Modes.Section3_CubicTailRates
+public import Transformer.Modes.Section3_CubicCorrectionTail
+public import Transformer.Modes.Section3_CubicIntegralComparison
+public import Transformer.Modes.Section3_CubicDensity
+public import Transformer.Modes.Section3_CubicWeightedDensity
+public import Transformer.Modes.Section3_CharacteristicDerivatives
+public import Transformer.Modes.Section3_DerivativeMoments
+public import Transformer.Modes.Section3_DerivativeTaylor
+public import Transformer.Modes.Section3_GaussianDerivativeComparison
+public import Transformer.Modes.Section3_PowerDerivatives
+public import Transformer.Modes.Section3_ThirdPowerDerivative
+public import Transformer.Modes.Section3_ThirdPowerBounds
+public import Transformer.Modes.Section3_ThirdDerivativeTail
+public import Transformer.Modes.Section3_GaussianThirdDerivativeBounds
+public import Transformer.Modes.Section3_CubicCorrectionDerivativeBounds
+public import Transformer.Modes.Section3_CubicDerivativeTailRates
+public import Transformer.Modes.Section3_CubicPowerFactorization
+public import Transformer.Modes.Section3_MixedPowerDerivativeBounds
+public import Transformer.Modes.Section3_CubicProductDerivativeBounds
+public import Transformer.Modes.Section3_GeometricDerivativeBounds
+public import Transformer.Modes.Section3_CubicLocalDerivativeBounds
+public import Transformer.Modes.Section3_CubicScaledDerivativeBounds
+public import Transformer.Modes.Section3_CubicScaledErrorFactors
+public import Transformer.Modes.Section3_NormalizedGeometricDerivatives
+public import Transformer.Modes.Section3_CubicDerivativeFrequency
+public import Transformer.Modes.Section3_CubicErrorRegularity
+public import Transformer.Modes.Section3_CubicDerivativeTail
+public import Transformer.Modes.Section3_CubicDerivativeIntegral
+public import Transformer.Modes.Section3_PowerComparison
+public import Transformer.Modes.Section3_FirstDerivativeFrequency
+public import Transformer.Modes.Section3_SecondDerivativeFrequency
+public import Transformer.Modes.Section3_DerivativeMomentBounds
+public import Transformer.Modes.Section3_DerivativeTail
+public import Transformer.Modes.Section3_DerivativeTailRate
+public import Transformer.Modes.Section3_DerivativeIntegralComparison
+public import Transformer.Modes.Section3_WeightedFourier
+public import Transformer.Modes.Section3_CubicWeightedFourier
+public import Transformer.Modes.Section3_WeightedDensity
+public import Transformer.Modes.Section3_BREstimates
+public import Transformer.Modes.Section3_DensityFamily
+public import Transformer.Modes.Section5_FourierGap
+public import Transformer.Modes.Section5_PtBddFejer
+public import Transformer.Modes.Section5_PtBddSmallBall
+public import Transformer.Modes.Section5_PtBddDecayFalse
+public import Transformer.Modes.Section5_PtBddOne
+
+/-!
 Formalization of:
   Geshkovski, Rigollet, Sun,
   "On the number of modes of Gaussian kernel density estimators",
@@ -11,160 +171,4 @@ Not transcribed, deliberately:
   the source does not give, so there is no statement to write down.
 -/
 
-import Transformer.Modes.Growth
-import Transformer.Modes.Section1_KDE
-import Transformer.Modes.Section1_Mammen
-import Transformer.Modes.Section1_Main
-import Transformer.Modes.Section1_Belt
-import Transformer.Modes.Section1_Sketch
-import Transformer.Modes.Section2_KacRice
-import Transformer.Modes.Section2_RandomLine
-import Transformer.Modes.Section2_OscillatingField
-import Transformer.Modes.Section2_OscillatingModulus
-import Transformer.Modes.Section2_DiskProbability
-import Transformer.Modes.Section2_DiskRotations
-import Transformer.Modes.Section2_DiskCoordinates
-import Transformer.Modes.Section2_SliceKernel
-import Transformer.Modes.Section2_JointDensity
-import Transformer.Modes.Section2_SliceWidth
-import Transformer.Modes.Section2_DensityContinuity
-import Transformer.Modes.Section2_MarginalDensity
-import Transformer.Modes.Section2_ProbabilityRegularity
-import Transformer.Modes.Section2_KacRiceRefutation
-import Transformer.Modes.Section2_Field
-import Transformer.Modes.Section2_ParameterTransversality
-import Transformer.Modes.Section2_GaussianTransversality
-import Transformer.Modes.Section2_GaussianCriticalImages
-import Transformer.Modes.Section2_ScoreBranches
-import Transformer.Modes.Section2_ScoreInverses
-import Transformer.Modes.Section2_ZeroCharts
-import Transformer.Modes.Section2_RegularDegenerate
-import Transformer.Modes.Section2_CriticalCharts
-import Transformer.Modes.Section2_Morse
-import Transformer.Modes.Section2_ModeUpcrossings
-import Transformer.Modes.Section2_Degenerate
-import Transformer.Modes.Section2_MainForm
-import Transformer.Modes.Section2_Gt
-import Transformer.Modes.Section2_GaussianInt
-import Transformer.Modes.Section5_GaussMoments
-import Transformer.Modes.Section5_Moments
-import Transformer.Modes.Section5_MomentsAsymp
-import Transformer.Modes.Section5_CovAsymp
-import Transformer.Modes.Section2_MomentsP
-import Transformer.Modes.Section2_MomentsPCov
-import Transformer.Modes.Section2_PhiT
-import Transformer.Modes.Section2_PhiTQuot
-import Transformer.Modes.Section2_PhiTUniform
-import Transformer.Modes.Section2_PhiTAsymp
-import Transformer.Modes.Section2_PhiTDelta
-import Transformer.Modes.Section2_IntPhiFinal
-import Transformer.Modes.Section2_MainIntPhi
-import Transformer.Modes.Section2_IntPhiB
-import Transformer.Modes.Section2_MainIntPhiT
-import Transformer.Modes.Section3_Hermite
-import Transformer.Modes.Section3_GaussianHermite
-import Transformer.Modes.Section3_ScalarGaussianFourier
-import Transformer.Modes.Section3_HermiteFourier
-import Transformer.Modes.Section3_Cumulants
-import Transformer.Modes.Section3_ExpMoments
-import Transformer.Modes.Section3_MixedMoments
-import Transformer.Modes.Section3_LogDeriv
-import Transformer.Modes.Section3_PowDeriv
-import Transformer.Modes.Section3_ScalarMGF
-import Transformer.Modes.Section3_ScaledSumMGF
-import Transformer.Modes.Section3_ScaledSumCube
-import Transformer.Modes.Section3_ScaledSumMoments
-import Transformer.Modes.Section3_ScaledSumDensity
-import Transformer.Modes.Section3_CumulantMoment
-import Transformer.Modes.Section3_BR
-import Transformer.Modes.Section3_Edgeworth
-import Transformer.Modes.Section3_SigmaPos
-import Transformer.Modes.Section3_Standardized
-import Transformer.Modes.Section3_EtaMoment
-import Transformer.Modes.Section3_ChangeOfVar
-import Transformer.Modes.Section3_ErrorThird
-import Transformer.Modes.Section3_ErrorThirdTPrime
-import Transformer.Modes.Section3_ErrorHigher
-import Transformer.Modes.Section3_ErrorKR
-import Transformer.Modes.Section4_KacRiceAppl
-import Transformer.Modes.Section4_ScaleSpace
-import Transformer.Modes.Section4_Tail
-import Transformer.Modes.Section5_PtBdd
-import Transformer.Modes.Section5_PtBddFourier
-import Transformer.Modes.Section5_PowerIntegrability
-import Transformer.Modes.Section3_YCharFun
-import Transformer.Modes.Section3_SumCharFun
-import Transformer.Modes.Section3_PhaseTaylor
-import Transformer.Modes.Section3_WeightedPhase
-import Transformer.Modes.Section3_FourthOrderPhase
-import Transformer.Modes.Section3_CharacteristicTaylor
-import Transformer.Modes.Section3_CharacteristicCubic
-import Transformer.Modes.Section3_CubicCumulant
-import Transformer.Modes.Section3_CubicCorrection
-import Transformer.Modes.Section3_CubicDerivatives
-import Transformer.Modes.Section3_CubicHigherDerivatives
-import Transformer.Modes.Section3_WeightedDotMoments
-import Transformer.Modes.Section3_CubicHigherTaylor
-import Transformer.Modes.Section3_CubicHigherGaussianComparison
-import Transformer.Modes.Section3_CubicDerivativeTaylor
-import Transformer.Modes.Section3_CubicFourier
-import Transformer.Modes.Section3_CubicFourierInversion
-import Transformer.Modes.Section3_SmallFrequency
-import Transformer.Modes.Section3_GaussianComparison
-import Transformer.Modes.Section3_FourierRegularization
-import Transformer.Modes.Section3_DensityInversion
-import Transformer.Modes.Section3_CharacteristicGap
-import Transformer.Modes.Section3_LargeFrequency
-import Transformer.Modes.Section3_FourierTail
-import Transformer.Modes.Section3_FrequencyMoments
-import Transformer.Modes.Section3_IntegralComparison
-import Transformer.Modes.Section3_DensityComparison
-import Transformer.Modes.Section3_GaussianDensity
-import Transformer.Modes.Section3_CubicGaussianComparison
-import Transformer.Modes.Section3_CubicPower
-import Transformer.Modes.Section3_CubicFrequency
-import Transformer.Modes.Section3_CubicTailRates
-import Transformer.Modes.Section3_CubicCorrectionTail
-import Transformer.Modes.Section3_CubicIntegralComparison
-import Transformer.Modes.Section3_CubicDensity
-import Transformer.Modes.Section3_CubicWeightedDensity
-import Transformer.Modes.Section3_CharacteristicDerivatives
-import Transformer.Modes.Section3_DerivativeMoments
-import Transformer.Modes.Section3_DerivativeTaylor
-import Transformer.Modes.Section3_GaussianDerivativeComparison
-import Transformer.Modes.Section3_PowerDerivatives
-import Transformer.Modes.Section3_ThirdPowerDerivative
-import Transformer.Modes.Section3_ThirdPowerBounds
-import Transformer.Modes.Section3_ThirdDerivativeTail
-import Transformer.Modes.Section3_GaussianThirdDerivativeBounds
-import Transformer.Modes.Section3_CubicCorrectionDerivativeBounds
-import Transformer.Modes.Section3_CubicDerivativeTailRates
-import Transformer.Modes.Section3_CubicPowerFactorization
-import Transformer.Modes.Section3_MixedPowerDerivativeBounds
-import Transformer.Modes.Section3_CubicProductDerivativeBounds
-import Transformer.Modes.Section3_GeometricDerivativeBounds
-import Transformer.Modes.Section3_CubicLocalDerivativeBounds
-import Transformer.Modes.Section3_CubicScaledDerivativeBounds
-import Transformer.Modes.Section3_CubicScaledErrorFactors
-import Transformer.Modes.Section3_NormalizedGeometricDerivatives
-import Transformer.Modes.Section3_CubicDerivativeFrequency
-import Transformer.Modes.Section3_CubicErrorRegularity
-import Transformer.Modes.Section3_CubicDerivativeTail
-import Transformer.Modes.Section3_CubicDerivativeIntegral
-import Transformer.Modes.Section3_PowerComparison
-import Transformer.Modes.Section3_FirstDerivativeFrequency
-import Transformer.Modes.Section3_SecondDerivativeFrequency
-import Transformer.Modes.Section3_DerivativeMomentBounds
-import Transformer.Modes.Section3_DerivativeTail
-import Transformer.Modes.Section3_DerivativeTailRate
-import Transformer.Modes.Section3_DerivativeIntegralComparison
-import Transformer.Modes.Section3_WeightedFourier
-import Transformer.Modes.Section3_CubicWeightedFourier
-import Transformer.Modes.Section3_WeightedDensity
-import Transformer.Modes.Section3_BREstimates
-import Transformer.Modes.Section3_DensityFamily
-import Transformer.Modes.Section5_FourierGap
-import Transformer.Modes.Section5_PtBddFejer
-import Transformer.Modes.Section5_PtBddSmallBall
-import Transformer.Modes.Section5_PtBddDecayFalse
-import Transformer.Modes.Section5_PtBddOne
+@[expose] public section

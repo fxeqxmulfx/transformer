@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_SimplexGronwall
+
+/-!
 # Absorbing the actual simplex bias within the source's radius
 
 ArXiv:2604.01978v1, §7, eq:Gronwall_E_selfcontained,
@@ -14,7 +18,7 @@ No martingale tail bound is asserted or assumed here: the last
 estimate is the numerical exponential expression used by that bound.
 -/
 
-import Transformer.Homogenized.Section7_SimplexGronwall
+@[expose] public section
 
 open Set
 

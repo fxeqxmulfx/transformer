@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.AlibiTails
+public import Transformer.CRASP.PositionalTransformers
+
+/-!
 # A common stabilization distance for finite ALiBi tables
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLCly`.
@@ -7,8 +12,7 @@ layer. Their individual stabilized coefficients therefore share a finite
 distance bound, for either sign of the slope.
 -/
 
-import Transformer.CRASP.AlibiTails
-import Transformer.CRASP.PositionalTransformers
+@[expose] public section
 
 namespace Transformer.CRASP
 

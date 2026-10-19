@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_GaussianParameters
+public import Transformer.BatchSize.Section4_VectorGaussianIdentity
+
+/-!
 # Integrated Gaussian generator identity with genuine random coefficients
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The bounded coefficients and bounded past observable give an integrable
 joint domination, so expectation and time integration commute.
 -/
 
-import Transformer.BatchSize.Section4_GaussianParameters
-import Transformer.BatchSize.Section4_VectorGaussianIdentity
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal

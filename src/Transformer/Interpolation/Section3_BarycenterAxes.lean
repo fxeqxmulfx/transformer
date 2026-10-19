@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_CommonTransverseAxis
+public import Transformer.Interpolation.Section3_PositiveBarycenters
+public import Transformer.Interpolation.Section3_MeanAxisLaw
+
+/-!
 # Original positive means and one common isolation axis
 
 ArXiv:2411.04551v3, §3.2, Step 1 of `lem: induction.barycenter`.
@@ -14,9 +20,7 @@ Both axis poles lie outside the positive quadrant and hence outside
 every original supported input, as required for uniform attraction.
 -/
 
-import Transformer.Interpolation.Section3_CommonTransverseAxis
-import Transformer.Interpolation.Section3_PositiveBarycenters
-import Transformer.Interpolation.Section3_MeanAxisLaw
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology

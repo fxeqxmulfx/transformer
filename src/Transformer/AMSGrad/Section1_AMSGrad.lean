@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.Calculus.FDeriv.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+/-!
 # AMSGrad — the algorithm, the regret, and Theorem A
 
 §1 and §2 of arXiv:1904.03590v4 (Tran, Le): Algorithm 1 (AMSGrad, Reddi et
@@ -8,7 +14,7 @@ theorem, which the paper calls problematic.
 **What the source says and what is carried here.**
 
 * Vectors are `Vec d = Fin d → ℝ`, and every operation of the algorithm on them
-  is coordinatewise: `g²`, `m / √v̂`, `max`.  `grad f x` is the vector of
+  is coordinatewise: `g²`, `m / √v̂`, `max`. `grad f x` is the vector of
   partial derivatives, `∇f(x)`.
 
 * `Π_{F, √V̂}(y) = argmin_{x ∈ F} ‖V̂^{1/4}(x - y)‖` is carried as a function
@@ -20,38 +26,36 @@ theorem, which the paper calls problematic.
 
 * The two algorithms of the paper differ only in the update of `v̂`; a run is
   `Setup.state` for a `Rule`, the map `(t, v̂_{t-1}, v_t) ↦ v̂_t`, and
-  `amsgradRule` is Algorithm 1.  `x_t` is `S.x R t` for `t ≥ 1`.
+  `amsgradRule` is Algorithm 1. `x_t` is `S.x R t` for `t ≥ 1`.
 
 * Theorem A contains `1/(1 - γ)` with `γ = β₁/√β₂`, under the hypothesis
-  `γ ≤ 1`; at `γ = 1` the bound is undefined.  It is stated for `γ < 1` and
+  `γ ≤ 1`; at `γ = 1` the bound is undefined. It is stated for `γ < 1` and
   `0 < β₂ < 1`, which `γ` and `√(1 - β₂)` presuppose.
 
 * The regret is `R(T) = Σ_{t=1}^T [f_t(x_t) - f_t(x*)]` with `x*` a minimizer
-  of `Σ f_t` over `F`.  The proofs use only `x* ∈ F`, and every bound is stated
+  of `Σ f_t` over `F`. The proofs use only `x* ∈ F`, and every bound is stated
   for every `x* ∈ F`, which contains the source's.
 
 Source: arXiv:1904.03590v4, §1, Algorithm 1, Theorem A; §2.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.Calculus.FDeriv.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+@[expose] public section
 
 open Finset
 
 namespace Transformer
 namespace AMSGrad
 
-/-- A point of `ℝ^d`, with coordinatewise operations.  arXiv:1904.03590v4, §2. -/
+/-- A point of `ℝ^d`, with coordinatewise operations. arXiv:1904.03590v4, §2. -/
 abbrev Vec (d : ℕ) := Fin d → ℝ
 
 variable {d : ℕ}
 
-/-- `∇f(x)`, the vector of partial derivatives.  arXiv:1904.03590v4, §2. -/
+/-- `∇f(x)`, the vector of partial derivatives. arXiv:1904.03590v4, §2. -/
 noncomputable def grad (f : Vec d → ℝ) (x : Vec d) : Vec d :=
   fun i => fderiv ℝ f x (Pi.single i 1)
 
-/-- The coordinatewise square root `√v`.  arXiv:1904.03590v4, §2. -/
+/-- The coordinatewise square root `√v`. arXiv:1904.03590v4, §2. -/
 noncomputable def vsqrt (v : Vec d) : Vec d := fun i => Real.sqrt (v i)
 
 /-- `proj w y` is a point of `F` minimizing `Σᵢ wᵢ (xᵢ - yᵢ)² = ‖W^{1/2}(x - y)‖²`
@@ -64,7 +68,7 @@ structure IsWeightedProj (F : Set (Vec d)) (proj : Vec d → Vec d → Vec d) : 
   le : ∀ w y, (∀ i, 0 ≤ w i) → ∀ z ∈ F,
     ∑ i, w i * (proj w y i - y i) ^ 2 ≤ ∑ i, w i * (z i - y i) ^ 2
 
-/-- Clamping each coordinate to `[a, b]`.  arXiv:1904.03590v4, §3, Example 3.2. -/
+/-- Clamping each coordinate to `[a, b]`. arXiv:1904.03590v4, §3, Example 3.2. -/
 def boxProj (a b : ℝ) (y : Vec d) : Vec d := fun i => max a (min b (y i))
 
 /-- Clamping is the weighted projection onto the box `[a, b]^d`, whatever the
@@ -86,11 +90,11 @@ theorem isWeightedProj_boxProj {a b : ℝ} (hab : a ≤ b) :
 /-- A rule `(t, v̂_{t-1}, v_t) ↦ v̂_t`: what distinguishes AMSGrad from AdamX. -/
 abbrev Rule (d : ℕ) := ℕ → Vec d → Vec d → Vec d
 
-/-- AMSGrad's `v̂_t = max(v̂_{t-1}, v_t)`.  arXiv:1904.03590v4, Algorithm 1. -/
+/-- AMSGrad's `v̂_t = max(v̂_{t-1}, v_t)`. arXiv:1904.03590v4, Algorithm 1. -/
 def amsgradRule : Rule d := fun _ a b => a ⊔ b
 
 /-- The data of a run: projection, costs `f_t`, step sizes `α_t`, `β_{1,t}`,
-`β₂`, and the starting point `x₁`.  arXiv:1904.03590v4, Algorithm 1. -/
+`β₂`, and the starting point `x₁`. arXiv:1904.03590v4, Algorithm 1. -/
 structure Setup (d : ℕ) where
   /-- The projection `(w, y) ↦ Π_{F, diag w}(y)`. -/
   proj : Vec d → Vec d → Vec d
@@ -144,7 +148,7 @@ noncomputable def vhat (S : Setup d) (R : Rule d) (t : ℕ) : Vec d := (S.state 
 /-- The gradient `g_t = ∇f_t(x_t)`. -/
 noncomputable def g (S : Setup d) (R : Rule d) (t : ℕ) : Vec d := grad (S.f t) (S.x R t)
 
-/-- The regret `R(T) = Σ_{t=1}^T [f_t(x_t) - f_t(x*)]`.  arXiv:1904.03590v4, §2. -/
+/-- The regret `R(T) = Σ_{t=1}^T [f_t(x_t) - f_t(x*)]`. arXiv:1904.03590v4, §2. -/
 noncomputable def regret (S : Setup d) (R : Rule d) (xstar : Vec d) (T : ℕ) : ℝ :=
   ∑ t ∈ Icc 1 T, (S.f t (S.x R t) - S.f t xstar)
 

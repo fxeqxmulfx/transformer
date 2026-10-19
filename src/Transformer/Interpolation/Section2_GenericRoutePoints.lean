@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_GenericQuadrantPoints
+
+/-!
 # Generic start and end points of the routes
 
 ArXiv:2411.04551v3, §2.2, proof of `prop: compression`, Step 3: chains of
@@ -11,7 +15,7 @@ start and end points in prescribed open sets whose route planes are in
 this general position.
 -/
 
-import Transformer.Interpolation.Section4_GenericQuadrantPoints
+@[expose] public section
 
 open Set
 

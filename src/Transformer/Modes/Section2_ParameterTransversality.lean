@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section2_Field
+
+/-!
 # The original Gaussian KDE field is transverse to sample coordinates
 
 ArXiv:2412.09080v3, §2.1, `eq:Fn`, and the equivalence
@@ -20,7 +24,7 @@ Gaussian sample. No almost-sure nondegeneracy or count identity
 is assumed in the definitions or in these derivative calculations.
 -/
 
-import Transformer.Modes.Section2_Field
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory Filter

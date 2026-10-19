@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixB_HighD
+public import Transformer.Perspective.RussianPairs
+
+/-!
 # Appendix B — `eq: claim.yury`, proved
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -13,8 +18,7 @@ and `Σ_k ⟨B_k x, y⟩²` — collapses the two `B`-dependent terms into
 with `θ_{ij} = arccos ⟨x_i, x_j⟩`, which is `eq: claim.yury`.
 -/
 
-import Transformer.Perspective.AppendixB_HighD
-import Transformer.Perspective.RussianPairs
+@[expose] public section
 
 open scoped BigOperators
 open Real

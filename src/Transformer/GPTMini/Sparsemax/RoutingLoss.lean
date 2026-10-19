@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Sparsemax.Failure
-import Mathlib.Analysis.Calculus.FDeriv.Linear
-import Mathlib.Analysis.Calculus.FDeriv.Add
+module
+
+public import Transformer.GPTMini.Sparsemax.Failure
+public import Mathlib.Analysis.Calculus.FDeriv.Linear
+public import Mathlib.Analysis.Calculus.FDeriv.Add
 
 /-!
 # A corrective score loss on a saturated sparsemax route
@@ -17,6 +19,8 @@ nonzero target derivative and one score-gradient step repairs its route.
 This assumes a supplied routing target; it is not a guarantee for latent
 attention or a claim about the benchmark's end-to-end cross-entropy.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_AngularSupport
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+
+/-!
 # Actual singleton weights and finite-support integration
 
 ArXiv:2601.21366v2, §5.2, `eq:Hess-bilinear.std`, and §5.5,
@@ -15,8 +20,7 @@ The energy formula keeps both interaction integrals and the
 one-half prefactor of the perceptron potential.
 -/
 
-import Transformer.Perceptron.Section5_AngularSupport
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
+@[expose] public section
 
 open scoped BigOperators
 open MeasureTheory

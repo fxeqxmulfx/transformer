@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdCollapse
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainGradientLimits
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdCollapse
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainGradientLimits
 
 /-!
 # Actual output, loss and confidence limits at the strict cold threshold
@@ -29,6 +31,8 @@ from appendix C's assigned coupled norm-cost GD. Learned stochastic/
 numerical GPTMini and thermodynamic size transfer remain unproved;
 no optimizer, experiment or checkpoint is modified.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_ExpandedHessian
+public import Transformer.Perceptron.Section5_ZeroMeanDirections
+
+/-!
 # Bounding the Hessian along a localized direction with zero mean
 
 ArXiv:2601.21366v2, §5.2, the final estimate in the proof of
@@ -13,8 +18,7 @@ estimates below use explicit local bounds as inputs; the support
 argument must produce them from continuity at an accumulation point.
 -/
 
-import Transformer.Perceptron.Section5_ExpandedHessian
-import Transformer.Perceptron.Section5_ZeroMeanDirections
+@[expose] public section
 
 open Real MeasureTheory Set
 

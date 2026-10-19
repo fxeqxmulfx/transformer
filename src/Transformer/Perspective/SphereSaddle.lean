@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.SphereCritical
+
+/-!
 # Strict saddles of `𝖤_β` on `(𝕊^{d-1})^n` for `d ≥ 3`
 
 Criscitiello, Rebjock, McRae, Boumal — arXiv:2405.18273, `thm:spheres` and
@@ -7,16 +11,16 @@ Criscitiello, Rebjock, McRae, Boumal — arXiv:2405.18273, `thm:spheres` and
 The curve `s ↦ (x_i + s v_i)/‖x_i + s v_i‖` of a tangent `v` is smooth
 (`contDiff_normalizedLine`) with velocity `v` (`hasDerivAt_normalizedLine`),
 so at a critical point the second derivative of `𝖤_β` along it is
-`2 · hessQuad`.  Along `v_i = Proj_{x_i} e_k` for the `e_k` of
+`2 · hessQuad`. Along `v_i = Proj_{x_i} e_k` for the `e_k` of
 `exists_hessQuad_proj_pos` it is positive: for `d ≥ 3` and `β > 0`, every
 critical point with two distinct tokens is a strict saddle
-(`exists_secondDerivEBetaAt_pos_of_nonTrivial`).  The synchronized
+(`exists_secondDerivEBetaAt_pos_of_nonTrivial`). The synchronized
 configurations are global maxima (`selfEnergy_le_of_not_nonTrivial`), and
 with them this is `thm:spheres` for `𝖤_β`
 (`synchronized_of_secondDerivEBetaAt_nonpos`).
 -/
 
-import Transformer.Perspective.SphereCritical
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -66,15 +70,15 @@ the normalized line `s ↦ (x_i + s v_i)/‖x_i + s v_i‖` of some tangent `v` 
 a positive second derivative of `𝖤_β`, so the ascent leaves it.
 
 The tangent is `v_i = Proj_{x_i} e_k` for a basis vector `e_k`, which moves
-every token toward the same `e_k`.  The second derivative along the line is
+every token toward the same `e_k`. The second derivative along the line is
 `2 · hessQuad(X, v)` (`secondDerivEBetaAt_eq_two_mul_hessQuad`), and
 `exists_hessQuad_proj_pos` gives a `k` that makes it positive.
 
 **What the source says and what is changed here.**  The source proves the
 contrapositive, `thm:spheres` (`synchronized_of_secondDerivEBetaAt_nonpos`);
 here the direction is exhibited, as `IsStrictSaddleTorusEnergy` asks on the
-circle.  Its Gaussian `γ` is replaced by the `d` basis vectors, which have the
-same second moments.  The term `⟨S, 2XᵀX⟩` that it removes with the
+circle. Its Gaussian `γ` is replaced by the `d` basis vectors, which have the
+same second moments. The term `⟨S, 2XᵀX⟩` that it removes with the
 first-order condition `XS = 0` vanishes identically, so criticality is used
 only to identify the second derivative with `2 · hessQuad`.
 
@@ -132,7 +136,7 @@ negative semidefinite is synchronized, `x_1 = ⋯ = x_n`, and a global maximum.*
 **What the source says and what is changed here.**  The source states it for
 `n ≥ 1`, a connected graph and `φ' > 0`, `φ'' ≥ 0` on `[-1, 1]`; `cor:spheres`
 applies it to `φ_β(t) = e^{βt}/β`, `β > 0`; `𝖤_β` is the complete graph with
-unit weights, and `n` is free.  The Hessian is negative semidefinite when
+unit weights, and `n` is free. The Hessian is negative semidefinite when
 every curve through `X` that is differentiable at `0` has a non-positive
 second derivative of `𝖤_β`; at a critical point that is `hessQuad ≤ 0` on the
 tangent space (`secondDerivEBetaAt_eq_two_mul_hessQuad`).

@@ -1,17 +1,21 @@
-/-
+module
+
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Data.Nat.Basic
+public import Mathlib.Data.Fintype.Pigeonhole
+
+/-!
 # `gpt-mini` Config
 
 Lean record mirroring the Python `Config` dataclass in `reference/model.py`.
 
-All hyperparameters are positive natural numbers (or positive reals).  The
+All hyperparameters are positive natural numbers (or positive reals). The
 record is parameterized by ordinary natural / real numbers; downstream
 specifications take the config as input and derive `Fin`-indexed types from
 it.
 -/
 
-import Mathlib.Basic.Real.Basic
-import Mathlib.Data.Nat.Basic
-import Mathlib.Data.Fintype.Pigeonhole
+@[expose] public section
 
 namespace Transformer
 namespace GPTMini
@@ -77,7 +81,7 @@ end Config
 `train_gpt.py` (`openai/parameter-golf`, 2026-09-13) attends with `n_heads`
 query heads against `n_kv_heads < n_heads` key/value heads, each key/value head
 shared by a contiguous group of `n_heads / n_kv_heads` query heads
-(`repeat_interleave` on the head axis).  Divisibility is what makes the groups
+(`repeat_interleave` on the head axis). Divisibility is what makes the groups
 equal, and it is the only well-formedness the construction needs beyond
 `Config`. -/
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Section5_VectorField
+
+/-!
 # Bounds for the actual center and nearest-predecessor velocities
 
 ArXiv:2411.04990v2, §5, proof of `lemma:meta`, `eq:bddotphi`.
@@ -8,7 +12,7 @@ peak. For a nearest predecessor, only inward pulls matter, and circle
 geometry puts those interactions beyond the same gap.
 -/
 
-import Transformer.Causal.Section5_VectorField
+@[expose] public section
 
 open scoped BigOperators
 open Real

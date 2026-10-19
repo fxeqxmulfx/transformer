@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_PowerMoments
+public import Transformer.Perceptron.Section5_QuadraticPolynomials
+
+/-!
 # Original homogeneous kernel powers preserve their polynomial degree
 
 ArXiv:2601.21366v2, §5.1, `eq:FH-basic` and `lem: quadpol` (i).
@@ -19,8 +24,7 @@ The original polynomial characterization still requires their spanning
 and the actual finite-dimensional inverse; neither is assumed here.
 -/
 
-import Transformer.Perceptron.Section5_PowerMoments
-import Transformer.Perceptron.Section5_QuadraticPolynomials
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

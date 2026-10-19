@@ -3,6 +3,12 @@ module
 public import Mathlib.MeasureTheory.Integral.MeanInequalities
 public import Mathlib.Analysis.Convex.Integral
 
+/-!
+# Integral and finite-sum mean inequalities
+
+Lp bounds for integrals and finite sums.
+-/
+
 @[expose] public section
 
 open MeasureTheory ENNReal

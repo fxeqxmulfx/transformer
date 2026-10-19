@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.EnergyChartCoordinates
+
+/-!
 # Energy-graph patches retaining the closed-ball source constraint
 
 Each patch lies in the original ball and covers all nearby ball points.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.EnergyChartCoordinates
+@[expose] public section
 
 noncomputable section
 open Filter Set Topology

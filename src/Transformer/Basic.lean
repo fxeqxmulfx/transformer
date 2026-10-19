@@ -1,7 +1,14 @@
-/-
+module
+
+public import Mathlib.Analysis.InnerProductSpace.EuclideanDist
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+
+/-!
 # Basic definitions shared across the formalization
 
-We work over `ℝ^d` realized as `EuclideanSpace ℝ (Fin d)`.  The unit sphere
+We work over `ℝ^d` realized as `EuclideanSpace ℝ (Fin d)`. The unit sphere
 `S(d) = 𝕊^{d-1} ⊂ ℝ^d` is the codomain on which Transformer particles live.
 
 We also collect the projection operator `Proj x : ℝ^d → T_x S(d)` and the
@@ -14,10 +21,7 @@ Everything in this file is auxiliary: the actual paper-by-paper formalization
 lives in the other files.
 -/
 
-import Mathlib.Analysis.InnerProductSpace.EuclideanDist
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.Topology.MetricSpace.Pseudo.Defs
+@[expose] public section
 
 open scoped BigOperators
 
@@ -33,7 +37,7 @@ abbrev Sphere (d : ℕ) : Set (EucSpace d) := Metric.sphere (0 : EucSpace d) 1
 abbrev SSphere (d : ℕ) : Type := Metric.sphere (0 : EucSpace d) 1
 
 /-- The orthogonal projection `Proj_x y = y - ⟨x,y⟩ x` of a vector `y ∈ ℝ^d`
-onto the tangent space `T_x 𝕊^{d-1}`.  Defined in display below
+onto the tangent space `T_x 𝕊^{d-1}`. Defined in display below
 `eq: transformerSd.QKV` in §2 of the paper:
 
   `Proj_x y = y - ⟨x, y⟩ x`. -/
@@ -56,7 +60,7 @@ example : ‖(EuclideanSpace.single (0 : Fin 1) (1 : ℝ))‖ = 1 := by
   simp [PiLp.norm_single]
 
 /-- **The projection kills the radial direction:** `Proj_x (c x) = 0` for a
-unit vector `x`.  This is what makes a configuration whose attention average
+unit vector `x`. This is what makes a configuration whose attention average
 is parallel to the particle itself a stationary point of the dynamics. -/
 theorem proj_smul_self {d : ℕ} {x : EucSpace d} (hx : ‖x‖ = 1) (c : ℝ) :
     proj d x (c • x) = 0 := by
@@ -69,7 +73,7 @@ example : ‖(EuclideanSpace.single (0 : Fin 1) (1 : ℝ))‖ = 1 := by
   simp [PiLp.norm_single]
 
 /-- **The projection is a contraction:** `‖Proj_x y‖ ≤ ‖y‖` for a unit vector
-`x`, since `‖Proj_x y‖² = ‖y‖² - ⟨x, y⟩²`.  This is what gives the `β = 0`
+`x`, since `‖Proj_x y‖² = ‖y‖² - ⟨x, y⟩²`. This is what gives the `β = 0`
 drift of §4 its Lipschitz constant. -/
 theorem norm_proj_le {d : ℕ} {x : EucSpace d} (hx : ‖x‖ = 1) (y : EucSpace d) :
     ‖proj d x y‖ ≤ ‖y‖ := by
@@ -93,8 +97,8 @@ For unit vectors `a`, `b` and a vector `v` with `‖v‖ ≤ 1`,
   `Proj_a u - Proj_b v = Proj_a (u - v) - ⟨a, v⟩ (a - b) - ⟨a - b, v⟩ b`,
 
 whose three summands are bounded by `‖u - v‖`, `‖v‖ ‖a - b‖ ` and
-`‖a - b‖ ‖v‖ ‖b‖`.  So the difference of the projections is at most
-`‖u - v‖ + 2 ‖a - b‖`.  The naive split
+`‖a - b‖ ‖v‖ ‖b‖`. So the difference of the projections is at most
+`‖u - v‖ + 2 ‖a - b‖`. The naive split
 `(u - v) - (⟨a, u⟩ a - ⟨b, v⟩ b)` gives `3` in place of `2`.
 
 This is the estimate behind every Grönwall constant in the formalization: it
@@ -169,7 +173,7 @@ noncomputable def tupleCoe {d n : ℕ} (X : SphereTuple d n) : Idx n → EucSpac
 
 /-! ### Linear parameters
 
-The Transformer architecture has `Query`, `Key`, `Value` matrices.  In the
+The Transformer architecture has `Query`, `Key`, `Value` matrices. In the
 abstract analysis these are arbitrary linear maps on `ℝ^d`.
 -/
 

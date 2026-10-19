@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section2_RadialRotation
+
+/-!
 # The exact discrete chain with a radial value component
 
 Source: arXiv:2604.01978v1, §2.1, `eq:update_tokens`.
@@ -24,7 +28,7 @@ phase discrepancy at the grid time `η L = 1` downstream.
 No comparison estimate is assumed in any of these calculations.
 -/
 
-import Transformer.Homogenized.Section2_RadialRotation
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory ProbabilityTheory

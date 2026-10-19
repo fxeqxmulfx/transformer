@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_AutonomousTail
+
+/-!
 # Joining an already well-posed original control prefix to one more phase
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and Appendix,
@@ -17,7 +21,7 @@ controls and every initial probability; it does not assume them for the
 joined equation.
 -/
 
-import Transformer.Interpolation.Section1_AutonomousTail
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal

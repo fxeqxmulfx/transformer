@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_DyadicEuler
+public import Transformer.BatchSize.Section4_EulerPaths
+
+/-!
 # Stopping Euler chains and their Brownian interpolation
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The stopped dyadic endpoints at different horizons are evaluations of
 the same Brownian interpolation. This is needed for increment estimates.
 -/
 
-import Transformer.BatchSize.Section4_DyadicEuler
-import Transformer.BatchSize.Section4_EulerPaths
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal BigOperators

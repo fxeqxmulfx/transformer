@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Properties.OutputSimplex
-import Mathlib.Data.List.MinMax
-import Mathlib.Tactic
+module
+
+public import Transformer.GPTMini.Properties.OutputSimplex
+public import Mathlib.Data.List.MinMax
+public import Mathlib.Tactic
 
 /-!
 # Deterministic decoding of actual GPTMini outputs
@@ -14,6 +16,8 @@ No correct-answer oracle enters the decoder. A strict logit certificate
 is sufficient to verify a prediction. Establishing the required logit
 property for given parameters remains a task-dependent verification step.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.TokenInterface
 

@@ -1,5 +1,7 @@
-import Transformer.DoubleDescent.Section2_EffectiveComplexity
-import Mathlib.Analysis.Calculus.Deriv.Basic
+module
+
+public import Transformer.DoubleDescent.Section2_EffectiveComplexity
+public import Mathlib.Analysis.Calculus.Deriv.Basic
 
 /-!
 # Fixed random features: exact fitting and effective complexity
@@ -12,6 +14,8 @@ This refutes that unrestricted reading, not a numerical claim about Fashion
 MNIST. This module treats real-valued features. The source's complex
 exponential Fourier features are treated in `AppendixD_FourierFeatures`.
 -/
+
+@[expose] public section
 
 namespace Transformer.DoubleDescent
 

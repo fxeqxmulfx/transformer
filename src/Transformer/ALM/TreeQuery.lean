@@ -1,26 +1,33 @@
-/-
+module
+
+public import Transformer.ALM.BinSearch
+public import Batteries.Recycling.RBTree.Depth
+import all Batteries.Recycling.RBTree.Depth
+public import Batteries.Recycling.RBTree.Lemmas
+
+/-!
 # The container the query actually descends
 
 `Transformer.ALM.BinSearch` prices the planar hull's query at
 `bcount len ≤ log₂ len + 1`, and that is the right number for the procedure it
 models: `std::lower_bound` over a sorted array, halving the range once per
-comparison.  It is not the number the shipped machine pays.
+comparison. It is not the number the shipped machine pays.
 
 `alm-hull/src/tree.rs` keeps the envelope in a red-black tree, because the C++
 original's `std::multiset` gives erase-and-advance in amortized constant time
-and stable Rust's `BTreeSet` gives nothing of the kind.  A red-black tree of
+and stable Rust's `BTreeSet` gives nothing of the kind. A red-black tree of
 `n` nodes is balanced to within a factor of two, not exactly, so the descent in
 `Tree::lower_bound_slope` costs up to `2·log₂(n + 1)` comparisons -- twice the
-array's bound, and `BinSearch` says nothing about it.  (The implementation
+array's bound, and `BinSearch` says nothing about it. (The implementation
 answers both ends of the envelope from cached cursors without descending at
 all, which the model below does not have and which only lowers the count.)
 
-This file closes that gap on both sides.  `lowerBound` is the descent written
+This file closes that gap on both sides. `lowerBound` is the descent written
 out, with the same accumulator the loop carries, and `lowerBound_eq_find` says
 it returns the first element the predicate accepts, which is what makes it a
-`lower_bound` at all.  `lbCount` is its comparison count, `lbCount_le_depth`
+`lower_bound` at all. `lbCount` is its comparison count, `lbCount_le_depth`
 prices it at the tree's depth, and `lbCount_le_two_log` composes that with
-`RBTree.RBNode.WF.depth_bound` to get the balance factor.  `log_succ_bound`
+`RBTree.RBNode.WF.depth_bound` to get the balance factor. `log_succ_bound`
 is the comparison of the two: for any nonempty envelope the tree's price is at
 least the array's and at most twice it.
 
@@ -28,9 +35,7 @@ Source: `vm-rs/alm-hull/src/tree.rs`, `Tree::lower_bound_slope`; Guibas-Sedgewic
 1978 for the balance factor, via `Batteries.Recycling.RBTree.Depth`.
 -/
 
-import Transformer.ALM.BinSearch
-import Batteries.Recycling.RBTree.Depth
-import Batteries.Recycling.RBTree.Lemmas
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -42,7 +47,7 @@ variable {α : Type*}
 /-! ### The descent -/
 
 /-- **`Tree::lower_bound_slope`, written out.**  Go right past every node the
-predicate rejects; on one it accepts, remember it and go left.  The
+predicate rejects; on one it accepts, remember it and go left. The
 accumulator is the loop's `at`, and `none` is its `NIL`. -/
 def lowerBound (p : α → Bool) : RBNode α → Option α → Option α
   | .nil, acc => acc

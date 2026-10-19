@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_TransferPhases
+public import Transformer.Interpolation.Section3_MeanAxisAttraction
+
+/-!
 # Three original phases for a protected atomic transfer
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, using the
@@ -15,8 +20,7 @@ Inverse attention then restores each such entire probability law
 exactly, while the selected atom reaches its prescribed target.
 -/
 
-import Transformer.Interpolation.Section4_TransferPhases
-import Transformer.Interpolation.Section3_MeanAxisAttraction
+@[expose] public section
 
 open Real MeasureTheory Set
 

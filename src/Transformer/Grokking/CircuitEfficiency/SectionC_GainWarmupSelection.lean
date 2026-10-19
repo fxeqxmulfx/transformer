@@ -1,6 +1,8 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainWarmupTail
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdLimits
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainWeakBalanceBoundary
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainWarmupTail
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdLimits
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainWeakBalanceBoundary
 
 /-!
 # Conditional original-warmup Gen selection from numerical initialization
@@ -37,6 +39,8 @@ those premises for the small source-style competing initialization.
 No first successful clock, uniform time bound or monotone allocation
 is obtained by classifying a finite limit.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_ComplexCharacteristic
-import Transformer.Modes.Section3_FourierRegularization
+module
+
+public import Transformer.Modes.Section3_ComplexCharacteristic
+public import Transformer.Modes.Section3_FourierRegularization
 
 /-!
 # The actual inverse integral as a limit of Gaussian smoothings
@@ -22,6 +24,8 @@ All the characteristic-function hypotheses below have concrete examples
 from the actual normalized sum of seventeen `lawY 3 0` summands.
 Source: arXiv:2412.09080v3, §3 `thm:br` and §5.4–§5.5, Fourier inversion.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped FourierTransform Topology ENNReal

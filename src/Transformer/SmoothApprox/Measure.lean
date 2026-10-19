@@ -1,22 +1,26 @@
-/-
+module
+
+public import Transformer.SmoothApprox.Basic
+public import Mathlib.MeasureTheory.Measure.HasOuterApproxClosed
+public import Mathlib.Topology.UniformSpace.UniformApproximation
+
+/-!
 # Testing measures against smooth functions
 
 Probability measures on a finite-dimensional space that live in a common
 ball are determined by their integrals of smooth compactly supported
-functions (`ext_of_forall_contDiff`).  For a curve `t ↦ μ_t` of such measures,
+functions (`ext_of_forall_contDiff`). For a curve `t ↦ μ_t` of such measures,
 continuity of `t ↦ ∫ g dμ_t` for every smooth `g` with compact support gives
 continuity of `p ↦ ∫ f(p, x) dμ_{τ(p)}(x)` for every jointly continuous `f`
 with values in a finite-dimensional space (`continuous_integral_param`).
 
 Both rest on the uniform approximation of `SmoothApprox.Basic`, and on a
-smooth cutoff equal to `1` on the ball where the measures live.  This is how
+smooth cutoff equal to `1` on the ball where the measures live. This is how
 arXiv:2305.05465v6, §6, `d:solconti`, passes from the test functions `C_c^∞`
 to the continuous integrands of `e:vectorfield`.
 -/
 
-import Transformer.SmoothApprox.Basic
-import Mathlib.MeasureTheory.Measure.HasOuterApproxClosed
-import Mathlib.Topology.UniformSpace.UniformApproximation
+@[expose] public section
 
 open MeasureTheory Metric Filter Topology
 

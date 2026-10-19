@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_NestedCaps
+
+/-!
 # Coefficients for a constant two-neuron cap attractor
 
 Auxiliaries for arXiv:2411.04551v3, Appendix, `lem: two.balls`,
@@ -14,7 +18,7 @@ statement chooses a positive boundary strip and a finite positive output
 coefficient; no dynamical conclusion is inserted into their definitions.
 -/
 
-import Transformer.Interpolation.Section3_NestedCaps
+@[expose] public section
 
 open Real Set
 

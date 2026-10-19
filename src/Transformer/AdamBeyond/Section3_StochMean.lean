@@ -1,6 +1,8 @@
-import Transformer.AdamBeyond.Section3_StochCoins
+module
 
-/-
+public import Transformer.AdamBeyond.Section3_StochCoins
+
+/-!
 # Adam and beyond — §3: the expectations in the lemma of Theorem 3
 
 `m_n` and `v_n` are functions of the coins `b_1, …, b_n` (`coinM`, `coinV`),
@@ -15,6 +17,8 @@ and the pointwise bounds of `Section3_StochBound` integrate to:
 Source: arXiv:1904.09237, Appendix, proof of Theorem 3, the lemma: the bounds
 on `E[T₁]`, `E[T₂]` and `E[T₃]`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Finset Function
 
@@ -51,7 +55,7 @@ theorem coinMV_dep (n : ℕ) (g : ℝ → ℝ → ℝ) :
 variable {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
   {b : ℕ → Ω → Bool} {p : ℝ}
 
-/-- `E[T₁] ≤ 1/√(1-β₂)`.  arXiv:1904.09237, Appendix, proof of Theorem 3,
+/-- `E[T₁] ≤ 1/√(1-β₂)`. arXiv:1904.09237, Appendix, proof of Theorem 3,
 (eq:T_1-bound). -/
 theorem stoch_int_T1 (hb : IsBernoulliSeq μ b p) (hC : 1 ≤ C) (hβ₁ : 0 ≤ β₁) (hβ₁' : β₁ ≤ 1)
     (hβ₂ : 0 ≤ β₂) (hβ₂' : β₂ < 1) (n : ℕ) :
@@ -65,7 +69,7 @@ theorem stoch_int_T1 (hb : IsBernoulliSeq μ b p) (hC : 1 ≤ C) (hβ₁ : 0 ≤
   simpa using h
 
 /-- `E[β₁ m_n/√(β₂ v_n + 1 - β₂)] ≤ β₁ K p Σ_{j≤n} γ^{n-j}`, with
-`K = 2(1-β₁)/√(β₂(1-β₂))` and `γ = β₁/√β₂`.  arXiv:1904.09237, Appendix,
+`K = 2(1-β₁)/√(β₂(1-β₂))` and `γ = β₁/√β₂`. arXiv:1904.09237, Appendix,
 proof of Theorem 3, (eq:T_2-bound), by another argument. -/
 theorem stoch_int_T2 (hb : IsBernoulliSeq μ b p) (hp : 0 ≤ p) (hC : 1 ≤ C) (hβ₁ : 0 ≤ β₁)
     (hβ₁' : β₁ ≤ 1) (hβ₂ : 0 < β₂) (hβ₂' : β₂ < 1) (n : ℕ) :
@@ -82,7 +86,7 @@ theorem stoch_int_T2 (hb : IsBernoulliSeq μ b p) (hp : 0 ≤ p) (hC : 1 ≤ C) 
   refine h.trans (le_of_eq ?_)
   rw [integral_const_mul, integral_const_mul, coin_integral_sum hb hp]
 
-/-- `E[β₂ v_n + 1 - β₂] ≤ 1 + p C²`.  arXiv:1904.09237, Appendix, proof of
+/-- `E[β₂ v_n + 1 - β₂] ≤ 1 + p C²`. arXiv:1904.09237, Appendix, proof of
 Theorem 3, the bound on `E[v_{t-1}]`. -/
 theorem stoch_int_v (hb : IsBernoulliSeq μ b p) (hp : 0 ≤ p) (hβ₂ : 0 ≤ β₂) (hβ₂' : β₂ < 1)
     (n : ℕ) :
@@ -122,7 +126,7 @@ theorem stoch_int_v (hb : IsBernoulliSeq μ b p) (hp : 0 ≤ p) (hβ₂ : 0 ≤ 
   nlinarith [mul_le_mul_of_nonneg_left hS2le h0]
 
 /-- `E[1/√(β₂ v_n + 1 - β₂)] ≥ 1/√a` for every `a ≥ 1 + p C²`: the tangent of
-`1/√x` at `a`.  arXiv:1904.09237, Appendix, proof of Theorem 3, the bound on
+`1/√x` at `a`. arXiv:1904.09237, Appendix, proof of Theorem 3, the bound on
 `E[T₃]`, by the tangent in place of Jensen's inequality. -/
 theorem stoch_int_inv (hb : IsBernoulliSeq μ b p) (hp : 0 ≤ p) (hβ₂ : 0 ≤ β₂) (hβ₂' : β₂ < 1)
     {a : ℝ} (ha : 1 + p * C ^ 2 ≤ a) (n : ℕ) :

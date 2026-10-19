@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.MomentMemory
+module
+
+public import Transformer.Grokking.AdamW.MomentMemory
 
 /-!
 # Persistent input differences in native moment histories
@@ -16,6 +18,8 @@ constant input difference also survives bias correction forever, even
 with identical zero initial buffers. Thus shared-input forgetting is
 not unrestricted contraction of a training process or a grokking time.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

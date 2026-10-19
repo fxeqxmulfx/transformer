@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.Magma.Section2_MaskLaw
+
+/-!
 # Mask moments and increased variance
 
 Formalization of arXiv:2602.15322v1, Section 2, eq:rsu_def, Appendix A.1.
 The normalized mask is unbiased; it increases second and third moments.
 -/
 
-import Transformer.Magma.Section2_MaskLaw
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_MeanOverlapNoise
+
+/-!
 # Actual centroid dependence of the empirical-mean noise
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -19,7 +23,7 @@ The bound retains the actual small-mean dependence lost by a uniform
 original Gaussian head law and actual original query averages.
 -/
 
-import Transformer.Homogenized.Section7_MeanOverlapNoise
+@[expose] public section
 
 open Real MeasureTheory
 open scoped BigOperators NNReal

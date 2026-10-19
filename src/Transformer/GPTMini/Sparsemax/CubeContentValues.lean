@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.CubeContentAttention
+module
+
+public import Transformer.GPTMini.Sparsemax.CubeContentAttention
 
 /-!
 # Original shared values from selected content coefficients
@@ -16,6 +18,8 @@ response is proved. A separate local evaluation identity uses only the
 query and its generated neighbors. Learned value storage is K*D for K
 selected features and D output channels, not 2^r*D or a prototype table.
 -/
+
+@[expose] public section
 
 noncomputable section
 

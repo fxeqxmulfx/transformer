@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.ScalarDenominator
+module
+
+public import Transformer.Grokking.AdamW.ScalarDenominator
 
 /-!
 # Strict adaptive dissipation from an inserted native input
@@ -28,6 +30,8 @@ reset or alteration of the frozen beta1=0.9 transformer experiments.
 The formulas use exact reals and non-AMSGrad native AdamW. No claim
 about learned Q/K, floating-point kernels or stochastic data follows.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

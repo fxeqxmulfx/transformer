@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Zoology.Section4_Coyote
+
+/-!
 # Selective attention used in the hybrid experiments
 
 Arora et al., arXiv:2312.04927v1, §5, equations `eq:selective` and
-`eq:programmatic`.  The selector acts on query rows; the attention weights
+`eq:programmatic`. The selector acts on query rows; the attention weights
 inside a selected row still depend on that row's input-dependent scores.
 -/
 
-import Transformer.Zoology.Section4_Coyote
+@[expose] public section
 
 open scoped BigOperators
 
@@ -20,7 +24,7 @@ noncomputable def attentionFromScores {n d : ℕ}
   fun i q => ∑ j, (Real.exp (scores i j) / ∑ k, Real.exp (scores i k)) *
     values j q
 
-/-- Rowwise selected attention.  The paper's `f(u)[i] ∈ {0,1}` is represented
+/-- Rowwise selected attention. The paper's `f(u)[i] ∈ {0,1}` is represented
 by `Bool`; the selector may itself depend on the input sequence.
 Source: §5, equation `eq:selective`. -/
 noncomputable def selectiveAttention {n d : ℕ}
@@ -42,7 +46,7 @@ theorem selective_full_eq_attention {n d : ℕ}
   simp [selectiveAttention]
 
 /-- The programmatic selector tests for any earlier occurrence of the same
-raw token.  Source: §5, equation `eq:programmatic`. -/
+raw token. Source: §5, equation `eq:programmatic`. -/
 def programmaticSelection {n c : ℕ} (x : TokenSequence n c)
     (i : Fin n) : Bool :=
   decide (∃ j : Fin n, j < i ∧ x j = x i)

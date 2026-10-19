@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_ThirdDerivativeTail
-import Transformer.Modes.Section3_FirstDerivativeFrequency
+module
+
+public import Transformer.Modes.Section3_ThirdDerivativeTail
+public import Transformer.Modes.Section3_FirstDerivativeFrequency
 
 /-!
 # Gaussian decay through the actual third characteristic derivative
@@ -17,6 +19,8 @@ integrability and its inverse-n exterior rate from the actual sum's
 integrable-power condition. The envelope will permit polynomial
 weights when differentiating the Gaussian-damped cubic correction.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.ALM.SoftmaxValue
+public import Transformer.XSA
+
+/-!
 # The lookup head is an ordinary attention head
 
 Every softmax bound in this development is stated of the sum written out by
@@ -6,23 +11,23 @@ hand,
 
     ∑ⱼ (exp (β · score q (K j)) / ∑ₖ exp (β · score q (K k))) • V j,
 
-and every docstring calls it "a standard softmax head".  Nothing said so.
+and every docstring calls it "a standard softmax head". Nothing said so.
 `Transformer.XSA.SAOutput` is the causal self-attention of the formalized
 papers — `Q, K, V : ParamMatrix d` applied to a residual stream, masked to the
 prefix — and the two were never identified.
 
-They are the same operator, and this file exhibits the weights.  What the
+They are the same operator, and this file exhibits the weights. What the
 theorem must not claim is that `K` is the paraboloid lift: the lift is
-quadratic and `K` is linear.  The honest statement, and the one the machine
+quadratic and `K` is linear. The honest statement, and the one the machine
 realizes, is that the lifted coordinates are already in the residual stream —
 written there upstream, as `PersistDimension` writes them in the VM — and that
-`Q` and `K` are coordinate projections reading two blocks of it.  The
+`Q` and `K` are coordinate projections reading two blocks of it. The
 nonlinearity of lookup lives above the head, not in it.
 
 So the residual stream at a position carries `(q, 1)` in its first block and
 `(2k, -‖k‖²)` in its second; `queryProj` reads the first, `keyProj` moves the
 second into the first block's coordinates, and their inner product is exactly
-`score`.  The causal mask is definitional: `Idx n` is the stored prefix, the
+`score`. The causal mask is definitional: `Idx n` is the stored prefix, the
 decoding position `i` is the last of it, and the query token's own slot is a
 stored key like any other — the machine is append-only.
 
@@ -36,8 +41,7 @@ path is not limited to our executor construction"; the head itself is
 `transformer_vm/attention/hull2d_cht.h`, lines 203-215.
 -/
 
-import Transformer.ALM.SoftmaxValue
-import Transformer.XSA
+@[expose] public section
 
 open scoped BigOperators
 
@@ -95,7 +99,7 @@ noncomputable def liftQueryVec (q : EucSpace m) : EucSpace (m + 1) :=
   WithLp.toLp 2 (Fin.snoc (WithLp.ofLp q) 1)
 
 /-- The paraboloid lift `k ↦ (2k, -‖k‖²)`, as a vector of the residual
-stream.  It is quadratic in `k`; nothing below applies a head to it. -/
+stream. It is quadratic in `k`; nothing below applies a head to it. -/
 noncomputable def liftKeyVec (k : EucSpace m) : EucSpace (m + 1) :=
   WithLp.toLp 2 (Fin.snoc (fun i => 2 * k i) (-‖k‖ ^ 2))
 
@@ -110,13 +114,13 @@ theorem inner_liftQueryVec_liftKeyVec (q k : EucSpace m) :
   ring_nf
 
 /-- The residual stream at one position: the query lift in the first block,
-the key lift in the second.  Both are written upstream of the head. -/
+the key lift in the second. Both are written upstream of the head. -/
 noncomputable def residual (q k : EucSpace m) : EucSpace ((m + 1) + (m + 1)) :=
   packBlocks (liftQueryVec q) (liftKeyVec k)
 
 /-! ### And the head is then two coordinate projections -/
 
-/-- The query matrix: read the first block.  A coordinate projection, and in
+/-- The query matrix: read the first block. A coordinate projection, and in
 particular linear. -/
 noncomputable def queryProj : ParamMatrix ((m + 1) + (m + 1)) :=
   LinearMap.toContinuousLinearMap (packLeftLin.comp fstBlockLin)

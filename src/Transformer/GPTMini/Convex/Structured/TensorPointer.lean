@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.TensorState
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorState
 
 /-!
 # All-pair learned binding inference from prenorm tensors
@@ -16,6 +18,8 @@ equal to the already verified unrestricted shared pointer for genuine
 RMS-normalized embeddings. Causal row-prefix selection, mixture,
 residual/tied readout and full changed-model integration remain.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

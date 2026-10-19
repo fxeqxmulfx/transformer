@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.ActiveDirection
+module
+
+public import Transformer.GPTMini.Sparsemax.ActiveDirection
 
 /-!
 # Restrictions on the outer loss and value readout
@@ -15,6 +17,8 @@ backpropagation assigns the probability-coordinate derivative
 values. These are conditional row results, not a global convergence claim
 or a new training loss needing a target route.
 -/
+
+@[expose] public section
 
 noncomputable section
 

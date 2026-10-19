@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Packing.Count
+
+/-!
 # Sphere packing at the R'enyi scale `δ = c β^{-1/2}`
 
 The separation of the R'enyi centers of §5 of 2411.04990v2 is `c β^{-1/2}`, so
@@ -10,11 +14,11 @@ the packing bounds of `Packing.Count` become powers of `β`: with
 Two regimes have to be kept apart, because `δ = c β^{-1/2}` is not small unless
 `β` is large: for `δ > 1/2` the covering bound says nothing, and the lower
 bound is carried instead by a single unit vector, which suffices because
-`β^{(d-1)/2} < (2c)^{d-1}` there.  That is why the constants below are minima
+`β^{(d-1)/2} < (2c)^{d-1}` there. That is why the constants below are minima
 and maxima of two expressions rather than one.
 -/
 
-import Transformer.Causal.Packing.Count
+@[expose] public section
 
 open Metric
 

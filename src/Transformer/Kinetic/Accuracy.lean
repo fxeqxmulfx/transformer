@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Codewords
+
+/-!
 # Kinetic theory for Transformers — the prediction accuracy
 
 Formalization of `eq:Acc-def` of arXiv:2605.09213v1, *Kinetic theory for
@@ -6,16 +10,16 @@ Transformers and the lost-in-the-middle phenomenon*, §1.1: the retrieval task's
 positions, and the identity that turns "the decoder returns the source word"
 into a radius test on the hidden state.
 
-The identity is proved, on the codeword geometry of `Codewords.lean`.  It holds
+The identity is proved, on the codeword geometry of `Codewords.lean`. It holds
 off the tie set `|θ_N(t) - θ_{i_*}(0)|_𝕋 = π/M`, where the nearest codeword is
 not unique, the indicator on the right is `1`, and an `argmin` may legitimately
-return the other word.  The source does not mention ties; excluding them is the
+return the other word. The source does not mention ties; excluding them is the
 one hypothesis added here, and it is added rather than assumed away because
 `argmin` over a finite set always returns *some* minimizer and the source's `=`
 is otherwise false.
 -/
 
-import Transformer.Kinetic.Codewords
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -33,9 +37,9 @@ index.
 
 **Where this differs from the source.**  The source writes
 `1 ≤ i_* = ⌊σ₀N⌋ ≤ N`, which is an assumption on `σ₀` and `N` and not a
-consequence of `σ₀ ∈ (0,1)`: at `σ₀ < 1/N` the floor is `0`.  A `Fin N` has to
+consequence of `σ₀ ∈ (0,1)`: at `σ₀ < 1/N` the floor is `0`. A `Fin N` has to
 be total, so both ends are clamped — to the first token when `⌊σ₀N⌋ = 0`, and
-to the last when `σ₀ ≥ 1`.  Under the hypothesis `σ₀ ∈ (0,1)` that every
+to the last when `σ₀ ≥ 1`. Under the hypothesis `σ₀ ∈ (0,1)` that every
 theorem here carries, `σ₀N < N` gives `⌊σ₀N⌋ ≤ N - 1` and only the lower clamp
 can act; it makes `σ₀ ↦ 𝒜_N(t,σ₀)` constant on `(0, 1/N)` at the value of the
 first position, which is the position the source's own convention puts there.
@@ -53,12 +57,12 @@ the expectation being over the random ensemble of prompts.
 
 **What the source says and what is added here.**  The decoder `m̂_N(t)` is an
 `argmin`, so it is data, not a formula: it is carried as a function `dec` that
-returns a nearest codeword.  The encoding `θ_i(0) = ϑ_{m_i}` of the input
-tokens is carried as `henc`.  The one hypothesis with no counterpart in the
+returns a nearest codeword. The encoding `θ_i(0) = ϑ_{m_i}` of the input
+tokens is carried as `henc`. The one hypothesis with no counterpart in the
 source is `hties`: on the tie set `|θ_N(t) - θ_{i_*}(0)|_𝕋 = π/M` the nearest
 codeword is not unique, the indicator on the right is `1`, and an `argmin` may
 legitimately return the other word — so the identity is false there, for every
-decoder that resolves the tie the other way.  Measurability of the event on the
+decoder that resolves the tie the other way. Measurability of the event on the
 right is the remaining datum.
 
 Source: arXiv:2605.09213v1, `eq:Acc-def`. -/

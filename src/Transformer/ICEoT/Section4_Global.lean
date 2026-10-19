@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.ICEoT.Section4_Feasible
+public import Mathlib.Analysis.Convex.Extrema
+
+/-!
 # IC-EoT: local optima are global optima of the reduced MPC
 
 arXiv:2603.22095v2, §4.1, paragraph after Corollary 2. A feasible local
@@ -7,8 +12,7 @@ nothing about the true plant, numerical solver termination or existence of
 a minimizer, none of which follow from convexity alone.
 -/
 
-import Transformer.ICEoT.Section4_Feasible
-import Mathlib.Analysis.Convex.Extrema
+@[expose] public section
 
 noncomputable section
 

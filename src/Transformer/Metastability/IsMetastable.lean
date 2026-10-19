@@ -1,8 +1,12 @@
-/-
+module
+
+public import Transformer.Metastability.DirectProof
+
+/-!
 # Metastability — the predicate "`thm: metastability` applies to `X₀`"
 
 `IsMetastable d n β X₀` is the vocabulary in which §4 of arXiv:2410.06833v1 asks its question
-about energy levels: *"metastability, as stated in `thm: metastability`, holds"*.  It carries the
+about energy levels: *"metastability, as stated in `thm: metastability`, holds"*. It carries the
 hypotheses of the theorem on the cap data — the cover of `Definition hyp: init`, `γ(β) > 0`, the two
 bounds of `eq: lambda.3` — together with its conclusion, the times `T₁ < T₂` and the two items.
 
@@ -10,7 +14,7 @@ The conclusion follows from the hypotheses (`Metastability.metastability`), whic
 `isMetastable_of_cover`; it is kept in the predicate so that it says what the source says.
 -/
 
-import Transformer.Metastability.DirectProof
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 open Real Set
@@ -44,14 +48,14 @@ A cover is nonempty as soon as there is a token (`n ≥ 1`); for `n = 0` there a
 
 **What the source says and what is changed here.**  The source asks (§4) whether the energy
 window forces "metastability, as stated in `thm: metastability`", and does not define the
-phrase further.  The earlier version of this predicate kept only the conclusion, with the cap
+phrase further. The earlier version of this predicate kept only the conclusion, with the cap
 data `k, w, ε`, the rate `λ` and the times `T₁ < T₂` existentially quantified and no other
-condition on them.  That admitted `k = 0`: the caps `𝒮_q(·)`, `q ∈ Idx 0`, do not exist, both
+condition on them. That admitted `k = 0`: the caps `𝒮_q(·)`, `q ∈ Idx 0`, do not exist, both
 items are about an empty family, and the predicate held for *every* `d, n, β, X₀` (verified in
-Lean, without `sorry`).  The cap family is now nonempty and covers the initial configuration, and
+Lean, without `sorry`). The cap family is now nonempty and covers the initial configuration, and
 the times and the rate obey the bounds under which the source states the theorem: without
 them the theorem has no content, since for `λ ≤ λ_* = β⁻¹ log(1/(8ε))` item 2 is a fact about the
-geometry of a cap (`inner_ge_of_mem_cap`).  As in `metastability`, `Ω(1)` for `γ` and `λ` is
+geometry of a cap (`inner_ge_of_mem_cap`). As in `metastability`, `Ω(1)` for `γ` and `λ` is
 not encoded: it is a statement about a family indexed by `β`.
 
 Source: arXiv:2410.06833v1, §2, `thm: metastability`, `Definition hyp: init`, `eq: lambda.3`;

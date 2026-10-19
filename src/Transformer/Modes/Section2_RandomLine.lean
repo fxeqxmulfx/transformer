@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section2_KacRice
+
+/-!
 # The number of modes of a Gaussian KDE — a field satisfying Kac-Rice
 
 The hypotheses of `thm:kac-rice` are satisfiable: the random line
@@ -6,7 +10,7 @@ The hypotheses of `thm:kac-rice` are satisfiable: the random line
 all four of them at level `u = 0` over `T = {0}`.
 
 The source quotes `thm:kac-rice` without a witness; this file supplies one, so
-that the four conditions of `IsKacRiceField` are known to be consistent.  The
+that the four conditions of `IsKacRiceField` are known to be consistent. The
 line is the simplest non-degenerate choice: at `t = 0` the pair
 `(Ψ(0), Ψ'(0))` is `z` itself, so the joint density asked for by condition 3
 is the Gaussian density of `z`, and `Ψ'` is constant in `t`, so the modulus of
@@ -15,7 +19,7 @@ continuity of condition 4 vanishes identically.
 Source: arXiv:2412.09080v3, `thm:kac-rice`, items 1-4.
 -/
 
-import Transformer.Modes.Section2_KacRice
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open Real MeasureTheory ProbabilityTheory Filter Topology Asymptotics

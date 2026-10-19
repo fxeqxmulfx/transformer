@@ -1,26 +1,30 @@
-/-
+module
+
+public import Mathlib.Algebra.BigOperators.Expect
+public import Transformer.NoiseScale.SectionE_Optimization
+public import Transformer.Surge.Section2_Tradeoff
+
+/-!
 # Estimating the noise batch and the peak learning rate
 
-arXiv:2405.14578, §3.2, and Appendix G.  For nonzero `S, E, S_min, E_min`, eq. (20) is
+arXiv:2405.14578, §3.2, and Appendix G. For nonzero `S, E, S_min, E_min`, eq. (20) is
 equivalent to each line of eq. (46), the last `1/S = -(E_min/S_min)(1/E) + 1/S_min`
-(`tradeoff_tfae`).  So a run at a constant batch `B > 0` has
+(`tradeoff_tfae`). So a run at a constant batch `B > 0` has
 `1/S = -B_crit(1/E) + 1/S_min`, eq. (22) (`inv_totalSteps_eq`), with the critical batch
 `B_crit = E_min/S_min` of eq. (21) for the paper's `B_noise ≈ B_crit`: the mean of `B_noise`
-over the run, `B_noise` itself at constant `μ, σ, H` (`critBatch_const`).  The points
+over the run, `B_noise` itself at constant `μ, σ, H` (`critBatch_const`). The points
 `(1/E, 1/S)` of any two batches lie on a line of slope `-B_crit`, which a linear fit recovers
 (`inv_totalSteps_slope`).
 
 Inverting eq. (13), a pair `(B, ε_opt(B))` and `B_noise` determine
 `ε_max = (ε_opt(B)/2)(√(B_noise/B) + √(B/B_noise))` (`lrPeak_eq_mul`), so its mean over a grid of
-batches, eq. (23), is `ε_max` (`expect_lrPeak`).  Inverting the form
+batches, eq. (23), is `ε_max` (`expect_lrPeak`). Inverting the form
 `ε_opt(B) = ε_max/(1 + B_noise/B)^α` of eq. (A.3) of arXiv:1812.06162 gives eq. (24) likewise
 (`lrCentral_mul_rpow`, `expect_lrCentral`), exactly for SGD at `α = 1` (`stepOpt_mul`); its
 `α = 0.5` for Adam is `NoiseScale.adam_lrCentral_half`.
 -/
 
-import Mathlib.Algebra.BigOperators.Expect
-import Transformer.NoiseScale.SectionE_Optimization
-import Transformer.Surge.Section2_Tradeoff
+@[expose] public section
 
 open MeasureTheory Real
 open scoped BigOperators

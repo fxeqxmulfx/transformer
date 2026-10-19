@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_QuadraticKernel
+
+/-!
 # Orthogonal geometry of the original quadratic test integral
 
 ArXiv:2601.21366v2, §5.1, `eq:FH-basic` and `lem: quadpol` (i),
@@ -19,7 +23,7 @@ transporting the original coordinate axes with an actual orthogonal map.
 No coefficient, preservation or inverse conclusion is assumed.
 -/
 
-import Transformer.Perceptron.Section5_QuadraticKernel
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped ENNReal

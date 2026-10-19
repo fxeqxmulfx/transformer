@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Quartet.Section3_SRCoinCube
+public import Transformer.Quartet.Hadamard
+
+/-!
 # Exact unbiasedness from element-wise FP4 stochastic rounding after RHT
 
 arXiv:2601.22813v2, §3.1 defines `Q_SR` and states that its dequantized
@@ -8,8 +13,7 @@ unbiasedness. Fixed scales must be positive and prevent FP4 clipping; a
 conservative scale construction below satisfies this for every real input.
 -/
 
-import Transformer.Quartet.Section3_SRCoinCube
-import Transformer.Quartet.Hadamard
+@[expose] public section
 
 open MeasureTheory
 

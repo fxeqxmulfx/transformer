@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section2_Fisher
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+
+/-!
 # AdaFisher: symmetry, positivity, and sum-of-score Fisher identities
 
 arXiv:2405.16397v3, §2, `eq:fishermatrix`.
@@ -7,8 +12,7 @@ moments vanish, as for independent centered scores. This condition is
 explicit rather than silently dropping off-diagonal sample terms.
 -/
 
-import Transformer.AdaFisher.Section2_Fisher
-import Mathlib.LinearAlgebra.Matrix.PosDef
+@[expose] public section
 
 open scoped BigOperators Matrix
 

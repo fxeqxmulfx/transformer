@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AMSGrad.Section4_OfflineConvergence
+public import Mathlib.Analysis.Convex.Jensen
+
+/-!
 # AMSGrad — an averaged parameter with vanishing objective gap
 
 Offline specialization of arXiv:1904.03590v4, §2 and Corollary 4.5.
@@ -7,8 +12,7 @@ guarantee of the original projected algorithm into an objective guarantee
 for the actual average of its parameters.
 -/
 
-import Transformer.AMSGrad.Section4_OfflineConvergence
-import Mathlib.Analysis.Convex.Jensen
+@[expose] public section
 
 open scoped Topology
 open Filter Finset

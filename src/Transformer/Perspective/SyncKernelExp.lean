@@ -1,9 +1,13 @@
-/-
+module
+
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # Polynomials against `e^{2z}` for `lemma:beta1`
 
 Polyanskiy, Rigollet, Yao — arXiv:2507.22857v1, Appendix A, proof of
 `lemma:beta1`, which uses that a few functions `√z p(z) e^{-z}` are bounded,
-"straightforward to verify".  `Perspective.SyncKernelSecond` reduces its bounds
+"straightforward to verify". `Perspective.SyncKernelSecond` reduces its bounds
 on `f_β''` to four such facts, squared:
 
 * `beta1_upper_tail`: `2z(2z - 3)² ≤ (4/25) e^{2z}` for `z ≥ 3/2`;
@@ -12,11 +16,11 @@ on `f_β''` to four such facts, squared:
 * `beta1_lower_middle`: `2z(3 - 2z)² ≤ (64/25) e^{2z}` on `[0, 3/2]`.
 
 Each one replaces `e^{2z}` by a Taylor polynomial, shifted by `3` or `2` where
-`z` is large, using `e > 2.7182818283` (`Real.exp_one_gt_d9`).  What is left is
+`z` is large, using `e > 2.7182818283` (`Real.exp_one_gt_d9`). What is left is
 a polynomial inequality that `nlinarith` proves.
 -/
 
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 namespace Transformer
 namespace Perspective
@@ -47,7 +51,7 @@ theorem taylor_five_le_exp {y : ℝ} (hy : 0 ≤ y) :
   linarith
 
 /-- `2z(2z - 3)² ≤ (4/25) e^{2z}` for `z ≥ 3/2`: with `s = 2z - 3`,
-`(s + 3)s² ≤ (16/5)(1 + s + ⋯ + s⁵/120) ≤ (4/25) e³ e^s`.  The ratio peaks at
+`(s + 3)s² ≤ (16/5)(1 + s + ⋯ + s⁵/120) ≤ (4/25) e³ e^s`. The ratio peaks at
 `0.88`, near `z = 2.7`. -/
 theorem beta1_upper_tail {z : ℝ} (hz : 3 / 2 ≤ z) :
     2 * z * (2 * z - 3) ^ 2 ≤ 4 / 25 * Real.exp (2 * z) := by
@@ -67,7 +71,7 @@ theorem beta1_upper_tail {z : ℝ} (hz : 3 / 2 ≤ z) :
   nlinarith [mul_le_mul exp_three_gt_twenty.le hT hpos (Real.exp_pos 3).le]
 
 /-- `25(3z - 2)³ ≤ 27(3z - 1 - z²) z e^{2z}` for `1 ≤ z ≤ 11/5`, through
-`e^{2z} = e² e^{2(z - 1)}`.  The ratio peaks at `0.66`, at `z = 11/5`. -/
+`e^{2z} = e² e^{2(z - 1)}`. The ratio peaks at `0.66`, at `z = 11/5`. -/
 theorem beta1_upper_middle {z : ℝ} (hz : 1 ≤ z) (hz' : z ≤ 11 / 5) :
     25 * (3 * z - 2) ^ 3 ≤ 27 * (3 * z - 1 - z ^ 2) * z * Real.exp (2 * z) := by
   set s := z - 1 with hs
@@ -92,7 +96,7 @@ theorem beta1_upper_middle {z : ℝ} (hz : 1 ≤ z) (hz' : z ≤ 11 / 5) :
   rw [hexp, hz1]
   nlinarith [mul_le_mul_of_nonneg_left hprod hr]
 
-/-- `2z(4 - 5z + z²)² ≤ (64/25) e^{2z}` for `0 ≤ z ≤ 2/5`.  The ratio peaks at
+/-- `2z(4 - 5z + z²)² ≤ (64/25) e^{2z}` for `0 ≤ z ≤ 2/5`. The ratio peaks at
 `0.968`, near `z = 0.20`. -/
 theorem beta1_lower_start {z : ℝ} (hz : 0 ≤ z) (hz' : z ≤ 2 / 5) :
     2 * z * (4 - 5 * z + z ^ 2) ^ 2 ≤ 64 / 25 * Real.exp (2 * z) := by
@@ -104,7 +108,7 @@ theorem beta1_lower_start {z : ℝ} (hz : 0 ≤ z) (hz' : z ≤ 2 / 5) :
       mul_nonneg (mul_nonneg hz (sub_nonneg.2 hz')) (sq_nonneg (z - 9 / 50))]
   nlinarith [taylor_five_le_exp h2z, pow_nonneg h2z 4, pow_nonneg h2z 5]
 
-/-- `2z(3 - 2z)² ≤ (64/25) e^{2z}` for `0 ≤ z ≤ 3/2`.  The ratio peaks at
+/-- `2z(3 - 2z)² ≤ (64/25) e^{2z}` for `0 ≤ z ≤ 3/2`. The ratio peaks at
 `0.744`, near `z = 0.28`. -/
 theorem beta1_lower_middle {z : ℝ} (hz : 0 ≤ z) (hz' : z ≤ 3 / 2) :
     2 * z * (3 - 2 * z) ^ 2 ≤ 64 / 25 * Real.exp (2 * z) := by

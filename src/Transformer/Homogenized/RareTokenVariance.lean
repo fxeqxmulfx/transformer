@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.RareTokenDiffusion
+
+/-!
 # Homogenized Transformers — the actual variance of a rare-token change
 
 The squared norm of the diffusion change is integrable under the admissible
@@ -11,7 +15,7 @@ Source: arXiv:2604.01978v1, `eq:G_def`, `prop:satisfying_MF`,
 `eq:Lipschitz_measure`; these are auxiliary estimates for its counterexample.
 -/
 
-import Transformer.Homogenized.RareTokenDiffusion
+@[expose] public section
 
 open scoped ENNReal
 open Real MeasureTheory

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.ParityDataList
+module
+
+public import Transformer.GPTMini.Convex.Structured.ParityDataList
 
 /-!
 # Only the nine transitions required by the true parity grammar
@@ -21,6 +23,8 @@ remain free and are checked independently. The selected path is a true
 configuration of the same stochastic model; its confidence is derived
 here without an assumed correctly inferred endpoint.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section5_ClusterRotations
+public import Transformer.Perspective.UniformAtomless
+
+/-!
 # The actual cluster law is atomless, and independent clusters differ
 
 ArXiv:2411.04551v3, §5, `prop:generic-discrete`.
@@ -18,8 +23,7 @@ All hypotheses are realized by actual one-token flows and the constructed
 uniform spherical law, including the full empirical-limit condition.
 -/
 
-import Transformer.Interpolation.Section5_ClusterRotations
-import Transformer.Perspective.UniformAtomless
+@[expose] public section
 
 open MeasureTheory Filter Topology
 

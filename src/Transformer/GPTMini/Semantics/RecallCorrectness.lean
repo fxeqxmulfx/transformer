@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.RecallParserLatest
-import Transformer.Basis.Encoding.Recall
+module
+
+public import Transformer.GPTMini.Semantics.RecallParserLatest
+public import Transformer.Basis.Encoding.Recall
 
 /-!
 # Complete original softmax GPTMini recall through List Int -> List Int
@@ -25,6 +27,8 @@ The shared formal head/RMS epsilon is not Python's unequal defaults.
 Neither AdamW finding these weights, floating-point correctness, full
 depth correctness nor convexity of the trainable parameters follows.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.NoiseScale.Section2_NoiseScale
+public import Mathlib.Probability.Moments.Variance
+public import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+
+/-!
 # Comments on optimization
 
 arXiv:1812.06162, Appendix E, with eq. (A.3) of Appendix A.2.
@@ -6,31 +12,29 @@ arXiv:1812.06162, Appendix E, with eq. (A.3) of Appendix A.2.
 §E.1: "training often tends towards a regime where the optimal step size (determined by a line
 search in the direction of the parameter update) is almost exactly half of the actual update
 magnitude", interpreted as "large Hessian directions ... dominating the update ..., so that
-training involves rapid oscillations".  In the model (2.4) along an update of positive
+training involves rapid oscillations". In the model (2.4) along an update of positive
 curvature, the best step of the line search is half the update exactly when the update leaves
 the loss unchanged, crossing the valley to the same height on its other wall
 (`quadModel_half_le_iff`).
 
 §E.2: the central learning rate `ε(B) = ε_*/(1 + B_*/B)^α` of the grid searches, eq. (A.3)
 (`lrCentral`), "generalizes" eq. (2.6): at `α = 1`, `ε_* = ε_max`, `B_* = B_noise` it is
-`ε_opt(B)` (`lrCentral_one`).  "The SGD linear scaling rule (`α = 1`) means that the step size
+`ε_opt(B)` (`lrCentral_one`). "The SGD linear scaling rule (`α = 1`) means that the step size
 per data example stays fixed up to `B_*`": `ε(B)/B` lies within a factor 2 of `ε_*/B_*` for
-`B ≤ B_*` (`lrCentral_one_div_mem_Icc`).  §3.1's optimal learning rate that "initially obeys a
+`B ≤ B_*` (`lrCentral_one_div_mem_Icc`). §3.1's optimal learning rate that "initially obeys a
 power law `ε(B) ∝ B^α` ..., then becomes roughly constant" is the shape of (A.3):
 `ε(B)/B^α → ε_*/B_*^α` as `B → 0`, the limit `ε_*/B_*` of `ε(B)/B` at `α = 1`, and
 `ε(B) → ε_*` as `B → ∞` (`tendsto_lrCentral_div_rpow`, `tendsto_lrCentral`).
 
 For Adam, disregarding `β₁`, `β₂` and `ε_Adam`, the update `εE[G_i]/√E[G_i²]` is
-`ε sign(E[G_i])/√(1 + s_i/E[G_i]²)`, `s_i` the variance of `G_i` (`adam_update_eq`).  At
+`ε sign(E[G_i])/√(1 + s_i/E[G_i]²)`, `s_i` the variance of `G_i` (`adam_update_eq`). At
 `s_i = s/B`, as for the mean of a batch (`covMatrix_batchGrad`), its size `ε/√(1 + B_*/B)`,
 `B_* = s/E[G_i]²`, follows the profile `1/(1 + B_*/B)` of eq. (2.6) exactly when `ε` follows
 (A.3) at `α = 1/2`: "this implies a square-root scaling rule (`α = 0.5`)"
 (`adam_lrCentral_half`).
 -/
 
-import Transformer.NoiseScale.Section2_NoiseScale
-import Mathlib.Probability.Moments.Variance
-import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped Matrix
@@ -127,7 +131,7 @@ theorem tendsto_lrCentral (εs Bs α : ℝ) :
 example (εs α : ℝ) := tendsto_lrCentral_div_rpow one_pos εs α
 
 /-- **Appendix E.2**: disregarding `β₁`, `β₂` and `ε_Adam`, the Adam update
-`εE[G_i]/√E[G_i²]` is `ε sign(E[G_i])/√(1 + s_i/E[G_i]²)`, `s_i` the variance of `G_i`.  The
+`εE[G_i]/√E[G_i²]` is `ε sign(E[G_i])/√(1 + s_i/E[G_i]²)`, `s_i` the variance of `G_i`. The
 paper's `≈` is an equality once its moving averages are read as means over the timesteps, a
 probability measure `P`; at `E[G_i] = 0` both sides vanish. -/
 theorem adam_update_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]

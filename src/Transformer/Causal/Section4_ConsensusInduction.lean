@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section4_AntipodalFibers
+public import Transformer.Causal.Section4_ConditionalMeasure
+
+/-!
 # Almost-everywhere consensus for the actual original causal system
 
 ArXiv:2411.04990v2, §4, Theorem `thm1` and its proof.
@@ -22,8 +27,7 @@ nonnegative-temperature statement without altering its dynamics,
 initial law, or conclusion. No unstable-manifold result is assumed.
 -/
 
-import Transformer.Causal.Section4_AntipodalFibers
-import Transformer.Causal.Section4_ConditionalMeasure
+@[expose] public section
 
 open MeasureTheory Real Filter Topology
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.MarkovObjective
+module
+
+public import Transformer.GPTMini.Convex.Structured.MarkovObjective
 
 /-!
 # Physical-index formulas for the actual complete state path
@@ -17,6 +19,8 @@ and no change of the transition logits. It supplies an exact compact
 physical-index likelihood for subsequent tensor training, where all
 learned transition fields must come from real recovered input rows.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

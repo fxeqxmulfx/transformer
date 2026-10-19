@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_QuotientLipschitz
+
+/-!
 # Globally Lipschitz signed drift and bounded normalized signal
 
 arXiv:2506.12543v1, Section 4.3, equation (3), Theorem 1.
@@ -6,7 +10,7 @@ The normalization by the positive state-dependent Gaussian noise and the
 actual error function preserve global Lipschitz regularity.
 -/
 
-import Transformer.BatchSize.Section4_QuotientLipschitz
+@[expose] public section
 
 noncomputable section
 

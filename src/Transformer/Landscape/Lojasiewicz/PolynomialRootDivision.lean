@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.PolynomialFamilyCoefficients
+
+/-!
 # Division by an analytic ramified root
 
 The monic quotient by a moving root has analytic coefficients and degree
@@ -6,7 +10,7 @@ one smaller. At the origin its central polynomial is again a pure power.
 The actual factorization retains every other root of the original family.
 -/
 
-import Transformer.Landscape.Lojasiewicz.PolynomialFamilyCoefficients
+@[expose] public section
 
 open Filter Polynomial Finset
 open scoped BigOperators

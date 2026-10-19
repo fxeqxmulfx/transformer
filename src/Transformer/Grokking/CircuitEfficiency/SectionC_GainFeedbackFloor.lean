@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainFeedbackBounds
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdRegime
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainFeedbackBounds
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdRegime
 
 /-!
 # A uniform positive actual CE scale on initialized native paths
@@ -24,6 +26,8 @@ it alone proves neither convergence nor eventual decision selection.
 Fixed physical gains and tables with uniform decoupled AdamW differ
 from appendix C's assigned coupled norm cost/GD and learned GPTMini.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,24 +1,28 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section4_Polytope
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # Attention's forward pass and Frank-Wolfe — the singular ODE
 
 Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
 *Attention's forward pass and Frank-Wolfe*, §4, `eq: hardmax.ode`.
 
 The continuous-time hardmax dynamics has a discontinuous right-hand side, so
-no classical existence theory applies.  Under the genericity conditions of
+no classical existence theory applies. Under the genericity conditions of
 `thm: exp.fast.polytope` every particle nevertheless runs along a straight
 line towards the vertex of its cell, `eq: solution.short`:
 
   `x_i(t) = e^{-t} x_i^0 + (1 - e^{-t}) v_{σ(i)}`.
 
 This module holds the equation (`IsHardmaxODESolution`) and that curve
-(`hardmaxSol`) with the facts about it that need no polytope.  The curve is a
+(`hardmaxSol`) with the facts about it that need no polytope. The curve is a
 solution in `Section4_ODESolution.lean` and the only one in
 `Section4_ODEUnique.lean`; `thm: ode` is in `Section4_ODEWellPosed.lean`.
 -/
 
-import Transformer.FrankWolfe.Section4_Polytope
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open scoped BigOperators
 open Real Set
@@ -33,13 +37,13 @@ for `0 < t < T`, by a curve continuous on `[0, T]`.
 
 The `argmax` is over the *particles*, not over their convex hull, and is
 carried as an existential, so a solution is a curve which at every time moves
-towards some maximizing particle.  Under the genericity conditions of
+towards some maximizing particle. Under the genericity conditions of
 `thm: ode` that maximizer is unique, so nothing is lost; without them the
 existential is the honest reading of an `argmax` that need not be a singleton.
 
 Solutions are classical, as in the source, which sets Filippov solutions
 aside: `x` is differentiable at every `t ∈ (0, T)` and satisfies the equation
-there.  The source imposes it for `t > 0` only, so at `t = 0` a solution is
+there. The source imposes it for `t > 0` only, so at `t = 0` a solution is
 merely continuous, and the datum `x(0) = x^0` is the Cauchy problem's business.
 Nothing is asked at the end point `T` either: the uniqueness of `thm: ode`
 then covers every classical solution on `[0, T]`, while the solution it has is
@@ -54,7 +58,7 @@ def IsHardmaxODESolution (B : ParamMatrix d) (T : ℝ) (x : ℝ → Idx n → Eu
     HasDerivAt (fun s => x s i) (y - x t i) t
 
 /-- `eq: solution.short`: each particle leaves `x_i^0` along the straight line
-towards its target `w_i`, `x_i(t) = e^{-t} x_i^0 + (1 - e^{-t}) w_i`.  With
+towards its target `w_i`, `x_i(t) = e^{-t} x_i^0 + (1 - e^{-t}) w_i`. With
 `w_i = v_{σ(i)}`, the vertex of the cell of `x_i^0`, this is the solution of
 `eq: hardmax.ode` (`isHardmaxODESolution_hardmaxSol`).
 

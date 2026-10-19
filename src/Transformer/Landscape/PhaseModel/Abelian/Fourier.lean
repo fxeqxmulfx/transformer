@@ -1,22 +1,26 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Abelian.Basic
+
+/-!
 # Phase model over a finite abelian group — a Fourier bound on the full table
 
 For phases `ψ` and a character `χ` of `G`, the Fourier coefficient of
 `x ↦ e^{iψ_x}` is `û_χ = Σ_x e^{i(ψ_x - arg χ(x))}`, with
-`Re û_χ = Σ_x cos (ψ_x - arg χ(x))`.  From `Σ_χ χ(a) = |G|` for `a = 0` and
+`Re û_χ = Σ_x cos (ψ_x - arg χ(x))`. From `Σ_χ χ(a) = |G|` for `a = 0` and
 `0` otherwise (`AddChar.sum_apply_eq_ite`) come the orthogonality relations
 `sum_exp_characterPhase_sub` and `sum_exp_characterPhase_add_sub`, and, as
 for `ℤ/n` (`Landscape.PhaseModel.Fourier`), Parseval's identity `Σ_χ |û_χ|² = |G|²`
 (`sum_normSq_fourier`) and the cubic identity
 `Σ_χ |û_χ|² Re û_χ = |G| Σ_{y,z} cos (ψ_{y+z} - ψ_y - ψ_z)`
 (`sum_normSq_mul_re_fourier`), where the double sum is `|G|² - V_full(ψ)`
-(`divisionEnergy_univ_eq`).  Under the weights `|û_χ|² / |G|²` the `Re û_χ`
+(`divisionEnergy_univ_eq`). Under the weights `|û_χ|² / |G|²` the `Re û_χ`
 have the mean `|G| - V_full(ψ)/|G|`, so some character `χ` has
 `|G| Σ_x (1 - cos (ψ_x - arg χ(x))) ≤ V_full(ψ)`
 (`exists_mul_sum_one_sub_cos_le`).
 -/
 
-import Transformer.Landscape.PhaseModel.Abelian.Basic
+@[expose] public section
 
 open Real ComplexConjugate
 

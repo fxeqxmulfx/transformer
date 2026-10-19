@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_TemperatureBarycenter
+public import Mathlib.Analysis.Calculus.Taylor
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
 # Genuine temperature Taylor bound for the original barycenter correlation
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -18,9 +24,7 @@ Neither the symmetry cancellation nor an expectation estimate is
 inserted as a premise of the temperature derivative calculation.
 -/
 
-import Transformer.Homogenized.Section7_TemperatureBarycenter
-import Mathlib.Analysis.Calculus.Taylor
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open Real Set
 open scoped BigOperators

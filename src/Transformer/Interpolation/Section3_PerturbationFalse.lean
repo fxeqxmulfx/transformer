@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_PerturbationGeometry
+
+/-!
 # Part 1 of the perturbation lemma is false for atomic measures
 
 Counterexample to arXiv:2411.04551v3, §3, `lem: perturbation` / `lem: colinearity`,
@@ -13,7 +17,7 @@ of the supports. These finite supports contain no such ball. Part 2, whose
 barycenters differ, remains the open theorem `perturbation_noncolinear`.
 -/
 
-import Transformer.Interpolation.Section3_PerturbationGeometry
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

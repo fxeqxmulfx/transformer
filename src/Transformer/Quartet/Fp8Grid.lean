@@ -1,7 +1,15 @@
-/-
+module
+
+public import Transformer.Quartet.Section3_Grids
+public import Mathlib.Algebra.Order.Archimedean.Basic
+public import Mathlib.Algebra.Order.Floor.Ring
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+
+/-!
 # How far `RTN_FP8` can move a group scale
 
-Support for arXiv:2601.22813v2, §3.1 and §3.3.  The non-clipping claims of the
+Support for arXiv:2601.22813v2, §3.1 and §3.3. The non-clipping claims of the
 paper — "Given the choice of constants, stochastic rounding `SR_FP4` does not
 clip its arguments" (§3.1) and "Setting the clipping factor `s` to `6 × 16/17`
 or lower makes the scheme non-clipping" (§3.3) — both rest on one property of
@@ -10,21 +18,17 @@ the E4M3 grid, named in §3.1 as "`16/17`, the maximum factor by which
 
 Rounding to nearest moves a value by at most half the local step, and a
 *normal* E4M3 value is at least `8` steps from zero, so `RTN_FP8(v)` is never
-below `16/17 · v`.  That is `le_rtn_fp8` below.
+below `16/17 · v`. That is `le_rtn_fp8` below.
 
 The hypothesis `2^{-6} ≤ v` is the normal range, and it cannot be dropped: the
 E4M3 subnormals are spaced `2^{-9}` apart all the way down to zero, so
 `RTN_FP8(3 · 2^{-10}) = 2^{-9}` moves its argument by a factor `2/3`, far
-below `16/17`.  The paper's claims are stated without it; what makes them
+below `16/17`. The paper's claims are stated without it; what makes them
 harmless in practice is that a group whose largest entry is `2^{14}` times
 smaller than the tensor's is already zero in NVFP4.
 -/
 
-import Transformer.Quartet.Section3_Grids
-import Mathlib.Algebra.Order.Archimedean.Basic
-import Mathlib.Algebra.Order.Floor.Ring
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
+@[expose] public section
 
 namespace Transformer
 namespace Quartet
@@ -142,7 +146,7 @@ example : (2 : ℝ) ^ (-6 : ℤ) ≤ 2 ^ (-6 : ℤ) ∧ (2 : ℝ) ^ (-6 : ℤ) �
   norm_num
 
 /-- **The E4M3 grid is finite**: its points are the integer multiples of `2^{-9}` of absolute
-value at most `448`.  Integrating a stochastic rounding onto it (`integral_sr`) needs this. -/
+value at most `448`. Integrating a stochastic rounding onto it (`integral_sr`) needs this. -/
 theorem fp8_finite : fp8.Finite := by
   have hsub : fp8 ⊆ (fun n : ℤ => (n : ℝ) / 512) '' (Finset.Icc (-229376 : ℤ) 229376 : Set ℤ) := by
     rintro x ⟨hx448, m, e, hm, he, habs⟩

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_DiscreteEscape
+public import Mathlib.Algebra.Ring.GeomSum
+
+/-!
 # Finite geometric errors and exact affine growth in the discrete asymptotic argument
 
 ArXiv:2305.05465v6, §7, proof of `l:exactasymptotic`, in the
@@ -15,8 +20,7 @@ positive geometric prefactor. Applying this estimate after a sufficiently
 late original layer will retain the full original layer factor.
 -/
 
-import Transformer.Clusters.Section12_DiscreteEscape
-import Mathlib.Algebra.Ring.GeomSum
+@[expose] public section
 
 open scoped BigOperators
 open Real

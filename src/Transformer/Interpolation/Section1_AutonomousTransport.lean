@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_FiniteNets
+public import Transformer.Interpolation.Section1_TimeRescaling
+public import Transformer.Interpolation.Section3_ReLURidges
+public import Transformer.Interpolation.HypPropagationFalse
+
+/-!
 # Actual characteristic transport for arbitrary spherical weak laws
 
 ArXiv:2411.04551v3, §1, `eq: ips`, `eq: cauchy.pb`, and
@@ -16,10 +23,7 @@ original flow solves the actual particle equation, and its Lipschitz
 regularity is explicit; weak uniqueness is proved, never hypothesized.
 -/
 
-import Transformer.Interpolation.Section1_FiniteNets
-import Transformer.Interpolation.Section1_TimeRescaling
-import Transformer.Interpolation.Section3_ReLURidges
-import Transformer.Interpolation.HypPropagationFalse
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal BigOperators

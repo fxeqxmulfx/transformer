@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation
+public import Transformer.Landscape.Lojasiewicz.AnalyticSignStability
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+public import Mathlib.Order.Filter.Finite
+
+/-!
 # Polynomial representatives of analytic conditions on a prepared fiber
 
 Weierstrass division gives finite-degree representatives of every analytic
@@ -7,10 +14,7 @@ actual function values, so equality, strict signs, and weak signs are all
 preserved together on a common neighborhood.
 -/
 
-import Transformer.Landscape.AnalyticPreparation
-import Transformer.Landscape.Lojasiewicz.AnalyticSignStability
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import Mathlib.Order.Filter.Finite
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

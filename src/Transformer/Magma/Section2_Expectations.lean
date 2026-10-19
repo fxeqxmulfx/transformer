@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Magma.Section2_Moments
+
+/-!
 # Finite mask expectation and the curvature correction
 
 Formalization of arXiv:2602.15322v1, Section 2, eq:implicit_reg,
@@ -6,7 +10,7 @@ and Appendix A.1. These identities retain all mixed Hessian coefficients.
 Only the diagonal block terms gain the extra factor (1-p)/p.
 -/
 
-import Transformer.Magma.Section2_Moments
+@[expose] public section
 
 open scoped BigOperators
 

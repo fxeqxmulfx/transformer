@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_UniformProjectionScale
+
+/-!
 # Projection concentration at half the comparison radius
 
 ArXiv:2312.10794v5, Appendix D, Step 2, `eq: almost.ortho.vec`.
@@ -13,7 +17,7 @@ A dimension threshold depending only on the maximum frame length absorbs
 that budget and recovers the source's final rate `d^(-1/64)`.
 -/
 
-import Transformer.Metastability.Section4_UniformProjectionScale
+@[expose] public section
 
 open Real MeasureTheory
 open Transformer.Metastability

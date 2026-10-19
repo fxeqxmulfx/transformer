@@ -1,5 +1,7 @@
-import Transformer.Memorization.Section2_LiteralCounterexample
-import Transformer.Memorization.Section3_UniformData
+module
+
+public import Transformer.Memorization.Section2_LiteralCounterexample
+public import Transformer.Memorization.Section3_UniformData
 
 /-!
 # The missing assumptions in the Kolmogorov/Shannon comparison
@@ -17,6 +19,8 @@ include coding constants and distribution-description complexity. The
 source's proof sets ε=2K(f), but the learner's joint density generally
 depends on dataset size; that does not justify an n-independent ε.
 -/
+
+@[expose] public section
 
 namespace Transformer.Memorization
 

@@ -1,18 +1,22 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Descent
+public import Transformer.Landscape.SaddleAvoidance.GradientDescent
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+
+/-!
 # Saddle avoidance — necessary conditions for a local minimizer
 
 At a local minimizer `z` of a differentiable `f` the gradient vanishes
 (`gradient_eq_zero_of_isLocalMin`), and the derivative `A` of the gradient
 at `z` has `⟪A h, h⟫ ≥ 0` for every `h` (`inner_nonneg_of_isLocalMin`):
-along a direction with `⟪A h, h⟫ < 0`, `f` decreases.  For `f` of class `C²`
+along a direction with `⟪A h, h⟫ < 0`, `f` decreases. For `f` of class `C²`
 on a finite-dimensional space, a critical point with such a direction is a
 strict saddle (`isStrictSaddle_of_inner_neg`): the Hessian is symmetric, and
 `⟪A h, h⟫` is a combination of its eigenvalues with nonnegative weights.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Descent
-import Transformer.Landscape.SaddleAvoidance.GradientDescent
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
+@[expose] public section
 
 open Filter Metric
 open scoped Topology
@@ -88,7 +92,7 @@ variable [FiniteDimensional ℝ E]
 
 /-- **A critical point with a direction of negative curvature is a strict
 saddle**: for `f` of class `C²`, if `⟪A h, h⟫ < 0` for the Hessian `A` at a
-critical point `z`, then `A` has a negative eigenvalue.  Otherwise, in an
+critical point `z`, then `A` has a negative eigenvalue. Otherwise, in an
 orthonormal basis `b` of eigenvectors with eigenvalues `λ_i ≥ 0`,
 `⟪A h, h⟫ = Σ_i λ_i ⟪b_i, h⟫² ≥ 0`. -/
 theorem isStrictSaddle_of_inner_neg (hf : ContDiff ℝ 2 f) {z : E} (hz : gradient f z = 0)

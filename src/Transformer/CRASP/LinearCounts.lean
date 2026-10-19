@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.Indicator
+public import Transformer.CRASP.Conjunctions
+
+/-!
 # Signed linear combinations of past counts
 
 arXiv:2506.16055v3, Appendix B.2, proof of `thm:rtfr_to_TLCl`.
@@ -7,8 +12,7 @@ finite activation states. Moving negative coefficients to the other side
 expresses their comparisons in the original, subtraction-free syntax.
 -/
 
-import Transformer.CRASP.Indicator
-import Transformer.CRASP.Conjunctions
+@[expose] public section
 
 namespace Transformer.CRASP
 

@@ -11,7 +11,18 @@ https://github.com/formal-applied-math/formal-mathfin.
 All coefficients are measurable in the joint vector filtration.
 -/
 
-import Transformer.BatchSize.Section4_BrownianMoments
+module
+
+public import Transformer.BatchSize.Section4_BrownianMoments
+
+/-!
+# Finite adapted Itô sums
+
+Adaptedness, bilinear moments and the finite-grid Itô isometry for the constructed
+vector driver. Source: arXiv:2506.12543v1, Section 4.3, equations (2)--(3).
+-/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal BigOperators

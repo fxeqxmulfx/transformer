@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthReadoutFFN
+module
+
+public import Transformer.GPTMini.Semantics.DepthReadoutFFN
 
 /-!
 # Genuine complete original depth readout block
@@ -17,6 +19,8 @@ The incoming invariant is local and explicit; the raw encoder already
 derives it. Full ModelParams and the checked integer adapter remain to
 be connected, with no encoder, route or correct-logit oracle premise.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

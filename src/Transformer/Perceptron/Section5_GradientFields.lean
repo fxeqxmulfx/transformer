@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_CircleRotation
+public import Mathlib.Analysis.Calculus.ContDiff.Basic
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+
+/-!
 # Smooth gradient directions in actual circle coordinates
 
 ArXiv:2601.21366v2, §2.2, `eq:otto.tangent`, and §5.2,
@@ -13,9 +19,7 @@ These are the directions tested by the already proved strict
 Hessian inequality; no closure or assumed Hessian formula is used.
 -/
 
-import Transformer.Perceptron.Section5_CircleRotation
-import Mathlib.Analysis.Calculus.ContDiff.Basic
-import Mathlib.Analysis.Calculus.Gradient.Basic
+@[expose] public section
 
 open Real
 

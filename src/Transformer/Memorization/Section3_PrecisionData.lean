@@ -1,5 +1,7 @@
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Rat.Defs
+module
+
+public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.Data.Rat.Defs
 
 /-!
 # Printed model-capacity estimates
@@ -11,6 +13,8 @@ SHA256: 4a862912a8a40db1d5c6b3108d8208c166d382f50c89f554ec6cc0792b09fc8a
 The rational values represent the printed, rounded measurements exactly;
 they are not identified with unknown unrounded experimental values.
 -/
+
+@[expose] public section
 
 namespace Transformer.Memorization
 

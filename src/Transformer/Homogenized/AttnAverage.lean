@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Simplex
+public import Mathlib.Analysis.Matrix.MeasurableSpace
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+
+/-!
 # Homogenized Transformers — the attention average at a token
 
 At a token `x_j` of a configuration `X`, the attention field of a head
@@ -7,18 +13,16 @@ At a token `x_j` of a configuration `X`, the attention field of a head
   `B_θ[μ_X](x_j) = V m_j(A)`,  `m_j(A) = Σ_k π^A_{j→k} x_k`
 
 (`attnField_self_eq_valueMap`), which is the softmax barycenter
-`m_{β,A}[μ_X](x_j)` of `eq: mbetaA` (`softBary_empMeasure`).  For unit tokens
+`m_{β,A}[μ_X](x_j)` of `eq: mbetaA` (`softBary_empMeasure`). For unit tokens
 `m_j(A)` is a convex combination of unit vectors, so `‖m_j(A)‖ ≤ 1`
 (`norm_sum_attnProb_smul_le`), and it is the common token when all tokens
-coincide (`sum_attnProb_smul_const`).  The remaining lemmas are the
+coincide (`sum_attnProb_smul_const`). The remaining lemmas are the
 measurability in `θ` that integrating against a head law requires.
 
 Source: arXiv:2604.01978v1, proof of `lem:Ito_formula`.
 -/
 
-import Transformer.Homogenized.Simplex
-import Mathlib.Analysis.Matrix.MeasurableSpace
-import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+@[expose] public section
 
 open scoped BigOperators
 open MeasureTheory
@@ -29,7 +33,7 @@ namespace Homogenized
 /-! ### The attention average at a token -/
 
 /-- **`B_θ[μ_X](x_j) = V m_j(A)`**, with `m_j(A) = Σ_k π^A_{j→k} x_k`: the
-normalizer is a scalar and `V` is linear.  This is
+normalizer is a scalar and `V` is linear. This is
 `attnFieldOf_eq_valueMap_softBary` read at the empirical measure, where the
 barycenter is the attention average (`softBary_empMeasure`).
 

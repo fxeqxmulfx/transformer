@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Sparsemax.BipartiteMemoryGram
-import Transformer.GPTMini.Sparsemax.BoundedGramWidth
-import Transformer.GPTMini.Sparsemax.LocalMemoryScoreIdentities
+module
+
+public import Transformer.GPTMini.Sparsemax.BipartiteMemoryGram
+public import Transformer.GPTMini.Sparsemax.BoundedGramWidth
+public import Transformer.GPTMini.Sparsemax.LocalMemoryScoreIdentities
 
 /-!
 # Genuine sparsemax memory with separate local budgets
@@ -17,6 +19,8 @@ projection. All learned path coordinates and their affine variation are
 preserved. Same-family orthogonality and possible path connections remain
 fixed restrictions; this is not unrestricted transformer attention.
 -/
+
+@[expose] public section
 
 noncomputable section
 

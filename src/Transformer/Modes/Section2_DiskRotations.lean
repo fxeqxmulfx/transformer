@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Modes.Section2_DiskProbability
+public import Transformer.Modes.Section2_OscillatingModulus
+public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+
+/-!
 # Rotations preserve the actual oscillating-field law
 
 Source: arXiv:2412.09080v3, §2.1, the joint-law hypothesis
@@ -20,9 +26,7 @@ zero; the proved nullity of that scale justifies equality of
 the laws. No joint density is presumed in this step.
 -/
 
-import Transformer.Modes.Section2_DiskProbability
-import Transformer.Modes.Section2_OscillatingModulus
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 

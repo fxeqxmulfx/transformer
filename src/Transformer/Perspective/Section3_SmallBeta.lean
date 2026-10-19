@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+public import Transformer.Perspective.Section2_FlowMap
+public import Transformer.Perspective.Section2_GradientFlow
+public import Mathlib.MeasureTheory.Constructions.Pi
+
+/-!
 # §4 — A single cluster for small β
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -20,11 +28,7 @@ This file formalizes §4 of the survey:
   `Transformer.Perspective.CircleClustering`, both after their proofs.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
-import Transformer.Perspective.Section2_FlowMap
-import Transformer.Perspective.Section2_GradientFlow
-import Mathlib.MeasureTheory.Constructions.Pi
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -52,7 +56,7 @@ Borel probability measure on the sphere.
 That marginal is unique — a Borel probability measure on `𝕊^{d-1}` invariant
 under every linear isometry of `ℝ^d` *is* `σ_d` — so `UniformTuple d n` holds
 for exactly one `P`, and quantifying over all of them below is not a
-strengthening of the paper's statement.  Writing it this way keeps the Haar
+strengthening of the paper's statement. Writing it this way keeps the Haar
 machinery out: invariance is stated through `Perspective.sphereMap`. -/
 def UniformTuple (P : Measure (SphereTuple d n)) : Prop :=
   ∃ σ : Measure (SSphere d), IsProbabilityMeasure σ ∧
@@ -81,9 +85,9 @@ def antipodalPair (x : SSphere d) : SphereTuple d 2 :=
 /-- **The exceptional set of `beta0_consensus` is not empty.**
 
 The antipodal pair is a stationary point of `e:Snonres0`: its mean is `0`, so
-`Proj_{x_i} 0 = 0` and the constant path is a solution.  The two particles stay
+`Proj_{x_i} 0 = 0` and the constant path is a solution. The two particles stay
 antipodal forever, so no `x⋆` can attract both, and `beta0_consensus` fails for
-this one initial condition.  This is what forces the almost-everywhere
+this one initial condition. This is what forces the almost-everywhere
 quantifier there — `∀ X₀` would be false.
 
 Source: arXiv:2312.10794v5, §4, `p:beta0` (the "almost every" of the
@@ -165,7 +169,7 @@ theorem SA_const_antipodalPair (β : ℝ) (x : SSphere d) :
 
 /-- The antipodal pair is outside `𝒮_β` for every `β`: the constant path is a
 solution of `SA` through it, and the two particles stay antipodal, so no `x⋆`
-attracts both.  This is why `beta_tiny` and `beta_interval` are read almost
+attracts both. This is why `beta_tiny` and `beta_interval` are read almost
 everywhere.
 
 Source: arXiv:2312.10794v5, §4. -/
@@ -199,9 +203,9 @@ For fixed `d, n ≥ 2`, the probability (w.r.t. uniform initialization on
   `ℙ(𝒮_β) →[β → 0⁺] 1`.
 
 Not proved here: the proof runs through `beta0_consensus`,
-`sset0_probability_tendsto_one` and `distance_bound_at_time_m`.  Of the three
+`sset0_probability_tendsto_one` and `distance_bound_at_time_m`. Of the three
 only `sset0_probability_tendsto_one` is not proved; `beta0_consensus` is proved
-after Appendix A, in `Perspective.AppendixA_Saddle`.  Measurability of `clusteringSet` is part of what is being
+after Appendix A, in `Perspective.AppendixA_Saddle`. Measurability of `clusteringSet` is part of what is being
 asserted: `P (𝒮_β)` is the outer measure when the set is not measurable, so the
 statement is the one the paper makes in either case.
 

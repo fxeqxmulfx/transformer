@@ -11,6 +11,12 @@ public import Mathlib.MeasureTheory.Measure.RegularityCompacts
 public import Mathlib.MeasureTheory.OuterMeasure.OfAddContent
 public import Mathlib.Topology.MetricSpace.Polish
 
+/-!
+# Kolmogorov extension
+
+Countable additivity and projective-limit measures from compatible finite-dimensional marginals.
+-/
+
 @[expose] public section
 
 open Set

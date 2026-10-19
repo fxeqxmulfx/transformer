@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section3_SmallBeta
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
 # Appendix A — Proof of Theorem (p:beta0), part 1
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -16,11 +24,7 @@ The second half — the Hessian at a critical point, the "Russian trick",
 `Perspective.AppendixA_Saddle`.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section3_SmallBeta
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -173,7 +177,7 @@ theorem hasDerivAt_E0_ascent
 
 /-- A *critical point* of `𝖤_0` on `(𝕊^{d-1})^n`: the Riemannian gradient
 vanishes in every variable, i.e. `Σ_j x_j` is normal to the sphere at each
-`x_i`.  This is the hypothesis "`X` is a critical point of `𝖤_0`" of
+`x_i`. This is the hypothesis "`X` is a critical point of `𝖤_0`" of
 `eq: taylor` and of `lem: yury.lemma`. -/
 def IsCriticalE0 (X : SphereTuple d n) : Prop :=
   ∀ i : Idx n, proj d ((X i : EucSpace d)) (∑ j : Idx n, (X j : EucSpace d)) = 0
@@ -189,10 +193,10 @@ critical point of `𝖤_0`, then there exists `𝒮 ⊂ [n]` with
 
   `Σ_{i ∈ 𝒮} Σ_{j ∈ 𝒮^c} ⟨x_i, x_j⟩ < 0`.
 
-A singleton always works.  Criticality says `S = Σ_j x_j` is `⟨x_i, S⟩ x_i`
+A singleton always works. Criticality says `S = Σ_j x_j` is `⟨x_i, S⟩ x_i`
 for every `i`, so `|⟨x_i, S⟩| = ‖S‖`; were every `⟨x_i, S⟩` positive they
 would all equal `‖S‖ > 0` and every `x_i` would be `S/‖S‖`, which is the
-trivial critical point.  So some `⟨x_i, S⟩ ≤ 0`, and for `𝒮 = {i}` the double
+trivial critical point. So some `⟨x_i, S⟩ ≤ 0`, and for `𝒮 = {i}` the double
 sum is `⟨x_i, S⟩ - 1 ≤ -1`.
 
 Source: arXiv:2312.10794v5, Appendix A, `eq: taylor`. -/
@@ -256,7 +260,7 @@ noncomputable def northPole : SSphere 1 :=
   ⟨EuclideanSpace.single (0 : Fin 1) (1 : ℝ), by simp⟩
 
 /-- The antipodal pair `(x, -x)` of `Perspective.antipodalPair` is a
-non-trivial critical configuration of `𝖤_0`, its sum being `0`.  It is the
+non-trivial critical configuration of `𝖤_0`, its sum being `0`. It is the
 witness for the hypotheses of `taylor_eq` here and of `yury_lemma` and
 `hessian_at_critical` in `Perspective.AppendixA_Saddle`; the latter needs
 `d ≥ 2`, which is why the dimension is left free. -/

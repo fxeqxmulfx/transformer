@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.DepthScan
+module
+
+public import Transformer.GPTMini.Convex.Structured.DepthScan
 
 /-!
 # Raw six-state depth data semantics for both Basis modes
@@ -16,6 +18,8 @@ parameter witnesses only. Actual inference still mixes every free
 finite stochastic transition/value row, and never calls this rule.
 Learned head and genuine tensor-block coupling remain subsequent steps.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

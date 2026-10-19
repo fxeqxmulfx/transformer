@@ -1,7 +1,9 @@
-import Transformer.Causal.AppendixA_CuspEnergy
-import Mathlib.Analysis.Asymptotics.Defs
-import Mathlib.Analysis.Calculus.FDeriv.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+module
+
+public import Transformer.Causal.AppendixA_CuspEnergy
+public import Mathlib.Analysis.Asymptotics.Defs
+public import Mathlib.Analysis.Calculus.FDeriv.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 
 /-!
 # Actual Jacobians of the periodic C¹ cusp system
@@ -26,6 +28,8 @@ the Jacobians and eigenvalues used by the original strong-stability
 and strong-instability predicates in the subsequent hypothesis check.
 The actual target tuple `(π,0)` realizes the zero-sine input.
 -/
+
+@[expose] public section
 
 open Real Asymptotics Filter Topology
 namespace Transformer.Causal

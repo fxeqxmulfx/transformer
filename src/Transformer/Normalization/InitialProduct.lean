@@ -1,14 +1,18 @@
-/-
+module
+
+public import Transformer.Normalization.InitialSphereMoments
+public import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+
+/-!
 # Integrals over independent initialization coordinates
 
 Finite-product integration used in Appendix B, proof of Theorem 4.2 of
 arXiv:2510.22026v2. The marginal space is compact, as is the unit sphere.
 -/
 
-import Transformer.Normalization.InitialSphereMoments
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Integral.Bochner.Set
+@[expose] public section
 
 open MeasureTheory Set
 

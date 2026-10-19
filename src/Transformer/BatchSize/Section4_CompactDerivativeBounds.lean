@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_SmoothCoefficients
+public import Mathlib.Analysis.Calculus.ContDiff.Bounds
+public import Mathlib.Analysis.Normed.Group.Bounded
+
+/-!
 # Genuine second derivative bounds from compact parameter ranges
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1's corrected regularity conditions.
@@ -6,9 +12,7 @@ The signed drift is smooth on positive noise parameters. Compactness bounds
 its outer derivatives before the actual state-dependent parameters are composed.
 -/
 
-import Transformer.BatchSize.Section4_SmoothCoefficients
-import Mathlib.Analysis.Calculus.ContDiff.Bounds
-import Mathlib.Analysis.Normed.Group.Bounded
+@[expose] public section
 
 open scoped BigOperators NNReal
 

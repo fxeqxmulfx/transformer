@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_AutonomousWeakTests
+
+/-!
 # Squared-distance tests of the original spherical weak equation
 
 ArXiv:2411.04551v3, §1, `eq: ips`, `eq: vf`, and `eq: cauchy.pb`.
@@ -14,7 +18,7 @@ point is exactly its Dirac mass. These estimates will force an original
 weak solution with atomic initial data to remain on its particle path.
 -/
 
-import Transformer.Interpolation.Section1_AutonomousWeakTests
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal

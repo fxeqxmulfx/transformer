@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section5_MomentsAsymp
+
+/-!
 # The number of modes of a Gaussian KDE — the covariance against its scale
 
 The three entries of `Σ_t` in `lem:moments-p`, each divided by its claimed
@@ -11,7 +15,7 @@ power of `ε` — the product of first moments, which is of lower order.
 Source: arXiv:2412.09080v3, §5.2 (`sec:moments`).
 -/
 
-import Transformer.Modes.Section5_MomentsAsymp
+@[expose] public section
 
 open Real
 

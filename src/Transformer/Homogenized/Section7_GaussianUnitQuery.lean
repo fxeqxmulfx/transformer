@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianMatrixLaw
+public import Transformer.Homogenized.Section7_GaussianRowDeviationThird
+
+/-!
 # The actual Gaussian matrix query law for every unit input
 
 ArXiv:2604.01978v1, §2.3.3, initialization (G), and §7.3,
@@ -20,8 +25,7 @@ the same constants. These results concern one original Gaussian factor;
 the source's product query requires composing the two independent laws.
 -/
 
-import Transformer.Homogenized.Section7_GaussianMatrixLaw
-import Transformer.Homogenized.Section7_GaussianRowDeviationThird
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

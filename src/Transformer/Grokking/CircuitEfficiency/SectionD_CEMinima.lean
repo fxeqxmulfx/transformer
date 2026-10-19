@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionD_CEExistence
-import Transformer.Grokking.CircuitEfficiency.SectionD_SuperlinearAllocation
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionD_CEExistence
+public import Transformer.Grokking.CircuitEfficiency.SectionD_SuperlinearAllocation
 
 /-!
 # Correct fixed-table decisions at attained multiclass CE minima
@@ -16,6 +18,8 @@ explicit. This establishes their equilibrium prediction, including the
 113-class simulation, rather than convergence or circuit discovery by
 native AdamW. No delayed event or training time is assumed or concluded.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,7 +1,10 @@
-import Transformer.Modes.Section3_Hermite
-import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-import Mathlib.Analysis.Complex.RealDeriv
-import Mathlib.RingTheory.Polynomial.Hermite.Gaussian
+module
+
+public import Transformer.Modes.Section3_Hermite
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
+public import Mathlib.Analysis.Complex.RealDeriv
+public import Mathlib.RingTheory.Polynomial.Hermite.Gaussian
+
 /-!
 # Actual Gaussian derivatives and the third Hermite basis
 
@@ -21,6 +24,7 @@ The complex scaling result includes arbitrary real scales, as needed
 when translating the library's Fourier phase convention to the paper's.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

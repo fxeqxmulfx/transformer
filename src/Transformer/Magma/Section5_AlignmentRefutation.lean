@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Magma.Section3_Algorithm
+public import Transformer.Optimization.Basic
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+
+/-!
 # The momentum-alignment lower bound is false as stated
 
 Formalization and refutation of arXiv:2602.15322v1, Section 5,
@@ -8,9 +14,7 @@ algorithm measures alignment with momentum and then smooths the score.
 Even an exact unbiased gradient with zero noise does not repair this gap.
 -/
 
-import Transformer.Magma.Section3_Algorithm
-import Transformer.Optimization.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+@[expose] public section
 
 noncomputable section
 

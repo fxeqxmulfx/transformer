@@ -1,11 +1,16 @@
-/-
+module
+
+public import Mathlib.Analysis.ODE.ExistUnique
+public import Mathlib.Analysis.ODE.Gronwall
+
+/-!
 # Global flows of autonomous ODEs — the radial retraction and a priori bounds
 
 Mathlib proves the Picard–Lindelöf theorem on a compact time interval, for a
 vector field that is bounded and Lipschitz on a ball around the initial point.
 The fields of the transformer papers are only *locally* Lipschitz, but they
 grow at most linearly, `‖F x‖ ≤ C ‖x‖`; their solutions therefore exist for
-all time.  This file provides the two tools that argument needs:
+all time. This file provides the two tools that argument needs:
 
 * the radial retraction `ballRetract R` onto `closedBall 0 R`, which is
   `2`-Lipschitz in any normed space and turns a field Lipschitz on the ball
@@ -17,8 +22,7 @@ Source: the standard proof of global existence under linear growth, as used by
 arXiv:2305.05465v6, `p:wellposedparticles`.
 -/
 
-import Mathlib.Analysis.ODE.ExistUnique
-import Mathlib.Analysis.ODE.Gronwall
+@[expose] public section
 
 open Set Metric
 open scoped NNReal
@@ -47,7 +51,7 @@ theorem norm_ballRetract_le {R : ℝ} (hR : 0 < R) (x : E) : ‖ballRetract R x�
     div_le_iff₀ hm]
   exact mul_le_mul_of_nonneg_left (le_max_right _ _) hR.le
 
-/-- **The radial retraction is `2`-Lipschitz**, in any normed space.  With
+/-- **The radial retraction is `2`-Lipschitz**, in any normed space. With
 `a = max R ‖x‖ ≥ b = max R ‖y‖`,
 `‖R x / a - R y / b‖ ≤ (R / a) ‖x - y‖ + R (a - b) / a ≤ 2 ‖x - y‖`. -/
 theorem lipschitzWith_ballRetract {R : ℝ} (hR : 0 < R) :

@@ -1,14 +1,18 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_Caratheodory
+public import Transformer.Convexifying.Section3_ScalarCounterexample
+
+/-!
 # Sparse optimal convex parameters
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §3.2 and Appendix A.4.
 The appendix invokes Carathéodory's theorem to bound the number of heads at
-an optimum by `N + 1`.  In the convex row model this corresponds to an
+an optimum by `N + 1`. In the convex row model this corresponds to an
 optimum with at most `N + 1` nonzero token rows, provided an optimum exists.
 -/
 
-import Transformer.Convexifying.Section3_Caratheodory
-import Transformer.Convexifying.Section3_ScalarCounterexample
+@[expose] public section
 
 open scoped BigOperators
 
@@ -82,9 +86,9 @@ private theorem sparseReconstruction_support_le {n d : ℕ}
   rw [hzero]
   simp [normSq]
 /-- The appendix's sparse optimum, with attainment made explicit for arbitrary
-losses.  An optimal parameter can be chosen with at most `N + 1` nonzero
-token rows.  The source does not state an attainment hypothesis; it is needed
-when the loss is left arbitrary here.  The proof applies Carathéodory to the
+losses. An optimal parameter can be chosen with at most `N + 1` nonzero
+token rows. The source does not state an attainment hypothesis; it is needed
+when the loss is left arbitrary here. The proof applies Carathéodory to the
 normalized sample responses and reconstructs rows without increasing the
 regularizer.
 

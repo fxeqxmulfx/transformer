@@ -1,4 +1,10 @@
-/-
+module
+
+public import Mathlib.Data.Matrix.Mul
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.Tactic
+
+/-!
 # Muon is Scalable for LLM Training — the optimizer
 
 Liu et al., arXiv:2502.16982, §2.1–2.2. The iteration is over real matrices;
@@ -7,9 +13,7 @@ questions. In particular, a finite Newton–Schulz iterate is not identified
 with an exact polar factor.
 -/
 
-import Mathlib.Data.Matrix.Mul
-import Mathlib.Analysis.Real.Sqrt
-import Mathlib.Tactic
+@[expose] public section
 
 open scoped BigOperators Matrix
 

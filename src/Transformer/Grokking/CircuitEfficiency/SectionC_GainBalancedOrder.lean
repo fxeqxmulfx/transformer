@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedEscape
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedEscape
 
 /-!
 # Persistent balanced Gen factor dominance under actual native feedback
@@ -22,6 +24,8 @@ coupled assigned norm/GD and first-zero-factor seeds, and from learned
 nonzero-beta GPTMini. Only ordering is proved; no finite parameter
 limit or quantitative observed transition time is asserted.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

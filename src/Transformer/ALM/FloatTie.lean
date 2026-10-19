@@ -1,25 +1,30 @@
-/-
+module
+
+public import Transformer.ALM.FloatLattice
+public import Transformer.ALM.HullCost
+
+/-!
 # The tie test the code runs is the tie the development resolves
 
 The two merge loops of `HullHalf::query` decide what to collect with
 `if (s == best_score)` — an exact `==` between two `double`s, each of them the
-recomputed score `qx*kx + qy*ky` of a neighbouring line.  `Transformer.ALM.HullScan`
+recomputed score `qx*kx + qy*ky` of a neighbouring line. `Transformer.ALM.HullScan`
 proves everything about the *exact* tie set `argmaxSet`, and
 `Transformer.ALM.FloatHull` covers the rounding of `isect` and of the search
-branch.  Nothing covered the comparison the loops actually branch on, so
+branch. Nothing covered the comparison the loops actually branch on, so
 "the walk collects the tied lines" was a statement about real arithmetic
 attached to code that does not use it.
 
 `FPScore` is the missing model: a score routine accurate to `δ`, of which
-exact arithmetic is the case `δ = 0`.  Two theorems bound it from both sides.
+exact arithmetic is the case `δ = 0`. Two theorems bound it from both sides.
 
 * `fp_tie_no_false_positive` — on lattice data a fired test is a real tie.
   Scores of integer keys at an integer query are integers, so two of them are
-  either equal or a whole unit apart, and `2δ < 1` cannot bridge a unit.  The
+  either equal or a whole unit apart, and `2δ < 1` cannot bridge a unit. The
   walk therefore never merges a line that is not a winner, *whatever* the
   rounding does.
 * `fp_tie_no_false_negative` — a real winner does fire the test, provided the
-  scores are computed exactly.  That proviso is discharged, not assumed:
+  scores are computed exactly. That proviso is discharged, not assumed:
   `Transformer.ALM.FloatGrid` shows a routine returning values on the integer
   grid to within a unit is exact on lattice data, which is what binary64 is on
   integers below `2^53`.
@@ -32,8 +37,7 @@ the winner with one neighbour, so each loop runs at most once.
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 277-303.
 -/
 
-import Transformer.ALM.FloatLattice
-import Transformer.ALM.HullCost
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -45,7 +49,7 @@ variable {n : ℕ}
 /-! ### The score routine the loops recompute -/
 
 /-- **The arithmetic of `qx*kx + qy*ky`.**  A score routine agreeing with the
-planar dot product to within `δ`.  The loops compare its results with `==`, so
+planar dot product to within `δ`. The loops compare its results with `==`, so
 `δ` is exactly what decides whether that comparison means anything.
 
 Source: `hull2d_cht.h`, lines 280-282. -/
@@ -97,7 +101,7 @@ lemma lineEval_liftKey_int {k : ℝ} {z q : ℤ} (hk : k = (z : ℝ)) :
 
 /-- **The `==` of the loops never fires on a loser.**  Integer keys at an
 integer query score integers, so a non-winner is a whole unit behind; an error
-of `2δ < 1` cannot make it compare equal to the best.  No exactness is
+of `2δ < 1` cannot make it compare equal to the best. No exactness is
 assumed — this is what makes the walk sound in the arithmetic that runs.
 
 Source: `hull2d_cht.h`, lines 283 and 296. -/
@@ -143,7 +147,7 @@ example : (∀ j : ℕ, ∃ z : ℤ, 2 * (j : ℝ) = (z : ℝ)) ∧ 2 * exactSco
 
 /-- **The `==` of the loops fires on every winner.**  With the scores computed
 exactly two tied lines compare equal, so the walk stops only where `argmaxSet`
-ends.  `Transformer.ALM.FloatGrid` discharges the exactness on lattice data
+ends. `Transformer.ALM.FloatGrid` discharges the exactness on lattice data
 from a grid condition on the routine.
 
 Source: `hull2d_cht.h`, lines 283 and 296. -/

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.PeriodicMemoryForward
+module
+
+public import Transformer.GPTMini.Sparsemax.PeriodicMemoryForward
 
 /-!+# A generated path attention preserving two value features
 
@@ -16,6 +18,8 @@ remain the earlier proved conditions, rather than assumed target routes.
 This restriction gives affine positional responses, not arbitrary answer
 memorization. The prototype records and input encoder are separate costs.
 -/
+
+@[expose] public section
 
 noncomputable section
 

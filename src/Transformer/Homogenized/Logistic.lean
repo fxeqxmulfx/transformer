@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.MvGenerator
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
+
+/-!
 # Homogenized Transformers — the limiting logistic SDE
 
 Formalization of `eq: sde.logistic` of arXiv:2604.01978v1, *Homogenized
@@ -8,12 +14,12 @@ Transformers*, and of the long-time behavior worked out for it in
   `du(t) = -u(t)(1 - u(t)²) dt + √2 (1 - u(t)²) dB(t)`.
 
 This is the scalar limit of the overlap `⟨x⁽¹⁾(td), x⁽²⁾(td)⟩` in
-`thm:large_beta_meta`.  Mathlib has no stochastic integral, so the equation is
+`thm:large_beta_meta`. Mathlib has no stochastic integral, so the equation is
 written as its martingale problem, with the generator
 
   `𝖫φ(u) = -u(1-u²) φ'(u) + (1-u²)² φ''(u)`,
 
-the `(1-u²)²` being `½ (√2(1-u²))²`.  The solution concept carries no initial
+the `(1-u²)²` being `½ (√2(1-u²))²`. The solution concept carries no initial
 condition: `eq: sde.logistic`'s `u(0) = 0` is a hypothesis of the statements
 that use it, and leaving it out makes the absorbing states `u ≡ ±1` available
 as the witness that the concept is satisfiable.
@@ -21,12 +27,10 @@ as the witness that the concept is satisfiable.
 The source's `sec: sde.logistic` sets `θ = arcsin u`; it writes
 "θ(t) = sin u(t)", which cannot be meant — the computation that follows,
 `dθ = √2 cos θ dB`, is the Itô formula for `arcsin`, and it is `arcsin` that
-makes `θ(t) ∈ [-π/2, π/2]` automatic.  `arcsin` is what is written here.
+makes `θ(t) ∈ [-π/2, π/2]` automatic. `arcsin` is what is written here.
 -/
 
-import Transformer.Homogenized.MvGenerator
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -78,7 +82,7 @@ structure IsLogisticSolution {Ω : Type*} {m : MeasurableSpace Ω} (P : Measure 
 
 /-- **`IsLogisticSolution` is satisfiable.**  `u ≡ 1` is a solution: both
 coefficients of `eq: sde.logistic` vanish there, so the compensated process is
-identically `0`.  This is the absorbing state the long-time analysis of
+identically `0`. This is the absorbing state the long-time analysis of
 `sec: sde.logistic` converges to. -/
 theorem isLogisticSolution_one {Ω : Type*} {m : MeasurableSpace Ω} (P : Measure Ω)
     [IsProbabilityMeasure P] (ℱ : Filtration ℝ m) :
@@ -133,7 +137,7 @@ example : IsLogisticSolution (Measure.dirac ())
 /-- The hypotheses of `logistic_range`, `logistic_arcsin_martingale` and
 `logistic_limit` are satisfiable at once, on the absorbing solution `u ≡ 1`:
 it solves the equation, it starts and stays in `[-1,1]`, and its initial value
-is the deterministic `u₀ = 1`.  The conclusion of `logistic_limit` is then the
+is the deterministic `u₀ = 1`. The conclusion of `logistic_limit` is then the
 true statement `P(u_∞ = 1) = arcsin(1)/π + 1/2 = 1`. -/
 example {Ω : Type*} {m : MeasurableSpace Ω} (P : Measure Ω) [IsProbabilityMeasure P]
     (ℱ : Filtration ℝ m) :

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_MeanLogNoiseBound
+
+/-!
 # Signed actual logarithmic drift bounds for the original empirical mean
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -21,7 +25,7 @@ inputs below are the original Gaussian head and actual generator;
 their drift and variance estimates are proved rather than assumed.
 -/
 
-import Transformer.Homogenized.Section7_MeanLogNoiseBound
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped NNReal

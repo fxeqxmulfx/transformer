@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_DriftDerivativeBounds
+
+/-!
 # Uniform derivative control under actual smooth composition
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1's finite-horizon weak comparison.
@@ -6,7 +10,7 @@ The chain rule gives a sharp derivative Lipschitz recurrence, without a
 factor independent of the time step that would explode along an Euler grid.
 -/
 
-import Transformer.BatchSize.Section4_DriftDerivativeBounds
+@[expose] public section
 
 open scoped NNReal
 

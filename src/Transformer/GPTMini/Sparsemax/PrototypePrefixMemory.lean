@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Sparsemax.PrototypeKernelTraining
-import Transformer.GPTMini.Sparsemax.CausalPrefixKeys
-import Transformer.GPTMini.Sparsemax.BoundedGramWidth
+module
+
+public import Transformer.GPTMini.Sparsemax.PrototypeKernelTraining
+public import Transformer.GPTMini.Sparsemax.CausalPrefixKeys
+public import Transformer.GPTMini.Sparsemax.BoundedGramWidth
 
 /-!
 # Compact kernel memory from actual causal prefixes
@@ -22,6 +24,8 @@ receive their normalized kernel prediction, without a generalization theorem.
 Features and prototype selection are fixed from data during optimization;
 the learned memory Gram is separate. Duplicate observations can share a slot.
 -/
+
+@[expose] public section
 
 noncomputable section
 

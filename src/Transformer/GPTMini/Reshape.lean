@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.GPTMini.Config
+
+/-!
 # The coordinate layout between `d_model` and the heads
 
 `reference/model.py` moves between three shapes with `view` and `chunk`:
@@ -18,8 +23,7 @@ row-major order `i ↦ (i / head_dim, i % head_dim)` that `view` uses.
 and they are mutually inverse — `headSlice_headMerge`, `headMerge_headSlice`.
 -/
 
-import Transformer.Basic
-import Transformer.GPTMini.Config
+@[expose] public section
 
 namespace Transformer
 namespace GPTMini
@@ -115,7 +119,7 @@ by the reshape. -/
 
 The three reshapes read each coordinate at most once, so none of them can
 increase the Euclidean norm, and `headMerge` preserves the total energy
-exactly.  These are the bounds the sub-layer growth estimates rest on. -/
+exactly. These are the bounds the sub-layer growth estimates rest on. -/
 
 /-- Reading coordinates along an injective index map cannot increase the
 Euclidean norm: the selected coordinates are a sub-family of the original. -/

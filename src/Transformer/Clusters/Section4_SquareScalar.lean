@@ -1,5 +1,7 @@
-import Transformer.Landscape.GlobalFlow.Existence
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+module
+
+public import Transformer.Landscape.GlobalFlow.Existence
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 /-!
 # A scalar equation for four symmetric planar tokens
@@ -22,6 +24,8 @@ by `exp(-t)`, and hence four distinct limiting corners.
 The construction tests the source's universal conjecture; it is
 not a changed definition of its attention dynamics.
 -/
+
+@[expose] public section
 
 open Real Filter Topology
 namespace Transformer.Clusters

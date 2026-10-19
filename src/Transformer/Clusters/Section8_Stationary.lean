@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section8_Origin
+
+/-!
 # The emergence of clusters in self-attention dynamics — the stationary
   configurations at `V = -I_d`
 
@@ -6,14 +10,14 @@
 
 **What the source says and what is carried here.**
 
-* `l:stationary` is split in two.  The substantive direction — a stationary
+* `l:stationary` is split in two. The substantive direction — a stationary
   configuration is the zero one — is `eq_zero_of_isStationaryConfig`; the
   converse is proved, and it is what witnesses the hypotheses.
 
 Source: arXiv:2305.05465v6, `l:stationary`.
 -/
 
-import Transformer.Clusters.Section8_Origin
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -41,13 +45,13 @@ theorem isStationaryConfig_zero (Q K : ParamMatrix d) :
 is `x̄_1 = … = x̄_n = 0`.
 
 The source's proof goes through the convexity of `log Σ_j e^{⟨x, x̄_j⟩}`
-(`l:logsumexp`) and its analyticity on the affine hull of the `x̄_i`.  The
+(`l:logsumexp`) and its analyticity on the affine hull of the `x̄_i`. The
 proof here stays with `g(x) = Σ_j e^{⟨x, x̄_j⟩}`: stationarity is `∇g(x̄_i) = 0`,
 so the tangent bound `e^b ≥ e^a(1 + b - a)` makes every `x̄_i` a global
-minimizer of `g`.  At the midpoint of `x̄_i` and `x̄_k`, with
+minimizer of `g`. At the midpoint of `x̄_i` and `x̄_k`, with
 `p_j = e^{⟨x̄_i, x̄_j⟩/2}` and `q_j = e^{⟨x̄_k, x̄_j⟩/2}`, minimality gives
 `Σ_j (p_j - q_j)² ≤ 0`, so `⟨x̄_i - x̄_k, x̄_j⟩ = 0` for every `j`, and then
-`x̄_i = x̄_k`.  A configuration at one point is stationary only at `0`.
+`x̄_i = x̄_k`. A configuration at one point is stationary only at `0`.
 
 Source: arXiv:2305.05465v6, `l:stationary`. -/
 theorem eq_zero_of_isStationaryConfig (Q K : ParamMatrix d) (hQK : IsIdentityQK Q K)

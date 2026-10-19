@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.PermutationMemoryGram
+module
+
+public import Transformer.GPTMini.Sparsemax.PermutationMemoryGram
 
 /-!
 # Linear-size learned edge weights with a self-weight budget
@@ -15,6 +17,8 @@ convex Gram parametrization and changing sparse supports. It does not freeze
 the edge weights, assume target routing labels, or assert that their order
 is learned. Both a zero-edge and a nonzero-edge witness inhabit the domain.
 -/
+
+@[expose] public section
 
 noncomputable section
 

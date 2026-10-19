@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Memorization
+public import Lean.Util.FoldConsts
+
+/-!
 # Entropy dependency audit for arXiv:2505.24832v3
 
 Run with `lake env lean scripts/MemorizationAxioms.lean` after building
@@ -7,8 +12,8 @@ every public declaration from the vendored PFR entropy import closure.
 The audit follows the kernel's transitive axiom dependencies; a hidden
 `sorryAx`, including one in an imported proof, makes the command fail.
 -/
-import Transformer.Memorization
-import Lean.Util.FoldConsts
+
+@[expose] public section
 
 open Lean Elab Command
 

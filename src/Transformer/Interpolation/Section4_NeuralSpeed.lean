@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Basic
+
+/-!
 # Neural dynamics and the quadratic dependence on parameter norms
 
 arXiv:2411.04551v3, §4, `eq: neural.ode.sphere`. The field is
@@ -12,7 +16,7 @@ estimate is used by `Section4_NeuralBoundFalse` to refute both of the §4
 uniform parameter estimates proportional to `1/T`.
 -/
 
-import Transformer.Interpolation.Basic
+@[expose] public section
 
 open scoped BigOperators Topology
 open MeasureTheory Real

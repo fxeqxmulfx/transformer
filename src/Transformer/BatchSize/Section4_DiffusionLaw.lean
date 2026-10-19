@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_PathObservables
+
+/-!
 # Constructing the paper's actual optimizer diffusion laws
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The continuous Brownian Euler limit satisfies the genuine generator
 martingale problem with all bounded measurable past-cylinder tests.
 -/
 
-import Transformer.BatchSize.Section4_PathObservables
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal

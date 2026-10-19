@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.DASH.Section2_TrainingModels
+public import Transformer.Optimization.Stationarity
+public import Transformer.Optimization.StrongConvergence
+public import Transformer.Optimization.Quadratic
+
+/-!
 # DASH — proved training convergence of the safeguarded optimizer
 
 User-requested extension of arXiv:2602.02016v2, §2–4. The full parameter
@@ -8,10 +15,7 @@ concern a fixed full-gradient objective in real arithmetic, not the paper's
 stochastic training experiments or lower-precision implementation.
 -/
 
-import Transformer.DASH.Section2_TrainingModels
-import Transformer.Optimization.Stationarity
-import Transformer.Optimization.StrongConvergence
-import Transformer.Optimization.Quadratic
+@[expose] public section
 
 open scoped Topology
 open Filter

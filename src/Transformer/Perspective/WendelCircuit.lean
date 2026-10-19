@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.WendelGeneralPosition
+public import Transformer.Perspective.WendelOneDimBasic
+public import Mathlib.LinearAlgebra.Dimension.Finite
+
+/-!
 # The unique circuit at one point beyond full dimension
 
 For `d + 1` points in `d` dimensions in linear general position, there is a
@@ -8,9 +14,7 @@ nontrivial case of the deterministic sign count in Wendel's theorem.
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962).
 -/
 
-import Transformer.Perspective.WendelGeneralPosition
-import Transformer.Perspective.WendelOneDimBasic
-import Mathlib.LinearAlgebra.Dimension.Finite
+@[expose] public section
 
 namespace Transformer.Perspective
 

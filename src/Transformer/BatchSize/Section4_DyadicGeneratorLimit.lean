@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_DyadicNeighborLimits
+public import Transformer.BatchSize.Section4_BoundedObservableLimits
+
+/-!
 # Passing the actual frozen Euler generator to its state limit
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ Both the preceding node and the interpolated Brownian state converge in
 measure; bounded continuous observables pass their generator expectations.
 -/
 
-import Transformer.BatchSize.Section4_DyadicNeighborLimits
-import Transformer.BatchSize.Section4_BoundedObservableLimits
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal Topology

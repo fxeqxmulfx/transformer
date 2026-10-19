@@ -1,5 +1,7 @@
-import Transformer.Homogenized.Section7_ExponentialGenerator
-import Transformer.Homogenized.Section7_OverlapDriftGramComparison
+module
+
+public import Transformer.Homogenized.Section7_ExponentialGenerator
+public import Transformer.Homogenized.Section7_OverlapDriftGramComparison
 
 /-!
 # Uniform bounds for the original exponential generator
@@ -20,6 +22,8 @@ between zero and exp(|c|)c²(3/d)/2 for either sign of c.
 These are pointwise bounds on the original fields, supplying
 the domination needed for the proved integrating-factor argument.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory
 open scoped NNReal

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthReadout
+module
+
+public import Transformer.GPTMini.Semantics.DepthReadout
 
 /-!
 # Complete original depth parameters and genuine detector loop
@@ -19,6 +21,8 @@ The readout and every tail layer are coupled to the same actual state;
 the true full forward call inherits strict whole-vocabulary margins.
 Only checked integer serialization and raw task correctness remain.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

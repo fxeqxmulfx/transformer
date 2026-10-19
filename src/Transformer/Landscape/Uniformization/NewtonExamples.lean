@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.Induction
+
+/-!
 # Local uniformization: examples for the Newton step
 
 The polynomial `P = y² + x₀²` on `ℝ²`, with coefficients `(x₀², 0)`, units `(1, 0)` and
@@ -8,7 +12,7 @@ local uniformization itself. Auxiliary examples for Appendix D.1, `lem: loj`, of
 arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Uniformization.Induction
+@[expose] public section
 
 open Filter Set Polynomial
 open scoped BigOperators Topology

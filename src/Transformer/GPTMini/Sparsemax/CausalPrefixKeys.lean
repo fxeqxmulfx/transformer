@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Sparsemax.CodeMemoryOutputs
-import Mathlib.Data.Fintype.EquivFin
-import Mathlib.Data.Fintype.BigOperators
+module
+
+public import Transformer.GPTMini.Sparsemax.CodeMemoryOutputs
+public import Mathlib.Data.Fintype.EquivFin
+public import Mathlib.Data.Fintype.BigOperators
 
 /-!
 # Complete causal observation codes for a finite context window
@@ -20,6 +22,8 @@ unused ones. Its dictionary has `(V + 1)^T` slots for vocabulary size V and
 window length T. This deliberately expensive bound proves expressivity;
 it does not establish a compact transformer or generalization beyond T.
 -/
+
+@[expose] public section
 
 noncomputable section
 

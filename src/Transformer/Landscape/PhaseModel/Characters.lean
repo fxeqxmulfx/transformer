@@ -1,14 +1,20 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Abelian.Characters
+public import Transformer.Landscape.PhaseModel.Basin
+public import Transformer.Landscape.PhaseModel.Orthogonality
+
+/-!
 # Phase model — critical points of `V_full` near a character
 
 The phases `(2πjx/n)_x` of a character leave the energy of every set of rows
 of the division table invariant (`divisionEnergy_add_characterPhase`), so
-the estimates near the zero `0` hold near every character.  For `n ≥ 4`, a
+the estimates near the zero `0` hold near every character. For `n ≥ 4`, a
 local minimizer of `V_full` with `Σ_x (1 - cos (ψ_x - 2πjx/n)) < n/8` is the
 character `j` up to periods
 (`sub_characterPhase_mem_periods_of_isLocalMin`), and a critical point there
 that is not is a strict saddle (`isStrictSaddle_of_sum_one_sub_cos_lt`):
-the Hessian has a negative diagonal entry.  The last example exhibits such
+the Hessian has a negative diagonal entry. The last example exhibits such
 a saddle for `n = 17` and `j = 0`: the phases `π e_0` keep every relation in
 `πℤ`, so they are critical, at `Σ_x (1 - cos ψ_x) = 2 < 17/8`.
 
@@ -19,9 +25,7 @@ character `cyclicChar n j`, whose phases are `2πjx/n` up to periods
 Source: item M6.8 of `landscape_plan.md`.
 -/
 
-import Transformer.Landscape.PhaseModel.Abelian.Characters
-import Transformer.Landscape.PhaseModel.Basin
-import Transformer.Landscape.PhaseModel.Orthogonality
+@[expose] public section
 
 open Real
 

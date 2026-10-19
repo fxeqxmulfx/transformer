@@ -1,33 +1,37 @@
-/-
+module
+
+public import Transformer.RecurrentGradients.Section2_Counterexample
+public import Transformer.RecurrentGradients.Section3_Inputs
+
+/-!
 # Previous solutions
 
-arXiv:1211.5063, §3.1.  Of an L1 or L2 penalty on the recurrent weights: "the
+arXiv:1211.5063, §3.1. Of an L1 or L2 penalty on the recurrent weights: "the
 spectral radius of `W_rec` is probably smaller than 1, from which it follows
 that the gradient can not explode (see necessary condition found in section
 2.1)", and the model is limited to a regime "where any information inserted in
-the model has to die out exponentially fast in time".  Of Echo State Networks:
+the model has to die out exponentially fast in time". Of Echo State Networks:
 "Because usually the largest eigenvalue of the recurrent weight is, by
 construction, smaller than 1, information fed in to the model has to die out
 exponentially fast."  For tanh all three fail on the network of
-`Section2_Counterexample`, whose `W_rec` has `λ₁ = 0`.  Its factors
-`∂x_{k+l}/∂x_k` grow like `2^l` (`not_not_explode_of_spectralRadius_lt`).  With
+`Section2_Counterexample`, whose `W_rec` has `λ₁ = 0`. Its factors
+`∂x_{k+l}/∂x_k` grow like `2^l` (`not_not_explode_of_spectralRadius_lt`). With
 `W_in` the identity and the inputs `0`, `x*` stays a fixed point
 (`states_xn_zero`), and the derivative of `x_{k+1+l}` in the first coordinate
 of `u_{k+1}` (`Section3_Inputs`) is `J^l (1, 0)` (`hasDerivAt_input_xn`), which
-grows like `2^l` (`not_tendsto_input_of_spectralRadius_lt`).  Echo State
+grows like `2^l` (`not_tendsto_input_of_spectralRadius_lt`). Echo State
 Networks update `y_t = σ(W_rec y_{t-1} + W_in u_t + b)`, the form of
-footnote 1.  There `y* = tanh(x*)` is a fixed point (`statesAfter_yn`) with
+footnote 1. There `y* = tanh(x*)` is a fixed point (`statesAfter_yn`) with
 Jacobian `K = [[8, 8], [-6, -6]]` (`Kn`), `K² = 2K`, and the derivative of
 `y_{k+1+l}` in `u_{k+1}` grows like `2^l` too
-(`not_tendsto_inputAfter_of_spectralRadius_lt`).  The counterexample uses a
+(`not_tendsto_inputAfter_of_spectralRadius_lt`). The counterexample uses a
 bias `b = x* - W_rec tanh(x*)` that is not small, which the penalty on the
 recurrent weights leaves free, and recurrent weights with `‖W_rec‖ > 1`
 (`one_lt_norm_Wn`) whose spectral radius is below 1, all that the paper asks
-of the penalty.  In the linear model the claims hold (`Section2_Linear`).
+of the penalty. In the linear model the claims hold (`Section2_Linear`).
 -/
 
-import Transformer.RecurrentGradients.Section2_Counterexample
-import Transformer.RecurrentGradients.Section3_Inputs
+@[expose] public section
 
 open scoped Matrix Matrix.Norms.L2Operator
 open Filter Topology
@@ -36,7 +40,7 @@ namespace Transformer.RecurrentGradients
 
 /-- **The penalty claim of §3.1 is false for tanh**: "the spectral radius of
 `W_rec` is probably smaller than 1, from which it follows that the gradient can
-not explode".  `λ₁ < 1` does not keep the factors `∂x_{k+l}/∂x_k` of eq. (2)
+not explode". `λ₁ < 1` does not keep the factors `∂x_{k+l}/∂x_k` of eq. (2)
 from growing exponentially. -/
 theorem not_not_explode_of_spectralRadius_lt {κ : Type*} [Fintype κ] :
     ¬ ∀ (W : Matrix (Fin 2) (Fin 2) ℝ) (b x₀ : EuclideanSpace ℝ (Fin 2)) (u : ℕ → κ → ℝ)

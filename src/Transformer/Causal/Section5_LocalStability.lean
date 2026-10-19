@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Causal.Section5_RowDerivative
+public import Transformer.Causal.Section5_RowConvergence
+public import Transformer.Causal.SectionA_ScalarAttraction
+
+/-!
 # Local asymptotic stability of an attracting frozen extension
 
 ArXiv:2411.04990v2, §5 and Appendix A, the stability part
@@ -18,9 +24,7 @@ as required by the original asymptotic-stability predicate.
 No spectral or stable-manifold assertion is taken as an input.
 -/
 
-import Transformer.Causal.Section5_RowDerivative
-import Transformer.Causal.Section5_RowConvergence
-import Transformer.Causal.SectionA_ScalarAttraction
+@[expose] public section
 
 open Real Set Filter
 

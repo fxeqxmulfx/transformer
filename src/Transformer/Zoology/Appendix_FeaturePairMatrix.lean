@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_FeaturePairShears
+
+/-!
 # Every variable feature butterfly block uses exactly n × d
 
 Arora et al., arXiv:2312.04927v1, Appendix `prop: butterfly-hyena`
@@ -7,7 +11,7 @@ variable shears give a 25-layer implementation of arbitrary pair matrices,
 including singular blocks. No input coordinate is used as scratch space.
 -/
 
-import Transformer.Zoology.Appendix_FeaturePairShears
+@[expose] public section
 
 noncomputable section
 

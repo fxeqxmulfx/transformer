@@ -1,4 +1,7 @@
-import Transformer.Modes.Section3_CubicGaussianComparison
+module
+
+public import Transformer.Modes.Section3_CubicGaussianComparison
+
 /-!
 # Exterior Fourier rates for the cubic Edgeworth comparison
 
@@ -25,6 +28,7 @@ The actual Gaussian function has finite moment integrals at every degree,
 so all constants in these comparisons are finite real quantities.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

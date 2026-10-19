@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.IncidentMemoryCore
-import Transformer.GPTMini.Sparsemax.LocalMemorySelection
+module
+
+public import Transformer.GPTMini.Sparsemax.IncidentMemoryCore
+public import Transformer.GPTMini.Sparsemax.LocalMemorySelection
 
 /-!
 # Compact convex learned Q/K parameters with separate row budgets
@@ -14,6 +16,8 @@ minimum for cap at least one and floor at most one. Its reference may lie
 outside the domain. Later modules derive such a reference from observed
 data and transfer the actual sparsemax and common-value guarantees.
 -/
+
+@[expose] public section
 
 noncomputable section
 

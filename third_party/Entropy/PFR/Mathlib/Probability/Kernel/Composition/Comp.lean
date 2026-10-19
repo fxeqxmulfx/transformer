@@ -3,6 +3,12 @@ module
 public import Mathlib.Probability.Kernel.Composition.Comp
 public import PFR.Mathlib.Probability.Kernel.Disintegration
 
+/-!
+# Composition of probability kernels
+
+Mapping, coordinate swaps and deletion of an intermediate product coordinate.
+-/
+
 public section
 
 open Function MeasureTheory Real

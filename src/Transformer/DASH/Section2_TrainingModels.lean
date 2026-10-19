@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.DASH.Section3_GuardedNewton
+public import Transformer.DASH.Section2_History
+public import Transformer.Optimization.Basic
+public import Transformer.Optimization.Matrix
+
+/-!
 # DASH — sequential training with actual finite matrix solvers
 
 arXiv:2602.02016v2, §2, Algorithm 1, §2.3 and §3.3–3.5. The gradient
@@ -7,10 +14,7 @@ regularization, finite multi-start PI, certified NDB inverse fourth roots
 and Adam grafting. The new training guard is an explicit algorithm change.
 -/
 
-import Transformer.DASH.Section3_GuardedNewton
-import Transformer.DASH.Section2_History
-import Transformer.Optimization.Basic
-import Transformer.Optimization.Matrix
+@[expose] public section
 
 noncomputable section
 

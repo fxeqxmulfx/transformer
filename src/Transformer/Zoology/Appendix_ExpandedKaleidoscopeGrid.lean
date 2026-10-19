@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ButterflyGridPadding
+
+/-!
 # Expanded recursive K matrices compiled on n × d
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: kaleidoscope` and
@@ -9,7 +13,7 @@ The source's exact 2^e·n-row bound for d ≥ 2 is proved by the separate
 in-place compiler in Appendix_ExactKaleidoscopeCoyote.
 -/
 
-import Transformer.Zoology.Appendix_ButterflyGridPadding
+@[expose] public section
 
 namespace Transformer.Zoology
 

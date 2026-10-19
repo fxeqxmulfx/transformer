@@ -1,4 +1,81 @@
-/-
+module
+
+public import Transformer.Metastability.Basic
+public import Transformer.Metastability.AlphaDist
+public import Transformer.Metastability.AngularEnergy
+public import Transformer.Metastability.CollapseODE
+public import Transformer.Metastability.MainTheorem
+public import Transformer.Metastability.AttnFlow
+public import Transformer.Metastability.AttnPair
+public import Transformer.Metastability.AttnComparison
+public import Transformer.Metastability.CapGeometry
+public import Transformer.Metastability.CapContainment
+public import Transformer.Metastability.CollapseScalar
+public import Transformer.Metastability.CollapseComparison
+public import Transformer.Metastability.CollapseTime
+public import Transformer.Metastability.CollapseParams
+public import Transformer.Metastability.CollapseTimeBounds
+public import Transformer.Metastability.DirectAssemble
+public import Transformer.Metastability.DirectProof
+public import Transformer.Metastability.IsMetastable
+public import Transformer.Metastability.DirectProofWitness
+public import Transformer.Metastability.CapVelocity
+public import Transformer.Metastability.CapVelocityBound
+public import Transformer.Metastability.PairVelocity
+public import Transformer.Metastability.PairVelocitySum
+public import Transformer.Metastability.CapVariance
+public import Transformer.Metastability.BakryEmery
+public import Transformer.Metastability.OttoAttention
+public import Transformer.Metastability.OttoClaimOne
+public import Transformer.Metastability.Section3_CapTemperature
+public import Transformer.Metastability.Section3_ForceMonotonicity
+public import Transformer.Metastability.Section3_GradientComparison
+public import Transformer.Metastability.Section3_AngularCharts
+public import Transformer.Metastability.Section3_ScalarTaylor
+public import Transformer.Metastability.Section3_EnergyAlgebra
+public import Transformer.Metastability.Section3_EnergyTaylor
+public import Transformer.Metastability.Section3_ForceDerivative
+public import Transformer.Metastability.Section3_ForceCoercivity
+public import Transformer.Metastability.Section3_SlowManifold
+public import Transformer.Metastability.Section3_ClusterSpread
+public import Transformer.Metastability.Section3_PL
+public import Transformer.Metastability.Section3_SharpTaylor
+public import Transformer.Metastability.Section3_SharpEnergy
+public import Transformer.Metastability.Section3_SlowGradient
+public import Transformer.Metastability.Section3_SlowProjection
+public import Transformer.Metastability.Section3_SlowFlatnessCounterexample
+public import Transformer.Metastability.OttoCorollary
+public import Transformer.Metastability.OttoReznikoff
+public import Transformer.Metastability.ReversePL
+public import Transformer.Metastability.QuantitativeInequality
+public import Transformer.Metastability.ExponentialFlow
+public import Transformer.Metastability.Initial
+public import Transformer.Metastability.InitialCapGeometry
+public import Transformer.Metastability.InitialMixtureBound
+public import Transformer.Metastability.InitialScale
+public import Transformer.Metastability.GaussianTail
+public import Transformer.Metastability.GaussianMixtureTail
+public import Transformer.Metastability.InitialCounterexample
+public import Transformer.Metastability.InitialUniform
+public import Transformer.Metastability.Section4_UniformTail
+public import Transformer.Metastability.Section4_UniformProjectionScale
+public import Transformer.Metastability.Section4_UniformConcentration
+public import Transformer.Metastability.UniformCap
+public import Transformer.Metastability.NotSeparated
+public import Transformer.Metastability.LowDimDecay
+public import Transformer.Metastability.CircleWitness
+public import Transformer.Metastability.MeanField
+public import Transformer.Metastability.MeanFieldCapExit
+public import Transformer.Metastability.MeanFieldMetastability
+public import Transformer.Metastability.MeanFieldStatic
+public import Transformer.Metastability.EnergyScale
+public import Transformer.Metastability.EnergyLevel
+public import Transformer.Metastability.OpenProblems
+public import Transformer.Metastability.Staircase
+public import Transformer.Metastability.StaircaseProfile
+public import Transformer.Metastability.StaircaseTimeScale
+
+/-!
 Formalization of:
   Geshkovski, Koubbi, Polyanskiy, Rigollet,
   "Dynamic metastability in the self-attention model", arXiv:2410.06833v1.
@@ -6,77 +83,4 @@ Formalization of:
 This top-level module re-exports every section of the formalization.
 -/
 
-import Transformer.Metastability.Basic
-import Transformer.Metastability.AlphaDist
-import Transformer.Metastability.AngularEnergy
-import Transformer.Metastability.CollapseODE
-import Transformer.Metastability.MainTheorem
-import Transformer.Metastability.AttnFlow
-import Transformer.Metastability.AttnPair
-import Transformer.Metastability.AttnComparison
-import Transformer.Metastability.CapGeometry
-import Transformer.Metastability.CapContainment
-import Transformer.Metastability.CollapseScalar
-import Transformer.Metastability.CollapseComparison
-import Transformer.Metastability.CollapseTime
-import Transformer.Metastability.CollapseParams
-import Transformer.Metastability.CollapseTimeBounds
-import Transformer.Metastability.DirectAssemble
-import Transformer.Metastability.DirectProof
-import Transformer.Metastability.IsMetastable
-import Transformer.Metastability.DirectProofWitness
-import Transformer.Metastability.CapVelocity
-import Transformer.Metastability.CapVelocityBound
-import Transformer.Metastability.PairVelocity
-import Transformer.Metastability.PairVelocitySum
-import Transformer.Metastability.CapVariance
-import Transformer.Metastability.BakryEmery
-import Transformer.Metastability.OttoAttention
-import Transformer.Metastability.OttoClaimOne
-import Transformer.Metastability.Section3_CapTemperature
-import Transformer.Metastability.Section3_ForceMonotonicity
-import Transformer.Metastability.Section3_GradientComparison
-import Transformer.Metastability.Section3_AngularCharts
-import Transformer.Metastability.Section3_ScalarTaylor
-import Transformer.Metastability.Section3_EnergyAlgebra
-import Transformer.Metastability.Section3_EnergyTaylor
-import Transformer.Metastability.Section3_ForceDerivative
-import Transformer.Metastability.Section3_ForceCoercivity
-import Transformer.Metastability.Section3_SlowManifold
-import Transformer.Metastability.Section3_ClusterSpread
-import Transformer.Metastability.Section3_PL
-import Transformer.Metastability.Section3_SharpTaylor
-import Transformer.Metastability.Section3_SharpEnergy
-import Transformer.Metastability.Section3_SlowGradient
-import Transformer.Metastability.Section3_SlowProjection
-import Transformer.Metastability.Section3_SlowFlatnessCounterexample
-import Transformer.Metastability.OttoCorollary
-import Transformer.Metastability.OttoReznikoff
-import Transformer.Metastability.ReversePL
-import Transformer.Metastability.QuantitativeInequality
-import Transformer.Metastability.ExponentialFlow
-import Transformer.Metastability.Initial
-import Transformer.Metastability.InitialCapGeometry
-import Transformer.Metastability.InitialMixtureBound
-import Transformer.Metastability.InitialScale
-import Transformer.Metastability.GaussianTail
-import Transformer.Metastability.GaussianMixtureTail
-import Transformer.Metastability.InitialCounterexample
-import Transformer.Metastability.InitialUniform
-import Transformer.Metastability.Section4_UniformTail
-import Transformer.Metastability.Section4_UniformProjectionScale
-import Transformer.Metastability.Section4_UniformConcentration
-import Transformer.Metastability.UniformCap
-import Transformer.Metastability.NotSeparated
-import Transformer.Metastability.LowDimDecay
-import Transformer.Metastability.CircleWitness
-import Transformer.Metastability.MeanField
-import Transformer.Metastability.MeanFieldCapExit
-import Transformer.Metastability.MeanFieldMetastability
-import Transformer.Metastability.MeanFieldStatic
-import Transformer.Metastability.EnergyScale
-import Transformer.Metastability.EnergyLevel
-import Transformer.Metastability.OpenProblems
-import Transformer.Metastability.Staircase
-import Transformer.Metastability.StaircaseProfile
-import Transformer.Metastability.StaircaseTimeScale
+@[expose] public section

@@ -1,7 +1,9 @@
-import Transformer.DoubleDescent.Section2_Risk
-import Transformer.DoubleDescent.Section5_Curves
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Basic.ENNReal.BigOperators
+module
+
+public import Transformer.DoubleDescent.Section2_Risk
+public import Transformer.DoubleDescent.Section5_Curves
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Basic.ENNReal.BigOperators
 
 /-!
 # Translation likelihood and token loss
@@ -13,6 +15,8 @@ must be present in the target list. Thus no undefined endpoint is used.
 The source explicitly notes that including every token of each sampled
 sentence is not iid sampling from the token distribution of Definition 1.
 -/
+
+@[expose] public section
 
 namespace Transformer.DoubleDescent
 

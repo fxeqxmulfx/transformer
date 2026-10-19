@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_SphericalFlowBounds
+public import Transformer.Interpolation.Section1_AutonomousTransport
+
+/-!
 # Actual weak laws from arbitrary spherical characteristic flows
 
 ArXiv:2411.04551v3, §1, `eq: ips`, `eq: vf`, `eq: cauchy.pb`,
@@ -15,8 +20,7 @@ identity for every weak solution, this gives existence and uniqueness from
 any spherical probability. Several ReLU activations need no new weak-law proof.
 -/
 
-import Transformer.Interpolation.Section1_SphericalFlowBounds
-import Transformer.Interpolation.Section1_AutonomousTransport
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal

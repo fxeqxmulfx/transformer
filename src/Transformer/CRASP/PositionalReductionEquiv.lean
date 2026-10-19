@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.CRASP.PositionalReduction
+public import Transformer.CRASP.PositionalReductionAtomEquiv
+public import Transformer.CRASP.PositionalReductionCount
+
+/-!
 # `TL[◁#]^pos` reduces to `TL[◁#]`: the translation preserves meaning
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -7,14 +13,12 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 
 The invariant is proved at every admissible `(i, ρ)`: `i ∈ [|w|]` with
 `ρ ∈ [r]`, as in the paper, and also `i = 0` with `ρ = r`, which the final step
-needs for `w = ε`.  The block size is `reach ≤ r` instead of the paper's
+needs for `w = ε`. The block size is `reach ≤ r` instead of the paper's
 `r > Y`, and `tr_paperBlockSize_unsound` shows that the paper's `r = M(Y+1)`
 is too small there.
 -/
 
-import Transformer.CRASP.PositionalReduction
-import Transformer.CRASP.PositionalReductionAtomEquiv
-import Transformer.CRASP.PositionalReductionCount
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -117,7 +121,7 @@ end
 
 /-- **The final step of `lem:tlclpos_reduction`** (Appendix F):
 `f(w) ⊨ φ ⟺ w ⊨ T_r⟦φ⟧`, the invariant at the last position `r·|w| + r` of
-`f(w)`.  For `w = ε` that position is the end of the first block, outside the
+`f(w)`. For `w = ε` that position is the end of the first block, outside the
 positions `i ∈ [|w|]` the paper proves the invariant for. -/
 theorem FormP.models_spread_iff {r : ℕ} (hr : 1 ≤ r) (w : List σ) {φ : FormP (Option σ)}
     (hφ : YNormal φ) (hreach : φ.reach ≤ r) (hper : φ.period ∣ r) :
@@ -140,9 +144,9 @@ example :
 
 /-- **The paper's block size is too small.**  For `φ = Y Q_e` there are no
 moduli and one `Y`, so the proof of `lem:tlclpos_reduction` takes
-`r = M(Y+1) = 2`.  Then `T_2⟦Y Q_e⟧ = ⊥`, since `ρ − c = 2 − 1 = 1` makes it
+`r = M(Y+1) = 2`. Then `T_2⟦Y Q_e⟧ = ⊥`, since `ρ − c = 2 − 1 = 1` makes it
 read the letter `w_i`, yet `f(ε) = ee` satisfies `Y Q_e`: at `i = 0` the first
-block has no letter to read.  `FormP.reach` asks for `r ≥ 3` here.
+block has no letter to read. `FormP.reach` asks for `r ≥ 3` here.
 
 Source: arXiv:2506.16055v3, Appendix F, proof of `lem:tlclpos_reduction`. -/
 theorem tr_paperBlockSize_unsound :

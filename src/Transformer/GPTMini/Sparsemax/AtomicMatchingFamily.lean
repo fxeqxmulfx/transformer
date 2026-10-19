@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Sparsemax.AtomicMatchingContinuity
-import Transformer.GPTMini.Sparsemax.AtomicMatchingCompression
-import Mathlib.Data.Fintype.EquivFin
+module
+
+public import Transformer.GPTMini.Sparsemax.AtomicMatchingContinuity
+public import Transformer.GPTMini.Sparsemax.AtomicMatchingCompression
+public import Mathlib.Data.Fintype.EquivFin
 
 /-!
 # Compact finite charts of actual matching-mixture predictions
@@ -15,6 +17,8 @@ by assigning zero weight to unused slots. All matching geometries remain
 eligible: the slot identities are storage locations, not a preset atom bank.
 The later R+1 chart covers the complete observed convex prediction class.
 -/
+
+@[expose] public section
 
 noncomputable section
 

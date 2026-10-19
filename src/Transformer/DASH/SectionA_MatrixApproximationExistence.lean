@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_DenseCoefficients
+public import Transformer.DASH.SectionA_Approximation
+
+/-!
 # DASH — uniform accuracy of an actual optimized matrix evaluator
 
 arXiv:2602.02016v2, Appendix A. Finite coefficient arrays exist for any
@@ -6,8 +11,7 @@ positive accuracy target. The corrected original-scale algorithm fits at
 `ε/c` and multiplies its output by `c^exponent`.
 -/
 
-import Transformer.DASH.SectionA_DenseCoefficients
-import Transformer.DASH.SectionA_Approximation
+@[expose] public section
 
 open scoped Matrix
 

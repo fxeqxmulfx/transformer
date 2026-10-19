@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.ALM.KeyOrder
+public import Transformer.ALM.TieBreak
+
+/-!
 # The merge walk is a constant-time step, not a scan
 
 After the binary search, `HullHalf::query`
@@ -11,9 +16,9 @@ Written as it stands the walk is unbounded — two `while` loops over a
 walks could run long.
 
 They cannot, and the reason is that the score is a strictly concave function
-of the key.  `tie_iff_midpoint` says two distinct keys tie only at the
+of the key. `tie_iff_midpoint` says two distinct keys tie only at the
 midpoint query, so a third key would have to satisfy `k₂ = 2q - k₁ = k₃`:
-`not_tie_three` rules it out.  Hence:
+`not_tie_three` rules it out. Hence:
 
 * `argmaxSet_card_le_two` — at most two lines are ever tied, whatever the
   query and however many keys are stored;
@@ -24,12 +29,11 @@ midpoint query, so a third key would have to satisfy `k₂ = 2q - k₁ = k₃`:
   merge of at most two `Meta`s.
 
 So the walk is `O(1)` on top of the search, and the published bound stands.
-What that merge resolves to is `Transformer.ALM.HullResolve`.  The sorted order
+What that merge resolves to is `Transformer.ALM.HullResolve`. The sorted order
 is `Transformer.ALM.KeyOrder`'s; the metas are `Transformer.ALM.TieBreak`'s.
 -/
 
-import Transformer.ALM.KeyOrder
-import Transformer.ALM.TieBreak
+@[expose] public section
 
 namespace Transformer
 namespace ALM

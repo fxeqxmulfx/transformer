@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.QKAnchors
-import Transformer.GPTMini.Sparsemax.TrainableAnchors
+module
+
+public import Transformer.GPTMini.Sparsemax.QKAnchors
+public import Transformer.GPTMini.Sparsemax.TrainableAnchors
 
 /-!
 # Nonzero ordinary task directions in actual key vectors
@@ -20,6 +22,8 @@ assumption is introduced. Keys can subsequently leave the restricted
 family under unconstrained updates; the all-parameter guarantee concerns
 the chart parameterization. Shared-row losses may still cancel directions.
 -/
+
+@[expose] public section
 
 noncomputable section
 

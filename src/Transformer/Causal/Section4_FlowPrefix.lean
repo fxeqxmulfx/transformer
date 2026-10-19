@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Section4_SphereFlow
+
+/-!
 # Time translation and exact prefix consistency of the original causal flow
 
 ArXiv:2411.04990v2, §4, proof of `thm1`.
@@ -16,7 +20,7 @@ The proof retains the actual exponential scores and current-token term;
 no prefix consistency or flow property is built into a definition.
 -/
 
-import Transformer.Causal.Section4_SphereFlow
+@[expose] public section
 
 open scoped BigOperators
 open Real

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.Softmax
+
+/-!
 # The emergence of clusters in self-attention dynamics — the dynamics
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2305.05465v6.
@@ -16,25 +20,25 @@ transformer dynamics `eq:trans_dyn` it drives, the forward Euler iteration
 
 * `P_ij(t)` is `attentionMatrix Q K (X t) i j`, a function of the
   configuration rather than of a curve and a time, so that it can be evaluated
-  along the continuous and the discrete dynamics alike.  It is
+  along the continuous and the discrete dynamics alike. It is
   `Perspective.softmaxWeight` of the score row, which is where its two
   defining properties — non-negativity and row sum `1` — come from.
 
-* The source notes that `Q` and `K` "need not be square".  They are carried as
+* The source notes that `Q` and `K` "need not be square". They are carried as
   square `d × d` maps, and nothing is lost: they enter only through the
   bilinear form `(u,v) ↦ ⟨Qu, Kv⟩`, and every form a rectangular pair realizes
-  is realized by a square pair.  A rectangular `Q : ℝ^d → ℝ^m` with `m < d`
+  is realized by a square pair. A rectangular `Q : ℝ^d → ℝ^m` with `m < d`
   is in any case excluded by `QᵀK ≻ 0`, which forces `QᵀK` to have full rank.
 
 * `QᵀK ≻ 0` is `IsPosDefQK`: the form `⟨Q·, K·⟩` is symmetric and positive
-  definite.  Symmetry is part of it — the source takes the square root
+  definite. Symmetry is part of it — the source takes the square root
   `A := (QᵀK)^{1/2}` in `eq: A`, which presupposes it.
 
 Source: arXiv:2305.05465v6, `eq:trans_dyn`, `eq:P`, `r:discretetime`,
 `e:discreteequation`, `eq: A`.
 -/
 
-import Transformer.Perspective.Softmax
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -105,7 +109,7 @@ def DiscreteTransformer (Δt : ℝ) (Q K V : ParamMatrix d)
 
 /-- **A single token does not move.**  With `n = 1` the only attention weight
 is `1` and the dynamics reads `ẋ = V x`; at `V = 0` the constant curve solves
-`eq:trans_dyn`.  This is the one solution available in closed form, and it is
+`eq:trans_dyn`. This is the one solution available in closed form, and it is
 what witnesses the hypotheses of the theorems below. -/
 theorem transformerDynamics_const (Q K : ParamMatrix d) (X : Idx n → EucSpace d) :
     TransformerDynamics Q K 0 (fun _ => X) := by

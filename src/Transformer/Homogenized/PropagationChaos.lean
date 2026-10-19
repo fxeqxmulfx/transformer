@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section4_StaticPoC
+
+/-!
 # The printed propagation-of-chaos maximum estimate is false
 
 ArXiv:2604.01978v1, §4, `prop: poc`, displays
@@ -31,7 +35,7 @@ The literal uniform maximum claim is refuted. No alternative averaged
 or exchangeable estimate is asserted under its name.
 -/
 
-import Transformer.Homogenized.Section4_StaticPoC
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open Real MeasureTheory

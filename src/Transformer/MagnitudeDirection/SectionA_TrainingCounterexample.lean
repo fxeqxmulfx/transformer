@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.SectionA_TrainingCounterexampleStep
+
+/-!
 # Original MD need not inherit training convergence
 
 User-requested extension of arXiv:2606.25971v2, §3.1 and Appendix A,
@@ -10,7 +14,7 @@ not a numbered theorem in the paper, which gives no such theorem.
 The example allows any stateful gain optimizers, including Adam/AMSGrad.
 -/
 
-import Transformer.MagnitudeDirection.SectionA_TrainingCounterexampleStep
+@[expose] public section
 
 open scoped Topology
 open Filter

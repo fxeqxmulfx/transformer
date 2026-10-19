@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.ALM.BinSearch
+
+/-!
 # The search, over the lines the code actually stores
 
 `Transformer.ALM.BinSearch` proves `hull_bsearch_isGreatest`: the binary
-search returns a maximizer, and pays `log₂ n + 1` comparisons for it.  But it
+search returns a maximizer, and pays `log₂ n + 1` comparisons for it. But it
 says so only for the lines the *paraboloid lift* produces,
-`liftKey k = (2k, -k²)`, whose breakpoint is a midpoint.  The implementation
+`liftKey k = (2k, -k²)`, whose breakpoint is a midpoint. The implementation
 stores no such thing: `_HullCHT` in `transformer_vm/attention/hull2d_cht.h`
 holds arbitrary lines `(m, b)` and runs `lower_bound` over their intersection
-abscissas `isect`.  The geometry for that is already proved —
+abscissas `isect`. The geometry for that is already proved —
 `Transformer.ALM.Query`'s `lowerBound_isGreatest` assumes nothing but the two
 invariants the file states — but no theorem ran the *procedure* on it, so
 "the search is correct for the lines the code stores" was prose.
@@ -24,7 +28,7 @@ Source: `transformer_vm/attention/hull2d_cht.h`, lines 11-17 (the reduction),
 95-98 and 203-215 (the invariants and `argmax`), 255-315 (`query`).
 -/
 
-import Transformer.ALM.BinSearch
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -35,7 +39,7 @@ namespace ALM
 the two invariants of `hull2d_cht.h` — slopes increasing, intersection
 abscissas increasing — the index the binary search returns maximizes the line
 value at `x` over the whole stored range, and it cost `log₂ n + 1`
-comparisons.  Source: `hull2d_cht.h`, lines 95-98 and 203-215. -/
+comparisons. Source: `hull2d_cht.h`, lines 95-98 and 203-215. -/
 theorem bsearch_lines_isGreatest (L : ℕ → ℝ × ℝ) (x : ℝ) (n : ℕ)
     (hslope : ∀ j, (L j).1 < (L (j + 1)).1)
     (hbp : ∀ a b, a ≤ b → interX (L a) (L (a + 1)) ≤ interX (L b) (L (b + 1))) :

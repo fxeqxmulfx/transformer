@@ -1,4 +1,6 @@
-import Transformer.Basis.RecallTablePositions
+module
+
+public import Transformer.Basis.RecallTablePositions
 
 /-!
 # Exact adjacency and chronological positions in full raw recall prefixes
@@ -16,6 +18,8 @@ Successful parser inversion supplies these conditions. These facts
 will be transferred to the checked finite embedding indices; they
 do not inspect a transformer state or assume its predicted answer.
 -/
+
+@[expose] public section
 
 namespace Transformer.Basis
 

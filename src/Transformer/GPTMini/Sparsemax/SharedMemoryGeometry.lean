@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.SharedMemoryValues
+module
+
+public import Transformer.GPTMini.Sparsemax.SharedMemoryValues
 
 /-!
 # Convex training geometry and the exact shared-memory prediction class
@@ -16,6 +18,8 @@ attainable. Gram changes can be compensated by one global value decoder;
 an output-only objective does not identify the dictionary attention.
 This price is recorded alongside the positive convexity result.
 -/
+
+@[expose] public section
 
 noncomputable section
 

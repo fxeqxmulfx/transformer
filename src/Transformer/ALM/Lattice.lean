@@ -1,22 +1,26 @@
-/-
+module
+
+public import Transformer.ALM.Softmax
+public import Mathlib.Algebra.Field.GeomSum
+
+/-!
 # Removing the factor `n`: a lattice counting bound
 
 `softmax_winner_ge` bounds every one of the `n-1` competitors by the single
-worst gap `δ`, which throws away the lattice structure.  For integer keys the
+worst gap `δ`, which throws away the lattice structure. For integer keys the
 true competitor sum is
 
   `∑_{j ≠ i₀} exp(-β ‖k_j - q‖²)`,
 
 and distinct integer keys put a bounded number of keys at each distance `t`
-from `q`.  Summing the resulting geometric series gives a bound that does not
+from `q`. Summing the resulting geometric series gives a bound that does not
 mention `n` at all.
 
 The consequence is architectural: the inverse temperature `β` needed for an
 exact simulation does **not** have to grow with the length of the trace.
 -/
 
-import Transformer.ALM.Softmax
-import Mathlib.Algebra.Field.GeomSum
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -72,7 +76,7 @@ private lemma geom_range_le {s : ℝ} (hs0 : 0 ≤ s) (hs1 : s < 1) (N : ℕ) :
 
   `∑_{t = 1}^{N} r^{t²} ≤ r / (1 - r³)`,
 
-because `t² ≥ 3t - 2` for every `t ≥ 1`.  Compare `geom_pos_le` of
+because `t² ≥ 3t - 2` for every `t ≥ 1`. Compare `geom_pos_le` of
 `Transformer.ALM.Lattice`, which gives `r/(1-r)` for the linear exponents. -/
 theorem geom_sq_le {r : ℝ} (hr0 : 0 ≤ r) (hr1 : r < 1) (N : ℕ) :
     ∑ t ∈ (Finset.range (N + 1)).erase 0, r ^ (t ^ 2) ≤ r / (1 - r ^ 3) := by
@@ -104,7 +108,7 @@ theorem geom_sq_le {r : ℝ} (hr0 : 0 ≤ r) (hr1 : r < 1) (N : ℕ) :
 
 /-- **Lattice counting bound.**  Suppose every competitor `j ≠ i₀` loses by at
 least an integer amount `g j ≥ 1`, and at most `M` competitors share any given
-value of `g`.  Then the competitor sum is at most `M · e^{-β}/(1-e^{-β})`,
+value of `g`. Then the competitor sum is at most `M · e^{-β}/(1-e^{-β})`,
 *independently of `n`*. -/
 lemma sum_exp_gap_le {n : ℕ} (β : ℝ) (hβ : 0 < β)
     (s : Fin n → ℝ) (i₀ : Fin n) (g : Fin n → ℕ) (M : ℕ)

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section6_HardyPrimitive
+
+/-!
 # Kinetic theory for Transformers — regularity of the original Bessel profile
 
 The spatial and time integrals in arXiv:2605.09213v1, §6, proof of
@@ -10,7 +14,7 @@ rectangle. The literal diagonal formula is kept throughout; a singleton
 change is used only when identifying its actual spatial integral.
 -/
 
-import Transformer.Kinetic.Section6_HardyPrimitive
+@[expose] public section
 
 open Real Set MeasureTheory
 

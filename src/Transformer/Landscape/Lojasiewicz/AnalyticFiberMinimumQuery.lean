@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.AnalyticFiberMinimaReduction
+public import Transformer.Landscape.Lojasiewicz.PolynomialFiberArithmetic
+
+/-!
 # Analytic fiber minima as arithmetic Sturm--Tarski tests
 
 Analytic preparation and division retain every scalar competitor on a
@@ -6,8 +11,7 @@ fixed box; signed real-root queries eliminate that competitor variable.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.AnalyticFiberMinimaReduction
-import Transformer.Landscape.Lojasiewicz.PolynomialFiberArithmetic
+@[expose] public section
 
 noncomputable section
 open scoped BigOperators

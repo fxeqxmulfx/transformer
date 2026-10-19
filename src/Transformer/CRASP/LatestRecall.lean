@@ -1,10 +1,15 @@
-/-
+module
+
+public import Transformer.CRASP.MatchingRecallAnswers
+public import Transformer.CRASP.SecondLast
+
+/-!
 # Recall of the latest value needs positions
 
 In no paper: the hard recall of the lab's basis (`python/src/lab/domain/basis.py`)
 rebinds keys and answers a query with the value its key was bound to last
 (`LatestAnswer`), which Zoology's Setup leaves open
-(`Zoology.unrestricted_mqar_ambiguous`).  No future-masked rounded transformer
+(`Zoology.unrestricted_mqar_ambiguous`). No future-masked rounded transformer
 recalls it at every length over two values or more, whatever its depth, width
 and precision (`not_recallsLatest`), while the matcher recalls a prior value of
 the query in one layer of width five at every length (`matcher_answers`).
@@ -14,13 +19,12 @@ row is the value of the row before it (`latestAnswer_oneKey_iff`): binding the
 key by the bits of a string, the answer is whether the string lies in `Σ*bΣ`.
 A transformer over the triples (key, value, query) read through that binding
 (`RTfr.comap`) is one over `{a, b}`, which would then agree with `Σ*bΣ` on the
-nonempty strings, against `not_models_iff_secondLast`.  Those instances rebind
+nonempty strings, against `not_models_iff_secondLast`. Those instances rebind
 the key to the value it holds, which the lab's generator never does; that recall
 stays out of reach when every rebinding changes the value is not proved here.
 -/
 
-import Transformer.CRASP.MatchingRecallAnswers
-import Transformer.CRASP.SecondLast
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -57,7 +61,7 @@ theorem RTfr.accepts_comap_bos (T : RTfr (Option σ) p s d k) (g : τ → σ) (w
   simp [bos, Function.comp_def]
 
 /-- The value bound last to the query of row `i`: an earlier row `j` binds the
-query to `v`, and no row between binds the query again.  The lab's recall
+query to `v`, and no row between binds the query again. The lab's recall
 settles a rebinding so (`python/src/lab/domain/tasks.py`, `MQAR` with
 `overwrites`); Zoology's `PriorAnswer` accepts any earlier binding. -/
 def LatestAnswer {n : ℕ} (x : Zoology.MQARInstance n c) (i : Fin n) (v : Fin c) : Prop :=
@@ -65,7 +69,7 @@ def LatestAnswer {n : ℕ} (x : Zoology.MQARInstance n c) (i : Fin n) (v : Fin c
     ∀ j' : Fin n, j < j' → j' < i → x.key j' ≠ x.query i
 
 /-- **On a consistent dictionary the latest value is the prior one**: the two
-recalls differ only where a key is rebound.  Of the earlier rows holding the
+recalls differ only where a key is rebound. Of the earlier rows holding the
 query the latest exists when one does, and consistency gives it that value. -/
 theorem latestAnswer_iff_priorAnswer {n : ℕ} {x : Zoology.MQARInstance n c}
     (hx : Zoology.Consistent x) (i : Fin n) (v : Fin c) :

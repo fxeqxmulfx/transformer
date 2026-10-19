@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.Basic
+public import Transformer.Landscape.Lojasiewicz.AnalyticSignStability
+public import Transformer.Basic
+
+/-!
 # Sources described by finite analytic coordinate families
 
 Domains retain the original finite signs and both strict box bounds.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.Basic
-import Transformer.Landscape.Lojasiewicz.AnalyticSignStability
-import Transformer.Basic
+@[expose] public section
 
 namespace Transformer.Landscape.Lojasiewicz
 

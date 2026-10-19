@@ -1,5 +1,7 @@
-import Transformer.Homogenized.Section7_BoundedMartingaleNatLimit
-import Transformer.Homogenized.Section7_WeightedMartingale
+module
+
+public import Transformer.Homogenized.Section7_BoundedMartingaleNatLimit
+public import Transformer.Homogenized.Section7_WeightedMartingale
 
 /-!
 # The actual variance budget of bounded martingale increments
@@ -16,6 +18,8 @@ partial sum of the expected squared increments, hence also for their
 nonnegative extended-real infinite sum. This is the summability needed
 to control continuous-time excursions by the preceding maximal bound.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology ENNReal BigOperators

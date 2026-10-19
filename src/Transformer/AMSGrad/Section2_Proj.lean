@@ -1,9 +1,11 @@
-import Transformer.AMSGrad.Section1_AMSGrad
-import Mathlib.LinearAlgebra.Matrix.PosDef
-import Mathlib.Analysis.Convex.Basic
-import Mathlib.Algebra.Order.Star.Real
+module
 
-/-
+public import Transformer.AMSGrad.Section1_AMSGrad
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+public import Mathlib.Analysis.Convex.Basic
+public import Mathlib.Algebra.Order.Star.Real
+
+/-!
 # AMSGrad — projections are non-expansive
 
 §2 of arXiv:1904.03590v4, Lemma 2.7 (`McM&Str`, Lemma 3 of McMahan and
@@ -21,6 +23,8 @@ norm `‖Q^{1/2} ·‖` is non-expansive in that norm.
 
 Source: arXiv:1904.03590v4, §2, Lemma 2.7.
 -/
+
+@[expose] public section
 
 open Matrix
 

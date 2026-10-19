@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_ExponentialMeanLogGenerator
+public import Transformer.Homogenized.Section7_GramFieldContinuity
+
+/-!
 # Actual mean-noise covariance and continuity of the logarithmic fields
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -21,8 +26,7 @@ positive regularization transfer this to the logarithmic and
 exponential-logarithmic generator fields used in the maximal bound.
 -/
 
-import Transformer.Homogenized.Section7_ExponentialMeanLogGenerator
-import Transformer.Homogenized.Section7_GramFieldContinuity
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators NNReal

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+
+/-!
 # Normalization in Attention Dynamics — Basic definitions
 
 Formalization of arXiv:2510.22026v2 — "Normalization in Attention Dynamics"
@@ -15,8 +20,7 @@ Equations covered:
   with speed-regulation factors `s_j(t)` listed in Table 2.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -120,11 +124,11 @@ noncomputable def varScale (α : ℝ → ℝ) (scheme : Scheme) (t : ℝ) : ℝ 
 
 `θ` follows `eq: NA` with the speed-regulation factor `s_j(t)` of `scheme`,
 and `r` is the magnitude that factor refers to, evolving by the `ṙ_j(t)` of
-the same row of Table 2.  `α` is the nGPT step size and `τ` the Mix-LN
+the same row of Table 2. `α` is the nGPT step size and `τ` the Mix-LN
 switching time; both are ignored by the schemes that do not mention them.
 
 The dynamics runs forward from the initialization, `t ≥ 0`, with one-sided
-derivatives at `t = 0`, as in the source.  Asked on all of `ℝ` it would also
+derivatives at `t = 0`, as in the source. Asked on all of `ℝ` it would also
 demand a backward-global solution, which for Pre-, Mix- and Peri-LN need not
 exist (a radius `r_j` may reach `0` in finite negative time), and any
 statement quantified over such solutions could hold vacuously.

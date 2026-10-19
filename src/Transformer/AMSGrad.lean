@@ -1,4 +1,59 @@
-/-
+module
+
+public import Transformer.AMSGrad.Section1_AMSGrad
+public import Transformer.AMSGrad.Section1_TheoremA
+public import Transformer.AMSGrad.Section2_Prelim
+public import Transformer.AMSGrad.Section2_Proj
+public import Transformer.AMSGrad.Section3_Step
+public import Transformer.AMSGrad.Section3_Issue
+public import Transformer.AMSGrad.Section3_Example
+public import Transformer.AMSGrad.Section3_Optimal
+public import Transformer.AMSGrad.Section4_Lemmas
+public import Transformer.AMSGrad.Section4_MainLemma
+public import Transformer.AMSGrad.Section4_Telescope
+public import Transformer.AMSGrad.Section4_Terms
+public import Transformer.AMSGrad.Section4_TheoremAAbel
+public import Transformer.AMSGrad.Section4_TheoremAAbelFalse
+public import Transformer.AMSGrad.Section4_TheoremAActualAbelFalse
+public import Transformer.AMSGrad.Section4_TheoremAReduce
+public import Transformer.AMSGrad.Section4_TheoremAGeneral
+public import Transformer.AMSGrad.Section4_TheoremAAntitone
+public import Transformer.AMSGrad.Section4_TheoremASparse
+public import Transformer.AMSGrad.Section4_TheoremABump
+public import Transformer.AMSGrad.Section4_TheoremAAlternateStep
+public import Transformer.AMSGrad.Section4_TheoremAEnergyBounds
+public import Transformer.AMSGrad.Section4_TheoremAEnergyBudget
+public import Transformer.AMSGrad.Section4_TheoremAPotential
+public import Transformer.AMSGrad.Section4_TheoremAProof
+public import Transformer.AMSGrad.Section4_TheoremAFinite
+public import Transformer.AMSGrad.Section4_Third
+public import Transformer.AMSGrad.Section4_Rate
+public import Transformer.AMSGrad.Section4_Theorem
+public import Transformer.AMSGrad.Section4_Corollary
+public import Transformer.AMSGrad.Section4_OfflineConvergence
+public import Transformer.AMSGrad.Section4_OfflineAverage
+public import Transformer.AMSGrad.Section4_OfflineAverageConvergence
+public import Transformer.AMSGrad.Section4_TrainingModels
+public import Transformer.AMSGrad.Section4_TrainingScalarEnergy
+public import Transformer.AMSGrad.Section4_TrainingKinetic
+public import Transformer.AMSGrad.Section4_TrainingDescent
+public import Transformer.AMSGrad.Section4_TrainingGradientBound
+public import Transformer.AMSGrad.Section4_TrainingMetricBound
+public import Transformer.AMSGrad.Section4_TrainingVelocityLimit
+public import Transformer.AMSGrad.Section4_TrainingGradientEnergy
+public import Transformer.AMSGrad.Section4_TrainingStationarity
+public import Transformer.AMSGrad.Section4_TrainingLossLimit
+public import Transformer.AMSGrad.Section4_TrainingMinimum
+public import Transformer.AMSGrad.Section4_Counter
+public import Transformer.AMSGrad.Section4_CounterRun
+public import Transformer.AMSGrad.Section4_CounterRegret
+public import Transformer.AMSGrad.Section5_AdamX
+public import Transformer.AMSGrad.Section5_Bounds
+public import Transformer.AMSGrad.Section5_Theorem
+public import Transformer.AMSGrad.Section5_Sums
+public import Transformer.AMSGrad.Section5_Corollary
+
+/-!
 Formalization of:
   Tran, Le,
   "On the Convergence Proof of AMSGrad and a New Version",
@@ -44,55 +99,4 @@ initial loss gap; no direction-replacement guard is added.
 Not transcribed, deliberately: the experiments of §6.
 -/
 
-import Transformer.AMSGrad.Section1_AMSGrad
-import Transformer.AMSGrad.Section1_TheoremA
-import Transformer.AMSGrad.Section2_Prelim
-import Transformer.AMSGrad.Section2_Proj
-import Transformer.AMSGrad.Section3_Step
-import Transformer.AMSGrad.Section3_Issue
-import Transformer.AMSGrad.Section3_Example
-import Transformer.AMSGrad.Section3_Optimal
-import Transformer.AMSGrad.Section4_Lemmas
-import Transformer.AMSGrad.Section4_MainLemma
-import Transformer.AMSGrad.Section4_Telescope
-import Transformer.AMSGrad.Section4_Terms
-import Transformer.AMSGrad.Section4_TheoremAAbel
-import Transformer.AMSGrad.Section4_TheoremAAbelFalse
-import Transformer.AMSGrad.Section4_TheoremAActualAbelFalse
-import Transformer.AMSGrad.Section4_TheoremAReduce
-import Transformer.AMSGrad.Section4_TheoremAGeneral
-import Transformer.AMSGrad.Section4_TheoremAAntitone
-import Transformer.AMSGrad.Section4_TheoremASparse
-import Transformer.AMSGrad.Section4_TheoremABump
-import Transformer.AMSGrad.Section4_TheoremAAlternateStep
-import Transformer.AMSGrad.Section4_TheoremAEnergyBounds
-import Transformer.AMSGrad.Section4_TheoremAEnergyBudget
-import Transformer.AMSGrad.Section4_TheoremAPotential
-import Transformer.AMSGrad.Section4_TheoremAProof
-import Transformer.AMSGrad.Section4_TheoremAFinite
-import Transformer.AMSGrad.Section4_Third
-import Transformer.AMSGrad.Section4_Rate
-import Transformer.AMSGrad.Section4_Theorem
-import Transformer.AMSGrad.Section4_Corollary
-import Transformer.AMSGrad.Section4_OfflineConvergence
-import Transformer.AMSGrad.Section4_OfflineAverage
-import Transformer.AMSGrad.Section4_OfflineAverageConvergence
-import Transformer.AMSGrad.Section4_TrainingModels
-import Transformer.AMSGrad.Section4_TrainingScalarEnergy
-import Transformer.AMSGrad.Section4_TrainingKinetic
-import Transformer.AMSGrad.Section4_TrainingDescent
-import Transformer.AMSGrad.Section4_TrainingGradientBound
-import Transformer.AMSGrad.Section4_TrainingMetricBound
-import Transformer.AMSGrad.Section4_TrainingVelocityLimit
-import Transformer.AMSGrad.Section4_TrainingGradientEnergy
-import Transformer.AMSGrad.Section4_TrainingStationarity
-import Transformer.AMSGrad.Section4_TrainingLossLimit
-import Transformer.AMSGrad.Section4_TrainingMinimum
-import Transformer.AMSGrad.Section4_Counter
-import Transformer.AMSGrad.Section4_CounterRun
-import Transformer.AMSGrad.Section4_CounterRegret
-import Transformer.AMSGrad.Section5_AdamX
-import Transformer.AMSGrad.Section5_Bounds
-import Transformer.AMSGrad.Section5_Theorem
-import Transformer.AMSGrad.Section5_Sums
-import Transformer.AMSGrad.Section5_Corollary
+@[expose] public section

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_ProtectedTransfers
+public import Transformer.Interpolation.Section4_TransferStability
+
+/-!
 # Original contraction and transfer using the same protected attention axis
 
 ArXiv:2411.04551v3, §3.2, selective contraction, and §5,
@@ -17,8 +22,7 @@ of the requested accuracy. Equal selected endpoints allow a zero
 transfer clock while the other phases retain their actual weak laws.
 -/
 
-import Transformer.Interpolation.Section4_ProtectedTransfers
-import Transformer.Interpolation.Section4_TransferStability
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped NNReal

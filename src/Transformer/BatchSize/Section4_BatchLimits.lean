@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_Coefficients
+
+/-!
 # Batch-size sensitivity and the corrected local approximation
 
 arXiv:2506.12543v1, Section 4.3's takeaway following Theorem 1.
@@ -6,7 +10,7 @@ The sqrt(B) effect is the derivative at zero signal, not an exact law
 for finite signal. Saturation is approached as B tends to infinity.
 -/
 
-import Transformer.BatchSize.Section4_Coefficients
+@[expose] public section
 
 open Filter
 open scoped Topology

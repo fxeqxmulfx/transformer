@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Kinetic.Defs
+public import Mathlib.Topology.Instances.Real.Lemmas
+
+/-!
 # The attention weights and the kernel's Lipschitz constants
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 1. The field of
@@ -12,8 +17,7 @@ with the normalized ALiBi weights `ω_{j,k} = e^{-λ(j-k)/N} / 𝒵_{N,j}`.
   both are continuous and `2π`-periodic, so their derivatives are bounded.
 -/
 
-import Transformer.Kinetic.Defs
-import Mathlib.Topology.Instances.Real.Lemmas
+@[expose] public section
 
 open Real
 

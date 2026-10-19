@@ -1,10 +1,12 @@
-import Transformer.AMSGrad.Section4_Counter
-import Transformer.AMSGrad.Section4_Lemmas
+module
 
-/-
+public import Transformer.AMSGrad.Section4_Counter
+public import Transformer.AMSGrad.Section4_Lemmas
+
+/-!
 # AMSGrad — the run of the counterexample to Corollary 4.5
 
-§4 of arXiv:1904.03590v4, Corollary 4.5: the run of `signSetup`.  With
+§4 of arXiv:1904.03590v4, Corollary 4.5: the run of `signSetup`. With
 `β_{1,t} = 0` and `g_t = s_t`, the step is `x_{t+1} = Π(x_t - η_t s_t)` with
 `η_t = α_t/√v̂_t ≥ 1/√t`, so inside a block `[2^k, 2^{k+1})` the iterate
 reaches the endpoint `-s_t` after at most `2√(2^{k+1})` steps and stays there.
@@ -12,12 +14,14 @@ reaches the endpoint `-s_t` after at most `2√(2^{k+1})` steps and stays there.
 Source: arXiv:1904.03590v4, §4, Corollary 4.5.
 -/
 
+@[expose] public section
+
 open Finset
 
 namespace Transformer
 namespace AMSGrad
 
-/-- `s_t² = 1`.  arXiv:1904.03590v4, §4, Corollary 4.5. -/
+/-- `s_t² = 1`. arXiv:1904.03590v4, §4, Corollary 4.5. -/
 theorem blockSign_sq (t : ℕ) : blockSign t ^ 2 = 1 := by
   unfold blockSign; split_ifs <;> norm_num
 
@@ -94,7 +98,7 @@ theorem blockSign_block {k t : ℕ} (h1 : 2 ^ k ≤ t) (h2 : t < 2 ^ (k + 1)) :
   · exact (Even.neg_one_pow (Nat.even_iff.2 h)).symm
   · exact (Odd.neg_one_pow (Nat.odd_iff.2 (by omega))).symm
 
-/-- `x_t ∈ [-1, 1]`.  arXiv:1904.03590v4, §4, Corollary 4.5. -/
+/-- `x_t ∈ [-1, 1]`. arXiv:1904.03590v4, §4, Corollary 4.5. -/
 theorem sign_x_mem (t : ℕ) :
     -1 ≤ signSetup.x amsgradRule t 0 ∧ signSetup.x amsgradRule t 0 ≤ 1 :=
   ⟨(x_mem isOnlineConvex_sign amsgradRule t).1 0, (x_mem isOnlineConvex_sign amsgradRule t).2 0⟩

@@ -1,5 +1,7 @@
-import Transformer.Clusters.Section7_UnboundedParticles
-import Transformer.Landscape.GlobalFlow.Existence
+module
+
+public import Transformer.Clusters.Section7_UnboundedParticles
+public import Transformer.Landscape.GlobalFlow.Existence
 
 /-!
 # Four scalar tokens for the ReLU feed-forward dynamics
@@ -21,6 +23,8 @@ bound for the attention drift.
 These facts support a genuine global trajectory, which will test the
 source's proposed extension of its three-hyperplane conclusion.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -147,4 +151,3 @@ theorem norm_reluClockDrift_le (s : ReluClockState) :
     (mul_le_mul_of_nonneg_left (max_le hy hw) (by norm_num))
 
 end Transformer.Clusters
-

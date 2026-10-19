@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianMatrixPair
+public import Transformer.Homogenized.GaussianDrift
+
+/-!
 # Corrected delta method for every original Gaussian head law
 
 ArXiv:2604.01978v1, §2.3.3, initialization (G), and §7.3,
@@ -23,8 +28,7 @@ The corrected uniform expansion follows from the proved standard-head
 expansion. No covariance, remainder or law-transfer identity is assumed.
 -/
 
-import Transformer.Homogenized.Section7_GaussianMatrixPair
-import Transformer.Homogenized.GaussianDrift
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.RASP.Basic
+
+/-!
 # RASP: `selector_width` is not a primitive
 
 Weiss, Goldberg, Yahav — arXiv:2106.06981v2, "Thinking Like Transformers",
@@ -20,17 +24,17 @@ that implementation:
 
 The claim to check is that `nobos_res` is the width of `sel`, and that
 `bos_res` is its width with position `0` — the BOS position, which is never
-to be counted — removed.  Both hold exactly, for every selector.
+to be counted — removed. Both hold exactly, for every selector.
 
 The mechanism is the one §4 calls out under "Use of Separator Tokens": a
 row of `or0` always selects position `0`, so the mass `light0` puts there is
-diffused by exactly the row's width, and the reciprocal recovers it.  The
+diffused by exactly the row's width, and the reciprocal recovers it. The
 `and0` term is the correction that a neutral position would have made
 unnecessary — "without such neutral positions, counting requires an
 additional head".
 -/
 
-import Transformer.RASP.Basic
+@[expose] public section
 
 namespace Transformer
 namespace RASP

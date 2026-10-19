@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_AttentionFlow
+public import Transformer.Interpolation.Section1_AutonomousTransport
+
+/-!
 # Finite-net comparison for the original attention weak law
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §2, `prop: targets.atoms`.
@@ -8,8 +13,7 @@ with explicit net and smoothing errors. Choosing the scales in order
 removes those errors for the original arbitrary weak probability law.
 -/
 
-import Transformer.Interpolation.Section2_AttentionFlow
-import Transformer.Interpolation.Section1_AutonomousTransport
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal BigOperators

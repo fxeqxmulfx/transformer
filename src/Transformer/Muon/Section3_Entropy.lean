@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Muon.Section2_Models
+public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
+
+/-!
 # Muon — spectral entropy
 
 arXiv:2502.16982, §3.4, “Dynamics of Singular Spectrum”. Squared singular
@@ -7,8 +12,7 @@ and positive energy the reported normalized entropy lies in `[0,1]`.
 The comparisons of actual training checkpoints are empirical observations.
 -/
 
-import Transformer.Muon.Section2_Models
-import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
+@[expose] public section
 
 open scoped BigOperators
 

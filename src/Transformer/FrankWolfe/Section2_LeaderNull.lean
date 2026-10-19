@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section2_LinearBranches
+public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+public import Mathlib.MeasureTheory.Constructions.Pi
+
+/-!
 # Attention's forward pass and Frank-Wolfe — null sets of score ties
 
 For a linear branch fixing consensus tuples, a common translation leaves
@@ -10,10 +17,7 @@ such ties for almost every initial tuple, even for singular branches.
 Source: arXiv:2508.09628v1, §2.1, lem:singleLeader.
 -/
 
-import Transformer.FrankWolfe.Section2_LinearBranches
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathlib.MeasureTheory.Constructions.Pi
+@[expose] public section
 
 open MeasureTheory
 

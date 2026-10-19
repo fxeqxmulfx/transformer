@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Reparameterization.Completion
+module
+
+public import Transformer.GPTMini.Convex.Reparameterization.Completion
 
 /-!
 # Coordinate-independent head-class obstruction and a finite convex completion
@@ -13,3 +15,5 @@ prediction table with convex likelihoods by enlarging that class.
 These controls have fixed one-hot values and explicitly specified
 log-probability readouts. Neither is a compact causal GPTMini replacement.
 -/
+
+@[expose] public section

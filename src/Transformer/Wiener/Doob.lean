@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Wiener.DoobGrid
+
+/-!
 # Doob's `L²` inequalities for right-continuous martingales
 
 For a martingale `(M_t)_{t ≥ 0}` on a finite measure space whose paths are
@@ -9,7 +13,7 @@ almost surely right-continuous (continuous paths are:
 * `ε² ℙ(sup_{t ≤ T} |M_t| ≥ ε) ≤ 𝔼[M_T²]` (`sq_mul_measure_le_iSup_enorm`;
   `sq_mul_measureReal_le` with a real supremum and a Bochner integral).
 
-The supremum is measurable up to a null set (`aemeasurable_iSup_enorm`).  On the
+The supremum is measurable up to a null set (`aemeasurable_iSup_enorm`). On the
 dyadic grid of level `n` both inequalities are those of `DoobFinite` for the
 submartingale `|M|`; the grid maxima increase to the supremum
 (`iSup_enorm_eq_iSup_gridMax`), and monotone convergence, of integrals and of
@@ -19,7 +23,7 @@ Reference: D. Revuz, M. Yor, *Continuous martingales and Brownian motion*,
 Thm II.1.7, `p = 2`.
 -/
 
-import Transformer.Wiener.DoobGrid
+@[expose] public section
 
 open MeasureTheory Filter Set
 open scoped ENNReal NNReal Topology
@@ -42,8 +46,8 @@ example : ∀ᵐ _ : ℝ ∂(Measure.dirac 0), Continuous fun _ : ℝ≥0 => (1 
 variable [IsFiniteMeasure P]
 
 /-- **Doob's `L²` inequality**: `𝔼[(sup_{t ≤ T} |M_t|)²] ≤ 4 𝔼[M_T²]` for a
-martingale with almost surely right-continuous paths.  Revuz–Yor, Thm II.1.7,
-`p = 2`.  On the dyadic grid of level `n` it is `lintegral_runningMax_sq_le`,
+martingale with almost surely right-continuous paths. Revuz–Yor, Thm II.1.7,
+`p = 2`. On the dyadic grid of level `n` it is `lintegral_runningMax_sq_le`,
 `𝔼[M_s²] ≤ 𝔼[M_T²]` for `s ≤ T` giving its integrability hypothesis. -/
 theorem lintegral_iSup_enorm_sq_le (hM : Martingale M ℱ P)
     (hc : ∀ᵐ ω ∂P, ∀ t, ContinuousWithinAt (fun s => M s ω) (Ici t) t) (T : ℝ≥0) :
@@ -70,8 +74,8 @@ theorem lintegral_iSup_enorm_sq_le (hM : Martingale M ℱ P)
         simpa only [gridMax, ← Real.enorm_eq_ofReal_abs, dyadicTime_two_pow] using h
 
 /-- **Doob's weak `L²` inequality**: `ε² ℙ(sup_{t ≤ T} |M_t| ≥ ε) ≤ 𝔼[M_T²]` for
-a martingale with almost surely right-continuous paths.  Revuz–Yor,
-Thm II.1.7, `p = 2`.  For `0 < δ < ε` the event lies, up to a null set, in the
+a martingale with almost surely right-continuous paths. Revuz–Yor,
+Thm II.1.7, `p = 2`. For `0 < δ < ε` the event lies, up to a null set, in the
 increasing union of the grid events `{gridMax M T n ≥ δ}`, each of which
 `ofReal_sq_mul_measure_le` bounds; then `δ → ε`. -/
 theorem sq_mul_measure_le_iSup_enorm (hM : Martingale M ℱ P)
@@ -109,7 +113,7 @@ theorem sq_mul_measure_le_iSup_enorm (hM : Martingale M ℱ P)
 
 /-- **Doob's weak `L²` inequality with real quantities**: for `M_T` square
 integrable and `ε ≥ 0`, `ε² ℙ(sup_{t ≤ T} |M_t| ≥ ε) ≤ 𝔼[M_T²]`, the supremum
-taken in `ℝ`.  Where `|M|` is unbounded on `[0, T]` the real supremum is `0` by
+taken in `ℝ`. Where `|M|` is unbounded on `[0, T]` the real supremum is `0` by
 convention; its event lies in that of `sq_mul_measure_le_iSup_enorm` anyway. -/
 theorem sq_mul_measureReal_le (hM : Martingale M ℱ P)
     (hc : ∀ᵐ ω ∂P, ∀ t, ContinuousWithinAt (fun s => M s ω) (Ici t) t) {T : ℝ≥0}

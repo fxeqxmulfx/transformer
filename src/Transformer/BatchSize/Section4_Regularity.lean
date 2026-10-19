@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_DiffusionModel
+
+/-!
 # Explicit regularity for weak approximation
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1.
@@ -6,7 +10,7 @@ The source's missing regularity conditions are stated separately from
 the approximation claim, and their nonvacuity and moment bounds are proved.
 -/
 
-import Transformer.BatchSize.Section4_DiffusionModel
+@[expose] public section
 
 noncomputable section
 

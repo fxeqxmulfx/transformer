@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_Coefficients
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
+
+/-!
 # DASH — discrete orthogonality of the fitting transform
 
 arXiv:2602.02016v2, Appendix A, coefficient-fitting algorithm.
@@ -6,8 +11,7 @@ The cosine modes at the source's midpoint angles are orthogonal
 when their degrees are strictly below the number of samples.
 -/
 
-import Transformer.DASH.SectionA_Coefficients
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
+@[expose] public section
 
 open scoped BigOperators
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Basic.ENNReal.Operations
+
+/-!
 # Grouping small masses into prescribed weights
 
 ArXiv:2411.04551v3, §2.2, proof of `prop: compression`, Step 1: the
@@ -11,8 +16,7 @@ and reaches it up to `η`; the remaining weights are grouped among the
 remaining masses.
 -/
 
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Basic.ENNReal.Operations
+@[expose] public section
 
 open scoped ENNReal NNReal
 

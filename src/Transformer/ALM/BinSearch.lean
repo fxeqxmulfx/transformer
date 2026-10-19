@@ -1,14 +1,18 @@
-/-
+module
+
+public import Transformer.ALM.Hull
+
+/-!
 # What the query actually costs
 
 `Transformer.ALM.Hull` proves that the index `lower_bound(q)` returns is an
 argmax of the score, but `lower_bound` was a hypothesis there: the index `i`
-was *described* by `hlt` and `hge`, not computed.  `Transformer.ALM.LookupIndex`
+was *described* by `hlt` and `hge`, not computed. `Transformer.ALM.LookupIndex`
 has the matching gap on the cost side, where `NNIndex.query` is declared data.
 
-This file removes both.  `bsearch` is `std::lower_bound` written out —
+This file removes both. `bsearch` is `std::lower_bound` written out —
 halve, compare once, recurse — and `bcount` counts the comparisons it makes
-on the same recursion.  Then
+on the same recursion. Then
 
 * `bsearch_lt` and `bsearch_ge_of_lt` are exactly the `hlt` and `hge` that
   `hull_isGreatest` asks for, so `hull_bsearch_isGreatest` needs no
@@ -18,7 +22,7 @@ on the same recursion.  Then
 So the logarithmic query cost of the planar hull is a theorem about the
 procedure that runs, not a number declared in a structure field.
 
-The procedure that runs *in C++*, that is.  `alm-hull/src/tree.rs` keeps the
+The procedure that runs *in C++*, that is. `alm-hull/src/tree.rs` keeps the
 envelope in a red-black tree rather than a sorted array, and pays
 `2·log₂(n + 1)` for the same query; `Transformer.ALM.TreeQuery` is that
 descent and its price, and `TreeQuery.log_succ_bound` is the factor of two
@@ -29,7 +33,7 @@ calls `lower_bound` once); the comparison count is the standard bound
 `⌈log₂ (len + 1)⌉` for `std::lower_bound`.
 -/
 
-import Transformer.ALM.Hull
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -37,7 +41,7 @@ namespace ALM
 /-! ### The search, and its comparison count -/
 
 /-- **`std::lower_bound`.**  The first index of `[lo, lo + len)` at which `p`
-holds, or `lo + len` if none does.  Each step tests the midpoint once and
+holds, or `lo + len` if none does. Each step tests the midpoint once and
 keeps the half that can still contain the answer. -/
 def bsearch (p : ℕ → Bool) (lo len : ℕ) : ℕ :=
   match len with
@@ -88,7 +92,7 @@ theorem bsearch_le (p : ℕ → Bool) (lo len : ℕ) : bsearch p lo len ≤ lo +
 
 /-- **The search only looks inside its window.**  Two predicates that agree
 on `[lo, lo + len)` send the search down the same path, so the answer depends
-on nothing outside the range being searched.  `Transformer.ALM.FloatIndex`
+on nothing outside the range being searched. `Transformer.ALM.FloatIndex`
 needs exactly this: the floating-point comparisons agree with the exact ones
 only where the keys are, and that is enough. -/
 theorem bsearch_congr (p p' : ℕ → Bool) (lo len : ℕ) :
@@ -108,7 +112,7 @@ theorem bsearch_congr (p p' : ℕ → Bool) (lo len : ℕ) :
       exact ih (fun j hj hlt => h j (by omega) (by omega))
 
 /-- **Nothing before the answer satisfies `p`.**  This is the `hlt`
-hypothesis of `lowerBound_isGreatest`.  Monotonicity of `p` is used exactly
+hypothesis of `lowerBound_isGreatest`. Monotonicity of `p` is used exactly
 once, to discard the half the search skipped. -/
 theorem bsearch_lt (p : ℕ → Bool) (hp : ∀ a b, a ≤ b → p a = true → p b = true)
     (lo len : ℕ) : ∀ j, lo ≤ j → j < bsearch p lo len → p j = false := by
@@ -178,7 +182,7 @@ theorem bcount_le_log (len : ℕ) : bcount len ≤ Nat.log 2 len + 1 := by
 
 /-- **The planar lookup, computed and paid for.**  For a strictly increasing
 key sequence the midpoints are increasing, so the `q ≤ midpoint` test is
-monotone and `bsearch` applies.  The key it returns maximizes the paraboloid
+monotone and `bsearch` applies. The key it returns maximizes the paraboloid
 score over the first `n` keys, and reaching it took at most `log₂ n + 1`
 comparisons. -/
 theorem hull_bsearch_isGreatest (K : ℕ → ℝ) (q : ℝ) (n : ℕ)

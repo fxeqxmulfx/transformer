@@ -1,9 +1,13 @@
-/-
+module
+
+public import Transformer.ALM.Expansion
+
+/-!
 # Reading the sign off the top component
 
 `Transformer.ALM.Expansion` proves what the sweep preserves: the components
-sum to the terms, exactly, with nothing about floating point involved.  That
-is the half a transcription error would break.  It is not yet the predicate,
+sum to the terms, exactly, with nothing about floating point involved. That
+is the half a transcription error would break. It is not yet the predicate,
 because `exact.rs::expansion_sign` does not sum the components — it returns
 
     e[len - 1].partial_cmp(&0.0)
@@ -11,10 +15,10 @@ because `exact.rs::expansion_sign` does not sum the components — it returns
 the sign of the last one alone, and an empty expansion as `Equal`.
 
 Reading one component for the sign of all of them is sound exactly when the
-last dominates the rest.  That is Shewchuk's non-overlapping invariant, and it
+last dominates the rest. That is Shewchuk's non-overlapping invariant, and it
 is the one step here that is a fact about binary floating point rather than
 about algebra, so it enters as the hypothesis `|lows.sum| < |top|` and not as
-a proof.  Everything else is discharged: `sign_of_top` is the reading,
+a proof. Everything else is discharged: `sign_of_top` is the reading,
 `expansion_sign_eq` is it composed with `expansion_sum`, and
 `expansion_nil_sum` is the empty case, which needs no hypothesis at all.
 
@@ -26,7 +30,7 @@ Source: Shewchuk 1997, §2 (non-overlapping expansions) and the tail of
 `vm-rs/alm-hull/src/exact.rs::expansion_sign`.
 -/
 
-import Transformer.ALM.Expansion
+@[expose] public section
 
 namespace Transformer
 namespace ALM

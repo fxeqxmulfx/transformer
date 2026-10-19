@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_WeakConsistency
+
+/-!
 # Local weak consistency for bounded smooth tests of any size
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1.
@@ -7,7 +11,7 @@ Rescaling tests makes the local estimate usable with any fixed bound,
 rather than assuming preservation of the unit smoothness bounds.
 -/
 
-import Transformer.BatchSize.Section4_WeakConsistency
+@[expose] public section
 
 open MeasureTheory
 

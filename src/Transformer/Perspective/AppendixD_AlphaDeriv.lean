@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixD_DotAlpha
+
+/-!
 # Appendix D — the differential inequality for `α`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -11,13 +15,13 @@ derivative of `α(t) = min_i ⟨x_i(t), x⋆⟩` that Appendix D integrates into
 The survey writes the three equations for the `x⋆` that `lem: hemisphere.clustering`
 produces — the common limit of the particles, which start in an open
 hemisphere — and it imports from step 2 of that lemma the fact that `x⋆` lies
-in the cone of the particles.  Both are hypotheses of `diff_ineq_alpha` in
+in the cone of the particles. Both are hypotheses of `diff_ineq_alpha` in
 that form: the hemisphere and the limit, from which the cone is proved
-(`Perspective.limit_mem_cone`).  The estimate `e:dotalpha` + `e:mineqalpha`
+(`Perspective.limit_mem_cone`). The estimate `e:dotalpha` + `e:mineqalpha`
 it shares with step 2 of the lemma is `Perspective.dot_alpha_ge`.
 -/
 
-import Transformer.Perspective.AppendixD_DotAlpha
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -32,7 +36,7 @@ variable (d n : ℕ)
   `α̇(t) ≥ (1/(n e^{2β})) α(1/n) (1 - α(t))`   for `t ≥ 1/n`.
 
 **What the source says and what is changed here.**  The conclusion is the
-survey's, verbatim.  The hypotheses are the survey's setting, each used in its
+survey's, verbatim. The hypotheses are the survey's setting, each used in its
 own derivation without appearing in the displayed equation.
 
 *`hβ : 0 ≤ β`.*  The step "`a_{ij}(t) ≥ n^{-1} e^{-2β}`" is `e^{β⟨x_i,x_j⟩} ≥
@@ -40,20 +44,20 @@ e^{-β}` over `Z_{β,i} ≤ n e^{β}`, and both need `β ≥ 0`.
 
 *`hw` and `hlim`: `x⋆` is the limit of `lem: hemisphere.clustering`.*  The
 particles start in the open hemisphere around some `w`, and `x⋆` is their
-common limit.  Step 2 of the lemma then puts `x⋆` in the cone of the particles
+common limit. Step 2 of the lemma then puts `x⋆` in the cone of the particles
 at every time (`limit_mem_cone`), which is what `e:mineqalpha` uses: with
 `η x⋆` in the hull, `min_j ⟨x_i,x_j⟩ ≤ η α(t) ≤ α(t)`.
 
 *`hpos : 0 < α(1/n)`.*  This is what the survey draws from `e:1/n`,
 `α(1/n) ≥ γ_β(1/n)/2 > 0`, which rests on the high-dimensional estimates of
-Appendix D (`Perspective.alpha_at_one_over_n`).  From it step 1, run from time
+Appendix D (`Perspective.alpha_at_one_over_n`). From it step 1, run from time
 `1/n` along `x⋆`, makes `α` non-decreasing — "we gather that `α(t) ≥ α(1/n)`
 for `t ≥ 1/n`" — and hence `0 ≤ α(t)`, without which `⟨x_j,x⋆⟩ - ⟨x_i,x_j⟩ α(t)
 ≥ α(t)(1 - ⟨x_i,x_j⟩)` points the wrong way.
 
 *`hdα`, differentiability.*  `α` is a minimum of finitely many smooth curves,
 so it need not be differentiable where the minimising index changes; the
-survey's `α̇` is a Dini derivative.  The statement asserts an honest
+survey's `α̇` is a Dini derivative. The statement asserts an honest
 `HasDerivAt`, so differentiability is carried as a hypothesis — at a time
 where `α` *is* differentiable, Fermat's theorem forces its derivative to agree
 with that of the attaining curve, which is what the proof uses.

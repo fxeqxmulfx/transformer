@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.DescentTrap
+
+/-!
 # Saddle avoidance — the estimates behind the rates of descent curves
 
 Let `x` descend `f` from time `0` on at the rates `c₁ > 0` and `c₂ ≥ 0`
 (`IsDescentCurve`) and converge to `w`, where the Łojasiewicz inequality holds
-with an exponent `a < 1`.  Then `f (x t) ≥ f w`, and either `x` reaches `w` and
+with an exponent `a < 1`. Then `f (x t) ≥ f w`, and either `x` reaches `w` and
 stays there, or from some time on `r = f ∘ x - f w` is positive, its derivative
 `⟪∇f(x), ẋ⟫` is at most `-c r ^ (2a)`, and `‖x t - w‖ ≤ K r ^ (1 - a)`
-(`IsDescentCurve.exists_rate_estimates`).  On every `[0, T]`, `f (x t) - f w`
+(`IsDescentCurve.exists_rate_estimates`). On every `[0, T]`, `f (x t) - f w`
 and `‖x t - w‖` are bounded (`IsDescentCurve.exists_bounds`).
 
 These are the estimates of the proof of `prop:rates` of arXiv:1602.04915 for
@@ -14,7 +18,7 @@ flows (for gradient descent: `exists_rate_estimates_of_isLojasiewiczAt`);
 `Landscape.SaddleAvoidance.FlowRates` turns them into rates.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.DescentTrap
+@[expose] public section
 
 open Filter Metric Set
 open scoped Topology
@@ -38,7 +42,7 @@ theorem IsDescentCurve.exists_bounds (hf : Differentiable ℝ f)
 
 /-- **The estimates behind the rates, for descent curves.**  Let `x` descend
 `f` from time `0` on at the rates `c₁ > 0` and `c₂ ≥ 0` and converge to `w`,
-where the Łojasiewicz inequality holds with `a < 1`.  Then `f (x t) ≥ f w`, and
+where the Łojasiewicz inequality holds with `a < 1`. Then `f (x t) ≥ f w`, and
 either `x` reaches `w` and stays there, or from some time `T` on
 `r = f ∘ x - f w` is positive, its derivative `⟪∇f(x), ẋ⟫` is at most
 `-c r ^ (2a)`, and `‖x t - w‖ ≤ K r ^ (1 - a)`: the length of the rest of the

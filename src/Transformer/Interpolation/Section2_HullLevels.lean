@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_TargetCaps
+public import Mathlib.Analysis.Convex.Caratheodory
+public import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
+
+/-!
 # Compact hulls and levels of linear functionals on geodesic hulls
 
 ArXiv:2411.04551v3, §1.5, the geodesic convex hull `conv_g`, as used in
@@ -10,9 +16,7 @@ half-space and in the unit ball, and the radial projection scales by a
 factor at least one.
 -/
 
-import Transformer.Interpolation.Section3_TargetCaps
-import Mathlib.Analysis.Convex.Caratheodory
-import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
+@[expose] public section
 
 open Real Set
 

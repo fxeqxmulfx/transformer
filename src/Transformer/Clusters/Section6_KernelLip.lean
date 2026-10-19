@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.Clusters.Section6_Kernel
+
+/-!
 # The emergence of clusters in self-attention dynamics — the attention kernel
   is Lipschitz in the measure
 
 `e:lipinmu` of arXiv:2305.05465v6, §6: on `B̄(0,R)`,
 `‖𝒳[μ] - 𝒳[ν]‖ ≤ C(R) W_2(μ, ν)` for probability measures carried by
-`B̄(0,R)`.  The source bounds `W_1` by `W_2` and uses Lipschitz test functions;
+`B̄(0,R)`. The source bounds `W_1` by `W_2` and uses Lipschitz test functions;
 that step is `Transformer.Wasserstein.norm_integral_sub_le_W2`.
 
 The source's `L^∞(B(0,R))` is read on the closed ball, which is the same bound
@@ -13,7 +17,7 @@ for the continuous `𝒳[μ] - 𝒳[ν]`.
 Source: arXiv:2305.05465v6, `lem: vectorfield.properties`, `e:lipinmu`.
 -/
 
-import Transformer.Clusters.Section6_Kernel
+@[expose] public section
 
 open Real MeasureTheory
 

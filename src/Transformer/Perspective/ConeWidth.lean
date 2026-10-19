@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.ConeChart
+public import Transformer.Perspective.MaxCurve
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # Cone collapse — the width of the configuration in the chart decays
 
 Auxiliary to arXiv:2312.10794v5, *A mathematical perspective on Transformers*,
@@ -6,16 +12,14 @@ Auxiliary to arXiv:2312.10794v5, *A mathematical perspective on Transformers*,
 
 In the chart `y = x / ⟨x, w⟩` of `Perspective.ConeChart`, a weighted flow with
 weights `a_ij ≥ m > 0` whose heights stay in `[r₀, 1]` is the consensus
-dynamics `ẏ_i = Σ_j b_ij (y_j - y_i)` with `b_ij = a_ij s_j / s_i ≥ m r₀`.  In
+dynamics `ẏ_i = Σ_j b_ij (y_j - y_i)` with `b_ij = a_ij s_j / s_i ≥ m r₀`. In
 any direction `u`, the width `max_i ⟨y_i, u⟩ - min_i ⟨y_i, u⟩` then contracts at
 rate `2 m r₀`: the top particle is pulled down by the bottom one at least at
-rate `m r₀`, and the bottom one up by the top one.  Hence
+rate `m r₀`, and the bottom one up by the top one. Hence
 `‖y_i(t) - y_k(t)‖ ≤ D₀ e^{-2 m r₀ t}` (`norm_hemiChart_sub_le`).
 -/
 
-import Transformer.Perspective.ConeChart
-import Transformer.Perspective.MaxCurve
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open scoped BigOperators
 open Real

@@ -1,5 +1,7 @@
-import Transformer.Homogenized.Section7_OverlapNoiseMaximal
-import Transformer.Homogenized.Section7_SimplexNoiseReserve
+module
+
+public import Transformer.Homogenized.Section7_OverlapNoiseMaximal
+public import Transformer.Homogenized.Section7_SimplexNoiseReserve
 
 /-!
 # Simultaneous original overlap noise within the source's radius
@@ -20,6 +22,8 @@ The unused eighth of the radius remains available to absorb
 the original finite-dimension drift bias in the deterministic
 simplex comparison already proved.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory
 open scoped NNReal ENNReal

@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section6_Circle
+public import Transformer.Metastability.Basic
+public import Transformer.Metastability.MainTheorem
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+
+/-!
 # Metastability — Beyond metastability: the staircase setting (§6 of 2410.06833v1)
 
 Equations and definitions covered:
@@ -17,28 +25,24 @@ Equations and definitions covered:
   `𝖤_β = (1/(2β e^β n²)) Σ_i Σ_j e^{β cos(θ_i - θ_j)}`, whose gradient is
   `θ̇_i = (1/n²) Σ_j e^{β(cos(θ_j - θ_i) - 1)} sin(θ_j - θ_i)`; the display
   "in other words" below it drops the `1/n²`, and `compt: derivative` in the
-  proof of `thm: staircase` keeps it.  `usaVel` is the gradient, with `1/n²`.
+  proof of `thm: staircase` keeps it. `usaVel` is the gradient, with `1/n²`.
 * `def: modified USA` counts indices `i` with "`∃ j`" close to them; `j = i`
   is always close, and `j ≠ i` is meant.
 * `compt: reparam` takes a `max` of `e^{β(1 - cos(θ_i - θ_j))}` over the pairs
-  farther apart than `1/√(β log β)`.  The proof then plugs it into
+  farther apart than `1/√(β log β)`. The proof then plugs it into
   `compt: derivative` and obtains `e^{β(cos(θ̃_j - θ̃_i) - cos(θ̃_1 - θ̃_2))}`
   with `(1, 2)` the *closest* such pair (the display before
   `compt: derivative` is an `argmax` of `cos`); that identity holds for the
   `min`, not the `max`, and at the reparametrized configuration
-  `θ̃ = θ ∘ τ_β`, not at `θ(t)`.  `staircaseReparam` is stated with the `min`
-  along `θ̃`.  Where no pair is farther apart than the radius the `min` is
+  `θ̃ = θ ∘ τ_β`, not at `θ(t)`. `staircaseReparam` is stated with the `min`
+  along `θ̃`. Where no pair is farther apart than the radius the `min` is
   over nothing; there the rate is `0` and the clock stops.
 * `τ_β` is only asked to be continuous, and its rate jumps whenever a pair
   crosses the radius; a derivative has no jumps (Darboux), so the
   differential form is read in integral form, `τ_β(t) = ∫_0^t τ̇_β`.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section6_Circle
-import Transformer.Metastability.Basic
-import Transformer.Metastability.MainTheorem
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -94,8 +98,8 @@ def collisionTimes {N : ℕ} (β : ℝ) (θ : ℝ → Angles N) : Set ℝ :=
 
 /-- **Definition (def: modified USA).** *Modified `USA` enforcing collisions.*
 
-`θ` solves `eq: usa.angles`.  If no two particles ever come within
-`1/√(β log β)`, the modified dynamics `θ̄` is `θ`.  Otherwise `T_*` is the
+`θ` solves `eq: usa.angles`. If no two particles ever come within
+`1/√(β log β)`, the modified dynamics `θ̄` is `θ`. Otherwise `T_*` is the
 infimum of the times at which two do; exactly the indices `0` and `1` (the
 source's `1` and `2`, "without loss of generality") are then within the
 radius of another particle; `θ̄ = θ` before `T_*`; from `T_*` on the first

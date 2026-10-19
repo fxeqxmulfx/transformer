@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianPolynomialVectorConditioning
+
+/-!
 # Polynomial integration by parts on the original independent Gaussian pair
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -15,7 +19,7 @@ The other Gaussian vector may have a singular or even zero covariance.
 All growth bounds concern the actual test or its actual derivative.
 -/
 
-import Transformer.Homogenized.Section7_GaussianPolynomialVectorConditioning
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators

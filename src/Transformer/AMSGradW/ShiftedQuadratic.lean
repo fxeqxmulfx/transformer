@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AMSGradW.Minimum
+
+/-!
 # AMSGradW need not approach unregularized stationarity
 
 arXiv:1904.03590v4, Algorithm 1 and §4, AMSGradW extension. On the
@@ -7,7 +11,7 @@ decay and momentum converges, but its original gradient does not vanish.
 This refutes inheritance of the ordinary AMSGrad stationarity conclusion.
 -/
 
-import Transformer.AMSGradW.Minimum
+@[expose] public section
 
 open scoped Topology
 open Filter

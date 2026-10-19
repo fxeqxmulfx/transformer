@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Magma.Section2_MaskLaw
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+
+/-!
 # Coordinate smoothness does not imply the paper's joint descent bound
 
 Formalization and correction of arXiv:2602.15322v1, Section 5,
@@ -8,10 +15,7 @@ the unsupported passage from one-block updates to simultaneous updates.
 The partial gradients below are actual derivatives of the objective.
 -/
 
-import Transformer.Magma.Section2_MaskLaw
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.Calculus.Deriv.Mul
+@[expose] public section
 
 noncomputable section
 

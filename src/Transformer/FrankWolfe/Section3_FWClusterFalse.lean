@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section3_NegativeDefinite
+
+/-!
 # Attention's forward pass and Frank-Wolfe — `thm: fw.cluster` is false
 
 Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
 *Attention's forward pass and Frank-Wolfe*, §3.
 
 `thm: fw.cluster` claims `J^t(x_i^{t+1}) ≤ (2/(t+1)) λ_max(B_*^0) 𝖽(𝒦^0)²`
-under `0 ∈ 𝒦^0`.  Its proof (`sec: bach.proof`) uses `0 ∈ 𝒦^t` for every
+under `0 ∈ 𝒦^0`. Its proof (`sec: bach.proof`) uses `0 ∈ 𝒦^t` for every
 `t`, but only `0 ∈ 𝒦^0` is assumed, and the hull shrinks away from the origin.
 On the line with `B_* = 1` and particles `3, -1`:
 
@@ -15,10 +19,10 @@ On the line with `B_* = 1` and particles `3, -1`:
   one approaches it, `1/3 + 8/(t(t+1))`.
 
 So `J^t(x_2^{t+1}) = 1/18` for every `t ≥ 1`, while the claimed bound is
-`32/(t+1)`.  No `argmin` in the trajectory is a tie.
+`32/(t+1)`. No `argmin` in the trajectory is a tie.
 -/
 
-import Transformer.FrankWolfe.Section3_NegativeDefinite
+@[expose] public section
 
 open scoped BigOperators
 open Real

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_NeuronReflection
+
+/-!
 # Comparing the original ReLU field across one neuron reflection
 
 ArXiv:2601.21366v2, §5.2, `eq:toggle-diff-general`, and §6,
@@ -19,7 +23,7 @@ premises of this intermediate case; the source's full general-matrix
 claim remains separately stated in `GeneralAtomicity`.
 -/
 
-import Transformer.Perceptron.Section5_NeuronReflection
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

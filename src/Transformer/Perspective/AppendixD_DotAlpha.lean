@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.Section5_HemisphereCone
+
+/-!
 # `e:dotalpha` and `e:mineqalpha` — the derivative of `α` at the limit
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -6,13 +10,13 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 The lower bound on the derivative of `α(t) = min_i ⟨x_i(t), x⋆⟩` that both
 step 2 of `lem: hemisphere.clustering` (§6.1) and Appendix D use, for `x⋆` the
-common limit of particles starting in an open hemisphere.  Each then bounds
+common limit of particles starting in an open hemisphere. Each then bounds
 `α(t)` from below its own way: step 2 by `1/2`
 (`Perspective.step2_alpha_diff_ineq`), Appendix D by `α(1/n)`
 (`Perspective.diff_ineq_alpha`).
 -/
 
-import Transformer.Perspective.Section5_HemisphereCone
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -27,10 +31,10 @@ variable (d n : ℕ)
   `α̇(t) ≥ (1/(n e^{2β})) α(t) (1 - α(t))`   wherever `α(t) ≥ 0`,
 
 for `α(t) = min_i ⟨x_i(t), x⋆⟩` and `x⋆` the limit of
-`lem: hemisphere.clustering`.  This is the part the survey's two derivations
+`lem: hemisphere.clustering`. This is the part the survey's two derivations
 share: step 2 of the lemma (`e:dotalpha.step2`, `e:mineqalpha.step2`) and
 Appendix D (`e:dotalpha`, `e:mineqalpha`) differ only in how they bound
-`α(t)` from below afterwards.  `e:dotalpha` is `α̇ ≥ Σ_j a_{ij}(1 - ⟨x_i,x_j⟩)
+`α(t)` from below afterwards. `e:dotalpha` is `α̇ ≥ Σ_j a_{ij}(1 - ⟨x_i,x_j⟩)
 α(t)`, `e:mineqalpha` is `min_j ⟨x_i,x_j⟩ ≤ α(t)` through the cone of
 `limit_mem_cone`, and `a_{ij} ≥ n^{-1} e^{-2β}` joins them.
 

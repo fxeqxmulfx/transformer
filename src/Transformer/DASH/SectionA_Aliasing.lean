@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_FitReproduction
+
+/-!
 # DASH — the missing sample-count restriction
 
 arXiv:2602.02016v2, Appendix A, coefficient-fitting algorithm.
@@ -6,7 +10,7 @@ The mode at the sample count vanishes at every fitting node, so the
 source's orthogonality explanation requires a degree below that count.
 -/
 
-import Transformer.DASH.SectionA_FitReproduction
+@[expose] public section
 
 noncomputable section
 

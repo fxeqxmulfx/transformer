@@ -1,20 +1,24 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Abelian.Basin
+
+/-!
 # Phase model over a finite abelian group — critical points near a character
 
 The phases `(arg χ(x))_x` of a character `χ` of `G` leave the energy of every
 set of rows invariant (`divisionEnergy_add_characterPhase`), so the
 estimates near the zero `0` hold near every character, as for `ℤ/n`
-(`Landscape.PhaseModel.Characters`).  For `|G| ≥ 4`, a local minimizer of `V_full` with
+(`Landscape.PhaseModel.Characters`). For `|G| ≥ 4`, a local minimizer of `V_full` with
 `Σ_x (1 - cos (ψ_x - arg χ(x))) < |G|/8` is the character `χ` up to periods
 (`sub_characterPhase_mem_periods_of_isLocalMin`), and a critical point there
 that is not is a strict saddle (`isStrictSaddle_of_sum_one_sub_cos_lt`): the
-Hessian has a negative diagonal entry.  The last example exhibits such a
+Hessian has a negative diagonal entry. The last example exhibits such a
 saddle in `ℤ/5 × ℤ/5` near the trivial character: the phases `π e_0` keep
 every relation in `πℤ`, so they are critical, at
 `Σ_x (1 - cos ψ_x) = 2 < 25/8`.
 -/
 
-import Transformer.Landscape.PhaseModel.Abelian.Basin
+@[expose] public section
 
 open Real
 

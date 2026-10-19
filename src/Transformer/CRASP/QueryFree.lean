@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.Transformers
+public import Transformer.CRASP.Locality
+
+/-!
 # Attention that ignores the query reads the past through sums
 
 In no paper: the step of Zoology's index argument (arXiv:2312.04927v1,
@@ -9,19 +14,18 @@ future-masked rounded transformers of arXiv:2506.16055v3 (Appendix B.1,
 A transformer *ignores the query* (`RTfr.QueryFree`) when no score
 `sᵢⱼ = qᵢ · kⱼ` of a layer depends on the query `qᵢ`, as when `W_Q` or `W_K`
 is constant; the transformer that `thm:TLCl_to_rtfr` builds from a formula of
-`TL[◁#]` uses uniform attention, `W_Q = W_K = 0` (`queryFree_model`).  A query-free
+`TL[◁#]` uses uniform attention, `W_Q = W_K = 0` (`queryFree_model`). A query-free
 layer reads the positions up to `i` through the totals of `2d + 1` parts
 (`part`): their rounded weights `round(exp sⱼ)`, their weighted values, and
 their values, which the fallback of Equation `eq:att` averages
-(`layer_queryFree`).  A transformer does not look ahead (`actAt_append`), so
+(`layer_queryFree`). A transformer does not look ahead (`actAt_append`), so
 at the last position of `⊲ · u · b` the totals over `⊲ · u` are a message
 from `u`, `msg`, of `2d + 1` integers per layer, the sums of the mantissas,
 and the last activation is a function of that message and of `b`
 (`actAt_last`); each integer is one of `2^p (|u| + 1) + 1` (`msg_mem`).
 -/
 
-import Transformer.CRASP.Transformers
-import Transformer.CRASP.Locality
+@[expose] public section
 
 namespace Transformer.CRASP.RTfr
 

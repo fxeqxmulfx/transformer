@@ -1,9 +1,17 @@
-/-
+module
+
+public import Transformer.ContinuityEq.Weak
+public import Transformer.Wasserstein.Basic
+public import Mathlib.Analysis.Calculus.ParametricIntegral
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.ODE.Gronwall
+
+/-!
 # Stability of transported measures in `W_2`
 
 Let `w` and `u` be `IsFlowField`s on a finite-dimensional inner product
 space, and push probability measures `μ₀`, `ν₀` carried by `B̄(0, R)` along
-their flows: `μ_τ = (Φ^w_{0,τ})_# μ₀` and `ν_τ = (Φ^u_{0,τ})_# ν₀`.  If on
+their flows: `μ_τ = (Φ^w_{0,τ})_# μ₀` and `ν_τ = (Φ^u_{0,τ})_# ν₀`. If on
 `[0, T]` the fields satisfy, where the trajectories can be,
 
   `‖w(τ, a) - u(τ, b)‖ ≤ K ‖a - b‖ + C W_2(μ_τ, ν_τ)`,
@@ -13,7 +21,7 @@ then `W_2(μ_t, ν_t) ≤ e^{(K + C) t} W_2(μ₀, ν₀)` (`W2_map_flow_le`).
 For a coupling `γ` of `μ₀` and `ν₀`, the cost `P(τ) = ∫ ‖Φ^w_τ x - Φ^u_τ y‖² dγ`
 of transporting it along the two flows bounds `W_2(μ_τ, ν_τ)²`
 (`W2_map_le_sqrt`) and has derivative `2 ∫ ⟨Φ^w_τ x - Φ^u_τ y, w - u⟩ dγ`
-(`hasDerivAt_cost`).  That is at most `2 (K + C) P(τ)`, because
+(`hasDerivAt_cost`). That is at most `2 (K + C) P(τ)`, because
 `2 C ‖D‖ W ≤ C (‖D‖² + W²)` and `W² ≤ P`; Grönwall bounds `P(t)` by
 `e^{2 (K + C) t} P(0)`, and the infimum over couplings gives the estimate.
 
@@ -21,11 +29,7 @@ This is the proof of `e:w2estimate` in arXiv:2305.05465v6, §6, once the
 solutions are known to be transported by their flows.
 -/
 
-import Transformer.ContinuityEq.Weak
-import Transformer.Wasserstein.Basic
-import Mathlib.Analysis.Calculus.ParametricIntegral
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.ODE.Gronwall
+@[expose] public section
 
 open Set Metric Filter Topology MeasureTheory
 open scoped NNReal

@@ -1,11 +1,17 @@
-/-
+module
+
+public import Transformer.Homogenized.OverlapDrift
+public import Transformer.Homogenized.HeadLawRotation
+public import Transformer.Homogenized.SimplexBary
+
+/-!
 # Homogenized Transformers — the drift on the simplex line
 
 Formalization of `lem:drift_on_simplex_selfcontained` of arXiv:2604.01978v1,
-*Homogenized Transformers*.  It has two halves.
+*Homogenized Transformers*. It has two halves.
 
 * The drift `𝒟_ij(X)` of `eq:Dij_explicit_clean` depends on `X` only through
-  its Gram matrix (`overlapDrift_of_gram`).  The content is that `s_{μ_X}` does
+  its Gram matrix (`overlapDrift_of_gram`). The content is that `s_{μ_X}` does
   (`baryCorr_of_gram`, from the orthogonal invariance of the Gaussian law of
   `A = W W'ᵀ`, `HeadLawRotation.lean`); the rest is the substitution
   `overlapDrift_congr`.
@@ -16,14 +22,14 @@ Formalization of `lem:drift_on_simplex_selfcontained` of arXiv:2604.01978v1,
 
 **Where this deviates from the source.**  The source says that plugging the two
 statistics into `eq:Dij_explicit_clean` "yields exactly" the `b(γ)` of
-`eq:Phi_def_selfcontained`, i.e. `𝒟_ij(R(γ)) = b(γ)`.  It does not: with
+`eq:Phi_def_selfcontained`, i.e. `𝒟_ij(R(γ)) = b(γ)`. It does not: with
 `S = γ + (1-γ)g(γ)` and `P = γ + (1-γ)f(γ)` the substitution gives
 
   `𝒟_ij = (1/d)(d-2+γ²) S - ((d-1)/d) γ P`,   while   `b(γ) = S - γ P`,
 
 and the two differ by `(γP - (2-γ²)S)/d`, which is not zero — at `γ = 0` it is
 `-2g(0)/d`, and `g(0) > 0` because the attention probabilities are positive.
-`b(γ)` is the `d → ∞` form of the drift.  The corrected identity is
+`b(γ)` is the `d → ∞` form of the drift. The corrected identity is
 `overlapDrift_simplex` and the exact gap is
 `overlapDrift_simplex_sub_simplexDrift`; the discrepancy is `O(1/d)`, below the
 `O(√(T/d))` fluctuation `thm:clustering_random_init` allows, so the theorem the
@@ -32,9 +38,7 @@ lemma feeds is unaffected.
 Source: arXiv:2604.01978v1, `lem:drift_on_simplex_selfcontained`.
 -/
 
-import Transformer.Homogenized.OverlapDrift
-import Transformer.Homogenized.HeadLawRotation
-import Transformer.Homogenized.SimplexBary
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory
@@ -54,7 +58,7 @@ conjugating `A` by `O` (`softBary_conjMat`), and the law of the head is invarian
 under that conjugation (`measurePreserving_conjHead`).
 
 **What the source says and what is changed.**  The source states the lemma for
-configurations on the sphere.  The proof never uses `‖x_k‖ = 1`, and the
+configurations on the sphere. The proof never uses `‖x_k‖ = 1`, and the
 hypothesis is dropped: the statement here is the source's for unit tokens and
 holds for every configuration.
 
@@ -80,7 +84,7 @@ example (X : Idx 2 → EucSpace 2) :
 
 /-- **Lemma (lem:drift_on_simplex_selfcontained), the substitution.**  Once the
 three values of `s_{μ_X}` and the overlap `R_ij` agree, the drifts agree: this
-is the "and hence `𝒟_ij(X)`" of the statement.  `overlapDrift_of_gram` feeds it
+is the "and hence `𝒟_ij(X)`" of the statement. `overlapDrift_of_gram` feeds it
 `baryCorr_of_gram`.
 
 Source: arXiv:2604.01978v1, `lem:drift_on_simplex_selfcontained`. -/
@@ -100,7 +104,7 @@ example {d n : ℕ} (β : ℝ) (ρ : Measure (HeadParam d)) (X : Idx n → EucSp
   ⟨rfl, rfl⟩
 
 /-- **Lemma (lem:drift_on_simplex_selfcontained), first half, the drift.**
-Under (G), `𝒟_ij(X)` depends on `X` only through its Gram matrix.  As in
+Under (G), `𝒟_ij(X)` depends on `X` only through its Gram matrix. As in
 `baryCorr_of_gram`, the source's unit-norm hypothesis is not needed.
 
 Source: arXiv:2604.01978v1, `lem:drift_on_simplex_selfcontained`. -/
@@ -121,7 +125,7 @@ a simplex configuration with overlap `γ`, and for `i ≠ j`,
 
 **What the source says and what is changed.**  The source asserts that this
 substitution "yields exactly" `b(γ) = γ + (1-γ)g(γ) - γ(γ + (1-γ)f(γ))` of
-`eq:Phi_def_selfcontained`.  The coefficients `1/d` and `(d-1)/(2d)` of
+`eq:Phi_def_selfcontained`. The coefficients `1/d` and `(d-1)/(2d)` of
 `eq:Dij_explicit_clean` do not disappear, and what is stated here is the result
 of the substitution as written; `overlapDrift_simplex_sub_simplexDrift` is the
 exact difference from `b(γ)`, which is `O(1/d)`.
@@ -161,7 +165,7 @@ theorem overlapDrift_simplex {d n : ℕ} (hd : (d : ℝ) ≠ 0) (β : ℝ)
   `𝒟_ij(X) - b(γ) = (γP - (2-γ²)S)/d`.
 
 This is the exact size of the source's "yields exactly": `b(γ)` is the drift's
-`d → ∞` form, and the error is `O(1/d)`.  It does not vanish — at `γ = 0` it is
+`d → ∞` form, and the error is `O(1/d)`. It does not vanish — at `γ = 0` it is
 `-2g(0)/d` and `g(0) > 0`, the attention probabilities being positive.
 
 Source: arXiv:2604.01978v1, `lem:drift_on_simplex_selfcontained`,

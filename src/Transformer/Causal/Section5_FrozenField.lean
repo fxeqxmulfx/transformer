@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Causal.Section5_FrozenWeights
+public import Mathlib.Analysis.Calculus.ContDiff.RCLike
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Smoothness and prefix consistency of the original frozen-token field
 
 ArXiv:2411.04990v2, §5, Theorem `thm:fixed_centers`.
@@ -17,10 +24,7 @@ original frozen-token system. Actual nonzero center masses with
 coincident original angles provide joint solution witnesses.
 -/
 
-import Transformer.Causal.Section5_FrozenWeights
-import Mathlib.Analysis.Calculus.ContDiff.RCLike
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Calculus.Deriv.Prod
+@[expose] public section
 
 open scoped BigOperators
 open Real

@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Clusters.Section6_KernelField
+public import Transformer.ContinuityEq.Lagrangian
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+
+/-!
 # The emergence of clusters in self-attention dynamics — solutions of the
   continuity equation
 
@@ -10,15 +17,15 @@ solutions that the proof of `c:wellposedtransformers` uses.
 
 * `d:solconti` asks for `μ ∈ C⁰_comp(ℝ, 𝒫_c(ℝ^d))`, absolute continuity of
   `t ↦ ∫ g dμ_t` for every `g ∈ C_c^∞`, and the weak identity for almost
-  every `t`.  It is carried as: each `μ_t` a probability measure; supports
+  every `t`. It is carried as: each `μ_t` a probability measure; supports
   equi-contained in a ball on every compact time interval (the definition of
   `C⁰_comp`); `t ↦ ∫ g dμ_t` continuous; and the weak identity for **every**
-  `t`.  Demanding the identity everywhere rather than almost everywhere is
+  `t`. Demanding the identity everywhere rather than almost everywhere is
   not a strengthening here: both sides are continuous in `t`, so an identity
   valid almost everywhere is valid everywhere, and absolute continuity then
   comes from the right-hand side being an integral in `t`.
 
-* `C_c^∞(ℝ^d)` is `ContDiff ℝ (⊤ : ℕ∞)` with compact support.  The bare
+* `C_c^∞(ℝ^d)` is `ContDiff ℝ (⊤ : ℕ∞)` with compact support. The bare
   `ContDiff ℝ ⊤` is `C^ω`, analytic, and on `ℝ^d`, `d ≥ 1`, the only analytic
   function with compact support is `0`: with it the weak identity would test
   nothing.
@@ -33,17 +40,14 @@ solutions that the proof of `c:wellposedtransformers` uses.
 
 Reversing time turns a solution for `V` into one for `-V`
 (`IsContEqSolution.comp_neg`), which reduces the source's statements on `ℝ`
-to forward times.  Forward in time, a solution is the image of its initial
+to forward times. Forward in time, a solution is the image of its initial
 measure under the flow of its own field (`IsContEqSolution.eq_map_flow`): the
 Lagrangian description that the proof of `c:wellposedtransformers` compares.
 
 Source: arXiv:2305.05465v6, `e:conteq`, `d:solconti`.
 -/
 
-import Transformer.Clusters.Section6_KernelField
-import Transformer.ContinuityEq.Lagrangian
-import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+@[expose] public section
 
 open Set Metric Filter Topology MeasureTheory
 
@@ -74,7 +78,7 @@ def IsContEqSolution (Q K V : ParamMatrix d) (μ₀ : Measure (EucSpace d))
 
 /-- **The Dirac mass at the origin is a stationary solution.**  The attention
 kernel vanishes there — the only value averaged is `V 0 = 0` — so nothing
-moves.  This witnesses `d:solconti`.
+moves. This witnesses `d:solconti`.
 
 Source: arXiv:2305.05465v6, `e:vectorfield`, `d:solconti`. -/
 theorem isContEqSolution_dirac (Q K V : ParamMatrix d) :

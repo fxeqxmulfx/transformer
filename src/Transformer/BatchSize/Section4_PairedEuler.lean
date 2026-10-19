@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerStepBounds
+public import Transformer.BatchSize.Section4_EulerFrozenStability
+
+/-!
 # Coupling an Euler grid with its refinement into pairs
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -7,8 +12,7 @@ coefficients frozen at the preceding coarse state. Both chains use the
 same actual vector Brownian sample.
 -/
 
-import Transformer.BatchSize.Section4_EulerStepBounds
-import Transformer.BatchSize.Section4_EulerFrozenStability
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.Section2_FlowRotations
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+
+/-!
 # The empirical probability measure of the actual attention particles
 
 ArXiv:2312.10794v5, §3.1, `eq: mean.field.ips`,
@@ -15,8 +20,7 @@ into a definition without proving it first. The nonempty-tuple hypothesis
 excludes the zero measure produced by an empty empirical sum.
 -/
 
-import Transformer.Perspective.Section2_FlowRotations
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory

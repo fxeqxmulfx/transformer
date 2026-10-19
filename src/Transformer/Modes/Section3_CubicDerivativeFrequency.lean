@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_NormalizedGeometricDerivatives
-import Transformer.Modes.Section3_CubicScaledErrorFactors
+module
+
+public import Transformer.Modes.Section3_NormalizedGeometricDerivatives
+public import Transformer.Modes.Section3_CubicScaledErrorFactors
 
 /-!
 # Local Gaussian bounds for the actual cubic-corrected derivatives
@@ -21,6 +23,8 @@ The damping exponent is `1/8`, rather than the source's `1/4`,
 as in the preceding mixed-power bounds. This still gives an
 integrable envelope for the Fourier derivative estimates.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

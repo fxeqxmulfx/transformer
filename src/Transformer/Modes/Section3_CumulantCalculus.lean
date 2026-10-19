@@ -1,4 +1,6 @@
-import Transformer.Modes.Section3_CumulantExpressions
+module
+
+public import Transformer.Modes.Section3_CumulantExpressions
 
 /-!
 # Actual derivatives of the moment expressions
@@ -20,6 +22,8 @@ no differentiability at its boundary is assumed.
 
 Source: arXiv:2412.09080v3, §3.1, `lem:eta`, and its proof in §5.3.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped Topology

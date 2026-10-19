@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.Basic
-import Transformer.GPTMini.AttentionLipschitz
+module
+
+public import Transformer.GPTMini.Semantics.Basic
+public import Transformer.GPTMini.AttentionLipschitz
 
 /-!
 # A retrieval head preserves semantic codes despite softmax leakage
@@ -16,6 +18,8 @@ tokens need not copy or route exactly. These are universal conditional
 operator laws, not claims that arbitrary learned parameters obey the
 routing hypotheses on every Basis input.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

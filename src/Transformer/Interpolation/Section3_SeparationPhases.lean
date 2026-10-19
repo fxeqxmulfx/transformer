@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_SeparatedCapSequence
+
+/-!
 # Actual phase sequences separating all original geodesic hulls
 
 ArXiv:2411.04551v3, §3.2, `prop: separation`.
@@ -14,7 +18,7 @@ has its original weak law and zero scores; the final phase list has
 length at most 4N, independently of dimension and the particular data.
 -/
 
-import Transformer.Interpolation.Section3_SeparatedCapSequence
+@[expose] public section
 
 open Real MeasureTheory Set
 

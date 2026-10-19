@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.PositionalNextState
+
+/-!
 # Layer induction for a finite attention-table representation
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLClmod`.
@@ -7,7 +11,7 @@ Its attention then has finite query/source tables, to which the same
 one-counting-layer induction as Appendix B.2 applies.
 -/
 
-import Transformer.CRASP.PositionalNextState
+@[expose] public section
 
 namespace Transformer.CRASP.PositionalNext
 

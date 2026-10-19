@@ -1,16 +1,18 @@
-import Transformer.Modes.Section3_PowDeriv
-import Transformer.Modes.Section3_ExpMoments
+module
 
-/-
+public import Transformer.Modes.Section3_PowDeriv
+public import Transformer.Modes.Section3_ExpMoments
+
+/-!
 # The number of modes of a Gaussian KDE — the moment generating function of one
 real random variable
 
 `Section3_ExpMoments.lean` differentiates `∫ X^i Y^j e^{uX+vY}` under the
-integral sign in two parameters.  The third moment of a normalized sum, which
+integral sign in two parameters. The third moment of a normalized sum, which
 is what the moment identity of arXiv:2412.09080v3, §3.1, needs, is read off a
 *one*-parameter moment generating function: the two-dimensional statement is
 recovered from it afterwards by taking directional combinations
-`s x₁ + t x₂`.  This module is that one-parameter case,
+`s x₁ + t x₂`. This module is that one-parameter case,
 
   `scalarMoment P f i θ = ∫ f^i e^{θ f} dP`,
 
@@ -19,6 +21,8 @@ with the third derivative at the origin, `∫ f³ dP`.
 
 Source: arXiv:2412.09080v3, §3.1, after `eq:psi`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped Topology
@@ -34,7 +38,7 @@ Source: arXiv:2412.09080v3, §3.1, after `eq:psi`. -/
 def HasScalarExpMomentsOn (P : Measure Ω) (f : Ω → ℝ) (E : ℝ) : Prop :=
   ∀ θ : ℝ, |θ| < E → Integrable (fun ω => exp (θ * f ω)) P
 
-/-- The moment `∫ f^i e^{θ f} dP`.  For `i = 0` this is the moment generating
+/-- The moment `∫ f^i e^{θ f} dP`. For `i = 0` this is the moment generating
 function of `f`.
 
 Source: arXiv:2412.09080v3, §3.1, after `eq:psi`. -/

@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.ALM.ScalarInt
+
+/-!
 # The bound the quadratic gap actually gives
 
 `softmax_winner_scalar_int` of `Transformer.ALM.ScalarInt` feeds the counting
 lemma the *linear* margin `|k_j - q|`, while the exact margin available from
-`score_gap` is the *square* `(k_j - q)²`.  That discards a square, and the
+`score_gap` is the *square* `(k_j - q)²`. That discards a square, and the
 discarded amount is not asymptotically negligible at the temperatures the
 machine actually runs at.
 
-This file redoes the estimate with the quadratic margin.  The competitor sum
+This file redoes the estimate with the quadratic margin. The competitor sum
 becomes a theta-function tail `2 ∑_{t ≥ 1} r^{t²}` instead of a geometric
 series `2 ∑_{t ≥ 1} r^t`, and `t² ≥ 3t - 2` bounds it by `2r/(1 - r³)`:
 
@@ -23,7 +27,7 @@ integer keys sit at any distance from the query, and `t² ≥ 3t - 2` is an
 equality at `t = 1` and `t = 2`.
 -/
 
-import Transformer.ALM.ScalarInt
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -124,7 +128,7 @@ keys,
 
   `w i₀ ≥ 1 / (1 + 2 e^{-β}/(1 - e^{-3β}))`,
 
-with no dependence on the token count `n`.  This is `softmax_winner_scalar_int`
+with no dependence on the token count `n`. This is `softmax_winner_scalar_int`
 with the quadratic margin restored. -/
 theorem softmax_winner_scalar_int_sharp {n : ℕ} (β : ℝ) (hβ : 0 < β)
     (K : Fin n → ℤ) (hinj : Function.Injective K) (i₀ : Fin n) :

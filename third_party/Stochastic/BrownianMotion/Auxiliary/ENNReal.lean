@@ -2,6 +2,12 @@ module
 
 public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
+/-!
+# Extended nonnegative real estimates
+
+Reciprocals, geometric sums, real powers and conversion to real-valued bounds.
+-/
+
 public section
 
 open ENNReal

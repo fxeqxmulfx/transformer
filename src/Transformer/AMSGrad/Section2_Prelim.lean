@@ -1,7 +1,13 @@
-import Transformer.AMSGrad.Section1_AMSGrad
-import Mathlib.Analysis.Convex.Deriv
-import Mathlib.Analysis.SpecificLimits.Normed
-import Mathlib.NumberTheory.Harmonic.Bounds
+module
+
+public import Transformer.AMSGrad.Section1_AMSGrad
+public import Mathlib.Analysis.Convex.Deriv
+public import Mathlib.Analysis.SpecificLimits.Normed
+public import Mathlib.NumberTheory.Harmonic.Bounds
+
+/-! ### First-order convexity -/
+
+@[expose] public section
 
 /-
 # AMSGrad — the preliminary lemmas
@@ -33,8 +39,6 @@ namespace AMSGrad
 
 variable {d : ℕ}
 
-/-! ### First-order convexity -/
-
 /-- The directional derivative is the gradient paired with the direction. -/
 theorem fderiv_apply_eq_sum (f : Vec d → ℝ) (x v : Vec d) :
     fderiv ℝ f x v = ∑ i, grad f x i * v i := by
@@ -47,7 +51,7 @@ theorem fderiv_apply_eq_sum (f : Vec d → ℝ) (x v : Vec d) :
   exact Finset.sum_congr rfl fun i _ => mul_comm _ _
 
 /-- **Lemma 2.1.** A differentiable convex `f` lies above its tangent planes:
-`f(y) ≥ f(x) + ∇f(x)ᵀ(y - x)`.  The source assumes differentiability
+`f(y) ≥ f(x) + ∇f(x)ᵀ(y - x)`. The source assumes differentiability
 implicitly, through `∇f`.
 
 Source: arXiv:1904.03590v4, §2, Lemma 2.1. -/
@@ -77,13 +81,13 @@ theorem convex_first_order {f : Vec d → ℝ} (hf : ConvexOn ℝ Set.univ f)
 /-! ### Sums -/
 
 /-- **Lemma 2.2 (Cauchy–Schwarz).**
-`(Σᵢ uᵢvᵢ)² ≤ (Σᵢ uᵢ²)(Σᵢ vᵢ²)`.  Source: arXiv:1904.03590v4, §2, Lemma 2.2. -/
+`(Σᵢ uᵢvᵢ)² ≤ (Σᵢ uᵢ²)(Σᵢ vᵢ²)`. Source: arXiv:1904.03590v4, §2, Lemma 2.2. -/
 theorem cauchy_schwarz (n : ℕ) (u v : ℕ → ℝ) :
     (∑ i ∈ Icc 1 n, u i * v i) ^ 2 ≤ (∑ i ∈ Icc 1 n, u i ^ 2) * ∑ i ∈ Icc 1 n, v i ^ 2 :=
   Finset.sum_mul_sq_le_sq_mul_sq _ _ _
 
 /-- **Lemma 2.3, first half, corrected:** `Σ_{t≥1} αᵗ = α/(1-α)` for
-`0 ≤ α < 1`.  Source: arXiv:1904.03590v4, §2, Lemma 2.3; see the module
+`0 ≤ α < 1`. Source: arXiv:1904.03590v4, §2, Lemma 2.3; see the module
 docstring. -/
 theorem taylor_geom {α : ℝ} (h₀ : 0 ≤ α) (h₁ : α < 1) :
     ∑' t : ℕ, α ^ (t + 1) = α / (1 - α) := by
@@ -104,7 +108,7 @@ theorem not_taylor :
   norm_num at h1
 
 /-- **Lemma 2.3, second half:** `Σ_{t≥1} t α^{t-1} = 1/(1-α)²` for
-`0 ≤ α < 1`.  Source: arXiv:1904.03590v4, §2, Lemma 2.3. -/
+`0 ≤ α < 1`. Source: arXiv:1904.03590v4, §2, Lemma 2.3. -/
 theorem taylor_deriv {α : ℝ} (h₀ : 0 ≤ α) (h₁ : α < 1) :
     ∑' t : ℕ, ((t : ℝ) + 1) * α ^ t = 1 / (1 - α) ^ 2 := by
   have hn : ‖α‖ < 1 := by rwa [Real.norm_of_nonneg h₀]
@@ -146,7 +150,7 @@ theorem sum_inv_sqrt_le (N : ℕ) : ∑ n ∈ Icc 1 N, 1 / Real.sqrt n ≤ 2 * R
     linarith
 
 /-- **Lemma 2.6.**  For `aᵢ ≥ 0` and `bᵢ > 0`,
-`(Σᵢ aᵢ)/(Σⱼ bⱼ) ≤ Σᵢ aᵢ/bᵢ`.  Source: arXiv:1904.03590v4, §2, Lemma 2.6. -/
+`(Σᵢ aᵢ)/(Σⱼ bⱼ) ≤ Σᵢ aᵢ/bᵢ`. Source: arXiv:1904.03590v4, §2, Lemma 2.6. -/
 theorem sum_div_sum_le (n : ℕ) {a b : ℕ → ℝ} (ha : ∀ i ∈ Icc 1 n, 0 ≤ a i)
     (hb : ∀ i ∈ Icc 1 n, 0 < b i) :
     (∑ i ∈ Icc 1 n, a i) / ∑ j ∈ Icc 1 n, b j ≤ ∑ i ∈ Icc 1 n, a i / b i := by

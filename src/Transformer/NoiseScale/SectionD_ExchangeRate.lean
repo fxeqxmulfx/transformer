@@ -1,12 +1,19 @@
-/-
+module
+
+public import Transformer.NoiseScale.Section2_Tradeoff
+public import Transformer.NoiseScale.Section2_NoiseScale
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.Analysis.Calculus.Deriv.Inv
+
+/-!
 # The exchange rate between steps and examples
 
-arXiv:1812.06162, Appendix D, "Theory".  A full-batch step drops the loss by `ΔL_max`, a step
+arXiv:1812.06162, Appendix D, "Theory". A full-batch step drops the loss by `ΔL_max`, a step
 of batch `B` by the best `ΔL_opt(B) = ΔL_max/(1 + B_noise/B)` of eq. (2.7), so `δS` steps of
 batch `B` make the progress of one full-batch step if and only if `δS = 1 + 𝓑/B`
 (`mul_lossDrop_eq_iff`), at `δE = BδS` examples: the integrands of eq. (D.1), `totalSteps`
-and `totalExamples` of `Section2_Tradeoff`.  The paper's full-batch step, "over which the loss
-increases by an amount `δL`", is read as one over which it drops.  The exchange rate
+and `totalExamples` of `Section2_Tradeoff`. The paper's full-batch step, "over which the loss
+increases by an amount `δL`", is read as one over which it drops. The exchange rate
 `r = -(dδE/dB)/(dδS/dB)` is `B²/𝓑`, eq. (D.2) (`exchangeRate`).
 
 For a noise scale `𝓑 ≥ 0` and `r > 0`, the schedule `B(s) = √(r𝓑(s))` of eq. (D.3)
@@ -14,14 +21,11 @@ For a noise scale `𝓑 ≥ 0` and `r > 0`, the schedule `B(s) = √(r𝓑(s))` 
 (`totalSteps_adaptiveBatch`, `totalExamples_adaptiveBatch`), and every positive schedule `B`
 has `S(B) + E(B)/r = S(√(r𝓑)) + E(√(r𝓑))/r + ∫(B - √(r𝓑))²/(rB) ds`
 (`totalSteps_add_div`): no schedule takes fewer steps on as few examples, or fewer examples in
-as few steps (`adaptiveBatch_optimal`).  The converse, the paper's argument that an optimal
+as few steps (`adaptiveBatch_optimal`). The converse, the paper's argument that an optimal
 schedule has a constant exchange rate, is `exchangeRate_const` of `SectionD_ParetoFront`.
 -/
 
-import Transformer.NoiseScale.Section2_Tradeoff
-import Transformer.NoiseScale.Section2_NoiseScale
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.Analysis.Calculus.Deriv.Inv
+@[expose] public section
 
 open MeasureTheory
 open scoped Matrix

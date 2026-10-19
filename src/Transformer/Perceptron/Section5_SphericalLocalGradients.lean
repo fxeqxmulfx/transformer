@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_SphereTransport
+public import Transformer.Perceptron.Hyperplane
+public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+
+/-!
 # Actual localized smooth spherical gradients in every dimension
 
 ArXiv:2601.21366v2, §5.3, the localization argument for
@@ -16,9 +22,7 @@ ball. This construction makes no assumption about measure support
 or about the existence of a Hessian.
 -/
 
-import Transformer.Perceptron.Section5_SphereTransport
-import Transformer.Perceptron.Hyperplane
-import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+@[expose] public section
 
 open Real Filter Set Metric
 open scoped Topology

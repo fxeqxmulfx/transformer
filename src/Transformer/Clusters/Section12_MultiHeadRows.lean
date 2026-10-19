@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadEscape
+
+/-!
 # Attention rows of escaping original multi-head tokens
 
 ArXiv:2305.05465v6, §7, `l:unboundedparticles`, applied separately
@@ -15,7 +19,7 @@ The hypotheses asserting escape are supplied by the original trajectory
 classification; no replacement attention matrix or head is used.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadEscape
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

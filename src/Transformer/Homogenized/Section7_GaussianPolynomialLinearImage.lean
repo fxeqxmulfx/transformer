@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_StandardGaussianPolynomialStein
+
+/-!
 # Polynomial Gaussian integration by parts through an actual linear image
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and `eq:SIGMA_R`.
@@ -15,7 +19,7 @@ singular images. The source's polynomial derivative growth, rather than
 a uniform derivative bound, justifies this version of its argument.
 -/
 
-import Transformer.Homogenized.Section7_StandardGaussianPolynomialStein
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators

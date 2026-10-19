@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.ALM.ClearKey
+
+/-!
 # The cleared entry loses at every query the guard admits, and only there
 
 `Transformer.ALM.ClearKey` proves the clearing mechanism sound at the query the
 released model writes: `_to_2d_query` sets `qy = 1`, so subtracting `BIG` from
 the key's ordinate subtracts `BIG` from the score, and `marked_sup'_eq_live`
-takes it from there.  The hull path does not normalise the ordinate, and at a
+takes it from there. The hull path does not normalise the ordinate, and at a
 general `qy` the marker arrives as `qy · BIG` — smaller, absent, or the wrong
-sign.  The implementation already tests for that (`ClearGuard::dominated` in
+sign. The implementation already tests for that (`ClearGuard::dominated` in
 `vm-rs/alm-hull/src/clearkey.rs` asks `2M < qy · B`); what it did not have is
 the statement that the test is the right one.
 
@@ -25,7 +29,7 @@ And the two edges, which say the sign test is necessary rather than cautious:
 and a cleared entry competes on its base score), and
 `live_lt_cleared_of_added_marker` (at `qy < 0` the marker is *added*, and the
 cleared entry beats every live one by the same margin that was supposed to sink
-it).  `pos_of_margin` closes the circle: a query that passes the margin test has
+it). `pos_of_margin` closes the circle: a query that passes the margin test has
 `qy > 0` already, so the sign test in the code is there for the one thing the
 reals do not have — a `NaN` ordinate, which fails a positive test and sends the
 query to the cleared entries, the safe side.
@@ -34,7 +38,7 @@ Source: `todo3.md` §7; `transformer_vm/graph/core.py` lines 293-319;
 `vm-rs/alm-hull/src/clearkey.rs`, `ClearGuard::bound` and `::dominated`.
 -/
 
-import Transformer.ALM.ClearKey
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -53,7 +57,7 @@ theorem dot_marked_query (qx qy kx ky c B : ℝ) :
 
 /-- The bound `ClearGuard` carries: one number per coordinate, taken over every
 entry the head holds, live and cleared alike, with the marker taken off the
-cleared ones.  It is a product with the query rather than a bound on the score
+cleared ones. It is a product with the query rather than a bound on the score
 because at insert time there is no query yet. -/
 noncomputable def clearBound (qx qy Kx Ky : ℝ) : ℝ := |qx| * Kx + |qy| * Ky
 
@@ -71,7 +75,7 @@ theorem abs_dot_le_clearBound {qx qy kx ky Kx Ky : ℝ} (hx : |kx| ≤ Kx) (hy :
 
 /-- **A query that clears the margin can leave the cleared entries out.**  The
 hypothesis is `ClearGuard::dominated` written out: twice the bound below the
-marker this query sees.  Everything else is the container's split into live
+marker this query sees. Everything else is the container's split into live
 entries `L` and cleared entries `C`, and the requirement that some live entry
 exists — which the code does not check and the caller owes. -/
 theorem marked_sup'_eq_live_at_query {ι : Type*} [DecidableEq ι] {L C : Finset ι}
@@ -87,7 +91,7 @@ theorem marked_sup'_eq_live_at_query {ι : Type*} [DecidableEq ι] {L C : Finset
 
 /-- **And it has a positive ordinate, whether or not it is asked.**  A bound is
 nonnegative and the marker is positive, so the margin test implies the sign
-test.  In the code the sign test is kept regardless: it is written as `qy > 0`,
+test. In the code the sign test is kept regardless: it is written as `qy > 0`,
 which a `NaN` ordinate fails, and a query that fails it consults the cleared
 entries rather than skipping them. -/
 theorem pos_of_margin {qy B M : ℝ} (hM : 0 ≤ M) (hB : 0 < B) (h : 2 * M < qy * B) : 0 < qy := by
@@ -106,7 +110,7 @@ theorem marker_vanishes_at_zero_ordinate (B base c : ℝ) : markedScore (0 * B) 
 
 /-- **At a negative ordinate the marker is added, and the cleared entry wins.**
 Not narrowly: it wins by exactly the margin that was meant to sink it, against
-every live entry at once.  That is a fact about the released representation, so
+every live entry at once. That is a fact about the released representation, so
 a container may not round it away — the guard has to refuse the query, and
 `ClearGuard::dominated` does. -/
 theorem live_lt_cleared_of_added_marker {qy B M bl bc : ℝ} (hl : |bl| ≤ M) (hc : |bc| ≤ M)
@@ -120,7 +124,7 @@ theorem live_lt_cleared_of_added_marker {qy B M bl bc : ℝ} (hl : |bl| ≤ M) (
 
 /-- The §4b head, whose keys sit at `3.4·10^8` and whose queries sit at
 `8.6·10^9`: thirteen orders of margin under the marker, so its cleared entries
-are never read.  The numbers are `alm-hull`'s own test
+are never read. The numbers are `alm-hull`'s own test
 (`the_margin_holds_at_the_shipped_keys_and_fails_at_the_top_of_the_range`). -/
 theorem the_section_4b_head_is_guarded :
     2 * clearBound 8589934503 1 673720322 113474768068945920 < 1 * (10 : ℝ) ^ 30 := by

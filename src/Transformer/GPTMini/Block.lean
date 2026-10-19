@@ -1,4 +1,15 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.GPTMini.Config
+public import Transformer.GPTMini.RMSNorm
+public import Transformer.GPTMini.Reshape
+public import Transformer.GPTMini.QKNorm
+public import Transformer.GPTMini.RoPE
+public import Transformer.GPTMini.AttentionBounds
+public import Transformer.GPTMini.ReLU2FFN
+
+/-!
 # Pre-LN Block
 
 Formalization of the `Block` class from `reference/model.py`:
@@ -27,14 +38,7 @@ We define the abstract block, then prove:
   3. **Residual stream growth** — linear in depth
 -/
 
-import Transformer.Basic
-import Transformer.GPTMini.Config
-import Transformer.GPTMini.RMSNorm
-import Transformer.GPTMini.Reshape
-import Transformer.GPTMini.QKNorm
-import Transformer.GPTMini.RoPE
-import Transformer.GPTMini.AttentionBounds
-import Transformer.GPTMini.ReLU2FFN
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -116,7 +120,7 @@ noncomputable def blockForward
 
 For Pre-LN with RMSNorm-without-γ, each sub-layer output has L2 norm
 bounded by a constant depending only on the parameter operator norms,
-NOT on `‖x‖`.  This is the key property that prevents Pre-LN residual
+NOT on `‖x‖`. This is the key property that prevents Pre-LN residual
 stream divergence (despite "growth issue" folklore).
 
 The chain is: RMSNorm puts the sub-layer input inside the ball of radius

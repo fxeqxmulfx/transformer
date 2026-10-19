@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadRates
+public import Transformer.Clusters.Section12_MultiHeadScaledDrift
+public import Transformer.Clusters.Section12_MultiHeadMean
+
+/-!
 # The bounded interior token in the original discrete multi-head equation
 
 ArXiv:2305.05465v6, §7, `l:boundedother`, with §3's discrete
@@ -16,9 +22,7 @@ convergence in the query, or a differential equation for the iterates.
 The exact original head scores then converge separately.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadRates
-import Transformer.Clusters.Section12_MultiHeadScaledDrift
-import Transformer.Clusters.Section12_MultiHeadMean
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

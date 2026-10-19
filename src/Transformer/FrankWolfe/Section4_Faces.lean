@@ -1,7 +1,13 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section4_Cells
+public import Mathlib.Analysis.Convex.KreinMilman
+public import Mathlib.Analysis.Convex.Exposed
+
+/-!
 # Attention's forward pass and Frank-Wolfe — maximizing faces of a polytope
 
-Two geometric facts behind the proof of `thm: exp.fast.polytope`.  The source
+Two geometric facts behind the proof of `thm: exp.fast.polytope`. The source
 states "the maximizer of `⟨B x_i^0, y⟩` over `𝒦` is `v_{σ(i)}`" and "by
 convexity of the cell … `x_i^1 ∈ 𝒞_{σ(i)}(v)`"; here:
 
@@ -15,9 +21,7 @@ Source: arXiv:2508.09628v1, §4, proof of `thm: exp.fast.polytope`
 (`sec: proof.exp.fast`).
 -/
 
-import Transformer.FrankWolfe.Section4_Cells
-import Mathlib.Analysis.Convex.KreinMilman
-import Mathlib.Analysis.Convex.Exposed
+@[expose] public section
 
 open Set
 

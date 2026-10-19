@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Metastability.Section6_UniformPlateaux
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # Endpoint limits of a uniform staircase profile
 
 ArXiv:2410.06833v1, §6, `conj: saddle-to-saddle`.
@@ -25,9 +31,7 @@ long-time convergence in temperature. Its only uniform input is precisely
 the source's entire-interval plateau estimate.
 -/
 
-import Transformer.Metastability.Section6_UniformPlateaux
-import Mathlib.Topology.MetricSpace.Pseudo.Defs
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open Filter Topology
 

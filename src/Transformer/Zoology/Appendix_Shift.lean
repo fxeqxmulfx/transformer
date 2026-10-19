@@ -1,14 +1,18 @@
-/-
+module
+
+public import Transformer.Zoology.Section4_Coyote
+
+/-!
 # Shift primitives and the identity-filter error
 
 Arora et al., arXiv:2312.04927v1, Appendix Proposition `prop: prim-shift`.
 The proof describes a down-shift kernel as being at `s+1`, but its polynomial
-calculation uses `X^s`; the latter is the correct offset.  It also says
-cyclic convolution with the identity filter reverses a sequence.  That
+calculation uses `X^s`; the latter is the correct offset. It also says
+cyclic convolution with the identity filter reverses a sequence. That
 intermediate claim is false: the identity filter leaves the sequence fixed.
 -/
 
-import Transformer.Zoology.Section4_Coyote
+@[expose] public section
 
 open scoped BigOperators
 
@@ -67,7 +71,7 @@ def fixedGateParameters {n d : ℕ} [NeZero n]
   bias₂ := fun _ _ => 0
 }
 
-/-- One Coyote layer gates an input by a fixed matrix.  Together with
+/-- One Coyote layer gates an input by a fixed matrix. Together with
 `coyote_realizes_linear` and `coyote_realizes_convolution`, this proves the
 three functional constructions in Appendix `lmm:primitives`. -/
 theorem coyote_realizes_fixed_gate {n d : ℕ} [NeZero n]

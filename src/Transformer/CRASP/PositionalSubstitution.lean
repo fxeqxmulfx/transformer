@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.PositionalEmbedding
+public import Transformer.CRASP.FormulaBounds
+
+/-!
 # Substituting positional state predicates into counting formulas
 
 arXiv:2506.16055v3, Appendix F, adaptations of `thm:rtfr_to_TLCl`.
@@ -6,8 +11,7 @@ The finite-state count comparisons from Appendix B.2 are reused by replacing
 their letter predicates with positional formulas.
 -/
 
-import Transformer.CRASP.PositionalEmbedding
-import Transformer.CRASP.FormulaBounds
+@[expose] public section
 
 namespace Transformer.CRASP
 

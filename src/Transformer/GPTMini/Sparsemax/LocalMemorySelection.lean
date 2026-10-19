@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Sparsemax.LocalMemoryQuadratic
-import Transformer.GPTMini.Sparsemax.LocalMemoryFeasibility
-import Mathlib.Topology.Order.Compact
+module
+
+public import Transformer.GPTMini.Sparsemax.LocalMemoryQuadratic
+public import Transformer.GPTMini.Sparsemax.LocalMemoryFeasibility
+public import Mathlib.Topology.Order.Compact
 
 /-!
 # Existence and uniqueness of an additional compact-memory selection
@@ -18,6 +20,8 @@ Gram has genuine bounded-width embeddings and invertible actual attention.
 This resolves choice under the extra criterion, not identification from
 the output-only forward. No model task loss or FFN is selected here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

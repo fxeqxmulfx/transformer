@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.PeriodicEnergyTopology
+module
+
+public import Transformer.GPTMini.Sparsemax.PeriodicEnergyTopology
 
 /-!
 # Compact learned edge/output domains and minimum attainment
@@ -14,6 +16,8 @@ for arbitrary finite observation tables, including conflicting or unattainable
 answers. Nonemptiness is the only remaining existence premise. No prescribed
 minimum, sparse support, eigenbasis or numerical optimization oracle is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 

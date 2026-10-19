@@ -1,19 +1,23 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Analytic.Constructions
+public import Mathlib.Analysis.Analytic.Linear
+public import Mathlib.Data.Finset.Max
+
+/-!
 # Coordinate monomials and directional derivatives
 
 Elementary local models for the analytic gradient estimate used in
 Appendix D.1 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Analytic.Constructions
-import Mathlib.Analysis.Analytic.Linear
-import Mathlib.Data.Finset.Max
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators

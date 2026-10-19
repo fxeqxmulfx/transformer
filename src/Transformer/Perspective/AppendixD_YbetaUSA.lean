@@ -1,20 +1,24 @@
-/-
+module
+
+public import Transformer.Perspective.Gronwall
+public import Transformer.Perspective.AppendixD_YbetaInvariance
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # Appendix D, `rem: usa.d` — the angle closes at rate `e^{β/2}` for `USA`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
-One statement: `rem: usa.d`, the `USA` analogue of `e:ybetacloseto1`.  It is
+One statement: `rem: usa.d`, the `USA` analogue of `e:ybetacloseto1`. It is
 integrated in two stages, both instances of `Perspective.decay_of_deriv_ge`:
 a slow global rate `2/n` from time `0`, which is what carries the estimate up
 to `t = n/2` and supplies the half-way value there, and the fast rate
 `e^{β/2}` from `t = n/2` on, which is the rate the remark prints.
 -/
 
-import Transformer.Perspective.Gronwall
-import Transformer.Perspective.AppendixD_YbetaInvariance
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -32,7 +36,7 @@ The same argument as `e:ybetacloseto1` runs with `eq: ybeta` replaced by
   `1 - γ_β(t) ≤ (1/2) exp(-e^{β/2} (t - n/2))`,   `t ≥ 0`.
 
 **What the source says.**  The range `t ≥ 0` and the constant are the
-survey's, both unchanged.  The `[0,1]`-invariance of the solution of
+survey's, both unchanged. The `[0,1]`-invariance of the solution of
 `eq: ybetaUSA`, which the survey uses silently, is proved from the equation
 (`ybetaODE_USA.mem_Ico`).
 
@@ -42,10 +46,10 @@ bound reads `1 - γ(0) = 1 ≤ (1/2) e^{1/2} ≈ 0.824`, which is false — see
 
 **The proof.**  Below `t = n/2` the rate `e^{β/2}` is not available (nothing
 forces `γ_β ≥ 1/2` there), but the crude rate `2/n` is: `e^{βγ} ≥ 1` and
-`(n-1)γ + 1 ≥ 1` for `γ ∈ [0,1]`, `β ≥ 0`, so `1 - γ_β(t) ≤ e^{-2t/n}`.  At
+`(n-1)γ + 1 ≥ 1` for `γ ∈ [0,1]`, `β ≥ 0`, so `1 - γ_β(t) ≤ e^{-2t/n}`. At
 `t = n/2` that reads `1 - γ_β(n/2) ≤ e^{-1} < 1/2`, which both starts the
 second stage and, since `2/n ≤ 1 ≤ e^{β/2}` for `n ≥ 2`, dominates
-`(1/2) e^{-e^{β/2}(t - n/2)}` on the whole of `[0, n/2]`.  Past `t = n/2` the
+`(1/2) e^{-e^{β/2}(t - n/2)}` on the whole of `[0, n/2]`. Past `t = n/2` the
 solution is above `1/2`, so `e^{βγ} ≥ e^{β/2}` and `(n-1)γ + 1 ≥ (n+1)/2`,
 giving the rate `(2/n) e^{β/2} (n+1)/2 ≥ e^{β/2}`.
 

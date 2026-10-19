@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Metastability
+public import Transformer.Homogenized.Logistic
+public import Mathlib.Analysis.SpecificLimits.Basic
+
+/-!
 # Homogenized Transformers — the logistic limit of the overlap
 
 Formalization of the second part of `thm:large_beta_meta` of
@@ -11,9 +17,7 @@ The first part — the slow-motion bound on the original time scale — is
 `Metastability.lean`.
 -/
 
-import Transformer.Homogenized.Metastability
-import Transformer.Homogenized.Logistic
-import Mathlib.Analysis.SpecificLimits.Basic
+@[expose] public section
 
 open scoped BigOperators ENNReal NNReal Topology
 open Real MeasureTheory Filter
@@ -55,7 +59,7 @@ where `R_∞` solves `eq: sde.logistic` with `R_∞(0) = 0`.
 
 **What the source says and what is written here.**
 
-* The family is indexed by dimension `d + 1`.  At dimension `0` there is no
+* The family is indexed by dimension `d + 1`. At dimension `0` there is no
   unit vector, so `IsLowTemperature 0 σ …` is contradictory — `σ` would have to
   be a probability measure carried by the empty sphere — and a family indexed
   by `d` would have unsatisfiable hypotheses and say nothing.
@@ -63,12 +67,12 @@ where `R_∞` solves `eq: sde.logistic` with `R_∞(0) = 0`.
 * The horizon of the pair is `(d+1)T`, since `R̂_d(t) = R((d+1)t)` for
   `t ∈ [0,T]` reads `R` on `[0,(d+1)T]`.
 
-* `d β^{-1/2} = o(1)` is `(d+1)·effBeta^{-1/2} → 0`.  The `β` is again the
+* `d β^{-1/2} = o(1)` is `(d+1)·effBeta^{-1/2} → 0`. The `β` is again the
   temperature of the normalized query-key matrix of `lem:delta_method`, as in
   `large_beta_metastability`; `effBeta` records the translation.
 
 * Convergence in law is written by testing against bounded continuous
-  functionals of the path, which is what it means.  No measurable structure is
+  functionals of the path, which is what it means. No measurable structure is
   put on `C([0,T],ℝ)` here, so `F ∘ pathOn` is not known to be measurable and
   its integrability is hypothesized; boundedness alone does not give it.
 
@@ -78,7 +82,7 @@ where `R_∞` solves `eq: sde.logistic` with `R_∞(0) = 0`.
   construction; without continuity the path is not a point of `C([0,T],ℝ)` and
   the statement cannot be made.
 
-* The source says `R_∞` is "the unique solution" of `eq: sde.logistic`.  What
+* The source says `R_∞` is "the unique solution" of `eq: sde.logistic`. What
   is asserted here is that the limit *is* a solution started at `0`;
   uniqueness in law for that equation is a separate claim about
   `IsLogisticSolution`, not about this limit, and asserting it here would be
@@ -125,12 +129,12 @@ Gaussian head law of assumption (G) exists at the standard scaling
 `σ_V² = 1/(d+1)`, and the uniform measure satisfies `ass:low-temperature` with
 density `1`, `ρ_min = ρ_max = 1`, `L = 0`.
 
-What is *not* witnessed is `IsCoupledPair` in every dimension.  In dimension
+What is *not* witnessed is `IsCoupledPair` in every dimension. In dimension
 `1` the frozen uniform pair of `OneDim.lean` is one, as
 `large_beta_metastability`'s witness records; from dimension `2` on, the field
 `eq:G_def` does not vanish at a Gaussian head law, no frozen pair can solve the
 martingale problem, and constructing a solution is `thm:PoC_wellposedness`,
-which is a `sorry` in `WellPosed.lean`.  Exhibiting a family here would be
+which is a `sorry` in `WellPosed.lean`. Exhibiting a family here would be
 claiming that construction. -/
 example :
     Tendsto

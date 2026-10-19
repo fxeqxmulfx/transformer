@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Normalized
+public import Transformer.Perceptron.GeneralAttention
+
+/-!
 # Perceptrons and attention's mean-field landscape — normalized attention with
   a general matrix
 
@@ -11,9 +16,9 @@ because the `1/2` and the symmetry of the kernel cancel.
 **Consistency with the isotropic case.**  `E_{β•id} = β E_β`
 (`interactionEnergyMap_smul_id`), so the weight of `E_{β•id}` is `β` times the
 weight `β⁻¹Z_{β,μ}` of `E_β`, which is `Z_{β,μ}` itself:
-`attentionWeightMap_smul_id`.  The stationarity conditions then agree with no
+`attentionWeightMap_smul_id`. The stationarity conditions then agree with no
 reweighting of `ω` — `isNormalizedStationaryMap_smul_id_iff` — because the
-factor `β` multiplies the attention field and its weight alike.  That is
+factor `β` multiplies the attention field and its weight alike. That is
 unlike the unnormalized case, where the same factor multiplies only the
 interaction half of the coupled energy and `isStationaryMap_smul_id_iff`
 carries `β⁻¹ω`.
@@ -21,8 +26,7 @@ carries `β⁻¹ω`.
 Source: arXiv:2601.21366v2, `rem:unifiedlog-B`.
 -/
 
-import Transformer.Perceptron.Normalized
-import Transformer.Perceptron.GeneralAttention
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

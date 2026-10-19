@@ -1,4 +1,8 @@
-/-
+module
+
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+
+/-!
 # The NVFP4 grids, round-to-nearest, and stochastic rounding
 
 arXiv:2601.22813v2, Panferov, Schultheis, Tabesh, Alistarh, "Quartet II:
@@ -6,27 +10,27 @@ Accurate LLM Pre-Training in NVFP4 by Improved Unbiased Gradient Estimation"
 (ICML 2026), §3.1.
 
 NVFP4 stores a tensor at three levels: one E2M1 number per entry, one E4M3
-scale per `16` entries, and one FP32 scale per tensor.  This module is the
+scale per `16` entries, and one FP32 scale per tensor. This module is the
 bottom level: the two grids, the deterministic rounding `RTN` onto a grid, and
 the stochastic rounding `SR` the paper relies on for unbiasedness.
 
-Randomness is explicit.  `sr G x u` reads its coin from `u`, and *unbiased*
+Randomness is explicit. `sr G x u` reads its coin from `u`, and *unbiased*
 means that the integral over `u ∈ [0,1]` returns `x` — the paper's "`SR_FP4`
 is the probabilistic rounding operation w.r.t. randomness `ω` which preserves
-its argument in expectation".  That statement,
+its argument in expectation". That statement,
 `integral_sr`, is proved in `Transformer.Quartet.Section3_Unbiased`, next to
 its one use.
 
 `floorOn` and `ceilOn` are the supremum and the infimum of the grid points on
-either side of the argument.  Outside the range of the grid they saturate: an
+either side of the argument. Outside the range of the grid they saturate: an
 argument above the largest point rounds to it, one below the least point to
 that, which is what a floating-point cast with clipping does and what §3.3
-relies on when its rescaled entries overshoot `6`.  The bracketing statements
+relies on when its rescaled entries overshoot `6`. The bracketing statements
 below ask for a grid point on either side; `rtn_of_forall_le`,
 `rtn_of_le_forall` and `sr_of_forall_le` are the saturation.
 -/
 
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+@[expose] public section
 
 namespace Transformer
 namespace Quartet
@@ -37,14 +41,14 @@ representable by FP4" (§3.1). -/
 def fp4 : Set ℝ := {0, 0.5, 1, 1.5, 2, 3, 4, 6, -0.5, -1, -1.5, -2, -3, -4, -6}
 
 /-- The E4M3 grid of NVFP4 group scales: the numbers `±m·2^e` with `m < 16`
-and `-9 ≤ e`, of absolute value at most `448`.  Three mantissa bits and an
+and `-9 ≤ e`, of absolute value at most `448`. Three mantissa bits and an
 exponent bias of `7` put the subnormal step at `2^{-9}`, and `448.0` is "the
 absolute maximum value representable by FP8" (§3.1) because the all-ones
 pattern is reserved for `NaN`. -/
 def fp8 : Set ℝ := {x | |x| ≤ 448 ∧ ∃ (m : ℕ) (e : ℤ), m < 16 ∧ -9 ≤ e ∧ |x| = m * 2 ^ e}
 
 open Classical in
-/-- The largest grid point at most `x`; below the grid, its least point.  The
+/-- The largest grid point at most `x`; below the grid, its least point. The
 second branch is the saturation of a floating-point cast: an argument beyond
 the range is clipped to the end of the grid (§3.3, where the rescaling by
 `0.93` sends entries past `6` and they "clip"). -/
@@ -90,7 +94,7 @@ example : fp4.Finite ∧ (∃ y ∈ fp4, y ≤ (0.75 : ℝ)) ∧ ∃ y ∈ fp4, 
     ⟨1, by norm_num [fp4], by norm_num⟩⟩
 
 /-- **Reading off the floor.**  A grid point below `x` that dominates every
-grid point below `x` is `floorOn G x`: the supremum is attained there.  This is
+grid point below `x` is `floorOn G x`: the supremum is attained there. This is
 how the `RTN` and `SR` displays of §3.1 are evaluated at a concrete argument. -/
 theorem floorOn_eq {G : Set ℝ} {x f : ℝ} (hf : f ∈ G) (hfx : f ≤ x)
     (hub : ∀ y ∈ G, y ≤ x → y ≤ f) : floorOn G x = f := by

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Atomicity
+
+/-!
 # Perceptrons and attention's mean-field landscape — the non-degeneracy
   condition
 
@@ -14,7 +18,7 @@ is not a scalar multiple of the identity.
 
 * `M` appears in the proof only through its quadratic form `x ↦ xᵀMx`, whose
   gradient is `2Mx`; `signedGram` is the map `x ↦ Mx`, written with
-  `(a_j a_jᵀ)x = (a_j·x) a_j` so that no matrix type is needed.  "Is a scalar
+  `(a_j a_jᵀ)x = (a_j·x) a_j` so that no matrix type is needed. "Is a scalar
   multiple of the identity" is `∃ c, ∀ x, Mx = cx`, which for a linear map is
   the same statement.
 
@@ -26,7 +30,7 @@ is not a scalar multiple of the identity.
 Source: arXiv:2601.21366v2, `eq: nondeg.normalized`.
 -/
 
-import Transformer.Perceptron.Atomicity
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

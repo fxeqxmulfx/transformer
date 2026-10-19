@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ButterflyGridVectors
+
+/-!
 # Recursive butterfly factors transported to n × d
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: butterfly` and
@@ -7,7 +11,7 @@ one row-major factor. The transport preserves both coefficients and the
 partner index, for arbitrary independently parameterized recursive nodes.
 -/
 
-import Transformer.Zoology.Appendix_ButterflyGridVectors
+@[expose] public section
 
 namespace Transformer.Zoology
 

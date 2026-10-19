@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.OutputTiedMemoryCurvature
-import Mathlib.Analysis.Matrix.Order
+module
+
+public import Transformer.GPTMini.Sparsemax.OutputTiedMemoryCurvature
+public import Mathlib.Analysis.Matrix.Order
 
 /-!
 # Closed feasible domains and continuous actual ordinary error
@@ -14,6 +16,8 @@ inverse domain because the genuine sparsemax/common-value forward equals
 the coded output table there. No continuity of an arbitrary inverse at
 singular attention, or assumption of an attained optimizer, is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 

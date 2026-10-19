@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_CapContractionPhases
+public import Transformer.Interpolation.Section1_BoundedPhaseSequences
+
+/-!
 # Physical realizations of fixed and cap-contraction phases
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, and §5, the norm
@@ -16,8 +21,7 @@ fixed valid list of phases and of every cap contraction list together.
 That is the hypothesis of `exists_bounded_phase_sequence_controls`.
 -/
 
-import Transformer.Interpolation.Section1_CapContractionPhases
-import Transformer.Interpolation.Section1_BoundedPhaseSequences
+@[expose] public section
 
 open Real MeasureTheory Set
 

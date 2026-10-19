@@ -1,13 +1,24 @@
-/-
+module
+
+public import Transformer.RASPL.Defs
+public import Transformer.RASPL.Attention
+public import Transformer.RASPL.Conjecture
+public import Transformer.RASPL.Fourier
+public import Transformer.RASPL.Restrict
+public import Transformer.RASPL.Degree
+public import Transformer.RASPL.MinDegree
+public import Transformer.RASPL.Gotu
+
+/-!
 # What Algorithms can Transformers Learn?
 
 Formalization of Zhou, Bradley, Littwin, Razin, Saremi, Susskind, Bengio,
-Nakkiran — arXiv:2310.16028v1, "What Algorithms can Transformers Learn?  A
+Nakkiran — arXiv:2310.16028v1, "What Algorithms can Transformers Learn? A
 Study in Length Generalization" (ICLR 2024).
 
 The paper's thesis is that a transformer length-generalizes on exactly those
 tasks that can be written as a short program in RASP-L, a causal and
-"learnable" restriction of the RASP of `Transformer.RASP`.  Its own
+"learnable" restriction of the RASP of `Transformer.RASP`. Its own
 mathematical content is small and sits in the appendices: the conjecture
 (§3), the RASP-L core (Appendix C, Listing 3), the attention constructions
 that compile an aggregation (Appendix C), and the two lemmas behind §4's
@@ -29,11 +40,4 @@ and the core is given with its causal `select` and nothing more.
 | `RASPL.Gotu` | the one-line AND program, and that min-degree interpolation misses it |
 -/
 
-import Transformer.RASPL.Defs
-import Transformer.RASPL.Attention
-import Transformer.RASPL.Conjecture
-import Transformer.RASPL.Fourier
-import Transformer.RASPL.Restrict
-import Transformer.RASPL.Degree
-import Transformer.RASPL.MinDegree
-import Transformer.RASPL.Gotu
+@[expose] public section

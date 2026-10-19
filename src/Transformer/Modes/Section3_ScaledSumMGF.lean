@@ -1,30 +1,34 @@
-import Transformer.Modes.Section3_ScalarMGF
-import Transformer.Modes.Section3_MixedMoments
-import Mathlib.MeasureTheory.Integral.Pi
+module
 
-/-
+public import Transformer.Modes.Section3_ScalarMGF
+public import Transformer.Modes.Section3_MixedMoments
+public import Mathlib.MeasureTheory.Integral.Pi
+
+/-!
 # The number of modes of a Gaussian KDE — the law of the normalized sum
 
 arXiv:2412.09080v3, §3.1, reads the moment identity on `q_t`, the density of
-`S_n = n^{-1/2} Σ Yᵢ(t)`.  Everything about `S_n` used there follows from one
+`S_n = n^{-1/2} Σ Yᵢ(t)`. Everything about `S_n` used there follows from one
 identity between moment generating functions: for a linear form
 `W(x) = s x₁ + t x₂`,
 
   `𝔼 e^{θ W(S_n)} = (𝔼 e^{θ n^{-1/2} W(Y)})^n`,
 
 because `W(S_n) = Σᵢ n^{-1/2} W(Yᵢ)` is a sum of independent copies and the
-exponential of a sum is a product.  Differentiating three times at `θ = 0`
+exponential of a sum is a product. Differentiating three times at `θ = 0`
 with `iteratedDeriv_three_pow` — legitimate because `Y` has exponential
 moments and `𝔼 W(Y) = 0` — gives `𝔼 W(S_n)³ = n · n^{-3/2} 𝔼 W(Y)³`, the
 factor `n^{-1/2}` of the moment identity.
 
 The linear form is a device: `s` and `t` are free, and the four mixed third
 moments are recovered from the four values of `𝔼 W³` in
-`Section3_ScaledSumMoments.lean`.  It replaces differentiating a
+`Section3_ScaledSumMoments.lean`. It replaces differentiating a
 two-parameter moment generating function in a mixed order.
 
 Source: arXiv:2412.09080v3, §3.1, the display after `eq:psi`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped Topology

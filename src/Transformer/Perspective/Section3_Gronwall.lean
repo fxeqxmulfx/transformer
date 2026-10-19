@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.Beta0Gronwall
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # §4 — The Gronwall bound behind `th:beta_small`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -12,8 +17,7 @@ lone token stands still under both dynamics.
 `Transformer.Perspective.Beta0Gronwall`.
 -/
 
-import Transformer.Perspective.Beta0Gronwall
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -29,7 +33,7 @@ variable (d n : ℕ)
 
 At `n = 1` the attention average is the token itself — the single weight is
 `e^{β}` and it is divided by the partition function `Z = e^{β}` — so the drift
-is `Proj_x x = 0` and every solution is constant.  This is the converse of
+is `Proj_x x = 0` and every solution is constant. This is the converse of
 `SA_const_consensus` in the one-particle case.
 
 Source: arXiv:2312.10794v5, §2, `eq: SA`. -/

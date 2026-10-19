@@ -1,23 +1,25 @@
-import Transformer.AMSGrad.Section3_Example
-import Mathlib.Data.Nat.Log
+module
 
-/-
+public import Transformer.AMSGrad.Section3_Example
+public import Mathlib.Data.Nat.Log
+
+/-!
 # AMSGrad — the average regret need not tend to zero
 
 §4 of arXiv:1904.03590v4, Corollary 4.5, asserts `lim_{T→∞} R(T)/T = 0` under
 the assumptions of Theorem 4.1, with `R(T)` the regret against the minimizer
-`x*` of `Σ_{t≤T} f_t` over `F`.  Theorem 4.1 bounds `R(T)` from above only,
+`x*` of `Σ_{t≤T} f_t` over `F`. Theorem 4.1 bounds `R(T)` from above only,
 and the online iterates may beat every fixed point by a linear margin, so the
 limit can be negative.
 
 **The counterexample.**  `d = 1`, `F = [-1, 1]`, `f_t(x) = s_t x` with
 `s_t = +1` on `[2^k, 2^{k+1})` for even `k` and `-1` for odd `k`, AMSGrad with
 `α_t = 1/√t`, `β_{1,t} = 0` (both settings of Theorem 4.1 with `β₁ = 0`),
-`β₂ = 1/2`, `x₁ = 0`.  Each block is as long as the time elapsed, while the
+`β₂ = 1/2`, `x₁ = 0`. Each block is as long as the time elapsed, while the
 iterate needs only `O(√t)` steps to cross `F`, so it spends almost all of each
-block at the endpoint where `f_t = -1`: `Σ_{t≤T} f_t(x_t) ≈ -T`.  At the end of
+block at the endpoint where `f_t = -1`: `Σ_{t≤T} f_t(x_t) ≈ -T`. At the end of
 a block `|Σ_{t≤T} s_t| ≈ T/3`, so `R(T) ≈ -T + T/3 = -2T/3` for every
-`x* ∈ F`.  Numerically `R(T)/T = -0.664` at `T = 2²² - 1`.
+`x* ∈ F`. Numerically `R(T)/T = -0.664` at `T = 2²² - 1`.
 
 `signSetup` satisfies every hypothesis of Corollary 4.5 in both settings,
 `isOnlineConvex_sign` and `sign_hyp`; `not_cor_lower`, in
@@ -26,6 +28,8 @@ every `x* ∈ F`.
 
 Source: arXiv:1904.03590v4, §4, Corollary 4.5.
 -/
+
+@[expose] public section
 
 namespace Transformer
 namespace AMSGrad

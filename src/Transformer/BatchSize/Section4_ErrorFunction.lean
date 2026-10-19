@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib
+public import Transformer.Basic
+
+/-!
 # The error function in signed-gradient drift
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1 and its takeaway.
@@ -7,8 +12,7 @@ It is only asymptotically linear: the strict inequality below refutes
 literal linearity on any positive interval.
 -/
 
-import Mathlib
-import Transformer.Basic
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped Topology

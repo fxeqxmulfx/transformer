@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainRatioGrowth
-import Mathlib.Analysis.SpecificLimits.Basic
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainRatioGrowth
+public import Mathlib.Analysis.SpecificLimits.Basic
 
 /-!
 # Finite Gen/Mem factor crossing on the actual initialized native path
@@ -24,6 +26,8 @@ from learned nonzero-beta GPTMini. The bound is qualitative, not a
 measured transition time. Persistent held-out ordering and a combined
 arbitrarily long wrong-prefix/later-success statement follow separately.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

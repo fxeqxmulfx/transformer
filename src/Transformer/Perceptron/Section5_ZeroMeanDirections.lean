@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_LocalGradients
+public import Transformer.Perceptron.Section3_TwoAtomEnergy
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
+
+/-!
 # Nonzero localized gradient directions with zero measure mean
 
 ArXiv:2601.21366v2, §5.2, the construction of `ξ₀` in the
@@ -15,9 +21,7 @@ nonvanishing and admissibility properties needed for the strict
 Hessian test without assuming any atomic presentation.
 -/
 
-import Transformer.Perceptron.Section5_LocalGradients
-import Transformer.Perceptron.Section3_TwoAtomEnergy
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology ENNReal

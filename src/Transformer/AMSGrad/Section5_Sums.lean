@@ -1,6 +1,8 @@
-import Transformer.AMSGrad.Section2_Prelim
+module
 
-/-
+public import Transformer.AMSGrad.Section2_Prelim
+
+/-!
 # AdamX — the sums (last1), (last2)
 
 §5 of arXiv:1904.03590v4, proof of Corollary 5.6: the sums
@@ -9,6 +11,8 @@ import Transformer.AMSGrad.Section2_Prelim
 
 Source: arXiv:1904.03590v4, §5, proof of Corollary 5.6.
 -/
+
+@[expose] public section
 
 open Finset
 
@@ -54,7 +58,7 @@ theorem sum_lambda_le {β₁ lam : ℝ} (hβ₁' : β₁ ≤ 1) (hl : 0 ≤ lam)
     _ ≤ ∑' n : ℕ, ((n : ℝ) + 1) * lam ^ n := hsum.sum_le_tsum _ fun n _ => hg n
     _ = 1 / (1 - lam) ^ 2 := taylor_deriv hl hl'
 
-/-- **(last2).**  For `β₁ ≤ 1`, `Σ_{t=2}^T (β₁/t)√(t-1) ≤ 2√T`.  The source
+/-- **(last2).**  For `β₁ ≤ 1`, `Σ_{t=2}^T (β₁/t)√(t-1) ≤ 2√T`. The source
 takes `β₁ = 1`.
 Source: arXiv:1904.03590v4, §5, proof of Corollary 5.6, (last2). -/
 theorem sum_inv_le {β₁ : ℝ} (hβ₁' : β₁ ≤ 1) (T : ℕ) :

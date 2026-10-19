@@ -1,17 +1,21 @@
-/-
+module
+
+public import Transformer.ContinuityEq.Weak
+
+/-!
 # Uniqueness for the linear continuity equation by duality
 
 Let `w` be an `IsFlowField` whose spatial derivative is jointly continuous,
 and let `t ↦ μ_t` solve `∂_t μ + div(w μ) = 0` weakly on `[0, T]`
-(`ContinuityEq/Weak.lean`).  Then `μ_t` is the image of `μ_0` under the flow,
+(`ContinuityEq/Weak.lean`). Then `μ_t` is the image of `μ_0` under the flow,
 `μ_t = (Φ_{0,t})_# μ_0` (`eq_map_flow`).
 
-The proof is by duality.  For `g ∈ C_c^∞` and `t ∈ [0, T]`, the function
-`F(s) = ∫ g(Φ_{s,t} x) dμ_s(x)` is continuous.  Near `s < t` it splits as
+The proof is by duality. For `g ∈ C_c^∞` and `t ∈ [0, T]`, the function
+`F(s) = ∫ g(Φ_{s,t} x) dμ_s(x)` is continuous. Near `s < t` it splits as
 `∫ (h(Φ_{s',s} x) - h(x)) dμ_{s'} + ∫ h dμ_{s'}` with `h = g ∘ Φ_{s,t} ∈ C¹_c`.
 The first term has derivative `-∫ Dh · w(s) dμ_s`, by the expansion of the
 flow in the initial time (`hasDerivAt_integral_comp_flow`); the second has
-right derivative `∫ Dh · w(s) dμ_s`, by the weak identity for `h`.  So `F` is
+right derivative `∫ Dh · w(s) dμ_s`, by the weak identity for `h`. So `F` is
 constant, and `∫ g dμ_t = F(t) = F(0) = ∫ g ∘ Φ_{0,t} dμ_0`.
 
 This is the uniqueness half of the theory of the linear continuity equation
@@ -19,7 +23,7 @@ with a `C¹` field, which the proof of `c:wellposedtransformers` of
 arXiv:2305.05465v6, §6, uses.
 -/
 
-import Transformer.ContinuityEq.Weak
+@[expose] public section
 
 open Set Metric Filter Topology MeasureTheory Asymptotics
 open scoped NNReal

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.ContinuityEq.Duality
+public import Mathlib.Analysis.Calculus.ParametricIntegral
+
+/-!
 # Weak solutions are the measures transported along trajectories
 
 Let `w` be a field continuous in `(t, x)` and bounded uniformly in `x`, locally
@@ -14,7 +19,7 @@ uniformly in `t`.
   `t ↦ μ_t` of probability measures, carried near each time by a fixed ball,
   that solves the equation weakly on `[0, T]` is the image of its initial
   measure under the flow: `μ_t = (Φ_{0,t})_# μ_0` for `t ∈ [0, T]`
-  (`eq_map_flow`).  The function `F(s) = ∫ g(Φ_{s,t} x) dμ_s` is continuous
+  (`eq_map_flow`). The function `F(s) = ∫ g(Φ_{s,t} x) dμ_s` is continuous
   and stationary from the right (`hasDerivWithinAt_integral_comp_flow_zero`),
   so `F(t) = F(0)` for every `g ∈ C_c^∞`, and both measures are carried by one
   ball, where smooth functions with compact support separate probability
@@ -26,7 +31,7 @@ object that its existence proof builds and its stability estimate
 `e:w2estimate` compares.
 -/
 
-import Transformer.ContinuityEq.Duality
+@[expose] public section
 
 open Set Metric Filter Topology MeasureTheory
 open scoped NNReal

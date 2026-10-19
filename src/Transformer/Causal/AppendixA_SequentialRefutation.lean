@@ -1,4 +1,6 @@
-import Transformer.Causal.AppendixA_CuspCollapse
+module
+
+public import Transformer.Causal.AppendixA_CuspCollapse
 
 /-!
 # Counterexample to the printed C¹ sequential-flow convergence lemma
@@ -27,6 +29,8 @@ already for two particles, with its original C¹ hypotheses intact.
 The source's unstable-manifold step requires regularity of the
 velocity that does not follow from its C¹ energy assumption.
 -/
+
+@[expose] public section
 
 open Real Filter Topology MeasureTheory Set
 namespace Transformer.Causal

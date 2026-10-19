@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.Indicator
+public import Transformer.CRASP.PositionalReductionAtom
+
+/-!
 # `TL[◁#]^pos` reduces to `TL[◁#]`: the translation
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -14,19 +19,18 @@ size; the rest follows the paper except in two places.
 * **Counts.**  The paper translates `◁#[φ]` to
   `C_φ + Σ_{ρ' ∈ [r]} ◁#strict[T_ρ'⟦φ⟧] + Σ_{ρ' ∈ [ρ]} (T_ρ'⟦φ⟧ ? 1 : 0)`,
   which is not a term of `TL[◁#]`: the strict count and the indicator are not
-  in its syntax.  Here the count is `C_φ + Σ_{ρ' ∈ [r]} ◁#[T_ρ'⟦φ⟧]` less the
+  in its syntax. Here the count is `C_φ + Σ_{ρ' ∈ [r]} ◁#[T_ρ'⟦φ⟧]` less the
   indicators of the `ρ' ∈ (ρ, r]`, and a comparison moves those indicators to
-  its other side, where `Form.ltSum` removes them at no cost in depth.  A term
+  its other side, where `Form.ltSum` removes them at no cost in depth. A term
   is translated to `Summands`: its constant, its counts and the formulas whose
   indicators it subtracts.
 * **The first block.**  The paper proves its invariant for `i ∈ [|w|]` only,
   so its final step `f(w) ⊨ φ ⟺ w ⊨ T_r⟦φ⟧` is not established for `w = ε`,
-  and at `i = 0` its count would take the first block in twice.  Here the
+  and at `i = 0` its count would take the first block in twice. Here the
   invariant also covers `i = 0` with `ρ = r`, the end of the first block.
 -/
 
-import Transformer.CRASP.Indicator
-import Transformer.CRASP.PositionalReductionAtom
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -35,7 +39,7 @@ universe u
 
 variable {σ : Type u}
 
-/-- A translated term `const + Σ terms − Σ_{ψ ∈ negs} (ψ ? 1 : 0)`.  The
+/-- A translated term `const + Σ terms − Σ_{ψ ∈ negs} (ψ ? 1 : 0)`. The
 subtracted indicators are added on the other side of a comparison. -/
 structure Summands (σ : Type u) where
   /-- The constant. -/
@@ -62,7 +66,7 @@ def FormP.tr (r ρ : ℕ) : FormP (Option σ) → Form σ
   | .neg φ => .neg (φ.tr r ρ)
   | .and φ₁ φ₂ => .and (φ₁.tr r ρ) (φ₂.tr r ρ)
 
-/-- `T_ρ⟦t⟧` on terms.  `◁#[φ]` becomes the count `C_φ` of the first block,
+/-- `T_ρ⟦t⟧` on terms. `◁#[φ]` becomes the count `C_φ` of the first block,
 which every formula sees as `e^r`, plus `◁#[T_ρ'⟦φ⟧]` for every `ρ' ∈ [r]`,
 less the indicators of `T_ρ'⟦φ⟧` for the `ρ' ∈ (ρ, r]` of the current block
 that `r·i + ρ` has not reached. -/

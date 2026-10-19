@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_TrainingBias
+
+/-!
 # AdaFisher — constants in the momentum-error Lyapunov estimate
 
 arXiv:2405.16397v3, §3.4 and Appendix A.2, deterministic training extension.
@@ -6,7 +10,7 @@ The sufficient step condition is `2*L*eta <= damping*(1-beta)`.
 It permits every beta in [0,1), including nonzero constant momentum.
 -/
 
-import Transformer.AdaFisher.Section3_TrainingBias
+@[expose] public section
 
 namespace Transformer.AdaFisher
 

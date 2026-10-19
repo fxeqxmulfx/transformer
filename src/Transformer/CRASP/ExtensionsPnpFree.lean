@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.ExtensionsElim
+public import Transformer.CRASP.Conjunctions
+
+/-!
 # PNP-free elimination of counting sugar
 
 arXiv:2506.16055v3, Appendix A.3: `thm:strict` and conditional-term
@@ -6,8 +11,7 @@ elimination. The guarded-piece translation stays in the plain logic when
 its input has no Parikh numerical predicates.
 -/
 
-import Transformer.CRASP.ExtensionsElim
-import Transformer.CRASP.Conjunctions
+@[expose] public section
 
 namespace Transformer.CRASP
 

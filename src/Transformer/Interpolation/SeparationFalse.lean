@@ -1,10 +1,15 @@
-/-
+module
+
+public import Transformer.Interpolation.Disentanglement
+public import Transformer.Interpolation.MassConcentrationSqrt
+
+/-!
 # Measure-to-measure interpolation — `prop: separation` fails for equal data
 
 `prop: separation` of arXiv:2411.04551v3 asks for the solutions started at the
-`μ_0^i` to end with pairwise disjoint geodesic hulls of their supports.  Two
+`μ_0^i` to end with pairwise disjoint geodesic hulls of their supports. Two
 equal initial measures have the same solutions, and a hull disjoint from
-itself is empty, which the support of a probability measure is not.  So the
+itself is empty, which the support of a probability measure is not. So the
 proposition as printed is false in every dimension `d ≥ 1`, for every
 parameter curve and every number of switches; the statement kept in
 `Transformer.Interpolation.Disentanglement` adds that the `μ_0^i` are pairwise
@@ -13,8 +18,7 @@ distinct.
 Source: arXiv:2411.04551v3, §3, `prop: separation`.
 -/
 
-import Transformer.Interpolation.Disentanglement
-import Transformer.Interpolation.MassConcentrationSqrt
+@[expose] public section
 
 open Real MeasureTheory
 
@@ -27,11 +31,11 @@ variable (d : ℕ)
 
 /-- **Proposition (prop: separation) is false as written.**
 
-Take `N = 2` and `μ_0^1 = μ_0^2 = δ_q`, `q = (1, …, 1)/√d ∈ ℚ_1^{d-1}`.  For
+Take `N = 2` and `μ_0^1 = μ_0^2 = δ_q`, `q = (1, …, 1)/√d ∈ ℚ_1^{d-1}`. For
 any parameter curve `θ` under which the data has a solution `μ`, the
 proposition's conclusion applied to `μ` for both indices would make
 `conv_g supp μ(T)` disjoint from itself, hence empty; but `supp μ(T)` lies in
-its hull and has full `μ(T)`-measure `1`.  No hypothesis on `θ`, `T` or the
+its hull and has full `μ(T)`-measure `1`. No hypothesis on `θ`, `T` or the
 number of switches is used, so no choice of the `O(d · N)` constant helps.
 
 Source: arXiv:2411.04551v3, §3, `prop: separation`. -/

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_DistNonDec
+public import Transformer.Clusters.Section7_BooleanScaling
+
+/-!
 # Exact scalar averages for the original multi-head iteration
 
 ArXiv:2305.05465v6, §12, `sec:conclusion`, the multi-head display,
@@ -17,8 +22,7 @@ These are estimates for the exact multi-head field; no common head
 temperature, replacement dynamics, or limiting weights are assumed.
 -/
 
-import Transformer.Clusters.Section7_DistNonDec
-import Transformer.Clusters.Section7_BooleanScaling
+@[expose] public section
 
 open scoped BigOperators
 open Real Set

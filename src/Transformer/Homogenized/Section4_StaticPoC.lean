@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.CoupledSystem
+public import Transformer.Homogenized.RandomChain
+public import Transformer.Wasserstein.Basic
+
+/-!
 # Actual stationary coupled systems and a single original token discrepancy
 
 ArXiv:2604.01978v1, §4, `prop: poc`, its displayed maximum
@@ -19,9 +25,7 @@ The displayed source proposition imposes conditional independence on
 the copies, and no exchangeability assumption on the first block.
 -/
 
-import Transformer.Homogenized.CoupledSystem
-import Transformer.Homogenized.RandomChain
-import Transformer.Wasserstein.Basic
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open Real MeasureTheory

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_ChainSums
+
+/-!
 # Power sums of the chain ratio
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Steps 2 and 4: the sums
@@ -8,7 +12,7 @@ over tokens in `eq:est-cov-phi` and `eq:est-kap3-th`. For `s ≤ 1/2` the ratio
 `n < M < x` has `Σ 1/(M+1) ≤ q_γ(x, n)/γ` (`sum_Ico_inv_le`).
 -/
 
-import Transformer.Kinetic.Section3_ChainSums
+@[expose] public section
 
 open Real
 

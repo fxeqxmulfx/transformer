@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.CRASP.MajTwoRectMajority
+
+/-!
 # Depth and fragment bounds for the majority translation
 
 arXiv:2506.16055v3, Appendix E, `thm:majtwo_to_tlc`: one majority
 quantifier becomes one level of temporal counting.
 -/
 
-import Transformer.CRASP.MajTwoRectMajority
+@[expose] public section
 
 namespace Transformer.CRASP
 

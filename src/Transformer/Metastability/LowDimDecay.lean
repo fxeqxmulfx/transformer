@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.Metastability.NotSeparated
+
+/-!
 # Metastability — Separated configurations are exponentially rare on the circle
 
 The low-dimensional claim of §4: `n` i.i.d. uniform points on `𝕊^1` are
 `(β, ε)`-separated with probability at most `c^n`, `c < 1`.
 
 The proof here is not the source's heuristic, which it calls one and which
-does not bound the probability of a union over the choices of centres.  It
+does not bound the probability of a union over the choices of centres. It
 rests on two elementary facts about `γ(β) = 1 - α - 8ε - β⁻¹ log(2n²/ε)`.
 
 * `α ≥ -1`, so `γ(β) ≤ 2 - β⁻¹ log(2n²/ε)`, which is negative as soon as
@@ -14,7 +18,7 @@ rests on two elementary facts about `γ(β) = 1 - α - 8ε - β⁻¹ log(2n²/ε
 * Two points with `1 - 8ε ≤ ⟨x_i, x_j⟩ < 1 - 4ε` spoil every choice of
   centres: a single cap of height `1 - ε` forces `⟨x_i, x_j⟩ ≥ 1 - 4ε`, and two
   distinct caps force `α ≥ ⟨x_i, x_j⟩ ≥ 1 - 8ε`, hence `γ(β) ≤ 0`
-  (`not_isSeparated_of_inner`).  The event that the first two points fall in
+  (`not_isSeparated_of_inner`). The event that the first two points fall in
   two fixed small caps realizing such an inner product has a probability
   `p > 0` independent of `n` (`UniformCap`), so the probability of being
   separated is at most `1 - p` for every `n`.
@@ -24,7 +28,7 @@ rests on two elementary facts about `γ(β) = 1 - α - 8ε - β⁻¹ log(2n²/ε
 Source: arXiv:2410.06833v1, §4, "Low dimension".
 -/
 
-import Transformer.Metastability.NotSeparated
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -45,7 +49,7 @@ alone, with
 "Fix `β > 0`", made a hypothesis; the statement stood without it and is false
 for `β < 0`: then `-β⁻¹ log(2n²/ε) → +∞`, so for large `n` every
 configuration is separated with `k = n` centres at the points themselves, and
-the probability is `1`.  The source's argument is a heuristic ("we briefly
+the probability is `1`. The source's argument is a heuristic ("we briefly
 explain how to heuristically derive this bound"); the proof here is the one in
 the module docstring.
 
@@ -144,7 +148,7 @@ theorem low_dim_decay (β ε : ℝ) (hβ : 0 < β) (hε : 0 < ε) (hε16 : ε < 
       _ ≤ (q ^ ((N : ℝ)⁻¹)) ^ n := pow_le_pow_of_le_one hc0.le hc1.le hnN.le
 
 /-- The hypotheses of `low_dim_decay` carried in its binders are satisfiable:
-`β = 1`, `ε = 1/32`.  The uniform family is pinned down by `IsUniformFamily`,
+`β = 1`, `ε = 1/32`. The uniform family is pinned down by `IsUniformFamily`,
 not constructed; see `InitialUniform`. -/
 example : (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 / 32 ∧ (1 : ℝ) / 32 < 1 / 16 := by norm_num
 

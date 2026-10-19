@@ -1,8 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+
+/-!
 # Metastability — the softmax velocity, tested against a direction
   (behind `rem: variance` of 2410.06833v1)
 
-The computation the remark of §2 rests on.  Tested against a fixed direction
+The computation the remark of §2 rests on. Tested against a fixed direction
 `w`, the `SA` velocity of a token splits into the attention-weighted gap to
 the other tokens and the attention-weighted variance around it
 (`inner_proj_softmax_eq`); bounding the first sum below by the leakage from
@@ -10,11 +14,11 @@ the `α`-separated tokens and the second by its restriction to a subset gives
 the remark's inequality (`inner_proj_softmax_ge`, in `CapVelocityBound`).
 
 Both are statements about a plain tuple of unit vectors: no dynamics, no cap,
-no time.  `Metastability.variance_inequality` is what is left once the
+no time. `Metastability.variance_inequality` is what is left once the
 envelope argument has identified `η̇_q(t)` with this velocity.
 -/
 
-import Transformer.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -32,7 +36,7 @@ For unit vectors `x_1,…,x_n` and any `w`,
      = Σ_j a_{kj} (⟨x_j, w⟩ - ⟨x_k, w⟩)
        + ⟨x_k, w⟩ Σ_j a_{kj} ‖x_j - x_k‖² / 2`,
 
-with `a_{kj} = e^{β⟨x_k,x_j⟩} / Σ_l e^{β⟨x_k,x_l⟩}`.  The only input is
+with `a_{kj} = e^{β⟨x_k,x_j⟩} / Σ_l e^{β⟨x_k,x_l⟩}`. The only input is
 `⟨x_k, x_j⟩ = 1 - ‖x_j - x_k‖²/2`, which holds because the `x_j` are unit
 vectors; the weights need not even sum to one for the identity to hold, the
 term `Σ_j a_{kj}` cancelling between the two sums.

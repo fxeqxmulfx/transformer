@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_DyadicGeneratorIdentity
+public import Transformer.BatchSize.Section4_DyadicGeneratorLimit
+public import Transformer.BatchSize.Section4_BoundedIntervalLimits
+public import Transformer.BatchSize.Section4_WeightedTestLimits
+
+/-!
 # The actual continuous Euler limit satisfies the generator identity
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,10 +13,7 @@ Finite Brownian Euler identities pass to a genuine continuous modification
 of their mean-square limits, with arbitrary bounded past weights.
 -/
 
-import Transformer.BatchSize.Section4_DyadicGeneratorIdentity
-import Transformer.BatchSize.Section4_DyadicGeneratorLimit
-import Transformer.BatchSize.Section4_BoundedIntervalLimits
-import Transformer.BatchSize.Section4_WeightedTestLimits
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal Topology

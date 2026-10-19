@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.GPTMini.Config
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+
+/-!
 # RoPE — Rotary Positional Encoding
 
 Formalization of `rope_tables` and `apply_rope` from `reference/model.py`:
@@ -17,10 +24,10 @@ def apply_rope(x, cos, sin):
 ```
 
 RoPE rotates the pair `(x_k, x_{k + half})` by the angle `t · invFreq k`, the
-two halves of the head dimension being paired by `chunk(2)`.  `ropeSplit` is
+two halves of the head dimension being paired by `chunk(2)`. `ropeSplit` is
 that pairing: it presents `Fin d_head` as two copies of `Fin (d_head / 2)`
 followed by the coordinate an odd `d_head` leaves over, which RoPE does not
-touch.  Everything else is stated and proved on the split index, where the
+touch. Everything else is stated and proved on the split index, where the
 rotation is two-dimensional and the sums factor.
 
 Proved here:
@@ -29,10 +36,7 @@ Proved here:
     positions only, which is what makes RoPE a *relative* encoding.
 -/
 
-import Transformer.Basic
-import Transformer.GPTMini.Config
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import Mathlib.Analysis.InnerProductSpace.PiL2
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -150,9 +154,9 @@ theorem applyRope_sub (d_head : ℕ) (theta t : ℝ) (x y : EucSpace d_head) :
   ext i
   simp [applyRope_apply, ropeCoord_sub]
 
-/-- **RoPE preserves distances**, being linear and norm-preserving.  This is
+/-- **RoPE preserves distances**, being linear and norm-preserving. This is
 what lets a Lipschitz estimate for the head ignore the positional encoding
-entirely.  Source: `reference/model.py` (`apply_rope`). -/
+entirely. Source: `reference/model.py` (`apply_rope`). -/
 theorem applyRope_dist (d_head : ℕ) (theta t : ℝ) (x y : EucSpace d_head) :
     ‖applyRope d_head theta t x - applyRope d_head theta t y‖ = ‖x - y‖ := by
   rw [← applyRope_sub, applyRope_isometry]
@@ -169,7 +173,7 @@ theorem ropeAngle_sub (d_head : ℕ) (theta t s : ℝ) (k : Fin (d_head / 2)) :
   `⟨applyRope d θ t x, applyRope d θ s y⟩ = ⟨x, applyRope d θ (s - t) y⟩`:
 
 inner products depend only on the *difference* of the positions, which is the
-property RoPE attention exploits.  Source: `reference/model.py`
+property RoPE attention exploits. Source: `reference/model.py`
 (`apply_rope`); Su et al., *RoFormer*, eq. (14). -/
 theorem applyRope_relative
     (d_head : ℕ) (theta : ℝ) (t s : ℝ) (x y : EucSpace d_head) :

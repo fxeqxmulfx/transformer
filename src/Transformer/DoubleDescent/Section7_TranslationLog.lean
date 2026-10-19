@@ -1,4 +1,6 @@
-import Transformer.DoubleDescent.Section5_RecordedCurves
+module
+
+public import Transformer.DoubleDescent.Section5_RecordedCurves
 
 /-!
 # Published sample-wise translation losses
@@ -11,9 +13,13 @@ The source calls the plotted loss perplexity; the notebook labels
 it cross-entropy. We certify the exported `test_loss` values.
 
 Source SHA-256:
-dd-translation-samples-aug26-small.csv: afb0978c4e8bd0f57ed1a4805f227270cc4e6fdedad996b3252c2e689414c180
-dd-translation-samples-aug27-size80.csv: 2eac9e99eb09d04cbd04db6810934412ddae44fc2e2c543caeb79f8b215f74ca
+dd-translation-samples-aug26-small.csv:
+afb0978c4e8bd0f57ed1a4805f227270cc4e6fdedad996b3252c2e689414c180
+dd-translation-samples-aug27-size80.csv:
+2eac9e99eb09d04cbd04db6810934412ddae44fc2e2c543caeb79f8b215f74ca
 -/
+
+@[expose] public section
 
 namespace Transformer.DoubleDescent
 

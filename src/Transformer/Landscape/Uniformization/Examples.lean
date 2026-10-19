@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.Induction
+
+/-!
 # Local uniformization: examples for the product step and the induction
 
 The coordinate `x₀` of `ℝ¹` satisfies the hypotheses of the lemmas on coefficients;
@@ -9,7 +13,7 @@ discharged by local uniformization itself. Auxiliary examples for Appendix D.1,
 `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Uniformization.Induction
+@[expose] public section
 
 open Filter Set Polynomial
 open scoped BigOperators Topology

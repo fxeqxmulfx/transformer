@@ -1,4 +1,6 @@
-import Transformer.Homogenized.Section7_LogisticArcsinTests
+module
+
+public import Transformer.Homogenized.Section7_LogisticArcsinTests
 
 /-!
 # Domination and limits for the actual logistic angle generators
@@ -23,6 +25,8 @@ and tends to 1, so the smooth approximants exist at every index.
 The examples retain nonzero drift and positive diffusion at an
 interior point, together with actual smooth test functions.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

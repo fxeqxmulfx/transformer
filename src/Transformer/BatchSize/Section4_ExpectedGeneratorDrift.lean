@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_C2DriftObservable
+public import Transformer.BatchSize.Section4_C2GeneratorBounds
+public import Transformer.BatchSize.Section4_OptimizerSmallIncrements
+public import Transformer.BatchSize.Section4_PathExpectationBounds
+
+/-!
 # Expected generator variation within one optimizer interval
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,10 +13,7 @@ The covariance correction and actual path increments give a uniform
 O(eta) difference from the first-order generator at the interval's start.
 -/
 
-import Transformer.BatchSize.Section4_C2DriftObservable
-import Transformer.BatchSize.Section4_C2GeneratorBounds
-import Transformer.BatchSize.Section4_OptimizerSmallIncrements
-import Transformer.BatchSize.Section4_PathExpectationBounds
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal

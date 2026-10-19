@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_FullWeakContinuity
+public import Transformer.Interpolation.Section1_VarianceFlux
+public import Transformer.Interpolation.Section1_SpacetimeTests
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Derivatives inside a complete original control phase
 
 ArXiv:2411.04551v3, §1, `eq: vf` and `eq: cauchy.pb`.
@@ -13,9 +20,7 @@ uses the actual tuple on this phase. No differentiability is asserted
 at its switching endpoints; the weak barycenter is continuous there.
 -/
 
-import Transformer.Interpolation.Section1_FullWeakContinuity
-import Transformer.Interpolation.Section1_VarianceFlux
-import Transformer.Interpolation.Section1_SpacetimeTests
+@[expose] public section
 
 open Real MeasureTheory Filter Set
 open scoped Topology NNReal

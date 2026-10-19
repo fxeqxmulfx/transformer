@@ -1,5 +1,7 @@
-import Mathlib.Data.List.Range
-import Mathlib.Tactic
+module
+
+public import Mathlib.Data.List.Range
+public import Mathlib.Tactic
 
 /-!
 # Threshold events on a finite observed training prefix
@@ -22,6 +24,8 @@ The observation clock also omits changes between recorded checkpoints;
 the first observed crossing need not be the first optimizer-step crossing.
 No missing checkpoint or unrecorded intermediate accuracy is reconstructed.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Operational
 

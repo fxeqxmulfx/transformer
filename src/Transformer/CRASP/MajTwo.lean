@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.TLCDepth
+
+/-!
 # `MAJ²`: majority quantification over two variables
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -7,8 +11,8 @@ of `∀`/`∃` in favour of `MAJ`.
 
 `MAJ²` has atoms `Q_σ(x)`, `Q_σ(y)`, `x < y`, `y < x`, the Boolean
 connectives, and `MAJ_v⟨φ₁, …, φ_m⟩`, which holds when more than half of the
-`|w|·m` pairs `(i, t)` satisfy `φ_t` with `v ↦ i`.  Its depth counts nested
-majority quantifiers.  Ordinary quantification is definable without cost:
+`|w|·m` pairs `(i, t)` satisfy `φ_t` with `v ↦ i`. Its depth counts nested
+majority quantifiers. Ordinary quantification is definable without cost:
 `∃v[φ] ≡ MAJ_v⟨φ, ⊤⟩` and `∀v[φ] ≡ ¬MAJ_v⟨¬φ, ⊤⟩`, because the `⊤` disjunct
 contributes exactly half the mass.
 
@@ -20,7 +24,7 @@ cheapest closed tautology is therefore `¬(∃x[⊤] ∧ ¬∃x[⊤])`, of depth
 not `¬(x < x)`.
 -/
 
-import Transformer.CRASP.TLCDepth
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -37,7 +41,7 @@ inductive Var : Type
   | y : Var
   deriving DecidableEq
 
-/-- The syntax of `MAJ²` (Definition `def:MAJtwo`).  A majority quantifier
+/-- The syntax of `MAJ²` (Definition `def:MAJtwo`). A majority quantifier
 carries `m + 1` formulas, the paper's `m ≥ 1`. -/
 inductive Maj2 (σ : Type u) : Type u
   /-- `Q_σ(v)`. -/
@@ -57,7 +61,7 @@ variable [DecidableEq σ]
 
 /-- Satisfaction `w, ξ ⊨ φ`, with `ξ` a total assignment of positions to the
 two variables; an unused variable may be sent anywhere (Definition
-`def:MAJtwo`).  A majority quantifier compares twice the number of satisfied
+`def:MAJtwo`). A majority quantifier compares twice the number of satisfied
 pairs against `|w|·m`, which is the paper's `> |w|m/2` over the integers. -/
 def sat (w : List σ) : (Var → ℕ) → Maj2 σ → Bool
   | ξ, .sym a v => w[ξ v - 1]? = some a
@@ -173,7 +177,7 @@ theorem depth_ex (v : Var) (φ : Maj2 σ) : (ex v φ).depth = 1 + φ.depth := by
         Finset.le_sup (f := fun t : Fin 2 => (![φ, (top : Maj2 σ)] t).depth) (Finset.mem_univ 0)
   rw [ex, depth, hsup]
 
-/-- A closed tautology, `¬(∃x[⊤] ∧ ¬∃x[⊤])`.  Every atom of `MAJ²` names a
+/-- A closed tautology, `¬(∃x[⊤] ∧ ¬∃x[⊤])`. Every atom of `MAJ²` names a
 variable, so the only closed formulas are those in which a majority quantifier
 binds it; this is the cheapest such tautology. -/
 def closedTop : Maj2 σ := .neg (.and (ex .x top) (.neg (ex .x top)))

@@ -1,19 +1,23 @@
-import Transformer.AdamBeyond.Section3_GenBlock
-import Transformer.AdamBeyond.AppendixG_Auxiliary
+module
 
-/-
+public import Transformer.AdamBeyond.Section3_GenBlock
+public import Transformer.AdamBeyond.AppendixG_Auxiliary
+
+/-!
 # Adam and beyond — §3: one block of Theorem 2 returns to `x = 1`
 
 Past the warm-up, `t ≥ C`, the steps of a block add up to at least
 `N α/(2√t) - 2α/(√t √(1-β₂)(1-γ)) ≥ 0` (`gen_block_sum`): the `N` last steps of the
 block have `v ≤ 2` and move up by at least `α/(2√t)` each, while all the downward
-pull of the gradient `C` is at most a geometric series in `γ = β₁/√β₂`.  Since
+pull of the gradient `C` is at most a geometric series in `γ = β₁/√β₂`. Since
 the steps change sign once, from down to up, the projected run then ends the
 block no lower than it started (`proj_1d_of_mono`), so a block that starts at
 `x = 1` ends at `x = 1` (`gen_block`).
 
 Source: arXiv:1904.09237, Appendix, proof of Theorem 2, eq:gen-claim.
 -/
+
+@[expose] public section
 
 open Finset
 
@@ -119,7 +123,7 @@ theorem gen_block_sum : 0 ≤ ∑ j ∈ Icc 1 C, genD C β₁ β₂ α (t + j) :
   linarith
 
 /-- **The claim eq:gen-claim of the proof of Theorem 2.**  A block that starts at
-`x = 1` ends at `x = 1`.  arXiv:1904.09237, Appendix, proof of Theorem 2. -/
+`x = 1` ends at `x = 1`. arXiv:1904.09237, Appendix, proof of Theorem 2. -/
 theorem gen_block (hx : genX C β₁ β₂ α t = 1) : genX C β₁ β₂ α (t + C) = 1 := by
   have hβ₂ := hβ₂0.le
   have hβ₂' := hβ₂1.le

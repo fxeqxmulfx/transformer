@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainWarmupSelection
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainWarmupSelection
 
 /-!
 # Actual original-warmup output limits, decisions and logit robustness
@@ -24,6 +26,8 @@ logits concerns decisions only; it is not dynamical stability of the
 weights. Plain CE/uniform native decay differs from the source's
 coupled circuit-norm GD. Frozen training and measurements are unchanged.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

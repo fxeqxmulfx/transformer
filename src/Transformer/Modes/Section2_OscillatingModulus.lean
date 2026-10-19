@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section2_OscillatingField
+
+/-!
 # The actual modulus of the signed oscillating field
 
 Source: arXiv:2412.09080v3, §2.1, hypothesis four of
@@ -19,7 +23,7 @@ supply the measurability required for their finite moments
 under the probability law, which is defined separately.
 -/
 
-import Transformer.Modes.Section2_OscillatingField
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 open scoped ENNReal

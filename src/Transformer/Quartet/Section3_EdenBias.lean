@@ -1,35 +1,39 @@
-/-
+module
+
+public import Transformer.Quartet.Section3_EdenMean
+
+/-!
 # The Corollary of §3.3 is false at every dimension
 
 arXiv:2601.22813v2, §3.3: "For all `x ∈ ℝ^d` and scale `s ≠ 0`",
 `E_{ω_RHT, ω_SR} RHT⁻¹(x̂, ω_RHT) = x` for the output `x̂` of `MS-EDEN`.
 
 `Transformer.Quartet.Section3_EdenFalse` kills the quantifier over `s`: at `s = 21` the corrected
-group scale saturates the E4M3 grid.  This module kills the quantifier over `d`, *inside* the
+group scale saturates the E4M3 grid. This module kills the quantifier over `d`, *inside* the
 window of clipping factors the paper uses, `6 · 16/17 ≤ s ≤ (1/0.93) · 6 · 16/17` — the
-non-clipping bound of §3.3 and the factor it "uses for the rest of the paper".  For every
+non-clipping bound of §3.3 and the factor it "uses for the rest of the paper". For every
 dimension `d = 16 · 2^k` and every `s` in the window there is a vector `x` with
 
 `E_{ω_RHT, ω_SR} RHT⁻¹(x̂, ω_RHT)_{0,0} = 101/102 ≠ 1 = x_{0,0}`.
 
-The witness is `x = e₀ + (1/10) e₁` (`Section3_EdenPair`).  Its rotation takes only two values,
+The witness is `x = e₀ + (1/10) e₁` (`Section3_EdenPair`). Its rotation takes only two values,
 `(σ₀ ± σ₁/10)/√d` by the parity of the position, where `σ₀, σ₁ = ±1` are the signs the seed gives
-the two nonzero entries.  So for every seed the rotated tensor has the same maximum `M = 11a`
+the two nonzero entries. So for every seed the rotated tensor has the same maximum `M = 11a`
 in every group, `a = 1/(10 √d)`, every group scale is exactly `256`
 (`Section3_EdenTwoValued`), the larger entries round to `±6` and the smaller ones, `9/11` of
-them, to `±4`, and the EDEN correction is `S = s · 202 a² / (11 a · 102 a)` in every group.  The
+them, to `±4`, and the EDEN correction is `S = s · 202 a² / (11 a · 102 a)` in every group. The
 `2^k` stochastic roundings of `256 S` are unbiased (`Section3_EdenCoins`); what is left is
 arithmetic (`Section3_EdenMean`), and it gives `101/102`, exactly.
 
 §3.2 quotes EDEN's guarantee for the `RHT` as a *limit* `d → ∞` ("in practice … converges fast
 enough to be unbiased with RHT performed in groups as small as `d = 64`"), and Appendix A says the
-kernels use `d = 128`; the Corollary drops the limit.  At finite `d` it is false: `d = 64` is
-`k = 2`, `d = 128` is `k = 3`.  For `k = 3`, `msEden` is Algorithm 1 verbatim, one chunk of `128`;
+kernels use `d = 128`; the Corollary drops the limit. At finite `d` it is false: `d = 64` is
+`k = 2`, `d = 128` is `k = 3`. For `k = 3`, `msEden` is Algorithm 1 verbatim, one chunk of `128`;
 for other `k` it is Algorithm 1 with the chunk equal to the whole vector, which the paper allows
 ("any multiple of the quantization group size 16 is valid").
 -/
 
-import Transformer.Quartet.Section3_EdenMean
+@[expose] public section
 
 namespace Transformer
 namespace Quartet
@@ -38,7 +42,7 @@ variable {k : ℕ}
 
 /-- **The mean over the coins of `MS-EDEN` on `edenPair`, at the coordinate `(0, 0)`, is
 `101/102`**, for every seed of the signs, every `s` in the window `6 · 16/17 ≤ s ≤ (1/0.93) ·
-6 · 16/17` and every dimension `16 · 2^k`.  The four sign patterns of the seed at the two
+6 · 16/17` and every dimension `16 · 2^k`. The four sign patterns of the seed at the two
 nonzero entries give the rotation `(±11a, ±9a)` or `(±9a, ±11a)`, with `a = 1/(10 √d)`. -/
 theorem integral_rhtInv_msEden_edenPair {s : ℝ} (hs₀ : 6 * (16 / 17) ≤ s)
     (hs₁ : s ≤ 6 * (16 / 17) / 0.93) (ε : Fin (2 ^ k) → Fin 16 → Bool) :
@@ -115,7 +119,7 @@ where the mean is `101/102`.
 
 This refutes what was the sorried theorem `mean_rhtInv_msEden` — the paper's Corollary with `s`
 restricted to that window, which is the strongest form of it that `not_mean_rhtInv_msEden`
-leaves standing.  The paper's own reading of EDEN for the `RHT` is a limit `d → ∞` (§3.2).
+leaves standing. The paper's own reading of EDEN for the `RHT` is a limit `d → ∞` (§3.2).
 
 Source: arXiv:2601.22813v2, §3.3, the Corollary after Algorithm 1. -/
 theorem not_mean_rhtInv_msEden_window (k : ℕ) {s : ℝ} (hs₀ : 6 * (16 / 17) ≤ s)

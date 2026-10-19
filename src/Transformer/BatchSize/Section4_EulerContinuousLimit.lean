@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_KolmogorovCriterion
+
+/-!
 # Continuous modifications of the actual optimizer Euler limits
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -7,7 +11,7 @@ an invertible time change. Returning to physical time gives continuous
 sample paths whose evaluations equal the constructed adapted L2 limits.
 -/
 
-import Transformer.BatchSize.Section4_KolmogorovCriterion
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped NNReal ENNReal Topology

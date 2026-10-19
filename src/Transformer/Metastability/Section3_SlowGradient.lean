@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.Section3_SlowManifold
+public import Transformer.Causal.Interaction
+
+/-!
 # Small gradients on the part of the slow manifold inside the caps
 
 ArXiv:2410.06833v1, §3.1 (H2), and §3.2, `lem: PL.borjan` and
@@ -11,8 +16,7 @@ caps have exponentially small interactions. Their actual normalized
 gradient consequently has Euclidean squared norm at most `exp(-λβ)`.
 -/
 
-import Transformer.Metastability.Section3_SlowManifold
-import Transformer.Causal.Interaction
+@[expose] public section
 
 open scoped BigOperators
 open Real

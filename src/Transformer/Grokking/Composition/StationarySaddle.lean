@@ -1,7 +1,9 @@
-import Transformer.Grokking.Composition.Curvature
-import Mathlib.Analysis.Convex.Function
-import Mathlib.Topology.Order.LocalExtr
-import Mathlib.Topology.MetricSpace.Pseudo.Constructions
+module
+
+public import Transformer.Grokking.Composition.Curvature
+public import Mathlib.Analysis.Convex.Function
+public import Mathlib.Topology.Order.LocalExtr
+public import Mathlib.Topology.MetricSpace.Pseudo.Constructions
 
 /-!
 # Flat coordinate restrictions do not trap the joint CE objective
@@ -20,6 +22,8 @@ These are loss-landscape statements. They do not prove escape from an
 exact zero deterministic initialization, a probabilistic initialization
 claim, a learned attention circuit or grokking on held-out tokens.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Composition
 

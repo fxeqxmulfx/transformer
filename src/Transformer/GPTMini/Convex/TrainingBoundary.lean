@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.GPTMini.Convex.Model
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+
+/-!
 # A training obstruction that a convex attention row does not remove
 
 The remaining `ReLU2_FFN.forward` in
@@ -12,8 +17,7 @@ Source context: arXiv:2211.11052v1, §3.4's gated-ReLU relaxation and §4's
 stacking experiments do not establish convexity for this ReLU² FFN.
 -/
 
-import Transformer.GPTMini.Convex.Model
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Landscape.RealAnalyticGerms.Division
+public import Mathlib.LinearAlgebra.Isomorphisms
+public import Mathlib.LinearAlgebra.Quotient.Basic
+public import Mathlib.LinearAlgebra.StdBasis
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+
+/-!
 # Real analytic germs: PreparedQuotient
 
 Adapted from Bochao Kong's LocalComplexGeometry, revision
@@ -8,11 +16,7 @@ dependency closure is retained. Apache-2.0 license:
 third_party/LocalComplexGeometry/LICENSE.
 -/
 
-import Transformer.Landscape.RealAnalyticGerms.Division
-import Mathlib.LinearAlgebra.Isomorphisms
-import Mathlib.LinearAlgebra.Quotient.Basic
-import Mathlib.LinearAlgebra.StdBasis
-import Mathlib.RingTheory.Ideal.Quotient.Operations
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

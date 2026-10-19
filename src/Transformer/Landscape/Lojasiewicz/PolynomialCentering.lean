@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.PolynomialTranslation
+
+/-!
 # Analytic centering of a monic polynomial family
 
 Translation by minus the next-to-leading coefficient divided by the degree
@@ -7,7 +11,7 @@ and retain their zero central values. This prevents concentration of the
 entire degree at one root after Newton normalization.
 -/
 
-import Transformer.Landscape.Lojasiewicz.PolynomialTranslation
+@[expose] public section
 
 open Filter Polynomial Finset
 open scoped BigOperators

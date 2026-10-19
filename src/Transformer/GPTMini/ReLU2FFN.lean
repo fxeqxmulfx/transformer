@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.GPTMini.Config
+public import Mathlib.Analysis.SpecificLimits.Basic
+
+/-!
 # ReLU² Feed-Forward Network
 
 Formalization of the `ReLU2_FFN` class from `reference/model.py`:
@@ -23,9 +29,7 @@ The FFN as a whole is therefore piecewise polynomial of degree ≤ 2 on the
 polyhedral subdivision determined by the signs of the pre-activations.
 -/
 
-import Transformer.Basic
-import Transformer.GPTMini.Config
-import Mathlib.Analysis.SpecificLimits.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real

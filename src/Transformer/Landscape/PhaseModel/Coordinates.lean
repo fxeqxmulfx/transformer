@@ -1,14 +1,18 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Abelian.Coordinates
+
+/-!
 # Phase model — coordinates on the full division table
 
 The phase `ψ_t` enters the relations `θ_{x,y} = ψ_x - ψ_y - ψ_{x-y}` of the
 full division table as `ψ_x` in the rows `t / y`, as `ψ_y` in the rows
-`x / t`, and as `ψ_{x-y}` in the rows `(t + y) / y`.  This gives the
+`x / t`, and as `ψ_{x-y}` in the rows `(t + y) / y`. This gives the
 coordinates of the gradient of `V_full`
 (`inner_gradient_divisionEnergy_single`) and the diagonal of its Hessian
 (`inner_fderiv_gradient_divisionEnergy_single`): there the rows `t / t` and
 `t / 0`, where `ψ_t` enters twice with opposite signs, drop out, and the row
-`2t / t`, where it enters twice with the same sign, counts four times.  The
+`2t / t`, where it enters twice with the same sign, counts four times. The
 chord inequality (`one_sub_cos_add_le`, `one_sub_cos_sub_le`) bounds the
 energy of a sum of phases by those of the summands, also summed over
 `Fin n` (`sub_le_sum_cos_add`, `sub_le_sum_cos_sub`).
@@ -20,7 +24,7 @@ statements without `NeZero n` being empty for `n = 0`.
 Source: item M6.8 of `landscape_plan.md`.
 -/
 
-import Transformer.Landscape.PhaseModel.Abelian.Coordinates
+@[expose] public section
 
 open Real
 

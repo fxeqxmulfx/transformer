@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.DASH.Section3_Rayleigh
+
+/-!
 # DASH — equality and strictness of the Rayleigh bound
 
 arXiv:2602.02016v2, §3.4. Equality holds for every nonzero vector in
 the maximal eigenspace, not only for a single distinguished eigenvector.
 -/
 
-import Transformer.DASH.Section3_Rayleigh
+@[expose] public section
 
 open scoped BigOperators Matrix
 

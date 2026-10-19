@@ -1,4 +1,6 @@
-import Transformer.GPTMini.TokenInterface.Correctness
+module
+
+public import Transformer.GPTMini.TokenInterface.Correctness
 
 /-!
 # Semantic codes survive the actual final normalization and tied readout
@@ -17,6 +19,8 @@ A second result makes representation distinctions explicit: disjoint code
 neighborhoods cannot contain the same hidden state. This applies before
 unembedding, so it detects loss of order or binding in the residual stream.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

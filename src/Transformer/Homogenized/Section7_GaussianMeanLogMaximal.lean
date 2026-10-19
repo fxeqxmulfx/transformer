@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianMeanLogChernoff
+
+/-!
 # Two-sided original logarithmic mean noise and its measurable paths
 
 ArXiv:2604.01978v1, §7, the maximal argument in the proof of
@@ -13,7 +17,7 @@ additional tail estimate, regularity of the drift, or measurable
 uniform event is assumed.
 -/
 
-import Transformer.Homogenized.Section7_GaussianMeanLogChernoff
+@[expose] public section
 
 open Set MeasureTheory
 open scoped NNReal

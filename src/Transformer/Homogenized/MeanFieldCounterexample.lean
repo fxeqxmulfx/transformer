@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.RareTokenVariance
+
+/-!
 # Homogenized Transformers — a counterexample to global mean-field Lipschitzness
 
 `prop:satisfying_MF` of arXiv:2604.01978v1 is false even after its displayed
@@ -33,7 +37,7 @@ in the counterexample. Neither query leaves the unit sphere.
 Source: arXiv:2604.01978v1, `prop:satisfying_MF`, `eq:Lipschitz_measure`.
 -/
 
-import Transformer.Homogenized.RareTokenVariance
+@[expose] public section
 
 open scoped NNReal ENNReal
 open Real MeasureTheory

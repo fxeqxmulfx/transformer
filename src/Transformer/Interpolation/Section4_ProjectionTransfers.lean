@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_ProjectionControls
+public import Transformer.Interpolation.Section1_CloseAtomicInputs
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+
+/-!
 # Exact projection transfers between original unit atoms
 
 ArXiv:2411.04551v3, §4, the point matching in
@@ -16,9 +22,7 @@ solutions from the input atom. This is one transfer; finite-data
 localization and protection of other points are separate steps.
 -/
 
-import Transformer.Interpolation.Section3_ProjectionControls
-import Transformer.Interpolation.Section1_CloseAtomicInputs
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+@[expose] public section
 
 open Real MeasureTheory
 

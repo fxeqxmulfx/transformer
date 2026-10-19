@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.QKTaskDirections
+module
+
+public import Transformer.GPTMini.Sparsemax.QKTaskDirections
 
 /-!
 # Task directions reach shared query/key projection matrices
@@ -18,6 +20,8 @@ This is not asserted for arbitrary learned embeddings or for a shared
 multi-row objective. The unit-key and active-value prefix restrictions
 remain part of the construction; normalization alone enforces neither.
 -/
+
+@[expose] public section
 
 noncomputable section
 

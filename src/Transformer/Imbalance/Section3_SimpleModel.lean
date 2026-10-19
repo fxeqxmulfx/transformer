@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_Derivatives
+public import Transformer.Imbalance.Section3_LossBounds
+public import Mathlib.Basic.Real.Sign
+
+/-!
 # The simple imbalanced setting
 
 arXiv:2402.19449v2, Section 3.3 and Appendix I.
@@ -6,9 +12,7 @@ Every sample of class k is the basis vector e_k. Frequencies weight an
 actual cross-entropy objective. Rows are classes and columns are inputs.
 -/
 
-import Transformer.Imbalance.Section3_Derivatives
-import Transformer.Imbalance.Section3_LossBounds
-import Mathlib.Basic.Real.Sign
+@[expose] public section
 
 open scoped BigOperators
 

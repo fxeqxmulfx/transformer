@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.EvaluationUniqueness
+
+/-!
 # Real analytic preparation: DivisionEvaluation
 
 Adapted from LocalComplexGeometry, revision
@@ -8,7 +12,7 @@ Apache-2.0 licenses: third_party/classical-complex-wpt/LICENSE and
 third_party/LocalComplexGeometry/LICENSE.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.EvaluationUniqueness
+@[expose] public section
 
 open Filter
 open scoped BigOperators ENNReal NNReal Topology

@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.CRASP.TransformerPrefix
+
+/-!
 # Reindexing a masked prefix by natural positions
 
 arXiv:2506.16055v3, Appendix B.2 and F: a masked attention sum is one
 BOS contribution plus the contributions at positions `1,...,i`.
 -/
 
-import Transformer.CRASP.TransformerPrefix
+@[expose] public section
 
 namespace Transformer.CRASP.RTfr
 

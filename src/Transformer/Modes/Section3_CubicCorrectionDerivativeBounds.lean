@@ -1,6 +1,8 @@
-import Transformer.Modes.Section3_CubicHigherDerivatives
-import Transformer.Modes.Section3_GaussianThirdDerivativeBounds
-import Mathlib.Analysis.Calculus.ContDiff.Bounds
+module
+
+public import Transformer.Modes.Section3_CubicHigherDerivatives
+public import Transformer.Modes.Section3_GaussianThirdDerivativeBounds
+public import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Bounds and integrability for derivatives of the Gaussian-damped cubic correction
@@ -19,6 +21,8 @@ integrability of the actual correction derivatives. These conclusions
 need only a finite third moment; exponential moments are used separately
 to identify the source's logarithmic cumulants with the cubic coefficient.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

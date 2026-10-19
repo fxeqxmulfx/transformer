@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_GeneralHessian
+public import Transformer.Perceptron.Section5_ContinuousCurvature
+
+/-!
 # Expanding the actual circle Hessian
 
 ArXiv:2601.21366v2, §5.2, `eq:Hess-bilinear`. Symmetry of the
@@ -13,8 +18,7 @@ derivative identity and its strict SOPD lower bound are established
 for arbitrary probability measures, before any support reduction.
 -/
 
-import Transformer.Perceptron.Section5_GeneralHessian
-import Transformer.Perceptron.Section5_ContinuousCurvature
+@[expose] public section
 
 open Real MeasureTheory
 

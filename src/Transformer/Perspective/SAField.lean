@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.Beta0Field
+public import Transformer.Perspective.Softmax
+
+/-!
 # The right-hand side of `SA` as a vector field
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -6,7 +11,7 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 The right-hand side of `eq: SA` is a time-independent vector field on
 `(ℝ^d)^n`: the softmax weights of `Perspective.softmaxWeight` at the scores
-`β⟨y_i, y_j⟩`, averaged and projected.  This file names it (`saField`), proves
+`β⟨y_i, y_j⟩`, averaged and projected. This file names it (`saField`), proves
 that solving `eq: SA` is being one of its integral curves (`SA_iff`), and
 records the two facts a Grönwall comparison needs about it: the attention
 average of unit vectors is again short, and at `n = 1` the field vanishes.
@@ -15,8 +20,7 @@ That it is Lipschitz — Step 1 of Appendix D — is
 `Perspective.lipschitzOnWith_saField`, in `Perspective.SALipschitz`.
 -/
 
-import Transformer.Perspective.Beta0Field
-import Transformer.Perspective.Softmax
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real

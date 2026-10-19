@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.WendelCountBridge
+public import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional
+
+/-!
 # General position after orthogonal projection
 
 If a finite family together with a new vector is linearly independent, then
@@ -9,8 +14,7 @@ reduction in Wendel's sign-count recurrence.
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962).
 -/
 
-import Transformer.Perspective.WendelCountBridge
-import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional
+@[expose] public section
 
 namespace Transformer.Perspective
 

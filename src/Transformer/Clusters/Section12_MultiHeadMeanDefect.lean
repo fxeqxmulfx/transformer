@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadMean
+public import Transformer.Clusters.Section7_UnboundedParticles
+
+/-!
 # Vanishing off-diagonal weights from the actual weighted-head mean defect
 
 ArXiv:2305.05465v6, §7, `l:boundedxn`, for the original
@@ -15,8 +20,7 @@ then makes the self probability tend to one. No convergence of the
 scaled query is required for this one-sided case.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadMean
-import Transformer.Clusters.Section7_UnboundedParticles
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

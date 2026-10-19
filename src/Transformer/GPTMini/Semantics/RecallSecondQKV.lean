@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallProjectionScale
+module
+
+public import Transformer.GPTMini.Semantics.RecallProjectionScale
 
 /-!
 # The genuine fused second QKV matrix for compact raw recall matching
@@ -18,6 +20,8 @@ gain derived from raw encoder bounds is supplied to this matrix in
 the next coupling step. Actual normalized key errors, robust routing,
 tied readout and complete validated-parser correctness remain.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

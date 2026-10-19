@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.ICEoT.Section4_Performance
+
+/-!
 # IC-EoT: the fixed time-of-use tariffs
 
 arXiv:2603.22095v2, §4.4.1. These are the tariffs adopted by the
 experiment, not a statement about current market tariffs.
 -/
 
-import Transformer.ICEoT.Section4_Performance
+@[expose] public section
 
 namespace Transformer.ICEoT
 

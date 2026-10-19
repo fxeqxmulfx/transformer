@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.LocalMemorySupport
+module
+
+public import Transformer.GPTMini.Sparsemax.LocalMemorySupport
 
 /-!
 # Joint convex compact embeddings, attention and common values
@@ -17,6 +19,8 @@ every output unchanged. An output-only objective consequently cannot
 identify those parameters. Additional information or a separate criterion
 is needed to select among them; sparsity alone does not remove this freedom.
 -/
+
+@[expose] public section
 
 noncomputable section
 

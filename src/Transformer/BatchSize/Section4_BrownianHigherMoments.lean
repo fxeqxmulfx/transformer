@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_BrownianConditional
+
+/-!
 # Higher moments of the constructed Brownian increments
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The fourth-moment identity supplies the Kolmogorov continuity estimate
 for limits of finite Brownian Euler approximations.
 -/
 
-import Transformer.BatchSize.Section4_BrownianConditional
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

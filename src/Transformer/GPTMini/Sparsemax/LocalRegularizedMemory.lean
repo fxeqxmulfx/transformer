@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.LocalMemorySelection
-import Transformer.GPTMini.Sparsemax.LocalMemoryExamples
+module
+
+public import Transformer.GPTMini.Sparsemax.LocalMemorySelection
+public import Transformer.GPTMini.Sparsemax.LocalMemoryExamples
 
 /-!
 # A convex joint criterion that uniquely selects compact attention parameters
@@ -21,6 +23,8 @@ The criterion is an optional mathematical extension, not the selection of
 a model task loss or an FFN. A nonconstant squared-output witness attains
 its minimum with nonidentity attention and different global output tables.
 -/
+
+@[expose] public section
 
 noncomputable section
 

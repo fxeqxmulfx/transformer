@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.SequenceOperators
+public import Mathlib.Analysis.SpecificLimits.Normed
+public import Mathlib.Analysis.Analytic.Constructions
+
+/-!
 # Real analytic preparation: SequenceDivision
 
 Adapted from Bochao Kong's classical-complex-wpt, revision
@@ -9,9 +15,7 @@ The scalar field is real; no complex root or complex differentiation result
 is used. Apache-2.0 license: third_party/classical-complex-wpt/LICENSE.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.SequenceOperators
-import Mathlib.Analysis.SpecificLimits.Normed
-import Mathlib.Analysis.Analytic.Constructions
+@[expose] public section
 
 open Filter Finset
 open scoped BigOperators ENNReal NNReal Topology

@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.ClosedForm
-import Transformer.GPTMini.QKNorm
+module
+
+public import Transformer.GPTMini.Sparsemax.ClosedForm
+public import Transformer.GPTMini.QKNorm
 
 /-!
 # The one-unit support window and QKNorm gain
@@ -12,6 +14,8 @@ Future masked positions are excluded from comparisons with the maximum.
 Support is defined by strictly positive weights, so an exact unit score
 difference is already enough to exclude the lower-scoring coordinate.
 -/
+
+@[expose] public section
 
 noncomputable section
 

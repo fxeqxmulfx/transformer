@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section4_TwoTokenConvergence
+public import Mathlib.MeasureTheory.Constructions.Pi
+
+/-!
 # Conditioning the original uniform tuple law on its prefix
 
 ArXiv:2411.04990v2, §4, proof of `thm1`, law of total probability.
@@ -16,8 +21,7 @@ remain explicit inputs here. The original uniform invariant marginal
 and the actual antipodal two-token fibers give concrete witnesses.
 -/
 
-import Transformer.Causal.Section4_TwoTokenConvergence
-import Mathlib.MeasureTheory.Constructions.Pi
+@[expose] public section
 
 open MeasureTheory Filter
 

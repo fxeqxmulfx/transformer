@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Positional
+
+/-!
 # The `Y`-normal form of `TL[◁#]^pos`: the transformation
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -8,15 +12,15 @@ A formula is in `Y`-normal form when `Y` occurs only around atomic formulas.
 The proof pushes the `Y`s inwards with a transformation `N^c⟦·⟧` that carries
 the number `c` of `Y`s pushed so far and puts them back around the atoms:
 `N^c⟦Q_σ⟧ = Y^c Q_σ`, `N^c⟦Y φ⟧ = N^{c+1}⟦φ⟧`, and `N^c` commutes with every
-other constructor.  `FormP.pushY` is that transformation with one change: at
+other constructor. `FormP.pushY` is that transformation with one change: at
 `¬` and `<` it keeps the pushed `Y`s behind as a guard `Y^c ⊤`, with
-`⊤ = MOD_1^0`, which is a `Y`-atom and costs no depth.  Why the guard is
+`⊤ = MOD_1^0`, which is a `Y`-atom and costs no depth. Why the guard is
 needed, and the equivalence it buys, are in `Transformer.CRASP.YNormalFormEquiv`;
 this file has the syntax: the result has the depth of the input and is in
 `Y`-normal form.
 -/
 
-import Transformer.CRASP.Positional
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_SupersolutionBound
+
+/-!
 # The envelope of a second difference
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 3: the second difference of
@@ -9,7 +13,7 @@ bracket is at most `(ωT(1 + 2κ)³ + τ + τ²)(E(x; l, m) + E(x; m, l))`
 (`pair_le_pairEnv`): the source's `|∂²_{θ_l θ_m} θ_x| ≲ (x max(l, m))⁻¹ e^{…}`.
 -/
 
-import Transformer.Kinetic.Section3_SupersolutionBound
+@[expose] public section
 
 namespace Transformer
 namespace Kinetic

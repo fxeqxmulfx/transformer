@@ -1,16 +1,20 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_AtomicEpigraph
+
+/-!
 # Nonlinear recovery cannot convexify every convex loss
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §2–§3.1, equation
-`eq:attention_only_obj` permits an arbitrary convex loss.  Affine losses
-with any real slope belong to that class.  If a fixed regularizer plus every
+`eq:attention_only_obj` permits an arbitrary convex loss. Affine losses
+with any real slope belong to that class. If a fixed regularizer plus every
 such loss of a decoded prediction is convex, then the decoder preserves
-convex combinations.  The exact original prediction-budget epigraph proved
+convex combinations. The exact original prediction-budget epigraph proved
 nonconvex in the preceding module therefore cannot be represented this way,
 even with a nonlinear decoder and a changed regularizer.
 -/
 
-import Transformer.Convexifying.Section3_AtomicEpigraph
+@[expose] public section
 
 namespace Transformer.Convexifying
 
@@ -52,7 +56,7 @@ theorem decoder_jensen_of_all_affine_losses {E : Type*} [AddCommGroup E] [Module
 
 /-- The prediction-budget epigraph of any model whose objective is convex
 for every affine loss is convex, even if its decoder is initially given as
-an arbitrary nonlinear function.  Source: `eq:attention_only_obj`, abstract
+an arbitrary nonlinear function. Source: `eq:attention_only_obj`, abstract
 candidate reformulation. -/
 theorem decodedEpigraph_convex_of_all_affine_losses {E : Type*} [AddCommGroup E] [Module ℝ E]
     (C : Set E) (decode penalty : E → ℝ)
@@ -85,7 +89,7 @@ theorem decodedEpigraph_convex_of_all_affine_losses {E : Type*} [AddCommGroup E]
 Let a convex parameter set, any decoder, and any fixed regularizer be given.
 If `penalty + M * decode` is convex for every affine loss slope `M`, their
 prediction-budget epigraph cannot equal that of the original attention
-model with trainable scores and four-matrix weight decay.  Thus nonlinear
+model with trainable scores and four-matrix weight decay. Thus nonlinear
 recovery or changing the parameter penalty does not repair an exact
 all-convex-loss reformulation under this epigraph notion of equivalence.
 Source: arXiv:2211.11052v1, §2–§3.1, `eq:attention_only_obj`. -/

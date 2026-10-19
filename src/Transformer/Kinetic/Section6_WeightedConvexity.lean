@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section6_WeightedProfiles
+
+/-!
 # Kinetic theory for Transformers — convexity and growth of the aggregate
 
 The sum of the original mode coefficients has nonnegative curvature
@@ -9,7 +13,7 @@ linear lower bound tending to infinity. This proves the source's growth
 step directly from the Bessel series, without an asymptotic formula.
 -/
 
-import Transformer.Kinetic.Section6_WeightedProfiles
+@[expose] public section
 
 open scoped BigOperators
 

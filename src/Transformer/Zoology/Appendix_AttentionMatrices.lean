@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_TwoLayerAttention
+
+/-!
 # Explicit attention projection matrices
 
 Arora et al., arXiv:2312.04927v1, Appendix Proposition
@@ -9,7 +13,7 @@ interchanges the `Q` and `K` matrix names once; the matrices themselves
 select the query and key slots as stated here.
 -/
 
-import Transformer.Zoology.Appendix_TwoLayerAttention
+@[expose] public section
 
 open scoped BigOperators
 
@@ -164,7 +168,7 @@ theorem projectedSecondLayerOutput_eq {n c : ℕ} (x : MQARInstance n c)
   · rcases position with ⟨j, slot⟩
     have hslot : slot = 0 := h.1
     subst slot
-    simp only [secondLayerScore, h]
+    simp only [secondLayerScore, h, and_self, ↓reduceIte]
     rw [second_value_matrix_correct, alignedValue_key]
     congr 1
     apply Finset.sum_congr rfl

@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+public import Transformer.Perspective.Section3_SmallBeta
+public import Transformer.Perspective.Section5_HighD
+public import Transformer.Perspective.CircleClustering
+
+/-!
 # §5 — A single cluster for large β
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -11,11 +19,7 @@ This file formalizes §5 of the survey, which contains:
   `d = 2`.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
-import Transformer.Perspective.Section3_SmallBeta
-import Transformer.Perspective.Section5_HighD
-import Transformer.Perspective.CircleClustering
+@[expose] public section
 
 open scoped BigOperators
 open MeasureTheory
@@ -29,7 +33,7 @@ variable (d : ℕ)
 
 /-- **Theorem (thm: beta.interval).** *Cluster collapse at high β.*
 
-Fix `d, n ≥ 2`.  There exists a constant `C = C(d) > 0` (depending only on
+Fix `d, n ≥ 2`. There exists a constant `C = C(d) > 0` (depending only on
 `d`) such that whenever `β ≥ C(d) n²`, the conclusion of `thm: beta.tiny` holds
 for both `SA` and `USA`:
 
@@ -39,7 +43,7 @@ solution of `SA` and for that of `USA` (`clusteringSetUSA`).
 
 *Almost any* is not *any*: `antipodalPair_not_mem_clusteringSet` exhibits, for
 every `β`, an initial sequence outside `𝒮_β` — an antipodal pair is stationary
-for `SA`, so its two particles never meet.  The exceptional set is therefore
+for `SA`, so its two particles never meet. The exceptional set is therefore
 non-empty at every `β`, however large, and the quantifier has to be the
 almost-everywhere one, read against the uniform law as in §4.
 
@@ -49,7 +53,7 @@ quantified after `C`; the statement had `n` fixed before `C`, which let `C` depe
 
 **Proof.**  `C = 1` will do, since the conclusion holds for every `β ≥ 0`: for `d ≥ 3`
 by `thm: boumal` (`boumal_clustering`), for `d = 2` by `clustering_circle`, through the
-landscape of arXiv:2507.22857 on the circle.  The survey notes at the start of §6 that
+landscape of arXiv:2507.22857 on the circle. The survey notes at the start of §6 that
 "the restrictions on `β` provided by Theorems `thm: beta.tiny` and `thm: beta.interval`
 are specific to the two-dimensional case"; its own proof, Appendix B, shows that for
 `β ≥ C n²` every critical point of `𝖤_β` other than a global maximum is a strict saddle.

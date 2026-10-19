@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.DepthZero
+
+/-!
 # Formulas constant, letter by letter, on a strip past a prefix
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -7,23 +11,23 @@ with the positions before the interval fixed.
 
 The paper calls a formula constant on a family of intervals of Parikh vectors
 when its value at a position depends only on the letter there while the prefix
-vector ranges over the interval.  `lem:cropping_oneway` fails because a count
+vector ranges over the interval. `lem:cropping_oneway` fails because a count
 also reads the positions before the interval
 (`Transformer.CRASP.CroppingUnsound`), so here those positions are a fixed
-prefix `u`.  `ConstOnStrip ψ u p V q` says: at a position of `u ++ m` whose
+prefix `u`. `ConstOnStrip ψ u p V q` says: at a position of `u ++ m` whose
 prefix inside `m` holds `x` letters `a` and `y` letters `b`, with
-`p ≤ x ≤ p + V` and `q ≤ y`, the value of `ψ` depends on the letter alone.  The
+`p ≤ x ≤ p + V` and `q ≤ y`, the value of `ψ` depends on the letter alone. The
 number of `a`s is bounded and that of `b`s is not, so the strip is open towards
 `b`.
 
 A strip after `u` becomes the whole quadrant `x ≤ V` after `u ++ μ` when `μ`
-holds `p` letters `a` and `q` letters `b` (`ConstOnStrip.append`).  That is how
-the argument climbs from one level of depth to the next.  A formula of depth
+holds `p` letters `a` and `q` letters `b` (`ConstOnStrip.append`). That is how
+the argument climbs from one level of depth to the next. A formula of depth
 `0` without PNPs is constant on every strip
 (`Form.constOnStrip_of_depth_eq_zero`).
 -/
 
-import Transformer.CRASP.DepthZero
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

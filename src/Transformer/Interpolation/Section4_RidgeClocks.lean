@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_RidgeFlow
+public import Transformer.Interpolation.Section3_ProjectionDynamics
+public import Transformer.Interpolation.SeparationField
+public import Transformer.Perspective.DrivenFlow
+
+/-!
 # The exact projection clock of a complete original ReLU trajectory
 
 ArXiv:2411.04551v3, §1, `eq: neural.ode.sphere`, and §4,
@@ -16,10 +23,7 @@ itself, proving equality from their common initial unit point.
 No representation is assumed in the definition of the original flow.
 -/
 
-import Transformer.Interpolation.Section3_RidgeFlow
-import Transformer.Interpolation.Section3_ProjectionDynamics
-import Transformer.Interpolation.SeparationField
-import Transformer.Perspective.DrivenFlow
+@[expose] public section
 
 open Real MeasureTheory Set
 

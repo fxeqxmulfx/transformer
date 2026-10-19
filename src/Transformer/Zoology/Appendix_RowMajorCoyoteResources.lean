@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ExpandedRowMajorCoyote
+
+/-!
 # Explicit logarithmic depth, workspace, and K-weight bounds
 
 Arora et al., arXiv:2312.04927v1, Appendix `prop: butterfly-hyena`,
@@ -7,7 +11,7 @@ the verified primary-form matrix compiler, not the dense feature-memory
 circuit compiler. The latter still needs a width-sensitive factorization.
 -/
 
-import Transformer.Zoology.Appendix_ExpandedRowMajorCoyote
+@[expose] public section
 
 namespace Transformer.Zoology
 

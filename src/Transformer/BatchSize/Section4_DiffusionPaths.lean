@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_Regularity
+
+/-!
 # The paper's diffusion law on genuine continuous paths
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1 and equations (2)--(3).
@@ -6,7 +10,7 @@ The generator martingale problem specifies the continuous law independently
 of any claim comparing it with the discrete optimizer.
 -/
 
-import Transformer.BatchSize.Section4_Regularity
+@[expose] public section
 
 open MeasureTheory
 

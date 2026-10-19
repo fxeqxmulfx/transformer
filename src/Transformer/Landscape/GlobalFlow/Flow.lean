@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.Landscape.GlobalFlow.TimeDependent
+
+/-!
 # The flow of a bounded time-dependent Lipschitz field
 
 For a field `w : ℝ → E → E` continuous in `(t, x)`, `L`-Lipschitz in `x` and
 bounded by `M` (`IsFlowField`), `flow w s t x` is the position at time `t` of
 the trajectory through `x` at time `s`, which exists and is unique by
-`exists_timeDependent_through`.  This file proves
+`exists_timeDependent_through`. This file proves
 
 * the flow property `Φ_{s',t} ∘ Φ_{s,s'} = Φ_{s,t}` (`flow_flow`);
 * the speed bound `‖Φ_{s,t} x - x‖ ≤ M |t - s|` (`norm_flow_sub_le`);
@@ -18,7 +22,7 @@ These are the characteristics of the linear continuity equation, used in the
 uniqueness proof of `c:wellposedtransformers` of arXiv:2305.05465v6, §6.
 -/
 
-import Transformer.Landscape.GlobalFlow.TimeDependent
+@[expose] public section
 
 open Set Metric Filter Topology
 open scoped NNReal

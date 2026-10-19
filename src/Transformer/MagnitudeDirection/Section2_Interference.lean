@@ -1,14 +1,18 @@
-/-
+module
+
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Tactic
+
+/-!
 # Magnitude--direction interference
 
 arXiv:2606.25971v2, §2. Matrices carry the Frobenius inner product, so
 the geometric statements apply to every real inner product space.
 -/
 
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Tactic
+@[expose] public section
 
 noncomputable section
 

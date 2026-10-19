@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Muon.Section2_Spectral
+
+/-!
 # Muon — Newton–Schulz in singular coordinates
 
 arXiv:2502.16982, §2.1, `eq:iteration`. Orthonormal singular frames are
@@ -6,7 +10,7 @@ preserved, and the singular coefficients follow the printed polynomial.
 This is an exact real-arithmetic statement, without a bf16 error model.
 -/
 
-import Transformer.Muon.Section2_Spectral
+@[expose] public section
 
 open scoped BigOperators Matrix
 

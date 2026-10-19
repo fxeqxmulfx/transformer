@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_PiecewiseAtomicity
+public import Transformer.Interpolation.Section1_AtomicField
+public import Transformer.Interpolation.Wasserstein
+
+/-!
 # Quantitative separation limit for original atomic inputs
 
 ArXiv:2411.04551v3, §1, `eq: ips`, `eq: vf`, `eq: cauchy.pb`,
@@ -14,9 +20,7 @@ inside each phase and continuity across the actual finite grid.
 There is no assumed common flow map or weak uniqueness.
 -/
 
-import Transformer.Interpolation.Section1_PiecewiseAtomicity
-import Transformer.Interpolation.Section1_AtomicField
-import Transformer.Interpolation.Wasserstein
+@[expose] public section
 
 open Real MeasureTheory Set
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.Section3_Factorization
+public import Transformer.Muon.AppendixA_RMS
+
+/-!
 # Muon update scale and the sphere radius
 
 arXiv:2606.25971v2, §4.1.1 and Appendix D. RMS matching uses an
@@ -6,8 +11,7 @@ exact full-rank polar factor. Finite Newton--Schulz iterations provide
 only approximate orthogonalization, not an exact norm identity.
 -/
 
-import Transformer.MagnitudeDirection.Section3_Factorization
-import Transformer.Muon.AppendixA_RMS
+@[expose] public section
 
 open scoped BigOperators
 

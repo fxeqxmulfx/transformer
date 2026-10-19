@@ -1,5 +1,7 @@
-import Transformer.Grokking.Composition.AdditiveContrast
-import Transformer.Grokking.Geometry.RowAlignment
+module
+
+public import Transformer.Grokking.Composition.AdditiveContrast
+public import Transformer.Grokking.Geometry.RowAlignment
 
 /-!
 # Class-centered output interactions before cross-entropy
@@ -19,6 +21,8 @@ These are finite-output identities, not proofs of a particular attention
 algorithm, training dynamics or generalization. They do not identify all
 interior gate values from four removal states or certify numerical kernels.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Composition.OutputInteractions
 

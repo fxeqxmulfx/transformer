@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainPairDifference
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainPairDifference
 
 /-!
 # Positive pair-mass growth relative to unequal-factor contraction
@@ -22,6 +24,8 @@ same native path before iteration. Fixed tables, exact reals, legal
 zero betas and uniform native decay differ from coupled-cost GD and
 preserved learned GPTMini. No future balance/limit is a hypothesis.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

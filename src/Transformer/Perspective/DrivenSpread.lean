@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.DrivenFlow
+
+/-!
 # Driven flows do not collapse, on any window
 
 **Not a statement of any paper.**  The theorem that `Perspective.DrivenFlow`
@@ -11,11 +15,11 @@ of the window two tokens are more than `δ` apart, where `δ` depends on `w₁`,
 
 Unlike `IsInjectedFlow.spread` the window is arbitrary and short: `τ` is not
 the theorem's to choose, and the drive is asked to be of this form on the window
-only.  A block of a residual network that runs for time `τ` is one such window;
+only. A block of a residual network that runs for time `τ` is one such window;
 a stack of different blocks is a sequence of them.
 -/
 
-import Transformer.Perspective.DrivenFlow
+@[expose] public section
 
 open scoped BigOperators
 
@@ -25,7 +29,7 @@ namespace Perspective
 variable {d : ℕ}
 
 /-- **Theorem (no collapse on a window).**  Let `w₁`, `w₂` be linearly
-independent and `L, M ≥ 0`, `τ > 0`.  There is `δ > 0`, depending on `w₁`,
+independent and `L, M ≥ 0`, `τ > 0`. There is `δ > 0`, depending on `w₁`,
 `w₂`, `L`, `M` and `τ` only, such that along every driven flow
 `ẋ_i = Proj_{x_i}(v_i(t))` on a window `[t₀, t₀ + τ]` whose drives are bounded
 by `M` and whose drive differences satisfy, at every time of the window,
@@ -33,7 +37,7 @@ by `M` and whose drive differences satisfy, at every time of the window,
   `‖v_k - v_l - w₁‖ ≤ L ε` and `‖v_m - v_p - w₂‖ ≤ L ε`
   whenever the tokens are pairwise within `ε`,
 
-some time of the window has two tokens more than `δ` apart.  `δ` does not
+some time of the window has two tokens more than `δ` apart. `δ` does not
 depend on the number of tokens, on the flow, on the drives or on `t₀`.
 
 The proof: `ψ = ⟨x_k - x_l, w₁⟩ + ⟨x_m - x_p, w₂⟩` satisfies `|ψ| ≤ δ W`,

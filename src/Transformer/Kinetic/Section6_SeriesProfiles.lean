@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Kinetic.Section6_ModeCurvature
+public import Mathlib.Analysis.Convex.Deriv
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # Kinetic theory for Transformers — calculus of the aggregate profile
 
 The aggregate profile in arXiv:2605.09213v1, §6, proof of `thm:U-shape`,
@@ -8,9 +14,7 @@ criterion for strictly positive curvature. This permits the source's
 infinite weighted sum to use the same calculus as each original mode.
 -/
 
-import Transformer.Kinetic.Section6_ModeCurvature
-import Mathlib.Analysis.Convex.Deriv
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open Real
 

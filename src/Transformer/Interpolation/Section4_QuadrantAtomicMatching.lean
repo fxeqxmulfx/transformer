@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_AtomsToGeneric
+public import Transformer.Interpolation.Section1_PhaseSequenceInverse
+
+/-!
 # Exact matching of finite original positive-quadrant atom families
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, and §3.2,
@@ -18,8 +23,7 @@ This is an auxiliary full-network construction using attention as
 well as perceptrons. The perceptron-only claim of §4 is separate.
 -/
 
-import Transformer.Interpolation.Section4_AtomsToGeneric
-import Transformer.Interpolation.Section1_PhaseSequenceInverse
+@[expose] public section
 
 open Real MeasureTheory Set
 

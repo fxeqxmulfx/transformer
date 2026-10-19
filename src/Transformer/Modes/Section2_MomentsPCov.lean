@@ -1,10 +1,15 @@
-/-
+module
+
+public import Transformer.Modes.Section2_MomentsP
+public import Transformer.Modes.Section5_CovAsymp
+
+/-!
 # The number of modes of a Gaussian KDE — `lem:moments-p`, the covariance
 
 §2.2 of arXiv:2412.09080v3, `lem:moments-p`: the three entries of the
 covariance `Σ_t` of `(G(t), G'(t))`, along a sequence `(β_k, t_k)` with
 `β_k → ∞` and `t_k²/β_k → 0` (see `Section2_MomentsP.lean` for the reading of
-`~`).  All three are as the source writes them.
+`~`). All three are as the source writes them.
 
 Each quotient of `Section5_CovAsymp.lean` is `A + b·Ψ`: `A` a continuous
 function of `(1/β, t²/β)` equal to `1` at the origin, `b` a bounded function of
@@ -15,8 +20,7 @@ function of `(1/β, t²/β)` equal to `1` at the origin, `b` a bounded function 
 Source: arXiv:2412.09080v3, `lem:moments-p`, `eq:moments-p`; §5.2.
 -/
 
-import Transformer.Modes.Section2_MomentsP
-import Transformer.Modes.Section5_CovAsymp
+@[expose] public section
 
 open Real Filter Asymptotics
 open scoped Topology

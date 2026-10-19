@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.PeriodicAttention
+public import Transformer.CRASP.FixedSign
+
+/-!
 # Ignoring a zero-angle sinusoidal embedding
 
 arXiv:2506.16055v3, Appendix F, the positive sinusoidal hierarchy.
@@ -6,8 +11,7 @@ The zero-angle positional vector is zero on even coordinates. Put the
 ordinary program in these coordinates and reserve the odd ones.
 -/
 
-import Transformer.CRASP.PeriodicAttention
-import Transformer.CRASP.FixedSign
+@[expose] public section
 
 namespace Transformer.CRASP.SinusoidalLift
 

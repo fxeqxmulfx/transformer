@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section4_Global
+
+/-!
 # IC-EoT: why controls and predicted states have different extensions
 
 arXiv:2603.22095v2, §4.1, discussion following Eqs. (33), (34), and
@@ -6,7 +10,7 @@ arXiv:2603.22095v2, §4.1, discussion following Eqs. (33), (34), and
 These are explicit counterexamples to the extensions the source excludes.
 -/
 
-import Transformer.ICEoT.Section4_Global
+@[expose] public section
 
 noncomputable section
 

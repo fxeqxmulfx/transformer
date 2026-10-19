@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryCoverage
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryCoverage
 
 /-!
 # Positive partner mixing on the original nonzero-beta native path
@@ -27,6 +29,8 @@ Fixed gained tables and native uniform decay differ from appendix C
 coupled-cost GD. Learned stochastic/floating-point GPTMini transfer and
 positive confidence remain open.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

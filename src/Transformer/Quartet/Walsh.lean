@@ -1,4 +1,14 @@
-/-
+module
+
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Data.Nat.Bitwise
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+
+/-!
 # Walsh characters and the orthogonality of the Hadamard matrix
 
 Support for arXiv:2601.22813v2, §3.2: the randomized Hadamard transform `RHT`
@@ -12,17 +22,11 @@ rows.
 The one fact everything rests on is `sum_walsh_mul_range`: summing
 `walsh n a c · walsh n b c` over all `c < 2^n` gives `2^n` when `a` and `b`
 agree below `n`, and `0` otherwise — the characters of `(ℤ/2)^n` are
-orthogonal.  It is proved by induction on `n`, splitting `[0, 2^{n+1})` at
+orthogonal. It is proved by induction on `n`, splitting `[0, 2^{n+1})` at
 `2^n`, which is exactly splitting on the top bit.
 -/
 
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Nat.Bitwise
-import Mathlib.Basic.Real.Basic
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Algebra.BigOperators.Ring.Finset
+@[expose] public section
 
 namespace Transformer
 namespace Quartet

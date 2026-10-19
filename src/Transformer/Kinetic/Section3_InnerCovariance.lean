@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_SwapCovariance
+
+/-!
 # The inner covariance
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 4, `eq:est-kap3-th`: the
@@ -11,7 +15,7 @@ moves with the coordinate `m` of `x` by at most
 the mixed second differences.
 -/
 
-import Transformer.Kinetic.Section3_SwapCovariance
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

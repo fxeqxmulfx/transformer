@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_FrozenBrownianExpectation
+public import Transformer.BatchSize.Section4_RandomGaussianIdentity
+
+/-!
 # The actual frozen Brownian interval satisfies the generator identity
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The vector increment's Gaussian conditional law and the integrated
 Gaussian identity give the genuine weighted Brownian expectation formula.
 -/
 
-import Transformer.BatchSize.Section4_FrozenBrownianExpectation
-import Transformer.BatchSize.Section4_RandomGaussianIdentity
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal

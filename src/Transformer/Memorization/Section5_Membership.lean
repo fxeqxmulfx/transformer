@@ -1,6 +1,8 @@
-import Mathlib.Analysis.SpecialFunctions.Sigmoid
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Tactic
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Sigmoid
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Tactic
 
 /-!
 # The printed membership scaling law
@@ -10,6 +12,8 @@ fit coefficients are retained exactly. Their consequences disagree with
 the claimed limit and monotonic direction; the following theorems record
 those discrepancies rather than silently changing the fit.
 -/
+
+@[expose] public section
 
 namespace Transformer.Memorization
 

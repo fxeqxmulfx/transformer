@@ -1,4 +1,6 @@
-import Transformer.Perceptron.Section5_SphericalMapInteraction
+module
+
+public import Transformer.Perceptron.Section5_SphericalMapInteraction
 
 /-!
 # Exact cancellation for the original transported matrix energy
@@ -15,6 +17,8 @@ leaves exactly their subtraction from the two-point transport,
 with the original factor one half. This is an identity at every
 real time; no second derivative of the primitive is assumed.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 

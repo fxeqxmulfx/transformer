@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_TestModulus
+public import Transformer.Interpolation.Section1_MovingTests
+public import Transformer.Interpolation.Section1_CompactTests
+
+/-!
 # Continuous tests for every original weak probability curve
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`.
@@ -14,9 +20,7 @@ These results apply across switches of the original controls, and are
 independent of characteristic transport and nonlinear weak uniqueness.
 -/
 
-import Transformer.Interpolation.Section1_TestModulus
-import Transformer.Interpolation.Section1_MovingTests
-import Transformer.Interpolation.Section1_CompactTests
+@[expose] public section
 
 open Real MeasureTheory
 open scoped Topology

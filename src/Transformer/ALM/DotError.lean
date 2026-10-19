@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.ALM.FloatHull
+public import Transformer.ALM.HullMark
+
+/-!
 # Three roundings, not one, and the cancellation between them
 
 `Transformer.ALM.GuardSep.cmp_of_guard` takes the runtime's guard to the
@@ -6,13 +11,13 @@ comparison it licenses, and it models the price of the arithmetic as
 `hδ₁ hδ₂ : δ ≤ ulpOf p E / 2` — each score within half a spacing of exact,
 which is what one correctly rounded operation costs.
 
-The machine does not spend one operation.  `alm-hull/src/head.rs` evaluates
+The machine does not spend one operation. `alm-hull/src/head.rs` evaluates
 `q0 * k0 + q1 * k1`: two products and a sum, three roundings, and the bound
-they add up to is relative to the two products and not to their sum.  On the
-keys the compiler emits that distinction is the whole story.  A marked key is
+they add up to is relative to the two products and not to their sum. On the
+keys the compiler emits that distinction is the whole story. A marked key is
 `(2k, -k² + δ)` (`Transformer.ALM.HullMark.markKey`), so a query near its own
 abscissa forms `2k²` and `-k²` and answers `k²`: the terms are three times the
-result, and their rounding is carried into it undiminished.  Measuring the
+result, and their rounding is carried into it undiminished. Measuring the
 error as `ulp(score)` understates it by exactly that factor.
 
 `dot_error_le` is the bound — `u(2 + u)(|a| + |b|)`, the standard two-term
@@ -22,27 +27,26 @@ the true gap rather than `ulp(score) < |qy|` against an assumed one.
 `dotTerms_markKey_self` is the factor of three.
 
 This is what `alm-hull/src/gap.rs::score_error_bound` computes and what
-`ScoreGaps::unresolved` counts the failures of.  Read this way the shipped
+`ScoreGaps::unresolved` counts the failures of. Read this way the shipped
 model leaves queries uncovered where the `ulp` reading said it did not: on
 `fibonacci` the worst ratio is `3.86` and 61 of 382284 queries have a gap that
-does not clear the rounding at all.  Uncovered is not wrong -- the guard is
+does not clear the rounding at all. Uncovered is not wrong -- the guard is
 sufficient and not necessary, as the examples below show -- and rescanning
 those 61 with `alm-hull/src/exact.rs`'s exact dot product upholds every one of
-them.  What the theorem does not reach, the runtime still gets right.
+them. What the theorem does not reach, the runtime still gets right.
 
 Source: `todo3.md` §4a; `vm-rs/alm-hull/src/head.rs`, `BruteAttentionHead::query`;
 Higham, *Accuracy and Stability of Numerical Algorithms*, 2nd ed., §3.1.
 -/
 
-import Transformer.ALM.FloatHull
-import Transformer.ALM.HullMark
+@[expose] public section
 
 namespace Transformer
 namespace ALM
 
 /-! ### The size the rounding is relative to -/
 
-/-- The two products of a two-term dot product, in absolute value.  This is
+/-- The two products of a two-term dot product, in absolute value. This is
 the quantity a relative error bound on `a + b` is relative to, and it is not
 `|a + b|`: the sum can cancel and the products cannot. -/
 def dotTerms (a b : ℝ) : ℝ := |a| + |b|
@@ -91,7 +95,7 @@ example : |(3 : ℝ) - (1 + 2)| ≤ 0 * (2 + 0) * dotTerms 1 2 :=
 /-- **A comparison of two dot products, decided correctly.**  Both scores
 carry the error of `dot_error_le` against a common bound `T` on their terms,
 so the two errors together are `2·u(2 + u)·T`; a gap wider than that decides
-the comparison exactly.  This is the guard `alm-hull/src/gap.rs` reports:
+the comparison exactly. This is the guard `alm-hull/src/gap.rs` reports:
 `2 · score_error_bound(terms) / (best - second) < 1`.
 
 `Transformer.ALM.GuardSep.cmp_of_guard` is the same conclusion from the
@@ -115,7 +119,7 @@ example : ∀ a' b' : ℝ,
 /-- **And the hypothesis cannot be dropped.**  At `u = 1/4` and terms of `1`
 the bound is `9/16`, and two errors of exactly that size carry `a = 0` and
 `b = 1` past each other: the computed comparison is the reverse of the exact
-one.  So a gap that fails to clear twice the bound really is undecided. -/
+one. So a gap that fails to clear twice the bound really is undecided. -/
 example : |(9 / 16 : ℝ) - 0| ≤ 1 / 4 * (2 + 1 / 4) * 1 ∧
     |(7 / 16 : ℝ) - 1| ≤ 1 / 4 * (2 + 1 / 4) * 1 ∧
     ¬ ((9 / 16 : ℝ) ≤ 7 / 16 ↔ (0 : ℝ) ≤ 1) := by
@@ -137,7 +141,7 @@ example : |(1 / 10 : ℝ) - 0| ≤ 1 / 4 * (2 + 1 / 4) * 1 ∧
 
 /-- **The cancellation, on the keys the compiler emits.**  A marked key
 queried at its own abscissa forms the products `2k·k` and `-k² + δ` and
-answers `k² + δ`.  At `δ = 0` the terms are `3k²` and the answer is `k²`: the
+answers `k² + δ`. At `δ = 0` the terms are `3k²` and the answer is `k²`: the
 error the dot product carries is three times what the spacing at the answer
 suggests, and `ulp(score)` cannot see the difference.
 

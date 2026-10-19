@@ -1,11 +1,16 @@
-/-
+module
+
+public import Transformer.Perspective.Section2_EnergySeries
+public import Mathlib.MeasureTheory.Measure.FiniteMeasureExt
+
+/-!
 # Moments determine a measure on the sphere
 
 A finite measure on `𝕊^{d-1}` is determined by its moments
 `m_I(μ) = ∫ x_{I 0} ⋯ x_{I (k-1)} dμ(x)` (`measure_eq_of_integral_mono_eq`):
 the coordinates separate the points of the sphere, so by Stone–Weierstrass the
 algebra they generate is dense in `C(𝕊^{d-1})`, and a finite measure is
-determined by its integrals against a dense algebra.  This is the last step of
+determined by its integrals against a dense algebra. This is the last step of
 every positive-definiteness argument for the kernel `e^{β x·y}`
 (`PositiveDefinite`).
 
@@ -13,8 +18,7 @@ Source: arXiv:2601.21366v2, proof of `lem: quadpol` ("spherical polynomials
 are uniformly dense in `C⁰(𝕊^{d-1})`").
 -/
 
-import Transformer.Perspective.Section2_EnergySeries
-import Mathlib.MeasureTheory.Measure.FiniteMeasureExt
+@[expose] public section
 
 open scoped BigOperators BoundedContinuousFunction
 open MeasureTheory

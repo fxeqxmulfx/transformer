@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_SubgaussianSquareExponential
+public import Mathlib.MeasureTheory.Order.Group.Lattice
+
+/-!
 # Centered scalar exponential estimates
 
 Source: arXiv:2604.01978v1, §6.3, `lem:Hanson_wright`.
@@ -10,8 +15,7 @@ The Taylor remainder is global, so unbounded coordinates are covered.
 Integrability is established before cancellation of the actual mean.
 -/
 
-import Transformer.Homogenized.Section6_SubgaussianSquareExponential
-import Mathlib.MeasureTheory.Order.Group.Lattice
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

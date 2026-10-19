@@ -1,4 +1,35 @@
-/-
+module
+
+public import Transformer.GPTMini.Config
+public import Transformer.GPTMini.RMSNorm
+public import Transformer.GPTMini.Reshape
+public import Transformer.GPTMini.ReshapeDist
+public import Transformer.GPTMini.RoPE
+public import Transformer.GPTMini.QKNorm
+public import Transformer.GPTMini.QKNormLipschitz
+public import Transformer.GPTMini.CausalMHA
+public import Transformer.GPTMini.AttentionBounds
+public import Transformer.GPTMini.TotalVariation
+public import Transformer.GPTMini.SoftmaxStability
+public import Transformer.GPTMini.AttentionLipschitz
+public import Transformer.GPTMini.HeadLipschitz
+public import Transformer.GPTMini.AttnSubLayerLipschitz
+public import Transformer.GPTMini.ReLU2FFN
+public import Transformer.GPTMini.Block
+public import Transformer.GPTMini.BlockLipschitz
+public import Transformer.GPTMini.Model
+public import Transformer.GPTMini.Causality
+public import Transformer.GPTMini.TokenInterface
+public import Transformer.GPTMini.Semantics
+public import Transformer.GPTMini.Properties
+public import Transformer.GPTMini.Bridge
+public import Transformer.GPTMini.ClusteringTheorem
+public import Transformer.GPTMini.TwoTokens
+public import Transformer.GPTMini.RateRefutation
+public import Transformer.GPTMini.MeanFieldRefutation
+public import Transformer.GPTMini.Convex
+
+/-!
 # `gpt-mini` Formalization
 
 Top-level module re-exporting the formalization of the `gpt-mini`
@@ -55,38 +86,11 @@ Transformer.MeanField`: `Bridge.SphereResidence` puts the tokens on the sphere
 those theorems live on, `Bridge.RoPEAsTimeVarying` shows RoPE is a
 pair-dependent key matrix `R(p_j - p_i) K`, which those setups do not allow, `Bridge.CausalConnection` matches the
 mask with `Transformer.Causal.CSA`, and `Bridge.XSAEquivalence` identifies the
-XSA output at `V = I` with the spherical projection.  `ClusteringTheorem`
+XSA output at `V = I` with the spherical projection. `ClusteringTheorem`
 assembles them into the statement that the representations cluster to one
 direction for almost every initial configuration — a composition of bridges,
 whose remaining `sorry`-leaves are the deep theorems of the paper
 formalizations themselves and not anything about `gpt-mini`.
 -/
 
-import Transformer.GPTMini.Config
-import Transformer.GPTMini.RMSNorm
-import Transformer.GPTMini.Reshape
-import Transformer.GPTMini.ReshapeDist
-import Transformer.GPTMini.RoPE
-import Transformer.GPTMini.QKNorm
-import Transformer.GPTMini.QKNormLipschitz
-import Transformer.GPTMini.CausalMHA
-import Transformer.GPTMini.AttentionBounds
-import Transformer.GPTMini.TotalVariation
-import Transformer.GPTMini.SoftmaxStability
-import Transformer.GPTMini.AttentionLipschitz
-import Transformer.GPTMini.HeadLipschitz
-import Transformer.GPTMini.AttnSubLayerLipschitz
-import Transformer.GPTMini.ReLU2FFN
-import Transformer.GPTMini.Block
-import Transformer.GPTMini.BlockLipschitz
-import Transformer.GPTMini.Model
-import Transformer.GPTMini.Causality
-import Transformer.GPTMini.TokenInterface
-import Transformer.GPTMini.Semantics
-import Transformer.GPTMini.Properties
-import Transformer.GPTMini.Bridge
-import Transformer.GPTMini.ClusteringTheorem
-import Transformer.GPTMini.TwoTokens
-import Transformer.GPTMini.RateRefutation
-import Transformer.GPTMini.MeanFieldRefutation
-import Transformer.GPTMini.Convex
+@[expose] public section

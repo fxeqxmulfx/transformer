@@ -1,6 +1,8 @@
-import Transformer.Basis.Depth
-import Transformer.Basis.Recall
-import Transformer.Basis.Parity
+module
+
+public import Transformer.Basis.Depth
+public import Transformer.Basis.Recall
+public import Transformer.Basis.Parity
 
 /-!
 # The Basis suite in one raw-token function interface
@@ -17,6 +19,8 @@ Parity really generates its answer and EOS by two successive calls.
 The model is trained separately for each task and mode; the same weights
 are not required to assign incompatible easy/hard depth labels.
 -/
+
+@[expose] public section
 
 namespace Transformer.Basis
 

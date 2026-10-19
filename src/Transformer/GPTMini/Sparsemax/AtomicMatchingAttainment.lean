@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.AtomicMatchingFamily
-import Transformer.GPTMini.Sparsemax.AtomicMatchingOptimality
+module
+
+public import Transformer.GPTMini.Sparsemax.AtomicMatchingFamily
+public import Transformer.GPTMini.Sparsemax.AtomicMatchingOptimality
 
 /-!
 # Attained global training and pricing for freely learned matching
@@ -18,6 +20,8 @@ Global physical-head pricing is continuous on the numerical head box,
 so its optimum exists too. These are mathematical existence guarantees,
 not an efficient method for finding a new globally optimal Q/K/value head.
 -/
+
+@[expose] public section
 
 noncomputable section
 

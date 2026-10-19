@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.CRASP.PeriodicEncodingsToLogic
+public import Transformer.CRASP.PeriodicOutputPermutation
+public import Transformer.CRASP.PositionalDepth
+public import Transformer.CRASP.AlibiToLogic
+
+/-!
 # Lower bounds for periodic position encodings, including depth zero
 
 arXiv:2506.16055v3, §4.5, `thm:rtfr_pes_depth_hierarchy`, and Appendix F.
@@ -7,10 +14,7 @@ At depth zero, equal-length words with the same final letter have identical
 outputs under every position encoding.
 -/
 
-import Transformer.CRASP.PeriodicEncodingsToLogic
-import Transformer.CRASP.PeriodicOutputPermutation
-import Transformer.CRASP.PositionalDepth
-import Transformer.CRASP.AlibiToLogic
+@[expose] public section
 
 namespace Transformer.CRASP
 

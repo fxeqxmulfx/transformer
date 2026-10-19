@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.RecallCodes
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+module
+
+public import Transformer.GPTMini.Semantics.RecallCodes
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 
 /-!
 # Actual low RoPE frequencies for compact recall matching
@@ -14,6 +16,8 @@ Over sixty-four raw positions their total squared angular displacement
 is small enough to preserve a categorical symbol gap. These scalar
 bounds are independent of tables and do not assume a correct query route.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

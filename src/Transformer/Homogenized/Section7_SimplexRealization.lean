@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_SimplexCentroid
+
+/-!
 # Realizing every feasible reference simplex in the original space
 
 ArXiv:2604.01978v1, §7, the reference Gram matrix R(γ) in
@@ -13,7 +17,7 @@ It requires no additional dimension hypothesis, orthonormal frame,
 or assumed realization of an intermediate Gram matrix.
 -/
 
-import Transformer.Homogenized.Section7_SimplexCentroid
+@[expose] public section
 
 open scoped BigOperators
 open Set

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_ThirdOrder
+
+/-!
 # The third cumulant of a product law
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 4, `eq:est-kap3-th`: the
@@ -9,7 +13,7 @@ third cumulant `𝔼[F̄ Ḡ H̄]` is the covariance of `F̄Ḡ` with `H`. Summi
           + s_m(G)(s²_{l,m}(F) s_l(H) + s_l(F) s²_{l,m}(H))] + ½ Σ_l s_l(F) s_l(G) s_l(H)`.
 -/
 
-import Transformer.Kinetic.Section3_ThirdOrder
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

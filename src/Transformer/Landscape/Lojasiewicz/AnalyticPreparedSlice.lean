@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.EnergyLevelPreparation
+public import Transformer.Landscape.Lojasiewicz.PolynomialFamily
+
+/-!
 # Preparation along an analytic curve in the base parameters
 
 An analytic base curve gives a two-variable analytic slice. Real
@@ -6,8 +11,7 @@ preparation identifies all nearby zeros in each scalar fiber with the
 roots of an analytic monic polynomial family.
 -/
 
-import Transformer.Landscape.Lojasiewicz.EnergyLevelPreparation
-import Transformer.Landscape.Lojasiewicz.PolynomialFamily
+@[expose] public section
 
 open Filter Set
 

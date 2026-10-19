@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativeRecurrence
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativeRecurrence
 
 /-!
 # Retained moments of the actual closed clipped CE path
@@ -17,6 +19,8 @@ prescribed rate or later held-out margin crossing. The fixed reference
 tables, plain CE/decoupled-decay deviation and missing numerical-kernel
 and learned-GPTMini bridges remain as in NativeRecurrence.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

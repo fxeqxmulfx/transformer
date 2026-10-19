@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianPolynomialLinearImage
+
+/-!
 # Integration by parts for the original Gaussian vector with polynomial growth
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and `eq:SIGMA_R`.
@@ -18,7 +22,7 @@ The source states its interpolation lemma without growth control; these
 explicit polynomial hypotheses justify the integration step it uses.
 -/
 
-import Transformer.Homogenized.Section7_GaussianPolynomialLinearImage
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators MatrixOrder

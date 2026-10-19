@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryIntervals
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryIntervals
 
 /-!
 # Separated full retained pair rates on one actual legal-beta path
@@ -25,6 +27,8 @@ physical product margin or a confidence result. Fixed gained tables
 and uniform native decay differ from appendix C coupled-cost GD.
 Learned stochastic/floating-point GPTMini transfer remains open.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

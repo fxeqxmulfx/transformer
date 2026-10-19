@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.ALM.SoftmaxTie
+
+/-!
 # Where the mass on the tie comes from
 
 Every tie bound in this development takes `hmass : 1 - ε ≤ w b + w c` as a
 hypothesis — `softmax_output_close_level`, `softmax_head_resolves_average`,
 `softmax_head_resolves_latest`, and through them every head statement down to
-`fp_head_tie_resolves`.  Nothing discharged it.  For a single winner the
+`fp_head_tie_resolves`. Nothing discharged it. For a single winner the
 corresponding bound is a theorem about the data (`softmax_winner_ge`,
 `softmax_winner_lengthfree`, and the sharp forms), used in five places; for a
 tie the same fact was assumed each time, so the head bounds held of a
@@ -22,7 +26,7 @@ Source: `transformer_vm/attention/hull2d_cht.h`, lines 70-83; the softmax
 side is the standard estimate of `Transformer.ALM.Softmax`.
 -/
 
-import Transformer.ALM.SoftmaxTie
+@[expose] public section
 
 open scoped BigOperators
 
@@ -34,7 +38,7 @@ variable {n : ℕ}
 /-- **The tied pair carries everything the losers do not.**  With both scores
 equal to `σ`, the two weights sum to `2A/(2A+R)` for `A = exp(βσ)` and `R` the
 losers' contribution, so a bound `R ≤ 2εA` is a bound `1 - ε` from below on
-the pair.  This is `softmax_winner_sharp` with the winner doubled. -/
+the pair. This is `softmax_winner_sharp` with the winner doubled. -/
 theorem softmax_tie_mass (β : ℝ) (s : Fin n → ℝ) (b c : Fin n)
     (hbc : b ≠ c) (σ : ℝ) (hb : s b = σ) (hc : s c = σ) (ε : ℝ)
     (htail : ∑ j ∈ (Finset.univ.erase b).erase c, Real.exp (β * s j)
@@ -70,7 +74,7 @@ example : (1 : ℝ) - 0 ≤ Real.exp (1 * (fun _ : Fin 2 => (0 : ℝ)) 0)
 
 /-- **And a score gap supplies the bound.**  If every key outside the tie
 scores at least `δ` below it, each of the `n - 2` losing terms is at most
-`e^{-βδ}` times the tied one, so the pair carries `1 - (n-2)e^{-βδ}/2`.  This
+`e^{-βδ}` times the tied one, so the pair carries `1 - (n-2)e^{-βδ}/2`. This
 is the two-key form of `softmax_winner_ge`: a statement about the keys, not
 about the softmax. -/
 theorem softmax_tie_mass_ge (β : ℝ) (hβ : 0 ≤ β) (s : Fin n → ℝ) (b c : Fin n)
@@ -120,7 +124,7 @@ example : (1 : ℝ) - (((2 : ℕ) : ℝ) - 2) * Real.exp (-(1 * 1)) / 2
 /-- **The head's tie bound, priced by the keys.**  `softmax_head_resolves_average`
 with its mass hypothesis discharged: two keys tie, every other key scores at
 least `δ` lower, and the head's output is within `((n-2)e^{-βδ}/2)·C` of what
-`resolve` writes out under `TieBreak::AVERAGE`.  Every remaining hypothesis is
+`resolve` writes out under `TieBreak::AVERAGE`. Every remaining hypothesis is
 about the keys, the payloads, or the log — none about the softmax itself. -/
 theorem softmax_head_resolves_average_of_gap [Nonempty (Fin n)] (β : ℝ) (hβ : 0 ≤ β)
     (s : Fin n → ℝ) (V : Fin n → ℝ × ℝ) (b c : Fin n) (hbc : b ≠ c)

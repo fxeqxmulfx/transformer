@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.Section2_FlowContinuity
+public import Transformer.Perspective.SphereInvariant
+
+/-!
 # Rotation equivariance of the actual spherical attention flow
 
 ArXiv:2312.10794v5, §2, `SA`; arXiv:2411.04551v3, §5,
@@ -14,8 +19,7 @@ The sphere action is continuous and measurable; no rotation property is
 assumed of the trajectory chosen by the existence theorem.
 -/
 
-import Transformer.Perspective.Section2_FlowContinuity
-import Transformer.Perspective.SphereInvariant
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

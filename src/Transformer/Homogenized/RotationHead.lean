@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.RandomChain
+public import Transformer.Homogenized.Generator
+
+/-!
 # Homogenized Transformers — a rotation head
 
 A deterministic instance of the model of arXiv:2604.01978v1, *Homogenized
@@ -9,7 +14,7 @@ Transformers*, on which every object of §2 and §5 can be computed by hand:
 With one token the softmax weights cancel, so `B_θ[μ_X](x) = J x`, which is
 tangent to the circle; hence `b(X) = J x`, the flow `eq: deterministic` is the
 unit-speed rotation `x(t) = (cos t, sin t)`, and `∇_b b = Proj_x(J² x) = 0`, so
-the corrected flow `eq: deterministic.modified` is the same rotation.  A point
+the corrected flow `eq: deterministic.modified` is the same rotation. A point
 mass has no fluctuation, so `σ = 0`, `α = 0`, and `ass:high_order_short` holds
 with `σ_V = σ_A = 0`.
 
@@ -19,8 +24,7 @@ Source: arXiv:2604.01978v1, §2.1, §2.2.1, `ass:high_order_short`,
 `eq: deterministic`, `eq: deterministic.modified`.
 -/
 
-import Transformer.Homogenized.RandomChain
-import Transformer.Homogenized.Generator
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory ProbabilityTheory

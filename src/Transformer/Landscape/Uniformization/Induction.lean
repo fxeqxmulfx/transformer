@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.Product
+public import Transformer.Landscape.AnalyticPreparation.PreparationReconstruction
+public import Transformer.Landscape.RealAnalyticGerms.RegularCoordinates
+
+/-!
 # Local uniformization
 
 Every real analytic function on `ℝⁿ` that does not vanish identically near `z` has
@@ -11,9 +17,7 @@ the product step. This is the local uniformization behind the gradient inequalit
 Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Uniformization.Product
-import Transformer.Landscape.AnalyticPreparation.PreparationReconstruction
-import Transformer.Landscape.RealAnalyticGerms.RegularCoordinates
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators Topology

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section3_Closure
+
+/-!
 # IC-EoT: the shared latent gate-value product
 
 arXiv:2603.22095v2, §3.3, Lemma 2 and Eqs. (18)–(20).
@@ -7,7 +11,7 @@ activation, including non-smooth ReLU, without differentiability assumptions.
 The two branches must share the same scalar latent variable.
 -/
 
-import Transformer.ICEoT.Section3_Closure
+@[expose] public section
 
 noncomputable section
 

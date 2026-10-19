@@ -1,5 +1,8 @@
-import Transformer.Modes.Section3_CharacteristicCubic
-import Transformer.Modes.Section3_CumulantBounds
+module
+
+public import Transformer.Modes.Section3_CharacteristicCubic
+public import Transformer.Modes.Section3_CumulantBounds
+
 /-!
 # The actual cubic phase coefficient and the third cumulants
 
@@ -22,6 +25,7 @@ before Fourier inversion and the spatially weighted third-order error
 estimate of §5.4 `eq:higher-error-goal`.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

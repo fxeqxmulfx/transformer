@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Basic
+
+/-!
 # Metastability — the softmax velocity of a pair (behind `eq: ze.equation`)
 
 The estimate that drives §2's differential inequality for
@@ -6,7 +10,7 @@ The estimate that drives §2's differential inequality for
   `ρ_q(t) = min_{i, j ∈ I} ⟨x_i(t), x_j(t)⟩`,
 
 stated — as in `Metastability.CapVelocity` — about a plain tuple of unit
-vectors, with no dynamics in sight.  The two ingredients are
+vectors, with no dynamics in sight. The two ingredients are
 
 * `pair_sum_bound`, the arithmetic: one distinguished term carries the gain,
   the remaining `n - 1` cost at most `e` each;
@@ -18,7 +22,7 @@ and `inner_proj_softmax_pair_sum` (in `PairVelocitySum`) adds the two halves of
 `d/dt ⟨x_i, x_j⟩`.
 -/
 
-import Transformer.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -46,7 +50,7 @@ noncomputable def softmaxVel (β : ℝ) (x : Idx n → EucSpace d) (k : Idx n) :
 
 A sum `Σ_k a_k c_k` over `Idx n` in which one index `j` already carries `M`
 and every other index costs at least `-E` is bounded below by
-`M - n E`.  Stated over opaque reals so that the estimate is separated from
+`M - n E`. Stated over opaque reals so that the estimate is separated from
 the softmax expressions it will be instantiated at.
 
 Source: arXiv:2410.06833v1, §2, `eq: ze.equation` (the leakage bookkeeping). -/
@@ -77,7 +81,7 @@ example : (1 : ℝ) - ((1 : ℕ) : ℝ) * 1 ≤ ∑ _k : Idx 1, (1 : ℝ) * 1 :=
 
 Let `x` be a tuple of unit vectors, `I` a set of indices, and let
 `ρ = ⟨x_i, x_j⟩` be the minimum of `⟨x_k, x_l⟩` over `I × I`, attained at
-`(i, j)` and nonnegative.  If every token outside `I` is `α`-separated from
+`(i, j)` and nonnegative. If every token outside `I` is `α`-separated from
 `x_i`, then
 
   `⟨Proj_{x_i} v_i, x_j⟩ ≥ (1/n)(1 - ρ²) e^{β(ρ-1)} - n e^{-(1-α)β}`.

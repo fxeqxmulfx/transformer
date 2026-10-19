@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Section5_CircularInteraction
+
+/-!
 # Weighted original force and curvature comparisons for frozen centers
 
 ArXiv:2411.04990v2, §5, proof of `thm:fixed_centers`.
@@ -20,7 +24,7 @@ All sums keep their original signs, original angular distances,
 and original frozen masses.
 -/
 
-import Transformer.Causal.Section5_CircularInteraction
+@[expose] public section
 
 open scoped BigOperators
 open Real Set

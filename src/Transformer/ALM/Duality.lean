@@ -1,9 +1,13 @@
-/-
+module
+
+public import Transformer.ALM.Defs
+
+/-!
 # The 1D reduction behind the hull
 
-The machine does not answer `argmax_k ⟪q, k⟫` by scanning the keys.  It keeps
+The machine does not answer `argmax_k ⟪q, k⟫` by scanning the keys. It keeps
 two dynamic one-dimensional convex envelopes and queries them at a single
-point.  The reduction that licenses this is stated, without proof, in
+point. The reduction that licenses this is stated, without proof, in
 `transformer_vm/attention/hull2d_cht.h` (lines 11-17):
 
 > For `q = (qx, qy)` with `qy ≠ 0`, maximizing `q · (kx, ky)` is equivalent to
@@ -18,7 +22,7 @@ is always `1`, so only the upper envelope is ever consulted.
 The scores themselves are in `Transformer.ALM.Defs`.
 -/
 
-import Transformer.ALM.Defs
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -51,7 +55,7 @@ theorem dot_le_dot_iff_of_neg {q : ℝ × ℝ} (hq : q.2 < 0) (k k' : ℝ × ℝ
   rw [dot_eq_mul_lineEval q k hq.ne, dot_eq_mul_lineEval q k' hq.ne]
   exact mul_le_mul_left_of_neg hq
 
-/-- The degenerate branch.  When `q.2 = 0` the intercept drops out and only the
+/-- The degenerate branch. When `q.2 = 0` the intercept drops out and only the
 slope matters, which is why querying the envelope at `±∞` is the right
 answer there. -/
 theorem dot_of_snd_eq_zero (q k : ℝ × ℝ) (hq : q.2 = 0) :
@@ -112,7 +116,7 @@ theorem liftQuery_snd_pos (q : ℝ) : 0 < (liftQuery q).2 := by
 
 /-- **What the machine actually relies on.**  Under the paraboloid embedding
 the planar argmax over keys is the argmax of the one-dimensional upper
-envelope evaluated at `q`.  The lower envelope is never consulted, and no
+envelope evaluated at `q`. The lower envelope is never consulted, and no
 division occurs: `q.1 / q.2 = q`. -/
 theorem lookup_reduces_to_upper_envelope {n : ℕ} (q : ℝ) (K : Fin n → ℝ)
     (i₀ : Fin n) :

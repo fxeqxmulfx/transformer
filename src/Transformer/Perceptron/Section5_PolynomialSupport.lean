@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_QuadraticDensity
+public import Transformer.Perceptron.Section6_SphereUniqueness
+
+/-!
 # Full original support of a nonnegative polynomial density
 
 ArXiv:2601.21366v2, §5.3, proof of `thm: any.d` (i), following
@@ -21,8 +26,7 @@ Pointwise nonnegativity is essential because `ENNReal.ofReal` clips
 negative values; the original inverse proves it before this support step.
 -/
 
-import Transformer.Perceptron.Section5_QuadraticDensity
-import Transformer.Perceptron.Section6_SphereUniqueness
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators ENNReal

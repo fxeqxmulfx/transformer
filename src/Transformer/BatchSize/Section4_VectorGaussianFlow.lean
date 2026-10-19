@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_GaussianTestIntegration
+
+/-!
 # Actual diagonal Gaussian expectations with frozen drift and amplitudes
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -7,7 +11,7 @@ Continuity at zero, integrability, and samplewise time derivatives are
 proved explicitly before differentiation of the expectation.
 -/
 
-import Transformer.BatchSize.Section4_GaussianTestIntegration
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped NNReal Topology

@@ -1,6 +1,8 @@
-import Transformer.AMSGrad.Section4_TheoremAGeneral
+module
 
-/-
+public import Transformer.AMSGrad.Section4_TheoremAGeneral
+
+/-!
 # AMSGrad — Theorem A with a sparse first-moment schedule
 
 Theorem A of arXiv:1904.03590v4, §1, assumes only
@@ -18,6 +20,8 @@ now follows by a different argument.
 
 Source: arXiv:1904.03590v4, §1, Theorem A, and §3, Lemma 3.1.
 -/
+
+@[expose] public section
 
 open Finset
 

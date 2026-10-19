@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CircuitSemantics
+
+/-!
 # Total evaluation of well-formed arithmetic circuits
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: circuit-tuple` and
@@ -7,7 +11,7 @@ every gate by well-founded recursion on its index. Together with
 `ArithmeticCircuit.computes_unique`, this makes its semantics functional.
 -/
 
-import Transformer.Zoology.Appendix_CircuitSemantics
+@[expose] public section
 
 namespace Transformer.Zoology
 

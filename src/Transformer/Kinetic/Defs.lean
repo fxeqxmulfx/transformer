@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+public import Mathlib.Analysis.SpecialFunctions.Exponential
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+
+/-!
 # Kinetic theory for Transformers — the model
 
 Formalization of Duerinckx, Geshkovski, Rossi — arXiv:2605.09213v1,
@@ -9,10 +16,7 @@ positional bias, its limiting directed graphon, and the Fourier coefficients of
 the interaction kernel.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import Mathlib.Analysis.SpecialFunctions.Exponential
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -109,7 +113,7 @@ theorem graphon_of_le {lam σ σ' : ℝ} (h : σ ≤ σ') : graphon lam σ σ' =
 
 **What the source says and what is changed here.**  The source defines
 `f̂(n) = ∫_𝕋 e^{-inθ} f(θ) dθ` but then states `ŵ_β(n) = I_n(β)`, the modified
-Bessel function, which is the *normalized* coefficient `(2π)⁻¹ ∫`.  The
+Bessel function, which is the *normalized* coefficient `(2π)⁻¹ ∫`. The
 normalized one is used here, because it is what `a_n` and the smallness
 condition of `thm:U-shape` are calibrated against.
 

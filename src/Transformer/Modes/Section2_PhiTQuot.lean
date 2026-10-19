@@ -1,18 +1,22 @@
-/-
+module
+
+public import Transformer.Modes.Section2_PhiT
+public import Transformer.Modes.Section5_CovAsymp
+
+/-!
 # The number of modes of a Gaussian KDE — the moments as quotients times scales
 
 The five entries of `μ_t` and `Σ_t` (`Section2_PhiT.lean`), each written as a
-quotient times the leading term of `lem:moments-p`.  The quotients are
+quotient times the leading term of `lem:moments-p`. The quotients are
 continuous functions of `p = (1/β, t²/β)`, the ones of `Σ_t` up to a bounded
 function of `t` times a function vanishing at `p = 0`
-(`Section5_CovAsymp.lean`).  This is the form the uniform bounds over `T` of
+(`Section5_CovAsymp.lean`). This is the form the uniform bounds over `T` of
 `lem:phi-t` are read from.
 
 Source: arXiv:2412.09080v3, `lem:moments-p`, §5.2.
 -/
 
-import Transformer.Modes.Section2_PhiT
-import Transformer.Modes.Section5_CovAsymp
+@[expose] public section
 
 open Real
 
@@ -168,7 +172,7 @@ theorem phiDelta_eq {n : ℕ} {β : ℝ} (hβ : 0 < β) (t : ℝ) (h3 : qVar β 
   ring
 
 /-- The hypothesis of `phiA_eq` and `phiDelta_eq` is satisfiable: at `β = 1`,
-`t = 0`, `qVar = gVarA(1, 0) > 0`.  For `phiAlpha_eq`, see
+`t = 0`, `qVar = gVarA(1, 0) > 0`. For `phiAlpha_eq`, see
 `Section2_PhiTUniform.lean`. -/
 example : qVar 1 0 ≠ 0 := by
   have h1 : 0 < qVar 1 0 := by simp [qVar, gVarA]; positivity

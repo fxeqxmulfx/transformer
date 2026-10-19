@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallGateGain
+module
+
+public import Transformer.GPTMini.Semantics.RecallGateGain
 
 /-!
 # Bound the complete original encoder from raw table inputs
@@ -18,6 +20,8 @@ premises. Raw query/value slots survive the whole block. One shared
 second matrix gain can now compensate the finite upper norm bound;
 full validated-parser coupling and second routing/readout remain.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

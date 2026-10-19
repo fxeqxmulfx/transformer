@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianProductDelta
+
+/-!
 # The actual two-factor Gaussian law of the original head matrix
 
 ArXiv:2604.01978v1, §2.3.3, initialization (G), and §7.3,
@@ -20,7 +24,7 @@ zero vectors, and keeps the original transpose in the head definition.
 Arbitrary original positive query scales are handled by positive scaling.
 -/
 
-import Transformer.Homogenized.Section7_GaussianProductDelta
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

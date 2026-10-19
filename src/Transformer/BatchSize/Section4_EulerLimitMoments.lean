@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerLimitProcess
+public import Transformer.BatchSize.Section4_EulerFourthMoment
+public import Transformer.BatchSize.Section4_LimitMoments
+
+/-!
 # Fourth-moment bounds for the constructed optimizer Euler limits
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,9 +12,7 @@ Fatou transfers actual, grid-uniform Euler estimates to the constructed
 limit, retaining the eta-squared factor in the fourth noise moment.
 -/
 
-import Transformer.BatchSize.Section4_EulerLimitProcess
-import Transformer.BatchSize.Section4_EulerFourthMoment
-import Transformer.BatchSize.Section4_LimitMoments
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal Topology

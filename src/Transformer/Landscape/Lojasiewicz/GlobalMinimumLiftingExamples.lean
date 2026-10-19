@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.ProjectedGradientMinimumLifting
+public import Transformer.Landscape.Lojasiewicz.QuadraticEnergy
+
+/-!
 # A moving quadratic level witnesses global minimum lifting
 
 The projected curve is the level parameter. Square-root witnesses
@@ -6,8 +11,7 @@ approach zero, and every point on a quadratic level has the same gradient
 norm. The lifted analytic curve retains comparison with the whole space.
 -/
 
-import Transformer.Landscape.Lojasiewicz.ProjectedGradientMinimumLifting
-import Transformer.Landscape.Lojasiewicz.QuadraticEnergy
+@[expose] public section
 
 open Filter Set
 

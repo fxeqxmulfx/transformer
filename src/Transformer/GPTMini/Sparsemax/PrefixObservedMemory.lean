@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.ObservedMemoryPreferences
-import Transformer.GPTMini.Sparsemax.IncidentNearestMemory
+module
+
+public import Transformer.GPTMini.Sparsemax.ObservedMemoryPreferences
+public import Transformer.GPTMini.Sparsemax.IncidentNearestMemory
 
 /-!
 # Causal text-derived geometry selection
@@ -16,6 +18,8 @@ bounds supply actual embeddings and an inverse, not a desired-attention
 factorization assumed as input. No text-target regularity or unseen coverage
 is inferred from these statements; the earlier conditional bounds remain.
 -/
+
+@[expose] public section
 
 noncomputable section
 

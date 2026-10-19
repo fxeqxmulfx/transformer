@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Global
+public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.SpecificLimits.Normed
+
+/-!
 # Saddle avoidance — gradient descent
 
 Let `f` be a `C²` function on a finite-dimensional real inner product space
@@ -7,7 +14,7 @@ Gradient descent `x ↦ x - η ∇f(x)` converges to a strict saddle of `f` only
 from a null set of starts (`measure_tendsto_strictSaddle_eq_zero`).
 
 The step map is `C¹` with derivative `1 - η ∇²f(x)`, whose determinant is
-nonzero because `‖η ∇²f(x)‖ ≤ η L < 1` (`det_fderiv_gradientStep_ne_zero`).  At
+nonzero because `‖η ∇²f(x)‖ ≤ η L < 1` (`det_fderiv_gradientStep_ne_zero`). At
 a strict saddle `z` the Hessian is symmetric (`isSymmetric_fderiv_gradient`)
 and has a negative eigenvalue `λ`, so the derivative of the step is symmetric
 with the eigenvalue `1 - ηλ > 1`, and `z` is a symmetric unstable fixed
@@ -18,10 +25,7 @@ single strict saddle and a start drawn from a law with a density, `thm:main` of
 arXiv:1602.04915 (`measure_tendsto_eq_zero_of_isStrictSaddle`).
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Global
-import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.SpecificLimits.Normed
+@[expose] public section
 
 open Filter MeasureTheory InnerProductSpace
 open scoped Topology NNReal

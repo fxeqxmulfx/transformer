@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section5_NarrowWindow
+public import Transformer.Causal.Section5_WeightedInteraction
+
+/-!
 # Same-sign original forces within one circular cluster
 
 ArXiv:2411.04990v2, §5, the critical-force split in the proof
@@ -18,8 +23,7 @@ cannot cancel the original center force of mass at least one.
 This supplies the signed lower bound in the source's induction.
 -/
 
-import Transformer.Causal.Section5_NarrowWindow
-import Transformer.Causal.Section5_WeightedInteraction
+@[expose] public section
 
 open scoped BigOperators
 open Real Set

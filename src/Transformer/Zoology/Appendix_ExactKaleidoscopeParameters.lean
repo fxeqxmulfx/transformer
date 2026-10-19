@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ExactKaleidoscopeCoyote
+
+/-!
 # Scalar storage of the exact-length K compiler
 
 Arora et al., arXiv:2312.04927v1, Appendix `prop: single-baseconv`,
@@ -7,7 +11,7 @@ K factors, filters, and biases of every layer. Exact sequence length does
 not require larger or unrepresented dense projection weights.
 -/
 
-import Transformer.Zoology.Appendix_ExactKaleidoscopeCoyote
+@[expose] public section
 
 noncomputable section
 

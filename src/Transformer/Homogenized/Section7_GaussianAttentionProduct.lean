@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianAttentionHessian
+
+/-!
 # Actual first derivatives and product Hessians of Gaussian attention
 
 ArXiv:2604.01978v1, §7, the two attention factors differentiated
@@ -15,7 +19,7 @@ drift. The nonzero biased self-pair example witnesses the extra terms:
 its actual key Hessian is `-9/128`, while the single weight's is `-3/32`.
 -/
 
-import Transformer.Homogenized.Section7_GaussianAttentionHessian
+@[expose] public section
 
 open scoped BigOperators
 
@@ -160,4 +164,3 @@ example : ∃ z : EuclideanSpace ℝ (GaussianFeatureIdx 2 2), (0 : ℕ) < 2 ∧
   norm_num [z, PiLp.single_apply]
 
 end Transformer.Homogenized
-

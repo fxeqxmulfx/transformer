@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_CriticalShape
+public import Transformer.Perspective.Section2_FlowContinuity
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Appendix A — the flow of `e:gradfl` and its Lipschitz inverse
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -6,15 +12,14 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 `e:gradfl` is `SA` at `β = 0` run at double speed (`beta0Dynamics_smul`), so
 its solutions are the time-changed `SA` flow `e0Flow X₀ t = saFlow 0 X₀ (2t)`
-(`eq_e0Flow`).  The proof of `l:nosaddleconv` pulls the local center-stable set
+(`eq_e0Flow`). The proof of `l:nosaddleconv` pulls the local center-stable set
 back along this flow: it needs the backward flow map `X₀ ↦ e0Flow X₀ (-T)`,
 which recovers the start of a trajectory from its state at time `T`
 (`e0Flow_neg_eq`) and is Lipschitz by the Grönwall bound of
 `eq: stability.4ortho` run backward in time (`lipschitzWith_e0Flow_neg`).
 -/
 
-import Transformer.Perspective.AppendixA_CriticalShape
-import Transformer.Perspective.Section2_FlowContinuity
+@[expose] public section
 
 open Real Set
 

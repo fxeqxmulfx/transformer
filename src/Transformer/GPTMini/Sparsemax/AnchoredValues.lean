@@ -1,7 +1,9 @@
-import Transformer.GPTMini.Sparsemax.AnchoredScores
-import Transformer.GPTMini.Sparsemax.ValueSpan
-import Mathlib.LinearAlgebra.Basis.Basic
-import Mathlib.LinearAlgebra.StdBasis
+module
+
+public import Transformer.GPTMini.Sparsemax.AnchoredScores
+public import Transformer.GPTMini.Sparsemax.ValueSpan
+public import Mathlib.LinearAlgebra.Basis.Basic
+public import Mathlib.LinearAlgebra.StdBasis
 
 /-!
 # An enforceable active-value span
@@ -23,6 +25,8 @@ query/key transformer already enforces the restriction. The result concerns
 the ordinary task derivative at the frozen value readout; a zero output
 derivative and global convergence remain outside its conclusion.
 -/
+
+@[expose] public section
 
 noncomputable section
 

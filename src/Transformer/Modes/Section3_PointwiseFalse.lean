@@ -1,7 +1,9 @@
-import Transformer.Modes.Section3_DensityObstruction
-import Transformer.Modes.Section3_PsiBounds
+module
 
-/-
+public import Transformer.Modes.Section3_DensityObstruction
+public import Transformer.Modes.Section3_PsiBounds
+
+/-!
 # The number of modes of a Gaussian KDE — counterexamples to `eq:error-higher`
 
 In §3.2, `lem:error-higher` claims globally uniform weighted errors between
@@ -23,6 +25,8 @@ rates and quantifiers are recorded in `Section3_ErrorHigher.lean`.
 Source: arXiv:2412.09080v3, §2.2, the definition of `φ`; §3.1, `eq:psi`;
 §3.2, `lem:error-higher`, `eq:error-higher`; §5.5, `lem: pt.bdd`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 

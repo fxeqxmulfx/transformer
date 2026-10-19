@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_RidgeWellPosed
+
+/-!
 # Actual ReLU activation caps and scalar particle dynamics
 
 ArXiv:2411.04551v3, Appendix, `lem: two.balls`, `eq: activation.ball`
@@ -16,7 +20,7 @@ and the cap margin has its exact original particle derivative. These are
 the inputs for a quantitative concentration estimate inside the cap.
 -/
 
-import Transformer.Interpolation.Section3_RidgeWellPosed
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal BigOperators

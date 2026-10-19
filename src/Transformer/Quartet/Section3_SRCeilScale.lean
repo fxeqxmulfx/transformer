@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Quartet.Section3_SRRotation
+
+/-!
 # An everywhere non-clipping E4M3 scale policy for FP4 stochastic rounding
 
 arXiv:2601.22813v2, §3.1 uses an FP32 tensor scale and E4M3 group scales,
@@ -12,7 +16,7 @@ hypothesis is needed for exact unbiasedness after any fixed RHT. As in the
 rest of the formalization, the FP32 tensor scale is modeled by an exact real.
 -/
 
-import Transformer.Quartet.Section3_SRRotation
+@[expose] public section
 
 open MeasureTheory
 

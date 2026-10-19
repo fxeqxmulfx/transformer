@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_FullFieldBounds
+public import Transformer.Perspective.DrivenFlow
+
+/-!
 # Uniform spatial constants for the complete original network field
 
 ArXiv:2411.04551v3, §1, `eq: vf` and `eq: cauchy.pb`,
@@ -13,8 +18,7 @@ component bound K gives the explicit spatial constant
 without assuming a characteristic representation or weak uniqueness.
 -/
 
-import Transformer.Interpolation.Section1_FullFieldBounds
-import Transformer.Perspective.DrivenFlow
+@[expose] public section
 
 open Real MeasureTheory
 open scoped NNReal

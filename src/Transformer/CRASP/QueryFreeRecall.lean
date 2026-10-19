@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.AlignedRecall
+
+/-!
 # Recall that ignores the query needs a width growing with the vocabulary
 
 In no paper: Zoology's index argument (arXiv:2312.04927v1, Appendix
@@ -10,29 +14,29 @@ ignores the query (`RTfr.QueryFree`), on the aligned recall of
 Over `m + 1` tokens, the first `n ≥ m` rows of an instance bind each key
 `i + 1` to the value `v` or to another, as a set `S` of `i < m` chooses; the
 last row binds key `0`, which no other row has, and queries a key `q + 1`
-(`indexInstance`).  The dictionary is consistent (`consistent_indexInstance`),
+(`indexInstance`). The dictionary is consistent (`consistent_indexInstance`),
 and `v` answers the query exactly when `S` holds `q`
-(`priorAnswer_indexInstance`).  A transformer deciding at the last row whether
-`v` answers thus solves the index problem on `m` bits.  If its attention
+(`priorAnswer_indexInstance`). A transformer deciding at the last row whether
+`v` answers thus solves the index problem on `m` bits. If its attention
 ignores the query, it reads the first `n` rows through a message of
 `k (2d + 1)` integers, each one of `2^p (n + 1) + 1` (`RTfr.actAt_last`,
 `RTfr.msg_mem`), and different sets need different messages: over `c` tokens,
 
     2^{c-1} ≤ (2^p (n + 1) + 1)^{k (2d + 1)}        (`two_pow_le_of_queryFree`),
 
-that is `c - 1 ≤ k (2d + 1) log₂(2^p (n + 1) + 1)`.  At the fewest rows,
+that is `c - 1 ≤ k (2d + 1) log₂(2^p (n + 1) + 1)`. At the fewest rows,
 `n = c - 1`, this is `c - 1 ≤ k (2d + 1) (p + 1 + log₂ c)`: at a fixed depth
 and precision the width grows with the vocabulary, linearly up to a logarithm.
 The transformer of `exists_rtfr_answers` ignores the query, so the bound holds
-for it.  Zoology argues from the randomized index bound; an exact recognizer
+for it. Zoology argues from the randomized index bound; an exact recognizer
 needs only the deterministic one, a pigeonhole
-(`Transformer.Zoology.exact_index_requires_bits` states it for bits).  Below
-`c - 1` rows nothing is claimed.  Attention comparing a query with a key
+(`Transformer.Zoology.exact_index_requires_bits` states it for bits). Below
+`c - 1` rows nothing is claimed. Attention comparing a query with a key
 recalls in width `5` at `p = O(log c)` bits whatever `n` (`matcher_answers`),
 so at every depth and width the two separate (`exists_matcher_not_queryFree`).
 -/
 
-import Transformer.CRASP.AlignedRecall
+@[expose] public section
 
 namespace Transformer.CRASP
 

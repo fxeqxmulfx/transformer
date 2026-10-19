@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.MemoryExampleGrams
+module
+
+public import Transformer.GPTMini.Sparsemax.MemoryExampleGrams
 
 /-!
 # Exact attainable outputs for categorical data codes
@@ -19,6 +21,8 @@ Targets here characterize expressivity; they are not supplied to the data
 encoder. Duplicate codes must share predictions. Dictionary size and feature
 width are unrestricted, and no efficient representation is asserted.
 -/
+
+@[expose] public section
 
 noncomputable section
 

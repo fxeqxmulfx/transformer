@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_UniformNoncolinearity
+public import Transformer.Interpolation.Section3_PositiveBarycenters
+public import Transformer.Interpolation.Section1_TimeRescaling
+
+/-!
 # Constant controls separating the original collinear barycenters
 
 ArXiv:2411.04551v3, §3.2, `lem: perturbation`, Part 2.
@@ -16,9 +22,7 @@ The construction uses one constant pure-perceptron control, which is
 stronger than the source's allowance of at most two switches.
 -/
 
-import Transformer.Interpolation.Section3_UniformNoncolinearity
-import Transformer.Interpolation.Section3_PositiveBarycenters
-import Transformer.Interpolation.Section1_TimeRescaling
+@[expose] public section
 
 open Real MeasureTheory
 

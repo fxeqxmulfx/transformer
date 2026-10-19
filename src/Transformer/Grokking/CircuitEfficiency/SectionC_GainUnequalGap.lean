@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMassRates
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMassRates
 
 /-!
 # Current unequal-pair efficiency advantage after a quantified error budget
@@ -27,6 +29,8 @@ uniform native decay, differing from appendix C's coupled-cost GD
 and the preserved nonzero-beta learned GPTMini. It alone proves
 neither a path crossing nor permanent held-out correctness.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

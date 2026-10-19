@@ -1,27 +1,31 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section4_ODESolution
+public import Mathlib.Analysis.ODE.Gronwall
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Attention's forward pass and Frank-Wolfe — uniqueness for the singular ODE
 
 Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
 *Attention's forward pass and Frank-Wolfe*, §4, `thm: ode`, Part 2 of its proof.
 
 `hardmaxSol` solves `eq: hardmax.ode` (`isHardmaxODESolution_hardmaxSol`); here
-it is the only solution.  Where a solution `x` agrees with it at `t₀`, the
+it is the only solution. Where a solution `x` agrees with it at `t₀`, the
 strict gaps of `inner_hardmaxSol_lt` persist for a while by continuity, so every
-particle of `x` keeps moving towards a particle resting at its vertex.  On that
+particle of `x` keeps moving towards a particle resting at its vertex. On that
 stretch both curves solve one equation, Lipschitz in the state, and Grönwall
 keeps them together (`eventually_eq_hardmaxSol`); the set where they agree is
 closed, so it is all of `[0, T]` (`eqOn_hardmaxSol`).
 
 The source argues with explicit times instead: a solution moves at speed at
 most `2𝖽(𝒦)`, so it stays in its cell for a time `δ / 2𝖽(𝒦)`, and the argument
-is iterated.  The continuity argument here needs neither the bound nor `δ`.
+is iterated. The continuity argument here needs neither the bound nor `δ`.
 
 Source: arXiv:2508.09628v1, `sec: proof.thm.ode`, Part 2.
 -/
 
-import Transformer.FrankWolfe.Section4_ODESolution
-import Mathlib.Analysis.ODE.Gronwall
-import Mathlib.Analysis.Calculus.Deriv.Prod
+@[expose] public section
 
 open scoped BigOperators Topology NNReal
 open Real Set Filter

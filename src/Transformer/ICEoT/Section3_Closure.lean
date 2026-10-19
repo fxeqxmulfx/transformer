@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Analysis.Convex.Function
+public import Mathlib.Tactic
+
+/-!
 # IC-EoT: componentwise convexity and closure
 
 Xu, Zhi, Jiang, arXiv:2603.22095v2, §3.3, Definition 1 and Lemma 1.
@@ -7,8 +12,7 @@ Functions into finite real arrays use the pointwise order. Thus vector-valued
 the graph. Biases and positional encodings are fixed, with unrestricted signs.
 -/
 
-import Mathlib.Analysis.Convex.Function
-import Mathlib.Tactic
+@[expose] public section
 
 noncomputable section
 

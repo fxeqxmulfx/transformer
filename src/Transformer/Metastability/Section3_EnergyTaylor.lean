@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.Section3_EnergyAlgebra
+public import Transformer.Metastability.Section3_ClusterSpread
+
+/-!
 # A global quadratic bound for the actual angular energy
 
 ArXiv:2410.06833v1, §3.2, `lem: PL.borjan`.
@@ -8,8 +13,7 @@ bounded by the Euclidean coordinate-square displacement.
 No cap, flow, or convergence assumption enters this global energy bound.
 -/
 
-import Transformer.Metastability.Section3_EnergyAlgebra
-import Transformer.Metastability.Section3_ClusterSpread
+@[expose] public section
 
 open scoped BigOperators
 open Real

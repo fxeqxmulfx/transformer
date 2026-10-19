@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section5_EmpiricalLimits
+public import Transformer.Metastability.Section4_UniformLaw
+public import Mathlib.Dynamics.Ergodic.MeasurePreserving
+
+/-!
 # Rotation invariance of the actual cluster law
 
 ArXiv:2411.04551v3, §5, the rotation argument in `prop:generic-discrete`.
@@ -16,9 +22,7 @@ proved in `Metastability.Section4_UniformLaw`. No unproved uniformity or
 clustering claim is invoked. The latter is an explicit input throughout.
 -/
 
-import Transformer.Interpolation.Section5_EmpiricalLimits
-import Transformer.Metastability.Section4_UniformLaw
-import Mathlib.Dynamics.Ergodic.MeasurePreserving
+@[expose] public section
 
 open Real MeasureTheory Filter Topology
 

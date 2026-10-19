@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.PeriodicEnergyCompact
+module
+
+public import Transformer.GPTMini.Sparsemax.PeriodicEnergyCompact
 
 /-!
 # A unique attained trained point for every ordinary answer table
@@ -14,6 +16,8 @@ width-three Q/K and invertible actual sparsemax. A nonsingleton three-slot
 instance has a provably unattainable zero target and an attained positive
 minimum, making the distinction between optimality and exact fitting explicit.
 -/
+
+@[expose] public section
 
 noncomputable section
 

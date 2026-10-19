@@ -1,6 +1,8 @@
-import Transformer.AMSGrad.Section2_Proj
+module
 
-/-
+public import Transformer.AMSGrad.Section2_Proj
+
+/-!
 # Adam and beyond — the auxiliary lemmas
 
 The last appendix of arXiv:1904.09237, "Auxiliary Lemma": the projection
@@ -14,7 +16,7 @@ the proof of Theorem 2 (lem:1d-proj-prop).
   arXiv:1904.03590 (`Transformer.AMSGrad.mcm_str`) has positive definite.
   "`u = min_{x∈F} ‖Q^{1/2}(x - z)‖`" is taken as: `u ∈ F` minimizes
   `(x - z)ᵀQ(x - z)` over `F`, any minimizer, since for singular `Q` it need
-  not be unique.  The source's proof starts from
+  not be unique. The source's proof starts from
   "`⟨z₁ - u₁, Q(z₂ - z₁)⟩ ≥ 0`", which is not the variational inequality and
   does not hold in general; the proof here is the variational inequality
   `(u - z)ᵀQ(x - u) ≥ 0`, `proj_variational_psd`, added twice.
@@ -23,11 +25,13 @@ the proof of Theorem 2 (lem:1d-proj-prop).
   vanishes, which it does only if `y_i = 0`.
 
 * lem:1d-proj-prop assumes `i ∈ [T]`; the bound holds for every `i`, and is
-  stated so.  `Π_F` on `F = [a, b]` is `y ↦ max a (min b y)`.
+  stated so. `Π_F` on `F = [a, b]` is `y ↦ max a (min b y)`.
 
 Source: arXiv:1904.09237, appendix, "Auxiliary Lemma": lem:proj-lemma,
 lem:simple-grad-bound, lem:1d-proj-prop.
 -/
+
+@[expose] public section
 
 open Finset Matrix
 
@@ -51,9 +55,9 @@ theorem psd_nonneg {Q : Matrix (Fin d) (Fin d) ℝ} (hQ : Q.PosSemidef)
     (v : Vec d) : 0 ≤ v ⬝ᵥ Q *ᵥ v := by
   simpa using hQ.dotProduct_mulVec_nonneg v
 
-/-- **The variational inequality**, for `Q` positive semidefinite.  If `u ∈ F`
+/-- **The variational inequality**, for `Q` positive semidefinite. If `u ∈ F`
 minimizes `(x - z)ᵀQ(x - z)` over a convex `F`, then `(u - z)ᵀQ(x - u) ≥ 0` for
-every `x ∈ F`.  arXiv:1904.09237, appendix, the proof of lem:proj-lemma. -/
+every `x ∈ F`. arXiv:1904.09237, appendix, the proof of lem:proj-lemma. -/
 theorem proj_variational_psd {Q : Matrix (Fin d) (Fin d) ℝ} (hQ : Q.PosSemidef)
     {F : Set (Vec d)} (hF : Convex ℝ F) {z u : Vec d} (hu : u ∈ F)
     (hmin : ∀ x ∈ F, (u - z) ⬝ᵥ Q *ᵥ (u - z) ≤ (x - z) ⬝ᵥ Q *ᵥ (x - z))

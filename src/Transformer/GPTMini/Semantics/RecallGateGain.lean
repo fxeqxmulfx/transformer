@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallStateBounds
+module
+
+public import Transformer.GPTMini.Semantics.RecallStateBounds
 
 /-!
 # A finite shared table gain and a bound on the actual gated block
@@ -17,6 +19,8 @@ local gate-separation conditions used here were derived from raw
 IDs in RecallRawGate; subsequent uniform raw bounds discharge them
 at every position before choosing one shared second-QKV gain.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

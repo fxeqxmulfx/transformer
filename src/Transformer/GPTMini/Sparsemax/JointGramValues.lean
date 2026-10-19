@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.GramValues
+module
+
+public import Transformer.GPTMini.Sparsemax.GramValues
 
 /-!
 # Exact convex coordinates for embeddings, attention and learned values
@@ -17,6 +19,8 @@ The guarantee covers one distinct-token context with all causal rows.
 Original value penalties, repeated-token sharing across contexts, bounded
 embedding width and inverse conditioning are not preserved or inferred.
 -/
+
+@[expose] public section
 
 noncomputable section
 

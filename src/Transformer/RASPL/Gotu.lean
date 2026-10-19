@@ -1,11 +1,16 @@
-/-
+module
+
+public import Transformer.RASPL.Defs
+public import Transformer.RASPL.MinDegree
+
+/-!
 # What the transformer learns and the interpolator cannot
 
 Zhou et al. — arXiv:2310.16028v1, "What Algorithms can Transformers Learn?",
 §4 ("A Case Study: Boolean AND") and Appendix D.
 
 The experiment: train on 20-bit strings whose last five bits are always `1`,
-with the boolean AND of all twenty as the label.  The trained transformer
+with the boolean AND of all twenty as the label. The trained transformer
 reaches 100% accuracy on test strings that *do* vary those five bits, so it
 has learned the AND of all twenty; the minimum-degree interpolator of the same
 training data provably has not, since it cannot depend on a coordinate the
@@ -17,14 +22,13 @@ gives for the task —
     def output(x): kqv(x, full(x, 0), full(x, 0), equals, default=1)
 
 — computing the AND of every bit seen so far, and `minDeg_ne_andAll` is the
-separation.  Bits are `Bool` with `true` for the bit `1`; the `±1` reading the
+separation. Bits are `Bool` with `true` for the bit `1`; the `±1` reading the
 characters of `RASPL.Fourier` use is the standard translation of Appendix E
 ("we state this with the boolean hypercube identified with `{±1}^n` ... but
 these statements can be translated to `{0,1}^n`").
 -/
 
-import Transformer.RASPL.Defs
-import Transformer.RASPL.MinDegree
+@[expose] public section
 
 namespace Transformer
 namespace RASPL
@@ -120,7 +124,7 @@ lemma levelWeight_const_one_of_ne {k : ℕ} (hk : k ≠ 0) :
   rw [coeff_const_one, ite_eq_right (fun h : S = ∅ => hk (by rw [← hS, h, Finset.card_empty]))]
   ring
 
-/-- The hypotheses of `minDeg_ne_andAll` are satisfiable.  On one bit with
+/-- The hypotheses of `minDeg_ne_andAll` are satisfiable. On one bit with
 the single training point `1`, the constant function `1` is a minimum-degree
 interpolator of the AND, and that training point fixes the only
 coordinate. -/

@@ -1,15 +1,26 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Abelian.Defs
+public import Transformer.Landscape.PhaseModel.Abelian.Basic
+public import Transformer.Landscape.PhaseModel.Abelian.Coordinates
+public import Transformer.Landscape.PhaseModel.Abelian.Basin
+public import Transformer.Landscape.PhaseModel.Abelian.Characters
+public import Transformer.Landscape.PhaseModel.Abelian.Fourier
+public import Transformer.Landscape.PhaseModel.Abelian.Landscape
+public import Transformer.Landscape.PhaseModel.Abelian.Convergence
+
+/-!
 # Phase model over a finite abelian group
 
 The phase model of division (`Transformer.Landscape.PhaseModel`) with a finite abelian
 group `G` of order `n` in place of the cyclic group `ℤ/n`: phases
 `ψ ∈ ℝ^G`, the rows `e_x - e_y - e_{x-y}` of the division table of `G`, and
 the characters `χ : G → ℂ`, whose phases `arg χ(x)` take the place of
-`2πjx/n`.  The zeros of `V_full` are the phases of the characters up to
-periods.  For `n ≥ 4`, below `n²/8` every local minimizer of `V_full` is the
+`2πjx/n`. The zeros of `V_full` are the phases of the characters up to
+periods. For `n ≥ 4`, below `n²/8` every local minimizer of `V_full` is the
 phases of a character up to periods and every other critical point is a
 strict saddle, so for almost every start below `n²/8` gradient descent
-converges to the phases of a character.  At `G = Fin n` these give the
+converges to the phases of a character. At `G = Fin n` these give the
 landscape of `ℤ/n` (`PhaseModel.Coordinates` to `PhaseModel.Landscape`).
 
 | Module | Contents |
@@ -24,11 +35,4 @@ landscape of `ℤ/n` (`PhaseModel.Coordinates` to `PhaseModel.Landscape`).
 | `PhaseModel.Abelian.Convergence` | the periods span `ℝ^G`; every orbit of gradient descent on a phase energy with integer rows converges, to a critical point; from almost every start below `n²/8`, gradient descent on `V_full` converges, to a character up to periods |
 -/
 
-import Transformer.Landscape.PhaseModel.Abelian.Defs
-import Transformer.Landscape.PhaseModel.Abelian.Basic
-import Transformer.Landscape.PhaseModel.Abelian.Coordinates
-import Transformer.Landscape.PhaseModel.Abelian.Basin
-import Transformer.Landscape.PhaseModel.Abelian.Characters
-import Transformer.Landscape.PhaseModel.Abelian.Fourier
-import Transformer.Landscape.PhaseModel.Abelian.Landscape
-import Transformer.Landscape.PhaseModel.Abelian.Convergence
+@[expose] public section

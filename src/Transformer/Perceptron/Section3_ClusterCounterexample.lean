@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section3_Antipodal
+public import Mathlib.Analysis.Real.Sqrt
+
+/-!
 # A counterexample to the exclusion of a single cluster at every temperature
 
 The second part of `thm: bound`, §3.2 of arXiv:2601.21366v2, says that
@@ -14,8 +19,7 @@ The counterexample addresses that quantifier. It does not contradict the
 large-temperature mass bound in the first part of the theorem.
 -/
 
-import Transformer.Perceptron.Section3_Antipodal
-import Mathlib.Analysis.Real.Sqrt
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

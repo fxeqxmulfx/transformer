@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_RoutedCollapses
+public import Transformer.Interpolation.Section2_SmallBalls
+public import Transformer.Interpolation.Section2_BallGrouping
+public import Transformer.Interpolation.Section2_ClusterCoupling
+public import Transformer.Interpolation.AtomlessSphere
+
+/-!
 # Clustering one law in dimension at least three
 
 ArXiv:2411.04551v3, §2.2, proof of `prop: compression`, Steps 1–3, for
@@ -11,11 +19,7 @@ and routed near its point. The masses near the points then bound the
 distance to the atomic target.
 -/
 
-import Transformer.Interpolation.Section2_RoutedCollapses
-import Transformer.Interpolation.Section2_SmallBalls
-import Transformer.Interpolation.Section2_BallGrouping
-import Transformer.Interpolation.Section2_ClusterCoupling
-import Transformer.Interpolation.AtomlessSphere
+@[expose] public section
 
 open scoped ENNReal NNReal
 open Real MeasureTheory Set

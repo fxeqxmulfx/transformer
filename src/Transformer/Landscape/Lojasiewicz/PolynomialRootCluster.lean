@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.PolynomialRootBounds
+public import Mathlib.Topology.Sequences
+public import Mathlib.Order.Filter.AtTopBot.CountablyGenerated
+public import Mathlib.Analysis.Real.Sqrt
+
+/-!
 # Central limits of real polynomial roots
 
 Uniform monic root bounds give a convergent subsequence of real roots at
@@ -6,10 +13,7 @@ parameters approaching zero from above. Its limit is a root of the actual
 central polynomial, and the shifted roots accumulate at the origin.
 -/
 
-import Transformer.Landscape.Lojasiewicz.PolynomialRootBounds
-import Mathlib.Topology.Sequences
-import Mathlib.Order.Filter.AtTopBot.CountablyGenerated
-import Mathlib.Analysis.Real.Sqrt
+@[expose] public section
 
 open Filter Set
 

@@ -1,12 +1,22 @@
-/-
+module
+
+public import Transformer.Perspective.Section6_Circle
+public import Transformer.Perspective.Section2_GradientFlow
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.Complex.RealDeriv
+public import Mathlib.Analysis.Complex.Isometry
+public import Mathlib.Analysis.SpecialFunctions.Complex.Log
+
+/-!
 # Angles and the circle
 
 On the circle `𝕊¹ ⊂ ℝ²` a particle is an angle: `x = (cos θ, sin θ)`
 (`circlePoint`), and a configuration of `n` particles is a tuple of angles
-(`anglesToSphere`).  The inner product of two points is the cosine of the
+(`anglesToSphere`). The inner product of two points is the cosine of the
 difference of their angles (`inner_circlePoint`), and the tangent
 projection of `(cos b, sin b)` at `(cos a, sin a)` is `-sin (a - b)` times
-the unit tangent `(-sin a, cos a)` (`proj_circlePoint`).  So the right-hand
+the unit tangent `(-sin a, cos a)` (`proj_circlePoint`). So the right-hand
 side of `USA` at `(cos θ_i, sin θ_i)` is the right-hand side of the angular
 equation `eq:onangles` times that tangent, which is the velocity of
 `(cos θ_i, sin θ_i)` (`hasDerivAt_circlePoint`): solutions of `eq:onangles`
@@ -14,9 +24,9 @@ give solutions of `USA` on `(𝕊¹)ⁿ` (`usa_anglesToSphere`).
 
 The circle is the image of `θ ↦ e^{iθ}` under the isometry `ℂ ≃ ℝ²`,
 `z ↦ (re z, im z)` (`complexEuc`), so that these computations are complex
-arithmetic.  The angle map is `2π`-periodic, and two angles give one point only
+arithmetic. The angle map is `2π`-periodic, and two angles give one point only
 if they differ by a multiple of `2π` (`exists_int_of_circlePoint_eq`); the
-argument is a section of it (`anglesToSphere_sphereAngles`).  Every linear
+argument is a section of it (`anglesToSphere_sphereAngles`). Every linear
 isometry of the plane acts on angles by a translation or a reflection
 (`exists_sphereMap_circlePoint`).
 
@@ -25,13 +35,7 @@ writing `x_i(t) = (cos θ_i(t), sin θ_i(t))`; here the computation runs the
 other way.
 -/
 
-import Transformer.Perspective.Section6_Circle
-import Transformer.Perspective.Section2_GradientFlow
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Complex.RealDeriv
-import Mathlib.Analysis.Complex.Isometry
-import Mathlib.Analysis.SpecialFunctions.Complex.Log
+@[expose] public section
 
 open Complex
 open scoped Real

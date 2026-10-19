@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryDelayFamily
-import Mathlib.Topology.Separation.Hausdorff
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryDelayFamily
+public import Mathlib.Topology.Separation.Hausdorff
 
 /-!
 # Noncommuting original legal-beta time/initial-seed decision limits
@@ -35,6 +37,8 @@ this is not positive-confidence or numerical GPTMini convergence.
 Fixed gained tables and uniform decoupled native decay differ from
 appendix C coupled-cost GD and learned stochastic/numerical heads.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

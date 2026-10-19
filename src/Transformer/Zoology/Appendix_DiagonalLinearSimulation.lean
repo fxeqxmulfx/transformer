@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_DiagonalLinearLayout
+
+/-!
 # Exact cancellation of Coyote's quadratic terms
 
 Arora et al., arXiv:2312.04927v1, Appendix `lmm:primitives` and
@@ -7,7 +11,7 @@ a ⊙ u + b ⊙ (uW), with arbitrary position-dependent a and b and a shared W.
 The intermediate quadratic terms cancel identically over the reals.
 -/
 
-import Transformer.Zoology.Appendix_DiagonalLinearLayout
+@[expose] public section
 
 open scoped BigOperators
 

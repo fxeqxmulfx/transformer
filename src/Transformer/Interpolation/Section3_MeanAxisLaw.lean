@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_MeanAxisClock
+public import Transformer.Interpolation.Section1_AutonomousComparison
+
+/-!
 # Actual weak laws for rank-one mean attention
 
 ArXiv:2411.04551v3, §3.2, `eq: cauchy.pb.reloaded`, proof of
@@ -13,8 +18,7 @@ all real times. Existence is constructed, without a well-posedness
 assumption. A vanishing initial axial mean gives a stationary law.
 -/
 
-import Transformer.Interpolation.Section3_MeanAxisClock
-import Transformer.Interpolation.Section1_AutonomousComparison
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology

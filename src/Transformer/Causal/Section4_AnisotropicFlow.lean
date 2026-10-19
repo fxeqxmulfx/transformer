@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Causal.Section4_AnisotropicCircle
+public import Transformer.Landscape.GlobalFlow.Existence
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Genuine global solutions for the anisotropic causal field
 
 Source: arXiv:2411.04990v2, §4, Conjecture `thm1.5`, and
@@ -13,9 +20,7 @@ has an angular representative; no solution, forward invariance or
 limiting behavior is postulated in the definition of the field.
 -/
 
-import Transformer.Causal.Section4_AnisotropicCircle
-import Transformer.Landscape.GlobalFlow.Existence
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+@[expose] public section
 
 open Real
 

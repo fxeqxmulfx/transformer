@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CircuitGateLayers
+
+/-!
 # Correctness of each compiled arithmetic gate
 
 Arora et al., arXiv:2312.04927v1, Appendix Theorem `thm: gen-ac`.
@@ -7,7 +11,7 @@ gates, and two layers for multiplication. Well-formedness makes the target
 slot fresh, so the multiplication layer can still read its left operand.
 -/
 
-import Transformer.Zoology.Appendix_CircuitGateLayers
+@[expose] public section
 
 namespace Transformer.Zoology
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_GradientFlow
+
+/-!
 # Lambert-W expression for the solved gradient dynamics
 
 arXiv:2402.19449v2, Appendix I, Lemma 5. A genuine positive-argument
@@ -6,7 +10,7 @@ Lambert W is constructed using the real inverse already proved to exist.
 The manuscript's exact closed form is then recovered from the margin.
 -/
 
-import Transformer.Imbalance.Section3_GradientFlow
+@[expose] public section
 
 noncomputable section
 

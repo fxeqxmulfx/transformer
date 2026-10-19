@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_L2Limits
+public import Transformer.BatchSize.Section4_BoundedCoefficients
+
+/-!
 # Constructed adapted L2 limits of the optimizer Euler approximations
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The limits here are constructed at each actual time. Continuous sample
 paths and the generator martingale identity remain separate obligations.
 -/
 
-import Transformer.BatchSize.Section4_L2Limits
-import Transformer.BatchSize.Section4_BoundedCoefficients
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal Topology

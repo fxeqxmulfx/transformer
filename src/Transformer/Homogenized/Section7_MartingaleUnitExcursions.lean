@@ -1,7 +1,9 @@
-import Transformer.Homogenized.Section7_MartingaleVariance
-import Transformer.Homogenized.Section7_ContinuousSubmartingaleMaximal
-import Transformer.Homogenized.Section7_MartingaleTimeShift
-import Mathlib.MeasureTheory.OuterMeasure.BorelCantelli
+module
+
+public import Transformer.Homogenized.Section7_MartingaleVariance
+public import Transformer.Homogenized.Section7_ContinuousSubmartingaleMaximal
+public import Transformer.Homogenized.Section7_MartingaleTimeShift
+public import Mathlib.MeasureTheory.OuterMeasure.BorelCantelli
 
 /-!
 # Excursions between consecutive integer times vanish almost surely
@@ -20,6 +22,8 @@ The crossing events are actual measurable events of the original paths.
 Only the original finite-horizon martingale, continuity, and uniform
 bound are premises. No independence or excursion estimate is assumed.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology ENNReal

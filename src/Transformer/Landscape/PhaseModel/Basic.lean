@@ -1,14 +1,22 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Defs
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+
+/-!
 # Phase model — the energy and its derivatives
 
 The phase energy is nonnegative and vanishes exactly where every relation
 holds (`phaseEnergy_eq_zero_iff`); a translation `v` with `⟪m_r, v⟫ ∈ 2πℤ`
-for every row leaves it invariant (`phaseEnergy_add`).  It is smooth
+for every row leaves it invariant (`phaseEnergy_add`). It is smooth
 (`contDiff_phaseEnergy`) and analytic (`analyticOnNhd_phaseEnergy`), with
 gradient `Σ_r sin ⟪m_r, ψ⟫ m_r` (`gradient_phaseEnergy`) and Hessian
 `h ↦ Σ_r cos ⟪m_r, ψ⟫ ⟪m_r, h⟫ m_r` (`hasFDerivAt_gradient_phaseEnergy`);
 the gradient is Lipschitz with constant `Σ_r ‖m_r‖²`
-(`lipschitzWith_gradient_phaseEnergy`).  At a zero of the energy the
+(`lipschitzWith_gradient_phaseEnergy`). At a zero of the energy the
 Hessian is `h ↦ Σ_r ⟪m_r, h⟫ m_r`, injective when no nonzero vector is
 orthogonal to every row (`injective_fderiv_gradient_of_phaseEnergy_eq_zero`).
 
@@ -19,11 +27,7 @@ Three facts on the circle serve every phase model: `e^{i(x + 2πk)} = e^{ix}`
 `one_sub_cos_sub_le`).
 -/
 
-import Transformer.Landscape.PhaseModel.Defs
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+@[expose] public section
 
 open Real ComplexConjugate
 

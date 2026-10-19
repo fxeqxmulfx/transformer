@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.TensorGain
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorGain
 
 /-!
 # Complete loss certifies actual semantic predictions
@@ -17,6 +19,8 @@ state witness satisfies the loss hypothesis, so the premises are real.
 A small minibatch mean is not a uniform bound over all raw prefixes;
 optimizer convergence and floating-point certification remain separate.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

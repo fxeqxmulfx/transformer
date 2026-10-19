@@ -1,4 +1,80 @@
-/-
+module
+
+public import Transformer.CRASP.Defs
+public import Transformer.CRASP.Basic
+public import Transformer.CRASP.Parikh
+public import Transformer.CRASP.Alternating
+public import Transformer.CRASP.Blocks
+public import Transformer.CRASP.BoundedExists
+public import Transformer.CRASP.Indicator
+public import Transformer.CRASP.Subsequence
+public import Transformer.CRASP.SubsequenceTwoSided
+public import Transformer.CRASP.PiecewiseTestable
+public import Transformer.CRASP.NeutralLetter
+public import Transformer.CRASP.DepthZero
+public import Transformer.CRASP.Middle
+public import Transformer.CRASP.Commutative
+public import Transformer.CRASP.CroppingUnsound
+public import Transformer.CRASP.ReductionUnsound
+public import Transformer.CRASP.Locality
+public import Transformer.CRASP.Strip
+public import Transformer.CRASP.Affine
+public import Transformer.CRASP.Shrink
+public import Transformer.CRASP.LowerBound
+public import Transformer.CRASP.Depth
+public import Transformer.CRASP.Prediction
+public import Transformer.CRASP.Frame
+public import Transformer.CRASP.FrameCount
+public import Transformer.CRASP.FrameAffine
+public import Transformer.CRASP.FrameBox
+public import Transformer.CRASP.FrameShrink
+public import Transformer.CRASP.LowerBoundTwoSided
+public import Transformer.CRASP.TLCDepth
+public import Transformer.CRASP.Extensions
+public import Transformer.CRASP.ExtensionsPieces
+public import Transformer.CRASP.ExtensionsCounts
+public import Transformer.CRASP.ExtensionsElim
+public import Transformer.CRASP.Fixed
+public import Transformer.CRASP.FixedBits
+public import Transformer.CRASP.Conjunctions
+public import Transformer.CRASP.Transformers
+public import Transformer.CRASP.FiniteAlphabet
+public import Transformer.CRASP.Parity
+public import Transformer.CRASP.ParityTwoSided
+public import Transformer.CRASP.SecondLast
+public import Transformer.CRASP.AlignedRecall
+public import Transformer.CRASP.QueryFree
+public import Transformer.CRASP.QueryFreeRecall
+public import Transformer.CRASP.MatchingRecall
+public import Transformer.CRASP.MatchingRecallSums
+public import Transformer.CRASP.MatchingRecallAnswers
+public import Transformer.CRASP.RecallSeparation
+public import Transformer.CRASP.LatestRecall
+public import Transformer.CRASP.FiniteFunction
+public import Transformer.CRASP.ConstantLayer
+public import Transformer.CRASP.Collapse
+public import Transformer.CRASP.MajTwo
+public import Transformer.CRASP.MajTwoDepthOne
+public import Transformer.CRASP.MajTwoCount
+public import Transformer.CRASP.MajTwoOfTLC
+public import Transformer.CRASP.MajTwoEquiv
+public import Transformer.CRASP.MajTwoHierarchy
+public import Transformer.CRASP.Positional
+public import Transformer.CRASP.PositionalEmbedding
+public import Transformer.CRASP.PositionalTransformers
+public import Transformer.CRASP.YNormalForm
+public import Transformer.CRASP.YNormalFormEquiv
+public import Transformer.CRASP.Spread
+public import Transformer.CRASP.PositionalReductionAtom
+public import Transformer.CRASP.PositionalReduction
+public import Transformer.CRASP.PositionalReductionAtomEquiv
+public import Transformer.CRASP.PositionalReductionCount
+public import Transformer.CRASP.PositionalReductionEquiv
+public import Transformer.CRASP.PositionalDepth
+public import Transformer.CRASP.PositionalHierarchy
+public import Transformer.CRASP.EncodingHierarchy
+
+/-!
 # Knee-Deep in C-RASP: a transformer depth hierarchy
 
 Formalization of Yang, Huang, Chiang — arXiv:2506.16055v3, "Knee-Deep in
@@ -6,7 +82,7 @@ C-RASP: A Transformer Depth Hierarchy" (COLM 2025).
 
 The paper studies `TL[◁#]` (equivalently C-RASP) and `TL[◁#, ▷#]`, temporal
 logics whose only non-Boolean device is counting how many earlier (or later)
-positions satisfy a subformula.  Their *depth* — the nesting of counting
+positions satisfy a subformula. Their *depth* — the nesting of counting
 operators — matches the depth of a fixed-precision future-masked transformer,
 and the main results are that this depth induces a strict hierarchy: the
 languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
@@ -136,13 +212,13 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.PositionalHierarchy` | what they simulate |
 | `CRASP.EncodingHierarchy` | the depth hierarchy under position encodings |
 
-Two things the paper carries are deliberately absent.  `lem:bb` and
+Two things the paper carries are deliberately absent. `lem:bb` and
 `lem:piecewise_testable_depth_majtwo` sit inside `\iffalse` blocks in the
 source and so are not part of it; so do `thm:mnf`, `thm:tlmod_to_rtfr` and
 `thm:TLCmod_to_rtfr` of Appendix F, and `lem:find_half_planes_oneway` of §4.4.
 The step from `MAJ²` to `FO[<]`-uniform `LTC⁰` circuits is not formalized
 either: it is a statement about circuits, which this development does not
-model.  One remark the source leaves in a comment, after
+model. One remark the source leaves in a comment, after
 `thm:transformer_equivalence`, is formalized all the same: PARITY is in
 `TL[◁#, ▷#]` and not in `TL[◁#]` (`CRASP.Parity`, `CRASP.ParityTwoSided`).
 Four results are in no paper: Zoology's recall, once each value sits beside
@@ -160,76 +236,4 @@ symbol, so that no transformer recalls the latest value of a rebound key
 (`CRASP.SecondLast`, `CRASP.LatestRecall`).
 -/
 
-import Transformer.CRASP.Defs
-import Transformer.CRASP.Basic
-import Transformer.CRASP.Parikh
-import Transformer.CRASP.Alternating
-import Transformer.CRASP.Blocks
-import Transformer.CRASP.BoundedExists
-import Transformer.CRASP.Indicator
-import Transformer.CRASP.Subsequence
-import Transformer.CRASP.SubsequenceTwoSided
-import Transformer.CRASP.PiecewiseTestable
-import Transformer.CRASP.NeutralLetter
-import Transformer.CRASP.DepthZero
-import Transformer.CRASP.Middle
-import Transformer.CRASP.Commutative
-import Transformer.CRASP.CroppingUnsound
-import Transformer.CRASP.ReductionUnsound
-import Transformer.CRASP.Locality
-import Transformer.CRASP.Strip
-import Transformer.CRASP.Affine
-import Transformer.CRASP.Shrink
-import Transformer.CRASP.LowerBound
-import Transformer.CRASP.Depth
-import Transformer.CRASP.Prediction
-import Transformer.CRASP.Frame
-import Transformer.CRASP.FrameCount
-import Transformer.CRASP.FrameAffine
-import Transformer.CRASP.FrameBox
-import Transformer.CRASP.FrameShrink
-import Transformer.CRASP.LowerBoundTwoSided
-import Transformer.CRASP.TLCDepth
-import Transformer.CRASP.Extensions
-import Transformer.CRASP.ExtensionsPieces
-import Transformer.CRASP.ExtensionsCounts
-import Transformer.CRASP.ExtensionsElim
-import Transformer.CRASP.Fixed
-import Transformer.CRASP.FixedBits
-import Transformer.CRASP.Conjunctions
-import Transformer.CRASP.Transformers
-import Transformer.CRASP.FiniteAlphabet
-import Transformer.CRASP.Parity
-import Transformer.CRASP.ParityTwoSided
-import Transformer.CRASP.SecondLast
-import Transformer.CRASP.AlignedRecall
-import Transformer.CRASP.QueryFree
-import Transformer.CRASP.QueryFreeRecall
-import Transformer.CRASP.MatchingRecall
-import Transformer.CRASP.MatchingRecallSums
-import Transformer.CRASP.MatchingRecallAnswers
-import Transformer.CRASP.RecallSeparation
-import Transformer.CRASP.LatestRecall
-import Transformer.CRASP.FiniteFunction
-import Transformer.CRASP.ConstantLayer
-import Transformer.CRASP.Collapse
-import Transformer.CRASP.MajTwo
-import Transformer.CRASP.MajTwoDepthOne
-import Transformer.CRASP.MajTwoCount
-import Transformer.CRASP.MajTwoOfTLC
-import Transformer.CRASP.MajTwoEquiv
-import Transformer.CRASP.MajTwoHierarchy
-import Transformer.CRASP.Positional
-import Transformer.CRASP.PositionalEmbedding
-import Transformer.CRASP.PositionalTransformers
-import Transformer.CRASP.YNormalForm
-import Transformer.CRASP.YNormalFormEquiv
-import Transformer.CRASP.Spread
-import Transformer.CRASP.PositionalReductionAtom
-import Transformer.CRASP.PositionalReduction
-import Transformer.CRASP.PositionalReductionAtomEquiv
-import Transformer.CRASP.PositionalReductionCount
-import Transformer.CRASP.PositionalReductionEquiv
-import Transformer.CRASP.PositionalDepth
-import Transformer.CRASP.PositionalHierarchy
-import Transformer.CRASP.EncodingHierarchy
+@[expose] public section

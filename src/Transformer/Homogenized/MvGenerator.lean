@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.MeanField
+public import Mathlib.Probability.Martingale.Basic
+
+/-!
 # Homogenized Transformers — the generator of one token
 
 The vocabulary in which §4 of arXiv:2604.01978v1, *Homogenized Transformers*,
@@ -11,8 +16,7 @@ Also the trivial head `ρ* = δ_0`, at which every one of these fields vanishes:
 it is the witness that the solution concepts built on them are satisfiable.
 -/
 
-import Transformer.Homogenized.MeanField
-import Mathlib.Probability.Martingale.Basic
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -28,7 +32,7 @@ Mathlib's `MeasureTheory.Martingale` asks for the martingale property at every
 pair of times of the index type — all of `ℝ` here, negative times included —
 which a process given on `[0,T]` cannot supply; and it leaves integrability
 out, whereas `condExp` of a non-integrable function is `0`, so without it the
-condition below would not say what a martingale is.  Both are spelled out. -/
+condition below would not say what a martingale is. Both are spelled out. -/
 def IsMartingaleOn {Ω : Type*} {m : MeasurableSpace Ω} (T : ℝ) (ℱ : Filtration ℝ m)
     (P : Measure Ω) (M : ℝ → Ω → ℝ) : Prop :=
   (∀ t ∈ Set.Icc (0 : ℝ) T, StronglyMeasurable[ℱ t] (M t)) ∧

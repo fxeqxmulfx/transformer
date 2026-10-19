@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdCeiling
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainReferenceBalance
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdCeiling
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainReferenceBalance
 
 /-!
 # Necessary finite native limits at and above the cold threshold
@@ -34,6 +36,8 @@ appendix C's assigned coupled norm-cost GD. Learned stochastic/numerical
 GPTMini, stable weak-decay rule selection and thermodynamic size scaling
 are separate; no optimizer, buffer or experiment is changed.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

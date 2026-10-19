@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section5_CircleGeometry
+public import Transformer.Causal.InteractionPeak
+
+/-!
 # Actual vector interaction decays beyond the circle peak
 
 ArXiv:2411.04990v2, §5, `lemma:meta`, `eq:c`, and `eq:bddotphi`;
@@ -15,8 +20,7 @@ beyond the peak bounds the weighted vector interaction by the source's
 `h(r)`. This transfers the angular bound to the actual spherical equation.
 -/
 
-import Transformer.Causal.Section5_CircleGeometry
-import Transformer.Causal.InteractionPeak
+@[expose] public section
 
 open Real
 

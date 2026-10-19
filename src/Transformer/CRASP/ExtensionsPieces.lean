@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Basic
+
+/-!
 # Eliminating the sugar of Appendix A.3: terms as guarded pieces
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -6,19 +10,19 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 `thm:strict`.
 
 The rewriting rules of the appendix, `◁#_<[φ] ≡ ◁#[φ] − (φ ? 1 : 0)` and its
-mirror images, subtract; the plain syntax cannot.  So an extended term is
+mirror images, subtract; the plain syntax cannot. So an extended term is
 represented by *guarded pieces* `(g, p, k)`: some guard holds at every position,
 and wherever `g` holds the term plus `k` equals the plain term `p`
-(`Covers`).  A comparison of two represented terms is then a disjunction over
+(`Covers`). A comparison of two represented terms is then a disjunction over
 pairs of pieces of `g₁ ∧ g₂ ∧ p₁ + k₂ < p₂ + k₁` (`ltPieces`), and `?` and `+`
-combine pieces (`condPieces`, `addPieces`).  None of it adds depth.
+combine pieces (`condPieces`, `addPieces`). None of it adds depth.
 
 One caveat the rules hide: at position `0`, where the empty word is judged,
 `◁#_<[φ]` is `0` and not `◁#[φ] − (φ ? 1 : 0)`; the pieces of `◁#_<` guard
 against it with `pos`.
 -/
 
-import Transformer.CRASP.Basic
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

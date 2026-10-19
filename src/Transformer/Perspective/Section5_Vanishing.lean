@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.MeasureTheory.Integral.IntegralEqImproper
+public import Mathlib.MeasureTheory.Integral.ExpDecay
+
+/-!
 # A mathematical perspective on Transformers — §5, the vanishing-of-integrand
 lemma
 
@@ -12,10 +19,7 @@ right of `t`, so the tail `∫_t^∞ |f|` is at least `ε²/(4C)` — and the ta
 convergent integral goes to zero.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-import Mathlib.MeasureTheory.Integral.ExpDecay
+@[expose] public section
 
 open Real MeasureTheory
 

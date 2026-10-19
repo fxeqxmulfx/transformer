@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianQueryThird
+
+/-!
 # Actual Gaussian score and full Taylor-deviation cubic moments
 
 ArXiv:2604.01978v1, §7.3, `lem:delta_method`, the third-order
@@ -18,7 +22,7 @@ All statements concern one original Gaussian matrix factor. They
 provide the actual remainder input needed before composing two factors.
 -/
 
-import Transformer.Homogenized.Section7_GaussianQueryThird
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

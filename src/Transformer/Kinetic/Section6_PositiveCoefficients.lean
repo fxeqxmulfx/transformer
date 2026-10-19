@@ -1,18 +1,22 @@
-/-
+module
+
+public import Transformer.Kinetic.Defs
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.Analysis.SpecialFunctions.Exponential
+
+/-!
 # Kinetic theory for Transformers — the eigenvalues `a_n` are positive
 
 The proof of `thm:U-shape` of arXiv:2605.09213v1 takes every `c_n = a_n t` positive: its
 convexity step assumes `0 < c ≤ 3 - √3`, and its slope step asks `h_c'(0) < 0` of every mode.
 For `β > 0` and `n ≥ 1` it is so: `ŵ_β(n) > 0` (`wHat_pos`), whence `a_n = n² ŵ_β(n) > 0`
-(`aCoeff_pos`).  Expanding `e^{β cos θ} = Σ_k β^k cos^k θ / k!`, the coefficient is a series of
+(`aCoeff_pos`). Expanding `e^{β cos θ} = Σ_k β^k cos^k θ / k!`, the coefficient is a series of
 the integrals `∫₀^{2π} cos(mθ) cos^k θ dθ`; these are nonnegative, by the product formula
 `2 cos(mθ) cos θ = cos((m+1)θ) + cos((m-1)θ)` and induction on `k`, and the one at `m = k` is
 positive.
 -/
 
-import Transformer.Kinetic.Defs
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.Analysis.SpecialFunctions.Exponential
+@[expose] public section
 
 open scoped BigOperators
 open Real

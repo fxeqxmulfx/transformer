@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section3_Attention
+
+/-!
 # IC-EoT: embedding, residual blocks and readout
 
 arXiv:2603.22095v2, §3.2, Eqs. (13), (14), (23)–(27).
@@ -6,7 +10,7 @@ All weight matrices, biases, activations and positional encodings are
 actual parameters. The encoder depth is the length of the block list.
 -/
 
-import Transformer.ICEoT.Section3_Attention
+@[expose] public section
 
 noncomputable section
 

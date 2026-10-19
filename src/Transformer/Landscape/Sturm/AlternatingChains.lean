@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.EuclideanSigns
+
+/-!
 # Alternating chains for signed real-root queries
 
 These conditions omit the positive head crossing needed for unsigned
@@ -6,7 +10,7 @@ Sturm counts. Auxiliary for Appendix D.1, `lem: loj`, of
 arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.EuclideanSigns
+@[expose] public section
 
 noncomputable section
 open Polynomial

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.RASPL.Restrict
+
+/-!
 # Degree profiles, and what restricting a coordinate does to one
 
 Zhou et al. — arXiv:2310.16028v1, "What Algorithms can Transformers Learn?",
@@ -7,19 +11,19 @@ Zhou et al. — arXiv:2310.16028v1, "What Algorithms can Transformers Learn?",
 The degree profile of a boolean function is "the tuple of its Fourier weights
 at each level, with the natural total ordering which refines the standard
 polynomial degree" (footnote to §4.1, following Abbe, Boix-Adserà,
-Misiakiewicz).  The ordering that refines polynomial degree is the
+Misiakiewicz). The ordering that refines polynomial degree is the
 lexicographic one read from the top level down: a function is smaller when,
-at the highest level where the two differ, it carries less weight.  That is
+at the highest level where the two differ, it carries less weight. That is
 `DegPLt` below, written out rather than routed through a lexicographic order
 on tuples, which is the same thing and less readable.
 
 `degP_restrict_lt` is Lemma E.1 ("Technical Lemma"): restricting a coordinate
-the function actually depends on strictly reduces the degree profile.  The
+the function actually depends on strictly reduces the degree profile. The
 paper's proof is a sketch; the level that witnesses the drop is the top level
 carrying weight on that coordinate, and above it nothing changes at all.
 -/
 
-import Transformer.RASPL.Restrict
+@[expose] public section
 
 namespace Transformer
 namespace RASPL
@@ -31,13 +35,13 @@ noncomputable def levelWeight (f : Cube n → ℝ) (k : ℕ) : ℝ :=
   ∑ S ∈ Finset.univ.filter (fun S : Finset (Fin n) => S.card = k), coeff f S ^ 2
 
 /-- `DegP g < DegP f`: at the highest level at which their weights differ,
-`g` carries less.  This is the lexicographic order on the weight tuple read
+`g` carries less. This is the lexicographic order on the weight tuple read
 from the top level down. -/
 def DegPLt (g f : Cube n → ℝ) : Prop :=
   ∃ d : ℕ, levelWeight g d < levelWeight f d ∧
     ∀ k, d < k → levelWeight g k = levelWeight f k
 
-/-- `f` depends on coordinate `i`: flipping it changes some value.  This is
+/-- `f` depends on coordinate `i`: flipping it changes some value. This is
 the hypothesis "`∃ z : f(1 ∘ z) ≠ f(-1 ∘ z)`" of Lemma E.1. -/
 def DependsOn (f : Cube n → ℝ) (i : Fin n) : Prop :=
   ∃ x : Cube n, f (Function.update x i false) ≠ f (Function.update x i true)

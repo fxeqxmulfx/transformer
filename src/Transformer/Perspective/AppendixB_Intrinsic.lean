@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixB_Expansion
+public import Transformer.Perspective.PeanoTaylor
+
+/-!
 # Appendix B — the Hessian at a critical point is intrinsic
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -15,8 +20,7 @@ written in the velocity alone, against the uniqueness of a Peano expansion,
 `Perspective.eq_zero_of_isLittleO_pow`.
 -/
 
-import Transformer.Perspective.AppendixB_Expansion
-import Transformer.Perspective.PeanoTaylor
+@[expose] public section
 
 open scoped BigOperators
 open Real Asymptotics Filter
@@ -32,7 +36,7 @@ velocity `v`, at a critical point `X`:
   `(2β)⁻¹ [ β (Σ_{i,j} K_{ij} ⟨v_i, v_j⟩ - Σ_i λ_i ‖v_i‖²)
             + Σ_{i,j} K_{ij} β² (⟨x_i, v_j⟩ + ⟨v_i, x_j⟩)² / 2 ]`,
 
-with `K_{ij} = e^{β⟨x_i,x_j⟩}` and `λ_i = ⟨x_i, Σ_j K_{ij} x_j⟩`.  It is half
+with `K_{ij} = e^{β⟨x_i,x_j⟩}` and `λ_i = ⟨x_i, Σ_j K_{ij} x_j⟩`. It is half
 the Riemannian Hessian `Hess 𝖤_β(X)[v, v]`.
 
 Source: arXiv:2312.10794v5, Appendix B, `e:Hessianincoord`. -/
@@ -55,7 +59,7 @@ noncomputable def hessQuad (β : ℝ) (X : SphereTuple d n) (v : Idx n → EucSp
 
   `𝖤_β(Y t) = 𝖤_β(X) + hessQuad(X, v) t² + o(t²)`
 
-for every curve `Y` through the critical point `X` with velocity `v`.  The
+for every curve `Y` through the critical point `X` with velocity `v`. The
 first-order term is absent — that is criticality — and the second-order one
 depends on `Y` only through `v`.
 

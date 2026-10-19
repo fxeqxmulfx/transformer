@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.IncidentMemoryFeasibility
+module
+
+public import Transformer.GPTMini.Sparsemax.IncidentMemoryFeasibility
 
 /-!
 # Three periodic key coordinates with size-independent norm bounds
@@ -13,6 +15,8 @@ neighbours, not learned edge weights or actual sparse supports. Subsequent
 queries reproduce every feasible path attention with width three. Both Q
 and K depend on learned geometry, without independent norm gauge variables.
 -/
+
+@[expose] public section
 
 noncomputable section
 

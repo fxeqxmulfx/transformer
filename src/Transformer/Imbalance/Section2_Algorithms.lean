@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_Quadratic
+
+/-!
 # Algorithms used in the ablations
 
 arXiv:2402.19449v2, Section 2.3 and Appendix A.6.
@@ -7,7 +11,7 @@ directions. The article's Adam comparisons are empirical; its numbered
 theorems analyze gradient flow and ordinary sign descent.
 -/
 
-import Transformer.Imbalance.Section3_Quadratic
+@[expose] public section
 
 noncomputable section
 

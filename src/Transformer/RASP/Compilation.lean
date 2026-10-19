@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.RASP.Programs
+
+/-!
 # RASP: compiling a program to layers and heads
 
 Weiss, Goldberg, Yahav — arXiv:2106.06981v2, "Thinking Like Transformers",
@@ -6,19 +10,19 @@ Weiss, Goldberg, Yahav — arXiv:2106.06981v2, "Thinking Like Transformers",
 
 The abstract's central claim is that "analyzing a RASP program implies a
 maximum number of heads and layers necessary to encode a task in a
-transformer".  That needs the *syntax* of a program and not only its value,
+transformer". That needs the *syntax* of a program and not only its value,
 so this file adds one: an `Expr` is a RASP s-op as written, and `Expr.eval`
 gives it the semantics of `RASP.Defs`.
 
 §3.1 states the compilation rule:
 
 > Each aggregation is an attention head, which must be placed at a layer
-> later than all of its inputs.  Elementwise operations are feedforward
+> later than all of its inputs. Elementwise operations are feedforward
 > operations, and sit in the earliest layer containing all of their
 > dependencies.
 
 `Expr.heads` and `Expr.layers` are that rule read as two counts, and
-`layers_lt_agg_*` is the "later than all of its inputs" half of it.  The
+`layers_lt_agg_*` is the "later than all of its inputs" half of it. The
 counts are upper bounds rather than exact costs, because §3.1 also notes that
 "aggregations performed at the same layer with the same selector can be
 merged into the same attention head".
@@ -32,12 +36,12 @@ keeps the syntax a single inductive type.
 §4 draws a consequence of the layer count that is a theorem about programs
 and not about transformers: "in RASP, there is little value to repeated
 elementwise operations before the first `aggregate`: each position has only
-its initial input, and cannot generate new information".  That is
+its initial input, and cannot generate new information". That is
 `eval_eq_of_heads_eq_zero`, and `not_reverse_of_heads_eq_zero` is the sharp
 form — the smallest program of §3 that no head-free program computes.
 -/
 
-import Transformer.RASP.Programs
+@[expose] public section
 
 namespace Transformer
 namespace RASP
@@ -76,7 +80,7 @@ noncomputable def eval {n : ℕ} (x : Seq n ℝ) : Expr → Seq n ℝ
       aggregate (fun i j => φ fun a => p a (eval x (k a) j) (eval x (q a) i)) (eval x v) 0
 
 /-- The number of attention heads the program compiles to: one per
-aggregation (§3.1).  An upper bound, since aggregations sharing a layer and a
+aggregation (§3.1). An upper bound, since aggregations sharing a layer and a
 selector may be merged. -/
 def heads : Expr → ℕ
   | .tokens | .indices | .const _ => 0
@@ -163,11 +167,11 @@ theorem not_reverse_of_heads_eq_zero (e : Expr) (h : e.heads = 0) :
   norm_num at hx
 
 /-- The counts are not vacuous, and they reproduce the paper's own reading of
-`reverse`.  Figure 11's caption: "This compiles to an architecture with two
+`reverse`. Figure 11's caption: "This compiles to an architecture with two
 layers: `length` requires an attention head to compute, and `reverse` applies
 a select-aggregate pair that uses (among others) the s-op `length`."  Written
 out — with `length` as the program §3.1 gives for it — that is exactly two
-heads and two layers.  The elementwise program below it has none, so the
+heads and two layers. The elementwise program below it has none, so the
 hypothesis `heads = 0` is satisfiable too. -/
 example :
     let lengthProg : Expr :=

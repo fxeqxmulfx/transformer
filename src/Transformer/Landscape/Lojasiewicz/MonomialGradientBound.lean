@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.CoordinateMonomial
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+/-!
 # Bounds for a monomial times a nonvanishing unit
 
 The directional derivative and the smallest active coordinate give the
 power estimate needed by Appendix D.1 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.CoordinateMonomial
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators

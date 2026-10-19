@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_BoundedXNCore
+
+/-!
 # The emergence of clusters in self-attention dynamics — `l:boundedxn`, the barrier
 
 The heart of point (3) of the proof of `l:boundedxn` (§7 of
 arXiv:2305.05465v6), on the scalar curves of `e:Idnonresca`: when the largest
 token `x_N` is bounded and the next one `x_J` runs off like `-c e^t`,
 `e:convdeladiff` holds, `x_N (x_N - x_J) → +∞`
-(`tendsto_mul_sub_of_bounded`).  Once `x_N (x_N - x_J) ≤ κ` at a large time,
+(`tendsto_mul_sub_of_bounded`). Once `x_N (x_N - x_J) ≤ κ` at a large time,
 `e:epsxjxn` makes it decrease at speed at least `2` for good, which drives the
 nonnegative quantity below `0`.
 
@@ -15,7 +19,7 @@ Plugged into the weights, every `P_Nk`, `k ≠ N`, tends to `0`
 Source: arXiv:2305.05465v6, proof of `l:boundedxn`, point (3).
 -/
 
-import Transformer.Clusters.Section7_BoundedXNCore
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

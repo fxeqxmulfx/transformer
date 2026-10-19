@@ -1,4 +1,6 @@
-import Transformer.Modes.Section5_PhaseRoots
+module
+
+public import Transformer.Modes.Section5_PhaseRoots
 
 /-!
 # The shifted Gaussian amplitude in the Fourier integral
@@ -26,6 +28,8 @@ square root of `gaussianPhaseFloor β (|m| + 1)`. Their exponential rates
 leave a summable Gaussian precisely when `β < 2`.
 Source: arXiv:2412.09080v3, §5.5, proof of `eq:uniform-decay`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 open scoped Interval

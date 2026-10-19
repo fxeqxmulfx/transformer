@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.CRASP.NeutralLetter
+public import Transformer.CRASP.PositionalEmbedding
+public import Transformer.CRASP.PositionalReductionEquiv
+
+/-!
 # `TL[◁#]^pos`: reduction to `TL[◁#]`, and the depth hierarchy
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -8,14 +14,12 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 The reduction pulls a `TL[◁#]^pos_k` formula over `Σ ∪ {e}` back along the
 string map `w ↦ e^r w₁ e^{r−1} ⋯ wₙ e^{r−1}` to a plain `TL[◁#]_k` formula
 over `Σ`: the `Y`-normal form of `Transformer.CRASP.YNormalFormEquiv`, put through
-the translation of `Transformer.CRASP.PositionalReductionEquiv`.  This turns the
+the translation of `Transformer.CRASP.PositionalReductionEquiv`. This turns the
 hierarchy of `thm:TLCl_depth` into a hierarchy for `TL[◁#]^pos` with the
 separating language `E_{k+1}`.
 -/
 
-import Transformer.CRASP.NeutralLetter
-import Transformer.CRASP.PositionalEmbedding
-import Transformer.CRASP.PositionalReductionEquiv
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -30,7 +34,7 @@ variable {σ : Type u} [DecidableEq σ]
 
 As in the paper, the formula is `T_r⟦ψ⟧` for the `Y`-normal form `ψ` of `φ`.
 The paper's `r = M(Y+1)`, for `M` the lcm of the moduli and `Y` the `Y`-depth,
-is too small once `w = ε` (`tr_paperBlockSize_unsound`).  Here
+is too small once `w = ε` (`tr_paperBlockSize_unsound`). Here
 `r = period ψ · (reach ψ + 1)`: a multiple of every modulus, as `M(Y+1)` is,
 and at least `reach ψ`, which exceeds every `Y`-nesting by two. -/
 theorem exists_form_of_formP (k : ℕ) (φ : FormP (Option σ)) (hφ : φ ∈ TLClPos (Option σ) k) :
@@ -62,10 +66,10 @@ reduce along `spread` to a `TL[◁#]_k` definition of `A_{k+1}`, contradicting
 
 The negative half is proved in those words: `spread` is a section of
 `List.reduceOption`, so pulling `E_{k+1}` back along it gives `A_{k+1}` on the
-nose.  The proof in the paper starts from `φ ∈ TL[◁#]^pos_{k+1}`, which has to
+nose. The proof in the paper starts from `φ ∈ TL[◁#]^pos_{k+1}`, which has to
 read `TL[◁#]^pos_k` for the reduction to land in `TL[◁#]_k`.
 
-The paper does not argue the positive half.  It holds without `MOD` and `Y`:
+The paper does not argue the positive half. It holds without `MOD` and `Y`:
 `E_{k+1}` is `(k+1)`-piecewise testable because `A_{k+1}` is and a neutral
 letter does not change that, `lem:piecewise_testable_depth` puts it in
 `TL[◁#]_{k+1}`, and `TL[◁#]` sits inside `TL[◁#]^pos`.

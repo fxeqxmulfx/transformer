@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_AttentionRegularity
+public import Transformer.Landscape.GlobalFlow.TimeDependent
+
+/-!
 # A bounded spatial extension of the original attention field
 
 Auxiliary for arXiv:2411.04551v3, §1, the characteristics of `eq: vf`,
@@ -9,8 +14,7 @@ field is bounded and globally Lipschitz, uniformly over all laws. Its
 restriction to the original sphere is exactly the manuscript's field.
 -/
 
-import Transformer.Interpolation.Section2_AttentionRegularity
-import Transformer.Landscape.GlobalFlow.TimeDependent
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology NNReal

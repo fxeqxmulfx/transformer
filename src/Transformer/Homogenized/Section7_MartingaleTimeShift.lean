@@ -1,5 +1,7 @@
-import Transformer.Homogenized.Section7_WeightedExpectation
-import Mathlib.Analysis.Calculus.Deriv.Shift
+module
+
+public import Transformer.Homogenized.Section7_WeightedExpectation
+public import Mathlib.Analysis.Calculus.Deriv.Shift
 
 /-!
 # Moving the compensated martingale to an actual subinterval
@@ -17,6 +19,8 @@ is exactly the original integral between s and s+u. The proof
 uses this equality rather than assuming a new martingale law
 on every subinterval.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory
 namespace Transformer.Homogenized

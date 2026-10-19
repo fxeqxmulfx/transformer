@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.AnalyticFiberPolynomialValues
+public import Transformer.Landscape.Lojasiewicz.GradientEnergyImage
+
+/-!
 # Polynomial formulas for all local analytic fiber minima
 
 Real analytic division retains a finite constraint family and an arbitrary
@@ -7,8 +12,7 @@ box, the universal minimum comparison is therefore an exact polynomial
 formula in the distinguished variable. No base curve is supplied.
 -/
 
-import Transformer.Landscape.Lojasiewicz.AnalyticFiberPolynomialValues
-import Transformer.Landscape.Lojasiewicz.GradientEnergyImage
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

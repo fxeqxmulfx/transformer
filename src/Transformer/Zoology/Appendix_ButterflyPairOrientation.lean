@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ExpandedKaleidoscopeGrid
+
+/-!
 # Orientation of a binary butterfly pair
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: butterfly`.
@@ -6,7 +10,7 @@ The partner exchanges upper and lower halves; choosing the upper endpoint
 therefore gives a canonical index shared by both coordinates of a pair.
 -/
 
-import Transformer.Zoology.Appendix_ExpandedKaleidoscopeGrid
+@[expose] public section
 
 namespace Transformer.Zoology
 

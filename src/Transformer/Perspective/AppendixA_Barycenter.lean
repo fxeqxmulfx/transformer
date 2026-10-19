@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_CriticalShape
+
+/-!
 # Appendix A — the barycentre along gradient ascent
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*, Appendix A.
 
 `𝖤_0` is `‖s‖² / n` for the barycentre `s = Σ_j x_j`, and it increases along
-`e:gradfl`, so `‖s‖` never shrinks.  This file draws from that the two cases of
+`e:gradfl`, so `‖s‖` never shrinks. This file draws from that the two cases of
 `l:nosaddleconv` that need no stable-manifold argument:
 
 * a trajectory converging to a configuration with `s = 0` had `s = 0` from the
@@ -17,7 +21,7 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
   positive, so `D` can tend to `0` only if it vanishes.
 -/
 
-import Transformer.Perspective.AppendixA_CriticalShape
+@[expose] public section
 
 open scoped BigOperators Topology
 open Real Filter Set

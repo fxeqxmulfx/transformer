@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallNormalizedInputs
+module
+
+public import Transformer.GPTMini.Semantics.RecallNormalizedInputs
 
 /-!
 # Scores of the genuine raw matching head remain close to rotary references
@@ -16,6 +18,8 @@ introducing a factor 1/epsilon. A true raw query also has zero own
 value and zero matching key. Latest-write comparison and full raw
 parser coupling remain separate obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Magma.Section5_FiniteLaw
+
+/-!
 # A valid replacement for the momentum-based descent-efficiency lemma
 
 Correction of arXiv:2602.15322v1, Section 5, sup_lem:descent_lower_bound,
@@ -7,7 +11,7 @@ The estimate permits dependence on the stochastic sample and does not
 pretend that momentum alignment is alignment with the objective gradient.
 -/
 
-import Transformer.Magma.Section5_FiniteLaw
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 

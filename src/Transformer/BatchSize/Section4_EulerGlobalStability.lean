@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerStability
+
+/-!
 # Stability over finite horizons, uniformly in Euler resolution
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The constants depend on the model and dimension, not the number of grid
 steps. For optimizer coefficients they can also be independent of eta in [0,1].
 -/
 
-import Transformer.BatchSize.Section4_EulerStability
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal

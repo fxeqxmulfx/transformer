@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.ALM.Defs
+
+/-!
 # Exact keyed lookup, in arbitrary key dimension
 
-Basic API for `Transformer.ALM.score`.  Two facts carry the construction:
+Basic API for `Transformer.ALM.score`. Two facts carry the construction:
 
 * `score_gap` / `score_lt_of_ne` — the score is *uniquely* maximized at
-  `k = q`, with an exact deficiency `‖k - q‖²`.  This is the hard-max
+  `k = q`, with an exact deficiency `‖k - q‖²`. This is the hard-max
   statement, and it holds in every key dimension; the blog states the
   generalization to dimension `3` only, as a remark about convex-hull
   efficiency.
@@ -15,7 +19,7 @@ Basic API for `Transformer.ALM.score`.  Two facts carry the construction:
 The softmax counterpart is `Transformer.ALM.Softmax`.
 -/
 
-import Transformer.ALM.Defs
+@[expose] public section
 
 open scoped BigOperators
 

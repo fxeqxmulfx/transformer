@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.Homogenized.Section4_WellPosedRefutation
+
+/-!
 # Homogenized Transformers — the formal weak solution is not the conditional law
 
 `thm:PoC_wellposedness` of arXiv:2604.01978v1 makes the conditional law `μ` of
-the McKean–Vlasov solution the unique weak solution of `eq: the.spde`.  Its
+the McKean–Vlasov solution the unique weak solution of `eq: the.spde`. Its
 uniqueness half — every weak solution starting at `μ_0` has the law of `μ` — is
 false for the formal solution concepts, on the data of
-`Section4_WellPosedRefutation`.  Under the trivial head `ρ* = δ_0` the
+`Section4_WellPosedRefutation`. Under the trivial head `ρ* = δ_0` the
 compensated process of a weak solution has no noise to follow, and a law at
 rest solves `def:weak_spde` for every filtration
 (`isWeakSpdeSolution_dirac_zero_const`); the revealing `μ` jumps at `0+`
@@ -17,7 +21,7 @@ filtration of a noise independent of `x_0`, and then `μ(t) = Law(x_0) = μ_0`.
 Source: arXiv:2604.01978v1, §4.
 -/
 
-import Transformer.Homogenized.Section4_WellPosedRefutation
+@[expose] public section
 
 open scoped NNReal
 open MeasureTheory
@@ -58,15 +62,15 @@ under `ass:high_order_short`, for every `μ_0 ∈ 𝒫(𝕊^{d-1})` the formal
 `def:nonlinear_SDE_common` has a solution, and for every solution `(x, μ)` and
 every weak solution `μ'` of the formal `def:weak_spde` with `μ'(0) = μ_0`, the
 processes `μ` and `μ'` have the same finite-dimensional distributions on
-`[0,T]` (`SameFdd`).  The source: "there exists a unique solution `(x,μ)` …
+`[0,T]` (`SameFdd`). The source: "there exists a unique solution `(x,μ)` …
 Moreover, `μ` is the unique weak solution to `eq: the.spde`".
 
 The data: `d = 1`, `ρ* = δ_0` (`σ_V = σ_A = 0`), `β = 0`, `T = 1`, the fair
 coin `x_0 = ±e_0` with the revealing filtration, which gives the solution
 `μ(t) = δ_{x_0}` for `t > 0` (`isMcKeanVlasovSolution_reveal`), and the weak
 solution `μ' = μ_0` at rest for the same filtration
-(`isWeakSpdeSolution_dirac_zero_const`).  The functional `1{ν{e_0} = 1}` of the
-law at time `1` has mean `½` under `μ` and `0` under `μ'`.  The existence half
+(`isWeakSpdeSolution_dirac_zero_const`). The functional `1{ν{e_0} = 1}` of the
+law at time `1` has mean `½` under `μ` and `0` under `μ'`. The existence half
 alone is `exists_mckeanVlasovSolution`.
 
 Source: arXiv:2604.01978v1, `thm:PoC_wellposedness`, `def:weak_spde`,

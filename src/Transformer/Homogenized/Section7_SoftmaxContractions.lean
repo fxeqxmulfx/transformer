@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_SoftmaxSummedHessian
+
+/-!
 # Normalized softmax matrix and derivative contractions
 
 ArXiv:2604.01978v1, §7, `eq:estimate_bound_h`,
@@ -15,7 +19,7 @@ weights are never moved outside an expectation. The last estimate is
 the direct change of the original Gram coefficients at fixed scores.
 -/
 
-import Transformer.Homogenized.Section7_SoftmaxSummedHessian
+@[expose] public section
 
 open Real
 open scoped BigOperators

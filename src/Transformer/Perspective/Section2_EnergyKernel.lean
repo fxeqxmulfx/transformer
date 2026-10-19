@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.Section2_FlowMap
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+
+/-!
 # §3.2 — The kernel `exp(β⟨x,y⟩)` and the partition function on the sphere
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -8,15 +13,14 @@ The analytic groundwork under `eq: interaction.energy` and
 `prop: existence.uniqueness.energy`: the kernel of `eq: partition.function`
 is continuous in each argument and bounded by `e^β` on the sphere, because
 `⟨x, x'⟩ ≤ 1` there — with equality exactly at `x = x'`, which is the fact
-the maximiser half of `prop: existence.uniqueness.energy` turns on.  Hence
+the maximiser half of `prop: existence.uniqueness.energy` turns on. Hence
 `Z_{β,μ}` of `eq: partition.function` is itself continuous and bounded on the
 sphere, so integrable against any probability measure on it.
 
 Used by `Perspective.Section2_EnergyMax`.
 -/
 
-import Transformer.Perspective.Section2_FlowMap
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
+@[expose] public section
 
 open Real MeasureTheory
 

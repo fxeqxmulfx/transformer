@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section2_MomentsP
+
+/-!
 # The number of modes of a Gaussian KDE — the Gaussian proxy of `p_t`
 
 §2.2 of arXiv:2412.09080v3, `eq:Yi`, `eq:qt`, `eq:approx` and the first half of
@@ -9,28 +13,28 @@ completed.
 **What the source says and what is carried here.**
 
 * The source writes the proxy as `(det Σ_t)^{-1/2} φ(Σ_t^{-1/2}[(0,y) - μ_t])`,
-  `φ` the standard normal density on `ℝ²`.  Since
+  `φ` the standard normal density on `ℝ²`. Since
   `‖Σ^{-1/2} z‖² = zᵀ Σ⁻¹ z`, no matrix square root is needed: for
   `Σ = [[a, b], [b, d]]` with `D = ad - b²`,
-  `zᵀ Σ⁻¹ z = (d z₁² - 2b z₁z₂ + a z₂²)/D`.  That is `krQuad`, and
+  `zᵀ Σ⁻¹ z = (d z₁² - 2b z₁z₂ + a z₂²)/D`. That is `krQuad`, and
   `krPhi = φ(Σ_t^{-1/2}[(x,y) - μ_t])`.
 
 * `eq:Yi` and `eq:qt` define the standardized vector `Y` and its density `q_t`,
   and `eq:approx` is the informal `q_t ≈ φ`; the source makes it precise only
   as `eq:error-goal` of §3, where it is carried.
 
-* The proof of `lem:phi-t` completes the square in `y`.  Done exactly, it
+* The proof of `lem:phi-t` completes the square in `y`. Done exactly, it
   gives `zᵀΣ⁻¹z = A + α(y - δ)²` at `z = (-μ₁, y - μ₂)`, with
   `A = μ₁²/a`, `α = a/D`, `δ = μ₂ - bμ₁/a`: `quadForm_complete_square`, proved
-  for every symmetric `Σ` with `a ≠ 0`, `D ≠ 0`.  `phiA`, `phiAlpha` and
-  `phiDelta` are these three for `Σ_t`, `μ_t`.  The asymptotics the source
+  for every symmetric `Σ` with `a ≠ 0`, `D ≠ 0`. `phiA`, `phiAlpha` and
+  `phiDelta` are these three for `Σ_t`, `μ_t`. The asymptotics the source
   gives them, with their corrections, are in `Section2_PhiTAsymp.lean` and
   `Section2_PhiTDelta.lean`.
 
 Source: arXiv:2412.09080v3, `eq:Yi`, `eq:qt`, `eq:approx`, `lem:phi-t`.
 -/
 
-import Transformer.Modes.Section2_MomentsP
+@[expose] public section
 
 open Real
 
@@ -39,19 +43,19 @@ namespace Modes
 
 /-! ### `μ_t` and `Σ_t` -/
 
-/-- `μ_{t,1} = √n E G(t)`.  Source: arXiv:2412.09080v3, `eq:moments-p`. -/
+/-- `μ_{t,1} = √n E G(t)`. Source: arXiv:2412.09080v3, `eq:moments-p`. -/
 noncomputable def muFst (n : ℕ) (β t : ℝ) : ℝ := Real.sqrt n * meanG β t
 
-/-- `μ_{t,2} = √n E G'(t)`.  Source: arXiv:2412.09080v3, `eq:moments-p`. -/
+/-- `μ_{t,2} = √n E G'(t)`. Source: arXiv:2412.09080v3, `eq:moments-p`. -/
 noncomputable def muSnd (n : ℕ) (β t : ℝ) : ℝ := Real.sqrt n * meanG' β t
 
-/-- `Σ_{t,11} = Var G(t)`.  Source: arXiv:2412.09080v3, `eq:moments-p`. -/
+/-- `Σ_{t,11} = Var G(t)`. Source: arXiv:2412.09080v3, `eq:moments-p`. -/
 noncomputable def sigmaFst (β t : ℝ) : ℝ := sqMeanG β t - meanG β t ^ 2
 
-/-- `Σ_{t,12} = Cov(G(t), G'(t))`.  Source: arXiv:2412.09080v3, `eq:moments-p`. -/
+/-- `Σ_{t,12} = Cov(G(t), G'(t))`. Source: arXiv:2412.09080v3, `eq:moments-p`. -/
 noncomputable def sigmaCov (β t : ℝ) : ℝ := mulMeanGG' β t - meanG β t * meanG' β t
 
-/-- `Σ_{t,22} = Var G'(t)`.  Source: arXiv:2412.09080v3, `eq:moments-p`. -/
+/-- `Σ_{t,22} = Var G'(t)`. Source: arXiv:2412.09080v3, `eq:moments-p`. -/
 noncomputable def sigmaSnd (β t : ℝ) : ℝ := sqMeanG' β t - meanG' β t ^ 2
 
 /-- `det Σ_t`. -/
@@ -107,7 +111,7 @@ noncomputable def phiDelta (n : ℕ) (β t : ℝ) : ℝ :=
 
 /-- **Lemma (lem:phi-t), first display, exactly.**
 `‖Σ_t^{-1/2}[(0, y) - μ_t]‖² = A_t + α_t(y - δ_t)²`, whenever `Σ_{t,11} ≠ 0`
-and `det Σ_t ≠ 0`.  The source writes `~`, with `A_t, α_t, δ_t` known only up
+and `det Σ_t ≠ 0`. The source writes `~`, with `A_t, α_t, δ_t` known only up
 to constants; with the exact coefficients it is an identity.
 
 Source: arXiv:2412.09080v3, `lem:phi-t`, `eq:phi-t`. -/

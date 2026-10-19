@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.AMSGrad.Section4_TrainingGradientBound
+public import Mathlib.Topology.Algebra.InfiniteSum.Real
+public import Mathlib.Topology.Algebra.InfiniteSum.NatInt
+
+/-!
 # AMSGrad — summable displacement energy and vanishing velocities
 
 Training extension of arXiv:1904.03590v4, Algorithm 1 and §4.
@@ -7,9 +13,7 @@ bound on the fixed objective suffices; boundedness of the weights is
 not assumed, and no inverse-root iteration limit is involved.
 -/
 
-import Transformer.AMSGrad.Section4_TrainingGradientBound
-import Mathlib.Topology.Algebra.InfiniteSum.Real
-import Mathlib.Topology.Algebra.InfiniteSum.NatInt
+@[expose] public section
 
 open scoped BigOperators Topology
 open Filter

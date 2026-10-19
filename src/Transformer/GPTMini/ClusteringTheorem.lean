@@ -1,4 +1,14 @@
-/-
+module
+
+public import Transformer.GPTMini.Bridge
+public import Transformer.GPTMini.Model
+public import Transformer.Perspective.Section5_HighD
+public import Transformer.Causal.MainTheorem
+public import Transformer.Normalization.Convergence
+public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+public import Mathlib.MeasureTheory.Constructions.Pi
+
+/-!
 # Clustering of `gpt-mini` representations
 
 The capstone statement of the development:
@@ -19,15 +29,15 @@ The chain of bridges that is supposed to prove it:
   7. `Normalization.Convergence`  — Pre-LN clustering.
 
 Neither of the two statements below is proved here, and each rests on
-`sorry`-leaves of the papers it composes.  Three things are worth reading off
+`sorry`-leaves of the papers it composes. Three things are worth reading off
 them before they are used.
 
 *The layer dynamics are the Pre-LN residual recursion of one head*, written
 out in `PreLNHead`: the sub-layer reads `rmsNormEps` of the stream and its
-output is added back.  `V = I_d` is imposed structurally — the value argument
+output is added back. `V = I_d` is imposed structurally — the value argument
 of `attentionHead` is the normalized stream itself, not a projection of it —
 rather than as a hypothesis on `AttnParams` (the `V`-block `qkvV` of `W_qkv`
-and the output map `W_o`).  The one head, the head dimension in place of
+and the output map `W_o`). The one head, the head dimension in place of
 `d_model`, and the absent FFN are a restriction: what is stated is the depth
 behaviour of the attention recursion, not of `GPTMini.forward`, whose
 `Block.attnSubLayer` runs every head of `CausalMHA` between `W_qkv` and `W_o`.
@@ -35,8 +45,8 @@ behaviour of the attention recursion, not of `GPTMini.forward`, whose
 *No rate is stated.*  The exponential rate of `Section5_HighD` is exponential
 in the time of the continuous dynamics, and under Pre-LN the layer index is not
 that time: the residual stream grows while the sub-layer output stays bounded,
-so the direction moves less and less.  `layer_clustering` therefore states
-convergence only.  A rate `C / L³` with `C` uniform over the initial stream,
+so the direction moves less and less. `layer_clustering` therefore states
+convergence only. A rate `C / L³` with `C` uniform over the initial stream,
 once stated here as `polynomial_rate`, is false: a stream far from the origin
 turns by `O(1/‖x‖)` per layer (`GPTMini.not_polynomial_rate`, in
 `RateRefutation`).
@@ -46,13 +56,7 @@ Mathlib has no Wasserstein distance — and quantified over every `W₂` it is
 false: `not_mean_field_clustering`, in `MeanFieldRefutation`.
 -/
 
-import Transformer.GPTMini.Bridge
-import Transformer.GPTMini.Model
-import Transformer.Perspective.Section5_HighD
-import Transformer.Causal.MainTheorem
-import Transformer.Normalization.Convergence
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-import Mathlib.MeasureTheory.Constructions.Pi
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -68,7 +72,7 @@ variable (cfg : Config)
 
 where `head` is `CausalMHA.attentionHead`: QK-norm, RoPE, causal softmax and
 XSA, with the value stream equal to its own input — which is what `V = I_d`
-means.  Source: `reference/model.py` (`Block.forward`), and
+means. Source: `reference/model.py` (`Block.forward`), and
 arXiv:2411.04990v2, `eq: csa`, for the sub-layer. -/
 def PreLNHead (alpha eps : ℝ) {T : ℕ} (positions : Fin T → ℝ)
     (x : ℕ → Fin T → EucSpace cfg.head_dim) : Prop :=

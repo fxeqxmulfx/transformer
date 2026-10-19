@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.AttentionFormulas
+
+/-!
 # The induction step for activation-state formulas
 
 arXiv:2506.16055v3, Appendix B.2, `thm:rtfr_to_TLCl`.
@@ -6,7 +10,7 @@ Enumerating the current state and the rounded attention vector makes
 residual addition and the feed-forward function a finite Boolean test.
 -/
 
-import Transformer.CRASP.AttentionFormulas
+@[expose] public section
 
 namespace Transformer.CRASP.RTfr
 

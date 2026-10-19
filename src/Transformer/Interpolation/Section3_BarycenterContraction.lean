@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_BarycenterAxes
+public import Transformer.Interpolation.Section3_SelectiveContraction
+public import Transformer.Interpolation.Section3_TargetCaps
+
+/-!
 # Original barycenter contraction and geodesic accuracy
 
 ArXiv:2411.04551v3, §3.2, `lem: induction.barycenter`.
@@ -15,9 +21,7 @@ This proves the original conclusion for every original weak solution
 in ambient dimension at least two, with three constant pieces.
 -/
 
-import Transformer.Interpolation.Section3_BarycenterAxes
-import Transformer.Interpolation.Section3_SelectiveContraction
-import Transformer.Interpolation.Section3_TargetCaps
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology

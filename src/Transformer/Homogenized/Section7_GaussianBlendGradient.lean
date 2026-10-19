@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianTestBounds
+
+/-!
 # The original blended gradient and its actual Gaussian Hessian identity
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -17,7 +21,7 @@ Every derivative and bound is proved from the original bounded `C²`
 test, rather than supplied as an integration-by-parts hypothesis.
 -/
 
-import Transformer.Homogenized.Section7_GaussianTestBounds
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators

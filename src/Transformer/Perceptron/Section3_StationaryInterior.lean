@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section3_Genericity
+
+/-!
 # Interior of the stationary parameter set
 
 For the fixed measure in arXiv:2601.21366v2, §3.1, `thm: any.d` (iii),
@@ -11,7 +15,7 @@ parameters is dense. A Dirac measure with strictly inactive inputs supplies
 an actual open region of stationary parameters, including nonzero weights.
 -/
 
-import Transformer.Perceptron.Section3_Genericity
+@[expose] public section
 
 open Real MeasureTheory Filter Topology
 open scoped BigOperators

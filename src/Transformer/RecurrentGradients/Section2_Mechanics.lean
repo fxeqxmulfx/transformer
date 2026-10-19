@@ -1,14 +1,22 @@
-/-
+module
+
+public import Transformer.RecurrentGradients.Section1_Gradients
+public import Mathlib.Analysis.Calculus.Deriv.Inv
+public import Mathlib.Analysis.SpecialFunctions.Sigmoid
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+public import Mathlib.Analysis.SpecificLimits.Basic
+
+/-!
 # The mechanics of vanishing and exploding gradients
 
-arXiv:1211.5063, §2.1 ("The mechanics").  The factor `∂x_t/∂x_k` of a temporal
+arXiv:1211.5063, §2.1 ("The mechanics"). The factor `∂x_t/∂x_k` of a temporal
 contribution (`factor`, with `t = k + l`) is a product of `l` Jacobians
-(eq. (5)).  For eq. (2) with `|σ'| ≤ γ` the paper "proves" that `λ₁ < 1/γ`,
+(eq. (5)). For eq. (2) with `|σ'| ≤ γ` the paper "proves" that `λ₁ < 1/γ`,
 `λ₁` the largest absolute value of an eigenvalue of `W_rec`, suffices for the
 long term contributions to vanish, and, "by inverting this proof", that
-`λ₁ > 1/γ` is necessary for them to explode.  Both are false
+`λ₁ > 1/γ` is necessary for them to explode. Both are false
 (`Section2_Counterexample`): eq. (6) bounds the 2-norm `‖W_recᵀ‖` by `1/γ`,
-which `λ₁ < 1/γ` does not give.  The proof proves the statements with the
+which `λ₁ < 1/γ` does not give. The proof proves the statements with the
 2-norm `‖W_rec‖` (`= ‖W_recᵀ‖`, `Matrix.l2_opNorm_conjTranspose`) in place of
 `λ₁`:
 
@@ -24,11 +32,7 @@ which `λ₁ < 1/γ` does not give.  The proof proves the statements with the
 (`isGreatest_abs_deriv_tanh`, `isGreatest_abs_deriv_sigmoid`).
 -/
 
-import Transformer.RecurrentGradients.Section1_Gradients
-import Mathlib.Analysis.Calculus.Deriv.Inv
-import Mathlib.Analysis.SpecialFunctions.Sigmoid
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Analysis.SpecificLimits.Basic
+@[expose] public section
 
 open scoped Matrix Matrix.Norms.L2Operator
 open Filter Topology

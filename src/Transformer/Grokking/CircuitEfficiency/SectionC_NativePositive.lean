@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativeSigns
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativeSigns
 
 /-!
 # Positive circuit formation on the closed native CE trajectory
@@ -15,6 +17,8 @@ not the paper's GD/coupled circuit-norm penalty. Positivity gives strict
 training correctness but does not select Gen over Mem, cross a held-out
 margin, identify learned GPTMini features or certify floating-point code.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

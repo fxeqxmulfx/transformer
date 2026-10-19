@@ -1,26 +1,30 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Convergence
+public import Transformer.Landscape.SaddleAvoidance.GradientDescent
+
+/-!
 # Saddle avoidance — gradient descent finds local minimizers
 
 Let `f` be `C²` on a finite-dimensional real inner product space with an
-`L`-Lipschitz gradient, and `0 < η`, `η L < 1`.  Gradient descent started
+`L`-Lipschitz gradient, and `0 < η`, `η L < 1`. Gradient descent started
 from a law with a density almost surely converges to no strict saddle
-(`ae_not_tendsto_of_isStrictSaddle`).  If every critical point is a local
+(`ae_not_tendsto_of_isStrictSaddle`). If every critical point is a local
 minimizer or a strict saddle, every limit of almost every orbit is therefore
 a local minimizer (`ae_isLocalMin_of_tendsto`).
 
-Whether an orbit has a limit is a separate question.  If `f` satisfies the
+Whether an orbit has a limit is a separate question. If `f` satisfies the
 Łojasiewicz inequality at each critical point, and almost every orbit has a
 limit point up to translations leaving `f` invariant, almost every orbit
 converges to a critical point that is not a strict saddle
 (`ae_exists_tendsto_not_isStrictSaddle`); if the orbits are bounded and
 every critical point is a local minimizer or a strict saddle, to a local
-minimizer (`ae_exists_tendsto_isLocalMin`).  These are `thm:no-saddles`,
+minimizer (`ae_exists_tendsto_isLocalMin`). These are `thm:no-saddles`,
 `thm:local-min` and the first part of `prop:rates` of arXiv:1602.04915, with
 the changes their docstrings give.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Convergence
-import Transformer.Landscape.SaddleAvoidance.GradientDescent
+@[expose] public section
 
 open Filter Metric MeasureTheory
 open scoped Topology NNReal
@@ -33,9 +37,9 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDim
 /-- **Gradient descent almost never converges to a strict saddle.**  For `f`
 of class `C²` with an `L`-Lipschitz gradient, `0 < η` and `η L < 1`, the orbit
 of a start drawn from a law `ν` absolutely continuous with respect to a Haar
-measure almost surely converges to no strict saddle.  Corollary
+measure almost surely converges to no strict saddle. Corollary
 `thm:no-saddles` of arXiv:1602.04915 reads: "Let `C` be the set of saddle
-points and assume they are all strict.  If `C` has at most countably
+points and assume they are all strict. If `C` has at most countably
 infinite cardinality, then `Pr(lim_k x_k ∈ C) = 0`."  This theorem gives it
 without the countability of `C`. -/
 theorem ae_not_tendsto_of_isStrictSaddle (μ : Measure E) [μ.IsAddHaarMeasure]
@@ -52,12 +56,12 @@ theorem ae_not_tendsto_of_isStrictSaddle (μ : Measure E) [μ.IsAddHaarMeasure]
 
 /-- **Every limit of gradient descent is almost surely a local minimizer**
 when every critical point of `f` is a local minimizer or a strict saddle, the
-strict saddle property of §1 of arXiv:1602.04915.  `thm:local-min` there
+strict saddle property of §1 of arXiv:1602.04915. `thm:local-min` there
 reads: "Assume the same conditions as Theorem `thm:no-saddles` and
 `lim_k x_k` exists, then `Pr(lim_k x_k = x*) = 1`, where `x*` is a local
 minimizer."  Its proof passes from `Pr(lim_k x_k ∈ C) = 0` to a local
 minimizer, which needs every critical point outside the set `C` of saddle
-points to be a local minimizer.  The strict saddle property `hcrit` gives
+points to be a local minimizer. The strict saddle property `hcrit` gives
 this and replaces the hypotheses of `thm:no-saddles`; no limit is assumed to
 exist. -/
 theorem ae_isLocalMin_of_tendsto (μ : Measure E) [μ.IsAddHaarMeasure] {ν : Measure E}
@@ -95,9 +99,9 @@ theorem ae_exists_tendsto_not_isStrictSaddle (μ : Measure E) [μ.IsAddHaarMeasu
 inequality added.**  If every critical point of `f` is a local minimizer or a
 strict saddle and satisfies the Łojasiewicz inequality with an exponent
 `0 ≤ a < 1`, and almost every orbit is bounded, then almost every orbit
-converges to a local minimizer.  The source reads: "Assume the same
+converges to a local minimizer. The source reads: "Assume the same
 conditions as Theorem `thm:no-saddles`, and the iterates do not escape to
-`∞`, meaning `{x_k}` is a bounded sequence.  Then `lim_k x_k` exists and
+`∞`, meaning `{x_k}` is a bounded sequence. Then `lim_k x_k` exists and
 `lim_k x_k = x*` for a local minimum `x*`."  Its proof takes the existence of
 the limit from Theorem 3.2 of Absil, Mahony and Andrews (SIAM J. Optim. 16,
 2005), which the source introduces as the sufficient condition based on the

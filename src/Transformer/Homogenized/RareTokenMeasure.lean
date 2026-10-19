@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.ProductHeadLaw
+public import Transformer.Wasserstein.Basic
+
+/-!
 # Homogenized Transformers — transporting a rare antipodal token
 
 The measures `(1-ε)δ_{-e₁} + εδ_{e₁}` are actual probability measures on
@@ -10,8 +15,7 @@ These measures test the uniformity over all sphere-supported token laws in
 arXiv:2604.01978v1, `prop:satisfying_MF`, `eq:Lipschitz_measure`.
 -/
 
-import Transformer.Homogenized.ProductHeadLaw
-import Transformer.Wasserstein.Basic
+@[expose] public section
 
 open scoped ENNReal
 open Real MeasureTheory

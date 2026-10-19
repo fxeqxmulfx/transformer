@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section2_DensityContinuity
+
+/-!
 # The actual scalar density of the oscillating field
 
 Source: arXiv:2412.09080v3, §2.1, hypothesis two of
@@ -23,7 +27,7 @@ positive constant test function checks the normalization
 under the original probability measure.
 -/
 
-import Transformer.Modes.Section2_DensityContinuity
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 open scoped ENNReal

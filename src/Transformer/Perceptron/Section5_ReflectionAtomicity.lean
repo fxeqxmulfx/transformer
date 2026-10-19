@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_ReflectionBranches
+
+/-!
 # Finite original support for a commuting neuron reflection
 
 ArXiv:2601.21366v2, §3.1, `rem: ext` (ii), §5.2,
@@ -22,7 +26,7 @@ and zero measure for every original uniform law. The unrestricted source
 claim remains in `GeneralAtomicity`, with this case dispatched there.
 -/
 
-import Transformer.Perceptron.Section5_ReflectionBranches
+@[expose] public section
 
 open Real MeasureTheory Set
 

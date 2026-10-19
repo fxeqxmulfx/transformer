@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerIntervals
+
+/-!
 # The generator identity in physical time on an actual Euler interval
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The frozen Brownian identity is transported to the actual grid interval
 and to the full Brownian interpolation, with any bounded past weight.
 -/
 
-import Transformer.BatchSize.Section4_EulerIntervals
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal

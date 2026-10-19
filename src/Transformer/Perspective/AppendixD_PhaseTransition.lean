@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.AppendixD_Stability
+public import Transformer.Perspective.Section1_IPS
+public import Transformer.Perspective.AppendixD_Concentration
+
+/-!
 # Appendix D — the stability estimates behind `thm: phase.transition.curve`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -14,7 +21,7 @@ The first half of Appendix D of the survey:
 `Perspective.AppendixD_Stability`.
 
 The decay of `1 - γ_β(t)`, `e:ybetacloseto1`, is in
-`Perspective.AppendixD_Ybeta`.  The lower bound on the smallest coordinate
+`Perspective.AppendixD_Ybeta`. The lower bound on the smallest coordinate
 `α(t)` is in `Perspective.AppendixD_Alpha`, and what the survey builds on it
 in `Perspective.AppendixD_Assembly`.
 
@@ -23,10 +30,7 @@ The exact orthogonal-approximation radius and its probability are proved in
 source theorem and exact uniform moments for its projection estimates.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.AppendixD_Stability
-import Transformer.Perspective.Section1_IPS
-import Transformer.Perspective.AppendixD_Concentration
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -46,7 +50,7 @@ and `x` starts within `√(log d / d)` of it, then
 
 The proof is `e:shortdist` followed by Cauchy–Schwarz on
 `⟨x_i, x_j⟩ - ⟨y_i, y_j⟩ = ⟨x_i - y_i, x_j⟩ + ⟨y_i, x_j - y_j⟩`, both particles
-being unit vectors.  It carries `stability_orthogonal`'s added hypothesis
+being unit vectors. It carries `stability_orthogonal`'s added hypothesis
 `0 ≤ β`.
 
 Source: arXiv:2312.10794v5, Appendix D, `e:ineqfirstpart`. -/
@@ -150,7 +154,7 @@ compared with `γ_β(1/n)` at time `1/n`.
 
 The survey derives the threshold from `γ_β(1/n) > 0`, but that hypothesis is
 not needed: `d / log d` passes *every* real bound, and when `γ_β(1/n) = 0` the
-left-hand side is `0` under Lean's division convention.  So the ODE plays no
+left-hand side is `0` under Lean's division convention. So the ODE plays no
 role here and the hypothesis `ybetaODE_SA n β γ` is dropped.
 
 Source: arXiv:2312.10794v5, Appendix D, `eq: d.large`. -/

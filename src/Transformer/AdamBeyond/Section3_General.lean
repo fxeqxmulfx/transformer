@@ -1,12 +1,14 @@
-import Transformer.AdamBeyond.Section3_GenRegret
+module
 
-/-
+public import Transformer.AdamBeyond.Section3_GenRegret
+
+/-!
 # Adam and beyond — §3: Theorem 2, for every `β₁ < √β₂`
 
 Theorem 2 extends the counterexample of Theorem 1 to every `β₁, β₂ ∈ [0, 1)`
 with `β₁ < √β₂`, with the costs `C x` once every `C` steps and `-x` otherwise:
 every block of `C` steps starts at `x = 1` (`gen_block`), and costs at least `2`
-against `x* = -1` (`gen_regret`).  Theorem 3, its stochastic version, is
+against `x* = -1` (`gen_regret`). Theorem 3, its stochastic version, is
 `counter_example_stochastic`.
 
 **What the source says and what is carried here.**
@@ -15,21 +17,23 @@ against `x* = -1` (`gen_regret`).  Theorem 3, its stochastic version, is
 
 * Theorem 2 is stated for every `α > 0` in `α_t = α/√t`, which its proof
   handles uniformly; "`R_T/T ↛ 0`" is `c T ≤ R_T` for all large `T`, against a
-  fixed `x* ∈ F`.  The statement is the source's.
+  fixed `x* ∈ F`. The statement is the source's.
 
-* The proof departs from the source's in three places.  The problem is
+* The proof departs from the source's in three places. The problem is
   preceded by `C` steps with `f_t = 0`, during which Adam does not move
   (`m = v = 0`, and the step `0/√0` is `0`); the blocks then start at `t ≥ C`,
   where `√(t + C) ≤ √(2t)`, and at `x = 1`, which replaces the source's `T'`,
   `τ` and the divergence of `Σ 1/√t` that brings the iterate to `1`.
   `C = 2N` is taken with `β₂^N C² ≤ 1` and `N √(1-β₂)(1-γ) ≥ 4`,
   `γ = β₁/√β₂`, in place of eq:p-condition, and `-1 ≤ m_t ≤ C`,
-  `0 ≤ v_t ≤ C²` along the whole run replace `m_{kC} ≤ 0`.  At the `j`-th step
+  `0 ≤ v_t ≤ C²` along the whole run replace `m_{kC} ≤ 0`. At the `j`-th step
   of a block `v ≥ (1-β₂)β₂^{j-1}C²`: the source's text (`β₂^{i-2}`, `j = i - 1`)
   has the right exponent, its display (`β₂^{i-1}`) is off by one.
 
 Source: arXiv:1904.09237, §3, Theorem 2; Appendix, its proof.
 -/
+
+@[expose] public section
 
 open Filter
 
@@ -40,7 +44,7 @@ open AMSGrad
 
 /-- **Theorem 2.**  For every `β₁, β₂ ∈ [0, 1)` with `β₁ < √β₂` and every
 `α > 0`, Adam with `β_{1,t} = β₁`, `β₂` and `α_t = α/√t` has non-zero average
-regret on an online convex problem.  arXiv:1904.09237, §3, Theorem 2. -/
+regret on an online convex problem. arXiv:1904.09237, §3, Theorem 2. -/
 theorem counter_example_gen {β₁ β₂ : ℝ} (hβ₁ : 0 ≤ β₁) (hβ₂ : β₂ < 1) (hγ : β₁ < Real.sqrt β₂)
     {α : ℝ} (hα : 0 < α) :
     ∃ (S : Setup 1) (F : Set (Vec 1)) (D G : ℝ), IsOnlineConvex S F D G ∧

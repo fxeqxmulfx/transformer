@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdBounds
-import Mathlib.Topology.Order.MonotoneConvergence
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdBounds
+public import Mathlib.Topology.Order.MonotoneConvergence
 
 /-!
 # Actual critical mass monotonicity with legal zero first beta
@@ -32,6 +34,8 @@ Fixed tables/plain CE/uniform native decay differ from appendix C's
 assigned coupled norm-cost GD; no learned transformer or thermodynamic
 system-size claim is made, and no optimizer/checkpoint is changed.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

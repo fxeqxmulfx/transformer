@@ -1,7 +1,9 @@
-import Transformer.Modes.Section5_PtBddDecayFalse
-import Transformer.Modes.Section3_Edgeworth
+module
 
-/-
+public import Transformer.Modes.Section5_PtBddDecayFalse
+public import Transformer.Modes.Section3_Edgeworth
+
+/-!
 # The number of modes of a Gaussian KDE — mass near the origin
 
 The proof of `lem: pt.bdd` in arXiv:2412.09080v3, §5.5, overlooks Gaussian
@@ -16,6 +18,8 @@ imposed by a continuous planar density and refutes `lem: pt.bdd`.
 
 Source: arXiv:2412.09080v3, §2.2, `eq: Gt`; §5.5, `lem: pt.bdd`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators ENNReal

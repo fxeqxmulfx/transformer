@@ -1,23 +1,28 @@
-/-
+module
+
+public import Transformer.Perceptron.Hyperplane
+public import Transformer.Perceptron.HigherDim
+
+/-!
 # Perceptrons and attention's mean-field landscape — biases
 
 Formalization of `rem: ext` (i) of arXiv:2601.21366v2: the results extend to a
 perceptron with biases, `a_j · x + b_j` inside the activation, provided at
 least one of the hyperplanes `{x : a_j · x + b_j = 0}` meets `𝕊^{d-1}` in more
-than one point.  The geometry of that proviso is `Hyperplane.lean`.
+than one point. The geometry of that proviso is `Hyperplane.lean`.
 
 **What the source says and what is carried here.**
 
 * The biased potential is `v_ϑ(x) = Σ_j ω_j φ(a_j·x + b_j)`, and its spherical
   gradient is twice the biased drift — `proj_gradient_biasedPotential`, the
-  biased form of the identity `(1/2)∇v_ϑ = u_ϑ` of `eq: primitive.field`.  At
+  biased form of the identity `(1/2)∇v_ϑ = u_ϑ` of `eq: primitive.field`. At
   `b = 0` every biased object is the unbiased one of `Basic.lean`; that is
   `biasedPotential_zero` and its companions, which is also what makes the
   witnesses below available.
 
 * "The results above" are `thm: circle`, `thm: circle.gelu` and `thm: any.d`.
   Carried here are the two that name the ReLU — `thm: circle` and
-  `thm: any.d` (i) — in their biased form.  The strict-SOPD statements are not:
+  `thm: any.d` (i) — in their biased form. The strict-SOPD statements are not:
   they are about second-order conditions on the *energy*, so their biased form
   needs the biased geodesic second derivative as well, and the source gives no
   more reason to believe it than it gives for these two.
@@ -31,8 +36,7 @@ than one point.  The geometry of that proviso is `Hyperplane.lean`.
 Source: arXiv:2601.21366v2, `rem: ext` (i).
 -/
 
-import Transformer.Perceptron.Hyperplane
-import Transformer.Perceptron.HigherDim
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory

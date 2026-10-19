@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AMSGrad.Section3_Example
+
+/-!
 # AMSGrad — a nonconstant fixed-loss witness for the original algorithm
 
 arXiv:1904.03590v4, §2 and Corollary 4.5. The linear objective on the
@@ -6,7 +10,7 @@ source's bounded box has a genuine feasible minimizer. It witnesses
 offline convergence assumptions without using a zero objective.
 -/
 
-import Transformer.AMSGrad.Section3_Example
+@[expose] public section
 
 noncomputable section
 

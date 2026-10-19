@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GlobalCorrelationTaylor
+public import Transformer.Homogenized.Section7_GaussianRowFourth
+public import Transformer.Homogenized.Basic
+
+/-!
 # Integrating the actual correlation remainder
 
 ArXiv:2604.01978v1, §7.3, `lem:delta_method`, expectation of the
@@ -20,9 +26,7 @@ established for the original product initialization. No covariance
 identity or probabilistic remainder is included as an assumption.
 -/
 
-import Transformer.Homogenized.Section7_GlobalCorrelationTaylor
-import Transformer.Homogenized.Section7_GaussianRowFourth
-import Transformer.Homogenized.Basic
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

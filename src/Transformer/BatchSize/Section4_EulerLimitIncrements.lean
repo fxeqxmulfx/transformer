@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerIncrementMoments
+public import Transformer.BatchSize.Section4_EulerLimitMoments
+
+/-!
 # Arbitrary increment moments of the constructed optimizer limits
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ Consistent dyadic interpolations give mesh-uniform increment estimates.
 Mean-square convergence and Fatou transfer these to the actual limits.
 -/
 
-import Transformer.BatchSize.Section4_EulerIncrementMoments
-import Transformer.BatchSize.Section4_EulerLimitMoments
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal Topology

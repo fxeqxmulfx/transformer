@@ -1,16 +1,20 @@
-/-
+module
+
+public import Transformer.Modes.Section3_CumulantBounds
+public import Transformer.Modes.Section2_WidthTerms
+public import Transformer.Modes.Section2_GaussianShiftBounds
+
+/-!
 # The number of modes of a Gaussian KDE — a Gaussian majorant for `ψ`
 
 In arXiv:2412.09080v3, §3.1, `eq:psi` is a Gaussian times four cubic Hermite
-polynomials.  Their valid global bound includes a linear term, as proved in
-`Section3_Hermite`.  Both the linear and cubic terms are absorbed into half
-the Gaussian exponent.  This gives a majorant usable in `lem:error-3`
+polynomials. Their valid global bound includes a linear term, as proved in
+`Section3_Hermite`. Both the linear and cubic terms are absorbed into half
+the Gaussian exponent. This gives a majorant usable in `lem:error-3`
 without the source's false purely cubic estimate near the origin.
 -/
 
-import Transformer.Modes.Section3_CumulantBounds
-import Transformer.Modes.Section2_WidthTerms
-import Transformer.Modes.Section2_GaussianShiftBounds
+@[expose] public section
 
 open Real MeasureTheory
 
@@ -55,7 +59,7 @@ theorem linear_cube_mul_exp_le {r : ℝ} (hr : 0 ≤ r) :
 example : (0 : ℝ) ≤ 1 := zero_le_one
 
 /-- A third Hermite polynomial times the standard Gaussian has a wider
-Gaussian majorant.  Source: arXiv:2412.09080v3, §3.1, `eq:psi`,
+Gaussian majorant. Source: arXiv:2412.09080v3, §3.1, `eq:psi`,
 `eq:H3-bound` corrected to include the linear term. -/
 theorem phi2_mul_abs_hermite_le (z : ℝ × ℝ) (k : ℕ) (hk : k ≤ 3) :
     phi2 z * |hermite3 k z| ≤
@@ -83,8 +87,8 @@ theorem phi2_mul_abs_hermite_le (z : ℝ × ℝ) (k : ℕ) (hk : k ≤ 3) :
 example : (3 : ℕ) ≤ 3 := le_rfl
 
 /-- The third-order Edgeworth correction is bounded by `η₃` times a
-Gaussian with doubled covariance.  Source: arXiv:2412.09080v3, §3.1,
-`eq:psi`, `lem:eta`, proof of `lem:error-3`.  This uses the corrected global
+Gaussian with doubled covariance. Source: arXiv:2412.09080v3, §3.1,
+`eq:psi`, `lem:eta`, proof of `lem:error-3`. This uses the corrected global
 Hermite bound and controls the absolute value of the signed correction. -/
 theorem abs_psiOf_le_gaussian {μ : Measure (ℝ × ℝ)} [IsProbabilityMeasure μ]
     (hμ : IsStandardized μ) (hexp : HasExpMoments μ) (z : ℝ × ℝ) :
@@ -159,7 +163,7 @@ theorem eucl_whiten_kr_sq {β : ℝ} (hβ : 0 < β) (n : ℕ) (t y : ℝ) :
 example : (0 : ℝ) < 1 := one_pos
 
 /-- The wider Gaussian used for `ψ` has a first moment bounded linearly in
-the shift.  Source: arXiv:2412.09080v3, §3.1, proof of `lem:error-3`. -/
+the shift. Source: arXiv:2412.09080v3, §3.1, proof of `lem:error-3`. -/
 theorem lintegral_mul_exp_quarter_shift_sq_le {a δ : ℝ} (ha : 0 < a) :
     (∫⁻ y in Set.Ioi (0 : ℝ), ENNReal.ofReal
       (y * Real.exp (-(a / 4) * (y - δ) ^ 2))) ≤

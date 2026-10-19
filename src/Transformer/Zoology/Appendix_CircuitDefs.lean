@@ -1,4 +1,8 @@
-/-
+module
+
+public import Mathlib
+
+/-!
 # Arithmetic-circuit syntax and resource bounds
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: circuit-tuple`
@@ -9,11 +13,11 @@ records parallel gate count; the paper also describes width as wires
 crossing a cut, which requires a separate liveness condition.
 -/
 
-import Mathlib
+@[expose] public section
 
 namespace Transformer.Zoology
 
-/-- An arithmetic-circuit gate.  A predecessor is an index into the same
+/-- An arithmetic-circuit gate. A predecessor is an index into the same
 finite gate array; `ArithmeticCircuit.WellFormed` requires it to be earlier.
 Source: Appendix `def: circuit-tuple`. -/
 inductive ArithmeticGate (inputs nodes : ℕ) where
@@ -41,7 +45,7 @@ def ArithmeticGate.value {inputs nodes : ℕ}
   | .multiply a b => z a * z b
 
 /-- The circuit computes an output when its gates can be evaluated
-consistently in their topological order.  Source: Appendix `def: circuit-tuple`.
+consistently in their topological order. Source: Appendix `def: circuit-tuple`.
 This relation is used only with `WellFormed` circuits in substantive results. -/
 def ArithmeticCircuit.Computes {inputs outputs : ℕ}
     (c : ArithmeticCircuit inputs outputs)
@@ -60,7 +64,7 @@ def ArithmeticCircuit.WellFormed {inputs outputs : ℕ}
     | .add a b | .multiply a b => a < i ∧ b < i
 
 /-- A linear arithmetic circuit permits multiplication only when at least
-one operand is a gate holding a fixed scalar constant.  Source: Appendix
+one operand is a gate holding a fixed scalar constant. Source: Appendix
 `sec: linear_circuit`, Definition `Linear Arithmetic Circuit`. -/
 def ArithmeticCircuit.IsLinear {inputs outputs : ℕ}
     (c : ArithmeticCircuit inputs outputs) : Prop :=
@@ -97,7 +101,7 @@ def ArithmeticCircuit.HasResources {inputs outputs : ℕ}
   c.size ≤ size ∧ c.HasDepthWidth depth width
 
 /-- The one-input, one-output identity circuit is a concrete example of
-the appendix's circuit model.  Source: Appendix `def: circuit-tuple`. -/
+the appendix's circuit model. Source: Appendix `def: circuit-tuple`. -/
 def identityCircuit : ArithmeticCircuit 1 1 := {
   size := 1
   gate := fun _ => .input 0

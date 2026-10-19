@@ -2,6 +2,13 @@ module
 
 public import Mathlib.Data.Finset.Pairwise
 public import Mathlib.Probability.Independence.Kernel.IndepFun
+public import Mathlib.MeasureTheory.MeasurableSpace.Pi
+
+/-!
+# Independence for kernels
+
+Finite-coordinate independence and composition identities for probability kernels.
+-/
 
 public section
 

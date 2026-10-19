@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.Coefficients
+
+/-!
 # Local uniformization: the product step
 
 Near `0` let `F = m(x') · V(x) · P(x', y)` with `P = y^d + Σ_i b_i(x') y^i` centered. Let
@@ -11,7 +15,7 @@ charts at every point of them. Auxiliary for Appendix D.1, `lem: loj`, of
 arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Uniformization.Coefficients
+@[expose] public section
 
 open Filter Set Polynomial
 open scoped BigOperators Topology

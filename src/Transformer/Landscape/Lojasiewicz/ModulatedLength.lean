@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.ModulatedEnergy
+public import Mathlib.Topology.MetricSpace.Cauchy
+public import Mathlib.Analysis.Calculus.TangentCone.Real
+
+/-!
 # Displacement bounds and the constant-energy branch
 
 The finite-length argument of Appendix D.1 of arXiv:2510.22026v2 uses
 the mean value theorem, without extra regularity of the modulation.
 -/
 
-import Transformer.Landscape.Lojasiewicz.ModulatedEnergy
-import Mathlib.Topology.MetricSpace.Cauchy
-import Mathlib.Analysis.Calculus.TangentCone.Real
+@[expose] public section
 
 namespace Transformer.Landscape.Lojasiewicz
 

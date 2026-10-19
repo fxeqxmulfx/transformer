@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Modes.Section2_PhiTDeltaRate
+public import Transformer.Modes.Section2_GaussianShiftBounds
+
+/-!
 # The number of modes of a Gaussian KDE — `lem:phi-t`, `δ_t` and the inner integral
 
 §2.2 of arXiv:2412.09080v3, `lem:phi-t`: the check on `δ_t` in its proof, and
@@ -10,11 +15,11 @@ proxy, uniformly over `t ∈ T` (read as in `Section2_PhiTAsymp.lean`).
 * **The second display needs `n ≲ β^{5/2}`.**  The source checks
   "`α_t^{-1}δ_t² ≪ 1`", which is dimensionally inconsistent: `α_t` scales as
   `y⁻²`, and the quantity that makes `∫_0^∞ y e^{-α(y-δ)²/2} dy ≍ α⁻¹` is
-  `α_t δ_t² = O(1)`.  That is `n β^{-5/2} e^{-t²/2} = O(1)`, i.e. `n ≲ β^{5/2}`
-  at `t = 0`, which the regime `n^c ≲ β` does not give for `c < 2/5`.  Without
+  `α_t δ_t² = O(1)`. That is `n β^{-5/2} e^{-t²/2} = O(1)`, i.e. `n ≲ β^{5/2}`
+  at `t = 0`, which the regime `n^c ≲ β` does not give for `c < 2/5`. Without
   it the display fails at `t = 0`: numerically, for `β = 100`, the ratio of the
   integral to `α_t^{-1}e^{-A_t/2}` is `0.26, 1.7, 17, 171, 1712` for
-  `n = 10⁴, 10⁶, 10⁸, 10¹⁰, 10¹²`, growing as `√n β^{-5/4}`.  Both
+  `n = 10⁴, 10⁶, 10⁸, 10¹⁰, 10¹²`, growing as `√n β^{-5/4}`. Both
   `phiAlpha_mul_phiDelta_sq_le` and `integral_krPhi_isTheta` carry `n ≲ β^{5/2}`
   as a hypothesis.
 
@@ -29,8 +34,7 @@ proxy, uniformly over `t ∈ T` (read as in `Section2_PhiTAsymp.lean`).
 Source: arXiv:2412.09080v3, `lem:phi-t`, `eq:phi-t`.
 -/
 
-import Transformer.Modes.Section2_PhiTDeltaRate
-import Transformer.Modes.Section2_GaussianShiftBounds
+@[expose] public section
 
 open Real Filter Asymptotics MeasureTheory
 open scoped Topology
@@ -39,7 +43,7 @@ namespace Transformer
 namespace Modes
 
 /-- **Lemma (lem:phi-t), the check on `δ_t`, corrected.**  If moreover
-`n ≲ β^{5/2}`, then `α_t δ_t² = O(1)` uniformly on `T`.  The source checks
+`n ≲ β^{5/2}`, then `α_t δ_t² = O(1)` uniformly on `T`. The source checks
 `α_t^{-1}δ_t² ≪ 1` instead; see the module docstring.
 
 Source: arXiv:2412.09080v3, proof of `lem:phi-t`. -/
@@ -74,7 +78,7 @@ theorem phiAlpha_mul_phiDelta_sq_le {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ
 
 /-- **Lemma (lem:phi-t), second display, corrected.**  If moreover
 `n ≲ β^{5/2}`, then `∫_0^∞ y φ(Σ_t^{-1/2}[(0,y) - μ_t]) dy ≍ α_t^{-1} e^{-A_t/2}`
-uniformly on `T`.  Without `n ≲ β^{5/2}` it fails at `t = 0`; see the module
+uniformly on `T`. Without `n ≲ β^{5/2}` it fails at `t = 0`; see the module
 docstring.
 
 Source: arXiv:2412.09080v3, `lem:phi-t`, `eq:phi-t`. -/

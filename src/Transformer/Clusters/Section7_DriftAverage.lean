@@ -1,16 +1,20 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_UnboundedParticles
+
+/-!
 # The emergence of clusters in self-attention dynamics — drift averages
 
 Two estimates of §7 of arXiv:2305.05465v6 on the drift
 `Σ_j P_ij x_j` of `e:Idnonresca` in `d = 1`, used by `l:exactasymptotic`:
 it never exceeds the largest coordinate (`drift_le`), and a positive token
-moves almost at the speed of the largest one (`sub_drift_le`).  With them, a
+moves almost at the speed of the largest one (`sub_drift_le`). With them, a
 monotonicity criterion on `[T, ∞)` (`antitoneOn_Ici_of_hasDerivAt`).
 
 Source: arXiv:2305.05465v6, proof of `l:exactasymptotic`.
 -/
 
-import Transformer.Clusters.Section7_UnboundedParticles
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

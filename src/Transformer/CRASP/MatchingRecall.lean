@@ -1,25 +1,29 @@
-/-
+module
+
+public import Transformer.CRASP.FixedSign
+public import Transformer.CRASP.FixedTail
+public import Transformer.CRASP.QueryFreeRecall
+
+/-!
 # A transformer comparing a query with a key, in width five
 
 In no paper: the attention comparing a query with a key that
-`CRASP.QueryFreeRecall` leaves out.  Zoology's attention solution of MQAR
+`CRASP.QueryFreeRecall` leaves out. Zoology's attention solution of MQAR
 (arXiv:2312.04927v1, §4, `prop: attention-ar`, proved as
 `prop: app-attention`) compares them through one-hot embeddings, in width `3c`
-over `c` tokens.  A future-masked rounded transformer of arXiv:2506.16055v3
+over `c` tokens. A future-masked rounded transformer of arXiv:2506.16055v3
 (Appendix B.1, `def:transformer`) compares them in width `5`, spending
 precision instead: the query `(-β R², 2βR, -β)` of a token `R` meets the key
 `(1, A, A²)` of a token `A` in the score `-β (R - A)²` (`score_matcher_some`),
-`0` on a match and at most `-β` otherwise.  At `β = s + 1` the rounded weight
+`0` on a match and at most `-β` otherwise. At `β = s + 1` the rounded weight
 `round(exp(score))` is `1` on a match and `0` otherwise (`val_round_exp`), as
 `e^{s+1} > 2^s`; the key of `⊲` is `0`, so `⊲` weighs `1`
-(`score_matcher_none`) and no denominator vanishes.  This file builds the
+(`score_matcher_none`) and no denominator vanishes. This file builds the
 transformer (`matcher`) and its scores; `CRASP.MatchingRecallSums` sums them,
 and `CRASP.MatchingRecallAnswers` reads the last position.
 -/
 
-import Transformer.CRASP.FixedSign
-import Transformer.CRASP.FixedTail
-import Transformer.CRASP.QueryFreeRecall
+@[expose] public section
 
 namespace Transformer.CRASP
 

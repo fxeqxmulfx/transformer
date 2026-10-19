@@ -1,23 +1,28 @@
-/-
+module
+
+public import Transformer.ALM.ExactDot
+public import Transformer.ALM.DotError
+
+/-!
 # The breakpoint test, both ways it is answered
 
 `alm-hull/src/exact.rs::cross_sign` decides `a * b - c * d` against zero, and
 it is not a rescan: every breakpoint comparison in the hull goes through it, so
-unlike `dot_cmp` it is on the path the shipped machine takes.  It answers
+unlike `dot_cmp` it is on the path the shipped machine takes. It answers
 twice over.
 
 The fast path subtracts the two rounded products and trusts the result when it
 is far enough from zero to carry its own error -- `|det| > 2·eps·(|p| + |q|)`,
-four operations.  `cross_filter_sound` is that test: with the error model of
+four operations. `cross_filter_sound` is that test: with the error model of
 `Transformer.ALM.DotError.dot_error_le` the computed difference is within
 `u(2 + u)` of the exact one relative to the terms, the terms are within
 `1/(1 - u)` of the rounded products the runtime actually measures against, and
-`2·eps = 4u` clears the product of the two for every `u ≤ 2/5`.  Binary64's
+`2·eps = 4u` clears the product of the two for every `u ≤ 2/5`. Binary64's
 `u = 2^-53` clears it by a factor of nearly two.
 
 The slow path is the expansion, and `cross_sign_eq` is it: the four terms
 `two_prod` produces sum to `a * b - c * d` exactly, so
-`Transformer.ALM.ExpansionSign.expansion_sign_eq` gives the true sign.  It runs
+`Transformer.ALM.ExpansionSign.expansion_sign_eq` gives the true sign. It runs
 where the filter gives up, which is where the determinant nearly cancels.
 
 Both answer the same question, which is `cross_paths_agree`: the docstring's
@@ -28,8 +33,7 @@ Source: `vm-rs/alm-hull/src/exact.rs`, `CROSS_FILTER` and `cross_sign`;
 Shewchuk 1997, §3; Higham, §3.1.
 -/
 
-import Transformer.ALM.ExactDot
-import Transformer.ALM.DotError
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -54,7 +58,7 @@ theorem sign_of_error_lt {det e : ℝ} (h : |det - e| < |det|) :
 
 /-- **The fast path is sound.**  `p` and `q` are the rounded products, `det`
 their rounded difference, and the runtime compares `|det|` against
-`4u(|p| + |q|)` -- its `CROSS_FILTER` is `2 * eps` and `eps = 2u`.  When the
+`4u(|p| + |q|)` -- its `CROSS_FILTER` is `2 * eps` and `eps = 2u`. When the
 comparison passes, the sign of `det` is the sign of `a * b - c * d`.
 
 The margin is where `u ≤ 2/5` comes from: the exact terms exceed the measured

@@ -1,15 +1,22 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_Convergence
+public import Transformer.Perspective.Section3_Gronwall
+public import Transformer.Perspective.Section5_ExpRate
+public import Transformer.Perspective.Section5_HemisphereCone
+
+/-!
 # §4 — the sets `𝒮_0^m` and `𝒮_β` of `th:beta_small`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*, §4, proof of `th:beta_small`.
 
-Two inclusions carry the proof of `th:beta_small`.  A start whose `β = 0`
+Two inclusions carry the proof of `th:beta_small`. A start whose `β = 0`
 solution reaches consensus is `(3/4)`-clustered at every late enough integer
 time (`eventually_mem_Sset0`), so, consensus being almost sure (`p:beta0`), the
 measure of `𝒮_0^m` tends to that of the whole space
 (`tendsto_measure_of_ae_eventually_mem`, for any sets almost every point
-eventually enters).  The source derives this limit, `e:Ps0n`, from
+eventually enters). The source derives this limit, `e:Ps0n`, from
 `𝒮_0^m ⊂ 𝒮_0^{m+1}` and `⋃_m 𝒮_0^m = 𝒮_0`; the monotonicity is not needed.
 And `𝒮_0^m ⊂ 𝒮_β` for `β ≤ β_m`
 (`exists_Sset0_subset_clusteringSet`): at time `m` the `SA` solution is within
@@ -18,10 +25,7 @@ And `𝒮_0^m ⊂ 𝒮_β` for `β ≤ β_m`
 it collapses to one point (`cone_collapse`).
 -/
 
-import Transformer.Perspective.AppendixA_Convergence
-import Transformer.Perspective.Section3_Gronwall
-import Transformer.Perspective.Section5_ExpRate
-import Transformer.Perspective.Section5_HemisphereCone
+@[expose] public section
 
 open Filter Set MeasureTheory
 open scoped Topology
@@ -72,7 +76,7 @@ example : (fun _ => basePoint 0 : SphereTuple 1 1) ∈ consensusSet0 1 1 := by
   simp [← h]
 
 /-- **Sets almost every point eventually enters fill the space in the limit:**
-`μ(S_m) → μ(univ)`, for sets `S_m` not necessarily measurable.  The sets
+`μ(S_m) → μ(univ)`, for sets `S_m` not necessarily measurable. The sets
 `⋂_{m ≥ M} S_m` increase to a set of full measure. -/
 theorem tendsto_measure_of_ae_eventually_mem {α : Type*} [MeasurableSpace α]
     {μ : Measure α} {S : ℕ → Set α} (h : ∀ᵐ x ∂μ, ∀ᶠ m in atTop, x ∈ S m) :
@@ -115,7 +119,7 @@ example : ‖EuclideanSpace.single (0 : Fin 2) (1 : ℝ)‖ = 1 ∧
     ‖EuclideanSpace.single (0 : Fin 2) (1 : ℝ) - EuclideanSpace.single 0 1‖ ≤ 1 / 8 := by
   norm_num
 
-/-- **`𝒮_0^m ⊂ 𝒮_β` for small `β`** (`n ≥ 1`).  At time `m` the `SA` solution is
+/-- **`𝒮_0^m ⊂ 𝒮_β` for small `β`** (`n ≥ 1`). At time `m` the `SA` solution is
 within `1/8` of the `β = 0` one (`distance_bound_at_time_m`), so it is
 `(1/2)`-clustered and lies in the open hemisphere around its first particle;
 from there it collapses to a single point (`cone_collapse`), and it is the only

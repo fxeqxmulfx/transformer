@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.WendelOneDimBasic
+
+/-!
 # Wendel's formula in dimension one
 
 The one-dimensional unit sphere has two points of equal probability.
@@ -7,7 +11,7 @@ The hemisphere event is the union of the two constant configurations.
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962).
 -/
 
-import Transformer.Perspective.WendelOneDimBasic
+@[expose] public section
 
 open MeasureTheory
 

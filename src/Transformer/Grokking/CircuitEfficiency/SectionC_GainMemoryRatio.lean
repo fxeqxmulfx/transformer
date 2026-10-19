@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryPowers
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryPowers
 
 /-!
 # Actual retained-memory relative selection despite absolute collapse
@@ -25,6 +27,8 @@ pair-balance theorem, confidence result or grokking detector. Fixed gained
 tables and uniform native decay differ from appendix C coupled-cost GD.
 Learned stochastic/floating-point GPTMini transfer remains open.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_CollinearReLU
+
+/-!
 # Excluding a zero scalar branch on the original circle
 
 ArXiv:2601.21366v2, §5.2, the final non-analyticity contradiction
@@ -19,7 +23,7 @@ genuine nonzero input only when both effective terms are nontrivial.
 The attention matrix does not enter this finite-neuron argument.
 -/
 
-import Transformer.Perceptron.Section5_CollinearReLU
+@[expose] public section
 
 open Real Set
 

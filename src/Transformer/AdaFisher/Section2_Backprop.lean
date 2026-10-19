@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_ConvexFalse
+public import Transformer.AdaFisher.SectionA_Descent
+public import Transformer.AdaFisher.Section2_Fisher
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Data.Fin.Tuple.Basic
+
+/-!
 # AdaFisher: affine layers and backpropagation identities
 
 arXiv:2405.16397v3, §2, the forward and backward layer equations.
 -/
 
-import Transformer.AdaFisher.Section3_ConvexFalse
-import Transformer.AdaFisher.SectionA_Descent
-import Transformer.AdaFisher.Section2_Fisher
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Data.Fin.Tuple.Basic
+@[expose] public section
 
 open scoped BigOperators Matrix
 

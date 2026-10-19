@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_WeightedFourier
-import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+module
+
+public import Transformer.Modes.Section3_WeightedFourier
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
 
 /-!
 # Cubic spatial weights through the actual third Fourier derivative
@@ -22,6 +24,8 @@ derivative error remains a separate spectral comparison in proving §3
 `thm:br`, `s = 3`. Schwartz functions provide examples satisfying every
 smoothness and integrability hypothesis.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter VectorFourier
 open scoped ENNReal Topology FourierTransform

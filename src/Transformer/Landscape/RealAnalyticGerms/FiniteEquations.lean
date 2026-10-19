@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.RealAnalyticGerms.Noetherian
+
+/-!
 # Finite bases for families of real analytic germ equations
 
 Rückert's theorem gives a finite subfamily with the same generated ideal.
@@ -7,7 +11,7 @@ that subfamily. The conclusions concern germs; they do not assert a common
 neighborhood for arbitrary infinitely many function representatives.
 -/
 
-import Transformer.Landscape.RealAnalyticGerms.Noetherian
+@[expose] public section
 
 open Set
 

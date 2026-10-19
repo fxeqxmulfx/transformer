@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.ConstrainedMinima
+
+/-!
 # Common objective thresholds across polynomial fibers
 
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.ConstrainedMinima
+@[expose] public section
 
 noncomputable section
 open Polynomial Transformer.Landscape.Lojasiewicz

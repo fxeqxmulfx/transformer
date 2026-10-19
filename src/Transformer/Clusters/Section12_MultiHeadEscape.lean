@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_DiscreteEscape
+public import Transformer.Clusters.Section12_MultiHeadSpread
+
+/-!
 # Escape classification for actual original discrete multi-head trajectories
 
 ArXiv:2305.05465v6, §12, `sec:conclusion`, and §7,
@@ -16,8 +21,7 @@ two distinct tokens, the spreading estimate forces at least one of these
 actual original coordinates to tend to infinity in one direction.
 -/
 
-import Transformer.Clusters.Section12_DiscreteEscape
-import Transformer.Clusters.Section12_MultiHeadSpread
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

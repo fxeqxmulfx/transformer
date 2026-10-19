@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ButterflyGridLayout
+
+/-!
 # Binary partner reads in the original row-major layout
 
 Arora et al., arXiv:2312.04927v1, Appendix `prop: butterfly-hyena`.
@@ -7,7 +11,7 @@ remaining p digits are row digits. These identities transport the actual
 recursive butterfly partner permutation, without increasing feature width.
 -/
 
-import Transformer.Zoology.Appendix_ButterflyGridLayout
+@[expose] public section
 
 namespace Transformer.Zoology
 

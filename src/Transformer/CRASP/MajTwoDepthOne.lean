@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.MajTwo
+
+/-!
 # Closed `MAJ²` formulas of depth one are blind to the order of symbols
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -7,7 +11,7 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 Every atom of `MAJ²` names a variable, so a closed formula has to bind it, and
 at depth `1` there is room for exactly one majority quantifier: the body of
 that quantifier has depth `0`, mentions only the bound variable, and therefore
-reads a position solely through the symbol standing at it.  A single majority
+reads a position solely through the symbol standing at it. A single majority
 quantifier then counts symbols, and counting cannot tell `ba` from `ab`.
 
 That is what `sat_eq_of_closed_depth_le_one` says, and it is the reason the
@@ -18,7 +22,7 @@ The refutation of the `k = 0` reading is `not_forall_closed_majTwo_of_definable`
 the corrected statement is `CRASP.exists_closed_majTwo_of_definable`.
 -/
 
-import Transformer.CRASP.MajTwo
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -152,9 +156,9 @@ end Maj2
 /-- **The first inclusion of `thm:logical_inclusions` fails at `k = 0`.**
 
 `Q_b` is a `TL[◁#,▷#]_0` formula, and the language it defines — the strings
-whose last symbol is `b` — contains `ab` but not `ba`.  By
+whose last symbol is `b` — contains `ab` but not `ba`. By
 `Maj2.sat_eq_of_closed_depth_le_one` no closed `MAJ²_1` formula separates those
-two strings, so none defines that language.  This is what pins the hypothesis
+two strings, so none defines that language. This is what pins the hypothesis
 `0 < k` in `exists_closed_majTwo_of_definable`. -/
 theorem not_forall_closed_majTwo_of_definable :
     ¬ ∀ L : Set (List Bool), Definable L 0 →

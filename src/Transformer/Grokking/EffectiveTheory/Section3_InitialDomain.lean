@@ -1,4 +1,6 @@
-import Transformer.Grokking.EffectiveTheory.Section3_GroundDynamics
+module
+
+public import Transformer.Grokking.EffectiveTheory.Section3_GroundDynamics
 
 /-!
 # Nonzero representation domain from initial data
@@ -16,6 +18,8 @@ gradient identity. Therefore it is zero everywhere, the norm is constant,
 and a nonzero initial norm excludes the origin at every finite real time.
 Existence of such a global differentiable path is still an input.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.EffectiveTheory
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Kinetic.Hardy
+public import Transformer.Kinetic.Section6_PowerSeries
+
+/-!
 # Kinetic theory for Transformers — one mode at the output layer
 
 The proof of `thm:U-shape` of arXiv:2605.09213v1 writes the profile `g_{a_n}(t,1;σ₀)` of
@@ -11,8 +16,7 @@ the profile (`hardyProfile_one_eq`), and the first two derivatives of `h_c` (`mo
 `modeDeriv2`), the second being `λ/(e^λ-1) ψ_c'' + λe^{-y}(ψ_c'' - 2ψ_c' + ψ_c)` as in the source.
 -/
 
-import Transformer.Kinetic.Hardy
-import Transformer.Kinetic.Section6_PowerSeries
+@[expose] public section
 
 open Real
 

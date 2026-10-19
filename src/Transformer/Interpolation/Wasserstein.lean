@@ -1,17 +1,21 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section2_FlowMap
+public import Transformer.Wasserstein
+
+/-!
 # Measure-to-measure interpolation — the 2-Wasserstein distance
 
 The statements of arXiv:2411.04551v3 are about `W_2` on `𝒫(𝕊^{d-1})`, which is
-the general construction of `Transformer.Wasserstein` read on the sphere.  The
+the general construction of `Transformer.Wasserstein` read on the sphere. The
 distance there is the ambient `‖x - y‖` restricted to `𝕊^{d-1}`, which is what
 the paper's Monge identity `lem: monge` is written in.
 
 Source: arXiv:2411.04551v3, §1 (`W_2` throughout).
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section2_FlowMap
-import Transformer.Wasserstein
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -22,12 +26,12 @@ namespace Interpolation
 variable (d : ℕ)
 
 /-- `γ` is a *coupling* of `μ` and `ν`: a measure on `𝕊^{d-1} × 𝕊^{d-1}` whose
-two marginals are `μ` and `ν`.  Source: arXiv:2411.04551v3, §1. -/
+two marginals are `μ` and `ν`. Source: arXiv:2411.04551v3, §1. -/
 abbrev IsCoupling (μ ν : Measure (SSphere d)) (γ : Measure (SSphere d × SSphere d)) : Prop :=
   Wasserstein.IsCoupling μ ν γ
 
 /-- The quadratic transport costs `∫ d(x, y)² dγ` of the couplings `γ` of `μ`
-and `ν`.  Source: arXiv:2411.04551v3, §1. -/
+and `ν`. Source: arXiv:2411.04551v3, §1. -/
 noncomputable abbrev transportCosts (μ ν : Measure (SSphere d)) : Set ℝ :=
   Wasserstein.transportCosts μ ν
 
@@ -55,7 +59,7 @@ theorem W2_nonneg (μ ν : Measure (SSphere d)) : 0 ≤ W2 d μ ν :=
   Wasserstein.W2_nonneg μ ν
 
 /-- **One coupling bounds `W_2` from above.**  This is the only property of the
-definition the paper's proofs use.  Source: arXiv:2411.04551v3, §1. -/
+definition the paper's proofs use. Source: arXiv:2411.04551v3, §1. -/
 theorem W2_le_of_coupling (μ ν : Measure (SSphere d))
     (γ : Measure (SSphere d × SSphere d)) (hγ : IsCoupling d μ ν γ) :
     W2 d μ ν ≤ Real.sqrt (∫ p, dist p.1 p.2 ^ 2 ∂γ) :=

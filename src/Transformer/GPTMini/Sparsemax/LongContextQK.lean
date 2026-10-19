@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.PrefixInputs
-import Transformer.GPTMini.Sparsemax.QKProjectedError
+module
+
+public import Transformer.GPTMini.Sparsemax.PrefixInputs
+public import Transformer.GPTMini.Sparsemax.QKProjectedError
 
 /-!
 # Actual shared Q/K matrices with arbitrarily many dependent tokens
@@ -18,6 +20,8 @@ condition, not a claim that this example solves token-specific tasks.
 The general partial-decoder result permits arbitrary ordinary embeddings
 whenever the given matrix satisfies the stated score-family restriction.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallGateBounds
+module
+
+public import Transformer.GPTMini.Semantics.RecallGateBounds
 
 /-!
 # Derive the gate margins from the actual raw first residual
@@ -16,6 +18,8 @@ IDs and indices, not an encoded table indicator or desired gate.
 Coupling this raw alphabet and boundary to the complete Basis parser
 and proving the second-block selection remain later obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

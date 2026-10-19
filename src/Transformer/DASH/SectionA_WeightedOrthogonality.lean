@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_ScalarChebyshev
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.Orthogonality
+
+/-!
 # DASH — continuous Chebyshev orthogonality and cosine coefficients
 
 arXiv:2602.02016v2, Appendix A. The first-kind polynomials are
@@ -6,8 +11,7 @@ orthogonal for the Chebyshev measure, and their weighted Fourier
 coefficients equal those of the cosine-composed function.
 -/
 
-import Transformer.DASH.SectionA_ScalarChebyshev
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.Orthogonality
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_BallParameters
+public import Transformer.Interpolation.Section3_ChainMass
+public import Transformer.Interpolation.Section1_NeuralPhaseLaw
+
+/-!
 # Actual original neural controls for a finite ball chain
 
 ArXiv:2411.04551v3, Appendix, `lem: tubular.mass.movement`.
@@ -20,9 +26,7 @@ errors when the chain has at least one step. The source's unclamped real
 power is false for `ε = 3`, `K = 2`.
 -/
 
-import Transformer.Interpolation.Section3_BallParameters
-import Transformer.Interpolation.Section3_ChainMass
-import Transformer.Interpolation.Section1_NeuralPhaseLaw
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped ENNReal

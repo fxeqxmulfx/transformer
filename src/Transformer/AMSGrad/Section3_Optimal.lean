@@ -1,4 +1,10 @@
-import Transformer.AMSGrad.Section3_Example
+module
+
+public import Transformer.AMSGrad.Section3_Example
+
+/-! ### `x* = -1` is optimal for every horizon -/
+
+@[expose] public section
 
 /-
 # AMSGrad — what Example 3.2 shows
@@ -24,8 +30,6 @@ open Finset
 
 namespace Transformer
 namespace AMSGrad
-
-/-! ### `x* = -1` is optimal for every horizon -/
 
 /-- Over the first period the slopes sum to `1010 - 10(T - 1)`. -/
 theorem exaCoef_sum_le_101 {T : ℕ} (h1 : 1 ≤ T) (h2 : T ≤ 101) :

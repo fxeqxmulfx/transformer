@@ -1,4 +1,14 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Causal.Section4_TwoClusterRefutation
+public import Transformer.Causal.Section4_ConsensusInduction
+public import Transformer.Causal.SectionA_Scalar
+public import Transformer.Perspective.Section2_FlowMap
+public import Transformer.Perspective.Section3_SmallBeta
+public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
+
+/-!
 # Causal attention — Main theorem for `V = I_d` (§4 of 2411.04990v2)
 
 * `Theorem thm1`        — almost-everywhere convergence to a single cluster
@@ -11,7 +21,7 @@
                           with, and its equality cases.
 
 All three statements quantify over "almost every initial configuration" with
-respect to the volume measure on `(𝕊^{d-1})^n`.  Its null sets are those of
+respect to the volume measure on `(𝕊^{d-1})^n`. Its null sets are those of
 the uniform law, which is read as every `σ` with `Perspective.UniformTuple d n σ`
 — it holds for exactly one `σ`. Conjecture `thm1.5` is refuted by a
 positive-measure counterexample in `Section4_TwoClusterRefutation`.
@@ -21,13 +31,7 @@ expansion and Fubini. The subspace convergence assertion remains unproved.
 The geometric `lemma:scalar` and its equality cases are in `SectionA_Scalar`.
 -/
 
-import Transformer.Basic
-import Transformer.Causal.Section4_TwoClusterRefutation
-import Transformer.Causal.Section4_ConsensusInduction
-import Transformer.Causal.SectionA_Scalar
-import Transformer.Perspective.Section2_FlowMap
-import Transformer.Perspective.Section3_SmallBeta
-import Mathlib.Analysis.InnerProductSpace.Projection.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -52,7 +56,7 @@ sees only itself, so the whole cloud is dragged onto where it started.
 *`d ≥ 2`.*  The source puts no bound on `d`, and at `d = 1` the statement is
 false: `𝕊^0 = {±1}` has no tangent directions, so no token moves, and the
 configuration `(1, -1)` has mass `1/4` under the uniform law and never reaches
-`x_1(0)`.  `2 ≤ d` is added.
+`x_1(0)`. `2 ≤ d` is added.
 
 The actual global causal flow and its prefix consistency are proved first.
 For a fixed converging prefix, the original last token converges to the
@@ -108,12 +112,12 @@ theorem not_two_cluster :
 Let `λ > 0`, let `L` be an eigenspace of `V` for `λ` with `dim L ≥ 2`, let `V`
 preserve `L^⊥`, and let `⟨V z, z⟩ < λ ‖z‖²` for every `z ∈ L^⊥ \ {0}` — so `λ`
 really is the top eigenvalue and everything transverse to `L` decays relative
-to it.  Then almost every initialization yields convergence of every token to
+to it. Then almost every initialization yields convergence of every token to
 the normalized `L`-component of `x_1(0)`, which is defined as soon as that
 component is nonzero.
 
 The source defines `ξ` in words as "the normalized `L`-component of `x_1(0)`"
-and then in symbols as `y_1 := P_{L^⊥}(x_1(0))`, `ξ := y_1/|y_1|`.  The
+and then in symbols as `y_1 := P_{L^⊥}(x_1(0))`, `ξ := y_1/|y_1|`. The
 symbols contradict the words and the surrounding discussion (tokens are
 attracted *into* `L`); the words are taken, `ξ` is the projection on `L`.
 
@@ -137,7 +141,7 @@ theorem subspace_cluster (β : ℝ) (Q K V : ParamMatrix d)
   sorry
 
 /-- The hypotheses of `subspace_cluster` are satisfiable: in the plane, with
-`L = ⊤`, `V = I_2` and `λ = 1`.  The whole plane has rank `2`, is invariant, and
+`L = ⊤`, `V = I_2` and `λ = 1`. The whole plane has rank `2`, is invariant, and
 `⊤ᗮ = ⊥`, so the decay condition holds on an empty set of `z`. -/
 example :
     (0 : ℝ) ≤ 0 ∧ (0 : ℝ) < 1 ∧

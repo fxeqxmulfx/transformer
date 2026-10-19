@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.NormalCrossingCharts
+public import Transformer.Landscape.Lojasiewicz.CompactFiberGradient
+
+/-!
 # Compact monomial charts and the analytic gradient inequality
 
 A finite family of analytic maps, with compact source sets and local
@@ -7,8 +12,7 @@ gradient inequality. Existence of such charts is a separate geometric input
 in this route to Appendix D.1 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.NormalCrossingCharts
-import Transformer.Landscape.Lojasiewicz.CompactFiberGradient
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_PositiveQuadraticMGF
+public import Mathlib.Analysis.Matrix.PosDef
+
+/-!
 # Gaussian positive quadratic-form exponentials
 
 Source: arXiv:2604.01978v1, §6.3, `lem:Hanson_wright`.
@@ -11,8 +16,7 @@ The eigenvalue bound uses normalized eigenvectors, including empty
 dimensions without a nonemptiness restriction on the main estimate.
 -/
 
-import Transformer.Homogenized.Section6_PositiveQuadraticMGF
-import Mathlib.Analysis.Matrix.PosDef
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

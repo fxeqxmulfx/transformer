@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.ScalarInputDissipation
+module
+
+public import Transformer.Grokking.AdamW.ScalarInputDissipation
 
 /-!
 # Retained-input dissipation with a nonzero native first beta
@@ -31,6 +33,8 @@ Exact reals and non-AMSGrad native AdamW are explicit. No buffer,
 optimizer or checkpoint is changed, and no learned GPTMini,
 floating-point or thermodynamic system-size claim follows.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

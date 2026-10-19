@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.Basic
+
+/-!
 # Geometry of radial projection for Gaussian-mixture initialization
 
 The deterministic step of `prop: mixture.of.gaussians`: a sample close to a
@@ -8,7 +12,7 @@ probabilistic concentration estimate is stated separately in `Initial`.
 Source: arXiv:2410.06833v1, §4, `prop: mixture.of.gaussians`.
 -/
 
-import Transformer.Metastability.Basic
+@[expose] public section
 
 open Real
 

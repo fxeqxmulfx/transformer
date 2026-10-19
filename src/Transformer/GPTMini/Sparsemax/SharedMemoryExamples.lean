@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.MemoryExampleGrams
+module
+
+public import Transformer.GPTMini.Sparsemax.MemoryExampleGrams
 
 /-!
 # Three different repeated-token contexts with jointly learned common values
@@ -17,6 +19,8 @@ true joint midpoint is one half, realized by the same decoded values
 learned parameter dictionary, not ordinary token self-attention. No task
 loss, FFN, floating-point execution or new training result is asserted.
 -/
+
+@[expose] public section
 
 noncomputable section
 

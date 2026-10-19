@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallParserLayout
+module
+
+public import Transformer.GPTMini.Semantics.RecallParserLayout
 
 /-!
 # Actual finite last-write routing from the complete raw Basis parser
@@ -19,6 +21,8 @@ Both rewrite settings and arbitrary accepted record counts are
 covered. Context limits and the public model callback are connected
 in the subsequent full correctness theorem.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

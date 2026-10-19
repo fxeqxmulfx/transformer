@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.MarkovTeacher
-import Transformer.Basis.Parity
+module
+
+public import Transformer.GPTMini.Convex.Structured.MarkovTeacher
+public import Transformer.Basis.Parity
 
 /-!
 # Six-state parity data semantics on actual integer tokens
@@ -17,6 +19,8 @@ on every validated prefix. The learned stochastic head's confidence,
 shared raw parameter assignment, output-channel decoding and actual
 residual/integer model coupling remain separate proof obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

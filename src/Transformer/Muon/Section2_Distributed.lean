@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Muon.Section2_Models
+
+/-!
 # Muon — correctness of Distributed Muon
 
 arXiv:2502.16982, §2.3, Algorithm 1 (`alg:distribmuon`). An equivalence
@@ -9,7 +13,7 @@ Communication here is exact; the paper's bf16 communication introduces
 rounding and is not claimed to equal an exact real-arithmetic execution.
 -/
 
-import Transformer.Muon.Section2_Models
+@[expose] public section
 
 open scoped BigOperators Matrix
 

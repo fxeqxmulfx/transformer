@@ -1,6 +1,8 @@
-import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
-import Mathlib.LinearAlgebra.Complex.FiniteDimensional
-import Mathlib.MeasureTheory.Integral.Prod
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Gaussian regularization before density inversion
@@ -24,6 +26,8 @@ coordinate equivalence with `ℝ × ℝ` is used when recovering the density
 of the paper's actual normalized sum. No density is a hypothesis here.
 Source: arXiv:2412.09080v3, §3 `thm:br` and §5.4, Fourier inversion.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 open scoped ENNReal

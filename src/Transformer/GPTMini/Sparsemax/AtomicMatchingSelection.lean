@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.AtomicMatchingOptimality
+module
+
+public import Transformer.GPTMini.Sparsemax.AtomicMatchingOptimality
 
 /-!
 # Selecting new genuine matching heads changes the learned response
@@ -19,6 +21,8 @@ unchanging atom bank cannot certify the full matching problem.
 These are physical forward witnesses; no inverse decoder enters the path.
 The oracle certificate itself remains conditional on a price bound for all heads.
 -/
+
+@[expose] public section
 
 noncomputable section
 

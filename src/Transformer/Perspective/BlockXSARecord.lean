@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perspective.BlockXSASpread
+public import Transformer.Perspective.BlockMLP
+public import Transformer.Perspective.InjectedAttention
+public import Mathlib.Analysis.SpecialFunctions.Sigmoid
+
+/-!
 # The block of the record — gated exclusive heads and its own MLP — does not collapse
 
 **Not a statement of any paper.**  `xsaDrive_spread` for the block of
@@ -13,20 +20,17 @@ the layer's constant scale and the grouping of queries; the residual weight as
 the linear term `D = mix[0] - 1`; the feed-forward term `W₂ σ_α(W₁ x)²` of
 `Perspective.BlockMLP`; and injections `z_i = mix[1] ⊙ x0_i`.
 
-The gate is the point.  Applied after the projection, it is a factor on the row
+The gate is the point. Applied after the projection, it is a factor on the row
 of its head (`xsaDrive_gate`), so the block is a `xsaDrive` with weights
 `g_{hi} p_{hij}`, and all that is asked of `g` is `|g_{hi}| ≤ Γ`: nothing about
-its shape, its input or its smoothness.  `Γ = 1` for the record's
+its shape, its input or its smoothness. `Γ = 1` for the record's
 `σ(scale · w · x)` and for `GatedAttn`, `Γ = 2` for `2 σ(·)` of `AttnOutGate`,
-`Γ = 1` with no gate at all.  Without the projection this is out of reach:
+`Γ = 1` with no gate at all. Without the projection this is out of reach:
 `IsBoundedBlockOn` needs the rows of a head to share their sum, and a gate that
 depends on the token breaks exactly that.
 -/
 
-import Transformer.Perspective.BlockXSASpread
-import Transformer.Perspective.BlockMLP
-import Transformer.Perspective.InjectedAttention
-import Mathlib.Analysis.SpecialFunctions.Sigmoid
+@[expose] public section
 
 open scoped BigOperators
 
@@ -105,13 +109,13 @@ example (β : ℝ) (Q K : TimeParam 1) (X : ℝ → SphereTuple 1 1) (s : ℝ �
 
 /-- **Theorem (the block of the record does not collapse).**  Let `w₁`, `w₂` be
 linearly independent, `H` a number of heads, `|α| ≤ 1`, `Γ, N, K, L, K₂, Z ≥ 0`
-and `τ > 0`.  There is `δ > 0` such that along every flow
+and `τ > 0`. There is `δ > 0` such that along every flow
 `ẋ_i = Proj_{x_i}(v_i(t))` driven on a window `[t₀, t₀ + τ]` by a block whose
 heads have softmax rows `p_{hij}` gated by `|g_{hi}| ≤ Γ`, are exclusive, have
 values `‖U_h‖ ≤ N` and output maps `‖O_h‖ ≤ K`, whose feed-forward part is
 `D x + W₂ σ_α(W₁ x)²` with `‖D‖ ≤ L`, `‖W₁‖ ≤ K₁`, `‖W₂‖ ≤ K₂`, and whose
 injections are bounded by `Z` and satisfy `z_k - z_l = w₁`, `z_q - z_r = w₂`
-throughout, some time of the window has two tokens more than `δ` apart.  `δ`
+throughout, some time of the window has two tokens more than `δ` apart. `δ`
 depends on neither the number of tokens nor the width of a head or of the hidden
 layer, the flow, the weights, the gate or `t₀`.
 

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.CRASP.PositionalSubstitutionSemantics
+public import Transformer.CRASP.PositionalBoolean
+public import Transformer.CRASP.CountCells
+
+/-!
 # Positional formulas for finite-state attention sums
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLClmod`.
@@ -6,9 +12,7 @@ The auxiliary alphabet consists of finite source states. Substitution then
 turns the original rounded quotient cells into positional formulas.
 -/
 
-import Transformer.CRASP.PositionalSubstitutionSemantics
-import Transformer.CRASP.PositionalBoolean
-import Transformer.CRASP.CountCells
+@[expose] public section
 
 namespace Transformer.CRASP.CountCells
 

@@ -1,4 +1,6 @@
-import Transformer.Modes.Section5_FirstDerivativeTest
+module
+
+public import Transformer.Modes.Section5_FirstDerivativeTest
 
 /-!
 # Oscillatory integral bounds with a smooth amplitude
@@ -15,6 +17,8 @@ is at most `M + L * (b - a)`. These estimates apply on a bounded interval;
 they do not assume that the source's fixed Gaussian tail decays with `ρ`.
 Source: arXiv:2412.09080v3, §5.5, proof of `eq:uniform-decay`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 open scoped Interval

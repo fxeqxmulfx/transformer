@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.CubeContentRouting
-import Mathlib.Data.Fintype.Powerset
+module
+
+public import Transformer.GPTMini.Sparsemax.CubeContentRouting
+public import Mathlib.Data.Fintype.Powerset
 
 /-!
 # Content interaction features diagonalize generated sparse attention
@@ -16,6 +18,8 @@ or value table is stored. Features and bit identities are fixed before
 training; learned responses are linear in these coefficients, even when
 the observation-to-feature map has high-order nonlinear interactions.
 -/
+
+@[expose] public section
 
 noncomputable section
 

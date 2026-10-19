@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.JointGramValues
+module
+
+public import Transformer.GPTMini.Sparsemax.JointGramValues
 
 /-!
 # Two different learned embedding matrices with invertible causal attention
@@ -15,6 +17,8 @@ and self-weight floor one half. The first causal row necessarily remains
 a self route; the second need not. This is a mathematical prototype for
 the value-coordinate change, not an experiment or arbitrary-context claim.
 -/
+
+@[expose] public section
 
 noncomputable section
 

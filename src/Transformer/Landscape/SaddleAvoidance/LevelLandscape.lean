@@ -1,19 +1,24 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Landscape
+public import Transformer.Landscape.SaddleAvoidance.SecondOrderCritical
+
+/-!
 # Saddle avoidance — the landscape below a level
 
 Landscape theorems usually describe only the critical points below a level
 `c`: every critical point `z` with `f z < c` is a global minimizer or a
-strict saddle.  Gradient descent with `0 < η` and `η L < 1` does not raise
+strict saddle. Gradient descent with `0 < η` and `η L < 1` does not raise
 `f` (`antitone_iterate`), so an orbit starting below `c` stays below it, and
 so does every limit point of the orbit up to translations leaving `f`
-invariant (`le_of_frequently_norm_add_sub_lt`).  The landscape hypothesis
+invariant (`le_of_frequently_norm_add_sub_lt`). The landscape hypothesis
 `hcrit` and the Łojasiewicz inequality `hloj` are therefore needed only
-below `c`.  Almost every start below `c` whose orbit has a limit point up to
+below `c`. Almost every start below `c` whose orbit has a limit point up to
 translations converges to a critical point, no higher than the start, that
 is not a strict saddle (`ae_exists_tendsto_not_isStrictSaddle_of_lt`); hence
-to a global minimizer (`ae_exists_tendsto_isMinOn_of_lt`).  When the
+to a global minimizer (`ae_exists_tendsto_isMinOn_of_lt`). When the
 translations span `E`, every orbit has such a limit point
-(`ae_exists_tendsto_isMinOn_of_lt_of_span_eq_top`).  `FlowLevelLandscape`
+(`ae_exists_tendsto_isMinOn_of_lt_of_span_eq_top`). `FlowLevelLandscape`
 has the same for gradient flows, and `AnalyticLevelLandscape` the forms
 without `hloj` for analytic `f`.
 
@@ -21,8 +26,7 @@ Source: item M6.3 of `landscape_plan.md`, the theorems of `Landscape` with
 their hypotheses asked only below `c`.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Landscape
-import Transformer.Landscape.SaddleAvoidance.SecondOrderCritical
+@[expose] public section
 
 open Filter Set MeasureTheory
 open scoped Topology NNReal
@@ -36,8 +40,8 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDim
 point that is not a strict saddle**, if `f` satisfies the Łojasiewicz
 inequality with an exponent `0 ≤ a < 1` at each critical point below `c`,
 and almost every orbit starting below `c` has a limit point up to
-translations in a set `Λ` leaving `f` invariant.  The limit is no higher than
-the start.  This is `ae_exists_tendsto_not_isStrictSaddle` with `hloj` and
+translations in a set `Λ` leaving `f` invariant. The limit is no higher than
+the start. This is `ae_exists_tendsto_not_isStrictSaddle` with `hloj` and
 `hcl` asked only below `c`. -/
 theorem ae_exists_tendsto_not_isStrictSaddle_of_lt (μ : Measure E) [μ.IsAddHaarMeasure]
     {ν : Measure E} (hν : ν ≪ μ) (hf : ContDiff ℝ 2 f) (hL : LipschitzWith L (gradient f))
@@ -66,7 +70,7 @@ theorem ae_exists_tendsto_not_isStrictSaddle_of_lt (μ : Measure E) [μ.IsAddHaa
 minimizer**, if every critical point below `c` is a global minimizer or a
 strict saddle and satisfies the Łojasiewicz inequality with an exponent
 `0 ≤ a < 1`, and almost every orbit starting below `c` has a limit point up
-to translations in a set `Λ` leaving `f` invariant.  This is
+to translations in a set `Λ` leaving `f` invariant. This is
 `ae_exists_tendsto_isMinOn` for the starts below `c`, with `hcrit`, `hloj`
 and `hcl` asked only below `c`. -/
 theorem ae_exists_tendsto_isMinOn_of_lt (μ : Measure E) [μ.IsAddHaarMeasure] {ν : Measure E}
@@ -86,7 +90,7 @@ theorem ae_exists_tendsto_isMinOn_of_lt (μ : Measure E) [μ.IsAddHaarMeasure] {
 /-- **Below a level, gradient descent on a periodic function almost surely
 converges to a global minimizer**, if every critical point below `c` is a
 global minimizer or a strict saddle and satisfies the Łojasiewicz
-inequality.  The translations `Λ` leaving `f` invariant span `E`, so every
+inequality. The translations `Λ` leaving `f` invariant span `E`, so every
 orbit has a limit point up to their integer combinations. -/
 theorem ae_exists_tendsto_isMinOn_of_lt_of_span_eq_top (μ : Measure E) [μ.IsAddHaarMeasure]
     {ν : Measure E} (hν : ν ≪ μ) (hf : ContDiff ℝ 2 f) (hL : LipschitzWith L (gradient f))
@@ -107,10 +111,10 @@ theorem ae_exists_tendsto_isMinOn_of_lt_of_span_eq_top (μ : Measure E) [μ.IsAd
 /-- The hypotheses of the theorems above hold for
 `f(x) = 2 - cos x - cos² x` on the line with Lebesgue measure, `L = 3`,
 `η = 1/4`, the period `2π` or its integer multiples, and `c = 2`, while the
-hypothesis `hcrit` of `ae_exists_tendsto_isMinOn` fails.  The gradient is
-`sin x + sin 2x = sin x (1 + 2 cos x)`.  Below `2`, where `cos x > 0`, the
+hypothesis `hcrit` of `ae_exists_tendsto_isMinOn` fails. The gradient is
+`sin x + sin 2x = sin x (1 + 2 cos x)`. Below `2`, where `cos x > 0`, the
 critical points are the global minimizers, where `cos x = 1` and the Hessian
-`cos x + 2 cos 2x` is `3`.  At `π`, where `f = 2`, lies a local minimizer
+`cos x + 2 cos 2x` is `3`. At `π`, where `f = 2`, lies a local minimizer
 that is neither a global one nor a strict saddle. -/
 example : let f := fun x : ℝ => 2 - Real.cos x - Real.cos x ^ 2
     (volume : Measure ℝ).IsAddHaarMeasure ∧ (volume : Measure ℝ) ≪ volume ∧ ContDiff ℝ 2 f ∧

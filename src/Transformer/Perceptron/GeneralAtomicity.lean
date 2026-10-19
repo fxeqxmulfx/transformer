@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Perceptron.GeneralAttention
+public import Transformer.Perceptron.HigherDim
+public import Transformer.Perceptron.Section3_StrictMatrixAtomicity
+public import Transformer.Perceptron.Section5_SphericalMapNullSupport
+public import Transformer.Perceptron.Section5_ReflectionAtomicity
+
+/-!
 # Perceptrons and attention's mean-field landscape — atomicity for a general
   attention matrix
 
@@ -21,11 +29,7 @@
 Source: arXiv:2601.21366v2, `rem: ext` (ii), `rem:unifiedlog-B`.
 -/
 
-import Transformer.Perceptron.GeneralAttention
-import Transformer.Perceptron.HigherDim
-import Transformer.Perceptron.Section3_StrictMatrixAtomicity
-import Transformer.Perceptron.Section5_SphericalMapNullSupport
-import Transformer.Perceptron.Section5_ReflectionAtomicity
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory

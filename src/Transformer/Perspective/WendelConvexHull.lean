@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.Perspective.UniformHemisphere
+public import Transformer.Perspective.WendelOneDimBasic
+public import Mathlib.Analysis.Convex.Topology
+public import Mathlib.Analysis.Convex.Combination
+public import Mathlib.Analysis.LocallyConvex.Separation
+public import Mathlib.Analysis.InnerProductSpace.Dual
+
+/-!
 # The convex-hull form of Wendel's hemisphere event
 
 For a nonempty finite sample on the sphere, lying in a common open hemisphere
@@ -9,12 +18,7 @@ convex hull.
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962).
 -/
 
-import Transformer.Perspective.UniformHemisphere
-import Transformer.Perspective.WendelOneDimBasic
-import Mathlib.Analysis.Convex.Topology
-import Mathlib.Analysis.Convex.Combination
-import Mathlib.Analysis.LocallyConvex.Separation
-import Mathlib.Analysis.InnerProductSpace.Dual
+@[expose] public section
 
 open MeasureTheory
 

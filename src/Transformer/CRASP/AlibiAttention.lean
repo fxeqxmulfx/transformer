@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.AlibiStateSums
+
+/-!
 # Exact ALiBi attention from its integer coefficient sums
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLCly`, and B.1,
@@ -6,7 +10,7 @@ Equation `eq:att`. The common mantissa scale cancels in weighted attention
 and remains in the uniform denominator-zero fallback.
 -/
 
-import Transformer.CRASP.AlibiStateSums
+@[expose] public section
 
 namespace Transformer.CRASP.AlibiTables
 

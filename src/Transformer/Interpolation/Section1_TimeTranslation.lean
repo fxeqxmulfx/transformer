@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_TimeRescaling
+public import Transformer.Interpolation.Section3_TwoRidgeLaw
+
+/-!
 # Exact translated and reversed clocks for the original weak equation
 
 ArXiv:2411.04551v3, §1, `eq: vf` and `eq: cauchy.pb`,
@@ -15,8 +20,7 @@ weak equation for `t ↦ μ(a-t)`, which will identify later autonomous
 control phases by applying the proved autonomous-prefix transport theorem.
 -/
 
-import Transformer.Interpolation.Section1_TimeRescaling
-import Transformer.Interpolation.Section3_TwoRidgeLaw
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

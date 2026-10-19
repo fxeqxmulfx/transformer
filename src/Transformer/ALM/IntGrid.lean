@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.ALM.Defs
+
+/-!
 # Integer keys live on a grid, and their breakpoints on a half-grid
 
 The arithmetic behind `Transformer.ALM.FloatLattice`, separated from it
 because it says nothing about floating point: a sorted family of integer keys
 steps by at least one, so consecutive breakpoints are at least one apart, and
-every breakpoint is a multiple of `1/2`.  An integer query is therefore either
+every breakpoint is a multiple of `1/2`. An integer query is therefore either
 exactly on a breakpoint or a clear `1/2` from it, which is the gap a rounded
 comparison has to fit inside.
 
@@ -12,7 +16,7 @@ Source: `transformer_vm/attention/hull2d_cht.h`, lines 60-70 (`isect`), and
 `Transformer.ALM.ScalarInt` for the integrality of the stored keys.
 -/
 
-import Transformer.ALM.Defs
+@[expose] public section
 
 namespace Transformer
 namespace ALM

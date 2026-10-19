@@ -1,6 +1,8 @@
-import Transformer.Homogenized.Section7_LogisticNegativePart
-import Transformer.Homogenized.Section7_WeightedSupermartingale
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+module
+
+public import Transformer.Homogenized.Section7_LogisticNegativePart
+public import Transformer.Homogenized.Section7_WeightedSupermartingale
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # Invariance of the logistic state interval
@@ -21,6 +23,8 @@ Neither a range property nor a martingale property of a nonsmooth
 test or a weighted process is assumed. The solution is tested only
 with the actual globally smooth functions of the preceding module.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

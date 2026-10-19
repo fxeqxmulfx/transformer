@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainGradient
-import Transformer.Grokking.AdamW.ScalarLimits
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainGradient
+public import Transformer.Grokking.AdamW.ScalarLimits
 
 /-!+# Closed native feedback for physical forward efficiency
 
@@ -20,6 +22,8 @@ pair with stale momentum is not declared invariant. Positive interior
 allocation, attraction, delay and learned stochastic GPTMini transfer
 remain separate obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

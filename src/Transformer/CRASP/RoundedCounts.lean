@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.CRASP.LinearCounts
+public import Transformer.CRASP.FixedFinite
+public import Transformer.CRASP.FormulaBounds
+
+/-!
 # A rounded quotient as comparisons of signed counts
 
 arXiv:2506.16055v3, Appendix B.2, the division step in
@@ -7,9 +13,7 @@ division by their exact endpoint-aware intervals. No extra counting is
 needed after the weighted sums have been formed.
 -/
 
-import Transformer.CRASP.LinearCounts
-import Transformer.CRASP.FixedFinite
-import Transformer.CRASP.FormulaBounds
+@[expose] public section
 
 namespace Transformer.CRASP.LinearCount
 

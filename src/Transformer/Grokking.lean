@@ -1,13 +1,15 @@
-import Transformer.Grokking.NaiveLoss
-import Transformer.Grokking.Perceptron
-import Transformer.Grokking.EffectiveTheory
-import Transformer.Grokking.AdamW
-import Transformer.Grokking.GradientEvidence
-import Transformer.Grokking.Operational
-import Transformer.Grokking.Geometry
-import Transformer.Grokking.DivisionOrbits
-import Transformer.Grokking.Composition
-import Transformer.Grokking.CircuitEfficiency
+module
+
+public import Transformer.Grokking.NaiveLoss
+public import Transformer.Grokking.Perceptron
+public import Transformer.Grokking.EffectiveTheory
+public import Transformer.Grokking.AdamW
+public import Transformer.Grokking.GradientEvidence
+public import Transformer.Grokking.Operational
+public import Transformer.Grokking.Geometry
+public import Transformer.Grokking.DivisionOrbits
+public import Transformer.Grokking.Composition
+public import Transformer.Grokking.CircuitEfficiency
 
 /-! Exact mathematical formulations of grokking and its candidate
 measurements. Current scope: finite-class confidence and decisions, and
@@ -28,3 +30,5 @@ certificates, and corrected fixed-circuit efficiency allocation with
 positive-penalty and global-optimality premises, including source
 counterexamples, repaired real-power increment estimates, actual feasible
 transfers, superlinear minimum cost balance/ratios and fixed-table margins. -/
+
+@[expose] public section

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianLinearImage
+
+/-!
 # Integration by parts for the original centered Gaussian law
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -16,7 +20,7 @@ immediately after `eq:SIGMA_R`. All derivatives and expectations refer
 to the actual original test and actual original Gaussian measure.
 -/
 
-import Transformer.Homogenized.Section7_GaussianLinearImage
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators MatrixOrder

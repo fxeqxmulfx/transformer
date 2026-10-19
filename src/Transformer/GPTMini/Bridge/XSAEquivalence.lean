@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.GPTMini.CausalMHA
+public import Transformer.GPTMini.Bridge.SphereResidence
+
+/-!
 # Bridge: XSA at `V = I_d` equals spherical projection
 
 When the value projection is the identity (`V x_i = x_i`) and the tokens
@@ -18,9 +24,7 @@ in the canonical limit it is **literally** the same operation as the
 sphere-tangent projection in the formalized clustering theorems.
 -/
 
-import Transformer.Basic
-import Transformer.GPTMini.CausalMHA
-import Transformer.GPTMini.Bridge.SphereResidence
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -59,7 +63,7 @@ up to the `√d` of `Bridge.SphereResidence` — and `eps = 0`, one head of
 
 the spherical-tangent projection of the attention output, which is the
 operation the canonical dynamics `Perspective.Section1_IPS.SA` and
-`Perspective.Section5_HighD` are written with.  The XSA sub-layer is therefore
+`Perspective.Section5_HighD` are written with. The XSA sub-layer is therefore
 not an approximation of that projection: at `V = I_d` it *is* that projection.
 
 What is still missing before the clustering theorems apply is the multi-head

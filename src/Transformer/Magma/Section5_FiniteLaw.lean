@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Optimization.Basic
+
+/-!
 # Finite stochastic-gradient laws
 
 Formalization of arXiv:2602.15322v1, Section 5 and Appendix A.3.
@@ -7,7 +11,7 @@ Unbiasedness is an explicit correction: the source's second-moment
 inequality alone neither states nor implies it.
 -/
 
-import Transformer.Optimization.Basic
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 

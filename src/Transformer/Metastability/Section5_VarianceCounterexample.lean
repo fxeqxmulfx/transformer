@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Metastability.Section5_DiracCaps
+public import Transformer.Metastability.DirectProofWitness
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # The cap-exit variance estimate fails at the initial time
 
 ArXiv:2410.06833v1, §5, proof of `thm: metastability MF`, Step 2,
@@ -18,9 +24,7 @@ The full counterexample, including every hypothesis of the old
 `variance_small` statement, is in `MeanFieldCapExit`.
 -/
 
-import Transformer.Metastability.Section5_DiracCaps
-import Transformer.Metastability.DirectProofWitness
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

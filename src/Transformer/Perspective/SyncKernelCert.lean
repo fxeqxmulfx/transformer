@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.SyncKernelPieces
+public import Mathlib.Analysis.Real.Pi.Bounds
+
+/-!
 # Certificates for `τ_β ∫ |f_β'''|₊ < 4`
 
 Polyanskiy, Rigollet, Yao — arXiv:2507.22857v1, *Synchronization of mean-field
@@ -18,8 +23,7 @@ They take the place of the values of `g¹`, `g²` and of `lemma:tau1` that the
 source uses in `lemma:beta_0.75`, …, `lemma:beta_final`.
 -/
 
-import Transformer.Perspective.SyncKernelPieces
-import Mathlib.Analysis.Real.Pi.Bounds
+@[expose] public section
 
 open Real
 
@@ -29,7 +33,7 @@ namespace Perspective
 /-- **`-A ≤ f_β'' ≤ U` on `[0, π]` from chains of pieces.**  For `0 ≤ β₁ ≤ β ≤ β₂`,
 `β ≤ 1`, `1 ≤ A` and `0 ≤ U`: if consecutive points of `0 :: cs ++ [1]` satisfy
 `NegPieceOK` and those of `0 :: us ++ [1]` satisfy `PosPieceOK`, then
-`-A ≤ f_β'' ≤ U` on `[0, π]`.  Where `cos x ≤ 0`, `-f_β'' ≤ 1`; where
+`-A ≤ f_β'' ≤ U` on `[0, π]`. Where `cos x ≤ 0`, `-f_β'' ≤ 1`; where
 `cos x ≥ 0`, `f_β'' ≤ 0`. -/
 theorem f_β''_mem_Icc_of_isChain {β β₁ β₂ A U : ℝ} (cs us : List ℝ) (hβ₁ : 0 ≤ β₁)
     (hβ : β ∈ Set.Icc β₁ β₂) (hβ1 : β ≤ 1) (hA : 1 ≤ A) (hU : 0 ≤ U)

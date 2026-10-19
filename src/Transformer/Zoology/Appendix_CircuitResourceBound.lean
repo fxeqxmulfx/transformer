@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CyclicCircuitEquivalence
+
+/-!
 # A finite resource bound for the explicit circuit compiler
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: circuit-tuple` and
@@ -8,7 +12,7 @@ compiler consequently uses at most `nd + depth*width` feature columns.
 This does not imply the paper's `O(width)` inner-dimension bound.
 -/
 
-import Transformer.Zoology.Appendix_CyclicCircuitEquivalence
+@[expose] public section
 
 namespace Transformer.Zoology
 

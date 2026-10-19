@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Causal.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.RCLike
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # The original finite causal weights on the ambient token space
 
 ArXiv:2411.04990v2, §2, `eqn:csa`, and §4, proof of `thm1`.
@@ -15,10 +22,7 @@ the local smoothness and growth inputs for the causal flow construction.
 No dynamics, convergence, or regularity is put into these definitions.
 -/
 
-import Transformer.Causal.Basic
-import Mathlib.Analysis.Calculus.ContDiff.RCLike
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open scoped BigOperators
 open Real

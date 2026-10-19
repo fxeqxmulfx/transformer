@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianCoordinateMoments
+public import Transformer.Homogenized.Section7_GaussianHeadFeatures
+
+/-!
 # The actual Gram covariance of the original Gaussian head features
 
 ArXiv:2604.01978v1, §7, `eq:SIGMA_R`, under initialization (G).
@@ -17,8 +22,7 @@ The assertions allow arbitrary token vectors, including zero vectors,
 linearly dependent vectors, and singular original Gaussian laws.
 -/
 
-import Transformer.Homogenized.Section7_GaussianCoordinateMoments
-import Transformer.Homogenized.Section7_GaussianHeadFeatures
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

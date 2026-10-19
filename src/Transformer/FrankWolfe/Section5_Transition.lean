@@ -1,14 +1,18 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section5_Process
+
+/-!
 # Attention's forward pass and Frank-Wolfe — the transition law of the process
 
-`IsSAProcess` states the transition identity for a fixed target set `A`.  The estimates of
+`IsSAProcess` states the transition identity for a fixed target set `A`. The estimates of
 `lem: first.phase` and `lem: metastab.1` need it for a target set that depends on the current
 configuration (`x_i^{t+1}` lands outside the convex combinations of its own group), so here the
 identity is extended to every measurable set of pairs `(x^t, x_i^{t+1})`, by a monotone class
 argument on rectangles.
 -/
 
-import Transformer.FrankWolfe.Section5_Process
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory

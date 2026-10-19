@@ -1,7 +1,110 @@
-/-
+module
+
+public import Transformer.Zoology.Section3_MQAR
+public import Transformer.Zoology.Section4_Coyote
+public import Transformer.Zoology.Appendix_Attention
+public import Transformer.Zoology.Appendix_SoftmaxRecall
+public import Transformer.Zoology.Appendix_Shift
+public import Transformer.Zoology.Appendix_Network
+public import Transformer.Zoology.Appendix_RetNet
+public import Transformer.Zoology.Appendix_CircuitDefs
+public import Transformer.Zoology.Section5_SelectiveAttention
+public import Transformer.Zoology.Section4_PairedRecall
+public import Transformer.Zoology.Appendix_Butterfly
+public import Transformer.Zoology.Appendix_ButterflyTree
+public import Transformer.Zoology.Appendix_Kaleidoscope
+public import Transformer.Zoology.Appendix_PaddedModel
+public import Transformer.Zoology.Appendix_ShiftUp
+public import Transformer.Zoology.Appendix_RunningSum
+public import Transformer.Zoology.Appendix_RunningSumBlocks
+public import Transformer.Zoology.Appendix_TwoLayerAttention
+public import Transformer.Zoology.Appendix_AttentionMatrices
+public import Transformer.Zoology.Appendix_CircuitPrimitives
+public import Transformer.Zoology.Appendix_KaleidoscopeLinear
+public import Transformer.Zoology.Appendix_KaleidoscopeMatrix
+public import Transformer.Zoology.Appendix_KCoyote
+public import Transformer.Zoology.Appendix_KCoyoteZero
+public import Transformer.Zoology.Appendix_KCoyotePrimitives
+public import Transformer.Zoology.Appendix_KCoyoteGates
+public import Transformer.Zoology.Appendix_CircuitSemantics
+public import Transformer.Zoology.Appendix_CircuitEvaluation
+public import Transformer.Zoology.Appendix_KNetwork
+public import Transformer.Zoology.Appendix_SmallCircuits
+public import Transformer.Zoology.Appendix_DependentDistance
+public import Transformer.Zoology.Appendix_DependentDistanceMany
+public import Transformer.Zoology.Appendix_RequiredDistances
+public import Transformer.Zoology.Appendix_PositionMask
+public import Transformer.Zoology.Appendix_RawDistanceOffset
+public import Transformer.Zoology.Appendix_Autocorrelation
+public import Transformer.Zoology.Appendix_SequentialMQAR
+public import Transformer.Zoology.Appendix_CircuitMemory
+public import Transformer.Zoology.Appendix_CircuitGateLayers
+public import Transformer.Zoology.Appendix_CircuitGateCorrectness
+public import Transformer.Zoology.Appendix_CircuitPrefix
+public import Transformer.Zoology.Appendix_CircuitSimulation
+public import Transformer.Zoology.Appendix_CircuitBatchDefs
+public import Transformer.Zoology.Appendix_CircuitBatchCorrectness
+public import Transformer.Zoology.Appendix_CircuitParallelPrefix
+public import Transformer.Zoology.Appendix_CircuitParallel
+public import Transformer.Zoology.Appendix_CircuitCutWidth
+public import Transformer.Zoology.Appendix_CyclicCircuitNetwork
+public import Transformer.Zoology.Appendix_CyclicCircuitInput
+public import Transformer.Zoology.Appendix_CyclicCircuitOutput
+public import Transformer.Zoology.Appendix_CyclicCircuitSimulation
+public import Transformer.Zoology.Appendix_CyclicCircuitEquivalence
+public import Transformer.Zoology.Appendix_CircuitResourceBound
+public import Transformer.Zoology.Appendix_CausalCircuitLimit
+public import Transformer.Zoology.Appendix_ShiftSumLayout
+public import Transformer.Zoology.Appendix_ShiftSumCopy
+public import Transformer.Zoology.Appendix_ShiftSumSimulation
+public import Transformer.Zoology.Appendix_CyclicKNetwork
+public import Transformer.Zoology.Appendix_ShiftSumK
+public import Transformer.Zoology.Appendix_BlockButterflyIndex
+public import Transformer.Zoology.Appendix_BlockButterflyCoyote
+public import Transformer.Zoology.Appendix_ShiftSumProgram
+public import Transformer.Zoology.Appendix_DiagonalLinearLayout
+public import Transformer.Zoology.Appendix_DiagonalLinearSimulation
+public import Transformer.Zoology.Appendix_DiagonalLinearK
+public import Transformer.Zoology.Appendix_ButterflyIdentity
+public import Transformer.Zoology.Appendix_ButterflyToggle
+public import Transformer.Zoology.Appendix_ButterflyToggleShift
+public import Transformer.Zoology.Appendix_BinaryButterflyStage
+public import Transformer.Zoology.Appendix_BinaryButterflyProgram
+public import Transformer.Zoology.Appendix_BinaryButterflyTranspose
+public import Transformer.Zoology.Appendix_ButterflyProgramMatrix
+public import Transformer.Zoology.Appendix_RowMajorKaleidoscope
+public import Transformer.Zoology.Appendix_ExpandedRowMajorCoyote
+public import Transformer.Zoology.Appendix_RowMajorCoyoteResources
+public import Transformer.Zoology.Appendix_ButterflyTreeLevels
+public import Transformer.Zoology.Appendix_ButterflyTreeProduct
+public import Transformer.Zoology.Appendix_ButterflyGridLayout
+public import Transformer.Zoology.Appendix_ButterflyGridToggle
+public import Transformer.Zoology.Appendix_ButterflyGridVectors
+public import Transformer.Zoology.Appendix_ButterflyGridStages
+public import Transformer.Zoology.Appendix_KaleidoscopeGrid
+public import Transformer.Zoology.Appendix_KaleidoscopeCast
+public import Transformer.Zoology.Appendix_ButterflyGridPadding
+public import Transformer.Zoology.Appendix_ExpandedKaleidoscopeGrid
+public import Transformer.Zoology.Appendix_ButterflyPairOrientation
+public import Transformer.Zoology.Appendix_SingleLevelButterfly
+public import Transformer.Zoology.Appendix_InPlaceLinear
+public import Transformer.Zoology.Appendix_PairMatrixFactorization
+public import Transformer.Zoology.Appendix_FeaturePairAction
+public import Transformer.Zoology.Appendix_FeaturePairPrimitives
+public import Transformer.Zoology.Appendix_FeaturePairShears
+public import Transformer.Zoology.Appendix_FeaturePairMatrix
+public import Transformer.Zoology.Appendix_ControlledFeatureSwap
+public import Transformer.Zoology.Appendix_RowFeatureExchange
+public import Transformer.Zoology.Appendix_RowFeatureConjugacy
+public import Transformer.Zoology.Appendix_InPlaceButterflyProgram
+public import Transformer.Zoology.Appendix_InPlaceWeightWidths
+public import Transformer.Zoology.Appendix_ExactKaleidoscopeCoyote
+public import Transformer.Zoology.Appendix_ExactKaleidoscopeParameters
+
+/-!
 # Zoology: Measuring and Improving Recall in Efficient Language Models
 
-Formalization of Arora et al., arXiv:2312.04927v1.  The modules follow the
+Formalization of Arora et al., arXiv:2312.04927v1. The modules follow the
 main sections and theoretical appendix of the manuscript. This is partial:
 the width-sensitive K-matrix circuit resource bound, the parallel MQAR
 algorithm and its Coyote resource bounds, the randomized RetNet lower
@@ -31,103 +134,4 @@ prove exact lookup for covered shifts and identify missing steps in the
 paper's raw-position projections and autocorrelation selector.
 -/
 
-import Transformer.Zoology.Section3_MQAR
-import Transformer.Zoology.Section4_Coyote
-import Transformer.Zoology.Appendix_Attention
-import Transformer.Zoology.Appendix_SoftmaxRecall
-import Transformer.Zoology.Appendix_Shift
-import Transformer.Zoology.Appendix_Network
-import Transformer.Zoology.Appendix_RetNet
-import Transformer.Zoology.Appendix_CircuitDefs
-import Transformer.Zoology.Section5_SelectiveAttention
-import Transformer.Zoology.Section4_PairedRecall
-import Transformer.Zoology.Appendix_Butterfly
-import Transformer.Zoology.Appendix_ButterflyTree
-import Transformer.Zoology.Appendix_Kaleidoscope
-import Transformer.Zoology.Appendix_PaddedModel
-import Transformer.Zoology.Appendix_ShiftUp
-import Transformer.Zoology.Appendix_RunningSum
-import Transformer.Zoology.Appendix_RunningSumBlocks
-import Transformer.Zoology.Appendix_TwoLayerAttention
-import Transformer.Zoology.Appendix_AttentionMatrices
-import Transformer.Zoology.Appendix_CircuitPrimitives
-import Transformer.Zoology.Appendix_KaleidoscopeLinear
-import Transformer.Zoology.Appendix_KaleidoscopeMatrix
-import Transformer.Zoology.Appendix_KCoyote
-import Transformer.Zoology.Appendix_KCoyoteZero
-import Transformer.Zoology.Appendix_KCoyotePrimitives
-import Transformer.Zoology.Appendix_KCoyoteGates
-import Transformer.Zoology.Appendix_CircuitSemantics
-import Transformer.Zoology.Appendix_CircuitEvaluation
-import Transformer.Zoology.Appendix_KNetwork
-import Transformer.Zoology.Appendix_SmallCircuits
-import Transformer.Zoology.Appendix_DependentDistance
-import Transformer.Zoology.Appendix_DependentDistanceMany
-import Transformer.Zoology.Appendix_RequiredDistances
-import Transformer.Zoology.Appendix_PositionMask
-import Transformer.Zoology.Appendix_RawDistanceOffset
-import Transformer.Zoology.Appendix_Autocorrelation
-import Transformer.Zoology.Appendix_SequentialMQAR
-import Transformer.Zoology.Appendix_CircuitMemory
-import Transformer.Zoology.Appendix_CircuitGateLayers
-import Transformer.Zoology.Appendix_CircuitGateCorrectness
-import Transformer.Zoology.Appendix_CircuitPrefix
-import Transformer.Zoology.Appendix_CircuitSimulation
-import Transformer.Zoology.Appendix_CircuitBatchDefs
-import Transformer.Zoology.Appendix_CircuitBatchCorrectness
-import Transformer.Zoology.Appendix_CircuitParallelPrefix
-import Transformer.Zoology.Appendix_CircuitParallel
-import Transformer.Zoology.Appendix_CircuitCutWidth
-import Transformer.Zoology.Appendix_CyclicCircuitNetwork
-import Transformer.Zoology.Appendix_CyclicCircuitInput
-import Transformer.Zoology.Appendix_CyclicCircuitOutput
-import Transformer.Zoology.Appendix_CyclicCircuitSimulation
-import Transformer.Zoology.Appendix_CyclicCircuitEquivalence
-import Transformer.Zoology.Appendix_CircuitResourceBound
-import Transformer.Zoology.Appendix_CausalCircuitLimit
-import Transformer.Zoology.Appendix_ShiftSumLayout
-import Transformer.Zoology.Appendix_ShiftSumCopy
-import Transformer.Zoology.Appendix_ShiftSumSimulation
-import Transformer.Zoology.Appendix_CyclicKNetwork
-import Transformer.Zoology.Appendix_ShiftSumK
-import Transformer.Zoology.Appendix_BlockButterflyIndex
-import Transformer.Zoology.Appendix_BlockButterflyCoyote
-import Transformer.Zoology.Appendix_ShiftSumProgram
-import Transformer.Zoology.Appendix_DiagonalLinearLayout
-import Transformer.Zoology.Appendix_DiagonalLinearSimulation
-import Transformer.Zoology.Appendix_DiagonalLinearK
-import Transformer.Zoology.Appendix_ButterflyIdentity
-import Transformer.Zoology.Appendix_ButterflyToggle
-import Transformer.Zoology.Appendix_ButterflyToggleShift
-import Transformer.Zoology.Appendix_BinaryButterflyStage
-import Transformer.Zoology.Appendix_BinaryButterflyProgram
-import Transformer.Zoology.Appendix_BinaryButterflyTranspose
-import Transformer.Zoology.Appendix_ButterflyProgramMatrix
-import Transformer.Zoology.Appendix_RowMajorKaleidoscope
-import Transformer.Zoology.Appendix_ExpandedRowMajorCoyote
-import Transformer.Zoology.Appendix_RowMajorCoyoteResources
-import Transformer.Zoology.Appendix_ButterflyTreeLevels
-import Transformer.Zoology.Appendix_ButterflyTreeProduct
-import Transformer.Zoology.Appendix_ButterflyGridLayout
-import Transformer.Zoology.Appendix_ButterflyGridToggle
-import Transformer.Zoology.Appendix_ButterflyGridVectors
-import Transformer.Zoology.Appendix_ButterflyGridStages
-import Transformer.Zoology.Appendix_KaleidoscopeGrid
-import Transformer.Zoology.Appendix_KaleidoscopeCast
-import Transformer.Zoology.Appendix_ButterflyGridPadding
-import Transformer.Zoology.Appendix_ExpandedKaleidoscopeGrid
-import Transformer.Zoology.Appendix_ButterflyPairOrientation
-import Transformer.Zoology.Appendix_SingleLevelButterfly
-import Transformer.Zoology.Appendix_InPlaceLinear
-import Transformer.Zoology.Appendix_PairMatrixFactorization
-import Transformer.Zoology.Appendix_FeaturePairAction
-import Transformer.Zoology.Appendix_FeaturePairPrimitives
-import Transformer.Zoology.Appendix_FeaturePairShears
-import Transformer.Zoology.Appendix_FeaturePairMatrix
-import Transformer.Zoology.Appendix_ControlledFeatureSwap
-import Transformer.Zoology.Appendix_RowFeatureExchange
-import Transformer.Zoology.Appendix_RowFeatureConjugacy
-import Transformer.Zoology.Appendix_InPlaceButterflyProgram
-import Transformer.Zoology.Appendix_InPlaceWeightWidths
-import Transformer.Zoology.Appendix_ExactKaleidoscopeCoyote
-import Transformer.Zoology.Appendix_ExactKaleidoscopeParameters
+@[expose] public section

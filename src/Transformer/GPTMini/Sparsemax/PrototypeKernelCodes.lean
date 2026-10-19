@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.PrefixFeatureCodes
+module
+
+public import Transformer.GPTMini.Sparsemax.PrefixFeatureCodes
 
 /-!
 # Compact probability codes from a finite prototype kernel
@@ -19,6 +21,8 @@ and values still use the earlier exact convex chart. Codes are dense, and
 the output-only Gram freedom persists; neither sparsity of query routes nor
 sample-independent parameter count is claimed by this construction.
 -/
+
+@[expose] public section
 
 noncomputable section
 

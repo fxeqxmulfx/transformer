@@ -1,7 +1,9 @@
-import Transformer.Grokking.DivisionOrbits.Basic
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.Data.Finset.Prod
-import Mathlib.Data.Fintype.Card
+module
+
+public import Transformer.Grokking.DivisionOrbits.Basic
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.Data.Finset.Prod
+public import Mathlib.Data.Fintype.Card
 
 /-!
 # Exhaustive division cells and the modulo-97 corpus size
@@ -20,6 +22,8 @@ The zero-quotient cell is included in the numeric task even though the
 main energy diagnostic omits it. Numeric field semantics do not verify
 Python's inverse implementation, token dictionary or train/test shuffle.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.DivisionOrbits
 

@@ -1,7 +1,10 @@
-import Transformer.Modes.Section3_ComplexCharacteristic
-import Transformer.Modes.Section3_CharacteristicTaylor
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
-import Mathlib.Analysis.Calculus.ContDiff.Basic
+module
+
+public import Transformer.Modes.Section3_ComplexCharacteristic
+public import Transformer.Modes.Section3_CharacteristicTaylor
+public import Mathlib.MeasureTheory.Function.LpSpace.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.Basic
+
 /-!
 # Differentiating the literal characteristic function
 
@@ -18,6 +21,7 @@ for the product norm. Transporting the derivative and integral back
 recovers the paper's explicit dot products and positive phase.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_ConvexFalse
+public import Transformer.AdaFisher.Section3_NonconvexFalse
+
+/-!
 # AdaFisher: the unconditional regret-rate table needs additional assumptions
 
 arXiv:2405.16397v3, §3.2–3.4, Table 1 and Proposition 3.3.
@@ -7,8 +12,7 @@ the displayed O(log(T) sqrt(T)) bound at a permitted fixed step. Thus Table 1
 cannot be read as an unconditional guarantee for all allowed hyperparameters.
 -/
 
-import Transformer.AdaFisher.Section3_ConvexFalse
-import Transformer.AdaFisher.Section3_NonconvexFalse
+@[expose] public section
 
 open scoped BigOperators
 open Filter Topology

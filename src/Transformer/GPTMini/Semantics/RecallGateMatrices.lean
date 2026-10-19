@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallGateScalar
+module
+
+public import Transformer.GPTMini.Semantics.RecallGateScalar
 
 /-!
 # Realize the recall table gate in the original FFN matrices
@@ -16,6 +18,8 @@ prenorm formula instead retains its homogeneous square explicitly.
 These are finite shared matrices, not a switch on semantic table
 membership. Gate outcomes on raw inputs are proved subsequently.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

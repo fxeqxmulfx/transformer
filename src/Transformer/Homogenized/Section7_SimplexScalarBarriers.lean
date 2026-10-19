@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_SimplexMomentBounds
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Scalar barriers for the simplex ODE
 
 ArXiv:2604.01978v1, §7, eq:gamma_ODE_selfcontained and the
@@ -15,8 +20,7 @@ The subsequent application derives all drift premises from the
 original attention moments and explicit simplex realization.
 -/
 
-import Transformer.Homogenized.Section7_SimplexMomentBounds
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open Set
 

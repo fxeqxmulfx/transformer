@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.Perceptron.HigherDim
+public import Transformer.Perceptron.TransformPoly
+public import Transformer.Perceptron.Section5_PiecewisePolynomialCover
+public import Transformer.Perceptron.Section5_PiecewiseAtomicity
+public import Transformer.Perceptron.Section5_UniformSupport
+public import Transformer.Perceptron.Section5_LinearStationarity
+
+/-!
 # Perceptrons and attention's mean-field landscape — piecewise-polynomial
   activations
 
@@ -11,15 +20,15 @@ Lipschitz piecewise-polynomial activation, and the linear activation
 
 * "piecewise polynomial" is `IsPiecewisePolynomial`: finitely many
   breakpoints, and on every open interval avoiding them `σ` agrees with a
-  polynomial.  It is stated over open *preconnected* sets, which on `ℝ` are
+  polynomial. It is stated over open *preconnected* sets, which on `ℝ` are
   exactly the intervals, so it says what it should without enumerating the
-  pieces in order.  The ReLU and the leaky ReLU are instances, with the single
+  pieces in order. The ReLU and the leaky ReLU are instances, with the single
   breakpoint `0`.
 
 * "globally Lipschitz" is `∃ K, LipschitzWith K σ`.
 
 * "The same extension applies to `thm: any.d`" is read as the extension of
-  `thm: any.d` (i)'s first alternative — the one that names the ReLU.  Its
+  `thm: any.d` (i)'s first alternative — the one that names the ReLU. Its
   two genericity clauses have distinct activation hypotheses: (ii) is the
   real-analytic case and (iii) the ReLU case. Those original statements
   remain in `HigherDim`; this module carries the finite-support and
@@ -55,12 +64,7 @@ The branch calculus and support argument are in
 Source: arXiv:2601.21366v2, `rem:piecewise-poly`, `rem:genericity-vacuity`.
 -/
 
-import Transformer.Perceptron.HigherDim
-import Transformer.Perceptron.TransformPoly
-import Transformer.Perceptron.Section5_PiecewisePolynomialCover
-import Transformer.Perceptron.Section5_PiecewiseAtomicity
-import Transformer.Perceptron.Section5_UniformSupport
-import Transformer.Perceptron.Section5_LinearStationarity
+@[expose] public section
 
 open scoped BigOperators ENNReal NNReal
 open Real MeasureTheory
@@ -74,7 +78,7 @@ variable {d : ℕ}
 
 /-- **Remark (rem:piecewise-poly), for `thm: circle`.**  Let `d = 2`, `β > 0`,
 and let `σ` be globally Lipschitz and piecewise polynomial — the leaky ReLU,
-say.  If `v_ϑ` is not real-analytic on `𝕊¹` and `μ ∈ P(𝕊¹)` is stationary for
+say. If `v_ϑ` is not real-analytic on `𝕊¹` and `μ ∈ P(𝕊¹)` is stationary for
 `E_{β,ϑ}`, then `μ` is purely atomic with finite support.
 
 The proof covers every actual neuron input by finitely many original

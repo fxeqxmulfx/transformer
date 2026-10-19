@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Causal.Section5_FrozenField
+public import Transformer.Landscape.GlobalFlow.Existence
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.FDeriv.Linear
+
+/-!
 # Global actual flows for the original frozen-token angular system
 
 ArXiv:2411.04990v2, §5, Theorem `thm:fixed_centers`.
@@ -18,10 +25,7 @@ causal interactions, and the original partition. No convergence or
 stability property is assumed in constructing it.
 -/
 
-import Transformer.Causal.Section5_FrozenField
-import Transformer.Landscape.GlobalFlow.Existence
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Calculus.FDeriv.Linear
+@[expose] public section
 
 open scoped BigOperators
 open Real

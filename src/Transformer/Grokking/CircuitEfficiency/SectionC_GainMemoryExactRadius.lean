@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryRobustness
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryRobustness
 
 /-!
 # Exact binary coordinate-error threshold on the original native path
@@ -30,6 +32,8 @@ it does not predict the errors of a floating-point kernel or supply
 learned stochastic/numerical GPTMini transfer. Fixed gained tables and
 uniform decoupled native decay differ from appendix C coupled-cost GD.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

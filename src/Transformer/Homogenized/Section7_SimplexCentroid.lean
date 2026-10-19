@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Simplex
+
+/-!
 # Centroid geometry of the original simplex
 
 ArXiv:2604.01978v1, §7, thm:clustering_random_init and the
@@ -14,7 +18,7 @@ without any dimension enlargement or assumed Gram realization.
 The next module uses them to construct the comparison simplex.
 -/
 
-import Transformer.Homogenized.Simplex
+@[expose] public section
 
 open scoped BigOperators
 

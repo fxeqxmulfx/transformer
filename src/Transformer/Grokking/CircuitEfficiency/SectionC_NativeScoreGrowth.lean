@@ -1,6 +1,8 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativeLimitBalance
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativeDescent
-import Mathlib.Topology.Order.MonotoneConvergence
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativeLimitBalance
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativeDescent
+public import Mathlib.Topology.Order.MonotoneConvergence
 
 /-!
 # Unbounded native training score from actual positive source seeds
@@ -20,6 +22,8 @@ in this particular sign region; it does not analyze positive decay,
 learned stochastic GPTMini features or floating-point kernels. The
 paper's GD/coupled efficiency penalty is not substituted for AdamW.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

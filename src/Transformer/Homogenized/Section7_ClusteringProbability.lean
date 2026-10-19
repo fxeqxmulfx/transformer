@@ -1,6 +1,8 @@
-import Transformer.Homogenized.Section7_SimplexConsensus
-import Transformer.Homogenized.Section7_SphereMartingale
-import Transformer.Homogenized.Section7_OverlapNoiseProbability
+module
+
+public import Transformer.Homogenized.Section7_SimplexConsensus
+public import Transformer.Homogenized.Section7_SphereMartingale
+public import Transformer.Homogenized.Section7_OverlapNoiseProbability
 
 /-!
 # The source simplex clustering probability estimate
@@ -34,6 +36,8 @@ at positive source-normalized Gaussian value variance, positive
 horizon, genuine attention moments and consensus initial data.
 It verifies precisely the selected observable martingale conditions.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped BigOperators NNReal ENNReal

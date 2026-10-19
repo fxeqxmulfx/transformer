@@ -1,8 +1,13 @@
-/-
+module
+
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Transformer.Modes.Section1_Sketch
+
+/-!
 # The number of modes of a Gaussian KDE — the interval `T'`
 
 `eq:T'` of arXiv:2412.09080v3: `T' = [-√(2 log n - 3 log β), √(2 log n - 3 log β)]`
-if `β ≤ n^{2/3}`, and `∅` otherwise.  Two facts about it are used in the proof of
+if `β ≤ n^{2/3}`, and `∅` otherwise. Two facts about it are used in the proof of
 `lem:main-int-phi` on `T'`:
 
 * on `T'` the factor `β^{-3/2} n e^{-t²/2}` of the rate of `eq:int-phi-b` is at
@@ -14,8 +19,7 @@ if `β ≤ n^{2/3}`, and `∅` otherwise.  Two facts about it are used in the pr
 Source: arXiv:2412.09080v3, `eq:T'`, proof of `lem:main-int-phi`.
 -/
 
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Transformer.Modes.Section1_Sketch
+@[expose] public section
 
 open Real Filter
 open scoped Topology

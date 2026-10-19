@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativeSigns
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativeSigns
 
 /-!
 # Fixed forward gains and actual two-factor parameter efficiency
@@ -22,6 +24,8 @@ simulation exponent 1.2 and assumed circuit-norm penalty. The tables
 and gains are fixed; learned GPTMini feature discovery, native path
 convergence and numerical-kernel bridges are not supplied here.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

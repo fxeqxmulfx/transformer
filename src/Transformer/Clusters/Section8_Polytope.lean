@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.Clusters.Section3_IdCase
+public import Transformer.Clusters.Extremum
+public import Mathlib.Analysis.LocallyConvex.Separation
+public import Mathlib.Analysis.Convex.Topology
+public import Mathlib.Analysis.Convex.Extreme
+public import Mathlib.Topology.MetricSpace.HausdorffDistance
+
+/-!
 # The emergence of clusters in self-attention dynamics — the convex polytope
 
 §8 of arXiv:2305.05465v6, `sec: clustering.polytopes`: the shrinking convex
@@ -7,13 +16,13 @@ hull and candidate set used by the `V = I_d` clustering theorem.
 **What the source says and what is carried here.**
 
 * `Cx({z_i(t)}_{i∈[n]})` is `tokenHull (Z t)`, the convex hull of the range of
-  the configuration.  It is a convex polytope for every `t`, being the hull of
+  the configuration. It is a convex polytope for every `t`, being the hull of
   finitely many points.
 
-* `p:noninc` says `t ↦ Cx({z_i(t)})` is non-increasing for inclusion.  Its
+* `p:noninc` says `t ↦ Cx({z_i(t)})` is non-increasing for inclusion. Its
   proof uses only that the attention weights are non-negative and that the
   drift is `Σ_j P_ij (z_j - z_i)`, so it is proved with neither `QᵀK ≻ 0` nor
-  `0 ≤ s`: for every `A` and on the whole line.  `V = I_d` is the form of
+  `0 ≤ s`: for every `A` and on the whole line. `V = I_d` is the form of
   `e:dynIdzi` itself.
 
 * `c:theziunifbdd` is deduced from `p:noninc` in one line, as in the source.
@@ -21,7 +30,7 @@ hull and candidate set used by the `V = I_d` clustering theorem.
 * `t:Idcase11`, proved in `Section8_IdConvergence.lean`, is the full statement
   whose simplified form is `t:Idcase11int`. "The convex hull converges to a convex
   polytope `𝒦`" is convergence in Hausdorff distance — the hulls are nested
-  compact sets, so this is the convergence to their intersection.  The
+  compact sets, so this is the convergence to their intersection. The
   vertices `𝒱` are `Set.extremePoints ℝ`, and `‖Ax‖² = max_{j∈[m]}⟨Ax,Av_j⟩`
   is `IsGreatest`, which records both that the maximum is attained at a vertex
   and that it dominates every vertex.
@@ -30,12 +39,7 @@ Source: arXiv:2305.05465v6, `p:noninc`, `c:theziunifbdd`, `t:Idcase11`,
 `e:dynIdzi`, `eq: A`.
 -/
 
-import Transformer.Clusters.Section3_IdCase
-import Transformer.Clusters.Extremum
-import Mathlib.Analysis.LocallyConvex.Separation
-import Mathlib.Analysis.Convex.Topology
-import Mathlib.Analysis.Convex.Extreme
-import Mathlib.Topology.MetricSpace.HausdorffDistance
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter
@@ -47,7 +51,7 @@ variable {d n : ℕ}
 
 /-! ### The convex hull of a configuration -/
 
-/-- `Cx({z_i}_{i∈[n]})`: the convex hull of the tokens of a configuration.  It
+/-- `Cx({z_i}_{i∈[n]})`: the convex hull of the tokens of a configuration. It
 is a convex polytope, being the hull of the finite set `range Z`.
 
 Source: arXiv:2305.05465v6, `p:noninc`. -/
@@ -73,12 +77,12 @@ theorem idRescaledDynamics_const (A : ParamMatrix d) (z : EucSpace d) :
 
 /-! ### `p:noninc` and `c:theziunifbdd` -/
 
-/-- **Proposition (p:noninc).**  Let `V = I_d` and `QᵀK ≻ 0`.  Then the
+/-- **Proposition (p:noninc).**  Let `V = I_d` and `QᵀK ≻ 0`. Then the
 solution of `e:dynIdzi` is such that `t ↦ Cx({z_i(t)}_{i∈[n]})` is
 non-increasing in the sense of set-inclusion.
 
 Proved for every `A`, without the source's `QᵀK ≻ 0`, and for all `s ≤ t`, not
-only `0 ≤ s`: neither is used.  As in the source, at an index realizing
+only `0 ≤ s`: neither is used. As in the source, at an index realizing
 `max_i ℓ(z_i)` for a linear `ℓ` the derivative `Σ_j P_ij ℓ(z_j - z_i)` is
 `≤ 0`, so each such maximum does not increase (`antitone_sup'_of_hasDerivAt`),
 and a point outside the hull is separated from it by some `ℓ`
@@ -136,7 +140,7 @@ theorem exists_bound_idRescaled (A : ParamMatrix d) (Z : ℝ → Idx n → EucSp
 
 /-- The defining condition of the candidate limit set `𝒮` of `t:Idcase11`:
 `‖Ax‖² = max_{j∈[m]}⟨Ax, Av_j⟩`, the maximum being over the vertices of the
-polytope.  `IsGreatest` records both halves of the equality — that the value
+polytope. `IsGreatest` records both halves of the equality — that the value
 is attained at a vertex, and that it dominates every vertex.
 
 Source: arXiv:2305.05465v6, `e:Ax15`. -/

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.SectionB_CentralCurvature
+
+/-!
 # Polynomial control of the original interaction-curvature derivative
 
 ArXiv:2411.04990v2, Appendix B and §5, proof of `thm:fixed_centers`.
@@ -16,7 +20,7 @@ are auxiliary calculations for the original far-interaction bound;
 no original interaction or temperature hypothesis is redefined.
 -/
 
-import Transformer.Causal.SectionB_CentralCurvature
+@[expose] public section
 
 open Real
 

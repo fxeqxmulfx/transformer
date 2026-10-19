@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.KernelHess
+public import Transformer.Perceptron.Section5_InteractionCurvature
+
+/-!
 # Uniform curvature bounds at the actual cluster scale
 
 ArXiv:2601.21366v2, §5.4, `eq:dist.cond`, `eq:T-in-bound`,
@@ -15,8 +20,7 @@ The statements also transfer the bounds to the actual spherical
 interaction curvature used by the angular first variation.
 -/
 
-import Transformer.Perceptron.KernelHess
-import Transformer.Perceptron.Section5_InteractionCurvature
+@[expose] public section
 
 open Real
 

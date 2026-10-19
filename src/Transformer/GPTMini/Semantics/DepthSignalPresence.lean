@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthAttentionBounds
+module
+
+public import Transformer.GPTMini.Semantics.DepthAttentionBounds
 
 /-!
 # Exact presence gap in actual depth attention signals
@@ -18,6 +20,8 @@ An ordinary two-position real-vector control satisfies all local
 hypotheses. It is an operator witness, not a whole-prefix encoder or
 the definition of the full model's hidden state.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

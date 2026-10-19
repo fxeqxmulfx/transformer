@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Quartet.Section4_FourOverSix
+
+/-!
 # The tensor Four Over Six is biased on, and its NVFP4 scales
 
 arXiv:2601.22813v2, "Quartet II: Accurate LLM Pre-Training in NVFP4 by
@@ -6,20 +10,20 @@ Improved Unbiased Gradient Estimation" (ICML 2026), §4.2 and Appendix A.
 
 The paper asserts that Four Over Six "does not constitute an unbiased
 estimation" and backs the assertion with a measurement — the plateau of
-Figure 5 — not with a construction.  A proof needs one tensor whose
+Figure 5 — not with a construction. A proof needs one tensor whose
 expectation moves, and this module fixes it: a single group of `16` entries,
 the first `1` and the rest `0`.
 
-That choice makes every scale explicit.  With one group `max_g|x| = max|x|`,
+That choice makes every scale explicit. With one group `max_g|x| = max|x|`,
 so the E4M3 argument of §3.1 is exactly `448` whatever the grid maximum `c`
 is, `RTN_FP8` leaves it alone, and the two scales multiply to `17/(16 c)`.
 The sole non-zero entry is therefore presented to E2M1 as `16 c / 17`: as
 `64/17` on the `4.0` branch, whose neighbours are `3` and `4`, and as `96/17`
-on the `6.0` branch, whose neighbours are `4` and `6`.  Those four grid
+on the `6.0` branch, whose neighbours are `4` and `6`. Those four grid
 points, and `RTN_FP8(448) = 448`, are what the module computes first.
 -/
 
-import Transformer.Quartet.Section4_FourOverSix
+@[expose] public section
 
 namespace Transformer
 namespace Quartet
@@ -65,7 +69,7 @@ theorem floorOn_fp4_96_17 : floorOn fp4 (96 / 17) = 4 := by
   rcases hy with rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl <;>
     (revert hle; norm_num)
 
-/-- The E2M1 point above `96/17` (§4.2).  The gap is `2` here against `1` on
+/-- The E2M1 point above `96/17` (§4.2). The gap is `2` here against `1` on
 the other branch, and that asymmetry is the whole source of the bias. -/
 theorem ceilOn_fp4_96_17 : ceilOn fp4 (96 / 17) = 6 := by
   refine ceilOn_eq (by norm_num [fp4]) (by norm_num) ?_
@@ -75,7 +79,7 @@ theorem ceilOn_fp4_96_17 : ceilOn fp4 (96 / 17) = 6 := by
     (revert hle; norm_num)
 
 /-- `448` is the largest element of the E4M3 grid, so `RTN_FP8` fixes it
-(§3.1).  This is the group scale of every one-group tensor. -/
+(§3.1). This is the group scale of every one-group tensor. -/
 theorem rtn_fp8_448 : rtn fp8 448 = 448 := by
   have hmem : (448 : ℝ) ∈ fp8 := ⟨by norm_num, 14, 5, by norm_num⟩
   rw [rtn, floorOn_eq hmem le_rfl fun _ _ hle => hle,
@@ -83,7 +87,7 @@ theorem rtn_fp8_448 : rtn fp8 448 = 448 := by
   norm_num
 
 /-- **The witness of §4.2**: one group of `16` entries, the first `1` and the
-rest `0`.  Only the first is off the E2M1 grid at either scale, so it alone
+rest `0`. Only the first is off the E2M1 grid at either scale, so it alone
 carries the rounding error Four Over Six compares. -/
 def biasWitness : Fin (2 ^ 0) → Fin 16 → ℝ := fun _ j => if j = 0 then 1 else 0
 

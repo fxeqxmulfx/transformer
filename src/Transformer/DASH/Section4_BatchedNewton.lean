@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section4_Blocking
+public import Transformer.DASH.Section3_NewtonModels
+
+/-!
 # DASH — Newton recurrences using batched matrix multiplication
 
 arXiv:2602.02016v2, §4. The batching axis is explicit in each product
@@ -6,8 +11,7 @@ of the CN and NDB recurrences. The complete batched state agrees
 with the single-matrix solver on every component and iteration.
 -/
 
-import Transformer.DASH.Section4_Blocking
-import Transformer.DASH.Section3_NewtonModels
+@[expose] public section
 
 open scoped Matrix
 

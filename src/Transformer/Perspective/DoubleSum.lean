@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Add
+
+/-!
 # Finite double sums over `Idx n × Idx n`
 
 The energies of the survey are double sums over the token indices:
@@ -12,8 +17,7 @@ a uniform bound.
 Nothing here is specific to the survey; it is the arithmetic of `Finset.univ`.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.Calculus.Deriv.Add
+@[expose] public section
 
 open scoped BigOperators
 

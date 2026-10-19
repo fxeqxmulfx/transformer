@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_FitApproximation
+public import Mathlib.LinearAlgebra.Finsupp.LinearCombination
+
+/-!
 # DASH — degree-preserving Chebyshev expansions
 
 arXiv:2602.02016v2, Appendix A. A degree-`d` reference polynomial can
@@ -6,8 +11,7 @@ be expressed using exactly the permitted modes `T_0,...,T_d`, which
 connects polynomial approximation bounds to the source's fitted arrays.
 -/
 
-import Transformer.DASH.SectionA_FitApproximation
-import Mathlib.LinearAlgebra.Finsupp.LinearCombination
+@[expose] public section
 
 open scoped BigOperators
 
@@ -22,7 +26,7 @@ theorem exists_chebyshev_degree_expansion (p : Polynomial ℝ) (d : ℕ)
     (hp : p.natDegree ≤ d) :
     ∃ c : Fin (d + 1) → ℝ,
       p = ∑ j : Fin (d + 1), c j • Polynomial.Chebyshev.T ℝ (j.val : ℤ) := by
-  let S := Polynomial.Chebyshev.chebyshevTsequence ℝ
+  let S := Polynomial.Chebyshev.chebyshevTSequence ℝ
   have hset : Set.range (fun j : Fin (d + 1) => Polynomial.Chebyshev.T ℝ (j.val : ℤ)) =
       S '' Set.Iic d := by
     ext q

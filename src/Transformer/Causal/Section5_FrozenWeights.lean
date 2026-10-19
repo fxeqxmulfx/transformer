@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Section5_FrozenDefs
+
+/-!
 # The original frozen-token normalized interactions
 
 ArXiv:2411.04990v2, §5, Theorem `thm:fixed_centers` and its proof.
@@ -17,7 +21,7 @@ normalization are those of the original theorem. These estimates
 do not assume any convergence or stability conclusion.
 -/
 
-import Transformer.Causal.Section5_FrozenDefs
+@[expose] public section
 
 open scoped BigOperators
 open Real

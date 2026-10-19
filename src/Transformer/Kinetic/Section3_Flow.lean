@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_Weights
+public import Transformer.Landscape.GlobalFlow.Existence
+public import Mathlib.Analysis.ODE.Gronwall
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # The flow map of the causal dynamics
 
 ArXiv:2605.09213v1, §1, `eq:gpt-dyn-alibi`, as used in the proof of
@@ -15,9 +22,7 @@ turns moves that token's trajectory by the same turns and leaves the others
 unchanged (`flowMap_add_single`).
 -/
 
-import Transformer.Kinetic.Section3_Weights
-import Transformer.Landscape.GlobalFlow.Existence
-import Mathlib.Analysis.ODE.Gronwall
+@[expose] public section
 
 open Real
 

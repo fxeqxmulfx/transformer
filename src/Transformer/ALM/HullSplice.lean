@@ -1,7 +1,11 @@
-/-
+module
+
+public import Transformer.ALM.HullMono
+
+/-!
 # The three comparisons the splice creates, and the three tests that make them
 
-`Transformer.ALM.HullMono` is the invariant one triple at a time.  This file is
+`Transformer.ALM.HullMono` is the invariant one triple at a time. This file is
 the surgery: `add_line` erases a contiguous run, links the new line where the
 run was, and the result has to have increasing breakpoints again.
 
@@ -9,7 +13,7 @@ The list before is `pre ++ c :: (mid ++ post)` and the list after is
 `pre ++ (c.1, breakTo c.1 new.1) :: new :: post`, so exactly three adjacencies
 are new -- the one into the rewritten `c`, the one from `c` to `new`, and the
 one from `new` into `post` -- and the rest of the order is the order that was
-already there.  `breakOrd_splice` is that, and what makes it worth stating is
+already there. `breakOrd_splice` is that, and what makes it worth stating is
 that all three are comparisons the port has already made:
 
 * `hback` is the predecessor walk's exit, `self.t.break_of(back) < p`;
@@ -29,7 +33,7 @@ Source: `vm-rs/alm-hull/src/envelope.rs`, `Envelope::add_line` and the
 `transformer_vm/attention/hull2d_cht.h` lines 122-192.
 -/
 
-import Transformer.ALM.HullMono
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -85,7 +89,7 @@ theorem breakOrd_append_cons {pre post : List HullNode} {u : HullNode}
 /-- **The splice leaves the breakpoints increasing.**  Everything the erase
 loops did is summarised by three comparisons, and each of them is a comparison
 the port makes: the left walk stops on `hback`, the keep decision is `hkeep`,
-and the right walk stops on `hhi`.  Neither `pre` nor `post` is consulted for
+and the right walk stops on `hhi`. Neither `pre` nor `post` is consulted for
 anything but its end. -/
 theorem breakOrd_splice {pre mid post : List HullNode} {c new : HullNode}
     (h : BreakOrd (pre ++ c :: (mid ++ post)))
@@ -108,7 +112,7 @@ theorem breakOrd_splice_dropped {pre mid post : List HullNode} {c : HullNode}
 /-! ### The hypotheses are satisfiable -/
 
 /-- **The two-line envelope, ordered.**  `y = 0` gives way to `y = x` at the
-origin and `y = x` runs forever, so the breakpoints are `0` and `PosInf`.  This
+origin and `y = x` runs forever, so the breakpoints are `0` and `PosInf`. This
 is `Transformer.ALM.the_two_line_cache`'s envelope, seen through the other
 invariant. -/
 theorem the_two_line_order :

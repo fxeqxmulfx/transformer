@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.MomentBounds
+module
+
+public import Transformer.Grokking.AdamW.MomentBounds
 
 /-!
 # Same-gradient partial resets of native AdamW
@@ -16,6 +18,8 @@ only the second moment can enlarge the adaptive magnitude. Neither
 fact implies finite-step loss descent, behavior of decoupled decay,
 or a multi-step GPTMini generalization improvement.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

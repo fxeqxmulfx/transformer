@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_Beta0
+public import Transformer.Perspective.AppendixB_Intrinsic
+
+/-!
 # Critical points of `𝖤_β` on `(𝕊^{d-1})^n` for `d ≥ 3`
 
 Criscitiello, Rebjock, McRae, Boumal — arXiv:2405.18273, Appendix C, the
@@ -7,17 +12,16 @@ arXiv:2312.10794v5, which is the paper's `f` with `w_{ij} = 1` and
 `φ = φ_β`, `φ_β(t) = e^{βt}/β`.
 
 Every token moves along the projection of one vector `γ` on its tangent
-space, `v_i = Proj_{x_i} γ` (`proj`).  Summed over an orthonormal basis
+space, `v_i = Proj_{x_i} γ` (`proj`). Summed over an orthonormal basis
 `γ = e_1, …, e_d`, the Hessian form `hessQuad` of
 `Perspective.AppendixB_Intrinsic` is at least
 `½ Σ_{i,j} e^{β⟨x_i,x_j⟩} ((1 - ⟨x_i,x_j⟩)² + (d - 3)(1 - ⟨x_i,x_j⟩))`
 (`sum_hessQuad_proj_ge`), which is positive when `d ≥ 3` and two tokens
-differ (`exists_hessQuad_proj_pos`).  The antipodal pair is such a
+differ (`exists_hessQuad_proj_pos`). The antipodal pair is such a
 configuration, and a critical point of `𝖤_β` (`antipodalPair_isCriticalEBeta`).
 -/
 
-import Transformer.Perspective.AppendixA_Beta0
-import Transformer.Perspective.AppendixB_Intrinsic
+@[expose] public section
 
 open scoped BigOperators
 open Real

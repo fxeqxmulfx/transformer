@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.AnchoredSquaredError
+module
+
+public import Transformer.GPTMini.Sparsemax.AnchoredSquaredError
 
 /-!
 # A finite trainable correction with a visible exact zero
@@ -15,6 +17,8 @@ A score transfer of `1/16` is realized by finite parameters
 This is a constructed row correction, not a trained-transformer result
 or a guarantee that an arbitrary fixed value hull contains its target.
 -/
+
+@[expose] public section
 
 noncomputable section
 

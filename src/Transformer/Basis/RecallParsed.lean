@@ -1,4 +1,6 @@
-import Transformer.Basis.RecallAnswer
+module
+
+public import Transformer.Basis.RecallAnswer
 
 /-!
 # Full raw recall parsing retains alphabet, adjacency and chronology
@@ -16,6 +18,8 @@ assumed for hard-mode table keys. These are parser facts needed to
 discharge actual transformer routing predicates, independently of
 any hidden state, attention score, readout or model answer.
 -/
+
+@[expose] public section
 
 namespace Transformer.Basis
 

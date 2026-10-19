@@ -1,4 +1,14 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section2_FlowMap
+public import Transformer.Interpolation.Basic
+public import Transformer.Interpolation.Clustering
+public import Transformer.Interpolation.Section3_TwoContractions
+public import Transformer.Interpolation.Section3_QuadrantControlPhases
+public import Transformer.Interpolation.Section3_SeparationControls
+
+/-!
 # Measure-to-measure interpolation — Disentangling supports
 
 Formalization of §3 of arXiv:2411.04551v3:
@@ -8,24 +18,18 @@ Formalization of §3 of arXiv:2411.04551v3:
 
 `lem: induction.barycenter` and `lem: perturbation` are in
 `Transformer.Interpolation.Perturbation`; `eq: identity.flow` is in
-`Transformer.Interpolation.IdentityFlow`.  That `prop: separation` is false for
+`Transformer.Interpolation.IdentityFlow`. That `prop: separation` is false for
 two equal initial measures is `Interpolation.not_separation`.
 
 "The solution `μ^i` of `eq: cauchy.pb` with data `μ_0^i`" is read as: a
-solution exists, and every solution satisfies the conclusion.  `O(d · N)` is a
-constant `C` chosen before `d`, `N` and the data.  `𝐁 ≡ 0` is imposed on the
+solution exists, and every solution satisfies the conclusion. `O(d · N)` is a
+constant `C` chosen before `d`, `N` and the data. `𝐁 ≡ 0` is imposed on the
 parameter curve rather than `eq: average.vf` being used in place of `eq: vf`;
 the two agree, since `exp ⟨0, x'⟩ = 1` turns the attention term of `fullVF`
 into the barycenter.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section2_FlowMap
-import Transformer.Interpolation.Basic
-import Transformer.Interpolation.Clustering
-import Transformer.Interpolation.Section3_TwoContractions
-import Transformer.Interpolation.Section3_QuadrantControlPhases
-import Transformer.Interpolation.Section3_SeparationControls
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -49,13 +53,13 @@ all `i`, the solution `μ^i` of `eq: cauchy.pb`–`eq: average.vf` with data
 
 Two hypotheses are added to the source's.
 
-* The `μ_0^i` are pairwise distinct.  As printed the claim is false:
+* The `μ_0^i` are pairwise distinct. As printed the claim is false:
   `μ_0^1 = μ_0^2` have the same solutions, and `conv_g supp μ(T)` is disjoint
   from itself only if it is empty, which a probability measure's support is not
-  (`Interpolation.not_separation`).  The proof in §3 feeds its measures to
+  (`Interpolation.not_separation`). The proof in §3 feeds its measures to
   `lem: perturbation`, which requires "two different measures", so distinctness
   is what the source uses.
-* `N ≥ 1`.  For `N = 0` the bound `O(d · N)` allows no switch, i.e. no piece of
+* `N ≥ 1`. For `N = 0` the bound `O(d · N)` allows no switch, i.e. no piece of
   positive length, which `PiecewiseConstant` on `[0, T]` with `T > 0` rules
   out; the source's induction starts at `N = 1`.
 
@@ -102,13 +106,13 @@ If `⋃_i supp μ_0^i ⊊ 𝕊^{d-1}`, there is a piecewise-constant
 Two deviations from the source, both recorded here.
 
 * `C` depends on the data `μ_0`, not on `N` alone; it is chosen before `T`,
-  which is what "by time-rescaling" in the proof gives.  With `C` independent
+  which is what "by time-rescaling" in the proof gives. With `C` independent
   of the data the claim fails: every admissible flow is a composition of two
   flows of `ẋ = Proj_x w`, `|w| ≤ √d ‖𝐖‖`, so under `‖𝐖‖ ≤ C/T` it is
   bi-Lipschitz with a constant depending on `C` and `d` only; a support that
   misses only a cap of radius `δ` would have its complement, of diameter `δ`,
-  mapped onto `𝕊^{d-1} ∖ ℚ_1^{d-1}`, of diameter `2`.  This is not formalized.
-* `d ≥ 2`.  On `𝕊^0 = {±1}` every tangent field vanishes, so
+  mapped onto `𝕊^{d-1} ∖ ℚ_1^{d-1}`, of diameter `2`. This is not formalized.
+* `d ≥ 2`. On `𝕊^0 = {±1}` every tangent field vanishes, so
   `μ_0 = δ_{-1}` never reaches `ℚ_1^0 = {+1}`.
 
 The proof uses two explicit rank-one controls, with intrinsic phase

@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+public import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+
+/-!
 # §3 — Measure to measure flow map
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -20,7 +28,7 @@ Main objects:
 `Perspective.Section2_EnergyMin`, on the strict convexity of
 `Perspective.Section2_EnergyConvex`, and the maximiser — every global
 maximiser of `𝖤_β` is a Dirac mass — in `Perspective.Section2_EnergyMax`, on
-the analytic groundwork of `Perspective.Section2_EnergyKernel`.  The
+the analytic groundwork of `Perspective.Section2_EnergyKernel`. The
 dissipation of `𝖤_β` along `SA`, `eq: dissipation.softmax`, is proved in
 `Perspective.Section2_Dissipation`.
 
@@ -28,11 +36,7 @@ For the integrals over `SSphere d` we equip the sphere with its induced Borel
 measurable space (it is a metric subspace of `ℝ^d`).
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
-import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-import Mathlib.Analysis.Calculus.Gradient.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -46,7 +50,7 @@ variable (d n : ℕ)
 noncomputable instance sphereMeasurableSpace : MeasurableSpace (SSphere d) :=
   borel _
 
-/-- That σ-algebra *is* the Borel one, by definition.  Registering the fact
+/-- That σ-algebra *is* the Borel one, by definition. Registering the fact
 makes the sphere's continuous maps measurable and its singletons measurable
 sets, which is what integration against a measure on `𝕊^{d-1}` needs. -/
 instance sphereBorelSpace : BorelSpace (SSphere d) := ⟨rfl⟩
@@ -152,7 +156,7 @@ noncomputable def interactionEnergy
 
 `𝒳[δ_x](x)` is a multiple of `x` — the only point the measure sees is `x`
 itself — and `Proj_x` kills the radial direction, so the velocity vanishes
-`δ_x`-almost everywhere and the mass does not move.  This is what makes the
+`δ_x`-almost everywhere and the mass does not move. This is what makes the
 hypothesis of `dissipation_softmax` (in `Section2_Dissipation`) satisfiable,
 and satisfiable by something other than a contradiction. -/
 theorem vectorField_diracProb_self (β : ℝ) (x : SSphere d) :

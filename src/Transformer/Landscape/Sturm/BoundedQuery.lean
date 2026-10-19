@@ -8,14 +8,18 @@ The finite-breakpoint induction is adapted from SturmTheorem.lean at
 revision 53ce31466dc5ff520463249d470119c1e0006e22, with signed jumps.
 -/
 
-import Transformer.Landscape.Sturm.QueryCrossing
-import Transformer.Landscape.Sturm.IntervalSums
+module
+
+public import Transformer.Landscape.Sturm.QueryCrossing
+public import Transformer.Landscape.Sturm.IntervalSums
 
 /-!
 # Signed Sturm queries on intervals with generic endpoints
 
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
+
+@[expose] public section
 
 noncomputable section
 open Polynomial

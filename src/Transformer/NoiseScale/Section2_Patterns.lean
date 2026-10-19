@@ -1,10 +1,16 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.LocalExtr.Basic
+
+public import Transformer.NoiseScale.Section2_Implications
+
+/-!
 # Caveats and patterns of the noise scale
 
 arXiv:1812.06162, §2.4 and §2.5.
 
 §2.4, caveat 3, "Simplified noise scale": `B_simple` "may be inaccurate to the extent that the
-Hessian is not well-conditioned".  For `l |v|² ≤ vᵀHv ≤ u |v|²` with `0 < l` and `Σ` the
+Hessian is not well-conditioned". For `l |v|² ≤ vᵀHv ≤ u |v|²` with `0 < l` and `Σ` the
 covariance of a random vector, `B_noise` lies within the factor `u/l` of `B_simple`
 (`noiseScale_mem_Icc`), and the factor is attained: `G = (1, 0)`, `H = diag(1, κ)`,
 `Σ = diag(0, 1)` give `B_noise = κ B_simple` (`noiseScale_diagonal`).
@@ -13,7 +19,7 @@ covariance of a random vector, `B_noise` lies within the factor `u/l` of `B_simp
 constant" read as constant and `tr(Σ) > 0`, which the paper leaves implicit: the noise scale
 grows when `|G|` decreases (`simpleNoiseScale_lt_of_lt`) and tends to infinity as `G → 0`
 (`tendsto_simpleNoiseScale`), as at a local minimum of a continuously differentiable loss
-(`tendsto_simpleNoiseScale_of_isLocalMin`).  "Weak dependence on model size": for a model of
+(`tendsto_simpleNoiseScale_of_isLocalMin`). "Weak dependence on model size": for a model of
 two parts, `B_simple` is the mediant `(tr Σ₁ + tr Σ₂)/(|G₁|² + |G₂|²)` whatever the covariance
 between the parts (`simpleNoiseScale_sumElim`), between the noise scales of the parts
 (`simpleNoiseScale_sumElim_mem_Icc`), so that parts of equal noise scale leave it unchanged.
@@ -22,7 +28,7 @@ The other caveats and patterns are qualitative, except the dependence on the lea
 the temperature of Appendix C.
 -/
 
-import Transformer.NoiseScale.Section2_Implications
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped Matrix
@@ -94,7 +100,7 @@ example := noiseScale_mem_Icc (P := Measure.dirac ()) (Y := fun _ : Unit => fun 
   (fun _ => memLp_const _) (H := 1) (l := 1) (u := 1) one_pos (fun v => by simp)
   (fun v => by simp) (G := fun _ => 1) fun h => one_ne_zero (congr_fun h ())
 
-/-- **§2.4, caveat 3**: the factor `u/l` is attained.  `H = diag(1, κ)`, `κ ≥ 1`, has
+/-- **§2.4, caveat 3**: the factor `u/l` is attained. `H = diag(1, κ)`, `κ ≥ 1`, has
 `|v|² ≤ vᵀHv ≤ κ |v|²`, and `G = (1, 0)`, `Σ = diag(0, 1)` give `B_simple = 1`,
 `B_noise = κ`. -/
 theorem noiseScale_diagonal {κ : ℝ} (hκ : 1 ≤ κ) :
@@ -140,7 +146,7 @@ theorem tendsto_simpleNoiseScale {S : Matrix ι ι ℝ} (hS : 0 < S.trace) :
 example := tendsto_simpleNoiseScale (ι := Unit) (S := 1) (by simp)
 
 /-- **§2.5, "Growth over training"**: "`|G|` decreases as we approach the minimum of a smooth
-loss", so `B_simple → ∞` there.  For a continuously differentiable `L` of gradient `G θ'` at
+loss", so `B_simple → ∞` there. For a continuously differentiable `L` of gradient `G θ'` at
 `θ'`, as `θ'` tends to a local minimum among the points of nonzero gradient. -/
 theorem tendsto_simpleNoiseScale_of_isLocalMin {L : (ι → ℝ) → ℝ} (hL : ContDiff ℝ 1 L)
     {G : (ι → ℝ) → ι → ℝ} (hG : ∀ θ' v, fderiv ℝ L θ' v = G θ' ⬝ᵥ v) {θ : ι → ℝ}

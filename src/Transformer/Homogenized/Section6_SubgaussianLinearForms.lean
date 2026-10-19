@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Homogenized.RandomChain
+public import Mathlib.Probability.Moments.MGFAnalytic
+public import Mathlib.Analysis.Calculus.LocalExtr.Basic
+public import Mathlib.Probability.Distributions.Gaussian.Real
+
+/-!
 # Original subgaussian means and exact linear-form variance proxies
 
 ArXiv:2604.01978v1, §6.3, `lem:Hanson_wright`. The source's
@@ -19,10 +26,7 @@ coordinates and coefficients retained. Genuine standard Gaussian
 coordinates witness the hypotheses with positive variance proxies.
 -/
 
-import Transformer.Homogenized.RandomChain
-import Mathlib.Probability.Moments.MGFAnalytic
-import Mathlib.Analysis.Calculus.LocalExtr.Basic
-import Mathlib.Probability.Distributions.Gaussian.Real
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped BigOperators NNReal Topology

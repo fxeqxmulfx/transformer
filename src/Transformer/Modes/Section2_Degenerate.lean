@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Modes.Section2_ModeUpcrossings
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
+
+/-!
 # The number of modes of a Gaussian KDE — a degenerate mode
 
 §2.1 of arXiv:2412.09080v3, the "i.e." after `eq:Fn`, read in the other
@@ -7,9 +12,9 @@ direction.
 **What the source says and what is carried here.**
 
 * The source passes from "`t` is an upcrossing of `F_n` at level `0`" to "`t` is
-  a mode of `P̂_n`" and back, as if the two were the same set of points.  One
+  a mode of `P̂_n`" and back, as if the two were the same set of points. One
   direction is `upcrossingSet_subset_modeSet` of `Section2_Field.lean` and is
-  proved.  The other is **false as a pathwise statement**, and
+  proved. The other is **false as a pathwise statement**, and
   `not_forall_modeSet_subset_upcrossingSet` refutes it: for the two-point sample
   `X = (-1, 1)` at bandwidth `β = 1`, `t = 0` is a global maximum of `P̂_2` —
   the sum `e^{-(t+1)²/2} + e^{-(t-1)²/2} = 2e^{-1/2}e^{-t²/2}\cosh t` is
@@ -18,7 +23,7 @@ direction.
 
 * What the argument needs, and what it in fact has, is the identity **in
   expectation**: a Gaussian sample almost surely has no degenerate critical
-  point.  `expectedUpcrossings_le_expectedModes` is the half that follows from
+  point. `expectedUpcrossings_le_expectedModes` is the half that follows from
   the inclusion and is proved; the equality
   `expectedModes_eq_expectedUpcrossings` is proved below using the actual
   Gaussian sample law and the nondegeneracy theorem of `Section2_Morse.lean`.
@@ -38,8 +43,7 @@ simultaneously for every query set, and their extended counts integrate equally.
 Source: arXiv:2412.09080v3, `sec:kac-rice`, after `eq:Fn`.
 -/
 
-import Transformer.Modes.Section2_ModeUpcrossings
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open Real MeasureTheory
@@ -96,7 +100,7 @@ theorem deriv_deriv_kde_twoPoint : deriv (deriv (kde 1 twoPoint)) 0 = 0 := by
 
 /-- **A mode need not be an upcrossing.**  The source's "i.e." after `eq:Fn`
 reads the equivalence `P̂_n'(t) = 0 ∧ P̂_n''(t) < 0 ⟺ t` is a mode as an
-identity of sets; it is an inclusion only.  The two-point sample `(-1, 1)` at
+identity of sets; it is an inclusion only. The two-point sample `(-1, 1)` at
 `β = 1` has a global maximum at `0` with `P̂_2''(0) = 0`.
 
 Source: arXiv:2412.09080v3, `sec:kac-rice`, after `eq:Fn`. -/

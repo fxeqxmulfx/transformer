@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_ProjectionTransfers
+public import Mathlib.Analysis.Convex.SpecificFunctions.Basic
+public import Mathlib.Analysis.Convex.Jensen
+
+/-!
 # A uniformly active gate along an exact projection transfer
 
 ArXiv:2411.04551v3, §4, the local point transfer in
@@ -15,9 +21,7 @@ Any smaller nonnegative threshold gives a uniformly positive actual
 ReLU gate, which will permit an exact change to the gated clock.
 -/
 
-import Transformer.Interpolation.Section4_ProjectionTransfers
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
-import Mathlib.Analysis.Convex.Jensen
+@[expose] public section
 
 open Real MeasureTheory Set
 

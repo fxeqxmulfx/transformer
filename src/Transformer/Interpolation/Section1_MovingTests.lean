@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_WeakContinuity
+public import Mathlib.Analysis.Asymptotics.Ring
+
+/-!
 # Differentiating a moving test against a weakly varying measure
 
 Auxiliary calculus for arXiv:2411.04551v3, §1, `eq: cauchy.pb`, and
@@ -9,8 +14,7 @@ and the probability bound on the integral functional. It never assumes
 continuity in the operator norm of the measure-valued curve.
 -/
 
-import Transformer.Interpolation.Section1_WeakContinuity
-import Mathlib.Analysis.Asymptotics.Ring
+@[expose] public section
 
 open Real MeasureTheory Filter Topology Asymptotics
 

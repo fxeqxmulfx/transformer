@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_CriticalSupport
+public import Transformer.Perceptron.Section5_CircleGeometry
+public import Mathlib.Topology.ClusterPt
+public import Mathlib.Analysis.Real.Pi.Bounds
+
+/-!
 # Critical support accumulation and local curvature control
 
 ArXiv:2601.21366v2, §5.2, the accumulation-point argument in
@@ -18,10 +25,7 @@ The local estimates have a joint constant-zero example on the
 actual circle, with the positive tolerance fixed to one.
 -/
 
-import Transformer.Perceptron.Section5_CriticalSupport
-import Transformer.Perceptron.Section5_CircleGeometry
-import Mathlib.Topology.ClusterPt
-import Mathlib.Analysis.Real.Pi.Bounds
+@[expose] public section
 
 open Real Set Filter Metric
 open scoped Topology

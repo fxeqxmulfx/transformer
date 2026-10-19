@@ -1,4 +1,12 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Tactic
+
+/-!
 # A training safeguard for Muon and DASH
 
 User-requested convergence extension of arXiv:2502.16982, §2.1–2.2,
@@ -13,11 +21,7 @@ their convergence. They are explicit additional conditions for a fixed,
 deterministic differentiable loss with a quadratic smooth upper model.
 -/
 
-import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Tactic
+@[expose] public section
 
 open scoped InnerProductSpace
 

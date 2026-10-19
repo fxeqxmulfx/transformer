@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.SecondStep
+module
+
+public import Transformer.Grokking.AdamW.SecondStep
 
 /-!
 # Native moment histories and direct forgetting
@@ -16,6 +18,8 @@ on future gradients. Those gradients may be actual clipped minibatch
 gradients, but a transformer/rounding bridge is not assumed here.
 No sign of alignment or delayed generalization is built into the history.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

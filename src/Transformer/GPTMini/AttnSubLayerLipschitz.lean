@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.GPTMini.Block
+public import Transformer.GPTMini.ReshapeDist
+public import Transformer.GPTMini.HeadLipschitz
+
+/-!
 # How far the attention sub-layer sends two residual streams apart
 
 `HeadLipschitz` estimates one head; this file wraps the reshapes of
@@ -22,9 +28,7 @@ Nothing here is local: the constant does not depend on `D`, so the attention
 sub-layer is Lipschitz on the whole residual stream space.
 -/
 
-import Transformer.GPTMini.Block
-import Transformer.GPTMini.ReshapeDist
-import Transformer.GPTMini.HeadLipschitz
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -34,7 +38,7 @@ namespace GPTMini
 
 /-- The `q`, `k` or `v` stream that `attnSubLayer` hands to head `h`: RMSNorm,
 the QKV projection, the `chunk(3, dim=-1)` selected by `e`, and finally the
-`view(T, n_heads, head_dim)` of head `h`.  Source: `reference/model.py`
+`view(T, n_heads, head_dim)` of head `h`. Source: `reference/model.py`
 (`CausalMHA.forward`). -/
 noncomputable def attnHeadInput (cfg : Config) (params : AttnParams cfg) (eps : ℝ)
     (e : Fin cfg.d_model → Fin (3 * cfg.d_model))
@@ -60,7 +64,7 @@ every `log α_h`,
 
   `‖attn(x) i - attn(y) i‖ ≤ ‖W_o‖ √n_heads · L(α_max, eps, B) · 2‖W_qkv‖D/√eps`
 
-whenever the two streams are `D`-close at every position.  The estimate is
+whenever the two streams are `D`-close at every position. The estimate is
 uniform in the position because the head mixes them: a bound at `i` alone
 would not do.
 

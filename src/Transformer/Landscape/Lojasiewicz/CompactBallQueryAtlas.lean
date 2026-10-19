@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.BallEnergyQueryPreparation
+
+/-!
 # Scalar query elimination on the entire compact analytic ball
 
 Preparation at the nonflat central fiber and compactness construct a
@@ -6,7 +10,7 @@ finite atlas covering every point on nearby noncentral energy levels.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.BallEnergyQueryPreparation
+@[expose] public section
 
 noncomputable section
 open Set

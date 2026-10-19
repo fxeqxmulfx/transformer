@@ -1,4 +1,14 @@
-/-
+module
+
+public import Transformer.Homogenized.Barycenter
+public import Transformer.Homogenized.GaussianDrift
+public import Transformer.Homogenized.GaussianEnsemble
+public import Transformer.Homogenized.GaussianCrossMoments
+public import Transformer.Homogenized.GaussianMatrixKernel
+public import Transformer.Homogenized.SimplexBary
+public import Transformer.Homogenized.AttnAverage
+
+/-!
 # Homogenized Transformers — the noise kernel at Gaussian initialization
 
 Formalization of `lem:lemma_app` of arXiv:2604.01978v1, *Homogenized
@@ -8,20 +18,14 @@ and, at the empirical token measure `μ_X`, the covariance kernel
 
   `K[μ](x,y) = (1/d) E_A⟨m_{β,A}[μ](x), m_{β,A}[μ](y)⟩ I_d`.
 
-The computation has two halves.  The first is that the value matrix comes out
+The computation has two halves. The first is that the value matrix comes out
 of the field: `B_θ[μ](x) = V m_{β,A}[μ](x)`, which is `attnFieldOf_eq_valueMap_softBary`
 and is proved here — it is where the softmax barycenter of `Barycenter.lean`
-enters the dynamics at all.  The second is `E_V[V a bᵀ Vᵀ] = σ_V²⟨a,b⟩ I_d`
+enters the dynamics at all. The second is `E_V[V a bᵀ Vᵀ] = σ_V²⟨a,b⟩ I_d`
 together with `σ_V² = 1/d`, which is the lemma itself.
 -/
 
-import Transformer.Homogenized.Barycenter
-import Transformer.Homogenized.GaussianDrift
-import Transformer.Homogenized.GaussianEnsemble
-import Transformer.Homogenized.GaussianCrossMoments
-import Transformer.Homogenized.GaussianMatrixKernel
-import Transformer.Homogenized.SimplexBary
-import Transformer.Homogenized.AttnAverage
+@[expose] public section
 
 open scoped BigOperators ENNReal NNReal
 open Real MeasureTheory
@@ -72,7 +76,7 @@ example {d : ℕ} (β : ℝ) (θ : HeadParam d) (x z : EucSpace d) :
 /-! ### The kernel -/
 
 /-- The scalar mixed-moment computation in the proof of `lem:lemma_app`, at
-the empirical measure of unit tokens.  The two softmax barycenters depend on
+the empirical measure of unit tokens. The two softmax barycenters depend on
 the query/key matrix but not on the Gaussian value matrix; their norms are at
 most one, so `integral_gaussian_value_cross` applies.
 
@@ -101,7 +105,7 @@ example (d : ℕ) (σA : ℝ≥0) :
   ⟨isGaussianHeadLaw_gaussHeadLaw _ _ _, fun _ => by simp [basePoint, PiLp.norm_single]⟩
 
 /-- The covariance kernel at an empirical measure of unit tokens is a scalar
-multiple of the identity.  This is the unprojected matrix equality underlying
+multiple of the identity. This is the unprojected matrix equality underlying
 the displayed formula of `lem:lemma_app`; the source sandwiches it between
 the two tangent projections.
 
@@ -122,12 +126,12 @@ theorem gaussian_covKernel_empMeasure {d n : ℕ} (β : ℝ) {σV σA : ℝ≥0}
 
 /-- **Lemma (lem:lemma_app), at the empirical token measure of the source.**
 The Gaussian drift vanishes, and the covariance kernel is the scalar
-`(1/d) s_{μ_X}(x_i,x_j)` times the identity.  The projections in the source's
+`(1/d) s_{μ_X}(x_i,x_j)` times the identity. The projections in the source's
 display are applied to this matrix when forming the noise cross-variation.
 
-The source explicitly says `μ = μ_X`.  An earlier formalization additionally
+The source explicitly says `μ = μ_X`. An earlier formalization additionally
 asserted this kernel identity for an arbitrary measure, which is stronger than
-the cited lemma and is not needed to formalize it.  This theorem states and
+the cited lemma and is not needed to formalize it. This theorem states and
 proves the source's empirical-measure claim.
 
 Source: arXiv:2604.01978v1, `lem:lemma_app`. -/

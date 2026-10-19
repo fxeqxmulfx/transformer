@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section1_Models
+
+/-!
 # Attention's forward pass and Frank-Wolfe — negative-definite key-query
 
 Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
@@ -10,7 +14,7 @@ for which the source claims the standard Frank-Wolfe rate, `thm: fw.cluster`.
 That claim is false as stated; it is refuted in `Section3_FWClusterFalse.lean`.
 -/
 
-import Transformer.FrankWolfe.Section1_Models
+@[expose] public section
 
 open scoped BigOperators
 open Real

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Atomicity
+
+/-!
 # Perceptrons and attention's mean-field landscape — atomic measures on `𝕊¹`
 
 The vocabulary `thm: bound` and `cor: bound` of arXiv:2601.21366v2 are written
@@ -12,13 +16,13 @@ claim, and `isAtomicOnCircle_atomicProb` says the constructor satisfies it.
 
 `circleVel` is the velocity `x'(θ)` of the parametrization, and
 `hasDerivAt_circleVel` is `x''(θ) = -x(θ)`: the unit circle has unit speed and
-unit curvature.  The angular derivatives of `rem:strictSOPD-perceptron` are
+unit curvature. The angular derivatives of `rem:strictSOPD-perceptron` are
 read along it.
 
 Source: arXiv:2601.21366v2, `eq: atomic.thm.bound`.
 -/
 
-import Transformer.Perceptron.Atomicity
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory

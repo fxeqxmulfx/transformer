@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_GaussianIntegration
+
+/-!
 # Gaussian flow and its time derivative
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3).
@@ -7,7 +11,7 @@ Gaussian measure, with an integrable domination bound. Gaussian integration
 by parts then identifies its generator as one half of the second derivative.
 -/
 
-import Transformer.BatchSize.Section4_GaussianIntegration
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped Topology

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_SimplexOdeDomain
+public import Transformer.Homogenized.Section7_SimplexNoiseReserve
+public import Transformer.Homogenized.Section7_SimplexPathComparison
+
+/-!
 # The original simplex comparison envelope with its finite dimension bias
 
 ArXiv:2604.01978v1, §7, eq:Gronwall_E_selfcontained and
@@ -16,9 +22,7 @@ The stochastic probability step is proved downstream in
 Section7_ClusteringProbability using this pathwise comparison.
 -/
 
-import Transformer.Homogenized.Section7_SimplexOdeDomain
-import Transformer.Homogenized.Section7_SimplexNoiseReserve
-import Transformer.Homogenized.Section7_SimplexPathComparison
+@[expose] public section
 
 open scoped BigOperators NNReal
 open MeasureTheory Set

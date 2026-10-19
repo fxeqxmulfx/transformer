@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianRowFourth
+public import Transformer.Homogenized.Section6_DiagonalQuadraticMGF
+
+/-!
 # Uniform fourth moments of the original Gaussian row-norm deviation
 
 ArXiv:2604.01978v1, §7.3, `lem:delta_method`, the third-order
@@ -20,8 +25,7 @@ Combined with the exact second moment and Hölder, this provides the
 required third-moment scaling for one original Gaussian factor.
 -/
 
-import Transformer.Homogenized.Section7_GaussianRowFourth
-import Transformer.Homogenized.Section6_DiagonalQuadraticMGF
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.SphereSaddleAvoidance
+public import Transformer.Perspective.CircleClustering
+
+/-!
 # Almost every start clusters, for `d ≥ 3` and `β > 0`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -7,7 +12,7 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 On the radii `r_i = ‖x_i‖`, `USA` is `ẏ_i = n⁻¹ ‖y_i‖² ∇_i g(y)` and `SA` is
 `ẏ_i = ‖y_i‖² Z_i(y/‖y‖)⁻¹ ∇_i g(y)` (`usa_iff_gradient`, `sa_iff_gradient`): block
 scalings of `∇g` by positive scales, smooth off the zero vectors (the partition function
-`Z_i` of the normalized tuple is analytic there, `analyticAt_coe_tupleNormalize`).  So
+`Z_i` of the normalized tuple is analytic there, `analyticAt_coe_tupleNormalize`). So
 `ae_not_tendsto_nonTrivial_of_blockScale` applies to both: for `d ≥ 3`, `β > 0` and
 almost every `x`, the solution from `x/‖x‖` converges to no critical point of `𝖤_β`
 with two distinct tokens (`ae_USA_not_tendsto_nonTrivial`,
@@ -17,15 +22,14 @@ Every solution converges to a critical point of `𝖤_β`
 (`exists_tendsto_isCriticalEBeta_of_SA`, `exists_tendsto_isCriticalEBeta_of_USA`: the
 Łojasiewicz theorem), so for almost every start the limit is a consensus; the solution
 being unique (`SA_unique`, `USA_unique`), the start lies in `𝒮_β` and in its `USA`
-counterpart (`ae_mem_clusteringSet_of_pos`).  The step from limits to clusters holds for
+counterpart (`ae_mem_clusteringSet_of_pos`). The step from limits to clusters holds for
 any dynamics with unique solutions (`exists_cluster_of_not_tendsto_nonTrivial`).
 
 Source: arXiv:2312.10794v5, §6, `thm: boumal`, and the outline of the gradient-flow
 proofs at the end of §5; arXiv:2405.18273, `thm:spheres`, for the landscape.
 -/
 
-import Transformer.Perspective.SphereSaddleAvoidance
-import Transformer.Perspective.CircleClustering
+@[expose] public section
 
 open Filter MeasureTheory
 open scoped Topology

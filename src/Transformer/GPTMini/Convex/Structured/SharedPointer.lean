@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.SharedSlots
-import Transformer.GPTMini.Convex.Structured.PointerValues
+module
+
+public import Transformer.GPTMini.Convex.Structured.SharedSlots
+public import Transformer.GPTMini.Convex.Structured.PointerValues
 
 /-!
 # Joint pointer training with learned positional potentials
@@ -18,6 +20,8 @@ This is an algebraic construction, not yet a proof that the positional
 weights learn table exclusion or that the raw model solves Basis recall.
 Mixture training and actual prenorm/residual/tied integration remain open.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

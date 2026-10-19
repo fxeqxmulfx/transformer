@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainSmallDecayAbsent
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainPairEnvelopes
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainSmallDecayAbsent
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainPairEnvelopes
 
 /-!
 # Generated original weak-decay pair data near an absent-Gen boundary
@@ -31,6 +33,8 @@ attractor. They do not yet assert winning Gen dominance, confidence
 stability, learned GPTMini behavior or a thermodynamic system limit.
 Fixed tables and uniform native decay differ from coupled-cost GD.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

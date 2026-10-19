@@ -1,16 +1,20 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_FCN
+
+/-!
 # Sequence-valued targets
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, Appendix A.7,
 `theo:attn_matrix_convex`, equations (30)–(33).
 
-The paper does not define its mixed matrix norm `‖·‖_{1,∞}`.  The convex
-objective therefore takes that norm as an explicit argument.  The concrete
+The paper does not define its mixed matrix norm `‖·‖_{1,∞}`. The convex
+objective therefore takes that norm as an explicit argument. The concrete
 counterexample below works for every such norm giving value at most one to
 each displayed coordinate matrix, including the usual mixed norms.
 -/
 
-import Transformer.Convexifying.Section3_FCN
+@[expose] public section
 
 open scoped BigOperators
 
@@ -26,7 +30,7 @@ structure MatrixParameters (h n d c : ℕ) where
 def MatrixParameters.Feasible {h n d c : ℕ} (p : MatrixParameters h n d c) : Prop :=
   ∀ j, IsRowStochastic (p.attention j)
 
-/-- Entrywise matrix ℓ₁ norm of the value weight.  This choice has the
+/-- Entrywise matrix ℓ₁ norm of the value weight. This choice has the
 entrywise ℓ∞ dual used in the appendix's displayed dual constraint. -/
 def matrixNorm₁ {d c : ℕ} (B : Mat d c) : ℝ :=
   ∑ q, ∑ l, |B q l|
@@ -141,7 +145,7 @@ theorem matrixWitness_convex_upper_bound (mixedNorm : Mat 2 2 → ℝ)
 
 /-- **Counterexample to the appendix matrix-target theorem at one head.**
 Its claimed unrestricted convex formulation has a strictly smaller sublevel
-set threshold than the one-head sequence model.  The only property needed of
+set threshold than the one-head sequence model. The only property needed of
 the paper's undefined mixed norm is that each coordinate matrix has norm at
 most one.
 Source: arXiv:2211.11052v1, Appendix A.7, `theo:attn_matrix_convex`. -/

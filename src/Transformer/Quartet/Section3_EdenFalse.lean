@@ -1,17 +1,21 @@
-/-
+module
+
+public import Transformer.Quartet.Section3_Eden
+
+/-!
 # The Corollary of §3.3 is false for large `s`
 
 arXiv:2601.22813v2, §3.3: "For all `x ∈ ℝ^d` and scale `s ≠ 0`",
 `E_{ω_RHT, ω_SR} RHT⁻¹(x̂, ω_RHT) = x` for the output `x̂` of `MS-EDEN`.
 
-The quantifier over `s` is too wide.  The group scales of `Q_RTN` are capped at
+The quantifier over `s` is too wide. The group scales of `Q_RTN` are capped at
 `256` so that the EDEN correction `S` can raise them to at most `448`, the top
-of E4M3; that headroom is a factor `1.75`.  With a large clipping factor `s`
+of E4M3; that headroom is a factor `1.75`. With a large clipping factor `s`
 the E2M1 entries clip at `±6`, `S` grows like `s`, and the stochastic rounding
 of `S · 256` saturates at `448` whatever the coin says: the correction is lost,
 and with it unbiasedness.
 
-The witness is a single group, `d = 16`, and the first basis vector.  Its
+The witness is a single group, `d = 16`, and the first basis vector. Its
 rotation is `±(1/4, …, 1/4)` for every sign seed, so at `s = 21` the entries
 round to `±6`, `S = 7/2`, the scale saturates at `448 < 7/2 · 256`, and the
 estimate is exactly half the input: `MS-EDEN` returns `x/2` in expectation.
@@ -21,7 +25,7 @@ the Corollary fails too, at every dimension: `Transformer.Quartet.not_mean_rhtIn
 (`Section3_EdenBias`).
 -/
 
-import Transformer.Quartet.Section3_Eden
+@[expose] public section
 
 namespace Transformer
 namespace Quartet

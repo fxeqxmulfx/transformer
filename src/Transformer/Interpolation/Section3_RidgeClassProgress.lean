@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_CollinearRidgePhase
+public import Transformer.Interpolation.Section3_FiniteRefinement
+public import Transformer.Interpolation.Section3_GatedCenterLaw
+
+/-!
 # One actual ridge phase strictly refines barycenter classes
 
 ArXiv:2411.04551v3, §3.2, the perturbation stage of `prop: separation`.
@@ -14,9 +20,7 @@ of barycenter classes. Exact output scaling puts the same progress at
 any prescribed positive horizon, with global original weak uniqueness.
 -/
 
-import Transformer.Interpolation.Section3_CollinearRidgePhase
-import Transformer.Interpolation.Section3_FiniteRefinement
-import Transformer.Interpolation.Section3_GatedCenterLaw
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_InteractionCurvature
+public import Mathlib.Analysis.Calculus.ParametricIntegral
+
+/-!
 # Differentiating the actual angular interaction integral
 
 ArXiv:2601.21366v2, §5.2, `eq:Hess-bilinear`, and §5.5,
@@ -13,8 +18,7 @@ the lower curvature bound `-exp β`. It holds for arbitrary Borel
 probability measures, before any finite-support conclusion.
 -/
 
-import Transformer.Perceptron.Section5_InteractionCurvature
-import Mathlib.Analysis.Calculus.ParametricIntegral
+@[expose] public section
 
 open Real MeasureTheory Filter Set Topology
 

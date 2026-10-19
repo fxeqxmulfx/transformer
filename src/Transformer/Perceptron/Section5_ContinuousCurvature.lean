@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_RotatedKernel
+public import Transformer.Perceptron.Section5_CirclePotential
+public import Transformer.Perceptron.Section5_FirstVariationCurvature
+
+/-!
 # Continuous first-variation curvature on the actual circle
 
 ArXiv:2601.21366v2, §5.2, `eq:Hess-bilinear`. The coefficient
@@ -14,9 +20,7 @@ support or density hypothesis. Its actual derivative identity
 is proved using the preceding angular first-variation calculus.
 -/
 
-import Transformer.Perceptron.Section5_RotatedKernel
-import Transformer.Perceptron.Section5_CirclePotential
-import Transformer.Perceptron.Section5_FirstVariationCurvature
+@[expose] public section
 
 open Real MeasureTheory
 

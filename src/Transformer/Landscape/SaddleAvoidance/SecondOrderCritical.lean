@@ -1,21 +1,25 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Necessary
+
+/-!
 # Saddle avoidance — the landscape hypothesis in second-order form
 
 Papers state a benign landscape as the absence of spurious second-order
 critical points: every critical point at which the Hessian is positive
-semidefinite is a minimizer.  The landscape theorems ask instead that every
-critical point be a minimizer or a strict saddle (`hcrit`).  For `f` of class
-`C²` on a finite-dimensional space the two agree.  A critical point is a
+semidefinite is a minimizer. The landscape theorems ask instead that every
+critical point be a minimizer or a strict saddle (`hcrit`). For `f` of class
+`C²` on a finite-dimensional space the two agree. A critical point is a
 strict saddle exactly when it has a direction `h` of negative curvature,
 `⟪∇²f(z) h, h⟫ < 0` (`isStrictSaddle_iff_exists_inner_neg`), so a property
 holds at it or it is a strict saddle exactly when the property holds there if
-the Hessian is positive semidefinite (`or_isStrictSaddle_iff`).  This gives
+the Hessian is positive semidefinite (`or_isStrictSaddle_iff`). This gives
 `hcrit` for global minimizers (`isMinOn_or_isStrictSaddle_of_inner_nonneg`)
 and local minimizers (`isLocalMin_or_isStrictSaddle_of_inner_nonneg`), and
 for both below a level `c` (the forms ending in `_of_lt`).
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Necessary
+@[expose] public section
 
 open Set
 
@@ -87,7 +91,7 @@ theorem isLocalMin_or_isStrictSaddle_of_inner_nonneg (hf : ContDiff ℝ 2 f)
 /-- **The landscape hypothesis below a level `c`, for global minimizers.**  If
 every critical point `z` of a `C²` function with `f z < c` at which the
 Hessian is positive semidefinite is a global minimizer, every critical point
-below `c` is a global minimizer or a strict saddle.  Any other restriction of
+below `c` is a global minimizer or a strict saddle. Any other restriction of
 the critical points is the same application of `or_isStrictSaddle_iff`. -/
 theorem isMinOn_or_isStrictSaddle_of_inner_nonneg_of_lt (hf : ContDiff ℝ 2 f) {c : ℝ}
     (h2 : ∀ z, gradient f z = 0 → f z < c → (∀ h, 0 ≤ ⟪fderiv ℝ (gradient f) z h, h⟫) →
@@ -107,7 +111,7 @@ theorem isLocalMin_or_isStrictSaddle_of_inner_nonneg_of_lt (hf : ContDiff ℝ 2 
 
 /-- The hypotheses of the theorems above hold for the double well
 `f(x) = (x² - 1)² / 4` on the line, at its critical point `0` and with
-`c = 1`.  Its gradient is `x³ - x` and its Hessian `3 x² - 1`: the critical
+`c = 1`. Its gradient is `x³ - x` and its Hessian `3 x² - 1`: the critical
 point `0`, where the Hessian is `-1`, is a strict saddle, and the critical
 points `±1`, where it is `2`, are global minimizers. -/
 example : let f := fun x : ℝ => (x ^ 2 - 1) ^ 2 / 4

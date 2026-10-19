@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.SecondStep
+module
+
+public import Transformer.Grokking.AdamW.SecondStep
 
 /-!
 # Reachable momentum can turn the next update into ascent
@@ -21,6 +23,8 @@ no arbitrary buffer is planted. It refutes unconditional repeated-step
 descent, not grokking or convergence of GPTMini. The quadratic is an
 explicit deviation from transformer CE and the parallelogram quotient.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

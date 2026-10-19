@@ -1,6 +1,8 @@
-import Transformer.AMSGrad.Section4_TheoremAProof
+module
 
-/-
+public import Transformer.AMSGrad.Section4_TheoremAProof
+
+/-!
 # AMSGrad — Theorem A under the paper's finite-horizon assumptions
 
 Theorem A of arXiv:1904.03590v4, §1, assumes properties of the losses,
@@ -8,6 +10,8 @@ steps, and first-moment coefficients for `1 ≤ t ≤ T`. We extend those data
 after `T` without changing any iterate or statistic used in the bound and
 apply the schedule-free proof in `Section4_TheoremAProof`.
 -/
+
+@[expose] public section
 
 open Finset
 namespace Transformer

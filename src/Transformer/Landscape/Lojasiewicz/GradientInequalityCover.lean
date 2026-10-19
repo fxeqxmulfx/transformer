@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.ModulatedCritical
+public import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+
+/-!
 # Local gradient inequalities and the fixed-energy open cover
 
 Appendix D.1 of arXiv:2510.22026v2: regular points require only continuity;
 points away from the limiting energy are excluded from the late trajectory.
 -/
 
-import Transformer.Landscape.Lojasiewicz.ModulatedCritical
-import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+@[expose] public section
 
 namespace Transformer.Landscape.Lojasiewicz
 

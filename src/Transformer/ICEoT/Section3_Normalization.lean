@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.ICEoT.Section3_Encoder
+public import Mathlib.Analysis.Real.Sqrt
+
+/-!
 # IC-EoT: input-dependent layer normalization can break convexity
 
 arXiv:2603.22095v2, §3.2, paragraph after Eq. (25). The source omits
@@ -7,8 +12,7 @@ two-channel normalization with epsilon one and unit affine scale is already
 non-convex along the affine input `(t,-t)`.
 -/
 
-import Transformer.ICEoT.Section3_Encoder
-import Mathlib.Analysis.Real.Sqrt
+@[expose] public section
 
 noncomputable section
 

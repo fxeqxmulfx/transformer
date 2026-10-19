@@ -1,10 +1,12 @@
-import Transformer.AMSGrad.Section3_Issue
+module
 
-/-
+public import Transformer.AMSGrad.Section3_Issue
+
+/-!
 # AMSGrad — Theorem A: Abel summation with a varying `β_{1,t}`
 
 The scalar inequalities behind the repair of Theorem A of arXiv:1904.03590v4
-(`Section4_TheoremAFinite`).  In Lemma 3.1 the first term carries the weights
+(`Section4_TheoremAFinite`). In Lemma 3.1 the first term carries the weights
 `c_t = a_t/(2(1-β_{1,t}))`, `a_t = √v̂_{t,i}/α_t`, which are not monotone when
 `β_{1,t}` varies, so `abel_le` of `Section3_Issue` does not apply; together with
 the `β_{1,t}` term of Lemma 3.1, one coordinate at a time, with
@@ -22,6 +24,8 @@ the `β_{1,t}` term of Lemma 3.1, one coordinate at a time, with
 Source: not a statement of arXiv:1904.03590v4; the estimates its Theorem A
 needs, where the proof of Reddi et al. quoted there fails.
 -/
+
+@[expose] public section
 
 open Finset
 
@@ -221,7 +225,7 @@ example : (0 : ℝ) < 1 ∧ (∀ t, 1 ≤ t → (0 : ℝ) ≤ (fun _ : ℕ => 0)
   `  ≤ E a_T/(1-β) + E/(2(1-β)) Σ_{t=1}^T β_t a_t`,
 
 is false: `a ≡ 1`, `β = 1/2`, `β_t = 1/2` for even `t` and `0` for odd `t`, `u_t = 1` for
-even `t` and `0` for odd `t`, `E = 1`, `T = 10` give `5 ≤ 4.5`.  A proof of Theorem A with
+even `t` and `0` for odd `t`, `E = 1`, `T = 10` give `5 ≤ 4.5`. A proof of Theorem A with
 the printed constant for a schedule that is not monotone must therefore use more than
 `0 ≤ u_t ≤ E` and the monotonicity of `a_t`. -/
 theorem not_abel_printed :

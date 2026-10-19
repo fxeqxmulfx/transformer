@@ -1,22 +1,24 @@
-import Transformer.Modes.Section5_PtBddFourier
-import Transformer.Modes.Section5_PtBddSmallBall
+module
 
-/-
+public import Transformer.Modes.Section5_PtBddFourier
+public import Transformer.Modes.Section5_PtBddSmallBall
+
+/-!
 # The number of modes of a Gaussian KDE — `eq:uniform-decay` fails for `β > 2`
 
 `eq:uniform-decay` of arXiv:2412.09080v3, `|𝓕ν_t(ξ)| ≲ (1 + ‖ξ‖)^{-1/2}`, is proved in
 the source by cutting `ℝ` at a *fixed* radius `R`: on `[-2R, 2R]` stationary and
 non-stationary phase give `‖ξ‖^{-1/2}` uniformly in the direction, and the rest is
 bounded by `∫_{|x| ≥ R} e^{-x²/2} dx`, which "as `R` is fixed, is smaller than
-`(1 + ρ)^{-1/2}` whenever `ρ` is large enough".  That last step is false: a fixed
-positive number is not `o(ρ^{-1/2})`.  And the tail is not negligible: both entries of
+`(1 + ρ)^{-1/2}` whenever `ρ` is large enough". That last step is false: a fixed
+positive number is not `o(ρ^{-1/2})`. And the tail is not negligible: both entries of
 `(G(t), G'(t)) = (g, g')(t - X)` tend to `0` as `|X| → ∞`, so the far tail of `X`
-does not oscillate.  For `β > 2` this breaks the estimate itself.
+does not oscillate. For `β > 2` this breaks the estimate itself.
 
 **What is proved.**  `G'(t) = e^{-βu²/2}(1 - βu²)`, `u = t - X`, is at most
 `(2β/(β-2)) e^{-((β+2)/4) z²}` once `|u| ≥ z ≥ 1` (`abs_bigG'_le_far`), while the Gaussian
 gives that tail mass `≳ e^{-z²/2 - O(z)}`: so `ℙ(|G'(t)| ≤ r) ≳ r^{2/(β+2) - o(1)}`,
-which beats `O(√r)` exactly when `β > 2`.  A law whose Fourier transform decays like
+which beats `O(√r)` exactly when `β > 2`. A law whose Fourier transform decays like
 `(1 + |s|)^{-1/2}` has `ℙ(|W| ≤ r) = O(√r)` (`measureReal_abs_le_of_decay`, a Fejér
 kernel argument, `Section5_PtBddSmallBall.lean`), so the decay fails along `ξ = (0, s)`:
 `not_uniform_decay_of_two_lt`, for every `t`.
@@ -24,6 +26,8 @@ kernel argument, `Section5_PtBddSmallBall.lean`), so the decay fails along `ξ =
 Source: arXiv:2412.09080v3, §5.5, `eq:uniform-decay` and the sentence "as `R` is fixed,
 is smaller than `(1 + ρ)^{-1/2}` whenever `ρ` is large enough".
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

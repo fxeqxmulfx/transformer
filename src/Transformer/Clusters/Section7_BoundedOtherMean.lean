@@ -1,10 +1,15 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_OnlyOneSpread
+public import Mathlib.Topology.Order.IntermediateValue
+
+/-!
 # The emergence of clusters in self-attention dynamics — `l:boundedother`, the mean
 
 The function `g` of the proof of `l:boundedother` (§7 of arXiv:2305.05465v6)
 is the softmax mean `θ ↦ Σ_k a_k e^{θ a_k} / Σ_k e^{θ a_k}` of the exponential
 rates `a_k = γ_k`, with `γ_{i₀} = 0` for the bounded token (the `1` of the
-source's denominator).  Here, for any finite family `a`:
+source's denominator). Here, for any finite family `a`:
 
 * `softmaxMean_sub_ge` — the mean increases, quantitatively, from the strict
   convexity of the log-sum-exp (`sq_le_softmax_monotone`);
@@ -13,15 +18,14 @@ source's denominator).  Here, for any finite family `a`:
   vanishes at exactly one `θ₀`, with sign changing across it.
 
 **What the source says and what is carried here.**  The source says `g`
-"takes value `-∞` at `-∞`, and `+∞` at `+∞`".  It does not: `g` is an average
-of the `γ_k` and stays in `[γ_1, γ_n]`.  Its limits are `γ_1 < 0` and
+"takes value `-∞` at `-∞`, and `+∞` at `+∞`". It does not: `g` is an average
+of the `γ_k` and stays in `[γ_1, γ_n]`. Its limits are `γ_1 < 0` and
 `γ_n > 0`, which is all that is used, and the root `θ₀` exists as claimed.
 
 Source: arXiv:2305.05465v6, proof of `l:boundedother`, the function `g`.
 -/
 
-import Transformer.Clusters.Section7_OnlyOneSpread
-import Mathlib.Topology.Order.IntermediateValue
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

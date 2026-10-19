@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.PositiveDefinite
+public import Mathlib.MeasureTheory.Measure.Prokhorov
+public import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
+
+/-!
 # §3.2 — The interaction energy is strictly convex
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -12,25 +18,23 @@ For `β > 0` and a continuous `V : 𝕊^{d-1} → ℝ`, write
 * `F` is continuous for the weak topology on `𝒫(𝕊^{d-1})`, which is compact
   (Prokhorov), so `F` has a global minimiser
   (`exists_isMin_interactionEnergy_add`).
-* `F` is strictly convex along midpoints.  The moments
+* `F` is strictly convex along midpoints. The moments
   `m_I(μ) = ∫ x_{I 0} ⋯ x_{I (k-1)} dμ(x)` and `∫ V dμ` are linear in `μ`, and
   `𝖤_β` is a positive series of squares of moments
   (`hasSum_interactionEnergy`), so with `ν = (μ₀ + μ₁)/2`
   `(F(μ₀) + F(μ₁))/2 - F(ν) = (8β)⁻¹ Σ_k β^k/k! Σ_I (m_I(μ₀) - m_I(μ₁))²`
-  (`hasSum_interactionEnergy_midProb`).  Two minimisers make the left side
+  (`hasSum_interactionEnergy_midProb`). Two minimisers make the left side
   `≤ 0`, hence are equal (`eq_of_hasSum_sq_moment_sub_nonpos`), and the
   minimiser is unique (`existsUnique_isMin_interactionEnergy_add`).
 
 The survey expands `e^{βt}` in Gegenbauer polynomials and cites Bilyk–Dai
 (Prop. 2.2) for the uniqueness of the minimiser once the coefficients are
-positive.  Here the expansion is in monomials, whose coefficients `β^k/k!` are
+positive. Here the expansion is in monomials, whose coefficients `β^k/k!` are
 visibly positive, and Mathlib's Stone–Weierstrass theorem replaces the
 completeness of spherical harmonics (`SphereMoments`).
 -/
 
-import Transformer.Perspective.PositiveDefinite
-import Mathlib.MeasureTheory.Measure.Prokhorov
-import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
+@[expose] public section
 
 open scoped BigOperators Nat ENNReal
 open Real MeasureTheory

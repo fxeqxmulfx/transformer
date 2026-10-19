@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.PreparedFunctions
+
+/-!
 # Real analytic preparation: PreparationReconstruction
 
 Adapted from Bochao Kong's classical-complex-wpt, revision
@@ -9,7 +13,7 @@ The scalar field is real; no complex root or complex differentiation result
 is used. Apache-2.0 license: third_party/classical-complex-wpt/LICENSE.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.PreparedFunctions
+@[expose] public section
 
 open Filter Finset
 open scoped BigOperators ENNReal NNReal Topology
@@ -22,7 +26,7 @@ namespace Transformer.Landscape.AnalyticPreparation
 variable {A I J : Type*} [AddCommMonoid A] [Finset.HasAntidiagonal A]
 
 /-- Pointwise reconstruction once sequence division and convergence are
-available.  Keeping the convergence hypotheses explicit makes this lemma
+available. Keeping the convergence hypotheses explicit makes this lemma
 reusable for both the public existence and uniqueness arguments.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2. -/
 theorem preparation_factorization_of_sequence_factorization {n d : ℕ}

@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section2_FlowMap
+public import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
+public import Mathlib.MeasureTheory.Measure.Support
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+
+/-!
 # Measure-to-measure interpolation — Basic definitions
 
 Formalization of arXiv:2411.04551v3 — "Measure-to-measure interpolation
@@ -20,12 +29,7 @@ This file collects:
   the ingredients every satisfiability witness of §1–§5 is built from.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section2_FlowMap
-import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
-import Mathlib.MeasureTheory.Measure.Support
-import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -98,16 +102,16 @@ on the ambient space and every `t`,
 
   `∫ φ dμ(t) = ∫ φ dμ(0) + ∫_0^t ∫ ⟨∇φ(x), 𝐯[μ(s)](s,x)⟩ dμ(s)(x) ds`,
 
-the inner integral being integrable in `s`.  The parameters of the source are
+the inner integral being integrable in `s`. The parameters of the source are
 piecewise constant in time, so `s ↦ ∫ ⟨∇φ, 𝐯⟩ dμ(s)` jumps at every switch
 and `t ↦ ∫ φ dμ(t)` is not differentiable there: the pointwise form
 `d/dt ∫ φ dμ(t) = …` at every `t` has no solution as soon as a switch changes
 the field on the support, and the integrated form is the distributional
-solution the source means.  Integrability is required because an interval
+solution the source means. Integrability is required because an interval
 integral of a non-integrable function is `0`.
 
 The initial condition `μ(0) = μ_0` is imposed separately by the statements that
-use this, since it is what varies between them.  As in
+use this, since it is what varies between them. As in
 `Perspective.continuityEquation`, the ambient gradient is the right pairing
 because `fullVF` ends in `proj`.
 
@@ -124,7 +128,7 @@ def cauchyPB
 
 /-- **Characteristics of eq: cauchy.pb.**  A curve `y` driven by the field
 `𝐯[μ(t)](t, ·)` along a measure curve `μ`, in integrated form:
-`y(t) = y(0) + ∫_0^t 𝐯[μ(s)](s, y(s)) ds`, the integrand being integrable.  As
+`y(t) = y(0) + ∫_0^t 𝐯[μ(s)](s, y(s)) ds`, the integrand being integrable. As
 for `cauchyPB`, the pointwise form `ẏ(t) = 𝐯(t, y(t))` at every `t` fails at
 the switches of a piecewise-constant parameter.
 
@@ -139,7 +143,7 @@ def IsCharacteristic
 
 It is a property of a candidate `Φ`, not a construction: `Φ^t_θ μ₀` is the
 solution of the Cauchy problem started at `μ₀`, and producing one is exactly
-the well-posedness the paper assumes.  Stating it this way keeps that
+the well-posedness the paper assumes. Stating it this way keeps that
 assumption visible wherever a flow map is used. -/
 def IsFlowMap
     (θ : TimeParams d) (Φ : ℝ → Perspective.ProbSphere d → Perspective.ProbSphere d) :
@@ -159,7 +163,7 @@ def positiveQuadrant : Set (SSphere d) :=
 /-! ### Witnesses
 
 The statements of §2–§3 hypothesize supports inside `ℚ_1^{d-1}`, barycenters,
-and families of measures.  The cheapest measure satisfying such conditions is a
+and families of measures. The cheapest measure satisfying such conditions is a
 Dirac mass, and the cheapest point of `ℚ_1^{d-1}` is `basePoint 0 = +1 ∈ 𝕊^0`;
 these two facts are what the satisfiability examples of those statements use. -/
 
@@ -181,7 +185,7 @@ noncomputable def antipode (x : SSphere d) : SSphere d :=
     exact mem_sphere_zero_iff_norm.mp x.2⟩
 
 /-- A point of the sphere and its antipode are distinct — `-x = x` would force
-`x = 0`, and `‖x‖ = 1`.  So a Dirac mass has neither full support nor all of
+`x = 0`, and `‖x‖ = 1`. So a Dirac mass has neither full support nor all of
 the sphere in its support's complement. -/
 theorem antipode_ne (x : SSphere d) : antipode d x ≠ x := by
   intro h
@@ -197,7 +201,7 @@ theorem antipode_ne (x : SSphere d) : antipode d x ≠ x := by
     exact absurd hx (by norm_num)
 
 /-- `basePoint 0`, the point `+1` of `𝕊^0 ⊂ ℝ^1`, lies in the positive
-quadrant, so `ℚ_1^0` is inhabited.  In dimension `d ≥ 2` a point of
+quadrant, so `ℚ_1^0` is inhabited. In dimension `d ≥ 2` a point of
 `ℚ_1^{d-1}` has to have *all* its coordinates positive, so no basis vector
 will do and the witnesses of §2–§3 all take `d = 1`. -/
 theorem basePoint_mem_positiveQuadrant : basePoint 0 ∈ positiveQuadrant 1 := by
@@ -208,7 +212,7 @@ theorem basePoint_mem_positiveQuadrant : basePoint 0 ∈ positiveQuadrant 1 := b
 /-- The geodesic convex hull `conv_g A` of a set `A ⊆ 𝕊^{d-1}` (§1.5,
 "Notation and basic definitions"): the radial projection onto the sphere of the Euclidean convex
 hull of `A`, and the whole sphere when that hull contains `0`, i.e. when `A`
-lies in no open hemisphere.  For `A` inside an open hemisphere it is the
+lies in no open hemisphere. For `A` inside an open hemisphere it is the
 smallest set containing `A` and every minimizing geodesic between two of its
 points, which is the only case in which the source uses it.
 

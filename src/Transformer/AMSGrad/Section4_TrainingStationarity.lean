@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AMSGrad.Section4_TrainingGradientEnergy
+public import Transformer.AMSGrad.Section4_TrainingVelocityLimit
+
+/-!
 # AMSGrad — actual full-gradient convergence to stationarity
 
 Deterministic fixed-objective extension of arXiv:1904.03590v4, Algorithm 1
@@ -7,8 +12,7 @@ convergence of the actual objective gradients along training; it is
 distinct from regret bounds and the limit of a matrix iteration.
 -/
 
-import Transformer.AMSGrad.Section4_TrainingGradientEnergy
-import Transformer.AMSGrad.Section4_TrainingVelocityLimit
+@[expose] public section
 
 open scoped Topology
 open Filter

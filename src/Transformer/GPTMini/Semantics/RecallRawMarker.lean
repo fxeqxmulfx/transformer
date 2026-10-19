@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallMarkerWeights
+module
+
+public import Transformer.GPTMini.Semantics.RecallMarkerWeights
 
 /-!
 # Derive the table-position signal from actual raw BOS tokens
@@ -17,6 +19,8 @@ paired key/value features or desired output scores. A table cutoff can
 subsequently be an ordinary fixed linear form in coordinates 0/26/36.
 The actual FFN cutoff and complete retrieval/readout remain separate.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

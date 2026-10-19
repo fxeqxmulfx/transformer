@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.Modes.Section2_PhiTDelta
+public import Transformer.Modes.Section2_ProxyKRScale
+
+/-!
 # The number of modes of a Gaussian KDE — the inner proxy Kac–Rice integral
 
 For `eq:int-phi-final`, the real Gaussian moment of `lem:phi-t` must be
 identified with the nonnegative Lebesgue integral used by the Kac–Rice
-formula.  Positivity of `α_t` suffices for integrability and this conversion.
+formula. Positivity of `α_t` suffices for integrability and this conversion.
 
 Source: arXiv:2412.09080v3, `lem:phi-t`, `eq:int-phi-final`.
 -/
 
-import Transformer.Modes.Section2_PhiTDelta
-import Transformer.Modes.Section2_ProxyKRScale
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped ENNReal
@@ -61,7 +65,7 @@ theorem lintegral_krPhi_eq_ofReal_integral {n : ℕ} {β t : ℝ}
   exact (ofReal_integral_eq_lintegral_ofReal (integrableOn_mul_krPhi hα) hnonneg).symm
 
 /-- Pull the positive covariance determinant out of the inner nonnegative
-Kac–Rice integral.  The remaining integral is exactly the real moment of
+Kac–Rice integral. The remaining integral is exactly the real moment of
 `lem:phi-t`.
 
 Source: arXiv:2412.09080v3, `eq:int-phi-final`. -/

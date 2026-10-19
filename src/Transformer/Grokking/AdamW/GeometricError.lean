@@ -1,5 +1,7 @@
-import Transformer.Grokking.AdamW.RetainedInputDissipation
-import Mathlib.Topology.Order.MonotoneConvergence
+module
+
+public import Transformer.Grokking.AdamW.RetainedInputDissipation
+public import Mathlib.Topology.Order.MonotoneConvergence
 
 /-!
 # Absorbing geometric clock errors in a numerical observer
@@ -29,6 +31,8 @@ All formulas use exact reals; frozen experiments, optimizers and
 checkpoints remain unchanged. Learned stochastic/numerical GPTMini
 and thermodynamic system-size transfer are separate questions.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

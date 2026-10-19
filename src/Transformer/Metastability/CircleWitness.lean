@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+
+/-!
 # Metastability — a separated configuration on the circle (§3.2 of 2410.06833v1)
 
 Three particles on `𝕋` meeting every condition of §3.2 at once, and the chart
-estimate for the caps `𝒮_q(τ)` it rests on.  The hypotheses of
+estimate for the caps `𝒮_q(τ)` it rests on. The hypotheses of
 `Metastability.PL_borjan` and `Metastability.claim_one` are witnessed here.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+@[expose] public section
 
 open Real
 
@@ -15,7 +19,7 @@ namespace Transformer
 namespace Metastability
 
 /-- A point of a `2τ`-cap within `π` of its centre is within `4√τ` of it:
-the chart estimate behind `eq: tau.small`.  Source: arXiv:2410.06833v1, §3.2,
+the chart estimate behind `eq: tau.small`. Source: arXiv:2410.06833v1, §3.2,
 `eq: cones_2`. -/
 theorem sq_le_of_mem_cap (τ u : ℝ) (hu : |u| ≤ π) (hc : 1 - 2 * τ ≤ Real.cos u) :
     u ^ 2 ≤ 16 * τ := by

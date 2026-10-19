@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Probability.Distributions.Gamma
+public import Mathlib.Tactic
+
+/-!
 # Exponential moments of the paper's Gamma benchmark
 
 Audit of arXiv:2602.15322v1, Appendix B, Heavy-Tailed Gradient Noise
@@ -8,8 +13,7 @@ The Gamma variable has positive exponential moments. Calling it
 heavy-tailed in the strict exponential-moment sense is incorrect.
 -/
 
-import Mathlib.Probability.Distributions.Gamma
-import Mathlib.Tactic
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

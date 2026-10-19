@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_BrownianVectorIncrement
+
+/-!
 # Expectations with arbitrary random parameters from the Brownian past
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The next full vector increment has its genuine product Gaussian law,
 independent of any bundle of jointly adapted parameters.
 -/
 
-import Transformer.BatchSize.Section4_BrownianVectorIncrement
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped NNReal

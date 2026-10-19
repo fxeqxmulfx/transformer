@@ -1,6 +1,8 @@
-import Transformer.AdamBeyond.Section3_StochStep
+module
 
-/-
+public import Transformer.AdamBeyond.Section3_StochStep
+
+/-!
 # Adam and beyond — §3: Theorem 3
 
 The costs are i.i.d.: `C x` with probability `p = (1 + δ)/(C + 1)` and `-x`
@@ -12,12 +14,14 @@ while Adam drifts upward in expectation (`stoch_step`) from `x₁ = 0`, so that
 
 * `β₂ ≥ 0` is not a hypothesis: it follows from `0 ≤ β₁ < √β₂`.
 * Theorem 3 is run, as its proof assumes, without projection and from
-  `x₁ = 0`; the source's footnote defers the projected case.  "Adam does not
+  `x₁ = 0`; the source's footnote defers the projected case. "Adam does not
   converge" is carried as the proof's conclusion: `E[F(x_t)] - F(-1) ≥ δ` for
   every `t ≥ 1`, with `δ = 1` and `C = max(C₀, 2)`.
 
 Source: arXiv:1904.09237, §3, Theorem 3; Appendix, its proof.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

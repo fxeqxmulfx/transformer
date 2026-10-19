@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.GPTMini.Model
+public import Transformer.GPTMini.AttnSubLayerLipschitz
+public import Transformer.GPTMini.BlockLipschitz
+public import Transformer.GPTMini.Properties.StreamGrowth
+
+/-!
 # The Lipschitz constants of one `gpt-mini` block
 
 A Pre-LN block is `(1 + ffn) ∘ (1 + attn)`, so its constant factors:
@@ -18,14 +25,11 @@ The two sub-layer constants are the ones actually proved upstream:
 
 Both carry `‖W_qkv‖` and the normalization floor `eps`, and neither can drop
 them: nothing downstream of the QKV projection renormalizes the values, and
-`rmsNormEps` has slope `2/√eps` at the origin.  What the depth induction makes
+`rmsNormEps` has slope `2/√eps` at the origin. What the depth induction makes
 of `blockForward_lipschitz` is `Properties.Lipschitz`.
 -/
 
-import Transformer.GPTMini.Model
-import Transformer.GPTMini.AttnSubLayerLipschitz
-import Transformer.GPTMini.BlockLipschitz
-import Transformer.GPTMini.Properties.StreamGrowth
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -107,7 +111,7 @@ position.
 
 The estimate has to be uniform in the position on the input side: the
 attention sub-layer mixes positions, so what happens at `i` depends on the
-whole stream.  On the output side it is pointwise, which is what lets the
+whole stream. On the output side it is pointwise, which is what lets the
 depth induction of `Properties.Lipschitz` iterate it.
 
 Source: `reference/model.py` (`Block.forward`), through

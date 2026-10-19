@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.RealAnalyticGerms.FiniteEquations
+
+/-!
 # Pullback by arbitrary real analytic maps fixing the origin
 
 Composition with an analytic parameterization induces an intrinsic ring
@@ -6,7 +10,7 @@ homomorphism on analytic germs. Finite equation bases consequently control
 vanishing along nonlinear analytic curves as well as linear coordinate maps.
 -/
 
-import Transformer.Landscape.RealAnalyticGerms.FiniteEquations
+@[expose] public section
 
 open Filter
 open scoped Topology

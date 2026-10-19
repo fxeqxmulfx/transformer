@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Modes.Section3_SummandUniform
+public import Mathlib.MeasureTheory.SpecificCodomains.Pi
+
+/-!
 # The number of modes of a Gaussian KDE — the moment bound of `lem:eta`
 
 The standardized law has `E‖Y(t)‖² = 2`. The uniform pointwise estimate
@@ -13,8 +18,7 @@ existence is required.
 Source: arXiv:2412.09080v3, `lem:eta`, §3.1 and its proof in §5.3.
 -/
 
-import Transformer.Modes.Section3_SummandUniform
-import Mathlib.MeasureTheory.SpecificCodomains.Pi
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 

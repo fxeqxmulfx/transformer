@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.Basic
+public import Mathlib.Analysis.Analytic.Polynomial
+public import Mathlib.Algebra.Polynomial.RingDivision
+
+/-!
 # Finite root orders and strict multiplicity reduction
 
 Polynomial root multiplicity is the analytic order of the shifted polynomial
@@ -7,9 +13,7 @@ root has multiplicity strictly smaller than its degree. These facts give
 the decreasing induction parameter in ramified analytic root lifting.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.Basic
-import Mathlib.Analysis.Analytic.Polynomial
-import Mathlib.Algebra.Polynomial.RingDivision
+@[expose] public section
 
 open Filter Polynomial
 

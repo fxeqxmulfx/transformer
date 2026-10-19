@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Perceptron.Analytic
+public import Transformer.Perspective.SphereInvariant
+public import Mathlib.Analysis.InnerProductSpace.Projection.Reflection
+public import Mathlib.Analysis.Analytic.Linear
+public import Mathlib.Analysis.Analytic.Constructions
+
+/-!
 # Actual orthogonal paths with analytic point orbits
 
 ArXiv:2601.21366v2, §6, proof of `prop: unified.log`, part (a),
@@ -18,11 +26,7 @@ orthogonal-invariance predicate. No measure-preserving property is put
 inside the definition, and no point or parameter is discarded.
 -/
 
-import Transformer.Perceptron.Analytic
-import Transformer.Perspective.SphereInvariant
-import Mathlib.Analysis.InnerProductSpace.Projection.Reflection
-import Mathlib.Analysis.Analytic.Linear
-import Mathlib.Analysis.Analytic.Constructions
+@[expose] public section
 
 open Real MeasureTheory Set
 

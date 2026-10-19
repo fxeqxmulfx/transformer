@@ -1,34 +1,39 @@
-/-
+module
+
+public import Mathlib.Algebra.BigOperators.Group.List.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+/-!
 # The exact sum the fast path falls back on
 
 `Transformer.ALM.DotError` bounds the error of `q0*k0 + q1*k1` and
-`cmp_of_dot_guard` says when that bound decides a comparison.  When it does
+`cmp_of_dot_guard` says when that bound decides a comparison. When it does
 not, `vm-rs/alm-hull/src/head.rs` does not give up: it scans again with
 `vm-rs/alm-hull/src/exact.rs::dot_cmp`, which answers with the sign of the
 exact difference and is therefore the arbiter of every query the bound leaves
-open.  On `fibonacci` that is 61 queries of 382284, and the arbiter's verdict
+open. On `fibonacci` that is 61 queries of 382284, and the arbiter's verdict
 is the one the measurement reports.
 
-An arbiter with nothing behind it is not an arbiter.  This file is what is
+An arbiter with nothing behind it is not an arbiter. This file is what is
 behind it, down to the one step that is not algebra.
 
 `exact.rs` builds a Shewchuk expansion: a list of components whose sum is the
 exact total, grown one term at a time by sweeping the new term through the
-list with error-free two-sums and keeping every low part.  `grow` and `push`
+list with error-free two-sums and keeping every low part. `grow` and `push`
 are that loop; `expansion_sum` is its invariant, and it is pure algebra —
 nothing about floating point enters, because nothing about floating point is
-used.  A transcription error in the sweep would break it, and that is the
+used. A transcription error in the sweep would break it, and that is the
 error worth guarding against.
 
-The last step is not algebra.  `expansion_sign` reads the sign off the final
+The last step is not algebra. `expansion_sign` reads the sign off the final
 component alone, which is sound because a non-overlapping expansion is
 dominated by its last component — Shewchuk's invariant, and the one thing
-here taken as a hypothesis rather than proved.  `sign_of_top` is that step,
+here taken as a hypothesis rather than proved. `sign_of_top` is that step,
 `expansion_sign_eq` the two halves put together.
 
 `ExactSum` is the error-free transformation the sweep runs on: `two_sum`
 (Knuth 1969, §4.2.2) returns the rounded sum together with the part it lost,
-and the two add back to the exact sum.  It is a structure and not an `axiom`,
+and the two add back to the exact sum. It is a structure and not an `axiom`,
 so every statement below carries it as a hypothesis, and `exactArith` is a
 witness that the hypothesis is satisfiable.
 
@@ -37,8 +42,7 @@ Robust Geometric Predicates", 1997, §2 (`grow_expansion`);
 `vm-rs/alm-hull/src/exact.rs`, `two_sum` and `expansion_sign`.
 -/
 
-import Mathlib.Algebra.BigOperators.Group.List.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+@[expose] public section
 
 namespace Transformer
 namespace ALM

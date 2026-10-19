@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_CapAttractor
+public import Transformer.Interpolation.Section3_MassConcentration
+public import Transformer.Interpolation.Section3_TwoRidgeScaling
+public import Transformer.Interpolation.Section3_NullRepeller
+
+/-!
 # Explicit original two-neuron data for each ball-chain phase
 
 ArXiv:2411.04551v3, Appendix, `lem: two.balls` and its use in
@@ -16,10 +23,7 @@ existence and uniqueness. Their choice may depend on the initial law,
 as required by the corrected quantifier order of the ball lemmas.
 -/
 
-import Transformer.Interpolation.Section3_CapAttractor
-import Transformer.Interpolation.Section3_MassConcentration
-import Transformer.Interpolation.Section3_TwoRidgeScaling
-import Transformer.Interpolation.Section3_NullRepeller
+@[expose] public section
 
 open Real Set MeasureTheory Filter
 open scoped Topology ENNReal

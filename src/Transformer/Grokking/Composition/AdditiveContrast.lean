@@ -1,4 +1,6 @@
-import Transformer.Grokking.Composition.Basic
+module
+
+public import Transformer.Grokking.Composition.Basic
 
 /-!
 # Negative removal contrasts do not identify product logits
@@ -19,6 +21,8 @@ in the logits. Aggregation and nonlinear loss can supply that pattern.
 No learned transformer algorithm or actual numerical-kernel bridge is
 claimed. This explicitly fixed two-example task is not division or EOS.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Composition
 

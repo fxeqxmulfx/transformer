@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.TemporalProgramSources
+
+/-!
 # Downward rounding implements the comparison
 
 arXiv:2506.16055v3, Appendix B.2, `thm:TLCl_to_rtfr`.
@@ -6,7 +10,7 @@ The source numerator is an integer difference, its uniform average
 has the same sign, and downward rounding preserves negativity.
 -/
 
-import Transformer.CRASP.TemporalProgramSources
+@[expose] public section
 
 namespace Transformer.CRASP.TemporalProgram
 

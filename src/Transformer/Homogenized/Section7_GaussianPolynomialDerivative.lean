@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianPolynomialContinuity
+
+/-!
 # Differentiation of the original polynomial Gaussian expectation
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -20,7 +24,7 @@ in its actual bilinear softmax application.
 This analytic step precedes the covariance contraction in the Gram-stability proof.
 -/
 
-import Transformer.Homogenized.Section7_GaussianPolynomialContinuity
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter Set
 open scoped Topology

@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_AtomicPenaltyWeights
+
+/-!
 # The exact prediction-budget epigraph is nonconvex
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §2–§3.1, equations
-`eq:attention_only` and `eq:attention_only_obj`.  The original four-matrix
+`eq:attention_only` and `eq:attention_only_obj`. The original four-matrix
 weight decay cannot be represented by a convex prediction-budget epigraph,
 even when any finite number of trainable-score softmax heads is allowed.
 -/
 
-import Transformer.Convexifying.Section3_AtomicPenaltyWeights
+@[expose] public section
 
 namespace Transformer.Convexifying
 
@@ -21,7 +25,7 @@ def originalMixtureEpigraph : Set (ℝ × ℝ) :=
 
 /-- The cheap point admitted by the convex atomic mixture is outside the
 original prediction-budget epigraph, even with arbitrarily many finite
-trainable-score heads.  Source: arXiv:2211.11052v1,
+trainable-score heads. Source: arXiv:2211.11052v1,
 `eq:attention_only_obj`, specialized. -/
 theorem smallAtomicPoint_not_original :
     ((1 / 600 : ℝ), (1 / 50 : ℝ)) ∉ originalMixtureEpigraph := by
@@ -30,7 +34,7 @@ theorem smallAtomicPoint_not_original :
 
 /-- The genuine-softmax atomic mixture is convex but does not have the
 same prediction-budget set as the paper's four-matrix weight-decay model.
-The score product is trainable in both sets.  Source: arXiv:2211.11052v1,
+The score product is trainable in both sets. Source: arXiv:2211.11052v1,
 §2–§3.1, equations `eq:attention_only`–`eq:attention_only_obj`. -/
 theorem atomicMixture_not_exact :
     atomicMixtureEpigraph ≠ originalMixtureEpigraph := by
@@ -64,8 +68,8 @@ theorem original_budget_witness : (1 / 6, 2) ∈ originalMixtureEpigraph := by
 /-- **The exact projected prediction-budget epigraph is nonconvex even when the
 number of original softmax heads is arbitrary and finite.**  Mixing the
 zero network with a genuine head that has difference `1/6` at budget `2`
-would put `(1/600, 1/50)` in any convex epigraph.  The quadratic bound
-above proves that no original network can attain this point.  Thus an
+would put `(1/600, 1/50)` in any convex epigraph. The quadratic bound
+above proves that no original network can attain this point. Thus an
 affine-output convex reformulation cannot preserve both predictions and the
 four-matrix weight decay of equation `eq:attention_only_obj`.
 Source: arXiv:2211.11052v1, §2–§3.1. -/
@@ -91,7 +95,7 @@ projected prediction-budget pairs can exactly represent the original,
 arbitrarily wide, trainable-score attention model with its four-matrix
 weight decay.
 This is the epigraph obstruction established here; nonlinear recovery or a
-different penalty lies outside its scope.  Source: arXiv:2211.11052v1,
+different penalty lies outside its scope. Source: arXiv:2211.11052v1,
 §2–§3.1, equations `eq:attention_only`–`eq:attention_only_obj`. -/
 theorem no_finite_affine_budget_lift {m : ℕ}
     (C : Set (Fin m → ℝ)) (f : (Fin m → ℝ) →ᵃ[ℝ] (ℝ × ℝ))

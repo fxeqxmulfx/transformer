@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_PolynomialMoments
+
+/-!
 # Actual homogeneous power tests and their even moment expansion
 
 ArXiv:2601.21366v2, §5.1, `eq:FH-basic` and `lem: quadpol` (i).
@@ -20,7 +24,7 @@ coordinate. The next polynomial-degree argument uses exactly these
 original terms. No moment, inverse or polynomial conclusion is assumed.
 -/
 
-import Transformer.Perceptron.Section5_PolynomialMoments
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

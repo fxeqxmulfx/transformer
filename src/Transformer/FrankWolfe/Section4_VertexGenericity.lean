@@ -1,20 +1,24 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section4_GaussianCells
+public import Transformer.FrankWolfe.Section4_Edges
+public import Mathlib.Probability.Distributions.Gaussian.Multivariate
+public import Mathlib.Geometry.Euclidean.Angle.Unoriented.Affine
+
+/-!
 # Attention's forward pass and Frank-Wolfe — when a vertex owns its cell
 
 Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
 *Attention's forward pass and Frank-Wolfe*, §4, the two remarks on the
 genericity of `eq: vertices.own.cell`.
 
-A vertex of `𝒦` need not lie in its own cell.  `prop: d.to.infty` says that in
+A vertex of `𝒦` need not lie in its own cell. `prop: d.to.infty` says that in
 high dimension Gaussian vertices do, with probability tending to one;
 `prop: polytope.condition` characterizes it, for a fixed polytope, by a
 condition on the edges at that vertex.
 -/
 
-import Transformer.FrankWolfe.Section4_GaussianCells
-import Transformer.FrankWolfe.Section4_Edges
-import Mathlib.Probability.Distributions.Gaussian.Multivariate
-import Mathlib.Geometry.Euclidean.Angle.Unoriented.Affine
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -76,9 +80,9 @@ def neigh (v : Idx κ → EucSpace d) (i : Idx κ) : Set (EucSpace d) :=
 
 /-- **Remark (prop: polytope.condition) — the tangent-hyperplane condition.**
 
-Let `B ≻ 0` and let `𝒥(x) = ½⟨Bx, x⟩`.  The hyperplane tangent at `v` to the
+Let `B ≻ 0` and let `𝒥(x) = ½⟨Bx, x⟩`. The hyperplane tangent at `v` to the
 level set `{𝒥 = 𝒥(v)}` is `{x | ⟨a_v, x⟩ + b_v = 0}` with `a_v = Bv`,
-`b_v = -⟨Bv, v⟩`, so `⟨a_v, x⟩ + b_v = ⟨Bv, x - v⟩`.  For a vertex `v_i ≠ 0`,
+`b_v = -⟨Bv, v⟩`, so `⟨a_v, x⟩ + b_v = ⟨Bv, x - v⟩`. For a vertex `v_i ≠ 0`,
 
   `v_i` owns its cell   ↔   `⟨B v_i, w - v_i⟩ < 0` for all `w ∈ neigh(v_i) ∪ {0}`.
 
@@ -86,15 +90,15 @@ level set `{𝒥 = 𝒥(v)}` is `{x | ⟨a_v, x⟩ + b_v = 0}` with `a_v = Bv`,
 forced.
 
 First, the source's `eq: cond.hyperplane` is a disjunction: all of
-`neigh(v_i) ∪ {0}` strictly on one side *or* strictly on the other.  The
+`neigh(v_i) ∪ {0}` strictly on one side *or* strictly on the other. The
 positive branch is empty: at `w = 0` it reads `⟨B v_i, -v_i⟩ > 0`, i.e.
-`⟨B v_i, v_i⟩ < 0`, which `B ≻ 0` forbids for `v_i ≠ 0`.  Only the negative
+`⟨B v_i, v_i⟩ < 0`, which `B ≻ 0` forbids for `v_i ≠ 0`. Only the negative
 branch survives, and it is the one kept here.
 
 Second, the source states the equivalence against `v_i ∈ 𝒞_i(v)`, whose
 defining inequality is non-strict; a neighbour `w` with
 `⟨B v_i, w⟩ = ⟨B v_i, v_i⟩` then satisfies the left side and not the right,
-so the equivalence is false as written.  The strict condition characterizes
+so the equivalence is false as written. The strict condition characterizes
 `eq: vertices.own.cell` — `v_i ∈ 𝒞_i(v)` *and* `v_i ∉ 𝒞_j(v)` for `j ≠ i` —
 which is the hypothesis `thm: exp.fast.polytope` actually needs, and that is
 what is stated here.

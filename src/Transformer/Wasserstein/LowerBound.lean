@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Wasserstein.Basic
+
+/-!
 # The 2-Wasserstein distance — a lower bound
 
 `Transformer.Wasserstein` bounds `W_2` from above by exhibiting a coupling.
@@ -15,7 +19,7 @@ which is what makes every transport cost the integral of a bounded function.
 Sources: arXiv:2411.04551v3, `cl: W.to.ball`, `lem: mass.concentration.Q1`.
 -/
 
-import Transformer.Wasserstein.Basic
+@[expose] public section
 
 open scoped ENNReal
 open Real MeasureTheory

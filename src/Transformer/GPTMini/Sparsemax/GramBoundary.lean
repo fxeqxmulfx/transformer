@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.GramSupport
+module
+
+public import Transformer.GPTMini.Sparsemax.GramSupport
 
 /-!
 # Limits of the convex embedding and routing foundation
@@ -17,6 +19,8 @@ independent of any chosen task loss or FFN. The new energy formulation
 therefore must not be advertised as an exact convex reformulation of
 ordinary end-to-end sparsemax transformer training.
 -/
+
+@[expose] public section
 
 noncomputable section
 

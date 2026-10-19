@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section3_GuardedNewton
+public import Transformer.DASH.Section2_History
+
+/-!
 # DASH — guarded inverse roots for the original positive-definite matrix
 
 arXiv:2602.02016v2, §3.2–3.5. No eigenbasis, positive scale or
@@ -6,8 +11,7 @@ reliable PI estimate is supplied by the caller. The EVD is used in
 the proof and target specification, not in these iterative algorithms.
 -/
 
-import Transformer.DASH.Section3_GuardedNewton
-import Transformer.DASH.Section2_History
+@[expose] public section
 
 open scoped Matrix Topology
 open Filter

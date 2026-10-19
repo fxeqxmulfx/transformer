@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section9_Eigen
+public import Transformer.Clusters.Section10_ComplementaryProjection
+
+/-!
 # The simple leading eigencoordinate and its invariant complement
 
 ArXiv:2305.05465v6, §4, `d:good`, and §9, the proof of
@@ -17,8 +22,7 @@ the leading line is positive; no global positive-definiteness of
 `QᵀK`, orthogonality, or diagonalizability is added here.
 -/
 
-import Transformer.Clusters.Section9_Eigen
-import Transformer.Clusters.Section10_ComplementaryProjection
+@[expose] public section
 
 open Real Filter Topology
 

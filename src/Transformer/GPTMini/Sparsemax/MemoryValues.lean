@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.MemoryGram
+module
+
+public import Transformer.GPTMini.Sparsemax.MemoryGram
 
 /-!
 # One learned value table for a shared invertible dictionary
@@ -14,6 +16,8 @@ unrestricted; their usual penalties or norm bounds are not preserved by
 this nonlinear coordinate change. Fixed small feature width, task loss,
 FFN and ordinary token self-attention are not claimed by this architecture.
 -/
+
+@[expose] public section
 
 noncomputable section
 

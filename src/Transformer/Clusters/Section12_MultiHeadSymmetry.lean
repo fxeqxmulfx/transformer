@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadEscape
+
+/-!
 # Original multi-head symmetries and a bounded interior token beside two escaping tokens
 
 Construction for arXiv:2305.05465v6, §12, `sec:conclusion`, using §7's
@@ -16,7 +20,7 @@ original heads, and distinct data; no scalar ODE or unproved trajectory
 existence is taken as a premise of the witness.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadEscape
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

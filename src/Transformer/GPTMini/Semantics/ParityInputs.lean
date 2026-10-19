@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.ParityConstruction
+module
+
+public import Transformer.GPTMini.Semantics.ParityConstruction
 
 /-!
 # Exact raw parity inputs to the original decoder FFN
@@ -16,6 +18,8 @@ actual FFN input and the actual ReLU2 matrices. Proving that its final
 greedy tied readout emits the required token still requires quantitative
 margin bounds; this module does not assume correct logits.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_AtomicSeparation
+public import Transformer.Interpolation.Section1_CloseAtomicInputs
+
+/-!
 # Obstruction to a norm estimate uniform over the original data
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms` and its displayed
@@ -19,8 +24,7 @@ conclusions contradict the chosen initial gap, with any finite number
 of complete control phases. All original matrix blocks are allowed.
 -/
 
-import Transformer.Interpolation.Section1_AtomicSeparation
-import Transformer.Interpolation.Section1_CloseAtomicInputs
+@[expose] public section
 
 open Real MeasureTheory Set
 

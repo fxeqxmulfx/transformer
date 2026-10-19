@@ -1,16 +1,20 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Twisted
+
+/-!
 # Phase model — a spurious local minimizer of a generating partial table
 
 Below `n²/8` every local minimizer of `V_full` is the phases of a character
-up to periods (`exists_sub_characterPhase_mem_periods_of_isLocalMin`).  This
+up to periods (`exists_sub_characterPhase_mem_periods_of_isLocalMin`). This
 fails for partial tables `S` whose rows generate those of the full table
 over `ℤ`, although the zeros of `V_S` are still the characters up to periods
-(`divisionEnergy_eq_zero_iff_of_mem_span`).  For `n = 5` the fifteen pairs of
+(`divisionEnergy_eq_zero_iff_of_mem_span`). For `n = 5` the fifteen pairs of
 `spuriousTable`, the nine of the forms `(x, 0)` and `(x, x)` and six more,
-generate the full table (`mem_span_divisionRow_spuriousTable`).  At the
+generate the full table (`mem_span_divisionRow_spuriousTable`). At the
 integer phases `j = (0, 1, 1, 1, 3)` the six have the defects `1` for
 `(4, 1)`, `(4, 3)`, `(3, 4)` and `-1` for `(1, 3)`, `(2, 1)`, `(3, 1)`
-modulo `6`, and both triples of rows sum to `-2e₁ - e₃`.  So `(π/3) j` is a
+modulo `6`, and both triples of rows sum to `-2e₁ - e₃`. So `(π/3) j` is a
 twisted state: a local minimizer of energy `3 < 5²/8`
 (`isLocalMin_divisionEnergy_spuriousTable`, `divisionEnergy_spuriousTable`)
 that is not a character up to periods
@@ -18,7 +22,7 @@ that is not a character up to periods
 `not_forall_exists_sub_characterPhase_mem_periods_of_isLocalMin`).
 -/
 
-import Transformer.Landscape.PhaseModel.Twisted
+@[expose] public section
 
 open Real
 open scoped Finset

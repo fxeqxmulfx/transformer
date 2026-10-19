@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_AmbientWeight
+public import Mathlib.Analysis.Calculus.FDeriv.Analytic
+public import Mathlib.Analysis.InnerProductSpace.Dual
+
+/-!
 # Actual interaction gradients and their ambient analyticity
 
 ArXiv:2601.21366v2, §2.3, `eq: fulltrans.stat`, §5.3,
@@ -15,9 +21,7 @@ projection through the integral identifies the original field
 No density, atomicity or stationary-field identity is assumed.
 -/
 
-import Transformer.Perceptron.Section6_AmbientWeight
-import Mathlib.Analysis.Calculus.FDeriv.Analytic
-import Mathlib.Analysis.InnerProductSpace.Dual
+@[expose] public section
 
 open Real MeasureTheory Set
 

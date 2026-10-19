@@ -1,6 +1,8 @@
-import Transformer.Modes.Section2_Gt
+module
 
-/-
+public import Transformer.Modes.Section2_Gt
+
+/-!
 # The number of modes of a Gaussian KDE — the proof of `lem: pt.bdd`
 
 §5.5 of arXiv:2412.09080v3, `sec: proof.pt.bdd`: the curve `ψ = (g, g')` that
@@ -18,10 +20,12 @@ on.
 * "Any stationary point `x₀` of `φ_θ` satisfies `g'(x₀) = 0`" is a slip —
   `φ_θ' = cos θ g' + sin θ g''`, not `g'` — but the argument that follows does
   not use it: a stationary point where also `φ_θ'' = 0` would make the
-  determinant vanish.  That argument is proved, `phase_nondegenerate`.
+  determinant vanish. That argument is proved, `phase_nondegenerate`.
 
 Source: arXiv:2412.09080v3, §5.5, `eq: Gt-prime`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 open scoped ENNReal
@@ -29,16 +33,16 @@ open scoped ENNReal
 namespace Transformer
 namespace Modes
 
-/-- `g(z) = z e^{-βz²/2}`.  arXiv:2412.09080v3, `eq: Gt-prime`. -/
+/-- `g(z) = z e^{-βz²/2}`. arXiv:2412.09080v3, `eq: Gt-prime`. -/
 noncomputable def gPt (β z : ℝ) : ℝ := Real.exp (-(β / 2) * z ^ 2) * z
 
-/-- `g'(z) = (1 - βz²) e^{-βz²/2}`.  arXiv:2412.09080v3, §5.5. -/
+/-- `g'(z) = (1 - βz²) e^{-βz²/2}`. arXiv:2412.09080v3, §5.5. -/
 noncomputable def gPt1 (β z : ℝ) : ℝ := Real.exp (-(β / 2) * z ^ 2) * (1 - β * z ^ 2)
 
-/-- `g''(z) = βz(βz² - 3) e^{-βz²/2}`.  arXiv:2412.09080v3, §5.5. -/
+/-- `g''(z) = βz(βz² - 3) e^{-βz²/2}`. arXiv:2412.09080v3, §5.5. -/
 noncomputable def gPt2 (β z : ℝ) : ℝ := Real.exp (-(β / 2) * z ^ 2) * (β * z * (β * z ^ 2 - 3))
 
-/-- `g'''(z) = β(-β²z⁴ + 6βz² - 3) e^{-βz²/2}`.  arXiv:2412.09080v3, §5.5. -/
+/-- `g'''(z) = β(-β²z⁴ + 6βz² - 3) e^{-βz²/2}`. arXiv:2412.09080v3, §5.5. -/
 noncomputable def gPt3 (β z : ℝ) : ℝ :=
   Real.exp (-(β / 2) * z ^ 2) * (β * (-β ^ 2 * z ^ 4 + 6 * β * z ^ 2 - 3))
 
@@ -52,7 +56,7 @@ theorem hasDerivAt_gaussFactor (β z : ℝ) :
       (Real.exp (-(β / 2) * z ^ 2) * (-(β / 2) * (↑2 * z ^ (2 - 1)))) z :=
   ((hasDerivAt_pow 2 z).const_mul (-(β / 2))).exp
 
-/-- `g'` is the derivative of `g`.  arXiv:2412.09080v3, §5.5. -/
+/-- `g'` is the derivative of `g`. arXiv:2412.09080v3, §5.5. -/
 theorem hasDerivAt_gPt (β z : ℝ) : HasDerivAt (gPt β) (gPt1 β z) z := by
   have h := (hasDerivAt_gaussFactor β z).fun_mul (hasDerivAt_id' z)
   have hf : gPt β = fun z => Real.exp (-(β / 2) * z ^ 2) * z := rfl
@@ -61,7 +65,7 @@ theorem hasDerivAt_gPt (β z : ℝ) : HasDerivAt (gPt β) (gPt1 β z) z := by
   simp only [gPt1]
   ring
 
-/-- `g''` is the derivative of `g'`.  arXiv:2412.09080v3, §5.5. -/
+/-- `g''` is the derivative of `g'`. arXiv:2412.09080v3, §5.5. -/
 theorem hasDerivAt_gPt1 (β z : ℝ) : HasDerivAt (gPt1 β) (gPt2 β z) z := by
   have h := (hasDerivAt_gaussFactor β z).fun_mul
     ((hasDerivAt_const z (1 : ℝ)).fun_sub ((hasDerivAt_pow 2 z).const_mul β))
@@ -71,7 +75,7 @@ theorem hasDerivAt_gPt1 (β z : ℝ) : HasDerivAt (gPt1 β) (gPt2 β z) z := by
   simp only [gPt2]
   ring
 
-/-- `g'''` is the derivative of `g''`.  arXiv:2412.09080v3, §5.5. -/
+/-- `g'''` is the derivative of `g''`. arXiv:2412.09080v3, §5.5. -/
 theorem hasDerivAt_gPt2 (β z : ℝ) : HasDerivAt (gPt2 β) (gPt3 β z) z := by
   have h := (hasDerivAt_gaussFactor β z).fun_mul
     (((hasDerivAt_pow 3 z).const_mul (β ^ 2)).fun_sub ((hasDerivAt_id' z).const_mul (3 * β)))
@@ -83,7 +87,7 @@ theorem hasDerivAt_gPt2 (β z : ℝ) : HasDerivAt (gPt2 β) (gPt3 β z) z := by
   ring
 
 /-- **`det(ψ', ψ'') = g'g''' - g''² = -β(β²z⁴ + 3)e^{-βz²}`**, where
-`ψ = (g, g')`.  arXiv:2412.09080v3, §5.5. -/
+`ψ = (g, g')`. arXiv:2412.09080v3, §5.5. -/
 theorem det_psi (β z : ℝ) :
     gPt1 β z * gPt3 β z - gPt2 β z ^ 2 = -β * (β ^ 2 * z ^ 4 + 3) * Real.exp (-β * z ^ 2) := by
   have he : Real.exp (-β * z ^ 2)

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.FiniteAnalyticMinima
+public import Transformer.Landscape.Lojasiewicz.RamifiedBranchIdentity
+
+/-!
 # Analytic minimizers over every real root in a prepared fiber
 
 Complete ramified root coverage and stable finite minima eliminate the
@@ -6,8 +11,7 @@ universal objective comparison over the distinguished-variable roots.
 Finite analytic equality and sign constraints are retained.
 -/
 
-import Transformer.Landscape.Lojasiewicz.FiniteAnalyticMinima
-import Transformer.Landscape.Lojasiewicz.RamifiedBranchIdentity
+@[expose] public section
 
 open Filter Set
 

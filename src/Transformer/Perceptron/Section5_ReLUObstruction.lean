@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_ReLUBranches
+public import Transformer.Perceptron.FirstVariation
+
+/-!
 # Non-analytic original potentials obstruct a globally zero ReLU branch
 
 ArXiv:2601.21366v2, §5.3, proof of `thm: any.d` (i),
@@ -22,8 +27,7 @@ The scalar full-support implication also applies at negative nonzero
 temperature; the branch inverse retains the source's positive temperature.
 -/
 
-import Transformer.Perceptron.Section5_ReLUBranches
-import Transformer.Perceptron.FirstVariation
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

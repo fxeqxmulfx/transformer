@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_GatedTransfers
+public import Transformer.Interpolation.Section3_PhaseLawMaps
+
+/-!
 # Original attention, gated transfer and inverse-attention phases
 
 ArXiv:2411.04551v3, §1, `eq: vf`, and the gather, move and
@@ -15,8 +20,7 @@ bound controls its final support. Every middle-fixed unselected law
 is restored exactly by the original nonlinear inverse.
 -/
 
-import Transformer.Interpolation.Section4_GatedTransfers
-import Transformer.Interpolation.Section3_PhaseLawMaps
+@[expose] public section
 
 open Real MeasureTheory Set
 

@@ -1,33 +1,37 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_Unbounded
+
+/-!
 # The emergence of clusters in self-attention dynamics — the symmetric triple
 
 A construction, not a statement of arXiv:2305.05465v6.
 
 §7 argues about solutions of `e:Idnonresca` in `d = 1` with `n` pairwise
 distinct tokens, and its lemmas separate the tokens that stay bounded from the
-ones that do not.  The source exhibits no solution, and the repository has
+ones that do not. The source exhibits no solution, and the repository has
 none either: the stationary configurations that witness the hypotheses
 elsewhere in this paper all have coinciding tokens, so none of them is ordered
 in the sense of §7.
 
-This file supplies one.  Put three tokens at `-u`, `0`, `u` on the line.  The
+This file supplies one. Put three tokens at `-u`, `0`, `u` on the line. The
 middle token sees every other one at inner product `0`, so it is pulled by the
 uniform average `(-u + 0 + u)/3 = 0` and does not move; the outer two are
 pulled symmetrically, and the whole system collapses to the scalar equation
 
   `u̇ = u (e^{u²} - e^{-u²}) / (e^{u²} + 1 + e^{-u²})`,
 
-which is `symDrift`.  Everything below is proved from a solution `u` of that
+which is `symDrift`. Everything below is proved from a solution `u` of that
 scalar equation, taken as a hypothesis: the reduction is exact, and it is the
 only nontrivial solution family of `e:Idnonresca` available in closed form.
 
-Its use is to witness §7's hypotheses.  It is a configuration of three ordered
+Its use is to witness §7's hypotheses. It is a configuration of three ordered
 tokens, with exactly one of them — the interior one — identically `0`, hence
 bounded; that is the case `i₀ ∉ {1, n}` of `l:boundedother`, which no
 configuration with fewer than three tokens can exhibit.
 -/
 
-import Transformer.Clusters.Section7_Unbounded
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -152,7 +156,7 @@ theorem symInterior_ne_first : (1 : Idx 3) ≠ 0 := by decide
 theorem symInterior_ne_last : (1 : Idx 3) ≠ Fin.last 2 := by decide
 
 /-- The scalar equation is satisfiable: `u ≡ 0` solves it, since
-`symDrift 0 = 0`.  It is the ordered solution — one with `u 0 > 0` — that §7
+`symDrift 0 = 0`. It is the ordered solution — one with `u 0 > 0` — that §7
 needs, and that is the content of `wellposed_particles`. -/
 example : ∀ t : ℝ, HasDerivAt (fun _ : ℝ => (0 : ℝ)) (symDrift ((fun _ : ℝ => (0 : ℝ)) t)) t := by
   intro t

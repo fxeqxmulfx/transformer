@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_CircleCuts
+public import Transformer.Interpolation.Section2_CollapsePhases
+
+/-!
 # Sweeping a law along a window of the circle
 
 ArXiv:2411.04551v3, §2.2, proof of `prop: compression`, Steps 2–3, on
@@ -10,8 +15,7 @@ point by a phase local in the rest of the window; a part once cut is
 never moved again. Each collapse loses at most `ε` of the mass.
 -/
 
-import Transformer.Interpolation.Section2_CircleCuts
-import Transformer.Interpolation.Section2_CollapsePhases
+@[expose] public section
 
 open scoped ENNReal
 open Real MeasureTheory Set

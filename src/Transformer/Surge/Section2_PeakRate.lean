@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.Surge.Section2_SmallBatch
+
+/-!
 # The peak of the optimal learning rate
 
-arXiv:2405.14578, §2.1, Theorem 3, proved in Appendix D, with `ΣH_ii > 0` and `S > 0`.  The
+arXiv:2405.14578, §2.1, Theorem 3, proved in Appendix D, with `ΣH_ii > 0` and `S > 0`. The
 learning rate `ε(B) = ε_max/(½(√(B_noise/B) + √(B/B_noise)))` of eq. (13) is at most `ε_max`
 (`lrSign_signLin_le`), reaches it at `B_peak = B_noise`, eqs. (15) and (16)
-(`lrSign_signLin_noiseBatch`), and only there when `M > 0` (`lrSign_signLin_lt`).  It increases
+(`lrSign_signLin_noiseBatch`), and only there when `M > 0` (`lrSign_signLin_lt`). It increases
 up to `B_noise` and decreases after it (`strictMonoOn_lrSign_signLin`,
 `strictAntiOn_lrSign_signLin`): the interval where "the batch size becomes larger and the optimal
 learning rate needs to be reduced", the surge of the intro and of the summary's first item.
@@ -13,7 +17,7 @@ Eq. (41) writes `ε_max = M/(2√S√ΣH_ii)` (`lrPeak_eq`) and, by the AM-GM in
 below by `M/ΣΣ_{i,j}(μ_iμ_j/(σ_iσ_j) if i ≠ j, 1 if i = j)H_ij` (`div_le_lrPeak`).
 -/
 
-import Transformer.Surge.Section2_SmallBatch
+@[expose] public section
 
 open Real
 

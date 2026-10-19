@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_BrownianNoise
+
+/-!
 # Independence of vector Brownian future increments and the joint past
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3).
@@ -7,7 +11,7 @@ driving increment must be independent of the joint past, not just of its
 own coordinate's past.
 -/
 
-import Transformer.BatchSize.Section4_BrownianNoise
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

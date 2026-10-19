@@ -1,23 +1,27 @@
-/-
+module
+
+public import Transformer.NoiseScale.Section2_Quadratic
+
+/-!
 # A toy model for the temperature
 
 arXiv:1812.06162, Appendix C, "A Toy Model for the Temperature".
 
 The loss `L(θ) = ½θᵀHθ` of a symmetric `H` (`toyLoss`) has gradient `Hθ`, and the per-example
-loss `L_i(θ) = L(θ - c_i)` has gradient `H(θ - c_i)` (`fderiv_toyLoss_sub`).  For `c` of mean
+loss `L_i(θ) = L(θ - c_i)` has gradient `H(θ - c_i)` (`fderiv_toyLoss_sub`). For `c` of mean
 zero and covariance `Σ_c`, the per-example gradient has mean `G = Hθ` and covariance
 `Σ = HΣ_cH`, independent of `θ` (`integral_toyGrad`, `covMatrix_toyGrad`).
 
 The paper cites [arXiv:1704.04289] for SGD sampling `θ` of mean zero and covariance `M` with
-`MH + HM = (ε/B)Σ`.  One step `θ' = θ - ε(Hθ + ξ)`, of noise `ξ` independent of `θ`, has
+`MH + HM = (ε/B)Σ`. One step `θ' = θ - ε(Hθ + ξ)`, of noise `ξ` independent of `θ`, has
 covariance `(1 - εH)M(1 - εH) + ε² cov(ξ)` (`covMatrix_sgdStep`), so a stationary `M`, with
 `cov(ξ) = Σ/B`, solves `MH + HM = (ε/B)Σ + εHMH` (`lyapunov_of_sgdStep`): the paper's equation
-up to `εHMH`, which its continuous-time limit drops.  The equation gives
+up to `εHMH`, which its continuous-time limit drops. The equation gives
 `2 tr(H^{k+1} M) = (ε/B) tr(H^k Σ)` (`trace_lyapunov`), and `θ` of mean zero gives
 `E[(Hθ)ᵀ H^k (Hθ)] = tr(H^{k+2} M)` (`integral_toyGrad_quadForm`).
 -/
 
-import Transformer.NoiseScale.Section2_Quadratic
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped Matrix

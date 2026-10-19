@@ -1,4 +1,10 @@
-/-
+module
+
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Complex
+
+public import Transformer.Modes.Section2_DiskRotations
+
+/-!
 # Real coordinates for the actual disk law
 
 Source: arXiv:2412.09080v3, §2.1, the actual joint-law
@@ -22,7 +28,7 @@ assumed. Their simultaneous examples use positive stretch
 and an actual interior disk point.
 -/
 
-import Transformer.Modes.Section2_DiskRotations
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 open scoped ENNReal

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Kinetic.Section6_InteriorMinimum
+public import Transformer.Kinetic.Section6_PositiveCoefficients
+
+/-!
 # Kinetic theory for Transformers — the original Fourier aggregate
 
 The profile `ℋ` from arXiv:2605.09213v1, §6, is built from the actual
@@ -10,8 +15,7 @@ strictly negative aggregate slope because some actual eigenvalue is
 strictly below the positive threshold.
 -/
 
-import Transformer.Kinetic.Section6_InteriorMinimum
-import Transformer.Kinetic.Section6_PositiveCoefficients
+@[expose] public section
 
 open scoped BigOperators Topology
 open Set Filter Real

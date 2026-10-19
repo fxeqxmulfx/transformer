@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_FullWeakContinuity
+public import Transformer.Interpolation.Section1_VarianceFlux
+public import Transformer.Interpolation.Section1_TimeRescaling
+public import Transformer.Interpolation.SeparationField
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Atomicity forced by the complete original weak equation
 
 ArXiv:2411.04551v3, §1, `eq: vf` and `eq: cauchy.pb`,
@@ -15,11 +23,7 @@ weak law is a Dirac at its own unit barycenter. Neither an atomic
 representation nor nonlinear weak uniqueness is assumed.
 -/
 
-import Transformer.Interpolation.Section1_FullWeakContinuity
-import Transformer.Interpolation.Section1_VarianceFlux
-import Transformer.Interpolation.Section1_TimeRescaling
-import Transformer.Interpolation.SeparationField
-import Mathlib.Analysis.Calculus.Deriv.Prod
+@[expose] public section
 
 open Real MeasureTheory
 open scoped NNReal

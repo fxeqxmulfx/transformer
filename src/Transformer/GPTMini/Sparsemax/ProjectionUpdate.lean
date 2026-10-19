@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.ProjectionLift
+module
+
+public import Transformer.GPTMini.Sparsemax.ProjectionLift
 
 /-!
 # Local shared projection updates at the actual current matrix
@@ -16,6 +18,8 @@ row is realized without losing the original matrix's unseen component.
 These properties permit derivative and local-minimum transport at actual
 parameter points, rather than only at specially chosen matrix lifts.
 -/
+
+@[expose] public section
 
 noncomputable section
 

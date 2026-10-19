@@ -1,23 +1,27 @@
-/-
+module
+
+public import Transformer.ALM.HullLift
+
+/-!
 # The envelope names the keys, so nothing smaller answers
 
 `Transformer.ALM.HullLift` proves that the container the machine builds keeps
 one line per distinct key: no erase rule applies to a lifted family, so the
-build ends with `keyCard K` lines.  That is a statement about `add_line`.  It
+build ends with `keyCard K` lines. That is a statement about `add_line`. It
 leaves open the question `todo3.md` §5 actually asks — whether a *different*
 container could do better, since the measured `128` bytes per token and the
 "several GB of hulls" of the Sudoku demo are a property of the construction
 only if no cleverer representation exists.
 
-None does, in the representation the head is defined in.  At the query `x = k`
+None does, in the representation the head is defined in. At the query `x = k`
 the envelope of a lifted family is exactly `k²`, and `k²` is the most any line
 of it can score there, so a line attaining the maximum at two distinct keys
 would be a chord of the parabola and would overshoot the envelope at their
-midpoint.  So the attaining line is different for every key
+midpoint. So the attaining line is different for every key
 (`card_le_of_envelope_eq`): any family of lines with the head's envelope has at
 least one line per distinct key it was fed, whatever built it.
 
-The linear space is therefore not a defect of `hull2d_cht.h`.  It is what a
+The linear space is therefore not a defect of `hull2d_cht.h`. It is what a
 head keyed on `position` costs, and `wasm/interpreter.py` has at least thirteen
 of them.
 
@@ -25,7 +29,7 @@ Source: `todo3.md` §5; `transformer_vm/wasm/interpreter.py` lines 304, 330, 334
 415-417 and 481.
 -/
 
-import Transformer.ALM.HullLift
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -56,7 +60,7 @@ theorem envelope_eq_sq_of_mem {S : Finset ℝ} (hS : S.Nonempty) {k : ℝ} (hk :
 
 /-- **A chord of the parabola overshoots its midpoint.**  A line touching the
 parabola at two distinct keys is above it halfway between them, by a quarter of
-the squared key distance.  This is the whole obstruction: such a line cannot
+the squared key distance. This is the whole obstruction: such a line cannot
 stay under an envelope that is itself under the parabola. -/
 lemma lineEval_midpoint_gt {l : ℝ × ℝ} {k₁ k₂ : ℝ} (hne : k₁ ≠ k₂)
     (h₁ : lineEval l k₁ = k₁ ^ 2) (h₂ : lineEval l k₂ = k₂ ^ 2) :
@@ -73,7 +77,7 @@ lemma lineEval_midpoint_gt {l : ℝ × ℝ} {k₁ k₂ : ℝ} (hne : k₁ ≠ k�
 set.**  Whatever the container, however it was built, if its upper envelope
 agrees at every query with the envelope of the lifted keys `S` then it holds at
 least `S.card` lines: the line attaining the maximum at `k` attains it at no
-other key of `S`, so `k ↦ that line` is injective.  This is the lower bound
+other key of `S`, so `k ↦ that line` is injective. This is the lower bound
 `todo3.md` §5 asks for — the linear state is forced by the queries, not chosen
 by `add_line`. -/
 theorem card_le_of_envelope_eq {S : Finset ℝ} (hS : S.Nonempty) {L : Finset (ℝ × ℝ)}

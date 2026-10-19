@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Perceptron.NormalizedMap
+public import Transformer.Perceptron.SignedGram
+public import Transformer.Perceptron.GeneralAtomicity
+public import Transformer.Perceptron.Section6_NormalizedCircleAtomicity
+public import Transformer.Perceptron.Section6_NormalizedNullSupport
+
+/-!
 # Perceptrons and attention's mean-field landscape — sparsity for normalized
   attention
 
@@ -14,7 +22,7 @@ atomic with finitely many atoms.
   `thm: circle` are: `σ_d(supp μ) = 0` in every `d ≥ 2`, and finite atomicity
   in `d = 2`.
 
-* `σ(s) = s_+` is substituted into the statement.  No primitive `φ` appears:
+* `σ(s) = s_+` is substituted into the statement. No primitive `φ` appears:
   `eq: fulltrans.stat` is a condition on the drift alone, and the potential
   `v_ϑ` enters only the proof.
 
@@ -29,7 +37,7 @@ atomic with finitely many atoms.
 
 * `rem:unifiedlog-B` replaces `E_β` by `E_B` of `GeneralAttention.lean`, with
   the weight and the field of `NormalizedMap.lean`; its two statements are the
-  `Map` versions below.  Its last sentence — that `thm: circle` and
+  `Map` versions below. Its last sentence — that `thm: circle` and
   `thm: any.d` likewise extend to `E_B` — is `rem: ext` (ii), carried in
   `GeneralAtomicity.lean`.
 
@@ -41,11 +49,7 @@ atomic with finitely many atoms.
 Source: arXiv:2601.21366v2, `prop: unified.log`, `rem:unifiedlog-B`.
 -/
 
-import Transformer.Perceptron.NormalizedMap
-import Transformer.Perceptron.SignedGram
-import Transformer.Perceptron.GeneralAtomicity
-import Transformer.Perceptron.Section6_NormalizedCircleAtomicity
-import Transformer.Perceptron.Section6_NormalizedNullSupport
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -59,7 +63,7 @@ variable {d : ℕ}
 
 /-- **Proposition (prop: unified.log), first conclusion.**  Let `d ≥ 2`,
 `β > 0` and `σ(s) = s_+`, and let the weights satisfy the non-degeneracy
-condition `eq: nondeg.normalized`.  Then the support of a measure stationary
+condition `eq: nondeg.normalized`. Then the support of a measure stationary
 for the normalized dynamics `eq:full-WGF-main` is `σ_d`-null.
 
 Proved from the original stationary branch field, spherical analytic

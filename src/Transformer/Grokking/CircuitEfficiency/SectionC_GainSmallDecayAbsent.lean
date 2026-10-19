@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainSmallDecayConfidence
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainSmallDecayConfidence
 
 /-!
 # Original small-decay absent-Gen control with permanent wrong test answers
@@ -33,6 +35,8 @@ simulation or model stochastic discovery of new learned heads. Fixed
 tables and uniform decoupled native decay differ from coupled-cost GD
 and learned floating-point GPTMini. No optimizer or buffer reset is used.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

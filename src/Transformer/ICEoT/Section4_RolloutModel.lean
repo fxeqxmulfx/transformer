@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section3_Encoder
+
+/-!
 # IC-EoT: selective input expansion and the actual MPC rollout
 
 arXiv:2603.22095v2, §4.1, Eqs. (31)–(39). The history is represented
@@ -8,7 +12,7 @@ Only controls are duplicated with a negative sign. Every predicted output,
 including physically exogenous variables, is substituted recursively.
 -/
 
-import Transformer.ICEoT.Section3_Encoder
+@[expose] public section
 
 noncomputable section
 

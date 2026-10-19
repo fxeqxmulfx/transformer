@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ConvexRecall.Basic
+
+/-!
 # Convex simplex routing and its unique sparse winner
 
 Extension of the simplex relaxation in arXiv:2211.11052v1, §3.1. Instead
@@ -8,7 +12,7 @@ of one half yields an exact basis-vector solution, including a null slot.
 Recall context: arXiv:2312.04927v1, Appendix `prop: app-attention`.
 -/
 
-import Transformer.ConvexRecall.Basic
+@[expose] public section
 
 open scoped BigOperators
 

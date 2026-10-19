@@ -1,4 +1,14 @@
-/-
+module
+
+public import Transformer.Memorization.Section2_Proposition1
+public import Transformer.Memorization.Section2_Proposition4
+public import Transformer.Memorization.Section2_Compression
+public import Transformer.Memorization.Section3_Capacity
+public import Transformer.Memorization.Section3_PrecisionResults
+public import Transformer.Memorization.Section5_Membership
+public import Transformer.Memorization.Section5_ValidationResults
+
+/-!
 # How much do language models memorize?
 
 Formalization of arXiv:2505.24832v3, Morris, Sitawarin, Guo,
@@ -57,10 +67,4 @@ scripts/MemorizationAxioms.lean audits all paper and vendored entropy
 declarations, including their transitive proof dependencies.
 -/
 
-import Transformer.Memorization.Section2_Proposition1
-import Transformer.Memorization.Section2_Proposition4
-import Transformer.Memorization.Section2_Compression
-import Transformer.Memorization.Section3_Capacity
-import Transformer.Memorization.Section3_PrecisionResults
-import Transformer.Memorization.Section5_Membership
-import Transformer.Memorization.Section5_ValidationResults
+@[expose] public section

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianScoreDerivatives
+public import Transformer.Homogenized.Section7_SoftmaxHessian
+
+/-!
 # Actual query and key Hessians of the original Gaussian attention
 
 ArXiv:2604.01978v1, §7, the Hessian computations before
@@ -15,8 +20,7 @@ No Hessian formula or same-block cancellation is assumed. The biased
 original feature example has a nonzero actual key Hessian.
 -/
 
-import Transformer.Homogenized.Section7_GaussianScoreDerivatives
-import Transformer.Homogenized.Section7_SoftmaxHessian
+@[expose] public section
 
 open scoped BigOperators
 
@@ -169,4 +173,3 @@ example : ∃ z : EuclideanSpace ℝ (GaussianFeatureIdx 2 2), (0 : ℕ) < 2 ∧
   norm_num [z, PiLp.single_apply]
 
 end Transformer.Homogenized
-

@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.CriticalPoints
+public import Transformer.Landscape.SaddleAvoidance.SecondOrder
+public import Transformer.Landscape.SaddleAvoidance.Minimizers
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+
+/-!
 # Saddle avoidance — gradient descent near nondegenerate critical points
 
 For almost every start, an orbit of gradient descent with a limit point `z`
@@ -10,17 +18,13 @@ minimizer that differs from `z` by a translation
 (`exists_tendsto_of_isLojasiewiczAt`); the limit has an injective Hessian
 and is almost surely not a strict saddle (`ae_not_tendsto_of_isStrictSaddle`),
 hence a local minimizer (`exists_pos_mul_norm_sq_le_inner`,
-`isLocalMin_of_mul_norm_sq_le_inner`).  When every point has a translate in
+`isLocalMin_of_mul_norm_sq_le_inner`). When every point has a translate in
 one compact set and the Hessian is injective at every critical point, as for
 a Morse function on a torus, almost every orbit converges to a local
 minimizer (`ae_exists_tendsto_isLocalMin_of_injective`).
 -/
 
-import Transformer.Landscape.SaddleAvoidance.CriticalPoints
-import Transformer.Landscape.SaddleAvoidance.SecondOrder
-import Transformer.Landscape.SaddleAvoidance.Minimizers
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+@[expose] public section
 
 open Filter Metric MeasureTheory
 open scoped Topology NNReal
@@ -31,7 +35,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDim
   [MeasurableSpace E] [BorelSpace E] {f : E → ℝ} {L : ℝ≥0} {η : ℝ}
 
 /-- **Gradient descent converges to a local minimizer from a nondegenerate
-limit point**, for almost every start.  Let `f` be `C²` with an `L`-Lipschitz
+limit point**, for almost every start. Let `f` be `C²` with an `L`-Lipschitz
 gradient, `0 < η`, `η L < 1`, and let the closed set `Λ` leave `f` invariant.
 For a start drawn from a law `ν` absolutely continuous with respect to a Haar
 measure, almost surely: if `z` is a limit point of the orbit up to
@@ -62,10 +66,10 @@ theorem ae_exists_tendsto_isLocalMin_of_frequently (μ : Measure E) [μ.IsAddHaa
 
 /-- **Gradient descent converges to a local minimizer from almost every
 start when every critical point is nondegenerate** and every point has a
-translate in one compact set `K`, as for a Morse function on a torus.  Let
+translate in one compact set `K`, as for a Morse function on a torus. Let
 `f` be `C²` with an `L`-Lipschitz gradient, `0 < η`, `η L < 1`, let the
 closed set `Λ` leave `f` invariant, and let the Hessian be injective at
-every critical point.  For a start drawn from a law `ν` absolutely continuous
+every critical point. For a start drawn from a law `ν` absolutely continuous
 with respect to a Haar measure, the orbit almost surely converges to a local
 minimizer. -/
 theorem ae_exists_tendsto_isLocalMin_of_injective (μ : Measure E) [μ.IsAddHaarMeasure]

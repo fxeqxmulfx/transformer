@@ -1,4 +1,6 @@
-import Transformer.Homogenized.Section7_SimplexOdeDomain
+module
+
+public import Transformer.Homogenized.Section7_SimplexOdeDomain
 
 /-!
 # Continuity of the original attention moments and scalar drift
@@ -22,6 +24,8 @@ or time-integrability assumption is added to the source's data.
 This supplies the original drift integral needed to combine the
 noise probability estimate with the deterministic comparison.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped BigOperators NNReal

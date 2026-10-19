@@ -1,25 +1,29 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.GradientDescent
+public import Mathlib.Geometry.Manifold.PartitionOfUnity
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+
+/-!
 # Saddle avoidance — smooth cutoffs near a compact set
 
 The avoidance theorems ask for a `C²` function and a bounded, Lipschitz field on
-the whole space.  A function and a field given only on an open set `U` meet them
-after a cutoff.  For a compact `K ⊆ U` of a finite-dimensional space, a smooth
+the whole space. A function and a field given only on an open set `U` meet them
+after a cutoff. For a compact `K ⊆ U` of a finite-dimensional space, a smooth
 `χ` with values in `[0, 1]` and compact support inside `U` is `1` on an open
 neighborhood of `K` (`exists_cutoff`), and a product `χ • φ` is smooth wherever
 `φ` is smooth on a set containing the support of `χ`
-(`contDiff_smul_of_tsupport_subset`).  A strict saddle depends only on the germ
+(`contDiff_smul_of_tsupport_subset`). A strict saddle depends only on the germ
 of the function (`IsStrictSaddle.congr_of_eventuallyEq`), so the cut-off function
-has the same strict saddles near `K`.  For `f` of class `C²`, `χ f` has a Lipschitz
-gradient and agrees with `f` near `K` (`exists_lipschitzWith_gradient_eqOn`).  An open
+has the same strict saddles near `K`. For `f` of class `C²`, `χ f` has a Lipschitz
+gradient and agrees with `f` near `K` (`exists_lipschitzWith_gradient_eqOn`). An open
 set is covered by countably many compact subsets, one of them containing any given
 compact subset (`exists_isCompact_cover`).
 
 `Perspective.SphereCutoff` builds such a cutoff by hand on the shells of tuples.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.GradientDescent
-import Mathlib.Geometry.Manifold.PartitionOfUnity
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+@[expose] public section
 
 open Filter Metric Set
 open scoped Topology
@@ -84,7 +88,7 @@ example : ∃ χ : ℝ → ℝ, ContDiff ℝ 2 χ ∧ (∀ x, 0 ≤ χ x ∧ χ 
   exists_cutoff isCompact_singleton isOpen_univ (subset_univ _) 2
 
 /-- **An open set is a countable union of compact sets catching every compact
-subset**: `K_k = B̄(0, k) ∖ (1/(k+1))-thickening of Uᶜ`.  A compact `C ⊆ U` lies in a
+subset**: `K_k = B̄(0, k) ∖ (1/(k+1))-thickening of Uᶜ`. A compact `C ⊆ U` lies in a
 ball, and some `δ`-thickening of it lies in `U`, so `C ⊆ K_k` once `k ≥ 1/δ`. -/
 theorem exists_isCompact_cover {U : Set E} (hU : IsOpen U) :
     ∃ K : ℕ → Set E, (∀ k, IsCompact (K k)) ∧ (∀ k, K k ⊆ U) ∧

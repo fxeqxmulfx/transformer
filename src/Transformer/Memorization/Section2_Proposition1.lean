@@ -1,10 +1,14 @@
-import Transformer.Memorization.Section2_ConditionalDataset
+module
+
+public import Transformer.Memorization.Section2_ConditionalDataset
 
 /-!
 # Super-additivity of unintended memorization
 
 arXiv:2505.24832v3, Section 2.1, Proposition 1; Appendix A.6.
 -/
+
+@[expose] public section
 
 namespace Transformer.Memorization
 

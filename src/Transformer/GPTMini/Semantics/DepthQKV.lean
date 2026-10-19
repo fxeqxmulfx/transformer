@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.DepthEmbedding
-import Transformer.GPTMini.Reshape
+module
+
+public import Transformer.GPTMini.Semantics.DepthEmbedding
+public import Transformer.GPTMini.Reshape
 
 /-!
 # Two simultaneous uniform depth heads in the actual fused QKV
@@ -20,6 +22,8 @@ No rotary or QKNorm operator is removed: their original zero-input
 behavior supplies uniform scores in the subsequent genuine heads.
 This gives ordinary baseline parameters, not a convex architecture.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

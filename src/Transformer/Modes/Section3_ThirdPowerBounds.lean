@@ -1,4 +1,6 @@
-import Transformer.Modes.Section3_ThirdPowerDerivative
+module
+
+public import Transformer.Modes.Section3_ThirdPowerDerivative
 
 /-!
 # Operator bounds retaining the undifferentiated characteristic powers
@@ -15,6 +17,8 @@ frequency. If the base function has modulus at most one, every term
 can then retain the common power `n-3`. That common factor is essential
 for integrability and geometric decay on the exterior frequency region.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

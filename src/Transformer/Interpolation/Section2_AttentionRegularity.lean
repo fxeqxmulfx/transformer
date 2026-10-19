@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_AttentionLipschitz
+public import Transformer.Interpolation.Section1_AutonomousWeakTests
+
+/-!
 # Time regularity along original attention weak solutions
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §2, `prop: targets.atoms`.
@@ -17,8 +22,7 @@ pointwise derivative at every time. No independent continuity assumption
 on the probability curve is used.
 -/
 
-import Transformer.Interpolation.Section2_AttentionLipschitz
-import Transformer.Interpolation.Section1_AutonomousWeakTests
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology

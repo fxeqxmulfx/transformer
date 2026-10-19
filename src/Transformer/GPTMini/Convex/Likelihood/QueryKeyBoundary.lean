@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Likelihood.Fibers
+module
+
+public import Transformer.GPTMini.Convex.Likelihood.Fibers
 
 /-!
 # Genuine nonlinear logits, and the boundary at learned query/key products
@@ -16,6 +18,8 @@ for category zero. This is a changed likelihood toy, not a claim that the
 sequential model implements an attention/value block. No route teacher,
 new loss, optimizer, fixed feature bank, or head-search oracle is added.
 -/
+
+@[expose] public section
 
 noncomputable section
 

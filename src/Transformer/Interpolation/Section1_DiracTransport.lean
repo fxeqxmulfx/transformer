@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_SquaredDistance
+public import Transformer.Interpolation.Section1_TimeRescaling
+public import Transformer.Interpolation.SeparationField
+
+/-!
 # Actual weak transport and uniqueness for a spherical Dirac law
 
 ArXiv:2411.04551v3, §1, `eq: ips` and `eq: cauchy.pb`,
@@ -16,9 +22,7 @@ field determines exactly one global weak solution from its initial atom.
 No regularity of the measure curve or uniqueness premise is added.
 -/
 
-import Transformer.Interpolation.Section1_SquaredDistance
-import Transformer.Interpolation.Section1_TimeRescaling
-import Transformer.Interpolation.SeparationField
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal

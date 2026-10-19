@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.DASH.Section3_EVDExistence
+
+/-!
 # DASH — temporal preconditioners and regularized Shampoo updates
 
 arXiv:2602.02016v2, §2, `algorithm:default-shampoo` and “Grafting”.
 The optimizer's inverse roots are exact EVD powers over the reals.
 -/
 
-import Transformer.DASH.Section3_EVDExistence
+@[expose] public section
 
 open scoped Matrix
 

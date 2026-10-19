@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Muon.Section2_Models
+
+/-!
 # Muon — gate scaling
 
 arXiv:2502.16982, Appendix C, `fig:gate_scaling_code`. The code
@@ -7,7 +11,7 @@ Euclidean norm. The numerical value `2.446` is a Monte Carlo estimate, not
 an exact constant implied by the formula.
 -/
 
-import Transformer.Muon.Section2_Models
+@[expose] public section
 
 open scoped BigOperators
 

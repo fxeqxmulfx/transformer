@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_MapForce
+public import Transformer.Perceptron.Section5_GeneralHessian
+
+/-!
 # The actual transported full-energy Hessian for matrix attention
 
 ArXiv:2601.21366v2, §3.1, `rem: ext` (ii), extending §5.2,
@@ -16,8 +21,7 @@ Both halves of `E_{B,ϑ}` have prefactor one half; the scalar-temperature
 prefactor of `E_{β,ϑ}` is not substituted into the matrix energy.
 -/
 
-import Transformer.Perceptron.Section5_MapForce
-import Transformer.Perceptron.Section5_GeneralHessian
+@[expose] public section
 
 open Real MeasureTheory
 

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.Comparable
+public import Transformer.Landscape.Uniformization.Principal
+public import Transformer.Landscape.Uniformization.Ramification
+
+/-!
 # Local uniformization: examples for germs, normal crossings and monomial charts
 
 The coordinate `x₀` of `ℝ¹` and its powers satisfy the hypotheses of the lemmas on
@@ -10,9 +16,7 @@ lemmas on coordinates. Auxiliary examples for Appendix D.1, `lem: loj`, of
 arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Uniformization.Comparable
-import Transformer.Landscape.Uniformization.Principal
-import Transformer.Landscape.Uniformization.Ramification
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators Topology

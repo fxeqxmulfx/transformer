@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.Perspective.CircleUniform
+
+/-!
 # Null sets of the uniform law on the circle
 
 The angle map `θ ↦ ((cos θ_i, sin θ_i))_i` has a measurable section, the
 argument (`sphereAngles`), and its fibres are the orbits of `2πℤⁿ`
-(`exists_int_of_circlePoint_eq`).  Every `UniformTuple 2 n P` is its image of
-the normalized Lebesgue measure on `[0, 2π)ⁿ` (`eq_map_angleCube`).  So a set
+(`exists_int_of_circlePoint_eq`). Every `UniformTuple 2 n P` is its image of
+the normalized Lebesgue measure on `[0, 2π)ⁿ` (`eq_map_angleCube`). So a set
 of configurations whose preimage in angles is Lebesgue-null is `P`-null,
 measurable or not (`measure_eq_zero_of_volume_preimage`): what holds for almost
 every tuple of angles holds `P`-almost surely (`ae_of_ae_volume`), and a
@@ -16,7 +20,7 @@ Source: arXiv:2312.10794v5, §4 (the "almost every" of `p:beta0` and
 (particles on the circle as angles).
 -/
 
-import Transformer.Perspective.CircleUniform
+@[expose] public section
 
 open MeasureTheory Complex Set
 open scoped Real ENNReal
@@ -34,7 +38,7 @@ theorem measurable_sphereAngles {n : ℕ} : Measurable (sphereAngles (n := n)) :
 
 /-- **Null sets in angles are null for the uniform law.**  If the set of angles
 `θ` with `((cos θ_i, sin θ_i))_i ∈ A` is Lebesgue-null, then `P A = 0` for every
-`UniformTuple 2 n P`; `A` need not be measurable.  The `2πℤⁿ`-saturation of a
+`UniformTuple 2 n P`; `A` need not be measurable. The `2πℤⁿ`-saturation of a
 measurable null hull of the preimage is null, and its preimage under
 `sphereAngles` is a measurable set containing `A`. -/
 theorem measure_eq_zero_of_volume_preimage {n : ℕ} {P : Measure (SphereTuple 2 n)}

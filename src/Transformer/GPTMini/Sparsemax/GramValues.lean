@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.InvertibleGram
+module
+
+public import Transformer.GPTMini.Sparsemax.InvertibleGram
 
 /-!
 # Exact recovery of jointly learned values from attention outputs
@@ -16,6 +18,8 @@ are distinct; arbitrary repeated-token or multi-context value sharing is
 not inferred. The change does not preserve a weight penalty or norm bound
 placed on the original values. There is no chosen task loss or FFN here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

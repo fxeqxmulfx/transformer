@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.ContextMemory
-import Transformer.GPTMini.Sparsemax.Uniform
+module
+
+public import Transformer.GPTMini.Sparsemax.ContextMemory
+public import Transformer.GPTMini.Sparsemax.Uniform
 
 /-!
 # Causal context codes from data, including repeated tokens
@@ -17,6 +19,8 @@ the general memory results allow other fixed causal probability codes.
 Learned memory keys and values are shared across all these contexts.
 Dictionary attention is distinct from attention to input occurrences.
 -/
+
+@[expose] public section
 
 noncomputable section
 

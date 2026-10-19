@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedStep
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedStep
 
 /-!
 # A positive relative-growth advantage before balanced Gen catches Mem
@@ -22,6 +24,8 @@ gains and uniform decoupled decay differ from the source's assigned
 coupled circuit norm/GD. Later finite-time escape still needs an
 iteration on the actual recurrence, not just a strict single-step gap.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

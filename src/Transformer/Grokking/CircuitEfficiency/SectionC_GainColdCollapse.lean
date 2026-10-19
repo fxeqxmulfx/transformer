@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdContraction
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdInstability
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdContraction
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdInstability
 
 /-!
 # Original cold parameter/input limits and strict threshold classification
@@ -31,6 +33,8 @@ learned stochastic/numerical GPTMini and thermodynamic size scaling
 are separate. Uniform native decay/plain CE differ from appendix C's
 assigned coupled norm-cost GD. No optimizer or checkpoint is modified.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

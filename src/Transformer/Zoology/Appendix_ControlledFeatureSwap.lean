@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_FeaturePairMatrix
+
+/-!
 # Conditional feature swaps with no temporary storage
 
 Arora et al., arXiv:2312.04927v1, Appendix `lmm:primitives` and
@@ -7,7 +11,7 @@ exchange feature partners only on selected rows. This is a three-layer
 K-constrained permutation of the original coordinates.
 -/
 
-import Transformer.Zoology.Appendix_FeaturePairMatrix
+@[expose] public section
 
 noncomputable section
 

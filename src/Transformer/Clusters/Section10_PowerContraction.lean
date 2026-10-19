@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section10_PowerMetric
+public import Transformer.Clusters.Section5_Mix
+
+/-!
 # Spectral gap gives a contracting quadratic metric
 
 ArXiv:2305.05465v6, §9, `r:notdiagonalizable`, `e:notdi`, and §10.
@@ -11,8 +16,7 @@ This derives the operator bound needed by the growth argument without a
 diagonalizability assumption or an unproved choice of Jordan coordinates.
 -/
 
-import Transformer.Clusters.Section10_PowerMetric
-import Transformer.Clusters.Section5_Mix
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

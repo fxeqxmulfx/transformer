@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedStep
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedStep
 
 /-!
 # Difference contraction for unequal native zero-beta factor pairs
@@ -23,6 +25,8 @@ parameter convergence is assumed. Zero betas, physical gains and
 uniform decoupled decay differ from appendix C's coupled-cost GD
 and preserved GPTMini. These are exact-real, fixed-table statements.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

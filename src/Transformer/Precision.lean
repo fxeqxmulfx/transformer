@@ -1,4 +1,18 @@
-/-
+module
+
+public import Transformer.Precision.Basic
+public import Transformer.Precision.ContextLength
+public import Transformer.Precision.Nearest
+public import Transformer.Precision.Significand
+public import Transformer.Precision.Blind
+public import Transformer.Precision.Accumulate
+public import Transformer.Precision.IEEE
+public import Transformer.Precision.Float
+public import Transformer.Precision.FloatSum
+public import Transformer.Precision.Tail
+public import Transformer.Precision.BlockScale
+
+/-!
 # Numerical precision and context length
 
 How the format attention weights are stored in bounds the context a head can
@@ -19,14 +33,4 @@ still read.
 | `Precision.ContextLength` | past `2^{b+1} e^D` tokens a `b`-bit head outputs `0`; below `2^{b+1} e^{-D}` it reads every token |
 -/
 
-import Transformer.Precision.Basic
-import Transformer.Precision.ContextLength
-import Transformer.Precision.Nearest
-import Transformer.Precision.Significand
-import Transformer.Precision.Blind
-import Transformer.Precision.Accumulate
-import Transformer.Precision.IEEE
-import Transformer.Precision.Float
-import Transformer.Precision.FloatSum
-import Transformer.Precision.Tail
-import Transformer.Precision.BlockScale
+@[expose] public section

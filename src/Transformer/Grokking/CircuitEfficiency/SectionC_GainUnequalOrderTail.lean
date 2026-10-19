@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainUnequalOrderStep
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainUnequalOrderStep
 
 /-!
 # Permanent actual unequal Gen mass dominance from initial data
@@ -31,6 +33,8 @@ It need not be uniformly bounded over positive seeds tending to zero.
 Retained clocks and buffers remain those of the native recurrence.
 Selection uses its actual current signs, sums and clipped CE inputs.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

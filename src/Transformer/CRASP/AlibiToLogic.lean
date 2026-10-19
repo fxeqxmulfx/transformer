@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.AlibiStateInduction
+public import Transformer.CRASP.PeriodicToLogic
+
+/-!
 # The ALiBi-to-logic simulation
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLCly`.
@@ -6,8 +11,7 @@ The accepting-state disjunction closes the layer induction, with the BOS
 empty input handled separately from ordinary positions.
 -/
 
-import Transformer.CRASP.AlibiStateInduction
-import Transformer.CRASP.PeriodicToLogic
+@[expose] public section
 
 namespace Transformer.CRASP
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.Convex.SpecificFunctions.Basic
+
+/-!
 # The chain sums
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 1. A perturbation of
@@ -8,8 +13,7 @@ them: `γ Σ_{b<c<a} (c+1)^{γ-1} ≤ a^γ - (b+1)^γ` (`sum_rpow_le`), so
 `Σ_{b<c<a} q_γ(c, b)/(c+1) ≤ (q_γ(a, b) - 1)/γ` (`sum_ratioPow_div_le`).
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
+@[expose] public section
 
 open Real
 

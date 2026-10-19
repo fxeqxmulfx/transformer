@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainGrowthEnvelope
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainGrowthEnvelope
 
 /-!
 # Current total parameter and retained-moment mass laws
@@ -27,6 +29,8 @@ task success or a GPTMini grokking event. Fixed physical tables and
 uniform decoupled native decay differ from appendix C's coupled-cost
 GD. No numerical-kernel or learned-transformer transfer is asserted.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

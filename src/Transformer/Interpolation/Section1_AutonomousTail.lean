@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_AutonomousPrefix
+public import Transformer.Interpolation.Section1_TimeTranslation
+public import Transformer.Interpolation.Section3_TwoRidgeScaling
+
+/-!
 # Exact original weak transport after the final control switch
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and Appendix,
@@ -15,9 +21,7 @@ time, and equality at the switch itself follows from the actual initial
 law of the autonomous flow. No uniqueness hypothesis is assumed here.
 -/
 
-import Transformer.Interpolation.Section1_AutonomousPrefix
-import Transformer.Interpolation.Section1_TimeTranslation
-import Transformer.Interpolation.Section3_TwoRidgeScaling
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal

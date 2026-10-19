@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Muon.Section2_TrainingModels
+public import Transformer.Muon.Section2_NewtonSchulz
+public import Transformer.Optimization.Quadratic
+
+/-!
 # Muon — a quadratic training cycle with the printed five-step update
 
 arXiv:2502.16982, §2.1–2.2. The manuscript gives no general learning
@@ -8,9 +14,7 @@ a fixed positive learning rate can cycle even on a strongly convex loss.
 It does not refute the manuscript's empirical training observations.
 -/
 
-import Transformer.Muon.Section2_TrainingModels
-import Transformer.Muon.Section2_NewtonSchulz
-import Transformer.Optimization.Quadratic
+@[expose] public section
 
 open scoped Matrix
 

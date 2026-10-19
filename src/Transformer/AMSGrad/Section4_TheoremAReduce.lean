@@ -1,18 +1,22 @@
-import Transformer.AMSGrad.Section4_TheoremAAbel
-import Transformer.AMSGrad.Section4_Terms
+module
 
-/-
+public import Transformer.AMSGrad.Section4_TheoremAAbel
+public import Transformer.AMSGrad.Section4_Terms
+
+/-!
 # AMSGrad — Theorem A: reduction of the regret to one scalar inequality per coordinate
 
 Lemma 3.1 (`prepare_lem`) bounds the regret of AMSGrad by three sums; the second
 is bounded by Lemma 4.4 (`eqsecond_le`), the first and third by an inequality
 on the scalar sequences `a_t = √v̂_{t,i}/α_t`, `β_{1,t}`,
-`u_t = (x_{t,i} - x*ᵢ)²`.  `regret_le_of_abel` takes that scalar bound as a
+`u_t = (x_{t,i} - x*ᵢ)²`. `regret_le_of_abel` takes that scalar bound as a
 hypothesis. The full Theorem A is now proved by a different route in
 `Section4_TheoremAFinite`.
 
 Source: arXiv:1904.03590v4, §3, Lemma 3.1, and §4, proof of Theorem 4.1.
 -/
+
+@[expose] public section
 
 open Finset
 

@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Convex.Structured.PointerValues
-import Transformer.GPTMini.Convex.Structured.SharedPointer
-import Transformer.GPTMini.Convex.Structured.OutputMargins
+module
+
+public import Transformer.GPTMini.Convex.Structured.PointerValues
+public import Transformer.GPTMini.Convex.Structured.SharedPointer
+public import Transformer.GPTMini.Convex.Structured.OutputMargins
 
 /-!
 # True compact pointer values and the whole-vocabulary decoder
@@ -19,6 +21,8 @@ assume that the model already has correct logits. Semantic finite
 weight constructions must derive the actual selected probability.
 Residual/prenorm/tied model integration remains a separate proof.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

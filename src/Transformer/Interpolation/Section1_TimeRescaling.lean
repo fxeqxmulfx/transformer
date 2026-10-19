@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_WeakContinuity
+
+/-!
 # Exact time rescaling of the original weak equation
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb` and `eq: vf`, and
@@ -16,7 +20,7 @@ Constant controls remain constant, and zero attention scores remain
 zero. Thus a small-time separation can fit any positive time budget.
 -/
 
-import Transformer.Interpolation.Section1_WeakContinuity
+@[expose] public section
 
 open Real MeasureTheory
 

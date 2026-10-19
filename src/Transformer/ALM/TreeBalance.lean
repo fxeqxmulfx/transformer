@@ -1,22 +1,28 @@
-/-
+module
+
+public import Transformer.ALM.TreeQuery
+public import Mathlib.Logic.Relation
+import all Batteries.Recycling.RBTree.Depth
+
+/-!
 # Rebalancing moves nodes and not the order they are in
 
 `Transformer.ALM.TreeQuery` prices and verifies the descent
 `Tree::lower_bound_slope`, but `lowerBound_eq_find` asks for a hypothesis the
 descent cannot check: that the predicate rises along `t.toList`, which is the
-tree's ordering read through the test.  A freshly built tree has it.  What
+tree's ordering read through the test. A freshly built tree has it. What
 `tree.rs` does between two queries is `fix_insert` and `fix_erase`, three
 hundred lines of pointer surgery whose correctness is checked by `audit` in the
 tests and by nothing else — and if a rotation could move a node past its
 neighbour, the hypothesis would be false and the answer wrong, not merely late.
 
-It cannot, and the reason is structural rather than arithmetic.  Read
+It cannot, and the reason is structural rather than arithmetic. Read
 `tree.rs` lines 520-680: every write those two functions perform is either
 `lk_mut(_).red = _`, which is a colour, or a call to `rotate_left` /
-`rotate_right`, which is the standard rotation.  So each step is `Step` below,
+`rotate_right`, which is the standard rotation. So each step is `Step` below,
 each acts on one subtree at one position (`RBNode.Path`, Batteries' zipper for
 this same tree type), and `toList_of_stepAt` is that none of them changes the
-in-order sequence.  `toList_of_rebalances` closes that under any number of
+in-order sequence. `toList_of_rebalances` closes that under any number of
 steps, and `lowerBound_eq_find_of_rebalances` is the conclusion the container
 needs: after a rebalancing, the descent returns what a search of the *original*
 order returns.
@@ -24,17 +30,16 @@ order returns.
 What this does not say is that the tree is still balanced — the colours are
 carried but nothing is proved about them, and `the_rotation_moves_the_depth`
 is a rotation that changes the depth while fixing the order, so the two
-questions really are separate.  The depth bound `lbCount_le_two_log` still
+questions really are separate. The depth bound `lbCount_le_two_log` still
 holds of trees satisfying the red-black invariant and still rests on `audit`
-for the claim that these are such trees.  The gap that leaves is a cost, not
+for the claim that these are such trees. The gap that leaves is a cost, not
 an answer.
 
 Source: `vm-rs/alm-hull/src/tree.rs`, `rotate_left`, `rotate_right`,
 `fix_insert`, `fix_erase`.
 -/
 
-import Transformer.ALM.TreeQuery
-import Mathlib.Logic.Relation
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -46,9 +51,9 @@ variable {α : Type*}
 /-! ### The two writes the rebalancing is made of -/
 
 /-- **`rotate_left`.**  `y` is the right child, `b` is `y`'s left child; `b`
-becomes the right child of `x` and `x` becomes the left child of `y`.  The
+becomes the right child of `x` and `x` becomes the left child of `y`. The
 colours ride along untouched: `fix_insert` sets them in its own statements,
-never inside a rotation.  A node with no right child is left alone, which is
+never inside a rotation. A node with no right child is left alone, which is
 the `NIL` guard the caller keeps. -/
 def rotateLeft : RBNode α → RBNode α
   | .node c a x (.node c' b y r) => .node c' (.node c a x b) y r
@@ -108,7 +113,7 @@ theorem toList_run (s : Step) (t : RBNode α) : (s.run t).toList = t.toList := b
 /-! ### And a step is taken at a node, not at the root -/
 
 /-- One step of the rebalancing, taken where the loop is standing: a subtree at
-the end of some path is replaced by a rotation or a recolouring of itself.  The
+the end of some path is replaced by a rotation or a recolouring of itself. The
 path is Batteries' zipper for this tree, which is the `parent` chain `tree.rs`
 walks. -/
 inductive StepAt : RBNode α → RBNode α → Prop where
@@ -139,7 +144,7 @@ sequence, the rebalancing does not touch that sequence, so the descent through
 the rebalanced tree returns the first element the predicate accepts in the
 order the envelope was built in.
 
-This is the half of `tree.rs` the tests were carrying alone.  The other half,
+This is the half of `tree.rs` the tests were carrying alone. The other half,
 that the tree is still *balanced*, is not here: see
 `the_rotation_moves_the_depth`. -/
 theorem lowerBound_eq_find_of_rebalances (p : α → Bool) {t t' : RBNode α}

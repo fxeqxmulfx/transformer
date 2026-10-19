@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.SectionA_AMSGradCounterexampleStep
+public import Transformer.MagnitudeDirection.SectionA_AMSGradConvergence
+
+/-!
 # Original concrete AMSGradMD can fail on a strongly convex loss
 
 arXiv:2606.25971v2, §3.1 and Appendix A, Algorithm 2, with the specified
@@ -10,8 +15,7 @@ The loss is `(w+1)^2/2`; the unguarded weights stay positive and their
 true full gradients cannot tend to zero. The corrected algorithm converges.
 -/
 
-import Transformer.MagnitudeDirection.SectionA_AMSGradCounterexampleStep
-import Transformer.MagnitudeDirection.SectionA_AMSGradConvergence
+@[expose] public section
 
 open scoped Topology
 open Filter

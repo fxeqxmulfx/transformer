@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.SectionA_ScalarConvergence
+
+/-!
 # Scalar uniqueness at a repelling limiting angle
 
 ArXiv:2411.04990v2, Appendix A and §5, repelling-limit
@@ -18,7 +22,7 @@ It requires continuity of the actual field derivative, not
 the false general printed C1 energy convergence statement.
 -/
 
-import Transformer.Causal.SectionA_ScalarConvergence
+@[expose] public section
 
 open Real Set Filter
 

@@ -1,25 +1,29 @@
-/-
+module
+
+public import Transformer.NoiseScale.SectionD_ExchangeRate
+
+/-!
 # The Pareto front of adaptive batches
 
-arXiv:1812.06162, Appendix D, "Theory".  "If the distribution of training examples (and hence
+arXiv:1812.06162, Appendix D, "Theory". "If the distribution of training examples (and hence
 the batch size schedule) is optimal, then transferring examples from one part of training to
-another should not save any optimization steps.  This means that the exchange rate `r` should
+another should not save any optimization steps. This means that the exchange rate `r` should
 be constant throughout training": for a noise scale `𝓑 > 0`, a positive schedule taking the
 fewest steps for its examples has `B²/𝓑 = r` and `B = √(r𝓑)`, eq. (D.3), almost everywhere
-(`exchangeRate_const`).  With `adaptiveBatch_optimal` of `SectionD_ExchangeRate`, the
+(`exchangeRate_const`). With `adaptiveBatch_optimal` of `SectionD_ExchangeRate`, the
 schedules `√(r𝓑)` are the Pareto front.
 
 Along it `S_tot/S_min - 1 = γ(E_tot/E_min - 1)⁻¹`, eq. (D.4), with
 `γ = (∫√𝓑 ds)²/(S_min E_min)` of eq. (D.5) (`paretoGamma`,
-`totalSteps_adaptiveBatch_tradeoff`).  At `r = E_min/S_min` both ratios are `1 + √γ`, the
-footnote's choice (`adaptiveBatch_minRatio`).  `S_tot → S_min` as `r → ∞` and `E_tot → E_min`
+`totalSteps_adaptiveBatch_tradeoff`). At `r = E_min/S_min` both ratios are `1 + √γ`, the
+footnote's choice (`adaptiveBatch_minRatio`). `S_tot → S_min` as `r → ∞` and `E_tot → E_min`
 as `r → 0`, reading the paper's "inserting `B ≫ 𝓑` and `B ≪ 𝓑` respectively into (D.3)"
 (`tendsto_totalSteps_adaptiveBatch`, `tendsto_totalExamples_adaptiveBatch`); that they are "the
 minimum possible" over every schedule is `le_totalSteps` and `le_totalExamples` of
 `Section2_Tradeoff`.
 -/
 
-import Transformer.NoiseScale.SectionD_ExchangeRate
+@[expose] public section
 
 open MeasureTheory Filter Topology
 
@@ -28,7 +32,7 @@ namespace Transformer.NoiseScale
 variable {T : Type*} [MeasurableSpace T] {μ : Measure T} [IsFiniteMeasure μ] {𝓑 : T → ℝ}
 
 /-- **Appendix D**: "if the distribution of training examples (and hence the batch size
-schedule) is optimal ... the exchange rate `r` should be constant throughout training.  Thus the
+schedule) is optimal ... the exchange rate `r` should be constant throughout training. Thus the
 batch size should be varied in proportion with the square root of the noise scale": a positive
 schedule taking the fewest steps among positive schedules on no more examples has
 `B²/𝓑 = r` and `B = √(r𝓑)` almost everywhere, for some `r > 0`. -/

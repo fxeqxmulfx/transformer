@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section4_Rollout
+
+/-!
 # IC-EoT: the reduced soft-constrained MPC problem
 
 arXiv:2603.22095v2, §4.1, Eq. (41). The decision variables are exactly
@@ -7,7 +11,7 @@ by substitution, with no nonlinear equality constraints. The squared
 Euclidean slack norm is written as the sum of coordinate squares.
 -/
 
-import Transformer.ICEoT.Section4_Rollout
+@[expose] public section
 
 noncomputable section
 

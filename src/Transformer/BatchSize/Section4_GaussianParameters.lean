@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_FrozenGaussianGenerator
+
+/-!
 # Actual Gaussian states and generators with variable parameters
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The coordinate formulas establish joint continuity and measurability
 before the frozen Gaussian identity is applied to random coefficients.
 -/
 
-import Transformer.BatchSize.Section4_FrozenGaussianGenerator
+@[expose] public section
 
 open MeasureTheory
 

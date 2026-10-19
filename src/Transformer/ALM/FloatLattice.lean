@@ -1,16 +1,22 @@
-/-
+module
+
+public import Transformer.ALM.IntGrid
+public import Transformer.ALM.FloatIndex
+public import Transformer.ALM.HullScan
+
+/-!
 # On the lattice the search needs no separation at all
 
 `Transformer.ALM.FloatIndex` proves the floating-point search right under a
 separation hypothesis: the query must clear every breakpoint by more than the
-rounding error.  That hypothesis fails in exactly one situation — when the
+rounding error. That hypothesis fails in exactly one situation — when the
 query sits *on* a breakpoint — and that situation is not exotic: it is the tie
-the two `while` loops of `HullHalf::query` exist to handle.  So the theorem
+the two `while` loops of `HullHalf::query` exist to handle. So the theorem
 was silent precisely where the code does something interesting.
 
-Integer data removes the hypothesis.  The `LookUp` primitive stores integer
+Integer data removes the hypothesis. The `LookUp` primitive stores integer
 keys (`Transformer.ALM.ScalarInt`), and the breakpoint of two of them is a
-multiple of `1/2`.  An integer query is therefore either exactly on a
+multiple of `1/2`. An integer query is therefore either exactly on a
 breakpoint or at least `1/2` away from it, and `1/2` is far more than the
 rounding error of `isect` (`Transformer.ALM.IntGrid` has that arithmetic).
 Where the comparison could go either way the two keys score the same, which is
@@ -27,9 +33,7 @@ Source: `transformer_vm/attention/hull2d_cht.h`, lines 60-70 (`isect`) and
 203-215 (`argmax`).
 -/
 
-import Transformer.ALM.IntGrid
-import Transformer.ALM.FloatIndex
-import Transformer.ALM.HullScan
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -41,7 +45,7 @@ variable {n : ℕ}
 /-- **The running search is exact on integer data.**  Keys and query integers,
 keys sorted, the computed breakpoints accurate to better than `1/2` on the
 window searched: then the index `fpSearch` returns maximizes the paraboloid
-score over the whole window.  No hypothesis separates the query from the
+score over the whole window. No hypothesis separates the query from the
 breakpoints — at a breakpoint the comparison may round either way, and both
 ways are right, because the two keys there score the same.
 
@@ -159,7 +163,7 @@ lemma sortedKey_int [Nonempty (Fin n)] (K : Fin n → ℝ) (hK : ∀ i, ∃ z : 
 
 /-- **The probe the running code lands on is one of the winners.**  For
 integer keys and an integer query the floating-point probe is a member of the
-tie set `argmaxSet`, whatever the rounding does at a tie.  This is the
+tie set `argmaxSet`, whatever the rounding does at a tie. This is the
 hypothesis the merge walk of `Transformer.ALM.HullScan` needs, now supplied by
 the arithmetic that actually runs rather than assumed. -/
 theorem fpProbe_mem_argmaxSet_of_int [Nonempty (Fin n)] (F : FPArith) (K : Fin n → ℝ)

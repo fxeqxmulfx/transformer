@@ -1,8 +1,13 @@
-/-
+module
+
+public import Transformer.ALM.HullHead
+public import Transformer.ALM.SoftmaxLatest
+
+/-!
 # The other tie-break mode, at the tie the hull found
 
 `Transformer.ALM.HullHead` bounds the head against what `resolve` writes out
-under `TieBreak::AVERAGE`, at any two keys the tie set contains.  The machine's
+under `TieBreak::AVERAGE`, at any two keys the tie set contains. The machine's
 other mode returns one of the two payloads instead
 (`Transformer.ALM.HullResolve.scanCombined_resolveLatest_of_ne`), and
 `Transformer.ALM.SoftmaxLatest` prices the difference: half the distance
@@ -16,8 +21,7 @@ are both accounted for where the machine actually has to choose between them.
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 70-83 and 276-306.
 -/
 
-import Transformer.ALM.HullHead
-import Transformer.ALM.SoftmaxLatest
+@[expose] public section
 
 open scoped BigOperators
 

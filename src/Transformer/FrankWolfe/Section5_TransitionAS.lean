@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section5_Transition
+
+/-!
 # Attention's forward pass and Frank-Wolfe — what the transition law forces
 
 Consequences of the transition identity `IsSAProcess.measure_inter_prod` that hold along almost
@@ -7,7 +11,7 @@ configuration, so a convex set containing the initial configuration contains eve
 one-step bounds on the probability of leaving a configuration-dependent target set.
 -/
 
-import Transformer.FrankWolfe.Section5_Transition
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory

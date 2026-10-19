@@ -1,7 +1,9 @@
-import Transformer.AdamBeyond.Section5_Lemma
-import Transformer.AdamBeyond.Section4_Abel
+module
 
-/-
+public import Transformer.AdamBeyond.Section5_Lemma
+public import Transformer.AdamBeyond.Section4_Abel
+
+/-!
 # Adam and beyond — §5: Theorem 5
 
 Theorem 5 of arXiv:1904.09237, the regret of AdamNC, and its proof (appendix,
@@ -17,16 +19,16 @@ second.
   (`Section5_AdamNC`); `v_t` of the source is `v̂_t` of the run.
 
 * Condition 1 of Theorem 5 reads `(1/α_T) √v_{t,i} ≥ (1/ζ) ‖g_{1:t,i}‖₂` for
-  all `t ∈ [T]`.  The proof uses it at every `t` with `α_t` in place of `α_T`
+  all `t ∈ [T]`. The proof uses it at every `t` with `α_t` in place of `α_T`
   ("using similar argument for all time steps"), and with `α_T` it does not
-  give that, since `1/α_t ≤ 1/α_T`; condition 1 is stated with `α_t`.  Its sum
+  give that, since `1/α_t ≤ 1/α_T`; condition 1 is stated with `α_t`. Its sum
   `Σ_j Π_k β_{2(t-k+1)}(1-β_{2j}) g²_{j,i}` is `v_{t,i}` (`adamNC_vhat_sum`).
   Implicit in the source and made explicit: `0 ≤ β_{1,t}`, `β₁ < 1`, `α > 0`.
 
 * The source's `β₂ = 0`, which makes the run AdamNC, and its implicit
   `0 ≤ β_{2,t} ≤ 1` are not used by the proof: conditions 1 and 2 carry all it
   needs of `v_t`, including `m_{t,i} = 0` wherever `v_{t,i} = 0`, which
-  Lemma 3.1 asks for.  The theorem is stated without them.
+  Lemma 3.1 asks for. The theorem is stated without them.
 
 Not transcribed: "one can generalize the result to deal with the case where
 [`Γ_t ⪰ 0`] is violated as long as the violation is not too large or
@@ -35,6 +37,8 @@ frequent", which names no statement.
 Source: arXiv:1904.09237, §5, Theorem 5 (thm:adamnc-proof); appendix,
 §"Proof of Theorem 5".
 -/
+
+@[expose] public section
 
 open Finset
 
@@ -45,7 +49,7 @@ open AMSGrad
 
 variable {d : ℕ}
 
-/-- **Theorem 5**, with condition 1 at `α_t`.  For AdamNC with `α_t = α/√t`,
+/-- **Theorem 5**, with condition 1 at `α_t`. For AdamNC with `α_t = α/√t`,
 `0 ≤ β_{1,t} ≤ β₁ = β_{1,1} < 1`, under the standing assumptions, if for some
 `ζ > 0`
 1. `√v_{t,i}/α_t ≥ ‖g_{1:t,i}‖₂/ζ` for all `t ∈ [T]` and `i`, and

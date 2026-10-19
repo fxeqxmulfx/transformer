@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.Staircase
+
+/-!
 # Metastability — `thm: staircase`, and the plateau it needs
 
 `Theorem thm: staircase` of §6 of arXiv:2410.06833v1: along the modified
@@ -20,7 +24,7 @@ piecewise-constant profile `φ_∞`, uniformly on each plateau.
   source's `(θ_i(0))_{i=1}^n` carries no `β`.
 -/
 
-import Transformer.Metastability.Staircase
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -77,7 +81,7 @@ times `0 = T_0 < T_1 < ⋯ < T_k < T_{k+1} = +∞` (with `1 ≤ k ≤ n`) and a
 The limit is in `β`, so the statement is about a whole family of dynamics
 indexed by `β`, and the `max`/`sup` is written out as uniform convergence:
 for every `ε > 0` there is a `B` past which the error is below `ε` on every
-plateau at once.  See the module header for what differs from the source.
+plateau at once. See the module header for what differs from the source.
 
 The three dynamical hypotheses stay inside the statement rather than becoming
 binders: no solution of `modifiedUSA` started from a well-prepared

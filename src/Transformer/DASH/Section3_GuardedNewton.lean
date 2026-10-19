@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.DASH.Section3_GuardedScaling
+public import Transformer.DASH.Section3_CNUnitScaling
+public import Transformer.DASH.Section3_FiniteChaining
+
+/-!
 # DASH — Newton solvers with automatic safe preprocessing
 
 arXiv:2602.02016v2, §3.2–3.4. These algorithms include the scale
@@ -6,9 +12,7 @@ selection and output rescaling. The CN comparison scale is retained,
 but the normalized spectrum lies strictly below its failed endpoint.
 -/
 
-import Transformer.DASH.Section3_GuardedScaling
-import Transformer.DASH.Section3_CNUnitScaling
-import Transformer.DASH.Section3_FiniteChaining
+@[expose] public section
 
 open scoped Matrix Topology
 open Filter

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_AttentionHemisphere
+
+/-!
 # The original attention field in the hemisphere chart
 
 ArXiv:2411.04551v3, §2, `prop: targets.atoms`, and §1, `eq: vf`.
@@ -14,7 +18,7 @@ integrability under the actual law. Linear moments of the original
 attention average are exactly the normalized scalar integrals.
 -/
 
-import Transformer.Interpolation.Section2_AttentionHemisphere
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology

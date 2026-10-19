@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Modes.Section2_CriticalCharts
+public import Transformer.Modes.Section2_GaussianCriticalImages
+
+/-!
 # Almost-sure nondegeneracy of the original Gaussian KDE critical points
 
 ArXiv:2412.09080v3, §2.1, the mode/upcrossing identity after
@@ -17,8 +22,7 @@ has almost surely no simultaneous zero of itself and its query
 derivative, with the original positive bandwidth and sample size.
 -/
 
-import Transformer.Modes.Section2_CriticalCharts
-import Transformer.Modes.Section2_GaussianCriticalImages
+@[expose] public section
 
 open Real Set MeasureTheory
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Data.Finset.Lattice.Fold
+public import Mathlib.Tactic
+
+/-!
 # AdaFisher: min-max normalization
 
 arXiv:2405.16397v3, §3.2, Proposition 3.2 and Appendix A.2, Part 2.
@@ -6,8 +11,7 @@ The source omits the constant-diagonal case. We extend that case by zero;
 on a nonconstant vector this is precisely the printed affine formula.
 -/
 
-import Mathlib.Data.Finset.Lattice.Fold
-import Mathlib.Tactic
+@[expose] public section
 
 open scoped BigOperators
 

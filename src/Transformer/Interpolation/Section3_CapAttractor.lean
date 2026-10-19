@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_CapContraction
+public import Transformer.Interpolation.Section3_CapEntry
+
+/-!
 # An actual constant two-neuron attractor for every proper spherical cap
 
 Auxiliaries for arXiv:2411.04551v3, Appendix, `lem: two.balls`,
@@ -16,8 +21,7 @@ single-neuron argument for arbitrary targets in large caps. No small-cap
 restriction is imposed: the chordal ball may have any radius up to `2`.
 -/
 
-import Transformer.Interpolation.Section3_CapContraction
-import Transformer.Interpolation.Section3_CapEntry
+@[expose] public section
 
 open Real Set Filter
 open scoped Topology NNReal

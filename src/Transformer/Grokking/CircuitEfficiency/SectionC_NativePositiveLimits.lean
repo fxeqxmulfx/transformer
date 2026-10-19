@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativeUnitPath
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativeUnitPath
 
 /-!
 # Positive finite-limit consequences on actual closed native CE paths
@@ -25,6 +27,8 @@ distinct from appendix C's asymmetric coupled penalty/GD. General seed
 convergence, boundary limits, physical efficiency and stochastic/float
 bridges remain open.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

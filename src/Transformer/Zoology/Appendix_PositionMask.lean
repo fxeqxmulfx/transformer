@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_TwoLayerAttention
+
+/-!
 # A missing position mask in the Coyote MQAR construction
 
 Arora et al., arXiv:2312.04927v1, Appendix `sec: data-dep-ar`, equation
@@ -10,7 +14,7 @@ Position-dependent gating or tagged channels could repair this local step;
 the result below does not refute the Coyote existence theorem.
 -/
 
-import Transformer.Zoology.Appendix_TwoLayerAttention
+@[expose] public section
 
 open scoped BigOperators
 

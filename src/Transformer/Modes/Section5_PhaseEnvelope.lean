@@ -1,4 +1,6 @@
-import Transformer.Modes.Section5_GaussianAmplitude
+module
+
+public import Transformer.Modes.Section5_GaussianAmplitude
 
 /-!
 # A Gaussian envelope for the local Fourier estimates
@@ -29,6 +31,8 @@ rates are combined. The source prints the estimate for every positive
 counterexamples in `Section5_PtBddFourier` and `Section5_PtBddDecayFalse`.
 Source: arXiv:2412.09080v3, §5.5, proof of `eq:uniform-decay`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 open scoped Interval

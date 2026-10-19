@@ -1,6 +1,8 @@
-import Transformer.Modes.Section3_HermiteFourier
-import Transformer.Modes.Section3_CubicCorrection
-import Transformer.Modes.Section3_GaussianDensity
+module
+
+public import Transformer.Modes.Section3_HermiteFourier
+public import Transformer.Modes.Section3_CubicCorrection
+public import Transformer.Modes.Section3_GaussianDensity
 
 /-!
 # Fourier identity for the literal third-cumulant density correction
@@ -22,6 +24,8 @@ This repairs the §5.4 display before `eq:higher-error-goal`: its Hermite
 polynomial in frequency must be the cubic monomial multiplier. The
 spatial definition and all cumulant coefficients in `eq:psi` are retained.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology FourierTransform

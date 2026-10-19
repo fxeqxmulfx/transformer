@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.MajTwoRectCount
+
+/-!
 # Semantics of the rectangle counts
 
 arXiv:2506.16055v3, Appendix E, proof of `thm:majtwo_to_tlc`:
@@ -6,7 +10,7 @@ arXiv:2506.16055v3, Appendix E, proof of `thm:majtwo_to_tlc`:
 equality with the current-position indicator.
 -/
 
-import Transformer.CRASP.MajTwoRectCount
+@[expose] public section
 
 namespace Transformer.CRASP
 

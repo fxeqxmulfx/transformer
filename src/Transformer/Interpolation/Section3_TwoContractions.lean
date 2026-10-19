@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_QuadrantGeometry
+
+/-!
 # Two projection phases reach the positive quadrant
 
 ArXiv:2411.04551v3, §3.1, proof of `lem: first.quadrant`.
@@ -11,7 +15,7 @@ The conclusion concerns the actual two characteristic maps on the
 original supports, before any time rescaling or weak-solution argument.
 -/
 
-import Transformer.Interpolation.Section3_QuadrantGeometry
+@[expose] public section
 
 open Real MeasureTheory
 

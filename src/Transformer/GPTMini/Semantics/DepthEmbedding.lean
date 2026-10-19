@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.DepthRecurrence
-import Transformer.Basis.Tasks
+module
+
+public import Transformer.GPTMini.Semantics.DepthRecurrence
+public import Transformer.Basis.Tasks
 
 /-!
 # Actual token-local depth embedding in the original model widths
@@ -20,6 +22,8 @@ inputs have norm at most two and zero detector/readout channels. The
 large label embeddings are excluded by the actual raw-input grammar;
 no uniform bound on the whole tied vocabulary is claimed here.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

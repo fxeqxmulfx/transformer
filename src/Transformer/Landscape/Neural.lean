@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Landscape.Neural.Basic
+public import Transformer.Landscape.Neural.Loss
+public import Transformer.Landscape.Neural.Residual
+public import Transformer.Landscape.Neural.SiLU
+public import Transformer.Landscape.Neural.SwiGLU
+
+/-!
 # Analytic neural losses for the Landscape framework
 
 `Basic` proves analyticity of SiLU, SwiGLU and positive-epsilon RMSNorm.
@@ -11,8 +19,4 @@ Sources and the remaining bridge to the Rotate90 lab are recorded in
 `landscape_grokking_plan.md`.
 -/
 
-import Transformer.Landscape.Neural.Basic
-import Transformer.Landscape.Neural.Loss
-import Transformer.Landscape.Neural.Residual
-import Transformer.Landscape.Neural.SiLU
-import Transformer.Landscape.Neural.SwiGLU
+@[expose] public section

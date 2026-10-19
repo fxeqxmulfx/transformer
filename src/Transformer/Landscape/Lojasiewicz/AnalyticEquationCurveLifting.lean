@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.ConstrainedRootLifting
+
+/-!
 # Lifting analytic parameter curves through prepared zero sets
 
 Real preparation and complete constrained polynomial branch lifting apply
@@ -7,7 +11,7 @@ An analytic curve in the base parameters lifts after ramification while
 retaining any finite family of accumulating analytic sign conditions.
 -/
 
-import Transformer.Landscape.Lojasiewicz.ConstrainedRootLifting
+@[expose] public section
 
 open Filter Set
 

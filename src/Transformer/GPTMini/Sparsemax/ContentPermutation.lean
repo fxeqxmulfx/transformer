@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.AtomicMatchingMixture
+module
+
+public import Transformer.GPTMini.Sparsemax.AtomicMatchingMixture
 
 /-!
 # The content-only matching encoder forgets key/value binding
@@ -15,6 +17,8 @@ values, but their correct query answers differ. The old model has sharp
 squared-error sum at least 1/2, independently of its learned parameters,
 head count, optimization method or numerical coordinate bound.
 -/
+
+@[expose] public section
 
 noncomputable section
 

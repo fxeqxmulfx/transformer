@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryMass
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryMass
 
 /-!
 # A static contraction ceiling retaining native first-moment memory
@@ -26,6 +28,8 @@ path convergence and decisions require subsequent proof. Fixed physical
 tables and uniform decoupled AdamW differ from appendix C coupled-cost
 GD and changing learned GPTMini. No floating-point transfer is claimed.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,28 +1,33 @@
-/-
+module
+
+public import Transformer.ALM.HullIndex
+public import Transformer.ALM.VectorInt
+
+/-!
 # The softmax head returns the index's answer
 
 `Transformer.ALM.Softmax` and its refinements bound the softmax weight of a
 winning score, and `Transformer.ALM.VectorInt` removes the factor `n` from
-that bound for integer keys.  None of it mentions an index: the winner is a
-hypothesis, `i₀`, handed to the theorem.  On the other side
-`Transformer.ALM.HullIndex` builds the index and proves it exact.  The two
+that bound for integer keys. None of it mentions an index: the winner is a
+hypothesis, `i₀`, handed to the theorem. On the other side
+`Transformer.ALM.HullIndex` builds the index and proves it exact. The two
 met only through the definition of `score`, so "the real head, which uses
 softmax, returns what the hull returns" was an expectation, not a statement.
 
 `NNIndex.ans_eq_of_query_mem` closes it in one step, and for every index at
 once: when the query is one of the stored keys, exactness alone forces the
-index to return that key.  Nothing about the hull is used — exactness is the
+index to return that key. Nothing about the hull is used — exactness is the
 whole hypothesis — so it applies to `hullIndex`, `bruteForce` and `scanIndex`
 alike.
 
-What follows is then a statement about the running head.  In every dimension
+What follows is then a statement about the running head. In every dimension
 `softmax_at_index_ge` gives the published bound `1 - (n-1)e^{-β}` at the key
 the index names, the gap being the unit lattice gap of
 `one_le_dist_sq_of_int`; in dimension one — the case `hull2d_cht.h` compiles
 to — `softmax_at_hullIndex_int` gives the length-free bound of
 `softmax_winner_int_sharp_one`, which does not degrade as keys accumulate.
 
-All of that is on the lookup path, where the query is a stored key.  The last
+All of that is on the lookup path, where the query is a stored key. The last
 section leaves it: on the lattice a score is an integer (`score_embInt_int`),
 so two keys either tie exactly or differ by a whole unit, and
 `softmax_at_index_ge_of_untied` gives the same bound at *any* integer query the
@@ -33,8 +38,7 @@ by averaging.
 Source of the head: `transformer_vm/attention/hull2d_cht.h`, lines 203-215.
 -/
 
-import Transformer.ALM.HullIndex
-import Transformer.ALM.VectorInt
+@[expose] public section
 
 open scoped BigOperators
 
@@ -168,7 +172,7 @@ theorem one_le_score_gap_int (q k k' : Fin m → ℤ)
 /-- **The head agrees with the index at every integer query it does not tie
 at.**  `softmax_at_index_ge` needed the query to be one of the stored keys; all
 that was really needed is that the index's answer is the only argmax, which off
-the tie hyperplanes of `Transformer.ALM.TieHyperplane` it is.  The bound is the
+the tie hyperplanes of `Transformer.ALM.TieHyperplane` it is. The bound is the
 same `1 - (n-1)e^{-β}`, because a broken tie on the lattice is a gap of one. -/
 theorem softmax_at_index_ge_of_untied (I : NNIndex) [Nonempty (Fin n)] (β : ℝ) (hβ : 0 ≤ β)
     (K : Fin n → (Fin m → ℤ)) (q : Fin m → ℤ)

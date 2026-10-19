@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativeScoreGrowth
-import Mathlib.Order.Filter.AtTopBot.Archimedean
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativeScoreGrowth
+public import Mathlib.Order.Filter.AtTopBot.Archimedean
 
 /-!
 # Actual native train CE can vanish while held-out CE stays positive
@@ -20,6 +22,8 @@ cost-asymmetric coupled penalty/GD. No stochastic learned GPTMini or
 finite-precision transfer, onset time or universal grokking detector is
 claimed. Tie handling is not replaced by an assigned accuracy value.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

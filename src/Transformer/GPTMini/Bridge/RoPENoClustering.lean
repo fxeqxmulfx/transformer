@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.GPTMini.Bridge.RoPEAsTimeVarying
+public import Transformer.Perspective.Section3_SmallBeta
+
+/-!
 # RoPE attention does not cluster every initial sequence
 
 The claim this file refutes was stated here as `rope_clustering`: for
@@ -8,21 +13,21 @@ The claim this file refutes was stated here as `rope_clustering`: for
 
 That dynamics feeds the RoPE rotation the depth `t` as its position, which is
 not what RoPE does (`Bridge.RoPEAsTimeVarying`: RoPE's index is each token's
-own position, not a clock shared by all).  The claim is false anyway, and for
-a reason that has nothing to do with RoPE or with that misreading.  The antipodal
+own position, not a clock shared by all). The claim is false anyway, and for
+a reason that has nothing to do with RoPE or with that misreading. The antipodal
 pair `(x, -x)` of `Perspective.antipodalPair` has mean `0`; every linear `V`
 sends it to `0`; and at `β = 0` all attention weights are `exp 0 = 1`, so the
-velocity is `Proj_{x_i} 0 = 0` whatever `Q, K` and `θ` are.  The constant path
+velocity is `Proj_{x_i} 0 = 0` whatever `Q, K` and `θ` are. The constant path
 is a solution, the two particles stay at distance `2` forever, and no `x⋆`
 attracts both.
 
 This is the exceptional set of `Perspective.boumal_clustering` reappearing in
-the RoPE parametrization.  The survey quantifies over *Lebesgue-almost every*
+the RoPE parametrization. The survey quantifies over *Lebesgue-almost every*
 initial sequence, never every one, and `Perspective.antipodalPair_not_exponential`
 already makes the same point for the simplified model `Q = K = V = I_d`.
 
 The almost-everywhere statement — the RoPE analogue of
-`thm: main.d.geq.3` — is not stated here.  `Perspective.boumal_clustering`
+`thm: main.d.geq.3` — is not stated here. `Perspective.boumal_clustering`
 covers `Q = K = V = I_d` only and is itself unproved, its argument does not
 carry over to RoPE's pair-dependent keys, and one more unprovable statement is worth
 less than the refutation of the one that was wrong.
@@ -31,8 +36,7 @@ Source: arXiv:2312.10794v5, §2 (`eq: transformerSd.QKV`), §4 (`p:beta0`) and
 §6.1 (`thm: boumal`).
 -/
 
-import Transformer.GPTMini.Bridge.RoPEAsTimeVarying
-import Transformer.Perspective.Section3_SmallBeta
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -46,7 +50,7 @@ whatever `Q, K, V` are.**
 
 At `β = 0` every attention weight is `exp 0 = 1`, so the velocity is the
 projection of `V(t) x + V(t) (-x)`, and `V(t)` is linear: the sum is `0` and
-the constant path is a solution.  Nothing about `Q` or `K` is used, which is
+the constant path is a solution. Nothing about `Q` or `K` is used, which is
 why the RoPE rotation does not help.
 
 Source: arXiv:2312.10794v5, §2, `eq: transformerSd.QKV`; the configuration is
@@ -109,7 +113,7 @@ theorem not_rope_clustering_antipodalPair
 For every `d_head ≥ 3`, every `n ≥ 2` and every `β ≥ 0`, RoPE-rotated `Q, K`
 with `V = I_d` do *not* send every initial sequence to a single point: the
 `gpt-mini` head dimension `64`, two particles at `(e₀, -e₀)` and `β = 0` are a
-counterexample.  This kills the claim the file used to state as
+counterexample. This kills the claim the file used to state as
 `rope_clustering`.
 
 The survey's theorem is about Lebesgue-almost every initial sequence

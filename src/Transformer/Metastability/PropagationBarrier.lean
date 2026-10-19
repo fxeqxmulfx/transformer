@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.DerivativeTest
+public import Mathlib.Topology.Order.IntermediateValue
+
+/-!
 # A finite-family barrier principle for propagation
 
 If finitely many continuously varying quantities start nonnegative and each
@@ -7,8 +12,7 @@ nonnegative, none can cross below zero. This avoids differentiating their
 minimum, which may have corners.
 -/
 
-import Mathlib.Analysis.Calculus.DerivativeTest
-import Mathlib.Topology.Order.IntermediateValue
+@[expose] public section
 
 open scoped Topology
 
@@ -19,7 +23,7 @@ open Filter Set
 
 /-- A finite collection of scalar constraints, each continuous on `[a, b]`, remains
 nonnegative on `[a, b]` when its vector field points strictly inward at every active
-boundary constraint.  Only continuity on the interval is needed, so a constraint may be
+boundary constraint. Only continuity on the interval is needed, so a constraint may be
 given by a formula with singularities outside `[a, b]`. -/
 theorem finite_nonneg_of_boundary_deriv_on {ι : Type*} [Fintype ι]
     (f : ι → ℝ → ℝ) (a b : ℝ)

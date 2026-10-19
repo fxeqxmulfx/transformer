@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativeSigns
-import Mathlib.Topology.Order.OrderClosed
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativeSigns
+public import Mathlib.Topology.Order.OrderClosed
 
 /-!
 # Actual fixed-table CE callback limits from parameter limits
@@ -18,6 +20,8 @@ distinct from appendix C's GD/coupled circuit-norm penalty. Fixed tables
 do not model learned GPTMini features or stochastic minibatch variation;
 floating-point forward/autograd/clipping bridges are still absent.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,5 +1,7 @@
-import Transformer.Grokking.Composition.OutputInteractions.NonIdentification
-import Transformer.Grokking.Geometry.Decisions
+module
+
+public import Transformer.Grokking.Composition.OutputInteractions.NonIdentification
+public import Transformer.Grokking.Geometry.Decisions
 
 /-!
 # Decision meaning of the hypothetical additive output
@@ -20,6 +22,8 @@ preserves its correct decision, so interaction is not a decision change.
 No numerical rounding bound, transformer training convergence or causal
 grokking detector follows from this finite-output comparison.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Composition.OutputInteractions
 

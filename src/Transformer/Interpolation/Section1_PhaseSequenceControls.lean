@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_PhaseSequenceStep
+public import Mathlib.Data.List.Induction
+
+/-!
 # Actual control curves realizing finite autonomous phase sequences
 
 ArXiv:2411.04551v3, §1 and §3.2, successive perceptron and
@@ -15,8 +20,7 @@ Global original weak existence and uniqueness and the actual final
 constant tail are retained throughout the construction.
 -/
 
-import Transformer.Interpolation.Section1_PhaseSequenceStep
-import Mathlib.Data.List.Induction
+@[expose] public section
 
 open Real MeasureTheory Set
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadBoundedInterior
+public import Transformer.Clusters.Section12_MultiHeadMeanDefect
+
+/-!
 # The exceptional bounded row of the original discrete multi-head Transformer
 
 ArXiv:2305.05465v6, §7, `l:boundedxn` and `l:boundedother`,
@@ -17,8 +22,7 @@ These exhaust nonzero off-diagonal rates, including the single-token
 case where the off-diagonal family is empty.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadBoundedInterior
-import Transformer.Clusters.Section12_MultiHeadMeanDefect
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

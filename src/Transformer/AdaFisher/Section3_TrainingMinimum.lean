@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_TrainingStationarity
+
+/-!
 # AdaFisher — convergence of actual last weights to a global minimum
 
 arXiv:2405.16397v3, §3.4 and Appendix A.2, strong-convexity extension
@@ -7,7 +11,7 @@ is not identified with the computed Fisher matrix. Strong convexity
 is an explicit additional objective assumption, not a claim about DNNs.
 -/
 
-import Transformer.AdaFisher.Section3_TrainingStationarity
+@[expose] public section
 
 open scoped Topology
 open Filter

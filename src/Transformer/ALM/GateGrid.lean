@@ -1,26 +1,30 @@
-/-
+module
+
+public import Transformer.ALM.ScoreWall
+
+/-!
 # The gate is where the stream's range is squared
 
 Three parts of `Alm::forward_timed` carry a theorem and, until this file, two
-did not: the gated feed-forward and the two residual additions.  Their fidelity
+did not: the gated feed-forward and the two residual additions. Their fidelity
 rested on `alm-vm/tests/reference.rs` reproducing the released traces token for
 token, which is evidence that the port is faithful and no evidence at all about
 what happens past the end of those traces.
 
 What happens is a wall, and it is the same wall `Transformer.ALM.ScoreWall`
-finds on the other path, reached by a different route.  The attention score
+finds on the other path, reached by a different route. The attention score
 `2qk - k^2` leaves the grid when the key passes `2^26.5`; the gate
 `max(ff, 0) * ff'` multiplies two coordinates of the residual stream together,
 so it leaves the grid when the *stream* passes `2^26.5`, which is
 `94 906 265` — `the_ffn_wall` is that this bound is sharp to the unit, as
 `todo3.md` §0 found it to be for the score.
 
-The rest is small and worth having written down anyway.  `relu_isBinary` is
+The rest is small and worth having written down anyway. `relu_isBinary` is
 that the half of the gate everyone worries about — the branch — is exactly the
 half that costs nothing: `max a 0` is `a` or `0` and is representable whenever
-`a` is, at any magnitude.  `gate_eq_ite` is that the two spellings of it agree:
+`a` is, at any magnitude. `gate_eq_ite` is that the two spellings of it agree:
 `transformer.cpp:315` writes `(ff[i] > 0 ? ff[i] : 0.0)` and `model.rs` writes
-`.max(0.0)`.  That is the agreement over the reals; the two cases where the
+`.max(0.0)`. That is the agreement over the reals; the two cases where the
 reals have nothing to say — a `NaN` operand and a negative zero — are IEEE-754
 questions, and `model.rs` argues them where they belong, at the code.
 
@@ -31,7 +35,7 @@ Source: `vm-rs/alm-model/src/model.rs`, `Alm::forward_timed`;
 `transformer_vm/model/transformer.cpp` lines 310-320; `todo3.md` §0 and §4.
 -/
 
-import Transformer.ALM.ScoreWall
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -104,7 +108,7 @@ theorem isBinary_add {p : ℕ} {z w : ℤ} (h : |z + w| < 2 ^ p) :
 
 /-- **The feed-forward's wall, sharp to the unit.**  A stream coordinate of
 `94 906 265` gates to a product still inside `2 ^ 53`; one more and it is
-outside.  That is the same number `todo3.md` §0 measures for the score, which
+outside. That is the same number `todo3.md` §0 measures for the score, which
 is not a coincidence: both are `⌈√(2^53)⌉`, and both mechanisms are a product
 of two quantities the stream carries. -/
 theorem the_ffn_wall : (94906265 : ℤ) ^ 2 < 2 ^ 53 ∧ (2 : ℤ) ^ 53 < 94906266 ^ 2 := by

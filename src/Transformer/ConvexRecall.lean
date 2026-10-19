@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.ConvexRecall.Training
+public import Transformer.ConvexRecall.Simplex
+public import Transformer.ConvexRecall.Routing
+public import Transformer.ConvexRecall.Recall
+
+/-!
 # Convex training with content-dependent multi-query recall
 
 This is a new cross-paper construction. It extends the convex-training aim
@@ -21,7 +28,4 @@ does not establish parity of end-to-end training, speed, or parameter count
 with the two-layer GPT-style experiments in the MQAR paper.
 -/
 
-import Transformer.ConvexRecall.Training
-import Transformer.ConvexRecall.Simplex
-import Transformer.ConvexRecall.Routing
-import Transformer.ConvexRecall.Recall
+@[expose] public section

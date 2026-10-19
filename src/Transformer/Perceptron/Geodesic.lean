@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Basic
+
+/-!
 # Perceptrons and attention's mean-field landscape — second-order critical points
 
 Formalization of §2.2 of arXiv:2601.21366v2: the Wasserstein Hessian, and the
@@ -10,7 +14,7 @@ about.
 
 * The geodesic the Hessian is read along, `μ(t) = (T(t))_# μ` with
   `T(t)(x) = exp_x(t ∇φ(x))`, is carried as data: a curve `ν` together with a
-  measurable map realizing the pushforward at each time.  The source itself
+  measurable map realizing the pushforward at each time. The source itself
   notes that for singular `μ` a geodesic need not be determined by its `L²(μ)`
   velocity field, so quantifying over every such curve is the faithful reading:
   `IsSOPD` asks for the inequality along every geodesic issued from `μ`.
@@ -22,7 +26,7 @@ about.
 
 * The tangent space `eq:otto.tangent` is the `L²(μ)`-closure of the spherical
   gradients `∇φ` of smooth `φ`; the Hessian, however, is *defined* by the
-  source only along `ξ = ∇φ`, and `eq:2order` is tested there.  `IsGradientField`
+  source only along `ξ = ∇φ`, and `eq:2order` is tested there. `IsGradientField`
   is that dense subspace, and no closure is taken: testing on fewer directions
   is the weaker hypothesis, hence the stronger theorem.
 
@@ -36,7 +40,7 @@ Source: arXiv:2601.21366v2, §2.1–2.2, `eq:otto.tangent`, `eq:2order`,
 `eq:strict2order`.
 -/
 
-import Transformer.Perceptron.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -52,7 +56,7 @@ variable {d : ℕ}
 
   `exp_x(v) = cos‖v‖ · x + (sin‖v‖/‖v‖) · v`,
 
-the great circle through `x` with initial velocity `v`.  At `v = 0` the second
+the great circle through `x` with initial velocity `v`. At `v = 0` the second
 summand is `(0/0) • 0 = 0`, so `exp_x(0) = x`.
 
 Source: arXiv:2601.21366v2, §2.2 (footnote). -/

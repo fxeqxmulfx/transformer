@@ -1,4 +1,15 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Causal.Basic
+public import Transformer.Causal.Interaction
+public import Transformer.Causal.InteractionWindow
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Angle
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+/-!
 # The original frozen angular field and its initialization space
 
 Source: arXiv:2411.04990v2, §5, `thm:fixed_centers` and its
@@ -45,14 +56,7 @@ restricted Lebesgue volume on the unit interval for one moving
 token and two antipodal fixed centers.
 -/
 
-import Transformer.Basic
-import Transformer.Causal.Basic
-import Transformer.Causal.Interaction
-import Transformer.Causal.InteractionWindow
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Angle
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -103,7 +107,7 @@ def IsAsymptoticallyStable (F : (Idx n → ℝ) → Idx n → ℝ) (p : Idx n �
 
 /-- The hypotheses of `fixed_centers` are satisfiable, and not vacuously so:
 one particle, the two antipodal frozen tokens `θ = (0, π)` with unit weights,
-`N = 3`, `β = 11`, `ε = 0.09`, `c = 5.68`, and `μ₀` uniform on `[0, 1)`.  The
+`N = 3`, `β = 11`, `ε = 0.09`, `c = 5.68`, and `μ₀` uniform on `[0, 1)`. The
 conditions on `h` and `g` are `lem:interaction`
 (`Causal.interaction_inequalities`), whose bound on `N` is
 `3 < e^{3·4.5²/8} · 0.09/4.68`. -/

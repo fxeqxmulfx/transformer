@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadFullGrowth
+
+/-!
 # Exact scaled head scores and bounded original multi-head drift
 
 ArXiv:2305.05465v6, §7, proof of `l:boundedother`, with
@@ -16,7 +20,7 @@ These are consequences of the original vector update and actual
 boundedness, rather than an assumed limiting scalar equation.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadFullGrowth
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

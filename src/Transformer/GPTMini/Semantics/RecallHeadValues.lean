@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallQKV
+module
+
+public import Transformer.GPTMini.Semantics.RecallQKV
 
 /-!
 # Genuine head values retain the compact raw code and its norm
@@ -18,6 +20,8 @@ The bounds cover both sign choices in every categorical digit and all
 reserved entries. They apply before any table gating or latest-write
 retrieval, so those subsequent computations remain separate obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

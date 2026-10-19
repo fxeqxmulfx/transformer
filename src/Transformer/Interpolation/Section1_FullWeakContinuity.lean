@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_ContinuousWeakTests
+public import Transformer.Interpolation.Section1_FullFieldLipschitz
+
+/-!
 # Attention continuity along arbitrary original weak laws
 
 ArXiv:2411.04551v3, §1, `eq: vf` and `eq: cauchy.pb`.
@@ -13,8 +18,7 @@ restriction on the original weak equation. This distinction is needed
 inside individual constant phases of the complete network.
 -/
 
-import Transformer.Interpolation.Section1_ContinuousWeakTests
-import Transformer.Interpolation.Section1_FullFieldLipschitz
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology

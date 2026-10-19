@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.Examples
+
+/-!
 # Repeated-root and signed-query examples
 
 Cancellation in a signed query is different from absence of a feasible
@@ -6,7 +10,7 @@ root. The mask queries retain the actual constrained count and minimum.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.Examples
+@[expose] public section
 
 noncomputable section
 open Polynomial Transformer.Landscape.Lojasiewicz

@@ -1,19 +1,23 @@
-/-
+module
+
+public import Transformer.Clusters.Section9_Eigen
+public import Transformer.Clusters.Extremum
+
+/-!
 # The emergence of clusters in self-attention dynamics — `l:fj`
 
 §9 of arXiv:2305.05465v6: along `e:Rres`, for an eigenfunctional `φ*_k` with
 `λ_k ≥ 0`, the largest coordinate `max_j φ*_k(z_j(t))` does not increase and
 the smallest does not decrease.
 
-The source argues at a time and an index realizing the extremum.  What makes
+The source argues at a time and an index realizing the extremum. What makes
 that an argument about the extremum is `antitone_sup'_of_hasDerivAt`, in
 `Clusters.Extremum`.
 
 Source: arXiv:2305.05465v6, `l:fj`.
 -/
 
-import Transformer.Clusters.Section9_Eigen
-import Transformer.Clusters.Extremum
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

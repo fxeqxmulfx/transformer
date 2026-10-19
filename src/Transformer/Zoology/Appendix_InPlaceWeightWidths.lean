@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_InPlaceButterflyProgram
+
+/-!
 # Actual hierarchy-width bounds of the in-place compiler
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: W-kmat` and
@@ -6,7 +10,7 @@ Arora et al., arXiv:2312.04927v1, Appendix `def: W-kmat` and
 two, including routing layers. The predicate inspects actual layer weights.
 -/
 
-import Transformer.Zoology.Appendix_InPlaceButterflyProgram
+@[expose] public section
 
 noncomputable section
 

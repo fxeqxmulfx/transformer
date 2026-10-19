@@ -1,8 +1,14 @@
-/-
+module
+
+public import Transformer.Metastability.AttnComparison
+public import Transformer.Metastability.CollapseScalar
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # Metastability — the three phases of the collapse, as explicit subsolutions
 
 Steps 2–3 of the direct proof of `thm: metastability` (arXiv:2410.06833v1, §2) follow the
-within-cap minimum `ρ = 1 - s` of a cap `I` while `s` falls from `8ε` to `δ = e^{-λβ}`.  With
+within-cap minimum `ρ = 1 - s` of a cap `I` while `s` falls from `8ε` to `δ = e^{-λβ}`. With
 `attn_comparison` the ODE of the source is replaced by three explicit profiles `s(t)`, each
 a strict subsolution of `ρ̇ ≥ (2/n) F_β(s) - 2 n E` (`E = e^{-(1-α)β}`):
 
@@ -14,9 +20,7 @@ Each is an instance of `comparison_of_rate`: a profile `s` with `-s' ≤ F_β(s)
 above the leakage level `2 n² E` while `s` is in the range of the phase.
 -/
 
-import Transformer.Metastability.AttnComparison
-import Transformer.Metastability.CollapseScalar
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 open Real Set
@@ -90,7 +94,7 @@ theorem phase_linear {β α : ℝ} (hβ : 0 ≤ β) (hn : 1 ≤ n) {X : ℝ → 
 /-- **Phase 2: an exponential subsolution.**  If `c₂ > 0`, `0 < σ₂ ≤ σ₀ ≤ 1`, and
 `c₂ s ≤ F_β(s)/n`, `F_β(s) > 2 n² E` for all `s ∈ (σ₂, σ₀]`, then on
 `[a₀, a₀ + log(σ₀/σ₂)/c₂]` the cap satisfies `⟨x_i, x_j⟩ ≥ 1 - σ₀ e^{-c₂(t - a₀)}`, provided
-`⟨x_i, x_j⟩ ≥ 1 - σ₀` at `a₀`.  At the right end `σ₀ e^{-c₂(t - a₀)} = σ₂`. -/
+`⟨x_i, x_j⟩ ≥ 1 - σ₀` at `a₀`. At the right end `σ₀ e^{-c₂(t - a₀)} = σ₂`. -/
 theorem phase_exp {β α : ℝ} (hβ : 0 ≤ β) (hn : 1 ≤ n) {X : ℝ → SphereTuple d n}
     (hX : IsAttnFlow d n β X) (I : Finset (Idx n)) (a₀ σ₀ σ₂ c₂ : ℝ) (hc : 0 < c₂)
     (hσ₂ : 0 < σ₂) (hσ : σ₂ ≤ σ₀) (hσ1 : σ₀ ≤ 1)

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ButterflyTreeLevels
+
+/-!
 # Recursive butterfly trees in the primary product representation
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: butterfly`.
@@ -7,7 +11,7 @@ factor product. This bridge uses a single row for the scalar vector;
 reindexing it into a general n × d layout is a separate transport step.
 -/
 
-import Transformer.Zoology.Appendix_ButterflyTreeLevels
+@[expose] public section
 
 namespace Transformer.Zoology
 

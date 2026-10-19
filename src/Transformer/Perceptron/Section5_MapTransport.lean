@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_MapKernel
+
+/-!
 # Actual matrix pair derivatives along circle transport
 
 ArXiv:2601.21366v2, §3.1, `rem: ext` (ii), extending the
@@ -15,7 +19,7 @@ first-point derivative and makes the mixed coefficients agree.
 All pointwise derivative identities hold at every real transport time.
 -/
 
-import Transformer.Perceptron.Section5_MapKernel
+@[expose] public section
 
 open Real
 

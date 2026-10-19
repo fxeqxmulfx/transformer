@@ -1,5 +1,8 @@
-import Transformer.Modes.Section3_CubicTailRates
-import Transformer.Modes.Section3_CubicFrequency
+module
+
+public import Transformer.Modes.Section3_CubicTailRates
+public import Transformer.Modes.Section3_CubicFrequency
+
 /-!
 # Gaussian cubic correction: moments and exterior rates
 
@@ -27,6 +30,7 @@ is compared through its norm. Relating its inverse Fourier integral
 to the actual spatial Hermite expression is a further proof step.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

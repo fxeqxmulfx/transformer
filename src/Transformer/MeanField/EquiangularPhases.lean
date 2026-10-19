@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.MeanField.EquiangularWeights
+
+/-!
 # The equiangular attention weights at `β_n = γ log n`: the three phases
 
 The diagonal weight `a = e^β / Z` of the equiangular configuration satisfies
@@ -13,7 +17,7 @@ the theorem on top of this file.
 Source: arXiv:2512.01868v4, §6, `thm: long-context-phase-transition`.
 -/
 
-import Transformer.MeanField.EquiangularWeights
+@[expose] public section
 
 open scoped BigOperators
 open Filter Topology
@@ -81,7 +85,7 @@ theorem ratio_natAdd_mem (m : ℕ) :
 
 /-! ### The three phases
 
-Write `c = γ(1-ρ)`.  The exponent of `n` in `(n-1) e^{β(ρ-1)}` is `1 - c`, so
+Write `c = γ(1-ρ)`. The exponent of `n` in `(n-1) e^{β(ρ-1)}` is `1 - c`, so
 that quantity diverges, converges to `1`, or vanishes according to the sign of
 `1 - c`, and `a = 1/(1 + ·)` tends to `0`, `1/2` or `1`. -/
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.PrefixMemoryCodes
+module
+
+public import Transformer.GPTMini.Sparsemax.PrefixMemoryCodes
 
 /-!
 # Exact common values for arbitrarily many context queries
@@ -16,6 +18,8 @@ codes are insensitive to future observations. The architecture attends to
 parameter memory, not input occurrences, and its expressivity is limited
 by the fixed code family. No task loss, FFN or generalization claim is made.
 -/
+
+@[expose] public section
 
 noncomputable section
 

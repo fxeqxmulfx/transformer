@@ -1,6 +1,8 @@
-import Transformer.Clusters.Section7_LogSumExp
-import Mathlib.LinearAlgebra.Prod
-import Mathlib.Tactic
+module
+
+public import Transformer.Clusters.Section7_LogSumExp
+public import Mathlib.LinearAlgebra.Prod
+public import Mathlib.Tactic
 
 /-!
 # Joint structured likelihood at affine energies
@@ -20,6 +22,8 @@ marginal label loss is not asserted. Nor is compact evaluation, a Basis
 solver, a drop-in operator or AdamW convergence yet established here.
 The parameter space is unrestricted and includes no hidden projection.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

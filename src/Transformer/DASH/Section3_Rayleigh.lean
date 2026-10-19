@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section3_Scaling
+
+/-!
 # DASH — the Rayleigh quotient in an eigenbasis
 
 arXiv:2602.02016v2, §3.4. Rayleigh quotients are weighted averages
@@ -6,7 +10,7 @@ of eigenvalues; strict inequality requires a component outside the
 maximal eigenspace, not merely an inexactly computed vector.
 -/
 
-import Transformer.DASH.Section3_Scaling
+@[expose] public section
 
 open scoped BigOperators Matrix
 

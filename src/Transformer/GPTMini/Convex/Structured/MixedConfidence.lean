@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.MixedTraining
-import Transformer.GPTMini.Convex.Structured.RecallGap
+module
+
+public import Transformer.GPTMini.Convex.Structured.MixedTraining
+public import Transformer.GPTMini.Convex.Structured.RecallGap
 
 /-!
 # Derived finite whole-model confidence for the learned mixture
@@ -18,6 +20,8 @@ Finite logarithmic gains discharge both whole-distribution decoder
 budgets. Strict greedy/task coupling, tensor/prenorm/residual/tied
 realization and successful ordinary AdamW training remain separate.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

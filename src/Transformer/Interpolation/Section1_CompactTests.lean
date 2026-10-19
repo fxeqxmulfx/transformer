@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_MovingTests
+public import Mathlib.Topology.UniformSpace.HeineCantor
+public import Mathlib.Topology.ContinuousMap.Compact
+
+/-!
 # Uniform differentiation of tests on the compact sphere
 
 Auxiliary to arXiv:2411.04551v3, §1, `eq: cauchy.pb`, and
@@ -10,9 +16,7 @@ test derivative needed by the weak product rule, rather than assuming it
 as a new condition on the original measure-valued solution.
 -/
 
-import Transformer.Interpolation.Section1_MovingTests
-import Mathlib.Topology.UniformSpace.HeineCantor
-import Mathlib.Topology.ContinuousMap.Compact
+@[expose] public section
 
 open Real MeasureTheory Filter Topology Asymptotics
 

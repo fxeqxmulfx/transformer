@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.NewtonA
+public import Transformer.Landscape.Uniformization.Principal
+
+/-!
 # Local uniformization: the Newton step, principalized charts
 
 With the data of `NewtonA`, in a chart `s ↦ (ram w' q b t, y)` with `(t, y) = s^E` in
@@ -8,8 +13,7 @@ times a monomial in `s`: it has normal crossings at every point of the chart. Au
 for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Uniformization.NewtonA
-import Transformer.Landscape.Uniformization.Principal
+@[expose] public section
 
 open Filter Set Polynomial
 open scoped BigOperators Topology

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Magma.Section5_StochasticDescent
+public import Transformer.Magma.Section5_Transition
+
+/-!
 # Corrected finite-horizon stationarity
 
 Replacement for arXiv:2602.15322v1, Section 5, theorem:main_result,
@@ -8,8 +13,7 @@ explicit unbiasedness, uniform positive damping, and finite minibatch laws.
 It analyzes the normalized SGD recurrence, with dense auxiliary states.
 -/
 
-import Transformer.Magma.Section5_StochasticDescent
-import Transformer.Magma.Section5_Transition
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 

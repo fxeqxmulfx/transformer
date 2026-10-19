@@ -1,13 +1,19 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Decay
+public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+
+/-!
 # Saddle avoidance — functions that decrease at a power of themselves
 
-The continuous-time counterparts of `Landscape.SaddleAvoidance.Decay`.  If
+The continuous-time counterparts of `Landscape.SaddleAvoidance.Decay`. If
 `r' ≤ -λ r` on `[T, ∞)`, then `e^{λ t} r t` decreases, so
-`r t ≤ r T e^{λ T} e^{-λ t}` (`le_mul_exp_of_hasDerivAt`).  If `r > 0` and
+`r t ≤ r T e^{λ T} e^{-λ t}` (`le_mul_exp_of_hasDerivAt`). If `r > 0` and
 `r' ≤ -c r ^ (1 + β)` with `β > 0`, then `r ^ (-β)` grows at least at the rate
 `β c` (`rpow_neg_add_mul_le_of_hasDerivAt`), so
 `r t ≤ C (t + 1) ^ (-1/β)` for `t ≥ 2T + 1` when `c > 0`
-(`le_mul_rpow_of_hasDerivAt`).  A bound from some time on holds
+(`le_mul_rpow_of_hasDerivAt`). A bound from some time on holds
 from time `0` on, with a larger constant, when the bounded function is
 bounded on every `[0, T]` and the bounding one is positive and antitone
 (`exists_forall_le_mul_of_eventually_atTop`), and so does a bound by a power
@@ -17,9 +23,7 @@ They give the rates of descent curves (`Landscape.SaddleAvoidance.FlowRates`), t
 analogue for flows of `prop:rates` of arXiv:1602.04915.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Decay
-import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
+@[expose] public section
 
 open Filter Set Real
 
@@ -49,7 +53,7 @@ theorem exists_forall_le_mul_of_eventually_atTop {u g : ℝ → ℝ} (hg : ∀ t
       (mul_le_mul_of_nonneg_right (le_max_left _ _) (hg t ht).le)
 
 /-- **Bounds from time `0` on, from eventual bounds.**  Let `r ≥ 0` and `d` be
-bounded on every `[0, T]`, and `g > 0` antitone on `[0, ∞)`.  If from some
+bounded on every `[0, T]`, and `g > 0` antitone on `[0, ∞)`. If from some
 time on `r t ≤ C₁ g t` and `d t ≤ K r t ^ p`, with `K, p ≥ 0`, then for some
 `C ≥ 0`, `r t ≤ C g t` and `d t ≤ C g t ^ p` for every `t ≥ 0`. -/
 theorem exists_le_mul_and_le_mul_rpow_of_eventually {r d g : ℝ → ℝ} {C₁ K p : ℝ}

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.ModulatedCritical
+
+/-!
 # Local gradient estimates under analytic parametrization
 
 The chain rule controls the gradient of a pulled-back energy. A local
@@ -6,7 +10,7 @@ continuous right inverse transfers its gradient estimate back to the
 original energy, as required by Appendix D.1 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.ModulatedCritical
+@[expose] public section
 
 open Filter Set
 

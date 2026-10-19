@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CircuitBatchDefs
+
+/-!
 # Correctness of parallel circuit-level updates
 
 Arora et al., arXiv:2312.04927v1, Appendix Theorem `thm: gen-ac`.
@@ -7,7 +11,7 @@ distinct target slots simultaneously. The first Coyote layer performs the
 linear stages; the second completes multiplication gates.
 -/
 
-import Transformer.Zoology.Appendix_CircuitBatchDefs
+@[expose] public section
 
 namespace Transformer.Zoology
 

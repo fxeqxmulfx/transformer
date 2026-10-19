@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_CompactTests
+public import Transformer.Interpolation.Section3_ProjectionDynamics
+
+/-!
 # Ambient spacetime tests for the original weak equation
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §3.1,
@@ -10,8 +15,7 @@ For a constant tangent projection field, its fixed-test flux is also a
 continuous directly from the original weak equation.
 -/
 
-import Transformer.Interpolation.Section1_CompactTests
-import Transformer.Interpolation.Section3_ProjectionDynamics
+@[expose] public section
 
 open Real MeasureTheory Filter Topology
 

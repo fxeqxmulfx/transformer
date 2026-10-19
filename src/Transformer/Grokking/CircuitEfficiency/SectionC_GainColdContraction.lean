@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdBounds
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdBounds
 
 /-!
 # Actual retained native collapse above the strict cold threshold
@@ -27,6 +29,8 @@ is exact-real fixed tables/plain CE/uniform native decoupled decay,
 rather than the source's assigned coupled norm-cost GD. No optimizer,
 buffer, checkpoint or thermodynamic system-size limit is changed.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

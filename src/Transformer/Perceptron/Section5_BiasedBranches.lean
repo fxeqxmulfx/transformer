@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Bias
+public import Transformer.Perceptron.Section5_ReLUBranches
+
+/-!
 # Actual biased ReLU patterns and quadratic branch fields
 
 ArXiv:2601.21366v2, §3.1, `rem: ext` (i), with the branch arguments
@@ -19,8 +24,7 @@ in a definition. The following inverse argument computes all original
 constant, linear and quadratic terms caused by the actual biases.
 -/
 
-import Transformer.Perceptron.Bias
-import Transformer.Perceptron.Section5_ReLUBranches
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

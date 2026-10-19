@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.ConstrainedMinima
+public import Transformer.Landscape.AnalyticPreparation.FiniteFibers
+public import Mathlib.Data.List.OfFn
+
+/-!
 # Arithmetic elimination of the scalar fiber minimum comparison
 
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.ConstrainedMinima
-import Transformer.Landscape.AnalyticPreparation.FiniteFibers
-import Mathlib.Data.List.OfFn
+@[expose] public section
 
 noncomputable section
 open Polynomial

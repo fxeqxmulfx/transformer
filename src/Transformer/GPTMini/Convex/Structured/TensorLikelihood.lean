@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.TensorTraining
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorTraining
 
 /-!
 # The same actual tensor distribution governs inference and training
@@ -18,6 +20,8 @@ and this actual complete negative log likelihood is globally convex
 in all free weights. Output-only CE and AdamW convergence remain
 unproved; full-stack/FFN preservation is a subsequent obligation.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

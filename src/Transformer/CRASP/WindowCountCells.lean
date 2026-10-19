@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.PreviousPredicates
+public import Transformer.CRASP.PositionalStateCounts
+
+/-!
 # Quotient cells with a finite-window correction
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLCly`.
@@ -7,8 +12,7 @@ profile contributes an integer constant correcting the numerator and
 denominator; their quotient still costs only one counting layer.
 -/
 
-import Transformer.CRASP.PreviousPredicates
-import Transformer.CRASP.PositionalStateCounts
+@[expose] public section
 
 namespace Transformer.CRASP.CountCells
 

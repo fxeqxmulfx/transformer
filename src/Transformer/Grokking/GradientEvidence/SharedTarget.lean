@@ -1,5 +1,7 @@
-import Transformer.Grokking.GradientEvidence.BinaryObjectives
-import Mathlib.Analysis.Real.Sqrt
+module
+
+public import Transformer.Grokking.GradientEvidence.BinaryObjectives
+public import Mathlib.Analysis.Real.Sqrt
 
 /-!
 # Almost parallel full gradients with opposed answer gradients
@@ -19,6 +21,8 @@ The signed energy and dot-product decompositions match the experimental
 reader. Shared supervision can conceal conflict; this is not a theorem
 that a particular EOS token explains every observed transformer gradient.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.GradientEvidence
 

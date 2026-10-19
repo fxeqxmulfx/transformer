@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Kinetic.Defs
+public import Transformer.Landscape.GlobalFlow.Interval
+
+/-!
 # Three causal tokens with a resting pair
 
 ArXiv:2605.09213v1, §1, `eq:gpt-dyn-alibi`, for `N = 3`. The first token
@@ -15,8 +20,7 @@ These flows are used for the counterexample in
 `Section3_AperiodicCovariance`.
 -/
 
-import Transformer.Kinetic.Defs
-import Transformer.Landscape.GlobalFlow.Interval
+@[expose] public section
 
 open Real
 

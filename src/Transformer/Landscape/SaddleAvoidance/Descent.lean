@@ -1,31 +1,35 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Defs
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.InnerProductSpace.Dual
+public import Mathlib.Analysis.SpecificLimits.Basic
+
+/-!
 # Saddle avoidance — gradient descent decreases the function
 
 Let `f` be differentiable on a real inner product space with an `L`-Lipschitz
-gradient.  By the mean value inequality for `f - ⟪∇f(x), ·⟫`, whose
+gradient. By the mean value inequality for `f - ⟪∇f(x), ·⟫`, whose
 derivative `∇f(w) - ∇f(x)` has norm at most `L ‖y - x‖` on the segment
 `[x, y]`, `f y ≤ f x + ⟪∇f(x), y - x⟫ + L ‖y - x‖²`
 (`le_add_inner_add_mul_norm_sq`); the bound on the segment is all it uses
-(`le_add_inner_add_mul_norm_sq_of_segment`).  The gradient step therefore decreases `f`
+(`le_add_inner_add_mul_norm_sq_of_segment`). The gradient step therefore decreases `f`
 by at least `η (1 - η L) ‖∇f(x)‖²` (`le_sub_of_gradientStep`), at every step of an
-orbit (`iterate_succ_le_sub`).  Along an orbit whose steps lower `f` by at least
+orbit (`iterate_succ_le_sub`). Along an orbit whose steps lower `f` by at least
 `η κ ‖∇f‖²`, `κ ≥ 0`, `f` decreases (`antitone_iterate_of_le_sub`): along every
 orbit when `η L ≤ 1` (`antitone_iterate`).
 
 When `f` is invariant under translation by `v`, so is its gradient
 (`gradient_add_eq`), and the orbits of gradient descent commute with the
-translation (`iterate_gradientStep_add`).  A limit of an orbit is a critical
-point (`gradient_eq_zero_of_tendsto`).  The running example of this file and
+translation (`iterate_gradientStep_add`). A limit of an orbit is a critical
+point (`gradient_eq_zero_of_tendsto`). The running example of this file and
 the next ones is `‖x‖² / 2`: its gradient is `x`
 (`gradient_half_mul_norm_sq`), so gradient descent multiplies by `1 - η`
 (`iterate_gradientStep_half_mul_norm_sq`).
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Defs
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.InnerProductSpace.Dual
-import Mathlib.Analysis.SpecificLimits.Basic
+@[expose] public section
 
 open Filter Metric InnerProductSpace
 open scoped Topology NNReal
@@ -38,7 +42,7 @@ local notation "⟪" x ", " y "⟫" => inner ℝ x y
 
 /-- **Descent lemma along a segment.**  If `‖∇f(w) - ∇f(x)‖ ≤ L ‖w - x‖` for
 every `w` on the segment `[x, y]`, then
-`f y ≤ f x + ⟪∇f(x), y - x⟫ + L ‖y - x‖²`.  The usual constant `L/2` needs an
+`f y ≤ f x + ⟪∇f(x), y - x⟫ + L ‖y - x‖²`. The usual constant `L/2` needs an
 integral; the mean value inequality gives `L`. -/
 theorem le_add_inner_add_mul_norm_sq_of_segment {f : E → ℝ} (hf : Differentiable ℝ f) {L : ℝ}
     (hL0 : 0 ≤ L) {x y : E}

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.AnalyticFiberMinimumLifting
+public import Transformer.Landscape.Lojasiewicz.GradientEnergyImage
+
+/-!
 # Analytic selection of gradient minima on finite energy fibers
 
 The squared gradient norm is an analytic objective. Minimum lifting for
@@ -6,8 +11,7 @@ prepared fibers therefore gives gradient-norm minima on all nearby roots
 above a prescribed analytic parameter curve.
 -/
 
-import Transformer.Landscape.Lojasiewicz.AnalyticFiberMinimumLifting
-import Transformer.Landscape.Lojasiewicz.GradientEnergyImage
+@[expose] public section
 
 open Filter Set
 

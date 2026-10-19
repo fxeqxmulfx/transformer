@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_ChainSums
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # An explicit supersolution for the Glauber derivatives
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 1. A perturbation of
@@ -16,8 +21,7 @@ is at most `αt e^{αt/γ} ((a+1)/(b+1))^γ / (a+1)` (`profile_le`). Choosing
 `γ ~ √(αt / log((a+1)/(b+1)))` recovers the source's bound.
 -/
 
-import Transformer.Kinetic.Section3_ChainSums
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open Real
 

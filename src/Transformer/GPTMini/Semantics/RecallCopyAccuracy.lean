@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.RecallRawGate
-import Transformer.GPTMini.Semantics.RecallLatestGap
+module
+
+public import Transformer.GPTMini.Semantics.RecallRawGate
+public import Transformer.GPTMini.Semantics.RecallLatestGap
 
 /-!
 # A finite shared predecessor temperature for any positive copy tolerance
@@ -18,6 +20,8 @@ The genuine pre-FFN residual's compact copy inherits that accuracy.
 At tolerance at most one, every copied table key has nonzero norm;
 the actual positive table gate can therefore preserve its direction.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

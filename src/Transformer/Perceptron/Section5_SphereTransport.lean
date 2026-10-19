@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_SphericalExponential
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Actual Monge geodesic transport in arbitrary dimension
 
 ArXiv:2601.21366v2, §2.2, `T(t)(x)=exp_x(tξ(x))`, and §5.3,
@@ -14,8 +19,7 @@ regularity facts supply the transport maps and bounds used later to
 differentiate the original energy, without assuming a Hessian formula.
 -/
 
-import Transformer.Perceptron.Section5_SphericalExponential
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open Real MeasureTheory Set
 

@@ -1,8 +1,12 @@
-/-
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+
+/-!
 # The number of modes of a Gaussian KDE — pointwise bounds behind the width of the integral over `T'`
 
 The elementary half of the last step of `lem:main-int-phi` on `T'`
-(`Section2_WidthIntegral.lean`).  With `R = ρ e^{-u/2} ≥ 1` and `u = t²`, the
+(`Section2_WidthIntegral.lean`). With `R = ρ e^{-u/2} ≥ 1` and `u = t²`, the
 integrand `e^{-κ R u}(1 + K √R (4 + 6u))` of the proxy Kac–Rice integral is
 bounded by a sum of three Gaussians in `t = √u`:
 
@@ -14,7 +18,7 @@ bounded by a sum of three Gaussians in `t = √u`:
 Source: arXiv:2412.09080v3, `eq:int-phi-b` and the proof of `lem:main-int-phi`.
 -/
 
-import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+@[expose] public section
 
 open Real
 

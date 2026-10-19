@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DenominatorEmbedding
+module
+
+public import Transformer.GPTMini.Semantics.DenominatorEmbedding
 
 /-!
 # Uniform softmax retains count and denominator simultaneously
@@ -15,6 +17,8 @@ Consequently a second internal feature records the denominator of the
 normalized ONE count. A later residual/FFN proof must still show how to
 decode parity and EOS. This module does not assume either desired answer.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

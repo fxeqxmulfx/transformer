@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_ProtectedTransfers
+public import Transformer.Interpolation.Section4_TransversePlanes
+public import Transformer.Interpolation.Section3_BarycenterContraction
+
+/-!
 # Exact protected transfers inside the original positive quadrant
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, and §3.2,
@@ -16,9 +22,7 @@ weak solutions, and the same endpoints for every original weak law.
 The hypotheses have genuine positive, nonpolar, three-dimensional data.
 -/
 
-import Transformer.Interpolation.Section4_ProtectedTransfers
-import Transformer.Interpolation.Section4_TransversePlanes
-import Transformer.Interpolation.Section3_BarycenterContraction
+@[expose] public section
 
 open Real MeasureTheory Set
 

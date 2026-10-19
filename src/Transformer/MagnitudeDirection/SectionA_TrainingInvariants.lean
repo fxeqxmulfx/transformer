@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.SectionA_TrainingModels
+
+/-!
 # Representation invariants throughout corrected training
 
 User-requested extension of arXiv:2606.25971v2, Appendix A, Algorithm 2.
@@ -8,7 +12,7 @@ effective value, and the recovered direction remains on its sphere.
 The limit weight is allowed to be zero; no bounded-raw-gain premise is used.
 -/
 
-import Transformer.MagnitudeDirection.SectionA_TrainingModels
+@[expose] public section
 
 noncomputable section
 

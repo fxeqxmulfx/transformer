@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedOrder
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedOrder
 
 /-!
 # Persistent actual task decisions without parameter convergence
@@ -22,6 +24,8 @@ from appendix C's coupled norm/GD and unbalanced seeds, and from the
 preserved learned nonzero-beta GPTMini. Loss convergence, numerical
 classification and a measured transition time remain separate.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

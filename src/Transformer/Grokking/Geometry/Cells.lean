@@ -1,4 +1,6 @@
-import Transformer.Grokking.Geometry.Basic
+module
+
+public import Transformer.Grokking.Geometry.Basic
 
 /-!
 # Masked logit energies across several cells and classes
@@ -20,6 +22,8 @@ The input logits may already have their row shifts and global class bias
 removed, as in the observer. No such centering is needed for this energy
 identity. Correct predictions require additional information about targets.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Geometry
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_TransportCones
+public import Transformer.Interpolation.Section1_SoftMinimum
+
+/-!
 # Finite smooth transport comparisons for arbitrary original weak laws
 
 Auxiliary to arXiv:2411.04551v3, §1, the Lipschitz well-posedness
@@ -16,8 +21,7 @@ regularized-distance error and the finite-minimum approximation error.
 These estimates allow the finite centers to approach an arbitrary law.
 -/
 
-import Transformer.Interpolation.Section1_TransportCones
-import Transformer.Interpolation.Section1_SoftMinimum
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal BigOperators

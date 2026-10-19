@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Modes.Section2_IntPhiB
+public import Transformer.Modes.Section2_WidthTerms
+
+/-!
 # The number of modes of a Gaussian KDE — the full-window shift
 
 For arXiv:2412.09080v3, §2.3, `lem:main-int-phi`, the shift satisfies
@@ -7,8 +12,7 @@ The majorant `e^{-κ R t²}(1 + K √R)` integrates to a constant times the
 window length plus a constant independent of `n β^{-3/2}`.
 -/
 
-import Transformer.Modes.Section2_IntPhiB
-import Transformer.Modes.Section2_WidthTerms
+@[expose] public section
 
 open Real Filter Asymptotics MeasureTheory
 open scoped Topology ENNReal
@@ -16,7 +20,7 @@ open scoped Topology ENNReal
 namespace Transformer.Modes
 
 /-- The polynomial in the shift bound is negligible against the bandwidth,
-uniformly on `T`.  Source: arXiv:2412.09080v3, §2.3, `eq:T`, `lem:phi-t`.
+uniformly on `T`. Source: arXiv:2412.09080v3, §2.3, `eq:T`, `lem:phi-t`.
 -/
 theorem eventually_window_polynomial_le {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ}
     (hreg : IsRegime c N B) {ω : ℝ → ℝ} (hω : IsSlowGrowth ω) :
@@ -139,7 +143,7 @@ example : (0 : ℝ) < 1 ∧ (0 : ℝ) ≤ 0 ∧ (0 : ℝ) < 1 :=
   ⟨one_pos, le_rfl, one_pos⟩
 
 /-- The majorant integrates to a constant times interval length plus a
-constant independent of `ρ`.  Source: arXiv:2412.09080v3, §2.3,
+constant independent of `ρ`. Source: arXiv:2412.09080v3, §2.3,
 proof of `lem:main-int-phi`. -/
 theorem lintegral_shift_width_le {κ K ρ a : ℝ} (hκ : 0 < κ) (hK : 0 ≤ K)
     (hρ : 0 < ρ) (ha : 0 ≤ a) :

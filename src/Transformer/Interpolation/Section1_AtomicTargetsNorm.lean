@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_PhaseRealizationCosts
+public import Transformer.Interpolation.Section1_AtomicTargetsExistence
+public import Transformer.Interpolation.Section1_InverseQuadrantLipschitz
+
+/-!
 # The norm estimate for original atomic-target interpolation
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, with the norm estimate
@@ -19,9 +25,7 @@ and the contractions with the square root of their clock. For
 There are at most `14N + 5 ≤ 7dN` pieces.
 -/
 
-import Transformer.Interpolation.Section1_PhaseRealizationCosts
-import Transformer.Interpolation.Section1_AtomicTargetsExistence
-import Transformer.Interpolation.Section1_InverseQuadrantLipschitz
+@[expose] public section
 
 open Real MeasureTheory Set
 

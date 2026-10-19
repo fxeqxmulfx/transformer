@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Causal.Interaction
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+
+/-!
 # Quadratic bounds for the actual angular interaction energy
 
 ArXiv:2410.06833v1, §3.2, `lem: PL.borjan` and the interaction kernel
@@ -8,8 +14,7 @@ A scalar mean-value argument converts this into a quadratic energy bound.
 These bounds apply to the actual exponential interaction, globally on ℝ.
 -/
 
-import Transformer.Causal.Interaction
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open scoped NNReal
 open Set Real

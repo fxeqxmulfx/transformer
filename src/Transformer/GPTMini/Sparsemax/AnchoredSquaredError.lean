@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Sparsemax.TrainableAnchors
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.Calculus.LocalExtr.Basic
+module
+
+public import Transformer.GPTMini.Sparsemax.TrainableAnchors
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.Calculus.LocalExtr.Basic
 
 /-!
 # Wrong anchored outputs have a useful trainable direction
@@ -17,6 +19,8 @@ space. The target is an output vector, not an attention position. It does
 not supply a uniform gradient lower bound, prove the target attainable by
 fixed values and bounded scores, or imply whole-model convergence.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallReadoutCoordinates
+module
+
+public import Transformer.GPTMini.Semantics.RecallReadoutCoordinates
 
 /-!
 # Strict actual recall tied readout across the entire vocabulary
@@ -18,6 +20,8 @@ input, norm bound or normalization factor is a premise. Raw layout
 and last-write predicates still need discharge from the full Basis
 parser, and the two blocks still need top-level model/decoder coupling.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

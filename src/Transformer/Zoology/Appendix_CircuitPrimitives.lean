@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CircuitDefs
+public import Transformer.Zoology.Appendix_Shift
+
+/-!
 # Elementary arithmetic gates as Coyote layers
 
 Arora et al., arXiv:2312.04927v1, §4 Theorem `thm: equiv`, and Appendix
@@ -8,8 +13,7 @@ constant gate in its first output feature. They do not imply the paper's
 uniform depth and parameter bounds for arbitrary circuits.
 -/
 
-import Transformer.Zoology.Appendix_CircuitDefs
-import Transformer.Zoology.Appendix_Shift
+@[expose] public section
 
 namespace Transformer.Zoology
 

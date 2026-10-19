@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section10_ComplementaryProjection
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Leading normalization of the operator exponential
 
 ArXiv:2305.05465v6, §5, `d:goodmulti`, and §10, the decomposition of
@@ -13,8 +18,7 @@ act after this decomposition; no commutation with either projection is
 assumed.
 -/
 
-import Transformer.Clusters.Section10_ComplementaryProjection
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open scoped BigOperators
 open Real

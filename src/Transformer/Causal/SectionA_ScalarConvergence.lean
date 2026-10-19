@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Causal.Section4_ScalarLimits
+public import Mathlib.Topology.Algebra.Module.Cardinality
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
+
+/-!
 # Scalar convergence from eventual signed crossings
 
 ArXiv:2411.04990v2, Appendix A and §5, scalar convergence
@@ -23,9 +29,7 @@ For the eventual equilibrium step, we also prove that an
 eventually bounded curve cannot have a nonzero derivative limit.
 -/
 
-import Transformer.Causal.Section4_ScalarLimits
-import Mathlib.Topology.Algebra.Module.Cardinality
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
+@[expose] public section
 
 open Real Set Filter
 

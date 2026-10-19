@@ -1,4 +1,8 @@
-/-
+module
+
+public import Mathlib
+
+/-!
 # A trainable content metric for convex associative recall
 
 This is a new extension, not a theorem or model claimed by either paper.
@@ -8,7 +12,7 @@ The task is arXiv:2312.04927v1, §3 and Appendix `app:synthetic`.
 Token codes are fixed binary encodings; all metric coordinates are trainable.
 -/
 
-import Mathlib
+@[expose] public section
 
 open scoped BigOperators
 

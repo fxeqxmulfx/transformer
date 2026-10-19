@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+
+/-!
 # The scalar collapse ODE
 
   `u̇ = u (1 - u) e^{β (u - 1)}`
@@ -9,7 +14,7 @@ is the Cauchy problem `lem: eminem` of
   *Dynamic metastability in the self-attention model*, arXiv:2410.06833v1, §2
 
 is about: `u` is the smallest inner product inside a cap, and the lemma
-bounds the time `1 - u` needs to fall below `e^{-cβ}`.  This file proves that
+bounds the time `1 - u` needs to fall below `e^{-cβ}`. This file proves that
 bound; `Metastability.eminem` is its `sInf` reading.
 
 The proof takes the source's bound apart at `s = 1/β`, where `s = 1 - u`,
@@ -18,9 +23,9 @@ antiderivative — by two auxiliary functions whose derivative is bounded by a
 constant:
 
 * `g(t) = e^{β(1-u(t))} + u(0) t` has `g' = u(0) - β u (1-u) ≤ 0` as long as
-  `s ≥ 1/β`, the two exponentials cancelling exactly.  If `s` stayed above
+  `s ≥ 1/β`, the two exponentials cancelling exactly. If `s` stayed above
   `1/β` on `[0, B₁]`, `B₁ = e^{β s₀} / u₀`, then `g B₁ ≤ g 0` would read
-  `e^{β(1-u(B₁))} ≤ 0`.  So `s` drops below `1/β` at some `t⋆ ≤ B₁`.
+  `e^{β(1-u(B₁))} ≤ 0`. So `s` drops below `1/β` at some `t⋆ ≤ B₁`.
 * `h(t) = log (1 - u(t)) + ((β-1)/(βe)) t` has `h' ≤ 0` once `s ≤ 1/β`, and
   `((β-1)/(βe)) · B₂ = cβ` exactly for `B₂ = β² c e/(β-1)`, so
   `log s(t⋆ + B₂) ≤ log s(t⋆) - cβ ≤ -cβ`.
@@ -31,11 +36,10 @@ match with nothing to spare.
 Everything runs by contradiction from "`1 - u > e^{-cβ}` on `[0, B]`", which
 is what makes the qualitative half free: it gives `u < 1` there outright,
 `0 < u` follows from one crossing argument, and monotonicity of `u` from the
-sign of its derivative.  No uniqueness theorem for the ODE is used.
+sign of its derivative. No uniqueness theorem for the ODE is used.
 -/
 
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+@[expose] public section
 
 open Real Set
 

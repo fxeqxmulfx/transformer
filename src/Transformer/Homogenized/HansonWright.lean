@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_QuadraticChernoff
+public import Mathlib.Analysis.CStarAlgebra.Matrix
+
+/-!
 # Homogenized Transformers — the Hanson–Wright inequality
 
 Formalization of `lem:Hanson_wright` of arXiv:2604.01978v1, *Homogenized
@@ -13,11 +18,11 @@ The source applies it to `X = Ṽu`, `B = Proj_{x_i}`, with `‖Proj‖_op = 1` 
 **What the source says and what is carried here.**
 
 * `M = max_i ‖X_i‖_{ψ₂}` is the Orlicz `ψ₂` norm of the coordinates, which
-  Mathlib does not have.  The hypothesis is written with the variance proxy of
+  Mathlib does not have. The hypothesis is written with the variance proxy of
   `ProbabilityTheory.HasSubgaussianMGF` instead — `mgf X_i(t) ≤ exp(M² t²/2)`,
   the parameter being `M2 = M²` — which is the same notion of subgaussianity up
   to a universal factor, and the universal factor is absorbed by the universal
-  constant `c` the conclusion already carries.  The exponent's `M⁴‖B‖_F²` and
+  constant `c` the conclusion already carries. The exponent's `M⁴‖B‖_F²` and
   `M²‖B‖_op` are therefore `M2² ‖B‖_F²` and `M2 ‖B‖_op`.
 
 * "mean-zero" is not a separate hypothesis: `HasSubgaussianMGF X c` bounds the
@@ -26,7 +31,7 @@ The source applies it to `X = Ṽu`, `B = Proj_{x_i}`, with `‖Proj‖_op = 1` 
 
 * `‖B‖_F` is `√(Σ_{ij} B_{ij}²)`, so `‖B‖_F² = Σ_{ij} B_{ij}²`, and `‖B‖_op` is
   the `ℓ²` operator norm, i.e. the norm of `B` as a continuous linear map of
-  `EuclideanSpace ℝ (Fin n)`.  Neither is replaced by a dominating constant:
+  `EuclideanSpace ℝ (Fin n)`. Neither is replaced by a dominating constant:
   a dominating `opB` would make the bound larger, hence the statement weaker.
 
 The proof combines the actual centered diagonal MGF with the off-diagonal
@@ -37,8 +42,7 @@ rate, including zero variance and zero matrix norm.
 Source: arXiv:2604.01978v1, `lem:Hanson_wright`; `[vershynin2018high, Thm 6.2.1]`.
 -/
 
-import Transformer.Homogenized.Section6_QuadraticChernoff
-import Mathlib.Analysis.CStarAlgebra.Matrix
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open Real MeasureTheory ProbabilityTheory

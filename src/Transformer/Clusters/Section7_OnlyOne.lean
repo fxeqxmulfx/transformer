@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_OnlyOneSpread
+public import Mathlib.Data.Set.Card
+
+/-!
 # The emergence of clusters in self-attention dynamics — `l:onlyone`
 
 §7 of arXiv:2305.05465v6: at most one token of a solution of `e:Idnonresca`
@@ -19,8 +24,7 @@ which is bounded or runs off to `±∞` (`unbounded_tendsto_atTop_or_atBot`):
 Source: arXiv:2305.05465v6, `l:onlyone` and its proof.
 -/
 
-import Transformer.Clusters.Section7_OnlyOneSpread
-import Mathlib.Data.Set.Card
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.IncidentMemoryParameters
-import Transformer.GPTMini.Sparsemax.LocalMemorySupport
+module
+
+public import Transformer.GPTMini.Sparsemax.IncidentMemoryParameters
+public import Transformer.GPTMini.Sparsemax.LocalMemorySupport
 
 /-!
 # Learned query/key norms and values under separate incident budgets
@@ -15,6 +17,8 @@ permits distant edge weights simultaneously without weakening the PSD,
 normalization or strict diagonal-dominance guarantees. Possible path
 connections and same-family orthogonality are still fixed restrictions.
 -/
+
+@[expose] public section
 
 noncomputable section
 

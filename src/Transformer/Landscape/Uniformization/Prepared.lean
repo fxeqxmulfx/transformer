@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.Snoc
+public import Transformer.Landscape.Lojasiewicz.PolynomialTranslation
+
+/-!
 # Local uniformization: prepared polynomials on `ℝⁿ`
 
 Monic polynomials `y^d + Σ_i a_i(x) y^i` with coefficients on `ℝⁿ`. The
@@ -9,8 +14,7 @@ less than `d` when the polynomial is centered and not `y^d`. Auxiliary for local
 uniformization for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Uniformization.Snoc
-import Transformer.Landscape.Lojasiewicz.PolynomialTranslation
+@[expose] public section
 
 open Filter Set Polynomial
 open scoped BigOperators Topology

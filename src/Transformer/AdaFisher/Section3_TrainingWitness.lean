@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_TrainingMinimum
+public import Transformer.AdaFisher.SectionA_Factors
+
+/-!
 # AdaFisher — a complete nonconstant-factor convergence witness
 
 arXiv:2405.16397v3, Algorithm 1, §3.4 and Appendix A.3.
@@ -8,8 +13,7 @@ from current weights and true gradients. This is a concrete factor-input
 witness, not an identification of every objective's Hessian with Fisher.
 -/
 
-import Transformer.AdaFisher.Section3_TrainingMinimum
-import Transformer.AdaFisher.SectionA_Factors
+@[expose] public section
 
 open scoped Topology
 open Filter

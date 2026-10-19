@@ -1,7 +1,9 @@
-import Transformer.Grokking.NaiveLoss.Section4_LogitScaling
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Calculus.Deriv.Comp
+module
+
+public import Transformer.Grokking.NaiveLoss.Section4_LogitScaling
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.Calculus.Deriv.Comp
 
 /-!
 # Actual softmax objectives with a shared supervised target
@@ -22,6 +24,8 @@ All partial derivatives are proved. Initial loss is independent of the
 shared feature scale, but its gradient need not be. This model does not
 assert that the full transformer has these two independent coordinates.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.GradientEvidence
 

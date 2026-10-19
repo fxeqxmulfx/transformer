@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perspective.Section2_GradientFlow
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # §3.3 — the particle version of the Wasserstein gradient flow
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -12,21 +19,18 @@ At an empirical measure `μ(t) = n⁻¹ Σ_i δ_{x_i(t)}` the interaction energy
 and `USA` is its gradient *ascent* flow for the round metric on
 `(𝕊^{d-1})^n`, sped up by `n`:
 
-  `Ẋ(t) = n ∇_X 𝖤_β(X(t))`.                                  (`e:dynonX`)
+  `Ẋ(t) = n ∇_X 𝖤_β(X(t))`. (`e:dynonX`)
 
 The Riemannian gradient on `(𝕊^{d-1})^n` is not carried by this development,
 so — as in `Perspective.SAIsGradientFlow` — the identity is stated through
 directional derivatives along curves, which is what `∇` abbreviates: the
 differential of `𝖤_β` at `X(t)` in a tangent direction `b` is `n⁻¹ ⟨Ẋ(t), b⟩`.
 Against `SAIsGradientFlow` the only difference is the metric: the round one
-here, `e:scalarproduct` there.  That is exactly the difference between `USA`
+here, `e:scalarproduct` there. That is exactly the difference between `USA`
 and `SA`.
 -/
 
-import Transformer.Perspective.Section2_GradientFlow
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -46,7 +50,7 @@ noncomputable def empiricalEnergy (β : ℝ) (X : SphereTuple d n) : ℝ :=
   ((n : ℝ) ^ 2)⁻¹ * particleEnergy d n β (ContinuousLinearMap.id ℝ (EucSpace d)) X
 
 /-- `HasDerivAt.sum` for a sum written as a function of the point rather than
-as a sum of functions.  Mathlib states the rule for `∑ i ∈ u, A i`; every use
+as a sum of functions. Mathlib states the rule for `∑ i ∈ u, A i`; every use
 below has the `fun y => ∑ i ∈ u, A i y` shape instead.
 
 Source: Mathlib, `HasDerivAt.sum`. -/
@@ -73,7 +77,7 @@ For every curve `Y` through `X(t)` with velocity `b`,
   `d/ds 𝖤_β(Y(s))|_{s=0} = n⁻¹ Σ_i ⟨ẋ_i(t), b_i⟩`,
 
 which is `Ẋ(t) = n ∇_X 𝖤_β(X(t))` read against the round metric
-`⟨a, b⟩ = Σ_i ⟨a_i, b_i⟩`.  Equivalently, per particle,
+`⟨a, b⟩ = Σ_i ⟨a_i, b_i⟩`. Equivalently, per particle,
 `∂_i 𝖤_β(X(t)) = n⁻¹ ẋ_i(t)`.
 
 Taking `b = Ẋ(t)` gives `d/dt 𝖤_β(X(t)) = n⁻¹ Σ_i ‖ẋ_i(t)‖² ≥ 0`, the

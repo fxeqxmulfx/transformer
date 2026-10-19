@@ -1,4 +1,14 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Normalization.Basic
+public import Transformer.Normalization.Velocities
+public import Transformer.Normalization.ClusterCounterexample
+public import Transformer.Normalization.ClusterWeights
+public import Transformer.Normalization.ClusterSpeedBounds
+public import Transformer.Normalization.ClusterVariance
+
+/-!
 # Normalization — the speed of cluster collapse (§4.3 of 2510.22026v2)
 
 * `Theorem thm: preln-slow (ii)` — from a local-cone initialization the
@@ -9,11 +19,11 @@
 **What the source says and what is changed here.**  The cone is
 `⟨θ_j(0), θ_k(0)⟩ ≥ 1 - δ` with `δ < 1/(100 n² β²)`, which for small `β` puts
 no constraint at all: at `β = 1/100`, `n = 2` it allows `δ = 5/2`, and the
-antipodal pair `u, -u` is then an admissible start.  It is stationary — every
+antipodal pair `u, -u` is then an admissible start. It is stationary — every
 attention vector is parallel to its token — so `Var ≡ 1` and `Var' ≡ 0`, and no
-`-Θ(Var)` rate holds (`not_clustering_rate`).  The proof in the supplement uses
+`-Θ(Var)` rate holds (`not_clustering_rate`). The proof in the supplement uses
 `2nδ Var ≥ 2n Var²` and `-2 + 2nδ + √2/(3√n) < 0`, which need `δ` small
-independently of `β`; `δ < 1/(100 n²)` is added.  The nGPT row reads
+independently of `β`; `δ < 1/(100 n²)` is added. The nGPT row reads
 `-Θ(Var/α_t)`, but Table 2 has `s_j = α_t⁻¹ ‖A_j‖`, the proof's own bounds give
 `s_j ≍ α_t⁻¹` once the table is used, and the Remark after it gives
 `Var = e^{-2∫α}`: the rate is `-Θ(α_t Var)`, and `varScale` reads it so.
@@ -22,13 +32,7 @@ Source: arXiv:2510.22026v2, §4.3, `thm: preln-slow` (ii); supplement, proof of
 Theorem 4.3; Table 2.
 -/
 
-import Transformer.Basic
-import Transformer.Normalization.Basic
-import Transformer.Normalization.Velocities
-import Transformer.Normalization.ClusterCounterexample
-import Transformer.Normalization.ClusterWeights
-import Transformer.Normalization.ClusterSpeedBounds
-import Transformer.Normalization.ClusterVariance
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -50,11 +54,11 @@ scale of `varScale`.
 constants `0 < c ≤ C`, fixed with the parameters, sandwich the derivative from
 some time on. That time depends on the solution: the invariant initial cap
 gives, for Pre-LN, `s_j(t) = r_j(t) ∈ [r_j(0) + (1 - 4δ)t, r_j(0) + t]`, which is `≍ t` only once
-`t ≳ r_j(0)`.  The radii start positive, being norms, and `α_t > 0`.
+`t ≳ r_j(0)`. The radii start positive, being norms, and `α_t > 0`.
 
 What is changed: `δ < 1/(100 n²)` is added and the nGPT scale is `α_t⁻¹` (see
 the module docstring); without the first the statement is false
-(`not_clustering_rate`).  Part (i) is `radialDerivative_pre_ge_of_localCone`.
+(`not_clustering_rate`). Part (i) is `radialDerivative_pre_ge_of_localCone`.
 
 The proof establishes the uniform constants `c = 1/9` and `C = 4`.
 

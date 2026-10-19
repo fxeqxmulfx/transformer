@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+
+/-!
 # Joining the integrated equations at one control switch
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §3.1,
@@ -10,8 +15,7 @@ The argument uses interval integrability and the actual primitive
 identities, including for negative observation times.
 -/
 
-import Transformer.Interpolation.Basic
-import Mathlib.MeasureTheory.Integral.Bochner.Set
+@[expose] public section
 
 open Real MeasureTheory
 
@@ -77,9 +81,9 @@ theorem intervalIntegrable_concatenate (S : ℝ) (f g : ℝ → E) (a b : ℝ)
   have hg' : IntervalIntegrable (fun x => g (x - S)) volume a b := by
     simpa only [sub_add_cancel] using hg.comp_sub_right S
   constructor
-  · exact Integrable.piecewise (s := Set.Iio S) measurableSet_Iio
+  · exact Integrable.piecewise (s := Set.Iio S) measurableSet_Iio.nullMeasurableSet
       hf.1.integrableOn hg'.1.integrableOn
-  · exact Integrable.piecewise (s := Set.Iio S) measurableSet_Iio
+  · exact Integrable.piecewise (s := Set.Iio S) measurableSet_Iio.nullMeasurableSet
       hf.2.integrableOn hg'.2.integrableOn
 
 variable [NormedSpace ℝ E]

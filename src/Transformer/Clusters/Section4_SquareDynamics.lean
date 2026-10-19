@@ -1,5 +1,7 @@
-import Transformer.Clusters.Section4_SquareAmplitude
-import Transformer.Clusters.Section4_SquareGeometry
+module
+
+public import Transformer.Clusters.Section4_SquareAmplitude
+public import Transformer.Clusters.Section4_SquareGeometry
 
 /-!
 # The square is an actual attention trajectory
@@ -22,6 +24,8 @@ exponential attention weights, rather than an assumed scalar model.
 This supplies the dynamical part of the counterexample to the
 codimension conjecture's proposed bound of three subspaces.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

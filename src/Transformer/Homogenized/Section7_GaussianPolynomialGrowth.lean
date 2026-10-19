@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianPolynomialStein
+public import Transformer.Homogenized.Section7_GaussianVectorStein
+
+/-!
 # Polynomial bounds on the original Gaussian variables
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and the justification
@@ -16,8 +21,7 @@ to the actual Gaussian random variable, retaining its original variance.
 No integration-by-parts or moment identity is assumed in these transfers.
 -/
 
-import Transformer.Homogenized.Section7_GaussianPolynomialStein
-import Transformer.Homogenized.Section7_GaussianVectorStein
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped NNReal

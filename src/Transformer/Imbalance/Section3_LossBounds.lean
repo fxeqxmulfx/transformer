@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_MarginInverse
+public import Mathlib.Analysis.Asymptotics.Theta
+
+/-!
 # Finite-time loss bounds for gradient flow
 
 arXiv:2402.19449v2, Appendix I, Lemma 6. Elementary bounds on the
@@ -6,8 +11,7 @@ integrated margin give Theta(1/(πt)) without Lambert-W asymptotics.
 The source's line `a=(c-1)b` has a missing minus sign: `a=-(c-1)b`.
 -/
 
-import Transformer.Imbalance.Section3_MarginInverse
-import Mathlib.Analysis.Asymptotics.Theta
+@[expose] public section
 
 open Filter Asymptotics
 open scoped Topology

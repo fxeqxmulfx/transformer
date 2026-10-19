@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_BranchIdentity
+public import Transformer.Perceptron.Section6_SignedQuadratic
+public import Transformer.Perceptron.Section6_NormalizedForce
+public import Transformer.Perceptron.TransformMap
+public import Transformer.Perceptron.Atomicity
+
+/-!
 # Finite normalized stationary support on the circle
 
 ArXiv:2601.21366v2, §6, `prop: unified.log`, part (b), and
@@ -22,11 +30,7 @@ interpretation of that field. Weak activation patterns include zero
 neurons and all hyperplane boundaries without additional assumptions.
 -/
 
-import Transformer.Perceptron.Section6_BranchIdentity
-import Transformer.Perceptron.Section6_SignedQuadratic
-import Transformer.Perceptron.Section6_NormalizedForce
-import Transformer.Perceptron.TransformMap
-import Transformer.Perceptron.Atomicity
+@[expose] public section
 
 open Real MeasureTheory Set
 

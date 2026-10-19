@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_QuadraticCoefficients
+public import Transformer.Perceptron.Section5_QuadraticPolynomials
+
+/-!
 # Actual quadratic density from the original quadratic transform
 
 ArXiv:2601.21366v2, §5.1, `lem: quadpol` (i), degree two,
@@ -19,8 +24,7 @@ stationary-measure example, with the original probability and every
 original quadratic test vector and coefficient retained.
 -/
 
-import Transformer.Perceptron.Section5_QuadraticCoefficients
-import Transformer.Perceptron.Section5_QuadraticPolynomials
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators ENNReal

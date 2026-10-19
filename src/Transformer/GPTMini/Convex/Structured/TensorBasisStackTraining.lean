@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.TensorBasisModel
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorBasisModel
 
 /-!
 # Complete raw Basis training through the actual configured tensor stack
@@ -19,6 +21,8 @@ of data count. Output-only CE, a learned FFN and independently trained
 deep matrices are outside scope; ordinary AdamW success and equal-FLOP
 measurement remain experimental, and label generation must be charged.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.ValueSpan
-import Mathlib.Analysis.Calculus.Deriv.Pow
+module
+
+public import Transformer.GPTMini.Sparsemax.ValueSpan
+public import Mathlib.Analysis.Calculus.Deriv.Pow
 
 /-!
 # Pure sparsemax with separated active values and an ordinary output loss
@@ -18,6 +20,8 @@ error while leaving the third weight exactly zero. The values are changed
 in this example; no rule enforcing their separation in every trainable
 head, or global convergence of the model, is claimed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

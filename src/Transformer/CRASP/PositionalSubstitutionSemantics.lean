@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.PositionalSubstitution
+public import Transformer.CRASP.TransformerStates
+
+/-!
 # Semantics of replacing finite-state letters by positional predicates
 
 arXiv:2506.16055v3, Appendix F, the finite-function adaptations of
@@ -6,8 +11,7 @@ arXiv:2506.16055v3, Appendix F, the finite-function adaptations of
 per ordinary token; the BOS contribution remains a separate constant.
 -/
 
-import Transformer.CRASP.PositionalSubstitution
-import Transformer.CRASP.TransformerStates
+@[expose] public section
 
 namespace Transformer.CRASP
 

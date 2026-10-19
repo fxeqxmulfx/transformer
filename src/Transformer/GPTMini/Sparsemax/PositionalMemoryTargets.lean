@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.PrefixFeatureCodes
+module
+
+public import Transformer.GPTMini.Sparsemax.PrefixFeatureCodes
 
 /-!
 # Arbitrary three targets from six shared position/token memory slots
@@ -24,6 +26,8 @@ Position-wise features do not represent every nonlinear causal task; complete
 prefix keys provide that separate, exponentially larger construction. No
 downstream loss, FFN or empirical language-model result is selected here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.AffineValueFeasibility
-import Transformer.GPTMini.Sparsemax.PeriodicEnergyTopology
+module
+
+public import Transformer.GPTMini.Sparsemax.AffineValueFeasibility
+public import Transformer.GPTMini.Sparsemax.PeriodicEnergyTopology
 
 /-!
 # Constant-size joint training of generated Q/K and common values
@@ -17,6 +19,8 @@ it is an explicit architectural change. The generated response family is
 affine in normalized position. Prototype records and categorical encoding
 remain external costs. General arbitrary answer fitting is not asserted.
 -/
+
+@[expose] public section
 
 noncomputable section
 

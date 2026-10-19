@@ -1,4 +1,11 @@
-/-
+module
+
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Tactic
+
+/-!
 # Independent block masks
 
 Formalization of arXiv:2602.15322v1, Section 2, eq:rsu_def, and Appendix A.1.
@@ -7,10 +14,7 @@ product Bernoulli law. The law is constructed, not postulated through moment
 identities. It covers p=1; probability statements require 0<=p<=1.
 -/
 
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Tactic
+@[expose] public section
 
 open scoped BigOperators
 

@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_GeometricDerivativeBounds
-import Transformer.Modes.Section3_CubicScaledDerivativeBounds
+module
+
+public import Transformer.Modes.Section3_GeometricDerivativeBounds
+public import Transformer.Modes.Section3_CubicScaledDerivativeBounds
 
 /-!
 # Gaussian decay of the actual normalized geometric factors
@@ -17,6 +19,8 @@ bound uses `1/8` where the source's display uses `1/4`; the weaker
 decay still has every required polynomial moment integrable.
 Only a finite third moment and standardization are used here.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_CircleGeometry
+public import Transformer.Perceptron.CircleDeriv
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # A uniform Lipschitz bound for the actual angular potential force
 
 ArXiv:2601.21366v2, §5.4, `eq:T-field-bound`. The source bounds
@@ -18,9 +24,7 @@ The geometric estimates use the actual Euclidean circle chart and
 unit angular velocity, and the force identity uses `φ'=2σ`.
 -/
 
-import Transformer.Perceptron.Section5_CircleGeometry
-import Transformer.Perceptron.CircleDeriv
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open scoped BigOperators
 open Real

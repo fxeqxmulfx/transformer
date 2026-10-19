@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.MvGenerator
+public import Mathlib.MeasureTheory.Measure.GiryMonad
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+
+/-!
 # Homogenized Transformers — the mean-field limit with common noise
 
 Formalization of `def:weak_spde` and `def:nonlinear_SDE_common` of
@@ -10,22 +16,20 @@ characterization `eq:non_linear_SDE_common`.
 **What the source writes, and what is written here.**  Both definitions are
 stated in the source through the cylindrical Wiener process `W` on `L²(ρ*)`:
 the SPDE carries `∫_0^t∫_Θ ⟨∇φ·G_{μ(s)}(·,θ), μ(s)⟩ W(ds,dθ)` and the SDE
-carries `∫_Θ G_{μ(t)}(x(t),θ) W(dθ,dt)`.  Mathlib has no stochastic integral,
-so neither display can be transcribed.  Each is written instead as the
+carries `∫_Θ G_{μ(t)}(x(t),θ) W(dθ,dt)`. Mathlib has no stochastic integral,
+so neither display can be transcribed. Each is written instead as the
 martingale problem it is equivalent to: the compensated process is a
 martingale, and its square minus `∫_0^t∫_Θ (…)² ρ*(dθ) ds` — the quadratic
 variation that a cylindrical noise on `L²(ρ*)` produces — is a martingale too.
 What those two conditions do not record, and what the source's displays do, is
 *which* Wiener process drives the equation, and so which filtration
-`𝒢 = (ℱ_t^W)` the conditional law `μ(t)` is taken given.  The formal `𝒢` is
+`𝒢 = (ℱ_t^W)` the conditional law `μ(t)` is taken given. The formal `𝒢` is
 any filtration below `ℱ`, and the uniqueness that `thm:PoC_wellposedness`
 asserts fails for it even in law: a `𝒢` that learns `x_0` gives a second
 solution (`Section4_RevealingFiltration`, `Section4_WellPosedRefutation`).
 -/
 
-import Transformer.Homogenized.MvGenerator
-import Mathlib.MeasureTheory.Measure.GiryMonad
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -103,10 +107,10 @@ W(dθ,dt)`.
 
 **What the source says and what is written here.**  The last display is the
 martingale problem for the generator `𝖫_{μ(t)}`, for the reason given in the
-module docstring.  The source's `x_0` is `ℱ_0`-measurable, independent of `W`,
+module docstring. The source's `x_0` is `ℱ_0`-measurable, independent of `W`,
 with law `μ_0`; independence of `W` is what makes `Law(x_0 | ℱ_0^W) = μ_0`
 deterministic, and it is that conclusion — `initLaw` — that is carried, since
-`W` itself is not available to be independent of.  Independence is thereby
+`W` itself is not available to be independent of. Independence is thereby
 kept at time `0` only: a later `𝒢_t` may learn `x_0` (`isMcKeanVlasovSolution_reveal`).
 
 Source: arXiv:2604.01978v1, `def:nonlinear_SDE_common`, `eq:non_linear_SDE_common`. -/
@@ -146,7 +150,7 @@ structure IsMcKeanVlasovSolution {d : ℕ} (β T : ℝ) (ρ : Measure (HeadParam
 
 Under `ρ* = δ_0` all the fields vanish, and a token sitting still at a unit
 vector, with `μ(t) = δ_x`, solves both `def:nonlinear_SDE_common` and
-`def:weak_spde`: every compensated process is the constant `0`.  This is the
+`def:weak_spde`: every compensated process is the constant `0`. This is the
 witness that neither definition is contradictory. -/
 
 theorem isWeakSpdeSolution_dirac_zero {d : ℕ} (β T : ℝ) {Ω : Type*} {m : MeasurableSpace Ω}

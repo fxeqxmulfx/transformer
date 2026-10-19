@@ -1,5 +1,7 @@
-import Transformer.Homogenized.Section7_BoundedContinuousMartingaleLimit
-import Mathlib.MeasureTheory.Integral.Lebesgue.Markov
+module
+
+public import Transformer.Homogenized.Section7_BoundedContinuousMartingaleLimit
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Markov
 
 /-!
 # The logistic bracket budget forces absorbing limits
@@ -21,6 +23,8 @@ to tend to zero; the corrected direction is divergence to infinity.
 The proof here establishes that divergence contradiction by ordinary
 interval integrals and requires no assumed Brownian time-change result.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology ENNReal

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.PairedRecallCodes
+module
+
+public import Transformer.GPTMini.Sparsemax.PairedRecallCodes
 
 /-!
 # Unit score gaps from compact bounded integer key geometry
@@ -14,6 +16,8 @@ and common squared norm thirty. Real physical scores retain all these
 bounds. This supplies a width-eight contextual-head capacity witness;
 the numerical optimizer is not required or proved to discover it.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Sparsemax
 

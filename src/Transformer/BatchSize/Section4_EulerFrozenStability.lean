@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerNormBounds
+
+/-!
 # Stability when Euler coefficients are frozen at a lagged state
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The perturbation estimate compares a fine update with a coarse update
 whose coefficients remain frozen across a refinement interval.
 -/
 
-import Transformer.BatchSize.Section4_EulerNormBounds
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal BigOperators

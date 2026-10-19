@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.NewtonPolynomialScaling
+public import Transformer.Landscape.Lojasiewicz.PositiveRamification
+public import Transformer.Landscape.Lojasiewicz.PolynomialCentering
+
+/-!
 # Newton normalization and preparation decrease the polynomial degree
 
 Positive-side real root accumulation survives Newton scaling. For a centered
@@ -6,9 +12,7 @@ normalized polynomial, preparation at any central root has strictly smaller
 degree. Together these give the recursive step in real Newton--Puiseux lifting.
 -/
 
-import Transformer.Landscape.Lojasiewicz.NewtonPolynomialScaling
-import Transformer.Landscape.Lojasiewicz.PositiveRamification
-import Transformer.Landscape.Lojasiewicz.PolynomialCentering
+@[expose] public section
 
 open Filter Set Polynomial
 open scoped BigOperators

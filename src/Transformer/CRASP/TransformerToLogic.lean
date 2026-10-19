@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.TransformerNextState
+
+/-!
 # The reverse transformer simulation
 
 arXiv:2506.16055v3, Appendix B.2, `thm:rtfr_to_TLCl`.
@@ -6,7 +10,7 @@ Finite activation-state formulas are constructed by induction on layers;
 the output predicate is a disjunction of the accepting final states.
 -/
 
-import Transformer.CRASP.TransformerNextState
+@[expose] public section
 
 namespace Transformer.CRASP
 

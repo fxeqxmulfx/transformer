@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_AttentionExtension
+public import Transformer.Interpolation.Section2_AttentionWeakTests
+
+/-!
 # Complete original attention characteristics
 
 ArXiv:2411.04551v3, §1, `eq: ips` and `eq: cauchy.pb`, and §2,
@@ -11,8 +16,7 @@ original equation exactly. No characteristic representation of the law
 is assumed in this construction.
 -/
 
-import Transformer.Interpolation.Section2_AttentionExtension
-import Transformer.Interpolation.Section2_AttentionWeakTests
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology NNReal

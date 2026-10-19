@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.SquareDirection
+module
+
+public import Transformer.Grokking.AdamW.SquareDirection
 
 /-!
 # Actual retained native histories with changing learning rates
@@ -30,6 +32,8 @@ the native buffers do not use them. A physical parameter-box
 application must additionally supply nonnegative rates and
 nonnegative remaining decay at each actual scheduled update.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

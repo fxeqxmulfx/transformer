@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_ChainSums
+
+/-!
 # The choice of the exponent
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 5: the envelopes hold for
@@ -9,7 +13,7 @@ every `γ ∈ (0, γ₀]`, with a factor `e^{aT/γ}` from the profiles and a fac
 `e^{√(CTℓ)} e^{CT}` (`exists_gamma_exp_le`).
 -/
 
-import Transformer.Kinetic.Section3_ChainSums
+@[expose] public section
 
 open Real
 

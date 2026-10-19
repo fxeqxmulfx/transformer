@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Basic
+
+/-!
 # Metastability — the velocity of a token with arbitrary attention weights
 
 The estimates of §2 of arXiv:2410.06833v1 behind `eq: ze.equation`, stated about one
 configuration `x` of unit vectors and one row `a = (a_k)` of nonnegative weights, with no
-dynamics and no particular model.  `Metastability.PairVelocity` proves the same estimates
+dynamics and no particular model. `Metastability.PairVelocity` proves the same estimates
 for the `SA` weights `e^{β⟨x_i,x_k⟩}/Z_i`; here the weights are arbitrary, subject only to
 the two properties the proof uses: `a_k ≥ 0`, and `a_k ≤ E` for every `k` outside the
-index set `I` of the cap.  That is what lets `SA` and `USA` share one proof
+index set `I` of the cap. That is what lets `SA` and `USA` share one proof
 (`Metastability.AttnFlow`).
 
 * `inner_attnVel` — `⟨Proj_{x_i} Σ_k a_k x_k, y⟩ = Σ_k a_k (⟨x_k,y⟩ - ⟨x_i,x_k⟩⟨x_i,y⟩)`;
@@ -19,7 +23,7 @@ index set `I` of the cap.  That is what lets `SA` and `USA` share one proof
 The leakage count is `(n-1)`, not the paper's `n`: the index `i` itself is in `I`.
 -/
 
-import Transformer.Basic
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 open Real
@@ -112,7 +116,7 @@ theorem cap_velocity_ge (x : Idx n → EucSpace d) (a : Idx n → ℝ) (I : Fins
 
 /-- **The pair estimate for arbitrary weights.**
 
-Let `ρ = ⟨x_i, x_j⟩` be the minimum of `⟨x_k, x_l⟩` over `I × I`, and nonnegative.  If the
+Let `ρ = ⟨x_i, x_j⟩` be the minimum of `⟨x_k, x_l⟩` over `I × I`, and nonnegative. If the
 weight `a_j` of `j` in the row of `i` is at least `m`, and every token outside `I` has
 weight at most `E`, then
 

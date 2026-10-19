@@ -1,4 +1,6 @@
-import Transformer.Modes.Section3_MixedPowerDerivativeBounds
+module
+
+public import Transformer.Modes.Section3_MixedPowerDerivativeBounds
 
 /-!
 # Derivative bounds for the exact cubic power factors
@@ -16,6 +18,8 @@ a bound for the derivative of the corrected error itself. Its
 input bounds remain explicit hypotheses on actual derivatives;
 they will be supplied by the local moment and geometric estimates.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

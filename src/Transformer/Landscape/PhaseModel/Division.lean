@@ -1,23 +1,27 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Periods
+public import Mathlib.Topology.Instances.AddCircle.Defs
+
+/-!
 # Phase model — the full division table
 
 On the full table of division in a cyclic group of order `n`, only `0` is
 orthogonal to every row (`eq_zero_of_forall_inner_divisionRow`): a vector
-orthogonal to every row is additive on `ℤ/n`, hence zero.  The phases
+orthogonal to every row is additive on `ℤ/n`, hence zero. The phases
 `ψ_x = 2πjx/n` of a character keep every relation
 (`exists_inner_intVec_divisionRow_characterPhase`), so they are a zero of the
 energy `V_S` of every set `S` of rows (`divisionEnergy_characterPhase`), and
 up to periods they are the only zeros of the energy `V_full` of the full
 table (`divisionEnergy_univ_eq_zero_iff`): where every relation holds,
 `x ↦ ψ_x mod 2π` is a homomorphism `ℤ/n → ℝ/2πℤ`, determined by `ψ_1`, with
-`n ψ_1 ∈ 2πℤ`.  Every row has norm at most `3`
+`n ψ_1 ∈ 2πℤ`. Every row has norm at most `3`
 (`norm_intVec_divisionRow_le`), so the squared norms of the rows of `S` sum
 to at most `9 |S|` (`sum_norm_intVec_divisionRow_sq_le`), a bound on the
 Lipschitz constant of the gradient of `V_S`.
 -/
 
-import Transformer.Landscape.PhaseModel.Periods
-import Mathlib.Topology.Instances.AddCircle.Defs
+@[expose] public section
 
 open Real
 

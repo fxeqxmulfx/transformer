@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Quartet.Section3_SRRotation
+
+/-!
 # The paper's Q_SR remains unbiased after a fixed RHT
 
 arXiv:2601.22813v2, §3.1 gives a concrete FP4-SR quantizer; §3.2 gives the
@@ -6,7 +10,7 @@ RHT. Their composition is exactly unbiased under the group normal-range
 condition needed by the paper's FP8 round-to-nearest scale formula.
 -/
 
-import Transformer.Quartet.Section3_SRRotation
+@[expose] public section
 
 open MeasureTheory
 

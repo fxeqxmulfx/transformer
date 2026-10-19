@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.ParityCollision
+module
+
+public import Transformer.GPTMini.Semantics.ParityCollision
 
 /-!
 # Two raw indicator channels in the original fused QKV
@@ -17,6 +19,8 @@ The shared-epsilon real-arithmetic deviation of GPTMini is unchanged.
 These weights implement features; a complete parity FFN/readout remains
 an independent proof obligation.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

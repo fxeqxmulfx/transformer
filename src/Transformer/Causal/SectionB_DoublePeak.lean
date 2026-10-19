@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.SectionB_PeakHeight
+public import Transformer.Causal.Section5_ParameterTemperature
+
+/-!
 # The original force beyond twice its actual peak
 
 ArXiv:2411.04990v2, Appendix B and §5, the original force
@@ -18,8 +23,7 @@ the original strict force inequality. No original parameter
 condition or force function is replaced.
 -/
 
-import Transformer.Causal.SectionB_PeakHeight
-import Transformer.Causal.Section5_ParameterTemperature
+@[expose] public section
 
 open Real Set
 

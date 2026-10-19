@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.Kinetic.MeanField
+public import Mathlib.Analysis.Fourier.AddCircle
+
+/-!
 # Kinetic theory for Transformers — uniform prompts
 
 The most homogeneous baseline of arXiv:2605.09213v1, §1.3: the initial tokens of a prompt are
-independent and uniformly distributed on `𝕋`.  Then `eq:init-conv` holds with `f_∘ ≡ 1`, the
+independent and uniformly distributed on `𝕋`. Then `eq:init-conv` holds with `f_∘ ≡ 1`, the
 mean-field solution stays `f ≡ 1`, and the mean term `E[e^{inθ_N(t)}] E[e^{-inθ_{i_*}(0)}]` of the
-retrieval score vanishes for `n ≠ 0`.  This module states the uniformity: the one property of the
+retrieval score vanishes for `n ≠ 0`. This module states the uniformity: the one property of the
 law of a single token that the theorems on the retrieval score need beyond independence.
 -/
 
-import Transformer.Kinetic.MeanField
-import Mathlib.Analysis.Fourier.AddCircle
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -23,7 +27,7 @@ variable {Ω : Type*} [MeasurableSpace Ω]
 has the normalized Haar measure `dθ/(2π)` of the torus as its law.
 
 Together with independence this is the source's "the initial tokens may even be taken iid and
-uniformly distributed on `𝕋`, so that `eq:init-conv` holds with `f_∘ ≡ 1`".  It is *exact*
+uniformly distributed on `𝕋`, so that `eq:init-conv` holds with `f_∘ ≡ 1`". It is *exact*
 uniformity, not `eq:init-conv` with `f_∘ ≡ 1`, which only asks the characteristic functions to be
 within `C N^{-δ} ⟨n⟩^γ` of those of the uniform law.
 

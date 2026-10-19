@@ -1,11 +1,16 @@
-/-
+module
+
+public import Transformer.Perspective.SAField
+public import Transformer.Perspective.UniformLipschitz
+
+/-!
 # The sphere flows as slices of a flow on `(ℝ^d ∖ 0)^n`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
 A vector field `V` on configurations `(𝕊^{d-1})^n` extends to tuples of vectors
-of `ℝ^d` as `F(x)_i = ‖x_i‖ V(x/‖x‖)_i` (`radialField`).  The extension has the
+of `ℝ^d` as `F(x)_i = ‖x_i‖ V(x/‖x‖)_i` (`radialField`). The extension has the
 flow of `V` on every slice `{(r_i u_i)_i : u ∈ (𝕊^{d-1})^n}`, `r_i > 0`:
 
 * `X` solves `u̇ = V(u)` exactly when `t ↦ (r_i X(t)_i)_i` solves `ẋ = F(x)`
@@ -25,8 +30,7 @@ Source: arXiv:2312.10794v5, §2 (`eq: USA`, `eq: SA`), and Appendix A, where the
 flows are gradient flows on the manifold `(𝕊^{d-1})^n`.
 -/
 
-import Transformer.Perspective.SAField
-import Transformer.Perspective.UniformLipschitz
+@[expose] public section
 
 namespace Transformer
 namespace Perspective

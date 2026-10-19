@@ -1,22 +1,27 @@
-/-
+module
+
+public import Transformer.ALM.ExpansionSign
+public import Transformer.ALM.Duality
+
+/-!
 # The eight terms the arbiter is handed
 
 `Transformer.ALM.Expansion` and `Transformer.ALM.ExpansionSign` take a list of
-terms to the sign of its exact sum.  This file says which list, and what that
+terms to the sign of its exact sum. This file says which list, and what that
 sign then means.
 
 `alm-hull/src/exact.rs::dot_cmp` splits each of the four products with
 `two_prod` -- an FMA and a subtraction, so `hi + lo = a * b` with no error at
 all -- and hands `expansion_sign` the eight pieces, the second key's four
-negated.  `crossTerms` is that list and `crossTerms_sum` is the only thing
+negated. `crossTerms` is that list and `crossTerms_sum` is the only thing
 about it that matters: the pieces sum to `⟪q, a⟫ - ⟪q, b⟫`, exactly, however
-the splitting was done.  `dot_cmp_eq` composes it with `expansion_sign_eq`.
+the splitting was done. `dot_cmp_eq` composes it with `expansion_sign_eq`.
 
-The composition is the contract `head.rs` leans on.  When
+The composition is the contract `head.rs` leans on. When
 `Transformer.ALM.DotError.cmp_of_dot_guard` cannot license a comparison --
 which on `fibonacci` happens on 61 of 382284 queries -- the head rescans with
 `dot_cmp`, and what comes back has to be the exact order rather than a better
-estimate of it, or the rescan decides nothing.  It is the exact order, down to
+estimate of it, or the rescan decides nothing. It is the exact order, down to
 the one step that is not algebra: that the expansion is non-overlapping, which
 `ExpansionSign` takes as a hypothesis and Shewchuk proves about binary
 floating point.
@@ -30,8 +35,7 @@ Source: `vm-rs/alm-hull/src/exact.rs`, `two_prod` and `dot_cmp`; Dekker 1971,
 §5; Shewchuk 1997, §2; Ogita-Rump-Oishi 2005, §3.
 -/
 
-import Transformer.ALM.ExpansionSign
-import Transformer.ALM.Duality
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -39,7 +43,7 @@ namespace ALM
 /-! ### Splitting a product -/
 
 /-- **What `two_prod` returns.**  A rounded product and the error it dropped,
-which together are the product exactly.  With an FMA that is one instruction:
+which together are the product exactly. With an FMA that is one instruction:
 `p = fl(a * b)` and `e = fma(a, b, -p)`, and `e` is representable.
 
 Only the identity is assumed here; which pair of floats realizes it is
@@ -54,7 +58,7 @@ structure ExactProd where
   /-- Together they are the product, with nothing lost. -/
   exact : ∀ a b, hi a b + lo a b = a * b
 
-/-- Real multiplication splits trivially: it drops nothing.  This is not the
+/-- Real multiplication splits trivially: it drops nothing. This is not the
 runtime's `two_prod`, it is the witness that the contract is satisfiable. -/
 def exactMul : ExactProd where
   hi a b := a * b

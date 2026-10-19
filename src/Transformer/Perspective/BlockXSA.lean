@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.XSAProj
+public import Transformer.Perspective.BlockDrive
+
+/-!
 # A residual block with exclusive self-attention as a driven flow
 
 **Not a statement of any paper.**  The drive of a block whose heads are
@@ -17,11 +22,11 @@ differences are `z_k - z_l` up to `(2 H K A N + L_G) ε` while the tokens are
 `ε`-close (`norm_xsaDrive_sub_sub_le`), so `IsDrivenFlowOn.spread` applies
 (`Perspective.BlockXSASpread`).
 
-The projection buys two things over `blockDrive`.  The rows are free: nothing
+The projection buys two things over `blockDrive`. The rows are free: nothing
 is asked of the weights but `Σ_j |a_{hij}| ≤ A`, so a gate on the output of a
 head — which is a gate on its row, `smul_xsaProj` — needs only to be bounded,
 where rows of different sums leave a difference of drives of order one, which
-is what the `row_sum` field of `IsBoundedBlockOn` rules out by hypothesis.  And
+is what the `row_sum` field of `IsBoundedBlockOn` rules out by hypothesis. And
 the estimate is stronger: every head is `O(ε)` by itself near a cluster
 (`norm_xsaAttn_le_of_close`), not only in a difference, so an exclusive
 attention layer cannot hold a cluster together at first order — what happens
@@ -36,8 +41,7 @@ queries, rotary embedding and the normalisation of queries and keys (they
 change `a` only), `attn_scale` and the layer's constant scale folded into `O_h`.
 -/
 
-import Transformer.Perspective.XSAProj
-import Transformer.Perspective.BlockDrive
+@[expose] public section
 
 open scoped BigOperators
 
@@ -70,7 +74,7 @@ bounded by `B` and `L_G`-Lipschitz on the sphere, and the injections are bounded
 by `Z`.
 
 Source: none — posed here; `IsBoundedBlockOn` without its `row_sum` field, which
-the projection makes unnecessary.  For softmax attention (`eq:P`,
+the projection makes unnecessary. For softmax attention (`eq:P`,
 arXiv:2312.10794v5, §2.2) under a gate `g ∈ [0, 1]`, `Σ_j |a_{hij}| = g_{hi} ≤ 1`. -/
 structure IsBoundedXSABlockOn {e H : ℕ} (a : ℝ → Idx H → Idx n → Idx n → ℝ)
     (U : ℝ → Idx H → EucSpace d →L[ℝ] EucSpace e)

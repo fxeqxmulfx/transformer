@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallRawRouting
+module
+
+public import Transformer.GPTMini.Semantics.RecallRawRouting
 
 /-!
 # A finite shared temperature gives uniform actual recall retrieval accuracy
@@ -18,6 +20,8 @@ leaves room for tied value readout at gain two divided by that scale.
 Full raw-parser discharge, actual second W_o and readout still remain.
 All bounds are real-arithmetic statements, not floating-point claims.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

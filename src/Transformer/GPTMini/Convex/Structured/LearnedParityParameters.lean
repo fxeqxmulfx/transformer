@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.LearnedParityData
+module
+
+public import Transformer.GPTMini.Convex.Structured.LearnedParityData
 
 /-!
 # Actual learned parity parameter family with all other fields arbitrary
@@ -23,6 +25,8 @@ arbitrary saved dyadic logits instead of a sharp-row capacity assignment.
 The later correctness theorem must check these saved rows, then transfer
 the true mixed model through the actual full tensor/integer interface.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

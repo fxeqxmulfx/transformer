@@ -1,5 +1,7 @@
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Tactic
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Tactic
 
 /-!
 # Likelihood-based compression estimator
@@ -12,6 +14,8 @@ An equal mixture is normalized and loses at most one ideal bit relative
 to the maximum. Integer codeword and universal-interpreter overheads are
 not identified with ideal negative log likelihood.
 -/
+
+@[expose] public section
 
 namespace Transformer.Memorization
 

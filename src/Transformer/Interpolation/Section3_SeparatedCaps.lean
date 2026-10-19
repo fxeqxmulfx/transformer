@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_BarycenterDirections
+public import Transformer.Interpolation.Section3_TargetCaps
+
+/-!
 # Disjoint quadrant caps and original barycenter directions
 
 ArXiv:2411.04551v3, §3.2, `prop: separation`.
@@ -14,8 +19,7 @@ in `Section3_TargetCaps`. These facts keep the finite contraction
 induction's actual mean directions in distinct prescribed regions.
 -/
 
-import Transformer.Interpolation.Section3_BarycenterDirections
-import Transformer.Interpolation.Section3_TargetCaps
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

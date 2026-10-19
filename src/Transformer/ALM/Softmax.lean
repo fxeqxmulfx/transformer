@@ -1,11 +1,16 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.SpecialFunctions.Exp
+
+/-!
 # Softmax approximates hardmax exponentially well
 
 `Transformer.ALM.Basic` shows that the paraboloid head is an exact argmax.
 A real head uses softmax at inverse temperature `β`, and this file bounds the
-resulting error.  Nothing here mentions `score`: the statements are about an
+resulting error. Nothing here mentions `score`: the statements are about an
 arbitrary score vector with a gap, so they sit at the shallowest possible
-import level.
+public import level.
 
 Two bounds, in increasing sharpness:
 
@@ -15,12 +20,11 @@ Two bounds, in increasing sharpness:
 
 The weakening `1/(1+c) ≥ 1-c` is not harmless: `1 - (n-1)e^{-βδ}` is
 *vacuous* (negative) as soon as `β δ ≤ log (n-1)`, whereas `1/(1+c)` always
-lies in `(0,1)`.  Removing the remaining factor `n` is the business of
+lies in `(0,1)`. Removing the remaining factor `n` is the business of
 `Transformer.ALM.Lattice`.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.SpecialFunctions.Exp
+@[expose] public section
 
 open scoped BigOperators
 open Real

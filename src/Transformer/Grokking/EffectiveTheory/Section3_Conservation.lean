@@ -1,5 +1,7 @@
-import Transformer.Grokking.EffectiveTheory.Section3_QuotientGradient
-import Mathlib.Analysis.Calculus.MeanValue
+module
+
+public import Transformer.Grokking.EffectiveTheory.Section3_QuotientGradient
+public import Mathlib.Analysis.Calculus.MeanValue
 
 /-!
 # Conserved norm, conditional centering and a failed linear-flow step
@@ -19,6 +21,8 @@ dropping denominator derivatives does not yield the normalized-loss flow.
 The source's `dR/dt = -H R` deduction needs revision before its eigenvalue
 formula is transferred to the normalized flow or to an actual transformer.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.EffectiveTheory
 

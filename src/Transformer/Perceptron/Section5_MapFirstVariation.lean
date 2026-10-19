@@ -1,5 +1,7 @@
-import Transformer.Perceptron.GeneralAttention
-import Transformer.Perceptron.Section5_AnalyticStationarity
+module
+
+public import Transformer.Perceptron.GeneralAttention
+public import Transformer.Perceptron.Section5_AnalyticStationarity
 
 /-!
 # The actual first variation for general matrix attention
@@ -22,6 +24,8 @@ without symmetry or invertibility; the source assumes both for its
 energy interpretation. The scalar specialization retains the source's
 weight re-scaling, because the two energy prefactors differ by β.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

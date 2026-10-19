@@ -1,10 +1,16 @@
-/-
+module
+
+public import Transformer.Perspective.Beta0Field
+public import Mathlib.Analysis.ODE.Gronwall
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # §4 — `e:approxsphere`, the Grönwall comparison of `SA` with `e:Snonres0`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
-One statement: `e:approxsphere`, `‖x_i^β(t) - x_i^0(t)‖ ≤ O(β) e^{3t}`.  It is
+One statement: `e:approxsphere`, `‖x_i^β(t) - x_i^0(t)‖ ≤ O(β) e^{3t}`. It is
 proved, from two inputs:
 
 * the `β = 0` drift is `3`-Lipschitz on unit tuples
@@ -16,9 +22,7 @@ Grönwall (`dist_le_of_approx_trajectories_ODE_of_mem`) then compares the exact
 trajectory of the `β = 0` field with the approximate one traced by `SA`.
 -/
 
-import Transformer.Perspective.Beta0Field
-import Mathlib.Analysis.ODE.Gronwall
-import Mathlib.Analysis.Calculus.Deriv.Prod
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real
@@ -38,7 +42,7 @@ theorem proj_sub (a u v : EucSpace d) :
 
 At a tuple of unit vectors the attention weight `e^{β⟨x_i,x_j⟩}/Z_{β,i}` lies
 between `e^{-2β}/n` and `e^{2β}/n`, because the exponent is in `[-β, β]` and the
-partition function is in `[n e^{-β}, n e^{β}]`.  Each of the `n` weights is
+partition function is in `[n e^{-β}, n e^{β}]`. Each of the `n` weights is
 therefore within `(e^{2β} - 1)/n` of the uniform weight `1/n`, and the two drifts
 differ by the projection of a vector of norm at most `e^{2β} - 1`.
 
@@ -144,19 +148,19 @@ theorem norm_SA_drift_sub_beta0Field_le {β : ℝ} (hβ : 0 ≤ β)
   `‖x_i^β(t) - x_i^0(t)‖ ≤ O(β) e^{3t}`.
 
 **What the source says and what is changed here.**  The quantifier on the
-constant is hoisted in front of `β` and in front of the two solutions.  Put
+constant is hoisted in front of `β` and in front of the two solutions. Put
 after them — as an earlier form of this statement had it — the inequality says
 nothing: for `β > 0` the constant `C = 2/β` already works, since two points of
-`𝕊^{d-1}` are never further apart than `2 ≤ 2 e^{3t}`.  The survey's `O(β)` is a
+`𝕊^{d-1}` are never further apart than `2 ≤ 2 e^{3t}`. The survey's `O(β)` is a
 constant depending on `d` and `n` alone, and in fact on neither: `C = 2 e²` is
-proved here.  With the quantifier in front the bound has content at every `β`,
+proved here. With the quantifier in front the bound has content at every `β`,
 including `β = 0`, where it asserts that `e:Snonres0` has at most one solution
 from a given initial tuple.
 
-The proof is the survey's.  The `β = 0` drift is `3`-Lipschitz on unit tuples
+The proof is the survey's. The `β = 0` drift is `3`-Lipschitz on unit tuples
 (`lipschitzOnWith_beta0Field`) — that is the `e^{3t}` — and the `SA` drift
 differs from it by at most `e^{2β} - 1` (`norm_SA_drift_sub_beta0Field_le`) —
-that is the `O(β)`, through `e^{2β} - 1 ≤ 2 β e^{2β}`.  Grönwall's inequality
+that is the `O(β)`, through `e^{2β} - 1 ≤ 2 β e^{2β}`. Grönwall's inequality
 for an exact and an approximate trajectory of the same field closes it for
 `β ≤ 1`; for `β > 1` the trivial bound `‖x_i^β - x_i^0‖ ≤ 2` is already below
 `2 e² β e^{3t}`.

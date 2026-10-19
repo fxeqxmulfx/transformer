@@ -1,7 +1,11 @@
-import Transformer.AdamBeyond.Section3_StochBound
-import Mathlib.Logic.Function.DependsOn
+module
 
-/-
+public import Mathlib.Probability.Independence.Integration
+
+public import Transformer.AdamBeyond.Section3_StochBound
+public import Mathlib.Logic.Function.DependsOn
+
+/-!
 # Adam and beyond — §3: functions of finitely many coins
 
 What the expectations in the lemma of Theorem 3 rest on: a function of the
@@ -13,6 +17,8 @@ so that `E[[b_t] Y] = p E[Y]` (`coin_integral_ind_mul`); and
 Source: arXiv:1904.09237, Appendix, proof of Theorem 3: the independence of
 `g_t` from `m_{t-1}` and `v_{t-1}`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Finset Function
 

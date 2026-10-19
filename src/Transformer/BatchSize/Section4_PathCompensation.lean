@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_BoundedIntervalLimits
+public import Transformer.BatchSize.Section4_BrownianPaths
+
+/-!
 # Integrable compensated observables on actual continuous path laws
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ Joint measurability and uniform generator bounds justify changing the
 order of time and probability integration in the martingale identity.
 -/
 
-import Transformer.BatchSize.Section4_BoundedIntervalLimits
-import Transformer.BatchSize.Section4_BrownianPaths
+@[expose] public section
 
 open MeasureTheory Filter
 

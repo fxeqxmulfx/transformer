@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.Snoc
+public import Transformer.Landscape.Uniformization.Factor
+
+/-!
 # Local uniformization: principalizing `(y, t^p)` by monomial maps
 
 On `ℝⁿ⁺¹` with coordinates `(t, y)`, finitely many monomial maps with compact
@@ -10,8 +15,7 @@ for the Newton step of local uniformization for Appendix D.1, `lem: loj`, of
 arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Uniformization.Snoc
-import Transformer.Landscape.Uniformization.Factor
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators Topology

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_CirclePotential
+public import Transformer.Perceptron.SignedGram
+public import Mathlib.Data.Set.Finite.Lattice
+
+/-!
 # ReLU activation patterns and their actual circle forces
 
 ArXiv:2601.21366v2, §6, proof of `prop: unified.log`.
@@ -14,9 +20,7 @@ the original ReLU perceptron force. Every infinite set of angles
 contains infinitely many angles in one pattern, by finite covering.
 -/
 
-import Transformer.Perceptron.Section5_CirclePotential
-import Transformer.Perceptron.SignedGram
-import Mathlib.Data.Set.Finite.Lattice
+@[expose] public section
 
 open Real Set
 open scoped BigOperators

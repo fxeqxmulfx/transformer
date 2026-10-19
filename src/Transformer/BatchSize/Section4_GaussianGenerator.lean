@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_GaussianFlow
+
+/-!
 # Integrated Gaussian generator identity
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3).
@@ -7,7 +11,7 @@ from actual Gaussian probability laws, including the zero-time boundary.
 It does not assume a stochastic Taylor formula or an SDE existence theorem.
 -/
 
-import Transformer.BatchSize.Section4_GaussianFlow
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

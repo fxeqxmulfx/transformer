@@ -1,16 +1,21 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Abelian.Fourier
+public import Transformer.Landscape.PhaseModel.Division
+
+/-!
 # Phase model — the characters of `ℤ/n` and their orthogonality
 
 The phases `2πjx/n` of a character of `ℤ/n` are additive up to `2πℤ`
 (`exists_characterPhase_sub`), so `x ↦ e^{2πijx/n}` is a character of
 `Fin n` (`cyclicChar`), and `j ↦ cyclicChar n j` is a bijection from `Fin n`
-onto the characters (`bijective_cyclicChar`).  The phases `arg e^{2πijx/n}`
+onto the characters (`bijective_cyclicChar`). The phases `arg e^{2πijx/n}`
 of `cyclicChar n j` (`Abelian.characterPhase`) differ from `2πjx/n` by a
 period (`characterPhase_sub_mem_periods`), so they give the same cosines
 (`cos_sub_characterPhase`) and the same periods
-(`sub_characterPhase_mem_periods_iff`).  This is how `Landscape.PhaseModel.Abelian`,
+(`sub_characterPhase_mem_periods_iff`). This is how `Landscape.PhaseModel.Abelian`,
 at `G = Fin n`, gives the theorems on `ℤ/n`, a sum over the characters
-being a sum over `j < n`.  Here it gives the orthogonality of the
+being a sum over `j < n`. Here it gives the orthogonality of the
 characters: `Σ_j e^{i(2πja/n - 2πjb/n)}` is `n` for `a = b` and `0`
 otherwise (`sum_exp_characterPhase_sub`), so `Σ_{j<n} e^{2πijd/n}` is `n`
 for `d = 0` and `0` otherwise (`sum_exp_characterPhase`), and
@@ -20,8 +25,7 @@ otherwise (`sum_exp_characterPhase_add_sub`).
 Source: item M6.8 of `landscape_plan.md`.
 -/
 
-import Transformer.Landscape.PhaseModel.Abelian.Fourier
-import Transformer.Landscape.PhaseModel.Division
+@[expose] public section
 
 open Real
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_NormalizedResidual
+
+/-!
 # The actual measurable frame from successive sample prefixes
 
 ArXiv:2410.06833v1, §4, `prop: concentration unif`, and
@@ -18,7 +22,7 @@ recursion allows conditioning on an actual prefix without imposing
 orthonormality on prefixes for which success has already failed.
 -/
 
-import Transformer.Metastability.Section4_NormalizedResidual
+@[expose] public section
 
 open Real MeasureTheory Set
 

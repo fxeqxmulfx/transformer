@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainLimitBalance
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativePositiveBalance
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainLimitBalance
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativePositiveBalance
 
 /-!
 # Physical efficiency orders positive native balanced allocations
@@ -25,6 +27,8 @@ trajectory proof. Degree-two fixed tables, chosen witness epsilon,
 the source's coupled norm-cost/GD deviation and absent learned
 stochastic/numerical GPTMini transfer remain explicit.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

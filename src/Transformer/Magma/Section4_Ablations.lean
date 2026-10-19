@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Magma.Section4_C4Results
+
+/-!
 # Exact audits of the ablation tables
 
 Formalization of arXiv:2602.15322v1, Appendix C, Tables
@@ -7,7 +11,7 @@ scores are rationals. These are finite comparisons of the reported
 observations; no causal or universal performance claim is inferred.
 -/
 
-import Transformer.Magma.Section4_C4Results
+@[expose] public section
 
 open scoped BigOperators
 

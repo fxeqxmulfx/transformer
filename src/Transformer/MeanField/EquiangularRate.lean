@@ -1,7 +1,13 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Transformer.MeanField.Equiangular
+
+/-!
 # The local clustering rate of the equiangular `eq: SA` ODE
 
-arXiv:2512.01868v4, §6.  Near the clustered state `ρ = 1` the equiangular ODE
+arXiv:2512.01868v4, §6. Near the clustered state `ρ = 1` the equiangular ODE
 
   `ρ̇ = 2 e^{βρ} (1 - ρ) ((n - 1) ρ + 1) / (e^β + (n - 1) e^{βρ})`
 
@@ -11,25 +17,23 @@ contracts `1 - ρ` exponentially, and this module proves it: for every
 
 The proof is a single barrier (`image_le_of_deriv_right_lt_deriv_boundary`):
 the curve `t ↦ C e^{-λ t}` starts above `1 - ρ`, and wherever the two meet the
-ODE pushes `1 - ρ` down faster than the curve.  At such a meeting point
+ODE pushes `1 - ρ` down faster than the curve. At such a meeting point
 `1 - ρ(x) ≤ C`, hence `ρ(x) ≥ 1 - C`, which bounds both the numerator
 `(n - 1) ρ + 1` from below and the ratio `e^β / e^{βρ} ≤ e^{βC}` from above;
 that is where `C = max (1 - ρ(0)) 1` and `λ = q₁ / (e^{βC} + n - 1)` with
-`q₁ = min ((n - 1) ρ(0) + 1) 1` come from.  No integrating factor and no
+`q₁ = min ((n - 1) ρ(0) + 1) 1` come from. No integrating factor and no
 Grönwall estimate are needed.
 
-Two hypotheses are not decoration.  `(n - 1) ρ(0) + 1 > 0` is the basin
+Two hypotheses are not decoration. `(n - 1) ρ(0) + 1 > 0` is the basin
 condition: `Transformer.MeanField.not_exists_rate_at_simplex` refutes the
-statement at the equiangular simplex, where it fails with equality.  And
+statement at the equiangular simplex, where it fails with equality. And
 `1 ≤ n`, which the paper leaves implicit, is what keeps the denominator
 positive: `not_equiangular_local_rate_zero` below refutes the statement at
 `n = 0, β = 0`, where `e^β + (n - 1) e^{βρ}` vanishes at `ρ = 0` and Lean's
 `x / 0 = 0` makes every constant a solution.
 -/
 
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Transformer.MeanField.Equiangular
+@[expose] public section
 
 namespace Transformer
 namespace MeanField
@@ -154,7 +158,7 @@ At `n = 0` and `β = 0` the denominator `e^β + (n - 1) e^{βρ}` vanishes at
 `ρ = 0`, so the right-hand side of the ODE reads `2 / 0 = 0` and the constant
 `ρ ≡ 0` is a solution of `equiangularSA 0 0` — one that satisfies the basin
 condition `(n - 1) ρ(0) + 1 = 1 > 0` and whose gap `1 - ρ ≡ 1` no decaying
-exponential dominates.  The vanishing denominator is an artifact of `n = 0`:
+exponential dominates. The vanishing denominator is an artifact of `n = 0`:
 `e^β + (n - 1) e^{βρ}` is the attention normalization of `n` tokens. -/
 theorem not_equiangular_local_rate_zero :
     equiangularSA 0 0 (fun _ : ℝ => 0) ∧ 0 < (((0 : ℕ) : ℝ) - 1) * (fun _ : ℝ => (0 : ℝ)) 0 + 1 ∧

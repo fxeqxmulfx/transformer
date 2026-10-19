@@ -1,9 +1,16 @@
-/-
+module
+
+public import Transformer.Metastability.AttnFlow
+public import Transformer.Metastability.AttnPair
+public import Transformer.Metastability.PropagationBarrier
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
 # Metastability — comparison for the within-cap minimum, without an ODE
 
 Lemma `lem: collapsetime` and Steps 2–3 of the direct proof of arXiv:2410.06833v1 compare
 the within-cap minimum `ρ_q(t) = min_{i,j ∈ I} ⟨x_i(t), x_j(t)⟩` with the solution of an
-ODE.  Here the comparison is made with an explicit strict subsolution `B`:
+ODE. Here the comparison is made with an explicit strict subsolution `B`:
 
   `B'(t) < (2/n) B(1 - B) e^{β(B - 1)} - 2 n e^{-(1-α)β}`,   `B ≥ 0`,   `B(a₀) ≤ ρ(a₀)`
     ⟹   `B(t) ≤ ⟨x_i(t), x_j(t)⟩`  for `t ∈ [a₀, b]`, `i, j ∈ I`,
@@ -14,16 +21,13 @@ The proof is the finite-family barrier of `PropagationBarrier` applied to the `|
 functions `⟨x_i, x_j⟩ - B`: at a time where one of them vanishes while the others are
 nonnegative, `B(t)` is the minimum of the pair inner products, `pair_velocity_ge` bounds the
 derivative of `⟨x_i, x_j⟩` below by the right-hand side above, and the strict inequality
-makes `⟨x_i, x_j⟩ - B` strictly increasing there.  This avoids differentiating a minimum,
+makes `⟨x_i, x_j⟩ - B` strictly increasing there. This avoids differentiating a minimum,
 which has corners; `B` need only be continuous on `[a₀, b]` and differentiable on `[a₀, b)`.
 
 It holds for every attention flow, so for `SA` and for `USA` alike.
 -/
 
-import Transformer.Metastability.AttnFlow
-import Transformer.Metastability.AttnPair
-import Transformer.Metastability.PropagationBarrier
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 open Real Set

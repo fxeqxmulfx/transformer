@@ -1,23 +1,27 @@
-/-
+module
+
+public import Transformer.CRASP.Affine
+
+/-!
 # Shrinking a strip until a formula is constant on it
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 (COLM 2025), §4.4 and Appendix C.2: `lem:cropping_oneway`, repaired.
 
 The paper crops an interval of Parikh vectors until a formula whose counted
-formulas are constant becomes constant itself.  With the positions before the
-interval fixed to a prefix `u` (`Transformer.CRASP.Strip`), that works.  A
+formulas are constant becomes constant itself. With the positions before the
+interval fixed to a prefix `u` (`Transformer.CRASP.Strip`), that works. A
 comparison of two counts is a comparison of two affine functions of the
 numbers `x` and `y` of `a`s and `b`s (`Term.val_affine`), and on a strip of
 width `V` inside a strip of width `2V` it is constant once `y` is large enough
 (`exists_strip_lt`): the coefficients of `y` decide it when they differ, and
 otherwise the comparison is monotone in `x`, so it is constant on the lower or
-the upper half.  Boolean combinations shrink the strip once per operand, so a
+the upper half. Boolean combinations shrink the strip once per operand, so a
 formula, and a list of formulas, is constant on a strip whose width depends on
 the formulas alone (`Form.exists_constOnStrip`, `exists_constOnStrip_list`).
 -/
 
-import Transformer.CRASP.Affine
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

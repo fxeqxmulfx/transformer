@@ -1,7 +1,9 @@
-import Transformer.AMSGrad.Section3_Example
-import Transformer.AMSGrad.Section4_TheoremAReduce
+module
 
-/-
+public import Transformer.AMSGrad.Section3_Example
+public import Transformer.AMSGrad.Section4_TheoremAReduce
+
+/-!
 # AMSGrad — Theorem A by Abel summation for a non-increasing schedule
 
 This earlier proof obtains the printed constants of Theorem A of
@@ -13,6 +15,8 @@ the Abel argument.
 
 Source: arXiv:1904.03590v4, §1, Theorem A, and §3.
 -/
+
+@[expose] public section
 
 open Finset
 

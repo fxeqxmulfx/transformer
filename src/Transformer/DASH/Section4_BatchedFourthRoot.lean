@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.DASH.Section4_BatchedCounts
+public import Transformer.DASH.Section3_FiniteChaining
+public import Transformer.DASH.Section3_Scaling
+
+/-!
 # DASH — the complete finite batched NDB inverse-fourth-root procedure
 
 arXiv:2602.02016v2, §3.3–3.4 and §4. Both NDB calls are finite
@@ -6,9 +12,7 @@ and counted. Input normalization and output rescaling are explicit;
 the numerical error of the first square-root call is included.
 -/
 
-import Transformer.DASH.Section4_BatchedCounts
-import Transformer.DASH.Section3_FiniteChaining
-import Transformer.DASH.Section3_Scaling
+@[expose] public section
 
 open scoped Matrix Topology
 open Filter

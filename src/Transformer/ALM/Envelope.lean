@@ -1,8 +1,12 @@
-/-
+module
+
+public import Transformer.ALM.Duality
+
+/-!
 # Why the hull may discard a line
 
 `Transformer.ALM.Duality` reduces the planar argmax to a one-dimensional
-upper envelope.  The machine never stores that envelope as a list of all
+upper envelope. The machine never stores that envelope as a list of all
 lines: `_HullCHT::add_line` in `transformer_vm/attention/hull2d_cht.h`
 (lines 122-192) erases a line as soon as it is no longer on the envelope,
 using two tests and no others.
@@ -15,18 +19,18 @@ using two tests and no others.
 
 This file proves that both tests are sound and, for the second one, that it
 is also *necessary* — the hull keeps exactly the lines that are somewhere
-strictly best.  It then shows that erasing a pointwise-dominated line leaves
+strictly best. It then shows that erasing a pointwise-dominated line leaves
 the envelope unchanged, which is the invariant `add_line` maintains.
 
 Lines are the pairs `(slope, intercept)` of `Transformer.ALM.lineEval`.
 -/
 
-import Transformer.ALM.Duality
+@[expose] public section
 
 namespace Transformer
 namespace ALM
 
-/-- The abscissa at which two lines of different slope meet.  This is the
+/-- The abscissa at which two lines of different slope meet. This is the
 `x->p` computed by `isect`: `(y.b - x.b) / (x.m - y.m)`. -/
 noncomputable def interX (l l' : ℝ × ℝ) : ℝ := (l'.2 - l.2) / (l.1 - l'.1)
 
@@ -40,7 +44,7 @@ theorem lineEval_interX (l l' : ℝ × ℝ) (h : l.1 ≠ l'.1) :
 /-! ### The equal-slope test -/
 
 /-- **Equal slopes.**  A line is dominated everywhere by a parallel line with
-a larger intercept.  This is the `it->b >= b` early return of `add_line`. -/
+a larger intercept. This is the `it->b >= b` early return of `add_line`. -/
 theorem lineEval_le_of_slope_eq {l l' : ℝ × ℝ} (hm : l.1 = l'.1) (hb : l.2 ≤ l'.2)
     (x : ℝ) : lineEval l x ≤ lineEval l' x := by
   unfold lineEval
@@ -81,7 +85,7 @@ theorem dominated_iff_le_at_interX {l₁ l₂ l₃ : ℝ × ℝ}
 
 /-- **The test as the code computes it.**  The geometric condition above is
 the breakpoint comparison `isect(l₁,l₂).p ≥ isect(l₂,l₃).p` that `add_line`
-loops on.  Neither side mentions the outer crossing point, so the hull can
+loops on. Neither side mentions the outer crossing point, so the hull can
 decide with the two breakpoints it already stores. -/
 theorem interX_le_interX_iff {l₁ l₂ l₃ : ℝ × ℝ}
     (h₁₂ : l₁.1 < l₂.1) (h₂₃ : l₂.1 < l₃.1) :
@@ -117,7 +121,7 @@ theorem interX_le_interX_iff {l₁ l₂ l₃ : ℝ × ℝ}
 
 /-- **The invariant `add_line` maintains.**  If at `x` some other retained
 line does at least as well as `l`, then dropping `l` does not change the
-envelope's value at `x`.  Applying this at every `x` for a line the two tests
+envelope's value at `x`. Applying this at every `x` for a line the two tests
 above reject is what makes the erase loops correct. -/
 theorem sup'_erase_of_le {s : Finset (ℝ × ℝ)} {l : ℝ × ℝ} (hl : l ∈ s)
     (hne : (s.erase l).Nonempty) (x : ℝ)

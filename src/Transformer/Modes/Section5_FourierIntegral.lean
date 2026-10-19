@@ -1,4 +1,6 @@
-import Transformer.Modes.Section5_PhaseSummation
+module
+
+public import Transformer.Modes.Section5_PhaseSummation
 
 /-!
 # The Fourier decay of the Gaussian curve law
@@ -27,6 +29,8 @@ errors have proved counterexamples in `Section5_PtBddFourier` and
 `Section5_PtBddDecayFalse`; the borderline `β = 2` is not asserted.
 Source: arXiv:2412.09080v3, §5.5, `eq:uniform-decay`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

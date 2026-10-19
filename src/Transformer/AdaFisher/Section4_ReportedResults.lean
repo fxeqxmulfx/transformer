@@ -1,4 +1,8 @@
-/-
+module
+
+public import Mathlib.Tactic
+
+/-!
 # AdaFisher: exact comparisons of the reported benchmark means
 
 arXiv:2405.16397v3, §4, Tables 2–5, Appendix A.4, Table 6.
@@ -7,7 +11,7 @@ These theorems check the tables' arithmetic, not the validity of the runs
 or a universal claim about optimizer performance.
 -/
 
-import Mathlib.Tactic
+@[expose] public section
 
 namespace Transformer.AdaFisher
 

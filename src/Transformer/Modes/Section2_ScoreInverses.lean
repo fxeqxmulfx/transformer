@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Modes.Section2_ScoreBranches
+public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Deriv
+
+/-!
 # Inverse branches of the original Gaussian KDE score
 
 ArXiv:2412.09080v3, §2.1, the original summand in `eq:Fn`.
@@ -14,8 +19,7 @@ outside the branch image. Every inverse identity or derivative
 below includes the branch or image membership it needs.
 -/
 
-import Transformer.Modes.Section2_ScoreBranches
-import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Deriv
+@[expose] public section
 
 open Real Set Filter
 open scoped Topology

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_UniformProjectionScale
+public import Mathlib.MeasureTheory.Group.Arithmetic
+public import Mathlib.Data.Fin.Tuple.Basic
+
+/-!
 # Normalizing the original orthogonal residual
 
 ArXiv:2410.06833v1, §4, `prop: concentration unif`, and
@@ -17,9 +23,7 @@ measurable everywhere. Unit norm is proved on the actual success
 event, rather than assumed of failed prefixes.
 -/
 
-import Transformer.Metastability.Section4_UniformProjectionScale
-import Mathlib.MeasureTheory.Group.Arithmetic
-import Mathlib.Data.Fin.Tuple.Basic
+@[expose] public section
 
 open Real MeasureTheory
 

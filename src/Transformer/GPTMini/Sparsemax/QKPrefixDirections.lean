@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.QKPrefixMatrix
+module
+
+public import Transformer.GPTMini.Sparsemax.QKPrefixMatrix
 
 /-!
 # Nonzero ordinary matrix directions with only anchor accessibility
@@ -18,6 +20,8 @@ before XSA and output projection remain explicit. The theorem concerns
 the ordinary task derivative and introduces no attention-route target.
 It does not assert that different row losses cannot cancel these directions.
 -/
+
+@[expose] public section
 
 noncomputable section
 

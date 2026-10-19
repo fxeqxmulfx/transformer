@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainRecurrence
-import Mathlib.Topology.Order.OrderClosed
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainRecurrence
+public import Mathlib.Topology.Order.OrderClosed
 
 /-!
 # Actual physical-gain CE feedback preserves numerical signs
@@ -21,6 +23,8 @@ from appendix C's GD/coupled norm cost. These sign and finite-clock
 noncollapse laws do not prove positive finite limits, attraction,
 delayed selection or learned stochastic/numerical GPTMini transfer.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainUnequalGap
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainUnequalGap
 
 /-!
 # Actual unequal-pair Gen/Mem mass-ratio growth after a current error budget
@@ -26,6 +28,8 @@ permanent task correctness still require iteration. Exact reals,
 fixed tables, zero betas and uniform native decay differ from the
 source's coupled-cost GD and preserved learned nonzero-beta GPTMini.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

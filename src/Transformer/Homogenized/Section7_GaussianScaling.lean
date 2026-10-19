@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianBarycenterBound
+public import Transformer.Homogenized.Metastability
+public import Mathlib.MeasureTheory.Group.MeasurableEquiv
+
+/-!
 # Exact rescaling of the original Gaussian-product head
 
 ArXiv:2604.01978v1, §2.3, initialization (G), and §7.3,
@@ -21,9 +27,7 @@ the barycenter is exactly the unit-entry-variance one at `β/d`.
 These equalities retain all original laws, integrals and unit queries.
 -/
 
-import Transformer.Homogenized.Section7_GaussianBarycenterBound
-import Transformer.Homogenized.Metastability
-import Mathlib.MeasureTheory.Group.MeasurableEquiv
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.SectionA_StatefulAlgorithm
+public import Transformer.AMSGrad.Section4_TrainingModels
+
+/-!
 # Concrete AMSGrad callbacks for MD
 
 arXiv:2606.25971v2, §3.1 and Appendix A, Algorithm 2, optimizer-agnostic
@@ -9,8 +14,7 @@ an explicitly specified AMSGradMD variant; the MD experiments use Adam
 for gains. No bias correction or weight decay is inserted here.
 -/
 
-import Transformer.MagnitudeDirection.SectionA_StatefulAlgorithm
-import Transformer.AMSGrad.Section4_TrainingModels
+@[expose] public section
 
 noncomputable section
 

@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainCycleFeedback
-import Transformer.Grokking.AdamW.ScalarDenominator
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainCycleFeedback
+public import Transformer.Grokking.AdamW.ScalarDenominator
 
 /-!
 # Legal native constants and actual zero-beta amplitude updates
@@ -22,6 +24,8 @@ an actual path proof; completed optimizer clocks keep increasing.
 This chosen large-rate binary-table specialization is not a claim
 about the preserved nonzero-beta GPTMini runs or coupled-cost GD.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

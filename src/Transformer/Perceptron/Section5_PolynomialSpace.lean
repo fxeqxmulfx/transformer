@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_QuadraticPolynomials
+public import Mathlib.RingTheory.MvPolynomial.Basic
+public import Mathlib.Topology.ContinuousMap.Compact
+public import Mathlib.Analysis.Calculus.Deriv.Slope
+
+/-!
 # The actual closed space of bounded-degree spherical polynomials
 
 ArXiv:2601.21366v2, §5.1, `lem: quadpol` (i).
@@ -18,10 +25,7 @@ combination of original polynomials with the same degree bound. These
 facts allow the proved original power tests to extend to mixed products.
 -/
 
-import Transformer.Perceptron.Section5_QuadraticPolynomials
-import Mathlib.RingTheory.MvPolynomial.Basic
-import Mathlib.Topology.ContinuousMap.Compact
-import Mathlib.Analysis.Calculus.Deriv.Slope
+@[expose] public section
 
 open Real Set Filter
 open scoped Topology

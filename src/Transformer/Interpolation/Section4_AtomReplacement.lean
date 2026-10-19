@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_GenericQuadrantPoints
+
+/-!
 # Replacing one actual quadrant atom while protecting all others
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, and §3.2,
@@ -18,7 +22,7 @@ positive prescribed horizon constructs original global weak solutions
 and determines the endpoint of every original weak solution.
 -/
 
-import Transformer.Interpolation.Section4_GenericQuadrantPoints
+@[expose] public section
 
 open Real MeasureTheory Set
 

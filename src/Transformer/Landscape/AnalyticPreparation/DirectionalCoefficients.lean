@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.SequenceDivision
+public import Mathlib.Analysis.Analytic.ChangeOrigin
+public import Mathlib.Analysis.Analytic.Uniqueness
+
+/-!
 # Real analytic preparation: DirectionalCoefficients
 
 Adapted from Bochao Kong's classical-complex-wpt, revision
@@ -9,9 +15,7 @@ The scalar field is real; no complex root or complex differentiation result
 is used. Apache-2.0 license: third_party/classical-complex-wpt/LICENSE.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.SequenceDivision
-import Mathlib.Analysis.Analytic.ChangeOrigin
-import Mathlib.Analysis.Analytic.Uniqueness
+@[expose] public section
 
 open Filter Finset
 open scoped BigOperators ENNReal NNReal Topology

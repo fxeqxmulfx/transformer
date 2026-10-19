@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_IndependentPrefix
+
+/-!
 # The original uniform independent-sample concentration theorem
 
 ArXiv:2410.06833v1, §4, `prop: concentration unif`, `eq: upto-t`,
@@ -18,7 +22,7 @@ proves the original statement with every original quantifier,
 hypothesis, probability constant and distance constant unchanged.
 -/
 
-import Transformer.Metastability.Section4_IndependentPrefix
+@[expose] public section
 
 open Real MeasureTheory Set
 

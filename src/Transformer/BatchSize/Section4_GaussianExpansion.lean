@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_GaussianGenerator
+
+/-!
 # Local weak expansion of the Gaussian flow
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3).
@@ -7,7 +11,7 @@ subtracting its generator. This is the constant-coefficient Brownian case;
 the state-dependent diffusion law of Theorem 1 is a separate proof obligation.
 -/
 
-import Transformer.BatchSize.Section4_GaussianGenerator
+@[expose] public section
 
 open MeasureTheory
 

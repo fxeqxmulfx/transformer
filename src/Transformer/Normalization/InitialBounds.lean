@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.Normalization.InitialAttention
+
+/-!
 # Absolute constants for the initialization estimate
 
 Elementary scalar estimates translating the numerator bound into the
 rate in Theorem 4.2, §4.2 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Normalization.InitialAttention
+@[expose] public section
 
 namespace Transformer.Normalization
 

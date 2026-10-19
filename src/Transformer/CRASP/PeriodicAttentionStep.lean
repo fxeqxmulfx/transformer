@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.PeriodicAttention
+
+/-!
 # Agreement of periodic attention with its finite tables
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLClmod`.
@@ -6,7 +10,7 @@ Reducing the two positional indices modulo a common period changes neither
 the rounded sums nor the residual/feed-forward update.
 -/
 
-import Transformer.CRASP.PeriodicAttention
+@[expose] public section
 
 namespace Transformer.CRASP.PeriodicAttention
 

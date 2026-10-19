@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section2_RadialChain
+
+/-!
 # Lower bounds for the radial rotation approximation error
 
 Source: arXiv:2604.01978v1, §6.1, `lem:stability_generator`, and
@@ -17,7 +21,7 @@ They defeat every proposed constant in the source's improved
 rates, including when the comparison is restricted to grid times.
 -/
 
-import Transformer.Homogenized.Section2_RadialChain
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory ProbabilityTheory

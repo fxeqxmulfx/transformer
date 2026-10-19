@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CircuitPrefix
+
+/-!
 # Simulation of an arbitrary arithmetic DAG by a Coyote network
 
 Arora et al., arXiv:2312.04927v1, §4 Theorem `thm:equiv` and Appendix
@@ -8,7 +12,7 @@ and feature width `inputs + size`. The sharper depth/width/K-matrix and
 polylogarithmic resource bounds remain separate.
 -/
 
-import Transformer.Zoology.Appendix_CircuitPrefix
+@[expose] public section
 
 namespace Transformer.Zoology
 

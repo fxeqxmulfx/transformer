@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.InteractionWindow
+
+/-!
 # Causal attention — The interaction window (§B of 2411.04990v2)
 
 `Remark rem:interaction`: the explicit `ε, c, β, N` window in which the two
@@ -7,7 +11,7 @@ is needed.
 
 `thm: fixed_centers` prints its second condition as
 `N g((c-2ε)β^{-1/2}) < g(εβ^{-1/2})`, where the lemma gives
-`-(N g(...)) < g(...)`.  They do not agree: `g_pot_nonpos_core` shows that
+`-(N g(...)) < g(...)`. They do not agree: `g_pot_nonpos_core` shows that
 `g` is negative at the far point, so the printed form holds for free and the
 lemma's is the one with content — and the one the theorem's proof uses.
 `Causal.fixed_centers` is stated with the minus sign, and the window here
@@ -16,7 +20,7 @@ delivers it.
 Source: arXiv:2411.04990v2, §B, `rem:interaction`.
 -/
 
-import Transformer.Causal.InteractionWindow
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -73,7 +77,7 @@ so that only `β ≳ log N` is needed; the remark's own example is `ε = 0.1`,
 This is `lem:interaction` read as a sufficient condition, and it differs from
 `interaction_inequalities` only in the bound on `N`, which is the non-strict
 one: `interaction_inequalities_core` takes it that way, both of its chains
-being strict already at their first step.  The second inequality carries the
+being strict already at their first step. The second inequality carries the
 minus sign, as in `Causal.fixed_centers`, which corrects the printed sign.
 
 Source: arXiv:2411.04990v2, §B, `rem:interaction`. -/

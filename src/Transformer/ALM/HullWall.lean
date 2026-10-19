@@ -1,24 +1,29 @@
-/-
+module
+
+public import Transformer.ALM.HullMark
+public import Transformer.ALM.ScoreWall
+
+/-!
 # Past the wall the perturbation is not stored, so the marked key is the lift
 
 `Transformer.ALM.HullMark` reads the key the compiler emits as `markKey δ k`,
 a lift whose intercept carries the recency offset
 `LATEST_ALPHA * inv_log_pos(p)`, and shows that offset is too small to revive
-an erase.  `Transformer.ALM.ScoreWall` reads the same intercept as a binary64
-number and shows that past `2^53` the format has no odd integers left.  Put
+an erase. `Transformer.ALM.ScoreWall` reads the same intercept as a binary64
+number and shows that past `2^53` the format has no odd integers left. Put
 together they say something neither says alone: the same smallness that makes
 the offset harmless to the hull makes it *invisible* to the format.
 
 Past the wall two distinct representables are at least two apart
 (`two_le_dist_of_isBinary`), and the whole offset the compiler adds is under
-one (`marked_sep_of_shipped`).  So a key whose square is past the wall and
+one (`marked_sep_of_shipped`). So a key whose square is past the wall and
 whose intercept is a double at all has `δ = 0` exactly:
-`markKey_eq_liftKey_of_wall`.  The family the head then holds is `Lifted`, not
+`markKey_eq_liftKey_of_wall`. The family the head then holds is `Lifted`, not
 merely `Marked` (`lifted_of_marked_of_wall`) — which is good news for the
 erase argument, since `Transformer.ALM.HullLift` is the stronger statement, and
-bad news for everything the offset was added to do.  `marks_tie_past_the_wall`
+bad news for everything the offset was added to do. `marks_tie_past_the_wall`
 is that half: two writes to one logical key, separated by the compiler at
-`0.3 * inv_log_pos`, arrive at the head as the *same point*.  `HullMeta.last_seq`
+`0.3 * inv_log_pos`, arrive at the head as the *same point*. `HullMeta.last_seq`
 is then not a fallback for an unlikely tie, it is the only thing deciding the
 answer.
 
@@ -31,8 +36,7 @@ Source: `todo3.md` §2a and §4b; `alm-compile/src/graph.rs` lines 231-264
 separation at run time.
 -/
 
-import Transformer.ALM.HullMark
-import Transformer.ALM.ScoreWall
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -42,7 +46,7 @@ namespace ALM
 /-- **A marked key past the wall is the lift itself.**  Both intercepts are
 representable and both are past `2^53` in magnitude, so if they differed they
 would differ by at least two — and the offset is under two by hypothesis and
-under one in the shipped compiler.  So they do not differ: the `δ` the
+under one in the shipped compiler. So they do not differ: the `δ` the
 compiler computed is not in the number the head receives.
 
 Source: `ScoreWall.two_le_dist_of_isBinary`; `todo3.md` §4b. -/
@@ -73,7 +77,7 @@ example : IsBinary 53 (-((134217728 : ℝ) ^ 2)) ∧
     ⟨-134217728, 27, by norm_num, by norm_num⟩, by norm_num, le_refl 0, by norm_num⟩
 
 /-- And the wall hypothesis is what does the work: below it a nonzero offset is
-a perfectly good double, and the marked key is *not* the lift.  `-8.5` is
+a perfectly good double, and the marked key is *not* the lift. `-8.5` is
 `-17 * 2⁻¹`, and `markKey 0.5 3 = (6, -8.5)` while `liftKey 3 = (6, -9)`. -/
 example : IsBinary 53 (-((3 : ℝ) ^ 2) + 0.5) ∧ markKey 0.5 (3 : ℝ) ≠ liftKey 3 := by
   refine ⟨⟨-17, -1, by norm_num, by norm_num⟩, ?_⟩
@@ -116,7 +120,7 @@ example : markKey 0 (134217728 : ℝ) = markKey 0 (134217728 : ℝ) ∧
 /-- **A marked family past the wall is a lifted family.**  Every line of it is
 `markKey δ z` with `δ ≤ A < 2`, every intercept is a double, and every key's
 square clears the wall by more than `A`; so every `δ` is zero and the container
-holds the pure lift.  `Transformer.ALM.HullLift.not_eraseStep_of_lift` then
+holds the pure lift. `Transformer.ALM.HullLift.not_eraseStep_of_lift` then
 applies with no separation hypothesis at all — the perturbed argument of
 `HullMark` is not needed past the wall, because there is nothing left to
 perturb.
@@ -170,7 +174,7 @@ theorem the_shipped_spread_is_under_two : (0.3 : ℝ) / Real.log 2 < 2 :=
 /-- **And the heads §4b names are past the wall by fifty-eight times over.**
 `538 976 288 = 0x20202020` is one of the 32-bit values the WASM heads are keyed
 on from the first token; its square clears `2^53` with room for any offset the
-compiler could add.  So on those heads the recency term is not small, it is
+compiler could add. So on those heads the recency term is not small, it is
 absent.
 
 Source: `todo3.md` §4b. -/

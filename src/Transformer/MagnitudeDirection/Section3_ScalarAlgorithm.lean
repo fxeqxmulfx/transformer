@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.Section3_Sphere
+public import Transformer.MagnitudeDirection.Section3_Gradients
+
+/-!
 # Scalar-gain optimizer wrapper
 
 arXiv:2606.25971v2, §3.1, Algorithm 1. Optimizer callbacks describe the
@@ -6,8 +11,7 @@ current step of any base optimizer; momentum/state evolution belongs to
 the callback. No guarantee of convergence is assumed for either callback.
 -/
 
-import Transformer.MagnitudeDirection.Section3_Sphere
-import Transformer.MagnitudeDirection.Section3_Gradients
+@[expose] public section
 
 noncomputable section
 

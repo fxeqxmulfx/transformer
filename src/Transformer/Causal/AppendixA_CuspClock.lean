@@ -1,7 +1,9 @@
-import Transformer.Causal.AppendixA_CuspJacobian
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
+module
+
+public import Transformer.Causal.AppendixA_CuspJacobian
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
 
 /-!
 # Actual first-angle trajectory and accumulated cusp forcing
@@ -24,6 +26,8 @@ The original energy and normalization are unchanged. This is an
 explicit trajectory and forcing calculation, independent of the
 printed convergence lemma and its unstable-manifold step.
 -/
+
+@[expose] public section
 
 open Real Filter MeasureTheory Topology
 namespace Transformer.Causal

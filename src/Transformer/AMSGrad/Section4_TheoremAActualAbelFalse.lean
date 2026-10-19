@@ -1,6 +1,8 @@
-import Transformer.AMSGrad.Section4_TheoremAActualRun
+module
 
-/-
+public import Transformer.AMSGrad.Section4_TheoremAActualRun
+
+/-!
 # AMSGrad — a scalar proof step fails on an actual run
 
 The scalar bound with Theorem A's printed constants fails at `T = 16` for the
@@ -11,6 +13,8 @@ by the attempted proof; it does not refute Theorem A's regret inequality.
 
 Source: arXiv:1904.03590v4, §1, Theorem A; §3, Lemma 3.1 and its proof audit.
 -/
+
+@[expose] public section
 
 open Finset
 namespace Transformer.AMSGrad

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianMatrixLaw
+public import Transformer.Homogenized.Section7_GaussianRowFourth
+
+/-!
 # Conditional moments of the original Gaussian product query
 
 ArXiv:2604.01978v1, §7.3, `lem:delta_method`, and §2.3.3,
@@ -18,8 +23,7 @@ original key-row law. All terms are integrable before sums of their
 integrals are distributed. Zero rows and empty dimensions are included.
 -/
 
-import Transformer.Homogenized.Section7_GaussianMatrixLaw
-import Transformer.Homogenized.Section7_GaussianRowFourth
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

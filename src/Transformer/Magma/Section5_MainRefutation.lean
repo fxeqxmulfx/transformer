@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Magma.Section5_SmoothnessRefutation
+public import Transformer.Magma.Section5_AlignmentRefutation
+
+/-!
 # Refutation of the manuscript's uncorrected finite-horizon theorem
 
 Formalization of arXiv:2602.15322v1, Section 5, theorem:main_result,
@@ -7,8 +12,7 @@ by a lower-bounded two-block polynomial with exact gradients and zero noise.
 Its published one-step horizon estimate nevertheless fails.
 -/
 
-import Transformer.Magma.Section5_SmoothnessRefutation
-import Transformer.Magma.Section5_AlignmentRefutation
+@[expose] public section
 
 noncomputable section
 

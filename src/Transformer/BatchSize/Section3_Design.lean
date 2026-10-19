@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section3_Quadratic
+
+/-!
 # The quadratic design matrix and loss expansion
 
 arXiv:2506.12543v1, Section 3.2, equation (1), and Appendix D.
@@ -6,7 +10,7 @@ The design is constructed from the actual rotated eigenvalues and is
 proved to satisfy X^T X=H. The quadratic Taylor expansion is exact.
 -/
 
-import Transformer.BatchSize.Section3_Quadratic
+@[expose] public section
 
 open Matrix
 open scoped BigOperators

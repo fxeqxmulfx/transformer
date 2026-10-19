@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.RASP.Defs
+public import Transformer.RASP.Basic
+public import Transformer.RASP.SelectorWidth
+public import Transformer.RASP.Programs
+public import Transformer.RASP.Sort
+public import Transformer.RASP.Compilation
+
+/-!
 # Thinking Like Transformers
 
 Formalization of Weiss, Goldberg, Yahav — arXiv:2106.06981v2, "Thinking Like
@@ -6,7 +15,7 @@ Transformers" (ICML 2021).
 
 The paper proposes RASP, a programming language whose primitives are the
 primitives of a transformer encoder, and argues that reading a task as a RASP
-program bounds the layers and heads a transformer needs for it.  It states no
+program bounds the layers and heads a transformer needs for it. It states no
 theorems; what is formalized here is the semantics of §3, the two identities
 §3.1 asserts about the built-ins, the `selector_width` implementation of
 Figure 8, the worked programs, and the compilation claim of §3.1 together
@@ -22,9 +31,4 @@ with the expressiveness consequence §4 draws from it.
 | `RASP.Compilation` | a program's syntax, its heads and layers, and what layer 0 can see |
 -/
 
-import Transformer.RASP.Defs
-import Transformer.RASP.Basic
-import Transformer.RASP.SelectorWidth
-import Transformer.RASP.Programs
-import Transformer.RASP.Sort
-import Transformer.RASP.Compilation
+@[expose] public section

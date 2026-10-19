@@ -1,14 +1,18 @@
-/-
+module
+
+public import Transformer.ALM.Hull
+
+/-!
 # The hull tests in finite precision
 
 Every comparison the hull makes goes through `isect`, and `isect` is a
-division (`Transformer.ALM.Envelope`, `interX`).  The implementation runs it
+division (`Transformer.ALM.Envelope`, `interX`). The implementation runs it
 in `long double`, so the two breakpoints being compared are each off by a
-little.  Nothing proved so far says the comparisons still come out right.
+little. Nothing proved so far says the comparisons still come out right.
 
 What is needed is a separation condition, and the paraboloid supplies one.
 `interX_liftKey` says the breakpoint of two lifted keys is their midpoint, so
-consecutive breakpoints differ by `(k₃ - k₁) / 2`.  For the integer keys the
+consecutive breakpoints differ by `(k₃ - k₁) / 2`. For the integer keys the
 `LookUp` primitive compiles to that is at least `1/2`, a gap that does not
 shrink as the instance grows — the comparison is safe as soon as the rounding
 error is below a quarter of it.
@@ -16,11 +20,11 @@ error is below a quarter of it.
 `FPArith` carries the standard model of floating-point arithmetic: the
 computed value of a quantity differs from the exact one by at most a relative
 `u` (Higham, *Accuracy and Stability of Numerical Algorithms*, 2nd ed., §2.2,
-eq. (2.4)).  `exactArith` is the `u = 0` instance, so nothing here is vacuous.
+eq. (2.4)). `exactArith` is the `u = 0` instance, so nothing here is vacuous.
 
-Two results follow.  `fp_no_spurious_erase` — rounding never fires
+Two results follow. `fp_no_spurious_erase` — rounding never fires
 `add_line`'s erase loop, so `liftKey_not_dominated` survives finite
-precision.  `fp_query_branch` — a query separated from the breakpoint takes
+precision. `fp_query_branch` — a query separated from the breakpoint takes
 the same branch as exact arithmetic would, and `lineEval_eq_at_midpoint`
 shows the excluded case is the one where the branch does not matter: at the
 breakpoint the two keys score equally, so either is an argmax.
@@ -29,7 +33,7 @@ Source: `transformer_vm/attention/hull2d_cht.h`, lines 60-70 (`isect`) and
 95-98 (the comparison `add_line` loops on).
 -/
 
-import Transformer.ALM.Hull
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -55,7 +59,7 @@ theorem cmp_of_sep {a b a' b' δ₁ δ₂ : ℝ} (ha : |a' - a| ≤ δ₁) (hb :
 /-! ### The arithmetic the implementation runs on -/
 
 /-- The breakpoint computation as it is actually performed, together with the
-relative accuracy it guarantees.  This is the standard model of floating-point
+relative accuracy it guarantees. This is the standard model of floating-point
 arithmetic applied to `isect`: the computed result is the exact one perturbed
 by a relative `u`. -/
 structure FPArith where
@@ -104,7 +108,7 @@ lemma isect_liftKey_error (F : FPArith) {k k' M : ℝ} (h : k ≠ k')
 /-- **Rounding does not discard a key.**  For three keys in `[-M, M]` whose
 outer two are at least `1` apart — which integer keys always are — the
 computed comparison `isect(k₂,k₃) ≤ isect(k₁,k₂)` is still false, so
-`add_line` keeps the middle line.  `liftKey_not_dominated` therefore holds of
+`add_line` keeps the middle line. `liftKey_not_dominated` therefore holds of
 the arithmetic that actually runs, not only of the reals. -/
 theorem fp_no_spurious_erase (F : FPArith) {k₁ k₂ k₃ M : ℝ}
     (h₁₂ : k₁ < k₂) (h₂₃ : k₂ < k₃) (hgap : 1 ≤ k₃ - k₁)
@@ -153,7 +157,7 @@ theorem lineEval_eq_at_midpoint {k k' : ℝ} (h : k ≠ k') :
 /-- **`long double` is far more than enough.**  Allowing a relative error of
 `2^-60` — well above the `2^-64` unit roundoff of the 80-bit format, with room
 to spare for the subtractions inside `isect` — integer keys of magnitude up to
-`2^56` still never trigger a spurious erase.  The machine's keys are far
+`2^56` still never trigger a spurious erase. The machine's keys are far
 smaller than that. -/
 theorem fp_longDouble (F : FPArith) (hu : F.u ≤ 1 / 2 ^ (60 : ℕ)) {k₁ k₂ k₃ : ℝ}
     (h₁₂ : k₁ < k₂) (h₂₃ : k₂ < k₃) (hgap : 1 ≤ k₃ - k₁)

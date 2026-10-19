@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.ScalarDenominator
+module
+
+public import Transformer.Grokking.AdamW.ScalarDenominator
 
 /-!
 # Coupled native first/second-moment square estimates
@@ -28,6 +30,8 @@ variance substitution. Exact-real recurrence algebra alone does not
 prove task generalization, stochastic optimization convergence or
 floating-point kernel agreement. Frozen checkpoints remain unchanged.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

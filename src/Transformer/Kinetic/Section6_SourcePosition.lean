@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Kinetic.Section6_ModeProfile
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+
+/-!
 # Kinetic theory for Transformers — inverting the output change of variable
 
 The proof of arXiv:2605.09213v1, §6, `thm:U-shape`, uses the decreasing
@@ -8,8 +13,7 @@ and the correspondence of the open intervals, then compute the actual
 derivative of the original `Yfun` on its positive-position domain.
 -/
 
-import Transformer.Kinetic.Section6_ModeProfile
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+@[expose] public section
 
 open Real Set Filter
 open scoped Topology

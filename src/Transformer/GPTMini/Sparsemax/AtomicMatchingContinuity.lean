@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.AtomicMatchingHead
-import Mathlib.Topology.Maps.Proper.Basic
+module
+
+public import Transformer.GPTMini.Sparsemax.AtomicMatchingHead
+public import Mathlib.Topology.Maps.Proper.Basic
 
 /-!
 # Continuity of genuine matching across sparsemax support changes
@@ -14,6 +16,8 @@ compactness of the simplex turns this into continuity. Independent shared
 Q/K/value tables then give continuous genuine observed head responses.
 Continuity does not assert convexity of these raw physical parameters.
 -/
+
+@[expose] public section
 
 noncomputable section
 

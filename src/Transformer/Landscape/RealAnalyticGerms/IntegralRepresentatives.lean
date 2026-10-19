@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.RealAnalyticGerms.PreparedIntegralRelation
+
+/-!
 # Function representatives of monic relations between analytic germs
 
 Only finitely many lower coefficient germs occur in a monic polynomial.
@@ -6,7 +10,7 @@ Their analytic representatives reconstruct the actual relation as a
 function germ, without substituting formal series for convergent functions.
 -/
 
-import Transformer.Landscape.RealAnalyticGerms.PreparedIntegralRelation
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

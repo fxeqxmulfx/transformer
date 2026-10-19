@@ -1,12 +1,14 @@
-import Transformer.AMSGrad.Section4_MainLemma
+module
 
-/-
+public import Transformer.AMSGrad.Section4_MainLemma
+
+/-!
 # Adam and beyond — §4: the regret of AMSGrad
 
 §4 of arXiv:1904.09237 introduces AMSGrad (Algorithm 2), `v̂_t = max(v̂_{t-1}, v_t)`,
 which is `Transformer.AMSGrad.amsgradRule`, and bounds its regret: Theorem 4,
 the lemma of its proof (appendix, §"Proof of Theorem 4"), Corollary 1, and the
-remark that `β_{1,t} = β₁/t` still gives `O(√T)`.  Theorem 4 is proved in
+remark that `β_{1,t} = β₁/t` still gives `O(√T)`. Theorem 4 is proved in
 `Section4_Regret`; Corollary 1 and the remark are `Section4_Corollary`.
 
 **What the source says and what is carried here.**
@@ -14,28 +16,28 @@ remark that `β_{1,t} = β₁/t` still gives `O(√T)`.  Theorem 4 is proved in
 * This is the revised Theorem 4: its second term carries `D²/(1-β₁)²`, where
   the first version, quoted by arXiv:1904.03590 as its Theorem A, had
   `D²/(2(1-β₁))`; the footnote of the appendix records the missing factor
-  `2/(1-β₁)`.  `Transformer.AMSGrad.theorem_A` now proves the first version as
+  `2/(1-β₁)`. `Transformer.AMSGrad.theorem_A` now proves the first version as
   printed; `Transformer.AMSGrad.regret_general_schedule` proves it with `D²/(1-β₁)`,
   which implies this one, and `Transformer.AMSGrad.theorem_A_antitone` proves the
-  printed `D²/(2(1-β₁))` for a non-increasing `β_{1,t}`.  The hypotheses the source
+  printed `D²/(2(1-β₁))` for a non-increasing `β_{1,t}`. The hypotheses the source
   leaves implicit are made explicit, as in Theorem A: `0 ≤ β_{1,t}`,
   `β₁ < 1` and `0 < β₂ < 1`, without which `1/(1-β₁)` and `√(1-β₂)` are not
-  bounds, and `α > 0`.  The source restricts to `T ≥ 1`; at `T = 0` both sides
+  bounds, and `α > 0`. The source restricts to `T ≥ 1`; at `T = 0` both sides
   vanish, so the bound is stated for every `T`.
 
 * The lemma is stated for AMSGrad under the assumptions of Theorem 4 other
-  than the diameter and gradient bounds, which its proof does not use.  With
+  than the diameter and gradient bounds, which its proof does not use. With
   `α_t = α/√t` it is `α` times the sum over `i` of Lemma 4.4 of
   arXiv:1904.03590 (`Transformer.AMSGrad.mainlem`).
 
 * Corollary 1, with `β_{1,t} = β₁λ^{t-1}`, states its second term as
-  `β₁D²G/((1-β₁)²(1-λ)²)`.  Theorem 4 gives
+  `β₁D²G/((1-β₁)²(1-λ)²)`. Theorem 4 gives
   `D²/(1-β₁)² Σ_t Σ_i β₁λ^{t-1}√t √v̂_{t,i}/α ≤ dβ₁D²G/(α(1-β₁)²(1-λ)²)`,
   using `√v̂_{t,i} ≤ G` and `Σ_t λ^{t-1}√t ≤ 1/(1-λ)²`: the factor `d/α` is
-  missing from the source and is restored here.  `0 ≤ λ < 1` is made explicit.
+  missing from the source and is restored here. `0 ≤ λ < 1` is made explicit.
 
 * The remark after Corollary 1 is stated as: with `β_{1,t} = β₁/t` there is
-  `K` with `R_T ≤ K√T` for every `T` and every `x* ∈ F`.  The third term of
+  `K` with `R_T ≤ K√T` for every `T` and every `x* ∈ F`. The third term of
   Theorem 4 is `O(√(T log T))`; the `O(√T)` rests on the closing remark of the
   appendix proof, that `Σ_t |g_{t,i}|/√t ≤ 2G√T` may replace the harmonic
   bound.
@@ -48,6 +50,8 @@ Source: arXiv:1904.09237, §4, Algorithm 2, Theorem 4 (thm:amsgrad-proof),
 Corollary 1 (cor:t1-cor) and the paragraph after it; appendix, §"Proof of
 Theorem 4", its lemma and closing remark.
 -/
+
+@[expose] public section
 
 open Finset
 

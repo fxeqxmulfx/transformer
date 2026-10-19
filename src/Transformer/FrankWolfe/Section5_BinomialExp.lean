@@ -1,4 +1,10 @@
-/-
+module
+
+public import Mathlib.Data.Nat.Choose.Bounds
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Transformer.FrankWolfe.Section5_RareEvents
+
+/-!
 # Attention's forward pass and Frank-Wolfe — the exponential binomial bound
 
 The binomial union estimate `choose(N,M) p^M` is at most `(e N p/M)^M`
@@ -13,9 +19,7 @@ Source: arXiv:2508.09628v1, §5, proof of `lem: metastab.1`,
 `eq: binomial.2` and `eq: metastability.bound`.
 -/
 
-import Mathlib.Data.Nat.Choose.Bounds
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Transformer.FrankWolfe.Section5_RareEvents
+@[expose] public section
 
 open scoped ENNReal
 open MeasureTheory

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.CompactAffineMemory
+module
+
+public import Transformer.GPTMini.Sparsemax.CompactAffineMemory
 
 /-!
 # Strictly convex ordinary training with constant-size learned state
@@ -16,6 +18,8 @@ witnesses fit with different actual supports on the same compact domain.
 Continuity follows from the proved forward identity on the true domain,
 not from an assumed globally continuous matrix inverse.
 -/
+
+@[expose] public section
 
 noncomputable section
 

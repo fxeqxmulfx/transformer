@@ -1,4 +1,10 @@
-/-
+module
+
+public import Mathlib.Analysis.ODE.Gronwall
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+
+/-!
 # The simplex comparison with a retained drift bias
 
 ArXiv:2604.01978v1, §7, eq:Gronwall_E_selfcontained.
@@ -14,9 +20,7 @@ is then treated using genuine integrability, norm bounds and the
 fundamental theorem of calculus.
 -/
 
-import Mathlib.Analysis.ODE.Gronwall
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+@[expose] public section
 
 open MeasureTheory Set
 

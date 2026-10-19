@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_MeanAxisAttraction
+public import Transformer.Interpolation.Section3_PositiveBarycenters
+public import Transformer.Interpolation.Section1_RidgeParameterBounds
+
+/-!
 # Uniform original attention gathering on fixed compact support regions
 
 ArXiv:2411.04551v3, §3.2, Step 1 of selective isolation,
@@ -15,9 +21,7 @@ poles. The choice of time is independent of the particular law and
 any later concentration tolerance used by the selected-law contraction.
 -/
 
-import Transformer.Interpolation.Section3_MeanAxisAttraction
-import Transformer.Interpolation.Section3_PositiveBarycenters
-import Transformer.Interpolation.Section1_RidgeParameterBounds
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

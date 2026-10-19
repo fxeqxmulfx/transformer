@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_OnlyOne
+
+/-!
 # The emergence of clusters in self-attention dynamics — bounded particles
 
 §7 of arXiv:2305.05465v6, `s:bounded`: the tokens that stay in `L^∞` are at
@@ -14,7 +18,7 @@ that need not become a standard basis row.
   the range of its second sentence corrected.
 
 * `l:boundedother` is proved in `Transformer.Clusters.Section7_BoundedOther`,
-  for every `j ∈ [n]`.  Stated over `j ∈ [n-1]`, the remaining entry would
+  for every `j ∈ [n]`. Stated over `j ∈ [n-1]`, the remaining entry would
   converge by the row sum — that is `tendsto_attention_of_tendsto_others` —
   and the limit row is a probability vector, which is the last sentence of the
   proof of `t:boolean` (`tendsto_row_isProbability`).
@@ -22,7 +26,7 @@ that need not become a standard basis row.
 Source: arXiv:2305.05465v6, the proof of `t:boolean` in §7.
 -/
 
-import Transformer.Clusters.Section7_OnlyOne
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -36,7 +40,7 @@ variable {d n m : ℕ}
 
 /-- **The remaining entry of a converging row.**  If every entry of the `i`-th
 row of `eq:P` but the `a`-th converges, so does the `a`-th, to what the row sum
-leaves.  This is what takes `l:boundedother`, stated over `j ∈ [n-1]`, to the
+leaves. This is what takes `l:boundedother`, stated over `j ∈ [n-1]`, to the
 whole row.
 
 Source: arXiv:2305.05465v6, the proof of `t:boolean` in §7. -/
@@ -72,7 +76,7 @@ theorem tendsto_row_isProbability (hn : 0 < n) (Q K : ParamMatrix d)
 
 /-- The hypotheses of `tendsto_attention_of_tendsto_others` and of
 `tendsto_row_isProbability` are satisfiable: along a configuration that does
-not move, every entry of `eq:P` is constant, hence convergent.  The whole
+not move, every entry of `eq:P` is constant, hence convergent. The whole
 family is exhibited, which in particular gives the subfamily `j ≠ a` that
 `tendsto_attention_of_tendsto_others` asks for. -/
 example (Q K : ParamMatrix d) :

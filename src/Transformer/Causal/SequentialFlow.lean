@@ -1,4 +1,14 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Causal.Basic
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+public import Mathlib.Analysis.Calculus.FDeriv.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+
+/-!
 # Causal attention — Sequential gradient flows (§A of 2411.04990v2)
 
 The causal dynamics is not a gradient flow, but it is a *sequential* one:
@@ -21,13 +31,7 @@ characteristic polynomial of the Jacobian of the truncated system, over `ℂ`,
 which is where the eigenvalues of a real matrix live.
 -/
 
-import Transformer.Basic
-import Transformer.Causal.Basic
-import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-import Mathlib.Analysis.Calculus.FDeriv.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -94,7 +98,7 @@ def IsCriticalPrefix
   ∀ i : Prefix n k, seqVelocity n E Z i.1 ψ = 0
 
 /-- **Strongly stable:** every eigenvalue of the truncated Jacobian has
-strictly negative real part.  The eigenvalues are the complex roots of the
+strictly negative real part. The eigenvalues are the complex roots of the
 characteristic polynomial of the matrix pushed forward to `ℂ`. -/
 def StronglyStablePrefix
     (E Z : Idx n → (Idx n → ℝ) → ℝ) (k : Idx n) (ψ : Idx n → ℝ) : Prop :=
@@ -112,7 +116,7 @@ def StronglyUnstablePrefix
 
 /-- The original hypotheses of Appendix A's `lemma:convergence` are
 jointly satisfiable: one particle with `E_1(ψ) = cos ψ_1` and `Z_1 ≡ 1`, `c = 1/2`,
-`C = 2`.  The velocity is `sin φ_1`; its critical points are the multiples
+`C = 2`. The velocity is `sin φ_1`; its critical points are the multiples
 `mπ`, strongly unstable for even `m` (Jacobian `cos = 1`) and strongly stable
 for odd `m` (Jacobian `cos = -1`). -/
 example :

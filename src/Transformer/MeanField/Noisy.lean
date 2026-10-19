@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+public import Transformer.Perspective.Section2_GradientFlow
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+
+/-!
 # Mean-Field Dynamics — Noisy Transformers (§7 of 2512.01868v4)
 
 * `eq: noisy.SDE`         — noisy Transformer SDE on the sphere, stated
@@ -7,11 +14,11 @@
 
 `eq: McKV`, the McKean–Vlasov limit, is not stated: it is an SDE whose drift
 depends on the law of its own solution, and laws of processes are not
-modelled here.  `eq: Fokker` is the equation that law satisfies.
+modelled here. `eq: Fokker` is the equation that law satisfies.
 
 Two objects the statements need are carried as parameters rather than built:
 the realization `W` of the driving Brownian motion, and the Laplace–Beltrami
-operator `Δ` of the sphere.  Neither the Itô/Stratonovich correction that keeps
+operator `Δ` of the sphere. Neither the Itô/Stratonovich correction that keeps
 the solution on the sphere nor the construction of `Δ` is formalized here.
 
 The pitchfork bifurcation at `κ = 2` of the homogeneous (`β = 0`) Kuramoto
@@ -20,10 +27,7 @@ and the threshold comes from the self-consistency `r = I₁(κ r) / I₀(κ r)`,
 which needs modified Bessel functions.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
-import Transformer.Perspective.Section2_GradientFlow
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -45,7 +49,7 @@ noncomputable def noisyDrift
       Real.exp (β * inner (𝕜 := ℝ) ((X i : EucSpace d)) ((X j : EucSpace d)))
         • (X j : EucSpace d))
 
-/-- The drift is tangent to the sphere at `X_i`: `⟨X_i, b_i(X)⟩ = 0`.  This is
+/-- The drift is tangent to the sphere at `X_i`: `⟨X_i, b_i(X)⟩ = 0`. This is
 what makes `eq: noisy.SDE` an equation on `(𝕊^{d-1})^n` rather than on
 `(ℝ^d)^n`. -/
 theorem inner_noisyDrift_eq_zero (β : ℝ) (X : SphereTuple d n) (i : Idx n) :
@@ -59,7 +63,7 @@ theorem inner_noisyDrift_eq_zero (β : ℝ) (X : SphereTuple d n) (i : Idx n) :
 
 Stated pathwise, as the integral equation the display abbreviates, for a fixed
 realization `W` of the driving noise: the stochastic integral of the constant
-diffusion coefficient `√(2/κ)` is `√(2/κ) W_i(t)`.  The correction term that
+diffusion coefficient `√(2/κ)` is `√(2/κ) W_i(t)`. The correction term that
 distinguishes the Itô and Stratonovich readings on the sphere — the one that
 keeps `X_i(t)` on `𝕊^{d-1}` — is not formalized.
 Source: arXiv:2512.01868v4, §7. -/
@@ -77,7 +81,7 @@ form: for every `C²` test function `φ`,
   `d/dt ∫ φ dμ_t = ∫ ( κ⁻¹ Δφ + ⟨∇φ, v_t⟩ ) dμ_t`,
   `v_t(x) = Proj_x ∫ e^{β⟨x,y⟩} y dμ_t(y)`,
 
-which is `∂_t μ_t = κ⁻¹ Δ μ_t - ∇ · (μ_t v_t)`.  The drift `v_t` is the
+which is `∂_t μ_t = κ⁻¹ Δ μ_t - ∇ · (μ_t v_t)`. The drift `v_t` is the
 `USA` field of `eq:continuity` (`Perspective.usaVectorField`), unnormalized,
 as in `eq: McKV`.
 
@@ -85,12 +89,12 @@ as in `eq: McKV`.
 
   `∂_t μ_t + κ⁻¹ Δ μ_t = ∇ · ( μ_t ∫ e^{β⟨·,y⟩} y μ_t(dy) )`,
 
-with both signs reversed.  The sentence after it says the equation "reduces
+with both signs reversed. The sentence after it says the equation "reduces
 to `eq:continuity` as `κ → ∞`", and `eq:continuity` is
 `∂_t μ_t + ∇ · (μ_t v_t) = 0`, the opposite sign of the transport term; and
 `+κ⁻¹Δμ_t` on the left is the backward heat equation, not the law of the
-forward diffusion `√(2κ⁻¹) dW`.  The equation stated is the one the text
-describes: the law of `eq: McKV`, reducing to `eq:continuity`.  The printed
+forward diffusion `√(2κ⁻¹) dW`. The equation stated is the one the text
+describes: the law of `eq: McKV`, reducing to `eq:continuity`. The printed
 drift also omits `Proj_x`; in weak form the drift is paired with the
 gradient of a test function along the sphere, which is tangent, so only the
 tangential part of the drift enters and the two agree.

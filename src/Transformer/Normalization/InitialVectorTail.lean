@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Normalization.InitialVectorMoments
+public import Transformer.Normalization.InitialConcentration
+
+/-!
 # Dimension-independent concentration of bounded vector sums
 
 The vector Hoeffding input in Appendix B, proof of Theorem 4.2 of
 arXiv:2510.22026v2.
 -/
 
-import Transformer.Normalization.InitialVectorMoments
-import Transformer.Normalization.InitialConcentration
+@[expose] public section
 
 open scoped BigOperators
 open MeasureTheory

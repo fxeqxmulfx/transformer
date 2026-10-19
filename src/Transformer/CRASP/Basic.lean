@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Defs
+
+/-!
 # Temporal logic with counting: derived operators, and the Dyck example
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -11,20 +15,20 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 
 This file writes those definitions out and proves that each has the value the
 paper intends, stays in the past-only fragment when its arguments do, and —
-what the depth hierarchy needs — does not raise the depth.  Note that a
+what the depth hierarchy needs — does not raise the depth. Note that a
 constant `0` is *not* among them: the only base term is `1` and terms are
-never subtracted, so every term is at least `1` unless it is a count.  What
+never subtracted, so every term is at least `1` unless it is a count. What
 the paper writes as `t = 0` is `t < 1`, which is `Form.isZero` here.
 
 Appendix A.2 traces the Dyck formula
 
     φ_Dyck = (◁#[Q_(] = ◁#[Q_)]) ∧ (◁#[◁#[Q_(] < ◁#[Q_)]] = 0)
 
-over `(())()` and `())()(`, position by position.  The two `example`s at the
+over `(())()` and `())()(`, position by position. The two `example`s at the
 end check this development against that trace.
 -/
 
-import Transformer.CRASP.Defs
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -110,7 +114,7 @@ omit [DecidableEq σ] in
   simp only [le, Form.depth]
   omega
 
-/-- `t = 0`.  There is no constant `0` among the terms, so the paper's `t = 0`
+/-- `t = 0`. There is no constant `0` among the terms, so the paper's `t = 0`
 is read as `t < 1`. -/
 def isZero (t : Term σ) : Form σ := .lt t .one
 
@@ -129,7 +133,7 @@ omit [DecidableEq σ] in
   simp [isZero, Form.past, Term.past]
 
 /-- `▷#[⊤] < 2`, with `⊤` written `¬(1 < 1)`: the position is the last one of
-the string.  The suffix `w[i:n]` the term counts has `n - i + 1` positions, so
+the string. The suffix `w[i:n]` the term counts has `n - i + 1` positions, so
 the formula holds exactly when `n ≤ i`; off the string it holds as well, the
 suffix being empty there (§2.2). -/
 def atEnd : Form σ := .lt (.countR (.neg (.lt .one .one))) (Term.ofPos 1)

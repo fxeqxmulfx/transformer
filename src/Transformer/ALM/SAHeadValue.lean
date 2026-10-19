@@ -1,8 +1,12 @@
-/-
+module
+
+public import Transformer.ALM.SAHead
+
+/-!
 # And so the bounds are bounds on standard attention
 
 `Transformer.ALM.SAHead` identifies the hand-written softmax head with
-`Transformer.XSA.SAOutput` at coordinate-projection weights.  That is only
+`Transformer.XSA.SAOutput` at coordinate-projection weights. That is only
 worth stating if the bounds move across it, and they do, with no work beyond
 the rewrite: every theorem of this development that bounds the hand-written
 sum is now a theorem about causal self-attention.
@@ -12,14 +16,14 @@ weight at a slot upper-bounds the distance from the attention output to the
 value stored there — and `sa_head_output_at_index` is the one that matters:
 `head_output_at_index` (`Transformer.ALM.SoftmaxValue`) applies to an ordinary
 attention head, so a trained head and a lookup head are the same operator at
-different weights.  That is what licenses the hybrid layer the authors
+different weights. That is what licenses the hybrid layer the authors
 describe, where the executor and the language model share an architecture.
 
 Source: Percepta, *Can LLMs Be Computers?* (2026-03-11), §"a dedicated fast
 path paired with a slower, more general model".
 -/
 
-import Transformer.ALM.SAHead
+@[expose] public section
 
 open scoped BigOperators
 

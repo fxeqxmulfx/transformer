@@ -1,16 +1,20 @@
-/-
+module
+
+public import Transformer.ALM.ScoreGap
+
+/-!
 # The whole run's verdict, and that merging the heads does not soften it
 
 `Transformer.ALM.GuardSep` says what one query earns by passing
-`grid.rs::off_the_grid`.  The runtime does not ask about one query: every head
+`grid.rs::off_the_grid`. The runtime does not ask about one query: every head
 carries a `GridWitness`, `observe` folds each query into it, `merge` combines
 the per-head records into the run's, and the report is `is_clean`, which reads
-one field — `count == 0`.  Between "each query passed" and "the run is clean"
+one field — `count == 0`. Between "each query passed" and "the run is clean"
 sit a fold and a merge, and neither had been said to preserve anything.
 
-They do, and the two statements are the file's point.  `clean_merge` — a merged
+They do, and the two statements are the file's point. `clean_merge` — a merged
 witness is clean exactly when both of its halves are, so a dirty query in one
-head cannot be averaged away by a clean one in another.  `clean_iff_worst_le_one`
+head cannot be averaged away by a clean one in another. `clean_iff_worst_le_one`
 — the counter and the high-water mark of `grid_ratio` threshold the same thing,
 so reporting the ratio instead of the verdict, which is what `grid_ratio`'s
 docstring claims makes the cost of the query scale visible, loses no
@@ -27,7 +31,7 @@ Source: `todo3.md` §4 and §4a; `vm-rs/alm-hull/src/grid.rs`, `grid_ratio`,
 `GridWitness::observe`, `merge` and `is_clean`.
 -/
 
-import Transformer.ALM.ScoreGap
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -175,7 +179,7 @@ theorem binade_of_worst_le_half {l : List (ℝ × ℝ)} (hw : runWorst l ≤ 1 /
 /-- **From the run's report to a query's answer.**  A run that came within a
 factor of two of the wall answers each of its separated queries exactly: the
 witness gives the spacing, `Transformer.ALM.ScoreGap` gives the separation, and
-`cmp_of_guard` gives the comparison.  This is what `is_clean` is for. -/
+`cmp_of_guard` gives the comparison. This is what `is_clean` is for. -/
 theorem run_retrieval_of_worst_lt_one {l : List (ℝ × ℝ)} (hw : runWorst l < 1)
     {p : ℕ} {E : ℤ} {σ best second best' second' δ₁ δ₂ : ℝ}
     (hmem : (ulpOf p E, σ) ∈ l) (hσ : 0 < σ) (hgap : 1 ≤ keyGap σ best second)
@@ -190,7 +194,7 @@ theorem run_retrieval_of_worst_lt_one {l : List (ℝ × ℝ)} (hw : runWorst l <
 
 /-- A two-query run one binade from the wall, and the crossing that would ruin
 it: spacings of `1` against margins of `±4` are clean with a ratio of `1/4`,
-while a spacing of `8` against the same margin is not.  These witness
+while a spacing of `8` against the same margin is not. These witness
 `clean_merge`, `clean_iff_forall`, `clean_iff_worst_le_one`,
 `strict_guard_of_worst_lt_one` and `binade_of_worst_le_half`. -/
 example : runCount [((1 : ℝ), (4 : ℝ)), (1, -4)] = 0 ∧

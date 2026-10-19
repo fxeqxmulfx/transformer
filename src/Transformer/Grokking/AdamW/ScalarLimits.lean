@@ -1,5 +1,7 @@
-import Transformer.Grokking.AdamW.ScalarRecurrence
-import Transformer.Grokking.AdamW.MomentLimits
+module
+
+public import Transformer.Grokking.AdamW.ScalarRecurrence
+public import Transformer.Grokking.AdamW.MomentLimits
 
 /-!
 # Necessary finite parameter limits of the retained native recurrence
@@ -18,6 +20,8 @@ parameter convergence, gradient descent, or rule selection. The CE
 application must derive input convergence from its actual feedback;
 stochastic minibatch gradients need not converge at stable parameters.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

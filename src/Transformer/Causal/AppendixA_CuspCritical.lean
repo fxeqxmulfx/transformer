@@ -1,5 +1,7 @@
-import Transformer.Causal.AppendixA_CuspEnergy
-import Mathlib.Analysis.Analytic.IsolatedZeros
+module
+
+public import Transformer.Causal.AppendixA_CuspEnergy
+public import Mathlib.Analysis.Analytic.IsolatedZeros
 
 /-!
 # Isolated critical points of the actual periodic cusp energies
@@ -24,6 +26,8 @@ also give an actual critical point of every truncation. This
 provides the critical-point inputs for the separate Jacobian check.
 No convergence or stability conclusion of the printed lemma is used.
 -/
+
+@[expose] public section
 
 open Real Filter Set Topology
 namespace Transformer.Causal

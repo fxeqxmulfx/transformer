@@ -1,11 +1,17 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixD_YbetaInvariance
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # Appendix D — the decay of `1 - γ_β(t)`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
 `e:ybetacloseto1`, the Grönwall estimate for the scalar equation `eq: ybeta`
-itself.  It is proved here, on the range its own constant points at, from
+itself. It is proved here, on the range its own constant points at, from
 `eq: ybeta` alone: the properties of the solution the survey's proof uses —
 `γ_β` stays in `[0, 1]`, increases, and has passed `1/2` by time `n e^β / 2` —
 are in `Perspective.AppendixD_YbetaInvariance`.
@@ -17,9 +23,7 @@ The stability estimates of the first half of Appendix D are in
 `Perspective.AppendixD_PhaseTransition`.
 -/
 
-import Transformer.Perspective.AppendixD_YbetaInvariance
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -38,9 +42,9 @@ variable (n : ℕ)
 *The range is `t ≥ n e^β / 2`, not `t ≥ 0`.*  The survey's right-hand side is
 `(1/2) exp(-λ (t - n e^β/2))` with `λ = n/(n + e^{β/2})`, so at `t = n e^β/2`
 it asserts `γ_β ≥ 1/2` and before that time it asserts less than `1` only by
-the width of the exponential.  At `n = 2`, `β = 0`, where `eq: ybeta` is
+the width of the exponential. At `n = 2`, `β = 0`, where `eq: ybeta` is
 solved in closed form by `tanh`, the printed form already fails at `t = 0`:
-it reads `1 ≤ (1/2) e^{2/3} ≈ 0.974`.  This is `not_forall_ybeta_close_to_1`.
+it reads `1 ≤ (1/2) e^{2/3} ≈ 0.974`. This is `not_forall_ybeta_close_to_1`.
 
 *`n ≥ 1` instead of `n ≥ 2`.*  The theorem the estimate serves fixes `n ≥ 2`;
 the proof needs only `n ≥ 1`.
@@ -54,7 +58,7 @@ the rate
   `2 e^{βγ} ((n-1)γ + 1) / (e^β + (n-1) e^{βγ})  ≥  (n+1)/(n - 1 + e^{β/2})
                                                  ≥  n/(n + e^{β/2}) = λ`
 
-is the survey's `λ`.  The constant `n² e^β / (2(n + e^{β/2}))` is exactly
+is the survey's `λ`. The constant `n² e^β / (2(n + e^{β/2}))` is exactly
 `λ · n e^β / 2`, so nothing is lost.
 
 Source: arXiv:2312.10794v5, Appendix D, `e:ybetacloseto1`. -/
@@ -186,9 +190,9 @@ example : (0 : ℕ) < 2 ∧ (0 : ℝ) ≤ 0 ∧ ybetaODE_SA 2 0 Real.tanh :=
 /-- **On all of `t ≥ 0` the estimate is false.**
 
 The survey states `e:ybetacloseto1` "for any `t ≥ 0`", within
-`thm: phase.transition.curve`, which fixes `β ≥ 0` and `n ≥ 2`.  At `n = 2`,
+`thm: phase.transition.curve`, which fixes `β ≥ 0` and `n ≥ 2`. At `n = 2`,
 `β = 0` the solution of `eq: ybeta` is `tanh`, and at `t = 0` the bound reads
-`1 ≤ (1/2) e^{2/3}`, false since `2/3 < log 2`.  The estimate is about the
+`1 ≤ (1/2) e^{2/3}`, false since `2/3 < log 2`. The estimate is about the
 regime past the half-way time `n e^β / 2`, which is `1` here;
 `ybeta_close_to_1` proves it there.
 

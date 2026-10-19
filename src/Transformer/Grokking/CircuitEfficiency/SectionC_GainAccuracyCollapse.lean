@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainStrongDecayLoss
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainUnequalDelay
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainStrongDecayLoss
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainUnequalDelay
 
 /-!
 # Arbitrarily delayed accuracy success with vanishing native confidence
@@ -42,6 +44,8 @@ decay differ from learned nonzero-beta GPTMini and floating-point
 kernels. Seed/margin scales can leave machine range. The theorem
 makes no claim of a measured grokking event on preserved GPTMini.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

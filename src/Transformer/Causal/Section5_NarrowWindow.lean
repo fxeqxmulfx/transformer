@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Causal.Section5_CircularInteraction
+public import Transformer.Causal.Section5_ParameterGeometry
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+
+/-!
 # Original narrow peak windows and curvature-parameter preservation
 
 ArXiv:2411.04990v2, Appendix B and §5, the force lower bound
@@ -19,9 +25,7 @@ The original signed curvature parameter inequality is also
 preserved when the neighborhood radius is decreased.
 -/
 
-import Transformer.Causal.Section5_CircularInteraction
-import Transformer.Causal.Section5_ParameterGeometry
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+@[expose] public section
 
 open Real Set
 

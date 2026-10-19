@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Kinetic.Defs
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
+
+/-!
 # Kinetic theory for Transformers — the eigenvalues `a_n` tend to `0`
 
 The footnote of `thm:U-shape` of arXiv:2605.09213v1: since `w_β` is smooth,
@@ -8,12 +13,11 @@ The footnote of `thm:U-shape` of arXiv:2605.09213v1: since `w_β` is smooth,
 Three integrations by parts on `[0, 2π]` move three derivatives onto `w_β`:
 the boundary terms vanish because `sin(2πn) = sin 0` and `cos(2πn) = cos 0`,
 and the one step that needs `w_β` itself at the endpoints — the second — sees
-`w_β'`, which vanishes at both.  So `ŵ_β(n) = n⁻³ (2π)⁻¹ ∫ sin(nθ) w_β'''(θ) dθ`,
+`w_β'`, which vanishes at both. So `ŵ_β(n) = n⁻³ (2π)⁻¹ ∫ sin(nθ) w_β'''(θ) dθ`,
 and `|a_n| ≤ C / n`.
 -/
 
-import Transformer.Kinetic.Defs
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
+@[expose] public section
 
 open Real
 

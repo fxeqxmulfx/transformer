@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.LocalMemoryCore
+module
+
+public import Transformer.GPTMini.Sparsemax.LocalMemoryCore
 
 /-!
 # Linear-size trainable path weights and independent query/key norms
@@ -16,6 +18,8 @@ of stored coordinates is linear in dictionary size; dense materialization
 of the full derived Gram is unnecessary and would still be quadratic.
 Feasibility and actual sparse attention are proved in subsequent modules.
 -/
+
+@[expose] public section
 
 noncomputable section
 

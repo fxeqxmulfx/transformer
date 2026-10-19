@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_MeanAxisTransport
+public import Transformer.Interpolation.Section1_WeakConcatenation
+
+/-!
 # Original rank-one weak transport across control switches
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §3.2, Steps 1 and 3
@@ -15,8 +20,7 @@ Both phase boundaries are included; no uniqueness is assumed for the
 full switched equation, and the earlier or later controls are arbitrary.
 -/
 
-import Transformer.Interpolation.Section3_MeanAxisTransport
-import Transformer.Interpolation.Section1_WeakConcatenation
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

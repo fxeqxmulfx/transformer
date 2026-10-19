@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.SmoothApprox.Basic
+public import Transformer.SmoothApprox.Measure
+
+/-!
 # Smooth approximation and smooth test functions
 
 `SmoothApprox/Basic.lean` approximates continuous and `C¹` functions with
@@ -12,5 +17,4 @@ Use: the weak formulation `d:solconti` of arXiv:2305.05465v6, §6, which tests
 against `C_c^∞`.
 -/
 
-import Transformer.SmoothApprox.Basic
-import Transformer.SmoothApprox.Measure
+@[expose] public section

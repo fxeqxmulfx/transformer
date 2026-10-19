@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_LogMeanLowerBarrier
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # Scalar conversion of the original logarithmic mean comparison
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -16,8 +21,7 @@ In particular the noise radius is never multiplied by the reference's
 exponential growth envelope.
 -/
 
-import Transformer.Homogenized.Section7_LogMeanLowerBarrier
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open Set
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.ICEoT.Section3_Closure
+public import Mathlib.Analysis.SpecialFunctions.Exp
+
+/-!
 # IC-EoT: ordinary dot-product attention need not be input convex
 
 arXiv:2603.22095v2, §2.1 and §2.2.4. A one-dimensional head with
@@ -7,8 +12,7 @@ query. Its actual softmax output fails Jensen on the negative half-line.
 This supplies a concrete witness for the source's architectural motivation.
 -/
 
-import Transformer.ICEoT.Section3_Closure
-import Mathlib.Analysis.SpecialFunctions.Exp
+@[expose] public section
 
 noncomputable section
 

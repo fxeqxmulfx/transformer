@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_AttentionWeights
+
+/-!
 # Lipschitz regularity of the actual original attention field
 
 ArXiv:2411.04551v3, §1, `eq: vf`, and §2, `prop: targets.atoms`.
@@ -16,7 +20,7 @@ has the uniform spatial regularity required by characteristic transport;
 no differentiability or transport property of that law is assumed.
 -/
 
-import Transformer.Interpolation.Section2_AttentionWeights
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology NNReal

@@ -1,17 +1,23 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Defs
+public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
+public import Mathlib.MeasureTheory.Function.Jacobian
+
+/-!
 # Saddle avoidance — preimages of null sets
 
 A `C¹` map `g` of a finite-dimensional real normed space into itself whose
 derivative has nonzero determinant everywhere pulls null sets back to null
 sets (`measure_preimage_eq_zero`), and so do its iterates
-(`measure_preimage_iterate_eq_zero`).  Locally: the points of a set `S` where
+(`measure_preimage_iterate_eq_zero`). Locally: the points of a set `S` where
 the determinant is nonzero that `g` maps into a null set form a null set
 (`measure_inter_preimage_eq_zero`), and the same holds for the iterates when
 `g` maps `S` into itself (`measure_inter_preimage_iterate_eq_zero`).
 
 By the inverse function theorem every point where the determinant is nonzero
 has an open neighbourhood `U` on which `g` is injective; countably many of
-them cover the open set of such points.  On `s = g⁻¹(N) ∩ U` the change of
+them cover the open set of such points. On `s = g⁻¹(N) ∩ U` the change of
 variables formula gives `∫_s |det Dg| = μ(g(s)) ≤ μ(N) = 0`, and
 `|det Dg| > 0`, so `μ(s) = 0`.
 
@@ -20,9 +26,7 @@ This is `lem:measure-0-local-diff` of arXiv:1710.07406, §4.1, for the space
 which are `C¹` and so locally Lipschitz.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Defs
-import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
-import Mathlib.MeasureTheory.Function.Jacobian
+@[expose] public section
 
 open Set MeasureTheory
 

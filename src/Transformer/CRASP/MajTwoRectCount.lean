@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.MajTwoRectBounds
+
+/-!
 # Counting rectangles
 
 arXiv:2506.16055v3, Appendix E, the transformation `C_y` in the proof
@@ -6,7 +10,7 @@ of `thm:majtwo_to_tlc`. Its three order regions become strict left counts,
 the current-position indicator, and strict right counts.
 -/
 
-import Transformer.CRASP.MajTwoRectBounds
+@[expose] public section
 
 namespace Transformer.CRASP
 

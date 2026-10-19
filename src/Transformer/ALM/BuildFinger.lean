@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ALM.BuildOrder
+
+/-!
 # What this port pays, which is less than the tariff charges
 
 `Transformer.ALM.HullBuild` prices a build at two ordered-container searches
@@ -7,28 +11,28 @@ Both are tariffs for the C++ container: `std::map::insert` after a
 `lower_bound` searches a second time, because it is handed a hint and not a
 position.
 
-`vm-rs/alm-hull/src/envelope.rs` does not.  One `lower_bound_slope` per
+`vm-rs/alm-hull/src/envelope.rs` does not. One `lower_bound_slope` per
 `add_line`, and everything after it — `next`, `prev`, `erase`,
-`insert_before` — is a cursor walk from the node that search returned.  And
+`insert_before` — is a cursor walk from the node that search returned. And
 `vm-rs/alm-hull/src/tree.rs` holds the two ends of the envelope in a field, so
 `lower_bound_slope` answers without descending at all whenever the arriving
-slope falls outside the span already covered.  `alm-stress` counts those: of
+slope falls outside the span already covered. `alm-stress` counts those: of
 its five arrival orders, three descend on no key whatsoever.
 
-So this file prices what the port runs.  `portCost` charges one search per
+So this file prices what the port runs. `portCost` charges one search per
 key, and that search is a logarithm only when the key lands strictly inside
-the span — `stepCost`.  `portCost_le_buildCost` is the claim `envelope.rs`
+the span — `stepCost`. `portCost_le_buildCost` is the claim `envelope.rs`
 makes and nothing proved; `portCost_le` lands at `n(log₂ n + 1) + n`, a third
 under `buildCost_le`; and `portCost_of_all_ends` is linear with no logarithm
 at all, which is the near-sorted path every reference trace takes.
 
-That sharpness costs something, and the cost is the point.  `buildCost` is
+That sharpness costs something, and the cost is the point. `buildCost` is
 blind to the fast path, so on the paraboloid it collapses to one number
 (`buildPrices_paraboloid`) and the spread `alm-stress` measures has to be
-charged to memory.  A tariff that can see the fast path sees a band instead:
+charged to memory. A tariff that can see the fast path sees a band instead:
 `portCost_moves_on_the_paraboloid` produces two orders of the same lifted keys
 whose prices differ, and `portPrices_ratio` bounds the band by `log₂ n + 2` —
-`20` at the stress size, against a measured `4.1`.  Most of the measured
+`20` at the stress size, against a measured `4.1`. Most of the measured
 spread is comparisons after all; the tariff simply could not see them.
 
 Source: `vm-rs/alm-hull/src/envelope.rs` (`add_line`),
@@ -37,7 +41,7 @@ Source: `vm-rs/alm-hull/src/envelope.rs` (`add_line`),
 columns).
 -/
 
-import Transformer.ALM.BuildOrder
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -46,7 +50,7 @@ namespace ALM
 
 /-- What one `add_line` pays to find its insertion point in a container of at
 most `2^(L-1)` lines: `L` comparisons when it has to descend, and one when the
-cached ends answer it.  `atEnd` is the test `lower_bound_slope` opens with —
+cached ends answer it. `atEnd` is the test `lower_bound_slope` opens with —
 the arriving slope is above every slope stored, or below every one. -/
 def stepCost (L : ℕ) (atEnd : Bool) : ℕ := if atEnd then 1 else L
 
@@ -92,7 +96,7 @@ def portCost (n : ℕ) (es : List Bool) (ps : List ℕ) : ℕ :=
 
 /-- **One search per key, not two.**  This is what the second `lower_bound`
 of `std::map::insert` costs and this port does not spend: `insert_before` is
-handed the cursor the first search returned.  The claim is made in
+handed the cursor the first search returned. The claim is made in
 `envelope.rs`; here it is as an inequality against the tariff
 `hullIndex.build` is still declared with. -/
 theorem portCost_le_buildCost (n : ℕ) (es : List Bool) (ps : List ℕ)
@@ -152,7 +156,7 @@ theorem searchCost_of_all_ends {n : ℕ} {es : List Bool} (h : ∀ e ∈ es, e =
 outside the span already covered — `ascending`, `descending` and `inside-out`
 of the stress table, which `alm-stress` now counts and finds descend on no key
 at all — the cached ends answer every search, and a build of lifted keys costs
-one unit each.  `tree.rs` keeps those two cursors for exactly this. -/
+one unit each. `tree.rs` keeps those two cursors for exactly this. -/
 theorem portCost_of_all_ends {n : ℕ} {es : List Bool} {ps : List ℕ}
     (h : ∀ e ∈ es, e = true) (hp : ∀ p ∈ ps, p = 0) :
     portCost n es ps = es.length := by
@@ -219,8 +223,8 @@ example : portCost 262144 (List.replicate 262144 true) (List.replicate 262144 0)
 
 /-- **The order still moves the price, with no erase anywhere.**
 `buildPrices_paraboloid` collapses the lifted build to a single number, which
-forced the measured spread to be charged entirely to memory.  It collapses
-because `buildCost` cannot see a search it does not have to run.  This one
+forced the measured spread to be charged entirely to memory. It collapses
+because `buildCost` cannot see a search it does not have to run. This one
 can: the same `m` lifted keys, erasing nothing either way, cost `m` when every
 key lands at an end and `m(log₂ n + 1)` when none does. -/
 theorem portCost_moves_on_the_paraboloid {m n : ℕ} (hm : 1 ≤ m) (hn : 2 ≤ n) :
@@ -249,7 +253,7 @@ example : 1 ≤ 262144 ∧ 2 ≤ 262144 := by norm_num
 
 /-- **Twenty, against a measured four point one.**  At the stress size the
 sharper tariff permits the worst arrival order twenty times the best, where
-`stress_spread_le` permitted three per cent.  The measured table sits between
+`stress_spread_le` permitted three per cent. The measured table sits between
 them — `0.030 s` to `0.123 s` — so the descent counts explain most of the
 spread and cannot explain all of it: `shuffled` and `outside-in` descend on
 the same keys to within fifty and still differ by half again, and that

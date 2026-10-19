@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_MixedMoments
-import Transformer.Modes.Section3_LogDeriv
+module
+
+public import Transformer.Modes.Section3_MixedMoments
+public import Transformer.Modes.Section3_LogDeriv
 
 /-!
 # Homogeneous expressions in the moments of a law
@@ -17,6 +19,8 @@ mixed derivative from §3.1. The connection to that derivative is proved in
 probability law the denominator is one, and the degree controls the product
 of moment bounds.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped Topology

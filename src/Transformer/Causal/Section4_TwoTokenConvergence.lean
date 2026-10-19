@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Causal.Section4_SecondOverlap
+public import Transformer.Causal.Section4_TwoClusterRefutation
+public import Transformer.Perspective.UniformAtomless
+
+/-!
 # Almost-everywhere convergence of the original two-token causal system
 
 ArXiv:2411.04990v2, §4, proof of `thm1`, base case `k=2`.
@@ -16,9 +22,7 @@ universal quantifier over all solutions and arbitrary query and key
 matrices. The estimates also allow every real temperature.
 -/
 
-import Transformer.Causal.Section4_SecondOverlap
-import Transformer.Causal.Section4_TwoClusterRefutation
-import Transformer.Perspective.UniformAtomless
+@[expose] public section
 
 open Real MeasureTheory Filter Topology
 

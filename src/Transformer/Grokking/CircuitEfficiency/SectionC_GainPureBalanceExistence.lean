@@ -1,6 +1,8 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainContinuity
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdRegime
-import Mathlib.Topology.Order.IntermediateValue
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainContinuity
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdRegime
+public import Mathlib.Topology.Order.IntermediateValue
 
 /-!
 # Actual positive pure-circuit balance at the original numerical settings
@@ -23,6 +25,8 @@ Gen over Mem: both pure alternatives have positive actual points.
 The source's coupled circuit-norm GD, learned transformer features,
 floating-point kernels and stochastic transfer are not asserted.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

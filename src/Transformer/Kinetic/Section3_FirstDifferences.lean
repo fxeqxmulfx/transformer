@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_Flow
+public import Transformer.Kinetic.Section3_Fence
+public import Transformer.Kinetic.Section3_Supersolution
+
+/-!
 # First differences of the flow
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 1, `eq:est-Gl`: moving
@@ -15,9 +21,7 @@ The source bounds the Glauber derivative `D_l θ_a`, which is an average of such
 differences; the bound is the same.
 -/
 
-import Transformer.Kinetic.Section3_Flow
-import Transformer.Kinetic.Section3_Fence
-import Transformer.Kinetic.Section3_Supersolution
+@[expose] public section
 
 open Real
 

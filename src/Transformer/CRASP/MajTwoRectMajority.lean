@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.MajTwoRectCountSemantics
+
+/-!
 # Turning a majority into a temporal comparison
 
 arXiv:2506.16055v3, Appendix E, `thm:majtwo_to_tlc`: twice the mass of
@@ -6,7 +10,7 @@ the positive rectangles exceeds the number of pairs plus twice the mass
 of the negative rectangles.
 -/
 
-import Transformer.CRASP.MajTwoRectCountSemantics
+@[expose] public section
 
 namespace Transformer.CRASP
 

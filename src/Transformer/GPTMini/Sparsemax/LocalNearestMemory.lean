@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Sparsemax.LocalJointMemory
-import Transformer.GPTMini.Sparsemax.PrefixNearestCodes
-import Transformer.GPTMini.Sparsemax.NearestMemoryGeneralization
+module
+
+public import Transformer.GPTMini.Sparsemax.LocalJointMemory
+public import Transformer.GPTMini.Sparsemax.PrefixNearestCodes
+public import Transformer.GPTMini.Sparsemax.NearestMemoryGeneralization
 
 /-!
 # Compact sparse causal memory with conditional unseen prediction guarantees
@@ -19,6 +21,8 @@ The prototype table, metric and possible path remain fixed data choices.
 Output-only attention nonidentifiability and task-loss/FFN selection remain
 separate questions. Future query tokens cannot affect the actual forward.
 -/
+
+@[expose] public section
 
 noncomputable section
 

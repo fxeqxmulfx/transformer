@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_ConvexFalse
+public import Transformer.AdaFisher.SectionA_Descent
+
+/-!
 # AdaFisher: the visualization grid and projection limitation
 
 arXiv:2405.16397v3, Appendix C, the 200×200 first-layer-weight mesh.
@@ -6,8 +11,7 @@ An interpolant of logged losses is not generally a single objective as a
 function of projected first-layer weights: other layers also change.
 -/
 
-import Transformer.AdaFisher.Section3_ConvexFalse
-import Transformer.AdaFisher.SectionA_Descent
+@[expose] public section
 
 noncomputable section
 

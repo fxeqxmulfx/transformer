@@ -1,17 +1,24 @@
-/-
+module
+
+public import Transformer.Perspective.CircleSA
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.WithLp
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # SA on the circle as a gradient flow in a metric
 
 The angles are the points of the Euclidean space `EucSpace n`, on which
 `𝖤_β` is `eucTorusEnergy`: smooth (`contDiff_eucTorusEnergy`), with the
 partial derivatives of `hasDerivAt_torusEnergy` as the coordinates of its
-gradient (`gradient_eucTorusEnergy_apply`).  So along a solution of
+gradient (`gradient_eucTorusEnergy_apply`). So along a solution of
 `angularSA`, for every curve `φ` of angles through `θ(t)` with velocity `b`,
 
   `d/ds (n² 𝖤_β)(φ(s))|_{s=0} = Σ_i Z_i(θ(t)) θ̇_i(t) b_i`
 
 (`hasDerivAt_torusEnergy_of_angularSA`): SA in angles is the gradient flow of
 the energy of §3.4 for the metric `diag(Z_i)`, `e:scalarproduct` in angles, as
-`sa_is_gradient_flow` states it on spheres.  With the gain
+`sa_is_gradient_flow` states it on spheres. With the gain
 `G = diag(n²/Z_i)`, SA in angles is `θ̇ = -G(θ) ∇f(θ)` for `f = -𝖤_β`
 (`saGain_gradient_apply`), the form of `Landscape.SaddleAvoidance.metricGradientFlow`;
 `𝖤_β` and `G` are invariant under the periods `2π e_k`
@@ -21,10 +28,7 @@ Source: arXiv:2312.10794v5, §3.4 (`e:scalarproduct`, `eq:r3`) and §7.1
 (`eq:energyF`).
 -/
 
-import Transformer.Perspective.CircleSA
-import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.Analysis.Calculus.ContDiff.WithLp
-import Mathlib.Analysis.Calculus.Deriv.Prod
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -45,7 +49,7 @@ theorem contDiff_eucTorusEnergy (β : ℝ) {k : WithTop ℕ∞} :
   fun_prop
 
 /-- **The gradient of `𝖤_β` has the partial derivatives as coordinates**:
-`(∇𝖤_β)_i = (1/n²) Σ_j e^{β cos(θ_j - θ_i)} sin(θ_j - θ_i)`.  The derivative
+`(∇𝖤_β)_i = (1/n²) Σ_j e^{β cos(θ_j - θ_i)} sin(θ_j - θ_i)`. The derivative
 along `e_i` is that of `x ↦ 𝖤_β(θ + (x - θ_i) e_i)`, the partial map of
 `hasDerivAt_torusEnergy`. -/
 theorem gradient_eucTorusEnergy_apply (β : ℝ) (hβ : β ≠ 0) (ψ : EucSpace n) (i : Idx n) :
@@ -136,7 +140,7 @@ angles through `θ(t)` with velocity `b`,
 
   `d/ds (n² 𝖤_β)(φ(s))|_{s=0} = Σ_i Z_i(θ(t)) θ̇_i(t) b_i`,
 
-`eq:r3` in angles.  Here `n² 𝖤_β = (1/2β) Σ_i Σ_j e^{β cos(θ_i - θ_j)}` is the
+`eq:r3` in angles. Here `n² 𝖤_β = (1/2β) Σ_i Σ_j e^{β cos(θ_i - θ_j)}` is the
 energy of §3.4, and `Σ_i Z_i a_i b_i` is `e:scalarproduct`: at
 `(cos θ_i, sin θ_i)` the tangent vectors `a_i τ_i` and `b_i τ_i`, `τ_i` the
 unit tangent, have the inner product `a_i b_i`. -/

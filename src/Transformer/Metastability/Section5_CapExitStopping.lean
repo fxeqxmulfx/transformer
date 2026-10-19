@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.Section5_CapExitNumerics
+public import Transformer.Metastability.Section5_VarianceCounterexample
+
+/-!
 # A nonempty stopping set violating the cap-exit time bound
 
 ArXiv:2410.06833v1, §5, `claim: de sortie de cap`, in Step 2 of
@@ -20,8 +25,7 @@ The existential theorem in `MeanFieldCapExit` records every original
 hypothesis, continuity of the measure curve and its push-forward law.
 -/
 
-import Transformer.Metastability.Section5_CapExitNumerics
-import Transformer.Metastability.Section5_VarianceCounterexample
+@[expose] public section
 
 open Real MeasureTheory
 namespace Transformer.Metastability

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.BallTransportFalse
+public import Transformer.Interpolation.Section3_NullRepeller
+
+/-!
 # The retained-fraction correction for the tubular mass lemma
 
 ArXiv:2411.04551v3, Appendix, `lem: tubular.mass.movement`.
@@ -21,8 +26,7 @@ proved in `BallTransportFalse`: the counterexample here applies even to
 controls allowed to depend on the initial probability.
 -/
 
-import Transformer.Interpolation.BallTransportFalse
-import Transformer.Interpolation.Section3_NullRepeller
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped ENNReal

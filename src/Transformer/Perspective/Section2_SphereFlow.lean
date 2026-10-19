@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.Section2_ExtendedField
+public import Transformer.Landscape.GlobalFlow.Existence
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Global existence and uniqueness of the actual spherical attention flow
 
 ArXiv:2312.10794v5, §2, `SA` and `eq: SA`, and arXiv:2411.04551v3,
@@ -16,8 +22,7 @@ Existence and uniqueness are proved for every real temperature; the
 source's positive-temperature case is included without changing its field.
 -/
 
-import Transformer.Perspective.Section2_ExtendedField
-import Transformer.Landscape.GlobalFlow.Existence
+@[expose] public section
 
 open scoped BigOperators
 open Real Set Filter Topology

@@ -1,10 +1,15 @@
-/-
+module
+
+public import Transformer.ALM.Defs
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # What actually orders two writes to one key, and how long it keeps doing it
 
 `Transformer.ALM.HullResolve` and `Transformer.ALM.SoftmaxLatest` describe
 `TieBreak::LATEST` as the machine documents it: two entries whose scores are
-*equal* are separated by the sequence number `HullMeta::last_seq` carries.  On
-the released weights that branch is never taken.  `todo3.md` §2a measures it —
+*equal* are separated by the sequence number `HullMeta::last_seq` carries. On
+the released weights that branch is never taken. `todo3.md` §2a measures it —
 zero ties on latest-flagged heads across `hello`, and the closest runner-up
 `6.026e-6` away — because a key is a matvec through the residual stream and the
 matvec rounds, so two writes to one logical key do not arrive at the head with
@@ -13,17 +18,17 @@ the same key and there is no exact tie left to break.
 What orders them instead is a perturbation the compiler folds into the key:
 `graph/core.py:316` adds `LATEST_ALPHA * inv_log_pos` to `ky`, and
 `evaluator.py:230` computes `inv_log_pos` at position `p` as
-`1/log 2 - 1/log (p + 2)`, which increases with `p`.  So the released machine
+`1/log 2 - 1/log (p + 2)`, which increases with `p`. So the released machine
 runs on the perturbation and `last_seq` is its unreached fallback, and nothing
 in this development said what the perturbation has to satisfy.
 
 This file says it, as a two-sided window on the scale `α` against the rounding
 `η` the key path introduces:
 
-* `latest_wins` — the lower side.  While one step of the perturbation is wider
+* `latest_wins` — the lower side. While one step of the perturbation is wider
   than the rounding, the later of two writes to one logical key scores strictly
   higher, with no tie and no sequence number consulted.
-* `distinct_keys_keep_their_order` — the upper side.  While the whole
+* `distinct_keys_keep_their_order` — the upper side. While the whole
   perturbation stays under the unit gap between distinct integer keys, it
   reorders nothing it was not meant to.
 * `released_alpha_below_half` — and the shipped `LATEST_ALPHA = 0.3` clears the
@@ -34,13 +39,12 @@ and the rounding does not — and `Transformer.ALM.LatestClose` says where it
 stops being met, and that the answer inverts when it does.
 
 Source: `todo3.md` §2 and §2a; `transformer_vm/graph/core.py:167-170, 316`;
-`transformer_vm/evaluator.py:230`.  Scores are stated at unit query scale,
+`transformer_vm/evaluator.py:230`. Scores are stated at unit query scale,
 which decides nothing an argmax sees — `vm-rs/alm-model/src/cache.rs` divides a
 query back to it and `vm-rs/alm-hull/src/gap.rs` reports every gap in it.
 -/
 
-import Transformer.ALM.Defs
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -101,9 +105,9 @@ lemma writeScore_eq (α : ℝ) (q k : ℤ) (p : ℕ) (ν : ℝ) :
 key `k`, at positions `p` and `r`, each landing within `η` of the score the
 exact key path would give: if one step of the perturbation across that interval
 is wider than the rounding can be on both sides together, the later write scores
-strictly higher.  `HullMeta::last_seq` is never reached, which is what §2a
+strictly higher. `HullMeta::last_seq` is never reached, which is what §2a
 measures on the released weights — zero latest-ties, and the machine still
-correct.  That `p` precedes `r` is not assumed; the hypothesis says so, since
+correct. That `p` precedes `r` is not assumed; the hypothesis says so, since
 `invLogPos` increases. -/
 theorem latest_wins {α q η ν₁ ν₂ : ℝ} {k : ℤ} {p r : ℕ}
     (h₁ : |ν₁| ≤ η) (h₂ : |ν₂| ≤ η)
@@ -132,7 +136,7 @@ example : ∃ η ν₁ ν₂ : ℝ, 0 < η ∧ |ν₁| ≤ η ∧ |ν₂| ≤ η
 /-! ### The upper side: distinct keys are not reordered -/
 
 /-- Between integer keys at an integer query the scores differ by an integer,
-so two distinct ones are a whole unit apart.  That unit is the room the
+so two distinct ones are a whole unit apart. That unit is the room the
 perturbation has to fit inside. -/
 lemma one_le_sScore_sub {q j k : ℤ} (h : sScore q j < sScore q k) :
     sScore q j + 1 ≤ sScore q k := by
@@ -146,7 +150,7 @@ lemma one_le_sScore_sub {q j k : ℤ} (h : sScore q j < sScore q k) :
 /-- **And the perturbation reorders nothing it was not meant to.**  The whole of
 it is under `α / log 2` at every position, by `invLogPos_lt`; while that and the
 rounding on both sides together stay inside the unit gap, a key that scored
-lower still scores lower, wherever and whenever either was written.  So recency
+lower still scores lower, wherever and whenever either was written. So recency
 is bought without spending correctness — the upper end of §2a's window. -/
 theorem distinct_keys_keep_their_order {α η ν₁ ν₂ : ℝ} {q j k : ℤ} {p r : ℕ}
     (hα : 0 ≤ α) (h₁ : |ν₁| ≤ η) (h₂ : |ν₂| ≤ η)
@@ -177,7 +181,7 @@ example : ∃ α η ν₁ ν₂ : ℝ, 0 ≤ α ∧ |ν₁| ≤ η ∧ |ν₂| �
 
 /-- **And the shipped constant is inside that side.**  `LATEST_ALPHA = 0.3`
 (`transformer_vm/graph/core.py:170`) holds the whole perturbation below `1/2`,
-half the gap it is not allowed to cross.  This is the `1/2` §2a names as the
+half the gap it is not allowed to cross. This is the `1/2` §2a names as the
 upper end of the admissible window, and the reason six orders of magnitude of
 `α` all reproduce the traces. -/
 lemma released_alpha_below_half (p : ℕ) : (0.3 : ℝ) * invLogPos p < 1 / 2 := by

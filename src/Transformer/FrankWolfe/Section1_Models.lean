@@ -1,25 +1,29 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.Convex.Combination
+public import Mathlib.Analysis.Convex.Extreme
+public import Mathlib.Analysis.InnerProductSpace.Positive
+
+/-!
 # Attention's forward pass and Frank-Wolfe — the models
 
 Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
 *Attention's forward pass and Frank-Wolfe*, §1.
 
 The paper studies an encoder-only, single-head, MLP-free Transformer in
-discrete time, with the tokens living in `ℝ^d` rather than on the sphere.  The
+discrete time, with the tokens living in `ℝ^d` rather than on the sphere. The
 layer map is `eq:sa`, its renormalized form `eq: rescaled.Tformers`, and the
 object of study is the singular limit `β → +∞`, `eq: hardmax.dynamics.V`,
 which for `V^t = h^t I_d` becomes the Frank-Wolfe iteration `(SA_∞)`.
 
 This file carries the vocabulary: the four dynamics, the leader set `𝒞_i^t`,
 the convex hull `𝒦^t` of a configuration, the quadratic objective `J`, and the
-cells `𝒞_i(v)` of `eq: cells`.  The theorems are in the `Section2_*` …
+cells `𝒞_i(v)` of `eq: cells`. The theorems are in the `Section2_*` …
 `Section5_*` files.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.Convex.Combination
-import Mathlib.Analysis.Convex.Extreme
-import Mathlib.Analysis.InnerProductSpace.Positive
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -82,7 +86,7 @@ noncomputable def renormalizedStep (β : ℝ) (P B : ParamMatrix d)
 configuration at which `y ↦ ⟨B x_i^t, y⟩` is maximal.
 
 A set of points, not of indices, as in the source: tokens that coincide are one
-leader.  Counting indices instead would make `#𝒞_i^t = 1` fail as soon as two
+leader. Counting indices instead would make `#𝒞_i^t = 1` fail as soon as two
 tokens merge, which the dynamics does on sets of positive measure.
 
 Source: arXiv:2508.09628v1, §1.2, the display under `eq: hardmax.dynamics.V`. -/
@@ -153,7 +157,7 @@ def cell (B : ParamMatrix d) (K : Set (EucSpace d)) (v : Idx κ → EucSpace d) 
   {x ∈ K | ∀ y ∈ K, inner (𝕜 := ℝ) (B x) y ≤ inner (𝕜 := ℝ) (B x) (v i)}
 
 /-- `B` is positive definite, `B ≻ 0`: symmetric, with `⟨B x, x⟩ > 0` away from
-the origin.  `ContinuousLinearMap.IsPositive` is the paper's `B ≽ 0`. -/
+the origin. `ContinuousLinearMap.IsPositive` is the paper's `B ≽ 0`. -/
 def IsPosDef (B : ParamMatrix d) : Prop :=
   B.IsSymmetric ∧ ∀ x : EucSpace d, x ≠ 0 → 0 < inner (𝕜 := ℝ) (B x) x
 

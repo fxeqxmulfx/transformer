@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_FrozenGaussianGenerator
+
+/-!
 # The vector Gaussian expectation solves its actual generator equation
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ Coordinate Gaussian integration by parts removes the singular sqrt(t)
 derivative and produces exactly half the diagonal Hessian contraction.
 -/
 
-import Transformer.BatchSize.Section4_FrozenGaussianGenerator
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped NNReal ENNReal BigOperators

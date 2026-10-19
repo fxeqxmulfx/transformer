@@ -1,22 +1,26 @@
-/-
+module
+
+public import Transformer.Modes.Section3_CumulantMoment
+public import Transformer.Modes.Section3_Standardized
+
+/-!
 # The number of modes of a Gaussian KDE — third cumulants
 
-The order-three case of `lem:eta`, arXiv:2412.09080v3, §3.1.  For the
+The order-three case of `lem:eta`, arXiv:2412.09080v3, §3.1. For the
 standardized law the cumulant is a centred mixed moment, so its absolute
-value is bounded by the third Euclidean moment with constant one.  The
+value is bounded by the third Euclidean moment with constant one. The
 bounded KDE summands also have the exponential moments needed to identify
 the derivatives of the cumulant generating function with those moments.
 -/
 
-import Transformer.Modes.Section3_CumulantMoment
-import Transformer.Modes.Section3_Standardized
+@[expose] public section
 
 open Real MeasureTheory Filter ProbabilityTheory
 
 namespace Transformer.Modes
 
 /-- Every continuous function of the bounded standardized KDE summand is
-integrable.  Source: arXiv:2412.09080v3, §2.2, `eq:Yi`, and §3.1. -/
+integrable. Source: arXiv:2412.09080v3, §2.2, `eq:Yi`, and §3.1. -/
 theorem integrable_lawY_of_continuous {β : ℝ} (hβ : 0 < β) (t : ℝ)
     {f : ℝ × ℝ → ℝ} (hf : Continuous f) : Integrable f (lawY β t) := by
   let L : ℝ × ℝ → ℝ := fun p => f (whiten (sigmaFst β t) (sigmaCov β t)
@@ -50,8 +54,8 @@ theorem integrable_eucl_pow_lawY {β : ℝ} (hβ : 0 < β) (t : ℝ) (s : ℕ) :
 example : (0 : ℝ) < 1 := one_pos
 
 /-- The single-sample law has exponential moments, as required by the
-cumulant identity after `eq:psi`.  In fact all real parameters are allowed
-because the summand is bounded.  Source: arXiv:2412.09080v3, §3.1. -/
+cumulant identity after `eq:psi`. In fact all real parameters are allowed
+because the summand is bounded. Source: arXiv:2412.09080v3, §3.1. -/
 theorem hasExpMoments_lawY {β : ℝ} (hβ : 0 < β) (t : ℝ) :
     HasExpMoments (lawY β t) := by
   refine ⟨1, one_pos, ?_⟩

@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.CenteredFamily
+module
+
+public import Transformer.Grokking.AdamW.CenteredFamily
 
 /-!
 # A state-dependent finite-step threshold for the effective loss
@@ -16,6 +18,8 @@ every positive rate because `rate*A` is positive. Comparing their
 actual quotient loss gives a strict threshold depending on the scale
 `t`. Centering is derived, and norm conservation is not assumed.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

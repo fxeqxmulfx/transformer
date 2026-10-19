@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Optimization.Basic
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+
+/-!
 # AMSGrad — fixed-objective training with constant momentum and epsilon
 
 Extension of arXiv:1904.03590v4, Algorithm 1 and §4, with the positive
@@ -9,8 +14,7 @@ The denominator is `epsilon + sqrt(vhat)`. No bias correction, weight
 decay, projection or direction-replacement guard is inserted.
 -/
 
-import Transformer.Optimization.Basic
-import Mathlib.Analysis.InnerProductSpace.PiL2
+@[expose] public section
 
 open scoped BigOperators
 

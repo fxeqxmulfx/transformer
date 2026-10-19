@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Modes.Section2_KacRice
+public import Mathlib.Analysis.Complex.RealDeriv
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Small signed oscillations for the printed Kac–Rice hypotheses
 
 Source: arXiv:2412.09080v3, §2.1, `thm:kac-rice`.
@@ -21,10 +28,7 @@ probability estimate are separate ingredients of the check of
 the full printed Kac–Rice statement.
 -/
 
-import Transformer.Modes.Section2_KacRice
-import Mathlib.Analysis.Complex.RealDeriv
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 

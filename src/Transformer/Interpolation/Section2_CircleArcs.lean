@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_CircleChart
+public import Transformer.Interpolation.AtomlessSphere
+
+/-!
 # Short arcs of the circle, and windows of angles
 
 ArXiv:2411.04551v3, §2.2, proof of `prop: compression`, on the circle
@@ -11,8 +16,7 @@ most `2π` has its arc inside the region, carrying every law of the region
 without atoms and every given point of it.
 -/
 
-import Transformer.Interpolation.Section2_CircleChart
-import Transformer.Interpolation.AtomlessSphere
+@[expose] public section
 
 open scoped ENNReal
 open Real MeasureTheory Set

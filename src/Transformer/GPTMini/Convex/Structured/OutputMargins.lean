@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.OutputCodes
-import Transformer.GPTMini.Convex.Structured.MarkovConfidence
+module
+
+public import Transformer.GPTMini.Convex.Structured.OutputCodes
+public import Transformer.GPTMini.Convex.Structured.MarkovConfidence
 
 /-!
 # Whole-vocabulary margins of actual learned output expectations
@@ -16,6 +18,8 @@ the complete joint-model expectation is proved, so confidence bounds
 apply to the same inference used by the head. These are local readout
 results; raw shared weights and actual residual/tied integration remain.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

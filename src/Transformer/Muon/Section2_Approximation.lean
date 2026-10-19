@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Muon.Section2_NewtonSchulz
+public import Transformer.Muon.AppendixA_RMS
+public import Mathlib.Topology.Algebra.Order.Field
+
+/-!
 # Muon — limits of the printed approximation
 
 arXiv:2502.16982, §2.1. The source seeks a fixed point “near 1”, not an
@@ -6,9 +12,7 @@ exact polar iteration. The printed coefficients must not be treated as a
 convergent iteration to exactly unit singular values.
 -/
 
-import Transformer.Muon.Section2_NewtonSchulz
-import Transformer.Muon.AppendixA_RMS
-import Mathlib.Topology.Algebra.Order.Field
+@[expose] public section
 
 open scoped BigOperators Matrix
 

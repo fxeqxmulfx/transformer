@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Analysis.ODE.DiscreteGronwall
+public import Mathlib.Analysis.Normed.Module.Basic
+
+/-!
 # A perturbed stack: the error after `N` steps
 
 **Not a statement of any paper.**  The record of parameter-golf
@@ -7,33 +12,32 @@
 runs its eleven layers in the order `0, 1, 2, 3, 4, 5, 3, 4, 5, 3, 4, 5, 6, …, 10`
 (`GPT.__init__`, `all_indices`, at the defaults `NUM_LAYERS = 11`,
 `NUM_LOOPS = 2`, `LOOP_START = 3`, `LOOP_END = 5`), and ships its weight
-matrices rounded to six bits (`gptq_mixed_quantize`, `MATRIX_BITS = 6`).  The
+matrices rounded to six bits (`gptq_mixed_quantize`, `MATRIX_BITS = 6`). The
 rounded model runs every block a little differently from the trained one, and
 every block after the first on a state that the blocks before it have already
-moved.  A depth-recurrent submission of the non-record track
+moved. A depth-recurrent submission of the non-record track
 (`records/track_non_record_16mb/2026-03-21_DepthRecurrence_MixedPrecisionQuant/README.md`,
 "What Worked", §1) reports its first run at `2.07` bits per byte before the
 rounding and `3.22` after, and the error amplified "roughly 900x through 3
 recurrence cycles".
 
-How far the rounding can move the output is a discrete Gronwall bound.  Let a
+How far the rounding can move the output is a discrete Gronwall bound. Let a
 stack run `x_{k+1} = F_k(x_k)` and a perturbed copy `y_{k+1} = G_k(y_k)`, let
 `L_k` bound how far `F_k` spreads the two states and `η_k` how far `G_k` is from
-`F_k` at the perturbed one.  Then
+`F_k` at the perturbed one. Then
 
   `‖y_N − x_N‖ ≤ ‖y_0 − x_0‖ Π_{j<N} L_j + Σ_{m<N} η_m Π_{m<j<N} L_j`
 
 (`norm_sub_le_perturbBound`, from Mathlib's `discrete_gronwall_prod_general`):
 the error made at each step is carried forward by the spreading of the steps
 after it, and nothing else enters — in particular not whether two steps share
-their weights.  A loop repeats one block and one rounding error, but the bound
-sees only the constants along the two trajectories.  It cannot be improved in
+their weights. A loop repeats one block and one rounding error, but the bound
+sees only the constants along the two trajectories. It cannot be improved in
 terms of those constants: a linear stack perturbed in one fixed direction at
 every step attains it with equality (`norm_sub_linearStack`).
 -/
 
-import Mathlib.Analysis.ODE.DiscreteGronwall
-import Mathlib.Analysis.Normed.Module.Basic
+@[expose] public section
 
 open scoped BigOperators
 

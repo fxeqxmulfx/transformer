@@ -1,9 +1,11 @@
-import Transformer.DoubleDescent.Section5_Curves
-import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
-import Mathlib.Data.Fintype.Fin
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Ring
+module
+
+public import Transformer.DoubleDescent.Section5_Curves
+public import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
+public import Mathlib.Data.Fintype.Fin
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Ring
 
 /-!
 # Uniformly incorrect label noise
@@ -13,6 +15,8 @@ arXiv:1912.02292v1, Section 4, paragraph "Label Noise". With probability
 differs from replacement uniformly among all labels. We derive the affine
 rescaling from the finite label distribution, rather than assuming it.
 -/
+
+@[expose] public section
 
 namespace Transformer.DoubleDescent
 

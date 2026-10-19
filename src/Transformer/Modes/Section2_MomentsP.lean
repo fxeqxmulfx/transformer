@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Modes.Section5_MomentsAsymp
+public import Transformer.Modes.Section1_Sketch
+
+/-!
 # The number of modes of a Gaussian KDE — `lem:moments-p`
 
 §2.2 of arXiv:2412.09080v3, `lem:moments-p`: the asymptotics of the mean
@@ -7,9 +12,9 @@
 **What the source says and what is carried here.**
 
 * `~` is read entrywise, as `Asymptotics.IsEquivalent` along a sequence of
-  parameters `(n_k, β_k, t_k)` with `β_k → ∞` and `t_k²/β_k → 0`.  The second
+  parameters `(n_k, β_k, t_k)` with `β_k → ∞` and `t_k²/β_k → 0`. The second
   condition is what §5.2 uses: "if `n^c ≲ β ≲ n^{2-c}` and `t ∈ T`, then
-  `exp Θ(t²/β) → 1`".  That the regime and `T` do give it is
+  `exp Θ(t²/β) → 1`". That the regime and `T` do give it is
   `tendsto_sq_div_of_mem_intervalT`, proved.
 
 * The entries of `Σ_t` are `Var G = E G² - (E G)²`, `Cov(G, G') = E GG' - E G·E G'`
@@ -18,18 +23,17 @@
   the two entries of `μ_t`.
 
 * **The second entry of `μ_t` is corrected.**  The source writes
-  `μ_{t,2} ~ n^{1/2}β^{-3/2}e^{-t²/2}(1 - t²)`.  At `t = ±1` the right side is
+  `μ_{t,2} ~ n^{1/2}β^{-3/2}e^{-t²/2}(1 - t²)`. At `t = ±1` the right side is
   `0` while `E G'(±1) = e^{-β/(2(β+1))}/(β+1)^{5/2} > 0` (`meanG'_eq`), so the
   claim fails there, and near `t = ±1` it fails along any `t_k → ±1` fast
-  enough.  The closed form of `E G'` gives the correct leading term
-  `n^{1/2}β^{-3/2}e^{-t²/2}(1 - t² + 1/β)`, which is what is stated.  The
+  enough. The closed form of `E G'` gives the correct leading term
+  `n^{1/2}β^{-3/2}e^{-t²/2}(1 - t² + 1/β)`, which is what is stated. The
   other four entries are as the source writes them.
 
 Source: arXiv:2412.09080v3, `lem:moments-p`, `eq:moments-p`; §5.2.
 -/
 
-import Transformer.Modes.Section5_MomentsAsymp
-import Transformer.Modes.Section1_Sketch
+@[expose] public section
 
 open Real Filter Asymptotics
 open scoped Topology
@@ -41,7 +45,7 @@ namespace Modes
 
 /-- **`t²/β → 0` on `T`.**  In the regime `n^c ≲ β ≲ n^{2-c}`, a point `t` of
 `T = [-√(2 log n - log β - ω(β)), √(…)]` has `t² ≤ 2 log n ≲ log β / c`, so
-`t²/β → 0`.  This is the remark opening §5.2 that makes every exponential
+`t²/β → 0`. This is the remark opening §5.2 that makes every exponential
 `exp Θ(t²/β)` in the moments tend to `1`.
 
 Source: arXiv:2412.09080v3, §5.2 (`sec:moments`), first paragraph. -/
@@ -125,7 +129,7 @@ theorem moments_p_mean_fst {N : ℕ → ℕ} {B t : ℕ → ℝ} (hB : Tendsto B
 `√n E G'(t) ~ n^{1/2}β^{-3/2}e^{-t²/2}(1 - t² + 1/β)`.
 
 The source writes `1 - t²` in place of `1 - t² + 1/β`, which is false at
-`t = ±1`: the right side vanishes and `E G'(±1) > 0`.  See the module
+`t = ±1`: the right side vanishes and `E G'(±1) > 0`. See the module
 docstring.
 
 Source: arXiv:2412.09080v3, `lem:moments-p`, `eq:moments-p`; the correction is

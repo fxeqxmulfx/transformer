@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainRelativePath
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainRelativePath
 
 /-!
 # Exact unequal-pair error relative to a balanced native proxy
@@ -24,6 +26,8 @@ Gen/Mem crossing or a successful unequal-seed held-out tail. They
 use exact reals and the actual-form zero-beta normalization, with
 uniform native decay differing from coupled-cost GD and GPTMini.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

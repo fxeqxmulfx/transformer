@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Modes.Section3_SummandBounds
+public import Transformer.Modes.Section2_ProxyKRScale
+
+/-!
 # The number of modes of a Gaussian KDE — the standardized summand is bounded on `T`
 
 The covariance estimates of `lem:moments-p` give the pointwise bound
@@ -9,8 +14,7 @@ combined with `E‖Y(t)‖² = 2` to prove all the moment bounds of `lem:eta`.
 Source: arXiv:2412.09080v3, `eq:Yi`, `lem:eta`, §5.2–5.3.
 -/
 
-import Transformer.Modes.Section3_SummandBounds
-import Transformer.Modes.Section2_ProxyKRScale
+@[expose] public section
 
 open Real Filter
 open scoped Topology

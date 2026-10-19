@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section4_AnisotropicFlow
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
+
+/-!
 # Certified inward signs of the original anisotropic follower
 
 Source: arXiv:2411.04990v2, §4, Conjecture `thm1.5`, and
@@ -14,8 +19,7 @@ enters the original field. These scalar inequalities are used with
 the actual unit-circle identities in the subsequent barrier proof.
 -/
 
-import Transformer.Causal.Section4_AnisotropicFlow
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
+@[expose] public section
 
 open Real Set
 

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Basic
+public import Transformer.Interpolation.Wasserstein
+public import Transformer.Wasserstein.LowerBound
+
+/-!
 # Measure-to-measure interpolation — Mass concentration estimates
 
 The two technical claims of arXiv:2411.04551v3 that turn a Wasserstein bound
@@ -6,16 +12,16 @@ into a statement about mass, against the Wasserstein distance `W2` of
 `Interpolation/Wasserstein.lean`:
 
 * `Claim cl: W.to.ball` — a measure `W₂`-close to a Dirac mass puts almost
-  all of its mass in a small ball.  Proved, `wToBall`, with `C = 1`: the
+  all of its mass in a small ball. Proved, `wToBall`, with `C = 1`: the
   mass outside `B(x₀, η₃)` has to travel at least `η₃`, so
   `μ(B(x₀,η₃)ᶜ) η₃² ≤ W₂² ≤ η₂²`, and `η₂²/η₃² ≤ η₂/η₃` or the bound is
-  trivial.  The paper goes through Kantorovich–Rubinstein duality for `W_1`
+  trivial. The paper goes through Kantorovich–Rubinstein duality for `W_1`
   instead; the statement is the same.
 * `Lemma lem: mass.concentration.Q1` — a measure putting `1 - η` of its mass
-  in the positive quadrant is `Cη`-close to one carried by it.  **False as
+  in the positive quadrant is `Cη`-close to one carried by it. **False as
   stated**, `not_massConcentrationQ1`: in `𝕊^0` the mass `η` sitting on the
   point `-1` has to travel distance `2 ≥ 1` into the quadrant, so
-  `η ≤ W₂² ≤ C²η²`, which fails for `η < 1/C²`.  The rate the paper's own
+  `η ≤ W₂² ≤ C²η²`, which fails for `η < 1/C²`. The rate the paper's own
   construction gives is `√η`, and that is proved, as a corrected statement,
   in `Interpolation/MassConcentrationSqrt.lean`.
 
@@ -23,9 +29,7 @@ Source: arXiv:2411.04551v3, Appendix "On condition (eq: assumption.hole)",
 `lem: mass.concentration.Q1`; Appendix, `cl: W.to.ball`.
 -/
 
-import Transformer.Interpolation.Basic
-import Transformer.Interpolation.Wasserstein
-import Transformer.Wasserstein.LowerBound
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -39,7 +43,7 @@ If `μ ∈ 𝒫(𝕊^{d-1})` and `x_0 ∈ 𝕊^{d-1}` satisfy `W_2(μ, δ_{x_0})
 
   `1 - μ(B(x_0, η_3)) ≤ C η_2 / η_3`   for every `η_3 > 0`,
 
-with `C > 0` universal.  Proved with `C = 1` from
+with `C > 0` universal. Proved with `C = 1` from
 `Wasserstein.measureReal_mul_sq_le_W2_sq`, not through the paper's `W_1`
 duality.
 
@@ -113,13 +117,13 @@ The lemma: let `ν_0^i ∈ 𝒫(𝕊^{d-1})` and `η > 0`, and let
 `φ_η : 𝕊^{d-1} → 𝕊^{d-1}` be Lipschitz and invertible with
 `(φ_η)_# ν_0^i (ℚ_1^{d-1}) = 1 - η` for every `i`; then for every `i` there is
 `μ_0^i ∈ 𝒫(ℚ_1^{d-1})` with `W_2((φ_η)_# ν_0^i, μ_0^i) ≤ C η`, `C > 0`
-universal.  "`μ_0^i ∈ 𝒫(ℚ_1^{d-1})`" is read as a probability measure on the
+universal. "`μ_0^i ∈ 𝒫(ℚ_1^{d-1})`" is read as a probability measure on the
 sphere giving no mass to the complement of the quadrant.
 
-It is false.  Take `d = 1`, `N = 1`, `φ_η = id`, and
-`ν = (1 - η) δ_{+1} + η δ_{-1}`.  Every point of `ℚ_1^0 = {+1}` is at distance
+It is false. Take `d = 1`, `N = 1`, `φ_η = id`, and
+`ν = (1 - η) δ_{+1} + η δ_{-1}`. Every point of `ℚ_1^0 = {+1}` is at distance
 `2` from `-1`, so any `μ` carried by the quadrant has `η ≤ W_2(ν, μ)² ≤ C²η²`;
-`η = 1/(C² + 2)` contradicts it.  The universal `C` is quantified first, as
+`η = 1/(C² + 2)` contradicts it. The universal `C` is quantified first, as
 "universal" demands; the same example refutes any `C` independent of `η`.
 
 What the paper needs of the lemma is only `W_2 → 0` as `η → 0`, for its

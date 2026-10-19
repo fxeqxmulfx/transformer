@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_BallFlow
+
+/-!
 # Untouched mass and the one-step ball-chain estimate
 
 ArXiv:2411.04551v3, Appendix, the proof of
@@ -19,7 +23,7 @@ particle map; neither an invariant law nor a mass estimate is assumed
 beyond the stated overlap bound supplied by the preceding ball control.
 -/
 
-import Transformer.Interpolation.Section3_BallFlow
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped ENNReal

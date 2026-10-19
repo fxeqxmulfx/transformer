@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadPull
+
+/-!
 # Discrete scalar escape estimates for the original multi-head proof
 
 ArXiv:2305.05465v6, §7, `l:auxiliary` and `l:unboundedparticles`,
@@ -16,7 +20,7 @@ infinity. Subsequent modules verify the step estimates directly from
 the original multi-head equation and its separate head coefficients.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadPull
+@[expose] public section
 
 open Real Filter Topology
 

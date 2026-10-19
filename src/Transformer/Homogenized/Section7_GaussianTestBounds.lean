@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianVectorConditioning
+
+/-!
 # Actual derivatives of the bounded Gaussian interpolation test
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -16,7 +20,7 @@ A nonconstant coordinate sine witnesses all of these hypotheses with
 a nonzero original derivative; no derivative or bound is assumed for it.
 -/
 
-import Transformer.Homogenized.Section7_GaussianVectorConditioning
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

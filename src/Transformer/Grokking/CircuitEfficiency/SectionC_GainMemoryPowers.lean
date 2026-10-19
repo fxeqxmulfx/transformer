@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryCompetition
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryCompetition
 
 /-!
 # Initialized powers for actual competing retained-memory measurements
@@ -26,6 +28,8 @@ confidence require further arguments. Fixed gained tables/native
 decay differ from appendix C coupled-cost GD. Learned stochastic/
 floating-point GPTMini transfer is not asserted.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

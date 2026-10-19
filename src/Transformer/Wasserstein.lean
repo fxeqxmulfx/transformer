@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Wasserstein.Basic
+public import Transformer.Wasserstein.LowerBound
+public import Transformer.Wasserstein.Collapse
+
+/-!
 # The 2-Wasserstein distance
 
 `W_2` on a pseudometric measurable space (`Wasserstein/Basic.lean`), with the
@@ -10,6 +16,4 @@ Sources: arXiv:2411.04551v3, §1 (`W_2` throughout); arXiv:2604.01978v1,
 `prop:satisfying_MF`, `prop: poc`.
 -/
 
-import Transformer.Wasserstein.Basic
-import Transformer.Wasserstein.LowerBound
-import Transformer.Wasserstein.Collapse
+@[expose] public section

@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Clusters.Section8_Bounded
+public import Transformer.Clusters.Section8_Energy
+public import Transformer.Clusters.Section8_Stationary
+public import Mathlib.Topology.UniformSpace.HeineCantor
+public import Mathlib.Topology.Order.Compact
+
+/-!
 # The emergence of clusters in self-attention dynamics — convergence to the origin
 
 §8 of arXiv:2305.05465v6, `t:cas-Idintro`: at `V = -I_d`, `QᵀK = I_d`, every
@@ -7,24 +15,20 @@ token tends to the origin.
 **What the source says and what is carried here.**  The source concludes by
 compactness: a limit point `x*` of `x(t_k)` that is not stationary would give,
 through the stability estimate `e:w2estimate` of the flow, a lower bound on
-`‖ẋ_i‖` over the intervals `[t_k, t_k + T₀]`, against `e:finiteinegral`.  The
-flow of `e:-Iddyn` is not needed for that.  By `l:cas1circle` the tokens stay
+`‖ẋ_i‖` over the intervals `[t_k, t_k + T₀]`, against `e:finiteinegral`. The
+flow of `e:-Iddyn` is not needed for that. By `l:cas1circle` the tokens stay
 in a ball of radius `R`, and the drift is a convex combination of tokens, so
-every token is `R`-Lipschitz in time (`norm_sub_le_of_negIdDynamics`).  The
+every token is `R`-Lipschitz in time (`norm_sub_le_of_negIdDynamics`). The
 total squared drift `G` is then uniformly continuous along the trajectory; it
 is bounded below by some `η > 0` wherever `‖x_i‖ ≥ ε`, because the only zero of
 `G` is the origin (`l:stationary`) and the set is compact; so each time
-`‖x_i‖ ≥ ε`, `G ≥ η/2` for a fixed length of time.  Since `G` is integrable
+`‖x_i‖ ≥ ε`, `G ≥ η/2` for a fixed length of time. Since `G` is integrable
 (`e:finiteinegral`), that happens only finitely far out.
 
 Source: arXiv:2305.05465v6, `t:cas-Idintro` and its proof in §8.
 -/
 
-import Transformer.Clusters.Section8_Bounded
-import Transformer.Clusters.Section8_Energy
-import Transformer.Clusters.Section8_Stationary
-import Mathlib.Topology.UniformSpace.HeineCantor
-import Mathlib.Topology.Order.Compact
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology MeasureTheory
@@ -67,7 +71,7 @@ theorem norm_sub_le_of_negIdDynamics (Q K : ParamMatrix d) (X : ℝ → Idx n �
     (fun x hx => norm_negIdDrift_le Q K (X x) (fun j => hR j x (ht.trans hx.1)) i) s
     ⟨hts, le_rfl⟩
 
-/-- **Theorem (t:cas-Idintro).**  Let `V = -I_d` and `QᵀK = I_d`.  Then for
+/-- **Theorem (t:cas-Idintro).**  Let `V = -I_d` and `QᵀK = I_d`. Then for
 any initial sequence of tokens and any `i ∈ [n]`, `‖x_i(t)‖ → 0` as
 `t → +∞`.
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.SharedRows
+module
+
+public import Transformer.GPTMini.Sparsemax.SharedRows
 
 /-!
 # Squared loss on a common affine output segment
@@ -14,6 +16,8 @@ sparsemax operator is not differentiable across a support boundary.
 Fitting a target gives an exact quadratic decay, and a negative one-sided
 derivative along the actual path rules out a zero full derivative.
 -/
+
+@[expose] public section
 
 noncomputable section
 

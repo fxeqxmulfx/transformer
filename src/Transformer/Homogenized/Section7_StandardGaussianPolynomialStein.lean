@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianPolynomialGrowth
+
+/-!
 # Polynomial integration by parts on the original standard Gaussian
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and the polynomial
@@ -14,7 +18,7 @@ on the actual test and derivative; no integration identity is an input.
 The residual law may be degenerate and is never assigned a density.
 -/
 
-import Transformer.Homogenized.Section7_GaussianPolynomialGrowth
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

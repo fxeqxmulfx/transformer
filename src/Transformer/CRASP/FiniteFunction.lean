@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.CRASP.Conjunctions
+public import Transformer.CRASP.FixedBits
+public import Transformer.CRASP.Transformers
+
+/-!
 # `lem:finite_function`: postcomposing a definable map with any `g : 𝔽 → 𝔽`
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -6,10 +12,10 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 
 If every bit of a length-preserving map `F : Σ* → 𝔽*` is defined by a formula,
 so is every bit of `g ∘ F`, for an arbitrary `g : 𝔽 → 𝔽`, and at no extra
-depth.  The construction is the disjunctive normal form over the bit patterns:
+depth. The construction is the disjunctive normal form over the bit patterns:
 `[g(F(w)_i)]_b = 1` exactly when the bits of `F(w)_i` form one of the finitely
 many patterns `v` carried by some `x` with `[g x]_b = 1`, and each pattern is
-a conjunction of the given formulas and their negations.  `Fx.ext_of_bit` is
+a conjunction of the given formulas and their negations. `Fx.ext_of_bit` is
 what makes the disjunction exact — a pattern determines its number — and the
 guard `Form.onStr` is what keeps the formula false off the string, where all
 the given formulas are false and the pattern of all-zero bits would otherwise
@@ -18,7 +24,7 @@ fire.
 Two departures from the statement of the paper, which leaves the depth clause
 implicit:
 
-* the bound is the supremum over `c < p + 2`, not over `c < p`.  Bits `0` and
+* the bound is the supremum over `c < p + 2`, not over `c < p`. Bits `0` and
   `p + 1` are along for the ride, but bit `p` is not: the bits below `p` leave
   the two's-complement sign undetermined, so a bound over `c < p` is false —
   at `p = 2` the mantissas `0` and `-2` share the bits `0, 1`, and a `g`
@@ -28,9 +34,7 @@ implicit:
   written at depth `0`.
 -/
 
-import Transformer.CRASP.Conjunctions
-import Transformer.CRASP.FixedBits
-import Transformer.CRASP.Transformers
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -188,7 +192,7 @@ theorem pnpFree_bitsFormula (g : Fx p s → Fx p s) (ψ : ℕ → Form σ)
   rw [pnpFree_ite_neg]
   exact hfree (c : ℕ)
 
-/-- **Lemma `lem:finite_function`** (Chiang, Cholak & Pillay).  A
+/-- **Lemma `lem:finite_function`** (Chiang, Cholak & Pillay). A
 length-preserving fixed-precision map whose bits are definable stays definable
 after any postcomposition `g : 𝔽 → 𝔽`, at no extra depth. -/
 theorem finite_function (F : List σ → List (Fx p s))

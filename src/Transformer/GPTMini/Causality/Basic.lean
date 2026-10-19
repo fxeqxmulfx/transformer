@@ -1,6 +1,8 @@
-import Transformer.GPTMini.AttentionBounds
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Tactic
+module
+
+public import Transformer.GPTMini.AttentionBounds
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Tactic
 
 /-!
 # Prefix preservation through the actual causal head
@@ -11,6 +13,8 @@ arbitrary future queries, keys and values. Its old rows are unchanged.
 The proof includes the softmax denominator, RoPE, QKNorm and XSA; it
 does not assume that the weights select a correct Basis answer.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Causality
 

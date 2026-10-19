@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.TransformPoly
+public import Mathlib.Topology.Algebra.Polynomial
+public import Mathlib.Analysis.Convex.PathConnected
+
+/-!
 # Finite original polynomial branches, including their boundary values
 
 ArXiv:2601.21366v2, §5.2, `rem:piecewise-poly`.
@@ -15,9 +21,7 @@ at every real input, including every original breakpoint. No global
 polynomial or analyticity assertion about the activation is assumed.
 -/
 
-import Transformer.Perceptron.TransformPoly
-import Mathlib.Topology.Algebra.Polynomial
-import Mathlib.Analysis.Convex.PathConnected
+@[expose] public section
 
 open Real Set
 open scoped NNReal

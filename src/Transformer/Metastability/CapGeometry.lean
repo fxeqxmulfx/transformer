@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.Basic
+public import Transformer.Metastability.AttnFlow
+
+/-!
 # Metastability — the geometry of the spherical caps
 
 Elementary facts about the caps `𝒮_q(c) = {x ∈ 𝕊^{d-1} : ⟨x, w_q⟩ ≥ 1 - c}` and the
@@ -13,8 +18,7 @@ separation constant `α = αDist d k w ε` of arXiv:2410.06833v1, used by the di
 * `cap_eq_of_mem` — the caps `𝒮_q(2ε)` are pairwise disjoint when `α < 1`.
 -/
 
-import Transformer.Metastability.Basic
-import Transformer.Metastability.AttnFlow
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 open Real

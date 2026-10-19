@@ -1,4 +1,16 @@
-/-
+module
+
+public import Transformer.GPTMini.Convex.Basic
+public import Transformer.GPTMini.Convex.Attention
+public import Transformer.GPTMini.Convex.Model
+public import Transformer.GPTMini.Convex.TrainingBoundary
+public import Transformer.GPTMini.Convex.JointInteractionBoundary
+public import Transformer.GPTMini.Convex.InteractionCompression
+public import Transformer.GPTMini.Convex.Likelihood
+public import Transformer.GPTMini.Convex.Reparameterization
+public import Transformer.GPTMini.Convex.Structured
+
+/-!
 # Convex replacements for gpt-mini components
 
 New modifications of `experiments/archive/gpt_mini/gpt_mini.py`, restored
@@ -25,12 +37,4 @@ The combined token-to-stream prefix is a candidate interface replacement;
 no compact Python drop-in block or full-model convexity is established.
 -/
 
-import Transformer.GPTMini.Convex.Basic
-import Transformer.GPTMini.Convex.Attention
-import Transformer.GPTMini.Convex.Model
-import Transformer.GPTMini.Convex.TrainingBoundary
-import Transformer.GPTMini.Convex.JointInteractionBoundary
-import Transformer.GPTMini.Convex.InteractionCompression
-import Transformer.GPTMini.Convex.Likelihood
-import Transformer.GPTMini.Convex.Reparameterization
-import Transformer.GPTMini.Convex.Structured
+@[expose] public section

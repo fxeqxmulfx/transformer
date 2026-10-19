@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_FullFieldLipschitz
+
+/-!
 # Uniform spatial bounds for the complete one-atom network
 
 ArXiv:2411.04551v3, §1, `eq: ips` and `eq: vf`,
@@ -15,7 +19,7 @@ two distinct actual unit Dirac laws when the parameter blocks are
 bounded by K. The same bound follows from the original sum norm.
 -/
 
-import Transformer.Interpolation.Section1_FullFieldLipschitz
+@[expose] public section
 
 open Real MeasureTheory
 open scoped NNReal

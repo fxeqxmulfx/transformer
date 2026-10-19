@@ -1,19 +1,23 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.Basic
+public import Mathlib.Analysis.Analytic.Constructions
+public import Mathlib.Analysis.Analytic.Linear
+
+/-!
 # Local uniformization: definitions
 
 Coordinate monomials `x^p` on `ℝⁿ`, monomial maps `s ↦ (s^{E i})_i`, functions
 with normal crossings (an analytic unit times a coordinate monomial centred at
 the point), and finite families of analytic charts with compact domains in
 which a function has normal crossings at every point
-(`HasMonomialCharts`).  `Landscape.Uniformization.Induction` proves that every real
+(`HasMonomialCharts`). `Landscape.Uniformization.Induction` proves that every real
 analytic germ that does not vanish identically has such charts; this is the
 local uniformization behind the gradient inequality of Appendix D.1,
 `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.Basic
-import Mathlib.Analysis.Analytic.Constructions
-import Mathlib.Analysis.Analytic.Linear
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators Topology

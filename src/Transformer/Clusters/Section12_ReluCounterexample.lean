@@ -1,5 +1,7 @@
-import Transformer.Clusters.Section12_ReluDynamics
-import Transformer.Clusters.Section4_SquareCounterexample
+module
+
+public import Transformer.Clusters.Section12_ReluDynamics
+public import Transformer.Clusters.Section4_SquareCounterexample
 
 /-!
 # The universal ReLU three-hyperplane extension is false
@@ -27,6 +29,8 @@ observations or assert that no broader clustering statement is
 possible. The negative theorem below is exactly the negation of
 the former universal assertion.
 -/
+
+@[expose] public section
 
 open Real Filter Topology
 namespace Transformer.Clusters

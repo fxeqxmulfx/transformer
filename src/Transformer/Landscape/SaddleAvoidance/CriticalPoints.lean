@@ -1,12 +1,17 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Convergence
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+
+/-!
 # Saddle avoidance — critical points
 
-Let `∇f` be continuous and `f` continuous at `z`.  If `z` is a limit point, up to
+Let `∇f` be continuous and `f` continuous at `z`. If `z` is a limit point, up to
 translations in a closed set leaving `f` invariant, of an orbit of gradient descent
 whose steps lower `f` by at least `η κ ‖∇f‖²`, `κ > 0`, then `z` is a critical point
 (`gradient_eq_zero_of_frequently_of_le_sub`): were `∇f(z) ≠ 0`, the Łojasiewicz
 inequality would hold at `z`, so the orbit would converge, to a critical point
-differing from `z` by a translation (`sub_mem_of_tendsto_of_frequently`).  An
+differing from `z` by a translation (`sub_mem_of_tendsto_of_frequently`). An
 `L`-Lipschitz gradient with `η L < 1` gives the decrease with `κ = 1 - η L`
 (`gradient_eq_zero_of_frequently`).
 
@@ -16,8 +21,7 @@ it the distance to the point is bounded by the gradient, and the gap of
 values by the square of the distance.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Convergence
-import Mathlib.Analysis.Normed.Module.FiniteDimension
+@[expose] public section
 
 open Filter Metric
 open scoped Topology NNReal
@@ -28,9 +32,9 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
   {f : E → ℝ} {L : ℝ≥0} {η κ : ℝ}
 
 /-- **A limit point of an orbit up to translations is a critical point**, along an
-orbit whose steps lower `f` by at least `η κ ‖∇f‖²`, `κ > 0`.  Let `∇f` be
+orbit whose steps lower `f` by at least `η κ ‖∇f‖²`, `κ > 0`. Let `∇f` be
 continuous, `0 < η`, `f` continuous at `z`, and let the closed set `Λ` leave `f`
-invariant.  If the orbit of `x` comes arbitrarily close to `z` up to translations in
+invariant. If the orbit of `x` comes arbitrarily close to `z` up to translations in
 `Λ`, then `∇f(z) = 0`. -/
 theorem gradient_eq_zero_of_frequently_of_le_sub (hη : 0 < η) (hκ : 0 < κ)
     (hc : Continuous (gradient f)) {Λ : Set E} (hΛc : IsClosed Λ)
@@ -58,9 +62,9 @@ theorem gradient_eq_zero_of_frequently (hf : Differentiable ℝ f)
     hf.continuous.continuousAt (iterate_succ_le_sub hf hL η x) hz
 
 /-- **The Łojasiewicz inequality at a nondegenerate critical point**, with
-exponent `1/2`.  If `∇f(z) = 0` and the derivative `A` of the gradient at `z`
+exponent `1/2`. If `∇f(z) = 0` and the derivative `A` of the gradient at `z`
 is injective, then near `z` the distance to `z` is at most `2 C ‖∇f‖` and
-`|f - f z|` at most `B` times its square.  The argument is that of
+`|f - f z|` at most `B` times its square. The argument is that of
 `Landscape.Lojasiewicz.analytic_gradient_inequality_of_nondegenerate`, with a
 differentiable `f` in place of an analytic one and the antilipschitz bound
 of an injective map in place of an inverse. -/

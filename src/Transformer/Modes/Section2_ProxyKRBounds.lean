@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Modes.Section2_ProxyKRShift
+
+/-!
 # The number of modes of a Gaussian KDE — full-window proxy bounds
 
 Upper and lower estimates for `lem:main-int-phi` of arXiv:2412.09080v3,
-§2.3, retaining the Gaussian shift.  The upper bound integrates the shift
+§2.3, retaining the Gaussian shift. The upper bound integrates the shift
 majorant; away from `[-1,1]`, the lower bound absorbs `α_t δ_t²` in the
-rate exponent.  Neither estimate requires `n ≲ β^{5/2}`.
+rate exponent. Neither estimate requires `n ≲ β^{5/2}`.
 -/
 
-import Transformer.Modes.Section2_ProxyKRShift
+@[expose] public section
 
 open Real Filter Asymptotics MeasureTheory
 open scoped Topology ENNReal
@@ -74,7 +78,7 @@ theorem eventually_inner_le_T {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ}
 
 example := eventually_inner_le_T isRegime_succ isSlowGrowth_sqrt_log_log
 /-- Integrating the full-window bound gives `√β` times the window length
-plus a constant.  In particular the nonnegative integral is finite.
+plus a constant. In particular the nonnegative integral is finite.
 Source: arXiv:2412.09080v3, §2.3, `lem:main-int-phi`. -/
 theorem eventually_proxyKR_T_le {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ}
     (hreg : IsRegime c N B) {ω : ℝ → ℝ} (hω : IsSlowGrowth ω) :

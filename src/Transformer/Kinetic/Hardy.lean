@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Kinetic.Defs
+public import Transformer.Kinetic.FourierDecay
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+
+/-!
 # Kinetic theory for Transformers — the Volterra-Hardy profile
 
 Formalization of `prop:Bessel` and `thm:U-shape` of arXiv:2605.09213v1,
@@ -6,16 +14,12 @@ Formalization of `prop:Bessel` and `thm:U-shape` of arXiv:2605.09213v1,
 
 The linearized limiting correlation diagonalizes in Fourier, and each mode
 solves a Volterra-Hardy equation whose solution is explicit in modified Bessel
-functions.  Summing the modes gives the leading correction `𝒮_t` to the soft
+functions. Summing the modes gives the leading correction `𝒮_t` to the soft
 accuracy, and that correction is U-shaped: primacy at one end, recency at the
 other, one interior minimum.
 -/
 
-import Transformer.Kinetic.Defs
-import Transformer.Kinetic.FourierDecay
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -36,7 +40,7 @@ theorem besselI_succ_zero (n : ℕ) : besselI (n + 1) 0 = 0 := by
   simp [besselI]
 
 /-- `eq:Ylambda`: `Y(σ; σ₀) = log((e^{λσ} - 1)/(e^{λσ₀} - 1))`, the change of
-variable that turns `eq:Hardy-hom` into a Goursat problem.  At `λ = 0` it is
+variable that turns `eq:Hardy-hom` into a Goursat problem. At `λ = 0` it is
 the limit `log(σ/σ₀)`, which is the value taken on that branch.
 
 Source: arXiv:2605.09213v1, `eq:Ylambda` and `eq:Bessel-output`. -/
@@ -92,7 +96,7 @@ noncomputable def softCorrection (β lam M t σ₀ : ℝ) : ℝ :=
 
 /-- The smallness condition `eq:affine-smallness` is met by some `t > 0`, at every `β` and every
 `λ > 0`: the family `a_n` tends to `0` (`aCoeff_tendsto_zero`), so it is bounded above by some
-`B`, and `t = m / (|B| + 1)` works, `m` being the positive threshold.  This is what makes the
+`B`, and `t = m / (|B| + 1)` works, `m` being the positive threshold. This is what makes the
 hypotheses of `u_shape` satisfiable. -/
 theorem exists_affine_smallness (β lam : ℝ) (hlam : 0 < lam) :
     ∃ t : ℝ, 0 < t ∧ ∀ n : ℕ, 1 ≤ n →

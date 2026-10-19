@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.PreviousPredicates
+
+/-!
 # Exact recent-state profiles in previous-position logic
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLCly`.
@@ -6,7 +10,7 @@ arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLCly`.
 long enough that their recent window excludes BOS.
 -/
 
-import Transformer.CRASP.PreviousPredicates
+@[expose] public section
 
 namespace Transformer.CRASP.WindowPredicates
 

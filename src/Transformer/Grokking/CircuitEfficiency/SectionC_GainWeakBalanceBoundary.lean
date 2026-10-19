@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainReferenceBalance
-import Mathlib.Analysis.Complex.ExponentialBounds
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainReferenceBalance
+public import Mathlib.Analysis.Complex.ExponentialBounds
 
 /-!
 # Original weak-decay balance excludes positive circuit coexistence
@@ -27,6 +29,8 @@ Physical fixed gains, plain CE and native decoupled decay differ
 from the source's coupled circuit-norm cost and GD. Learned GPTMini,
 warmup/numerical and stochastic bridges remain explicit obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

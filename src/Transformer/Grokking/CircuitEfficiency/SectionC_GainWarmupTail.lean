@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainPureWarmupPaths
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainLimitBalance
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainPureWarmupPaths
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainLimitBalance
 
 /-!
 # Full retained warmup tails and actual finite-limit balance
@@ -29,6 +31,8 @@ hypotheses at original epsilon, rather than an epsilon fitted to a
 proposed point. Attraction from competing seeds, existence of their
 limits and learned stochastic/numerical GPTMini remain open.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallMatching
+module
+
+public import Transformer.GPTMini.Semantics.RecallMatching
 
 /-!
 # A uniform finite-temperature gap for the latest equal-key record
@@ -17,6 +19,8 @@ content gap, so one constant handles both kinds of competitor.
 Copied-key errors and genuine second-block projections remain to
 be connected; no already-correct query route is assumed here.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

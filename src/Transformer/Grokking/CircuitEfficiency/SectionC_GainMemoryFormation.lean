@@ -1,6 +1,8 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemorySelection
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainDelaySeeds
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainFeedbackFloor
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemorySelection
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainDelaySeeds
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainFeedbackFloor
 
 /-!
 # Uniform native Mem formation from zero first factors in both pairs
@@ -30,6 +32,8 @@ transition or positive limiting confidence. Fixed gained lookup tables,
 exact reals and uniform decoupled AdamW differ from appendix C's
 coupled assigned norm/GD and learned stochastic/numerical GPTMini.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

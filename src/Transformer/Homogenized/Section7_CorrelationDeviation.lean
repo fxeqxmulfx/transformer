@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_CorrelationTaylorExpectation
+
+/-!
 # Controlling actual normalized correlation before composing factors
 
 ArXiv:2604.01978v1, §7.3, `lem:delta_method`, composition
@@ -20,7 +24,7 @@ All these estimates concern the actual observables, rather than a
 substitute covariance or an assumed Gaussian product matrix.
 -/
 
-import Transformer.Homogenized.Section7_CorrelationTaylorExpectation
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

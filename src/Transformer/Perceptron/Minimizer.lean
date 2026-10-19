@@ -1,35 +1,39 @@
-/-
+module
+
+public import Transformer.Perceptron.MinMax
+public import Transformer.Perspective.Section2_EnergyMin
+
+/-!
 # Perceptrons and attention's mean-field landscape — the minimizer
 
 Formalization of `prop: min.max` (ii) of arXiv:2601.21366v2: the coupled
 energy `E_{β,ϑ}[μ] = 𝖤_β[μ] + ½ ∫ v_ϑ dμ` has a unique global minimizer `μ⋆`,
-and `μ⋆` is invariant under the isometries that fix the weights.  Part (i),
+and `μ⋆` is invariant under the isometries that fix the weights. Part (i),
 the maximizers, is `MinMax`.
 
 **What the source says and what is carried here.**
 
-* Existence is the compactness of `𝒫(𝕊^{d-1})`, as in the source.  Uniqueness
+* Existence is the compactness of `𝒫(𝕊^{d-1})`, as in the source. Uniqueness
   is the strict convexity of `𝖤_β`, to which the linear term `½ ∫ v_ϑ dμ` adds
   nothing: the source reads it off the spherical-harmonic expansion of
   `e^{β x·y}` (through Bilyk et al.), this proof off its monomial expansion, at
-  the midpoint `(μ₀ + μ₁)/2` (`Perspective.Section2_EnergyConvex`).  Both are
+  the midpoint `(μ₀ + μ₁)/2` (`Perspective.Section2_EnergyConvex`). Both are
   `Perspective.existsUnique_isMin_interactionEnergy_add` with `V = ½ v_ϑ`.
 
 * "Rotations" is read as all of `O(d)`, the linear isometries of `ℝ^d`, as in
   the source's proof ("`R ∈ O(d)`"); with the reflections included the
-  statement is the stronger one.  The proof asks `R a_j = a_j` of every `j`,
+  statement is the stronger one. The proof asks `R a_j = a_j` of every `j`,
   the statement only of those with `ω_j ≠ 0`, and it is the statement that is
   carried: a neuron with `ω_j = 0` does not enter `v_ϑ`.
 
 * The source's standing `d ≥ 2` is relaxed to `d ≥ 1`: on `𝕊^0 = {±1}` the
-  argument is the same.  At `d = 0` the sphere is empty, `𝒫(𝕊^{-1}) = ∅`, and
+  argument is the same. At `d = 0` the sphere is empty, `𝒫(𝕊^{-1}) = ∅`, and
   there is no minimizer.
 
 Source: arXiv:2601.21366v2, `prop: min.max` (ii) and its proof.
 -/
 
-import Transformer.Perceptron.MinMax
-import Transformer.Perspective.Section2_EnergyMin
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

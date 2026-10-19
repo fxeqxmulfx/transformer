@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_WeakTaylorIntegral
+public import Transformer.BatchSize.Section4_GradientMoments
+
+/-!
 # Local weak error of SGD
 
 arXiv:2506.12543v1, Section 4.3, equation (2).
@@ -6,8 +11,7 @@ The actual sampled Gaussian vector, including its unbounded tails, is
 handled by its L2 moment rather than by a bounded-update assumption.
 -/
 
-import Transformer.BatchSize.Section4_WeakTaylorIntegral
-import Transformer.BatchSize.Section4_GradientMoments
+@[expose] public section
 
 open MeasureTheory
 open scoped BigOperators

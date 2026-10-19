@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_UniformInteraction
+public import Transformer.Perceptron.Section5_QuadraticPolynomials
+public import Mathlib.MeasureTheory.Integral.Prod
+
+/-!
 # The original degree-zero polynomial transform characterization
 
 ArXiv:2601.21366v2, §5.1, `lem: quadpol` (i), the polynomial
@@ -21,9 +27,7 @@ The source fixes positive temperature; nonzero negative temperature also
 works by the already proved signed-temperature injectivity theorem.
 -/
 
-import Transformer.Perceptron.Section5_UniformInteraction
-import Transformer.Perceptron.Section5_QuadraticPolynomials
-import Mathlib.MeasureTheory.Integral.Prod
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped ENNReal

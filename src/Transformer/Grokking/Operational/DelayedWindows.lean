@@ -1,4 +1,6 @@
-import Transformer.Grokking.Operational.Sustained
+module
+
+public import Transformer.Grokking.Operational.Sustained
 
 /-!
 # When a memorization window proves an observed delay
@@ -22,6 +24,8 @@ to the seed 2 observations in geometry_all_results.json at df4debc.
 These are trace laws, not an optimizer mechanism or a proof that a
 transformer trajectory must exhibit any of the supplied windows.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Operational
 

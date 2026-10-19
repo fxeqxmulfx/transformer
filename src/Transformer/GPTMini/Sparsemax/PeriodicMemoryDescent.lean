@@ -1,7 +1,9 @@
-import Transformer.GPTMini.Sparsemax.PeriodicMemoryForward
-import Transformer.GPTMini.Sparsemax.MatrixOutputError
-import Transformer.GPTMini.Sparsemax.SquaredSegment
-import Mathlib.Analysis.Convex.Extrema
+module
+
+public import Transformer.GPTMini.Sparsemax.PeriodicMemoryForward
+public import Transformer.GPTMini.Sparsemax.MatrixOutputError
+public import Transformer.GPTMini.Sparsemax.SquaredSegment
+public import Mathlib.Analysis.Convex.Extrema
 
 /-!
 # General feasible descent for constant-width attention and learned values
@@ -18,6 +20,8 @@ decoded globally along the genuine masked sparsemax path. Geometry can
 still change at fixed output coordinates in this untied chart; later
 modules impose an explicit affine weight tie to remove that freedom.
 -/
+
+@[expose] public section
 
 noncomputable section
 

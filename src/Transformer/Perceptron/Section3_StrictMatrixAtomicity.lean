@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_MapExpandedHessian
+public import Transformer.Perceptron.Section5_LocalHessianBound
+public import Transformer.Perceptron.Section5_Accumulation
+
+/-!
 # Finite strict critical support for symmetric matrix attention on the circle
 
 ArXiv:2601.21366v2, §3.1, `rem: ext` (ii), extending
@@ -18,9 +24,7 @@ Local continuity supplies its estimate without rotational invariance.
 The analytic corollaries use the activation's actual derivative.
 -/
 
-import Transformer.Perceptron.Section5_MapExpandedHessian
-import Transformer.Perceptron.Section5_LocalHessianBound
-import Transformer.Perceptron.Section5_Accumulation
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

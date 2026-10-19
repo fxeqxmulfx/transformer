@@ -5,6 +5,12 @@ public import Mathlib.Probability.IdentDistribIndep
 public import PFR.Mathlib.MeasureTheory.Constructions.Pi
 public import PFR.Mathlib.Probability.Independence.Basic
 
+/-!
+# Equality in distribution
+
+Equality-in-distribution identities under projections, composition and conditioning.
+-/
+
 public section
 
 -- TODO: Change `ae_snd` to assume `Measurable p`

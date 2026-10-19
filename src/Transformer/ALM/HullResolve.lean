@@ -1,23 +1,27 @@
-/-
+module
+
+public import Transformer.ALM.HullScan
+
+/-!
 # What the merge walk actually returns
 
 `Transformer.ALM.HullScan` bounds the walk: the tie set of a sorted key family
 is a singleton or an adjacent pair, so `HullHalf::query` merges at most one
-neighbour on each side.  What it did not say is what comes out.  The aggregate
+neighbour on each side. What it did not say is what comes out. The aggregate
 the walk builds is
 
     HullMeta combined;
     combined.merge(best_it->meta);
-    ... combined.merge(prev->meta) ...  ... combined.merge(itR->meta) ...
+    ... combined.merge(prev->meta) ... ... combined.merge(itR->meta) ...
     combined.resolve(tb, out);
 
 (`transformer_vm/attention/hull2d_cht.h`, lines 276-306), and `resolve`
 divides the summed values by the count, or returns the latest one
-(lines 70-83).  `scanCombined_count` only added the counts.
+(lines 70-83). `scanCombined_count` only added the counts.
 
 `merge_empty_left` is the step that makes the rest short: merging into the
 fresh `HullMeta` is the identity on any line that has stored something, so the
-walk's aggregate is the plain merge of the lines it visited.  From there
+walk's aggregate is the plain merge of the lines it visited. From there
 `scanCombined_resolveAverage` gives the value the head returns at a tie — the
 midpoint of the two tied payloads, which is what the file's own header comment
 (lines 26-27) promises — and `tie_resolve` attaches it to the tie set of
@@ -27,7 +31,7 @@ geometry says is there.
 `Meta` and `resolve` are `Transformer.ALM.TieBreak`.
 -/
 
-import Transformer.ALM.HullScan
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -112,7 +116,7 @@ theorem scanCombined_comm (M : ℕ → Meta) (b c : ℕ)
 
 /-- **LATEST, in either order.**  `scanCombined_resolveLatest` fixed the order
 of the two sequence numbers; the hull fixes the order of the two *positions*
-and says nothing about insertion times.  Under `TieBreak::LATEST` the walk
+and says nothing about insertion times. Under `TieBreak::LATEST` the walk
 returns the payload of whichever tied line was appended later, whichever side
 of the winner it sits on. -/
 theorem scanCombined_resolveLatest_of_ne (M : ℕ → Meta) (b c : ℕ) (v w : ℝ × ℝ) (sb sc : ℤ)

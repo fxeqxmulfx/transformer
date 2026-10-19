@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.AnalyticDivision
+public import Mathlib.Analysis.Analytic.Uniqueness
+
+/-!
 # Real analytic preparation: SequenceUniqueness
 
 Adapted from Bochao Kong's classical-complex-wpt, revision
@@ -9,8 +14,7 @@ Apache-2.0 licenses: third_party/classical-complex-wpt/LICENSE and
 third_party/LocalComplexGeometry/LICENSE.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.AnalyticDivision
-import Mathlib.Analysis.Analytic.Uniqueness
+@[expose] public section
 
 open Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -52,7 +56,7 @@ theorem seqDivisionQuotient_unique (d : ℕ) (p : L1Coeff ℕ) (hp : ‖p‖ < 1
   exact (seqDivisionInverse_left d p hp q).symm
 
 /-- Any two quotient/remainder decompositions for the same small normalized
-divisor agree.  This is the form of `seqDivision_existsUnique` used by germ
+divisor agree. This is the form of `seqDivision_existsUnique` used by germ
 uniqueness.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2. -/
 theorem seqDivision_factorizations_unique (d : ℕ) (p : L1Coeff ℕ) (hp : ‖p‖ < 1)

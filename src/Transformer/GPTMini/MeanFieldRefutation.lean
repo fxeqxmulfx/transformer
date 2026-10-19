@@ -1,8 +1,12 @@
-/-
+module
+
+public import Transformer.GPTMini.ClusteringTheorem
+
+/-!
 # `mean_field_clustering` refuted
 
 The mean-field form of `layer_clustering` was stated with the Wasserstein
-distance `W₂` as a free parameter, since Mathlib has none.  Quantified over
+distance `W₂` as a free parameter, since Mathlib has none. Quantified over
 every `W₂` it is false (`not_mean_field_clustering`): with one token the head
 only rescales the stream by a factor `≥ 1` (`attentionHead_one`,
 `preLNHead_one_ne_zero`), so the trajectory from any `x₀ ≠ 0` is admissible,
@@ -17,7 +21,7 @@ The survey's statement, `thm:mfclust`, is about the continuity equation
 Source: arXiv:2512.01868v4, `sec:clustering`, `thm:mfclust` (the claim transferred).
 -/
 
-import Transformer.GPTMini.ClusteringTheorem
+@[expose] public section
 
 open Real MeasureTheory
 
@@ -27,7 +31,7 @@ namespace GPTMini
 variable (cfg : Config)
 
 /-- **The head on a single token**: the causal softmax has one weight, `1`, and
-XSA leaves `(1 - (‖v‖/max(‖v‖,eps))²) v`.  `CausalMHA.attentionHead`. -/
+XSA leaves `(1 - (‖v‖/max(‖v‖,eps))²) v`. `CausalMHA.attentionHead`. -/
 theorem attentionHead_one (alpha eps : ℝ) (q k v : Fin 1 → EucSpace cfg.head_dim)
     (positions : Fin 1 → ℝ) :
     attentionHead cfg alpha eps q k v positions 0
@@ -82,7 +86,7 @@ example : ∃ x : ℕ → Fin 1 → EucSpace Config.default.head_dim,
 /-- **`mean_field_clustering` is false as written.**
 
 The statement quantifies over an arbitrary `W₂`, which nothing constrains to be
-a Wasserstein distance.  With `W₂ ≡ 1`, one token, `alpha = 0`, `eps = 1` and
+a Wasserstein distance. With `W₂ ≡ 1`, one token, `alpha = 0`, `eps = 1` and
 the default config, the trajectory from any `x₀ ≠ 0` stays away from the origin
 (`preLNHead_one_ne_zero`), so the hypotheses hold on the complement of a
 Lebesgue-null set, while `W₂ ≡ 1` never tends to `0`.

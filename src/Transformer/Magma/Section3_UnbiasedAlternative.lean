@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Magma.Section3_DampingBounds
+public import Transformer.Optimization.Basic
+
+/-!
 # A stable unbiased alignment-sampling model on a genuine quadratic
 
 Scoped result for the future direction in arXiv:2602.15322v1, Section 3:
@@ -9,8 +14,7 @@ conditional objective contraction on a quadratic under a uniform step bound;
 it makes no claim to solve stability of that scheme for large-model training.
 -/
 
-import Transformer.Magma.Section3_DampingBounds
-import Transformer.Optimization.Basic
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section4_Training
+
+/-!
 # IC-EoT: complete reported solver-termination counts
 
 arXiv:2603.22095v2, §4.4.2, Table 6. Every MPC call is retained,
@@ -6,7 +10,7 @@ including the iteration-limit calls; acceptable termination is valid.
 These are arithmetic checks on the reported data, not a solver certificate.
 -/
 
-import Transformer.ICEoT.Section4_Training
+@[expose] public section
 
 namespace Transformer.ICEoT
 

@@ -1,13 +1,15 @@
-import Transformer.AdamBeyond.Section3_Run
-import Mathlib.Probability.Independence.InfinitePi
-import Mathlib.Probability.Distributions.Bernoulli
+module
 
-/-
+public import Transformer.AdamBeyond.Section3_Run
+public import Mathlib.Probability.Independence.InfinitePi
+public import Mathlib.Probability.Distributions.Bernoulli
+
+/-!
 # Adam and beyond — §3: the stochastic problem of Theorem 3
 
 The problem of the proof of Theorem 3: the costs are i.i.d., `C x` with
 probability `p = (1 + δ)/(C + 1)` and `-x` otherwise, so that the gradient is
-`C` or `-1` whatever the iterate.  For one outcome of the coins the run is an
+`C` or `-1` whatever the iterate. For one outcome of the coins the run is an
 ordinary run of Adam, `stochSetup`; this file carries what holds outcome by
 outcome: the gradients, the recursions of `m_t` and `v_t`, their closed forms,
 and the step `x_{t+1} - x_t = -α_t m_t/√v_t`.
@@ -21,6 +23,8 @@ and the step `x_{t+1} - x_t = -α_t m_t/√v_t`.
 
 Source: arXiv:1904.09237, Appendix, proof of Theorem 3.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Finset
 
@@ -63,7 +67,7 @@ arXiv:1904.09237, Appendix, proof of Theorem 3. -/
 def coinGrad (C : ℝ) (c : Bool) : ℝ := if c then C else -1
 
 /-- The run of Theorem 3 for the outcome `ω`: `f_t(x) = C x` if `b_t(ω)`, else
-`-x`; no projection; `x₁ = 0`.  arXiv:1904.09237, Appendix, proof of Theorem 3. -/
+`-x`; no projection; `x₁ = 0`. arXiv:1904.09237, Appendix, proof of Theorem 3. -/
 noncomputable def stochSetup {Ω : Type*} (C β₁ β₂ : ℝ) (α : ℕ → ℝ) (b : ℕ → Ω → Bool)
     (ω : Ω) : Setup 1 :=
   ⟨fun _ y => y, fun t x => coinGrad C (b t ω) * x 0, α, fun _ => β₁, β₂, fun _ => 0⟩

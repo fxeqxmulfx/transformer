@@ -1,7 +1,9 @@
-import Transformer.AMSGrad.Section4_MainLemma
-import Transformer.AMSGrad.Section4_Lemmas
+module
 
-/-
+public import Transformer.AMSGrad.Section4_MainLemma
+public import Transformer.AMSGrad.Section4_Lemmas
+
+/-!
 # AMSGrad — the second term of Lemma 3.1
 
 §4 of arXiv:1904.03590v4, proof of Theorem 4.1: the bound (eqsecond2) on the
@@ -11,11 +13,13 @@ third term when `β_{1,t} = β₁λ^{t-1}`.
 **What the source says and what is carried here.**
 
 * For `β_{1,t} = β₁λ^{t-1}` the source bounds `Σ_{t=2}^T √(t-1) λ^{t-1}` by
-  `Σ_t t λ^{t-1} ≤ 1/(1-λ)²`, Lemma 2.3.  The bound used here is
+  `Σ_t t λ^{t-1} ≤ 1/(1-λ)²`, Lemma 2.3. The bound used here is
   `√s ≤ s + 1` and the series `Σ_{s≥0} (s+1)λ^s = 1/(1-λ)²`, `taylor_deriv`.
 
 Source: arXiv:1904.03590v4, §4, proof of Theorem 4.1.
 -/
+
+@[expose] public section
 
 open Finset
 

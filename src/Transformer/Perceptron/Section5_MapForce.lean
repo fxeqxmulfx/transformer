@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_MapIntegral
+public import Transformer.Perceptron.Section5_CirclePotential
+public import Mathlib.MeasureTheory.Function.L2Space
+
+/-!
 # Actual stationary force and curvature for matrix attention on the circle
 
 ArXiv:2601.21366v2, §3.1, `rem: ext` (ii), extending the
@@ -13,9 +19,7 @@ continuously differentiable activations. These statements are proved
 before any finite-support conclusion or Dirac decomposition is used.
 -/
 
-import Transformer.Perceptron.Section5_MapIntegral
-import Transformer.Perceptron.Section5_CirclePotential
-import Mathlib.MeasureTheory.Function.L2Space
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

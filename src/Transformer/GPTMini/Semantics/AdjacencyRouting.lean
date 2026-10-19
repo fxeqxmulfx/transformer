@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.AdjacencyRoPE
+module
+
+public import Transformer.GPTMini.Semantics.AdjacencyRoPE
 
 /-!
 # Previous-token concentration without an assumed score gap
@@ -14,6 +16,8 @@ This removes the positional score-gap premise of the earlier conditional
 head lemma. Simultaneous raw embedding/QKV realization and the subsequent
 key-conditioned latest-write readout are separate encoder obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

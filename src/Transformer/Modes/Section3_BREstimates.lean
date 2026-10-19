@@ -1,5 +1,8 @@
-import Transformer.Modes.Section3_WeightedDensity
-import Transformer.Modes.Section3_CubicWeightedDensity
+module
+
+public import Transformer.Modes.Section3_WeightedDensity
+public import Transformer.Modes.Section3_CubicWeightedDensity
+
 /-!
 # The cited Edgeworth estimates for actual normalized sums
 
@@ -28,6 +31,7 @@ are unchanged from `Section3_BR`; the estimates follow the Fourier
 modules so that the import graph contains no cycle.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

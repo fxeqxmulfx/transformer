@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.MarkovChain
+module
+
+public import Transformer.GPTMini.Convex.Structured.MarkovChain
 
 /-!
 # Finite learned-energy confidence bounds
@@ -17,6 +19,8 @@ state correctness is an input to these computations. Propagation of
 confidence along raw paths and complete Basis task capability remain
 subsequent obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

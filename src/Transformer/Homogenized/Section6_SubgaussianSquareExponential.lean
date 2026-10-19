@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_SubgaussianTails
+public import Mathlib.MeasureTheory.Integral.Layercake
+public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+
+/-!
 # Exponential moments of subgaussian squares
 
 Source: arXiv:2604.01978v1, §6.3, `lem:Hanson_wright`.
@@ -10,9 +16,7 @@ variable and its variance proxy; no exponential-square hypothesis
 or quadratic-form concentration estimate is assumed.
 -/
 
-import Transformer.Homogenized.Section6_SubgaussianTails
-import Mathlib.MeasureTheory.Integral.Layercake
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Set
 open scoped NNReal

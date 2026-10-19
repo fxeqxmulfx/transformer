@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.ICEoT.Section4_MPCModel
+public import Mathlib.Analysis.Convex.Mul
+
+/-!
 # IC-EoT: convexity of the MPC objective
 
 arXiv:2603.22095v2, §4.1, Corollary 2 and Eq. (41). Prices and the
 slack coefficient are explicitly assumed non-negative.
 -/
 
-import Transformer.ICEoT.Section4_MPCModel
-import Mathlib.Analysis.Convex.Mul
+@[expose] public section
 
 noncomputable section
 

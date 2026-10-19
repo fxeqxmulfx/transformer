@@ -1,4 +1,11 @@
-/-
+module
+
+public import Mathlib.Analysis.Analytic.Constructions
+public import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+/-!
 # Analytic activations and positive-epsilon RMS normalization
 
 Sources: `landscape_grokking_plan.md`, Activation comparisons and Model and
@@ -11,10 +18,7 @@ scalar activation. The browser's RMSNorm retains its positive epsilon.
 These results concern real arithmetic, rather than FP32 evaluation.
 -/
 
-import Mathlib.Analysis.Analytic.Constructions
-import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+@[expose] public section
 
 open scoped BigOperators
 open Filter

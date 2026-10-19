@@ -1,4 +1,102 @@
-/-
+module
+
+public import Transformer.ALM.Defs
+public import Transformer.ALM.Duality
+public import Transformer.ALM.Envelope
+public import Transformer.ALM.HullErase
+public import Transformer.ALM.HullPrune
+public import Transformer.ALM.HullCache
+public import Transformer.ALM.HullMono
+public import Transformer.ALM.HullSplice
+public import Transformer.ALM.TieSet
+public import Transformer.ALM.GeneralPosition
+public import Transformer.ALM.Query
+public import Transformer.ALM.Basic
+public import Transformer.ALM.Hull
+public import Transformer.ALM.BinSearch
+public import Transformer.ALM.HullLines
+public import Transformer.ALM.HullBranch
+public import Transformer.ALM.KeyOrder
+public import Transformer.ALM.HullScan
+public import Transformer.ALM.HullResolve
+public import Transformer.ALM.HullBuild
+public import Transformer.ALM.HullCover
+public import Transformer.ALM.BuildOrder
+public import Transformer.ALM.BuildFinger
+public import Transformer.ALM.HullLift
+public import Transformer.ALM.HullMark
+public import Transformer.ALM.MarkedPosition
+public import Transformer.ALM.HullClear
+public import Transformer.ALM.HullWall
+public import Transformer.ALM.HullNear
+public import Transformer.ALM.HullSep
+public import Transformer.ALM.HullTwin
+public import Transformer.ALM.HullLower
+public import Transformer.ALM.HullSpace
+public import Transformer.ALM.HullCost
+public import Transformer.ALM.HullValue
+public import Transformer.ALM.FloatHull
+public import Transformer.ALM.FloatIndex
+public import Transformer.ALM.IntGrid
+public import Transformer.ALM.FloatLattice
+public import Transformer.ALM.FloatTie
+public import Transformer.ALM.FloatWalk
+public import Transformer.ALM.FloatGrid
+public import Transformer.ALM.FloatResolve
+public import Transformer.ALM.TieBreak
+public import Transformer.ALM.LatestWindow
+public import Transformer.ALM.LatestClose
+public import Transformer.ALM.ScoreWall
+public import Transformer.ALM.ScoreGuard
+public import Transformer.ALM.CumSum
+public import Transformer.ALM.DriftMargin
+public import Transformer.ALM.ClearKey
+public import Transformer.ALM.ClearQuery
+public import Transformer.ALM.LiftCompare
+public import Transformer.ALM.LiftResidual
+public import Transformer.ALM.GuardSep
+public import Transformer.ALM.DotError
+public import Transformer.ALM.Expansion
+public import Transformer.ALM.ExpansionSign
+public import Transformer.ALM.ExactDot
+public import Transformer.ALM.CrossFilter
+public import Transformer.ALM.TreeBalance
+public import Transformer.ALM.TreeQuery
+public import Transformer.ALM.Dense
+public import Transformer.ALM.DensePad
+public import Transformer.ALM.GateGrid
+public import Transformer.ALM.SparseHead
+public import Transformer.ALM.ScoreGap
+public import Transformer.ALM.GridWitness
+public import Transformer.ALM.QueryScale
+public import Transformer.ALM.Softmax
+public import Transformer.ALM.Lattice
+public import Transformer.ALM.ScalarInt
+public import Transformer.ALM.ScalarSharp
+public import Transformer.ALM.Theta
+public import Transformer.ALM.VectorInt
+public import Transformer.ALM.TieHyperplane
+public import Transformer.ALM.TieMeasure
+public import Transformer.ALM.OrthVectors
+public import Transformer.ALM.LookupIndex
+public import Transformer.ALM.HullIndex
+public import Transformer.ALM.SoftmaxIndex
+public import Transformer.ALM.SoftmaxValue
+public import Transformer.ALM.SoftmaxTie
+public import Transformer.ALM.SparseSoftmax
+public import Transformer.ALM.SoftmaxMass
+public import Transformer.ALM.SoftmaxTieInt
+public import Transformer.ALM.SoftmaxLatest
+public import Transformer.ALM.SoftmaxLatestMass
+public import Transformer.ALM.HullHead
+public import Transformer.ALM.HullHeadLatest
+public import Transformer.ALM.FloatHead
+public import Transformer.ALM.FloatHeadTie
+public import Transformer.ALM.SAHead
+public import Transformer.ALM.SAHeadValue
+public import Transformer.ALM.PlanarHead
+
+/-!
 # Append-only Lookup Machine
 
 Formalization of the attention-head primitives of the *Append-only Lookup
@@ -103,98 +201,4 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.PlanarHead` | and that one hull query answers any planar head, not only the lift |
 -/
 
-import Transformer.ALM.Defs
-import Transformer.ALM.Duality
-import Transformer.ALM.Envelope
-import Transformer.ALM.HullErase
-import Transformer.ALM.HullPrune
-import Transformer.ALM.HullCache
-import Transformer.ALM.HullMono
-import Transformer.ALM.HullSplice
-import Transformer.ALM.TieSet
-import Transformer.ALM.GeneralPosition
-import Transformer.ALM.Query
-import Transformer.ALM.Basic
-import Transformer.ALM.Hull
-import Transformer.ALM.BinSearch
-import Transformer.ALM.HullLines
-import Transformer.ALM.HullBranch
-import Transformer.ALM.KeyOrder
-import Transformer.ALM.HullScan
-import Transformer.ALM.HullResolve
-import Transformer.ALM.HullBuild
-import Transformer.ALM.HullCover
-import Transformer.ALM.BuildOrder
-import Transformer.ALM.BuildFinger
-import Transformer.ALM.HullLift
-import Transformer.ALM.HullMark
-import Transformer.ALM.MarkedPosition
-import Transformer.ALM.HullClear
-import Transformer.ALM.HullWall
-import Transformer.ALM.HullNear
-import Transformer.ALM.HullSep
-import Transformer.ALM.HullTwin
-import Transformer.ALM.HullLower
-import Transformer.ALM.HullSpace
-import Transformer.ALM.HullCost
-import Transformer.ALM.HullValue
-import Transformer.ALM.FloatHull
-import Transformer.ALM.FloatIndex
-import Transformer.ALM.IntGrid
-import Transformer.ALM.FloatLattice
-import Transformer.ALM.FloatTie
-import Transformer.ALM.FloatWalk
-import Transformer.ALM.FloatGrid
-import Transformer.ALM.FloatResolve
-import Transformer.ALM.TieBreak
-import Transformer.ALM.LatestWindow
-import Transformer.ALM.LatestClose
-import Transformer.ALM.ScoreWall
-import Transformer.ALM.ScoreGuard
-import Transformer.ALM.CumSum
-import Transformer.ALM.DriftMargin
-import Transformer.ALM.ClearKey
-import Transformer.ALM.ClearQuery
-import Transformer.ALM.LiftCompare
-import Transformer.ALM.LiftResidual
-import Transformer.ALM.GuardSep
-import Transformer.ALM.DotError
-import Transformer.ALM.Expansion
-import Transformer.ALM.ExpansionSign
-import Transformer.ALM.ExactDot
-import Transformer.ALM.CrossFilter
-import Transformer.ALM.TreeBalance
-import Transformer.ALM.TreeQuery
-import Transformer.ALM.Dense
-import Transformer.ALM.DensePad
-import Transformer.ALM.GateGrid
-import Transformer.ALM.SparseHead
-import Transformer.ALM.ScoreGap
-import Transformer.ALM.GridWitness
-import Transformer.ALM.QueryScale
-import Transformer.ALM.Softmax
-import Transformer.ALM.Lattice
-import Transformer.ALM.ScalarInt
-import Transformer.ALM.ScalarSharp
-import Transformer.ALM.Theta
-import Transformer.ALM.VectorInt
-import Transformer.ALM.TieHyperplane
-import Transformer.ALM.TieMeasure
-import Transformer.ALM.OrthVectors
-import Transformer.ALM.LookupIndex
-import Transformer.ALM.HullIndex
-import Transformer.ALM.SoftmaxIndex
-import Transformer.ALM.SoftmaxValue
-import Transformer.ALM.SoftmaxTie
-import Transformer.ALM.SparseSoftmax
-import Transformer.ALM.SoftmaxMass
-import Transformer.ALM.SoftmaxTieInt
-import Transformer.ALM.SoftmaxLatest
-import Transformer.ALM.SoftmaxLatestMass
-import Transformer.ALM.HullHead
-import Transformer.ALM.HullHeadLatest
-import Transformer.ALM.FloatHead
-import Transformer.ALM.FloatHeadTie
-import Transformer.ALM.SAHead
-import Transformer.ALM.SAHeadValue
-import Transformer.ALM.PlanarHead
+@[expose] public section

@@ -1,42 +1,100 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Defs
+public import Transformer.Landscape.SaddleAvoidance.Basic
+public import Transformer.Landscape.SaddleAvoidance.Cone
+public import Transformer.Landscape.SaddleAvoidance.Spectral
+public import Transformer.Landscape.SaddleAvoidance.Preimage
+public import Transformer.Landscape.SaddleAvoidance.Global
+public import Transformer.Landscape.SaddleAvoidance.GradientDescent
+public import Transformer.Landscape.SaddleAvoidance.Descent
+public import Transformer.Landscape.SaddleAvoidance.Sequences
+public import Transformer.Landscape.SaddleAvoidance.Lojasiewicz
+public import Transformer.Landscape.SaddleAvoidance.Trap
+public import Transformer.Landscape.SaddleAvoidance.Convergence
+public import Transformer.Landscape.SaddleAvoidance.Decay
+public import Transformer.Landscape.SaddleAvoidance.RateEstimates
+public import Transformer.Landscape.SaddleAvoidance.Rates
+public import Transformer.Landscape.SaddleAvoidance.Minimizers
+public import Transformer.Landscape.SaddleAvoidance.CriticalPoints
+public import Transformer.Landscape.SaddleAvoidance.SecondOrder
+public import Transformer.Landscape.SaddleAvoidance.Necessary
+public import Transformer.Landscape.SaddleAvoidance.SecondOrderCritical
+public import Transformer.Landscape.SaddleAvoidance.Nondegenerate
+public import Transformer.Landscape.SaddleAvoidance.LinearFlow
+public import Transformer.Landscape.SaddleAvoidance.Periodic
+public import Transformer.Landscape.SaddleAvoidance.Invariant
+public import Transformer.Landscape.SaddleAvoidance.LocalInequality
+public import Transformer.Landscape.SaddleAvoidance.FlowTrap
+public import Transformer.Landscape.SaddleAvoidance.FlowConvergence
+public import Transformer.Landscape.SaddleAvoidance.Landscape
+public import Transformer.Landscape.SaddleAvoidance.TimeOne
+public import Transformer.Landscape.SaddleAvoidance.Sublevel
+public import Transformer.Landscape.SaddleAvoidance.FlowAvoidance
+public import Transformer.Landscape.SaddleAvoidance.FlowLandscape
+public import Transformer.Landscape.SaddleAvoidance.Symmetrizable
+public import Transformer.Landscape.SaddleAvoidance.SquareRoot
+public import Transformer.Landscape.SaddleAvoidance.MetricFlow
+public import Transformer.Landscape.SaddleAvoidance.MetricAvoidance
+public import Transformer.Landscape.SaddleAvoidance.Cutoff
+public import Transformer.Landscape.SaddleAvoidance.OpenAvoidance
+public import Transformer.Landscape.SaddleAvoidance.SublevelConvergence
+public import Transformer.Landscape.SaddleAvoidance.DescentCurve
+public import Transformer.Landscape.SaddleAvoidance.DescentTrap
+public import Transformer.Landscape.SaddleAvoidance.DescentConvergence
+public import Transformer.Landscape.SaddleAvoidance.FlowDecay
+public import Transformer.Landscape.SaddleAvoidance.DescentEstimates
+public import Transformer.Landscape.SaddleAvoidance.FlowRates
+public import Transformer.Landscape.SaddleAvoidance.Symmetry
+public import Transformer.Landscape.SaddleAvoidance.Analytic
+public import Transformer.Landscape.SaddleAvoidance.AnalyticLandscape
+public import Transformer.Landscape.SaddleAvoidance.LevelLandscape
+public import Transformer.Landscape.SaddleAvoidance.FlowLevelLandscape
+public import Transformer.Landscape.SaddleAvoidance.AnalyticLevelLandscape
+public import Transformer.Landscape.SaddleAvoidance.Orbit
+public import Transformer.Landscape.SaddleAvoidance.OrbitLandscape
+public import Transformer.Landscape.SaddleAvoidance.AnalyticOrbitLandscape
+public import Transformer.Landscape.SaddleAvoidance.OrbitRates
+
+/-!
 # Saddle avoidance
 
 Gradient descent with a small enough step almost never converges to a strict
-saddle.  Under the Łojasiewicz inequality at the critical points, almost
+saddle. Under the Łojasiewicz inequality at the critical points, almost
 every bounded orbit converges, to a local minimizer when every critical point
-is a local minimizer or a strict saddle.  Almost every orbit with a limit
+is a local minimizer or a strict saddle. Almost every orbit with a limit
 point up to translations where the Hessian is injective converges to a local
 minimizer; for a periodic function whose critical points are all
-nondegenerate, almost every orbit does.  A `C²` function invariant under
+nondegenerate, almost every orbit does. A `C²` function invariant under
 translations spanning the space, such as a function of angles, has a bounded
-gradient and a globally Lipschitz gradient, as these theorems require.  Under
+gradient and a globally Lipschitz gradient, as these theorems require. Under
 a translation symmetry `W`, an injective Hessian on `Wᗮ` still gives the
-Łojasiewicz inequality.  A gradient flow with a limit point up to
-translations where the Łojasiewicz inequality holds converges.  If every
+Łojasiewicz inequality. A gradient flow with a limit point up to
+translations where the Łojasiewicz inequality holds converges. If every
 critical point is a global minimizer or a strict saddle, almost every orbit
-converges to a global minimizer.  This hypothesis on the critical points
+converges to a global minimizer. This hypothesis on the critical points
 follows from the form in which papers state a landscape: every critical
 point with a positive semidefinite Hessian is a minimizer, global or local,
-everywhere or below a level.  The time-one map of the gradient flow of a
+everywhere or below a level. The time-one map of the gradient flow of a
 `C²` function with a bounded Lipschitz gradient is `C¹` with an invertible
 derivative, and every strict saddle is a symmetric unstable fixed point of it.
 A compact sublevel set replaces the global bound on the Hessian: for small
 steps gradient descent maps it into itself, and the starts in it converging
-to a strict saddle form a null set.  If every critical point in it is a local
+to a strict saddle form a null set. If every critical point in it is a local
 minimizer or a strict saddle and satisfies the Łojasiewicz inequality, almost
-every start in it converges to a local minimizer.  Gradient flows, descending or ascending,
+every start in it converges to a local minimizer. Gradient flows, descending or ascending,
 almost never converge to a strict saddle: at integer times they are orbits of
-the time-one map.  So if every critical point is a global minimizer or a
-strict saddle, almost every trajectory converges to a global minimizer.  The
+the time-one map. So if every critical point is a global minimizer or a
+strict saddle, almost every trajectory converges to a global minimizer. The
 avoidance theorem extends to fixed points whose derivative is conjugate to a
 symmetric map, and with it to the flows `ẋ = -G(x) ∇f(x)` with `G` symmetric
-positive definite at the strict saddles.  A cutoff localizes it: for `f` of
+positive definite at the strict saddles. A cutoff localizes it: for `f` of
 class `C²` and `G` of class `C¹` on an open set, `G` symmetric positive definite
 there, almost no solution of `ẋ = -G(x) ∇f(x)` that stays in the set converges
-to a strict saddle in it.  The trap and the convergence of
+to a strict saddle in it. The trap and the convergence of
 gradient flows hold for every curve along which `f` decreases at least at a
 rate `c₁ ‖∇f‖²` while it moves at most at the speed `c₂ ‖∇f‖`, among them the
-flows `ẋ = -G(x) ∇f(x)` with `c₁ ≤ G ≤ c₂`.  An analytic function on a
+flows `ẋ = -G(x) ∇f(x)` with `c₁ ≤ G ≤ c₂`. An analytic function on a
 finite-dimensional real inner product space satisfies the Łojasiewicz
 inequality at every point, so for analytic energies that hypothesis is dropped:
 an orbit of gradient descent or a trajectory of the gradient flow with a limit
@@ -46,20 +104,20 @@ At a limit where the Łojasiewicz inequality holds with exponent `a`, orbits
 of gradient descent and descent curves converge geometrically for `a ≤ 1/2`,
 and as `k ^ (-(1 - a)/(2a - 1))` for `1/2 < a < 1`, in `f` and in norm.
 A linear isometry preserving `f` commutes with gradient steps and gradient
-flows.  The subspace fixed by a set of such isometries is invariant, and on it
-gradient descent is that of the restriction of `f`.  Most landscape theorems
-describe only the critical points below a level `c`.  Gradient descent and
+flows. The subspace fixed by a set of such isometries is invariant, and on it
+gradient descent is that of the restriction of `f`. Most landscape theorems
+describe only the critical points below a level `c`. Gradient descent and
 gradient flows do not raise `f`, so for the starts below `c` the landscape
 hypothesis and the Łojasiewicz inequality are needed only below `c`, and for
-analytic `f` the latter holds anyway.  A run can check a bound on the Hessian
+analytic `f` the latter holds anyway. A run can check a bound on the Hessian
 only along its own orbit, and that is enough: on the segment of a step it gives
 the sufficient decrease, and the starts whose orbit has it at its points and
-converges to a strict saddle form a null set.  Nor does the Łojasiewicz
+converges to a strict saddle form a null set. Nor does the Łojasiewicz
 convergence need a global Lipschitz constant: it needs only that every step of
-the orbit lowers `f` by at least `η κ ‖∇f‖²` for some `κ > 0`.  So almost
+the orbit lowers `f` by at least `η κ ‖∇f‖²` for some `κ > 0`. So almost
 every start below a level whose orbit has the bound on its segments converges to
 a critical point that is not a strict saddle, or runs off to infinity; for analytic
-`f` without the Łojasiewicz hypothesis and without a level.  The rates too need
+`f` without the Łojasiewicz hypothesis and without a level. The rates too need
 only the decrease of every step, and a Hessian bound on the segments of the orbit
 gives them with `κ = 1 - η L`.
 
@@ -122,65 +180,11 @@ gives them with `κ = 1 - η L`.
 | `SaddleAvoidance.OrbitRates` | the rates of gradient descent at a Łojasiewicz limit under a Hessian bound on the segments of the orbit (`exists_rate_estimates_of_isLojasiewiczAt_of_segment`, `exists_le_mul_pow_of_isLojasiewiczAt_of_segment`, `exists_le_mul_rpow_of_isLojasiewiczAt_of_segment`) |
 
 The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
-and `thm:main` of arXiv:1602.04915.  Both rest on the center-stable manifold
+and `thm:main` of arXiv:1602.04915. Both rest on the center-stable manifold
 theorem; here a cone estimate replaces it, at the price of a symmetric
-derivative at the unstable point, which gradient descent has.  The
+derivative at the unstable point, which gradient descent has. The
 convergence follows Theorem 3.2 of Absil, Mahony and Andrews (SIAM J. Optim.
 16, 2005), which arXiv:1602.04915 cites for `prop:rates`.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Defs
-import Transformer.Landscape.SaddleAvoidance.Basic
-import Transformer.Landscape.SaddleAvoidance.Cone
-import Transformer.Landscape.SaddleAvoidance.Spectral
-import Transformer.Landscape.SaddleAvoidance.Preimage
-import Transformer.Landscape.SaddleAvoidance.Global
-import Transformer.Landscape.SaddleAvoidance.GradientDescent
-import Transformer.Landscape.SaddleAvoidance.Descent
-import Transformer.Landscape.SaddleAvoidance.Sequences
-import Transformer.Landscape.SaddleAvoidance.Lojasiewicz
-import Transformer.Landscape.SaddleAvoidance.Trap
-import Transformer.Landscape.SaddleAvoidance.Convergence
-import Transformer.Landscape.SaddleAvoidance.Decay
-import Transformer.Landscape.SaddleAvoidance.RateEstimates
-import Transformer.Landscape.SaddleAvoidance.Rates
-import Transformer.Landscape.SaddleAvoidance.Minimizers
-import Transformer.Landscape.SaddleAvoidance.CriticalPoints
-import Transformer.Landscape.SaddleAvoidance.SecondOrder
-import Transformer.Landscape.SaddleAvoidance.Necessary
-import Transformer.Landscape.SaddleAvoidance.SecondOrderCritical
-import Transformer.Landscape.SaddleAvoidance.Nondegenerate
-import Transformer.Landscape.SaddleAvoidance.LinearFlow
-import Transformer.Landscape.SaddleAvoidance.Periodic
-import Transformer.Landscape.SaddleAvoidance.Invariant
-import Transformer.Landscape.SaddleAvoidance.LocalInequality
-import Transformer.Landscape.SaddleAvoidance.FlowTrap
-import Transformer.Landscape.SaddleAvoidance.FlowConvergence
-import Transformer.Landscape.SaddleAvoidance.Landscape
-import Transformer.Landscape.SaddleAvoidance.TimeOne
-import Transformer.Landscape.SaddleAvoidance.Sublevel
-import Transformer.Landscape.SaddleAvoidance.FlowAvoidance
-import Transformer.Landscape.SaddleAvoidance.FlowLandscape
-import Transformer.Landscape.SaddleAvoidance.Symmetrizable
-import Transformer.Landscape.SaddleAvoidance.SquareRoot
-import Transformer.Landscape.SaddleAvoidance.MetricFlow
-import Transformer.Landscape.SaddleAvoidance.MetricAvoidance
-import Transformer.Landscape.SaddleAvoidance.Cutoff
-import Transformer.Landscape.SaddleAvoidance.OpenAvoidance
-import Transformer.Landscape.SaddleAvoidance.SublevelConvergence
-import Transformer.Landscape.SaddleAvoidance.DescentCurve
-import Transformer.Landscape.SaddleAvoidance.DescentTrap
-import Transformer.Landscape.SaddleAvoidance.DescentConvergence
-import Transformer.Landscape.SaddleAvoidance.FlowDecay
-import Transformer.Landscape.SaddleAvoidance.DescentEstimates
-import Transformer.Landscape.SaddleAvoidance.FlowRates
-import Transformer.Landscape.SaddleAvoidance.Symmetry
-import Transformer.Landscape.SaddleAvoidance.Analytic
-import Transformer.Landscape.SaddleAvoidance.AnalyticLandscape
-import Transformer.Landscape.SaddleAvoidance.LevelLandscape
-import Transformer.Landscape.SaddleAvoidance.FlowLevelLandscape
-import Transformer.Landscape.SaddleAvoidance.AnalyticLevelLandscape
-import Transformer.Landscape.SaddleAvoidance.Orbit
-import Transformer.Landscape.SaddleAvoidance.OrbitLandscape
-import Transformer.Landscape.SaddleAvoidance.AnalyticOrbitLandscape
-import Transformer.Landscape.SaddleAvoidance.OrbitRates
+@[expose] public section

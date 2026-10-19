@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Causal.Interaction
+public import Transformer.Metastability.CircleWitness
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
+public import Mathlib.Analysis.Real.Pi.Bounds
+
+/-!
 # Small angular caps and the derivative of the interaction
 
 ArXiv:2410.06833v1, §3.2, `eq: tau.small`, `claim: 1`, and the
@@ -8,10 +15,7 @@ The chart of a cap is an interval. The stated diameter condition bounds
 Across distinct caps its possible negative part is exponentially small.
 -/
 
-import Transformer.Causal.Interaction
-import Transformer.Metastability.CircleWitness
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
-import Mathlib.Analysis.Real.Pi.Bounds
+@[expose] public section
 
 open Set Real
 

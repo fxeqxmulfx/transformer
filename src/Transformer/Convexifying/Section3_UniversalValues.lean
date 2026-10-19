@@ -1,17 +1,21 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_SquaredLossGap
+
+/-!
 # No exact convex reformulation of all squared-loss sublevels
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §2–§3.1, equation
-`eq:attention_only_obj`.  This strengthens the epigraph obstruction:
+`eq:attention_only_obj`. This strengthens the epigraph obstruction:
 even equality of attainable training-objective sublevels for every
-nonnegative squared-loss weight and every target is impossible.  It allows
+nonnegative squared-loss weight and every target is impossible. It allows
 an arbitrary nonlinear decoder and an arbitrary changed parameter penalty,
 provided the candidate objectives are convex on one convex parameter set.
 The candidate parameter space may be any real vector space, including an
 infinite-dimensional one.
 -/
 
-import Transformer.Convexifying.Section3_SquaredLossGap
+@[expose] public section
 
 namespace Transformer.Convexifying
 
@@ -33,10 +37,10 @@ def DecodedProjectedSublevel {E : Type*} [AddCommGroup E] [Module ℝ E] (C : Se
   ∃ z ∈ C, penalty z + K * (decode z - target) ^ 2 ≤ bound
 
 /-- **No exact equality of all convex squared-loss objective sublevels.**
-The candidate decoder and penalty can be arbitrary functions.  If all
+The candidate decoder and penalty can be arbitrary functions. If all
 nonnegative weighted squared-loss objectives are convex on the same
 parameter set, their sublevel attainability cannot agree with the original
-trainable-score model for every weight, target, and bound.  This conclusion
+trainable-score model for every weight, target, and bound. This conclusion
 does not assume equality of prediction-budget epigraphs.
 Source: arXiv:2211.11052v1, §2–§3.1, `eq:attention_only_obj`. -/
 theorem no_universal_squared_sublevel_equivalence {E : Type*} [AddCommGroup E] [Module ℝ E]

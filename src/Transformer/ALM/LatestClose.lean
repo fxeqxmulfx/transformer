@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.ALM.LatestWindow
+
+/-!
 # And the window shuts, at a position that can be named
 
 `Transformer.ALM.LatestWindow` bounds the perturbation on both sides and shows
-the released `LATEST_ALPHA = 0.3` inside them.  The upper side is a constant and
-holds forever.  The lower side is not: it asks that one step of `invLogPos` stay
+the released `LATEST_ALPHA = 0.3` inside them. The upper side is a constant and
+holds forever. The lower side is not: it asks that one step of `invLogPos` stay
 wider than the rounding, and the steps shrink like `1/((p+2) log²(p+2))` while
 the rounding does not shrink at all.
 
-So the guarantee has a shelf life, and this file gives it a name.  Past
+So the guarantee has a shelf life, and this file gives it a name. Past
 `⌈exp (α / 2η)⌉` a rounding inside the budget makes the *stale* write win — not
-a weaker bound, an inverted answer, with nothing to announce it.  `todo3.md` §2a
+a weaker bound, an inverted answer, with nothing to announce it. `todo3.md` §2a
 measures where that sits on the released model: the closest runner-up on `hello`
 is `6.026e-6` against a noise floor of `4.3e-15`, which puts the crossing at
 `p ≈ 8·10^10` on heads keyed on small integers, and — §4b — already behind us on
@@ -22,7 +26,7 @@ gone, and `Transformer.ALM.HullResolve` is what says it answers.
 Source: `todo3.md` §2a and §4b; `transformer_vm/evaluator.py:230`.
 -/
 
-import Transformer.ALM.LatestWindow
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -41,11 +45,11 @@ lemma invLogPos_step_le (p : ℕ) :
 
 /-- **So for every scale and every rounding there is a position past which the
 stale write can win.**  Fix the perturbation scale `α` and a rounding budget
-`η > 0`.  Past `P` the step `invLogPos` takes between consecutive positions is
+`η > 0`. Past `P` the step `invLogPos` takes between consecutive positions is
 narrower than the rounding, and then a rounding inside the budget — `+η` on the
 earlier write, `-η` on the later — makes the *earlier* one score at least as
-high.  Nothing announces it: the head returns a stale value and the query looks
-like any other.  This is §2a's "past some length the ordering is lost silently
+high. Nothing announces it: the head returns a stale value and the query looks
+like any other. This is §2a's "past some length the ordering is lost silently
 and the answer becomes whichever the rounding prefers", and it is why the
 unreached fallback `HullMeta::last_seq` has to stay reachable. -/
 theorem past_the_window_rounding_decides {α η : ℝ} (hα : 0 < α) (hη : 0 < η)

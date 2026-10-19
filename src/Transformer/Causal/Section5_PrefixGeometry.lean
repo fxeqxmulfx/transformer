@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Causal.Section5_FrozenLastRow
+public import Transformer.Causal.Section5_WeightedInteraction
+public import Transformer.Causal.Section5_ParameterGeometry
+
+/-!
 # Locating the next original frozen token from its curvature
 
 ArXiv:2411.04990v2, §5, the induction in the proof of
@@ -18,9 +24,7 @@ These statements retain circular distance and arbitrary lifts,
 so the induction does not assume a common real-angle chart.
 -/
 
-import Transformer.Causal.Section5_FrozenLastRow
-import Transformer.Causal.Section5_WeightedInteraction
-import Transformer.Causal.Section5_ParameterGeometry
+@[expose] public section
 
 open scoped BigOperators
 open Real Set

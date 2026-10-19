@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_TransferPhases
+
+/-!
 # Stability of original protected transfers for concentrated laws
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, its proof in §5,
@@ -19,7 +23,7 @@ attention laws in the first and last phases, retaining their
 dependence on the evolving original probability law.
 -/
 
-import Transformer.Interpolation.Section4_TransferPhases
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped NNReal

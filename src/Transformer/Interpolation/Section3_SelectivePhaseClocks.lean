@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_PhaseLawMaps
+public import Transformer.Interpolation.Section3_MeanAxisAttraction
+public import Transformer.Interpolation.Section3_BarycenterContraction
+
+/-!
 # Intrinsic clocks for exact selective probability maps
 
 ArXiv:2411.04551v3, §3.2, Steps 1–3 of
@@ -15,9 +21,7 @@ phases; a prescribed physical horizon is supplied separately by the
 finite-phase realization theorem.
 -/
 
-import Transformer.Interpolation.Section3_PhaseLawMaps
-import Transformer.Interpolation.Section3_MeanAxisAttraction
-import Transformer.Interpolation.Section3_BarycenterContraction
+@[expose] public section
 
 open Real MeasureTheory Set
 

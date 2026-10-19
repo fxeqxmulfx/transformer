@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainReferenceBalance
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainPositiveLimits
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainReferenceBalance
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainPositiveLimits
 
 /-!
 # Efficient Gen selection from an initial positive partner
@@ -26,6 +28,8 @@ The joint witnesses are actual nonzero retained balanced paths.
 Their derived convergence does not establish convergence from the
 source's smaller Gen seed or attraction from other initial states.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

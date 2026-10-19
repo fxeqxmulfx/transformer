@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section4_GaussianBalls
+public import Mathlib.Topology.Algebra.InfiniteSum.ENNReal
+
+/-!
 # Gaussian vertices: all vertices own their cells with high probability
 
 The qualitative probability limit of `prop: d.to.infty` in §4 of
@@ -12,8 +17,7 @@ symmetric quadratic-form bounds supply it in `Section4_VertexGenericity`.
 No symmetry assumption is needed once that operator-norm bound is given.
 -/
 
-import Transformer.FrankWolfe.Section4_GaussianBalls
-import Mathlib.Topology.Algebra.InfiniteSum.ENNReal
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped BigOperators ENNReal

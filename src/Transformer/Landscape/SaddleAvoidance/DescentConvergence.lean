@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.DescentTrap
+public import Transformer.Landscape.SaddleAvoidance.FlowConvergence
+
+/-!
 # Saddle avoidance — descent curves converge near a Łojasiewicz point
 
 A curve that descends `f` (`IsDescentCurve`) and comes back at arbitrarily late
@@ -6,11 +11,11 @@ times arbitrarily close to `z`, up to translations leaving `f` invariant,
 converges when `f` satisfies the Łojasiewicz inequality at `z` with exponent
 `a < 1` (`IsDescentCurve.exists_tendsto_of_isLojasiewiczAt`), and its limit is
 a critical point where `∇f` is continuous
-(`IsDescentCurve.gradient_eq_zero_of_tendsto`).  These are
+(`IsDescentCurve.gradient_eq_zero_of_tendsto`). These are
 `exists_tendsto_gradientFlow_of_isLojasiewiczAt` and
-`gradient_eq_zero_of_tendsto_gradientFlow` for descent curves.  `f` decreases
-to `f z` along the curve.  If it reaches `f z`, the curve stops
-(`IsDescentCurve.eq_of_comp_eq`).  Otherwise a translate of the curve
+`gradient_eq_zero_of_tendsto_gradientFlow` for descent curves. `f` decreases
+to `f z` along the curve. If it reaches `f z`, the curve stops
+(`IsDescentCurve.eq_of_comp_eq`). Otherwise a translate of the curve
 (`IsDescentCurve.add_const`), started close to `z` with `f` close to `f z`, is
 trapped (`IsDescentCurve.mem_ball`), and the length bound
 `IsDescentCurve.mul_norm_sub_le` makes it Cauchy
@@ -26,8 +31,7 @@ Source: arXiv:2312.10794v5, §4, after `thm: beta.interval`, and Appendix A:
 function, in an analytic metric, converge.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.DescentTrap
-import Transformer.Landscape.SaddleAvoidance.FlowConvergence
+@[expose] public section
 
 open Filter Metric Set
 open scoped Topology
@@ -42,7 +46,7 @@ local notation "⟪" x ", " y "⟫" => inner ℝ x y
 /-- **A descent curve converges near a point where the Łojasiewicz inequality
 holds.**  Let `f` be differentiable and satisfy the Łojasiewicz inequality at
 `z` with exponent `a < 1`, and let `x` descend `f` from time `0` on at rates
-`c₁ > 0` and `c₂ ≥ 0`.  If at arbitrarily late times `x` comes arbitrarily
+`c₁ > 0` and `c₂ ≥ 0`. If at arbitrarily late times `x` comes arbitrarily
 close to `z` up to translations in a set `Λ` leaving `f` invariant, `x`
 converges. -/
 theorem IsDescentCurve.exists_tendsto_of_isLojasiewiczAt (hf : Differentiable ℝ f)
@@ -109,7 +113,7 @@ theorem IsDescentCurve.exists_tendsto_of_isLojasiewiczAt (hf : Differentiable �
 
 /-- **The limit of a descent curve is a critical point**: if `x` descends `f`
 at a rate `c₁ > 0` and converges to `w`, where `∇f` is continuous, then
-`∇f(w) = 0`.  Otherwise `‖∇f‖ > ‖∇f(w)‖ / 2` near `w`, so `f` drops by at
+`∇f(w) = 0`. Otherwise `‖∇f‖ > ‖∇f(w)‖ / 2` near `w`, so `f` drops by at
 least `c₁ ‖∇f(w)‖² / 4` over every late unit of time, while it converges. -/
 theorem IsDescentCurve.gradient_eq_zero_of_tendsto (hf : Differentiable ℝ f)
     (hx : IsDescentCurve f c₁ c₂ t₀ x) (hc₁ : 0 < c₁) {w : E}

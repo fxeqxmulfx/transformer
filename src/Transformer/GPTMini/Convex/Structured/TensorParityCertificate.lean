@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.ParitySemanticRows
+module
+
+public import Transformer.GPTMini.Convex.Structured.ParitySemanticRows
 
 /-!
 # Finite learned parity checks certify the entire actual tensor model
@@ -21,6 +23,8 @@ This is an arbitrary-weight semantic certificate, not a convergence claim
 for AdamW or a proof that IEEE arithmetic preserves the real margins.
 Output-only loss and freely trained FFNs remain outside this prototype.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

@@ -1,6 +1,8 @@
-import Transformer.Modes.Section3_CubicDerivativeFrequency
-import Transformer.Modes.Section3_CubicDerivativeTail
-import Transformer.Modes.Section3_CubicIntegralComparison
+module
+
+public import Transformer.Modes.Section3_CubicDerivativeFrequency
+public import Transformer.Modes.Section3_CubicDerivativeTail
+public import Transformer.Modes.Section3_CubicIntegralComparison
 
 /-!
 # The full integral of the actual cubic-corrected third derivative
@@ -23,6 +25,8 @@ inverse-n bounds for orders zero and three. Exponential moments
 enter only the existing zero-order comparison and the subsequent
 identification of the inverse cubic coefficient with `psiOf`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

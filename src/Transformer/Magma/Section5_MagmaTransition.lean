@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Magma.Section5_BlockOperators
+public import Transformer.Magma.Section5_Transition
+
+/-!
 # Dense momentum and invariant EMA scales in the corrected SGD model
 
 Formalization of arXiv:2602.15322v1, Sections 2--3 and 5. The actual
@@ -8,8 +13,7 @@ normalized parameter step is Section 5's rule, with Algorithm 1's dense
 auxiliary-state updates; their learning-rate difference remains explicit.
 -/
 
-import Transformer.Magma.Section5_BlockOperators
-import Transformer.Magma.Section5_Transition
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 

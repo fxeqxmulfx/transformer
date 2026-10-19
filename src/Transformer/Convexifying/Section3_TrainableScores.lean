@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_ConvexAttention
+
+/-!
 # Trainable softmax scores retain nonconvex prediction geometry
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §2–§3.1, equations (2)–(3).
-Here query and key weights remain trainable.  Two small training samples
+Here query and key weights remain trainable. Two small training samples
 show that the prediction set of one ordinary softmax-attention head is not
-convex.  This rules out an exact convex feasible set with affine predictions
+convex. This rules out an exact convex feasible set with affine predictions
 for this fixed-width model; it does not rule out other kinds of lifting or
 a model with more heads.
 -/
 
-import Transformer.Convexifying.Section3_ConvexAttention
+@[expose] public section
 
 open scoped BigOperators
 
@@ -17,18 +21,18 @@ namespace Transformer.Convexifying
 
 /-- The first-row attention weight for two scores `[z, 0]`.
 Source: arXiv:2211.11052v1, equation (2), rowwise softmax. -/
-private noncomputable def logistic (z : ℝ) : ℝ :=
+noncomputable def logistic (z : ℝ) : ℝ :=
   Real.exp z / (Real.exp z + 1)
 
 /-- Three selected output coordinates for sample token amplitudes `1` and
 `2`, expressed through the trainable products `p = q*k` and `t = v*o`.
 Source: arXiv:2211.11052v1, equations (2)–(3). -/
-private noncomputable def headTriple (p t : ℝ) : Fin 3 → ℝ :=
+noncomputable def headTriple (p t : ℝ) : Fin 3 → ℝ :=
   fun j => if j = 0 then t / 2 else
     if j = 1 then t * logistic p else 2 * t * logistic (4 * p)
 
 /-- The midpoint of the attainable predictions with `p = 0` and
-`p = log 2`, each with `t = 1`.  Source: equation (3), specialized. -/
+`p = log 2`, each with `t = 1`. Source: equation (3), specialized. -/
 private noncomputable def midpointTriple : Fin 3 → ℝ :=
   fun j => if j = 0 then 1 / 2 else if j = 1 then 7 / 12 else 49 / 34
 
@@ -46,7 +50,7 @@ private theorem exp_four_log_two : Real.exp (4 * Real.log 2) = 16 := by
   norm_num
 
 /-- The displayed rational triple is exactly the midpoint of two genuine
-trainable-score predictions.  Source: equation (3), specialized. -/
+trainable-score predictions. Source: equation (3), specialized. -/
 private theorem midpointTriple_eq :
     midpointTriple = fun j =>
       (headTriple 0 1 j + headTriple (Real.log 2) 1 j) / 2 := by
@@ -60,7 +64,7 @@ private theorem midpointTriple_eq :
 
 /-- No single score product and output amplitude yield the midpoint: its
 first coordinates force `t = 1` and `exp p = 7/5`, contradicting the
-second sample's score `4p`.  Source: equation (3), specialized. -/
+second sample's score `4p`. Source: equation (3), specialized. -/
 private theorem midpointTriple_unreachable :
     ¬ ∃ p t : ℝ, headTriple p t = midpointTriple := by
   rintro ⟨p, t, h⟩
@@ -91,12 +95,12 @@ def toyData : Fin 2 → Fin 2 → Vec 1 :=
   fun i r _ => if r = 0 then if i = 0 then 1 else 2 else 0
 
 /-- Genuine query-key scores for the two samples, with trainable scalar
-query and key weights.  Source: arXiv:2211.11052v1, equation (3). -/
+query and key weights. Source: arXiv:2211.11052v1, equation (3). -/
 def toyScores (i : Fin 2) (q k : ℝ) : Mat 2 2 :=
   fun r s => (toyData i r 0 * q) * (toyData i s 0 * k)
 
 /-- Ordinary softmax-attention output, including trainable value and output
-weights.  Source: arXiv:2211.11052v1, equations (2)–(3). -/
+weights. Source: arXiv:2211.11052v1, equations (2)–(3). -/
 noncomputable def toyOutput (i r : Fin 2) (q k v o : ℝ) : ℝ :=
   (∑ s, rowSoftmax (toyScores i q k) r s * (toyData i s 0 * v)) * o
 
@@ -107,7 +111,7 @@ noncomputable def toyPrediction (q k v o : ℝ) : Fin 3 → ℝ :=
     if j = 1 then toyOutput 0 0 q k v o else toyOutput 1 0 q k v o
 
 /-- The reduced products `q*k` and `v*o` describe these genuine softmax
-predictions exactly.  Source: arXiv:2211.11052v1, equation (3). -/
+predictions exactly. Source: arXiv:2211.11052v1, equation (3). -/
 theorem toyPrediction_eq_triple (q k v o : ℝ) :
     toyPrediction q k v o = headTriple (q * k) (v * o) := by
   funext j
@@ -150,9 +154,9 @@ def oneHeadPredictionSet : Set (Fin 3 → ℝ) :=
 
 /-- **One-head obstruction to an affine convex reparameterization.**  The
 attainable predictions are nonconvex even though all four weights remain
-trainable.  This concerns exact equality of prediction sets at fixed width;
+trainable. This concerns exact equality of prediction sets at fixed width;
 it does not exclude convex formulations with more heads or nonlinear output
-recovery.  Source: arXiv:2211.11052v1, §2–§3.1, equations (2)–(3). -/
+recovery. Source: arXiv:2211.11052v1, §2–§3.1, equations (2)–(3). -/
 theorem oneHeadPredictionSet_not_convex :
     ¬ Convex ℝ oneHeadPredictionSet := by
   intro hc
@@ -176,9 +180,9 @@ theorem oneHeadPredictionSet_not_convex :
   exact toyPrediction_midpoint_unreachable hmid
 
 /-- No finite-dimensional convex parameter set with an affine prediction
-map has exactly this one-head softmax prediction set.  This is the precise
+map has exactly this one-head softmax prediction set. This is the precise
 obstruction established here; nonlinear recovery or extra heads require
-separate analysis.  Source: arXiv:2211.11052v1, §3.1, equation (3). -/
+separate analysis. Source: arXiv:2211.11052v1, §3.1, equation (3). -/
 theorem no_finite_affine_convex_lift {m : ℕ}
     (C : Set (Fin m → ℝ)) (f : (Fin m → ℝ) →ᵃ[ℝ] (Fin 3 → ℝ))
     (hC : Convex ℝ C) : f '' C ≠ oneHeadPredictionSet := by

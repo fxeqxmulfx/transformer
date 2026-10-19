@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+
+/-!
 # Causal attention — Basic definitions
 
 Formalization of arXiv:2411.04990v2 — "Clustering in Causal Attention Masking"
@@ -14,8 +19,7 @@ Equations covered:
 * the eigenspaces `L, L'` associated with `λ_max(V)`.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
+@[expose] public section
 
 open scoped BigOperators
 open Real

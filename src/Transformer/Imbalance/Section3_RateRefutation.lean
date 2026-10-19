@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_SignFlow
+public import Transformer.Imbalance.Section3_GradientFlow
+
+/-!
 # Corrected main sign rate and refutation of the published rate
 
 arXiv:2402.19449v2, Theorem 3 and Appendix I, Lemma 7. The main theorem's
 exp(-ct) rate is also false for c=3, not just the exact loss formula.
 -/
 
-import Transformer.Imbalance.Section3_SignFlow
-import Transformer.Imbalance.Section3_GradientFlow
+@[expose] public section
 
 open Filter Asymptotics
 

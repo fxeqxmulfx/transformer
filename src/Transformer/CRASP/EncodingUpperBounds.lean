@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.CRASP.NeutralEncodings
+public import Transformer.CRASP.SinusoidalLiftCorrect
+public import Transformer.CRASP.LogicToTransformer
+
+/-!
 # Same-depth recognizers in all three position-encoding families
 
 arXiv:2506.16055v3, §4.5, `thm:rtfr_pes_depth_hierarchy`, and Appendix F.
@@ -6,9 +12,7 @@ The parameters belong to the model being constructed: zero-angle RoPE,
 zero-slope ALiBi, and a zero-angle sinusoidal model with reserved coordinates.
 -/
 
-import Transformer.CRASP.NeutralEncodings
-import Transformer.CRASP.SinusoidalLiftCorrect
-import Transformer.CRASP.LogicToTransformer
+@[expose] public section
 
 namespace Transformer.CRASP
 

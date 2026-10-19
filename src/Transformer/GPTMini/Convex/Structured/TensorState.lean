@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.TensorRecovery
-import Mathlib.Data.List.FinRange
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorRecovery
+public import Mathlib.Data.List.FinRange
 
 /-!
 # Learned state/value inference from genuine prenorm tensors
@@ -18,6 +20,8 @@ for every free parameter assignment. Compact ten-coordinate values
 are coupled to the true scalar decoder. Residual/tied readout and
 causal row-prefix selection remain further integration obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

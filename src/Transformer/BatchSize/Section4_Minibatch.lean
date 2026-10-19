@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_Coefficients
+
+/-!
 # Mean and variance under minibatch averaging
 
 arXiv:2506.12543v1, Section 4.3, definition of the stochastic gradient
@@ -6,7 +10,7 @@ and equation (2). Independence is needed for variance scaling, while
 unbiasedness alone determines the mean.
 -/
 
-import Transformer.BatchSize.Section4_Coefficients
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped BigOperators

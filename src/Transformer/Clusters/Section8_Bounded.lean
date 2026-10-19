@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section8_Origin
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # The emergence of clusters in self-attention dynamics — the trajectories at
   `V = -I_d` stay bounded
 
@@ -7,13 +12,12 @@
 **What the source says and what is carried here.**
 
 * `l:cas1circle` is stated as the source states it, as the existence of a
-  radius.  The explicit bound of its proof is not carried.
+  radius. The explicit bound of its proof is not carried.
 
 Source: arXiv:2305.05465v6, `l:cas1circle`.
 -/
 
-import Transformer.Clusters.Section8_Origin
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter
@@ -70,7 +74,7 @@ bounded in time: there is `R > 0`, depending only on `n` and the initial
 configuration, with `‖x_i(t)‖ ≤ R` for every `i ∈ [n]` and every `t ≥ 0`.
 
 As in the source, `‖x_i‖²` decreases whenever it is large, by
-`inner_negIdDrift_neg`.  The source's threshold is `2n`, and `n` already
+`inner_negIdDrift_neg`. The source's threshold is `2n`, and `n` already
 suffices; the radius taken is `√(Σ_j ‖x_j(0)‖² + n) + 1`.
 
 Source: arXiv:2305.05465v6, `l:cas1circle`. -/

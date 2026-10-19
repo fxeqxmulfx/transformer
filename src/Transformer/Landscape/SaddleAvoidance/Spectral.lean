@@ -1,11 +1,16 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Defs
+public import Mathlib.Analysis.InnerProductSpace.Spectrum
+
+/-!
 # Saddle avoidance — the expanding splitting of a symmetric map
 
 A symmetric linear map `A` of a finite-dimensional real inner product space
 with an eigenvalue of modulus greater than one has an expanding splitting
-(`exists_expandingSplitting`).  In an orthonormal basis of eigenvectors `bᵢ`
+(`exists_expandingSplitting`). In an orthonormal basis of eigenvectors `bᵢ`
 of `A` (the spectral theorem, `LinearMap.IsSymmetric.eigenvectorBasis`), `A`
-multiplies the coordinate `⟪bᵢ, v⟫` by the eigenvalue `λᵢ`.  The map `P` keeps
+multiplies the coordinate `⟪bᵢ, v⟫` by the eigenvalue `λᵢ`. The map `P` keeps
 the coordinates with `|λᵢ| > 1` and drops the others, and `c` is the least of
 those `|λᵢ|`; a basis vector with `|λᵢ| > 1` is a direction fixed by `P`.
 
@@ -14,8 +19,7 @@ coordinates are those of the negative eigenvalues of the Hessian, the
 directions along which the step `x ↦ x - η ∇f(x)` pushes away from `z`.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Defs
-import Mathlib.Analysis.InnerProductSpace.Spectrum
+@[expose] public section
 
 open Finset
 

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_BarycenterGramComparison
+public import Transformer.Homogenized.SimplexWellDefined
+public import Transformer.Homogenized.OverlapDrift
+
+/-!
 # The original overlap drift is Lipschitz in the Gram matrix
 
 ArXiv:2604.01978v1, §7, eq:Dij_explicit_clean and the final
@@ -13,9 +19,7 @@ constant. The complete original drift therefore has the source's
 dimension and variance scaling, with universal constant 80.
 -/
 
-import Transformer.Homogenized.Section7_BarycenterGramComparison
-import Transformer.Homogenized.SimplexWellDefined
-import Transformer.Homogenized.OverlapDrift
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_LogSumExp
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
 # The emergence of clusters in self-attention dynamics — particles never collide
 
 §7 of arXiv:2305.05465v6: `l:distnondec`, the distances between the particles
@@ -13,9 +19,7 @@ divergence, nonnegative term by term.
 Source: arXiv:2305.05465v6, `l:distnondec`, `e:infdist`.
 -/
 
-import Transformer.Clusters.Section7_LogSumExp
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -26,7 +30,7 @@ namespace Clusters
 variable {d n : ℕ}
 
 /-- The softmax is a monotone map: `Σ_j (p_j - q_j)(s_j - u_j) ≥ 0` for
-`p = softmax s`, `q = softmax u`.  With `log p_j = s_j - log Σ e^s`, the sum is
+`p = softmax s`, `q = softmax u`. With `log p_j = s_j - log Σ e^s`, the sum is
 `Σ_j (p_j - q_j)(log p_j - log q_j)`, and every term is nonnegative. -/
 theorem softmax_monotone (s u : Idx n → ℝ) :
     0 ≤ ∑ j, (Perspective.softmaxWeight s j - Perspective.softmaxWeight u j) * (s j - u j) := by
@@ -78,7 +82,7 @@ theorem inner_drift_sub_nonneg (X : Idx n → EucSpace d) (i j : Idx n) :
 
 The source's argument: `e:Idnonresca` is `ẋ_i = ∇f(x_i)` for the potential
 `e:logsumexpfct`, and the gradient of a convex function is monotone, so
-`⟨ẋ_i - ẋ_j, x_i - x_j⟩ ≥ 0`.  That monotonicity is `inner_drift_sub_nonneg`,
+`⟨ẋ_i - ẋ_j, x_i - x_j⟩ ≥ 0`. That monotonicity is `inner_drift_sub_nonneg`,
 proved from the softmax directly rather than through `l:logsumexp`.
 
 Source: arXiv:2305.05465v6, `l:distnondec`. -/

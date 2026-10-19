@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Muon.Section2_TrainingModels
+public import Transformer.Optimization.Stationarity
+public import Transformer.Optimization.StrongConvergence
+public import Transformer.Optimization.Quadratic
+
+/-!
 # Muon — proved convergence of the corrected learning algorithm
 
 User-requested training extension of arXiv:2502.16982, §2.1–2.2.
@@ -7,10 +14,7 @@ five Newton–Schulz steps fixed. The loss is fixed and deterministic;
 stochastic minibatch training and floating-point rounding are not covered.
 -/
 
-import Transformer.Muon.Section2_TrainingModels
-import Transformer.Optimization.Stationarity
-import Transformer.Optimization.StrongConvergence
-import Transformer.Optimization.Quadratic
+@[expose] public section
 
 open scoped Topology
 open Filter

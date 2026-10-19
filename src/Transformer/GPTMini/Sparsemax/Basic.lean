@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Convex.Basic
-import Mathlib.Analysis.Calculus.FDeriv.Const
-import Mathlib.Analysis.Calculus.FDeriv.Congr
+module
+
+public import Transformer.GPTMini.Convex.Basic
+public import Mathlib.Analysis.Calculus.FDeriv.Const
+public import Mathlib.Analysis.Calculus.FDeriv.Congr
 
 /-!
 # Saturated regions of the actual causal sparsemax row
@@ -10,6 +12,8 @@ already defined in `GPTMini.Convex.Basic`. The paper's convex positional
 model is different. These results concern real-valued inference and the
 backpropagation path through one row, not an entire PyTorch trajectory.
 -/
+
+@[expose] public section
 
 noncomputable section
 

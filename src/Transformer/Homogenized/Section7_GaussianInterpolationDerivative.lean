@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianInterpolationPath
+public import Mathlib.Analysis.Calculus.ParametricIntegral
+
+/-!
 # Differentiating the original Gaussian interpolation expectation
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -16,8 +21,7 @@ The analytic step below takes integrability explicitly, so the original
 Gaussian laws supply that input rather than an assumed derivative formula.
 -/
 
-import Transformer.Homogenized.Section7_GaussianInterpolationPath
-import Mathlib.Analysis.Calculus.ParametricIntegral
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Set Filter
 open scoped Topology

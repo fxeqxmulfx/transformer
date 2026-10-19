@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_SimplexDriftBias
+
+/-!
 # Actual Gaussian second moments of the overlap noise
 
 ArXiv:2604.01978v1, §7, eq:martingale_Mij_clean and the
@@ -14,7 +18,7 @@ factor before the source's standard-scaling specialization.
 All integral expansions are justified by actual integrability.
 -/
 
-import Transformer.Homogenized.Section7_SimplexDriftBias
+@[expose] public section
 
 open MeasureTheory
 open scoped BigOperators NNReal

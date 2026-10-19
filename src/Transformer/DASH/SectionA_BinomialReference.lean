@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_DegreeSpan
+public import Mathlib.Analysis.Analytic.Binomial
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+/-!
 # DASH — binomial reference polynomials for inverse powers
 
 arXiv:2602.02016v2, Appendix A, approximation on `[ε,1+ε]`.
@@ -6,9 +12,7 @@ Expanding at the interval midpoint supplies degree-bounded reference
 polynomials for estimates of the source's discrete cosine fit.
 -/
 
-import Transformer.DASH.SectionA_DegreeSpan
-import Mathlib.Analysis.Analytic.Binomial
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+@[expose] public section
 
 open scoped BigOperators
 

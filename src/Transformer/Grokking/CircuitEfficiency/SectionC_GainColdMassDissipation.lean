@@ -1,6 +1,8 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdMassMonotone
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainFeedbackFloor
-import Transformer.Grokking.AdamW.ScalarInputDissipation
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdMassMonotone
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainFeedbackFloor
+public import Transformer.Grokking.AdamW.ScalarInputDissipation
 
 /-!
 # Actual critical mass dissipation from true CE inputs
@@ -30,6 +32,8 @@ buffer is retained. Fixed tables/plain CE/uniform native decay differ
 from appendix C's assigned coupled norm-cost GD. Exact-real proofs
 do not establish learned GPTMini or thermodynamic system-size transfer.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

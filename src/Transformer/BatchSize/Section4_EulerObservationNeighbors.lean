@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerIntervals
+public import Transformer.BatchSize.Section4_EulerWindowSecondMoment
+public import Transformer.BatchSize.Section4_DyadicObservationTimes
+public import Transformer.BatchSize.Section4_LimitMoments
+
+/-!
 # Actual neighboring Euler states converge at every observation time
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,10 +13,7 @@ The arbitrary-window moment estimate controls the difference between a
 chosen adjacent grid state and the Brownian interpolation at that time.
 -/
 
-import Transformer.BatchSize.Section4_EulerIntervals
-import Transformer.BatchSize.Section4_EulerWindowSecondMoment
-import Transformer.BatchSize.Section4_DyadicObservationTimes
-import Transformer.BatchSize.Section4_LimitMoments
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal Topology

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianTaylorMean
+public import Transformer.Homogenized.Section7_GaussianScoreThird
+public import Transformer.Homogenized.Barycenter
+
+/-!
 # Uniform normalized-correlation expansion for one actual Gaussian factor
 
 ArXiv:2604.01978v1, §7.3, `lem:delta_method`. For the images
@@ -24,9 +30,7 @@ This theorem does not identify those two distinct original laws;
 the product expansion requires a further composition of factor laws.
 -/
 
-import Transformer.Homogenized.Section7_GaussianTaylorMean
-import Transformer.Homogenized.Section7_GaussianScoreThird
-import Transformer.Homogenized.Barycenter
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

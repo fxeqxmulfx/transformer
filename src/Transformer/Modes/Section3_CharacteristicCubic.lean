@@ -1,5 +1,8 @@
-import Transformer.Modes.Section3_FourthOrderPhase
-import Transformer.Modes.Section3_CharacteristicTaylor
+module
+
+public import Transformer.Modes.Section3_FourthOrderPhase
+public import Transformer.Modes.Section3_CharacteristicTaylor
+
 /-!
 # The actual cubic characteristic expansion under finite fourth moments
 
@@ -20,6 +23,7 @@ hypothesis on a probability law, so the polynomial subtraction is an
 identity of actual integrals rather than formal coefficients.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.LossDescent
+module
+
+public import Transformer.Grokking.AdamW.LossDescent
 
 /-!
 # Exact first update of a centered effective-loss family
@@ -15,6 +17,8 @@ by this particular family; it is not imposed on the update. This permits
 an exact finite-step threshold without identifying AdamW with the
 source's assumed Euclidean flow or with actual GPTMini training.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

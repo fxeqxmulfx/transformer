@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainGradientLimits
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainGradientLimits
 
 /-!
 # Necessary limits of actual uniformly decayed physical-gain feedback
@@ -22,6 +24,8 @@ remain distinct from the source's asymmetric coupled norm cost/GD.
 The source tables remain fixed, and stochastic learned GPTMini,
 finite-precision forward/autograd and kernel bridges remain open.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

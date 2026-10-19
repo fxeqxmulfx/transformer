@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AMSGradW.Convergence
+
+/-!
 # The limiting weighted objective
 
 arXiv:1904.03590v4, Algorithm 1, AMSGradW training extension.
@@ -7,7 +11,7 @@ penalty formed from the actual limiting denominator. It need not equal
 ordinary isotropic L2 regularization or minimize the original loss.
 -/
 
-import Transformer.AMSGradW.Convergence
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace Topology
 open Filter

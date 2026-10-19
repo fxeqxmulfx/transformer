@@ -1,12 +1,16 @@
-/-
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Tactic
+
+/-!
 # AdaFisher: likelihood and the training objective
 
 arXiv:2405.16397v3, §2, the maximum-likelihood/negative-log-likelihood
 equivalence. The likelihoods are positive on the observations in question.
 -/
 
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Tactic
+@[expose] public section
 
 open scoped BigOperators
 

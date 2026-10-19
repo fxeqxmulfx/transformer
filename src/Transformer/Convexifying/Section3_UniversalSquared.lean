@@ -1,21 +1,25 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_UniversalLoss
+public import Transformer.Convexifying.Section3_ScalarCounterexample
+
+/-!
 # Squared-loss targets force an affine decoder
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §2–§3.1, equation
-`eq:attention_only_obj`.  For a convex regularizer, convexity of the
+`eq:attention_only_obj`. For a convex regularizer, convexity of the
 training objective for every squared-loss target forces the decoder to
-preserve convex combinations.  This closes the nonlinear-decoder route to
+preserve convex combinations. This closes the nonlinear-decoder route to
 an exact universal reformulation under the prediction-budget criterion.
 -/
 
-import Transformer.Convexifying.Section3_UniversalLoss
-import Transformer.Convexifying.Section3_ScalarCounterexample
+@[expose] public section
 
 namespace Transformer.Convexifying
 
 /-- The same decoder-affinity conclusion follows if every squared-loss
-target, rather than every affine loss, gives a convex objective.  Squared
-losses are explicitly included in the paper's allowed class.  Varying the
+target, rather than every affine loss, gives a convex objective. Squared
+losses are explicitly included in the paper's allowed class. Varying the
 target produces arbitrary linear slopes after expanding the square.
 Source: arXiv:2211.11052v1, `eq:attention_only_obj`. -/
 theorem decoder_jensen_of_all_square_targets {E : Type*} [AddCommGroup E] [Module ℝ E]
@@ -53,7 +57,7 @@ theorem decoder_jensen_of_all_square_targets {E : Type*} [AddCommGroup E] [Modul
 
 /-- If a changed regularizer is convex and the decoded squared-loss
 training objective is convex for every target, its prediction-budget
-epigraph is convex.  Source: `eq:attention_only_obj`, abstract candidate. -/
+epigraph is convex. Source: `eq:attention_only_obj`, abstract candidate. -/
 theorem decodedEpigraph_convex_of_all_square_targets {E : Type*} [AddCommGroup E] [Module ℝ E]
     (C : Set E) (decode penalty : E → ℝ)
     (hpen : ConvexOn ℝ C penalty)
@@ -84,9 +88,9 @@ theorem decodedEpigraph_convex_of_all_square_targets {E : Type*} [AddCommGroup E
 
 /-- **No exact convex training reformulation for all squared targets.**
 The parameter regularizer may differ from the paper's four-matrix penalty
-and the decoder may initially be nonlinear.  If the candidate regularizer
+and the decoder may initially be nonlinear. If the candidate regularizer
 and every squared-target training objective are convex, exact equality of
-the prediction-budget epigraphs is impossible.  Source:
+the prediction-budget epigraphs is impossible. Source:
 arXiv:2211.11052v1, §2–§3.1, `eq:attention_only_obj`. -/
 theorem no_universal_square_loss_lift {E : Type*} [AddCommGroup E] [Module ℝ E]
     (C : Set E) (decode penalty : E → ℝ)
@@ -102,9 +106,9 @@ theorem no_universal_square_loss_lift {E : Type*} [AddCommGroup E] [Module ℝ E
 
 /-- Requiring convexity for every nonnegative weight on squared loss,
 including weight zero, automatically gives convexity of the changed
-regularizer.  Thus even allowing an arbitrary parameter penalty and a
+regularizer. Thus even allowing an arbitrary parameter penalty and a
 nonlinear decoder cannot yield an exact epigraph reformulation valid for
-this full family of convex losses.  Source: arXiv:2211.11052v1,
+this full family of convex losses. Source: arXiv:2211.11052v1,
 `eq:attention_only_obj`, arbitrary convex-loss hypothesis. -/
 theorem no_universal_scaled_square_loss_lift {E : Type*} [AddCommGroup E] [Module ℝ E]
     (C : Set E) (decode penalty : E → ℝ)

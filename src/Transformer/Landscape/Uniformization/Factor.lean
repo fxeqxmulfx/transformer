@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.Domain
+
+/-!
 # Local uniformization: factors of functions with normal crossings
 
 If `F * H` has normal crossings at `w` and `F`, `H` are analytic there, then
@@ -8,7 +12,7 @@ factor does; it is divisible by `x i - w i`, which then cancels. Auxiliary
 for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Uniformization.Domain
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators Topology

@@ -1,14 +1,20 @@
-/-
+module
+
+public import Transformer.Perspective.DrivenFlow
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+
+/-!
 # The stream before the norm, seen through it
 
 **Not a statement of any paper.**  In a pre-norm block of parameter-golf
 (github.com/openai/parameter-golf,
 `records/track_10min_16mb/2026-04-29_SmearGateBOSFix_3Seed_1.06141/train_gpt.py`,
 `Block.forward`) the residual stream `x_i ∈ ℝ^d` is not normalised between the
-embedding and the final norm.  Attention reads the direction of
+embedding and the final norm. Attention reads the direction of
 `x_in = mix[0] ⊙ x + mix[1] ⊙ x0`, the feed-forward term that of the stream
 after attention (the RMS norm, up to the constant factors `√d` and
-`ln_scale_factor`).  With `mix[0] = 1 + c` in every channel the stream is
+`ln_scale_factor`). With `mix[0] = 1 + c` in every channel the stream is
 
   `ẋ_i = c x_i + g_i(t)`,
 
@@ -23,9 +29,7 @@ with a clock that runs at the speed `1 / ‖x_i‖` of each token.
 `Perspective.RawGrowth` shows what that clock does when the stream grows.
 -/
 
-import Transformer.Perspective.DrivenFlow
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.SpecialFunctions.Sqrt
+@[expose] public section
 
 open scoped BigOperators
 

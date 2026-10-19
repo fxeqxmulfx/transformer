@@ -1,8 +1,12 @@
-/-
+module
+
+public import Transformer.Homogenized.Frozen
+
+/-!
 # Homogenized Transformers — the sphere `𝕊⁰`
 
 In dimension `1` the unit sphere is the two-point set `{±1}`, its tangent
-space at either point is `{0}`, and `Proj_x` is the zero map.  So the diffusion
+space at either point is `{0}`, and `Proj_x` is the zero map. So the diffusion
 kernel `G_μ(x,θ) = Proj_x ξ_θ[μ](x)` of `eq:G_def` vanishes there **at every
 head law**, and not only at the degenerate `ρ* = δ_0` of `MvGenerator.lean`.
 
@@ -19,7 +23,7 @@ own conclusion — that `R` moves by `O(T/d)` plus a martingale of bracket
 `O(T/d)` — is satisfied, with room to spare, at `d = 1`.
 -/
 
-import Transformer.Homogenized.Frozen
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -62,7 +66,7 @@ theorem hasVanishingField_one (β : ℝ) (ρ : Measure (HeadParam 1)) :
 uniform measure on `𝕊⁰`.**
 
 This is `isCoupledPair_uniformAmbient` at `d = 1`, where the hypothesis
-`HasVanishingField` costs nothing.  Together with
+`HasVanishingField` costs nothing. Together with
 `isLowTemperature_uniformAmbient` it satisfies every hypothesis of
 `thm:large_beta_meta` that concerns the dynamics. -/
 theorem isCoupledPair_uniformAmbient_one (β T : ℝ) (ρ : Measure (HeadParam 1))

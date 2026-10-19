@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_ConformalAtomicity
+
+/-!
 # Geometry of a nonzero scalar signed Gram map on the circle
 
 ArXiv:2601.21366v2, §5.2, `thm: circle`, and §6,
@@ -16,7 +20,7 @@ orthogonality. Applying the identity at each neuron gives its weight.
 No condition is inserted into the original neuron definitions.
 -/
 
-import Transformer.Perceptron.Section5_ConformalAtomicity
+@[expose] public section
 
 open Real
 

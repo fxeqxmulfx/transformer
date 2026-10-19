@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_QuadrantTransfers
+public import Mathlib.Topology.Algebra.Module.FiniteDimension
+public import Mathlib.Topology.Baire.Lemmas
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+
+/-!
 # Positive unit points avoiding finitely many original planes
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, and §3.2,
@@ -15,10 +22,7 @@ one actual positive-quadrant unit point. This gives intermediate point
 choices for the original protected atomic transfer construction.
 -/
 
-import Transformer.Interpolation.Section4_QuadrantTransfers
-import Mathlib.Topology.Algebra.Module.FiniteDimension
-import Mathlib.Topology.Baire.Lemmas
-import Mathlib.LinearAlgebra.Dimension.Constructions
+@[expose] public section
 
 open Real MeasureTheory Set
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.AttentionFormulas
+
+/-!
 # Exact quotient cells for positional attention
 
 arXiv:2506.16055v3, Appendix B.2 and F, `thm:rtfr_to_TLClmod`.
@@ -6,7 +10,7 @@ The rounded division depends only on three integer sums, so its predicate
 is independent of how a position encoding produces those sums.
 -/
 
-import Transformer.CRASP.AttentionFormulas
+@[expose] public section
 
 namespace Transformer.CRASP.CountCells
 

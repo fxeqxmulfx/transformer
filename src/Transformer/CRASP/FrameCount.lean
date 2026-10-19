@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Frame
+
+/-!
 # Counts around the middle of a frame
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -6,15 +10,15 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 a word is fixed we can rewrite `▷#` in terms of `◁#` and `n⃗`".
 
 A future count at `j + 1` and a past count at `j` add up to the past count at
-the last position (`Term.val_countR_add_val_countL`).  A past count inside the
+the last position (`Term.val_countR_add_val_countL`). A past count inside the
 middle of a frame is the count up to the middle plus the letters of the middle
 on which the counted formula holds (`Term.val_countL_middle`), and outside the
-middle it does not depend on the middle (`Term.val_countL_outside`).  So a
+middle it does not depend on the middle (`Term.val_countL_outside`). So a
 formula whose counted formulas are constant on the middles of a frame does not
 depend on the middle outside it (`Form.sat_eq_of_constOnMiddle`).
 -/
 
-import Transformer.CRASP.Frame
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

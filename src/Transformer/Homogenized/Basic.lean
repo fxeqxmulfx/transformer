@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Defs
+
+/-!
 # Homogenized Transformers — immediate API of the model
 
 Simp lemmas and elementary consequences of the definitions of
@@ -11,7 +15,7 @@ The last section is the witness the statements downstream use: at the head
 unit vectors is a stationary configuration of `eq:update_tokens`.
 -/
 
-import Transformer.Homogenized.Defs
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -20,7 +24,7 @@ namespace Transformer
 namespace Homogenized
 
 /-- At `β = 0` attention is uniform and the field is the plain average
-`(1/n) Σ_k V x_k` of the values.  (At `n = 0` both sides are `0`, so no
+`(1/n) Σ_k V x_k` of the values. (At `n = 0` both sides are `0`, so no
 positivity hypothesis is needed.) -/
 theorem attnField_zero_beta {d n : ℕ} (θ : HeadParam d)
     (x : Idx n → EucSpace d) (z : EucSpace d) :
@@ -67,7 +71,7 @@ theorem IsVarianceProxy.unique {d n : ℕ} {β : ℝ} {ρ : Measure (HeadParam d
 /-! ### The trivial head
 
 At `θ = (V, A) = (0, 0)` the attention field vanishes, so the law `ρ* = δ_0`
-makes every field of the model vanish identically.  This is the witness that
+makes every field of the model vanish identically. This is the witness that
 the model's hypotheses are satisfiable — a Transformer whose weights are all
 zero moves no token — and it is used as such by the statements downstream. -/
 

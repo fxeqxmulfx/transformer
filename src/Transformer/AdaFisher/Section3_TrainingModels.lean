@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_State
+public import Transformer.Optimization.Quadratic
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+
+/-!
 # AdaFisher — the full deterministic learning trajectory
 
 Training extension of arXiv:2405.16397v3, §3.3–3.4, Algorithm 1.
@@ -8,9 +14,7 @@ This module supplies the actual current loss gradient at every step.
 AdaFisher is selected with zero decoupled weight decay.
 -/
 
-import Transformer.AdaFisher.Section3_State
-import Transformer.Optimization.Quadratic
-import Mathlib.Analysis.InnerProductSpace.PiL2
+@[expose] public section
 
 open scoped BigOperators
 

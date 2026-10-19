@@ -1,21 +1,26 @@
-/-
+module
+
+public import Transformer.ALM.Theta
+public import Transformer.ALM.Basic
+
+/-!
 # The length-free bound in every key dimension
 
 `Transformer.ALM.ScalarSharp` proves that for distinct integer *scalar* keys
 the winner's softmax weight is bounded below by a quantity free of the token
-count `n`.  The machine's `LookUp` compiles to scalar keys, so that is the
+count `n`. The machine's `LookUp` compiles to scalar keys, so that is the
 case it needs; but the paraboloid embedding of `Transformer.ALM.Defs` is
 stated in every dimension, and the bound should be too.
 
 The scalar proof counts the keys at each distance from the query, which fails
 in dimension `m`: the shell `‖x‖² = t` carries `r_m(t)` lattice points, and
-`r_m` is unbounded.  `Transformer.ALM.Theta` replaces that count by the
+`r_m` is unbounded. `Transformer.ALM.Theta` replaces that count by the
 factorization of the whole lattice sum, and what comes out is the scalar bound
 raised to the `m`-th power:
 
   `w i₀ ≥ 1 / (1 + 2 e^{-β}/(1 - e^{-3β}))^m`.
 
-Still no `n`.  The dimension enters as an exponent, so the inverse temperature
+Still no `n`. The dimension enters as an exponent, so the inverse temperature
 needed for an exact simulation grows like `m`, not like the length of the
 trace — which is the architectural point `Transformer.ALM.Lattice` makes, now
 in the generality the head is defined in.
@@ -27,8 +32,7 @@ exactly the bound of `Transformer.ALM.ScalarSharp`, since `x^1 = x`.
   1985, §1 — the theta function whose `m`-th power appears here.
 -/
 
-import Transformer.ALM.Theta
-import Transformer.ALM.Basic
+@[expose] public section
 
 open scoped BigOperators
 
@@ -148,7 +152,7 @@ keys,
 
   `w i₀ ≥ 1 / (1 + 2 e^{-β}/(1 - e^{-3β}))^m`,
 
-with no dependence on the number of keys `n`.  This is
+with no dependence on the number of keys `n`. This is
 `softmax_winner_scalar_int_sharp` of `Transformer.ALM.ScalarSharp` with the
 dimension restored. -/
 theorem softmax_winner_int_sharp (β : ℝ) (hβ : 0 < β)

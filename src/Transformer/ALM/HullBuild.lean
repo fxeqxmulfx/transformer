@@ -1,7 +1,11 @@
-/-
+module
+
+public import Transformer.ALM.HullIndex
+
+/-!
 # What building the hull costs
 
-`Transformer.ALM.HullIndex` priced a query and proved the price paid.  The
+`Transformer.ALM.HullIndex` priced a query and proved the price paid. The
 other half of `NNIndex` — `build` — was a number with nothing behind it.
 
 `HullHalf::add_line` (`transformer_vm/attention/hull2d_cht.h`, lines 143-195)
@@ -12,11 +16,11 @@ erase loops
     while ((y = x) != lines.begin() && (--x)->p >= y->p) isect(x, lines.erase(y));
 
 which can each run many times on a single call — enough to make one insertion
-cost `Θ(n)`.  What keeps the build near-linear is amortization: a line is
+cost `Θ(n)`. What keeps the build near-linear is amortization: a line is
 inserted once and erased at most once, so the erases over the whole build are
 at most the insertions.
 `pops_add_size` is that invariant, stated exactly — pops plus the surviving
-lines equal the keys seen — and `pops_le_length` is its consequence.  On the
+lines equal the keys seen — and `pops_le_length` is its consequence. On the
 paraboloid the loops never run at all, and `Transformer.ALM.HullCover` draws
 the conclusion that buys: the container ends holding one line per key.
 
@@ -33,7 +37,7 @@ The hull is the hull in dimension one and nowhere else, which is the honest
 reading of `reduction_dimension_even`.
 -/
 
-import Transformer.ALM.HullIndex
+@[expose] public section
 
 namespace Transformer
 namespace ALM

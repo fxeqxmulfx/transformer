@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerClipping
+
+/-!
 # Euler interpolation restricted to a time window
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ Clamping each grid time to [s,v] expresses a path increment as a bounded
 drift sum and a predictable Brownian sum on exactly that time window.
 -/
 
-import Transformer.BatchSize.Section4_EulerClipping
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal BigOperators

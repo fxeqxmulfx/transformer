@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.RecallHeadValues
-import Transformer.GPTMini.Semantics.Block
+module
+
+public import Transformer.GPTMini.Semantics.RecallHeadValues
+public import Transformer.GPTMini.Semantics.Block
 
 /-!
 # Evaluate both original recall heads from raw tokens
@@ -18,6 +20,8 @@ task-answer hypothesis is used to derive these actual head formulas.
 Deriving the causal marker mass, the table gate and the second-block
 retrieval/readout remains necessary for full raw recall correctness.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

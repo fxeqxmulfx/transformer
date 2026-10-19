@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.Section3_AngularCharts
+public import Transformer.Metastability.CircleWitness
+
+/-!
 # An explicit collapsed configuration in the slow manifold
 
 ArXiv:2410.06833v1, §3.2, `lem: PL.borjan`, `eq: cones_2`, and
@@ -8,8 +13,7 @@ cap, choose one actual token index and collapse its assigned tokens to
 that token's angle. Every within-cap gap of this configuration is zero.
 -/
 
-import Transformer.Metastability.Section3_AngularCharts
-import Transformer.Metastability.CircleWitness
+@[expose] public section
 
 open Set Real
 

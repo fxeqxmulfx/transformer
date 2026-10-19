@@ -1,7 +1,9 @@
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Tactic
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Algebra.BigOperators.Field
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Tactic
 
 /-!
 # Confidence-only loss reduction and unchanged decisions
@@ -17,6 +19,8 @@ ties at the maximum are allowed, but an all-tied vector does not improve.
 The precise sufficient conditions are stated rather than hidden in a loss
 definition. Parameter updates realizing the scaling remain a separate task.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.NaiveLoss
 

@@ -1,9 +1,14 @@
-/-
+module
+
+public import Transformer.Metastability.InitialUniform
+public import Transformer.Perspective.SphereInvariant
+
+/-!
 # Metastability — Open caps carry positive uniform mass
 
 The uniform law on `𝕊^{d-1}` is pinned down by `IsUniformOn` rather than
 constructed, so every lower bound on the mass of a set has to come from the
-invariance alone.  For open caps it does: the isometries act transitively on
+invariance alone. For open caps it does: the isometries act transitively on
 the sphere (`Perspective.exists_sphereMap_apply_eq`), so all caps of one
 radius carry the same mass, and finitely many of them cover the compact
 sphere, so that common mass is positive.
@@ -12,8 +17,7 @@ Source: arXiv:2410.06833v1, §4 (the uniform law on `𝕊^{d-1}` of the
 low-dimensional bound).
 -/
 
-import Transformer.Metastability.InitialUniform
-import Transformer.Perspective.SphereInvariant
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory

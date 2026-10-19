@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Section4_AntipodalExpansion
+
+/-!
 # Original conditional antipodal fibers have at most one initial token
 
 ArXiv:2411.04990v2, §4, proof of `thm1`, conditional instability.
@@ -17,7 +21,7 @@ fiber. Its previously proved Borel measurability permits Fubini
 for the original independent uniform initialization.
 -/
 
-import Transformer.Causal.Section4_AntipodalExpansion
+@[expose] public section
 
 open Real Filter Topology
 

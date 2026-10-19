@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Kinetic.Section6_HardyRegularity
+public import Transformer.Kinetic.Section6_HardyContraction
+
+/-!
 # Kinetic theory for Transformers — uniqueness of the original classical profile
 
 The source's uniqueness claim in arXiv:2605.09213v1, §6, `prop:Bessel`,
@@ -15,8 +20,7 @@ iterated to all nonnegative time. No norm bound or solution identity is
 put into the equation predicate or assumed of the Bessel formula.
 -/
 
-import Transformer.Kinetic.Section6_HardyRegularity
-import Transformer.Kinetic.Section6_HardyContraction
+@[expose] public section
 
 open Real Set MeasureTheory
 

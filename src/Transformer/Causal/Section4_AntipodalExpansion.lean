@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Causal.Section4_AntipodalField
+public import Transformer.Causal.Section4_FollowerLimits
+public import Transformer.Causal.Section5_StrongCenterWitness
+
+/-!
 # A fixed original prefix has at most one antipodal follower trajectory
 
 ArXiv:2411.04990v2, §4, proof of `thm1`, antipodal instability.
@@ -17,9 +23,7 @@ uniqueness of the original smooth causal flow, after a time shift,
 gives equality of the full original trajectories.
 -/
 
-import Transformer.Causal.Section4_AntipodalField
-import Transformer.Causal.Section4_FollowerLimits
-import Transformer.Causal.Section5_StrongCenterWitness
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

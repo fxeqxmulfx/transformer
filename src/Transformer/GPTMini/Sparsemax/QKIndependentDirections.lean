@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.MixedInputQK
+module
+
+public import Transformer.GPTMini.Sparsemax.MixedInputQK
 
 /-!
 # Ordinary task directions in shared matrices on independent inputs
@@ -22,6 +24,8 @@ The current matrix may have an arbitrary component in directions unseen
 by the decoder. The lift retains that component and still passes through
 the current point, so the theorem does not assume a special matrix inverse.
 -/
+
+@[expose] public section
 
 noncomputable section
 

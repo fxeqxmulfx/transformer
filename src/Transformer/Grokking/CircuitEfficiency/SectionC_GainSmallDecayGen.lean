@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainSmallDecayBoundary
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainSmallDecayBoundary
 
 /-!
 # Original weak-decay Gen cannot asymptotically disappear
@@ -31,6 +33,8 @@ claimed. The circuit is a fixed gained table; learned head formation
 and stochastic/floating-point GPTMini transfer remain open. Uniform
 native decay differs from the source's coupled assigned norm-cost GD.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.Perceptron.FirstVariation
+
+/-!
 # Perceptrons and attention's mean-field landscape — moving mass to a point
 
 The segment `ν_ε = (1 - ε) μ + ε δ_z` from a measure `μ` to a Dirac mass at a
 point `z` of the sphere (`mixDirac`), and the energy along it.
 
 The energy is exactly quadratic in `ε`: the interaction term is a quadratic
-form in the measure, the potential term linear.  Its slope at `ε = 0` is the
+form in the measure, the potential term linear. Its slope at `ε = 0` is the
 first variation at `z`, centred (`energy_mixDirac`):
 
   `E[ν_ε] = E[μ] + ε (δE/δμ[μ](z) - ∫ δE/δμ[μ] dμ) + ε² M`.
@@ -17,7 +21,7 @@ slope is nonnegative for every `z`, which is the first-order condition
 Source: arXiv:2601.21366v2, §2.1 and §2.3.
 -/
 
-import Transformer.Perceptron.FirstVariation
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

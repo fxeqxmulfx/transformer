@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.Newton
+
+/-!
 # Local uniformization: the product step at a point
 
 Let `F = M(x') · V(x) · P(x', y)` with `P = y^d + Σ_i B_i(x') y^i` centered, `M` and
@@ -10,7 +14,7 @@ exponents of the `B_i` have comparable multiples. Then `F` has monomial charts a
 `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Uniformization.Newton
+@[expose] public section
 
 open Filter Set Polynomial
 open scoped BigOperators Topology

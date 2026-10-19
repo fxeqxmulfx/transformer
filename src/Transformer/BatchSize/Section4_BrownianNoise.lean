@@ -1,4 +1,9 @@
-/-
+module
+
+public import BrownianMotion.Gaussian.BrownianMotion
+public import Transformer.BatchSize.Section4_DiffusionModel
+
+/-!
 # Constructed independent Brownian noises
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3).
@@ -7,8 +12,7 @@ than assuming the existence of a Brownian motion in a structure field.
 The retained external construction is attributed in third_party/Stochastic.
 -/
 
-import BrownianMotion.Gaussian.BrownianMotion
-import Transformer.BatchSize.Section4_DiffusionModel
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

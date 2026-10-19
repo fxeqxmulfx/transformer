@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Perspective.Section2_FlowMap
+
+/-!
 # Rotation-invariant measures on the sphere have no atoms
 
 `Perspective.UniformTuple` pins the uniform law down by rotation invariance
 instead of constructing it: its marginal `σ` is a probability measure on
-`𝕊^{d-1}` invariant under every linear isometry of `ℝ^d`.  This file draws
+`𝕊^{d-1}` invariant under every linear isometry of `ℝ^d`. This file draws
 from that description the fact the almost-sure statements of §4 and §6 rest
 on: such a `σ` charges no point, as soon as `d ≥ 2`.
 
-The argument is elementary.  The isometry group acts transitively on the
+The argument is elementary. The isometry group acts transitively on the
 sphere, a Householder reflection carrying any unit vector to any other, so an
 invariant measure gives all singletons the same mass; and the sphere is
 infinite for `d ≥ 2`, so `k` points of common mass `a` force `k a ≤ 1` for
@@ -18,7 +22,7 @@ The tuple-level consequences are in `Perspective.UniformAtomless`.
 Source: arXiv:2312.10794v5, §4 (the uniform law `σ_d` of `p:beta0`).
 -/
 
-import Transformer.Perspective.Section2_FlowMap
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open MeasureTheory

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section5_MetaLevel
+public import Transformer.FrankWolfe.Section5_MetaWeights
+public import Transformer.FrankWolfe.Section5_TransitionAS
+
+/-!
 # Attention's forward pass and Frank-Wolfe — observable bad steps
 
 The bad-step event is evaluated on the actual sampled trajectory, and is
@@ -10,9 +16,7 @@ Source: arXiv:2508.09628v1, §5, `cl: group.cluster.bound` and the proof of
 `lem: metastab.1`, `eq: union.bound`.
 -/
 
-import Transformer.FrankWolfe.Section5_MetaLevel
-import Transformer.FrankWolfe.Section5_MetaWeights
-import Transformer.FrankWolfe.Section5_TransitionAS
+@[expose] public section
 
 open scoped ENNReal BigOperators
 open MeasureTheory

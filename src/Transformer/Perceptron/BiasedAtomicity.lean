@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_BiasedAtomicity
+
+/-!
 # Perceptrons and attention's mean-field landscape — atomicity with biases
 
 `rem: ext` (i) of arXiv:2601.21366v2 in its two carried forms: `thm: circle`
@@ -12,7 +16,7 @@ not, is recorded in the docstring of `Bias.lean`.
 Source: arXiv:2601.21366v2, `rem: ext` (i).
 -/
 
-import Transformer.Perceptron.Section5_BiasedAtomicity
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -126,7 +130,7 @@ example :
 
 /-- **Remark (rem: ext) (i), for `thm: any.d` (i).**  In `d ≥ 2`, with biases
 and the same proviso, a stationary measure for the ReLU perceptron with a
-non-analytic potential has `σ_d`-null support.  The uniform law is quantified
+non-analytic potential has `σ_d`-null support. The uniform law is quantified
 over inside the conclusion, as in `thm: any.d`.
 
 Source: arXiv:2601.21366v2, §3.1, `rem: ext` (i), `thm: any.d` (i),

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallIntegerArray
+module
+
+public import Transformer.GPTMini.Semantics.RecallIntegerArray
 
 /-!
 # Full validated Basis recall parsing discharges the real raw layout
@@ -21,6 +23,8 @@ These results apply to either overwrite setting and any accepted
 table size; the full context cap and real-model last-write/readout
 connection follow in the subsequent correctness proof.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

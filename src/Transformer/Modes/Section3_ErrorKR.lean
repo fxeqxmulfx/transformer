@@ -1,6 +1,8 @@
-import Transformer.Modes.Section3_ErrorHigher
+module
 
-/-
+public import Transformer.Modes.Section3_ErrorHigher
+
+/-!
 # The number of modes of a Gaussian KDE — higher-order errors in the Kac–Rice integral
 
 §3 and §3.2 of arXiv:2412.09080v3: `cor:error-higher`, the bounds
@@ -20,7 +22,7 @@ import Transformer.Modes.Section3_ErrorHigher
   The two claims on `T'` remain open; this regime has empty `T'` eventually.
 
 * "The second equation holds upon replacing `y ≥ 0` by `y ≥ Δ_t`, by
-  non-negativity of the integrand" is proved, `gThreeKR_Ioi_le`.  The integrand
+  non-negativity of the integrand" is proved, `gThreeKR_Ioi_le`. The integrand
   is clipped at `0`, so for `Δ_t < 0` the extra `y ≤ 0` contribute nothing.
 
 * `eq:error-goal`'s `≪` is `o`.
@@ -29,6 +31,8 @@ Source: arXiv:2412.09080v3, `eq:error-goal`, `cor:error-higher` and the remark
 after its proof.
 -/
 
+@[expose] public section
+
 open Real MeasureTheory Filter
 open scoped ENNReal
 
@@ -36,7 +40,7 @@ namespace Transformer
 namespace Modes
 
 /-- `Σ_t^{-1/2}[(0, y) - μ_t]`, the point the Kac–Rice integrand evaluates a
-density of `n^{-1/2} Σ Yᵢ(t)` at.  arXiv:2412.09080v3, `eq:error-goal`. -/
+density of `n^{-1/2} Σ Yᵢ(t)` at. arXiv:2412.09080v3, `eq:error-goal`. -/
 noncomputable def krPoint (n : ℕ) (β t y : ℝ) : ℝ × ℝ :=
   whiten (sigmaFst β t) (sigmaCov β t) (sigmaSnd β t) (-muFst n β t, y - muSnd n β t)
 

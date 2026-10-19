@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerClipping
+public import Transformer.BatchSize.Section4_FrozenBrownianGenerator
+
+/-!
 # Exact frozen Brownian representation of every Euler interval
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ Stopping and prefix agreement identify the actual interpolated state
 inside an arbitrary grid interval, pointwise on the Brownian sample space.
 -/
 
-import Transformer.BatchSize.Section4_EulerClipping
-import Transformer.BatchSize.Section4_FrozenBrownianGenerator
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallParserLatest
+module
+
+public import Transformer.GPTMini.Semantics.RecallParserLatest
 
 /-!
 # Raw Basis recall positions for the freely learned binding head
@@ -18,6 +20,8 @@ or desired logits are premises of the full selected-record theorem.
 Both rewrite settings and every successfully parsed record count are
 covered; finite energy gaps and actual learned inference remain separate.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

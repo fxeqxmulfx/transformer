@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_ConvexCorrected
+public import Mathlib.Topology.MetricSpace.Pseudo.Lemmas
+
+/-!
 # AdaFisher: convergence with corrected step-size conditions
 
 arXiv:2405.16397v3, Proposition 3.3, Appendix A.2.
@@ -6,8 +11,7 @@ This proves both objective convergence and convergence in squared Euclidean
 distance for the corrected theorem. The source's printed step is refuted.
 -/
 
-import Transformer.AdaFisher.Section3_ConvexCorrected
-import Mathlib.Topology.MetricSpace.Pseudo.Lemmas
+@[expose] public section
 
 open scoped BigOperators
 open Filter Topology

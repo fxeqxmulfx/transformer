@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Transformers
+
+/-!
 # Why the transformer simulation needs a finite alphabet
 
 arXiv:2506.16055v3, Section 2.3 (`def:Parikh_map`) fixes a finite alphabet,
@@ -8,7 +12,7 @@ on natural-number tokens recognizes parity, whereas a temporal formula
 can name only finitely many letters.
 -/
 
-import Transformer.CRASP.Transformers
+@[expose] public section
 
 namespace Transformer.CRASP
 

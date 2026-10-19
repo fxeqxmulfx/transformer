@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.WendelGeneralPosition
+public import Transformer.Perspective.WendelOneDimBasic
+public import Mathlib.MeasureTheory.Constructions.Pi
+
+/-!
 # Independent sign symmetry of a uniform spherical sample
 
 The product law in Wendel's theorem is invariant under independently
@@ -8,9 +14,7 @@ probabilistic half of Wendel's sign-pattern counting argument.
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962).
 -/
 
-import Transformer.Perspective.WendelGeneralPosition
-import Transformer.Perspective.WendelOneDimBasic
-import Mathlib.MeasureTheory.Constructions.Pi
+@[expose] public section
 
 open MeasureTheory
 

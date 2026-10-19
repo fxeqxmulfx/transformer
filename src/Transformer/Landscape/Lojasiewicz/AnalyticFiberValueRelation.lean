@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.RealAnalyticGerms.IntegralRepresentatives
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # Monic relations for the values of analytic functions on finite fibers
 
 The finite power basis of the prepared analytic-germ quotient produces an
@@ -6,8 +11,7 @@ actual monic polynomial relation for every analytic fiber value. Coefficients
 remain convergent real analytic functions of the base parameters.
 -/
 
-import Transformer.Landscape.RealAnalyticGerms.IntegralRepresentatives
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

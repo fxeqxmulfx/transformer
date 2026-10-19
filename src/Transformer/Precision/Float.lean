@@ -1,9 +1,14 @@
-/-
+module
+
+public import Transformer.Precision.IEEE
+public import Transformer.Precision.ContextLength
+
+/-!
 # Floating point has a context length
 
 Round-to-nearest in an IEEE format sends everything below half the smallest
 subnormal `σ` to `0` (`ieee_eq_zero`): `σ = 2^{-24}` in binary16, `2^{-133}` in
-bfloat16, `2^{-149}` in binary32.  That dead zone is the hypothesis of
+bfloat16, `2^{-149}` in binary32. That dead zone is the hypothesis of
 `qAttn_eq_zero`: softmax weights stored in such a format are all `0`, whatever
 the values, once `n > 2 e^D / σ` for scores in a window of width `D`; in
 binary16 that is `n > 2^{25} e^D` (`qAttn_f16_eq_zero`), in the 8-bit floats
@@ -11,7 +16,7 @@ E5M2 and E4M3 of FP8 attention kernels `n > 2^{17} e^D` and `n > 2^{10} e^D`
 (`qAttn_e5m2_eq_zero`, `qAttn_e4m3_eq_zero`).
 
 FP8 is Micikevicius et al., "FP8 formats for deep learning",
-arXiv:2209.05433, Table 1.  Its E4M3 gives up the infinities and keeps every
+arXiv:2209.05433, Table 1. Its E4M3 gives up the infinities and keeps every
 exponent pattern but one mantissa for normal numbers, so its largest number is
 `448`, not the `240` of `grid 4 3`; the subnormals, and with them the dead
 zone, are the same.
@@ -19,8 +24,7 @@ zone, are the same.
 Round-to-nearest is IEEE 754-2008, §4.3.1.
 -/
 
-import Transformer.Precision.IEEE
-import Transformer.Precision.ContextLength
+@[expose] public section
 
 namespace Transformer
 namespace Precision

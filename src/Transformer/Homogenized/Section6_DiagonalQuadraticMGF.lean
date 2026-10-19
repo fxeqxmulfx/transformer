@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_CenteredSubgaussianSquare
+
+/-!
 # Independent diagonal quadratic-form MGFs
 
 Source: arXiv:2604.01978v1, §6.3, `lem:Hanson_wright`.
@@ -11,7 +15,7 @@ Mathlib.Probability.Moments.Basic to almost-everywhere measurable
 coordinates, as required by the original subgaussian hypotheses.
 -/
 
-import Transformer.Homogenized.Section6_CenteredSubgaussianSquare
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

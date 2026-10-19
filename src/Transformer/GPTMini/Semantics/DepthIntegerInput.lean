@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthModel
+module
+
+public import Transformer.GPTMini.Semantics.DepthModel
 
 /-!
 # Exact raw integer/finite depth input and original-model coupling
@@ -17,6 +19,8 @@ The independent last-position semantic target is proved to be precisely
 Basis's integer taskNext in both E_2/E_4 modes. These are data/model
 representation bridges; full checked adapter correctness follows.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianRowFourth
+
+/-!
 # Mixed fourth moments of the actual original Gaussian row
 
 ArXiv:2604.01978v1, §7.3, `lem:delta_method`, the mixed entries
@@ -18,7 +22,7 @@ include zero coefficient vectors and empty dimensions, and will be
 summed over the independent original matrix rows in the query calculation.
 -/
 
-import Transformer.Homogenized.Section7_GaussianRowFourth
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

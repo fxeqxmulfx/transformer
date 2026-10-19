@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Semantics.Routing
-import Mathlib.Analysis.Real.Pi.Bounds
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+module
+
+public import Transformer.GPTMini.Semantics.Routing
+public import Mathlib.Analysis.Real.Pi.Bounds
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # An actual RoPE pair can select the previous raw token
@@ -16,6 +18,8 @@ The construction uses original RoPE and finite temperature. It is a
 positional routing component, not yet a complete raw MQAR encoder or a
 claim that learned query/key/value matrices satisfy this construction.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

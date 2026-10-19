@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianAttentionTraceBounds
+
+/-!
 # The actual full Gram observable Hessian and its original block trace
 
 ArXiv:2604.01978v1, §7, the original overlap sum after
@@ -15,7 +19,7 @@ The proof keeps actual derivatives and original indices throughout;
 no Hessian expansion or trace bound is an input.
 -/
 
-import Transformer.Homogenized.Section7_GaussianAttentionTraceBounds
+@[expose] public section
 
 open scoped BigOperators
 
@@ -150,4 +154,3 @@ example : ∃ z : EuclideanSpace ℝ (GaussianFeatureIdx 2 2), (0 : ℕ) < 2 ∧
     norm_num [z, PiLp.single_apply, hw0, hw1]
 
 end Transformer.Homogenized
-

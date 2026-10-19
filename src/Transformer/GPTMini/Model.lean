@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.GPTMini.Config
+public import Transformer.GPTMini.RMSNorm
+public import Transformer.GPTMini.Block
+public import Mathlib.Analysis.InnerProductSpace.Basic
+
+/-!
 # `gpt-mini` Top-Level Model
 
 Formalization of the `GPTMini` class from `reference/model.py`:
@@ -15,7 +23,7 @@ class GPTMini(nn.Module):
 
 We assemble the complete forward pass, and the residual stream `hidden`
 after each layer, which the properties of `Transformer.GPTMini.Properties` are
-stated about.  Totality needs no theorem: `forward` is a Lean function into
+stated about. Totality needs no theorem: `forward` is a Lean function into
 `ℝ`, defined on every input.
 
 The simplex property of the softmax output is in
@@ -23,11 +31,7 @@ The simplex property of the softmax output is in
 in `Transformer.GPTMini.Properties.StreamGrowth`.
 -/
 
-import Transformer.Basic
-import Transformer.GPTMini.Config
-import Transformer.GPTMini.RMSNorm
-import Transformer.GPTMini.Block
-import Mathlib.Analysis.InnerProductSpace.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -66,7 +70,7 @@ noncomputable def unembed
 
 the blocks being applied in index order and the stream staying put once the
 `n_layers` blocks are exhausted, so that `hidden … L` is the input of block
-`L` for every `L ≤ n_layers`.  Mirrors the `for block in self.blocks` loop of
+`L` for every `L ≤ n_layers`. Mirrors the `for block in self.blocks` loop of
 `reference/model.py` (`GPTMini.forward`). -/
 noncomputable def hidden
     (cfg : Config) (params : ModelParams cfg) (eps : ℝ)
@@ -84,7 +88,7 @@ noncomputable def hidden
 /-- **Top-level forward.**
 
 Given tokens of any length `T`, applies the stack of `n_layers` Pre-LN blocks
-and produces logits over `vocab_size`.  The reference model caps `T` at
+and produces logits over `vocab_size`. The reference model caps `T` at
 `max_seq_len` because its RoPE tables have that many rows; here the rotation
 is computed from `positions` directly, so no cap is needed and none is
 imposed. -/

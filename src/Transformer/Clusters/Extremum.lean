@@ -1,22 +1,26 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.Calculus.Deriv.Slope
+public import Mathlib.Topology.Order.Lattice
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # The maximum of finitely many differentiable functions
 
 The tool behind every "at an index realizing the maximum" argument of
 arXiv:2305.05465v6 (`p:noninc`, `l:fj`, `l:nottoofassst`):
 `antitone_sup'_of_hasDerivAt`, the maximum of finitely many differentiable
 functions does not increase when each has a nonpositive derivative wherever it
-attains the maximum.  It is proved by Mathlib's fencing theorem for right
-slopes, since the maximum itself need not be differentiable.  Grönwall for the
+attains the maximum. It is proved by Mathlib's fencing theorem for right
+slopes, since the maximum itself need not be differentiable. Grönwall for the
 maximum, `le_sup'_mul_exp_of_hasDerivAt`, follows.
 
 Source: arXiv:2305.05465v6, the proofs of `p:noninc`, `l:fj`,
 `l:nottoofassst`.
 -/
 
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.Calculus.Deriv.Slope
-import Mathlib.Topology.Order.Lattice
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open Filter Topology
 

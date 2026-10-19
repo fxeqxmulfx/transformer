@@ -1,5 +1,7 @@
-import Transformer.Basis.RecallSemantics
-import Transformer.Basis.Requirements
+module
+
+public import Transformer.Basis.RecallSemantics
+public import Transformer.Basis.Requirements
 
 /-!
 # A supervised raw recall answer names the last adjacent binding
@@ -14,6 +16,8 @@ records may contain that same key with a different value. The theorem
 therefore covers hard-mode rewrites without replacing the raw input by
 already paired records or assuming a desired final model answer.
 -/
+
+@[expose] public section
 
 namespace Transformer.Basis
 

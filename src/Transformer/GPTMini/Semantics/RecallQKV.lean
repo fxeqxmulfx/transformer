@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.RecallEmbeddingFeatures
-import Transformer.GPTMini.Reshape
+module
+
+public import Transformer.GPTMini.Semantics.RecallEmbeddingFeatures
+public import Transformer.GPTMini.Reshape
 
 /-!
 # Simultaneous predecessor and BOS rows in the original fused QKV
@@ -18,6 +20,8 @@ Both heads occupy the original four-head projection simultaneously.
 This module evaluates the actual chunk/view on arbitrary real inputs;
 the next module connects the rows to raw tokens and headAt.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

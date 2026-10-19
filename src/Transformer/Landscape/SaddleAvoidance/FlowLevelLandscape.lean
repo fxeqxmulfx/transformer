@@ -1,15 +1,20 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.FlowLandscape
+public import Transformer.Landscape.SaddleAvoidance.LevelLandscape
+
+/-!
 # Saddle avoidance — gradient flows below a level
 
 The gradient flow does not raise `f` (`antitoneOn_comp_gradientFlow`), so
-the theorems of `LevelLandscape` hold for it.  If `f` satisfies the
+the theorems of `LevelLandscape` hold for it. If `f` satisfies the
 Łojasiewicz inequality at each critical point below `c`, almost every
 trajectory starting below `c` with a limit point up to translations leaving
 `f` invariant converges to a critical point, no higher than the start, that
 is not a strict saddle
 (`ae_exists_tendsto_gradientFlow_not_isStrictSaddle_of_lt`); to a global
 minimizer if every critical point below `c` is a global minimizer or a
-strict saddle (`ae_exists_tendsto_gradientFlow_isMinOn_of_lt`).  When the
+strict saddle (`ae_exists_tendsto_gradientFlow_isMinOn_of_lt`). When the
 translations span `E`, neither the limit point nor bounds on `∇f` are
 needed (`ae_exists_tendsto_gradientFlow_isMinOn_of_lt_of_span_eq_top`).
 
@@ -17,8 +22,7 @@ Source: item M6.3 of `landscape_plan.md`, the theorems of `FlowLandscape`
 with their hypotheses asked only below `c`.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.FlowLandscape
-import Transformer.Landscape.SaddleAvoidance.LevelLandscape
+@[expose] public section
 
 open Filter Set MeasureTheory
 open scoped Topology NNReal
@@ -32,8 +36,8 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDim
 point that is not a strict saddle**, if `f` satisfies the Łojasiewicz
 inequality with an exponent `0 ≤ a < 1` at each critical point below `c`,
 and almost every trajectory starting below `c` has a limit point up to
-translations in a set `Λ` leaving `f` invariant.  The limit is no higher than
-the start.  This is `ae_exists_tendsto_gradientFlow_not_isStrictSaddle` with
+translations in a set `Λ` leaving `f` invariant. The limit is no higher than
+the start. This is `ae_exists_tendsto_gradientFlow_not_isStrictSaddle` with
 `hloj` and `hcl` asked only below `c`. -/
 theorem ae_exists_tendsto_gradientFlow_not_isStrictSaddle_of_lt (μ : Measure E)
     [μ.IsAddHaarMeasure] {ν : Measure E} (hν : ν ≪ μ) (hf : ContDiff ℝ 2 f)
@@ -70,7 +74,7 @@ theorem ae_exists_tendsto_gradientFlow_not_isStrictSaddle_of_lt (μ : Measure E)
 minimizer**, if every critical point below `c` is a global minimizer or a
 strict saddle and satisfies the Łojasiewicz inequality with an exponent
 `0 ≤ a < 1`, and almost every trajectory starting below `c` has a limit
-point up to translations in a set `Λ` leaving `f` invariant.  This is
+point up to translations in a set `Λ` leaving `f` invariant. This is
 `ae_exists_tendsto_gradientFlow_isMinOn` for the starts below `c`, with
 `hcrit`, `hloj` and `hcl` asked only below `c`. -/
 theorem ae_exists_tendsto_gradientFlow_isMinOn_of_lt (μ : Measure E) [μ.IsAddHaarMeasure]
@@ -90,7 +94,7 @@ theorem ae_exists_tendsto_gradientFlow_isMinOn_of_lt (μ : Measure E) [μ.IsAddH
 /-- **Below a level, the gradient flow of a periodic function almost surely
 converges to a global minimizer**, if every critical point below `c` is a
 global minimizer or a strict saddle and satisfies the Łojasiewicz
-inequality.  The translations `Λ` leaving `f` invariant span `E`, so the
+inequality. The translations `Λ` leaving `f` invariant span `E`, so the
 gradient is bounded and Lipschitz, and every trajectory has a limit point
 up to their integer combinations. -/
 theorem ae_exists_tendsto_gradientFlow_isMinOn_of_lt_of_span_eq_top (μ : Measure E)
@@ -108,7 +112,7 @@ theorem ae_exists_tendsto_gradientFlow_isMinOn_of_lt_of_span_eq_top (μ : Measur
 /-- The hypotheses of the theorems above hold for `f(x) = 2 - cos x - cos² x`,
 the function of the example in `LevelLandscape`, on the line with Lebesgue
 measure, `L = 3`, `M = 2`, the period `2π` or its integer multiples, and
-`c = 2`.  The gradient is `sin x + sin 2x`.  Below `2` the critical points
+`c = 2`. The gradient is `sin x + sin 2x`. Below `2` the critical points
 are the global minimizers, where `cos x = 1` and the Hessian
 `cos x + 2 cos 2x` is `3`. -/
 example : let f := fun x : ℝ => 2 - Real.cos x - Real.cos x ^ 2

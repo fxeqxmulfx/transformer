@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryCoefficients
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryCoefficients
 
 /-!
 # Exact pair weights for the original native retained-memory update
@@ -22,6 +24,8 @@ Fixed gained tables and uniform decoupled native decay differ from
 appendix C's assigned circuit cost/GD. No learned GPTMini transfer,
 finite precision statement or thermodynamic limit is asserted.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

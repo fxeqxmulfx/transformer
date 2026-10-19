@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.ProductHeadSource
+
+/-!
 # Homogenized Transformers — an admissible Gaussian-product head law
 
 The sparse source of `ProductHeadSource` realizes a particularly simple law:
@@ -11,7 +15,7 @@ coordinate space is used only to certify full entry independence.
 Source: arXiv:2604.01978v1, `ass:high_order_short`, `eq:Lipschitz_measure`.
 -/
 
-import Transformer.Homogenized.ProductHeadSource
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open Real MeasureTheory ProbabilityTheory

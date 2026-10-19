@@ -1,7 +1,9 @@
-import Transformer.Modes.Section1_FixedPoint
-import Mathlib.MeasureTheory.Group.MeasurableEquiv
+module
 
-/-
+public import Transformer.Modes.Section1_FixedPoint
+public import Mathlib.MeasureTheory.Group.MeasurableEquiv
+
+/-!
 # The number of modes of a Gaussian KDE — endpoints, reflection and interval counts
 
 The first bullet of `thm:mammen`, arXiv:2412.09080v3, §1.1, assigns limit one
@@ -19,6 +21,8 @@ Fixed endpoints also have zero contribution in expectation.
 Source: arXiv:2412.09080v3, §1.1, `thm:mammen`; §4.2, the reflection argument
 following `lem:scale-space`; §1.1, `eq:gkde`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal

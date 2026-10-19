@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+
+/-!
 # Metastability — Basic definitions
 
 Formalization of arXiv:2410.06833v1 — "Dynamic metastability in the
@@ -15,8 +20,7 @@ This file collects the basic objects used throughout the paper:
 * shorthand notation for `α(ε) = max ⟨x, y⟩` over distinct caps.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
+@[expose] public section
 
 open scoped BigOperators
 open Real

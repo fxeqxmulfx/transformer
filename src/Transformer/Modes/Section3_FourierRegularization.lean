@@ -1,6 +1,8 @@
-import Transformer.Modes.Section3_GaussianRegularization
-import Mathlib.Analysis.Fourier.Inversion
-import Mathlib.MeasureTheory.Measure.CharacteristicFunction.TaylorExpansion
+module
+
+public import Transformer.Modes.Section3_GaussianRegularization
+public import Mathlib.Analysis.Fourier.Inversion
+public import Mathlib.MeasureTheory.Measure.CharacteristicFunction.TaylorExpansion
 
 /-!
 # The exact Fourier integral of a Gaussian regularization
@@ -28,6 +30,8 @@ Fourier integral. Positivity and total-mass control can be passed to that
 limit before invoking the unregularized inversion theorem.
 Source: arXiv:2412.09080v3, §3 `thm:br` and §5.4, Fourier inversion.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped FourierTransform Topology ENNReal

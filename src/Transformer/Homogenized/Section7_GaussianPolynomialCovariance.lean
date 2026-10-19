@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianPolynomialDerivative
+
+/-!
 # The original covariance trace identity with polynomial Gaussian growth
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -15,7 +19,7 @@ expectations. The original variables, actual Hessian and singular laws
 are preserved; no covariance or derivative identity is an input.
 -/
 
-import Transformer.Homogenized.Section7_GaussianPolynomialDerivative
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Set
 open scoped BigOperators

@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedDelay
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedDelay
 
 /-!
 # A vanishing positive Gen initialization family with increasing native delay
@@ -23,6 +25,8 @@ gained tables differ from coupled-cost GD, source-style untrained
 first factors and preserved learned GPTMini. Very small real seeds
 need not be representable by the numerical training implementation.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

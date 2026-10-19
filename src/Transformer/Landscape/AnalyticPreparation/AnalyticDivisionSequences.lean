@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.PreparedPolynomialSequences
+
+/-!
 # Real analytic preparation: AnalyticDivisionSequences
 
 Adapted from LocalComplexGeometry, revision
@@ -8,7 +12,7 @@ Apache-2.0 licenses: third_party/classical-complex-wpt/LICENSE and
 third_party/LocalComplexGeometry/LICENSE.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.PreparedPolynomialSequences
+@[expose] public section
 
 open Filter
 open scoped BigOperators ENNReal NNReal Topology

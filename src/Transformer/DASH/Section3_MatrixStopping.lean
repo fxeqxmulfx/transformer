@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.DASH.Section3_StoppingAccuracy
+public import Transformer.DASH.Section3_OperatorNorm
+public import Transformer.DASH.Section3_NewtonSpectra
+
+/-!
 # DASH — matrix accuracy of the CN stopping criterion
 
 arXiv:2602.02016v2, §3.2. The Euclidean operator-norm residual
@@ -6,9 +12,7 @@ of `M_k` bounds the relative inverse-root error in both operator
 and Frobenius norms. All bounds concern the actual finite iterate.
 -/
 
-import Transformer.DASH.Section3_StoppingAccuracy
-import Transformer.DASH.Section3_OperatorNorm
-import Transformer.DASH.Section3_NewtonSpectra
+@[expose] public section
 
 open scoped BigOperators Matrix Matrix.Norms.L2Operator
 

@@ -1,4 +1,19 @@
-/-
+module
+
+public import Transformer.ICEoT.Section2_FeedForward
+public import Transformer.ICEoT.Section2_FeedForwardSelective
+public import Transformer.ICEoT.Section2_AttentionFalse
+public import Transformer.ICEoT.Section2_Recurrent
+public import Transformer.ICEoT.Section2_LSTMFalse
+public import Transformer.ICEoT.Section3_Expansion
+public import Transformer.ICEoT.Section3_Toy
+public import Transformer.ICEoT.Section3_Normalization
+public import Transformer.ICEoT.Section4_EncoderMPC
+public import Transformer.ICEoT.Section4_RecursionLimits
+public import Transformer.ICEoT.Section4_Parameters
+public import Transformer.ICEoT.Section4_Tariffs
+
+/-!
 # Input Convex Encoder-Only Transformer
 
 Kaipeng Xu, Zhuo Zhi, Keyue Jiang, arXiv:2603.22095v2:
@@ -75,15 +90,4 @@ All mathematically conditional results include examples witnessing their
 assumptions. Claims proven false are refuted, rather than weakened or sorried.
 -/
 
-import Transformer.ICEoT.Section2_FeedForward
-import Transformer.ICEoT.Section2_FeedForwardSelective
-import Transformer.ICEoT.Section2_AttentionFalse
-import Transformer.ICEoT.Section2_Recurrent
-import Transformer.ICEoT.Section2_LSTMFalse
-import Transformer.ICEoT.Section3_Expansion
-import Transformer.ICEoT.Section3_Toy
-import Transformer.ICEoT.Section3_Normalization
-import Transformer.ICEoT.Section4_EncoderMPC
-import Transformer.ICEoT.Section4_RecursionLimits
-import Transformer.ICEoT.Section4_Parameters
-import Transformer.ICEoT.Section4_Tariffs
+@[expose] public section

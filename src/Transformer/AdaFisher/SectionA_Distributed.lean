@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_Algorithm
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+
+/-!
 # AdaFisher: distributed Kronecker-factor aggregation
 
 arXiv:2405.16397v3, Appendix A.4, `eq:distributedkf`.
@@ -6,8 +11,7 @@ Linearity preserves unbiasedness of each factor. Products and min-max
 normalization are nonlinear and do not inherit that claim automatically.
 -/
 
-import Transformer.AdaFisher.Section3_Algorithm
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
+@[expose] public section
 
 open scoped BigOperators
 open MeasureTheory

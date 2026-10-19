@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_OrthonormalCoordinates
+
+/-!
 # Uniform tails for the original finite-frame projection
 
 ArXiv:2410.06833v1, §4, `prop: concentration unif`, and
@@ -16,7 +20,7 @@ only on `n`; the original large-dimension threshold can absorb it.
 No conditional independence or projection estimate is assumed here.
 -/
 
-import Transformer.Metastability.Section4_OrthonormalCoordinates
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

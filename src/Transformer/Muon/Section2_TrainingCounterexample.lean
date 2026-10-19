@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Muon.Section2_TrainingCycleStep
+public import Transformer.Muon.Section2_TrainingConvergence
+
+/-!
 # Muon — original learning can fail on a strongly convex quadratic
 
 arXiv:2502.16982, §2.1–2.2. With zero initial momentum, coefficient zero,
@@ -8,8 +13,7 @@ convergence even when `η ≤ 1/L`; it is not a refutation of a theorem in
 the paper, which states no general learning convergence theorem.
 -/
 
-import Transformer.Muon.Section2_TrainingCycleStep
-import Transformer.Muon.Section2_TrainingConvergence
+@[expose] public section
 
 open scoped Topology
 open Filter

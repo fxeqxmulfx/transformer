@@ -1,5 +1,8 @@
-import Transformer.Modes.Section3_DensityComparison
-import Transformer.Modes.Section3_IntegralComparison
+module
+
+public import Transformer.Modes.Section3_DensityComparison
+public import Transformer.Modes.Section3_IntegralComparison
+
 /-!
 # Uniform Gaussian approximation of the actual sum density
 
@@ -15,6 +18,7 @@ The spatially weighted estimate in `thm:br` additionally needs Fourier
 derivative bounds; the unweighted conclusions here are separate results.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology FourierTransform
 namespace Transformer.Modes

@@ -1,18 +1,22 @@
-/-
+module
+
+public import Transformer.RecurrentGradients.Section3_Regularizer
+
+/-!
 # The error signal under the regularizer
 
-arXiv:1211.5063, §3.3.  The regularizer `Ω` (`Section3_Regularizer`) "prefers
+arXiv:1211.5063, §3.3. The regularizer `Ω` (`Section3_Regularizer`) "prefers
 solutions for which the error signal preserves norm as it travels back in
 time": with `Ω = 0` each step keeps the norm of the nonzero error it sends back
 (`norm_comp_of_omegaSum_eq_zero`), and for a loss `L = 𝓛(x_T)` with `∂𝓛 ≠ 0`,
 whose errors are `∂L/∂x_k = ∂𝓛 ∂x_T/∂x_k` (eq. (5)), every error has the norm
-of `∂𝓛` (`norm_comp_transport_of_omegaSum_eq_zero`).  "We are using a soft
+of `∂𝓛` (`norm_comp_transport_of_omegaSum_eq_zero`). "We are using a soft
 constraint, therefore we are not ensured the norm of the error signal is
 preserved": however small `Ω` is, the error can exceed `∂𝓛` any number of
 times (`exists_omegaSum_le_le_norm`).
 -/
 
-import Transformer.RecurrentGradients.Section3_Regularizer
+@[expose] public section
 
 namespace Transformer.RecurrentGradients
 
@@ -87,7 +91,7 @@ example (T : ℕ) :
 /-- **§3.3: "we are using a soft constraint, therefore we are not ensured the
 norm of the error signal is preserved", which may explode "as `t - k`
 increases"**: however small `Ω` is, the error `∂L/∂x_0` of a loss `L = 𝓛(x_T)`
-can exceed `∂𝓛` any number of times.  On `ℝ`, `T = N K` steps of Jacobian
+can exceed `∂𝓛` any number of times. On `ℝ`, `T = N K` steps of Jacobian
 `1 + 1/N` give `Ω = K/N` and `∂L/∂x_0 = (1 + 1/N)^{NK} ∂𝓛`, at least
 `(1 + K) ∂𝓛`. -/
 theorem exists_omegaSum_le_le_norm {ε : ℝ} (hε : 0 < ε) (M : ℝ) :

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Modes.Section2_SliceWidth
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+
+/-!
 # Continuity and positivity of the actual local joint density
 
 Source: arXiv:2412.09080v3, §2.1, hypothesis three and
@@ -22,8 +27,7 @@ already proved to identify the actual joint law, rather than
 an independently chosen candidate density.
 -/
 
-import Transformer.Modes.Section2_SliceWidth
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 open scoped ENNReal

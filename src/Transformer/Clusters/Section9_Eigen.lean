@@ -1,24 +1,30 @@
-/-
+module
+
+public import Transformer.Clusters.Section4_Hyperplanes
+public import Mathlib.Topology.Order.MonotoneConvergence
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+
+/-!
 # The emergence of clusters in self-attention dynamics — the monotone
   coordinates of §9
 
 §9 of arXiv:2305.05465v6, `sec: clustering.hyperplanes`, first subsection:
 the facts about the eigencoordinates of `e:Rres` that the proof of
 `l:3hyperplanes11` runs on — `eq:phistarvar`, `e:defab`, `c:bounded`, and the
-bounds of `l:fj`.  `l:fj` itself is in `Section9_Fj`.
+bounds of `l:fj`. `l:fj` itself is in `Section9_Fj`.
 
 **What the source says and what is carried here.**
 
 * §9 fixes an orthonormal eigenbasis `(φ_1, …, φ_d)` of `V` and works with the
-  dual basis `(φ*_1, …, φ*_d)`.  The only property of `φ*_k` that the proofs
+  dual basis `(φ*_1, …, φ*_d)`. The only property of `φ*_k` that the proofs
   use is `φ*_k(Vz) = λ_k φ*_k(z)`, so that is what is carried:
-  `IsEigenFunctional`, a left eigenvector of `V`.  Nothing is assumed about
+  `IsEigenFunctional`, a left eigenvector of `V`. Nothing is assumed about
   where it came from, and the hypothesis "`V` is diagonalizable" enters only
   where the source uses the full basis, namely `c:bounded`, where it is the
   expansion `z = Σ_k φ*_k(z) φ_k`.
 
 * `l:fj` is stated for `λ_k ≥ 0` and speaks of `max_j φ*_k(z_j(t))`, so its
-  `φ*_k` is real-valued; that is how it is carried.  (A complex eigenfunctional
+  `φ*_k` is real-valued; that is how it is carried. (A complex eigenfunctional
   with a real eigenvalue splits into its real and imaginary parts, each a real
   eigenfunctional for the same eigenvalue, so nothing is lost.)  The complex
   case is `l:nottoofassst`, in `Transformer.Clusters.Section9_Growth`.
@@ -28,7 +34,7 @@ bounds of `l:fj`.  `l:fj` itself is in `Section9_Fj`.
   `Set.Ici 0` is that.
 
 * `e:defab` is the existence of `a` and `b`, with the parenthetical bound
-  `b ≤ max_j φ*_1(z_j(0))` in the form `b ≤ β(t)` for every `t ≥ 0`.  It is
+  `b ≤ max_j φ*_1(z_j(0))` in the form `b ≤ β(t)` for every `t ≥ 0`. It is
   proved here, from the conclusion of `l:fj` taken as an explicit hypothesis.
 
 * `c:bounded` is likewise proved from the conclusion of `l:fj` — the uniform
@@ -37,9 +43,7 @@ bounds of `l:fj`.  `l:fj` itself is in `Section9_Fj`.
 Source: arXiv:2305.05465v6, `l:fj`, `c:bounded`, `e:defab`, `eq:phistarvar`.
 -/
 
-import Transformer.Clusters.Section4_Hyperplanes
-import Mathlib.Topology.Order.MonotoneConvergence
-import Mathlib.Analysis.Calculus.Deriv.Comp
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

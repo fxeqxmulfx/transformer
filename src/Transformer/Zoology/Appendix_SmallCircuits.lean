@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_KNetwork
+public import Transformer.Zoology.Appendix_CircuitEvaluation
+
+/-!
 # Exact simulation of small arithmetic circuits by K-constrained Coyote
 
 Arora et al., arXiv:2312.04927v1, Appendix Theorem `thm: gen-ac`.
@@ -8,8 +13,7 @@ multiplication. The general width-sensitive K-matrix resource bound
 remains open.
 -/
 
-import Transformer.Zoology.Appendix_KNetwork
-import Transformer.Zoology.Appendix_CircuitEvaluation
+@[expose] public section
 
 namespace Transformer.Zoology
 

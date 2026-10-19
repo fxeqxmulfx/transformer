@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerRefinement
+
+/-!
 # Dyadic Brownian Euler approximations at an arbitrary finite time
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The clipped grids retain the same origin and every second fine time is
 a coarse time. Their endpoint is exactly T, including non-dyadic T.
 -/
 
-import Transformer.BatchSize.Section4_EulerRefinement
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal

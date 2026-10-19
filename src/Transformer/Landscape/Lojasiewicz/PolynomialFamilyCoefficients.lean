@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.PolynomialTranslation
+
+/-!
 # Analyticity of every polynomial coefficient
 
 Lower coefficients are the given analytic functions; the leading coefficient
@@ -6,7 +10,7 @@ is one and all higher coefficients are zero. This finite coefficient API
 allows analytic division by a moving linear root factor.
 -/
 
-import Transformer.Landscape.Lojasiewicz.PolynomialTranslation
+@[expose] public section
 
 open Polynomial
 open scoped BigOperators

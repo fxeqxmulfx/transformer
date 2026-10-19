@@ -1,9 +1,13 @@
-/-
+module
+
+public import Transformer.Metastability.CollapseComparison
+
+/-!
 # Metastability — the collapse time `T₁` and the state of a cap after it
 
-Steps 2–3 of the direct proof of `thm: metastability` (arXiv:2410.06833v1, §2).  A cap `I`
+Steps 2–3 of the direct proof of `thm: metastability` (arXiv:2410.06833v1, §2). A cap `I`
 has `⟨x_i, x_j⟩ ≥ 1 - r` at time `0` (`r = 8ε`), and the goal is `⟨x_i, x_j⟩ ≥ 1 - δ`
-(`δ = e^{-λβ}`) from `T₁` on.  With `F_β(s) = s(1 - s)e^{-βs}` and `σ₀ = max δ (min (1/β) r)`
+(`δ = e^{-λβ}`) from `T₁` on. With `F_β(s) = s(1 - s)e^{-βs}` and `σ₀ = max δ (min (1/β) r)`
 the distance `s = 1 - ρ` to `1` is pushed down in three phases:
 
 * `s` from `r` to `σ₀` at the constant speed `F_β(r)/n` (`phase_linear`; `F_β(s) ≥ F_β(r)`
@@ -16,7 +20,7 @@ All three need `F_β` above the leakage level `2 n² e^{-(1-α)β}` on `[δ, r]`
 of `F_β` it suffices to have it at the two ends.
 -/
 
-import Transformer.Metastability.CollapseComparison
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 open Real Set

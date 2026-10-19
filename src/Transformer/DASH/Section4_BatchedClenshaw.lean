@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section4_BatchedCounts
+public import Transformer.DASH.SectionA_OptimizedClenshaw
+
+/-!
 # DASH — optimized Clenshaw with batched products
 
 arXiv:2602.02016v2, §4 and Appendix A. Coefficients may differ between
@@ -6,8 +11,7 @@ batch entries, but all entries share the degree. Each multiplication
 is an actual call to the counted `bmm` primitive.
 -/
 
-import Transformer.DASH.Section4_BatchedCounts
-import Transformer.DASH.SectionA_OptimizedClenshaw
+@[expose] public section
 
 open scoped Matrix
 

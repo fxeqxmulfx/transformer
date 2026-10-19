@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Modes.Section2_GaussianTransversality
+public import Mathlib.MeasureTheory.Function.Jacobian
+
+/-!
 # Gaussian-null critical images for the original KDE parameter space
 
 ArXiv:2412.09080v3, §2.1, the mode/upcrossing identity
@@ -18,8 +23,7 @@ remain explicit inputs here; no generic nondegeneracy is defined
 into a predicate or asserted without its geometric proof.
 -/
 
-import Transformer.Modes.Section2_GaussianTransversality
-import Mathlib.MeasureTheory.Function.Jacobian
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

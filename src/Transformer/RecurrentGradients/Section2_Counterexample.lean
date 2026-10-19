@@ -1,26 +1,30 @@
-/-
+module
+
+public import Transformer.RecurrentGradients.Section2_Mechanics
+public import Mathlib.Analysis.Normed.Algebra.Spectrum
+public import Mathlib.Analysis.SpecialFunctions.Artanh
+
+/-!
 # The eigenvalue conditions of §2.1 are false
 
-arXiv:1211.5063, §2.1.  For eq. (2) with `|σ'| ≤ γ`, the paper claims that
+arXiv:1211.5063, §2.1. For eq. (2) with `|σ'| ≤ γ`, the paper claims that
 `λ₁ < 1/γ` is sufficient for the long term contributions to vanish, and that
 `λ₁ > 1/γ` is necessary for them to explode, `λ₁` "the absolute value of the
 largest eigenvalue of the recurrent weight matrix `W_rec`", which for a real
-matrix is the spectral radius of its complexification.  Both fail for tanh
-(`γ = 1`) on two units.  `W_rec = [[8, 8], [-8, -8]]` (`Wn`) is nilpotent, so
+matrix is the spectral radius of its complexification. Both fail for tanh
+(`γ = 1`) on two units. `W_rec = [[8, 8], [-8, -8]]` (`Wn`) is nilpotent, so
 `λ₁ = 0` (`spectralRadius_Wn`), and `x* = (0, artanh(1/2))` (`xn`) is a fixed
 point of eq. (2) for the bias `b = x* - W_rec tanh(x*)` (`bn`) and `W_in = 0`
-(`states_xn`).  There `tanh'(x*) = (1, 3/4)`, so every Jacobian along the
+(`states_xn`). There `tanh'(x*) = (1, 3/4)`, so every Jacobian along the
 orbit is `J = [[8, 6], [-8, -6]]` (`Jn`), with `J² = 2J`: the factor
 `∂x_{k+l+1}/∂x_k` is `2^l J` (`norm_factor_xn_succ`), growing like `2^l`
-(`exists_mul_two_pow_le`).  Hence neither claim holds
+(`exists_mul_two_pow_le`). Hence neither claim holds
 (`not_tendsto_of_spectralRadius_lt`, `not_one_lt_spectralRadius_of_explode`).
 The 2-norm conditions of `Section2_Mechanics` are not contradicted:
 `‖W_rec‖ γ > 1` (`one_lt_norm_Wn`).
 -/
 
-import Transformer.RecurrentGradients.Section2_Mechanics
-import Mathlib.Analysis.Normed.Algebra.Spectrum
-import Mathlib.Analysis.SpecialFunctions.Artanh
+@[expose] public section
 
 open scoped Matrix Matrix.Norms.L2Operator
 open Filter Topology

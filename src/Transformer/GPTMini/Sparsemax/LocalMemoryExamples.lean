@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.LocalNearestMemory
+module
+
+public import Transformer.GPTMini.Sparsemax.LocalNearestMemory
 
 /-!
 # Changing genuine compact embeddings, tight sparse routes and output freedom
@@ -17,6 +19,8 @@ counterexample records the remaining output-only nonidentifiability.
 It does not rule out a separate convex criterion selecting parameters.
 No Python training, particular task loss or text-generalization claim is made.
 -/
+
+@[expose] public section
 
 noncomputable section
 

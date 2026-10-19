@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.Prepared
+public import Transformer.Landscape.Uniformization.Ramification
+public import Mathlib.Algebra.Order.Sub.Prod
+
+/-!
 # Local uniformization: the Newton step, first chart
 
 Near `(w', 0)` let `F = M(x') · V(x) · P(x', y)` with `M = μ · (x' - w')^γ`,
@@ -10,9 +16,7 @@ which is not `Y^d`. Such products have monomial charts by induction on the degre
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Uniformization.Prepared
-import Transformer.Landscape.Uniformization.Ramification
-import Mathlib.Algebra.Order.Sub.Prod
+@[expose] public section
 
 open Filter Set Polynomial
 open scoped BigOperators Topology

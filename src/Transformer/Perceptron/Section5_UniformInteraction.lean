@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_AmbientGradient
+public import Transformer.Perceptron.Transform
+public import Transformer.Metastability.Section4_UniformLaw
+public import Mathlib.Analysis.InnerProductSpace.Projection.Reflection
+
+/-!
 # Orthogonal invariance of the original uniform interaction
 
 ArXiv:2601.21366v2, §5.1, `eq:FH-basic` and `lem: quadpol`.
@@ -21,10 +28,7 @@ The original measure, exponential kernel and projected field are retained.
 The constructed uniform circle law supplies the complete joint witness.
 -/
 
-import Transformer.Perceptron.Section6_AmbientGradient
-import Transformer.Perceptron.Transform
-import Transformer.Metastability.Section4_UniformLaw
-import Mathlib.Analysis.InnerProductSpace.Projection.Reflection
+@[expose] public section
 
 open Real MeasureTheory Set
 

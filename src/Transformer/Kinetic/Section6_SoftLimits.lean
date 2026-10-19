@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Kinetic.Section6_OutputAggregation
+public import Transformer.Kinetic.Section6_SourceLimits
+public import Transformer.Kinetic.Section1_RecencyEndpoint
+
+/-!
 # Kinetic theory for Transformers — primacy and the interior recency limit
 
 We transfer the actual aggregate `ℋ` to the original soft correction
@@ -15,9 +21,7 @@ derivatives, as explained in `Hardy` and `Section1_RecencyEndpoint`.
 `Section6_OutputAggregation` keeps the original weights and eigenvalues.
 -/
 
-import Transformer.Kinetic.Section6_OutputAggregation
-import Transformer.Kinetic.Section6_SourceLimits
-import Transformer.Kinetic.Section1_RecencyEndpoint
+@[expose] public section
 
 open Set Filter Real
 open scoped Topology

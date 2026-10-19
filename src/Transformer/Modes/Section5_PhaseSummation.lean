@@ -1,7 +1,10 @@
-import Transformer.Modes.Section5_PhaseEnvelope
-import Mathlib.Algebra.Order.ToIntervalMod
-import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-import Mathlib.Topology.Algebra.InfiniteSum.NatInt
+module
+
+public import Transformer.Modes.Section5_PhaseEnvelope
+public import Mathlib.Algebra.Order.ToIntervalMod
+public import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+public import Mathlib.Topology.Algebra.InfiniteSum.NatInt
+public import Mathlib.Algebra.Order.Interval.Set.Group
 
 /-!
 # Summing the Gaussian phase estimates on the whole real line
@@ -31,6 +34,8 @@ in the normalized direction. The constant depends on `β` and fixed `t`.
 There is no unproved regularity, partition, or summability input.
 Source: arXiv:2412.09080v3, §5.5, proof of `eq:uniform-decay`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 open scoped Interval

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.PeriodicInitialWord
+
+/-!
 # A one-layer periodic transformer cannot recover source order
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_eq_tlclmod`.
@@ -7,7 +11,7 @@ initial decorated states. This detects the extra power accidentally allowed
 by `MOD` with modulus zero in the former Lean syntax.
 -/
 
-import Transformer.CRASP.PeriodicInitialWord
+@[expose] public section
 
 namespace Transformer.CRASP.PeriodicAttention
 

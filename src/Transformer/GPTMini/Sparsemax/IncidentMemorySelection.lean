@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.IncidentMemoryFeasibility
+module
+
+public import Transformer.GPTMini.Sparsemax.IncidentMemoryFeasibility
 
 /-!
 # Unique constrained parameter selection and quantitative error
@@ -14,6 +16,8 @@ requires an attained minimum and explicit feasible endpoints. It concerns
 the additional geometry criterion, not unseen target errors or existence
 of a complete joint model minimum. Selection is noncomputable, not a solver.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,16 +1,20 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_ScalarCounterexample
+
+/-!
 # Multi-output convex attention
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §3.3, Theorem 2
 (`theo:attn_multihead_convex_vector`), and Appendix A.5.
 
 The left-hand side of the source theorem accepts a vector-valued loss, while
-its right-hand side sums scalar losses over outputs.  These are equal only for
-separable losses.  Even with a separable squared loss, the claimed equivalence
+its right-hand side sums scalar losses over outputs. These are equal only for
+separable losses. Even with a separable squared loss, the claimed equivalence
 fails for one head by specializing to one output.
 -/
 
-import Transformer.Convexifying.Section3_ScalarCounterexample
+@[expose] public section
 
 open scoped BigOperators
 
@@ -42,7 +46,7 @@ noncomputable def vectorObjective {N h n d c : ℕ} (X : Data N n d)
   (∑ i, L (vectorPrediction (X i) p) (y i)) +
     β / 2 * ∑ j, (normSq (p.value j) + (norm₁ (p.output j)) ^ 2)
 
-/-- The unrestricted `c` matrices in equation (12).  The paper applies
+/-- The unrestricted `c` matrices in equation (12). The paper applies
 the same loss symbol to a vector in (11) and to a scalar in (12); here the
 scalar loss is given its own type. -/
 noncomputable def vectorConvexObjective {N n d c : ℕ} (X : Data N n d)

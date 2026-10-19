@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_TwoRidgeFields
+
+/-!
 # Complete ambient trajectories for two original ReLU neurons
 
 ArXiv:2411.04551v3, §1, `eq: vf` and `eq: neural.ode.sphere`,
@@ -15,7 +19,7 @@ any two actual spherical trajectories. No particle existence, sphere
 invariance or uniqueness premise is left unproved.
 -/
 
-import Transformer.Interpolation.Section3_TwoRidgeFields
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal BigOperators

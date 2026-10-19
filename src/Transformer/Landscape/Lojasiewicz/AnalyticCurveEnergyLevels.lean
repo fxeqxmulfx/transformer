@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.AnalyticCurveGradient
+public import Mathlib.Topology.Order.IntermediateValue
+
+/-!
 # Energy levels covered by a one-sided analytic curve
 
 An analytic scalar curve which starts at zero and has positive values
@@ -8,8 +13,7 @@ lifting assumption by the usual one-sided conclusion of analytic curve
 selection in the route to Appendix D.1 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.AnalyticCurveGradient
-import Mathlib.Topology.Order.IntermediateValue
+@[expose] public section
 
 open Set
 

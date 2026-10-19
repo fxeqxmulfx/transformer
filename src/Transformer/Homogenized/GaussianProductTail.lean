@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Probability.Distributions.Gaussian.Real
+public import Mathlib.MeasureTheory.Measure.Prod
+
+/-!
 # Homogenized Transformers — a lower tail bound for a Gaussian product
 
 The query/key assumption `ass:high_order_short` allows an entry of
@@ -12,8 +17,7 @@ proof of `prop:satisfying_MF`; they are not assertions made by the source.
 Source: arXiv:2604.01978v1, `ass:high_order_short`, `eq:Lipschitz_measure`.
 -/
 
-import Mathlib.Probability.Distributions.Gaussian.Real
-import Mathlib.MeasureTheory.Measure.Prod
+@[expose] public section
 
 open scoped ENNReal
 open Real MeasureTheory ProbabilityTheory

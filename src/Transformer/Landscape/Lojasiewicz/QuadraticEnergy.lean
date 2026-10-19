@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.LojasiewiczConditional
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.Analytic.Constructions
+public import Mathlib.Analysis.Analytic.Linear
+
+/-!
 # Quadratic energy and a nonstationary convergence witness
 
 The quadratic flow checks the nonstationary branch of the finite-length
 argument in Appendix D.1 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.LojasiewiczConditional
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Analytic.Constructions
-import Mathlib.Analysis.Analytic.Linear
+@[expose] public section
 
 open scoped BigOperators
 

@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.DescentCurve
+
+/-!
 # Saddle avoidance — descent curves are trapped near a Łojasiewicz point
 
 The trap of `Landscape.SaddleAvoidance.FlowTrap`, for the curves that descend `f` at the
 rates `c₁` and `c₂` (`IsDescentCurve`) instead of the gradient flow, with the
-constants carried along.  Where `m (f - f z) ^ a ≤ ‖∇f‖` with `0 ≤ a < 1` and
+constants carried along. Where `m (f - f z) ^ a ≤ ‖∇f‖` with `0 ≤ a < 1` and
 `f > f z`, the speed `‖ẋ‖ ≤ c₂ ‖∇f‖` is at most `c₂ / (c₁ m (1 - a))` times the
 rate at which `(f - f z) ^ (1 - a)` decreases, because `f` decreases at least
-at the rate `c₁ ‖∇f‖²`.  So the length of the path is bounded by the drop of
+at the rate `c₁ ‖∇f‖²`. So the length of the path is bounded by the drop of
 `(f - f z) ^ (1 - a)` (`IsDescentCurve.mul_norm_sub_le`, through Mathlib's
 fencing theorem `image_norm_le_of_norm_deriv_right_le_deriv_boundary'`), and a
 descent curve that starts close to `z`, with `f` close to `f z` and above it,
@@ -18,7 +22,7 @@ the argument of Łojasiewicz's theorem (lojasiewicz1963propriete), for the
 gradient flows of `𝖤_β` in the metric of `SA` (§3.4) as in that of `USA`.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.DescentCurve
+@[expose] public section
 
 open Filter Metric Set
 open scoped Topology

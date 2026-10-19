@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.Section3_ForceDerivative
+
+/-!
 # Gradient differences control the width of a separated angular cap
 
 ArXiv:2410.06833v1, §3.2, `lem: PL.borjan` and `eq: Ht.second.lb`.
@@ -8,7 +12,7 @@ of any two chart angles by `4n²` times their force difference.
 At token angles those force values are the actual gradient components.
 -/
 
-import Transformer.Metastability.Section3_ForceDerivative
+@[expose] public section
 
 open Set Real
 

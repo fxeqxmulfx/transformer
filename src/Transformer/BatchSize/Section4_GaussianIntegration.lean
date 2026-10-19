@@ -11,7 +11,18 @@ Copyright (c) 2026 Raphael Coelho. Released under Apache 2.0 license as
 described in https://www.apache.org/licenses/LICENSE-2.0.
 -/
 
-import Transformer.BatchSize.Section4_GaussianCDF
+module
+
+public import Transformer.BatchSize.Section4_GaussianCDF
+
+/-!
+# Gaussian integration by parts
+
+Density transfer and integration by parts for the diffusion generator. Source:
+arXiv:2506.12543v1, Section 4.3, equations (2)--(3).
+-/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

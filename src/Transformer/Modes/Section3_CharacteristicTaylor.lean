@@ -1,5 +1,8 @@
-import Transformer.Modes.Section3_PhaseTaylor
-import Mathlib.MeasureTheory.SpecificCodomains.Pi
+module
+
+public import Transformer.Modes.Section3_PhaseTaylor
+public import Mathlib.MeasureTheory.SpecificCodomains.Pi
+
 /-!
 # The quadratic expansion of a standardized characteristic function
 
@@ -15,6 +18,7 @@ These are the single-summand estimates for the small-frequency proof in
 sum and derivatives; those further steps are not asserted here.
 -/
 
+@[expose] public section
 open Real MeasureTheory Filter
 open scoped ENNReal
 namespace Transformer.Modes

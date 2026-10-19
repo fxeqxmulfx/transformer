@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.AtomicMatchingMixture
+module
+
+public import Transformer.GPTMini.Sparsemax.AtomicMatchingMixture
 
 /-!
 # Exact convexification by finite mixtures of unrestricted matching atoms
@@ -15,6 +17,8 @@ is reconstructed as a stored finitely supported state; duplicate heads
 are merged. Every reconstructed prediction still evaluates original
 causal sparsemax attention and independent common values.
 -/
+
+@[expose] public section
 
 noncomputable section
 

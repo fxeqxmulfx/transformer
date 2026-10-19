@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.QKPrefixError
+module
+
+public import Transformer.GPTMini.Sparsemax.QKPrefixError
 
 /-!
 # Sparsemax is affine between scores with the same active support
@@ -15,6 +17,8 @@ simultaneously when the upstream normalized scores are affine on that
 segment. The identity alone gives no guarantee that arbitrary endpoints
 have the same support, nor that arbitrary QKNorm paths are affine.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthTransition
+module
+
+public import Transformer.GPTMini.Semantics.DepthTransition
 
 /-!
 # Quantitative true flags and strictly earlier depth occurrences
@@ -18,6 +20,8 @@ These local transition statements must still be instantiated by an
 induction on actual raw-token hidden states. They do not assume any
 desired label, supply a prefix oracle or prove training success.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

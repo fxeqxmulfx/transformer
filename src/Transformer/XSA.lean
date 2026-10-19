@@ -1,26 +1,30 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+
+/-!
 # Exclusive Self-Attention (XSA)
 
 Formalization of:
   Shuangfei Zhai, "Exclusive Self Attention", arXiv:2603.09078v1.
 
-The paper is empirical (no theorems).  Only one equation is introduced:
-`eq:xsa`.  We record it here and note one mathematical observation that ties
+The paper is empirical (no theorems). Only one equation is introduced:
+`eq:xsa`. We record it here and note one mathematical observation that ties
 XSA to the spherical-`SA` model already formalized in `Transformer.Section1_IPS`.
 
 Two claims of the paper are empirical and stay prose, because there is nothing
 in them to prove: that `⟪y_i, v_i⟫ / (‖y_i‖ ‖v_i‖)` is consistently positive in
 *trained* transformers and grows with depth (§1), and that the mass XSA frees
-is reallocated to `a_{i,i}`, an implicit attention sink (§4).  Both are about
+is reallocated to `a_{i,i}`, an implicit attention sink (§4). Both are about
 what training produces, not about the operator; the record runs of
 `openai/parameter-golf` (2026-09-13) adopting XSA on the deepest layers and then
 on all of them (1.1307 → 1.1099 BPB) are evidence for the first, and evidence is
-not a theorem.  What *is* provable about `z_i` is `xsa_output_orthogonal_to_value`
+not a theorem. What *is* provable about `z_i` is `xsa_output_orthogonal_to_value`
 below: the component XSA removes is removed exactly.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
+@[expose] public section
 
 open scoped BigOperators
 open Real

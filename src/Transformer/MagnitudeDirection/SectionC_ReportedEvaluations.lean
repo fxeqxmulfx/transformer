@@ -1,4 +1,8 @@
-/-
+module
+
+public import Mathlib.Tactic
+
+/-!
 # Arithmetic of reported downstream evaluations
 
 arXiv:2606.25971v2, Appendix C, Table 3 (`tab:moe-evals`). These theorems
@@ -6,7 +10,7 @@ check arithmetic and rankings of the literal printed scores; they do not
 assert that the training/evaluation process produced those scores.
 -/
 
-import Mathlib.Tactic
+@[expose] public section
 
 open scoped BigOperators
 

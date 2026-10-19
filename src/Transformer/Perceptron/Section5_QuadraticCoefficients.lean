@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_QuadraticGeometry
+
+/-!
 # The actual uniform kernel coefficients for degree-two functions
 
 ArXiv:2601.21366v2, §5.1, `eq:FH-basic` and `lem: quadpol` (i).
@@ -19,7 +23,7 @@ integrals against the actual original uniform law; no spectral formula,
 polynomial preservation, inverse or density is an unproved input.
 -/
 
-import Transformer.Perceptron.Section5_QuadraticGeometry
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped ENNReal

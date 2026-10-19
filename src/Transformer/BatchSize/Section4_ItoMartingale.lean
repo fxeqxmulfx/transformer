@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_ItoSums
+public import Transformer.BatchSize.Section4_BrownianConditional
+
+/-!
 # Actual finite stochastic sums are martingales
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3).
@@ -6,8 +11,7 @@ This verifies conditional mean zero for each new adapted stochastic
 summand relative to the joint vector filtration.
 -/
 
-import Transformer.BatchSize.Section4_ItoSums
-import Transformer.BatchSize.Section4_BrownianConditional
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal

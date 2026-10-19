@@ -1,4 +1,6 @@
-import Transformer.Modes.Section3_CharacteristicGap
+module
+
+public import Transformer.Modes.Section3_CharacteristicGap
 
 /-!
 # Exponential damping at large frequencies
@@ -15,6 +17,8 @@ The law and radius are fixed here. Dependence of `ε` on the bandwidth
 and translation for a varying `lawY` is retained; an integral error bound
 uniform in such laws is not claimed by these statements.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped Topology ENNReal

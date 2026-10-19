@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section5_Transition
+public import Mathlib.Data.Finset.Powerset
+
+/-!
 # Attention's forward pass and Frank-Wolfe — counting rare dependent steps
 
 The binomial estimate in the proof of `lem: metastab.1` needs only an upper
@@ -13,8 +18,7 @@ Source: arXiv:2508.09628v1, §5, proof of `lem: metastab.1`,
 `eq: union.bound`, `eq: binomial.2`.
 -/
 
-import Transformer.FrankWolfe.Section5_Transition
-import Mathlib.Data.Finset.Powerset
+@[expose] public section
 
 open scoped ENNReal BigOperators
 open MeasureTheory

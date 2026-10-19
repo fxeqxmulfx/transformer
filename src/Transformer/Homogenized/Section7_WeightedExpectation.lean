@@ -1,6 +1,8 @@
-import Transformer.Homogenized.Section7_CompensatedPartition
-import Transformer.Homogenized.Section7_WeightedMartingale
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+module
+
+public import Transformer.Homogenized.Section7_CompensatedPartition
+public import Transformer.Homogenized.Section7_WeightedMartingale
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # The weighted martingale identity in expectation
@@ -16,6 +18,8 @@ The compensated observable itself is required to be a martingale.
 The weighted process is not assumed to have a stochastic integral
 or a martingale property. The limit is also proved integrable.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Set MeasureTheory Filter Topology

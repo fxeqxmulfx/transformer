@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perspective.Section3_Gronwall
+public import Transformer.Perspective.Section5_HighD
+public import Transformer.Perspective.Section5_ExpRate
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+
+/-!
 # §6.1 — Cone collapse: the last step of its proof
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -8,21 +15,18 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 The survey proves the lemma in two steps: step 1 produces the limit point
 `x⋆` (`eq: qual.conv`), step 2 the differential inequality
 `α̇ ≥ (1 - α)/(2 n e^{2β})` for `α(t) = min_i ⟨x_i(t), x⋆⟩`
-(`e:diffineqalpha.step2`).  The lemma itself is `cone_collapse`
+(`e:diffineqalpha.step2`). The lemma itself is `cone_collapse`
 (`Perspective.Section5_ExpRate`), proved there by another route: the chart
 `x ↦ x / ⟨x, w⟩` of the hemisphere (`Perspective.ConeLimit`), which needs
-neither `x⋆` in advance nor the differential inequality.  The survey's route
+neither `x⋆` in advance nor the differential inequality. The survey's route
 is kept as well: step 2 is proved from the limit in
 `Perspective.Section5_HemisphereRate`, with the differentiability of `α`
-carried.  Integrating the differential inequality gives the exponential rate,
+carried. Integrating the differential inequality gives the exponential rate,
 and that is `exp_rate_of_diffineqalpha` below — the last step of the proof,
 not the lemma: the conclusion of the two steps is its hypothesis.
 -/
 
-import Transformer.Perspective.Section3_Gronwall
-import Transformer.Perspective.Section5_HighD
-import Transformer.Perspective.Section5_ExpRate
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -38,7 +42,7 @@ variable (d n : ℕ)
 
 If every `SA` solution from `X₀` satisfies `e:diffineqalpha.step2` past some
 `t₀` — `α̇ ≥ (1 - α)/(2 n e^{2β})` for `α(t) = min_i ⟨x_i(t), x⋆⟩` — then it
-converges to `x⋆` exponentially: `‖x_i(t) - x⋆‖ ≤ C e^{-λ t}`.  This is not
+converges to `x⋆` exponentially: `‖x_i(t) - x⋆‖ ≤ C e^{-λ t}`. This is not
 the lemma (`cone_collapse`): the hemisphere hypothesis, and steps 1 and 2 that
 turn it into the differential inequality, are what `hstep` stands for.
 
@@ -46,7 +50,7 @@ The proof: with `λ₀ = 1/(2 n e^{2β})`, the function
 `(1 - α(t)) e^{λ₀ t}` has non-positive derivative past `t₀`, hence
 `1 - α(t) ≤ 2 e^{λ₀(t₁ - t)}` for `t₁ = max(t₀, 0)`, and
 `‖x_i(t) - x⋆‖² = 2 - 2⟨x_i(t), x⋆⟩ ≤ 2(1 - α(t))` turns that into the rate
-`C = 2 e^{λ₀ t₁/2}`, `λ = λ₀/2`.  Before `t₁` the crude bound
+`C = 2 e^{λ₀ t₁/2}`, `λ = λ₀/2`. Before `t₁` the crude bound
 `‖x_i(t) - x⋆‖ ≤ 2` is already below `C e^{-λ t}`.
 
 Source: arXiv:2312.10794v5, §6.1, proof of `lem: hemisphere.clustering`,

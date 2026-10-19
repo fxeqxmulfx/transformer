@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.SharedMemoryExamples
-import Mathlib.Logic.Equiv.Fin.Basic
+module
+
+public import Transformer.GPTMini.Sparsemax.SharedMemoryExamples
+public import Mathlib.Logic.Equiv.Fin.Basic
 
 /-!
 # Causal prefix features that retain positions
@@ -17,6 +19,8 @@ three contexts without assigning a private learned table to any context.
 This feature family need not separate every possible nonlinear prefix task;
 complete signatures supply the more expensive general construction.
 -/
+
+@[expose] public section
 
 noncomputable section
 

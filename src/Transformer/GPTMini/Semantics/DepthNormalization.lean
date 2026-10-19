@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthEmbedding
+module
+
+public import Transformer.GPTMini.Semantics.DepthEmbedding
 
 /-!
 # Quantitative original RMS multipliers for the depth construction
@@ -19,6 +21,8 @@ compensate the homogeneous plateau. A tied label gain 8/r^2 gives
 the later readout margin. These real-arithmetic coefficients do not
 assert floating-point equivalence or that AdamW learns these weights.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

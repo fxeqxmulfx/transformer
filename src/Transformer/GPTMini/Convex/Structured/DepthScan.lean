@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.DepthCompression
-import Transformer.GPTMini.Convex.Structured.MarkovTeacher
+module
+
+public import Transformer.GPTMini.Convex.Structured.DepthCompression
+public import Transformer.GPTMini.Convex.Structured.MarkovTeacher
 
 /-!
 # Six-state chronological depth data scan
@@ -16,6 +18,8 @@ The scan of a true alternating word is derived for every finite length.
 Raw neutral/BOS serialization, Basis labels and the actual freely learned
 stochastic head remain subsequent coupling obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

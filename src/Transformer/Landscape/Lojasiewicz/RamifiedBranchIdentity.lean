@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.RamifiedPolynomialBranches
+public import Mathlib.Analysis.Analytic.IsolatedZeros
+
+/-!
 # Full analytic identities from positive ramified root branches
 
 Analytic isolated zeros upgrade a root identity holding on a positive
 interval to an identity of the full germ at zero.
 -/
 
-import Transformer.Landscape.Lojasiewicz.RamifiedPolynomialBranches
-import Mathlib.Analysis.Analytic.IsolatedZeros
+@[expose] public section
 
 open Filter Set
 

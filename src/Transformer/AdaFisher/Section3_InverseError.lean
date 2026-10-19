@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_Spectrum
+public import Mathlib.Analysis.Matrix.Normed
+
+/-!
 # AdaFisher: min-max scaling does not preserve inverse approximation error
 
 arXiv:2405.16397v3, Proposition 3.2, Appendix A.2, Part 2.
@@ -7,8 +12,7 @@ original factors are exactly diagonal. Min-max normalization maps their
 positive minimum to zero, so the damped inverse grows like 1/lambda.
 -/
 
-import Transformer.AdaFisher.Section3_Spectrum
-import Mathlib.Analysis.Matrix.Normed
+@[expose] public section
 
 open scoped BigOperators Matrix Kronecker Matrix.Norms.Elementwise
 

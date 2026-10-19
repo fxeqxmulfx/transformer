@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section4_Solver
+
+/-!
 # IC-EoT: reported solve times and closed-loop performance
 
 arXiv:2603.22095v2, §4.4.2–4.4.3, Figure 8 and Table 7.
@@ -6,7 +10,7 @@ Theorems check exact reported values and one-decimal rounding intervals,
 without extrapolating to other solvers, hardware, horizons or true plants.
 -/
 
-import Transformer.ICEoT.Section4_Solver
+@[expose] public section
 
 namespace Transformer.ICEoT
 

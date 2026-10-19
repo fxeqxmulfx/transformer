@@ -1,19 +1,23 @@
-/-
+module
+
+public import Transformer.ALM.LatestWindow
+
+/-!
 # The wall is in the representation, not in the arithmetic
 
 `Transformer.ALM.FloatGrid` discharges exactness from a condition an
 implementation can be checked against: a score routine that lands on the
 integer grid and errs by less than a unit is exact there (`fp_eval_exact_of_grid`,
-hypothesis `S.δ < 1`).  It never says where that condition stops holding, and
+hypothesis `S.δ < 1`). It never says where that condition stops holding, and
 `todo3.md` §4 is that it stops at a nameable place: the score `2qk - k²` is an
 integer, binary64 holds integers exactly only below `2^53`, so exact retrieval
 needs `n < √(2^53) = 94 906 266`.
 
-The point of this file is *which* step fails.  It is not the arithmetic.  Above
+The point of this file is *which* step fails. It is not the arithmetic. Above
 `2^p` every representable number is an even integer (`isBinary_even`), so two
 distinct ones are at least two apart (`two_le_dist_of_isBinary`) — while
 `Transformer.ALM.LatestWindow.one_le_sScore_sub` says distinct integer keys are
-exactly one apart in score.  The separation the whole development rests on is
+exactly one apart in score. The separation the whole development rests on is
 destroyed when the coordinate is *stored*, before any dot product runs, which is
 why §4 measures the same first failure for rounded and for exact scoring:
 
@@ -23,8 +27,8 @@ why §4 measures the same first failure for rounded and for exact scoring:
 `the_first_unstorable_key` is that boundary as a decided fact, and
 `the_missing_unit` is the pair of integers §4 names — `9 007 199 515 875 289`
 stored as `9 007 199 515 875 288`, the lost unit being exactly the gap that made
-the neighbour lose.  So no wider accumulator recovers it: Shewchuk expansions,
-an 80-bit `long double`, `f128` all arrive after the loss.  Only a wider
+the neighbour lose. So no wider accumulator recovers it: Shewchuk expansions,
+an 80-bit `long double`, `f128` all arrive after the loss. Only a wider
 embedding moves the wall, and that is a change to the weights.
 
 `IsBinary p` is deliberately more generous than any real format — significand
@@ -36,7 +40,7 @@ Source: `todo3.md` §4, §4a and §4b; measurement and test:
 guard: `vm-rs/alm-hull/src/grid.rs`.
 -/
 
-import Transformer.ALM.LatestWindow
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -44,7 +48,7 @@ namespace ALM
 /-! ### What a binary format can hold -/
 
 /-- Representable with `p` significand bits: a signed significand below `2 ^ p`
-times a power of two.  The exponent is unrestricted, so this contains every
+times a power of two. The exponent is unrestricted, so this contains every
 binary floating-point format of `p` significand bits — what it misses, binary64
 misses too. -/
 def IsBinary (p : ℕ) (x : ℝ) : Prop := ∃ m e : ℤ, |m| < 2 ^ p ∧ x = (m : ℝ) * (2 : ℝ) ^ e
@@ -56,7 +60,7 @@ lemma isBinary_intCast {p : ℕ} {z : ℤ} (hz : |z| < 2 ^ p) : IsBinary p (z : 
 
 /-- **Above the wall every representable number is an even integer.**  A
 significand below `2 ^ p` can only reach past `2 ^ p` by an exponent of at least
-one, and that factor of two is left in the result.  This is the whole of §4:
+one, and that factor of two is left in the result. This is the whole of §4:
 past that magnitude the format has no odd numbers at all, so a quantity that
 needs one is lost on the way in. -/
 lemma isBinary_even {p : ℕ} {x : ℝ} (h : IsBinary p x) (hx : (2 : ℝ) ^ p < |x|) :
@@ -106,7 +110,7 @@ lemma two_le_dist_of_isBinary {p : ℕ} {x y : ℝ} (hx : IsBinary p x) (hy : Is
   linarith
 
 /-- **The unit gap cannot be stored.**  Of two consecutive integers past the
-wall, at least one is not representable at all — one of them is odd.  So a
+wall, at least one is not representable at all — one of them is odd. So a
 winner that beat its runner-up by the minimum possible margin arrives at the
 head already tied with it, whatever arithmetic is applied afterwards. -/
 theorem unit_gap_unstorable {p : ℕ} {z : ℤ} (hz : (2 : ℤ) ^ p < z) :
@@ -120,7 +124,7 @@ theorem unit_gap_unstorable {p : ℕ} {z : ℤ} (hz : (2 : ℤ) ^ p < z) :
 
 /-- **The key coordinate itself is what goes.**  The compiler stores `-k²` in
 `ky`; for an odd key past the wall that is an odd integer past the wall, so it
-is rounded on the way in and every later reader sees the rounded one.  This is
+is rounded on the way in and every later reader sees the rounded one. This is
 §4's "the coordinate `-k²` stops being an exact double", stated for every
 width. -/
 theorem key_coord_unstorable {p : ℕ} {k : ℤ} (hodd : Odd k) (hk : (2 : ℤ) ^ p < k ^ 2) :
@@ -179,7 +183,7 @@ theorem the_first_unstorable_key : ¬ IsBinary 53 ((-((94906267 : ℤ) ^ 2) : �
 
 /-- **And the unit it loses is the one that decided the query.**  §4 reports the
 stored coordinate of `94 906 267` as `9 007 199 515 875 288` against a true
-`9 007 199 515 875 289`.  Both numbers are here: the true one is the square, it
+`9 007 199 515 875 289`. Both numbers are here: the true one is the square, it
 is odd, and the value one below it is even — the nearest thing the format has,
 one unit away, which is exactly the margin that made the neighbouring key lose.
 No wider accumulator recovers it, because the loss happened before the

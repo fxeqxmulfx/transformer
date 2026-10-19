@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Normalization.Velocities
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+
+/-!
 # Geometry of a normalized token cluster
 
 The mean and variance identities used in Appendix C, proof of Theorem 4.3,
@@ -6,10 +13,7 @@ of arXiv:2510.22026v2. These are finite-dimensional identities; no convergence
 or probabilistic premise is used.
 -/
 
-import Transformer.Normalization.Velocities
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Mul
+@[expose] public section
 
 open scoped BigOperators
 

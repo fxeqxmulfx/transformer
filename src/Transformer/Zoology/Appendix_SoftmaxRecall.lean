@@ -1,18 +1,22 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_Attention
+public import Transformer.ALM.SoftmaxValue
+
+/-!
 # Softmax associative recall with a logarithmic score scale
 
 Arora et al., arXiv:2312.04927v1, §4, Proposition `prop: attention-ar`,
-and Appendix Proposition `prop: app-attention`.  The appendix proves its
-exact vector result for attention *without* softmax.  This companion result
+and Appendix Proposition `prop: app-attention`. The appendix proves its
+exact vector result for attention *without* softmax. This companion result
 gives the correct finite-temperature statement: a genuine softmax head
 places more than half its mass on the uniquely matching key at scale
-`log (2m)`, where `m` is the number of candidate keys.  Thus one-hot values
+`log (2m)`, where `m` is the number of candidate keys. Thus one-hot values
 are decoded exactly by argmax, although the output vector itself retains
 nonzero softmax leakage.
 -/
 
-import Transformer.Zoology.Appendix_Attention
-import Transformer.ALM.SoftmaxValue
+@[expose] public section
 
 open scoped BigOperators
 
@@ -33,7 +37,7 @@ noncomputable def recallWeight {m c : ℕ} (keys : Fin m → Fin c)
     ∑ k, Real.exp (β * equalityScores keys q k)
 
 /-- At logarithmic score scale, a unique exact match gets strictly more than
-half the attention mass.  This is the softmax correction of Appendix
+half the attention mass. This is the softmax correction of Appendix
 Proposition `prop: app-attention`: the paper's exact vector equality uses
 unnormalized `QKᵀV`, not finite-temperature softmax. -/
 theorem matching_weight_majority {m c : ℕ} (hm : 0 < m)
@@ -76,7 +80,7 @@ noncomputable def recallCoordinate {m c : ℕ} (keys values : Fin m → Fin c)
   ∑ j, recallWeight keys q β j * oneHot (values j) v
 
 /-- A strict majority weight gives the correct one-hot value coordinate
-strictly above one half.  Source: Appendix Proposition `prop: app-attention`,
+strictly above one half. Source: Appendix Proposition `prop: app-attention`,
 softmax correction for a unique exact match. -/
 theorem recall_correct_coordinate {m c : ℕ} (hm : 0 < m)
     (keys values : Fin m → Fin c) (hkeys : Function.Injective keys)
@@ -107,7 +111,7 @@ theorem recall_correct_coordinate {m c : ℕ} (hm : 0 < m)
   have hmain : (1 / 2 : ℝ) < recallWeight keys q β j₀ := hw
   linarith
 
-/-- Every other value coordinate is strictly below one half.  The result
+/-- Every other value coordinate is strictly below one half. The result
 still holds if many nonmatching keys carry the same distractor value.
 Source: Appendix Proposition `prop: app-attention`, softmax correction. -/
 theorem recall_other_coordinate {m c : ℕ} (hm : 0 < m)
@@ -146,7 +150,7 @@ theorem recall_other_coordinate {m c : ℕ} (hm : 0 < m)
 /-- The correct token is the unique argmax of the softmax output, for any
 number of distinct one-hot keys and any assignment of one-hot values.
 This is exact *discrete* recall; the real output vector is not exactly one-hot
-at finite temperature.  Source: Appendix Proposition `prop: app-attention`,
+at finite temperature. Source: Appendix Proposition `prop: app-attention`,
 with genuine softmax and logarithmic score scaling. -/
 theorem recall_argmax_correct {m c : ℕ} (hm : 0 < m)
     (keys values : Fin m → Fin c) (hkeys : Function.Injective keys)

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Muon.Section2_Models
+public import Transformer.Optimization.Basic
+public import Transformer.Optimization.Matrix
+
+/-!
 # Muon — actual training recurrences and the new direction safeguard
 
 arXiv:2502.16982, §2.1–2.2. The original recurrence retains the printed
@@ -7,9 +13,7 @@ weight decay. The corrected recurrence adds the explicitly documented
 gradient check and uses `η=σ/L` on a fixed deterministic objective.
 -/
 
-import Transformer.Muon.Section2_Models
-import Transformer.Optimization.Basic
-import Transformer.Optimization.Matrix
+@[expose] public section
 
 noncomputable section
 

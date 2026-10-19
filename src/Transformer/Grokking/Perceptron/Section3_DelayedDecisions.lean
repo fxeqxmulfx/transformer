@@ -1,4 +1,6 @@
-import Transformer.Grokking.Perceptron.Section3_SymmetricMSE
+module
+
+public import Transformer.Grokking.Perceptron.Section3_SymmetricMSE
 
 /-!
 # Arbitrarily delayed classification under a convex gradient flow
@@ -15,6 +17,8 @@ decision crossing at any prescribed T > 0. The task margin varies with T;
 this is not arbitrary delay on one fixed task. Smooth scores and convex
 loss therefore do not rule out delayed, abrupt finite-test accuracy.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Perceptron
 

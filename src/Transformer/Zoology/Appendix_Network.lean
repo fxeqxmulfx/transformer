@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Zoology.Section4_Coyote
+
+/-!
 # Stacking Coyote layers
 
 Arora et al., arXiv:2312.04927v1, Appendix Lemma `lem: stacking-layers`
-in `circuit/primitives/primitives.tex`.  A finite list of layers has an
+in `circuit/primitives/primitives.tex`. A finite list of layers has an
 ordinary compositional semantics, and concatenating lists composes their
 functions while adding their layer counts.
 -/
 
-import Transformer.Zoology.Section4_Coyote
+@[expose] public section
 
 namespace Transformer.Zoology
 
@@ -28,7 +32,7 @@ def CoyoteNetwork.layerCount {n d : ℕ} (net : CoyoteNetwork n d) : ℕ :=
   net.layers.length
 
 /-- List concatenation is network composition, including the exact additive
-layer count.  Source: Appendix Lemma `lem: stacking-layers`, for equal inner
+layer count. Source: Appendix Lemma `lem: stacking-layers`, for equal inner
 sequence and feature dimensions. -/
 theorem coyote_stacking {n d : ℕ} (first second : CoyoteNetwork n d)
     (u : RealSequence n d) :

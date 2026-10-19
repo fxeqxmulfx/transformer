@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.DASH.Section5_Rank
+public import Transformer.DASH.Section2_History
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+
+/-!
 # DASH — corrected rank bounds for temporal preconditioners
 
 arXiv:2602.02016v2, §5, “Block Size”, and §2, Algorithm 1.
@@ -7,9 +13,7 @@ one instantaneous Gram matrix. An EMA over `t` gradients instead
 has rank at most `min(block height, t * gradient width)`.
 -/
 
-import Transformer.DASH.Section5_Rank
-import Transformer.DASH.Section2_History
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+@[expose] public section
 
 open scoped Matrix
 

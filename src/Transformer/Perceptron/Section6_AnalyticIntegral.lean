@@ -1,4 +1,14 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.ParametricIntegral
+public import Mathlib.Analysis.Complex.CauchyIntegral
+public import Mathlib.Analysis.Complex.RealDeriv
+public import Mathlib.Analysis.Analytic.Constructions
+public import Mathlib.Analysis.Analytic.Linear
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
+public import Mathlib.Analysis.Normed.Group.Bounded
+
+/-!
 # Analytic interaction integrals on compact spaces
 
 ArXiv:2601.21366v2, §6, proof of `prop: unified.log` and
@@ -16,13 +26,7 @@ arguments and taking the real part gives the needed real analyticity.
 The trace lemma identifies the integral with its original real kernel.
 -/
 
-import Mathlib.Analysis.Calculus.ParametricIntegral
-import Mathlib.Analysis.Complex.CauchyIntegral
-import Mathlib.Analysis.Complex.RealDeriv
-import Mathlib.Analysis.Analytic.Constructions
-import Mathlib.Analysis.Analytic.Linear
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
-import Mathlib.Analysis.Normed.Group.Bounded
+@[expose] public section
 
 open Complex MeasureTheory Filter Set Metric
 open scoped Topology

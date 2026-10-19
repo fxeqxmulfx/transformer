@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.AnalyticCurveGradient
+public import Transformer.Landscape.Lojasiewicz.GradientMinimumCluster
+
+/-!
 # From energy-level comparison curves to the gradient inequality
 
 Two analytic curves representing the smallest gradient norms on small
@@ -7,8 +12,7 @@ Curve existence is an explicit geometric input. This is the last analytic
 step in an alternative route to Appendix D.1 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.AnalyticCurveGradient
-import Transformer.Landscape.Lojasiewicz.GradientMinimumCluster
+@[expose] public section
 
 open Filter Set
 

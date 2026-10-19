@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthInvariant
+module
+
+public import Transformer.GPTMini.Semantics.DepthInvariant
 
 /-!
 # Actual original depth detector encoder and ordered-state induction
@@ -19,6 +21,8 @@ detector encoder invariant. Easy uses one detector and hard three;
 both leave room for readout within their unchanged original layer
 budgets. Full ModelParams/readout/integer coupling remains to be done.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

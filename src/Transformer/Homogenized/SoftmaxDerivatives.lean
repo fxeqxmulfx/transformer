@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Homogenized.Basic
+public import Transformer.Perspective.Softmax
+public import Mathlib.Analysis.Calculus.Deriv.Inv
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # Homogenized Transformers — derivatives of the softmax
 
 Formalization of `claim:softmax_is_smooth` of arXiv:2604.01978v1, *Homogenized
@@ -16,10 +23,10 @@ softmax in this tree, not one per paper.
 * The displayed formula of `claim:softmax_is_smooth` is not a statement: the
   multi-index `r_1, …, r_k` is free on the left-hand side and summed over on
   the right, and the `r_q'` of the indicator `1_{r_q = r_{q'} ∀ (q,q') ∈ I}` is
-  bound by nothing.  What the claim is *for* — the only thing the source ever
+  bound by nothing. What the claim is *for* — the only thing the source ever
   uses it for, two displays later in `eq:pi_derivative_bound` — is that each
   partial derivative of `χ_j` is `χ_j` times a bounded function of the scores,
-  with a bound depending on the order alone: `|∂^k χ_j| ≤ C_k χ_j`.  That is
+  with a bound depending on the order alone: `|∂^k χ_j| ≤ C_k χ_j`. That is
   what `softmax_is_smooth` states, and proves, in `SoftmaxSmooth.lean`.
 
 * The induction the source proves the claim by,
@@ -28,17 +35,14 @@ softmax in this tree, not one per paper.
 
   has the sign the wrong way round: differentiating `e^{z_j}/Σ_k e^{z_k}` gives
   `1_{r=j} χ_j - χ_j χ_r`, which is positive at `r = j` — as it must be, the
-  weight of a score increasing with that score.  `fderiv_softmaxWeight` states
-  and proves the corrected identity.  Nothing downstream turns on the sign: the
+  weight of a score increasing with that score. `fderiv_softmaxWeight` states
+  and proves the corrected identity. Nothing downstream turns on the sign: the
   claim's constants `C^k_I` are left unspecified by the source.
 
 Source: arXiv:2604.01978v1, `claim:softmax_is_smooth`, `eq:pi_derivative_bound`.
 -/
 
-import Transformer.Homogenized.Basic
-import Transformer.Perspective.Softmax
-import Mathlib.Analysis.Calculus.Deriv.Inv
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -53,7 +57,7 @@ weights, `σ(·)_j` is differentiable at every `z` with
 
   `Dσ(z)_j = χ_j (e_j^* - Σ_k χ_k e_k^*)`,
 
-`e_k^*` the `k`-th coordinate functional.  Evaluating at `e_r` gives the
+`e_k^*` the `k`-th coordinate functional. Evaluating at `e_r` gives the
 partial derivatives; see `fderiv_softmaxWeight`.
 
 Source: arXiv:2604.01978v1, `claim:softmax_is_smooth` (corrected). -/

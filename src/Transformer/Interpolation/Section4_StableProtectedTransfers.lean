@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_QuadrantTransfers
+public import Transformer.Interpolation.Section4_TransferStability
+
+/-!
 # Protected original transfers with uniform concentration error
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, its proof in §5,
@@ -17,8 +22,7 @@ Positive-quadrant endpoints and unselected laws satisfy all geometric
 premises whenever their original means avoid the selected plane.
 -/
 
-import Transformer.Interpolation.Section4_QuadrantTransfers
-import Transformer.Interpolation.Section4_TransferStability
+@[expose] public section
 
 open Real MeasureTheory Set
 

@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.AnchorTransfer
-import Transformer.GPTMini.Sparsemax.AnchoredValues
+module
+
+public import Transformer.GPTMini.Sparsemax.AnchorTransfer
+public import Transformer.GPTMini.Sparsemax.AnchoredValues
 
 /-!
 # Ordinary task derivatives reach trainable anchor parameters
@@ -17,6 +19,8 @@ is assumed at support boundaries, and no target attention route is used.
 The guarantee is for one row's ordinary task loss; cancellations between
 rows sharing parameters and whole-model convergence are not asserted.
 -/
+
+@[expose] public section
 
 noncomputable section
 

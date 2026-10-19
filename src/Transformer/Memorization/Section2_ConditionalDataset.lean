@@ -1,4 +1,6 @@
-import Transformer.Memorization.Section2_EntropyVectors
+module
+
+public import Transformer.Memorization.Section2_EntropyVectors
 
 /-!
 # Conditional dataset entropy
@@ -7,6 +9,8 @@ arXiv:2505.24832v3, Section 2.1 and Appendix A.6. The appendix clarifies
 that samples are independent conditional on the ground-truth model; they
 need not be independent before that model is sampled.
 -/
+
+@[expose] public section
 
 namespace Transformer.Memorization
 

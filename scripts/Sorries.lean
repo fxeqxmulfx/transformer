@@ -1,21 +1,26 @@
-/-
+import Transformer
+
+/-!
 # Sorry positions
 
+Implementation imports are intentional: the legacy frontend loads transitive
+proof bodies, which module imports omit. Reading public interfaces alone would
+incorrectly erase the direct-`sorry` count.
+
 `INDEX.md` marks a declaration as using `sorry` when it contains `sorry`
-itself, which is what `lake build` warns about.  A module that Lake restores
+itself, which is what `lake build` warns about. A module that Lake restores
 from its artifact cache comes with an empty build log, though, so its warnings
-are never printed.  This script reads the same fact from the `.olean` files:
+are never printed. This script reads the same fact from the `.olean` files:
 
     lake env lean scripts/Sorries.lean
 
 It prints one line `<source>\t<line>\t<declaration>` for each declaration of a
-`Transformer` module whose type or value contains `sorry`.  The line is that
-of the declaration's name, where `lake build` puts its warning.  An auxiliary
+`Transformer` module whose type or value contains `sorry`. The line is that
+of the declaration's name, where `lake build` puts its warning. An auxiliary
 declaration (`foo.proof_1`, `foo._unary`) has no position of its own and is
 reported at the nearest declaration it belongs to; line `0` means none was
-found.  `scripts/index.py` reads the output.
+found. `scripts/index.py` reads the output.
 -/
-import Transformer
 
 open Lean Elab Command
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallGateFFN
+module
+
+public import Transformer.GPTMini.Semantics.RecallGateFFN
 
 /-!
 # The simultaneous original first block with its table gate
@@ -16,6 +18,8 @@ addition is included, and the actual position-dependent RMS square
 is retained in the amplitude. Complete validated-prefix coupling and
 robust second-block retrieval/readout still remain to be discharged.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

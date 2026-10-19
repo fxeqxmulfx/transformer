@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.LongContextQK
+module
+
+public import Transformer.GPTMini.Sparsemax.LongContextQK
 
 /-!
 # Accessible Q/K anchor charts without full input independence
@@ -17,6 +19,8 @@ restriction. Queries and ordinary keys are fixed on this anchor path.
 The statements concern a single unrotated readout before XSA and output
 projection. They do not assume independent keys for all ordinary tokens.
 -/
+
+@[expose] public section
 
 noncomputable section
 

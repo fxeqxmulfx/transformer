@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_Observables
+public import Transformer.Kinetic.Section3_SwapCovariance
+public import Transformer.Kinetic.Section3_TokenSums
+
+/-!
 # The covariance of two observables of the flow
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 2, `eq:est-cov-phi`: under a
@@ -9,9 +15,7 @@ flow, `|∂_{θ_l} θ_x| ≤ π e^{L₁T}([l = x] + τ F(x, l))`
 (`abs_obs_update_sub_le_env`).
 -/
 
-import Transformer.Kinetic.Section3_Observables
-import Transformer.Kinetic.Section3_SwapCovariance
-import Transformer.Kinetic.Section3_TokenSums
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Real
 

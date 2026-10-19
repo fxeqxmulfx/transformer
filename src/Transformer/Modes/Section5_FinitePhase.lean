@@ -1,4 +1,6 @@
-import Transformer.Modes.Section5_PhaseBounds
+module
+
+public import Transformer.Modes.Section5_PhaseBounds
 
 /-!
 # Combining local phase estimates across finitely many derivative zeros
@@ -21,6 +23,8 @@ phases it will come from the roots of the quartic polynomial multiplying
 the nonzero Gaussian factor; no root locations or separations are needed.
 Source: arXiv:2412.09080v3, §5.5, proof of `eq:uniform-decay`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 open scoped Interval

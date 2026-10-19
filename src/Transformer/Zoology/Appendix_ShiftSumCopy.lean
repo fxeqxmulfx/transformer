@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ShiftSumLayout
+
+/-!
 # The duplicated-input stage of the shifted-diagonal compiler
 
 Arora et al., arXiv:2312.04927v1, Appendix `prop: prim-add`,
@@ -7,7 +11,7 @@ convolution creates two adjacent copies. Every branch then reads a
 cyclically shifted input from those copies without wraparound leakage.
 -/
 
-import Transformer.Zoology.Appendix_ShiftSumLayout
+@[expose] public section
 
 open scoped BigOperators
 

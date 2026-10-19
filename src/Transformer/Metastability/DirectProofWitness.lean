@@ -1,14 +1,18 @@
-/-
+module
+
+public import Transformer.Metastability.IsMetastable
+
+/-!
 # Metastability — the hypotheses of `metastability` are satisfiable
 
 A concrete instance of every hypothesis of `Metastability.metastability`: `n = 2` tokens at
 the point `e_{d+1}` of `𝕊^d`, one cap (`k = 1`, so there is no pair of distinct caps and `α = 0`),
 `β = 10⁴`, `ε = 1/100`, and `λ` half of the smaller of the two bounds of `eq: lambda.3`
-(`witness_regime`).  The same data show that `IsMetastable` is satisfiable
+(`witness_regime`). The same data show that `IsMetastable` is satisfiable
 (`isMetastable_basePoint`).
 -/
 
-import Transformer.Metastability.IsMetastable
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 open Real Set

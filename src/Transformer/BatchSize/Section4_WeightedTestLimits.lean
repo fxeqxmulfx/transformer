@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_BoundedObservableLimits
+
+/-!
 # Actual weighted test expectations under mean-square convergence
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
 The random bounded past weight remains fixed as the actual state converges.
 -/
 
-import Transformer.BatchSize.Section4_BoundedObservableLimits
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped Topology

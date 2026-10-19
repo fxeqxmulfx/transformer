@@ -1,11 +1,16 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.Modulated
+public import Transformer.Landscape.Lojasiewicz.LojasiewiczInnerProduct
+
+/-!
 # Łojasiewicz's theorem for analytic functions
 
 A trajectory of a modulated gradient flow `ẋ = -M(t) ∇E(x)` of an analytic energy that
 stays in a compact set converges to a critical point: `lem: loj` of Appendix D.1 of
 arXiv:2510.22026v2, proved here for any analytic `E` on a finite-dimensional real inner
-product space.  The proof rests on the Łojasiewicz gradient inequality at every point,
-which `SaddleAvoidance.LocalInequality` turns into `IsLojasiewiczAt`.  The modules came
+product space. The proof rests on the Łojasiewicz gradient inequality at every point,
+which `SaddleAvoidance.LocalInequality` turns into `IsLojasiewiczAt`. The modules came
 from `Transformer.Normalization`, the paper's directory, which keeps the statements that
 use its dynamics `eq: NA`.
 
@@ -65,5 +70,4 @@ below, and the inequality uses them in turn.
   `CompactBallQueryAtlas`.
 -/
 
-import Transformer.Landscape.Lojasiewicz.Modulated
-import Transformer.Landscape.Lojasiewicz.LojasiewiczInnerProduct
+@[expose] public section

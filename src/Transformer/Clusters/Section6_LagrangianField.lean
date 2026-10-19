@@ -1,9 +1,14 @@
-/-
+module
+
+public import Transformer.Clusters.Section6_KernelField
+public import Transformer.ContinuityEq.Stability
+
+/-!
 # The emergence of clusters in self-attention dynamics — the Lagrangian
   field of the continuity equation
 
 The existence half of `c:wellposedtransformers` is proved here by another
-route than the source's.  The source freezes the field on time steps `T/2^k`
+route than the source's. The source freezes the field on time steps `T/2^k`
 and passes to the limit by Arzelà–Ascoli; here the solution is sought as
 `μ_t = (Y_t)_# μ₀`, where `Y_t` is a bounded continuous map of `ℝ^d` moving
 each point along the field that the measure it transports generates:
@@ -11,12 +16,12 @@ each point along the field that the measure it transports generates:
   `Ẏ_t = F(Y_t)`,  `F(Y)(x) = 𝒳[Y_# μ₀](Y x)`  (`lagrangianField`).
 
 This is an autonomous ODE in the Banach space `ℝ^d →ᵇ ℝ^d` of bounded
-continuous maps.  `F` has linear growth, `‖F(Y)‖ ≤ ‖V‖ ‖Y‖`, since `Y_# μ₀`
+continuous maps. `F` has linear growth, `‖F(Y)‖ ≤ ‖V‖ ‖Y‖`, since `Y_# μ₀`
 is carried by `B̄(0, ‖Y‖)` (`e:bddinx`); and `F` is Lipschitz on every ball
 (`lipschitzOnWith_lagrangianField`), since `𝒳` is jointly Lipschitz in the
 point and in the measure (`exists_norm_attentionKernel_sub_le`) and
 `W₂(Y_# μ₀, Z_# μ₀) ≤ ‖Y - Z‖` through the coupling `(Y, Z)_# μ₀`
-(`W2_map_le_norm_sub`).  So the ODE has a solution on all of `ℝ`
+(`W2_map_le_norm_sub`). So the ODE has a solution on all of `ℝ`
 (`Landscape.GlobalFlow.exists_global_of_lipschitzOnWith`), from which
 `Section6_ContEq` builds the solution of `e:conteq`.
 
@@ -24,8 +29,7 @@ Source: arXiv:2305.05465v6, `c:wellposedtransformers`; the Lagrangian form
 `μ(t) = (Φ^t_{𝒳[μ(t)]})_# μ₀` is the one its proof arrives at.
 -/
 
-import Transformer.Clusters.Section6_KernelField
-import Transformer.ContinuityEq.Stability
+@[expose] public section
 
 open Set Metric Filter Topology MeasureTheory
 open scoped NNReal BoundedContinuousFunction

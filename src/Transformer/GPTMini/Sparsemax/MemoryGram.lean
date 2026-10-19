@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.GramValues
-import Mathlib.LinearAlgebra.Matrix.Gershgorin
+module
+
+public import Transformer.GPTMini.Sparsemax.GramValues
+public import Mathlib.LinearAlgebra.Matrix.Gershgorin
 
 /-!
 # Convex learned memory with a structural inverse guarantee
@@ -17,6 +19,8 @@ queries will be data-dependent mixtures of the learned query embeddings.
 The score constraints, width freedom and value-coordinate decoder are
 explicit architectural choices; no task loss or FFN is selected.
 -/
+
+@[expose] public section
 
 noncomputable section
 

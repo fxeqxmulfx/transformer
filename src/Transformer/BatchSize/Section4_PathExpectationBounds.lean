@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_PathCompensation
+public import Transformer.BatchSize.Section4_BoundedIntervalLimits
+
+/-!
 # Bounded continuous observables along actual measurable paths
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ These bounds ensure that the generator and drift expectations used
 in the weak comparison are genuine probability and time integrals.
 -/
 
-import Transformer.BatchSize.Section4_PathCompensation
-import Transformer.BatchSize.Section4_BoundedIntervalLimits
+@[expose] public section
 
 open MeasureTheory
 

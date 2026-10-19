@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_DiffusionModel
+
+/-!
 # Gaussian innovations realize the stochastic-gradient law
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1 and its proof sketch.
@@ -6,7 +10,7 @@ This connects the finite-step sampler to the Gaussian mean/covariance
 computations, rather than only defining matching coefficients.
 -/
 
-import Transformer.BatchSize.Section4_DiffusionModel
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

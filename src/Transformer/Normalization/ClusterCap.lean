@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Normalization.ClusterFlow
+public import Transformer.Normalization.Velocities
+public import Transformer.Metastability.PropagationBarrier
+public import Mathlib.Topology.Order.Compact
+public import Mathlib.Topology.Order.IntermediateValue
+
+/-!
 # Finite barriers and spherical cap invariance
 
 The invariant geometry used in Appendix C, proof of Theorem 4.3 of
@@ -6,11 +14,7 @@ arXiv:2510.22026v2. Continuity and a receding strict boundary avoid
 regularity assumptions on the attention parameters.
 -/
 
-import Transformer.Normalization.ClusterFlow
-import Transformer.Normalization.Velocities
-import Transformer.Metastability.PropagationBarrier
-import Mathlib.Topology.Order.Compact
-import Mathlib.Topology.Order.IntermediateValue
+@[expose] public section
 
 open Set
 open scoped BigOperators

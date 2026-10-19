@@ -1,25 +1,29 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Trap
+public import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+
+/-!
 # Saddle avoidance — gradient descent converges near a Łojasiewicz point
 
 Along an orbit of gradient descent whose steps lower `f` by at least `η κ ‖∇f‖²`,
 `κ > 0`, with a limit point `z` up to translations leaving `f` invariant, where `f`
 is continuous, the values of `f` decrease to `f z` (`antitone_iterate_of_le_sub`,
-`frequently_abs_sub_lt`, `le_and_tendsto_of_frequently`).  Such a point exists when
+`frequently_abs_sub_lt`, `le_and_tendsto_of_frequently`). Such a point exists when
 every point of the orbit can be translated into one compact set
 (`exists_frequently_norm_add_sub_lt`), as for a function on a torus.
 
 If `f` satisfies the Łojasiewicz inequality at `z` with `0 ≤ a < 1`, the orbit comes,
 up to a translation, close enough to `z` with `f` close enough to `f z` for the trap
-of `iterate_mem_ball_of_le_sub`.  From then on it has finite length, so it converges
+of `iterate_mem_ball_of_le_sub`. From then on it has finite length, so it converges
 (`exists_tendsto_of_isLojasiewiczAt_of_le_sub`), to `z` itself when `z` is a limit
-point of the orbit (`tendsto_of_isLojasiewiczAt_of_le_sub`).  This is Theorem 3.2 of
-Absil, Mahony and Andrews (SIAM J. Optim. 16, 2005), up to translations.  An
+point of the orbit (`tendsto_of_isLojasiewiczAt_of_le_sub`). This is Theorem 3.2 of
+Absil, Mahony and Andrews (SIAM J. Optim. 16, 2005), up to translations. An
 `L`-Lipschitz gradient with `η L < 1` gives the decrease with `κ = 1 - η L`
 (`exists_tendsto_of_isLojasiewiczAt`, `tendsto_of_isLojasiewiczAt`).
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Trap
-import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+@[expose] public section
 
 open Filter Metric
 open scoped Topology NNReal
@@ -30,9 +34,9 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
   {f : E → ℝ} {L : ℝ≥0} {η κ a : ℝ}
 
 /-- **Gradient descent converges near a point where the Łojasiewicz inequality
-holds**, along an orbit whose steps lower `f` by at least `η κ ‖∇f‖²`, `κ > 0`.  Let
+holds**, along an orbit whose steps lower `f` by at least `η κ ‖∇f‖²`, `κ > 0`. Let
 `0 < η`, and let `f` be continuous at `z` and satisfy the Łojasiewicz inequality there
-with `0 ≤ a < 1`.  If infinitely many points of the orbit of `x` lie near `z` up to
+with `0 ≤ a < 1`. If infinitely many points of the orbit of `x` lie near `z` up to
 translations in a set `Λ` leaving `f` invariant, the orbit converges. -/
 theorem exists_tendsto_of_isLojasiewiczAt_of_le_sub (hη : 0 < η) (hκ : 0 < κ) {Λ : Set E}
     (hΛ : ∀ v ∈ Λ, ∀ y, f (y + v) = f y) (ha0 : 0 ≤ a) (ha1 : a < 1) {z : E}

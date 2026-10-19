@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_SphericalFlowBounds
+
+/-!
 # Bounds for time-dependent spherical characteristics
 
 Auxiliary for arXiv:2411.04551v3, §1, `eq: ips` and `eq: cauchy.pb`.
@@ -14,7 +18,7 @@ fixed time. Neither estimate assumes that the field is autonomous
 or that the flow has spatial derivatives.
 -/
 
-import Transformer.Interpolation.Section1_SphericalFlowBounds
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal

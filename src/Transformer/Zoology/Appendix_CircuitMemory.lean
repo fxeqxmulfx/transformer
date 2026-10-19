@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CircuitEvaluation
+public import Transformer.Zoology.Appendix_Network
+
+/-!
 # A persistent memory layout for arbitrary arithmetic DAGs
 
 Arora et al., arXiv:2312.04927v1, Appendix Theorem `thm: gen-ac`.
@@ -9,8 +14,7 @@ This layout is a functional basis for a general Coyote simulation; its
 width is `inputs + size`, not the sharper width bound in the paper.
 -/
 
-import Transformer.Zoology.Appendix_CircuitEvaluation
-import Transformer.Zoology.Appendix_Network
+@[expose] public section
 
 namespace Transformer.Zoology
 

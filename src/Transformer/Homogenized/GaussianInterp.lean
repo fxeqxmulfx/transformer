@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Basic
+public import Transformer.Homogenized.Section7_GaussianInterpolationCovariance
+
+/-!
 # Homogenized Transformers — the Gaussian interpolation lemma
 
 Formalization of `lem:gaussian_interp` of arXiv:2604.01978v1, *Homogenized
@@ -55,8 +60,7 @@ Source: arXiv:2604.01978v1, `lem:gaussian_interp`, `eq:interpolation_gaussian`;
 `[vershynin2018high, Lemma 7.2.7]`.
 -/
 
-import Transformer.Homogenized.Basic
-import Transformer.Homogenized.Section7_GaussianInterpolationCovariance
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory ProbabilityTheory

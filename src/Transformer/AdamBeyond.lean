@@ -1,4 +1,30 @@
-/-
+module
+
+public import Transformer.AdamBeyond.Section2_Adam
+public import Transformer.AdamBeyond.Section3_Run
+public import Transformer.AdamBeyond.Section3_Counter
+public import Transformer.AdamBeyond.Section3_GenRun
+public import Transformer.AdamBeyond.Section3_GenBlock
+public import Transformer.AdamBeyond.Section3_GenStep
+public import Transformer.AdamBeyond.Section3_GenRegret
+public import Transformer.AdamBeyond.Section3_General
+public import Transformer.AdamBeyond.Section3_Stoch
+public import Transformer.AdamBeyond.Section3_StochBound
+public import Transformer.AdamBeyond.Section3_StochCoins
+public import Transformer.AdamBeyond.Section3_StochMean
+public import Transformer.AdamBeyond.Section3_StochStep
+public import Transformer.AdamBeyond.Section3_Stochastic
+public import Transformer.AdamBeyond.Section4_AMSGrad
+public import Transformer.AdamBeyond.Section4_Abel
+public import Transformer.AdamBeyond.Section4_Regret
+public import Transformer.AdamBeyond.Section4_Corollary
+public import Transformer.AdamBeyond.Section5_AdamNC
+public import Transformer.AdamBeyond.Section5_Lemma
+public import Transformer.AdamBeyond.Section5_Regret
+public import Transformer.AdamBeyond.Section5_Corollary
+public import Transformer.AdamBeyond.AppendixG_Auxiliary
+
+/-!
 Formalization of:
   Reddi, Kale, Kumar,
   "On the Convergence of Adam and Beyond",
@@ -44,26 +70,4 @@ the proof of Kingma & Ba, the convergence of SGD and AdaGrad, cited from
 the literature, and the averaged variant of §4, stated with no bound.
 -/
 
-import Transformer.AdamBeyond.Section2_Adam
-import Transformer.AdamBeyond.Section3_Run
-import Transformer.AdamBeyond.Section3_Counter
-import Transformer.AdamBeyond.Section3_GenRun
-import Transformer.AdamBeyond.Section3_GenBlock
-import Transformer.AdamBeyond.Section3_GenStep
-import Transformer.AdamBeyond.Section3_GenRegret
-import Transformer.AdamBeyond.Section3_General
-import Transformer.AdamBeyond.Section3_Stoch
-import Transformer.AdamBeyond.Section3_StochBound
-import Transformer.AdamBeyond.Section3_StochCoins
-import Transformer.AdamBeyond.Section3_StochMean
-import Transformer.AdamBeyond.Section3_StochStep
-import Transformer.AdamBeyond.Section3_Stochastic
-import Transformer.AdamBeyond.Section4_AMSGrad
-import Transformer.AdamBeyond.Section4_Abel
-import Transformer.AdamBeyond.Section4_Regret
-import Transformer.AdamBeyond.Section4_Corollary
-import Transformer.AdamBeyond.Section5_AdamNC
-import Transformer.AdamBeyond.Section5_Lemma
-import Transformer.AdamBeyond.Section5_Regret
-import Transformer.AdamBeyond.Section5_Corollary
-import Transformer.AdamBeyond.AppendixG_Auxiliary
+@[expose] public section

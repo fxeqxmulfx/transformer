@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_Coefficients
+
+/-!
 # Independent-coordinate Gaussian noise
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1.
@@ -6,7 +10,7 @@ The model is a genuine product probability measure, rather than an
 assumed mean or covariance. Its signed covariance is diagonal.
 -/
 
-import Transformer.BatchSize.Section4_Coefficients
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

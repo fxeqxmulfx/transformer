@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_IsometryLaws
+
+/-!
 # Original neuron reflection geometry on the circle
 
 ArXiv:2601.21366v2, §5.2, `thm: circle`, and §6,
@@ -15,7 +19,7 @@ below supplies joint original witnesses without assuming a reflection
 or a strict-pattern point as part of any neuron definition.
 -/
 
-import Transformer.Perceptron.Section5_IsometryLaws
+@[expose] public section
 
 open Real Set
 

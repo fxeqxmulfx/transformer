@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.GPTMini.Model
+public import Mathlib.Analysis.SpecialFunctions.Exp
+
+/-!
 # Property: Output is a probability distribution
 
 After softmax over the logits, the output for each token position is a
@@ -9,8 +14,7 @@ probability distribution over the vocabulary:
 This is independent of the model parameters, depending only on `softmax`.
 -/
 
-import Transformer.GPTMini.Model
-import Mathlib.Analysis.SpecialFunctions.Exp
+@[expose] public section
 
 open scoped BigOperators
 open Real

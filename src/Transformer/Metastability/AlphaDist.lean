@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.Basic
+
+/-!
 # `α(ε)` at a pairwise-orthogonal frame
 
 arXiv:2410.06833v1, "Dynamic metastability in the self-attention model"
@@ -6,7 +10,7 @@ arXiv:2410.06833v1, "Dynamic metastability in the self-attention model"
 
 The deterministic half of `coro: cm`: a configuration whose points sit within
 `√ε` of a pairwise-orthogonal frame is `(β, ε)`-separated as soon as `β` is
-large enough that `γ(β) > 0`.  All of the content is the estimate
+large enough that `γ(β) > 0`. All of the content is the estimate
 
   `α(ε) ≤ 4ε + 4√ε`
 
@@ -17,7 +21,7 @@ The probabilistic half, and the corollary itself, are in
 `Metastability.InitialUniform`.
 -/
 
-import Transformer.Metastability.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -49,9 +53,9 @@ of height `1 - 2ε` is within `2√ε` of its centre.
 
 **What the source says and what is changed here.**  The proof of `coro: cm`
 asserts `α(ε) ≤ ε² + 2ε`, which is the bound the same expansion gives from
-`‖x - w_i‖ ≤ ε`.  Membership of `𝒮_i(2ε)` does not give that: the cap of
+`‖x - w_i‖ ≤ ε`. Membership of `𝒮_i(2ε)` does not give that: the cap of
 height `1 - 2ε` has Euclidean radius `2√ε`, since
-`‖x - w_i‖² = 2 - 2⟨x, w_i⟩ ≤ 4ε`.  The difference is not slack.  At an
+`‖x - w_i‖² = 2 - 2⟨x, w_i⟩ ≤ 4ε`. The difference is not slack. At an
 orthogonal frame the supremum is attained and equals `sin 2θ` with
 `cos θ = 1 - 2ε`, that is `4(1 - 2ε)√(ε(1 - ε))`; for every `ε` small enough
 this exceeds `ε² + 2ε`, so the source's bound is false, not merely loose.
@@ -110,9 +114,9 @@ of the `i`-th vector of a pairwise-orthogonal frame `w_1,…,w_n`, and
 then `(x_1,…,x_n)` is `(β, ε)`-separated in the sense of `hyp: init`, with
 `k = n` and the frame as the centres.
 
-Both conditions of `hyp: init` come out of the same estimate.  For the first,
+Both conditions of `hyp: init` come out of the same estimate. For the first,
 `‖x_i - w_i‖² = 2 - 2⟨x_i, w_i⟩ ≤ ε` puts `x_i` in `𝒮_i(ε)`, with room to
-spare.  For the second, `αDist_le_of_orthogonal` bounds `α(ε)` by `4ε + 4√ε`,
+spare. For the second, `αDist_le_of_orthogonal` bounds `α(ε)` by `4ε + 4√ε`,
 and `γ(β) = 1 - α - 8ε - β⁻¹ log(2n²/ε)` is then positive exactly when the
 displayed inequality holds.
 

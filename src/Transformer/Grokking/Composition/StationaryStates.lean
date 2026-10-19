@@ -1,5 +1,7 @@
-import Transformer.Grokking.Composition.Curvature
-import Mathlib.Analysis.Real.Sqrt
+module
+
+public import Transformer.Grokking.Composition.Curvature
+public import Mathlib.Analysis.Real.Sqrt
 
 /-!
 # Exact stationary states and a finite penalty threshold
@@ -19,6 +21,8 @@ These are equilibrium statements in two parameters, not global-minimum
 classification, a thermodynamic limit, convergence from initialization,
 native AdamW weight decay, or delayed held-out generalization.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Composition
 

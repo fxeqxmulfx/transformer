@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.RealAnalyticGerms.AnalyticPullback
+
+/-!
 # Joint witnesses for analytic germ representatives and pullbacks
 
 Nonconstant real functions supply the actual analytic representatives,
@@ -6,7 +10,7 @@ coordinate changes, and nonvanishing units. Auxiliary examples for
 Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.RealAnalyticGerms.AnalyticPullback
+@[expose] public section
 
 open Filter
 open scoped Topology

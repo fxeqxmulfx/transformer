@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Interpolation.Section5_IndependentClusters
+public import Transformer.Interpolation.Section5_DiracPersistence
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+
+/-!
 # Measure-to-measure interpolation — Generic discrete inputs
 
 Formalization of `Proposition prop:generic-discrete` of arXiv:2411.04551v3:
@@ -8,10 +15,7 @@ points almost surely — the `O(1)`-switch regime the survey contrasts with the
 `O(d · N)` bound of `prop: compression`.
 -/
 
-import Transformer.Interpolation.Section5_IndependentClusters
-import Transformer.Interpolation.Section5_DiracPersistence
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -41,7 +45,7 @@ theorem genericParams_eq_pureAttentionParams (d : ℕ) (β : ℝ) :
 Let `d ≥ 3`, let `ref` be the uniform measure on `(𝕊^{d-1})^n` — identified with
 the empirical measures `𝒮_n` — and sample `μ_0^1, …, μ_0^N` i.i.d. from `π`.
 For `eq: cauchy.pb` with `𝐁 ≡ β I_d`, `𝐕 ≡ I_d`, `𝐖 ≡ 0`, let `x_*^i` be the
-almost surely existing cluster point of `μ^i(t)`.  Then
+almost surely existing cluster point of `μ^i(t)`. Then
 
   `ℙ[x_*^i ≠ x_*^j] = 1`   for `i ≠ j`.
 
@@ -62,7 +66,7 @@ Dirac `ref` charges one configuration, and for `N ≥ 2` a constant cluster map
 then makes `{f(X^i) ≠ f(X^j)}` null instead of full.
 
 One further condition the survey leaves implicit is written out, and it is not
-a weakening but a repair: `n ≥ 1`.  For `n = 0` the empirical measure of the
+a weakening but a repair: `n ≥ 1`. For `n = 0` the empirical measure of the
 empty tuple is the zero measure, which no probability measure equals, so the
 cluster hypothesis would hold vacuously.
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.BlockSpread
+
+/-!
 # The feed-forward term of parameter-golf is bounded and Lipschitz on the sphere
 
 **Not a statement of any paper.**  The feed-forward term of a block of
@@ -10,24 +14,24 @@ parameter-golf (github.com/openai/parameter-golf,
 
 with the leaky ReLU `σ_α(a) = a` for `a > 0` and `α a` otherwise, at `α = 1/2`
 (`F.leaky_relu(·, negative_slope=0.5).square()`; the fused kernel
-`linear_leaky_relu_square_kernel` computes the same), and no bias.  The block
+`linear_leaky_relu_square_kernel` computes the same), and no bias. The block
 multiplies the output by `mlp_scale` and the input, the RMS norm of the stream,
 by `ln_scale_factor`; on the sphere the RMS norm is `√d x`, so all three
 factors are linear and go into `W₁` and `W₂`.
 
 On the unit ball, `‖G(x)‖ ≤ ‖W₂‖ ‖W₁‖²` (`norm_sqMLP_le`) and `G` is
-`2 ‖W₂‖ ‖W₁‖²`-Lipschitz (`norm_sqMLP_sub_le`).  With the residual weight
+`2 ‖W₂‖ ‖W₁‖²`-Lipschitz (`norm_sqMLP_sub_le`). With the residual weight
 beside it as the linear term `D = mix[0] - 1`, the feed-forward part of the
 block is bounded by `‖D‖ + ‖W₂‖ ‖W₁‖²` and `(‖D‖ + 2 ‖W₂‖ ‖W₁‖²)`-Lipschitz on
 the sphere (`norm_add_sqMLP_le`, `norm_add_sqMLP_sub_le`): the bounds that
 `IsBoundedBlockOn` asks of a feed-forward term, with constants read off the
-weights.  `Perspective.BlockMLPSpread` draws the consequence.
+weights. `Perspective.BlockMLPSpread` draws the consequence.
 
 What stays out: in the block the feed-forward term reads the stream after
 attention, here the token `x_i`; the tokens live on the sphere.
 -/
 
-import Transformer.Perspective.BlockSpread
+@[expose] public section
 
 open scoped BigOperators
 
@@ -140,7 +144,7 @@ theorem norm_sqMLP_sub_le {α : ℝ} (hα : |α| ≤ 1) (W₁ : EucSpace d →L[
 
 /-- **Beside the residual weight, the feed-forward term is bounded on the
 sphere:** `‖D x + W₂ σ_α(W₁ x)²‖ ≤ L + K₂ K₁²` for `‖D‖ ≤ L`, `‖W₁‖ ≤ K₁`,
-`‖W₂‖ ≤ K₂` and `|α| ≤ 1`.  `D` stands for `mix[0] - 1`. -/
+`‖W₂‖ ≤ K₂` and `|α| ≤ 1`. `D` stands for `mix[0] - 1`. -/
 theorem norm_add_sqMLP_le {α L K₁ K₂ : ℝ} (hα : |α| ≤ 1) {D : EucSpace d →L[ℝ] EucSpace d}
     {W₁ : EucSpace d →L[ℝ] EucSpace m} {W₂ : EucSpace m →L[ℝ] EucSpace d} (hD : ‖D‖ ≤ L)
     (hW₁ : ‖W₁‖ ≤ K₁) (hW₂ : ‖W₂‖ ≤ K₂) (x : SSphere d) :

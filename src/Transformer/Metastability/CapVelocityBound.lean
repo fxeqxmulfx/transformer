@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.Metastability.CapVelocity
+
+/-!
 # Metastability — the softmax velocity, bounded below by a cap's variance
   (behind `rem: variance` of 2410.06833v1)
 
 `inner_proj_softmax_eq` splits the tested `SA` velocity into a gap sum and a
 variance sum; here both are bounded below token by token, which gives the
 remark's inequality with the paper's leakage constant `n e^{-(1-α)β}`
-(`inner_proj_softmax_ge`).  A statement about a plain tuple of unit vectors:
+(`inner_proj_softmax_ge`). A statement about a plain tuple of unit vectors:
 no dynamics, no cap, no time.
 -/
 
-import Transformer.Metastability.CapVelocity
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -54,7 +58,7 @@ complement is `α`-separated from `x_K`,
       ≥ η Σ_{j ∈ P} a_{Kj} ‖x_j - x_K‖²/2 - n e^{-(1-α)β}`.
 
 Token by token, in the two sums of `inner_proj_softmax_eq`: a token of `P`
-contributes a nonnegative gap `⟨x_j, w⟩ - η` and its variance term.  A token
+contributes a nonnegative gap `⟨x_j, w⟩ - η` and its variance term. A token
 outside contributes, gap and variance term together,
 `a_{Kj} ⟨x_j, w - η x_K⟩ ≥ -a_{Kj} ‖w - η x_K‖ = -a_{Kj} √(1 - η²) ≥ -a_{Kj}`,
 against a weight `a_{Kj} ≤ e^{βα}/e^{β} = e^{-(1-α)β}` — the partition

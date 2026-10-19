@@ -1,4 +1,12 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.FDeriv.Analytic
+public import Mathlib.Analysis.Analytic.Linear
+public import Mathlib.Analysis.Analytic.Constructions
+public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv
+public import Mathlib.Analysis.Calculus.FDeriv.Pow
+
+/-!
 # Analytic branches of nonsingular systems
 
 The regular step in analytic curve selection is an implicit-function
@@ -7,9 +15,7 @@ analyticity and local uniqueness of the branch. Singular systems still
 require analytic preparation and ramification.
 -/
 
-import Mathlib.Analysis.Calculus.FDeriv.Analytic
-import Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv
-import Mathlib.Analysis.Calculus.FDeriv.Pow
+@[expose] public section
 
 open Filter
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section3_Encoder
+
+/-!
 # IC-EoT: signed affine expressivity of the expanded input
 
 arXiv:2603.22095v2, §2.2.2 and §3.2, Eq. (13). A negative copy of an
@@ -8,7 +12,7 @@ This explains decreasing physical relationships without claiming arbitrary
 non-convex expressivity.
 -/
 
-import Transformer.ICEoT.Section3_Encoder
+@[expose] public section
 
 noncomputable section
 

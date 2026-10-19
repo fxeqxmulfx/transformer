@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_UniformCovariance
+
+/-!
 # Smooth drift, covariance and diffusion amplitude
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -8,7 +12,7 @@ each diagonal covariance smooth at every state for a positive learning rate.
 These are coefficient results, not an assumed stochastic existence theorem.
 -/
 
-import Transformer.BatchSize.Section4_UniformCovariance
+@[expose] public section
 
 noncomputable section
 

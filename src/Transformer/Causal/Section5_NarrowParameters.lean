@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section5_ForceRatio
+public import Transformer.Causal.Section5_NarrowWindow
+
+/-!
 # A narrow neighborhood derived from the original parameters
 
 ArXiv:2411.04990v2, §5, `thm:fixed_centers` and its proof.
@@ -21,8 +26,7 @@ far monotonicity. The final estimates apply directly to the
 original force and curvature of the critical-point induction.
 -/
 
-import Transformer.Causal.Section5_ForceRatio
-import Transformer.Causal.Section5_NarrowWindow
+@[expose] public section
 
 open Real Set
 

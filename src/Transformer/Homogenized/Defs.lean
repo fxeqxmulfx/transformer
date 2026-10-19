@@ -1,11 +1,17 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.Matrix.MeasurableSpace
+public import Mathlib.Analysis.Normed.Module.RCLike.Basic
+
+/-!
 # Homogenized Transformers — the model
 
 Formalization of the setup of arXiv:2604.01978v1, *Homogenized Transformers*
 (Geshkovski, Koubbi, Rigollet), §2.1 and §5.
 
 An encoder, attention-only Transformer whose head parameters
-`θ = (V, A) ∈ Θ = (ℝ^{d×d})²` are i.i.d. across heads and layers.  Tokens live
+`θ = (V, A) ∈ Θ = (ℝ^{d×d})²` are i.i.d. across heads and layers. Tokens live
 on `𝕊^{d-1}` and move by `eq:update_tokens`,
 
   `x_i^{ℓ+1} = N(x_i^ℓ + (η/H) Σ_{h=1}^H B_{θ_h^ℓ}[μ_{X^ℓ}](x_i^ℓ))`,
@@ -19,9 +25,7 @@ drift-fluctuation splitting `B = b_{ρ*} + ξ_θ`, the projected kernels `b` and
 `α = η σ²/H` of `eq:Alpha_Sec2`.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.Matrix.MeasurableSpace
-import Mathlib.Analysis.Normed.Module.RCLike.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

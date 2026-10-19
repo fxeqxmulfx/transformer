@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.CollapseTime
+
+/-!
 # Metastability — bounds on the collapse time `T₁`
 
 The collapse time `T₁ = t_a + t_b` of `Metastability.CollapseTime` satisfies, for `r = 8ε`
@@ -11,7 +15,7 @@ and `δ = e^{-λβ} < r` (arXiv:2410.06833v1, §2, `eq: an.ineq` and the bound o
 * `collapseTime_pos` — `T₁ > 0`.
 -/
 
-import Transformer.Metastability.CollapseTime
+@[expose] public section
 
 open Real Set
 

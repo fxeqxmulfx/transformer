@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section4_SecondOverlap
+public import Transformer.Causal.Section4_FlowContinuity
+
+/-!
 # Original weight sensitivity and antipodal follower geometry
 
 ArXiv:2411.04990v2, §4, proof of `thm1`.
@@ -18,8 +23,7 @@ term and the small weight-variation error in the original antipodal
 instability argument.
 -/
 
-import Transformer.Causal.Section4_SecondOverlap
-import Transformer.Causal.Section4_FlowContinuity
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.Certificate.Counts
+module
+
+public import Transformer.GPTMini.Sparsemax.Certificate.Counts
 
 /-!
 # Exact accuracy of the actual final prediction table
@@ -8,6 +10,8 @@ prime 193 and the frozen 25% split. Counts have already been checked by
 the kernel on every exported record. These statements report rational
 accuracy; the PyTorch export remains a separately measured trust boundary.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Sparsemax.Certificate
 

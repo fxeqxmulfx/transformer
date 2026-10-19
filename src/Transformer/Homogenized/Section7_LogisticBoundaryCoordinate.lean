@@ -1,4 +1,6 @@
-import Transformer.Homogenized.Section7_LogisticArcsinTests
+module
+
+public import Transformer.Homogenized.Section7_LogisticArcsinTests
 
 /-!
 # A globally bounded coordinate for logistic interval invariance
@@ -17,6 +19,8 @@ These identities permit smooth negative-part tests without stopping
 the original process or assuming the interval invariance being proved.
 The bounds 20 and 8 are auxiliary proof constants, not source constants.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

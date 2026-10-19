@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Muon.AppendixA_RMS
+
+/-!
 # Muon — shape-dependent and direct RMS scaling
 
 arXiv:2502.16982, §2.2 and §3.1. Shape scaling cancels the dimension factor
@@ -7,7 +11,7 @@ actual RMS, provided that RMS is positive; the zero-update exception is
 made explicit rather than hidden in division.
 -/
 
-import Transformer.Muon.AppendixA_RMS
+@[expose] public section
 
 open scoped BigOperators Matrix
 

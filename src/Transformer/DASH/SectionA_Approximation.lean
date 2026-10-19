@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_OptimizedClenshaw
+
+/-!
 # DASH — transferring scalar approximation accuracy to matrices
 
 arXiv:2602.02016v2, Appendix A. A verified scalar approximation bound
@@ -6,7 +10,7 @@ controls the matrix polynomial in Frobenius norm. The normalized target
 and the output rescaling are explicit.
 -/
 
-import Transformer.DASH.SectionA_OptimizedClenshaw
+@[expose] public section
 
 open scoped BigOperators Matrix
 

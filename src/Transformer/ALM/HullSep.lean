@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.ALM.HullNear
+
+/-!
 # How far apart the keys have to be, and what happens below that
 
 `Transformer.ALM.HullNear` answers a query by the nearest key, and pays for it
 with integrality: `sq_dist_gap_of_near_int` uses `z ≠ z'` only to get
-`1 ≤ |z' - z|`.  On the shipped model that hypothesis is not free — the keys
+`1 ≤ |z' - z|`. On the shipped model that hypothesis is not free — the keys
 are a matvec through the residual stream, and `alm-hull/src/lift.rs` counts
-`576` of `137 389` of them non-integer on `hello` alone.  So the real question
+`576` of `137 389` of them non-integer on `hello` alone. So the real question
 is not whether a key is an integer but how close two keys can get, and the
 answer should be a number.
 
-It is `sqrt A`.  With the keys `sep` apart the window around a key widens or
+It is `sqrt A`. With the keys `sep` apart the window around a key widens or
 narrows as `(sep^2 - A) / (2 * sep)` (`sq_dist_gap_of_sep`), which is
 `HullNear`'s `(1 - A) / 2` at `sep = 1` and closes entirely at `sep^2 = A`.
 Below that the nearest-key rule is not merely unproved, it is false:
@@ -18,7 +22,7 @@ one wins *at the nearer one's own abscissa*, which is the one query
 `Transformer.ALM.HullMark.lineEval_markKey_self` was about.
 
 For the shipped `A = LATEST_ALPHA / log 2` the floor is between `0.657` and
-`0.659` (`the_shipped_separation_floor`).  That is the threshold a live head has
+`0.659` (`the_shipped_separation_floor`). That is the threshold a live head has
 to clear for the ordered-set reduction to be sound, and it is a quantity a run
 can measure: the minimum distance between two keys in one head.
 
@@ -26,7 +30,7 @@ Source: `alm-compile/src/graph.rs` lines 231-264; `alm-hull/src/lift.rs`, whose
 `noninteger` count is the hypothesis this file replaces.
 -/
 
-import Transformer.ALM.HullNear
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -36,7 +40,7 @@ namespace ALM
 /-- **A key `sep` from its neighbours owns a window of `(sep² - A) / (2·sep)`.**
 The lead of the nearer key is `M² - 2uM` in the neighbour's offset `M` and the
 query's offset `u`; over `|M| ≥ sep` that is least at `|M| = sep`, where it is
-`sep² - 2|u|·sep`.  Asking it to exceed the offset spread `A` is asking
+`sep² - 2|u|·sep`. Asking it to exceed the offset spread `A` is asking
 `|u| < (sep² - A) / (2·sep)`, and nothing else.
 
 `Transformer.ALM.HullNear.sq_dist_gap_of_near_int` is this at `sep = 1`. -/
@@ -91,7 +95,7 @@ example : lineEval (markKey 0.44 (0.7 : ℝ)) 0.03 < lineEval (markKey 0 (0 : �
 /-- **Two keys closer than `√A` and the nearer one loses at its own
 abscissa.**  `HullMark.lineEval_markKey_self` says a key scores `k² + δ` at its
 own key; a neighbour `d` away scores `k² - d² + δ'`, so a later write `d` away
-with `d² < δ' - δ` outscores it there.  At `δ = 0`, `δ' = A` that is `d² < A`.
+with `d² < δ' - δ` outscores it there. At `δ = 0`, `δ' = A` that is `d² < A`.
 
 This is not a rounding effect and not an edge case of the search: there is no
 query at which the nearer key is the answer while the further key is nearer to
@@ -125,7 +129,7 @@ example : |(0 : ℝ) - 0| < |(0 : ℝ) - (0 + 0.65)| ∧
 the offset spread (`HullMark.marked_sep_of_shipped`), and the separation a live
 head must clear is its square root: at `0.657` `nearest_fails_of_close` already
 applies, at `0.659` `sq_dist_gap_of_sep` gives a window and the head answers
-with the nearest key.  Two thirds of a key step — which unit keys clear by half
+with the nearest key. Two thirds of a key step — which unit keys clear by half
 again, and which nothing in the compiler guarantees of a key that came out of a
 matvec.
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Generator
+
+/-!
 # Homogenized Transformers — well-posedness of the SDE on the sphere product
 
 Formalization of `prop:existence_SDE_sphere` of arXiv:2604.01978v1,
@@ -7,7 +11,7 @@ Formalization of `prop:existence_SDE_sphere` of arXiv:2604.01978v1,
   `dX = B(X) dt + ∫_Θ G(X,θ) W(dθ,dt)`
 
 on `(𝕊^{d-1})^n` has, for every starting configuration, a unique global
-solution.  The source proves it by citing `[gess2024rsgd, Proposition 4.2]`
+solution. The source proves it by citing `[gess2024rsgd, Proposition 4.2]`
 and noting that `(𝕊^{d-1})^n` is compact, so the explosion time is infinite.
 
 **What the source says and what is carried here.**
@@ -15,14 +19,14 @@ and noting that `(𝕊^{d-1})^n` is compact, so the explosion time is infinite.
 * The solution concept is `def: ito.formula`, which `Generator.lean` renders in
   the only form Mathlib can carry — Mathlib has no stochastic integral and no
   cylindrical Wiener process — namely the one-dimensional marginal flow
-  `d/dt E φ(X(t)) = E (𝖫 φ)(X(t))` of `IsItoSolution`.  Existence is therefore
+  `d/dt E φ(X(t)) = E (𝖫 φ)(X(t))` of `IsItoSolution`. Existence is therefore
   existence of a process with that marginal flow.
 
 * "Unique" in the source is pathwise uniqueness of a strong solution, which
-  cannot be written at all without the stochastic integral.  What is written
+  cannot be written at all without the stochastic integral. What is written
   here is its shadow at the level `IsItoSolution` lives at: any two processes
   with the marginal flow and the same starting configuration have the same
-  one-dimensional marginals.  That is a genuine consequence of the source's
+  one-dimensional marginals. That is a genuine consequence of the source's
   claim — pathwise uniqueness gives uniqueness in law, hence well-posedness of
   the martingale problem, hence uniqueness of the marginals — and it is
   strictly weaker; the difference is what the missing stochastic integral costs.
@@ -38,7 +42,7 @@ and noting that `(𝕊^{d-1})^n` is compact, so the explosion time is infinite.
 Source: arXiv:2604.01978v1, `prop:existence_SDE_sphere`, `def: ito.formula`.
 -/
 
-import Transformer.Homogenized.Generator
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -48,7 +52,7 @@ namespace Homogenized
 
 /-- **Proposition (prop:existence_SDE_sphere).**  Let `B ∈ C¹` and, for
 `ρ*`-a.e. `θ`, `G(·,θ) ∈ C²` be tangent fields on `(𝕊^{d-1})^n` with
-`G(x,·) ∈ L²(ρ*)`.  Then for every `x ∈ (𝕊^{d-1})^n` the Itô SDE
+`G(x,·) ∈ L²(ρ*)`. Then for every `x ∈ (𝕊^{d-1})^n` the Itô SDE
 `eq: ito.sde.final` has a global solution started at `x`, and its
 one-dimensional marginals are unique.
 

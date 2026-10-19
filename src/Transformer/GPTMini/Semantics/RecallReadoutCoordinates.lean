@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallFinalState
+module
+
+public import Transformer.GPTMini.Semantics.RecallFinalState
 
 /-!
 # Actual tied recall scores and compact categorical margins
@@ -17,6 +19,8 @@ times the compact code inner product. Identical symbols have product
 four; distinct symbols have product at most three. Full raw routing
 and error bounds must supply that reference; it is not a model input.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

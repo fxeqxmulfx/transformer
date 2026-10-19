@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.PrototypeKernelFeatures
+module
+
+public import Transformer.GPTMini.Sparsemax.PrototypeKernelFeatures
 
 /-!
 # Exact compact interpolation through one common learned memory
@@ -19,6 +21,8 @@ This is finite-sample compactness. Dense Gram parameters still grow
 quadratically with prototype count, and arbitrary unseen outputs or efficient
 generalization are not guaranteed. No FFN or task loss is selected.
 -/
+
+@[expose] public section
 
 noncomputable section
 

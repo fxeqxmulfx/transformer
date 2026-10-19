@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.Basic
-import Mathlib.Topology.Order.IntermediateValue
+module
+
+public import Transformer.GPTMini.Sparsemax.Basic
+public import Mathlib.Topology.Order.IntermediateValue
 
 /-!
 # Closed form of the actual causal simplex projection
@@ -10,6 +12,8 @@ to positions at most the query. We prove the clipped-threshold formula
 for the existing variational `sparseWeights`, rather than defining its
 optimality or its derivative into a new weight function.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section4_Hyperplanes
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+
+/-!
 # The emergence of clusters in self-attention dynamics — adding a
   feed-forward layer
 
@@ -38,8 +43,7 @@ Source: arXiv:2305.05465v6, `sec:conclusion`, `eq: mlp.transfo`, Figure
 `fig: last.pdf`; `l:3hyperplanes11`.
 -/
 
-import Transformer.Clusters.Section4_Hyperplanes
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -121,7 +125,7 @@ theorem mlpRescaledDynamics_id_iff (Q K V : ParamMatrix d) (Z : ℝ → Idx n �
 
 /-- **A configuration of equal tokens is stationary**, for any activation
 fixing `0`: the drift of `e:Rres` vanishes there and `σ` and `W` keep it at
-`0`.  This is the solution in closed form that witnesses the hypotheses
+`0`. This is the solution in closed form that witnesses the hypotheses
 below. -/
 theorem mlpRescaledDynamics_const (W : ParamMatrix d) {σ : ℝ → ℝ} (hσ : σ 0 = 0)
     (Q K V : ParamMatrix d) (z : EucSpace d) :

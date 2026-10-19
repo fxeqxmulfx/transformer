@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_DependentDistance
+public import Transformer.Zoology.Section4_PairedRecall
+
+/-!
 # Parallel lookup at a finite set of input-dependent distances
 
 Arora et al., arXiv:2312.04927v1, Appendix `sec: data-dep-ar`,
@@ -9,8 +14,7 @@ distance and exclude the zero shift. The paper's autocorrelation procedure
 is not proved to provide that coverage by this result.
 -/
 
-import Transformer.Zoology.Appendix_DependentDistance
-import Transformer.Zoology.Section4_PairedRecall
+@[expose] public section
 
 open scoped BigOperators
 

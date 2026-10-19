@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section5_Process
+
+/-!
 # Attention's forward pass and Frank-Wolfe — one softmax step contracts
 
 Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
@@ -8,14 +12,14 @@ Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
 A step of `eq: softmax.ODE` moves each particle to a convex combination of the
 configuration whose weights are the attention scores, so it stays in the convex
 hull (`softmaxStep_mem_configHull`), and on a bounded configuration every score
-is at least one constant `c > 0` (`attWeight_ge`).  In any direction `u` the
+is at least one constant `c > 0` (`attWeight_ge`). In any direction `u` the
 spread `max_j ⟨u, x_j⟩ - min_j ⟨u, x_j⟩` then shrinks by the factor `1 - γc`;
 taking for `u` the difference of two particles, so does every pairwise distance
-(`norm_sub_softmaxStep_le`).  A step moves a particle by at most the diameter
+(`norm_sub_softmaxStep_le`). A step moves a particle by at most the diameter
 (`norm_softmaxStep_sub_le`).
 -/
 
-import Transformer.FrankWolfe.Section5_Process
+@[expose] public section
 
 open scoped BigOperators
 open Real

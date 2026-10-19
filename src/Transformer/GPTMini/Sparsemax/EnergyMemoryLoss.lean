@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.EnergyMemoryIdentification
+module
+
+public import Transformer.GPTMini.Sparsemax.EnergyMemoryIdentification
 
 /-!
 # Convex ordinary output error selects nontrivial attention
@@ -13,6 +15,8 @@ An explicit lower bound holds after all values are relearned at the opposite
 edge allocation. Thus geometry affects attainable ordinary output error,
 even though the chart's unconstrained partial formula remains MZ.
 -/
+
+@[expose] public section
 
 noncomputable section
 

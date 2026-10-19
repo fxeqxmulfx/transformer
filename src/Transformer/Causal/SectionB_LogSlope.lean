@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.SectionB_LogSlopeAlgebra
+
+/-!
 # The original interaction's actual logarithmic force slope
 
 ArXiv:2411.04990v2, Appendix B and §5, the force-window
@@ -18,7 +22,7 @@ strictly less than `2/tau`. All identities concern the original
 interaction functions, rather than a replacement potential.
 -/
 
-import Transformer.Causal.SectionB_LogSlopeAlgebra
+@[expose] public section
 
 open Real Set
 

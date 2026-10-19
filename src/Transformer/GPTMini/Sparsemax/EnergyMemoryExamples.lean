@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.EnergyCoupledMemory
-import Mathlib.Data.Matrix.ColumnRowPartitioned
+module
+
+public import Transformer.GPTMini.Sparsemax.EnergyCoupledMemory
+public import Mathlib.Data.Matrix.ColumnRowPartitioned
 
 /-!
 # Nonidentity coupled-energy witnesses with all common values learned
@@ -15,6 +17,8 @@ congruence, not by assuming a factorization certificate. The actual original
 common value table is recovered, and happens to equal the answers in these
 witnesses. Subsequent necessity results show the labels selecting the edge.
 -/
+
+@[expose] public section
 
 noncomputable section
 

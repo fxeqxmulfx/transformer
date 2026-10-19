@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_ReLUObstruction
+
+/-!
 # Finite original support for stationary ReLU probabilities on the circle
 
 ArXiv:2601.21366v2, §5.2, proof of `thm: circle`.
@@ -24,7 +28,7 @@ for every actual original uniform law. A positive-measure pattern would
 make its original analytic branch zero globally, giving the contradiction.
 -/
 
-import Transformer.Perceptron.Section5_ReLUObstruction
+@[expose] public section
 
 open Real MeasureTheory Set
 

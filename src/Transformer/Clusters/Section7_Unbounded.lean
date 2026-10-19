@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_LogSumExp
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # The emergence of clusters in self-attention dynamics — unbounded particles
 
 §7 of arXiv:2305.05465v6, `s:unbounded`: in `d = 1`, a token that does not
@@ -9,13 +14,13 @@ self-attention matrix becomes a standard basis row.
 
 * §7 orders the tokens once and for all by `x_1(0) < … < x_n(0)`, which
   `l:distnondec` then preserves; `IsOrderedConfig` is that hypothesis, and the
-  extreme indices `1` and `n` are `0` and `Fin.last m` for `n = m + 1`.  The
+  extreme indices `1` and `n` are `0` and `Fin.last m` for `n = m + 1`. The
   `d = 1` coordinate of a token is `X t i 0`.
 
 * `l:auxiliary` names `A` as "the unique positive real number satisfying
-  `A² = n² exp(-A²)`".  Its existence is proved — `exists_auxiliary_constant`
+  `A² = n² exp(-A²)`". Its existence is proved — `exists_auxiliary_constant`
   — and `A` is then carried as a hypothesis, as the lemma states it.
-  Uniqueness is not used by the lemma and is not carried.  The lemma itself
+  Uniqueness is not used by the lemma and is not carried. The lemma itself
   is proved in `Section7_Auxiliary.lean`.
 
 * "converges with doubly exponential rate" in `l:unboundedparticles` is read
@@ -33,8 +38,7 @@ Source: arXiv:2305.05465v6, `l:auxiliary`, `l:unboundedparticles`,
 `Section7_ExactAsymptotic.lean`.
 -/
 
-import Transformer.Clusters.Section7_LogSumExp
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -60,7 +64,7 @@ theorem isOrderedConfig_subsingleton (X : Idx 1 → EucSpace 1) : IsOrderedConfi
 
 /-- **The one-token solution of `e:Idnonresca`.**  With `n = 1` the only
 attention weight is `1`, so the equation is `ẋ = x` and `x(t) = e^t z` solves
-it.  This is the solution in closed form that witnesses the hypotheses of
+it. This is the solution in closed form that witnesses the hypotheses of
 §7. -/
 theorem idNonrescaledDynamics_single (z : EucSpace d) :
     IdNonrescaledDynamics (n := 1) (fun t _ => Real.exp t • z) := by
@@ -105,7 +109,7 @@ theorem exists_auxiliary_constant (n : ℕ) (hn : 0 < n) :
 /-! ### `l:unboundedparticles` and `l:exactasymptotic` -/
 
 /-- A token is uniformly bounded in time when one radius holds it for every
-`t ≥ 0`.  This is membership in `L^∞([0,+∞))` for a continuous curve.
+`t ≥ 0`. This is membership in `L^∞([0,+∞))` for a continuous curve.
 
 Source: arXiv:2305.05465v6, `l:unboundedparticles`, `l:onlyone`. -/
 def IsBoundedToken (X : ℝ → Idx n → EucSpace 1) (i : Idx n) : Prop :=

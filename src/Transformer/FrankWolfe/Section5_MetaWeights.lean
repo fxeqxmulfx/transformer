@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section5_Process
+
+/-!
 # Attention's forward pass and Frank-Wolfe — the score of another group
 
 `lem: metastab.1`, `cl: group.cluster.bound`: when every particle sits near its own vertex, the
 attention scores a particle gives to particles of another group add up to at most
-`n e^{-β c₀ / 2}`.  The proof compares each such score with the score of the particle for itself.
+`n e^{-β c₀ / 2}`. The proof compares each such score with the score of the particle for itself.
 -/
 
-import Transformer.FrankWolfe.Section5_Process
+@[expose] public section
 
 open scoped BigOperators
 open Real

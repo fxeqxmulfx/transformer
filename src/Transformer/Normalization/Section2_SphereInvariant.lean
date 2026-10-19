@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Normalization.Section2_RadialInvariant
+
+/-!
 # Normalization — Pre-LN and Peri-LN preserve the sphere
 
 The direction variables in arXiv:2510.22026v2, §2, equation (NA), lie on
@@ -15,7 +19,7 @@ The singleton identity model supplies actual solutions of both schemes:
 the direction is fixed and the radius grows at rate one.
 -/
 
-import Transformer.Normalization.Section2_RadialInvariant
+@[expose] public section
 
 open scoped BigOperators
 open Real Set

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.SpherePolar
+
+/-!
 # Null sets of the uniform law are cones of Lebesgue-null sets
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -7,13 +11,13 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 Polar coordinates `x_i = r_i u_i`, one for each of the `n` particles, identify
 `(ℝ^d ∖ 0)^n` with `(𝕊^{d-1})^n × (0, ∞)^n` (`tuplePolar`) and carry Lebesgue
 measure to the product of the surface measures and of `n` copies of
-`r^{d-1} dr` (`measurePreserving_tuplePolar`).  The cone over a set `A` of
+`r^{d-1} dr` (`measurePreserving_tuplePolar`). The cone over a set `A` of
 configurations — the tuples of nonzero vectors whose directions lie in `A`
-(`sphereCone`) — is the preimage of `A × (0, ∞)^n`.  So its Lebesgue measure is
+(`sphereCone`) — is the preimage of `A × (0, ∞)^n`. So its Lebesgue measure is
 the surface measure of `A` times that of `(0, ∞)^n`, which is not `0`
 (`volume_sphereCone`), and `A` is null for the uniform law exactly when its cone
 is Lebesgue-null (`measure_eq_zero_iff_volume_sphereCone`), for every `A`,
-measurable or not.  Hence:
+measurable or not. Hence:
 
 * a property of the directions `x_i / ‖x_i‖` holds for Lebesgue-almost every
   `x ∈ (ℝ^d)^n` exactly when it holds `P`-almost surely (`ae_iff_ae_volume`);
@@ -30,7 +34,7 @@ Source: arXiv:2312.10794v5, §4 (the "Lebesgue almost any
 sets of `l:nosaddleconv`).
 -/
 
-import Transformer.Perspective.SpherePolar
+@[expose] public section
 
 open MeasureTheory Set Metric
 
@@ -139,7 +143,7 @@ theorem measure_eq_zero_iff_volume_sphereCone (hd : 1 ≤ d) {P : Measure (Spher
 
 /-- **Almost every configuration is almost every direction:** a property of the
 directions `x_i / ‖x_i‖` holds for Lebesgue-almost every `x ∈ (ℝ^d)^n` exactly
-when it holds `P`-almost surely.  The tuples with a zero vector are null. -/
+when it holds `P`-almost surely. The tuples with a zero vector are null. -/
 theorem ae_iff_ae_volume (hd : 1 ≤ d) {P : Measure (SphereTuple d n)} (hP : UniformTuple d n P)
     {p : SphereTuple d n → Prop} :
     (∀ᵐ X ∂P, p X) ↔ ∀ᵐ x ∂(volume : Measure (Idx n → EucSpace d)), p (tupleNormalize hd x) := by

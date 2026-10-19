@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.BlockXSA
+
+/-!
 # Blocks with exclusive heads do not collapse, one block or a stack
 
 **Not a statement of any paper.**  `IsDrivenFlowOn.spread` for the drive of a
@@ -6,13 +10,13 @@ block whose heads are exclusive (`Perspective.BlockXSA`): if two differences of
 injections `z_k - z_l`, `z_m - z_p` are linearly independent throughout a window
 of length `τ`, some time of the window has two tokens more than `δ` apart, and
 `δ` is fixed by the two differences, the bounds of the block and `τ` alone
-(`xsaDrive_spread`).  For a stack of blocks, each on its own window and each
+(`xsaDrive_spread`). For a stack of blocks, each on its own window and each
 with its own weights, values, output maps, feed-forward term and injections, one
 `δ` serves every block (`xsaDrive_stack`).
 
 Against `blockDrive_spread` the gain is the hypothesis that is gone: the rows of
 a head no longer need one common sum, because the projection of `eq:xsa`
-(arXiv:2603.09078v1, §3) makes each head small by itself near a cluster.  So the
+(arXiv:2603.09078v1, §3) makes each head small by itself near a cluster. So the
 per-head, per-token gates of parameter-golf — `σ(w · x_i)` on the output of head
 `h`, a gate on its row by `smul_xsaProj` — are covered with `A = 1`, and the
 record's attention, XSA on all `11` layers with a sigmoid gate, is a drive of
@@ -24,7 +28,7 @@ RMS-normalised in `ℝ^d`, and the attention reads `x` rather than
 `mix[0] ⊙ x + mix[1] ⊙ x0`.
 -/
 
-import Transformer.Perspective.BlockXSA
+@[expose] public section
 
 open scoped BigOperators
 
@@ -35,13 +39,13 @@ variable {d : ℕ}
 
 /-- **Theorem (a block with exclusive heads and injections does not collapse).**
 Let `w₁`, `w₂` be linearly independent, `H` a number of heads,
-`A, N, K, B, L_G, Z ≥ 0` and `τ > 0`.  There is `δ > 0` such that along every
+`A, N, K, B, L_G, Z ≥ 0` and `τ > 0`. There is `δ > 0` such that along every
 flow `ẋ_i = Proj_{x_i}(v_i(t))` driven by an exclusive block (`xsaDrive`) on a
 window `[t₀, t₀ + τ]`, with the bounds `IsBoundedXSABlockOn` there and
 `z_k - z_l = w₁`, `z_m - z_p = w₂` throughout, some time of the window has two
-tokens more than `δ` apart.  `δ` depends on `w₁`, `w₂`, `H`, `A`, `N`, `K`, `B`,
+tokens more than `δ` apart. `δ` depends on `w₁`, `w₂`, `H`, `A`, `N`, `K`, `B`,
 `L_G`, `Z` and `τ` only — not on the number of tokens, the width of a head, the
-flow, the weights, the values, the feed-forward term or `t₀`.  For softmax
+flow, the weights, the values, the feed-forward term or `t₀`. For softmax
 attention gated by `g ∈ [0, 1]`, `A = 1`, whatever `β`, `Q`, `K` and `g`.
 
 Source: none — posed here, as `blockDrive_spread` with the heads of `eq: albert`
@@ -71,11 +75,11 @@ theorem xsaDrive_spread {w₁ w₂ : EucSpace d} (hw : LinearIndependent ℝ ![w
 
 /-- **Theorem (a stack of different exclusive blocks does not collapse).**  Let
 every block `b` of `nb` come with linearly independent `w₁ b`, `w₂ b`, and let
-`H`, `A, N, K, B, L_G, Z ≥ 0` and `τ > 0` bound them all.  There is one `δ > 0`
+`H`, `A, N, K, B, L_G, Z ≥ 0` and `τ > 0` bound them all. There is one `δ > 0`
 such that along every flow driven, on the window `[s_b, s_b + τ]` of each block
 `b`, by an exclusive block with these bounds and with `z_{k_b} - z_{l_b} = w₁ b`,
 `z_{m_b} - z_{p_b} = w₂ b` there, every window has a time at which two tokens are
-more than `δ` apart.  The weights, values, output maps, feed-forward terms and
+more than `δ` apart. The weights, values, output maps, feed-forward terms and
 injections are functions of time, so each block has its own; for a stack run in
 order, `s_b = b τ`.
 

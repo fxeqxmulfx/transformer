@@ -1,9 +1,13 @@
-/-
+module
+
+public import Transformer.ALM.LiftCompare
+
+/-!
 # The query need not land on the grid, only near it
 
 `Transformer.ALM.LiftCompare` rebuilds the head's comparison from the integer
 key, and asks the query to be an integer too: `upper_lt_iff` is stated at
-`(q, ±1)` with `q : ℤ`.  The machine cannot always supply that.  The compiler
+`(q, ±1)` with `q : ℤ`. The machine cannot always supply that. The compiler
 multiplies every hard-attention query by `HARD_K · √2`, and `QueryScale`'s
 `onTheGrid` divides it back out; the division is a rounding, so what reaches
 the head is `z₀ + ε` for an integer `z₀` and a residual `ε` of a few ulps —
@@ -11,9 +15,9 @@ one ulp, on the shipped programs, which at a query of `2^33` is `1.9 · 10⁻⁶
 
 `QueryScale.rounded_normalization_keeps_the_winner` already pays for that
 residual, and pays too much: its margin is `4Kε < 1`, so at keys of `3 · 10⁸`
-it needs `ε < 10⁻⁹` and the shipped residual is three orders over.  The margin
+it needs `ε < 10⁻⁹` and the shipped residual is three orders over. The margin
 is conservative because it bounds the *score* perturbation, and the score moves
-by `2ε(k - k')`, which is large.  What does not move is the *order*: the keys
+by `2ε(k - k')`, which is large. What does not move is the *order*: the keys
 are integers, so a squared distance is an integer, and the residual reaches the
 comparison only multiplied by the same `k - k'` that the integer gap carries.
 `upper_near_lt_iff` and `lower_near_lt_iff` are that cancellation — the same
@@ -22,7 +26,7 @@ equivalences as `LiftCompare`'s, with `ε` in them, under the one hypothesis
 (`the_shipped_window`) against a measured `1.9 · 10⁻⁶`.
 
 The residual is not rounded away: it is carried into the tie, which is the one
-place it decides anything.  Two keys equidistant from `z₀` are separated by
+place it decides anything. Two keys equidistant from `z₀` are separated by
 `2ε(k - k')` and by the offsets, and `upper_lt_iff_of_sq_eq` is that comparison
 exactly, with no hypothesis on `ε` at all.
 
@@ -30,7 +34,7 @@ Source: `todo3.md` §0, §4a; `vm-rs/alm-hull/src/liftkey.rs` (`UnitQuery::of`,
 `UnitQuery::cmp`), `vm-rs/alm-model/src/cache.rs` (`on_the_grid`).
 -/
 
-import Transformer.ALM.LiftCompare
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -65,9 +69,9 @@ theorem lower_sub (ε δ δ' : ℝ) (z z' z₀ : ℤ) :
 
 /-- **The cancellation.**  The integer part of the difference is `J · s`, where
 `J` is the step between the keys and `s` the sum of their signed distances; the
-residual enters as `2εJ`, carrying the same `J`.  So the comparison is decided
+residual enters as `2εJ`, carrying the same `J`. So the comparison is decided
 by `s - 2ε` against the offsets, and one unit of `s` beats `2A` as soon as the
-residual is inside `1/2 - A`.  This is what `4Kε < 1` misses: the factor `K`
+residual is inside `1/2 - A`. This is what `4Kε < 1` misses: the factor `K`
 divides out.
 
 Source: `todo3.md` §4a; the argument is the integrality of `s`, so the bound is
@@ -122,7 +126,7 @@ theorem upper_lt_iff_of_sq_eq (ε δ δ' : ℝ) {z z' z₀ : ℤ} (h : (z - z₀
 
 /-- **The whole comparison at a near-integer query**, as an equivalence: the
 squared distances order the keys, and the residual and the offsets are consulted
-only where those tie.  `LiftCompare.upper_lt_iff` is this at `ε = 0`. -/
+only where those tie. `LiftCompare.upper_lt_iff` is this at `ε = 0`. -/
 theorem upper_near_lt_iff {A ε δ δ' : ℝ} {z z' z₀ : ℤ} (hε : |ε| < 1 / 2 - A) (hδ : |δ| ≤ A)
     (hδ' : |δ'| ≤ A) :
     dot ((z₀ : ℝ) + ε, 1) (markKey δ (z : ℝ)) < dot ((z₀ : ℝ) + ε, 1) (markKey δ' (z' : ℝ)) ↔
@@ -209,7 +213,7 @@ example : |(1.907e-6 : ℝ)| < 1 / 2 - 0.3 / Real.log 2 := by
 
 /-- **The §4b pair, at a query the scale left off the grid.**  `336860161` is
 half of the abscissa `0x20202020` that `todo3.md` §4b names, where the stored
-ordinate has lost the unit that separates the key from its neighbour.  The
+ordinate has lost the unit that separates the key from its neighbour. The
 comparison rebuilt from the abscissa decides it, and goes on deciding it when
 the query misses the integer by anything inside the window. -/
 theorem the_section_4a_query {A ε δ δ' : ℝ} (hε : |ε| < 1 / 2 - A) (hδ : |δ| ≤ A)

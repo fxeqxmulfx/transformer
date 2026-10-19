@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_EnergyGap
+public import Transformer.Perspective.Section2_FlowContinuity
+public import Transformer.Perspective.Section6_GramFlow
+public import Transformer.Perspective.Section5_ExpRate
+
+/-!
 # The actual two-token energy in the staircase problem
 
 ArXiv:2410.06833v1, §6, `conj: saddle-to-saddle`, with the normalized
@@ -12,10 +19,7 @@ The trajectories are the actual global solutions constructed in
 proved hemisphere-collapse theorem, without any staircase conjecture.
 -/
 
-import Transformer.Metastability.Section4_EnergyGap
-import Transformer.Perspective.Section2_FlowContinuity
-import Transformer.Perspective.Section6_GramFlow
-import Transformer.Perspective.Section5_ExpRate
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

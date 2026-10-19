@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.SharedRowMinimum
+module
+
+public import Transformer.GPTMini.Sparsemax.SharedRowMinimum
 
 /-!
 # A nonzero total-loss direction in the actual shared matrices
@@ -14,6 +16,8 @@ can have inactive threshold ties at the initial point; the loss identity
 and derivative along `[0,1]` suffice. Joint output attainability, clipped
 endpoint projected keys and equal endpoint supports remain explicit.
 -/
+
+@[expose] public section
 
 noncomputable section
 

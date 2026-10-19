@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.IncidentMemoryFeasibility
-import Transformer.GPTMini.Sparsemax.LocalJointMemory
+module
+
+public import Transformer.GPTMini.Sparsemax.IncidentMemoryFeasibility
+public import Transformer.GPTMini.Sparsemax.LocalJointMemory
 
 /-!
 # Convex joint embedding and common-value learning with local budgets
@@ -15,6 +17,8 @@ functional forward is reused unchanged; the new result strengthens its
 feasibility domain instead of defining a different prediction function.
 Nearest data queries retain at most three actual attention routes.
 -/
+
+@[expose] public section
 
 noncomputable section
 

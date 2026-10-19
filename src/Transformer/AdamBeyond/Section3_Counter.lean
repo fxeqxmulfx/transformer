@@ -1,6 +1,8 @@
-import Transformer.AdamBeyond.Section3_Run
+module
 
-/-
+public import Transformer.AdamBeyond.Section3_Run
+
+/-!
 # Adam and beyond — §3: Theorems 1 and 6, Adam does not converge
 
 On the run of `Section3_Run`, the iterate is back at `x = 1` at the start of
@@ -10,15 +12,15 @@ of regret against `x* = -1`, and `R_T ≥ (2s/3) T` for every `T`.
 **What the source says and what is carried here.**
 
 * "`R_T/T ↛ 0`" is stated in the stronger form it is proved in: a fixed
-  `x* ∈ F` and a `c > 0` with `c T ≤ R_T` for every `T`.  The regret against the
+  `x* ∈ F` and a `c > 0` with `c T ≤ R_T` for every `T`. The regret against the
   minimizer of `Σ f_t` over `F` is at least the regret against `x*`.
 
 * The source concludes `R_T ≥ (2C - 4)T/3` under `C ≥ 2`, which is `0` at
-  `C = 2`; §3 has `C > 2`.  Here `C = 3`.
+  `C = 2`; §3 has `C > 2`. Here `C = 3`.
 
 * Theorem 6 asks for "all the conditions in [Kingma & Ba]"; of those that bear
   on this run, `β₁ = 0`, `0 < β₂ < 1`, `α_t = α/√t`, bounded gradients and a
-  bounded feasible set are part of the statement.  Its proof displays
+  bounded feasible set are part of the statement. Its proof displays
   `√((β₂C² + 1 - β₂)/2) = √(1 - β₂ + ε/C²)`, which is false as written; it holds
   with `+ ε` on the left.
 
@@ -27,6 +29,8 @@ of regret against `x* = -1`, and `R_T ≥ (2s/3) T` for every `T`.
 Source: arXiv:1904.09237, §3, Theorem 1 and the remark after it, eq:gamma-t;
 Appendix, proofs of Theorems 1 and 6.
 -/
+
+@[expose] public section
 
 namespace Transformer
 namespace AdamBeyond
@@ -136,7 +140,7 @@ theorem counter_example_epsilon {ε : ℝ} (hε : 0 < ε) :
       fun _ => by norm_num⟩, _, by positivity, cex_regret hs hε.le hs2 h₀ h₁ h⟩
 
 /-- **Theorem 1.**  Adam has non-zero average regret on an online convex
-problem: `c T ≤ R_T` for every `T`.  arXiv:1904.09237, §3, Theorem 1. -/
+problem: `c T ≤ R_T` for every `T`. arXiv:1904.09237, §3, Theorem 1. -/
 theorem counter_example :
     ∃ (S : Setup 1) (F : Set (Vec 1)) (D G : ℝ), IsOnlineConvex S F D G ∧
       (∃ α > 0, S.α = fun t : ℕ => α / Real.sqrt t) ∧ (∀ t, S.β₁ t = 0) ∧
@@ -150,7 +154,7 @@ theorem counter_example :
     cex_regret one_pos le_rfl (by norm_num) h₀ h₁ h⟩
 
 /-- **The remark after Theorem 1.**  The same holds with a constant step size
-`α_t = α`.  arXiv:1904.09237, §3, after Theorem 1. -/
+`α_t = α`. arXiv:1904.09237, §3, after Theorem 1. -/
 theorem counter_example_const :
     ∃ (S : Setup 1) (F : Set (Vec 1)) (D G : ℝ), IsOnlineConvex S F D G ∧
       (∃ α > 0, S.α = fun _ => α) ∧ (∀ t, S.β₁ t = 0) ∧ 0 < S.β₂ ∧ S.β₂ < 1 ∧
@@ -163,7 +167,7 @@ theorem counter_example_const :
       (fun _ => by norm_num)⟩
 
 /-- **`Γ_t` is indefinite for Adam.**  With `α_t = α/√t`, `β₁ = 0`, `0 < β₂ < 1`,
-Adam's `Γ₂` is negative.  arXiv:1904.09237, §3, after eq:gamma-t. -/
+Adam's `Γ₂` is negative. arXiv:1904.09237, §3, after eq:gamma-t. -/
 theorem gamma_adam_neg :
     ∃ (S : Setup 1) (F : Set (Vec 1)) (D G : ℝ), IsOnlineConvex S F D G ∧
       (∃ α > 0, S.α = fun t : ℕ => α / Real.sqrt t) ∧ (∀ t, S.β₁ t = 0) ∧

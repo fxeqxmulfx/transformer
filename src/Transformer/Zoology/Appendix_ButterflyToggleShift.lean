@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ButterflyToggle
+
+/-!
 # Sequence-axis butterfly pairing as masked cyclic shifts
 
 Arora et al., arXiv:2312.04927v1, Appendix `eq: butterfly-split` and
@@ -7,7 +11,7 @@ half of its block and subtracts 2^t in the lower half. These are exact
 cyclic index identities, not an assumption about the convolution.
 -/
 
-import Transformer.Zoology.Appendix_ButterflyToggle
+@[expose] public section
 
 namespace Transformer.Zoology
 

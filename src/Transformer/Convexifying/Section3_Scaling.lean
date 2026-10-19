@@ -1,17 +1,21 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_Factorization
+
+/-!
 # Rescaling scalar attention heads
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §3.2, Lemma 1
 (`lemma:scaling`) and Appendix A.1, equations (18)–(22).
 -/
 
-import Transformer.Convexifying.Section3_Factorization
+@[expose] public section
 
 open scoped BigOperators
 
 namespace Transformer.Convexifying
 
-/-- The scaled problem in equation (8)'s rescaling lemma.  Feasibility also
+/-- The scaled problem in equation (8)'s rescaling lemma. Feasibility also
 requires the value vector of each head to have norm at most `1`. -/
 noncomputable def scaledScalarObjective {N h n d : ℕ} (X : Data N n d) (y : Vec N)
     (L : ℝ → ℝ → ℝ) (β : ℝ) (p : ScalarParameters h n d) : ℝ :=
@@ -68,10 +72,10 @@ theorem norm₂_value_product {d : ℕ} (v : Vec d) (b : ℝ) :
 
 /-- **Lemma 1 (`lemma:scaling`), as a statement about all objective
 sublevel sets.**  The two optimizations have the same infimum, including when
-it is not attained.  Unlike a bare equality of `sInf`, this formulation does
+it is not attained. Unlike a bare equality of `sInf`, this formulation does
 not require a lower-bound assumption on the arbitrary loss.
 
-The appendix divides by a value norm without discussing zero heads.  The
+The appendix divides by a value norm without discussing zero heads. The
 formal proof includes zero value and zero output heads through explicit
 balanced and unit factorizations.
 

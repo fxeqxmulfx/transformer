@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_ReferenceError
+public import Mathlib.Analysis.SpecificLimits.Normed
+
+/-!
 # DASH — uniform convergence of the actual inverse-power fit
 
 arXiv:2602.02016v2, Appendix A. The cosine fitting algorithm itself,
@@ -6,8 +11,7 @@ followed by mapped Clenshaw, converges uniformly as the degree grows
 and the number of samples stays above that degree.
 -/
 
-import Transformer.DASH.SectionA_ReferenceError
-import Mathlib.Analysis.SpecificLimits.Normed
+@[expose] public section
 
 open scoped BigOperators Topology
 open Filter

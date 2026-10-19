@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CyclicCircuitNetwork
+
+/-!
 # Sequence buffers for a sum of three shifted diagonal operators
 
 Arora et al., arXiv:2312.04927v1, Appendix `prop: butterfly-hyena`
@@ -7,7 +11,7 @@ one display. A corrected construction keeps three shifted copies in
 disjoint sequence buffers, preserving the feature dimension.
 -/
 
-import Transformer.Zoology.Appendix_CyclicCircuitNetwork
+@[expose] public section
 
 open scoped BigOperators
 
@@ -56,8 +60,7 @@ theorem shiftSumTermSlot_eq_iff {m : ℕ}
     have hv := congrArg Fin.val h
     dsimp [shiftSumTermSlot] at hv
     have hab : a = b := by
-      fin_cases a <;> fin_cases b <;> norm_num at hv ⊢ <;>
-        (first | rfl | omega)
+      fin_cases a <;> fin_cases b <;> norm_num at hv ⊢ <;> omega
     subst b
     exact ⟨rfl, Fin.ext (by omega)⟩
   · rintro ⟨rfl, rfl⟩

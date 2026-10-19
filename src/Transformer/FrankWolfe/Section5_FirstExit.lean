@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section5_BadEvents
+public import Transformer.FrankWolfe.Section5_RareEvents
+
+/-!
 # Attention's forward pass and Frank-Wolfe — the first exit needs bad steps
 
 Before the first exit from a group's hull neighborhood, every particle is
@@ -9,8 +14,7 @@ Source: arXiv:2508.09628v1, §5, proof of `lem: metastab.1`, the paragraph
 before `eq: union.bound` and the binomial estimate `eq: binomial.2`.
 -/
 
-import Transformer.FrankWolfe.Section5_BadEvents
-import Transformer.FrankWolfe.Section5_RareEvents
+@[expose] public section
 
 open scoped ENNReal BigOperators Pointwise
 open MeasureTheory

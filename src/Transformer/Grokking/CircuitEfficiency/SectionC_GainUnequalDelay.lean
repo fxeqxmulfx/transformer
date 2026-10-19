@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainUnequalSelection
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainDelaySeeds
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainUnequalSelection
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainDelaySeeds
 
 /-!
 # Arbitrarily delayed permanent native accuracy generalization with unequal Gen
@@ -31,6 +33,8 @@ decay differ from coupled-cost GD and learned nonzero-beta GPTMini.
 The seed may be below machine range; accuracy success need not give
 positive limiting confidence or zero limiting CE loss.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

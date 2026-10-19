@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.PeriodicToLogic
+public import Transformer.CRASP.PositionalPeriod
+
+/-!
 # Reverse simulations for sinusoidal embeddings and RoPE
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_eq_tlclmod` (reverse direction)
@@ -7,8 +12,7 @@ finitely many coordinate blocks, and finite decorated states give formulas
 with exactly the original counting-depth bound.
 -/
 
-import Transformer.CRASP.PeriodicToLogic
-import Transformer.CRASP.PositionalPeriod
+@[expose] public section
 
 namespace Transformer.CRASP
 

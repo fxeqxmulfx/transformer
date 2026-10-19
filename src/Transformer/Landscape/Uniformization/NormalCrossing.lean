@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.Defs
+
+/-!
 # Local uniformization: functions with normal crossings
 
 A unit times a coordinate monomial centred anywhere has normal crossings at
@@ -7,7 +11,7 @@ condition, is stable under products, and never holds for a germ vanishing
 identically. Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Uniformization.Defs
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators Topology

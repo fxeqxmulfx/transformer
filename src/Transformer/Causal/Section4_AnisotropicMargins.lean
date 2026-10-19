@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Section4_AnisotropicBoundary
+
+/-!
 # Actual coordinate margins for the anisotropic causal field
 
 Source: arXiv:2411.04990v2, §4, Conjecture `thm1.5` and
@@ -15,7 +19,7 @@ with the other coordinate bounds, by the original unit-circle identity.
 No invariant-region or convergence conclusion is included in a definition.
 -/
 
-import Transformer.Causal.Section4_AnisotropicBoundary
+@[expose] public section
 
 open Real Set
 

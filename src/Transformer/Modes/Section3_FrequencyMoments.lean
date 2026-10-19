@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_FourierTail
-import Mathlib.Analysis.SpecificLimits.Normed
+module
+
+public import Transformer.Modes.Section3_FourierTail
+public import Mathlib.Analysis.SpecificLimits.Normed
 
 /-!
 # Integrating polynomial Gaussian bounds and characteristic tails
@@ -15,6 +17,8 @@ zero-derivative `s = 2` case of `eq:big-z-exp`. All constants here may
 depend on the law and the fixed radius coefficient `a`; this is the
 fixed-law step in §3 `thm:br`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped ENNReal Topology

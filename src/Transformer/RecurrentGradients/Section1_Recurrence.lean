@@ -1,29 +1,33 @@
-/-
+module
+
+public import Mathlib.Analysis.CStarAlgebra.Matrix
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.Calculus.FDeriv.Prod
+public import Mathlib.Analysis.Calculus.FDeriv.WithLp
+public import Mathlib.Data.Matrix.Basis
+
+/-!
 # Recurrent networks and their Jacobians
 
-arXiv:1211.5063, §1.1 ("Training recurrent networks").  The generic network of
+arXiv:1211.5063, §1.1 ("Training recurrent networks"). The generic network of
 eq. (1), `x_t = F(x_{t-1}, u_t, θ)`, has the states `states F u x₀`, with `θ`
-inside `F`.  Its parametrization of eq. (2),
+inside `F`. Its parametrization of eq. (2),
 `x_t = W_rec σ(x_{t-1}) + W_in u_t + b`, is `step σ W_rec W_in b`, on the
-Euclidean space, whose norm is the 2-norm of §2.1.  Footnote 1 calls eq. (2)
+Euclidean space, whose norm is the 2-norm of §2.1. Footnote 1 calls eq. (2)
 equivalent to `x_t = σ(W_rec x_{t-1} + W_in u_t + b)` (`stepAfter`): `σ` maps
 the states of eq. (2) onto those of the other form (`act_states`), and from the
 first step on every state of the other form is such an image
 (`states_stepAfter`).
 
 The Jacobian of eq. (2) is `W_rec diag(σ'(x))` (`hasFDerivAt_step`), where
-eq. (5) writes `W_recᵀ diag(σ'(x))` (`Section1_Gradients`).  The "immediate"
+eq. (5) writes `W_recᵀ diag(σ'(x))` (`Section1_Gradients`). The "immediate"
 derivative of eq. (2) in the `(i, j)` entry of `W_rec` is `σ(x)_j` in unit `i`
 and `0` in the others (`hasDerivAt_step_single`): row `i` of `∂⁺x_k/∂W_rec` is
 `σ(x_{k-1})`, as §1.1 says.
 -/
 
-import Mathlib.Analysis.CStarAlgebra.Matrix
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Calculus.FDeriv.Prod
-import Mathlib.Analysis.Calculus.FDeriv.WithLp
-import Mathlib.Data.Matrix.Basis
+@[expose] public section
 
 open scoped Matrix
 

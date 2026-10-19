@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.DepthStep
-import Transformer.GPTMini.Semantics.RecallMarkerWeights
+module
+
+public import Transformer.GPTMini.Semantics.DepthStep
+public import Transformer.GPTMini.Semantics.RecallMarkerWeights
 
 /-!
 # Actual uniform softmax/XSA presence with nonconstant amplitudes
@@ -21,6 +23,8 @@ The amplitude array is a local operator input, not a prefix oracle.
 The raw embedding, simultaneous matrices and layer recurrence must
 still derive these representation conditions for the complete model.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

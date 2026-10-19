@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.DASH.Section3_CoupledNewton
+public import Mathlib.Topology.Order.MonotoneConvergence
+public import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+
+/-!
 # DASH — convergence of Coupled Newton
 
 arXiv:2602.02016v2, §3.2. Positive integer orders, positive scaling,
@@ -7,9 +13,7 @@ premise is assumed: the product is bounded and monotone after one step,
 and its positive fixed-point limit is one.
 -/
 
-import Transformer.DASH.Section3_CoupledNewton
-import Mathlib.Topology.Order.MonotoneConvergence
-import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+@[expose] public section
 
 noncomputable section
 

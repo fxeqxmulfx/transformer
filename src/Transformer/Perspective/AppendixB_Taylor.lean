@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixB_BetaInterval
+public import Transformer.Perspective.Section6_Circle
+
+/-!
 # Appendix B — the block Hessian of `𝖤_β` on the circle
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -15,8 +20,7 @@ The kernel `g_β` and the angle `τ_β^*` are in
 `Perspective.torusEnergy`.
 -/
 
-import Transformer.Perspective.AppendixB_BetaInterval
-import Transformer.Perspective.Section6_Circle
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -27,7 +31,7 @@ namespace Perspective
 variable (n : ℕ)
 
 /-- The direction `1_𝒮 ∈ ℝ^n` that rotates the tokens indexed by `𝒮` at unit
-speed and holds the others fixed.  Appendix B perturbs a critical point along
+speed and holds the others fixed. Appendix B perturbs a critical point along
 exactly this direction. -/
 def blockDir (𝒮 : Finset (Idx n)) : Angles n := fun i => if i ∈ 𝒮 then 1 else 0
 
@@ -44,7 +48,7 @@ def SecondDerivTorusEnergy (β : ℝ) (θ v : Angles n) (c : ℝ) : Prop :=
     HasDerivAt f' c 0
 
 /-- *Non-positive Hessian at `θ`*: every straight line through `θ` sees a
-non-positive second derivative of `𝖤_β`.  This is the hypothesis Appendix B
+non-positive second derivative of `𝖤_β`. This is the hypothesis Appendix B
 places on a critical point that is not a strict saddle.
 
 Source: arXiv:2312.10794v5, Appendix B. -/

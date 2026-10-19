@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.CausalPrefixKeys
-import Mathlib.Algebra.BigOperators.Ring.Finset
+module
+
+public import Transformer.GPTMini.Sparsemax.CausalPrefixKeys
+public import Mathlib.Algebra.BigOperators.Ring.Finset
 
 /-!
 # Generated bit states for content-sensitive learned memory
@@ -16,6 +18,8 @@ arbitrary selected content interactions. The finite enumeration below
 only connects this construction to the existing variational sparsemax;
 it is not an implementation requirement to materialize every state.
 -/
+
+@[expose] public section
 
 noncomputable section
 

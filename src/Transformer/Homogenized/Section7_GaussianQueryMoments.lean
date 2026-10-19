@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianRowNonzero
+
+/-!
 # Original Gaussian-product query moments and normalization
 
 ArXiv:2604.01978v1, §2.3.3, `eq: tformers.at.initialization`,
@@ -21,7 +25,7 @@ norm one, and its expected self-inner-product is exactly one.
 No invertibility hypothesis on a random product matrix is needed.
 -/
 
-import Transformer.Homogenized.Section7_GaussianRowNonzero
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

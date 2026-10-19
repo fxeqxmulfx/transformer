@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_GaussianQuadraticMGF
+public import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Basic
+
+/-!
 # The actual Gaussian comparison kernel
 
 Source: arXiv:2604.01978v1, §6.3, `lem:Hanson_wright`.
@@ -13,8 +18,7 @@ The zero vector and empty coordinate family are included in the exact
 linear identities, without an inverse covariance assumption.
 -/
 
-import Transformer.Homogenized.Section6_GaussianQuadraticMGF
-import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Basic
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

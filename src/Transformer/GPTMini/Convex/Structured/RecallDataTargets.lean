@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.RecallDataRoutes
-import Transformer.GPTMini.Convex.Structured.MixedBasis
+module
+
+public import Transformer.GPTMini.Convex.Structured.RecallDataRoutes
+public import Transformer.GPTMini.Convex.Structured.MixedBasis
 
 /-!
 # Correct raw-data complete labels for actual convex recall training
@@ -24,6 +26,8 @@ The generator uses each recipe's known record count at training time.
 That count is absent from the actual free-parameter inference signature;
 its learned positional fields must implement table exclusion themselves.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Section4_PairedRecall
+
+/-!
 # Correctness of sequential associative recall
 
 Arora et al., arXiv:2312.04927v1, Appendix Proposition
@@ -9,7 +13,7 @@ functional correctness for distinct keys. The proposition's balanced-tree
 runtime bound is not represented by this function-level result.
 -/
 
-import Transformer.Zoology.Section4_PairedRecall
+@[expose] public section
 
 namespace Transformer.Zoology
 

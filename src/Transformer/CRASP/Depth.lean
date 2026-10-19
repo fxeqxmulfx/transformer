@@ -1,16 +1,24 @@
-/-
+module
+
+public import Transformer.CRASP.Commutative
+public import Transformer.CRASP.CroppingUnsound
+public import Transformer.CRASP.LowerBound
+public import Transformer.CRASP.ReductionUnsound
+public import Transformer.CRASP.PiecewiseTestable
+
+/-!
 # The depth hierarchy of `TL[◁#]`
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 (COLM 2025), §4.4–4.5: `lem:cropping_oneway`, `lem:reduction` and
 `thm:TLCl_depth`.
 
-The argument runs downwards.  A depth-`k` formula defining `L_{k+1}` is peeled
+The argument runs downwards. A depth-`k` formula defining `L_{k+1}` is peeled
 one counting level at a time: the Cropping Lemma finds a sub-family of
 intervals on which the minimal depth-1 subformulas are constant, the Reduction
 Lemma then rewrites them away at the cost of restricting the language to an
 affix restriction whose middle is that sub-family, and after `k-1` rounds what
-is left is a depth-1 formula.  But a depth-1 formula defines a language
+is left is a depth-1 formula. But a depth-1 formula defines a language
 commutative on the middle (`lem:TLCP_commutative`), while `L_{k+1}` restricted
 to those affixes is not — the two strings `λ b^{s_b} a^{s_a-1} b a ϱ` and
 `λ b^{s_b} a^{s_a} ϱ b a` have the same Parikh vector and only one of them
@@ -25,11 +33,11 @@ the plane are over `Bool`, with `false` for `a` and `true` for `b`, matching
 (`cropping_oneway_unsound`, `cropping_oneway_right_unsound`): its proof reads a
 minimal depth-1 subformula as a half-plane in the prefix vector, which forgets
 the positions before the interval, where the PNPs are free
-(`Transformer.CRASP.CroppingUnsound`).  `lem:reduction` is false already at
+(`Transformer.CRASP.CroppingUnsound`). `lem:reduction` is false already at
 `k = 2`, in both of its versions (`reduction_past_unsound`,
 `reduction_unsound`): no depth-1 formula whose PNPs are constant on the middle
 checks the affix `ab`, because the middle contains the last position of the
-prefix (`Transformer.CRASP.ReductionUnsound`).  The hierarchy itself holds
+prefix (`Transformer.CRASP.ReductionUnsound`). The hierarchy itself holds
 (`definableL_altPlus`): `Transformer.CRASP.LowerBound` crops with the positions
 before the interval fixed to a prefix, and adds one block per level of depth in
 place of the reduction.
@@ -41,11 +49,7 @@ proof of `thm:TLC_depth` uses it (it goes from depth `ℓ+1` to depth `ℓ`).
 `reduction_unsound` refutes it in that reading.
 -/
 
-import Transformer.CRASP.Commutative
-import Transformer.CRASP.CroppingUnsound
-import Transformer.CRASP.LowerBound
-import Transformer.CRASP.ReductionUnsound
-import Transformer.CRASP.PiecewiseTestable
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -102,7 +106,7 @@ theorem cropping_oneway_right_unsound :
       h Form.firstNotA rfl _ accommodating_one pnpsConstantOn_firstNotA
     exact not_minimalOneConstantOn_firstNotA hI' (fun n => (hstick n).1.1) hmin
 
-/-- **`lem:reduction` (Reduction Lemma) is false**, already at `k = 2`.  "For
+/-- **`lem:reduction` (Reduction Lemma) is false**, already at `k = 2`. "For
 any depth-`k` formula `φ` of `TL[◁#]^P_k` and affix restriction `(λ, ϱ)`, if
 the PNPs and minimal depth-1 subformulas of `φ` are constant on the middle of
 `(λ, ϱ)`, then there is a formula `φ'` of depth `(k-1)` of `TL[◁#]^P_{k-1}`
@@ -115,7 +119,7 @@ tautology, and `(λ, ϱ) = (ab, ε)`: the restricted language holds `abab` and n
 
 The refutation rests on the lower end of the middle: the paper's
 `[ℙ(λ(n⃗)), n⃗ - ℙ(ϱ(n⃗))]` contains the prefix vector of the last position of
-`λ(n⃗)`.  With the middle starting one letter later the counterexample
+`λ(n⃗)`. With the middle starting one letter later the counterexample
 disappears; that corrected lemma is not stated here.
 
 Source: arXiv:2506.16055v3, §4.4, `lem:reduction`, and its proof in
@@ -153,7 +157,7 @@ definable in `TL[◁#]_{k+1}` but not in `TL[◁#]_k`.
 
 The positive half asks for nothing beyond §2.4: `L_{k+1}` is `(k+1)`-piecewise
 testable by `lem:piecewise_testable`, and `lem:piecewise_testable_depth` reads
-every such language inside `TL[◁#]_{k+1}`.  The negative half is the one the
+every such language inside `TL[◁#]_{k+1}`. The negative half is the one the
 chapter is about, and the paper derives it from `lem:cropping_oneway` and
 `lem:reduction`, both false as stated; it is `not_definableL_altPlus`, where a
 formula of depth `k` agrees on a word of `L_{k+1}` and a word of `L_{k+3}`. -/

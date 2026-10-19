@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerPaths
+
+/-!
 # Actual probability laws of continuous Euler approximations
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The approximations are measures on the very continuous-path space used by
 the martingale problem. Their endpoint marginals are the computed chains.
 -/
 
-import Transformer.BatchSize.Section4_EulerPaths
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

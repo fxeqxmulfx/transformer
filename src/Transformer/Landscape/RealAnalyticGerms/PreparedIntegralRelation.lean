@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.RealAnalyticGerms.PreparedPowerBasis
+public import Mathlib.LinearAlgebra.Charpoly.Basic
+
+/-!
 # Integral relations on a prepared real analytic hypersurface
 
 The actual finite power basis of a prepared quotient makes every analytic
@@ -6,8 +11,7 @@ function on it integral over the parameter-germ ring. Hence its values obey
 a monic polynomial relation with analytic parameter coefficients.
 -/
 
-import Transformer.Landscape.RealAnalyticGerms.PreparedPowerBasis
-import Mathlib.LinearAlgebra.Charpoly.Basic
+@[expose] public section
 
 noncomputable section
 namespace Transformer.Landscape.RealAnalyticGerms

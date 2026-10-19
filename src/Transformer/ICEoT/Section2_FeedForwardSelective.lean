@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section2_FeedForward
+
+/-!
 # IC-EoT: state-only passthrough restrictions for autoregressive ICNNs
 
 arXiv:2603.22095v2, §2.2.1, the Bünning et al. autoregressive variant.
@@ -7,7 +11,7 @@ in the recursively substituted variables; fixed control columns may have
 arbitrary signs. Single-step convexity is already proved in `fnnRun_convex`.
 -/
 
-import Transformer.ICEoT.Section2_FeedForward
+@[expose] public section
 
 noncomputable section
 

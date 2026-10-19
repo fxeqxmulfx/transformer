@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.Factorial
+module
+
+public import Transformer.GPTMini.Convex.Structured.Factorial
 
 /-!
 # Exact compact readout of implicit value channels
@@ -19,6 +21,8 @@ separate semantic capacity and real residual/tied-output construction.
 Source algebra: finite distributivity and normalized Gibbs expectations,
 following arXiv:2305.05465v6, §7's finite exponential normalizer.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

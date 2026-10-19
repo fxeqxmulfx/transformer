@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianMeanLogProbability
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Range, monotonicity, and relative growth of the original logistic reference
 
 ArXiv:2604.01978v1, §7, `eq:logistic_u_smallbeta`, `eq: logistic.sol`,
@@ -13,8 +18,7 @@ source Cauchy problem on nonnegative times. No closed formula,
 solution uniqueness, invariant interval, or monotonicity is assumed.
 -/
 
-import Transformer.Homogenized.Section7_GaussianMeanLogProbability
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open Set
 

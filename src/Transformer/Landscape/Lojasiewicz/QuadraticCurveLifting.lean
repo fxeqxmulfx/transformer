@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.RamifiedSquareRoot
+public import Mathlib.Analysis.Real.Sqrt
+
+/-!
 # Complete analytic lifting of quadratic root branches
 
 For an arbitrary analytic monic quadratic in one parameter, accumulating
@@ -7,8 +12,7 @@ ramification. The branches cover every root on the resulting neighborhood,
 including a double root at the base point.
 -/
 
-import Transformer.Landscape.Lojasiewicz.RamifiedSquareRoot
-import Mathlib.Analysis.Real.Sqrt
+@[expose] public section
 
 open Filter Set
 

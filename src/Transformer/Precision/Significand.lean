@@ -1,25 +1,29 @@
-/-
+module
+
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Algebra.Order.Field.Power
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+
+/-!
 # Numbers with `p` significant bits
 
 A format has `p` significant bits if every number in it is `± m · 2^k` with
-`m < 2^p` (`HasSignificand`).  The exponent range is not bounded: this covers
+`m < 2^p` (`HasSignificand`). The exponent range is not bounded: this covers
 every IEEE binary format, bfloat16, the FP8 formats, and the idealised formats
 with no overflow and no underflow alike.
 
 Beyond `2^{p-1} · 2^s` in absolute value such numbers are multiples of `2^s`
 (`HasSignificand.dvd`), so there consecutive numbers of the format are at least
-`2^s` apart (`HasSignificand.gap`).  Strictly beyond it a number of the format
+`2^s` apart (`HasSignificand.gap`). Strictly beyond it a number of the format
 is at least `2^s` from every other one, on both sides
 (`HasSignificand.le_abs_sub`); at `2^{p-1} · 2^s` itself the format towards `0`
-may be twice as dense.  This spacing is what a running sum in the format runs
+may be twice as dense. This spacing is what a running sum in the format runs
 into (`Precision.Accumulate`).
 -/
 
-import Mathlib.Basic.Real.Basic
-import Mathlib.Algebra.Order.Field.Power
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
+@[expose] public section
 
 namespace Transformer
 namespace Precision

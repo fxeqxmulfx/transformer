@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallFrequencies
+module
+
+public import Transformer.GPTMini.Semantics.RecallFrequencies
 
 /-!
 # Compact symbol codes in the actual sixteen-coordinate RoPE head
@@ -10,6 +12,8 @@ actual coordinate functions and actual rotation, with no hypothetical
 position-independent attention. All codes have norm two before and
 after RoPE. Score separation is established in the following module.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

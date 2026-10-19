@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Metastability.MeanField
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.Calculus.Deriv.Inv
+
+/-!
 # Scalar coefficients of a Dirac characteristic flow
 
 For the stationary solution `μ(t) = δ_w` of `eq: mean.field.pde`, the
@@ -15,9 +21,7 @@ This is auxiliary to arXiv:2410.06833v1, §5, `eq: flow.map` and the
 counterexample to `eq: v.small`; it is not an assumed ODE solver.
 -/
 
-import Transformer.Metastability.MeanField
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Calculus.Deriv.Inv
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

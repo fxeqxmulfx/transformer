@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_CorrelationTaylor
+public import Transformer.Homogenized.Defs
+
+/-!
 # A global cubic remainder for the actual normalized correlation
 
 ArXiv:2604.01978v1, §7.3, `lem:delta_method`, the Taylor-Lagrange
@@ -21,8 +26,7 @@ estimate is assumed; taking expectations will require actual third
 absolute deviation moments of the original matrix-product queries.
 -/
 
-import Transformer.Homogenized.Section7_CorrelationTaylor
-import Transformer.Homogenized.Defs
+@[expose] public section
 
 open Real
 

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.AnalyticSignStability
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Order.Filter.Finite
+
+/-!
 # Stable minima among finitely many analytic branches
 
 Analytic sign constraints stabilize on the positive side. A finite family
@@ -6,9 +12,7 @@ of analytic objective values therefore has one admissible branch which
 minimizes the objective at every sufficiently small positive parameter.
 -/
 
-import Transformer.Landscape.Lojasiewicz.AnalyticSignStability
-import Mathlib.Data.Finset.Max
-import Mathlib.Order.Filter.Finite
+@[expose] public section
 
 open Filter Set
 

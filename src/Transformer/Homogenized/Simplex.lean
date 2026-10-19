@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.GaussianInit
+
+/-!
 # Homogenized Transformers — simplex data at low temperature
 
 Formalization of `thm:clustering_random_init` of arXiv:2604.01978v1,
@@ -13,7 +17,7 @@ of the solution of `eq:Diffusive_gaussian_case` tracks the scalar ODE
 Source: arXiv:2604.01978v1, §2.3.4, `thm:clustering_random_init`.
 -/
 
-import Transformer.Homogenized.GaussianInit
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory ProbabilityTheory

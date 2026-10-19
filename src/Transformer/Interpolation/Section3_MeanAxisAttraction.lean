@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_MeanAxisStability
+public import Transformer.Interpolation.Section3_ProjectionContraction
+
+/-!
 # Uniform attraction of original rank-one mean-attention laws
 
 ArXiv:2411.04551v3, §3.2, Step 1 of `lem: induction.barycenter`,
@@ -15,8 +20,7 @@ balls, whenever the initial support misses both poles. The source's
 positive quadrant and transverse axes supply precisely this exclusion.
 -/
 
-import Transformer.Interpolation.Section3_MeanAxisStability
-import Transformer.Interpolation.Section3_ProjectionContraction
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Kinetic.Fluctuations
+public import Transformer.Kinetic.Section3_ThreeTokens
+public import Transformer.Homogenized.RademacherLaw
+
+/-!
 # A test that is not periodic — `lem:correl`
 
 ArXiv:2605.09213v1, §3, `lem:correl`. The source's test is `φ ∈ C²(𝕋)`.
@@ -17,9 +23,7 @@ two positions differ by some `Δ ≠ 0`. With `φ = id`, which has `φ' = 1` and
 `correlation_bounds` therefore takes `φ` periodic, as the source does.
 -/
 
-import Transformer.Kinetic.Fluctuations
-import Transformer.Kinetic.Section3_ThreeTokens
-import Transformer.Homogenized.RademacherLaw
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter Topology
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_ProjectionLaw
+public import Transformer.Interpolation.Section3_ScaledProjectionTransport
+
+/-!
 # Actual rank-one controls for a constant tangent projection
 
 ArXiv:2411.04551v3, §3.1, proof of `lem: first.quadrant`.
@@ -12,8 +17,7 @@ Any available coordinate suffices; the dimension hypothesis supplies
 that coordinate when the final two-phase construction is assembled.
 -/
 
-import Transformer.Interpolation.Section3_ProjectionLaw
-import Transformer.Interpolation.Section3_ScaledProjectionTransport
+@[expose] public section
 
 open Real MeasureTheory
 

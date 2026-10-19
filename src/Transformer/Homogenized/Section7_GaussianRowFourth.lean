@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianRowMoments
+public import Transformer.Homogenized.Section7_GaussianPolynomialStein
+
+/-!
 # Exact fourth moments of the original Gaussian rows
 
 ArXiv:2604.01978v1, §2.3.3, initialization (G), and §7.3,
@@ -19,8 +24,7 @@ their integrals. Empty dimensions and zero coefficient rows are
 included in the identities without any nondegeneracy assumption.
 -/
 
-import Transformer.Homogenized.Section7_GaussianRowMoments
-import Transformer.Homogenized.Section7_GaussianPolynomialStein
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

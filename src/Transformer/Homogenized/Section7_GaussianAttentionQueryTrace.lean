@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianQueryContractions
+
+/-!
 # The actual query-block Hessian trace of the original Gaussian attention pair
 
 ArXiv:2604.01978v1, §7, the query trace calculation preceding
@@ -15,7 +19,7 @@ so it also gives the self-pairs used by diagonal overlaps in Gram drift.
 The biased self-pair example has a nonzero actual query trace.
 -/
 
-import Transformer.Homogenized.Section7_GaussianQueryContractions
+@[expose] public section
 
 open scoped BigOperators
 
@@ -171,4 +175,3 @@ example : ∃ z : EuclideanSpace ℝ (GaussianFeatureIdx 2 2), (0 : ℕ) < 2 ∧
   ring
 
 end Transformer.Homogenized
-

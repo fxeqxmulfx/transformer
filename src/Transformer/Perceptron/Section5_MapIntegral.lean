@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_MapTransport
+public import Transformer.Perceptron.Section5_DominatedVariation
+
+/-!
 # Dominated matrix pair variations for arbitrary circle measures
 
 ArXiv:2601.21366v2, §3.1, `rem: ext` (ii), extending §5.2
@@ -17,8 +22,7 @@ existence of the interaction's actual second derivative. The factor
 one half in `E_B` is applied subsequently to this raw pair integral.
 -/
 
-import Transformer.Perceptron.Section5_MapTransport
-import Transformer.Perceptron.Section5_DominatedVariation
+@[expose] public section
 
 open Real MeasureTheory
 

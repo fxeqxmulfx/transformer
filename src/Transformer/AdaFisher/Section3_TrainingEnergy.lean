@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_TrainingError
+public import Transformer.AdaFisher.Section3_TrainingLossDescent
+
+/-!
 # AdaFisher — decrease of the full momentum-error Lyapunov energy
 
 arXiv:2405.16397v3, §3.4 and Appendix A.2, deterministic extension.
@@ -6,8 +11,7 @@ Bias correction is retained. Damping and Lipschitz continuity control
 both the actual displacement and the error of the corrected moment.
 -/
 
-import Transformer.AdaFisher.Section3_TrainingError
-import Transformer.AdaFisher.Section3_TrainingLossDescent
+@[expose] public section
 
 noncomputable section
 

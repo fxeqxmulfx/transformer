@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section9_Limits
+public import Transformer.Clusters.Section9_Fj
+
+/-!
 # The emergence of clusters in self-attention dynamics — how fast a
   coordinate may grow
 
@@ -13,7 +18,7 @@ eigencoordinates of the unrescaled tokens, and its replacement `e:notdi` when
   `transformerDynamics_iff_rescaled` is what reads them back on `z_i`.
 
 * `l:nottoofassst` is stated for any `k ∈ [d]`, so its `φ*_k` and `λ_k` may be
-  complex and `|λ_k|` is a modulus.  `IsEigenFunctional` is stated over
+  complex and `|λ_k|` is a modulus. `IsEigenFunctional` is stated over
   `RCLike`, so the complex case is `𝕜 = ℂ`: an `ℝ`-linear `f : ℝ^d → ℂ` with
   `f(Vz) = λ f(z)` is exactly a dual eigenvector of the complexification
   restricted to real vectors, and `|λ_k|` is `‖lam‖`.
@@ -21,17 +26,16 @@ eigencoordinates of the unrescaled tokens, and its replacement `e:notdi` when
 * `r:notdiagonalizable` recalls a standard normal form — a Jordan basis whose
   superdiagonal entries are an arbitrary `ε ≠ 0` (Horn–Johnson, Cor. 3.1.21) —
   and derives from it the bound `‖π_F(Vx)‖ ≤ (|λ_k| + δ)‖π_F(x)‖`, which is
-  what the modified proof runs on.  That bound is `IsProjContraction`, carried
+  what the modified proof runs on. That bound is `IsProjContraction`, carried
   as the hypothesis of `e:notdi`; the normal form itself is quoted linear
-  algebra, not a claim of the paper, and is not restated.  Only linearity of
+  algebra, not a claim of the paper, and is not restated. Only linearity of
   `proj` is used, not that it is an orthogonal projection.
 
 Source: arXiv:2305.05465v6, `l:nottoofassst`, `r:notdiagonalizable`,
 `e:notdi`.
 -/
 
-import Transformer.Clusters.Section9_Limits
-import Transformer.Clusters.Section9_Fj
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

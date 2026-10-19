@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Muon.Section2_Models
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+/-!
 # Muon — algebra of the reported scaling-law fits
 
 arXiv:2502.16982, §3.2, `tab:fit`, and Appendix B,
@@ -7,8 +12,7 @@ empirical fits. Algebraic identities about these functions do not prove
 their accuracy or the optimality of the hyperparameters for actual training.
 -/
 
-import Transformer.Muon.Section2_Models
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+@[expose] public section
 
 noncomputable section
 

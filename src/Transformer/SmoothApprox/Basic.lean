@@ -1,9 +1,15 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
+public import Mathlib.Analysis.Calculus.ContDiff.Convolution
+public import Mathlib.MeasureTheory.Measure.Haar.Basic
+
+/-!
 # Smooth approximation of compactly supported functions
 
 On a finite-dimensional real space, a continuous function with compact
 support is uniformly as close as wished to a smooth function with compact
-support, and a `C¹` one is so in the `C¹` norm.  The approximant is the
+support, and a `C¹` one is so in the `C¹` norm. The approximant is the
 mollification `φ ⋆ f` by a normed bump function `φ` whose radius is below the
 modulus of uniform continuity of `f` (`ContDiffBump.dist_normed_convolution_le`);
 its derivative is `φ ⋆ Df` (`HasCompactSupport.hasFDerivAt_convolution_right`).
@@ -12,9 +18,7 @@ This is how a weak formulation tested against `C_c^∞` functions extends to
 `C_c` and `C¹_c` ones, as arXiv:2305.05465v6, §6, uses for `d:solconti`.
 -/
 
-import Mathlib.Analysis.Calculus.BumpFunction.Convolution
-import Mathlib.Analysis.Calculus.ContDiff.Convolution
-import Mathlib.MeasureTheory.Measure.Haar.Basic
+@[expose] public section
 
 open MeasureTheory Metric ContinuousLinearMap
 open scoped Convolution

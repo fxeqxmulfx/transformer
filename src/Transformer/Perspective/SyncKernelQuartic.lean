@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.SyncKernel
+public import Mathlib.Algebra.Polynomial.Roots
+public import Mathlib.Tactic.ComputeDegree
+
+/-!
 # The quartic behind the sign of `f_β'''`
 
 Polyanskiy, Rigollet, Yao — arXiv:2507.22857v1, *Synchronization of mean-field
@@ -9,7 +15,7 @@ models on the circle*, Appendices A–B, proofs of `lemma:positiveregion` and
 
   `p(z) = -(z + 3βz² - 4β(1 - z²) - 6β²z(1 - z²) + β³(1 - z²)²)`,
 
-so the sign of `f_β'''` is the sign of `p` on `[-1, 1]`.  The source evaluates
+so the sign of `f_β'''` is the sign of `p` on `[-1, 1]`. The source evaluates
 `p` at a few points; each sign change gives a root by the intermediate value
 theorem, and a quartic has no more than four.
 
@@ -19,9 +25,7 @@ theorem, and a quartic has no more than four.
   `[-1, 1]`, `p ≥ 0` exactly on `[-1, r]` (`exists_kernelQuartic_root`).
 -/
 
-import Transformer.Perspective.SyncKernel
-import Mathlib.Algebra.Polynomial.Roots
-import Mathlib.Tactic.ComputeDegree
+@[expose] public section
 
 open Real Polynomial
 

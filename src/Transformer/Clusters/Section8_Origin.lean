@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_HigherDim
+public import Mathlib.MeasureTheory.Integral.IntegrableOn
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+
+/-!
 # The emergence of clusters in self-attention dynamics — a cluster at the
   origin
 
@@ -8,7 +14,7 @@ whole configuration collapses to a single cluster at the origin.
 **What the source says and what is carried here.**
 
 * `QᵀK = I_d` is `IsIdentityQK`: the form `(u,v) ↦ ⟨Qu, Kv⟩` is the standard
-  inner product.  It is what `e:-Iddyn` uses `Q` and `K` through, and `Q = K =
+  inner product. It is what `e:-Iddyn` uses `Q` and `K` through, and `Q = K =
   I_d` witnesses it.
 
 * `e:-Iddyn` is `eq:trans_dyn` at `V = -I_d`, and
@@ -31,9 +37,7 @@ Source: arXiv:2305.05465v6, `s:c<0`, `e:-Iddyn`, `l:cas1circle`,
 `l:stationary`, `e:finiteinegral`, `t:cas-Idintro`.
 -/
 
-import Transformer.Clusters.Section7_HigherDim
-import Mathlib.MeasureTheory.Integral.IntegrableOn
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter

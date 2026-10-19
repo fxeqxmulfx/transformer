@@ -8,6 +8,12 @@ module
 public import KolmogorovExtension4.CompactSystem
 public import Mathlib.MeasureTheory.Measure.AddContent
 
+/-!
+# Regular contents
+
+Continuity at the empty set and countable subadditivity for regular additive contents.
+-/
+
 @[expose] public section
 
 open scoped ENNReal

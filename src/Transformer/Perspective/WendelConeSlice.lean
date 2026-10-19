@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.WendelSignAverage
+public import Mathlib.Analysis.InnerProductSpace.Basic
+
+/-!
 # Slicing a strict sign cone by a hyperplane
 
 For Wendel's sign-pattern recurrence, a pattern on the first `n` vectors has
@@ -9,8 +14,7 @@ two witnesses; the reverse implication perturbs a witness in both directions.
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962).
 -/
 
-import Transformer.Perspective.WendelSignAverage
-import Mathlib.Analysis.InnerProductSpace.Basic
+@[expose] public section
 
 namespace Transformer.Perspective
 

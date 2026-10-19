@@ -1,31 +1,35 @@
-/-
+module
+
+public import Transformer.ALM.TieSet
+public import Transformer.ALM.Hull
+
+/-!
 # Keys in general position, and why the machine has them
 
 `Transformer.ALM.TieSet` shows what the erase loops of `add_line` can cost: at
 a query where three stored lines agree, the test fires on the middle one, the
 envelope keeps its value and the tie set the payloads are merged over loses a
-member.  `todo3.md` §3a asks for the hypothesis that rules this out to be
+member. `todo3.md` §3a asks for the hypothesis that rules this out to be
 stated, since `HullKVCache` is offered as a general drop-in and neither post
 nor code names it.
 
-Here it is.  `erase_preserves_tieSet`: if the three lines of a loop iteration
+Here it is. `erase_preserves_tieSet`: if the three lines of a loop iteration
 are not concurrent — equivalently, if the three keys are not collinear — then
 the rejected line is a maximizer at no query at all, and the erase preserves
-the tie set and not merely the value.  So the hull head and the brute head
+the tie set and not merely the value. So the hull head and the brute head
 agree for keys in general position, and anything else needs the brute head or
 a hull that keeps collinear vertices.
 
 `liftKey_not_concurrent` is why the released machine never meets the
 degenerate case: two lifted keys cross at their midpoint, so three of them
-concurrent would need `k₁ = k₃`.  That is the strict concavity of
+concurrent would need `k₁ = k₃`. That is the strict concavity of
 `k ↦ (2k, -k²)` and nothing the code checks — it is the hypothesis that fails
 the moment a head is keyed on something the compiler did not lift.
 
 Source: `todo3.md` §3a; `transformer_vm/attention/hull2d_cht.h`, lines 143-195.
 -/
 
-import Transformer.ALM.TieSet
-import Transformer.ALM.Hull
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -59,7 +63,7 @@ lemma lt_max_of_lt_at_interX {l₁ l₂ l₃ : ℝ × ℝ} (h₁₂ : l₁.1 < l
 lines of one loop iteration are not concurrent — equivalently, the three keys
 are not collinear — then the line the test rejects is a maximizer at no query
 at all, and dropping it changes neither the value nor the set of lines the
-merge walk collects.  This is the hypothesis `todo3.md` §3a asks to be stated:
+merge walk collects. This is the hypothesis `todo3.md` §3a asks to be stated:
 under it the hull head and the brute head answer alike. -/
 theorem erase_preserves_tieSet {s : Finset (ℝ × ℝ)} {l₁ l₂ l₃ : ℝ × ℝ}
     (h₁ : l₁ ∈ s) (h₃ : l₃ ∈ s) (h₁₂ : l₁.1 < l₂.1) (h₂₃ : l₂.1 < l₃.1)
@@ -100,7 +104,7 @@ theorem erase_preserves_tieSet {s : Finset (ℝ × ℝ)} {l₁ l₂ l₃ : ℝ �
 /-! ### Why the machine never meets the degenerate case -/
 
 /-- **The paraboloid is in general position.**  Two lifted keys cross at their
-midpoint, so three of them meeting at one point would need `k₁ = k₃`.  Nothing
+midpoint, so three of them meeting at one point would need `k₁ = k₃`. Nothing
 in `add_line` checks this; it is the strict concavity of `k ↦ (2k, -k²)` that
 keeps `HullKVCache` equivalent to the attention it replaces, and it is the
 hypothesis that fails the moment a head is keyed on anything else. -/
@@ -115,10 +119,10 @@ theorem liftKey_not_concurrent {k₁ k₂ k₃ : ℝ} (h₁₂ : k₁ < k₂) (h
 
 /-! ### The hypotheses are satisfiable -/
 
-/-- The triple that keeps its tie set: `y = -x`, `y = -1`, `y = x`.  The
+/-- The triple that keeps its tie set: `y = -x`, `y = -1`, `y = x`. The
 breakpoint test still fires — the flat line is redundant — but the three keys
 `(-1, 0)`, `(0, -1)`, `(1, 0)` are not collinear, so the erased line was a
-maximizer nowhere.  These are the hypotheses of `erase_preserves_tieSet` and
+maximizer nowhere. These are the hypotheses of `erase_preserves_tieSet` and
 `lt_max_of_lt_at_interX`. -/
 example :
     ((-1, 0) : ℝ × ℝ).1 < ((0, -1) : ℝ × ℝ).1 ∧ ((0, -1) : ℝ × ℝ).1 < ((1, 0) : ℝ × ℝ).1 ∧

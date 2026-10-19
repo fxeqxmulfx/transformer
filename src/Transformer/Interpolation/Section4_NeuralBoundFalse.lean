@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_NeuralSpeed
+
+/-!
 # The two inverse-time parameter bounds for neural interpolation are false
 
 arXiv:2411.04551v3, §4, `prop: interpolation.neural.ode` and
@@ -17,7 +21,7 @@ norms and vector norm is a norm on the finite-dimensional parameter space;
 another norm changes the proposed constant, independent of `T`.
 -/
 
-import Transformer.Interpolation.Section4_NeuralSpeed
+@[expose] public section
 
 open scoped BigOperators
 open MeasureTheory Real

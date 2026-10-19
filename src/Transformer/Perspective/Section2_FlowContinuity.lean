@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perspective.Section2_SphereFlow
+public import Transformer.Perspective.SALipschitz
+public import Mathlib.Analysis.ODE.Gronwall
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Continuity of the actual spherical attention flow
 
 ArXiv:2312.10794v5, §2, `SA`, and Appendix D, Step 1,
@@ -14,9 +21,7 @@ The temperature and forward-time sign conditions are explicit. No limit,
 measurability or continuity is imposed in the definition of the flow.
 -/
 
-import Transformer.Perspective.Section2_SphereFlow
-import Transformer.Perspective.SALipschitz
-import Mathlib.Analysis.ODE.Gronwall
+@[expose] public section
 
 open Real Set
 

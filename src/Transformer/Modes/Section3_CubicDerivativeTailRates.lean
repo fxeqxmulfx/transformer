@@ -1,4 +1,6 @@
-import Transformer.Modes.Section3_CubicCorrectionDerivativeBounds
+module
+
+public import Transformer.Modes.Section3_CubicCorrectionDerivativeBounds
 
 /-!
 # Inverse-n exterior rates for all Gaussian and cubic correction derivatives
@@ -17,6 +19,8 @@ general argument to the actual Gaussian characteristic function and
 its product with the literal cubic coefficient. The source's stronger
 exponential tail is replaced by the inverse-n bound needed at fixed law.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

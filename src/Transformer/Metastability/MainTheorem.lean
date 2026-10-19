@@ -1,4 +1,14 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+public import Transformer.Metastability.Basic
+public import Transformer.Metastability.CollapseODE
+public import Transformer.Metastability.PairVelocitySum
+public import Transformer.Metastability.Propagation
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
 # Metastability — Main theorem (thm: metastability) and direct proof
 
 This file formalizes §2 of arXiv:2410.06833v1.
@@ -22,13 +32,7 @@ Equations covered:
 `rem: variance`, which closes §2, is in `Metastability.CapVariance`.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
-import Transformer.Metastability.Basic
-import Transformer.Metastability.CollapseODE
-import Transformer.Metastability.PairVelocitySum
-import Transformer.Metastability.Propagation
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -61,12 +65,12 @@ within-cap inner-product minimum `ρ_q(t)`:
 `ρ_q` is not an arbitrary function: `hρq_le` and `hρq_att` say that `ρ_q(t)`
 is the minimum of `⟨x_i(t), x_j(t)⟩` over the cap `I = 𝒮_q`, and `h_far` is
 the `α`-separation of the cap from its complement on `[0, Tesc]` that bounds
-the leakage term.  Without them the statement is false —
-`not_rho_diff_ineq_of_free` refutes it.  The minimum of finitely many smooth
+the leakage term. Without them the statement is false —
+`not_rho_diff_ineq_of_free` refutes it. The minimum of finitely many smooth
 functions has corners, so its differentiability on `[0, Tesc]` is a hypothesis
 as well; the paper reads the inequality in the Dini sense instead.
 
-The proof is the envelope argument.  Fix `t` and a pair `(i, j) ∈ I²`
+The proof is the envelope argument. Fix `t` and a pair `(i, j) ∈ I²`
 attaining the minimum; since `I` does not move, `s ↦ ρ_q(s) - ⟨x_i(s), x_j(s)⟩`
 has a *global* maximum at `t`, so `ρ̇_q(t) = ⟨v_i, x_j⟩ + ⟨x_i, v_j⟩`, and the
 two terms are estimated by `Metastability.inner_proj_softmax_pair_sum`.
@@ -81,7 +85,7 @@ assumed.
 *`ρ_q ≥ 0` is a hypothesis.*  A token `x_k` inside the cap contributes
 `a_{ik}(⟨x_k, x_j⟩ - ⟨x_i, x_k⟩ ρ_q)` to `⟨v_i, x_j⟩`, and this is nonnegative
 because `⟨x_k, x_j⟩ ≥ ρ_q` and `⟨x_i, x_k⟩ ρ_q ≤ ρ_q` — the second step needs
-`ρ_q ≥ 0`.  In §2 `ρ_q ≥ 1 - δ` with `δ < 1`, so the hypothesis holds where
+`ρ_q ≥ 0`. In §2 `ρ_q ≥ 1 - δ` with `δ < 1`, so the hypothesis holds where
 the inequality is used; stated for an arbitrary minimum it has to be assumed.
 
 *The constant is the paper's `2 n`.*  Each of the two velocity terms leaks at

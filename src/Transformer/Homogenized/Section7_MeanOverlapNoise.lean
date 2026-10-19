@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_MeanOverlapGenerator
+public import Transformer.Homogenized.Section7_GaussianProductQueries
+public import Mathlib.Algebra.Order.Chebyshev
+
+/-!
 # Actual noise second moment for the original empirical mean
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -19,9 +25,7 @@ The source uses the coarser constant four. No martingale bracket
 or tail estimate is introduced as an assumption.
 -/
 
-import Transformer.Homogenized.Section7_MeanOverlapGenerator
-import Transformer.Homogenized.Section7_GaussianProductQueries
-import Mathlib.Algebra.Order.Chebyshev
+@[expose] public section
 
 open Real MeasureTheory
 open scoped BigOperators NNReal

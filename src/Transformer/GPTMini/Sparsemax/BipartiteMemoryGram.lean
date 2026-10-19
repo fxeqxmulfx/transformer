@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.LocalMemoryCore
+module
+
+public import Transformer.GPTMini.Sparsemax.LocalMemoryCore
 
 /-!+# Positive embedding Grams from nonnegative doubly stochastic scores
 
@@ -12,6 +14,8 @@ It is a finite matrix identity, not a rank assumption or a claim that every
 nonnegative matrix is a normalized sparsemax input. Subsequent modules
 apply it to symmetric local path scores with separate row budgets.
 -/
+
+@[expose] public section
 
 noncomputable section
 

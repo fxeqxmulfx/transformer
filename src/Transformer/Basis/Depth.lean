@@ -1,5 +1,7 @@
-import Transformer.Basis.Basic
-import Transformer.CRASP.PositionalDepth
+module
+
+public import Transformer.Basis.Basic
+public import Transformer.CRASP.PositionalDepth
 
 /-!
 # Basis depth as an integer-list continuation
@@ -18,6 +20,8 @@ tokens yield PAD rather than an exception. The valid-prefix grammar is
 broader than the benchmark's sampling distribution, whose neutral fraction,
 minimum lengths, and positive/negative pairing are not modeled here.
 -/
+
+@[expose] public section
 
 namespace Transformer.Basis
 

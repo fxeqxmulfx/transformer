@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.GPTMini.ClusteringTheorem
+public import Transformer.GPTMini.AttentionBounds
+
+/-!
 # Two tokens under the Pre-LN head
 
 The layer recursion `PreLNHead` at `T = 2`, and three facts about it that hold
@@ -13,14 +18,13 @@ for every stream, every temperature and every position:
   (`preLN_drift`, from `attentionHead_norm_le`).
 
 The last is what makes a large stream turn slowly: its direction moves by
-`O(√d / ‖x‖)` per layer (`Bridge.norm_inv_smul_sub_le`).  They are the input of
+`O(√d / ‖x‖)` per layer (`Bridge.norm_inv_smul_sub_le`). They are the input of
 `GPTMini.not_polynomial_rate`.
 
 Source: `reference/model.py` (`Block.forward`), through `PreLNHead`.
 -/
 
-import Transformer.GPTMini.ClusteringTheorem
-import Transformer.GPTMini.AttentionBounds
+@[expose] public section
 
 open scoped BigOperators
 open Real

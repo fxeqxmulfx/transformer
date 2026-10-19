@@ -1,8 +1,10 @@
-import Transformer.Modes.Section2_MainForm
-import Transformer.Modes.Section2_PhiTUniform
-import Transformer.Modes.Section5_PtBddDensity
+module
 
-/-
+public import Transformer.Modes.Section2_MainForm
+public import Transformer.Modes.Section2_PhiTUniform
+public import Transformer.Modes.Section5_PtBddDensity
+
+/-!
 # The number of modes of a Gaussian KDE — counterexamples to the application claims
 
 §4.1 of arXiv:2412.09080v3, `sec: kac.rice.application`, asserts that the
@@ -36,6 +38,8 @@ and the field with precisely the normalization of `eq:Fn`.
 
 Source: arXiv:2412.09080v3, §4.1, `lem: pt.bdd`, `lem:kr-appl`; §5.5.
 -/
+
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped ENNReal Topology

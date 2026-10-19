@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.SectionB_LogSlope
+
+/-!
 # The logarithmic force slope beyond twice the interaction peak
 
 ArXiv:2411.04990v2, Appendix B and §5, the force comparison
@@ -18,7 +22,7 @@ All bounds concern the original interaction and original peak;
 no new restriction is imposed on the positive temperature.
 -/
 
-import Transformer.Causal.SectionB_LogSlope
+@[expose] public section
 
 open Real Set
 

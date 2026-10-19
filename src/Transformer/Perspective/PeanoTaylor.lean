@@ -1,12 +1,17 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Second-order expansions with a Peano remainder
 
 The two analytic facts Appendix B's `e:Hessianincoord` runs on, both stated
 for real functions of a real variable and both independent of the survey:
 
-* `isLittleO_secondOrder` — Taylor–Young at order two.  A function whose
+* `isLittleO_secondOrder` — Taylor–Young at order two. A function whose
   derivative exists everywhere and is itself differentiable at `0` agrees with
-  its second-order polynomial up to `o(t²)`.  Mathlib's Taylor theorems
+  its second-order polynomial up to `o(t²)`. Mathlib's Taylor theorems
   (`taylor_isLittleO`, `taylor_mean_remainder_lagrange`) all ask for `C^n`
   regularity on an interval, which is more than the hypothesis
   `Perspective.SecondDerivEBetaAt` provides.
@@ -15,8 +20,7 @@ for real functions of a real variable and both independent of the survey:
 They are kept apart from the appendix because neither mentions it.
 -/
 
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open scoped BigOperators
 open Asymptotics Filter

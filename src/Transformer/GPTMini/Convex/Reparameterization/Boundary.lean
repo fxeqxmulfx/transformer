@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Reparameterization.LogOdds
+module
+
+public import Transformer.GPTMini.Convex.Reparameterization.LogOdds
 
 /-!
 # No convex likelihood coordinates for the unchanged scalar-head class
@@ -19,6 +21,8 @@ This is a fixed-one-hot-value shared-memory control, not a theorem about
 every causal GPTMini, every head width, learned values, or a particular
 dataset's aggregate loss. A changed prediction class remains admissible.
 -/
+
+@[expose] public section
 
 noncomputable section
 

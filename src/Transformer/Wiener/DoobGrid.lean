@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Wiener.DoobFinite
+
+/-!
 # Dyadic grids for Doob's inequalities in continuous time
 
 A process `(M_t)_{t ≥ 0}` sampled at the dyadic times `k T / 2ⁿ`, `k ≤ 2ⁿ`
 (`dyadicTime`), has running maxima `gridMax M T n = max_{k ≤ 2ⁿ} |M(k T / 2ⁿ)|`
-increasing in `n` (`gridMax_mono`).  Along a right-continuous path their limit
+increasing in `n` (`gridMax_mono`). Along a right-continuous path their limit
 is the supremum of `|M|` over `[0, T]` (`iSup_enorm_eq_iSup_gridMax`), every
 `t ≤ T` being a limit from the right of dyadic times
 (`exists_dyadicTime_tendsto`); so that supremum is measurable up to a null set
-(`aemeasurable_iSup_enorm`).  For a martingale, `|M|` on each grid is a
+(`aemeasurable_iSup_enorm`). For a martingale, `|M|` on each grid is a
 non-negative submartingale (`submartingale_abs_dyadic`), and `𝔼[M_s²] ≤ 𝔼[M_t²]`
 for `s ≤ t` (`lintegral_enorm_sq_le_of_le`).
 
@@ -16,7 +20,7 @@ The grid passage follows `nonnegative_submartingale_maximal_continuous`
 nested dyadic grids make the running maxima monotone in `n`.
 -/
 
-import Transformer.Wiener.DoobFinite
+@[expose] public section
 
 open MeasureTheory Filter Set
 open scoped ENNReal NNReal Topology

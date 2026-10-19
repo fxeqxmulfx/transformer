@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.MeanFieldStatic
+public import Transformer.Metastability.Section5_CapExitStopping
+
+/-!
 # Metastability — leaving the cap, mean-field (§5 of 2410.06833v1)
 
 Step 2 of the proof of `thm: metastability MF`: `claim: de sortie de cap`,
@@ -8,8 +13,7 @@ The vocabulary is `Metastability.MeanField`; the hypotheses are witnessed by
 the genuine global flows of `Section5_DiracDynamics`.
 -/
 
-import Transformer.Metastability.MeanFieldStatic
-import Transformer.Metastability.Section5_CapExitStopping
+@[expose] public section
 
 open Real MeasureTheory
 

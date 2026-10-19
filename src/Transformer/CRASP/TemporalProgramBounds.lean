@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.TemporalProgram
+
+/-!
 # Exact integer source values at the compiled precision
 
 arXiv:2506.16055v3, Appendix B.2, `thm:TLCl_to_rtfr`.
@@ -6,7 +10,7 @@ All value-projection contributions fit a precision chosen once from
 the finite syntax, so their inner rounding introduces no error.
 -/
 
-import Transformer.CRASP.TemporalProgram
+@[expose] public section
 
 namespace Transformer.CRASP.TemporalProgram
 

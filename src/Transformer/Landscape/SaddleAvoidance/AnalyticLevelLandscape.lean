@@ -1,11 +1,16 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.FlowLevelLandscape
+public import Transformer.Landscape.SaddleAvoidance.LocalInequality
+
+/-!
 # Saddle avoidance — analytic functions below a level
 
 An analytic function on a finite-dimensional real inner product space is
 `C²` (`AnalyticOnNhd.contDiff`) and satisfies the Łojasiewicz inequality at
 every point (`exists_isLojasiewiczAt_of_analyticOnNhd`), so for it the
 theorems of `LevelLandscape` and `FlowLevelLandscape` need no hypothesis
-`hloj`.  If every critical point below a level `c` is a global minimizer or
+`hloj`. If every critical point below a level `c` is a global minimizer or
 a strict saddle, gradient descent
 (`ae_exists_tendsto_isMinOn_of_lt_of_analyticOnNhd`) and the gradient flow
 (`ae_exists_tendsto_gradientFlow_isMinOn_of_lt_of_analyticOnNhd`) almost
@@ -16,8 +21,7 @@ span `E`, from all starts below `c` (the forms with `_of_span_eq_top`).
 Source: item M6.3 of `landscape_plan.md`.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.FlowLevelLandscape
-import Transformer.Landscape.SaddleAvoidance.LocalInequality
+@[expose] public section
 
 open Filter Set MeasureTheory
 open scoped Topology NNReal
@@ -86,7 +90,7 @@ theorem ae_exists_tendsto_gradientFlow_isMinOn_of_lt_of_span_eq_top_of_analyticO
 /-- The hypotheses of the theorems above hold for the analytic function
 `f(x) = 2 - cos x - cos² x` of the example in `LevelLandscape`, on the line
 with Lebesgue measure, `L = 3`, `η = 1/4`, `M = 2`, the period `2π` or its
-integer multiples, and `c = 2`.  Below `2` the critical points are the
+integer multiples, and `c = 2`. Below `2` the critical points are the
 global minimizers, where `cos x = 1`; the local minimizer `π` at the level
 `2` is not a global one, so the hypothesis `hcrit` of the global theorems
 fails, as that example shows. -/

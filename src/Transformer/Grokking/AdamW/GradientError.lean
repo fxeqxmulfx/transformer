@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.LossDirection
+module
+
+public import Transformer.Grokking.AdamW.LossDirection
 
 /-!
 # First-step amplification of an error in a zero gradient coordinate
@@ -17,6 +19,8 @@ and can reach half a step with arbitrarily small absolute error when
 epsilon is allowed to decrease with it. This is a conditional transfer
 bound, not a claim that every tiny numerical gradient causes such motion.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

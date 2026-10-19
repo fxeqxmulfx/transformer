@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_SignParameters
+
+/-!
 # Uniform second state derivatives of the actual optimizer drift
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The signed response has compact signal/noise parameter range away from
 zero denominators. Its true second derivatives therefore have a global bound.
 -/
 
-import Transformer.BatchSize.Section4_SignParameters
+@[expose] public section
 
 open scoped NNReal
 

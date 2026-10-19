@@ -1,60 +1,62 @@
-import Transformer.GPTMini.Sparsemax.SeparatedValues
-import Transformer.GPTMini.Sparsemax.ValuePlateau
-import Transformer.GPTMini.Sparsemax.QKIndependentError
-import Transformer.GPTMini.Sparsemax.SharedRowCancellation
-import Transformer.GPTMini.Sparsemax.GramBoundary
-import Transformer.GPTMini.Sparsemax.NormalizedGramExamples
-import Transformer.GPTMini.Sparsemax.JointGramValueExamples
-import Transformer.GPTMini.Sparsemax.ContextMemory
-import Transformer.GPTMini.Sparsemax.PrefixMemoryCodes
-import Transformer.GPTMini.Sparsemax.SharedMemoryValues
-import Transformer.GPTMini.Sparsemax.SharedMemoryGeometry
-import Transformer.GPTMini.Sparsemax.MemoryExampleGrams
-import Transformer.GPTMini.Sparsemax.SharedMemoryExamples
-import Transformer.GPTMini.Sparsemax.CodeMemoryOutputs
-import Transformer.GPTMini.Sparsemax.CausalPrefixKeys
-import Transformer.GPTMini.Sparsemax.CausalMemoryUniversality
-import Transformer.GPTMini.Sparsemax.PrefixFeatureCodes
-import Transformer.GPTMini.Sparsemax.PositionalMemoryTargets
-import Transformer.GPTMini.Sparsemax.BoundedGramWidth
-import Transformer.GPTMini.Sparsemax.PrototypeKernelCodes
-import Transformer.GPTMini.Sparsemax.PrototypeKernelFeatures
-import Transformer.GPTMini.Sparsemax.PrototypeKernelTraining
-import Transformer.GPTMini.Sparsemax.PrototypePrefixMemory
-import Transformer.GPTMini.Sparsemax.PrototypeKernelGeometry
-import Transformer.GPTMini.Sparsemax.NearestPrototypeCodes
-import Transformer.GPTMini.Sparsemax.PrefixNearestCodes
-import Transformer.GPTMini.Sparsemax.NearestMemoryGeneralization
-import Transformer.GPTMini.Sparsemax.PermutationMemoryGram
-import Transformer.GPTMini.Sparsemax.LocalMemoryFeasibility
-import Transformer.GPTMini.Sparsemax.LocalMemorySupport
-import Transformer.GPTMini.Sparsemax.LocalJointMemory
-import Transformer.GPTMini.Sparsemax.LocalNearestMemory
-import Transformer.GPTMini.Sparsemax.LocalMemoryExamples
-import Transformer.GPTMini.Sparsemax.LocalMemoryQuadratic
-import Transformer.GPTMini.Sparsemax.LocalMemorySelection
-import Transformer.GPTMini.Sparsemax.LocalRegularizedMemory
-import Transformer.GPTMini.Sparsemax.IncidentNearestMemory
-import Transformer.GPTMini.Sparsemax.IncidentMemorySelection
-import Transformer.GPTMini.Sparsemax.ObservedMemoryPreferences
-import Transformer.GPTMini.Sparsemax.PrefixObservedMemory
-import Transformer.GPTMini.Sparsemax.ObservedMemoryExamples
-import Transformer.GPTMini.Sparsemax.IncidentRegularizedMemory
-import Transformer.GPTMini.Sparsemax.IncidentMemoryDescent
-import Transformer.GPTMini.Sparsemax.EnergyMemoryLoss
-import Transformer.GPTMini.Sparsemax.PeriodicMemoryRank
-import Transformer.GPTMini.Sparsemax.OutputTiedMemoryDescent
-import Transformer.GPTMini.Sparsemax.CompactAffineCapacity
-import Transformer.GPTMini.Sparsemax.CausalContentBlock
-import Transformer.GPTMini.Sparsemax.AtomicMatchingContext
-import Transformer.GPTMini.Sparsemax.AtomicMatchingAttainment
-import Transformer.GPTMini.Sparsemax.PairedRecallRouting
-import Transformer.GPTMini.Sparsemax.Uniform
-import Transformer.GPTMini.Sparsemax.SelfRoute
-import Transformer.GPTMini.Sparsemax.Clipping
-import Transformer.GPTMini.Sparsemax.Failure
-import Transformer.GPTMini.Sparsemax.RoutingLoss
-import Transformer.GPTMini.Sparsemax.Certificate.Results
+module
+
+public import Transformer.GPTMini.Sparsemax.SeparatedValues
+public import Transformer.GPTMini.Sparsemax.ValuePlateau
+public import Transformer.GPTMini.Sparsemax.QKIndependentError
+public import Transformer.GPTMini.Sparsemax.SharedRowCancellation
+public import Transformer.GPTMini.Sparsemax.GramBoundary
+public import Transformer.GPTMini.Sparsemax.NormalizedGramExamples
+public import Transformer.GPTMini.Sparsemax.JointGramValueExamples
+public import Transformer.GPTMini.Sparsemax.ContextMemory
+public import Transformer.GPTMini.Sparsemax.PrefixMemoryCodes
+public import Transformer.GPTMini.Sparsemax.SharedMemoryValues
+public import Transformer.GPTMini.Sparsemax.SharedMemoryGeometry
+public import Transformer.GPTMini.Sparsemax.MemoryExampleGrams
+public import Transformer.GPTMini.Sparsemax.SharedMemoryExamples
+public import Transformer.GPTMini.Sparsemax.CodeMemoryOutputs
+public import Transformer.GPTMini.Sparsemax.CausalPrefixKeys
+public import Transformer.GPTMini.Sparsemax.CausalMemoryUniversality
+public import Transformer.GPTMini.Sparsemax.PrefixFeatureCodes
+public import Transformer.GPTMini.Sparsemax.PositionalMemoryTargets
+public import Transformer.GPTMini.Sparsemax.BoundedGramWidth
+public import Transformer.GPTMini.Sparsemax.PrototypeKernelCodes
+public import Transformer.GPTMini.Sparsemax.PrototypeKernelFeatures
+public import Transformer.GPTMini.Sparsemax.PrototypeKernelTraining
+public import Transformer.GPTMini.Sparsemax.PrototypePrefixMemory
+public import Transformer.GPTMini.Sparsemax.PrototypeKernelGeometry
+public import Transformer.GPTMini.Sparsemax.NearestPrototypeCodes
+public import Transformer.GPTMini.Sparsemax.PrefixNearestCodes
+public import Transformer.GPTMini.Sparsemax.NearestMemoryGeneralization
+public import Transformer.GPTMini.Sparsemax.PermutationMemoryGram
+public import Transformer.GPTMini.Sparsemax.LocalMemoryFeasibility
+public import Transformer.GPTMini.Sparsemax.LocalMemorySupport
+public import Transformer.GPTMini.Sparsemax.LocalJointMemory
+public import Transformer.GPTMini.Sparsemax.LocalNearestMemory
+public import Transformer.GPTMini.Sparsemax.LocalMemoryExamples
+public import Transformer.GPTMini.Sparsemax.LocalMemoryQuadratic
+public import Transformer.GPTMini.Sparsemax.LocalMemorySelection
+public import Transformer.GPTMini.Sparsemax.LocalRegularizedMemory
+public import Transformer.GPTMini.Sparsemax.IncidentNearestMemory
+public import Transformer.GPTMini.Sparsemax.IncidentMemorySelection
+public import Transformer.GPTMini.Sparsemax.ObservedMemoryPreferences
+public import Transformer.GPTMini.Sparsemax.PrefixObservedMemory
+public import Transformer.GPTMini.Sparsemax.ObservedMemoryExamples
+public import Transformer.GPTMini.Sparsemax.IncidentRegularizedMemory
+public import Transformer.GPTMini.Sparsemax.IncidentMemoryDescent
+public import Transformer.GPTMini.Sparsemax.EnergyMemoryLoss
+public import Transformer.GPTMini.Sparsemax.PeriodicMemoryRank
+public import Transformer.GPTMini.Sparsemax.OutputTiedMemoryDescent
+public import Transformer.GPTMini.Sparsemax.CompactAffineCapacity
+public import Transformer.GPTMini.Sparsemax.CausalContentBlock
+public import Transformer.GPTMini.Sparsemax.AtomicMatchingContext
+public import Transformer.GPTMini.Sparsemax.AtomicMatchingAttainment
+public import Transformer.GPTMini.Sparsemax.PairedRecallRouting
+public import Transformer.GPTMini.Sparsemax.Uniform
+public import Transformer.GPTMini.Sparsemax.SelfRoute
+public import Transformer.GPTMini.Sparsemax.Clipping
+public import Transformer.GPTMini.Sparsemax.Failure
+public import Transformer.GPTMini.Sparsemax.RoutingLoss
+public import Transformer.GPTMini.Sparsemax.Certificate.Results
 
 /-!
 # Sparsemax training boundaries and convex learned-memory constructions
@@ -179,22 +181,38 @@ Selected K features restrict capacity; universal coefficient-linear scalar
 responses need 2^r coefficients. Free token codes, normalization, layer stacks,
 FFN/language criteria and successful Basis training are not established.
 
-The genuine atomic model retains free shared token Q/K and independent original values with actual causal sparsemax.
-All bounded heads are eligible; nonnegative unit-total finite states are convex, and predictions form their complete convex hull.
-Mixture masses absorb into original values. R observations compress exactly to at most R+1 actual heads.
-At nonnegative cap, support-changing inference is continuous and a compact R+1 chart covers the observed prediction set.
+The genuine atomic model retains free shared token Q/K and independent original values
+with actual causal sparsemax.
+All bounded heads are eligible; nonnegative unit-total finite states are convex, and
+predictions form their complete convex hull.
+Mixture masses absorb into original values. R observations compress exactly to at most
+R+1 actual heads.
+At nonnegative cap, support-changing inference is continuous and a compact R+1 chart
+covers the observed prediction set.
 Every continuous output criterion attains a global minimum; storage is bounded by `(R+1)*(2*V*H+V*D+1)`.
-Convex criteria give convex distributional training; supporting functionals and certified global head prices bound the gap.
-Physical head-price minima exist, but finding them can be nonconvex even on affine Q/K paths with fixed values.
-The two-order example has uniform error floor 1/8. Variable head count, coordinate bounds and unit mass replace fixed raw-width training.
+Convex criteria give convex distributional training; supporting functionals and
+certified global head prices bound the gap.
+Physical head-price minima exist, but finding them can be nonconvex even on affine Q/K
+paths with fixed values.
+The two-order example has uniform error floor 1/8. Variable head count, coordinate
+bounds and unit mass replace fixed raw-width training.
 Original weight decay and unseen-text guarantees are deferred.
 
-Content-only heads lose key/value binding: every visible permutation fixing the query preserves their outputs.
-Exchanging two written values produces distinct correct answers and sharp error floor 1/2 for every old mixture.
-A new causal encoder splits keys into freely learned current-token and predecessor roles, with current-token Q and original values.
-Its physical storage has no V-squared pair table. True contextual forward continuity, output bounds and convex mixture criteria survive.
-Global contextual head prices attain minima over the original token tables; efficient discovery is still separate.
+Content-only heads lose key/value binding: every visible permutation fixing the query
+preserves their outputs.
+Exchanging two written values produces distinct correct answers and sharp error floor
+1/2 for every old mixture.
+A new causal encoder splits keys into freely learned current-token and predecessor
+roles, with current-token Q and original values.
+Its physical storage has no V-squared pair table. True contextual forward continuity,
+output bounds and convex mixture criteria survive.
+Global contextual head prices attain minima over the original token tables; efficient
+discovery is still separate.
 A cap-one head fits both exchanged tables and attains the exact two-observation price lower bound.
-For 256 keys, a cap-four width-eight physical head uses distinct signed integer codes of norm thirty and unit score gaps.
-Original sparsemax selects the unique visible matching predecessor and reads its next value. Rewrites and optimizer convergence are deferred.
+For 256 keys, a cap-four width-eight physical head uses distinct signed integer codes of
+norm thirty and unit score gaps.
+Original sparsemax selects the unique visible matching predecessor and reads its next
+value. Rewrites and optimizer convergence are deferred.
 -/
+
+@[expose] public section

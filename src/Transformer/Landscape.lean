@@ -1,8 +1,20 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance
+public import Transformer.Landscape.PhaseModel
+public import Transformer.Landscape.Neural
+public import Transformer.Landscape.GlobalFlow
+public import Transformer.Landscape.Lojasiewicz
+public import Transformer.Landscape.Uniformization
+public import Transformer.Landscape.AnalyticPreparation
+public import Transformer.Landscape.RealAnalyticGerms
+public import Transformer.Landscape.Sturm
+
+/-!
 # The landscape framework
 
 What gradient descent and gradient flows do on a landscape, and everything this rests
-on.  Each subdirectory has an aggregator beside it, `Landscape/<Subdirectory>.lean`,
+on. Each subdirectory has an aggregator beside it, `Landscape/<Subdirectory>.lean`,
 with a map of its modules.
 
 | Subdirectory | What it proves | Main theorems |
@@ -39,19 +51,11 @@ their type, and dot notation needs them in its namespace.
 ## Dependencies
 
 `PhaseModel` imports `SaddleAvoidance`, which imports `GlobalFlow` (in `TimeOne`) and
-`Lojasiewicz` (in `LocalInequality`, `Symmetry` and `FlowConvergence`).  `Lojasiewicz`,
+`Lojasiewicz` (in `LocalInequality`, `Symmetry` and `FlowConvergence`). `Lojasiewicz`,
 `Uniformization`, `AnalyticPreparation`, `RealAnalyticGerms` and `Sturm` import each
-other's modules.  Outside this directory the framework imports only `Transformer.Basic`
-and Mathlib.  `Normalization`, `Perspective`, `Clusters`, `Interpolation`, `Causal`,
+other's modules. Outside this directory the framework imports only `Transformer.Basic`
+and Mathlib. `Normalization`, `Perspective`, `Clusters`, `Interpolation`, `Causal`,
 `Kinetic`, `Imbalance` and `ContinuityEq` import it.
 -/
 
-import Transformer.Landscape.SaddleAvoidance
-import Transformer.Landscape.PhaseModel
-import Transformer.Landscape.Neural
-import Transformer.Landscape.GlobalFlow
-import Transformer.Landscape.Lojasiewicz
-import Transformer.Landscape.Uniformization
-import Transformer.Landscape.AnalyticPreparation
-import Transformer.Landscape.RealAnalyticGerms
-import Transformer.Landscape.Sturm
+@[expose] public section

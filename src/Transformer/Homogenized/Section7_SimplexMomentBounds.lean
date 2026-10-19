@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_SimplexDriftBias
+
+/-!
 # Column constraints on the actual simplex attention moments
 
 ArXiv:2604.01978v1, §7, eq:f_g_def_selfcontained and
@@ -15,7 +19,7 @@ These estimates will keep its trajectory within the domain where
 the reference simplex has been explicitly constructed.
 -/
 
-import Transformer.Homogenized.Section7_SimplexDriftBias
+@[expose] public section
 
 open scoped BigOperators
 open MeasureTheory Set

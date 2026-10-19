@@ -1,8 +1,12 @@
-/-
+module
+
+public import Transformer.Modes.Section3_Edgeworth
+
+/-!
 # The number of modes of a Gaussian KDE — `Σ_t` is positive definite
 
 The whitening `Σ_t^{-1/2}` of `eq:Yi` in arXiv:2412.09080v3 exists only when
-`Σ_t` is positive definite, which the source takes for granted.  It holds for
+`Σ_t` is positive definite, which the source takes for granted. It holds for
 every `β > 0`:
 
 * `G(t)` and `G'(t)` are bounded in `X` for `β > 0` (`abs_bigG_le`,
@@ -19,7 +23,7 @@ every `β > 0`:
 Source: arXiv:2412.09080v3, `eq:Yi` and the sentence after it.
 -/
 
-import Transformer.Modes.Section3_Edgeworth
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.ConstrainedMinima
+
+/-!
 # Joint witnesses for the Sturm and signed-query hypotheses
 
 These examples include actual roots, an interior sign collapse,
@@ -6,7 +10,7 @@ nonzero query values, generic endpoints, and repeated roots. Auxiliary
 for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.ConstrainedMinima
+@[expose] public section
 
 noncomputable section
 open Filter Topology Polynomial

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_BrownianHigherMoments
+public import Transformer.BatchSize.Section4_ItoSums
+
+/-!
 # Integrability for fourth-moment expansions with adapted coefficients
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ All terms in the polynomial expansion are genuinely integrable.
 The bounded amplitude may depend on the whole vector Brownian past.
 -/
 
-import Transformer.BatchSize.Section4_BrownianHigherMoments
-import Transformer.BatchSize.Section4_ItoSums
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped NNReal ENNReal

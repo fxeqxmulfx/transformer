@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_CircleRotation
+public import Transformer.Perceptron.CircleDeriv
+
+/-!
 # Perceptron force and curvature in continuous circle coordinates
 
 ArXiv:2601.21366v2, §2.3, `eq: primitive.field`, and §5.2,
@@ -14,8 +19,7 @@ activations satisfy that regularity; no density or atomicity of
 the measure is used in this calculation.
 -/
 
-import Transformer.Perceptron.Section5_CircleRotation
-import Transformer.Perceptron.CircleDeriv
+@[expose] public section
 
 open scoped BigOperators
 open Real

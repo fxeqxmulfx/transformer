@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_Spectrum
+public import Mathlib.Analysis.Real.Sqrt
+
+/-!
 # AdaFisher: the min-max matrix formula and Loewner bounds
 
 arXiv:2405.16397v3, Proposition 3.2, Appendix A.2, Part 2.
@@ -6,8 +11,7 @@ The sandwich formula requires a strictly positive diagonal range.
 Loewner bounds are expressed by positive semidefiniteness of M' and I-M'.
 -/
 
-import Transformer.AdaFisher.Section3_Spectrum
-import Mathlib.Analysis.Real.Sqrt
+@[expose] public section
 
 noncomputable section
 

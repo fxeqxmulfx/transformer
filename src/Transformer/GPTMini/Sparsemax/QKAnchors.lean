@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.QKChart
-import Transformer.GPTMini.Sparsemax.AnchorTransfer
+module
+
+public import Transformer.GPTMini.Sparsemax.QKChart
+public import Transformer.GPTMini.Sparsemax.AnchorTransfer
 
 /-!
 # Persistent anchors implemented by actual normalized query/key scores
@@ -18,6 +20,8 @@ variational sparsemax. The result concerns one query row. The temperature
 depends on this row's ordinary parameters, and independently parameterized
 keys are not yet a theorem about shared token projections across rows.
 -/
+
+@[expose] public section
 
 noncomputable section
 

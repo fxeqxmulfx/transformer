@@ -1,4 +1,10 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+
+/-!
 # `lem: quantitative inequality`, with the constant its proof supports
 
 arXiv:2410.06833v1, "Dynamic metastability in the self-attention model", §3.2,
@@ -16,29 +22,27 @@ Two corrections to the statement as printed.
 * The sign: the lemma is printed for the *ascending* flow `Ẋ = ∇𝖤(X)`, with
   `𝖤(v) - 𝖤(u)` on both sides, while (H1), which it serves, is written for
   the descending flow `Ẋ = -∇𝖤(X)` of the Otto–Reznikoff framework, with
-  `𝖤(u) - 𝖤(v)`.  The two conventions differ by `𝖤 ↦ -𝖤` (the constraint
+  `𝖤(u) - 𝖤(v)`. The two conventions differ by `𝖤 ↦ -𝖤` (the constraint
   `𝖤 ≥ 0` is immaterial: both sides involve differences of `𝖤` only, and
-  `𝖤` is bounded on the compact `ℳ` of the paper).  It is stated here in the
+  `𝖤` is bounded on the compact `ℳ` of the paper). It is stated here in the
   convention of (H1).
-* The constant: the argument gives `(c/2)‖u - v‖²`, not `2c‖u - v‖²`.  The
+* The constant: the argument gives `(c/2)‖u - v‖²`, not `2c‖u - v‖²`. The
   printed proof differentiates `√(𝖤(v) - 𝖤(X(t)))` and drops the factor `2`
   of `(√f)' = f'/(2√f)`, which is exactly the factor `4` between the two.
   `not_quantitative_inequality_two_mul` refutes `2c`: the flow of `𝖤(x) = x²/2`
   on `ℝ` from `u = 1` to `v = e⁻¹` meets every hypothesis with `c = 1` and
-  violates that conclusion.  At `c = 1` the corrected constant is `1/2`, which
+  violates that conclusion. At `c = 1` the corrected constant is `1/2`, which
   is exactly the lower bound (H1) asks for, so nothing downstream is lost.
 
 The flow enters as a triple `(𝖤, ∇𝖤, X)`: `X` solves the gradient flow, and
 `𝖤 ∘ X` falls at the rate `‖∇𝖤(X)‖²` — the chain rule for a smooth `𝖤`,
-which this development does not carry for an abstract manifold.  The PL
+which this development does not carry for an abstract manifold. The PL
 inequality is asked for along the whole trajectory, as the paper's proof uses
 it and its statement leaves implicit; at the single point `u` it says nothing
 about where the flow goes, and no bound on `‖u - v‖` can follow.
 -/
 
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+@[expose] public section
 
 namespace Transformer
 namespace Metastability
@@ -47,7 +51,7 @@ namespace Metastability
 
 Let `X` follow the gradient flow of `𝖤` from `u = X(0)` to `v = X(T)`, and let
 the Polyak-Łojasiewicz bound `𝖤(X(t)) - 𝖤(v) ≤ (1/2c)‖∇𝖤(X(t))‖²` hold along
-it.  Then
+it. Then
 
   `(c/2)‖u - v‖² ≤ 𝖤(u) - 𝖤(v)`.
 

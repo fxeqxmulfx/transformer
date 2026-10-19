@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Basic
+public import Mathlib.Probability.Moments.SubGaussian
+
+/-!
 # Homogenized Transformers — the random chain and the weight law
 
 Formalization of `ass:high_order_short` and of the randomness carried by the
@@ -11,7 +16,7 @@ arguments rather than as claims.
 * `IsHighOrderLaw` is `ass:high_order_short`: the weight law `ρ*` is the law of
   `(V, A)` where `A - 𝔼A = W W'ᵀ` is independent of `V`, and the entries of
   `V - 𝔼V`, of `W` and of `W'` are independent subGaussian with variance
-  proxies `C σ_V²` and `C σ_A²`.  The source space carrying `V, W, W'` is part
+  proxies `C σ_V²` and `C σ_A²`. The source space carrying `V, W, W'` is part
   of the data; `HasHighOrderLaw` existentially closes over it, which is how the
   assumption reads in the manuscript ("whenever `(A, V) ∼ ρ*`").
 
@@ -22,8 +27,7 @@ arguments rather than as claims.
 Source: arXiv:2604.01978v1, §2.3, `ass:high_order_short`, `eq:update_tokens`.
 -/
 
-import Transformer.Homogenized.Basic
-import Mathlib.Probability.Moments.SubGaussian
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory ProbabilityTheory
@@ -104,7 +108,7 @@ def HasHighOrderLaw (d : ℕ) (σV σA : ℝ≥0) (ρ : Measure (HeadParam d)) :
 
 /-- The degenerate weight law `ρ* = δ_0` satisfies `ass:high_order_short`, with
 all three centered parts equal to `0` on a one-point space, both means equal to
-`0`, and both scales `σ_V = σ_A = 0`.  This is the witness that the assumption
+`0`, and both scales `σ_V = σ_A = 0`. This is the witness that the assumption
 is not contradictory; it is stated with its data explicit, so that a consumer
 of `ass:high_order_short` can name `𝔼V = 0` as well.
 
@@ -152,7 +156,7 @@ structure IsRandomChain {d n H : ℕ} (η β : ℝ) (ρ : Measure (HeadParam d))
 
 /-- The degenerate chain: under `ρ* = δ_0` every head is the zero head, the
 attention field vanishes, and the update of `eq:update_tokens` leaves a unit
-tuple where it is.  So `IsRandomChain` is satisfiable.
+tuple where it is. So `IsRandomChain` is satisfiable.
 
 Source: arXiv:2604.01978v1, §2.1, `eq:update_tokens`. -/
 theorem isRandomChain_dirac_zero {d n H : ℕ} (η β : ℝ) (x₀ : Idx n → EucSpace d)

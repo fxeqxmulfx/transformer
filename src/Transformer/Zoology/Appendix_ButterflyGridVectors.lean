@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ButterflyGridToggle
+
+/-!
 # Vector and matrix coordinates in the row-major grid
 
 Arora et al., arXiv:2312.04927v1, Appendix `prop: butterfly-hyena`
@@ -6,7 +10,7 @@ and `def: kaleidoscope`. Encoding and decoding preserve every coordinate,
 including the coordinate basis used to define ordinary matrix transpose.
 -/
 
-import Transformer.Zoology.Appendix_ButterflyGridToggle
+@[expose] public section
 
 namespace Transformer.Zoology
 

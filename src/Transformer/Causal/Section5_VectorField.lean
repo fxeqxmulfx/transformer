@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Causal.Section5_InteractionDecay
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Data.Fintype.Fin
+
+/-!
 # The actual normalized circle vector field
 
 ArXiv:2411.04990v2, §5, proof of `lemma:meta`, `eq:bddotphi`.
@@ -8,9 +14,7 @@ one to the denominator and zero to the projected velocity.
 Indices are zero-based: the index `k` has exactly `k` strict predecessors.
 -/
 
-import Transformer.Causal.Section5_InteractionDecay
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Data.Fintype.Fin
+@[expose] public section
 
 open scoped BigOperators
 open Real

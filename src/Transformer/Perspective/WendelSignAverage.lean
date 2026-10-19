@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.WendelSignSymmetry
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+
+/-!
 # Averaging the sign patterns in Wendel's theorem
 
 The probability of the common-hemisphere event is the expected fraction of
@@ -9,8 +14,7 @@ count of sign patterns in general position.
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962).
 -/
 
-import Transformer.Perspective.WendelSignSymmetry
-import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+@[expose] public section
 
 open MeasureTheory
 

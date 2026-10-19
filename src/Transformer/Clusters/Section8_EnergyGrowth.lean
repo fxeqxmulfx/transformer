@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section8_SoftmaxEnergy
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Topology.Order.MonotoneConvergence
+
+/-!
 # A convergent energy for each rescaled token
 
 ArXiv:2305.05465v6, §8.1, `e:derivativenorm` and the boundedness
@@ -14,9 +20,7 @@ that token positions converge, nor assume their convergence as an input.
 Positive definiteness is unnecessary for this energy estimate.
 -/
 
-import Transformer.Clusters.Section8_SoftmaxEnergy
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Topology.Order.MonotoneConvergence
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

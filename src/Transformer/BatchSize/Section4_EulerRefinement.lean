@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_PairedEuler
+
+/-!
 # Mean-square convergence estimate for paired Euler refinements
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -7,7 +11,7 @@ The error bound vanishes with the mesh and retains the small-noise factor
 in the amplitudes, needed for the optimizer's O(eta) strong error.
 -/
 
-import Transformer.BatchSize.Section4_PairedEuler
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal

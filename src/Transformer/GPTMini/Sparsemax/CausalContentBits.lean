@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.CubeContentBits
-import Mathlib.Data.Nat.Bitwise
+module
+
+public import Transformer.GPTMini.Sparsemax.CubeContentBits
+public import Mathlib.Data.Nat.Bitwise
 
 /-!
 # Lossless causal content bits with a fixed token code
@@ -16,6 +18,8 @@ content interactions are supplied by the coefficient chart in the next
 modules. A vocabulary can use a binary code rather than one-hot bits;
 the causal representation uses T*(B+1) coordinates for B token-code bits.
 -/
+
+@[expose] public section
 
 noncomputable section
 

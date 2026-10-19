@@ -1,4 +1,6 @@
-import PFR.ForMathlib.Entropy.Basic
+module
+
+public import PFR.ForMathlib.Entropy.Basic
 
 /-!
 # Shannon memorization in bits
@@ -8,6 +10,8 @@ conditional mutual information, not mutual information with a new random
 variable called `X | Θ`. All entropies below use actual distributions.
 PFR uses natural logarithms; division by `log 2` converts to bits.
 -/
+
+@[expose] public section
 
 namespace Transformer.Memorization
 

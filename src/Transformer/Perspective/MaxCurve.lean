@@ -1,4 +1,8 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # The maximum of finitely many curves does not increase
 
 Auxiliary calculus for arXiv:2312.10794v5, *A mathematical perspective on
@@ -7,7 +11,7 @@ configuration in a chart of the hemisphere is shown to decay exponentially.
 
 A maximum of finitely many differentiable curves need not be differentiable
 where the maximising index changes, so "`Ṙ ≤ 0` at a maximising index" is not
-literally a derivative.  What is true is the one-sided statement proved here:
+literally a derivative. What is true is the one-sided statement proved here:
 the upper right Dini derivative of `R` is bounded by the derivatives of the
 curves attaining it, and the fencing theorem
 `image_le_of_liminf_slope_right_lt_deriv_boundary` holds `R` under the barrier
@@ -17,7 +21,7 @@ The curves need only be differentiable from time `a` on, which is what a chart
 defined on the future of a trajectory can supply.
 -/
 
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open scoped Topology
 

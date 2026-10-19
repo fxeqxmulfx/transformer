@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section8_Polytope
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.Normed.Group.Uniform
+
+/-!
 # Uniform continuity of rescaled token paths
 
 ArXiv:2305.05465v6, §8.1, Step 3 of `t:Idcase11`. The source observes
@@ -13,9 +19,7 @@ count. Empty token tuples are also covered. Every dynamical input is an
 actual solution of `e:dynIdzi`; no regularity assumption is added to it.
 -/
 
-import Transformer.Clusters.Section8_Polytope
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.Normed.Group.Uniform
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

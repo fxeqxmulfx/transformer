@@ -1,7 +1,14 @@
-/-
+module
+
+public import Mathlib.Algebra.Ring.GeomSum
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.Basic.Real.Sign
+public import Mathlib.Tactic.LinearCombination
+
+/-!
 # The moments of Adam
 
-arXiv:2405.14578, Appendix A.  Adam keeps the moments `m_t = β₁m_{t-1} + (1 - β₁)G_t` of the
+arXiv:2405.14578, Appendix A. Adam keeps the moments `m_t = β₁m_{t-1} + (1 - β₁)G_t` of the
 gradients and `v_t = β₂v_{t-1} + (1 - β₂)G_t²` of their squares, from `m_0 = v_0 = 0`,
 eqs. (25) and (26) (`adamMoment`, `adamMoment_eq`), and updates by `V = m̂_t/(√v̂_t + ε_Adam)`,
 with `m̂_t = m_t/(1 - β₁ᵗ)` and `v̂_t = v_t/(1 - β₂ᵗ)`, eq. (27) (`adamUpdate`, `adamUpdate_eq`).
@@ -9,16 +16,13 @@ with `m̂_t = m_t/(1 - β₁ᵗ)` and `v̂_t = v_t/(1 - β₂ᵗ)`, eq. (27) (`a
 Without `ε_Adam`, as `β₁, β₂ → 1` the update tends to `E_t[G]/√E_t[G²]`, the first step of
 eq. (28), the means taken over the iterations `1, …, t` (`iterMean`, `tendsto_adamUpdate_one`).
 The limit is joint in `(β₁, β₂)` and two-sided: it excludes only `β = 1`, where the bias
-correction `(1 - β)/(1 - βᵗ)` is `0/0`.  The variance `var_t(G) = E_t[G²] - E_t[G]²` of eq. (28)
+correction `(1 - β)/(1 - βᵗ)` is `0/0`. The variance `var_t(G) = E_t[G²] - E_t[G]²` of eq. (28)
 is `∑_{i=1}^t (G_i - E_t[G])²/t`, never negative (`iterVar`, `mul_iterVar`, `iterVar_nonneg`),
 and the limit is `sign(E_t[G])/√(1 + var_t(G)/E_t[G]²)`, the rest of eq. (28)
-(`adamLimit_eq_sign`).  At `β = 0` the moment is the last gradient (`adamMoment_zero`).
+(`adamLimit_eq_sign`). At `β = 0` the moment is the last gradient (`adamMoment_zero`).
 -/
 
-import Mathlib.Algebra.Ring.GeomSum
-import Mathlib.Analysis.Real.Sqrt
-import Mathlib.Basic.Real.Sign
-import Mathlib.Tactic.LinearCombination
+@[expose] public section
 
 open Filter Topology
 

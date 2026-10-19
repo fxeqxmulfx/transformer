@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.CompactMonomialCharts
+public import Transformer.Landscape.Lojasiewicz.OneDimensionalGradientInequality
+public import Transformer.Landscape.Uniformization
+
+/-!
 # Compact monomial charts of analytic energies
 
 Local uniformization (`Transformer.Landscape.Uniformization`) gives every analytic energy that is
@@ -9,9 +15,7 @@ energy satisfies the local Łojasiewicz gradient inequality at every point
 arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.CompactMonomialCharts
-import Transformer.Landscape.Lojasiewicz.OneDimensionalGradientInequality
-import Transformer.Landscape.Uniformization
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators Topology

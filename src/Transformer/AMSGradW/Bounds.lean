@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AMSGradW.Basic
+
+/-!
 # Bounds derived from decay and the objective
 
 AMSGradW extension of arXiv:1904.03590v4, Algorithm 1 and §4.
@@ -6,7 +10,7 @@ The sufficient regime `L < decay*epsilon` bounds actual weights and
 moments without assuming anything about the optimizer trajectory.
 -/
 
-import Transformer.AMSGradW.Basic
+@[expose] public section
 
 noncomputable section
 

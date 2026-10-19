@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.GramRoutingEnergy
-import Transformer.GPTMini.Sparsemax.ClosedForm
+module
+
+public import Transformer.GPTMini.Sparsemax.GramRoutingEnergy
+public import Transformer.GPTMini.Sparsemax.ClosedForm
 
 /-!
 # Guaranteed nonsaturation with trainable embeddings and changing supports
@@ -16,6 +18,8 @@ score bound therefore permits sparse supports to change. It excludes only
 singleton saturation of the score-to-weight map, not cancellation in a
 value readout or every downstream task gradient.
 -/
+
+@[expose] public section
 
 noncomputable section
 

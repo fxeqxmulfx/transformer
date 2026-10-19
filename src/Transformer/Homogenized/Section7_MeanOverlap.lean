@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Homogenized.GaussianInit
+public import Transformer.Homogenized.Section7_SimplexCentroid
+public import Transformer.Homogenized.AttnAverage
+public import Transformer.Homogenized.SimplexBary
+public import Transformer.Homogenized.GaussianEnsemble
+
+/-!
 # Geometry and zero-temperature averages of the original mean overlap
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -19,11 +27,7 @@ under every probability head law. Neither a simplex condition nor a
 Gaussian assumption is needed for these zero-temperature identities.
 -/
 
-import Transformer.Homogenized.GaussianInit
-import Transformer.Homogenized.Section7_SimplexCentroid
-import Transformer.Homogenized.AttnAverage
-import Transformer.Homogenized.SimplexBary
-import Transformer.Homogenized.GaussianEnsemble
+@[expose] public section
 
 open Real MeasureTheory
 open scoped BigOperators

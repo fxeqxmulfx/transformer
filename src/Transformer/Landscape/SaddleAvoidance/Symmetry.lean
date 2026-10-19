@@ -1,35 +1,39 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.TimeOne
+public import Transformer.Landscape.Lojasiewicz.LojasiewiczInnerProduct
+
+/-!
 # Saddle avoidance — symmetries
 
 A linear isometry `g` of `E` onto itself with `f ∘ g = f` carries the gradient
 of `f` along: `∇f(g x) = g ∇f(x)` (`gradient_apply_of_invariant`); in finite
 dimensions every linear isometry of `E` into itself is onto
-(`LinearIsometry.toLinearIsometryEquiv`).  So `g` commutes
+(`LinearIsometry.toLinearIsometryEquiv`). So `g` commutes
 with gradient steps and their iterates (`gradientStep_apply_of_invariant`,
 `iterate_gradientStep_apply_of_invariant`) and, when `∇f` is bounded and
 Lipschitz, with the gradient flow (`gradientFlow_apply_of_invariant`).
 
 The vectors fixed by a set `S` of such isometries, a group for instance, form
-a subspace `fixedSubspace S`.  The gradient, gradient descent and the gradient
+a subspace `fixedSubspace S`. The gradient, gradient descent and the gradient
 flow map it into itself (`mapsTo_gradient_fixedSubspace`,
-`mapsTo_gradientStep_fixedSubspace`, `mapsTo_gradientFlow_fixedSubspace`).  A
+`mapsTo_gradientStep_fixedSubspace`, `mapsTo_gradientFlow_fixedSubspace`). A
 point of it at which the derivative of `f` vanishes along it is a critical
 point of `f` (`gradient_eq_zero_of_mem_fixedSubspace`), the principle of
-symmetric criticality.  The fixed subspace is an inner product space of its
+symmetric criticality. The fixed subspace is an inner product space of its
 own, closed in `E` (`isClosed_fixedSubspace`) and so complete when `E` is.
 Where `f` is differentiable, the gradient of `f` restricted to it is `∇f`
 (`coe_gradient_restrict`), and the orbits of gradient descent of the
-restriction are those of `f` (`coe_iterate_gradientStep_restrict`).  The
+restriction are those of `f` (`coe_iterate_gradientStep_restrict`). The
 theorems on gradient descent then apply on the fixed subspace, for its own
-Lebesgue measure.  In `E` a proper subspace is null
+Lebesgue measure. In `E` a proper subspace is null
 (`MeasureTheory.Measure.addHaar_submodule`), so a bridge to `E` also needs the
 subspace to attract.
 
 Source: item M6.10 of `landscape_plan.md`.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.TimeOne
-import Transformer.Landscape.Lojasiewicz.LojasiewiczInnerProduct
+@[expose] public section
 
 open Set
 open scoped NNReal
@@ -68,7 +72,7 @@ instance completeSpace_fixedSubspace (S : Set (E ≃ₗᵢ[ℝ] E)) : CompleteSp
   (isClosed_fixedSubspace S).completeSpace_coe
 
 /-- **An isometry preserving `f` carries its gradient along**:
-`∇f(g x) = g ∇f(x)`, at every point, differentiable or not.  Since
+`∇f(g x) = g ∇f(x)`, at every point, differentiable or not. Since
 `f ∘ g⁻¹ = f`, this is `Landscape.Lojasiewicz.gradient_comp_linearIsometryEquiv_symm`. -/
 theorem gradient_apply_of_invariant (hg : ∀ x, f (g x) = f x) (x : E) :
     gradient f (g x) = g (gradient f x) := by

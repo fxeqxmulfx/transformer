@@ -1,21 +1,25 @@
-/-
+module
+
+public import Transformer.Quartet.Hadamard
+
+/-!
 # A vector whose rotation takes two values
 
 The counterexample of `Transformer.Quartet.Section3_EdenBias` to the Corollary of §3.3 at
 *every* dimension `d = 16 · 2^k` uses the vector `x = e₀ + (1/10) e₁` (`edenPair`): the first
-two coordinates of the first group, `1` and `1/10`, and zeros elsewhere.  Its randomized
+two coordinates of the first group, `1` and `1/10`, and zeros elsewhere. Its randomized
 Hadamard transform, for every sign seed `ε`, has only two values, by parity of the position:
 
 `RHT(x)_p = (σ₀ + σ₁/10) / √d` at even `p`, `(σ₀ − σ₁/10) / √d` at odd `p`,
 
-where `σ₀`, `σ₁ ∈ {±1}` are the signs the seed gives the two nonzero entries.  The reason is
+where `σ₀`, `σ₁ ∈ {±1}` are the signs the seed gives the two nonzero entries. The reason is
 that the Walsh character of the second column is `(-1)^{bit 0 of p}` (`walsh_four_one`), and
 the character of the first column is `1`.
 
 Source: arXiv:2601.22813v2, §3.2 (the `RHT`); the vector is ours.
 -/
 
-import Transformer.Quartet.Hadamard
+@[expose] public section
 
 namespace Transformer
 namespace Quartet

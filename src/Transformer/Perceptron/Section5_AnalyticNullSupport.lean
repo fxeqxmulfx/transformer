@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_SphericalHessian
+public import Transformer.Perceptron.Section5_SphericalNorms
+public import Transformer.Perceptron.Section5_NonatomicGradients
+
+/-!
 # Strict analytic stationary supports are uniform-null in every dimension
 
 ArXiv:2601.21366v2, §3.1, `thm: any.d` (i), and its proof in
@@ -21,9 +27,7 @@ constant and the explicit original mixed-kernel bound. This makes
 the resulting contradiction quantitative for the original L² norm.
 -/
 
-import Transformer.Perceptron.Section5_SphericalHessian
-import Transformer.Perceptron.Section5_SphericalNorms
-import Transformer.Perceptron.Section5_NonatomicGradients
+@[expose] public section
 
 open Real MeasureTheory Set
 

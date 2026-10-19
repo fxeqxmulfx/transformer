@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.DASH.Section3_NewtonModels
+
+/-!
 # DASH — counted matrix products for the Newton solvers
 
 arXiv:2602.02016v2, §3.2–3.3. A state counter increments only when an
 actual matrix-matrix product is evaluated. Scalar arithmetic is excluded.
 -/
 
-import Transformer.DASH.Section3_NewtonModels
+@[expose] public section
 
 open scoped Matrix
 

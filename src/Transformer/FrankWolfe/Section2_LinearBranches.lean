@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section1_Models
+
+/-!
 # Attention's forward pass and Frank-Wolfe — linear leader branches
 
 The proof of `lem:singleLeader` in arXiv:2508.09628v1, §2.1, needs to allow
@@ -9,7 +13,7 @@ maps at each time. These facts replace the source's incorrect assertion that
 every piecewise affine update preserves sets of positive measure.
 -/
 
-import Transformer.FrankWolfe.Section1_Models
+@[expose] public section
 
 open scoped BigOperators
 

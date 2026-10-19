@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_BlockButterflyIndex
+
+/-!
 # Constant-depth Coyote realization of block butterfly factors
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: butterfly` and
@@ -8,7 +12,7 @@ the off-diagonal shifts omitted in the source proof's later display.
 The full row-major factor also requires the feature-axis factors.
 -/
 
-import Transformer.Zoology.Appendix_BlockButterflyIndex
+@[expose] public section
 
 open scoped BigOperators
 

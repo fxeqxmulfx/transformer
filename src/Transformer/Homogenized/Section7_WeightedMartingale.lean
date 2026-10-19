@@ -1,7 +1,9 @@
-import Transformer.Homogenized.MvGenerator
-import Mathlib.MeasureTheory.Function.ConditionalExpectation.PullOut
-import Mathlib.Probability.Distributions.Gaussian.Real
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+module
+
+public import Transformer.Homogenized.MvGenerator
+public import Mathlib.MeasureTheory.Function.ConditionalExpectation.PullOut
+public import Mathlib.Probability.Distributions.Gaussian.Real
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
 /-!
 # Bounded weights for the martingale identity
@@ -13,6 +15,8 @@ an increment. The finite partition statement also holds after restriction to
 an event measurable at the initial endpoint. No stochastic integral is assumed
 for the weighted process.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped BigOperators

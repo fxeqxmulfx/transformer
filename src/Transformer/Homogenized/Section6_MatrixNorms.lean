@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_DiagonalQuadraticMGF
+public import Mathlib.Analysis.CStarAlgebra.Matrix
+
+/-!
 # Exact Euclidean matrix norms for Hanson–Wright
 
 Source: arXiv:2604.01978v1, §6.3, `lem:Hanson_wright`.
@@ -9,8 +14,7 @@ Frobenius sum also decreases. These exact matrix estimates retain
 the original norms in the eventual quadratic-form tail bound.
 -/
 
-import Transformer.Homogenized.Section6_DiagonalQuadraticMGF
-import Mathlib.Analysis.CStarAlgebra.Matrix
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal Matrix.Norms.L2Operator

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_InnerSums
+
+/-!
 # The sums of a pair
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 4, `eq:est-kap3-th`: the
@@ -9,7 +13,7 @@ for the tokens `k < j < i`. Each is at most `Λ Q⁶/((i+1)(j+1))`, with
 the earliest observable, `y = k` (`pairSum_up_le`, `pairSum_mid_le`).
 -/
 
-import Transformer.Kinetic.Section3_InnerSums
+@[expose] public section
 
 namespace Transformer
 namespace Kinetic

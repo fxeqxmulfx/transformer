@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Landscape.AnalyticPreparation.Basic
+public import Mathlib.Data.Fin.Tuple.Basic
+public import Mathlib.Topology.Algebra.Module.FiniteDimension
+
+/-!
 # Coordinates extending a nonzero real direction
 
 The elementary pivot construction is adapted from Bochao Kong's
@@ -9,10 +16,7 @@ Apache-2.0 license: third_party/LocalComplexGeometry/LICENSE.
 The scalar field is real, and the target has the Euclidean norm.
 -/
 
-import Transformer.Basic
-import Transformer.Landscape.AnalyticPreparation.Basic
-import Mathlib.Data.Fin.Tuple.Basic
-import Mathlib.Topology.Algebra.Module.FiniteDimension
+@[expose] public section
 
 noncomputable section
 

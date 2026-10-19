@@ -1,8 +1,10 @@
-import Mathlib.Analysis.Convex.Function
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Fintype.Prod
-import Mathlib.LinearAlgebra.Pi
-import Mathlib.Tactic
+module
+
+public import Mathlib.Analysis.Convex.Function
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Data.Fintype.Prod
+public import Mathlib.LinearAlgebra.Pi
+public import Mathlib.Tactic
 
 /-!
 # Unconstrained joint coefficients for an embedding/attention replacement
@@ -22,6 +24,8 @@ it does not retain QKNorm, RoPE, XSA, or the old parameter regularizer.
 All token interactions are trainable, but storage is cubic in vocabulary
 size. Affinity does not survive arbitrary downstream FFNs or tied readouts.
 -/
+
+@[expose] public section
 
 noncomputable section
 

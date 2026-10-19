@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_DependentDistanceMany
+
+/-!
 # The exact interaction-distance set for MQAR
 
 Arora et al., arXiv:2312.04927v1, Appendix `sec: data-dep-ar`, Setup
@@ -8,7 +12,7 @@ by the functional parallel-shift proof. This is an ideal data-dependent
 selector, not the paper's proposed autocorrelation `Top` computation.
 -/
 
-import Transformer.Zoology.Appendix_DependentDistanceMany
+@[expose] public section
 
 namespace Transformer.Zoology
 

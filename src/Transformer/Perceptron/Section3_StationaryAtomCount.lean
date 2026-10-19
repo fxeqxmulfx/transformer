@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section3_AtomCount
+
+/-!
 # The full atom-count corollary for circular-arc covers
 
 ArXiv:2601.21366v2, §3.2, `cor: bound`, and its proof in §5.4.
@@ -18,7 +22,7 @@ proved. The actual quadratic two-atom stationary configuration at
 `β=4` has a complete joint witness using one arc across angle zero.
 -/
 
-import Transformer.Perceptron.Section3_AtomCount
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

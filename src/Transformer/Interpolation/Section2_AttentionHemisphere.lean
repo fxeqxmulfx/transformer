@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_AttentionTransport
+public import Transformer.Interpolation.Section3_ProjectionTransport
+public import Transformer.Perspective.CompactPositiveFloor
+public import Transformer.Perspective.ConeChart
+
+/-!
 # Preservation of the original supporting hemisphere
 
 ArXiv:2411.04551v3, §2, `prop: targets.atoms`, and §1, `eq: vf`.
@@ -15,10 +22,7 @@ hemisphere into such a uniform positive floor. The associated hemisphere
 chart consequently stays uniformly bounded.
 -/
 
-import Transformer.Interpolation.Section2_AttentionTransport
-import Transformer.Interpolation.Section3_ProjectionTransport
-import Transformer.Perspective.CompactPositiveFloor
-import Transformer.Perspective.ConeChart
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology

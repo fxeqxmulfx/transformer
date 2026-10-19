@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_DiagonalLinearSimulation
+
+/-!
 # K-constrained cancellation construction
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: W-kmat`,
@@ -8,7 +12,7 @@ explicit zero K matrices; parameter storage is counted, rather than dense
 weights being silently assumed to satisfy the restriction.
 -/
 
-import Transformer.Zoology.Appendix_DiagonalLinearSimulation
+@[expose] public section
 
 namespace Transformer.Zoology
 

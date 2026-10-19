@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMassOrder
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMassOrder
 
 /-!
 # A quantified unequal-pair native step preserves Gen mass dominance
@@ -27,6 +29,8 @@ betas and uniform native decay differ from appendix C's coupled-cost
 GD and preserved learned nonzero-beta GPTMini. Product/decision order
 and positive limiting margin do not follow from mass order alone.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

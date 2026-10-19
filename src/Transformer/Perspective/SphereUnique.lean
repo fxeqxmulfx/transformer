@@ -1,25 +1,29 @@
-/-
+module
+
+public import Transformer.Perspective.UniformShell
+public import Mathlib.MeasureTheory.Measure.CharacteristicFunction.Basic
+
+/-!
 # The uniform law on the sphere is unique
 
 `Perspective.UniformTuple` describes the uniform law `σ_d` on `𝕊^{d-1}` by its
-rotation invariance instead of constructing it.  This file shows that the
+rotation invariance instead of constructing it. This file shows that the
 description determines it: two rotation-invariant probability measures on the
 sphere coincide (`eq_of_rotation_invariant`), as the docstring of `sphereMap`
 asserts.
 
-The proof compares characteristic functions in `ℝ^d`.  Invariance makes the
+The proof compares characteristic functions in `ℝ^d`. Invariance makes the
 characteristic function `φ_σ` of an invariant `σ` radial: `φ_σ(ξ) = φ_σ(‖ξ‖ y)`
-for every unit vector `y` (`charFun_map_coe_norm_smul`).  Averaging over
+for every unit vector `y` (`charFun_map_coe_norm_smul`). Averaging over
 `y ∼ τ` and exchanging the integrals, with `⟨x, ‖ξ‖ y⟩ = ⟨y, ‖ξ‖ x⟩`, turns
 `φ_σ(ξ)` into `φ_τ(ξ)`; a finite measure is determined by its characteristic
-function.  So every uniform tuple law is the product of shell laws
+function. So every uniform tuple law is the product of shell laws
 (`eq_pi_shellLaw`).
 
 Source: arXiv:2312.10794v5, §4 (the uniform law `σ_d` of `p:beta0`).
 -/
 
-import Transformer.Perspective.UniformShell
-import Mathlib.MeasureTheory.Measure.CharacteristicFunction.Basic
+@[expose] public section
 
 open MeasureTheory Complex
 

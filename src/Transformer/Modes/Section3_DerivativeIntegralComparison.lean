@@ -1,5 +1,8 @@
-import Transformer.Modes.Section3_DerivativeTailRate
-import Transformer.Modes.Section3_SecondDerivativeFrequency
+module
+
+public import Transformer.Modes.Section3_DerivativeTailRate
+public import Transformer.Modes.Section3_SecondDerivativeFrequency
+
 /-!
 # Global integrals of Gaussian characteristic-derivative errors
 
@@ -16,6 +19,7 @@ No boundary contribution or unproved input is assumed; the abstract
 integral comparison is instantiated with the actual characteristic functions.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

@@ -1,5 +1,8 @@
-import Transformer.Modes.Section3_DerivativeTaylor
-import Transformer.Modes.Section3_SmallFrequency
+module
+
+public import Transformer.Modes.Section3_DerivativeTaylor
+public import Transformer.Modes.Section3_SmallFrequency
+
 /-!
 # Gaussian comparison of the first two characteristic derivatives
 
@@ -17,6 +20,7 @@ has a uniform bound using only its covariance and finite second moment.
 The constants account for the product sup norm and are not sharp.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

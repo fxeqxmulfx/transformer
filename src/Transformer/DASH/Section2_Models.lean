@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Muon.Section2_PolarIdentities
+
+/-!
 # DASH — Shampoo and grafting
 
 Modoranu et al., arXiv:2602.02016v2, §2, Algorithm 1
@@ -6,7 +10,7 @@ Modoranu et al., arXiv:2602.02016v2, §2, Algorithm 1
 Inverse-root solvers and hardware timing are treated separately.
 -/
 
-import Transformer.Muon.Section2_PolarIdentities
+@[expose] public section
 
 open scoped BigOperators Matrix
 

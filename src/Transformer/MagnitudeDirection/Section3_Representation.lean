@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.Section3_Sphere
+
+/-!
 # Representational scope of the gains
 
 arXiv:2606.25971v2, §3.1, “do not provide any additional representational
@@ -6,7 +10,7 @@ capacity”, and Appendix A. Positive gains on a positive fixed sphere
 represent every nonzero matrix, but never the zero matrix.
 -/
 
-import Transformer.MagnitudeDirection.Section3_Sphere
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.MeanField.UniformLaw
+public import Transformer.Perspective.UniformLipschitz
+public import Mathlib.MeasureTheory.Constructions.HaarToSphere
+
+/-!
 # The surface measure of the sphere, and polar coordinates
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -7,7 +13,7 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 Mathlib's surface measure `volume.toSphere` of `𝕊^{d-1}` lives on the subspace
 σ-algebra; `surfaceMeasure` carries it to the Borel σ-algebra
 `sphereMeasurableSpace` of `SSphere d`, which is the same σ-algebra, though
-not by definition.  On it:
+not by definition. On it:
 
 * polar coordinates `x ↦ (x/‖x‖, ‖x‖)` carry Lebesgue measure on `ℝ^d ∖ 0` to
   `surfaceMeasure ⊗ r^{d-1} dr` (`measurePreserving_polar`, from
@@ -25,9 +31,7 @@ Source: arXiv:2312.10794v5, §4 (the uniform law `σ_d`: "the Lebesgue measure o
 `prop: existence.uniqueness.energy`).
 -/
 
-import Transformer.MeanField.UniformLaw
-import Transformer.Perspective.UniformLipschitz
-import Mathlib.MeasureTheory.Constructions.HaarToSphere
+@[expose] public section
 
 open MeasureTheory Set Metric
 open scoped ENNReal Pointwise
@@ -110,7 +114,7 @@ theorem surfaceMeasure_isometry (U : EucSpace d ≃ₗᵢ[ℝ] EucSpace d) :
   rw [hset, U.measurePreserving.measure_preimage_emb U.toHomeomorph.measurableEmbedding]
 
 /-- **Polar coordinates on `ℝ^d ∖ 0`:** `x ↦ (x/‖x‖, ‖x‖)` carries Lebesgue
-measure to `surfaceMeasure ⊗ r^{d-1} dr`.  This is
+measure to `surfaceMeasure ⊗ r^{d-1} dr`. This is
 `Measure.measurePreserving_homeomorphUnitSphereProd` with the Borel σ-algebra of
 `SSphere d` for the subspace one. -/
 theorem measurePreserving_polar :

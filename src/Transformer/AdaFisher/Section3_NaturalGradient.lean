@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_Spectrum
+
+/-!
 # AdaFisher: natural-gradient coordinate invariance
 
 arXiv:2405.16397v3, §3.2, `eq:NGD` and its coordinate-invariance discussion.
@@ -6,7 +10,7 @@ This is the tangent-space transformation law for the exact Fisher metric;
 the diagonal approximation does not automatically inherit that property.
 -/
 
-import Transformer.AdaFisher.Section3_Spectrum
+@[expose] public section
 
 open scoped Matrix
 

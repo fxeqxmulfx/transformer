@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Normalization.InitialBounds
+public import Transformer.Normalization.InitialVectorTail
+public import Transformer.Normalization.InitialProduct
+
+/-!
 # Conditional concentration of an attention numerator
 
 Conditioning on the query token leaves the other tokens independent.
 Source: arXiv:2510.22026v2, Appendix B, proof of Theorem 4.2.
 -/
 
-import Transformer.Normalization.InitialBounds
-import Transformer.Normalization.InitialVectorTail
-import Transformer.Normalization.InitialProduct
+@[expose] public section
 
 open scoped BigOperators
 open MeasureTheory

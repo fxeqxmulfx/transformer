@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.ScalarRecurrence
+module
+
+public import Transformer.Grokking.AdamW.ScalarRecurrence
 
 /-!
 # Noncollapse under a retained native gradient-sign history
@@ -15,6 +17,8 @@ history is identified with GPTMini. Positive remaining decay factor is
 explicit; neither unrestricted prescribed-rate descent nor convergence
 to the coupled-penalty optimum is asserted.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Magma.Section2_Moments
+public import Mathlib.Analysis.SpecialFunctions.Sigmoid
+public import Mathlib.Analysis.InnerProductSpace.Basic
+
+/-!
 # Magma's alignment damping and dense moment updates
 
 Formalization of arXiv:2602.15322v1, Sections 2-3 and Algorithm 1.
@@ -7,9 +13,7 @@ The difference is explicit below. Zero-vector cosine is extended to zero;
 the paper does not prescribe a convention at a zero denominator.
 -/
 
-import Transformer.Magma.Section2_Moments
-import Mathlib.Analysis.SpecialFunctions.Sigmoid
-import Mathlib.Analysis.InnerProductSpace.Basic
+@[expose] public section
 
 open scoped InnerProductSpace
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Atoms
+public import Mathlib.Analysis.SpecialFunctions.Complex.Arg
+
+/-!
 # The angular chart and orthonormal tangent frame on the circle
 
 ArXiv:2601.21366v2, §5.2, `eq:Hess-bilinear`, and §5.5,
@@ -16,8 +21,7 @@ The unit tangent frame also identifies each tangent vector with
 its scalar angular speed for the subsequent Hessian calculation.
 -/
 
-import Transformer.Perceptron.Atoms
-import Mathlib.Analysis.SpecialFunctions.Complex.Arg
+@[expose] public section
 
 open scoped BigOperators
 open Real

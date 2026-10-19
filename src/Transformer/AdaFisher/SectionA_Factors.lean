@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_Normalization
+public import Transformer.AdaFisher.Section3_MinMax
+
+/-!
 # AdaFisher: linear, convolutional and fallback Kronecker factors
 
 arXiv:2405.16397v3, Appendix A.3, “Computation of KFs”.
@@ -6,8 +11,7 @@ Convolutional patch extraction is specified by its finite index map,
 including the augmented bias coordinate supplied by the caller.
 -/
 
-import Transformer.AdaFisher.Section3_Normalization
-import Transformer.AdaFisher.Section3_MinMax
+@[expose] public section
 
 open scoped BigOperators Matrix
 

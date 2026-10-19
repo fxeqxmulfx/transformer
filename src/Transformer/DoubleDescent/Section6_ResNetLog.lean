@@ -1,4 +1,6 @@
-import Transformer.DoubleDescent.Section5_RecordedCurves
+module
+
+public import Transformer.DoubleDescent.Section5_RecordedCurves
 
 /-!
 # Published epoch-wise ResNet errors
@@ -15,6 +17,8 @@ Source SHA-256:
 resnet18-adam-Mlist.pickle: 19bfab1371d7fc89192eb029b39c65540cc37ea492a34a24fdf1485eeb7d2660
 resnet18-adam-ks.pickle: f282d0739c8afc952996923dd89024cb2fd83392db2cc7f22a6eddb0f519d81c
 -/
+
+@[expose] public section
 
 namespace Transformer.DoubleDescent
 

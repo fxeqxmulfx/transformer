@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.WeakError
+public import Mathlib.Probability.Distributions.Gaussian.Real
+
+/-!
 # Homogenized Transformers — Gaussian initialization
 
 Formalization of `eq: tformers.at.initialization` (assumption (G)), its two
@@ -8,13 +13,13 @@ consequences, and `cor:weak_error_centered` of arXiv:2604.01978v1,
 At Gaussian initialization the value matrix is centered, so the drift
 `b_{ρ*}[μ]` of `eq: first.sde` vanishes identically and the limiting dynamics
 is driven entirely by the fluctuation term; and the variance proxy is
-computable, `ς² = σ_V²(d-1)`, so `α = (η/H) σ_V²(d-1)`.  The error bound then
+computable, `ς² = σ_V²(d-1)`, so `α = (η/H) σ_V²(d-1)`. The error bound then
 holds up to a macroscopic time of order `1/α ≫ 1`, with `e^{C t_L}` improved
 to `e^{C t_L α}` and `max(1,α)` to `max(η,α)`.
 
 The limiting object of `cor:weak_error_centered` is `eq:Diffusive_gaussian_case`,
 which is `eq: first.sde` read under `b_{ρ*} ≡ 0`; it is therefore carried here
-as `IsFirstSde`, and `bField_gaussian` is what identifies the two.  Both
+as `IsFirstSde`, and `bField_gaussian` is what identifies the two. Both
 consequences are proved downstream, where the facts about the head law they
 rest on live: (i), `ς² = σ_V²(d-1)`, in `Homogenized.GaussianVariance`
 (`varianceProxy_gaussian`, `alphaOf_gaussian`), and (ii), `b_{ρ*}[μ] ≡ 0`, in
@@ -24,8 +29,7 @@ Source: arXiv:2604.01978v1, §2.3.3, `eq: tformers.at.initialization`,
 `cor:weak_error_centered`.
 -/
 
-import Transformer.Homogenized.WeakError
-import Mathlib.Probability.Distributions.Gaussian.Real
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory ProbabilityTheory
@@ -34,7 +38,7 @@ namespace Transformer
 namespace Homogenized
 
 /-- **Assumption (G), `eq: tformers.at.initialization`**: a Transformer at
-Gaussian initialization.  `V_{ij} ∼ 𝒩(0, σ_V²)` i.i.d., `A = W W'ᵀ` with
+Gaussian initialization. `V_{ij} ∼ 𝒩(0, σ_V²)` i.i.d., `A = W W'ᵀ` with
 `W_{ij}, W'_{ij} ∼ 𝒩(0, σ_A²)` i.i.d., all entries independent.
 
 Source: arXiv:2604.01978v1, `eq: tformers.at.initialization`. -/
@@ -57,7 +61,7 @@ Gaussian initialization,
   `dx_i = √α 𝐏_{x_i} ∫ B_θ[μ](x_i) W(dθ,dt) - (α/2) x_i ∫ ‖𝐏_{x_i} B_θ[μ](x_i)‖² ρ*(dθ)`,
 
 which is `eq: first.sde` read under `b_{ρ*} ≡ 0` — the centered fluctuation
-`ξ_θ` is then `B_θ` itself, by `bField_gaussian`.  The source rescales time to
+`ξ_θ` is then `B_θ` itself, by `bField_gaussian`. The source rescales time to
 set `α = 1` and writes the noise without the `1/ς` normalization, so this is
 `IsFirstSde` at `α = ς = 1`; the Itô correction is the one the intrinsic
 formulation of `Transformer.Homogenized.Generator` carries.
@@ -123,7 +127,7 @@ example : (1 : ℝ) ≤ 1 := le_rfl
 
   `sup_{t ∈ [0,t_L]} |𝔼φ(X(t)) - 𝔼φ(X^η(t))| ≤ C e^{C t_L α} η (t_L+1) max(η,α)`,
 
-with `C ≥ 1` depending on `‖φ‖_{C⁴}` but not on `η, α, L`.  The exponential now
+with `C ≥ 1` depending on `‖φ‖_{C⁴}` but not on `η, α, L`. The exponential now
 carries `t_L α`, so the approximation survives to a macroscopic time of order
 `1/α`.
 

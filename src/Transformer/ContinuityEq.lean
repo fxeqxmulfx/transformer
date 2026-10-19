@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.ContinuityEq.Weak
+public import Transformer.ContinuityEq.Duality
+public import Transformer.ContinuityEq.Lagrangian
+public import Transformer.ContinuityEq.Stability
+
+/-!
 # The linear continuity equation
 
 A field `w : ℝ → E → E` on a finite-dimensional space, continuous, bounded
@@ -19,7 +26,4 @@ Source: the Lagrangian proof of `c:wellposedtransformers` and `e:w2estimate`
 in arXiv:2305.05465v6, §6.
 -/
 
-import Transformer.ContinuityEq.Weak
-import Transformer.ContinuityEq.Duality
-import Transformer.ContinuityEq.Lagrangian
-import Transformer.ContinuityEq.Stability
+@[expose] public section

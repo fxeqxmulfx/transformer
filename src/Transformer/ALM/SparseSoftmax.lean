@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.ALM.SoftmaxValue
+
+/-!
 # Truncating the softmax to the retained keys
 
-Hardmax is not fundamental to the fast path.  A head that scores only the top
+Hardmax is not fundamental to the fast path. A head that scores only the top
 `k` keys and softmaxes over those is what a geometric retriever would actually
 feed a real attention layer, and the question is what that truncation costs.
 
-This file answers exactly that and nothing else.  `sparseWeight` is the
+This file answers exactly that and nothing else. `sparseWeight` is the
 softmax restricted to a retained set `T`, renormalized there and zero outside;
 `sparse_total_variation` computes the ℓ¹ distance between it and the full
 softmax — twice the mass the full softmax puts outside `T`, exactly, not up to
@@ -18,21 +22,21 @@ integer gap of `Transformer.ALM.Lattice` the whole error is
 **What is not here.**  The nested convex hulls that retrieve the top `k` in
 `O(k + log n)` are a different data structure from the single hull of
 `Transformer.ALM.Hull`, and nothing in this file bounds the cost of producing
-`T`.  `T` is an arbitrary retained set, supplied by whatever retrieves it; the
+`T`. `T` is an arbitrary retained set, supplied by whatever retrieves it; the
 theorems say what the answer is worth once it is in hand, and say nothing
 about how long it took.
 
 The generic step `dist_weighted_sum_sub_le` is the companion of
 `dist_weighted_sum_le`: where that one bounds the distance from a convex
 combination to one of its points, this one bounds the distance between two
-convex combinations by their ℓ¹ distance.  Neither mentions softmax.
+convex combinations by their ℓ¹ distance. Neither mentions softmax.
 
 Source: Percepta, *Can LLMs Be Computers?* (2026-03-11), the `k`-sparse
 softmax remark; the head is `transformer_vm/attention/hull2d_cht.h`,
 lines 203-215.
 -/
 
-import Transformer.ALM.SoftmaxValue
+@[expose] public section
 
 open scoped BigOperators
 
@@ -44,7 +48,7 @@ variable {n : ℕ}
 /-! ### The truncated head -/
 
 /-- The `k`-sparse softmax weights: the softmax of the scores over the retained
-set `T`, renormalized on `T` and zero off it.  `T.card` is the `k`. -/
+set `T`, renormalized on `T` and zero off it. `T.card` is the `k`. -/
 noncomputable def sparseWeight (β : ℝ) (s : Fin n → ℝ) (T : Finset (Fin n))
     (j : Fin n) : ℝ :=
   if j ∈ T then Real.exp (β * s j) / ∑ l ∈ T, Real.exp (β * s l) else 0
@@ -77,7 +81,7 @@ theorem sparseWeight_sum (β : ℝ) (s : Fin n → ℝ) (T : Finset (Fin n)) (hT
 
 /-- **The ℓ¹ distance of the weights is the distance of the outputs.**  Two
 convex combinations of the same values differ by at most their ℓ¹ weight
-distance times the spread of the values around any point.  Nothing about
+distance times the spread of the values around any point. Nothing about
 softmax, scores or retrieval enters; this is the companion of
 `dist_weighted_sum_le`, which is the case where one combination is a point
 mass. -/
@@ -149,7 +153,7 @@ theorem sparse_total_variation (β : ℝ) (s : Fin n → ℝ) (T : Finset (Fin n
 
 /-- **And so the truncated head is close to the full head.**  The distance
 between the two outputs is at most twice the discarded mass times the spread
-of the stored values.  `T` is arbitrary: the bound holds for any retained set,
+of the stored values. `T` is arbitrary: the bound holds for any retained set,
 however it was found. -/
 theorem sparse_softmax_output_close {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (β : ℝ) (s : Fin n → ℝ) (T : Finset (Fin n)) (hT : T.Nonempty)
@@ -197,7 +201,7 @@ theorem softmax_mass_outside_le (β : ℝ) (hβ : 0 ≤ β) (s : Fin n → ℝ)
 
 /-- **The whole truncation error.**  Retain any set whose discarded keys are
 `δ` below the best score: the truncated head's output is within
-`2 (n - k) e^{-βδ} C` of the full head's.  With the unit integer gap of
+`2 (n - k) e^{-βδ} C` of the full head's. With the unit integer gap of
 `Transformer.ALM.Lattice` this is `2 (n - k) e^{-β} C`. -/
 theorem sparse_softmax_output_close_of_gap {E : Type*} [NormedAddCommGroup E]
     [NormedSpace ℝ E] (β : ℝ) (hβ : 0 ≤ β) (s : Fin n → ℝ) (T : Finset (Fin n))

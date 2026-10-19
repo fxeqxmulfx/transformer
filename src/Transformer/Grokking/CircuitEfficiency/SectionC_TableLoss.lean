@@ -1,6 +1,8 @@
-import Transformer.Grokking.NaiveLoss.Section4_LogitScaling
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+module
+
+public import Transformer.Grokking.NaiveLoss.Section4_LogitScaling
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 
 /-!
 # Actual finite-class CE of the fixed Gen/Mem tables
@@ -17,6 +19,8 @@ including the source's 113-class configuration. The penalty is kept
 outside CE. Strict correctness compares all classes; this avoids
 silently replacing the source's multiclass problem by a binary margin.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

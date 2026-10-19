@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_CapCoefficients
+public import Transformer.Interpolation.Section3_CapCenter
+
+/-!
 # Tangential error in the actual two-neuron cap construction
 
 Auxiliaries for arXiv:2411.04551v3, Appendix, `lem: two.balls`,
@@ -16,8 +21,7 @@ It isolates its contracting term and this quadratic calibration error,
 which a sufficiently large finite radial coefficient can dominate.
 -/
 
-import Transformer.Interpolation.Section3_CapCoefficients
-import Transformer.Interpolation.Section3_CapCenter
+@[expose] public section
 
 open Real Set
 

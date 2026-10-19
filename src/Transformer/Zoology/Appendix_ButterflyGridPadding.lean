@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_KaleidoscopeCast
+
+/-!
 # Zero padding and cropping commute with row-major layout
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: kaleidoscope`.
@@ -6,7 +10,7 @@ The scalar upper-left submatrix S E Sᵀ becomes row padding and cropping
 in the original n × d layout. Feature width remains d throughout.
 -/
 
-import Transformer.Zoology.Appendix_KaleidoscopeCast
+@[expose] public section
 
 namespace Transformer.Zoology
 

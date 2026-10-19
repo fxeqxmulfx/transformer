@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Normalization.Section2_SphereInvariant
+public import Transformer.Normalization.Velocities
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Order.LiminfLimsup
+
+/-!
 # Normalization — radial bounds and their lower limit
 
 For Pre-LN and Peri-LN, the corollary to `thm:convergence` in
@@ -13,10 +20,7 @@ trajectory, using the sphere invariant rather than a unit path assumption.
 Integration also gives `r_j(t) ≥ r_j(0) + t/(n exp β)`.
 -/
 
-import Transformer.Normalization.Section2_SphereInvariant
-import Transformer.Normalization.Velocities
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Order.LiminfLimsup
+@[expose] public section
 
 open scoped BigOperators
 open Real Set Filter

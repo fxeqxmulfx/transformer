@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Clusters.Section3_IdCase
+public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+public import Mathlib.Topology.MetricSpace.HausdorffDistance
+
+/-!
 # The emergence of clusters in self-attention dynamics — clustering toward
   hyperplanes
 
@@ -8,9 +15,9 @@ the convergence of every token to one of at most three parallel hyperplanes.
 **What the source says and what is carried here.**
 
 * `d:good` asks that the eigenvalue of `V` of largest modulus be real,
-  positive and simple, `λ₁ > |λ₂| ≥ … ≥ |λ_d|`.  That is carried by the
+  positive and simple, `λ₁ > |λ₂| ≥ … ≥ |λ_d|`. That is carried by the
   splitting it is equivalent to and that §9 works in: a line `ℝφ₁` on which
-  `V` is `λ₁`, a complementary `V`-invariant `G`, and `ρ(V|_G) < λ₁`.  For a
+  `V` is `λ₁`, a complementary `V`-invariant `G`, and `ρ(V|_G) < λ₁`. For a
   real operator `ρ` is the modulus of a possibly complex eigenvalue, so it is
   taken through Gelfand's formula — `ρ(V|_G) < λ` exactly when the powers of
   `V` are bounded on `G` by `C r^k` for some `r < λ` — which needs no
@@ -19,13 +26,13 @@ the convergence of every token to one of at most three parallel hyperplanes.
 * The second half of `d:good`, `⟨Qφ₁, Kφ₁⟩ > 0` "for any `φ₁` lying on the
   line `ker(V - λ₁ Id)`", is `0 < ⟨Qφ, Kφ⟩` for one generator: the form is
   bilinear, so `⟨Q(cφ), K(cφ)⟩ = c²⟨Qφ, Kφ⟩` has the same sign for every
-  `c ≠ 0`.  Note that `QᵀK ≻ 0` is *not* assumed here — positivity is required
+  `c ≠ 0`. Note that `QᵀK ≻ 0` is *not* assumed here — positivity is required
   only along `φ₁`.
 
 * "There exist at most three parallel hyperplanes … such that the distance of
   `z_i(t)` to one of them converges to `0`" is a subspace `W` of codimension
   `1`, at most three translates `p + W`, and `Metric.infDist` to one of them
-  tending to `0`.  `affineShift` is that translate.  The source's own
+  tending to `0`. `affineShift` is that translate. The source's own
   hyperplanes are the level sets of `φ₁*`, which are exactly the translates of
   `ker φ₁*`.
 
@@ -35,10 +42,7 @@ supplies its good-triple predicates and affine level-set geometry.
 Source: arXiv:2305.05465v6, `d:good`, `l:3hyperplanes11`.
 -/
 
-import Transformer.Clusters.Section3_IdCase
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.Topology.MetricSpace.HausdorffDistance
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -50,7 +54,7 @@ variable {d n : ℕ}
 
 /-! ### Parallel affine subspaces -/
 
-/-- The translate `p + W` of a linear subspace.  Two translates of the same
+/-- The translate `p + W` of a linear subspace. Two translates of the same
 `W` are parallel, and `W` of codimension `1` makes them hyperplanes.
 
 Source: arXiv:2305.05465v6, `l:3hyperplanes11`. -/
@@ -65,7 +69,7 @@ theorem mem_affineShift_self (W : Submodule ℝ (EucSpace d)) (p : EucSpace d) :
 /-! ### Good triples -/
 
 /-- **`ρ(V|_G) < λ`, through Gelfand's formula.**  The powers of `V` are
-dominated on `G` by a geometric sequence of ratio `r < λ`.  For an operator on
+dominated on `G` by a geometric sequence of ratio `r < λ`. For an operator on
 a finite-dimensional space this holds exactly when every eigenvalue of `V|_G`,
 real or complex, has modulus `< λ`.
 
@@ -77,7 +81,7 @@ def IsSpectralRadiusLtOn (G : Submodule ℝ (EucSpace d)) (V : ParamMatrix d) (l
 /-- **Definition (d:good), with its witnesses named.**  `λ₁ = lam` is real
 and positive, `φ₁ = φ` spans its eigenline, `G` is the complementary
 `V`-invariant subspace on which `V` has spectral radius `< λ₁`, and
-`⟨Qφ₁, Kφ₁⟩ > 0`.  §9 needs the leading eigenpair by name, which is what
+`⟨Qφ₁, Kφ₁⟩ > 0`. §9 needs the leading eigenpair by name, which is what
 this form provides.
 
 Source: arXiv:2305.05465v6, `d:good`. -/
@@ -109,7 +113,7 @@ theorem span_singleton_eq_top {φ : EucSpace 1} (hφ : φ ≠ 0) :
 
 /-- **`(I₁, I₁, I₁)` is a good triple**, the scalar case `d = 1`, `V = 1`: the
 leading eigenvalue is `1`, its eigenspace is all of `ℝ`, the complement is
-trivial, and `⟨φ, φ⟩ > 0`.  This witnesses `d:good`. -/
+trivial, and `⟨φ, φ⟩ > 0`. This witnesses `d:good`. -/
 theorem isGoodTripleWith_one :
     IsGoodTripleWith (1 : ParamMatrix 1) 1 1 1 (EuclideanSpace.single 0 (1 : ℝ)) ⊥ := by
   have hφ : (EuclideanSpace.single 0 (1 : ℝ) : EucSpace 1) ≠ 0 :=

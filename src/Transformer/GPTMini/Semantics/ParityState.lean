@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.ResidualFeature
-import Transformer.GPTMini.Semantics.CountBlock
+module
+
+public import Transformer.GPTMini.Semantics.ResidualFeature
+public import Transformer.GPTMini.Semantics.CountBlock
 
 /-!
 # Raw count and completion phase coexist in one original block
@@ -20,6 +22,8 @@ still need their own invariants. This is verification of internal task
 features, not a proof of full Basis accuracy or optimization convergence.
 The existing shared-epsilon, real-arithmetic deviation is unchanged.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

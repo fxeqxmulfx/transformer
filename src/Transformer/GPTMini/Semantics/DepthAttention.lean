@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Semantics.DepthQKV
-import Transformer.GPTMini.Semantics.DepthNormalization
-import Transformer.GPTMini.Semantics.DepthUniformProjection
+module
+
+public import Transformer.GPTMini.Semantics.DepthQKV
+public import Transformer.GPTMini.Semantics.DepthNormalization
+public import Transformer.GPTMini.Semantics.DepthUniformProjection
 
 /-!
 # Complete original depth attention and output projection
@@ -20,6 +22,8 @@ are proved on arbitrary real input arrays. Distinct output coordinates
 read their own signal exactly. Actual amplitude/norm bounds and the
 ordered feature recurrence must still be derived from raw inputs.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

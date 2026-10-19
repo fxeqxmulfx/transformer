@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section3_TwoAtomEnergy
+public import Transformer.Perceptron.GeodesicCurve
+public import Transformer.Perceptron.Minimizer
+
+/-!
 # Antipodal two-atom SOPD critical points
 
 The second part of `thm: bound`, §3.2 of arXiv:2601.21366v2, excludes
@@ -16,9 +22,7 @@ not a claim that the pair minimizes energy over all probability measures.
 `Section3_TwoAtomEnergy` also proves existence of these second variations.
 -/
 
-import Transformer.Perceptron.Section3_TwoAtomEnergy
-import Transformer.Perceptron.GeodesicCurve
-import Transformer.Perceptron.Minimizer
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory Filter

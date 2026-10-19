@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthPresence
+module
+
+public import Transformer.GPTMini.Semantics.DepthPresence
 
 /-!
 # Genuine uniform depth heads when the current value is nonzero
@@ -20,6 +22,8 @@ uniform head signal when that coordinate is zero. Raw state induction
 must derive those alternatives and their amplitude bounds separately.
 This is an original-operator capacity result, not a training assertion.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

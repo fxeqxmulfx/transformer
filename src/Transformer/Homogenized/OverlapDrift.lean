@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.OverlapObservable
+public import Transformer.Homogenized.GaussianOverlapMoments
+
+/-!
 # Homogenized Transformers — the drift of an overlap
 
 Formalization of `lem:Ito_formula` of arXiv:2604.01978v1, *Homogenized
@@ -6,9 +11,9 @@ Transformers*, §5: the Itô decomposition of `R_ij(t) = ⟨x_i(t), x_j(t)⟩` a
 `eq:Diffusive_gaussian_case`, and its explicit drift `eq:Dij_explicit_clean`.
 
 **What the source says and what is written here.**  `eq:Rij_decomp_clean` is
-`dR_ij = dM_ij + 𝒟_ij dt`.  Mathlib has no stochastic integral and
+`dR_ij = dM_ij + 𝒟_ij dt`. Mathlib has no stochastic integral and
 `Generator.IsItoSolution` is a solution concept in the one-dimensional
-marginals, so neither `dR_ij` nor `dM_ij` can be written down.  What can be,
+marginals, so neither `dR_ij` nor `dM_ij` can be written down. What can be,
 and what is the whole content of the lemma, is:
 
 * the integrand of the martingale part `eq:martingale_Mij_clean` is the
@@ -24,8 +29,7 @@ The scalars `s_μ(x)` and `s_μ(x,x')` of `eq:s_mu_defs_clean` are
 `Barycenter.baryCorr`; `s_μ(x) = s_μ(x,x)` is `baryCorr_self`.
 -/
 
-import Transformer.Homogenized.OverlapObservable
-import Transformer.Homogenized.GaussianOverlapMoments
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory
@@ -87,7 +91,7 @@ at Gaussian initialization:
   `𝒟_ij = (1/d)(d - 2 + R_ij²) s_μ(x_i,x_j) - ((d-1)/2d) R_ij (s_μ(x_i) + s_μ(x_j))`,
 
 with `μ = μ_X` the empirical measure and `s_μ` the correlation `baryCorr` of
-the softmax barycenters.  The two coefficients are the traces
+the softmax barycenters. The two coefficients are the traces
 `Tr(Proj_{x_i}Proj_{x_j}) = d - 2 + R_ij²` and `Tr(Proj_{x_i}) = d - 1` of
 `eq:trace_proj_proj_clean`, divided by the `d` of the Gaussian identity
 `E[VᵀMV] = (1/d)Tr(M) I_d`.
@@ -101,7 +105,7 @@ noncomputable def overlapDrift {d n : ℕ} (β : ℝ) (ρ : Measure (HeadParam d
       * (baryCorr β ρ (empMeasure X) (X i) (X i) + baryCorr β ρ (empMeasure X) (X j) (X j))
 
 /-- The drift of `⟨x_i, x_i⟩` vanishes: `‖x_i(t)‖ ≡ 1`, which is what the
-sphere-preserving correction of `eq:ambient_form_clean` is chosen for.  This is
+sphere-preserving correction of `eq:ambient_form_clean` is chosen for. This is
 the formula of `eq:Dij_explicit_clean` at `i = j`, where
 `Tr(Proj_{x_i}Proj_{x_i}) = d - 2 + 1 = d - 1 = Tr(Proj_{x_i})`. -/
 theorem overlapDrift_self {d n : ℕ} (β : ℝ) (ρ : Measure (HeadParam d))
@@ -123,9 +127,9 @@ the equation, applied to the observable `φ(X) = ⟨x_i, x_j⟩`, is
 
 **What the source says and what is written here.**
 
-* `eq:Rij_decomp_clean` splits `dR_ij` into a martingale and a drift.  Only the
+* `eq:Rij_decomp_clean` splits `dR_ij` into a martingale and a drift. Only the
   drift is a statement about the generator; the martingale part is identified
-  separately, through its integrand, by `fderiv_overlap`.  See the module
+  separately, through its integrand, by `fderiv_overlap`. See the module
   docstring.
 * `σ_V² = 1/d` is an explicit hypothesis, as in `gaussian_drift_and_kernel_empMeasure`:
   the Gaussian identity `E[VᵀMV] = (1/d)Tr(M) I_d` the proof turns on is the

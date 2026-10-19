@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ShiftSumCopy
+
+/-!
 # Three Coyote layers for a sum of shifted diagonal maps
 
 Arora et al., arXiv:2312.04927v1, Appendix `prop: butterfly-hyena`.
@@ -7,7 +11,7 @@ along the sequence axis, so all three layers retain the external feature
 dimension and use zero projection weights.
 -/
 
-import Transformer.Zoology.Appendix_ShiftSumCopy
+@[expose] public section
 
 open scoped BigOperators
 

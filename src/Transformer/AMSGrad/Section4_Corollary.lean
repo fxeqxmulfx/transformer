@@ -1,19 +1,23 @@
-import Transformer.AMSGrad.Section4_Theorem
-import Transformer.AMSGrad.Section4_Rate
+module
 
-/-
+public import Transformer.AMSGrad.Section4_Theorem
+public import Transformer.AMSGrad.Section4_Rate
+
+/-!
 # AMSGrad — the corrected convergence rate
 
 §4 of arXiv:1904.03590v4: Corollary 4.5, from Theorem 4.1.
 
 **What the source says and what is carried here.**
 
-* Corollary 4.5 asserts `lim R(T)/T = 0`.  Theorem 4.1 is an upper bound and
+* Corollary 4.5 asserts `lim R(T)/T = 0`. Theorem 4.1 is an upper bound and
   gives only the upper half, `limsup R(T)/T ≤ 0`, which is what is stated here,
-  `cor_lambda` and `cor_inv`.  The lower half is false: `Section4_Counter`.
+  `cor_lambda` and `cor_inv`. The lower half is false: `Section4_Counter`.
 
 Source: arXiv:1904.03590v4, §4, Corollary 4.5.
 -/
+
+@[expose] public section
 
 open Finset Filter
 
@@ -24,7 +28,7 @@ variable {d : ℕ}
 
 /-- **Corollary 4.5, `β_{1,t} = β₁λ^{t-1}`, the upper half.**  Under the
 assumptions of `mainthm_lambda`, for every `ε > 0`, eventually
-`R(T)/T ≤ ε` for all `x* ∈ F`.  The source asserts `lim R(T)/T = 0`; see the
+`R(T)/T ≤ ε` for all `x* ∈ F`. The source asserts `lim R(T)/T = 0`; see the
 module docstring.
 
 Source: arXiv:1904.03590v4, §4, Corollary 4.5. -/

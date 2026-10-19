@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_Envelopes
+public import Transformer.Kinetic.Section3_SecondDifferences
+
+/-!
 # The envelope of the forcing of a pair
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 3: the forcing
@@ -9,8 +14,7 @@ most `(1 + 2κ)² q_γ(c, n)² G(c, M)` (`crossForcing_le`), where
 later token is `M`. Every `1/γ` comes with a `τ`, hence with a factor `T`.
 -/
 
-import Transformer.Kinetic.Section3_Envelopes
-import Transformer.Kinetic.Section3_SecondDifferences
+@[expose] public section
 
 open Real
 

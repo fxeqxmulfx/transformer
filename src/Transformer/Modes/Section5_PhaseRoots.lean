@@ -1,5 +1,7 @@
-import Transformer.Modes.Section5_FinitePhase
-import Mathlib.Algebra.Polynomial.Roots
+module
+
+public import Transformer.Modes.Section5_FinitePhase
+public import Mathlib.Algebra.Polynomial.Roots
 
 /-!
 # Quartic zeros and local bounds for the Gaussian phase
@@ -29,6 +31,8 @@ still records the loss as the argument radius grows. The subsequent
 Gaussian amplitude estimates must retain that loss when summing over
 all intervals. Source: arXiv:2412.09080v3, §5.5, `eq:uniform-decay`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Polynomial
 open scoped Interval

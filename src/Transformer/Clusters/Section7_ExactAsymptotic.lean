@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_DriftAverage
+public import Mathlib.Topology.Order.MonotoneConvergence
+
+/-!
 # The emergence of clusters in self-attention dynamics — `l:exactasymptotic`
 
 §7 of arXiv:2305.05465v6: in `d = 1`, a token that is not uniformly bounded
@@ -15,14 +20,13 @@ to `+∞` with the largest token `x_N`:
   `x_i e^{-t} = x_N e^{-t} - (x_N - x_i) e^{-t} → γ`.
 
 This is the source's argument with its rates dropped: monotone convergence
-replaces the estimate `ẋ_n = x_n(1 + o(·))`.  A token going to `-∞` is a token
+replaces the estimate `ẋ_n = x_n(1 + o(·))`. A token going to `-∞` is a token
 of `-x` going to `+∞`.
 
 Source: arXiv:2305.05465v6, `l:exactasymptotic`.
 -/
 
-import Transformer.Clusters.Section7_DriftAverage
-import Mathlib.Topology.Order.MonotoneConvergence
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

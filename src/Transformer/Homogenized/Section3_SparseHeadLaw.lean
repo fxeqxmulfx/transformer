@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.RademacherLaw
+
+/-!
 # A sparse subGaussian law for the kernel regularity claim
 
 The hypothesis `ass:high_order_short` in arXiv:2604.01978v1, §2.2.3,
@@ -14,7 +18,7 @@ The source is the three-point space `Fin 3`. The head law is its actual
 pushforward; the zero atom is retained in the probability and integral proofs.
 -/
 
-import Transformer.Homogenized.RademacherLaw
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open Real MeasureTheory ProbabilityTheory

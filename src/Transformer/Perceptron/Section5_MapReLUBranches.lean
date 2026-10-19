@@ -1,6 +1,8 @@
-import Transformer.Perceptron.Section5_MapFirstVariation
-import Transformer.Perceptron.Section5_ReLUBranches
-import Transformer.Perceptron.TransformMap
+module
+
+public import Transformer.Perceptron.Section5_MapFirstVariation
+public import Transformer.Perceptron.Section5_ReLUBranches
+public import Transformer.Perceptron.TransformMap
 
 /-!
 # Actual unnormalized matrix ReLU branch continuation and parity
@@ -24,6 +26,8 @@ boundaries. They use no scalar inversion for the matrix transform.
 The source's symmetry assumption is unnecessary for these displayed
 field identities and parity; invertibility enters only at injectivity.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

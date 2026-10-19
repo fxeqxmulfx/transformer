@@ -1,14 +1,19 @@
-/-
+module
+
+public import Transformer.ALM.HullHeadLatest
+public import Transformer.ALM.FloatWalk
+
+/-!
 # The head's output at the tie the running code merged
 
 `Transformer.ALM.HullHead` bounds the softmax head against the aggregate
 `resolve` builds from two tied keys, for any two keys the tie set contains
-(`argmaxTie_head_resolves`).  `Transformer.ALM.FloatWalk` says which keys the
+(`argmaxTie_head_resolves`). `Transformer.ALM.FloatWalk` says which keys the
 implementation's two `while` loops actually put into that aggregate: the
 members of `fpTieSet`, the lines whose recomputed score compares `==` to
 `best_score` in the arithmetic the machine runs.
 
-The two never met.  The head-level bound was stated at maximizers of the exact
+The two never met. The head-level bound was stated at maximizers of the exact
 score, and at a tie the floating-point search need not land on the index the
 exact one returns, so nothing connected the value the head approximates to the
 value `combined.resolve` writes out.
@@ -24,8 +29,7 @@ priced at the tie the running code merged too.
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 70-83 and 268-306.
 -/
 
-import Transformer.ALM.HullHeadLatest
-import Transformer.ALM.FloatWalk
+@[expose] public section
 
 open scoped BigOperators
 
@@ -37,7 +41,7 @@ variable {n : ℕ}
 /-- **The head returns what the running code resolved.**  Both keys are named
 by positions the *floating-point* merge loops accepted — `fpTieSet`, the `==`
 of the implementation — and `fp_walk_sound` puts those positions among the
-exact maximizers, where `argmaxTie_head_resolves` applies.  Nothing is assumed
+exact maximizers, where `argmaxTie_head_resolves` applies. Nothing is assumed
 exact: the score routine may round, provided it rounds by less than half the
 gap it is comparing (`2δ < 1`), and the breakpoints by less than half a unit of
 the key lattice (`F.u * B < 1/2`). -/
@@ -112,7 +116,7 @@ example :
 /-- **And against what the other mode writes out.**  The same two positions of
 `fpTieSet`, resolved by `TieBreak::LATEST` instead: the head's output is within
 `ε·C` of one of the two payloads rather than of their mean, so it is within
-`ε·C + ‖V i₁ - V i₂‖/2` of what the running code returns.  The extra term is
+`ε·C + ‖V i₁ - V i₂‖/2` of what the running code returns. The extra term is
 the whole difference between the modes, and it vanishes exactly when the two
 tied lines carry the same payload.
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_BarycenterContraction
+public import Transformer.Interpolation.Section1_ControlPartitions
+
+/-!
 # The original barycenter induction with a uniform control bound
 
 ArXiv:2411.04551v3, §3.2, `lem: induction.barycenter`.
@@ -18,8 +23,7 @@ the collinearity, both final hulls, the target pole and the restoration
 clause refer to this one index. No original data hypothesis is removed.
 -/
 
-import Transformer.Interpolation.Section3_BarycenterContraction
-import Transformer.Interpolation.Section1_ControlPartitions
+@[expose] public section
 
 open Real MeasureTheory
 

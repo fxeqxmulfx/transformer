@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CyclicCircuitNetwork
+public import Transformer.Zoology.Appendix_PaddedModel
+
+/-!
 # Packing a sequence into circuit feature memory
 
 Arora et al., arXiv:2312.04927v1, Appendix Theorem `thm: gen-ac`.
@@ -8,8 +13,7 @@ entire flattened input. This supplies the input-layout bridge omitted by
 the one-token circuit compiler.
 -/
 
-import Transformer.Zoology.Appendix_CyclicCircuitNetwork
-import Transformer.Zoology.Appendix_PaddedModel
+@[expose] public section
 
 namespace Transformer.Zoology
 

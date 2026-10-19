@@ -1,4 +1,6 @@
-import Transformer.Grokking.Geometry.IntegerEncoding
+module
+
+public import Transformer.Grokking.Geometry.IntegerEncoding
 
 /-!
 # The exact integer inequality certifies observed decisions
@@ -22,6 +24,8 @@ list gives a checked subset of current correct decisions, not a law that
 its size must increase during training. Positive scale invariance also
 does not supply a margin for the correct target; that premise is explicit.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Geometry
 

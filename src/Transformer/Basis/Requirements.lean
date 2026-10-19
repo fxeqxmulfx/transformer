@@ -1,4 +1,6 @@
-import Transformer.Basis.Tasks
+module
+
+public import Transformer.Basis.Tasks
 
 /-!
 # Necessary answer properties of any Basis solver
@@ -14,6 +16,8 @@ Theorems apply to any given continuation function, including the actual
 GPTMini adapter. They do not assert that arbitrary parameters already
 satisfy these task-dependent conditions.
 -/
+
+@[expose] public section
 
 namespace Transformer.Basis
 

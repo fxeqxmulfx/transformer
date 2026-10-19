@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_BranchCalculus
+public import Transformer.Perceptron.Section5_MapForce
+
+/-!
 # Actual normalized stationarity in circle coordinates
 
 ArXiv:2601.21366v2, §2.3, `eq: fulltrans.stat`, and §6,
@@ -17,8 +22,7 @@ measurable map. It will carry an actual support point to its antipode
 once evenness of the invertible transform supplies measure invariance.
 -/
 
-import Transformer.Perceptron.Section6_BranchCalculus
-import Transformer.Perceptron.Section5_MapForce
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators Topology

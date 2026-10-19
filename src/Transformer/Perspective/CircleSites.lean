@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.Section6_Circle
+
+/-!
 # Sorted positions of a configuration on the circle
 
 Polyanskiy, Rigollet, Yao — arXiv:2507.22857v1, *Synchronization of mean-field
@@ -17,7 +21,7 @@ Counted from `0`, they are
 The gaps between consecutive positions are in `Perspective.CircleGaps`.
 -/
 
-import Transformer.Perspective.Section6_Circle
+@[expose] public section
 
 open scoped BigOperators
 open Real

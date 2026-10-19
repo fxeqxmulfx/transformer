@@ -1,12 +1,19 @@
-/-
+module
+
+public import Transformer.CRASP.BoundedExists
+public import Transformer.CRASP.LowerBound
+public import Transformer.CRASP.Positional
+public import Transformer.CRASP.Transformers
+
+/-!
 # The previous symbol is definable at no depth
 
-In no paper.  arXiv:2506.16055v3, §1, recalls that "attention heads at lower
+In no paper. arXiv:2506.16055v3, §1, recalls that "attention heads at lower
 layers exhibit lower-order patterns (e.g., each symbol attends to the previous
-symbol)".  Without positions no depth suffices for it: `Σ*bΣ`, the strings over
+symbol)". Without positions no depth suffices for it: `Σ*bΣ`, the strings over
 `{a, b}` whose second-to-last symbol is `b` (`secondLast`), is definable in
 `TL[◁#]` at no depth (`not_definableL_secondLast`), so no future-masked rounded
-transformer recognizes it (`not_recognizes_secondLast`).  Counting to the end
+transformer recognizes it (`not_recognizes_secondLast`). Counting to the end
 defines it at depth 2 (`definable_secondLast`), so it is, like PARITY
 (`CRASP.Parity`, `CRASP.ParityTwoSided`), in `TL[◁#, ▷#]` and not in `TL[◁#]`;
 and `Y Q_b` defines it at depth 0 in `TL[◁#]` with the operator `Y` of
@@ -14,20 +21,17 @@ Appendix F (`definableY_secondLast`), the logic into which `thm:rtfr_to_TLCly`
 translates transformers with ALiBi.
 
 The proof is the lower bound of the depth hierarchy (`CRASP.LowerBound`) cut
-short.  After some word `u`, a formula of `TL[◁#]_{k+1}` reads at a position
+short. After some word `u`, a formula of `TL[◁#]_{k+1}` reads at a position
 only its letter and the numbers of `a`s and `b`s since `u`
 (`exists_constOnStrip_altPlus`, `Form.sat_eq_of_count_eq`), and `u·aba` and
 `u·baa` agree on those at their last position, while only the first has `b`
-second to last (`exists_models_iff_secondLast`).  Both words are nonempty, so
+second to last (`exists_models_iff_secondLast`). Both words are nonempty, so
 no formula agrees with `Σ*bΣ` even on the nonempty strings
 (`not_models_iff_secondLast`), which is what a reduction from recall needs
 (`CRASP.LatestRecall`).
 -/
 
-import Transformer.CRASP.BoundedExists
-import Transformer.CRASP.LowerBound
-import Transformer.CRASP.Positional
-import Transformer.CRASP.Transformers
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

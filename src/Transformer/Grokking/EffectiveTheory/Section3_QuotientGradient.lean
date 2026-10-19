@@ -1,8 +1,10 @@
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Calculus.Deriv.Inv
-import Mathlib.Tactic
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.Calculus.Deriv.Inv
+public import Mathlib.Tactic
 
 /-!
 # The actual gradient of a normalized parallelogram loss
@@ -21,6 +23,8 @@ Every component below is an actual partial derivative of the quotient.
 The next module checks conservation and the source's linear-flow claim.
 No transformer/AdamW dynamics is assumed to obey this effective model.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.EffectiveTheory
 

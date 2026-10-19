@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_CircleArcs
+public import Transformer.Interpolation.Section2_LocalPhases
+public import Transformer.Interpolation.Section5_BallMass
+
+/-!
 # Cutting arcs of the circle at a prescribed mass
 
 ArXiv:2411.04551v3, §2.2, proof of `prop: compression`, Steps 2–3, on
@@ -10,9 +16,7 @@ continuously with its right end, and some right end gives any prescribed
 mass up to that of a given arc.
 -/
 
-import Transformer.Interpolation.Section2_CircleArcs
-import Transformer.Interpolation.Section2_LocalPhases
-import Transformer.Interpolation.Section5_BallMass
+@[expose] public section
 
 open scoped ENNReal
 open Real MeasureTheory Set

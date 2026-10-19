@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_Scaling
+
+/-!
 # Scalar heads and convex token rows
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §3.2, Theorem 1 and
-Appendix A.2/A.4.  This file constructs the two directions of the
+Appendix A.2/A.4. This file constructs the two directions of the
 finite-width equivalence after the paper's loss-factor error is corrected.
 -/
 
-import Transformer.Convexifying.Section3_Scaling
+@[expose] public section
 
 open scoped BigOperators
 
@@ -101,7 +105,7 @@ theorem scalarHead_basis_unit {n d : ℕ} (X : Fin n → Vec d)
   have hprod := (unitPair_spec z).1
   simp [hprod, mul_comm]
 
-/-- Recover `n` token heads and pad with `m` zero heads.  A token index
+/-- Recover `n` token heads and pad with `m` zero heads. A token index
 `k₀` supplies valid simplex weights for the padding.
 Source: arXiv:2211.11052v1, Appendix A.2/A.4. -/
 noncomputable def scalarHeadsOf {n d : ℕ} (m : ℕ) (k₀ : Fin n)

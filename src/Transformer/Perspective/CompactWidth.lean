@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.CompactMaxCurve
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+
+/-!
 # Width decay for compact consensus families
 
 Auxiliary for arXiv:2411.04551v3, §2, `prop: targets.atoms`. A common
@@ -13,9 +19,7 @@ Only continuity on future times and derivatives of the actual curves
 are used; derivatives of the extrema are never assumed.
 -/
 
-import Transformer.Perspective.CompactMaxCurve
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
+@[expose] public section
 
 open Real Set MeasureTheory
 open scoped Topology

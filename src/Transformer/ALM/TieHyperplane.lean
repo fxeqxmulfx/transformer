@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.ALM.TieBreak
+public import Transformer.ALM.VectorInt
+
+/-!
 # Where the ties are, in every key dimension
 
 `Transformer.ALM.TieBreak` locates the ties of the planar machine: two
@@ -9,18 +14,18 @@ zero in the query, and is unreachable altogether when the query is one of the
 stored keys.
 
 In dimension `m` the same computation gives a *hyperplane* rather than a
-point.  The tie locus of `k₁ ≠ k₂` is
+point. The tie locus of `k₁ ≠ k₂` is
 
   `⟪k₁ - k₂, 2q - (k₁ + k₂)⟫ = 0`,
 
 the perpendicular bisector of the two keys — equivalently, the queries
-equidistant from both.  That is what `score_eq_iff_inner_eq_zero` and
-`score_eq_iff_norm_eq` say.  Two consequences for the machine:
+equidistant from both. That is what `score_eq_iff_inner_eq_zero` and
+`score_eq_iff_norm_eq` say. Two consequences for the machine:
 
 * the lookup path is still safe — `tie_eq_of_query_mem` reproves
   `argmax_unique_of_query_mem` in every dimension, so `resolve` never sees a
   merged line when the query is a stored key;
-* off that path the tie set *grows with the dimension*.  At `m = 1` it is one
+* off that path the tie set *grows with the dimension*. At `m = 1` it is one
   query, and `score_eq_iff_int_one` recovers `sScore_eq_iff` exactly; at
   `m = 2` it is already an unbounded line, as the final example exhibits.
 
@@ -28,8 +33,7 @@ The scores are `Transformer.ALM.score` of `Transformer.ALM.Defs`; the scalar
 case is `Transformer.ALM.TieBreak`.
 -/
 
-import Transformer.ALM.TieBreak
-import Transformer.ALM.VectorInt
+@[expose] public section
 
 open scoped BigOperators
 
@@ -76,7 +80,7 @@ theorem score_midpoint_eq (k₁ k₂ : EucSpace m) :
   norm_num
 
 /-- And it is never everything: distinct keys are separated at the query that
-is one of them.  So the tie locus of `k₁ ≠ k₂` is a proper, nonempty affine
+is one of them. So the tie locus of `k₁ ≠ k₂` is a proper, nonempty affine
 subspace — a hyperplane, not a degenerate case. -/
 theorem exists_score_ne (k₁ k₂ : EucSpace m) (hne : k₁ ≠ k₂) :
     ∃ q : EucSpace m, score q k₁ ≠ score q k₂ :=
@@ -92,7 +96,7 @@ theorem exists_score_ne (k₁ k₂ : EucSpace m) (hne : k₁ ≠ k₂) :
 
 /-- **The merge path is dead on the lookup path, in every dimension.**  If the
 query is one of the stored keys, every key achieving the best score *is* that
-query, so the scan merges nothing and `resolve` sees a single value.  This is
+query, so the scan merges nothing and `resolve` sees a single value. This is
 `argmax_unique_of_query_mem` of `Transformer.ALM.TieBreak` without the
 restriction to scalar integer keys. -/
 theorem tie_eq_of_query_mem (K : Fin n → EucSpace m) (q : EucSpace m) (i₀ : Fin n)

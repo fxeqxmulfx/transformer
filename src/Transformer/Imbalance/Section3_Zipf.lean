@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_ZipfLimits
+
+/-!
 # The Zipf-law asymptotic consequences
 
 arXiv:2402.19449v2, Appendix H.
 -/
 
-import Transformer.Imbalance.Section3_ZipfLimits
+@[expose] public section
 
 open Filter Asymptotics
 open scoped Topology

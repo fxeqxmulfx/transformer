@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianCorrelationDeviation
+public import Mathlib.MeasureTheory.Integral.Prod
+
+/-!
 # Actual product queries and conditioning on the first Gaussian factor
 
 ArXiv:2604.01978v1, §2.3.3, initialization (G), and §7.3,
@@ -20,8 +25,7 @@ expectation. These identities keep both original factors explicit;
 no Gaussian law is imposed on the product matrix itself.
 -/
 
-import Transformer.Homogenized.Section7_GaussianCorrelationDeviation
-import Mathlib.MeasureTheory.Integral.Prod
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.AlibiTables
+public import Transformer.CRASP.PeriodicAttention
+
+/-!
 # Integer sums of the actual ALiBi coefficients
 
 arXiv:2506.16055v3, Appendix F, Equation `eq:alibi` and
@@ -6,8 +11,7 @@ arXiv:2506.16055v3, Appendix F, Equation `eq:alibi` and
 natural difference, and fixed-point mantissas remove the common scale.
 -/
 
-import Transformer.CRASP.AlibiTables
-import Transformer.CRASP.PeriodicAttention
+@[expose] public section
 
 namespace Transformer.CRASP.AlibiTables
 

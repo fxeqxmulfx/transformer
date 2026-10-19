@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.HeadLawRotation
+
+/-!
 # Homogenized Transformers — the drift vanishes at Gaussian initialization
 
 Consequence (ii) of assumption (G) of arXiv:2604.01978v1: "because `V` is
@@ -8,7 +12,7 @@ Under (G) the head is `(V, A) = (V, W W'ᵀ)` with `V, W, W'` independent i.i.d.
 Gaussian matrices, and a centered Gaussian is symmetric, so the law of the
 head is invariant under `(V, A) ↦ (-V, A)` (`measurePreserving_negValue`).
 The attention field `B_θ[μ](x)` is linear in `V` and its weights see only `A`,
-so it is odd under that flip (`attnFieldOf_negValue`).  Its mean is therefore
+so it is odd under that flip (`attnFieldOf_negValue`). Its mean is therefore
 its own negative, and vanishes (`meanFieldOf_gaussian`); no integrability is
 needed, since an integral and the integral of its negative are negatives of
 each other whether or not the integrand is integrable.
@@ -16,7 +20,7 @@ each other whether or not the integrand is integrable.
 Source: arXiv:2604.01978v1, §2.3.3, item (ii).
 -/
 
-import Transformer.Homogenized.HeadLawRotation
+@[expose] public section
 
 open scoped NNReal
 open MeasureTheory ProbabilityTheory
@@ -124,7 +128,7 @@ example (d : ℕ) : IsGaussianHeadLaw d 0 0 (Measure.dirac (0 : HeadParam d)) :=
   isGaussianHeadLaw_dirac_zero d
 
 /-- The attention field is odd in the value matrix: its weights see only `A`,
-and it is linear in `V`.  arXiv:2604.01978v1,
+and it is linear in `V`. arXiv:2604.01978v1,
 `EQ:VELOCITY_FIELD_SELF_ATTENTION`. -/
 theorem attnFieldOf_negValue {d : ℕ} (β : ℝ) (θ : HeadParam d) (μ : Measure (EucSpace d))
     (x : EucSpace d) : attnFieldOf β (negValue d θ) μ x = -attnFieldOf β θ μ x := by
@@ -169,7 +173,7 @@ example (d : ℕ) : IsGaussianHeadLaw d 0 0 (Measure.dirac (0 : HeadParam d)) :=
 
 /-- **Consequence (ii) of (G), the projected drift.**  Because `V` is centered
 and independent of `A`, the drift of `eq: first.sde` vanishes identically:
-`b(X)_i = Proj_{x_i} b_{ρ*}[μ_X](x_i) = 0`.  The diffusive regime
+`b(X)_i = Proj_{x_i} b_{ρ*}[μ_X](x_i) = 0`. The diffusive regime
 `αηL = Θ(1)` is therefore driven entirely by the random fluctuations, and the
 ballistic regime is static.
 

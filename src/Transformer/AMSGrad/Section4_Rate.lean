@@ -1,14 +1,18 @@
-import Transformer.AMSGrad.Section4_Lemmas
+module
 
-/-
+public import Transformer.AMSGrad.Section4_Lemmas
+
+/-!
 # AMSGrad — the rate behind Corollary 4.5
 
 §4 of arXiv:1904.03590v4, Corollary 4.5: the bound of Theorem 4.1 grows like
-`√(T ln T)`, so it is `o(T)`.  The two facts used: `‖g_{1:T,i}‖₂ ≤ G√T`, and
+`√(T ln T)`, so it is `o(T)`. The two facts used: `‖g_{1:T,i}‖₂ ≤ G√T`, and
 `(a + b√T + c√(ln T + 1)√T)/T ≤ (|a| + |b| + |c|) √((ln T + 1)/T) → 0`.
 
 Source: arXiv:1904.03590v4, §4, Corollary 4.5.
 -/
+
+@[expose] public section
 
 open Finset Filter Topology
 
@@ -57,7 +61,7 @@ theorem rate_le (a b c : ℝ) {T : ℕ} (hT : 1 ≤ T) :
       hs0.le
   nlinarith
 
-/-- `√((ln T + 1)/T) → 0`.  arXiv:1904.03590v4, §4, Corollary 4.5. -/
+/-- `√((ln T + 1)/T) → 0`. arXiv:1904.03590v4, §4, Corollary 4.5. -/
 theorem tendsto_rate :
     Tendsto (fun T : ℕ => Real.sqrt ((Real.log T + 1) / T)) atTop (𝓝 0) := by
   have hlog : Tendsto (fun x : ℝ => Real.log x / x) atTop (𝓝 0) := by

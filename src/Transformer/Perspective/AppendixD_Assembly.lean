@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixD_Product
+
+/-!
 # Appendix D — the assembly of the phase-transition curve
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
-One statement: `e:ineqsecondpart`, the second half of `eq: upto-t`.  It is
+One statement: `e:ineqsecondpart`, the second half of `eq: upto-t`. It is
 proved — as the deduction it is, from `e:productcloseto1` and
 `e:ybetacloseto1` carried as explicit hypotheses, and with the constant its own
 derivation supports rather than the one the survey prints.
@@ -17,7 +21,7 @@ in `Perspective.AppendixD_Product`; the `USA` analogue `rem: usa.d` is in
 One range to watch: `hcp` below is asked on `t ≥ 0`, which is where the survey
 uses `e:productcloseto1`, while the survey derives that estimate by integrating
 from `1/n`, and `Perspective.product_close_to_one` proves it only on
-`t ≥ 1/n`; nothing in the derivation covers `[0, 1/n)`.  The deduction below
+`t ≥ 1/n`; nothing in the derivation covers `[0, 1/n)`. The deduction below
 is stated at its full strength; the chain it belongs to runs on `t ≥ 1/n`.
 
 The assembly of `thm: phase.transition.curve`
@@ -30,7 +34,7 @@ configuration solves `SA` and `tanh` solves `eq: ybeta`
 (`Perspective.ybetaODE_SA_two_zero`).
 -/
 
-import Transformer.Perspective.AppendixD_Product
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -51,15 +55,15 @@ by the survey's own derivation.
 
 *The two inputs are carried as hypotheses.*  The survey deduces this from
 `e:productcloseto1` (`product_close_to_one`) and `e:ybetacloseto1`
-(`ybeta_close_to_1`).  They enter as `hcp` and `hyb`, so that what is proved is
-the deduction and its dependence is visible in the signature.  `hγle`, that `γ_β ≤ 1`, is the remaining property of the
+(`ybeta_close_to_1`). They enter as `hcp` and `hyb`, so that what is proved is
+the deduction and its dependence is visible in the signature. `hγle`, that `γ_β ≤ 1`, is the remaining property of the
 solution of `eq: ybeta` the step uses, and is carried the same way.
 
 *The constant on the first summand is `4`, not `1`.*  `α` bounds the inner
 products with `x⋆`, not the pairwise ones, and the passage costs a factor:
 from `1 - ⟨x_i, x⋆⟩ ≤ ε` and `1 - ⟨x_j, x⋆⟩ ≤ ε` one gets
 `‖x_i - x⋆‖, ‖x_j - x⋆‖ ≤ √(2ε)`, hence `‖x_i - x_j‖ ≤ 2√(2ε)` and
-`1 - ⟨x_i, x_j⟩ = ‖x_i - x_j‖²/2 ≤ 4ε`.  The survey writes the conclusion with
+`1 - ⟨x_i, x_j⟩ = ‖x_i - x_j‖²/2 ≤ 4ε`. The survey writes the conclusion with
 `1` in place of `4`; nothing in its argument supplies that, and the `C e^{-λt}`
 branch of `eq: upto-t` the estimate feeds is unaffected by the constant.
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+
+/-!
 # Power substitutions preserve positive-side accumulation
 
 Every positive parameter has a unique positive real power root. The inverse
@@ -6,7 +10,7 @@ power tends to zero on the positive side, so frequently occurring properties
 remain frequent after a positive integral power substitution.
 -/
 
-import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+@[expose] public section
 
 open Filter Set
 

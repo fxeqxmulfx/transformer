@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ShiftSumSimulation
+public import Transformer.Zoology.Appendix_CyclicKNetwork
+
+/-!
 # K-constrained resource bounds for shifted diagonal sums
 
 Arora et al., arXiv:2312.04927v1, Appendix `prop: butterfly-hyena`,
@@ -7,8 +12,7 @@ has unchanged feature width, workspace length `9m`, and actual stored
 K-weight/filter/bias parameter counts. No dense weight bound is assumed.
 -/
 
-import Transformer.Zoology.Appendix_ShiftSumSimulation
-import Transformer.Zoology.Appendix_CyclicKNetwork
+@[expose] public section
 
 namespace Transformer.Zoology
 

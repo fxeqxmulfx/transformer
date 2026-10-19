@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.TemporalProgramCorrect
+
+/-!
 # The exact numerator of a comparison average
 
 arXiv:2506.16055v3, Appendix B.2, `thm:TLCl_to_rtfr`.
@@ -6,7 +10,7 @@ The BOS source contributes the constant and every ordinary source
 contributes the truth values beneath the comparison's counts.
 -/
 
-import Transformer.CRASP.TemporalProgramCorrect
+@[expose] public section
 
 namespace Transformer.CRASP.TemporalProgram
 

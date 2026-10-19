@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_MeanAxisLaw
+public import Transformer.Interpolation.Section1_TimeDependentWeakTests
+
+/-!
 # Differential weak tests and clocks for every rank-one mean law
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §3.2,
@@ -12,8 +17,7 @@ clock for any original weak law. No characteristic representation or
 uniqueness assumption enters these statements.
 -/
 
-import Transformer.Interpolation.Section3_MeanAxisLaw
-import Transformer.Interpolation.Section1_TimeDependentWeakTests
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_MapHessian
+
+/-!
 # Expanding the actual matrix circle Hessian
 
 ArXiv:2601.21366v2, §3.1, `rem: ext` (ii), extending
@@ -13,7 +17,7 @@ used by the already proved local Hessian estimate. Strict SOPD
 therefore supplies a lower bound on the same actual quadratic form.
 -/
 
-import Transformer.Perceptron.Section5_MapHessian
+@[expose] public section
 
 open Real MeasureTheory
 

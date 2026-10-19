@@ -1,4 +1,6 @@
-import Transformer.Homogenized.Section7_MartingaleUnitExcursions
+module
+
+public import Transformer.Homogenized.Section7_MartingaleUnitExcursions
 
 /-!
 # Full real-time convergence of the bounded logistic angle
@@ -18,6 +20,8 @@ logistic process. Identification of the absorbing endpoint is separate.
 The deterministic example varies in time and verifies the path argument;
 the probabilistic examples are genuine martingale and equation witnesses.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

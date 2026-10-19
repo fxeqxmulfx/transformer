@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+public import Mathlib.MeasureTheory.Integral.Pi
+public import Mathlib.Probability.Distributions.Gaussian.Real
+
+/-!
 # Gaussian normalization in Euclidean space
 
 The corrected `d`-dimensional normalizer of `eq: gaussian.mixture` is checked
@@ -8,10 +15,7 @@ Gaussian densities. The product integrates to one by Fubini.
 Source: arXiv:2410.06833v1, §4, `eq: gaussian.mixture`.
 -/
 
-import Transformer.Basic
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-import Mathlib.MeasureTheory.Integral.Pi
-import Mathlib.Probability.Distributions.Gaussian.Real
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory ProbabilityTheory
@@ -114,7 +118,7 @@ theorem radial_gaussian_integral (d : ℕ) (σ : ℝ) (hσ : 0 < σ)
   exact coordinate_gaussian_integral d σ hσ μ
 
 /-- The quadratic exponential moment of a radial Gaussian:
-`E exp(‖X-μ‖²/(4σ²)) = 2^(d/2)`.  This is the normalization formula at the
+`E exp(‖X-μ‖²/(4σ²)) = 2^(d/2)`. This is the normalization formula at the
 larger scale `√2 σ`, and is the starting point for a Gaussian-radius tail
 bound in `prop: mixture.of.gaussians`.
 Source: arXiv:2410.06833v1, §4, proof of `prop: mixture.of.gaussians`. -/

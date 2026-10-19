@@ -1,4 +1,6 @@
-import Transformer.Grokking.Operational.Basic
+module
+
+public import Transformer.Grokking.Operational.Basic
 
 /-!+# Sustained fit and memorization windows
 
@@ -20,6 +22,8 @@ The prefix theorems require the whole confirmation window to be observed.
 They justify these primitives, not Python's median, longest-stretch,
 structure-alarm or complete phase-selection algorithms.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Operational
 

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.GPTMini.Model
+public import Transformer.GPTMini.Properties.OutputSimplex
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+
+/-!
 # Property: Output entropy is bounded below
 
 The softmax output distribution has Shannon entropy at most `log V`
@@ -7,16 +13,14 @@ The softmax output distribution has Shannon entropy at most `log V`
   `H(prob_i(·)) ≥ log(vocab_size) - 2M`
 
 (`softmaxEntropy_lower_bound`): a softmax with bounded logits cannot
-concentrate on a single token.  This is an *anti-collapse* property.
+concentrate on a single token. This is an *anti-collapse* property.
 
 The logit bound is discharged in `Properties.EntropyEmbedding`: the final
 RMSNorm and the tied unembedding give `M = √d_model · max_v ‖E_v‖`, whatever
 the depth and the blocks.
 -/
 
-import Transformer.GPTMini.Model
-import Transformer.GPTMini.Properties.OutputSimplex
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -30,7 +34,7 @@ variable (cfg : Config) (params : ModelParams cfg) (eps : ℝ)
 /-! ### Entropy of a finite distribution
 
 Two classical facts about a strictly positive probability vector on `n`
-points, stated here because the softmax output is such a vector.  Source:
+points, stated here because the softmax output is such a vector. Source:
 Cover & Thomas, *Elements of Information Theory*, 2nd ed., Th. 2.6.4 (the
 uniform distribution maximizes entropy) and the inequality `H_∞ ≤ H` between
 the min-entropy and the Shannon entropy (§ 2.6, Rényi entropies). -/
@@ -40,7 +44,7 @@ probability vector on `n` points is at most `log n`, with equality exactly at
 the uniform distribution.
 
 The proof is the usual one: `log(1 / (n p_v)) ≤ 1 / (n p_v) - 1`, multiplied by
-`p_v` and summed.  Source: Cover & Thomas, Th. 2.6.4. -/
+`p_v` and summed. Source: Cover & Thomas, Th. 2.6.4. -/
 theorem entropy_le_log_card {n : ℕ} (p : Fin n → ℝ) (hn : 0 < n)
     (hpos : ∀ v, 0 < p v) (hsum : ∑ v, p v = 1) :
     -∑ v, p v * Real.log (p v) ≤ Real.log (n : ℝ) := by
@@ -71,7 +75,7 @@ theorem entropy_le_log_card {n : ℕ} (p : Fin n → ℝ) (hn : 0 < n)
 /-- **The min-entropy bounds the Shannon entropy from below.**
 
 If no outcome has probability more than `c`, then `-log c ≤ H(p)`: a
-distribution that is nowhere concentrated cannot have small entropy.  Source:
+distribution that is nowhere concentrated cannot have small entropy. Source:
 Cover & Thomas, § 2.6 (`H_∞(p) = -log max_v p_v ≤ H(p)`). -/
 theorem log_le_entropy_of_le {n : ℕ} (p : Fin n → ℝ) (c : ℝ)
     (hpos : ∀ v, 0 < p v) (hsum : ∑ v, p v = 1) (hc : ∀ v, p v ≤ c) :
@@ -163,7 +167,7 @@ below:
 
 (The estimate only needs the *upper* bound `prob_i(v) ≤ exp(2M)/V`, which
 follows from `exp(logit) ≤ exp M` over a denominator of at least `V exp(-M)`;
-`log_le_entropy_of_le` then turns it into the entropy bound.  No positivity
+`log_le_entropy_of_le` then turns it into the entropy bound. No positivity
 hypothesis on `M` is needed: for `M < 0` the logit bound is unsatisfiable.) -/
 theorem softmaxEntropy_lower_bound
     (M : ℝ)

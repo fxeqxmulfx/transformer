@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Magma.Section3_Algorithm
+public import Transformer.Magma.Section5_AlignmentBound
+
+/-!
 # Uniform bounds for the actual alignment EMA
 
 Formalization of arXiv:2602.15322v1, Section 3, eq:masking_prob and
@@ -8,8 +13,7 @@ the same invariant interval. This supplies genuine operator bounds
 for the corrected Section 5 analysis.
 -/
 
-import Transformer.Magma.Section3_Algorithm
-import Transformer.Magma.Section5_AlignmentBound
+@[expose] public section
 
 open scoped InnerProductSpace
 

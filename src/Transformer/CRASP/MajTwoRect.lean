@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.MajTwoOfTLC
+public import Transformer.CRASP.ExtensionsElim
+
+/-!
 # Rectangles for the two-variable translation
 
 arXiv:2506.16055v3, Appendix E, proof of `thm:majtwo_to_tlc`.
@@ -7,8 +12,7 @@ of the three order regions. Signed sums of rectangles implement the
 paper's disjunctive normal form without a disjointness side condition.
 -/
 
-import Transformer.CRASP.MajTwoOfTLC
-import Transformer.CRASP.ExtensionsElim
+@[expose] public section
 
 namespace Transformer.CRASP
 

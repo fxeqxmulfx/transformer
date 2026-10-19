@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_InverseQuadrantSupports
+
+/-!
 # Quantitative error under the original inverse quadrant phases
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, §3.1,
@@ -18,7 +22,7 @@ In particular, the inverse phase clocks and their control cost remain
 fixed while the desired approximation radius tends to zero.
 -/
 
-import Transformer.Interpolation.Section1_InverseQuadrantSupports
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped NNReal

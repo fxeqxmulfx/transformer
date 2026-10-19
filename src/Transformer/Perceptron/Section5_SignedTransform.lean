@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_FiniteTransform
+public import Transformer.Perceptron.Section5_UniformSupport
+public import Mathlib.MeasureTheory.Function.AEEqOfLIntegral
+public import Mathlib.MeasureTheory.Measure.OpenPos
+
+/-!
 # Continuous signed densities in the original exponential transform
 
 ArXiv:2601.21366v2, §5.1, proof of `lem: quadpol` (i).
@@ -19,10 +26,7 @@ continuous signed densities without an inverse or harmonic expansion
 as an input. All integrals use the original exponential kernel.
 -/
 
-import Transformer.Perceptron.Section5_FiniteTransform
-import Transformer.Perceptron.Section5_UniformSupport
-import Mathlib.MeasureTheory.Function.AEEqOfLIntegral
-import Mathlib.MeasureTheory.Measure.OpenPos
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped ENNReal

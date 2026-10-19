@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.SoftmaxSmooth
+public import Transformer.Homogenized.Section7_GaussianHeadFeatures
+public import Mathlib.Analysis.Distribution.TemperateGrowth
+
+/-!
 # Polynomial growth of the actual Gaussian softmax overlap observable
 
 ArXiv:2604.01978v1, §7, the justification of Gaussian interpolation
@@ -16,9 +22,7 @@ polynomial controls its value and first two actual derivatives, exactly
 as required by the proved Gaussian interpolation theorem.
 -/
 
-import Transformer.Homogenized.SoftmaxSmooth
-import Transformer.Homogenized.Section7_GaussianHeadFeatures
-import Mathlib.Analysis.Distribution.TemperateGrowth
+@[expose] public section
 open scoped BigOperators
 namespace Transformer.Homogenized
 /-- A bound on actual coordinate values bounds the norm of a finite
@@ -159,4 +163,3 @@ example : (0 : ℕ) < 2 ∧ Function.HasTemperateGrowth
       (gaussianGramObservable (d := 2) 1 (1 : Matrix (Idx 2) (Idx 2) ℝ) 0 1) :=
   ⟨by norm_num, hasTemperateGrowth_gaussianFeatureScores _ _, hasTemperateGrowth_gaussianGramObservable (by norm_num) _ _ _ _⟩
 end Transformer.Homogenized
-

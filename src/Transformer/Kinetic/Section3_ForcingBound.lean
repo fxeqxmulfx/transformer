@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_ForcingEnvelope
+
+/-!
 # The forcing of a pair and Duhamel's supersolution
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 3, `eq:est-Glaub-2nd`:
@@ -9,7 +13,7 @@ supersolution at time `T` is at most `V_x ≤ T (1 + 2κ)³ q_γ(x, n)³ G(x, M)
 `|∂²_{θ_n θ_M} θ_x| ≲ (xM)⁻¹ e^{√(CT log(x/n))}`.
 -/
 
-import Transformer.Kinetic.Section3_ForcingEnvelope
+@[expose] public section
 
 open Real
 

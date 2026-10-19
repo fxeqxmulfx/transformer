@@ -1,19 +1,23 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_Attention
+
+/-!
 # Complete causal recall on aligned key-value pairs
 
 Arora et al., arXiv:2312.04927v1, §4, Proposition `prop: attention-ar`,
-and Appendix Proposition `prop: app-attention`.  After the paper's first
+and Appendix Proposition `prop: app-attention`. After the paper's first
 local-shift layer has associated each value with its key, one unnormalized
 causal attention layer computes every MQAR answer and zero on no-match rows.
 The proof assumes distinct keys, as does the synthetic generator.
 -/
 
-import Transformer.Zoology.Appendix_Attention
+@[expose] public section
 
 namespace Transformer.Zoology
 
 /-- One-hot encoding of the preceding-key answer relation, with the zero
-vector at queries having no prior match.  Source: Appendix
+vector at queries having no prior match. Source: Appendix
 `sec: intro-general-ar`, Setup. -/
 noncomputable def expectedPairedAnswer {n c : ℕ} (x : MQARInstance n c)
     (i : Fin n) (v : Fin c) : ℝ := by
@@ -22,7 +26,7 @@ noncomputable def expectedPairedAnswer {n c : ℕ} (x : MQARInstance n c)
 
 /-- For every query and every value coordinate, paired causal attention
 returns the indicator that the value is associated to an earlier matching
-key.  This includes the no-match case and any number of query positions.
+key. This includes the no-match case and any number of query positions.
 Source: Appendix Proposition `prop: app-attention`, corrected with the
 causal mask and unique-key hypothesis. -/
 theorem paired_attention_solves_mqar {n c : ℕ} (x : MQARInstance n c)

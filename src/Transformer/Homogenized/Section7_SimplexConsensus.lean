@@ -1,4 +1,6 @@
-import Transformer.Homogenized.Section7_SimplexOdeCompensation
+module
+
+public import Transformer.Homogenized.Section7_SimplexOdeCompensation
 
 /-!
 # The consensus endpoint of the original simplex comparison
@@ -21,6 +23,8 @@ Gaussian drift continuity give the same source envelope, with
 the previously retained finite-dimension bias and coefficient 82.
 Together with the strict-interior result this includes consensus.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped BigOperators NNReal

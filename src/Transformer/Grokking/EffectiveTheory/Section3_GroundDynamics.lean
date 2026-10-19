@@ -1,5 +1,7 @@
-import Transformer.Grokking.EffectiveTheory.Section3_RelativeModes
-import Transformer.Grokking.EffectiveTheory.Section3_BoundedGrowth
+module
+
+public import Transformer.Grokking.EffectiveTheory.Section3_RelativeModes
+public import Transformer.Grokking.EffectiveTheory.Section3_BoundedGrowth
 
 /-!
 # Ground components cannot vanish from nonzero initial data
@@ -18,6 +20,8 @@ time zero therefore stays nonzero; its squared amplitude is nondecreasing.
 A classical flow on the nonzero representation domain is still a premise.
 Existence and transfer to GPTMini/AdamW are not inferred from this bound.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.EffectiveTheory
 

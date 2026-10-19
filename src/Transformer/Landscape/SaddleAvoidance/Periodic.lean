@@ -1,32 +1,36 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.GradientDescent
+public import Transformer.Landscape.SaddleAvoidance.Descent
+public import Mathlib.Algebra.Module.ZLattice.Basic
+public import Mathlib.LinearAlgebra.Basis.VectorSpace
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+
+/-!
 # Saddle avoidance — periodic functions
 
 A `C²` function on a finite-dimensional real inner product space `E` that is
 invariant under the translations by a set `Λ` spanning `E`, such as a lattice
 spanning `E` or the periods `2πℤⁿ` of a function of `n` angles, has a bounded
 gradient, a bounded Hessian and a globally Lipschitz gradient
-(`exists_lipschitzWith_gradient_of_periodic`).  These are the hypotheses on
+(`exists_lipschitzWith_gradient_of_periodic`). These are the hypotheses on
 `f` of the gradient-descent theorems of this directory, and, through the
 bound and the Lipschitz constant of `-∇f`, of `Landscape.GlobalFlow.IsFlowField`.
 
 The integer combinations of `Λ` leave the function invariant
-(`periodic_of_mem_span`).  Reducing modulo the lattice spanned by a basis of
+(`periodic_of_mem_span`). Reducing modulo the lattice spanned by a basis of
 `E` taken from `Λ` moves every point into one closed ball
-(`exists_add_mem_closedBall_of_span_eq_top`).  The gradient and the Hessian
+(`exists_add_mem_closedBall_of_span_eq_top`). The gradient and the Hessian
 are invariant too (`gradient_add_eq`, `fderiv_gradient_add_eq`), so their
 bounds on that compact ball hold everywhere (`exists_bound_of_periodic`), and
 the mean value inequality turns the bound on the Hessian into a Lipschitz
-constant of the gradient (`exists_lipschitzWith_gradient_of_isCompact`).  The
+constant of the gradient (`exists_lipschitzWith_gradient_of_isCompact`). The
 same argument bounds every invariant `C¹` map and its Lipschitz constant
 (`exists_lipschitzWith_of_periodic`), such as the field `G ∇f` of a flow
 `ẋ = -G(x) ∇f(x)` with `G` and `f` invariant.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.GradientDescent
-import Transformer.Landscape.SaddleAvoidance.Descent
-import Mathlib.Algebra.Module.ZLattice.Basic
-import Mathlib.LinearAlgebra.Basis.VectorSpace
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+@[expose] public section
 
 open Metric
 open scoped NNReal
@@ -152,7 +156,7 @@ theorem exists_lipschitzWith_gradient_of_isCompact {f : E → ℝ} (hf : ContDif
 
 /-- **A `C²` function invariant under a set of translations spanning `E` has
 a bounded gradient, a bounded Hessian and a globally Lipschitz gradient**,
-with one constant `L`.  A lattice spanning `E` (`IsZLattice.span_top`) and
+with one constant `L`. A lattice spanning `E` (`IsZLattice.span_top`) and
 the periods `2πℤⁿ` of a function of `n` angles are such sets; neither
 discreteness nor a group structure is needed. -/
 theorem exists_lipschitzWith_gradient_of_periodic {f : E → ℝ} (hf : ContDiff ℝ 2 f)

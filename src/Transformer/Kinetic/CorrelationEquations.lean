@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Fluctuations
+
+/-!
 # Kinetic theory for Transformers — the equations of the limiting correlations
 
 The vocabulary of `th:lost` of arXiv:2605.09213v1,
@@ -8,10 +12,10 @@ the density form in which the source writes them, the covariance observables `Â
 and `eq:init-conv` for a profile with a density.
 
 The mean-field limit says nothing about retrieval: the signal sits in the time
-correlations, which vanish at that order.  The autocorrelation `A_φ` is `O(1)`
+correlations, which vanish at that order. The autocorrelation `A_φ` is `O(1)`
 and is transported by the mean-field flow; the cross-correlation `C_φ` is
 `O(N⁻¹)` and solves the linearization, forced at the source position `σ₀`
-through the graphon `k_λ(σ,σ₀)`.  That forcing is what makes the retrieval
+through the graphon `k_λ(σ,σ₀)`. That forcing is what makes the retrieval
 profile depend on where the answer was placed.
 
 **The normalization of `∫_𝕋`.**  The source writes `f̂(n) = ∫_𝕋 e^{-inθ} f(θ) dθ`
@@ -20,13 +24,13 @@ Three of its own statements force that reading: the iid uniform prompt has
 `f_∘ ≡ 1` in `eq:init-conv`, where the left-hand side `E[e^{inθ⁰}]` is `≤ 1`;
 `ŵ_β(n) = I_n(β)` is the normalized coefficient, which is what `a_n` is
 calibrated against; and `A_φ ≡ φ - ∫_𝕋 φ` of §`sec:litm` is centered only for
-the normalized mean.  So `torusConv` and `fourierDensity` carry the factor
+the normalized mean. So `torusConv` and `fourierDensity` carry the factor
 `(2π)⁻¹`, densities here are densities for the normalized measure — the uniform
 profile is `1`, not `(2π)⁻¹` — and `wConv` of `Transformer.Kinetic.MeanField`,
 an integral against a probability measure, is the same convolution.
 -/
 
-import Transformer.Kinetic.Fluctuations
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory ProbabilityTheory
@@ -45,7 +49,7 @@ noncomputable def torusConv (β : ℝ) (g : ℝ → ℝ) (θ : ℝ) : ℝ :=
   (2 * π)⁻¹ * ∫ θ' in (0 : ℝ)..(2 * π), wBetaDeriv β (θ - θ') * g θ'
 
 /-- `w_β'` integrates to zero over a period, so a constant density is
-stationary: `w_β' ∗_θ c = 0`.  This is what makes the uniform profile a
+stationary: `w_β' ∗_θ c = 0`. This is what makes the uniform profile a
 solution of `eq:mfl-lambda`. -/
 @[simp]
 theorem torusConv_const (β c θ : ℝ) : torusConv β (fun _ => c) θ = 0 := by

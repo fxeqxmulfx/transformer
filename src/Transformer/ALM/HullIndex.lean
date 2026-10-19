@@ -1,24 +1,28 @@
-/-
+module
+
+public import Transformer.ALM.KeyOrder
+public import Transformer.ALM.LookupIndex
+
+/-!
 # The machine as an index
 
 `Transformer.ALM.BinSearch` proves that the planar hull answers a lookup in
 `log₂ n + 1` comparisons; `Transformer.ALM.LookupIndex` names the thing that
-answers lookups, an `NNIndex`, and specifies it.  The two never met: the first
+answers lookups, an `NNIndex`, and specifies it. The two never met: the first
 speaks about a procedure, the second about a structure, and nothing in Lean
 identified them.
 
-This module does.  `hullIndex` is an `NNIndex` whose answer in dimension one
+This module does. `hullIndex` is an `NNIndex` whose answer in dimension one
 *is* the hull's binary search over the sorted keys of
 `Transformer.ALM.KeyOrder`, and whose declared query price there is exactly
 the comparison count `bcount` that search pays (`hullIndex_query_paid`), not
-an invented one.  Outside dimension one it falls back to a scan and is charged
+an invented one. Outside dimension one it falls back to a scan and is charged
 for it.
 
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 203-215.
 -/
 
-import Transformer.ALM.KeyOrder
-import Transformer.ALM.LookupIndex
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -101,7 +105,7 @@ theorem hullAns_isGreatest {m n : ℕ} [Nonempty (Fin n)] (K : Fin n → EucSpac
 
 /-- **The machine as an index.**  Exact in every dimension; logarithmic in the
 one it is built for, where the price is the comparison count of the binary
-search, and a scan elsewhere.  Building sorts the keys. -/
+search, and a scan elsewhere. Building sorts the keys. -/
 noncomputable def hullIndex : NNIndex where
   ans := fun K q => hullAns K q
   ans_isGreatest := fun K q j => hullAns_isGreatest K q j

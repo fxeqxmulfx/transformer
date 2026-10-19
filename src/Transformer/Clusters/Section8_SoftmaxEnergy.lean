@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section8_Polytope
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
 # Softmax error in the identity-value energy
 
 The energy derivative `e:derivativenorm`, arXiv:2305.05465v6, §8.1.
@@ -13,8 +18,7 @@ and no estimate of the distance to the candidate set is assumed. Choosing
 the self token also gives a global lower bound on the energy derivative.
 -/
 
-import Transformer.Clusters.Section8_Polytope
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open scoped BigOperators
 open Real

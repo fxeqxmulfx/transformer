@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section4_ODEUnique
+
+/-!
 # Attention's forward pass and Frank-Wolfe — well-posedness of the singular ODE
 
 Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
@@ -8,13 +12,13 @@ Under the genericity conditions of `thm: exp.fast.polytope` the Cauchy problem
 for `eq: hardmax.ode` has exactly one solution: the explicit curve
 `eq: solution.short` solves it (`isHardmaxODESolution_hardmaxSol`, in
 `Section4_ODESolution.lean`) and every solution is that curve
-(`eqOn_hardmaxSol`, in `Section4_ODEUnique.lean`).  The strict gaps which make
+(`eqOn_hardmaxSol`, in `Section4_ODEUnique.lean`). The strict gaps which make
 the curve the solution survive a small perturbation of the data
 (`eventually_inner_lt`, the source's `cl: stab.cell`), so the solution depends
 continuously on them (`hardmax_ode_continuous_dependence`).
 -/
 
-import Transformer.FrankWolfe.Section4_ODEUnique
+@[expose] public section
 
 open scoped BigOperators Topology
 open Real Set Filter
@@ -27,7 +31,7 @@ variable {d n κ : ℕ}
 /-- **Theorem (thm: ode) — well-posedness.**
 
 Let the initial configuration satisfy the genericity conditions of
-`thm: exp.fast.polytope`.  Then for every `T` the Cauchy problem for
+`thm: exp.fast.polytope`. Then for every `T` the Cauchy problem for
 `eq: hardmax.ode` with data `x_i(0) = x_i^0` has a solution in
 `C⁰([0,T]; (ℝ^d)^n)`, that solution is unique on `[0,T]`, and it stays in
 `𝒦 = conv{x_i^0}`.
@@ -36,7 +40,7 @@ Let the initial configuration satisfy the genericity conditions of
 1 and 2 are `GenericPolytope`, with condition 2 recorded there as "`x_i^0`
 lies in exactly one cell"; see its docstring.
 
-The source assumes `B ≻ 0` and `T > 0`.  The proof uses neither, so both are
+The source assumes `B ≻ 0` and `T > 0`. The proof uses neither, so both are
 dropped and the theorem proved is stronger than the source's (for `T ≤ 0` it
 is immediate).
 
@@ -45,7 +49,7 @@ Solutions are the classical ones of `IsHardmaxODESolution`: continuous on
 
 Uniqueness is stated on `[0, T]`, where the equation is imposed — two
 solutions may of course differ outside the interval, so `∃!` over all of `ℝ`
-would be false for a reason having nothing to do with the theorem.  For the
+would be false for a reason having nothing to do with the theorem. For the
 same reason the solution is said to stay in `𝒦` for `t ∈ [0, T]`, where it
 lives; the source says `t ≥ 0`.
 
@@ -70,7 +74,7 @@ theorem hardmax_ode_wellposed (B : ParamMatrix d) (X₀ : Idx n → EucSpace d)
   rw [eqOn_hardmaxSol hgen hσ hx hx0 ht, eqOn_hardmaxSol hgen hσ hy hy0 ht]
 
 /-- **Claim (cl: stab.cell) — the strict gaps survive a small perturbation.**
-Let `p(k)` be a particle that starts at the vertex `v_k`.  For every
+Let `p(k)` be a particle that starts at the vertex `v_k`. For every
 configuration `y` close enough to `x^0` and every `i`, the functional
 `⟨B y_i, ·⟩` scores `y_{p(σ(i))}` strictly above `y_j` for every particle `j`
 that does not start at `v_{σ(i)}`.
@@ -79,7 +83,7 @@ that does not start at `v_{σ(i)}`.
 `ṽ_{σ(i)}` with every other perturbed particle, and that is false as soon as a
 vertex `v_k` carries a particle besides `p(k)`: the two score level at `x^0`,
 and for `i = p(k)`, moving the other one alone by any `ε > 0` in the direction
-of `B v_k` puts it ahead (level, if `B v_k = 0`).  The claim is stated here
+of `B v_k` puts it ahead (level, if `B v_k = 0`). The claim is stated here
 for the particles that do not start at `v_{σ(i)}`, which is what Part 3 needs.
 
 Source: arXiv:2508.09628v1, `sec: proof.thm.ode`, Part 3, `cl: stab.cell`. -/
@@ -102,23 +106,23 @@ theorem eventually_inner_lt {B : ParamMatrix d} {X₀ : Idx n → EucSpace d}
 /-- **Theorem (thm: ode) — continuity with respect to the initial data.**
 
 Let the initial configuration `x^0` satisfy the genericity conditions of
-`thm: exp.fast.polytope`.  The solution map is continuous at `x^0`, uniformly
+`thm: exp.fast.polytope`. The solution map is continuous at `x^0`, uniformly
 on `[0, T]`: for every `ε > 0` there is `δ > 0` such that the solution from any
 generic initial configuration `y^0` within `δ` of `x^0` stays within `ε` of the
 solution from `x^0` at every `t ∈ [0, T]`.
 
 **What the source says and what is changed here.**  The source says only
-"which is continuous with respect to the initial data".  The nearby data are
+"which is continuous with respect to the initial data". The nearby data are
 restricted to those that are themselves generic — for which a solution is
 known to exist and be unique at all — since that is the class the theorem
-constructs solutions in.  Their number `κ'` of vertices is left free.
+constructs solutions in. Their number `κ'` of vertices is left free.
 
-The source assumes `B ≻ 0` and `T > 0`.  The proof uses neither, so both are
+The source assumes `B ≻ 0` and `T > 0`. The proof uses neither, so both are
 dropped, as in `hardmax_ode_wellposed`.
 
-The proof is Part 3 of the source's.  By `cl: stab.cell`
+The proof is Part 3 of the source's. By `cl: stab.cell`
 (`eventually_inner_lt`) the vertex `w_{σ'(i)}` that `y_i` heads for is the
-perturbation of a particle that starts at `v_{σ(i)}`.  Both solutions are
+perturbation of a particle that starts at `v_{σ(i)}`. Both solutions are
 explicit (`eqOn_hardmaxSol`), and their difference
 `e^{-t}(x_i^0 - y_i^0) + (1 - e^{-t})(v_{σ(i)} - w_{σ'(i)})` is a convex
 combination of two vectors shorter than `δ`.

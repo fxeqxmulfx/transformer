@@ -1,4 +1,6 @@
-import Transformer.Basis.Encoding.Recall
+module
+
+public import Transformer.Basis.Encoding.Recall
 
 /-!
 # The entire Basis input domain fits the actual model interface
@@ -9,6 +11,8 @@ the final-row context bound are proved from the independent raw grammar.
 They are not extra correctness assumptions supplied by the user or by
 an unknown transformer-weight witness.
 -/
+
+@[expose] public section
 
 namespace Transformer.Basis.Encoding
 

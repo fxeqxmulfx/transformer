@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.FrameAffine
+
+/-!
 # A comparison is constant on a box of the middles of a frame
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -10,13 +14,13 @@ affine functions of the numbers `x` and `y` of `a`s and `b`s before the position
 (`Term.val_affine_frame`), and on a box of side `V` inside a box of side `2V` it
 is constant (`exists_box_lt`): each side of the comparison moves monotonically
 in `x` and in `y` apart, so from the centre of the big box one of its four
-quarters keeps the comparison as it is at the centre.  Unlike the one-sided
+quarters keeps the comparison as it is at the centre. Unlike the one-sided
 strip of `Transformer.CRASP.Shrink`, the box is bounded in `y` too: with the
-whole Parikh vector fixed, `y` cannot grow past it.  `ConstOnBox` is the
+whole Parikh vector fixed, `y` cannot grow past it. `ConstOnBox` is the
 property the cropping keeps, closed under Boolean combinations.
 -/
 
-import Transformer.CRASP.FrameAffine
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.Section2_EnergySeries
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.Analysis.Calculus.SmoothSeries
+
+/-!
 # §3.2 — Differentiating the interaction energy along a continuity equation
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -8,19 +14,17 @@ Along a solution of `eq: CE` with a continuous bounded velocity `v`,
 
   `d/dt 𝖤_β[μ(t)] = ∫ ⟨∫ e^{β⟨x,y⟩} y dμ(t,y), v(t,x)⟩ dμ(t,x)`
 
-(`hasDerivAt_interactionEnergy`).  This is the computation behind both
+(`hasDerivAt_interactionEnergy`). This is the computation behind both
 `eq: dissipation.softmax` and `lem: dissipation`; the two differ only in `v`.
 
-The proof expands `e^{β⟨x,y⟩} = Σ_k β^k ⟨x,y⟩^k / k!`.  The `k`-th term of the
+The proof expands `e^{β⟨x,y⟩} = Σ_k β^k ⟨x,y⟩^k / k!`. The `k`-th term of the
 energy is `Σ_I (∫ m_I dμ)²` (`integral_prod_inner_pow`), whose derivative the
 continuity equation gives term by term; summed back over `I` it is
 `2 ∫∫ k ⟨x,y⟩^{k-1} ⟨y, v(x)⟩` (`sum_mono_mul_fderiv_mono`), bounded by `2kM`,
 so the series may be differentiated term by term (`hasDerivAt_tsum`).
 -/
 
-import Transformer.Perspective.Section2_EnergySeries
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.Analysis.Calculus.SmoothSeries
+@[expose] public section
 
 open scoped BigOperators Nat
 open Real MeasureTheory

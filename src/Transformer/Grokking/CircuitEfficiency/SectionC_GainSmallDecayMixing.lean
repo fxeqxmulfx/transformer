@@ -1,6 +1,8 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdReturns
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainFeedbackFloor
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryCoefficients
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdReturns
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainFeedbackFloor
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryCoefficients
 
 /-!
 # Uniform actual partner mixing at small retained native decay
@@ -35,6 +37,8 @@ recurrent physical mass into actual product logits. Fixed gained
 tables/plain CE/uniform decoupled native decay differ from appendix C's
 coupled norm-cost GD and learned stochastic/floating-point GPTMini.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Causal.CapMass
+
+/-!
 # Causal attention — the uniform law on the sphere has no atoms
 
 The uniform probability measure `uniformSphere d` on `𝕊^{d-1}` gives no mass to a point once
-`d ≥ 2`, and positive mass to every nonempty open set.  These are the two facts about it that the
+`d ≥ 2`, and positive mass to every nonempty open set. These are the two facts about it that the
 diffuse initial measures of the interpolation problems are built from.
 -/
 
-import Transformer.Causal.CapMass
+@[expose] public section
 
 open scoped ENNReal Pointwise
 open Real MeasureTheory

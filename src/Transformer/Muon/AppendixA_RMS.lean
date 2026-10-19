@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Muon.Section2_Spectral
+
+/-!
 # Muon — the update RMS lemma
 
 arXiv:2502.16982, Lemma 1 (`lemma:updaterms`) and Appendix A.
@@ -7,7 +11,7 @@ justifying their cancellation. The trace argument below cancels them using
 both sets of orthonormal columns and works in either rectangular orientation.
 -/
 
-import Transformer.Muon.Section2_Spectral
+@[expose] public section
 
 open scoped BigOperators Matrix
 

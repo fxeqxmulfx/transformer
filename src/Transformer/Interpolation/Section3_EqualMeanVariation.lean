@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_UniformNoncolinearity
+public import Transformer.Interpolation.Section3_PositiveBarycenters
+public import Transformer.Interpolation.Section3_RidgeWellPosed
+public import Transformer.Interpolation.Section3_PerturbationFalse
+
+/-!
 # Separating distinct laws with equal original barycenters
 
 ArXiv:2411.04551v3, §3.2, `lem: perturbation`, equal-mean case,
@@ -17,10 +24,7 @@ positive times. Global weak existence and uniqueness are already proved
 for these same actual single-neuron parameters.
 -/
 
-import Transformer.Interpolation.Section3_UniformNoncolinearity
-import Transformer.Interpolation.Section3_PositiveBarycenters
-import Transformer.Interpolation.Section3_RidgeWellPosed
-import Transformer.Interpolation.Section3_PerturbationFalse
+@[expose] public section
 
 open Real MeasureTheory Filter Set
 

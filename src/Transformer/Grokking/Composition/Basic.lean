@@ -1,4 +1,6 @@
-import Transformer.Grokking.GradientEvidence.BinaryObjectives
+module
+
+public import Transformer.Grokking.GradientEvidence.BinaryObjectives
 
 /-!
 # Coupled components under actual binary softmax cross-entropy
@@ -19,6 +21,8 @@ No transformer circuit, QK-normalization, generalization on new inputs or
 delayed decision change is identified with this two-component calculation.
 In particular, increasing its positive score can be confidence alone.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Composition
 

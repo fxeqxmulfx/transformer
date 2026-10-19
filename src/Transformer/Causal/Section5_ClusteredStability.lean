@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section5_LocalStability
+public import Transformer.Causal.Section5_AEConvergence
+
+/-!
 # Asymptotic stability of the actual clustered frozen limit
 
 ArXiv:2411.04990v2, §5 and Appendix A, the stability and
@@ -21,8 +26,7 @@ signed curvature conditions and yields the original requested
 clustering radius. The single-center case is separate.
 -/
 
-import Transformer.Causal.Section5_LocalStability
-import Transformer.Causal.Section5_AEConvergence
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 

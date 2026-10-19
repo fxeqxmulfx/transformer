@@ -1,5 +1,7 @@
-import Transformer.Basis.Depth
-import Mathlib.Data.List.Destutter
+module
+
+public import Transformer.Basis.Depth
+public import Mathlib.Data.List.Destutter
 
 /-!
 # Compact depth data semantics versus the independent Basis language
@@ -19,6 +21,8 @@ As in CRASP.altPlus_eq, the paper's printed even-a exponent k in
 eq:altsingle is corrected to k/2; the equality also requires positive k.
 The independent k-block language itself is unchanged.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

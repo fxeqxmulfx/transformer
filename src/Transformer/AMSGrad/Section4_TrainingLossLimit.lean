@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AMSGrad.Section4_TrainingVelocityLimit
+public import Mathlib.Topology.Order.MonotoneConvergence
+
+/-!
 # AMSGrad — finite limit of the actual training loss
 
 Training extension of arXiv:1904.03590v4, Algorithm 1 and §4,
@@ -7,8 +12,7 @@ decrease at each momentum step. Its Lyapunov energy is monotone,
 and their difference tends to zero.
 -/
 
-import Transformer.AMSGrad.Section4_TrainingVelocityLimit
-import Mathlib.Topology.Order.MonotoneConvergence
+@[expose] public section
 
 open scoped Topology
 open Filter

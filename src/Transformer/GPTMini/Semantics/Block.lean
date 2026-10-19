@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Semantics.Routing
-import Transformer.GPTMini.ReshapeDist
-import Transformer.GPTMini.Model
+module
+
+public import Transformer.GPTMini.Semantics.Routing
+public import Transformer.GPTMini.ReshapeDist
+public import Transformer.GPTMini.Model
 
 /-!
 # Semantic head errors through the actual multi-head residual block
@@ -17,6 +19,8 @@ not a hypothesis of any result in this module. Semantic codes must be
 supplied by the task's independently specified data computation; the
 bounds do not assert that training has found such internal states.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

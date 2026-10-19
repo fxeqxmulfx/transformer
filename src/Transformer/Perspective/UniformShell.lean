@@ -1,11 +1,16 @@
-/-
+module
+
+public import Transformer.Perspective.UniformSlices
+public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+
+/-!
 # The uniform law on the sphere from Lebesgue measure on a shell
 
 Lebesgue measure on the shell `1 < ‖y‖ < 2` of `ℝ^d`, projected radially onto
-the sphere, is rotation invariant, finite and nonzero (`shellMeasure`).  Its
+the sphere, is rotation invariant, finite and nonzero (`shellMeasure`). Its
 normalization `shellLaw` is a rotation-invariant probability measure, so its
 `n`-fold product is a `UniformTuple` (`uniformTuple_shellLaw`): the uniform law
-of `p:beta0` exists.  Being the only one (`Perspective.SphereUnique`), it lets
+of `p:beta0` exists. Being the only one (`Perspective.SphereUnique`), it lets
 the null sets of the uniform law be computed with Lebesgue measure on the
 product of shells (`Perspective.UniformLipschitz`), where radial projection,
 `2`-Lipschitz outside the unit ball (`dist_sphereNormalize_le`), lifts Lipschitz
@@ -14,8 +19,7 @@ maps of configurations to the shells.
 Source: arXiv:2312.10794v5, §4 (the uniform law `σ_d` of `p:beta0`).
 -/
 
-import Transformer.Perspective.UniformSlices
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+@[expose] public section
 
 open MeasureTheory Set
 

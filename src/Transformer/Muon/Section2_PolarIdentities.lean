@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Muon.Section2_SteepestDescent
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+public import Mathlib.Algebra.Order.Star.Real
+
+/-!
 # Muon — square roots and exact normalization
 
 arXiv:2502.16982, §2.1 and Appendix A. The constructions are verified
@@ -6,9 +12,7 @@ algebraically, including positivity of the spectral square root. This
 separates an exact polar update from its finite polynomial approximation.
 -/
 
-import Transformer.Muon.Section2_SteepestDescent
-import Mathlib.LinearAlgebra.Matrix.PosDef
-import Mathlib.Algebra.Order.Star.Real
+@[expose] public section
 
 open scoped BigOperators Matrix
 

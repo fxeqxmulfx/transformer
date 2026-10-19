@@ -1,21 +1,25 @@
-/-
+module
+
+public import Transformer.Surge.Section2_SmallBatchLimit
+
+/-!
 # The optimal loss improvement at small batch sizes
 
-arXiv:2405.14578, §2.2, Theorem 5, proved in Appendix F.  With `𝓔_i = √(2B/π)μ_i/σ_i` of
+arXiv:2405.14578, §2.2, Theorem 5, proved in Appendix F. With `𝓔_i = √(2B/π)μ_i/σ_i` of
 eq. (39), the loss improvement of eq. (8) is `½(2B/π)ΣΣμ_i²μ_j²/(σ_iσ_j)/(ΣH_ii + (2B/π)S)`,
 the first line of eq. (43) (`lossDropSign_signLin`), and, when `S ≠ 0` and `B > 0`, the last,
 `ΔL_max/(1 + B_noise/B)`, eq. (18) (`lossDropSign_signLin_eq`), with
 `ΔL_max = ΣΣμ_i²μ_j²/(σ_iσ_j)/(2S)` of eq. (19) (`lossDropSignMax`), which is `M²/(2S)`
-(`lossDropSignMax_eq`).  It is at most `ΔL_max` when `ΣH_ii ≥ 0` and `S > 0`
+(`lossDropSignMax_eq`). It is at most `ΔL_max` when `ΣH_ii ≥ 0` and `S > 0`
 (`lossDropSign_signLin_le`), and tends to it as `B → ∞`
-(`tendsto_lossDropSign_signLin_atTop`).  The "≈" of eq. (18), for `B ≪ πσ_i²/(2μ_i²)`, holds as
+(`tendsto_lossDropSign_signLin_atTop`). The "≈" of eq. (18), for `B ≪ πσ_i²/(2μ_i²)`, holds as
 the one of eq. (13): as `B → 0`, the ratio of eq. (8) to its value at `𝓔_i = √(2B/π)μ_i/σ_i`
 tends to `1` when `M ≠ 0` and `ΣH_ii ≠ 0` (`tendsto_lossDropSign_div_lossDropSign_signLin`,
 `tendsto_lossDropSign_div_max`): divided by `B/2`, both tend to `(2M/√π)²/(2ΣH_ii)`
 (`tendsto_lossDropSign_div`).
 -/
 
-import Transformer.Surge.Section2_SmallBatchLimit
+@[expose] public section
 
 open Filter Topology Real
 

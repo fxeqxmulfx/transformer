@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Magma.Section5_AlignmentBound
+public import Transformer.Magma.Section5_MaskDescent
+
+/-!
 # Corrected descent with stochastic gradients
 
 Replacement for arXiv:2602.15322v1, Section 5, prop:magma_descent and
@@ -7,8 +12,7 @@ unbiasedness, actual derivatives, and bounded positive damping. The masks
 are independent of the sampled gradient because their law is a product.
 -/
 
-import Transformer.Magma.Section5_AlignmentBound
-import Transformer.Magma.Section5_MaskDescent
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 

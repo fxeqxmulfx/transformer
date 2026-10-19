@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Causal.CapCone
+public import Mathlib.Analysis.SpecialFunctions.PolarCoord
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+
+/-!
 # Causal attention — The cone over a cap on the circle, in polar coordinates
 
 In polar coordinates `(r, θ) ∈ (0, ∞) × (-π, π)` of the plane, the cone over
@@ -9,8 +15,7 @@ Source: arXiv:2411.04990v2, §"R'enyi centers vs strong R'enyi centers" (the
 cap mass `δ/π` on `𝕊^1`).
 -/
 
-import Transformer.Causal.CapCone
-import Mathlib.Analysis.SpecialFunctions.PolarCoord
+@[expose] public section
 
 open scoped ENNReal
 open Real MeasureTheory

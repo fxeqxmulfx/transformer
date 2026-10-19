@@ -1,4 +1,37 @@
-/-
+module
+
+public import Transformer.Quartet.SeedSums
+public import Transformer.Quartet.Walsh
+public import Transformer.Quartet.Hadamard
+public import Transformer.Quartet.Section3_Grids
+public import Transformer.Quartet.Fp8Grid
+public import Transformer.Quartet.Section3_NVFP4
+public import Transformer.Quartet.Section3_NonClipping
+public import Transformer.Quartet.Section3_Unbiased
+public import Transformer.Quartet.Section3_SRCoinCube
+public import Transformer.Quartet.Section3_SRRotation
+public import Transformer.Quartet.Section3_SRConcrete
+public import Transformer.Quartet.Section3_SRCeilScale
+public import Transformer.Quartet.Section3_Eden
+public import Transformer.Quartet.Section3_EdenFalse
+public import Transformer.Quartet.Fp4Grid
+public import Transformer.Quartet.Section3_EdenPair
+public import Transformer.Quartet.Section3_EdenTwoValued
+public import Transformer.Quartet.Section3_EdenCoins
+public import Transformer.Quartet.Section3_EdenMean
+public import Transformer.Quartet.Section3_EdenBias
+public import Transformer.Quartet.Section3_EdenVectorCore
+public import Transformer.Quartet.Section3_EdenVectorBias
+public import Transformer.Quartet.Section3_EdenVectorNorm
+public import Transformer.Quartet.Section3_EdenUnitOne
+public import Transformer.Quartet.Section3_EdenGemm
+public import Transformer.Quartet.Section4_FourOverSix
+public import Transformer.Quartet.Section4_Witness
+public import Transformer.Quartet.Section4_Rounding
+public import Transformer.Quartet.Section4_Bias
+public import Transformer.Quartet.AppendixA_Concentration
+
+/-!
 # Quartet II: accurate LLM pre-training in NVFP4
 
 Formalization of Panferov, Schultheis, Tabesh, Alistarh — arXiv:2601.22813v2,
@@ -7,12 +40,12 @@ Estimation" (ICML 2026).
 
 NVFP4 is the 4-bit micro-scaling format of the NVIDIA Blackwell GPUs: one E2M1
 number per entry, one E4M3 scale per `16` entries, and one FP32 scale per
-tensor.  Quantized pre-training needs the *backward* pass to be unbiased, and
+tensor. Quantized pre-training needs the *backward* pass to be unbiased, and
 every scheme before this paper buys that with element-wise stochastic rounding,
-at a cost of roughly `2.5×` in mean-square error.  The paper instead carries
+at a cost of roughly `2.5×` in mean-square error. The paper instead carries
 the bias correction of EDEN — a randomized rotation, then a per-group rescaling
 `S` — over to micro-scaling, by folding `S` into the E4M3 group scales through
-stochastic rounding.  That is `MS-EDEN`, and `Quartet II` is the linear-layer
+stochastic rounding. That is `MS-EDEN`, and `Quartet II` is the linear-layer
 scheme built on it.
 
 | Module | Contents |
@@ -49,37 +82,8 @@ scheme built on it.
 
 Most of the paper is experimental: the pre-training loss gaps of §5 and the
 kernel benchmarks of §6 are measurements, not statements, and are not
-formalized.  What is formalized is the arithmetic the guarantees rest on, and
+formalized. What is formalized is the arithmetic the guarantees rest on, and
 — for Appendix A — what its plot would have to show.
 -/
 
-import Transformer.Quartet.SeedSums
-import Transformer.Quartet.Walsh
-import Transformer.Quartet.Hadamard
-import Transformer.Quartet.Section3_Grids
-import Transformer.Quartet.Fp8Grid
-import Transformer.Quartet.Section3_NVFP4
-import Transformer.Quartet.Section3_NonClipping
-import Transformer.Quartet.Section3_Unbiased
-import Transformer.Quartet.Section3_SRCoinCube
-import Transformer.Quartet.Section3_SRRotation
-import Transformer.Quartet.Section3_SRConcrete
-import Transformer.Quartet.Section3_SRCeilScale
-import Transformer.Quartet.Section3_Eden
-import Transformer.Quartet.Section3_EdenFalse
-import Transformer.Quartet.Fp4Grid
-import Transformer.Quartet.Section3_EdenPair
-import Transformer.Quartet.Section3_EdenTwoValued
-import Transformer.Quartet.Section3_EdenCoins
-import Transformer.Quartet.Section3_EdenMean
-import Transformer.Quartet.Section3_EdenBias
-import Transformer.Quartet.Section3_EdenVectorCore
-import Transformer.Quartet.Section3_EdenVectorBias
-import Transformer.Quartet.Section3_EdenVectorNorm
-import Transformer.Quartet.Section3_EdenUnitOne
-import Transformer.Quartet.Section3_EdenGemm
-import Transformer.Quartet.Section4_FourOverSix
-import Transformer.Quartet.Section4_Witness
-import Transformer.Quartet.Section4_Rounding
-import Transformer.Quartet.Section4_Bias
-import Transformer.Quartet.AppendixA_Concentration
+@[expose] public section

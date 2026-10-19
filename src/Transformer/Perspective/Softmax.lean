@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Basic
+
+/-!
 # The softmax weights, and how far two of them can be apart
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -10,12 +14,12 @@ with a constant that does not depend on the number of scores.
 
 The survey states it as "the softmax function with a parameter `β` is
 `β`-Lipschitz (with respect to the Euclidean norm)" and then pays a factor `√n`
-twice for passing through the Euclidean norm.  The `ℓ^∞ → ℓ^1` form proved
+twice for passing through the Euclidean norm. The `ℓ^∞ → ℓ^1` form proved
 here,
 
   `Σ_j |σ(u)_j - σ(v)_j| ≤ 4 ‖u - v‖_∞`,
 
-loses no factor of `n` at all.  The argument is elementary: the two weight
+loses no factor of `n` at all. The argument is elementary: the two weight
 vectors are within a factor `e^{±2ε}` of each other entrywise, so their
 positive parts differ by at most `(1 - e^{-2ε}) σ(u)_j`, which sums to
 `1 - e^{-2ε} ≤ 2ε`; and a difference of two probability vectors has equal
@@ -25,7 +29,7 @@ The constant `4` is not sharp — the sharp one is `1` — but it is what the
 elementary argument gives, and it is enough for `eq: stability.4ortho`.
 -/
 
-import Transformer.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real

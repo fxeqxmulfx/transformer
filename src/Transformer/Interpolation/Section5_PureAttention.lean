@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Basic
+public import Transformer.Perspective.Section3_EmpiricalMeasures
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+
+/-!
 # Actual empirical solutions for the generic pure-attention parameters
 
 ArXiv:2411.04551v3, §1, `eq: ips`, `eq: vf` and `eq: cauchy.pb`,
@@ -16,9 +22,7 @@ Thus the conditional cluster hypothesis can be applied to an actual
 probability-measure solution from every nonempty initial tuple.
 -/
 
-import Transformer.Interpolation.Basic
-import Transformer.Perspective.Section3_EmpiricalMeasures
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

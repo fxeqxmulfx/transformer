@@ -1,5 +1,7 @@
-import Transformer.Memorization.Section5_ValidationData
-import Mathlib.Tactic
+module
+
+public import Transformer.Memorization.Section5_ValidationData
+public import Mathlib.Tactic
 
 /-!
 # Validation-table error bounds
@@ -9,6 +11,8 @@ are "generally within 1.5 points". This is not a uniform error guarantee:
 the largest displayed central-value discrepancy is 9.31 percentage points.
 Uncertainty intervals are retained as separate observations.
 -/
+
+@[expose] public section
 
 namespace Transformer.Memorization
 

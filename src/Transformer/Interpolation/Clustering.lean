@@ -1,4 +1,14 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section2_FlowMap
+public import Transformer.Interpolation.Basic
+public import Transformer.Interpolation.AtomlessSphere
+public import Transformer.Interpolation.Wasserstein
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.MeasureTheory.Measure.Support
+
+/-!
 # Measure-to-measure interpolation — Clustering of input data
 
 Formalization of §2 of arXiv:2411.04551v3:
@@ -19,13 +29,7 @@ measure supported in an open hemisphere has a nonzero barycenter — which is
 what makes the drift of `eq: average.vf` point into the hemisphere.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section2_FlowMap
-import Transformer.Interpolation.Basic
-import Transformer.Interpolation.AtomlessSphere
-import Transformer.Interpolation.Wasserstein
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Measure.Support
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -51,7 +55,7 @@ the integral, and the integral of a function bounded below by `c` against a
 probability measure is bounded below by `c`.
 
 This is the step the proof of `prop: targets.atoms` opens with, for the cap
-`c > 0` cut out by an open hemisphere.  Source: arXiv:2411.04551v3, §2. -/
+`c > 0` cut out by an open hemisphere. Source: arXiv:2411.04551v3, §2. -/
 theorem le_inner_barycenter (μ : ProbSphere d) (w : EucSpace d) (c : ℝ)
     (hint : Integrable (fun x : SSphere d => (x : EucSpace d))
       (μ : Measure (SSphere d)))
@@ -80,7 +84,7 @@ theorem le_inner_barycenter (μ : ProbSphere d) (w : EucSpace d) (c : ℝ)
 The hemisphere hypothesis of `prop: targets.atoms` is `⟨x, w⟩ ≥ c` for some
 `c > 0`; by `le_inner_barycenter` the barycenter then has positive inner
 product with `w`, so it cannot vanish, and `eq: average.vf` has a nonzero
-drift.  Source: arXiv:2411.04551v3, §2. -/
+drift. Source: arXiv:2411.04551v3, §2. -/
 theorem barycenter_ne_zero (μ : ProbSphere d) (w : EucSpace d) (c : ℝ) (hc : 0 < c)
     (hint : Integrable (fun x : SSphere d => (x : EucSpace d))
       (μ : Measure (SSphere d)))
@@ -128,16 +132,16 @@ example (θ₀ : Params d) : PiecewiseConstant d (fun _ => θ₀) 1 1 := by
 /-- **Proposition (prop: compression).** *Clustering to discrete measures.*
 
 Let the `μ_0^i` have no atoms and pairwise disjoint geodesic convex hulls of
-their supports.  Fix `M ≥ 1`, and targets `μ_1^i = Σ_k α_k^i δ_{x_k^i}` with
+their supports. Fix `M ≥ 1`, and targets `μ_1^i = Σ_k α_k^i δ_{x_k^i}` with
 `α_k^i ≥ 0`, `Σ_k α_k^i = 1`, `x_k^i ∈ conv_g supp μ_0^i`, and
-`x_k^i = x_{k'}^j` only if `(k, i) = (k', j)`.  Then for any `T > 0` and
+`x_k^i = x_{k'}^j` only if `(k, i) = (k', j)`. Then for any `T > 0` and
 `ε > 0` there are piecewise-constant `(𝐖, 𝐔, b)` on `[0, T]` such that, with
 `𝐕 ≡ 0`, the solution `μ^i` of `eq: cauchy.pb`–`eq: vf` with data `μ_0^i`
 satisfies `W_2(μ^i(T), μ_1^i) ≤ ε`, and
 `conv_g supp μ^i(T) ∩ conv_g supp μ^j(T) = ∅` for `i ≠ j`.
 
 "The solution" is read as: one exists, and every solution satisfies the
-conclusion.  `W_2` is `Interpolation.W2`, `conv_g` is `convG`.  The count of
+conclusion. `W_2` is `Interpolation.W2`, `conv_g` is `convG`. The count of
 switches of `rem: nb.disc.clustering` is not part of the proposition and is
 not stated here: its ingredients `𝖭_k^i(δ)` and `L_{k,n}^i` are not defined
 in this development.
@@ -171,7 +175,7 @@ theorem compression
 /-- The hypotheses of `compression` are satisfiable by a nondegenerate family, `N = 2` on the
 circle: two diffuse initial measures supported in opposite caps, with disjoint geodesic convex
 hulls (`exists_two_diffuse_separated`), and for each one target atom of weight `1` at a point of
-its own support, hence of its hull.  The two atoms are distinct because the hulls are disjoint. -/
+its own support, hence of its hull. The two atoms are distinct because the hulls are disjoint. -/
 example : ∃ (μ₀ : Idx 2 → ProbSphere 2) (x : Idx 2 → Idx 1 → SSphere 2) (α : Idx 2 → Idx 1 → ℝ),
     1 ≤ 1 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧
       (∀ i : Idx 2, ∀ y : SSphere 2, (μ₀ i : Measure (SSphere 2)) {y} = 0) ∧

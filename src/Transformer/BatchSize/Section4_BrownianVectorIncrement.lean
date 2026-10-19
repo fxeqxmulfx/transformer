@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_BrownianMoments
+public import Transformer.BatchSize.Section4_VectorGaussianIdentity
+
+/-!
 # Genuine vector Gaussian increments independent of the joint past
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The product law and the full natural-filtration independence are both
 proved from the constructed Brownian coordinates.
 -/
 
-import Transformer.BatchSize.Section4_BrownianMoments
-import Transformer.BatchSize.Section4_VectorGaussianIdentity
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

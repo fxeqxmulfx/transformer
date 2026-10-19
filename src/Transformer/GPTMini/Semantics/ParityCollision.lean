@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.ParityState
-import Transformer.Basis.Tasks
+module
+
+public import Transformer.GPTMini.Semantics.ParityState
+public import Transformer.Basis.Tasks
 
 /-!
 # A variable-length collision in the first count-and-phase block
@@ -18,6 +20,8 @@ does not provide a length feature to the actual FFN or tied readout.
 The next construction must retain an independent denominator signal.
 All equalities concern the actual prenorm, softmax, XSA and residual block.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

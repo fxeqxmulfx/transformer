@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianProductQueries
+
+/-!
 # The corrected correlation expansion for two actual Gaussian factors
 
 ArXiv:2604.01978v1, §7.3, `lem:delta_method`. The source
@@ -23,7 +27,7 @@ matrix laws. Transplanting it to every original Gaussian head law,
 with arbitrary value variance and positive query variance, is separate.
 -/
 
-import Transformer.Homogenized.Section7_GaussianProductQueries
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

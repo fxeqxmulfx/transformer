@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_PolynomialBranchObstruction
+public import Transformer.Perceptron.Section5_PiecewisePolynomialCover
+public import Transformer.Perceptron.Section5_ReLUAtomicity
+
+/-!
 # Finite and uniform-null original support for piecewise-polynomial activations
 
 ArXiv:2601.21366v2, §5.2, `rem:piecewise-poly`, with the
@@ -17,9 +23,7 @@ Continuity suffices for these intermediate statements; the source's
 globally Lipschitz condition is retained in `Piecewise`.
 -/
 
-import Transformer.Perceptron.Section5_PolynomialBranchObstruction
-import Transformer.Perceptron.Section5_PiecewisePolynomialCover
-import Transformer.Perceptron.Section5_ReLUAtomicity
+@[expose] public section
 
 open Real MeasureTheory Set
 

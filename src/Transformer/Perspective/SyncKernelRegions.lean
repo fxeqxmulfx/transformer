@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.SyncKernelSign
+
+/-!
 # The positive regions of `f_β'''`
 
 Polyanskiy, Rigollet, Yao — arXiv:2507.22857v1, *Synchronization of mean-field
@@ -10,16 +14,16 @@ models on the circle*, Appendices A–B, `lemma:positiveregion` and
 is the sign of `f_β'''` in `|x|`:
 
 * `β > 1/3`: on `[-π, π]`, `f_β''' > 0` exactly where `b < |x| < a`, with
-  `b = arccos r₂` and `a = arccos r₁` (`exists_f_β'''_pos_iff`).  On `(-π, π]`
+  `b = arccos r₂` and `a = arccos r₁` (`exists_f_β'''_pos_iff`). On `(-π, π]`
   this is the positive region `(-a, -b) ⊔ (b, a)` of `lemma:positiveregion`.
 * `0 < β ≤ 1/3`: on `[-π, π]`, `f_β''' ≥ 0` exactly where `a ≤ |x|`, with
-  `a = arccos r` (`exists_f_β'''_nonneg_iff`).  By `2π`-periodicity this is the
+  `a = arccos r` (`exists_f_β'''_nonneg_iff`). By `2π`-periodicity this is the
   nonnegative region `[a, 2π - a]` on `[0, 2π)` of `lemma:positiveregion2`.
 
 The endpoints `a` and `b` are zeros of `f_β'''`.
 -/
 
-import Transformer.Perspective.SyncKernelSign
+@[expose] public section
 
 open Real
 
@@ -75,11 +79,11 @@ theorem abs_mem_Ioo_iff {b a x : ℝ} (hb : 0 < b) :
     exact ⟨fun H => Or.inl ⟨by linarith, by linarith⟩,
       fun H => H.elim (fun H => ⟨by linarith, by linarith⟩) fun H => False.elim (by linarith [H.1])⟩
 
-/-- **Lemma (lemma:positiveregion).** *Suppose `β > 1/3`.  There exist
+/-- **Lemma (lemma:positiveregion).** *Suppose `β > 1/3`. There exist
 `0 < b < a < π` such that the positive region of `f_β'''` is `(-a, -b) ⊔ (b, a)`.*
 
 The region is taken on `(-π, π]`, as §5 states it; §5 writes `0 < a < b < π`, the
-lemma `0 < b < a < π`.  `b` and `a` are `arccos` of the two roots of the quartic
+lemma `0 < b < a < π`. `b` and `a` are `arccos` of the two roots of the quartic
 `p` in `(-1, 1)` (`exists_kernelQuartic_roots`, `exists_f_β'''_pos_iff`).
 
 Source: arXiv:2507.22857v1, Appendix A, `lemma:positiveregion`; §5. -/
@@ -109,12 +113,12 @@ example : ∃ β a : ℝ, a < π / 2 ∧ ∀ x ∈ Set.Icc (-π) π, 0 ≤ f_β'
   obtain ⟨a, -, ha, -, h⟩ := exists_f_β'''_nonneg_iff (β := 1 / 4) (by norm_num) (by norm_num)
   exact ⟨1 / 4, a, ha, h⟩
 
-/-- **Lemma (lemma:positiveregion2).** *Suppose `β ∈ (0, 1/3]`.  Then there exists
+/-- **Lemma (lemma:positiveregion2).** *Suppose `β ∈ (0, 1/3]`. Then there exists
 `a ∈ (0, π/2)` such that the nonnegative region of `f_β'''` over `[0, 2π)` is
 `[a, 2π - a]`.*
 
 `a` is `arccos` of the root of the quartic `p` in `(0, 1)`
-(`exists_kernelQuartic_root`, `exists_f_β'''_nonneg_iff`).  §5 speaks of the
+(`exists_kernelQuartic_root`, `exists_f_β'''_nonneg_iff`). §5 speaks of the
 positive region `(a, 2π - a)`; the source's remark after the lemma explains the
 nonnegative one: at `β = 1/3`, `f_β'''(π) = 0`.
 

@@ -1,23 +1,27 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_Flow
+public import Transformer.Perspective.AppendixA_Lojasiewicz
+
+/-!
 # Appendix A — the trajectories of `e:gradfl` have finite length
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*, Appendix A, proof of `p:beta0`.
 
-`‖s‖²`, `s = Σ_j x_j`, increases along `e:gradfl` to its supremum `Q_∞`.  If it
+`‖s‖²`, `s = Σ_j x_j`, increases along `e:gradfl` to its supremum `Q_∞`. If it
 reaches `Q_∞`, its derivative `(4/n) Σ_i ‖Proj_{x_i} s‖²` vanishes there, the
 configuration is critical and the trajectory stands still
-(`isCriticalE0_of_eq_iSup`).  Otherwise the gradient inequality of
+(`isCriticalE0_of_eq_iSup`). Otherwise the gradient inequality of
 `Perspective.AppendixA_Lojasiewicz`, the squares `m²`, `|m| ≤ n`, being
 finitely many, becomes the Łojasiewicz inequality
 `Q_∞ - ‖s‖² ≤ C Σ_i ‖Proj_{x_i} s‖²` from some time on
-(`eventually_iSup_sub_le`).  Then `φ = √(Q_∞ - ‖s‖²)` decreases at rate at
+(`eventually_iSup_sub_le`). Then `φ = √(Q_∞ - ‖s‖²)` decreases at rate at
 least `‖ẋ_i‖ / K`, so each particle travels at most `K φ(t)` after time `t`
 (`exists_norm_sub_le`).
 -/
 
-import Transformer.Perspective.AppendixA_Flow
-import Transformer.Perspective.AppendixA_Lojasiewicz
+@[expose] public section
 
 open Filter Set
 open scoped Topology
@@ -91,7 +95,7 @@ example (x : SSphere 2) : 0 < 3 ∧ E0GradientAscent 2 3 (fun _ => signedTuple x
 
 /-- **Finite length.**  From some time `T` on, each particle of a trajectory of
 `e:gradfl` travels at most `K √(Q_∞ - ‖s(t)‖²)` after time `t`, `Q_∞` the
-supremum of `‖s‖²`.  A trajectory reaching `Q_∞` stands still
+supremum of `‖s‖²`. A trajectory reaching `Q_∞` stands still
 (`isCriticalE0_of_eq_iSup`); otherwise `φ = √(Q_∞ - ‖s‖²)` has
 `φ' = -(2/n) Σ_k ‖Proj_{x_k} s‖² / φ` while `‖ẋ_i‖ = (2/n) ‖Proj_{x_i} s‖`, and
 `‖Proj_{x_i} s‖ φ ≤ K Σ_k ‖Proj_{x_k} s‖²` by the Łojasiewicz inequality

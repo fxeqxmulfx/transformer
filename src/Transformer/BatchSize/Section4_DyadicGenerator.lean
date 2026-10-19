@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_DyadicIntervals
+public import Transformer.BatchSize.Section4_EulerIntervals
+
+/-!
 # The measurable frozen generator of an actual Brownian Euler path
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The coefficients use the genuine preceding dyadic state, while the test
 is evaluated on the complete continuous Brownian interpolation.
 -/
 
-import Transformer.BatchSize.Section4_DyadicIntervals
-import Transformer.BatchSize.Section4_EulerIntervals
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal

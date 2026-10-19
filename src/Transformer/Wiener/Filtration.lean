@@ -1,4 +1,6 @@
-import Transformer.Wiener.Augment
+module
+
+public import Transformer.Wiener.Augment
 
 /-!
 # The filtrations of the cylindrical Wiener process
@@ -13,6 +15,8 @@ increment of `W` after `s` is independent of `ℱ^{W,0}_s`, and of `σ(x₀) ⊔
 is independent of the whole noise (`indep_sup_of_indep`); and `ℱ` already contains the null sets
 and its right limits.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Set
 open scoped NNReal

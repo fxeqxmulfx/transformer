@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerLimitLaw
+
+/-!
 # Quantitative mean-square convergence of actual dyadic Euler states
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ Summing geometric L2 increments gives an explicit error bound against
 the constructed limit, not merely qualitative convergence.
 -/
 
-import Transformer.BatchSize.Section4_EulerLimitLaw
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal Topology

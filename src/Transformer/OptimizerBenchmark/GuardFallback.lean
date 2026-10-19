@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Optimization.Basic
+
+/-!
 # Why the always-rejecting safeguards behave as SGD
 
 Source implementation: benchmark common.py, DirectionOptimizer.step.
@@ -15,7 +19,7 @@ Algorithm references: training correction to arXiv:2502.16982, Section 2.2,
 and arXiv:2602.02016v2, Sections 2-4.
 -/
 
-import Transformer.Optimization.Basic
+@[expose] public section
 
 open scoped InnerProductSpace
 

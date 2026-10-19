@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.PartialReset
+module
+
+public import Transformer.Grokking.AdamW.PartialReset
 
 /-!
 # Scalar native AdamW state and its retained update
@@ -15,6 +17,8 @@ use the real division convention; native beta and epsilon conditions
 are explicit in the later sign and trajectory results. No buffer is
 reset between steps and no convergence is presumed by the state type.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

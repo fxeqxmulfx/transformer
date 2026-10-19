@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.ConeWidth
+
+/-!
 # Cone collapse — exponential convergence of one weighted flow
 
 Auxiliary to arXiv:2312.10794v5, *A mathematical perspective on Transformers*,
@@ -12,7 +16,7 @@ to one point `y⋆` with `‖y⋆‖ ≥ 1`, and the particles `x_i = y_i / ‖y
 `x⋆ = y⋆ / ‖y⋆‖` (`exists_expLimit_of_weightedFlow`).
 -/
 
-import Transformer.Perspective.ConeWidth
+@[expose] public section
 
 open scoped BigOperators Topology
 open Real Filter

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.AtomlessSphere
+public import Transformer.Perceptron.Section6_SphereUniqueness
+
+/-!
 # Diffuse small-cap probabilities with null ball boundaries
 
 ArXiv:2411.04551v3, §5, `cl: balls`. The source's actual measures
@@ -18,8 +23,7 @@ Thus these examples also apply after the geometric scale in the
 equal-mass construction has been fixed.
 -/
 
-import Transformer.Interpolation.AtomlessSphere
-import Transformer.Perceptron.Section6_SphereUniqueness
+@[expose] public section
 
 open Real MeasureTheory Metric Set
 

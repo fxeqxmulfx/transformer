@@ -1,24 +1,28 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Generating
+public import Transformer.Landscape.PhaseModel.Lift
+public import Transformer.Landscape.SaddleAvoidance.SecondOrder
+
+/-!
 # Phase model — twisted states
 
 A critical point of a phase energy where every cosine `cos ⟪m_r, z⟫` is
 positive and no nonzero vector is orthogonal to every row is a local
 minimizer (`isLocalMin_phaseEnergy_of_cos_pos`): the Hessian
-`h ↦ Σ_r cos ⟪m_r, z⟫ ⟪m_r, h⟫ m_r` is then positive definite.  It need not
-be a zero.  For the division table, take integer phases `j` and
+`h ↦ Σ_r cos ⟪m_r, z⟫ ⟪m_r, h⟫ m_r` is then positive definite. It need not
+be a zero. For the division table, take integer phases `j` and
 `ψ = (π/3) j`: the relation of `p = (x, y)` takes the value `π d_p / 3`, with
-the defect `d_p = j_x - j_y - j_{x-y}` (`defect`).  When every defect of `S`
+the defect `d_p = j_x - j_y - j_{x-y}` (`defect`). When every defect of `S`
 is `0` or `±1` modulo `6`, every cosine is `1` or `1/2` and every sine `0` or
 `±√3/2` (`sin_cos_pi_div_three_mul`), so `ψ` is critical as soon as the rows
 of defect `1` and those of defect `-1` modulo `6` have the same sum: a
-twisted state.  For `S` generating the full table it is a local minimizer
+twisted state. For `S` generating the full table it is a local minimizer
 (`isLocalMin_divisionEnergy_twisted`), of energy half the number of nonzero
 defects (`divisionEnergy_twisted`).
 -/
 
-import Transformer.Landscape.PhaseModel.Generating
-import Transformer.Landscape.PhaseModel.Lift
-import Transformer.Landscape.SaddleAvoidance.SecondOrder
+@[expose] public section
 
 open Real
 open scoped Finset

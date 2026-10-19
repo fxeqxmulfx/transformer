@@ -1,14 +1,18 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_TrainableScores
+
+/-!
 # A convex atomic mixture changes the original score penalty
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §2–§3.1, equations
-`eq:attention_only` and `eq:attention_only_obj`.  This module studies a
+`eq:attention_only` and `eq:attention_only_obj`. This module studies a
 possible convexification using atoms that are themselves genuine softmax
-heads, with trainable query-key score products.  It compares the positively
+heads, with trainable query-key score products. It compares the positively
 homogeneous atomic cost with the paper's four-matrix weight decay.
 -/
 
-import Transformer.Convexifying.Section3_TrainableScores
+@[expose] public section
 
 namespace Transformer.Convexifying
 
@@ -18,7 +22,7 @@ noncomputable def centeredSoftmax (p : ℝ) : ℝ :=
   Real.exp p / (Real.exp p + 1) - 1 / 2
 
 /-- The nonuniform component of a genuine head with score product `p` and
-value-output product `t`.  Source: equations `eq:attention_only`–
+value-output product `t`. Source: equations `eq:attention_only`–
 `eq:attention_only_obj`, specialized to one scalar feature. -/
 noncomputable def reducedHeadDifference (p t : ℝ) : ℝ :=
   t * centeredSoftmax p
@@ -35,12 +39,12 @@ noncomputable def reducedMixtureDifference (heads : List (ℝ × ℝ)) : ℝ :=
   (heads.map fun h => reducedHeadDifference h.1 h.2).sum
 
 /-- The sum of product-based lower bounds on four-factor weight decay for a
-finite mixture of scalar heads.  Source: equation `eq:attention_only_obj`. -/
+finite mixture of scalar heads. Source: equation `eq:attention_only_obj`. -/
 def reducedMixtureCost (heads : List (ℝ × ℝ)) : ℝ :=
   (heads.map fun h => reducedHeadCost h.1 h.2).sum
 
 /-- The centered two-token softmax weight grows at most linearly with the
-query-key score product.  Source: equation `eq:attention_only`. -/
+query-key score product. Source: equation `eq:attention_only`. -/
 private theorem abs_centeredSoftmax_le (p : ℝ) :
     |centeredSoftmax p| ≤ |p| := by
   let e := Real.exp p
@@ -70,9 +74,8 @@ theorem reducedMixtureCost_nonneg (heads : List (ℝ × ℝ)) :
   induction heads with
   | nil => simp [reducedMixtureCost]
   | cons h hs ih =>
-      simp only [reducedMixtureCost, List.map_cons, List.sum_cons] at ih ⊢
-      dsimp [reducedHeadCost]
-      positivity
+      change 0 ≤ reducedHeadCost h.1 h.2 + reducedMixtureCost hs
+      exact add_nonneg (add_nonneg (abs_nonneg h.1) (abs_nonneg h.2)) ih
 
 /-- The nonuniform output of any finite number of original softmax heads is
 quadratic in the total product-based lower bound on their weight decay.
@@ -101,21 +104,21 @@ theorem reducedMixtureDifference_quadratic (heads : List (ℝ × ℝ)) :
         sq_nonneg |h.1|, sq_nonneg |h.2|]
 
 /-- A standard signed-atom penalty: each coefficient is charged linearly,
-with the fixed score cost included in the atom's weight.  This is positively
+with the fixed score cost included in the atom's weight. This is positively
 homogeneous in the coefficient and yields a convex finite-mixture gauge.
 Source: equations `eq:attention_only`–`eq:attention_only_obj`, candidate
 convexification. -/
 def atomicHeadCost (p t : ℝ) : ℝ := |t| * (1 + |p|)
 
 /-- The genuine softmax atom with score `log 2` and coefficient `1/100`
-has nonuniform output `1/600`.  Source: equation `eq:attention_only`. -/
+has nonuniform output `1/600`. Source: equation `eq:attention_only`. -/
 theorem smallAtomicDifference :
     reducedHeadDifference (Real.log 2) (1 / 100) = 1 / 600 := by
   norm_num [reducedHeadDifference, centeredSoftmax,
     Real.exp_log (by norm_num : (0 : ℝ) < 2)]
 
 /-- The same atom costs at most `1/50` under the positively homogeneous
-penalty.  Source: equation `eq:attention_only_obj`, candidate atomic cost. -/
+penalty. Source: equation `eq:attention_only_obj`, candidate atomic cost. -/
 theorem smallAtomicCost :
     atomicHeadCost (Real.log 2) (1 / 100) ≤ 1 / 50 := by
   have hlog0 : 0 ≤ Real.log 2 := Real.log_nonneg (by norm_num)
@@ -130,7 +133,7 @@ theorem smallAtomicCost :
 /-- **Gap for every finite number of trainable-score heads.**  A single
 genuine softmax atom has nonuniform output `1/600` and atomic cost at most
 `1/50`, but no finite mixture of original heads can achieve that output
-within the same reduced four-factor weight-decay budget.  Hence this
+within the same reduced four-factor weight-decay budget. Hence this
 positively homogeneous atomic mixture does not preserve the regularized
 problem in equation `eq:attention_only_obj`. -/
 theorem no_small_original_mixture (heads : List (ℝ × ℝ))
@@ -145,7 +148,7 @@ theorem no_small_original_mixture (heads : List (ℝ × ℝ))
   nlinarith [sq_nonneg (reducedMixtureCost heads - 1 / 50)]
 
 /-- The nonuniform-output hypothesis of the preceding theorem is realized
-by a genuine score and coefficient.  Source: equation
+by a genuine score and coefficient. Source: equation
 `eq:attention_only`, specialized. -/
 example : ∃ heads : List (ℝ × ℝ),
     reducedMixtureDifference heads = 1 / 600 := by

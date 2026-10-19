@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Dirac
+public import Transformer.Perspective.PartitionGradient
+
+/-!
 # Perceptrons and attention's mean-field landscape — normalized self-attention
 
 Formalization of `eq:full-WGF-main` and `eq: fulltrans.stat` of
@@ -19,20 +24,19 @@ rescaled by its own strictly positive weight.
 * `eq: fulltrans.stat` is `∇δE_β/δμ[μ] + w[μ] u_ϑ = 0` on `supp μ`, which is
   the source's own rewriting of the weighted stationarity
   `Grad E_β[μ] + u_ϑ = 0`: the two are equivalent because `w > 0`
-  (`attentionWeight_pos`).  `IsNormalizedStationary` carries the displayed
+  (`attentionWeight_pos`). `IsNormalizedStationary` carries the displayed
   equation, which is the one the results of §6 are stated for.
 
 * `Grad E ≔ w[μ]⁻¹ ∇δE/δμ[μ]` is, on the sphere, `β` times the mean-field
   self-attention field `𝒳[μ]` of arXiv:2312.10794v5 —
-  `proj_inv_smul_gradient_attentionWeight`.  That is the sense in which
+  `proj_inv_smul_gradient_attentionWeight`. That is the sense in which
   `eq:full-WGF-main` is *normalized* attention: dividing by the partition
   function is what the weight does.
 
 Source: arXiv:2601.21366v2, `eq:full-WGF-main`, `eq: fulltrans.stat`.
 -/
 
-import Transformer.Perceptron.Dirac
-import Transformer.Perspective.PartitionGradient
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -76,7 +80,7 @@ theorem attentionWeight_pos (β : ℝ) (hβ : 0 < β) (μ : Perspective.ProbSphe
 example : (0 : ℝ) < 1 := one_pos
 
 /-- **`Proj_x` commutes with the attention integral**: the projection is
-affine in the integrand, and both pieces are integrable.  This is the one
+affine in the integrand, and both pieces are integrable. This is the one
 analytic step behind the two identities below. -/
 theorem proj_integral_expInner_smul (β : ℝ) (μ : Perspective.ProbSphere d) (x : EucSpace d) :
     proj d x (∫ y, Real.exp (β * inner (𝕜 := ℝ) x (y : EucSpace d)) • (y : EucSpace d)
@@ -99,7 +103,7 @@ theorem proj_integral_expInner_smul (β : ℝ) (μ : Perspective.ProbSphere d) (
   simpa [real_inner_smul_right] using ((innerSL ℝ x).integral_comp_comm hint).symm
 
 /-- **The normalization of `attentionWeight`**: its spherical gradient is the
-attention field.  This is what makes `β⁻¹ Z_{β,μ}` — and not `Z_{β,μ}` — the
+attention field. This is what makes `β⁻¹ Z_{β,μ}` — and not `Z_{β,μ}` — the
 first variation of `E_β`: the `β` produced by differentiating the kernel is
 exactly what the `(2β)⁻¹` in front of the energy cancels. -/
 theorem proj_gradient_attentionWeight (β : ℝ) (hβ : β ≠ 0) (μ : Perspective.ProbSphere d)
@@ -160,7 +164,7 @@ theorem attentionGrad_diracProb (β : ℝ) (x : SSphere d) :
 
 /-- **A Dirac mass is stationary for normalized attention whenever the
 perceptron's raw drift at its atom is radial** — the weight multiplies a drift
-that is already `0`.  This is the inhabitant every satisfiability witness of
+that is already `0`. This is the inhabitant every satisfiability witness of
 §6 is built from.
 
 Source: arXiv:2601.21366v2, `eq: fulltrans.stat`. -/

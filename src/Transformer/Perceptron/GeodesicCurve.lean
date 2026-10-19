@@ -1,29 +1,33 @@
-/-
+module
+
+public import Transformer.Perceptron.Geodesic
+public import Mathlib.Analysis.Calculus.DerivativeTest
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+
+/-!
 # Perceptrons and attention's mean-field landscape — curves issued from a minimum
 
 The calculus behind `isSOPD_of_isMin` (`StrictSOPD`), the remark that the
-minimizer of the coupled energy is a SOPD critical point.  Two curves carry it.
+minimizer of the coupled energy is a SOPD critical point. Two curves carry it.
 
 * Through a point `x` of the sphere, the great circle `t ↦ exp_x(t u)` has
-  velocity `u` at `t = 0` (`hasDerivAt_sphereExp_smul`).  A function on `ℝ^d`
+  velocity `u` at `t = 0` (`hasDerivAt_sphereExp_smul`). A function on `ℝ^d`
   that is minimal at `x` among the points of the sphere therefore has a
   tangential gradient `Proj_x ∇F(x) = 0` there (`proj_eq_zero_of_isMin_sphere`):
   the first-order half, which gives stationarity.
 
 * Through a measure `μ`, a `W₂`-geodesic `ν` starts at `ν 0 = μ` and is
-  weakly continuous at `0` (`geodesic_zero`, `tendsto_geodesic`).  A function
+  weakly continuous at `0` (`geodesic_zero`, `tendsto_geodesic`). A function
   of `t` minimal at `0`, continuous there, has a non-negative second derivative
   at `0` whenever it has one (`nonneg_of_hasDerivAt_deriv_of_isMin`): the
-  second-order half.  The continuity is not decoration — `J(0) = 0`,
+  second-order half. The continuity is not decoration — `J(0) = 0`,
   `J(t) = 1 - t²` elsewhere has a global minimum at `0` and `J''(0) = -2`.
 
 Source: arXiv:2601.21366v2, §2.2, `rem:strictSOPD-perceptron`.
 -/
 
-import Transformer.Perceptron.Geodesic
-import Mathlib.Analysis.Calculus.DerivativeTest
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory Filter Topology
@@ -67,7 +71,7 @@ theorem hasDerivAt_sphereExp_smul (x v : EucSpace d) :
 
 /-- **A minimum on the sphere is a critical point of the tangential
 gradient**: if `F` is minimal at `x` among the unit vectors, then
-`Proj_x ∇F(x) = 0`.  Along the great circle with velocity `u = Proj_x ∇F(x)`
+`Proj_x ∇F(x) = 0`. Along the great circle with velocity `u = Proj_x ∇F(x)`
 the derivative `⟪∇F(x), u⟫` vanishes at the minimum, and it equals `‖u‖²`. -/
 theorem proj_eq_zero_of_isMin_sphere {F : EucSpace d → ℝ} {x g : EucSpace d}
     (hx : ‖x‖ = 1) (hF : HasGradientAt F g x)

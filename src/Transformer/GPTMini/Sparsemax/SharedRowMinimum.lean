@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.SharedRowLoss
+module
+
+public import Transformer.GPTMini.Sparsemax.SharedRowLoss
 
 /-!
 # Local minima of the summed loss in actual shared Q/K matrices
@@ -15,6 +17,8 @@ The existence of an admissible improving endpoint is essential: arbitrary
 row targets can conflict through shared parameters. Convexity of the
 projection does not itself resolve that obstruction.
 -/
+
+@[expose] public section
 
 noncomputable section
 

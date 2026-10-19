@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.AnalyticFiberConstraints
+
+/-!
 # Simultaneous polynomial values on analytic scalar fibers
 
 One fixed box retains the equation, every finite constraint value, and
@@ -6,7 +10,7 @@ the objective value under actual analytic preparation and division.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.AnalyticFiberConstraints
+@[expose] public section
 
 noncomputable section
 open Filter Topology

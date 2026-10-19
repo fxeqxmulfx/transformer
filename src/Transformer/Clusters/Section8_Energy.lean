@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section8_Origin
+public import Mathlib.MeasureTheory.Integral.IntegralEqImproper
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
 # The emergence of clusters in self-attention dynamics — the energy at
   `V = -I_d`
 
@@ -12,9 +18,7 @@
 Source: arXiv:2305.05465v6, `e:finiteinegral`.
 -/
 
-import Transformer.Clusters.Section8_Origin
-import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter MeasureTheory
@@ -48,7 +52,7 @@ theorem sum_exp_smul_eq_neg_smul_negIdDrift (Q K : ParamMatrix d) (hQK : IsIdent
 
 As in the source, `𝓛(t) = Σ_i Σ_j e^{⟨x_i(t),x_j(t)⟩}` is non-negative and
 `d𝓛/dt = -2 Σ_i Z_i ‖ẋ_i‖²`, so `-𝓛` is non-decreasing, bounded, and its
-derivative is integrable on `[0,+∞)`.  The source then bounds
+derivative is integrable on `[0,+∞)`. The source then bounds
 `Z_i ≥ n e^{-R²}` by `l:cas1circle`; here `Z_i ≥ e^{‖x_i‖²} ≥ 1` already
 suffices, and `l:cas1circle` is not used.
 

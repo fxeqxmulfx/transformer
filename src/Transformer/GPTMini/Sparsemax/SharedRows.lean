@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.SharedRowsExample
+module
+
+public import Transformer.GPTMini.Sparsemax.SharedRowsExample
 
 /-!
 # Actual readouts and summed loss of shared projection matrices
@@ -16,6 +18,8 @@ one actual shared key change fits both while ordinary weights stay zero.
 Readouts are unrotated and before XSA/output projection, with fixed inputs,
 values, epsilon and gain. This is a restricted shared-parameter result.
 -/
+
+@[expose] public section
 
 noncomputable section
 

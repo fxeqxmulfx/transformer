@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section3_StationaryInterior
+
+/-!
 # Generic ReLU parameters for a fixed measure
 
 For the quantifiers of arXiv:2601.21366v2, §3.1, `thm: any.d` (iii),
@@ -12,7 +16,7 @@ direction preserves its positive activation, but makes its projection
 nonzero. This contradicts interior stationarity in dimension at least two.
 -/
 
-import Transformer.Perceptron.Section3_StationaryInterior
+@[expose] public section
 
 open Real MeasureTheory Filter Topology
 

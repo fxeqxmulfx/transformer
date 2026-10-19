@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section2_TrainingCycleStep
+public import Transformer.DASH.Section2_TrainingConvergence
+
+/-!
 # DASH — finite inverse-root convergence does not prove learning convergence
 
 arXiv:2602.02016v2, §2–3. This actual sequential NDB/grafting run has
@@ -9,8 +14,7 @@ the additional training guard is what eliminates this learning failure.
 The manuscript states no general training convergence theorem to refute.
 -/
 
-import Transformer.DASH.Section2_TrainingCycleStep
-import Transformer.DASH.Section2_TrainingConvergence
+@[expose] public section
 
 open scoped Topology
 open Filter

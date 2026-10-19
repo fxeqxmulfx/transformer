@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section2_LeaderNull
+
+/-!
 # Attention's forward pass and Frank-Wolfe — an open set of token mergers
 
 The null-set argument in the proof of lem:singleLeader must allow singular
@@ -10,7 +14,7 @@ Source: arXiv:2508.09628v1, §2.1, the proof of lem:singleLeader, and
 §1.2, eq:hardmax.dynamics.V.
 -/
 
-import Transformer.FrankWolfe.Section2_LeaderNull
+@[expose] public section
 
 open MeasureTheory
 

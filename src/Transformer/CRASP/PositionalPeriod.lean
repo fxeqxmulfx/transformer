@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.PositionalTransformers
+
+/-!
 # A common period for rational rotation angles
 
 arXiv:2506.16055v3, Appendix F, `sec:sinusoidal_pes` and `sec:rope_pes`.
@@ -6,7 +10,7 @@ Only the finitely many angles used by a model's coordinates need a common
 period. Twice the product of their rational denominators suffices.
 -/
 
-import Transformer.CRASP.PositionalTransformers
+@[expose] public section
 
 namespace Transformer.CRASP
 

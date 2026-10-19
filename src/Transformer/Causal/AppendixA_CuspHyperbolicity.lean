@@ -1,5 +1,7 @@
-import Transformer.Causal.AppendixA_CuspCritical
-import Transformer.Causal.AppendixA_CuspJacobian
+module
+
+public import Transformer.Causal.AppendixA_CuspCritical
+public import Transformer.Causal.AppendixA_CuspJacobian
 
 /-!
 # All printed sequential-flow hypotheses for the actual C¹ cusp energies
@@ -26,6 +28,8 @@ unstable target `(π,0)`. This is the input verification preceding
 the construction of trajectories for the C¹ regularity audit.
 No conclusion of the printed convergence lemma is assumed.
 -/
+
+@[expose] public section
 
 open Real
 open scoped BigOperators

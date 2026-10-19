@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_PolynomialSpan
+public import Transformer.Perceptron.Section5_PowerPolynomials
+public import Transformer.Perceptron.Section5_DensityIdentification
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+
+/-!
 # The original kernel's finite-dimensional polynomial inverse
 
 ArXiv:2601.21366v2, §5.1, `eq:FH-basic` and `lem: quadpol` (i).
@@ -13,11 +21,7 @@ of the same degree. Positivity and identification with the original
 probability are supplied by the separate proved density theorem.
 -/
 
-import Transformer.Perceptron.Section5_PolynomialSpan
-import Transformer.Perceptron.Section5_PowerPolynomials
-import Transformer.Perceptron.Section5_DensityIdentification
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+@[expose] public section
 
 open Real MeasureTheory Set
 

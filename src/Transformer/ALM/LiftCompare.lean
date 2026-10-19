@@ -1,30 +1,35 @@
-/-
+module
+
+public import Transformer.ALM.HullMark
+public import Transformer.ALM.ScoreWall
+
+/-!
 # The abscissa outlives the ordinate, and carries the whole comparison
 
 `Transformer.ALM.ScoreWall` puts the wall in the stored coordinate: past
 `⌈√(2^53)⌉ = 94 906 266` the ordinate `-k²` of a key is not a binary64 number
 (`key_coord_unstorable`), the unit that separated two scores is gone before any
 dot product runs (`minimal_margin_unstorable`), and no wider accumulator
-recovers it.  What that file leaves open is what the head is supposed to do
+recovers it. What that file leaves open is what the head is supposed to do
 about it, and its own answer — a wider embedding — is a change to the weights.
 
-There is a cheaper one, and this file is it.  The key reaches the head as the
+There is a cheaper one, and this file is it. The key reaches the head as the
 point `(2k, -k² + δ)`, and the *abscissa* is `2k`: an integer of one more bit
 than `k`, so it is stored exactly to `|k| ≤ 2^52`
 (`the_abscissa_and_its_half_are_both_storable`) long past the magnitude at which
 the ordinate stops being stored at all (`the_section_4b_key` exhibits both at
-one key).  And for a live key the ordinate is not independent information — it
+one key). And for a live key the ordinate is not independent information — it
 is `-k²` plus a recency term `δ` the compiler adds, bounded by `LATEST_ALPHA /
-log 2 < 1/2` (`the_shipped_spread`).  So the head need not read the ordinate: it
+log 2 < 1/2` (`the_shipped_spread`). So the head need not read the ordinate: it
 can recover `k` from the abscissa and rebuild the comparison from `k`.
 
 `upper_lt_iff` and `lower_lt_iff` are that rebuilt comparison, and they say it
-is the *same* comparison — not an approximation of it.  Against an integer
+is the *same* comparison — not an approximation of it. Against an integer
 query the score of a marked key splits as an integer plus an offset
 (`dot_markKey_upper`, `dot_markKey_lower`), and `lt_iff` is the one inequality
 that makes the split decide: two offsets under a half cannot bridge a unit, so
 the integer part orders the keys and the offset is consulted only where the
-integers tie.  That is `HullNear` without its window hypothesis — `HullNear`
+integers tie. That is `HullNear` without its window hypothesis — `HullNear`
 buys a strict win by putting the query inside `(1 - A)/2` of a key, which needs
 the query to be near *some* key; here the query is an integer and the
 comparison is total, ties included, which is what a container has to answer.
@@ -32,15 +37,14 @@ comparison is total, ties included, which is what a container has to answer.
 The integers it runs on are squared distances, and `sq_dist_le` bounds them:
 at `|k|, |q| ≤ 2^52` a squared distance is at most `2^106`, which is `i128` with
 twenty bits to spare, so the comparison the machine makes is exact
-arithmetic and not floating point at all.  The wall moves from `2^26.5` to
+arithmetic and not floating point at all. The wall moves from `2^26.5` to
 `2^52`, in the same two dimensions and at the same weights.
 
 Source: `todo3.md` §4, §4a, §4b; `vm-rs/alm-hull/src/liftkey.rs`
 (`LiftKey::of`, `UnitQuery::cmp`, `KEY_LIMIT`).
 -/
 
-import Transformer.ALM.HullMark
-import Transformer.ALM.ScoreWall
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -51,7 +55,7 @@ namespace LiftCompare
 /-- **The abscissa is an integer of one more bit, and both it and the integer
 under it are representable.**  `embed_key` emits `2k`, so recovering `k` is a
 halving, and a halving of a representable number is exact: the two share a
-significand.  The bound `2^52` is `KEY_LIMIT`, and it is one bit short of the
+significand. The bound `2^52` is `KEY_LIMIT`, and it is one bit short of the
 `2^53` a binary64 significand holds precisely because the stored number is
 `2k`. -/
 theorem the_abscissa_and_its_half_are_both_storable {k : ℤ} (hk : |k| ≤ 2 ^ 52) :
@@ -67,7 +71,7 @@ example : IsBinary 53 ((2 * (2 ^ 52 : ℤ) : ℤ) : ℝ) :=
 company.**  `0x20202020 = 673 720 322` is the abscissa the shipped model
 reaches, so the key is `336 860 161`; its square is twenty-six binades past
 `2^53` and is not stored (`ScoreWall.key_coord_unstorable`), while the abscissa
-is stored exactly.  The head is handed a wrong ordinate and a right abscissa,
+is stored exactly. The head is handed a wrong ordinate and a right abscissa,
 which is why reading the key off the abscissa is not a refinement of the old
 path but a different one. -/
 theorem the_section_4b_key :
@@ -80,7 +84,7 @@ theorem the_section_4b_key :
 
 /-- **The integer part decides.**  Two offsets bounded by `A < 1/2` differ by
 less than one, and distinct integers differ by at least one, so the integer
-order is the order of the sum.  This is the inequality `not_eraseStep_of_marked`
+order is the order of the sum. This is the inequality `not_eraseStep_of_marked`
 spends to keep every key in the container, spent here on the comparison
 instead. -/
 theorem lt_of_int_lt {A δ δ' : ℝ} {n n' : ℤ} (hA : A < 1 / 2) (hδ : |δ| ≤ A)
@@ -148,8 +152,8 @@ theorem dot_markKey_lower (δ : ℝ) (z q : ℤ) :
 
 /-- **The rebuilt comparison, upper envelope.**  The key at least squared
 distance from the query wins, and the recency offsets decide only a tie in
-squared distance.  Nothing here is rounded: the left side is the score the head
-would compute and the right side is a comparison of integers.  This is
+squared distance. Nothing here is rounded: the left side is the score the head
+would compute and the right side is a comparison of integers. This is
 `UnitQuery::cmp` at `upper = true`. -/
 theorem upper_lt_iff {A δ δ' : ℝ} {z z' q : ℤ} (hA : A < 1 / 2) (hδ : |δ| ≤ A)
     (hδ' : |δ'| ≤ A) :
@@ -218,7 +222,7 @@ theorem the_shipped_spread : (0.3 : ℝ) / Real.log 2 < 1 / 2 := by
 whose ordinate is not stored (`the_section_4b_key`), the query equal to the key
 puts that key strictly ahead of its neighbour whatever the two recency offsets
 are — because the comparison is `0 < 1` between two squared distances, and the
-offsets cannot reach across it.  The measured failure of §4b is an inversion of
+offsets cannot reach across it. The measured failure of §4b is an inversion of
 these two, so this is the defect closed rather than bounded. -/
 theorem the_section_4b_query {A δ δ' : ℝ} (hA : A < 1 / 2) (hδ : |δ| ≤ A) (hδ' : |δ'| ≤ A) :
     dot (((336860161 : ℤ) : ℝ), 1) (markKey δ' ((336860162 : ℤ) : ℝ)) <

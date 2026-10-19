@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.SectionA_TrainingInvariants
+public import Transformer.Optimization.Stationarity
+public import Transformer.Optimization.Quadratic
+
+/-!
 # MD training convergence to stationarity
 
 User-requested deterministic training extension of arXiv:2606.25971v2,
@@ -9,9 +15,7 @@ and a lower bound describe the loss; no convergence, bounded-gradient or
 optimizer-alignment premise describes the iterates.
 -/
 
-import Transformer.MagnitudeDirection.SectionA_TrainingInvariants
-import Transformer.Optimization.Stationarity
-import Transformer.Optimization.Quadratic
+@[expose] public section
 
 open scoped BigOperators Topology
 open Filter

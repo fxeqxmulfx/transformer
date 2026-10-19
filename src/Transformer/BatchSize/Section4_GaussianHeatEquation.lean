@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_GaussianSemigroup
+
+/-!
 # The heat equation for the Gaussian comparison operator
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3).
@@ -7,7 +11,7 @@ one half of its spatial second derivative. This supplies the backward
 generator equation for constant scalar Brownian coefficients.
 -/
 
-import Transformer.BatchSize.Section4_GaussianSemigroup
+@[expose] public section
 
 noncomputable section
 

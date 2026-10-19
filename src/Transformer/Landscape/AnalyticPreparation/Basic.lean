@@ -1,4 +1,10 @@
-/-
+module
+
+public import Mathlib.Analysis.Analytic.Constructions
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+public import Mathlib.Analysis.Analytic.Order
+
+/-!
 # Real analytic preparation: Basic
 
 Adapted from Bochao Kong's classical-complex-wpt, revision
@@ -9,9 +15,7 @@ The scalar field is real; no complex root or complex differentiation result
 is used. Apache-2.0 license: third_party/classical-complex-wpt/LICENSE.
 -/
 
-import Mathlib.Analysis.Analytic.Constructions
-import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
-import Mathlib.Analysis.Analytic.Order
+@[expose] public section
 
 open Filter Finset
 open scoped BigOperators ENNReal NNReal Topology

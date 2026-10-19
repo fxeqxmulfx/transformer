@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.MemoryValues
+module
+
+public import Transformer.GPTMini.Sparsemax.MemoryValues
 
 /-!
 # Actual attention for data-dependent mixtures of learned queries
@@ -16,6 +18,8 @@ not future data. This is memory attention with fixed data codes, not
 ordinary self-attention to the input occurrences or trainable code mixtures.
 QKNorm, RoPE and fixed small feature width are not retained.
 -/
+
+@[expose] public section
 
 noncomputable section
 

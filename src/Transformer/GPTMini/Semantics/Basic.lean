@@ -1,4 +1,6 @@
-import Transformer.GPTMini.AttentionBounds
+module
+
+public import Transformer.GPTMini.AttentionBounds
 
 /-!
 # Finite-temperature retrieval in the actual softmax head
@@ -14,6 +16,8 @@ T counts the full context here, so the estimate also holds when some
 competitors are masked. Applying it to attentionHead uses the actual
 RoPE-rotated queries and keys; no hard attention or rounding is substituted.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

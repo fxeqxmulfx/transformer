@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_ExponentialObservable
+public import Transformer.Homogenized.Section7_OverlapNoiseBounds
+
+/-!
 # The actual generator of the exponential overlap
 
 ArXiv:2604.01978v1, §7, lem:Ito_formula and the maximal
@@ -14,8 +19,7 @@ No exponential supermartingale or tail bound is assumed here.
 The example has positive value variance and generator value 1/4.
 -/
 
-import Transformer.Homogenized.Section7_ExponentialObservable
-import Transformer.Homogenized.Section7_OverlapNoiseBounds
+@[expose] public section
 
 open scoped BigOperators NNReal
 open MeasureTheory

@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Convex.Structured.RecallPositions
-import Mathlib.Data.List.MinMax
-import Mathlib.Data.List.FinRange
+module
+
+public import Transformer.GPTMini.Convex.Structured.RecallPositions
+public import Mathlib.Data.List.MinMax
+public import Mathlib.Data.List.FinRange
 
 /-!
 # Computable raw-data route supervision for the learned recall head
@@ -21,6 +23,8 @@ for both rewrite settings, every record count and arbitrary valid fillers.
 The scan and subsequent label generation must be charged in FLOP/work
 accounting; these data theorems do not assert zero preprocessing cost.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

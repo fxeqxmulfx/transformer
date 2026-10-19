@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.SpecialFunctions.Exponential
+public import Mathlib.Topology.Order.Compact
+
+/-!
 # Second differences and a discrete maximum principle
 
 The two analytic facts behind the injectivity of `μ ↦ f_B^μ` in
@@ -19,9 +25,7 @@ Source: arXiv:2601.21366v2, `rem: general-attention` (the Dirichlet problem
 for `Δ - 1` on the ellipsoid, and `Δ e^{z·y} = ‖y‖² e^{z·y}`).
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.SpecialFunctions.Exponential
-import Mathlib.Topology.Order.Compact
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -82,7 +86,7 @@ example : ‖(EuclideanSpace.single 0 1 : EucSpace 1)‖ = 1 ∧ |(0 : ℝ)| ≤
 `≤ 0` on the unit sphere, and its second differences along some
 `w_1, …, w_d` satisfy
 `Σ_i [G(x + t w_i) + G(x - t w_i) - 2 G(x)] ≥ t² G(x) - t⁴ S(x)` for `|t| ≤ 1`,
-then `G ≤ 0` on the closed unit ball.  At an interior positive maximum the
+then `G ≤ 0` on the closed unit ball. At an interior positive maximum the
 left side is `≤ 0`, while the right side is `> 0` once `0 < t² < G/S`. -/
 theorem le_zero_of_secondDiff_ge {G S : EucSpace d → ℝ} (hG : Continuous G)
     (w : Fin d → EucSpace d)

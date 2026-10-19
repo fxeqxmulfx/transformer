@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_ProjectionDynamics
+
+/-!
 # Uniform contraction away from the repelling pole
 
 ArXiv:2411.04551v3, §3.1, proof of `lem: first.quadrant`.
@@ -7,7 +11,7 @@ into any prescribed ball about `w` in finite time. An explicit squared
 distance estimate gives the uniformity over the original compact set.
 -/
 
-import Transformer.Interpolation.Section3_ProjectionDynamics
+@[expose] public section
 
 open Real Filter Topology
 

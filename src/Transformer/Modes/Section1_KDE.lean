@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Probability.Distributions.Gaussian.Real
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.Analysis.Calculus.DerivativeTest
+public import Mathlib.Data.Set.Card
+
+/-!
 # The number of modes of a Gaussian KDE — the estimator and its modes
 
 §1.1 of arXiv:2412.09080v3, `sec:setup`: the Gaussian kernel density estimator
@@ -8,7 +16,7 @@ statement of the paper is about.
 **What the source says and what is carried here.**
 
 * `eq:gkde` is `kde`:  `P̂_n(t) = √β/(n√(2π)) Σ_i e^{-β(t-X_i)²/2}`, the KDE
-  with bandwidth `h = β^{-1/2}`.  The sample `X : Idx n → ℝ` is an explicit
+  with bandwidth `h = β^{-1/2}`. The sample `X : Idx n → ℝ` is an explicit
   argument; the law `X_1, …, X_n ~iid N(0,1)` enters only through the measure
   `gaussianSample n` that expectations are taken against.
 
@@ -17,18 +25,14 @@ statement of the paper is about.
   with infinitely many modes is counted as infinite; `Set.ncard` would count it
   as zero.
 
-* `expectedModes` is the expectation over the sample.  Its real shadow
+* `expectedModes` is the expectation over the sample. Its real shadow
   `expectedModesReal`, in which the asymptotic statements are written, also
   asserts finiteness whenever it is bounded below: `(∞ : ℝ≥0∞).toReal = 0`.
 
 Source: arXiv:2412.09080v3, `sec:setup`, `eq:gkde`.
 -/
 
-import Transformer.Basic
-import Mathlib.Probability.Distributions.Gaussian.Real
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.Analysis.Calculus.DerivativeTest
-import Mathlib.Data.Set.Card
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open Real MeasureTheory ProbabilityTheory
@@ -116,7 +120,7 @@ Source: arXiv:2412.09080v3, `sec:setup`. -/
 noncomputable def expectedModes (β : ℝ) (n : ℕ) (S : Set ℝ) : ℝ≥0∞ :=
   ∫⁻ X, modeCount (kde β X) S ∂(gaussianSample n)
 
-/-- The expected number of modes as a real number.  A lower bound on it — the
+/-- The expected number of modes as a real number. A lower bound on it — the
 `Θ` of `thm:main-result`, say — also asserts that the expectation is finite,
 since `(∞ : ℝ≥0∞).toReal = 0`. -/
 noncomputable def expectedModesReal (β : ℝ) (n : ℕ) (S : Set ℝ) : ℝ :=

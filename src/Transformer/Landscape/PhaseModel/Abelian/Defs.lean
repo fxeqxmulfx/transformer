@@ -1,22 +1,26 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Defs
+public import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
+public import Mathlib.Analysis.SpecialFunctions.Complex.Arg
+
+/-!
 # Phase model over a finite abelian group — definitions
 
 `Landscape.PhaseModel.Defs` fits phases to division in a cyclic group of order `n`.
 Here the group is any finite abelian group `G`, written additively, with
-one phase `ψ_x ∈ ℝ` per element, `ψ ∈ ℝ^G`.  The relation of the row
+one phase `ψ_x ∈ ℝ` per element, `ψ ∈ ℝ^G`. The relation of the row
 `x / y = x - y` is `ψ_x - ψ_y - ψ_{x-y} ∈ 2πℤ`, with integer row
 `e_x - e_y - e_{x-y}` (`divisionRow`), and the energy of a set `S` of rows
 is `divisionEnergy S`, the phase energy `Σ_r (1 - cos ⟪m_r, ψ⟫)` of those
-rows.  A character `χ : G → ℂ` takes values of modulus `1`; its phases are
-its arguments `ψ_x = arg χ(x)` (`characterPhase`).  For `G = ℤ/n` the
+rows. A character `χ : G → ℂ` takes values of modulus `1`; its phases are
+its arguments `ψ_x = arg χ(x)` (`characterPhase`). For `G = ℤ/n` the
 characters are `x ↦ e^{2πijx/n}`, whose phases `2πjx/n` of
-`Landscape.PhaseModel.characterPhase` agree with these up to `2πℤ`.  The periods are
+`Landscape.PhaseModel.characterPhase` agree with these up to `2πℤ`. The periods are
 the lattice `2πℤ^G` (`periods`).
 -/
 
-import Transformer.Landscape.PhaseModel.Defs
-import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
-import Mathlib.Analysis.SpecialFunctions.Complex.Arg
+@[expose] public section
 
 open Real
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.CountEmbedding
+module
+
+public import Transformer.GPTMini.Semantics.CountEmbedding
 
 /-!
 # Preserve a semantic phase feature through every original residual layer
@@ -18,6 +20,8 @@ It separates the two legal equal-count prefixes from Counting. The
 final parity/EOS readout is a separate obligation; retained phase does
 not imply that the tied unembedding has already decoded the correct label.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

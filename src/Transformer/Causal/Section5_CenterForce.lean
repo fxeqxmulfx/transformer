@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section5_WeightedInteraction
+public import Transformer.Causal.Section5_ParameterGeometry
+
+/-!
 # The first original frozen token clusters at every nonrepelling critical point
 
 ArXiv:2411.04990v2, §5, induction base in the proof of
@@ -21,8 +26,7 @@ Its scope is the first token; no condition on later predecessors
 is assumed or hidden in the original dynamics.
 -/
 
-import Transformer.Causal.Section5_WeightedInteraction
-import Transformer.Causal.Section5_ParameterGeometry
+@[expose] public section
 
 open scoped BigOperators
 open Real Set

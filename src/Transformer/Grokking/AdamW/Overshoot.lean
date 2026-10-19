@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.FiniteThreshold
+module
+
+public import Transformer.Grokking.AdamW.FiniteThreshold
 
 /-!
 # Centered overshoot and the absence of a uniform first-step rate
@@ -18,6 +20,8 @@ neither a singular loss nor lack of centering explains the overshoot.
 These are exact-real effective-model counterexamples, not a measured
 failure of GPTMini or an all-time assertion about momentum dynamics.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

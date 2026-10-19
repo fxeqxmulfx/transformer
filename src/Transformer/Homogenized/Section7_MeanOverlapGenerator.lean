@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_MeanOverlapCalculus
+public import Transformer.Homogenized.Section7_ExponentialGenerator
+public import Transformer.Homogenized.Section7_SphereMartingale
+
+/-!
 # The actual Gaussian generator of the original empirical mean
 
 ArXiv:2604.01978v1, §7, `eq:m_decomp_clean` and
@@ -20,9 +26,7 @@ also supplies the compensated mean test directly. No pathwise noise
 estimate or drift decomposition is assumed as a separate input.
 -/
 
-import Transformer.Homogenized.Section7_MeanOverlapCalculus
-import Transformer.Homogenized.Section7_ExponentialGenerator
-import Transformer.Homogenized.Section7_SphereMartingale
+@[expose] public section
 
 open Real MeasureTheory
 open scoped BigOperators NNReal

@@ -1,9 +1,13 @@
-/-
+module
+
+public import Transformer.ALM.HullCache
+
+/-!
 # Why the cached breakpoints increase
 
 `vm-rs/alm-hull/src/envelope.rs` states two invariants and rests both searches
 on them: the slopes increase along the envelope, and so do the cached
-breakpoints.  The first is the container's order and holds by construction.
+breakpoints. The first is the container's order and holds by construction.
 The second is the one `Envelope::argmax` depends on -- it is why a tree ordered
 by slope can be searched by breakpoint at all -- and until this file nothing
 proved it.
@@ -11,14 +15,14 @@ proved it.
 The content is already in `Transformer.ALM.Envelope`, one adjacency at a time:
 `interX_le_interX_iff` says the breakpoints at a triple are *out* of order
 exactly when the middle line is redundant, which is the test both erase loops
-fire on.  Negating it gives the invariant: the breakpoints are in order exactly
+fire on. Negating it gives the invariant: the breakpoints are in order exactly
 when no line of the triple is redundant, so a loop that erases every redundant
 line leaves an ordered envelope behind.
 
 `interX_lt_interX_widen_left` is the step the predecessor walk takes, and it is
-the one that is not obvious.  The walk erases a left neighbour and then
+the one that is not obvious. The walk erases a left neighbour and then
 recomputes the new line's breakpoint against the neighbour *beyond* it, without
-re-running the test that decided to keep the new line in the first place.  That
+re-running the test that decided to keep the new line in the first place. That
 is sound, and the reason is a witness point: at the crossing of the erased
 neighbour with the right-hand line the new line is strictly above both, and the
 line further left is below the erased one there, so it is below the new line
@@ -28,7 +32,7 @@ Source: `vm-rs/alm-hull/src/envelope.rs`, `Envelope::add_line`, the predecessor
 walk; `transformer_vm/attention/hull2d_cht.h` lines 122-192.
 -/
 
-import Transformer.ALM.HullCache
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -59,7 +63,7 @@ theorem interX_lt_interX_iff {l₁ l₂ l₃ : ℝ × ℝ} (h₁₂ : l₁.1 < l
 /-- **Erasing a left neighbour keeps the new line's own test passing.**  The
 predecessor walk drops `B`, rebinds the left neighbour to `A` and recomputes
 the breakpoint there; it never re-tests the new line `C` against the wider
-pair.  It does not have to: `interX B D` is a point where `C` is strictly above
+pair. It does not have to: `interX B D` is a point where `C` is strictly above
 `B = D`, and `A` is below `B` there because `A` and `B` have already crossed,
 so `C` is strictly above `max (A, D)` at that point and cannot be redundant.
 
@@ -88,7 +92,7 @@ theorem interX_lt_interX_widen_left {A B C D : ℝ × ℝ}
 /-- **And that is the comparison the code makes.**  `Transformer.ALM.HullCache`
 has each node carrying `breakTo` against its successor, so the ordering of two
 adjacent cached breakpoints is the ordering of two crossing points, which is
-the erase test at that triple.  Nothing here reads a node's cache except
+the erase test at that triple. Nothing here reads a node's cache except
 through the lines it was computed from. -/
 theorem cached_lt_iff {a b c : HullNode} (hab : Cached a b) (hbc : Cached b c)
     (h₁₂ : a.1.1 < b.1.1) (h₂₃ : b.1.1 < c.1.1) :

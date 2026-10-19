@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section2_LowRank
+public import Transformer.Clusters.Section12_MultiHeadBoundedRows
+
+/-!
 # The emergence of clusters in self-attention dynamics — multi-headed
   Transformers
 
@@ -10,7 +15,7 @@ the positive one-dimensional case of the open problem it carries.
 * The display is written "borrowing the notation from Remark
   `r:discreterescaling`", that is in discrete time: it is `e:discreteequation`
   with the single attention head replaced by a sum over `h ∈ [H]`, each head
-  having its own constant `Q_h, K_h, V_h`.  `MultiHeadTransformer` is that
+  having its own constant `Q_h, K_h, V_h`. `MultiHeadTransformer` is that
   display, and `multiHeadTransformer_one_iff` proves that at `H = 1` it is
   `e:discreteequation` itself.
 
@@ -20,15 +25,15 @@ the positive one-dimensional case of the open problem it carries.
   single-headed conclusion needs them — §2's `t:boolean` asks for `d = 1`,
   `V > 0`, `QK > 0` and pairwise distinct initial tokens, and the source
   itself says of a value matrix whose leading eigenvalue is complex that "we
-  do not expect any clustering to occur".  The open problem is therefore
+  do not expect any clustering to occur". The open problem is therefore
   carried as the multi-headed form of `t:boolean`: those hypotheses, one copy
-  per head, and `t:boolean`'s own conclusion, one per head.  The addition of
+  per head, and `t:boolean`'s own conclusion, one per head. The addition of
   the hypotheses is the deviation from the source. This case is proved here
   for the actual discrete dynamics and each original head. `Δt > 0` is among them,
   since at `Δt = 0` no token moves and the attention matrix stays wherever it
   started.
 
-* The conclusion is stated along the iteration, `k → +∞`.  That it is the
+* The conclusion is stated along the iteration, `k → +∞`. That it is the
   discrete rather than the continuous dynamics is the source's own choice of
   display, and `r:discreterescaling` says the proofs of `t:boolean` and the
   rest "carry through with straightforward modifications" there.
@@ -37,8 +42,7 @@ Source: arXiv:2305.05465v6, `sec:conclusion`, the multi-headed display;
 `r:discreterescaling`, `t:boolean`.
 -/
 
-import Transformer.Clusters.Section2_LowRank
-import Transformer.Clusters.Section12_MultiHeadBoundedRows
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -61,7 +65,7 @@ theorem multiHeadTransformer_one_iff (Δt : ℝ) (Q K V : Idx 1 → ParamMatrix 
   simp [MultiHeadTransformer, DiscreteTransformer]
 
 /-- **The configuration at the origin is stationary**, whatever the heads:
-every `V_h` kills it, so no token moves.  This is the solution in closed form
+every `V_h` kills it, so no token moves. This is the solution in closed form
 that witnesses the hypotheses below. -/
 theorem multiHeadTransformer_zero {H : ℕ} (Δt : ℝ) (Q K V : Idx H → ParamMatrix d) :
     MultiHeadTransformer (n := n) Δt Q K V (fun _ _ => (0 : EucSpace d)) := by

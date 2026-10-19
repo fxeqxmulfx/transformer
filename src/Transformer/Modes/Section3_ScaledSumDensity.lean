@@ -1,7 +1,9 @@
-import Transformer.Modes.Section3_ScaledSumMoments
-import Transformer.Modes.Section3_CumulantMoment
+module
 
-/-
+public import Transformer.Modes.Section3_ScaledSumMoments
+public import Transformer.Modes.Section3_CumulantMoment
+
+/-!
 # The number of modes of a Gaussian KDE — the moment identity for the density
 of the normalized sum
 
@@ -9,7 +11,7 @@ The second equality of the moment identity of arXiv:2412.09080v3, §3.1, is
 
   `𝔼_{Z ~ N(0,I₂)}[(q_t/φ)(Z) H^α(Z)] = ∫ q_t H^α = n^{-1/2} κ_t^α`,
 
-`q_t` being the density of `S_n = n^{-1/2} Σ Yᵢ(t)`.  Three steps, each proved
+`q_t` being the density of `S_n = n^{-1/2} Σ Yᵢ(t)`. Three steps, each proved
 elsewhere in this directory, meet here:
 
 * `∫ q H^α dx = 𝔼 H^α(S_n)`, since `q` is a density — the only place
@@ -27,12 +29,14 @@ homogeneous of degree three, so it is `n^{-1/2} κ_t^α`.
 The slip is in that one line, and the source's own Edgeworth display contradicts
 it: from `q_t/φ = 1 + n^{-1/2} Σ_{|α|=3} κ_t^α/α! H^α + r`, multiplying by
 `φ H^β` and integrating with `∫ φ H^α H^β = α! δ_{αβ}` and `∫ φ H^β = 0` gives
-`∫ q_t H^β = n^{-1/2} κ_t^β`, the factor and not its absence.  The theorem below
+`∫ q_t H^β = n^{-1/2} κ_t^β`, the factor and not its absence. The theorem below
 carries it; `cumulant_three_eq_integral_hermite` carries the first equality as
 the source writes it.
 
 Source: arXiv:2412.09080v3, §3.1, the display after `eq:psi`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 
@@ -42,7 +46,7 @@ namespace Modes
 variable {μ : Measure (ℝ × ℝ)} {ε : ℝ} {n : ℕ}
 
 /-- **The law of a normalized sum of centred summands is centred**, first
-coordinate.  arXiv:2412.09080v3, §3 ("by construction `q_t` has mean `0`"). -/
+coordinate. arXiv:2412.09080v3, §3 ("by construction `q_t` has mean `0`"). -/
 theorem integral_map_scaledSum_fst [IsProbabilityMeasure μ] (hE : HasExpMomentsOn μ ε)
     (hε : 0 < ε) (hfst : ∫ x, x.1 ∂μ = 0) (n : ℕ) :
     ∫ x, x.1 ∂((Measure.pi fun _ : Fin n => μ).map (scaledSum n)) = 0 := by
@@ -62,7 +66,7 @@ theorem integral_map_scaledSum_fst [IsProbabilityMeasure μ] (hE : HasExpMoments
   simp [hterm]
 
 /-- **The law of a normalized sum of centred summands is centred**, second
-coordinate.  arXiv:2412.09080v3, §3 ("by construction `q_t` has mean `0`"). -/
+coordinate. arXiv:2412.09080v3, §3 ("by construction `q_t` has mean `0`"). -/
 theorem integral_map_scaledSum_snd [IsProbabilityMeasure μ] (hE : HasExpMomentsOn μ ε)
     (hε : 0 < ε) (hsnd : ∫ x, x.2 ∂μ = 0) (n : ℕ) :
     ∫ x, x.2 ∂((Measure.pi fun _ : Fin n => μ).map (scaledSum n)) = 0 := by

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AdaFisher.SectionA_Descent
+
+/-!
 # AdaFisher: corrected effective-step variation bounds
 
 arXiv:2405.16397v3, Proposition 3.4, Appendix A.2, `eq:bound_1`.
@@ -7,7 +11,7 @@ source's upper-bound equation repeats the same time in its C3 term;
 here the two adjacent iterates are distinguished explicitly.
 -/
 
-import Transformer.AdaFisher.SectionA_Descent
+@[expose] public section
 
 open scoped BigOperators
 

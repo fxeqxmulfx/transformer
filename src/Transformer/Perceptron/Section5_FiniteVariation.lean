@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Perceptron.Kernel
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+
+/-!
 # Differentiating the finite angular energy
 
 ArXiv:2601.21366v2, §5.2, `eq:Hess-bilinear.std`, and §5.5,
@@ -15,9 +23,7 @@ The Hessian value is proved by differentiating the energy function;
 it is not inserted into its definition.
 -/
 
-import Transformer.Perceptron.Kernel
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Mul
+@[expose] public section
 
 open scoped BigOperators
 

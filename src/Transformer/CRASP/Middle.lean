@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.BoundedExists
+public import Transformer.CRASP.DepthZero
+
+/-!
 # Depth-0 formulas in the middle of an affix restriction
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -6,16 +11,15 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 
 In a string `λ(n⃗) u ϱ(n⃗)` with Parikh vector `n⃗`, the prefixes that end inside
 `u` have their Parikh vectors in the middle `[ℙ(λ(n⃗)), n⃗ − ℙ(ϱ(n⃗))]`
-(`prefixVec_mem_middle`).  A depth-0 formula whose PNPs are constant on the
+(`prefixVec_mem_middle`). A depth-0 formula whose PNPs are constant on the
 middle therefore reads there the letter alone: at a position of `u` it holds
 exactly where it holds at the first occurrence of that letter in `u`
-(`Form.sat_middle`).  Its count over the positions of `u` is then a count over
+(`Form.sat_middle`). Its count over the positions of `u` is then a count over
 the letters of `u` (`countP_range'_eq_countP`), and two middles with the same
 Parikh vector are permutations of each other (`perm_of_parikh_eq`).
 -/
 
-import Transformer.CRASP.BoundedExists
-import Transformer.CRASP.DepthZero
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -119,9 +123,9 @@ example : parikh (((⟨fun _ => [], fun _ => []⟩ : Affix σ).pre (parikh [])) 
   ⟨rfl, le_rfl⟩
 
 /-- **A depth-0 formula in the middle reads the letter alone** (Appendix C.1,
-the depth-0 cases of the proof of `lem:TLCP_commutative`).  Let `λ(n⃗) u ϱ(n⃗)`
+the depth-0 cases of the proof of `lem:TLCP_commutative`). Let `λ(n⃗) u ϱ(n⃗)`
 and `λ(n⃗) v ϱ(n⃗)` both have Parikh vector `n⃗`, and let the PNPs of `χ` be
-constant on the middle.  At a position of `v` that carries a letter `a` of
+constant on the middle. At a position of `v` that carries a letter `a` of
 `u`, `χ` holds exactly where it holds at the first occurrence of `a` in `u`. -/
 theorem Form.sat_middle (A : Affix σ) {n : PVec σ} {u v : List σ} {χ : Form σ}
     (hχ : χ.depth = 0) (hpnp : PnpsConstantOn χ A.middle)

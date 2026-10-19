@@ -1,24 +1,28 @@
-/-
+module
+
+public import Transformer.CRASP.Parity
+
+/-!
 # PARITY is definable in `TL[◁#, ▷#]`, at depth 2
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 (COLM 2025), §3: the first half of the remark the authors left commented out
 after `thm:transformer_equivalence`, "PARITY is in `TL[◁#, ▷#]` but not
-`TL[◁#]`"; the second half is `Transformer.CRASP.Parity`.  The remark gives
+`TL[◁#]`"; the second half is `Transformer.CRASP.Parity`. The remark gives
 no formula; this file gives one.
 
 A position `j` holding a `1` counts the `1`s up to it, `◁#[Q_1]`, and from it
-on, `▷#[Q_1]`.  Both count `j` itself, so for `m` ones in all they sum to
+on, `▷#[Q_1]`. Both count `j` itself, so for `m` ones in all they sum to
 `m + 1` (`countL_add_countR`), and they agree exactly at the `(m + 1)/2`-th
 `1`, which exists exactly when `m` is odd:
 
     φ_PARITY = 1 ≤ ◁#[Q_1 ∧ ◁#[Q_1] = ▷#[Q_1]],
 
-a formula of depth `2` (`definable_parity`).  With `not_definableL_parity`,
+a formula of depth `2` (`definable_parity`). With `not_definableL_parity`,
 the future count `▷#` is what PARITY needs.
 -/
 
-import Transformer.CRASP.Parity
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -95,7 +99,7 @@ theorem sat_middleOne (w : List Bool) {j : ℕ} (hj : j ≤ w.length) :
 example : 1 ≤ [true].length := le_rfl
 
 /-- **PARITY is definable in `TL[◁#, ▷#]` at depth 2** (the first half of the
-remark after `thm:transformer_equivalence`, §3).  A position satisfies
+remark after `thm:transformer_equivalence`, §3). A position satisfies
 `middleOne` only when twice a count is one more than the number `m` of `1`s,
 so `m` is odd; and when `m` is odd, the first position up to which the `1`s
 reach `(m + 1)/2` holds a `1` and satisfies it. -/

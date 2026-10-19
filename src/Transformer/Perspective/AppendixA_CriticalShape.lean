@@ -1,20 +1,24 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_Beta0
+
+/-!
 # Appendix A — the shape of the critical points of `𝖤_0`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*, Appendix A.
 
 A critical point of `𝖤_0` on `(𝕊^{d-1})^n` has its barycentre `s = Σ_j z_j`
-normal to the sphere at every particle, `s = ⟨z_i, s⟩ z_i`.  So either `s = 0`,
+normal to the sphere at every particle, `s = ⟨z_i, s⟩ z_i`. So either `s = 0`,
 or every particle is `± s/‖s‖`: the configuration is `signedTuple e S`, the
 particles of `S` at `-e` and the others at `e`, for the unit vector
-`e = s/‖s‖` (`eq_signedTuple_of_critical`).  Conversely every `signedTuple`
+`e = s/‖s‖` (`eq_signedTuple_of_critical`). Conversely every `signedTuple`
 is critical, and constant paths at critical points solve `e:gradfl`; these
 are the witnesses the hypotheses of `l:nosaddleconv` and its cases are tested
 on.
 -/
 
-import Transformer.Perspective.AppendixA_Beta0
+@[expose] public section
 
 open scoped BigOperators
 open Real

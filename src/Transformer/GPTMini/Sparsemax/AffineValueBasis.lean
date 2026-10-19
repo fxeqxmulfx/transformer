@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.AffineValueProfile
-import Transformer.GPTMini.Sparsemax.MatrixOutputError
+module
+
+public import Transformer.GPTMini.Sparsemax.AffineValueProfile
+public import Transformer.GPTMini.Sparsemax.MatrixOutputError
 
 /-!
 # Two generated value features with uniform observation curvature
@@ -16,6 +18,8 @@ the observation map, not an extra loss penalty or supplied attention label.
 The generated feature family restricts representable answers to affine
 functions of position. It does not require stored rows of a feature table.
 -/
+
+@[expose] public section
 
 noncomputable section
 

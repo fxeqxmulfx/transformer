@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Causal.Section5_ClosestDrift
+public import Transformer.Causal.Section5_GapBarrier
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Strong causal centers retain their gaps and barely move
 
 ArXiv:2411.04990v2, §5, proof of `lemma:meta`, the comparison after
@@ -11,9 +17,7 @@ assuming that a chosen closest predecessor is differentiable in time.
 Its initial height fits below the strict strong-center separation.
 -/
 
-import Transformer.Causal.Section5_ClosestDrift
-import Transformer.Causal.Section5_GapBarrier
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open Set Real
 

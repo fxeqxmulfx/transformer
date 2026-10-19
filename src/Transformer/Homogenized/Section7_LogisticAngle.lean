@@ -1,5 +1,7 @@
-import Transformer.Homogenized.Section7_LogisticModification
-import Transformer.Homogenized.Section7_LogisticArcsin
+module
+
+public import Transformer.Homogenized.Section7_LogisticModification
+public import Transformer.Homogenized.Section7_LogisticArcsin
 
 /-!
 # The original logistic angle and its finite expected bracket budget
@@ -20,6 +22,8 @@ It also identifies the source's printed bracket-to-zero sentence as
 unnecessary: an interior limit would make the bracket diverge, whereas
 this finite expectation budget will rule out that behavior almost surely.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

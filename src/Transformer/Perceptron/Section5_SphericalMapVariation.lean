@@ -1,5 +1,7 @@
-import Transformer.Perceptron.Section5_SphericalMapKernelBounds
-import Transformer.Perceptron.Section5_SphericalVariation
+module
+
+public import Transformer.Perceptron.Section5_SphericalMapKernelBounds
+public import Transformer.Perceptron.Section5_SphericalVariation
 
 /-!
 # Regularity of actual transported matrix interactions
@@ -20,6 +22,8 @@ No finite atomic presentation or density is required.
 The original matrix remains inside every bilinear exponent and
 every derivative. The actual radial accelerations are retained.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 namespace Transformer.Perceptron

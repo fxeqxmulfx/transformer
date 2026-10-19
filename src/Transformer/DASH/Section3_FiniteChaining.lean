@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section3_CNUniformConvergence
+public import Transformer.DASH.Section3_ChainedRoots
+
+/-!
 # DASH — two finite NDB calls for the inverse fourth root
 
 arXiv:2602.02016v2, §3.3. Both calls use a growing finite iteration
@@ -7,8 +12,7 @@ convergence of their actual composition, including the changing
 numerical square-root output of the first call.
 -/
 
-import Transformer.DASH.Section3_CNUniformConvergence
-import Transformer.DASH.Section3_ChainedRoots
+@[expose] public section
 
 open scoped Matrix Topology
 open Filter

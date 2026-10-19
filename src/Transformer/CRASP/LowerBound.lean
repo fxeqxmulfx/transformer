@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.Blocks
+public import Transformer.CRASP.Shrink
+
+/-!
 # The lower bound of the depth hierarchy
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -13,20 +18,19 @@ fixed to a prefix, and adds one block per level of depth in place of the
 reduction.
 
 Formulas of `TL[◁#]_d` are all constant, letter by letter, on the quadrant
-`x ≤ V` after some word `u` of `L_{d+1}` (`exists_constOnStrip_altPlus`).  By
+`x ≤ V` after some word `u` of `L_{d+1}` (`exists_constOnStrip_altPlus`). By
 induction, the formulas under their counts are constant on a larger quadrant
 after some `u'` of `L_d`; shrinking gives a strip `p ≤ x ≤ p + V`, `q ≤ y` on
 which the formulas themselves are constant (`exists_constOnStrip_list`); and
 `u = u' aᵖ bᑫ`, or `u' bᑫ aᵖ`, lengthens the last block of `u'`, adds one, and
-turns that strip into the quadrant after `u`.  A formula of depth `d + 1` then
+turns that strip into the quadrant after `u`. A formula of depth `d + 1` then
 reads, after `u`, only the letter and the numbers of `a`s and `b`s
 (`Form.sat_eq_of_count_eq`), so it cannot tell `u·ss·s̄s̄`, a word of `L_{d+2}`,
 from `u·s·s̄·s·s̄`, a word of `L_{d+4}`, where `s` is the last letter of `u`
 (`exists_models_iff_altPlus`).
 -/
 
-import Transformer.CRASP.Blocks
-import Transformer.CRASP.Shrink
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

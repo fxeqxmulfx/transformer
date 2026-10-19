@@ -1,4 +1,6 @@
-import Transformer.Grokking.Composition.OutputInteractions.Basic
+module
+
+public import Transformer.Grokking.Composition.OutputInteractions.Basic
 
 /-!
 # What four output corners identify and what they miss
@@ -18,6 +20,8 @@ normalization nonlinearities. These are explicit finite-output examples.
 Neither probability of initialization, transformer training, held-out
 division accuracy nor a numerical-kernel certificate is assumed or proved.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Composition.OutputInteractions
 

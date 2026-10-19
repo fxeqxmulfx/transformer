@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Sparsemax.AtomicMatchingHull
-import Mathlib.Analysis.Convex.Caratheodory
-import Mathlib.LinearAlgebra.Dimension.Constructions
+module
+
+public import Transformer.GPTMini.Sparsemax.AtomicMatchingHull
+public import Mathlib.Analysis.Convex.Caratheodory
+public import Mathlib.LinearAlgebra.Dimension.Constructions
 
 /-!
 # Finite sample compression of freely learned matching heads
@@ -20,6 +22,8 @@ algorithm or a generalization guarantee.
 The criterion reads observed physical outputs; it does not select head identities.
 Every compressed head retains its independent original values and learned Q/K.
 -/
+
+@[expose] public section
 
 noncomputable section
 

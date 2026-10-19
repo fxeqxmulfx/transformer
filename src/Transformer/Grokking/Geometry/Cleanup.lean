@@ -1,4 +1,6 @@
-import Transformer.Grokking.Geometry.Decisions
+module
+
+public import Transformer.Grokking.Geometry.Decisions
 
 /-!
 # A correctness certificate using the actual masked cleanup energy
@@ -23,6 +25,8 @@ correct margin or an absolute scale bound supplies no such certificate.
 These are statements about the current forward logits. No future margin,
 residual decrease or discrete AdamW update law is assumed to be proved.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Geometry
 

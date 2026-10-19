@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Modes.Section1_KDE
+public import Mathlib.MeasureTheory.Measure.Prod
+public import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+
+/-!
 # The number of modes of a Gaussian KDE — the printed Kac–Rice hypotheses
 
 §2.1 of arXiv:2412.09080v3, `sec:kac-rice`: upcrossings, the modulus of
@@ -11,11 +17,11 @@ continuity, and the unchanged hypotheses of `thm:kac-rice`.
   that a path with infinitely many upcrossings counts as infinite.
 
 * The four hypotheses of `thm:kac-rice` are the four fields of
-  `IsKacRiceField`.  "Finite variance over `T`" is `MemLp … 2`, a finite second
-  moment, which for a probability measure is finite variance.  "The law admits
+  `IsKacRiceField`. "Finite variance over `T`" is `MemLp … 2`, a finite second
+  moment, which for a probability measure is finite variance. "The law admits
   a density `p_t`" is written as an equality of measures, `map Ψ(t) ℙ =
   volume.withDensity p_t`, so that `p_t` is an explicit function and the
-  conclusion can name it.  "Continuous for `t ∈ T` and `x` in a neighbourhood
+  conclusion can name it. "Continuous for `t ∈ T` and `x` in a neighbourhood
   of `u`" is `ContinuousOn` on `T ×ˢ V` for some `V ∈ 𝓝 u`.
 
 * The claimed equality `eq:krf` is refuted in `Section2_KacRiceRefutation`.
@@ -79,9 +85,7 @@ Source: arXiv:2412.09080v3, `thm:kac-rice`, `eq:krf`
 (Azaïs-Wschebor, p. 62; Adler-Taylor, §11.1).
 -/
 
-import Transformer.Modes.Section1_KDE
-import Mathlib.MeasureTheory.Measure.Prod
-import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open Real MeasureTheory ProbabilityTheory Filter Topology Asymptotics

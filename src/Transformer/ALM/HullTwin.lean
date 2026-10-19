@@ -1,21 +1,25 @@
-/-
+module
+
+public import Transformer.ALM.HullSep
+
+/-!
 # One key rounded twice
 
 `Transformer.ALM.HullSep` says a head's keys must be `sqrt A` apart for the
 nearest of them to be the answer, and `alm-hull/src/sep.rs` measured the
-shipped heads against that.  Three of the hundred and thirty-three fail it —
+shipped heads against that. Three of the hundred and thirty-three fail it —
 and every failing pair is between half a step and three steps of the floating
-grid wide, on integer keys between `4` and `888`.  Nothing measured lands
-between three representable steps and the floor of `0.6578`.  So what the
+grid wide, on integer keys between `4` and `888`. Nothing measured lands
+between three representable steps and the floor of `0.6578`. So what the
 measurement found is not two keys that collided but one key the projection
 rounded two or three ways, and `HullSep.nearest_fails_of_close` is the wrong
 reading of it: that theorem needs the *further* key to carry the larger
 offset, and here "further" is a rounding error.
 
-The right reading is below.  Two keys `u` apart with offsets `δ < δ'` differ in
+The right reading is below. Two keys `u` apart with offsets `δ < δ'` differ in
 score by `δ' - δ + 2u(q - k) - u²`, so the one with the larger offset wins over
 an interval of radius `(δ' - δ) / (2u) - u / 2` about the key
-(`twin_later_wins`).  When `u` is a rounding error and `δ' - δ` is the gap
+(`twin_later_wins`). When `u` is a rounding error and `δ' - δ` is the gap
 between two positions' recency terms, that radius is enormous: at the widest
 gap measured, `2.274e-13`, and the closest two positions of the longest run,
 the radius passes `1400` while the keys involved stop at `888`
@@ -23,7 +27,7 @@ the radius passes `1400` while the keys involved stop at `888`
 
 So the earlier rounding answers no query the run can put to it
 (`twin_not_greatest`), and a container that erases it returns the same answers
-as one that keeps it.  That is the licence the three heads need: they do not
+as one that keeps it. That is the licence the three heads need: they do not
 satisfy `Transformer.ALM.HullMark.Marked`, their container holds two or three
 lines where `build_card_eq_of_marked` counts one, and neither costs an answer.
 The direction is the point — the offset rises with the position, so the
@@ -33,7 +37,7 @@ Source: `alm-compile/src/graph.rs` lines 231-264; `alm-hull/src/sep.rs`, whose
 `twins` count is what this file is about.
 -/
 
-import Transformer.ALM.HullSep
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -55,7 +59,7 @@ theorem lineEval_markKey_sub_twin (δ δ' u k q : ℝ) :
 positions' recency terms; the radius is the ratio, so a rounding error loses to
 any offset difference at all over a range that grows as the error shrinks.
 
-Note what is *not* assumed.  `u` may have either sign, so this covers a
+Note what is *not* assumed. `u` may have either sign, so this covers a
 rounding that fell short of the true key as well as one that overshot — the
 survivor is picked by the offset and not by which side of the key it landed on.
 And `δ < δ'` is not a hypothesis but a consequence: a radius wide enough to hold
@@ -112,7 +116,7 @@ example : ¬ ∀ l ∈ ({markKey 0 (4 : ℝ), markKey 1e-9 ((4 : ℝ) + 8.88e-16
 the widest gap `alm-hull/src/sep.rs` found between two roundings of one key,
 over all six reference programs; `1.2e-9` is the recency gap between the two
 closest positions of the longest run that produced it; `888` is the largest key
-involved in any such pair.  The radius clears the keys by a factor of three.
+involved in any such pair. The radius clears the keys by a factor of three.
 
 So on the three heads that fail `Transformer.ALM.HullSep`'s floor, every pair
 that fails it is covered here instead, and the failure costs no answer.

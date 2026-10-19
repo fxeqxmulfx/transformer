@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_MeanAxisPhases
+public import Transformer.Interpolation.Section1_PhaseConcatenation
+
+/-!
 # Composing actual mean-attention and perceptron phases
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §3.2,
@@ -13,8 +18,7 @@ last-phase formula then applies with its actual elapsed time. The three
 constant phases have an explicit three-piece description on their horizon.
 -/
 
-import Transformer.Interpolation.Section3_MeanAxisPhases
-import Transformer.Interpolation.Section1_PhaseConcatenation
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

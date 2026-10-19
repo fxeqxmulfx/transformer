@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.DirectProofWitness
+public import Transformer.Metastability.Section4_EnergyGap
+
+/-!
 # A single cap gives metastability at an explicit temperature threshold
 
 For fixed token count `n ≥ 1`, height `ε = 1/100` and
@@ -19,8 +24,7 @@ Source: arXiv:2410.06833v1, §2, `thm: metastability`, `eq: gamma`,
 `eq: lambda.3`; §4, `sec: energy.levels`.
 -/
 
-import Transformer.Metastability.DirectProofWitness
-import Transformer.Metastability.Section4_EnergyGap
+@[expose] public section
 
 open Real
 

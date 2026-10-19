@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Normalization.Velocities
+
+/-!
 # Counterexample to the source clustering hypotheses
 
 An antipodal stationary solution refutes the uncorrected form of
@@ -6,7 +10,7 @@ arXiv:2510.22026v2, §4.3, Theorem 4.3(ii). Smallness independent of the
 inverse temperature is necessary; see `clustering_rate` for the correction.
 -/
 
-import Transformer.Normalization.Velocities
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -49,9 +53,9 @@ theorem pairSign_sq (j : Idx 2) : pairSign j ^ 2 = 1 := by
 /-- **`thm: preln-slow (ii)` is false under the source's hypotheses.**
 
 At `β = 1/100`, `n = 2` the condition `δ < 1/(100 n² β²)` admits `δ = 5/2`,
-which every pair of unit vectors meets.  The antipodal pair `u, -u` with unit
+which every pair of unit vectors meets. The antipodal pair `u, -u` with unit
 radii is then a stationary Post-LN solution, `Var ≡ 1`, and no `c > 0` gives
-`Var' ≤ -c Var` at any time.  In every dimension `d ≥ 1`, for every `α, τ`.
+`Var' ≤ -c Var` at any time. In every dimension `d ≥ 1`, for every `α, τ`.
 
 Source: arXiv:2510.22026v2, §4.3, `thm: preln-slow` (ii). -/
 theorem not_clustering_rate (hd : 0 < d) (α : ℝ → ℝ) (τ : ℝ) :

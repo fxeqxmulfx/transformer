@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.GPTMini.Config
+public import Transformer.GPTMini.QKNorm
+public import Transformer.GPTMini.RoPE
+public import Mathlib.Analysis.SpecialFunctions.Exp
+
+/-!
 # Causal Multi-Head Attention with QK-norm and XSA
 
 Formalization of the `CausalMHA.forward` method from `reference/model.py`:
@@ -30,11 +38,7 @@ We formalize the forward pass with three components:
 followed by the output linear projection `W_o`.
 -/
 
-import Transformer.Basic
-import Transformer.GPTMini.Config
-import Transformer.GPTMini.QKNorm
-import Transformer.GPTMini.RoPE
-import Mathlib.Analysis.SpecialFunctions.Exp
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -50,7 +54,7 @@ variable (cfg : Config)
 position `j`, with QK-norm + RoPE-rotated `q, k`.
 
 For `j > i` (causal masked), the score is `-∞` (encoded as
-`Option.none` ↦ excluded from softmax).  We formalize this by restricting
+`Option.none` ↦ excluded from softmax). We formalize this by restricting
 the sum domain to `{j : Fin (i.1 + 1)}` in `softmax`.
 -/
 noncomputable def preScore

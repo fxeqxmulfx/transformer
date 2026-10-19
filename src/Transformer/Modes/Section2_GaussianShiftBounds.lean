@@ -1,14 +1,18 @@
-/-
+module
+
+public import Transformer.Modes.Section2_GaussianInt
+
+/-!
 # The number of modes of a Gaussian KDE — a uniform shifted Gaussian moment bound
 
 The second display of `lem:phi-t` reduces to bounding a one-sided Gaussian
-moment when the squared shift in Gaussian units is bounded.  The bounds below
+moment when the squared shift in Gaussian units is bounded. The bounds below
 follow from comparison with the unshifted moments of `lem:gaussian-int`.
 
 Source: arXiv:2412.09080v3, `lem:phi-t`, `lem:gaussian-int`.
 -/
 
-import Transformer.Modes.Section2_GaussianInt
+@[expose] public section
 
 open Real MeasureTheory
 
@@ -90,7 +94,7 @@ example : (0 : ℝ) < 1 ∧ (1 : ℝ) * 0 ^ 2 ≤ 0 := by norm_num
 /-- **The shifted one-sided first moment grows linearly in the shift.**
 `∫_0^∞ y e^{-a(y-δ)²/2} dy ≤ a⁻¹ (1 + 3 |δ| √a)`: on `y > 0`, `y` is at most the
 positive part of `y - δ` plus `|δ|`, and the positive part integrates to `a⁻¹`
-against the centred Gaussian, which is translation invariant.  Unlike
+against the centred Gaussian, which is translation invariant. Unlike
 `integral_mul_exp_neg_shift_sq_bounds`, the bound is not exponential in `a δ²`.
 
 Source: arXiv:2412.09080v3, `lem:phi-t`, second display (the shifted moment). -/

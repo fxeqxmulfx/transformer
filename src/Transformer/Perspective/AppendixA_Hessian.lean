@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_Beta0
+public import Transformer.Perspective.RussianTrick
+public import Transformer.Perspective.DoubleSum
+
+/-!
 # Appendix A — the Hessian of `𝖤_0` along a block rotation, proved
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -10,10 +16,10 @@ leave the others where they are; then
   `𝖤_0''(0) = (2/n) Σ_{i ∈ 𝒮} Σ_{j ∈ 𝒮^c} ⟨B² x_i, x_j⟩`.
 
 The whole content is that the pairs inside `𝒮` and the pairs inside `𝒮^c`
-contribute nothing.  The second kind is constant in `t`; the first kind is
+contribute nothing. The second kind is constant in `t`; the first kind is
 constant because `B` is skew — `⟨B x_i, B x_j⟩ = -⟨x_i, B² x_j⟩` cancels the
 term it sits next to — which is the only place skewness is used, and the
-reason `e^{tB}` is a rotation in the first place.  What is left is the cross
+reason `e^{tB}` is a rotation in the first place. What is left is the cross
 terms, counted twice by the symmetry of the double sum.
 
 The perturbation is described by the differential equation `ẋ_i = B x_i` its
@@ -22,9 +28,7 @@ the same and the `HasDerivAt` API is the one the rest of the development
 speaks.
 -/
 
-import Transformer.Perspective.AppendixA_Beta0
-import Transformer.Perspective.RussianTrick
-import Transformer.Perspective.DoubleSum
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -67,9 +71,9 @@ For a skew-symmetric `B`, a subset `𝒮 ⊂ [n]`, and the perturbation
 **What the source says and what is changed here.**  The survey states
 `e:helpcl` at a critical point of `𝖤_0`, because that is where it uses it:
 the first-order term of the expansion vanishes there, and the second-order
-term is the whole of it.  The identity above is about the second derivative
+term is the whole of it. The identity above is about the second derivative
 alone, and it holds at every `X`: criticality enters the proof nowhere, so it
-is not assumed.  `Perspective.yury_lemma`, which is where the paper's use of
+is not assumed. `Perspective.yury_lemma`, which is where the paper's use of
 `e:helpcl` lives, keeps the hypothesis.
 
 Source: arXiv:2312.10794v5, Appendix A, `e:helpcl`. -/

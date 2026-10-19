@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.BlockDrive
+
+/-!
 # Blocks with injections do not collapse, one block or a stack of different ones
 
 **Not a statement of any paper.**  `IsDrivenFlowOn.spread` for the drive of a
@@ -6,7 +10,7 @@ residual block (`Perspective.BlockDrive`): if two differences of injections
 `z_k - z_l`, `z_m - z_p` are linearly independent throughout a window of
 length `τ`, some time of the window has two tokens more than `δ` apart, and `δ`
 is fixed by the two differences, the bounds of the block and `τ` alone
-(`blockDrive_spread`).  For a stack of blocks, each on its own window and each
+(`blockDrive_spread`). For a stack of blocks, each on its own window and each
 with its own weights, values, feed-forward term and injections, one `δ` serves
 every block (`blockDrive_stack`).
 
@@ -16,15 +20,15 @@ The model is the stack of parameter-golf (github.com/openai/parameter-golf,
 its drive carries `(mix^{(b)}[0] - 1) ⊙ x_i` in the feed-forward term and the
 injection `z^{(b)}_i = mix^{(b)}[1] ⊙ x0_i`, whose differences
 `mix^{(b)}[1] ⊙ (x0_k - x0_l)` stay independent when the embedding
-differences are and `mix^{(b)}[1]` has no zero entry.  What the model still
+differences are and `mix^{(b)}[1]` has no zero entry. What the model still
 leaves out: time is continuous, the tokens live on the sphere instead of being
-RMS-normalised in `ℝ^d`, and the attention reads `x` rather than `x_in`.  The
+RMS-normalised in `ℝ^d`, and the attention reads `x` rather than `x_in`. The
 second is taken up in `Perspective.RawStream` and `Perspective.RawGrowth`:
 before the norm, with `mix[0] > 1` in every channel, every direction freezes
 and the conclusion fails (`not_rawStream_spread`).
 -/
 
-import Transformer.Perspective.BlockDrive
+@[expose] public section
 
 open scoped BigOperators
 
@@ -38,9 +42,9 @@ linearly independent, `H` a number of heads, `A, N, B, L_G, Z ≥ 0` and `τ > 0
 There is `δ > 0` such that along every flow `ẋ_i = Proj_{x_i}(v_i(t))` driven by
 a block (`blockDrive`) on a window `[t₀, t₀ + τ]`, with the bounds
 `IsBoundedBlockOn` there and `z_k - z_l = w₁`, `z_m - z_p = w₂` throughout,
-some time of the window has two tokens more than `δ` apart.  `δ` depends on
+some time of the window has two tokens more than `δ` apart. `δ` depends on
 `w₁`, `w₂`, `H`, `A`, `N`, `B`, `L_G`, `Z` and `τ` only — not on the number of
-tokens, the flow, the weights, the values, the feed-forward term or `t₀`.  For
+tokens, the flow, the weights, the values, the feed-forward term or `t₀`. For
 softmax attention `A = 1`, whatever `β`, `Q` and `K`.
 
 Source: none — posed here, as the counterpart of `lem: hemisphere.clustering`
@@ -69,11 +73,11 @@ theorem blockDrive_spread {w₁ w₂ : EucSpace d} (hw : LinearIndependent ℝ !
 
 /-- **Theorem (a stack of different blocks does not collapse).**  Let every
 block `b` of `nb` come with linearly independent `w₁ b`, `w₂ b`, and let `H`,
-`A, N, B, L_G, Z ≥ 0` and `τ > 0` bound them all.  There is one `δ > 0` such
+`A, N, B, L_G, Z ≥ 0` and `τ > 0` bound them all. There is one `δ > 0` such
 that along every flow driven, on the window `[s_b, s_b + τ]` of each block `b`,
 by a block with these bounds and with `z_{k_b} - z_{l_b} = w₁ b`,
 `z_{m_b} - z_{p_b} = w₂ b` there, every window has a time at which two tokens
-are more than `δ` apart.  The weights, values, feed-forward terms and
+are more than `δ` apart. The weights, values, feed-forward terms and
 injections are functions of time, so each block has its own; for a stack run in
 order, `s_b = b τ`.
 

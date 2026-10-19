@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.ParityInputs
+module
+
+public import Transformer.GPTMini.Semantics.ParityInputs
 
 /-!
 # Exact coordinates and tied scores of the original parity decoder
@@ -10,6 +12,8 @@ predicate or an oracle. Every scalar controls a distinct actual residual
 coordinate. Its norm and all 68 tied scores are computed explicitly.
 These identities will support uniform finite-weight readout margins.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

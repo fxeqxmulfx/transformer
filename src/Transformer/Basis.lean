@@ -1,14 +1,16 @@
-import Transformer.Basis.Basic
-import Transformer.Basis.Depth
-import Transformer.Basis.Recall
-import Transformer.Basis.Parity
-import Transformer.Basis.Tasks
-import Transformer.Basis.Requirements
-import Transformer.Basis.Encoding
-import Transformer.Basis.RecallAnswer
-import Transformer.Basis.RecallParsed
-import Transformer.Basis.RecallTablePositions
-import Transformer.Basis.RecallPrefixPositions
+module
+
+public import Transformer.Basis.Basic
+public import Transformer.Basis.Depth
+public import Transformer.Basis.Recall
+public import Transformer.Basis.Parity
+public import Transformer.Basis.Tasks
+public import Transformer.Basis.Requirements
+public import Transformer.Basis.Encoding
+public import Transformer.Basis.RecallAnswer
+public import Transformer.Basis.RecallParsed
+public import Transformer.Basis.RecallTablePositions
+public import Transformer.Basis.RecallPrefixPositions
 
 /-!
 # Basis on List Int
@@ -32,3 +34,5 @@ matching record index by the parser's selected chronological last write.
 Those exact adjacency/last-write bounds now hold at original integer
 positions in complete BOS/table/query prefixes, with final query derived.
 -/
+
+@[expose] public section

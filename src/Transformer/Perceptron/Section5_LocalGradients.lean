@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_GradientFields
+public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+
+/-!
 # Localized smooth gradients on the actual circle
 
 ArXiv:2601.21366v2, §5.2, the localized tangent directions in
@@ -15,8 +20,7 @@ positive-radius ball or open neighborhood. No support finiteness
 or density of the measure is assumed in this construction.
 -/
 
-import Transformer.Perceptron.Section5_GradientFields
-import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+@[expose] public section
 
 open Real Filter Set Metric
 open scoped Topology

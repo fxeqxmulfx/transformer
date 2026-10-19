@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.LinearAlgebra.Eigenspace.Basic
+
+/-!
 # Saddle avoidance — definitions
 
 The objects of the saddle-avoidance theorem for a map `g` of a real inner
@@ -16,12 +21,11 @@ The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
 (Lee, Panageas, Piliouras, Simchowitz, Jordan, Recht, *First-order methods
 almost always avoid strict saddle points*) and `thm:main` of arXiv:1602.04915
 (Lee, Simchowitz, Jordan, Recht, *Gradient descent only converges to
-minimizers*).  Both rest on the center-stable manifold theorem of Shub; the
+minimizers*). Both rest on the center-stable manifold theorem of Shub; the
 proof here replaces it by a cone estimate (`SaddleAvoidance/Cone.lean`).
 -/
 
-import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.LinearAlgebra.Eigenspace.Basic
+@[expose] public section
 
 open Metric
 
@@ -71,7 +75,7 @@ noncomputable def gradientStep (f : E → ℝ) (η : ℝ) (x : E) : E :=
   x - η • gradient f x
 
 /-- `z` is a strict saddle of `f`: a critical point at which the derivative of
-the gradient, the Hessian, has a negative eigenvalue.  Definition
+the gradient, the Hessian, has a negative eigenvalue. Definition
 `def:strict_saddle` of arXiv:1710.07406 asks for `λ_min(∇²f(z)) < 0`, which is
 the same for the symmetric Hessian of a `C²` function; as there, local maxima
 with a nondegenerate negative direction count as strict saddles. -/

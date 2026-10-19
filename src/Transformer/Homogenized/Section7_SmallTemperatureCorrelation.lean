@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_TemperatureFirstOrder
+public import Transformer.Homogenized.Section7_MeanOverlapCentroidNoise
+
+/-!
 # Uniform small-temperature control of the actual Gaussian correlations
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -20,8 +25,7 @@ then at most `4 σV² m (m + 20 β² d² σA⁴)`. This preserves the
 small-mean dependence needed beyond a uniform `O(1/d)` noise bound.
 -/
 
-import Transformer.Homogenized.Section7_TemperatureFirstOrder
-import Transformer.Homogenized.Section7_MeanOverlapCentroidNoise
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Set
 open scoped BigOperators NNReal

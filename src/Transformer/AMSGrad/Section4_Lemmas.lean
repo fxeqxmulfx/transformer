@@ -1,5 +1,11 @@
-import Transformer.AMSGrad.Section1_TheoremA
-import Mathlib.Analysis.SpecificLimits.Normed
+module
+
+public import Transformer.AMSGrad.Section1_TheoremA
+public import Mathlib.Analysis.SpecificLimits.Normed
+
+/-! ### The run stays in `F` and `v̂_t` stays below `G²` -/
+
+@[expose] public section
 
 /-
 # AMSGrad — Lemmas 4.2 and 4.3
@@ -26,8 +32,6 @@ namespace Transformer
 namespace AMSGrad
 
 variable {d : ℕ}
-
-/-! ### The run stays in `F` and `v̂_t` stays below `G²` -/
 
 /-- Every state of the run carries a point of `F`. -/
 theorem state_x_mem {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineConvex S F D G)

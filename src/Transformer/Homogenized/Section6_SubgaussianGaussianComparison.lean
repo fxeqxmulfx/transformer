@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_GaussianComparisonKernel
+public import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
+
+/-!
 # Actual subgaussian square-exponential comparison
 
 Source: arXiv:2604.01978v1, §6.3, `lem:Hanson_wright`.
@@ -14,8 +19,7 @@ The real-valued estimate is derived after the extended-real bound
 has proved finiteness of the original expectation.
 -/
 
-import Transformer.Homogenized.Section6_GaussianComparisonKernel
-import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal ENNReal

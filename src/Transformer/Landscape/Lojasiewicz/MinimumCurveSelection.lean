@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.MinimumCurveLifting
+public import Transformer.Landscape.Lojasiewicz.AnalyticComparisonArcs
+
+/-!
 # Reducing the general gradient inequality to analytic curve selection
 
 Compact energy-level minima have critical accumulation points. One-sided
@@ -8,8 +13,7 @@ are proved. Selection itself remains an explicit geometric hypothesis
 for the general analytic input of Appendix D.1 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.MinimumCurveLifting
-import Transformer.Landscape.Lojasiewicz.AnalyticComparisonArcs
+@[expose] public section
 
 open Filter Set
 

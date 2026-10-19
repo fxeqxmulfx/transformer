@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_AutonomousPhases
+public import Transformer.Interpolation.Section1_ControlPartitions
+
+/-!
 # Appending one actual autonomous phase at a prescribed horizon
 
 ArXiv:2411.04551v3, §1 and §3.2, the composition of control phases.
@@ -15,8 +20,7 @@ concern the previously proved prefix or the specified original phase;
 none presupposes well-posedness of the newly joined controls.
 -/
 
-import Transformer.Interpolation.Section1_AutonomousPhases
-import Transformer.Interpolation.Section1_ControlPartitions
+@[expose] public section
 
 open Real MeasureTheory Set
 

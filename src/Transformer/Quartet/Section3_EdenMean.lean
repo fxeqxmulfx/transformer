@@ -1,11 +1,16 @@
-/-
+module
+
+public import Transformer.Quartet.Section3_EdenTwoValued
+public import Transformer.Quartet.Section3_EdenCoins
+
+/-!
 # The mean of `MS-EDEN` over the coins, on a two-valued rotation
 
 Support for the counterexample of `Transformer.Quartet.Section3_EdenBias` to the Corollary of
-§3.3.  On a two-valued rotation (`Section3_EdenTwoValued`) the first entry of the inverse
+§3.3. On a two-valued rotation (`Section3_EdenTwoValued`) the first entry of the inverse
 rotation of `MS-EDEN` is a constant times the sum over the `2^k` groups of the stochastic
 rounding of the corrected scale `256 S` (`rhtInv_msEden_twoValued`), and that sum integrates to
-`2^k · 256 S` by the unbiasedness of `SR` (`integral_sum_sr`).  What is left is arithmetic in
+`2^k · 256 S` by the unbiasedness of `SR` (`integral_sum_sr`). What is left is arithmetic in
 `P`, `R`, `q_P`, `q_R` (`integral_rhtInv_msEden_twoValued`), and for the rotation of
 `e₀ + e₁/10` (`Section3_EdenPair`) it collapses to `101/102`, provided the roundings are those
 of `integral_rhtInv_msEden_edenPair_case`.
@@ -13,8 +18,7 @@ of `integral_rhtInv_msEden_edenPair_case`.
 Source: arXiv:2601.22813v2, §3.1 (`SR` is unbiased), §3.3 and Algorithm 1.
 -/
 
-import Transformer.Quartet.Section3_EdenTwoValued
-import Transformer.Quartet.Section3_EdenCoins
+@[expose] public section
 
 open MeasureTheory
 

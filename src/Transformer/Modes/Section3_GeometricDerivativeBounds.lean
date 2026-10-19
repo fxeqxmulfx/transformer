@@ -1,4 +1,6 @@
-import Transformer.Modes.Section3_CubicProductDerivativeBounds
+module
+
+public import Transformer.Modes.Section3_CubicProductDerivativeBounds
 
 /-!
 # Derivative bounds for the two finite geometric factors
@@ -15,6 +17,8 @@ base modulus bound `r ≤ 1` leaves `r^(n-7)` in the first sum and
 bound `n²`, rather than its smaller triangular cardinality. These
 constants suffice for the literal normalized frequency scale.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

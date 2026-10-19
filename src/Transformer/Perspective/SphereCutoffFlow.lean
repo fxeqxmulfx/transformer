@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perspective.SphereCutoff
+public import Transformer.Perspective.CircleEnergyHessian
+public import Transformer.Landscape.SaddleAvoidance.OpenAvoidance
+public import Transformer.Landscape.SaddleAvoidance.Necessary
+
+/-!
 # Saddle avoidance for block-rescaled gradient flows on a shell of tuples
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -6,14 +13,14 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 Let `g` be `C²` and the scales `w_i > 0` be `C¹` on the tuples of nonzero vectors, and
 consider the trajectories of `ẏ = M(y) ∇g(y)`, `M(y)` the block scaling by `w(y)`, that
-stay in an open shell `R`.  This is the flow `ẏ = -M(y) ∇(-g)(y)`, and off the zero
-vectors `M` is `C¹` and symmetric positive definite (`blockScale_isSymmetric_pos`).  For
+stay in an open shell `R`. This is the flow `ẏ = -M(y) ∇(-g)(y)`, and off the zero
+vectors `M` is `C¹` and symmetric positive definite (`blockScale_isSymmetric_pos`). For
 a cut-off `χ` equal to `1` on `R` with compact support away from the zero vectors, the
 trajectories in `R` stay in the support of `χ`, a compact set, so saddle avoidance on
-an open set (`Landscape.SaddleAvoidance.ae_not_tendsto_metricGradient_of_isCompact`) applies.  A
+an open set (`Landscape.SaddleAvoidance.ae_not_tendsto_metricGradient_of_isCompact`) applies. A
 critical point `z ∈ R` of `g` with a direction of positive second derivative is a
 strict saddle of `-χ g`, which is `C²` on the whole space, and so of `-g`, equal to it
-near `z`.  Hence for almost every start, no trajectory in `R` converges to such a point
+near `z`. Hence for almost every start, no trajectory in `R` converges to such a point
 (`ae_not_tendsto_of_cutoff`).
 
 Source: arXiv:2312.10794v5, Appendix A, `l:nosaddleconv`: the set of initial conditions
@@ -22,10 +29,7 @@ the center-stable manifold theorem, applied to the time-one map as in `SaddleAvo
 for `thm: boumal` of §6.
 -/
 
-import Transformer.Perspective.SphereCutoff
-import Transformer.Perspective.CircleEnergyHessian
-import Transformer.Landscape.SaddleAvoidance.OpenAvoidance
-import Transformer.Landscape.SaddleAvoidance.Necessary
+@[expose] public section
 
 open Filter MeasureTheory
 open scoped Topology

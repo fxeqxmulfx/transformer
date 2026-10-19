@@ -1,17 +1,23 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.FlowAvoidance
+public import Transformer.Landscape.SaddleAvoidance.FlowConvergence
+public import Transformer.Landscape.SaddleAvoidance.Landscape
+
+/-!
 # Saddle avoidance — gradient flows find a global minimizer
 
 Let `f` be `C²` on a finite-dimensional real inner product space with a
-bounded `L`-Lipschitz gradient.  If every critical point of `f` is a global
+bounded `L`-Lipschitz gradient. If every critical point of `f` is a global
 minimizer or a strict saddle, `f` satisfies the Łojasiewicz inequality with
 an exponent `0 ≤ a < 1` at each, and almost every trajectory of the gradient
 flow has a limit point up to translations leaving `f` invariant, then almost
 every trajectory converges to a global minimizer
 (`ae_exists_tendsto_gradientFlow_isMinOn`), as for gradient descent
-(`ae_exists_tendsto_isMinOn`).  The trajectory converges
+(`ae_exists_tendsto_isMinOn`). The trajectory converges
 (`exists_tendsto_gradientFlow_of_isLojasiewiczAt`) to a critical point
 (`gradient_eq_zero_of_tendsto_gradientFlow`), almost surely not a strict
-saddle (`ae_not_tendsto_gradientFlow_of_isStrictSaddle`).  When the
+saddle (`ae_not_tendsto_gradientFlow_of_isStrictSaddle`). When the
 translations span `E`, every curve has a limit point up to their integer
 combinations (`exists_frequently_norm_add_sub_lt_of_span_eq_top`) and the
 gradient is bounded and Lipschitz, so these hypotheses can be dropped
@@ -23,9 +29,7 @@ makes every trajectory converge, `l:nosaddleconv` excludes the strict
 saddles, and a landscape lemma, there `lem: yury.lemma`, leaves the optima.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.FlowAvoidance
-import Transformer.Landscape.SaddleAvoidance.FlowConvergence
-import Transformer.Landscape.SaddleAvoidance.Landscape
+@[expose] public section
 
 open Filter Set MeasureTheory
 open scoped Topology NNReal
@@ -37,7 +41,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
 
 /-- **The limit of a gradient flow is a critical point**: if `x` solves
 `ẋ = -∇f(x)` from time `0` on and converges to `w`, where `∇f` is continuous,
-then `∇f(w) = 0`.  Over `[t, t + 1]` the trajectory moves by nearly `-∇f(w)`
+then `∇f(w) = 0`. Over `[t, t + 1]` the trajectory moves by nearly `-∇f(w)`
 for large `t`, and by nearly `0`. -/
 theorem gradient_eq_zero_of_tendsto_gradientFlow {x : ℝ → E}
     (hx : ∀ t, 0 ≤ t → HasDerivAt x (-gradient f (x t)) t) {w : E}
@@ -122,7 +126,7 @@ theorem ae_exists_tendsto_gradientFlow_isMinOn (μ : Measure E) [μ.IsAddHaarMea
 
 /-- **The gradient flow of a periodic function almost surely converges to a
 global minimizer** if every critical point is a global minimizer or a strict
-saddle and the Łojasiewicz inequality holds at each.  The translations `Λ`
+saddle and the Łojasiewicz inequality holds at each. The translations `Λ`
 leaving `f` invariant span `E`, so the gradient is bounded and Lipschitz, and
 every trajectory has a limit point up to their integer combinations. -/
 theorem ae_exists_tendsto_gradientFlow_isMinOn_of_span_eq_top (μ : Measure E)
@@ -150,7 +154,7 @@ example : let f := fun x : ℝ => (1 / 2 : ℝ) * ‖x‖ ^ 2
 
 /-- The hypotheses of the other theorems above hold for `f(x) = 1 - cos x` on
 the line with Lebesgue measure, `L = M = 1`, and the period `2π` or its integer
-multiples.  The even multiples of `π` are global minimizers, the odd ones strict
+multiples. The even multiples of `π` are global minimizers, the odd ones strict
 saddles, and the Hessian `±1` is injective at both, so the Łojasiewicz
 inequality holds with `a = 1/2`. -/
 example : let f := fun x : ℝ => 1 - Real.cos x

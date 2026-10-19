@@ -1,5 +1,8 @@
-import Transformer.Modes.Section3_DerivativeMomentBounds
-import Transformer.Modes.Section3_GaussianDensity
+module
+
+public import Transformer.Modes.Section3_DerivativeMomentBounds
+public import Transformer.Modes.Section3_GaussianDensity
+
 /-!
 # Integrable exterior tails of normalized-sum derivatives
 
@@ -17,6 +20,7 @@ the exterior gap is explicit; the source's inconsistent block scaling
 is replaced by the actual normalized-sum characteristic formula.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

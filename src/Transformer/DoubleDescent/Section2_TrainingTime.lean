@@ -1,8 +1,10 @@
-import Transformer.DoubleDescent.Section2_EffectiveComplexity
-import Mathlib.Tactic.Ring
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Mul
+module
+
+public import Transformer.DoubleDescent.Section2_EffectiveComplexity
+public import Mathlib.Tactic.Ring
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!
 # Training time does not by itself order EMC
@@ -13,6 +15,8 @@ increases EMC. This needs a training-improvement assumption, supplied by
 one-parameter squared-loss model gives a counterexample without that premise.
 All data points have the same target one; the model predicts its parameter.
 -/
+
+@[expose] public section
 
 namespace Transformer.DoubleDescent
 

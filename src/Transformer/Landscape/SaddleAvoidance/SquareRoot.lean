@@ -1,16 +1,21 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.LinearFlow
+public import Mathlib.Analysis.InnerProductSpace.Spectrum
+
+/-!
 # Saddle avoidance — a positive definite map times a symmetric map
 
 Let `P` be a symmetric positive definite map and `H` a symmetric map of a
 finite-dimensional real inner product space.
 
-* `P` has a symmetric invertible square root `S` (`exists_sqrt`).  In an
+* `P` has a symmetric invertible square root `S` (`exists_sqrt`). In an
   orthonormal basis `b` of eigenvectors of `P` with eigenvalues `λ_i > 0`, the
   maps `D_c v = Σ_i c_i ⟪b_i, v⟫ b_i` are symmetric, multiply `b_i` by `c_i`
   and compose as the products of their coefficients; `P = D_λ`, and
   `S = D_{√λ}` has the inverse `D_{1/√λ}`.
 * `S⁻¹ (P H) S = S H S` is symmetric (`isSymmetric_comp_comp`), so `P H` is
-  conjugate to a symmetric map.  A negative eigenvalue `λ` of `H`, with
+  conjugate to a symmetric map. A negative eigenvalue `λ` of `H`, with
   eigenvector `v`, gives one of `P H`
   (`exists_conj_isSymmetric_and_hasEigenvalue_neg`): for `w = S⁻¹ v`,
   `⟪S H S w, w⟫ = ⟪H v, v⟫ = λ ‖v‖² < 0`, so the symmetric `S H S` has a
@@ -24,8 +29,7 @@ symmetric map, with an eigenvalue greater than one
 (`Landscape.SaddleAvoidance.MetricFlow`).
 -/
 
-import Transformer.Landscape.SaddleAvoidance.LinearFlow
-import Mathlib.Analysis.InnerProductSpace.Spectrum
+@[expose] public section
 
 open NormedSpace
 

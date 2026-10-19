@@ -2,6 +2,12 @@ module
 
 public import Mathlib.Probability.ConditionalProbability
 
+/-!
+# Conditional probability
+
+Real-valued conditional probabilities and probability-measure instances.
+-/
+
 public section
 
 open MeasureTheory

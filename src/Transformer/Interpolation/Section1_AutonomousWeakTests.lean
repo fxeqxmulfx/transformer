@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_TestModulus
+public import Transformer.Interpolation.Section1_CompactTests
+public import Transformer.Interpolation.Section3_RidgeLaw
+
+/-!
 # Continuous tests and moving linear tests for autonomous weak solutions
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb` and `eq: vf`.
@@ -17,9 +23,7 @@ It requires continuity of the field, including across the ReLU kink,
 and does not require differentiating the field or the flow in space.
 -/
 
-import Transformer.Interpolation.Section1_TestModulus
-import Transformer.Interpolation.Section1_CompactTests
-import Transformer.Interpolation.Section3_RidgeLaw
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

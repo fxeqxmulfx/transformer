@@ -1,18 +1,22 @@
-/-
+module
+
+public import Transformer.Modes.Section3_ErrorThirdT
+public import Transformer.Modes.Section2_WidthIntegral
+
+/-!
 # The number of modes of a Gaussian KDE — `lem:error-3` on `T'`
 
-For the standard slow window, `T' ⊆ T` eventually.  The inner Edgeworth
+For the standard slow window, `T' ⊆ T` eventually. The inner Edgeworth
 majorant on `T` therefore holds on `T'`, and the shifted Gaussian rate
-integrates to a constant there.  In particular the absolute correction is
+integrates to a constant there. In particular the absolute correction is
 `O(√β)`, including regimes where `n/β^{5/2}` is unbounded.
 The argument bounds the nonnegative integral itself, so it also proves
-finiteness.  A third-moment bound of `O(β^{-1/2})` is proved first; its
+finiteness. A third-moment bound of `O(β^{-1/2})` is proved first; its
 uniform boundedness is enough for the rate stated by the source.
 Source: arXiv:2412.09080v3, §3.1, `lem:error-3`, second display.
 -/
 
-import Transformer.Modes.Section3_ErrorThirdT
-import Transformer.Modes.Section2_WidthIntegral
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped ENNReal
@@ -21,7 +25,7 @@ namespace Transformer.Modes
 
 /-- On `T'` the third-moment prefactor of `ψ` is `O(β^{-1/2})`.
 The moment estimate restricts from `T`; the arithmetic rate uses the
-smaller radius of `T'` itself.  This also covers the case of empty `T'`.
+smaller radius of `T'` itself. This also covers the case of empty `T'`.
 Source: arXiv:2412.09080v3, §3.1, `lem:eta`, `lem:error-3`, and
 §3.2, `eq:rate` with `s = 2`. -/
 theorem eventually_eta_three_scaled_le_T' {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ}
@@ -76,8 +80,8 @@ theorem eventually_eta_three_scaled_bounded_T' {c : ℝ} {N : ℕ → ℕ} {B : 
 example := eventually_eta_three_scaled_bounded_T' isRegime_succ
 
 /-- The same Gaussian width majorant as for the proxy controls the inner
-Edgeworth integral on `T'`.  Source: arXiv:2412.09080v3, §3.1, proof of
-`lem:error-3`.  The cutoff, absolute value and Gaussian shift are retained. -/
+Edgeworth integral on `T'`. Source: arXiv:2412.09080v3, §3.1, proof of
+`lem:error-3`. The cutoff, absolute value and Gaussian shift are retained. -/
 theorem eventually_psi_inner_le_T' {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ}
     (hreg : IsRegime c N B) :
     ∃ C κ K : ℝ, 0 < C ∧ 0 < κ ∧ 0 ≤ K ∧

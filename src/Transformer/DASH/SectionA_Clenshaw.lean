@@ -1,4 +1,8 @@
-/-
+module
+
+public import Mathlib.Tactic
+
+/-!
 # DASH — Clenshaw evaluation over rings
 
 arXiv:2602.02016v2, Appendix A, `algorithm:cbshv-clenshaw-scalar`
@@ -6,7 +10,7 @@ and `algorithm:cbshv-clenshaw-matrix`. The generic ring includes
 both real numbers and noncommutative square matrices.
 -/
 
-import Mathlib.Tactic
+@[expose] public section
 
 namespace Transformer.DASH
 

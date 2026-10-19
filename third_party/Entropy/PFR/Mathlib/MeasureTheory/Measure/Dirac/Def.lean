@@ -2,6 +2,12 @@ module
 
 public import Mathlib.MeasureTheory.Measure.Dirac.Def
 
+/-!
+# Dirac probabilities
+
+Real-valued evaluations of point-mass measures.
+-/
+
 public section
 
 namespace MeasureTheory.Measure

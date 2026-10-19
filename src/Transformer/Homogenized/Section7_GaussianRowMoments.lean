@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianCoordinateMoments
+public import Mathlib.MeasureTheory.Integral.Prod
+
+/-!
 # Genuine Gaussian row laws and bilinear query moments
 
 ArXiv:2604.01978v1, §2.3.3, assumption (G),
@@ -20,8 +25,7 @@ This includes zero rows and empty dimensions; no inverse covariance
 or nonzero-variance assumption enters the conditional law.
 -/
 
-import Transformer.Homogenized.Section7_GaussianCoordinateMoments
-import Mathlib.MeasureTheory.Integral.Prod
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

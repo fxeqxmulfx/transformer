@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.BallEnergyQueryValues
+public import Transformer.Landscape.Lojasiewicz.AnalyticFiberPolynomialValues
+
+/-!
 # Constructing prepared gradient-query patches from analyticity
 
 The degree, real polynomial coefficients, and coverage neighborhood are
@@ -6,8 +11,7 @@ constructed for every nonconstant analytic energy germ.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.BallEnergyQueryValues
-import Transformer.Landscape.Lojasiewicz.AnalyticFiberPolynomialValues
+@[expose] public section
 
 noncomputable section
 

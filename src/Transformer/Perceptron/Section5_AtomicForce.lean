@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_KernelClusterBounds
+public import Transformer.Perceptron.Section5_InteractionIntegral
+public import Transformer.Perceptron.Section3_ClusterCounterexample
+
+/-!
 # Interaction-force increments on an actual atomic cluster
 
 ArXiv:2601.21366v2, §5.4, `eq:T-in-bound` and `eq:T-out-bound`.
@@ -14,9 +20,7 @@ is the actual cluster mass. No Hessian or second derivative of
 the activation is assumed in this interaction-only estimate.
 -/
 
-import Transformer.Perceptron.Section5_KernelClusterBounds
-import Transformer.Perceptron.Section5_InteractionIntegral
-import Transformer.Perceptron.Section3_ClusterCounterexample
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Interpolation.Settling
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
+public import Mathlib.Analysis.InnerProductSpace.Continuous
+
+/-!
 # Measure-to-measure interpolation — the separation field
 
 The frozen perceptron of Step 2 of the proof of the interpolation theorem of
@@ -14,11 +22,7 @@ the geodesic with the chordal distance on the sphere.
 Source: arXiv:2411.04551v3, §4, Step 2.
 -/
 
-import Transformer.Interpolation.Settling
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
-import Mathlib.Analysis.InnerProductSpace.Continuous
+@[expose] public section
 
 open Real
 
@@ -37,7 +41,7 @@ noncomputable def separationField (γ ω : EucSpace d) (ε : ℝ) (z : EucSpace 
   max (inner (𝕜 := ℝ) γ z - ε / 2) 0 • proj d z ω
 
 /-- **Fencing.**  A function that starts `≤ 0` and, wherever it is positive,
-grows at most linearly in itself, stays `≤ 0`.  It is compared with the
+grows at most linearly in itself, stays `≤ 0`. It is compared with the
 barriers `δ e^{(|C|+1) t}`, `δ > 0`, by
 `image_le_of_deriv_right_lt_deriv_boundary`. -/
 theorem nonpos_of_deriv_le_mul (φ φ' : ℝ → ℝ) (C T : ℝ)

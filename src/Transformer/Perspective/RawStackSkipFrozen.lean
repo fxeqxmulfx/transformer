@@ -1,20 +1,25 @@
-/-
+module
+
+public import Transformer.Perspective.RawStackFrozen
+public import Transformer.Perspective.RawStackSkipDamp
+
+/-!
 # Freezing survives one skip
 
 **Not a statement of any paper.**  `rawStack_frozen` of
 `Perspective.RawStackFrozen` freezes the directions of a stack whose gains
 exceed `1 + c` and whose blocks output at most `M`, and it needs every update to
-be `x_{k+1,i} = λ_{k,i} x_{k,i} + g_{k,i}`.  The first update of modded-nanogpt
+be `x_{k+1,i} = λ_{k,i} x_{k,i} + g_{k,i}`. The first update of modded-nanogpt
 not of that form is at layer `6`, which adds the snapshot `cache[3]` of the end
 of layer `3` instead of a block output (`x = x + skip_gate_out * cache[3]`,
 `train_gpt.py`, `GPT.forward`), and the question this module answers is what
 one skip costs.
 
-It costs one term.  A stack with a single skip — `hx` at every depth but `K`,
+It costs one term. A stack with a single skip — `hx` at every depth but `K`,
 `hxK` at `K`, reading depth `m ≤ K` with a gate `s_i` per token — is, in the
 gauge, the skip-free gauge stack plus one fixed vector
 `(s_i Λ_{m,i} / Λ_{K+1,i}) G_{m,i}` from depth `K + 1` onwards
-(`ungauged_eq_gaugeStack_of_le`, `ungauged_eq_gaugeStack_add_skip`).  So the
+(`ungauged_eq_gaugeStack_of_le`, `ungauged_eq_gaugeStack_add_skip`). So the
 displacement `M / c` of `norm_gaugeStack_sub_le` gains one summand, damped by
 the depth the skip jumps, and every direction of the stack stays within
 
@@ -27,19 +32,18 @@ Of the record this covers the updates of the first ten layers, with their one
 skip, once the skip's own step, of gain `1`, is merged with the MLP step after
 it into one step of gain `resid_lambdas_mlp[6]` and gate
 `resid_lambdas_mlp[6] * skip_gate_out`; the state between the two is the one
-depth it does not see.  The last layer and the step after the loop add
+depth it does not see. The last layer and the step after the loop add
 `cache[0]`, `cache[7]`, `cache[9]` and `cache[3]` under per-token coefficients
 (`GPT.forward_mudd`), several in one step; `Perspective.RawStackDenseFrozen`
 takes them, and the layer-`6` skip as a step of its own, and says what `M` is
-for the record.  A skip at every layer is out of reach here:
+for the record. A skip at every layer is out of reach here:
 `le_abs_skipWeight` of `Perspective.RawStackSkipDamp` shows their rescaled
 gates do not shrink with depth, so the sum this proof takes over one skip does
 not converge over infinitely many; `rawStack_frozen_dense` takes any finite
 number of skips, at the cost of a product.
 -/
 
-import Transformer.Perspective.RawStackFrozen
-import Transformer.Perspective.RawStackSkipDamp
+@[expose] public section
 
 open scoped BigOperators
 
@@ -105,7 +109,7 @@ every depth the direction of token `i` is within
 
   `2 (M/c + |s_i| (1+c)^{-(K+1-m)} (‖x_{0,i}‖ + M/c)) / ‖x_{0,i}‖`
 
-of the direction it started with.  The skip costs exactly one term, damped by
+of the direction it started with. The skip costs exactly one term, damped by
 the gain accumulated over the depth it jumps (`abs_skipWeight_le`), and at
 `s = 0` the bound is `rawStack_frozen`'s.
 

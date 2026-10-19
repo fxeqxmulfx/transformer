@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainUnequalRatio
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainUnequalRatio
 
 /-!
 # Generated unequal-pair relative-growth tails on actual native paths
@@ -27,6 +29,8 @@ from appendix C's assigned coupled norm/GD and learned GPTMini.
 The quantitative CE floor is loose; the start is qualitative rather
 than a measured or floating-point grokking clock certificate.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

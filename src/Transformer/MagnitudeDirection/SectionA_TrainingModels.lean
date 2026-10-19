@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.SectionA_StatefulAlgorithm
+public import Transformer.MagnitudeDirection.SectionA_TrainingGuard
+
+/-!
 # The corrected fused MD training recurrence
 
 User-requested extension of arXiv:2606.25971v2, §3.1 and Appendix A,
@@ -8,8 +13,7 @@ weights with a nonsingular gradient step. Repair only the representation.
 An accepted valid paper step is retained including its raw gains.
 -/
 
-import Transformer.MagnitudeDirection.SectionA_StatefulAlgorithm
-import Transformer.MagnitudeDirection.SectionA_TrainingGuard
+@[expose] public section
 
 noncomputable section
 

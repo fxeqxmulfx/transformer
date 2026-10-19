@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.FirstStep
+module
+
+public import Transformer.Grokking.AdamW.FirstStep
 
 /-!
 # Actual effective-loss derivative under the native first update
@@ -20,6 +22,8 @@ also changes effective epsilon; it cannot generally be identified with
 a uniform time rescaling. No GPTMini loss, floating-point kernel or
 later nonzero-moment state is identified with this scalar calculation.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

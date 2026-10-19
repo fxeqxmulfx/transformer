@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Causal.Section5_SimpleRows
+public import Transformer.Causal.Section5_LocalStability
+public import Transformer.Causal.Section5_ConditionalVolume
+
+/-!
 # Almost-everywhere convergence to one original frozen center
 
 ArXiv:2411.04990v2, §5 and Appendix A, the single-center
@@ -21,9 +27,7 @@ from almost every original initialization. No separation
 condition or two-center parameter reduction is needed here.
 -/
 
-import Transformer.Causal.Section5_SimpleRows
-import Transformer.Causal.Section5_LocalStability
-import Transformer.Causal.Section5_ConditionalVolume
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 

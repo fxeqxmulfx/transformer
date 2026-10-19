@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainPairMass
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainPairContraction
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainPairMass
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainPairContraction
 
 /-!
 # Actual current native relative-asymmetry contraction
@@ -22,6 +24,8 @@ positive limiting mass, loss convergence, Gen/Mem allocation or a
 learned-transformer detector. Uniform decoupled native decay differs
 from appendix C's coupled-cost GD and preserved GPTMini settings.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

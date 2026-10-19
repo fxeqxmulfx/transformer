@@ -1,14 +1,19 @@
-/-
+module
+
+public import Transformer.Perceptron.Geodesic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+
+/-!
 # Perceptrons and attention's mean-field landscape — a strict SOPD critical point
 
 The statements of arXiv:2601.21366v2 are about *strictly SOPD* Wasserstein
-critical points, and a hypothesis nothing satisfies is worth nothing.  This
+critical points, and a hypothesis nothing satisfies is worth nothing. This
 file exhibits one, proved from the definitions: for the one-neuron perceptron
 
   `ω = e_{j₀}`,  `a_{j₀} = -x`,  `φ(s) = s`,  `σ ≡ 1/2`,
 
 the Dirac mass `δ_x` is a strictly SOPD critical point of `E_{β,ϑ}` with
-`κ = 1/2`, in every dimension.  The reason is visible in one line: along the
+`κ = 1/2`, in every dimension. The reason is visible in one line: along the
 geodesic issued from `x` with velocity `ξ(x)`, the interaction energy is
 constant — `e^β/(2β)` for any Dirac — and the potential is `-cos(t‖ξ(x)‖)`, by
 `inner_sphereExp_smul`.
@@ -20,8 +25,7 @@ which is what those statements ask of it.
 Source: arXiv:2601.21366v2, §2.2–2.3.
 -/
 
-import Transformer.Perceptron.Geodesic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

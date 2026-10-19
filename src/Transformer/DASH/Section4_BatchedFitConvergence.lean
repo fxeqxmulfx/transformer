@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.DASH.Section4_BatchedClenshaw
+public import Transformer.DASH.SectionA_MatrixFitConvergence
+public import Mathlib.Order.Filter.Finite
+
+/-!
 # DASH — fitted coefficients and convergence of the batched power solver
 
 arXiv:2602.02016v2, §4 and Appendix A. Each block has its own
@@ -7,9 +13,7 @@ For a finite bucket, one sufficiently large degree works for every
 block and every sample count greater than that degree.
 -/
 
-import Transformer.DASH.Section4_BatchedClenshaw
-import Transformer.DASH.SectionA_MatrixFitConvergence
-import Mathlib.Order.Filter.Finite
+@[expose] public section
 
 open scoped Matrix Topology
 open Filter

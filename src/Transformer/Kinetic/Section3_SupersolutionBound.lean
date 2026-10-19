@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_ForcingBound
+
+/-!
 # Duhamel's supersolution of a pair
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 3, `eq:est-Glaub-2nd`:
@@ -8,7 +12,7 @@ for the pair `n < M`, Duhamel's supersolution `V_x = T Σ_c σ_c Ĝ^c_x(T)` is a
 power of the ratio (`ratioPow_sq_mul_le`), and the sum over `M < c < x` one `1/γ`.
 -/
 
-import Transformer.Kinetic.Section3_ForcingBound
+@[expose] public section
 
 open Real
 

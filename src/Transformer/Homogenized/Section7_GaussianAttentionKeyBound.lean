@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_SoftmaxContractions
+public import Transformer.Homogenized.Section7_GaussianAttentionKeyTrace
+
+/-!
 # The pointwise bound on the actual original Gaussian key Hessian trace
 
 ArXiv:2604.01978v1, §7, `eq:estimate_bound_g`.
@@ -23,8 +28,7 @@ right are the original squared query norms. Their Gaussian expectations
 are evaluated after the original softmax factors are normalized.
 -/
 
-import Transformer.Homogenized.Section7_SoftmaxContractions
-import Transformer.Homogenized.Section7_GaussianAttentionKeyTrace
+@[expose] public section
 
 open scoped BigOperators
 
@@ -148,4 +152,3 @@ example : ∃ (z : EuclideanSpace ℝ (GaussianFeatureIdx 2 2))
   · simp [z]
 
 end Transformer.Homogenized
-

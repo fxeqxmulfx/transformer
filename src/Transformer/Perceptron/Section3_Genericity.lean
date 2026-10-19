@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Hyperplane
+public import Mathlib.Analysis.Analytic.Uniqueness
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+
+/-!
 # Generic parameter sets for a fixed stationary measure
 
 In `thm: any.d` (ii), §3.1 of arXiv:2601.21366v2, the probability measure
@@ -13,9 +19,7 @@ stated conclusion for each fixed `μ`; it does not assert that a common
 parameter set works for all measures, or that every field has finitely many zeros.
 -/
 
-import Transformer.Perceptron.Hyperplane
-import Mathlib.Analysis.Analytic.Uniqueness
-import Mathlib.MeasureTheory.Integral.Bochner.Set
+@[expose] public section
 
 open Real MeasureTheory Filter Topology
 open scoped BigOperators

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Kinetic.Section6_ModeProfile
+public import Transformer.Kinetic.Section1_RecencyEndpoint
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+
+/-!
 # Kinetic theory for Transformers — the original Hardy change of variable
 
 The proof of arXiv:2605.09213v1, §6, `prop:Bessel`, uses
@@ -9,9 +15,7 @@ positive-position domain. In particular `Y>0` for `0<σ₀<σ`, including
 negative bias, as required by the original Bessel square roots.
 -/
 
-import Transformer.Kinetic.Section6_ModeProfile
-import Transformer.Kinetic.Section1_RecencyEndpoint
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+@[expose] public section
 
 open Real Set
 

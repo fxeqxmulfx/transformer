@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AMSGrad.Section4_TrainingModels
+
+/-!
 # AMSGrad — the coordinate Lyapunov inequality
 
 Training extension of arXiv:1904.03590v4, Algorithm 1 and §4.
@@ -7,7 +11,7 @@ momentum balance. It does not assume alignment of momentum with the
 current gradient, and it needs no gradient-replacement safeguard.
 -/
 
-import Transformer.AMSGrad.Section4_TrainingModels
+@[expose] public section
 
 namespace Transformer.AMSGrad
 

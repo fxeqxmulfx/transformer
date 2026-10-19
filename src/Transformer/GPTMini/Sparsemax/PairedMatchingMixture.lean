@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Sparsemax.PairedMatchingHead
-import Transformer.GPTMini.Sparsemax.AtomicMatchingOptimality
-import Mathlib.Topology.Order.Compact
+module
+
+public import Transformer.GPTMini.Sparsemax.PairedMatchingHead
+public import Transformer.GPTMini.Sparsemax.AtomicMatchingOptimality
+public import Mathlib.Topology.Order.Compact
 
 /-!
 # Convex training and global prices for contextual matching heads
@@ -16,6 +18,8 @@ convex output criteria remain convex. Continuity gives attained global head
 pricing. A certified price bound transfers to every feasible mixture. None
 of these statements supplies an efficient globally optimal Q/K search.
 -/
+
+@[expose] public section
 
 noncomputable section
 

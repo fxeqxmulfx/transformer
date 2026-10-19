@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Causal.Section5_RowRepulsion
+public import Transformer.Causal.Section5_RepellerDetector
+public import Transformer.Causal.Section5_OneCenterField
+
+/-!
 # Actual frozen rows with simple limiting critical angles
 
 ArXiv:2411.04990v2, §5 and Appendix A, the scalar convergence
@@ -20,9 +26,7 @@ The explicit inputs concern the actual limiting force only;
 no convergence or null-set assertion is included in them.
 -/
 
-import Transformer.Causal.Section5_RowRepulsion
-import Transformer.Causal.Section5_RepellerDetector
-import Transformer.Causal.Section5_OneCenterField
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 

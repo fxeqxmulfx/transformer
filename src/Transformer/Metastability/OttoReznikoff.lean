@@ -1,4 +1,14 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+public import Transformer.Perspective.Section6_Circle
+public import Transformer.Metastability.Basic
+public import Transformer.Metastability.MainTheorem
+public import Transformer.Metastability.AngularEnergy
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+
+/-!
 # Metastability — Otto–Reznikoff framework (§3.1 of 2410.06833v1)
 
 Equations and statements covered, here and in the modules named:
@@ -29,13 +39,7 @@ Equations and statements covered, here and in the modules named:
 derivation uses and refutes the form that leaves the two scalar fields free.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
-import Transformer.Perspective.Section6_Circle
-import Transformer.Metastability.Basic
-import Transformer.Metastability.MainTheorem
-import Transformer.Metastability.AngularEnergy
-import Mathlib.Analysis.Calculus.Gradient.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -85,20 +89,20 @@ the gradient flow `u` of `eq: otto.gf` and any `v` with `v(t) ∈ 𝒩` satisfyi
 gives, for all `t ≥ 0`,
 
   `‖u(t) - v(t)‖ + √(𝖤(u(t)) - 𝖤(v(t)))
-        ≤ e^{-(1-ε) t} √(𝖤(u(0)) - 𝖤(v(0))) + C_ε δ`.   (`eq: otto.1`)
+        ≤ e^{-(1-ε) t} √(𝖤(u(0)) - 𝖤(v(0))) + C_ε δ`. (`eq: otto.1`)
 
 At `t = 0` the two square roots cancel and what is left is
 `‖u(0) - v(0)‖ ≤ C_ε δ` for every initial datum, which no constant can give.
 The counterexample is as honest as the setting allows: `M = ℝ`,
 `𝖤(x) = x²/2 ≥ 0` smooth, `∇𝖤(x) = x` its actual gradient, `𝒩 = {0}`,
-`δ = 1`.  (H1) holds with `v = 0` and equality on both sides, (H2) is
+`δ = 1`. (H1) holds with `v = 0` and equality on both sides, (H2) is
 trivial on a point, the flow is `u(t) = u₀ e^{-t}`, and `v ≡ 0` satisfies
 `eq: first.inequality` at every time; `u₀ = C_ε + 1` then breaks `eq: otto.1`.
 
 By (H1) `‖u - v‖ ≤ √(2(𝖤(u) - 𝖤(v)))`, so a version with a constant factor in
 front of the first term would survive this example; which factor the original
 has is not recoverable from this source, and the statement is therefore
-refuted rather than repaired.  `eq: otto.2` falls with it on the same flow
+refuted rather than repaired. `eq: otto.2` falls with it on the same flow
 (`s` small, `t - s ≈ 2`, `u₀` large) and is not stated separately.
 
 Source: arXiv:2410.06833v1, §3.1, `thm: Otto result`, `eq: otto.1`, with

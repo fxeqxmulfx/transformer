@@ -1,15 +1,20 @@
-/-
+module
+
+public import Transformer.Perceptron.Analytic
+public import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional
+
+/-!
 # Perceptrons and attention's mean-field landscape — hyperplane sections
 
 `rem: ext` (i) of arXiv:2601.21366v2 puts the biases `b_j` back inside the
 perceptron and asks that at least one of the hyperplanes
 `{x : a_j · x + b_j = 0}` meet `𝕊^{d-1}` in more than one point,
-"equivalently, `|b_j| < ‖a_j‖`".  That equivalence is what this file proves;
+"equivalently, `|b_j| < ‖a_j‖`". That equivalence is what this file proves;
 the extension itself is `Bias.lean`.
 
 **What the source says and what is carried here.**
 
-* `a ≠ 0` is added to the source's parenthesis.  `{x : a·x + b = 0}` is a
+* `a ≠ 0` is added to the source's parenthesis. `{x : a·x + b = 0}` is a
   hyperplane only then, and at `a = b = 0` it is the whole space — meeting the
   sphere in more than one point while `|b| < ‖a‖` reads `0 < 0`, so the
   equivalence is false as written without it.
@@ -24,8 +29,7 @@ the extension itself is `Bias.lean`.
 Source: arXiv:2601.21366v2, `rem: ext` (i).
 -/
 
-import Transformer.Perceptron.Analytic
-import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional
+@[expose] public section
 
 open scoped BigOperators
 open Real

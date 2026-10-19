@@ -1,22 +1,26 @@
-/-
+module
+
+public import Transformer.CRASP.ExtensionsPieces
+
+/-!
 # The conjunction of a list, and the test that a position carries a letter
 
-Support for arXiv:2506.16055v3, Appendix B.2.  `Form.any` (in
+Support for arXiv:2506.16055v3, Appendix B.2. `Form.any` (in
 `Transformer.CRASP.ExtensionsPieces`) is the disjunction of a list of
 formulas; `Form.all` here is its dual, and both keep the fragment: a Boolean
 combination of past-only formulas is past-only, and of `PNP`-free formulas is
 `PNP`-free.
 
 `Form.onStr` is `⋁_{a ∈ Σ} Q_a`, true exactly at the positions that carry a
-letter.  The logic judges strings at their last position but its semantics is
+letter. The logic judges strings at their last position but its semantics is
 defined at every `i`, and a formula that is to describe a *string-indexed*
-quantity has to say where the string stops.  The alphabet is finite — it is a
+quantity has to say where the string stops. The alphabet is finite — it is a
 vocabulary in the paper — which is what lets the test be written at depth `0`
 without a Parikh predicate; over an infinite alphabet no depth-`0` `PNP`-free
 formula can express it, since any one of them mentions finitely many letters.
 -/
 
-import Transformer.CRASP.ExtensionsPieces
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_SphericalCancellation
+
+/-!
 # Actual mixed spherical Hessian after global cancellation
 
 ArXiv:2601.21366v2, §5.3, the analytic alternative in
@@ -16,7 +20,7 @@ Thus the conditional strict-SOPD inequality has a proved derivative
 input before the localization argument uses it.
 -/
 
-import Transformer.Perceptron.Section5_SphericalCancellation
+@[expose] public section
 
 open Real MeasureTheory
 

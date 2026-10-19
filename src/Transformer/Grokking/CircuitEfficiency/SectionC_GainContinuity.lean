@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainGradientLimits
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainGradientLimits
 
 /-!
 # Continuous actual gained-CE parameter families
@@ -30,6 +32,8 @@ The parameter family has no accuracy or optimizer-success field.
 Neither positive physical factors nor finite optimizer clock limits
 are required by these complete CE and shared clipping calculations.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

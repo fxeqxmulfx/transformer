@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Magma.Section5_Paths
+public import Transformer.Magma.Section2_BlockExpansion
+
+/-!
 # The sampled normalized SGD transition
 
 Formalization of arXiv:2602.15322v1, Section 5's update and Appendix A.4.
@@ -7,8 +12,7 @@ The auxiliary state may contain momentum, EMA scales, and a clock. It is
 updated densely before masking the parameter displacement.
 -/
 
-import Transformer.Magma.Section5_Paths
-import Transformer.Magma.Section2_BlockExpansion
+@[expose] public section
 
 open scoped BigOperators
 

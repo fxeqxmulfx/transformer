@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdMassDissipation
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdMassDissipation
 
 /-!
 # Actual critical collapse with legal first beta zero
@@ -29,6 +31,8 @@ needs its own weighted dissipation argument. Appendix C's assigned
 coupled norm-cost GD differs; learned stochastic/numerical GPTMini,
 relative Gen/Mem selection and thermodynamic size scaling are separate.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

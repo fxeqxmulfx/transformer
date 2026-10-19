@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_SpacetimeTests
+
+/-!
 # C1 spacetime tests for time-dependent weak transport
 
 ArXiv:2411.04551v3, §1, `eq: ips` and `eq: cauchy.pb`.
@@ -14,7 +18,7 @@ particle paths. These statements also cover clocks with only C1
 regularity, as required for rank-one nonlinear mean attention in §3.2.
 -/
 
-import Transformer.Interpolation.Section1_SpacetimeTests
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal

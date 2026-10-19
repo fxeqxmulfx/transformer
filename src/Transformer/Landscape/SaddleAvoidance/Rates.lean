@@ -1,23 +1,28 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Decay
+public import Transformer.Landscape.SaddleAvoidance.RateEstimates
+
+/-!
 # Saddle avoidance — rates of convergence of gradient descent
 
 Along an orbit `x_k` of gradient descent converging to `w`, where the
 Łojasiewicz inequality holds with `0 < a < 1`, `r_k = f x_k - f w ≥ 0`
 eventually drops by `c r_k ^ (2a)` per step and `‖x_k - w‖ ≤ K r_k ^ (1 - a)`
-(`exists_rate_estimates_of_isLojasiewiczAt`).  By `Landscape.SaddleAvoidance.Decay`,
+(`exists_rate_estimates_of_isLojasiewiczAt`). By `Landscape.SaddleAvoidance.Decay`,
 `f x_k - f w` and `‖x_k - w‖` decay geometrically for `a ≤ 1/2`
 (`exists_le_mul_pow_of_isLojasiewiczAt`), and as `(k + 1) ^ (-1/(2a - 1))` and
 `(k + 1) ^ (-(1 - a)/(2a - 1))` for `1/2 < a < 1`
 (`exists_le_mul_rpow_of_isLojasiewiczAt`).
 
 These theorems use the `L`-Lipschitz gradient and `η L < 1` only through the
-decrease `f x_{k+1} ≤ f x_k - η (1 - η L) ‖∇f(x_k)‖²` (`iterate_succ_le_sub`).  Their
+decrease `f x_{k+1} ≤ f x_k - η (1 - η L) ‖∇f(x_k)‖²` (`iterate_succ_le_sub`). Their
 `_of_le_sub` forms ask instead that every step lower `f` by at least
 `η κ ‖∇f(x_k)‖²` for some `κ > 0`, and that `f` be continuous at `w`
 (`exists_rate_estimates_of_isLojasiewiczAt_of_le_sub` in
 `Landscape.SaddleAvoidance.RateEstimates`, `exists_le_mul_pow_of_isLojasiewiczAt_of_le_sub`,
 `exists_le_mul_rpow_of_isLojasiewiczAt_of_le_sub`); the present ones follow with
-`κ = 1 - η L`.  `Landscape.SaddleAvoidance.OrbitRates` gives them under a Hessian bound
+`κ = 1 - η L`. `Landscape.SaddleAvoidance.OrbitRates` gives them under a Hessian bound
 on the segments of the orbit.
 
 This is the rate part of `prop:rates` of arXiv:1602.04915: at a limit `x*`
@@ -27,8 +32,7 @@ Here the limit need not be a local minimizer, `a ≤ 1/2` may be `0` or negative
 and the values of `f` decay too.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Decay
-import Transformer.Landscape.SaddleAvoidance.RateEstimates
+@[expose] public section
 
 open Filter Metric
 open scoped Topology NNReal
@@ -55,7 +59,7 @@ theorem exists_rate_estimates_of_isLojasiewiczAt (hf : Differentiable ℝ f)
   exists_rate_estimates_of_isLojasiewiczAt_of_le_sub hη (by linarith) ha0 ha1 hw
     hf.continuous.continuousAt (iterate_succ_le_sub hf hL η x) hx
 
-/-- **Geometric rate from a decrease along the orbit** (`0 < a ≤ 1/2`).  Under the
+/-- **Geometric rate from a decrease along the orbit** (`0 < a ≤ 1/2`). Under the
 hypotheses of `exists_rate_estimates_of_isLojasiewiczAt_of_le_sub`, with an exponent
 `a ≤ 1/2` instead, for some `C` and `0 < b < 1`, `f x_k - f w ≤ C b ^ k` and
 `‖x_k - w‖ ≤ C b ^ k` for every `k`. -/
@@ -92,10 +96,10 @@ theorem exists_le_mul_pow_of_isLojasiewiczAt_of_le_sub (hη : 0 < η) (hκ : 0 <
   · rw [Real.rpow_pow_comm hq0.le]
     exact (hC k).2
 
-/-- **Geometric rate** (`prop:rates` of arXiv:1602.04915, `0 < a ≤ 1/2`).  Let
+/-- **Geometric rate** (`prop:rates` of arXiv:1602.04915, `0 < a ≤ 1/2`). Let
 `f` have an `L`-Lipschitz gradient, `0 < η`, `η L < 1`, and let an orbit of
 gradient descent converge to `w`, where the Łojasiewicz inequality holds with
-an exponent `a ≤ 1/2`.  Then for some `C` and `0 < b < 1`,
+an exponent `a ≤ 1/2`. Then for some `C` and `0 < b < 1`,
 `f x_k - f w ≤ C b ^ k` and `‖x_k - w‖ ≤ C b ^ k` for every `k`. -/
 theorem exists_le_mul_pow_of_isLojasiewiczAt (hf : Differentiable ℝ f)
     (hL : LipschitzWith L (gradient f)) (hη : 0 < η) (hηL : η * L < 1) (ha : a ≤ 1 / 2)
@@ -106,7 +110,7 @@ theorem exists_le_mul_pow_of_isLojasiewiczAt (hf : Differentiable ℝ f)
   exists_le_mul_pow_of_isLojasiewiczAt_of_le_sub hη (by linarith) ha hw
     hf.continuous.continuousAt (iterate_succ_le_sub hf hL η x) hx
 
-/-- **Polynomial rate from a decrease along the orbit** (`1/2 < a < 1`).  Under the
+/-- **Polynomial rate from a decrease along the orbit** (`1/2 < a < 1`). Under the
 hypotheses of `exists_le_mul_pow_of_isLojasiewiczAt_of_le_sub`, with an exponent
 `1/2 < a < 1` instead, for some `C` and every `k`,
 `f x_k - f w ≤ C (k + 1) ^ (-1/(2a - 1))` and
@@ -141,7 +145,7 @@ theorem exists_le_mul_rpow_of_isLojasiewiczAt_of_le_sub (hη : 0 < η) (hκ : 0 
 Under the hypotheses of `exists_le_mul_pow_of_isLojasiewiczAt`, with an
 exponent `1/2 < a < 1` instead, for some `C` and every `k`,
 `f x_k - f w ≤ C (k + 1) ^ (-1/(2a - 1))` and
-`‖x_k - w‖ ≤ C (k + 1) ^ (-(1 - a)/(2a - 1))`.  The source's bound
+`‖x_k - w‖ ≤ C (k + 1) ^ (-(1 - a)/(2a - 1))`. The source's bound
 `C / k^((1-a)/(2a-1))` for `k ≥ 1` follows, since `k + 1 > k`. -/
 theorem exists_le_mul_rpow_of_isLojasiewiczAt (hf : Differentiable ℝ f)
     (hL : LipschitzWith L (gradient f)) (hη : 0 < η) (hηL : η * L < 1) (ha : 1 / 2 < a)

@@ -1,18 +1,22 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_ConvexAttention
+public import Transformer.Convexifying.Section3_ScalarCounterexample
+
+/-!
 # A shared simplex matrix is not a reparameterization of self-attention
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §3.1,
 `sec:convex_attention`, equations (3)–(4).
 
 The displayed fact `∀U, ∃W ∈ Δ, softmax(U)X = WX` is true for a single
-score matrix.  The subsequent training objective uses one trainable `W`
+score matrix. The subsequent training objective uses one trainable `W`
 shared by every sample, whereas the original score matrix depends on the
-sample.  The two-sample example below proves that the shared-`W` model is
+sample. The two-sample example below proves that the shared-`W` model is
 not a reparameterization of the self-attention operation.
 -/
 
-import Transformer.Convexifying.Section3_ConvexAttention
-import Transformer.Convexifying.Section3_ScalarCounterexample
+@[expose] public section
 
 open scoped BigOperators
 
@@ -42,7 +46,7 @@ theorem second_sample_output :
     separatingData, Fin.sum_univ_two, Real.exp_zero]
 
 /-- A single row-stochastic matrix cannot reproduce self-attention on both
-data samples, even with unit query, key, and value weights.  Thus the move
+data samples, even with unit query, key, and value weights. Thus the move
 from equation (3) to a shared simplex weight in equation (4) changes the
 model class; it is not an exact reformulation of the original network.
 Source: arXiv:2211.11052v1, §3.1, paragraph before `eq:simplex_regression`. -/

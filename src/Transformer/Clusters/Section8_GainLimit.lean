@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Clusters.Section8_EnergyGrowth
+public import Transformer.Clusters.Section8_LimitPrinciples
+public import Transformer.Clusters.Section8_PathBounds
+public import Mathlib.Topology.UniformSpace.HeineCantor
+
+/-!
 # The maximal attention gain tends to zero
 
 ArXiv:2305.05465v6, §8.1, Step 2 of `t:Idcase11` and `e:derivativenorm`.
@@ -14,10 +21,7 @@ attention operator, even a singular one. Injectivity will be used to
 make the candidate set finite in the subsequent convergence proof.
 -/
 
-import Transformer.Clusters.Section8_EnergyGrowth
-import Transformer.Clusters.Section8_LimitPrinciples
-import Transformer.Clusters.Section8_PathBounds
-import Mathlib.Topology.UniformSpace.HeineCantor
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

@@ -1,6 +1,8 @@
-import Transformer.Homogenized.Section7_WeightedConditionalOrder
-import Transformer.Homogenized.Section7_MartingaleTimeShift
-import Transformer.Homogenized.Section7_ContinuousVille
+module
+
+public import Transformer.Homogenized.Section7_WeightedConditionalOrder
+public import Transformer.Homogenized.Section7_MartingaleTimeShift
+public import Transformer.Homogenized.Section7_ContinuousVille
 
 /-!
 # The weighted supermartingale inequality on every time pair
@@ -18,6 +20,8 @@ observable. The weighted process's supermartingale inequality
 is derived from it and the sign of its actual product drift.
 The product evaluations are also integrable by the proved bounds.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory
 namespace Transformer.Homogenized

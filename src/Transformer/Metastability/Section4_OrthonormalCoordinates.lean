@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_SphericalNet
+
+/-!
 # Actual coordinates and projection of the previous orthonormal frame
 
 ArXiv:2410.06833v1, §4, `prop: concentration unif`, and
@@ -17,7 +21,7 @@ also keeps these actual constructions measurable in the previous
 frame and the new sample, as required for product initialization.
 -/
 
-import Transformer.Metastability.Section4_SphericalNet
+@[expose] public section
 
 open Real
 open scoped BigOperators

@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_BoundedOtherMean
+
+/-!
 # The emergence of clusters in self-attention dynamics — `l:boundedother`, the escape
 
 The heart of the proof of `l:boundedother` (§7 of arXiv:2305.05465v6), on the
-scalar curves of `e:Idnonresca`.  With `y = x_{i₀} e^t` and
+scalar curves of `e:Idnonresca`. With `y = x_{i₀} e^t` and
 `a_k(t) = x_k(t) e^{-t}`, the equation of the bounded token is exactly
 `ẏ = e^{2t} g_{a(t)}(y) + y` (`hasDerivAt_rescaled`), `g` the softmax mean.
 
 If `a(t) → γ` and `g_γ(θ) > 0`, then `y` is eventually below `θ`
 (`eventually_rescaled_lt`): once `y ≥ θ`, monotonicity of `g` gives
 `ẏ ≥ (δ/4) e^{2t}`, so `y ≥ θ + (δ/8)(e^{2t} - e^{2t₁})` and `x_{i₀} = y e^{-t}`
-is unbounded.  With the mirror image, `y → θ₀` (`tendsto_rescaled`).
+is unbounded. With the mirror image, `y → θ₀` (`tendsto_rescaled`).
 
 **What the source says and what is carried here.**  The source's argument
 runs through `x_{i₀} → 0` and `|y| = o(e^t)`; the barrier above contradicts
@@ -18,7 +22,7 @@ the boundedness of `x_{i₀}` directly, and the limit `x_{i₀} → 0` is not us
 Source: arXiv:2305.05465v6, proof of `l:boundedother`.
 -/
 
-import Transformer.Clusters.Section7_BoundedOtherMean
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

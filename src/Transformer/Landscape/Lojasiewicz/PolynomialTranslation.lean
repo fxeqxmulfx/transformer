@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.PolynomialFamily
+public import Mathlib.Algebra.Polynomial.Taylor
+
+/-!
 # Coefficient formulas for polynomial translation
 
 Finite binomial formulas describe the coefficients after translation in
@@ -6,8 +11,7 @@ the polynomial variable. The translation retains the monic degree, so
 the coefficients completely reconstruct the translated polynomial.
 -/
 
-import Transformer.Landscape.Lojasiewicz.PolynomialFamily
-import Mathlib.Algebra.Polynomial.Taylor
+@[expose] public section
 
 open Polynomial Finset
 open scoped BigOperators

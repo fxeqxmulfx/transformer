@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.Basic
+module
+
+public import Transformer.GPTMini.Semantics.Basic
 
 /-!
 # Softmax detects the presence of an encoded prefix feature
@@ -17,6 +19,8 @@ and temperature. Future occurrences are
 masked before the test; they cannot create a past-prefix signal. The
 sign criterion applies at every finite learned temperature.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

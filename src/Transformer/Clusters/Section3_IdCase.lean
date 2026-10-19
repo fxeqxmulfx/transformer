@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section3_Rescaled
+public import Transformer.Clusters.Section8_AttentionRoot
+public import Mathlib.Analysis.Convex.Combination
+
+/-!
 # The emergence of clusters in self-attention dynamics — the case `V = I_d`
 
 §3 of arXiv:2305.05465v6 continued: the rescaled dynamics at `V = I_d`,
@@ -8,7 +14,7 @@ their exact identity-root form, and continuity of the actual solutions.
 
 * At `V = I_d` the flow is the scalar `e^t` (`expTime_one_apply`), so the
   exponent of `e:Rres` becomes `e^{2t}⟨Az_i,Az_j⟩` for the square root
-  `A = (QᵀK)^{1/2}` of `eq: A`, and the drift becomes `z_j - z_i`.  That is
+  `A = (QᵀK)^{1/2}` of `eq: A`, and the drift becomes `z_j - z_i`. That is
   `e:dynIdzi`, and `rescaledDynamics_one_iff` proves it is the same equation
   as `e:Rres` at `V = 1` — the source introduces it as a "shorthand
   notation", and this is what makes that literally true.
@@ -28,9 +34,7 @@ their exact identity-root form, and continuity of the actual solutions.
 Source: arXiv:2305.05465v6, `e:dynIdzi`, `eq: A`, `t:Idcase11int`.
 -/
 
-import Transformer.Clusters.Section3_Rescaled
-import Transformer.Clusters.Section8_AttentionRoot
-import Mathlib.Analysis.Convex.Combination
+@[expose] public section
 
 open scoped BigOperators
 open Real

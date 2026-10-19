@@ -1,19 +1,23 @@
-/-
+module
+
+public import Transformer.ALM.FloatWalk
+
+/-!
 # The exactness the walk needs is a property of the grid
 
 `Transformer.ALM.FloatTie` bounds the merge test from both sides, but the two
-bounds are not equally grounded.  Soundness (`fp_tie_no_false_positive`) asks
-only `2δ < 1` and holds for any rounding.  Completeness
+bounds are not equally grounded. Soundness (`fp_tie_no_false_positive`) asks
+only `2δ < 1` and holds for any rounding. Completeness
 (`fp_tie_no_false_negative`) asks that the score routine return the *exact*
 dot product, and the only routine in the development that does is `exactScore`,
-which is the dot product.  So the completeness half was, in effect, a statement
+which is the dot product. So the completeness half was, in effect, a statement
 about real arithmetic again, with the justification — "binary64 is exact on
 integers below `2^53`" — left in prose.
 
-The justification is a theorem, and it is not about binary64.  What matters is
+The justification is a theorem, and it is not about binary64. What matters is
 that the routine returns a value *on the integer grid* and is accurate to
 better than a unit: two integers within a unit of each other are equal, so such
-a routine cannot be inexact on lattice data.  `fp_exact_of_grid` says this, and
+a routine cannot be inexact on lattice data. `fp_exact_of_grid` says this, and
 it discharges the `hexact` hypothesis of the whole completeness chain from a
 condition an implementation can be checked against.
 
@@ -25,7 +29,7 @@ machine is used.
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 280-283.
 -/
 
-import Transformer.ALM.FloatWalk
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -54,7 +58,7 @@ theorem fp_eval_exact_of_grid (S : FPScore) (hδ : S.δ < 1) (q k : ℝ × ℝ) 
 
 /-- **So on lattice data exactness is free.**  Integer keys at an integer query
 score integers, so a grid-valued routine accurate to better than a unit agrees
-with the dot product on every key in range.  This is the hypothesis
+with the dot product on every key in range. This is the hypothesis
 `fp_tie_no_false_negative` and `fp_walk_collects` ask for, now supplied by a
 property of the implementation rather than assumed of it. -/
 theorem fp_exact_of_grid (S : FPScore) (K : ℕ → ℝ) (hK : ∀ j, ∃ z : ℤ, K j = (z : ℝ))
@@ -72,7 +76,7 @@ theorem fp_exact_of_grid (S : FPScore) (K : ℕ → ℝ) (hK : ∀ j, ∃ z : �
 
 /-- **Rounding to the nearest integer.**  A score routine that is wrong on
 almost every real input — its error reaches half a unit — and still meets the
-grid condition.  It witnesses that `fp_exact_of_grid` is about the grid and not
+grid condition. It witnesses that `fp_exact_of_grid` is about the grid and not
 about exact arithmetic in disguise. -/
 noncomputable def roundScore : FPScore where
   eval := fun q k => ((round (dot q k) : ℤ) : ℝ)

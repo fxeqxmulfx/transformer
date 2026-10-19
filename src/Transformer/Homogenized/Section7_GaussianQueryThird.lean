@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianQueryCovariance
+
+/-!
 # Cubic norm-deviation moments for arbitrary actual Gaussian queries
 
 ArXiv:2604.01978v1, §7.3, `lem:delta_method`, the third-order
@@ -19,7 +23,7 @@ of absolute deviations in the global correlation Taylor remainder.
 No Gaussian law is attributed to the product of two matrix factors.
 -/
 
-import Transformer.Homogenized.Section7_GaussianQueryCovariance
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

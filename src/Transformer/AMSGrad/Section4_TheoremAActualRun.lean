@@ -1,6 +1,8 @@
-import Transformer.AMSGrad.Section4_TheoremAActualMoments
+module
 
-/-
+public import Transformer.AMSGrad.Section4_TheoremAActualMoments
+
+/-!
 # AMSGrad — iterates of the alternating run
 
 For the concrete setup from `Section4_TheoremAActualMoments`, every step up to
@@ -10,6 +12,8 @@ scalar weight is `√t/100`.
 
 Source: arXiv:1904.03590v4, §1, Algorithm 1; §3, Lemma 3.1.
 -/
+
+@[expose] public section
 
 open Finset
 namespace Transformer.AMSGrad

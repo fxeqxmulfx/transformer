@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.CountSpline
+module
+
+public import Transformer.GPTMini.Semantics.CountSpline
 
 /-!
 # Realize the homogeneous count decoder in the original FFN matrices
@@ -16,6 +18,8 @@ contribute to the result. EOS, tied embedding choices, prenorm margins
 and the full autoregressive integer function remain separate obligations.
 No assertion about joint parameter convexity or AdamW is made here.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

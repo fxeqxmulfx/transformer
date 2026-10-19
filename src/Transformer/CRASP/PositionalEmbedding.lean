@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Positional
+
+/-!
 # `TL[◁#]` inside `TL[◁#]^pos`
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -7,13 +11,13 @@ and `Y` added, so a formula of `TL[◁#]` is already one of `TL[◁#]^pos` — a
 of both fragments `TL[◁#, MOD]` and `TL[◁#, Y]` — at the same depth.
 
 `Form` carries more than `TL[◁#]`: the future count `▷#` and the Parikh
-numerical predicates have no counterpart in `FormP`.  The embedding is
+numerical predicates have no counterpart in `FormP`. The embedding is
 therefore stated for past-only, PNP-free formulas, as the existence of a
 positional formula of the same depth that uses neither `MOD` nor `Y` and holds
 at the same positions.
 -/
 
-import Transformer.CRASP.Positional
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

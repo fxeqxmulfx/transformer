@@ -1,32 +1,36 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.TimeOne
+public import Transformer.Landscape.SaddleAvoidance.Symmetrizable
+public import Transformer.Landscape.SaddleAvoidance.SquareRoot
+
+/-!
 # Saddle avoidance — the time-one map of `ẋ = -G(x) ∇f(x)`
 
 Let `f` be a `C²` function and `G` a `C¹` field of linear maps on a
 finite-dimensional real inner product space such that `G ∇f` is
-`L`-Lipschitz and bounded by `M`.  Then `-G ∇f` is a flow field
+`L`-Lipschitz and bounded by `M`. Then `-G ∇f` is a flow field
 (`isFlowField_neg_metricGradient`) whose flow from time `0`
 (`metricGradientFlow`) exists for all times: where `G(x)` is symmetric
 positive definite, the gradient flow of `f` in the metric `⟪G(x)⁻¹ u, v⟫`.
 As for `gradientFlow` (`Landscape.SaddleAvoidance.TimeOne`), for `t ≥ 0` the time-`t`
 map is `C¹` (`contDiff_metricGradientFlow`) with an invertible derivative
-(`det_fderiv_metricGradientFlow_ne_zero`).  A critical point `z` is fixed
+(`det_fderiv_metricGradientFlow_ne_zero`). A critical point `z` is fixed
 (`metricGradientFlow_eq_self`); there the derivative of `G ∇f` is
 `G(z) ∇²f(z)`, the term `DG(z)[·] ∇f(z)` vanishing
 (`fderiv_metricGradient_of_gradient_eq_zero`), and the time-`t` map has the
 derivative `exp (-t G(z) ∇²f(z))`
 (`hasFDerivAt_metricGradientFlow_of_gradient_eq_zero`).
 
-`G(z) ∇²f(z)` need not be symmetric.  When `G(z)` is symmetric positive
+`G(z) ∇²f(z)` need not be symmetric. When `G(z)` is symmetric positive
 definite it is conjugate to a symmetric map, and a negative eigenvalue of the
 Hessian gives it a negative eigenvalue `κ`
-(`exists_conj_isSymmetric_and_hasEigenvalue_neg`).  So a strict saddle is a
+(`exists_conj_isSymmetric_and_hasEigenvalue_neg`). So a strict saddle is a
 symmetrizable unstable fixed point of the time-one map, with the eigenvalue
 `e^{-κ} > 1` (`IsStrictSaddle.isSymmetrizableUnstable_metricGradientFlow`).
 -/
 
-import Transformer.Landscape.SaddleAvoidance.TimeOne
-import Transformer.Landscape.SaddleAvoidance.Symmetrizable
-import Transformer.Landscape.SaddleAvoidance.SquareRoot
+@[expose] public section
 
 open NormedSpace
 open scoped NNReal
@@ -41,7 +45,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
   {G : E → E →L[ℝ] E} {f : E → ℝ} {L : ℝ≥0} {M : ℝ}
 
 /-- The flow `ẋ = -G(x) ∇f(x)`: `metricGradientFlow G f t x` is the position
-at time `t` of the trajectory through `x` at time `0`.  Where `G(x)` is
+at time `t` of the trajectory through `x` at time `0`. Where `G(x)` is
 symmetric positive definite, `G(x) ∇f(x)` is the gradient of `f` in the
 metric `⟪G(x)⁻¹ u, v⟫`. -/
 noncomputable def metricGradientFlow (G : E → E →L[ℝ] E) (f : E → ℝ) (t : ℝ) (x : E) : E :=
@@ -125,8 +129,8 @@ theorem det_fderiv_metricGradientFlow_ne_zero (hf : ContDiff ℝ 2 f) (hG : Cont
     (fun _ y => hasFDerivAt_neg_metricGradient hf hG y) ht x
 
 /-- **A strict saddle is a symmetrizable unstable fixed point of the time-one
-map** when `G(z)` is symmetric positive definite.  The derivative there is
-`exp (-A)`, `A = G(z) ∇²f(z)`.  For `T` with `T A T⁻¹` symmetric,
+map** when `G(z)` is symmetric positive definite. The derivative there is
+`exp (-A)`, `A = G(z) ∇²f(z)`. For `T` with `T A T⁻¹` symmetric,
 `T exp (-A) T⁻¹ = exp (-T A T⁻¹)` is symmetric (`conj_exp`,
 `isSymmetric_exp`), and a negative eigenvalue `κ` of `A` gives the eigenvalue
 `e^{-κ} > 1` of `exp (-A)` (`hasEigenvalue_exp`). -/

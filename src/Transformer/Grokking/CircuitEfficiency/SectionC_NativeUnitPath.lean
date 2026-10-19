@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativePositiveBalance
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativeHistory
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativePositiveBalance
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativeHistory
 
 /-!
 # A nonzero balanced point is an actual retained native CE trajectory
@@ -24,6 +26,8 @@ establish attraction from the paper's one-zero-factor seeds, global
 convergence, a grokking delay, physical circuit efficiency or any
 stochastic/numerical-kernel bridge.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

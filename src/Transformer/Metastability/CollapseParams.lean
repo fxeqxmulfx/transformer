@@ -1,9 +1,14 @@
-/-
+module
+
+public import Transformer.Metastability.Basic
+public import Transformer.Metastability.CollapseScalar
+
+/-!
 # Metastability — the parameter conditions of `thm: metastability`, made explicit
 
 The three phases of `Metastability.CollapseTime` need `F_β(s) = s (1 - s) e^{-βs}` above the
 leakage level `2 n² e^{-(1-α)β}` at the two ends `s = 8ε` and `s = δ = e^{-λβ}` of the collapse,
-and the resulting time `T₁` has to be below `T₂ = (ε/n) e^{(1-α)β}`.  This file derives all of
+and the resulting time `T₁` has to be below `T₂ = (ε/n) e^{(1-α)β}`. This file derives all of
 it from the hypotheses of the paper (`eq: gamma`, `eq: lambda.3`):
 
 * `collapseRate_gt_of_gamma` — `γ(β) > 0` gives `F_β(8ε) > 2 n² e^{-(1-α)β}`;
@@ -15,8 +20,7 @@ The bounds on the collapse time itself (`T₁ ≤ 2 n e^{8εβ} + e n λ β²/(�
 `Metastability.CollapseTimeBounds`.
 -/
 
-import Transformer.Metastability.Basic
-import Transformer.Metastability.CollapseScalar
+@[expose] public section
 
 open Real Set
 

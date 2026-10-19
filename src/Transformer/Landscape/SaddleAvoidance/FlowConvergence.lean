@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.FlowTrap
+public import Transformer.Landscape.Lojasiewicz.ModulatedLength
+
+/-!
 # Saddle avoidance — gradient flows converge near a Łojasiewicz point
 
 A trajectory of the gradient flow `ẋ = -∇f(x)` that comes back at arbitrarily
@@ -6,23 +11,22 @@ late times arbitrarily close to `z`, up to translations leaving `f`
 invariant, converges when `f` satisfies the Łojasiewicz inequality at `z`
 with exponent `a < 1` (`exists_tendsto_gradientFlow_of_isLojasiewiczAt`).
 Without translations its limit is `z`
-(`tendsto_gradientFlow_of_isLojasiewiczAt`).  This is the flow analogue of
-`exists_tendsto_of_isLojasiewiczAt`, with the same proof.  `f` decreases to
-`f z` along the trajectory.  If it reaches `f z`, the gradient vanishes from
-then on and the trajectory stops (`eq_of_comp_gradientFlow_eq`).  Otherwise
+(`tendsto_gradientFlow_of_isLojasiewiczAt`). This is the flow analogue of
+`exists_tendsto_of_isLojasiewiczAt`, with the same proof. `f` decreases to
+`f z` along the trajectory. If it reaches `f z`, the gradient vanishes from
+then on and the trajectory stops (`eq_of_comp_gradientFlow_eq`). Otherwise
 a translate of the trajectory (`hasDerivAt_gradientFlow_add`), started close
 to `z` with `f` close to `f z`, is trapped (`mem_ball_of_gradientFlow`), and
 the length bound `mul_norm_sub_le_of_gradientFlow` makes it Cauchy.
 
 `Landscape.Lojasiewicz.lojasiewicz_modulated_of_local_gradient_inequality` proves
 that a bounded modulated flow of an analytic function on `ℝᴺ` converges when
-the inequality holds at every critical point.  Its last step,
+the inequality holds at every critical point. Its last step,
 `Landscape.Lojasiewicz.converges_of_displacement_bound`, turns the length bound
 into convergence here too.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.FlowTrap
-import Transformer.Landscape.Lojasiewicz.ModulatedLength
+@[expose] public section
 
 open Filter Metric Set
 open scoped Topology
@@ -60,7 +64,7 @@ theorem eq_of_comp_gradientFlow_eq (hf : Differentiable ℝ f) {t₀ : ℝ}
 /-- **A gradient flow converges near a point where the Łojasiewicz
 inequality holds.**  Let `f` be differentiable and satisfy the Łojasiewicz
 inequality at `z` with exponent `a < 1`, and let `x` solve `ẋ = -∇f(x)` from
-time `0` on.  If at arbitrarily late times `x` comes arbitrarily close to
+time `0` on. If at arbitrarily late times `x` comes arbitrarily close to
 `z` up to translations in a set `Λ` leaving `f` invariant, `x` converges. -/
 theorem exists_tendsto_gradientFlow_of_isLojasiewiczAt (hf : Differentiable ℝ f)
     (hx : ∀ t, 0 ≤ t → HasDerivAt x (-gradient f (x t)) t) {Λ : Set E}

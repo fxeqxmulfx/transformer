@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_PhaseSequenceControls
+
+/-!
 # Perceptron phases acting inside a region
 
 ArXiv:2411.04551v3, §2.2, proof of `prop: compression`: "when we act on
@@ -13,7 +17,7 @@ outside a region containing `D` inside that region. Finite sequences of
 phases in one region inherit all three properties.
 -/
 
-import Transformer.Interpolation.Section1_PhaseSequenceControls
+@[expose] public section
 
 open Real MeasureTheory Set
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_CorrelationWitness
+
+/-!
 # Corrected asymptotic gradient/Hessian correlation
 
 arXiv:2402.19449v2, Proposition 2, equation (2), Appendix H.
@@ -8,7 +12,7 @@ and positive second-moment trace H. The incorrect-class probability bound
 q must satisfy q/π_k -> 0 (for q=C/c, this is cπ_k -> infinity).
 -/
 
-import Transformer.Imbalance.Section3_CorrelationWitness
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

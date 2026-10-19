@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.PointerValues
+module
+
+public import Transformer.GPTMini.Convex.Structured.PointerValues
 
 /-!
 # Learned content and raw adjacent-binding controls
@@ -18,6 +20,8 @@ to the head. A finite learned-value decoder has strict opposite labels
 on equal-bag swapped inputs. This verifies content/binding expressivity,
 not AdamW finding the weights or original tied residual integration.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

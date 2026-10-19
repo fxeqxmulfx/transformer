@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Sublevel
+
+/-!
 # Saddle avoidance — bounds along the orbit
 
 The avoidance and convergence theorems so far ask for a bound on `‖∇²f‖` on all of
-`E`, or near a compact sublevel set.  A run of gradient descent can check a bound
+`E`, or near a compact sublevel set. A run of gradient descent can check a bound
 only along its own orbit `x_k = (gradientStep f η)^[k] x`; this file asks for it
 there.
 
 * **One step.**  If `‖∇²f‖ ≤ L` on the segment from `x` to its gradient step, the
   step lowers `f` by at least `η (1 - η L) ‖∇f(x)‖²`
   (`le_sub_of_gradientStep_of_segment`), by the descent lemma on that segment
-  (`le_add_inner_add_mul_norm_sq_of_convex`).  So along an orbit whose segments
+  (`le_add_inner_add_mul_norm_sq_of_convex`). So along an orbit whose segments
   `[x_k, x_{k+1}]` carry the bound, step `k` lowers `f` by at least
   `η (1 - η L) ‖∇f(x_k)‖²` (`iterate_succ_le_sub_of_segment`), and `f` decreases
   when `0 ≤ η` and `η L ≤ 1` (`antitone_iterate_of_segment`).
@@ -17,7 +21,7 @@ there.
   `‖∇²f(x_k)‖ ≤ L` at every `k` and converges to a strict saddle form a null set
   for every Haar measure (`measure_iterate_norm_le_tendsto_strictSaddle_eq_zero`):
   gradient descent maps these starts into themselves, so
-  `measure_inter_tendsto_strictSaddle_eq_zero` applies.  The bound is asked at the
+  `measure_inter_tendsto_strictSaddle_eq_zero` applies. The bound is asked at the
   points `x_k` only, not on the segments; on the segments it gives the same
   (`measure_segment_tendsto_strictSaddle_eq_zero`), almost surely for a law absolutely
   continuous with respect to a Haar measure (`ae_not_tendsto_strictSaddle_of_segment`).
@@ -27,7 +31,7 @@ The gradient-descent corollary in §5.1 of arXiv:1710.07406 assumes a globally
 along the orbit.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Sublevel
+@[expose] public section
 
 open Set Filter MeasureTheory InnerProductSpace
 open scoped Topology
@@ -80,7 +84,7 @@ variable [MeasurableSpace E] [BorelSpace E]
 /-- **Gradient descent almost never converges to a strict saddle along an orbit
 with the bound at its points.**  If `f` is `C²`, `0 < η` and `η L < 1`, the starts
 whose orbit has `‖∇²f(x_k)‖ ≤ L` at every `k` and converges to a strict saddle form a
-null set for every Haar measure `μ`.  These starts form a set that gradient descent
+null set for every Haar measure `μ`. These starts form a set that gradient descent
 maps into itself, on which `‖∇²f‖ ≤ L`. -/
 theorem measure_iterate_norm_le_tendsto_strictSaddle_eq_zero (μ : Measure E)
     [μ.IsAddHaarMeasure] (hf : ContDiff ℝ 2 f) (hη : 0 < η) (hηL : η * L < 1) :

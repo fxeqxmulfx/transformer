@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.TensorPointer
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorPointer
 
 /-!
 # Actual mixed compact tensor-head output
@@ -18,6 +20,8 @@ parameter assignment. This establishes tensor-level head inference,
 with residual/tied final readout, causal row-prefix selection, actual
 complete tensor likelihood and full-stack integration still separate.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

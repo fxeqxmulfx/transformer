@@ -1,8 +1,17 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.GPTMini.RoPE
+public import Transformer.GPTMini.CausalMHA
+public import Transformer.Perspective.Section1_IPS
+public import Mathlib.Topology.Algebra.Module.FiniteDimension
+public import Mathlib.Analysis.Normed.Operator.NormedSpace
+
+/-!
 # Bridge: RoPE is a relative, pair-dependent key matrix — not a depth-varying one
 
 RoPE rotates the query of the token at position `p_i` by `R(p_i)` and the key
-of the token at `p_j` by `R(p_j)`, both orthogonal.  This file bundles the
+of the token at `p_j` by `R(p_j)`, both orthogonal. This file bundles the
 rotation and reads off what that does to the score:
 
   - `ropeIsometry` bundles `GPTMini.applyRope` as a linear isometry — the
@@ -14,22 +23,17 @@ rotation and reads off what that does to the score:
     so the pair `(i, j)` sees the key matrix `R(p_j - p_i) K`.
 
 What RoPE is *not* is an instance of the time-varying `Q(t), K(t)` of
-`Perspective.transformerODE` (`eq: transformerSd.QKV`).  There `t` is the
+`Perspective.transformerODE` (`eq: transformerSd.QKV`). There `t` is the
 depth, one clock shared by every token; here `p` is a token's own position,
-different for each token and fixed in depth.  The honest reading of RoPE
+different for each token and fixed in depth. The honest reading of RoPE
 attention is a depth-constant key matrix that depends on the *pair* of tokens,
-`K_{ij} = R(p_j - p_i) K`, which none of the survey's dynamics allow.  The
+`K_{ij} = R(p_j - p_i) K`, which none of the survey's dynamics allow. The
 file used to name `ropeRotated` a `TimeParam` and claim the RoPE head is
 `transformerODE` at `Q(t) = R(t) Q`, `K(t) = R(t) K`; that identification
 conflates the two clocks and is withdrawn.
 -/
 
-import Transformer.Basic
-import Transformer.GPTMini.RoPE
-import Transformer.GPTMini.CausalMHA
-import Transformer.Perspective.Section1_IPS
-import Mathlib.Topology.Algebra.Module.FiniteDimension
-import Mathlib.Analysis.Normed.Operator.NormedSpace
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -71,7 +75,7 @@ noncomputable def ropeIsometry (d_head : ℕ) (theta t : ℝ) :
 /-- **The RoPE-rotated projections, indexed by position.**
 
 Given a constant matrix `Q : ParamMatrix d`, `p ↦ R(p) ∘ Q` is the projection
-a token at position `p` is read through.  The index is the token's position,
+a token at position `p` is read through. The index is the token's position,
 not the depth: see the module header for why this family is not the
 `Q(t)` of `Perspective.transformerODE`.
 
@@ -100,7 +104,7 @@ theorem ropeRotated_norm
 
 the score of a token at position `t` against a token at position `s` depends
 on `s - t` and not on `t` and `s` separately: the pair sees the key matrix
-`R(s - t) K`.  It is `GPTMini.applyRope_relative` read through `ropeRotated`.  Source: `reference/model.py` (`apply_rope`);
+`R(s - t) K`. It is `GPTMini.applyRope_relative` read through `ropeRotated`. Source: `reference/model.py` (`apply_rope`);
 Su et al., *RoFormer*, eq. (14). -/
 theorem rope_score_relative
     {d_head : ℕ} (Q K : ParamMatrix d_head) (theta : ℝ) (t s : ℝ)

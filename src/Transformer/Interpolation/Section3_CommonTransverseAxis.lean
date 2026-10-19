@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_MeanAxisField
+
+/-!
 # A common transverse axis for a finite family of original means
 
 ArXiv:2411.04551v3, §3.2, Step 1 of `lem: induction.barycenter`.
@@ -16,7 +20,7 @@ This alternative isolation argument retains the original non-collinearity
 hypotheses and reduces the number of attention phases needed by the proof.
 -/
 
-import Transformer.Interpolation.Section3_MeanAxisField
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology

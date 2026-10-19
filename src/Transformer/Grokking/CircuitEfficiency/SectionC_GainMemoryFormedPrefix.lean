@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryFormation
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryDelay
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryFormation
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryDelay
 
 /-!
 # Arbitrary wrong-test prefixes after true double-zero native formation
@@ -30,6 +32,8 @@ Exact reals, fixed gained tables and uniform decoupled native decay
 differ from appendix C coupled-cost GD and learned stochastic/numerical
 GPTMini. The loose positive seeds can fall outside floating-point range.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

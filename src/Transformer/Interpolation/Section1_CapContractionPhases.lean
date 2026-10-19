@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_QuantitativeCenterClocks
+
+/-!
 # Cap contractions toward distinct targets, one target at a time
 
 ArXiv:2411.04551v3, §3.2, Step 2 of selective contraction, and §5,
@@ -15,7 +19,7 @@ already within that radius stays there. The clock is the logarithmic
 one of `exists_logarithmic_center_clock`, chosen from the radius alone.
 -/
 
-import Transformer.Interpolation.Section3_QuantitativeCenterClocks
+@[expose] public section
 
 open Real MeasureTheory Set
 

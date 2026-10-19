@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.AlibiWindowCorrections
+public import Transformer.CRASP.WindowCountCells
+
+/-!
 # Logical cells for the corrected ALiBi quotient
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLCly`.
@@ -6,8 +11,7 @@ Once a profile specifies the integer corrections, the generic rounded
 quotient cells describe the actual ALiBi attention coordinate.
 -/
 
-import Transformer.CRASP.AlibiWindowCorrections
-import Transformer.CRASP.WindowCountCells
+@[expose] public section
 
 namespace Transformer.CRASP.AlibiTables
 

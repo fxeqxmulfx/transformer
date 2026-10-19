@@ -2,6 +2,12 @@ module
 
 public import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 
+/-!
+# Modifications of stochastic processes
+
+Modifications, indistinguishability and dense parameter sets for stochastic processes.
+-/
+
 @[expose] public section
 
 open MeasureTheory

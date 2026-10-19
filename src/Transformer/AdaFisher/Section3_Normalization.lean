@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section2_Fisher
+
+/-!
 # AdaFisher: normalization-layer factors and exact Fisher blocks
 
 arXiv:2405.16397v3, §3.2, Proposition 3.1, and Appendix A.2.
@@ -6,7 +10,7 @@ Scale and shift have one parameter per channel. Their exact Fisher blocks
 are channel-by-channel matrices, not channel-pair-by-channel-pair matrices.
 -/
 
-import Transformer.AdaFisher.Section2_Fisher
+@[expose] public section
 
 open scoped BigOperators Matrix
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_ExponentialMeanLog
+public import Transformer.Homogenized.Section7_MeanLogDriftBounds
+
+/-!
 # Actual exponential generator control for the original logarithmic mean
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -20,8 +25,7 @@ weighted supermartingale nor its maximal probability bound is
 introduced as a replacement stochastic hypothesis.
 -/
 
-import Transformer.Homogenized.Section7_ExponentialMeanLog
-import Transformer.Homogenized.Section7_MeanLogDriftBounds
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped NNReal

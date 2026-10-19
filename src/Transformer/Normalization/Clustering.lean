@@ -1,4 +1,16 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Normalization.Basic
+public import Transformer.Normalization.Radial
+public import Transformer.Normalization.Section3_RadialBounds
+public import Transformer.Perspective.Section3_SmallBeta
+public import Mathlib.Probability.Distributions.Gaussian.Multivariate
+public import Mathlib.Order.LiminfLimsup
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+
+/-!
 # Normalization — Asymptotic clustering (§3 of 2510.22026v2)
 
 * `Theorem thm: convergence` — its Gaussian alternative for
@@ -28,15 +40,7 @@ The gradient-flow identification the proof starts from is in
 `Landscape.Lojasiewicz.Modulated`.
 -/
 
-import Transformer.Basic
-import Transformer.Normalization.Basic
-import Transformer.Normalization.Radial
-import Transformer.Normalization.Section3_RadialBounds
-import Transformer.Perspective.Section3_SmallBeta
-import Mathlib.Probability.Distributions.Gaussian.Multivariate
-import Mathlib.Order.LiminfLimsup
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory ProbabilityTheory
@@ -81,7 +85,7 @@ cluster or have a stalling radial velocity,
 
 The initialization is read off the Gaussian sample: `θ_j(0) = x_j / ‖x_j‖` and
 `r_j(0) = ‖x_j‖`, so the hypothesis `x_j ≠ 0` — which the Gaussian satisfies
-almost surely — is carried explicitly.  The source has no `d ≥ 2`, and without
+almost surely — is carried explicitly. The source has no `d ≥ 2`, and without
 it the statement is false: `not_clusters_or_stalls_from_gaussian_one`.
 
 Not proved here.

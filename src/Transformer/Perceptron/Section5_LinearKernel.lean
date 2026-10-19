@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_DensityIdentification
+
+/-!
 # The original uniform exponential kernel on linear functions
 
 ArXiv:2601.21366v2, §5.1, `eq:FH-basic` and `lem: quadpol` (i).
@@ -19,7 +23,7 @@ coefficient is produced from the original integral and original uniform
 law, rather than placed into the density definition as an unproved input.
 -/
 
-import Transformer.Perceptron.Section5_DensityIdentification
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped ENNReal

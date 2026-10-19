@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_DiscreteVille
+public import Transformer.Homogenized.Section7_IntervalGrid
+
+/-!
 # Continuous-time Ville inequality on the original finite horizon
 
 ArXiv:2604.01978v1, §7, the maximal inequality following
@@ -15,8 +20,7 @@ theorem at a continuous stopping time is assumed.
 The continuous crossing event is also proved measurable.
 -/
 
-import Transformer.Homogenized.Section7_DiscreteVille
-import Transformer.Homogenized.Section7_IntervalGrid
+@[expose] public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal

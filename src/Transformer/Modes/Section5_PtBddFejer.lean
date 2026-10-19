@@ -1,16 +1,20 @@
-import Mathlib.Probability.Distributions.Gaussian.Real
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+module
 
-/-
+public import Mathlib.Probability.Distributions.Gaussian.Real
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+
+/-!
 # The number of modes of a Gaussian KDE — the Fejér kernel
 
 The Fejér kernel `Λ_a(w) = ∫_0^a (1 - s/a) cos(s w) ds = (1 - cos(a w)) / (a w²)` is
-nonnegative and at least `a/4` on `|w| ≤ 1/a`.  It is the test function that turns
+nonnegative and at least `a/4` on `|w| ≤ 1/a`. It is the test function that turns
 Fourier decay into a small-ball estimate (`Section5_PtBddSmallBall.lean`).
 
 Source: not a statement of arXiv:2412.09080v3; a tool for refuting its
 `eq:uniform-decay` (§5.5) for `β > 2` (`Section5_PtBddDecayFalse.lean`).
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

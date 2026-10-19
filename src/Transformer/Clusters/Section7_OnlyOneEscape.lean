@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_OnlyOneDrift
+
+/-!
 # The emergence of clusters in self-attention dynamics — bounded tokens beside an escaping one
 
 Two steps of the proof of `l:onlyone` (§7 of arXiv:2305.05465v6), on the
@@ -7,7 +11,7 @@ scalar curves of `e:Idnonresca`, once the largest token `x_M` runs off to
 
 * `eventually_le_of_bounded` — a token bounded from above ends up below any
   `ε > 0`: at a time when it sits above `ε`, `e:lowerboundxi` pushes it up at a
-  speed that grows with `x_M`, and a barrier carries it past its bound.  This is
+  speed that grows with `x_M`, and a barrier carries it past its bound. This is
   the source's "if `x_i(t) > ε` for an unbounded sequence of times then
   `x_i(t) → +∞`".
 * `frequently_lt_of_bounded` — a bounded token that stays below `-δ` is
@@ -18,7 +22,7 @@ scalar curves of `e:Idnonresca`, once the largest token `x_M` runs off to
 Source: arXiv:2305.05465v6, proof of `l:onlyone`.
 -/
 
-import Transformer.Clusters.Section7_OnlyOneDrift
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

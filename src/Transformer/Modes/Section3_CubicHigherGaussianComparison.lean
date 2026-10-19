@@ -1,4 +1,6 @@
-import Transformer.Modes.Section3_CubicHigherTaylor
+module
+
+public import Transformer.Modes.Section3_CubicHigherTaylor
 
 /-!
 # Gaussian comparison after the second and third cubic derivatives
@@ -17,6 +19,8 @@ derivative linearly, in frequency. These estimates hold for the full
 multilinear operator norms. They do not yet differentiate the Gaussian
 damping of the correction or take the normalized-sum power.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

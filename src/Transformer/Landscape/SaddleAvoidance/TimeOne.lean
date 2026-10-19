@@ -1,10 +1,16 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.LinearFlow
+public import Transformer.Landscape.SaddleAvoidance.GradientDescent
+public import Transformer.Landscape.GlobalFlow.Variational
+
+/-!
 # Saddle avoidance — the time-one map of a gradient flow
 
 Let `f` be a `C²` function on a finite-dimensional real inner product space
-whose gradient is `L`-Lipschitz and bounded by `M`.  Then `-∇f` is a flow
+whose gradient is `L`-Lipschitz and bounded by `M`. Then `-∇f` is a flow
 field (`isFlowField_neg_gradient`), and its flow from time `0`, the gradient
-flow `ẋ = -∇f(x)` (`gradientFlow`), exists for all times.  For `t ≥ 0` the
+flow `ẋ = -∇f(x)` (`gradientFlow`), exists for all times. For `t ≥ 0` the
 time-`t` map has the two properties that
 `measure_tendsto_symmetricUnstable_eq_zero` asks of a map:
 
@@ -18,7 +24,7 @@ time-`t` map has the two properties that
 A critical point `z` is fixed by the flow (`gradientFlow_eq_self`), so the
 variational equation along its trajectory is the linear equation
 `J' = -∇²f(z) J`, solved by `exp (-τ ∇²f(z))`, the derivative of the time-`t`
-map at `z` (`hasFDerivAt_gradientFlow_of_gradient_eq_zero`).  A negative
+map at `z` (`hasFDerivAt_gradientFlow_of_gradient_eq_zero`). A negative
 eigenvalue `λ` of the Hessian gives the eigenvalue `e^{-λ} > 1` of the
 derivative of the time-one map, so a strict saddle is a symmetric unstable
 fixed point of the time-one map
@@ -29,9 +35,7 @@ arXiv:2312.10794v5 takes from Shub's book: `Φ^t` is a diffeomorphism, and the
 Jacobian of a gradient field at a critical point is the Hessian.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.LinearFlow
-import Transformer.Landscape.SaddleAvoidance.GradientDescent
-import Transformer.Landscape.GlobalFlow.Variational
+@[expose] public section
 
 open NormedSpace
 open scoped NNReal
@@ -72,10 +76,10 @@ theorem gradientFlow_eq_self (hL : LipschitzWith L (gradient f))
 variable [FiniteDimensional ℝ E]
 
 /-- **A flow map has an invertible derivative.**  Let `w` be a flow field
-with a jointly continuous spatial derivative `A`, and `s ≤ t`.  The flow
+with a jointly continuous spatial derivative `A`, and `s ≤ t`. The flow
 from time `t` back to time `s` is the flow of the reversed field `-w(-τ, x)`
 from time `-t` to time `-s` (`flow_reverse`), so it is `C¹`, and it is a left
-inverse of `flow w s t` (`flow_flow`).  The derivative of `flow w s t`
+inverse of `flow w s t` (`flow_flow`). The derivative of `flow w s t`
 therefore has a left inverse, and its determinant is nonzero. -/
 theorem det_fderiv_flow_ne_zero {w : ℝ → E → E} {A : ℝ → E → E →L[ℝ] E}
     (hw : IsFlowField w L M) (hA : Continuous (Function.uncurry A))
@@ -123,7 +127,7 @@ theorem det_fderiv_gradientFlow_ne_zero (hf : ContDiff ℝ 2 f)
     (fun _ y => hasFDerivAt_neg_gradient hf y) ht x
 
 /-- **At a critical point the derivative of the time-`t` map is
-`exp (-t ∇²f(z))`**, for `t ≥ 0`.  The trajectory through `z` is constant
+`exp (-t ∇²f(z))`**, for `t ≥ 0`. The trajectory through `z` is constant
 (`gradientFlow_eq_self`), so the variational equation along it is
 `J' = -∇²f(z) J`, solved by `J τ = exp (-τ ∇²f(z))` (`hasDerivAt_exp_smul`). -/
 theorem hasFDerivAt_gradientFlow_of_gradient_eq_zero (hf : ContDiff ℝ 2 f)

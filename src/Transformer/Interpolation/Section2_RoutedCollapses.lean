@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_GenericRoutePoints
+public import Transformer.Interpolation.Section2_RouteChains
+public import Transformer.Interpolation.Section2_CollapseChains
+
+/-!
 # Collapsing balls and routing them to their targets
 
 ArXiv:2411.04551v3, §2.2, proof of `prop: compression`, Step 3, in
@@ -10,9 +16,7 @@ end points. The phases are local in the region, and the mass of each ball
 arrives up to a prescribed fraction.
 -/
 
-import Transformer.Interpolation.Section2_GenericRoutePoints
-import Transformer.Interpolation.Section2_RouteChains
-import Transformer.Interpolation.Section2_CollapseChains
+@[expose] public section
 
 open scoped ENNReal
 open Real MeasureTheory Set Filter Topology

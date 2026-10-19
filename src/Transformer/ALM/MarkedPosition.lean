@@ -1,28 +1,34 @@
-/-
+module
+
+public import Transformer.ALM.GeneralPosition
+public import Transformer.ALM.HullMark
+public import Transformer.ALM.HullMono
+
+/-!
 # General position for the keys the compiler actually emits
 
 `Transformer.ALM.GeneralPosition` names the hypothesis the hull head needs and
-discharges it — for `liftKey k = (2k, -k²)`.  The compiler does not emit that.
+discharges it — for `liftKey k = (2k, -k²)`. The compiler does not emit that.
 `Transformer.ALM.HullMark` is the key it does emit: `markKey δ k` raises the
 intercept by the recency term `δ = LATEST_ALPHA · inv_log_pos p`, and the whole
-point of that term is that it *moves the keys off the paraboloid*.  Strict
+point of that term is that it *moves the keys off the paraboloid*. Strict
 concavity is what `liftKey_not_concurrent` runs on, and a perturbation is
 exactly what can spend it.
 
 So the general-position hypothesis is not inherited, and until now it was
 carried only by `vm-rs/alm-hull/tests/differential.rs`, which samples keys and
-skips the collinear draws.  `markKey_not_concurrent` settles it by arithmetic
+skips the collinear draws. `markKey_not_concurrent` settles it by arithmetic
 instead, and says what the perturbation costs: three marked keys are concurrent
-only if `δ` spreads further than the product of the two key gaps.  On integer
+only if `δ` spreads further than the product of the two key gaps. On integer
 keys that product is at least one, and the shipped offset stays under
 `0.3/log 2 = 0.433`, so the bound holds with a factor of two to spare — the
 same margin `Transformer.ALM.HullMark` needs for a different reason.
 
 `marked_not_concurrent` is the statement over the family `Marked A s` the
-container actually holds.  `marked_breakpoints_ordered` is the stronger fact
+container actually holds. `marked_breakpoints_ordered` is the stronger fact
 beneath it: on that family the breakpoint test of `add_line` never fires at
 all, because the middle of any three marked keys is strictly ahead of both
-others at its own key.  So the erase that could drop a tied winner never runs
+others at its own key. So the erase that could drop a tied winner never runs
 on the machine's keys, and the disagreement of
 `three_collinear_keys_are_where_the_hull_head_stops_being_exact` is ruled out
 rather than sampled away.
@@ -35,9 +41,7 @@ Source: `todo3.md` §3a; `transformer_vm/graph/core.py` lines 293-319;
 `vm-rs/alm-hull/tests/differential.rs`.
 -/
 
-import Transformer.ALM.GeneralPosition
-import Transformer.ALM.HullMark
-import Transformer.ALM.HullMono
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -47,14 +51,14 @@ namespace ALM
 /-- **The perturbation cannot spend the gap.**  Writing `a = k₂ - k₁` and
 `b = k₃ - k₂`, three marked lines meeting at one abscissa would force
 `a·b·(a + b) = b(δ₁ - δ₂) - a(δ₂ - δ₃)`, whose right side is at most
-`A·(a + b)`.  With integer keys `a` and `b` are at least one, so the left side
+`A·(a + b)`. With integer keys `a` and `b` are at least one, so the left side
 is at least `a + b`, and `A < 1` closes it.
 
 This is the hypothesis `todo3.md` §3a asks for, on the keys the compiler emits
 rather than on the lift: `Transformer.ALM.GeneralPosition.liftKey_not_concurrent`
 is the case `δ = 0`, where strict concavity does the work alone.
 
-Three of the six bounds on the offsets are not needed and are not taken.  Only
+Three of the six bounds on the offsets are not needed and are not taken. Only
 the outer two keys may not be raised past `A`, and only the middle one may not
 be pushed below zero: the middle offset enters both differences with the sign
 that helps, so lowering it can only make the two lines meet further apart. -/
@@ -118,7 +122,7 @@ theorem marked_not_concurrent {A : ℝ} {s : Finset (ℝ × ℝ)} (hA : A < 1) (
 
 /-- **On the family the compiler emits, the breakpoint test never fires.**
 For three members of `Marked A s` in increasing slope, the middle one is kept:
-`interX l₁ l₂ < interX l₂ l₃`.  At its own key `k₂` the middle line is
+`interX l₁ l₂ < interX l₂ l₃`. At its own key `k₂` the middle line is
 strictly ahead of both others (`lineEval_markKey_lt`), and a line strictly
 ahead of both neighbours somewhere is ahead of them at their crossing.
 

@@ -1,5 +1,8 @@
-import Transformer.Modes.Section3_CubicPower
-import Transformer.Modes.Section3_FirstDerivativeFrequency
+module
+
+public import Transformer.Modes.Section3_CubicPower
+public import Transformer.Modes.Section3_FirstDerivativeFrequency
+
 /-!
 # Cubic Edgeworth error for the actual normalized-sum characteristic function
 
@@ -25,6 +28,7 @@ for the spatially weighted density expansion. The present statement
 controls the actual characteristic function itself without such inputs.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

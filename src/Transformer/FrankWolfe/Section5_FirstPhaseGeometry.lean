@@ -1,6 +1,8 @@
-import Transformer.FrankWolfe.Section5_Metastability
-import Mathlib.Analysis.Convex.Strict.Extreme
-import Mathlib.Analysis.InnerProductSpace.Convex
+module
+
+public import Transformer.FrankWolfe.Section5_Metastability
+public import Mathlib.Analysis.Convex.Strict.Extreme
+public import Mathlib.Analysis.InnerProductSpace.Convex
 
 /-!
 # A genuine acute segment for the first-phase clustering audit
@@ -19,6 +21,8 @@ The actual convex-hull identity and extreme-point property are proved
 for the segment itself. These facts supply genuine geometric inputs
 for checking the printed minimum-distance clustering time.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

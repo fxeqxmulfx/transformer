@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_ErrorFunction
+
+/-!
 # The homogeneous and heterogeneous quadratic Hessians
 
 arXiv:2506.12543v1, Section 3.3 and Appendix D.
@@ -7,7 +11,7 @@ depend on how the experiment samples them. The coordinate index is
 (within-block position, block number), matching Matrix.blockDiagonal.
 -/
 
-import Transformer.BatchSize.Section4_ErrorFunction
+@[expose] public section
 
 open Matrix
 open scoped BigOperators

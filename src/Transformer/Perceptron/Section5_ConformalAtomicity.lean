@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_ConformalSupport
+
+/-!
 # Original ReLU atomicity for conformal attention matrices
 
 ArXiv:2601.21366v2, §3.1, `rem: ext` (ii), §5.2–§5.3,
@@ -20,7 +24,7 @@ scalar inverse. The circle conclusion concerns actual finite support
 and its proved finite Dirac representation.
 -/
 
-import Transformer.Perceptron.Section5_ConformalSupport
+@[expose] public section
 
 open Real MeasureTheory Set
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.LinearCounts
+
+/-!
 # Counting a finite partition of the activation states
 
 arXiv:2506.16055v3, Appendix B.2, construction of the attention sums in
@@ -6,7 +10,7 @@ arXiv:2506.16055v3, Appendix B.2, construction of the attention sums in
 function of that state into a weighted past count.
 -/
 
-import Transformer.CRASP.LinearCounts
+@[expose] public section
 
 namespace Transformer.CRASP.LinearCount
 

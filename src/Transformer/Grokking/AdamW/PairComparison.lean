@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.PairEnvelope
+module
+
+public import Transformer.Grokking.AdamW.PairEnvelope
 
 /-!
 # Two retained factor-pair masses under shared current feedback
@@ -28,6 +30,8 @@ epsilon. A positive cone factor need not give a winning logit margin.
 Fixed gained tables and uniform native decay still differ from the
 source's coupled-cost GD and learned floating-point GPTMini.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.GradientEnergyImage
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+
+/-!
 # Finite neighborhoods covering all nearby noncentral energy fibers
 
 Only nonconstant germs on the central energy level need coordinate
@@ -6,8 +11,7 @@ charts. Compactness then covers entire nearby noncentral source fibers.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.GradientEnergyImage
-import Mathlib.Topology.MetricSpace.Pseudo.Defs
+@[expose] public section
 
 open Filter Set Topology
 

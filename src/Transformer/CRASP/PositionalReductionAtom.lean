@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Positional
+
+/-!
 # `TL[◁#]^pos` reduces to `TL[◁#]`: the `Y`-atoms
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -8,21 +12,21 @@ The reduction reads a string `w` over `Σ` through
 `f(w) = e^r w₁ e^{r−1} ⋯ wₙ e^{r−1}` block by block: position `i` of `w`
 stands for the positions `r·i + 1, …, r·i + r` of `f(w)`, and the translation
 `T_ρ⟦φ⟧` of `Transformer.CRASP.PositionalReduction` simulates `φ` at
-`r·i + ρ`.  A `Y`-atom `Y^c α` there looks at position `r·i + ρ − c`, which
+`r·i + ρ`. A `Y`-atom `Y^c α` there looks at position `r·i + ρ − c`, which
 carries `wᵢ` when `ρ − c = 1` and `e` otherwise, and which is congruent to
-`r + ρ − c` modulo every modulus dividing `r`.  So `FormP.atomTr`, its
+`r + ρ − c` modulo every modulus dividing `r`. So `FormP.atomTr`, its
 translation, is `Q_{wᵢ}` or a constant, and costs no depth.
 
 **The block size.**  The paper takes `r = M(Y + 1)`, for `M` the least common
-multiple of the moduli and `Y` the `Y`-depth, which gives `r ≥ c + 1`.  The
+multiple of the moduli and `Y` the `Y`-depth, which gives `r ≥ c + 1`. The
 translation also reads the first block `e^r` at its end `ρ = r`, where
 `Y^c Q_e` holds, and `T_r⟦Y^c Q_e⟧ = ⊥` exactly when `r − c = 1`: that takes
-`r ≥ c + 2`.  `FormP.reach` bounds `c + 2` over the `Y`-atoms, and `s + c + 2`
+`r ≥ c + 2`. `FormP.reach` bounds `c + 2` over the `Y`-atoms, and `s + c + 2`
 over `Y^c MOD_0^s`, which compares with `s` rather than reducing modulo `0`;
 `FormP.period` is a common multiple of the positive moduli.
 -/
 
-import Transformer.CRASP.Positional
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -110,7 +114,7 @@ end
 /-- **The translation of a `Y`-atom** `T_ρ⟦Y^c α⟧` (Appendix F, proof of
 `lem:tlclpos_reduction`): position `r·i + ρ − c` of `f(w)` carries `wᵢ` when
 `ρ − c = 1` and `e` otherwise, and is congruent to `r + ρ − c` modulo every
-modulus dividing `r`.  `atomTr r ρ c φ` translates `Y^c φ`, so a `Y` is peeled
+modulus dividing `r`. `atomTr r ρ c φ` translates `Y^c φ`, so a `Y` is peeled
 off by raising `c`; what is not a `Y`-atom goes to `⊥`. -/
 def FormP.atomTr (r ρ : ℕ) : ℕ → FormP (Option σ) → Form σ
   | c, .sym none => Form.ofBool (decide (ρ ≠ c + 1))

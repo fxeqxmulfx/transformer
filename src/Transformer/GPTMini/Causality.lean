@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Causality.Basic
-import Transformer.GPTMini.Causality.Block
-import Transformer.GPTMini.Causality.Model
+module
+
+public import Transformer.GPTMini.Causality.Basic
+public import Transformer.GPTMini.Causality.Block
+public import Transformer.GPTMini.Causality.Model
 
 /-!
 # Architectural causality of GPTMini
@@ -10,3 +12,5 @@ from archived gpt_mini.py at f11b6e2. Prefix preservation includes every
 softmax denominator, RoPE, QKNorm, XSA, residual, FFN and final readout.
 It holds for all parameter assignments and across different lengths.
 -/
+
+@[expose] public section

@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Landscape.GlobalFlow.FlowDeriv
+
+/-!
 # The variational equation along a flow
 
 Let `w` be an `IsFlowField` on a finite-dimensional space whose spatial
-derivative `A(t, x)` is jointly continuous.  Along the trajectory
+derivative `A(t, x)` is jointly continuous. Along the trajectory
 `τ ↦ Φ_{s,τ} x`, the variational equation `J' = A(τ, Φ_{s,τ} x) J`,
 `J(s) = id`, is linear, hence not bounded; its solution is the flow of the
 field retracted to a ball (`ballRetract`) which, by Grönwall, the solution
-never leaves on `[s, s + T]` (`exists_variational`).  Its value at a fixed
+never leaves on `[s, s + T]` (`exists_variational`). Its value at a fixed
 time is continuous in the initial point (`continuous_variational`), so the
 flow is `C¹` forwards in time (`contDiff_flow`).
 
@@ -15,7 +19,7 @@ on initial data, which Mathlib does not have; arXiv:2305.05465v6, §6, uses it
 in the duality proof of uniqueness for `c:wellposedtransformers`.
 -/
 
-import Transformer.Landscape.GlobalFlow.FlowDeriv
+@[expose] public section
 
 open Set Metric Filter Topology
 open scoped NNReal
@@ -87,7 +91,7 @@ theorem IsFlowField.exists_variational (hw : IsFlowField w L M)
 
 /-- **Solutions of the variational equation depend continuously on the
 initial point**: if `J x` solves it along `τ ↦ Φ_{s,τ} x` on `[s, t]`, then
-`x ↦ J x t` is continuous.  The two solutions solve linear equations whose
+`x ↦ J x t` is continuous. The two solutions solve linear equations whose
 coefficients `A(τ, Φ_{s,τ} x)` and `A(τ, Φ_{s,τ} x₀)` are uniformly close;
 Grönwall bounds the difference. -/
 theorem IsFlowField.continuous_variational (hw : IsFlowField w L M)

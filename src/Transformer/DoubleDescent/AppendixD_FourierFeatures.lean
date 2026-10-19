@@ -1,7 +1,9 @@
-import Transformer.DoubleDescent.Section2_EffectiveComplexity
-import Mathlib.Analysis.Calculus.Deriv.Basic
-import Mathlib.Analysis.Complex.Exponential
-import Mathlib.Analysis.Complex.Basic
+module
+
+public import Transformer.DoubleDescent.Section2_EffectiveComplexity
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.Analysis.Complex.Basic
 
 /-!
 # The source's complex Fourier feature model
@@ -14,6 +16,8 @@ layer, hence in particular for any Gaussian draw. The target is identically
 zero; this refutes the distribution-independent identity `EMC=d`, not a
 claim about the particular Fashion MNIST labels in Figures 14--15.
 -/
+
+@[expose] public section
 
 namespace Transformer.DoubleDescent
 

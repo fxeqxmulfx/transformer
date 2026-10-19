@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_PolynomialSupport
+
+/-!
 # Original density inversion with linear and quadratic terms
 
 ArXiv:2601.21366v2, §5.1, `lem: quadpol` (i), degrees at most two,
@@ -20,7 +24,7 @@ for an original affine-quadratic transform. No inverse, density,
 coefficient identity, positivity or support conclusion is an input.
 -/
 
-import Transformer.Perceptron.Section5_PolynomialSupport
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators ENNReal

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section5_RowRepulsion
+public import Transformer.Causal.Section5_RepellerDetector
+
+/-!
 # Avoidance of a repelling original last-token limit
 
 ArXiv:2411.04990v2, §5 and Appendix A, the causal induction
@@ -21,8 +26,7 @@ input; the separate measurable Fubini step removes this input
 for almost every original full initialization inductively.
 -/
 
-import Transformer.Causal.Section5_RowRepulsion
-import Transformer.Causal.Section5_RepellerDetector
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 

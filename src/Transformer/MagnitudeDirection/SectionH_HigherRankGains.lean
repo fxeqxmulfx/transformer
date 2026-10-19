@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.Section3_Factorization
+public import Mathlib.LinearAlgebra.Matrix.Rank
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+
+/-!
 # Higher-rank multiplicative gains
 
 arXiv:2606.25971v2, Appendix H, equation `eq:higherrank-gain`.
@@ -6,9 +12,7 @@ The offset is the all-ones matrix, not the identity matrix. Rank `k`
 describes the update `ABᵀ`; the offset gain can have larger rank.
 -/
 
-import Transformer.MagnitudeDirection.Section3_Factorization
-import Mathlib.LinearAlgebra.Matrix.Rank
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+@[expose] public section
 
 open scoped BigOperators Matrix
 

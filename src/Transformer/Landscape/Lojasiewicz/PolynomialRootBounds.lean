@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.PolynomialFamily
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+
+/-!
 # Uniform bounds for real roots of analytic monic families
 
 The elementary monic root bound gives a compact interval containing all
@@ -6,8 +11,7 @@ real roots at sufficiently small parameters. It applies after Newton
 normalization, where the central polynomial need not be a pure power.
 -/
 
-import Transformer.Landscape.Lojasiewicz.PolynomialFamily
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
+@[expose] public section
 
 open Filter Finset
 open scoped BigOperators

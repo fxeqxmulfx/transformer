@@ -1,12 +1,14 @@
-import Transformer.AdamBeyond.Section2_Adam
-import Transformer.AMSGrad.Section3_Example
+module
 
-/-
+public import Transformer.AdamBeyond.Section2_Adam
+public import Transformer.AMSGrad.Section3_Example
+
+/-!
 # Adam and beyond — §3: the run behind Theorems 1 and 6
 
 The one-dimensional problem of the proof of Theorem 1: `F = [-1, 1]`,
 `f_t(x) = C x` for `t mod 3 = 1` and `-x` otherwise, Adam with `β₁ = 0`, started
-at `x₁ = 1`.  Every third step the gradient `C` is scaled down by `√v_t ≈ C`,
+at `x₁ = 1`. Every third step the gradient `C` is scaled down by `√v_t ≈ C`,
 while the two gradients `-1` in between are scaled by `√v_t ≈ 1`, so the
 iterate returns to `x = 1`, the worst point of `F`, after every block of three
 steps (`cex_block`).
@@ -14,13 +16,13 @@ steps (`cex_block`).
 **What the source says and what is carried here.**
 
 * The update with `ε` of eq:mod-update is the rule `adamEpsRule ε`,
-  `v̂_t = v_t + ε`.  The projection is then weighted by `√(v_t + ε)`, not by
+  `v̂_t = v_t + ε`. The projection is then weighted by `√(v_t + ε)`, not by
   `√v_t`; in one dimension every weighted projection onto `[-1, 1]` is the
-  clamp, so the run is the same.  `adamEpsRule 0` is Adam.
+  clamp, so the run is the same. `adamEpsRule 0` is Adam.
 
 * The run is scaled: `f_t(x) = 3s x` or `-s x`, `C = 3`, `β₂ = 1/100`, with
   `0 ≤ ε ≤ s²/100`; `s = 1, ε = 0` is Theorem 1's setting and `s = 10√ε` is
-  Theorem 6's rescaling.  The source's constants, `β₂ = 1/(1 + C²)` for
+  Theorem 6's rescaling. The source's constants, `β₂ = 1/(1 + C²)` for
   Theorem 1 and `β₂ = 2/((1 + C²)C²)` for Theorem 6, rest on
   `1/√(3t+3) ≥ 1/√(2(3t+1))`, which fails at `t = 0`; the constants here leave
   room for every block, the first included.
@@ -33,6 +35,8 @@ steps (`cex_block`).
 Source: arXiv:1904.09237, §3, eq:mod-update; Appendix, proofs of Theorem 1
 and Theorem 6.
 -/
+
+@[expose] public section
 
 namespace Transformer
 namespace AdamBeyond

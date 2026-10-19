@@ -1,16 +1,20 @@
-/-
+module
+
+public import Transformer.Precision.Float
+
+/-!
 # The online-softmax sum in floating point
 
 Flash attention keeps the running maximum `m` of the scores and sums
 `p_k = exp(s_k - m) ∈ (0, 1]`, weighted by the values (Dao, Fu, Ermon, Rudra,
-Ré, "FlashAttention", arXiv:2205.14135, §3.1).  With scores in a window of
+Ré, "FlashAttention", arXiv:2205.14135, §3.1). With scores in a window of
 width `D`, every `p_k ≥ e^{-D}`, so the exact sum of `n` of them is at least
-`n e^{-D}`.  Summed one at a time in a format of `M + 1` significant bits,
+`n e^{-D}`. Summed one at a time in a format of `M + 1` significant bits,
 it never exceeds `2^{M+2}` (`accum_le`), so the computed sum is at most
 `2^{M+2} e^D / n` times the exact one (`accum_softmax_le`).
 
 With `v ≡ 1` that ratio is the computed output itself: past `2^{M+2} e^D`
-keys it is below `1`, and it goes to `0` like `1/n`.  Per format:
+keys it is below `1`, and it goes to `0` like `1/n`. Per format:
 
 | format | significant bits | the sum is wrong past |
 | --- | ---: | ---: |
@@ -23,7 +27,7 @@ keys it is below `1`, and it goes to `0` like `1/n`.  Per format:
 This is the sequential order; `pairwise_exact` is the way out.
 -/
 
-import Transformer.Precision.Float
+@[expose] public section
 
 open scoped BigOperators
 

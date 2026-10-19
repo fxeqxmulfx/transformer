@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.ICEoT.Section3_Encoder
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+
+/-!
 # IC-EoT: the three non-convex toy surfaces
 
 arXiv:2603.22095v2, §3.4, Eqs. (28)–(30). The fractional exponent
@@ -8,9 +14,7 @@ inputs. It is not silently replaced by the usual six-hump polynomial `x^4/3`.
 All three functions fail Jensen's inequality.
 -/
 
-import Transformer.ICEoT.Section3_Encoder
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+@[expose] public section
 
 noncomputable section
 

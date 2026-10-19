@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_QuadraticGeometry
+public import Transformer.Perceptron.Section5_UniformSupport
+
+/-!
 # Original radial and perpendicular polynomial kernel moments
 
 ArXiv:2601.21366v2, §5.1, `eq:FH-basic` and `lem: quadpol` (i).
@@ -22,8 +27,7 @@ conclusion as a definition. The quadratic computations are included as
 the degree-two case; every original degree and vector remains explicit.
 -/
 
-import Transformer.Perceptron.Section5_QuadraticGeometry
-import Transformer.Perceptron.Section5_UniformSupport
+@[expose] public section
 
 open Real MeasureTheory Set
 

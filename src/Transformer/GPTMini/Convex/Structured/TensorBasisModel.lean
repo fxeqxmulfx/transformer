@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.TensorStackInterface
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorStackInterface
 
 /-!
 # Actual finite tensor models solve all six complete raw Basis recipes
@@ -20,6 +22,8 @@ assumed. Parity generates its label and EOS in two real model calls.
 This is real-arithmetic capacity with unrestricted-weight inference
 coupling, not output-only CE convexity or measured AdamW success.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

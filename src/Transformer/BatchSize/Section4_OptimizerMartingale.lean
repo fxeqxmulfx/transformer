@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_OptimizerGenerator
+public import Transformer.BatchSize.Section4_EulerLimitGenerator
+public import Transformer.BatchSize.Section4_EulerLimitLaw
+public import Transformer.BatchSize.Section4_PathCompensation
+
+/-!
 # The constructed optimizer paths satisfy the actual martingale identity
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,10 +13,7 @@ The previously constructed continuous Euler modification is identified
 with the paper's generator using its true adapted Brownian approximations.
 -/
 
-import Transformer.BatchSize.Section4_OptimizerGenerator
-import Transformer.BatchSize.Section4_EulerLimitGenerator
-import Transformer.BatchSize.Section4_EulerLimitLaw
-import Transformer.BatchSize.Section4_PathCompensation
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal

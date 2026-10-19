@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_GaussianHeatEquation
+public import Transformer.BatchSize.Section4_ExpectationOperator
+
+/-!
 # A concrete Gaussian comparison operator
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3).
@@ -8,8 +13,7 @@ iteration law and propagated smoothness bounds are proved, rather than
 left as premises about an unnamed continuous comparison operator.
 -/
 
-import Transformer.BatchSize.Section4_GaussianHeatEquation
-import Transformer.BatchSize.Section4_ExpectationOperator
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

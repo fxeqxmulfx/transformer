@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.AnalyticDivisionFunctions
+
+/-!
 # Real analytic preparation: AnalyticDivision
 
 Adapted from LocalComplexGeometry, revision
@@ -8,7 +12,7 @@ Apache-2.0 licenses: third_party/classical-complex-wpt/LICENSE and
 third_party/LocalComplexGeometry/LICENSE.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.AnalyticDivisionFunctions
+@[expose] public section
 
 open Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -17,7 +21,7 @@ noncomputable section
 namespace Transformer.Landscape.AnalyticPreparation
 
 /--
-Fixed-radius analytic Weierstrass division by a prepared polynomial.  The
+Fixed-radius analytic Weierstrass division by a prepared polynomial. The
 radius and ambient power-series witness remain explicit so downstream germ
 bridges can reuse the constructed quotient and remainder functions.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2. -/
@@ -59,7 +63,7 @@ theorem analyticWeierstrassDivision_fixedRadius {n d : ℕ}
   simpa using analyticDivision_pointwise p r hr0 a x.1 x.2 hxsmall hxw hxreconstruct
 
 /--
-Arbitrary-dividend analytic Weierstrass division.  This is the function-level
+Arbitrary-dividend analytic Weierstrass division. This is the function-level
 adapter missing from the pinned WPT public surface: it returns an analytic
 quotient and analytic coefficients of a remainder of distinguished degree
 strictly below `d`.

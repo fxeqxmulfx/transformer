@@ -1,11 +1,16 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_BoundedOther
+public import Transformer.Clusters.Section2_LowRank
+
+/-!
 # The emergence of clusters in self-attention dynamics — `t:boolean`, the ordered case
 
 §7 of arXiv:2305.05465v6, "Concluding the proof of Theorem `t:boolean`": for
 the ordered solutions of `e:Idnonresca` in `d = 1`, every entry of `P(t)`
 converges and the limit matrix lies in `𝒫`.
 
-The proof is the source's.  A token that is not bounded has its row tend to
+The proof is the source's. A token that is not bounded has its row tend to
 `e_1` or `e_n` (`l:unboundedparticles`); at most one token is bounded
 (`l:onlyone`), and its row converges by `l:boundedxn` or `l:boundedother`; the
 limit of that row is a probability vector because every row of `P(t)` is.
@@ -16,8 +21,7 @@ The source adds that the rows equal to `e_n` come after those equal to `e_1`;
 Source: arXiv:2305.05465v6, proof of `t:boolean`, §7.
 -/
 
-import Transformer.Clusters.Section7_BoundedOther
-import Transformer.Clusters.Section2_LowRank
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

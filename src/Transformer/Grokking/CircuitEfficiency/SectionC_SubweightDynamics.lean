@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_SubweightGradient
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_SubweightGradient
 
 /-!
 # Finite gradient descent on the actual product subweights
@@ -16,6 +18,8 @@ incorrect test decisions after one step. An entirely absent factor
 pair stays absent forever; the correct effective minimum alone cannot
 guarantee its discovery. Native AdamW and rounding remain separate.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

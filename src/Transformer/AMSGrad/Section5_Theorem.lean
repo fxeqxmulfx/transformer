@@ -1,26 +1,30 @@
-import Transformer.AMSGrad.Section5_Bounds
+module
 
-/-
+public import Transformer.AMSGrad.Section5_Bounds
+
+/-!
 # AdamX — the regret bound and its corollaries
 
-§5 of arXiv:1904.03590v4: Theorem 5.1 (`mainthm2`).  Corollaries 5.5 and 5.6
+§5 of arXiv:1904.03590v4: Theorem 5.1 (`mainthm2`). Corollaries 5.5 and 5.6
 are `Section5_Corollary`.
 
 **What the source says and what is carried here.**
 
 * Theorem 5.1 bounds the second term by
-  `dD²G/(2α(1-β₁)) Σ_{t=2}^T β_{1,t}√(t-1)`.  Its own proof gives
+  `dD²G/(2α(1-β₁)) Σ_{t=2}^T β_{1,t}√(t-1)`. Its own proof gives
   `dD²G/(2α(1-β₁)²) Σ_{t=2}^T β_{1,t}√(t-1)`: the factor
   `β_{1,t}√v̂_{t-1}/(2α_{t-1}(1-β_{1,t}))` contributes one `1/(1-β₁)` and
-  Lemma 5.3, `√v̂_{t-1} ≤ G/(1-β₁)`, a second one.  The constant is corrected.
+  Lemma 5.3, `√v̂_{t-1} ≤ G/(1-β₁)`, a second one. The constant is corrected.
   The first term `dD²G√T/(2α(1-β₁))` stands as stated, although the proof's
   last line writes `(1-β₁)²`: Lemma 5.2 gives `√v̂_T ≤ (1-β_{1,T})G/(1-β₁)`,
-  which cancels `1-β_{1,T}`.  As in §4, `γ < 1` replaces `γ ≤ 1`,
+  which cancels `1-β_{1,T}`. As in §4, `γ < 1` replaces `γ ≤ 1`,
   `0 ≤ β_{1,t}`, `0 < β₂ < 1` and `α > 0` are made explicit, and the regret is
   bounded against every `x* ∈ F`.
 
 Source: arXiv:1904.03590v4, §5, Theorem 5.1.
 -/
+
+@[expose] public section
 
 open Finset
 
@@ -36,7 +40,7 @@ variable {d : ℕ}
   `      + α√(ln T + 1)/((1-β₁)²√(1-β₂)(1-γ)) Σᵢ ‖g_{1:T,i}‖₂`.
 
 The source has `(1-β₁)` for `(1-β₁)²` in the second term; see the module
-docstring.  Lemma 5.4 is `mainlem le_adamXRule`.
+docstring. Lemma 5.4 is `mainlem le_adamXRule`.
 Source: arXiv:1904.03590v4, §5, Theorem 5.1. -/
 theorem mainthm2 {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineConvex S F D G)
     {α : ℝ} (hα : 0 < α) (hαt : S.α = fun t : ℕ => α / Real.sqrt t)

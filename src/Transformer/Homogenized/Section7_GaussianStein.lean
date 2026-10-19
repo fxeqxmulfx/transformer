@@ -1,4 +1,12 @@
-/-
+module
+
+public import Mathlib.Probability.Distributions.Gaussian.Real
+public import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+public import Mathlib.Analysis.SpecialFunctions.Gaussian.PoissonSummation
+public import Mathlib.MeasureTheory.Integral.IntegralEqImproper
+
+/-!
 # Actual one-dimensional Gaussian integration by parts
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -16,11 +24,7 @@ assumed. The resulting identity also includes the degenerate Gaussian
 law at variance zero, where the original law is the actual Dirac mass.
 -/
 
-import Mathlib.Probability.Distributions.Gaussian.Real
-import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import Mathlib.Analysis.SpecialFunctions.Gaussian.PoissonSummation
-import Mathlib.MeasureTheory.Integral.IntegralEqImproper
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped Topology NNReal

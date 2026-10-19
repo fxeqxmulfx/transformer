@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Geodesic
+
+/-!
 # Perceptrons and attention's mean-field landscape — a general attention matrix
 
 Formalization of the energy `E_B` of `rem:unifiedlog-B` of arXiv:2601.21366v2,
@@ -14,11 +18,11 @@ symmetric invertible matrix `B` in place of `β I_d`.
 
 * The source's `E_β` carries the prefactor `(2β)⁻¹` and `E_B` the prefactor
   `1/2`, so the two agree only up to the factor `β`:
-  `interactionEnergyMap_smul_id`.  In the *coupled* energy that factor is not
+  `interactionEnergyMap_smul_id`. In the *coupled* energy that factor is not
   a harmless rescaling — it multiplies the interaction half and not the
   potential half — and the honest statement of what it does is
   `energyMap_smul_id`: the coupled `E_B` at `B = β • id` with weights `ω` is
-  `β` times the source's `E_{β,ϑ}` with weights `β⁻¹ω`.  Stationarity is
+  `β` times the source's `E_{β,ϑ}` with weights `β⁻¹ω`. Stationarity is
   therefore the same relation up to that reweighting,
   `isStationaryMap_smul_id_iff`, and at `B = id` the two energies are equal on
   the nose.
@@ -26,14 +30,14 @@ symmetric invertible matrix `B` in place of `β I_d`.
 * `energyGradMap` is the Wasserstein gradient of the first variation of
   `energyMap` *for symmetric `B`*: it is there that
   `δE_B/δμ[μ](x) = ∫ e^{xᵀBy} dμ(y)`, with ambient gradient
-  `∫ e^{xᵀBy} By dμ(y)`.  Every statement of `rem: ext` (ii) carries
+  `∫ e^{xᵀBy} By dμ(y)`. Every statement of `rem: ext` (ii) carries
   `B.IsSymmetric`, so nothing below uses it outside that case.
 
 Source: arXiv:2601.21366v2, `rem: ext` (ii), `rem:unifiedlog-B`,
 `rem: general-attention`.
 -/
 
-import Transformer.Perceptron.Geodesic
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

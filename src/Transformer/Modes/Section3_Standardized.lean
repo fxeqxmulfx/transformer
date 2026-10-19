@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.Modes.Section3_SigmaPos
+
+/-!
 # The number of modes of a Gaussian KDE — `Y(t)` is standardized
 
 The claim after `eq:Yi` of arXiv:2412.09080v3 that `Y(t)` has mean `0` and
-covariance `I₂` "by construction".  Given that `Σ_t` is positive definite
+covariance `I₂` "by construction". Given that `Σ_t` is positive definite
 (`Section3_SigmaPos`), it is linear algebra on the five moments of
 `(G(t), G'(t))`, each finite since both are bounded.
 
 Source: arXiv:2412.09080v3, `eq:Yi` and the sentence after it.
 -/
 
-import Transformer.Modes.Section3_SigmaPos
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 
@@ -69,9 +73,9 @@ theorem isStandardized_map_whiten {β : ℝ} (hβ : 0 < β) (t : ℝ) {a b d : �
     simp only [k]; ring
 
 /-- **`Y(t)` is standardized**: mean `0` and covariance `I₂`, "by
-construction".  arXiv:2412.09080v3, after `eq:Yi`.  The source says it of
+construction". arXiv:2412.09080v3, after `eq:Yi`. The source says it of
 `q_t`, the law of `n^{-1/2} Σ Yᵢ(t)`; for independent copies that is the same
-statement about one `Y(t)`.  It needs `Σ_t` to be positive definite, which
+statement about one `Y(t)`. It needs `Σ_t` to be positive definite, which
 holds for `β > 0` (`sigmaFst_pos`, `sigmaDet_pos`). -/
 theorem isStandardized_lawY {β : ℝ} (hβ : 0 < β) (t : ℝ) : IsStandardized (lawY β t) :=
   isStandardized_map_whiten hβ t rfl rfl rfl

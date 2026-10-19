@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_OnlyOneCore
+
+/-!
 # The emergence of clusters in self-attention dynamics — a bounded configuration spreads
 
 The first step of the proof of `l:onlyone` (§7 of arXiv:2305.05465v6): a
-solution of `e:Idnonresca` with two distinct tokens cannot stay bounded.  The
+solution of `e:Idnonresca` with two distinct tokens cannot stay bounded. The
 source argues by compactness — on the compact set `ℐ` of bounded configurations
 with separated tokens the log-sum-exp potential is strictly convex, so
 `|x_1 - x_n|` has a derivative bounded away from `0`.
 
-Here the bound is explicit.  The monotonicity of the softmax
+Here the bound is explicit. The monotonicity of the softmax
 (`softmax_monotone`) is a sum of terms `(e^a - e^b)(a - b) ≥ min(e^a, e^b)(a - b)²`;
 when every score lies in `[-K, K]` every weight is at least
 `w = e^{-2K}/n`, and the two terms of the extreme tokens alone give
@@ -16,7 +20,7 @@ when every score lies in `[-K, K]` every weight is at least
 Source: arXiv:2305.05465v6, proof of `l:onlyone`, first paragraph.
 -/
 
-import Transformer.Clusters.Section7_OnlyOneCore
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

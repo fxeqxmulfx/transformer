@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_AssignmentBounds
+public import Transformer.Imbalance.Section3_SimpleModel
+
+/-!
 # A nondegenerate assignment witness for arbitrarily many classes
 
 arXiv:2402.19449v2, Proposition 2, equation (2). One observed class
@@ -7,8 +12,7 @@ The other output classes remain available to the softmax. This witnesses
 the consistency of all corrected correlation hypotheses.
 -/
 
-import Transformer.Imbalance.Section3_AssignmentBounds
-import Transformer.Imbalance.Section3_SimpleModel
+@[expose] public section
 
 open scoped BigOperators
 

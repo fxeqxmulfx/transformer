@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section9_LeadingProjection
+public import Transformer.Clusters.Section10_ScoreError
+
+/-!
 # The actual attention scores are governed by the leading eigencoordinate
 
 ArXiv:2305.05465v6, §9, `e:majorizeweights`, in the proof of
@@ -17,8 +22,7 @@ softmax of these normalized scores at inverse temperature `exp(2λt)`.
 No positive attention square root is introduced for this setting.
 -/
 
-import Transformer.Clusters.Section9_LeadingProjection
-import Transformer.Clusters.Section10_ScoreError
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

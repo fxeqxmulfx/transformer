@@ -1,4 +1,21 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.EnergyLevelPreparation
+public import Transformer.Landscape.Lojasiewicz.QuadraticCurveLifting
+public import Transformer.Landscape.Lojasiewicz.AnalyticPlaneCurveSelection
+public import Transformer.Landscape.Lojasiewicz.GlobalMinimumLiftingExamples
+public import Transformer.Landscape.Lojasiewicz.AnalyticFiberConstraints
+public import Transformer.Landscape.Lojasiewicz.AnalyticFiberMinimaReduction
+public import Transformer.Landscape.Lojasiewicz.AnalyticFiberValueRelation
+public import Transformer.Landscape.Lojasiewicz.AnalyticFiberMinimumQuery
+public import Transformer.Landscape.Lojasiewicz.AnalyticBoxMinimumQuery
+public import Transformer.Landscape.Lojasiewicz.AnalyticAtlasQueryExamples
+public import Transformer.Landscape.Lojasiewicz.CompactBallGradientQueries
+public import Transformer.Landscape.RealAnalyticGerms
+public import Transformer.Landscape.Sturm
+public import Lean.Util.FoldConsts
+
+/-!
 # Real analytic preparation and ramified-root dependency audit
 
 Run after building the imported modules:
@@ -11,20 +28,7 @@ proofs are checked transitively. This audit
 supplements statement and definition inspection and the full-tree audit.
 -/
 
-import Transformer.Landscape.Lojasiewicz.EnergyLevelPreparation
-import Transformer.Landscape.Lojasiewicz.QuadraticCurveLifting
-import Transformer.Landscape.Lojasiewicz.AnalyticPlaneCurveSelection
-import Transformer.Landscape.Lojasiewicz.GlobalMinimumLiftingExamples
-import Transformer.Landscape.Lojasiewicz.AnalyticFiberConstraints
-import Transformer.Landscape.Lojasiewicz.AnalyticFiberMinimaReduction
-import Transformer.Landscape.Lojasiewicz.AnalyticFiberValueRelation
-import Transformer.Landscape.Lojasiewicz.AnalyticFiberMinimumQuery
-import Transformer.Landscape.Lojasiewicz.AnalyticBoxMinimumQuery
-import Transformer.Landscape.Lojasiewicz.AnalyticAtlasQueryExamples
-import Transformer.Landscape.Lojasiewicz.CompactBallGradientQueries
-import Transformer.Landscape.RealAnalyticGerms
-import Transformer.Landscape.Sturm
-import Lean.Util.FoldConsts
+@[expose] public section
 
 open Lean Elab Command
 

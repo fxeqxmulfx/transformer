@@ -1,4 +1,6 @@
-import Transformer.Homogenized.Section7_WeightedGridLimit
+module
+
+public import Transformer.Homogenized.Section7_WeightedGridLimit
 
 /-!
 # Limits of the actual compensated partition sums
@@ -15,6 +17,8 @@ A bound independent of the grid size will justify passing this
 identity through expectation. These are deterministic statements;
 the martingale property is used in the next expectation argument.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Set MeasureTheory Filter Topology

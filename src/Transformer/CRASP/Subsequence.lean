@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.CRASP.BoundedExists
+
+/-!
 # Testing a fixed subsequence inside `TL[◁#]`
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 (COLM 2025), §2.4, the proof of `lem:piecewise_testable_depth`.
 
 A 𝒥-expression asks whether a fixed pattern `σ₁ ⋯ σ_k` occurs as a
-subsequence.  The formula testing it consumes the pattern from the *right*:
+subsequence. The formula testing it consumes the pattern from the *right*:
 `σ₁ ⋯ σ_k` fits into the prefix `w[1:i]` exactly when some position `j ≤ i`
-carries `σ_k` and `σ₁ ⋯ σ_{k-1}` already fits into `w[1:j-1]`.  Every
+carries `σ_k` and `σ₁ ⋯ σ_{k-1}` already fits into `w[1:j-1]`. Every
 quantifier is then a bounded one over the past, `Form.exAt` or
 `Form.exBefore`, and each of the `k` symbols costs one counting operator,
 which is what puts the formula in `TL[◁#]_k`.
@@ -16,7 +20,7 @@ Patterns are therefore carried in reverse, last symbol first: `subseqAt s`
 tests for `s.reverse`.
 -/
 
-import Transformer.CRASP.BoundedExists
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -180,7 +184,7 @@ theorem lang_subseqAt (s : List σ) : (subseqAt s).lang = {w : List σ | s.rever
 `◁#[⋯◁#[◁#[Q_σ₁] ≥ 1 ∧ Q_σ₂] ≥ 1 ⋯ ∧ Q_σ_k] ≥ 1`, the non-strict `◁#` at every
 level, so two equal neighbours `σⱼ = σⱼ₊₁` can be matched at one position.
 For `Σ*aΣ*aΣ*` that formula accepts the one-letter string `a`, which does not
-contain `aa`.  The separating languages alternate their letters and are not
+contain `aa`. The separating languages alternate their letters and are not
 affected; `subseqStrict` counts strictly below the top level instead.
 
 Source: arXiv:2506.16055v3, Appendix A, proof of `lem:piecewise_testable_depth`. -/

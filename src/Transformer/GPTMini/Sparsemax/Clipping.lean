@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.SelfRoute
+module
+
+public import Transformer.GPTMini.Sparsemax.SelfRoute
 
 /-!
 # Counterexample to unconditional self-route erasure with epsilon clipping
@@ -10,6 +12,8 @@ Below that floor a nonzero residual remains, even at a strict unit score
 gap. This corrects the implementation-level claim, not the paper's exact
 orthogonal-projection formula for nonzero vectors.
 -/
+
+@[expose] public section
 
 noncomputable section
 

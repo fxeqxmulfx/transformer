@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section10_ComplementaryGrowth
+public import Transformer.Clusters.Section10_LeadingFlow
+public import Transformer.Clusters.Section10_ProjectedHullLimit
+
+/-!
 # Exponentially small error in the normalized leading scores
 
 ArXiv:2305.05465v6, §10, the score decomposition in Step 2' of
@@ -13,9 +19,7 @@ Here the order is corrected from the original attention scores themselves.
 No commutation of the attention root and the projection is assumed.
 -/
 
-import Transformer.Clusters.Section10_ComplementaryGrowth
-import Transformer.Clusters.Section10_LeadingFlow
-import Transformer.Clusters.Section10_ProjectedHullLimit
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.PeriodicMemoryForward
-import Mathlib.LinearAlgebra.Matrix.Rank
+module
+
+public import Transformer.GPTMini.Sparsemax.PeriodicMemoryForward
+public import Mathlib.LinearAlgebra.Matrix.Rank
 
 /-!
 # Why the structural mask permits fixed width
@@ -14,6 +16,8 @@ actual sparsemax attention has rank P. Masking and projection, with proved
 threshold zero, supply the full-rank matrix. Thus constant embedding width
 does not assume a false low-rank factorization of invertible attention.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section10_Remainder
+public import Transformer.Clusters.Section10_SquareApproach
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
 # The emergence of clusters in self-attention dynamics — Step 2'
 
 §10 of arXiv:2305.05465v6: Claim `cl:gamma'12` and Step 2', the lower bound on
@@ -29,9 +35,7 @@ Source: arXiv:2305.05465v6, `sec: clustering.hyperplanes.and.polytopes`,
 `cl:gamma'12`, Step 2', `e:derivativenorm123`.
 -/
 
-import Transformer.Clusters.Section10_Remainder
-import Transformer.Clusters.Section10_SquareApproach
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -47,7 +51,7 @@ variable {d n : ℕ}
 
   `½ d/dt ‖π_ℱ(Az_i(t))‖² = ⟨π_ℱ(Aż_i(t)), π_ℱ(Az_i(t))⟩`,
 
-with `ż_i(t)` the drift of `e:Rres`.  This is the chain rule, and it is what
+with `ż_i(t)` the drift of `e:Rres`. This is the chain rule, and it is what
 Step 2' bounds from below.
 
 Source: arXiv:2305.05465v6, `e:derivativenorm123`. -/

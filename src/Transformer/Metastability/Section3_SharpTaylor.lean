@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.Section3_ScalarTaylor
+public import Transformer.Perceptron.KernelSup
+
+/-!
 # Sharp Taylor bounds for the normalized angular interaction
 
 ArXiv:2410.06833v1, §3.2, `eq: otto.attention` and the kernel `g`
@@ -11,8 +16,7 @@ Keeping the factor `1/2` in Taylor's theorem is essential for the
 Euclidean lower bound in (H1) when there are two tokens.
 -/
 
-import Transformer.Metastability.Section3_ScalarTaylor
-import Transformer.Perceptron.KernelSup
+@[expose] public section
 
 open scoped NNReal
 open Set Real

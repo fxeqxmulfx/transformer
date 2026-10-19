@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_CapCenter
+public import Transformer.Interpolation.Section3_CapBoundary
+
+/-!
 # Entry into the contracting region of the actual two-neuron flow
 
 Auxiliaries for arXiv:2411.04551v3, Appendix, `lem: two.balls`,
@@ -14,8 +19,7 @@ positive and forces it to reach the inner core in finite time. No bound
 uniform in the starting particle is asserted or needed.
 -/
 
-import Transformer.Interpolation.Section3_CapCenter
-import Transformer.Interpolation.Section3_CapBoundary
+@[expose] public section
 
 open Real Set Filter
 open scoped Topology NNReal

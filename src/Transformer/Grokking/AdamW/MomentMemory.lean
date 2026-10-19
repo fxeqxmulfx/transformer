@@ -1,5 +1,7 @@
-import Transformer.Grokking.AdamW.MomentBounds
-import Mathlib.Analysis.SpecificLimits.Basic
+module
+
+public import Transformer.Grokking.AdamW.MomentBounds
+public import Mathlib.Analysis.SpecificLimits.Basic
 
 /-!
 # Direct memory decay of native AdamW buffers
@@ -16,6 +18,8 @@ An adaptive update divides by a changing second moment and epsilon;
 raw-moment attenuation is not automatically an update-size bound or
 an explanation of the thirty-thousand-step memorization interval.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

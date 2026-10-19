@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_DiscreteLaw
+public import Transformer.BatchSize.Section4_Telescoping
+public import Mathlib.MeasureTheory.Integral.Prod
+
+/-!
 # The optimizer's Markov expectation operator
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1.
@@ -6,9 +12,7 @@ The contraction used in the weak-error telescope is proved for the actual
 Gaussian SGD/SignSGD update, not postulated as a stability assumption.
 -/
 
-import Transformer.BatchSize.Section4_DiscreteLaw
-import Transformer.BatchSize.Section4_Telescoping
-import Mathlib.MeasureTheory.Integral.Prod
+@[expose] public section
 
 open MeasureTheory
 

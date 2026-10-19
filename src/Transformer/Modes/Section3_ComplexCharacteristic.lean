@@ -1,7 +1,9 @@
-import Transformer.Modes.Section3_SumCharFun
-import Mathlib.Analysis.Fourier.Inversion
-import Mathlib.MeasureTheory.Measure.CharacteristicFunction.TaylorExpansion
-import Mathlib.MeasureTheory.Measure.Lebesgue.Complex
+module
+
+public import Transformer.Modes.Section3_SumCharFun
+public import Mathlib.Analysis.Fourier.Inversion
+public import Mathlib.MeasureTheory.Measure.CharacteristicFunction.TaylorExpansion
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Complex
 
 /-!
 # Complex coordinates for the actual two-dimensional law
@@ -26,6 +28,8 @@ Its reality, positivity, integrability, and measure identity follow in the
 next modules from actual Gaussian smoothing and Fourier inversion.
 Source: arXiv:2412.09080v3, §3 `thm:br` and §5.4–§5.5, Fourier inversion.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped FourierTransform Topology ENNReal

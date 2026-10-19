@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.MeanField.EquiangularPhases
+
+/-!
 # The equiangular phase transition at `β_n = γ log n`
 
 `Transformer.MeanField.EquiangularWeights` reduced the cosine between the two
@@ -10,13 +14,13 @@ namely `(ρ + (1-ρ)(2ab + (n-2)b²)) / (ρ + (1-ρ)(a² + (n-1)b²))`.
 
 The whole phase transition is then one observation: `a + (n-1) b = 1` forces
 `b ≤ 1/(n-1)`, so *every* term carrying a factor `b` vanishes in the limit and
-only `a` survives.  The cosine tends to `ρ / (ρ + (1-ρ) L²)` where `L` is the
+only `a` survives. The cosine tends to `ρ / (ρ + (1-ρ) L²)` where `L` is the
 limit of `a`, and the three phases are the three values of `L`.
 
 Source: arXiv:2512.01868v4, §6, `thm: long-context-phase-transition`.
 -/
 
-import Transformer.MeanField.EquiangularPhases
+@[expose] public section
 
 open scoped BigOperators
 open Filter Topology

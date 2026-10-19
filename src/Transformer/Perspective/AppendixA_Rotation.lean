@@ -1,26 +1,30 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_Hessian
+public import Mathlib.Analysis.SpecialFunctions.Exponential
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Appendix A — the block rotation `e^{tB}` exists
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
 `Perspective.PerturbationBy` describes the curve `e:helpcl` is read along by
-the differential equation `ẋ_i = B x_i` its rotated tokens solve.  Nothing so
+the differential equation `ẋ_i = B x_i` its rotated tokens solve. Nothing so
 far says that such a curve exists, and `Perspective.hessian_at_critical` is
 worth nothing until it does: a second derivative of a curve that is not there
 is a statement about the empty set.
 
-The curve is the matrix exponential, and two facts about it are needed.  It
+The curve is the matrix exponential, and two facts about it are needed. It
 solves the equation — `d/dt e^{tB} v = e^{tB} B v = B e^{tB} v`, the last step
-being that `B` commutes with its own exponential.  And it stays on the sphere
+being that `B` commutes with its own exponential. And it stays on the sphere
 when `B` is skew — `d/dt ⟨y, y⟩ = ⟨By, y⟩ + ⟨y, By⟩ = 0`, so `‖y(t)‖` never
-moves from `‖y(0)‖ = 1`.  That second fact is the only place skewness is used
+moves from `‖y(0)‖ = 1`. That second fact is the only place skewness is used
 here, and it is what makes `e^{tB}` a rotation.
 -/
 
-import Transformer.Perspective.AppendixA_Hessian
-import Mathlib.Analysis.SpecialFunctions.Exponential
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open scoped BigOperators
 open Real

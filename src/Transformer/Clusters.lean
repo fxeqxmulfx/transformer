@@ -1,119 +1,123 @@
-/-
+module
+
+public import Transformer.Clusters.Section1_Dynamics
+public import Transformer.Clusters.Section2_LowRank
+public import Transformer.Clusters.Section3_Rescaled
+public import Transformer.Clusters.Section3_Discrete
+public import Transformer.Clusters.Section3_IdCase
+public import Transformer.Clusters.Section4_Hyperplanes
+public import Transformer.Clusters.Section4_Codim
+public import Transformer.Clusters.Section4_SquareScalar
+public import Transformer.Clusters.Section4_SquareAmplitude
+public import Transformer.Clusters.Section4_SquareGeometry
+public import Transformer.Clusters.Section4_SquareDynamics
+public import Transformer.Clusters.Section4_SquareCounterexample
+public import Transformer.Clusters.Section5_Mix
+public import Transformer.Clusters.Section6_Field
+public import Transformer.Clusters.Section6_WellPosed
+public import Transformer.Clusters.Section6_Kernel
+public import Transformer.Clusters.Section6_KernelDeriv
+public import Transformer.Clusters.Section6_KernelLip
+public import Transformer.Clusters.Section6_KernelField
+public import Transformer.Clusters.Section6_WeakSolution
+public import Transformer.Clusters.Section6_Stability
+public import Transformer.Clusters.Section6_LagrangianField
+public import Transformer.Clusters.Section6_ContEq
+public import Transformer.Clusters.Section7_HigherDim
+public import Transformer.Clusters.Section7_LogSumExp
+public import Transformer.Clusters.Section7_DistNonDec
+public import Transformer.Clusters.Section7_Unbounded
+public import Transformer.Clusters.Section7_Drift
+public import Transformer.Clusters.Section7_Auxiliary
+public import Transformer.Clusters.Section7_UnboundedParticles
+public import Transformer.Clusters.Section7_DriftAverage
+public import Transformer.Clusters.Section7_ExactAsymptotic
+public import Transformer.Clusters.Section7_Symmetric
+public import Transformer.Clusters.Section7_OnlyOneDrift
+public import Transformer.Clusters.Section7_OnlyOneEscape
+public import Transformer.Clusters.Section7_OnlyOneCore
+public import Transformer.Clusters.Section7_OnlyOneSpread
+public import Transformer.Clusters.Section7_OnlyOne
+public import Transformer.Clusters.Section7_Bounded
+public import Transformer.Clusters.Section7_BoundedXNCore
+public import Transformer.Clusters.Section7_BoundedXNLimit
+public import Transformer.Clusters.Section7_BoundedXN
+public import Transformer.Clusters.Section7_BoundedOtherMean
+public import Transformer.Clusters.Section7_BoundedOtherEscape
+public import Transformer.Clusters.Section7_BoundedOther
+public import Transformer.Clusters.Section7_Boolean
+public import Transformer.Clusters.Section7_BooleanScaling
+public import Transformer.Clusters.Section7_BooleanGeneral
+public import Transformer.Clusters.Section9_Eigen
+public import Transformer.Clusters.Extremum
+public import Transformer.Clusters.Section9_Fj
+public import Transformer.Clusters.Section9_Limits
+public import Transformer.Clusters.Section9_Growth
+public import Transformer.Clusters.Section9_LeadingProjection
+public import Transformer.Clusters.Section9_LeadingScores
+public import Transformer.Clusters.Section9_LeadingEnergy
+public import Transformer.Clusters.Section9_LeadingGain
+public import Transformer.Clusters.Section9_ThreeCandidates
+public import Transformer.Clusters.Section9_ThreeCoordinates
+public import Transformer.Clusters.Section9_Hyperplanes
+public import Transformer.Clusters.Section8_Polytope
+public import Transformer.Clusters.Section8_HullContinuity
+public import Transformer.Clusters.Section8_HullLimit
+public import Transformer.Clusters.Section8_CandidateBoundary
+public import Transformer.Clusters.Section8_CandidateFinite
+public import Transformer.Clusters.Section8_SoftmaxEnergy
+public import Transformer.Clusters.Section8_EnergyGrowth
+public import Transformer.Clusters.Section8_LimitPrinciples
+public import Transformer.Clusters.Section8_PathBounds
+public import Transformer.Clusters.Section8_GainLimit
+public import Transformer.Clusters.Section8_ClusterLimits
+public import Transformer.Clusters.Section8_AttentionRoot
+public import Transformer.Clusters.Section8_IdConvergence
+public import Transformer.Clusters.Section8_Origin
+public import Transformer.Clusters.Section8_Bounded
+public import Transformer.Clusters.Section8_Energy
+public import Transformer.Clusters.Section8_Stationary
+public import Transformer.Clusters.Section8_Convergence
+public import Transformer.Clusters.Section10_ProjHull
+public import Transformer.Clusters.Section10_ProjectedDynamics
+public import Transformer.Clusters.Section10_ProjectedHullLimit
+public import Transformer.Clusters.Section10_PowerMetric
+public import Transformer.Clusters.Section10_PowerContraction
+public import Transformer.Clusters.Section10_ComplementaryProjection
+public import Transformer.Clusters.Section10_ComplementaryGrowth
+public import Transformer.Clusters.Section10_LeadingFlow
+public import Transformer.Clusters.Section10_ScoreError
+public import Transformer.Clusters.Section10_ProjectedEnergy
+public import Transformer.Clusters.Section10_CorrectedEnergy
+public import Transformer.Clusters.Section10_ProjectedGain
+public import Transformer.Clusters.Section10_ProjectedClusterLimits
+public import Transformer.Clusters.Section10_RelativeCandidates
+public import Transformer.Clusters.Section10_Multiplicity
+public import Transformer.Clusters.Section10_Remainder
+public import Transformer.Clusters.Section10_RemainderFalse
+public import Transformer.Clusters.Section10_SquareApproach
+public import Transformer.Clusters.Section10_Step2
+public import Transformer.Clusters.Section12_MultiHead
+public import Transformer.Clusters.Section12_MultiHeadRates
+public import Transformer.Clusters.Section12_MultiHeadScaledDrift
+public import Transformer.Clusters.Section12_MultiHeadMean
+public import Transformer.Clusters.Section12_MultiHeadBoundedInterior
+public import Transformer.Clusters.Section12_MultiHeadMeanDefect
+public import Transformer.Clusters.Section12_MultiHeadBoundedRows
+public import Transformer.Clusters.Section12_Generic
+public import Transformer.Clusters.Section12_Feedforward
+public import Transformer.Clusters.Section12_ReluScalar
+public import Transformer.Clusters.Section12_ReluBounds
+public import Transformer.Clusters.Section12_ReluFlow
+public import Transformer.Clusters.Section12_ReluLimits
+public import Transformer.Clusters.Section12_ReluDynamics
+public import Transformer.Clusters.Section12_ReluCounterexample
+
+/-!
 Formalization of:
   Geshkovski, Letrouit, Polyanskiy, Rigollet,
   "The emergence of clusters in self-attention dynamics",
   arXiv:2305.05465v6.
 -/
 
-import Transformer.Clusters.Section1_Dynamics
-import Transformer.Clusters.Section2_LowRank
-import Transformer.Clusters.Section3_Rescaled
-import Transformer.Clusters.Section3_Discrete
-import Transformer.Clusters.Section3_IdCase
-import Transformer.Clusters.Section4_Hyperplanes
-import Transformer.Clusters.Section4_Codim
-import Transformer.Clusters.Section4_SquareScalar
-import Transformer.Clusters.Section4_SquareAmplitude
-import Transformer.Clusters.Section4_SquareGeometry
-import Transformer.Clusters.Section4_SquareDynamics
-import Transformer.Clusters.Section4_SquareCounterexample
-import Transformer.Clusters.Section5_Mix
-import Transformer.Clusters.Section6_Field
-import Transformer.Clusters.Section6_WellPosed
-import Transformer.Clusters.Section6_Kernel
-import Transformer.Clusters.Section6_KernelDeriv
-import Transformer.Clusters.Section6_KernelLip
-import Transformer.Clusters.Section6_KernelField
-import Transformer.Clusters.Section6_WeakSolution
-import Transformer.Clusters.Section6_Stability
-import Transformer.Clusters.Section6_LagrangianField
-import Transformer.Clusters.Section6_ContEq
-import Transformer.Clusters.Section7_HigherDim
-import Transformer.Clusters.Section7_LogSumExp
-import Transformer.Clusters.Section7_DistNonDec
-import Transformer.Clusters.Section7_Unbounded
-import Transformer.Clusters.Section7_Drift
-import Transformer.Clusters.Section7_Auxiliary
-import Transformer.Clusters.Section7_UnboundedParticles
-import Transformer.Clusters.Section7_DriftAverage
-import Transformer.Clusters.Section7_ExactAsymptotic
-import Transformer.Clusters.Section7_Symmetric
-import Transformer.Clusters.Section7_OnlyOneDrift
-import Transformer.Clusters.Section7_OnlyOneEscape
-import Transformer.Clusters.Section7_OnlyOneCore
-import Transformer.Clusters.Section7_OnlyOneSpread
-import Transformer.Clusters.Section7_OnlyOne
-import Transformer.Clusters.Section7_Bounded
-import Transformer.Clusters.Section7_BoundedXNCore
-import Transformer.Clusters.Section7_BoundedXNLimit
-import Transformer.Clusters.Section7_BoundedXN
-import Transformer.Clusters.Section7_BoundedOtherMean
-import Transformer.Clusters.Section7_BoundedOtherEscape
-import Transformer.Clusters.Section7_BoundedOther
-import Transformer.Clusters.Section7_Boolean
-import Transformer.Clusters.Section7_BooleanScaling
-import Transformer.Clusters.Section7_BooleanGeneral
-import Transformer.Clusters.Section9_Eigen
-import Transformer.Clusters.Extremum
-import Transformer.Clusters.Section9_Fj
-import Transformer.Clusters.Section9_Limits
-import Transformer.Clusters.Section9_Growth
-import Transformer.Clusters.Section9_LeadingProjection
-import Transformer.Clusters.Section9_LeadingScores
-import Transformer.Clusters.Section9_LeadingEnergy
-import Transformer.Clusters.Section9_LeadingGain
-import Transformer.Clusters.Section9_ThreeCandidates
-import Transformer.Clusters.Section9_ThreeCoordinates
-import Transformer.Clusters.Section9_Hyperplanes
-import Transformer.Clusters.Section8_Polytope
-import Transformer.Clusters.Section8_HullContinuity
-import Transformer.Clusters.Section8_HullLimit
-import Transformer.Clusters.Section8_CandidateBoundary
-import Transformer.Clusters.Section8_CandidateFinite
-import Transformer.Clusters.Section8_SoftmaxEnergy
-import Transformer.Clusters.Section8_EnergyGrowth
-import Transformer.Clusters.Section8_LimitPrinciples
-import Transformer.Clusters.Section8_PathBounds
-import Transformer.Clusters.Section8_GainLimit
-import Transformer.Clusters.Section8_ClusterLimits
-import Transformer.Clusters.Section8_AttentionRoot
-import Transformer.Clusters.Section8_IdConvergence
-import Transformer.Clusters.Section8_Origin
-import Transformer.Clusters.Section8_Bounded
-import Transformer.Clusters.Section8_Energy
-import Transformer.Clusters.Section8_Stationary
-import Transformer.Clusters.Section8_Convergence
-import Transformer.Clusters.Section10_ProjHull
-import Transformer.Clusters.Section10_ProjectedDynamics
-import Transformer.Clusters.Section10_ProjectedHullLimit
-import Transformer.Clusters.Section10_PowerMetric
-import Transformer.Clusters.Section10_PowerContraction
-import Transformer.Clusters.Section10_ComplementaryProjection
-import Transformer.Clusters.Section10_ComplementaryGrowth
-import Transformer.Clusters.Section10_LeadingFlow
-import Transformer.Clusters.Section10_ScoreError
-import Transformer.Clusters.Section10_ProjectedEnergy
-import Transformer.Clusters.Section10_CorrectedEnergy
-import Transformer.Clusters.Section10_ProjectedGain
-import Transformer.Clusters.Section10_ProjectedClusterLimits
-import Transformer.Clusters.Section10_RelativeCandidates
-import Transformer.Clusters.Section10_Multiplicity
-import Transformer.Clusters.Section10_Remainder
-import Transformer.Clusters.Section10_RemainderFalse
-import Transformer.Clusters.Section10_SquareApproach
-import Transformer.Clusters.Section10_Step2
-import Transformer.Clusters.Section12_MultiHead
-import Transformer.Clusters.Section12_MultiHeadRates
-import Transformer.Clusters.Section12_MultiHeadScaledDrift
-import Transformer.Clusters.Section12_MultiHeadMean
-import Transformer.Clusters.Section12_MultiHeadBoundedInterior
-import Transformer.Clusters.Section12_MultiHeadMeanDefect
-import Transformer.Clusters.Section12_MultiHeadBoundedRows
-import Transformer.Clusters.Section12_Generic
-import Transformer.Clusters.Section12_Feedforward
-import Transformer.Clusters.Section12_ReluScalar
-import Transformer.Clusters.Section12_ReluBounds
-import Transformer.Clusters.Section12_ReluFlow
-import Transformer.Clusters.Section12_ReluLimits
-import Transformer.Clusters.Section12_ReluDynamics
-import Transformer.Clusters.Section12_ReluCounterexample
+@[expose] public section

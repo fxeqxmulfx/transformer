@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section6_WeakSolution
+public import Transformer.ContinuityEq.Stability
+
+/-!
 # The emergence of clusters in self-attention dynamics — stability and
   uniqueness of solutions of the continuity equation
 
@@ -7,12 +12,12 @@ and the uniqueness half of `c:wellposedtransformers`.
 
 Two solutions `μ`, `ν` carried by `B̄(0, R)` on `[0, T]` are the images of
 their initial measures under the flows of their own fields
-(`IsContEqSolution.eq_map_flow`).  Along these flows the fields differ by
+(`IsContEqSolution.eq_map_flow`). Along these flows the fields differ by
 `‖𝒳[μ_τ](a) - 𝒳[ν_τ](b)‖ ≤ L ‖a - b‖ + C W₂(μ_τ, ν_τ)`
 (`exists_norm_attentionKernel_sub_le`), and Grönwall's lemma on the transport
 cost of every coupling (`ContinuityEq.W2_map_flow_le`) gives
 `W₂(μ_t, ν_t) ≤ e^{(L + C) t} W₂(μ₀, ν₀)` (`exists_W2_le`): the source's proof
-of `e:w2estimate`, with constants depending on the radius of the ball.  From
+of `e:w2estimate`, with constants depending on the radius of the ball. From
 one initial measure the right side vanishes; `W₂` separates probability
 measures carried by a ball (`eq_of_W2_eq_zero`), and reversing time
 (`IsContEqSolution.comp_neg`) gives uniqueness on all of `ℝ`
@@ -21,8 +26,7 @@ measures carried by a ball (`eq_of_W2_eq_zero`), and reversing time
 Source: arXiv:2305.05465v6, `c:wellposedtransformers`, `e:w2estimate`.
 -/
 
-import Transformer.Clusters.Section6_WeakSolution
-import Transformer.ContinuityEq.Stability
+@[expose] public section
 
 open Set Metric Filter Topology MeasureTheory
 
@@ -34,7 +38,7 @@ open Landscape.GlobalFlow Wasserstein
 variable {d : ℕ}
 
 /-- **`W₂` separates probability measures carried by a ball**: `W₂(μ, ν) = 0`
-forces `μ = ν`.  For smooth `g` with compact support, `g` is Lipschitz and
+forces `μ = ν`. For smooth `g` with compact support, `g` is Lipschitz and
 `|∫ g dμ - ∫ g dν| ≤ Lip(g) W₂(μ, ν) = 0` (`norm_integral_sub_le_W2`), and
 such `g` separate the two measures (`SmoothApprox.ext_of_forall_contDiff`). -/
 theorem eq_of_W2_eq_zero {μ ν : Measure (EucSpace d)} [IsProbabilityMeasure μ]

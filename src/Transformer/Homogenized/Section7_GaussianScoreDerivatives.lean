@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianSoftmaxGrowth
+
+/-!
 # Actual derivatives of the original bilinear Gaussian feature scores
 
 ArXiv:2604.01978v1, §7, the original scores before `eq:SIGMA_R`
@@ -15,7 +19,7 @@ support in the token indices. These identities supply the chain-rule
 terms for the actual softmax covariance contraction.
 -/
 
-import Transformer.Homogenized.Section7_GaussianSoftmaxGrowth
+@[expose] public section
 
 open scoped BigOperators
 
@@ -147,4 +151,3 @@ example : ∃ z : EuclideanSpace ℝ (GaussianFeatureIdx 2 2),
   · rw [iteratedFDeriv_two_gaussianFeatureScores, fderiv_gaussianFeatureScores_apply]
     norm_num [PiLp.single_apply, Fin.sum_univ_two]
 end Transformer.Homogenized
-

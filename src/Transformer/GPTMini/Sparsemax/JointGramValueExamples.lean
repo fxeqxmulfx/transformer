@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.GramValueExampleGrams
+module
+
+public import Transformer.GPTMini.Sparsemax.GramValueExampleGrams
 
 /-!
 # A concrete joint embedding, attention and value update
@@ -20,6 +22,8 @@ decoded values and a fixed embedding width are not preserved. The two token
 IDs index one learned value table; outputs on a new context are not covered
 by this finite-context certificate.
 -/
+
+@[expose] public section
 
 noncomputable section
 

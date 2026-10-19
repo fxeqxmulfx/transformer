@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.SectionB_PeakTemperature
+
+/-!
 # The original interaction curvature and its decreasing central branch
 
 ArXiv:2411.04990v2, Appendix B, `lemma:interaction`, and §5,
@@ -17,7 +21,7 @@ edge. This is the actual lower bound used in the frozen-center
 stability calculation, for every positive original temperature.
 -/
 
-import Transformer.Causal.SectionB_PeakTemperature
+@[expose] public section
 
 open Real Set
 

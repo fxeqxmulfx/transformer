@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.RASPL.Fourier
+
+/-!
 # Restricting a coordinate of a boolean function
 
 Zhou et al. — arXiv:2310.16028v1, "What Algorithms can Transformers Learn?",
@@ -15,7 +19,7 @@ and `restrict_eq` is exactly that factorization, summed over the subsets not
 containing the coordinate.
 -/
 
-import Transformer.RASPL.Fourier
+@[expose] public section
 
 namespace Transformer
 namespace RASPL
@@ -39,7 +43,7 @@ lemma chi_insert {i : Fin n} {S : Finset (Fin n)} (hi : i ∉ S) (x : Cube n) :
   rw [chi, Finset.prod_insert hi, chi]
 
 /-- The subsets of `Fin n` in pairs: one not containing `i`, one containing
-it.  This is the splitting the multilinear factorization runs over. -/
+it. This is the splitting the multilinear factorization runs over. -/
 lemma sum_subsets_split (i : Fin n) (F : Finset (Fin n) → ℝ) :
     ∑ T : Finset (Fin n), F T
       = ∑ S ∈ Finset.univ.filter (fun S : Finset (Fin n) => i ∉ S), (F S + F (insert i S)) := by

@@ -3,6 +3,12 @@ module
 public import Mathlib.Util.Notation3
 public import Mathlib.Tactic.Basic
 
+/-!
+# Pair constructions
+
+Pair constructions used by the finite-probability development.
+-/
+
 public section
 
 /-- The pair of two random variables -/

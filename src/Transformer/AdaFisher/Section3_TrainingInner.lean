@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_TrainingBias
+
+/-!
 # AdaFisher — the genuine gradient and the actual Fisher solve
 
 arXiv:2405.16397v3, Algorithm 1, §3.4 and Appendix A.2.
@@ -6,7 +10,7 @@ Exact momentum and Fisher balances supply the inner-product identity
 used by the loss decrease; sufficient alignment is not assumed.
 -/
 
-import Transformer.AdaFisher.Section3_TrainingBias
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 

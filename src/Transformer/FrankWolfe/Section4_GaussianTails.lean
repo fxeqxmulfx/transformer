@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section4_Polytope
+public import Mathlib.Analysis.InnerProductSpace.Rayleigh
+public import Mathlib.Probability.Distributions.Gaussian.Multivariate
+public import Mathlib.Probability.Distributions.Gaussian.Fernique
+public import Mathlib.Probability.Moments.Variance
+
+/-!
 # Gaussian vertices: conditional tail estimates
 
 The proof of `prop: d.to.infty` in §4 of arXiv:2508.09628v1 compares
@@ -14,11 +22,7 @@ alone do not control a skew-symmetric part, so symmetry is retained in the
 operator-norm estimate below.
 -/
 
-import Transformer.FrankWolfe.Section4_Polytope
-import Mathlib.Analysis.InnerProductSpace.Rayleigh
-import Mathlib.Probability.Distributions.Gaussian.Multivariate
-import Mathlib.Probability.Distributions.Gaussian.Fernique
-import Mathlib.Probability.Moments.Variance
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

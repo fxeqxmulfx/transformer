@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryMass
-import Transformer.Grokking.AdamW.PairComparison
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryMass
+public import Transformer.Grokking.AdamW.PairComparison
 
 /-!
 # Actual competing pair envelopes with retained native moments
@@ -26,6 +28,8 @@ from the source's coupled assigned norm cost and gradient descent.
 Both native buffers remain untouched; no replacement optimizer,
 learned GPTMini transfer or floating-point guarantee is asserted.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,25 +1,29 @@
-/-
+module
+
+public import Transformer.RecurrentGradients.SectionA_PowerIteration
+
+/-!
 # Exponential growth, and the entire gradient
 
 arXiv:1211.5063, supplementary "Analytical analysis of the exploding and
 vanishing gradients problem", from the power iteration of
-`SectionA_PowerIteration`.  "Given certain conditions, `∂L_t/∂x_t (W_recᵀ)^l`
+`SectionA_PowerIteration`. "Given certain conditions, `∂L_t/∂x_t (W_recᵀ)^l`
 grows exponentially": the error sent back, `∂L_t/∂x_t ∂x_t/∂x_k`, has norm at
-least `C |λ_j|^l` eventually (`eventually_le_norm_comp_factor_id`).  "If
+least `C |λ_j|^l` eventually (`eventually_le_norm_comp_factor_id`). "If
 `|λ_j| > 1`, it follows that `∂x_t/∂x_k` grows exponentially fast with `l`":
-`‖∂x_t/∂x_k‖ ≥ |λ_j|^l` (`pow_le_norm_factor_id`).  "If `q_j` is not in the
+`‖∂x_t/∂x_k‖ ≥ |λ_j|^l` (`pow_le_norm_factor_id`). "If `q_j` is not in the
 null space of `∂⁺x_k/∂θ` the entire temporal component grows exponentially
 with `l`" (`eventually_le_norm_temporal`).
 
 "This approach extends easily to the entire gradient": `∂L_t/∂θ` is the sum
 over `j` and `k` of the temporal components `c_j λ_j^{t-k} p_j ∂⁺x_k/∂θ`
-(`hasFDerivAt_loss_eigen`, correcting an index).  The claim that the dominant
+(`hasFDerivAt_loss_eigen`, correcting an index). The claim that the dominant
 one makes the sum grow "exponentially fast to infinity with `t`" is false, as
 the components of other `k` grow as fast and may cancel it
 (`not_tendsto_abs_deriv_atTop`).
 -/
 
-import Transformer.RecurrentGradients.SectionA_PowerIteration
+@[expose] public section
 
 open Filter Topology
 
@@ -103,7 +107,7 @@ example (Win : Matrix (Fin 2) κ ℝ) (b : EuclideanSpace ℝ (Fin 2)) (u : ℕ 
 
 /-- **The supplementary's expansion of the entire gradient, corrected**: "If we
 re-write it in terms of the eigen-decomposition of `W`, we get
-`∂L_t/∂θ = Σ_{j=1}^n (Σ_{i=k}^t c_j λ_j^{t-k} q_jᵀ ∂⁺x_k/∂θ)`".  When every
+`∂L_t/∂θ = Σ_{j=1}^n (Σ_{i=k}^t c_j λ_j^{t-k} q_jᵀ ∂⁺x_k/∂θ)`". When every
 Jacobian is `A`, as `W_rec` in the linear model (`factor_id`), and
 `∂L_t/∂x_t = Σ_j c_j p_j` with `p_j A = λ_j p_j`,
 `∂L_t/∂θ = Σ_j Σ_{1 ≤ k ≤ t} c_j λ_j^{t-k} p_j ∂⁺x_k/∂θ`, by eq. (4): the inner
@@ -160,12 +164,12 @@ theorem states_cancelling (θ : ℝ) (t : ℕ) :
 
 /-- **The supplementary's "the same will happen to the sum" is false.**  "We can
 now pick `j` and `k` such that `c_j q_jᵀ ∂⁺x_k/∂θ` does not have 0 norm, while
-maximizing `|λ_j|`.  If for the chosen `j` it holds that `|λ_j| > 1` then
+maximizing `|λ_j|`. If for the chosen `j` it holds that `|λ_j| > 1` then
 `λ_j^{t-k} c_j q_jᵀ ∂⁺x_k/∂θ` will dominate the sum and because this term grows
 exponentially fast to infinity with `t`, the same will happen to the sum."  For
 eq. (`standard_rnn`) with one linear unit, `W_rec = w`, `b = 0`, `x_0 = 0` and
 the parameter `θ = W_in`, so `x_t = w x_{t-1} + θ u_t`, and the loss `L_t = x_t`,
-the sum is `∂L_t/∂θ`, with `c_1 q_1 = 1`, `λ_1 = w` and `∂⁺x_k/∂θ = u_k`.  For
+the sum is `∂L_t/∂θ`, with `c_1 q_1 = 1`, `λ_1 = w` and `∂⁺x_k/∂θ = u_k`. For
 `w = 2`, `u_1 = 1` and `u_2 = -2` the temporal components `2^{t-1}` and
 `-2^{t-1}` of `k = 1, 2` cancel: `x_t = 0` from `t = 2` on
 (`states_cancelling`), so `∂L_t/∂θ = 0`. -/

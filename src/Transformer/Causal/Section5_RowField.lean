@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section5_FrozenLastRow
+public import Mathlib.Analysis.Calculus.LocalExtr.Rolle
+
+/-!
 # Periodicity and limits of the actual frozen scalar row
 
 ArXiv:2411.04990v2, §5, the actual scalar equations in the
@@ -18,8 +23,7 @@ then supply an actual force zero within an angular period.
 Every original interaction and center mass is retained.
 -/
 
-import Transformer.Causal.Section5_FrozenLastRow
-import Mathlib.Analysis.Calculus.LocalExtr.Rolle
+@[expose] public section
 
 open scoped BigOperators
 open Real Set Filter

@@ -1,9 +1,16 @@
-/-
+module
+
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Data.List.Range
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.Ring
+
+/-!
 # The interleaved weight layout changes no answer
 
 `vm-rs/alm-model/src/linear.rs` is where the forward pass spends its time: on
-the `sudoku` trace `Dense::apply` carries 48 % of the run's samples.  It earns
-that back by not storing the matrix the way the file does.  `model.bin` is
+the `sudoku` trace `Dense::apply` carries 48 % of the run's samples. It earns
+that back by not storing the matrix the way the file does. `model.bin` is
 row-major, and `Dense::of` scatters it — row `i`, column `j` of the matrix
 lands at `((i / LANES) * cols + j) * LANES + i % LANES`, so the `j`-th entry
 of `LANES` consecutive rows sits in `LANES` adjacent words and one vector FMA
@@ -11,23 +18,23 @@ advances that many rows at once.
 
 The module docstring claims this "changes no answer", and gives the reason:
 each lane still sums its own row left to right, so no regrouping happens and
-the reference traces stay bit-for-bit what they were.  That claim has two
+the reference traces stay bit-for-bit what they were. That claim has two
 halves and they need different arguments.
 
 The first half is combinatorial and is where a transcription error would
 live: the scatter is a *relabelling*, every `(i, j)` reaching its own word and
-no two sharing one.  `unpack_packed` proves it by exhibiting the inverse, and
+no two sharing one. `unpack_packed` proves it by exhibiting the inverse, and
 `packed_lt_buffer` proves the words are inside the buffer `Dense::of`
 allocates.
 
 The second half is about arithmetic, and the point is that it needs none.
 `rowFold` folds a row with an *arbitrary* `add` and `mul` — not `ℝ`'s, not
 assumed associative, commutative, or anything else — because the order within
-a row is untouched.  `apply_eq_rowMajor` then says the two layouts fold to
+a row is untouched. `apply_eq_rowMajor` then says the two layouts fold to
 the identical element for any such pair, which is the bit-exactness claim:
 had the kernel regrouped a row, no theorem at this generality could hold.
 
-What is not covered here is the padding.  `Dense::of` rounds the row count up
+What is not covered here is the padding. `Dense::of` rounds the row count up
 to a multiple of `LANES` with zeros and `apply` truncates their sums away with
 `&s[..out.len()]`; that is a fact about slice lengths, not about the layout,
 and it is `Transformer.ALM.DensePad` -- which also discharges the hypothesis
@@ -37,10 +44,7 @@ row.
 Source: `vm-rs/alm-model/src/linear.rs`, `Dense::of` and `Dense::apply`.
 -/
 
-import Mathlib.Basic.Real.Basic
-import Mathlib.Data.List.Range
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.Ring
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -62,7 +66,7 @@ def unpack (lanes cols k : ℕ) : ℕ × ℕ :=
 
 /-- **The scatter loses nothing.**  `unpack` is a left inverse of `packed` on
 every address the loop in `Dense::of` writes, so distinct entries land in
-distinct words and each one can be read back.  This is the half of "changes
+distinct words and each one can be read back. This is the half of "changes
 no answer" that a mistyped index would break. -/
 theorem unpack_packed {lanes cols i j : ℕ} (hlanes : 0 < lanes) (hcols : 0 < cols)
     (hj : j < cols) : unpack lanes cols (packed lanes cols i j) = (i, j) := by
@@ -106,7 +110,7 @@ example : packed 8 3 9 2 < 2 * 3 * 8 :=
 /-! ### The fold that is not allowed to regroup -/
 
 /-- One row's inner product, summed left to right, over an **arbitrary**
-`add` and `mul`.  Nothing is assumed of either — not associativity, not
+`add` and `mul`. Nothing is assumed of either — not associativity, not
 commutativity, not that they are `ℝ`'s — because the claim being made about
 the layout is that it changes no partial sum, and a claim that weak in its
 arithmetic is exactly a claim that strong about the order.
@@ -142,7 +146,7 @@ matching row-major one — which is what `Dense::of`'s loop establishes — the
 fold over the packed row and the fold over the file's row are the same
 element, for every `add` and `mul` whatsoever.
 
-That generality is the content.  The equality holds step for step, so it
+That generality is the content. The equality holds step for step, so it
 holds in `f64` too, with its non-associative addition: the partial sums are
 the ones `transformer.cpp` forms, in the order it forms them, and the
 reference traces are reproduced bit for bit rather than to within a rounding.
@@ -158,7 +162,7 @@ theorem apply_eq_rowMajor (add mul : ℝ → ℝ → ℝ) (x : ℕ → ℝ) {w p
 
 /-- The hypotheses are satisfiable at a shape where the two layouts genuinely
 disagree: two lanes, two columns, and the packed buffer is the file's four
-weights with the middle two exchanged.  Row `1` still folds to what the file
+weights with the middle two exchanged. Row `1` still folds to what the file
 says it folds to. -/
 example (add mul : ℝ → ℝ → ℝ) (x : ℕ → ℝ) :
     rowFold add mul

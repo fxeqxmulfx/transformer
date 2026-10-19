@@ -1,4 +1,6 @@
-import Transformer.Modes.Section3_CubicFourier
+module
+
+public import Transformer.Modes.Section3_CubicFourier
 
 /-!
 # Actual inverse Fourier integral of the cubic density correction
@@ -19,6 +21,8 @@ corrected monomial multiplier for the §5.4 display before
 `eq:higher-error-goal`, retaining the original spatial `eq:psi`.
 The correction is a signed integrable function, not an assumed law.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology FourierTransform

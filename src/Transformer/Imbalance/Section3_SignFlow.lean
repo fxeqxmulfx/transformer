@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_SimpleModel
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Ordinary continuous-time sign descent
 
 arXiv:2402.19449v2, Section 3.3, Theorem 3, Appendix I, Lemma 7.
@@ -7,8 +12,7 @@ into the loss. The actual margin is a-b=2t, so the corrected exponential
 rate is exp(-2t), independently of both frequencies and class count.
 -/
 
-import Transformer.Imbalance.Section3_SimpleModel
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open Filter Asymptotics
 

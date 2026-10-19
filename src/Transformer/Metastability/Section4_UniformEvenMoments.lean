@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_UniformPowerIdentity
+
+/-!
 # Exact even-moment recurrence for the original uniform sphere law
 
 ArXiv:2410.06833v1, §4, `prop: concentration unif`, and
@@ -15,7 +19,7 @@ hold for every original unit direction. All laws, coordinates,
 indices and factors remain actual integrals of the original sample.
 -/
 
-import Transformer.Metastability.Section4_UniformPowerIdentity
+@[expose] public section
 
 open Real MeasureTheory
 open scoped BigOperators

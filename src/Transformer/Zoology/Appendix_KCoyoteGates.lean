@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_KCoyotePrimitives
+public import Transformer.Zoology.Appendix_CircuitPrimitives
+
+/-!
 # Two-feature gate projections belong to the K-matrix class
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: butterfly`,
@@ -8,8 +13,7 @@ multiplication gate projections used in the circuit base cases satisfy
 the article's K-matrix restriction.
 -/
 
-import Transformer.Zoology.Appendix_KCoyotePrimitives
-import Transformer.Zoology.Appendix_CircuitPrimitives
+@[expose] public section
 
 namespace Transformer.Zoology
 

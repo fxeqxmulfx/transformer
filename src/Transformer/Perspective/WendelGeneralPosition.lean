@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.Perspective.UniformHemisphere
+public import Mathlib.Probability.ProductMeasure
+
+/-!
 # General position of a uniform spherical sample
 
 For Wendel's formula, every subfamily of at most `d` sampled points must be
-linearly independent almost surely.  This extends the initial-segment result
+linearly independent almost surely. This extends the initial-segment result
 of `UniformHemisphere` to arbitrary finite sets of sample indices.
 
 Source: arXiv:2312.10794v5, §6.1, `r:wendel`.
 -/
 
-import Transformer.Perspective.UniformHemisphere
-import Mathlib.Probability.ProductMeasure
+@[expose] public section
 
 open MeasureTheory
 
@@ -61,7 +65,7 @@ theorem ae_linearIndependent_pi_fintype (σ : Measure (SSphere d))
   exact (linearIndependent_equiv e).2 hX
 
 /-- Every fixed subfamily of at most `d` points in an i.i.d. uniform
-spherical sample is linearly independent almost surely.  The product-law
+spherical sample is linearly independent almost surely. The product-law
 marginal on the chosen indices is again a product law.
 
 Source: arXiv:2312.10794v5, §6.1, `r:wendel`. -/
@@ -87,7 +91,7 @@ theorem ae_linearIndependent_on_finset (σ : Measure (SSphere d))
   exact (ae_map_iff hres.aemeasurable hmeas).mp hae
 
 /-- A finite uniform spherical sample is almost surely in linear general
-position: every subfamily of at most `d` points is independent.  This is the
+position: every subfamily of at most `d` points is independent. This is the
 nondegeneracy condition used in the counting proof of Wendel's formula.
 
 Source: arXiv:2312.10794v5, §6.1, `r:wendel`. -/

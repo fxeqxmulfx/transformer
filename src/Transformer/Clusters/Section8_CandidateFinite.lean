@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Clusters.Section8_CandidateBoundary
+public import Mathlib.Analysis.Convex.Combination
+public import Mathlib.Data.Finset.Powerset
+public import Mathlib.Data.Set.Card
+
+/-!
 # Finitely many candidate limits
 
 The finiteness part of Claim `cl:propofS`, arXiv:2305.05465v6, §8.1.
@@ -16,10 +23,7 @@ linear-span assertion. It includes the zero candidate and allows arbitrary
 finite generators, including redundant generators and the empty set.
 -/
 
-import Transformer.Clusters.Section8_CandidateBoundary
-import Mathlib.Analysis.Convex.Combination
-import Mathlib.Data.Finset.Powerset
-import Mathlib.Data.Set.Card
+@[expose] public section
 
 open scoped BigOperators
 open Real

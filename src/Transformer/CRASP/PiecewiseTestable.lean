@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.CRASP.Alternating
+public import Transformer.CRASP.Parikh
+public import Transformer.CRASP.SubsequenceTwoSided
+
+/-!
 # Piecewise testable languages and the separating family
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -7,7 +13,7 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 A *𝒥-expression* is a language `Σ*σ₁Σ*σ₂Σ*⋯Σ*σ_kΣ*`, that is, the set of
 strings containing `σ₁ ⋯ σ_k` as a subsequence; a language is *`k`-piecewise
 testable* if it is a Boolean combination of 𝒥-expressions with at most `k`
-fixed symbols.  `PT` is the syntax of such a Boolean combination and
+fixed symbols. `PT` is the syntax of such a Boolean combination and
 `PT.width` counts its longest 𝒥-expression, so `KPiecewiseTestable` reads off
 the definition directly.
 
@@ -27,9 +33,7 @@ testable; the odd case, the companion `K_b^k`, and the use made of both
 require `Σ*(aΣ*bΣ*)^{k/2}`.
 -/
 
-import Transformer.CRASP.Alternating
-import Transformer.CRASP.Parikh
-import Transformer.CRASP.SubsequenceTwoSided
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -47,7 +51,7 @@ inductive PT (σ : Type u) : Type u
   /-- Intersection. -/
   | and : PT σ → PT σ → PT σ
 
-/-- The language of a Boolean combination of 𝒥-expressions.  A string is in
+/-- The language of a Boolean combination of 𝒥-expressions. A string is in
 the 𝒥-expression of `s` exactly when `s` is a subsequence of it. -/
 def PT.lang : PT σ → Set (List σ)
   | .jexpr s => {w | s.Sublist w}
@@ -171,7 +175,7 @@ theorem definableL_of_kPiecewiseTestable [DecidableEq σ] (k : ℕ) (L : Set (Li
 `(2k+1)`-piecewise testable language is definable in `TL[◁#, ▷#]_{k+1}`:
 `PT.toForm` with the two-sided test `subseqTwoSided k`, which guesses the
 middle symbol with one `◁#` and checks the `k` symbols on either side of it at
-depth `k`.  The halves `φ_L`, `φ_R` of the paper count non-strictly and so let
+depth `k`. The halves `φ_L`, `φ_R` of the paper count non-strictly and so let
 them reuse the middle position; `subseqTwoSided` counts strictly. -/
 theorem definable_of_kPiecewiseTestable [DecidableEq σ] (k : ℕ) (L : Set (List σ))
     (h : KPiecewiseTestable (2 * k + 1) L) : Definable L (k + 1) := by

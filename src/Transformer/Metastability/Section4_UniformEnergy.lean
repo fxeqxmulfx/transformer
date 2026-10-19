@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_EnergyGap
+public import Transformer.Metastability.Section4_UniformLaw
+public import Transformer.Perspective.WendelSignSymmetry
+
+/-!
 # The expected uniform energy is strictly below consensus
 
 This is the probabilistic step for arXiv:2410.06833v1, §4,
@@ -17,9 +23,7 @@ The strict gap comes from an off-diagonal ordered pair. Independence supplies
 the reflection invariance, and compactness controls the integrals.
 -/
 
-import Transformer.Metastability.Section4_EnergyGap
-import Transformer.Metastability.Section4_UniformLaw
-import Transformer.Perspective.WendelSignSymmetry
+@[expose] public section
 
 open Real MeasureTheory
 open scoped BigOperators

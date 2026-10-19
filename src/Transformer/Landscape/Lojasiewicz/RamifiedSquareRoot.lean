@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.AnalyticImplicitBranch
+public import Mathlib.Analysis.Analytic.IsolatedZeros
+public import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
+
+/-!
 # Analytic square roots after a square ramification
 
 An analytic germ which is nonnegative arbitrarily close on the positive
@@ -7,9 +13,7 @@ handles odd-order zeros; the square root of the remaining positive unit
 is constructed from the analytic logarithm and exponential.
 -/
 
-import Transformer.Landscape.Lojasiewicz.AnalyticImplicitBranch
-import Mathlib.Analysis.Analytic.IsolatedZeros
-import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
+@[expose] public section
 
 open Filter Set
 

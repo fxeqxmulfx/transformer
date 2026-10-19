@@ -1,4 +1,12 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+
+public import Transformer.Landscape.SaddleAvoidance.Convergence
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
+
+/-!
 # Saddle avoidance — gradient flows are trapped near a Łojasiewicz point
 
 Along a trajectory of the gradient flow `ẋ = -∇f(x)`, `f` decreases at the
@@ -7,7 +15,7 @@ Where `m (f - f z) ^ a ≤ ‖∇f‖` with `0 ≤ a < 1` and `f > f z`, the spe
 `‖∇f‖` is at most the rate at which `(f - f z) ^ (1 - a) / (m (1 - a))`
 decreases, so the length of the path is bounded by the drop of
 `(f - f z) ^ (1 - a)` (`mul_norm_sub_le_of_gradientFlow`, through Mathlib's
-fencing theorem `image_norm_le_of_norm_deriv_right_le_deriv_boundary'`).  A
+fencing theorem `image_norm_le_of_norm_deriv_right_le_deriv_boundary'`). A
 trajectory that starts close to `z`, with `f` close to `f z` and above it,
 therefore never leaves the ball where the Łojasiewicz inequality holds: at
 its first exit time it would still be inside (`mem_ball_of_gradientFlow`).
@@ -22,9 +30,7 @@ interval; the trap needs the estimate up to an exit time, where the
 Łojasiewicz inequality may fail.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Convergence
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
+@[expose] public section
 
 open Filter Metric Set
 open scoped Topology

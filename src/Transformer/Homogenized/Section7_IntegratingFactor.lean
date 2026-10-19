@@ -1,5 +1,7 @@
-import Transformer.Homogenized.Section7_WeightedGridLimit
-import Transformer.Homogenized.Section7_WeightedMartingale
+module
+
+public import Transformer.Homogenized.Section7_WeightedGridLimit
+public import Transformer.Homogenized.Section7_WeightedMartingale
 
 /-!
 # The actual adapted integrating factor on a finite horizon
@@ -16,6 +18,8 @@ is proved equal to exp(-∫₀ᵗa) at every t in [0,T]. Thus its derivative
 at the endpoints requires no information outside the original
 horizon. All bounds and adaptedness concern that same factor.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory Filter Topology
 open scoped BigOperators

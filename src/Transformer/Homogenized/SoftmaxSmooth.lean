@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.SoftmaxDerivatives
+
+/-!
 # Homogenized Transformers — the softmax is smooth with bounded derivatives
 
 `claim:softmax_is_smooth` of arXiv:2604.01978v1, as stated in
@@ -6,19 +10,19 @@
 `χ_j` is at most `C_k χ_j`, with `C_k` depending on `k` alone.
 
 The proof runs the source's induction on monomials in the weights,
-`χ_a = χ_{a_1} ⋯ χ_{a_p}`.  By `fderiv_softmaxWeight`,
+`χ_a = χ_{a_1} ⋯ χ_{a_p}`. By `fderiv_softmaxWeight`,
 
   `∂χ_a/∂z_s = #{i : a_i = s} · χ_a - p · χ_a χ_s`,
 
 a combination of two monomials, of degrees `p` and `p + 1`, with coefficients
-at most `p`, both keeping the factor `χ_{a_1}`.  Since every weight lies in
+at most `p`, both keeping the factor `χ_{a_1}`. Since every weight lies in
 `[0,1]`, `|∂^k χ_a| ≤ C(k, p) χ_{a_1}` with `C(0, p) = 1` and
 `C(k+1, p) = p · C(k, p) + p · C(k, p+1)` — independent of the number of scores.
 
 Source: arXiv:2604.01978v1, `claim:softmax_is_smooth`.
 -/
 
-import Transformer.Homogenized.SoftmaxDerivatives
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -85,7 +89,7 @@ theorem monomialBound_nonneg : ∀ k p, 0 ≤ monomialBound k p
 /-- **The partial derivatives of a monomial are bounded by its first factor**,
 uniformly in the scores and in their number:
 `|∂^k χ_a / ∂z_{r_1} ⋯ ∂z_{r_k}| ≤ C(k, p) · χ_{a_1}` for a monomial of degree
-`p ≥ 1`.  Every monomial the induction produces keeps the factor `χ_{a_1}`.
+`p ≥ 1`. Every monomial the induction produces keeps the factor `χ_{a_1}`.
 
 Source: arXiv:2604.01978v1, `claim:softmax_is_smooth`. -/
 theorem abs_iteratedFDeriv_softmaxMonomial_le (hm : 0 < m) :

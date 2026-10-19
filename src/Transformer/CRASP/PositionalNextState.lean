@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.PositionalStateCounts
+
+/-!
 # One finite-state attention step in positional logic
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLClmod`.
@@ -6,7 +10,7 @@ After enumerating a query state and an attention vector, the update is a
 finite Boolean test. Only the weighted prefix sums add counting depth.
 -/
 
-import Transformer.CRASP.PositionalStateCounts
+@[expose] public section
 
 namespace Transformer.CRASP.PositionalNext
 

@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.AtomicMatchingContinuity
-import Mathlib.Logic.Equiv.Fin.Basic
+module
+
+public import Transformer.GPTMini.Sparsemax.AtomicMatchingContinuity
+public import Mathlib.Logic.Equiv.Fin.Basic
 
 /-!
 # Causal neighboring-token keys with freely learned original values
@@ -16,6 +18,8 @@ representation: physical storage remains V-by-2H Q/K and V-by-D values, with
 no V-squared table. All coordinates are free inside the same numerical box.
 This preserves causality and continuity across attention support changes.
 -/
+
+@[expose] public section
 
 noncomputable section
 

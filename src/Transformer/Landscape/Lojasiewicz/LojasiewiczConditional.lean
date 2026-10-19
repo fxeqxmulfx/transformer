@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.GradientInequalityCover
+public import Mathlib.Data.Finset.Lattice.Fold
+public import Transformer.Landscape.Lojasiewicz.ModulatedConvergence
+
+/-!
 # Compact uniformization and conditional modulated convergence
 
 All steps of Appendix D.1 of arXiv:2510.22026v2 after the local analytic
 gradient inequality are proved, without extra time regularity assumptions.
 -/
 
-import Transformer.Landscape.Lojasiewicz.GradientInequalityCover
-import Mathlib.Data.Finset.Lattice.Fold
-import Transformer.Landscape.Lojasiewicz.ModulatedConvergence
+@[expose] public section
 
 namespace Transformer.Landscape.Lojasiewicz
 

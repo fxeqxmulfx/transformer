@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.Section3_EnergyTaylor
+
+/-!
 # A proved, uniform PL inequality for the angular interaction energy
 
 ArXiv:2410.06833v1, §3.2, `lem: PL.borjan`.
@@ -15,7 +19,7 @@ of that selected point. Its coefficient is fixed before the configuration.
 All norm squares are Euclidean coordinate sums.
 -/
 
-import Transformer.Metastability.Section3_EnergyTaylor
+@[expose] public section
 
 open scoped BigOperators
 open Set Real

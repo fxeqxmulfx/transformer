@@ -1,6 +1,8 @@
-import Transformer.Modes.Section3_SumCharFun
-import Mathlib.Analysis.Calculus.Taylor
-import Mathlib.Analysis.Complex.RealDeriv
+module
+
+public import Transformer.Modes.Section3_SumCharFun
+public import Mathlib.Analysis.Calculus.Taylor
+public import Mathlib.Analysis.Complex.RealDeriv
 
 /-!
 # Taylor remainders for the actual phase exponential
@@ -18,6 +20,8 @@ nonsharp; the quadratic and cubic cases suffice for finite third and
 fourth moments. Integrating preserves these bounds and requires only
 the next absolute moment, as in the hypotheses of §3 `thm:br`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped BigOperators

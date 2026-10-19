@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianInterpolationDerivative
+
+/-!
 # Actual coordinate and vector gradient expectations in Gaussian interpolation
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -16,7 +20,7 @@ order when the two original covariance contractions are combined.
 No vector integration-by-parts identity or gradient moment is assumed.
 -/
 
-import Transformer.Homogenized.Section7_GaussianInterpolationDerivative
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators

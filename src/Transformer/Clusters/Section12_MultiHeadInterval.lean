@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadEscape
+
+/-!
 # The original multi-head layer factor and rescaled token interval
 
 ArXiv:2305.05465v6, §12, `sec:conclusion`, and §3,
@@ -15,7 +19,7 @@ it uses their actual normalized attention averages and assumes no
 limiting token configuration or convergence rate.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadEscape
+@[expose] public section
 
 open scoped BigOperators
 open Real Set

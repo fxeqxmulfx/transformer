@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Kinetic.Defs
+public import Transformer.Kinetic.Riemann
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
+public import Mathlib.Analysis.Calculus.Deriv.Shift
+
+/-!
 # Kinetic theory for Transformers — the mean-field limit
 
 Formalization of `th:mf-gpt`(i) of arXiv:2605.09213v1,
@@ -10,11 +18,7 @@ the causal structure: a token at cursor `σ` sees only `σ' < σ`, weighted by t
 graphon `k_λ`.
 -/
 
-import Transformer.Kinetic.Defs
-import Transformer.Kinetic.Riemann
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-import Mathlib.Analysis.Calculus.Deriv.Shift
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -82,9 +86,9 @@ empirical measures, so `f` is written through its disintegration
 `σ ↦ f(t,σ,·) ∈ 𝒫(𝕋)`, which is what the source's `f(t,σ,θ)` denotes and which a measure on
 `(0,1] × 𝕋` determines only for almost every `σ`: the initial condition and the equation are
 asked for almost every `σ`, the velocity `V[f](t,σ,·)` depends on `f(t,σ',·)` for `σ' < σ`
-through an integral and so not on the choice of the kernel.  The disintegration is measurable in
+through an integral and so not on the choice of the kernel. The disintegration is measurable in
 `σ` (`IsCursorKernel`), which is part of being a solution: without it the velocity is not
-defined.  As the source's solutions are weakly continuous in `t`, the equation is asked as a
+defined. As the source's solutions are weakly continuous in `t`, the equation is asked as a
 time derivative at every `t ≥ 0`.
 
 Source: arXiv:2605.09213v1, `eq:mfl-lambda`. -/
@@ -127,17 +131,17 @@ and `f(t,σ,θ)` denotes their disintegration over the cursor `σ`, which is def
 almost every `σ`.
 
 * The earlier statement took `f_∘` and `f` to be arbitrary maps `σ ↦ 𝒫(𝕋)`, with no
-  measurability in `σ`.  For such maps the velocity `V[f]` and the limit integral of
+  measurability in `σ`. For such maps the velocity `V[f]` and the limit integral of
   `EmpiricalTendsto` are integrals of non-measurable functions, which vanish in Lean, so
-  the statement was about junk.  The initial profile is now a cursor kernel (`hf₀`) and so
-  is each `f t` (a clause of `IsMeanFieldSolution`).  The `L^∞` bound in `t` is automatic for
+  the statement was about junk. The initial profile is now a cursor kernel (`hf₀`) and so
+  is each `f t` (a clause of `IsMeanFieldSolution`). The `L^∞` bound in `t` is automatic for
   probability measures.
 * The earlier statement asked the initial condition and the equation at *every* `σ`, and
-  `g t σ = f t σ` for every `σ`.  A disintegration is determined only almost everywhere, and the
+  `g t σ = f t σ` for every `σ`. A disintegration is determined only almost everywhere, and the
   source identifies solutions as measures (elements of `L^∞`), so the initial condition, the
   equation and the uniqueness are now almost everywhere in `σ ∈ (0,1]`.
 * The source fixes `β > 0` (`eq:wbeta`); `hβ` is added (the earlier statement had every real
-  `β`).  `λ ∈ ℝ` is as in the source.
+  `β`). `λ ∈ ℝ` is as in the source.
 
 Source: arXiv:2605.09213v1, `th:mf-gpt`(i). -/
 theorem mean_field_limit (lam β : ℝ) (hβ : 0 < β) (f₀ : ℝ → ProbabilityMeasure Torus)
@@ -154,7 +158,7 @@ theorem mean_field_limit (lam β : ℝ) (hβ : 0 < β) (f₀ : ℝ → Probabili
 
 /-- The hypotheses of `mean_field_limit` are satisfiable: tokens that never move, all at the
 origin of `𝕋`, whose empirical measures converge to `δ_0` at every cursor (Riemann sums,
-`tendsto_rightRiemann`).  The flow is witnessed for every `N`, the profile `σ ↦ δ_0` is
+`tendsto_rightRiemann`). The flow is witnessed for every `N`, the profile `σ ↦ δ_0` is
 constant and so a cursor kernel. -/
 example : ∃ lam β : ℝ, 0 < β ∧ ∃ f₀ : ℝ → ProbabilityMeasure Torus, IsCursorKernel f₀ ∧
     (∀ N : ℕ, IsGPTFlow lam β N (fun _ _ => 0)) ∧

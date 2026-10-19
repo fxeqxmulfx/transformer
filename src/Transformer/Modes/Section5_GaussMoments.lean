@@ -1,9 +1,14 @@
-/-
+module
+
+public import Transformer.Modes.Section2_GaussianInt
+public import Mathlib.Probability.Distributions.Gaussian.Real
+
+/-!
 # The number of modes of a Gaussian KDE — the moments behind §5.2
 
 The five expectations of `lem:moments-p` are all read the same way in §5.2 of
 arXiv:2412.09080v3: complete the square in the exponent, shift, and integrate
-a polynomial of degree at most four against `e^{-au²}`.  This file carries
+a polynomial of degree at most four against `e^{-au²}`. This file carries
 that reading once, for every such integrand.
 
 * `integral_odd_pow_mul_exp_neg_mul_sq`, `integral_even_pow_mul_exp_neg_mul_sq`:
@@ -18,8 +23,7 @@ that reading once, for every such integrand.
 Source: arXiv:2412.09080v3, §5.1 (`lem:gaussian-int`) and §5.2.
 -/
 
-import Transformer.Modes.Section2_GaussianInt
-import Mathlib.Probability.Distributions.Gaussian.Real
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

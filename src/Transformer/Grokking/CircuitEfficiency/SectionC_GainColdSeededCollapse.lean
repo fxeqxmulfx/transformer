@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdWeightedDissipation
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdMassDissipation
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdWeightedDissipation
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdMassDissipation
 
 /-!
 # Actual initialized critical collapse with retained native betas
@@ -36,6 +38,8 @@ selection or the transition time. Learned stochastic/numerical
 GPTMini and thermodynamic size scaling remain separate claims.
 Frozen transformer experiments and optimizers are unchanged.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

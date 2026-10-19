@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_SphericalInteraction
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+
+/-!
 # Original L¹ and L² estimates for localized spherical fields
 
 ArXiv:2601.21366v2, §5.3, the localization estimate in
@@ -15,8 +20,7 @@ Every integral below is justified on the compact original space;
 there is no assumption about a density or finite atomic support.
 -/
 
-import Transformer.Perceptron.Section5_SphericalInteraction
-import Mathlib.MeasureTheory.Integral.Bochner.Set
+@[expose] public section
 
 open Real MeasureTheory Set
 

@@ -1,28 +1,32 @@
-/-
+module
+
+public import Transformer.Perspective.SyncKernelIntegral
+public import Transformer.Perspective.SyncKernelExp
+
+/-!
 # Bounds on `f_β''` from pieces of `cos x`
 
 Polyanskiy, Rigollet, Yao — arXiv:2507.22857v1, *Synchronization of mean-field
 models on the circle*, §5, proof of `cor:conjecture`.
 
 The criterion `τ_β ∫ |f_β'''|₊ < 4` of §5 follows from bounds `L ≤ f_β'' ≤ U` on
-`[0, π]` (`integral_posPart_f_β'''_le`).  With `c = cos x` and `s = sin x ≥ 0`,
+`[0, π]` (`integral_posPart_f_β'''_le`). With `c = cos x` and `s = sin x ≥ 0`,
 
   `f_β''(x) = s (β² s² - 3βc - 1) e^{β(c - 1)}`  (`f_β''_eq_mul`).
 
 On a piece `c ∈ [c₁, c₂] ⊆ [0, 1]` with `β ∈ [β₁, β₂]`: `s² ≤ 1 - c₁²`,
 `1 + 3βc - β² s² ≤ 1 + 3β₂c₂ - β₁²(1 - c₂²)` and `e^{β(c - 1)} ≤ e^{-β₁(1 - c₂)}`,
 where `e^y` is at least its Taylor polynomial `expPoly y` of degree 5
-(`taylor_five_le_exp`).  So `-f_β'' ≤ A` on the piece once an inequality
-between numbers holds (`NegPieceOK`, `neg_f_β''_le_of_negPieceOK`).  Likewise
-`f_β'' ≤ U` on a piece `-c ∈ [u₁, u₂]` (`PosPieceOK`, `f_β''_le_of_posPieceOK`).  The pieces between
+(`taylor_five_le_exp`). So `-f_β'' ≤ A` on the piece once an inequality
+between numbers holds (`NegPieceOK`, `neg_f_β''_le_of_negPieceOK`). Likewise
+`f_β'' ≤ U` on a piece `-c ∈ [u₁, u₂]` (`PosPieceOK`, `f_β''_le_of_posPieceOK`). The pieces between
 consecutive points of a list cover `[0, 1]` (`exists_piece_of_isChain`).
 
 These bounds take the place of the functions `g¹`, `g²` and `g_β` of
 `lemma:beta1`, …, `lemma:beta_0.33`.
 -/
 
-import Transformer.Perspective.SyncKernelIntegral
-import Transformer.Perspective.SyncKernelExp
+@[expose] public section
 
 open Real
 

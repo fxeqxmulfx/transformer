@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdInstability
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdInstability
 
 /-!
 # Recurrent internal mass and squared norm under weak native decay
@@ -30,6 +32,8 @@ actual partner-mixing argument must connect them to product logits.
 Fixed physical gains/tables and uniform native decay differ from the
 source's coupled norm-cost GD and learned stochastic/numerical GPTMini.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

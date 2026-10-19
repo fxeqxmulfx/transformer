@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section10_ProjectedDynamics
+public import Transformer.Clusters.Section8_HullLimit
+
+/-!
 # The projected hull converges to a genuine polytope
 
 ArXiv:2305.05465v6, §10, the first paragraph of `t:multiplicity`.
@@ -14,8 +19,7 @@ real-valued Hausdorff convention. Candidate finiteness and the convergence
 of individual projected tokens are separate later steps.
 -/
 
-import Transformer.Clusters.Section10_ProjectedDynamics
-import Transformer.Clusters.Section8_HullLimit
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

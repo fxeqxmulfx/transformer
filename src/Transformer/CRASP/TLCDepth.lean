@@ -1,28 +1,32 @@
-/-
+module
+
+public import Transformer.CRASP.Depth
+public import Transformer.CRASP.LowerBoundTwoSided
+
+/-!
 # The depth hierarchy of `TL[◁#, ▷#]`
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 (COLM 2025), Appendix D: `lem:cropping` and `thm:TLC_depth`.
 
-Adding future counting costs a factor of two in the separating language.  The
+Adding future counting costs a factor of two in the separating language. The
 reason is stated at the head of the appendix: "if the Parikh vector of a word
 is fixed we can rewrite `▷#` in terms of `◁#` and `n⃗`" — a minimal depth-1
 subformula is still a half-plane in the counts of `a` and `b`, so cropping
 still works, but now it must crop away from *every* side of the interval, and
 each reduction step therefore eats a block at the left and a block at the
-right.  The separating family is
+right. The separating family is
 
     D_k = L_{2k-1} = (a⁺b⁺)^{k-1} a⁺,
 
 and `D_{k+1}` separates depth `k` from depth `k+1`.
 
 `lem:cropping` is false as stated, for the reason `lem:cropping_oneway` is
-(`cropping_unsound`): a count reads the positions before the interval too.  The
+(`cropping_unsound`): a count reads the positions before the interval too. The
 lower bound is proved without it, in `CRASP.LowerBoundTwoSided`.
 -/
 
-import Transformer.CRASP.Depth
-import Transformer.CRASP.LowerBoundTwoSided
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_SeparationPhases
+
+/-!
 # Original weak support separation with a uniform control bound
 
 ArXiv:2411.04551v3, §3.2, `prop: separation`.
@@ -23,7 +27,7 @@ are explicit hypotheses. Equal inputs refute the printed statement;
 N=0 is incompatible with a positive-time partition having zero pieces.
 -/
 
-import Transformer.Interpolation.Section3_SeparationPhases
+@[expose] public section
 
 open Real MeasureTheory
 

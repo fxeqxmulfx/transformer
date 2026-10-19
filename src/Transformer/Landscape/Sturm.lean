@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.QueryExamples
+public import Transformer.Landscape.Sturm.Thresholds
+
+/-!
 # Real polynomial sign queries for analytic projection
 
 The minimal audited Sturm theorem closure is adapted locally from
@@ -10,5 +15,4 @@ These are auxiliary results for Appendix D.1, `lem: loj`, of
 arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.QueryExamples
-import Transformer.Landscape.Sturm.Thresholds
+@[expose] public section

@@ -1,4 +1,6 @@
-import Transformer.Clusters.Section12_ReluBounds
+module
+
+public import Transformer.Clusters.Section12_ReluBounds
 
 /-!
 # A global clock-driven ODE for the ReLU test configuration
@@ -21,6 +23,8 @@ truncation is inactive on the resulting trajectory. That equality
 will be proved before using the trajectory as a solution of the
 source's actual feed-forward equation.
 -/
+
+@[expose] public section
 
 open Real
 namespace Transformer.Clusters

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.LearnedParityConfidence
+module
+
+public import Transformer.GPTMini.Convex.Structured.LearnedParityConfidence
 
 /-!
 # Completed learned parity coordinates solve every original raw input
@@ -24,6 +26,8 @@ FFN weights, or extend the original nineteen-position parity grammar.
 Uniformity includes both raw supervised prefix forms and arbitrary
 assignments of every parameter outside the saved finite row certificate.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

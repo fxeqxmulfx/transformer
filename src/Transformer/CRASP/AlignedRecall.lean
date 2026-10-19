@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.CRASP.BoundedExists
+public import Transformer.CRASP.FormulaBounds
+public import Transformer.CRASP.Locality
+public import Transformer.CRASP.QueryFree
+public import Transformer.CRASP.Transformers
+public import Transformer.Zoology.Section3_MQAR
+
+/-!
 # Aligned recall over a finite vocabulary is counting at depth 1
 
 In no paper: the remark behind the lab's choice of a recall vocabulary larger
@@ -6,11 +15,11 @@ than either model's width (`python/src/lab/domain/basis.py`).
 
 Zoology's MQAR (arXiv:2312.04927v1, Appendix `sec: intro-general-ar`, Setup;
 `Transformer.Zoology.MQARInstance`) asks at each row `i` for the value `v_j`
-of an earlier row `j < i` whose key is the query `q_i`.  Its attention
+of an earlier row `j < i` whose key is the query `q_i`. Its attention
 solution (§4, `prop: attention-ar`, proved as `prop: app-attention`) spends
 its first layer shifting each value onto its key; after it, the input is a
 string of triples (key, value, query) over a vocabulary of `c` tokens
-(`word`).  Over a finite vocabulary the answer then needs no comparison of a
+(`word`). Over a finite vocabulary the answer then needs no comparison of a
 query with a key: "the value `v` answers the query at `i`" is
 
     ⋁_{q < c} (query = q ∧ ∃ j < i [key = q ∧ value = v]),
@@ -18,22 +27,17 @@ query with a key: "the value `v` answers the query at `i`" is
 a formula of `TL[◁#]` of depth 1 (`answers_mem`) that is true exactly where
 `v` answers (`sat_answers`), and that counts nothing but the `c` formulas
 `key = q ∧ value = v` (`countSubs_answers`); the `c` values together take
-`c²` counts, one per pair.  By `thm:transformer_equivalence` of
+`c²` counts, one per pair. By `thm:transformer_equivalence` of
 arXiv:2506.16055v3 a future-masked rounded transformer of one layer, whose
 attention in that construction ignores the query (`RTfr.QueryFree`),
 recognizes the instances whose last query `v` answers (`exists_rtfr_answers`):
 over a fixed vocabulary, aligned recall is counting, with no attention from a
-query to a key.  At `n + 1 ≥ c` rows such a transformer needs
+query to a key. At `n + 1 ≥ c` rows such a transformer needs
 `c - 1 ≤ k (2d + 1) log₂(2^p (n + 1) + 1)`, a width growing with `c`
 (`two_pow_le_of_queryFree`, `CRASP.QueryFreeRecall`).
 -/
 
-import Transformer.CRASP.BoundedExists
-import Transformer.CRASP.FormulaBounds
-import Transformer.CRASP.Locality
-import Transformer.CRASP.QueryFree
-import Transformer.CRASP.Transformers
-import Transformer.Zoology.Section3_MQAR
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

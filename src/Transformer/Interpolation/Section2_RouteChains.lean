@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_GreatArcs
+public import Mathlib.Topology.MetricSpace.Thickening
+
+/-!
 # Chains of balls along generic great circle arcs
 
 ArXiv:2411.04551v3, §2.2, proof of `prop: compression`, Step 3: chains
@@ -12,8 +17,7 @@ compact subset of the open set off those finitely many points, so a
 thickening of it is too.
 -/
 
-import Transformer.Interpolation.Section2_GreatArcs
-import Mathlib.Topology.MetricSpace.Thickening
+@[expose] public section
 
 open Set Filter Topology
 

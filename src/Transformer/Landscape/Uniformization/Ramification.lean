@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.NormalCrossing
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+/-!
 # Local uniformization: ramified coordinates
 
 The maps `ram w' q b t = w' + (±t_j^q)_j` with signs `b`. Every point `x'` with
@@ -8,8 +13,7 @@ times a monomial in `t`. Auxiliary for the Newton step of local uniformization f
 Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Uniformization.NormalCrossing
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators Topology

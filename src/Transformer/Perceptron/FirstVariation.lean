@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Minimizer
+public import Transformer.Perspective.PartitionGradient
+
+/-!
 # Perceptrons and attention's mean-field landscape — the first variation
 
 The first variation of the coupled energy,
@@ -17,8 +22,7 @@ Source: arXiv:2601.21366v2, §2.1 (the first variation of `𝖤_β`) and §2.3 (
 of `E_{β,ϑ}`).
 -/
 
-import Transformer.Perceptron.Minimizer
-import Transformer.Perspective.PartitionGradient
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

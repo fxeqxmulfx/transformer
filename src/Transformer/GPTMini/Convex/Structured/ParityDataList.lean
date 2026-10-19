@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.LocalConfidence
+module
+
+public import Transformer.GPTMini.Convex.Structured.LocalConfidence
 
 /-!
 # Actual finite parity token lists and chronological path composition
@@ -18,6 +20,8 @@ In particular, the finite lists introduce no new tokens and no teacher
 input to the model. They are an exact representation of existing data
 for proofs about the actual learned probability of that data path.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

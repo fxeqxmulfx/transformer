@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.IncidentRegularizedMemory
+module
+
+public import Transformer.GPTMini.Sparsemax.IncidentRegularizedMemory
 
 /-!
 # Quantitative geometry descent in the actual common-value chart
@@ -16,6 +18,8 @@ proved parameter projection, supplies an actual joint minimum. This makes
 the remaining output-existence requirement explicit without choosing a
 model task loss or claiming unconditioned text generalization.
 -/
+
+@[expose] public section
 
 noncomputable section
 

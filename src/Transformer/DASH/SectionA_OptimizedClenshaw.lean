@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_MatrixChebyshev
+
+/-!
 # DASH — the complete optimized matrix Clenshaw algorithm
 
 arXiv:2602.02016v2, Appendix A, `algorithm:cbshv-clenshaw-matrix-optimized`.
@@ -6,7 +10,7 @@ The returned natural number counts matrix-matrix products, excluding scalar
 multiplication, additions, and construction of the normalized argument.
 -/
 
-import Transformer.DASH.SectionA_MatrixChebyshev
+@[expose] public section
 
 open scoped Matrix
 

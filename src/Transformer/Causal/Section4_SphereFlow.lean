@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Causal.Section4_ParticleField
+public import Transformer.Perspective.Section2_SphereFlow
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # The actual causal attention flow exists globally and is unique
 
 ArXiv:2411.04990v2, §2, `eqn:csa`, and §4, proof of `thm1`.
@@ -15,8 +21,7 @@ real temperatures, all original matrices, and empty token tuples.
 No existence or invariance premise is included in its definition.
 -/
 
-import Transformer.Causal.Section4_ParticleField
-import Transformer.Perspective.Section2_SphereFlow
+@[expose] public section
 
 open scoped BigOperators
 open Real Set Filter Topology

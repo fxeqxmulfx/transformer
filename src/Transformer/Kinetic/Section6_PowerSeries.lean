@@ -1,16 +1,20 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.Calculus.SmoothSeries
+public import Mathlib.Analysis.SpecificLimits.Normed
+
+/-!
 # Kinetic theory for Transformers — entire power series
 
 The proof of `thm:U-shape` of arXiv:2605.09213v1 differentiates termwise the series
 `ψ_c(y) = Σ_k c^{k+1} y^k / (k!(k+1)!)` of the profile at the output layer, which converges on
-the whole line.  This is that calculus: coefficients summable against every power (`IsEntire`),
+the whole line. This is that calculus: coefficients summable against every power (`IsEntire`),
 the sum `powerSum a y = Σ_k a_k y^k`, its derivative, the sum of the coefficients
 `(k+1) a_{k+1}` (`hasDerivAt_powerSum`), linearity, and comparison of sums.
 -/
 
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.Calculus.SmoothSeries
-import Mathlib.Analysis.SpecificLimits.Normed
+@[expose] public section
 
 open scoped BigOperators
 

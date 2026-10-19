@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.DASH.Section2_Models
+public import Mathlib.Logic.Equiv.Fin.Basic
+
+/-!
 # DASH — lossless block layout and stacked batches
 
 arXiv:2602.02016v2, §4. The equivalence is with the same
 blockwise Shampoo computation, not with unblocked Shampoo.
 -/
 
-import Transformer.DASH.Section2_Models
-import Mathlib.Logic.Equiv.Fin.Basic
+@[expose] public section
 
 namespace Transformer.DASH
 

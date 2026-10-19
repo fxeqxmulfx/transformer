@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_ProjectionFlow
+public import Transformer.Landscape.GlobalFlow.Existence
+public import Mathlib.Analysis.Calculus.ContDiff.RCLike
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
 # The constant projection formula solves the original ODE
 
 ArXiv:2411.04551v3, §3.1, proof of `lem: first.quadrant`.
@@ -7,10 +14,7 @@ of the polynomial ambient field then gives the group law and its continuous
 inverse on the sphere. These are actual flow maps of `x' = Proj_x w`.
 -/
 
-import Transformer.Interpolation.Section3_ProjectionFlow
-import Transformer.Landscape.GlobalFlow.Existence
-import Mathlib.Analysis.Calculus.ContDiff.RCLike
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open Real
 

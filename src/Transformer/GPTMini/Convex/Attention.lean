@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.GPTMini.Convex.Basic
+public import Transformer.GPTMini.AttentionBounds
+
+/-!
 # Causal sparsemax with the gpt-mini score and XSA projection
 
 New replacement of `CausalMHA.forward` in
@@ -10,8 +15,7 @@ arXiv:2211.11052v1, §3.1, not its shared positional matrix or an
 equivalence to softmax attention.
 -/
 
-import Transformer.GPTMini.Convex.Basic
-import Transformer.GPTMini.AttentionBounds
+@[expose] public section
 
 open scoped BigOperators
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.RASP.Defs
+
+/-!
 # RASP: the immediate API of `select`, `aggregate` and `selector_width`
 
 Weiss, Goldberg, Yahav — arXiv:2106.06981v2, "Thinking Like Transformers".
@@ -8,7 +12,7 @@ identities §3.1 asserts about the built-ins: `length` is *computed*, not
 primitive, and `selector_width(select(tokens,tokens,==))` is the histogram.
 -/
 
-import Transformer.RASP.Defs
+@[expose] public section
 
 namespace Transformer
 namespace RASP

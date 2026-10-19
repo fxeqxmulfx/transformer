@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section2_PhiTAsymp
+
+/-!
 # The number of modes of a Gaussian KDE — covariance scales for the proxy Kac–Rice integral
 
 For `eq:int-phi-final`, the covariance factor combines with the curvature
@@ -7,7 +11,7 @@ For `eq:int-phi-final`, the covariance factor combines with the curvature
 Source: arXiv:2412.09080v3, `lem:phi-t`, `eq:int-phi-final`.
 -/
 
-import Transformer.Modes.Section2_PhiTAsymp
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped ENNReal
@@ -44,7 +48,7 @@ theorem eventually_sigmaFst_bounds {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ}
             exact mul_le_mul_of_nonneg_right hqhi.le (by positivity)
       _ = (4 * q) * momentScale (B k) t := by ring
 
-/-- On `T` the covariance determinant is eventually positive.  The global
+/-- On `T` the covariance determinant is eventually positive. The global
 version for every `β > 0` and `t` is proved later in `Section3_SigmaPos`; this
 local version needs only the quotient bounds of §5.2.
 

@@ -1,6 +1,8 @@
-import Transformer.Modes.Section3_GaussianHermite
-import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
-import Mathlib.Analysis.Fourier.FourierTransformDeriv
+module
+
+public import Transformer.Modes.Section3_GaussianHermite
+public import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
+public import Mathlib.Analysis.Fourier.FourierTransformDeriv
 
 /-!
 # Fourier transform of the actual low-order Gaussian Hermite basis
@@ -17,6 +19,8 @@ before `eq:higher-error-goal`, which writes Hermite polynomials in the
 frequency correction, needs this monomial multiplier instead. The
 spatial correction in §3.1 `eq:psi` is retained exactly.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology FourierTransform

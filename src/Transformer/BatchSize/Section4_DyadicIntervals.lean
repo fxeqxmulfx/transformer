@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_DyadicObservationTimes
+public import Mathlib.MeasureTheory.Function.Floor
+
+/-!
 # Identifying the frozen state on genuine dyadic intervals
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The floor selector identifies the actual chain state at the left endpoint.
 It is measurable, including at stopped and negative observation times.
 -/
 
-import Transformer.BatchSize.Section4_DyadicObservationTimes
-import Mathlib.MeasureTheory.Function.Floor
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal

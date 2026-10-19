@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.PrefixMemoryCodes
+module
+
+public import Transformer.GPTMini.Sparsemax.PrefixMemoryCodes
 
 /-!
 # Free learned query-key matching atoms on actual causal token occurrences
@@ -14,6 +16,8 @@ input identities; RoPE, normalization, FFN and a shared fixed-width layer
 stack are not asserted. The later convex mixture ranges over every head
 inside a numerical parameter box, rather than a selected interaction bank.
 -/
+
+@[expose] public section
 
 noncomputable section
 

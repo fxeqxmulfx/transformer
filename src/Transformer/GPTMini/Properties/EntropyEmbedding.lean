@@ -1,12 +1,17 @@
-/-
+module
+
+public import Transformer.GPTMini.Properties.Entropy
+public import Transformer.GPTMini.Properties.StreamGrowth
+
+/-!
 # Property: the output entropy, bounded by the embedding alone
 
 `Properties.Entropy` bounds the entropy of the output below by
-`log V - 2M` given a bound `M` on the logits.  Here `M` is discharged: the
+`log V - 2M` given a bound `M` on the logits. Here `M` is discharged: the
 final RMSNorm puts the representation in the ball of radius `√d_model`
 (`final_representation_norm_le`), and the unembedding is tied to the
 embedding, so every logit is at most `√d_model · max_v ‖E_v‖` in absolute
-value.  Hence
+value. Hence
 
   `H(prob_i) ≥ log V - 2 √d_model · max_v ‖E_v‖`
 
@@ -17,8 +22,7 @@ Source: `reference/model.py` (`GPTMini.forward`: `norm_final`, the tied
 `unembed`).
 -/
 
-import Transformer.GPTMini.Properties.Entropy
-import Transformer.GPTMini.Properties.StreamGrowth
+@[expose] public section
 
 open scoped BigOperators
 open Real

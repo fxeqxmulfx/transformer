@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section2_JointDensity
+
+/-!
 # The actual disk-slice width near level zero
 
 Source: arXiv:2412.09080v3, §2.1, the joint-density
@@ -21,7 +25,7 @@ observation and its actual support, and gives a normalized
 interval formula for the actual finite joint density.
 -/
 
-import Transformer.Modes.Section2_JointDensity
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 open scoped ENNReal

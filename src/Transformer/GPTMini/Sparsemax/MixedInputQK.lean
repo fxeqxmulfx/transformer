@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.ProjectionUpdate
-import Transformer.GPTMini.Sparsemax.QKProjectedError
+module
+
+public import Transformer.GPTMini.Sparsemax.ProjectionUpdate
+public import Transformer.GPTMini.Sparsemax.QKProjectedError
 
 /-!
 # A nonstandard input row with certified normalized sparse attention
@@ -16,6 +18,8 @@ squared-error correction. This supplies inhabited nonstandard-input
 premises for the general derivative and local-minimum results.
 It is an unrotated single-row example before XSA and output projection.
 -/
+
+@[expose] public section
 
 noncomputable section
 

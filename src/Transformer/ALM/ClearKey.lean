@@ -1,26 +1,31 @@
-/-
+module
+
+public import Transformer.ALM.ScoreWall
+public import Transformer.ALM.Duality
+
+/-!
 # The cleared entry loses, and that is the only reason it is harmless
 
 `_to_2d_key` subtracts `BIG = 1e30` from the key's intercept when a clear flag
 is set (`transformer_vm/graph/core.py:314`), and the resulting point goes into
-the same hull as every live key.  `todo3.md` §7 names this as the one place §0's
+the same hull as every live key. `todo3.md` §7 names this as the one place §0's
 grid argument does not reach: `HARD_K` was off the integer grid by a scale, the
 marker is off it by thirty orders of magnitude, so a cleared entry satisfies no
 hypothesis of `Transformer.ALM.FloatGrid` — and the invariant that makes the
 container correct anyway is nowhere stated or checked.
 
-Here it is, and it is domination rather than arithmetic.  The query's second
+Here it is, and it is domination rather than arithmetic. The query's second
 coordinate is `1` (`_to_2d_query`), so the marker passes from the key
 coordinate into the score unchanged (`dot_marked`); with every live score
 inside `±M` and `2M < BIG` a marked entry is below every live one at every
 query (`cleared_lt_live`), and the head answers exactly as if the cleared
-entries had never been inserted (`marked_sup'_eq_live`).  That is the
+entries had never been inserted (`marked_sup'_eq_live`). That is the
 unwritten invariant, in the form the erase loops need it.
 
-What it costs is stated too.  `the_marker_costs_the_grid`: of two live scores a
+What it costs is stated too. `the_marker_costs_the_grid`: of two live scores a
 unit apart — the separation `Transformer.ALM.ScoreWall` and the whole
 tie-breaking argument run on — at most one survives the subtraction as a
-binary64 number, because past `10^30` the representables are `2^47` apart.  So
+binary64 number, because past `10^30` the representables are `2^47` apart. So
 the marker does not merely leave the grid, it destroys the unit that the grid
 was there to preserve; only the fact that nothing ever reads a cleared score
 back keeps that from mattering.
@@ -28,8 +33,7 @@ back keeps that from mattering.
 Source: `todo3.md` §7; `transformer_vm/graph/core.py` lines 8 and 293-319.
 -/
 
-import Transformer.ALM.ScoreWall
-import Transformer.ALM.Duality
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -53,7 +57,7 @@ theorem dot_marked (qx kx ky c B : ℝ) :
 
 /-- **The marked entry is below the live one.**  With both underlying scores
 inside `±M` and the marker wider than the whole range, a cleared entry cannot
-win, at any query and against any live competitor.  This is the invariant
+win, at any query and against any live competitor. This is the invariant
 `add_line` needs and `hull2d_cht.h` does not state. -/
 theorem cleared_lt_live {B M bl bc : ℝ} (hl : |bl| ≤ M) (hc : |bc| ≤ M) (hB : 2 * M < B) :
     markedScore B bc 1 < markedScore B bl 0 := by
@@ -107,7 +111,7 @@ lemma unit_gap_unstorable_abs {p : ℕ} {z : ℤ} (hz : (2 : ℤ) ^ p < |z|)
 /-- **The marker destroys the unit it was added to.**  Of two live scores one
 apart, at most one survives the subtraction of `BIG` as a binary64 number: near
 `10^30` the representables are `2^47` apart, and the separation the search and
-the tie test both run on is gone.  Harmless only because a cleared score is
+the tie test both run on is gone. Harmless only because a cleared score is
 never compared against anything but a live one, which
 `marked_sup'_eq_live` settles without arithmetic. -/
 theorem the_marker_costs_the_grid {z : ℤ} (hz : |z| ≤ 2 ^ 53) :

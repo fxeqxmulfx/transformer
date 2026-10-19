@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section2_GraftingDomain
+
+/-!
 # DASH — passing numerical root convergence through the parameter update
 
 arXiv:2602.02016v2, §2.2–2.3. Continuity transfers the corrected
@@ -7,7 +11,7 @@ is continuous at nonzero directions; zero gradients are handled exactly
 by the optimizer pipeline rather than by dividing by their norms.
 -/
 
-import Transformer.DASH.Section2_GraftingDomain
+@[expose] public section
 
 open scoped BigOperators Matrix Topology
 open Filter

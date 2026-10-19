@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.GPTMini.SoftmaxStability
+public import Transformer.GPTMini.QKNormLipschitz
+
+/-!
 # How far one attention head can move
 
 The head of `reference/model.py` (`CausalMHA.forward`) is a composition of
@@ -20,8 +25,7 @@ traded the exponential softmax estimate against the trivial one, so what
 constant and not a modulus of continuity on a bounded set.
 -/
 
-import Transformer.GPTMini.SoftmaxStability
-import Transformer.GPTMini.QKNormLipschitz
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -157,7 +161,7 @@ example {d : ℕ} (a b : EucSpace d) :
   norm_proj_sub_proj_le a b 0 0 (by simp) (by simp)
 
 /-- **How far the XSA projection moves** when both the attention output and
-the self-value direction move.  `normL2` never exceeds `1`, so
+the self-value direction move. `normL2` never exceeds `1`, so
 `norm_proj_sub_proj_le` applies directly. -/
 theorem xsaProjection_dist_le
     {T : ℕ} (eps : ℝ) (heps : 0 ≤ eps)

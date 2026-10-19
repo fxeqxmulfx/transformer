@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerGlobalStability
+public import Transformer.BatchSize.Section4_BrownianPaths
+
+/-!
 # Continuous Brownian interpolation of finite Euler chains
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -7,8 +12,7 @@ Brownian path. The interpolation is constant before zero and after the
 finite chain's final time.
 -/
 
-import Transformer.BatchSize.Section4_EulerGlobalStability
-import Transformer.BatchSize.Section4_BrownianPaths
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal BigOperators

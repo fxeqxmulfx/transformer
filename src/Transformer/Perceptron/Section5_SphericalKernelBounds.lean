@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_SphericalKernel
+
+/-!
 # Uniform bounds for actual spherical kernel derivatives
 
 ArXiv:2601.21366v2, §5.3, the localization argument for
@@ -18,7 +22,7 @@ The first derivative bound is `e^β β (‖v‖+‖w‖)`; the second is
 after integration against the original product measure.
 -/
 
-import Transformer.Perceptron.Section5_SphericalKernel
+@[expose] public section
 
 open Real
 

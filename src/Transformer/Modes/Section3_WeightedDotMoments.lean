@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_CharacteristicDerivatives
-import Transformer.Modes.Section3_FourthOrderPhase
+module
+
+public import Transformer.Modes.Section3_CharacteristicDerivatives
+public import Transformer.Modes.Section3_FourthOrderPhase
 
 /-!
 # Weighted dot moments for characteristic Taylor derivatives
@@ -19,6 +21,8 @@ The factor `2^(k + m + 1)` comes from the product sup norm on `ℝ²`.
 No exponential moment or extra density hypothesis enters these
 single-summand estimates.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

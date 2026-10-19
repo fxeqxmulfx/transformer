@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.PairedMatchingMixture
-import Transformer.GPTMini.Sparsemax.ContentPermutation
+module
+
+public import Transformer.GPTMini.Sparsemax.PairedMatchingMixture
+public import Transformer.GPTMini.Sparsemax.ContentPermutation
 
 /-!
 # The repaired head learns the two swapped key/value assignments
@@ -16,6 +18,8 @@ the two-observation linear price reaches the universal output-box bound.
 This exact oracle is specific to these observations, not a global numerical
 search method for Basis or arbitrary unseen language.
 -/
+
+@[expose] public section
 
 noncomputable section
 

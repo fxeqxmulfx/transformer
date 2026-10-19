@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_RidgeFlow
+public import Mathlib.Analysis.ODE.Gronwall
+
+/-!
 # Continuous dependence of the actual one-neuron flow
 
 ArXiv:2411.04551v3, §1, `eq: neural.ode.sphere`, and §3.2,
@@ -15,8 +20,7 @@ dependence on the initial point proves joint continuity. These are the
 regularity inputs for constructing actual transported weak solutions.
 -/
 
-import Transformer.Interpolation.Section3_RidgeFlow
-import Mathlib.Analysis.ODE.Gronwall
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 open scoped NNReal Topology

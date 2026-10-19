@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section3_Closure
+
+/-!
 # IC-EoT: the feed-forward ICNN background
 
 arXiv:2603.22095v2, §2.2.1, Eq. (1). Passthrough weights are unrestricted
@@ -6,7 +10,7 @@ for one-step convexity. Layer widths may vary; the initial state is zero.
 No non-negativity assumption on the activation values is needed here.
 -/
 
-import Transformer.ICEoT.Section3_Closure
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CircuitParallelPrefix
+public import Transformer.Zoology.Appendix_SmallCircuits
+
+/-!
 # Depth-sensitive simulation of an arithmetic DAG by Coyote
 
 Arora et al., arXiv:2312.04927v1, §4 Theorem `thm:equiv` and Appendix
@@ -10,8 +15,7 @@ per layer. The paper's original sequence layout and sharper width-sensitive
 K-matrix parameter bound are not established by this construction.
 -/
 
-import Transformer.Zoology.Appendix_CircuitParallelPrefix
-import Transformer.Zoology.Appendix_SmallCircuits
+@[expose] public section
 
 namespace Transformer.Zoology
 

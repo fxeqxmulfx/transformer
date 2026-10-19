@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.MixedConfidence
-import Transformer.GPTMini.Convex.Structured.BindingInterface
+module
+
+public import Transformer.GPTMini.Convex.Structured.MixedConfidence
+public import Transformer.GPTMini.Convex.Structured.BindingInterface
 
 /-!
 # Actual whole-vocabulary margins and greedy decoding of the mixture
@@ -23,6 +25,8 @@ The positive-scale law also preserves exact greedy tie breaking. A later
 tensor realization must derive its final normalizer's common positive
 multiplier from the actual hidden state rather than supply it by fiat.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.GaussianMixtureTail
+public import Transformer.Metastability.InitialCapGeometry
+
+/-!
 # The Gaussian-mixture tail event implies separated radial projections
 
 The probabilistic event controlled by `GaussianMixtureTail` is connected here
@@ -8,8 +13,7 @@ quadratic cap estimate in `InitialCapGeometry`.
 Source: arXiv:2410.06833v1, §4, `prop: mixture.of.gaussians`.
 -/
 
-import Transformer.Metastability.GaussianMixtureTail
-import Transformer.Metastability.InitialCapGeometry
+@[expose] public section
 
 open Real MeasureTheory
 

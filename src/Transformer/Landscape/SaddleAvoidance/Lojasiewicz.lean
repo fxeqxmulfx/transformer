@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Descent
+public import Transformer.Landscape.SaddleAvoidance.Sequences
+
+/-!
 # Saddle avoidance — the Łojasiewicz inequality bounds gradient steps
 
 `f` satisfies the Łojasiewicz gradient inequality at `z` with exponent `a` when
@@ -6,11 +11,11 @@
 (`IsLojasiewiczAt`); `‖x‖² / 2` satisfies it at `0` with `a = 1/2`
 (`isLojasiewiczAt_half_mul_norm_sq`), every `f` satisfies it where its gradient is
 continuous and does not vanish (`isLojasiewiczAt_of_gradient_ne_zero`), and it holds
-with every exponent larger than one it holds with (`IsLojasiewiczAt.mono`).  With
+with every exponent larger than one it holds with (`IsLojasiewiczAt.mono`). With
 `0 ≤ a < 1` it bounds a gradient step that lowers `f` by at least `η κ ‖∇f‖²` by the
 drop of `(f - f z) ^ (1 - a)` (`mul_norm_gradientStep_sub_le_of_le_sub`): the
 decrease and the concavity of `s ↦ s ^ (1 - a)`, a weighted AM-GM inequality
-(`mul_sub_le_rpow_mul_sub`), give `m (1 - a) κ η ‖∇f‖² ≤ ‖∇f‖ · drop`.  For an
+(`mul_sub_le_rpow_mul_sub`), give `m (1 - a) κ η ‖∇f‖² ≤ ‖∇f‖ · drop`. For an
 `L`-Lipschitz gradient the sufficient decrease gives `κ = 1 - η L`
 (`mul_norm_gradientStep_sub_le`); on `‖x‖² / 2` a step lowers `f` by exactly
 `η (1 - η / 2) ‖∇f‖²` (`half_mul_norm_sq_gradientStep`), also where `η L ≥ 1`.
@@ -21,8 +26,7 @@ functions* (SIAM J. Optim. 16, 2005), which arXiv:1602.04915 cites for
 `prop:rates`.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Descent
-import Transformer.Landscape.SaddleAvoidance.Sequences
+@[expose] public section
 
 open Filter Metric
 open scoped Topology NNReal
@@ -34,7 +38,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
 
 /-- **The Łojasiewicz gradient inequality** at `z` with exponent `a`: for
 some `m, ε > 0`, `m |f x - f z| ^ a ≤ ‖∇f(x)‖` for all `x` near `z` with
-`f z < f x < f z + ε`.  This is `def:gradineq` of arXiv:1602.04915, which
+`f z < f x < f z + ε`. This is `def:gradineq` of arXiv:1602.04915, which
 also asks that `z` be a critical point and `0 ≤ a < 1`; here these are
 hypotheses of the theorems that use it. -/
 def IsLojasiewiczAt (f : E → ℝ) (z : E) (a : ℝ) : Prop :=

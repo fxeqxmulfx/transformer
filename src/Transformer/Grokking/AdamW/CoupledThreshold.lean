@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.CoupledFirstStep
+module
+
+public import Transformer.Grokking.AdamW.CoupledFirstStep
 
 /-!
 # Small-component growth under the actual fresh AdamW update
@@ -23,6 +25,8 @@ gradient scale and coupling are therefore not identified with this
 binary specialization, and the derived coefficient is not asserted
 for that training objective or its archived moment states.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

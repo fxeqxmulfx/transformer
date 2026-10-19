@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.CircleEnergyHessian
+public import Transformer.Landscape.SaddleAvoidance.Invariant
+
+/-!
 # The synchronized states, and Łojasiewicz for `-𝖤_β` on angles
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5, §7 and
@@ -7,21 +12,20 @@ Appendix A.
 For `β > 0` the synchronized states are exactly the global maxima of `𝖤_β`
 (`synchronized_of_isGlobalMaxTorusEnergy`, the converse of
 `isGlobalMaxTorusEnergy_of_synchronized`), and they are critical
-(`isCriticalTorusEnergy_of_synchronized`).  There every `g_β(θ_i - θ_j)` is
+(`isCriticalTorusEnergy_of_synchronized`). There every `g_β(θ_i - θ_j)` is
 `e^β`, so the second derivative vanishes only along the line `ℝ𝟙` of common
 rotations (`eq_of_secondDerivTorusEnergy_synchronized`).
 
 The gradient ascent `eq:onangles` of `𝖤_β` is the gradient descent of
-`-𝖤_β`, the form `SaddleAvoidance` treats.  `-𝖤_β` satisfies the Łojasiewicz
+`-𝖤_β`, the form `SaddleAvoidance` treats. `-𝖤_β` satisfies the Łojasiewicz
 inequality with exponent `1/2` at a critical point where only the common
 rotations have zero second derivative (`isLojasiewiczAt_neg_eucTorusEnergy`):
-this is `Landscape.SaddleAvoidance.isLojasiewiczAt_of_invariant` with `W = ℝ𝟙`.  That
+this is `Landscape.SaddleAvoidance.isLojasiewiczAt_of_invariant` with `W = ℝ𝟙`. That
 covers the synchronized states (`isLojasiewiczAt_of_synchronized`) and, for
 two tokens, every critical point (`isLojasiewiczAt_of_isCritical_two`).
 -/
 
-import Transformer.Perspective.CircleEnergyHessian
-import Transformer.Landscape.SaddleAvoidance.Invariant
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -92,7 +96,7 @@ theorem eq_of_secondDerivTorusEnergy_synchronized {β : ℝ} (hβ : β ≠ 0) {�
 
 /-- **Łojasiewicz across the common rotations.**  At a critical point of
 `𝖤_β` where only the common rotations `v ∈ ℝ𝟙` have zero second derivative,
-`-𝖤_β` satisfies the Łojasiewicz inequality with exponent `1/2`.  If the
+`-𝖤_β` satisfies the Łojasiewicz inequality with exponent `1/2`. If the
 derivative `A` of `∇(-𝖤_β)` kills `v`, then `⟪A v, v⟫ = 0`, so the second
 derivative along `v` is `0` (`inner_fderiv_gradient_eucTorusEnergy`) and `v`
 is a common rotation; on `(ℝ𝟙)ᗮ` that forces `v = 0`, which is what

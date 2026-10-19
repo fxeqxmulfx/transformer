@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.AnchoredScores
+module
+
+public import Transformer.GPTMini.Sparsemax.AnchoredScores
 
 /-!
 # Lifting active score transfers into trainable anchor parameters
@@ -15,6 +17,8 @@ a direction accessible to this architecture's learned anchor parameters.
 No inverse property is asserted for steps leaving the open score cap.
 Ordinary scores and values are frozen along this particular curve.
 -/
+
+@[expose] public section
 
 noncomputable section
 

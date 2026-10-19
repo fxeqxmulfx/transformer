@@ -1,4 +1,10 @@
-/-
+module
+
+public import Mathlib.Analysis.Analytic.Order
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+
+/-!
 # The analytic gradient inequality in one real variable
 
 The local analytic input of Appendix D.1, `lem: loj`, in
@@ -6,8 +12,7 @@ arXiv:2510.22026v2 follows from the finite order of an analytic zero
 in one variable, including degenerate critical points.
 -/
 
-import Mathlib.Analysis.Analytic.Order
-import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+@[expose] public section
 
 open Filter Set
 

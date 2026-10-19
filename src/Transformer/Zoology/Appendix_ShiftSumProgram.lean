@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_BlockButterflyCoyote
+
+/-!
 # Stacking shifted-diagonal factors without accumulating workspace
 
 Arora et al., arXiv:2312.04927v1, Appendix `prop: butterfly-hyena`,
@@ -7,7 +11,7 @@ extra rows, so a product of L factors shares one ninefold sequence workspace
 and has exactly 3L layers. All weights have explicit K representations.
 -/
 
-import Transformer.Zoology.Appendix_BlockButterflyCoyote
+@[expose] public section
 
 namespace Transformer.Zoology
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_RunningSum
+
+/-!
 # Running-sum primitive on packed input blocks
 
 Arora et al., arXiv:2312.04927v1, Appendix `sec: primitives`, `Add`, and
@@ -7,7 +11,7 @@ a following `S` block, and zeros. The output has ones in the first block,
 `S+x` in the second, and zeros afterward.
 -/
 
-import Transformer.Zoology.Appendix_RunningSum
+@[expose] public section
 
 namespace Transformer.Zoology
 

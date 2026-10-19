@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadIteration
+public import Transformer.Clusters.Section7_Unbounded
+
+/-!
 # Order and separation for actual discrete multi-head trajectories
 
 ArXiv:2305.05465v6, §12, `sec:conclusion`, and §7, `l:distnondec`.
@@ -15,8 +20,7 @@ The joint witness has two distinct nonzero tokens, two positive heads,
 and is the actual recursively constructed original trajectory.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadIteration
-import Transformer.Clusters.Section7_Unbounded
+@[expose] public section
 
 open scoped BigOperators
 open Real

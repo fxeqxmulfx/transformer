@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_IndependentBilinearMGF
+public import Mathlib.Probability.Distributions.Uniform
+public import Mathlib.MeasureTheory.Integral.Bochner.SumMeasure
+public import Mathlib.MeasureTheory.MeasurableSpace.Instances
+
+/-!
 # Genuine independent fair coordinate splits
 
 Source: arXiv:2604.01978v1, §6.3, `lem:Hanson_wright`.
@@ -11,10 +18,7 @@ preparing the averaging and Jensen steps of the decoupling argument.
 The product law and its finiteness include the empty coordinate family.
 -/
 
-import Transformer.Homogenized.Section6_IndependentBilinearMGF
-import Mathlib.Probability.Distributions.Uniform
-import Mathlib.MeasureTheory.Integral.Bochner.SumMeasure
-import Mathlib.MeasureTheory.MeasurableSpace.Instances
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal ENNReal
@@ -23,9 +27,11 @@ namespace Transformer.Homogenized
 
 /-- The actual fair Boolean law used for coordinate decoupling.
 Source: arXiv:2604.01978v1, §6.3, the random split in `lem:Hanson_wright`. -/
-noncomputable def fairCoinLaw : Measure Bool := (PMF.uniformOfFintype Bool).toMeasure
+noncomputable def fairCoinLaw : Measure Bool := Measure.uniformOfFinset Finset.univ
 
-instance : IsProbabilityMeasure fairCoinLaw := by unfold fairCoinLaw; infer_instance
+instance : IsProbabilityMeasure fairCoinLaw := ⟨by
+  simpa [fairCoinLaw, Measure.uniformOfFinset, Fintype.sum_bool] using
+    ENNReal.inv_two_add_inv_two⟩
 
 /-- The genuine zero-or-one value of a Boolean outcome. Source:
 arXiv:2604.01978v1, §6.3, the coordinate indicator in `lem:Hanson_wright`. -/
@@ -58,9 +64,8 @@ theorem mem_randomCoordinateSubset {n : ℕ} (σ : Fin n → Bool) (i : Fin n) :
 /-- Both genuine Boolean atoms have their actual probability one half.
 Source: arXiv:2604.01978v1, §6.3, the fair split for `lem:Hanson_wright`. -/
 theorem fairCoinLaw_real_singleton (b : Bool) : fairCoinLaw.real {b} = 1 / 2 := by
-  rw [Measure.real, fairCoinLaw,
-    PMF.toMeasure_apply_singleton (PMF.uniformOfFintype Bool) b (measurableSet_singleton b)]
-  norm_num [PMF.uniformOfFintype_apply, Fintype.card_bool]
+  rw [Measure.real, fairCoinLaw, Measure.uniformOfFinset_apply_singleton]
+  norm_num
 
 /-- The original fair indicator has mean one half. Source:
 arXiv:2604.01978v1, §6.3, the coordinate averaging in `lem:Hanson_wright`. -/

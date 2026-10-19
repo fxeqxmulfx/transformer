@@ -1,4 +1,6 @@
-import Transformer.Grokking.Operational.Basic
+module
+
+public import Transformer.Grokking.Operational.Basic
 
 /-!
 # What a finite accuracy history does not determine
@@ -25,6 +27,8 @@ assertion about continuity or the update sizes of a neural network.
 Consequently the conclusion limits exact model-free prediction; it does
 not rule out probabilistic forecasts with stated dynamical assumptions.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Operational
 

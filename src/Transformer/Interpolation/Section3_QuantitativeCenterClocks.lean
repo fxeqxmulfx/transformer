@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_BalancedRidgePhases
+public import Transformer.Interpolation.Section3_PositiveBarycenters
+
+/-!
 # Quantitative original center contraction clocks and parameter costs
 
 ArXiv:2411.04551v3, §3.2, Step 2 of selective contraction,
@@ -15,8 +20,7 @@ parameter growth, retaining original global weak existence and the
 support conclusion for every original weak solution.
 -/
 
-import Transformer.Interpolation.Section1_BalancedRidgePhases
-import Transformer.Interpolation.Section3_PositiveBarycenters
+@[expose] public section
 
 open Real MeasureTheory Set
 

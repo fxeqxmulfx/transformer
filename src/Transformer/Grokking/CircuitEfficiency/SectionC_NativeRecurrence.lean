@@ -1,7 +1,9 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_AdaptiveFirstStep
-import Transformer.Grokking.AdamW.ScalarStability
-import Transformer.Grokking.AdamW.GradientClipping
-import Mathlib.Data.Fin.VecNotation
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_AdaptiveFirstStep
+public import Transformer.Grokking.AdamW.ScalarStability
+public import Transformer.Grokking.AdamW.GradientClipping
+public import Mathlib.Data.Fin.VecNotation
 
 /-!
 # Closed native AdamW iteration of actual fixed-table product CE
@@ -19,6 +21,8 @@ feature discovery. Exact-real clipping preserves the source's 1e-6;
 floating-point kernels, minibatch implementation and rounding bridges
 are not supplied. No successful margin is encoded in the iteration.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

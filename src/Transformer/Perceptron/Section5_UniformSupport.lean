@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_ConstantTransform
+public import Transformer.Perceptron.Section6_AntipodalFields
+public import Transformer.Perceptron.Section6_CircleNullSupport
+
+/-!
 # The original uniform support and stationary linear-density example
 
 ArXiv:2601.21366v2, §5.1, `lem: quadpol` (i), and §5.3,
@@ -20,9 +26,7 @@ the earlier linear-density statement, retaining its genuine probability
 measure and the primitive `φ(s)=s²` of the original linear activation.
 -/
 
-import Transformer.Perceptron.Section5_ConstantTransform
-import Transformer.Perceptron.Section6_AntipodalFields
-import Transformer.Perceptron.Section6_CircleNullSupport
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators ENNReal

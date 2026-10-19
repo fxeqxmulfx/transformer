@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.CubeContentBits
+module
+
+public import Transformer.GPTMini.Sparsemax.CubeContentBits
 
 /-!
 # Sparse content diffusion with a convex learned budget
@@ -15,6 +17,8 @@ and the original variational sparsemax. It is not defined as that
 attention operator. Its feature action is proved for arbitrary functions,
 so the later compact value inverse has no stored virtual-state table.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_ChangeOfVar
-import Transformer.Modes.Section5_PowerIntegrability
+module
+
+public import Transformer.Modes.Section3_ChangeOfVar
+public import Transformer.Modes.Section5_PowerIntegrability
 
 /-!
 # The characteristic function condition for the standardized summand
@@ -29,6 +31,8 @@ without a density assumption or an unproved input. The final continuity
 statement also follows directly from the unit-modulus integrand.
 Source: arXiv:2412.09080v3, §2.3 `eq:Yi`, §3 `thm:br`, and §5.4–§5.5.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped ENNReal

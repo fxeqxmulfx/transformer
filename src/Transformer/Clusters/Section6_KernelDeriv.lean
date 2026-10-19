@@ -1,22 +1,26 @@
-/-
+module
+
+public import Transformer.Clusters.Section6_Kernel
+public import Mathlib.Analysis.Calculus.ParametricIntegral
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.Calculus.Deriv.Inv
+
+/-!
 # The emergence of clusters in self-attention dynamics — the derivative of
   the attention kernel
 
 `e:lipinx` of arXiv:2305.05465v6, §6: `𝒳[μ]` is differentiable in `x`, with
-`‖∇_x 𝒳[μ]‖ ≤ 2‖QᵀK‖_op ‖V‖_op R²`.  The derivative of both integrals of
+`‖∇_x 𝒳[μ]‖ ≤ 2‖QᵀK‖_op ‖V‖_op R²`. The derivative of both integrals of
 `e:vectorfield` is taken under the integral sign
 (`hasFDerivAt_integral_of_dominated_of_fderiv_le`), the weights being bounded
-near `x` because `μ` is carried by `B̄(0,R)`.  The derivative is written out
+near `x` because `μ` is carried by `B̄(0,R)`. The derivative is written out
 (`attentionKernelDeriv`), so that its continuity in `(t, x)` along a curve of
 measures can be read off it (`Section6_KernelField`).
 
 Source: arXiv:2305.05465v6, `lem: vectorfield.properties`, `e:lipinx`.
 -/
 
-import Transformer.Clusters.Section6_Kernel
-import Mathlib.Analysis.Calculus.ParametricIntegral
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Calculus.Deriv.Inv
+@[expose] public section
 
 open Real MeasureTheory
 

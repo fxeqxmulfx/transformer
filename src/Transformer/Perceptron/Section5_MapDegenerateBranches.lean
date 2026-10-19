@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_MapReLUAtomicity
+
+/-!
 # The actual scalar signed Gram obstruction for matrix ReLU branches
 
 ArXiv:2601.21366v2, §5.2–§5.3, `eq:global-Id`, and §6,
@@ -15,7 +19,7 @@ case belongs to the selected support pattern, rather than to an
 unrelated subset of neurons. All original fields and measures remain.
 -/
 
-import Transformer.Perceptron.Section5_MapReLUAtomicity
+@[expose] public section
 
 open Real MeasureTheory Set
 

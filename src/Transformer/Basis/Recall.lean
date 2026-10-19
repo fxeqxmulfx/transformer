@@ -1,4 +1,6 @@
-import Transformer.Basis.Basic
+module
+
+public import Transformer.Basis.Basic
 
 /-!
 # Raw integer MQAR prefixes
@@ -14,6 +16,8 @@ changed-value rewrites, minimum lengths and the final eight-query count
 are not imposed. Every sampled supervised prefix belongs to this broader
 grammar. Invalid prefixes return PAD instead of raising ValueError.
 -/
+
+@[expose] public section
 
 namespace Transformer.Basis
 

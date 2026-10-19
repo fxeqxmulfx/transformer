@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.MvGenerator
+public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+
+/-!
 # Homogenized Transformers — the uniform law on the sphere
 
 The measure `σ_d` that `ass:low-temperature` of arXiv:2604.01978v1,
@@ -8,7 +13,7 @@ It is pinned down by the property that characterizes it — a probability
 measure on `ℝ^d` carried by the unit sphere and invariant under every linear
 isometry of the ambient space is `σ_d`, and there is only one — so a statement
 quantified over every measure satisfying `IsUniformAmbient` says exactly what
-the source says about `σ_d`.  This is `Metastability.IsUniformOn`'s device,
+the source says about `σ_d`. This is `Metastability.IsUniformOn`'s device,
 read in ambient coordinates because §4 and §5 of this paper work with measures
 on `ℝ^d` carried by the sphere rather than with measures on a subtype.
 
@@ -19,8 +24,7 @@ projection lands there, and is rotation invariant because a linear isometry
 commutes with the projection and preserves both Lebesgue measure and the ball.
 -/
 
-import Transformer.Homogenized.MvGenerator
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory

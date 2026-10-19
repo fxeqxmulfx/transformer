@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_NonconvexFalse
+public import Transformer.AdaFisher.SectionA_StochasticTerms
+public import Transformer.AdaFisher.Section3_InverseError
+public import Mathlib.Analysis.Calculus.FDeriv.Prod
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+
+/-!
 # AdaFisher: a nondegenerate block-Kronecker nonconvex counterexample
 
 arXiv:2405.16397v3, Proposition 3.4 and Appendix A.2.
@@ -6,11 +14,7 @@ The four-dimensional witness realizes a nonconstant normalized pair of KFs,
 avoiding the constant-factor domain issue. The objective is 0.001 sin(x₀).
 -/
 
-import Transformer.AdaFisher.Section3_NonconvexFalse
-import Transformer.AdaFisher.SectionA_StochasticTerms
-import Transformer.AdaFisher.Section3_InverseError
-import Mathlib.Analysis.Calculus.FDeriv.Prod
-import Mathlib.Analysis.Calculus.Deriv.Comp
+@[expose] public section
 
 open scoped BigOperators
 open Filter Topology MeasureTheory

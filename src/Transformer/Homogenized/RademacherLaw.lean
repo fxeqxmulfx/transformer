@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.RandomChain
+
+/-!
 # Homogenized Transformers — a nondegenerate weight law
 
 `ass:high_order_short` of arXiv:2604.01978v1, *Homogenized Transformers*, is
@@ -7,9 +11,9 @@ that the assumption is not contradictory, but under `ρ* = δ_0` the fluctuation
 `ξ_θ[μ]` vanishes identically and every statement about the diffusion kernel
 `G_μ` of `eq:G_def` holds vacuously.
 
-This file builds the smallest weight law that is not degenerate.  The source
+This file builds the smallest weight law that is not degenerate. The source
 space is a fair coin, the value matrix has one Rademacher entry `V₁₁ = ±1` and
-is `0` elsewhere, and the query-key matrix is `A ≡ 0`.  The independence
+is `0` elsewhere, and the query-key matrix is `A ≡ 0`. The independence
 hypotheses hold because one entry is random and all the others are constant;
 the subGaussian hypotheses hold by Hoeffding's lemma, with `σ_V = 1`,
 `σ_A = 0`, `C = 1`.
@@ -17,7 +21,7 @@ the subGaussian hypotheses hold by Hoeffding's lemma, with `σ_V = 1`,
 Source: arXiv:2604.01978v1, `ass:high_order_short`.
 -/
 
-import Transformer.Homogenized.RandomChain
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open Real MeasureTheory ProbabilityTheory

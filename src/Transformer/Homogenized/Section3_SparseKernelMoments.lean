@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section3_SparseHeadLaw
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+/-!
 # Exact moments of the sparse attention kernel
 
 For the law in `Section3_SparseHeadLaw`, the actual attention field is the
@@ -12,8 +17,7 @@ Source: arXiv:2604.01978v1, §3.1, `eq:G_def`, `eq: defining.alpha`,
 counterexample to `lem:Kernel_regularity`(2).
 -/
 
-import Transformer.Homogenized.Section3_SparseHeadLaw
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

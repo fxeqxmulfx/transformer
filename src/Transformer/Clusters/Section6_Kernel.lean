@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Clusters.Section1_Dynamics
+public import Transformer.Wasserstein
+public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+
+/-!
 # The emergence of clusters in self-attention dynamics — the attention kernel
 
 `e:vectorfield` and `lem: vectorfield.properties` of arXiv:2305.05465v6, §6:
@@ -13,18 +20,18 @@ estimates the well-posedness proof rests on.
 
 * `𝒫_c(ℝ^d)`, compactly supported probability measures, is carried as
   `IsProbabilityMeasure μ` together with `μ (B̄(0,R))ᶜ = 0` for the radius `R`
-  that each estimate names anyway.  This avoids `Measure.support` and says
+  that each estimate names anyway. This avoids `Measure.support` and says
   exactly what the proofs use.
 
 * `e:bddinx` and `e:lipinx` are stated in the source as `L^∞(ℝ^d)` bounds,
   that is for every `x ∈ ℝ^d`; `e:lipinmu` only for `‖x‖ ≤ R`, and the
-  source's marginal note insists on that restriction.  Both are carried as
+  source's marginal note insists on that restriction. Both are carried as
   written.
 
 * `∇_x 𝒳[μ]` is the Fréchet derivative, and the bound is on its operator
   norm; existence of the derivative is part of the statement, since
   `e:lipinx` asserts a bound on an object the source does not separately
-  construct.  `‖QᵀK‖_op` is the operator norm of `Q* ∘ K`.
+  construct. `‖QᵀK‖_op` is the operator norm of `Q* ∘ K`.
 
 * `W_2` is `Transformer.Wasserstein.W2`.
 
@@ -35,10 +42,7 @@ Source: arXiv:2305.05465v6, `e:vectorfield`, `lem: vectorfield.properties`,
 `e:bddinx`, `e:lipinx`, `e:lipinmu`.
 -/
 
-import Transformer.Clusters.Section1_Dynamics
-import Transformer.Wasserstein
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-import Mathlib.Analysis.InnerProductSpace.Adjoint
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -82,7 +86,7 @@ noncomputable def attentionKernel (Q K V : ParamMatrix d) (μ : Measure (EucSpac
     ∫ y, Real.exp (inner (𝕜 := ℝ) (Q x) (K y)) • V y ∂μ
 
 /-- **The kernel vanishes at a Dirac mass at the origin**: the only value
-averaged is `V 0 = 0`.  This is the stationary solution of `e:conteq`. -/
+averaged is `V 0 = 0`. This is the stationary solution of `e:conteq`. -/
 theorem attentionKernel_dirac_zero (Q K V : ParamMatrix d) (x : EucSpace d) :
     attentionKernel Q K V (Measure.dirac (0 : EucSpace d)) x = 0 := by
   simp [attentionKernel]

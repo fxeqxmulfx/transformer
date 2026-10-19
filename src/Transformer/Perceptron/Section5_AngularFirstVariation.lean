@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_InteractionIntegral
+public import Transformer.Perceptron.FirstVariation
+public import Transformer.Perceptron.CircleDeriv
+public import Mathlib.MeasureTheory.Function.L2Space
+
+/-!
 # The first variation in actual angular coordinates
 
 ArXiv:2601.21366v2, §2.1--2.3, the first variation and
@@ -13,10 +20,7 @@ The derivative also splits into the justified interaction
 integral and one half of the potential's angular derivative.
 -/
 
-import Transformer.Perceptron.Section5_InteractionIntegral
-import Transformer.Perceptron.FirstVariation
-import Transformer.Perceptron.CircleDeriv
-import Mathlib.MeasureTheory.Function.L2Space
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

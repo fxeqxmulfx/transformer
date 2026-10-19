@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Clusters.Section4_SquareDynamics
+public import Transformer.Clusters.Section10_ProjectedHullLimit
+public import Transformer.Clusters.Section10_Remainder
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+
+/-!
 # A genuine attention trajectory approaches its limiting hull from outside
 
 ArXiv:2305.05465v6, §10, Claim `cl:gamma'12` and Step 2'.
@@ -14,10 +21,7 @@ outside their intersection. The projected limit below is nonempty and
 equals that intersection; no empty-set Hausdorff convention is used.
 -/
 
-import Transformer.Clusters.Section4_SquareDynamics
-import Transformer.Clusters.Section10_ProjectedHullLimit
-import Transformer.Clusters.Section10_Remainder
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

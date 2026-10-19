@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.PreparedFunctions
+
+/-!
 # Real analytic preparation: PreparedPolynomialSequences
 
 Adapted from Bochao Kong's classical-complex-wpt, revision
@@ -8,7 +12,7 @@ Apache-2.0 licenses: third_party/classical-complex-wpt/LICENSE and
 third_party/LocalComplexGeometry/LICENSE.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.PreparedFunctions
+@[expose] public section
 
 open Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -16,7 +20,7 @@ open scoped BigOperators ENNReal NNReal Topology
 noncomputable section
 namespace Transformer.Landscape.AnalyticPreparation
 
-/-- The normalized weighted low-degree tail of a prepared polynomial.  Its
+/-- The normalized weighted low-degree tail of a prepared polynomial. Its
 `i`-th coordinate is `r^i / r^d * a_i(z)`; adding the shifted constant
 sequence gives the coefficients of `r^{-d} P(z,rw)`.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2. -/

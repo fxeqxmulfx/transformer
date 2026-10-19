@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_AttentionContraction
+public import Transformer.Interpolation.Section2_DiracApproximation
+
+/-!
 # Collapse of the full original attention support
 
 ArXiv:2411.04551v3, §2, `prop: targets.atoms`. The actual chart flow
@@ -13,8 +18,7 @@ approximation, for every actual weak law with the prescribed initial
 measure and the original constant matrix parameters.
 -/
 
-import Transformer.Interpolation.Section2_AttentionContraction
-import Transformer.Interpolation.Section2_DiracApproximation
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

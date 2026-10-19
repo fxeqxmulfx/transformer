@@ -1,6 +1,8 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainPureBalanceExistence
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainWarmupBounds
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedPath
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainPureBalanceExistence
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainWarmupBounds
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedPath
 
 /-!
 # Actual original-warmup pure-circuit retained trajectories
@@ -25,6 +27,8 @@ Legal native constants alone therefore do not select a physical circuit.
 The source's coupled norm-cost GD, learned GPTMini mechanisms,
 numerical and stochastic implementation bridges remain separate tasks.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

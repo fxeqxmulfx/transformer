@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_Model
+public import Mathlib.Analysis.Calculus.Deriv.Inverse
+public import Mathlib.Topology.Order.IntermediateValue
+public import Mathlib.Topology.Order.MonotoneContinuity
+public import Mathlib.Order.Hom.Set
+
+/-!
 # Solving the reduced gradient-flow equation by a real inverse
 
 arXiv:2402.19449v2, Appendix I, Lemma 5 (Solution of the dynamics).
@@ -7,11 +15,7 @@ Its strictly increasing left side is inverted directly. This is equivalent
 to the paper's Lambert-W expression without assuming an unimplemented W.
 -/
 
-import Transformer.Imbalance.Section3_Model
-import Mathlib.Analysis.Calculus.Deriv.Inverse
-import Mathlib.Topology.Order.IntermediateValue
-import Mathlib.Topology.Order.MonotoneContinuity
-import Mathlib.Order.Hom.Set
+@[expose] public section
 
 open Filter
 open scoped Topology

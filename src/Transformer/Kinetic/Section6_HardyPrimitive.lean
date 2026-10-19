@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Kinetic.Section6_GoursatSeries
+public import Transformer.Kinetic.Section6_HardyKernel
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+
+/-!
 # Kinetic theory for Transformers — the actual spatial Volterra primitive
 
 The Goursat series in arXiv:2605.09213v1, §6, proof of `prop:Bessel`,
@@ -9,9 +15,7 @@ actual Volterra term in `eq:Hardy-hom`. The causal endpoint values are
 kept: they are removed only by equality on the open integration interval.
 -/
 
-import Transformer.Kinetic.Section6_GoursatSeries
-import Transformer.Kinetic.Section6_HardyKernel
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+@[expose] public section
 
 open Real Set MeasureTheory
 

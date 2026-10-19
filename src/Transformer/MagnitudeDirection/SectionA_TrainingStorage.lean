@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.SectionA_FullAlgorithm
+public import Transformer.MagnitudeDirection.Section3_Representation
+
+/-!
 # Softplus storage for the training correction
 
 User-requested convergence extension of arXiv:2606.25971v2, §3.1 and
@@ -8,8 +13,7 @@ the fixed direction norm, preserves their ratios and keeps column gains.
 The model's weight is unchanged by this storage repair.
 -/
 
-import Transformer.MagnitudeDirection.SectionA_FullAlgorithm
-import Transformer.MagnitudeDirection.Section3_Representation
+@[expose] public section
 
 noncomputable section
 

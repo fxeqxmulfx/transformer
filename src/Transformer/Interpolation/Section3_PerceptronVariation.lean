@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_ReLURidges
+
+/-!
 # Actual perceptron parameters with a transverse barycenter variation
 
 Auxiliary for arXiv:2411.04551v3, §3.2, `lem: perturbation`, Part 2.
@@ -16,7 +20,7 @@ weak solutions and turning the transverse variation into a uniform
 finite-time separation are further steps in the original theorem.
 -/
 
-import Transformer.Interpolation.Section3_ReLURidges
+@[expose] public section
 
 open Real MeasureTheory Filter Set
 namespace Transformer.Interpolation

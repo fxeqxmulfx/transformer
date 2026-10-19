@@ -1,6 +1,13 @@
 module
 
 public import Mathlib.Probability.Distributions.Gaussian.Real
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+
+/-!
+# Gaussian even moments
+
+Even central moments of real Gaussian laws.
+-/
 
 @[expose] public section
 

@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Convex.Structured.MarkovChain
-import Mathlib.LinearAlgebra.Pi
-import Mathlib.Data.Fin.Tuple.Basic
+module
+
+public import Transformer.GPTMini.Convex.Structured.MarkovChain
+public import Mathlib.LinearAlgebra.Pi
+public import Mathlib.Data.Fin.Tuple.Basic
 
 /-!
 # Convex training of fully observed causal state paths
@@ -22,6 +24,8 @@ value emission and genuine residual/tied readout are still required.
 Source algebra: Structured.Basic's affine finite log-sum-exp objective,
 motivated by arXiv:2305.05465v6, §7, and the actual causal state recurrence.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

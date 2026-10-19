@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.CodeMemoryOutputs
-import Mathlib.Data.Finset.Max
+module
+
+public import Transformer.GPTMini.Sparsemax.CodeMemoryOutputs
+public import Mathlib.Data.Finset.Max
 
 /-!
 # Sparse data codes from nearest registered observations
@@ -16,6 +18,8 @@ observations therefore retain arbitrary-target interpolation. Unseen
 queries use a genuine nearest-prototype prediction; regularity assumptions
 on their targets will be stated separately, rather than inferred from fit.
 -/
+
+@[expose] public section
 
 noncomputable section
 

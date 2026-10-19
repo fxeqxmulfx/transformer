@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+
+/-!
 # Mean-Field Dynamics — Equiangular model & normalization (§6 of 2512.01868v4)
 
 * The equiangular ODEs for `ρ(t) = ⟨x_i(t), x_j(t)⟩` under `eq: SA` and
@@ -7,13 +12,12 @@
   `β_n = γ log n` (Chen et al. 2025).
 
 The local clustering rate of the `eq: SA` ODE is
-`Transformer.MeanField.EquiangularRate`.  The phase transition itself is proved
+`Transformer.MeanField.EquiangularRate`. The phase transition itself is proved
 in `Transformer.MeanField.EquiangularLimit`, on top of the closed forms of
 `Transformer.MeanField.EquiangularWeights`; both are built on this file.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -43,7 +47,7 @@ def equiangularUSA
         * ((n - 1 : ℝ) * ρ t + 1)) t
 
 /-- The equiangular simplex `ρ ≡ -1/(n-1)` is a stationary solution of the
-equiangular `eq: SA` ODE: the factor `(n - 1) ρ + 1` vanishes.  For `n ≥ 2` it
+equiangular `eq: SA` ODE: the factor `(n - 1) ρ + 1` vanishes. For `n ≥ 2` it
 is a configuration of `n` unit vectors — the vertices of a regular simplex —
 and it is the obstruction to a global convergence rate below. -/
 theorem equiangularSA_const_simplex (hn : 2 ≤ n) (β : ℝ) :
@@ -67,7 +71,7 @@ theorem equiangularSA_const_simplex (hn : 2 ≤ n) (β : ℝ) :
 
 At the equiangular simplex the right-hand side of the `eq: SA` ODE vanishes,
 so `ρ` stays at `-1/(n-1) < 1` forever and `1 - ρ` stays at `n/(n-1) ≥ 1`,
-which no decaying exponential dominates.  This is why
+which no decaying exponential dominates. This is why
 `Transformer.MeanField.equiangular_local_rate` — in
 `Transformer.MeanField.EquiangularRate`, which proves it — carries the initial
 condition `(n-1) ρ(0) + 1 > 0`: the rate is local to the basin of `ρ = 1`,
@@ -111,7 +115,7 @@ theorem equiangularSA_const_one (β : ℝ) :
 /-! ### One attention layer on an equiangular configuration -/
 
 /-- The Gram matrix of the equiangular configuration: `⟨x_i, x_j⟩ = ρ` off the
-diagonal and `1` on it.  The configuration exists in `ℝ^d` for `d ≥ n - 1` and
+diagonal and `1` on it. The configuration exists in `ℝ^d` for `d ≥ n - 1` and
 `ρ ≥ -1/(n-1)`; only its Gram matrix enters the statements below. -/
 def equiGram (n : ℕ) (ρ : ℝ) (i j : Idx n) : ℝ := if i = j then 1 else ρ
 

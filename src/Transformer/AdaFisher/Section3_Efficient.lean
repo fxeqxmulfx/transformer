@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_MinMax
+public import Mathlib.LinearAlgebra.Matrix.Kronecker
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+public import Mathlib.Algebra.Order.Star.Real
+
+/-!
 # AdaFisher: efficient damped diagonal Fisher
 
 arXiv:2405.16397v3, §3.2, Proposition 3.2, `eq:FIMDiag`;
 Appendix A.2, eigenvalue bounds and the inverse preconditioner.
 -/
 
-import Transformer.AdaFisher.Section3_MinMax
-import Mathlib.LinearAlgebra.Matrix.Kronecker
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import Mathlib.LinearAlgebra.Matrix.PosDef
-import Mathlib.Algebra.Order.Star.Real
+@[expose] public section
 
 open scoped BigOperators Matrix Kronecker
 

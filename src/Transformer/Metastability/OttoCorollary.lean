@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Metastability.OttoAttention
+public import Transformer.Metastability.Section3_SlowProjection
+public import Transformer.Metastability.Section3_SlowFlatnessCounterexample
+
+/-!
 # Metastability — the Otto energy comparison with an explicit cap domain
 
 ArXiv:2410.06833v1, §3.2, `eq: otto.attention`, corrected by requiring
@@ -9,9 +15,7 @@ states the added restriction explicitly and proves a stronger static
 energy comparison for the actual normalized angular energy.
 -/
 
-import Transformer.Metastability.OttoAttention
-import Transformer.Metastability.Section3_SlowProjection
-import Transformer.Metastability.Section3_SlowFlatnessCounterexample
+@[expose] public section
 
 open scoped BigOperators
 open Real

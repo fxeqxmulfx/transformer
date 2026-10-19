@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.OutputTiedMemoryMinimum
+module
+
+public import Transformer.GPTMini.Sparsemax.OutputTiedMemoryMinimum
 
 /-!
 # Ordinary suboptimality controls complete trained parameter error
@@ -13,6 +15,8 @@ full intrinsic squared distance with factor `1+4*gain^2`, independent of
 dictionary size. The error is a diagnostic quantity, not an added criterion.
 The earlier proved nonempty-domain optimizer supplies all minimum premises.
 -/
+
+@[expose] public section
 
 noncomputable section
 

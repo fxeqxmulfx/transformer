@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.WeierstrassCoordinates
+public import Transformer.Landscape.Lojasiewicz.CompactEnergyAtlasCover
+public import Transformer.Landscape.Lojasiewicz.QuadraticEnergy
+
+/-!
 # Energy-graph coordinates and their actual inverse on the source
 
 The energy value is a free base parameter. Inverse coordinates set that
@@ -6,9 +12,7 @@ parameter to the actual energy, retaining every nearby source point.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.WeierstrassCoordinates
-import Transformer.Landscape.Lojasiewicz.CompactEnergyAtlasCover
-import Transformer.Landscape.Lojasiewicz.QuadraticEnergy
+@[expose] public section
 
 noncomputable section
 open Filter Topology

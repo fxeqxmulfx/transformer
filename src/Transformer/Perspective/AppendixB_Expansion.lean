@@ -1,10 +1,15 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixB_EBeta
+public import Transformer.Perspective.InnerAsymptotics
+
+/-!
 # Appendix B — the second-order expansion of `𝖤_β` at a critical point
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
-The computation behind `e:Hessianincoord`.  Along a curve `t ↦ P t` on
+The computation behind `e:Hessianincoord`. Along a curve `t ↦ P t` on
 `(𝕊^{d-1})^n` through a critical point `x` with velocity `v`,
 
   `Σ_{i,j} e^{β ⟨P_i, P_j⟩} = Σ_{i,j} e^{β ⟨x_i, x_j⟩}
@@ -12,10 +17,10 @@ The computation behind `e:Hessianincoord`.  Along a curve `t ↦ P t` on
              + Σ_{i,j} K_{ij} β² (⟨x_i, v_j⟩ + ⟨v_i, x_j⟩)² / 2 ] + o(t²)`,
 
 where `K_{ij} = e^{β ⟨x_i, x_j⟩}` and `λ_i` is the Lagrange multiplier
-`⟨x_i, Σ_j K_{ij} x_j⟩`.  The point of the statement is the shape of the
+`⟨x_i, Σ_j K_{ij} x_j⟩`. The point of the statement is the shape of the
 coefficient: it is written in `v` alone, not in the curve.
 
-Two facts of the sphere make the first-order term disappear.  Writing
+Two facts of the sphere make the first-order term disappear. Writing
 `w_i(t) = P_i(t) - x_i`, the constraint `‖P_i‖ = 1` gives
 `⟨x_i, w_i⟩ = -‖w_i‖²/2` — a *second*-order quantity — and criticality gives
 `Σ_j K_{ij} x_j = λ_i x_i`, which is what turns the two cross terms into
@@ -27,8 +32,7 @@ Everything is stated for abstract `x, v, P, K, λ, m` so that no unfolding of
 `Perspective.AppendixB_Intrinsic`.
 -/
 
-import Transformer.Perspective.AppendixB_EBeta
-import Transformer.Perspective.InnerAsymptotics
+@[expose] public section
 
 open scoped BigOperators
 open Real Asymptotics Filter

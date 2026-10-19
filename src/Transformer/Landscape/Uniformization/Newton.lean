@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.NewtonB
+public import Transformer.Landscape.Uniformization.Comparable
+
+/-!
 # Local uniformization: the Newton step
 
 At a point `(w', 0)` where the coefficients `B_i = β_i · (x' - w')^{α_i}` of a centered
@@ -9,8 +14,7 @@ the principalized charts (`NewtonB`) cover `R |t^p| < |y|`, for every sign vecto
 ramified coordinates. Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Uniformization.NewtonB
-import Transformer.Landscape.Uniformization.Comparable
+@[expose] public section
 
 open Filter Set Polynomial
 open scoped BigOperators Topology

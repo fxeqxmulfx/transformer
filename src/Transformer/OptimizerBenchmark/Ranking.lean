@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.OptimizerBenchmark.Basic
+public import Mathlib.Tactic
+
+/-!
 # What the observed optimizer winner actually establishes
 
 The source is our RTX 3050 GPTMini/Tiny Shakespeare experiment, REPORT.md,
@@ -15,8 +20,7 @@ Algorithm references: arXiv:2502.16982, Section 2.2, and
 arXiv:2602.02016v2, Sections 2-4.
 -/
 
-import Transformer.OptimizerBenchmark.Basic
-import Mathlib.Tactic
+@[expose] public section
 
 namespace Transformer.OptimizerBenchmark
 

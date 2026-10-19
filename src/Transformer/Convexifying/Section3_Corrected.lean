@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_Vector
+public import Transformer.Convexifying.Section3_Scaling
+public import Transformer.Convexifying.Section3_ScalarBridge
+public import Transformer.Convexifying.Section3_VectorRecovery
+
+/-!
 # Width-corrected convexification statements
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §3.2–§3.3 and Appendix A.
@@ -6,17 +13,14 @@ These theorems record the corrections justified by the paper's recovery
 constructions and prove the resulting equivalences.
 -/
 
-import Transformer.Convexifying.Section3_Vector
-import Transformer.Convexifying.Section3_Scaling
-import Transformer.Convexifying.Section3_ScalarBridge
-import Transformer.Convexifying.Section3_VectorRecovery
+@[expose] public section
 
 namespace Transformer.Convexifying
 
 /-- **Corrected scalar equivalence.**  Equation (9) must not halve the loss,
-and `h ≥ n` suffices to assign one head to every token row.  The paper's
+and `h ≥ n` suffices to assign one head to every token row. The paper's
 Appendix A.4 gives a potentially smaller data-dependent bound `h ≥ h*`
-with `h* ≤ N + 1`, but Theorem 1 states no width hypothesis.  This version
+with `h* ≤ N + 1`, but Theorem 1 states no width hypothesis. This version
 uses the simple uniform bound `n` and compares all objective sublevel sets.
 
 Source: arXiv:2211.11052v1, §3.2, `theo:attn_multihead_convex_scalar`,
@@ -51,9 +55,9 @@ example : 0 < (1 : ℕ) ∧ (1 : ℕ) ≤ 1 ∧ (0 : ℝ) ≤ 1 := by norm_num
 
 /-- **Corrected vector equivalence.**  The loss in equation (11) must
 separate over output coordinates to match equation (12), and `h ≥ n c`
-suffices to allocate a head to each token-output row.  Appendix A.2 in fact
+suffices to allocate a head to each token-output row. Appendix A.2 in fact
 constructs `h c` heads from `h` rows, despite Theorem 2 keeping `h` heads on
-its left-hand side.  The source's unqualified assertion is refuted by
+its left-hand side. The source's unqualified assertion is refuted by
 `vector_equivalence_false_for_one_head`.
 
 Source: arXiv:2211.11052v1, §3.3,

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CyclicCircuitOutput
+
+/-!
 # A shape-preserving cyclic Coyote simulation of an arithmetic circuit
 
 Arora et al., arXiv:2312.04927v1, §4 Theorem `thm:equiv` and Appendix
@@ -14,7 +18,7 @@ parameter bound. The causal-only variant cannot generally perform the
 required backward communication between input positions.
 -/
 
-import Transformer.Zoology.Appendix_CyclicCircuitOutput
+@[expose] public section
 
 namespace Transformer.Zoology
 

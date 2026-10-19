@@ -1,4 +1,12 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Slope
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Topology.Order.Compact
+public import Mathlib.Tactic
+
+/-!
 # A finite first-crossing argument for the causal gap barrier
 
 ArXiv:2411.04990v2, §5, proof of `lemma:meta`, the comparison after
@@ -11,11 +19,7 @@ as `Transformer.Modes.deriv_nonneg_of_isMaxOn_Icc_right`, with the order
 reversed for a minimum. The finite comparison itself is proved here.
 -/
 
-import Mathlib.Analysis.Calculus.Deriv.Slope
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Topology.Order.Compact
-import Mathlib.Tactic
+@[expose] public section
 
 open Filter Set Topology
 

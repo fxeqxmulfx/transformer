@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_Objective
+
+/-!
 # Empirical derivatives and initialization
 
 arXiv:2402.19449v2, Section 3.2, Proposition 2, equation (1), Appendix H.
@@ -6,7 +10,7 @@ The paper's initialization gradient has its sign reversed. The Hessian
 formula is unchanged. Derivatives are averages of actual sample derivatives.
 -/
 
-import Transformer.Imbalance.Section3_Objective
+@[expose] public section
 
 open scoped BigOperators
 

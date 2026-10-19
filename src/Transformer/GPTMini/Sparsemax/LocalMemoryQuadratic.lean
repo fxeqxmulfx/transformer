@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.LocalMemoryParameters
+module
+
+public import Transformer.GPTMini.Sparsemax.LocalMemoryParameters
 
 /-!
 # A strictly convex criterion on every compact attention parameter
@@ -16,6 +18,8 @@ the unchanged output-only chart. It makes the extra choice explicit and
 does not select the model's task loss or an FFN. Compact-domain projection
 and the actual joint objective are treated in subsequent modules.
 -/
+
+@[expose] public section
 
 noncomputable section
 

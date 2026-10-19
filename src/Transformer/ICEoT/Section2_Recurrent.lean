@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section2_FeedForward
+
+/-!
 # IC-EoT: the ICRNN background
 
 arXiv:2603.22095v2, §2.2.2, Eqs. (2), (3). The initial hidden state
@@ -6,7 +10,7 @@ and preceding input are fixed. At stage `k` the output uses only inputs
 through `k`; indexing a full sequence avoids padding any finite prefix.
 -/
 
-import Transformer.ICEoT.Section2_FeedForward
+@[expose] public section
 
 noncomputable section
 

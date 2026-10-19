@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.CRASP.MajTwoRectMajorityBounds
+public import Transformer.CRASP.MajTwoRectDiagonal
+public import Transformer.CRASP.MajTwoFree
+
+/-!
 # Depth-preserving translation from `MAJ²`
 
 arXiv:2506.16055v3, Appendix E, `thm:majtwo_to_tlc`. The induction
@@ -7,9 +13,7 @@ becomes a unary temporal comparison; a formula with one free variable is
 then read on the diagonal.
 -/
 
-import Transformer.CRASP.MajTwoRectMajorityBounds
-import Transformer.CRASP.MajTwoRectDiagonal
-import Transformer.CRASP.MajTwoFree
+@[expose] public section
 
 namespace Transformer.CRASP
 

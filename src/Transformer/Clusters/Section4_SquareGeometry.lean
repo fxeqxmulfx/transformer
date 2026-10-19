@@ -1,4 +1,6 @@
-import Transformer.Clusters.Section3_Rescaled
+module
+
+public import Transformer.Clusters.Section3_Rescaled
 
 /-!
 # The four planar corners in the codimension test
@@ -23,6 +25,8 @@ their image has cardinality four. This is the finite obstruction to
 the conjecture's bound of three codimension-two affine subspaces:
 in the plane, such subspaces are single points.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

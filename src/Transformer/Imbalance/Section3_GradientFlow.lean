@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_SimpleModel
+public import Transformer.Landscape.GlobalFlow.Existence
+public import Mathlib.Analysis.Calculus.ContDiff.RCLike
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Matrix gradient flow and its class-frequency-dependent rate
 
 arXiv:2402.19449v2, Theorem 3 and Appendix I, Lemmas 4--6.
@@ -6,9 +13,7 @@ The explicit integral-equation solution is verified against the matrix
 field, and uniqueness identifies every global zero-initialized solution.
 -/
 
-import Transformer.Imbalance.Section3_SimpleModel
-import Transformer.Landscape.GlobalFlow.Existence
-import Mathlib.Analysis.Calculus.ContDiff.RCLike
+@[expose] public section
 
 open Filter Asymptotics
 

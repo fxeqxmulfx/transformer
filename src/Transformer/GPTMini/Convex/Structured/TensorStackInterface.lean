@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.TensorStackTraining
-import Transformer.GPTMini.Semantics.CountEmbedding
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorStackTraining
+public import Transformer.GPTMini.Semantics.CountEmbedding
 
 /-!
 # Genuine full tensor stack through the checked integer-list interface
@@ -18,6 +20,8 @@ prediction. This is actual forward coupling, not correctness assumed
 of supplied logits. Full Basis finite-weight instantiation and correct
 data minibatch training are provided by subsequent recipe integration.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

@@ -1,6 +1,8 @@
-import Transformer.AMSGrad.Section3_Issue
+module
 
-/-
+public import Transformer.AMSGrad.Section3_Issue
+
+/-!
 # Adam and beyond — §4: Abel summation with a varying `β_{1,t}`
 
 The scalar inequality behind the first term of Theorem 4 of arXiv:1904.09237:
@@ -9,6 +11,8 @@ together with the `β_{1,t}` term of `prepare_lem`, one coordinate at a time.
 
 Source: arXiv:1904.09237, appendix, §"Proof of Theorem 4".
 -/
+
+@[expose] public section
 
 open Finset
 

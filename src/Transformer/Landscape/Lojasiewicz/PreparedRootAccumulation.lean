@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.PolynomialFamily
+
+/-!
 # Root accumulation passes through analytic preparation
 
 A nonvanishing preparation unit can be cancelled at roots accumulating
@@ -6,7 +10,7 @@ from positive parameters. The resulting prepared polynomial has real roots
 frequently on the same positive side.
 -/
 
-import Transformer.Landscape.Lojasiewicz.PolynomialFamily
+@[expose] public section
 
 open Filter Set
 

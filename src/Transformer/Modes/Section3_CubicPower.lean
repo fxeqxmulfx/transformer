@@ -1,5 +1,8 @@
-import Transformer.Modes.Section3_CubicGaussianComparison
-import Transformer.Modes.Section3_GaussianComparison
+module
+
+public import Transformer.Modes.Section3_CubicGaussianComparison
+public import Transformer.Modes.Section3_GaussianComparison
+
 /-!
 # Retaining the cubic correction under characteristic-function powers
 
@@ -24,6 +27,7 @@ supplies the third moment from the fourth moment, so this step uses
 exactly the finite-moment input of the local expansion.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

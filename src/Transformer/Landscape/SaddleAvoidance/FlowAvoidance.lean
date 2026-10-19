@@ -1,8 +1,12 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.TimeOne
+
+/-!
 # Saddle avoidance — gradient flows
 
 Let `f` be a `C²` function on a finite-dimensional real inner product space
-whose gradient is `L`-Lipschitz and bounded by `M`.  The gradient flow
+whose gradient is `L`-Lipschitz and bounded by `M`. The gradient flow
 `ẋ = -∇f(x)` converges to a strict saddle of `f` only from a null set of
 starts (`measure_tendsto_gradientFlow_strictSaddle_eq_zero`); started from a
 law with a density, it almost surely converges to none
@@ -10,14 +14,14 @@ law with a density, it almost surely converges to none
 
 The field `-∇f` does not depend on time, so the flow is a one-parameter group
 (`gradientFlow_gradientFlow`), and its value at the integer time `k` is the
-`k`-th iterate of the time-one map (`iterate_gradientFlow_one`).  A trajectory
-converging to `z` converges along the integer times.  The time-one map is
+`k`-th iterate of the time-one map (`iterate_gradientFlow_one`). A trajectory
+converging to `z` converges along the integer times. The time-one map is
 `C¹` with an invertible derivative, and every strict saddle is a symmetric
 unstable fixed point of it (`Landscape.SaddleAvoidance.TimeOne`), so the avoidance
 theorem for maps, `measure_tendsto_symmetricUnstable_eq_zero`, concludes.
 
 Gradient ascent `ẋ = ∇f(x)` is the gradient flow of `-f`
-(`hasDerivAt_gradientFlow_neg`).  The strict saddles of `-f` are the critical
+(`hasDerivAt_gradientFlow_neg`). The strict saddles of `-f` are the critical
 points of `f` at which the Hessian of `f` has a positive eigenvalue
 (`isStrictSaddle_neg`), so ascent converges to such a point only from a null
 set of starts (`measure_tendsto_gradientAscent_strictSaddle_eq_zero`): the
@@ -26,7 +30,7 @@ proof it follows with `thm:main-general` of §4 of arXiv:1710.07406, applied to
 the time-one map, in place of the center-stable manifold theorem for flows.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.TimeOne
+@[expose] public section
 
 open Filter MeasureTheory
 open scoped Topology NNReal
@@ -39,7 +43,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
   {f : E → ℝ} {L : ℝ≥0} {M : ℝ}
 
 /-- **The gradient flow is a one-parameter group**: flowing for time `t` and
-then for time `s` is flowing for time `s + t`.  The field `-∇f` does not depend
+then for time `s` is flowing for time `s + t`. The field `-∇f` does not depend
 on time, so `τ ↦ Φ^{τ + t}(x)` is the trajectory through `Φ^t(x)`. -/
 theorem gradientFlow_gradientFlow (hL : LipschitzWith L (gradient f))
     (hM : ∀ x, ‖gradient f x‖ ≤ M) (s t : ℝ) (x : E) :
@@ -99,7 +103,7 @@ variable [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E]
 /-- **Gradient flows almost never converge to a strict saddle.**  For `f` of
 class `C²` with an `L`-Lipschitz gradient bounded by `M`, the starts from
 which the gradient flow `ẋ = -∇f(x)` converges to a strict saddle as `t → ∞`
-form a null set.  Along the integer times such a trajectory is an orbit of the
+form a null set. Along the integer times such a trajectory is an orbit of the
 time-one map converging to a symmetric unstable fixed point of it. -/
 theorem measure_tendsto_gradientFlow_strictSaddle_eq_zero (μ : Measure E)
     [μ.IsAddHaarMeasure] (hf : ContDiff ℝ 2 f) (hL : LipschitzWith L (gradient f))
@@ -128,24 +132,24 @@ theorem ae_not_tendsto_gradientFlow_of_isStrictSaddle (μ : Measure E) [μ.IsAdd
   exact hx
 
 /-- **Gradient ascent almost never converges to a strict saddle**: the
-Euclidean analog of Lemma `l:nosaddleconv`.  For `f` of class `C²` with an
+Euclidean analog of Lemma `l:nosaddleconv`. For `f` of class `C²` with an
 `L`-Lipschitz gradient bounded by `M`, the starts from which gradient ascent
 `ẋ = ∇f(x)`, the gradient flow of `-f`, converges to a critical point of `f`
 at which the Hessian has a positive eigenvalue form a null set.
 
 The source: "Let `ℳ` be a compact Riemannian manifold and let `f : ℳ → ℝ` be a
-smooth function.  The set of initial conditions `X₀ ∈ ℳ` for which the
+smooth function. The set of initial conditions `X₀ ∈ ℳ` for which the
 gradient ascent `Ẋ(t) = ∇f(X(t))`, `X(0) = X₀` converges to a strict saddle
 point of `f` is of volume zero", a strict saddle point being a critical point
 at which the Hessian has at least one strictly positive eigenvalue.
 
 **What the source says and what is changed here.**  `ℳ` is a
 finite-dimensional real inner product space `E` instead of a compact
-manifold, and volume is a Haar measure `μ`.  On the non-compact `E`, the
+manifold, and volume is a Haar measure `μ`. On the non-compact `E`, the
 smooth `f` is replaced by an `f` of class `C²` whose gradient is bounded and
 Lipschitz, as on a compact manifold, so that the flow exists for all times.
 The proof replaces the center-stable manifold theorem for flows by
-`thm:main-general` of §4 of arXiv:1710.07406 for the time-one map.  The
+`thm:main-general` of §4 of arXiv:1710.07406 for the time-one map. The
 instance of the source on `(𝕊^{d-1})^n` is `Perspective.no_saddle_convergence`.
 
 Source: arXiv:2312.10794v5, Appendix A, `l:nosaddleconv`. -/

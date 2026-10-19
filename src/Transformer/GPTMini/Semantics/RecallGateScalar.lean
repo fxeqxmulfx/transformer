@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.CountSpline
-import Transformer.GPTMini.Semantics.RecallRawMarker
+module
+
+public import Transformer.GPTMini.Semantics.CountSpline
+public import Transformer.GPTMini.Semantics.RecallRawMarker
 
 /-!
 # A finite table cutoff using the original quadratic activation
@@ -17,6 +19,8 @@ These scalar computations do not insert a semantic indicator into
 the model: the following matrix realization will use its real residual
 coordinates. Raw-prefix parsing and final retrieval remain separate.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

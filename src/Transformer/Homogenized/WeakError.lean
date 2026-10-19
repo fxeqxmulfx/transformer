@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_OneStepRefutation
+
+/-!
 # Homogenized Transformers — weak approximation and false improved rates
 
 Source: arXiv:2604.01978v1, §2.3.2, `thm:weak_error_clean`,
@@ -20,7 +24,7 @@ original dynamics and full source assumptions; the false
 claims are replaced by theorems naming their counterexamples.
 -/
 
-import Transformer.Homogenized.Section6_OneStepRefutation
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory ProbabilityTheory
@@ -40,11 +44,11 @@ where `X` solves `eq: first.sde`, `X^η` interpolates the chain
 **What the source says and what is carried here.**  `X` and `X^η` start from
 the same deterministic configuration; the manuscript's `X(0) = X^0` is written
 out as the hypothesis `X 0 ω = x₀`, because without it the two expectations at
-`t = 0` need not agree and the bound is false.  The solution of
+`t = 0` need not agree and the bound is false. The solution of
 `eq: first.sde` is taken in the sense of `IsFirstSde`, i.e. through the
 generator: see `Transformer.Homogenized.Generator`.
 
-The number of heads is positive.  The source writes `Σ_{h=1}^H`, so `H ≥ 1` is
+The number of heads is positive. The source writes `Σ_{h=1}^H`, so `H ≥ 1` is
 implicit there, and the hypothesis is needed: at `H = 0` the update of
 `eq:update_tokens` is the identity and the chain never moves, while the
 limiting dynamics has drift `b` and does, so the bound fails for every `φ` that

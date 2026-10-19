@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CircuitBatchCorrectness
+
+/-!
 # Induction over parallel circuit levels
 
 Arora et al., arXiv:2312.04927v1, Appendix Theorem `thm: gen-ac`.
@@ -7,7 +11,7 @@ Coyote layers per level compute all new gates simultaneously, using the
 topological level assignment from the paper's depth convention.
 -/
 
-import Transformer.Zoology.Appendix_CircuitBatchCorrectness
+@[expose] public section
 
 namespace Transformer.Zoology
 

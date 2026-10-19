@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Reparameterization.Interpolation
+module
+
+public import Transformer.GPTMini.Convex.Reparameterization.Interpolation
 
 /-!
 # A likelihood midpoint has a strictly positive log-odds minor
@@ -15,6 +17,8 @@ off-diagonal contrasts have magnitude at most log(8/7). Since 5/4 > 8/7,
 the two-by-two determinant is strictly positive.
 The arithmetic mean of the physical endpoints satisfies all hypotheses.
 -/
+
+@[expose] public section
 
 noncomputable section
 

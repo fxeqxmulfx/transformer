@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section3_WeakTaylor
+public import Transformer.BatchSize.Section4_StepMoments
+
+/-!
 # Local weak error of SignSGD
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1.
@@ -7,8 +12,7 @@ This is a proved step toward the global weak-approximation claim;
 it does not assume existence of a continuous diffusion law.
 -/
 
-import Transformer.BatchSize.Section3_WeakTaylor
-import Transformer.BatchSize.Section4_StepMoments
+@[expose] public section
 
 open MeasureTheory
 

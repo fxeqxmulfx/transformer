@@ -1,4 +1,10 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.Real.Sqrt
+
+/-!
 # A barrier for the nearest of finitely many tokens
 
 ArXiv:2411.04990v2, §5, proof of `lemma:meta`, the comparison following
@@ -9,9 +15,7 @@ contact. The right-slope argument also appears in
 `Transformer.Perspective.MinCurve` for the hemisphere comparison.
 -/
 
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.Real.Sqrt
+@[expose] public section
 
 open scoped Topology
 

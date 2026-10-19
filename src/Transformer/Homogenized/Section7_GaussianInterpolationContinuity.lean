@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianBlendGradient
+public import Mathlib.Analysis.Calculus.FDeriv.Extend
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+
+/-!
 # Continuity and the actual one-sided Gaussian interpolation endpoints
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -16,9 +22,7 @@ This does not restrict the interpolation to the open interval or
 require a nonsingular original Gaussian covariance matrix.
 -/
 
-import Transformer.Homogenized.Section7_GaussianBlendGradient
-import Mathlib.Analysis.Calculus.FDeriv.Extend
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Set Filter
 open scoped BigOperators Topology

@@ -1,10 +1,16 @@
-/-
+module
+
+public import Transformer.Perspective.RawStackDenseGronwall
+public import Transformer.Perspective.RawStackFrozen
+public import Transformer.Perspective.RawStackSkipDamp
+
+/-!
 # Freezing survives any number of skips
 
 **Not a statement of any paper.**  `rawStack_frozen` of
 `Perspective.RawStackFrozen` freezes the directions of a stack whose gains
 exceed `1 + c` and whose blocks output at most `M`, and `rawStack_frozen_skip`
-of `Perspective.RawStackSkipFrozen` lets one update add an earlier state.  Here
+of `Perspective.RawStackSkipFrozen` lets one update add an earlier state. Here
 every update may add any number of them,
 
   `x_{k+1,i} = λ_{k,i} x_{k,i} + Σ_{j ≤ k} s_{k,j,i} x_{j,i} + g_{k,i}`,
@@ -19,39 +25,37 @@ within
 
   `2 (M/c + (‖x_{0,i}‖ + M/c) (Π_{j<k} (1 + V_{j,i}) - 1)) / ‖x_{0,i}‖`
 
-of the one it started with (`rawStack_frozen_dense`).  Without skips the product
+of the one it started with (`rawStack_frozen_dense`). Without skips the product
 is `1` and this is the bound of `rawStack_frozen`; with one skip it is at most
 that of `rawStack_frozen_skip`, and equal to it past the skip.
 
-Of the record this covers every update, all twenty-three.  A step of gain below
+Of the record this covers every update, all twenty-three. A step of gain below
 `1 + c` — the skip of layer `6` and the step after the loop have gain `1`, and
 any gain, of any sign, will do — is taken at gain `1 + c`, the difference
 carried by a skip onto the state it updates (`Perspective.RawStackDense`), which
 adds `|gain - 1 - c| / (1 + c)` to its `V`; the skips proper, of layers `6` and
-`10` and after the loop, are the other summands.  The price is the product:
+`10` and after the loop, are the other summands. The price is the product:
 every skipping step multiplies the growth by one plus what its skips weigh, and
 skips at a fixed distance keep their weight at every depth
 (`le_abs_skipWeight`), so over infinitely many the product need not converge.
 It is a bound for a stack of given depth, which a record is.
 
-What `M` is for the record changes at layer `4`.  The attentions and MLPs read
+What `M` is for the record changes at layer `4`. The attentions and MLPs read
 normalized states, and up to layer `4` the gates of the `x0` and bigram
 injections are computed from the normalized embedding, so a constant of the
-weights bounds the outputs.  From layer `4` on, the gates of those injections
+weights bounds the outputs. From layer `4` on, the gates of those injections
 and of the layer-`6` skip, with coefficients of three attentions, come from
 `forward_mudd_gate` applied to the raw state at depth `8`; the gains and gates
 of layer `10` and of the step after the loop come from `forward_mudd` applied
 to the raw stream; and the values of the last attention also carry
 `v_mudd = mu[0] * cache[0] + mu[1] * cache[7] + mu[2] * x`, raw states that the
-attention mixes across tokens (`train_gpt.py`, `GPT.forward`).  There `M`, `λ`
+attention mixes across tokens (`train_gpt.py`, `GPT.forward`). There `M`, `λ`
 and `s` are properties of the trajectory, and `rawStack_frozen_dense` is a
-bound in terms of them.  At initialisation `mudd_w2` and `mudd_gate_w2` are
+bound in terms of them. At initialisation `mudd_w2` and `mudd_gate_w2` are
 zero, and every coefficient is a constant.
 -/
 
-import Transformer.Perspective.RawStackDenseGronwall
-import Transformer.Perspective.RawStackFrozen
-import Transformer.Perspective.RawStackSkipDamp
+@[expose] public section
 
 open scoped BigOperators
 
@@ -91,7 +95,7 @@ depth and token: then at every depth the direction of token `i` is within
   `2 (M/c + (‖x_{0,i}‖ + M/c) (Π_{j<k} (1 + V_{j,i}) - 1)) / ‖x_{0,i}‖`,
   `V_{j,i} = Σ_{l ≤ j} |s_{j,l,i}| (1+c)^{-(j+1-l)}`,
 
-of the direction it started with.  Without skips this is `rawStack_frozen`'s
+of the direction it started with. Without skips this is `rawStack_frozen`'s
 bound, and with one skip at most `rawStack_frozen_skip`'s.
 
 Source: none — posed here; every update of modded-nanogpt (`train_gpt.py`,

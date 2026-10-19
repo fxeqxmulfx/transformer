@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ALM.GuardSep
+
+/-!
 # The gap the runtime reports, in the unit the guard compares against
 
 `vm-rs/alm-hull/src/gap.rs` is the diagnostic half of the pair: `ScoreGaps`
@@ -6,20 +10,20 @@ divides the distance between the winner and the best strictly-lower score by
 one *key step*, and reads the quotient on three bands — near `1` the two keys
 are genuinely different, near `10^-5` the compiler's `LATEST_ALPHA` separation
 is what is holding the order up, near `10^-15` the matvec's rounding is
-deciding the answer.  `Transformer.ALM.LatestWindow` already says what those
-last two bands mean.  What nothing said is why the division is there.
+deciding the answer. `Transformer.ALM.LatestWindow` already says what those
+last two bands mean. What nothing said is why the division is there.
 
-It is there because the quotient is the hypothesis.  The step `observe` divides
+It is there because the quotient is the hypothesis. The step `observe` divides
 by is `|q[1]|`, which is the same number `grid.rs::off_the_grid` takes as its
 `margin`, and `Transformer.ALM.GuardSep` needs exactly `margin ≤ |a - b|` to
-discharge `cmp_of_sep`.  So a reported gap of at least one key step is not a
+discharge `cmp_of_sep`. So a reported gap of at least one key step is not a
 sign that the query is healthy — it *is* the separation hypothesis, written in
 the only scale-free way available (`keyGap_scale_free`), and
 `retrieval_of_keyGap` runs it into the answer.
 
 Below the band the same arithmetic says the opposite: `rounding_decides_below`
 turns a gap under a rounding budget into the two perturbations that invert the
-order, which is what `NOISE = 1e-9` is counting.  And an exact tie is not a gap
+order, which is what `NOISE = 1e-9` is counting. And an exact tie is not a gap
 at all (`keyGap_self`) — `observe` drops it, because it is `HullMeta::last_seq`
 that answers there and not this.
 
@@ -27,7 +31,7 @@ Source: `todo3.md` §2a and §4; `vm-rs/alm-hull/src/gap.rs`, `ScoreGaps::observ
 and its three tests; `vm-rs/alm-hull/src/grid.rs`, `off_the_grid`.
 -/
 
-import Transformer.ALM.GuardSep
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -56,7 +60,7 @@ instead. -/
 
 /-- **A whole step, at either scale.**  Two distinct parabolic integer scores
 are a unit apart before the scale (`one_le_sScore_sub`) and the scale divides
-out of the quotient, so the reported gap is at least `1`.  This is `gap.rs`'s
+out of the quotient, so the reported gap is at least `1`. This is `gap.rs`'s
 own first test, which runs it at `1` and at the shipped `√2 · 10^10`. -/
 theorem one_le_keyGap {q j k : ℤ} {σ : ℝ} (hσ : 0 < σ)
     (h : sScore q j < sScore q k) :
@@ -79,7 +83,7 @@ theorem one_le_keyGap_iff {σ best second : ℝ} (hσ : 0 < σ) :
 /-- **From the reported gap to the answer.**  A query whose diagnostic gap is a
 full key step and whose guard passed with a bit to spare has its two computed
 scores in the order the exact ones are: the runner-up stays the runner-up
-after rounding.  This is the whole of what the two files in `vm-rs` are for,
+after rounding. This is the whole of what the two files in `vm-rs` are for,
 joined — `gap.rs` supplies the separation, `grid.rs` supplies the spacing, and
 `cmp_of_guard` turns the pair into the comparison. -/
 theorem retrieval_of_keyGap {p : ℕ} {E : ℤ} {σ best second best' second' δ₁ δ₂ : ℝ}
@@ -96,7 +100,7 @@ theorem retrieval_of_keyGap {p : ℕ} {E : ℤ} {σ best second best' second' δ
 
 /-- **Below the floor the rounding decides.**  A gap narrower than a rounding
 budget of `η` key steps is inverted by roundings inside that budget: the loser
-comes out strictly ahead and nothing announces it.  That is what `NOISE = 1e-9`
+comes out strictly ahead and nothing announces it. That is what `NOISE = 1e-9`
 counts — §2a's reading that a gap of that size is "the key path's own rounding
 and not a separation anyone intended" — and it is the same arithmetic as
 `Transformer.ALM.LatestClose.past_the_window_rounding_decides`, here with the
@@ -145,7 +149,7 @@ example : (0 : ℝ) < 1 ∧ ulpOf 53 0 < 1 ∧ 1 ≤ keyGap 1 1 0 ∧
   refine ⟨by norm_num, ?_, ?_, ?_, ?_⟩ <;> simp only [ulpOf, keyGap] <;> norm_num
 
 /-- And a gap the rounding owns: `10^-15` key steps against a budget of
-`10^-9`, which is §2a's noise floor on `hello`.  These are the hypotheses of
+`10^-9`, which is §2a's noise floor on `hello`. These are the hypotheses of
 `rounding_decides_below`. -/
 example : (0 : ℝ) < 1 ∧ (0 : ℝ) < 1e-15 ∧ keyGap 1 1e-15 0 < 1e-9 := by
   refine ⟨by norm_num, by norm_num, ?_⟩

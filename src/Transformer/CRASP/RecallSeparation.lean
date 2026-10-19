@@ -1,7 +1,11 @@
-/-
+module
+
+public import Transformer.CRASP.MatchingRecallAnswers
+
+/-!
 # Comparing a query with a key separates recall
 
-In no paper.  At every depth `k` and width `d`, aligned recall over `c = 2^t`
+In no paper. At every depth `k` and width `d`, aligned recall over `c = 2^t`
 tokens and `c` rows, at `p = 2t + 3` bits, none of them fractional, is
 recognized by the matcher of `CRASP.MatchingRecallAnswers`, one layer of
 width `5` comparing a query with a key (`matcher_answers`), and by no
@@ -14,18 +18,18 @@ query with a key recalls in constant width, and attention ignoring the query
 does not at any fixed width and depth.
 
 Up to a constant factor, no transformer recalls with fewer bits a position
-than the matcher, at any depth and whatever its attention compares.  One
+than the matcher, at any depth and whatever its attention compares. One
 recognizing recall of `v` on the consistent instances of `n + 1 ≥ 2` rows
 embeds the `c` triples `(a, v, a)` apart (`card_le_of_recall`), since a word
 reaches the output only through its embeddings (`out_eq_of_map`) and the
 instance whose rows all read `(a, v, a)` recalls `v` while the one whose
-earlier rows read `(a', v, a')` does not (`priorAnswer_collide`).  So
+earlier rows read `(a', v, a')` does not (`priorAnswer_collide`). So
 `c ≤ 2^{p d}` at `p ≥ 1` bits and width `d` (`le_two_pow_of_recall`):
 `p d ≥ log₂ c`, which the matcher's `5 p = O(log c)` meets up to a constant
 factor at every length.
 -/
 
-import Transformer.CRASP.MatchingRecallAnswers
+@[expose] public section
 
 namespace Transformer.CRASP
 

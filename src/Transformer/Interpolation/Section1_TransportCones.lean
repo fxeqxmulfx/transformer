@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_AutonomousComparison
+
+/-!
 # Smooth cones following the original particle trajectories
 
 Auxiliary to arXiv:2411.04551v3, §1, the Lipschitz well-posedness
@@ -19,7 +23,7 @@ Finite smooth minima of these cones will compare arbitrary weak laws
 with their actual transported initial probabilities.
 -/
 
-import Transformer.Interpolation.Section1_AutonomousComparison
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal BigOperators

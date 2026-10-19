@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativeSigns
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativeSigns
 
 /-!
 # A missing product circuit cannot be discovered from zero seeds
@@ -18,6 +20,8 @@ factors, true held-out CE stays at least its uniform-initialization value
 log q. This exact-real fixed-table obstruction neither models stochastic
 feature discovery nor refutes the paper's positive-seed simulation.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

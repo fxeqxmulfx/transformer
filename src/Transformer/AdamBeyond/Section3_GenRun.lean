@@ -1,16 +1,20 @@
-import Transformer.AdamBeyond.Section3_Run
+module
 
-/-
+public import Transformer.AdamBeyond.Section3_Run
+
+/-!
 # Adam and beyond — §3: the run behind Theorem 2
 
 The one-dimensional problem of the proof of Theorem 2: `F = [-1, 1]`,
 `f_t(x) = C x` for `t mod C = 1` and `-x` otherwise, Adam with `β_{1,t} = β₁`,
 `β₂` and `α_t = α/√t`, started at `x₁ = 1`, preceded here by a warm-up of `C`
-steps with `f_t = 0`, during which nothing moves (`gen_warmup`).  Along the whole
+steps with `f_t = 0`, during which nothing moves (`gen_warmup`). Along the whole
 run `-1 ≤ m_t ≤ C` and `0 ≤ v_t ≤ C²` (`gen_bounds`).
 
 Source: arXiv:1904.09237, Appendix, proof of Theorem 2.
 -/
+
+@[expose] public section
 
 namespace Transformer
 namespace AdamBeyond

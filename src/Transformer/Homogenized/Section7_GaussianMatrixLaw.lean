@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianRowNonzero
+public import Mathlib.Probability.ProductMeasure
+
+/-!
 # The original matrix factor and an independent original key row
 
 ArXiv:2604.01978v1, §2.3.3, initialization (G), and §7.3,
@@ -18,8 +23,7 @@ conditionally on the fixed key row. Neither the product matrix nor
 its bilinear coordinates are assigned a Gaussian law.
 -/
 
-import Transformer.Homogenized.Section7_GaussianRowNonzero
-import Mathlib.Probability.ProductMeasure
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

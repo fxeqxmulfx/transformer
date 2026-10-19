@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.RealAnalyticGerms.PreparedIntegralRelation
+
+/-!
 # Joint witnesses for germ division and its finite power basis
 
 The divisor `y² - z₀` has a two-element power basis over the actual base
@@ -6,7 +10,7 @@ germ ring. Dividing `y³` computes the nonzero remainder `z₀ y`. Auxiliary
 examples for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.RealAnalyticGerms.PreparedIntegralRelation
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

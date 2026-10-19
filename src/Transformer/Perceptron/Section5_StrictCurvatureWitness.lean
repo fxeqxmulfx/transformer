@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_CircleGeometry
+public import Transformer.Perceptron.CircleDeriv
+public import Transformer.Perceptron.Dirac
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # A complete nonempty witness of the strict angular curvature condition
 
 ArXiv:2601.21366v2, §5.5, `rem:strictSOPD-perceptron` and
@@ -15,10 +22,7 @@ there is eight. At `β=κ=1`, `2 exp 1+2<8` verifies the full
 source condition. None of these statements assumes strict SOPD.
 -/
 
-import Transformer.Perceptron.Section5_CircleGeometry
-import Transformer.Perceptron.CircleDeriv
-import Transformer.Perceptron.Dirac
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

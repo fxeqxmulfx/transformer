@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+public import Transformer.Perspective.Section2_FlowMap
+public import Mathlib.Analysis.Normed.Algebra.Exponential
+
+/-!
 # §9 — General matrices
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -16,10 +23,7 @@ This file formalizes §9 of the survey:
 * §9.4 — diffusive regularization (consensus-based optimization analogy).
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
-import Transformer.Perspective.Section2_FlowMap
-import Mathlib.Analysis.Normed.Algebra.Exponential
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -82,7 +86,7 @@ noncomputable def discreteEnergy (β : ℝ) (𝒞 : Finset (SSphere d)) : ℝ :=
   ∑ x ∈ 𝒞, ∑ y ∈ 𝒞, Real.exp (β * inner (𝕜 := ℝ) (x : EucSpace d) (y : EucSpace d))
 
 /-- `𝖧_β` is, up to the constant `e^β`, a sum of `f(‖x - y‖²)` over all pairs,
-with `f(r) = e^{-(β/2) r}`.  This is what places the survey's energy inside the
+with `f(r) = e^{-(β/2) r}`. This is what places the survey's energy inside the
 Cohn–Kumar framework of potentials that decrease with distance. -/
 theorem discreteEnergy_eq_sqDist (β : ℝ) (𝒞 : Finset (SSphere d)) :
     discreteEnergy d β 𝒞
@@ -95,7 +99,7 @@ theorem discreteEnergy_eq_sqDist (β : ℝ) (𝒞 : Finset (SSphere d)) :
 
 /-- The potential `f(r) = e^{-(β/2) r}` of `discreteEnergy_eq_sqDist` is
 strictly decreasing in the squared distance whenever `β > 0`: minimizing
-`𝖧_β` pushes the points apart.  Source: arXiv:2312.10794v5, §9.1. -/
+`𝖧_β` pushes the points apart. Source: arXiv:2312.10794v5, §9.1. -/
 theorem exp_sqDist_strictAnti (β : ℝ) (hβ : 0 < β) :
     StrictAnti (fun r : ℝ => Real.exp (-(β / 2) * r)) := by
   intro a b hab

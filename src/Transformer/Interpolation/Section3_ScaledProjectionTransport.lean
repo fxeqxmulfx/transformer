@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_ScaledProjectionTests
+public import Transformer.Interpolation.Section3_ProjectionTransport
+
+/-!
 # Characteristic transport at the source's rescaled phase speeds
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §3.1,
@@ -12,8 +17,7 @@ map, and a negative speed runs the same sphere group backward.
 The test argument therefore needs no positivity assumption on the speed.
 -/
 
-import Transformer.Interpolation.Section3_ScaledProjectionTests
-import Transformer.Interpolation.Section3_ProjectionTransport
+@[expose] public section
 
 open Real MeasureTheory
 

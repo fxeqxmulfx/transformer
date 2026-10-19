@@ -8,16 +8,20 @@ Adapted from leanprover/hex-real-roots-mathlib,
 revision 53ce31466dc5ff520463249d470119c1e0006e22.
 -/
 
-import Mathlib.Basic.Sign.Basic
-import Mathlib.Algebra.Polynomial.Eval.Defs
-import Mathlib.Algebra.Polynomial.Degree.Defs
-import Mathlib.Topology.Instances.Real.Lemmas
+module
+
+public import Mathlib.Basic.Sign.Basic
+public import Mathlib.Algebra.Polynomial.Eval.Defs
+public import Mathlib.Algebra.Polynomial.Degree.Defs
+public import Mathlib.Topology.Instances.Real.Lemmas
 
 /-!
 # Zero-skipping sign variations
 
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
+
+@[expose] public section
 
 open Filter Topology
 

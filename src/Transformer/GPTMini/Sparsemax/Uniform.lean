@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.SupportWindow
+module
+
+public import Transformer.GPTMini.Sparsemax.SupportWindow
 
 /-!
 # Full-support sparsemax and relative uniformity
@@ -8,6 +10,8 @@ arXiv:1602.02068v2, §2.2, Proposition 1 and equation
 relative-error scale is epsilon divided by the number of visible slots.
 This is a row theorem, not a claim that counting tasks fail in training.
 -/
+
+@[expose] public section
 
 noncomputable section
 

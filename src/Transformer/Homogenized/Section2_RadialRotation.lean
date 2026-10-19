@@ -1,4 +1,10 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+public import Transformer.Homogenized.RotationHead
+
+/-!
 # A radial shift changes the discrete normalization step
 
 Source: arXiv:2604.01978v1, §2.1, `eq:update_tokens`,
@@ -24,7 +30,7 @@ when differentiating it; it does not replace that drift by
 `Jx` away from unit configurations.
 -/
 
-import Transformer.Homogenized.RotationHead
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory ProbabilityTheory

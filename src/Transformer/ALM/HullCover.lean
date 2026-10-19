@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.ALM.HullBuild
+public import Transformer.ALM.HullPrune
+
+/-!
 # The container really does hold every key
 
 `Transformer.ALM.HullBuild` prices the build with the erase loops amortized
@@ -8,11 +13,11 @@ the outer two, so the test
 
     while (isect(y, z)) z = lines.erase(z);
 
-never fires on the paraboloid.  That was as far as either file went, and the
+never fires on the paraboloid. That was as far as either file went, and the
 conclusion it exists for — the hull of `n` keys holds `n` lines, so the
 `lower_bound` of `argmax` searches all of them — lived in a docstring.
 
-Here it is drawn.  `runState_of_no_erase` turns "no pop" into the container's
+Here it is drawn. `runState_of_no_erase` turns "no pop" into the container's
 final size, `keyCard_eq_of_injective` says how many positions the query's
 search covers, and `hull_covers_every_key` puts the two equal: for distinct
 keys the lines the build leaves are exactly the positions
@@ -21,21 +26,20 @@ price of two ordered-container searches per key and nothing else.
 
 `Transformer.ALM.HullPrune` proves the other thing a finished container owes
 its queries — that it holds a maximizer over every line inserted — and states
-it of lines.  The machine's lookup is over keys, and `build_isGreatest_score`
+it of lines. The machine's lookup is over keys, and `build_isGreatest_score`
 is that same conclusion read through the paraboloid: the container answers the
 attention query itself.
 
 Everything here is conditional on `hno : ∀ p ∈ ps, p = 0`, and what decides
 that hypothesis for the keys the compiler actually emits is
 `Transformer.ALM.HullMark` — which holds it for a live head — and
-`Transformer.ALM.HullClear`, which refutes it for a head that clears.  On the
+`Transformer.ALM.HullClear`, which refutes it for a head that clears. On the
 latter the count below is an upper bound and not the container's size.
 
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 143-195.
 -/
 
-import Transformer.ALM.HullBuild
-import Transformer.ALM.HullPrune
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -120,7 +124,7 @@ example : Function.Injective (fun j : Fin 3 => ((j : ℕ) : ℝ)) ∧
 bounds line values; under the paraboloid lift a line value at `q` *is* a score
 (`score_eq_lineEval`), so a container built by any interleaving of insertions
 and erases, holding the lifted line of every key, holds a line whose value at
-the query beats every key's score.  This is `hullAns` justified at the level
+the query beats every key's score. This is `hullAns` justified at the level
 of the build rather than at the level of the finished array. -/
 theorem build_isGreatest_score [Nonempty (Fin n)] (Kv : Fin n → EucSpace 1)
     (qv : EucSpace 1) {c s : Finset (ℝ × ℝ)}

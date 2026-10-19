@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.CRASP.TransformerStateSums
+
+/-!
 # Attention evaluated by integer state counts
 
 arXiv:2506.16055v3, Appendix B.1, Equation `eq:att`, and B.2's
 numerator/denominator construction in `thm:rtfr_to_TLCl`.
 -/
 
-import Transformer.CRASP.TransformerStateSums
+@[expose] public section
 
 namespace Transformer.CRASP.RTfr
 

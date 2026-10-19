@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.PositionalBoolean
+public import Transformer.CRASP.PositionalSubstitution
+
+/-!
 # Bounded previous-position tests for ALiBi windows
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLCly`.
@@ -6,8 +11,7 @@ Repeated `Y` reads the finitely many recent source states without adding
 counting depth and detects whether the ordinary prefix is long enough.
 -/
 
-import Transformer.CRASP.PositionalBoolean
-import Transformer.CRASP.PositionalSubstitution
+@[expose] public section
 
 namespace Transformer.CRASP
 

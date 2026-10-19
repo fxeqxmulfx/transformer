@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixB_BetaInterval
+public import Transformer.Perspective.AppendixB_HessBeta
+
+/-!
 # Appendix B — the `d`-dimensional statements
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -24,8 +29,7 @@ block rotation is computed in `Perspective.AppendixB_HessBeta`, and `eq: dr1`
 is that computation read against the hypothesis.
 -/
 
-import Transformer.Perspective.AppendixB_BetaInterval
-import Transformer.Perspective.AppendixB_HessBeta
+@[expose] public section
 
 open scoped BigOperators
 open Real

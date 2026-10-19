@@ -1,22 +1,26 @@
-/-
+module
+
+public import Transformer.ALM.HullMark
+
+/-!
 # The marker erases the entry it marks
 
 `Transformer.ALM.ClearKey` prices the other term `_to_2d_key` adds to the
 intercept: `ky = ky - clear · BIG` with `BIG = 10^30`
 (`transformer_vm/graph/core.py`, line 314, ported as
-`vm-rs/alm-compile/src/graph.rs::embed_key`).  It proves the marker passes into
+`vm-rs/alm-compile/src/graph.rs::embed_key`). It proves the marker passes into
 the score undiminished and that a cleared entry loses to every live one, so the
 head answers as if the cleared entries had never been inserted
 (`marked_sup'_eq_live`).
 
-That is a statement about the answer.  This one is about the container, and it
-goes the other way from `Transformer.ALM.HullMark`.  The recency term is small
+That is a statement about the answer. This one is about the container, and it
+goes the other way from `Transformer.ALM.HullMark`. The recency term is small
 enough that no erase rule fires; the marker is not, and `eraseStep_of_clearKey`
 says so: a cleared key with a live key on either side of it is at or below the
 higher of the two at *every* query, which is exactly the hypothesis of
-`EraseStep`.  So the erase loops do run on a head that clears, and
+`EraseStep`. So the erase loops do run on a head that clears, and
 `HullCover`'s count — one line per key inserted — is an upper bound there and
-not an equality.  `not_marked_of_clearKey` is the same fact stated against the
+not an equality. `not_marked_of_clearKey` is the same fact stated against the
 predicate: a container holding a cleared line is not a `Marked` family for any
 offset bound below the marker, so none of `Transformer.ALM.HullMark` applies to
 it.
@@ -24,14 +28,14 @@ it.
 The bracket the erase needs is `(k - k')² ≤ BIG - δ`, and
 `clear_bracket_of_shipped` discharges it for the shipped constants with
 thirteen orders of magnitude to spare: the widest bracket two storable keys can
-make is `(2·10^8)² = 4·10^16`, against a marker of `10^30`.  Which is the
+make is `(2·10^8)² = 4·10^16`, against a marker of `10^30`. Which is the
 same margin `cleared_lt_live` asks for, read as a geometric condition instead
 of a bound on the score range.
 
 Source: `transformer_vm/graph/core.py` lines 293-319; `todo3.md` §7.
 -/
 
-import Transformer.ALM.HullMark
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -113,7 +117,7 @@ example : EraseStep ({clearKey 1 0 (1 : ℝ), markKey 0 (0 : ℝ), markKey 0 (2 
 /-- **A container holding a cleared line is not a `Marked` family.**  The
 slope names the key, so the cleared line can only be the perturbed lift of its
 own key, and its offset is `δ - B`, which is below zero as soon as the marker
-exceeds the offset bound.  Every theorem of `Transformer.ALM.HullMark` is
+exceeds the offset bound. Every theorem of `Transformer.ALM.HullMark` is
 therefore silent about such a container, and `eraseStep_of_clearKey` says why
 it has to be. -/
 theorem not_marked_of_clearKey {A B δ k : ℝ} {s : Finset (ℝ × ℝ)}

@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.RASP.Basic
+
+/-!
 # RASP-L: the causal core
 
-Zhou et al. — arXiv:2310.16028v1, "What Algorithms can Transformers Learn?  A
+Zhou et al. — arXiv:2310.16028v1, "What Algorithms can Transformers Learn? A
 Study in Length Generalization" (ICLR 2024), Appendix C (Listing 3, "the
 RASP-L core") and §5.
 
 RASP-L is RASP restricted so that every program it admits is one a
-transformer can plausibly *learn*, not merely represent.  Three of its
+transformer can plausibly *learn*, not merely represent. Three of its
 restrictions are typing disciplines the paper itself calls open —
 "fully formalizing the intended index restrictions, and proving they hold
 under the appropriate type system, is an open question for future work"
@@ -15,13 +19,13 @@ core operations themselves, which differ from the RASP of `Transformer.RASP`
 in being *causal*.
 
 Their `select` builds "a causal binary attention matrix": `A[i][j]` is set
-only for `j ≤ i`.  Note also that the reference implementation writes
+only for `j ≤ i`. Note also that the reference implementation writes
 `A[i, j] = pred(k[j], q[i])`, keys against queries — the same convention
 `Transformer.RASP` had to recover from arXiv:2106.06981's worked example
 rather than from its prose.
 -/
 
-import Transformer.RASP.Basic
+@[expose] public section
 
 namespace Transformer
 namespace RASPL

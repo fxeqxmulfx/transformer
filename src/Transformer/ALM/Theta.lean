@@ -1,14 +1,18 @@
-/-
+module
+
+public import Transformer.ALM.Lattice
+
+/-!
 # Counting lattice points by the theta function
 
 `Transformer.ALM.ScalarSharp` removes the token count `n` from the softmax
-bound for *scalar* integer keys.  Its one counting step is that at most two
-integers sit at any given distance from the query.  In dimension `m` that step
+bound for *scalar* integer keys. Its one counting step is that at most two
+integers sit at any given distance from the query. In dimension `m` that step
 has no analogue: the number of lattice points on the shell `‖x‖² = t` is the
 sum-of-squares function `r_m(t)`, which is erratic and unbounded in `t`.
 
 The way past it is not to count the shells but to sum over the whole lattice
-at once.  The exponent is a *sum* of squared coordinates, so the exponential
+at once. The exponent is a *sum* of squared coordinates, so the exponential
 factorizes and the lattice sum is a power of a one-dimensional series:
 
   `∑_{x ∈ ℤ^m} r^{‖x‖²} = (∑_{a ∈ ℤ} r^{a²})^m = θ(r)^m`.
@@ -17,7 +21,7 @@ The one-dimensional series is the one `ScalarSharp` already handles, and
 `geom_sq_le` bounds its tail: `θ(r) ≤ 1 + 2r/(1-r³)`.
 
 `theta1_le` is that bound on a finite window `[-M, M]`, and `box_sum_le` is
-the factorization over the box `[-M, M]^m`.  Windows rather than the whole
+the factorization over the box `[-M, M]^m`. Windows rather than the whole
 lattice because the sums here are `Finset` sums; the box is chosen large
 enough at the point of use, in `Transformer.ALM.VectorInt`.
 
@@ -26,7 +30,7 @@ enough at the point of use, in `Transformer.ALM.VectorInt`.
   the factorization below is.
 -/
 
-import Transformer.ALM.Lattice
+@[expose] public section
 
 open scoped BigOperators
 

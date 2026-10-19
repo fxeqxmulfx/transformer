@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainFeedbackFloor
-import Transformer.Grokking.AdamW.ScalarDenominator
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainFeedbackFloor
+public import Transformer.Grokking.AdamW.ScalarDenominator
 
 /-!
 # Actual balanced-pair native recurrence
@@ -23,6 +25,8 @@ nonzero-beta GPTMini runs. Fixed physical readouts, plain CE and
 uniform decoupled decay differ from appendix C's assigned circuit
 norm/GD model. This reduction alone proves no later selection.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

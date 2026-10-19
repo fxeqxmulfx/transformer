@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Normalization.Basic
+public import Transformer.Normalization.Radial
+
+/-!
 # Normalization — Initial and terminal token velocities (§4.2–§4.3 of 2510.22026v2)
 
 * `Theorem thm: initial-velocity`  — uniform bound on `‖A_j(0)‖` for random
@@ -10,14 +16,12 @@
 
 Part (i) of `thm: preln-slow` is `r_k(t) ≥ (1 - δ) t` for all `t`, which
 integrates this bound only once the local cone is known to hold along the
-whole trajectory; that invariance is not stated here.  Part (ii), the
+whole trajectory; that invariance is not stated here. Part (ii), the
 per-scheme rates of `d/dt Var(t)`, is `Normalization.ClusterSpeed`: refuted as
 printed, and stated there with the cone narrowed.
 -/
 
-import Transformer.Basic
-import Transformer.Normalization.Basic
-import Transformer.Normalization.Radial
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -37,7 +41,7 @@ against positive weights summing to `Z_j`, so with unit-norm tokens and
 
   `‖A_j(Θ)‖ ≤ 1`,
 
-whatever `Q`, `K` and `β` are.  This is the deterministic bound under the
+whatever `Q`, `K` and `β` are. This is the deterministic bound under the
 norm hypotheses of `thm: initial-velocity`; the theorem's point is the much
 sharper `C (√(log n / n) + log n / d)`, which holds only with high probability
 over an i.i.d. uniform directional initialization, is proved in
@@ -93,11 +97,11 @@ the Pre-LN scheme is at least `1 - δ`:
   `ṙ_k = ⟨θ_k, A_k(Θ)⟩ ≥ 1 - δ`,
 
 because `⟨θ_k, A_k⟩` is the average of the scores `⟨θ_k, θ_j⟩` against the
-positive attention weights, and every score is at least `1 - δ`.  Integrating
+positive attention weights, and every score is at least `1 - δ`. Integrating
 this is the paper's `r_k(t) ≥ (1 - δ) t`.
 
 The paper states this for Pre-LN and Peri-LN; only the Pre-LN velocity is
-here, pointwise in time.  Part (ii), the per-scheme rates `d/dt Var(t)` of
+here, pointwise in time. Part (ii), the per-scheme rates `d/dt Var(t)` of
 `intraClusterVar`, is `Normalization.ClusterSpeed`.
 Source: arXiv:2510.22026v2, §4.3. -/
 theorem radialDerivative_pre_ge_of_localCone

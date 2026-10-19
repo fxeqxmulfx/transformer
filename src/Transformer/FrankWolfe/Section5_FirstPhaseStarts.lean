@@ -1,5 +1,7 @@
-import Transformer.FrankWolfe.Section5_FirstPhaseGeometry
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+module
+
+public import Transformer.FrankWolfe.Section5_FirstPhaseGeometry
+public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 
 /-!
 # Actual four-particle data for the printed first-phase time
@@ -20,6 +22,8 @@ temperature-dependent erosion holds at every sufficiently large β.
 The original minimum, greatest constraint value and integer time
 are calculated from the data; none is introduced as an assumption.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

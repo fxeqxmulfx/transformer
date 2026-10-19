@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdSeededCollapse
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdInstability
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdSeededCollapse
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdInstability
 
 /-!
 # The initialized native cold threshold includes equality
@@ -39,6 +41,8 @@ assigned coupled norm-cost GD and learned stochastic/numerical GPTMini.
 No thermodynamic system-size conclusion follows. Frozen model,
 optimizer, measurements, runs and checkpoints are unchanged.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

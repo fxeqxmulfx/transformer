@@ -1,14 +1,20 @@
-/-
+module
+
+public import Transformer.NoiseScale.SectionD_ParetoFront
+public import Mathlib.MeasureTheory.Integral.Average
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+
+/-!
 # The variation of the noise scale
 
-arXiv:1812.06162, Appendix D.  The parameter `γ = (∫√𝓑 ds)²/(S_min E_min)` of eq. (D.5)
+arXiv:1812.06162, Appendix D. The parameter `γ = (∫√𝓑 ds)²/(S_min E_min)` of eq. (D.5)
 (`paretoGamma`) is at most 1, by Cauchy–Schwarz (`paretoGamma_le_one`), and "when the noise
-scale is constant `γ = 1`" (`paretoGamma_const`).  On as many examples as a constant batch,
+scale is constant `γ = 1`" (`paretoGamma_const`). On as many examples as a constant batch,
 the schedule `√(r𝓑)` takes `S_min + γ(S - S_min)` steps, where `S` are the constant batch's
 (`totalSteps_adaptiveBatch_sub`): at `γ = 1` "there is no benefit from using an adaptive batch
 size", a smaller `γ` is the "predicted improvement in the Pareto front", and the steps saved
 vanish as the batch grows: "negligible benefits at large `E_tot/S_tot`"
-(`tendsto_totalSteps_sub_adaptiveBatch`).  The footnote's
+(`tendsto_totalSteps_sub_adaptiveBatch`). The footnote's
 `γ = E[√𝓑]²/E[𝓑] = 1/(1 + σ²/E[√𝓑]²)`, "where the expectation is over a training run,
 weighting each full-batch step equally", holds with `E` the average `⨍` over `ds` and `σ²` the
 variance of `√𝓑` under it (`paretoGamma_eq_average`): "more variation in `𝓑` pushes `γ`
@@ -19,9 +25,7 @@ closer to 0".
 the factor 10 (`paretoGamma_sqrt`).
 -/
 
-import Transformer.NoiseScale.SectionD_ParetoFront
-import Mathlib.MeasureTheory.Integral.Average
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+@[expose] public section
 
 open MeasureTheory Filter Topology
 

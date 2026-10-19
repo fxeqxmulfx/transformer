@@ -1,10 +1,12 @@
-import Transformer.Modes.Section5_PtBdd
-import Transformer.Modes.Section5_FourierIntegral
-import Transformer.Modes.Section3_Cumulants
-import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
-import Mathlib.Analysis.SpecialFunctions.Gaussian.PoissonSummation
+module
 
-/-
+public import Transformer.Modes.Section5_PtBdd
+public import Transformer.Modes.Section5_FourierIntegral
+public import Transformer.Modes.Section3_BR
+public import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
+public import Mathlib.Analysis.SpecialFunctions.Gaussian.PoissonSummation
+
+/-!
 # The number of modes of a Gaussian KDE — the Fourier transform of `ν_t`
 
 §5.5 of arXiv:2412.09080v3, `sec: proof.pt.bdd`: the decay of `𝓕ν_t`, where
@@ -17,19 +19,19 @@ for `n > 4`.
   constant depends only on `β`", is false as printed, in two ways.
 
   - The constant cannot be uniform in `t`, since `ν_t → δ₀` as `t → ∞` and
-    `𝓕δ₀ ≡ 1`: `not_uniform_decay`.  The source reduces to `t = 0` "by
+    `𝓕δ₀ ≡ 1`: `not_uniform_decay`. The source reduces to `t = 0` "by
     translation invariance of the standard Gaussian", but translating
     `Z ~ N(t, 1)` moves the amplitude `e^{-x²/2}`, not the phase `φ_θ`, so the
     reduction does not hold.
   - It is false for every `β > 2` and every `t`, even at fixed `t`:
-    `not_uniform_decay_of_two_lt` (`Section5_PtBddDecayFalse.lean`).  The source
+    `not_uniform_decay_of_two_lt` (`Section5_PtBddDecayFalse.lean`). The source
     bounds the tail `∫_{|x|≥R} e^{-x²/2}` "as `R` is fixed" by `(1 + ρ)^{-1/2}`
     "whenever `ρ` is large enough", which is false for a fixed `R`; and the tail
     does not oscillate, because `(G, G')(t) → 0` as `|X| → ∞`, so it carries mass
     `≈ ρ^{-1/β}` of `ν_t` in a ball of radius `1/ρ` around `0`.
 
   `uniform_decay` is therefore stated for `0 < β < 2` and a fixed `t`, with a
-  constant depending on both.  The borderline `β = 2` is not claimed.  This is
+  constant depending on both. The borderline `β = 2` is not claimed. This is
   what the source's stationary-phase argument would give once the tail is
   repaired (the tail mass `ρ^{-1/β}` is negligible against `ρ^{-1/2}` exactly for
   `β < 2`). `Section5_FourierIntegral` proves it by summing all unit intervals
@@ -37,7 +39,7 @@ for `n > 4`.
 
 * "`∫|𝓕ν_t|ⁿ ≲ ∫_{‖ξ‖≤1} 1 + ∫_{‖ξ‖>1} |ξ|^{-n/2}`, which is finite as long
   as `n > 4`" is proved, for any function with the decay of
-  `eq:uniform-decay`: `lintegral_pow_lt_top_of_decay`.  For `β > 2` the decay
+  `eq:uniform-decay`: `lintegral_pow_lt_top_of_decay`. For `β > 2` the decay
   is not available. `Section5_FractionalFourier` supplies a smaller positive
   exponent for every `β > 0`; `Section5_PowerIntegrability` proves actual
   power integrability at fixed `t` whenever `n > 4(β + 1)`.
@@ -45,13 +47,15 @@ for `n > 4`.
 Source: arXiv:2412.09080v3, §5.5, `eq:uniform-decay`.
 -/
 
+@[expose] public section
+
+/-! ### The constant of `eq:uniform-decay` cannot be uniform in `t` -/
+
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 
 namespace Transformer
 namespace Modes
-
-/-! ### The constant of `eq:uniform-decay` cannot be uniform in `t` -/
 
 /-- `|u|ᵏ e^{-βu²/2} → 0` as `u → ∞`. -/
 theorem tendsto_pow_mul_gaussFactor {β : ℝ} (hβ : 0 < β) (k : ℕ) :

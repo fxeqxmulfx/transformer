@@ -1,8 +1,13 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Cutoff
+public import Transformer.Landscape.SaddleAvoidance.MetricAvoidance
+
+/-!
 # Saddle avoidance — flows `ẋ = -G(x) ∇f(x)` on an open set
 
 Let `f` be `C²` and `G` be `C¹` on an open set `U` of a finite-dimensional real
-inner product space, with `G` symmetric positive definite on `U`.  For almost every
+inner product space, with `G` symmetric positive definite on `U`. For almost every
 start, no solution of `ẋ = -G(x) ∇f(x)` on `[0, ∞)` that stays in a compact `K ⊆ U`
 converges to a strict saddle of `f` (`ae_not_tendsto_metricGradient_of_isCompact`),
 and no solution on `[0, ∞)` that stays in `U` converges to a strict saddle in `U`
@@ -12,7 +17,7 @@ For the first, a cutoff `χ` equal to `1` near `K` with compact support in `U`
 (`exists_cutoff`) gives `F = χ f`, of class `C²` on the whole space, and the field
 `G' = χ G + (1 - χ) I`, of class `C¹` and symmetric positive definite everywhere.
 `G' ∇F` is `C¹` with compact support, hence bounded and Lipschitz, so
-`ae_not_tendsto_metricGradientFlow_of_isStrictSaddle` applies to `F` and `G'`.  Near
+`ae_not_tendsto_metricGradientFlow_of_isStrictSaddle` applies to `F` and `G'`. Near
 `K` they are `f` and `G`, so by forward uniqueness (`ODE_solution_unique`) a solution
 in `K` is a trajectory of the flow of `-G' ∇F` for `t ≥ 0`; its limit lies in `K`,
 where `F` and `f` have the same strict saddles (`IsStrictSaddle.congr_of_eventuallyEq`).
@@ -21,15 +26,14 @@ of its arc up to some time and a closed ball around `z` inside `U`, so in one of
 countably many compact sets of `exists_isCompact_cover`.
 
 This is item M6.7 of `landscape_plan.md`: the cutoff of
-`Perspective.ae_not_tendsto_of_cutoff`, for a general metric.  The plan takes an open
+`Perspective.ae_not_tendsto_of_cutoff`, for a general metric. The plan takes an open
 `R` with compact closure in `U` and limits in `R`, the case `K = closure R` of the
-first theorem; the second is its form for a countable cover of `U`.  The source is
+first theorem; the second is its form for a countable cover of `U`. The source is
 `l:nosaddleconv` in Appendix A of arXiv:2312.10794v5, there for gradient ascent of
 `𝖤_β` on the whole space.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Cutoff
-import Transformer.Landscape.SaddleAvoidance.MetricAvoidance
+@[expose] public section
 
 open Filter MeasureTheory Metric Set
 open scoped Topology

@@ -1,13 +1,19 @@
-/-
+module
+
+public import Transformer.Homogenized.Section4_RevealingFiltration
+public import Transformer.Homogenized.WellPosed
+public import Transformer.Homogenized.RademacherLaw
+
+/-!
 # Homogenized Transformers — the formal well-posedness is false
 
 The formal `def:nonlinear_SDE_common` of `McKeanVlasov.lean` admits any noise
-filtration below `ℱ` (`Section4_RevealingFiltration`).  Under the trivial head
+filtration below `ℱ` (`Section4_RevealingFiltration`). Under the trivial head
 `ρ* = δ_0`, which satisfies `ass:high_order_short`, take a fair coin
-`x_0 = ±e_0 ∈ 𝕊^0` frozen in time.  With the trivial filtration it solves the
+`x_0 = ±e_0 ∈ 𝕊^0` frozen in time. With the trivial filtration it solves the
 equation with `μ(t) = μ_0 = ½δ_{e_0} + ½δ_{-e_0}`
 (`isMcKeanVlasovSolution_frozen`); with `revealFiltration` it solves it with
-`μ(t) = δ_{x_0}` for `t > 0` (`isMcKeanVlasovSolution_reveal`).  This refutes,
+`μ(t) = δ_{x_0}` for `t > 0` (`isMcKeanVlasovSolution_reveal`). This refutes,
 for the formal solution concepts,
 
 * uniqueness in law, `prop:mckean_vlasov_common_noise`:
@@ -23,9 +29,7 @@ independent of `x_0`: no such `𝒢` can learn `x_0`.
 Source: arXiv:2604.01978v1, §4.
 -/
 
-import Transformer.Homogenized.Section4_RevealingFiltration
-import Transformer.Homogenized.WellPosed
-import Transformer.Homogenized.RademacherLaw
+@[expose] public section
 
 open scoped ENNReal NNReal
 open MeasureTheory
@@ -73,12 +77,12 @@ solution concept.**
 The claim refuted is `mckeanVlasovSolution_unique`, which stood in
 `WellPosed.lean`: under `ass:high_order_short`, two solutions of the formal
 `def:nonlinear_SDE_common` with one initial law `μ_0` have the same
-finite-dimensional distributions of `(x, μ)` on `[0,T]` (`SameFdd`).  The
+finite-dimensional distributions of `(x, μ)` on `[0,T]` (`SameFdd`). The
 source claims pathwise uniqueness for solutions driven by one Wiener process
 `W`, with `𝒢 = (ℱ_t^W)` and `x_0` independent of `W`.
 
 The data: `d = 1`, `ρ* = δ_0` (`σ_V = σ_A = 0`), `β = 0`, `T = 1`, the coin of
-the module docstring.  The functional `F(x, ν) = 1{ν{e_0} = 1}` of
+the module docstring. The functional `F(x, ν) = 1{ν{e_0} = 1}` of
 `(x(1), μ(1))` has mean `0` under the trivial filtration and `½` under the
 revealing one.
 

@@ -1,7 +1,9 @@
-import Transformer.Homogenized.MvGenerator
-import Mathlib.MeasureTheory.Function.ConditionalExpectation.PullOut
-import Mathlib.Probability.Distributions.Gaussian.Real
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+module
+
+public import Transformer.Homogenized.MvGenerator
+public import Mathlib.MeasureTheory.Function.ConditionalExpectation.PullOut
+public import Mathlib.Probability.Distributions.Gaussian.Real
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!
 # Initial values and centered squares of the logistic angle martingale
@@ -32,6 +34,8 @@ space using sine and cosine of its coordinate, and realize every
 centered-square premise on a nonzero constant angle. These are
 martingale-algebra witnesses and assert no additional SDE solution.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set Filter
 open scoped Topology

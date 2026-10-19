@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_KCoyoteZero
+public import Transformer.Zoology.Appendix_Shift
+
+/-!
 # K-constrained versions of basic Coyote primitives
 
 Arora et al., arXiv:2312.04927v1, Appendix `lmm:primitives` and
@@ -7,8 +12,7 @@ linear weights. We prove these weights have an explicit expanded K-matrix
 representation and preserve the functional constructions.
 -/
 
-import Transformer.Zoology.Appendix_KCoyoteZero
-import Transformer.Zoology.Appendix_Shift
+@[expose] public section
 
 namespace Transformer.Zoology
 

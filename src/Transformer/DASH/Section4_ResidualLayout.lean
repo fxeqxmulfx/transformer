@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section4_Dimensions
+
+/-!
 # DASH — lossless blocking with arbitrary rectangular remainders
 
 arXiv:2602.02016v2, §4. The full and residual block indices are
@@ -6,7 +10,7 @@ disjoint and cover every gradient entry, even when both axes have a
 remainder. The source's embedding example has a remainder on one axis.
 -/
 
-import Transformer.DASH.Section4_Dimensions
+@[expose] public section
 
 namespace Transformer.DASH
 

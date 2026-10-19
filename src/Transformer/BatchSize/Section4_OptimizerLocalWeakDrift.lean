@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_ExpectedGeneratorDrift
+
+/-!
 # Local weak drift error for the constructed optimizer diffusion
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ Integration of the genuine generator identity and the proved expected
 generator variation yields an O(eta^2) local weak drift defect.
 -/
 
-import Transformer.BatchSize.Section4_ExpectedGeneratorDrift
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal

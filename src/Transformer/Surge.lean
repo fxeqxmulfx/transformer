@@ -1,4 +1,21 @@
-/-
+module
+
+public import Transformer.Surge.Section2_LargeBatch
+public import Transformer.Surge.Section2_Lemma1
+public import Transformer.Surge.Section2_LossDrop
+public import Transformer.Surge.Section2_PeakRate
+public import Transformer.Surge.Section2_RateForm
+public import Transformer.Surge.Section2_SignApprox
+public import Transformer.Surge.Section2_SmallBatch
+public import Transformer.Surge.Section2_SmallBatchLimit
+public import Transformer.Surge.Section2_Theorem2
+public import Transformer.Surge.Section2_Tradeoff
+public import Transformer.Surge.Section3_Estimation
+public import Transformer.Surge.SectionA_AdamMoments
+public import Transformer.Surge.SectionA_SignUpdate
+public import Transformer.Surge.SectionC_SignMoments
+
+/-!
 Formalization of:
   Li, Zhao, Zhang, Sun, Wu, Jiao, Wang, Liu, Fang, Xue, Tao, Cui, Wang,
   "Surge Phenomenon in Optimal Learning Rate and Batch Size Scaling",
@@ -40,17 +57,4 @@ the restatements of §1, §4, §5 and §6; the remark after Theorem 4 that late 
 §3.2, of which the identities behind eqs. (22) to (24) are proved.
 -/
 
-import Transformer.Surge.Section2_LargeBatch
-import Transformer.Surge.Section2_Lemma1
-import Transformer.Surge.Section2_LossDrop
-import Transformer.Surge.Section2_PeakRate
-import Transformer.Surge.Section2_RateForm
-import Transformer.Surge.Section2_SignApprox
-import Transformer.Surge.Section2_SmallBatch
-import Transformer.Surge.Section2_SmallBatchLimit
-import Transformer.Surge.Section2_Theorem2
-import Transformer.Surge.Section2_Tradeoff
-import Transformer.Surge.Section3_Estimation
-import Transformer.Surge.SectionA_AdamMoments
-import Transformer.Surge.SectionA_SignUpdate
-import Transformer.Surge.SectionC_SignMoments
+@[expose] public section

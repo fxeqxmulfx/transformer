@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixB_HighD
+public import Mathlib.Analysis.Complex.Exponential
+
+/-!
 # Appendix B — the modified metric costs `O(β)`, proved
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -18,12 +23,11 @@ The proof is the two derivatives, computed and subtracted:
   whose weight is the constant `1`.
 
 What is left is `Σ_i Σ_j (e^{β ⟨x_i, x_j⟩} - 1) ⟨x_j, v_i⟩`, and on the sphere
-`|⟨x_i, x_j⟩| ≤ 1`, so `|e^{β ⟨x_i, x_j⟩} - 1| ≤ 2β` for `β ≤ 1`.  The constant
+`|⟨x_i, x_j⟩| ≤ 1`, so `|e^{β ⟨x_i, x_j⟩} - 1| ≤ 2β` for `β ≤ 1`. The constant
 is `2 n Σ_i ‖v_i‖ + 1`, explicit in the initial tuple and the velocity.
 -/
 
-import Transformer.Perspective.AppendixB_HighD
-import Mathlib.Analysis.Complex.Exponential
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -99,7 +103,7 @@ theorem symmetrized_double_sum (β : ℝ) (hβ : β ≠ 0) (w g : Idx n → Idx 
   `g_β(∇_{g_β} 𝖤_β(x), v) = g(∇_g 𝖤_0(x), v) + O(β)`.
 
 Both sides are directional derivatives: the left one of `𝖤_β` and the right
-one of `𝖤_0`, along a curve with velocity `v`.  The factor `n/2` is the
+one of `𝖤_0`, along a curve with velocity `v`. The factor `n/2` is the
 difference of normalisations, `𝖤_0 = n⁻¹ Σ_i Σ_j ⟨x_i, x_j⟩` against
 `𝖤_β = (2β)⁻¹ Σ_i Σ_j e^{β ⟨x_i, x_j⟩}`, whose `β → 0` derivative is
 `Σ_i Σ_j ⟨v_i, x_j⟩`.

@@ -1,19 +1,23 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_Butterfly
+
+/-!
 # Recursive butterfly matrices
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: butterfly`.
 At every level, an arbitrary butterfly factor combines two independently
-chosen half-size butterfly matrices.  This is the paper's recursive
+chosen half-size butterfly matrices. This is the paper's recursive
 definition; the number of scalar coefficients is exactly `2k·2^k` at
 size `2^k` before any parameter sharing or compression.
 -/
 
-import Transformer.Zoology.Appendix_Butterfly
+@[expose] public section
 
 namespace Transformer.Zoology
 
 /-- The dimension of a depth-`k` butterfly matrix, written recursively so
-that the two-half decomposition is definitional.  Source: Appendix
+that the two-half decomposition is definitional. Source: Appendix
 `def: butterfly`. -/
 def butterflyWidth : ℕ → ℕ
   | 0 => 1

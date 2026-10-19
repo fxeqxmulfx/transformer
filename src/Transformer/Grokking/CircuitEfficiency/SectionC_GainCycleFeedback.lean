@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdRegime
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdRegime
 
 /-!
 # Actual binary gained-CE feedback at two proposed cycle amplitudes
@@ -20,6 +22,8 @@ the preserved beta1=0.9/beta2=0.98 GPTMini run. Plain CE, physical
 gains, real arithmetic and uniform decoupled native decay remain
 explicit deviations from appendix C's coupled-cost GD.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

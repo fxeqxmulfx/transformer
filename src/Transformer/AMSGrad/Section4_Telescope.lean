@@ -1,7 +1,9 @@
-import Transformer.AMSGrad.Section3_Issue
-import Transformer.AMSGrad.Section4_Lemmas
+module
 
-/-
+public import Transformer.AMSGrad.Section3_Issue
+public import Transformer.AMSGrad.Section4_Lemmas
+
+/-!
 # AMSGrad — the first term of Lemma 3.1 under Lemma 4.3
 
 §4 of arXiv:1904.03590v4, proof of Theorem 4.1: the bound (eqmain2) on the
@@ -10,14 +12,16 @@ first term (eqmain) of Lemma 3.1, from the Abel summation (eqtemp2) and the
 
 **What the source says and what is carried here.**
 
-* The source splits the Abel sum at `t₀` and uses `1 ≤ t₀ ≤ T`.  Here `t₀` is
+* The source splits the Abel sum at `t₀` and uses `1 ≤ t₀ ≤ T`. Here `t₀` is
   fixed before `T` (see `Section4_Theorem`), so `T ≤ t₀` is allowed; then the
   sum over `t₀ < t ≤ T` is empty, and the bound still holds, since every term
-  of `Σ_{t=1}^{t₀} √t` is non-negative.  The split is carried as an induction
+  of `Σ_{t=1}^{t₀} √t` is non-negative. The split is carried as an induction
   on `T`, `telescope_le`.
 
 Source: arXiv:1904.03590v4, §4, proof of Theorem 4.1, (eqmain2).
 -/
+
+@[expose] public section
 
 open Finset
 
@@ -26,7 +30,7 @@ namespace AMSGrad
 
 variable {d : ℕ}
 
-/-- The telescoping of (eqmain2).  For `c_t ≥ 0` (`t ≥ 1`), non-decreasing past
+/-- The telescoping of (eqmain2). For `c_t ≥ 0` (`t ≥ 1`), non-decreasing past
 `t₀`, and `0 ≤ e_t ≤ K`,
 
   `c₁e₁ + Σ_{t=2}^T e_t(c_t - c_{t-1}) ≤ K (Σ_{1 ≤ t ≤ T, t ≤ t₀} c_t + [t₀ < T] c_T)`.

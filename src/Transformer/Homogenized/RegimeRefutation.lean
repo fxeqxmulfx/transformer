@@ -1,31 +1,35 @@
-/-
+module
+
+public import Transformer.Homogenized.Regimes
+public import Transformer.Homogenized.RotationHead
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Analysis.Real.Pi.Bounds
+
+/-!
 # Homogenized Transformers — the printed rates of `cor:ode1` and `cor:ode2` are false
 
 `cor:ode1` and `cor:ode2` of arXiv:2604.01978v1 display
 
   `sup_{t∈[0,t_L]} |𝔼φ(X^η(t)) - φ(X(t))| ≤ C e^{C t_L} η (t_L+1) max(η,α)`
 
-for the piecewise-constant interpolation `X^η(t) = X^{⌊t/η⌋}`.  Both are
-false.  At the rotation head of `RotationHead` — `d = 2`, one token,
+for the piecewise-constant interpolation `X^η(t) = X^{⌊t/η⌋}`. Both are
+false. At the rotation head of `RotationHead` — `d = 2`, one token,
 `ρ* = δ_{(J,0)}`, so `α = 0` and `ass:high_order_short` holds with
 `σ_V = σ_A = 0` — take `η_m = 1/(m+1)`, `L_m = 1` (so `αηL = 0`, `η²L → 0`,
-`η³L → 0`), `φ(X) = (x₁)₁` and `t = η/2`.  The chain has not moved,
+`η³L → 0`), `φ(X) = (x₁)₁` and `t = η/2`. The chain has not moved,
 `X^η(η/2) = X⁰ = e₀`, while both limiting flows — they coincide here, the
 corrector `∇_b b` vanishing — have turned by the angle `η/2`, so the left-hand
-side is `sin(η/2) ≥ η/π`.  The right-hand side is
+side is `sin(η/2) ≥ η/π`. The right-hand side is
 `C e^{Cη} η (η+1) η ≤ 2 C e^C η²`, smaller for `η` small.
 
 The `Θ(η)` gap is the interpolation lag, which no rate carrying a factor `η²`
-can absorb.  `Regimes` states both corollaries with the leading `η` removed;
+can absorb. `Regimes` states both corollaries with the leading `η` removed;
 this file is the proof that the printed rate cannot be kept.
 
 Source: arXiv:2604.01978v1, `cor:ode1`, `cor:ode2`.
 -/
 
-import Transformer.Homogenized.Regimes
-import Transformer.Homogenized.RotationHead
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Mathlib.Analysis.Real.Pi.Bounds
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory ProbabilityTheory Filter
@@ -93,7 +97,7 @@ example : (0 : ℝ) < 1 ∧ (1 : ℝ) ≤ 1 := ⟨one_pos, le_rfl⟩
 
 /-- **`cor:ode1` is false as printed.**  The display
 `sup_{t∈[0,t_L]} |𝔼φ(X^η(t)) - φ(X(t))| ≤ C e^{C t_L} η (t_L+1) max(η,α)`
-fails at the rotation head: see the module docstring.  `ballistic_regime`
+fails at the rotation head: see the module docstring. `ballistic_regime`
 states the corollary with the leading `η` removed.
 
 Source: arXiv:2604.01978v1, `cor:ode1`. -/
@@ -132,7 +136,7 @@ theorem not_ballistic_regime_printed :
 
 /-- **`cor:ode2` is false as printed.**  The same display against
 `eq: deterministic.modified` fails at the rotation head, whose corrector
-vanishes.  `modified_regime` states the corollary with the leading `η` removed.
+vanishes. `modified_regime` states the corollary with the leading `η` removed.
 
 Source: arXiv:2604.01978v1, `cor:ode2`. -/
 theorem not_modified_regime_printed :

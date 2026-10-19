@@ -1,28 +1,32 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section1_Models
+public import Mathlib.Analysis.Convex.Between
+public import Mathlib.Analysis.Convex.KreinMilman
+public import Mathlib.Analysis.LocallyConvex.Separation
+
+/-!
 # Attention's forward pass and Frank-Wolfe — a vertex above its edges
 
 The fact behind `prop: polytope.condition`: a linear functional that is
 strictly smaller at the far end of every edge leaving a vertex `p` of a
 polytope `𝒦 = conv V` is strictly maximized over `𝒦` at `p` alone
-(`lt_of_forall_isExtreme_segment`).  The source leaves it implicit
+(`lt_of_forall_isExtreme_segment`). The source leaves it implicit
 ("`eq: cond.hyperplane` is like being a local maximizer of `𝖩`"); it is the
 local-to-global principle of the simplex method.
 
-The proof is the vertex figure.  A functional `g` separates `p` from the other
+The proof is the vertex figure. A functional `g` separates `p` from the other
 points of `V`; the directions `(u - p)/(g(p) - g(u))`, `u ∈ V \ {p}`, span a
-polytope `B` in the hyperplane `{g = -1}`, and `𝒦 ⊆ p + ℝ₊ B`.  An extreme
+polytope `B` in the hyperplane `{g = -1}`, and `𝒦 ⊆ p + ℝ₊ B`. An extreme
 point `e` of `B` is the direction of an edge: the segment `[p, u]` along it is
 an extreme subset of `𝒦`, because `e` is extreme in `B` and `u` is extreme in
-`𝒦`.  So the functional is negative at the extreme points of `B`, hence on `B`
+`𝒦`. So the functional is negative at the extreme points of `B`, hence on `B`
 (Krein–Milman), hence below its value at `p` on the rest of `𝒦`.
 
 Source: arXiv:2508.09628v1, §4, `prop: polytope.condition`.
 -/
 
-import Transformer.FrankWolfe.Section1_Models
-import Mathlib.Analysis.Convex.Between
-import Mathlib.Analysis.Convex.KreinMilman
-import Mathlib.Analysis.LocallyConvex.Separation
+@[expose] public section
 
 open Set
 
@@ -55,7 +59,7 @@ theorem convex_apexCone {B : Set (EucSpace d)} (hB : Convex ℝ B) (p : EucSpace
 example : Convex ℝ (univ : Set (EucSpace 1)) := convex_univ
 
 /-- **A vertex above its edges is the unique maximizer.**  Let `𝒦 = conv V`,
-with `V` finite and made of extreme points of `𝒦`, and let `p ∈ V`.  If a
+with `V` finite and made of extreme points of `𝒦`, and let `p ∈ V`. If a
 linear functional `ℓ` is strictly smaller than at `p` at the far end of every
 edge of `𝒦` leaving `p` — every `w ∈ V \ {p}` with `[p, w]` an extreme subset
 of `𝒦` — then it is strictly smaller than at `p` on all of `𝒦 \ {p}`.

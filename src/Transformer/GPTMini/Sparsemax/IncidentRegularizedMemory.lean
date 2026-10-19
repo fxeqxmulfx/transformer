@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Sparsemax.IncidentMemorySelection
-import Transformer.GPTMini.Sparsemax.IncidentJointMemory
-import Transformer.GPTMini.Sparsemax.LocalRegularizedMemory
+module
+
+public import Transformer.GPTMini.Sparsemax.IncidentMemorySelection
+public import Transformer.GPTMini.Sparsemax.IncidentJointMemory
+public import Transformer.GPTMini.Sparsemax.LocalRegularizedMemory
 
 /-!
 # Additional geometry selection with separate-budget joint convex learning
@@ -17,6 +19,8 @@ freedom; output-only fitting still cannot identify those parameters.
 Full joint-minimum existence requires a property of the output objective.
 Parameter-projection existence is already proved without assuming it.
 -/
+
+@[expose] public section
 
 noncomputable section
 

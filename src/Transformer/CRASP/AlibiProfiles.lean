@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.AlibiWindowCells
+public import Transformer.CRASP.WindowPredicates
+
+/-!
 # Enumerating ALiBi's recent windows
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLCly`.
@@ -6,8 +11,7 @@ A profile of length `Δ` describes a long prefix; shorter profiles describe
 their exact positive index and leave the BOS contribution explicit.
 -/
 
-import Transformer.CRASP.AlibiWindowCells
-import Transformer.CRASP.WindowPredicates
+@[expose] public section
 
 namespace Transformer.CRASP.AlibiTables
 

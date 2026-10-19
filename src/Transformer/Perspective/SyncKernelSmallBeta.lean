@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.SyncKernelCert
+
+/-!
 # `τ_β ∫ |f_β'''|₊ < 4` for `0 < β < 1`
 
 Polyanskiy, Rigollet, Yao — arXiv:2507.22857v1, *Synchronization of mean-field
@@ -8,14 +12,14 @@ models on the circle*, §5, proof of `cor:conjecture`; `lemma:beta_0.75`,
 §5 proves `τ ⟨1, |f'''|₊⟩ < 4` for `f = f_β` and `τ = τ_β`, the criterion of
 `thm:main`: `τ(f''(a) - f''(b)) < 2` for `1/3 < β < 1` (`lemma:beta_0.75`,
 `lemma:beta_0.5`, `lemma:beta_0.33`) and `τ f''(a) > -2` for `0 < β ≤ 1/3`
-(`lemma:beta_final`).  Here the bound follows for every `0 < β < 1` from the
+(`lemma:beta_final`). Here the bound follows for every `0 < β < 1` from the
 certificates of `Perspective.SyncKernelCert` on nine intervals of `β`
 (`τ_mul_integral_posPart_f_β'''_lt_four_of_lt_one`), and the four lemmas in
 the form of the source follow from it (`beta_0_75`, `beta_0_5`, `beta_0_33`,
 `beta_final`).
 -/
 
-import Transformer.Perspective.SyncKernelCert
+@[expose] public section
 
 open Real
 

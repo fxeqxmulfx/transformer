@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.InteractionPeak
+
+/-!
 # The original interaction peak at every positive temperature
 
 ArXiv:2411.04990v2, Appendix B, `lemma:interaction` (3), used in
@@ -17,7 +21,7 @@ fourth power of the scale is less than sixteen. The original
 interaction functions and the original peak formula are unchanged.
 -/
 
-import Transformer.Causal.InteractionPeak
+@[expose] public section
 
 open Real Set
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_IteratedExpectation
+public import Transformer.BatchSize.Section4_ScaledWeakConsistency
+
+/-!
 # Conditional global weak approximation of the actual optimizer
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1.
@@ -9,8 +14,7 @@ condition is silently attributed to a continuous diffusion whose existence
 has not been established.
 -/
 
-import Transformer.BatchSize.Section4_IteratedExpectation
-import Transformer.BatchSize.Section4_ScaledWeakConsistency
+@[expose] public section
 
 open MeasureTheory
 

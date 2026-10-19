@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_TrainingCoefficients
+
+/-!
 # AdaFisher — contracting error of the actual corrected momentum
 
 arXiv:2405.16397v3, §3.4, assumption (i), deterministic specialization.
@@ -6,7 +10,7 @@ Gradient Lipschitz continuity is an objective property. No small-error,
 alignment or bounded-iterate premise is imposed on the training run.
 -/
 
-import Transformer.AdaFisher.Section3_TrainingCoefficients
+@[expose] public section
 
 noncomputable section
 

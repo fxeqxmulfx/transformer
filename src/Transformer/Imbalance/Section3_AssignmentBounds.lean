@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_Assignment
+
+/-!
 # Quantitative errors in the assignment mechanism
 
 arXiv:2402.19449v2, Proposition 2, equation (2), Appendix H.
@@ -7,7 +11,7 @@ from probability bounds alone. Uniform bounds on data moments are also
 needed. Here |x_ir|≤B and off-class probabilities ≤q give explicit errors.
 -/
 
-import Transformer.Imbalance.Section3_Assignment
+@[expose] public section
 
 open scoped BigOperators
 

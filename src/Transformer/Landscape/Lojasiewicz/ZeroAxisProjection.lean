@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.AnalyticEquationCurveLifting
+
+/-!
 # Isolating the central distinguished-variable zero
 
 Preparation with a nonvanishing unit makes the zero at the central
@@ -6,7 +10,7 @@ distinguished-variable axis isolated. Accumulating nonzero points of a
 prepared zero set must therefore have nonzero base parameters.
 -/
 
-import Transformer.Landscape.Lojasiewicz.AnalyticEquationCurveLifting
+@[expose] public section
 
 open Filter
 

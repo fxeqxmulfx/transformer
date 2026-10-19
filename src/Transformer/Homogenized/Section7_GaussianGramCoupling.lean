@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianGramExpectation
+
+/-!
 # Independent coupling and changing the original Gram coefficients
 
 ArXiv:2604.01978v1, §7, eq:interpolation_gaussian and the overlap
@@ -14,7 +18,7 @@ Boundedness justifies subtraction of the two original integrals;
 the proved Gaussian comparison handles the change of feature laws.
 -/
 
-import Transformer.Homogenized.Section7_GaussianGramExpectation
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Set
 open scoped BigOperators NNReal

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.EnergyMemoryExamples
+module
+
+public import Transformer.GPTMini.Sparsemax.EnergyMemoryExamples
 
 /-!
 # Ordinary answers identify actual attention under the energy coupling
@@ -13,6 +15,8 @@ No criterion comparing embeddings or target routes is used. The outputs
 come from actual sparsemax attention and one global learned value table.
 The two nonconstant answer patterns choose opposite nonidentity supports.
 -/
+
+@[expose] public section
 
 noncomputable section
 

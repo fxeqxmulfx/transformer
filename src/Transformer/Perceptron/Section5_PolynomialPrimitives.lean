@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.TransformPoly
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.Analytic.Polynomial
+
+/-!
 # Actual primitives of the original polynomial activation branches
 
 ArXiv:2601.21366v2, §5.2, `rem:piecewise-poly`, and §5.1,
@@ -14,10 +21,7 @@ Actual finite weighted sums preserve one common original degree bound.
 No derivative, analyticity, or polynomial inverse is built into the data.
 -/
 
-import Transformer.Perceptron.TransformPoly
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.Analytic.Polynomial
+@[expose] public section
 
 open Real Set
 open scoped BigOperators

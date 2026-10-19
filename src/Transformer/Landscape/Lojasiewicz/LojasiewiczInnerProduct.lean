@@ -1,7 +1,11 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.Modulated
+
+/-!
 # Łojasiewicz convergence in any finite-dimensional inner product space
 
-`lojasiewicz_modulated` is stated in `ℝ^N`.  A linear isometry carries gradients to
+`lojasiewicz_modulated` is stated in `ℝ^N`. A linear isometry carries gradients to
 gradients (`gradient_comp_linearIsometryEquiv_symm`), and every finite-dimensional
 real inner product space is isometric to `ℝ^N` (`stdOrthonormalBasis`), so the
 theorem holds verbatim in all of them (`lojasiewicz_modulated_of_finiteDimensional`):
@@ -11,7 +15,7 @@ sphere flows.
 Source: arXiv:2510.22026v2, Appendix D.1, `lem: loj`.
 -/
 
-import Transformer.Landscape.Lojasiewicz.Modulated
+@[expose] public section
 
 namespace Transformer
 namespace Landscape.Lojasiewicz
@@ -42,7 +46,7 @@ example : gradient ((fun _ : EucSpace 2 => (0 : ℝ)) ∘ (LinearIsometryEquiv.r
 
 /-- **Lemma (lem: loj) in a finite-dimensional inner product space `E`.**  Let `M(t)`
 be symmetric with `C λ(t) I ≻ M(t) ≻ λ(t) I`, `λ(t) > 0` and `∫_0^∞ λ = ∞`, and let `f`
-be analytic on an open `U ⊆ E`.  Then any trajectory of `ẋ = -M(t) ∇f(x)` that stays
+be analytic on an open `U ⊆ E`. Then any trajectory of `ẋ = -M(t) ∇f(x)` that stays
 in a compact subset of `U` converges to a critical point of `f`.
 
 The hypotheses are those of `lojasiewicz_modulated`, with `E` for `ℝ^N`; the

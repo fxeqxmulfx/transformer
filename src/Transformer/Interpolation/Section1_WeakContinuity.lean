@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Interpolation.Section5_PureAttention
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Integral.BoundedContinuousFunction
+public import Mathlib.MeasureTheory.Function.L2Space
+
+/-!
 # Continuity of moments of actual weak solutions
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb` and `eq: vf`.
@@ -14,10 +21,7 @@ the one-token cluster hypothesis, which quantifies over every weak solution.
 No continuity or moment equation is assumed as part of a solution definition.
 -/
 
-import Transformer.Interpolation.Section5_PureAttention
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.MeasureTheory.Integral.BoundedContinuousFunction
-import Mathlib.MeasureTheory.Function.L2Space
+@[expose] public section
 
 open Real MeasureTheory
 

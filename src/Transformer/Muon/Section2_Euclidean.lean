@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Muon.AppendixA_RMS
+public import Mathlib.Data.Matrix.Basis
+
+/-!
 # Muon — the Euclidean operator constraint
 
 arXiv:2502.16982, §2.1, “Steepest Descent Under Norm Constraints”. The
@@ -7,8 +12,7 @@ column vector. Squaring its two nonnegative norms is equivalent to the
 usual induced-operator-norm condition.
 -/
 
-import Transformer.Muon.AppendixA_RMS
-import Mathlib.Data.Matrix.Basis
+@[expose] public section
 
 open scoped BigOperators Matrix
 

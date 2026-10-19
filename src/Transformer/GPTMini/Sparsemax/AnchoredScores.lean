@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.BoundedCoordinates
+module
+
+public import Transformer.GPTMini.Sparsemax.BoundedCoordinates
 
 /-!
 # Persistent active anchors with exact sparsemax zeros
@@ -16,6 +18,8 @@ and ordinary slots use negative exponential coordinates. The causal
 mask and simplex projection are unchanged. All anchors must precede
 the current query; this is an explicit prefix requirement.
 -/
+
+@[expose] public section
 
 noncomputable section
 

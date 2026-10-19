@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Causal.Interaction
+public import Transformer.Causal.InteractionBounds
+public import Transformer.Causal.InteractionNumerics
+
+/-!
 # Causal attention — The interaction window (§B of 2411.04990v2)
 
 `Lemma lem:interaction`: the two inequalities on the interaction scale
@@ -9,20 +16,17 @@ The remark `rem:interaction`, which reads the lemma as an explicit window in
 The functions themselves, and the Gaussian bounds the proof runs on, are in
 `Causal.Interaction` and `Causal.InteractionBounds`.
 
-**A missing hypothesis.**  `lem:interaction` is stated for every `ε > 0`.  It
+**A missing hypothesis.**  `lem:interaction` is stated for every `ε > 0`. It
 is false there: at `ε = 30`, `c = 87.48`, `β = 490.07` and `N = 1.45·10^114`
 — all within the lemma's own bounds — the first inequality reads
-`1.35·10^{-22} < 1.67·10^{-167}`.  What goes wrong is that `ε β^{-1/2}` is
+`1.35·10^{-22} < 1.67·10^{-167}`. What goes wrong is that `ε β^{-1/2}` is
 then far outside the first arch of the sine, so `h(εβ^{-1/2})` is no longer
-of order `εβ^{-1/2}`.  The bound `ε < 0.1` that `rem:interaction` carries is
+of order `εβ^{-1/2}`. The bound `ε < 0.1` that `rem:interaction` carries is
 therefore taken as a hypothesis here too; the first failures a sweep finds
 sit at `ε ≈ 0.97` (second inequality) and `ε ≈ 1.98` (first).
 -/
 
-import Transformer.Basic
-import Transformer.Causal.Interaction
-import Transformer.Causal.InteractionBounds
-import Transformer.Causal.InteractionNumerics
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -42,7 +46,7 @@ hypotheses to the first arch of the sine, where the Gaussian sandwich of
 `Causal.InteractionBounds` applies: `h(bs) < e^{-5b²/12} bs` and
 `h(εs) > 0.99 εs`, while the hypothesis on `N` — non-strict, since each chain is already strict at its
 first step — contributes `e^{3b²/8}` and
-`e^{3b²/8 - 5b²/12} = e^{-b²/24} ≤ e^{-27/32} ≤ 1/2`.  For `g` the same
+`e^{3b²/8 - 5b²/12} = e^{-b²/24} ≤ e^{-27/32} ≤ 1/2`. For `g` the same
 sandwich gives `-g((b+1)s) < e^{-365(b+1)²/972}(b+1)²`, which `e^{3b²/8}`
 leaves below `e^{-365b/486} ≤ 71/(10b²)`, against `g(εs) > 0.9`.
 
@@ -264,7 +268,7 @@ theorem interaction_inequalities
   exact interaction_inequalities_core N ε β _ _ hε hsmall hN hb hβ hs hs2 hNbound'.le
 
 /-- The hypotheses of `interaction_inequalities` are satisfiable: the remark's
-own example with `ε` halved, `ε = 0.05`, `c = 6.5`, `β = 15`, `N = 1`.  Note
+own example with `ε` halved, `ε = 0.05`, `c = 6.5`, `β = 15`, `N = 1`. Note
 `5.5 + 2ε = 5.6 ≤ 6.5` and `(c - 1 - 2ε)²/2 = 5.4²/2 = 14.58 ≤ 15`. -/
 example :
     (0 : ℝ) < 0.05 ∧ (0.05 : ℝ) < 1 / 10 ∧ (0 : ℝ) < 1 ∧ (5.5 : ℝ) + 2 * 0.05 ≤ 6.5 ∧

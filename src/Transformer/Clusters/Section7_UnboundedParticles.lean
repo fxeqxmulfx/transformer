@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_Auxiliary
+
+/-!
 # The emergence of clusters in self-attention dynamics — `l:unboundedparticles`
 
 §7 of arXiv:2305.05465v6: in `d = 1`, a token that is not uniformly bounded
@@ -6,14 +10,14 @@ runs off to `±∞` at an exponential rate, and its row of the self-attention
 matrix converges to a standard basis row with doubly exponential rate.
 
 The proof: an unbounded token is once beyond `±A`, and `l:auxiliary` — in the
-form proved here, for every token — gives `±x_i(t) ≥ c e^t`.  The gaps of
+form proved here, for every token — gives `±x_i(t) ≥ c e^t`. The gaps of
 `e:infdist` persist for `t ≥ 0` (`exists_gap`), so for `j ≠ n`,
 `P_ij ≤ e^{x_i(x_j - x_n)} ≤ e^{-g x_i}`, and `1 - P_in` is the sum of those.
 
 Source: arXiv:2305.05465v6, `e:infdist`, `l:unboundedparticles`.
 -/
 
-import Transformer.Clusters.Section7_Auxiliary
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -32,7 +36,7 @@ theorem attentionMatrix_one_eq (Y : Idx n → EucSpace 1) (i j : Idx n) :
   simp [PiLp.inner_apply, mul_comm]
 
 /-- **`e:infdist`.**  The tokens of an ordered configuration keep a uniform
-gap: there is `g > 0` with `x_i(t) + g ≤ x_j(t)` for `i < j` and `t ≥ 0`.  The
+gap: there is `g > 0` with `x_i(t) + g ≤ x_j(t)` for `i < j` and `t ≥ 0`. The
 source takes `g = min_i |x_{i+1}(0) - x_i(0)|` and invokes `l:distnondec`.
 
 Source: arXiv:2305.05465v6, `e:infdist`. -/

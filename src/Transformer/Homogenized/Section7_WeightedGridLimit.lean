@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_WeightedPartition
+public import Transformer.Homogenized.Section7_IntervalGrid
+public import Mathlib.Topology.UniformSpace.HeineCantor
+
+/-!
 # Actual weighted partition sums converge to the time integral
 
 ArXiv:2604.01978v1, §7, the exponential maximal inequality
@@ -15,9 +21,7 @@ The endpoint versions will be used on the two sides of the
 finite integration-by-parts identity for the random factor.
 -/
 
-import Transformer.Homogenized.Section7_WeightedPartition
-import Transformer.Homogenized.Section7_IntervalGrid
-import Mathlib.Topology.UniformSpace.HeineCantor
+@[expose] public section
 
 open scoped BigOperators
 open Set Filter MeasureTheory Topology

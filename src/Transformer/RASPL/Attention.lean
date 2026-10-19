@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Basic
+
+/-!
 # Compiling a RASP-L aggregation into an attention layer
 
 Zhou et al. — arXiv:2310.16028v1, "What Algorithms can Transformers Learn?",
@@ -22,7 +26,7 @@ Three statements:
   `max` reduction.
 -/
 
-import Transformer.Basic
+@[expose] public section
 
 namespace Transformer
 namespace RASPL

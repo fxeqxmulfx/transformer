@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_BrownianVectorExpectation
+public import Transformer.BatchSize.Section4_GaussianParameters
+
+/-!
 # The genuine frozen-coefficient Brownian Euler interval
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The random left state determines all coefficients; the next full
 Brownian increment supplies the actual future noise.
 -/
 
-import Transformer.BatchSize.Section4_BrownianVectorExpectation
-import Transformer.BatchSize.Section4_GaussianParameters
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

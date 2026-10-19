@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Wasserstein
+public import Mathlib.MeasureTheory.Measure.Sub
+
+/-!
 # Clustered laws near atomic targets
 
 ArXiv:2411.04551v3, §2.2, the end of the proof of `prop: compression`:
@@ -15,8 +20,7 @@ the remaining masses, of total at most `M e`, independently. Its cost
 is at most `s² + 4 M e`.
 -/
 
-import Transformer.Interpolation.Wasserstein
-import Mathlib.MeasureTheory.Measure.Sub
+@[expose] public section
 
 open scoped BigOperators ENNReal NNReal
 open Real MeasureTheory Set

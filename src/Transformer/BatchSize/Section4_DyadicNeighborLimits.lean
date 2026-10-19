@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerObservationNeighbors
+public import Transformer.BatchSize.Section4_DyadicGenerator
+
+/-!
 # Both actual neighbors converge to the genuine Euler limit
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The proved neighboring-state estimate is applied to the true floor and
 ceiling selectors. The finite horizon can exceed the observation time.
 -/
 
-import Transformer.BatchSize.Section4_EulerObservationNeighbors
-import Transformer.BatchSize.Section4_DyadicGenerator
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal Topology

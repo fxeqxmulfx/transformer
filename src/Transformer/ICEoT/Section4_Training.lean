@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section4_ReportedModels
+
+/-!
 # IC-EoT: the complete reported multi-seed stability table
 
 arXiv:2603.22095v2, §4.3.4, Table 5. These are exact counts of the
@@ -6,7 +10,7 @@ published S/R/A/I classifications, not claims about unprovided loss traces.
 No theorem extrapolates numerical stability outside the tested runs.
 -/
 
-import Transformer.ICEoT.Section4_ReportedModels
+@[expose] public section
 
 namespace Transformer.ICEoT
 

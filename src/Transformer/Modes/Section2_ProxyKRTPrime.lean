@@ -1,10 +1,16 @@
-/-
+module
+
+public import Transformer.Modes.Section2_ProxyKRInner
+public import Transformer.Modes.Section2_PhiTDeltaRate
+public import Transformer.Modes.Section2_IntervalTPrime
+
+/-!
 # The number of modes of a Gaussian KDE — the inner Kac–Rice integral on `T'`
 
-`lem:main-int-phi` on `T'`, the inner integral.  On `T'` the source proof of
+`lem:main-int-phi` on `T'`, the inner integral. On `T'` the source proof of
 `eq:int-phi-final` is not available: it rests on `lem:phi-t`, whose second
 display needs `α_t δ_t² = O(1)`, i.e. `n ≲ β^{5/2}`, which the regime does not
-give (`Section2_PhiTDelta.lean`).  Here the shift is handled directly.  For
+give (`Section2_PhiTDelta.lean`). Here the shift is handled directly. For
 `t ∈ T'` (which lies in `T` for large `k`, `Section2_IntervalTPrime.lean`), with
 `R = β^{-3/2} n e^{-t²/2}`:
 
@@ -20,9 +26,7 @@ The remaining `t`-integral is `Section2_WidthIntegral.lean`.
 Source: arXiv:2412.09080v3, `lem:main-int-phi`, `eq:int-phi-final`, `lem:phi-t`.
 -/
 
-import Transformer.Modes.Section2_ProxyKRInner
-import Transformer.Modes.Section2_PhiTDeltaRate
-import Transformer.Modes.Section2_IntervalTPrime
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped ENNReal Topology

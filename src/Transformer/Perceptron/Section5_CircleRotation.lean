@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_CircleGeodesics
+
+/-!
 # Continuous angular transport on the actual circle
 
 ArXiv:2601.21366v2, §2.2, the exponential-map geodesic, and §5.2,
@@ -13,7 +17,7 @@ These facts hold for arbitrary probability measures on the circle;
 no finite support or density is assumed.
 -/
 
-import Transformer.Perceptron.Section5_CircleGeodesics
+@[expose] public section
 
 open Real MeasureTheory
 

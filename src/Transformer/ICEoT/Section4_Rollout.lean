@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section4_RolloutModel
+
+/-!
 # IC-EoT: convexity of recursive predictions
 
 arXiv:2603.22095v2, §4.1, Corollary 2, Eqs. (33)–(39).
@@ -7,7 +11,7 @@ monotonicity only in predicted variables, as the paper states, rather than
 the stronger monotonicity in every predictor input.
 -/
 
-import Transformer.ICEoT.Section4_RolloutModel
+@[expose] public section
 
 noncomputable section
 

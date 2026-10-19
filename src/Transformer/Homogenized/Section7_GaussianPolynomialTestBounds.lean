@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianPolynomialParameter
+public import Transformer.Homogenized.Section7_GaussianBlendGradient
+
+/-!
 # Polynomial bounds on the actual Gaussian interpolation derivatives
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and the polynomial
@@ -15,8 +20,7 @@ All derivatives are the original derivatives, not auxiliary definitions
 that replace a derivative or the function being differentiated.
 -/
 
-import Transformer.Homogenized.Section7_GaussianPolynomialParameter
-import Transformer.Homogenized.Section7_GaussianBlendGradient
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators

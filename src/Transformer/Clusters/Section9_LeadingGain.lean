@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section9_LeadingEnergy
+public import Transformer.Clusters.Section10_CorrectedEnergy
+public import Transformer.Clusters.Section10_ProjectedGain
+
+/-!
 # Leading attention gain vanishes under subspace positivity
 
 ArXiv:2305.05465v6, §9, the proof of `l:3hyperplanes11`, using
@@ -16,9 +22,7 @@ The proved derivative-domination principle then forces the gap to
 tend to zero, with no assumption that token positions converge.
 -/
 
-import Transformer.Clusters.Section9_LeadingEnergy
-import Transformer.Clusters.Section10_CorrectedEnergy
-import Transformer.Clusters.Section10_ProjectedGain
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

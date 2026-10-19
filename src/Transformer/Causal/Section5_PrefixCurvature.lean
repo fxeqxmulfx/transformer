@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Section5_PrefixForce
+
+/-!
 # Strict curvature at the next clustered original critical token
 
 ArXiv:2411.04990v2, §5, the final diagonal-curvature estimate
@@ -18,7 +22,7 @@ zero curvature is excluded. The final statement uses the
 unchanged original parameters; the narrow radius is derived.
 -/
 
-import Transformer.Causal.Section5_PrefixForce
+@[expose] public section
 
 open scoped BigOperators
 open Real Set

@@ -5,6 +5,12 @@ public import PFR.Mathlib.Probability.IdentDistrib
 public import PFR.ForMathlib.FiniteRange.ConditionalProbability
 public import PFR.ForMathlib.Pair
 
+/-!
+# Conditional independence
+
+Conditional independence, composition, and conditioning on finite fibers.
+-/
+
 @[expose] public section
 
 open MeasureTheory Measure Set

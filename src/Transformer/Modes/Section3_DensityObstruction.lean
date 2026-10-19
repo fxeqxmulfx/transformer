@@ -1,7 +1,9 @@
-import Transformer.Modes.Section3_ChangeOfVar
-import Transformer.Modes.Section5_PtBddDensity
+module
 
-/-
+public import Transformer.Modes.Section3_ChangeOfVar
+public import Transformer.Modes.Section5_PtBddDensity
+
+/-!
 # The number of modes of a Gaussian KDE — density obstructions after whitening
 
 The proved affine change of variables `eq:qt` transfers the counterexample
@@ -21,6 +23,8 @@ assertion inherited from `lem: pt.bdd` is removed.
 Source: arXiv:2412.09080v3, §2.2, `eq:qt`; §3.2, `lem:error-higher`;
 §4.1 and §5.5, `lem: pt.bdd`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped ENNReal

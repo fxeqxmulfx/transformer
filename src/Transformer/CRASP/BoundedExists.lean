@@ -1,19 +1,23 @@
-/-
+module
+
+public import Transformer.CRASP.Basic
+
+/-!
 # Bounded existentials over the past, written as counts
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 (COLM 2025), §2.2 and the proof of `lem:piecewise_testable_depth` in §2.4.
 
 `TL[◁#]` has no quantifiers, but a count can stand in for one: `∃ j ≤ i [ψ]`
-is `1 ≤ ◁#[ψ]`.  For the strict `∃ j < i [ψ]` the count needs correcting at
+is `1 ≤ ◁#[ψ]`. For the strict `∃ j < i [ψ]` the count needs correcting at
 the current position, which `◁#` includes, so the threshold is `2` where `ψ`
-holds and `1` where it does not.  Both cost one level of depth, exactly like
+holds and `1` where it does not. Both cost one level of depth, exactly like
 the count they are made of; this is what the subsequence formulas of
-`Transformer.CRASP.Subsequence` are built from.  `∃ j > i [ψ]` is the same
+`Transformer.CRASP.Subsequence` are built from. `∃ j > i [ψ]` is the same
 construction in `▷#`, which counts `w[i:n]`.
 -/
 
-import Transformer.CRASP.Basic
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -90,7 +94,7 @@ namespace Form
 /-- `∃ j ≤ i [ψ]`, written as the logic can write it: `1 ≤ ◁#[ψ]`. -/
 def exAt (ψ : Form σ) : Form σ := Form.le .one (.countL ψ)
 
-/-- `∃ j < i [ψ]`.  `◁#` counts the current position too, so the threshold is
+/-- `∃ j < i [ψ]`. `◁#` counts the current position too, so the threshold is
 raised by one exactly when `ψ` holds there. -/
 def exBefore (ψ : Form σ) : Form σ :=
   Form.or (.and ψ (Form.le (.add .one .one) (.countL ψ)))

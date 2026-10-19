@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Magma.Section4_GammaDensity
+
+/-!
 # The square-root Gamma covariates are not heavy-tailed in the strict sense
 
 Correction of arXiv:2602.15322v1, Appendix B, Heavy-Tailed Gradient Noise
@@ -8,7 +12,7 @@ the radius; it does not refute the reported optimization observations or
 claim that arbitrary nonlinear gradient functions must be light-tailed.
 -/
 
-import Transformer.Magma.Section4_GammaDensity
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

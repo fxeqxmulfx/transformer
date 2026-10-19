@@ -3,6 +3,12 @@ module
 public import Mathlib.Probability.UniformOn
 public import PFR.Mathlib.Data.Set.Card
 
+/-!
+# Uniform measures on sets
+
+Evaluations of uniform measures on singletons and subsets.
+-/
+
 public section
 
 open Function MeasureTheory Measure

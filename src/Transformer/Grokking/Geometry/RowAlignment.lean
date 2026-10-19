@@ -1,4 +1,6 @@
-import Transformer.Grokking.Geometry.Decisions
+module
+
+public import Transformer.Grokking.Geometry.Decisions
 
 /-!
 # Raw reference margins and row-aligned cleanup errors
@@ -16,6 +18,8 @@ the residual but changes the reference; its restoration is essential.
 No floating-point implementation or optimization trajectory is identified
 with these exact-real functional identities.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Geometry
 

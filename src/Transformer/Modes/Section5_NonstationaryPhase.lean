@@ -1,7 +1,9 @@
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
-import Mathlib.Analysis.Complex.RealDeriv
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Calculus.Deriv.Inv
+module
+
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
+public import Mathlib.Analysis.Complex.RealDeriv
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.Calculus.Deriv.Inv
 
 /-!
 # Integration by parts on the nonstationary intervals
@@ -24,6 +26,8 @@ integration interval is needed. They supply the nonstationary part of the
 corrected fixed-`t`, `0 < β < 2` Fourier decay problem.
 Source: arXiv:2412.09080v3, §5.5, `eq:uniform-decay` and its proof.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 open scoped Interval

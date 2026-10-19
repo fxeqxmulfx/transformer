@@ -1,8 +1,12 @@
-/-
+module
+
+public import Transformer.GPTMini.AttentionBounds
+
+/-!
 # Property: Causal masking
 
 The causal mask in `CausalMHA` ensures that the attention weights at
-position `i` depend only on positions `j ≤ i`.  Formally:
+position `i` depend only on positions `j ≤ i`. Formally:
 
   **`causalAttnWeights cfg α ε q k i j = 0`  for `j > i`.**
 
@@ -16,7 +20,7 @@ The complete top-level property is proved in `GPTMini.Causality.Model`:
 This module retains the foundational attention-output restriction.
 -/
 
-import Transformer.GPTMini.AttentionBounds
+@[expose] public section
 
 open scoped BigOperators
 open Real

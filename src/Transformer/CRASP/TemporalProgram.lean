@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.CRASP.TermAffine
+public import Transformer.CRASP.FixedSign
+public import Transformer.CRASP.AttentionKernel
+
+/-!
 # A uniform-attention program for a temporal formula
 
 arXiv:2506.16055v3, Appendix B.2, `thm:TLCl_to_rtfr`.
@@ -6,9 +12,7 @@ Boolean subformulas are stored in parallel; separate scratch coordinates
 average each comparison's signed integer source contributions.
 -/
 
-import Transformer.CRASP.TermAffine
-import Transformer.CRASP.FixedSign
-import Transformer.CRASP.AttentionKernel
+@[expose] public section
 
 namespace Transformer.CRASP.TemporalProgram
 

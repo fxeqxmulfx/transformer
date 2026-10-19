@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.RamifiedPolynomialRoot
+public import Transformer.Landscape.Lojasiewicz.PolynomialRootDivision
+public import Mathlib.Data.Fin.Tuple.Basic
+
+/-!
 # Complete real root coverage after a common ramification
 
 Removing analytic root factors one at a time gives finitely many analytic
@@ -6,9 +12,7 @@ branches covering every real root at all sufficiently small positive
 parameters. The number of branches is bounded by the polynomial degree.
 -/
 
-import Transformer.Landscape.Lojasiewicz.RamifiedPolynomialRoot
-import Transformer.Landscape.Lojasiewicz.PolynomialRootDivision
-import Mathlib.Data.Fin.Tuple.Basic
+@[expose] public section
 
 open Filter Set
 

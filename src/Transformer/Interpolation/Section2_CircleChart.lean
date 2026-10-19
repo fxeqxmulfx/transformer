@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section5_BallSweep
+public import Mathlib.Analysis.SpecialFunctions.Complex.Arg
+
+/-!
 # The unit circle in angle coordinates
 
 ArXiv:2411.04551v3, §2.2, proof of `prop: compression`, on the circle
@@ -11,8 +16,7 @@ angular radius. Hence a metric sphere of the circle has at most two
 points, and a law without atoms gives it no mass.
 -/
 
-import Transformer.Interpolation.Section5_BallSweep
-import Mathlib.Analysis.SpecialFunctions.Complex.Arg
+@[expose] public section
 
 open Real MeasureTheory Set
 

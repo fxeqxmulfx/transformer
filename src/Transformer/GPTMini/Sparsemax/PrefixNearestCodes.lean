@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.NearestPrototypeCodes
-import Transformer.GPTMini.Sparsemax.CausalPrefixKeys
+module
+
+public import Transformer.GPTMini.Sparsemax.NearestPrototypeCodes
+public import Transformer.GPTMini.Sparsemax.CausalPrefixKeys
 
 /-!
 # Nearest memory inputs from actual causal prefix distances
@@ -15,6 +17,8 @@ memory attention can still vary: the encoder selects its query row, not
 its eventual sparse routing weights. Generalization requires an explicit
 regularity condition on the target function, stated in the next module.
 -/
+
+@[expose] public section
 
 noncomputable section
 

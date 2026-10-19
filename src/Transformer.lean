@@ -1,4 +1,57 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Basis
+public import Transformer.Wasserstein
+public import Transformer.SmoothApprox
+public import Transformer.ContinuityEq
+public import Transformer.Wiener
+public import Transformer.ALM
+public import Transformer.RASP
+public import Transformer.RASPL
+public import Transformer.CRASP
+public import Transformer.Perspective
+public import Transformer.Metastability
+public import Transformer.Interpolation
+public import Transformer.Causal
+public import Transformer.Normalization
+public import Transformer.MeanField
+public import Transformer.FrankWolfe
+public import Transformer.Kinetic
+public import Transformer.Homogenized
+public import Transformer.Perceptron
+public import Transformer.Clusters
+public import Transformer.Modes
+public import Transformer.AMSGrad
+public import Transformer.AMSGradW
+public import Transformer.AdamBeyond
+public import Transformer.XSA
+public import Transformer.Quartet
+public import Transformer.GPTMini
+public import Transformer.GPTMini.Sparsemax
+public import Transformer.Precision
+public import Transformer.Convexifying
+public import Transformer.Zoology
+public import Transformer.ConvexRecall
+public import Transformer.Muon
+public import Transformer.DASH
+public import Transformer.AdaFisher
+public import Transformer.Optimization
+public import Transformer.ICEoT
+public import Transformer.OptimizerBenchmark
+public import Transformer.Magma
+public import Transformer.Imbalance
+public import Transformer.BatchSize
+public import Transformer.DoubleDescent
+public import Transformer.Memorization
+public import Transformer.MagnitudeDirection
+public import Transformer.RecurrentGradients
+public import Transformer.NoiseScale
+public import Transformer.Surge
+public import Transformer.Grokking
+public import Transformer.Landscape
+
+/-!
 Formalization of thirty-four papers on the mathematics of Transformers:
 
 1. Weiss, Goldberg, Yahav — arXiv:2106.06981v2
@@ -6,7 +59,7 @@ Formalization of thirty-four papers on the mathematics of Transformers:
 
 2. Zhou, Bradley, Littwin, Razin, Saremi, Susskind, Bengio, Nakkiran —
    arXiv:2310.16028v1
-   "What Algorithms can Transformers Learn?  A Study in Length
+   "What Algorithms can Transformers Learn? A Study in Length
    Generalization".
 
 3. Yang, Huang, Chiang — arXiv:2506.16055v3
@@ -126,7 +179,7 @@ a cone estimate in place of the center-stable manifold theorem, and that under
 the Łojasiewicz inequality at the critical points almost every bounded orbit
 converges, to a local minimizer under the strict saddle property; for a
 periodic function with nondegenerate critical points, almost every orbit
-converges to a local minimizer.  Its `PhaseModel` applies this to
+converges to a local minimizer. Its `PhaseModel` applies this to
 phase energies `Σ_r (1 - cos ⟪m_r, ψ⟫)` with integer rows, such as the
 relations `ψ_x - ψ_y - ψ_{x-y}` of division in a cyclic group: every limit
 point up to periods is critical, and almost every orbit with a nondegenerate
@@ -144,53 +197,4 @@ source claims and resource gaps. `Transformer.ConvexRecall` is a new
 cross-paper construction with explicit changes to the original models.
 -/
 
-import Transformer.Basic
-import Transformer.Basis
-import Transformer.Wasserstein
-import Transformer.SmoothApprox
-import Transformer.ContinuityEq
-import Transformer.Wiener
-import Transformer.ALM
-import Transformer.RASP
-import Transformer.RASPL
-import Transformer.CRASP
-import Transformer.Perspective
-import Transformer.Metastability
-import Transformer.Interpolation
-import Transformer.Causal
-import Transformer.Normalization
-import Transformer.MeanField
-import Transformer.FrankWolfe
-import Transformer.Kinetic
-import Transformer.Homogenized
-import Transformer.Perceptron
-import Transformer.Clusters
-import Transformer.Modes
-import Transformer.AMSGrad
-import Transformer.AMSGradW
-import Transformer.AdamBeyond
-import Transformer.XSA
-import Transformer.Quartet
-import Transformer.GPTMini
-import Transformer.GPTMini.Sparsemax
-import Transformer.Precision
-import Transformer.Convexifying
-import Transformer.Zoology
-import Transformer.ConvexRecall
-import Transformer.Muon
-import Transformer.DASH
-import Transformer.AdaFisher
-import Transformer.Optimization
-import Transformer.ICEoT
-import Transformer.OptimizerBenchmark
-import Transformer.Magma
-import Transformer.Imbalance
-import Transformer.BatchSize
-import Transformer.DoubleDescent
-import Transformer.Memorization
-import Transformer.MagnitudeDirection
-import Transformer.RecurrentGradients
-import Transformer.NoiseScale
-import Transformer.Surge
-import Transformer.Grokking
-import Transformer.Landscape
+@[expose] public section

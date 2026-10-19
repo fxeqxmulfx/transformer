@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.PeriodicInitial
+
+/-!
 # A periodic positional transformer has a same-depth counting formula
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLClmod` and the reverse
@@ -6,7 +10,7 @@ direction of `thm:rtfr_eq_tlclmod`. The finite residue/activation induction
 is followed by the accepting-state test, with a separate BOS empty input.
 -/
 
-import Transformer.CRASP.PeriodicInitial
+@[expose] public section
 
 namespace Transformer.CRASP
 

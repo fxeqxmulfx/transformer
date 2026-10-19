@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.GaussianVariance
+public import Transformer.Homogenized.GaussianKernel
+
+/-!
 # Homogenized Transformers — Gaussian moments of projected attention fields
 
 The mixed second moment in the drift of the overlap `R_ij` is the trace of
@@ -7,7 +12,7 @@ two tangent projections, multiplied by the softmax-barycenter correlation:
   `E⟨G_i,G_j⟩ = σ_V² (d - 2 + R_ij²) s_μ(x_i,x_j)`.
 
 The finite-dimensional trace identity is proved below by summing over the
-standard basis.  Integrability follows from the bounded attention averages
+standard basis. Integrability follows from the bounded attention averages
 and the Gaussian mixed-moment bound, rather than from a formal manipulation
 of Bochner integrals.
 
@@ -15,8 +20,7 @@ Source: arXiv:2604.01978v1, proof of `lem:Ito_formula`,
 `eq:trace_proj_proj_clean` and `eq:Dij_explicit_clean`.
 -/
 
-import Transformer.Homogenized.GaussianVariance
-import Transformer.Homogenized.GaussianKernel
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory
@@ -24,7 +28,7 @@ open Real MeasureTheory
 namespace Transformer.Homogenized
 
 /-- The inner product of two projected vectors, expanded in the standard
-basis.  Source: arXiv:2604.01978v1, proof of `lem:Ito_formula`. -/
+basis. Source: arXiv:2604.01978v1, proof of `lem:Ito_formula`. -/
 private theorem inner_proj_eq_sum {d : ℕ} (x y a b : EucSpace d) :
     inner (𝕜 := ℝ) (proj d x a) (proj d y b) =
       ∑ k : Fin d,

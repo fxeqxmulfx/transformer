@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_BrownianMoments
+
+/-!
 # Conditional moments with respect to the joint Brownian past
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3).
@@ -7,7 +11,7 @@ constructed joint filtration. Conditional expectation's default value for
 nonintegrable inputs is never used to manufacture a martingale identity.
 -/
 
-import Transformer.BatchSize.Section4_BrownianMoments
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

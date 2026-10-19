@@ -1,10 +1,12 @@
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Convex.Function
-import Mathlib.Tactic
+module
+
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Convex.Function
+public import Mathlib.Tactic
 
 /-!
 # An optimized convex perceptron, not a prescribed accuracy curve
@@ -20,6 +22,8 @@ convexity and partial derivatives are proved. The exponential trajectories
 then solve the negative-gradient equations of that same loss. Delayed
 held-out classification is derived in the next module, not put in the flow.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Perceptron
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section2_Morse
+
+/-!
 # The original Gaussian KDE mode and upcrossing sets agree almost surely
 
 ArXiv:2412.09080v3, §2.1, the identity asserted after `eq:Fn`.
@@ -17,7 +21,7 @@ extended counts, so no measurability or finiteness of the query
 set needs to be added to the source expectation identity.
 -/
 
-import Transformer.Modes.Section2_Morse
+@[expose] public section
 
 open Real Set MeasureTheory Filter
 open scoped Topology ENNReal

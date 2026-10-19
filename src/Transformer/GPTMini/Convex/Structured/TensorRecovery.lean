@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.TensorEmbedding
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorEmbedding
 
 /-!
 # Recovering genuine free embedding fields after RMSNorm
@@ -16,6 +18,8 @@ not identify Q/K/V with frozen features: all 52 recovered fields remain
 their original free parameters. Tensor-only attention, residual/tied
 readout and full changed-model training are subsequent obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

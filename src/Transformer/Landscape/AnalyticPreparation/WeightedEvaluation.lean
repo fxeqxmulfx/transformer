@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.ScalarEvaluation
+
+/-!
 # Real analytic preparation: WeightedEvaluation
 
 Adapted from Bochao Kong's classical-complex-wpt, revision
@@ -9,7 +13,7 @@ The scalar field is real; no complex root or complex differentiation result
 is used. Apache-2.0 license: third_party/classical-complex-wpt/LICENSE.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.ScalarEvaluation
+@[expose] public section
 
 open Filter Finset
 open scoped BigOperators ENNReal NNReal Topology

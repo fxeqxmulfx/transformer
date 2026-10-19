@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_ErrorFunction
+
+/-!
 # Gaussian probabilities behind the signed-gradient drift
 
 arXiv:2506.12543v1, Section 4.3, proof sketch following Theorem 1.
 The CDF formula is valid at every threshold, including below the mean.
 -/
 
-import Transformer.BatchSize.Section4_ErrorFunction
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

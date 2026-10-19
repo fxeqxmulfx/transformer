@@ -1,21 +1,25 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Abelian.Basic
+public import Transformer.Landscape.PhaseModel.Lift
+
+/-!
 # Phase model over a finite abelian group — coordinates on the full table
 
 As for `ℤ/n` (`Landscape.PhaseModel.Coordinates`), the phase `ψ_t` enters the
 relations `θ_{x,y} = ψ_x - ψ_y - ψ_{x-y}` of the full division table of `G`
 as `ψ_x` in the rows `t / y`, as `ψ_y` in the rows `x / t`, and as `ψ_{x-y}`
-in the rows `(t + y) / y`.  This gives the coordinates of the gradient of
+in the rows `(t + y) / y`. This gives the coordinates of the gradient of
 `V_full` (`inner_gradient_divisionEnergy_single`) and the diagonal of its
 Hessian (`inner_fderiv_gradient_divisionEnergy_single`): there the rows
 `t / t` and `t / 0`, where `ψ_t` enters twice with opposite signs, drop out,
 and the row `2t / t`, where it enters twice with the same sign, counts four
-times.  The chord inequality `1 - cos (a ± b) ≤ 2 (1 - cos a) + 2 (1 - cos b)`
+times. The chord inequality `1 - cos (a ± b) ≤ 2 (1 - cos a) + 2 (1 - cos b)`
 summed over `G` bounds the energy of a sum of phases by those of the
 summands (`sub_le_sum_cos_add`, `sub_le_sum_cos_sub`).
 -/
 
-import Transformer.Landscape.PhaseModel.Abelian.Basic
-import Transformer.Landscape.PhaseModel.Lift
+@[expose] public section
 
 open Real
 

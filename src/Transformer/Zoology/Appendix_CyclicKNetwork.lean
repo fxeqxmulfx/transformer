@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CyclicCircuitNetwork
+public import Transformer.Zoology.Appendix_KCoyoteZero
+
+/-!
 # Cyclic Coyote networks with genuine K-matrix weights
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: W-kmat`,
@@ -7,8 +12,7 @@ and position-gating layers admit constant-width, constant-expansion
 K representations. The cyclic option does not change parameter storage.
 -/
 
-import Transformer.Zoology.Appendix_CyclicCircuitNetwork
-import Transformer.Zoology.Appendix_KCoyoteZero
+@[expose] public section
 
 namespace Transformer.Zoology
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Orthogonality
+
+/-!
 # Phase model — a Fourier bound on the full division table
 
 For phases `ψ`, let `û_j = Σ_x e^{i(ψ_x - 2πjx/n)}` be the Fourier
@@ -7,7 +11,7 @@ The orthogonality of the characters gives Parseval's identity
 `Σ_j |û_j|² = n²` (`sum_normSq_fourier`) and the cubic identity
 `Σ_j |û_j|² Re û_j = n Σ_{y,z} cos (ψ_{y+z} - ψ_y - ψ_z)`
 (`sum_normSq_mul_re_fourier`), where the double sum is `n² - V_full(ψ)`
-(`divisionEnergy_univ_eq`).  Under the weights `|û_j|² / n²` the `Re û_j`
+(`divisionEnergy_univ_eq`). Under the weights `|û_j|² / n²` the `Re û_j`
 have the mean `n - V_full(ψ)/n`, so some `j` has
 `n Σ_x (1 - cos (ψ_x - 2πjx/n)) ≤ V_full(ψ)` (`exists_mul_sum_one_sub_cos_le`).
 
@@ -18,7 +22,7 @@ the characters are sums over `j < n` (`bijective_cyclicChar`).
 Source: item M6.8 of `landscape_plan.md`.
 -/
 
-import Transformer.Landscape.PhaseModel.Orthogonality
+@[expose] public section
 
 open Real
 
@@ -62,7 +66,7 @@ theorem divisionEnergy_univ_eq (ψ : EucSpace n) :
   exact h
 
 /-- **Some character is within `V_full(ψ)/n` of the phases**: there is `j`
-with `n Σ_x (1 - cos (ψ_x - 2πjx/n)) ≤ V_full(ψ)`.  Otherwise every
+with `n Σ_x (1 - cos (ψ_x - 2πjx/n)) ≤ V_full(ψ)`. Otherwise every
 `n Re û_j < n² - V_full(ψ)`, and the weights `|û_j|²`, of sum `n²`, would
 give `n Σ_j |û_j|² Re û_j < n² (n² - V_full(ψ))`, against the cubic
 identity. -/

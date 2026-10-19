@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section2_SingleLeader
+
+/-!
 # Attention's forward pass and Frank-Wolfe — derivations
 
 Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
@@ -13,7 +17,7 @@ key-query matrix:
 * `lem:convHullDecreases` — the convex hull of the configuration shrinks.
 -/
 
-import Transformer.FrankWolfe.Section2_SingleLeader
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

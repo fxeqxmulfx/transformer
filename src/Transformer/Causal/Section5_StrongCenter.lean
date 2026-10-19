@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section5_MinCurve
+public import Transformer.Causal.Section5_VelocityBounds
+
+/-!
 # The strong-center displacement comparison
 
 ArXiv:2411.04990v2, §5, `lemma:meta`, `eq:renyi`, and `eq:time_bd`.
@@ -7,8 +12,7 @@ interaction radius. The center velocity is therefore bounded throughout
 the interval, and the mean-value inequality bounds its displacement.
 -/
 
-import Transformer.Causal.Section5_MinCurve
-import Transformer.Causal.Section5_VelocityBounds
+@[expose] public section
 
 open scoped BigOperators
 open Real

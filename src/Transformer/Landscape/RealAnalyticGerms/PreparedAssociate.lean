@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.RealAnalyticGerms.Preparation
+public import Transformer.Landscape.RealAnalyticGerms.Division
+
+/-!
 # Real analytic germs: PreparedAssociate
 
 Adapted from Bochao Kong's LocalComplexGeometry, revision
@@ -8,8 +13,7 @@ dependency closure is retained. Apache-2.0 license:
 third_party/LocalComplexGeometry/LICENSE.
 -/
 
-import Transformer.Landscape.RealAnalyticGerms.Preparation
-import Transformer.Landscape.RealAnalyticGerms.Division
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

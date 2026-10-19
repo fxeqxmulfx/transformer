@@ -1,15 +1,20 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Division
+public import Transformer.Landscape.PhaseModel.Descent
+
+/-!
 # Phase model — sets of rows generating the division table
 
 When every row of the full division table is an integer combination of the
 rows of a set `S` of pairs, the relations of `S` imply those of the full
 table, so the energy `V_S` has the zeros of `V_full`: the phases of the
-characters up to periods (`divisionEnergy_eq_zero_iff_of_mem_span`).  Then
+characters up to periods (`divisionEnergy_eq_zero_iff_of_mem_span`). Then
 only `0` is orthogonal to every row of `S`
 (`eq_zero_of_forall_inner_divisionRow_of_mem_span`), so every zero of `V_S`
 is nondegenerate (`injective_fderiv_gradient_divisionEnergy_of_mem_span`),
 and the Łojasiewicz inequality holds there with exponent `1/2`
-(`isLojasiewiczAt_divisionEnergy_of_mem_span`).  In particular the Hessian of
+(`isLojasiewiczAt_divisionEnergy_of_mem_span`). In particular the Hessian of
 `V_full` is injective at the phases of every character up to periods
 (`injective_fderiv_gradient_divisionEnergy_univ`), where the Łojasiewicz
 inequality holds with exponent `1/2` (`isLojasiewiczAt_divisionEnergy_univ`).
@@ -19,8 +24,7 @@ character as a limit point up to periods converges to them up to a period
 (`exists_tendsto_characterPhase`).
 -/
 
-import Transformer.Landscape.PhaseModel.Division
-import Transformer.Landscape.PhaseModel.Descent
+@[expose] public section
 
 open Filter Real
 open scoped Topology

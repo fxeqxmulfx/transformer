@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.Section5_DiracCoefficients
+public import Transformer.Metastability.MeanFieldStatic
+
+/-!
 # The full characteristic flow of a stationary Dirac law
 
 ArXiv:2410.06833v1, §5, `eq: mean.field.pde` and `eq: flow.map`.
@@ -13,8 +18,7 @@ This construction supplies the complete flow hypothesis in the
 counterexample to `eq: v.small`; no flow existence claim is assumed.
 -/
 
-import Transformer.Metastability.Section5_DiracCoefficients
-import Transformer.Metastability.MeanFieldStatic
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

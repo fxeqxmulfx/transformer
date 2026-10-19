@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_SignLipschitz
+public import Transformer.BatchSize.Section4_SmoothCoefficients
+
+/-!
 # Globally Lipschitz diffusion amplitudes
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The actual square root of the covariance is globally Lipschitz in the state.
 Its Lipschitz constant factors as sqrt(eta) times a model-dependent constant.
 -/
 
-import Transformer.BatchSize.Section4_SignLipschitz
-import Transformer.BatchSize.Section4_SmoothCoefficients
+@[expose] public section
 
 noncomputable section
 

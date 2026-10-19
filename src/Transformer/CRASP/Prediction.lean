@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.CRASP.Blocks
+public import Transformer.CRASP.Frame
+public import Transformer.CRASP.Depth
+
+/-!
 # The next-token prediction problem
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -6,24 +12,22 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 the proof in Appendix C.4.
 
 A formula solves the prediction problem for `L_k` when it recognizes, among the
-prefixes of the strings of `L_k`, exactly those in `L_k`.  That is easier than
+prefixes of the strings of `L_k`, exactly those in `L_k`. That is easier than
 recognition by one level of depth and two blocks: a prefix of a string of
 `L_{k+3}` starts with `a` and has at most `k + 3` blocks, so it is in `L_{k+3}`
 when it has at least `k + 2` blocks — the alternating word of length `k + 1`
 starting with `b` is a subsequence — and its last symbol is that of block
-`k + 3`.  This is the paper's formula `φ_{B_{k+1}} ∧ Q_a` (`k` even) or
+`k + 3`. This is the paper's formula `φ_{B_{k+1}} ∧ Q_a` (`k` even) or
 `φ_{B_{k+1}} ∧ Q_b` (`k` odd), `predictAltPlus` below.
 
 The negative half is derived in the paper from `lem:cropping_oneway` and
-`lem:reduction`, both false as stated (`Transformer.CRASP.Depth`).  It holds
+`lem:reduction`, both false as stated (`Transformer.CRASP.Depth`). It holds
 nonetheless (`not_solvesPrediction_altPlus`): a formula of depth `k + 1` agrees
 on a word of `L_{k+2}` that is a prefix of a word of `L_{k+4}`, and on a word of
 `L_{k+4}` (`Transformer.CRASP.LowerBound`).
 -/
 
-import Transformer.CRASP.Blocks
-import Transformer.CRASP.Frame
-import Transformer.CRASP.Depth
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -34,7 +38,7 @@ variable {σ : Type u}
 
 /-- **Definition `def:prediction_task`.**  A `TL[◁#]` formula solves the
 next-token prediction problem for `L` when, on every prefix of every string of
-`L`, it says exactly whether that prefix is itself in `L`.  Only prefixes of
+`L`, it says exactly whether that prefix is itself in `L`. Only prefixes of
 strings of `L` are considered, which is what separates prediction from
 recognition. -/
 def SolvesPrediction [DecidableEq σ] (φ : Form σ) (L : Set (List σ)) : Prop :=
@@ -138,10 +142,10 @@ example : (Form.sym false : Form Bool) ∈ TLCl Bool 0 := ⟨rfl, rfl, le_rfl⟩
 formula solves the next-token prediction problem for `L_{k+3}`, and no
 depth-`k` formula does.
 
-The positive half is `solvesPrediction_predictAltPlus`.  The negative half,
+The positive half is `solvesPrediction_predictAltPlus`. The negative half,
 which the paper derives from `lem:cropping_oneway` and `lem:reduction`, both
 false as stated, is `not_solvesPrediction_altPlus`, and at `k = 0`
-`not_solvesPrediction_altPlus_three`.  The paper puts no bound on `k`, and
+`not_solvesPrediction_altPlus_three`. The paper puts no bound on `k`, and
 none is needed. -/
 theorem prediction_task_depth (k : ℕ) :
     (∃ φ ∈ TLCl Bool (k + 1), SolvesPrediction φ (altPlus false (k + 3))) ∧

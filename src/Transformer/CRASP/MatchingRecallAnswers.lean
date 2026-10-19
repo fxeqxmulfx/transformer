@@ -1,22 +1,26 @@
-/-
+module
+
+public import Transformer.CRASP.MatchingRecallSums
+
+/-!
 # One layer of width five recalls over every vocabulary, at every length
 
 In no paper: the attention comparing a query with a key of
 `CRASP.MatchingRecall` recalls, where attention ignoring the query needs a
-width growing with the vocabulary (`CRASP.QueryFreeRecall`).  Over `c` tokens
+width growing with the vocabulary (`CRASP.QueryFreeRecall`). Over `c` tokens
 and `n + 1` rows, with `2 (s + 1) c² 2^s < 2^{p-1}`, the matcher's last
 activation is the last token followed by `(m_v - 1) / (1 + m)` and
 `(m_v - 2) / (1 + m)` rounded (`actAt_matcher`), for the `m` rows whose key is
-the last query and the `m_v` of them with value `v`.  Rounding down keeps the
+the last query and the `m_v` of them with value `v`. Rounding down keeps the
 sign (`m_round_nonneg_iff`), so the matcher accepts exactly when
 `m_v ≥ 1 + e`, for the last row's own share `e ∈ {0, 1}`, that is, when an
 earlier row binds the last query to `v` (`matcher_answers`), consistent
-dictionary or not, whatever `n`.  Aligned recall over `c` tokens thus takes one
+dictionary or not, whatever `n`. Aligned recall over `c` tokens thus takes one
 layer of width `5` at `p = O(log c)` bits at every length, with no fractional
 bit (`s = 0`) needed.
 -/
 
-import Transformer.CRASP.MatchingRecallSums
+@[expose] public section
 
 namespace Transformer.CRASP
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.InputDecoder
+module
+
+public import Transformer.GPTMini.Sparsemax.InputDecoder
 
 /-!
 # Actual projection changes realizing arbitrary independent input rows
@@ -16,6 +18,8 @@ dimensions is assumed. The rank condition is explicit: dependent inputs
 cannot in general admit arbitrary independent key changes.
 These linear constructions precede normalization, sparsemax and task loss.
 -/
+
+@[expose] public section
 
 noncomputable section
 

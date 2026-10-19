@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.FrameCount
+
+/-!
 # Inside the middle of a frame, a count is affine in the letter counts
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -10,13 +14,13 @@ When the formulas under the counts of a term are constant on the middles of a
 frame, the term at a position of the middle holding `c`, with `x` letters `a`
 and `y` letters `b` before it in the middle, satisfies
 `t + β'·x + γ'·y = K(c) + β·x + γ·y` (`Term.val_affine_frame`): a past count
-adds the letters before the position, a future count loses them.  The
-coefficients stay natural numbers by keeping the losses on the left.  A formula
+adds the letters before the position, a future count loses them. The
+coefficients stay natural numbers by keeping the losses on the left. A formula
 over such terms is then determined by the letter and `(x, y)`
 (`Form.sat_eq_of_take_count_eq`).
 -/
 
-import Transformer.CRASP.FrameCount
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

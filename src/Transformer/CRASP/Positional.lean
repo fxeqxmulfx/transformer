@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.TLCDepth
+
+/-!
 # `TL[◁#]^pos`: position encodings on the logic side
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -9,8 +13,8 @@ depth hierarchy that follows (`thm:tlclpos_depth_hierarchy`).
 
 `TL[◁#]^pos` is `TL[◁#]` — past-only counting, no Parikh numerical predicates
 — with two additions: `MOD_m^r` holds at position `i` when `i ≡ r (mod m)`,
-and `Y φ` holds at `i` when `i > 1` and `φ` holds at `i − 1`.  The paper notes
-it is the logic `C-RASP[local, periodic]` of Huang et al. (2025).  Its two
+and `Y φ` holds at `i` when `i > 1` and `φ` holds at `i − 1`. The paper notes
+it is the logic `C-RASP[local, periodic]` of Huang et al. (2025). Its two
 sublogics `TL[◁#, MOD]` and `TL[◁#, Y]` are the `MOD`-only and `Y`-only
 fragments, which are what the sinusoidal/RoPE and the ALiBi transformers of
 Appendix F simulate. The models and reverse simulations are formalized in
@@ -24,7 +28,7 @@ inserted anywhere; the neutral letter is `none` of `Option σ`, and deleting it
 is `List.reduceOption`.
 -/
 
-import Transformer.CRASP.TLCDepth
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

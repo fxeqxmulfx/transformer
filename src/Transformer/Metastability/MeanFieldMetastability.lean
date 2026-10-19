@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.MeanFieldStatic
+
+/-!
 # Metastability — the mean-field theorem (§5 of 2410.06833v1)
 
 `Theorem thm: metastability MF`, in the vocabulary of
@@ -6,7 +10,7 @@
 solution of `Metastability.MeanFieldStatic`.
 -/
 
-import Transformer.Metastability.MeanFieldStatic
+@[expose] public section
 
 open Real MeasureTheory
 
@@ -20,9 +24,9 @@ variable (d : ℕ)
 /-- **Theorem (thm: metastability MF).** *Mean-field metastability.*
 
 Let `β > 1`, `ε ∈ (0, 1/16)`, and let `μ_0 = (1/k) Σ_q ν_q` be a
-`(β, ε)`-separated measure with caps `𝒮_q(ε)` around `w_1,…,w_k`.  Let `μ`
+`(β, ε)`-separated measure with caps `𝒮_q(ε)` around `w_1,…,w_k`. Let `μ`
 solve `eq: mean.field.pde` from `μ_0` and let `Φ` be the characteristic flow
-of `v[μ(t)]` (`eq: flow.map`).  Then there are `T_2 > T_1 > 0` with
+of `v[μ(t)]` (`eq: flow.map`). Then there are `T_2 > T_1 > 0` with
 
   `T_1 < (ε/k) e^{β(1-α-8ε)} < T_2`
 
@@ -39,10 +43,10 @@ such that, for every `q`:
 
 **What the source says and what is changed here.**  The `argmin` need not be a
 single point; the bound is asserted for every minimising selection `x`
-(`IsCapArgmin`).  The side condition `γ(β) = Ω(1)` of
-`def: init_measure_MF` is asymptotic in `β` and is not formalized.  The
+(`IsCapArgmin`). The side condition `γ(β) = Ω(1)` of
+`def: init_measure_MF` is asymptotic in `β` and is not formalized. The
 source's `k ≤ n` refers to a number of particles that the mean-field setting
-does not have; `0 < k` is kept.  The source's proof chooses `T_1` after
+does not have; `0 < k` is kept. The source's proof chooses `T_1` after
 `λ` (through `T_*(q, λ)`), while its statement fixes `T_1` before `λ`; the
 statement is what is written here.
 

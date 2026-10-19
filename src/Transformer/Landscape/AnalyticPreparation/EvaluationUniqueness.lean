@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.SequenceUniqueness
+
+/-!
 # Real analytic preparation: EvaluationUniqueness
 
 Adapted from Bochao Kong's classical-complex-wpt, revision
@@ -8,7 +12,7 @@ Apache-2.0 licenses: third_party/classical-complex-wpt/LICENSE and
 third_party/LocalComplexGeometry/LICENSE.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.SequenceUniqueness
+@[expose] public section
 
 open Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -38,7 +42,7 @@ theorem preparedTailSeq_eq_iff {n d : ℕ} {r : ℝ≥0} (hr : 0 < r)
     rw [h i]
 
 /-- The analytic function on the unit disc represented by an `ℓ¹` sequence
-determines every coefficient.  The hypothesis is stated as germ equality,
+determines every coefficient. The hypothesis is stated as germ equality,
 which is exactly what is available after shrinking the common analytic
 neighborhood in preparation uniqueness.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2. -/

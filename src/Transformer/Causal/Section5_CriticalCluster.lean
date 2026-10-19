@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Section5_ClusterForceError
+
+/-!
 # The actual full critical-point curvature split around one frozen center
 
 ArXiv:2411.04990v2, §5, the central-versus-far stability
@@ -18,7 +22,7 @@ cancels the cluster force. The example has strictly positive
 cluster force canceled by a genuine second frozen center.
 -/
 
-import Transformer.Causal.Section5_ClusterForceError
+@[expose] public section
 
 open scoped BigOperators
 open Real Set

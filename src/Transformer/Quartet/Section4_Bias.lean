@@ -1,18 +1,23 @@
-/-
+module
+
+public import Transformer.Quartet.Section4_Rounding
+public import Mathlib.MeasureTheory.Constructions.Pi
+
+/-!
 # Four Over Six is biased
 
 arXiv:2601.22813v2, §4.2 and Appendix A.
 
 Averaging `Transformer.Quartet.Section4_Rounding.q46At_biasWitness` over the
-`16` coins of the group finishes the refutation.  The value depends on the
+`16` coins of the group finishes the refutation. The value depends on the
 first coin alone, so the unit cube splits into two boxes — the coin below
 `14/17` and the coin above it — whose volumes are `14/17` and `3/17`, and the
 mean is
 
     (14/17) · (17/16) + (3/17) · (51/64) = 7/8 + 9/64 = 65/64,
 
-against an entry of `1`.  The bias is `1/64`, about `1.6%`, and it is positive:
-Four Over Six systematically *overestimates* this entry.  That is what
+against an entry of `1`. The bias is `1/64`, about `1.6%`, and it is positive:
+Four Over Six systematically *overestimates* this entry. That is what
 Appendix A measures as a plateau in the concentration curve, and why §4.2
 keeps the scheme on the forward pass and refuses it on the backward one.
 
@@ -21,8 +26,7 @@ nothing here contradicts §3.1; what the selection adds is a correlation
 between the branch and the coins, and `65/64 ≠ 1` is its size.
 -/
 
-import Transformer.Quartet.Section4_Rounding
-import Mathlib.MeasureTheory.Constructions.Pi
+@[expose] public section
 
 namespace Transformer
 namespace Quartet
@@ -142,7 +146,7 @@ theorem meanGroup_q46At_biasWitness :
 /-- **Their combination is biased** (§4.2, "it does not constitute an unbiased
 estimation, as the act of picking a lower MSE scale branch introduces bias"):
 some tensor has an entry whose expectation under Four Over Six is not that
-entry.  This is why the paper drops the scheme from its backward pass, and
+entry. This is why the paper drops the scheme from its backward pass, and
 Appendix A measures the leftover bias as a plateau in the concentration
 curve.
 

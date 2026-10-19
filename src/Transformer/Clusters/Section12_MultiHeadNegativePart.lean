@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadScalar
+public import Transformer.Clusters.Section7_OnlyOneEscape
+
+/-!
 # Negative contributions to each original positive scalar head
 
 ArXiv:2305.05465v6, §7, `e:minorationpourxn` and the proof of
@@ -16,8 +21,7 @@ The statements concern the actual softmax of each original head and
 allow different positive query-key coefficients.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadScalar
-import Transformer.Clusters.Section7_OnlyOneEscape
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

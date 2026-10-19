@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.PairedRecallHead
+module
+
+public import Transformer.GPTMini.Sparsemax.PairedRecallHead
 
 /-!
 # Exact causal recall of 256 keys with one bounded width-eight head
@@ -16,6 +18,8 @@ inputs. No target attention routes are passed to a training procedure. This
 is an expressivity witness inside the full freely selectable physical-head
 family, not a guarantee that random numerical head search will find it.
 -/
+
+@[expose] public section
 
 noncomputable section
 

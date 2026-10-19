@@ -1,24 +1,28 @@
-/-
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+public import Transformer.Perspective.Section2_FlowMap
+
+/-!
 # §10 — Measure-to-measure approximation
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*, §10.
 
 The survey cites, without stating it, "the first universal approximation results for Transformers,
-viewed as measure-to-measure maps".  The repository had written it as a theorem: the time-`T` flow
+viewed as measure-to-measure maps". The repository had written it as a theorem: the time-`T` flow
 maps of the mean-field dynamics with time-dependent `Q, K, V` approximate every continuous
-self-map of `𝒫(𝕊^{d-1})`.  That is false, and it is refuted here at `β = 0`, where the reason is
+self-map of `𝒫(𝕊^{d-1})`. That is false, and it is refuted here at `β = 0`, where the reason is
 visible without any well-posedness theory: attention is uniform, a symmetric measure has barycenter
-`0`, and the field then vanishes for every `Q, K, V`, so the measure does not move.  For `β > 0`
+`0`, and the field then vanishes for every `Q, K, V`, so the measure does not move. For `β > 0`
 the claim fails for the same reason that a flow acts by push-forward: a Dirac mass stays a Dirac
-mass, and a constant map onto the uniform measure cannot be approximated.  That argument needs the
+mass, and a constant map onto the uniform measure cannot be approximated. That argument needs the
 solution theory the survey only quotes; the refutation below does not.
 -/
 
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
-import Transformer.Perspective.Section2_FlowMap
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -52,13 +56,13 @@ equation driven by `vectorFieldQKV` satisfies, for all bounded `1`-Lipschitz `φ
 bounded-Lipschitz distance), `|∫ φ d m(T) - ∫ φ d Φ(m(0))| < ε`.
 
 At `β = 0` the weights are constant, the attention average is `V_t` applied to the barycenter of
-the measure, and the barycenter of `μ₀ = (δ_{x₀} + δ_{-x₀})/2` is `0`.  So the constant curve
+the measure, and the barycenter of `μ₀ = (δ_{x₀} + δ_{-x₀})/2` is `0`. So the constant curve
 `m ≡ μ₀` solves the equation for **every** choice of `T, Q, K, V`, and `Φ ≡ δ_{x₀}`, which is
 continuous, must be matched at `μ₀` by `μ₀` itself; with `φ(x) = sin ⟨x₀, x⟩` the two sides differ
-by `sin 1 > 1/2`.  This holds in every dimension `d + 1 ≥ 1`.
+by `sin 1 > 1/2`. This holds in every dimension `d + 1 ≥ 1`.
 
 The survey states no such theorem: §10 only refers to work on universal approximation "viewed as
-measure-to-measure maps".  A flow map acts on measures by push-forward, so it cannot send a Dirac
+measure-to-measure maps". A flow map acts on measures by push-forward, so it cannot send a Dirac
 mass to a diffuse measure, which an arbitrary continuous `Φ` may do.
 
 Source: arXiv:2312.10794v5, §10, the paragraph citing Agrachev–Sarychev and Furuya et al. -/

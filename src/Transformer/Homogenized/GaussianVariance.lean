@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Homogenized.AttnAverage
+public import Transformer.Homogenized.GaussianEntries
+public import Transformer.Homogenized.GaussianMoments
+public import Transformer.Homogenized.GaussianDrift
+public import Transformer.Homogenized.SimplexWellDefined
+
+/-!
 # Homogenized Transformers — the variance proxy at Gaussian initialization
 
 Consequence (i) of assumption (G) of arXiv:2604.01978v1: the variance proxy
@@ -15,7 +23,7 @@ The computation has three steps.
 * The drift vanishes under (G) (`meanField_gaussian`), so `ξ_θ = B_θ`, and at a
   token the field is the value matrix applied to the attention average,
   `B_θ[μ_X](x_j) = V m_j(A)` with `m_j(A) = Σ_k π^A_{j→k} x_k`
-  (`attnField_self_eq_valueMap`, in `Homogenized.AttnAverage`).  The attention
+  (`attnField_self_eq_valueMap`, in `Homogenized.AttnAverage`). The attention
   average is the softmax barycenter `m_{β,A}[μ_X](x_j)` of `eq: mbetaA`
   (`softBary_empMeasure`).
 * `V` is independent of `A`, with uncorrelated entries of variance `σ_V²`
@@ -30,11 +38,7 @@ Source: arXiv:2604.01978v1, §2.3.3, item (i); `eq:G_def`,
 `eq: defining.alpha`, `eq:Alpha_Sec2`, and the proof of `lem:Ito_formula`.
 -/
 
-import Transformer.Homogenized.AttnAverage
-import Transformer.Homogenized.GaussianEntries
-import Transformer.Homogenized.GaussianMoments
-import Transformer.Homogenized.GaussianDrift
-import Transformer.Homogenized.SimplexWellDefined
+@[expose] public section
 
 open scoped BigOperators NNReal
 open MeasureTheory ProbabilityTheory

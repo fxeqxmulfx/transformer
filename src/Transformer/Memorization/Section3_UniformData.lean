@@ -1,4 +1,6 @@
-import Transformer.Memorization.Section2_Shannon
+module
+
+public import Transformer.Memorization.Section2_Shannon
 
 /-!
 # Exact synthetic-dataset entropy
@@ -7,6 +9,8 @@ arXiv:2505.24832v3, Section 3.2: `N` sequences of `S` independent,
 uniform vocabulary tokens contain `N S log₂ V` bits. A finite vector
 of length `N*S` preserves duplicate samples and all coordinate positions.
 -/
+
+@[expose] public section
 
 namespace Transformer.Memorization
 

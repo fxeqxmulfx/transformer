@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ALM.FloatTie
+
+/-!
 # The whole query in floating point
 
 Three separate results now describe `HullHalf::query`, each about a different
@@ -6,12 +10,12 @@ part of the arithmetic: `Transformer.ALM.FloatLattice` says the search lands
 on a winner even though `isect` is rounded, `Transformer.ALM.FloatTie` says
 the `==` the merge loops branch on fires on winners and on nothing else, and
 `Transformer.ALM.HullCost` says a tie set is a winner alone or a winner with
-one neighbour.  What the function does is their composition, and that
+one neighbour. What the function does is their composition, and that
 composition was prose.
 
 `fpTieSet` is the set of lines the two loops accept: those whose recomputed
 score compares equal to `best_score`, around the index the floating-point
-search returned.  Four statements about it, the last three on the integer data
+search returned. Four statements about it, the last three on the integer data
 the `LookUp` primitive stores:
 
 * `fpProbe_mem_fpTieSet` — it is never empty: the probe compares equal to
@@ -28,7 +32,7 @@ the `LookUp` primitive stores:
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 268-306.
 -/
 
-import Transformer.ALM.FloatTie
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -69,7 +73,7 @@ theorem fpTieSet_nonempty (S : FPScore) (F : FPArith) [Nonempty (Fin n)]
 
 /-- **The walk accepts no loser.**  On integer keys at an integer query, with
 the breakpoints accurate to better than `1/2` and the scores to better than
-`1/2` each, every line the loops merge is an exact maximizer.  Nothing is
+`1/2` each, every line the loops merge is an exact maximizer. Nothing is
 assumed exact: this is soundness of the running code in the arithmetic it
 runs in. -/
 theorem fp_walk_sound (S : FPScore) (F : FPArith) [Nonempty (Fin n)] (K : Fin n → ℝ)

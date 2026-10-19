@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_MeanAxisWeakTests
+
+/-!
 # Conserved inverse-clock tests for every original mean-attention law
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §3.2,
@@ -13,7 +17,7 @@ spacetime weak identity then makes every inverse-test integral constant
 for all real times, including zero. No law transport is assumed.
 -/
 
-import Transformer.Interpolation.Section3_MeanAxisWeakTests
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

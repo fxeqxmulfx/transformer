@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_MeanLogCalculus
+public import Transformer.Homogenized.Section7_SmallTemperatureMeanDrift
+
+/-!
 # The actual Gaussian generator and noise of the regularized log mean
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -19,8 +24,7 @@ adapted continuous sphere martingale problem supplies the selected
 logarithmic test identity; it is not replaced by an assumed tail bound.
 -/
 
-import Transformer.Homogenized.Section7_MeanLogCalculus
-import Transformer.Homogenized.Section7_SmallTemperatureMeanDrift
+@[expose] public section
 
 open Real MeasureTheory
 open scoped NNReal

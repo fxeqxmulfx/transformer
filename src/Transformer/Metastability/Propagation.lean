@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Perspective.Section1_IPS
+public import Transformer.Metastability.PairVelocitySum
+public import Transformer.Metastability.PropagationBarrier
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
 # Metastability — propagation of within-cap alignment for SA
 
 The `SA` branch of `lem:collapsetime` from arXiv:2410.06833v1.
 -/
 
-import Transformer.Perspective.Section1_IPS
-import Transformer.Metastability.PairVelocitySum
-import Transformer.Metastability.PropagationBarrier
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open scoped BigOperators
 open Real

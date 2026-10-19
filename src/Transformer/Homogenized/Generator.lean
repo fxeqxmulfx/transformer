@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Basic
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+public import Mathlib.Analysis.Calculus.ContDiff.Basic
+
+/-!
 # Homogenized Transformers — the limiting dynamics
 
 Formalization of `def: ito.formula`, `lem:toolkit_geo_riem`, `eq: first.sde`,
@@ -16,16 +22,16 @@ integral of `(𝖫 g)(X(s))` plus a stochastic integral, where
   `𝖫 g = ⟨grad g, B⟩ + ½ ∫_Θ Hess g[G(·,θ), G(·,θ)] ρ*(dθ)`.
 
 Mathlib has no Itô integral and no cylindrical Wiener process, so the pathwise
-identity cannot be written.  What is written instead is what taking
+identity cannot be written. What is written instead is what taking
 expectations in `def: ito.formula` leaves — the stochastic integral is a
 martingale, so it drops out — differentiated in `t`:
 
   `d/dt E g(X(t)) = E (𝖫 g)(X(t))`.
 
 This is the form in which the approximation theorems of the paper are stated
-and used: `thm:weak_error_clean` compares `E φ(X(t))` with `E φ(X^η(t))`.  It
+and used: `thm:weak_error_clean` compares `E φ(X(t))` with `E φ(X^η(t))`. It
 is *weaker* than `def: ito.formula`: it pins the one-dimensional marginals of
-the process and nothing beyond them.  Every statement below that carries it as
+the process and nothing beyond them. Every statement below that carries it as
 a hypothesis is therefore about any process with the right marginal evolution,
 which is a stronger statement than one about a designated solution, and every
 statement that would have to *produce* a solution is not stated here.
@@ -41,9 +47,7 @@ and `⟨x_i, ∇_{x_i} φ̃(X)⟩` is the ambient derivative of `φ̃` in the di
 that carries `x_i` in slot `i` and `0` elsewhere.
 -/
 
-import Transformer.Homogenized.Basic
-import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
-import Mathlib.Analysis.Calculus.ContDiff.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -167,7 +171,7 @@ def IsModifiedFlow {d n : ℕ} (η β : ℝ) (ρ : Measure (HeadParam d))
 /-! ### The trivial head solves everything
 
 Under `ρ* = δ_0` every field of the model vanishes, so a constant
-configuration of unit vectors solves each of the four limiting dynamics.  This
+configuration of unit vectors solves each of the four limiting dynamics. This
 is the witness of satisfiability for the statements that carry them. -/
 
 @[simp]

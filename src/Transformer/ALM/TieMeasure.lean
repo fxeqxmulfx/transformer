@@ -1,19 +1,25 @@
-/-
+module
+
+public import Transformer.ALM.TieHyperplane
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+
+/-!
 # The merge path is null, in every dimension
 
 `Transformer.ALM.TieHyperplane` computes the tie locus of two keys and calls
 it a hyperplane — "a proper, nonempty affine subspace", and in
-`Transformer.ALM.TieBreak` "a set of measure zero in the query".  Neither was
+`Transformer.ALM.TieBreak` "a set of measure zero in the query". Neither was
 stated: `score_midpoint_eq` gives a point of the locus, `exists_score_ne` a
 point outside it, and the two were never put together, so nothing in the
-development said the tie locus is small.  In dimension one smallness was
+development said the tie locus is small. In dimension one smallness was
 visible — `sScore_eq_iff` pins the tie to the single query `2q = k₁ + k₂` —
 and the generalization to dimension `m` lost exactly that, since an equation
 between scores is not by itself a statement about how many queries satisfy it.
 
 `tieLocus_eq_bisector` identifies the locus with an affine subspace,
 `tieLocus_ne_top` makes it proper from `exists_score_ne`, and
-`volume_tieLocus` concludes it is Lebesgue-null.  `volume_tie_locus_family` is
+`volume_tieLocus` concludes it is Lebesgue-null. `volume_tie_locus_family` is
 the statement the machine needs: for *any* stored family, in any dimension,
 the queries at which two distinct keys tie form a null set, so the merge loops
 of `HullHalf::query` are entered for almost no query at all, and the
@@ -23,9 +29,7 @@ everywhere.
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 252-310.
 -/
 
-import Transformer.ALM.TieHyperplane
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+@[expose] public section
 
 open scoped BigOperators
 
@@ -89,7 +93,7 @@ example : MeasureTheory.volume
 
 /-- **And the machine's merge path is null for the whole stored family.**  A
 query reaches the merge loops only if two of the stored keys tie at it; there
-are finitely many pairs, and each contributes a null set.  So in every
+are finitely many pairs, and each contributes a null set. So in every
 dimension, for every family, almost every query has a unique best key: the
 tie-break modes decide nothing on a set of positive measure, and the
 single-maximizer hypothesis of `Transformer.ALM.SoftmaxValue` is satisfied

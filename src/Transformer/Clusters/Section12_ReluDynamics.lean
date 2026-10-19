@@ -1,6 +1,8 @@
-import Transformer.Clusters.Section12_Feedforward
-import Transformer.Clusters.Section12_ReluLimits
-import Transformer.Clusters.Section7_Symmetric
+module
+
+public import Transformer.Clusters.Section12_Feedforward
+public import Transformer.Clusters.Section12_ReluLimits
+public import Transformer.Clusters.Section7_Symmetric
 
 /-!
 # Four actual limiting tokens in the ReLU feed-forward equation
@@ -24,6 +26,8 @@ In dimension one, codimension-one affine hyperplanes are points.
 The next module uses these actual limits to refute the universal
 three-hyperplane extension proposed in the source's last figure.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

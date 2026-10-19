@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.AMSGrad.Section4_TrainingModels
+public import Transformer.Optimization.Quadratic
+public import Mathlib.Topology.MetricSpace.Contracting
+public import Mathlib.Topology.Order.MonotoneConvergence
+
+/-!
 # AMSGrad with decoupled weight decay
 
 User-requested deterministic extension of arXiv:1904.03590v4,
@@ -8,10 +15,7 @@ the moment buffers. Decay is applied directly to the old parameter.
 This model has constant coefficients, no bias correction and no projection.
 -/
 
-import Transformer.AMSGrad.Section4_TrainingModels
-import Transformer.Optimization.Quadratic
-import Mathlib.Topology.MetricSpace.Contracting
-import Mathlib.Topology.Order.MonotoneConvergence
+@[expose] public section
 
 open scoped Topology
 open Filter

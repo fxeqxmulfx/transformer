@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Causal.Basic
+public import Transformer.Causal.Packing
+public import Transformer.Causal.Section5_StrongCenter
+public import Transformer.Causal.Section5_CausalWeights
+
+/-!
 # Causal attention — Meta-stable clustering and R'enyi parking (§5 of 2411.04990v2)
 
 Equations and statements covered:
@@ -11,11 +19,7 @@ Equations and statements covered:
 `Causal.FixedCenters`.
 -/
 
-import Transformer.Basic
-import Transformer.Causal.Basic
-import Transformer.Causal.Packing
-import Transformer.Causal.Section5_StrongCenter
-import Transformer.Causal.Section5_CausalWeights
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -52,7 +56,7 @@ For `d = 2`, `Q = K = V = I_2`, suppose the strong R'enyi centers
 
   `min_{i < s_j} |x_{s_j} - x_i| > c (1 + 2 ε) β^{-1/2}`
 
-with `c > β^{1/2} arccos((-1 + √(4 β² + 1)) / (2 β))`.  For any `T_j` with
+with `c > β^{1/2} arccos((-1 + √(4 β² + 1)) / (2 β))`. For any `T_j` with
 
   `T_j · s_j · h(c β^{-1/2}) < ε c β^{-1/2}`,
 
@@ -114,7 +118,7 @@ example (x₀ : SSphere 2) :
 
 The number of (strong) R'enyi centers with separation `δ = c β^{-1/2}` is
 `Θ(β^{(d-1)/2})` — the packing number of the sphere `𝕊^{d-1}` at that scale,
-since the centers are exactly a `δ`-separated set of unit vectors.  The `Θ` is
+since the centers are exactly a `δ`-separated set of unit vectors. The `Θ` is
 spelled out as a pair of constants independent of `β`.
 
 Proved, from the volume estimates of `Transformer.Causal.Packing`: the upper
@@ -122,7 +126,7 @@ half holds for *every* `δ`-separated set, and the lower half is witnessed by a
 maximal one, which exists by `Packing.exists_maximalSeparated`.
 
 What is proved is therefore the geometric half of the survey's claim — the
-packing number of the sphere at scale `δ`.  The survey's centers are the
+packing number of the sphere at scale `δ`. The survey's centers are the
 centers *of a given sequence*, and that they are as many as the packing number
 allows needs in addition that they are a maximal separated set, which is a
 property of the sequence and not of the geometry; the expected count, for an

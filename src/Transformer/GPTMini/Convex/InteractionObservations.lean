@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.JointInteractionFactorization
+module
+
+public import Transformer.GPTMini.Convex.JointInteractionFactorization
 
 /-!
 # The complete interaction tensor is observable in contexts of length two and three
@@ -16,6 +18,8 @@ This uses all possible short contexts, not just a given training sample.
 It does not establish a parameter bound for normalized softmax or for an
 arbitrary nonlinear replacement. No FFN, task loss, or optimizer is added.
 -/
+
+@[expose] public section
 
 noncomputable section
 

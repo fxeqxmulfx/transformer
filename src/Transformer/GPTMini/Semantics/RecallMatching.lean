@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallRotaryCode
+module
+
+public import Transformer.GPTMini.Semantics.RecallRotaryCode
 
 /-!
 # Compact query-key code retains a strict gap under original RoPE
@@ -18,6 +20,8 @@ claim that this trainable parameterization is convex.
 The positive content gap and strict same-key recency preference coexist
 in one actual sixteen-coordinate query/key representation.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

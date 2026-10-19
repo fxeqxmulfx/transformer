@@ -4,6 +4,12 @@ public import Mathlib.Data.Set.Card
 public import PFR.Mathlib.Data.Set.Basic
 public import PFR.Mathlib.Data.Set.Insert
 
+/-!
+# Cardinalities of singleton intersections
+
+Finite cardinality identities for intersections with a singleton.
+-/
+
 public section
 
 namespace Set

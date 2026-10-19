@@ -1,8 +1,12 @@
-/-
+module
+
+public import Transformer.MeanField.Equiangular
+
+/-!
 # The equiangular configuration after one attention layer: closed forms
 
 The three limits of `thm: long-context-phase-transition` are limits of
-`equiOutCos`, which is defined by a double sum over the token indices.  This
+`equiOutCos`, which is defined by a double sum over the token indices. This
 module evaluates that double sum.
 
 Everything rests on two features of the equiangular Gram matrix
@@ -19,7 +23,7 @@ limit is a rational function of `a` and `b` alone.
 Source: arXiv:2512.01868v4, §6.
 -/
 
-import Transformer.MeanField.Equiangular
+@[expose] public section
 
 open scoped BigOperators
 

@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_SeriesIntegral
+public import Transformer.Perceptron.Section5_DominatedVariation
+public import Transformer.Perceptron.NormalizedMap
+public import Mathlib.Analysis.Analytic.Constructions
+public import Mathlib.Analysis.SpecialFunctions.Exponential
+public import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
+
+/-!
 # Ambient analyticity of the original interaction weight
 
 ArXiv:2601.21366v2, §5.3, the exponential expansion and Weierstrass
@@ -14,12 +23,7 @@ The preceding series-integration theorem consequently applies to the
 original probability integral. No density or atomicity input is used.
 -/
 
-import Transformer.Perceptron.Section6_SeriesIntegral
-import Transformer.Perceptron.Section5_DominatedVariation
-import Transformer.Perceptron.NormalizedMap
-import Mathlib.Analysis.Analytic.Constructions
-import Mathlib.Analysis.SpecialFunctions.Exponential
-import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators NNReal ENNReal

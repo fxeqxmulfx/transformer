@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_GenericQuadrantFamily
+public import Transformer.Interpolation.Section4_AtomReplacement
+
+/-!
 # Matching original quadrant atoms to a generic finite family
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, and §3.2,
@@ -14,8 +19,7 @@ targets exactly. The same original controls work for the whole family,
 and their prescribed-time realization determines all weak endpoints.
 -/
 
-import Transformer.Interpolation.Section4_GenericQuadrantFamily
-import Transformer.Interpolation.Section4_AtomReplacement
+@[expose] public section
 
 open Real MeasureTheory Set
 

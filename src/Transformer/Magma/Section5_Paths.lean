@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Magma.Section5_FiniteLaw
+
+/-!
 # Finite stochastic trajectories
 
 Formalization of total expectations over the iterates in
@@ -7,7 +11,7 @@ from the transition function and the actual sampling law. It does not
 postulate objective descent or stationarity.
 -/
 
-import Transformer.Magma.Section5_FiniteLaw
+@[expose] public section
 
 open scoped BigOperators
 

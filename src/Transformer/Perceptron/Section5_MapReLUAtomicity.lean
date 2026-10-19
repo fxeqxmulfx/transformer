@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_MapBranchObstruction
+public import Transformer.Perceptron.Section5_ReLUAtomicity
+public import Transformer.Perceptron.Section6_CircleNullSupport
+
+/-!
 # Finite unnormalized matrix support under signed Gram non-degeneracy
 
 ArXiv:2601.21366v2, §3.1, `rem: ext` (ii), §5.2, and §6,
@@ -18,9 +24,7 @@ of this intermediate result. The source's ReLU claims without that
 condition are retained separately in `GeneralAtomicity`.
 -/
 
-import Transformer.Perceptron.Section5_MapBranchObstruction
-import Transformer.Perceptron.Section5_ReLUAtomicity
-import Transformer.Perceptron.Section6_CircleNullSupport
+@[expose] public section
 
 open Real MeasureTheory Set
 

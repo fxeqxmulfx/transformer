@@ -1,29 +1,33 @@
-/-
+module
+
+public import Transformer.ALM.ScoreWall
+
+/-!
 # The cumulative sum comes back, but not exactly
 
 The construction recovers a running total by reading a uniform average and
 multiplying it back up: the head returns `vsum · (1/count)`
 (`hull2d_cht.h`, `HullMeta::resolve`) and the FFN multiplies by `position`
 (`graph/core.py`, `fetch_sum`), so what the machine computes is
-`fl(fl(s · fl(1/p)) · p)` and what it wants is `s`.  Those are not the same
-number.  `todo3.md` §8 measures the round trip failing on 25.8 % of
+`fl(fl(s · fl(1/p)) · p)` and what it wants is `s`. Those are not the same
+number. `todo3.md` §8 measures the round trip failing on 25.8 % of
 byte-valued payloads, the first at `s = 3`, `p = 5`, and §8a measures the
 consequence on the running machine: 2.8 % to 7.1 % of the hard-attention
 queries of the six reference programs are not integers, the worst off by two
 units in the last place.
 
-Two things are proved here.  `recip_isBinary_iff`: the reciprocal the head
+Two things are proved here. `recip_isBinary_iff`: the reciprocal the head
 multiplies by is representable only when the position is a power of two, so
 for three positions out of four the average is already inexact before the FFN
-touches it — no rounding mode and no precision changes that.  And
+touches it — no rounding mode and no precision changes that. And
 `round_trip_drift`: what comes back is within `(2u + u²)|s|` of the total, and
 that is all that can be claimed of it.
 
-The division is not a mistake.  A cumulative sum by uniform attention is the
+The division is not a mistake. A cumulative sum by uniform attention is the
 only constant-depth route to one — the recurrence `c(p) = c(p-1) + δ(p)` needs
 the previous position's *computed* value, and a layer can only read the layer
-below, so it costs one layer per token.  The average is forced, the division is
-forced, and the inexactness is forced with it.  So exactness is not the thing
+below, so it costs one layer per token. The average is forced, the division is
+forced, and the inexactness is forced with it. So exactness is not the thing
 to prove on this path: `Transformer.ALM.DriftMargin` proves what is true
 instead, that the retrieval survives the drift with a margin, and where it does
 not.
@@ -31,7 +35,7 @@ not.
 Source: `todo3.md` §8 and §8a; `transformer_vm/wasm/interpreter.py:316-320`.
 -/
 
-import Transformer.ALM.ScoreWall
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -90,7 +94,7 @@ theorem recip_isBinary_iff {prec p : ℕ} (hprec : 0 < prec) (hp : 0 < p) :
 /-- **The total comes back within a relative `2u`.**  The head's division and
 the FFN's multiplication each land within a relative `u` of their exact value,
 so the recovered cumulative sum is within `(2u + u²)|s|` of `s` — not equal to
-it, and this is the whole of what `fetch_sum` guarantees.  `todo3.md` §8. -/
+it, and this is the whole of what `fetch_sum` guarantees. `todo3.md` §8. -/
 theorem round_trip_drift {s p a r u : ℝ} (hp : 0 < p) (hu : 0 ≤ u)
     (ha : |a - s / p| ≤ u * |s / p|) (hr : |r - a * p| ≤ u * |a * p|) :
     |r - s| ≤ (2 * u + u ^ 2) * |s| := by
@@ -112,7 +116,7 @@ theorem round_trip_drift {s p a r u : ℝ} (hp : 0 < p) (hu : 0 ≤ u)
 /-- **And the query inherits it linearly.**  `wasm/interpreter.py:320` forms
 the lookup query as `5·cursor + 1`, and the hat filter offsets it again, so a
 counter recovered `ε` off its integer value produces a query `5ε` off its
-integer value.  Nothing damps it. -/
+integer value. Nothing damps it. -/
 lemma affine_drift (a b : ℝ) {c c₀ ε : ℝ} (h : |c - c₀| ≤ ε) :
     |(a * c + b) - (a * c₀ + b)| ≤ |a| * ε := by
   have : a * c + b - (a * c₀ + b) = a * (c - c₀) := by ring
@@ -121,7 +125,7 @@ lemma affine_drift (a b : ℝ) {c c₀ ε : ℝ} (h : |c - c₀| ≤ ε) :
 
 /-! ### The hypotheses are satisfiable -/
 
-/-- At `p = 4` the reciprocal is a float.  At `p = 5` — `todo3.md` §8's first
+/-- At `p = 4` the reciprocal is a float. At `p = 5` — `todo3.md` §8's first
 failing round trip, `s = 3`, `p = 5`, which comes back as
 `3.0000000000000004` — it is not, at any precision. -/
 example :

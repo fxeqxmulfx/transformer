@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ButterflyProgramMatrix
+
+/-!
 # Coyote realization of primary-form kaleidoscope products
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: kaleidoscope` and
@@ -8,7 +12,7 @@ Transpose and all scalar matrix-vector operations are proved. The common
 workspace is 9n rows and d features, with exact depth and scalar storage.
 -/
 
-import Transformer.Zoology.Appendix_ButterflyProgramMatrix
+@[expose] public section
 
 open scoped BigOperators
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_CircleGeometry
+public import Transformer.Perceptron.KernelSup
+
+/-!
 # Angular derivatives of the actual pair interaction
 
 ArXiv:2601.21366v2, §5.2, `eq:Hess-bilinear`, and §5.5,
@@ -13,8 +18,7 @@ The construction of a circle angle for every integration point
 justifies using that scalar bound on the whole sphere.
 -/
 
-import Transformer.Perceptron.Section5_CircleGeometry
-import Transformer.Perceptron.KernelSup
+@[expose] public section
 
 open Real
 

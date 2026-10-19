@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Data.List.Basic
+public import Mathlib.Data.Set.Insert
+
+/-!
 # Alternating words and the separating family `L_k`
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -10,17 +15,17 @@ The separating family of the paper is
     L_k = (a⁺b⁺)^{(k-1)/2} a⁺  k odd
 
 — strings of `k` alternating nonempty blocks, starting with `a`; written
-recursively that is `altPlus`.  The alphabet is `Bool`, with `false` for `a`
+recursively that is `altPlus`. The alphabet is `Bool`, with `false` for `a`
 and `true` for `b`, because the paper's `Σ = {a, b}` is exactly a two-element
 alphabet and `altPlus_eq` below is false over a larger one.
 
 `altPlus_eq` is the identity `lem:piecewise_testable` rests on,
 `L_k = A_k ∖ B_k`, where `A_k` and `B_k` are the strings containing the
 alternating word of length `k` starting with `a`, resp. with `b`, as a
-subsequence.  It reads off the block decomposition: a word with `m` maximal
+subsequence. It reads off the block decomposition: a word with `m` maximal
 blocks whose first block carries the symbol `s` has an alternating
 subsequence of length `m` starting with `s` and of length `m - 1` starting
-with `!s`, so belonging to `A_k` and not to `B_k` pins `m` to `k`.  The
+with `!s`, so belonging to `A_k` and not to `B_k` pins `m` to `k`. The
 arguments below are the same count run without ever naming the block
 decomposition.
 
@@ -29,8 +34,7 @@ decomposition.
 `L_0 = {ε}`.
 -/
 
-import Mathlib.Data.List.Basic
-import Mathlib.Data.Set.Insert
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -60,7 +64,7 @@ starting with `s` as a subsequence. -/
 def altSingle (s : Bool) (k : ℕ) : Set (List Bool) := {w | (altList s k).Sublist w}
 
 /-- `L_k` beginning with the symbol `s`: `k` alternating nonempty blocks
-(Equation `eq:altplus`).  The paper's `L_k` is `altPlus false k`. -/
+(Equation `eq:altplus`). The paper's `L_k` is `altPlus false k`. -/
 def altPlus (s : Bool) : ℕ → Set (List Bool)
   | 0 => {[]}
   | k + 1 => {w | ∃ m, 0 < m ∧ ∃ v ∈ altPlus (!s) k, w = List.replicate m s ++ v}
@@ -246,10 +250,10 @@ example : ([true] : List Bool) ∈ altPlus true 1 := ⟨1, Nat.one_pos, [], rfl,
 /-- **A word of `A_k ∖ B_k` has exactly `k` alternating blocks, the first of
 them carrying `s`.**
 
-The induction is on the word.  A leading symbol of the opposite phase is
+The induction is on the word. A leading symbol of the opposite phase is
 impossible, because the alternating subsequence of length `k` starting with
 `s` would then live in the tail and could be extended by that leading symbol
-into one of length `k` starting with `!s`.  With the right leading symbol,
+into one of length `k` starting with `!s`. With the right leading symbol,
 either the whole subsequence already lives in the tail — one fewer repetition
 of the first block — or the tail carries `k - 1` blocks, and
 `altList_succ_of_both` is what rules out its carrying more. -/

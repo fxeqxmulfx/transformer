@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Sparsemax.Certificate.Train
-import Transformer.GPTMini.Sparsemax.Certificate.HeldoutFirst
-import Transformer.GPTMini.Sparsemax.Certificate.HeldoutLast
+module
+
+public import Transformer.GPTMini.Sparsemax.Certificate.Train
+public import Transformer.GPTMini.Sparsemax.Certificate.HeldoutFirst
+public import Transformer.GPTMini.Sparsemax.Certificate.HeldoutLast
 
 /-!
 # Kernel-checked counts of the actual final prediction table
@@ -11,6 +13,8 @@ These theorems check supplied predictions, not floating-point execution
 of PyTorch. Plain `decide` is kernel checked; no native evaluation axiom
 or stipulated correct-count premise is used.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Sparsemax.Certificate
 

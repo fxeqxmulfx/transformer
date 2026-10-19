@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallReadout
+module
+
+public import Transformer.GPTMini.Semantics.RecallReadout
 
 /-!
 # Complete original recall parameters and the actual integer adapter
@@ -22,6 +24,8 @@ state or a prepared logit. Full Basis parser discharge remains.
 Real arithmetic and the documented shared epsilon family are used;
 floating-point equivalence and AdamW success do not follow here.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

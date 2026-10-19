@@ -1,16 +1,22 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+public import Transformer.Perspective.Section2_FlowMap
+
+/-!
 # §10 — Approximation, control, training
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
-Section 10 of the survey is a short review: it states no theorem.  Of the approximation results it
+Section 10 of the survey is a short review: it states no theorem. Of the approximation results it
 cites, two had been written here as sorried theorems of the survey, and neither is one:
 
 * for discrete-time Transformers (Yun et al.), `universal_approximation_discrete` claimed uniform
   approximation of *every* continuous sequence-to-sequence map on a compact set by residual
-  attention-plus-feed-forward layers.  Such layers are permutation-equivariant, so the claim is false
-  as soon as there are two tokens: `not_universal_approximation_discrete`.  The cited theorem uses
+  attention-plus-feed-forward layers. Such layers are permutation-equivariant, so the claim is false
+  as soon as there are two tokens: `not_universal_approximation_discrete`. The cited theorem uses
   positional encodings, which this layer does not have.
 * for measure-to-measure flow maps, `universal_approximation_measure`: refuted in
   `Transformer.Perspective.Section9_ApproximationMeasure`.
@@ -19,9 +25,7 @@ The false statements are deleted and the counterexamples kept: nothing in the su
 unproved here.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
-import Transformer.Perspective.Section2_FlowMap
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -58,7 +62,7 @@ noncomputable def discreteLayer
 
 /-- **A block commutes with permutations of the tokens.**  Renaming the tokens by `τ` renames the
 outputs by `τ`: the attention weights of token `i` are a sum over all tokens, which does not see
-their order, and the feed-forward part acts on each token alone.  A stack of such blocks therefore
+their order, and the feed-forward part acts on each token alone. A stack of such blocks therefore
 carries no information on the position of a token. -/
 theorem discreteLayer_comp_perm (β : ℝ) (Q K V : ParamMatrix d) (σ : ℝ → ℝ)
     (w a : ParamMatrix d) (b : EucSpace d) (x : Idx n → EucSpace d) (τ : Equiv.Perm (Idx n))
@@ -73,15 +77,15 @@ theorem discreteLayer_comp_perm (β : ℝ) (Q K V : ParamMatrix d) (σ : ℝ →
 
 The claim was: for every continuous sequence-to-sequence map `f`, every compact `S` and every
 `ε > 0`, some stack of residual attention-plus-feed-forward blocks (`discreteLayer`, any continuous
-activation, per-layer parameters, any depth) moves each `x₀ ∈ S` to within `ε` of `f x₀`.  It fails
+activation, per-layer parameters, any depth) moves each `x₀ ∈ S` to within `ε` of `f x₀`. It fails
 with two tokens on the line: blocks are permutation-equivariant (`discreteLayer_comp_perm`), so the
 stack sends the swapped sequence `y ∘ τ` to the swap of the image of `y`, while the constant map
-`f ≡ (0, 1)` asks for the same output at `y = (0, 1)` and at `(1, 0)`.  Both cannot be within
+`f ≡ (0, 1)` asks for the same output at `y = (0, 1)` and at `(1, 0)`. Both cannot be within
 `1/2` of it.
 
 The survey states no such theorem: §10 only says that universal approximation "has been shown to
 hold" for discrete-time Transformers "making use of a variant of the architecture with translation
-parameters".  The translation parameters are positional encodings, which break the symmetry; this
+parameters". The translation parameters are positional encodings, which break the symmetry; this
 layer has none.
 
 Source: arXiv:2312.10794v5, §10, the paragraph citing Yun et al. -/

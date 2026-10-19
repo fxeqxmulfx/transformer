@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ButterflyToggleShift
+
+/-!
 # Both axes of a row-major butterfly factor
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: butterfly` and
@@ -7,7 +11,7 @@ every binary pairing lies either inside a feature row or along a feature
 column. Both cases use three K-constrained layers on the same workspace.
 -/
 
-import Transformer.Zoology.Appendix_ButterflyToggleShift
+@[expose] public section
 
 namespace Transformer.Zoology
 

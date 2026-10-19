@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section6_LagrangianField
+public import Transformer.Clusters.Section6_Stability
+public import Transformer.Landscape.GlobalFlow.Existence
+
+/-!
 # The emergence of clusters in self-attention dynamics — the continuity
   equation
 
@@ -16,13 +22,13 @@ estimate.
   The source asks `T > 0` in `e:w2estimate`; the estimate holds for every `T`.
 
 **The proof.**  Existence takes another route than the source's frozen-field
-scheme and Arzelà–Ascoli.  The solution is `μ_t = (Y_t)_# μ₀` for the solution
+scheme and Arzelà–Ascoli. The solution is `μ_t = (Y_t)_# μ₀` for the solution
 `Y` of the Lagrangian ODE `Ẏ_t = F(Y_t)` of `Section6_LagrangianField`,
 started from the retraction of `ℝ^d` onto `B̄(0, R)`, which is the identity on
-the support of `μ₀`.  By Grönwall, `‖Y_t‖ ≤ R e^{‖V‖ |t|}`, which bounds the
+the support of `μ₀`. By Grönwall, `‖Y_t‖ ≤ R e^{‖V‖ |t|}`, which bounds the
 supports; each trajectory `t ↦ Y_t x` solves `ẏ = 𝒳[μ_t](y)`, so `μ` satisfies
 the weak formulation of `d:solconti` (`ContinuityEq.weak_of_map`).
-Uniqueness is `IsContEqSolution.unique`.  For `e:w2estimate`, uniqueness puts
+Uniqueness is `IsContEqSolution.unique`. For `e:w2estimate`, uniqueness puts
 every solution from a measure carried by `B̄(0, R)` in `B̄(0, R e^{‖V‖ T})` on
 `[0, T]`, where `exists_W2_le` applies with constants depending only on `R`
 and `T`.
@@ -31,9 +37,7 @@ Source: arXiv:2305.05465v6, `e:conteq`, `d:solconti`,
 `c:wellposedtransformers`, `e:w2estimate`.
 -/
 
-import Transformer.Clusters.Section6_LagrangianField
-import Transformer.Clusters.Section6_Stability
-import Transformer.Landscape.GlobalFlow.Existence
+@[expose] public section
 
 open Set Metric Filter Topology MeasureTheory
 open scoped BoundedContinuousFunction
@@ -136,7 +140,7 @@ example (Q K V : ParamMatrix d) :
 ball depend on their initial datum with an exponential `W_2` modulus on every
 bounded time interval.
 
-The source states it for `R > 0` and `T > 0`.  The hypothesis `T > 0` is
+The source states it for `R > 0` and `T > 0`. The hypothesis `T > 0` is
 dropped: the estimate holds for every `T`, trivially for `T ≤ 0`, where at
 most `t = 0` is left.
 

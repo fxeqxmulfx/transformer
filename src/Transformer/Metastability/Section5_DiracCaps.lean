@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.Section5_DiracDynamics
+
+/-!
 # Transported caps for a Dirac characteristic flow
 
 ArXiv:2410.06833v1, §5, proof of `thm: metastability MF`, Steps 1 and 2.
@@ -15,7 +19,7 @@ is exactly the stationary solution, as required by the characteristic
 representation in `eq: flow.map`.
 -/
 
-import Transformer.Metastability.Section5_DiracDynamics
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

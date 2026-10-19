@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Causal.Basic
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+
+/-!
 # Causal attention — Single-token dynamics (§3 of 2411.04990v2)
 
 `Lemma lemma1` of the survey: for almost any initial condition the solution of
@@ -10,7 +19,7 @@ the generalized eigenvectors of `V` whose eigenvalue has maximal real part and
 **What the source says and what is changed here.**  The form this development
 gave the lemma existentially quantified the two subspaces and the exceptional
 set — `∃ L, L', E`, with `L'` and `L` asked only to be nested and `V`-invariant
-and `E` only to be proper.  Nothing in that pins them to the spectrum of `V`,
+and `E` only to be proper. Nothing in that pins them to the spectrum of `V`,
 and the result is not the survey's lemma:
 
 * it is **false** as written, and `not_forall_single_token_convergence` refutes
@@ -22,7 +31,7 @@ and the result is not the survey's lemma:
 
 What survives is `norm_eq_one_of_singleTokenODE`, the invariance of the sphere,
 which the survey uses without comment and which the two statements above rest
-on.  Stating `lemma1` itself needs the real Jordan decomposition of `V` — that
+on. Stating `lemma1` itself needs the real Jordan decomposition of `V` — that
 is what names `L'(V)` and `L(V)` — and neither Mathlib nor this development
 has it; a statement that does not name them is not the lemma, so none is made
 here.
@@ -30,12 +39,7 @@ here.
 Source: arXiv:2411.04990v2, §3, `lemma1`.
 -/
 
-import Transformer.Basic
-import Transformer.Causal.Basic
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -117,7 +121,7 @@ example : Causal.singleTokenODE 1 0 (fun _ => (Transformer.basePoint 0 : EucSpac
 Asking only for *some* nested `V`-invariant pair `L ≤ L'` and *some* proper
 `E`, as this development did, fails at `d = 0`: the zero space has exactly one
 submodule, `⊥ = ⊤`, so there is no proper `E` to exclude an exceptional set
-with.  The survey's `lemma1` names `L'(V)` and `L(V)` through the spectrum of
+with. The survey's `lemma1` names `L'(V)` and `L(V)` through the spectrum of
 `V` and is not this statement.
 
 Source: arXiv:2411.04990v2, §3, `lemma1`. -/
@@ -148,7 +152,7 @@ theorem not_forall_single_token_convergence :
 
 `L = L' = ⊤` and `E = ⊥` satisfy it: the flow keeps `‖x(t)‖ = 1`
 (`norm_eq_one_of_singleTokenODE`), so `x(t)` lies in `⊤ ∩ 𝕊^{d-1}` and both
-distances are `0`, below every positive bound.  The statement therefore says
+distances are `0`, below every positive bound. The statement therefore says
 nothing about `V`; what makes the survey's `lemma1` a theorem is that `L'(V)`
 and `L(V)` are the spectral subspaces of `V`, which no hypothesis here records.
 

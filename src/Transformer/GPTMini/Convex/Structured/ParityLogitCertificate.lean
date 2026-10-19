@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.TensorParityCertificate
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorParityCertificate
 
 /-!
 # Rationally checkable actual learned parity logit gaps
@@ -21,6 +23,8 @@ remain absent from the learned forward call. Actual normalized confidence,
 whole-vocabulary margin and full raw integer transfer are derived through
 the previously proved true likelihood/inference coupling.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

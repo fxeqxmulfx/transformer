@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.LocalIncidentWeights
-import Transformer.GPTMini.Sparsemax.LocalMemoryCore
+module
+
+public import Transformer.GPTMini.Sparsemax.LocalIncidentWeights
+public import Transformer.GPTMini.Sparsemax.LocalMemoryCore
 
 /-!
 # Algebra of path scores independently of a global mixture budget
@@ -14,6 +16,8 @@ These are identities and inequalities for the already defined affine
 Gram. No new attention is defined to bypass the actual projection.
 Positivity of the full Gram needs a separate proof using these identities.
 -/
+
+@[expose] public section
 
 noncomputable section
 

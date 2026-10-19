@@ -1,33 +1,37 @@
-/-
+module
+
+public import Transformer.ALM.SoftmaxValue
+public import Transformer.ALM.HullResolve
+
+/-!
 # The head and the machine agree where the machine has to choose
 
 `Transformer.ALM.SoftmaxValue` says what the softmax head returns when one key
-wins: the value stored at it, up to `(n-1)e^{-β}·C`.  Its hypothesis is a
+wins: the value stored at it, up to `(n-1)e^{-β}·C`. Its hypothesis is a
 strict winner, and `Transformer.ALM.TieHyperplane` says exactly where that
 hypothesis fails — on the bisecting hyperplanes, which in dimension one is the
-single query `2q = k₁ + k₂`.  There the machine does something: `HullHalf::query`
+single query `2q = k₁ + k₂`. There the machine does something: `HullHalf::query`
 merges the two tied lines and `resolve` averages them
 (`transformer_vm/attention/hull2d_cht.h`, lines 70-83, 276-306), and
 `Transformer.ALM.HullCost` proves that is what it hands back.
 
 So the one place where the tie-break mode is observable at all was the one
-place with no statement about the head.  The two halves of the answer — the
+place with no statement about the head. The two halves of the answer — the
 machine's and the head's — were proved on complementary sets and never
 compared on either.
 
 They agree, and for a reason that needs no geometry: softmax gives equal
-weight to equal scores.  `dist_weighted_sum_le_of_level` is that observation
+weight to equal scores. `dist_weighted_sum_le_of_level` is that observation
 at full strength — for any convex combination whose weights are constant on a
 set `T` carrying mass `1 - ε`, the output sits within `ε·C` of the *centroid*
-of `T`, whatever `T` is and however large.  It subsumes
+of `T`, whatever `T` is and however large. It subsumes
 `dist_weighted_sum_le`, which is the case `T = {i₀}`.
 `softmax_head_resolves_average` is then the two-key instance, stated against
 the aggregate the walk actually builds: on the tie locus the running head
 returns what `TieBreak::AVERAGE` returns.
 -/
 
-import Transformer.ALM.SoftmaxValue
-import Transformer.ALM.HullResolve
+@[expose] public section
 
 open scoped BigOperators
 
@@ -41,7 +45,7 @@ variable {n : ℕ}
 /-- **Concentration on a level set.**  If the weights of a convex combination
 are constant on `T` and `T` carries all but `ε` of the mass, the output is
 within `ε·C` of the centroid of the values on `T`, where `C` bounds their
-spread around it.  Nothing here is about softmax, scores or ties; the case
+spread around it. Nothing here is about softmax, scores or ties; the case
 `T = {i₀}` is `dist_weighted_sum_le`. -/
 theorem dist_weighted_sum_le_of_level {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (w : Fin n → ℝ) (hw0 : ∀ j, 0 ≤ w j) (hsum : ∑ j, w j = 1)
@@ -119,7 +123,7 @@ the walk of `HullHalf::query` merges their aggregates and `resolve` returns
 the componentwise mean of the two payloads
 (`Transformer.ALM.HullResolve.scanCombined_resolveAverage`); the softmax head,
 weighting the two equally because their scores are equal, returns the same
-vector up to `ε·C`.  So the machine's tie-break is not a convention the head
+vector up to `ε·C`. So the machine's tie-break is not a convention the head
 has to be reconciled with — it is what the head already does. -/
 theorem softmax_head_resolves_average [Nonempty (Fin n)] (β : ℝ) (s : Fin n → ℝ)
     (V : Fin n → ℝ × ℝ) (b c : Fin n) (hbc : b ≠ c) (σ : ℝ) (hb : s b = σ) (hc : s c = σ)

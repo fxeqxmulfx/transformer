@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.WeakError
+
+/-!
 # Homogenized Transformers — the three scaling regimes
 
 Formalization of `cor:ode1` (ballistic), `cor:ode2` (modified) and `cor:SDE`
@@ -14,44 +18,44 @@ asymptotic — `αηL = o(1)`, `η²L = o(1)`, `η³L = o(1)`, `αηL = O(1)` �
 asymptotic condition is a statement about a family, not about one `(η, L)`.
 The corollaries are therefore stated along a sequence `m ↦ (η_m, L_m)`, with
 the scaling written as the convergence it is, and the displayed bound asserted
-at every index.  Nothing is weakened: that is what "in the subcritical scaling
+at every index. Nothing is weakened: that is what "in the subcritical scaling
 … the chain is weakly approximated by" says.
 
 **What the source says and what is changed here: the rate.**  All three
 corollaries display the improved rate `C e^{C t_L} η (t_L+1) max(η,α)` of the
-proof of `thm:weak_error_clean`.  For `cor:SDE`, whose limit is
+proof of `thm:weak_error_clean`. For `cor:SDE`, whose limit is
 `eq:SDE_ito_clean` itself, the general estimate fails even at grid times:
 the radial rotation counterexample is proved in `WeakError`. The conditional
 corollary retains the estimate as a hypothesis. For the two deterministic
 limits the source's rate is too strong by a factor:
 
 * `cor:ode1` drops the corrector `-(η/2)∇_b b`, which moves the trajectory by
-  `Θ(η t_L)` — the classical `O(η)` weak error of an Euler scheme.  At a
+  `Θ(η t_L)` — the classical `O(η)` weak error of an Euler scheme. At a
   deterministic weight law, `α = 0` and `t_L = 1`, that is `Θ(η)` against a
   displayed `C e^C η (t_L+1) max(η,0) = Θ(η²)`.
 * `cor:ode2` keeps the corrector but drops the noise, whose contribution to
-  the generator is of size `α`, hence `Θ(α t_L)` over the horizon.  At
+  the generator is of size `α`, hence `Θ(α t_L)` over the horizon. At
   `α = ης²/H = Θ(η)` and `t_L = 1` that is `Θ(η)` against the same `Θ(η²)`.
 
 Both errors are `Θ((t_L+1) max(η,α))`, and that is the rate stated here: the
-source's display with the leading factor `η` removed.  That the printed rate
+source's display with the leading factor `η` removed. That the printed rate
 is false is proved, for both corollaries, in `RegimeRefutation`
 (`not_ballistic_regime_printed`, `not_modified_regime_printed`), by a simpler
 mechanism still: off the grid the piecewise-constant `X^η` lags the flow by
-`Θ(η)`, already at `t = η/2`.  It is the rate the
+`Θ(η)`, already at `t = η/2`. It is the rate the
 source's own scaling conditions are calibrated to — for `cor:ode1`,
 `αηL = o(1)` and `η²L = o(1)` are exactly `α t_L = o(1)` and `η t_L = o(1)`,
 the two terms above.
 
 **On the number of heads.**  `H ≥ 1`, as the source's `Σ_{h=1}^H` has it: at
 `H = 0` the update of `eq:update_tokens` is the identity, the chain never
-moves, and no approximation statement about it can hold.  See
+moves, and no approximation statement about it can hold. See
 `weak_error_clean`.
 
 Source: arXiv:2604.01978v1, §4–§5, `cor:ode1`, `cor:ode2`, `cor:SDE`.
 -/
 
-import Transformer.Homogenized.WeakError
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory ProbabilityTheory Filter

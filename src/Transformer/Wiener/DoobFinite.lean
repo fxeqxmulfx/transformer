@@ -1,4 +1,10 @@
-/-
+module
+
+public import Mathlib.Probability.Martingale.OptionalStopping
+public import Mathlib.MeasureTheory.Integral.Layercake
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+
+/-!
 # Doob's `L²` inequalities on a finite grid
 
 For a non-negative submartingale `(f_k)_{k ∈ ℕ}` with running maximum
@@ -9,20 +15,18 @@ For a non-negative submartingale `(f_k)_{k ∈ ℕ}` with running maximum
   inequality.
 
 Both rest on Mathlib's `maximal_ineq`, `ε ℙ(f*_n ≥ ε) ≤ 𝔼[f_n; f*_n ≥ ε]`, whose
-docstring leaves Doob's `L^p` inequality to future work.  The first adds
-`2εx ≤ x² + ε²` on `{f*_n ≥ ε}`.  The second integrates `maximal_ineq` against
+docstring leaves Doob's `L^p` inequality to future work. The first adds
+`2εx ≤ x² + ε²` on `{f*_n ≥ ε}`. The second integrates `maximal_ineq` against
 `2ε dε` by the layer-cake formula, once for `ℙ` and once for `f_n · ℙ`:
 `𝔼[(f*_n)²] ≤ 2 𝔼[f_n f*_n] ≤ 2 𝔼[f_n²] + 𝔼[(f*_n)²] / 2`, where
-`𝔼[(f*_n)²] ≤ Σ_{k ≤ n} 𝔼[f_k²] < ∞` is assumed.  Expectations are lower
+`𝔼[(f*_n)²] ≤ Σ_{k ≤ n} 𝔼[f_k²] < ∞` is assumed. Expectations are lower
 Lebesgue integrals.
 
 Reference: D. Revuz, M. Yor, *Continuous martingales and Brownian motion*,
 Thm II.1.7, at a finite set of times.
 -/
 
-import Mathlib.Probability.Martingale.OptionalStopping
-import Mathlib.MeasureTheory.Integral.Layercake
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal
@@ -83,7 +87,7 @@ theorem ofReal_mul_measure_le_setLIntegral [IsFiniteMeasure P] (hsub : Submartin
   exact h
 
 /-- **Doob's weak `L²` inequality on a finite grid**:
-`ε² ℙ(f*_n ≥ ε) ≤ 𝔼[f_n²]` for a non-negative submartingale.  On
+`ε² ℙ(f*_n ≥ ε) ≤ 𝔼[f_n²]` for a non-negative submartingale. On
 `A = {f*_n ≥ ε}`, `2ε² ℙ(A) ≤ 2ε 𝔼[f_n; A] ≤ 𝔼[f_n²; A] + ε² ℙ(A)`. -/
 theorem ofReal_sq_mul_measure_le [IsFiniteMeasure P] (hsub : Submartingale f 𝒢 P)
     (hnonneg : 0 ≤ f) (ε : ℝ) (n : ℕ) :
@@ -116,7 +120,7 @@ example : Submartingale (fun _ _ => (1 : ℝ))
   ⟨(martingale_const _ _ 1).submartingale, fun _ _ => zero_le_one⟩
 
 /-- **Doob's `L²` inequality on a finite grid**: `𝔼[(f*_n)²] ≤ 4 𝔼[f_n²]` for a
-non-negative submartingale with `𝔼[f_k²] < ∞`, `k ≤ n`.  By the layer-cake
+non-negative submartingale with `𝔼[f_k²] < ∞`, `k ≤ n`. By the layer-cake
 formula and `maximal_ineq`, `𝔼[(f*_n)²] = ∫₀^∞ 2ε ℙ(f*_n ≥ ε) dε ≤
 2 ∫₀^∞ 𝔼[f_n; f*_n ≥ ε] dε = 2 𝔼[f_n f*_n]`, and `4xy ≤ 4x² + y²`. -/
 theorem lintegral_runningMax_sq_le [IsFiniteMeasure P] (hsub : Submartingale f 𝒢 P)

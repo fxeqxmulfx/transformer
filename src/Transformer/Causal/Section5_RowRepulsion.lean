@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Causal.Section5_RowDerivative
+public import Transformer.Causal.Section5_RowConvergence
+public import Transformer.Causal.Section5_FrozenFlow
+public import Transformer.Causal.SectionA_ScalarRepulsion
+
+/-!
 # Uniqueness of an original follower approaching a repelling limit
 
 ArXiv:2411.04990v2, §5 and Appendix A, unstable-limit
@@ -18,10 +25,7 @@ that such an exceptional fiber can be nonempty.
 No general center-stable manifold theorem is assumed here.
 -/
 
-import Transformer.Causal.Section5_RowDerivative
-import Transformer.Causal.Section5_RowConvergence
-import Transformer.Causal.Section5_FrozenFlow
-import Transformer.Causal.SectionA_ScalarRepulsion
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 

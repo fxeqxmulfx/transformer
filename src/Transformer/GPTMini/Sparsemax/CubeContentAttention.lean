@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.CubeContentQK
+module
+
+public import Transformer.GPTMini.Sparsemax.CubeContentQK
 
 /-!
 # Genuine variational sparsemax on generated content neighbors
@@ -16,6 +18,8 @@ by the observed content encoder, not by treating virtual destinations
 as future input-token positions. Possible support has at most r+1 slots
 for r content bits, independent of the 2^r virtual dictionary size.
 -/
+
+@[expose] public section
 
 noncomputable section
 

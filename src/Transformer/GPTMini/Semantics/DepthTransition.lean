@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthResidual
+module
+
+public import Transformer.GPTMini.Semantics.DepthResidual
 
 /-!
 # Complete real detector transitions from explicit input conditions
@@ -17,6 +19,8 @@ incoming conditions from the validated word and identify these flags
 with the independent ordered-occurrence semantics. No correct logits,
 semantic encoder, optimizer success or convexity is assumed or claimed.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

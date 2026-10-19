@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.Modes.Section2_PhiTAsymp
+
+/-!
 # The number of modes of a Gaussian KDE — `lem:phi-t`, `α_t δ_t²` at the rate
 
 The check on `δ_t` in the proof of `lem:phi-t` bounds `α_t δ_t²` by a constant,
-which needs `n ≲ β^{5/2}` (`Section2_PhiTDelta.lean`).  What holds with no bound
+which needs `n ≲ β^{5/2}` (`Section2_PhiTDelta.lean`). What holds with no bound
 on `n` at all is the bound with the rate kept:
-`α_t δ_t² ≲ n β^{-5/2} e^{-t²/2} (1 + t²)²`, uniformly on `T`.  It is what
+`α_t δ_t² ≲ n β^{-5/2} e^{-t²/2} (1 + t²)²`, uniformly on `T`. It is what
 `eq:int-phi-final` needs on `T'`, where `n β^{-3/2} e^{-t²/2} ≥ 1` can be huge
 and the shift `δ_t` is paid for by the factor `e^{-A_t/2}` and the width of the
 integral in `t` (`Section2_ProxyKRTPrime.lean`, `Section2_WidthIntegral.lean`).
@@ -12,7 +16,7 @@ integral in `t` (`Section2_ProxyKRTPrime.lean`, `Section2_WidthIntegral.lean`).
 Source: arXiv:2412.09080v3, proof of `lem:phi-t`.
 -/
 
-import Transformer.Modes.Section2_PhiTAsymp
+@[expose] public section
 
 open Real Filter Asymptotics
 open scoped Topology
@@ -22,7 +26,7 @@ namespace Modes
 
 /-- **Lemma (lem:phi-t), the check on `δ_t`, at the rate.**
 `α_t δ_t² ≤ C n β^{-5/2} e^{-t²/2} (4 + 6t²)²` uniformly on `T`, with no bound
-on `n`.  With `n ≲ β^{5/2}` this is `α_t δ_t² = O(1)`
+on `n`. With `n ≲ β^{5/2}` this is `α_t δ_t² = O(1)`
 (`phiAlpha_mul_phiDelta_sq_le`).
 
 Source: arXiv:2412.09080v3, proof of `lem:phi-t`. -/

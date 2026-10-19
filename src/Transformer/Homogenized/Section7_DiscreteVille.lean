@@ -1,4 +1,8 @@
-/-
+module
+
+public import Mathlib.Probability.Martingale.OptionalStopping
+
+/-!
 # Ville's maximal inequality from actual supermartingale data
 
 ArXiv:2604.01978v1, §7, the maximal inequality used after
@@ -16,7 +20,7 @@ decreasing positive supermartingale, so none of the positivity,
 integrability or stopping-time premises is contradictory.
 -/
 
-import Mathlib.Probability.Martingale.OptionalStopping
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

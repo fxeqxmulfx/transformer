@@ -1,5 +1,7 @@
-import Transformer.Grokking.AdamW.MomentBounds
-import Mathlib.Algebra.BigOperators.Fin
+module
+
+public import Transformer.Grokking.AdamW.MomentBounds
+public import Mathlib.Algebra.BigOperators.Fin
 
 /-!
 # Exact-real native gradient clipping and its moment consequences
@@ -16,6 +18,8 @@ gradients are only reduced when total_norm exceeds max_norm; its
 1e-6 coefficient instead reduces them in the boundary strip too.
 The exact threshold and a unit-boundary counterexample are proved.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

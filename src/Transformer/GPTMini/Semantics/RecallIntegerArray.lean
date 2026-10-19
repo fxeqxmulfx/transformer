@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.RecallConstruction
-import Transformer.Basis.RecallPrefixPositions
+module
+
+public import Transformer.GPTMini.Semantics.RecallConstruction
+public import Transformer.Basis.RecallPrefixPositions
 
 /-!
 # Exact integer/finite-index coupling for the real recall input
@@ -18,6 +20,8 @@ only input representation and will discharge the actual raw routing
 conditions. They do not replace any model operator or supply a desired
 hidden state, prepared score or answer.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Alternating
+
+/-!
 # The blocks of the words of `L_k`
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -14,7 +18,7 @@ of the second block is shorter than the number of blocks, while every shorter
 one occurs (`altList_not_sublist_iff`).
 -/
 
-import Transformer.CRASP.Alternating
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

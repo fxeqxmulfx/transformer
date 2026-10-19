@@ -9,6 +9,12 @@ public import Mathlib.MeasureTheory.Constructions.ClosedCompactCylinders
 public import Mathlib.Topology.Compactness.CompactSystem
 public import Mathlib.Topology.IsClosedRestrict
 
+/-!
+# Compact systems
+
+Compact set systems used to construct consistent product measures.
+-/
+
 @[expose] public section
 
 open Set MeasureTheory

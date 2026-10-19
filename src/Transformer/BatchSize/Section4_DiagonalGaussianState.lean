@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_VectorGaussianIntegration
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Diagonal Gaussian affine states and their genuine derivatives
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The explicit diagonal continuous linear map identifies coordinate
 derivatives in vector Gaussian integration by parts.
 -/
 
-import Transformer.BatchSize.Section4_VectorGaussianIntegration
-import Mathlib.Analysis.Calculus.Deriv.Prod
+@[expose] public section
 
 open MeasureTheory
 

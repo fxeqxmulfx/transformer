@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_FairCoordinateSplits
+public import Mathlib.Analysis.Convex.Integral
+public import Mathlib.Analysis.Convex.SpecificFunctions.Basic
+
+/-!
 # Actual random-split quadratic decoupling
 
 Source: arXiv:2604.01978v1, §6.3, `lem:Hanson_wright`.
@@ -11,9 +17,7 @@ already proved for independent coordinate blocks. All matrix entries,
 Frobenius squares and Euclidean operator norms remain the original ones.
 -/
 
-import Transformer.Homogenized.Section6_FairCoordinateSplits
-import Mathlib.Analysis.Convex.Integral
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Set
 open scoped BigOperators NNReal ENNReal

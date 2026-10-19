@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_QuadrantPhaseSequence
+public import Transformer.Interpolation.Section4_TargetSupportError
+
+/-!
 # Original inverse quadrant phases preserve arbitrarily small target errors
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, §3.1,
@@ -18,8 +23,7 @@ zero-score controls, global weak existence and the corresponding
 genuine Wasserstein accuracy for every original weak endpoint.
 -/
 
-import Transformer.Interpolation.Section3_QuadrantPhaseSequence
-import Transformer.Interpolation.Section4_TargetSupportError
+@[expose] public section
 
 open Real MeasureTheory Set
 

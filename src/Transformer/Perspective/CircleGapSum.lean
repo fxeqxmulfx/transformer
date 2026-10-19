@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.CircleMult
+public import Transformer.Perspective.CircleGapBounds
+
+/-!
 # `φ` at the positions, and the sum over the gaps
 
 Polyanskiy, Rigollet, Yao — arXiv:2507.22857v1, *Synchronization of mean-field
@@ -19,8 +24,7 @@ multiplicities `N_k`, let `χ = Σ_j f(· - x_j)` and `φ = χ' = Σ_j f'(· - x
   (`sum_integral_circleSite_le`).
 -/
 
-import Transformer.Perspective.CircleMult
-import Transformer.Perspective.CircleGapBounds
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -141,7 +145,7 @@ theorem sum_integral_circleSite_le {f₃ : ℝ → ℝ} (hp₃ : Function.Period
 `x = (0, π)`, and the kernel `f = sin 2·`, with `f' = 2 cos 2·`,
 `f'' = -4 sin 2·` and `f''' = -8 cos 2·`: every difference is a multiple of
 `π`, where `sin 2·` vanishes and `2 cos 2· = 2`; `f'` and `f'''` are
-`2π`-periodic with `f`.  The particles fill two
+`2π`-periodic with `f`. The particles fill two
 positions, and `0` and `2π` are one point of `𝕋`. -/
 example :
     let x : Angles 2 := fun i => (i : ℕ) * π

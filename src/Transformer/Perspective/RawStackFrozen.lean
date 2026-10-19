@@ -1,10 +1,15 @@
-/-
+module
+
+public import Transformer.Perspective.RawStack
+public import Mathlib.Algebra.Order.Field.GeomSum
+
+/-!
 # Growth freezes the directions of a stack
 
 **Not a statement of any paper.**  `Perspective.RawStack` writes a stack of
 different blocks as its gauge `Λ_{k,i} = ∏_{j<k} λ_{j,i}` times the same stack
 with the gains divided out, and the directions are those of the second
-(`normalize_rawStack`).  Here the gains are read: at `λ ≥ 1 + c`, `c > 0`, the
+(`normalize_rawStack`). Here the gains are read: at `λ ≥ 1 + c`, `c > 0`, the
 gauge grows at least as `(1 + c)^k` (`pow_le_gainProd`), so the steps
 `g_{k,i} / Λ_{k+1,i}` the directions do see are summable whatever the blocks
 compute (`norm_gaugeStack_sub_le`), and the whole stack moves each direction by
@@ -13,7 +18,7 @@ at most `2 M / (c ‖x_{0,i}‖)` (`rawStack_frozen`).
 That is `rawStream_frozen` of `Perspective.RawGrowth` without its continuous
 time, and without what continuous time forced: the gain is now per block and
 per token instead of one constant `c`, the blocks are all different — eleven of
-them, as in the model — and `Σ_{j≥1} (1+c)^{-j} = 1/c` replaces Gronwall.  With
+them, as in the model — and `Σ_{j≥1} (1+c)^{-j} = 1/c` replaces Gronwall. With
 `resid_lambdas` of modded-nanogpt at `1.1^{1/2}` this is `c = 1.1^{1/2} - 1`,
 and a stack of any depth moves a direction by at most `2 M / (c ‖x_{0,i}‖)`.
 
@@ -21,14 +26,13 @@ Then the constants are read back against the record, and they are not in this
 regime: the bound exceeds `40` once the blocks may output as much as the stream
 they start from (`lt_rawStack_frozen_bound`), while the directions live on a
 sphere of diameter `2`, and the gauge the whole stack accumulates at
-initialisation is a factor under `3` (`gainProd_lt_three`).  What the theorem
+initialisation is a factor under `3` (`gainProd_lt_three`). What the theorem
 rules out is a stack that starts long and is asked to turn; what the record has
 is the exact factorisation of `Perspective.RawStack`, which needs no constants
 at all.
 -/
 
-import Transformer.Perspective.RawStack
-import Mathlib.Algebra.Order.Field.GeomSum
+@[expose] public section
 
 open scoped BigOperators
 
@@ -154,7 +158,7 @@ gain of `1.1^{1/2}` per sublayer is `1 + c` with `(1 + c)^2 = 11/10`, so
 `c < 1/20`, and the bound `2 M / (c ‖x_{0,i}‖)` then exceeds `40` as soon as the
 blocks may output as much as the stream they start from (`‖x_{0,i}‖ ≤ M`, which
 is the model's own scale: a pre-norm block reads `norm(x)` and adds something of
-that size).  The directions live on a sphere of diameter `2`, so a bound above
+that size). The directions live on a sphere of diameter `2`, so a bound above
 `40` rules nothing out.
 
 Source: `nn.Parameter(torch.full((num_layers, 2), 1.1**0.5))` (modded-nanogpt,
@@ -171,9 +175,9 @@ theorem lt_rawStack_frozen_bound {c M r : ℝ} (hc : 0 < c) (hsq : (1 + c) ^ 2 =
 /-- **And the gauge the record accumulates is a factor under `3`.**  Twenty-two
 sublayers at `1.1^{1/2}` each is `Λ_{22} = (11/10)^{11} < 3`, and the record's
 own gauge is smaller still: the step of its layer-6 skip has gain `1`, so it is
-`(11/10)^{21/2}`.  So the regime of `rawStack_frozen` — a gauge large enough
+`(11/10)^{21/2}`. So the regime of `rawStack_frozen` — a gauge large enough
 that the steps `g_{k,i} / Λ_{k+1,i}` the directions see are spent — is not the
-one the record is in at initialisation.  `resid_lambdas` is trained, and where
+one the record is in at initialisation. `resid_lambdas` is trained, and where
 training takes it this says nothing.
 
 Source: `num_layers=11`, `nn.Parameter(torch.full((num_layers, 2), 1.1**0.5))`

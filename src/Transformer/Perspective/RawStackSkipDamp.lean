@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.RawStackSkip
+
+/-!
 # What the gauge does to a skip, and what it does not
 
 **Not a statement of any paper.**  `Perspective.RawStackSkip` writes the skip
@@ -11,24 +15,24 @@ Here that ratio is read.
 Above, at gains of at least `1 + c`, the gain accumulated over `q - p`
 sublayers is at least `(1+c)^{q-p}` (`pow_mul_gainProd_le`), so the gate is
 divided by that much: `|s| (1+c)^{-(k+1-m)}` (`gainProd_div_le`,
-`abs_skipWeight_le`).  A skip over a deep enough gap is damped away.
+`abs_skipWeight_le`). A skip over a deep enough gap is damped away.
 
 Below, at gains of at most `1 + C`, the division is by no more than
 `(1+C)^{q-p}` (`gainProd_le_pow_mul`, `le_gainProd_div`,
-`le_abs_skipWeight`).  At a fixed gap `D` that is `|s| (1+C)^{-D}` at every
+`le_abs_skipWeight`). At a fixed gap `D` that is `|s| (1+C)^{-D}` at every
 depth, the same number at every layer: the weights of skips at a fixed distance
 do not shrink with depth, and `rawStack_frozen` — which sums the weights the
-directions see — has no route to them.  The block outputs `g_{k,i}` are damped
+directions see — has no route to them. The block outputs `g_{k,i}` are damped
 by `Λ_{k+1,i}⁻¹` and a skip is not, which is the sense in which a skip is not a
 bounded drive.
 
-And at the record's own gains neither bound bites.  The skip reads `cache[3]`,
+And at the record's own gains neither bound bites. The skip reads `cache[3]`,
 the state at depth `8`, and takes the step at depth `12` at gain `1`, so four
 sublayers at `1.1^{1/2}` lie between them and `100/121` of its gate survives
 (`gainProd_div_record`).
 -/
 
-import Transformer.Perspective.RawStackSkip
+@[expose] public section
 
 open scoped BigOperators
 
@@ -133,7 +137,7 @@ theorem le_gainProd_div {lam : ℕ → Idx n → ℝ} {C : ℝ} (hC : 0 ≤ C)
 /-- **A skip is not damped below `|s| (1+C)^{-(k+1-m)}`.**  At a fixed gap
 `k + 1 - m = D` this is the same number at every depth, so the weights of skips
 at a fixed distance do not shrink as the stack deepens — unlike the block
-outputs, which the gauge divides by `Λ_{k+1,i}`.  Summing them, the route
+outputs, which the gauge divides by `Λ_{k+1,i}`. Summing them, the route
 `rawStack_frozen` takes, is therefore not available for such skips.
 
 Source: none — posed here; `ungauged_rec_skip` and `le_gainProd_div`. -/
@@ -155,9 +159,9 @@ example : (0 : ℝ) ≤ 0 ∧ (∀ (_ : ℕ) (_ : Idx 1), (0 : ℝ) < 1) ∧
 
 /-- **At the record's own gains the damping is weak.**  The skip of
 modded-nanogpt reads `cache[3]`, written at the end of loop iteration `3`, after
-its MLP: the state at depth `8`.  It takes the place of the attention sublayer
+its MLP: the state at depth `8`. It takes the place of the attention sublayer
 of layer `6`, the step at depth `12`, and carries no `resid_lambdas`: that step
-has gain `1`.  So its gate is multiplied by
+has gain `1`. So its gate is multiplied by
 `Λ_{8,i} / Λ_{13,i} = (λ_{8,i} λ_{9,i} λ_{10,i} λ_{11,i})⁻¹`, at the initial
 gains `1.1^{1/2}` that is `(11/10)^{-2} = 100/121`, and more than four fifths of
 the gate survives: the exponent of `gainProd_div_le` is not yet doing anything.

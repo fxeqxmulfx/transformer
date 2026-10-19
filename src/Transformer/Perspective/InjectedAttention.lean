@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.InjectedSpread
+public import Transformer.Perspective.Section5_ExpRate
+
+/-!
 # Softmax attention with the input mixed back in
 
 **Not a statement of any paper.**  The dynamics `eq: transformerSd.QKV` of
@@ -11,7 +16,7 @@ the drive of token `i`,
 At `z = 0` it is `eq: transformerSd.QKV` with `V = I_d`
 (`injectedODE_zero_iff`), which for constant `Q`, `K` collapses from any open
 hemisphere (`expConvergent_injectedODE_zero`, from `cone_collapse`,
-`lem: hemisphere.clustering`, §6.1).  For every `z` it is an injected flow
+`lem: hemisphere.clustering`, §6.1). For every `z` it is an injected flow
 whose weights, the attention matrix `eq:P`, have row sums `1`
 (`injectedODE.isInjectedFlow`), so `IsInjectedFlow.spread` applies to it;
 `Perspective.InjectedConsensus` draws the consequences.
@@ -24,7 +29,7 @@ every token back in before every block, the injection `z_i = mix[1] ⊙ x0_i`.
 What this model leaves out: the MLP, the RMS norm (the sphere stands in for
 it), `mix[0] ≠ 1`, `attn_scale`, `V ≠ I_d`, and a `mix[1]` that changes from
 block to block — `z` is constant in time, as for one block applied again and
-again.  `Perspective.BlockDrive` and `Perspective.BlockSpread` take in all of
+again. `Perspective.BlockDrive` and `Perspective.BlockSpread` take in all of
 these but the norm, for a stack of different blocks, at the price of two
 independent differences `z_k - z_l` in place of two independent injections,
 a price `Perspective.BlockConsensus` shows cannot be avoided.
@@ -32,8 +37,7 @@ a price `Perspective.BlockConsensus` shows cannot be avoided.
 `mix[0] > 1` in every channel the conclusion does not survive it.
 -/
 
-import Transformer.Perspective.InjectedSpread
-import Transformer.Perspective.Section5_ExpRate
+@[expose] public section
 
 open scoped BigOperators
 

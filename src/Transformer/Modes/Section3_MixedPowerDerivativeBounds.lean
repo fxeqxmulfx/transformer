@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_CubicPowerFactorization
-import Mathlib.Analysis.Calculus.ContDiff.Bounds
+module
+
+public import Transformer.Modes.Section3_CubicPowerFactorization
+public import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Uniform derivative bounds for mixed characteristic powers
@@ -17,6 +19,8 @@ coefficients that vanish in these small cases are never cancelled.
 This supplies the factors used in the actual cubic error, after its
 literal frequency normalization makes `n A` polynomial in frequency.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

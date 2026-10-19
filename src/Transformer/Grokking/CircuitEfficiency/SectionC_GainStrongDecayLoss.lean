@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainStrongDecayPath
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainGradientLimits
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainStrongDecayPath
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainGradientLimits
 
 /-!
 # Actual strong-decay logit, loss and softmax confidence limits
@@ -29,6 +31,8 @@ Zero betas, fixed physical tables and uniform decoupled native decay
 differ from appendix C's coupled norm/GD and the preserved learned
 nonzero-beta GPTMini. No numerical-kernel transfer is claimed.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

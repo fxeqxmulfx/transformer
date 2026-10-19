@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_SphericalVariation
+public import Transformer.Perceptron.MinMax
+public import Transformer.Perspective.Section2_EnergyConvex
+
+/-!
 # Actual integrated spherical second variations in every dimension
 
 ArXiv:2601.21366v2, §5.3, the localized-gradient proof of
@@ -19,9 +25,7 @@ The original integration measure stays fixed through both steps,
 and the actual pushforward is used only in the full-energy pullback.
 -/
 
-import Transformer.Perceptron.Section5_SphericalVariation
-import Transformer.Perceptron.MinMax
-import Transformer.Perspective.Section2_EnergyConvex
+@[expose] public section
 
 open Real MeasureTheory
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_FixedRegionMass
+
+/-!
 # Accumulating transported mass along a ball chain
 
 ArXiv:2411.04551v3, Appendix, the final induction in the proof
@@ -19,7 +23,7 @@ All measures are actual pushforwards. The preceding mass bound is an
 explicit induction input and the next bound is derived from it.
 -/
 
-import Transformer.Interpolation.Section3_FixedRegionMass
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped ENNReal

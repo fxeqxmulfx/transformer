@@ -1,4 +1,6 @@
-import Transformer.DoubleDescent.Section7_TranslationLog
+module
+
+public import Transformer.DoubleDescent.Section7_TranslationLog
 
 /-!
 # Verified sample-size non-monotonicity
@@ -8,6 +10,8 @@ The actual logs certify worse exported test loss with more train samples
 for both fixed model sizes. These comparisons do not equate a sentence
 count with an iid token count, or certify the expected population error.
 -/
+
+@[expose] public section
 
 namespace Transformer.DoubleDescent
 

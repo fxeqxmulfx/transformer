@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Convex.Structured.SharedInterface
-import Transformer.GPTMini.Convex.Structured.ParityReference
-import Transformer.Basis.Encoding.Tasks
+module
+
+public import Transformer.GPTMini.Convex.Structured.SharedInterface
+public import Transformer.GPTMini.Convex.Structured.ParityReference
+public import Transformer.Basis.Encoding.Tasks
 
 /-!
 # Actual finite learned causal head solves raw Basis parity
@@ -19,6 +21,8 @@ on the entire free shared parameter space. This does not yet realize
 the full prenorm/residual/tied block or prove AdamW/finite-precision
 training convergence; complete depth and recall remain open.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallMatching
+module
+
+public import Transformer.GPTMini.Semantics.RecallMatching
 
 /-!
 # Disjoint compact code slots in the original residual stream
@@ -17,6 +19,8 @@ Separate slots therefore preserve the key/value association problem:
 the binding must still be computed by the actual causal head and FFN.
 The insertion alone does not claim to solve that task.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

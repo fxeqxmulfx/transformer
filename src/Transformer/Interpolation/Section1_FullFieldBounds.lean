@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_AttentionLipschitz
+public import Transformer.Interpolation.Section4_NeuralSpeed
+
+/-!
 # Parameter-dependent bounds for the complete original field
 
 ArXiv:2411.04551v3, §1, `eq: vf` and `eq: cauchy.pb`,
@@ -14,8 +19,7 @@ over every original spherical probability law and every unit query.
 The exact Dirac identity retains the complete field and score matrix.
 -/
 
-import Transformer.Interpolation.Section2_AttentionLipschitz
-import Transformer.Interpolation.Section4_NeuralSpeed
+@[expose] public section
 
 open Real MeasureTheory
 open scoped BigOperators

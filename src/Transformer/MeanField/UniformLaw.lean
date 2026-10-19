@@ -1,8 +1,16 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section2_FlowMap
+public import Transformer.Causal.CapMass
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+
+/-!
 # Mean-Field Dynamics — the uniform law on the sphere, and densities against it
 
 `Causal.uniformSphere` is built on the subspace σ-algebra of `𝕊^{d-1}`, while
-`𝒫(𝕊^{d-1})` (`Perspective.ProbSphere`) carries the Borel one.  The two are
+`𝒫(𝕊^{d-1})` (`Perspective.ProbSphere`) carries the Borel one. The two are
 equal but not by definition; `uniformLaw` is the uniform law read over the
 latter, and it is what `thm: mfclust` takes densities against.
 
@@ -12,11 +20,7 @@ latter, and it is what `thm: mfclust` takes densities against.
 Source: arXiv:2512.01868v4, §4.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section2_FlowMap
-import Transformer.Causal.CapMass
-import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -64,10 +68,10 @@ example : 1 ≤ 2 := by norm_num
 `𝕊^{d-1}` there is a probability measure `μ₀ = f₀ · σ`, with `f₀ ≥ 0` bounded,
 whose mean `∫ x dμ₀` is nonzero.
 
-If `σ` has a nonzero mean itself, `f₀ = 1`.  Otherwise
+If `σ` has a nonzero mean itself, `f₀ = 1`. Otherwise
 `Σ_k ∫ x_k² dσ = ∫ ‖x‖² dσ = 1`, so some coordinate has `∫ x_k² dσ > 0`, and
 `f₀ = 1 + x_k` has mass `1 + ∫ x_k dσ = 1` and mean with `k`-th coordinate
-`∫ x_k dσ + ∫ x_k² dσ > 0`.  No symmetry of `σ` is used.
+`∫ x_k dσ + ∫ x_k² dσ > 0`. No symmetry of `σ` is used.
 
 Source: arXiv:2512.01868v4, §4, the hypotheses of `thm:mfclust`. -/
 theorem exists_density_mean_pos (σ : Measure (SSphere d)) [IsProbabilityMeasure σ] :

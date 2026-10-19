@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryFormedPrefix
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryFormedPrefix
 
 /-!
 # Explicit vanishing bounded Gen-seed family with original retained memory
@@ -33,6 +35,8 @@ an exact-real construction, not a quantitative GPTMini delay prediction.
 Fixed physical gained tables and uniform native decoupled decay differ
 from appendix C coupled-cost GD and learned stochastic/numerical features.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

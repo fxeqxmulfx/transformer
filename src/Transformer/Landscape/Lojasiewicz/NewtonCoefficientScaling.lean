@@ -1,4 +1,10 @@
-/-
+module
+
+public import Mathlib.Analysis.Analytic.IsolatedZeros
+public import Mathlib.Analysis.Analytic.Constructions
+public import Mathlib.Data.Finset.Max
+
+/-!
 # Newton scaling for arbitrary analytic polynomial coefficients
 
 Finite orders of the nonzero coefficient germs determine a rational Newton
@@ -7,8 +13,7 @@ weight from each coefficient. At least one resulting coefficient is nonzero
 at the origin, so the normalized central polynomial is not a pure power.
 -/
 
-import Mathlib.Analysis.Analytic.IsolatedZeros
-import Mathlib.Data.Finset.Max
+@[expose] public section
 
 open Filter Finset
 

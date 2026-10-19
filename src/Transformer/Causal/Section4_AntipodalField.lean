@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section4_WeightSensitivity
+public import Transformer.Causal.Section4_FollowerDrift
+
+/-!
 # Expansion of the actual conditional follower field near its antipode
 
 ArXiv:2411.04990v2, §4, proof of `thm1`, antipodal instability.
@@ -18,8 +23,7 @@ using the actual masked field and arbitrary original query and key
 matrices.
 -/
 
-import Transformer.Causal.Section4_WeightSensitivity
-import Transformer.Causal.Section4_FollowerDrift
+@[expose] public section
 
 open scoped BigOperators
 open Real

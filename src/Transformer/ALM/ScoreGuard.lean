@@ -1,21 +1,25 @@
-/-
+module
+
+public import Transformer.ALM.ScoreWall
+
+/-!
 # The query-time guard, and why the scale almost cancels out of it
 
 `vm-rs/alm-hull/src/grid.rs` carries the only thing in either runtime that
 reports whether a query was answered or guessed: `off_the_grid(score, margin)`,
-which fires when `ulp(score) > |margin|`.  `Transformer.ALM.ScoreWall` proves
+which fires when `ulp(score) > |margin|`. `Transformer.ALM.ScoreWall` proves
 what it is guarding against — past `2^53` the unit that separates two integer
 scores has nowhere to be stored — but says nothing about the test itself, and
-the test is not the absolute one.  The shipped model multiplies its queries by
+the test is not the absolute one. The shipped model multiplies its queries by
 a hard-attention scale of `√2 · 10^10`, so an absolute "is the score past
 `2^53`" test fires at position `799` of a `1034`-token `hello` run whose every
 answer is right; `grid.rs` compares against `|qy|` instead, and the docstring's
 claim is that the scale then cancels "very nearly".
 
-Very nearly is the part worth proving.  `clean_at_every_scale` and
+Very nearly is the part worth proving. `clean_at_every_scale` and
 `dirty_at_every_scale`: outside a band of two binades the guard's verdict does
 not depend on the scale at all — a query with a factor of two to spare is clean
-at every scale, one that fails by a factor of two fails at every scale.  Inside
+at every scale, one that fails by a factor of two fails at every scale. Inside
 the band the scale decides, and that band is the whole of the movement
 `grid.rs` measures, `94 906 266` down to `73 966 031`, twenty-two per cent.
 
@@ -26,14 +30,14 @@ float development is stated with.
 Source: `todo3.md` §4 and §4a; `vm-rs/alm-hull/src/grid.rs`.
 -/
 
-import Transformer.ALM.ScoreWall
+@[expose] public section
 
 namespace Transformer
 namespace ALM
 
 /-! ### The binade a number sits in -/
 
-/-- `x` lies in the binade of exponent `e`: `2^e ≤ |x| < 2^(e+1)`.  Every
+/-- `x` lies in the binade of exponent `e`: `2^e ≤ |x| < 2^(e+1)`. Every
 nonzero real lies in exactly one, and it is the exponent `ulp` reads off. -/
 def IsExp (e : ℤ) (x : ℝ) : Prop := (2 : ℝ) ^ e ≤ |x| ∧ |x| < (2 : ℝ) ^ (e + 1)
 
@@ -78,7 +82,7 @@ theorem isExp_mul {e f : ℤ} {σ x : ℝ} (hσ : IsExp f σ) (hx : IsExp e x) :
 /-- **A query with a factor of two to spare is clean at every scale.**  If the
 unscaled spacing is at most half the unscaled margin of `1`, then whatever
 binade the scale `σ` puts the score in, the spacing there is still at most `σ`
-— the margin `grid.rs` compares against, `|qy|`.  So the guard does not fire on
+— the margin `grid.rs` compares against, `|qy|`. So the guard does not fire on
 a query that the unit-scale argument of §4 answers with room, however the
 compiler scaled it. -/
 theorem clean_at_every_scale {p : ℕ} {e f E : ℤ} {σ s : ℝ}
@@ -104,7 +108,7 @@ theorem clean_at_every_scale {p : ℕ} {e f E : ℤ} {σ s : ℝ}
 
 /-- **And one that fails by a factor of two fails at every scale.**  The same
 two binades read the other way: a spacing above twice the unit margin stays
-above the scaled margin wherever the scale moves it.  Between the two
+above the scaled margin wherever the scale moves it. Between the two
 statements lies a band of two binades, and that band is the whole of the
 movement `grid.rs` reports — `94 906 266` at unit scale against `73 966 031`
 at the shipped one. -/

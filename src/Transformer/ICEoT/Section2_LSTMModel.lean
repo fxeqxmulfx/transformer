@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section2_Recurrent
+
+/-!
 # IC-EoT: the cited IC-LSTM equations
 
 arXiv:2603.22095v2, §2.2.3, Eqs. (4)–(11). This is the actual
@@ -7,7 +11,7 @@ The LaTeX source places the skip input OUTSIDE the dense activation in
 Eq. (10); the model follows that source, not the PDF's ambiguous extraction.
 -/
 
-import Transformer.ICEoT.Section2_Recurrent
+@[expose] public section
 
 noncomputable section
 

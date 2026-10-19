@@ -1,7 +1,9 @@
-import Transformer.Modes.Section3_CubicDerivatives
-import Transformer.Modes.Section3_WeightedDotMoments
-import Transformer.Modes.Section3_GaussianDerivativeComparison
-import Transformer.Modes.Section3_CubicGaussianComparison
+module
+
+public import Transformer.Modes.Section3_CubicDerivatives
+public import Transformer.Modes.Section3_WeightedDotMoments
+public import Transformer.Modes.Section3_GaussianDerivativeComparison
+public import Transformer.Modes.Section3_CubicGaussianComparison
 
 /-!
 # Fourth-moment Taylor error for the first characteristic derivative
@@ -20,6 +22,8 @@ differentiating the Gaussian-damped correction adds further terms.
 Every estimate below is for one summand, before frequency scaling
 and the normalized-sum product rule.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

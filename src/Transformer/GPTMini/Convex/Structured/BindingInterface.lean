@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.RawBinding
-import Transformer.GPTMini.Convex.Structured.SharedInterface
+module
+
+public import Transformer.GPTMini.Convex.Structured.RawBinding
+public import Transformer.GPTMini.Convex.Structured.SharedInterface
 
 /-!
 # Genuine learned all-pair pointer through the integer-list interface
@@ -18,6 +20,8 @@ prenorm/residual/tied readout and complete mixed-head realization remain
 separate obligations. Task capability must derive true raw margins from
 the actual finite weights rather than assume a correct decoder output.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

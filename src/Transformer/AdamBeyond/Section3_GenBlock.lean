@@ -1,18 +1,22 @@
-import Transformer.AdamBeyond.Section3_GenRun
+module
 
-/-
+public import Transformer.AdamBeyond.Section3_GenRun
+
+/-!
 # Adam and beyond — §3: inside one block of Theorem 2
 
 A block starts after a step `t` with `t mod C = 0` past the warm-up: the gradient
-is `C` at step `t + 1` and `-1` at the steps `t + 2, …, t + C`.  At its `j`-th step
+is `C` at step `t + 1` and `-1` at the steps `t + 2, …, t + C`. At its `j`-th step
 `m_{t+j} ≤ β₁^{j-1}(C+1) - 1`, `(1-β₂)β₂^{j-1}C² ≤ v_{t+j} ≤ β₂^{j-1}C² + 1`
-(`gen_inblock`), and `m` decreases along the block (`genM_block_anti`).  So the
+(`gen_inblock`), and `m` decreases along the block (`genM_block_anti`). So the
 steps `δ_j = -α_{t+j} m_{t+j}/√v_{t+j}` are first non-positive, then positive,
 and each is at least `α_{t+j}/√v_{t+j} - 2α_{t+j}γ^{j-1}/√(1-β₂)`, `γ = β₁/√β₂`
 (`genD_ge`).
 
 Source: arXiv:1904.09237, Appendix, proof of Theorem 2.
 -/
+
+@[expose] public section
 
 namespace Transformer
 namespace AdamBeyond

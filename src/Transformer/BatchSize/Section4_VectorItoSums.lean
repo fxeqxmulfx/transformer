@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_ItoSums
+
+/-!
 # Vector stochastic sums and their exact energy
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3).
@@ -7,7 +11,7 @@ Euclidean norm introduces a sum of coordinate energies, without assuming
 independence of the random coefficients themselves.
 -/
 
-import Transformer.BatchSize.Section4_ItoSums
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal BigOperators

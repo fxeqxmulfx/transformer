@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_MatrixNorms
+public import Mathlib.Probability.Distributions.Gaussian.Multivariate
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+
+/-!
 # Positive diagonal square-exponential estimates
 
 Source: arXiv:2604.01978v1, §6.3, `lem:Hanson_wright`.
@@ -11,9 +17,7 @@ then it is transferred to the genuine product and Euclidean Gaussian
 laws, with measurability and integrability retained explicitly.
 -/
 
-import Transformer.Homogenized.Section6_MatrixNorms
-import Mathlib.Probability.Distributions.Gaussian.Multivariate
-import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

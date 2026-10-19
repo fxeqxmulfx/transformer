@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerDriftSum
+
+/-!
 # Fourth-moment displacement of actual Brownian Euler chains
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ Bounded drift and amplitudes give a moment estimate independent of the
 Euler mesh. The coefficients are evaluated at the actual random states.
 -/
 
-import Transformer.BatchSize.Section4_EulerDriftSum
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_ReLUThresholds
+public import Mathlib.MeasureTheory.Measure.CharacteristicFunction.Basic
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
+
+/-!
 # ReLU ridge tests determine measures on the sphere
 
 Auxiliary for arXiv:2411.04551v3, §3.2, `lem: perturbation`, Part 2.
@@ -16,9 +22,7 @@ This is the measure-separation input toward an actual perceptron
 perturbation, not an assumption of the desired separation conclusion.
 -/
 
-import Transformer.Interpolation.Section3_ReLUThresholds
-import Mathlib.MeasureTheory.Measure.CharacteristicFunction.Basic
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
+@[expose] public section
 
 open Real MeasureTheory Filter Set
 

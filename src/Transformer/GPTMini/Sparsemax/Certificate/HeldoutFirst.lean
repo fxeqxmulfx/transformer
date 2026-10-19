@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.Certificate.Basic
+module
+
+public import Transformer.GPTMini.Sparsemax.Certificate.Basic
 
 /-!
 # Actual final-checkpoint heldout prediction records
@@ -13,6 +15,8 @@ c3f296b2f9ffd388451f4beefb358b184ad32da404658424c6685c9a935ac601.
 Source context: arXiv:2211.11052v1, §4, modular division; prime-193
 experiment adaptation. Packing retains every numeral and EOS flag.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Sparsemax.Certificate
 

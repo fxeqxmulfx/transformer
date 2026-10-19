@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+
+/-!
 # Metastability — one framework for `SA` and `USA`
 
 The theorem of §2 of arXiv:2410.06833v1 is stated for `(SA)` *or* `(USA)`:
@@ -11,19 +16,18 @@ The proof of the paper uses of the weights `a_{ij}` in `ẋ_i = Proj_{x_i} Σ_j 
   `n⁻¹ e^{β(⟨x_i,x_j⟩ - 1)} ≤ a_{ij} ≤ e^{β(⟨x_i,x_j⟩ - 1)}`,
 
 and both models satisfy it: for `SA` because `e^β ≤ Z_i ≤ n e^β`, and for `USA`
-with `a_{ij} = n⁻¹ e^{β(⟨x_i,x_j⟩ - 1)}` itself.  `IsAttnFlow` is the class of
+with `a_{ij} = n⁻¹ e^{β(⟨x_i,x_j⟩ - 1)}` itself. `IsAttnFlow` is the class of
 trajectories with such weights; `isAttnFlow_of_SA` and `isAttnFlow_of_unnormalizedSA`
 put both models in it, so the proof of the metastability theorem is written once.
 
 `unnormalizedSA` is `(USA)` exactly as the metastability paper prints it, with the
-factor `e^{-β}` inside the sum.  It is *not* `Perspective.USA`, which drops that factor
+factor `e^{-β}` inside the sum. It is *not* `Perspective.USA`, which drops that factor
 (the survey's normalisation): the two differ by the constant time change `t ↦ e^{β} t`.
 
 Source: arXiv:2410.06833v1, §1 (`SA`, `USA`) and §2 (the proof uses only the bounds above).
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 open Real

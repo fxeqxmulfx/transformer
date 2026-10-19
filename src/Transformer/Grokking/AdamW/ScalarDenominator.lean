@@ -1,5 +1,7 @@
-import Transformer.Grokking.AdamW.ScalarLimits
-import Mathlib.Topology.Order.OrderClosed
+module
+
+public import Transformer.Grokking.AdamW.ScalarLimits
+public import Mathlib.Topology.Order.OrderClosed
 
 /-!
 # Actual retained AdamW denominator and vanishing-input limit
@@ -20,6 +22,8 @@ The formula uses exact reals and non-AMSGrad native updates. No
 floating-point error, stochastic input convergence or GPTMini
 generalization is asserted.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

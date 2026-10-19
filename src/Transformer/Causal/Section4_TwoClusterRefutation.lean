@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Causal.Section4_AnisotropicBarrier
+public import Transformer.Causal.UniformAtoms
+public import Transformer.Metastability.Section4_UniformLaw
+public import Transformer.Perspective.Section3_SmallBeta
+
+/-!
 # A positive-measure counterexample to the two-cluster conjecture
 
 Source: arXiv:2411.04990v2, §4, Conjecture `thm1.5`.
@@ -23,10 +30,7 @@ The original independent uniform initialization gives strictly
 positive probability to this behavior.
 -/
 
-import Transformer.Causal.Section4_AnisotropicBarrier
-import Transformer.Causal.UniformAtoms
-import Transformer.Metastability.Section4_UniformLaw
-import Transformer.Perspective.Section3_SmallBeta
+@[expose] public section
 
 open Real Set MeasureTheory Filter Topology
 

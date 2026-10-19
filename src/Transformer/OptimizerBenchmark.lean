@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.OptimizerBenchmark.Ranking
+public import Transformer.OptimizerBenchmark.GuardFallback
+public import Transformer.OptimizerBenchmark.AdamWAnalysis
+
+/-!
 # Formal audit of the GPTMini optimizer comparison
 
 User-requested explanation of the RTX 3050 Tiny Shakespeare results.
@@ -11,6 +17,4 @@ can improve or worsen the same update; convergence is not a finite-budget
 test-loss ranking.
 -/
 
-import Transformer.OptimizerBenchmark.Ranking
-import Transformer.OptimizerBenchmark.GuardFallback
-import Transformer.OptimizerBenchmark.AdamWAnalysis
+@[expose] public section

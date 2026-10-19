@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section2_FlowMap
+public import Transformer.Interpolation.Basic
+public import Transformer.Interpolation.Wasserstein
+
+/-!
 # Measure-to-measure interpolation — the Monge-style identity
 
 `Lemma lem: monge` of arXiv:2411.04551v3, §5, proved against the `W_2` of
@@ -6,10 +13,7 @@
 distance function.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section2_FlowMap
-import Transformer.Interpolation.Basic
-import Transformer.Interpolation.Wasserstein
+@[expose] public section
 
 open Real MeasureTheory
 
@@ -37,14 +41,14 @@ what makes this a theorem rather than a request.
 as it was here, the inequality is false: `not_forall_monge` refutes it below.
 That is not an accident of the constant — the statement *is* a defining
 property of the 2-Wasserstein distance, so asking it of an arbitrary function
-of two measures asks for something no hypothesis in the binders supplies.  The
+of two measures asks for something no hypothesis in the binders supplies. The
 distance is therefore defined, in `Interpolation.Wasserstein`, as the infimum
 of the quadratic transport cost over couplings, and the lemma is proved: the
 map `x ↦ (S x, ψ x)` pushes `μ` to a coupling of `S_# μ` and `ψ_# μ` whose
 cost is exactly the `L²(μ)` distance of the two maps.
 
 *The constant is `1`.*  The paper writes `≲`; the proof gives `1`, which is
-the sharp value, so nothing is lost by writing it.  Carried as a parameter, as
+the sharp value, so nothing is lost by writing it. Carried as a parameter, as
 `Cst` was here, it was again a free variable in the direction that makes the
 claim false.
 
@@ -83,8 +87,8 @@ example : Measurable (id : SSphere d → SSphere d) ∧ Measurable (id : SSphere
 
 Read with `W₂` and `Cst` as universally quantified binders, as the statement
 stood here before, the lemma claims an inequality about a function of two
-measures of which nothing is assumed.  `W₂ ≡ 1` and `Cst = 0` with `S = ψ`
-give `1 ≤ 0`.  This is what `monge` above repairs by defining `W_2`.
+measures of which nothing is assumed. `W₂ ≡ 1` and `Cst = 0` with `S = ψ`
+give `1 ≤ 0`. This is what `monge` above repairs by defining `W_2`.
 
 Source: arXiv:2411.04551v3, §5, `lem: monge`. -/
 theorem not_forall_monge :

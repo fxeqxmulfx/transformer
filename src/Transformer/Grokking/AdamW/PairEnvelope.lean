@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.ScalarDenominator
+module
+
+public import Transformer.Grokking.AdamW.ScalarDenominator
 
 /-!
 # Retained pair mass under explicit feedback lower bounds
@@ -20,6 +22,8 @@ These algebraic envelope laws neither assume nor prove that an
 arbitrary CE path meets that threshold. They are not an attraction,
 global-convergence, delayed-crossing or learned GPTMini theorem.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

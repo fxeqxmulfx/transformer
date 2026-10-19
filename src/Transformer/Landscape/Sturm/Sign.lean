@@ -8,14 +8,18 @@ Adapted from leanprover/hex-real-roots-mathlib,
 revision 53ce31466dc5ff520463249d470119c1e0006e22.
 -/
 
-import Mathlib.Topology.Connected.TotallyDisconnected
-import Mathlib.Topology.Instances.Sign
+module
+
+public import Mathlib.Topology.Connected.TotallyDisconnected
+public import Mathlib.Topology.Instances.Sign
 
 /-!
 # Signs of continuous nonvanishing functions
 
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
+
+@[expose] public section
 
 open Filter Topology
 

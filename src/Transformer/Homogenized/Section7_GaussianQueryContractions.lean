@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianAttentionKeyBound
+
+/-!
 # Original key Gram contractions of actual query score derivatives
 
 ArXiv:2604.01978v1, §7, the query-block trace computation
@@ -14,7 +18,7 @@ the constants six and four, and keeps the original softmax factors.
 Every estimate is pointwise, before taking Gaussian expectations.
 -/
 
-import Transformer.Homogenized.Section7_GaussianAttentionKeyBound
+@[expose] public section
 
 open scoped BigOperators
 
@@ -165,4 +169,3 @@ example : ∃ (G : Idx 2 → Fin 2 → ℝ) (u : Idx 2 → ℝ), (0 : ℕ) < 2 �
     norm_num [G, hw0, hw1]
 
 end Transformer.Homogenized
-

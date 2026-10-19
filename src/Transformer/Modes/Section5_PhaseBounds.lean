@@ -1,4 +1,6 @@
-import Transformer.Modes.Section5_CoefficientBounds
+module
+
+public import Transformer.Modes.Section5_CoefficientBounds
 
 /-!
 # Quantitative nondegeneracy of the Gaussian phase
@@ -23,6 +25,8 @@ The floor applies to every positive `β`, including `β ≥ 2`.
 The global `β < 2` restriction concerns the Gaussian sum over intervals.
 Source: arXiv:2412.09080v3, §5.5, proof of `eq:uniform-decay`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 open scoped Interval

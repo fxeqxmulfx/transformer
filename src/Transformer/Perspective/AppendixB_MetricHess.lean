@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixB_MetricGrad
+public import Transformer.Perspective.DoubleSum
+
+/-!
 # Appendix B — the Hessians of `𝖤_β` and `𝖤_0` differ by `O(β)`, proved
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -8,25 +13,24 @@ The second-order companion of `Perspective.metric_grad_comparison`: along the
 block rotation `x_i(t) = e^{tB} x_i` (`i ∈ 𝒮`), `x_i(t) = x_i` (`i ∉ 𝒮`), the
 second derivatives of `𝖤_β` and of `(n/2) 𝖤_0` agree up to `O(β)`.
 
-The proof differentiates both energies twice along the curve.  Writing
+The proof differentiates both energies twice along the curve. Writing
 `a_{ij}(t) = ⟨x_i(t), x_j(t)⟩` and `w_{ij} = e^{β a_{ij}(0)}`,
 
   `𝖤_β''(0) - (n/2) 𝖤_0''(0) = Σ_i Σ_j ((β/2) w_{ij} a_{ij}'(0)²
                                         + (1/2) (w_{ij} - 1) a_{ij}''(0))`,
 
 and on the sphere `|a_{ij}'| ≤ 2‖B‖`, `|a_{ij}''| ≤ 4‖B‖²`, `w_{ij} ≤ e` and
-`|w_{ij} - 1| ≤ 2β` for `β ≤ 1`.  The constant is `(2e + 4) n² ‖B‖² + 1`.
+`|w_{ij} - 1| ≤ 2β` for `β ≤ 1`. The constant is `(2e + 4) n² ‖B‖² + 1`.
 
-Deviation from the source: skew-symmetry of `B` is *not* assumed.  The paper
+Deviation from the source: skew-symmetry of `B` is *not* assumed. The paper
 states `eq: metric.hess` for the block rotations of `e:helpcl`, whose `B` is
 skew; the bound above holds for every `B`, and `IsSkew` is dropped rather than
-carried as an unused hypothesis.  Skewness is what makes `PerturbationBy`
+carried as an unused hypothesis. Skewness is what makes `PerturbationBy`
 satisfiable — it is why the rotated tokens stay on the sphere — but it enters
 nowhere in the estimate.
 -/
 
-import Transformer.Perspective.AppendixB_MetricGrad
-import Transformer.Perspective.DoubleSum
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -45,7 +49,7 @@ normalisation factor `n/2` as in `Perspective.metric_grad_comparison`.
 Together with `hessian_at_critical_intrinsic` this is what transports the
 `β = 0` saddle analysis of Appendix A to small `β > 0`.
 
-Source: arXiv:2312.10794v5, Appendix B, `eq: metric.hess`.  Skew-symmetry of
+Source: arXiv:2312.10794v5, Appendix B, `eq: metric.hess`. Skew-symmetry of
 `B` is not needed for the estimate and is not assumed; see the module
 docstring. -/
 theorem metric_hess_comparison

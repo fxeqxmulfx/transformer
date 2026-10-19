@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.PrototypeKernelCodes
+module
+
+public import Transformer.GPTMini.Sparsemax.PrototypeKernelCodes
 
 /-!
 # Pair-feature kernel and nonsingular observed-prototype geometry
@@ -19,6 +21,8 @@ The features remain fixed data inputs. Learned Q/K embeddings reside in the
 separate memory Gram, and their inverse chart is unchanged. The observed
 prototype count controls memory size, rather than the universe of prefixes.
 -/
+
+@[expose] public section
 
 noncomputable section
 

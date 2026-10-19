@@ -1,4 +1,15 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Normalization.Basic
+public import Transformer.Normalization.Velocities
+public import Transformer.Normalization.InitialNumeratorTail
+public import Transformer.Perspective.Section3_SmallBeta
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # Normalization — Initial velocity (§4.2 of 2510.22026v2)
 
 * `Theorem thm: initial-velocity` — at a uniform initialization the attention
@@ -16,14 +27,7 @@ measure on `(𝕊^{d-1})^{⊗ n}`, which is pinned down by
 `not_forall_initial_velocity_small` proves it.
 -/
 
-import Transformer.Basic
-import Transformer.Normalization.Basic
-import Transformer.Normalization.Velocities
-import Transformer.Normalization.InitialNumeratorTail
-import Transformer.Perspective.Section3_SmallBeta
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-import Mathlib.Analysis.Normed.Lp.MeasurableSpace
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -50,15 +54,15 @@ uniform on `𝕊^{d-1}` and `e^{√d} ≥ n log n ≥ d`, there are absolute con
 `Perspective.UniformTuple d n`, the `n`-fold product of a rotation-invariant
 Borel probability measure on the sphere — which is exactly the paper's "drawn
 i.i.d. uniform on `𝕊^{d-1}`", and pins the measure down uniquely, so
-quantifying over every such `σ` is no weaker than naming one.  Carried as a
+quantifying over every such `σ` is no weaker than naming one. Carried as a
 free parameter, as it was, the statement is false: `σ = 0` makes the
 right-hand side `0` while the left-hand side `1 - n^{-c}` is positive for
-`c > 0`.  That is `not_forall_initial_velocity_small`.
+`c > 0`. That is `not_forall_initial_velocity_small`.
 
 The constants are chosen before `d` and `n`, as "absolute constants" says.
 Chosen after them, as they were, the statement is empty: `‖A_j‖ ≤ 1` at every
 configuration (`norm_attentionVec_le_one`), and a `C` depending on `d, n` makes
-the bound hold everywhere as soon as `n ≥ 2`.  The source's probability is
+the bound hold everywhere as soon as `n ≥ 2`. The source's probability is
 `1 - n^{-C}`, with the `c` it introduces left unused; it is read as
 `1 - n^{-c}`, the reading in which both constants are used.
 
@@ -136,7 +140,7 @@ example :
 The theorem is a probability bound, and a probability bound says nothing
 unless the measure is a probability measure: with `σ` free, `σ = 0` sends the
 right-hand side to `0`, while the left-hand side `1 - n^{-c}` is positive for
-every `c > 0` as soon as `n ≥ 2`.  At `d = 1`, `n = 2` the two size
+every `c > 0` as soon as `n ≥ 2`. At `d = 1`, `n = 2` the two size
 conditions `n log n ≤ e^{√d}` and `d ≤ n log n` hold and `Q = K = V = I_1`
 meet the operator bounds, so the hypotheses are all met and the conclusion
 fails.

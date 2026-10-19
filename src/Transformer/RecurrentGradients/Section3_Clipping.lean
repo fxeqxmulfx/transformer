@@ -1,11 +1,20 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.Calculus.Deriv.Slope
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+
+/-!
 # Scaling down the gradients
 
 arXiv:1211.5063, §3.2, Algorithm 1: `ĝ ← ∂L/∂θ`, and if `‖ĝ‖ ≥ threshold`,
-`ĝ ← (threshold/‖ĝ‖) ĝ` (`clip`).  The clipped gradient has norm
+`ĝ ← (threshold/‖ĝ‖) ĝ` (`clip`). The clipped gradient has norm
 `min ‖g‖ threshold` (`norm_clip`) and is `g` times `min 1 (threshold/‖g‖)`,
 "adapting the learning rate based on the norm of the gradient"
-(`clip_eq_smul`).  For a positive threshold it is a positive multiple of a
+(`clip_eq_smul`). For a positive threshold it is a positive multiple of a
 nonzero gradient (`inner_clip_pos`), so a small enough step against it lowers
 the loss (`eventually_lt_clip`): "ensuring that we always move in a descent
 direction with respect to the current mini-batch".
@@ -18,12 +27,7 @@ the temporal components `10`, `-19/2`, `-2/5` of the derivative `1/10` clip at
 loss with that derivative (`eventually_gt_clampEntry`).
 -/
 
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Calculus.Deriv.Slope
-import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.Analysis.InnerProductSpace.Basic
+@[expose] public section
 
 open Filter Topology
 open scoped RealInnerProductSpace

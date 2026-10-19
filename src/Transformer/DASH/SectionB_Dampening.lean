@@ -1,12 +1,16 @@
-/-
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Tactic
+
+/-!
 # DASH — EVD dampening and correction of the double-shift description
 
 arXiv:2602.02016v2, Appendix B. Every eigenvalue receives the
 same shift, although the shift changes with the smallest eigenvalue.
 -/
 
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Tactic
+@[expose] public section
 
 noncomputable section
 

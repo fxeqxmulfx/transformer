@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_DriftAverage
+
+/-!
 # The emergence of clusters in self-attention dynamics — the drift toward the largest token
 
 The estimate `e:lowerboundxi` of §7 of arXiv:2305.05465v6, for a token that
 need not be the largest: if `y_k > 0` and `y_M` is the largest coordinate,
 the weight `P_kM` is at least `1/n`, and every other term `P_kj y_j` is at
-least `min(0, e^{y_k y_j} y_j)` (`add_sum_min_le_drift`).  The two
+least `min(0, e^{y_k y_j} y_j)` (`add_sum_min_le_drift`). The two
 specializations used by `l:onlyone` follow: `e^{az} z ≥ -1/a` gives
 `Σ_j P_kj y_j ≥ y_M/n - n/y_k` (`div_sub_le_drift_of_max`), the form of
 `e:lowerboundxi` itself.
@@ -12,7 +16,7 @@ specializations used by `l:onlyone` follow: `e^{az} z ≥ -1/a` gives
 Source: arXiv:2305.05465v6, `e:lowerboundxi`, `e:minorationpourxn`.
 -/
 
-import Transformer.Clusters.Section7_DriftAverage
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

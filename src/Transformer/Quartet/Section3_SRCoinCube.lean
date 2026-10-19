@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Quartet.Section3_EdenCoins
+public import Mathlib.MeasureTheory.Integral.Pi
+
+/-!
 # A cube of independent FP4 stochastic-rounding coins
 
 arXiv:2601.22813v2, §3.1: one SR coin per FP4 element, with its
@@ -6,8 +11,7 @@ dequantized expectation equal to the original element when fixed scales are
 positive and the normalized element lies in `[-6, 6]`.
 -/
 
-import Transformer.Quartet.Section3_EdenCoins
-import Mathlib.MeasureTheory.Integral.Pi
+@[expose] public section
 
 open MeasureTheory
 

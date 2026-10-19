@@ -1,4 +1,27 @@
-/-
+module
+
+public import Transformer.Muon.Section2_Models
+public import Transformer.Muon.Section2_TrainingConvergence
+public import Transformer.Muon.Section2_TrainingCycleStep
+public import Transformer.Muon.Section2_TrainingCounterexample
+public import Transformer.Muon.Section2_Spectral
+public import Transformer.Muon.AppendixA_RMS
+public import Transformer.Muon.Section2_Scaling
+public import Transformer.Muon.Section2_NewtonSchulz
+public import Transformer.Muon.Section2_Approximation
+public import Transformer.Muon.Section2_Euclidean
+public import Transformer.Muon.Section2_SteepestDescent
+public import Transformer.Muon.Section2_Distributed
+public import Transformer.Muon.Section2_Costs
+public import Transformer.Muon.Section2_PolarIdentities
+public import Transformer.Muon.Section3_Entropy
+public import Transformer.Muon.AppendixC_Routing
+public import Transformer.Muon.AppendixC_GateScaling
+public import Transformer.Muon.AppendixC_GateModel
+public import Transformer.Muon.Section3_ScalingLaws
+public import Transformer.Muon.Section2_Rank
+
+/-!
 # Muon is Scalable for LLM Training
 
 Liu et al., arXiv:2502.16982. The source archive is available locally in
@@ -89,23 +112,4 @@ their accuracy or optimality. The qualitative research directions in §4
 do not specify quantified mathematical conjectures.
 -/
 
-import Transformer.Muon.Section2_Models
-import Transformer.Muon.Section2_TrainingConvergence
-import Transformer.Muon.Section2_TrainingCycleStep
-import Transformer.Muon.Section2_TrainingCounterexample
-import Transformer.Muon.Section2_Spectral
-import Transformer.Muon.AppendixA_RMS
-import Transformer.Muon.Section2_Scaling
-import Transformer.Muon.Section2_NewtonSchulz
-import Transformer.Muon.Section2_Approximation
-import Transformer.Muon.Section2_Euclidean
-import Transformer.Muon.Section2_SteepestDescent
-import Transformer.Muon.Section2_Distributed
-import Transformer.Muon.Section2_Costs
-import Transformer.Muon.Section2_PolarIdentities
-import Transformer.Muon.Section3_Entropy
-import Transformer.Muon.AppendixC_Routing
-import Transformer.Muon.AppendixC_GateScaling
-import Transformer.Muon.AppendixC_GateModel
-import Transformer.Muon.Section3_ScalingLaws
-import Transformer.Muon.Section2_Rank
+@[expose] public section

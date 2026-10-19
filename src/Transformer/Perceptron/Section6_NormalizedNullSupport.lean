@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_BranchObstruction
+public import Transformer.Perceptron.Section6_AntipodalFields
+public import Transformer.Perceptron.TransformMap
+
+/-!
 # Null support for the actual normalized stationary dynamics
 
 ArXiv:2601.21366v2, §6, `prop: unified.log`, part (a), and
@@ -26,9 +32,7 @@ below extends it to every nonzero parameter through the actual
 matrix-field identity, retaining the original probability measure.
 -/
 
-import Transformer.Perceptron.Section6_BranchObstruction
-import Transformer.Perceptron.Section6_AntipodalFields
-import Transformer.Perceptron.TransformMap
+@[expose] public section
 
 open Real MeasureTheory Set
 

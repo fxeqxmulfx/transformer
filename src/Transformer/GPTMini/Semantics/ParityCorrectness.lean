@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.ParityReadout
+module
+
+public import Transformer.GPTMini.Semantics.ParityReadout
 
 /-!
 # Complete original GPTMini parity correctness through List Int -> List Int
@@ -16,6 +18,8 @@ it makes no claim about floating-point rounding, unequal Python default
 epsilons, AdamW finding these weights, or full depth/recall correctness.
 Universal correctness is stronger than the sampled 99-percent criterion.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

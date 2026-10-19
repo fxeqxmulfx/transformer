@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_Saddle
+public import Transformer.Perspective.CircleNull
+public import Transformer.Perspective.CircleSAConvergence
+public import Transformer.Perspective.Section2_SphereFlow
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # A single cluster on the circle for every β ≥ 0
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5, §4,
@@ -7,23 +15,20 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5, §4,
 On `𝕊¹` the solutions of `USA` and `SA` in angles give solutions on the
 sphere (`usa_anglesToSphere`, `sa_anglesToSphere`); they exist from every
 start (`exists_angularUSA`, `exists_angularSA`), and the solution on the
-sphere is unique (`USA_unique`, `SA_unique`).  If the angles converge to a
+sphere is unique (`USA_unique`, `SA_unique`). If the angles converge to a
 synchronized `θ'`, whose points `(cos θ'_i, sin θ'_i)` all coincide, every
-token converges to that point (`exists_tendsto_of_angles`).  For `β > 0`
+token converges to that point (`exists_tendsto_of_angles`). For `β > 0`
 almost every solution in angles does (`ae_tendsto_synchronized_of_angularUSA`,
 `ae_tendsto_synchronized_of_angularSA`), and a uniform tuple law on the circle
 charges no Lebesgue-null set of angles (`ae_of_ae_volume`): almost every
-initial tuple clusters (`ae_mem_clusteringSet_circle`).  At `β = 0` both
+initial tuple clusters (`ae_mem_clusteringSet_circle`). At `β = 0` both
 dynamics are that of `beta0_consensus` (`beta0Dynamics_of_SA`,
-`beta0Dynamics_of_USA`).  So the conclusion of `thm: beta.tiny` holds on the
+`beta0Dynamics_of_USA`). So the conclusion of `thm: beta.tiny` holds on the
 circle for every `β ≥ 0` (`clustering_circle`), in particular for `β ≤ 1`
 (`beta_tiny_circle`).
 -/
 
-import Transformer.Perspective.AppendixA_Saddle
-import Transformer.Perspective.CircleNull
-import Transformer.Perspective.CircleSAConvergence
-import Transformer.Perspective.Section2_SphereFlow
+@[expose] public section
 
 open scoped BigOperators Topology
 open Real Filter MeasureTheory
@@ -143,14 +148,14 @@ theorem clustering_circle {β : ℝ} (hβ : 0 ≤ β) (P : Measure (SphereTuple 
       ⟨x_star, fun X hX0 hX => hx X hX0 (beta0Dynamics_of_USA hX)⟩⟩
   · exact ae_mem_clusteringSet_circle n hβ hP
 
-/-- **`thm: beta.tiny` for `d = 2`** (Criscitiello–Boumal 2024).  "Moreover,
+/-- **`thm: beta.tiny` for `d = 2`** (Criscitiello–Boumal 2024). "Moreover,
 when `d = 2` one can take `β ≤ 1` and the same conclusion holds": for
 Lebesgue-almost every initial tuple on `𝕊¹` all tokens of the solution of `SA`
-(resp. `USA`) converge to one point.  It holds for every `β ≥ 0`
+(resp. `USA`) converge to one point. It holds for every `β ≥ 0`
 (`clustering_circle`).
 
 Source: arXiv:2312.10794v5, §4, `thm: beta.tiny`, last sentence; credited to
-criscitiello2024synchronization.  The source assumes `n ≥ 2`; it is dropped. -/
+criscitiello2024synchronization. The source assumes `n ≥ 2`; it is dropped. -/
 theorem beta_tiny_circle :
     ∀ β : ℝ, 0 ≤ β → β ≤ 1 →
       ∀ P : Measure (SphereTuple 2 n), UniformTuple 2 n P →

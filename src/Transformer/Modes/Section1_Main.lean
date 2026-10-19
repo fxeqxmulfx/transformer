@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section1_Mammen
+
+/-!
 # The number of modes of a Gaussian KDE — the main result
 
 §1.1 of arXiv:2412.09080v3, `thm:main-result`: in the regime
@@ -9,7 +13,7 @@ is `Θ(√(β log β))`, and almost all of them sit in the belt
 **What the source says and what is carried here.**
 
 * The regime is `IsRegime c N B`: sample sizes `N k`, bandwidth parameters
-  `B k`, both running to infinity, with `n^c ≲ β ≲ n^{2-c}`.  "For arbitrarily
+  `B k`, both running to infinity, with `n^c ≲ β ≲ n^{2-c}`. "For arbitrarily
   small `c > 0`" is the quantifier the user of the theorem supplies: the
   theorems below hold for each `c > 0` at once.
 
@@ -24,7 +28,7 @@ Source: arXiv:2412.09080v3, `thm:main-result`, `rem:minimax`, the belt-width
 remark of §1.1.
 -/
 
-import Transformer.Modes.Section1_Mammen
+@[expose] public section
 
 open Filter Asymptotics
 open scoped Topology ENNReal

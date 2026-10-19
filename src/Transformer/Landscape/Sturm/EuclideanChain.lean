@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.Chains
+public import Mathlib.Algebra.Polynomial.FieldDivision
+
+/-!
 # Signed Euclidean chains over the real numbers
 
 The chain uses actual field division of real polynomials and terminates
@@ -6,8 +11,7 @@ by strict decrease of the remainder degree. Auxiliary for Appendix D.1,
 `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.Chains
-import Mathlib.Algebra.Polynomial.FieldDivision
+@[expose] public section
 
 noncomputable section
 open Polynomial

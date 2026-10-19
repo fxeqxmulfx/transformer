@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Causal.Section5_FrozenFlow
+public import Mathlib.Analysis.ODE.Gronwall
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Continuous dependence of the actual frozen angular flow
 
 ArXiv:2411.04990v2, §5 and Appendix A, the smooth frozen
@@ -19,9 +25,7 @@ These are the actual flow maps needed for the later Borel
 repelling-limit detector and the original Fubini argument.
 -/
 
-import Transformer.Causal.Section5_FrozenFlow
-import Mathlib.Analysis.ODE.Gronwall
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 open scoped NNReal

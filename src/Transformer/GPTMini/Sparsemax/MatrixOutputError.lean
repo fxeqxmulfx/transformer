@@ -1,10 +1,12 @@
-import Mathlib.Analysis.Convex.Function
-import Mathlib.Data.Matrix.Basic
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Basic.Real.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
+module
+
+public import Mathlib.Analysis.Convex.Function
+public import Mathlib.Data.Matrix.Basic
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
 
 /-!
 # Exact curvature of ordinary finite output error
@@ -20,6 +22,8 @@ then remove its residual geometry freedom by an explicit architectural
 weight tie. This module does not assume that arbitrary Q/K training is
 affine or that every answer is attainable under the energy restriction.
 -/
+
+@[expose] public section
 
 noncomputable section
 

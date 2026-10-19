@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.SphereTupleEnergy
+public import Transformer.Landscape.Lojasiewicz.LojasiewiczInnerProduct
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Łojasiewicz convergence on the product of unit spheres
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -6,7 +12,7 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 Written on `ℓ²` tuples, a solution of `USA` or `SA` solves `ẏ = M(t) ∇g(y)` for
 `g = 𝖤_β ∘ normalize`, where `M(t)` scales the `i`-th vector (`blockScale`) by a
-number in a fixed interval `[a, b]`, `0 < a` (`Perspective.SphereFlowLimit`).  Such a
+number in a fixed interval `[a, b]`, `0 < a` (`Perspective.SphereFlowLimit`). Such a
 scaling is symmetric with `a I ≼ M(t) ≼ b I` (`inner_blockScale_self_mem_Icc`), `g` is
 real-analytic off the tuples with a zero vector, and the trajectory stays on the compact
 product of unit spheres, so the Łojasiewicz theorem applies: the trajectory converges
@@ -19,8 +25,7 @@ flow converges to some critical point of `𝖤_β`"), with `lem: loj` of
 arXiv:2510.22026v2 for the theorem itself.
 -/
 
-import Transformer.Perspective.SphereTupleEnergy
-import Transformer.Landscape.Lojasiewicz.LojasiewiczInnerProduct
+@[expose] public section
 
 open Filter
 open scoped Topology

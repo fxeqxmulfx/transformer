@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.GPTMini.Properties.LipschitzConstants
+
+/-!
 # Property: the representation is Lipschitz in the input
 
 Two `gpt-mini` streams driven by the same parameters and started from two
@@ -7,7 +11,7 @@ configurations `x_0, y_0 : Fin T → ℝ^{d_model}` stay within
   `L(params, eps, α_max) · max_i ‖x_0(i) - y_0(i)‖`
 
 of each other at every depth, `L` being the product `endToEndLipschitz` of the
-per-block constants of `Properties.LipschitzConstants`.  That is
+per-block constants of `Properties.LipschitzConstants`. That is
 `stream_lipschitz`, proved here by induction on the depth: each per-block
 constant is at least `1`, so the partial products increase and the same `L`
 bounds every depth, and past `n_layers` no block is applied any more.
@@ -28,7 +32,7 @@ mean-field continuity (Wasserstein-style stability) and numerical analysis
 (error propagation under `bf16` rounding).
 -/
 
-import Transformer.GPTMini.Properties.LipschitzConstants
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -44,7 +48,7 @@ variable (cfg : Config) (eps : ℝ)
 `GPTMini.hidden` satisfies it (`hidden_isStream`), but so does the stream
 started from any configuration whatever, which is what makes
 `stream_lipschitz` a statement about perturbations of the representation and
-not only about those a token lookup can produce.  Source: `reference/model.py`
+not only about those a token lookup can produce. Source: `reference/model.py`
 (`GPTMini.forward`). -/
 def IsStream (params : ModelParams cfg) {T : ℕ} (positions : Fin T → ℝ)
     (x : ℕ → Fin T → EucSpace cfg.d_model) : Prop :=
@@ -70,7 +74,7 @@ within
   `endToEndLipschitz · max_i ‖x_0(i) - y_0(i)‖`
 
 of each other at every depth: the per-block constants multiply, and past
-`n_layers` nothing is applied any more.  The bound holds at every `L`, not
+`n_layers` nothing is applied any more. The bound holds at every `L`, not
 only at `L = n_layers`, because each per-block constant is at least `1`
 (`one_le_perBlockLipschitz`).
 

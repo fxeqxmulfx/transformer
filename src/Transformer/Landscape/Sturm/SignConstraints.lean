@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.SignMasks
+
+/-!
 # Eliminating finite polynomial sign constraints at real roots
 
 A finite recursion combines Sturm--Tarski queries. The resulting
@@ -6,7 +10,7 @@ expression contains no quantified root variable. Auxiliary for
 Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.SignMasks
+@[expose] public section
 
 noncomputable section
 open Polynomial Transformer.Landscape.Lojasiewicz

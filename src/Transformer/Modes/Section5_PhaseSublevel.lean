@@ -1,5 +1,7 @@
-import Transformer.Modes.Section5_WeightedPhase
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
+module
+
+public import Transformer.Modes.Section5_WeightedPhase
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
 
 /-!
 # The interval where a monotone phase derivative is small
@@ -25,6 +27,8 @@ its `HasDerivAt` hypotheses already imply continuity at every point of
 the closed interval, including both endpoints.
 Source: arXiv:2412.09080v3, §5.5, proof of `eq:uniform-decay`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 open scoped Interval

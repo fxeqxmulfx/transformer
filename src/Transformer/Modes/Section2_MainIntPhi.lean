@@ -1,37 +1,41 @@
-/-
+module
+
+public import Transformer.Modes.Section2_IntPhiFinal
+public import Transformer.Modes.Section2_ProxyKRTPrime
+public import Transformer.Modes.Section2_WidthIntegral
+
+/-!
 # The number of modes of a Gaussian KDE — `lem:main-int-phi` and `eq:int-phi-b`
 
 §2.3 of arXiv:2412.09080v3: `lem:main-int-phi` and the two bounds `eq:int-phi-b`
-its proof reduces to.  The proxy Kac-Rice integral is `proxyKR`
+its proof reduces to. The proxy Kac-Rice integral is `proxyKR`
 (`Section2_IntPhiFinal.lean`).
 
 **What the source says and what is carried here.**
 
-* `lem:main-int-phi` is stated as the source has it.  Its proof goes through
+* `lem:main-int-phi` is stated as the source has it. Its proof goes through
   `eq:int-phi-final`, so for `c < 2/5` the source's proof does not cover it.
   The bound on `T'` is proved here regardless, directly and with no bound on
-  `n`.  On `T'` the shift `δ_t` of the Gaussian in `y` is large where
+  `n`. On `T'` the shift `δ_t` of the Gaussian in `y` is large where
   `R = β^{-3/2} n e^{-t²/2} ≥ 1` is large: `√(α_t δ_t²) ≲ √R (4 + 6t²)`, and the
   factor `√R` is paid for by `e^{-A_t/2} ≤ e^{-κ R t²}` together with the width
   `R^{-1/2}` of `∫ e^{-κ R t²} dt` near `t = 0`
-  (`Section2_ProxyKRTPrime.lean`, `Section2_WidthIntegral.lean`).  The bound on
+  (`Section2_ProxyKRTPrime.lean`, `Section2_WidthIntegral.lean`). The bound on
   `T`, `main_int_phi_T`, is proved in `Section2_MainIntPhiT.lean` by retaining
   the Gaussian shift and integrating its width directly.
 
 * `eq:int-phi-b` is carried in the form its proof uses: for every `C > 0`,
   `∫_T e^{-C β^{-3/2} n t² e^{-t²/2}} dt ≍ √(log β)` and
-  `∫_{T'} e^{-C β^{-3/2} n t² e^{-t²/2}} dt ≲ 1`.  This form needs neither the
-  moments nor `A_t`: `phiA_isTheta` is what ties it to `A_t`.  The bound on
-  `T'` is proved here: on `T'` the exponent is at least `C t²`.  The bound on
+  `∫_{T'} e^{-C β^{-3/2} n t² e^{-t²/2}} dt ≲ 1`. This form needs neither the
+  moments nor `A_t`: `phiA_isTheta` is what ties it to `A_t`. The bound on
+  `T'` is proved here: on `T'` the exponent is at least `C t²`. The bound on
   `T` is proved in `Section2_IntPhiB.lean`.
 
 Source: arXiv:2412.09080v3, §2.3 (`sec: 2.3`), `lem:main-int-phi`,
 `eq:int-phi-b`.
 -/
 
-import Transformer.Modes.Section2_IntPhiFinal
-import Transformer.Modes.Section2_ProxyKRTPrime
-import Transformer.Modes.Section2_WidthIntegral
+@[expose] public section
 
 open Real Filter Asymptotics MeasureTheory
 open scoped Topology ENNReal
@@ -96,12 +100,12 @@ theorem integral_exp_phiRate_T' {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (h
 /-! ### `lem:main-int-phi` -/
 
 /-- **Lemma (lem:main-int-phi), on `T'`.**  In the regime `n^c ≲ β ≲ n^{2-c}`,
-`∫_{T'} ∫_0^∞ y (det Σ_t)^{-1/2} φ(…) dy dt ≲ √β`.  Finiteness is stated,
+`∫_{T'} ∫_0^∞ y (det Σ_t)^{-1/2} φ(…) dy dt ≲ √β`. Finiteness is stated,
 since `toReal` reads `∞` as `0`.
 
-The statement is the source's.  Its proof is not: the source goes through
+The statement is the source's. Its proof is not: the source goes through
 `eq:int-phi-final`, which needs `n ≲ β^{5/2}` (`int_phi_final`), and for
-`c < 2/5` the regime allows `n ≫ β^{5/2}`.  Here the shift `δ_t` of the Gaussian
+`c < 2/5` the regime allows `n ≫ β^{5/2}`. Here the shift `δ_t` of the Gaussian
 in `y` is handled directly on `T'`, with no bound on `n`
 (`eventually_inner_le_T'`, `lintegral_width_le`).
 
@@ -146,7 +150,7 @@ theorem main_int_phi_T' {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hreg : Is
       _ = C * K * Real.sqrt (B k) := by ring
 
 /-- The regime hypothesis of `main_int_phi_T'` is satisfiable, with `T'` nonempty at
-every `k`: `c = 1/2`, `n = k + 1`, `β = √n ≤ n^{2/3}`.  (For `β = n`, the witness
+every `k`: `c = 1/2`, `n = k + 1`, `β = √n ≤ n^{2/3}`. (For `β = n`, the witness
 `isRegime_succ`, `T'` is empty once `n ≥ 2` and the bound is trivial.) -/
 example : IsRegime (1 / 2) (fun k => k + 1) (fun k => Real.sqrt ((k + 1 : ℕ) : ℝ)) ∧
     ∀ k : ℕ, (0 : ℝ) ∈ intervalT' (k + 1) (Real.sqrt ((k + 1 : ℕ) : ℝ)) := by

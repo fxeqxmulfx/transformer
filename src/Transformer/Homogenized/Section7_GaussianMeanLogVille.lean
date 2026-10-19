@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_MeanNoiseContinuity
+public import Transformer.Homogenized.Section7_GaussianOverlapVille
+
+/-!
 # Actual logarithmic mean exponential maximal inequality
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -19,8 +24,7 @@ Both signs of `c` are retained, and its deterministic initial
 exponential is kept for the subsequent original-noise cancellation.
 -/
 
-import Transformer.Homogenized.Section7_MeanNoiseContinuity
-import Transformer.Homogenized.Section7_GaussianOverlapVille
+@[expose] public section
 
 open Real Set MeasureTheory
 open scoped NNReal

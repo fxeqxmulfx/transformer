@@ -1,4 +1,8 @@
-/-
+module
+
+public import Mathlib
+
+/-!
 # Butterfly factors and their shifted-diagonal decomposition
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: butterfly`, equation
@@ -8,7 +12,7 @@ The algebraic decomposition is proved, and a counterexample shows why the
 shifts omitted in one later proof display cannot be dropped.
 -/
 
-import Mathlib
+@[expose] public section
 
 namespace Transformer.Zoology
 
@@ -56,7 +60,7 @@ def ButterflyFactor.lowerDiagonal {m : ℕ} (f : ButterflyFactor m)
   fun half t => if half = 0 then f.lowerLeft t * u 0 t else 0
 
 /-- Every even-size butterfly factor is the sum of its main diagonal and
-two shifted off-diagonals.  The paper states the power-of-two case; the
+two shifted off-diagonals. The paper states the power-of-two case; the
 identity itself needs only two equal-size halves.
 Source: Appendix Proposition `prop: butterfly-decomposition`. -/
 theorem butterfly_factor_decomposition {m : ℕ} (f : ButterflyFactor m)

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.GPTMini.TwoTokens
+
+/-!
 # The depth rate of `gpt-mini` is not uniform in the initial stream
 
 `polynomial_rate` stood in `GPTMini.ClusteringTheorem` as
@@ -7,17 +11,17 @@
 > every initial stream the token directions reach a common limit at the rate
 > `‖Φ(x_L(i)) - x_∞‖ ≤ C / L³`,
 
-citing `thm: preln-slow` of arXiv:2510.22026v2.  That theorem says nothing of
+citing `thm: preln-slow` of arXiv:2510.22026v2. That theorem says nothing of
 the kind: it states `r_k(t) ≥ (1-δ)t` and `Var' = -Θ(Var/t)` for the
 continuous-time Pre-LN dynamics started in a narrow cone; the exponent `3`,
-the almost-every initial stream and the uniformity of `C` were not in it.  The
+the almost-every initial stream and the uniformity of `C` were not in it. The
 statement is false, and this file proves it.
 
 A layer adds at most `2√d` to a token, whatever the size of the stream, so a
-token at distance `R` from the origin turns by `O(√d / R)` per layer.  With
+token at distance `R` from the origin turns by `O(√d / R)` per layer. With
 two tokens, the first stays on its ray forever and fixes the limit; the second,
 started far out at an angle of `π/4` from it, is still at an angle after
-`L₀ ≪ R / √d` layers, while `C / L₀³` is already small.  Such starts form an
+`L₀ ≪ R / √d` layers, while `C / L₀³` is already small. Such starts form an
 open set, of positive Lebesgue measure, so "almost every" does not save the
 statement.
 
@@ -25,7 +29,7 @@ Source: the former `GPTMini.polynomial_rate`; arXiv:2510.22026v2,
 `thm: preln-slow`, for what the cited theorem does say.
 -/
 
-import Transformer.GPTMini.TwoTokens
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -39,7 +43,7 @@ variable (cfg : Config)
 
 For every temperature bound `A ≥ 0` and every head dimension `d ≥ 3` there is
 no `C` with `‖Φ(x_L(i)) - x_∞‖ ≤ C / L³` for almost every initial stream of
-two tokens: the negation of the former statement at `T = 2`.  The failing
+two tokens: the negation of the former statement at `T = 2`. The failing
 starts are the ball of radius `1/40` about `(e₀, R(e₀ + e₁))`, with
 `R = 64 √d L₀` and `L₀ = ⌈8C⌉ + 1`; at layer `L₀` the second token's
 direction is still `> 3/8` from the first's, while both must be within

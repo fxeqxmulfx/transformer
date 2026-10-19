@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section3_RowBounds
+
+/-!
 # DASH — automatic scaling with a certified strict margin
 
 arXiv:2602.02016v2, §3.4. Twice the PI estimate is accepted only when
@@ -7,7 +11,7 @@ bound is used, with scale one at zero. This repairs both the unsafe
 PI guarantee and the CN endpoint introduced by exact normalization.
 -/
 
-import Transformer.DASH.Section3_RowBounds
+@[expose] public section
 
 open scoped Matrix
 

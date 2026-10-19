@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallRawBinding
+module
+
+public import Transformer.GPTMini.Semantics.RecallRawBinding
 
 /-!
 # An ordinary linear matrix inserts genuine copied keys into slow RoPE pairs
@@ -17,6 +19,8 @@ are not amplified before the true rotary operator. Its symbol-code
 output is the previously verified actual matching geometry. Further
 QKV coupling and prenorm/QKNorm saturation remain separate steps.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

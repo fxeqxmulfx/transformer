@@ -1,8 +1,13 @@
-/-
+module
+
+public import Transformer.Modes.Section2_PhiTQuot
+public import Transformer.Modes.Section2_MomentsPCov
+
+/-!
 # The number of modes of a Gaussian KDE — the quotients are bounded on `T`
 
 The five quotients of `Section2_PhiTQuot.lean` lie in `(1/2, 2)` for every
-`t ∈ T`, for all large `k`, along a regime sequence `(n_k, β_k)`.  This is the
+`t ∈ T`, for all large `k`, along a regime sequence `(n_k, β_k)`. This is the
 uniform form of `lem:moments-p` that `lem:phi-t` reads its `≍ over t ∈ T` from.
 
 The uniformity comes from the sequential statement
@@ -12,8 +17,7 @@ which a bound fails, whenever there is one, is itself a sequence in `T`.
 Source: arXiv:2412.09080v3, `lem:moments-p`, `lem:phi-t`; §5.2.
 -/
 
-import Transformer.Modes.Section2_PhiTQuot
-import Transformer.Modes.Section2_MomentsPCov
+@[expose] public section
 
 open Real Filter
 open scoped Topology

@@ -1,6 +1,8 @@
-import Mathlib.Data.Nat.Find
-import Mathlib.Data.List.OfFn
-import Mathlib.Tactic
+module
+
+public import Mathlib.Data.Nat.Find
+public import Mathlib.Data.List.OfFn
+public import Mathlib.Tactic
 
 /-!
 # Description complexity and sample-level memorization
@@ -9,6 +11,8 @@ arXiv:2505.24832v3, Section 2.2, Definitions 2 and 3. A decoder may fail
 to describe a string. The paper's minimum is then undefined, represented
 by `none`, rather than by a fabricated zero. Subtraction is signed.
 -/
+
+@[expose] public section
 
 namespace Transformer.Memorization
 

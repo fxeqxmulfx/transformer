@@ -1,4 +1,20 @@
-/-
+module
+
+public import Transformer.RecurrentGradients.Section1_Recurrence
+public import Transformer.RecurrentGradients.Section1_Gradients
+public import Transformer.RecurrentGradients.Section2_Mechanics
+public import Transformer.RecurrentGradients.Section2_Counterexample
+public import Transformer.RecurrentGradients.Section2_Linear
+public import Transformer.RecurrentGradients.Section2_Geometric
+public import Transformer.RecurrentGradients.Section3_Inputs
+public import Transformer.RecurrentGradients.Section3_Previous
+public import Transformer.RecurrentGradients.Section3_Clipping
+public import Transformer.RecurrentGradients.Section3_Regularizer
+public import Transformer.RecurrentGradients.Section3_ErrorSignal
+public import Transformer.RecurrentGradients.SectionA_PowerIteration
+public import Transformer.RecurrentGradients.SectionA_Growth
+
+/-!
 Formalization of:
   Pascanu, Mikolov, Bengio,
   "On the difficulty of training Recurrent Neural Networks",
@@ -42,16 +58,4 @@ and the supplementary's extension of the power iteration through the Jordan
 normal form, sketched in one sentence.
 -/
 
-import Transformer.RecurrentGradients.Section1_Recurrence
-import Transformer.RecurrentGradients.Section1_Gradients
-import Transformer.RecurrentGradients.Section2_Mechanics
-import Transformer.RecurrentGradients.Section2_Counterexample
-import Transformer.RecurrentGradients.Section2_Linear
-import Transformer.RecurrentGradients.Section2_Geometric
-import Transformer.RecurrentGradients.Section3_Inputs
-import Transformer.RecurrentGradients.Section3_Previous
-import Transformer.RecurrentGradients.Section3_Clipping
-import Transformer.RecurrentGradients.Section3_Regularizer
-import Transformer.RecurrentGradients.Section3_ErrorSignal
-import Transformer.RecurrentGradients.SectionA_PowerIteration
-import Transformer.RecurrentGradients.SectionA_Growth
+@[expose] public section

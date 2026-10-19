@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Likelihood.Basic
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
+module
+
+public import Transformer.GPTMini.Convex.Likelihood.Basic
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-!
 # Convex categorical likelihoods force convex prediction fibers
@@ -19,6 +21,8 @@ space must be constant if all its category likelihoods are convex. Symmetric
 query/key products therefore need a changed parameterization, not merely
 a new positive normalizer, to escape this test.
 -/
+
+@[expose] public section
 
 noncomputable section
 

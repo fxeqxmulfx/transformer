@@ -1,7 +1,9 @@
-import Transformer.Wiener.Defs
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.MeasureTheory.Measure.HasOuterApproxClosed
-import Mathlib.Probability.Independence.Integration
+module
+
+public import Transformer.Wiener.Defs
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Measure.HasOuterApproxClosed
+public import Mathlib.Probability.Independence.Integration
 
 /-!
 # The usual augmentation keeps a Brownian motion Brownian
@@ -14,6 +16,8 @@ Brownian is again one for which `B` is Brownian. The null sets do not disturb in
 the almost sure limit of the increments `B t - B u`, `u ↓ s`, each independent of `ℱ u`
 (`indep_comap_of_tendsto`). The augmentation satisfies the usual conditions.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Set
 open scoped BoundedContinuousFunction NNReal Topology

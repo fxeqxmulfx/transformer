@@ -1,6 +1,8 @@
-import Transformer.Modes.Section3_YCharFun
-import Transformer.Modes.Section3_ScaledSumMGF
-import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+module
+
+public import Transformer.Modes.Section3_YCharFun
+public import Transformer.Modes.Section3_ScaledSumMGF
+public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 
 /-!
 # The characteristic function of the actual normalized sum
@@ -31,6 +33,8 @@ characteristic functions. This is the Fourier input to density inversion;
 it does not assume the continuous densities requested elsewhere in §3.
 Source: arXiv:2412.09080v3, §3 `thm:br` and §5.4 `eq:big-z-exp`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

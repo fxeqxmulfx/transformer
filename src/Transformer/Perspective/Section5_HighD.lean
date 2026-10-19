@@ -1,4 +1,24 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+public import Transformer.Perspective.Section3_SmallBeta
+public import Transformer.Perspective.AppendixA_Flow
+public import Transformer.Perspective.AppendixA_Saddle
+public import Transformer.Perspective.SphereClustering
+public import Transformer.Perspective.Section5_Exceptional
+public import Transformer.Perspective.Section5_Vanishing
+public import Transformer.Perspective.WendelGeneralPosition
+public import Transformer.Perspective.WendelCircuitFormula
+public import Transformer.Perspective.WendelCountGeneralPosition
+public import Transformer.Perspective.WendelConvexHull
+public import Transformer.Perspective.WendelOneDim
+public import Transformer.Perspective.WendelSignAverage
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
 # §6 — The high-dimensional case
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -21,10 +41,10 @@ The remark following `thm: boumal` — no smooth invariant measure — is
 `Lemma lem: hemisphere.clustering` — *cone collapse* — is `cone_collapse`, in
 `Perspective.Section5_ExpRate`, proved through the chart `x ↦ x / ⟨x, w⟩` of
 the hemisphere (`Perspective.ConeLimit`); its step 1, `eq: qual.conv`, is the
-qualitative half of its conclusion and is not stated apart.  Along the
+qualitative half of its conclusion and is not stated apart. Along the
 survey's own route, the last step of its proof, integrating
 `e:diffineqalpha.step2` into the rate, is proved in
-`Perspective.Section5_ConeCollapse`.  Steps 1 and 2 — that
+`Perspective.Section5_ConeCollapse`. Steps 1 and 2 — that
 `min_i ⟨x_i(t), w⟩` does not decrease, and the decomposition
 `e:decompox*.step2` of `x⋆` along the particles — are
 `Perspective.Section5_Hemisphere`, which needs the one-sided calculus of
@@ -40,23 +60,7 @@ sequences they have to exclude are exhibited in
 `Perspective.Section5_Exceptional`.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
-import Transformer.Perspective.Section3_SmallBeta
-import Transformer.Perspective.AppendixA_Flow
-import Transformer.Perspective.AppendixA_Saddle
-import Transformer.Perspective.SphereClustering
-import Transformer.Perspective.Section5_Exceptional
-import Transformer.Perspective.Section5_Vanishing
-import Transformer.Perspective.WendelGeneralPosition
-import Transformer.Perspective.WendelCircuitFormula
-import Transformer.Perspective.WendelCountGeneralPosition
-import Transformer.Perspective.WendelConvexHull
-import Transformer.Perspective.WendelOneDim
-import Transformer.Perspective.WendelSignAverage
-import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -78,12 +82,12 @@ counterpart `clusteringSetUSA`.
 *Almost every* is not *every*, and the difference is not decoration: at every
 `β` and every `d`, `antipodalPair_not_mem_clusteringSet` exhibits an initial
 sequence outside `𝒮_β`, so the `∀ X₀` reading of this theorem is false rather
-than unproved.  The exceptional set is null but non-empty, which is why the
+than unproved. The exceptional set is null but non-empty, which is why the
 conclusion is read against the uniform law `UniformTuple` of §4, exactly as in
 `beta_interval`.
 
 **Proof.**  At `β = 0` both dynamics are the `β = 0` flow of §4, and almost every start
-reaches consensus (`beta0_consensus`, for `d ≥ 2`).  For `β > 0` the route is the one
+reaches consensus (`beta0_consensus`, for `d ≥ 2`). For `β > 0` the route is the one
 the survey outlines at the end of §5 for its clustering theorems: every solution
 converges to a critical point of `𝖤_β` (the Łojasiewicz theorem), every critical point
 with two distinct tokens is a strict saddle when `d ≥ 3` (arXiv:2405.18273,

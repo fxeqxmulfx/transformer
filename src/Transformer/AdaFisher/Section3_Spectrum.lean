@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_Efficient
+
+/-!
 # AdaFisher: inverse and spectral bounds
 
 arXiv:2405.16397v3, Proposition 3.2, Appendix A.2, Part 2.
 -/
 
-import Transformer.AdaFisher.Section3_Efficient
+@[expose] public section
 
 open scoped BigOperators Matrix
 

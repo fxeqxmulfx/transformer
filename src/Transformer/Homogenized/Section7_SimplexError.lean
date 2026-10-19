@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_SimplexDriftBias
+
+/-!
 # The actual simplex error and its drift bound
 
 ArXiv:2604.01978v1, §7, the error maximum E(t) and
@@ -15,7 +19,7 @@ Continuous original token and scalar paths give a continuous error,
 as required for the integral Grönwall argument.
 -/
 
-import Transformer.Homogenized.Section7_SimplexDriftBias
+@[expose] public section
 
 open MeasureTheory Set
 open scoped BigOperators NNReal

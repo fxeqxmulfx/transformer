@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.ScalarGradientInequality
+public import Transformer.Landscape.Lojasiewicz.ModulatedCritical
+
+/-!
 # Gradient estimates along analytic curves
 
 The scalar finite-order inequality and the chain rule give an exponent
@@ -6,8 +11,7 @@ below one along every analytic curve. This is the analytic part of an
 energy-level curve-selection route to Appendix D.1 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.ScalarGradientInequality
-import Transformer.Landscape.Lojasiewicz.ModulatedCritical
+@[expose] public section
 
 open Filter Set
 

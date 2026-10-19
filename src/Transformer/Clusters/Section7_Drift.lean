@@ -1,10 +1,15 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_Unbounded
+public import Transformer.Clusters.Section7_DistNonDec
+
+/-!
 # The emergence of clusters in self-attention dynamics — the drift in `d = 1`
 
 The estimates behind `l:auxiliary` of arXiv:2305.05465v6, for the largest
 token `x_N` of `e:Idnonresca` on the line: its drift
 `Σ_j P_Nj x_j = Σ_j softmax(x_N x_l)_j x_j` is at least `x_N - n/x_N`, and at
-least `x_N/n - n e^{-x_N²}/x_N` (`e:pypyly`).  Both come from
+least `x_N/n - n e^{-x_N²}/x_N` (`e:pypyly`). Both come from
 `P_Nj ≤ e^{x_N(x_j - x_N)}` and `e^{az} z ≥ -1/a`.
 
 Also the passage from `e:Idnonresca` in `EucSpace 1` to its coordinate: the
@@ -14,8 +19,7 @@ scalar equation `ẋ_i = Σ_j softmax(x_i x_l)_j x_j`, and the ordering
 Source: arXiv:2305.05465v6, `l:auxiliary`, `e:infdist`.
 -/
 
-import Transformer.Clusters.Section7_Unbounded
-import Transformer.Clusters.Section7_DistNonDec
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -48,7 +52,7 @@ theorem softmaxWeight_le_exp (y : Idx (m + 1) → ℝ) (N j : Idx (m + 1)) :
   exact mul_le_mul_of_nonneg_left hZ (Real.exp_pos _).le
 
 /-- The drift of a positive token, near its value: with `a = y_N > 0`,
-`Σ_j P_Nj y_j ≥ a - n/a`.  The token need not be the largest: the terms with
+`Σ_j P_Nj y_j ≥ a - n/a`. The token need not be the largest: the terms with
 `y_j > a` only help. -/
 theorem sub_le_drift (y : Idx (m + 1) → ℝ) (N : Idx (m + 1)) (ha : 0 < y N) :
     y N - (m + 1) / y N ≤

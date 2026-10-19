@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Homogenized.SlowMotion
+public import Transformer.Homogenized.Barycenter
+public import Transformer.Normalization.InitialSphereMoments
+public import Transformer.Metastability.InitialUniform
+
+/-!
 # The original uniform-law softmax barycenter and dimension
 
 ArXiv:2604.01978v1, §7.3, `lemma:Laplace_method`, Step 1.
@@ -22,10 +29,7 @@ Laplace limit. The estimate is useful when the query norm grows more
 slowly than the logarithm of dimension.
 -/
 
-import Transformer.Homogenized.SlowMotion
-import Transformer.Homogenized.Barycenter
-import Transformer.Normalization.InitialSphereMoments
-import Transformer.Metastability.InitialUniform
+@[expose] public section
 
 open Real MeasureTheory
 open scoped BigOperators

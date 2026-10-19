@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_VectorGaussianDerivative
+public import Transformer.BatchSize.Section4_GeneratorBound
+
+/-!
 # The genuine frozen diagonal diffusion generator
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The coefficients are held at the left endpoint of an Euler interval;
 the derivatives remain the actual derivatives of the observable.
 -/
 
-import Transformer.BatchSize.Section4_VectorGaussianDerivative
-import Transformer.BatchSize.Section4_GeneratorBound
+@[expose] public section
 
 open MeasureTheory
 open scoped BigOperators

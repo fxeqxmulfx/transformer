@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_DeterministicEulerMap
+
+/-!
 # Genuine C2 bounds for the deterministic backward Euler tests
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1's weak comparison.
@@ -6,7 +10,7 @@ The true propagated tests retain their value bound; their derivative
 constants grow at most exponentially in physical time, not in mesh size.
 -/
 
-import Transformer.BatchSize.Section4_DeterministicEulerMap
+@[expose] public section
 
 open scoped NNReal
 

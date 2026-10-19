@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_ScalarGaussianFourier
-import Mathlib.MeasureTheory.Integral.Prod
+module
+
+public import Transformer.Modes.Section3_ScalarGaussianFourier
+public import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # The actual two-dimensional Gaussian Hermite transform
@@ -19,6 +21,8 @@ writes a Hermite polynomial in frequency in place of the cubic
 monomial multiplier. The functions transformed here are precisely
 the spatial Gaussian Hermite basis of §3.1, without altering `ψ`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology FourierTransform

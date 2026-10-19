@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section1_Models
+
+/-!
 # Attention's forward pass and Frank-Wolfe — the cells
 
 Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
@@ -9,7 +13,7 @@ one per vertex (`lem: cells`), and when all vertices sit on one level set of
 `J` these pieces are exactly the `B`-norm Voronoi cells (`prop: voronoi`).
 -/
 
-import Transformer.FrankWolfe.Section1_Models
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -166,10 +170,10 @@ def vorCell (B : ParamMatrix d) (v : Idx κ → EucSpace d) (i : Idx κ) : Set (
 **What the source says and what is changed here.**  Two hypotheses of the
 source are dropped, because the proof uses neither: `B ≻ 0` is weakened to
 `B` symmetric — the polarization identity is all that the argument needs — and
-`c > 0` is dropped outright.  The resulting statement is stronger.
+`c > 0` is dropped outright. The resulting statement is stronger.
 
 The source's `Vor_B(v_i)` is compared against every `y ∈ 𝒦`; here, as in the
-source's own proof, the comparison is against the vertices.  Against every
+source's own proof, the comparison is against the vertices. Against every
 `y ∈ 𝒦` the claim would be false: `y = x` gives `‖x - v_i‖_B ≤ 0`, so only the
 vertices themselves could lie in their cells.
 

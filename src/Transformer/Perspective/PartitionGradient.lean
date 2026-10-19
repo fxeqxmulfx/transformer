@@ -1,4 +1,13 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.ParametricIntegral
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+public import Transformer.Perspective.Section2_EnergyKernel
+
+/-!
 # The gradient of the partition function
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -9,7 +18,7 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
   `∇Z_{β,μ}(x) = β ∫ e^{β ⟨x,y⟩} y dμ(y)`.
 
 This is the one analytic fact behind `eq: logder` and `e:XmuE` of §3.3, which
-`Perspective.Section2_GradientFlow` reads off from it.  The domination is
+`Perspective.Section2_GradientFlow` reads off from it. The domination is
 immediate: on a ball of radius `1` around `x` the integrand's derivative is
 bounded by the constant `|β| e^{|β|(‖x‖+1)}`, and `μ` is a probability
 measure.
@@ -17,12 +26,7 @@ measure.
 Source: arXiv:2312.10794v5, §3.3.
 -/
 
-import Mathlib.Analysis.Calculus.ParametricIntegral
-import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import Transformer.Perspective.Section2_EnergyKernel
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

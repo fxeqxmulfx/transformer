@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.OverlapObservable
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # Exponentiating the original overlap observable
 
 ArXiv:2604.01978v1, §7, the martingale maximal inequality after
@@ -14,8 +19,7 @@ noise second moment. Unit configurations also give genuine uniform
 bounds on the observable and its first derivative.
 -/
 
-import Transformer.Homogenized.OverlapObservable
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open scoped BigOperators
 
@@ -30,8 +34,8 @@ noncomputable def exponentialOverlap {d n : ℕ} (c : ℝ) (i j : Idx n)
 Source: arXiv:2604.01978v1, §7, the maximal inequality and def:ito.formula. -/
 theorem contDiff_exponentialOverlap {d n : ℕ} (c : ℝ) (i j : Idx n) :
     ContDiff ℝ (⊤ : ℕ∞) (exponentialOverlap (d := d) c i j) :=
-  (contDiff_const.mul ((contDiff_apply ℝ (EucSpace d) i).inner ℝ
-    (contDiff_apply ℝ (EucSpace d) j))).exp
+  (contDiff_const.mul ((contDiff_apply ℝ (fun _ : Idx n => EucSpace d) i).inner ℝ
+    (contDiff_apply ℝ (fun _ : Idx n => EucSpace d) j))).exp
 
 /-- Its actual first derivative, as a continuous linear map.
 Source: arXiv:2604.01978v1, §7, lem:Ito_formula and the maximal inequality. -/

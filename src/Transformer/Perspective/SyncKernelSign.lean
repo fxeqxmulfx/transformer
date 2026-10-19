@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.SyncKernelQuartic
+
+/-!
 # The sign of the quartic `p` on `[-1, 1]`
 
 Polyanskiy, Rigollet, Yao — arXiv:2507.22857v1, *Synchronization of mean-field
@@ -20,7 +24,7 @@ The source takes the lowest root from `p(z) → -∞` as `z → -∞`; the point
 `-2 - 6/β`, where `p < 0`, stands for that limit.
 -/
 
-import Transformer.Perspective.SyncKernelQuartic
+@[expose] public section
 
 open Real
 

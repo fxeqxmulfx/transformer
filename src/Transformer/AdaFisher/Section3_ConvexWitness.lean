@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_ConvexCorrected
+public import Transformer.AdaFisher.Section3_ConvexFalse
+public import Transformer.AdaFisher.Section3_NonconvexWitness
+
+/-!
 # AdaFisher: a complete block-Kronecker convex counterexample
 
 arXiv:2405.16397v3, Proposition 3.3, Appendix A.2.
@@ -6,9 +12,7 @@ The scalar divergent eigendirection is embedded in an actual efficient
 four-parameter block with positive nonconstant original factors `(1,2)`.
 -/
 
-import Transformer.AdaFisher.Section3_ConvexCorrected
-import Transformer.AdaFisher.Section3_ConvexFalse
-import Transformer.AdaFisher.Section3_NonconvexWitness
+@[expose] public section
 
 open scoped BigOperators
 open Filter Topology

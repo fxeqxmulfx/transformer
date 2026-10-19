@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_SpacetimeTests
+public import Transformer.Interpolation.Section3_ProjectionTransport
+
+/-!
 # Constructing actual weak solutions of a constant projection field
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §3.1,
@@ -10,8 +15,7 @@ differentiation, and its continuous flux gives the time-integrated equation.
 Thus the construction does not assume existence of a measure-valued solution.
 -/
 
-import Transformer.Interpolation.Section1_SpacetimeTests
-import Transformer.Interpolation.Section3_ProjectionTransport
+@[expose] public section
 
 open Real MeasureTheory
 

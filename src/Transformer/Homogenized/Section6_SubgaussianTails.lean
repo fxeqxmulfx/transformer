@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_SubgaussianQuadraticMoments
+public import Mathlib.Analysis.Real.Sqrt
+
+/-!
 # Actual subgaussian scalar and squared tails
 
 ArXiv:2604.01978v1, §6.3, `lem:Hanson_wright`. The actual
@@ -16,8 +21,7 @@ All statements keep the original probability space, events and scales;
 no quadratic-form concentration estimate is assumed.
 -/
 
-import Transformer.Homogenized.Section6_SubgaussianQuadraticMoments
-import Mathlib.Analysis.Real.Sqrt
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

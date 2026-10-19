@@ -1,4 +1,11 @@
-/-
+module
+
+public import Mathlib.Probability.Distributions.Gaussian.Real
+public import Mathlib.Probability.CDF
+public import Mathlib.Analysis.InnerProductSpace.Continuous
+public import Mathlib.Tactic
+
+/-!
 # Gaussian negative-alignment probabilities
 
 Formalization of arXiv:2602.15322v1, Section 3, the inline Phi formula.
@@ -7,10 +14,7 @@ are explicit. The formula is not a distribution-free property of EMA
 momentum. A Chernoff bound specifies its stated exponential decay.
 -/
 
-import Mathlib.Probability.Distributions.Gaussian.Real
-import Mathlib.Probability.CDF
-import Mathlib.Analysis.InnerProductSpace.Continuous
-import Mathlib.Tactic
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped InnerProductSpace

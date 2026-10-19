@@ -1,6 +1,8 @@
-import Transformer.Modes.Section3_MixedMoments
-import Mathlib.Analysis.Convex.Integral
-import Mathlib.Analysis.Convex.SpecificFunctions.Pow
+module
+
+public import Transformer.Modes.Section3_MixedMoments
+public import Mathlib.Analysis.Convex.Integral
+public import Mathlib.Analysis.Convex.SpecificFunctions.Pow
 
 /-!
 # Comparing every mixed moment with one Euclidean moment
@@ -23,6 +25,8 @@ kept in the final cumulant inequality.
 No centring or covariance hypothesis is needed for these comparisons.
 Source: arXiv:2412.09080v3, §3.1, `lem:eta`, and its proof in §5.3.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Filter
 

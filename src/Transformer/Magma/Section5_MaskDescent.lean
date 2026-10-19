@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Magma.Section2_BlockExpansion
+public import Transformer.Optimization.Basic
+public import Mathlib.Analysis.InnerProductSpace.LinearMap
+
+/-!
 # Corrected expected descent under global smoothness
 
 Correction of arXiv:2602.15322v1, Section 5, prop:magma_descent,
@@ -7,9 +13,7 @@ quadratic upper model replaces the false inference from coordinate
 smoothness. Independent normalized masks act on orthogonal embedded blocks.
 -/
 
-import Transformer.Magma.Section2_BlockExpansion
-import Transformer.Optimization.Basic
-import Mathlib.Analysis.InnerProductSpace.LinearMap
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 

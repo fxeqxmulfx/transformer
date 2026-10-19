@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Normalization.Basic
+
+/-!
 # Normalization — The radial velocity under Pre-LN (§3 of 2510.22026v2)
 
 The corollary of `thm: convergence` for Pre-LN and Peri-LN rests on one
@@ -6,12 +11,11 @@ explicit lower bound for the radial velocity,
 
   `ṙ_j = ⟨θ_j, A_j(Θ)⟩ ≥ (1 / (n e^β)) (e^β - (n - 1)) ≥ 1 / (n e^β)`,
 
-valid whenever `n ≤ e^β`.  This file proves it.  The passage from the bound to
+valid whenever `n ≤ e^β`. This file proves it. The passage from the bound to
 unconditional synchronization is an asymptotic argument and is not formalized.
 -/
 
-import Transformer.Basic
-import Transformer.Normalization.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -111,7 +115,7 @@ theorem inner_attentionVec_self_lower_bound
 `inner_attentionVec_self_lower_bound` applies to `ṙ_j` of the Pre-LN scheme
 directly, and is at least `1 / (n e^β) > 0`: the radius grows at a rate bounded
 away from zero, which is what makes the synchronization of the corollary
-unconditional.  Source: arXiv:2510.22026v2, §3. -/
+unconditional. Source: arXiv:2510.22026v2, §3. -/
 theorem radialDerivative_pre_lower_bound
     (β : ℝ) (hβ : 0 < β) (θ : ℝ → Idx n → EucSpace d) (t τ : ℝ)
     (hθ : ∀ l : Idx n, ‖θ t l‖ = 1) (hn : (n : ℝ) ≤ Real.exp β) (j : Idx n) :

@@ -1,4 +1,6 @@
-import Transformer.Modes.Section3_LargeFrequency
+module
+
+public import Transformer.Modes.Section3_LargeFrequency
 
 /-!
 # The integrable large-frequency tail of the actual normalized sum
@@ -16,6 +18,8 @@ This proves the zero-derivative large-frequency integral step of §5.4
 Dependence on the law is retained; tracking this bound uniformly in a
 varying bandwidth or translation requires further estimates.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped ENNReal Topology

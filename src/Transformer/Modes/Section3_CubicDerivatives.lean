@@ -1,7 +1,9 @@
-import Transformer.Modes.Section3_CubicCorrection
-import Transformer.Modes.Section3_DerivativeMoments
-import Mathlib.Analysis.Calculus.FDeriv.Analytic
-import Mathlib.Analysis.Calculus.ContDiff.CPolynomial
+module
+
+public import Transformer.Modes.Section3_CubicCorrection
+public import Transformer.Modes.Section3_DerivativeMoments
+public import Mathlib.Analysis.Calculus.FDeriv.Analytic
+public import Mathlib.Analysis.Calculus.ContDiff.CPolynomial
 
 /-!
 # The actual derivative of the cubic characteristic correction
@@ -23,6 +25,8 @@ These identities supply the differentiated correction in the `s = 3`
 normalized-sum comparison. Exponential moments are still used separately
 to identify the source's logarithmic cumulants with these moments.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

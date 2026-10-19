@@ -1,6 +1,8 @@
-import Transformer.AMSGrad.Section4_Terms
+module
 
-/-
+public import Transformer.AMSGrad.Section4_Terms
+
+/-!
 # AMSGrad — the third term of Lemma 3.1
 
 §4 of arXiv:1904.03590v4, proof of Theorem 4.1: the bounds on the third term
@@ -9,6 +11,8 @@ of Lemma 3.1 for `β_{1,t} = β₁λ^{t-1}`, (beta_1lambda^{t-1}), and for
 
 Source: arXiv:1904.03590v4, §4, proof of Theorem 4.1.
 -/
+
+@[expose] public section
 
 open Finset
 

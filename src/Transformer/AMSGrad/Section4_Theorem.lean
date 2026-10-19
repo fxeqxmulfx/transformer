@@ -1,10 +1,12 @@
-import Transformer.AMSGrad.Section4_Telescope
-import Transformer.AMSGrad.Section4_Third
+module
 
-/-
+public import Transformer.AMSGrad.Section4_Telescope
+public import Transformer.AMSGrad.Section4_Third
+
+/-!
 # AMSGrad — the corrected convergence theorem
 
-§4 of arXiv:1904.03590v4: Theorem 4.1 (`mainthm_change_beta1`).  Lemma 4.4
+§4 of arXiv:1904.03590v4: Theorem 4.1 (`mainthm_change_beta1`). Lemma 4.4
 is `Section4_MainLemma`, Corollary 4.5 is `Section4_Corollary`.
 
 **What the source says and what is carried here.**
@@ -14,13 +16,15 @@ is `Section4_MainLemma`, Corollary 4.5 is `Section4_Corollary`.
   `α > 0`, which the source assumes throughout.
 
 * Theorem 4.1 asserts "there is some `1 ≤ t₀ ≤ T` such that … for all
-  `T ≥ 1`".  Its `t₀` is the `t₀` of Lemma 4.3, which does not depend on `T`;
-  it is stated as `∃ t₀ ≥ 1, ∀ T ≥ 1, ∀ x* ∈ F, R(T) ≤ …`.  The regret is
-  bounded for every `x* ∈ F`, not only for the minimizer of `Σ_t f_t`.  One
+  `T ≥ 1`". Its `t₀` is the `t₀` of Lemma 4.3, which does not depend on `T`;
+  it is stated as `∃ t₀ ≥ 1, ∀ T ≥ 1, ∀ x* ∈ F, R(T) ≤ …`. The regret is
+  bounded for every `x* ∈ F`, not only for the minimizer of `Σ_t f_t`. One
   theorem per setting of `β_{1,t}`: `mainthm_lambda`, `mainthm_inv`.
 
 Source: arXiv:1904.03590v4, §4, Theorem 4.1.
 -/
+
+@[expose] public section
 
 open Finset Filter
 

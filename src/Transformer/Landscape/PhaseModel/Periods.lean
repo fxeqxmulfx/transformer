@@ -1,20 +1,24 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Basic
+public import Mathlib.Algebra.Order.ToIntervalMod
+
+/-!
 # Phase model — integer rows and periods
 
 For an integer row `a`, `⟪a, v⟫ = Σ_i a_i v_i` (`inner_intVec`), a multiple
 of `2π` when `v` is a period (`exists_inner_intVec_eq`), so the periods
 `2πℤⁿ` leave a phase energy with integer rows invariant
-(`phaseEnergy_add_of_mem_periods`).  A relation `⟪a, v⟫ ∈ G`, for an additive
+(`phaseEnergy_add_of_mem_periods`). A relation `⟪a, v⟫ ∈ G`, for an additive
 subgroup `G` of `ℝ`, passes from rows to their integer combinations
-(`inner_intVec_mem_of_mem_span`).  The periods form a closed set
+(`inner_intVec_mem_of_mem_span`). The periods form a closed set
 (`isClosed_periods`), and every point has a translate by a period in the
-compact cube `[0, 2π]ⁿ` (`isCompact_cube`, `exists_add_mem_cube`).  The
+compact cube `[0, 2π]ⁿ` (`isCompact_cube`, `exists_add_mem_cube`). The
 inner product with the row of `x / y` is `ψ_x - ψ_y - ψ_{x-y}`
 (`inner_intVec_divisionRow`), which gives `divisionEnergy_apply`.
 -/
 
-import Transformer.Landscape.PhaseModel.Basic
-import Mathlib.Algebra.Order.ToIntervalMod
+@[expose] public section
 
 open Real
 

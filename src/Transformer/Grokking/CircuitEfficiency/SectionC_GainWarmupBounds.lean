@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainSquareBounds
-import Transformer.Grokking.AdamW.ScheduledParameterBox
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainSquareBounds
+public import Transformer.Grokking.AdamW.ScheduledParameterBox
 
 /-!
 # Closed gained-CE feedback with the original native warmup
@@ -30,6 +32,8 @@ does not predict a transition time. Floating-point schedule/kernel,
 stochastic transfer and weak-decay attraction remain separate tasks.
 Frozen training, checkpoints and measurements are unchanged.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

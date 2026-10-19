@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.MixedMargins
+module
+
+public import Transformer.GPTMini.Convex.Structured.MixedMargins
 
 /-!
 # Actual learned mixed head through the full integer-list interface
@@ -18,6 +20,8 @@ margins and successful encoding, never from assumed correct logits.
 This is a standalone mixed callback. Actual tensor/prenorm/residual/tied
 realization, floating-point behavior and AdamW training remain separate.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

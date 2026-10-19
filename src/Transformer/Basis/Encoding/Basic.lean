@@ -1,4 +1,6 @@
-import Transformer.Basis.Tasks
+module
+
+public import Transformer.Basis.Tasks
 
 /-!
 # Legal integer tokens and checked model encoding
@@ -8,6 +10,8 @@ at cbafbe9. Valid depth and parity prefixes consist of genuine model token
 IDs. The encoding theorem checks both integer bounds and reconstructs the
 original input; validity is not a premise about the model's answers.
 -/
+
+@[expose] public section
 
 namespace Transformer.Basis.Encoding
 

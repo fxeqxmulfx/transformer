@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.Homogenized.GaussianCrossMoments
+
+/-!
 # Homogenized Transformers — integrability of mixed Gaussian value moments
 
 The scalar products in the matrix identity of `lem:lemma_app` are integrable
-when the query/key-dependent vectors are bounded.  This complements the
+when the query/key-dependent vectors are bounded. This complements the
 integral identity in `GaussianCrossMoments.lean` and permits coordinatewise
 evaluation of the Bochner integral defining the covariance kernel.
 
 Source: arXiv:2604.01978v1, proof of `lem:lemma_app`.
 -/
 
-import Transformer.Homogenized.GaussianCrossMoments
+@[expose] public section
 
 open scoped BigOperators NNReal
 open MeasureTheory ProbabilityTheory

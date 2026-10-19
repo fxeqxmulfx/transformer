@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.AnalyticCurveEnergyLevels
+public import Transformer.Landscape.Lojasiewicz.GradientMinimumCluster
+
+/-!
 # Energy-level comparison from one-sided curves of gradient minima
 
 The one-sided output of analytic curve selection supplies the energy-level
@@ -6,8 +11,7 @@ lifting needed by the comparison-curve proof of the local gradient
 inequality in Appendix D.1 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.AnalyticCurveEnergyLevels
-import Transformer.Landscape.Lojasiewicz.GradientMinimumCluster
+@[expose] public section
 
 open Filter Set
 

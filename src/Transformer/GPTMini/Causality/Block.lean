@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Causality.Basic
-import Transformer.GPTMini.Block
+module
+
+public import Transformer.GPTMini.Causality.Basic
+public import Transformer.GPTMini.Block
 
 /-!
 # Prefix preservation through the actual pre-norm block
@@ -10,6 +12,8 @@ RMSNorm, all QKV/head reshapes, the output projection, both residual
 additions and the ReLU-squared FFN. Parameters are arbitrary and shared
 between the shorter and longer evaluations, as in the actual model.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Causality
 

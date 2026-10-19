@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_CenteredExponentialBounds
+
+/-!
 # MGF of the original centered subgaussian square
 
 Source: arXiv:2604.01978v1, §6.3, `lem:Hanson_wright`.
@@ -10,7 +14,7 @@ The constants are fixed and independent of the probability space,
 coordinate and variance proxy. The zero-proxy case is included.
 -/
 
-import Transformer.Homogenized.Section6_CenteredExponentialBounds
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped NNReal

@@ -1,9 +1,16 @@
-/-
+module
+
+public import Transformer.Causal.Interaction
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Analysis.Real.Pi.Bounds
+
+/-!
 # Causal attention — The Gaussian bounds on `h` and `g` (§B of 2411.04990v2)
 
 `lemma:interaction` (4) and (5): the interaction potential
 `h(x) = e^{β(cos x - 1)} sin x` and its derivative `g = h'` are squeezed
-between Gaussians of width `β^{-1/2}`.  Everything here is the pair of Taylor
+between Gaussians of width `β^{-1/2}`. Everything here is the pair of Taylor
 bounds `x - x³/6 < sin x < x` and `1 - x²/2 ≤ cos x ≤ 1 - x²/2 + x⁴/24`
 transported through `exp`, so `cos_le_quartic` — which Mathlib does not carry —
 comes first.
@@ -11,13 +18,13 @@ comes first.
 Two of the three inequalities need a hypothesis the paper leaves implicit, and
 Lean is what made that visible:
 
-* the lower bound on `h` needs `x ≤ π`.  Past `π` the factor `sin x` turns
+* the lower bound on `h` needs `x ≤ π`. Past `π` the factor `sin x` turns
   negative while `x - x³/6` is already negative and exponentially smaller: at
   `β = 5`, `x = 3π/2` the claim reads `-10⁻²³ < -6.7·10⁻³`, which is false.
-* the lower bound `-e^{-βx²/2 + βx⁴/24} βx² < g(x)` needs `1 ≤ β`.  Dividing
+* the lower bound `-e^{-βx²/2 + βx⁴/24} βx² < g(x)` needs `1 ≤ β`. Dividing
   by `e^{β(cos x - 1)} > 0` it comes down to `cos x + β(x² - sin²x) > 0`, and
   the supremum of `-cos x / (x² - sin²x)` over `x > 0` is `≈ 0.141`, attained
-  near `x ≈ 2.26`; at `β = 0.05`, `x = 1.66` the claim is false.  `1 ≤ β` is
+  near `x ≈ 2.26`; at `β = 0.05`, `x = 1.66` the claim is false. `1 ≤ β` is
   the hypothesis `h_pot_unimodal` already carries, and `rem:interaction` works
   at `β ≥ 14`.
 
@@ -27,10 +34,7 @@ separate theorem rather than a conjunct.
 Source: arXiv:2411.04990v2, §B, `lemma:interaction` (4) and (5).
 -/
 
-import Transformer.Causal.Interaction
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Mathlib.Analysis.Real.Pi.Bounds
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -43,7 +47,7 @@ open Causal
 /-- **The quartic Taylor bound for the cosine:** `cos x ≤ 1 - x²/2 + x⁴/24`.
 
 Mathlib has the quadratic companion `Real.one_sub_sq_div_two_le_cos` but not
-this one.  It is `Real.sin_gt_sub_cube` integrated from `0`: the difference
+this one. It is `Real.sin_gt_sub_cube` integrated from `0`: the difference
 `1 - x²/2 + x⁴/24 - cos x` vanishes at `0` and has derivative
 `sin x - (x - x³/6) > 0`, hence is monotone on `[0, ∞)`; both sides are even.
 
@@ -112,7 +116,7 @@ For `0 < x ≤ π`,
 
   `e^{-βx²/2} (x - x³/6) < h(x) < e^{-βx²/2 + βx⁴/24} x`.
 
-The paper states both for every `x > 0`.  The upper bound does hold there —
+The paper states both for every `x > 0`. The upper bound does hold there —
 past `π` the left-hand side is negative and the right-hand side positive — but
 the lower bound does not: see the file header.
 

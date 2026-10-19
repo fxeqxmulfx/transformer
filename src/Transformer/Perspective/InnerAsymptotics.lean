@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.Asymptotics.Lemmas
+
+/-!
 # Inner products and asymptotics at the origin
 
 The bookkeeping the second-order expansion of `𝖤_β` runs on: Cauchy–Schwarz
 read as a statement about `O` and `o`, and the two monomial comparisons
-`t³ = o(t²)`, `t² = o(t)`.  Nothing here mentions the survey.
+`t³ = o(t²)`, `t² = o(t)`. Nothing here mentions the survey.
 
 Used by `Perspective.AppendixB_Intrinsic`.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.Asymptotics.Lemmas
+@[expose] public section
 
 open scoped BigOperators
 open Asymptotics Filter

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallRawExcluded
+module
+
+public import Transformer.GPTMini.Semantics.RecallRawExcluded
 
 /-!
 # A full genuine recall score row from raw table and last-write conditions
@@ -18,6 +20,8 @@ without a score-gap premise. The six-token overwrite control makes
 all raw conditions concrete. Full validated-parser coupling, finite
 value retrieval and complete tied integer readout remain.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

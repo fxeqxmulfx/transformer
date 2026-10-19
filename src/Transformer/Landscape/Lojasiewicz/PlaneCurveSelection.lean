@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.PlaneCurveOrientation
+
+/-!
 # Analytic curve selection in prepared real plane zero sets
 
 A prepared analytic zero set in the plane admits curve selection under
@@ -6,7 +10,7 @@ arbitrary finite analytic sign constraints. Axis isolation, orientation,
 and constrained ramified branch lifting provide all geometric steps.
 -/
 
-import Transformer.Landscape.Lojasiewicz.PlaneCurveOrientation
+@[expose] public section
 
 open Filter Set
 

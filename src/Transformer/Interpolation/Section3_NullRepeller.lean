@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_ProjectionContraction
+public import Transformer.Interpolation.Section3_QuadrantGeometry
+public import Transformer.Interpolation.Section3_TwoRidgeLaw
+public import Transformer.Interpolation.Section3_CollapseLaws
+public import Transformer.Causal.UniformAtoms
+public import Mathlib.MeasureTheory.Measure.Typeclasses.SFinite
+
+/-!
 # A nearby attracting direction with a null repelling pole
 
 Auxiliaries for arXiv:2411.04551v3, Appendix, `lem: two.balls`,
@@ -16,12 +25,7 @@ particle converges to that direction, without assuming the initial law is
 diffuse. Chordal balls of radius greater than `2` are the whole sphere.
 -/
 
-import Transformer.Interpolation.Section3_ProjectionContraction
-import Transformer.Interpolation.Section3_QuadrantGeometry
-import Transformer.Interpolation.Section3_TwoRidgeLaw
-import Transformer.Interpolation.Section3_CollapseLaws
-import Transformer.Causal.UniformAtoms
-import Mathlib.MeasureTheory.Measure.Typeclasses.SFinite
+@[expose] public section
 
 open Real Set MeasureTheory Filter
 open scoped Topology ENNReal

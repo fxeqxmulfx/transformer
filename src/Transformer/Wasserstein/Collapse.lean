@@ -1,7 +1,11 @@
-/-
+module
+
+public import Transformer.Wasserstein.Basic
+
+/-!
 # The 2-Wasserstein distance — collapsing mass onto a point
 
-The upper bound companion of `Wasserstein/LowerBound.lean`.  Keep `ρ` on a set
+The upper bound companion of `Wasserstein/LowerBound.lean`. Keep `ρ` on a set
 `s` and move the mass of `sᶜ` onto one point `x₀`: the result is
 `ρ|_s + ρ(sᶜ) δ_{x₀}`, the plan that moves it is the coupling
 `(x ↦ (x,x))_# ρ|_s + (x ↦ (x,x₀))_# ρ|_{sᶜ}`, and it costs at most
@@ -14,7 +18,7 @@ jump onto a single point, which already gives `W_2 = O(√η)`.
 Source: arXiv:2411.04551v3, `lem: mass.concentration.Q1`.
 -/
 
-import Transformer.Wasserstein.Basic
+@[expose] public section
 
 open scoped ENNReal
 open Real MeasureTheory

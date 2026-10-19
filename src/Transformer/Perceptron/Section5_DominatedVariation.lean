@@ -1,4 +1,11 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.ParametricIntegral
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
+public import Mathlib.Analysis.Normed.Group.Bounded
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+
+/-!
 # Dominated second variations on compact probability spaces
 
 ArXiv:2601.21366v2, §5.2, `eq:Hess-bilinear.std`. Differentiating
@@ -13,10 +20,7 @@ paper's atomicity theorem. The rotated kernel and perceptron must
 supply them before that theorem can use the second variation.
 -/
 
-import Mathlib.Analysis.Calculus.ParametricIntegral
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
-import Mathlib.Analysis.Normed.Group.Bounded
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+@[expose] public section
 
 open Real MeasureTheory Filter Set Topology
 

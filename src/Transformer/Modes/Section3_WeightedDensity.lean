@@ -1,4 +1,7 @@
-import Transformer.Modes.Section3_WeightedFourier
+module
+
+public import Transformer.Modes.Section3_WeightedFourier
+
 /-!
 # Quadratically weighted comparison of actual continuous densities
 
@@ -15,6 +18,7 @@ quadratic bound with the unweighted inversion estimate gives exactly
 the spatial weight `1 + |x|²` used in §3 `thm:br` for `s = 2`.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology FourierTransform
 namespace Transformer.Modes

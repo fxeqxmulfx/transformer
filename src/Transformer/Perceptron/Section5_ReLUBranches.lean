@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_LinearStationarity
+public import Transformer.Perceptron.Section5_PolynomialSupport
+
+/-!
 # The original unnormalized ReLU branch fields
 
 ArXiv:2601.21366v2, §5.2 and §5.3, `eq:quad.pol.I` and
@@ -20,8 +25,7 @@ one actual pattern intersection. No genericity or nonzero-neuron
 assumption is needed in this original finite-cover step.
 -/
 
-import Transformer.Perceptron.Section5_LinearStationarity
-import Transformer.Perceptron.Section5_PolynomialSupport
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

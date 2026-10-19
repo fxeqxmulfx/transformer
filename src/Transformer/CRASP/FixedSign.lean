@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.FixedFinite
+
+/-!
 # Boolean storage and the sign of downward rounding
 
 arXiv:2506.16055v3, Appendix B.2, `thm:TLCl_to_rtfr`:
@@ -6,7 +10,7 @@ uniform attention followed by downward rounding implements an integer
 comparison, while Boolean features are stored as zero and one.
 -/
 
-import Transformer.CRASP.FixedFinite
+@[expose] public section
 
 namespace Transformer.CRASP.Fx
 

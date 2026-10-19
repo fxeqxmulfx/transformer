@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_DensityInversion
-import Transformer.Modes.Section3_ErrorKR
+module
+
+public import Transformer.Modes.Section3_DensityInversion
+public import Transformer.Modes.Section3_ErrorKR
 
 /-!
 # Actual continuous density families on the smaller window
@@ -33,6 +35,8 @@ an empty-window case. The eventual claims also have the source's
 already verified regime as a concrete witness to all their hypotheses.
 Source: arXiv:2412.09080v3, §3.2 `cor:error-higher`, `eq:T'`, and §5.5.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped Topology ENNReal

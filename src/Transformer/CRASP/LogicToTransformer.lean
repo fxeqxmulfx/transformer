@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.TemporalProgramInduction
+
+/-!
 # The forward transformer simulation
 
 arXiv:2506.16055v3, Appendix B.2, `thm:TLCl_to_rtfr`.
@@ -6,7 +10,7 @@ The finite parallel program compiles a temporal formula into a genuine
 future-masked rounded transformer with the same depth bound.
 -/
 
-import Transformer.CRASP.TemporalProgramInduction
+@[expose] public section
 
 namespace Transformer.CRASP
 

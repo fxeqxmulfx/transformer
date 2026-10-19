@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Magma.Section5_Convergence
+
+/-!
 # A nonempty model of every corrected convergence hypothesis
 
 Witness for arXiv:2602.15322v1, Section 5, corrected theorem:main_result.
@@ -6,7 +10,7 @@ The objective is an actual nonconstant quadratic, gradients are its
 derivatives, and surviving updates have nonzero scalar damping.
 -/
 
-import Transformer.Magma.Section5_Convergence
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 

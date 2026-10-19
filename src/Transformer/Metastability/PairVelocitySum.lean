@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.PairVelocity
+
+/-!
 # Metastability — both halves of `d/dt ⟨x_i, x_j⟩` (behind `eq: ze.equation`)
 
 `inner_proj_softmax_pair` bounds `⟨Proj_{x_i} v_i, x_j⟩`; adding it to itself
@@ -6,7 +10,7 @@ with `i` and `j` exchanged gives the right-hand side of `eq: ze.equation`,
 with the paper's leakage constant `2 n e^{-(1-α)β}`.
 -/
 
-import Transformer.Metastability.PairVelocity
+@[expose] public section
 
 open scoped BigOperators
 open Real

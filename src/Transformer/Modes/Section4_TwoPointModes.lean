@@ -1,6 +1,8 @@
-import Transformer.Modes.Section4_InteriorMode
+module
 
-/-
+public import Transformer.Modes.Section4_InteriorMode
+
+/-!
 # The number of modes of a Gaussian KDE — two modes beyond a single sample
 
 The claim `lem:scale-space`, arXiv:2412.09080v3, §4.2, bounds the number of
@@ -22,6 +24,8 @@ it does not rely on a numerical approximation to either mode.
 Source: arXiv:2412.09080v3, §1.1, `eq:gkde`; §2.1, `eq:Fn`;
 §4.2, `lem:scale-space` and its proof.
 -/
+
+@[expose] public section
 
 open Real
 open scoped ENNReal

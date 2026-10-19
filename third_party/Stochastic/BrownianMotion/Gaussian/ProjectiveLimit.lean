@@ -9,6 +9,12 @@ public import KolmogorovExtension4.KolmogorovExtension
 public import Mathlib.Probability.BrownianMotion.GaussianProjectiveFamily
 public import Mathlib.Probability.HasLaw
 
+/-!
+# Gaussian projective limits
+
+Construction of a Gaussian process law from consistent finite-dimensional Gaussian marginals.
+-/
+
 @[expose] public section
 
 open MeasureTheory

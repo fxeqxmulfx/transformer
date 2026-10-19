@@ -1,6 +1,8 @@
-import Transformer.Modes.Section3_ThirdPowerBounds
-import Transformer.Modes.Section3_DerivativeTail
-import Transformer.Modes.Section3_CubicTailRates
+module
+
+public import Transformer.Modes.Section3_ThirdPowerBounds
+public import Transformer.Modes.Section3_DerivativeTail
+public import Transformer.Modes.Section3_CubicTailRates
 
 /-!
 # Integrable third derivative of the actual normalized-sum characteristic function
@@ -18,6 +20,8 @@ two-dimensional Jacobian `n`, yielding the explicit fourth-power
 prefactor in the tail estimate. The normalization is that of the
 actual `scaledSum`, independently of the source's block decomposition.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

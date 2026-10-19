@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.MajTwoDepthOne
+
+/-!
 # Counting in `MAJ²`: majorities over lists, and the three masks
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -8,14 +12,14 @@ that the terms count, padded by `⊤` and `⊥` so that exactly half the mass is
 the break-even point.
 
 `Maj2.mass w ξ u l` is the number of pairs `(j, g)` with `g ∈ l` satisfied at
-`u ↦ j`.  A majority over a list is a comparison of its mass
+`u ↦ j`. A majority over a list is a comparison of its mass
 (`Maj2.sat_majList`); negating a list complements its mass, and `⊤`/`⊥` add
-`|w|` and `0` (`Maj2.sat_cmpList`, which is the whole trick).  The masks
+`|w|` and `0` (`Maj2.sat_cmpList`, which is the whole trick). The masks
 `y ≤ x`, `x ≤ y` and `y = x` turn a sum over all positions into `◁#`, `▷#`
 and `1` (`sum_Icc_le`, `sum_Icc_ge`, `sum_Icc_eq`).
 -/
 
-import Transformer.CRASP.MajTwoDepthOne
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

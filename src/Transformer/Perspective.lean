@@ -1,34 +1,212 @@
-/-
+module
+
+public import Transformer.Perspective.Section1_IPS
+public import Transformer.Perspective.Section2_FlowMap
+public import Transformer.Perspective.Section2_EnergyKernel
+public import Transformer.Perspective.Section2_EnergyMoments
+public import Transformer.Perspective.Section2_EnergySeries
+public import Transformer.Perspective.SphereMoments
+public import Transformer.Perspective.PositiveDefinite
+public import Transformer.Perspective.Section2_EnergyDerivative
+public import Transformer.Perspective.Section2_Dissipation
+public import Transformer.Perspective.Section2_EnergyMax
+public import Transformer.Perspective.Section2_EnergyConvex
+public import Transformer.Perspective.Section2_EnergyMin
+public import Transformer.Perspective.PartitionGradient
+public import Transformer.Perspective.Section2_GradientFlow
+public import Transformer.Perspective.Section2_ParticleFlow
+public import Transformer.Perspective.SphereInvariant
+public import Transformer.Perspective.Section3_SmallBeta
+public import Transformer.Perspective.UniformAtomless
+public import Transformer.Perspective.UniformSlices
+public import Transformer.Perspective.UniformShell
+public import Transformer.Perspective.SphereUnique
+public import Transformer.Perspective.UniformLipschitz
+public import Transformer.Perspective.Section5_InvariantMeasure
+public import Transformer.Perspective.Beta0Field
+public import Transformer.Perspective.Softmax
+public import Transformer.Perspective.Beta0Gronwall
+public import Transformer.Perspective.SAField
+public import Transformer.Perspective.Section2_ExtendedField
+public import Transformer.Perspective.Section2_SphereFlow
+public import Transformer.Perspective.Section2_FlowContinuity
+public import Transformer.Perspective.Section2_FlowRotations
+public import Transformer.Perspective.Section3_EmpiricalMeasures
+public import Transformer.Perspective.SALipschitz
+public import Transformer.Perspective.Section3_Gronwall
+public import Transformer.Perspective.Section4_LargeBeta
+public import Transformer.Perspective.MinCurve
+public import Transformer.Perspective.MaxCurve
+public import Transformer.Perspective.CompactMaxCurve
+public import Transformer.Perspective.CompactPositiveFloor
+public import Transformer.Perspective.CompactWidth
+public import Transformer.Perspective.ConeChart
+public import Transformer.Perspective.ConeWidth
+public import Transformer.Perspective.ConeLimit
+public import Transformer.Perspective.ConeFields
+public import Transformer.Perspective.Section5_HighD
+public import Transformer.Perspective.SphereHyperplane
+public import Transformer.Perspective.UniformHemisphere
+public import Transformer.Perspective.Section5_ExpRate
+public import Transformer.Perspective.InjectedFlow
+public import Transformer.Perspective.InjectedSpread
+public import Transformer.Perspective.InjectedAttention
+public import Transformer.Perspective.InjectedConsensus
+public import Transformer.Perspective.DrivenFlow
+public import Transformer.Perspective.DrivenSpread
+public import Transformer.Perspective.BlockDrive
+public import Transformer.Perspective.BlockSpread
+public import Transformer.Perspective.BlockConsensus
+public import Transformer.Perspective.RawStream
+public import Transformer.Perspective.RawGrowth
+public import Transformer.Perspective.RawStack
+public import Transformer.Perspective.RawStackFrozen
+public import Transformer.Perspective.RawStackSkip
+public import Transformer.Perspective.RawStackSkipDamp
+public import Transformer.Perspective.RawStackSkipFrozen
+public import Transformer.Perspective.RawStackDense
+public import Transformer.Perspective.RawStackDenseGronwall
+public import Transformer.Perspective.RawStackDenseFrozen
+public import Transformer.Perspective.PerturbGronwall
+public import Transformer.Perspective.BlockMLP
+public import Transformer.Perspective.BlockMLPSpread
+public import Transformer.Perspective.XSAProj
+public import Transformer.Perspective.BlockXSA
+public import Transformer.Perspective.BlockXSASpread
+public import Transformer.Perspective.BlockXSARecord
+public import Transformer.Perspective.Section5_ConeCollapse
+public import Transformer.Perspective.Section5_Hemisphere
+public import Transformer.Perspective.Section5_HemisphereCone
+public import Transformer.Perspective.Section5_HemisphereRate
+public import Transformer.Perspective.Section5_Exceptional
+public import Transformer.Perspective.Section5_HighDCurve
+public import Transformer.Perspective.Section5_Vanishing
+public import Transformer.Perspective.Section6_Circle
+public import Transformer.Perspective.Section7_BBGKY
+public import Transformer.Perspective.Section8_General
+public import Transformer.Perspective.Section8_CohnKumar
+public import Transformer.Perspective.Section9_Approximation
+public import Transformer.Perspective.Section9_ApproximationMeasure
+public import Transformer.Perspective.RussianTrick
+public import Transformer.Perspective.RussianPairs
+public import Transformer.Perspective.AppendixA_Beta0
+public import Transformer.Perspective.AppendixA_Hessian
+public import Transformer.Perspective.AppendixA_Rotation
+public import Transformer.Perspective.AppendixA_CriticalShape
+public import Transformer.Perspective.AppendixA_Barycenter
+public import Transformer.Perspective.AppendixA_ConeForm
+public import Transformer.Perspective.AppendixA_ConeError
+public import Transformer.Perspective.AppendixA_ConeGrowth
+public import Transformer.Perspective.AppendixA_Cone
+public import Transformer.Perspective.AppendixA_StayNear
+public import Transformer.Perspective.AppendixA_Flow
+public import Transformer.Perspective.AppendixA_Lojasiewicz
+public import Transformer.Perspective.AppendixA_FiniteLength
+public import Transformer.Perspective.AppendixA_Convergence
+public import Transformer.Perspective.AppendixA_SaddleNull
+public import Transformer.Perspective.AppendixA_Saddle
+public import Transformer.Perspective.Section3_ClusteredSets
+public import Transformer.Perspective.AppendixB_BetaInterval
+public import Transformer.Perspective.AppendixB_Taylor
+public import Transformer.Perspective.CircleCritical
+public import Transformer.Perspective.StrictSaddle
+public import Transformer.Perspective.CircleSites
+public import Transformer.Perspective.CircleGaps
+public import Transformer.Perspective.CircleGapBounds
+public import Transformer.Perspective.CircleMult
+public import Transformer.Perspective.CircleGapSum
+public import Transformer.Perspective.CircleTaumax
+public import Transformer.Perspective.CircleSync
+public import Transformer.Perspective.SyncKernel
+public import Transformer.Perspective.SyncKernelQuartic
+public import Transformer.Perspective.SyncKernelSign
+public import Transformer.Perspective.SyncKernelRegions
+public import Transformer.Perspective.SyncKernelIntegral
+public import Transformer.Perspective.SyncKernelPieces
+public import Transformer.Perspective.SyncKernelCert
+public import Transformer.Perspective.SyncKernelSmallBeta
+public import Transformer.Perspective.CircleAngles
+public import Transformer.Perspective.CircleUniform
+public import Transformer.Perspective.CircleNull
+public import Transformer.Perspective.CircleSA
+public import Transformer.Perspective.CircleSAGradient
+public import Transformer.Perspective.CircleSAFlow
+public import Transformer.Perspective.SpherePolar
+public import Transformer.Perspective.SphereNull
+public import Transformer.Perspective.SphereRadial
+public import Transformer.Perspective.SphereRadialGradient
+public import Transformer.Perspective.SphereTupleEnergy
+public import Transformer.Perspective.SphereConvergence
+public import Transformer.Perspective.SphereFlowLimit
+public import Transformer.Perspective.SyncKernelExp
+public import Transformer.Perspective.SyncKernelSecond
+public import Transformer.Perspective.SyncKernelBetaOne
+public import Transformer.Perspective.CircleEnergyHessian
+public import Transformer.Perspective.CircleLojasiewicz
+public import Transformer.Perspective.CircleConvergence
+public import Transformer.Perspective.CircleSAConvergence
+public import Transformer.Perspective.CircleClustering
+public import Transformer.Perspective.InnerAsymptotics
+public import Transformer.Perspective.PeanoTaylor
+public import Transformer.Perspective.AppendixB_EBeta
+public import Transformer.Perspective.AppendixB_Expansion
+public import Transformer.Perspective.AppendixB_HessBeta
+public import Transformer.Perspective.AppendixB_HighD
+public import Transformer.Perspective.AppendixB_Intrinsic
+public import Transformer.Perspective.SphereCritical
+public import Transformer.Perspective.SphereSaddle
+public import Transformer.Perspective.SphereCutoff
+public import Transformer.Perspective.SphereCutoffFlow
+public import Transformer.Perspective.SphereSaddleAvoidance
+public import Transformer.Perspective.SphereClustering
+public import Transformer.Perspective.AppendixB_ClaimYury
+public import Transformer.Perspective.AppendixB_MetricGrad
+public import Transformer.Perspective.AppendixB_MetricHess
+public import Transformer.Perspective.DoubleSum
+public import Transformer.Perspective.AppendixC_BetaTiny
+public import Transformer.Perspective.Gronwall
+public import Transformer.Perspective.AppendixD_Stability
+public import Transformer.Perspective.AppendixD_PhaseTransition
+public import Transformer.Perspective.AppendixD_Alpha
+public import Transformer.Perspective.AppendixD_DotAlpha
+public import Transformer.Perspective.AppendixD_AlphaDeriv
+public import Transformer.Perspective.AppendixD_Product
+public import Transformer.Perspective.AppendixD_YbetaInvariance
+public import Transformer.Perspective.AppendixD_Ybeta
+public import Transformer.Perspective.AppendixD_YbetaUSA
+public import Transformer.Perspective.AppendixD_Assembly
+
+/-!
 # A mathematical perspective on Transformers
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5.
 
 One module per section of the manuscript (`Section1_IPS … Section9_Approximation`),
-followed by the four appendices.  Everything lives in the namespace
-`Transformer.Perspective`.  `MinCurve` carries no section of its own: it is
+followed by the four appendices. Everything lives in the namespace
+`Transformer.Perspective`. `MinCurve` carries no section of its own: it is
 the one-sided calculus behind step 1 of §6.1, `PartitionGradient` is the
 differentiation of `Z_{β,μ}` under the integral sign that §3.3 rests on, and
 `RussianTrick` is the linear-algebra identity `e:russiantrick` of Appendix A
-with the rank-two construction that proves it.  `InnerAsymptotics` and
+with the rank-two construction that proves it. `InnerAsymptotics` and
 `PeanoTaylor` are the two ledgers of real analysis Appendix B's second-order
-expansion runs on; neither mentions the survey.  `MaxCurve`, `ConeChart`,
+expansion runs on; neither mentions the survey. `MaxCurve`, `ConeChart`,
 `ConeWidth` and `ConeLimit` are the proof of cone collapse (§6.1) for any flow
 `ẋ_i = Proj_{x_i}(Σ_j a_ij x_j)` with weights in `[m, M]`, `m > 0`, through
 the chart `x ↦ x / ⟨x, w⟩` of a hemisphere, and `ConeFields` puts the
-attention dynamics in that form.  `SphereHyperplane` and `UniformHemisphere`
+attention dynamics in that form. `SphereHyperplane` and `UniformHemisphere`
 are the footnote to `thm: d.infty`: a rotation-invariant law does not charge
 great spheres, so `n ≤ d` uniform points are almost surely linearly
-independent and lie in an open hemisphere.  `SphereMoments` and
+independent and lie in an open hemisphere. `SphereMoments` and
 `PositiveDefinite` make the kernel `e^{β x·y}` positive definite on the
 moments of a measure: a probability measure on the sphere is determined by its
 moments, hence by its partition function
-`Z_{β,μ}`, `β > 0`.  `InjectedFlow`, `InjectedSpread`, `InjectedAttention` and
+`Z_{β,μ}`, `β > 0`. `InjectedFlow`, `InjectedSpread`, `InjectedAttention` and
 `InjectedConsensus` are not in the survey: the flow
 `ẋ_i = Proj_{x_i}(Σ_j a_ij x_j + z_i)`, with constant vectors `z_i` mixed back
 into the drive, does not collapse when two of the `z_i` are linearly
 independent, uniformly in weights of bounded row sums — for softmax attention,
 in `β`, `Q` and `K` — while at `z = 0` softmax attention with constant `Q`,
-`K` collapses from any open hemisphere (§6.1).  `DrivenFlow` and
+`K` collapses from any open hemisphere (§6.1). `DrivenFlow` and
 `DrivenSpread` let the drive be anything and ask for it on one window of time
 only: along `ẋ_i = Proj_{x_i}(v_i(t))`, if two drive differences `v_k - v_l`,
 `v_m - v_p` stay near two independent vectors while the tokens are close, the
@@ -37,28 +215,28 @@ tokens do not stay close through any window of positive length.
 with any values, a feed-forward term Lipschitz on the sphere, an injection
 `z_i(t)` — and to a stack of different blocks: if two differences of
 injections `z_k - z_l`, `z_m - z_p` are independent in every block, one `δ`
-works for the whole stack.  `BlockConsensus` shows that differences are what
+works for the whole stack. `BlockConsensus` shows that differences are what
 counts: when all `z_i - z_{i₀}` are collinear, a block with a rank-one value
 holds every token at one point, so two independent injections alone — the
-hypothesis for `V = I_d` — do not rule collapse out.  `RawStream` and
+hypothesis for `V = I_d` — do not rule collapse out. `RawStream` and
 `RawGrowth` drop the sphere: behind the RMS norm of a pre-norm block the
 directions follow the sphere model with the drive of each token divided by its
 length, and for `mix[0] = 1 + c > 1` the stream outgrows its drive, so every
 direction stays within `2 M / (c ‖x_i(t₀)‖)` of where it was at `t₀` and
-`blockDrive_spread` fails before the norm.  `BlockMLP` and `BlockMLPSpread`
+`blockDrive_spread` fails before the norm. `BlockMLP` and `BlockMLPSpread`
 take in the feed-forward term of parameter-golf, `W₂ σ(W₁ x)²` with a leaky
 ReLU `σ`: on the sphere it is bounded and Lipschitz with constants read off
 the weights, so `blockDrive_spread` holds for a block with that term, with
-nothing assumed of it but bounds on `‖W₁‖` and `‖W₂‖`.  `XSAProj`, `BlockXSA`,
+nothing assumed of it but bounds on `‖W₁‖` and `‖W₂‖`. `XSAProj`, `BlockXSA`,
 `BlockXSASpread` and `BlockXSARecord` make the heads exclusive (`eq:xsa`,
 arXiv:2603.09078v1): a head with its own value projected away is `O(ε)` by
 itself on a cluster, not only in a difference, so the rows of a head no longer
 need one common sum and a gate per head and token — which the projection turns
-into a factor on the row — needs only to be bounded.  That is the block of the
+into a factor on the row — needs only to be bounded. That is the block of the
 record, XSA on every layer under a sigmoid gate, with softmax rows, values and
 output maps carrying `attn_scale` and the grouping of queries, and the
 leaky-ReLU² feed-forward term: it does not collapse either
-(`gatedXSA_block_spread`).  `RawStack` leaves continuous time behind: a stack
+(`gatedXSA_block_spread`). `RawStack` leaves continuous time behind: a stack
 `x_{k+1,i} = λ_{k,i} x_{k,i} + g_{k,i}` of blocks that are all different, with
 the scalar residual gains of modded-nanogpt, is its gauge `∏_{j<k} λ_{j,i}`
 times the same stack with the gains divided out, so the directions never see
@@ -66,7 +244,7 @@ them (`normalize_rawStack`), and in `RawStackFrozen` gains above `1 + c` freeze
 every direction within `2 M / (c ‖x_{0,i}‖)` of its start, at every depth and
 whatever the blocks compute (`rawStack_frozen`) — a bound that the record's own
 gains make empty (`lt_rawStack_frozen_bound`), which is what the exactness of
-the factorisation is worth.  `RawStackSkip` adds the first update left over, the
+the factorisation is worth. `RawStackSkip` adds the first update left over, the
 skip that adds an earlier state of the stream instead of a bounded output: it is
 gauge-covariant too (`ungauged_rec_skip`), with its gate divided by the gain
 accumulated over the depth it jumps, and `RawStackSkipDamp` reads that division
@@ -74,26 +252,26 @@ from both sides — exponential in the depth skipped (`abs_skipWeight_le`), but
 bounded below by the same exponential (`le_abs_skipWeight`), so skips at a fixed
 distance keep one weight at every depth and `rawStack_frozen` does not reach
 them; at initialisation `100/121` of the gate of the record's layer-6 skip
-survives (`gainProd_div_record`).  One skip, though, it does reach:
+survives (`gainProd_div_record`). One skip, though, it does reach:
 `RawStackSkipFrozen` shows that a single skip is one fixed displacement of the
 ungauged stream (`ungauged_eq_gaugeStack_add_skip`), so freezing survives it
 with one extra term, damped by the depth the skip jumps (`rawStack_frozen_skip`)
 — which covers the first ten layers of the record, its layer-6 skip merged with
 the MLP step after it, but not the last layer and the step after the loop, which
-add several earlier states in one step.  `RawStackDense`, `RawStackDenseGronwall`
+add several earlier states in one step. `RawStackDense`, `RawStackDenseGronwall`
 and `RawStackDenseFrozen` take them all: any number of skips per step, onto any
 depth, the current one included, so that a gain below `1 + c`, of any sign, is
 taken at `1 + c` with the difference carried by a skip onto the state being
 updated (`ungauged_rec_dense`); freezing then survives every update of the record
 at the cost of a product `Π_{j<k} (1 + V_{j,i})` of damped skip weights
 (`rawStack_frozen_dense`) — with the bound on the blocks' outputs, from layer 4
-on, a property of the trajectory rather than of the weights.  `PerturbGronwall`
+on, a property of the trajectory rather than of the weights. `PerturbGronwall`
 turns from the stream to its copy with rounded weights: a stack and a perturbed
 copy of it stay within `‖y_0 − x_0‖ Π_{j<N} L_j + Σ_{m<N} η_m Π_{m<j<N} L_j` of
 each other, with `L_j` the spreading of each step along the two trajectories
 and `η_m` the error it makes (`norm_sub_le_perturbBound`) — a bound that a linear
 stack attains (`norm_sub_linearStack`) and that does not ask whether the steps
-share their weights.  `CircleSites` and `CircleGaps` begin arXiv:2507.22857v1
+share their weights. `CircleSites` and `CircleGaps` begin arXiv:2507.22857v1
 (Polyanskiy, Rigollet, Yao), which answers `o:strictsaddle` on paper: the
 distinct positions of a configuration on `𝕋` in increasing order, the gaps
 between them, and `lemma:twoconsecutive_general`, by which under
@@ -114,7 +292,7 @@ synchronized has `4 (1/τ + 1/τ_max) f'(0) ≤ ∫_{-π}^{π} |f'''|₊`
 `f_β(x) = sin x e^{β(cos x - 1)}`: `f_β' < 0` off `[-τ_β, τ_β]` (`f_β'_neg`), the
 sign regions of `f_β'''` from the quartic `p(cos x)` (`positiveregion`,
 `positiveregion2`), and `∫_{-π}^{π} |f_β'''|₊` through `f_β''` at the sign
-changes (`integral_posPart_f_β'''_le`).  `SyncKernelExp` through
+changes (`integral_posPart_f_β'''_le`). `SyncKernelExp` through
 `SyncKernelBetaOne` prove `τ_β < 1/√β` (`corollary:tau2`) and, for `β ≥ 1`,
 `-(8/5)√β ≤ f_β'' ≤ (2/5)√β` on `[0, π]`, hence `lemma:beta1` and
 `τ_β ∫_{-π}^{π} |f_β'''|₊ < 4` (`τ_mul_integral_posPart_f_β'''_lt_four`).
@@ -161,7 +339,7 @@ one synchronizes (`ae_tendsto_synchronized_of_angularSA`).
 initial tuple on `𝕊¹` clusters, for `SA` and for `USA` (`clustering_circle`),
 which is the last sentence of `thm: beta.tiny` (`beta_tiny_circle`).
 `SpherePolar`, `SphereNull`, `SphereRadial` and `SphereRadialGradient` bridge
-`(𝕊^{d-1})^n` and `(ℝ^d)^n` without manifolds.  Polar coordinates carry Lebesgue
+`(𝕊^{d-1})^n` and `(ℝ^d)^n` without manifolds. Polar coordinates carry Lebesgue
 measure on `(ℝ^d ∖ 0)^n` to the product of surface measures and `r^{d-1} dr`,
 so a set of configurations is null for the uniform law exactly when its cone is
 Lebesgue-null (`measure_eq_zero_iff_volume_sphereCone`, `ae_iff_ae_volume`).
@@ -174,7 +352,7 @@ Lebesgue-null (`measure_eq_zero_iff_volume_sphereCone`, `ae_iff_ae_volume`).
 every solution of `USA` and of `SA` converges to a critical point of `𝖤_β`
 (`exists_tendsto_isCriticalEBeta_of_USA`, `exists_tendsto_isCriticalEBeta_of_SA`).
 `SphereCutoff`, `SphereCutoffFlow`, `SphereSaddleAvoidance` and `SphereClustering`
-avoid the strict saddles of `SphereSaddle` and conclude `thm: boumal` for `β > 0`.  On
+avoid the strict saddles of `SphereSaddle` and conclude `thm: boumal` for `β > 0`. On
 each shell `1/(k+2) < ‖x_i‖² < k+2` the rescaled flows are flows `ẋ = -G(x) ∇f(x)` on
 the tuples of nonzero vectors, which almost never converge to a strict saddle while
 they stay in a compact set (`ae_not_tendsto_of_cutoff`), so for `d ≥ 3` and
@@ -188,178 +366,4 @@ With `clustering_circle` this gives clustering for every `d ≥ 2` and `β ≥ 0
 constant `C = 1` (`beta_tiny`, in `AppendixC_BetaTiny`).
 -/
 
-import Transformer.Perspective.Section1_IPS
-import Transformer.Perspective.Section2_FlowMap
-import Transformer.Perspective.Section2_EnergyKernel
-import Transformer.Perspective.Section2_EnergyMoments
-import Transformer.Perspective.Section2_EnergySeries
-import Transformer.Perspective.SphereMoments
-import Transformer.Perspective.PositiveDefinite
-import Transformer.Perspective.Section2_EnergyDerivative
-import Transformer.Perspective.Section2_Dissipation
-import Transformer.Perspective.Section2_EnergyMax
-import Transformer.Perspective.Section2_EnergyConvex
-import Transformer.Perspective.Section2_EnergyMin
-import Transformer.Perspective.PartitionGradient
-import Transformer.Perspective.Section2_GradientFlow
-import Transformer.Perspective.Section2_ParticleFlow
-import Transformer.Perspective.SphereInvariant
-import Transformer.Perspective.Section3_SmallBeta
-import Transformer.Perspective.UniformAtomless
-import Transformer.Perspective.UniformSlices
-import Transformer.Perspective.UniformShell
-import Transformer.Perspective.SphereUnique
-import Transformer.Perspective.UniformLipschitz
-import Transformer.Perspective.Section5_InvariantMeasure
-import Transformer.Perspective.Beta0Field
-import Transformer.Perspective.Softmax
-import Transformer.Perspective.Beta0Gronwall
-import Transformer.Perspective.SAField
-import Transformer.Perspective.Section2_ExtendedField
-import Transformer.Perspective.Section2_SphereFlow
-import Transformer.Perspective.Section2_FlowContinuity
-import Transformer.Perspective.Section2_FlowRotations
-import Transformer.Perspective.Section3_EmpiricalMeasures
-import Transformer.Perspective.SALipschitz
-import Transformer.Perspective.Section3_Gronwall
-import Transformer.Perspective.Section4_LargeBeta
-import Transformer.Perspective.MinCurve
-import Transformer.Perspective.MaxCurve
-import Transformer.Perspective.CompactMaxCurve
-import Transformer.Perspective.CompactPositiveFloor
-import Transformer.Perspective.CompactWidth
-import Transformer.Perspective.ConeChart
-import Transformer.Perspective.ConeWidth
-import Transformer.Perspective.ConeLimit
-import Transformer.Perspective.ConeFields
-import Transformer.Perspective.Section5_HighD
-import Transformer.Perspective.SphereHyperplane
-import Transformer.Perspective.UniformHemisphere
-import Transformer.Perspective.Section5_ExpRate
-import Transformer.Perspective.InjectedFlow
-import Transformer.Perspective.InjectedSpread
-import Transformer.Perspective.InjectedAttention
-import Transformer.Perspective.InjectedConsensus
-import Transformer.Perspective.DrivenFlow
-import Transformer.Perspective.DrivenSpread
-import Transformer.Perspective.BlockDrive
-import Transformer.Perspective.BlockSpread
-import Transformer.Perspective.BlockConsensus
-import Transformer.Perspective.RawStream
-import Transformer.Perspective.RawGrowth
-import Transformer.Perspective.RawStack
-import Transformer.Perspective.RawStackFrozen
-import Transformer.Perspective.RawStackSkip
-import Transformer.Perspective.RawStackSkipDamp
-import Transformer.Perspective.RawStackSkipFrozen
-import Transformer.Perspective.RawStackDense
-import Transformer.Perspective.RawStackDenseGronwall
-import Transformer.Perspective.RawStackDenseFrozen
-import Transformer.Perspective.PerturbGronwall
-import Transformer.Perspective.BlockMLP
-import Transformer.Perspective.BlockMLPSpread
-import Transformer.Perspective.XSAProj
-import Transformer.Perspective.BlockXSA
-import Transformer.Perspective.BlockXSASpread
-import Transformer.Perspective.BlockXSARecord
-import Transformer.Perspective.Section5_ConeCollapse
-import Transformer.Perspective.Section5_Hemisphere
-import Transformer.Perspective.Section5_HemisphereCone
-import Transformer.Perspective.Section5_HemisphereRate
-import Transformer.Perspective.Section5_Exceptional
-import Transformer.Perspective.Section5_HighDCurve
-import Transformer.Perspective.Section5_Vanishing
-import Transformer.Perspective.Section6_Circle
-import Transformer.Perspective.Section7_BBGKY
-import Transformer.Perspective.Section8_General
-import Transformer.Perspective.Section8_CohnKumar
-import Transformer.Perspective.Section9_Approximation
-import Transformer.Perspective.Section9_ApproximationMeasure
-import Transformer.Perspective.RussianTrick
-import Transformer.Perspective.RussianPairs
-import Transformer.Perspective.AppendixA_Beta0
-import Transformer.Perspective.AppendixA_Hessian
-import Transformer.Perspective.AppendixA_Rotation
-import Transformer.Perspective.AppendixA_CriticalShape
-import Transformer.Perspective.AppendixA_Barycenter
-import Transformer.Perspective.AppendixA_ConeForm
-import Transformer.Perspective.AppendixA_ConeError
-import Transformer.Perspective.AppendixA_ConeGrowth
-import Transformer.Perspective.AppendixA_Cone
-import Transformer.Perspective.AppendixA_StayNear
-import Transformer.Perspective.AppendixA_Flow
-import Transformer.Perspective.AppendixA_Lojasiewicz
-import Transformer.Perspective.AppendixA_FiniteLength
-import Transformer.Perspective.AppendixA_Convergence
-import Transformer.Perspective.AppendixA_SaddleNull
-import Transformer.Perspective.AppendixA_Saddle
-import Transformer.Perspective.Section3_ClusteredSets
-import Transformer.Perspective.AppendixB_BetaInterval
-import Transformer.Perspective.AppendixB_Taylor
-import Transformer.Perspective.CircleCritical
-import Transformer.Perspective.StrictSaddle
-import Transformer.Perspective.CircleSites
-import Transformer.Perspective.CircleGaps
-import Transformer.Perspective.CircleGapBounds
-import Transformer.Perspective.CircleMult
-import Transformer.Perspective.CircleGapSum
-import Transformer.Perspective.CircleTaumax
-import Transformer.Perspective.CircleSync
-import Transformer.Perspective.SyncKernel
-import Transformer.Perspective.SyncKernelQuartic
-import Transformer.Perspective.SyncKernelSign
-import Transformer.Perspective.SyncKernelRegions
-import Transformer.Perspective.SyncKernelIntegral
-import Transformer.Perspective.SyncKernelPieces
-import Transformer.Perspective.SyncKernelCert
-import Transformer.Perspective.SyncKernelSmallBeta
-import Transformer.Perspective.CircleAngles
-import Transformer.Perspective.CircleUniform
-import Transformer.Perspective.CircleNull
-import Transformer.Perspective.CircleSA
-import Transformer.Perspective.CircleSAGradient
-import Transformer.Perspective.CircleSAFlow
-import Transformer.Perspective.SpherePolar
-import Transformer.Perspective.SphereNull
-import Transformer.Perspective.SphereRadial
-import Transformer.Perspective.SphereRadialGradient
-import Transformer.Perspective.SphereTupleEnergy
-import Transformer.Perspective.SphereConvergence
-import Transformer.Perspective.SphereFlowLimit
-import Transformer.Perspective.SyncKernelExp
-import Transformer.Perspective.SyncKernelSecond
-import Transformer.Perspective.SyncKernelBetaOne
-import Transformer.Perspective.CircleEnergyHessian
-import Transformer.Perspective.CircleLojasiewicz
-import Transformer.Perspective.CircleConvergence
-import Transformer.Perspective.CircleSAConvergence
-import Transformer.Perspective.CircleClustering
-import Transformer.Perspective.InnerAsymptotics
-import Transformer.Perspective.PeanoTaylor
-import Transformer.Perspective.AppendixB_EBeta
-import Transformer.Perspective.AppendixB_Expansion
-import Transformer.Perspective.AppendixB_HessBeta
-import Transformer.Perspective.AppendixB_HighD
-import Transformer.Perspective.AppendixB_Intrinsic
-import Transformer.Perspective.SphereCritical
-import Transformer.Perspective.SphereSaddle
-import Transformer.Perspective.SphereCutoff
-import Transformer.Perspective.SphereCutoffFlow
-import Transformer.Perspective.SphereSaddleAvoidance
-import Transformer.Perspective.SphereClustering
-import Transformer.Perspective.AppendixB_ClaimYury
-import Transformer.Perspective.AppendixB_MetricGrad
-import Transformer.Perspective.AppendixB_MetricHess
-import Transformer.Perspective.DoubleSum
-import Transformer.Perspective.AppendixC_BetaTiny
-import Transformer.Perspective.Gronwall
-import Transformer.Perspective.AppendixD_Stability
-import Transformer.Perspective.AppendixD_PhaseTransition
-import Transformer.Perspective.AppendixD_Alpha
-import Transformer.Perspective.AppendixD_DotAlpha
-import Transformer.Perspective.AppendixD_AlphaDeriv
-import Transformer.Perspective.AppendixD_Product
-import Transformer.Perspective.AppendixD_YbetaInvariance
-import Transformer.Perspective.AppendixD_Ybeta
-import Transformer.Perspective.AppendixD_YbetaUSA
-import Transformer.Perspective.AppendixD_Assembly
+@[expose] public section

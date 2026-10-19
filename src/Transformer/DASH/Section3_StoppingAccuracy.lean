@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section3_CNConvergence
+
+/-!
 # DASH — accuracy supplied by the CN identity-residual stopping rule
 
 arXiv:2602.02016v2, §3.2, after `equation:CN-X-M`. The auxiliary
@@ -6,7 +10,7 @@ product gives a relative inverse-root error certificate. An absolute
 error bound additionally contains the size of the true inverse root.
 -/
 
-import Transformer.DASH.Section3_CNConvergence
+@[expose] public section
 
 noncomputable section
 

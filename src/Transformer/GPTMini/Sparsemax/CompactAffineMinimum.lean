@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.CompactAffineTraining
+module
+
+public import Transformer.GPTMini.Sparsemax.CompactAffineTraining
 
 /-!
 # Attained compact training without intrinsic flats or bad local minima
@@ -16,6 +18,8 @@ attained minimum at arbitrarily short positive segment times. The bounds
 are independent of prototype count. They are finite mathematical
 guarantees, not an implementation of a numerical optimizer.
 -/
+
+@[expose] public section
 
 noncomputable section
 

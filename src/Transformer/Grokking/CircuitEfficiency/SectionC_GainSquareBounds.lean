@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainFeedbackFloor
-import Transformer.Grokking.AdamW.SquareParameterBox
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainFeedbackFloor
+public import Transformer.Grokking.AdamW.SquareParameterBox
 
 /-!
 # Sharper physical boxes for actual retained gained-CE feedback
@@ -30,6 +32,8 @@ The score bound retains both gained product logits and all
 remaining+2 finite classes. The clipping floor keeps the actual
 added 1e-6 norm denominator; neither contribution is discarded.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

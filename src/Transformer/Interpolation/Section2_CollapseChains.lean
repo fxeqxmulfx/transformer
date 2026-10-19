@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_CollapsePhases
+
+/-!
 # Disjoint collapses and collapse chains
 
 ArXiv:2411.04551v3, §2.2, Step 3 of the proof of `prop: compression`:
@@ -18,7 +22,7 @@ of each chain misses the small balls that wait for later chains and
 those already brought by earlier ones.
 -/
 
-import Transformer.Interpolation.Section2_CollapsePhases
+@[expose] public section
 
 open Real MeasureTheory Set
 

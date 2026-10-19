@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_SequentialApproximation
+public import Mathlib.MeasureTheory.Measure.Prod
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+
+/-!
 # Conditioning the original independent sample on its actual prefix
 
 ArXiv:2410.06833v1, §4, `prop: concentration unif`, and
@@ -17,9 +23,7 @@ one-step bound. All event measurability and finite-product identities
 are proved for the original sample law.
 -/
 
-import Transformer.Metastability.Section4_SequentialApproximation
-import Mathlib.MeasureTheory.Measure.Prod
-import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+@[expose] public section
 
 open Real MeasureTheory Set
 

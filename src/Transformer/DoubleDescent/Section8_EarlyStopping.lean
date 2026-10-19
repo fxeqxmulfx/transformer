@@ -1,5 +1,7 @@
-import Transformer.DoubleDescent.Section5_Curves
-import Lean.Elab.Tactic.Omega
+module
+
+public import Transformer.DoubleDescent.Section5_Curves
+public import Lean.Elab.Tactic.Omega
 
 /-!
 # Optimal early stopping
@@ -10,6 +12,8 @@ as in the paper's plots. A practical validation rule is a different procedure.
 This oracle's error cannot increase as the horizon grows. Its minimum need
 not remove double descent as a function of model size, as the paper notes.
 -/
+
+@[expose] public section
 
 namespace Transformer.DoubleDescent
 

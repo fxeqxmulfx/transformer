@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Sparsemax.OuterSensitivity
-import Mathlib.LinearAlgebra.Span.Basic
-import Mathlib.Algebra.Module.Submodule.Ker
+module
+
+public import Transformer.GPTMini.Sparsemax.OuterSensitivity
+public import Mathlib.LinearAlgebra.Span.Basic
+public import Mathlib.Algebra.Module.Submodule.Ker
 
 /-!
 # A structural restriction on active values
@@ -18,6 +20,8 @@ enforces the span for every input nor guarantees that a query/key
 parameter map can realize every raw score direction. In a scalar output
 space, two distinct active values already suffice for the span condition.
 -/
+
+@[expose] public section
 
 noncomputable section
 

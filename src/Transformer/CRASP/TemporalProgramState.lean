@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.TemporalProgramAttention
+
+/-!
 # Memory, scratch and BOS invariants of the compiled program
 
 arXiv:2506.16055v3, Appendix B.2, `thm:TLCl_to_rtfr`.
@@ -6,7 +10,7 @@ Scratch is cleared after every layer and the BOS bit stays fixed.
 These invariants separate the comparison average from stored truth values.
 -/
 
-import Transformer.CRASP.TemporalProgramAttention
+@[expose] public section
 
 namespace Transformer.CRASP.TemporalProgram
 

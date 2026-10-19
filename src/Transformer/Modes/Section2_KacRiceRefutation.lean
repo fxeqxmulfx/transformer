@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section2_ProbabilityRegularity
+
+/-!
 # Counterexample to the printed general Kac–Rice claim
 
 Source: arXiv:2412.09080v3, §2.1, `thm:kac-rice` and
@@ -35,7 +39,7 @@ No stronger modulus assumption or replacement
 general Kac–Rice theorem is asserted here.
 -/
 
-import Transformer.Modes.Section2_ProbabilityRegularity
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 open scoped ENNReal

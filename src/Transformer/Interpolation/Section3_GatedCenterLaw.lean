@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_CapCenter
+public import Transformer.Interpolation.Section3_TwoRidgeLaw
+public import Transformer.Interpolation.Section3_ProjectionTransport
+public import Transformer.Interpolation.Section3_TwoRidgeScaling
+
+/-!
 # Actual gated center laws for the barycenter induction
 
 ArXiv:2411.04551v3, §3.2, Step 2 of `lem: induction.barycenter`,
@@ -14,10 +21,7 @@ target lie in that inactive region. Output scaling retains the actual
 phase clock used by the three-phase control construction.
 -/
 
-import Transformer.Interpolation.Section3_CapCenter
-import Transformer.Interpolation.Section3_TwoRidgeLaw
-import Transformer.Interpolation.Section3_ProjectionTransport
-import Transformer.Interpolation.Section3_TwoRidgeScaling
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

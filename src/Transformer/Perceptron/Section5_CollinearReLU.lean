@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_TwoNeuronReduction
+
+/-!
 # A zero signed Gram action for two collinear original neurons
 
 ArXiv:2601.21366v2, §5.2, `thm: circle`, and §6,
@@ -10,7 +14,7 @@ for opposite ray directions. The original primitive contributes its
 actual constant, as proved in the preceding reduction module.
 -/
 
-import Transformer.Perceptron.Section5_TwoNeuronReduction
+@[expose] public section
 
 open Real Set
 open scoped BigOperators

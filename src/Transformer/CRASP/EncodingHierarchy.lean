@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.CRASP.PositionalHierarchy
+public import Transformer.CRASP.EncodingLowerBounds
+public import Transformer.CRASP.EncodingUpperBounds
+
+/-!
 # The depth hierarchy under position encodings
 
 arXiv:2506.16055v3, §4.5, theorem `thm:rtfr_pes_depth_hierarchy`,
@@ -6,9 +12,7 @@ and the three encoding-specific hierarchies of Appendix F.
 Both halves are proved, including the depth-zero lower bound.
 -/
 
-import Transformer.CRASP.PositionalHierarchy
-import Transformer.CRASP.EncodingLowerBounds
-import Transformer.CRASP.EncodingUpperBounds
+@[expose] public section
 
 namespace Transformer.CRASP
 

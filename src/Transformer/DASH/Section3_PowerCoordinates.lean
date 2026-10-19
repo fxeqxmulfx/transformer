@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section3_PowerIteration
+
+/-!
 # DASH — exact eigenbasis description of normalized Power Iteration
 
 arXiv:2602.02016v2, §3.4–3.5. Normalization changes vector length but
@@ -6,7 +10,7 @@ preserves the Rayleigh quotient. A nonzero dominant component prevents
 the iterates from reaching zero.
 -/
 
-import Transformer.DASH.Section3_PowerIteration
+@[expose] public section
 
 open scoped BigOperators Matrix
 

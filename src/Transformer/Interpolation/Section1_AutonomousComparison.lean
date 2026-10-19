@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_AutonomousWeakTests
+
+/-!
 # Smooth spacetime comparisons for the original weak equation
 
 ArXiv:2411.04551v3, §1, `eq: ips` and `eq: cauchy.pb`,
@@ -17,7 +21,7 @@ are legitimate comparison tests without assuming spatial derivatives
 of the original flow. This is the input for smooth transport barriers.
 -/
 
-import Transformer.Interpolation.Section1_AutonomousWeakTests
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal

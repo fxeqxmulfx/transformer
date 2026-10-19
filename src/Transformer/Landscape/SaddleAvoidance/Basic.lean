@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Defs
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+
+/-!
 # Saddle avoidance — orbits that stay near a point, and sets met once by lines
 
 Two facts the local argument combines.
@@ -9,12 +14,11 @@ Two facts the local argument combines.
 * A bounded measurable set that meets every line of a fixed direction `e` at
   most once is null (`measure_eq_zero_of_line_meets_once`): its translates by
   `t • e`, `t = 1/(n+1)`, are pairwise disjoint, have its measure, and lie in
-  one bounded set.  This is the step that replaces the dimension count of the
+  one bounded set. This is the step that replaces the dimension count of the
   local center-stable manifold in the proof of `thm:main` of arXiv:1602.04915.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Defs
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+@[expose] public section
 
 open Set Metric MeasureTheory
 

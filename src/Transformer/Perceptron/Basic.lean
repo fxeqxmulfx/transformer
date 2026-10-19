@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Basic
+
+/-!
 # Perceptrons and attention's mean-field landscape — the coupled energy
 
 Formalization of §2 of arXiv:2601.21366v2, *Perceptrons and localization of
@@ -23,7 +27,7 @@ about measures and not about that paper.
   which is exactly when the coupled dynamics is still a Wasserstein gradient
   flow, and every statement of the paper is made under that restriction.
 
-* `φ` is the source's primitive, `φ' = 2σ`.  It is carried as the hypothesis
+* `φ` is the source's primitive, `φ' = 2σ`. It is carried as the hypothesis
   `∀ s, HasDerivAt φ (2 * σ s) s` where it is needed, rather than constructed:
   a primitive exists for every continuous `σ`, and no statement depends on
   which one.
@@ -34,7 +38,7 @@ about measures and not about that paper.
 Source: arXiv:2601.21366v2, §2.
 -/
 
-import Transformer.Interpolation.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -158,7 +162,7 @@ def IsStationary (β : ℝ) (σ : ℝ → ℝ) (ω : Idx d → ℝ) (a : Idx d �
 /-- **A Dirac mass is stationary whenever the perceptron's raw drift at its
 atom is radial.**  Its own point is the only point of its support; there the
 attention field is `e^β Proj_x x = 0`, and `Proj_x` kills every multiple of
-`x`.  This is the inhabitant every satisfiability witness below is built from.
+`x`. This is the inhabitant every satisfiability witness below is built from.
 
 Source: arXiv:2601.21366v2, `eq: steady.state`. -/
 theorem isStationary_diracProb_of_radial (β : ℝ) (σ : ℝ → ℝ) (ω : Idx d → ℝ)

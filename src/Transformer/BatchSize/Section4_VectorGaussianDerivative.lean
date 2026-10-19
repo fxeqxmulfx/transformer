@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_VectorGaussianFlow
+
+/-!
 # Differentiating the actual vector Gaussian expectation in time
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The fixed product measure permits differentiation under the integral.
 The derivative has a genuine integrable domination bound on s > t/2.
 -/
 
-import Transformer.BatchSize.Section4_VectorGaussianFlow
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped NNReal Topology

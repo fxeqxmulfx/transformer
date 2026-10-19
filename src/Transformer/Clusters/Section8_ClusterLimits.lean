@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Clusters.Section8_GainLimit
+public import Transformer.Clusters.Section8_HullLimit
+public import Transformer.Clusters.Section8_CandidateFinite
+public import Mathlib.Analysis.Convex.Exposed
+public import Mathlib.Topology.Bases
+
+/-!
 # Every rescaled token converges to a candidate
 
 ArXiv:2305.05465v6, §8.1, `t:Idcase11` and the candidate condition `e:Ax15`.
@@ -14,11 +22,7 @@ to converge to one candidate. No token-convergence input, quantitative
 candidate-distance estimate, or unproved paper claim is assumed.
 -/
 
-import Transformer.Clusters.Section8_GainLimit
-import Transformer.Clusters.Section8_HullLimit
-import Transformer.Clusters.Section8_CandidateFinite
-import Mathlib.Analysis.Convex.Exposed
-import Mathlib.Topology.Bases
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

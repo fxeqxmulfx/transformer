@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.CRASP.TransformerPrefix
+public import Transformer.CRASP.FixedFinite
+public import Transformer.CRASP.FormulaBounds
+public import Transformer.CRASP.Indicator
+
+/-!
 # Formulas for the finite activation states
 
 arXiv:2506.16055v3, Appendix B.2, induction underlying Equation
@@ -6,10 +13,7 @@ arXiv:2506.16055v3, Appendix B.2, induction underlying Equation
 past counts themselves range only over ordinary token positions.
 -/
 
-import Transformer.CRASP.TransformerPrefix
-import Transformer.CRASP.FixedFinite
-import Transformer.CRASP.FormulaBounds
-import Transformer.CRASP.Indicator
+@[expose] public section
 
 namespace Transformer.CRASP.RTfr
 

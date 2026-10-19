@@ -1,11 +1,17 @@
-/-
+module
+
+public import Transformer.Perspective.SyncKernelSecond
+public import Transformer.Perspective.SyncKernelIntegral
+public import Transformer.Causal.SectionB_PeakTemperature
+
+/-!
 # `τ_β ∫ |f_β'''|₊ < 4` for `β ≥ 1`
 
 Polyanskiy, Rigollet, Yao — arXiv:2507.22857v1, Appendix A: `corollary:tau2`
 and `lemma:beta1`; `landscape_plan.md`, M3.1e.
 
 * `τ_β_star_two_lt_inv_sqrt` is `corollary:tau2`: `τ_β < 1/√β` for every
-  `β > 0`, where `τ_β = τ_β_star 2 β = arccos((√(1 + 4β²) - 1)/(2β))`.  It is
+  `β > 0`, where `τ_β = τ_β_star 2 β = arccos((√(1 + 4β²) - 1)/(2β))`. It is
   the peak `Causal.interactionPeak β` of `e^{β(cos x - 1)} sin x`
   (`τ_β_star_two_eq_interactionPeak`).
 * `f_β''_le_of_one_le`, `neg_le_f_β''_of_one_le`: `-(8/5)√β ≤ f_β'' ≤ (2/5)√β`
@@ -13,25 +19,23 @@ and `lemma:beta1`; `landscape_plan.md`, M3.1e.
 * `τ_mul_f_β''_sub_lt_two` is `lemma:beta1`: for `β ≥ 1`,
   `τ_β (f_β''(a) - f_β''(b)) < 2`.
 * `τ_mul_integral_posPart_f_β'''_lt_four` gives `τ_β ∫_{-π}^{π} |f_β'''|₊ < 4`
-  for `β ≥ 1`.  That is `τ⟨1, |f'''|₊⟩ < 4f'(0)`, which §5 needs for
+  for `β ≥ 1`. That is `τ⟨1, |f'''|₊⟩ < 4f'(0)`, which §5 needs for
   `cor:conjecture`, since `f_β'(0) = 1`.
 
 The source derives `corollary:tau2` from `lemma:tau1` (`√x τ_x` is increasing)
-and the limit `√x τ_x → 1`.  It notes that the corollary also appears as
+and the limit `√x τ_x → 1`. It notes that the corollary also appears as
 Lemma 4 of arXiv:2411.04990v2 (`lemma:interaction` (3), for `β ≥ 1`), which
 `Causal.interactionPeak_lt_scale` proves for every `β > 0` from
-`cos u ≤ 1 - u²/2 + u⁴/24` at `u = 1/√β`.  Here it is that theorem.
+`cos u ≤ 1 - u²/2 + u⁴/24` at `u = 1/√β`. Here it is that theorem.
 `landscape_plan.md` (M3.1e) allows this replacement, so `lemma:tau1` is not
 formalized.
 
 For `β ∈ [1, 2)` the source also needs `√β τ_β < √2 τ_2 < 0.96`, from
-`lemma:tau1`.  The bounds on `f_β''` here differ by `2√β`, so `√β τ_β < 1`
+`lemma:tau1`. The bounds on `f_β''` here differ by `2√β`, so `√β τ_β < 1`
 suffices for every `β ≥ 1`.
 -/
 
-import Transformer.Perspective.SyncKernelSecond
-import Transformer.Perspective.SyncKernelIntegral
-import Transformer.Causal.SectionB_PeakTemperature
+@[expose] public section
 
 open Real
 
@@ -107,7 +111,7 @@ theorem τ_β_star_two_eq_interactionPeak (β : ℝ) :
 
 Source: arXiv:2507.22857v1, Appendix A, `corollary:tau2`,
 "`arccos((√(1+4x²) - 1)/(2x)) < 1/√x` over `(0, ∞)`", proved there from
-`lemma:tau1`.  The source notes that it also appears in `[Lemma 4]` of
+`lemma:tau1`. The source notes that it also appears in `[Lemma 4]` of
 Karagodin, Polyanskiy and Rigollet, "Clustering in causal attention masking":
 arXiv:2411.04990v2, Appendix A.2, `lemma:interaction` (3), stated there for
 `β ≥ 1`. -/
@@ -123,14 +127,14 @@ theorem sqrt_mul_τ_β_star_two_lt_one {β : ℝ} (hβ : 0 < β) :
   linarith
 
 /-- **`lemma:beta1`: `τ_β (f_β''(a) - f_β''(b)) < 2` for `β ≥ 1`**, for all
-`a, b ∈ [0, π]`.  `f_β''(a) - f_β''(b) ≤ (2/5 + 8/5)√β = 2√β` and
+`a, b ∈ [0, π]`. `f_β''(a) - f_β''(b) ≤ (2/5 + 8/5)√β = 2√β` and
 `√β τ_β < 1`.
 
 Source: arXiv:2507.22857v1, Appendix A, `lemma:beta1`, "If `β ≥ 1` then
 `τ(f''(a) - f''(b)) < 2`", where `0 < b < a < π` are the ends of the positive
 region of `f'''` (`lemma:positiveregion`, here
-`integral_posPart_f_β'''_of_one_third_lt`).  Here `a` and `b` are any points
-of `[0, π]`, which is stronger.  The source bounds the two values separately,
+`integral_posPart_f_β'''_of_one_third_lt`). Here `a` and `b` are any points
+of `[0, π]`, which is stronger. The source bounds the two values separately,
 with its own constants and a case split at `β = 2`; the constants here are
 `2/5` and `-8/5` (see the module docstring). -/
 theorem τ_mul_f_β''_sub_lt_two {β a b : ℝ} (hβ : 1 ≤ β) (ha : a ∈ Set.Icc 0 π)
@@ -147,10 +151,10 @@ theorem τ_mul_f_β''_sub_lt_two {β a b : ℝ} (hβ : 1 ≤ β) (ha : a ∈ Set
 integral is at most `4√β`, and `√β τ_β < 1`.
 
 Source: arXiv:2507.22857v1, §5, proof of `cor:conjecture`: "By
-`thm:ascentnormal`, it suffices to show that `τ⟨1, |f'''|₊⟩ < 4f'(0)`".  For
+`thm:ascentnormal`, it suffices to show that `τ⟨1, |f'''|₊⟩ < 4f'(0)`". For
 `β > 1/3` it reduces this to `τ(f''(a) - f''(b)) < 2` through
-`∫ |f'''|₊ = 2(f''(a) - f''(b))`, and for `β ≥ 1` to `lemma:beta1`.  Here
-`f_β'(0) = 1`.  The bound also gives the hypothesis
+`∫ |f'''|₊ = 2(f''(a) - f''(b))`, and for `β ≥ 1` to `lemma:beta1`. Here
+`f_β'(0) = 1`. The bound also gives the hypothesis
 `τ ∫ |f'''|₊ ≤ 4(1 + τ/2π) f'(0)` of `thm:main`. -/
 theorem τ_mul_integral_posPart_f_β'''_lt_four {β : ℝ} (hβ : 1 ≤ β) :
     τ_β_star 2 β * ∫ x in (-π)..π, max (f_β''' β x) 0 < 4 := by

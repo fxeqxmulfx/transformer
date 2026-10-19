@@ -1,5 +1,7 @@
-import Transformer.Homogenized.MvGenerator
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+module
+
+public import Transformer.Homogenized.MvGenerator
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # Passing smooth logistic test martingales to bounded limits
@@ -28,6 +30,8 @@ the logistic application uses the source's probability measure.
 The examples retain nonzero approximants and genuinely varying
 test paths with their actual constant drift compensators.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set Filter
 open scoped Topology

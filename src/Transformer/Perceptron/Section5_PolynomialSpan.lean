@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_PolynomialSpace
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Data.Finsupp.Multiset
+
+/-!
 # Powers of linear functions span the original spherical polynomial space
 
 ArXiv:2601.21366v2, §5.1, `eq:FH-basic` and `lem: quadpol` (i).
@@ -13,9 +19,7 @@ the original monomial support then supplies every polynomial.
 Neither the kernel's inverse nor its degree preservation is assumed.
 -/
 
-import Transformer.Perceptron.Section5_PolynomialSpace
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Data.Finsupp.Multiset
+@[expose] public section
 
 open Real Set Filter
 open scoped Topology

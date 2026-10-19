@@ -1,4 +1,6 @@
-import Transformer.DoubleDescent.Section2_TrainingTime
+module
+
+public import Transformer.DoubleDescent.Section2_TrainingTime
 
 /-!
 # What the generalized double-descent hypothesis assumes
@@ -11,6 +13,8 @@ learning procedures, on the same iid probability distribution, refute that
 interpretation. They do not refute a future precisely restricted conjecture
 about natural procedures. No unproved universal risk guarantee is assumed.
 -/
+
+@[expose] public section
 
 namespace Transformer.DoubleDescent
 

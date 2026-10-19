@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.ICEoT.Section3_EncoderModel
+
+/-!
 # IC-EoT: residual-block and complete-network convexity
 
 arXiv:2603.22095v2, §3.3, Proposition 2, Theorem 1 and Corollary 1.
 Theorems refer to the actual equations in `Section3_EncoderModel`.
 -/
 
-import Transformer.ICEoT.Section3_EncoderModel
+@[expose] public section
 
 noncomputable section
 

@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Normalization.InitialSphereMoments
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # Bias of the exponential spherical tilt
 
 The expectation estimate in Appendix B, proof of Theorem 4.2 of
 arXiv:2510.22026v2, obtained from the first two spherical moments.
 -/
 
-import Transformer.Normalization.InitialSphereMoments
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open MeasureTheory
 

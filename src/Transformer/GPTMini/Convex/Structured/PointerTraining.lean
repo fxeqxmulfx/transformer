@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Convex.Structured.Factorial
-import Mathlib.LinearAlgebra.Pi
-import Mathlib.Data.Fintype.Sum
+module
+
+public import Transformer.GPTMini.Convex.Structured.Factorial
+public import Mathlib.LinearAlgebra.Pi
+public import Mathlib.Data.Fintype.Sum
 
 /-!
 # Jointly trainable compact Q/K/value log-potential tables
@@ -22,6 +24,8 @@ The proof does not convexify ordinary output-label-only cross entropy,
 prove successful AdamW training, or yet realize the complete raw Basis
 encoder/readout inside a genuine replacement residual block.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Perspective.SphereRadialGradient
+public import Mathlib.Analysis.Calculus.FDeriv.Analytic
+public import Mathlib.Analysis.Calculus.FDeriv.Pi
+public import Mathlib.Analysis.Calculus.FDeriv.WithLp
+public import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
+
+/-!
 # The energy of normalized tuples on `(ℝ^d)^n` with the `ℓ²` norm
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -6,10 +14,10 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 The gradient flows of `Perspective.SphereRadialGradient` live on tuples of vectors of
 `ℝ^d`; with the `ℓ²` norm (`TupleSpace`) these form an inner product space, the setting
-of the Łojasiewicz theorem and of saddle avoidance.  On it, `g(x) = 𝖤_β(x/‖x‖)`
+of the Łojasiewicz theorem and of saddle avoidance. On it, `g(x) = 𝖤_β(x/‖x‖)`
 (`tupleEnergy`) is real-analytic wherever no vector vanishes
 (`analyticOnNhd_tupleEnergy`), since `‖y‖⁻¹ = exp(-½ log⟨y, y⟩)` is
-(`analyticAt_norm_inv`).  The gradient of a differentiable function of `ℓ²` tuples is
+(`analyticAt_norm_inv`). The gradient of a differentiable function of `ℓ²` tuples is
 the tuple of its partial gradients (`gradient_ofLp_apply`), so `∇g` has the vectors
 `‖x_i‖⁻¹ Proj_{u_i} Σ_j e^{β⟨u_i, u_j⟩} u_j` of `hasGradientAt_selfEnergy_update`
 (`gradient_tupleEnergy_apply`), and vanishes at a tuple of unit vectors exactly at the
@@ -19,11 +27,7 @@ Source: arXiv:2312.10794v5, §3.3 and Appendix A, where `𝖤_β` is real-analyt
 `(𝕊^{d-1})^n`.
 -/
 
-import Transformer.Perspective.SphereRadialGradient
-import Mathlib.Analysis.Calculus.FDeriv.Analytic
-import Mathlib.Analysis.Calculus.FDeriv.Pi
-import Mathlib.Analysis.Calculus.FDeriv.WithLp
-import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
+@[expose] public section
 
 open Filter
 open scoped Topology

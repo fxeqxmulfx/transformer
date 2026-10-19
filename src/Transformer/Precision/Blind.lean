@@ -1,9 +1,16 @@
-/-
+module
+
+public import Transformer.Precision.Basic
+public import Transformer.Precision.Nearest
+public import Mathlib.Order.Filter.Finite
+public import Mathlib.Topology.Order.LeftRightNhds
+
+/-!
 # Every finite format blinds attention
 
 Store the softmax weights of a head in any format with finitely many numbers,
-rounded to nearest.  Nothing about the format is assumed: no `0`, no exponent,
-no spacing.  Near `0` a finite set has one nearest point `c` from the right, so
+rounded to nearest. Nothing about the format is assumed: no `0`, no exponent,
+no spacing. Near `0` a finite set has one nearest point `c` from the right, so
 rounding is constant on some interval `(0, τ)` (`IsNearest.exists_const`).
 Scores in a window of width `D` put every weight below `e^D / n`
 (`softmax_le`), so once `n > e^D / τ` every weight is stored as the same `c`,
@@ -11,12 +18,12 @@ and the head outputs
 
   `c · Σ_j v_j`
 
-whatever its scores are (`qAttn_blind`).  The queries and keys no longer reach
+whatever its scores are (`qAttn_blind`). The queries and keys no longer reach
 the output: the head cannot tell which token it attends to.
 
-The two kinds of formats differ only in `c`.  If `0` is a number of the format
+The two kinds of formats differ only in `c`. If `0` is a number of the format
 (fixed point, IEEE floats, the integer quants, `MXFP4`), `c = 0` and the output
-is `0`: the signal is lost.  If it is not (the codebook of `IQ4_NL`), `c ≠ 0`
+is `0`: the signal is lost. If it is not (the codebook of `IQ4_NL`), `c ≠ 0`
 and the output is an unweighted sum of the values: the signal is still there,
 but it is no longer attention.
 
@@ -25,10 +32,7 @@ arXiv:2410.01104, §2; the statement for an arbitrary finite format is this
 repository's own.
 -/
 
-import Transformer.Precision.Basic
-import Transformer.Precision.Nearest
-import Mathlib.Order.Filter.Finite
-import Mathlib.Topology.Order.LeftRightNhds
+@[expose] public section
 
 open scoped BigOperators Topology
 
@@ -87,7 +91,7 @@ variable {n : ℕ} {E : Type*} [AddCommGroup E] [Module ℝ E]
 numbers, rounded to nearest, and a score window of width `D`, there is a
 length `N` and a number `c` of the format such that beyond `N` tokens every
 head outputs `c · Σ_j v_j`, whatever its scores: the output no longer depends
-on the queries and keys.  If `0` is a number of the format, `c = 0`. -/
+on the queries and keys. If `0` is a number of the format, `c = 0`. -/
 theorem qAttn_blind {G : Set ℝ} {Q : ℝ → ℝ} (hQ : IsNearest G Q) (hfin : G.Finite)
     (hne : G.Nonempty) (D : ℝ) :
     ∃ c ∈ G, ((0 : ℝ) ∈ G → c = 0) ∧ ∃ N : ℕ, ∀ n ≥ N, ∀ s : Idx n → ℝ,

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section10_ProjHull
+
+/-!
 # The emergence of clusters in self-attention dynamics — the attention weights
   of §10
 
@@ -16,18 +20,18 @@ softmax estimate the third bullet of the proof runs on.
 * `e:boundrj`, `|r_j(t)| ≤ Ce^{t(λ₁+|λ₂|)}`, is false as written: the
   source derives it through the three cross terms `P₁, P₂, P₃`, which uses
   `π_ℱ(Ae^{tV}z_j(t)) = e^{λ₁t}π_ℱ(Az_j(t))`, true only when `A` respects the
-  splitting.  The counterexample is `not_exists_bound_scoreRemainder`, in
+  splitting. The counterexample is `not_exists_bound_scoreRemainder`, in
   `Clusters.Section10_RemainderFalse`.
 
 * The third bullet of the proof of Step 2' bounds a softmax weight of a
   non-positive exponent by `e^{-s_{j₀}}`, `j₀` being an index of largest
-  exponent.  That is `softmax_le_exp_neg`, and it is proved.
+  exponent. That is `softmax_le_exp_neg`, and it is proved.
 
 Source: arXiv:2305.05465v6, `sec: clustering.hyperplanes.and.polytopes`,
 `e:derivativenorm123`, `e:boundrj`.
 -/
 
-import Transformer.Clusters.Section10_ProjHull
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

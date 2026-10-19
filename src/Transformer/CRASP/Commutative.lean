@@ -1,17 +1,21 @@
-/-
+module
+
+public import Transformer.CRASP.Middle
+
+/-!
 # Depth-1 formulas are commutative on the middle
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 (COLM 2025), §4.3 and Appendix C.1: `lem:TLCP_commutative`.
 
 Two strings `λ u ϱ` and `λ u' ϱ` that match an affix restriction and share a
-Parikh vector differ only by a permutation of their middles.  The paper builds
+Parikh vector differ only by a permutation of their middles. The paper builds
 a permutation of positions and shows that a depth-0 formula reads the same at
-a position of one string and at its image in the other.  Here a count `◁#[χ]`
+a position of one string and at its image in the other. Here a count `◁#[χ]`
 at the last position is split into the prefix, the middle and the suffix
 instead: the prefix and the suffix carry the same letters in both strings, and
 the middle count is a count over the letters of `u`, the same as over those of
-`u'` (`Term.val_countL_length_eq`).  The rest is an induction on the formula at
+`u'` (`Term.val_countL_length_eq`). The rest is an induction on the formula at
 the last position.
 
 The last position lies in the suffix `ϱ` as long as `ϱ` is never empty: there
@@ -19,7 +23,7 @@ The last position lies in the suffix `ϱ` as long as `ϱ` is never empty: there
 strings.
 -/
 
-import Transformer.CRASP.Middle
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -29,7 +33,7 @@ universe u
 variable {σ : Type u} [DecidableEq σ]
 
 /-- **A depth-1 count at the last position** (Appendix C.1, proof of
-`lem:TLCP_commutative`: "the `◁#` terms count all positions").  For a depth-0
+`lem:TLCP_commutative`: "the `◁#` terms count all positions"). For a depth-0
 `χ` whose PNPs are constant on the middle, `◁#[χ]` takes the same value at the
 last position of `λ(n⃗) u ϱ(n⃗)` and of `λ(n⃗) v ϱ(n⃗)` when both have Parikh
 vector `n⃗`. -/
@@ -79,7 +83,7 @@ example :
 mutual
 
 /-- **A depth-1 formula at the last position** (Appendix C.1, proof of
-`lem:TLCP_commutative`).  Two strings of the same length and Parikh vector,
+`lem:TLCP_commutative`). Two strings of the same length and Parikh vector,
 with the same last letter, on which every `◁#[χ]` for a depth-0 `χ` with PNPs
 constant on `I` takes the same value at the last position, satisfy the same
 depth-1 formulas with PNPs constant on `I`. -/

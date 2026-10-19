@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.TensorObservationInference
-import Transformer.GPTMini.Block
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorObservationInference
+public import Transformer.GPTMini.Block
 
 /-!
 # Real two-residual blocks with the FFN deferred
@@ -19,6 +21,8 @@ and observation laws. Repeated learned attention uses shared weights
 in the subsequent stack; arbitrary independent deep weights and a
 learned FFN are outside this prototype's convexity claim.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

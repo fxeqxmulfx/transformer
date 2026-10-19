@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_Attention
+public import Transformer.Zoology.Appendix_Shift
+
+/-!
 # One input-dependent distance for associative recall
 
 Arora et al., arXiv:2312.04927v1, Appendix `sec: data-dep-ar`,
@@ -7,8 +12,7 @@ interaction distance, shifted one-hot keys are compared with queries and
 the same shift retrieves values only where that comparison succeeds.
 -/
 
-import Transformer.Zoology.Appendix_Attention
-import Transformer.Zoology.Appendix_Shift
+@[expose] public section
 
 open scoped BigOperators
 

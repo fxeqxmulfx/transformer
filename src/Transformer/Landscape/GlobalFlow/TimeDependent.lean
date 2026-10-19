@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.GlobalFlow.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+
+/-!
 # Global trajectories for bounded time-dependent Lipschitz fields
 
 A field continuous in time and uniformly Lipschitz in space, with a
@@ -15,8 +20,7 @@ attention equation in arXiv:2411.04551v3, §1, `eq: ips` and
 `eq: cauchy.pb`. Time dependence is explicit in the actual field.
 -/
 
-import Transformer.Landscape.GlobalFlow.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+@[expose] public section
 
 open Real Set Metric Filter Topology
 open scoped NNReal

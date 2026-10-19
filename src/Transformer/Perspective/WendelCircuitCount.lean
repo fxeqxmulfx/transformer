@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.WendelCircuitSigns
+
+/-!
 # Counting the two bad sign patterns of a minimal circuit
 
 For a general-position sample of `d + 1` vectors, exactly two coordinatewise
@@ -8,7 +12,7 @@ the first sample size beyond full dimension.
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962).
 -/
 
-import Transformer.Perspective.WendelCircuitSigns
+@[expose] public section
 
 namespace Transformer.Perspective
 

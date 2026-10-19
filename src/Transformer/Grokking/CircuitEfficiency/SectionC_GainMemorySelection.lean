@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryMixing
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryMixing
 
 /-!
 # Generated true product and decision selection with native retained memory
@@ -27,6 +29,8 @@ has two classes with fixed gained lookup tables, not learned heads.
 Uniform native decoupled decay differs from appendix C coupled-cost
 GD. Learned stochastic/floating-point GPTMini transfer remains open.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

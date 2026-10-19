@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Normalization.ClusterWeights
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+
+/-!
 # Positive normalized attention and sphere residence
 
 The sign and sphere estimates used with Table 2 and Appendix C, proof of
@@ -6,10 +13,7 @@ Theorem 4.3 of arXiv:2510.22026v2. Squared norm error avoids regularity
 assumptions on the speed coefficients.
 -/
 
-import Transformer.Normalization.ClusterWeights
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
+@[expose] public section
 
 open Set
 open scoped BigOperators

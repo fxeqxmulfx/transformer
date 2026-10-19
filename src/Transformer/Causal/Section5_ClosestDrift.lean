@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section5_CausalWeights
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
 # The inward velocity of the closest causal predecessor
 
 ArXiv:2411.04990v2, §5, proof of `lemma:meta`, after `eq:bddotphi`.
@@ -11,8 +16,7 @@ predecessor's inward bound with the center's speed bound. The resulting
 squared-chord derivative bound requires no polar-coordinate chart.
 -/
 
-import Transformer.Causal.Section5_CausalWeights
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open scoped BigOperators
 open Real

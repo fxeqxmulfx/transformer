@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_SimplexError
+public import Transformer.Homogenized.Section7_SimplexGronwall
+public import Mathlib.MeasureTheory.SpecificCodomains.Pi
+
+/-!
 # Pathwise simplex comparison with the original drift and noise
 
 ArXiv:2604.01978v1, §7, eq:Gronwall_E_selfcontained and the final
@@ -15,9 +21,7 @@ The event inclusion then transfers an established noise-event
 measure bound to the corresponding uniform error event.
 -/
 
-import Transformer.Homogenized.Section7_SimplexError
-import Transformer.Homogenized.Section7_SimplexGronwall
-import Mathlib.MeasureTheory.SpecificCodomains.Pi
+@[expose] public section
 
 open MeasureTheory Set
 open scoped BigOperators NNReal

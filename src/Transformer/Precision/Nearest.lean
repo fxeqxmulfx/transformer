@@ -1,9 +1,16 @@
-/-
+module
+
+public import Mathlib.Data.Set.Finite.Lemmas
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+
+/-!
 # Round-to-nearest: the dead zone and absorption
 
 `Q` rounds to a nearest point of a set `G` of representable numbers (IEEE
 754-2008, §4.3.1, roundTiesToEven and roundTiesToAway alike: the tie rule is
-left free).  Two consequences hold for every such rounding, whatever the
+left free). Two consequences hold for every such rounding, whatever the
 format:
 
 * *the dead zone* — if no point of `G` other than `0` is closer to `0` than
@@ -17,10 +24,7 @@ The first bounds how small a stored weight can be, the second how small an
 increment an accumulator can still take.
 -/
 
-import Mathlib.Data.Set.Finite.Lemmas
-import Mathlib.Basic.Real.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
+@[expose] public section
 
 namespace Transformer
 namespace Precision

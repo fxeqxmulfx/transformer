@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.GlobalFlow.Flow
+
+/-!
 # Differentiability of the flow in the initial point
 
 Let `w` be an `IsFlowField` on a finite-dimensional space whose spatial
@@ -9,7 +13,7 @@ derivative `A(t, x)` is jointly continuous.
   and points (`norm_sub_sub_le_of_uniform`).
 * For `s ≤ t`, `x ↦ Φ_{s,t} x` is differentiable, with derivative `J(t)` for
   any solution `J` of the variational equation `J' = A(τ, Φ_{s,τ} x) J`,
-  `J(s) = id` (`hasFDerivAt_flow`).  The remainder
+  `J(s) = id` (`hasFDerivAt_flow`). The remainder
   `r = Φ_{s,τ}(x + h) - Φ_{s,τ} x - J(τ) h` is an approximate solution of
   `r' = A r` whose error is `o(‖h‖)`, uniformly in `τ`; Grönwall bounds it.
 * In the initial time, `Φ_{s',s} x = x + (s - s') w(s, x) + o(s' - s)`,
@@ -20,7 +24,7 @@ which Mathlib does not have; arXiv:2305.05465v6, §6, uses it in the duality
 proof of uniqueness for `c:wellposedtransformers`.
 -/
 
-import Transformer.Landscape.GlobalFlow.Flow
+@[expose] public section
 
 open Set Metric Filter Topology Asymptotics
 open scoped NNReal
@@ -141,7 +145,7 @@ theorem IsFlowField.hasFDerivAt_flow (hw : IsFlowField w L M)
     _ = c * ‖h‖ := mul_comm _ _
 
 /-- **First-order expansion in the initial time**, uniform on balls:
-`Φ_{s',s} x = x + (s - s') w(s, x) + o(s' - s)`.  The trajectory from `x`
+`Φ_{s',s} x = x + (s - s') w(s, x) + o(s' - s)`. The trajectory from `x`
 stays within `M |s - s'|` of `x`, where `w` is uniformly close to `w(s, x)`;
 the mean value theorem bounds the rest. -/
 theorem IsFlowField.flow_expansion (hw : IsFlowField w L M) (s r : ℝ) {ε : ℝ} (hε : 0 < ε) :

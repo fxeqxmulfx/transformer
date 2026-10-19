@@ -1,4 +1,13 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Inverse
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Topology.DiscreteSubset
+public import Mathlib.Topology.Compactness.Compact
+public import Mathlib.Topology.Order.Compact
+
+/-!
 # Isolated critical angles on a compact set
 
 ArXiv:2601.21366v2, §5.5, `rem:strictSOPD-perceptron` and
@@ -15,12 +24,7 @@ not define atomicity by those conditions. Nonempty examples at
 the quadratic function realize every hypothesis.
 -/
 
-import Mathlib.Analysis.Calculus.Deriv.Inverse
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Topology.DiscreteSubset
-import Mathlib.Topology.Compactness.Compact
-import Mathlib.Topology.Order.Compact
+@[expose] public section
 
 open Set Filter Topology
 

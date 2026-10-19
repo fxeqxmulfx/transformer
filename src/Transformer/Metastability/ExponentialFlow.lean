@@ -1,11 +1,16 @@
-/-
+module
+
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Transformer.Metastability.QuantitativeInequality
+
+/-!
 # The flow of `𝖤(x) = x²/2` on `ℝ`, and the constant of `lem: quantitative inequality`
 
 arXiv:2410.06833v1, "Dynamic metastability in the self-attention model", §3.2,
 `lem: quantitative inequality`.
 
 `X(t) = e^{-t}` is the gradient flow of the one-dimensional energy
-`𝖤(x) = x²/2`, whose gradient is the identity.  It is the smallest example of
+`𝖤(x) = x²/2`, whose gradient is the identity. It is the smallest example of
 the hypotheses of `Transformer.Metastability.quantitative_inequality`, so it
 witnesses that they are satisfiable; and, run from `u = X(0) = 1` to
 `v = X(1) = e⁻¹` with `c = 1`, it is also what refutes the constant `2c`
@@ -13,12 +18,11 @@ printed in the paper:
 
   `2c‖u - v‖² = 2(1 - e⁻¹)² ≈ 0.799 > 0.432 ≈ (1 - e⁻²)/2 = 𝖤(u) - 𝖤(v)`,
 
-since `4(1 - s)² > 1 - s²` for `s = e⁻¹ < 1/2`.  The corrected constant `c/2`
+since `4(1 - s)² > 1 - s²` for `s = e⁻¹ < 1/2`. The corrected constant `c/2`
 of `quantitative_inequality` holds here, as it must: `(1 - e⁻¹)²/2 ≈ 0.200`.
 -/
 
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Transformer.Metastability.QuantitativeInequality
+@[expose] public section
 
 namespace Transformer
 namespace Metastability

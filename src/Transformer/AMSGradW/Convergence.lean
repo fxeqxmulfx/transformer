@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.AMSGradW.MetricLimit
+public import Transformer.AMSGradW.Error
+public import Transformer.AMSGradW.Perturbation
+
+/-!
 # Convergence of original AMSGradW in a decay-dominated regime
 
 User-requested extension of arXiv:1904.03590v4, Algorithm 1 and §4–6,
@@ -10,9 +16,7 @@ does not automatically satisfy it. All limits are derived from the
 objective and parameter conditions, including the limiting metric.
 -/
 
-import Transformer.AMSGradW.MetricLimit
-import Transformer.AMSGradW.Error
-import Transformer.AMSGradW.Perturbation
+@[expose] public section
 
 open scoped Topology
 open Filter

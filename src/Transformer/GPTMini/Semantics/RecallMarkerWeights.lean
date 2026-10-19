@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.RecallRawCopy
-import Mathlib.Order.Interval.Finset.Fin
+module
+
+public import Transformer.GPTMini.Semantics.RecallRawCopy
+public import Mathlib.Order.Interval.Finset.Fin
 
 /-!
 # Exact causal BOS mass at every original head position
@@ -17,6 +19,8 @@ operator. Subsequent raw-head coupling derives the single marker
 array from actual integer IDs. The table boundary can then be a
 fixed linear threshold of this internally computed coordinate.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

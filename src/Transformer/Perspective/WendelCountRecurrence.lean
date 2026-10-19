@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.WendelConeSlice
+
+/-!
 # The combinatorial recurrence for strict sign patterns
 
 Adding one nonzero vector contributes one sign pattern for every old feasible
@@ -8,7 +12,7 @@ orthogonal hyperplane. This is the counting step behind Wendel's recurrence.
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962).
 -/
 
-import Transformer.Perspective.WendelConeSlice
+@[expose] public section
 
 namespace Transformer.Perspective
 

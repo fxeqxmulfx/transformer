@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section5_GaussMoments
+
+/-!
 # The number of modes of a Gaussian KDE — the first two moments of `(G, G')`
 
 §5.2 of arXiv:2412.09080v3, the proof of `lem:moments-p`: the five Gaussian
@@ -10,7 +14,7 @@ expectations `E G`, `E G'`, `E G²`, `E GG'`, `E G'²` in closed form, for
 * The source completes the square in the exponent,
   `β z²/2 + (z-t)²/2 = (β+1)u²/2 + βt²/(2(β+1))` for the first moments and
   `β z² + (z-t)²/2 = (2β+1)u²/2 + βt²/(2β+1)` for the second, and reads the
-  moments of `u` off `lem:gaussian-int`.  All five are proved that way: the
+  moments of `u` off `lem:gaussian-int`. All five are proved that way: the
   square is completed in the variable `x` of `N(0,1)`, at the centre
   `βt/(β+1)` (resp. `2βt/(2β+1)`), which is the source's `u` after `z = t - x`,
   and `integral_gaussianReal_of_square` does the rest.
@@ -20,7 +24,7 @@ expectations `E G`, `E G'`, `E G²`, `E GG'`, `E G'²` in closed form, for
 Source: arXiv:2412.09080v3, §5.2 (`sec:moments`).
 -/
 
-import Transformer.Modes.Section5_GaussMoments
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

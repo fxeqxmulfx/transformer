@@ -1,4 +1,6 @@
-import Transformer.Modes.Section5_SecondDerivativeTest
+module
+
+public import Transformer.Modes.Section5_SecondDerivativeTest
 
 /-!
 # Phase estimates when the first two derivatives do not vanish together
@@ -20,6 +22,8 @@ before applying this test. The lower bound remains a condition on the
 actual derivatives, with both derivative identities stated explicitly.
 Source: arXiv:2412.09080v3, §5.5, proof of `eq:uniform-decay`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 open scoped Interval

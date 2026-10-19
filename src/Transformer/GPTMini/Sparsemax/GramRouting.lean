@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.EmbeddingGram
+module
+
+public import Transformer.GPTMini.Sparsemax.EmbeddingGram
 
 /-!
 # Shared content scores and free causal rows in Gram coordinates
@@ -16,6 +18,8 @@ Feasibility alone does not impose the equation defining that solution.
 The next modules distinguish the convex projection energy from its exact
 optimizer graph. Values, FFN and task loss remain outside this foundation.
 -/
+
+@[expose] public section
 
 noncomputable section
 

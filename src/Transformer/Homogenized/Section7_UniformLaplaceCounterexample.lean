@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianScaling
+public import Transformer.Metastability.Section4_UniformLaw
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+/-!
 # Counterexample to the dimension-uniform Laplace estimate
 
 ArXiv:2604.01978v1, §7.3, `lemma:Laplace_method`.
@@ -27,9 +33,7 @@ The value matrix has the source's adopted variance `1/d`, and both
 independent Gaussian factors of the attention matrix are retained.
 -/
 
-import Transformer.Homogenized.Section7_GaussianScaling
-import Transformer.Metastability.Section4_UniformLaw
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+@[expose] public section
 
 open Real MeasureTheory
 

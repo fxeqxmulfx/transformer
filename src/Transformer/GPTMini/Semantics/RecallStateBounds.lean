@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallSaturation
+module
+
+public import Transformer.GPTMini.Semantics.RecallSaturation
 
 /-!
 # Uniform bounds on the genuine raw recall residual and prenorm
@@ -17,6 +19,8 @@ that constant. These bounds precede a finite uniform gate/projection
 gain; they do not assume equal RMS scales across table positions or
 claim the complete second block is already saturated.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

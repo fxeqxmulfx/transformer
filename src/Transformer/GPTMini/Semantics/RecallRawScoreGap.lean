@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallScoreError
+module
+
+public import Transformer.GPTMini.Semantics.RecallScoreError
 
 /-!
 # Genuine raw table competitors retain a positive latest-write score gap
@@ -17,6 +19,8 @@ ideal routing gap. Full validated-parser coupling must still derive
 them for every legal prefix. Excluded nonrecords, finite-softmax
 retrieval and complete tied readout remain subsequent obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

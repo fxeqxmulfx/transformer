@@ -1,9 +1,14 @@
-/-
+module
+
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.Topology.Algebra.Order.Field
+
+/-!
 # The tradeoff between steps and examples
 
 arXiv:1812.06162, §2.3, with eq. (D.1) of Appendix D, from which the paper derives it.
 A run is a trajectory of full-batch steps `s`, carried by a finite measure `μ` (the
-paper's `ds`), along which the noise scale is `𝓑(s)` and the batch `B(s)`.  It takes
+paper's `ds`), along which the noise scale is `𝓑(s)` and the batch `B(s)`. It takes
 `S = ∫(1 + 𝓑/B) ds` steps and processes `E = ∫(𝓑 + B) ds` examples, eq. (D.1)
 (`totalSteps`, `totalExamples`): at least `S_min = ∫ds` and `E_min = ∫𝓑 ds`
 (`le_totalSteps`, `le_totalExamples`), the limits as a constant batch grows and shrinks
@@ -13,13 +18,12 @@ At a constant batch `B`, `E = BS` (`totalExamples_const`) and `S = S_min(1 + B_c
 (`totalSteps_const`), with the critical batch `B_crit = E_min/S_min` of eq. (2.12)
 (`critBatch`); hence `S/S_min - 1 = (E/E_min - 1)⁻¹`, eq. (2.11) (`totalSteps_tradeoff`),
 and at `B = B_crit` a run takes twice the least steps and twice the least examples
-(`totalSteps_critBatch`).  The paper fits `B_crit` to measured runs; here it is the
+(`totalSteps_critBatch`). The paper fits `B_crit` to measured runs; here it is the
 model's `E_min/S_min`, the mean noise scale over the run, the noise scale itself when that
 is constant (`critBatch_const`).
 -/
 
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Topology.Algebra.Order.Field
+@[expose] public section
 
 open MeasureTheory Filter Topology
 

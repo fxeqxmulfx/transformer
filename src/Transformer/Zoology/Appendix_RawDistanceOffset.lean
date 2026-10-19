@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_Shift
+
+/-!
 # Tuple distances versus raw-token convolution offsets
 
 Arora et al., arXiv:2312.04927v1, Appendix `sec: data-dep-ar`, Setup,
@@ -10,7 +14,7 @@ sequence sees key `k_j` at `3j` and query `q_i` at `3i+2`; its offset is
 `X^(i-j)` therefore needs an index conversion in this raw-token model.
 -/
 
-import Transformer.Zoology.Appendix_Shift
+@[expose] public section
 
 namespace Transformer.Zoology
 

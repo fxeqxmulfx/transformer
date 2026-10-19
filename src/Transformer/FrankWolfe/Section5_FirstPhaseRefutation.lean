@@ -1,6 +1,8 @@
-import Transformer.FrankWolfe.Section5_FirstPhaseStarts
-import Transformer.FrankWolfe.Section5_ProcessLaw
-import Transformer.FrankWolfe.Section5_TransitionAS
+module
+
+public import Transformer.FrankWolfe.Section5_FirstPhaseStarts
+public import Transformer.FrankWolfe.Section5_ProcessLaw
+public import Transformer.FrankWolfe.Section5_TransitionAS
 
 /-!
 # Counterexample to the printed first-phase clustering time
@@ -24,6 +26,8 @@ the original softmax rows. The final theorem negates the full original
 universal statement with all its hypotheses and quantifiers retained.
 No change of a universal radius constant repairs this printed time.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set Filter Topology
 open scoped BigOperators ENNReal

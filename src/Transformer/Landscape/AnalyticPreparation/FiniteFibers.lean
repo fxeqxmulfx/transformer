@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.PreparationReconstruction
+public import Mathlib.Algebra.Polynomial.Monic
+public import Mathlib.Algebra.Polynomial.Roots
+
+/-!
 # Finite fibers of prepared zero sets
 
 After preparation, projection of an analytic zero set along the distinguished
@@ -7,9 +13,7 @@ needed to lift parameter curves; existence of ramified analytic root branches
 is a further step.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.PreparationReconstruction
-import Mathlib.Algebra.Polynomial.Monic
-import Mathlib.Algebra.Polynomial.Roots
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

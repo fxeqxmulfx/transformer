@@ -1,4 +1,6 @@
-import Transformer.Modes.Section5_NonstationaryPhase
+module
+
+public import Transformer.Modes.Section5_NonstationaryPhase
 
 /-!
 # The first derivative test for a nonstationary phase
@@ -20,6 +22,8 @@ smooth phase satisfies these differentiability and continuity conditions
 on each interval between zeros of its second derivative.
 Source: arXiv:2412.09080v3, §5.5, proof of `eq:uniform-decay`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 open scoped Interval

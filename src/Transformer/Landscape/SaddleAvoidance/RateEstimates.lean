@@ -1,20 +1,24 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Convergence
+
+/-!
 # Saddle avoidance — the estimates behind the rates of gradient descent
 
 Let an orbit `x_k` of gradient descent converge to `w`, where `f` is continuous and
 the Łojasiewicz inequality holds with `0 < a < 1`, and let every step lower `f` by
-at least `η κ ‖∇f(x_k)‖²` for some `κ > 0`.  Then `r_k = f x_k - f w ≥ 0`
+at least `η κ ‖∇f(x_k)‖²` for some `κ > 0`. Then `r_k = f x_k - f w ≥ 0`
 eventually drops by `c r_k ^ (2a)` per step and `‖x_k - w‖ ≤ K r_k ^ (1 - a)`
 (`exists_rate_estimates_of_isLojasiewiczAt_of_le_sub`).
 
 The decrease holds with `κ = 1 - η L` for an `L`-Lipschitz gradient
 (`iterate_succ_le_sub`) and under a bound `L` on the Hessian along the segments of
-the orbit (`iterate_succ_le_sub_of_segment`).  The rates of `prop:rates` of
+the orbit (`iterate_succ_le_sub_of_segment`). The rates of `prop:rates` of
 arXiv:1602.04915 follow from the two estimates, in `Landscape.SaddleAvoidance.Rates`
 and `Landscape.SaddleAvoidance.OrbitRates`.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Convergence
+@[expose] public section
 
 open Filter Metric
 open scoped Topology
@@ -27,7 +31,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
 /-- **The two estimates behind the rates, from a decrease along the orbit.**  Let
 every step of an orbit of gradient descent lower `f` by at least `η κ ‖∇f(x_k)‖²`,
 `0 < η`, `0 < κ`, and let the orbit converge to `w`, where `f` is continuous and the
-Łojasiewicz inequality holds with `0 < a < 1`.  Then `f` stays above `f w` along
+Łojasiewicz inequality holds with `0 < a < 1`. Then `f` stays above `f w` along
 it, and for some `c > 0` and `K ≥ 0`, from some step on, `r_k = f x_k - f w`
 satisfies `r_{k+1} ≤ r_k - c r_k ^ (2a)` and `‖x_k - w‖ ≤ K r_k ^ (1 - a)`. -/
 theorem exists_rate_estimates_of_isLojasiewiczAt_of_le_sub (hη : 0 < η) (hκ : 0 < κ)

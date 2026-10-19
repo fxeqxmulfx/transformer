@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerLimitIncrements
+
+/-!
 # A continuous time change for Kolmogorov's increment criterion
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -7,7 +11,7 @@ increment bound into a global quadratic bound. Its inverse restores
 the original physical time after constructing a continuous modification.
 -/
 
-import Transformer.BatchSize.Section4_EulerLimitIncrements
+@[expose] public section
 
 open scoped NNReal
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadFullGrowth
+
+/-!
 # Bounded gaps inside the original escaping multi-head clusters
 
 ArXiv:2305.05465v6, §7, proof of `l:exactasymptotic`, for
@@ -17,7 +21,7 @@ for every negative escaping token. No common head temperature or
 replacement iteration is introduced.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadFullGrowth
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

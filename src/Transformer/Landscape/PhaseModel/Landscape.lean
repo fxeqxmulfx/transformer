@@ -1,18 +1,24 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Abelian.Landscape
+public import Transformer.Landscape.PhaseModel.Characters
+public import Transformer.Landscape.PhaseModel.Fourier
+
+/-!
 # Phase model — the landscape of `V_full` below `n²/8`
 
 For every phases `ψ`, some character `j` has
 `n Σ_x (1 - cos (ψ_x - 2πjx/n)) ≤ V_full(ψ)` (`exists_mul_sum_one_sub_cos_le`),
 so below `n²/8` the phases lie within `n/8` of a character
 (`exists_sum_one_sub_cos_lt`), where for `n ≥ 4` every critical point is the
-character up to periods or a strict saddle (`Characters`).  Hence, for
+character up to periods or a strict saddle (`Characters`). Hence, for
 `n ≥ 4`, every local minimizer of `V_full` below `n²/8` is the phases of a
 character up to periods (`exists_sub_characterPhase_mem_periods_of_isLocalMin`),
 a global minimizer (`divisionEnergy_eq_zero_of_isLocalMin`); every critical
 point with `0 < V_full < n²/8` is a strict saddle
-(`isStrictSaddle_of_divisionEnergy_lt`).  So gradient descent started below
+(`isStrictSaddle_of_divisionEnergy_lt`). So gradient descent started below
 `n²/8` converges to a character for almost every start
-(`Landscape.PhaseModel.Convergence`).  The critical points above `n²/8` are not
+(`Landscape.PhaseModel.Convergence`). The critical points above `n²/8` are not
 settled here.
 
 Each theorem is that of `Landscape.PhaseModel.Abelian.Landscape` at `G = Fin n`, the
@@ -22,9 +28,7 @@ character `χ` found there being `cyclicChar n j` for some `j < n`
 Source: item M6.8 of `landscape_plan.md`.
 -/
 
-import Transformer.Landscape.PhaseModel.Abelian.Landscape
-import Transformer.Landscape.PhaseModel.Characters
-import Transformer.Landscape.PhaseModel.Fourier
+@[expose] public section
 
 open Real
 

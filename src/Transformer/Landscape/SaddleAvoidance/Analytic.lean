@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.FlowLandscape
+public import Transformer.Landscape.SaddleAvoidance.LocalInequality
+
+/-!
 # Saddle avoidance — analytic energies converge without `hloj`
 
 An analytic function on a finite-dimensional real inner product space
@@ -10,7 +15,7 @@ energies, and convergence becomes a conclusion.
 Let `f` be analytic with an `L`-Lipschitz gradient, `0 < η` and `η L < 1`.
 An orbit of gradient descent with a limit point up to translations leaving
 `f` invariant converges, to a critical point
-(`exists_tendsto_of_analyticOnNhd`).  So does every orbit when the
+(`exists_tendsto_of_analyticOnNhd`). So does every orbit when the
 translations span `E` (`exists_tendsto_of_span_eq_top_of_analyticOnNhd`),
 and every bounded orbit (`exists_tendsto_of_isBounded_of_analyticOnNhd`).
 The same holds for every trajectory of the gradient flow, with no bound on
@@ -23,8 +28,7 @@ Theorem 3.2 of Absil, Mahony and Andrews (SIAM J. Optim. 16, 2005), which
 arXiv:1602.04915 cites for `prop:rates`.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.FlowLandscape
-import Transformer.Landscape.SaddleAvoidance.LocalInequality
+@[expose] public section
 
 open Filter Set
 open scoped Topology NNReal
@@ -39,7 +43,7 @@ from every orbit with a limit point up to translations leaving `f` invariant**,
 for `0 < η` and `η L < 1`: Łojasiewicz's theorem gives the inequality at the
 limit point (`exists_isLojasiewiczAt_of_analyticAt`), so
 `exists_tendsto_of_isLojasiewiczAt` applies, and the limit is critical
-(`gradient_eq_zero_of_tendsto`).  For `η = 0` the orbit stands still at a point
+(`gradient_eq_zero_of_tendsto`). For `η = 0` the orbit stands still at a point
 that need not be critical. -/
 theorem exists_tendsto_of_analyticOnNhd (hf : AnalyticOnNhd ℝ f univ)
     (hL : LipschitzWith L (gradient f)) (hη : 0 < η) (hηL : η * L < 1) {Λ : Set E}
@@ -79,7 +83,7 @@ theorem exists_tendsto_of_isBounded_of_analyticOnNhd (hf : AnalyticOnNhd ℝ f u
 
 /-- **A gradient flow of an analytic function converges, to a critical point, if
 it has a limit point up to translations leaving `f` invariant**: `x` solves
-`ẋ = -∇f(x)` from time `0` on, with no bound on `∇f`.  Łojasiewicz's theorem
+`ẋ = -∇f(x)` from time `0` on, with no bound on `∇f`. Łojasiewicz's theorem
 gives the inequality at the limit point, so
 `exists_tendsto_gradientFlow_of_isLojasiewiczAt` applies, and the limit is
 critical (`gradient_eq_zero_of_tendsto_gradientFlow`). -/

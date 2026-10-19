@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_Coefficients
+public import Transformer.DASH.Section3_Scaling
+
+/-!
 # DASH — matrix Clenshaw and the corrected approximation target
 
 arXiv:2602.02016v2, Appendix A. With fitting interval `[ε,1+ε]`
@@ -7,8 +12,7 @@ Recovering a power of the original-scale regularized matrix also
 requires multiplying the result by `c^(-1/p)`.
 -/
 
-import Transformer.DASH.SectionA_Coefficients
-import Transformer.DASH.Section3_Scaling
+@[expose] public section
 
 open scoped BigOperators Matrix
 

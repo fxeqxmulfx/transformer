@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_SphericalInteraction
+public import Transformer.Perceptron.Section5_AnalyticStationarity
+
+/-!
 # Exact cancellation in the original transported spherical energy
 
 ArXiv:2601.21366v2, §5.3, `H` constant in the analytic alternative
@@ -14,8 +19,7 @@ This avoids requiring a separate second derivative of the original
 primitive: the exact constant first-variation identity supplies it.
 -/
 
-import Transformer.Perceptron.Section5_SphericalInteraction
-import Transformer.Perceptron.Section5_AnalyticStationarity
+@[expose] public section
 
 open Real MeasureTheory
 

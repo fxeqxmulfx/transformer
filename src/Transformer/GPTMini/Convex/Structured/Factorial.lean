@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.Basic
-import Mathlib.Algebra.BigOperators.Ring.Finset
+module
+
+public import Transformer.GPTMini.Convex.Structured.Basic
+public import Mathlib.Algebra.BigOperators.Ring.Finset
 
 /-!
 # Compact contraction of learned matching and value channels
@@ -21,6 +23,8 @@ Raw adjacency, role selection, parameter convexity, value readout and
 complete Basis capability remain separate construction obligations.
 This module proves an actual contraction identity, not FLOP measurements.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

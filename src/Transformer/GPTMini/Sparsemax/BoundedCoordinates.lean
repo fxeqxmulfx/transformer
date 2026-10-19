@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.BoundedGain
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+module
+
+public import Transformer.GPTMini.Sparsemax.BoundedGain
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 
 /-!
 # Smooth bounded score coordinates
@@ -15,6 +17,8 @@ independent. This explicit architecture change makes small raw score
 transfers accessible to trainable parameters. It does not certify that
 a query/key factorization has the same local freedom.
 -/
+
+@[expose] public section
 
 noncomputable section
 

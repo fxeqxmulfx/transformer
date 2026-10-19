@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section2_PhiTUniform
+
+/-!
 # The number of modes of a Gaussian KDE — `lem:phi-t`, the asymptotics
 
 §2.2 of arXiv:2412.09080v3, `lem:phi-t`: the sizes of `A_t`, `α_t`, `δ_t` and
@@ -8,29 +12,29 @@ of the inner Kac-Rice integral over the Gaussian proxy, uniformly over `t ∈ T`
 
 * `≍` over `t ∈ T` is read uniformly: two constants `0 < C₁ ≤ C₂` and, for all
   large `k`, the two-sided bound at every `t ∈ T_k`, along a regime sequence
-  `(n_k, β_k)`.  `A_t, α_t, δ_t` are the exact coefficients of
+  `(n_k, β_k)`. `A_t, α_t, δ_t` are the exact coefficients of
   `krQuad_zero_eq`, so the source's "there exist" is discharged by them.
 
 * `A_t ≍ β^{-3/2} n t² e^{-t²/2}` and `α_t ≍ β^{1/2} e^{t²/2}`: as in the
   source.
 
 * **`δ_t` is not carried as the source writes it.**  The source claims
-  `δ_t ≍ n^{1/2}β^{-3/2}e^{-t²/2}(1 - t²/2)`.  The right side vanishes at
+  `δ_t ≍ n^{1/2}β^{-3/2}e^{-t²/2}(1 - t²/2)`. The right side vanishes at
   `t = √2 ∈ T`; from the closed forms of §5.2,
   `δ_t = n^{1/2}β^{-3/2}e^{-t²/2}(1 - t²/2 + (-3/2 + 3t²/2 - t⁴/4)/β + O(β⁻²))`,
   which is `≈ n^{1/2}β^{-5/2}e^{-1}/2 > 0` there (checked numerically to seven
-  digits), so the claim is false at `t = √2`.  The refutation is not carried
+  digits), so the claim is false at `t = √2`. The refutation is not carried
   yet.
 
 * Both bounds are read off the exact identities `phiA_eq`, `phiAlpha_eq`
   and the quotients of `Section2_PhiTQuot.lean`, which lie in `(1/2, 2)` on
-  `T` for all large `k` (`eventually_quot_mem_Ioo`).  The check on `δ_t` and
+  `T` for all large `k` (`eventually_quot_mem_Ioo`). The check on `δ_t` and
   the second display are in `Section2_PhiTDelta.lean`.
 
 Source: arXiv:2412.09080v3, `lem:phi-t`, `eq:phi-t`.
 -/
 
-import Transformer.Modes.Section2_PhiTUniform
+@[expose] public section
 
 open Real Filter Asymptotics MeasureTheory
 open scoped Topology

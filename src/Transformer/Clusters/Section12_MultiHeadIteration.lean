@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadScalar
+
+/-!
 # Exact construction and scalar coordinates of the original multi-head iteration
 
 ArXiv:2305.05465v6, §12, `sec:conclusion`, the multi-head display,
@@ -15,7 +19,7 @@ the constructed solution is the actual geometric progression with
 factor `1+Δt Σ_h v_h`, providing nonzero original trajectories.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadScalar
+@[expose] public section
 
 open scoped BigOperators
 open Real

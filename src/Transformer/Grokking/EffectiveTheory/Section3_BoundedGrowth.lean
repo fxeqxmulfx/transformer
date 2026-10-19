@@ -1,9 +1,11 @@
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Tactic
+module
+
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Tactic
 
 /-!
 # Nonvanishing from initial data for a bounded growth coefficient
@@ -19,6 +21,8 @@ Two actual monotone quantities, squared amplitude and an integrating-factor
 weighted squared amplitude, control the forward and backward directions.
 This module alone does not identify a neural trajectory with that equation.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.EffectiveTheory
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.RealAnalyticGerms.RegularCoordinates
+
+/-!
 # Real analytic germs: Preparation
 
 Adapted from Bochao Kong's LocalComplexGeometry, revision
@@ -8,7 +12,7 @@ dependency closure is retained. Apache-2.0 license:
 third_party/LocalComplexGeometry/LICENSE.
 -/
 
-import Transformer.Landscape.RealAnalyticGerms.RegularCoordinates
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology
@@ -45,9 +49,9 @@ theorem representative_value_eq_evalAtOrigin {n : ℕ}
 /--
 Regularized preparation of a nonzero analytic germ.
 
-`H` is written in WPT's product coordinates.  Composing it with the standard
+`H` is written in WPT's product coordinates. Composing it with the standard
 successor-coordinate splitting represents exactly the coordinate pullback of
-the original germ.  The equality `H 0 = evalAtOrigin f` makes the positive-order
+the original germ. The equality `H 0 = evalAtOrigin f` makes the positive-order
 corollary independent of representatives.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2. -/
 theorem exists_regularized_weierstrassPreparation

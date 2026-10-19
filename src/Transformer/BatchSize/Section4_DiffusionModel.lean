@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_DiagonalNoise
+
+/-!
 # Discrete updates and their diffusion generators
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3).
@@ -6,7 +10,7 @@ The discrete law is the pushforward of independent standard Gaussian
 innovations. The continuous model is specified by its infinitesimal generator.
 -/
 
-import Transformer.BatchSize.Section4_DiagonalNoise
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped BigOperators

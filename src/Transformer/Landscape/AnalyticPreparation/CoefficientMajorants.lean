@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.MovingCoefficients
+public import Mathlib.Analysis.Normed.Lp.lpSpace
+
+/-!
 # Real analytic preparation: CoefficientMajorants
 
 Adapted from Bochao Kong's classical-complex-wpt, revision
@@ -9,8 +14,7 @@ The scalar field is real; no complex root or complex differentiation result
 is used. Apache-2.0 license: third_party/classical-complex-wpt/LICENSE.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.MovingCoefficients
-import Mathlib.Analysis.Normed.Lp.lpSpace
+@[expose] public section
 
 open Filter Finset
 open scoped BigOperators ENNReal NNReal Topology
@@ -23,7 +27,7 @@ namespace Transformer.Landscape.AnalyticPreparation
 variable {A I J : Type*} [AddCommMonoid A] [Finset.HasAntidiagonal A]
 
 /-- The ordinary (Archimedean) majorant needed to sum the weighted coordinate
-series.  This is extracted from Mathlib's `changeOriginSeries_summable_aux₁`;
+series. This is extracted from Mathlib's `changeOriginSeries_summable_aux₁`;
 no ultrametric inequality is used.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2. -/
 theorem summable_nnnorm_changeOriginSeries_mul_pow {n : ℕ}

@@ -1,12 +1,16 @@
-/-
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+public import Mathlib.Tactic
+
+/-!
 # Smooth positive gains
 
 arXiv:2606.25971v2, §4.1.3, the displayed softplus map; Appendix A,
 Algorithm 2, backpropagation through the gain map.
 -/
 
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Tactic
+@[expose] public section
 
 noncomputable section
 

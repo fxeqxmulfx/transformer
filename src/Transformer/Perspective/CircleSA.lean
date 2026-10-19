@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.CircleAngles
+public import Mathlib.Analysis.Calculus.ContDiff.WithLp
+
+/-!
 # SA on the circle in angles
 
 At the points `x_k = (cos θ_k, sin θ_k)` of the circle the partition function
@@ -9,15 +14,15 @@ into `eq:onangles` turns `SA` into
   `θ̇_i = -(1/Z_i) Σ_j e^{β cos(θ_i - θ_j)} sin(θ_i - θ_j)`  (`angularSA`),
 
 `eq:onangles` with `n` replaced by `Z_i`, as `USA` is `SA` with `Z_i` replaced
-by `n`.  Its solutions give solutions of `SA` on `(𝕊¹)ⁿ`
+by `n`. Its solutions give solutions of `SA` on `(𝕊¹)ⁿ`
 (`sa_anglesToSphere`), and its right-hand side is `n²/Z_i` times the `i`-th
 partial derivative of the energy `𝖤_β` of `eq:energyF`
 (`angularSA_is_gradient_flow`): SA in angles is the gradient ascent of
 `n² 𝖤_β = (1/2β) Σ_i Σ_j e^{β cos(θ_i - θ_j)}`, the energy of §3.4, in the
-metric `diag(Z_i)`, which is `e:scalarproduct` written in angles.  The
+metric `diag(Z_i)`, which is `e:scalarproduct` written in angles. The
 inverse of the metric `diag(Z_i/n²)` of `𝖤_β`, the gain
 `G(θ) = diag(n²/Z_i(θ))` on `EucSpace n` (`saGain`), is smooth, symmetric and
-positive definite (`inner_saGain_self_pos`).  `Perspective.CircleSAGradient`
+positive definite (`inner_saGain_self_pos`). `Perspective.CircleSAGradient`
 states the gradient flow with the metric, and `Perspective.CircleSAFlow`
 draws the consequence for strict saddles.
 
@@ -26,8 +31,7 @@ by replacing the partition function `Z_{β,i}(t)` by `n`") and §7.1
 (`eq:onangles`, `eq:energyF`).
 -/
 
-import Transformer.Perspective.CircleAngles
-import Mathlib.Analysis.Calculus.ContDiff.WithLp
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -86,9 +90,9 @@ theorem sa_anglesToSphere {β : ℝ} {θ : ℝ → Angles n} (hθ : angularSA n 
   `θ̇_i = (n²/Z_i) ∂_i 𝖤_β(θ)`,
 
 with `∂_i 𝖤_β = (1/n²) Σ_j e^{β cos(θ_j - θ_i)} sin(θ_j - θ_i)`
-(`hasDerivAt_torusEnergy`).  Equivalently `Z_i θ̇_i = ∂_i (n² 𝖤_β)`: the
-gradient of the energy of §3.4 in the metric `diag(Z_i)`.  For `USA` the
-factor is `n` (`angularUSA_is_gradient_flow`).  The energy `𝖤_β` of
+(`hasDerivAt_torusEnergy`). Equivalently `Z_i θ̇_i = ∂_i (n² 𝖤_β)`: the
+gradient of the energy of §3.4 in the metric `diag(Z_i)`. For `USA` the
+factor is `n` (`angularUSA_is_gradient_flow`). The energy `𝖤_β` of
 `torusEnergy` is `0` for `β = 0`, hence `hβ`. -/
 theorem angularSA_is_gradient_flow (β : ℝ) (hβ : β ≠ 0) (θ : ℝ → Angles n)
     (hθ : angularSA n β θ) (t : ℝ) (i : Idx n) :
@@ -162,7 +166,7 @@ theorem contDiff_saGain (β : ℝ) {k : WithTop ℕ∞} : ContDiff ℝ k (saGain
 
 /-- The hypotheses of `sa_anglesToSphere` and `angularSA_is_gradient_flow`
 hold for every consensus `θ_i = c`, with `β = 1`: every sine `sin 0`
-vanishes, so the constant curve solves `angularSA`.  That of
+vanishes, so the constant curve solves `angularSA`. That of
 `inner_saGain_self_pos` holds for `v = e_0` in `ℝ¹`. -/
 example (c : ℝ) : angularSA n 1 (fun _ _ => c) ∧ (1 : ℝ) ≠ 0 ∧
     EuclideanSpace.single (0 : Fin 1) (1 : ℝ) ≠ 0 := by

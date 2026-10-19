@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.ParityLogitCertificate
+module
+
+public import Transformer.GPTMini.Convex.Structured.ParityLogitCertificate
 
 /-!
 # Exact relevant coordinates of six completed learned parity checkpoints
@@ -14,6 +16,8 @@ use four and branch uses two. Extra columns are zero padding, never rivals.
 A subsequent full parameter family retains arbitrary unobserved fields.
 Checkpoint hashes and exact row metadata are preserved separately.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

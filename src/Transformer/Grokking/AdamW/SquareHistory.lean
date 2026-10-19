@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.MomentSquare
+module
+
+public import Transformer.Grokking.AdamW.MomentSquare
 
 /-!
 # Initialized native moment-square history budgets
@@ -23,6 +25,8 @@ The retained optimizer, clipping and gradient stream are unchanged.
 No floating-point equivalence or learned transformer convergence is
 asserted by these exact-real numerical recurrence estimates.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

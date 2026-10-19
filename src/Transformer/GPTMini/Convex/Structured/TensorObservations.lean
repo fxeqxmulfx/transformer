@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.TensorStream
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorStream
 
 /-!
 # Actual head observations are invariant under intermediate code writes
@@ -16,6 +18,8 @@ The proof derives both unit-anchor recoveries and all preserved reads
 from the actual residual formula. Subsequent chronological inference
 and stack induction must still use these local observation identities.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

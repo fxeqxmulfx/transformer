@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.LocalMemoryFeasibility
-import Transformer.GPTMini.Sparsemax.NearestPrototypeCodes
+module
+
+public import Transformer.GPTMini.Sparsemax.LocalMemoryFeasibility
+public import Transformer.GPTMini.Sparsemax.NearestPrototypeCodes
 
 /-!
 # At most three actual query routes in compact learned memory
@@ -18,6 +20,8 @@ path is fixed; learned supports can still change within it. No assertion
 about learned semantic prototype order or faster nearest search is made.
 Nearest search may still scan the complete prototype table.
 -/
+
+@[expose] public section
 
 noncomputable section
 

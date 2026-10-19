@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Analysis.MeanInequalities
+public import Mathlib.Topology.Sequences
+
+/-!
 # Saddle avoidance — sequences
 
 Facts on real numbers and on sequences, with no gradient in them, that the
@@ -12,7 +17,7 @@ convergence of gradient descent and of descent curves rests on.
   never leaves `B(z, r)` (`mem_ball_of_step`).
 * **Values near a level.**  The values of a decreasing sequence that comes close to
   a value `c` infinitely often stay above `c` and converge to it
-  (`le_and_tendsto_of_frequently`).  Along a sequence with a limit point `z` up to
+  (`le_and_tendsto_of_frequently`). Along a sequence with a limit point `z` up to
   translations leaving `f` invariant, `f` comes close to `f z` infinitely often
   where it is continuous at `z` (`frequently_abs_sub_lt`), and a bound on `f`
   along the sequence holds at `z` (`le_of_frequently_norm_add_sub_lt`).
@@ -22,8 +27,7 @@ convergence of gradient descent and of descent curves rests on.
   `Λ`, then `z - w ∈ Λ` (`sub_mem_of_tendsto_of_frequently`).
 -/
 
-import Mathlib.Analysis.MeanInequalities
-import Mathlib.Topology.Sequences
+@[expose] public section
 
 open Filter Metric
 open scoped Topology
@@ -83,7 +87,7 @@ theorem mem_ball_of_step {u : ℕ → E} {φ : ℕ → ℝ} {κ r : ℝ} {z : E}
     exact lt_of_mul_lt_mul_left (by linarith [hφ (k + 1)]) hκ.le
 
 /-- **The values of a decreasing sequence near a value it comes close to
-infinitely often.**  They stay above it and converge to it.  The index may be
+infinitely often.**  They stay above it and converge to it. The index may be
 discrete, as for gradient descent, or continuous, as for gradient flows. -/
 theorem le_and_tendsto_of_frequently {ι : Type*} [SemilatticeSup ι] [Nonempty ι] {u : ι → ℝ}
     (hu : Antitone u) {c : ℝ}

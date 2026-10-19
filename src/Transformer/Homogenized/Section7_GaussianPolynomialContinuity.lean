@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianPolynomialBlendGradient
+public import Transformer.Homogenized.Section7_GaussianInterpolationCovariance
+
+/-!
 # Continuity of the original polynomial Gaussian interpolation expectations
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -15,8 +20,7 @@ are endpoint inputs for interpolation with polynomially growing derivatives,
 without replacing the original variables or discarding singular laws.
 -/
 
-import Transformer.Homogenized.Section7_GaussianPolynomialBlendGradient
-import Transformer.Homogenized.Section7_GaussianInterpolationCovariance
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter Set
 open scoped BigOperators Topology

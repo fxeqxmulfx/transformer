@@ -1,18 +1,23 @@
-/-
+module
+
+public import Transformer.ALM.SoftmaxValue
+public import Transformer.ALM.FloatLattice
+
+/-!
 # The head's output, at the line the running code returns
 
 `Transformer.ALM.FloatIndex` ends at a key: under the separation condition the
 floating-point search returns the key `hullIndex` names
-(`fp_hullIndex_key`).  `Transformer.ALM.SoftmaxValue` starts at an index: the
+(`fp_hullIndex_key`). `Transformer.ALM.SoftmaxValue` starts at an index: the
 head's output vector is the value stored at `I.ans`, up to `(n-1)e^{-β}·C`.
 Between them sits the only claim the machine actually makes — that querying a
 stored key gives back the value stored beside it — and neither file made it,
 because one never mentions a value and the other never mentions arithmetic.
 
-`fp_head_output` makes it.  Its two conjuncts are the two halves at the same
+`fp_head_output` makes it. Its two conjuncts are the two halves at the same
 query: the line the implementation's `lower_bound` lands on carries exactly the
 queried key, and the head's output is the value at that line up to the softmax
-error.  Nothing is assumed about the query beyond what the running code needs
+error. Nothing is assumed about the query beyond what the running code needs
 — a bound on the keys and a separation from the breakpoints, the hypotheses of
 `fpProbe_eq_hullProbe`.
 
@@ -25,8 +30,7 @@ machine rather than once per query.
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 203-215.
 -/
 
-import Transformer.ALM.SoftmaxValue
-import Transformer.ALM.FloatLattice
+@[expose] public section
 
 open scoped BigOperators
 
@@ -75,7 +79,7 @@ theorem fpProbe_key_eq [Nonempty (Fin n)] (F : FPArith) (K : Fin n → ℤ)
 /-- **The whole machine, in one statement.**  Query a stored key: the
 implementation's own arithmetic lands on the line carrying it, and the softmax
 head's output vector is the value stored at that line, within
-`(n-1)e^{-β}·C`.  The first conjunct is `Transformer.ALM.FloatIndex`, the
+`(n-1)e^{-β}·C`. The first conjunct is `Transformer.ALM.FloatIndex`, the
 second `Transformer.ALM.SoftmaxValue`, and they are here about one query. -/
 theorem fp_head_output {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [Nonempty (Fin n)] (F : FPArith) (β : ℝ) (hβ : 0 ≤ β) (K : Fin n → ℤ)
@@ -102,7 +106,7 @@ theorem fp_head_output {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 /-- **A stored key is half a unit from every breakpoint.**  For an integer
 family the sorted keys are integers and the breakpoint of two adjacent ones is
 a multiple of `1/2`; a breakpoint lies strictly between its two keys, so it is
-never a key itself, and two distinct multiples of `1/2` are `1/2` apart.  The
+never a key itself, and two distinct multiples of `1/2` are `1/2` apart. The
 separation condition of `fpProbe_eq_hullProbe` is therefore not something a
 caller has to check on the lookup path: it holds by arithmetic. -/
 lemma half_le_key_dist_mid [Nonempty (Fin n)] (K : Fin n → ℤ) (i₀ : Fin n) (j : ℕ) :
@@ -143,7 +147,7 @@ lemma half_le_key_dist_mid [Nonempty (Fin n)] (K : Fin n → ℤ) (i₀ : Fin n)
 separation hypothesis of `fp_head_output` is discharged by
 `half_le_key_dist_mid`, so all that is left of the arithmetic is one condition
 on the precision: the rounding error on the breakpoints must stay below half a
-unit of the key lattice.  For long double (`u ≤ 2^-60`) on keys below `2^56`
+unit of the key lattice. For long double (`u ≤ 2^-60`) on keys below `2^56`
 that error is `2^-4`. -/
 theorem fp_head_output_of_int {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [Nonempty (Fin n)] (F : FPArith) (β : ℝ) (hβ : 0 ≤ β) (K : Fin n → ℤ)

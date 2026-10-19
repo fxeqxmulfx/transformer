@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.RawStackSkip
+
+/-!
 # Any number of skips, onto any depth
 
 **Not a statement of any paper.**  `Perspective.RawStackSkip` takes one skip per
@@ -17,18 +21,18 @@ states in one step:
   mu[2] * cache[9] + mu[4] * cache[3]`, the states at depths `0`, `16`, `20`
   and `8`, at gain `1`,
 
-where every `mu[·]` is one scalar per token (`GPT.forward_mudd`).  So every
+where every `mu[·]` is one scalar per token (`GPT.forward_mudd`). So every
 update of the record — all twenty-three, counting sublayers — is of the form
 
   `x_{k+1,i} = λ_{k,i} x_{k,i} + Σ_{j ≤ k} s_{k,j,i} x_{j,i} + g_{k,i}`,
 
 with the attention and MLP outputs, the `x0` and bigram injections and
-`mu[3] * ve_bank0` in `g`.  The sum runs up to `j = k`, and that is not a
+`mu[3] * ve_bank0` in `g`. The sum runs up to `j = k`, and that is not a
 detail: a skip onto the current state is a change of gain, so `λ` may be chosen
 freely — `1 + c`, say — and the step's own gain, of any sign, carried by the
 self-skip `s_{k,k,i} = (its gain) - λ_{k,i}`.
 
-The gauge is still exact.  Dividing out `Λ_{k,i} = Π_{j<k} λ_{j,i}` sets every
+The gauge is still exact. Dividing out `Λ_{k,i} = Π_{j<k} λ_{j,i}` sets every
 gain to `1` and every skip weight to `s_{k,j,i} Λ_{j,i} / Λ_{k+1,i}`
 (`ungauged_rec_dense`), and the ungauged stream is the skip-free gauge stack
 plus all the rescaled skips taken so far (`ungauged_sub_gaugeStack_dense`).
@@ -37,7 +41,7 @@ and `Perspective.RawStackDenseFrozen` reads the bound off gains of at least
 `1 + c` and outputs of at most `M`.
 -/
 
-import Transformer.Perspective.RawStackSkip
+@[expose] public section
 
 open scoped BigOperators
 
@@ -52,7 +56,7 @@ variable {d n : ℕ}
 
 with every gain positive, then the ungauged stream obeys the same recursion
 with every gain `1`, the step `g_{k,i}/Λ_{k+1,i}` and the skip weights
-`s_{k,j,i} Λ_{j,i} / Λ_{k+1,i}`.  The gates are arbitrary, one per step, depth
+`s_{k,j,i} Λ_{j,i} / Λ_{k+1,i}`. The gates are arbitrary, one per step, depth
 read and token, and so are the outputs.
 
 Source: none — posed here; the skips of modded-nanogpt at layer `6`, at layer

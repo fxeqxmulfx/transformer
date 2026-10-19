@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.GaussianMoments
+public import Transformer.Homogenized.GaussianEntries
+public import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
+
+/-!
 # Homogenized Transformers — mixed second moments of a Gaussian value matrix
 
 The matrix identity used in the proof of `lem:lemma_app` of
@@ -10,9 +16,7 @@ matrix and independent of the value matrix `V`,
 Source: arXiv:2604.01978v1, proof of `lem:lemma_app`.
 -/
 
-import Transformer.Homogenized.GaussianMoments
-import Transformer.Homogenized.GaussianEntries
-import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
+@[expose] public section
 
 open scoped BigOperators NNReal
 open MeasureTheory ProbabilityTheory
@@ -91,7 +95,7 @@ example (d : ℕ) :
     fun _ _ => integrable_const _, fun _ => by simp⟩
 
 /-- The mixed second moment of the value matrix under assumption (G), with
-two bounded vectors determined by the query/key matrix.  This is the matrix
+two bounded vectors determined by the query/key matrix. This is the matrix
 expectation computed in the proof of `lem:lemma_app`.
 
 Source: arXiv:2604.01978v1, proof of `lem:lemma_app`. -/

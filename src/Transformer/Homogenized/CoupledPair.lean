@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.McKeanVlasov
+public import Mathlib.Probability.Independence.Basic
+
+/-!
 # Homogenized Transformers — two tokens under the same common noise
 
 The object `thm:large_beta_meta` of arXiv:2604.01978v1, *Homogenized
@@ -9,21 +14,20 @@ conditional McKean-Vlasov equation, with independent initial data drawn from
 Sharing the noise is the whole content of the theorem — it is what puts the
 cross-covariance `K[μ]` of `eq:cross_variation_kernel` into the drift of the
 overlap `R(t) = ⟨x⁽¹⁾(t), x⁽²⁾(t)⟩`, and without it the two tokens would be
-independent and `R` would not move at all at leading order.  Since Mathlib has
+independent and `R` would not move at all at leading order. Since Mathlib has
 no stochastic integral, "the same `W`" cannot be said directly; it is said
 instead through the joint martingale problem, whose generator `mvGenerator₂`
 carries the mixed second derivative
 
   `D²φ(x,y)[(G_μ(x,θ), G_μ(y,θ)), (G_μ(x,θ), G_μ(y,θ))]`
 
-integrated in `θ` against `ρ*`.  That mixed term *is* `K[μ](x,y)`, so a pair
+integrated in `θ` against `ρ*`. That mixed term *is* `K[μ](x,y)`, so a pair
 satisfying `IsCoupledPair` has exactly the cross-variation the source's
 coupling argument uses, and a pair driven by independent noises does not
 satisfy it.
 -/
 
-import Transformer.Homogenized.McKeanVlasov
-import Mathlib.Probability.Independence.Basic
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -98,7 +102,7 @@ sharing of the noise is recorded.
 `eq:non_linear_SDE_cylindrical`, written with the full field `B_θ` and without
 the `√α` scaling; its own proof works with `eq:non_linear_SDE_common`, whose
 field is the projected fluctuation `G_μ(·,θ)` and which carries the Stratonovich
-correction `-½(∫‖G‖²ρ*)x dt` explicitly.  The latter is the equation
+correction `-½(∫‖G‖²ρ*)x dt` explicitly. The latter is the equation
 formalized, here and in `McKeanVlasov.lean`: it is the one §4 defines, the one
 `thm:PoC_wellposedness` is about, and the one the proof of
 `thm:large_beta_meta` computes with.

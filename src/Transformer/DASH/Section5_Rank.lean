@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.DASH.Section2_Models
+public import Mathlib.LinearAlgebra.Matrix.Rank
+
+/-!
 # DASH — instantaneous Gram rank versus accumulated preconditioner rank
 
 arXiv:2602.02016v2, §5, “Block Size”. A single `B×E` gradient
 has Gram rank at most `E`. Its temporal EMA need not keep that rank.
 -/
 
-import Transformer.DASH.Section2_Models
-import Mathlib.LinearAlgebra.Matrix.Rank
+@[expose] public section
 
 open scoped Matrix
 

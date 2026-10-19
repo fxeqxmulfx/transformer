@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.CountEmbedding
+module
+
+public import Transformer.GPTMini.Semantics.CountEmbedding
 
 /-!
 # The original first block retains the raw ONE count
@@ -17,6 +19,8 @@ the answer/EOS phase must be implemented separately. Statements evaluate
 the mathematical block at arbitrary finite lengths; the checked model
 adapter additionally enforces the configured 19-token context cap.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

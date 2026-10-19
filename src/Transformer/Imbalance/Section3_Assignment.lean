@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_Empirical
+
+/-!
 # Exact finite-data form of the assignment mechanism
 
 arXiv:2402.19449v2, Section 3.2, Assumption 1 and Proposition 2,
@@ -7,7 +11,7 @@ equation (2), proof in Appendix H. The gradient's leading term is
 contributions from other classes, not uninterpreted error parameters.
 -/
 
-import Transformer.Imbalance.Section3_Empirical
+@[expose] public section
 
 open scoped BigOperators
 

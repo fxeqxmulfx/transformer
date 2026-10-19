@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ConvexRecall.Simplex
+
+/-!
 # A solved convex replacement for the attention weight row
 
 New modification of `experiments/archive/gpt_mini/gpt_mini.py`,
@@ -9,7 +13,7 @@ Scores are inputs to inference. Their dependence on trainable Q/K matrices
 is retained by the next module and is not assumed jointly convex.
 -/
 
-import Transformer.ConvexRecall.Simplex
+@[expose] public section
 
 open scoped BigOperators
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.CubeContentFeatures
+module
+
+public import Transformer.GPTMini.Sparsemax.CubeContentFeatures
 
 /-!
 # Actual learned content Q/K at width one plus the bit count
@@ -15,6 +17,8 @@ The causal encoder supplies the observed state; virtual destination bits
 are generated locally. This is a content-sensitive memory architecture,
 not unrestricted QKNorm/RoPE attention or a jointly trained layer stack.
 -/
+
+@[expose] public section
 
 noncomputable section
 

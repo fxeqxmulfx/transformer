@@ -1,14 +1,21 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Cutoff
+public import Transformer.Landscape.SaddleAvoidance.Minimizers
+public import Transformer.Landscape.SaddleAvoidance.Sublevel
+public import Transformer.Landscape.SaddleAvoidance.LocalInequality
+
+/-!
 # Saddle avoidance — the scheme on a compact sublevel set
 
-The convergence theorems ask for a gradient that is Lipschitz on the whole space.  A
+The convergence theorems ask for a gradient that is Lipschitz on the whole space. A
 polynomial of degree above two or a network has none, while a regularized loss has
-compact sublevel sets.  A cutoff replaces the global constant.  For `f` of class `C²`
+compact sublevel sets. A cutoff replaces the global constant. For `f` of class `C²`
 and a compact `K`, the function `χ f`, with `χ` smooth with compact support and equal to
 `1` near `K`, has a Lipschitz gradient and agrees with `f` near `K`
-(`exists_lipschitzWith_gradient_eqOn`, in `Landscape.SaddleAvoidance.Cutoff`).  When gradient
+(`exists_lipschitzWith_gradient_eqOn`, in `Landscape.SaddleAvoidance.Cutoff`). When gradient
 descent maps `K` into itself, its
-orbits from `K` are those of `χ f` (`iterate_gradientStep_eq_of_eqOn`).  So for small
+orbits from `K` are those of `χ f` (`iterate_gradientStep_eq_of_eqOn`). So for small
 steps they converge to a critical point in `K` if `f` satisfies the Łojasiewicz
 inequality at the critical points in `K` (`exists_pos_tendsto_of_mapsTo`).
 
@@ -16,7 +23,7 @@ With the avoidance theorem on a compact sublevel set
 (`exists_pos_measure_sublevel_tendsto_strictSaddle_eq_zero`): if every critical point in
 `{f ≤ c}` is a local minimizer or a strict saddle and satisfies the Łojasiewicz
 inequality, then for every small step almost every start in `{f ≤ c}` converges to a
-local minimizer (`exists_pos_ae_sublevel_exists_tendsto_isLocalMin`).  For analytic `f`
+local minimizer (`exists_pos_ae_sublevel_exists_tendsto_isLocalMin`). For analytic `f`
 the inequality holds everywhere
 (`exists_pos_ae_sublevel_exists_tendsto_isLocalMin_of_analyticOnNhd`).
 
@@ -25,10 +32,7 @@ arXiv:1602.04915, as in `ae_exists_tendsto_isLocalMin`, with a compact sublevel 
 place of the global Lipschitz constant and of the bounded orbits.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Cutoff
-import Transformer.Landscape.SaddleAvoidance.Minimizers
-import Transformer.Landscape.SaddleAvoidance.Sublevel
-import Transformer.Landscape.SaddleAvoidance.LocalInequality
+@[expose] public section
 
 open Filter Metric MeasureTheory Set
 open scoped Topology NNReal
@@ -53,10 +57,10 @@ theorem iterate_gradientStep_eq_of_eqOn {F : E → ℝ} {V : Set E} (hV : IsOpen
       gradientStep, hg]
 
 /-- **Gradient descent converges from a compact set it maps into itself**, with no global
-Lipschitz constant.  Let `f` be `C²`, `K` compact, and let `f` satisfy the Łojasiewicz
-inequality with an exponent `0 ≤ a < 1` at its critical points in `K`.  For some `η₁ > 0`
+Lipschitz constant. Let `f` be `C²`, `K` compact, and let `f` satisfy the Łojasiewicz
+inequality with an exponent `0 ≤ a < 1` at its critical points in `K`. For some `η₁ > 0`
 and every `0 < η < η₁` for which gradient descent maps `K` into itself, every orbit from
-`K` converges to a critical point in `K`.  The orbits from `K` are those of the cutoff of
+`K` converges to a critical point in `K`. The orbits from `K` are those of the cutoff of
 `exists_lipschitzWith_gradient_eqOn`, to which `tendsto_of_isLojasiewiczAt` applies at a
 limit point in `K`. -/
 theorem exists_pos_tendsto_of_mapsTo (hf : ContDiff ℝ 2 f) (hK : IsCompact K)
@@ -90,9 +94,9 @@ variable [MeasurableSpace E] [BorelSpace E]
 
 /-- **The scheme on a compact sublevel set.**  Let `f` be `C²` with `{f ≤ c}` compact, and
 let every critical point in `{f ≤ c}` be a local minimizer or a strict saddle and satisfy
-the Łojasiewicz inequality with an exponent `0 ≤ a < 1`.  For some `η₀ > 0` and every
+the Łojasiewicz inequality with an exponent `0 ≤ a < 1`. For some `η₀ > 0` and every
 `0 < η < η₀`, the orbit of gradient descent from almost every start in `{f ≤ c}`
-converges to a local minimizer in `{f ≤ c}`.  No global Lipschitz constant is needed:
+converges to a local minimizer in `{f ≤ c}`. No global Lipschitz constant is needed:
 small steps keep the orbits in `{f ≤ c}`, where almost none converges to a strict saddle
 (`exists_pos_measure_sublevel_tendsto_strictSaddle_eq_zero`) and all converge
 (`exists_pos_tendsto_of_mapsTo`). -/
@@ -160,7 +164,7 @@ example := exists_pos_ae_sublevel_exists_tendsto_isLocalMin (volume : Measure �
 
 /-- The hypotheses of `exists_pos_ae_sublevel_exists_tendsto_isLocalMin_of_analyticOnNhd`
 hold for the double well `f(x) = x⁴/4 - x²/2` on the line, Lebesgue measure and `c = 0`.
-The Hessian `3x² - 1` of `f` is unbounded, and `{f ≤ 0} = [-√2, √2]` is compact.  The
+The Hessian `3x² - 1` of `f` is unbounded, and `{f ≤ 0} = [-√2, √2]` is compact. The
 critical points `±1` are minimizers, as `f + 1/4 = (x² - 1)²/4`, and `0` is a strict
 saddle, with Hessian `-1`. -/
 example := exists_pos_ae_sublevel_exists_tendsto_isLocalMin_of_analyticOnNhd

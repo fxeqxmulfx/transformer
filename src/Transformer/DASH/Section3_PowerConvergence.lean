@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section3_PowerCoordinates
+public import Mathlib.Analysis.SpecificLimits.Basic
+
+/-!
 # DASH — convergence to the maximal eigenspace
 
 arXiv:2602.02016v2, §3.4–3.5. The dominant eigenvalue may have
@@ -6,8 +11,7 @@ multiplicity greater than one. A nonzero projection onto its eigenspace
 is required, rather than a unique largest eigenvector.
 -/
 
-import Transformer.DASH.Section3_PowerCoordinates
-import Mathlib.Analysis.SpecificLimits.Basic
+@[expose] public section
 
 open scoped BigOperators Matrix
 

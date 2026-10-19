@@ -1,12 +1,17 @@
-/-
+module
+
+public import Transformer.Perspective.Section2_EnergyKernel
+public import Mathlib.MeasureTheory.Integral.Prod
+
+/-!
 # §3.2 — The interaction energy through the moments of `μ`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*, §3.2.
 
-The groundwork of `eq: dissipation.softmax`.  The energy is a quadratic form in
+The groundwork of `eq: dissipation.softmax`. The energy is a quadratic form in
 `μ`, and the continuity equation only differentiates linear functionals
-`∫ φ dμ(t)`.  The monomials `m_I(x) = ∏_j x_{I_j}` split the kernel:
+`∫ φ dμ(t)`. The monomials `m_I(x) = ∏_j x_{I_j}` split the kernel:
 
   `⟨x, y⟩^k = Σ_{I : [k] → [d]} m_I(x) m_I(y)`   (`inner_pow_eq_sum_mono`),
 
@@ -15,8 +20,7 @@ squares of linear functionals, and the exponential kernel is the sum of these
 over `k` with weights `β^k/k!`.
 -/
 
-import Transformer.Perspective.Section2_EnergyKernel
-import Mathlib.MeasureTheory.Integral.Prod
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

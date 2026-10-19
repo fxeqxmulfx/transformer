@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.SupportWindow
+module
+
+public import Transformer.GPTMini.Sparsemax.SupportWindow
 
 /-!
 # Score constraints that exclude singleton sparsemax routes
@@ -12,6 +14,8 @@ These statements exclude singleton saturation of the score-to-weight map.
 They do not assert nonzero derivatives for every outer loss or parameter
 map, and they do not require every visible position to have positive weight.
 -/
+
+@[expose] public section
 
 noncomputable section
 

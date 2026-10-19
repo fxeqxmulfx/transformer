@@ -1,4 +1,6 @@
-import Transformer.Modes.Section3_CubicLocalDerivativeBounds
+module
+
+public import Transformer.Modes.Section3_CubicLocalDerivativeBounds
 
 /-!
 # Small derivatives at the literal normalized frequency scale
@@ -15,6 +17,8 @@ difference from one also has a common `c²` bound at all four derivative
 orders. It controls the additional term produced when the literal
 cubic coefficient is multiplied by Gaussian damping.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

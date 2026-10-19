@@ -1,4 +1,6 @@
-import Transformer.Perceptron.Section5_SphericalMapKernel
+module
+
+public import Transformer.Perceptron.Section5_SphericalMapKernel
 
 /-!
 # Uniform bounds for the actual matrix kernel derivatives
@@ -18,6 +20,8 @@ small localized mass with the strict L² lower bound.
 The source's unspecified finite matrix constant is made explicit;
 no positivity, symmetry or invertibility is needed for these bounds.
 -/
+
+@[expose] public section
 
 open Real
 namespace Transformer.Perceptron

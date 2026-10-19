@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.GaussianIntegral
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+
+/-!
 # An exponential-radius bound for one Gaussian component
 
 The corrected radial Gaussian density has an exponential moment. Markov's
@@ -9,8 +14,7 @@ sharper Gaussian concentration inequality used in the manuscript.
 Source: arXiv:2410.06833v1, §4, proof of `prop: mixture.of.gaussians`.
 -/
 
-import Transformer.Metastability.GaussianIntegral
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+@[expose] public section
 
 open Real MeasureTheory
 

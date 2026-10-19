@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Kinetic.Section6_WeightedConvexity
+public import Mathlib.Analysis.Calculus.LocalExtr.Basic
+public import Mathlib.Topology.Order.Compact
+
+/-!
 # Kinetic theory for Transformers — the unique positive minimum
 
 The final real-variable step of arXiv:2605.09213v1, §6, proof of
@@ -8,9 +14,7 @@ compact attainment, the actual derivative's slope limit, and uniqueness
 of a strictly convex minimum. No minimizer is put into a definition.
 -/
 
-import Transformer.Kinetic.Section6_WeightedConvexity
-import Mathlib.Analysis.Calculus.LocalExtr.Basic
-import Mathlib.Topology.Order.Compact
+@[expose] public section
 
 open Set Filter
 open scoped Topology

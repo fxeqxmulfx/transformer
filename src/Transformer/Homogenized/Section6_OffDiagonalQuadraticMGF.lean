@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_RandomSplitDecoupling
+
+/-!
 # The original off-diagonal quadratic MGF
 
 Source: arXiv:2604.01978v1, §6.3, `lem:Hanson_wright`.
@@ -11,7 +15,7 @@ The matrix norm condition uses the original matrix before removing
 its diagonal. Both coefficient signs and singular matrices are covered.
 -/
 
-import Transformer.Homogenized.Section6_RandomSplitDecoupling
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal ENNReal

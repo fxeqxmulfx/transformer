@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_MeanLogErrorEnvelope
+
+/-!
 # Pathwise error of the original mean from its actual logarithmic decomposition
 
 ArXiv:2604.01978v1, §7, `eq:m_decomp_clean`,
@@ -16,7 +20,7 @@ the Gaussian application derives them from the genuine original fields.
 No derivative is assumed for the original mean or its noise path.
 -/
 
-import Transformer.Homogenized.Section7_MeanLogErrorEnvelope
+@[expose] public section
 
 open Set MeasureTheory
 open scoped NNReal

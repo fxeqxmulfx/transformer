@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianMeanLogMaximal
+
+/-!
 # Uniform original logarithmic mean noise with the source confidence scale
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -11,7 +15,7 @@ Measurability and the complement identity give probability at least
 original adapted continuous sphere martingale problem.
 -/
 
-import Transformer.Homogenized.Section7_GaussianMeanLogMaximal
+@[expose] public section
 
 open Set MeasureTheory
 open scoped NNReal

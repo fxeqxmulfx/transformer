@@ -1,6 +1,8 @@
-import Mathlib.Basic.Real.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
+module
+
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
 
 /-!
 # Double descent and sample non-monotonicity
@@ -10,6 +12,8 @@ finite, strict witnesses of the reported qualitative behavior. They do not
 claim global monotonicity between sampled points, or identify a population
 test-risk curve with a finite experimental log.
 -/
+
+@[expose] public section
 
 namespace Transformer.DoubleDescent
 

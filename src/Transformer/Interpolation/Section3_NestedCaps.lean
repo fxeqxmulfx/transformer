@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_TwoRidgeFields
+
+/-!
 # A hemispherical cap inside an arbitrary proper activation cap
 
 Auxiliary to arXiv:2411.04551v3, Appendix, the constant-control
@@ -15,7 +19,7 @@ estimate bounds `1+⟨x,ω⟩` away from zero on the inner cap, which is the
 factor needed in the actual squared-distance contraction equation.
 -/
 
-import Transformer.Interpolation.Section3_TwoRidgeFields
+@[expose] public section
 
 open Real Set
 

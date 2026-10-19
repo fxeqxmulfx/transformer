@@ -1,6 +1,8 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainEnvelope
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdRegime
-import Transformer.Grokking.AdamW.ScalarDenominator
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainEnvelope
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdRegime
+public import Transformer.Grokking.AdamW.ScalarDenominator
 
 /-!
 # A finite-step upper envelope for actual retained Gen formation
@@ -20,6 +22,8 @@ They do not prove parameter convergence, later success, a learned
 transformer circuit, or a thermodynamic transition. Appendix C uses
 GD and a coupled assigned norm cost; that optimizer is not substituted.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

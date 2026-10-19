@@ -1,18 +1,22 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_PolynomialInverse
+
+/-!
 # Perceptrons and attention's mean-field landscape — polynomial transforms
 
 Formalization of `lem: quadpol` (i), "in particular", of arXiv:2601.21366v2:
 `f^μ` is a polynomial of degree `≤ k` exactly when `μ` has a density with
-respect to `σ_d` that is a polynomial of degree `≤ k`.  The transform itself
+respect to `σ_d` that is a polynomial of degree `≤ k`. The transform itself
 is `Transform`.
 
 **What the source says and what is carried here.**
 
 * "`f^μ` is a polynomial of degree `k`" is carried as "`f^μ` is the
-  restriction to the sphere of a polynomial of total degree `≤ k`".  Degree is
+  restriction to the sphere of a polynomial of total degree `≤ k`". Degree is
   not well defined for a *function* on the sphere: `Σ_i x_i² = 1` there, so
   every representing polynomial can be raised by two, and only the bound
-  survives.  The same reading is used for the density, and the source's `iff`
+  survives. The same reading is used for the density, and the source's `iff`
   is then an equality of the two least such bounds.
 
 * `σ_d` is `Metastability.IsUniformOn`, quantified over inside the
@@ -20,7 +24,7 @@ is `Transform`.
   constructed in `Metastability.Section4_UniformLaw` and witnesses the
   theorem jointly with its original uniform probability and density one.
 
-* The source's standing `d ≥ 2` is not assumed, as in `Transform`.  On
+* The source's standing `d ≥ 2` is not assumed, as in `Transform`. On
   `𝕊^0 = {±1}` every function is `a + b x`, so for `k ≥ 1` both sides hold for
   every `μ`, and for `k = 0` both say `μ({1}) = 1/2`; `𝒫(𝕊^{-1})` is empty.
 
@@ -33,11 +37,11 @@ is `Transform`.
 
 * **What is not carried.**  The `L²(σ_d)` criterion of `lem: quadpol` (i) —
   `μ` has an `L²` density iff `Σ_{j,ℓ} |f̂^μ_{jℓ}/λ_j(β)|² < ∞`, with the
-  density given by `eq:degreek` — is not stated.  Writing it down needs the
+  density given by `eq:degreek` — is not stated. Writing it down needs the
   spherical harmonics `Y_{jℓ}` and the Funk–Hecke eigenvalues
   `λ_j(β) = Γ(d/2)(2/β)^{d/2-1} I_{j+d/2-1}(β)`, which Mathlib does not have
   and which the source imports as standard; a definition supplying them would
-  be the whole difficulty parked in a definition.  Its consequence — the
+  be the whole difficulty parked in a definition. Its consequence — the
   polynomial characterization, which is what `rem:genericity-vacuity` uses —
   is `isPolyOfDegreeLE_attentionTransform_iff` below.
 
@@ -52,7 +56,7 @@ nonnegativity and the actual measure equality.
 Source: arXiv:2601.21366v2, §5.1, `lem: quadpol` (i).
 -/
 
-import Transformer.Perceptron.Section5_PolynomialInverse
+@[expose] public section
 
 open scoped ENNReal
 open MeasureTheory

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.Section3_ForceMonotonicity
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # The ordered-cluster gradient comparison
 
 ArXiv:2410.06833v1, §3.2, `claim: 1`, `eq: Ht.third.lb`.
@@ -8,8 +13,7 @@ bounded by the larger endpoint absolute value. This gives the source's
 `e/2` comparison without its unsupported final absorption step.
 -/
 
-import Transformer.Metastability.Section3_ForceMonotonicity
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open Set Real
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_FourthMomentTools
+
+/-!
 # Exact fourth moment of an adapted Brownian step
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The state and the bounded amplitude may depend on the same entire past.
 Odd future-increment terms vanish by independence from that past.
 -/
 
-import Transformer.BatchSize.Section4_FourthMomentTools
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal

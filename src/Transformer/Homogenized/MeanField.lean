@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Generator
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Function.L2Space
+
+/-!
 # Homogenized Transformers — the fields at a general measure
 
 The vocabulary of §3 of arXiv:2604.01978v1, *Homogenized Transformers*: the
@@ -10,7 +16,7 @@ cross-variation identity `eq:cross_variation_kernel` it is there for.
 
 `Defs.lean` carries the same fields at the empirical measure `μ_X` of a
 configuration `X ∈ (𝕊^{d-1})^n`, which is what the particle statements of §2
-are written in.  The two agree — `attnFieldOf_empMeasure` and
+are written in. The two agree — `attnFieldOf_empMeasure` and
 `Gfield_eq_GfieldOf` identify them — so the mean-field statements of §3 are
 written in the same fields as §2 and not in a parallel vocabulary.
 
@@ -18,9 +24,7 @@ Source: arXiv:2604.01978v1, `EQ:VELOCITY_FIELD_SELF_ATTENTION`, `eq:G_def`,
 `eq:covariance_kernel`, `rem:shared_noise_rewrite`.
 -/
 
-import Transformer.Homogenized.Generator
-import Mathlib.Analysis.Normed.Lp.MeasurableSpace
-import Mathlib.MeasureTheory.Function.L2Space
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open Real MeasureTheory
@@ -29,7 +33,7 @@ namespace Transformer
 namespace Homogenized
 
 /-- The orthogonal projection onto `T_x 𝕊^{d-1}` is self-adjoint:
-`⟨Proj_x u, v⟩ = ⟨u, Proj_x v⟩`, both sides being `⟨u,v⟩ - ⟨x,u⟩⟨x,v⟩`.  This
+`⟨Proj_x u, v⟩ = ⟨u, Proj_x v⟩`, both sides being `⟨u,v⟩ - ⟨x,u⟩⟨x,v⟩`. This
 is what lets `eq:cross_variation_kernel` move the two projections of
 `Proj_x K[μ](x,y) Proj_y` onto the vectors they are tested against. -/
 theorem real_inner_proj_left {d : ℕ} (x u v : EucSpace d) :
@@ -78,7 +82,7 @@ Source: arXiv:2604.01978v1, §2.1. -/
 noncomputable def empMeasure {d n : ℕ} (x : Idx n → EucSpace d) : Measure (EucSpace d) :=
   ((n : ℝ≥0∞))⁻¹ • ∑ k : Idx n, Measure.dirac (x k)
 
-/-- Integration against the empirical measure is the normalized sum.  At
+/-- Integration against the empirical measure is the normalized sum. At
 `n = 0` both sides are `0`, the empirical measure of no tokens being the zero
 measure. -/
 theorem integral_empMeasure {d n : ℕ} {E : Type*} [NormedAddCommGroup E]
@@ -90,7 +94,7 @@ theorem integral_empMeasure {d n : ℕ} {E : Type*} [NormedAddCommGroup E]
 
 /-- The attention field at the empirical measure of a configuration is the
 attention field of that configuration: the `1/n` of `μ_X` cancels between the
-numerator and the normalizer.  This is what makes the mean-field vocabulary of
+numerator and the normalizer. This is what makes the mean-field vocabulary of
 §3 an extension of the particle vocabulary of §2 and not a second one. -/
 theorem attnFieldOf_empMeasure {d n : ℕ} (β : ℝ) (θ : HeadParam d)
     (x : Idx n → EucSpace d) (z : EucSpace d) :
@@ -144,14 +148,14 @@ parts with cross-variation
 
 **What the source says and what is written here.**  Mathlib has no stochastic
 integral, so the cross-variation of `M_i = √α ∫_Θ ξ_θ[μ](x_i) W(dθ,dt)` cannot
-be written.  Its integrand can, and it is the whole content of the identity:
+be written. Its integrand can, and it is the whole content of the identity:
 the cross-variation of two Itô integrals against the same cylindrical noise is
 the `L²(ρ*)` pairing of their integrands, so `eq:cross_variation_kernel` says
 exactly that for all `u, v`
 
   `∫_Θ ⟨G_μ(x,θ), u⟩ ⟨G_μ(y,θ), v⟩ ρ*(dθ) = ⟨Proj_x K[μ](x,y) Proj_y v, u⟩`.
 
-The scalar `α` multiplies both martingales and is dropped with them.  The
+The scalar `α` multiplies both martingales and is dropped with them. The
 right side is written as `⟨K[μ](x,y) Proj_y v, Proj_x u⟩`, which is the same
 number by `real_inner_proj_left`; that is where the source's two projections
 `Proj_{x_i} · Proj_{x_j}` go.

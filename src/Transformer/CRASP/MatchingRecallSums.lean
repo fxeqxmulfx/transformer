@@ -1,19 +1,23 @@
-/-
+module
+
+public import Transformer.CRASP.MatchingRecall
+
+/-!
 # The matcher's weights, and its layer at a position
 
 In no paper: the attention of `CRASP.MatchingRecall`'s matcher, token by
-token.  Once `2 (s + 1) c² 2^s < 2^{p-1}` over `c` tokens, a query weighs `⊲`
+token. Once `2 (s + 1) c² 2^s < 2^{p-1}` over `c` tokens, a query weighs `⊲`
 `1` (`val_weight_none`), and a row `1` when its key is the query and `0`
 otherwise (`val_weight_some`); weighted, `⊲` contributes `-1` and `-2` in the
 last two coordinates (`val_weighted_none`), and a row `1` in both when its key
-is the query and its value `v` (`val_weighted_some`).  A sum over `⊲ · word x`
+is the query and its value `v` (`val_weighted_some`). A sum over `⊲ · word x`
 is the sum at `⊲` plus one per
 row (`sum_bos_word`), at the last position every position is visible
 (`masked_eq_univ`), and a coordinate of the matcher's layer is its weighted
 values over its weights once these do not sum to `0` (`layer_matcher`).
 -/
 
-import Transformer.CRASP.MatchingRecall
+@[expose] public section
 
 namespace Transformer.CRASP
 

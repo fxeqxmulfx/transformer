@@ -1,23 +1,27 @@
-/-
+module
+
+public import Transformer.Perspective.Section3_SmallBeta
+public import Mathlib.Topology.MetricSpace.Pseudo.Pi
+
+/-!
 # §4 — the `β = 0` drift as a Lipschitz vector field
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
 `e:Snonres0` reads `ẋ_i = Proj_{x_i}( (1/n) Σ_j x_j )`, and the right-hand
-side is a vector field on `(ℝ^d)^n` that does not depend on time.  This file
+side is a vector field on `(ℝ^d)^n` that does not depend on time. This file
 names it (`beta0Field`) and proves the one property the Grönwall comparison of
 `e:approxsphere` needs: on tuples of unit vectors it is Lipschitz with constant
 `3` for the sup-norm.
 
 The constant is the survey's: the `e^{3t}` of `e:approxsphere` is exactly
-`e^{Kt}` for this `K`.  It is `1 + 2`: `Transformer.norm_proj_sub_proj_le`
+`e^{Kt}` for this `K`. It is `1 + 2`: `Transformer.norm_proj_sub_proj_le`
 gives `‖Proj_a m - Proj_b m'‖ ≤ ‖m - m'‖ + 2 ‖a - b‖`, and on unit tuples the
 means satisfy `‖m - m'‖ ≤ sup_j ‖y_j - z_j‖`.
 -/
 
-import Transformer.Perspective.Section3_SmallBeta
-import Mathlib.Topology.MetricSpace.Pseudo.Pi
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real

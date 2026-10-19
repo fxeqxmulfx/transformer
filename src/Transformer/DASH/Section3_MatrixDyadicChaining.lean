@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section3_DyadicChaining
+
+/-!
 # DASH — convergent finite matrix chains for dyadic powers
 
 arXiv:2602.02016v2, §3.3. Every intermediate matrix is computed by
@@ -7,7 +11,7 @@ iteration count converges to the corresponding positive or negative
 dyadic matrix power.
 -/
 
-import Transformer.DASH.Section3_DyadicChaining
+@[expose] public section
 
 open scoped Matrix Topology
 open Filter

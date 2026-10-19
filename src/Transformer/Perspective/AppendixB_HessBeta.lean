@@ -1,10 +1,15 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixB_EBeta
+public import Transformer.Perspective.DoubleSum
+
+/-!
 # Appendix B — the Hessian of `𝖤_β` along a block rotation, proved
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
-The `β > 0` companion of `Perspective.hessian_at_critical`.  Rotate the tokens
+The `β > 0` companion of `Perspective.hessian_at_critical`. Rotate the tokens
 indexed by `𝒮` by `e^{tB}` with `B` skew and leave the others where they are;
 then
 
@@ -13,17 +18,16 @@ then
 
 The bookkeeping is the same as at `β = 0`: a pair inside `𝒮` contributes
 nothing because `B` is skew, a pair inside `𝒮^c` contributes nothing because
-it does not move, and the two cross blocks contribute the same amount.  What
+it does not move, and the two cross blocks contribute the same amount. What
 is new is only the chain rule through `e^{βu}`, which turns `u'' ` into
 `β u'' + β² (u')²`.
 
 The scalar is left as `(2β)⁻¹ · 2β` rather than cancelled, so that the
 identity holds at every `β` — at `β = 0` both sides are `0`, since Lean reads
-`(2·0)⁻¹` as `0`.  `Perspective.dr1_skew_inequality` cancels it where `β ≠ 0`.
+`(2·0)⁻¹` as `0`. `Perspective.dr1_skew_inequality` cancels it where `β ≠ 0`.
 -/
 
-import Transformer.Perspective.AppendixB_EBeta
-import Transformer.Perspective.DoubleSum
+@[expose] public section
 
 open scoped BigOperators
 open Real

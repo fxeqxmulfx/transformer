@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryFormedPrefix
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryConfidence
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryFormedPrefix
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryConfidence
 
 /-!
 # Least success and confidence limits after original double-zero formation
@@ -36,6 +38,8 @@ physical gained tables, not learned heads. Uniform decoupled AdamW
 with beta1=0.9/beta2=0.98 differs from appendix C coupled-cost GD;
 weaker-decay attraction and stochastic/numerical GPTMini transfer remain open.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

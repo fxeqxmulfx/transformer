@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_AnalyticIntegral
+public import Transformer.Perceptron.NormalizedMap
+public import Transformer.Perceptron.Analytic
+public import Transformer.Perceptron.Section5_CircleGeometry
+public import Mathlib.Analysis.Calculus.FDeriv.Analytic
+
+/-!
 # Analytic interaction weights along great circles in every dimension
 
 ArXiv:2601.21366v2, §6, proof of `prop: unified.log` and
@@ -13,11 +21,7 @@ nor a finite-support presentation is needed for this analytic calculation.
 The original probability measure is retained in the weight and derivative.
 -/
 
-import Transformer.Perceptron.Section6_AnalyticIntegral
-import Transformer.Perceptron.NormalizedMap
-import Transformer.Perceptron.Analytic
-import Transformer.Perceptron.Section5_CircleGeometry
-import Mathlib.Analysis.Calculus.FDeriv.Analytic
+@[expose] public section
 
 open Real MeasureTheory Set
 

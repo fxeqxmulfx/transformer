@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Precision.Float
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # Unnormalized weights in FP8: the tail is cut
 
 FP8 flash attention (Shah, Bikshandi, Zhang, Thakkar, Ramani, Dao,
@@ -11,18 +16,17 @@ What depends on `n` is how much is lost.
 
 If every key but the top one `i` is in the dead zone, the numerator keeps
 `v_i` alone while the denominator, summed before rounding, keeps all of them:
-the head outputs `v_i / S` (`tail_eq`).  With the keys within `D` of the top,
+the head outputs `v_i / S` (`tail_eq`). With the keys within `D` of the top,
 `S ≥ 1 + (n - 1) e^{-D}`, so the output is shrunk by that factor, which grows
 with the context: for `v ≡ 1`, where the exact output is `1`, the computed one
-is at most `1 / (1 + (n - 1) e^{-D})`.  At `n = 2^{17}`, `D = 8` that is below
+is at most `1 / (1 + (n - 1) e^{-D})`. At `n = 2^{17}`, `D = 8` that is below
 `0.023`.
 
 The denominator is taken exact: in the kernel it is summed in binary32 before
-the conversion to FP8.  The statement is this repository's own.
+the conversion to FP8. The statement is this repository's own.
 -/
 
-import Transformer.Precision.Float
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open scoped BigOperators
 

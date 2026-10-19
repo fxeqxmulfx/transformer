@@ -1,4 +1,11 @@
-/-
+module
+
+public import Mathlib.Data.Fintype.EquivFin
+public import Mathlib.SetTheory.Cardinal.NatCard
+public import Mathlib.Data.Set.Finite.Range
+public import Mathlib.Logic.Function.Iterate
+
+/-!
 # Finite progress of barycenter class refinement
 
 Auxiliary combinatorics for arXiv:2411.04551v3, §3.2,
@@ -13,10 +20,7 @@ ridge phase proving them for barycenter directions is supplied separately.
 No measure, control or weak-solution conclusion is assumed in this kernel.
 -/
 
-import Mathlib.Data.Fintype.EquivFin
-import Mathlib.SetTheory.Cardinal.NatCard
-import Mathlib.Data.Set.Finite.Range
-import Mathlib.Logic.Function.Iterate
+@[expose] public section
 
 open Set
 

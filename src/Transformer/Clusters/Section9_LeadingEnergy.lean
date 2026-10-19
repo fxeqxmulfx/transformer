@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section9_LeadingScores
+public import Transformer.Clusters.Section10_ProjectedEnergy
+public import Mathlib.Analysis.Real.Sqrt
+
+/-!
 # An energy estimate needs positivity only on the leading space
 
 ArXiv:2305.05465v6, §9, `eq:phistarvar` and `e:majorizeweights`,
@@ -17,9 +23,7 @@ gain estimate, or energy property. Such a metric is constructed below
 from the original positive coefficient along the simple leading line.
 -/
 
-import Transformer.Clusters.Section9_LeadingScores
-import Transformer.Clusters.Section10_ProjectedEnergy
-import Mathlib.Analysis.Real.Sqrt
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

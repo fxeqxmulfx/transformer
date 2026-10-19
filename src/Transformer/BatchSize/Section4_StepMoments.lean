@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_Sampling
+
+/-!
 # Vector moments of a signed step
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1.
@@ -6,7 +10,7 @@ The exact drift is a Bochner expectation of the full vector update,
 with integrability proved from its bounded coordinates.
 -/
 
-import Transformer.BatchSize.Section4_Sampling
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped BigOperators

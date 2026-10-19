@@ -2,6 +2,12 @@ module
 
 public import Mathlib.Data.Set.Insert
 
+/-!
+# Set insertions
+
+Set-insertion imports for the entropy compatibility layer.
+-/
+
 public section
 
 namespace Set

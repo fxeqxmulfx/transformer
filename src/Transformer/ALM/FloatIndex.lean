@@ -1,14 +1,19 @@
-/-
+module
+
+public import Transformer.ALM.HullIndex
+public import Transformer.ALM.FloatHull
+
+/-!
 # The index survives finite precision
 
 `Transformer.ALM.FloatHull` proves that the hull's individual comparisons are
 decided correctly in floating point: `fp_query_branch` says a query separated
-from a breakpoint takes the branch exact arithmetic would take.  But the
+from a breakpoint takes the branch exact arithmetic would take. But the
 index the machine answers with is `hullIndex`, and no statement connected the
-two — `FPArith` appeared nowhere outside `FloatHull`.  So "finite precision does not change
+two — `FPArith` appeared nowhere outside `FloatHull`. So "finite precision does not change
 the answer" was proved of a comparison and asserted of an index.
 
-Here it is proved of the index.  `fpSearch` is the binary search of
+Here it is proved of the index. `fpSearch` is the binary search of
 `Transformer.ALM.BinSearch` with every breakpoint computed by an `FPArith`
 instead of exactly — that is, `lower_bound` as the implementation runs it.
 `fpSearch_eq` says it returns the same index as the exact search whenever the
@@ -20,7 +25,7 @@ returns in floating point is the key the index returns, so
 
 `fp_hullIndex_longDouble` puts numbers on it: at `long double` accuracy and
 keys below `2^56`, a query further than `1/16` from every breakpoint is
-answered exactly.  The excluded queries are the ones where it does not
+answered exactly. The excluded queries are the ones where it does not
 matter — at a breakpoint the two keys score the same
 (`lineEval_eq_at_midpoint`).
 
@@ -28,8 +33,7 @@ Source: `transformer_vm/attention/hull2d_cht.h`, lines 60-70 (`isect`) and
 203-215 (the search that calls it).
 -/
 
-import Transformer.ALM.HullIndex
-import Transformer.ALM.FloatHull
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -158,7 +162,7 @@ example [Nonempty (Fin n)] (K : Fin n → ℝ) :
 /-- **`long double` answers the index exactly.**  At a relative accuracy of
 `2^-60` — above the unit roundoff of the 80-bit format, with room for the
 subtractions inside `isect` — and keys below `2^56`, any query further than
-`1/16` from every breakpoint gets the index's own answer.  This is
+`1/16` from every breakpoint gets the index's own answer. This is
 `fp_longDouble` of `Transformer.ALM.FloatHull` on the query side. -/
 theorem fp_hullIndex_longDouble (F : FPArith) [Nonempty (Fin n)] (K : Fin n → ℝ) (q : ℝ)
     (hu : F.u ≤ 1 / 2 ^ (60 : ℕ))

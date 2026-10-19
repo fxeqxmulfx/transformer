@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianCovariance
+public import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.Probability.Independence.Basic
+
+/-!
 # Gaussian integration by parts with the original independent parameter
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -16,9 +22,7 @@ The independent parameter's law need not have a density or even
 be Gaussian; in particular, degenerate coordinates are included.
 -/
 
-import Transformer.Homogenized.Section7_GaussianCovariance
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.Probability.Independence.Basic
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped NNReal

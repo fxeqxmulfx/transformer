@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.Quartet.Section3_EdenUnitOne
+
+/-!
 # An inner-product counterexample with independent FP8 coins
 
 Source: arXiv:2601.22813v2, §3.2–§3.3 and Algorithm 1.
 -/
 
-import Transformer.Quartet.Section3_EdenUnitOne
+@[expose] public section
 
 open MeasureTheory
 

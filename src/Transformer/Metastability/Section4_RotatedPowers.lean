@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_RotationCalculus
+
+/-!
 # Actual differentiated polynomial moments of uniform rotations
 
 ArXiv:2410.06833v1, §4, `prop: concentration unif`, and
@@ -15,7 +19,7 @@ the original compact sphere supplies the remaining inputs for
 two dominated differentiations under its original probability law.
 -/
 
-import Transformer.Metastability.Section4_RotationCalculus
+@[expose] public section
 
 open Real MeasureTheory
 

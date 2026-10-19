@@ -1,4 +1,10 @@
-/-
+module
+
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Data.Matrix.Mul
+public import Mathlib.Tactic
+
+/-!
 # Fused row-and-column gains
 
 arXiv:2606.25971v2, §3, the displayed factorization, and Appendix A,
@@ -6,9 +12,7 @@ Algorithm 2. A matrix is a genuine finite array; its geometric norm is
 the Euclidean norm of its entries, rather than the sup norm on functions.
 -/
 
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Data.Matrix.Mul
-import Mathlib.Tactic
+@[expose] public section
 
 open scoped BigOperators Matrix
 

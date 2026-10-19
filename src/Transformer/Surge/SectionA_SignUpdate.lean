@@ -1,9 +1,13 @@
-/-
+module
+
+public import Transformer.Surge.SectionA_AdamMoments
+
+/-!
 # The sign update
 
-arXiv:2405.14578, Appendix A, eqs. (28) and (29).  As `β₁, β₂ → 1` the update of Adam tends to
+arXiv:2405.14578, Appendix A, eqs. (28) and (29). As `β₁, β₂ → 1` the update of Adam tends to
 `E_t[G]/√E_t[G²] = sign(E_t[G])/√(1 + var_t(G)/E_t[G]²)` (`tendsto_adamUpdate_one`,
-`adamLimit_eq_sign`).  "When the variance of `G_est` is small, the update amount is
+`adamLimit_eq_sign`). "When the variance of `G_est` is small, the update amount is
 approximately `sign(G_est)`": once `t var_t(G) < E_t[G]²`, every `G_i`, `1 ≤ i ≤ t`, has the sign
 of `E_t[G]` (`sign_eq_of_mul_iterVar_lt`), and the limit is within `var_t(G)/(2E_t[G]²)` of it
 (`abs_adamLimit_sub_sign_le`).
@@ -14,7 +18,7 @@ Eq. (29) leaves implicit `G_t ≠ 0`, where its `G_est/√(G_est²)` is defined:
 `G_2 = 0` the update at `t = 2` has no limit (`not_tendsto_adamUpdate_zero`).
 -/
 
-import Transformer.Surge.SectionA_AdamMoments
+@[expose] public section
 
 open Filter Topology
 
@@ -90,7 +94,7 @@ theorem adamUpdate_zero (g : ℕ → ℝ) {t : ℕ} (ht : t ≠ 0) :
 example (g : ℕ → ℝ) := adamUpdate_zero g one_ne_zero
 
 /-- **Eq. (29)**: without `ε_Adam`, as `β₁, β₂ → 0` the update of Adam tends to
-`G_t/√(G_t²) = sign(G_t)`.  The source's `G_est/√(G_est²)` leaves implicit `G_t ≠ 0`. -/
+`G_t/√(G_t²) = sign(G_t)`. The source's `G_est/√(G_est²)` leaves implicit `G_t ≠ 0`. -/
 theorem tendsto_adamUpdate_zero {g : ℕ → ℝ} {t : ℕ} (ht : t ≠ 0) (hg : g t ≠ 0) :
     Tendsto (fun β : ℝ × ℝ => adamUpdate β.1 β.2 0 g t) (𝓝 0 ×ˢ 𝓝 0)
       (𝓝 (Real.sign (g t))) := by
@@ -112,7 +116,7 @@ theorem tendsto_adamUpdate_zero {g : ℕ → ℝ} {t : ℕ} (ht : t ≠ 0) (hg :
 example := tendsto_adamUpdate_zero (g := fun _ => 1) one_ne_zero one_ne_zero
 
 /-- Eq. (29) needs `G_t ≠ 0`: for `G_1 = 1`, `G_2 = 0`, the update of Adam at `t = 2` has no limit
-as `β₁, β₂ → 0`.  It tends to `0` along `β₁ = β₂`, and to `1` along `β₂ = β₁²`, `β₁ > 0`. -/
+as `β₁, β₂ → 0`. It tends to `0` along `β₁ = β₂`, and to `1` along `β₂ = β₁²`, `β₁ > 0`. -/
 theorem not_tendsto_adamUpdate_zero : ¬∃ L, Tendsto
     (fun β : ℝ × ℝ => adamUpdate β.1 β.2 0 (fun i => if i = 1 then 1 else 0) 2) (𝓝 0 ×ˢ 𝓝 0)
     (𝓝 L) := by

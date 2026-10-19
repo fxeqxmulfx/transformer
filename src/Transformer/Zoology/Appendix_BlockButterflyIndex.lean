@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ShiftSumK
+
+/-!
 # Finite indices for block butterfly factors
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: butterfly` and
@@ -6,7 +10,7 @@ Arora et al., arXiv:2312.04927v1, Appendix `def: butterfly` and
 reads below stay within their own block, even with global cyclic shifts.
 -/
 
-import Transformer.Zoology.Appendix_ShiftSumK
+@[expose] public section
 
 namespace Transformer.Zoology
 

@@ -1,20 +1,24 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_UniversalValues
+
+/-!
 # Approximate objective-value equivalence also fails
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §2–§3.1, equation
-`eq:attention_only_obj`.  The preceding no-go theorem used exact equality of
-objective sublevels.  Here even arbitrarily accurate transfer of every
+`eq:attention_only_obj`. The preceding no-go theorem used exact equality of
+objective sublevels. Here even arbitrarily accurate transfer of every
 sublevel between the original and a single convex candidate is refuted.
 This allows arbitrary real-vector-space parameters, a nonlinear decoder,
 and a changed fixed penalty.
 -/
 
-import Transformer.Convexifying.Section3_UniversalValues
+@[expose] public section
 
 namespace Transformer.Convexifying
 
 /-- Every objective sublevel on either side can be matched on the other
-side with any positive tolerance in the objective bound.  This is the
+side with any positive tolerance in the objective bound. This is the
 value-level equivalence condition used below.
 Source: arXiv:2211.11052v1, `eq:attention_only_obj`, abstract candidate. -/
 def ApproxProjectedSublevelTransfer {E : Type*} [AddCommGroup E] [Module ℝ E]
@@ -28,7 +32,7 @@ def ApproxProjectedSublevelTransfer {E : Type*} [AddCommGroup E] [Module ℝ E]
 /-- **No arbitrarily accurate equivalence of training values.**  A fixed
 candidate whose objectives are convex for all nonnegative weighted squared
 losses cannot transfer every original objective sublevel to within every
-positive tolerance and vice versa.  The candidate vector space may be
+positive tolerance and vice versa. The candidate vector space may be
 infinite-dimensional, and its decoder and fixed penalty may be arbitrary.
 Source: arXiv:2211.11052v1, §2–§3.1, `eq:attention_only_obj`. -/
 theorem no_universal_approx_sublevel_transfer {E : Type*}

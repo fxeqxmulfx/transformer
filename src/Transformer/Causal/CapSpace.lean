@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.CapHalfPlane
+
+/-!
 # Causal attention — The volume of the cone over a cap on `𝕊^2`
 
 Around the axis `e₀` of `ℝ³`, a point `(a, q)` with `q ∈ ℝ²` lies in the cone
@@ -13,7 +17,7 @@ Source: arXiv:2411.04990v2, §"R'enyi centers vs strong R'enyi centers" (the
 cap mass on `𝕊^2`).
 -/
 
-import Transformer.Causal.CapHalfPlane
+@[expose] public section
 
 open scoped ENNReal
 open Real MeasureTheory

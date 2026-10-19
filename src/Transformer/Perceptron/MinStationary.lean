@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.MixDirac
+public import Transformer.Perceptron.GeodesicCurve
+
+/-!
 # Perceptrons and attention's mean-field landscape — the minimizer is stationary
 
 The first half of "it is clear that the minimizer `μ⋆` is SOPD"
@@ -12,20 +17,19 @@ satisfies `eq: steady.state` on its whole support (`isStationary_of_isMin`).
 * The first variation is continuous, so it equals its minimum over the sphere
   everywhere on the support (`firstVariation_le_of_mem_support`), and at a
   minimum on the sphere the tangential gradient vanishes
-  (`proj_eq_zero_of_isMin_sphere`).  That tangential gradient is `energyGrad`
+  (`proj_eq_zero_of_isMin_sphere`). That tangential gradient is `energyGrad`
   (`energyGrad_eq_proj`).
 
-The source states `eq: steady.state` for continuous `σ`.  The minimizer needs
+The source states `eq: steady.state` for continuous `σ`. The minimizer needs
 no continuity of `σ`: the first variation is differentiable as soon as `σ` has
-the primitive `φ`, its gradient being pointwise in `σ`.  Nor does it need
+the primitive `φ`, its gradient being pointwise in `σ`. Nor does it need
 `β > 0`: `β ≠ 0` suffices here.
 
 Source: arXiv:2601.21366v2, §2.3, `eq: steady.state`, and
 `rem:strictSOPD-perceptron`.
 -/
 
-import Transformer.Perceptron.MixDirac
-import Transformer.Perceptron.GeodesicCurve
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory Filter Topology

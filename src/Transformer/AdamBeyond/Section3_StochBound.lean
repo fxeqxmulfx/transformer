@@ -1,6 +1,8 @@
-import Transformer.AdamBeyond.Section3_Stoch
+module
 
-/-
+public import Transformer.AdamBeyond.Section3_Stoch
+
+/-!
 # Adam and beyond — §3: the pointwise bounds of the lemma of Theorem 3
 
 What the lemma in the proof of Theorem 3 bounds outcome by outcome, with
@@ -10,7 +12,7 @@ What the lemma in the proof of Theorem 3 bounds outcome by outcome, with
   `stoch_T1_le`, as in the source;
 * `T₂`: `β₁ m_n/√(β₂ v_n + 1 - β₂) ≤ β₁ K Σ_{j≤n} γ^{n-j} [b_j]`, with
   `K = 2(1-β₁)/√(β₂(1-β₂))` and `γ = β₁/√β₂`, `stoch_T2_le`: every coin
-  `C` in `m_n` is paid for by its own `C²` in `v_n`.  The source bounds `T₂`
+  `C` in `m_n` is paid for by its own `C²` in `v_n`. The source bounds `T₂`
   on the event that the last `k ≈ log C/log(1/β₁)` coins are all `-1`, and by
   Cauchy-Schwarz elsewhere, which gives `O(p log C)` in expectation; this bound
   gives `O(p)` with no event;
@@ -20,6 +22,8 @@ What the lemma in the proof of Theorem 3 bounds outcome by outcome, with
 Source: arXiv:1904.09237, Appendix, proof of Theorem 3, the lemma: the bounds
 on `T₁`, `T₂` and `T₃`.
 -/
+
+@[expose] public section
 
 open Finset
 
@@ -72,7 +76,7 @@ theorem inv_sqrt_ge {x a : ℝ} (hx : 0 < x) (ha : 0 < a) :
     (by positivity : (0 : ℝ) ≤ 2 * r ^ 2 * r)]
 
 /-- The bound on `T₁`: `(β₁ m + (1-β₁) C)/√(β₂ v + (1-β₂) C²) ≤ 1/√(1-β₂)`
-for `m ≤ C` and `v ≥ 0`.  arXiv:1904.09237, Appendix, proof of Theorem 3,
+for `m ≤ C` and `v ≥ 0`. arXiv:1904.09237, Appendix, proof of Theorem 3,
 (eq:T_1-bound). -/
 theorem stoch_T1_le {C β₁ β₂ m v : ℝ} (hC : 1 ≤ C) (hβ₁ : 0 ≤ β₁) (hβ₂ : 0 ≤ β₂)
     (hβ₂' : β₂ < 1) (hm : m ≤ C) (hv : 0 ≤ v) :
@@ -136,7 +140,7 @@ theorem stoch_m_le_ind (hβ₁ : 0 ≤ β₁) (hβ₁' : β₁ ≤ 1) (n : ℕ) 
 
 /-- The bound on `T₂`, outcome by outcome:
 `β₁ m_n/√(β₂ v_n + 1 - β₂) ≤ β₁ K Σ_{j≤n} γ^{n-j} [b_j]` with
-`K = 2(1-β₁)/√(β₂(1-β₂))` and `γ = β₁/√β₂`.  arXiv:1904.09237, Appendix,
+`K = 2(1-β₁)/√(β₂(1-β₂))` and `γ = β₁/√β₂`. arXiv:1904.09237, Appendix,
 proof of Theorem 3, the bound on `T₂` (eq:T_2-bound), by another argument. -/
 theorem stoch_T2_le (hC : 1 ≤ C) (hβ₁ : 0 ≤ β₁) (hβ₁' : β₁ ≤ 1) (hβ₂ : 0 < β₂)
     (hβ₂' : β₂ < 1) (n : ℕ) :

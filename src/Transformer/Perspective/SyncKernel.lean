@@ -1,17 +1,22 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixB_BetaInterval
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+
+/-!
 # The kernel `f_β` of self-attention on the circle
 
 Polyanskiy, Rigollet, Yao — arXiv:2507.22857v1, *Synchronization of mean-field
 models on the circle*, §5 (proof of `cor:conjecture`) and Appendices A–B.
 
 On the circle, self-attention `eq:selfattention` is the mean-field model
-`ẋ_i = -Σ_j f(x_i - x_j)` with `f(x) = sin x e^{β cos x}`.  From §5 on the source
+`ẋ_i = -Σ_j f(x_i - x_j)` with `f(x) = sin x e^{β cos x}`. From §5 on the source
 normalizes the kernel to
 
   `f_β(x) = sin x e^{β(cos x - 1)}`,
 
 so that `f_β'(0) = 1`; the criterion of `thm:main` is unchanged by the positive
-factor `e^{-β}`.  This file has
+factor `e^{-β}`. This file has
 
 * `f_β` and the three derivatives `f_β'`, `f_β''`, `f_β'''` that §5 writes out;
 * their periodicity and parity;
@@ -24,8 +29,7 @@ The sign regions of `f_β'''` and the integral `∫ |f_β'''|₊` are in
 `Perspective.SyncKernelQuartic` and `Perspective.SyncKernelRegions`.
 -/
 
-import Transformer.Perspective.AppendixB_BetaInterval
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+@[expose] public section
 
 open Real
 
@@ -34,7 +38,7 @@ namespace Perspective
 
 /-- **The kernel** `f_β(x) = sin x e^{β(cos x - 1)}`.
 
-Source: arXiv:2507.22857v1, §5 and Appendices A–B.  §2.3 writes
+Source: arXiv:2507.22857v1, §5 and Appendices A–B. §2.3 writes
 `f_β(x) = sin x e^{β cos x}`, which is `e^β` times this kernel. -/
 noncomputable def f_β (β x : ℝ) : ℝ :=
   Real.sin x * Real.exp (β * (Real.cos x - 1))

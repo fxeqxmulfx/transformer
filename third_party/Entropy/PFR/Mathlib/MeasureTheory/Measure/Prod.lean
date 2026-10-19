@@ -2,6 +2,12 @@ module
 
 public import Mathlib.MeasureTheory.Measure.Prod
 
+/-!
+# Products and coordinate swaps
+
+Product-measure identities for swaps, singletons, and finite supports.
+-/
+
 public section
 
 open Function

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section4_BatchedNewton
+
+/-!
 # DASH — exact bucket stacking for batched Newton solves
 
 arXiv:2602.02016v2, §4. The source combines left and right full-block
@@ -6,7 +10,7 @@ preconditioners and compatible residual preconditioners into one bucket.
 Running the actual batched recurrence on it preserves every output buffer.
 -/
 
-import Transformer.DASH.Section4_BatchedNewton
+@[expose] public section
 
 noncomputable section
 

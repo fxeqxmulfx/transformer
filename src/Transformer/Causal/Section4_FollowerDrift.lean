@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Section4_TwoTokenConvergence
+
+/-!
 # The original last-token drift near a converging prefix
 
 ArXiv:2411.04990v2, §4, proof of `thm1`.
@@ -17,7 +21,7 @@ converges. No convergence or differential estimate is built into a
 replacement field or an auxiliary definition.
 -/
 
-import Transformer.Causal.Section4_TwoTokenConvergence
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter

@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.CubeContentValues
-import Mathlib.LinearAlgebra.Dimension.Constructions
+module
+
+public import Transformer.GPTMini.Sparsemax.CubeContentValues
+public import Mathlib.LinearAlgebra.Dimension.Constructions
 
 /-!
 # Expressive generated content features with an explicit capacity price
@@ -17,6 +19,8 @@ parity is also a single product feature. The encoding and features use
 only observed data, while coefficients are learned task parameters.
 No teacher routes, hidden continuation or prototype table is supplied.
 -/
+
+@[expose] public section
 
 noncomputable section
 

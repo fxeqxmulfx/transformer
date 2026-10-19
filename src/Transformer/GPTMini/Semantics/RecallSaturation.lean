@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.RecallRotaryInsert
-import Transformer.GPTMini.QKNormLipschitz
+module
+
+public import Transformer.GPTMini.Semantics.RecallRotaryInsert
+public import Transformer.GPTMini.QKNormLipschitz
 
 /-!
 # Clipped QKNorm removes genuine record amplitudes after saturation
@@ -18,6 +20,8 @@ error. Later raw-state bounds must discharge saturation for one
 finite shared projection gain; no saturation or prepared normalized
 key is yet assumed for a complete model correctness theorem.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

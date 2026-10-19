@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Kinetic.Hardy
+public import Mathlib.Analysis.Calculus.Deriv.Slope
+
+/-!
 # The endpoint interpretation of the kinetic recency claim
 
 ArXiv:2605.09213v1, §1, `thm:U-shape` (ii), and its proof in §6.
@@ -15,8 +20,7 @@ nonnegative function vanishing at its right endpoint cannot have a
 positive left derivative there.
 -/
 
-import Transformer.Kinetic.Hardy
-import Mathlib.Analysis.Calculus.Deriv.Slope
+@[expose] public section
 
 open Filter Set Real Topology
 

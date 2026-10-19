@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.AffineValueBasis
+module
+
+public import Transformer.GPTMini.Sparsemax.AffineValueBasis
 
 /-!
 # Original common values decoded with two coefficients per channel
@@ -16,6 +18,8 @@ The equality to the original global nonsingular value decoder is proved.
 This is an exact restricted response family, not a loss of sparsity or an
 approximation to the former arbitrary-output table.
 -/
+
+@[expose] public section
 
 noncomputable section
 

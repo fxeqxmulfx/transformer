@@ -1,17 +1,21 @@
-/-
+module
+
+public import Transformer.ALM.HullBranch
+
+/-!
 # One hull query answers any planar head
 
 `Transformer.ALM.HullBranch` proves the three branches of `query` one at a
 time: the upper hull for `qy > 0`, the negated family for `qy < 0`, and the
-two ends of the degenerate branch for `qy = 0`.  Each is a theorem about the
+two ends of the degenerate branch for `qy = 0`. Each is a theorem about the
 branch the code took, and nothing put them together — so the claim the
 manuscript makes,
 
-> the geometric fast path is not limited to our executor construction.  In
+> the geometric fast path is not limited to our executor construction. In
 > principle, it can accelerate any transformer with 2D heads at decoding time,
 > replacing full linear scans with efficient geometric retrieval
 
-was three theorems and a dispatch left to the reader.  The dispatch matters:
+was three theorems and a dispatch left to the reader. The dispatch matters:
 the executor only ever queries with `qy = 1` (`liftQuery_snd_pos`), so the
 other two branches exist for queries the lookup machine never makes — the
 queries a *trained* planar head makes.
@@ -20,25 +24,25 @@ queries a *trained* planar head makes.
 `planarAns_isGreatest` is the one theorem on top: for an arbitrary planar
 query — `qy > 0`, `qy < 0`, `qy = 0` either way, and `q = 0` — the line it
 returns maximizes `q · k` over the hull the branch consults, at the cost of
-one binary search.  `planar_head_argmax` is the same statement for an
+one binary search. `planar_head_argmax` is the same statement for an
 arbitrary family of planar keys, each dominated at the query by a line of that
 hull, which is what the erase rule of `Transformer.ALM.HullErase` preserves.
 
-The two hulls are two families of their own, of their own lengths.  An earlier
+The two hulls are two families of their own, of their own lengths. An earlier
 statement asked every upper line to be a negated lower one on a common range;
 together with both breakpoint invariants that forces every breakpoint of the
 upper hull in the range to coincide, since negation reverses the order of the
-slopes and keeps `interX`.  That statement held only for concurrent lines and
+slopes and keeps `interX`. That statement held only for concurrent lines and
 is replaced.
 
-The keys here are arbitrary: no lift, no paraboloid, no integrality.  A
+The keys here are arbitrary: no lift, no paraboloid, no integrality. A
 trained 2D head gets the same `log₂ n + 1`.
 
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 255-315 (`query`);
 Percepta, *Can LLMs Be Computers?* (2026-03-11).
 -/
 
-import Transformer.ALM.HullBranch
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -48,7 +52,7 @@ namespace ALM
 /-- **`query`, as the code dispatches it.**  `L` is what the upper hull
 stores, `nL + 1` lines, and `N` what the lower hull stores, `nN + 1` lines —
 points negated, as `hull2d_cht.h` pushes them — and the answer is a *key*,
-the line the branch lands on.  The `qy = 0` branches are the code's queries at
+the line the branch lands on. The `qy = 0` branches are the code's queries at
 `±INF` of the upper hull, answered with no search at all. -/
 noncomputable def planarAns (L N : ℕ → ℝ × ℝ) (nL nN : ℕ) (q : ℝ × ℝ) : ℝ × ℝ :=
   if 0 < q.2 then
@@ -92,7 +96,7 @@ theorem planarAns_isGreatest (L N : ℕ → ℝ × ℝ) (nL nN : ℕ) (q : ℝ �
 /-- **And so it answers an arbitrary planar head.**  For any finite family of
 planar keys, each dominated at the query by a line of the hull the branch
 consults — the invariant the erase rule preserves — the key `planarAns`
-returns maximizes the head's score over the whole family.  Nothing here is
+returns maximizes the head's score over the whole family. Nothing here is
 lifted, integral, or produced by the executor: this is the fast path for a
 trained 2D head.
 
@@ -116,8 +120,8 @@ theorem planar_head_argmax {n' : ℕ} (L N : ℕ → ℝ × ℝ) (nL nN : ℕ) (
     exact hle.trans (hN hq j hj)
 
 /-- The hypotheses are satisfiable, by the family the machine itself stores,
-and on both branches at once.  The lifted keys `parabLine` satisfy both
-invariants, so they serve as the upper hull and as the stored lower one.  At
+and on both branches at once. The lifted keys `parabLine` satisfy both
+invariants, so they serve as the upper hull and as the stored lower one. At
 `q = (0, 1)` every lifted key `j ≤ n` is dominated by itself on the upper
 hull; at `q = (0, -1)` the keys `-parabLine j` are dominated by themselves on
 the lower one. -/

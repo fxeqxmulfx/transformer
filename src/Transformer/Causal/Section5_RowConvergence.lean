@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section5_RowBounds
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Deterministic convergence of the next original frozen token
 
 ArXiv:2411.04990v2, §5 and Appendix A, the smooth frozen
@@ -22,7 +27,7 @@ No general printed C1 convergence lemma or exponential rate
 is assumed in this argument.
 -/
 
-import Transformer.Causal.Section5_RowBounds
+@[expose] public section
 
 open scoped BigOperators
 open Real Set Filter

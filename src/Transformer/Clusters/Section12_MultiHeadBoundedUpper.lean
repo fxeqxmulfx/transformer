@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadSymmetry
+
+/-!
 # Bounded original tokens beside escaping tokens
 
 ArXiv:2305.05465v6, §7, proof of `l:onlyone`, for the original
@@ -19,7 +23,7 @@ three-token trajectory with its stationary interior token and two
 escaping outer tokens, for two genuine positive original heads.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadSymmetry
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

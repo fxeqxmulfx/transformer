@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainRelativeStep
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainRelativeStep
 
 /-!
 # Initialized actual native relative pair balance without parameter limits
@@ -23,6 +25,8 @@ held-out success, a positive limiting margin or CE-loss convergence.
 Exact-real fixed tables, zero betas and uniform native decay differ
 from appendix C's coupled-cost GD and preserved learned GPTMini.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

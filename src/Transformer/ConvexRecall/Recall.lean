@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.ConvexRecall.Training
+public import Transformer.ConvexRecall.Routing
+
+/-!
 # A trained convex mechanism performs exact multi-query associative recall
 
 New extension of arXiv:2211.11052v1, §3.1–§3.2, evaluated against the
@@ -9,8 +14,7 @@ dictionary, not remembered in training parameters. The theorem includes
 all query positions, arbitrary value assignments, and no-match outputs.
 -/
 
-import Transformer.ConvexRecall.Training
-import Transformer.ConvexRecall.Routing
+@[expose] public section
 
 open scoped BigOperators
 

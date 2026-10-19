@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section2_Models
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+/-!
 # DASH — symmetric spectral calculus
 
 arXiv:2602.02016v2, §3.1, and Appendix B. A square orthogonal frame
@@ -7,8 +12,7 @@ used for Shampoo require positive eigenvalues; symmetry alone does
 not give a real inverse root on a zero or negative eigenvalue.
 -/
 
-import Transformer.DASH.Section2_Models
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+@[expose] public section
 
 open scoped BigOperators Matrix
 

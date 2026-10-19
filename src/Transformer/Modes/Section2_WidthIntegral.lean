@@ -1,12 +1,17 @@
-/-
+module
+
+public import Transformer.Modes.Section2_IntervalTPrime
+public import Transformer.Modes.Section2_WidthTerms
+
+/-!
 # The number of modes of a Gaussian KDE — the width of the integral over `T'`
 
-The last step of `lem:main-int-phi` on `T'`.  On `T'`, write
-`R(t) = β^{-3/2} n e^{-t²/2} ≥ 1` (`one_le_rateScale`).  The integrand of the
+The last step of `lem:main-int-phi` on `T'`. On `T'`, write
+`R(t) = β^{-3/2} n e^{-t²/2} ≥ 1` (`one_le_rateScale`). The integrand of the
 proxy Kac–Rice integral is bounded by `√β` times
 `e^{-κ R t²}(1 + K √R (4 + 6t²))` (`Section2_ProxyKRTPrime.lean`): the factor
 `√R` is the size of the shift `√(α_t δ_t²)` of the Gaussian in `y`, which is not
-bounded on `T'` for `n ≫ β^{5/2}`.  It is paid for by the width of `e^{-κ R t²}`
+bounded on `T'` for `n ≫ β^{5/2}`. It is paid for by the width of `e^{-κ R t²}`
 in `t`, which is `R^{-1/2}`: near `t = 0`, where `R ≈ n β^{-3/2}`, the integral
 of `√R e^{-κ R t²}` is bounded by a constant, and for `|t| ≥ 1` the factor
 `√R` is absorbed by `e^{-κ R t²}` since `R t² ≥ R`
@@ -18,8 +23,7 @@ involved.
 Source: arXiv:2412.09080v3, `eq:int-phi-b` and the proof of `lem:main-int-phi`.
 -/
 
-import Transformer.Modes.Section2_IntervalTPrime
-import Transformer.Modes.Section2_WidthTerms
+@[expose] public section
 
 open Real MeasureTheory
 open scoped ENNReal

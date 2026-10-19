@@ -1,5 +1,8 @@
-import Transformer.Modes.Section3_CubicCorrection
-import Transformer.Modes.Section3_GaussianDensity
+module
+
+public import Transformer.Modes.Section3_CubicCorrection
+public import Transformer.Modes.Section3_GaussianDensity
+
 /-!
 # Gaussian comparison after the actual cubic correction
 
@@ -22,6 +25,7 @@ The constants are elementary explicit bounds, rather than the unspecified
 constants in the source's `eq:br-9.10`.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

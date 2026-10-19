@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixD_QuantitativeHemisphere
+public import Transformer.Perspective.ConeFields
+public import Transformer.Perspective.Section2_FlowMap
+
+/-!
 # Uniform pair contraction from a quantitative hemisphere
 
 ArXiv:2312.10794v5, Appendix D, `e:ineqsecondpart`, and §6.1,
@@ -13,9 +19,7 @@ For `SA`, every weight is at least `exp(-2β)/n`. At initial height
 and temperature, uniformly in dimension and in the initial configuration.
 -/
 
-import Transformer.Perspective.AppendixD_QuantitativeHemisphere
-import Transformer.Perspective.ConeFields
-import Transformer.Perspective.Section2_FlowMap
+@[expose] public section
 
 open scoped BigOperators
 open Real

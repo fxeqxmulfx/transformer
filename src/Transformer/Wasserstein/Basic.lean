@@ -1,4 +1,12 @@
-/-
+module
+
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Map
+public import Mathlib.MeasureTheory.Measure.Prod
+public import Mathlib.Analysis.Convex.Integral
+public import Mathlib.Analysis.Convex.Mul
+
+/-!
 # The 2-Wasserstein distance
 
 Mathlib carries no Wasserstein distance, and two of the papers formalized here
@@ -9,7 +17,7 @@ quadratic transport cost over the couplings of the two measures,
 
 The infimum is a `sInf` over the set of costs, which is bounded below by `0`
 and, for probability measures, nonempty — the diagonal coupling is one when
-`μ = ν`, and the product coupling always is.  That is all the papers' proofs
+`μ = ν`, and the product coupling always is. That is all the papers' proofs
 use of the definition: an upper bound on `W_2` from one exhibited coupling,
 and, the other way, `‖∫ f dμ - ∫ f dν‖ ≤ L W_2(μ, ν)` for an `L`-Lipschitz `f`
 on a bounded set carrying both measures (`norm_integral_sub_le_W2`).
@@ -23,11 +31,7 @@ Sources: arXiv:2411.04551v3, §1 (`W_2` throughout); arXiv:2604.01978v1,
 `prop:satisfying_MF`, `prop: poc`.
 -/
 
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Measure.Map
-import Mathlib.MeasureTheory.Measure.Prod
-import Mathlib.Analysis.Convex.Integral
-import Mathlib.Analysis.Convex.Mul
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -141,7 +145,7 @@ on a bounded set on which `f` is `L`-Lipschitz, then
   `‖∫ f dμ - ∫ f dν‖ ≤ L W_2(μ, ν)`.
 
 For each coupling `γ`, `‖∫ f dμ - ∫ f dν‖ ≤ L ∫ d dγ ≤ L (∫ d² dγ)^{1/2}` by
-Jensen; the infimum over `γ` follows.  The bounded set makes every cost the
+Jensen; the infimum over `γ` follows. The bounded set makes every cost the
 integral of a bounded function, which is what keeps the Bochner integral
 honest here.
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.PeriodicMemoryDescent
+module
+
+public import Transformer.GPTMini.Sparsemax.PeriodicMemoryDescent
 
 /-!
 # Affine sharing between learned answer coordinates and attention edges
@@ -16,6 +18,8 @@ by this explicit parameter sharing and the canonical width-three chart.
 Offsets, gain, channel and possible local connections are fixed choices;
 jointly learning the readout is not claimed to remain convex.
 -/
+
+@[expose] public section
 
 noncomputable section
 

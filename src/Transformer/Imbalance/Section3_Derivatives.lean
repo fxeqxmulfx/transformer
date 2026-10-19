@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_Model
+
+/-!
 # The actual gradient and Hessian
 
 arXiv:2402.19449v2, Section 3.2, equation (4), and Appendix H.1.
@@ -7,7 +11,7 @@ Its sign is reversed. The definitions below use actual Lean derivatives
 and prove the corrected formula `(p_k-1_{y=k})x`.
 -/
 
-import Transformer.Imbalance.Section3_Model
+@[expose] public section
 
 open scoped BigOperators
 

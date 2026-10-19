@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.Kinetic.Accuracy
+public import Transformer.Kinetic.Hardy
+public import Transformer.Kinetic.PeriodicGaussian
+public import Transformer.Kinetic.UniformPrompt
+public import Transformer.Kinetic.Section1_SourceCells
+public import Mathlib.Probability.Independence.Basic
+
+/-!
 # Kinetic theory for Transformers — the retrieval score
 
 Formalization of `eq:Acc-soft-Fourier`, `eq:soft-accuracy-expansion` and the
@@ -12,12 +21,7 @@ is refuted by its actual integer source cells. Attainment of a minimum
 is proved separately, without weakening the printed claim under its name.
 -/
 
-import Transformer.Kinetic.Accuracy
-import Transformer.Kinetic.Hardy
-import Transformer.Kinetic.PeriodicGaussian
-import Transformer.Kinetic.UniformPrompt
-import Transformer.Kinetic.Section1_SourceCells
-import Mathlib.Probability.Independence.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory ProbabilityTheory
@@ -46,7 +50,7 @@ accuracy is
 
 **What the source says and what is changed here.**  The source takes the
 `θ_i(t)` to be random variables; that is the hypothesis `hϑ`, that each is
-measurable.  Without it the identity is false: for a non-measurable
+measurable. Without it the identity is false: for a non-measurable
 `D = θ_N(t) - θ_{i_*}(0)` with values in `{0, π}` the left side and every odd
 Fourier coefficient integrate to `0` by convention, while the even ones do not.
 
@@ -102,9 +106,9 @@ positional information sits in the `N⁻¹` correction `𝒮_t`, which is
 expansion "in the specific case of iid uniformly distributed prompts, thus
 satisfying `eq:init-conv` with `f_∘ ≡ 1`": there `f ≡ 1`, the cross-correlation
 equation becomes the Volterra-Hardy equation, and `𝒮_t` is the sum of its
-solutions.  This statement used to take an arbitrary profile `f₀` and a solution
+solutions. This statement used to take an arbitrary profile `f₀` and a solution
 `f` of `eq:mfl-lambda` — a binder the conclusion never used — with prompts
-satisfying `eq:init-conv` at rate `N^{-δ}`.  Both are beyond the source, and the
+satisfying `eq:init-conv` at rate `N^{-δ}`. Both are beyond the source, and the
 statement was false with them:
 
 * for a profile other than `f_∘ ≡ 1` the leading term is not `𝒮_t`, which is computed

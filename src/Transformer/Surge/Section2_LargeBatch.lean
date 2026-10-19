@@ -1,14 +1,19 @@
-/-
+module
+
+public import Transformer.Surge.Section2_PeakRate
+public import Transformer.Surge.Section2_SmallBatchLimit
+
+/-!
 # The optimal learning rate at large batch sizes
 
-arXiv:2405.14578, §2.1, Theorem 4, proved in Appendix E.  As `B → ∞`,
+arXiv:2405.14578, §2.1, Theorem 4, proved in Appendix E. As `B → ∞`,
 `𝓔_i(B) = erf(√(B/2)μ_i/σ_i)` tends to `sign(μ_i/σ_i) = sign(μ_i)`, eq. (42)
 (`tendsto_signMean_atTop`), so the learning rate of eq. (9), continuous in `𝓔`
 (`tendsto_lrSign`), tends to its value at `𝓔_i = sign(μ_i)`,
-`Σ|μ_i|/(Σ(1 - sign(μ_i)²)H_ii + ΣΣ sign(μ_i)sign(μ_j)H_ij)` (`tendsto_lrSign_atTop`).  Eq. (17)
+`Σ|μ_i|/(Σ(1 - sign(μ_i)²)H_ii + ΣΣ sign(μ_i)sign(μ_j)H_ij)` (`tendsto_lrSign_atTop`). Eq. (17)
 drops the first sum of the denominator, which vanishes when every `μ_i ≠ 0` (`signDen_sign`), as
 the condition `B ≫ πσ_i²/(2μ_i²)` presumes: with that hypothesis eq. (17) holds
-(`tendsto_lrSign_atTop_eq`), without it it fails (`exists_not_tendsto_lrSign_atTop`).  "When `B` increases infinitely, the optimal learning rate
+(`tendsto_lrSign_atTop_eq`), without it it fails (`exists_not_tendsto_lrSign_atTop`). "When `B` increases infinitely, the optimal learning rate
 will eventually converge to a non-zero value": the limit is positive when `μ ≠ 0` and the
 Hessian is positive definite (`sum_abs_div_pos`).
 
@@ -16,12 +21,11 @@ Hessian is positive definite (`sum_abs_div_pos`).
 `ε_max` in Theorem 3 will become the one in Theorem 4, which means that the local peak value of
 the optimal learning rate is larger than the final convergence value": at `σ_i = |μ_i|`, every
 `μ_i ≠ 0`, the bound of eq. (41) is the limit of eq. (17) (`snrSum_abs_div_eq`), so `ε_max` is
-at least that limit (`sum_abs_div_le_lrPeak`).  The paper's next remark, that late in training
+at least that limit (`sum_abs_div_le_lrPeak`). The paper's next remark, that late in training
 the limit "is more likely to exceed the local maximum", is a heuristic, not transcribed.
 -/
 
-import Transformer.Surge.Section2_PeakRate
-import Transformer.Surge.Section2_SmallBatchLimit
+@[expose] public section
 
 open Filter Topology Real
 
@@ -109,7 +113,7 @@ example (H : Matrix (Fin 2) (Fin 2) ℝ) := signDen_sign (μ := fun _ => 1) (fun
 
 /-- **Theorem 4**, eq. (17): as `B → ∞`, the learning rate of eq. (9) tends to
 `Σ|μ_i|/ΣΣ sign(μ_i)sign(μ_j)H_ij`, when every `μ_i ≠ 0`, every `σ_i > 0` and the denominator is
-nonzero.  The paper's condition `B ≫ πσ_i²/(2μ_i²)` presumes `μ_i ≠ 0` without stating it; at
+nonzero. The paper's condition `B ≫ πσ_i²/(2μ_i²)` presumes `μ_i ≠ 0` without stating it; at
 `μ_i = 0`, `𝓔_i → 0` leaves `H_ii` in the denominator, and eq. (17) fails
 (`exists_not_tendsto_lrSign_atTop`). -/
 theorem tendsto_lrSign_atTop_eq (hμ : ∀ i, μ i ≠ 0) (hσ : ∀ i, 0 < σ i)

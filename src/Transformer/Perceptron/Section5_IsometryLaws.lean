@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_NonzeroScalarCircle
+
+/-!
 # Isometric symmetries of the original matrix law
 
 ArXiv:2601.21366v2, §5.1, `rem: general-attention`, and §6,
@@ -16,7 +20,7 @@ neuron reflections used to examine the remaining circle case.
 No law invariance or support inclusion is hidden in a definition.
 -/
 
-import Transformer.Perceptron.Section5_NonzeroScalarCircle
+@[expose] public section
 
 open Real MeasureTheory Set
 

@@ -2,6 +2,12 @@ module
 
 public import Mathlib.LinearAlgebra.Dimension.Finite
 
+/-!
+# Algebraic bounds for stochastic constructions
+
+Monotonicity of sums and scalar multiplication, and finite-dimensional algebraic facts.
+-/
+
 @[expose] public section
 
 /-- A finite sum of monotone functions is monotone. -/

@@ -1,4 +1,12 @@
-/-
+module
+
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Analysis.SpecialFunctions.Exp
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.Tactic
+
+/-!
 # Weighted velocity differences and the source's strictness constant
 
 ArXiv:2601.21366v2, §5.5, `rem:strictSOPD-perceptron`.
@@ -14,11 +22,7 @@ The lower bound uses `K_β'' ≥ -β exp β` and `V'' ≥ 2 exp β+2κ`,
 and retains exactly the coefficient `κ` claimed by the source.
 -/
 
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Tactic
+@[expose] public section
 
 open scoped BigOperators
 

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_PhaseConcatenation
+public import Transformer.Interpolation.Section1_NeuralConcatenation
+public import Transformer.Interpolation.Section1_ControlPartitions
+
+/-!
 # Exact weak laws for appended neural transport phases
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and Appendix,
@@ -16,9 +22,7 @@ control also gives the identity flow and the constant law, supplying an
 initial idle phase without any additional switch in the source bound.
 -/
 
-import Transformer.Interpolation.Section1_PhaseConcatenation
-import Transformer.Interpolation.Section1_NeuralConcatenation
-import Transformer.Interpolation.Section1_ControlPartitions
+@[expose] public section
 
 open Real MeasureTheory Set
 

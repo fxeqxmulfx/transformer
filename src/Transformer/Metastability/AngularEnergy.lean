@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Metastability.Basic
+public import Mathlib.Algebra.BigOperators.Pi
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+
+/-!
 # Metastability — the angular energy on `𝕋^n` and its gradient
 
 On the circle the configuration `x_i = (cos θ_i, sin θ_i)` turns the
@@ -6,20 +13,17 @@ interaction energy `Metastability.Eβ` into a function of the angles alone,
 
   `𝖤_β(Θ) = (1 / (2 β e^β n²)) Σ_i Σ_j exp(β cos(θ_i - θ_j))`,
 
-because `⟨x_i, x_j⟩ = cos(θ_i - θ_j)`.  This file is that function and its
+because `⟨x_i, x_j⟩ = cos(θ_i - θ_j)`. This file is that function and its
 partial derivatives: `hasDerivAt_angularEβ` proves that `∂_{θ_ℓ} 𝖤_β` is
 
   `-(1/n²) Σ_m sin(θ_ℓ - θ_m) e^{β (cos(θ_ℓ - θ_m) - 1)}`,
 
 which is the expression §3.2 of arXiv:2410.06833v1 writes on the right-hand
-side of the PL inequality `lem: PL.borjan`.  The two `e^{-β}`, one from the
+side of the PL inequality `lem: PL.borjan`. The two `e^{-β}`, one from the
 normalization of `𝖤_β` and one from the exponent, cancel against the `2 β`.
 -/
 
-import Transformer.Basic
-import Transformer.Metastability.Basic
-import Mathlib.Algebra.BigOperators.Pi
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -47,7 +51,7 @@ theorem inner_circlePoint (θ φ : ℝ) :
 /-- **The interaction energy in angular coordinates.**
 
 `Metastability.Eβ` evaluated at `x_i = (cos θ_i, sin θ_i)`, where
-`⟨x_i, x_j⟩ = cos(θ_i - θ_j)`.  Source: arXiv:2410.06833v1, §3.2. -/
+`⟨x_i, x_j⟩ = cos(θ_i - θ_j)`. Source: arXiv:2410.06833v1, §3.2. -/
 noncomputable def angularEβ (n : ℕ) (β : ℝ) (Θ : Idx n → ℝ) : ℝ :=
   (1 / (2 * β * Real.exp β * (n : ℝ)^2)) *
     ∑ i : Idx n, ∑ j : Idx n, Real.exp (β * Real.cos (Θ i - Θ j))
@@ -83,7 +87,7 @@ theorem hasDerivAt_pairSnd (β a x : ℝ) :
 
 Differentiating `𝖤_β` in `θ_ℓ` touches the terms with `i = ℓ` and those with
 `j = ℓ`; the two families are equal, which is where the factor `2` cancelling
-the `2 β` of the normalization comes from.  Source: arXiv:2410.06833v1, §3.2
+the `2 β` of the normalization comes from. Source: arXiv:2410.06833v1, §3.2
 (the gradient in `lem: PL.borjan`). -/
 theorem hasDerivAt_angularEβ
     (n : ℕ) (β : ℝ) (hβ : β ≠ 0) (Θ : Idx n → ℝ) (l : Idx n) :
@@ -178,7 +182,7 @@ theorem hasDerivAt_angularEβ
 configuration.**
 
 `𝖤_β` at `x_i = (cos θ_i, sin θ_i)` is `angularEβ`, since
-`⟨x_i, x_j⟩ = cos(θ_i - θ_j)`.  This is what licenses reading §3.2 of
+`⟨x_i, x_j⟩ = cos(θ_i - θ_j)`. This is what licenses reading §3.2 of
 arXiv:2410.06833v1 on the torus. -/
 theorem Eβ_circlePoint (n : ℕ) (β : ℝ) (Θ : Idx n → ℝ) :
     Eβ 2 n β (fun i => circlePoint (Θ i)) = angularEβ n β Θ := by

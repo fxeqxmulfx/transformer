@@ -1,15 +1,21 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Periods
+public import Transformer.Landscape.SaddleAvoidance.Nondegenerate
+public import Transformer.Landscape.SaddleAvoidance.Analytic
+
+/-!
 # Phase model — gradient descent
 
 Gradient descent on a phase energy `V` with integer rows `a_r`, with a step
-`0 < η` and `η Σ_r ‖a_r‖² < 1`.  Every orbit comes arbitrarily close, up to
+`0 < η` and `η Σ_r ‖a_r‖² < 1`. Every orbit comes arbitrarily close, up to
 periods, to a point of the cube (`exists_frequently_periods`), and each such
 limit point is a critical point of `V`
-(`gradient_eq_zero_of_frequently_periods`).  As `V` is analytic, every orbit
+(`gradient_eq_zero_of_frequently_periods`). As `V` is analytic, every orbit
 converges, to a critical point (`exists_tendsto_gradient_phaseEnergy_eq_zero`).
 An orbit with a limit point at a zero of `V` where no nonzero vector is
 orthogonal to every row converges to a zero
-(`exists_tendsto_phaseEnergy_eq_zero`).  For almost every start,
+(`exists_tendsto_phaseEnergy_eq_zero`). For almost every start,
 an orbit with a limit point where the Hessian is injective converges to a
 local minimizer differing from it by a period
 (`ae_exists_tendsto_isLocalMin_of_frequently_periods`); when the Hessian is
@@ -17,9 +23,7 @@ injective at every critical point, almost every orbit converges to a local
 minimizer (`ae_exists_tendsto_isLocalMin_periods`).
 -/
 
-import Transformer.Landscape.PhaseModel.Periods
-import Transformer.Landscape.SaddleAvoidance.Nondegenerate
-import Transformer.Landscape.SaddleAvoidance.Analytic
+@[expose] public section
 
 open Filter MeasureTheory Real
 open scoped Topology NNReal
@@ -66,8 +70,8 @@ theorem exists_tendsto_gradient_phaseEnergy_eq_zero (hη : 0 < η)
   exact ⟨w, hwx, hw⟩
 
 /-- **An orbit with a nondegenerate zero as a limit point converges to a
-zero** of the phase energy.  Let `0 < η` with `η Σ_r ‖a_r‖² < 1`, let
-`V(z) = 0`, and let no nonzero vector be orthogonal to every row.  If the
+zero** of the phase energy. Let `0 < η` with `η Σ_r ‖a_r‖² < 1`, let
+`V(z) = 0`, and let no nonzero vector be orthogonal to every row. If the
 orbit comes arbitrarily close to `z` up to periods, it converges to a zero
 `w` with `z - w ∈ 2πℤⁿ`. -/
 theorem exists_tendsto_phaseEnergy_eq_zero (hη : 0 < η)
@@ -92,8 +96,8 @@ theorem exists_tendsto_phaseEnergy_eq_zero (hη : 0 < η)
   exact hz0
 
 /-- **Gradient descent on a phase energy converges to a local minimizer from
-a nondegenerate limit point**, for almost every start.  Let `0 < η` with
-`η Σ_r ‖a_r‖² < 1`.  For a start drawn from a law `ν` absolutely continuous
+a nondegenerate limit point**, for almost every start. Let `0 < η` with
+`η Σ_r ‖a_r‖² < 1`. For a start drawn from a law `ν` absolutely continuous
 with respect to a Haar measure, almost surely: if `z` is a limit point of
 the orbit up to periods and the Hessian at `z` is injective, then the orbit
 converges to a local minimizer `w` with `z - w ∈ 2πℤⁿ`. -/
@@ -113,7 +117,7 @@ theorem ae_exists_tendsto_isLocalMin_of_frequently_periods (μ : Measure (EucSpa
 /-- **Gradient descent on a phase energy whose critical points are all
 nondegenerate converges to a local minimizer from almost every start.**  Let
 `0 < η` with `η Σ_r ‖a_r‖² < 1`, and let the Hessian be injective at every
-critical point.  For a start drawn from a law `ν` absolutely continuous with
+critical point. For a start drawn from a law `ν` absolutely continuous with
 respect to a Haar measure, the orbit almost surely converges to a local
 minimizer. -/
 theorem ae_exists_tendsto_isLocalMin_periods (μ : Measure (EucSpace n)) [μ.IsAddHaarMeasure]

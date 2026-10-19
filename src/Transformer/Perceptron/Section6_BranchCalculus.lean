@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_ActivationPatterns
+public import Transformer.Perceptron.Section6_AnalyticWeight
+public import Transformer.Perceptron.Transform
+public import Mathlib.Analysis.Calculus.Deriv.Shift
+
+/-!
 # Global analytic quadratic branches in the circle angle
 
 ArXiv:2601.21366v2, §6, proof of `prop: unified.log` and
@@ -14,10 +21,7 @@ The quadratic branch and its force have period `π`, because the actual
 circle point and its velocity both change sign at the antipode.
 -/
 
-import Transformer.Perceptron.Section6_ActivationPatterns
-import Transformer.Perceptron.Section6_AnalyticWeight
-import Transformer.Perceptron.Transform
-import Mathlib.Analysis.Calculus.Deriv.Shift
+@[expose] public section
 
 open Real Set
 open scoped BigOperators

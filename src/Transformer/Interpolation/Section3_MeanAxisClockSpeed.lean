@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_MeanAxisField
+
+/-!
 # The scalar clock coefficient for rank-one mean attention
 
 ArXiv:2411.04551v3, proof of `lem: induction.barycenter`, Step 1,
@@ -12,7 +16,7 @@ The coefficient lies in `[-1,1]`. Its derivative is the integral of
 translation needed to reverse the original mean-attention phase.
 -/
 
-import Transformer.Interpolation.Section3_MeanAxisField
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology NNReal

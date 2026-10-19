@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_Models
+
+/-!
 # Counterexamples to the scalar equivalence as printed
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §3.2, Theorem 1
 (`theo:attn_multihead_convex_scalar`), equations (8)–(9).
 
 The first example isolates the factor `1/2` applied only to the loss in the
-printed convex objective.  The second uses one head and two tokens, and still
-works after that factor is removed.  Thus a sufficient head count is essential.
+printed convex objective. The second uses one head and two tokens, and still
+works after that factor is removed. Thus a sufficient head count is essential.
 -/
 
-import Transformer.Convexifying.Section3_Models
+@[expose] public section
 
 open scoped BigOperators
 
@@ -44,7 +48,7 @@ def zeroData : Data 1 1 1 := fun _ _ _ => 0
 def unitTarget : Vec 1 := fun _ => 1
 
 /-- Every feasible one-head original model on the zero data has value at
-least `1`.  The regularizer is nonnegative. -/
+least `1`. The regularizer is nonnegative. -/
 theorem zeroData_original_lower_bound (p : ScalarParameters 1 1 1) :
     1 ≤ scalarObjective zeroData unitTarget squareLoss 1 p := by
   have hs : 0 ≤ normSq (p.value 0) := normSq_nonneg _
@@ -139,7 +143,7 @@ theorem oneHead_convex_value :
     Fin.sum_univ_two, Fin.sum_univ_one]
 
 /-- Theorem 1 also fails after the loss-factor typo is corrected, if the
-number of heads is fixed at `h = 1`.  Here `n = N = 2`, `d = 1`, and the
+number of heads is fixed at `h = 1`. Here `n = N = 2`, `d = 1`, and the
 convex optimum is strictly below every feasible one-head value.
 The appendix strong-duality argument explicitly requires `h ≥ h*`, with
 `h* ≤ N + 1`, but Theorem 1 omits this hypothesis.

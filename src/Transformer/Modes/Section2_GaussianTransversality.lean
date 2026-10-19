@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Modes.Section2_ParameterTransversality
+public import Mathlib.Probability.Independence.Basic
+
+/-!
 # Gaussian sample data satisfy the original KDE parameter transversality premise
 
 ArXiv:2412.09080v3, §2.1, `eq:Fn` and the expected
@@ -19,8 +24,7 @@ that almost-sure conclusion requires the subsequent critical-value
 argument for projection of this regular zero set to sample space.
 -/
 
-import Transformer.Modes.Section2_ParameterTransversality
-import Mathlib.Probability.Independence.Basic
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open Real MeasureTheory ProbabilityTheory

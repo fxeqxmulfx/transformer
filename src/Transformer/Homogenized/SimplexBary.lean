@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Barycenter
+public import Transformer.Homogenized.Simplex
+
+/-!
 # Homogenized Transformers — the barycenter of a simplex configuration
 
 The computation inside the proof of `lem:drift_on_simplex_selfcontained` of
@@ -12,7 +17,7 @@ and the Gram structure collapses the double sum,
 
   `⟨m_i, m_j⟩ = γ + (1-γ) Σ_k π^A_{i→k}(γ) π^A_{j→k}(γ)`,
 
-whose expectation over the head law is `s_{μ_X}(x_i, x_j)`.  At `i = j` this is
+whose expectation over the head law is `s_{μ_X}(x_i, x_j)`. At `i = j` this is
 the source's `‖m_i‖² = γ + (1-γ) Σ_k (π^A_{i→k})²`; there is one identity, not
 two.
 
@@ -22,8 +27,7 @@ two.
 Source: arXiv:2604.01978v1, proof of `lem:drift_on_simplex_selfcontained`.
 -/
 
-import Transformer.Homogenized.Barycenter
-import Transformer.Homogenized.Simplex
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory

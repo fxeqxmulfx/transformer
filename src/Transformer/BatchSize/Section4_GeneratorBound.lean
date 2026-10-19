@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_DiffusionModel
+
+/-!
 # Size of the diffusion correction
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The covariance part of the generator is O(eta), so its contribution over
 one optimizer step is O(eta^2).
 -/
 
-import Transformer.BatchSize.Section4_DiffusionModel
+@[expose] public section
 
 open scoped BigOperators
 

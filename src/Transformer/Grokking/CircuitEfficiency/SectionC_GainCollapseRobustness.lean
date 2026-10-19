@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainAccuracyCollapse
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainAccuracyCollapse
 
 /-!
 # Delayed native accuracy without a positive perturbation radius
@@ -26,6 +28,8 @@ This does not prove a numerical failure or kernel-error magnitude.
 Zero betas, fixed physical tables and native decoupled decay differ
 from appendix C's coupled-cost GD and learned nonzero-beta GPTMini.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

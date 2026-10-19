@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.RawStack
+
+/-!
 # A skip is gauge-covariant, and the gauge damps it
 
 **Not a statement of any paper.**  Modded-nanogpt
@@ -10,16 +14,16 @@ attention at layer `6` and adds an earlier state of the stream instead,
 
 where `cache[3]` is the snapshot of the residual stream at the end of layer `3`,
 after its MLP — the state at depth `8`, counting sublayers — and the gate is one
-scalar per token (`gate[..., 28:29]` of `unpack_post_mudd_gate`).  That is the
+scalar per token (`gate[..., 28:29]` of `unpack_post_mudd_gate`). That is the
 first update the model `Perspective.RawStack` does not cover: it adds not a
-bounded output of a block but the stream itself, at an earlier depth.  It is
+bounded output of a block but the stream itself, at an earlier depth. It is
 not the only one: the last layer and the step after the loop add `cache[0]`,
 `cache[7]`, `cache[9]` and `cache[3]` under per-token coefficients computed
 from the stream (`GPT.forward_mudd`), several of them in one step.
 
-In the gauge it is still exact.  Write `y_{k,i} = x_{k,i} / Λ_{k,i}` for the
+In the gauge it is still exact. Write `y_{k,i} = x_{k,i} / Λ_{k,i}` for the
 stream with its gains divided out (`ungauged`, which is `gaugeStack` when there
-are no skips).  Then a stack
+are no skips). Then a stack
 
   `x_{k+1,i} = λ_{k,i} x_{k,i} + s_{k,i} x_{m(k),i} + g_{k,i}`
 
@@ -28,7 +32,7 @@ is, in `y`, the same stack with every gain `1` and the skip weight rescaled:
   `y_{k+1,i} = y_{k,i} + (s_{k,i} Λ_{m(k),i} / Λ_{k+1,i}) y_{m(k),i} + g_{k,i}/Λ_{k+1,i}`
 
 (`ungauged_rec_skip`), and the directions are those of `y` whatever the gains
-are (`normalize_ungauged`).  So a skip is a gauge-covariant
+are (`normalize_ungauged`). So a skip is a gauge-covariant
 operation, and what reaches the directions is not its gate but the gate divided
 by the gain accumulated between the snapshot and the skip.
 
@@ -36,7 +40,7 @@ by the gain accumulated between the snapshot and the skip.
 reads it back against the record's own numbers.
 -/
 
-import Transformer.Perspective.RawStack
+@[expose] public section
 
 open scoped BigOperators
 
@@ -100,7 +104,7 @@ theorem ungauged_step {lam : ℕ → Idx n → ℝ} {x : ℕ → Idx n → EucSp
 
 with every gain positive, then the ungauged stream obeys the same recursion
 with every gain `1`, the step `g_{k,i}/Λ_{k+1,i}` and the skip weight
-`s_{k,i} Λ_{m(k),i} / Λ_{k+1,i}`.  The depth `m(k)` the skip reads is
+`s_{k,i} Λ_{m(k),i} / Λ_{k+1,i}`. The depth `m(k)` the skip reads is
 arbitrary, and so are the gates and the outputs.
 
 Source: none — posed here; `x = x + skip_gate_out * cache[3]` of

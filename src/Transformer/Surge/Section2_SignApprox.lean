@@ -1,16 +1,20 @@
-/-
+module
+
+public import Transformer.Surge.Section2_Theorem2
+
+/-!
 # The sigmoid approximation of the error function
 
-arXiv:2405.14578, §2.1, eq. (10), and Appendix C.  To simplify Theorems 3 to 5, the paper
+arXiv:2405.14578, §2.1, eq. (10), and Appendix C. To simplify Theorems 3 to 5, the paper
 replaces `𝓔(B) = erf(√(B/2)μ/σ)` by `(μ/σ)/√(π/(2B) + (μ/σ)²)` (`signApprox`), a function of the
-same `x = √(B/2)μ/σ`: it is `x/√(π/4 + x²)` (`signApprox_eq`, `erfApprox`).  The "≈" of eq. (10)
+same `x = √(B/2)μ/σ`: it is `x/√(π/4 + x²)` (`signApprox_eq`, `erfApprox`). The "≈" of eq. (10)
 is not an equality (`signApprox_lt_signMean`), but the ratio of the two sides tends to `1` as
 `B → 0`, the regime of Theorems 3 and 5 (`tendsto_signApprox_div_signMean_zero`), and as `B → ∞`,
 the regime of Theorem 4 (`tendsto_signApprox_div_signMean_atTop`): both functions of `x` are odd,
 have the slope `2/√π` at `x = 0` and tend to `1` as `x → ∞`.
 -/
 
-import Transformer.Surge.Section2_Theorem2
+@[expose] public section
 
 open Filter Topology Real
 

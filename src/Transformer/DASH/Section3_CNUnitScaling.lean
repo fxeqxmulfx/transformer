@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section3_MatrixConvergence
+public import Transformer.DASH.Section3_Scaling
+
+/-!
 # DASH — failure at the unit-scaled CN endpoint
 
 arXiv:2602.02016v2, §3.4 chooses `(p+1)c^p=1`. Exact normalization
@@ -7,8 +12,7 @@ the excluded CN endpoint. A one-dimensional Frobenius example has
 the same failure, whereas NDB is exact there.
 -/
 
-import Transformer.DASH.Section3_MatrixConvergence
-import Transformer.DASH.Section3_Scaling
+@[expose] public section
 
 open scoped Matrix
 

@@ -1,5 +1,8 @@
-import Transformer.Modes.Section3_WeightedPhase
-import Transformer.Modes.Section3_MixedMoments
+module
+
+public import Transformer.Modes.Section3_WeightedPhase
+public import Transformer.Modes.Section3_MixedMoments
+
 /-!
 # Weighted Taylor polynomials for the fourth-moment comparison
 
@@ -19,6 +22,7 @@ use actual coordinate weights and phases, with every polynomial moment
 integrable, so all assumptions are simultaneously realized.
 -/
 
+@[expose] public section
 open Real MeasureTheory Filter
 open scoped ENNReal
 namespace Transformer.Modes

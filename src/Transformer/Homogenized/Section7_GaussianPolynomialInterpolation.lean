@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.GaussianInterp
+public import Transformer.Homogenized.Section7_GaussianPolynomialCovariance
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Gaussian interpolation with polynomial growth of the actual derivatives
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -23,9 +29,7 @@ estimates to obtain `eq:Lispchitz_bound_softmax`; those estimates remain
 separate inputs to this general consequence.
 -/
 
-import Transformer.Homogenized.GaussianInterp
-import Transformer.Homogenized.Section7_GaussianPolynomialCovariance
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Set
 open scoped BigOperators

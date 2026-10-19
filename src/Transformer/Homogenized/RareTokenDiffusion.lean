@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.RareTokenAttention
+public import Transformer.Homogenized.AttnAverage
+public import Mathlib.MeasureTheory.Integral.Prod
+
+/-!
 # Homogenized Transformers — the actual diffusion coefficient at a rare atom
 
 The value coin is independent of the Gaussian query/key entry and centered.
@@ -11,9 +17,7 @@ Source: arXiv:2604.01978v1, `eq:G_def`, `eq:decomposition_G_mf`,
 auxiliary to `prop:satisfying_MF`.
 -/
 
-import Transformer.Homogenized.RareTokenAttention
-import Transformer.Homogenized.AttnAverage
-import Mathlib.MeasureTheory.Integral.Prod
+@[expose] public section
 
 open scoped ENNReal
 open Real MeasureTheory

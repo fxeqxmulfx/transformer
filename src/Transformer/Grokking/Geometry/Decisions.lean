@@ -1,5 +1,7 @@
-import Transformer.Grokking.Geometry.Cells
-import Transformer.Grokking.NaiveLoss.Section4_LogitScaling
+module
+
+public import Transformer.Grokking.Geometry.Cells
+public import Transformer.Grokking.NaiveLoss.Section4_LogitScaling
 
 /-!
 # When a structured reference actually certifies decisions
@@ -18,6 +20,8 @@ The margin premise is an observable condition involving correct labels.
 No learning dynamics, correct margin, or future cleanup is inferred from
 projection geometry alone. Strict correctness excludes an argmax tie.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Geometry
 

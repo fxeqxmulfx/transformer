@@ -1,6 +1,8 @@
-import Mathlib.Algebra.Field.Rat
-import Mathlib.Algebra.GroupWithZero.Units.Basic
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Field.Rat
+public import Mathlib.Algebra.GroupWithZero.Units.Basic
+public import Mathlib.Tactic
 
 /-!
 # The division task's actual common-scaling orbits
@@ -23,6 +25,8 @@ not imply that a learned logit map respects that symmetry or that its
 invariant component decodes the correct label. Python's integer inverse,
 token encoding and NumPy split remain additional implementation bridges.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.DivisionOrbits
 

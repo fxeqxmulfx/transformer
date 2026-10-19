@@ -1,22 +1,42 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Defs
+public import Transformer.Landscape.PhaseModel.Basic
+public import Transformer.Landscape.PhaseModel.Periods
+public import Transformer.Landscape.PhaseModel.Descent
+public import Transformer.Landscape.PhaseModel.Division
+public import Transformer.Landscape.PhaseModel.Generating
+public import Transformer.Landscape.PhaseModel.Lift
+public import Transformer.Landscape.PhaseModel.Coordinates
+public import Transformer.Landscape.PhaseModel.Basin
+public import Transformer.Landscape.PhaseModel.Characters
+public import Transformer.Landscape.PhaseModel.Orthogonality
+public import Transformer.Landscape.PhaseModel.Fourier
+public import Transformer.Landscape.PhaseModel.Landscape
+public import Transformer.Landscape.PhaseModel.Convergence
+public import Transformer.Landscape.PhaseModel.Abelian
+public import Transformer.Landscape.PhaseModel.Twisted
+public import Transformer.Landscape.PhaseModel.Spurious
+
+/-!
 # Phase model
 
 Gradient descent on phases `ψ ∈ ℝⁿ`, one per token, fitted to integer
 relations `⟪m_r, ψ⟫ ∈ 2πℤ` through the energy
-`V(ψ) = Σ_r (1 - cos ⟪m_r, ψ⟫)`.  For division in a cyclic group of order
+`V(ψ) = Σ_r (1 - cos ⟪m_r, ψ⟫)`. For division in a cyclic group of order
 `n`, with phases indexed by discrete logarithms, a set `S` of pairs gives
 `V_S(ψ) = Σ_{(x, y) ∈ S} (1 - cos (ψ_x - ψ_y - ψ_{x-y}))`, whose zeros are
-the phases with `ψ_x - ψ_y - ψ_{x-y} ∈ 2πℤ` for every `(x, y) ∈ S`.  On the
+the phases with `ψ_x - ψ_y - ψ_{x-y} ∈ 2πℤ` for every `(x, y) ∈ S`. On the
 full table, and on every `S` whose rows generate those of the full table
 over `ℤ`, these are the phases `ψ_x = 2πjx/n` of the characters up to
-periods, and every zero is nondegenerate.  For `n ≥ 4`, below `n²/8` every
+periods, and every zero is nondegenerate. For `n ≥ 4`, below `n²/8` every
 local minimizer of `V_full` is the phases of a character up to periods and
-every other critical point is a strict saddle.  The phase energy is
+every other critical point is a strict saddle. The phase energy is
 analytic, so every orbit of gradient descent converges, and for almost every
-start below `n²/8` it converges to the phases of a character.  The same
+start below `n²/8` it converges to the phases of a character. The same
 landscape and convergence hold over every finite abelian group in place of
 `ℤ/n` (`PhaseModel.Abelian`), and the landscape of `ℤ/n` is that of `Fin n`,
-whose characters are the `x ↦ e^{2πijx/n}`.  The landscape fails for
+whose characters are the `x ↦ e^{2πijx/n}`. The landscape fails for
 partial tables: already for `n = 5` some `S` generating the full table has a
 local minimizer below `n²/8` that is not a character (`PhaseModel.Spurious`).
 
@@ -42,25 +62,9 @@ local minimizer below `n²/8` that is not a character (`PhaseModel.Spurious`).
 
 The theorems of `Coordinates`, `Basin`, `Characters`, `Orthogonality`,
 `Fourier` and `Landscape` are those of `PhaseModel.Abelian` at `G = Fin n`,
-which imports none of them.  The convergence results instantiate
+which imports none of them. The convergence results instantiate
 `Transformer.Landscape.SaddleAvoidance` with the lattice of periods as translations and
 the cube as a compact set meeting every orbit of the lattice.
 -/
 
-import Transformer.Landscape.PhaseModel.Defs
-import Transformer.Landscape.PhaseModel.Basic
-import Transformer.Landscape.PhaseModel.Periods
-import Transformer.Landscape.PhaseModel.Descent
-import Transformer.Landscape.PhaseModel.Division
-import Transformer.Landscape.PhaseModel.Generating
-import Transformer.Landscape.PhaseModel.Lift
-import Transformer.Landscape.PhaseModel.Coordinates
-import Transformer.Landscape.PhaseModel.Basin
-import Transformer.Landscape.PhaseModel.Characters
-import Transformer.Landscape.PhaseModel.Orthogonality
-import Transformer.Landscape.PhaseModel.Fourier
-import Transformer.Landscape.PhaseModel.Landscape
-import Transformer.Landscape.PhaseModel.Convergence
-import Transformer.Landscape.PhaseModel.Abelian
-import Transformer.Landscape.PhaseModel.Twisted
-import Transformer.Landscape.PhaseModel.Spurious
+@[expose] public section

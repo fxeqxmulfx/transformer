@@ -1,11 +1,20 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Normalization.Basic
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # Normalization — Asymptotic clustering (§3 of 2510.22026v2)
 
 The gradient-flow energy is
 
   `E(Θ) = -Σ_{j,k} e^{β ⟨Q θ_k, K θ_j⟩}`,
 
-and the dynamics is `θ̇_j = -(s_j(t) Z_j(t))⁻¹ Proj_{θ_j} ∇_{θ_j} E(Θ)`.  This
+and the dynamics is `θ̇_j = -(s_j(t) Z_j(t))⁻¹ Proj_{θ_j} ∇_{θ_j} E(Θ)`. This
 file proves that identification for `Q = K = V = I_d`:
 
 * `energyGrad` and `hasDerivAt_energy` — the gradient of `E` in `θ_j`,
@@ -19,12 +28,7 @@ with respect to a random initialization and is not formalized here; the
 explicit bound behind its corollary is in `Normalization.Radial`.
 -/
 
-import Transformer.Basic
-import Transformer.Normalization.Basic
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -59,7 +63,7 @@ noncomputable def energyGrad
 /-- **`energyGrad` is the gradient of `Energy`.**
 
 Along the line `ε ↦ Θ + ε v e_j` the energy has derivative
-`⟨∇_{θ_j} E(Θ), v⟩` at `ε = 0`, for every direction `v`.  This is the
+`⟨∇_{θ_j} E(Θ), v⟩` at `ε = 0`, for every direction `v`. This is the
 computation announced in §3 of arXiv:2510.22026v2, for `Q = K = I_d`. -/
 theorem hasDerivAt_energy
     (β : ℝ) (Θ : Idx n → EucSpace d) (j : Idx n) (v : EucSpace d) :
@@ -146,7 +150,7 @@ and the energy gradient is `-2 β Z_j A_j(Θ)`, so the velocity prescribed by
   `θ̇_j = s_j⁻¹ Proj_{θ_j} A_j(Θ)`,
 
 is exactly `-(2 β s_j Z_j)⁻¹ Proj_{θ_j} ∇_{θ_j} E(Θ)` — the header's
-gradient-flow form of the dynamics (arXiv:2510.22026v2, §3).  No hypothesis on
+gradient-flow form of the dynamics (arXiv:2510.22026v2, §3). No hypothesis on
 `s_j` is needed: at `s_j = 0` both sides are `0`, the convention under which
 `NA` freezes. -/
 theorem na_velocity_eq_energyGrad

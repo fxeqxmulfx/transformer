@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.CRASP.BoundedExists
+public import Transformer.CRASP.Locality
+public import Transformer.CRASP.Transformers
+
+/-!
 # PARITY is not definable in `TL[◁#]`
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -7,18 +13,18 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 
 > A relevant note is that PARITY is in `TL[◁#, ▷#]` but not `TL[◁#]`,
 
-with no proof.  This file proves its second half; the first is
-`Transformer.CRASP.ParityTwoSided`.  PARITY is the set of strings over
+with no proof. This file proves its second half; the first is
+`Transformer.CRASP.ParityTwoSided`. PARITY is the set of strings over
 `{0, 1}` with an odd number of `1`s, `true` standing for `1` (`parity`).
 
 On the strings `a^n`, a past-only formula without PNPs sees at a position `i`
 the string `a^i` (`Form.sat_append`), so at the last position its value is a
 function of `n` alone, and that function is eventually constant
-(`Form.const_replicate`).  The terms are eventually affine in `n` with a
+(`Form.const_replicate`). The terms are eventually affine in `n` with a
 natural slope (`Term.affine_replicate`): once `φ` is constant, `◁#[φ]` grows
-by `1` or by `0` at each step.  Of two such terms the steeper eventually wins
+by `1` or by `0` at each step. Of two such terms the steeper eventually wins
 a comparison, and two of one slope compare by their offsets, so a comparison
-is eventually constant, and the Boolean connectives keep that.  PARITY
+is eventually constant, and the Boolean connectives keep that. PARITY
 alternates on `1^n`, so no formula of `TL[◁#]` defines it, at any depth
 (`not_definableL_parity`); by `thm:transformer_equivalence`, no future-masked
 rounded transformer recognizes it (`not_recognizes_parity`).
@@ -27,9 +33,7 @@ A Parikh numerical predicate is excluded, as it is from `TL[◁#]`: one reading
 the number of `1`s defines PARITY at depth `0`.
 -/
 
-import Transformer.CRASP.BoundedExists
-import Transformer.CRASP.Locality
-import Transformer.CRASP.Transformers
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -154,7 +158,7 @@ example (a : σ) :
   ⟨rfl, rfl⟩
 
 /-- **PARITY is not definable in `TL[◁#]`, at any depth** (the second half of
-the remark after `thm:transformer_equivalence`, §3).  A defining formula would
+the remark after `thm:transformer_equivalence`, §3). A defining formula would
 be eventually constant on `1^n` (`Form.const_replicate`), while `1^n ∈ PARITY`
 exactly when `n` is odd. -/
 theorem not_definableL_parity (k : ℕ) : ¬ DefinableL parity k := by

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_PhaseSequenceControls
+public import Transformer.Interpolation.Section3_RidgeClassSequence
+public import Transformer.Interpolation.Section3_MeanAxisStability
+
+/-!
 # Actual probability maps of preprocessing and selective phases
 
 ArXiv:2411.04551v3, §3.2, `prop: separation` and Steps 1–3
@@ -14,9 +20,7 @@ reverse-attention radius bound. If the middle law is fixed, the complete
 nonlinear attention inverse restores the original law exactly.
 -/
 
-import Transformer.Interpolation.Section1_PhaseSequenceControls
-import Transformer.Interpolation.Section3_RidgeClassSequence
-import Transformer.Interpolation.Section3_MeanAxisStability
+@[expose] public section
 
 open Real MeasureTheory Set
 

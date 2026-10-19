@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthPresence
+module
+
+public import Transformer.GPTMini.Semantics.DepthPresence
 
 /-!
 # Six ordinary FFN units realize simultaneous depth detectors
@@ -19,6 +21,8 @@ small FFN and 512-unit large FFN without widening either model.
 Actual raw embeddings, fused attention, amplitude propagation and full
 depth readout remain separate obligations. No training claim follows.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionD_TransferDirections
-import Mathlib.Analysis.Calculus.LocalExtr.Basic
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionD_TransferDirections
+public import Mathlib.Analysis.Calculus.LocalExtr.Basic
 
 /-!
 # Actual allocations at nonzero minima of the superlinear budget
@@ -18,6 +20,8 @@ the incorrect printed increment lemma nor an assigned stationary
 gradient is used. The full input-output tables, minimizer existence,
 subweight dynamics and arrival of native AdamW remain separate questions.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

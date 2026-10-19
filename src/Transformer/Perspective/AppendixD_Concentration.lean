@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixD_ProjectionScale
+public import Transformer.Perspective.Section3_SmallBeta
+public import Transformer.Metastability.Section4_IndependentPrefix
+
+/-!
 # Almost orthogonality at the source's exact distance radius
 
 ArXiv:2312.10794v5, Appendix D, Step 2, `eq: almost.ortho.vec`.
@@ -14,9 +20,7 @@ on the original sample prefix, exactly as in the previous construction.
 The resulting probability bound is stronger than the displayed source bound.
 -/
 
-import Transformer.Perspective.AppendixD_ProjectionScale
-import Transformer.Perspective.Section3_SmallBeta
-import Transformer.Metastability.Section4_IndependentPrefix
+@[expose] public section
 
 open Real MeasureTheory Set
 open Transformer.Metastability

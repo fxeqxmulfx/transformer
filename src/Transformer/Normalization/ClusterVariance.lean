@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.Normalization.ClusterResidual
+
+/-!
 # Pointwise variance decay inside a narrow cluster
 
 The uniform-attention contribution and its combination with the
 weight error in Appendix C, proof of Theorem 4.3 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Normalization.ClusterResidual
+@[expose] public section
 
 open Set
 open scoped BigOperators

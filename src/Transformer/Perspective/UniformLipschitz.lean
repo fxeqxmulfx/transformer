@@ -1,9 +1,15 @@
-/-
+module
+
+public import Transformer.Perspective.SphereUnique
+public import Mathlib.MeasureTheory.Measure.Haar.Unique
+public import Mathlib.MeasureTheory.Measure.Hausdorff
+
+/-!
 # Lipschitz maps preserve the null sets of the uniform law
 
 The uniform law of `n` points on `𝕊^{d-1}` is the radial projection of a Haar
 measure on `(ℝ^d)^n` restricted to the product of the shells `1 < ‖y‖ < 2`
-(`exists_addHaar_eq_map`, from the uniqueness of `Perspective.SphereUnique`).  A
+(`exists_addHaar_eq_map`, from the uniqueness of `Perspective.SphereUnique`). A
 Lipschitz map `f` of the configurations lifts to the shells as
 `Y ↦ (‖Y_k‖ f(Y/‖Y‖)_k)_k`, Lipschitz there (`lipschitzOnWith_radialLift`), and
 Haar measure has the null sets of the Hausdorff measure of full dimension, which
@@ -15,9 +21,7 @@ null sets back along the flow of `e:gradfl`.
 Source: arXiv:2312.10794v5, Appendix A, `l:nosaddleconv`.
 -/
 
-import Transformer.Perspective.SphereUnique
-import Mathlib.MeasureTheory.Measure.Haar.Unique
-import Mathlib.MeasureTheory.Measure.Hausdorff
+@[expose] public section
 
 open MeasureTheory Set
 open scoped NNReal ENNReal

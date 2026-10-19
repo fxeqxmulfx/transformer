@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.SpecialFunctions.Exp
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # ℓ¹ distance between two finite probability vectors
 
 Three facts about probability vectors on a finite index set, none of them
@@ -17,9 +23,7 @@ locally, Lipschitz: `2 (e^{2r} - 1)` grows without bound in `r`, but the ℓ¹
 distance it estimates never exceeds `2`.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -51,7 +55,7 @@ then `Σ_j |a j - b j| ≤ 2 (c - 1)`.
 
 The proof is the standard total-variation identity `|t| = 2 t⁺ - t`: summing
 it, the linear part cancels because both vectors sum to `1`, and the positive
-part is bounded by `(c - 1) b j` termwise.  Note `1 ≤ c` is not assumed — it
+part is bounded by `(c - 1) b j` termwise. Note `1 ≤ c` is not assumed — it
 follows by summing the hypothesis.
 
 Source: the classical bound on the total variation distance. -/

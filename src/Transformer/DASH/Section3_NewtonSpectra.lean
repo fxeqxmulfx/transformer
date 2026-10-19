@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.DASH.Section3_NewtonModels
+public import Mathlib.Topology.Instances.Matrix
+
+/-!
 # DASH — matrix iterates in eigenvalue coordinates
 
 arXiv:2602.02016v2, §3.2–3.4. Every iteration retains the input
 eigenvectors, and each eigenvalue follows the scalar recurrence.
 -/
 
-import Transformer.DASH.Section3_NewtonModels
-import Mathlib.Topology.Instances.Matrix
+@[expose] public section
 
 open scoped BigOperators Matrix
 

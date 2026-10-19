@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Perceptron.Atoms
+public import Transformer.Perceptron.GeodesicCurve
+public import Transformer.Perspective.Section3_SmallBeta
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.Calculus.ContDiff.Deriv
+
+/-!
 # Two equally weighted atoms and their interaction energy
 
 The atomic energy in the proof of `thm: bound`, §3.2 of
@@ -15,11 +23,7 @@ establish SOPD without presupposing any atomicity theorem. The energy
 along these curves is twice continuously differentiable.
 -/
 
-import Transformer.Perceptron.Atoms
-import Transformer.Perceptron.GeodesicCurve
-import Transformer.Perspective.Section3_SmallBeta
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.Calculus.ContDiff.Deriv
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory

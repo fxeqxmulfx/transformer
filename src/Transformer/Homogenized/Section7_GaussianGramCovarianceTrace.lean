@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianGramHessian
+public import Transformer.Homogenized.Section7_GaussianFeatureCovariance
+
+/-!
 # The original covariance-difference trace of the full Gram observable
 
 ArXiv:2604.01978v1, §7, `eq:SIGMA_R`, `eq:gaussian_interp_0`
@@ -18,8 +23,7 @@ Gram coefficients, not any derivative or covariance trace.
 The unit-token singular reference example has a nonzero actual trace.
 -/
 
-import Transformer.Homogenized.Section7_GaussianGramHessian
-import Transformer.Homogenized.Section7_GaussianFeatureCovariance
+@[expose] public section
 
 open scoped BigOperators NNReal
 
@@ -149,4 +153,3 @@ example : ∃ (X Y : Idx 2 → EucSpace 2) (z : EuclideanSpace ℝ (GaussianFeat
     norm_num [z, PiLp.single_apply, hw0, hw1]
 
 end Transformer.Homogenized
-

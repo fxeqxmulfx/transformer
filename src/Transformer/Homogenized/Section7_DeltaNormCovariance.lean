@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_ProductQueryFourth
+public import Transformer.Homogenized.Section7_GaussianScaling
+
+/-!
 # Corrected normalized query-norm covariance in the delta method
 
 ArXiv:2604.01978v1, §7.3, proof of `lem:delta_method`. Its displayed
@@ -20,8 +25,7 @@ full normalized-correlation expansion needs a separate remainder
 argument and is not inferred solely from this diagonal discrepancy.
 -/
 
-import Transformer.Homogenized.Section7_ProductQueryFourth
-import Transformer.Homogenized.Section7_GaussianScaling
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_RidgeFlowContinuity
+
+/-!
 # Regularity of actual spherical characteristic flows
 
 ArXiv:2411.04551v3, §1, `eq: ips`, `eq: neural.ode.sphere`,
@@ -15,7 +19,7 @@ the regularity needed to push arbitrary probabilities along any such
 proved particle flow, including fields with several ReLU activations.
 -/
 
-import Transformer.Interpolation.Section3_RidgeFlowContinuity
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal

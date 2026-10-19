@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section10_ProjHull
+
+/-!
 # The projected hull shrinks along the actual dynamics
 
 ArXiv:2305.05465v6, §10, opening of the proof of `t:multiplicity`.
@@ -14,7 +18,7 @@ of the attention root with the projection is used. The conclusion follows
 from the actual rescaled dynamics and the paranormal value-map splitting.
 -/
 
-import Transformer.Clusters.Section10_ProjHull
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

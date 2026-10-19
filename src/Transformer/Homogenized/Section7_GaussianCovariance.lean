@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Probability.Distributions.Gaussian.Fernique
+public import Transformer.Homogenized.Section7_GaussianStein
+public import Mathlib.Probability.Distributions.Gaussian.Multivariate
+public import Mathlib.Probability.Distributions.Gaussian.CharFun
+
+/-!
 # The original Gaussian covariance and its actual square-root representation
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp`, `eq:SIGMA_R`,
@@ -16,10 +24,7 @@ coordinates without assuming a density for a singular original law.
 No covariance positivity or Gaussian representation is assumed.
 -/
 
-import Transformer.Basic
-import Transformer.Homogenized.Section7_GaussianStein
-import Mathlib.Probability.Distributions.Gaussian.Multivariate
-import Mathlib.Probability.Distributions.Gaussian.CharFun
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal MatrixOrder

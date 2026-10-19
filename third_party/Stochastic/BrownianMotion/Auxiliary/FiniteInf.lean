@@ -7,6 +7,12 @@ public import Mathlib.Order.ConditionallyCompletePartialOrder.Indexed
 
 import Mathlib.Order.ConditionallyCompleteLattice.Finset
 
+/-!
+# Finite extrema
+
+Attainment and comparison of suprema and infima over finite sets.
+-/
+
 @[expose] public section
 
 variable {α ι : Type*} [CompleteLinearOrder α]

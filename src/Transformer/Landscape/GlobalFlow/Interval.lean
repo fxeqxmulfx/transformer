@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.GlobalFlow.Existence
+public import Mathlib.Topology.Order.IntermediateValue
+
+/-!
 # Global scalar flows between two equilibria
 
 Auxiliary to arXiv:2312.10794v5, §6.2, `eq: ybeta`.
@@ -12,8 +17,7 @@ uniqueness prevent a solution from crossing either equilibrium. The clamp is
 then the identity along the solution, which solves the original equation.
 -/
 
-import Transformer.Landscape.GlobalFlow.Existence
-import Mathlib.Topology.Order.IntermediateValue
+@[expose] public section
 
 open Set Filter Topology
 open scoped NNReal

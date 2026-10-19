@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Commutative
+
+/-!
 # The Reduction Lemma is false as stated
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -6,23 +10,23 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 
 The lemma trades a depth-`k` formula for a depth-`(k-1)` formula `φ'` that
 defines the affix-restricted language exactly, with the PNPs of `φ'` constant
-on the middle.  The proof checks the affix with
+on the middle. The proof checks the affix with
 `φ_aff = ◁#[(Π_a ∧ Q_a) ∨ (Π_b ∧ Q_b)] = ◁#[⊤]`, where `Π_σ` reads the letter
 the affix puts at a position and is `⊤` in between, and claims that `Π_σ` is
-constant on the middle.  It is not: the middle `[ℙ(λ(n⃗)), n⃗ - ℙ(ϱ(n⃗))]`
+constant on the middle. It is not: the middle `[ℙ(λ(n⃗)), n⃗ - ℙ(ϱ(n⃗))]`
 contains the prefix vector of position `|λ(n⃗)|`, where `Π_σ` reads the last
 letter of `λ(n⃗)` and so is false for one of the two letters.
 
-Nothing else can do the check at depth `1`.  Under `(λ, ϱ) = (ab, ε)` the
+Nothing else can do the check at depth `1`. Under `(λ, ϱ) = (ab, ε)` the
 middle at `n⃗ = (2,2)` is `[(1,1), (2,2)]`, and `abab` enters it at position `2`
 already, so a PNP constant on the middle takes one value at positions `2`, `3`
-and `4` of every string with that Parikh vector.  A depth-0 formula then reads
+and `4` of every string with that Parikh vector. A depth-0 formula then reads
 positions `2, 3, 4` of `aabb` as it reads positions `3, 2, 4` of `abab`, the
 counts of depth-1 formulas agree at the last position, and `abab`, which
 matches the affix, cannot be told from `aabb`, which does not.
 -/
 
-import Transformer.CRASP.Commutative
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

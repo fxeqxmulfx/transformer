@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_PowerSums
+public import Transformer.Kinetic.Section3_Supersolution
+
+/-!
 # Envelopes of the profiles
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Steps 2 and 4. At time `T`
@@ -10,8 +15,7 @@ over `M > n` of a term with the decay `G(x, M)` of a pair is at most
 `(1 + c q_γ(x, n)/γ)/(x+1)` (`sum_decay_le`).
 -/
 
-import Transformer.Kinetic.Section3_PowerSums
-import Transformer.Kinetic.Section3_Supersolution
+@[expose] public section
 
 open Real
 

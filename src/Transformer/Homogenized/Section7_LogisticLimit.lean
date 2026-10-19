@@ -1,4 +1,6 @@
-import Transformer.Homogenized.Section7_LogisticBracketLimit
+module
+
+public import Transformer.Homogenized.Section7_LogisticBracketLimit
 
 /-!
 # The original logistic limit and its exact endpoint probabilities
@@ -18,6 +20,8 @@ is corrected to arcsin, and its bracket-to-zero sentence is corrected to
 divergence in Section7_LogisticBracketLimit. At the source's initial
 value u₀=0, both formulas give probability 1/2 as claimed there.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

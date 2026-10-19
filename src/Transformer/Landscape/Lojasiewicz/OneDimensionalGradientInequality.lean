@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Landscape.Lojasiewicz.ScalarGradientInequality
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.Analysis.Calculus.FDeriv.Equiv
+public import Mathlib.Analysis.Calculus.Deriv.Linear
+public import Mathlib.Analysis.Analytic.Linear
+
+/-!
 # The analytic gradient inequality in dimensions zero and one
 
 Appendix D.1, `lem: loj`, of arXiv:2510.22026v2: transfer the scalar
@@ -6,12 +15,7 @@ finite-order argument to Euclidean space and handle locally constant
 energies in any dimension.
 -/
 
-import Transformer.Basic
-import Transformer.Landscape.Lojasiewicz.ScalarGradientInequality
-import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.Analysis.Calculus.FDeriv.Equiv
-import Mathlib.Analysis.Calculus.Deriv.Linear
-import Mathlib.Analysis.Analytic.Linear
+@[expose] public section
 
 open Filter Set
 

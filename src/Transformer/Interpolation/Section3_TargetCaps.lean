@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.SeparationField
+
+/-!
 # Positive target caps and geodesic convex hulls
 
 ArXiv:2411.04551v3, §1.5, the definition of `conv_g`, and §3.2,
@@ -14,7 +18,7 @@ set in the positive hemisphere also supplies a uniform positive height
 floor for the original gated perceptron phase.
 -/
 
-import Transformer.Interpolation.SeparationField
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology

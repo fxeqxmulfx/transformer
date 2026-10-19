@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryFormedOutcomes
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainCollapseRobustness
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryFormedOutcomes
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainCollapseRobustness
 
 /-!
 # Original nonzero-memory delayed accuracy without a positive robust radius
@@ -33,6 +35,8 @@ Strong decay 100, epsilon/cap 1, gains 3/2 and rate 0.001 differ from
 the preserved learned GPTMini configuration and appendix C coupled-cost
 GD. Weaker-decay attraction and learned stochastic/numerical transfer remain open.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

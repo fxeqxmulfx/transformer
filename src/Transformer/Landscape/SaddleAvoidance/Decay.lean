@@ -1,15 +1,21 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Lojasiewicz
+public import Mathlib.Analysis.Asymptotics.Lemmas
+public import Mathlib.Analysis.SpecificLimits.Basic
+
+/-!
 # Saddle avoidance — sequences that drop by a power of themselves
 
 A bound `u k ≤ C g k` from some index on holds for every index, with a larger
-constant, when `g` is positive (`exists_forall_le_mul_of_eventually`).  A
+constant, when `g` is positive (`exists_forall_le_mul_of_eventually`). A
 nonnegative sequence with `r (k + 1) ≤ q r k` from some index on, `0 < q`, is
-therefore at most `C q ^ k` (`exists_le_mul_pow_of_le_mul`).  A positive one
+therefore at most `C q ^ k` (`exists_le_mul_pow_of_le_mul`). A positive one
 with `r (k + 1) ≤ r k - c r k ^ (1 + β)`, `c ≥ 0` and `0 < β ≤ 1`, gains at
 least `β c` in `r ^ (-β)` at each step (`rpow_neg_add_le_of_le_sub`, by the
 concavity of `s ↦ s ^ β`, `mul_sub_le_rpow_mul_sub`), so for `c > 0` a
 nonnegative one is at most `C (k + 1) ^ (-1/β)`
-(`exists_le_mul_rpow_of_le_sub`).  A sequence bounded from some index on by
+(`exists_le_mul_rpow_of_le_sub`). A sequence bounded from some index on by
 `K r k ^ p` is then at most `C g k ^ p` when `r ≤ C₁ g`
 (`exists_le_mul_and_le_mul_rpow`).
 
@@ -18,9 +24,7 @@ there for the length `e_k` of the rest of an orbit of gradient descent, here
 for `f x_k - f x*` (`Landscape.SaddleAvoidance.Rates`).
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Lojasiewicz
-import Mathlib.Analysis.Asymptotics.Lemmas
-import Mathlib.Analysis.SpecificLimits.Basic
+@[expose] public section
 
 open Filter Asymptotics
 
@@ -57,7 +61,7 @@ theorem exists_le_mul_pow_of_le_mul {r : ℕ → ℝ} {q : ℝ} (hq : 0 < q) (hr
 
 /-- **A drop by a power gains a constant in a negative power.**  If
 `0 < t ≤ s` and `t ≤ s - c s ^ (1 + β)`, with `c ≥ 0` and `0 < β ≤ 1`, then
-`s ^ (-β) + β c ≤ t ^ (-β)`.  By the concavity of `s ↦ s ^ β`,
+`s ^ (-β) + β c ≤ t ^ (-β)`. By the concavity of `s ↦ s ^ β`,
 `β (s - t) ≤ s ^ (1 - β) (s ^ β - t ^ β)`. -/
 theorem rpow_neg_add_le_of_le_sub {β c s t : ℝ} (hβ : 0 < β) (hβ1 : β ≤ 1) (hc : 0 ≤ c)
     (ht : 0 < t) (hts : t ≤ s) (h : t ≤ s - c * s ^ (1 + β)) :

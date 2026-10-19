@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_UniformLaw
+public import Mathlib.Analysis.InnerProductSpace.Projection.Reflection
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+
+/-!
 # Actual coordinate-plane rotations of the original uniform law
 
 ArXiv:2410.06833v1, §4, `prop: concentration unif`, and
@@ -16,9 +22,7 @@ Every original uniform law therefore preserves the actual power
 integrals along these rotations. No moment value is assumed.
 -/
 
-import Transformer.Metastability.Section4_UniformLaw
-import Mathlib.Analysis.InnerProductSpace.Projection.Reflection
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+@[expose] public section
 
 open Real MeasureTheory
 

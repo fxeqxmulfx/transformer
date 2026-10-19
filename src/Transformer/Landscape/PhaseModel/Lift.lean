@@ -1,21 +1,25 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Basic
+public import Transformer.Landscape.SaddleAvoidance.Necessary
+
+/-!
 # Phase model — critical points near a zero
 
 At a zero `z` of the phase energy every relation lies in `2πℤ`, so a point
 `ψ` sees the relations `x_r = ⟪m_r, ψ - z⟫` through their sines and cosines
-(`sin_cos_inner_sub`).  The Hessian has the quadratic form
+(`sin_cos_inner_sub`). The Hessian has the quadratic form
 `⟪H h, h⟫ = Σ_r cos ⟪m_r, ψ⟫ ⟪m_r, h⟫²` (`inner_fderiv_gradient_phaseEnergy`),
 and at a critical point `Σ_r x_r sin x_r = ⟪∇V(ψ), ψ - z⟫ = 0`
-(`sum_inner_sub_mul_sin`).  As `x sin x > 0` for `0 < |x| < π`, a critical
+(`sum_inner_sub_mul_sin`). As `x sin x > 0` for `0 < |x| < π`, a critical
 point with every `|x_r| < π` has every `x_r = 0`
-(`inner_sub_eq_zero_of_gradient_eq_zero`).  As `x² cos x < x sin x` for
+(`inner_sub_eq_zero_of_gradient_eq_zero`). As `x² cos x < x sin x` for
 `0 < |x| ≤ π` (`sq_mul_cos_lt_mul_sin`), at a local minimizer `|x_r| ≤ π`
 suffices (`inner_sub_eq_zero_of_isLocalMin`): the Hessian along `ψ - z`
 would otherwise be negative.
 -/
 
-import Transformer.Landscape.PhaseModel.Basic
-import Transformer.Landscape.SaddleAvoidance.Necessary
+@[expose] public section
 
 open Real
 
@@ -98,7 +102,7 @@ theorem inner_sub_eq_zero_of_gradient_eq_zero {ψ z : E} (hψ : gradient (phaseE
 /-- **A local minimizer whose relations are within `π` of those of a zero
 keeps the relations of the zero**: if `ψ` is a local minimizer of `V`,
 `V(z) = 0` and `|⟪m_r, ψ - z⟫| ≤ π` for every row, then `⟪m_r, ψ - z⟫ = 0`
-for every row.  With `x_r = ⟪m_r, ψ - z⟫`, the Hessian along `ψ - z` gives
+for every row. With `x_r = ⟪m_r, ψ - z⟫`, the Hessian along `ψ - z` gives
 `Σ_r x_r² cos x_r ≥ 0` and the gradient `Σ_r x_r sin x_r = 0`, while
 `x² cos x < x sin x` for `0 < |x| ≤ π`. -/
 theorem inner_sub_eq_zero_of_isLocalMin {ψ z : E} (hmin : IsLocalMin (phaseEnergy m) ψ)

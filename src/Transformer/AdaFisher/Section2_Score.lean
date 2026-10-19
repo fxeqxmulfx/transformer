@@ -1,4 +1,10 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+public import Mathlib.Tactic
+
+/-!
 # AdaFisher: finite probabilistic scores are centered
 
 arXiv:2405.16397v3, §2, `eq:fishermatrix`.
@@ -6,9 +12,7 @@ The score is the derivative of log p. Differentiation of a finite
 normalized positive probability mass function gives a zero expected score.
 -/
 
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Tactic
+@[expose] public section
 
 open scoped BigOperators
 

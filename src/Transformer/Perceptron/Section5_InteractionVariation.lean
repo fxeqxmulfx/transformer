@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_RotatedKernel
+public import Transformer.Perceptron.Section5_DominatedVariation
+public import Mathlib.MeasureTheory.Integral.Prod
+
+/-!
 # Twice differentiating the actual transported pair integral
 
 ArXiv:2601.21366v2, §5.2, `eq:Hess-bilinear.std`. For an
@@ -14,9 +20,7 @@ atomic presentation. The temperature and pair-speed factors are
 retained before multiplying by the energy's prefactor `1/(2β)`.
 -/
 
-import Transformer.Perceptron.Section5_RotatedKernel
-import Transformer.Perceptron.Section5_DominatedVariation
-import Mathlib.MeasureTheory.Integral.Prod
+@[expose] public section
 
 open Real MeasureTheory
 

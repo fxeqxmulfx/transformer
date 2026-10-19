@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.TransformExt
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+
+/-!
 # Perceptrons and attention's mean-field landscape — a general attention matrix
 
 Formalization of `rem: general-attention` of arXiv:2601.21366v2: for an
@@ -8,16 +13,16 @@ antipodally symmetric.
 
 **What the source says and what is carried here.**
 
-* The source fixes a *symmetric* nonsingular `B`.  Symmetry is never used and
+* The source fixes a *symmetric* nonsingular `B`. Symmetry is never used and
   is dropped: `xᵀ B y = (Bᵀ x)·y`, and only the invertibility of `Bᵀ` enters —
-  the source's own ellipsoid is `{Bᵀ x : ‖x‖ < 1}`.  Dropping a hypothesis only
+  the source's own ellipsoid is `{Bᵀ x : ‖x‖ < 1}`. Dropping a hypothesis only
   strengthens a statement.
 
 * The source's standing `d ≥ 2` is dropped, as in `Transform`.
 
 * The source solves the Dirichlet problem for `Δ - 1` on the ellipsoid,
   continues `F_ν` analytically from a neighbourhood of `0`, and reads off the
-  moments.  Here no derivative is taken.  With `w_i = (Bᵀ)⁻¹ e_i`, the second
+  moments. Here no derivative is taken. With `w_i = (Bᵀ)⁻¹ e_i`, the second
   differences of `f(x) = ∫ e^{xᵀ B y} dμ(y)` satisfy
   `Σ_i [f(x + t w_i) + f(x - t w_i) - 2 f(x)] = t² f(x) + O(t⁴ f(x))`
   (`abs_secondDiff_sub_le`), the discrete form of `Δ F = F`; at an interior
@@ -25,14 +30,13 @@ antipodally symmetric.
   (`le_zero_of_secondDiff_ge`), so `f_{μ₁} = f_{μ₂}` on the closed unit ball.
   The ball contains `r (Bᵀ)⁻¹ 𝕊^{d-1}` for some `r > 0`, where `f_B^μ` is the
   isotropic transform at `β = r`, and `Perspective.eq_of_integral_exp_inner_eq`
-  finishes: the analytic continuation is not needed.  The second differences
+  finishes: the analytic continuation is not needed. The second differences
   are `TransformExt`, the maximum principle `SecondDiff`.
 
 Source: arXiv:2601.21366v2, `rem: general-attention`.
 -/
 
-import Transformer.Perceptron.TransformExt
-import Mathlib.Analysis.InnerProductSpace.Adjoint
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory Filter Topology
@@ -48,7 +52,7 @@ variable {d : ℕ}
 map `μ ↦ f_B^μ` is injective on `𝒫(𝕊^{d-1})`.
 
 The source fixes `B` symmetric as well; symmetry is not used (module
-docstring).  With `D = (B⁻¹)ᵀ`, `(D v)·(B y) = v·y`: the directions
+docstring). With `D = (B⁻¹)ᵀ`, `(D v)·(B y) = v·y`: the directions
 `w_i = D e_i` feed `attentionTransformMapExt_eq_of_eq_on_sphere`, and on
 `D(r 𝕊^{d-1})`, inside the ball for small `r > 0`, `f_B^μ` is the isotropic
 transform at `β = r`.

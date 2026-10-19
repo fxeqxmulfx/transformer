@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.AnalyticFiberMinimumQuery
+public import Transformer.Landscape.Lojasiewicz.PolynomialFiberThreshold
+
+/-!
 # Scalar quantifier elimination for analytic minima on a whole box
 
 The comparison threshold is fixed by the candidate and is compared
@@ -7,8 +12,7 @@ base slices are retained, including a prescribed energy parameter.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.AnalyticFiberMinimumQuery
-import Transformer.Landscape.Lojasiewicz.PolynomialFiberThreshold
+@[expose] public section
 
 noncomputable section
 open scoped BigOperators

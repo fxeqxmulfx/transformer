@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_CompactDerivativeBounds
+
+/-!
 # The actual Gaussian model's smooth bounded parameter map
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1's corrected regularity conditions.
@@ -6,7 +10,7 @@ The gradient and coordinate standard deviations form the actual arguments
 of the signed response; their first two derivatives inherit the model bounds.
 -/
 
-import Transformer.BatchSize.Section4_CompactDerivativeBounds
+@[expose] public section
 
 open scoped NNReal
 

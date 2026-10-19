@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_RowFeatureConjugacy
+
+/-!
 # Original-shape K compilation of every butterfly product
 
 Arora et al., arXiv:2312.04927v1, Appendix `prop: butterfly-hyena`
@@ -7,7 +11,7 @@ takes 35 layers via bit exchange. Composition uses exactly n rows and d
 features. A chosen feature digit witnesses the source condition d ≥ 2.
 -/
 
-import Transformer.Zoology.Appendix_RowFeatureConjugacy
+@[expose] public section
 
 noncomputable section
 

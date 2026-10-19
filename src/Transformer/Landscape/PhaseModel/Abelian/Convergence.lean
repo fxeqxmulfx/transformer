@@ -1,26 +1,30 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Abelian.Landscape
+public import Transformer.Landscape.SaddleAvoidance.Analytic
+public import Transformer.Landscape.SaddleAvoidance.AnalyticLevelLandscape
+
+/-!
 # Phase model over a finite abelian group — convergence to a character
 
-As for `ℤ/n` (`Landscape.PhaseModel.Convergence`), with `n = |G|`.  The periods span
+As for `ℤ/n` (`Landscape.PhaseModel.Convergence`), with `n = |G|`. The periods span
 `ℝ^G` (`span_periods`), and the phase energy is analytic, so gradient descent
 on a phase energy with integer rows, with `0 < η` and `η Σ_r ‖a_r‖² < 1`,
 converges from every start, to a critical point
-(`exists_tendsto_gradient_phaseEnergy_eq_zero`).  For `n ≥ 4`, every
+(`exists_tendsto_gradient_phaseEnergy_eq_zero`). For `n ≥ 4`, every
 critical point of `V_full` below `n²/8` is a zero, a global minimizer, or a
-strict saddle (`Landscape.PhaseModel.Abelian.Landscape`).  So gradient descent with
+strict saddle (`Landscape.PhaseModel.Abelian.Landscape`). So gradient descent with
 `0 < η`, `9 n² η < 1`, started below `n²/8`, converges for almost every
 start, and its limit is the phases of a character up to periods
 (`ae_exists_tendsto_characterPhase`), by
 `Landscape.SaddleAvoidance.ae_exists_tendsto_isMinOn_of_lt_of_span_eq_top_of_analyticOnNhd`
-at the level `n²/8`.  In particular a convergent orbit ends at a character
+at the level `n²/8`. In particular a convergent orbit ends at a character
 (`ae_tendsto_characterPhase`).
 
 Source: item M6.4 of `landscape_plan.md`.
 -/
 
-import Transformer.Landscape.PhaseModel.Abelian.Landscape
-import Transformer.Landscape.SaddleAvoidance.Analytic
-import Transformer.Landscape.SaddleAvoidance.AnalyticLevelLandscape
+@[expose] public section
 
 open Filter MeasureTheory Real
 open scoped Topology
@@ -66,11 +70,11 @@ theorem exists_tendsto_gradient_phaseEnergy_eq_zero {G R : Type*} [Fintype G] [F
 variable {G : Type*} [AddCommGroup G] [Fintype G] [DecidableEq G]
 
 /-- **Gradient descent on `V_full` started below `|G|²/8` converges to the
-phases of a character**, for almost every start.  Let `|G| ≥ 4` and `0 < η`
-with `9 |G|² η < 1`.  For a start `x` drawn from a law `ν` absolutely
+phases of a character**, for almost every start. Let `|G| ≥ 4` and `0 < η`
+with `9 |G|² η < 1`. For a start `x` drawn from a law `ν` absolutely
 continuous with respect to a Haar measure, almost surely: if
 `V_full(x) < |G|²/8`, the orbit converges, and its limit is the phases of a
-character up to periods.  Below `|G|²/8` every critical point of `V_full` is
+character up to periods. Below `|G|²/8` every critical point of `V_full` is
 a zero, a global minimizer, or a strict saddle
 (`isStrictSaddle_of_divisionEnergy_lt`), and the zeros are the characters up
 to periods (`divisionEnergy_univ_eq_zero_iff`). -/
@@ -107,11 +111,11 @@ theorem ae_exists_tendsto_characterPhase (hn : 4 ≤ Fintype.card G)
     (divisionEnergy_characterPhase _ 0)
 
 /-- **Gradient descent on `V_full` started below `|G|²/8` converges, if at
-all, to the phases of a character**, for almost every start.  Let
-`|G| ≥ 4` and `0 < η` with `9 |G|² η < 1`.  For a start `x` drawn from a law
+all, to the phases of a character**, for almost every start. Let
+`|G| ≥ 4` and `0 < η` with `9 |G|² η < 1`. For a start `x` drawn from a law
 `ν` absolutely continuous with respect to a Haar measure, almost surely: if
 `V_full(x) < |G|²/8` and the orbit converges to `w`, then `w` is the phases
-of a character up to periods.  The orbit converges anyway
+of a character up to periods. The orbit converges anyway
 (`ae_exists_tendsto_characterPhase`), and limits are unique. -/
 theorem ae_tendsto_characterPhase (hn : 4 ≤ Fintype.card G) (μ : Measure (EuclideanSpace ℝ G))
     [μ.IsAddHaarMeasure] {ν : Measure (EuclideanSpace ℝ G)} (hν : ν ≪ μ) {η : ℝ} (hη : 0 < η)

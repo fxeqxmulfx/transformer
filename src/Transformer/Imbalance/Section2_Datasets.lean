@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Tactic
+
+/-!
 # Finite synthetic dataset counts
 
 arXiv:2402.19449v2, Section 2.2 and Appendix A.2 (Custom datasets).
@@ -7,8 +12,7 @@ The source instead states c=2^(m+1)-1. Sample and feature counts agree
 with its m-group construction; the class-count discrepancy is explicit.
 -/
 
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Tactic
+@[expose] public section
 
 open scoped BigOperators
 

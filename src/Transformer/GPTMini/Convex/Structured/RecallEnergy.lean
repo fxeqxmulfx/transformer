@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Convex.Structured.RecallPotentials
-import Transformer.GPTMini.Convex.Structured.ChannelGaps
-import Transformer.GPTMini.Convex.Structured.RawBinding
+module
+
+public import Transformer.GPTMini.Convex.Structured.RecallPotentials
+public import Transformer.GPTMini.Convex.Structured.ChannelGaps
+public import Transformer.GPTMini.Convex.Structured.RawBinding
 
 /-!
 # Genuine raw finite recall energies and local deficits
@@ -19,6 +21,8 @@ the table/adjacency predicates appear only when evaluating given weights.
 No infinite gains, optimizer modification or training-success claim is
 used. Full tensor/prenorm/residual/tied integration remains separate.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

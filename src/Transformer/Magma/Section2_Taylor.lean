@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Magma.Section2_BlockExpansion
+public import Mathlib.Analysis.Calculus.FDeriv.Const
+
+/-!
 # Corrected curvature regularization with an explicit remainder
 
 Formalization of arXiv:2602.15322v1, Section 2, Proposition
@@ -9,8 +14,7 @@ below. First and second derivatives are the objective's actual Frechet
 derivatives. Block vectors are embedded in the full parameter space.
 -/
 
-import Transformer.Magma.Section2_BlockExpansion
-import Mathlib.Analysis.Calculus.FDeriv.Const
+@[expose] public section
 
 open scoped BigOperators
 

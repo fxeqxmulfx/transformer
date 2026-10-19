@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.Quartet.Section3_EdenBias
+
+/-!
 # The conditional vector mean of MS-EDEN
 
 Source: arXiv:2601.22813v2, §3.2–§3.3 and Algorithm 1.
 -/
 
-import Transformer.Quartet.Section3_EdenBias
+@[expose] public section
 
 open MeasureTheory
 

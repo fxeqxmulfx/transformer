@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativeSymmetry
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativeSymmetry
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
 
 /-!
 # Strict native training-CE descent without eventual rule selection
@@ -20,6 +22,8 @@ train CE tends to zero, handle positive decay, or contradict the paper's
 cost-asymmetric GD penalty. Learned GPTMini/finite-precision transfer
 remains open; admissible beta2 is explicit for the actual path result.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

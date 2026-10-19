@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_ApproximationExistence
+public import Mathlib.Algebra.BigOperators.Finsupp.Basic
+public import Mathlib.Data.List.Indexes
+
+/-!
 # DASH — turning finite expansions into Clenshaw coefficient arrays
 
 arXiv:2602.02016v2, Appendix A. Sparse finite Chebyshev expansions
 and the coefficient lists consumed by the algorithms evaluate identically.
 -/
 
-import Transformer.DASH.SectionA_ApproximationExistence
-import Mathlib.Algebra.BigOperators.Finsupp.Basic
-import Mathlib.Data.List.Indexes
+@[expose] public section
 
 open scoped BigOperators
 

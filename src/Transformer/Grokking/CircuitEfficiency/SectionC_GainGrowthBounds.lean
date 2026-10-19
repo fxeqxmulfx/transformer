@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainGrowthEnvelope
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainGrowthEnvelope
 
 /-!
 # Actual finite-clock Gen ceilings and coordinate decay floors
@@ -17,6 +19,8 @@ No later generalization, quantitative GPTMini delay, floating-point
 equivalence or convergence is proved. Fixed gains, plain CE and uniform
 native decoupled decay differ from appendix C's coupled-cost GD.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

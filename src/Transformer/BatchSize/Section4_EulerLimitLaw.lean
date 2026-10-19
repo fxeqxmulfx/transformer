@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerContinuousLimit
+
+/-!
 # The probability law of the continuous optimizer Euler limit
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -8,7 +12,7 @@ marginals follow from the constructed adapted mean-square limits.
 Identification of its generator martingale problem is a separate step.
 -/
 
-import Transformer.BatchSize.Section4_EulerContinuousLimit
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped NNReal

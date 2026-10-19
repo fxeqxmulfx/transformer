@@ -1,17 +1,22 @@
-/-
+module
+
+public import Transformer.ALM.Dense
+public import Mathlib.Algebra.Order.Floor.Div
+
+/-!
 # The padded rows, and that dropping them drops nothing else
 
 `Transformer.ALM.Dense` proves the interleaved layout changes no answer, and
-says in as many words what it does not cover: the padding.  `Dense::of` rounds
+says in as many words what it does not cover: the padding. `Dense::of` rounds
 the row count up to a multiple of `LANES` with zeros, `Dense::apply` computes
 those rows' sums along with the real ones, and then throws them away by copying
-only `&s[..out.len()]` into the output chunk.  Until now that was a fact about
+only `&s[..out.len()]` into the output chunk. Until now that was a fact about
 slice lengths carried by a `debug_assert_eq!`.
 
 It is still a fact about slice lengths -- that is the point, and why no
-arithmetic appears below.  The padded lanes are not shown to sum to zero; over
+arithmetic appears below. The padded lanes are not shown to sum to zero; over
 an arbitrary `add` and `mul` they do not, and `Dense` is stated at exactly that
-generality.  They are shown to be *dropped*: the lanes `apply` copies out are
+generality. They are shown to be *dropped*: the lanes `apply` copies out are
 the row indices the file has, each exactly once, and the lanes it truncates are
 row indices the file never had.
 
@@ -31,8 +36,7 @@ Five claims, and the last two are the ones that reach back into `Dense`:
 Source: `vm-rs/alm-model/src/linear.rs`, `Dense::of` and `Dense::apply`.
 -/
 
-import Transformer.ALM.Dense
-import Mathlib.Algebra.Order.Floor.Div
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -123,7 +127,7 @@ theorem chunkOf_mem {lanes rows i : ℕ} (hlanes : 0 < lanes) (hi : i < rows) :
 /-- **The two loops the kernel zips have the same length.**  The weight buffer
 holds `blocks * cols * lanes` words, which `as_chunks::<LANES>` and
 `chunks_exact(cols)` cut into `blocks` groups -- the number of chunks
-`y.chunks_mut(LANES)` produces.  Neither side of the `zip` is truncated. -/
+`y.chunks_mut(LANES)` produces. Neither side of the `zip` is truncated. -/
 theorem blocks_of_buffer {lanes cols blocks : ℕ} (hlanes : 0 < lanes) (hcols : 0 < cols) :
     blocks * cols * lanes / lanes / cols = blocks := by
   rw [Nat.mul_div_cancel _ hlanes, Nat.mul_div_cancel _ hcols]

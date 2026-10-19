@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section3_Scaling
+public import Mathlib.Analysis.CStarAlgebra.Matrix
+
+/-!
 # DASH — Euclidean operator norms in the eigenframe
 
 arXiv:2602.02016v2, §3.3–3.4. The matrix norm here is the actual
@@ -6,8 +11,7 @@ Euclidean operator norm, not the entrywise matrix norm. Orthogonal
 conjugation identifies it with the largest absolute eigenvalue.
 -/
 
-import Transformer.DASH.Section3_Scaling
-import Mathlib.Analysis.CStarAlgebra.Matrix
+@[expose] public section
 
 open scoped Matrix Matrix.Norms.L2Operator
 

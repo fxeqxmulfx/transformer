@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.SAField
+public import Mathlib.Analysis.Calculus.ContDiff.RCLike
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
 # A smooth ambient extension of the spherical attention field
 
 ArXiv:2312.10794v5, §2, `eq: SA`, and arXiv:2411.04551v3, §5,
@@ -17,9 +23,7 @@ The manuscript does not prescribe this ambient extension; it is an
 auxiliary construction whose spherical restriction is the source's ODE.
 -/
 
-import Transformer.Perspective.SAField
-import Mathlib.Analysis.Calculus.ContDiff.RCLike
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open scoped BigOperators
 open Real

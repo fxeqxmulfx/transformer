@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.EuclideanChain
+
+/-!
 # Real sign properties of signed remainder chains
 
 No coprimality over a larger field is assumed: absence of common real
@@ -6,7 +10,7 @@ zeros suffices. Auxiliary for Appendix D.1, `lem: loj`, of
 arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.EuclideanChain
+@[expose] public section
 
 noncomputable section
 open Polynomial

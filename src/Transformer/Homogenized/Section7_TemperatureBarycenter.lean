@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_TemperatureSoftmax
+public import Transformer.Homogenized.AttnAverage
+public import Transformer.Homogenized.SimplexBary
+
+/-!
 # Actual temperature derivatives of the empirical softmax barycenter
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -17,9 +23,7 @@ second-moment calculation. No symmetry, Gaussian moment or Taylor
 remainder is postulated by these definitions or estimates.
 -/
 
-import Transformer.Homogenized.Section7_TemperatureSoftmax
-import Transformer.Homogenized.AttnAverage
-import Transformer.Homogenized.SimplexBary
+@[expose] public section
 
 open Real
 open scoped BigOperators

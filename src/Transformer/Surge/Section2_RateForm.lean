@@ -1,24 +1,28 @@
-/-
+module
+
+public import Transformer.NoiseScale.SectionE_Optimization
+public import Transformer.Surge.Section2_PeakRate
+public import Transformer.Surge.Section2_SmallBatchLimit
+
+/-!
 # The form of the optimal learning rate in the batch size
 
-arXiv:2405.14578, §2.1, eqs. (11) and (12), and §1, eqs. (3) and (4).  When every `𝓔_i(B)` is
+arXiv:2405.14578, §2.1, eqs. (11) and (12), and §1, eqs. (3) and (4). When every `𝓔_i(B)` is
 a common `f(B)` times `μ_i/σ_i`, the numerator of eq. (9) is of first order in `f(B)` and its
 denominator of second order: eq. (9) is `βf(B)/(f(B)² + γ) = β/(f(B) + γ/f(B))`, eq. (11), with
-`β = M/S`, `γ = ΣH_ii/S` (`lrSign_mul`, `lrSign_mul_eq_div`).  The linearization of eq. (39) is
+`β = M/S`, `γ = ΣH_ii/S` (`lrSign_mul`, `lrSign_mul_eq_div`). The linearization of eq. (39) is
 such, with `f(B) = √(2B/π)` (`signLin_eq_mul`), and tends to `0` as `B → ∞`
-(`tendsto_lrSign_signLin_atTop`).  "Therefore ... `ε(B) ≠ ε_*/(1 + B_noise/B)^α`", eq. (12):
+(`tendsto_lrSign_signLin_atTop`). "Therefore ... `ε(B) ≠ ε_*/(1 + B_noise/B)^α`", eq. (12):
 no `ε_*`, `B_*`, `α` make eq. (A.3) of arXiv:1812.06162, which tends to `ε_*`, equal to it at
 every `B > 0` (`not_exists_lrCentral`).
 
 When `B ≪ B_noise`, SGD's `ε_max/(1 + B_noise/B)` of eq. (1) is `(ε_max/B_noise)B`, linear
 scaling, eq. (3) (`tendsto_stepOpt_div`), and Adam's eq. (2) is `(2ε_max/√B_noise)√B`, square
-root scaling, eq. (4) (`tendsto_peak_div_sqrt`): the ratios tend to `1` as `B → 0`.  So does
+root scaling, eq. (4) (`tendsto_peak_div_sqrt`): the ratios tend to `1` as `B → 0`. So does
 the ratio of eq. (9) itself to `(2ε_max/√B_noise)√B`, by Theorem 3 (`tendsto_lrSign_div_sqrt`).
 -/
 
-import Transformer.NoiseScale.SectionE_Optimization
-import Transformer.Surge.Section2_PeakRate
-import Transformer.Surge.Section2_SmallBatchLimit
+@[expose] public section
 
 open Filter Topology Real
 
@@ -99,7 +103,7 @@ example := tendsto_lrSign_signLin_atTop (μ := fun _ : Fin 2 => 1) (σ := fun _ 
 /-- **Eq. (12)**, `ε(B) ≠ ε_*/(1 + B_noise/B)^α`: no `ε_*`, `B_*`, `α` make eq. (A.3) of
 arXiv:1812.06162 the learning rate of eq. (11) with `f(B) = √(2B/π)`, Theorem 3's, at every
 `B > 0`, when `ΣH_ii > 0`, `S > 0` and `M > 0`: the latter tends to `0` as `B → ∞`, the former
-to `ε_*`, which must then be `0`, while the latter is `ε_max > 0` at `B_noise`.  The paper's
+to `ε_*`, which must then be `0`, while the latter is `ε_max > 0` at `B_noise`. The paper's
 `B_* = B_noise` is a special case. -/
 theorem not_exists_lrCentral (hD : 0 < ∑ i, H i i) (hS : 0 < offSum μ σ H)
     (hM : 0 < snrSum μ σ) :

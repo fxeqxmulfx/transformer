@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section2_FlowMap
+public import Transformer.Metastability.Basic
+public import Mathlib.MeasureTheory.Measure.Support
+
+/-!
 # Metastability — Mean-field regime (§5 of 2410.06833v1), definitions
 
 The objects §5 is written in:
@@ -19,10 +26,7 @@ The statements are `Metastability.MeanFieldMetastability` (the theorem) and
 hypotheses.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section2_FlowMap
-import Transformer.Metastability.Basic
-import Mathlib.MeasureTheory.Measure.Support
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -72,7 +76,7 @@ def meanFieldPDE (β : ℝ) (μ : ℝ → ProbSphere d) : Prop :=
 place of the number of particles.
 
 The paper's further requirement `γ(β) = Ω(1)` is asymptotic in `β` and is not
-formalized.  Source: arXiv:2410.06833v1, §5. -/
+formalized. Source: arXiv:2410.06833v1, §5. -/
 def isSeparatedMeasure
     (β ε : ℝ) (μ₀ : ProbSphere d) : Prop :=
   ∃ (k : ℕ) (w : Idx k → SSphere d) (ν : Idx k → ProbSphere d),
@@ -84,7 +88,7 @@ def isSeparatedMeasure
 
 /-- **The characteristic flow (eq: flow.map).**  `Φ` is the flow of the
 velocity field `v[μ(t)]`: `Φ^0 = id`, and every trajectory `t ↦ Φ^t(x)`
-solves `ẋ(t) = v[μ(t)](x(t))`.  Measurability of each `Φ^t` is what the
+solves `ẋ(t) = v[μ(t)](x(t))`. Measurability of each `Φ^t` is what the
 push-forward `(Φ^t)_# μ_0` needs.
 
 Source: arXiv:2410.06833v1, §5, proof of `thm: metastability MF`,
@@ -110,7 +114,7 @@ noncomputable def capMin (Φ : ℝ → SSphere d → SSphere d) (w : SSphere d) 
     '' capFlowImage d Φ w ε t)
 
 /-- `x(t) ∈ argmin_{x ∈ 𝓑_q(t)} ⟨x, w_q⟩` at every time: a point of the
-transported cap at which `η_q(t)` is attained.  The minimiser need not be
+transported cap at which `η_q(t)` is attained. The minimiser need not be
 unique; every statement below holds for each such selection.
 
 Source: arXiv:2410.06833v1, §5, proof of `thm: metastability MF`, step 1, and
@@ -144,9 +148,9 @@ noncomputable def capVariance (μ₀ : ProbSphere d) (Φ : ℝ → SSphere d →
 transported cap has left its double.
 
 **What the source says and what is changed here.**  The source writes the
-window through the infimum `T_esc`, which may be `+∞`.  It is written here as
+window through the infimum `T_esc`, which may be `+∞`. It is written here as
 the set of times `t ≥ 0` before which every `𝓑_q(s)`, `s ≤ t`, stays in
-`𝒮_q(2ε)`.  The two agree when the escape set is open — as it is for a
+`𝒮_q(2ε)`. The two agree when the escape set is open — as it is for a
 continuous flow, the caps being closed — and without that the set below may
 drop the endpoint `T_esc`; it never adds a time.
 

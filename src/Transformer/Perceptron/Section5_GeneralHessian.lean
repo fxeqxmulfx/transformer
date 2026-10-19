@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_InteractionVariation
+public import Transformer.Perceptron.Section5_PotentialVariation
+public import Transformer.Perspective.Section2_EnergyConvex
+
+/-!
 # The actual circle Hessian for arbitrary probability measures
 
 ArXiv:2601.21366v2, §2.2, `eq:strict2order`, and §5.2,
@@ -16,9 +22,7 @@ point must satisfy the resulting inequality along every continuous
 speed whose tangent field is a smooth spherical gradient.
 -/
 
-import Transformer.Perceptron.Section5_InteractionVariation
-import Transformer.Perceptron.Section5_PotentialVariation
-import Transformer.Perspective.Section2_EnergyConvex
+@[expose] public section
 
 open Real MeasureTheory
 

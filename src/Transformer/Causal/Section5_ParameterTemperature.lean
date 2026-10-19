@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section5_ParameterGeometry
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # The original separated frozen-center conditions force temperature above one
 
 ArXiv:2411.04990v2, §5, `thm:fixed_centers` and Appendix B's
@@ -20,8 +25,7 @@ apply in this original nontrivial separated regime without an
 additional temperature hypothesis.
 -/
 
-import Transformer.Causal.Section5_ParameterGeometry
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open scoped BigOperators
 open Real Set

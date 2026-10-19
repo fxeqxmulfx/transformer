@@ -2,6 +2,12 @@ module
 
 public import Mathlib.MeasureTheory.Constructions.Pi
 
+/-!
+# Product measures
+
+Coordinate evaluation and cylinder-set identities for product measures.
+-/
+
 public section
 
 open Function Set

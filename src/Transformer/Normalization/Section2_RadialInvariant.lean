@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Normalization.Convergence
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Normalization — a radial invariant of Pre-LN and Peri-LN
 
 The polar identities in arXiv:2510.22026v2, §2, equation (NA) and Table 2,
@@ -13,8 +18,7 @@ Pre-LN uses the forcing `A`; Peri-LN uses `A/‖A‖`. The invariant depends onl
 on the two polar equations, so no continuity of the forcing is assumed.
 -/
 
-import Transformer.Normalization.Convergence
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open scoped BigOperators
 open Real Set

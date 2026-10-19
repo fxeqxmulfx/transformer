@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Basic
+
+/-!
 # Circle geometry behind the strong-center barrier
 
 ArXiv:2411.04990v2, §5, `lemma:meta`, and `sec:proof_lemma_meta`.
@@ -14,7 +18,7 @@ is assumed. The argument therefore also covers configurations straddling
 the cut of a polar-coordinate chart.
 -/
 
-import Transformer.Causal.Basic
+@[expose] public section
 
 open Real
 

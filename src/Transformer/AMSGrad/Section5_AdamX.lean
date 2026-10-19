@@ -1,6 +1,8 @@
-import Transformer.AMSGrad.Section4_MainLemma
+module
 
-/-
+public import Transformer.AMSGrad.Section4_MainLemma
+
+/-!
 # AdamX — the algorithm and Lemmas 5.2, 5.3
 
 §5 of arXiv:1904.03590v4: AdamX (Algorithm 2), which differs from AMSGrad only
@@ -10,13 +12,13 @@ in `v̂_1 = v_1` and `v̂_t = max((1-β_{1,t})²/(1-β_{1,t-1})² v̂_{t-1}, v_t
 **What the source says and what is carried here.**
 
 * Lemma 5.2 writes `v̂_t` as a maximum over `1 ≤ s ≤ t`; it is stated as that
-  maximum's two properties, an upper bound attained at some `s`.  Its proof
+  maximum's two properties, an upper bound attained at some `s`. Its proof
   cancels `1 - β_{1,t-1}`, so it needs `β_{1,t} ≠ 1`.
 
 * Lemma 5.3 needs `0 ≤ β_{1,t} ≤ β₁ = β_{1,1} < 1` and `0 ≤ β₂ ≤ 1`, which the
   source assumes throughout; it holds for every `t`, `v̂₀ = 0` included.
 
-* Lemma 5.4 (`mainlem2`) is Lemma 4.4 for AdamX.  `mainlem` is stated for
+* Lemma 5.4 (`mainlem2`) is Lemma 4.4 for AdamX. `mainlem` is stated for
   every rule with `v_t ≤ v̂_t`, and AdamX is one, `le_adamXRule`; so Lemma 5.4
   is `mainlem le_adamXRule`, not a separate statement.
 
@@ -25,6 +27,8 @@ in `v̂_1 = v_1` and `v̂_t = max((1-β_{1,t})²/(1-β_{1,t-1})² v̂_{t-1}, v_t
 
 Source: arXiv:1904.03590v4, §5, Algorithm 2, Lemmas 5.2–5.4.
 -/
+
+@[expose] public section
 
 open Finset
 

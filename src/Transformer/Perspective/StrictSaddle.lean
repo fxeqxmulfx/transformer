@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perspective.CircleCritical
+public import Transformer.Perspective.CircleSync
+public import Transformer.Perspective.SyncKernelBetaOne
+public import Transformer.Perspective.SyncKernelSmallBeta
+
+/-!
 # Open Problem `o:strictsaddle` — the critical points of `𝖤_β` on `𝕋^n`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -8,7 +15,7 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 toroidal energy `𝖤_β` is a strict saddle — a point at which some direction
 sees a strictly positive second derivative, so that gradient ascent escapes.
 
-The survey leaves it open.  Polyanskiy, Rigollet and Yao answer it for every
+The survey leaves it open. Polyanskiy, Rigollet and Yao answer it for every
 `β > 0` (arXiv:2507.22857v1, §5, proof of `cor:conjecture`, which covers
 `β ≥ -0.16`), and `strict_saddle` follows their proof:
 
@@ -27,14 +34,11 @@ The survey leaves it open.  Polyanskiy, Rigollet and Yao answer it for every
 The vocabulary is Appendix B's: `Perspective.SecondDerivTorusEnergy` is the
 second derivative along a straight line of `𝕋^n`, and
 `Perspective.TorusHessianNonPos` its non-positivity, which is what a critical
-point that is *not* a strict saddle satisfies.  The predicates of the
+point that is *not* a strict saddle satisfies. The predicates of the
 statement are in `Perspective.CircleCritical`.
 -/
 
-import Transformer.Perspective.CircleCritical
-import Transformer.Perspective.CircleSync
-import Transformer.Perspective.SyncKernelBetaOne
-import Transformer.Perspective.SyncKernelSmallBeta
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -51,8 +55,8 @@ For `β > 0`, every critical point of `𝖤_β` on `𝕋^n` that is not a global
 maximum is a strict saddle: some straight line through it sees a strictly
 positive second derivative of `𝖤_β`.
 
-The proof is by contradiction.  A critical point that is not a strict saddle
-is stationary (C1) and cut-stable (C2) for the kernel `f_β`.  `f_β` meets the
+The proof is by contradiction. A critical point that is not a strict saddle
+is stationary (C1) and cut-stable (C2) for the kernel `f_β`. `f_β` meets the
 criterion of `thm:main` with `τ = τ_β`, so the point is synchronized, and
 hence a global maximum.
 
@@ -60,10 +64,10 @@ The two-particle antipodal configuration is the picture: at `n = 2`,
 `θ = (0, π)` is critical and a global minimum, and moving one particle gives
 the second derivative `e^{-β}/4 > 0`.
 
-Source: arXiv:2312.10794v5, §7, `o:strictsaddle`.  The survey asks it for
+Source: arXiv:2312.10794v5, §7, `o:strictsaddle`. The survey asks it for
 `𝖤_β` with `β > 0` (§2, and §7 after `eq:onangles`), with no bound on `n`,
-and leaves it open.  The proof is that of arXiv:2507.22857v1, §5,
-`cor:conjecture`, for `β > 0`.  It uses `thm:main` (§2), the (C2) of §4 for
+and leaves it open. The proof is that of arXiv:2507.22857v1, §5,
+`cor:conjecture`, for `β > 0`. It uses `thm:main` (§2), the (C2) of §4 for
 every `S`, and the bound `τ_β ∫ |f_β'''|₊ < 4` of §5 and Appendices A–B,
 proved here separately for `β ≥ 1` and for `0 < β < 1`. -/
 theorem strict_saddle (β : ℝ) (hβ : 0 < β) :

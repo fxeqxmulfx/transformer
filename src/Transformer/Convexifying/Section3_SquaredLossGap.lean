@@ -1,19 +1,23 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_UniversalSquared
+
+/-!
 # A convex squared loss detects the atomic-penalty gap
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §2–§3.1, equation
-`eq:attention_only_obj` allows squared loss.  A squared loss on the linear
+`eq:attention_only_obj` allows squared loss. A squared loss on the linear
 difference between two output rows separates the ordinary four-matrix
 weight-decay problem from the convex genuine-softmax atomic mixture, even
 when the ordinary model has any finite number of trainable-score heads.
 -/
 
-import Transformer.Convexifying.Section3_UniversalSquared
+@[expose] public section
 
 namespace Transformer.Convexifying
 
 /-- Squared loss on the difference between the two output rows, with target
-`1/600` and positive weight `200000`.  Source: equation
+`1/600` and positive weight `200000`. Source: equation
 `eq:attention_only_obj`, an allowed convex squared-loss specialization. -/
 noncomputable def projectedSquareLoss (d : ℝ) : ℝ :=
   200000 * (d - 1 / 600) ^ 2
@@ -32,7 +36,7 @@ theorem projectedSquareLoss_convex (x y t : ℝ)
   ring
 
 /-- The same loss on a two-row output is convex because row difference is
-linear.  Source: equation `eq:attention_only_obj`, squared-loss case. -/
+linear. Source: equation `eq:attention_only_obj`, squared-loss case. -/
 noncomputable def twoRowProjectedSquareLoss (u : Fin 2 → ℝ) : ℝ :=
   projectedSquareLoss (u 0 - u 1)
 
@@ -83,7 +87,7 @@ noncomputable def originalProjectedObjective
     originalMixturePenalty heads
 
 /-- Atomic-mixture objective for the same squared loss and weighted
-coefficient penalty.  Source: §3.1, candidate convexification. -/
+coefficient penalty. Source: §3.1, candidate convexification. -/
 noncomputable def atomicProjectedObjective (heads : List (ℝ × ℝ)) : ℝ :=
   projectedSquareLoss (reducedMixtureDifference heads) +
     atomicMixtureCost heads
@@ -99,7 +103,7 @@ theorem originalProjectedObjective_eq_rows (heads : List ScalarFourWeights) :
     originalMixtureDifference_eq_rows]
 
 /-- The atomic objective uses the same full-output loss, with the changed
-weighted coefficient penalty.  Source: §3.1, candidate convexification. -/
+weighted coefficient penalty. Source: §3.1, candidate convexification. -/
 theorem atomicProjectedObjective_eq_rows (heads : List (ℝ × ℝ)) :
     atomicProjectedObjective heads =
       twoRowProjectedSquareLoss (atomicMixtureRows heads) +
@@ -118,9 +122,9 @@ theorem atomicProjectedObjective_witness :
   simpa [projectedSquareLoss, atomicMixtureCost] using smallAtomicCost
 
 /-- Every finite original network pays at least `1/30` under the same
-convex squared loss.  Thus changing to the homogeneous atomic penalty
+convex squared loss. Thus changing to the homogeneous atomic penalty
 changes an optimal training value, not merely a representation of the
-feasible set.  Source: arXiv:2211.11052v1, `eq:attention_only_obj`,
+feasible set. Source: arXiv:2211.11052v1, `eq:attention_only_obj`,
 specialized. -/
 theorem originalProjectedObjective_lower (heads : List ScalarFourWeights) :
     1 / 30 ≤ originalProjectedObjective heads := by

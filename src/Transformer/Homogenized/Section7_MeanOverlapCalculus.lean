@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_MeanOverlapDrift
+
+/-!
 # Actual differential and sphere Hessian of the original mean overlap
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -18,7 +22,7 @@ Gaussian generator; no drift or martingale decomposition is included
 as a hypothesis of these calculus statements.
 -/
 
-import Transformer.Homogenized.Section7_MeanOverlapDrift
+@[expose] public section
 
 open Real MeasureTheory
 open scoped BigOperators
@@ -65,7 +69,8 @@ theorem contDiff_meanOverlap {d n : ℕ} :
     ContDiff ℝ (⊤ : ℕ∞) (meanOverlap (d := d) (n := n)) := by
   have hs (i j : Idx n) : ContDiff ℝ (⊤ : ℕ∞)
       (fun X : Idx n → EucSpace d => inner ℝ (X i) (X j)) :=
-    (contDiff_apply ℝ (EucSpace d) i).inner ℝ (contDiff_apply ℝ (EucSpace d) j)
+    (contDiff_apply ℝ (fun _ : Idx n => EucSpace d) i).inner ℝ
+      (contDiff_apply ℝ (fun _ : Idx n => EucSpace d) j)
   unfold meanOverlap
   fun_prop
 

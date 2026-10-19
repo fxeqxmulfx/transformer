@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section2_KacRice
+
+/-!
 # The number of modes of a Gaussian KDE — the field `F_n` and its upcrossings
 
 §2.1 of arXiv:2412.09080v3, `eq:Fn`: the random function whose upcrossings of
@@ -17,14 +21,14 @@ the KDE.
 
 * "i.e. `t` is a mode of `P̂_n`" is the second-derivative test, and it goes one
   way only: an upcrossing is a mode, but a mode need not be an upcrossing, the
-  second derivative being allowed to vanish there.  `Section2_Degenerate.lean`
+  second derivative being allowed to vanish there. `Section2_Degenerate.lean`
   exhibits a KDE with a degenerate mode and refutes the pathwise equality; the
   identity the paper uses holds in expectation and is carried there.
 
 Source: arXiv:2412.09080v3, `eq:Fn`, `sec:kac-rice`.
 -/
 
-import Transformer.Modes.Section2_KacRice
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open Real MeasureTheory Filter

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section4_Global
+
+/-!
 # IC-EoT: connecting the proved encoder to the MPC hypotheses
 
 arXiv:2603.22095v2, §4.1, Eqs. (33)–(36), and §4.3.1, Eq. (48).
@@ -7,7 +11,7 @@ This bridge derives predictor convexity and predicted-variable monotonicity
 from the encoder's parameters, rather than assuming the conclusion of §3.3.
 -/
 
-import Transformer.ICEoT.Section4_Global
+@[expose] public section
 
 noncomputable section
 

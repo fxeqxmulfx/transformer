@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_CircleGeometry
+public import Transformer.Perceptron.Section5_AtomicIntegrals
+public import Transformer.Perceptron.GeodesicCurve
+public import Transformer.Perceptron.Kernel
+
+/-!
 # Angular speeds along the actual spherical exponential map
 
 ArXiv:2601.21366v2, §2.2, the exponential map defining the Monge
@@ -16,10 +23,7 @@ No Hessian is defined by that sum; the next calculus step must
 differentiate the actual energy expression.
 -/
 
-import Transformer.Perceptron.Section5_CircleGeometry
-import Transformer.Perceptron.Section5_AtomicIntegrals
-import Transformer.Perceptron.GeodesicCurve
-import Transformer.Perceptron.Kernel
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

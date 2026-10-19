@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.SequenceExamples
+
+/-!
 # Joint witnesses for analytic preparation hypotheses
 
 The energy `w² + z₀²` supplies a nonconstant, singular analytic example.
@@ -7,7 +11,7 @@ majorant, normalization, analytic quotient, and analytic remainder inputs.
 Auxiliary examples for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.SequenceExamples
+@[expose] public section
 
 open Filter
 open scoped ENNReal NNReal Topology

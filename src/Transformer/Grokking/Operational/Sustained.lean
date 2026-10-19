@@ -1,5 +1,7 @@
-import Transformer.Grokking.Operational.Windows
-import Transformer.Grokking.Operational.Censoring
+module
+
+public import Transformer.Grokking.Operational.Windows
+public import Transformer.Grokking.Operational.Censoring
 
 /-!
 # First sustained success and confirmation
@@ -21,6 +23,8 @@ The trace is a model-free counterexample; it is not an asserted AdamW
 trajectory. The Python finite-list scan and its timestamps remain an
 additional implementation bridge to these observation-indexed predicates.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Operational
 

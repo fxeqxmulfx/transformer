@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Modes.Section2_Gt
+public import Mathlib.MeasureTheory.Integral.Gamma
+
+/-!
 # The number of modes of a Gaussian KDE — the Gaussian integrals
 
 `lem:gaussian-int` of arXiv:2412.09080v3, §5.1: the one-sided Gaussian moment
@@ -12,15 +17,14 @@ moment asymptotics of `lem:moments-p` and `lem:phi-t` are read off from.
   `q = n`, once the `rpow`s are turned into `npow`s.
 
 * The two limits as `ε → 0` are proved by dominated convergence, as in the
-  source.  The dominating function is `e·|v|ⁿe^{-v²/2}` for `|ε| ≤ 1`, from
+  source. The dominating function is `e·|v|ⁿe^{-v²/2}` for `|ε| ≤ 1`, from
   `(v - ε)² ≥ v²/2 - ε²`, one function in place of the source's piecewise
   `e·2ⁿ` on `[-2, 2]` and `|v|ⁿe^{-v²/4}` outside.
 
 Source: arXiv:2412.09080v3, `lem:gaussian-int`, §5.1.
 -/
 
-import Transformer.Modes.Section2_Gt
-import Mathlib.MeasureTheory.Integral.Gamma
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory Filter Topology

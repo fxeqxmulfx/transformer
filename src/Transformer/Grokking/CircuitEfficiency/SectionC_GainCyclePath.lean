@@ -1,6 +1,8 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainCycleStep
-import Mathlib.Order.Filter.AtTopBot.Tendsto
-import Mathlib.Topology.Separation.Hausdorff
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainCycleStep
+public import Mathlib.Order.Filter.AtTopBot.Tendsto
+public import Mathlib.Topology.Separation.Hausdorff
 
 /-!
 # An actual native CE path with period-two physical parameters
@@ -25,6 +27,8 @@ GPTMini runs. Fixed gained tables and plain CE with decoupled decay
 also differ from appendix C's GD and coupled circuit norm cost.
 Neither attraction nor a learned transformer cycle is asserted.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

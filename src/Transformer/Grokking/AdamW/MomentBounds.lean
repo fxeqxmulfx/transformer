@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.MomentRecurrence
+module
+
+public import Transformer.Grokking.AdamW.MomentRecurrence
 
 /-!
 # Causal bounds for corrected native moments
@@ -15,6 +17,8 @@ not assert alignment of a stale first moment with the current gradient,
 or descent at the prescribed rate. Gradients beyond the current clock
 are unconstrained. No long-time generalization conclusion is presumed.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

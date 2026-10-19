@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.MarkovMarginals
-import Transformer.GPTMini.Convex.Structured.ChannelMarginals
+module
+
+public import Transformer.GPTMini.Convex.Structured.MarkovMarginals
+public import Transformer.GPTMini.Convex.Structured.ChannelMarginals
 
 /-!
 # Jointly learned conditional output channels
@@ -16,6 +18,8 @@ This supplies the actual inference distribution for the subsequent
 convex complete-likelihood objective. Ordinary marginal output-label
 CE, full Basis capability and residual/tied decoding are not claimed.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

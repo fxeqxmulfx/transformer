@@ -1,6 +1,8 @@
-import Transformer.Modes.Section3_CubicFourierInversion
-import Transformer.Modes.Section3_CubicIntegralComparison
-import Transformer.Modes.Section3_WeightedFourier
+module
+
+public import Transformer.Modes.Section3_CubicFourierInversion
+public import Transformer.Modes.Section3_CubicIntegralComparison
+public import Transformer.Modes.Section3_WeightedFourier
 
 /-!
 # The actual sum density after its first Edgeworth correction
@@ -21,6 +23,8 @@ is also used by `Section3_CubicWeightedDensity`, where the proved third
 derivative estimate supplies the spatial factor `1 + |x|³`. The source's
 `edgeworth_three` statement is kept separately in `Section3_BREstimates`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology FourierTransform

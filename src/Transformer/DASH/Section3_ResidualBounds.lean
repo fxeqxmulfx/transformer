@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.DASH.Section3_CoupledNewton
+
+/-!
 # DASH — quantitative consequences of the Newton recurrence
 
 arXiv:2602.02016v2, §3.2–3.4. Exact residual identities explain
 quadratic convergence near one and the slow escape from zero.
 -/
 
-import Transformer.DASH.Section3_CoupledNewton
+@[expose] public section
 
 noncomputable section
 

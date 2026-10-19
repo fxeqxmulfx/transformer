@@ -1,7 +1,9 @@
-import Transformer.AMSGrad.Section1_TheoremA
-import Mathlib.Analysis.Calculus.FDeriv.Mul
+module
 
-/-
+public import Transformer.AMSGrad.Section1_TheoremA
+public import Mathlib.Analysis.Calculus.FDeriv.Mul
+
+/-!
 # AMSGrad — Example 3.2
 
 §3 of arXiv:1904.03590v4, Example 3.2: Reddi et al.'s synthetic cost on
@@ -21,6 +23,8 @@ from `x₁ = 1` with `β₁ = 0.9`, `β_{1,t} = β₁λ^{t-1}`, `λ = 0.001`,
 Source: arXiv:1904.03590v4, §3, Example 3.2.
 -/
 
+@[expose] public section
+
 open Finset
 
 namespace Transformer
@@ -29,7 +33,7 @@ namespace AMSGrad
 /-- The slope of the cost at time `t`: `1010` if `t mod 101 = 1`, else `-10`. -/
 def exaCoef (t : ℕ) : ℝ := if t % 101 = 1 then 1010 else -10
 
-/-- The run of Example 3.2.  arXiv:1904.03590v4, §3, Example 3.2. -/
+/-- The run of Example 3.2. arXiv:1904.03590v4, §3, Example 3.2. -/
 noncomputable def exaSetup : Setup 1 :=
   ⟨fun _ => boxProj (-1) 1, fun t x => exaCoef t * x 0, fun t => 0.001 / Real.sqrt t,
     fun t => 0.9 * 0.001 ^ (t - 1), 0.999, fun _ => 1⟩

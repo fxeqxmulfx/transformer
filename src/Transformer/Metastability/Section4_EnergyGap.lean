@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Metastability.EnergyScale
+public import Transformer.Metastability.AttnFlow
+public import Transformer.Metastability.InitialUniform
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
+
+/-!
 # Energy deficits and a common spherical cap
 
 For the energy printed in arXiv:2410.06833v1, §1,
@@ -9,10 +16,7 @@ a cap centred at any chosen token. This supplies the geometric step for the
 nonempty energy window asked for in §4, `sec: energy.levels`.
 -/
 
-import Transformer.Metastability.EnergyScale
-import Transformer.Metastability.AttnFlow
-import Transformer.Metastability.InitialUniform
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
+@[expose] public section
 
 open Real MeasureTheory
 open scoped BigOperators

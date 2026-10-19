@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.Section2_EnergyConvex
+public import Transformer.Perspective.SphereInvariant
+
+/-!
 # §3.2 — The minimiser of the interaction energy
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -6,18 +11,17 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 `prop: existence.uniqueness.energy`, minimiser half.
 
 `𝖤_β` is invariant under the linear isometries of `ℝ^d`
-(`interactionEnergy_map_sphereMap`), since `⟨Ux, Ux'⟩ = ⟨x, x'⟩`.  If a
+(`interactionEnergy_map_sphereMap`), since `⟨Ux, Ux'⟩ = ⟨x, x'⟩`. If a
 continuous `V` is invariant too, the image of the minimiser of `𝖤_β + ∫ V` is
 again a minimiser, hence the minimiser itself, which is unique
 (`Section2_EnergyConvex`): `map_sphereMap_eq_of_isMin`.
 
 `V = 0` is the minimiser half of the proposition
-(`existence_uniqueness_energy_min`).  `Perceptron.Minimizer` takes the
+(`existence_uniqueness_energy_min`). `Perceptron.Minimizer` takes the
 perceptron's potential for `V`.
 -/
 
-import Transformer.Perspective.Section2_EnergyConvex
-import Transformer.Perspective.SphereInvariant
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -82,9 +86,9 @@ name — a probability measure on `𝕊^{d-1}` invariant under every linear
 isometry of `ℝ^d` *is* `σ_d` — so that no Haar-measure machinery is needed to
 state the proposition.
 
-The source assumes `d ≥ 2`; `d ≥ 1` suffices, and is what is proved.  On
+The source assumes `d ≥ 2`; `d ≥ 1` suffices, and is what is proved. On
 `𝕊^0 = {±1}` the isometries are `±id`, and the invariant measure is
-`(δ_1 + δ_{-1})/2`, the uniform measure there.  At `d = 0` the sphere is
+`(δ_1 + δ_{-1})/2`, the uniform measure there. At `d = 0` the sphere is
 empty and there is no minimiser.
 
 The source's proof expands `e^{βt}` in Gegenbauer polynomials; this one

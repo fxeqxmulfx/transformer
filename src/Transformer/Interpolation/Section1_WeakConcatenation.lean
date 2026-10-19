@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_ConcatenatedPrimitives
+public import Transformer.Interpolation.Section3_ProjectionControls
+public import Transformer.Interpolation.Clustering
+
+/-!
 # Concatenating actual solutions of the original weak equation
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §3.1,
@@ -10,9 +16,7 @@ The proof joins their actual scalar test primitives and fluxes, so
 it retains the original integrated equation at the control switch.
 -/
 
-import Transformer.Interpolation.Section1_ConcatenatedPrimitives
-import Transformer.Interpolation.Section3_ProjectionControls
-import Transformer.Interpolation.Clustering
+@[expose] public section
 
 open Real MeasureTheory
 

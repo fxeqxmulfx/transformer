@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CyclicCircuitInput
+
+/-!
 # Returning circuit results to the original sequence positions
 
 Arora et al., arXiv:2312.04927v1, Appendix Theorem `thm: gen-ac`.
@@ -7,7 +11,7 @@ designated outputs into position-indexed columns, shift those columns to
 their destination rows, and sum them into the original feature columns.
 -/
 
-import Transformer.Zoology.Appendix_CyclicCircuitInput
+@[expose] public section
 
 namespace Transformer.Zoology
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixD_DotAlpha
+
+/-!
 # §6.1 — Step 2 of cone collapse: the differential inequality
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -6,14 +10,14 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 `lem: hemisphere.clustering`, step 2.
 
 `e:diffineqalpha.step2`, for the `x⋆` that step 1 produces: the common limit
-of particles starting in an open hemisphere.  The cone of step 2 is
+of particles starting in an open hemisphere. The cone of step 2 is
 `Perspective.limit_mem_cone`, and the estimate shared with Appendix D is
 `Perspective.dot_alpha_ge`; what is left here is the survey's choice of `t₀`,
-past which `α ≥ 1/2`.  The integration of the inequality into the exponential
+past which `α ≥ 1/2`. The integration of the inequality into the exponential
 rate is `Perspective.exp_rate_of_diffineqalpha`.
 -/
 
-import Transformer.Perspective.AppendixD_DotAlpha
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -33,9 +37,9 @@ where `α(t) = min_i ⟨x_i(t), x⋆⟩`, `x⋆` is the common limit of step 1
 **What the source says and what is changed here.**  The survey fixes `t₀` in
 the text ("there exists some `t₀ > 0` such that `α(t) ≥ 1/2` for all
 `t ≥ t₀`"); here it is the existential of the conclusion, and it is produced
-from the limit exactly as the survey does.  The setting is the lemma's: the
+from the limit exactly as the survey does. The setting is the lemma's: the
 particles start in the open hemisphere around `w` (`hw`) and converge to `x⋆`
-(`hlim`, which is `eq: qual.conv`).  Two hypotheses are not in the survey's
+(`hlim`, which is `eq: qual.conv`). Two hypotheses are not in the survey's
 display:
 
 *`hβ : 0 ≤ β`.*  The lemma assumes `β > 0`; the bound `a_{ij} ≥ n^{-1}

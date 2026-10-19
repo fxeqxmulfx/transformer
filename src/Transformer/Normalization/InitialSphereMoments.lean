@@ -1,14 +1,18 @@
-/-
+module
+
+public import Transformer.Perspective.SphereInvariant
+public import Transformer.Perspective.Section2_EnergyMoments
+public import Transformer.Perspective.WendelOneDimBasic
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+
+/-!
 # The first two moments of uniform spherical initialization
 
 The centered and isotropic spherical law used in Appendix B, proof of
 Theorem 4.2 of arXiv:2510.22026v2. Only isometry invariance is assumed.
 -/
 
-import Transformer.Perspective.SphereInvariant
-import Transformer.Perspective.Section2_EnergyMoments
-import Transformer.Perspective.WendelOneDimBasic
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+@[expose] public section
 
 open scoped BigOperators
 open MeasureTheory

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_AutonomousTransport
+public import Transformer.Interpolation.Section3_RidgeTransport
+
+/-!
 # Original ReLU weak well-posedness for every spherical probability
 
 ArXiv:2411.04551v3, §1, `eq: ips`, `eq: cauchy.pb` and the
@@ -16,8 +21,7 @@ to every original weak solution, so later selective transport arguments
 can use the fixed region without assuming uniqueness or a flow formula.
 -/
 
-import Transformer.Interpolation.Section1_AutonomousTransport
-import Transformer.Interpolation.Section3_RidgeTransport
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal BigOperators

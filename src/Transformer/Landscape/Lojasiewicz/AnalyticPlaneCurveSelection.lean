@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.PlaneCurveExamples
+public import Transformer.Landscape.Lojasiewicz.WeierstrassCoordinates
+
+/-!
 # Curve selection in arbitrary nonconstant analytic plane level sets
 
 A finite-order direction supplies invertible preparation coordinates.
@@ -7,8 +12,7 @@ retaining all finite analytic sign requirements and excluding that point
 at every positive curve parameter.
 -/
 
-import Transformer.Landscape.Lojasiewicz.PlaneCurveExamples
-import Transformer.Landscape.Lojasiewicz.WeierstrassCoordinates
+@[expose] public section
 
 open Filter Set
 

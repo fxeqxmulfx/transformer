@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section4_BatchedFourthRoot
+public import Transformer.DASH.Section3_GuardedRootCorrectness
+
+/-!
 # DASH — automatically normalized batched NDB inverse fourth roots
 
 arXiv:2602.02016v2, §3.3–3.5 and §4. The batch solver includes the
@@ -7,8 +12,7 @@ not a presumed bound on a PI estimate. Counts refer only to root-solver
 batched matrix products, as in the source, not preprocessing or PI work.
 -/
 
-import Transformer.DASH.Section4_BatchedFourthRoot
-import Transformer.DASH.Section3_GuardedRootCorrectness
+@[expose] public section
 
 open scoped Matrix Topology
 open Filter

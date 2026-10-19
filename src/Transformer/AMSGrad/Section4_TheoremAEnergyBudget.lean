@@ -1,12 +1,16 @@
-import Transformer.AMSGrad.Section4_TheoremAEnergyBounds
+module
 
-/-
+public import Transformer.AMSGrad.Section4_TheoremAEnergyBounds
+
+/-!
 # AMSGrad — Theorem A: EnergyBudget
 
 Alternative proof of the printed regret bound in arXiv:1904.03590v4, §1,
 Theorem A. The paper’s telescoping step is invalid for varying schedules;
 these estimates use the schedule-free projection potential instead.
 -/
+
+@[expose] public section
 
 open Finset
 

@@ -1,15 +1,19 @@
-/-
+module
+
+public import Mathlib
+
+/-!
 # Convexifying Transformers: finite-dimensional models
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §3.1–§3.2.
 The index types `Fin N`, `Fin n`, `Fin d`, and `Fin h` represent samples,
-tokens, embedding coordinates, and attention heads.  A scalar attention
+tokens, embedding coordinates, and attention heads. A scalar attention
 weight is a vector in the unit simplex, as required by the scalar model in
 equation (8); the matrix simplex introduced in §3.1 is used for sequence
 outputs instead.
 -/
 
-import Mathlib
+@[expose] public section
 
 open scoped BigOperators
 
@@ -36,7 +40,7 @@ def IsSimplex {n : ℕ} (a : Vec n) : Prop :=
 
 /-- The row-stochastic matrix simplex corresponding to rowwise softmax.
 The notation in §3.1 writes `1ᵀ W_i = 1` for each `i`, which would make
-columns stochastic if `W_i` denotes a column.  The row interpretation is
+columns stochastic if `W_i` denotes a column. The row interpretation is
 forced by the stated softmax identity. -/
 def IsRowStochastic {n : ℕ} (A : Mat n n) : Prop :=
   ∀ r, IsSimplex (A r)
@@ -72,7 +76,7 @@ def convexPrediction {n d : ℕ} (X : Fin n → Vec d)
     (Z : Fin n → Vec d) : ℝ :=
   ∑ k, ∑ q, Z k q * X k q
 
-/-- The convex objective *as printed* in equation (9).  Its loss has an
+/-- The convex objective *as printed* in equation (9). Its loss has an
 additional factor `1/2` absent from equation (8). -/
 noncomputable def printedConvexObjective {N n d : ℕ} (X : Data N n d) (y : Vec N)
     (L : ℝ → ℝ → ℝ) (β : ℝ) (Z : Fin n → Vec d) : ℝ :=

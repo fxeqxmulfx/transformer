@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AdaFisher.SectionA_Descent
+public import Mathlib.NumberTheory.Harmonic.Bounds
+
+/-!
 # AdaFisher: corrected squared-update and harmonic bounds
 
 arXiv:2405.16397v3, Proposition 3.4, Appendix A.2, C1 term in `eq:bound_1`.
@@ -7,8 +12,7 @@ entry. The required assumption is an entrywise lower bound δ>0, supplied
 by damping, and the resulting estimate contains δ⁻².
 -/
 
-import Transformer.AdaFisher.SectionA_Descent
-import Mathlib.NumberTheory.Harmonic.Bounds
+@[expose] public section
 
 open scoped BigOperators
 

@@ -1,26 +1,30 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_BoundedXN
+public import Transformer.Clusters.Section7_BoundedOtherEscape
+public import Transformer.Clusters.Section7_ExactAsymptotic
+
+/-!
 # The emergence of clusters in self-attention dynamics — `l:boundedother`
 
 §7 of arXiv:2305.05465v6: if the bounded token is interior, its row of the
 self-attention matrix converges.
 
-The proof is the source's.  Every other token is unbounded (`l:onlyone`), so
+The proof is the source's. Every other token is unbounded (`l:onlyone`), so
 `x_k e^{-t} → γ_k ≠ 0` (`l:exactasymptotic`), with `γ_n > 0` and `γ_1 < 0`
-since `x_1 ≤ x_{i₀} ≤ x_n`; the bounded token has `x_{i₀} e^{-t} → 0`.  Then
+since `x_1 ≤ x_{i₀} ≤ x_n`; the bounded token has `x_{i₀} e^{-t} → 0`. Then
 `x_{i₀} e^t → θ₀` (`tendsto_rescaled`), so every score
 `x_{i₀} x_k = (x_{i₀} e^t)(x_k e^{-t})` converges to `θ₀ γ_k`, and the row
 converges to the softmax of these limits.
 
 **What the source says and what is carried here.**  The source states the
-convergence for `j ∈ [n-1]` only.  Its proof gives every `j ∈ [n]`, and that
+convergence for `j ∈ [n-1]` only. Its proof gives every `j ∈ [n]`, and that
 is what is stated: the case `j = n` is no longer left to the row sum.
 
 Source: arXiv:2305.05465v6, `l:boundedother`.
 -/
 
-import Transformer.Clusters.Section7_BoundedXN
-import Transformer.Clusters.Section7_BoundedOtherEscape
-import Transformer.Clusters.Section7_ExactAsymptotic
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -98,7 +102,7 @@ theorem exists_tendsto_attention_of_bounded_interior (X : ℝ → Idx (m + 1) �
 satisfiable: the symmetric triple `(-u, 0, u)` of
 `Transformer.Clusters.Section7_Symmetric` is ordered as soon as `u(0) > 0`,
 and its interior token sits at the origin for all time, so it is the bounded
-one.  The solution `u` of the scalar equation is the hypothesis; no solution
+one. The solution `u` of the scalar equation is the hypothesis; no solution
 of `e:Idnonresca` with three distinct tokens is available in closed form. -/
 example (u : ℝ → ℝ) (hu : ∀ t : ℝ, HasDerivAt u (symDrift (u t)) t) (hu0 : 0 < u 0) :
     IdNonrescaledDynamics (fun t => symTriple (u t)) ∧

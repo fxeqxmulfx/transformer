@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.Concentration
-import Transformer.GPTMini.Convex.Structured.Factorial
+module
+
+public import Transformer.GPTMini.Convex.Structured.Concentration
+public import Transformer.GPTMini.Convex.Structured.Factorial
 
 /-!
 # Actual finite learned-channel energy deficits
@@ -19,6 +21,8 @@ position and latest-write conditions have been obtained from parsing.
 No infinite temperatures, optimizer change or output-only convexity
 are asserted. Both the matching and value variables are evaluated.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

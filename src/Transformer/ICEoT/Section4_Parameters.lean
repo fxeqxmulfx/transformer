@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section4_ReportedModels
+
+/-!
 # IC-EoT: scalar parameter accounting
 
 arXiv:2603.22095v2, §3.2, Eqs. (14)–(27), and §4.3.2, Table 3.
@@ -7,7 +11,7 @@ IC-EoT counts printed in Table 3. The difference is recorded explicitly;
 no claim is made about an unavailable implementation's parameter tying.
 -/
 
-import Transformer.ICEoT.Section4_ReportedModels
+@[expose] public section
 
 namespace Transformer.ICEoT
 

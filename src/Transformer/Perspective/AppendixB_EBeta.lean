@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_Rotation
+public import Transformer.Perspective.Section2_GradientFlow
+
+/-!
 # Appendix B — the energy `𝖤_β` on `(𝕊^{d-1})^n`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -19,8 +24,7 @@ Hessian along a block rotation, `eq: dr1`), `Perspective.AppendixB_HighD`
 (`e:Hessianincoord`).
 -/
 
-import Transformer.Perspective.AppendixA_Rotation
-import Transformer.Perspective.Section2_GradientFlow
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -49,7 +53,7 @@ theorem selfEnergy_one (β : ℝ) (X : SphereTuple d 1) :
 
   `Proj_{x_i} Σ_j e^{β ⟨x_i, x_j⟩} x_j`
 
-vanishes at every token.  It is the right-hand side of `USA`, so the critical
+vanishes at every token. It is the right-hand side of `USA`, so the critical
 points are exactly the stationary configurations of the dynamics. -/
 def IsCriticalEBeta (β : ℝ) (X : SphereTuple d n) : Prop :=
   ∀ i : Idx n,
@@ -85,8 +89,8 @@ noncomputable def singleToken : SphereTuple 1 1 :=
 
 /-- A single token is a critical point of `𝖤_β` — its gradient is a multiple
 of `Proj_x x = 0` — and `𝖤_β` is constant on `(𝕊^{d-1})^1`, so every second
-derivative vanishes and the Hessian is non-positive.  The zero matrix is
-skew-symmetric.  This is the witness the statements of Appendix B are tested
+derivative vanishes and the Hessian is non-positive. The zero matrix is
+skew-symmetric. This is the witness the statements of Appendix B are tested
 against. -/
 theorem singleToken_isSkew_critical_hessianNonPos :
     IsSkew 1 0 ∧ IsCriticalEBeta 1 1 1 singleToken ∧

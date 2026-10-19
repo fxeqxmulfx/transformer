@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section3_Spectral
+public import Transformer.DASH.Section3_CoupledNewton
+
+/-!
 # DASH — matrix root iteration models
 
 arXiv:2602.02016v2, §3.2–3.3. The exact recurrences are kept separate
@@ -6,8 +11,7 @@ from the spectral and convergence proofs. The first NDB step is reduced
 to one matrix multiplication, as described in §3.3.
 -/
 
-import Transformer.DASH.Section3_Spectral
-import Transformer.DASH.Section3_CoupledNewton
+@[expose] public section
 
 open scoped BigOperators Matrix
 

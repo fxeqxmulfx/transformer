@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_PolynomialKernel
+public import Transformer.Perceptron.Section5_ConstantTransform
+
+/-!
 # The original polynomial kernel inverse in every dimension
 
 ArXiv:2601.21366v2, §5.1, `lem: quadpol` (i).
@@ -10,8 +15,7 @@ Together with the proved kernel preservation in dimensions at least two,
 these cases give an actual finite-dimensional inverse in every dimension.
 -/
 
-import Transformer.Perceptron.Section5_PolynomialKernel
-import Transformer.Perceptron.Section5_ConstantTransform
+@[expose] public section
 
 open Real MeasureTheory Set
 

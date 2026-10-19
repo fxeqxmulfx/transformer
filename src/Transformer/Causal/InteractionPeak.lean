@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.Causal.InteractionBounds
+
+/-!
 # Causal attention — The peak of the interaction potential (§B of 2411.04990v2)
 
 `lemma:interaction` (3): on `[0, π]` the potential `h(x) = e^{β(cos x - 1)} sin x`
 rises to a single peak and falls back.
 
-The peak is where `g = h'` changes sign.  Since
+The peak is where `g = h'` changes sign. Since
 
   `g(x) = e^{β(cos x - 1)} (β cos²x + cos x - β)`,
 
@@ -26,7 +30,7 @@ This is the one item of `lemma:interaction` that needs the quartic bound
 `cos_le_quartic`, which is why it comes after `Causal.InteractionBounds`.
 -/
 
-import Transformer.Causal.InteractionBounds
+@[expose] public section
 
 open scoped BigOperators
 open Real

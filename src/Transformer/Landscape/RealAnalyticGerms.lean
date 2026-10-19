@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.RealAnalyticGerms.DivisionExamples
+public import Transformer.Landscape.RealAnalyticGerms.FiniteEquationExamples
+public import Transformer.Landscape.RealAnalyticGerms.RemainderKernelExamples
+
+/-!
 # Noetherian real analytic germ rings and finite analytic elimination
 
 Real Weierstrass division supplies an intrinsic remainder map, an explicit
@@ -8,6 +14,4 @@ These are auxiliary foundations for Appendix D.1, `lem: loj`, of
 arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.RealAnalyticGerms.DivisionExamples
-import Transformer.Landscape.RealAnalyticGerms.FiniteEquationExamples
-import Transformer.Landscape.RealAnalyticGerms.RemainderKernelExamples
+@[expose] public section

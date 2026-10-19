@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.RawStream
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # Growth freezes the directions
 
 **Not a statement of any paper.**  The stream of `Perspective.RawStream`,
@@ -7,10 +13,10 @@ channel of a parameter-golf block.
 
 * The stream outgrows its drive: after `t₀` the direction of token `i` moves
   by at most `2 M / (c ‖x_i(t₀)‖)` for all time, whatever the attention, the
-  feed-forward term and the injections do (`rawStream_frozen`).  The
+  feed-forward term and the injections do (`rawStream_frozen`). The
   directions keep the configuration they had at `t₀` up to that much, a
   consensus as well as a spread one.
-* So `blockDrive_spread` does not survive the norm.  On the sphere the pure
+* So `blockDrive_spread` does not survive the norm. On the sphere the pure
   injection `ẋ_i = Proj_{x_i}(z_i)` with two independent differences spreads
   within every window of length `τ` (`blockDrive_spread` at `A = B = L_G = 0`).
   Before the norm, for every `c > 0`, any injections and any `δ > 0`, some
@@ -31,15 +37,13 @@ The U-Net skip of the decoder half, `x ← x + skip_weights ⊙ skip`, which add
 an earlier state of the stream rather than a bounded drive, is no longer open
 as a question of the gauge: it is gauge-covariant (`ungauged_rec_skip` of
 `Perspective.RawStackSkip`), with its gate divided by the gain accumulated over
-the depth it jumps.  What stays open is freezing through it, and for a reason
+the depth it jumps. What stays open is freezing through it, and for a reason
 that is now proved rather than guessed: at a fixed gap the rescaled gates do
 not shrink with depth (`le_abs_skipWeight` of `Perspective.RawStackSkipDamp`),
 so they are not summable the way the block outputs are.
 -/
 
-import Transformer.Perspective.RawStream
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open scoped BigOperators
 
@@ -50,8 +54,8 @@ variable {d n : ℕ}
 
 /-- **Growth freezes the direction.**  Let `c > 0` and `ẋ = c x + g(t)` on
 `[t₀, t₁]` (right derivatives, so that `g` may jump from block to block), with
-`‖g‖ ≤ M`.  Then for every `t` of the window the direction of `x` has moved by
-at most `2 M / (c ‖x(t₀)‖)` — a bound that does not depend on `t₁`.  In the
+`‖g‖ ≤ M`. Then for every `t` of the window the direction of `x` has moved by
+at most `2 M / (c ‖x(t₀)‖)` — a bound that does not depend on `t₁`. In the
 frame `e^{-c(t - t₀)} x(t)` that grows with the stream, the drive
 `e^{-c(t - t₀)} g` has total length at most `M / c`.
 
@@ -113,18 +117,18 @@ example : (0 : ℝ) < 1 ∧ (0 : ℝ) ≤ 0 ∧
 `blockDrive_spread` for the stream behind the RMS norm — that for `c > 0`
 (`mix[0] > 1`) and injections `z_i` there is `δ > 0` such that along every
 nonvanishing stream `ẋ_i = c x_i + z_i` two directions are more than `δ` apart
-at some time `t ≥ 0`.  It fails for every `c > 0` and every `z`, independent
+at some time `t ≥ 0`. It fails for every `c > 0` and every `z`, independent
 differences included, although this is a block with no attention and no
 feed-forward term, within the bounds `IsBoundedBlockOn` for any
 `A, N, B, L_G ≥ 0` and `Z ≥ ‖z_i‖`: start all tokens at `R e₀` with `R` large;
 by `rawStream_frozen` every direction stays within `2 M / (c R)` of `e₀`,
-`M = Σ_k ‖z_k‖`.  On the sphere, once two differences `z_k - z_l`, `z_m - z_p`
+`M = Σ_k ‖z_k‖`. On the sphere, once two differences `z_k - z_l`, `z_m - z_p`
 are independent, the same drive spreads the tokens within every window of
 length `τ` (`blockDrive_spread`).
 
-The initial state is free, as in `blockDrive_spread`.  In parameter-golf the
+The initial state is free, as in `blockDrive_spread`. In parameter-golf the
 stream starts at `x0`, of RMS norm `1`, and `z = mix[1] ⊙ x0` is tied to it;
-that start the refutation does not reach.  What it shows is that no bound on
+that start the refutation does not reach. What it shows is that no bound on
 the drive forces the directions apart once `‖x_i‖` is large against `M / c`.
 
 Source: none — posed here; it refutes the extension of `blockDrive_spread` to

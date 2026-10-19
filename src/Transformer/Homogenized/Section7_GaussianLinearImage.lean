@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_StandardGaussianStein
+
+/-!
 # Actual linear images in the Gaussian integration-by-parts argument
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -16,7 +20,7 @@ original law or discarding singular covariance matrices.
 All exchanges with finite sums use actual finite Gaussian moments.
 -/
 
-import Transformer.Homogenized.Section7_StandardGaussianStein
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators

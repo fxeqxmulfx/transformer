@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedPath
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedPath
 
 /-!
 # Efficient physical circuits win on actual positive finite-limit paths
@@ -26,6 +28,8 @@ transfer and the source's coupled norm-cost/GD deviation remain
 separate. A limiting positive margin supplies eventual decisions,
 whereas finite-point CE need not tend to zero.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

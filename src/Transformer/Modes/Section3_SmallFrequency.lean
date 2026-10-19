@@ -1,4 +1,7 @@
-import Transformer.Modes.Section3_CharacteristicTaylor
+module
+
+public import Transformer.Modes.Section3_CharacteristicTaylor
+
 /-!
 # Gaussian damping for small frequencies
 
@@ -16,6 +19,7 @@ arguments. The exponent uses the Euclidean square, while the radius
 condition uses the equivalent product sup norm of the Lean model.
 -/
 
+@[expose] public section
 open Real MeasureTheory Filter
 open scoped ENNReal
 namespace Transformer.Modes

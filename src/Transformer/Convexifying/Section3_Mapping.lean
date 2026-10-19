@@ -1,18 +1,22 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_Scaling
+public import Transformer.Convexifying.Section3_ScalarCounterexample
+
+/-!
 # Recovering heads from convex rows
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §3.2, Proposition 1
 (`prop:mapping`) and Appendix A.2.
 
-The displayed formula applies to each *nonzero* row of `Z`.  The paper's
+The displayed formula applies to each *nonzero* row of `Z`. The paper's
 premise says only that there are `h` nonzero rows, not that they are the first
 `h` rows; the printed `e_j` must therefore be replaced by `e_{k_j}` for an
-enumeration of their actual token indices.  The one-row identity below is
+enumeration of their actual token indices. The one-row identity below is
 the algebraic core of that corrected mapping.
 -/
 
-import Transformer.Convexifying.Section3_Scaling
-import Transformer.Convexifying.Section3_ScalarCounterexample
+@[expose] public section
 
 open scoped BigOperators
 
@@ -32,7 +36,7 @@ theorem mappedOutput_pos {d : ℕ} (z : Vec d) (hz : norm₂ z ≠ 0) :
   unfold mappedOutput
   exact Real.sqrt_pos.2 (lt_of_le_of_ne (norm₂_nonneg z) (Ne.symm hz))
 
-/-- The corrected per-row reconstruction formula.  Its attention vector is
+/-- The corrected per-row reconstruction formula. Its attention vector is
 the basis vector at the row's *actual* token index `k`.
 Source: arXiv:2211.11052v1, §3.2, `prop:mapping`. -/
 theorem mapped_row_prediction {n d : ℕ} (X : Fin n → Vec d)
@@ -62,7 +66,7 @@ def secondTokenDatum : Fin 2 → Vec 1 :=
   fun k _ => if k = 1 then 1 else 0
 
 /-- The printed map with `h = 1` reads the first row and therefore gives
-zero, although the convex matrix predicts one.  This demonstrates why an
+zero, although the convex matrix predicts one. This demonstrates why an
 enumeration of the support is required in Proposition 1.
 Source: arXiv:2211.11052v1, §3.2, `prop:mapping`, displayed recovery map. -/
 theorem printed_row_index_fails :
@@ -119,8 +123,8 @@ theorem secondToken_optimal (Z : Fin 2 → Vec 1) :
 
 /-- **Counterexample to the literal index choice in Proposition 1 at a
 global convex optimum.**  The optimal matrix has exactly one nonzero row,
-but that row is token one, not the first row.  The printed `j = 0` recovery
-formula predicts zero where the optimum predicts `7/8`.  Replacing `e_j`
+but that row is token one, not the first row. The printed `j = 0` recovery
+formula predicts zero where the optimum predicts `7/8`. Replacing `e_j`
 by the basis vector at the actual support index repairs the formula.
 Source: arXiv:2211.11052v1, §3.2, `prop:mapping`, Appendix A.2. -/
 theorem printed_mapping_fails_at_optimum :

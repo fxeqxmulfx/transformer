@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.ExtensionsPieces
+
+/-!
 # Eliminating the sugar of Appendix A.3: the counting operators
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -12,7 +16,7 @@ At position `0` the first rule fails, since both counts are `0` there; its
 pieces guard against it with `Form.pos`.
 -/
 
-import Transformer.CRASP.ExtensionsPieces
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

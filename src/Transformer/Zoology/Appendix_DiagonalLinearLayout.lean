@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ShiftSumProgram
+
+/-!
 # Workspace for a diagonal term plus a shared linear projection
 
 Arora et al., arXiv:2312.04927v1, Appendix `prop: butterfly-hyena` and
@@ -8,7 +12,7 @@ allows position-dependent diagonal coefficients without increasing the
 feature dimension. Three adjacent buffers fit in the common 9n workspace.
 -/
 
-import Transformer.Zoology.Appendix_ShiftSumProgram
+@[expose] public section
 
 namespace Transformer.Zoology
 

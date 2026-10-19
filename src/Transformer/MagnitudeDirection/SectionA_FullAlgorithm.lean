@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.Section3_ScalarAlgorithm
+public import Transformer.MagnitudeDirection.Section4_PositiveGains
+
+/-!
 # Full row-and-column optimizer wrapper
 
 arXiv:2606.25971v2, Appendix A, Algorithm 2. The wrapper implements the
@@ -6,8 +11,7 @@ complete printed step with a supplied gain map and derivative. Softplus
 gives an invariant independent of the gain optimizer's output values.
 -/
 
-import Transformer.MagnitudeDirection.Section3_ScalarAlgorithm
-import Transformer.MagnitudeDirection.Section4_PositiveGains
+@[expose] public section
 
 noncomputable section
 

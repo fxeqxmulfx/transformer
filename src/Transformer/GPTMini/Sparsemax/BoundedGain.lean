@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Sparsemax.ActiveDirection
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Calculus.Deriv.Inv
+module
+
+public import Transformer.GPTMini.Sparsemax.ActiveDirection
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.Calculus.Deriv.Inv
 
 /-!
 # A bounded QKNorm gain that needs no routing labels
@@ -18,6 +20,8 @@ every finite parameter. This is a derived modification, not the paper's
 score rule or a proven experiment. Outer losses and query/key parameter
 derivatives can still vanish; visible exact zeros remain possible.
 -/
+
+@[expose] public section
 
 noncomputable section
 

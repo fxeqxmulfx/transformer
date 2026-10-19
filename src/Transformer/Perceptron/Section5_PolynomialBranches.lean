@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_PolynomialPrimitives
+public import Transformer.Perceptron.Section5_LinearStationarity
+
+/-!
 # Actual first-variation fields of the original polynomial branches
 
 ArXiv:2601.21366v2, §5.2, `rem:piecewise-poly`, and §5.3,
@@ -14,8 +19,7 @@ the supplied polynomials match the original activation values.
 No global polynomial or analyticity property of the activation is assumed.
 -/
 
-import Transformer.Perceptron.Section5_PolynomialPrimitives
-import Transformer.Perceptron.Section5_LinearStationarity
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

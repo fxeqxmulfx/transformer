@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianRowMoments
+
+/-!
 # Original Gaussian row pairs and nonzero bilinear queries
 
 ArXiv:2604.01978v1, §2.3.3, assumption (G),
@@ -18,7 +22,7 @@ ensemble by selecting disjoint finite blocks. No assertion that a
 product matrix is invertible or has a Gaussian law enters the proof.
 -/
 
-import Transformer.Homogenized.Section7_GaussianRowMoments
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

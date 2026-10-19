@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_AttentionChartEquation
+public import Transformer.Perspective.CompactWidth
+public import Transformer.Perspective.ConeLimit
+
+/-!
 # Contraction of the full original attention support in a hemisphere chart
 
 ArXiv:2411.04551v3, §2, `prop: targets.atoms`, and §1, `eq: vf`.
@@ -14,9 +20,7 @@ hold for every original weak solution and arbitrary initial laws; no
 finite-particle approximation or atomic mass lower bound is assumed.
 -/
 
-import Transformer.Interpolation.Section2_AttentionChartEquation
-import Transformer.Perspective.CompactWidth
-import Transformer.Perspective.ConeLimit
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology

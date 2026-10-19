@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Quartet.Section3_NonClipping
+
+/-!
 # `Q_SR` is unbiased
 
 arXiv:2601.22813v2, §3.1: "`E_ω[x_i^FP4 × x^FP8_{i//16} × x^FP32] = x_i`",
@@ -10,11 +14,11 @@ The proof is short once the scheme is known not to clip
 (`Transformer.Quartet.Section3_NonClipping`): the two scales do not depend on
 the rounding coin, so they come out of the integral, and what is left is
 `integral_sr` on the E2M1 grid, whose two neighbours of the argument exist
-because the argument lies in `[-6, 6]`.  The hypothesis
+because the argument lies in `[-6, 6]`. The hypothesis
 `max|x| ≤ 2^14 · max_g|x|` is the one discussed there.
 -/
 
-import Transformer.Quartet.Section3_NonClipping
+@[expose] public section
 
 namespace Transformer
 namespace Quartet
@@ -23,7 +27,7 @@ variable {k : ℕ} {c : ℝ}
 
 /-- **Stochastic rounding is unbiased**: averaging over a coin uniform on
 `[0,1]` returns the argument (§3.1, "`SR_FP4` … preserves its argument in
-expectation").  This is the one property the whole backward pass of the paper
+expectation"). This is the one property the whole backward pass of the paper
 rests on. -/
 theorem integral_sr {G : Set ℝ} {x : ℝ} (hfin : G.Finite) (hlo : ∃ y ∈ G, y ≤ x)
     (hhi : ∃ y ∈ G, x ≤ y) : ∫ u in (0 : ℝ)..1, sr G x u = x := by

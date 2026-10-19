@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Kinetic.Defs
+public import Mathlib.Probability.Moments.Covariance
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Integral.Prod
+
+/-!
 # The swap identity for covariances
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 2, `eq:est-cov-phi`: for
@@ -15,10 +22,7 @@ coordinates of `x` and `x'` preserves the law (`measurePreserving_swapAt`) and
 exchanges `h_l` and `h_{l+1}`, which gives the factor `½`.
 -/
 
-import Transformer.Kinetic.Defs
-import Mathlib.Probability.Moments.Covariance
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Integral.Prod
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

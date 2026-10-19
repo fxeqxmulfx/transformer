@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.JointInteraction
+module
+
+public import Transformer.GPTMini.Convex.JointInteraction
 
 /-!
 # Exact linear-head representation of the unfactorized joint operator
@@ -16,6 +18,8 @@ training; the optimizer need not search for or learn these selector heads.
 Neither the tensor's cubic storage nor the recovered head count is compact.
 The direct forward already has the token-to-stream prefix's output shape.
 -/
+
+@[expose] public section
 
 noncomputable section
 

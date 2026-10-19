@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Interpolation.Basic
+public import Transformer.Interpolation.NeuralODE
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # Measure-to-measure interpolation — Exponential settling near the attractor
 
 `eq: Hartman.Grobman` of §4 of arXiv:2411.04551v3 asserts that, while the
@@ -9,7 +17,7 @@ attractor `ω_+` at an exponential rate,
 
 It is proved, for the flow `eq: neural.ode.separation` of Step 2 and every
 start in `𝒮_+`, as `Interpolation.Hartman_Grobman` in
-`Interpolation.HartmanGrobman`.  This file holds what that proof and the rest
+`Interpolation.HartmanGrobman`. This file holds what that proof and the rest
 of §4 share: the perceptron field `perceptronField`, and the Gronwall estimate
 `norm_sub_le_of_contraction` — a field pointing back towards `w` at a linear
 rate brings the path to `w` at that rate — whose hypothesis
@@ -23,11 +31,7 @@ standing still at the antipode of `ω_+` keeps the distance `2`, which no
 Source: arXiv:2411.04551v3, §4, `eq: Hartman.Grobman`.
 -/
 
-import Transformer.Interpolation.Basic
-import Transformer.Interpolation.NeuralODE
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open scoped BigOperators
 open Real

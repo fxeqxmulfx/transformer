@@ -1,4 +1,6 @@
-import Transformer.Modes.Section3_DensityLimit
+module
+
+public import Transformer.Modes.Section3_DensityLimit
 
 /-!
 # Density inversion for the actual probability law
@@ -33,6 +35,8 @@ Every law satisfying `HasIntegrableCharFun` also has these densities
 eventually; the weighted Edgeworth remainder estimates remain separate.
 Source: arXiv:2412.09080v3, §3 `thm:br` and §5.4–§5.5, Fourier inversion.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped FourierTransform Topology ENNReal

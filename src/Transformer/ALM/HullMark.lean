@@ -1,29 +1,34 @@
-/-
+module
+
+public import Transformer.ALM.HullLift
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # The key the compiler emits is not the lift
 
 `Transformer.ALM.HullLift` proves that no erase rule fires on a family of
 lifted keys, and `Transformer.ALM.HullCover` reads the container's final size
-off that.  Both are theorems about `liftKey k = (2k, -k²)`, and the compiler
-never emits it.  `_to_2d_key` (`transformer_vm/graph/core.py`, lines 293-319,
+off that. Both are theorems about `liftKey k = (2k, -k²)`, and the compiler
+never emits it. `_to_2d_key` (`transformer_vm/graph/core.py`, lines 293-319,
 ported verbatim as `vm-rs/alm-compile/src/graph.rs::embed_key`) builds the
 intercept of a `latest` head as
 
   `ky = -k² - clear · BIG + LATEST_ALPHA · inv_log_pos`,
 
 so every live key of the shipped model sits *above* the paraboloid by a
-positive amount.  The amount is bounded: `LATEST_ALPHA = 0.3` and
+positive amount. The amount is bounded: `LATEST_ALPHA = 0.3` and
 `inv_log_pos p = 1/log 2 - 1/log (p+2)` (`transformer_vm/evaluator.py`, line
 230) rises from `0` to `1/log 2`, so the offset stays under
 `0.3/log 2 = 0.4329` at every position a trace can reach — never zero after
 the first token, never as much as the unit gap between distinct integer keys.
 
-That bound is the whole of it.  Three lifted keys put the middle one above the
+That bound is the whole of it. Three lifted keys put the middle one above the
 chord of the other two by `(k₂-k₁)(k₃-k₂) ≥ 1`, and an offset under `1` cannot
 spend that, so `lineEval_markKey_lt` recovers the strict domination
 `lineEval_liftKey_lt_of_ne` gave for free and every consequence of it follows
 unchanged: `not_eraseStep_of_marked`, `erasesTo_eq_of_marked`,
 `build_eq_of_marked`, and one line per distinct key in
-`build_card_eq_of_marked`.  What the perturbation costs is a hypothesis the
+`build_card_eq_of_marked`. What the perturbation costs is a hypothesis the
 lift did not need — the keys must be a unit apart, which on the integer keys
 the machine compiles to (`Transformer.ALM.ScalarInt`) they are.
 
@@ -32,14 +37,13 @@ The perturbation's own purpose — separating two writes to one logical key, so
 that `HullMeta::last_seq` is a fallback rather than the mechanism — is
 `todo3.md` §2a, measured by
 `vm-rs/alm-vm/tests/reference.rs::nothing_on_the_released_weights_is_decided_by_rounding`
-at `6.0e-6` key steps in `hello`.  The other term, the clear marker, does not
+at `6.0e-6` key steps in `hello`. The other term, the clear marker, does not
 fit under this bound and is not covered here.
 
 Source: `transformer_vm/graph/core.py` lines 293-319; `todo3.md` §2a.
 -/
 
-import Transformer.ALM.HullLift
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -66,7 +70,7 @@ theorem lineEval_markKey_self (δ k : ℝ) : lineEval (markKey δ k) k = k ^ 2 +
 
 /-- **And a key a unit away is still strictly below it there.**  The shortfall
 of `k'` at `k` is `(k - k')² - (δ' - δ)`, and a perturbation spread under one
-cannot spend a squared key gap of at least one.  This is
+cannot spend a squared key gap of at least one. This is
 `lineEval_liftKey_lt_of_ne` with the offsets carried through, and it is the
 only place the unit separation is used. -/
 theorem lineEval_markKey_lt {δ δ' k k' : ℝ} (hsep : 1 ≤ (k - k') ^ 2)
@@ -83,7 +87,7 @@ example : lineEval (markKey 0 (0 : ℝ)) 1 < lineEval (markKey 0.4 (1 : ℝ)) 1 
 /-! ### The family a `latest` head holds -/
 
 /-- A family of perturbed lifts, as a head holds it: one line per *integer*
-key, each raised by an offset in `[0, A]`.  `onePerKey` is not an extra
+key, each raised by an offset in `[0, A]`. `onePerKey` is not an extra
 assumption about the data but the container's own invariant — two lines of
 equal slope are two writes to one key, and `eraseStep_of_slope_eq` removes one
 of them before this predicate is asked about. -/

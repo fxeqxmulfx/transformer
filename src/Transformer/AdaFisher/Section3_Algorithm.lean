@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_Efficient
+
+/-!
 # AdaFisher and AdaFisherW iterations
 
 arXiv:2405.16397v3, §3.2–3.3, `eq:expkronfactors`, Algorithm 1.
@@ -7,7 +11,7 @@ and conflates raw and corrected moments. We use its computed gradient `g`,
 keep raw momentum, and correct at the positive number of processed batches.
 -/
 
-import Transformer.AdaFisher.Section3_Efficient
+@[expose] public section
 
 open scoped BigOperators
 

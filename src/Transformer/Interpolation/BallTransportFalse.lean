@@ -1,22 +1,26 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_BallFlow
+
+/-!
 # Measure-to-measure interpolation — the ball lemmas in the source's order
 
 `lem: two.balls` and `lem: tubular.mass.movement` of arXiv:2411.04551v3
 (Appendix) choose the parameters, and with them the flow map `φ^t`, *before*
 the initial measure: "there exist `𝐖, 𝐔, b` such that for any
-`μ_0 ∈ 𝒫(𝕊^{d-1})` …".  In that order both are false as soon as the mass has
+`μ_0 ∈ 𝒫(𝕊^{d-1})` …". In that order both are false as soon as the mass has
 to move, in every dimension.
 
-The obstruction is elementary.  `φ^T` is a bijection which is the identity off
+The obstruction is elementary. `φ^T` is a bijection which is the identity off
 `S` (the ball `𝓑_0`, or the union of the chain), so it maps `S` onto `S`: every
-`x ∈ S` is `φ^T(y)` for some `y ∈ S`.  Take `x ∈ S` outside the target set `A`
+`x ∈ S` is `φ^T(y)` for some `y ∈ S`. Take `x ∈ S` outside the target set `A`
 and `μ_0 = δ_y`; then `μ(T) = δ_x` gives `A` no mass, while the claim asks for
 `c · μ_0(S) = c > 0`.
 
 The lemmas as stated in `BallTransport` choose `μ_0` first, as the proof does.
 -/
 
-import Transformer.Interpolation.Section3_BallFlow
+@[expose] public section
 
 open scoped ENNReal
 open MeasureTheory
@@ -65,7 +69,7 @@ theorem not_forall_mass_into (θ : TimeParams d) (φ : ℝ → SSphere d → SSp
 Whenever `𝓑_0 ⊄ 𝓑_1` and `ε < 1`, no constant `(𝐖, 𝐔, b)` and flow map
 `φ^t`, Lipschitz, invertible and the identity off `𝓑_0`, give
 `μ(T, 𝓑_0 ∩ 𝓑_1) ≥ (1 - ε) μ_0(𝓑_0)` with `μ(T) = φ^T_# μ_0` for every
-`μ_0`.  In any dimension; `two_balls` states the lemma with `μ_0` first.
+`μ_0`. In any dimension; `two_balls` states the lemma with `μ_0` first.
 
 Source: arXiv:2411.04551v3, Appendix, `lem: two.balls`. -/
 theorem not_two_balls (z₀ z₁ : SSphere d) (R₀ R₁ : ℝ)
@@ -89,7 +93,7 @@ Whenever `⋃_k 𝓑_k ⊄ 𝓑_K` and `ε < 1`, no piecewise-constant `(𝐖, �
 flow map `φ^t`, Lipschitz, invertible and the identity off `⋃_k 𝓑_k`, give
 `μ(T, 𝓑_K) ≥ (1 - ε)^K μ_0(⋃_k 𝓑_k)` with `μ(T) = φ^T_# μ_0` for every `μ_0`.
 For `K ≥ 2` the chain hypotheses themselves force `⋃_k 𝓑_k ⊄ 𝓑_K`, `𝓑_0` being
-nonempty and disjoint from `𝓑_K`.  `tubular_mass_movement` states the lemma
+nonempty and disjoint from `𝓑_K`. `tubular_mass_movement` states the lemma
 with `μ_0` first.
 
 Source: arXiv:2411.04551v3, Appendix, `lem: tubular.mass.movement`. -/

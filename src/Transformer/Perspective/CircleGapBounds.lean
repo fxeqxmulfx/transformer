@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perspective.CircleSites
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
+public import Mathlib.Analysis.Calculus.Deriv.Shift
+
+/-!
 # The two estimates of `lemma:taumax`
 
 Polyanskiy, Rigollet, Yao — arXiv:2507.22857v1, *Synchronization of mean-field
@@ -14,7 +21,7 @@ parts into
   `∫_a^b Ψ φ'' = (b - a)(φ(a) + φ(b))/2`,   `φ = χ'`
 
 (`integral_bump_mul_eq`), and `0 ≤ Ψ ≤ (b - a)²/8` gives
-`φ(a) + φ(b) ≤ (b - a)/4 ∫_a^b |φ''|₊` (`add_le_mul_integral_max_zero`).  The
+`φ(a) + φ(b) ≤ (b - a)/4 ∫_a^b |φ''|₊` (`add_le_mul_integral_max_zero`). The
 source takes `Ψ_i = a_i (x - θ_i)(θ_{i+1} - x)/2` and later `a_i = 1/Δ_i`;
 here `a_i = 1`, and `1/Δ_i` is divided out when the gaps are summed.
 
@@ -29,10 +36,7 @@ Over the gaps, `Σ_k w_k/Δ_k ≥ m/τ + m/Δ_ℓ` once `Σ w = 2m`, `w_ℓ ≤ 
 every other gap is at most `τ` and at most `Δ_ℓ` (`le_sum_div_of_le`).
 -/
 
-import Transformer.Perspective.CircleSites
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-import Mathlib.Analysis.Calculus.Deriv.Shift
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -133,11 +137,11 @@ example : Function.Periodic sin (2 * π) ∧ (0 : ℝ) < π ∧ (∀ y, HasDeriv
     continuous_cos.neg, by simp⟩
 
 /-- **The counting step of `lemma:taumax`.**  Let `Δ_k > 0`, `w_k ≥ 0` on `s`,
-with `Σ_s w = 2m` and `w_ℓ ≤ m`.  If every `Δ_k`, `k ≠ ℓ`, is at most `τ` and
+with `Σ_s w = 2m` and `w_ℓ ≤ m`. If every `Δ_k`, `k ≠ ℓ`, is at most `τ` and
 at most `Δ_ℓ`, then `m/τ + m/Δ_ℓ ≤ Σ_s w_k/Δ_k`.
 
 Source: arXiv:2507.22857v1, §3, the last display of the proof of
-`lemma:taumax`, with `w_k = N_k + N_{k+1}`, `m = n` and `Δ_ℓ = τ_max`.  The
+`lemma:taumax`, with `w_k = N_k + N_{k+1}`, `m = n` and `Δ_ℓ = τ_max`. The
 source bounds `1/Δ_k` below by `1/τ` only, which gives `8/τ` when
 `τ_max ≤ τ`; with `1/Δ_k ≥ max(1/τ, 1/τ_max)` it gives `1/τ + 1/τ_max`. -/
 theorem le_sum_div_of_le {s : Finset ℕ} {w Δ : ℕ → ℝ} {ℓ : ℕ} {m τ : ℝ} (hℓ : ℓ ∈ s)

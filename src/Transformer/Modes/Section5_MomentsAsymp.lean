@@ -1,22 +1,26 @@
-/-
+module
+
+public import Transformer.Modes.Section5_Moments
+
+/-!
 # The number of modes of a Gaussian KDE — the moments against their scale
 
 The asymptotics of `lem:moments-p` are read off the closed forms of §5.2 of
-arXiv:2412.09080v3 by dividing each by its claimed leading term.  This file
+arXiv:2412.09080v3 by dividing each by its claimed leading term. This file
 writes each quotient out, as an explicit function of
 
 * `ε = 1/β`, `x = t²/β` — both `→ 0` in the regime of §5.2 — and
 * a bounded function of `t` alone, `t²e^{-t²/2}` and its kin,
 
 so that the leading term is recovered exactly: `u = F · v`, with `F → 1`
-visibly.  The exponentials `e^{-βt²/(2(β+1))}` and `e^{-βt²/(2β+1)}` are
+visibly. The exponentials `e^{-βt²/(2(β+1))}` and `e^{-βt²/(2β+1)}` are
 split as `e^{-t²/2}·e^{xr/2}` and `e^{-t²/2}·e^{xs/2}`, where `r = 1/(1+ε)`
 and `s = 1/(2+ε)`: the source's remark that `exp Θ(t²/β) → 1`.
 
 Source: arXiv:2412.09080v3, §5.2 (`sec:moments`).
 -/
 
-import Transformer.Modes.Section5_Moments
+@[expose] public section
 
 open Real Filter Asymptotics
 open scoped Topology

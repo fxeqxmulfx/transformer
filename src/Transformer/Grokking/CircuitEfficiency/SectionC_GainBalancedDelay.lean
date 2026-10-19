@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedSelection
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainDelaySeeds
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedSelection
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainDelaySeeds
 
 /-!
 # Arbitrarily delayed permanent accuracy generalization on an actual native path
@@ -26,6 +28,8 @@ seed may fall below floating-point range. The later tail start is
 not asserted to be the first correct clock or a uniform time bound;
 CE-loss convergence and transfer to preserved GPTMini remain open.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

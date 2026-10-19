@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerL2Limit
+
+/-!
 # The actual optimizer process obtained from Euler L2 limits
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -7,7 +11,7 @@ in the joint Brownian past. Continuous paths and the generator identity
 are not assumed by the construction.
 -/
 
-import Transformer.BatchSize.Section4_EulerL2Limit
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal Topology

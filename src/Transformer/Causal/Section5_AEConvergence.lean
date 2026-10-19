@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section5_RowAvoidance
+public import Transformer.Causal.Section5_ConditionalVolume
+
+/-!
 # Almost-everywhere convergence for the original frozen system
 
 ArXiv:2411.04990v2, §5 and Appendix A, convergence and
@@ -22,8 +27,7 @@ also gives the assertion for every original global solution.
 Asymptotic stability remains a separate local assertion.
 -/
 
-import Transformer.Causal.Section5_RowAvoidance
-import Transformer.Causal.Section5_ConditionalVolume
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 

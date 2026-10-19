@@ -1,8 +1,13 @@
-/-
+module
+
+public import Transformer.ALM.SoftmaxMass
+public import Transformer.ALM.TieBreak
+
+/-!
 # The tie bound on the data the machine stores
 
 `Transformer.ALM.SoftmaxMass` derives the mass on a tie from a score gap `δ`,
-and leaves `δ` to be supplied.  On the keys the machine actually holds it need
+and leaves `δ` to be supplied. On the keys the machine actually holds it need
 not be supplied at all: scalar integer keys score integers against an integer
 query, so a key that does not tie loses by at least a full unit — the same
 observation `score_gap_one_of_int` makes for a single winner, at a tie.
@@ -10,7 +15,7 @@ observation `score_gap_one_of_int` makes for a single winner, at a tie.
 Which keys tie is itself determined: `sScore_eq_iff` of
 `Transformer.ALM.TieBreak` says two distinct integer keys score alike against
 `q` exactly when they are reflections of each other in `q`, so a tie has
-exactly two members and every other key is a clear `1` below.  `softmax_tie_mass_int` is the mass that follows and
+exactly two members and every other key is a clear `1` below. `softmax_tie_mass_int` is the mass that follows and
 `softmax_head_resolves_average_of_int` the head bound it buys: on distinct
 integer keys, at a genuine tie, the head's output is within
 `((n-2)·e^{-β}/2)·C` of what `resolve` writes out, with no hypothesis about
@@ -20,8 +25,7 @@ Source: `transformer_vm/attention/hull2d_cht.h`, lines 70-83; the lattice
 separation is `Transformer.ALM.Basic.one_le_dist_sq_of_int` in dimension one.
 -/
 
-import Transformer.ALM.SoftmaxMass
-import Transformer.ALM.TieBreak
+@[expose] public section
 
 open scoped BigOperators
 
@@ -73,7 +77,7 @@ theorem softmax_tie_mass_int (β : ℝ) (hβ : 0 ≤ β) (K : Fin n → ℤ)
 distinct keys tie at the maximum, the payloads spread by at most `C`, and the
 log holds each key's aggregate; then the head's output is within
 `((n-2)e^{-β}/2)·C` of the vector the machine writes out under
-`TieBreak::AVERAGE`.  Every hypothesis is about the stored data. -/
+`TieBreak::AVERAGE`. Every hypothesis is about the stored data. -/
 theorem softmax_head_resolves_average_of_int [Nonempty (Fin n)] (β : ℝ) (hβ : 0 ≤ β)
     (K : Fin n → ℤ) (hinj : Function.Injective K) (q : ℤ) (V : Fin n → ℝ × ℝ)
     (b c : Fin n) (hbc : b ≠ c) (htie : sScore q (K c) = sScore q (K b))

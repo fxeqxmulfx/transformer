@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdSeededReadouts
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdSeededReadouts
 
 /-!
 # Full initialized confidence and CE limits at critical equality
@@ -33,6 +35,8 @@ weak-decay rule selection, learned stochastic/numerical GPTMini and
 thermodynamic system-size transfer remain separate. Frozen model,
 optimizer, measurements, runs and checkpoints are unchanged.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

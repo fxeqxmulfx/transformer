@@ -1,28 +1,32 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Defs
+public import Mathlib.Analysis.SpecialFunctions.Exponential
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+
+/-!
 # Saddle avoidance — the linear flow `exp (τ A)`
 
 For a continuous linear map `A` of a real Banach space, `J τ = exp (τ A)`
 solves the linear equation `J' = A J` with `J 0 = id` (`exp_zero_smul`,
-`hasDerivAt_exp_smul`, `continuous_exp_smul`).  This is the variational
+`hasDerivAt_exp_smul`, `continuous_exp_smul`). This is the variational
 equation of the flow of a field at a fixed point where the field's derivative
 is `A`, so `exp (τ A)` is the derivative of the flow there.
 
 An eigenvector of `A` with eigenvalue `μ` is an eigenvector of `exp A` with
 eigenvalue `e^μ`: `A` multiplies it by `μ`, so each term of the exponential
-series does by `μⁿ / n!` (`hasEigenvector_exp`, `hasEigenvalue_exp`).  On a Hilbert
+series does by `μⁿ / n!` (`hasEigenvector_exp`, `hasEigenvalue_exp`). On a Hilbert
 space, `exp A` is symmetric when `A` is (`isSymmetric_exp`), since the
 adjoint commutes with the series.
 
 For the gradient flow of `f` at a critical point `z`, `A = -∇²f(z)`: a
 negative eigenvalue `λ` of the Hessian gives the eigenvalue `e^{-λ} > 1` of
-the derivative of the time-one map.  This is the step that the proof of
+the derivative of the time-one map. This is the step that the proof of
 `l:nosaddleconv` in Appendix A of arXiv:2312.10794v5 takes when it notes
 that the Jacobian of a gradient field is, at a critical point, the Hessian.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Defs
-import Mathlib.Analysis.SpecialFunctions.Exponential
-import Mathlib.Analysis.InnerProductSpace.Adjoint
+@[expose] public section
 
 open NormedSpace
 

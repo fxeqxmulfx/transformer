@@ -1,20 +1,24 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Lojasiewicz
+
+/-!
 # Saddle avoidance — gradient descent is trapped near a Łojasiewicz point
 
 Along an orbit whose steps lower `f` by at least `η κ ‖∇f‖²`, `κ > 0`, a step from
 near a point `z` where the Łojasiewicz inequality holds is bounded by the drop of
 `(f - f z) ^ (1 - a)` (`mul_norm_iterate_succ_sub_le_of_le_sub`, by
-`mul_norm_gradientStep_sub_le_of_le_sub`).  Steps so bounded add up
+`mul_norm_gradientStep_sub_le_of_le_sub`). Steps so bounded add up
 (`mul_norm_sub_le_of_step`) and keep a sequence that starts close to `z` near `z`
-(`mem_ball_of_step`).  So such an orbit that starts close to `z`, with `f` close to
+(`mem_ball_of_step`). So such an orbit that starts close to `z`, with `f` close to
 `f z` and never below it, stays near `z` (`iterate_mem_ball_of_le_sub`) and has finite
 length (`mul_norm_iterate_sub_le_of_le_sub`), as in the proof of Theorem 3.2 of Absil,
-Mahony and Andrews (SIAM J. Optim. 16, 2005).  An `L`-Lipschitz gradient with
+Mahony and Andrews (SIAM J. Optim. 16, 2005). An `L`-Lipschitz gradient with
 `η L < 1` gives the decrease with `κ = 1 - η L` (`mul_norm_iterate_succ_sub_le`,
 `iterate_mem_ball`, `mul_norm_iterate_sub_le`).
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Lojasiewicz
+@[expose] public section
 
 open Filter Metric
 open scoped Topology NNReal

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallCopyAccuracy
+module
+
+public import Transformer.GPTMini.Semantics.RecallCopyAccuracy
 
 /-!
 # A uniformly accurate nonzero raw binding in the full original block
@@ -17,6 +19,8 @@ without pretending every table value has the same RMS multiplier.
 Complete validated-parser coupling and second-block saturation,
 routing/value/readout margins remain separate obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

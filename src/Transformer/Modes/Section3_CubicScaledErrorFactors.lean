@@ -1,4 +1,6 @@
-import Transformer.Modes.Section3_CubicScaledDerivativeBounds
+module
+
+public import Transformer.Modes.Section3_CubicScaledDerivativeBounds
 
 /-!
 # Small derivative profiles for the exact cubic-error factors
@@ -16,6 +18,8 @@ has `c⁵`, which is at most `c⁴`. Gaussian differentiation remains in
 each product bound. The polynomial degrees are deliberately enlarged
 to obtain one envelope valid at all four derivative orders.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

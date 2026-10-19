@@ -1,4 +1,8 @@
-/-
+module
+
+public import Mathlib.Tactic
+
+/-!
 # Exact arithmetic audits of the C4 table
 
 Formalization of arXiv:2602.15322v1, Section 4,
@@ -7,7 +11,7 @@ represented as rationals. These theorems concern the reported table,
 not a reproduction of training or universal optimizer superiority.
 -/
 
-import Mathlib.Tactic
+@[expose] public section
 
 namespace Transformer.Magma
 

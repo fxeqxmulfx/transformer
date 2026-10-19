@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryContraction
-import Mathlib.Analysis.SpecificLimits.Basic
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryContraction
+public import Mathlib.Analysis.SpecificLimits.Basic
 
 /-!
 # Initialized native mass contraction with legal retained beta memory
@@ -28,6 +30,8 @@ This is a fixed-table exact-real decoupled-native result, differing from
 appendix C coupled-cost GD. Learned GPTMini, stochastic minibatches and
 floating-point kernels are not identified with these dynamics.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

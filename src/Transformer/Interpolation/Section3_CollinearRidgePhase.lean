@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_EqualMeanVariation
+public import Transformer.Interpolation.Section3_BarycenterDirections
+
+/-!
 # Actual ridge phases split collinear barycenter directions
 
 ArXiv:2411.04551v3, §3.2, `lem: perturbation`, and its use in
@@ -18,8 +23,7 @@ The source's additional fixed-outside-hulls assertion in the equal-mean
 case is false and is not used by these separation statements.
 -/
 
-import Transformer.Interpolation.Section3_EqualMeanVariation
-import Transformer.Interpolation.Section3_BarycenterDirections
+@[expose] public section
 
 open Real MeasureTheory Set
 

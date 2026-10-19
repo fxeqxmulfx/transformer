@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.UniformLaw
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.MeasureTheory.Measure.WithDensity
+
+/-!
 # Homogenized Transformers — the low-temperature setting
 
 Formalization of `ass:low-temperature` of arXiv:2604.01978v1, *Homogenized
@@ -9,9 +15,7 @@ The uniform measure `σ_d` the assumption is written against is
 `UniformLaw.IsUniformAmbient`.
 -/
 
-import Transformer.Homogenized.UniformLaw
-import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.MeasureTheory.Measure.WithDensity
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -33,7 +37,7 @@ density `ρ(t,·) = dμ(t)/dσ_d` is `C¹` with
   the proof of `lemma:Laplace_method` uses it — it expands
   `ρ(Exp_u(v)) = ρ(u) + O(‖v‖)` against an ambient modulus.
 * `∇ρ` is the Riemannian gradient, `proj_y ∇ρ̃(y)` by `lem:toolkit_geo_riem`,
-  and the `L^∞(𝕊^{d-1})` norm is a bound at every unit vector.  The bounds on
+  and the `L^∞(𝕊^{d-1})` norm is a bound at every unit vector. The bounds on
   `ρ` itself are likewise imposed only on the sphere, where they are the
   source's, and are silent off it, where the density is irrelevant to `μ(t)`.
 * The source adds that `ρ_min` and `ρ_max` are "independent of `d` and `β`".

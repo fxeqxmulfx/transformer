@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.AtomicMatchingCompression
-import Mathlib.Analysis.Convex.Function
+module
+
+public import Transformer.GPTMini.Sparsemax.AtomicMatchingCompression
+public import Mathlib.Analysis.Convex.Function
 
 /-!
 # Convex criteria and global certificates for freely learned matching
@@ -16,6 +18,8 @@ on Q/K finds the required global head price. Convexity is proved only
 when the supplied output criterion is convex; no FFN or nonlinear
 trainable layer stack is included.
 -/
+
+@[expose] public section
 
 noncomputable section
 

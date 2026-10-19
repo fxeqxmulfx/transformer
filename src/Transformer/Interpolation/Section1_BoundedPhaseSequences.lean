@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_QuantitativeCenterClocks
+public import Transformer.Interpolation.Section3_PhaseLawMaps
+
+/-!
 # Bounded physical realization of actual original phase sequences
 
 ArXiv:2411.04551v3, §1 and §5, assembling the controls for
@@ -14,8 +19,7 @@ uniqueness and constant final tail. No well-posedness of joined
 controls is assumed as an input.
 -/
 
-import Transformer.Interpolation.Section3_QuantitativeCenterClocks
-import Transformer.Interpolation.Section3_PhaseLawMaps
+@[expose] public section
 
 open Real MeasureTheory Set
 

@@ -1,4 +1,6 @@
-import Mathlib.Tactic.NormNum
+module
+
+public import Mathlib.Tactic.NormNum
 
 /-!
 # A finite certificate for modular-division predictions
@@ -9,6 +11,8 @@ nonzero denominator, predicted numeral (193 denotes a non-numeral), and
 whether EOS is correct. Kernel evaluation checks the supplied table; its
 export from a PyTorch checkpoint is a separately measured trust boundary.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Sparsemax.Certificate
 

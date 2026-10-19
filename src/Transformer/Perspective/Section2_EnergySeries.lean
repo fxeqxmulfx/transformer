@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.Section2_EnergyMoments
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.Analysis.SpecialFunctions.Exponential
+
+/-!
 # §3.2 — The interaction energy as a power series
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -9,12 +15,10 @@ Expanding `e^{β⟨x,y⟩} = Σ_k β^k ⟨x,y⟩^k / k!` and integrating term by
   `𝖤_β[ν] = Σ_k (2β)⁻¹ β^k/k! Σ_I (∫ m_I dν)²`   (`hasSum_interactionEnergy`),
 
 a series of squares of linear functionals of `ν`, each of which the continuity
-equation can differentiate.  Groundwork for `eq: dissipation.softmax`.
+equation can differentiate. Groundwork for `eq: dissipation.softmax`.
 -/
 
-import Transformer.Perspective.Section2_EnergyMoments
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.Analysis.SpecialFunctions.Exponential
+@[expose] public section
 
 open scoped BigOperators Nat
 open Real MeasureTheory

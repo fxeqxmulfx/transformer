@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianMeanLogVille
+
+/-!
 # Original logarithmic mean noise and its signed maximal tail
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -12,7 +16,7 @@ expectation cancels in the maximal quotient. No tail bound or
 selected exponential martingale is an additional hypothesis.
 -/
 
-import Transformer.Homogenized.Section7_GaussianMeanLogVille
+@[expose] public section
 
 open Set MeasureTheory
 open scoped NNReal

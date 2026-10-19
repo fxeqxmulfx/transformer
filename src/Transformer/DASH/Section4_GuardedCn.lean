@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section4_BatchedCounts
+public import Transformer.DASH.Section3_GuardedRootCorrectness
+
+/-!
 # DASH — complete guarded batched CN inverse fourth roots
 
 arXiv:2602.02016v2, §3.2–3.5 and §4. Each recurrence step uses
@@ -6,8 +11,7 @@ the four-product CN implementation. The guard repairs both the
 unit-domain endpoint and unreliable PI estimates before iteration.
 -/
 
-import Transformer.DASH.Section4_BatchedCounts
-import Transformer.DASH.Section3_GuardedRootCorrectness
+@[expose] public section
 
 open scoped Matrix Topology
 open Filter

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section1_Main
+
+/-!
 # The number of modes of a Gaussian KDE — the shape of the belt
 
 §1.1 of arXiv:2412.09080v3: "almost all modes lie in **two intervals** of
@@ -10,7 +14,7 @@ the belt-width remark that computes the length.
 * The belt `t² ∈ [2 log n - 3 log β, 2 log n - log β]` is two intervals only
   where its inner edge is non-negative: for `β ≫ n^{2/3}` the number
   `2 log n - 3 log β` is negative, and the belt is the single interval
-  `[-√(2 log n - log β), √(2 log n - log β)]`.  Point 2 of `thm:main-result`
+  `[-√(2 log n - log β), √(2 log n - log β)]`. Point 2 of `thm:main-result`
   — an upper bound on what lies *outside* the belt — stays true either way,
   which is why it is stated over the set and not over the two intervals.
   `belt_eq_union` is the decomposition where it holds.
@@ -18,14 +22,14 @@ the belt-width remark that computes the length.
 * The belt-width remark computes the length: the edges are `√U` and `√L` with
   `U - L = 2 log β`, so when both are `Θ(log β)` — the regime
   `2 log n - log β ≍ log β ≍ log n` the source restricts to "for the sake of
-  clarity" — the difference is `Θ(√(log β))`.  That is
+  clarity" — the difference is `Θ(√(log β))`. That is
   `sqrt_sub_sqrt_isTheta`, and it is proved.
 
 Source: arXiv:2412.09080v3, `thm:main-result` point 2, the belt-width remark
 of §1.1.
 -/
 
-import Transformer.Modes.Section1_Main
+@[expose] public section
 
 open Filter Asymptotics
 open scoped Topology

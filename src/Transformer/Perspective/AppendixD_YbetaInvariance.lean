@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.Section5_HighDCurve
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+
+/-!
 # Appendix D — the solutions of `eq: ybeta` and `eq: ybetaUSA` stay in `[0, 1]`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -6,19 +12,17 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 The properties of `γ_β` the proof of `e:ybetacloseto1` states in one line —
 "`t ↦ γ_β(t)` is increasing and thus `γ_β(t) ≥ 0`, as well as
-`γ̇_β(t) ≥ 1/(n e^β)` as long as `γ_β(t) ≤ 1/2`.  Therefore
+`γ̇_β(t) ≥ 1/(n e^β)` as long as `γ_β(t) ≤ 1/2`. Therefore
 `γ_β(n e^β / 2) ≥ 1/2`" — proved from the equations with `γ_β(0) = 0`.
 
-Two facts about scalar equations carry them.  An equation
+Two facts about scalar equations carry them. An equation
 `γ̇ = a(γ) (1 - γ)` with `a` continuous keeps `1 - γ` of one sign, since
-`(1 - γ) e^{∫ a(γ)}` is constant (`lt_one_of_deriv_eq_mul_one_sub`).  And an
+`(1 - γ) e^{∫ a(γ)}` is constant (`lt_one_of_deriv_eq_mul_one_sub`). And an
 equation `γ̇ = F(γ)` with `F(0) > 0` cannot cross `0` downwards
 (`nonneg_of_deriv_eq`).
 -/
 
-import Transformer.Perspective.Section5_HighDCurve
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+@[expose] public section
 
 open Real
 

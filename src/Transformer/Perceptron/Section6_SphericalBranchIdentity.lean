@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_AmbientBranches
+public import Transformer.Perceptron.Section6_SphericalFields
+public import Transformer.Perceptron.Section3_StationaryInterior
+public import Transformer.Perceptron.Transform
+
+/-!
 # The actual global normalized branch identity on the sphere
 
 ArXiv:2601.21366v2, §6, `eq:log-identity-global` in the proof of
@@ -20,10 +27,7 @@ Invertibility is used later to recover antipodal measure invariance.
 All global-zero hypotheses here have actual nonempty measure witnesses.
 -/
 
-import Transformer.Perceptron.Section6_AmbientBranches
-import Transformer.Perceptron.Section6_SphericalFields
-import Transformer.Perceptron.Section3_StationaryInterior
-import Transformer.Perceptron.Transform
+@[expose] public section
 
 open Real MeasureTheory Set
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_GenericQuadrantPoints
+
+/-!
 # Finite original quadrant families in generic plane position
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, and §3.2,
@@ -14,7 +18,7 @@ protected original transfer. A nonempty pool of old vectors also
 forces the entire new unit family to be injective.
 -/
 
-import Transformer.Interpolation.Section4_GenericQuadrantPoints
+@[expose] public section
 
 open Real MeasureTheory Set
 

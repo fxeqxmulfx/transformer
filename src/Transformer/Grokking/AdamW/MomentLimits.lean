@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.MomentFeedback
+module
+
+public import Transformer.Grokking.AdamW.MomentFeedback
 
 /-!
 # Native moment limits from convergent generated inputs
@@ -16,6 +18,8 @@ the closed CE application must derive it from parameter convergence.
 No convergence of GPTMini parameters or stochastic minibatches is
 claimed. In particular, bounded clipped inputs need not converge.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

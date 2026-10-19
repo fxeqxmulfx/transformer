@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.PreparationReconstruction
+
+/-!
 # Joint witnesses for coefficient sequence hypotheses
 
 Concrete embeddings, monomials, small divisor tails, and convergent scalar
@@ -6,7 +10,7 @@ evaluation supply the hypotheses of the copied sequence lemmas. Auxiliary
 examples for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.PreparationReconstruction
+@[expose] public section
 
 open scoped ENNReal NNReal Topology
 

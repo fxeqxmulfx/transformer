@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_PerceptronControls
+public import Transformer.Interpolation.Section3_MassConcentration
+public import Transformer.Interpolation.Section3_CapAttractor
+
+/-!
 # Ball collapses as local perceptron phases
 
 ArXiv:2411.04551v3, §2.2, proof of `prop: compression`, through the
@@ -13,9 +19,7 @@ The phase is local in the ball for every initial law; only its clock
 depends on the chosen law.
 -/
 
-import Transformer.Interpolation.Section2_PerceptronControls
-import Transformer.Interpolation.Section3_MassConcentration
-import Transformer.Interpolation.Section3_CapAttractor
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 

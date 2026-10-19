@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.NonSaturation
-import Mathlib.Analysis.InnerProductSpace.Positive
+module
+
+public import Transformer.GPTMini.Sparsemax.NonSaturation
+public import Mathlib.Analysis.InnerProductSpace.Positive
 
 /-!
 # A convex representation of learned query and key embeddings
@@ -16,6 +18,8 @@ RoPE, a fixed embedding width, or the original parameter regularizer.
 Finite feature recovery is exact without a width bound. No assertion about
 learned value mixtures, an FFN, or a downstream task loss is made here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

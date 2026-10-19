@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.CubeContentLearning
-import Transformer.GPTMini.Sparsemax.PeriodicEnergyTopology
+module
+
+public import Transformer.GPTMini.Sparsemax.CubeContentLearning
+public import Transformer.GPTMini.Sparsemax.PeriodicEnergyTopology
 
 /-!
 # A coefficient box enforces every learned content-attention budget
@@ -18,6 +20,8 @@ convexity of a later nonlinear FFN/language criterion. The r>0 and
 floor<=1 hypotheses suffice for the elementary budget facts below;
 the actual attention/value guarantee also needs its stated strict floor.
 -/
+
+@[expose] public section
 
 noncomputable section
 

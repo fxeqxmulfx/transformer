@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Basic
+
+/-!
 # Syntactic sugar: the `?` operator and the unmasked/strict counting terms
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -15,14 +19,14 @@ lemmas at once — every extended formula is matched by a plain one of the same
 language and the same depth.
 
 **A typo.**  Appendix A.3 defines the strict left-counting operator as
-`◁#_<[φ]^{w,i} = |{j ∈ [i, |w|−1] | w,j ⊨ φ}|`.  That range is a *right*-hand
+`◁#_<[φ]^{w,i} = |{j ∈ [i, |w|−1] | w,j ⊨ φ}|`. That range is a *right*-hand
 range; it contradicts both the operator's name and the rewriting rule
 `◁#_<[φ] ≡ ◁#[φ] − (φ ? 1 : 0)` given a few lines below, which force
-`[1, i−1]`.  The definition below takes `[1, i−1]`, and the proof of
+`[1, i−1]`. The definition below takes `[1, i−1]`, and the proof of
 `lem:cropping` in Appendix D uses `◁#_<` in exactly that sense.
 -/
 
-import Transformer.CRASP.Basic
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -69,7 +73,7 @@ end
 
 mutual
 
-/-- Counting depth for the extended syntax.  The `?` operator adds nothing
+/-- Counting depth for the extended syntax. The `?` operator adds nothing
 ("does not increase its expressive power or affect the depth of formulas"). -/
 def FormX.depth : FormX σ → ℕ
   | .sym _ => 0

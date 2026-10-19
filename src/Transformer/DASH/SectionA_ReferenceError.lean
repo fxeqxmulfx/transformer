@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_BinomialReference
+
+/-!
 # DASH — geometric accuracy of inverse-power reference polynomials
 
 arXiv:2602.02016v2, Appendix A, regularized inverse-root approximation.
@@ -6,7 +10,7 @@ The positive interval stays inside a strict subdisk of the binomial
 series, so its midpoint reference errors decrease geometrically.
 -/
 
-import Transformer.DASH.SectionA_BinomialReference
+@[expose] public section
 
 noncomputable section
 

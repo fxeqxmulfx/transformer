@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AMSGrad.Section4_TrainingStationarity
+
+/-!
 # AMSGrad — actual weights converge under strong convexity
 
 Additional objective assumption for the full-gradient training extension
@@ -7,7 +11,7 @@ for neural-network losses. In this regime the actual last iterates, not
 only their averages or loss values, converge to a global minimizer.
 -/
 
-import Transformer.AMSGrad.Section4_TrainingStationarity
+@[expose] public section
 
 open scoped Topology
 open Filter

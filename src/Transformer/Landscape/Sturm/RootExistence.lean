@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.SquarefreeCount
+
+/-!
 # Exact existential root criteria from coefficient operations
 
 Multiplicity removal and Euclidean chains make the tests independent of
@@ -6,7 +10,7 @@ any supplied root or Sturm certificate. Auxiliary for Appendix D.1,
 `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.SquarefreeCount
+@[expose] public section
 
 noncomputable section
 open Polynomial

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallRawHeads
+module
+
+public import Transformer.GPTMini.Semantics.RecallRawHeads
 
 /-!
 # Bind raw adjacent key/value tokens in the actual first residual
@@ -17,6 +19,8 @@ first block has a genuine adjacency-sensitive binding representation
 before its FFN. Gating the table region and robust final retrieval
 remain necessary; a filler after a post-table query is not a write.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

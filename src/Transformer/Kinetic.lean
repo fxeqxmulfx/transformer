@@ -1,4 +1,48 @@
-/-
+module
+
+public import Transformer.Kinetic.Defs
+public import Transformer.Kinetic.FourierDecay
+public import Transformer.Kinetic.Hardy
+public import Transformer.Kinetic.Section6_PowerSeries
+public import Transformer.Kinetic.Section6_PositiveCoefficients
+public import Transformer.Kinetic.Section6_ModeProfile
+public import Transformer.Kinetic.Section6_HardyVariable
+public import Transformer.Kinetic.Section6_HardyKernel
+public import Transformer.Kinetic.Section6_GoursatSeries
+public import Transformer.Kinetic.Section6_HardyPrimitive
+public import Transformer.Kinetic.Section6_HardyRegularity
+public import Transformer.Kinetic.Section6_HardyContraction
+public import Transformer.Kinetic.Section6_HardyUniqueness
+public import Transformer.Kinetic.Section6_ModeCurvature
+public import Transformer.Kinetic.Section6_WeightedCoefficients
+public import Transformer.Kinetic.Section6_SeriesProfiles
+public import Transformer.Kinetic.Section6_WeightedProfiles
+public import Transformer.Kinetic.Section6_WeightedConvexity
+public import Transformer.Kinetic.Section6_InteriorMinimum
+public import Transformer.Kinetic.Section6_OutputAggregation
+public import Transformer.Kinetic.Section6_SourcePosition
+public import Transformer.Kinetic.Section6_SourceLimits
+public import Transformer.Kinetic.Section6_SoftLimits
+public import Transformer.Kinetic.Section6_UShape
+public import Transformer.Kinetic.Section1_RecencyEndpoint
+public import Transformer.Kinetic.Riemann
+public import Transformer.Kinetic.MeanField
+public import Transformer.Kinetic.Section1_GridQuadrature
+public import Transformer.Kinetic.Section1_SourceCells
+public import Transformer.Kinetic.Fluctuations
+public import Transformer.Kinetic.Section3_ThreeTokens
+public import Transformer.Kinetic.Section3_AperiodicCovariance
+public import Transformer.Kinetic.Section3_CumulantBounds
+public import Transformer.Kinetic.Section3_Observables
+public import Transformer.Kinetic.Section3_ThirdCumulant
+public import Transformer.Kinetic.Codewords
+public import Transformer.Kinetic.Accuracy
+public import Transformer.Kinetic.CorrelationEquations
+public import Transformer.Kinetic.Correlations
+public import Transformer.Kinetic.UniformPrompt
+public import Transformer.Kinetic.SoftAccuracy
+
+/-!
 Formalization of:
   Duerinckx, Geshkovski, Rossi,
   "Kinetic theory for Transformers and the lost-in-the-middle phenomenon",
@@ -24,44 +68,4 @@ on `ℝ` reads the winding numbers of the angles, and
 For the periodic test they hold (`correlation_bounds`).
 -/
 
-import Transformer.Kinetic.Defs
-import Transformer.Kinetic.FourierDecay
-import Transformer.Kinetic.Hardy
-import Transformer.Kinetic.Section6_PowerSeries
-import Transformer.Kinetic.Section6_PositiveCoefficients
-import Transformer.Kinetic.Section6_ModeProfile
-import Transformer.Kinetic.Section6_HardyVariable
-import Transformer.Kinetic.Section6_HardyKernel
-import Transformer.Kinetic.Section6_GoursatSeries
-import Transformer.Kinetic.Section6_HardyPrimitive
-import Transformer.Kinetic.Section6_HardyRegularity
-import Transformer.Kinetic.Section6_HardyContraction
-import Transformer.Kinetic.Section6_HardyUniqueness
-import Transformer.Kinetic.Section6_ModeCurvature
-import Transformer.Kinetic.Section6_WeightedCoefficients
-import Transformer.Kinetic.Section6_SeriesProfiles
-import Transformer.Kinetic.Section6_WeightedProfiles
-import Transformer.Kinetic.Section6_WeightedConvexity
-import Transformer.Kinetic.Section6_InteriorMinimum
-import Transformer.Kinetic.Section6_OutputAggregation
-import Transformer.Kinetic.Section6_SourcePosition
-import Transformer.Kinetic.Section6_SourceLimits
-import Transformer.Kinetic.Section6_SoftLimits
-import Transformer.Kinetic.Section6_UShape
-import Transformer.Kinetic.Section1_RecencyEndpoint
-import Transformer.Kinetic.Riemann
-import Transformer.Kinetic.MeanField
-import Transformer.Kinetic.Section1_GridQuadrature
-import Transformer.Kinetic.Section1_SourceCells
-import Transformer.Kinetic.Fluctuations
-import Transformer.Kinetic.Section3_ThreeTokens
-import Transformer.Kinetic.Section3_AperiodicCovariance
-import Transformer.Kinetic.Section3_CumulantBounds
-import Transformer.Kinetic.Section3_Observables
-import Transformer.Kinetic.Section3_ThirdCumulant
-import Transformer.Kinetic.Codewords
-import Transformer.Kinetic.Accuracy
-import Transformer.Kinetic.CorrelationEquations
-import Transformer.Kinetic.Correlations
-import Transformer.Kinetic.UniformPrompt
-import Transformer.Kinetic.SoftAccuracy
+@[expose] public section

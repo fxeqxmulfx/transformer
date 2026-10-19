@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Basic
+public import Transformer.Perspective.PartitionGradient
+public import Mathlib.MeasureTheory.Function.L2Space
+
+/-!
 # Uniform bounds for original measure-valued attention averages
 
 ArXiv:2411.04551v3, §1, `eq: vf`, and §2, `prop: targets.atoms`.
@@ -15,9 +21,7 @@ pointwise field estimates used for hemisphere preservation and support
 contraction; no support invariance or clustering conclusion is assumed.
 -/
 
-import Transformer.Interpolation.Basic
-import Transformer.Perspective.PartitionGradient
-import Mathlib.MeasureTheory.Function.L2Space
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

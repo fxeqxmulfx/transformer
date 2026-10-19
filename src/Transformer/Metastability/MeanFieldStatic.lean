@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.MeanField
+public import Transformer.Interpolation.Basic
+
+/-!
 # Metastability — a static mean-field solution
 
 A Dirac mass `δ_p` solves the mean-field equation at rest in every dimension.
@@ -7,17 +12,16 @@ cancels exactly. The full characteristic flow above dimension one is
 constructed in `Section5_DiracDynamics`.
 
 On `𝕊^0 = {±p}` the mass does not move, and neither does anything
-else: on `𝕊^0` every tangent vector is zero.  The constant curve at `δ_p`
+else: on `𝕊^0` every tangent vector is zero. The constant curve at `δ_p`
 therefore solves `eq: mean.field.pde`, the identity is its characteristic
 flow, and with one cap around `p` and a large `β` it is a `(β, ε)`-separated
-measure.  This is the configuration that witnesses the hypotheses of
+measure. This is the configuration that witnesses the hypotheses of
 `Metastability.metastability_mf`, the cap-exit claim and
 the estimate refuted by `Metastability.variance_small_counterexample`
 (arXiv:2410.06833v1, §5).
 -/
 
-import Transformer.Metastability.MeanField
-import Transformer.Interpolation.Basic
+@[expose] public section
 
 open Real MeasureTheory
 

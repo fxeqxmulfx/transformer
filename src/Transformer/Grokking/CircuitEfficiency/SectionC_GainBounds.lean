@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainSigns
-import Transformer.Grokking.AdamW.ScalarDenominator
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainSigns
+public import Transformer.Grokking.AdamW.ScalarDenominator
 
 /-!
 # Bounded actual gained-CE parameters and retained buffers
@@ -22,6 +24,8 @@ those separately on the same delayed-prefix trajectories. Exact
 reals, fixed tables, gains and uniform native decay are explicit
 deviations from appendix C's coupled-cost GD and from learned GPTMini.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

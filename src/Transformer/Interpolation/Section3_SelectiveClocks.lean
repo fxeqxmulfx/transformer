@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_MeanNeuralPhases
+public import Transformer.Interpolation.Section3_MeanAxisStability
+public import Transformer.Interpolation.Section3_GatedCenterLaw
+
+/-!
 # Three-phase selective controls at a prescribed horizon
 
 ArXiv:2411.04551v3, §3.2, Steps 1–3 of `lem: induction.barycenter`.
@@ -12,9 +18,7 @@ radius grows by at most the proved reverse-attention factor. Inputs on
 which the gate is inactive are restored exactly by the actual inverse law.
 -/
 
-import Transformer.Interpolation.Section3_MeanNeuralPhases
-import Transformer.Interpolation.Section3_MeanAxisStability
-import Transformer.Interpolation.Section3_GatedCenterLaw
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology

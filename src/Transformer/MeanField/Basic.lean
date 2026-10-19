@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+public import Transformer.Perspective.Section2_FlowMap
+
+/-!
 # Mean-Field Dynamics of Transformers — survey
 
 Formalization of arXiv:2512.01868v4 — "The Mean-Field Dynamics of Transformers"
@@ -15,9 +21,7 @@ This file collects:
                                 the unified speed-regulation formulation).
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
-import Transformer.Perspective.Section2_FlowMap
+@[expose] public section
 
 open scoped BigOperators
 open Real

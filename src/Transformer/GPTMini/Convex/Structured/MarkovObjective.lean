@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.MarkovEmissions
+module
+
+public import Transformer.GPTMini.Convex.Structured.MarkovEmissions
 
 /-!
 # Convex joint initial/transition/value training
@@ -16,6 +18,8 @@ intermediate states and channel assignments are additional fixed data
 targets, absent from inference. No marginal output CE convexity, AdamW
 convergence, raw Basis capacity or residual/tied decoding is asserted.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

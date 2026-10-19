@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Likelihood.Basic
+module
+
+public import Transformer.GPTMini.Convex.Likelihood.Basic
 
 /-!
 # The prediction class of a scalar shared-key softmax head
@@ -15,6 +17,8 @@ heads are retained as coverage witnesses for a later likelihood test.
 The membership predicate requires real original head factors; it does
 not replace a substantive conclusion by a defining property.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,5 +1,7 @@
-import Transformer.Grokking.AdamW.ScheduledHistory
-import Transformer.Grokking.AdamW.SquareParameterBox
+module
+
+public import Transformer.Grokking.AdamW.ScheduledHistory
+public import Transformer.Grokking.AdamW.SquareParameterBox
 
 /-!
 # Actual scheduled AdamW physical boxes and the original warmup
@@ -28,6 +30,8 @@ Python float/rounding bridge nor learned transformer convergence,
 Gen/Mem attraction or eventual held-out generalization. Frozen
 training schedules, moments, checkpoints and measurements are unchanged.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

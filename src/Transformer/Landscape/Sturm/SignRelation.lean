@@ -8,15 +8,21 @@ Adapted from leanprover/hex-real-roots-mathlib,
 revision 53ce31466dc5ff520463249d470119c1e0006e22.
 -/
 
-import Transformer.Landscape.Sturm.Chains
-import Transformer.Landscape.Sturm.Sign
-import Mathlib.Analysis.Polynomial.Order
+module
+
+public import Transformer.Landscape.Sturm.Chains
+public import Transformer.Landscape.Sturm.Sign
+public import Mathlib.Analysis.Polynomial.Order
+
+public import Mathlib.Topology.Algebra.Polynomial
 
 /-!
 # Variation-preserving local sign patterns
 
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
+
+@[expose] public section
 
 open Filter Topology
 
@@ -85,7 +91,7 @@ Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2. -/
 theorem eval_sign_eq_of_no_zero {q : Polynomial ℝ} {a b : ℝ} (hab : a ≤ b)
     (hz : ∀ x ∈ Set.Icc a b, q.eval x ≠ 0) :
     SignType.sign (q.eval a) = SignType.sign (q.eval b) :=
-  sign_eq_of_continuousOn isPreconnected_Icc q.continuousOn hz
+  sign_eq_of_continuousOn isPreconnected_Icc q.continuous.continuousOn hz
     ⟨le_refl a, hab⟩ ⟨hab, le_refl b⟩
 
 /-- Build the sign-pattern relation `SignRelation` between the evaluations of a

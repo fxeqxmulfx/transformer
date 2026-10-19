@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_MeanLogScalarConversion
+
+/-!
 # The original mean error with deterministic bias and unamplified noise
 
 ArXiv:2604.01978v1, §7, `thm:clustering_small_beta` and
@@ -18,7 +22,7 @@ The deterministic scalar inputs are derived from the original Gaussian
 solution in the subsequent application.
 -/
 
-import Transformer.Homogenized.Section7_MeanLogScalarConversion
+@[expose] public section
 
 open Set
 open scoped NNReal

@@ -1,26 +1,30 @@
-/-
+module
+
+public import Transformer.Quartet.Section4_Witness
+
+/-!
 # What Four Over Six does to the witness, coin by coin
 
 arXiv:2601.22813v2, §4.2.
 
 With the scales of `Transformer.Quartet.Section4_Witness` in hand the two
 branches are explicit functions of the one coin that matters, the coin of the
-single non-zero entry.  On the `4.0` branch that entry is presented to E2M1 as
+single non-zero entry. On the `4.0` branch that entry is presented to E2M1 as
 `64/17` and comes back as `17/16` with probability `13/17` and as `51/64`
 otherwise; on the `6.0` branch it is `96/17` and comes back as `17/16` with
 probability `14/17` and as `17/24` otherwise.
 
-The selection then reads those realized values.  Below `13/17` both branches
+The selection then reads those realized values. Below `13/17` both branches
 round up and their errors agree, so the tie goes to `4.0`; between `13/17` and
 `14/17` the `4.0` branch has already fallen to `51/64` while `6.0` still
 rounds up, so `6.0` wins; above `14/17` both have fallen, and the coarser
-`6.0` step makes it the worse of the two, so `4.0` wins again.  The upshot is
+`6.0` step makes it the worse of the two, so `4.0` wins again. The upshot is
 `q46At_biasWitness`: the entry comes back as `17/16` on the first `14/17` of
 the coin and as `51/64` on the rest — the distribution of the `6.0` branch
 with the values of the `4.0` branch, which is nobody's unbiased estimator.
 -/
 
-import Transformer.Quartet.Section4_Witness
+@[expose] public section
 
 namespace Transformer
 namespace Quartet
@@ -82,7 +86,7 @@ maxima. -/
 example : (4 : ℝ) ≠ 0 ∧ (6 : ℝ) ≠ 0 := ⟨by norm_num, by norm_num⟩
 
 /-- **Four Over Six on the witness** (§4.2): the entry comes back as `17/16`
-while the coin is below `14/17` and as `51/64` above it.  The branch that
+while the coin is below `14/17` and as `51/64` above it. The branch that
 wins is `4.0` at both ends and `6.0` in the middle, and what survives is the
 *upper* threshold of the `6.0` branch carrying the *values* of the `4.0`
 branch — the coupling between the choice and the coins the paper points at. -/

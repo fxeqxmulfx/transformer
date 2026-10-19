@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainPureWarmupPaths
-import Transformer.Grokking.CircuitEfficiency.SectionC_TrainProbability
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainPureWarmupPaths
+public import Transformer.Grokking.CircuitEfficiency.SectionC_TrainProbability
 
 /-!
 # Opposite held-out decisions under the same original native settings
@@ -24,6 +26,8 @@ competing positive-partner source seeds or transfer to learned GPTMini.
 The models use fixed physical readout tables and exact arithmetic;
 source norm-cost GD, stochastic and numerical bridges remain open.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

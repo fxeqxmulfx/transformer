@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_FeaturePairAction
+
+/-!
 # Fixed pair projections and variable pair diagonals in place
 
 Arora et al., arXiv:2312.04927v1, Appendix `lmm:primitives`,
@@ -6,7 +10,7 @@ Arora et al., arXiv:2312.04927v1, Appendix `lmm:primitives`,
 exactly the input n × d shape. Pair coefficients can vary with every row.
 -/
 
-import Transformer.Zoology.Appendix_FeaturePairAction
+@[expose] public section
 
 namespace Transformer.Zoology
 

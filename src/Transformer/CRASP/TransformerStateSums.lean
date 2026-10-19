@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.TransformerStates
+public import Transformer.CRASP.StateCounts
+
+/-!
 # Masked attention sums from finite state predicates
 
 arXiv:2506.16055v3, Appendix B.2, the weighted numerator and
@@ -6,8 +11,7 @@ denominator in `thm:rtfr_to_TLCl`. The BOS contribution is a constant;
 the remaining contributions are past counts of activation states.
 -/
 
-import Transformer.CRASP.TransformerStates
-import Transformer.CRASP.StateCounts
+@[expose] public section
 
 namespace Transformer.CRASP.RTfr
 

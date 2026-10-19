@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Sparsemax.AtomicMatchingHead
-import Mathlib.LinearAlgebra.Finsupp.LinearCombination
-import Mathlib.Analysis.Convex.Combination
+module
+
+public import Transformer.GPTMini.Sparsemax.AtomicMatchingHead
+public import Mathlib.LinearAlgebra.Finsupp.LinearCombination
+public import Mathlib.Analysis.Convex.Combination
 
 /-!
 # A convex learned mixture over the complete family of matching heads
@@ -17,6 +19,8 @@ of heads. Head count may change. The numerical box and unit mass are
 explicit architectural bounds; the paper's original four-matrix weight
 decay and a practical globally optimal head search are not preserved.
 -/
+
+@[expose] public section
 
 noncomputable section
 

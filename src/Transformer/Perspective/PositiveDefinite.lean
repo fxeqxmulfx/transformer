@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.SphereMoments
+
+/-!
 # The kernel `e^{β x·y}` is positive definite on the sphere
 
 `∫∫ e^{β x·y} db(y) da(x) = Σ_k β^k/k! Σ_I m_I(a) m_I(b)`
@@ -15,18 +19,18 @@ and a series of this form whose sum is `≤ 0` forces `μ₁ = μ₂`
 
 If `∫ e^{β x·y} dμ₁(y) = ∫ e^{β x·y} dμ₂(y)` on the sphere — `Z_{β,μ₁} = Z_{β,μ₂}`
 in the notation of `eq: partition.function` — the left side vanishes, hence
-`μ₁ = μ₂` (`eq_of_integral_exp_inner_eq`).  That is the injectivity of
+`μ₁ = μ₂` (`eq_of_integral_exp_inner_eq`). That is the injectivity of
 `μ ↦ f^μ` in `lem: quadpol` of arXiv:2601.21366v2, at the level of measures
-(`Perceptron.Transform` reads it off).  The source proves it through the
+(`Perceptron.Transform` reads it off). The source proves it through the
 Funk–Hecke formula instead: the spherical-harmonic coefficients of `f^ν` are
-`λ_j(β) m_{jℓ}(ν)` with `λ_j(β) > 0`.  Both routes end in the same
+`λ_j(β) m_{jℓ}(ν)` with `λ_j(β) > 0`. Both routes end in the same
 Stone–Weierstrass step; this one needs no spherical harmonics, which Mathlib
 does not have.
 
 Source: arXiv:2601.21366v2, `lem: quadpol` (injectivity) and its proof.
 -/
 
-import Transformer.Perspective.SphereMoments
+@[expose] public section
 
 open scoped BigOperators Nat
 open Real MeasureTheory
@@ -84,7 +88,7 @@ theorem hasSum_integral_exp_inner (β : ℝ) (a b : Measure (SSphere d))
 /-- **A moment series of squares with sum `≤ 0` forces `μ₁ = μ₂`.**  For
 `β > 0`, the terms of `Σ_k β^k/k! Σ_I (m_I(μ₁) - m_I(μ₂))²` are nonnegative,
 so a sum `≤ 0` makes every one of them vanish, hence every moment agrees
-(`measure_eq_of_integral_mono_eq`).  The sum is
+(`measure_eq_of_integral_mono_eq`). The sum is
 `T(μ₁,μ₁) - T(μ₁,μ₂) - T(μ₂,μ₁) + T(μ₂,μ₂)` by `hasSum_integral_exp_inner`:
 this is the strict positive definiteness of the kernel `e^{β x·y}`.
 
@@ -119,7 +123,7 @@ example : (0 : ℝ) < 1 ∧ (0 : ℝ) ≤ 0 ∧
 probability measures `μ₁` and `μ₂` are equal.
 
 The source's proof expands `f^{μ₁ - μ₂}` in spherical harmonics; this one
-expands the kernel in monomials, see the module docstring.  The conclusion is
+expands the kernel in monomials, see the module docstring. The conclusion is
 the same.
 
 Source: arXiv:2601.21366v2, `lem: quadpol`. -/

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Optimization.StrongConvexity
+public import Mathlib.Analysis.Calculus.Deriv.Add
+
+/-!
 # Decoupled decay can help or hurt: a limit on explaining AdamW's win
 
 First-step moments and epsilon match the benchmark's coordinate.py:
@@ -16,8 +21,7 @@ The decoupled update is from arXiv:2502.16982, Section 2.2, equation
 equation:weightdecay.
 -/
 
-import Transformer.Optimization.StrongConvexity
-import Mathlib.Analysis.Calculus.Deriv.Add
+@[expose] public section
 
 open scoped InnerProductSpace
 

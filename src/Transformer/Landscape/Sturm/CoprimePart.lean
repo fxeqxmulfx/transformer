@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.SquarefreeCount
+
+/-!
 # Removing the roots where a query polynomial vanishes
 
 The quotient by a polynomial gcd filters the roots exactly when the
@@ -6,7 +10,7 @@ dividend has simple real roots. Auxiliary for Appendix D.1, `lem: loj`,
 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.SquarefreeCount
+@[expose] public section
 
 noncomputable section
 open Polynomial

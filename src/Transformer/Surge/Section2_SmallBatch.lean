@@ -1,19 +1,23 @@
-/-
+module
+
+public import Transformer.Surge.Section2_Theorem2
+
+/-!
 # The optimal learning rate at small batch sizes
 
-arXiv:2405.14578, §2.1, Theorem 3, proved in Appendix D.  When `B ≪ πσ_i²/(2μ_i²)`, eq. (39)
-replaces `𝓔_i(B)` by `√(2B/π)μ_i/σ_i` (`signLin`).  For any `𝓔`, the diagonal terms of the
+arXiv:2405.14578, §2.1, Theorem 3, proved in Appendix D. When `B ≪ πσ_i²/(2μ_i²)`, eq. (39)
+replaces `𝓔_i(B)` by `√(2B/π)μ_i/σ_i` (`signLin`). For any `𝓔`, the diagonal terms of the
 denominator of eq. (9) cancel (`signDen_eq`), so eq. (9) becomes
 `ε(B) = Σ√(2B/π)μ_i²/σ_i/(ΣH_ii + (2B/π)S)`, with `S = ΣΣ_{i≠j}μ_iμ_jH_ij/(σ_iσ_j)` (`offSum`),
-the first line of eq. (40) (`lrSign_signLin`).  With `M = Σμ_i²/σ_i` (`snrSum`),
+the first line of eq. (40) (`lrSign_signLin`). With `M = Σμ_i²/σ_i` (`snrSum`),
 `B_noise = πΣH_ii/(2S)` of eq. (14) (`noiseBatch`) and `ε_max = √(B_noise/(2π))M/ΣH_ii` of
 eq. (16) (`lrPeak`), it is `√B/(1 + B/B_noise)·√(2/π)M/ΣH_ii`, the third line
 (`lrSign_signLin_eq`), and `ε_max/(½(√(B_noise/B) + √(B/B_noise)))`, the last line, eq. (13) and
-the intro's eq. (2) (`lrSign_signLin_eq_peak`).  The paper notes that `B_noise > 0` and
+the intro's eq. (2) (`lrSign_signLin_eq_peak`). The paper notes that `B_noise > 0` and
 `ε_max > 0` make `ΣH_ii > 0` and `S > 0`: these are the hypotheses of eq. (13).
 -/
 
-import Transformer.Surge.Section2_Theorem2
+@[expose] public section
 
 open Real
 

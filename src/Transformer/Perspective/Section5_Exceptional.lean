@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.Perspective.Section3_SmallBeta
+
+/-!
 # §6 — The exceptional set of the high-dimensional statements
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
 `thm: boumal` and `thm: d.infty` speak of *Lebesgue-almost every* initial
-sequence, and the quantifier is not decoration.  The antipodal pair `(x, -x)`
+sequence, and the quantifier is not decoration. The antipodal pair `(x, -x)`
 is a stationary point of `eq: SA` at every `β` (`SA_const_antipodalPair`), so
 it converges to no single `x⋆` (`antipodalPair_not_mem_clusteringSet`) and a
 fortiori obeys no exponential rate — which is what this file proves.
@@ -14,7 +18,7 @@ fortiori obeys no exponential rate — which is what this file proves.
 uniform law of §4, the way `thm: beta.interval` already is.
 -/
 
-import Transformer.Perspective.Section3_SmallBeta
+@[expose] public section
 
 open scoped BigOperators
 open Real

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.GradientEnergyImage
+public import Transformer.Landscape.Lojasiewicz.QuadraticEnergy
+public import Mathlib.Analysis.Calculus.LagrangeMultipliers
+
+/-!
 # Polar equations for compact energy-level gradient minima
 
 Interior minima of squared gradient norm have dependent energy and
@@ -7,9 +13,7 @@ included. These analytic equations locate the minima whose curve selection
 is needed for Appendix D.1 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.GradientEnergyImage
-import Transformer.Landscape.Lojasiewicz.QuadraticEnergy
-import Mathlib.Analysis.Calculus.LagrangeMultipliers
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators

@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.DepthIntegerInput
-import Transformer.GPTMini.TokenInterface.Basic
+module
+
+public import Transformer.GPTMini.Semantics.DepthIntegerInput
+public import Transformer.GPTMini.TokenInterface.Basic
 
 /-!
 # Complete original depth correctness through List Int
@@ -20,6 +22,8 @@ convex trainability or benchmark-training FLOPs. Original width/layer
 budgets are retained: easy 64/two, hard 128/six.
 Universal raw-prefix correctness is stronger than sampled 99-percent accuracy.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

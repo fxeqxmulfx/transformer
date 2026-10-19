@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.Initial
+
+/-!
 # A zero-scale counterexample to the uncorrected Gaussian-mixture proposition
 
 At zero variance, the formula of `eq: gaussian.mixture` defines the zero
@@ -6,7 +10,7 @@ measure, not a probability law. The paper explicitly assumes positive scale;
 this module records the counterexample to the earlier unrestricted Lean claim.
 -/
 
-import Transformer.Metastability.Initial
+@[expose] public section
 
 open Real MeasureTheory
 
@@ -30,7 +34,7 @@ theorem mixtureLaw_sigma_zero_univ (d n r : ℕ) (hd : 0 < d) (w : Idx r → Euc
 
 /-- The present Lean statement of `prop: mixture.of.gaussians` is false without
 the source's `σ > 0` assumption: at `σ = 0` its purported mixture law is the
-zero measure, although the stated lower probability bound is positive.  This
+zero measure, although the stated lower probability bound is positive. This
 counterexample uses `d = n = r = 1`, also outside the source's `d, n ≥ 2`.
 
 Source: arXiv:2410.06833v1, §4, `prop: mixture.of.gaussians` and

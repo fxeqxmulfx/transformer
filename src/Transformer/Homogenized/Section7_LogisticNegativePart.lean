@@ -1,4 +1,6 @@
-import Transformer.Homogenized.Section7_LogisticBoundaryCoordinate
+module
+
+public import Transformer.Homogenized.Section7_LogisticBoundaryCoordinate
 
 /-!
 # Smooth global tests for the logistic state interval
@@ -11,6 +13,8 @@ For a state initially in [-1,1], the test is at most ε.
 Thus the smooth-test martingale problem controls negative boundary
 coordinates before any range property of the process is available.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

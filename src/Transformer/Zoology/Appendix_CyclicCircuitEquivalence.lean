@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CyclicCircuitSimulation
+
+/-!
 # External-shape equivalence for the cyclic circuit compiler
 
 Arora et al., arXiv:2312.04927v1, §4 Theorem `thm:equiv` and Appendix
@@ -9,7 +13,7 @@ bounds remain those of the explicit dense construction, not the paper's
 K-matrix and cut-width bound.
 -/
 
-import Transformer.Zoology.Appendix_CyclicCircuitSimulation
+@[expose] public section
 
 namespace Transformer.Zoology
 

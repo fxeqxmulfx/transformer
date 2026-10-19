@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainUnequalOrderTail
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainUnequalOrderTail
 
 /-!
 # Relative balance turns unequal mass dominance into actual task decisions
@@ -30,6 +32,8 @@ GPTMini. No floating-point or learned-feature transfer is asserted.
 Factor signs are not hidden in the scalar product bound; a balance
 budget below one derives a positive product from positive pair mass.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

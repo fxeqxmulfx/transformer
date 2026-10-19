@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.LocalMemoryParameters
-import Transformer.GPTMini.Sparsemax.BoundedGramWidth
+module
+
+public import Transformer.GPTMini.Sparsemax.LocalMemoryParameters
+public import Transformer.GPTMini.Sparsemax.BoundedGramWidth
 
 /-!
 # Structural guarantees for compact learned embeddings and actual attention
@@ -17,6 +19,8 @@ Q/K squared norms can change independently. This is a restricted path
 memory, with fixed same-family orthogonality; unrestricted token attention,
 task-loss selection and FFN convexity are not asserted.
 -/
+
+@[expose] public section
 
 noncomputable section
 

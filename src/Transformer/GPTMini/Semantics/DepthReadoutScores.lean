@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthWordFinalState
+module
+
+public import Transformer.GPTMini.Semantics.DepthWordFinalState
 
 /-!
 # Genuine tied depth scores and quantitative decision direction
@@ -16,6 +18,8 @@ this into margin four. Every nonlabel tied score is at most two, derived
 from the preserved actual raw constant/types. No logit or oracle encoder
 is a premise. Strict labels, final RMS and full-model coupling follow.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

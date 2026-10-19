@@ -1,11 +1,16 @@
-/-
+module
+
+public import Transformer.Interpolation.MassConcentration
+public import Transformer.Wasserstein.Collapse
+
+/-!
 # Measure-to-measure interpolation — mass concentration at rate `√η`
 
-The corrected `lem: mass.concentration.Q1` of arXiv:2411.04551v3.  The paper
+The corrected `lem: mass.concentration.Q1` of arXiv:2411.04551v3. The paper
 claims `W_2 ≤ Cη`, which is false (`not_massConcentrationQ1`); its own proof,
 "`μ_0^i(A) = ν_0^i(A ∩ ℚ_1^{d-1}) + ν_0^i(𝕊^{d-1} ∖ ℚ_1^{d-1}) δ_{x_0^i}(A)`",
 moves mass `η` a distance at most `2`, which costs `4η` and gives
-`W_2 ≤ 2√η`.  That is enough for the continuity argument the lemma serves,
+`W_2 ≤ 2√η`. That is enough for the continuity argument the lemma serves,
 which only needs `W_2 → 0` as `η → 0`.
 
 The point `x_0` has to exist: `diagPoint`, the unit vector `(1, …, 1)/√d`.
@@ -13,8 +18,7 @@ The point `x_0` has to exist: `diagPoint`, the unit vector `(1, …, 1)/√d`.
 Source: arXiv:2411.04551v3, `lem: mass.concentration.Q1` and its proof.
 -/
 
-import Transformer.Interpolation.MassConcentration
-import Transformer.Wasserstein.Collapse
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory

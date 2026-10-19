@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_OffDiagonalQuadraticMGF
+
+/-!
 # MGF of the original mean-centered quadratic form
 
 Source: arXiv:2604.01978v1, §6.3, `lem:Hanson_wright`.
@@ -11,7 +15,7 @@ The fixed universal constant and coefficient interval retain the exact
 original matrix Frobenius square and Euclidean operator norm.
 -/
 
-import Transformer.Homogenized.Section6_OffDiagonalQuadraticMGF
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

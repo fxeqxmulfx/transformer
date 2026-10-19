@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthSignalPresence
+module
+
+public import Transformer.GPTMini.Semantics.DepthSignalPresence
 
 /-!
 # Complete original depth detector FFN with shared finite weights
@@ -20,6 +22,8 @@ representation domain. In the domain and at nonnegative epsilon,
 the actual two-branch FFN contribution has norm at most 256. These
 are original-operator computations, not a training or convexity claim.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

@@ -1,5 +1,7 @@
-import Transformer.Perceptron.Section5_MapFirstVariation
-import Transformer.Perceptron.Section5_SphericalKernel
+module
+
+public import Transformer.Perceptron.Section5_MapFirstVariation
+public import Transformer.Perceptron.Section5_SphericalKernel
 
 /-!
 # Actual spherical derivatives for matrix interaction
@@ -24,6 +26,8 @@ matrix. The source assumes symmetry and invertibility for its
 stationary-measure conclusions. The example uses a genuine unit
 position, a nonzero tangent direction, and identity attention.
 -/
+
+@[expose] public section
 
 open Real
 namespace Transformer.Perceptron

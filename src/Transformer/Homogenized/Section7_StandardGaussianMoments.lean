@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianConditioning
+
+/-!
 # Actual standard Gaussian coordinate and vector moments
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -16,7 +20,7 @@ All vector integrals are proved finite by actual Gaussian second
 moments and Hölder's inequality before commuting the linear forms.
 -/
 
-import Transformer.Homogenized.Section7_GaussianConditioning
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

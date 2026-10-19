@@ -1,9 +1,13 @@
-/-
+module
+
+public import Transformer.RecurrentGradients.Section1_Gradients
+
+/-!
 # The regularizer
 
-arXiv:1211.5063, §3.3.  The regularizer of eq. (`reg_term`) is `Ω = Σ_k Ω_k`,
+arXiv:1211.5063, §3.3. The regularizer of eq. (`reg_term`) is `Ω = Σ_k Ω_k`,
 `Ω_k = (‖∂L/∂x_{k+1} ∂x_{k+1}/∂x_k‖ / ‖∂L/∂x_{k+1}‖ - 1)²` (`omegaTerm`,
-`omegaSum`), the error `∂L/∂x_{k+1}` a covector.  `Ω_k` vanishes exactly when
+`omegaSum`), the error `∂L/∂x_{k+1}` a covector. `Ω_k` vanishes exactly when
 the step preserves the norm of a nonzero error (`omegaTerm_eq_zero_iff`), and
 `Ω` when every `Ω_k` does (`omegaSum_eq_zero_iff`); `Section3_ErrorSignal`
 draws the consequences for the error signal.
@@ -11,14 +15,14 @@ draws the consequences for the error signal.
 With the states `x_k` and the errors held fixed, `Ω` is, as a function of
 `W_rec` for eq. (2), `Σ_k (‖∂L/∂x_{k+1} W_rec diag(σ'(x_k))‖ / ‖∂L/∂x_{k+1}‖ - 1)²`
 (`omegaSum_step`), where eq. (`dir_deriv`) writes `W_recᵀ` for `W_rec`, the
-transpose of eq. (5) again.  "Our regularization term only forces the Jacobian
+transpose of eq. (5) again. "Our regularization term only forces the Jacobian
 matrices `∂x_{k+1}/∂x_k` to preserve norm in the relevant direction of the
 error `∂L/∂x_{k+1}`, not for any direction (i.e. we do not enforce that all
 eigenvalues are close to 1)": `Ω_k = 0` for `J = diag(1, 0)` and the error
 `(1, 0)`, while `J` sends `(0, 1)` to `0` (`not_forall_norm_eq_of_omegaTerm_eq_zero`).
 -/
 
-import Transformer.RecurrentGradients.Section1_Gradients
+@[expose] public section
 
 open scoped Matrix
 
@@ -86,7 +90,7 @@ example (δ : ℕ → EuclideanSpace ℝ ι →L[ℝ] ℝ) (x : ℕ → Euclidea
 
 /-- **§3.3: the regularizer preserves norm "in the relevant direction of the
 error, not for any direction"**: `Ω_k = 0` does not make the Jacobian preserve
-every norm.  With the error `(1, 0)` and `J = diag(1, 0)`, `Ω_k = 0` while `J`
+every norm. With the error `(1, 0)` and `J = diag(1, 0)`, `Ω_k = 0` while `J`
 sends `(0, 1)` to `0`. -/
 theorem not_forall_norm_eq_of_omegaTerm_eq_zero :
     ¬ ∀ (δ : EuclideanSpace ℝ (Fin 2) →L[ℝ] ℝ) (J : Matrix (Fin 2) (Fin 2) ℝ), δ ≠ 0 →

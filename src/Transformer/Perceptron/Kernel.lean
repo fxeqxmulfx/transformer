@@ -1,4 +1,10 @@
-/-
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+public import Mathlib.Analysis.Convex.Deriv
+
+/-!
 # Perceptrons and attention's mean-field landscape — the interaction kernel
 
 Formalization of `lem: concavity` of arXiv:2601.21366v2: the angular kernel
@@ -10,7 +16,7 @@ bounds the proof of `thm: bound` runs on.
 
 * `θ_c(β) = arccos((√(1+4β²) - 1)/(2β))` is the source's definition, and
   `cos_thetaC` checks that the argument is in `[-1,1]`, so that `arccos` is
-  not being read at a junk value.  The source says `θ_c(β) ∈ (-π, π]`; it is
+  not being read at a junk value. The source says `θ_c(β) ∈ (-π, π]`; it is
   in fact in `(0, π/2)`, which is `thetaC_pos` and `thetaC_lt_pi_div_two`.
 
 * "`K_β` is strictly concave on `(-θ_c, θ_c)`" is `StrictConcaveOn`, proved
@@ -24,14 +30,12 @@ bounds the proof of `thm: bound` runs on.
 * `sup_{|θ| ≤ λθ_c} K_β''(θ)` and `max_{θ ∈ [θ_c, π]} K_β''(θ)` are carried as
   bounds valid at every such `θ`: a supremum bounded above is exactly that,
   and no junk value of `sSup` on an unbounded family can make the statement
-  true by accident.  Both are proved in `KernelHess.lean`.
+  true by accident. Both are proved in `KernelHess.lean`.
 
 Source: arXiv:2601.21366v2, `lem: concavity`, `eq: K''`, `eq: theta_c`.
 -/
 
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import Mathlib.Analysis.Convex.Deriv
+@[expose] public section
 
 open Real Filter
 open scoped Topology

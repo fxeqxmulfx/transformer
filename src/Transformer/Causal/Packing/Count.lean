@@ -1,21 +1,25 @@
-/-
+module
+
+public import Transformer.Causal.Packing.Lower
+
+/-!
 # Sphere packing — the cardinality bounds
 
 The two volume ledgers are inequalities between `(1 ± δ/2)^d` and
-`card S · (δ/2)^d`.  Reading a bound on `card S` off them means bounding the
+`card S · (δ/2)^d`. Reading a bound on `card S` off them means bounding the
 *shell* `x^d - y^d` from both sides, which the factorization
 
   `x^d - y^d = (∑_{i<d} x^i y^{d-1-i}) (x - y)`
 
 does with no analysis: each of the `d` terms of the sum lies between `y^{d-1}`
-and `x^{d-1}`.  The outcome is the packing number of `𝕊^{d-1}` at scale `δ`,
+and `x^{d-1}`. The outcome is the packing number of `𝕊^{d-1}` at scale `δ`,
 
   `d (1/(4δ))^{d-1} ≤ card S ≤ 2 d (4/δ)^{d-1}`,
 
 the first for a maximal separated set, the second for any separated set.
 -/
 
-import Transformer.Causal.Packing.Lower
+@[expose] public section
 
 open Metric
 

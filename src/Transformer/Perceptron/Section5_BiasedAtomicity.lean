@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_BiasedObstruction
+public import Transformer.Perceptron.Section5_ReLUAtomicity
+
+/-!
 # Original biased ReLU probabilities have finite or null support
 
 ArXiv:2601.21366v2, §3.1, `rem: ext` (i), extending `thm: circle`
@@ -23,8 +28,7 @@ are retained throughout. Finite support gives actual finite Dirac masses;
 uniform-null support gives actual mutual singularity.
 -/
 
-import Transformer.Perceptron.Section5_BiasedObstruction
-import Transformer.Perceptron.Section5_ReLUAtomicity
+@[expose] public section
 
 open Real MeasureTheory Set
 

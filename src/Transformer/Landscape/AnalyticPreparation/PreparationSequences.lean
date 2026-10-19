@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.NormalizedMaps
+
+/-!
 # Real analytic preparation: PreparationSequences
 
 Adapted from Bochao Kong's classical-complex-wpt, revision
@@ -9,7 +13,7 @@ The scalar field is real; no complex root or complex differentiation result
 is used. Apache-2.0 license: third_party/classical-complex-wpt/LICENSE.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.NormalizedMaps
+@[expose] public section
 
 open Filter Finset
 open scoped BigOperators ENNReal NNReal Topology

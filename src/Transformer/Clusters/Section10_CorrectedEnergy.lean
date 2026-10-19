@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section10_ProjectedEnergy
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+
+/-!
 # An actual monotone energy for the leading component
 
 ArXiv:2305.05465v6, §10, Step 2' and `e:derivativenorm123`.
@@ -12,8 +17,7 @@ from the actual ODE in `Section10_ProjectedEnergy`. The error constants
 are supplied by the proved score estimate, rather than assumed.
 -/
 
-import Transformer.Clusters.Section10_ProjectedEnergy
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

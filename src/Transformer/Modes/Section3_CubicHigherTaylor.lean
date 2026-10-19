@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_CubicHigherDerivatives
-import Transformer.Modes.Section3_WeightedDotMoments
+module
+
+public import Transformer.Modes.Section3_CubicHigherDerivatives
+public import Transformer.Modes.Section3_WeightedDotMoments
 
 /-!
 # Fourth-moment errors for the second and third characteristic derivatives
@@ -28,6 +30,8 @@ both cases: `(k,m) = (2,1)` and `(3,0)`. No fifth moment or higher
 characteristic derivative enters either estimate. The operator bounds
 follow from the applied estimates without restricting the directions.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

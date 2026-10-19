@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.PolynomialRootOrder
+public import Transformer.Landscape.AnalyticPreparation
+
+/-!
 # Real analytic monic polynomial families
 
 A scalar parameter and a polynomial variable provide the local families
@@ -6,8 +11,7 @@ used in ramified curve lifting. Preparation at a central root replaces
 the degree by the root's actual multiplicity.
 -/
 
-import Transformer.Landscape.Lojasiewicz.PolynomialRootOrder
-import Transformer.Landscape.AnalyticPreparation
+@[expose] public section
 
 open Filter Polynomial
 open scoped BigOperators

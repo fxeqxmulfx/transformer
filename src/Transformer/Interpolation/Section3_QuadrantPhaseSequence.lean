@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_PhaseSequenceInverse
+public import Transformer.Interpolation.Section3_TwoContractions
+
+/-!
 # The original two-flow quadrant reduction as autonomous phases
 
 ArXiv:2411.04551v3, §3.1, `lem: first.quadrant`.
@@ -14,8 +19,7 @@ conclusion are retained. This is a representation of the existing
 reduction, without an additional controllability hypothesis.
 -/
 
-import Transformer.Interpolation.Section1_PhaseSequenceInverse
-import Transformer.Interpolation.Section3_TwoContractions
+@[expose] public section
 
 open Real MeasureTheory Set
 

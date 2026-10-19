@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_SmallRidgeStability
+
+/-!
 # Original barycenter directions and finite separation relations
 
 ArXiv:2411.04551v3, §3.2, `lem: induction.barycenter` and
@@ -14,7 +18,7 @@ Finite intersections preserve every initially distinct direction during
 one sufficiently short actual ridge phase.
 -/
 
-import Transformer.Interpolation.Section3_SmallRidgeStability
+@[expose] public section
 
 open Real MeasureTheory Filter Set
 open scoped Topology

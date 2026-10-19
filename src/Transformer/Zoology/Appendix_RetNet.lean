@@ -1,14 +1,18 @@
-/-
+module
+
+public import Transformer.Zoology.Section3_MQAR
+
+/-!
 # RetNet recurrence and finite-memory recall
 
 Arora et al., arXiv:2312.04927v1, Appendix `app:retnet-proof`, equations
 `eq: retnet-recurrence` and `eq: retnet-poly`, and Corollary `cor: space-ar`.
-The paper's communication argument concerns *bits*.  A matrix of real
+The paper's communication argument concerns *bits*. A matrix of real
 numbers has no fixed bit capacity without a representation or precision
 bound, so the lower bound below states its finite-state premise explicitly.
 -/
 
-import Transformer.Zoology.Section3_MQAR
+@[expose] public section
 
 namespace Transformer.Zoology
 
@@ -40,7 +44,7 @@ theorem retNetRun_append {d : ℕ} (γ : ℝ)
   simp [retNetRun, List.foldl_append]
 
 /-- Any finite memory state that answers every one-way index query exactly
-must distinguish all input bit strings.  This is the deterministic exact
+must distinguish all input bit strings. This is the deterministic exact
 case underlying the information argument in Appendix `cor: space-ar`.
 The randomized `2/3`-success result cited there is stronger and requires
 its own communication-complexity proof. -/
@@ -55,7 +59,7 @@ theorem exact_index_encoder_injective {n s : ℕ}
     _ = y i := hcorrect y i
 
 /-- If the retained state has `b` bits, exact recall of one of `n`
-independently chosen bits requires `n ≤ b`.  This correct finite-state
+independently chosen bits requires `n ≤ b`. This correct finite-state
 specialization of Appendix Corollary `cor: space-ar` does not assume that a
 real-valued RetNet state automatically uses only `O(d²)` bits. -/
 theorem exact_index_requires_bits (n b : ℕ)

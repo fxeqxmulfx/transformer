@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Magma.Section5_MagmaTransition
+public import Transformer.Magma.Section5_Convergence
+
+/-!
 # Corrected convergence of the actual dense-state Magma SGD model
 
 Replacement for arXiv:2602.15322v1, Section 5, theorem:main_result and
@@ -7,8 +12,7 @@ cosine/sigmoid scale EMA. Uniform operator bounds are derived, not assumed.
 Global smoothness and unbiased finite sampling are explicit corrections.
 -/
 
-import Transformer.Magma.Section5_MagmaTransition
-import Transformer.Magma.Section5_Convergence
+@[expose] public section
 
 open scoped BigOperators
 

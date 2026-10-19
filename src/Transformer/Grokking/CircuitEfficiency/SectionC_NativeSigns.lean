@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativeRecurrence
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativeRecurrence
 
 /-!
 # Actual CE feedback preserves the native sign region
@@ -16,6 +18,8 @@ stream, learned GPTMini features, or rule-selection premise is used.
 Nonnegative remaining decay factor is explicit; arbitrary rates need
 not preserve positive parameters.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

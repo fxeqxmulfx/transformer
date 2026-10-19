@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Transformers
+
+/-!
 # A layer above a collapse computes one vector
 
 If every position of an input carries the same activation `v`, then a layer of
@@ -10,7 +14,7 @@ length of the input.
 The reason is the one `eq:att` makes visible: with all keys, queries and
 values equal, every score `s_{ij}` is the same number `S`, so the attention
 average of `m` identical rounded terms over `m` identical rounded weights is
-that one term over that one weight, whatever `m = |{j ≤ i}|` is.  The
+that one term over that one weight, whatever `m = |{j ≤ i}|` is. The
 `den = 0` branch, which averages the values themselves, collapses the same
 way.
 
@@ -23,7 +27,7 @@ shallower transformer.
 Source: arXiv:2506.16055v3, Appendix B.1, `def:transformer`, `eq:att`.
 -/
 
-import Transformer.CRASP.Transformers
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -120,7 +124,7 @@ theorem act_eq_of_fields {k' : ℕ} (T : RTfr σ p s d k) (T' : RTfr σ p s d k'
 
 /-- **The collapsed transformer.**  Runs the first `L` layers of `T` and reads
 its output off the common activation of layer `L`, carried `M` layers up by
-`above`.  It has depth `L`, and `out_collapse` says it computes what `T`
+`above`. It has depth `L`, and `out_collapse` says it computes what `T`
 computes whenever layer `L` of `T` is constant. -/
 noncomputable def collapse {L M : ℕ} (T : RTfr σ p s d (L + M)) :
     RTfr σ p s d L where

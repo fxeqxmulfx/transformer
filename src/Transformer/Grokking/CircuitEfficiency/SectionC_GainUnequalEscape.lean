@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainUnequalGrowthTail
-import Mathlib.Analysis.SpecificLimits.Basic
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainUnequalGrowthTail
+public import Mathlib.Analysis.SpecificLimits.Basic
 
 /-!
 # Actual unequal native Gen mass crosses Mem after every finite budget
@@ -26,6 +28,8 @@ Exact reals, fixed gained tables, zero betas and sufficient small
 rate differ from appendix C's coupled-cost GD and learned GPTMini.
 The finite clock is qualitative, not a numerical or FLOP bound.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,17 +1,21 @@
-/-
+module
+
+public import Transformer.GPTMini.Reshape
+
+/-!
 # The reshapes on differences
 
 `GPTMini.Reshape` shows that `qkvSlice`, `headSlice` and `headMerge` do not
-increase the Euclidean norm.  All three are linear, so the same bounds hold
+increase the Euclidean norm. All three are linear, so the same bounds hold
 for the *displacement* between two inputs, which is what the Lipschitz
-estimates of the attention sub-layer need.  Each proof is the corresponding
+estimates of the attention sub-layer need. Each proof is the corresponding
 norm bound after pushing the subtraction through the reshape.
 
 Source: `reference/model.py` (`CausalMHA.forward`), the `chunk` and `view`
 calls around the heads.
 -/
 
-import Transformer.GPTMini.Reshape
+@[expose] public section
 
 open scoped BigOperators
 open Real

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.Basic
+public import Mathlib.Topology.Germ
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
+
+/-!
 # Real analytic germs: Basic
 
 Adapted from Bochao Kong's LocalComplexGeometry, revision
@@ -8,9 +14,7 @@ dependency closure is retained. Apache-2.0 license:
 third_party/LocalComplexGeometry/LICENSE.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.Basic
-import Mathlib.Topology.Germ
-import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

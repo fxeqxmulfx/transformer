@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_ProjectionContraction
+
+/-!
 # Positive directions avoiding one prescribed point
 
 ArXiv:2411.04551v3, §3.1, proof of `lem: first.quadrant`.
@@ -10,7 +14,7 @@ contained in the quadrant. Antipodal identities track the repelling
 poles of the two original projection fields.
 -/
 
-import Transformer.Interpolation.Section3_ProjectionContraction
+@[expose] public section
 
 open Real
 

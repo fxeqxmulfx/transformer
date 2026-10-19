@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section10_ProjectedGain
+public import Transformer.Clusters.Section8_ClusterLimits
+
+/-!
 # Every leading token converges to a candidate of the limiting polytope
 
 ArXiv:2305.05465v6, §10, the adaptation of Steps 3--4 from §8.1 in
@@ -13,8 +18,7 @@ force each projected token to converge to one candidate. No convergence
 input or commutation of the attention root with a projection is assumed.
 -/
 
-import Transformer.Clusters.Section10_ProjectedGain
-import Transformer.Clusters.Section8_ClusterLimits
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

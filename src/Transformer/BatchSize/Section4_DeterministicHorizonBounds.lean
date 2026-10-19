@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_DeterministicTestBounds
+
+/-!
 # Uniform backward test bounds on a physical time horizon
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1.
@@ -6,7 +10,7 @@ The comparison tests have a C2 bound independent of the step size
 whenever their number of steps times the step size stays below T.
 -/
 
-import Transformer.BatchSize.Section4_DeterministicTestBounds
+@[expose] public section
 
 open scoped NNReal
 

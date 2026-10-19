@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Transformers
+
+/-!
 # Future-masked transformers with a position encoding
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -8,7 +12,7 @@ treats — sinusoidal (`sec:sinusoidal_pes`, `eq:rotation`), RoPE
 
 Each modifies one line of `def:transformer`: sinusoidal adds a positional
 vector to the embedding `eq:emb`, while RoPE and ALiBi change the attention
-logit `eq:att_logit`.  `PosEnc` is therefore a single datatype selecting which
+logit `eq:att_logit`. `PosEnc` is therefore a single datatype selecting which
 of the three (or none) is in force, and `PTfr` is `RTfr` with one such field;
 the rest of the architecture — rounding, future masking, the empty-denominator
 fallback, the residual — is unchanged, so `PTfr.layer` repeats
@@ -17,20 +21,20 @@ fallback, the residual — is unchanged, so `PTfr.layer` repeats
 **Two modelling notes.**
 
 `eq:rotation` rounds the entries of `R(θ)` and then takes powers of the
-rounded matrix.  `rotate` below is instead the exact rotation by `i · θ_c` in
+rounded matrix. `rotate` below is instead the exact rotation by `i · θ_c` in
 each two-dimensional block, with the rounding applied to the result; the
 composition law `R(θ)^i = R(i θ)` used here is what the paper's own
 computations use, and the accumulated rounding error of a matrix power is not
-modelled.  Positions are the zero-based `Fin n` indices, so `R(θ)^{i-1}` of
+modelled. Positions are the zero-based `Fin n` indices, so `R(θ)^{i-1}` of
 the paper's one-based `i` is `rotate d θ i`.
 
 The paper's `θ` is indexed by the blocks `c ∈ [d/2]`, so `θ (c / 2)` is the
-angle governing the coordinate `c`.  It is carried as a parameter: the
+angle governing the coordinate `c`. It is carried as a parameter: the
 theorems of Appendix F do not use `θ_c = 1000^{-2(c-1)/d}`, only that the
 angles are rational multiples of `π` and the encoding is therefore periodic.
 -/
 
-import Transformer.CRASP.Transformers
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -80,7 +84,7 @@ def PosEnc.RationalAngles : PosEnc → Prop
   | .rope θ => ∃ q : ℕ → ℚ, ∀ c : ℕ, θ c = Real.pi * q c
   | .alibi _ => True
 
-/-- The vector added to the word embedding at position `i` (`eq:emb`).  Only
+/-- The vector added to the word embedding at position `i` (`eq:emb`). Only
 the sinusoidal encoding contributes one. -/
 noncomputable def PosEnc.emb (pe : PosEnc) (p s d i : ℕ) : Fin d → Fx p s :=
   match pe with

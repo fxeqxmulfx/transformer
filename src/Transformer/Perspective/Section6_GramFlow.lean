@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perspective.ConeFields
+public import Transformer.Perspective.Section1_IPS
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # §6.2 — The ODE for the Gram matrix of an attention trajectory
 
 Auxiliary to arXiv:2312.10794v5, *A mathematical perspective on Transformers*,
@@ -6,9 +13,7 @@ Auxiliary to arXiv:2312.10794v5, *A mathematical perspective on Transformers*,
 without a choice of ambient coordinates or an assumed symmetry of the flow.
 -/
 
-import Transformer.Perspective.ConeFields
-import Transformer.Perspective.Section1_IPS
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -50,7 +55,8 @@ Source: arXiv:2312.10794v5, §6.2, proof of `thm: orthogonal`. -/
 theorem contDiff_gramWeight (n : ℕ) (β : ℝ) (i k : Idx n) :
     ContDiff ℝ 1 (fun G => gramWeight n β G i k) := by
   have hentry (i j : Idx n) : ContDiff ℝ 1 (fun G : Idx n → Idx n → ℝ => G i j) :=
-    (contDiff_apply ℝ ℝ j).comp (contDiff_apply ℝ (Idx n → ℝ) i)
+    (contDiff_apply ℝ (fun _ : Idx n => ℝ) j).comp
+      (contDiff_apply ℝ (fun _ : Idx n => Idx n → ℝ) i)
   have he (j : Idx n) : ContDiff ℝ 1 (fun G : Idx n → Idx n → ℝ => exp (β * G i j)) :=
     (contDiff_const.mul (hentry i j)).exp
   exact (he k).div (ContDiff.sum (fun j _ => he j)) (fun G =>
@@ -62,7 +68,8 @@ Source: arXiv:2312.10794v5, §6.2, `thm: orthogonal`; this permits
 comparison of the actual Gram matrix with a scalar-angle matrix by uniqueness. -/
 theorem contDiff_gramDrift (n : ℕ) (β : ℝ) : ContDiff ℝ 1 (gramDrift n β) := by
   have hentry (i j : Idx n) : ContDiff ℝ 1 (fun G : Idx n → Idx n → ℝ => G i j) :=
-    (contDiff_apply ℝ ℝ j).comp (contDiff_apply ℝ (Idx n → ℝ) i)
+    (contDiff_apply ℝ (fun _ : Idx n => ℝ) j).comp
+      (contDiff_apply ℝ (fun _ : Idx n => Idx n → ℝ) i)
   have hhalf (i j : Idx n) : ContDiff ℝ 1 (fun G => gramHalfDrift n β G i j) :=
     ContDiff.sum fun k _ => (contDiff_gramWeight n β i k).mul
       ((hentry k j).sub ((hentry i k).mul (hentry i j)))

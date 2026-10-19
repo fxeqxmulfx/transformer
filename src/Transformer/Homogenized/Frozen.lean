@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.CoupledPair
+public import Transformer.Homogenized.UniformLaw
+
+/-!
 # Homogenized Transformers — the frozen pair
 
 Whenever the field `G_μ(·,θ)` of `eq:G_def` vanishes on the sphere,
@@ -6,8 +11,8 @@ Whenever the field `G_μ(·,θ)` of `eq:G_def` vanishes on the sphere,
 held fixed in time, solves it, with conditional law its own law under the
 trivial noise filtration.
 
-Two head laws make the field vanish, for different reasons.  At `ρ* = δ_0`
-every head is the zero head and the attention field is `0`.  In dimension `1`
+Two head laws make the field vanish, for different reasons. At `ρ* = δ_0`
+every head is the zero head and the attention field is `0`. In dimension `1`
 the sphere is two points, every tangent space is trivial, and `Proj_x` kills
 everything — there the head law may be an honest Gaussian one, which is what
 the satisfiability of `thm:large_beta_meta` needs (`OneDim.lean`).
@@ -20,8 +25,7 @@ with density `1`, which the frozen witnesses of `McKeanVlasov.lean` (whose law
 is a Dirac mass) do not.
 -/
 
-import Transformer.Homogenized.CoupledPair
-import Transformer.Homogenized.UniformLaw
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -36,7 +40,7 @@ at every measure and every point of the sphere, for `ρ*`-almost every head.
 
 This is a property of the temperature and the head law together: `GfieldOf` is
 what drives `eq:non_linear_SDE_common`, so where it vanishes the equation is
-`dx = 0` and every constant solves it.  Almost every head is the right
+`dx = 0` and every constant solves it. Almost every head is the right
 quantifier and not every head: the dynamics only ever sees `G` under `∫ · ∂ρ*`,
 and at `ρ* = δ_0` the field does *not* vanish at a head `θ ≠ 0`. -/
 def HasVanishingField {d : ℕ} (β : ℝ) (ρ : Measure (HeadParam d)) : Prop :=
@@ -189,7 +193,7 @@ theorem map_clampSphere {d : ℕ} {σ : Measure (EucSpace d)} {e : EucSpace d}
 
 /-- **A coupled pair whose conditional law is the uniform measure**, in every
 dimension `d ≥ 1` and at every head law whose field vanishes: two independent
-uniform tokens, frozen.  Together with `isLowTemperature_uniformAmbient` this
+uniform tokens, frozen. Together with `isLowTemperature_uniformAmbient` this
 witnesses the hypotheses of `thm:large_beta_meta`. -/
 theorem isCoupledPair_uniformAmbient {d : ℕ} (hd : 0 < d) (β T : ℝ)
     (ρ : Measure (HeadParam d)) (hG : HasVanishingField β ρ)

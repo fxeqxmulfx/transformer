@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.ClippedKeySegment
+module
+
+public import Transformer.GPTMini.Sparsemax.ClippedKeySegment
 
 /-!
 # Two different row targets corrected by one shared key matrix
@@ -16,6 +18,8 @@ This is an inhabited witness for the multi-row hypotheses; it is not
 an experiment, a floating-point certificate or a theorem of full-model
 convergence. There are no private row parameters or attention labels.
 -/
+
+@[expose] public section
 
 noncomputable section
 

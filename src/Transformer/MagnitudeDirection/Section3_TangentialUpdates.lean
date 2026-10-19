@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.Section3_Sphere
+
+/-!
 # Exact angular and chord updates on a sphere
 
 arXiv:2606.25971v2, §2, §3.1 and §4.1.5. For a tangential update
@@ -6,7 +10,7 @@ whose norm matches the weight norm, projection gives a cosine and a
 relative chord depending only on the LR. The chord is not equal to the LR.
 -/
 
-import Transformer.MagnitudeDirection.Section3_Sphere
+@[expose] public section
 
 noncomputable section
 

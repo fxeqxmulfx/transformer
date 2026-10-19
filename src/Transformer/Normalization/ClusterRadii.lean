@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Normalization.ClusterResidence
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Radius bounds inside a token cluster
 
 The radial estimates used with Table 2 in Appendix C, proof of
@@ -6,8 +11,7 @@ Theorem 4.3 of arXiv:2510.22026v2, including the initial radius and the
 Mix-LN switching time.
 -/
 
-import Transformer.Normalization.ClusterResidence
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open Set
 open scoped BigOperators

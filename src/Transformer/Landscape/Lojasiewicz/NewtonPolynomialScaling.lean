@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.NewtonCoefficientScaling
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+
+/-!
 # Polynomial factorization after Newton scaling
 
 The coefficient normalization applies to the entire monic polynomial, in
@@ -6,8 +11,7 @@ arbitrary degree. Away from the ramification point the original and
 normalized zero sets are equivalent under the power substitutions.
 -/
 
-import Transformer.Landscape.Lojasiewicz.NewtonCoefficientScaling
-import Mathlib.Algebra.BigOperators.Ring.Finset
+@[expose] public section
 
 open Filter Finset
 open scoped BigOperators

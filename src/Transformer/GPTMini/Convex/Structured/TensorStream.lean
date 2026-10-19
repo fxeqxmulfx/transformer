@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.TensorLikelihood
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorLikelihood
 
 /-!
 # Intermediate causal tensor blocks preserve learned input fields
@@ -17,6 +19,8 @@ can subsequently clear them with TensorCausalBlock's verified ordinary
 residual before unchanged final RMSNorm/tied readout. Complete stack
 induction and deferred FFN integration remain subsequent obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

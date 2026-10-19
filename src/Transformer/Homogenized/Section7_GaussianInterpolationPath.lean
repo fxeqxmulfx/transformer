@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianInterpolationContinuity
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+
+/-!
 # The actual Gaussian interpolation path, derivative and local bound
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -16,8 +21,7 @@ Gaussian first moments will make that original bound integrable,
 justifying differentiation of the original expectation.
 -/
 
-import Transformer.Homogenized.Section7_GaussianInterpolationContinuity
-import Mathlib.Analysis.SpecialFunctions.Sqrt
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Set Filter
 open scoped Topology

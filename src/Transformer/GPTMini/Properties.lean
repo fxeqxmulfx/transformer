@@ -1,4 +1,14 @@
-/-
+module
+
+public import Transformer.GPTMini.Properties.OutputSimplex
+public import Transformer.GPTMini.Properties.Causal
+public import Transformer.GPTMini.Properties.StreamGrowth
+public import Transformer.GPTMini.Properties.LipschitzConstants
+public import Transformer.GPTMini.Properties.Lipschitz
+public import Transformer.GPTMini.Properties.Entropy
+public import Transformer.GPTMini.Properties.EntropyEmbedding
+
+/-!
 # `gpt-mini` Universal-in-Weights Properties
 
 Re-exports of all proven structural properties of the `gpt-mini` forward
@@ -13,10 +23,4 @@ Contents:
     embedding norm alone
 -/
 
-import Transformer.GPTMini.Properties.OutputSimplex
-import Transformer.GPTMini.Properties.Causal
-import Transformer.GPTMini.Properties.StreamGrowth
-import Transformer.GPTMini.Properties.LipschitzConstants
-import Transformer.GPTMini.Properties.Lipschitz
-import Transformer.GPTMini.Properties.Entropy
-import Transformer.GPTMini.Properties.EntropyEmbedding
+@[expose] public section

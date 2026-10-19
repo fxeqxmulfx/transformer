@@ -1,20 +1,24 @@
-/-
+module
+
+public import Transformer.Surge.Section2_Lemma1
+public import Transformer.BatchSize.Section4_Coefficients
+
+/-!
 # The sign of a Gaussian batch gradient
 
-arXiv:2405.14578, Appendix C, the proof of Theorem 2.  For `x ∼ N(μ, σ²)`,
+arXiv:2405.14578, Appendix C, the proof of Theorem 2. For `x ∼ N(μ, σ²)`,
 `E[sign(x)] = erf(μ/(√2σ))` and `var(sign(x)) = 1 - erf(μ/(√2σ))²`, eqs. (32) and (33)
-(`integral_sign_gaussianReal`, `variance_sign_gaussianReal`), from `Transformer.BatchSize`.  The
+(`integral_sign_gaussianReal`, `variance_sign_gaussianReal`), from `Transformer.BatchSize`. The
 mean of `B` independent samples of `N(μ, σ²)` is `N(μ, σ²/B)`, eq. (34) (`hasLaw_batchMean`).
 
 So when the per-sample gradient of each parameter `i` is `N(μ_i, σ_i²)`, the update
 `V = sign(G_est)` has `E[V]_i = erf(√(B/2)μ_i/σ_i)`, eq. (35) (`meanVec_sign_batchGrad`), and
-`cov(V) = diag(1 - erf(√(B/2)μ_i/σ_i)²)`, eq. (36) (`covMatrix_sign_batchGrad`).  Eq. (36) needs
+`cov(V) = diag(1 - erf(√(B/2)μ_i/σ_i)²)`, eq. (36) (`covMatrix_sign_batchGrad`). Eq. (36) needs
 the coordinates of `G_est` independent, which Theorem 2 leaves implicit: here the per-sample
 gradients of all the parameters are independent (`indepFun_batchGrad`).
 -/
 
-import Transformer.Surge.Section2_Lemma1
-import Transformer.BatchSize.Section4_Coefficients
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

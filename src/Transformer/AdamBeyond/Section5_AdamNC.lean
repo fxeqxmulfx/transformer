@@ -1,6 +1,8 @@
-import Transformer.AdamBeyond.Section2_Adam
+module
 
-/-
+public import Transformer.AdamBeyond.Section2_Adam
+
+/-!
 # Adam and beyond — §5: AdamNC
 
 §5 of arXiv:1904.09237 (the extension after the experiments) and Algorithm 3
@@ -26,6 +28,8 @@ Source: arXiv:1904.09237, §5, "Extension: AdamNC algorithm", and Corollary 2
 with the sentence after it; appendix, Algorithm 3 (alg:adamnc).
 -/
 
+@[expose] public section
+
 open Finset
 
 namespace Transformer
@@ -35,8 +39,8 @@ open AMSGrad
 
 variable {d : ℕ}
 
-/-- AdamNC: `v̂_t = β_{2,t} v̂_{t-1} + (1 - β_{2,t}) v_t`.  Run with `β₂ = 0`, so
-that `v_t = g_t²`.  arXiv:1904.09237, appendix, Algorithm 3 (alg:adamnc). -/
+/-- AdamNC: `v̂_t = β_{2,t} v̂_{t-1} + (1 - β_{2,t}) v_t`. Run with `β₂ = 0`, so
+that `v_t = g_t²`. arXiv:1904.09237, appendix, Algorithm 3 (alg:adamnc). -/
 def adamNCRule (β₂ : ℕ → ℝ) : Rule d := fun t a b => β₂ t • a + (1 - β₂ t) • b
 
 /-- One step of AdamNC, run with `β₂ = 0`. -/

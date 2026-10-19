@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianPolynomialVectorStein
+
+/-!
 # Polynomial vector integration by parts with the original independent Gaussian
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -14,7 +18,7 @@ joint law, so the final formula is on the original probability space.
 Singular laws are included, without densities or inverse covariances.
 -/
 
-import Transformer.Homogenized.Section7_GaussianPolynomialVectorStein
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators

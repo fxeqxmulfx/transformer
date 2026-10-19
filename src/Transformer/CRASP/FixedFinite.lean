@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Fixed
+
+/-!
 # Finite values and exact rounding cells
 
 arXiv:2506.16055v3, Appendix B.1, `def:fixed_precision`, and B.2's
@@ -6,7 +10,7 @@ finite-state simulation. The two boundary cells include saturation;
 interior cells are the usual half-open grid intervals.
 -/
 
-import Transformer.CRASP.Fixed
+@[expose] public section
 
 namespace Transformer.CRASP.Fx
 
@@ -22,7 +26,7 @@ instance : Finite (Fx p s) := Finite.of_injective
 noncomputable instance : Fintype (Fx p s) := Fintype.ofFinite _
 
 /-- There are `2 · 2^{p-1}` fixed-point numbers, `2^p` at `p ≥ 1` bits: the
-mantissas `-2^{p-1}, …, 2^{p-1} - 1`.  Source: arXiv:2506.16055v3, Appendix
+mantissas `-2^{p-1}, …, 2^{p-1} - 1`. Source: arXiv:2506.16055v3, Appendix
 B.1, `def:fixed_precision`. -/
 theorem card_eq : Fintype.card (Fx p s) = 2 * 2 ^ (p - 1) := by
   have e : Fx p s ≃ Finset.Ico (-2 ^ (p - 1) : ℤ) (2 ^ (p - 1)) :=

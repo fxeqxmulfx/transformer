@@ -1,24 +1,28 @@
-/-
+module
+
+public import Transformer.RecurrentGradients.Section2_Linear
+public import Mathlib.Analysis.SpecificLimits.Normed
+
+/-!
 # The power iteration
 
 arXiv:1211.5063, supplementary "Analytical analysis of the exploding and
-vanishing gradients problem".  For the linear model `∂x_t/∂x_k = W_rec^l`,
-`l = t - k` (`factor_id`), where eq. (`prod_wk`) writes `(W_recᵀ)^l`.  The
+vanishing gradients problem". For the linear model `∂x_t/∂x_k = W_rec^l`,
+`l = t - k` (`factor_id`), where eq. (`prod_wk`) writes `(W_recᵀ)^l`. The
 paper writes the error `∂L_t/∂x_t = Σ_i c_i q_iᵀ` in eigenvectors `q_i` of
 `W_rec`, by `q_iᵀ (W_recᵀ)^l = λ_i^l q_iᵀ`; for the corrected factor the `q_iᵀ`
 are left eigenvectors `p_i`, `p_i W_rec = λ_i p_i`, so `p_i W_rec^l = λ_i^l p_i`
 (`comp_pow_eq_smul`) and `∂L_t/∂x_t ∂x_t/∂x_k = Σ_i c_i λ_i^l p_i`
-(`comp_factor_id`).  With `|λ_1| > ⋯ > |λ_n|` and `j` the first index with
+(`comp_factor_id`). With `|λ_1| > ⋯ > |λ_n|` and `j` the first index with
 `c_j ≠ 0`, this over `λ_j^l` tends to `c_j p_j`, eq. (`approx_comp`)
 (`tendsto_div_pow_comp_factor_id`), for `λ_j ≠ 0`, which the ratios
-`λ_i/λ_j` presuppose.  Neither a basis of eigenvectors nor the order of all the
+`λ_i/λ_j` presuppose. Neither a basis of eigenvectors nor the order of all the
 `|λ_i|` is needed: only `|λ_i| < |λ_j|` for the other `i` with `c_i ≠ 0`
 (`tendsto_div_pow_sum`), which also bounds the sum below by `C |λ_j|^l`
 (`eventually_le_norm_sum`); `SectionA_Growth` draws the growth claims.
 -/
 
-import Transformer.RecurrentGradients.Section2_Linear
-import Mathlib.Analysis.SpecificLimits.Normed
+@[expose] public section
 
 open Filter Topology
 

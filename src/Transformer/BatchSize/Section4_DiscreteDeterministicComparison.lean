@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_C2DiscreteError
+public import Transformer.BatchSize.Section4_DeterministicHorizonBounds
+public import Transformer.BatchSize.Section4_DriftDerivativeBounds
+public import Transformer.BatchSize.Section4_IteratedExpectation
+
+/-!
 # Finite-horizon weak comparison for the actual discrete optimizers
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1.
@@ -7,10 +14,7 @@ orbit using uniformly bounded C2 backward tests and the proved Markov
 contraction. Every local defect and derivative bound is established.
 -/
 
-import Transformer.BatchSize.Section4_C2DiscreteError
-import Transformer.BatchSize.Section4_DeterministicHorizonBounds
-import Transformer.BatchSize.Section4_DriftDerivativeBounds
-import Transformer.BatchSize.Section4_IteratedExpectation
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal

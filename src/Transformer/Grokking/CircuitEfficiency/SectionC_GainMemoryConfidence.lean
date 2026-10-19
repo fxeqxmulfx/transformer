@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryDelay
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryLoss
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryDelay
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryLoss
 
 /-!
 # Delayed permanent native accuracy with uniform limiting confidence
@@ -30,6 +32,8 @@ tables and uniform decoupled native decay differ from appendix C's
 coupled-cost GD. Learned stochastic/floating-point GPTMini transfer
 and the weaker-decay positive-confidence regime remain open.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

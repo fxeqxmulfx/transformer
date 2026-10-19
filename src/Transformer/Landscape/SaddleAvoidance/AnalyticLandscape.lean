@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Analytic
+
+/-!
 # Saddle avoidance — the scheme for analytic energies
 
 The scheme theorems ask `hf : ContDiff ℝ 2 f` and the Łojasiewicz inequality
-at every critical point (`hloj`).  An analytic `f` is `C²`
+at every critical point (`hloj`). An analytic `f` is `C²`
 (`AnalyticOnNhd.contDiff`) and satisfies the inequality at every point
 (`exists_isLojasiewiczAt_of_analyticOnNhd`, Łojasiewicz's theorem), so
-`hf : AnalyticOnNhd ℝ f univ` replaces both.  For gradient descent:
+`hf : AnalyticOnNhd ℝ f univ` replaces both. For gradient descent:
 `ae_exists_tendsto_isMinOn_of_analyticOnNhd`,
 `ae_exists_tendsto_isMinOn_of_span_eq_top_of_analyticOnNhd` and
 `ae_exists_tendsto_isLocalMin_of_analyticOnNhd`; for gradient flows:
@@ -15,7 +19,7 @@ A model then brings its analyticity, a Lipschitz constant, and its
 landscape `hcrit`.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Analytic
+@[expose] public section
 
 open Filter Set MeasureTheory
 open scoped Topology NNReal
@@ -96,7 +100,7 @@ theorem ae_exists_tendsto_gradientFlow_isMinOn_of_span_eq_top_of_analyticOnNhd
 
 /-- The hypotheses of the theorems above on global minimizers hold for
 `f(x) = 1 - cos x` on the line with Lebesgue measure, `L = M = 1`, `η = 1/2`,
-and the period `2π` or its integer multiples.  The even multiples of `π` are
+and the period `2π` or its integer multiples. The even multiples of `π` are
 global minimizers, the odd ones strict saddles, where the Hessian `cos x = -1`
 is negative. -/
 example : let f := fun x : ℝ => 1 - Real.cos x

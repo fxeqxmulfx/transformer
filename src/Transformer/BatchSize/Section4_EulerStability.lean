@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_BrownianKick
+
+/-!
 # Mean-square stability of the actual Brownian Euler update
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ Two adapted random states are coupled using the same fresh Brownian
 increment. Exact adapted energy removes the drift-noise cross term.
 -/
 
-import Transformer.BatchSize.Section4_BrownianKick
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal BigOperators

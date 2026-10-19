@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_PhaseDerivatives
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+
+/-!
 # Distinct arbitrarily close atomic inputs with a common hole
 
 ArXiv:2411.04551v3, §1, `eq: first.assp` and `thm: targets.atoms`.
@@ -15,8 +20,7 @@ unit points to their actual probability Dirac laws preserves
 injectivity, as follows by testing their original barycenters.
 -/
 
-import Transformer.Interpolation.Section1_PhaseDerivatives
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+@[expose] public section
 
 open Real MeasureTheory Set
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Optimization.StrongConvexity
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
 # A genuine matrix-training objective witnessing the assumptions
 
 The nonconstant objective `‖x‖²/2` works in every real Hilbert space,
@@ -7,8 +12,7 @@ Source: convergence extension of arXiv:2502.16982, §2.1–2.2,
 and arXiv:2602.02016v2, §2–4.
 -/
 
-import Transformer.Optimization.StrongConvexity
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open scoped InnerProductSpace
 

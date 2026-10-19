@@ -1,5 +1,7 @@
-import Mathlib.Analysis.MeanInequalitiesPow
-import Mathlib.Tactic
+module
+
+public import Mathlib.Analysis.MeanInequalitiesPow
+public import Mathlib.Tactic
 
 /-!
 # Efficient allocation when circuits agree on training logits
@@ -19,6 +21,8 @@ optimality is an input, not an assertion that an optimizer reaches it.
 No existence, subweight dynamics, AdamW L2 equivalence, learned GPTMini
 circuit decomposition or held-out success is assumed or proved.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

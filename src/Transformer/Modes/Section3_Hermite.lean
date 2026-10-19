@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section2_MainIntPhi
+
+/-!
 # The number of modes of a Gaussian KDE — Hermite polynomials and whitening
 
 §3.1 of arXiv:2412.09080v3 (`sec:error-3`): the standard normal density on
@@ -10,26 +14,26 @@ standardization `Σ^{-1/2}` of `eq:Yi`.
 * Points of `ℝ²` are pairs, as in `IsKacRiceField`; since the norm of `ℝ × ℝ`
   in Mathlib is the sup norm, the Euclidean norm is written out, `eucl`.
 
-* `H^α(x) = (-1)^{|α|} φ(x)⁻¹ ∂^α φ(x)`.  For `φ` the standard normal density
+* `H^α(x) = (-1)^{|α|} φ(x)⁻¹ ∂^α φ(x)`. For `φ` the standard normal density
   on `ℝ²` this factors as `He_{α₁}(x₁) He_{α₂}(x₂)`, the probabilists' Hermite
   polynomials; only `|α| = 3` enters, so `He_0, …, He_3` are written out.
 
 * **"Trivially, `|H^{(k,3-k)}(x)| ≲ ‖x‖³`" is false.**  `H^{(3,0)}(x) =
   x₁³ - 3x₁ ≈ -3x₁` near `0`, which no `C‖x‖³` bounds:
-  `not_exists_hermite_le_cube`, proved.  What holds is
+  `not_exists_hermite_le_cube`, proved. What holds is
   `|H^{(k,3-k)}(x)| ≤ 3(‖x‖ + ‖x‖³)` (`abs_hermite_le`, proved), and that is the
   bound `lem:error-3` has to be run with.
 
 * `Σ_t^{-1/2}` is realised by the explicit whitening `whiten`, the
   lower-triangular `L` with `L Σ Lᵀ = I`, in place of the symmetric square
-  root.  The two differ by a rotation, which leaves `φ`, `‖·‖` and every
+  root. The two differ by a rotation, which leaves `φ`, `‖·‖` and every
   integral of §3 unchanged; `eucl_whiten_sq` proves
   `‖L z‖² = zᵀ Σ⁻¹ z = quadForm`, the identity everything is read through.
 
 Source: arXiv:2412.09080v3, §3.1, `eq:Yi`, `eq:psi`, `eq:H3-bound`.
 -/
 
-import Transformer.Modes.Section2_MainIntPhi
+@[expose] public section
 
 open Real
 
@@ -126,7 +130,7 @@ example : (0 : ℕ) ≤ 3 := Nat.zero_le 3
 /-! ### Whitening -/
 
 /-- The lower-triangular whitening `L` of `Σ = [[a, b], [b, d]]`, `D = ad - b²`:
-`L z = (z₁/√a, (a z₂ - b z₁)/√(aD))`, so that `L Σ Lᵀ = I`.  It stands for
+`L z = (z₁/√a, (a z₂ - b z₁)/√(aD))`, so that `L Σ Lᵀ = I`. It stands for
 `Σ^{-1/2}` of `eq:Yi`. -/
 noncomputable def whiten (a b d : ℝ) (z : ℝ × ℝ) : ℝ × ℝ :=
   (z.1 / Real.sqrt a, (a * z.2 - b * z.1) / Real.sqrt (a * (a * d - b ^ 2)))

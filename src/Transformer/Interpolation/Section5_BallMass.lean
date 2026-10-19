@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Real
+public import Mathlib.MeasureTheory.Measure.Typeclasses.NullSingletonClass
+public import Mathlib.Topology.Order.IntermediateValue
+
+/-!
 # Continuity and quantiles of the actual ball mass
 
 ArXiv:2411.04551v3, §5, proof of `cl: balls`, the function
@@ -15,12 +24,7 @@ No nesting or separation property of the later construction is assumed
 or encoded in the definition of that mass.
 -/
 
-import Transformer.Basic
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Real
-import Mathlib.MeasureTheory.Measure.Typeclasses.NullSingletonClass
-import Mathlib.Topology.Order.IntermediateValue
+@[expose] public section
 
 open Real MeasureTheory Metric Set Filter
 

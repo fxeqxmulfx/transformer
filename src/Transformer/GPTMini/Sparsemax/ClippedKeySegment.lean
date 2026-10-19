@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.SupportSegment
+module
+
+public import Transformer.GPTMini.Sparsemax.SupportSegment
 
 /-!
 # A shared matrix segment with exact affine QKNorm scores
@@ -16,6 +18,8 @@ ordinary epsilon `1e-6` requires keys within that much smaller ball.
 Unrestricted normalized unit-key segments need not have affine scores.
 The condition is proved along the segment from endpoint norm bounds.
 -/
+
+@[expose] public section
 
 noncomputable section
 

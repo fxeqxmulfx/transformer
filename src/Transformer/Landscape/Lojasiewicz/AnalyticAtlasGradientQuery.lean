@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.AnalyticAtlasMinimumQuery
+public import Transformer.Landscape.Lojasiewicz.GradientMinimumCluster
+
+/-!
 # Gradient-minimizer sets on a finite analytic energy atlas
 
 The actual universal gradient-norm comparison on the entire atlas source
@@ -6,8 +11,7 @@ is retained, while all scalar competitor variables are eliminated.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.AnalyticAtlasMinimumQuery
-import Transformer.Landscape.Lojasiewicz.GradientMinimumCluster
+@[expose] public section
 
 noncomputable section
 

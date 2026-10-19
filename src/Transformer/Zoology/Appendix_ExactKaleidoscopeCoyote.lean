@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_InPlaceWeightWidths
+
+/-!
 # Exact expanded sequence length in the kaleidoscope compiler
 
 Arora et al., arXiv:2312.04927v1, Appendix `lmm: kaleido-coyote`.
@@ -8,7 +12,7 @@ projection is an actual width-one K matrix with expansion two. The
 source's d ≥ 2 is represented by k > 0; no invertibility premise is needed.
 -/
 
-import Transformer.Zoology.Appendix_InPlaceWeightWidths
+@[expose] public section
 
 noncomputable section
 

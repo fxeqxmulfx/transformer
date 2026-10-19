@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perspective.CircleSAGradient
+public import Transformer.Perspective.CircleCritical
+public import Transformer.Landscape.SaddleAvoidance.GradientDescent
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
 # Critical points and second derivatives of `𝖤_β` on the space of angles
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5, §7 and
@@ -14,16 +21,13 @@ Along every line, `𝖤_β` has the second derivative
   `d²/ds² 𝖤_β(θ + s v)|_{s=0} = -(1/(2n²)) Σ_i Σ_j (v_i - v_j)² g_β(θ_i - θ_j)`
 
 (`secondDerivTorusEnergy_line`); `secondDeriv_torusEnergy_block` computes it
-for the block directions `1_𝒮`.  A second derivative is unique
+for the block directions `1_𝒮`. A second derivative is unique
 (`secondDerivTorusEnergy_unique`), and it is the quadratic form of the
 derivative of the gradient (`inner_fderiv_gradient_eucTorusEnergy`, from
 `inner_fderiv_gradient_eq_of_hasDerivAt`).
 -/
 
-import Transformer.Perspective.CircleSAGradient
-import Transformer.Perspective.CircleCritical
-import Transformer.Landscape.SaddleAvoidance.GradientDescent
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open scoped BigOperators
 open Real

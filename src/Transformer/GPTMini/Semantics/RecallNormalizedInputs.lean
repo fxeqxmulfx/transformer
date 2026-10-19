@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallSecondQKV
+module
+
+public import Transformer.GPTMini.Semantics.RecallSecondQKV
 
 /-!
 # Normalize genuine raw second-layer recall queries and copied keys
@@ -17,6 +19,8 @@ The real fused value projection is zero at a raw query, preserving
 the selected value through original XSA. Robust score margins,
 softmax retrieval, tied readout and full parser coupling remain.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

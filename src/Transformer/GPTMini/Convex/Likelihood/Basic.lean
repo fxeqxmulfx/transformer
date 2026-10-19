@@ -1,8 +1,10 @@
-import Transformer.MagnitudeDirection.Section4_PositiveGains
-import Mathlib.Analysis.Convex.Deriv
-import Mathlib.LinearAlgebra.Prod
-import Mathlib.LinearAlgebra.AffineSpace.AffineMap
-import Mathlib.Tactic
+module
+
+public import Transformer.MagnitudeDirection.Section4_PositiveGains
+public import Mathlib.Analysis.Convex.Deriv
+public import Mathlib.LinearAlgebra.Prod
+public import Mathlib.LinearAlgebra.AffineSpace.AffineMap
+public import Mathlib.Tactic
 
 /-!
 # A compact nonlinear probability family with convex ordinary likelihoods
@@ -21,6 +23,8 @@ The reused softplus function and derivative are the existing declarations
 in `MagnitudeDirection.Section4_PositiveGains` (arXiv:2606.25971v2, §4.1.3).
 No optimizer, constraint projection, or auxiliary target is introduced.
 -/
+
+@[expose] public section
 
 noncomputable section
 

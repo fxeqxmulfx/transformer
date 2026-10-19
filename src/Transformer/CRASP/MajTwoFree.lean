@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.CRASP.MajTwo
+
+/-!
 # Free variables and satisfaction in `MAJ²`
 
 arXiv:2506.16055v3, Appendix E, `def:MAJtwo` and `thm:majtwo_to_tlc`:
 satisfaction depends only on the assignment of free variables.
 -/
 
-import Transformer.CRASP.MajTwo
+@[expose] public section
 
 namespace Transformer.CRASP.Maj2
 

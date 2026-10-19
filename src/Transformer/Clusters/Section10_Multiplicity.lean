@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section10_ProjectedClusterLimits
+public import Transformer.Clusters.Section10_RelativeCandidates
+
+/-!
 # Clustering toward the relative polytope boundary times the complement
 
 ArXiv:2305.05465v6, §5, `t:multiplicity`, with its proof in §10.
@@ -15,8 +20,7 @@ The source's faulty `π_F A` auxiliary estimates are replaced by the proved
 score and energy estimates in the correct order `A π_F`.
 -/
 
-import Transformer.Clusters.Section10_ProjectedClusterLimits
-import Transformer.Clusters.Section10_RelativeCandidates
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

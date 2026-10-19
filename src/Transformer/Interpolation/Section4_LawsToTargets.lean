@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_RobustQuadrantFamily
+
+/-!
 # Moving original concentrated quadrant laws to their final target caps
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, §3.2,
@@ -17,7 +21,7 @@ concentration tolerance may be smaller than the geometric radius,
 which was chosen before the final tolerance.
 -/
 
-import Transformer.Interpolation.Section4_RobustQuadrantFamily
+@[expose] public section
 
 open Real MeasureTheory Set
 

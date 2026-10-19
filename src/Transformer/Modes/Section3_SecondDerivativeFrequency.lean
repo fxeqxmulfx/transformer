@@ -1,6 +1,9 @@
-import Transformer.Modes.Section3_FirstDerivativeFrequency
-import Transformer.Modes.Section3_GaussianDerivativeComparison
-import Transformer.Modes.Section3_GaussianDensity
+module
+
+public import Transformer.Modes.Section3_FirstDerivativeFrequency
+public import Transformer.Modes.Section3_GaussianDerivativeComparison
+public import Transformer.Modes.Section3_GaussianDensity
+
 /-!
 # Second-derivative Gaussian error for normalized sums
 
@@ -16,6 +19,7 @@ The elementary power estimates give the nonsharp exponent `1/8` instead
 of the source's `1/4`. The full multilinear operator norm is controlled.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

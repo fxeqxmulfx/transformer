@@ -1,5 +1,7 @@
-import Transformer.Homogenized.Section7_LogisticRange
-import Transformer.Homogenized.Section7_IntegratingFactor
+module
+
+public import Transformer.Homogenized.Section7_LogisticRange
+public import Transformer.Homogenized.Section7_IntegratingFactor
 
 /-!
 # A single probability-one range event and a bounded logistic modification
@@ -18,6 +20,8 @@ The example explicitly distinguishes pathwise and almost-sure equality:
 it changes an absorbing solution on a null set while keeping continuous
 adapted paths, and verifies the full original martingale problem there.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

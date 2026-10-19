@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section3_CNConvergence
+public import Mathlib.Topology.UniformSpace.Dini
+
+/-!
 # DASH — uniform CN convergence on compact spectral sets
 
 arXiv:2602.02016v2, §3.2–3.3. Uniform convergence on compact subsets
@@ -6,8 +11,7 @@ of the corrected positive CN domain justifies evaluating the second
 inverse-root call on a changing first-call approximation.
 -/
 
-import Transformer.DASH.Section3_CNConvergence
-import Mathlib.Topology.UniformSpace.Dini
+@[expose] public section
 
 open scoped Topology
 open Filter

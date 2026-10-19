@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.PeriodicMemoryKeys
+module
+
+public import Transformer.GPTMini.Sparsemax.PeriodicMemoryKeys
 
 /-!
 # Learned bounded queries realize every local score at width three
@@ -15,6 +17,8 @@ count. Key squared norms are at most four by the preceding module. A later
 module proves the actual variational sparsemax after masking, rather than
 assuming the target weights or an embedding factorization.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,5 +1,7 @@
-import Transformer.DoubleDescent.Section5_Curves
-import Mathlib.Data.List.GetD
+module
+
+public import Transformer.DoubleDescent.Section5_Curves
+public import Mathlib.Data.List.GetD
 
 /-!
 # Predicates on recorded experimental curves
@@ -9,6 +11,8 @@ an exact rational encoding of a published numeric value. The predicates
 compare the actual recorded parameters, not arbitrary out-of-range defaults.
 They certify properties of a finite log, not statistical generalization.
 -/
+
+@[expose] public section
 
 namespace Transformer.DoubleDescent
 

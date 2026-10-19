@@ -1,4 +1,8 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # The minimum of finitely many curves does not decrease while it is positive
 
 Auxiliary calculus for arXiv:2312.10794v5, *A mathematical perspective on
@@ -7,8 +11,8 @@ Transformers*, §6.1, step 1 of `lem: hemisphere.clustering`, where
 
 The step is stated in the survey as "`ṙ ≥ 0` at a minimising index", which is
 not literally a derivative: a minimum of several smooth curves need not be
-differentiable at the times where the minimising index changes.  What is true
-is the one-sided statement proved here.  `r` is a minimum of finitely many
+differentiable at the times where the minimising index changes. What is true
+is the one-sided statement proved here. `r` is a minimum of finitely many
 differentiable curves, hence continuous, and its upper right Dini derivative
 is bounded by the derivatives of the curves that attain it; the fencing
 theorem `image_le_of_liminf_slope_right_lt_deriv_boundary` then holds `-r`
@@ -21,7 +25,7 @@ the application can supply, the bracket of `eq: therighthandside` being
 non-negative only in the hemisphere.
 -/
 
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open scoped Topology
 
@@ -34,7 +38,7 @@ variable {ι : Type*} [Fintype ι] [Nonempty ι] {f f' : ι → ℝ → ℝ} {r 
 while it is positive.**
 
 `r` is given by a specification rather than as a `Finset.inf'`: it is a lower
-bound for the family and it is attained at every time.  `hnn` says that at a
+bound for the family and it is attained at every time. `hnn` says that at a
 time when `r` is non-negative, every curve attaining it has a non-negative
 derivative.
 

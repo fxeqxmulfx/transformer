@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Analytic
+public import Transformer.Perspective.SphereInvariant
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Analysis.Real.Pi.Bounds
+
+/-!
 # Convex spherical caps in the ball decomposition
 
 ArXiv:2411.04551v3, §5, proof of `cl: balls`, the monotonicity of
@@ -13,10 +20,7 @@ The great circle is the existing explicit sine/cosine curve of
 points, independently of any measure or flow.
 -/
 
-import Transformer.Perceptron.Analytic
-import Transformer.Perspective.SphereInvariant
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Mathlib.Analysis.Real.Pi.Bounds
+@[expose] public section
 
 open Real Metric Set
 

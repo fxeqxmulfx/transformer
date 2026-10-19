@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_DiracTransport
+public import Transformer.Interpolation.Section3_BallFlow
+
+/-!
 # Actual single-neuron flow and atomic weak well-posedness
 
 ArXiv:2411.04551v3, §§1, 3.2 and 4, `eq: cauchy.pb`,
@@ -15,8 +20,7 @@ The fixed set is stated using the actual affine activation. No identity
 between an activation cap and a prescribed source ball is assumed.
 -/
 
-import Transformer.Interpolation.Section1_DiracTransport
-import Transformer.Interpolation.Section3_BallFlow
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal

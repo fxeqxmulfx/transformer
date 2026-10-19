@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
+public import Mathlib.Basic.Real.Sign
+
+/-!
 # Appendix A — the scalar comparison for causal convergence
 
 Source: arXiv:2411.04990v2, Appendix A, `lemma:scalar`,
@@ -28,9 +34,7 @@ module follows the manuscript's Appendix A and keeps its scalar
 comparison independent of the remaining §4 convergence assertions.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-import Mathlib.Basic.Real.Sign
+@[expose] public section
 
 open Real
 
@@ -150,4 +154,3 @@ example :
 
 end Causal
 end Transformer
-

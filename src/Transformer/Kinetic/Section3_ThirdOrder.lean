@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_CrossTerm
+
+/-!
 # The third-order inequality
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 4, `eq:est-kap3-th`: for a
@@ -16,7 +20,7 @@ integrals of a centred observable against a cross term, bounded by
 `abs_integral_centered_mul_le` and `abs_crossTerm_sub_le`.
 -/
 
-import Transformer.Kinetic.Section3_CrossTerm
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

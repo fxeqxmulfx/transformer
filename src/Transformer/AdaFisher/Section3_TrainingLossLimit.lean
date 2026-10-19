@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_TrainingErrorLimit
+public import Mathlib.Topology.Order.MonotoneConvergence
+
+/-!
 # AdaFisher — a finite limit for the actual training loss
 
 arXiv:2405.16397v3, §3.4, deterministic full-gradient extension.
@@ -6,8 +11,7 @@ Loss need not decrease at every momentum step. Its Lyapunov energy
 decreases, and its squared corrected-momentum error tends to zero.
 -/
 
-import Transformer.AdaFisher.Section3_TrainingErrorLimit
-import Mathlib.Topology.Order.MonotoneConvergence
+@[expose] public section
 
 open scoped Topology
 open Filter

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ButterflyTreeProduct
+
+/-!
 # Exact row-major layout of a butterfly vector
 
 Arora et al., arXiv:2312.04927v1, Appendix `prop: butterfly-hyena`:
@@ -7,7 +11,7 @@ coordinate equivalence exposes row digits above the feature digits, and
 its numeric value agrees with the usual i*d+q row-major formula.
 -/
 
-import Transformer.Zoology.Appendix_ButterflyTreeProduct
+@[expose] public section
 
 namespace Transformer.Zoology
 

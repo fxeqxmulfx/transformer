@@ -1,8 +1,14 @@
-/-
+module
+
+public import Transformer.Perspective.Section3_SmallBeta
+public import Transformer.Perspective.SphereInvariant
+public import Mathlib.MeasureTheory.Measure.Prod
+
+/-!
 # The uniform law on `(𝕊^{d-1})^n` is atomless off the diagonal
 
 `Perspective.UniformTuple` describes the uniform law as `P = σ^{⊗ n}` for a
-rotation-invariant probability measure `σ` on `𝕊^{d-1}`.  Since `σ` has no
+rotation-invariant probability measure `σ` on `𝕊^{d-1}`. Since `σ` has no
 atoms (`Perspective.SphereInvariant`), the law of a pair of distinct
 coordinates is `σ × σ`, whose diagonal is null by Fubini: two distinct
 coordinates of a uniform tuple differ almost surely, and no single
@@ -16,9 +22,7 @@ form a null one.
 Source: arXiv:2312.10794v5, §4 (the uniform law `σ_d` of `p:beta0`).
 -/
 
-import Transformer.Perspective.Section3_SmallBeta
-import Transformer.Perspective.SphereInvariant
-import Mathlib.MeasureTheory.Measure.Prod
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open MeasureTheory

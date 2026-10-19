@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.OneDim
+public import Transformer.Homogenized.SlowMotion
+public import Transformer.Homogenized.GaussianEnsemble
+
+/-!
 # Homogenized Transformers — slow motion of the two-point overlap
 
 Formalization of the first part of `thm:large_beta_meta` of arXiv:2604.01978v1,
@@ -9,9 +15,7 @@ The second part — the logistic limit of the overlap on the time scale `td` —
 is `LogisticLimit.lean`.
 -/
 
-import Transformer.Homogenized.OneDim
-import Transformer.Homogenized.SlowMotion
-import Transformer.Homogenized.GaussianEnsemble
+@[expose] public section
 
 open scoped BigOperators ENNReal NNReal
 open Real MeasureTheory
@@ -26,9 +30,9 @@ namespace Homogenized
 Assumption (G) takes the query-key matrix to be `A = W W'ᵀ` with
 `W_ij, W'_ij ∼ N(0, σ_A²)`, so `‖A x‖` is of order `d σ_A²`; the attention
 weight `attnWeight β θ x y = e^{β⟨Ax,y⟩}` therefore concentrates at the scale
-`β d σ_A²` and not at the scale `β`.  The proof of `thm:large_beta_meta`
+`β d σ_A²` and not at the scale `β`. The proof of `thm:large_beta_meta`
 normalizes it away — `lem:delta_method` is stated for `Â = (dσ_A²)^{-1}WᵀW'` —
-and then writes its error as `O(β^{-1/2})` in the temperature of `Â`.  That
+and then writes its error as `O(β^{-1/2})` in the temperature of `Â`. That
 temperature is this one.
 
 `thm:clustering_small_beta` carries the same scale in the open: its error term
@@ -61,32 +65,32 @@ time of order `d`: the slow transient of §2.5.
 **What the source says and what is written here.**
 
 * The source's quantifier list reads "for every `T>0` and every `δ∈(0,1)` and
-  `t≥0`".  There is no free `t` — it is bound by the `sup_{t∈[0,T]}` — so the
+  `t≥0`". There is no free `t` — it is bound by the `sup_{t∈[0,T]}` — so the
   `t ≥ 0` is dropped.
 
 * The source displays the last term as `r(β,d)` with
   `|r(β,d)| = O(d^{-3/2}+β^{-1/2})`, but its own Step 4 produces
-  `T·sup_{t∈[0,T]}|ε_{d,β}(t)|` with `|ε_{d,β}| = O(d^{-3/2}+β^{-1/2})`.  The
+  `T·sup_{t∈[0,T]}|ε_{d,β}(t)|` with `|ε_{d,β}| = O(d^{-3/2}+β^{-1/2})`. The
   factor `T` belongs there and is restored; without it the statement is false
-  for large `T`, since the error accumulates over the whole interval.  The `4`
+  for large `T`, since the error accumulates over the whole interval. The `4`
   under Step 4's square root is absorbed into `C`, as the display does.
 
 * The `β` of `β^{-1/2}` is the temperature of the **normalized** query-key
   matrix: `lem:delta_method` is stated for `Â = (dσ_A²)^{-1}WᵀW'`, whereas
-  assumption (G) — and `attnWeight` — use `A = WW'ᵀ`.  It is therefore
+  assumption (G) — and `attnWeight` — use `A = WW'ᵀ`. It is therefore
   `effBeta`, and `σ_A > 0` is required, without which that quantity is `0` and
   the bound says nothing.
 
 * `σ_V² = 1/d` is the "standard scaling, which we adopt henceforth" of §2.5,
   and it is carried as a hypothesis because the proof uses it: Step 3 computes
   the bracket from `E⟨m_{β,A}[μ](x⁽¹⁾),m_{β,A}[μ](x⁽²⁾)⟩` with no `V` in sight,
-  which is `E⟨Vu,Vv⟩ = σ_V² d ⟨u,v⟩ = ⟨u,v⟩` only at that scaling.  `σ_A` is
+  which is `E⟨Vu,Vv⟩ = σ_V² d ⟨u,v⟩ = ⟨u,v⟩` only at that scaling. `σ_A` is
   left general, as the source leaves it.
 
-* `C` is produced after `ρ_min, ρ_max, L` and before `d, β, T, δ`.  The source
+* `C` is produced after `ρ_min, ρ_max, L` and before `d, β, T, δ`. The source
   calls `C` universal, but `lemma:Laplace_method` produces constants depending
   on the density bounds of `ass:low-temperature`, and the assumption itself
-  claims only that `ρ_min, ρ_max` are independent of `d` and `β`.  Placing `C`
+  claims only that `ρ_min, ρ_max` are independent of `d` and `β`. Placing `C`
   after the three constants and before `d` and `β` is what that says.
 
 Not proved here.
@@ -118,7 +122,7 @@ theorem large_beta_metastability (ρmin ρmax L : ℝ) :
 Dimension `1` is what makes a joint witness available: there the tangent space
 of the sphere is trivial, so `eq:G_def` vanishes at *every* head law
 (`OneDim.lean`) — in particular at the honest Gaussian law of assumption (G)
-with `σ_V² = 1/d` and `σ_A = 1 > 0`, which `δ_0` is not.  The two tokens are
+with `σ_V² = 1/d` and `σ_A = 1 > 0`, which `δ_0` is not. The two tokens are
 then frozen at independent uniform draws, their common conditional law is the
 uniform measure `σ_1`, and that same measure satisfies `ass:low-temperature`
 with density `1`.

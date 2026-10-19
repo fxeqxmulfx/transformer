@@ -1,5 +1,11 @@
-import Transformer.Modes.Section4_ScaleSpace
-import Mathlib.Probability.Moments.Basic
+module
+
+public import Transformer.Modes.Section4_ScaleSpace
+public import Mathlib.Probability.Moments.Basic
+
+/-! ### The Gaussian tail and the expected count -/
+
+@[expose] public section
 
 /-
 # The number of modes of a Gaussian KDE — the modes outside `T`
@@ -28,10 +34,8 @@ namespace Modes
 
 variable {n : ℕ}
 
-/-! ### The Gaussian tail and the expected count -/
-
 /-- **The Gaussian tail**, upper side: `P(X ≥ a) ≤ e^{-a²/2}` for `a ≥ 0`, by
-Chernoff.  arXiv:2412.09080v3, proof of `prop:main-tail`. -/
+Chernoff. arXiv:2412.09080v3, proof of `prop:main-tail`. -/
 theorem gaussianReal_Ici_le {a : ℝ} (ha : 0 ≤ a) :
     gaussianReal 0 1 (Set.Ici a) ≤ ENNReal.ofReal (Real.exp (-(a ^ 2) / 2)) := by
   have h := measure_ge_le_exp_mul_mgf (μ := gaussianReal 0 1) (X := id) a ha

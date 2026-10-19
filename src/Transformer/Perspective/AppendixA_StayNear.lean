@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_Cone
+public import Transformer.Perspective.UniformSlices
+
+/-!
 # Appendix A — the configurations staying near a saddle form a null set
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -6,18 +11,17 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 `stayNear e i₀ r` is the set of initial configurations whose trajectory under
 `e:gradfl` stays within `r` of the saddle `signedTuple e {i₀}` for all `t ≥ 0`:
-the local center-stable set of the source.  Any two points of its closure have
+the local center-stable set of the source. Any two points of its closure have
 `q(x - y) ≤ 0` (`Perspective.AppendixA_Cone`), while a perturbation of the
-particle `i₀` alone has `q > 0`.  So the slices of the closure along `i₀` have
+particle `i₀` alone has `q > 0`. So the slices of the closure along `i₀` have
 at most one point, and the closure is null for the uniform law
-(`measure_closure_stayNear`).  A trajectory converging to the saddle of `e`
+(`measure_closure_stayNear`). A trajectory converging to the saddle of `e`
 enters `stayNear e' i₀ r` at an integer time for every `e'` near `e`
 (`exists_nat_mem_stayNear`), which is how the countably many local sets cover
 the global one.
 -/
 
-import Transformer.Perspective.AppendixA_Cone
-import Transformer.Perspective.UniformSlices
+@[expose] public section
 
 open Set Filter MeasureTheory
 open scoped Topology

@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.MeanField.Merging
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # Mean-Field Dynamics — what the pairing dynamics does (§5 of 2512.01868v4)
 
 The limiting dynamics `hardmaxPair` of `thm: agazzi_merge`,
@@ -15,16 +23,12 @@ is read off here:
 
 The survey says the pair "merges in finite rescaled time"; for this vector
 field the merge is asymptotic, `ρ(s) = tanh(2 s + artanh ρ(0)) < 1`, and the
-last theorem is the exact statement that no finite time will do.  The proof
+last theorem is the exact statement that no finite time will do. The proof
 needs no solution formula: `(1 - ρ(s)) e^{4 s}` has derivative
 `2 e^{4 s} (1 - ρ(s))² ≥ 0`, so it cannot come down to `0`.
 -/
 
-import Transformer.MeanField.Merging
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -35,7 +39,7 @@ namespace MeanField
 variable (d : ℕ)
 
 /-- The constant configuration solves `hardmaxPair`: each of the two particles
-attends to the other, which sits on top of it, and `Proj_x x = 0`.  It is the
+attends to the other, which sits on top of it, and `Proj_x x = 0`. It is the
 witness that the hypotheses of this file are satisfiable. -/
 theorem hardmaxPair_const (K : ℕ) (ibar jbar : Idx K) (x₀ : SSphere d) :
     hardmaxPair d K ibar jbar (fun _ _ => x₀) := by
@@ -118,7 +122,7 @@ example (s : ℝ) :
 /-- **The pair merges in finite time only if it starts merged.**
 
 If `y_ī(S) = y_j̄(S)` for some `S ≥ 0` then `y_ī(0) = y_j̄(0)`: the survey's
-"merge in finite rescaled time" is asymptotic for this vector field.  The
+"merge in finite rescaled time" is asymptotic for this vector field. The
 witness is `F(s) = (1 - ρ(s)) e^{4 s}`, whose derivative is
 `2 e^{4 s} (1 - ρ(s))² ≥ 0`, so `F(0) ≤ F(S) = 0` while `F(0) = 1 - ρ(0) ≥ 0`
 by Cauchy–Schwarz.

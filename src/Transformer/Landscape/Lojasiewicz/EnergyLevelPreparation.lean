@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.WeierstrassCoordinates
+
+/-!
 # Finite projection of the local analytic energy graph
 
 The level value is included among the Weierstrass parameters. Preparation
@@ -7,7 +11,7 @@ energy, including the singular central level. This is a general step toward
 lifting comparison curves, independent of any Hessian condition.
 -/
 
-import Transformer.Landscape.Lojasiewicz.WeierstrassCoordinates
+@[expose] public section
 
 open Filter
 

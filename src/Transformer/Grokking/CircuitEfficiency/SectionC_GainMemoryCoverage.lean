@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryRatio
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryRatio
 
 /-!
 # Transfer from original retained measurements to physical parameters
@@ -26,6 +28,8 @@ route; complete signed pair balance may be stronger than selection needs.
 Fixed gained tables/uniform native decay differ from appendix C coupled
 cost/GD. Learned stochastic/floating-point GPTMini transfer remains open.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

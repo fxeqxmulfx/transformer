@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Section5_FrozenField
+
+/-!
 # The actual original last frozen-token force and critical derivative
 
 ArXiv:2411.04990v2, §5, proof of `thm:fixed_centers`.
@@ -18,7 +22,7 @@ used by the manuscript, with every original predecessor and
 every original frozen-center mass retained.
 -/
 
-import Transformer.Causal.Section5_FrozenField
+@[expose] public section
 
 open scoped BigOperators
 open Real

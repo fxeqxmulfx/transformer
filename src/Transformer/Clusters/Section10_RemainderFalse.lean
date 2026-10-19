@@ -1,7 +1,12 @@
-/-
+module
+
+public import Transformer.Clusters.Section10_Remainder
+public import Mathlib.Topology.Algebra.InfiniteSum.ContinuousEval
+
+/-!
 # The emergence of clusters in self-attention dynamics — `e:boundrj` is false
 
-§10 of arXiv:2305.05465v6, the proof of Step 2'.  The bound `e:boundrj` on
+§10 of arXiv:2305.05465v6, the proof of Step 2'. The bound `e:boundrj` on
 the remainder `r_j(t)` (`scoreRemainder`) does not follow from its stated
 inputs: `not_exists_bound_scoreRemainder` is a counterexample in `ℝ²`, built
 on the coordinate helpers `mat2`, `coordKer` and the fact that `e^{tV}` fixes
@@ -10,8 +15,7 @@ on the coordinate helpers `mat2`, `coordKer` and the fact that `e^{tV}` fixes
 Source: arXiv:2305.05465v6, `e:boundrj`.
 -/
 
-import Transformer.Clusters.Section10_Remainder
-import Mathlib.Topology.Algebra.InfiniteSum.ContinuousEval
+@[expose] public section
 
 open Real
 
@@ -87,12 +91,12 @@ The source's claim: for a good triple with multiplicity `(Q, K, V)`
 and the growth bounds `|π_ℱ(y_j(t))| ≤ Ce^{λ₁t}`, `|π_𝒢(y_j(t))| ≤ Ce^{t|λ₂|}`
 of `y_j(t) = Ae^{tV}z_j(t)` (from `l:nottoofassst`), the remainder
 `r_j(t) = ⟨y_i(t), y_j(t) - y_i(t)⟩ - a_j(t)e^{2λ₁t}` obeys
-`|r_j(t)| ≤ Ce^{t(λ₁+|λ₂|)}`.  Every one of those inputs is a hypothesis
+`|r_j(t)| ≤ Ce^{t(λ₁+|λ₂|)}`. Every one of those inputs is a hypothesis
 below, and the conclusion fails.
 
 Counterexample: `d = n = 2`, `V = diag(1, 0)`, so `ℱ = ℝe₁`, `𝒢 = ℝe₂`,
 `λ₁ = 1`, `|λ₂| = 0`; `A = Q = K = [[1, 1/2], [1/2, 1]]`; the stationary
-configuration `z₁ = (0, 1)`, `z₂ = (0, 2)`, which `V` does not move.  Then
+configuration `z₁ = (0, 1)`, `z₂ = (0, 2)`, which `V` does not move. Then
 `y_j = Az_j` is bounded, while `a_2 = 1/4`, so `r_2(t) = 5/4 - e^{2t}/4`.
 
 The source's derivation writes `r_j` as the three cross terms `P₁, P₂, P₃`,

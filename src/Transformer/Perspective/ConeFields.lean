@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Landscape.GlobalFlow.Existence
+public import Transformer.Perspective.ConeLimit
+public import Mathlib.Analysis.Calculus.ContDiff.RCLike
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Cone collapse — the attention dynamics as weighted flows
 
 Auxiliary to arXiv:2312.10794v5, *A mathematical perspective on Transformers*,
@@ -10,20 +17,17 @@ one smooth field on `(ℝ^d)^n`,
 
   `(F Y)_i = Proj_{y_i}( c_i(Y) Σ_j e^{β⟨Q y_i, K y_j⟩} y_j )`   (`attnField`),
 
-with `c_i = Z_i⁻¹` (`softmaxNorm`) or `c_i = n⁻¹`.  They are weighted flows
+with `c_i = Z_i⁻¹` (`softmaxNorm`) or `c_i = n⁻¹`. They are weighted flows
 (`Perspective.IsWeightedFlow`) with weights `a_ij = c_i e^{β⟨Q x_i, K x_j⟩}`,
 which on the sphere lie in `[e^{-2L}/n, e^{2L}/n]`, `L = |β| ‖Q‖ ‖K‖`
-(`attnExp_bounds`, `softmaxNorm_bounds`).  Since the field is smooth, a
+(`attnExp_bounds`, `softmaxNorm_bounds`). Since the field is smooth, a
 solution through a given point is unique (`Landscape.GlobalFlow.eq_of_hasDerivAt`), and
 the exponential convergence of one solution
 (`exists_expLimit_of_weightedFlow`) is that of every solution:
 `expLimit_of_attnField`.
 -/
 
-import Transformer.Landscape.GlobalFlow.Existence
-import Transformer.Perspective.ConeLimit
-import Mathlib.Analysis.Calculus.ContDiff.RCLike
-import Mathlib.Analysis.Calculus.Deriv.Prod
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -63,8 +67,8 @@ variable {β : ℝ} {Q K : ParamMatrix d} {c : (Idx n → EucSpace d) → Idx n 
 Source: arXiv:2312.10794v5, §6.1, `lem: hemisphere.clustering` ("the unique
 solution"). -/
 theorem contDiff_attnExp (i j : Idx n) : ContDiff ℝ 1 fun Y => attnExp β Q K Y i j :=
-  (contDiff_const.mul ((Q.contDiff.comp (contDiff_apply ℝ (EucSpace d) i)).inner ℝ
-    (K.contDiff.comp (contDiff_apply ℝ (EucSpace d) j)))).exp
+  (contDiff_const.mul ((Q.contDiff.comp (contDiff_apply ℝ (fun _ : Idx n => EucSpace d) i)).inner ℝ
+    (K.contDiff.comp (contDiff_apply ℝ (fun _ : Idx n => EucSpace d) j)))).exp
 
 /-- The softmax normalisation is smooth: the partition function is positive.
 
@@ -83,7 +87,7 @@ theorem locallyLipschitz_attnField (hc : ∀ i, ContDiff ℝ 1 fun Y => c Y i) :
     LocallyLipschitz (attnField β Q K c) := by
   refine ContDiff.locallyLipschitz (𝕂 := ℝ) (contDiff_pi.2 fun i => ?_)
   have hp : ∀ k : Idx n, ContDiff ℝ 1 fun Y : Idx n → EucSpace d => Y k :=
-    contDiff_apply ℝ (EucSpace d)
+    contDiff_apply ℝ (fun _ : Idx n => EucSpace d)
   have hv : ContDiff ℝ 1 fun Y : Idx n → EucSpace d =>
       c Y i • ∑ j : Idx n, attnExp β Q K Y i j • Y j :=
     (hc i).smul (ContDiff.sum fun j _ => (contDiff_attnExp i j).smul (hp j))

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.CircleSites
+
+/-!
 # Gaps of a configuration on the circle
 
 Polyanskiy, Rigollet, Yao — arXiv:2507.22857v1, *Synchronization of mean-field
@@ -6,14 +10,14 @@ models on the circle*, §3.
 
 The gaps `Δ_j = θ_{j+1} - θ_j` between consecutive positions of a
 configuration on `𝕋` (`Perspective.CircleSites`), counted from `0`, as
-`circleGap x k`.  They are positive and add up to `2π`.
+`circleGap x k`. They are positive and add up to `2π`.
 
 `lemma:twoconsecutive_general`, that under cut-stability (C2) at most one gap
-exceeds `τ`, is `not_two_circleGap_gt`.  Nothing here is specific to the
+exceeds `τ`, is `not_two_circleGap_gt`. Nothing here is specific to the
 kernel `f_β`: the function `g` plays the role of `f'`.
 -/
 
-import Transformer.Perspective.CircleSites
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -46,7 +50,7 @@ theorem sum_circleGap (x : Angles n) (h : 0 < (circleSites x).card) :
 /-- **Lemma (lemma:twoconsecutive_general).** *At most one gap exceeds `τ`.*
 
 Let `g` be `2π`-periodic and negative off `[-τ, τ]` on `𝕋`, that is on
-`(τ, 2π - τ)`: `g` plays the role of `f'` in `thm:main`.  If the configuration
+`(τ, 2π - τ)`: `g` plays the role of `f'` in `thm:main`. If the configuration
 `x` is cut-stable, `Σ_{i ∈ S, j ∉ S} g(x_i - x_j) ≥ 0` for every `S ⊆ [n]`
 (C2), then no two distinct gaps exceed `τ`.
 
@@ -54,7 +58,7 @@ The source's proof: the particles on the arc between the two gaps form `S`.
 Every difference across the cut is farther than `τ` from `0` on `𝕋`, so every
 term of (C2) is negative, and so is their sum.
 
-Source: arXiv:2507.22857v1, §3, `lemma:twoconsecutive_general`.  Changed: the
+Source: arXiv:2507.22857v1, §3, `lemma:twoconsecutive_general`. Changed: the
 source states (C2) only for sets `S` of coincident particles, yet its proof
 applies (C2) to the particles of an arc; here (C2) is assumed for every `S`.
 A critical point of `𝖤_β` whose Hessian is non-positive satisfies it
@@ -124,8 +128,8 @@ theorem circleGap_le_of_lt_circleGap (g : ℝ → ℝ) (hg : Function.Periodic g
 /-- The hypotheses of `not_two_circleGap_gt` and `circleGap_le_of_lt_circleGap`
 are satisfiable together, by a configuration that is not synchronized:
 `g = cos`, which is negative on `(π/2, 3π/2)`, and two particles at `0` and
-`π/3`.  Every difference lies in `[-π/3, π/3]`, where `cos ≥ 0`, so (C2) holds
-for every `S`.  The two gaps add up to `2π`, so one of them exceeds `π/2`. -/
+`π/3`. Every difference lies in `[-π/3, π/3]`, where `cos ≥ 0`, so (C2) holds
+for every `S`. The two gaps add up to `2π`, so one of them exceeds `π/2`. -/
 example :
     let x : Angles 2 := fun i => ((i : ℕ) : ℝ) * (π / 3)
     Function.Periodic Real.cos (2 * π) ∧

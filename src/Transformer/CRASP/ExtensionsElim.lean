@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.Extensions
+public import Transformer.CRASP.ExtensionsCounts
+
+/-!
 # Eliminating the sugar of Appendix A.3
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -20,8 +25,7 @@ the word, by the counting cases of `CRASP.ExtensionsCounts` (`FormX.sat_elim`) a
 gives both lemmas at once (`exists_form_of_formX`).
 -/
 
-import Transformer.CRASP.Extensions
-import Transformer.CRASP.ExtensionsCounts
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

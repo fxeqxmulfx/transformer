@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.FixedTail
+public import Transformer.CRASP.FixedSign
+
+/-!
 # Rounded ALiBi coefficients stabilize beyond a finite distance
 
 arXiv:2506.16055v3, Appendix F, `lem:alibi_window` and
@@ -7,8 +12,7 @@ negative numerators become minus one mantissa unit under downward rounding.
 For a negative slope, each nonzero contribution saturates instead.
 -/
 
-import Transformer.CRASP.FixedTail
-import Transformer.CRASP.FixedSign
+@[expose] public section
 
 namespace Transformer.CRASP
 

@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Perceptron.Atoms
+public import Transformer.Perceptron.Geodesic
+public import Transformer.Perceptron.Section3_ClusterCounterexample
+public import Transformer.Perceptron.Section5_StationaryCluster
+public import Mathlib.Analysis.Real.Pi.Bounds
+
+/-!
 # Perceptrons and attention's mean-field landscape — the anti-concentration bound
 
 Formalization of `thm: bound` and `cor: bound` of arXiv:2601.21366v2, §3.2:
@@ -14,17 +22,17 @@ when the weights are small. That universal claim is false:
 * "for `β` sufficiently large … `≤ 0.5742 + O(e^{-β})`" is one statement about
   the fixed perceptron `ϑ = (ω_j, a_j)_j` of the theorem: constants `C, β₀`
   produced after `ϑ` but *before* `β`, the activation and the configuration,
-  with the bound `0.5742 + C e^{-β}` for every `β ≥ β₀`.  `C` may depend on
+  with the bound `0.5742 + C e^{-β}` for every `β ≥ β₀`. `C` may depend on
   `ϑ`, and in the source's proof it does: the bound derived there is
   `(2e^{β-3/2} + C_ϑ)/(2e^{β-3/2} + (3/8)e^{β-1/8})` with
   `C_ϑ = 2 Σ_j |ω_j| ‖a_j‖²`, whose `O(e^{-β})` part is `C_ϑ e^{-β}` up to a
-  numerical factor.  A `C` uniform in `ϑ` would be a stronger claim than the
-  source makes or proves.  Read the other way round — `C` chosen after the
+  numerical factor. A `C` uniform in `ϑ` would be a stronger claim than the
+  source makes or proves. Read the other way round — `C` chosen after the
   configuration — the claim would say nothing, since `C` could absorb any
   cluster mass.
 
 * `max_{i,j ∈ S} min_{k ∈ ℤ} |θ_i - θ_j + 2πk| ≤ 1/(2√β)` is carried as: for
-  every `i, j ∈ S` there is a `k` with `|θ_i - θ_j + 2πk| ≤ 1/(2√β)`.  The
+  every `i, j ∈ S` there is a `k` with `|θ_i - θ_j + 2πk| ≤ 1/(2√β)`. The
   minimum over `k` is attained and the maximum over a finite set is a bound on
   every entry, so this is the same condition.
 
@@ -45,7 +53,7 @@ when the weights are small. That universal claim is false:
 * `rem: thm.bound.multid` states no theorem: it says that the restriction to
   `d = 2` is an artefact of the proof — the angular parametrization of `𝕊¹` and
   the scalar concavity estimate `lem: concavity` — and that `d ≥ 3` would need
-  a Hessian estimate on small geodesic caps.  It names no such estimate and
+  a Hessian estimate on small geodesic caps. It names no such estimate and
   claims no bound in `d ≥ 3`, so there is nothing to put on the books; the
   dimension hypothesis of both theorems above is the record of it.
 
@@ -64,11 +72,7 @@ pairwise circular-distance condition are all included in the witness.
 Source: arXiv:2601.21366v2, `thm: bound`, `cor: bound`.
 -/
 
-import Transformer.Perceptron.Atoms
-import Transformer.Perceptron.Geodesic
-import Transformer.Perceptron.Section3_ClusterCounterexample
-import Transformer.Perceptron.Section5_StationaryCluster
-import Mathlib.Analysis.Real.Pi.Bounds
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory

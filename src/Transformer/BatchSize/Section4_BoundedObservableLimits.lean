@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_LimitMoments
+
+/-!
 # Passing bounded continuous observables to actual stochastic limits
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ Subsequence extraction and dominated convergence suffice for the C2
 generator tests, whose Hessians need not be globally Lipschitz.
 -/
 
-import Transformer.BatchSize.Section4_LimitMoments
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped Topology

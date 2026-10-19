@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_CenteredQuadraticMGF
+
+/-!
 # Chernoff optimization with the original quadratic rate
 
 Source: arXiv:2604.01978v1, §6.3, `lem:Hanson_wright`.
@@ -10,7 +14,7 @@ Zero denominators are treated using the probability bound, consistently
 with real division by zero in the formal statement.
 -/
 
-import Transformer.Homogenized.Section6_CenteredQuadraticMGF
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped NNReal ENNReal

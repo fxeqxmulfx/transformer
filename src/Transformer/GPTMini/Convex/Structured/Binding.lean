@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.SharedPointer
-import Mathlib.LinearAlgebra.Prod
+module
+
+public import Transformer.GPTMini.Convex.Structured.SharedPointer
+public import Mathlib.LinearAlgebra.Prod
 
 /-!
 # Jointly learned key/value binding over all visible position pairs
@@ -20,6 +22,8 @@ sum costs quadratically many positions per query, but never enumerates
 latent channel combinations. Full raw recall, successful AdamW training
 and tensor/residual/tied block realization are subsequent obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

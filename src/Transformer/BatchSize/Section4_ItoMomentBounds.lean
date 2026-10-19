@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_ItoFourthStep
+
+/-!
 # Bounded-amplitude second and fourth moment estimates
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The constants depend on the amplitude bound and elapsed time, rather
 than the number of Brownian grid intervals.
 -/
 
-import Transformer.BatchSize.Section4_ItoFourthStep
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal

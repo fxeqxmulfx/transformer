@@ -1,12 +1,14 @@
-import Transformer.Modes.Section3_Hermite
-import Mathlib.Probability.Distributions.Gaussian.Fernique
+module
 
-/-
+public import Transformer.Modes.Section3_Hermite
+public import Mathlib.Probability.Distributions.Gaussian.Fernique
+
+/-!
 # The number of modes of a Gaussian KDE — cumulants and the Edgeworth term
 
 §3.1 of arXiv:2412.09080v3 (`sec:error-3`): the cumulants `κ^α` of a random
 vector of `ℝ²`, the third Edgeworth term `ψ` (`eq:psi`), and the moment
-identity for `|α| = 3`.  Everything here is stated for an arbitrary law `μ` on
+identity for `|α| = 3`. Everything here is stated for an arbitrary law `μ` on
 `ℝ²`; §3 applies it to `μ = Law(Y(t))` of `eq:Yi`, which is bounded (`G` and
 `G'` are), so every hypothesis on exponential moments below holds there.
 
@@ -14,7 +16,7 @@ identity for `|α| = 3`.  Everything here is stated for an arbitrary law `μ` on
 
 * A density is a continuous function: "`q` is the density of `S`" is
   `IsDensityOf`, measurability and nonnegativity together with
-  `Law(S) = q · Lebesgue`.  Only measurability is asked for — a density is
+  `Law(S) = q · Lebesgue`. Only measurability is asked for — a density is
   measurable by definition, and without it `∫ q H^α` is not a statement about
   `q` — and only measurability is used; continuity of `q_t` is proved in §5
   and is nowhere needed here.
@@ -24,16 +26,18 @@ identity for `|α| = 3`.  Everything here is stated for an arbitrary law `μ` on
 
 * **The moment identity is off by `√n`.**  The source writes
   `κ_t^α = 𝔼[H^α(Y(t))] = 𝔼_{Z ~ N(0,I₂)}[(q_t/φ)(Z) H^α(Z)]` with `q_t` the
-  density of `n^{-1/2} Σ Yᵢ(t)`.  The last expectation is `𝔼[H^α(S_n)]`, the
+  density of `n^{-1/2} Σ Yᵢ(t)`. The last expectation is `𝔼[H^α(S_n)]`, the
   third cumulant of the normalized sum, which is `n^{-1/2} κ_t^α`, not `κ_t^α`
   (cumulants are additive over independent summands and homogeneous of
-  degree three).  `cumulant_three_eq_integral_hermite` carries the first
+  degree three). `cumulant_three_eq_integral_hermite` carries the first
   equality as written; `integral_density_mul_hermite`, in
   `Section3_ScaledSumDensity.lean`, carries the second with the factor
   `n^{-1/2}` restored.
 
 Source: arXiv:2412.09080v3, §3.1, `eq:psi` and the display after it.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped ENNReal
@@ -42,7 +46,7 @@ namespace Transformer
 namespace Modes
 
 /-- `q` is a density of the law of `S` under `P`: it is measurable, nonnegative
-and `Law(S) = q · Lebesgue`.  arXiv:2412.09080v3, §3 ("the density `q_t` of
+and `Law(S) = q · Lebesgue`. arXiv:2412.09080v3, §3 ("the density `q_t` of
 `n^{-1/2} Σ Yᵢ(t)`"). -/
 structure IsDensityOf {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (S : Ω → ℝ × ℝ)
     (q : ℝ × ℝ → ℝ) : Prop where
@@ -69,7 +73,7 @@ def HasExpMoments (μ : Measure (ℝ × ℝ)) : Prop :=
     Integrable (fun x : ℝ × ℝ => Real.exp (u * x.1 + v * x.2)) μ
 
 /-- The cumulant `κ^{(a,b)}` of `μ`: the mixed derivative `∂_u^a ∂_v^b` at `0`
-of `log ∫ e^{u x₁ + v x₂} dμ`.  arXiv:2412.09080v3, §3.1, after `eq:psi`. -/
+of `log ∫ e^{u x₁ + v x₂} dμ`. arXiv:2412.09080v3, §3.1, after `eq:psi`. -/
 noncomputable def cumulantOf (μ : Measure (ℝ × ℝ)) (a b : ℕ) : ℝ :=
   iteratedDeriv a (fun u => iteratedDeriv b
     (fun v => Real.log (∫ x, Real.exp (u * x.1 + v * x.2) ∂μ)) 0) 0
@@ -81,7 +85,7 @@ noncomputable def psiOf (μ : Measure (ℝ × ℝ)) (x : ℝ × ℝ) : ℝ :=
   phi2 x * ∑ k ∈ Finset.range 4,
     cumulantOf μ k (3 - k) / ((k.factorial : ℝ) * ((3 - k).factorial : ℝ)) * hermite3 k x
 
-/-- The normalized sum `n^{-1/2} (X₁ + ⋯ + Xₙ)`.  arXiv:2412.09080v3, §3. -/
+/-- The normalized sum `n^{-1/2} (X₁ + ⋯ + Xₙ)`. arXiv:2412.09080v3, §3. -/
 noncomputable def scaledSum (n : ℕ) (X : Fin n → ℝ × ℝ) : ℝ × ℝ :=
   (Real.sqrt n)⁻¹ • ∑ i, X i
 
@@ -96,7 +100,7 @@ theorem integral_sq_stdGaussian : ∫ x, x ^ 2 ∂gaussianReal 0 1 = 1 := by
   rw [variance_of_integral_eq_zero (memLp_id_gaussianReal 2).aemeasurable (by simp)] at h
   simpa using h
 
-/-- `N(0, I₂)` is standardized.  arXiv:2412.09080v3, §3.1. -/
+/-- `N(0, I₂)` is standardized. arXiv:2412.09080v3, §3.1. -/
 theorem isStandardized_stdGauss2 : IsStandardized stdGauss2 where
   memLp := IsGaussian.memLp_id _ _ (by simp)
   mean_fst := by
@@ -119,7 +123,7 @@ theorem isStandardized_stdGauss2 : IsStandardized stdGauss2 where
     simpa using integral_prod_mul (μ := gaussianReal 0 1) (ν := gaussianReal 0 1)
       (fun a => a) (fun a => a)
 
-/-- `N(0, I₂)` has every exponential moment.  arXiv:2412.09080v3, §3.1. -/
+/-- `N(0, I₂)` has every exponential moment. arXiv:2412.09080v3, §3.1. -/
 theorem hasExpMoments_stdGauss2 : HasExpMoments stdGauss2 := by
   refine ⟨1, one_pos, fun u v _ _ => ?_⟩
   simpa [Real.exp_add] using

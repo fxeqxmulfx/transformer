@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Semantics.Presence
-import Transformer.Basis.Depth
-import Mathlib.Data.List.NodupEquivFin
+module
+
+public import Transformer.GPTMini.Semantics.Presence
+public import Transformer.Basis.Depth
+public import Mathlib.Data.List.NodupEquivFin
 
 /-!
 # Ordered subsequences from internal prefix features
@@ -16,6 +18,8 @@ self-value zero and preserving the probe through XSA. Prefix-feature
 encoding remains a local representation obligation; no full GPTMini
 parameter construction or assumed final logit correctness is used.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

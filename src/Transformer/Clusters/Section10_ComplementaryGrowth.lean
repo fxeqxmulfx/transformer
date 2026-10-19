@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section10_PowerContraction
+public import Transformer.Clusters.Section10_ComplementaryProjection
+public import Transformer.Clusters.Section9_Growth
+
+/-!
 # Complementary token growth is slower than the leading eigenvalue
 
 ArXiv:2305.05465v6, §9, `r:notdiagonalizable`, `e:notdi`, and §10, the
@@ -13,9 +19,7 @@ complementary component decay. No diagonalizability or boundedness of the
 full rescaled configuration is assumed.
 -/
 
-import Transformer.Clusters.Section10_PowerContraction
-import Transformer.Clusters.Section10_ComplementaryProjection
-import Transformer.Clusters.Section9_Growth
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

@@ -1,10 +1,13 @@
-import Transformer.Modes.Section5_PtBddFejer
+module
 
-/-
+public import Transformer.Modes.Section5_PtBddFejer
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+
+/-!
 # The number of modes of a Gaussian KDE — Fourier decay bounds the mass of small balls
 
 A probability law whose Fourier transform decays like `(1 + |s|)^{-1/2}` gives mass
-`O(√r)` to every ball `{|W| ≤ r}` (`measureReal_abs_le_of_decay`).  The Fejér kernel
+`O(√r)` to every ball `{|W| ≤ r}` (`measureReal_abs_le_of_decay`). The Fejér kernel
 `Λ_a` of `Section5_PtBddFejer.lean` is nonnegative and `≥ a/4` on `|w| ≤ 1/a`; by
 Fubini its integral against the law of `W` is the integral of `(1 - s/a) Re 𝓕(s)` over
 `[0, a]`, which the decay bounds by `2C√a`.
@@ -15,6 +18,8 @@ This is used in `Section5_PtBddDecayFalse.lean` to refute `eq:uniform-decay` for
 Source: not a statement of arXiv:2412.09080v3; a tool for refuting its
 `eq:uniform-decay` (§5.5).
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

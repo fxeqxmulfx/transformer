@@ -1,5 +1,7 @@
-import Transformer.Grokking.EffectiveTheory.Section3_InitialDomain
-import Mathlib.Order.Filter.AtTopBot.Field
+module
+
+public import Transformer.Grokking.EffectiveTheory.Section3_InitialDomain
+public import Mathlib.Order.Filter.AtTopBot.Field
 
 /-!
 # Spectral decay and effective-loss convergence from initial ground data
@@ -15,6 +17,8 @@ norm conservation and ground nonvanishing are derived. A bound on the
 ground coordinate then proves that the normalized loss tends to zero.
 The law does not establish classifier accuracy or AdamW convergence.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.EffectiveTheory
 

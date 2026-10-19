@@ -1,20 +1,24 @@
-/-
+module
+
+public import Transformer.Perspective.InjectedAttention
+
+/-!
 # Softmax attention with injection does not collapse
 
 **Not a statement of any paper.**  `IsInjectedFlow.spread` for `injectedODE`:
 if two of the injections, `z_k` and `z_l`, are linearly independent, the
 tokens cannot stay within `δ` of each other for a time `T`, where `δ` and `T`
 depend on `z_k` and `z_l` only — not on `β`, not on `Q(t)`, `K(t)`, not on the
-initial tokens (`injectedODE_spread`).  So they reach no consensus
+initial tokens (`injectedODE_spread`). So they reach no consensus
 (`injectedODE_not_consensus`), and in particular do not converge to a point at
 an exponential rate (`not_expConvergent_injectedODE`), which is what they do
 at `z = 0` from any open hemisphere (`expConvergent_injectedODE_zero`: cone
-collapse, `lem: hemisphere.clustering` of arXiv:2312.10794v5, §6.1).  The
+collapse, `lem: hemisphere.clustering` of arXiv:2312.10794v5, §6.1). The
 independence cannot be dropped: parallel injections `z_i = c_i x` let all
 tokens rest at `x` (`injectedODE_consensus`).
 -/
 
-import Transformer.Perspective.InjectedAttention
+@[expose] public section
 
 open scoped BigOperators
 open Filter Topology
@@ -25,7 +29,7 @@ namespace Perspective
 variable {d n : ℕ}
 
 /-- **Theorem (no collapse under injection, for softmax attention).**  Let
-`z_k`, `z_l` be linearly independent.  There are `δ, T > 0` such that for every
+`z_k`, `z_l` be linearly independent. There are `δ, T > 0` such that for every
 `β`, all `Q(t)`, `K(t)` and every solution of `injectedODE`, every time window
 of length `T` contains a time at which two tokens are more than `δ` apart.
 

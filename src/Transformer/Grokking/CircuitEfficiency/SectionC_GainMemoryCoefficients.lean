@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryLimits
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryLimits
 
 /-!
 # Exact native retained-memory and partner coefficients
@@ -28,6 +30,8 @@ or positive confidence. Those relative dynamics remain to be proved.
 Fixed tables/uniform native decay differ from appendix C coupled-cost GD
 and learned stochastic/floating-point GPTMini; no transfer is asserted.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.GPTMini.RMSNorm
+
+/-!
 # Bridge: Tokens after `RMSNorm` live on the sphere of radius `√d`
 
 Connects `Transformer.GPTMini.RMSNorm` to the canonical setup of all
@@ -8,15 +13,14 @@ particles live on the unit sphere `𝕊^{d-1}`.
 
 The bridge is via scaling: after applying `rmsNorm`, every (non-zero)
 token has L2 norm exactly `√d`, so dividing by `√d` puts it on the unit
-sphere.  Equivalently, the normalized direction `RMSNorm(x) / √d` lies on
+sphere. Equivalently, the normalized direction `RMSNorm(x) / √d` lies on
 `𝕊^{d-1}`.
 
 This is the foundational lemma for all subsequent bridges to spherical-SA
 theory.
 -/
 
-import Transformer.Basic
-import Transformer.GPTMini.RMSNorm
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -59,7 +63,7 @@ theorem toSphere_norm
 /-- **Setup for spherical clustering theorems.**
 
 Given a sequence of non-zero tokens `(x_i)_{i ∈ [n]}`, the directions
-`(toSphere d (x_i))_{i ∈ [n]}` are points on `𝕊^{d-1}`.  This is the input
+`(toSphere d (x_i))_{i ∈ [n]}` are points on `𝕊^{d-1}`. This is the input
 type expected by `Section1_IPS.SA`, `Section5_ExpRate.cone_collapse`,
 and `Causal.MainTheorem.thm1`. -/
 theorem token_sequence_on_sphere
@@ -83,7 +87,7 @@ example : 0 < 1 ∧ (EuclideanSpace.single (0 : Fin 1) (1 : ℝ) : EucSpace 1) �
   ⟨one_pos, by simp⟩
 
 /-- Normalizing moves a vector by at most twice the relative perturbation:
-`‖b/‖b‖ - a/‖a‖‖ ≤ 2‖b - a‖/‖a‖`.  So a token far from the origin turns
+`‖b/‖b‖ - a/‖a‖‖ ≤ 2‖b - a‖/‖a‖`. So a token far from the origin turns
 slowly under bounded updates. -/
 theorem norm_inv_smul_sub_le {d : ℕ} {a : EucSpace d} (b : EucSpace d) (ha : a ≠ 0) :
     ‖‖b‖⁻¹ • b - ‖a‖⁻¹ • a‖ ≤ 2 * ‖b - a‖ / ‖a‖ := by

@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.TensorCausalBlock
-import Transformer.GPTMini.Convex.Structured.StatePathProduct
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorCausalBlock
+public import Transformer.GPTMini.Convex.Structured.StatePathProduct
 
 /-!
 # Complete likelihood computed from actual tensor fields
@@ -19,6 +21,8 @@ globally convex on the entire unrestricted BindingParameters domain.
 This is neither output-only CE nor an AdamW convergence claim. Complete
 tensor probability and full-stack training coupling remain separate.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

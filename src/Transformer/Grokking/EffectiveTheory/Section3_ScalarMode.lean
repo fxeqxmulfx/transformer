@@ -1,8 +1,10 @@
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Tactic
+module
+
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Tactic
 
 /-!
 # Exact scalar decay, its time scale and its limits
@@ -17,6 +19,8 @@ unique, not prescribed as the behavior of a trained transformer. The next
 module derives this ODE for relative modes of the actual quotient flow.
 A threshold crossing time still depends on amplitude and threshold.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.EffectiveTheory
 

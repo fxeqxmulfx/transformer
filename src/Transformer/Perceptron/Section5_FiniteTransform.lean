@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.PositiveDefinite
+
+/-!
 # The original exponential transform on finite spherical measures
 
 ArXiv:2601.21366v2, §5.1, `lem: quadpol`, injectivity.
@@ -22,7 +26,7 @@ and negative parts of a polynomial-density candidate in the remaining
 inverse-transform proof. No polynomial inverse is assumed here.
 -/
 
-import Transformer.Perspective.PositiveDefinite
+@[expose] public section
 
 open scoped BigOperators Nat ENNReal NNReal
 open Real MeasureTheory Set

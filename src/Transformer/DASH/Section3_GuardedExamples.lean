@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.DASH.Section4_GuardedCn
+public import Transformer.DASH.Section4_GuardedNdb
+public import Transformer.DASH.Section4_GuardedChebyshev
+
+/-!
 # DASH — repaired behavior on the earlier scaling counterexamples
 
 arXiv:2602.02016v2, §3.2–3.5 and Appendix A. These results exercise
@@ -6,9 +12,7 @@ the actual guard on zero input, the failed CN unit endpoint and the
 PI pool trapped in the smaller eigenspace of `diag(100,1)`.
 -/
 
-import Transformer.DASH.Section4_GuardedCn
-import Transformer.DASH.Section4_GuardedNdb
-import Transformer.DASH.Section4_GuardedChebyshev
+@[expose] public section
 
 open scoped BigOperators Matrix Topology
 open Filter

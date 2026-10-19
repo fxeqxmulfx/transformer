@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_SmallTemperatureCorrelation
+public import Transformer.Homogenized.Section7_OverlapDriftGramComparison
+
+/-!
 # The actual Gaussian mean drift is uniformly close to logistic drift
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -21,8 +26,7 @@ simplex condition. The source's isolated unbound `r` in `f(u)=r(1-u)`
 is replaced by its actual logistic field `f(u)=u(1-u)`.
 -/
 
-import Transformer.Homogenized.Section7_SmallTemperatureCorrelation
-import Transformer.Homogenized.Section7_OverlapDriftGramComparison
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators NNReal

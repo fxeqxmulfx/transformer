@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.MarkovMarginals
-import Transformer.GPTMini.Convex.Structured.Concentration
+module
+
+public import Transformer.GPTMini.Convex.Structured.MarkovMarginals
+public import Transformer.GPTMini.Convex.Structured.Concentration
 
 /-!
 # Data state paths and genuine finite confidence propagation
@@ -19,6 +21,8 @@ whole-prefix oracle is used in the learned encoder's computation.
 Shared-slot realization, full task semantics, output-channel confidence
 and residual/tied integer decoding are subsequent obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

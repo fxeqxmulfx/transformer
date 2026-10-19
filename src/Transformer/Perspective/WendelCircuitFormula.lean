@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.WendelCircuitCount
+
+/-!
 # Wendel's count at `n = d + 1`
 
 The unique circuit of `d + 1` points in `d` dimensions has exactly two sign
@@ -8,7 +12,7 @@ lies in a common open hemisphere.
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962).
 -/
 
-import Transformer.Perspective.WendelCircuitCount
+@[expose] public section
 
 open MeasureTheory
 

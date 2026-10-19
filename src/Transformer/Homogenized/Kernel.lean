@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section3_SparseKernelMoments
+public import Transformer.Homogenized.Generator
+
+/-!
 # The quantitative kernel regularity claim has a sparse-law counterexample
 
 Lemma `lem:Kernel_regularity` of arXiv:2604.01978v1, §3.1, asserts both
@@ -30,8 +35,7 @@ Source: arXiv:2604.01978v1, §3.1, `lem:Kernel_regularity`,
 `eq:G_def`, `eq: defining.alpha`; proof §6.3.
 -/
 
-import Transformer.Homogenized.Section3_SparseKernelMoments
-import Transformer.Homogenized.Generator
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory ProbabilityTheory

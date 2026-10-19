@@ -1,6 +1,9 @@
-import Transformer.Modes.Section3_PowerDerivatives
-import Transformer.Modes.Section3_DerivativeMoments
-import Transformer.Modes.Section3_FourierTail
+module
+
+public import Transformer.Modes.Section3_PowerDerivatives
+public import Transformer.Modes.Section3_DerivativeMoments
+public import Transformer.Modes.Section3_FourierTail
+
 /-!
 # Moment bounds for normalized-sum characteristic derivatives
 
@@ -24,6 +27,7 @@ bound replaces these by `n`, retaining one common characteristic
 power for subsequent integration over the whole frequency space.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

@@ -1,7 +1,9 @@
-import Transformer.AMSGrad.Section3_Example
-import Transformer.AMSGrad.Section4_Lemmas
+module
 
-/-
+public import Transformer.AMSGrad.Section3_Example
+public import Transformer.AMSGrad.Section4_Lemmas
+
+/-!
 # AMSGrad — an alternating actual run for the Theorem A proof audit
 
 The schedule and linear costs below give an admissible one-dimensional AMSGrad
@@ -11,6 +13,8 @@ estimate behind Theorem A, rather than the regret theorem itself.
 
 Source: arXiv:1904.03590v4, §1, Algorithm 1 and Theorem A; §3, Lemma 3.1.
 -/
+
+@[expose] public section
 
 open Finset
 namespace Transformer.AMSGrad

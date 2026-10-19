@@ -1,20 +1,24 @@
-/-
+module
+
+public import Transformer.CRASP.FrameBox
+
+/-!
 # Shrinking a box until a formula is constant on it
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 (COLM 2025), Appendix D: `lem:cropping`, repaired.
 
 The paper crops an interval of Parikh vectors until a formula of
-`TL[◁#,▷#]` whose counted formulas are constant becomes constant itself.  With
+`TL[◁#,▷#]` whose counted formulas are constant becomes constant itself. With
 the positions around the interval fixed to a frame
-(`Transformer.CRASP.Frame`), that works.  A comparison is constant on a box of
+(`Transformer.CRASP.Frame`), that works. A comparison is constant on a box of
 half the side (`exists_box_lt`), once for each letter; Boolean combinations
-shrink the box once per operand.  So a formula, and a list of formulas, is
+shrink the box once per operand. So a formula, and a list of formulas, is
 constant on a box whose side depends on the formulas alone
 (`Form.exists_constOnBox`, `exists_constOnBox_list`).
 -/
 
-import Transformer.CRASP.FrameBox
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

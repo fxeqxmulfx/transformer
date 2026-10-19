@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_RowFeatureExchange
+
+/-!
 # Row factors are conjugates of feature factors
 
 Arora et al., arXiv:2312.04927v1, Appendix `prop: butterfly-hyena`.
@@ -7,7 +11,7 @@ while permuting the actual coefficients by the same coordinate map.
 This yields a 35-layer factor without additional rows or features.
 -/
 
-import Transformer.Zoology.Appendix_RowFeatureExchange
+@[expose] public section
 
 noncomputable section
 

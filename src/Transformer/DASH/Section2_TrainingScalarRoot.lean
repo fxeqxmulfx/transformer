@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section2_TrainingModels
+
+/-!
 # DASH — actual finite scalar roots and grafting for a training cycle
 
 arXiv:2602.02016v2, §2.3 and §3.3–3.5. These calculations retain the
@@ -7,7 +11,7 @@ They support a learning counterexample even after numerical scaling has
 been repaired, demonstrating why a separate training safeguard is needed.
 -/
 
-import Transformer.DASH.Section2_TrainingModels
+@[expose] public section
 
 open scoped Matrix
 

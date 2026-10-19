@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AdaFisher.SectionA_StochasticTerms
+public import Mathlib.Data.Finset.Max
+
+/-!
 # AdaFisher: the corrected last step of the stochastic argument
 
 arXiv:2405.16397v3, Appendix A.2, `eq:bound_2`.
@@ -7,8 +12,7 @@ This conditional statement does not assume the false β=1 version of
 Proposition 3.4 or conceal its stochastic estimate in a structure field.
 -/
 
-import Transformer.AdaFisher.SectionA_StochasticTerms
-import Mathlib.Data.Finset.Max
+@[expose] public section
 
 open scoped BigOperators
 

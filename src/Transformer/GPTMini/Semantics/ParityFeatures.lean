@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DenominatorBlock
+module
+
+public import Transformer.GPTMini.Semantics.DenominatorBlock
 
 /-!
 # Exact internal counting features for every raw parity word
@@ -15,6 +17,8 @@ examples and not encoder hypotheses. A bounded parity/EOS FFN and the
 full-stack tied readout still need to be implemented and verified.
 No correctness of final logits or optimization is inferred from a count.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

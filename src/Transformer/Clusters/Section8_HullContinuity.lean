@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section8_Polytope
+
+/-!
 # Continuity of the finite token hull
 
 The geometric input in arXiv:2305.05465v6, §8.1, the opening paragraph of
@@ -12,7 +16,7 @@ set inclusions needed to identify that limit; the distance alone cannot
 distinguish an empty set under the real-valued Hausdorff convention.
 -/
 
-import Transformer.Clusters.Section8_Polytope
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

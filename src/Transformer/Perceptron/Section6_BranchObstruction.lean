@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_SphericalBranchIdentity
+public import Transformer.Perceptron.Section6_SignedQuadratic
+public import Transformer.Perceptron.Section6_SphericalFields
+
+/-!
 # The original complementary-branch obstruction and pattern cover
 
 ArXiv:2601.21366v2, §6, `eq:ratio-const-correct` in the proof of
@@ -20,9 +26,7 @@ supplies positive measure in one actual pattern without assuming an
 open component or discarding a boundary set.
 -/
 
-import Transformer.Perceptron.Section6_SphericalBranchIdentity
-import Transformer.Perceptron.Section6_SignedQuadratic
-import Transformer.Perceptron.Section6_SphericalFields
+@[expose] public section
 
 open Real MeasureTheory Set
 

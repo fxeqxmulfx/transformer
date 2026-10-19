@@ -1,4 +1,16 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section2_FlowMap
+public import Transformer.Interpolation.Basic
+public import Transformer.Interpolation.Section3_BallFlow
+public import Transformer.Interpolation.Clustering
+public import Transformer.Interpolation.Disentanglement
+public import Transformer.Interpolation.NeuralODE
+public import Transformer.Interpolation.Wasserstein
+public import Transformer.Interpolation.Section1_TargetsAtoms
+
+/-!
 # Measure-to-measure interpolation — Main theorems
 
 Formalization of the main theorems of arXiv:2411.04551v3:
@@ -19,25 +31,17 @@ closed by `sorry`.
 
 The two theorems carry the manuscript's standing assumption that the input measures are pairwise
 distinct and so are the targets; without it two equal inputs, which the well-posed Cauchy problem
-sends to the same solution, could not be matched to different targets.  The `O(d · N)` switch bound
+sends to the same solution, could not be matched to different targets. The `O(d · N)` switch bound
 belongs to `thm: targets.atoms` only: for general targets the source says the number of switches
 can be exponential in `d`, and `thm: main.result` states piecewise-constant parameters and nothing
-more.  `lem: univ.approx` is about the perceptron part `eq: neural.pde.sphere` alone.
+more. `lem: univ.approx` is about the perceptron part `eq: neural.pde.sphere` alone.
 
 The transport maps of `thm: main.result` are required to be measurable rather
 than to lie in `L²(𝕊^{d-1}; 𝕊^{d-1})`; on a sphere of finite measure and with
 values in a bounded set the two agree, which is not proved here.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section2_FlowMap
-import Transformer.Interpolation.Basic
-import Transformer.Interpolation.Section3_BallFlow
-import Transformer.Interpolation.Clustering
-import Transformer.Interpolation.Disentanglement
-import Transformer.Interpolation.NeuralODE
-import Transformer.Interpolation.Wasserstein
-import Transformer.Interpolation.Section1_TargetsAtoms
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -67,11 +71,11 @@ them a weakening of what the paper proves.
 *`W_2` is `Interpolation.W2`* rather than a free function; see `targets_atoms`.
 
 *There is no bound on the number of switches.*  The theorem says only that `θ`
-"can be chosen piecewise constant".  The `O(d · N)` bound is that of
+"can be chosen piecewise constant". The `O(d · N)` bound is that of
 `thm: targets.atoms`, where the targets are atoms; the source states for the
 general case that the number of switches "can be exponential in `d`" (§1.3,
 `rem: nb.disc.clustering`), because it depends on the packing numbers of the
-supports and, through the simple function approximating each `𝖳^i`, on `ε`.  The
+supports and, through the simple function approximating each `𝖳^i`, on `ε`. The
 former statement asked `K ≤ C · d · N` with `C` before the data — a bound the
 paper proves for another theorem and disclaims for this one — and it is removed
 with `C`.
@@ -116,7 +120,7 @@ example :
 
 /-- **Lemma (lem: univ.approx).** *Universal approximation of `L²` maps.*
 
-Let `d ≥ 3`, `T, ε > 0` and `μ ∈ 𝒫(𝕊^{d-1})`.  For every measurable
+Let `d ≥ 3`, `T, ε > 0` and `μ ∈ 𝒫(𝕊^{d-1})`. For every measurable
 `ψ : 𝕊^{d-1} → 𝕊^{d-1}` there are piecewise-constant `(𝐖, 𝐔, b)` on `[0, T]`
 with finitely many switches such that the time-`T` map `φ^T` of the flow of
 `eq: neural.ode.sphere` is Lipschitz-continuous and invertible, the solution of
@@ -129,14 +133,14 @@ perceptron part `eq: neural.pde.sphere` alone — `𝐕 ≡ 𝐁 ≡ 0`, `neural
 whose flow map is the one the proof of `thm: main.result` composes and inverts.
 The former statement allowed the full vector field of `eq: vf`, attention
 included, and asked neither for a Lipschitz nor an invertible map nor for
-`μ(T) = φ^T_# μ`: a weaker claim under the source's name.  Three further points.
+`μ(T) = φ^T_# μ`: a weaker claim under the source's name. Three further points.
 `d ≥ 3` is the standing dimension of every result the lemma serves, and it is
 needed: on the circle a flow map is a homeomorphism, and no homeomorphism
 approximates in `L²` of the uniform measure a map that wraps the circle three
 times, `ψ(θ) = 3θ`; on `𝕊^0` every tangent projection vanishes and the flow is
-the identity.  `T` is the time of `Φ^T_{θ_ε}` in the source, which does not
-quantify it; every `T > 0` is asked.  The conclusion is `‖·‖_{L²(μ)} ≤ ε`, not
-its square.  "The solution" is read as in `two_balls`: one exists and every
+the identity. `T` is the time of `Φ^T_{θ_ε}` in the source, which does not
+quantify it; every `T > 0` is asked. The conclusion is `‖·‖_{L²(μ)} ≤ ε`, not
+its square. "The solution" is read as in `two_balls`: one exists and every
 solution satisfies `μ(T) = φ^T_# μ`.
 
 Not proved here.

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.SectionA_ScalarConvergence
+
+/-!
 # Local scalar attraction under a converging original prefix
 
 ArXiv:2411.04990v2, §5 and Appendix A, the local stability
@@ -20,7 +24,7 @@ the unique critical angle. No convergence rate or general
 printed C1 sequential convergence lemma is assumed here.
 -/
 
-import Transformer.Causal.SectionA_ScalarConvergence
+@[expose] public section
 
 open Real Set Filter
 

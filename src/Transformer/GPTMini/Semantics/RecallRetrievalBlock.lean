@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallRetrievalAccuracy
+module
+
+public import Transformer.GPTMini.Semantics.RecallRetrievalAccuracy
 
 /-!
 # The genuine second ordinary recall block writes retrieved values
@@ -17,6 +19,8 @@ tied readout and validated integer-parser coupling still remain.
 These are given real-arithmetic softmax baseline parameters, not
 a convexity, floating-point or optimization convergence claim.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

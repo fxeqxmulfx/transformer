@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_ReLUObstruction
+
+/-!
 # The actual analytic first variation in arbitrary dimension
 
 ArXiv:2601.21366v2, §5.3, the analytic alternative in the proof of
@@ -13,7 +17,7 @@ actual ambient analyticity and the spherical uniqueness theorem
 justify the continuation step, before any Hessian argument.
 -/
 
-import Transformer.Perceptron.Section5_ReLUObstruction
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

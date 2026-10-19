@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerChain
+
+/-!
 # Exact energy of an adapted diagonal Brownian update
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ This identity is the second-moment step in comparing Euler approximations.
 The existing state and the noise coefficient may share their entire past.
 -/
 
-import Transformer.BatchSize.Section4_EulerChain
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal BigOperators

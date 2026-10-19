@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.TemporalProgramBounds
+
+/-!
 # Uniform attention and scratch coordinates
 
 arXiv:2506.16055v3, Appendix B.2, `thm:TLCl_to_rtfr`.
@@ -7,7 +11,7 @@ coordinates receive zero attention; separate scratch slots receive the
 averages used for comparison signs.
 -/
 
-import Transformer.CRASP.TemporalProgramBounds
+@[expose] public section
 
 namespace Transformer.CRASP.TemporalProgram
 

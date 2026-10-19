@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_DiracApproximation
+public import Transformer.Interpolation.Section2_AttentionClustering
+
+/-!
 # Measure-to-measure interpolation — clustering to a single point mass
 
 ArXiv:2411.04551v3, §2, `prop: targets.atoms`.
@@ -16,5 +21,4 @@ and a logarithmic W₂ hitting-time rate; these further claims are not
 asserted by that declaration.
 -/
 
-import Transformer.Interpolation.Section2_DiracApproximation
-import Transformer.Interpolation.Section2_AttentionClustering
+@[expose] public section

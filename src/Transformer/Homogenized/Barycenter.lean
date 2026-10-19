@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.MeanField
+
+/-!
 # Homogenized Transformers — the softmax barycenter
 
 The object `lemma:Laplace_method`, `lem:delta_method`, `lem:lemma_app` and
@@ -16,7 +20,7 @@ removed, together with the statistic `s_μ(x,x') = E_A⟨m(x), m(x')⟩` of
 Source: arXiv:2604.01978v1, `eq: mbetaA`, `eq:s_mu_defs_clean`.
 -/
 
-import Transformer.Homogenized.MeanField
+@[expose] public section
 
 open scoped BigOperators ENNReal NNReal
 open Real MeasureTheory
@@ -58,7 +62,7 @@ normalizer cancels the weight. -/
     inv_mul_cancel₀ (softWeight_pos β A x z).ne', one_smul]
 
 /-- **`m_{β,A}[μ](x)` is a convex combination of unit vectors**, so it lies in
-the closed unit ball.  This is the source's parenthetical remark in the proof
+the closed unit ball. This is the source's parenthetical remark in the proof
 of `lem:Ito_formula`, and it is what makes `s_μ(x,y) = E⟨m(x),m(y)⟩` an
 integral of a bounded function rather than a junk value.
 

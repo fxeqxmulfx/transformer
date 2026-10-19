@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_AmbientBranches
+public import Transformer.Metastability.Section4_UniformLaw
+
+/-!
 # Antipodal symmetry of the actual normalized fields and support
 
 ArXiv:2601.21366v2, §6, proof of `prop: unified.log`, part (a),
@@ -18,8 +23,7 @@ finite-support or density conclusion. The uniform spherical Lebesgue
 law supplies a genuine nonempty invariant measure witness below.
 -/
 
-import Transformer.Perceptron.Section6_AmbientBranches
-import Transformer.Metastability.Section4_UniformLaw
+@[expose] public section
 
 open Real MeasureTheory Set
 

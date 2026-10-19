@@ -1,8 +1,15 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.Matrix.Order
+public import Mathlib.Analysis.Matrix.PosDef
+public import Mathlib.Analysis.Matrix.Spectrum
+
+/-!
 # Normalization — A positive-definite factor preserves instability (App. D)
 
 `Lemma lem: matrix` of arXiv:2510.22026v2: the product of a symmetric
-positive-definite matrix and a symmetric unstable one is unstable.  Step 4 of
+positive-definite matrix and a symmetric unstable one is unstable. Step 4 of
 Appendix D applies it to the energy Hessian, so "unstable" is read as "has a
 positive real eigenvalue".
 
@@ -13,10 +20,7 @@ the sign of one value of the quadratic form of `A`, hence has an eigenvalue of
 that sign.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.Matrix.Order
-import Mathlib.Analysis.Matrix.PosDef
-import Mathlib.Analysis.Matrix.Spectrum
+@[expose] public section
 
 open scoped MatrixOrder Matrix
 
@@ -27,7 +31,7 @@ namespace Normalization
 instability.*
 
 For a symmetric unstable `A` and a symmetric positive-definite `D`, the
-product `D A` is unstable.  The proof conjugates by the square root `P` of `D`:
+product `D A` is unstable. The proof conjugates by the square root `P` of `D`:
 `P⁻¹ (D A) P = P A P` is symmetric and has the inertia of `A`, so it keeps a
 positive eigenvalue, and similar matrices share their spectrum.
 

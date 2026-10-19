@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Basic
+
+/-!
 # Causal attention — The elementary estimates behind the interaction window
 
 Five inequalities with no `h` or `g` in them, pulled out of the proof of
@@ -15,7 +19,7 @@ Five inequalities with no `h` or `g` in them, pulled out of the proof of
 Source: arXiv:2411.04990v2, §B, the arithmetic of `lem:interaction`.
 -/
 
-import Transformer.Basic
+@[expose] public section
 
 open Real
 

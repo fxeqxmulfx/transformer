@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section3_PowerCoordinates
+public import Transformer.DASH.Section3_Scaling
+
+/-!
 # DASH — inexpensive spectral certificates for guarded scaling
 
 arXiv:2602.02016v2, §3.4. The manuscript treats twice a Rayleigh
@@ -7,8 +12,7 @@ an independently computed upper bound: the smaller of the Frobenius
 norm and the maximum absolute row sum. Neither requires an EVD.
 -/
 
-import Transformer.DASH.Section3_PowerCoordinates
-import Transformer.DASH.Section3_Scaling
+@[expose] public section
 
 open scoped BigOperators Matrix
 

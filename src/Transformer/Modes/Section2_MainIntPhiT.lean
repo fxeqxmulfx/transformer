@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.Modes.Section2_ProxyKRBounds
+
+/-!
 # The number of modes of a Gaussian KDE — `lem:main-int-phi` on `T`
 
 The first estimate of `lem:main-int-phi` in arXiv:2412.09080v3, §2.3:
 the Gaussian proxy Kac–Rice integral over `T` has order `√(β log β)`.
 The source passes through `eq:int-phi-final`, whose pointwise form requires
-`n ≲ β^{5/2}`.  Here the shift is bounded by `α_t δ_t² ≤ C R`, where
-`R = n β^{-3/2} e^{-t²/2}`, and is handled directly.  All of the original
+`n ≲ β^{5/2}`. Here the shift is bounded by `α_t δ_t² ≤ C R`, where
+`R = n β^{-3/2} e^{-t²/2}`, and is handled directly. All of the original
 regimes `n^c ≲ β ≲ n^{2-c}` are retained.
 -/
 
-import Transformer.Modes.Section2_ProxyKRBounds
+@[expose] public section
 
 open Real Filter Asymptotics MeasureTheory
 open scoped Topology ENNReal
@@ -17,7 +21,7 @@ open scoped Topology ENNReal
 namespace Transformer.Modes
 
 /-- The radius of `T` is at most a constant times `√(log β)` in the paper's
-regime.  Source: arXiv:2412.09080v3, §2.3, `eq:T`, `lem:main-int-phi`. -/
+regime. Source: arXiv:2412.09080v3, §2.3, `eq:T`, `lem:main-int-phi`. -/
 theorem eventually_window_radius_le {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ}
     (hreg : IsRegime c N B) {ω : ℝ → ℝ} (hω : IsSlowGrowth ω) :
     ∃ M : ℝ, 0 < M ∧ ∀ᶠ k in atTop, 1 ≤ Real.log (B k) ∧
@@ -40,7 +44,7 @@ Source: arXiv:2412.09080v3, §2.3, `lem:main-int-phi`. -/
 example := eventually_window_radius_le isRegime_succ isSlowGrowth_sqrt_log_log
 
 /-- Removing `[-1,1]` retains a positive `√(log β)` lower bound for the rate
-integral.  Source: arXiv:2412.09080v3, §2.3, `eq:int-phi-b`,
+integral. Source: arXiv:2412.09080v3, §2.3, `eq:int-phi-b`,
 proof of `lem:main-int-phi`. -/
 theorem eventually_integral_exp_phiRate_outside_ge {c : ℝ} {N : ℕ → ℕ}
     {B : ℕ → ℝ} (hreg : IsRegime c N B) {ω : ℝ → ℝ} (hω : IsSlowGrowth ω)

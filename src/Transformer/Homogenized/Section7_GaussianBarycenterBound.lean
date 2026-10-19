@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianQueryMoments
+public import Transformer.Homogenized.Section7_UniformBarycenter
+
+/-!
 # A cutoff bound for the original Gaussian uniform-law barycenter
 
 ArXiv:2604.01978v1, §7.3, `lemma:Laplace_method`, Step 1.
@@ -21,8 +26,7 @@ original law and original product matrix, with no postulated limit
 or Gaussian approximation to the product-matrix query.
 -/
 
-import Transformer.Homogenized.Section7_GaussianQueryMoments
-import Transformer.Homogenized.Section7_UniformBarycenter
+@[expose] public section
 
 open Real MeasureTheory
 open scoped BigOperators NNReal

@@ -1,9 +1,13 @@
-/-
+module
+
+public import Transformer.Perceptron.Atoms
+
+/-!
 # Perceptrons and attention's mean-field landscape — the potential along the
   circle
 
 The angular derivatives of `v_ϑ ∘ x` on `𝕊¹`, in the standard parametrization
-`x(θ) = circlePoint θ` of `Atoms.lean`.  They are what
+`x(θ) = circlePoint θ` of `Atoms.lean`. They are what
 `rem:strictSOPD-perceptron` of arXiv:2601.21366v2 states its sufficient
 condition for strictness in, and its closing display
 
@@ -16,7 +20,7 @@ unit circle has unit curvature (`hasDerivAt_circleVel`).
 Source: arXiv:2601.21366v2, `rem:strictSOPD-perceptron`, `eq: primitive.field`.
 -/
 
-import Transformer.Perceptron.Atoms
+@[expose] public section
 
 open scoped BigOperators
 open Real

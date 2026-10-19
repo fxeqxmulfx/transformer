@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_ComposedDerivativeLipschitz
+
+/-!
 # Lipschitz drift observables for the weak comparison
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ Bounded first and second test derivatives, together with the genuine
 bounded Lipschitz drift, control the change in its first-order generator.
 -/
 
-import Transformer.BatchSize.Section4_ComposedDerivativeLipschitz
+@[expose] public section
 
 open scoped NNReal
 

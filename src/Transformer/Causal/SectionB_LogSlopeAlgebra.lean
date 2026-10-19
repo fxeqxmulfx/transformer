@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.SectionB_DoublePeak
+
+/-!
 # Polynomial bounds for the original interaction's logarithmic slope
 
 ArXiv:2411.04990v2, Appendix B and §5, the actual original
@@ -16,7 +20,7 @@ reduces to `4c³-2c²+1>=2cb`, with the actual half-angle relation
 original trigonometric factors; no force or dynamics is changed.
 -/
 
-import Transformer.Causal.SectionB_DoublePeak
+@[expose] public section
 
 open Real Set
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section6_CoordinateBlocks
+
+/-!
 # Original independent bilinear-form exponential estimates
 
 Source: arXiv:2604.01978v1, §6.3, `lem:Hanson_wright`.
@@ -11,7 +15,7 @@ from the original coordinate assumptions. Integrability is obtained
 from the extended-real bound, including either coefficient sign.
 -/
 
-import Transformer.Homogenized.Section6_CoordinateBlocks
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal ENNReal

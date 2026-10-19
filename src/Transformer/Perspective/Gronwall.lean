@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # The scalar Grönwall step
 
 The one inequality the exponential estimates of arXiv:2312.10794v5 are
@@ -10,9 +16,7 @@ differential inequality as the hypothesis, so that each estimate supplies its
 own `λ` and its own reason for the rate.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open Real
 

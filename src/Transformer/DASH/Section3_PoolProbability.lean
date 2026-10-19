@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section3_MultiPowerConvergence
+public import Mathlib.Data.Fintype.Pi
+
+/-!
 # DASH — the probabilistic benefit of independent starting vectors
 
 arXiv:2602.02016v2, §3.5. This is an explicit finite uniform sampling model:
@@ -7,8 +12,7 @@ Sampling with replacement makes the draws independent. It does not model
 Gaussian starts, finite-precision effects, or a fixed iteration safety bound.
 -/
 
-import Transformer.DASH.Section3_MultiPowerConvergence
-import Mathlib.Data.Fintype.Pi
+@[expose] public section
 
 noncomputable section
 

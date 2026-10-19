@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_PairEnvelope
+
+/-!
 # Sums over a single token
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Steps 2 and 4: the sums over a
@@ -9,7 +13,7 @@ cumulant, `Σ_l Ĝ^l_i Ĝ^l_j Ĝ^l_k ≲ (ij)⁻¹ e^{√(CT log(i/k))}`
 through it (`profileEnv_mul_chainEnv`).
 -/
 
-import Transformer.Kinetic.Section3_PairEnvelope
+@[expose] public section
 
 namespace Transformer
 namespace Kinetic

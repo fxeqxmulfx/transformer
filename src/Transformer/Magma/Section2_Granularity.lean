@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Magma.Section2_Expectations
+public import Transformer.Magma.Section2_Moments
+public import Transformer.Magma.Section5_SmoothnessRefutation
+
+/-!
 # Mask granularity need not be equivalent under diagonal preconditioning
 
 Audit of the conjecture in arXiv:2602.15322v1, Section 2, Impacts of
@@ -8,9 +14,7 @@ The theorem below refutes a universal equality interpretation even with
 identity preconditioning and the objective's actual gradient direction.
 -/
 
-import Transformer.Magma.Section2_Expectations
-import Transformer.Magma.Section2_Moments
-import Transformer.Magma.Section5_SmoothnessRefutation
+@[expose] public section
 
 noncomputable section
 

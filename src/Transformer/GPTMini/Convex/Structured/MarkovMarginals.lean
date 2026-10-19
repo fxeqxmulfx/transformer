@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.MarkovTraining
+module
+
+public import Transformer.GPTMini.Convex.Structured.MarkovTraining
 
 /-!
 # Exact compact state-path marginalization
@@ -17,6 +19,8 @@ path enumeration nor the backward recurrence is required by the forward
 implementation. Conditional learned value emission, raw Basis capability
 and the residual/tied integer interface remain separate obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

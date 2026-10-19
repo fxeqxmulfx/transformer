@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.LearnedParityParameters
+module
+
+public import Transformer.GPTMini.Convex.Structured.LearnedParityParameters
 
 /-!
 # Kernel-checked finite rational learned-row certificates
@@ -19,6 +21,8 @@ coordinate layout is independently checked below, before any inference
 correctness transfer. The rational coordinate data came from completed
 ordinary-AdamW runs, not finite sharp-row construction weights.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

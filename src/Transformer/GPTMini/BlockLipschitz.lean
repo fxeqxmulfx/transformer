@@ -1,9 +1,13 @@
-/-
+module
+
+public import Transformer.GPTMini.Block
+
+/-!
 # How far apart one sub-layer sends two residual streams
 
 `Block.attnSubLayer_bounded` and `Block.ffnSubLayer_bounded` say how *large* a
 sub-layer output is; the Lipschitz estimates say how much it *moves* when the
-stream moves.  The two are independent: a bounded map need not be Lipschitz,
+stream moves. The two are independent: a bounded map need not be Lipschitz,
 and the constants here are not the constants there.
 
 The FFN sub-layer is the easy half, because it acts position by position:
@@ -19,7 +23,7 @@ so its constant is the product of
 The attention sub-layer mixes positions and is treated separately.
 -/
 
-import Transformer.GPTMini.Block
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -33,7 +37,7 @@ namespace GPTMini
 
 Both factors are sharp in their own right: the `√d_model` is the radius of the
 ball `rmsNormEps` maps into, where the quadratic `relu2` has slope `2√d_model`,
-and the `1/√eps` is the steepness of the normalization itself.  Source:
+and the `1/√eps` is the steepness of the normalization itself. Source:
 `reference/model.py` (`Block.forward`, second sub-layer), through
 `GPTMini.rmsNormEps_lipschitz` and `GPTMini.relu2FFN_lipschitz_on_ball`. -/
 theorem ffnSubLayer_lipschitz

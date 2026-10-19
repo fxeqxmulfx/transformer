@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.DASH.Section4_BatchedCounts
+public import Transformer.DASH.Section4_BatchedHistory
+public import Transformer.DASH.Section2_GraftingDomain
+
+/-!
 # DASH — batched preconditioning, grafting and parameter updates
 
 arXiv:2602.02016v2, §2 and §4. The two preconditioning products
@@ -6,9 +12,7 @@ are batched; grafting uses each block's own Frobenius norm.
 The exact regularized direction uses the updated EMA history.
 -/
 
-import Transformer.DASH.Section4_BatchedCounts
-import Transformer.DASH.Section4_BatchedHistory
-import Transformer.DASH.Section2_GraftingDomain
+@[expose] public section
 
 open scoped Matrix
 

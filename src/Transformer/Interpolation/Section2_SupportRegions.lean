@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_HullLevels
+public import Mathlib.Analysis.Convex.Join
+public import Mathlib.Analysis.LocallyConvex.Separation
+
+/-!
 # Convex neighbourhoods of supports with separated hulls
 
 ArXiv:2411.04551v3, §2.2, proof of `prop: compression`: "when we act on
@@ -12,9 +18,7 @@ hull, inside an open half-space unless they are the whole sphere, and
 with pairwise disjoint hulls of their closures.
 -/
 
-import Transformer.Interpolation.Section2_HullLevels
-import Mathlib.Analysis.Convex.Join
-import Mathlib.Analysis.LocallyConvex.Separation
+@[expose] public section
 
 open Real Set
 

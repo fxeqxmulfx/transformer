@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Kinetic.Section6_HardyVariable
+public import Mathlib.Analysis.Normed.Group.Bounded
+
+/-!
 # Kinetic theory for Transformers — the original Volterra kernel
 
 In arXiv:2605.09213v1, §6, proof of `prop:Bessel`, the directed kernel
@@ -9,8 +14,7 @@ Here are that factorization, continuity of the smooth expression and
 a uniform bound on the original positive-position rectangle.
 -/
 
-import Transformer.Kinetic.Section6_HardyVariable
-import Mathlib.Analysis.Normed.Group.Bounded
+@[expose] public section
 
 open Real Set MeasureTheory
 

@@ -1,5 +1,7 @@
-import Transformer.Causal.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+module
+
+public import Transformer.Causal.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
 
 /-!
 # A continuous periodic cusp force for the sequential-flow regularity audit
@@ -25,6 +27,8 @@ critical-point hypothesis for the actual periodic energies.
 These algebraic and regularity identities are established before
 any conclusion about trajectories or the printed lemma is used.
 -/
+
+@[expose] public section
 
 open Real
 namespace Transformer.Causal

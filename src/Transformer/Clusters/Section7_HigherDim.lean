@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section1_Dynamics
+public import Mathlib.Analysis.InnerProductSpace.Continuous
+
+/-!
 # The emergence of clusters in self-attention dynamics — the higher-dimensional
   remark
 
@@ -8,38 +13,37 @@ situations", supported by one example.
 
 **What the source says.**  For `d = 2`, `n = 2` and the initial configuration
 `x_1(0) = (1,ε)`, `x_2(0) = (1,-ε)`: "one can check that `x_i(t) → (1,0)` as
-`t → +∞`, for `i = 1,2`, which means that a single cluster appears.  However,
+`t → +∞`, for `i = 1,2`, which means that a single cluster appears. However,
 the self-attention matrix converges toward the identity (which has rank 2)."
 
 **The example is inconsistent, and the inconsistency is elementary.**  The
 self-attention matrix `eq:P` is a continuous function of the configuration
-alone.  If every token converges to one and the same point `p`, then every
+alone. If every token converges to one and the same point `p`, then every
 score `⟨Qx_i, Kx_l⟩` converges to the same number `⟨Qp, Kp⟩`, so every entry
 of `P(t)` converges to `1/n` — the rank-one matrix of uniform attention, not
-the identity.  That is `tendsto_attentionMatrix_of_tendsto_common` below, and
+the identity. That is `tendsto_attentionMatrix_of_tendsto_common` below, and
 `not_tendsto_id_of_tendsto_common` is the refutation it yields: no
 configuration at all, whether or not it solves `eq:trans_dyn`, can have its
 tokens converge to a common limit while its attention matrix converges to the
-identity.  So the two assertions the source makes about its example cannot
+identity. So the two assertions the source makes about its example cannot
 both hold.
 
 What this does *not* refute is the remark's conclusion — that the rank of the
-limiting self-attention matrix need not equal the number of clusters.  It
+limiting self-attention matrix need not equal the number of clusters. It
 refutes the example offered for it: whatever the solution from
 `x_1(0) = (1,ε)`, `x_2(0) = (1,-ε)` does, it does not both cluster to a single
 point and have attention converging to `I_2`.
 
-The refutation is of the text as printed, `x_i(t) → (1,0)`.  The remark names
+The refutation is of the text as printed, `x_i(t) → (1,0)`. The remark names
 no `(Q,K,V)`; in the setting of `t:boolean`, `V > 0`, the tokens themselves
 diverge and what clusters is a rescaling of them, while `P(t)` is computed
-from the unrescaled tokens.  If "`x_i(t)`" is read as `x_i(t)/‖x_i(t)‖` or as
+from the unrescaled tokens. If "`x_i(t)`" is read as `x_i(t)/‖x_i(t)‖` or as
 `e^{-tV}x_i(t)`, the example is not touched by anything here.
 
 Source: arXiv:2305.05465v6, `r:higherdimclus`.
 -/
 
-import Transformer.Clusters.Section1_Dynamics
-import Mathlib.Analysis.InnerProductSpace.Continuous
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

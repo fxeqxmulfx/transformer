@@ -1,6 +1,8 @@
-import Transformer.AMSGrad.Section3_Step
+module
 
-/-
+public import Transformer.AMSGrad.Section3_Step
+
+/-!
 # AMSGrad — the issue in the convergence proof
 
 §3 of arXiv:1904.03590v4: the regret bound every later theorem starts from
@@ -22,6 +24,8 @@ step of Reddi et al. the paper shows to be unjustified.
 
 Source: arXiv:1904.03590v4, §3, Lemma 3.1 and (3.4).
 -/
+
+@[expose] public section
 
 open Finset
 
@@ -174,7 +178,7 @@ theorem abel_eq (c D : ℕ → ℝ) {T : ℕ} (hT : 1 ≤ T) :
 
 /-- **Equation (3.4)**, one coordinate at a time: for `c_T ≥ 0` and
 `D_{T+1} ≥ 0`, `Σ_{t=1}^T c_t/2 (D_t - D_{t+1})
-≤ c_1/2 D_1 + 1/2 Σ_{t=2}^T D_t(c_t - c_{t-1})`.  With
+≤ c_1/2 D_1 + 1/2 Σ_{t=2}^T D_t(c_t - c_{t-1})`. With
 `c_t = √v̂_{t,i}/(α_t(1 - β_{1,t}))` and `D_t = (x_{t,i} - x*ᵢ)²` this is
 (3.4).
 

@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.QuadraticEnergy
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.Analytic.ChangeOrigin
+public import Mathlib.Analysis.Calculus.FDeriv.Analytic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+/-!
 # The gradient inequality at a nondegenerate critical point
 
 Appendix D.1, `lem: loj`, of arXiv:2510.22026v2: an invertible
@@ -6,12 +15,7 @@ Hessian gives the local analytic gradient inequality with exponent
 `1/2` in every finite dimension.
 -/
 
-import Transformer.Landscape.Lojasiewicz.QuadraticEnergy
-import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.Analytic.ChangeOrigin
-import Mathlib.Analysis.Calculus.FDeriv.Analytic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+@[expose] public section
 
 open Filter Set
 

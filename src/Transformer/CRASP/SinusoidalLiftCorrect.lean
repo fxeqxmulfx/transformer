@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.SinusoidalLiftStep
+
+/-!
 # Recognition survives a zero-angle sinusoidal encoding
 
 arXiv:2506.16055v3, Appendix F, the positive sinusoidal hierarchy.
@@ -6,7 +10,7 @@ An induction reads every layer from the reserved even coordinates, then
 the unchanged output projection establishes BOS recognition.
 -/
 
-import Transformer.CRASP.SinusoidalLiftStep
+@[expose] public section
 
 namespace Transformer.CRASP.SinusoidalLift
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Muon.Section2_Models
+
+/-!
 # Muon — centering the expert-routing bias
 
 arXiv:2502.16982, Appendix C, “Auxfree Bias Update”. Subtracting the mean
@@ -6,7 +10,7 @@ sign shifts all expert scores by the same constant, preserving every
 ordering and top-k selection. It also preserves the sum of the biases.
 -/
 
-import Transformer.Muon.Section2_Models
+@[expose] public section
 
 open scoped BigOperators
 

@@ -1,7 +1,13 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_Boolean
+public import Transformer.Clusters.Section7_BooleanScaling
+public import Mathlib.Data.Fin.Tuple.Sort
+
+/-!
 # The emergence of clusters in self-attention dynamics — `t:boolean`
 
-§2 of arXiv:2305.05465v6 states `t:boolean`; §7 proves it.  The set `𝒫` and
+§2 of arXiv:2305.05465v6 states `t:boolean`; §7 proves it. The set `𝒫` and
 the deviations from the source's statement are in
 `Transformer.Clusters.Section2_LowRank`; the reduction to the ordered case of
 `e:Idnonresca` is in `Section7_BooleanScaling`, and the ordered case in
@@ -10,9 +16,7 @@ the deviations from the source's statement are in
 Source: arXiv:2305.05465v6, `t:boolean`; the proof in §7.
 -/
 
-import Transformer.Clusters.Section7_Boolean
-import Transformer.Clusters.Section7_BooleanScaling
-import Mathlib.Data.Fin.Tuple.Sort
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -22,12 +26,12 @@ namespace Clusters
 
 variable {n : ℕ}
 
-/-- **Theorem (t:boolean).**  Let `d = 1`, `V > 0` and `QK > 0`.  For any
+/-- **Theorem (t:boolean).**  Let `d = 1`, `V > 0` and `QK > 0`. For any
 initial sequence of pairwise distinct tokens, the self-attention matrix `P(t)`
 converges as `t → +∞` to a matrix of `𝒫`.
 
 The source leaves `n ≥ 1` implicit; at `n = 0` there is no index, so no
-matrix is in `𝒫` and the statement is false as written.  `0 < n` is added.
+matrix is in `𝒫` and the statement is false as written. `0 < n` is added.
 
 The proof is the source's: time is reparametrized so that `V = 1`, the tokens
 are relabelled so that they are increasing, and the factor `QK` is absorbed

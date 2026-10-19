@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.TensorLikelihood
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorLikelihood
 
 /-!
 # Actual tensor complete training with correct raw Basis data
@@ -18,6 +20,8 @@ Widths 64/128 fit. Full-stack field preservation and zero deferred FFN
 integration remain before candidate acceptance; AdamW success and
 equal-FLOP comparisons are not claimed. Charge data-label generation.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

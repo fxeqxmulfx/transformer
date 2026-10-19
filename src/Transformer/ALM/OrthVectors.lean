@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ALM.Basic
+
+/-!
 # Orthogonal Vectors reduce to one lookup
 
 Exact nearest-neighbour search in high dimension answers a question about
@@ -8,7 +12,7 @@ Exact nearest-neighbour search in high dimension answers a question about
 This file formalizes that reduction, which needs no model of computation: an
 explicit embedding of a `0/1` instance into the paraboloid scores of
 `Transformer.ALM.Defs`, under which the **single** key returned by an exact
-lookup already decides the whole instance.  `Transformer.ALM.LookupIndex`
+lookup already decides the whole instance. `Transformer.ALM.LookupIndex`
 runs it through an index.
 
 The embedding is the standard one: a key `b` is sent to `(1 - b, b)`, whose
@@ -16,7 +20,7 @@ complement block equalizes all key norms and reverses the direction of
 optimization, and a query `a` to `(a, 0)`.
 -/
 
-import Transformer.ALM.Basic
+@[expose] public section
 
 open scoped BigOperators
 
@@ -77,7 +81,7 @@ lemma orth_iff (a b : BVec d) : Orth a b ↔ ∀ i, (a i && b i) = false := by
 def qvec (a : BVec d) : EucSpace (d + d) :=
   WithLp.toLp 2 (Fin.append (fun i => bit (a i)) (fun _ => 0))
 
-/-- The key embedding `b ↦ (1 - b, b)`.  The complement block gives every key
+/-- The key embedding `b ↦ (1 - b, b)`. The complement block gives every key
 the same norm, so the score depends on `b` only through `⟪a, 1 - b⟫`, and
 maximizing that is minimizing `⟪a, b⟫`. -/
 def kvec (b : BVec d) : EucSpace (d + d) :=
@@ -144,7 +148,7 @@ theorem argmax_decides_ov {n : ℕ} (a : BVec d) (B : Fin n → BVec d) (i₀ : 
 
 /-! ### Both outcomes are reachable -/
 
-/-- A positive instance: a single key, orthogonal to the query.  With one key
+/-- A positive instance: a single key, orthogonal to the query. With one key
 the maximality hypothesis of `argmax_decides_ov` is vacuous, so this witnesses
 that its hypotheses are satisfiable together with `Orth`. -/
 example : ∃ (a : BVec 1) (B : Fin 1 → BVec 1) (i₀ : Fin 1),

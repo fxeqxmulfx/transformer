@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section4_ParticleWeights
+public import Transformer.Perspective.Section2_ExtendedField
+
+/-!
 # A smooth ambient extension of the original causal attention field
 
 ArXiv:2411.04990v2, §2, `eqn:csa`, and §4, proof of `thm1`.
@@ -15,8 +20,7 @@ sphere. Sphere invariance is a separate consequence of its ODE.
 No invariant-set or flow existence conclusion is assumed below.
 -/
 
-import Transformer.Causal.Section4_ParticleWeights
-import Transformer.Perspective.Section2_ExtendedField
+@[expose] public section
 
 open scoped BigOperators
 open Real

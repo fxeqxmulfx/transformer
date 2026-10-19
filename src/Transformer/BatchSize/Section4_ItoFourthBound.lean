@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_ItoMomentBounds
+
+/-!
 # Fourth moment of finite adapted Brownian sums
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The sharp scalar bound is three times the fourth power of the amplitude
 bound times elapsed time squared, uniformly over all grid refinements.
 -/
 
-import Transformer.BatchSize.Section4_ItoMomentBounds
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal

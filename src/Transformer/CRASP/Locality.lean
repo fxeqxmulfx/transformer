@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.CRASP.Basic
+
+/-!
 # A past-only formula reads a prefix, and the formulas under its counts
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 (COLM 2025), §2.2 and §4.4.
 
-Two facts that every level of the depth-hierarchy argument uses.  A past-only
+Two facts that every level of the depth-hierarchy argument uses. A past-only
 formula without PNPs does not look ahead: at a position `1 ≤ i ≤ |u|` of
 `u ++ v` it has its value on `u` (`Form.sat_append`), since `◁#` counts the
-positions up to the current one and `Q_σ` reads the current one.  A PNP does
+positions up to the current one and `Q_σ` reads the current one. A PNP does
 look ahead, as it reads the Parikh vector of the whole string, and so does
 `▷#`.
 
@@ -16,7 +20,7 @@ formula, `Form.countSubs`: those of a formula of `TL[◁#]_{d+1}` lie in
 `TL[◁#]_d` (`Form.mem_TLCl_of_mem_countSubs`).
 -/
 
-import Transformer.CRASP.Basic
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

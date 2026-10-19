@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainNoncollapse
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainNoncollapse
 
 /-!
 # Nonnegative native reference pairs and efficient feedback threshold
@@ -23,6 +25,8 @@ leaf alone supplies no attraction, convergence or delayed crossing.
 Uniform decoupled native decay/plain CE remain distinct from the
 source's GD/coupled cost and from learned stochastic GPTMini.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

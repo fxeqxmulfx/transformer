@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_DensityInversion
-import Mathlib.MeasureTheory.Function.AEEqOfLIntegral
+module
+
+public import Transformer.Modes.Section3_DensityInversion
+public import Mathlib.MeasureTheory.Function.AEEqOfLIntegral
 
 /-!
 # Density comparison from the actual characteristic functions
@@ -16,6 +18,8 @@ preserves volume, so it contributes no further Jacobian. Integrability
 of both actual characteristic functions justifies subtracting their
 inverse integrals.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology FourierTransform

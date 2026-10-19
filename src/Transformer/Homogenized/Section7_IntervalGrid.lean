@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Algebra.Order.Floor.Semiring
+
+/-!
 # Finite grids approximate the original continuous time interval
 
 ArXiv:2604.01978v1, §7, the continuous martingale maximal
@@ -14,8 +19,7 @@ sufficiently fine grids, including crossings at the endpoints.
 No path regularity or probability estimate is put into a definition.
 -/
 
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Algebra.Order.Floor.Semiring
+@[expose] public section
 
 open Set Filter Topology
 

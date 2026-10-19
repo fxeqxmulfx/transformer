@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_GaussianDirectionalIntegration
+public import Transformer.BatchSize.Section4_Regularity
+
+/-!
 # Gaussian generator contractions for actual bounded C2 tests
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The derivative field is the actual Frechet derivative of the test;
 its derivative is the actual Hessian, with the stated uniform bounds.
 -/
 
-import Transformer.BatchSize.Section4_GaussianDirectionalIntegration
-import Transformer.BatchSize.Section4_Regularity
+@[expose] public section
 
 open MeasureTheory
 

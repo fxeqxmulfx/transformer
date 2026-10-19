@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_ConeGrowth
+
+/-!
 # Appendix A — two trajectories near the saddle start in the stable cone
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -7,13 +11,13 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 Along two solutions of `e:gradfl` the cone form `q` of their difference has
 derivative `B(P(x - y), P(F x - F y))` (`hasDerivAt_coneForm`), at least `2 q`
 while both stay within `r`, `60 n r ≤ 1`, of the saddle `signedTuple e {i₀}`
-(`Perspective.AppendixA_ConeGrowth`).  As `q` is bounded on the sphere, `q ≤ 0`
+(`Perspective.AppendixA_ConeGrowth`). As `q` is bounded on the sphere, `q ≤ 0`
 at time `0` (`coneForm_nonpos_of_stay`): the part of the source's center-stable
 manifold theorem that the slice argument of `Perspective.AppendixA_StayNear`
 needs.
 -/
 
-import Transformer.Perspective.AppendixA_ConeGrowth
+@[expose] public section
 
 open scoped BigOperators Topology
 open Real Set Filter MeasureTheory

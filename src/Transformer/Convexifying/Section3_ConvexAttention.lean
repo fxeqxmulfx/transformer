@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_Models
+
+/-!
 # The simplex relaxation of rowwise softmax
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §3.1,
-`sec:convex_attention`.  This proves the displayed inclusion of softmax
+`sec:convex_attention`. This proves the displayed inclusion of softmax
 attention weights in the simplex set, using the row-stochastic convention
 required by rowwise softmax.
 -/
 
-import Transformer.Convexifying.Section3_Models
+@[expose] public section
 
 open scoped BigOperators
 
@@ -40,7 +44,7 @@ theorem rowSoftmax_stochastic {n : ℕ} (hn : 0 < n) (U : Mat n n) :
 
 /-- The paper's displayed relaxation: for every score matrix and token
 matrix, a row-stochastic attention matrix gives exactly the same output as
-rowwise softmax.  The witness is the softmax matrix itself.
+rowwise softmax. The witness is the softmax matrix itself.
 Source: arXiv:2211.11052v1, §3.1, display before `eq:simplex_regression`. -/
 theorem softmax_has_simplex_representative {n d : ℕ} (hn : 0 < n)
     (U : Mat n n) (X : Fin n → Vec d) :

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_TwoRidgeLaw
+public import Transformer.Interpolation.SeparationField
+
+/-!
 # Inward drift and invariant cap strips for the actual two-neuron flow
 
 Auxiliaries for arXiv:2411.04551v3, Appendix, `lem: two.balls`,
@@ -14,8 +19,7 @@ any positive level in this strip in the outward direction. The proof uses
 the true ReLU field and does not require differentiating the activation.
 -/
 
-import Transformer.Interpolation.Section3_TwoRidgeLaw
-import Transformer.Interpolation.SeparationField
+@[expose] public section
 
 open Real Set Filter
 open scoped Topology NNReal

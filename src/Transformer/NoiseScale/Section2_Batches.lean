@@ -1,11 +1,15 @@
-/-
+module
+
+public import Mathlib.Probability.Moments.Covariance
+
+/-!
 # The batch gradient
 
-arXiv:1812.06162, §2.2.  The batch gradient `G_est = (1/B) Σ_{i=1}^B ∇_θ L_{x_i}(θ)`
+arXiv:1812.06162, §2.2. The batch gradient `G_est = (1/B) Σ_{i=1}^B ∇_θ L_{x_i}(θ)`
 of eq. (2.1) (`batchGrad`) has the mean `G` and the covariance `Σ/B` of eq. (2.2)
 (`integral_batchGrad`, `covMatrix_batchGrad`), `Σ` the per-example covariance
 `cov_{x∼ρ}(∇_θ L_x(θ)) = E[∇_θ L_x ∇_θ L_xᵀ] - G Gᵀ` of eq. (2.3) (`covMatrix`,
-`covMatrix_apply_eq_sub`).  The per-example gradients are random vectors `X i`,
+`covMatrix_apply_eq_sub`). The per-example gradients are random vectors `X i`,
 pairwise independent, of a common covariance `Σ` and a common mean `G`, the true
 gradient `∇L = E_ρ[∇_θ L_x]` once `∇` and `E` are exchanged, as the paper does:
 weaker hypotheses than its independent `x_i ∼ ρ`.
@@ -15,7 +19,7 @@ covariance `C`: `E[WᵀY] = Wᵀm` (`integral_dotProduct`), `E[YᵀHY] = mᵀHm 
 (`integral_quadForm`) and `E[|Y - m|²] = tr C` (`integral_dotProduct_sub`).
 -/
 
-import Mathlib.Probability.Moments.Covariance
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped Matrix

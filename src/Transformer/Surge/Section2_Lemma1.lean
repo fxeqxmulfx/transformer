@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.NoiseScale.Section2_NoiseScale
+
+/-!
 # The optimal learning rate of an update
 
-arXiv:2405.14578, §2.1, Lemma 1, proved in Appendix B.  Along an update `V`, the loss is the
+arXiv:2405.14578, §2.1, Lemma 1, proved in Appendix B. Along an update `V`, the loss is the
 quadratic model (30) of the true gradient `G` and Hessian `H`, as in arXiv:1812.06162
-(`quadModel`): the paper "adopt[s] the equal sign here".  The expected improvement over a
+(`quadModel`): the paper "adopt[s] the equal sign here". The expected improvement over a
 step `εV` is `E[ΔL] = εGᵀE[V] - ½ε²E[VᵀHV]`, eq. (31), with
-`E[VᵀHV] = tr(H cov(V)) + E[V]ᵀHE[V]` (`integral_lossDrop`).  The learning rate
+`E[VᵀHV] = tr(H cov(V)) + E[V]ᵀHE[V]` (`integral_lossDrop`). The learning rate
 `ε_opt = GᵀE[V]/(tr(H cov(V)) + E[V]ᵀHE[V])` of eq. (6) (`lrOpt`) is its only maximizer
 (`integral_lossDrop_lt`, `integral_lossDrop_le`), where the improvement is
 `ΔL_opt = GᵀE[V] ε_opt/2`, eq. (7) (`integral_lossDrop_lrOpt`), never negative
-(`lossDropOpt_nonneg`).  Lemma 1 leaves implicit that `tr(H cov(V)) + E[V]ᵀHE[V] > 0`: without
+(`lossDropOpt_nonneg`). Lemma 1 leaves implicit that `tr(H cov(V)) + E[V]ᵀHE[V] > 0`: without
 it `E[ΔL]` has no largest value, or is constant.
 
 For the gradient `G_est` of a batch of `B` independent examples, of mean `G` and covariance
@@ -17,7 +21,7 @@ For the gradient `G_est` of a batch of `B` independent examples, of mean `G` and
 (`lrOpt_batchGrad`).
 -/
 
-import Transformer.NoiseScale.Section2_NoiseScale
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped Matrix
@@ -62,7 +66,7 @@ theorem lossDrop_eq_sq {a : ℝ} (ha : a ≠ 0) (g ε : ℝ) :
 example (g ε : ℝ) := lossDrop_eq_sq one_ne_zero g ε
 
 /-- **Lemma 1**, eq. (6): `ε_opt = GᵀE[V]/(tr(H cov(V)) + E[V]ᵀHE[V])` is the only maximizer
-of `E[ΔL]` over the learning rate, in the model (30).  Lemma 1 leaves implicit the hypothesis
+of `E[ΔL]` over the learning rate, in the model (30). Lemma 1 leaves implicit the hypothesis
 `tr(H cov(V)) + E[V]ᵀHE[V] > 0`. -/
 theorem integral_lossDrop_lt {V : Ω → ι → ℝ} (hV : ∀ a, MemLp (fun ω => V ω a) 2 P) (L : ℝ)
     {G : ι → ℝ} {H : Matrix ι ι ℝ}

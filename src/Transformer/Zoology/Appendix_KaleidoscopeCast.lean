@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_KaleidoscopeGrid
+
+/-!
 # Equality transport for recursive hierarchy dimensions
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: kaleidoscope`.
@@ -7,7 +11,7 @@ associates them as k+(p+e). Equality transport changes neither coefficients,
 hierarchy width, nor scalar matrix action.
 -/
 
-import Transformer.Zoology.Appendix_KaleidoscopeGrid
+@[expose] public section
 
 namespace Transformer.Zoology
 

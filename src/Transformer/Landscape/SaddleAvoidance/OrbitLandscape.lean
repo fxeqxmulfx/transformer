@@ -1,32 +1,36 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Orbit
+public import Transformer.Landscape.SaddleAvoidance.Convergence
+
+/-!
 # Saddle avoidance — the scheme along the orbit
 
 A run of gradient descent can check a bound `‖∇²f‖ ≤ L` with `η L < 1` only along
-its own orbit: on the segment `[x_k, x_{k+1}]` of every step (S).  That is enough for
-the scheme.  Under (S) every step lowers `f` by at least `η (1 - η L) ‖∇f(x_k)‖²`
-(`iterate_succ_le_sub_of_segment`).  An orbit that does not run off to infinity
+its own orbit: on the segment `[x_k, x_{k+1}]` of every step (S). That is enough for
+the scheme. Under (S) every step lowers `f` by at least `η (1 - η L) ‖∇f(x_k)‖²`
+(`iterate_succ_le_sub_of_segment`). An orbit that does not run off to infinity
 comes back to some closed ball infinitely often, so it has a limit point `z` there
-(`IsCompact.exists_mapClusterPt_of_frequently`), with `f z ≤ f x`.  The Łojasiewicz
+(`IsCompact.exists_mapClusterPt_of_frequently`), with `f z ≤ f x`. The Łojasiewicz
 inequality holds at `z`: by hypothesis if `z` is critical, with exponent `0`
-otherwise (`isLojasiewiczAt_of_gradient_ne_zero`).  So the orbit converges to `z`
+otherwise (`isLojasiewiczAt_of_gradient_ne_zero`). So the orbit converges to `z`
 (`tendsto_of_isLojasiewiczAt_of_le_sub`), a critical point: an orbit satisfying (S)
 converges to a critical point no higher than its start, or `‖x_k‖ → ∞`
-(`exists_tendsto_or_tendsto_norm_of_segment`).  Almost no start whose orbit
+(`exists_tendsto_or_tendsto_norm_of_segment`). Almost no start whose orbit
 satisfies (S) converges to a strict saddle (`ae_not_tendsto_strictSaddle_of_segment`).
 So almost every start below a level `c` whose orbit satisfies (S) converges to a
 critical point that is not a strict saddle, or runs off to infinity
 (`ae_exists_tendsto_not_isStrictSaddle_or_tendsto_norm_of_lt_of_segment`); to a
 global minimizer if every critical point below `c` is one or a strict saddle
-(`ae_exists_tendsto_isMinOn_or_tendsto_norm_of_lt_of_segment`).  The Łojasiewicz
+(`ae_exists_tendsto_isMinOn_or_tendsto_norm_of_lt_of_segment`). The Łojasiewicz
 inequality is asked only below `c`; there is no global Lipschitz constant of `∇f`,
-no hypothesis of a limit point and no compact sublevel set.  `AnalyticOrbitLandscape`
+no hypothesis of a limit point and no compact sublevel set. `AnalyticOrbitLandscape`
 has the forms for analytic `f`, with neither the Łojasiewicz hypothesis nor a level.
 
 Source: item M8.3 of `landscape_plan.md`.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Orbit
-import Transformer.Landscape.SaddleAvoidance.Convergence
+@[expose] public section
 
 open Set Filter MeasureTheory Metric
 open scoped Topology
@@ -40,7 +44,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDim
 infinity.**  Let `f` be `C²`, `0 < η` and `η L < 1`, let the orbit of `x` have
 `‖∇²f‖ ≤ L` on the segment of every step, and let `f` satisfy the Łojasiewicz
 inequality, with an exponent `0 ≤ a < 1`, at every critical point `z` with
-`f z ≤ f x`.  Then the orbit converges to a critical point `w` with `f w ≤ f x`, or
+`f z ≤ f x`. Then the orbit converges to a critical point `w` with `f w ≤ f x`, or
 `‖x_k‖ → ∞`. -/
 theorem exists_tendsto_or_tendsto_norm_of_segment (hf : ContDiff ℝ 2 f) (hη : 0 < η)
     (hηL : η * L < 1) {x : E}
@@ -79,7 +83,7 @@ variable [MeasurableSpace E] [BorelSpace E]
 
 /-- **The scheme along the orbit.**  Let `f` be `C²`, `0 < η` and `η L < 1`, let `μ`
 be a Haar measure and `ν ≪ μ`, and let `f` satisfy the Łojasiewicz inequality, with
-an exponent `0 ≤ a < 1`, at every critical point below `c`.  For `ν`-almost every `x`
+an exponent `0 ≤ a < 1`, at every critical point below `c`. For `ν`-almost every `x`
 with `f x < c` whose orbit has `‖∇²f‖ ≤ L` on the segment of every step, either the
 orbit converges to a critical point `w` with `f w ≤ f x` that is not a strict saddle,
 or `‖x_k‖ → ∞`. -/

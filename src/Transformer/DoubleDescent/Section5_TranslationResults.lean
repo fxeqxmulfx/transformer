@@ -1,4 +1,6 @@
-import Transformer.DoubleDescent.Section5_TranslationLog
+module
+
+public import Transformer.DoubleDescent.Section5_TranslationLog
 
 /-!
 # Verified model-wise translation observations
@@ -7,6 +9,8 @@ arXiv:1912.02292v1, Section 5, Figure 8. These theorems certify exact
 inequalities between the authors' exported numbers, not a statement about
 the population risks of all Transformers or retraining with fresh seeds.
 -/
+
+@[expose] public section
 
 namespace Transformer.DoubleDescent
 

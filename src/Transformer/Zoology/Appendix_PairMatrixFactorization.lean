@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_InPlaceLinear
+
+/-!
 # Universal two-coordinate factorization, including singular blocks
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: butterfly` and
@@ -7,7 +11,7 @@ Arora et al., arXiv:2312.04927v1, Appendix `def: butterfly` and
 handles zero columns and the zero matrix without a nondegeneracy assumption.
 -/
 
-import Transformer.Zoology.Appendix_InPlaceLinear
+@[expose] public section
 
 noncomputable section
 

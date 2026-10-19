@@ -2,6 +2,12 @@ module
 
 public import Mathlib.Data.Set.Basic
 
+/-!
+# Set operations
+
+Set-theoretic imports for the entropy compatibility layer.
+-/
+
 public section
 
 namespace Set

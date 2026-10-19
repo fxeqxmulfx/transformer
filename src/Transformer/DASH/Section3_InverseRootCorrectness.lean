@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.DASH.Section2_History
+
+/-!
 # DASH — algebraic correctness of exact inverse roots
 
 arXiv:2602.02016v2, §2.2 and §3.1–3.3. These identities verify the
 inverse roots used by Shampoo, including the exact EVD implementation.
 -/
 
-import Transformer.DASH.Section2_History
+@[expose] public section
 
 open scoped Matrix
 

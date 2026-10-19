@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Optimization.Descent
+public import Mathlib.Topology.Algebra.InfiniteSum.Real
+public import Mathlib.Topology.Algebra.InfiniteSum.NatInt
+public import Mathlib.Topology.Order.MonotoneConvergence
+public import Mathlib.Analysis.Real.Sqrt
+
+/-!
 # Training convergence for a lower-bounded smooth objective
 
 Additional deterministic convergence theorem for the corrected algorithms
@@ -8,11 +16,7 @@ The full gradient norms vanish, not merely a selected subsequence.
 It does not assert convergence of nonconvex weights to a global minimum.
 -/
 
-import Transformer.Optimization.Descent
-import Mathlib.Topology.Algebra.InfiniteSum.Real
-import Mathlib.Topology.Algebra.InfiniteSum.NatInt
-import Mathlib.Topology.Order.MonotoneConvergence
-import Mathlib.Analysis.Real.Sqrt
+@[expose] public section
 
 open scoped InnerProductSpace BigOperators Topology
 open Filter

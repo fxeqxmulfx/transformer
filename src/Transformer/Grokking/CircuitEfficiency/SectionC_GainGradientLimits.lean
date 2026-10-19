@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainRecurrence
-import Mathlib.Topology.Order.OrderClosed
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainRecurrence
+public import Mathlib.Topology.Order.OrderClosed
 
 /-!
 # Actual gained-forward CE input limits from physical parameter limits
@@ -20,6 +22,8 @@ explicit, not deduced from clipping. Fixed-table deterministic CE is
 not identified with changing learned features, stochastic minibatches
 or floating-point GPTMini kernels.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

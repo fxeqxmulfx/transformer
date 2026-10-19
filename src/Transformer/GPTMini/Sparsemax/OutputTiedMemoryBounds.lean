@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.OutputTiedMemoryExamples
+module
+
+public import Transformer.GPTMini.Sparsemax.OutputTiedMemoryExamples
 
 /-!
 # Ordinary output error controls all tied intrinsic parameters
@@ -15,6 +17,8 @@ are determined by these intrinsic parameters through the proved chart.
 The bound itself is on chart coordinates, rather than a claim of uniformly
 well-conditioned original inverse values or arbitrary embedding gauges.
 -/
+
+@[expose] public section
 
 noncomputable section
 

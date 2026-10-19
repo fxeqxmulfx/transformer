@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.WendelCountBase
+
+/-!
 # Binomial arithmetic for Wendel's recurrence
 
 The strict-sign count satisfies a Pascal recurrence. These identities show
@@ -8,7 +12,7 @@ same full-dimensional base value.
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962).
 -/
 
-import Transformer.Perspective.WendelCountBase
+@[expose] public section
 
 namespace Transformer.Perspective
 

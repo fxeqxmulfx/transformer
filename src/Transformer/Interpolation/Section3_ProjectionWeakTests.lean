@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_SpacetimeTests
+public import Transformer.Interpolation.Section3_ProjectionRegularity
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+
+/-!
 # Conservation of inverse-characteristic tests for actual weak solutions
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §3.1,
@@ -9,9 +15,7 @@ endpoints: the original weak equation gives continuity through switches.
 No characteristic representation is assumed of the measure curve.
 -/
 
-import Transformer.Interpolation.Section1_SpacetimeTests
-import Transformer.Interpolation.Section3_ProjectionRegularity
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
+@[expose] public section
 
 open Real MeasureTheory Filter Topology
 

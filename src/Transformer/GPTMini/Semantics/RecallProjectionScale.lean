@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallEncoderBounds
+module
+
+public import Transformer.GPTMini.Semantics.RecallEncoderBounds
 
 /-!
 # One finite shared second-projection gain reaches actual QKNorm clipping
@@ -17,6 +19,8 @@ their saturation conditions. The complete fused second QKV and
 robust score/readout still require actual operator coupling; no
 input-dependent matrix or prepared common RMS scale is inserted.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

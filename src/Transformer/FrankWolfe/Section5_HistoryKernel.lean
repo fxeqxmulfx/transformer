@@ -1,5 +1,7 @@
-import Transformer.FrankWolfe.Section5_Process
-import Mathlib.Probability.Kernel.IonescuTulcea.Traj
+module
+
+public import Transformer.FrankWolfe.Section5_Process
+public import Mathlib.Probability.Kernel.IonescuTulcea.Traj
 
 /-!
 # An actual infinite history law for softmax attention sampling
@@ -19,6 +21,8 @@ Its finite-prefix marginals and its conditional next-step joint law
 are proved below. The following module maps it to the actual token paths
 and proves the complete original `IsSAProcess` transition identity.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Set
 open scoped BigOperators ENNReal

@@ -1,25 +1,29 @@
-/-
+module
+
+public import Transformer.Perspective.SphereConvergence
+
+/-!
 # Every solution of `USA` and of `SA` converges to a critical point of `𝖤_β`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
 At a tuple of unit vectors the gradient of `g = 𝖤_β ∘ normalize` is the round gradient
-`(Proj_{x_i} Σ_j e^{β⟨x_i, x_j⟩} x_j)_i` (`gradient_tupleEnergy_toLp_apply`).  So
+`(Proj_{x_i} Σ_j e^{β⟨x_i, x_j⟩} x_j)_i` (`gradient_tupleEnergy_toLp_apply`). So
 `USA` is `ẏ = n⁻¹ ∇g(y)` and `SA` is `ẏ_i = Z_i(t)⁻¹ ∇_i g(y)`, with the partition
 function `Z_i = Σ_j e^{β⟨x_i, x_j⟩}` between `n e^{-|β|}` and `n e^{|β|}`
-(`partitionSA_mem_Icc`).  Both are block scalings of `∇g` by numbers in a fixed
+(`partitionSA_mem_Icc`). Both are block scalings of `∇g` by numbers in a fixed
 interval of `(0, ∞)`, and Łojasiewicz convergence on the product of spheres
 (`exists_tendsto_of_hasDerivAt_blockScale`) gives, for `β ≠ 0`, that every solution
 converges to a critical point of `𝖤_β` (`exists_tendsto_isCriticalEBeta_of_USA`,
-`exists_tendsto_isCriticalEBeta_of_SA`).  At `β = 0` the energy `(2β)⁻¹ Σ e^{β⟨·,·⟩}`
+`exists_tendsto_isCriticalEBeta_of_SA`). At `β = 0` the energy `(2β)⁻¹ Σ e^{β⟨·,·⟩}`
 is `0` in Lean and both flows are `e:Snonres0`, treated in `Perspective.AppendixA_Saddle`.
 
 Source: arXiv:2312.10794v5, §5 (the outline after `thm: beta.interval`) and §3.3–§3.4,
 where `USA` and `SA` are gradient flows of `𝖤_β`.
 -/
 
-import Transformer.Perspective.SphereConvergence
+@[expose] public section
 
 open Filter
 open scoped Topology

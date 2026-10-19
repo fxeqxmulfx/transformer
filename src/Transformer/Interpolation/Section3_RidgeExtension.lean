@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_PerceptronVariation
+public import Transformer.Perspective.Section2_SphereFlow
+
+/-!
 # A complete ambient extension of the actual one-neuron field
 
 Auxiliary for arXiv:2411.04551v3, §3.2, `lem: perturbation`, Part 2,
@@ -15,8 +20,7 @@ point stays on the sphere. Thus the extension constructs trajectories
 of the original network field without changing its spherical dynamics.
 -/
 
-import Transformer.Interpolation.Section3_PerceptronVariation
-import Transformer.Perspective.Section2_SphereFlow
+@[expose] public section
 
 open Real MeasureTheory Filter Set
 

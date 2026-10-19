@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianPolynomialInterpolation
+public import Mathlib.Analysis.Normed.Lp.PiLp
+
+/-!
 # Polynomial Gaussian interpolation in the original finite feature coordinates
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and its application
@@ -17,8 +22,7 @@ interface; bounds for particular softmax observables require their
 actual derivative estimates. Empty types and singular laws are allowed.
 -/
 
-import Transformer.Homogenized.Section7_GaussianPolynomialInterpolation
-import Mathlib.Analysis.Normed.Lp.PiLp
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Set
 open scoped BigOperators
 namespace Transformer.Homogenized
@@ -153,4 +157,3 @@ example : ∃ (φ : EucSpace 2 → ℝ) (C : ℝ),
   · simp
 
 end Transformer.Homogenized
-

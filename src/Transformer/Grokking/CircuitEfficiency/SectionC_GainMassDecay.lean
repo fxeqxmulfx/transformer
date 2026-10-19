@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMassRates
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMassRates
 
 /-!
 # Strong native decay bounds every actual pair mass by a contraction
@@ -29,6 +31,8 @@ Fixed gained tables, zero betas and uniform native decoupled decay
 differ from appendix C's assigned coupled norm/GD and the preserved
 learned nonzero-beta GPTMini. No floating-point transfer is claimed.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

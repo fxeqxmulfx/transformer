@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CircuitMemory
+
+/-!
 # Coyote layers for an arbitrary arithmetic gate with persistent memory
 
 Arora et al., arXiv:2312.04927v1, Appendix Theorem `thm: gen-ac`,
@@ -8,7 +12,7 @@ linear layer first copies the right operand into that slot, and a second
 gated layer multiplies it by the left operand. Every other slot is retained.
 -/
 
-import Transformer.Zoology.Appendix_CircuitMemory
+@[expose] public section
 
 open scoped BigOperators
 

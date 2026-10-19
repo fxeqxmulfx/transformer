@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_Barycenter
+
+/-!
 # Appendix A — a Łojasiewicz inequality for `𝖤_0`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -6,8 +10,8 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 The proof of `p:beta0` invokes Łojasiewicz's theorem: a trajectory of the
 gradient flow of a real-analytic function on a compact manifold converges to a
-single critical point.  For `𝖤_0 = ‖s‖² / n`, `s = Σ_j x_j`, the inequality
-behind that theorem is explicit.  With `a_i = ⟨x_i, s⟩`, `σ_i = ±1` its sign
+single critical point. For `𝖤_0 = ‖s‖² / n`, `s = Σ_j x_j`, the inequality
+behind that theorem is explicit. With `a_i = ⟨x_i, s⟩`, `σ_i = ±1` its sign
 and `m = Σ_i σ_i`, the bounds `‖s‖ |a_i - σ_i ‖s‖| ≤ ‖s‖² - a_i² =
 ‖Proj_{x_i} s‖²` and `Σ_i a_i = ‖s‖²` give
 
@@ -15,12 +19,12 @@ and `m = Σ_i σ_i`, the bounds `‖s‖ |a_i - σ_i ‖s‖| ≤ ‖s‖² - a_
 
 away from `s = 0` the squared gradient bounds the distance from `‖s‖²` to the
 finitely many squares `m²`, `|m| ≤ n`, which keep a positive distance from any
-real number other than themselves (`exists_pos_le_abs_sq_sub`).  Along
+real number other than themselves (`exists_pos_le_abs_sq_sub`). Along
 `e:gradfl`, `d/dt ‖s‖² = (4/n) Σ_i ‖Proj_{x_i} s‖²` (`hasDerivAt_norm_sum_sq`)
 while `‖s‖² ≤ n²` (`bddAbove_norm_sum_sq`).
 -/
 
-import Transformer.Perspective.AppendixA_Barycenter
+@[expose] public section
 
 open Filter Set
 open scoped Topology

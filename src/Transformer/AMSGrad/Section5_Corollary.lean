@@ -1,8 +1,10 @@
-import Transformer.AMSGrad.Section5_Theorem
-import Transformer.AMSGrad.Section5_Sums
-import Transformer.AMSGrad.Section4_Rate
+module
 
-/-
+public import Transformer.AMSGrad.Section5_Theorem
+public import Transformer.AMSGrad.Section5_Sums
+public import Transformer.AMSGrad.Section4_Rate
+
+/-!
 # AdamX — the convergence of the average regret
 
 §5 of arXiv:1904.03590v4: Corollary 5.5 (`ge_cor`) and Corollary 5.6
@@ -11,17 +13,19 @@ import Transformer.AMSGrad.Section4_Rate
 **What the source says and what is carried here.**
 
 * Corollaries 5.5 and 5.6 assert `lim R(T)/T = 0`; as for Corollary 4.5 only
-  the upper half follows from an upper bound and is stated.  The lower half is
+  the upper half follows from an upper bound and is stated. The lower half is
   false: with `β_{1,t} = 0` AdamX is AMSGrad (`adamX_eq_amsgrad`), and
   `not_cor_lower` is a run with `β_{1,t} = 0` and `R(T) ≤ -T/2` infinitely often.
 
 * Corollary 5.6's second setting is `β_{1,t} = 1/t`, which gives
   `β_{1,1} = 1`, against the standing `β₁ = β_{1,1} < 1`, and makes AdamX
-  divide by `1 - β_{1,1} = 0`.  It is corrected to `β_{1,t} = β₁/t`, the
+  divide by `1 - β_{1,1} = 0`. It is corrected to `β_{1,t} = β₁/t`, the
   setting of Theorem 4.1; its proof (last2) is unchanged.
 
 Source: arXiv:1904.03590v4, §5, Corollaries 5.5, 5.6.
 -/
+
+@[expose] public section
 
 open Finset Filter Topology
 

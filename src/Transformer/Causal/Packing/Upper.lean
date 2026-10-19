@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Causal.Packing.Basic
+
+/-!
 # Sphere packing — the upper ledger
 
 A `δ`-separated set `S` of unit vectors carries disjoint balls `B(x, δ/2)`,
 `x ∈ S`, and none of them meets `B(0, 1 - δ/2)`, while all of them sit inside
-`B(0, 1 + δ/2)`.  Comparing volumes bounds `card S`.
+`B(0, 1 + δ/2)`. Comparing volumes bounds `card S`.
 
 The naive reading of that bound — `card ≲ δ^{-d}` — has one factor of `δ^{-1}`
-too many: the centers lie on a sphere, not in a ball.  Keeping the inner ball
+too many: the centers lie on a sphere, not in a ball. Keeping the inner ball
 `B(0, 1 - δ/2)` in the ledger is what repairs it, since it turns the right-hand
 side into the volume of a *shell*, `(1 + r)^d - (1 - r)^d ≍ 2 d r`; the sharp
 form is read off in `Packing.Count`.
@@ -15,7 +19,7 @@ The crude corollary `card_le_of_separated` is enough to make a *maximal*
 separated set exist, which is what the lower bound needs.
 -/
 
-import Transformer.Causal.Packing.Basic
+@[expose] public section
 
 open MeasureTheory Metric
 open scoped ENNReal
@@ -100,7 +104,7 @@ example : SeparatedOnSphere 1 (∅ : Finset (EucSpace 1)) 1 :=
   ⟨fun _ hx => absurd hx (Finset.notMem_empty _), fun _ hx => absurd hx (Finset.notMem_empty _)⟩
 
 /-- A crude cardinality bound in closed form: a `δ`-separated set of unit
-vectors has at most `(4/δ)^d` elements.  Only the boundedness matters here —
+vectors has at most `(4/δ)^d` elements. Only the boundedness matters here —
 it is what makes a *maximal* separated set exist; the sharp exponent
 `(1/δ)^{d-1}` is `Packing.card_le_of_separatedOnSphere`.
 

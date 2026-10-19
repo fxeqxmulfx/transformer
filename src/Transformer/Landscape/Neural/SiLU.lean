@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Neural.Residual
+public import Transformer.Landscape.SaddleAvoidance.LocalInequality
+
+/-!
 # The tied Rotate90 classifier with SiLU
 
 Source: `grokking_abmod/web/own-channel/README.md`, Architecture and
@@ -12,8 +17,7 @@ The labels and split are arbitrary fixed data, so the result applies to
 the browser's division table without dropping its zero residue.
 -/
 
-import Transformer.Landscape.Neural.Residual
-import Transformer.Landscape.SaddleAvoidance.LocalInequality
+@[expose] public section
 
 namespace Transformer.Landscape.Neural
 

@@ -1,30 +1,34 @@
-/-
+module
+
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Data.Fin.Tuple.Basic
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.LinearCombination
+
+/-!
 # Sums over `B` independent uniform seeds
 
 Support for arXiv:2601.22813v2, Appendix A: the plot there averages `B`
 independent quantized gradients, so every expectation it takes is a sum over
 `Fin B → Fin N`, the tuples of `B` seeds drawn out of `N`.
 
-Two sums carry the whole argument.  Writing `c` for a centred quantity —
+Two sums carry the whole argument. Writing `c` for a centred quantity —
 `∑ i, c i = 0`, which is what unbiasedness says — the sum of `∑ b, c (ω b)`
 over all tuples vanishes (`sum_pi_sum_eq_zero`), and the sum of its square is
 `B · N^B · ∑ i, c i ^ 2` (`sum_pi_sum_sq`): the cross terms of the square
 cancel because the seeds are independent, and only the `B` diagonal terms
-survive.  That is the `1/B` of Appendix A, before any of it is divided by
+survive. That is the `1/B` of Appendix A, before any of it is divided by
 `N^B`.
 
 Both are proved by induction on `B`, splitting a tuple of length `B + 1` into
 its first seed and the rest (`sum_pi_succ`).
 -/
 
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Data.Fin.Tuple.Basic
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Basic.Real.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.LinearCombination
+@[expose] public section
 
 namespace Transformer
 namespace Quartet
@@ -72,7 +76,7 @@ example : ∑ i : Fin 2, (if i = 0 then (1 : ℝ) else -1) = 0 := by
 /-- **The square of a centred average keeps only its diagonal** (Appendix A,
 the `~1/B` decay): summing `(∑ b, c (ω b))^2` over every tuple of `B` seeds
 gives `B · N^B · ∑ i, c i ^ 2`, once multiplied by `N` to clear the one seed
-the diagonal term integrates out.  The `B` cross terms of the square vanish by
+the diagonal term integrates out. The `B` cross terms of the square vanish by
 `sum_pi_sum_eq_zero`. -/
 theorem sum_pi_sum_sq {c : Fin N → ℝ} (hc : ∑ i, c i = 0) (B : ℕ) :
     (N : ℝ) * ∑ ω : Fin B → Fin N, (∑ b, c (ω b)) ^ 2 =

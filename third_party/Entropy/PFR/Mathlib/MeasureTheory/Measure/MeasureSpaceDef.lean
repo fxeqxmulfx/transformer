@@ -2,6 +2,12 @@ module
 
 public import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 
+/-!
+# Measures supported on finite sets
+
+A measure identity determined by its singleton masses.
+-/
+
 public section
 
 open Set

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.PairedMatchingWitness
+module
+
+public import Transformer.GPTMini.Sparsemax.PairedMatchingWitness
 
 /-!
 # Compact integer codes for all 256 Basis recall keys
@@ -16,6 +18,8 @@ follow algebraically from those factors and quotient/remainder decoding.
 This constructs a feasible parameter table, not an optimizer convergence
 guarantee. The numerical architecture leaves Q and K freely trainable.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Sparsemax
 

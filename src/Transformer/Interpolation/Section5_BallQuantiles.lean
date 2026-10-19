@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section5_BallMass
+
+/-!
 # Ordered quantiles and equal-mass shells on the carrying set
 
 ArXiv:2411.04551v3, §5, `cl: balls`. The original probability is
@@ -14,7 +18,7 @@ because the prescribed masses are strictly ordered. All formulas below
 refer to the original measure and actual sets and functions.
 -/
 
-import Transformer.Interpolation.Section5_BallMass
+@[expose] public section
 
 open Real MeasureTheory Metric Set Filter
 

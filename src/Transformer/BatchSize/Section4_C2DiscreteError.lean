@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_SGDWeakError
+public import Transformer.BatchSize.Section4_LocalWeakError
+public import Transformer.BatchSize.Section4_BoundedCoefficients
+public import Transformer.BatchSize.Section4_DeterministicEulerMap
+
+/-!
 # Actual discrete updates versus their deterministic mean Euler step
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,10 +13,7 @@ Only two test derivatives are needed for this comparison. Gaussian
 samples remain unbounded; the SGD estimate uses their proved second moment.
 -/
 
-import Transformer.BatchSize.Section4_SGDWeakError
-import Transformer.BatchSize.Section4_LocalWeakError
-import Transformer.BatchSize.Section4_BoundedCoefficients
-import Transformer.BatchSize.Section4_DeterministicEulerMap
+@[expose] public section
 
 open MeasureTheory
 open scoped BigOperators NNReal

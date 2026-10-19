@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Cone
+public import Transformer.Landscape.SaddleAvoidance.Preimage
+public import Transformer.Landscape.SaddleAvoidance.Spectral
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+
+/-!
 # Saddle avoidance — the starts converging to unstable points are null
 
 Let `g` be a `C¹` map of a finite-dimensional real inner product space into
@@ -6,7 +15,7 @@ itself.
 
 * If the derivative `A` of `g` at `z` is symmetric with an eigenvalue of
   modulus greater than one, then for some `r > 0` the starts whose orbit stays
-  in `B̄(z, r)` form a null set (`exists_measure_stayNear_eq_zero`).  `A` has
+  in `B̄(z, r)` form a null set (`exists_measure_stayNear_eq_zero`). `A` has
   an expanding splitting `P` with constant `c > 1` and a direction `e` fixed
   by `P` (`exists_expandingSplitting`); on a small ball `g` differs from `A` by
   a map of Lipschitz constant `(c - 1)/4` (`exists_closedBall_sub_fderiv_le`);
@@ -16,7 +25,7 @@ itself.
 * If moreover the derivative of `g` has nonzero determinant everywhere, the
   starts whose orbit converges to a fixed point of this kind form a null set
   (`measure_tendsto_symmetricUnstable_eq_zero`), however many such points
-  there are.  Countably many of the balls `B(z, r_z)` cover them (Lindelöf).
+  there are. Countably many of the balls `B(z, r_z)` cover them (Lindelöf).
   An orbit converging to such a point ends in one of these balls, so from some
   step `m` on it lies in the corresponding `stayNear`, and its start lies in
   the preimage of that null set under `g^m`, again null
@@ -31,12 +40,7 @@ fixed points with a symmetric derivative, with the center-stable manifold
 theorem replaced by `exists_measure_stayNear_eq_zero`.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Cone
-import Transformer.Landscape.SaddleAvoidance.Preimage
-import Transformer.Landscape.SaddleAvoidance.Spectral
-import Mathlib.Analysis.Calculus.ContDiff.Operations
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+@[expose] public section
 
 open Set Metric Filter MeasureTheory
 open scoped Topology
@@ -79,7 +83,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDim
 /-- **The local stable set of a point with a symmetric, somewhere stretching
 derivative is null.**  If `g` is `C¹` and its derivative at `z` is symmetric
 with an eigenvalue `λ`, `|λ| > 1`, then for some `r > 0` the starts whose
-forward orbit stays in `B̄(z, r)` form a null set.  The fixed point property
+forward orbit stays in `B̄(z, r)` form a null set. The fixed point property
 `g z = z` plays no part here. -/
 theorem exists_measure_stayNear_eq_zero (μ : Measure E) [μ.IsAddHaarMeasure] {g : E → E}
     (hg : ContDiff ℝ 1 g) {z : E} (hsym : (fderiv ℝ g z : E →ₗ[ℝ] E).IsSymmetric) {lam : ℝ}

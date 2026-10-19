@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ButterflyGridStages
+
+/-!
 # Recursive kaleidoscope matrices on the original n × d layout
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: kaleidoscope` and
@@ -8,7 +12,7 @@ semantics, including genuine transpose. The verified compiler is then
 applicable to those existing objects without an assumed bridge.
 -/
 
-import Transformer.Zoology.Appendix_ButterflyGridStages
+@[expose] public section
 
 open scoped BigOperators
 

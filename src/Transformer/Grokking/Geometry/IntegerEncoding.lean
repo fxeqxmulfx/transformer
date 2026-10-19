@@ -1,4 +1,6 @@
-import Transformer.Grokking.Geometry.RowAlignment
+module
+
+public import Transformer.Grokking.Geometry.RowAlignment
 
 /-!
 # Exact integer encoding of observed-logit cleanup errors
@@ -23,6 +25,8 @@ one by its mean without the class count would change the sufficient
 inequality. The observation and class counts remain in the numerator
 until they cancel against the corresponding reference-margin factors.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.Geometry
 

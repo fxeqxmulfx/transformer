@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.ProjectionUpdate
+module
+
+public import Transformer.GPTMini.Sparsemax.ProjectionUpdate
 
 /-!
 # Separate anchor channels without independent ordinary inputs
@@ -18,6 +20,8 @@ asserting that unconstrained learned embeddings have this property.
 All identities concern actual finite shared matrix-vector multiplication.
 The construction needs `A + B` input coordinates, independently of `N`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

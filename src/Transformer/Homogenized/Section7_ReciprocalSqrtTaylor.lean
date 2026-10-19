@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.Tactic
+
+/-!
 # Explicit reciprocal-square-root remainders for the delta method
 
 ArXiv:2604.01978v1, §7.3, `lem:delta_method`, the Taylor-Lagrange
@@ -20,8 +25,7 @@ estimate is assumed. Those are separate steps when integrating this
 pointwise expansion for the original Gaussian product matrix.
 -/
 
-import Mathlib.Analysis.Real.Sqrt
-import Mathlib.Tactic
+@[expose] public section
 
 open Real
 

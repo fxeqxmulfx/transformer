@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.EuclideanSigns
+public import Mathlib.Analysis.Calculus.Deriv.Polynomial
+public import Mathlib.Analysis.Calculus.Deriv.Slope
+
+/-!
 # Signs around simple real polynomial roots
 
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.EuclideanSigns
-import Mathlib.Analysis.Calculus.Deriv.Polynomial
-import Mathlib.Analysis.Calculus.Deriv.Slope
+@[expose] public section
 
 noncomputable section
 open Filter Topology Polynomial

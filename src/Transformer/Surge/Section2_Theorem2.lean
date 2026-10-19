@@ -1,8 +1,12 @@
-/-
+module
+
+public import Transformer.Surge.SectionC_SignMoments
+
+/-!
 # The optimal learning rate of the sign update
 
-arXiv:2405.14578, §2.1, Theorem 2, proved in Appendix C.  Adam is approximated by the sign
-update `V = sign(G_est)` of eq. (5).  When the per-sample gradient of each parameter `i` is
+arXiv:2405.14578, §2.1, Theorem 2, proved in Appendix C. Adam is approximated by the sign
+update `V = sign(G_est)` of eq. (5). When the per-sample gradient of each parameter `i` is
 `N(μ_i, σ_i²)`, the true gradient is `G = μ`, eq. (37), and Appendix C gives `E[V]_i = 𝓔_i(B)`
 and `cov(V) = diag(1 - 𝓔_i(B)²)`, with `𝓔_i(B) = erf(√(B/2)μ_i/σ_i)`, eq. (38) (`signMean`).
 Lemma 1 then gives the optimal learning rate
@@ -10,12 +14,12 @@ Lemma 1 then gives the optimal learning rate
 the loss improvement `ΔL_opt = ½ΣΣ𝓔_i𝓔_jμ_iμ_j/(Σ(1 - 𝓔_i²)H_ii + ΣΣ𝓔_i𝓔_jH_ij)` of eq. (8)
 (`integral_lossDrop_sign_batchGrad`).
 
-As Lemma 1 does, Theorem 2 leaves implicit that the denominator is positive.  It is when the
+As Lemma 1 does, Theorem 2 leaves implicit that the denominator is positive. It is when the
 Hessian is positive semidefinite and nonzero (`signDen_pos`), and then no learning rate improves
 the loss more than eq. (8) (`integral_lossDrop_sign_le`).
 -/
 
-import Transformer.Surge.SectionC_SignMoments
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped Matrix

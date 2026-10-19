@@ -1,9 +1,15 @@
-/-
+import Transformer
+
+/-!
 # Axiom audit
+
+This inspection script uses implementation imports: the legacy frontend loads
+transitive proof bodies, while module imports hide them. Direct `sorry`
+classification must inspect the actual value, not just its recorded axioms.
 
 `lake build` warns only about a declaration that contains `sorry` **itself**; a
 theorem that *uses* a sorried theorem elaborates without a word, and the sorry
-count in `INDEX.md` never sees it.  `#print axioms` does see it, and this
+count in `INDEX.md` never sees it. `#print axioms` does see it, and this
 script runs `#print axioms` over every `Transformer.*` declaration at once:
 
     lake env lean scripts/Axioms.lean
@@ -15,10 +21,9 @@ It prints one line per declaration whose axioms are not contained in
   `rests   Transformer.Foo.baz`     it is proved, but on top of a sorried one,
   `axiom   Transformer.Foo.qux      Lean.ofReduceBool`   any other axiom,
 
-then a summary line.  `rests` and `axiom` must both be zero; `sorry` is the
+then a summary line. `rests` and `axiom` must both be zero; `sorry` is the
 debt of `INDEX.md` and must only ever go down.
 -/
-import Transformer
 
 open Lean Elab Command
 
@@ -46,3 +51,5 @@ run_cmd do
   for (n, a) in extra.qsort (fun x y => x.1.toString < y.1.toString) do
     logInfo m!"axiom   {n}   {a}"
   logInfo m!"{selfSorry.size} sorry · {rests.size} resting on a sorry · {extra.size} extra axioms"
+  unless rests.isEmpty && extra.isEmpty do
+    throwError "Axiom audit failed: proved declarations must not rest on sorry or extra axioms"

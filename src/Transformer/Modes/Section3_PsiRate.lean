@@ -1,18 +1,22 @@
-/-
+module
+
+public import Transformer.Modes.Section3_PsiBounds
+public import Transformer.Modes.Section3_ErrorThird
+public import Transformer.Modes.Section2_ProxyKRShift
+
+/-!
 # The number of modes of a Gaussian KDE — the inner Edgeworth integral
 
-The inner integral of `lem:error-3`, arXiv:2412.09080v3, §3.1.  The Gaussian
+The inner integral of `lem:error-3`, arXiv:2412.09080v3, §3.1. The Gaussian
 majorant for `ψ` integrates over the positive half-line using the exact
-completed square and the shifted first-moment estimate.  The shift `δ_t`
+completed square and the shifted first-moment estimate. The shift `δ_t`
 is retained: replacing `y = δ_t + u/√α_t` by `u/√α_t`, as in the source's
 proof, would omit a contribution that need not be uniformly bounded.
 The covariance and shift estimates then give a uniform Gaussian rate on
 `T`, with the third-moment prefactor still explicit.
 -/
 
-import Transformer.Modes.Section3_PsiBounds
-import Transformer.Modes.Section3_ErrorThird
-import Transformer.Modes.Section2_ProxyKRShift
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped ENNReal
@@ -20,9 +24,9 @@ open scoped ENNReal
 namespace Transformer.Modes
 
 /-- The inner Edgeworth integral is controlled by its moment, covariance
-scale, rate exponent and linear shift.  The cutoff can be enlarged to the
+scale, rate exponent and linear shift. The cutoff can be enlarged to the
 positive half-line; for `y ≤ 0` the nonnegative integrand is zero.
-Source: arXiv:2412.09080v3, §3.1, proof of `lem:error-3`.  The Gaussian
+Source: arXiv:2412.09080v3, §3.1, proof of `lem:error-3`. The Gaussian
 majorant includes the linear Hermite term and the first moment retains `δ_t`. -/
 theorem lintegral_psi_line_le {n : ℕ} (hn : 0 < n) {β : ℝ} (hβ : 0 < β) (t : ℝ) :
     (∫⁻ y in Set.Ioi (deltaCut n β t), ENNReal.ofReal
@@ -92,7 +96,7 @@ theorem lintegral_psi_line_le {n : ℕ} (hn : 0 < n) {β : ℝ} (hβ : 0 < β) (
 example : 0 < (1 : ℕ) ∧ (0 : ℝ) < 1 := ⟨Nat.zero_lt_one, one_pos⟩
 
 /-- The inner integral for `ψ` is bounded by the covariance scale and a
-Gaussian rate with a linear shift factor.  The factor `n^{-1/2}η₃` is kept
+Gaussian rate with a linear shift factor. The factor `n^{-1/2}η₃` is kept
 explicit so the same estimate can be integrated on `T` and `T'`.
 Source: arXiv:2412.09080v3, §3.1, proof of `lem:error-3`. -/
 theorem eventually_psi_inner_le_T {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ}

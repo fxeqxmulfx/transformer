@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section5_FrozenDefs
+public import Transformer.Causal.SectionB_FarCurvature
+
+/-!
 # Original interaction bounds in the manuscript's circular distance
 
 ArXiv:2411.04990v2, §5, `thm:fixed_centers` and its proof, with
@@ -16,8 +21,7 @@ and far interaction bounds apply to the actual lifted dynamics,
 including angles crossing the choice of representative at pi.
 -/
 
-import Transformer.Causal.Section5_FrozenDefs
-import Transformer.Causal.SectionB_FarCurvature
+@[expose] public section
 
 open Real Set
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixD_PhaseTransition
+public import Transformer.Perspective.Section5_HemisphereCone
+
+/-!
 # Appendix D — the smallest coordinate `α(1/n)`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -6,7 +11,7 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 `e:1/n`, the estimate that starts the second half of Appendix D: at time `1/n`
 every particle is already within half of the orthogonal angle `γ_β(1/n)` of
-the limit `x⋆` of the dynamics.  It is proved here, from the cone of step 2 of
+the limit `x⋆` of the dynamics. It is proved here, from the cone of step 2 of
 `lem: hemisphere.clustering` (`Perspective.limit_mem_cone`).
 
 The stability estimates it rests on are in
@@ -14,8 +19,7 @@ The stability estimates it rests on are in
 it is in `Perspective.AppendixD_Assembly`.
 -/
 
-import Transformer.Perspective.AppendixD_PhaseTransition
-import Transformer.Perspective.Section5_HemisphereCone
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -33,12 +37,12 @@ where `x⋆` is the common limit of the particles, which exists by
 `lem: hemisphere.clustering`.
 
 The hypotheses are the survey's setting and the two halves of its argument
-evaluated at the single time `t = 1/n`.  `hw` and `hlim` say that `x⋆` is the
+evaluated at the single time `t = 1/n`. `hw` and `hlim` say that `x⋆` is the
 limit of `lem: hemisphere.clustering`: the particles start in the open
-hemisphere around `w` and converge to `x⋆`.  `hpair` is `e:ineqfirstpart` at
+hemisphere around `w` and converge to `x⋆`. `hpair` is `e:ineqfirstpart` at
 `t = 1/n`, where the stability factor `c(β)^{n · (1/n)}` is `c(β)`, and
 `hlarge` is `eq: d.large`, which is exactly what makes the error
-`2 c(β) √(log d / d)` smaller than `γ_β(1/n)/2`.  `hγle` records that `γ_β` is
+`2 c(β) √(log d / d)` smaller than `γ_β(1/n)/2`. `hγle` records that `γ_β` is
 a cosine, so that the diagonal `⟨x_j(1/n), x_j(1/n)⟩ = 1` clears the bound as
 well.
 

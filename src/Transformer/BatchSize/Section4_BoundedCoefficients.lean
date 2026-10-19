@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_UniformCovariance
+public import Transformer.BatchSize.Section4_NoiseLipschitz
+
+/-!
 # Uniform state bounds for the actual optimizer SDE coefficients
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The bounded model gives bounded drift and a noise amplitude proportional
 to sqrt(eta), independently of the state or Euler mesh.
 -/
 
-import Transformer.BatchSize.Section4_UniformCovariance
-import Transformer.BatchSize.Section4_NoiseLipschitz
+@[expose] public section
 
 noncomputable section
 

@@ -1,5 +1,7 @@
-import Transformer.Modes.Section5_UnitPhase
-import Transformer.Modes.Section2_Gt
+module
+
+public import Transformer.Modes.Section5_UnitPhase
+public import Transformer.Modes.Section2_Gt
 
 /-!
 # Derivatives and curvature of the Gaussian phase curve
@@ -23,6 +25,8 @@ this counterexample with a unit direction. The determinant argument for
 nondegeneracy remains valid without that sentence.
 Source: arXiv:2412.09080v3, §5.5, proof of `eq:uniform-decay`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 open scoped Interval

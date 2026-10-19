@@ -1,4 +1,11 @@
-/-
+module
+
+public import Mathlib.Analysis.Analytic.ConvergenceRadius
+public import Mathlib.Analysis.Normed.Algebra.Exponential
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+
+/-!
 # Integrating the actual multilinear Taylor series
 
 ArXiv:2601.21366v2, §5.3, the Weierstrass M-test for the exponential
@@ -13,10 +20,7 @@ the series through the original measure. The resulting analyticity is
 proved from the series equality, rather than assumed for the integral.
 -/
 
-import Mathlib.Analysis.Analytic.ConvergenceRadius
-import Mathlib.Analysis.Normed.Algebra.Exponential
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+@[expose] public section
 
 open MeasureTheory Set
 open scoped NNReal ENNReal BigOperators

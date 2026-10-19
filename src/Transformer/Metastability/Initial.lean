@@ -1,4 +1,18 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Metastability.Basic
+public import Transformer.Metastability.GaussianMixture
+public import Transformer.Metastability.InitialGeometry
+public import Transformer.Metastability.InitialMixtureBound
+public import Transformer.Metastability.InitialScale
+public import Transformer.Perspective.Section2_FlowMap
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # Metastability — On the initial configuration, Gaussian mixtures
   (§4 of 2410.06833v1)
 
@@ -18,17 +32,7 @@ is corrected to `(2πσ²)^(d/2)` in `GaussianMixture`. That the resulting law
 is a probability measure for `r ≥ 1` and `σ > 0` is `mixtureLaw_probability`.
 -/
 
-import Transformer.Basic
-import Transformer.Metastability.Basic
-import Transformer.Metastability.GaussianMixture
-import Transformer.Metastability.InitialGeometry
-import Transformer.Metastability.InitialMixtureBound
-import Transformer.Metastability.InitialScale
-import Transformer.Perspective.Section2_FlowMap
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.Analysis.Normed.Lp.MeasurableSpace
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

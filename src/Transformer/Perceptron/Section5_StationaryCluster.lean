@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_AtomicForce
+public import Transformer.Perceptron.Section5_PotentialForce
+public import Transformer.Perceptron.Section5_ClusterLifts
+public import Transformer.Perceptron.Section5_AngularFirstVariation
+public import Transformer.Perceptron.Section5_QuadraticClusterWitness
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+
+/-!
 # Bounding cluster mass by two actual stationary force equations
 
 ArXiv:2601.21366v2, §5.4, the proof of `thm: bound` and
@@ -19,12 +28,7 @@ printed `0.5742+(C_ϑ+1)exp(-β)` from `β=4` on. All derivatives
 are of the actual first variation and actual interaction force.
 -/
 
-import Transformer.Perceptron.Section5_AtomicForce
-import Transformer.Perceptron.Section5_PotentialForce
-import Transformer.Perceptron.Section5_ClusterLifts
-import Transformer.Perceptron.Section5_AngularFirstVariation
-import Transformer.Perceptron.Section5_QuadraticClusterWitness
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

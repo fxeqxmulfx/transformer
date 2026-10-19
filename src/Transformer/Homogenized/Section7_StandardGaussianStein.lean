@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianResidual
+
+/-!
 # Integration by parts for the actual standard Gaussian vector
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -15,7 +19,7 @@ vector identity without an assumed integration-by-parts formula.
 Bounded first derivatives justify each original expectation.
 -/
 
-import Transformer.Homogenized.Section7_GaussianResidual
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

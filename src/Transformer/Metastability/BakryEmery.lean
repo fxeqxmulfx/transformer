@@ -1,4 +1,11 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # Metastability — the Bakry–Émery lemma (§3.1 of 2410.06833v1)
 
 `Lemma lem: bakry-emery` with `ineq: Almost Hessian`: along the ascending
@@ -13,10 +20,7 @@ then `d/dt 𝖤(X(t)) = ‖∇𝖤(X(t))‖²` is integrated by observing that
 Source: arXiv:2410.06833v1, §3.1, `lem: bakry-emery`, `ineq: Almost Hessian`.
 -/
 
-import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open Real
 
@@ -35,11 +39,11 @@ Then `𝖤(v) - 𝖤(u) ≤ (2c)⁻¹ ‖∇𝖤(u)‖²`.
 *Deviation from the earlier Lean statement.*  This lemma used to be stated
 with `gradNorm` and `gradHess` two arbitrary functions `M → ℝ`, unrelated to
 `E` and to each other, and with no flow equation on `X`; in that form it is
-false — see `not_forall_bakry_emery`.  What is restored here is exactly what
+false — see `not_forall_bakry_emery`. What is restored here is exactly what
 the paper assumes: `gradE` is the gradient of `E` (`hgrad`), `X` follows it
 (`hflow`), and `gradHess` is the derivative data of `‖∇𝖤(X(·))‖²` (`hsq`),
 which is the Hessian quadratic form `⟨∇𝖤, Hess 𝖤 ∇𝖤⟩` whenever `E` is twice
-differentiable.  The Riemannian Hessian itself is still not formalized: `hsq`
+differentiable. The Riemannian Hessian itself is still not formalized: `hsq`
 is how the second-order information enters, and it is a hypothesis, not a
 definition.
 
@@ -130,9 +134,9 @@ theorem bakry_emery
 /-- The hypotheses of `bakry_emery` are satisfiable, and not only by a
 vanishing gradient: on `M = ℝ` take `𝖤(y) = -y²/2`, whose gradient is
 `∇𝖤(y) = -y` and whose ascending gradient flow through `u = 1` is
-`X(t) = e^{-t}`.  Then `‖∇𝖤(X(t))‖² = e^{-2t}` has derivative `-2e^{-2t}`,
+`X(t) = e^{-t}`. Then `‖∇𝖤(X(t))‖² = e^{-2t}` has derivative `-2e^{-2t}`,
 so the Hessian quadratic form is `gradHess(x) = -x²`, and
-`ineq: Almost Hessian` holds at `c = 1` with equality.  The gradient at `u`
+`ineq: Almost Hessian` holds at `c = 1` with equality. The gradient at `u`
 is `-1 ≠ 0`, so the conclusion is not the trivial `0 ≤ 0`. -/
 example :
     (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧
@@ -178,7 +182,7 @@ example :
 The statement `bakry_emery` used to carry — `E`, `gradNorm`, `gradHess`
 arbitrary, no flow equation — is refuted by `𝖤 = id`, `gradNorm ≡ 0`,
 `gradHess ≡ -1`, `X = id`, `u = 0`, `v = 1`, `c = T = 1`: the Hessian
-hypothesis reads `-1 ≤ 0` and the conclusion reads `1 ≤ 0`.  This is why
+hypothesis reads `-1 ≤ 0` and the conclusion reads `1 ≤ 0`. This is why
 `bakry_emery` above ties `gradE`, `gradHess` and `X` to `E`.
 
 Source: arXiv:2410.06833v1, §3.1, `lem: bakry-emery`. -/

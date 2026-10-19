@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section4_Cells
+
+/-!
 # Attention's forward pass and Frank-Wolfe — positive-definite key-query
 
 Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
 *Attention's forward pass and Frank-Wolfe*, §4.
 
-For `B ≻ 0` the Frank-Wolfe objective is concave.  The generic literature
+For `B ≻ 0` the Frank-Wolfe objective is concave. The generic literature
 bound on the duality gap is `prop: trash`; under genericity assumptions on the
 initial polytope (`GenericPolytope`, here) the dynamics is instead solved
 exactly (`thm: exp.fast.polytope`, in `Section4_ExpFast.lean`), and the same
@@ -12,7 +16,7 @@ geometry gives well-posedness of the singular ODE `eq: hardmax.ode`
 (`thm: ode`, in `Section4_ODEWellPosed.lean`).
 -/
 
-import Transformer.FrankWolfe.Section4_Cells
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -66,7 +70,7 @@ example : ContinuousLinearMap.IsPositive (0 : ParamMatrix 1) ∧ (0 : ℝ) ≤ 1
     ⟨rfl, fun z _ => by simp⟩, by simp⟩
 
 /-- **Proposition (prop: trash).**  Suppose `B^t = β^t B` for `B ≽ 0`, with
-`β^t/β^{t+1} = γ^t/γ^{t+1}` for all `t ≥ 0`.  Then particles evolving according
+`β^t/β^{t+1} = γ^t/γ^{t+1}` for all `t ≥ 0`. Then particles evolving according
 to `(SA_∞)` satisfy
 
   `min_{τ ∈ [1,t]} max_{y ∈ 𝒦^τ} ⟨∇J^τ(x_i^τ), x_i^τ - y⟩
@@ -76,10 +80,10 @@ where `J^τ(y) = -½ ⟨B^τ y, y⟩`, so `∇J^τ(x) = -B^τ x`.
 
 **What the source says and what is changed here.**  The ratio condition is
 written as the cross-product `β^t γ^{t+1} = β^{t+1} γ^t`, which says the same
-and needs no division.  Two standing assumptions of §4 that the statement
+and needs no division. Two standing assumptions of §4 that the statement
 leaves implicit are made explicit: `γ^t ∈ (0, 1)` (as `γ^t = h^t/(1+h^t)` with
 `h^t > 0`, `(SA_∞)`), and `β^t ≥ 0` (§4 treats `B^t ≽ 0`, and `J^t` is concave
-only then).  The source's `t ≥ 0` is `t ≥ 1`, the right side being `1/t` times
+only then). The source's `t ≥ 0` is `t ≥ 1`, the right side being `1/t` times
 something.
 
 The source omits the proof in the text, quoting Yurtsever-Sra, `Lemma 2.1`; a
@@ -169,7 +173,7 @@ in its own cell and in no other, and every particle lies in exactly one cell.
 
 **What the source says and what is changed here.**  The source's second
 condition reads "if `x_i^0` is not a vertex, then it doesn't lie on any face
-of two adjacent cells".  It is recorded here as "`x_i^0` lies in exactly one
+of two adjacent cells". It is recorded here as "`x_i^0` lies in exactly one
 cell", which is what makes the assignment map `σ` well-defined and is the only
 consequence the proof uses; for a vertex it follows from the first condition.
 

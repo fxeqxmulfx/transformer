@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_SingleLevelButterfly
+
+/-!
 # K-constrained linear operations without sequence workspace
 
 Arora et al., arXiv:2312.04927v1, Appendix `lmm:primitives` and
@@ -7,7 +11,7 @@ and channel-dependent cyclic shifts each use one layer of the original
 n × d shape. Every projection is an explicit width-one K matrix.
 -/
 
-import Transformer.Zoology.Appendix_SingleLevelButterfly
+@[expose] public section
 
 namespace Transformer.Zoology
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Muon.Section2_Euclidean
+public import Transformer.Muon.Section2_NewtonSchulz
+
+/-!
 # Muon — steepest descent under a spectral norm constraint
 
 arXiv:2502.16982, §2.1 and §4. The exact polar factor maximizes the
@@ -7,8 +12,7 @@ the linearized objective over the same ball, proving the stated
 steepest-descent interpretation without assuming the duality result.
 -/
 
-import Transformer.Muon.Section2_Euclidean
-import Transformer.Muon.Section2_NewtonSchulz
+@[expose] public section
 
 open scoped BigOperators Matrix
 

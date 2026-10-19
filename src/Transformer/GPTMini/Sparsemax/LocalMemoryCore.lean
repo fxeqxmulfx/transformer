@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.LocalMemoryWeights
-import Mathlib.Analysis.Convex.Combination
+module
+
+public import Transformer.GPTMini.Sparsemax.LocalMemoryWeights
+public import Mathlib.Analysis.Convex.Combination
 
 /-!
 # An affine compact Gram with changing local memory support
@@ -17,6 +19,8 @@ fixed orthogonality is an explicit restriction of the new path architecture.
 The cross block and actual sparse supports remain variable. Common values
 are still decoded globally by the earlier structural memory inverse.
 -/
+
+@[expose] public section
 
 noncomputable section
 

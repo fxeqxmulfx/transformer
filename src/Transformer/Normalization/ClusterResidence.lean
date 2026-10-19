@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Normalization.ClusterCap
+public import Transformer.Normalization.ClusterGeometry
+
+/-!
 # Global residence in a small token cluster
 
 Sphere residence, cap residence and nondecreasing radii used in
 Appendix C, proof of Theorem 4.3 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Normalization.ClusterCap
-import Transformer.Normalization.ClusterGeometry
+@[expose] public section
 
 open Set
 open scoped BigOperators

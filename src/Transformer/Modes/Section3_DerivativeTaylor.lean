@@ -1,5 +1,8 @@
-import Transformer.Modes.Section3_DerivativeMoments
-import Transformer.Modes.Section3_WeightedPhase
+module
+
+public import Transformer.Modes.Section3_DerivativeMoments
+public import Transformer.Modes.Section3_WeightedPhase
+
 /-!
 # Finite-third-moment Taylor bounds for characteristic derivatives
 
@@ -16,6 +19,7 @@ On the unit frequency ball the first derivative is additionally bounded
 by a constant times the frequency norm, as needed by the product rule.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Muon.Section2_Models
+public import Mathlib.LinearAlgebra.Matrix.Trace
+
+/-!
 # Muon — singular coordinates
 
 arXiv:2502.16982, §2.1 and Appendix A. A thin singular factorization uses
@@ -6,8 +11,7 @@ orthonormal columns in both rectangular factors. These are genuine
 algebraic conditions, not assumptions of the results to be proved.
 -/
 
-import Transformer.Muon.Section2_Models
-import Mathlib.LinearAlgebra.Matrix.Trace
+@[expose] public section
 
 open scoped BigOperators Matrix
 

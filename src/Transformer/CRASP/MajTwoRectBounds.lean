@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.CRASP.MajTwoRect
+public import Transformer.CRASP.ExtensionsPnpFree
+
+/-!
 # Bounds for rectangle representations
 
 arXiv:2506.16055v3, Appendix E, `thm:majtwo_to_tlc`: Boolean normalization
 does not increase depth and does not introduce Parikh predicates.
 -/
 
-import Transformer.CRASP.MajTwoRect
-import Transformer.CRASP.ExtensionsPnpFree
+@[expose] public section
 
 namespace Transformer.CRASP
 

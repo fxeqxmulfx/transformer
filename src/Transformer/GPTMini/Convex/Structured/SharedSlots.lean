@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.MarkovObjective
-import Mathlib.Data.Fintype.Card
+module
+
+public import Transformer.GPTMini.Convex.Structured.MarkovObjective
+public import Mathlib.Data.Fintype.Card
 
 /-!
 # Shared compact raw parameter coordinates
@@ -21,6 +23,8 @@ capability or prenorm/residual/tied readout integration. The count 64
 includes ten fixed decoder axes, a protected constant and one position
 axis; a count alone is not a realized embedding/attention block.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

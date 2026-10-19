@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadInterval
+public import Transformer.Clusters.Section12_MultiHeadExtrema
+public import Mathlib.Topology.Order.MonotoneConvergence
+
+/-!
 # Limits of the original extreme coordinates after exact multi-head rescaling
 
 ArXiv:2305.05465v6, §7, proof of `l:exactasymptotic`, with
@@ -15,9 +21,7 @@ when its original coordinate escapes is a separate estimate; no such
 nonzero-rate assertion is assumed here.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadInterval
-import Transformer.Clusters.Section12_MultiHeadExtrema
-import Mathlib.Topology.Order.MonotoneConvergence
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology Set

@@ -1,14 +1,16 @@
-import Transformer.AMSGrad.Section5_AdamX
-import Transformer.AMSGrad.Section4_Telescope
-import Transformer.AMSGrad.Section4_Terms
+module
 
-/-
+public import Transformer.AMSGrad.Section5_AdamX
+public import Transformer.AMSGrad.Section4_Telescope
+public import Transformer.AMSGrad.Section4_Terms
+
+/-!
 # AdamX — the terms of Lemma 3.1
 
 §5 of arXiv:1904.03590v4, proof of Theorem 5.1: the facts about AdamX that
 bound the first and third terms of Lemma 3.1.
 
-* `vtnew_div`: `√v̂_t/(1-β_{1,t}) ≤ G/(1-β₁)`, from Lemma 5.2.  This is what
+* `vtnew_div`: `√v̂_t/(1-β_{1,t}) ≤ G/(1-β₁)`, from Lemma 5.2. This is what
   lets the first term telescope to `dD²G√T/(2α(1-β₁))`.
 * `adamX_mono`: `√(t v̂_t)/(1-β_{1,t})` does not decrease, from
   `v̂_t ≥ (1-β_{1,t})²/(1-β_{1,t-1})² v̂_{t-1}`: the `t₀` of `eqmain_le_of` is `0`.
@@ -16,6 +18,8 @@ bound the first and third terms of Lemma 3.1.
 
 Source: arXiv:1904.03590v4, §5, proof of Theorem 5.1.
 -/
+
+@[expose] public section
 
 open Finset
 

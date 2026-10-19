@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainUnequalEscape
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainUnequalEscape
 
 /-!
 # Ordered balanced mass proxies and a positive unequal-pair error tolerance
@@ -33,6 +35,8 @@ reference. Exact reals, zero betas, fixed gained tables and uniform
 native decay differ from appendix C's coupled assigned norm/GD and
 the preserved nonzero-beta learned GPTMini configuration.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

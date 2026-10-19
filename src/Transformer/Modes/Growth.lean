@@ -1,13 +1,17 @@
-/-
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+
+/-!
 # The number of modes of a Gaussian KDE — comparison of growth rates
 
 Auxiliary comparisons of powers and logarithms, in the form the bandwidth
 regimes of arXiv:2412.09080v3 are written in: `β ≪ n^{2/5}`, `n^{2/5} ≪ β`,
-`β ≪ n^2/log⁶ n`, and so on.  They carry no content of the paper; they are
+`β ≪ n^2/log⁶ n`, and so on. They carry no content of the paper; they are
 what the satisfiability witnesses of those regimes are built from.
 -/
 
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+@[expose] public section
 
 open Filter Asymptotics
 open scoped Topology

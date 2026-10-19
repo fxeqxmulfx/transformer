@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Magma.Section2_Expectations
+public import Mathlib.Analysis.Calculus.FDeriv.Basic
+
+/-!
 # Linear and quadratic expansions for actual block directions
 
 Formalization of arXiv:2602.15322v1, Section 2 and Appendix A.1.
@@ -6,8 +11,7 @@ Block directions are vectors in the full parameter space, so arbitrary
 within-block dimensions and mixed block curvature are retained.
 -/
 
-import Transformer.Magma.Section2_Expectations
-import Mathlib.Analysis.Calculus.FDeriv.Basic
+@[expose] public section
 
 open scoped BigOperators
 

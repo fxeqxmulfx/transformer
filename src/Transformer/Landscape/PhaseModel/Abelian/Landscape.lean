@@ -1,22 +1,26 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Abelian.Characters
+public import Transformer.Landscape.PhaseModel.Abelian.Fourier
+
+/-!
 # Phase model over a finite abelian group — the landscape below `|G|²/8`
 
 As for `ℤ/n` (`Landscape.PhaseModel.Landscape`), with `n = |G|`: some character `χ`
 has `n Σ_x (1 - cos (ψ_x - arg χ(x))) ≤ V_full(ψ)`, so below `n²/8` the
 phases lie within `n/8` of a character (`exists_sum_one_sub_cos_lt`), where
 for `n ≥ 4` every critical point is the character up to periods or a strict
-saddle (`Abelian.Characters`).  Hence, for `n ≥ 4`, every local minimizer of
+saddle (`Abelian.Characters`). Hence, for `n ≥ 4`, every local minimizer of
 `V_full` below `n²/8` is the phases of a character up to periods
 (`exists_sub_characterPhase_mem_periods_of_isLocalMin`), a global minimizer
 (`divisionEnergy_eq_zero_of_isLocalMin`); every critical point with
 `0 < V_full < n²/8` is a strict saddle (`isStrictSaddle_of_divisionEnergy_lt`).
 So gradient descent started below `n²/8` converges to a character for almost
-every start (`Landscape.PhaseModel.Abelian.Convergence`).  The critical points above
+every start (`Landscape.PhaseModel.Abelian.Convergence`). The critical points above
 `n²/8` are not settled here.
 -/
 
-import Transformer.Landscape.PhaseModel.Abelian.Characters
-import Transformer.Landscape.PhaseModel.Abelian.Fourier
+@[expose] public section
 
 open Real
 

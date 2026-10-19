@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_LogisticOdeBounds
+
+/-!
 # A deterministic logarithmic upper barrier for the original mean
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -18,7 +22,7 @@ The scalar comparison inputs are explicit here; the Gaussian drift
 and original solution supply them in the subsequent application.
 -/
 
-import Transformer.Homogenized.Section7_LogisticOdeBounds
+@[expose] public section
 
 open Set
 

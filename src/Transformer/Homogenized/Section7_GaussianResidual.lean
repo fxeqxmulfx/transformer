@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_StandardGaussianMoments
+public import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Independence
+
+/-!
 # Independence of an actual standard Gaussian coordinate and its residual
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -16,8 +21,7 @@ selected coordinate zero, so the construction also retains its
 genuine degenerate law without choosing a lower-dimensional density.
 -/
 
-import Transformer.Homogenized.Section7_StandardGaussianMoments
-import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Independence
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped NNReal

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.PlaneCurveSelection
+
+/-!
 # A singular example of prepared plane curve selection
 
 The cusp with a positive distinguished variable satisfies jointly the
@@ -6,7 +10,7 @@ analytic preparation, accumulation, orientation, and curve-selection
 hypotheses. Its multiple root is not replaced by a simplicity assumption.
 -/
 
-import Transformer.Landscape.Lojasiewicz.PlaneCurveSelection
+@[expose] public section
 
 open Filter Set
 

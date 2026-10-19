@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.RecallDataTargets
+module
+
+public import Transformer.GPTMini.Convex.Structured.RecallDataTargets
 
 /-!
 # Actual convex complete training from all raw Basis semantics
@@ -24,6 +26,8 @@ floating-point behavior, ordinary AdamW success and the equal-FLOP
 comparison remain separate obligations. Output-only CE is not asserted
 convex. Label generation and all actual training work must be charged.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

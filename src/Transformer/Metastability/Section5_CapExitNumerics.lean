@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.Section5_DiracCapEvolution
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # Numerical separation of the stopping threshold from early Dirac trajectories
 
 ArXiv:2410.06833v1, §5, `claim: de sortie de cap` in Step 2 of the
@@ -23,8 +28,7 @@ the stopping set, are established in the adjoining modules. These
 numerical facts do not assume the source's derivative estimate.
 -/
 
-import Transformer.Metastability.Section5_DiracCapEvolution
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open Real
 namespace Transformer.Metastability

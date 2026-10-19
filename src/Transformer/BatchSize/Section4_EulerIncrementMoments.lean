@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerWindow
+public import Transformer.BatchSize.Section4_EulerFourthMoment
+
+/-!
 # Fourth moments of arbitrary Brownian Euler path increments
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The estimate is independent of grid resolution and remains valid inside
 grid intervals. The adapted stochastic sum uses clamped window times.
 -/
 
-import Transformer.BatchSize.Section4_EulerWindow
-import Transformer.BatchSize.Section4_EulerFourthMoment
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal BigOperators

@@ -2,6 +2,12 @@ module
 
 public import Mathlib.Topology.MetricSpace.HolderNorm
 
+/-!
+# Topological extensions
+
+Dense-set extensions, Hölder regularity and bounded pseudometric spaces.
+-/
+
 @[expose] public section
 
 open Bornology Filter

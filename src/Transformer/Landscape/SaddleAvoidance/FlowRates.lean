@@ -1,14 +1,19 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.DescentEstimates
+public import Transformer.Landscape.SaddleAvoidance.FlowDecay
+
+/-!
 # Saddle avoidance — rates of convergence of descent curves and gradient flows
 
 Let `x` descend `f` from time `0` on at the rates `c₁ > 0` and `c₂ ≥ 0`
 (`IsDescentCurve`) and converge to `w`, where the Łojasiewicz inequality holds
-with an exponent `a`.  By the estimates of `Landscape.SaddleAvoidance.DescentEstimates`
+with an exponent `a`. By the estimates of `Landscape.SaddleAvoidance.DescentEstimates`
 and the decay lemmas of `Landscape.SaddleAvoidance.FlowDecay`, `f (x t) - f w` and
 `‖x t - w‖` decay exponentially for `a ≤ 1/2`
 (`IsDescentCurve.exists_le_mul_exp_of_isLojasiewiczAt`), and as
 `(t + 1) ^ (-1/(2a - 1))` and `(t + 1) ^ (-(1 - a)/(2a - 1))` for
-`1/2 < a < 1` (`IsDescentCurve.exists_le_mul_rpow_of_isLojasiewiczAt`).  This
+`1/2 < a < 1` (`IsDescentCurve.exists_le_mul_rpow_of_isLojasiewiczAt`). This
 covers the flows `ẋ = -G(x) ∇f(x)` with `G` uniformly positive definite and
 bounded (`isDescentCurve_of_metric`), and gradient flows
 (`exists_le_mul_exp_gradientFlow_of_isLojasiewiczAt`,
@@ -16,12 +21,11 @@ bounded (`isDescentCurve_of_metric`), and gradient flows
 
 This is the rate part of `prop:rates` of arXiv:1602.04915 for flows, with
 `t + 1` for `k`; the source states it for gradient descent
-(`Landscape.SaddleAvoidance.Rates`).  As there, the limit need not be a local minimizer,
+(`Landscape.SaddleAvoidance.Rates`). As there, the limit need not be a local minimizer,
 `a ≤ 1/2` may be `0` or negative, and the values of `f` decay too.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.DescentEstimates
-import Transformer.Landscape.SaddleAvoidance.FlowDecay
+@[expose] public section
 
 open Filter Metric Set
 open scoped Topology
@@ -32,9 +36,9 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
   {f : E → ℝ} {x : ℝ → E} {a c₁ c₂ : ℝ}
 
 /-- **Exponential rate for descent curves** (`prop:rates` of arXiv:1602.04915
-for flows, `a ≤ 1/2`).  Let `x` descend `f` from time `0` on at the rates
+for flows, `a ≤ 1/2`). Let `x` descend `f` from time `0` on at the rates
 `c₁ > 0` and `c₂ ≥ 0` and converge to `w`, where the Łojasiewicz inequality
-holds with `a ≤ 1/2`.  Then for some `λ > 0`, `f (x t) - f w` and `‖x t - w‖`
+holds with `a ≤ 1/2`. Then for some `λ > 0`, `f (x t) - f w` and `‖x t - w‖`
 are at most `C e^{-λ t}`. -/
 theorem IsDescentCurve.exists_le_mul_exp_of_isLojasiewiczAt (hf : Differentiable ℝ f)
     (hx : IsDescentCurve f c₁ c₂ 0 x) (hc₁ : 0 < c₁) (hc₂ : 0 ≤ c₂) (ha : a ≤ 1 / 2) {w : E}
@@ -72,9 +76,9 @@ theorem IsDescentCurve.exists_le_mul_exp_of_isLojasiewiczAt (hf : Differentiable
     rwa [← Real.exp_mul, show -(lam * t) * (1 / 2) = -(lam / 2 * t) by ring] at h
 
 /-- **Polynomial rate for descent curves** (`prop:rates` of arXiv:1602.04915
-for flows, `1/2 < a < 1`).  Let `x` descend `f` from time `0` on at the rates
+for flows, `1/2 < a < 1`). Let `x` descend `f` from time `0` on at the rates
 `c₁ > 0` and `c₂ ≥ 0` and converge to `w`, where the Łojasiewicz inequality
-holds with `1/2 < a < 1`.  Then `f (x t) - f w ≤ C (t + 1) ^ (-1/(2a - 1))`
+holds with `1/2 < a < 1`. Then `f (x t) - f w ≤ C (t + 1) ^ (-1/(2a - 1))`
 and `‖x t - w‖ ≤ C (t + 1) ^ (-(1 - a)/(2a - 1))`. -/
 theorem IsDescentCurve.exists_le_mul_rpow_of_isLojasiewiczAt (hf : Differentiable ℝ f)
     (hx : IsDescentCurve f c₁ c₂ 0 x) (hc₁ : 0 < c₁) (hc₂ : 0 ≤ c₂) (ha : 1 / 2 < a)

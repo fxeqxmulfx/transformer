@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_SymmetricForce
+
+/-!
 # A complete stationary cluster witness at the large-temperature threshold
 
 ArXiv:2601.21366v2, §3.2, `eq: atomic.thm.bound` and
@@ -16,7 +20,7 @@ assumes SOPD, which is not asserted for this close symmetric pair.
 The actual measure is the two-atom probability already constructed.
 -/
 
-import Transformer.Perceptron.Section5_SymmetricForce
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory

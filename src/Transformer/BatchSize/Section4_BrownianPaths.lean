@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_BrownianFiltration
+public import Transformer.BatchSize.Section4_DiffusionPaths
+
+/-!
 # The constructed Brownian probability measure on continuous vector paths
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3).
@@ -6,8 +11,7 @@ Real-time paths are extended constantly to negative time. The resulting
 measure lives on exactly the path space used by the diffusion law.
 -/
 
-import Transformer.BatchSize.Section4_BrownianFiltration
-import Transformer.BatchSize.Section4_DiffusionPaths
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Accuracy
+
+/-!
 # Finite source cells and the claimed unique retrieval minimum
 
 ArXiv:2605.09213v1, §1, `eq:Acc-def`, and §1.1,
@@ -21,7 +25,7 @@ parameter, so applies in particular under all of the source's conditions.
 The limiting correction's separate uniqueness claim is not addressed here.
 -/
 
-import Transformer.Kinetic.Accuracy
+@[expose] public section
 
 open Real Set
 

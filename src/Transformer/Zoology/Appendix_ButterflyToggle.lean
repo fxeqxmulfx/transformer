@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ButterflyIdentity
+
+/-!
 # Bit-level feature permutations as butterfly weights
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: butterfly` and
@@ -7,7 +11,7 @@ in one binary digit. Its common partner permutation is itself a butterfly
 matrix, and therefore an explicitly represented width-one K matrix.
 -/
 
-import Transformer.Zoology.Appendix_ButterflyIdentity
+@[expose] public section
 
 namespace Transformer.Zoology
 

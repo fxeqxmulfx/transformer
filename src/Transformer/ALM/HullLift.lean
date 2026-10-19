@@ -1,16 +1,20 @@
-/-
+module
+
+public import Transformer.ALM.HullCover
+
+/-!
 # On the paraboloid, nothing is ever erased
 
 `Transformer.ALM.Hull.liftKey_not_dominated` says the breakpoint test of
 `add_line` is false for three lifted keys in increasing order, and
 `Transformer.ALM.HullCover` draws the container's final size from that — but
 only through `hno : ∀ p ∈ ps, p = 0`, a hypothesis of the counter model
-`runState`, justified in prose and discharged nowhere.  Between the geometric
+`runState`, justified in prose and discharged nowhere. Between the geometric
 fact and the counter there was no theorem: `ps` is a list of numbers, and
 nothing tied its entries to the erase relation the lines actually undergo.
 
 `Transformer.ALM.HullPrune` supplies the relation, so the gap can be closed
-directly and in a stronger form than the loop conditions give.  A lifted key
+directly and in a stronger form than the loop conditions give. A lifted key
 is the tangent of the paraboloid at its own abscissa, so it *strictly* beats
 every other lifted key there (`lineEval_liftKey_lt_of_ne`); hence no lifted
 line is pointwise dominated by the rest of a lifted family, hence no
@@ -32,7 +36,7 @@ the second is not — a cleared entry *is* erased, and that is how it leaves.
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 143-195.
 -/
 
-import Transformer.ALM.HullCover
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -55,7 +59,7 @@ theorem lineEval_liftKey_self (k : ℝ) : lineEval (liftKey k) k = k ^ 2 := by
 
 /-- **And every other lifted key is strictly below it there.**  The shortfall
 is exactly `(k - k')²`, so the inequality is strict as soon as the keys
-differ.  This is the reason the hull of a lifted family is the whole family:
+differ. This is the reason the hull of a lifted family is the whole family:
 no line of it is redundant at the one query that its own key names. -/
 theorem lineEval_liftKey_lt_of_ne {k k' : ℝ} (h : k ≠ k') :
     lineEval (liftKey k') k < lineEval (liftKey k) k := by
@@ -78,7 +82,7 @@ def Lifted (s : Finset (ℝ × ℝ)) : Prop := ∀ l ∈ s, ∃ k : ℝ, l = lif
 /-- **No erase step applies to a lifted family.**  Not merely that the two
 tests of `add_line` are false — that *no* rule of the form "this line is
 matched by a surviving one at every query" can hold, because the line under
-test strictly beats all the survivors at its own key.  So the prose claim
+test strictly beats all the survivors at its own key. So the prose claim
 "the erase loops never fire on the paraboloid" is a theorem about the erase
 relation and not about the particular comparisons the loops perform. -/
 theorem not_eraseStep_of_lift {s t : Finset (ℝ × ℝ)} (hs : Lifted s) :
@@ -113,7 +117,7 @@ theorem erasesTo_eq_of_lift {s t : Finset (ℝ × ℝ)} (h : ErasesTo s t) (hs :
 /-- **The container is the whole insertion history.**  Over an arbitrary
 interleaving of insertions and erases — `BuildStep` of
 `Transformer.ALM.HullPrune` — a build that only ever inserts lifted keys ends
-with the container equal to the set of lines it was given.  This is
+with the container equal to the set of lines it was given. This is
 `hno : ∀ p ∈ ps, p = 0` discharged: not assumed of a counter, but proved of
 the lines. -/
 theorem build_eq_of_lift {p : Finset (ℝ × ℝ) × Finset (ℝ × ℝ)}

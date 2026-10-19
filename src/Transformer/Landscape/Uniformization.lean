@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.Induction
+public import Transformer.Landscape.Uniformization.BasicExamples
+public import Transformer.Landscape.Uniformization.NewtonExamples
+public import Transformer.Landscape.Uniformization.Examples
+
+/-!
 # Local uniformization of real analytic functions
 
 Every real analytic function on `ℝⁿ` that does not vanish identically near a point has
@@ -12,7 +19,4 @@ maps. This is the geometric input of the gradient inequality of Appendix D.1,
 every lemma on the way.
 -/
 
-import Transformer.Landscape.Uniformization.Induction
-import Transformer.Landscape.Uniformization.BasicExamples
-import Transformer.Landscape.Uniformization.NewtonExamples
-import Transformer.Landscape.Uniformization.Examples
+@[expose] public section

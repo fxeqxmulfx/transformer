@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.SharedMemoryGeometry
+module
+
+public import Transformer.GPTMini.Sparsemax.SharedMemoryGeometry
 
 /-!
 # Inhabited memory domains and changing two-way sparse supports
@@ -15,6 +17,8 @@ claimed for their convex interpolants. Memory values are common to all
 data contexts and are decoded in the next concrete witness. This is an
 architectural feasibility result, not a new training experiment or task loss.
 -/
+
+@[expose] public section
 
 noncomputable section
 

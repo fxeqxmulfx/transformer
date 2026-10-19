@@ -1,16 +1,20 @@
-/-
+module
+
+public import Transformer.ALM.Envelope
+
+/-!
 # Why the binary search finds the maximum
 
 `_HullCHT::argmax` in `transformer_vm/attention/hull2d_cht.h` (lines 203-215)
 answers a query with one `lower_bound(x)` over the stored lines, falling back
-to the last line when the search runs off the end.  The file names the
+to the last line when the search runs off the end. The file names the
 invariant this rests on but does not prove it (lines 95-98):
 
 > The set ordering is by slope (`Line < Line`).
 > `lower_bound(x)` relies on the invariant that `p` is increasing with slope
 > among the *envelope* lines (maintained by insertion logic).
 
-Here `p` is the breakpoint `interX` of `Transformer.ALM.Envelope`.  This
+Here `p` is the breakpoint `interX` of `Transformer.ALM.Envelope`. This
 module proves that those two invariants are sufficient: under them, the index
 `lower_bound` returns is a maximizer of the line value at `x`, the fallback
 index `n` included.
@@ -20,7 +24,7 @@ the slope difference times the signed distance to their breakpoint, so a
 single sign decides which of the two is on top.
 -/
 
-import Transformer.ALM.Envelope
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -101,7 +105,7 @@ breakpoint is at or before `x`, and `i`'s own breakpoint is at or after it.
 The fallback branch `it == end` is the case `i = n`, where `hge` is vacuous.
 
 `hlt` is deliberately not strict: at a breakpoint the two lines agree, so a
-comparison decided either way still lands on a maximizer.  That is what makes
+comparison decided either way still lands on a maximizer. That is what makes
 the statement apply to a query sitting exactly on a breakpoint — the tie case
 the walk of `Transformer.ALM.HullScan` exists for. -/
 theorem lowerBound_isGreatest

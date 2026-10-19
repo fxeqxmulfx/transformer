@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.PairEnvelope
+module
+
+public import Transformer.Grokking.AdamW.PairEnvelope
 
 /-!
 # Retained feedback contraction at the strict decay-denominator threshold
@@ -29,6 +31,8 @@ trained transformer meets the bounds. Exact real fixed-table/native
 decay differs from the source's coupled assigned norm-cost GD.
 The abstract coefficient is not a temperature or a system-size limit.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

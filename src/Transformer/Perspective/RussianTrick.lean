@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Basic
+
+/-!
 # The "Russian trick"
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -12,12 +16,12 @@ skew-symmetric endomorphisms `B_1, …, B_d` of `ℝ^d` with
 The paper builds each `B_k` from the canonical `(d-1)`-dimensional symplectic
 form by zeroing out the `k`-th block, which is where its hypothesis that `d` is
 odd comes from: an orthogonal complex structure on `e_k^⊥` needs `d-1` even.
-That construction is not the only one, and not the cheapest.  A *rank-two*
+That construction is not the only one, and not the cheapest. A *rank-two*
 block suffices: for a unit pair `u ⊥ v`,
 
   `B x = c (⟨u,x⟩ v - ⟨v,x⟩ u)`    has   `B² x = -c² (⟨u,x⟩ u + ⟨v,x⟩ v)`,
 
-so `B²` is `-c²` times the projection onto `span{u,v}`.  Taking the `d` pairs
+so `B²` is `-c²` times the projection onto `span{u,v}`. Taking the `d` pairs
 `(e_k, e_{k+1})` around the cycle `ℤ/d`, every basis vector is hit exactly
 twice — once as the first member of a pair and once as the second — so
 
@@ -25,11 +29,11 @@ twice — once as the first member of a pair and once as the second — so
 
 Nothing here needs `d` odd; it needs `d ≥ 2`, which is also where the
 statement makes sense: at the odd dimension `d = 1` the factor `1/(d-1)` of the
-paper is undefined, and the only skew matrix of `ℝ^1` is `0` anyway.  So the hypothesis `Odd d` is replaced by `2 ≤ d`, which
+paper is undefined, and the only skew matrix of `ℝ^1` is `0` anyway. So the hypothesis `Odd d` is replaced by `2 ≤ d`, which
 covers every odd `d` at which the identity is meaningful.
 -/
 
-import Transformer.Basic
+@[expose] public section
 
 open scoped BigOperators
 
@@ -105,8 +109,8 @@ directions along which `𝖤_0` can be increased.
 
 Deviation from the source: the paper states this in odd dimension, because its
 own construction — the canonical symplectic form with the `k`-th `2×2` block
-removed — needs `d-1` even.  The construction used here, the cycle of rank-two
-generators described at the head of this file, needs only `d ≥ 2`.  The one
+removed — needs `d-1` even. The construction used here, the cycle of rank-two
+generators described at the head of this file, needs only `d ≥ 2`. The one
 odd dimension this leaves out is `d = 1`, where `1/(d-1)` is undefined on
 paper; in Lean it would read `0⁻¹ = 0`, and the statement would fail for that
 reason alone, which says nothing about the survey.

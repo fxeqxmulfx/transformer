@@ -1,5 +1,7 @@
-import Transformer.Memorization.Section2_Shannon
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+module
+
+public import Transformer.Memorization.Section2_Shannon
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 
 /-!
 # Capacity of a learning algorithm
@@ -9,6 +11,8 @@ over distributions. A supremum in the extended nonnegative reals is used
 here, and agrees with every attained maximum. This represents empty or
 unbounded distribution classes without claiming a maximizer exists.
 -/
+
+@[expose] public section
 
 namespace Transformer.Memorization
 

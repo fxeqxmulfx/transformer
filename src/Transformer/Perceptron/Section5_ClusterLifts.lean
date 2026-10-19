@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_KernelClusterBounds
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Analysis.Real.Pi.Bounds
+
+/-!
 # Coherent real representatives of a short circular cluster
 
 ArXiv:2601.21366v2, §5.4, `eq:dist.cond`. The distance hypothesis
@@ -16,9 +22,7 @@ The distinct original representatives in `[0,2π)` remain distinct.
 The finite set therefore has two distinct extreme representatives.
 -/
 
-import Transformer.Perceptron.Section5_KernelClusterBounds
-import Mathlib.Data.Finset.Max
-import Mathlib.Analysis.Real.Pi.Bounds
+@[expose] public section
 
 open Real
 

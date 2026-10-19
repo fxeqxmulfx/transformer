@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_CriticalShape
+public import Mathlib.Algebra.Order.Chebyshev
+
+/-!
 # Appendix A — the cone form at a saddle with one particle on the far side
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -6,19 +11,18 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 After `Perspective.AppendixA_Barycenter`, the saddles left in `l:nosaddleconv`
 are `Z = signedTuple e {i₀}` with `n ≥ 3`: one particle at `-e`, the others at
-`e`.  The source's center-stable manifold is replaced there by a cone.  For a
+`e`. The source's center-stable manifold is replaced there by a cone. For a
 perturbation `v` of `Z` write `u = P v`, `P = Proj_e`, and
 
   `W(u) = Σ_j u_j + (n - 2) u_{i₀}`,  `q(v) = 2/(n(n-1)) ‖W(u)‖² - Σ_j ‖u_j‖²`.
 
 The linearization `L` of `e:gradfl` at `Z` (`coneLin`) has `W(L u) = 2 W(u)`:
 `W` reads off the unstable direction, and along `L` the form grows at least
-like `2q` (`coneLin_growth`).  A perturbation of the particle `i₀` alone has
+like `2q` (`coneLin_growth`). A perturbation of the particle `i₀` alone has
 `q = (n-2)/n ‖P v_{i₀}‖² ≥ 0` (`coneForm_single`).
 -/
 
-import Transformer.Perspective.AppendixA_CriticalShape
-import Mathlib.Algebra.Order.Chebyshev
+@[expose] public section
 
 open scoped BigOperators
 open Real

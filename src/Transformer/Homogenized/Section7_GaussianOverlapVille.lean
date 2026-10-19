@@ -1,5 +1,7 @@
-import Transformer.Homogenized.Section7_GramFieldContinuity
-import Transformer.Homogenized.Section7_IntegratingFactorVille
+module
+
+public import Transformer.Homogenized.Section7_GramFieldContinuity
+public import Transformer.Homogenized.Section7_IntegratingFactorVille
 
 /-!
 # Maximal control of the original Gaussian exponential observable
@@ -22,6 +24,8 @@ in the event. The noise coefficient is the proved upper bound
 The accompanying identities prepare the original scalar-noise
 threshold and cancel its deterministic initial exponential.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory
 open scoped NNReal

@@ -1,4 +1,6 @@
-import Transformer.Memorization.Section2_Kolmogorov
+module
+
+public import Transformer.Memorization.Section2_Kolmogorov
 
 /-!
 # An allowed decoder need not exploit side information
@@ -10,6 +12,8 @@ literal encoding. All descriptions have the same length as their output.
 It is not a universal interpreter: universality is a missing hypothesis
 if an algorithmic/Shannon comparison is intended.
 -/
+
+@[expose] public section
 
 namespace Transformer.Memorization
 

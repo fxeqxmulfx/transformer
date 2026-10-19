@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.GPTMini.AttentionLipschitz
+
+/-!
 # How far one whole attention head can move
 
 `AttentionLipschitz` estimates the pieces; this file puts them together into
@@ -16,12 +20,12 @@ Given a uniform bound `D` on the movement of `q`, `k` and `v`, and a bound
     movement of the self-value direction.
 
 Every step is linear in `D`, so the head is globally Lipschitz with the
-constant `headLipschitz` collected below.  The constant is proportional to
+constant `headLipschitz` collected below. The constant is proportional to
 `B/eps`: what makes a head steep is a large value scale against a small
 normalization floor, not a large input displacement.
 -/
 
-import Transformer.GPTMini.AttentionLipschitz
+@[expose] public section
 
 open scoped BigOperators
 open Real

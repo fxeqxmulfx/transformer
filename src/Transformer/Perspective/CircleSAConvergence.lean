@@ -1,20 +1,25 @@
-/-
+module
+
+public import Transformer.Perspective.CircleConvergence
+public import Transformer.Landscape.SaddleAvoidance.DescentConvergence
+
+/-!
 # Almost every solution of SA on the circle synchronizes
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5, §4 and
 Appendix A.
 
 SA in angles is `θ̇ = -G(θ) ∇f(θ)` on `EucSpace n`, with `f = -𝖤_β` and
-`G = diag(n²/Z_i)` (`angularSA_iff`).  Each
+`G = diag(n²/Z_i)` (`angularSA_iff`). Each
 `Z_i = Σ_k e^{β cos(θ_i - θ_k)}` lies between `n e^{-|β|}` and `n e^{|β|}`
 (`circlePartition_mem_Icc`), so `G` lies between the same two constants
 (`le_inner_saGain`, `norm_saGain_le`), and every solution descends `f` at
-these rates (`isDescentCurve_angularSA`).  `f` is analytic, so it satisfies the
+these rates (`isDescentCurve_angularSA`). `f` is analytic, so it satisfies the
 Łojasiewicz inequality at every point
 (`exists_isLojasiewiczAt_neg_eucTorusEnergy`), and it is invariant under the
-periods `2π e_k`, which span the space.  So every solution has a limit point
+periods `2π e_k`, which span the space. So every solution has a limit point
 up to the periods, and converges, to a critical point of `𝖤_β`
-(`exists_tendsto_angularSA`, by `Landscape.SaddleAvoidance.DescentConvergence`).  For
+(`exists_tendsto_angularSA`, by `Landscape.SaddleAvoidance.DescentConvergence`). For
 `β > 0` a critical point is a global maximum, hence synchronized, or a strict
 saddle (`strict_saddle`), to which almost no solution converges
 (`ae_not_tendsto_angularSA_of_isStrictSaddle`): almost every solution
@@ -28,8 +33,7 @@ the gradient flow of §3.4, for another metric (Appendix A, Remark
 `r:extensiontoSAcase`).
 -/
 
-import Transformer.Perspective.CircleConvergence
-import Transformer.Landscape.SaddleAvoidance.DescentConvergence
+@[expose] public section
 
 open scoped BigOperators Topology
 open Real Filter MeasureTheory
@@ -140,7 +144,7 @@ theorem exists_tendsto_angularSA {β : ℝ} (hβ : β ≠ 0) (hn : 0 < n) {θ : 
 /-- **Almost every solution of SA on the circle synchronizes**, for every
 `β > 0`: for Lebesgue-almost every initial angle vector `θ₀ ∈ ℝⁿ` there is a
 `θ'` with `θ'_i - θ'_j ∈ 2πℤ` to which every solution of SA in angles with
-`θ(0) = θ₀` converges.  The solution from `θ₀` is unique
+`θ(0) = θ₀` converges. The solution from `θ₀` is unique
 (`toLp_eq_metricGradientFlow`) and converges to a critical point
 (`exists_tendsto_angularSA`); almost surely not to a strict saddle
 (`ae_not_tendsto_angularSA_of_isStrictSaddle`), so to a global maximum of
@@ -148,7 +152,7 @@ theorem exists_tendsto_angularSA {β : ℝ} (hβ : β ≠ 0) (hn : 0 < n) {θ : 
 (`synchronized_of_isGlobalMaxTorusEnergy`).
 
 Source: arXiv:2312.10794v5, §4, after `thm: beta.interval`, and Appendix A,
-Remark `r:extensiontoSAcase`: the arguments of Appendix A for SA.  The common
+Remark `r:extensiontoSAcase`: the arguments of Appendix A for SA. The common
 limit on `𝕋` is a limit `θ'` in `ℝⁿ` whose coordinates agree modulo `2π`. -/
 theorem ae_tendsto_synchronized_of_angularSA {β : ℝ} (hβ : 0 < β) :
     ∀ᵐ θ₀ : Angles n, ∃ θ' : Angles n, (∀ i j, ∃ k : ℤ, θ' i - θ' j = k * (2 * π)) ∧

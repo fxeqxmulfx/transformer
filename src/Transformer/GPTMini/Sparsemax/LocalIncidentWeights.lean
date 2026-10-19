@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.LocalMemoryWeights
+module
+
+public import Transformer.GPTMini.Sparsemax.LocalMemoryWeights
 
 /-!
 # Separate incident-edge budgets for compact sparse attention
@@ -13,6 +15,8 @@ the former convex-mixture PSD proof does not apply; the stochastic
 outer-product construction supplies the new proof in later modules.
 The path and same-family orthogonality remain architectural restrictions.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_ScalarChebyshev
+public import Mathlib.Algebra.Polynomial.BigOperators
+
+/-!
 # DASH — coefficient fitting and finite polynomial degree
 
 arXiv:2602.02016v2, Appendix A, `algorithm:cbshv-coeff-fitting`.
@@ -6,8 +11,7 @@ The cosine transform determines coefficients, not an automatic
 error bound for arbitrary degree and sample count.
 -/
 
-import Transformer.DASH.SectionA_ScalarChebyshev
-import Mathlib.Algebra.Polynomial.BigOperators
+@[expose] public section
 
 open scoped BigOperators
 

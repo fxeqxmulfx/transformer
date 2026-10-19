@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ALM.CumSum
+
+/-!
 # What is true instead of exactness
 
 `Transformer.ALM.CumSum` shows the cumulative sum coming back off by a
@@ -6,11 +10,11 @@ relative `2u` and the query inheriting it linearly, so the hypothesis `q : ℤ`
 of `Transformer.ALM.FloatGrid.fp_exact_of_grid` does not hold of the running
 machine: `todo3.md` §8a measures 2.8 % to 7.1 % of the hard-attention queries
 of the six reference programs missing an integer, `collatz` by two units in the
-last place at `2573.000000000001`.  Everything §0 proves about exactness
+last place at `2573.000000000001`. Everything §0 proves about exactness
 applies to the keys and not to these queries.
 
 What is available instead is exactness *within a margin*, and the margin is
-what this file bounds.  A query `ε` off its integer value moves each score by
+what this file bounds. A query `ε` off its integer value moves each score by
 at most `2Kε`, distinct integer keys at an integer query are a whole unit apart
 (`Transformer.ALM.LatestWindow.one_le_sScore_sub`), so the retrieval is
 unchanged as long as `4Kε < 1` — and `lookup_survives_drift` runs that from the
@@ -20,13 +24,13 @@ recovered counter through `5·cursor + 1` to the answer.
 cannot be widened to cover everything: a query that misses every stored key
 ties the two keys either side of it, that tie is exact at an integer query and
 broken at a drifted one, and which way it breaks is decided by the sign of a
-rounding error.  This is where `todo3.md` §3 finds `HullKVCache` disagreeing
+rounding error. This is where `todo3.md` §3 finds `HullKVCache` disagreeing
 with its own reference head, every observed disagreement on a miss.
 
 Source: `todo3.md` §8, §8a and §3; `transformer_vm/wasm/interpreter.py:316-320`.
 -/
 
-import Transformer.ALM.CumSum
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -80,7 +84,7 @@ theorem winner_survives_drift {q : ℝ} {q₀ b : ℤ} {K ε : ℝ} {S : Finset 
 /-- **The whole path, from the division to the answer.**  A counter recovered
 `δ` off its integer value makes the query `5·cursor + 1` land `5δ` off the
 integer query — `affine_drift`, nothing damps it — and the retrieval is
-unchanged as long as `20Kδ < 1`.  This is what replaces exactness on the main
+unchanged as long as `20Kδ < 1`. This is what replaces exactness on the main
 path of `wasm/interpreter.py:320`. -/
 theorem lookup_survives_drift {r δ K : ℝ} {c₀ b : ℤ} {S : Finset ℤ}
     (hr : |r - (c₀ : ℝ)| ≤ δ) (hb : b ∈ S) (hK : ∀ k ∈ S, |(k : ℝ)| ≤ K)
@@ -99,7 +103,7 @@ theorem lookup_survives_drift {r δ K : ℝ} {c₀ b : ℤ} {S : Finset ℤ}
 /-- **A miss ties the two keys around it, and the drift decides the tie.**  At
 an integer query the keys `q₀ - d` and `q₀ + d` score alike, which is the exact
 tie `todo3.md` §3 finds `HullKVCache` and `BruteAttentionHead` resolving
-differently.  At a query pushed off by `δ > 0` the tie is gone and the larger
+differently. At a query pushed off by `δ > 0` the tie is gone and the larger
 key wins — not because the machine chose it, but because one rounding of
 `fetch_sum` happened to have that sign. -/
 theorem symmetric_tie_broken_by_drift {q₀ j k : ℤ} {δ : ℝ} (hjk : j < k)
@@ -143,7 +147,7 @@ example :
 /-- The broken tie: the keys `2` and `4` around the query `3`. -/
 example : (2 : ℤ) < 4 ∧ (2 : ℤ) + 4 = 2 * 3 ∧ (0 : ℝ) < 1e-9 := by norm_num
 
-/-- And the margin the chain actually leaves.  At the working precision
+/-- And the margin the chain actually leaves. At the working precision
 `u = 2⁻⁵³`, a counter of `10⁷` recovered through `fetch_sum` drifts by at most
 `(2u + u²)·10⁷`, and keys of the same size still clear `20Kδ < 1`: on this
 bound alone the lookup is exact to ten million tokens. -/

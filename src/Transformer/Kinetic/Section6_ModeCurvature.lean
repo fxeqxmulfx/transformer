@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section6_ModeProfile
+
+/-!
 # Kinetic theory for Transformers — curvature of the original output modes
 
 The proof of arXiv:2605.09213v1, §6, `thm:U-shape`, expands
@@ -13,7 +17,7 @@ the bound is strict. The full Fourier family has such a mode because its
 eigenvalues tend to zero.
 -/
 
-import Transformer.Kinetic.Section6_ModeProfile
+@[expose] public section
 
 open Real
 

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadBoundedUpper
+public import Transformer.Clusters.Section12_MultiHeadBoundedLower
+public import Mathlib.Data.Set.Card
+
+/-!
 # At most one bounded token in the original discrete multi-head dynamics
 
 ArXiv:2305.05465v6, §7, `l:onlyone`, extended to the original
@@ -18,9 +24,7 @@ conclusions are proved from the actual original head matrices and
 finite-step equation; no escape premise is added to the final results.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadBoundedUpper
-import Transformer.Clusters.Section12_MultiHeadBoundedLower
-import Mathlib.Data.Set.Card
+@[expose] public section
 
 open Real Filter Topology
 

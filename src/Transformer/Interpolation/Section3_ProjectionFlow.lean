@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+
+/-!
 # Explicit flow of a constant tangent projection
 
 ArXiv:2411.04551v3, §3.1, proof of `lem: first.quadrant`.
@@ -8,8 +13,7 @@ Its denominator is positive at every real time, and the formula preserves
 unit norm. No existence or transport assertion is part of the definition.
 -/
 
-import Transformer.Interpolation.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+@[expose] public section
 
 open Real
 

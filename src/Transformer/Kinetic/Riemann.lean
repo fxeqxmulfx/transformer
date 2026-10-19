@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import Mathlib.Topology.UniformSpace.HeineCantor
+
+/-!
 # Kinetic theory for Transformers — right-endpoint Riemann sums
 
 `N⁻¹ Σ_{j=1}^N g(j/N) → ∫_0^1 g` for continuous `g`: the empirical measures of the cursor
@@ -6,9 +12,7 @@
 of tokens that never move witnesses of the initial convergence hypothesis of `mean_field_limit`.
 -/
 
-import Transformer.Basic
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.Topology.UniformSpace.HeineCantor
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory Filter Set

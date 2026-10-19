@@ -1,20 +1,24 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section6_Circle
+public import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+
+/-!
 # §8 — BBGKY hierarchy
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
 This file formalizes §8 of the survey, which considers a hierarchy of
-correlation functions for the dynamics on the circle.  Main object:
+correlation functions for the dynamics on the circle. Main object:
 
 * `e:transport` — closed-up-to-`g(t,x)` transport equation for the
   two-particle correlation `ψ(t, ·) : 𝕋 → ℝ_{≥0}`.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section6_Circle
-import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -59,7 +63,7 @@ noncomputable def bbgkyVelocity (β : ℝ) (g : ℝ → ℝ → ℝ) (t x : ℝ)
   `∂_t ψ(t,x) + ∂_x (v(t,x) ψ(t,x)) = 0`,   `(t,x) ∈ ℝ_{≥0} × 𝕋`,
   `ψ(0,x) = 1/(2π)`,
 
-with `v = bbgkyVelocity`.  The `ψ` of the hierarchy is an honest function, so
+with `v = bbgkyVelocity`. The `ψ` of the hierarchy is an honest function, so
 the equation is stated strongly: the time derivative of `ψ(·,x)` is minus the
 space derivative of the flux `v ψ` at `x`. -/
 def bbgkyTransport

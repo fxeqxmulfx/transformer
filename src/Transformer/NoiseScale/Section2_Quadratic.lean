@@ -1,11 +1,18 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.Taylor
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Transformer.NoiseScale.Section2_Batches
+
+/-!
 # The quadratic model of a step
 
-arXiv:1812.06162, §2.2.  A step `θ - εV` changes the loss by
+arXiv:1812.06162, §2.2. A step `θ - εV` changes the loss by
 `L(θ - εV) ≈ L(θ) - εGᵀV + ½ε²VᵀHV`, eq. (2.4) (`quadModel`), the second-order Taylor
 expansion: for a twice continuously differentiable `L` of gradient `G` and Hessian `H` at
 `θ`, the error is `o(ε²)` (`isLittleO_sub_quadModel`), the precise sense of the paper's
-`≈`.  Along the true gradient, `V = G`, the model is least at
+`≈`. Along the true gradient, `V = G`, the model is least at
 `ε_max = |G|²/GᵀHG` (`stepMax`, `quadModel_stepMax_lt`), which needs the curvature
 `GᵀHG > 0` the paper leaves implicit.
 
@@ -15,8 +22,7 @@ eq. (2.5), `E[L(θ - εG_est)] = L - ε|G|² + ½ε²(GᵀHG + tr(HΣ)/B)`
 (`integral_quadModel_batchGrad`), in the model (2.4), as the paper evaluates it.
 -/
 
-import Mathlib.Analysis.Calculus.Taylor
-import Transformer.NoiseScale.Section2_Batches
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Asymptotics Topology
 open scoped Matrix

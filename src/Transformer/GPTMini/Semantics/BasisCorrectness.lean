@@ -1,7 +1,9 @@
-import Transformer.GPTMini.Semantics.ParityCorrectness
-import Transformer.GPTMini.Semantics.RecallCorrectness
-import Transformer.GPTMini.Semantics.DepthCorrectness
-import Transformer.GPTMini.TokenInterface.Correctness
+module
+
+public import Transformer.GPTMini.Semantics.ParityCorrectness
+public import Transformer.GPTMini.Semantics.RecallCorrectness
+public import Transformer.GPTMini.Semantics.DepthCorrectness
+public import Transformer.GPTMini.TokenInterface.Correctness
 
 /-!
 # Complete original softmax GPTMini Basis family
@@ -27,6 +29,8 @@ Recall gains may depend on epsilon but never on a particular raw prefix.
 Given-weight correctness does not establish AdamW convergence, convex
 trainability or a measured benchmark-training FLOP budget.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

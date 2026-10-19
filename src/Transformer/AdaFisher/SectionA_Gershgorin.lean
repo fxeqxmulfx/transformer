@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section2_Fisher
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Data.Finset.Max
+
+/-!
 # AdaFisher: Gershgorin circle theorem
 
 arXiv:2405.16397v3, Appendix A.1, Theorem A.1 and §3.1.
@@ -6,9 +12,7 @@ The localization theorem holds for every complex matrix; being inside its
 discs does not by itself establish diagonal dominance of a Fisher factor.
 -/
 
-import Transformer.AdaFisher.Section2_Fisher
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Data.Finset.Max
+@[expose] public section
 
 open scoped BigOperators Matrix
 

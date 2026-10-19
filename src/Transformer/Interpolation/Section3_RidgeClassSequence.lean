@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_RidgeClassProgress
+
+/-!
 # Finite actual ridge sequences make original means non-collinear
 
 ArXiv:2411.04551v3, §3.2, preprocessing for `prop: separation`.
@@ -14,7 +18,7 @@ their original barycenters are pairwise non-collinear. The empty sequence
 is used only when no refinement is necessary.
 -/
 
-import Transformer.Interpolation.Section3_RidgeClassProgress
+@[expose] public section
 
 open Real MeasureTheory Set
 

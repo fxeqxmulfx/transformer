@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.AlibiTables
+
+/-!
 # A stabilized distance sum is a prefix count plus a finite window correction
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLCly`.
@@ -6,7 +10,7 @@ The stable tail contributes a weighted count of all source states. Only the
 finitely many smaller distances require reading previous-position states.
 -/
 
-import Transformer.CRASP.AlibiTables
+@[expose] public section
 
 namespace Transformer.CRASP
 

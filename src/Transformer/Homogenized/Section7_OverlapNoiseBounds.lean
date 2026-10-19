@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_OverlapNoiseMoments
+
+/-!
 # Uniform bounds for the actual Gaussian overlap noise
 
 ArXiv:2604.01978v1, §7, the bracket estimate following
@@ -14,7 +18,7 @@ The proof keeps the original head law and original token indices;
 no noise-moment or variance bound is assumed.
 -/
 
-import Transformer.Homogenized.Section7_OverlapNoiseMoments
+@[expose] public section
 
 open MeasureTheory Set
 open scoped BigOperators NNReal

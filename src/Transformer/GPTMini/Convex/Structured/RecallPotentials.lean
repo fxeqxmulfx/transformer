@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Convex.Structured.Binding
-import Transformer.GPTMini.Convex.Structured.RecallPositions
-import Transformer.GPTMini.Convex.Structured.SharedInterface
+module
+
+public import Transformer.GPTMini.Convex.Structured.Binding
+public import Transformer.GPTMini.Convex.Structured.RecallPositions
+public import Transformer.GPTMini.Convex.Structured.SharedInterface
 
 /-!
 # One finite shared raw matching/value/binding weight assignment
@@ -23,6 +25,8 @@ emission coordinates are zero in this pointer witness and its learned
 head logits favor the pointer branch. Energy gaps, full raw recall
 decoding and genuine tensor-stack realization are subsequent proofs.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

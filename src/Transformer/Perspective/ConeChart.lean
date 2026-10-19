@@ -1,12 +1,19 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.MinCurve
+public import Mathlib.Analysis.Calculus.Deriv.Inv
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
 # Cone collapse — weighted flows and the chart of a hemisphere
 
 Auxiliary to arXiv:2312.10794v5, *A mathematical perspective on Transformers*,
-§6.1, `lem: hemisphere.clustering`.  The survey remarks that "we only make use
+§6.1, `lem: hemisphere.clustering`. The survey remarks that "we only make use
 of the positivity of the coefficients `a_{i,j}(t)` throughout the proof", which
-is how it covers `SA`, `USA` and their `Q, K` variants at once.  Its step 2
+is how it covers `SA`, `USA` and their `Q, K` variants at once. Its step 2
 does use more: the uniform floor `a_ij(t) ≥ n⁻¹ e^{-2β}`, and so does the rate
-here, with weights in some `[m, M]`, `m > 0`.  This file sets up the common
+here, with weights in some `[m, M]`, `m > 0`. This file sets up the common
 form,
 
   `ẋ_i = Proj_{x_i}( Σ_j a_ij(t) x_j )`   (`IsWeightedFlow`),
@@ -26,10 +33,7 @@ differential inequality by one exponential contraction, proved in
 `Perspective.ConeWidth`.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.MinCurve
-import Mathlib.Analysis.Calculus.Deriv.Inv
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open scoped BigOperators
 

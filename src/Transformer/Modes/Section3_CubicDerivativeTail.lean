@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_CubicErrorRegularity
-import Transformer.Modes.Section3_CubicDerivativeTailRates
+module
+
+public import Transformer.Modes.Section3_CubicErrorRegularity
+public import Transformer.Modes.Section3_CubicDerivativeTailRates
 
 /-!
 # Integral envelopes for the cubic-corrected third derivative
@@ -21,6 +23,8 @@ norm. A finite third moment and the original integrable-power
 condition suffice; standardization and fourth moments will enter
 when combining this exterior estimate with the local bound.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

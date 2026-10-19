@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_Clenshaw
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.Basic
+
+/-!
 # DASH — scalar Chebyshev basis and interval mapping
 
 arXiv:2602.02016v2, Appendix A. The input to Clenshaw must be
 the mapped coordinate, although the scalar pseudocode calls it `x`.
 -/
 
-import Transformer.DASH.SectionA_Clenshaw
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.Basic
+@[expose] public section
 
 noncomputable section
 

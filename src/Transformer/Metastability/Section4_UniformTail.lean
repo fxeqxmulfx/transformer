@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_UniformMomentBounds
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # Actual directional tails for uniform spherical initialization
 
 ArXiv:2410.06833v1, §4, `prop: concentration unif`, and
@@ -16,10 +23,7 @@ steps can use this bound with the original law and directions.
 No tail estimate or Gaussian representation is assumed.
 -/
 
-import Transformer.Metastability.Section4_UniformMomentBounds
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open Real MeasureTheory Set
 

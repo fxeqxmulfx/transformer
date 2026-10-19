@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.SignedRootCrossing
+public import Transformer.Landscape.Sturm.PolynomialFlanks
+
+/-!
 # Signed Euclidean-chain crossings for real-root queries
 
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.SignedRootCrossing
-import Transformer.Landscape.Sturm.PolynomialFlanks
+@[expose] public section
 
 noncomputable section
 open Polynomial

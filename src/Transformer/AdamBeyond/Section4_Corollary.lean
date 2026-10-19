@@ -1,17 +1,21 @@
-import Transformer.AdamBeyond.Section4_Regret
+module
 
-/-
+public import Transformer.AdamBeyond.Section4_Regret
+
+/-!
 # Adam and beyond — §4: Corollary 1 and the `β₁/t` remark
 
 Corollary 1 of arXiv:1904.09237 and the remark after it, both consequences of
 Theorem 4 (`amsgrad_regret`) and, for the remark, of its proof before the
 lemma (`amsgrad_regret_moment`) with the closing remark of the appendix
 (`amsgrad_moment_sum_sqrt`); the deviations are recorded in the docstring of
-`Section4_AMSGrad`.  Their hypotheses are witnessed there.
+`Section4_AMSGrad`. Their hypotheses are witnessed there.
 
 Source: arXiv:1904.09237, §4, Corollary 1 (cor:t1-cor) and the paragraph
 after it; appendix, the closing remark of §"Proof of Theorem 4".
 -/
+
+@[expose] public section
 
 open Finset
 
@@ -49,7 +53,7 @@ theorem sum_lambda_sqrt_le {lam : ℝ} (hl : 0 ≤ lam) (hl' : lam < 1) (T : ℕ
 /-- The hypotheses of `sum_lambda_sqrt_le` are satisfiable: `λ = 0`. -/
 example : (0 : ℝ) ≤ 0 ∧ (0 : ℝ) < 1 := ⟨le_rfl, one_pos⟩
 
-/-- **Corollary 1**, with the factor `d/α` of its second term restored.  Under
+/-- **Corollary 1**, with the factor `d/α` of its second term restored. Under
 the assumptions of Theorem 4 with `β_{1,t} = β₁λ^{t-1}`, `0 ≤ λ < 1`, for
 every `x* ∈ F`,
 

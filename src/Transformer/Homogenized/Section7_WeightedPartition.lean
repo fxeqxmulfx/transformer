@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+
+/-!
 # Weighted interval partitions for the exponential martingale argument
 
 ArXiv:2604.01978v1, §7, the maximal inequality after
@@ -15,8 +20,7 @@ No stochastic integral, probabilistic estimate or convergence
 assumption is introduced into a definition.
 -/
 
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Set MeasureTheory

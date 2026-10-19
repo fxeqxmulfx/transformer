@@ -1,15 +1,20 @@
-/-
+module
+
+public import Transformer.ALM.HullIndex
+public import Transformer.ALM.HullResolve
+
+/-!
 # What one query costs, in full
 
 `Transformer.ALM.HullIndex` prices the binary search: `hullIndex_query_paid`
-bounds the comparisons `bsearch` makes.  `Transformer.ALM.HullScan` prices
+bounds the comparisons `bsearch` makes. `Transformer.ALM.HullScan` prices
 the tie-merge walk that follows it: `scan_merge_count_le_one` bounds the
 merges, but it bounds them *starting from an arbitrary element of*
 `argmaxSet`, because nothing in that file knows where the search lands.
 
 The two halves never touched, so the sentence "one query is a logarithmic
 search plus at most one merge" was true of the implementation and unstated in
-Lean.  `hullProbe_mem_argmaxSet` supplies the missing step — the index the
+Lean. `hullProbe_mem_argmaxSet` supplies the missing step — the index the
 search returns *is* a maximizer, which is the defining property of
 `argmaxSet` — and `hullQuery_cost_total` is then the whole price of
 `HullHalf::query` (`transformer_vm/attention/hull2d_cht.h`, lines 270-303) in
@@ -23,8 +28,7 @@ side — the left loop and the right loop, each running at most once.
 hands back.
 -/
 
-import Transformer.ALM.HullIndex
-import Transformer.ALM.HullResolve
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -56,7 +60,7 @@ theorem hullQuery_cost_total [Nonempty (Fin n)] (K : Fin n → ℝ) (q : ℝ) :
 
 /-- **The tie set around any winner.**  Whatever the keys and the query, a
 maximizer's tie set is that maximizer alone, it with its successor, or it with
-its predecessor: at most two lines tie, and two that tie are adjacent.  The
+its predecessor: at most two lines tie, and two that tie are adjacent. The
 winner is arbitrary because the walk starts wherever the search landed, and in
 floating point (`Transformer.ALM.FloatLattice`) that need not be the index the
 exact search returns. -/

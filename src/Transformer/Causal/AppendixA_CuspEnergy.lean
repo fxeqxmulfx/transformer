@@ -1,8 +1,10 @@
-import Transformer.Causal.AppendixA_Cusp
-import Transformer.Causal.SequentialFlow
-import Mathlib.Analysis.Calculus.ContDiff.Deriv
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
+module
+
+public import Transformer.Causal.AppendixA_Cusp
+public import Transformer.Causal.SequentialFlow
+public import Mathlib.Analysis.Calculus.ContDiff.Deriv
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
 
 /-!
 # Actual periodic C¹ energies with a continuous cusp gradient
@@ -27,6 +29,8 @@ are `sin ψ₀` and `sin ψ₁ - sin² ψ₀ · cuspForce(ψ₁)`.
 The isolated-critical-point and Jacobian conditions are separate
 checks; no conclusion of the printed convergence lemma is used.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 namespace Transformer.Causal

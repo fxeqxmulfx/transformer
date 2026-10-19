@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixB_Taylor
+
+/-!
 # Critical points of `𝖤_β` on the circle: stationarity, cut-stability, maxima
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5, §7 and
@@ -9,15 +13,15 @@ and its reduction to the system `ẋ_i = -Σ_j f(x_i - x_j)` (S1) of
 arXiv:2507.22857v1 with the kernel of its §5, `f(x) = sin x · e^{β (cos x - 1)}`,
 `f'(x) = (cos x - β sin² x) e^{β (cos x - 1)}` (`hasDerivAt_sin_mul_exp`).
 A critical point of `𝖤_β` is stationary (C1)
-(`sum_sin_mul_exp_eq_zero_of_isCritical`).  A point that is not a strict
+(`sum_sin_mul_exp_eq_zero_of_isCritical`). A point that is not a strict
 saddle has no positive second derivative
 (`torusHessianNonPos_of_not_isStrictSaddle`), so it is cut-stable (C2) for
 every set `S` (`cutStable_of_torusHessianNonPos`), and a negative cut sum
-makes a strict saddle (`isStrictSaddleTorusEnergy_of_cut_neg`).  For `β > 0`,
+makes a strict saddle (`isStrictSaddleTorusEnergy_of_cut_neg`). For `β > 0`,
 synchronized angles are global maxima (`isGlobalMaxTorusEnergy_of_synchronized`).
 -/
 
-import Transformer.Perspective.AppendixB_Taylor
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -86,7 +90,7 @@ the partial derivative `n⁻² Σ_j e^{β cos(θ_j - θ_i)} sin(θ_j - θ_i)` of
 Source: arXiv:2507.22857v1, §3, (C1), for the kernel `f` that §5 takes for
 (T1): `e^{-β}` times the kernel `sin x · e^{β cos x}` of (T1), whose dynamics
 is `n` times `eq:onangles` of arXiv:2312.10794v5, the gradient ascent on `𝖤_β`
-(`angularUSA_is_gradient_flow`).  Positive factors do not change (C1). -/
+(`angularUSA_is_gradient_flow`). Positive factors do not change (C1). -/
 theorem sum_sin_mul_exp_eq_zero_of_isCritical (β : ℝ) (hβ : β ≠ 0) (θ : Angles n)
     (h : IsCriticalTorusEnergy n β θ) (i : Idx n) :
     ∑ j : Idx n, sin (θ i - θ j) * exp (β * (cos (θ i - θ j) - 1)) = 0 := by
@@ -111,10 +115,10 @@ with `f'(x) = (cos x - β sin² x) e^{β (cos x - 1)}`: this is `e^{-β}` times 
 sum of `g_β` that `taylor3_inequality` bounds.
 
 Source: arXiv:2507.22857v1, §3, (C2), and §4, `remark:negative_semidef`, for
-the kernel of §5.  Changed: (C2) asks only for sets `S` of coincident
+the kernel of §5. Changed: (C2) asks only for sets `S` of coincident
 particles; here it holds for every `S`, which is what the proof of
 `lemma:twoconsecutive_general` uses, and what `remark:negative_semidef`
-gives with `c_i = 1_{i ∈ S}`.  A non-positive Hessian along every straight
+gives with `c_i = 1_{i ∈ S}`. A non-positive Hessian along every straight
 line (`TorusHessianNonPos`) stands for the negative semi-definite Hessian. -/
 theorem cutStable_of_torusHessianNonPos (β : ℝ) (hβ : β ≠ 0) (θ : Angles n)
     (h : TorusHessianNonPos n β θ) (S : Finset (Idx n)) :

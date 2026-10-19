@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Landscape.RealAnalyticGerms.NoetherianRemainder
+public import Transformer.Landscape.RealAnalyticGerms.ZeroDimension
+public import Transformer.Landscape.RealAnalyticGerms.PreparedAssociate
+public import Mathlib.RingTheory.Finiteness.Ideal
+
+/-!
 # Real analytic germs: Noetherian
 
 Adapted from Bochao Kong's LocalComplexGeometry, revision
@@ -8,10 +15,7 @@ dependency closure is retained. Apache-2.0 license:
 third_party/LocalComplexGeometry/LICENSE.
 -/
 
-import Transformer.Landscape.RealAnalyticGerms.NoetherianRemainder
-import Transformer.Landscape.RealAnalyticGerms.ZeroDimension
-import Transformer.Landscape.RealAnalyticGerms.PreparedAssociate
-import Mathlib.RingTheory.Finiteness.Ideal
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

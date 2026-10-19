@@ -1,39 +1,43 @@
-/-
+module
+
+public import Transformer.ALM.Dense
+
+/-!
 # Skipping the zeros, and the index the scan comes back with
 
 The output projection is the one matrix `vm-rs/alm-model/src/linear.rs` does
-not multiply densely.  The head is `vocab × d_model` — 915 × 38 and 85 % zero
+not multiply densely. The head is `vocab × d_model` — 915 × 38 and 85 % zero
 — and `SparseHead::of` keeps only the entries that are not zero, in the order
 the file lists them, so `argmax` touches a seventh of the words it otherwise
-would.  `perf` puts 6 % of the `sudoku` run inside that loop.
+would. `perf` puts 6 % of the `sudoku` run inside that loop.
 
 The docstring says skipping them "is exact — adding `0.0 * x` to a finite
 partial sum never changes it — so this is the same argmax, not an
 approximation of it", and there are two claims there.
 
 The first is that dropping a term with a zero coefficient does not move the
-sum.  In `ℝ` that is `a + 0 * v = a` and needs no saying; in `f64` it is a
+sum. In `ℝ` that is `a + 0 * v = a` and needs no saying; in `f64` it is a
 genuine hypothesis, and one with a boundary — `0.0 * v` is `NaN` when `v` is
 infinite or `NaN`, and then the partial sum is destroyed rather than
-preserved.  So `sparseFold_eq_rowFold` takes it as the hypothesis `hzero`,
+preserved. So `sparseFold_eq_rowFold` takes it as the hypothesis `hzero`,
 quantified over the *entries of `x`* and not over all reals, which is exactly
 the condition the runtime relies on and the docstring understates: it is the
 input that has to be finite, not only the partial sum.
 
-The second is that the scan returns the same index.  `SparseHead::argmax`
+The second is that the scan returns the same index. `SparseHead::argmax`
 keeps the incumbent unless a score is *strictly* greater, which resolves a
 tie towards the earlier row; `Tensor::argmax` and the C++ loop resolve it the
-same way, and the reference traces depend on the choice.  `firstMax` is that
+same way, and the reference traces depend on the choice. `firstMax` is that
 loop, `firstMax_le` says its answer is a maximum, and `firstMax_first` says
 nothing before it attains that maximum — together, the first index attaining
-it.  `firstMax_congr` is what carries the first claim into the second: rows
+it. `firstMax_congr` is what carries the first claim into the second: rows
 whose sparse scores agree with their dense scores are ranked identically.
 
 Source: `vm-rs/alm-model/src/linear.rs`, `SparseHead::of` and
 `SparseHead::argmax`.
 -/
 
-import Transformer.ALM.Dense
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -54,7 +58,7 @@ carries a zero coefficient, and if adding `mul 0 (x j)` to a partial sum
 returns it unchanged, then the compressed row folds to what the full row folds
 to — step for step, so in `f64` as well as in `ℝ`.
 
-The second hypothesis is the one with content.  `add s (mul 0 v) = s` holds
+The second hypothesis is the one with content. `add s (mul 0 v) = s` holds
 for every finite `f64` `v` and fails when `v` is infinite or `NaN`, where
 `0.0 * v` is `NaN`; the runtime is entitled to it because the inputs to the
 head are finite activations.
@@ -86,7 +90,7 @@ example (x : ℕ → ℝ) :
 /-! ### The index the scan settles on -/
 
 /-- `SparseHead::argmax`'s loop over `n` rows: keep the incumbent unless a
-later score is *strictly* greater.  `n = 0` returns `0`, as the Rust does with
+later score is *strictly* greater. `n = 0` returns `0`, as the Rust does with
 `best` never assigned. -/
 noncomputable def firstMax (f : ℕ → ℝ) : ℕ → ℕ
   | 0 => 0

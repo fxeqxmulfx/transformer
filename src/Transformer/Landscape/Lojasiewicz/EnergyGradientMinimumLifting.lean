@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.GradientFiberMinimumLifting
+
+/-!
 # Finite-fiber gradient minima for every nonconstant analytic energy
 
 Regular energy coordinates are constructed from analyticity. Including
@@ -6,7 +10,7 @@ the level as a base parameter then gives analytic gradient minima over
 every supplied analytic parameter curve, with universal root comparison.
 -/
 
-import Transformer.Landscape.Lojasiewicz.GradientFiberMinimumLifting
+@[expose] public section
 
 open Filter Set
 

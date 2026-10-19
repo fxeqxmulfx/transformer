@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadExtremeRates
+public import Transformer.Clusters.Section12_DiscreteGeometricError
+
+/-!
 # The full original layer-factor growth of escaping multi-head tokens
 
 ArXiv:2305.05465v6, §7, `l:auxiliary` and `l:exactasymptotic`,
@@ -16,8 +21,7 @@ strictly positive. Sign reversal of the original equation gives
 negative full-factor escape and a strictly negative normalized limit.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadExtremeRates
-import Transformer.Clusters.Section12_DiscreteGeometricError
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

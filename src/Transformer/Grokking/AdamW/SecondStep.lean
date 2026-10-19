@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.LossDescent
+module
+
+public import Transformer.Grokking.AdamW.LossDescent
 
 /-!
 # Native second-step direction and conditional effective-loss descent
@@ -17,6 +19,8 @@ for the conditional local-descent result, not a claimed learned property.
 The general formulas do not assert reachability of arbitrary inputs;
 the companion counterexample constructs an actual two-step history.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

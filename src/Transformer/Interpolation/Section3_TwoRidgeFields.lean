@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_RidgeWellPosed
+
+/-!
 # Two actual ReLU neurons with a prescribed spherical equilibrium
 
 ArXiv:2411.04551v3, §1, `eq: vf` and `eq: neural.ode.sphere`,
@@ -16,7 +20,7 @@ therefore an actual equilibrium even when the first output points toward
 a different cap center. Global attraction is a subsequent dynamical claim.
 -/
 
-import Transformer.Interpolation.Section3_RidgeWellPosed
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal BigOperators

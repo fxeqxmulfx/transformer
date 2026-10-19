@@ -1,8 +1,10 @@
-import Transformer.Modes.Section2_Gt
-import Mathlib.Analysis.Analytic.Order
-import Mathlib.MeasureTheory.Topology
+module
 
-/-
+public import Transformer.Modes.Section2_Gt
+public import Mathlib.Analysis.Analytic.Order
+public import Mathlib.MeasureTheory.Topology
+
+/-!
 # The number of modes of a Gaussian KDE — a fixed point is almost surely not a mode
 
 The first bullet of `thm:mammen`, arXiv:2412.09080v3, §1.1, uses the indicator
@@ -25,6 +27,8 @@ The consequences for nondegenerate intervals are considered separately.
 Source: arXiv:2412.09080v3, §1.1, `thm:mammen`; §2.1, `eq:Fn`;
 §2.2, `eq: Gt`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal

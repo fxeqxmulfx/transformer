@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.Basic
+module
+
+public import Transformer.GPTMini.Convex.Structured.Basic
 
 /-!
 # A compact freely learned causal state head
@@ -21,6 +23,8 @@ the true prenorm/residual/tied integer interface. Source algebra: the
 finite softmax normalizer underlying Structured.Basic and §7's
 log-sum-exp in arXiv:2305.05465v6, with a new causal state recurrence.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

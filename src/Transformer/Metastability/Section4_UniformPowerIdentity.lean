@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_RotatedPowers
+public import Transformer.Perceptron.Section5_DominatedVariation
+
+/-!
 # Actual uniform mixed-moment identity from rotational invariance
 
 ArXiv:2410.06833v1, §4, `prop: concentration unif`, and
@@ -16,8 +21,7 @@ coordinate vectors and degrees at least two. No moment value or
 concentration inequality is supplied as an unproved input.
 -/
 
-import Transformer.Metastability.Section4_RotatedPowers
-import Transformer.Perceptron.Section5_DominatedVariation
+@[expose] public section
 
 open Real MeasureTheory
 

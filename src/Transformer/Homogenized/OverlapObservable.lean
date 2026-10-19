@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Generator
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
+
+/-!
 # Homogenized Transformers — the overlap observable and its derivatives
 
 The calculus behind `lem:Ito_formula` of arXiv:2604.01978v1, *Homogenized
@@ -7,7 +13,7 @@ Transformers*, §5: the two derivatives of the observable
   `φ(X) = ⟨x_i, x_j⟩`
 
 on `(𝕊^{d-1})^n`, its Riemannian Hessian, and the generator of an Itô SDE
-applied to it.  `φ` is a quadratic form, so `Dφ` is linear and `D²φ(X) = Dφ`;
+applied to it. `φ` is a quadratic form, so `Dφ` is linear and `D²φ(X) = Dφ`;
 `overlapForm` is `Dφ` bundled as a continuous linear map of `X`, which is what
 makes that reading available.
 
@@ -15,9 +21,7 @@ The statements of `lem:Ito_formula` itself are in
 `Transformer.Homogenized.OverlapDrift`.
 -/
 
-import Transformer.Homogenized.Generator
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

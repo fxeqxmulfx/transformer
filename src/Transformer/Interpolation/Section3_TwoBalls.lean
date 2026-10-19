@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_BallControl
+
+/-!
 # Transport through two overlapping spherical balls
 
 Formalization of arXiv:2411.04551v3, Appendix, `lem: two.balls`.
@@ -21,7 +25,7 @@ The separate mass and collapse formulations below expose the two clauses
 used independently in the source's subsequent constructions.
 -/
 
-import Transformer.Interpolation.Section3_BallControl
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped ENNReal
@@ -43,10 +47,10 @@ Lipschitz, invertible, and the identity off `𝓑_0` for `t ∈ [0, T]`.
 Furthermore, for any `ω ∈ 𝓑_0` the parameters can be chosen so that
 `W_2(μ(T), α) ≤ ε`, `α = μ_0(𝓑_0) δ_ω + μ_0⌊(𝕊^{d-1} ∖ 𝓑_0)`.
 
-What is changed.  The source chooses `(𝐖, 𝐔, b)` before `μ_0`; that order is
-false (`not_two_balls`), and `μ_0` comes first here, as in the proof.  `d ≥ 2`
+What is changed. The source chooses `(𝐖, 𝐔, b)` before `μ_0`; that order is
+false (`not_two_balls`), and `μ_0` comes first here, as in the proof. `d ≥ 2`
 is added: on `𝕊^0` every tangent projection vanishes, no mass moves, and the
-claim fails for `𝓑_0 = 𝕊^0 ⊋ 𝓑_1`.  "The unique solution" is read as: one
+claim fails for `𝓑_0 = 𝕊^0 ⊋ 𝓑_1`. "The unique solution" is read as: one
 exists, and every solution satisfies the conclusion.
 
 The source's activation sign is also corrected: its displayed activation

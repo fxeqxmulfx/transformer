@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section6_ModeCurvature
+
+/-!
 # Kinetic theory for Transformers — summing the original mode coefficients
 
 The sum `ℋ` in arXiv:2605.09213v1, §6, proof of `thm:U-shape`, has
@@ -9,7 +13,7 @@ series calculus. The first two differentiated coefficients, and their
 curvature combination, are the sums of the original mode coefficients.
 -/
 
-import Transformer.Kinetic.Section6_ModeCurvature
+@[expose] public section
 
 open scoped BigOperators
 

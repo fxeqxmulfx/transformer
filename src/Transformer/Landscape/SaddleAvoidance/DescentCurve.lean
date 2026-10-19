@@ -1,14 +1,18 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.FlowTrap
+
+/-!
 # Saddle avoidance — curves that descend a function
 
 A curve `x` *descends* `f` from time `t₀` on, at the rates `c₁` and `c₂`, when
 for `t ≥ t₀` it is differentiable with `c₁ ‖∇f(x)‖² ≤ -⟪∇f(x), ẋ⟫` and
 `‖ẋ‖ ≤ c₂ ‖∇f(x)‖` (`IsDescentCurve`): `f` decreases at least at the rate
 `c₁ ‖∇f‖²` (`IsDescentCurve.antitoneOn`), and the curve moves at most at the
-speed `c₂ ‖∇f‖`.  The gradient flow `ẋ = -∇f(x)` descends `f` at the rates `1`
+speed `c₂ ‖∇f‖`. The gradient flow `ẋ = -∇f(x)` descends `f` at the rates `1`
 and `1` (`isDescentCurve_of_gradientFlow`), and a flow `ẋ = -G(x) ∇f(x)` in a
 metric `G` between `c₁` and `c₂` at the rates `c₁` and `c₂`
-(`isDescentCurve_of_metric`).  Translations leaving `f` invariant carry
+(`isDescentCurve_of_metric`). Translations leaving `f` invariant carry
 descent curves to descent curves (`IsDescentCurve.add_const`), and a descent
 curve along which `f` stays constant does not move
 (`IsDescentCurve.eq_of_comp_eq`).
@@ -16,14 +20,14 @@ curve along which `f` stays constant does not move
 The trap and the convergence of `Landscape.SaddleAvoidance.FlowTrap` and
 `Landscape.SaddleAvoidance.FlowConvergence` hold for descent curves
 (`Landscape.SaddleAvoidance.DescentTrap`, `Landscape.SaddleAvoidance.DescentConvergence`), so for
-flows in a metric too.  Source: arXiv:2312.10794v5, §4, after
+flows in a metric too. Source: arXiv:2312.10794v5, §4, after
 `thm: beta.interval`: "since all the intervening functions and metrics are
 real-analytic", Łojasiewicz's theorem (lojasiewicz1963propriete) makes the
 gradient flows of `𝖤_β` converge, for the metric of `SA` (§3.4) as for that of
 `USA`.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.FlowTrap
+@[expose] public section
 
 open Filter Set
 open scoped Topology

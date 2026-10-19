@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_Sampling
+
+/-!
 # The finite-step optimizer law is normalized
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1.
@@ -6,7 +10,7 @@ Smooth losses give measurable fresh-noise updates, so the pushforward
 used in the weak-approximation statement is a genuine probability law.
 -/
 
-import Transformer.BatchSize.Section4_Sampling
+@[expose] public section
 
 open MeasureTheory
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianPolynomialTestBounds
+
+/-!
 # The actual blended gradient under polynomial Gaussian domination
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and
@@ -15,7 +19,7 @@ included. The source's polynomial bounds on its bilinear softmax test,
 rather than score-variable uniform bounds, justify these expectations.
 -/
 
-import Transformer.Homogenized.Section7_GaussianPolynomialTestBounds
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_MeanLogPathError
+
+/-!
 # The original Gaussian mean path obeys the source error on its proved noise event
 
 ArXiv:2604.01978v1, §7, `thm:clustering_small_beta` and
@@ -16,7 +20,7 @@ allows horizon zero as well as positive horizons; the probability
 application uses the original strictly positive horizon.
 -/
 
-import Transformer.Homogenized.Section7_MeanLogPathError
+@[expose] public section
 
 open Set MeasureTheory
 open scoped NNReal

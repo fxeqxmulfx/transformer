@@ -1,81 +1,83 @@
-import Transformer.GPTMini.Convex.Structured.Basic
-import Transformer.GPTMini.Convex.Structured.Factorial
-import Transformer.GPTMini.Convex.Structured.PointerTraining
-import Transformer.GPTMini.Convex.Structured.ChannelMarginals
-import Transformer.GPTMini.Convex.Structured.PointerValues
-import Transformer.GPTMini.Convex.Structured.PointerControls
-import Transformer.GPTMini.Convex.Structured.MarkovChain
-import Transformer.GPTMini.Convex.Structured.MarkovTraining
-import Transformer.GPTMini.Convex.Structured.MarkovMarginals
-import Transformer.GPTMini.Convex.Structured.MarkovEmissions
-import Transformer.GPTMini.Convex.Structured.MarkovObjective
-import Transformer.GPTMini.Convex.Structured.StatePathProduct
-import Transformer.GPTMini.Convex.Structured.SharedSlots
-import Transformer.GPTMini.Convex.Structured.SharedPointer
-import Transformer.GPTMini.Convex.Structured.Concentration
-import Transformer.GPTMini.Convex.Structured.MarkovTeacher
-import Transformer.GPTMini.Convex.Structured.ParityReference
-import Transformer.GPTMini.Convex.Structured.MarkovConfidence
-import Transformer.GPTMini.Convex.Structured.OutputCodes
-import Transformer.GPTMini.Convex.Structured.OutputMargins
-import Transformer.GPTMini.Convex.Structured.SharedReference
-import Transformer.GPTMini.Convex.Structured.SharedInterface
-import Transformer.GPTMini.Convex.Structured.SharedParity
-import Transformer.GPTMini.Convex.Structured.DepthCompression
-import Transformer.GPTMini.Convex.Structured.DepthScan
-import Transformer.GPTMini.Convex.Structured.DepthReference
-import Transformer.GPTMini.Convex.Structured.SharedDepth
-import Transformer.GPTMini.Convex.Structured.Binding
-import Transformer.GPTMini.Convex.Structured.RecallPositions
-import Transformer.GPTMini.Convex.Structured.ChannelGaps
-import Transformer.GPTMini.Convex.Structured.RecallPotentials
-import Transformer.GPTMini.Convex.Structured.PointerDecoder
-import Transformer.GPTMini.Convex.Structured.RawBinding
-import Transformer.GPTMini.Convex.Structured.RecallEnergy
-import Transformer.GPTMini.Convex.Structured.RecallGap
-import Transformer.GPTMini.Convex.Structured.BindingInterface
-import Transformer.GPTMini.Convex.Structured.SharedRecall
-import Transformer.GPTMini.Convex.Structured.MixedHeads
-import Transformer.GPTMini.Convex.Structured.MixedTraining
-import Transformer.GPTMini.Convex.Structured.MixedConfidence
-import Transformer.GPTMini.Convex.Structured.MixedMargins
-import Transformer.GPTMini.Convex.Structured.MixedInterface
-import Transformer.GPTMini.Convex.Structured.MixedBasis
-import Transformer.GPTMini.Convex.Structured.RecallDataRoutes
-import Transformer.GPTMini.Convex.Structured.RecallDataTargets
-import Transformer.GPTMini.Convex.Structured.BasisTraining
-import Transformer.GPTMini.Convex.Structured.TensorEmbedding
-import Transformer.GPTMini.Convex.Structured.TensorRecovery
-import Transformer.GPTMini.Convex.Structured.TensorState
-import Transformer.GPTMini.Convex.Structured.TensorPointer
-import Transformer.GPTMini.Convex.Structured.TensorHeads
-import Transformer.GPTMini.Convex.Structured.TensorReadout
-import Transformer.GPTMini.Convex.Structured.TensorCausalBlock
-import Transformer.GPTMini.Convex.Structured.TensorTraining
-import Transformer.GPTMini.Convex.Structured.TensorLikelihood
-import Transformer.GPTMini.Convex.Structured.TensorBasisTraining
-import Transformer.GPTMini.Convex.Structured.TensorStream
-import Transformer.GPTMini.Convex.Structured.TensorObservations
-import Transformer.GPTMini.Convex.Structured.TensorObservationInference
-import Transformer.GPTMini.Convex.Structured.TensorDeferredFFN
-import Transformer.GPTMini.Convex.Structured.TensorStack
-import Transformer.GPTMini.Convex.Structured.TensorStackTraining
-import Transformer.GPTMini.Convex.Structured.TensorStackInterface
-import Transformer.GPTMini.Convex.Structured.TensorBasisModel
-import Transformer.GPTMini.Convex.Structured.TensorBasisStackTraining
-import Transformer.GPTMini.Convex.Structured.TensorGain
-import Transformer.GPTMini.Convex.Structured.TensorLossCertificate
-import Transformer.GPTMini.Convex.Structured.LocalConfidence
-import Transformer.GPTMini.Convex.Structured.ParityDataList
-import Transformer.GPTMini.Convex.Structured.ParityRows
-import Transformer.GPTMini.Convex.Structured.ParitySemanticRows
-import Transformer.GPTMini.Convex.Structured.TensorParityCertificate
-import Transformer.GPTMini.Convex.Structured.ParityLogitCertificate
-import Transformer.GPTMini.Convex.Structured.LearnedParityData
-import Transformer.GPTMini.Convex.Structured.LearnedParityParameters
-import Transformer.GPTMini.Convex.Structured.LearnedParityRows
-import Transformer.GPTMini.Convex.Structured.LearnedParityConfidence
-import Transformer.GPTMini.Convex.Structured.TensorLearnedParity
+module
+
+public import Transformer.GPTMini.Convex.Structured.Basic
+public import Transformer.GPTMini.Convex.Structured.Factorial
+public import Transformer.GPTMini.Convex.Structured.PointerTraining
+public import Transformer.GPTMini.Convex.Structured.ChannelMarginals
+public import Transformer.GPTMini.Convex.Structured.PointerValues
+public import Transformer.GPTMini.Convex.Structured.PointerControls
+public import Transformer.GPTMini.Convex.Structured.MarkovChain
+public import Transformer.GPTMini.Convex.Structured.MarkovTraining
+public import Transformer.GPTMini.Convex.Structured.MarkovMarginals
+public import Transformer.GPTMini.Convex.Structured.MarkovEmissions
+public import Transformer.GPTMini.Convex.Structured.MarkovObjective
+public import Transformer.GPTMini.Convex.Structured.StatePathProduct
+public import Transformer.GPTMini.Convex.Structured.SharedSlots
+public import Transformer.GPTMini.Convex.Structured.SharedPointer
+public import Transformer.GPTMini.Convex.Structured.Concentration
+public import Transformer.GPTMini.Convex.Structured.MarkovTeacher
+public import Transformer.GPTMini.Convex.Structured.ParityReference
+public import Transformer.GPTMini.Convex.Structured.MarkovConfidence
+public import Transformer.GPTMini.Convex.Structured.OutputCodes
+public import Transformer.GPTMini.Convex.Structured.OutputMargins
+public import Transformer.GPTMini.Convex.Structured.SharedReference
+public import Transformer.GPTMini.Convex.Structured.SharedInterface
+public import Transformer.GPTMini.Convex.Structured.SharedParity
+public import Transformer.GPTMini.Convex.Structured.DepthCompression
+public import Transformer.GPTMini.Convex.Structured.DepthScan
+public import Transformer.GPTMini.Convex.Structured.DepthReference
+public import Transformer.GPTMini.Convex.Structured.SharedDepth
+public import Transformer.GPTMini.Convex.Structured.Binding
+public import Transformer.GPTMini.Convex.Structured.RecallPositions
+public import Transformer.GPTMini.Convex.Structured.ChannelGaps
+public import Transformer.GPTMini.Convex.Structured.RecallPotentials
+public import Transformer.GPTMini.Convex.Structured.PointerDecoder
+public import Transformer.GPTMini.Convex.Structured.RawBinding
+public import Transformer.GPTMini.Convex.Structured.RecallEnergy
+public import Transformer.GPTMini.Convex.Structured.RecallGap
+public import Transformer.GPTMini.Convex.Structured.BindingInterface
+public import Transformer.GPTMini.Convex.Structured.SharedRecall
+public import Transformer.GPTMini.Convex.Structured.MixedHeads
+public import Transformer.GPTMini.Convex.Structured.MixedTraining
+public import Transformer.GPTMini.Convex.Structured.MixedConfidence
+public import Transformer.GPTMini.Convex.Structured.MixedMargins
+public import Transformer.GPTMini.Convex.Structured.MixedInterface
+public import Transformer.GPTMini.Convex.Structured.MixedBasis
+public import Transformer.GPTMini.Convex.Structured.RecallDataRoutes
+public import Transformer.GPTMini.Convex.Structured.RecallDataTargets
+public import Transformer.GPTMini.Convex.Structured.BasisTraining
+public import Transformer.GPTMini.Convex.Structured.TensorEmbedding
+public import Transformer.GPTMini.Convex.Structured.TensorRecovery
+public import Transformer.GPTMini.Convex.Structured.TensorState
+public import Transformer.GPTMini.Convex.Structured.TensorPointer
+public import Transformer.GPTMini.Convex.Structured.TensorHeads
+public import Transformer.GPTMini.Convex.Structured.TensorReadout
+public import Transformer.GPTMini.Convex.Structured.TensorCausalBlock
+public import Transformer.GPTMini.Convex.Structured.TensorTraining
+public import Transformer.GPTMini.Convex.Structured.TensorLikelihood
+public import Transformer.GPTMini.Convex.Structured.TensorBasisTraining
+public import Transformer.GPTMini.Convex.Structured.TensorStream
+public import Transformer.GPTMini.Convex.Structured.TensorObservations
+public import Transformer.GPTMini.Convex.Structured.TensorObservationInference
+public import Transformer.GPTMini.Convex.Structured.TensorDeferredFFN
+public import Transformer.GPTMini.Convex.Structured.TensorStack
+public import Transformer.GPTMini.Convex.Structured.TensorStackTraining
+public import Transformer.GPTMini.Convex.Structured.TensorStackInterface
+public import Transformer.GPTMini.Convex.Structured.TensorBasisModel
+public import Transformer.GPTMini.Convex.Structured.TensorBasisStackTraining
+public import Transformer.GPTMini.Convex.Structured.TensorGain
+public import Transformer.GPTMini.Convex.Structured.TensorLossCertificate
+public import Transformer.GPTMini.Convex.Structured.LocalConfidence
+public import Transformer.GPTMini.Convex.Structured.ParityDataList
+public import Transformer.GPTMini.Convex.Structured.ParityRows
+public import Transformer.GPTMini.Convex.Structured.ParitySemanticRows
+public import Transformer.GPTMini.Convex.Structured.TensorParityCertificate
+public import Transformer.GPTMini.Convex.Structured.ParityLogitCertificate
+public import Transformer.GPTMini.Convex.Structured.LearnedParityData
+public import Transformer.GPTMini.Convex.Structured.LearnedParityParameters
+public import Transformer.GPTMini.Convex.Structured.LearnedParityRows
+public import Transformer.GPTMini.Convex.Structured.LearnedParityConfidence
+public import Transformer.GPTMini.Convex.Structured.TensorLearnedParity
 
 /-!
 # Structured alternatives guided by raw Basis semantics
@@ -89,3 +91,5 @@ parameters, with FFN fixed zero and readonly decoder/anchor axes.
 Output-only CE, independent deep matrices and AdamW/FLOP results are
 outside this mathematical prototype's scope.
 -/
+
+@[expose] public section

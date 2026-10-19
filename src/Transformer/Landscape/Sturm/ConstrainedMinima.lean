@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.SignConstraints
+public import Transformer.Landscape.Sturm.RootExistence
+
+/-!
 # Exact arithmetic tests for constrained polynomial root minima
 
 The universal comparison is eliminated with a strict-better-root query.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.SignConstraints
-import Transformer.Landscape.Sturm.RootExistence
+@[expose] public section
 
 noncomputable section
 open Polynomial Transformer.Landscape.Lojasiewicz

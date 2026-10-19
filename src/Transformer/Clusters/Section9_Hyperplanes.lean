@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section9_Growth
+public import Transformer.Clusters.Section9_ThreeCoordinates
+
+/-!
 # The emergence of clusters in self-attention dynamics — the three
   hyperplanes
 
@@ -18,13 +23,13 @@
 
 * The three numbers are `{0, a, b}` with `a`, `b` of `e:defab`
   (`exists_tendsto_maxCoord_minCoord`), and the hyperplanes are their level
-  sets `H_c = {x : φ₁*(x) = c}`.  A level set of `φ₁*` is a translate of
+  sets `H_c = {x : φ₁*(x) = c}`. A level set of `φ₁*` is a translate of
   `ker φ₁*`, which is `affineShift` of §4, and `c • v` for any `v` with
   `φ₁*(v) = 1` is a point on it.
 
 * `φ₁*` is pinned as the leading eigenfunctional of a good triple by
   `IsGoodTripleWith Q K V lam φ G` together with `IsEigenFunctional V f lam`
-  and the normalisation `f φ = 1`.  The intermediate estimate
+  and the normalisation `f φ = 1`. The intermediate estimate
   `e:majorizeweights` of the proof is not carried on its own: it is a bound
   on `⟨Qe^{tV}z_i, Ke^{tV}z_j⟩` written in the full complex eigenbasis of `V`,
   which none of the statements of the paper needs.
@@ -33,8 +38,7 @@ Source: arXiv:2305.05465v6, `sec: clustering.hyperplanes`, the proof of
 `l:3hyperplanes11`, `e:defab`.
 -/
 
-import Transformer.Clusters.Section9_Growth
-import Transformer.Clusters.Section9_ThreeCoordinates
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

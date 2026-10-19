@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Basic
+public import Mathlib.MeasureTheory.Covering.BesicovitchVectorSpace
+public import Mathlib.Topology.Algebra.Module.Cardinality
+
+/-!
 # Finitely many small disjoint balls carrying almost all the mass
 
 ArXiv:2411.04551v3, §2.2, proof of `prop: compression`, Step 2: "Pack
@@ -17,9 +23,7 @@ those small enough for the ball to stay in the open set and carry at most
 all but `η`.
 -/
 
-import Transformer.Interpolation.Basic
-import Mathlib.MeasureTheory.Covering.BesicovitchVectorSpace
-import Mathlib.Topology.Algebra.Module.Cardinality
+@[expose] public section
 
 open scoped ENNReal NNReal
 open Real MeasureTheory Set Filter Topology

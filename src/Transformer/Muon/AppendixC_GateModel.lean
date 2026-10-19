@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Muon.AppendixC_GateScaling
+public import Transformer.Muon.AppendixC_Routing
+public import Mathlib.Analysis.SpecialFunctions.Sigmoid
+
+/-!
 # Muon — the gate-factor calculation and its variance interpretation
 
 arXiv:2502.16982, Appendix C, `fig:gate_scaling_code`. Sorting sigmoid scores is
@@ -8,9 +14,7 @@ requires equal, uncorrelated expert-output variances; it is not an
 unconditional statement about the trained experts.
 -/
 
-import Transformer.Muon.AppendixC_GateScaling
-import Transformer.Muon.AppendixC_Routing
-import Mathlib.Analysis.SpecialFunctions.Sigmoid
+@[expose] public section
 
 open scoped BigOperators
 

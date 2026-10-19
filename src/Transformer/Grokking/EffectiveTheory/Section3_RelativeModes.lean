@@ -1,5 +1,7 @@
-import Transformer.Grokking.EffectiveTheory.Section3_Conservation
-import Transformer.Grokking.EffectiveTheory.Section3_ScalarMode
+module
+
+public import Transformer.Grokking.EffectiveTheory.Section3_Conservation
+public import Transformer.Grokking.EffectiveTheory.Section3_ScalarMode
 
 /-!
 # Recovering spectral decay through relative modes
@@ -19,6 +21,8 @@ data and conserved norm, strengthening the layered result here.
 The stationary nonzero-loss counterexample has zero ground component.
 No transformer/AdamW trajectory is asserted to meet these effective premises.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.EffectiveTheory
 

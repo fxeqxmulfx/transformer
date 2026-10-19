@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section4_Blocking
+public import Transformer.DASH.Section2_History
+
+/-!
 # DASH — temporal preconditioners computed with batched Gram products
 
 arXiv:2602.02016v2, §2 and §4. Transposition swaps only the matrix
@@ -6,8 +11,7 @@ axes; the batching axis is preserved. The EMA recurrence and its
 entire history agree with each block's Shampoo preconditioners.
 -/
 
-import Transformer.DASH.Section4_Blocking
-import Transformer.DASH.Section2_History
+@[expose] public section
 
 open scoped Matrix
 

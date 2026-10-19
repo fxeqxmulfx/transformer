@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_TrainingBias
+
+/-!
 # AdaFisher — gradient energy from actual displacement and moment error
 
 arXiv:2405.16397v3, Algorithm 1 and §3.4, deterministic extension.
@@ -6,7 +10,7 @@ An upper bound on the computed min-max Fisher prevents a vanishing
 parameter step from hiding a nonzero corrected moment.
 -/
 
-import Transformer.AdaFisher.Section3_TrainingBias
+@[expose] public section
 
 open scoped BigOperators
 

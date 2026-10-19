@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section4_Hyperplanes
+
+/-!
 # The emergence of clusters in self-attention dynamics — a mix of hyperplanes
   and polytopes
 
@@ -10,26 +14,26 @@ and its complete proof are in `Section10_Multiplicity`.
 
 * `d:goodmulti` (ii) calls `V` *paranormal* when `ℝ^d` splits into two
   `V`-invariant subspaces `ℱ ⊕ 𝒢` with `V|_ℱ = λ Id`, `λ > 0`, and
-  `ρ(V|_𝒢) < λ`.  The spectral radius is taken through Gelfand's formula, as
-  in `Section4_Hyperplanes` — see `IsSpectralRadiusLtOn`.  `ℱ` and `𝒢` are
+  `ρ(V|_𝒢) < λ`. The spectral radius is taken through Gelfand's formula, as
+  in `Section4_Hyperplanes` — see `IsSpectralRadiusLtOn`. `ℱ` and `𝒢` are
   parameters of the definition rather than existentials, because the
   conclusion of `t:multiplicity` names them.
 
 * `t:multiplicity` sets `ℋ := (∂𝒦 ∪ {0}) × 𝒢` for a bounded convex polytope
-  `𝒦 ⊂ ℱ`.  The product is read through the splitting: `ℋ` is the set of
+  `𝒦 ⊂ ℱ`. The product is read through the splitting: `ℋ` is the set of
   `x ∈ ℝ^d` whose `ℱ`-part lies in `∂𝒦 ∪ {0}`, that is `x - p ∈ 𝒢` for some
   `p ∈ ∂𝒦 ∪ {0}`.
 
 * `∂𝒦` is the frontier **in `ℱ`**, not in `ℝ^d`: `𝒦` is a subset of a proper
   subspace, so its frontier in `ℝ^d` would be all of `𝒦` and the conclusion
-  would say strictly less.  `𝒦` therefore lives in `↥ℱ`, where `frontier` is
-  the relative one.  "Bounded convex polytope" is the convex hull of a finite
+  would say strictly less. `𝒦` therefore lives in `↥ℱ`, where `frontier` is
+  the relative one. "Bounded convex polytope" is the convex hull of a finite
   set, which is bounded and convex outright.
 
 Source: arXiv:2305.05465v6, `d:goodmulti`, `t:multiplicity`.
 -/
 
-import Transformer.Clusters.Section4_Hyperplanes
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -63,7 +67,7 @@ theorem isPosDefQK_one (d : ℕ) : IsPosDefQK (1 : ParamMatrix d) 1 := by
 
 /-- **`(I_d, I_d, I_d)` is a good triple with multiplicity**, with `ℱ = ℝ^d`,
 `𝒢 = 0` and `λ = 1`: the case `V = I_d` of §3, which `t:multiplicity`
-specializes to `t:Idcase11int`.  This witnesses `d:goodmulti`. -/
+specializes to `t:Idcase11int`. This witnesses `d:goodmulti`. -/
 theorem isGoodTripleMulti_one (d : ℕ) :
     IsGoodTripleMulti (1 : ParamMatrix d) 1 1 ⊤ ⊥ 1 := by
   refine ⟨isPosDefQK_one d, fun w _ => Submodule.mem_top, fun w hw => by simpa using hw,

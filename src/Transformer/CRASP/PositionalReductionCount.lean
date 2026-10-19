@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.CRASP.BoundedExists
+public import Transformer.CRASP.PositionalReductionAtom
+public import Transformer.CRASP.Spread
+
+/-!
 # `TL[◁#]^pos` reduces to `TL[◁#]`: counts, block by block
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -7,18 +13,16 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 
 The paper splits a count over `f(w) = e^r w₁ e^{r−1} ⋯ wₙ e^{r−1}` up to
 `r·i + ρ` into the first block, the blocks of `w₁ ⋯ w_{i−1}`, and the current
-block up to `ρ`.  Here the split is into the first block and the blocks of
+block up to `ρ`. Here the split is into the first block and the blocks of
 `w₁ ⋯ wᵢ` in full, which is the count up to `r·i + r`, less the rest
-`(r·i + ρ, r·i + r]` of the current block.  `TermP.val_countL_blockEnd` puts
+`(r·i + ρ, r·i + r]` of the current block. `TermP.val_countL_blockEnd` puts
 the rest back, and `TermP.val_countL_spread` counts the full blocks: the first
-as `e^r` reads it, each later one position of `w` at a time.  Both take as a
+as `e^r` reads it, each later one position of `w` at a time. Both take as a
 hypothesis the formulas `T ρ'` that simulate `φ` at `r·i + ρ'`, which the
 induction of `Transformer.CRASP.PositionalReductionEquiv` supplies.
 -/
 
-import Transformer.CRASP.BoundedExists
-import Transformer.CRASP.PositionalReductionAtom
-import Transformer.CRASP.Spread
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

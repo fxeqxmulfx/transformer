@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_SphericalKernelBounds
+public import Transformer.Perceptron.Section5_DominatedVariation
+
+/-!
 # Regularity of transported spherical interaction integrands
 
 ArXiv:2601.21366v2, §5.3, the localization argument for
@@ -16,8 +21,7 @@ The two fields may differ; taking one to be zero supplies the
 one-point transport terms needed for the exact energy cancellation.
 -/
 
-import Transformer.Perceptron.Section5_SphericalKernelBounds
-import Transformer.Perceptron.Section5_DominatedVariation
+@[expose] public section
 
 open Real MeasureTheory
 

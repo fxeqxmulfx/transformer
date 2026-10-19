@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadScalar
+public import Transformer.Clusters.Section7_BoundedOtherMean
+
+/-!
 # Limits and the unique zero of the original weighted multi-head scalar mean
 
 ArXiv:2305.05465v6, §7, proof of `l:boundedother`, for the
@@ -16,8 +21,7 @@ Continuity supplies its zero and strict monotonicity makes it unique.
 No common effective head replaces the original finite head sum.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadScalar
-import Transformer.Clusters.Section7_BoundedOtherMean
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology Set

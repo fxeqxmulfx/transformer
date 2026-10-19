@@ -1,24 +1,28 @@
-/-
+module
+
+public import Transformer.CRASP.Locality
+public import Transformer.CRASP.Middle
+public import Transformer.CRASP.Strip
+
+/-!
 # Past a prefix, a count of constant formulas is affine in the letter counts
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 (COLM 2025), §4.4 and Appendix C.2, the proof of `lem:cropping_oneway`: "each
 `ψ_ℓ` defines a half-plane".
 
-What the paper's claim needs, and what makes it true.  When every formula
+What the paper's claim needs, and what makes it true. When every formula
 under the counts of a term is constant, letter by letter, on the quadrant
 `x ≤ W` after a prefix `u`, the term at a position of `u ++ m` is
 `α + β·x + γ·y`, with `x` and `y` the numbers of `a`s and `b`s in `m` up to that
 position (`Term.val_affine`): the count over `u` is a constant `α`, since a
 past-only formula does not look ahead, and the count over `m` counts the
-letters on which the formula holds.  A comparison of two such terms is then a
+letters on which the formula holds. A comparison of two such terms is then a
 half-plane in `(x, y)`, and a formula over them is determined by the letter
 and `(x, y)` (`Form.sat_eq_of_count_eq`).
 -/
 
-import Transformer.CRASP.Locality
-import Transformer.CRASP.Middle
-import Transformer.CRASP.Strip
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

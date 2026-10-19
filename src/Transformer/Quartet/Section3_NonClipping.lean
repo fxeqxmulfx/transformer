@@ -1,27 +1,31 @@
-/-
+module
+
+public import Transformer.Quartet.Fp8Grid
+public import Transformer.Quartet.Section3_NVFP4
+
+/-!
 # Neither quantizer clips, and `Q_SR` is unbiased
 
-arXiv:2601.22813v2, §3.1 and §3.3.  Two claims of the paper say that the E2M1
+arXiv:2601.22813v2, §3.1 and §3.3. Two claims of the paper say that the E2M1
 rounding is never asked for a value outside `[-6, 6]`: "Given the choice of
 constants, stochastic rounding `SR_FP4` does not clip its arguments" (§3.1),
 and "Setting the clipping factor `s` to `6 × 16/17` or lower makes the scheme
-non-clipping" (§3.3).  Both are the same computation: an entry is at most
+non-clipping" (§3.3). Both are the same computation: an entry is at most
 `max_g|x|`, the group scale is `RTN_FP8` of `max_g|x|` divided by the rest of
 the display, and `RTN_FP8` gives back at least `16/17` of its argument
-(`le_rtn_fp8`).  Unbiasedness of `Q_SR` (§3.1) then follows from `integral_sr`,
+(`le_rtn_fp8`). Unbiasedness of `Q_SR` (§3.1) then follows from `integral_sr`,
 since the two scales do not depend on the coin.
 
 **The hypothesis the paper does not state.**  `le_rtn_fp8` needs its argument
 to be a normal E4M3 value, and here that is `max|x| ≤ 2^14 · max_g|x|`: no
-group is more than `2^14` times smaller than the tensor.  Without it the
+group is more than `2^14` times smaller than the tensor. Without it the
 claims are false — a group scale landing among the E4M3 subnormals can be
 rounded down by a factor `2/3`, and the E2M1 argument then leaves `[-6, 6]`.
 The hypothesis is harmless for the paper's purpose, since a group that far
 below the tensor maximum quantizes to zero anyway, but it is a hypothesis.
 -/
 
-import Transformer.Quartet.Fp8Grid
-import Transformer.Quartet.Section3_NVFP4
+@[expose] public section
 
 namespace Transformer
 namespace Quartet
@@ -62,7 +66,7 @@ example : (256 : ℝ) ≤ 448 ∧ (448 : ℝ) ≤ 448 ∧
 
 /-- **`Q_SR` never clips**: with the constants of §3.1 the argument handed to
 `SR_FP4` stays in `[-6, 6]`, the range of E2M1 — "Given the choice of
-constants, stochastic rounding `SR_FP4` does not clip its arguments".  The
+constants, stochastic rounding `SR_FP4` does not clip its arguments". The
 factor `16/17`, "the maximum factor by which `RTN_FP8` can increase the
 underlying values", is exactly what buys this. -/
 theorem abs_div_groupScaleSR_le {x : Fin (2 ^ k) → Fin 16 → ℝ} (hc : 0 < c) (hc' : c ≤ 6)

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_SequentialFrame
+
+/-!
 # Genuine orthogonal approximation on the original success event
 
 ArXiv:2410.06833v1, §4, `prop: concentration unif`, and
@@ -17,7 +21,7 @@ No orthogonality, distance estimate or probability estimate is
 assumed on failed prefixes, or built into the success predicate.
 -/
 
-import Transformer.Metastability.Section4_SequentialFrame
+@[expose] public section
 
 open Real MeasureTheory Set
 

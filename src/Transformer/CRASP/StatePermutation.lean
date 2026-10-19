@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.PositionalStateCounts
+
+/-!
 # Attention tables are invariant under permutations of source states
 
 arXiv:2506.16055v3, Appendix B.2 and F, finite-state counting construction.
@@ -6,7 +10,7 @@ At one layer, fixing the query and permuting the finite source-state word
 preserves every numerator, denominator and fallback sum.
 -/
 
-import Transformer.CRASP.PositionalStateCounts
+@[expose] public section
 
 namespace Transformer.CRASP.CountCells
 

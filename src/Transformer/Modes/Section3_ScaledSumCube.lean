@@ -1,11 +1,13 @@
-import Transformer.Modes.Section3_ScaledSumMGF
+module
 
-/-
+public import Transformer.Modes.Section3_ScaledSumMGF
+
+/-!
 # The number of modes of a Gaussian KDE — the third moment of a normalized sum
 
 The moment identity of arXiv:2412.09080v3, §3.1, rests on one scaling law: a
 third moment of `S_n = n^{-1/2} Σ Yᵢ` is `n^{-1/2}` times the corresponding
-third moment of `Y`, provided `Y` is centred.  Here it is proved for every
+third moment of `Y`, provided `Y` is centred. Here it is proved for every
 linear form at once,
 
   `𝔼 (s (S_n)₁ + t (S_n)₂)³ = n^{-1/2} 𝔼 (s Y₁ + t Y₂)³`,
@@ -13,14 +15,16 @@ linear form at once,
 which is enough: `s` and `t` are free, and the four mixed third moments are
 recovered from four values of the cubic form in `Section3_ScaledSumMoments.lean`.
 
-Two steps.  `integral_pi_sum_cube` is the probabilistic one: `𝔼 (Σ g(Yᵢ))³ =
+Two steps. `integral_pi_sum_cube` is the probabilistic one: `𝔼 (Σ g(Yᵢ))³ =
 n 𝔼 g(Y)³` for centred `g`, read off the third derivative at `0` of
 `(𝔼 e^{θ g})^n` — three of the four terms of that derivative carry a factor
-`𝔼 g(Y) = 0`.  The rest is the bookkeeping `n · (n^{-1/2})³ = n^{-1/2}` and a
+`𝔼 g(Y) = 0`. The rest is the bookkeeping `n · (n^{-1/2})³ = n^{-1/2}` and a
 change of measure along `scaledSum`.
 
 Source: arXiv:2412.09080v3, §3.1, the display after `eq:psi`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped Topology
@@ -40,7 +44,7 @@ theorem inv_sqrt_natCast_mem (hn : 1 ≤ n) : 0 < (Real.sqrt n)⁻¹ ∧ (Real.s
   exact ⟨inv_pos.2 (lt_of_lt_of_le one_pos hs), inv_le_one_of_one_le₀ hs⟩
 
 /-- `n · (n^{-1/2})³ = n^{-1/2}`: the third cumulant of a normalized sum of `n`
-summands carries exactly one factor `n^{-1/2}`.  arXiv:2412.09080v3, §3.1. -/
+summands carries exactly one factor `n^{-1/2}`. arXiv:2412.09080v3, §3.1. -/
 theorem natCast_mul_inv_sqrt_cube (hn : 1 ≤ n) :
     (n : ℝ) * ((Real.sqrt n)⁻¹) ^ 3 = (Real.sqrt n)⁻¹ := by
   have hn0 : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.2 (by omega)

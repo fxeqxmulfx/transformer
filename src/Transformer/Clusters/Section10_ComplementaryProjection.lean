@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section10_ProjectedDynamics
+public import Mathlib.LinearAlgebra.Projection
+
+/-!
 # The two projections in the paranormal splitting
 
 ArXiv:2305.05465v6, §5, `d:goodmulti`, and §10, the opening of the proof
@@ -11,8 +16,7 @@ These are projections along the specified direct sum. Orthogonality of
 the summands is not required for any statement below.
 -/
 
-import Transformer.Clusters.Section10_ProjectedDynamics
-import Mathlib.LinearAlgebra.Projection
+@[expose] public section
 
 open scoped BigOperators
 open Real

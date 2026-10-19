@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.BatchSize.Section3_WeakTaylor
+
+/-!
 # Averaging the Taylor remainder
 
 arXiv:2506.12543v1, Section 3.2, equation (1), and Section 4.3, Theorem 1.
 An L2 random update gives a weak Taylor bound controlled by its second moment.
 -/
 
-import Transformer.BatchSize.Section3_WeakTaylor
+@[expose] public section
 
 open MeasureTheory
 

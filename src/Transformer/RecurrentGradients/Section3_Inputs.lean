@@ -1,21 +1,25 @@
-/-
+module
+
+public import Transformer.RecurrentGradients.Section1_Gradients
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+
+/-!
 # The derivative in an input
 
-arXiv:1211.5063, §3.1 and §3.3.  The information an input inserts in the model
+arXiv:1211.5063, §3.1 and §3.3. The information an input inserts in the model
 (§3.1) reaches the later states through the derivative of the state in that
-input.  The derivative of `x_{k+1+l}` in `u_{k+1}` is `∂x_{k+1+l}/∂x_{k+1}`
+input. The derivative of `x_{k+1+l}` in `u_{k+1}` is `∂x_{k+1+l}/∂x_{k+1}`
 applied to the immediate derivative of `x_{k+1}` in `u_{k+1}`
 (`hasDerivAt_states_input`), as the states up to `k` do not see `u_{k+1}`
 (`states_congr`): "`∂x_t/∂x_k` is a factor in `∂L_t/∂u_k`" (§3.3), whose other
-factor is `∂L_t/∂x_t`.  For eq. (2) the immediate derivative is
-`W_in` (`hasDerivAt_step_input`).  For the form
+factor is `∂L_t/∂x_t`. For eq. (2) the immediate derivative is
+`W_in` (`hasDerivAt_step_input`). For the form
 `y_t = σ(W_rec y_{t-1} + W_in u_t + b)` of footnote 1 it is
 `diag(σ'(W_rec y + W_in u + b)) W_in` (`hasDerivAt_stepAfter_input`), and the
 Jacobian is `diag(σ'(W_rec y + W_in u + b)) W_rec` (`hasFDerivAt_stepAfter`).
 -/
 
-import Transformer.RecurrentGradients.Section1_Gradients
-import Mathlib.Analysis.Calculus.Deriv.Comp
+@[expose] public section
 
 open scoped Matrix
 

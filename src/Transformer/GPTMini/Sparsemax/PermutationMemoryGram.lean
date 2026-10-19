@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.MemoryExampleGrams
-import Mathlib.Logic.Equiv.Basic
+module
+
+public import Transformer.GPTMini.Sparsemax.MemoryExampleGrams
+public import Mathlib.Logic.Equiv.Basic
 
 /-!
 # Genuine permutation atoms for a local learned-memory Gram
@@ -18,6 +20,8 @@ architecture to a fixed path of possible connections, while allowing the
 actual support to change. No claim about the meaning of dictionary order
 or output-only identifiability follows from this structural construction.
 -/
+
+@[expose] public section
 
 noncomputable section
 

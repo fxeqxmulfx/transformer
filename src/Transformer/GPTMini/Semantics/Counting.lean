@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Semantics.Basic
-import Transformer.Basis.Parity
-import Mathlib.Algebra.BigOperators.Fin
+module
+
+public import Transformer.GPTMini.Semantics.Basic
+public import Transformer.Basis.Parity
+public import Mathlib.Algebra.BigOperators.Fin
 
 /-!
 # Counting raw ones with the actual uniform softmax head
@@ -16,6 +18,8 @@ It supplies the exact count from which a subsequent decoder can compute
 parity. Choosing FFN/readout weights and recognizing the EOS phase are
 separate obligations; counting alone is not a full Basis solver.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

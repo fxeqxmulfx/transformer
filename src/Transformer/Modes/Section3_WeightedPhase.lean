@@ -1,4 +1,6 @@
-import Transformer.Modes.Section3_PhaseTaylor
+module
+
+public import Transformer.Modes.Section3_PhaseTaylor
 
 /-!
 # Weighted phase remainders for characteristic derivatives
@@ -20,6 +22,8 @@ controls the resulting error. Later applications provide these inputs
 from the actual law's finite moments and use its standardization to
 compute the polynomial integrals.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped ENNReal

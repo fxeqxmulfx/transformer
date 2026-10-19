@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.Construction
+public import Transformer.Landscape.Sturm.SquarefreePart
+
+/-!
 # Root counts for arbitrary nonzero real polynomials
 
 Every distinct root is counted once, including repeated roots of the
@@ -6,8 +11,7 @@ original polynomial. Auxiliary for Appendix D.1, `lem: loj`, of
 arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.Construction
-import Transformer.Landscape.Sturm.SquarefreePart
+@[expose] public section
 
 noncomputable section
 open Polynomial

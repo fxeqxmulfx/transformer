@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.RASP.Basic
+
+/-!
 # RASP: the worked programs of §3
 
 Weiss, Goldberg, Yahav — arXiv:2106.06981v2, "Thinking Like Transformers",
@@ -18,7 +22,7 @@ each of its rows selects exactly one position, and the value there is passed
 through rather than averaged, so it transports tokens rather than numbers.
 -/
 
-import Transformer.RASP.Basic
+@[expose] public section
 
 namespace Transformer
 namespace RASP

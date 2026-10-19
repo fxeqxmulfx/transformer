@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section6_SourcePosition
+
+/-!
 # Kinetic theory for Transformers — the output variable at both ends
 
 The proof of arXiv:2605.09213v1, §6, `thm:U-shape`, transfers the
@@ -9,7 +13,7 @@ actual derivative tends to the finite negative number
 actual positive-position domain, including the continuous value at one.
 -/
 
-import Transformer.Kinetic.Section6_SourcePosition
+@[expose] public section
 
 open Real Set Filter
 open scoped Topology

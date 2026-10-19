@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.Section3_SmallBeta
+public import Transformer.Perspective.UniformAtomless
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+
+/-!
 # §6.1 — No smooth invariant measure
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -6,7 +12,7 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 The remark following `thm: boumal`: where almost every initial sequence
 clusters, no measure with a density with respect to the uniform law can be
-invariant under the flow.  The two inputs the survey uses without proof —
+invariant under the flow. The two inputs the survey uses without proof —
 the clustering statement itself and the existence of solutions — are carried
 as explicit hypotheses, so what is proved here is the implication, with its
 dependence legible in the signature.
@@ -15,9 +21,7 @@ The measure-theoretic input is `Perspective.UniformAtomless`: the uniform law
 charges neither a single configuration nor the diagonal.
 -/
 
-import Transformer.Perspective.Section3_SmallBeta
-import Transformer.Perspective.UniformAtomless
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -33,10 +37,10 @@ variable (d n : ℕ)
 for `d ≥ 3`), neither `SA` nor `USA` admits a smooth invariant measure.
 
 "Smooth" is read as *having a density*: `μ ≪ P`, with `P` the uniform law
-`UniformTuple` of §4.  That already rules out the Dirac masses on consensus
+`UniformTuple` of §4. That already rules out the Dirac masses on consensus
 configurations, which *are* invariant but sit on a `P`-null set, and it is what
 makes the remark a consequence of `boumal_clustering`: everything is swept into
-that null set, so no measure with a density can be preserved.  The flow is
+that null set, so no measure with a density can be preserved. The flow is
 presented as any map `Φ` that transports initial data along solutions of `SA`.
 
 **What the source says and what is changed here.**  Two inputs the survey uses
@@ -46,17 +50,17 @@ the remark is proved outright and its dependence is legible in its signature:
 * `h_clust` — the conclusion of `boumal_clustering`, which is a `sorry`;
 * `h_exist` — existence of an `SA` solution through every initial sequence,
   which this development does not build: `Section2_FlowMap` states the flow
-  map, it does not construct it.  Without `h_exist` the hypothesis on `Φ` is
+  map, it does not construct it. Without `h_exist` the hypothesis on `Φ` is
   empty of content, since it constrains `Φ` only along initial data a solution
   already passes through, and the remark is not provable at all.
 
 The source's `0 ≤ β` is dropped: with `h_clust` carried, no step of the proof
 below uses the sign of `β`.
 
-The proof.  Almost every orbit clusters, so `‖x_0(t) - x_1(t)‖ → 0` along it;
+The proof. Almost every orbit clusters, so `‖x_0(t) - x_1(t)‖ → 0` along it;
 that function is bounded by `2`, so invariance of `μ` and dominated
 convergence force `∫ ‖x_0 - x_1‖ dμ = 0`, i.e. `μ` lives on the diagonal
-`{X | X_0 = X_1}`.  That set is `P`-null by `measure_coords_eq_eq_zero`, hence
+`{X | X_0 = X_1}`. That set is `P`-null by `measure_coords_eq_eq_zero`, hence
 `μ`-null, so `μ` is the zero measure — and it was a probability measure.
 
 Source: arXiv:2312.10794v5, §6.1 (remark after `thm: boumal`). -/

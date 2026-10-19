@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Convex.Structured.RecallGap
-import Transformer.GPTMini.Convex.Structured.BindingInterface
-import Transformer.Basis.Encoding.Tasks
+module
+
+public import Transformer.GPTMini.Convex.Structured.RecallGap
+public import Transformer.GPTMini.Convex.Structured.BindingInterface
+public import Transformer.Basis.Encoding.Tasks
 
 /-!
 # Actual finite learned all-pair head solves full raw Basis recall
@@ -20,6 +22,8 @@ floating-point equivalence or successful AdamW training. The globally
 convex complete likelihood uses data-derived route/channel supervision;
 ordinary output-only CE is not covered by that convexity guarantee.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

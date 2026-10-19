@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_DyadicGenerator
+public import Transformer.BatchSize.Section4_EulerIntervalGenerator
+
+/-!
 # The actual finite Brownian Euler martingale identity
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The physical interval identities telescope for any bounded observable
 measurable in the past at the chosen starting node.
 -/
 
-import Transformer.BatchSize.Section4_DyadicGenerator
-import Transformer.BatchSize.Section4_EulerIntervalGenerator
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped NNReal BigOperators

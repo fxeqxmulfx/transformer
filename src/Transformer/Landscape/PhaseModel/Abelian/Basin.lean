@@ -1,21 +1,25 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Abelian.Coordinates
+
+/-!
 # Phase model over a finite abelian group — critical points near `0`
 
 As for `ℤ/n` (`Landscape.PhaseModel.Basin`), with `n = |G| ≥ 4`: let `ψ` be a critical
 point of the energy `V_full` of the full division table of `G` where the
-Hessian has a nonnegative diagonal, as at a local minimizer.  If
+Hessian has a nonnegative diagonal, as at a local minimizer. If
 `E = Σ_x (1 - cos ψ_x) < n/8`, then `cos ψ_t > 1/2` for every `t`
-(`half_lt_cos_of_gradient_eq_zero`).  With `θ_{x,y} = ψ_x - ψ_y - ψ_{x-y}`
+(`half_lt_cos_of_gradient_eq_zero`). With `θ_{x,y} = ψ_x - ψ_y - ψ_{x-y}`
 and `λ_t = Σ_y cos θ_{t,y} + Σ_x cos θ_{x,t} + Σ_y cos θ_{t+y,y}`, the
 identity `λ_t cos ψ_t + sin ψ_t ∂_t V = Σ_y cos (ψ_y + ψ_{t-y}) +
 Σ_x cos (ψ_x - ψ_{x-t}) + Σ_y cos (ψ_{t+y} - ψ_y)` and the chord inequality
 give `λ_t cos ψ_t ≥ 3n - 12E > 3n/2`, while `λ_t ≤ 3n` and, by the Hessian,
-`λ_t ≥ -6`.  Each `ψ_t` is then within `π/3` of `2πℤ`, every relation of
+`λ_t ≥ -6`. Each `ψ_t` is then within `π/3` of `2πℤ`, every relation of
 `ψ` within `π` of `2πℤ`, and a critical point with every `cos ψ_t > 1/2` is
 a period (`mem_periods_of_forall_half_lt_cos`).
 -/
 
-import Transformer.Landscape.PhaseModel.Abelian.Coordinates
+@[expose] public section
 
 open Real
 

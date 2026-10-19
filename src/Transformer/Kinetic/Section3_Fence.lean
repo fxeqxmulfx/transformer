@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # Comparison for triangular differential inequalities
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Steps 1 and 3: the bounds on
@@ -13,9 +19,7 @@ by token (`abs_le_of_triangular`). The one-token step `abs_le_of_deriv_le` is
 Mathlib's fencing theorem, applied to `W + ε e^{(L+1)t}` and then `ε → 0`.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open Real
 

@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_FrequencyMoments
-import Transformer.Modes.Section3_GaussianComparison
+module
+
+public import Transformer.Modes.Section3_FrequencyMoments
+public import Transformer.Modes.Section3_GaussianComparison
 
 /-!
 # The integrated Gaussian error of the actual normalized sum
@@ -21,6 +23,8 @@ and on the fixed small-frequency radius is retained explicitly.
 Both eventual integrability and the quantitative integral bound apply
 to the actual sum law, rather than an assumed approximate density.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped ENNReal Topology

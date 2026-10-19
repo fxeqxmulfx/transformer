@@ -1,11 +1,16 @@
-/-
+module
+
+public import Transformer.Perceptron.Transform
+public import Transformer.Perceptron.SecondDiff
+
+/-!
 # Perceptrons and attention's mean-field landscape — the transform off the sphere
 
 `f_B^μ(x) = ∫ e^{xᵀ B y} dμ(y)` makes sense for every `x ∈ ℝ^d`, and there it
 satisfies the discrete form of the source's `(Δ - 1) F_ν = 0`: with directions
 `w_i` such that `w_i · B y = y_i`,
 `Σ_i [f(x + t w_i) + f(x - t w_i) - 2 f(x)] = t² f(x) + O(t⁴ f(x))`
-(`abs_secondDiff_sub_le`).  With the discrete maximum principle of
+(`abs_secondDiff_sub_le`). With the discrete maximum principle of
 `SecondDiff`, two such transforms that agree on the unit sphere agree on the
 closed unit ball (`attentionTransformMapExt_eq_of_eq_on_sphere`) — the
 uniqueness for the Dirichlet problem that `rem: general-attention` invokes.
@@ -14,8 +19,7 @@ The remark itself is `TransformMap`.
 Source: arXiv:2601.21366v2, `rem: general-attention`.
 -/
 
-import Transformer.Perceptron.Transform
-import Transformer.Perceptron.SecondDiff
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory Filter

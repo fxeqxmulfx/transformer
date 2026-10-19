@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_Symmetric
+public import Transformer.Clusters.Section7_UnboundedParticles
+
+/-!
 # The emergence of clusters in self-attention dynamics — `t:boolean`, the reduction
 
 §7 of arXiv:2305.05465v6 opens: "in the statement, `V` is a positive scalar,
@@ -6,19 +11,18 @@ but by reparametrizing time we may assume that `V = 1` … to ease notations we
 focus on `QK = 1`, but the proof adapts straightforwardly to the setting
 `QK > 0`", and it relabels the tokens so that `x_1(0) < … < x_n(0)`.
 
-This file carries that reduction out.  In `d = 1` every map is a scalar:
-`V u = v u` and `⟨Q u, K w⟩ = c u w` with `v, c > 0`.  If `x` solves
+This file carries that reduction out. In `d = 1` every map is a scalar:
+`V u = v u` and `⟨Q u, K w⟩ = c u w` with `v, c > 0`. If `x` solves
 `eq:trans_dyn` then `y_i(s) = √c x_{σ(i)}(s / v)` solves `e:Idnonresca` for
 every relabelling `σ` (`idNonrescaledDynamics_rescale`), and its
 self-attention matrix at time `v t` is that of `x` at time `t`, with rows and
-columns relabelled (`attentionMatrix_rescale`).  Instead of adapting the proof
+columns relabelled (`attentionMatrix_rescale`). Instead of adapting the proof
 to `QK > 0`, the factor `c` is absorbed into the tokens.
 
 Source: arXiv:2305.05465v6, §7, the paragraph before `e:Idnonresca`.
 -/
 
-import Transformer.Clusters.Section7_Symmetric
-import Transformer.Clusters.Section7_UnboundedParticles
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

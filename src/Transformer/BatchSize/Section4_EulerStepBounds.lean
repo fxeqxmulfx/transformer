@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerStability
+
+/-!
 # Adaptedness and local displacement of Brownian Euler steps
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The displacement bound controls the error from freezing coefficients
 inside a coarse grid interval.
 -/
 
-import Transformer.BatchSize.Section4_EulerStability
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal BigOperators

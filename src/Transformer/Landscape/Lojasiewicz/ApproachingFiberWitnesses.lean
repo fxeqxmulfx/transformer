@@ -1,13 +1,17 @@
-/-
+module
+
+public import Mathlib.Analysis.Normed.Group.Constructions
+public import Mathlib.Analysis.Normed.Group.Real
+public import Mathlib.Topology.Instances.Real.Lemmas
+
+/-!
 # Joint accumulation from approaching witnesses in parameter fibers
 
 If every small positive parameter has a witness arbitrarily close to the
 fiber origin, the parameter-witness pairs accumulate jointly at zero.
 -/
 
-import Mathlib.Analysis.Normed.Group.Constructions
-import Mathlib.Analysis.Normed.Group.Real
-import Mathlib.Topology.Instances.Real.Lemmas
+@[expose] public section
 
 open Filter Set
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.Basic
+module
+
+public import Transformer.GPTMini.Sparsemax.Basic
 
 /-!
 # A wrong saturated route with zero corrective score derivative
@@ -9,6 +11,8 @@ arXiv:2211.11052v1, §3.1; this is not a claim refuted from the paper.
 The example is a row-level squared loss, not the entire GPTMini loss or
 a causal explanation of the measured final held-out accuracy.
 -/
+
+@[expose] public section
 
 noncomputable section
 

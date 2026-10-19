@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.Calculus.Deriv.Add
+
+/-!
 # §7 — Dynamics on the circle
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -19,11 +27,7 @@ critical point of `𝖤_β` on `𝕋^n` is a strict saddle — is in
 comes after this file.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Calculus.Deriv.Add
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -75,7 +79,7 @@ noncomputable def torusEnergy (β : ℝ) (θ : Angles n) : ℝ :=
 /-- **The `i`-th partial derivative of the toroidal energy.**
 
 Differentiating `exp(β cos(θ_a - θ_b))` in `θ_i` touches the `a = i` row and
-the `b = i` column.  The kernel is even and its derivative odd, so the two
+the `b = i` column. The kernel is even and its derivative odd, so the two
 contribute the same thing, and the factor `2β` they produce cancels the
 `1/(2β n²)` in front, leaving `n⁻²  Σ_j exp(β cos(θ_j - θ_i)) sin(θ_j - θ_i)`. -/
 theorem hasDerivAt_torusEnergy (β : ℝ) (hβ : β ≠ 0) (θ : Angles n) (i : Idx n) :
@@ -164,7 +168,7 @@ def variantKuramoto
 
 /-- **The kernel is even**, which is the whole content of the Bessel expansion
 `h_β(θ) = Σ_{k ∈ ℤ} I_k(β) e^{i k θ}` that §7 uses: because `h_β` is even, only
-cosines survive and the coefficients are real.  The modified Bessel functions
+cosines survive and the coefficients are real. The modified Bessel functions
 `I_k` themselves are not in Mathlib and the expansion is not formalized here. -/
 theorem h_β_neg (β θ : ℝ) : h_β β (-θ) = h_β β θ := by
   rw [h_β, h_β, Real.cos_neg]
@@ -177,7 +181,7 @@ theorem h_β_pos (β θ : ℝ) : 0 < h_β β θ := Real.exp_pos _
 /-! ### The hypotheses are satisfiable -/
 
 /-- `hasDerivAt_torusEnergy` and `angularUSA_is_gradient_flow` ask for `β ≠ 0`,
-for `n ≠ 0` and for a solution of `eq:onangles`.  A single token is one: with
+for `n ≠ 0` and for a solution of `eq:onangles`. A single token is one: with
 `n = 1` the only interaction is a token with itself, `sin 0 = 0`, so the angle
 stands still and the constant curve solves the dynamics. -/
 example : angularUSA 1 1 (fun _ _ => (0 : ℝ)) ∧ (1 : ℝ) ≠ 0 ∧ ((1 : ℕ) : ℝ) ≠ 0 := by

@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_CubicDerivatives
-import Mathlib.Analysis.Calculus.ContDiff.Comp
+module
+
+public import Transformer.Modes.Section3_CubicDerivatives
+public import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-!
 # The second and third derivatives of the literal cubic correction
@@ -17,6 +19,8 @@ characteristic function is smooth at all orders. The norm bounds retain
 the actual third norm moment and the factor eight from the product sup
 norm. These are the correction terms needed for the cubic spatial weight.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

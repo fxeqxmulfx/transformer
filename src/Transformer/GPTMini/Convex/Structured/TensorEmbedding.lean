@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.BasisTraining
-import Transformer.GPTMini.RMSNorm
+module
+
+public import Transformer.GPTMini.Convex.Structured.BasisTraining
+public import Transformer.GPTMini.RMSNorm
 
 /-!
 # Actual compact Euclidean embedding coordinates
@@ -18,6 +20,8 @@ state, matching label or prepared prefix enters either embedding.
 These coordinate computations do not yet realize the attention head,
 its residual, final tied readout or a complete changed model.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

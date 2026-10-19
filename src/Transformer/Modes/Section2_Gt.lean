@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section2_Field
+
+/-!
 # The number of modes of a Gaussian KDE — the summands `G(t)` and `G'(t)`
 
 §2.2 of arXiv:2412.09080v3, `eq: Gt`: the pair whose independent copies `F_n`
@@ -13,7 +17,7 @@ and `F_n'` are sums of.
 * "we have `(F_n(t), F_n'(t)) = n^{-1/2} Σ_i (G_i(t), G_i'(t))`" is
   `fieldF_eq_sum_bigG` for the first entry, and `hasDerivAt_fieldF` for the
   second: the naming `G'` is justified, since `G'(t)` is literally `∂_t G(t)`
-  (`hasDerivAt_bigG`).  Both are proved.
+  (`hasDerivAt_bigG`). Both are proved.
 
 * The law of that vector is the density `p_t` of `thm:kac-rice`; that it is one
   is `lem: pt.bdd`, and it is not carried here.
@@ -21,7 +25,7 @@ and `F_n'` are sums of.
 Source: arXiv:2412.09080v3, `eq: Gt`, §2.2.
 -/
 
-import Transformer.Modes.Section2_Field
+@[expose] public section
 
 open scoped BigOperators
 open Real

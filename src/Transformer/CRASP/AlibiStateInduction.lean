@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.CRASP.AlibiNextState
+public import Transformer.CRASP.PositionalStateInduction
+public import Transformer.CRASP.FixedSign
+
+/-!
 # State predicates for every ALiBi layer
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLCly`.
@@ -6,9 +12,7 @@ The initial predicates read the finite alphabet. Each later layer uses the
 uniform stable-tail table and the finite recent-window enumeration.
 -/
 
-import Transformer.CRASP.AlibiNextState
-import Transformer.CRASP.PositionalStateInduction
-import Transformer.CRASP.FixedSign
+@[expose] public section
 
 namespace Transformer.CRASP.AlibiTables
 

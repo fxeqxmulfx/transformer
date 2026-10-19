@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.Section3_ScalarTaylor
+public import Transformer.Metastability.AngularEnergy
+
+/-!
 # Double-sum algebra for the actual angular energy
 
 ArXiv:2410.06833v1, §3.2, `𝖤_β` and `lem: PL.borjan`.
@@ -7,8 +12,7 @@ sum. Oddness of the true interaction potential identifies the linear
 term of a pairwise quadratic bound with the actual angular gradient.
 -/
 
-import Transformer.Metastability.Section3_ScalarTaylor
-import Transformer.Metastability.AngularEnergy
+@[expose] public section
 
 open scoped BigOperators
 open Real

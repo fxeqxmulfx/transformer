@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section9_ThreeCandidates
+public import Transformer.Clusters.Section9_Fj
+public import Transformer.Clusters.Section8_LimitPrinciples
+
+/-!
 # Convergence to three leading coordinates for an actual good triple
 
 ArXiv:2305.05465v6, §9, the proof of `l:3hyperplanes11`.
@@ -18,9 +24,7 @@ does not assume convergence of any leading coordinate or boundedness
 of the full tokens in their complementary directions.
 -/
 
-import Transformer.Clusters.Section9_ThreeCandidates
-import Transformer.Clusters.Section9_Fj
-import Transformer.Clusters.Section8_LimitPrinciples
+@[expose] public section
 
 open Real Filter Topology
 

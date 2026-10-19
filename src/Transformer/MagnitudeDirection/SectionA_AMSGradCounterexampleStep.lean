@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.SectionA_AMSGradCallbacks
+public import Transformer.MagnitudeDirection.SectionA_TrainingCounterexampleStep
+
+/-!
 # The original concrete AMSGradMD scalar step can stay in one component
 
 arXiv:2606.25971v2, §3.1 and Appendix A, Algorithm 2, with the explicitly
@@ -8,8 +13,7 @@ the actual AMSGrad direction step from positive unit direction remains
 positive. Neither moment histories nor factor gradients are idealized.
 -/
 
-import Transformer.MagnitudeDirection.SectionA_AMSGradCallbacks
-import Transformer.MagnitudeDirection.SectionA_TrainingCounterexampleStep
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_RidgeCaps
+public import Transformer.Interpolation.Settling
+
+/-!
 # Center drift inside an arbitrary proper spherical cap
 
 Auxiliaries for arXiv:2411.04551v3, Appendix, `lem: two.balls`,
@@ -14,8 +19,7 @@ two-neuron construction. It does not assert the paper's unproved
 single-neuron attraction to an arbitrary target in the original cap.
 -/
 
-import Transformer.Interpolation.Section3_RidgeCaps
-import Transformer.Interpolation.Settling
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_PairSumsLower
+
+/-!
 # The pair sums of the third cumulant, in total
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 4, `eq:est-kap3-th`: the
@@ -8,7 +12,7 @@ double sums `Σ_l Σ_m Ĝ^l_y Ĝ^m_z (E(x; l, m) + E(x; m, l))`, each the sum of
 (`sum_pairEnv_four_le`).
 -/
 
-import Transformer.Kinetic.Section3_PairSumsLower
+@[expose] public section
 
 namespace Transformer
 namespace Kinetic

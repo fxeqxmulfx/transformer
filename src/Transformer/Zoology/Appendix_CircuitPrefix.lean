@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CircuitGateCorrectness
+
+/-!
 # Topological prefixes of an arithmetic DAG
 
 Arora et al., arXiv:2312.04927v1, §4 Theorem `thm:equiv` and Appendix
@@ -8,7 +12,7 @@ This file proves that every compiled prefix preserves inputs and computes
 all earlier gate values correctly in feature memory.
 -/
 
-import Transformer.Zoology.Appendix_CircuitGateCorrectness
+@[expose] public section
 
 namespace Transformer.Zoology
 

@@ -1,5 +1,7 @@
-import Transformer.Homogenized.Section7_IntegratingFactor
-import Transformer.Homogenized.Section7_WeightedSupermartingale
+module
+
+public import Transformer.Homogenized.Section7_IntegratingFactor
+public import Transformer.Homogenized.Section7_WeightedSupermartingale
 
 /-!
 # The maximal inequality with the actual exponential integral
@@ -19,6 +21,8 @@ is also proved measurable. The temporary endpoint extension
 used for differentiation is removed by the proved equality
 with the original integral throughout the finite horizon.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory
 namespace Transformer.Homogenized

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.SimplexDrift
+public import Transformer.Homogenized.Section7_OverlapDriftGramComparison
+
+/-!
 # Homogenized Transformers — the drift is Lipschitz near the simplex line
 
 Formalization of `lem:Gram_stability` of arXiv:2604.01978v1, *Homogenized
@@ -6,11 +11,11 @@ Transformers*, together with a refutation of the identity it takes for granted.
 
 The lemma bounds `max_{i≠j} |𝒟_ij(R) - b(γ)|` by `L ‖R - R(γ)‖_∞` with
 `L = O(1 + dσ_A⁴β²n)`, and adds parenthetically that `𝒟_ij(R(γ)) = b(γ)` —
-the claim of `lem:drift_on_simplex_selfcontained`.  That claim is false, and
+the claim of `lem:drift_on_simplex_selfcontained`. That claim is false, and
 `not_forall_overlapDrift_eq_simplexDrift` refutes it: in `d = n = 2`, at the
 head law (G) with `σ_V² = 1/d` and `σ_A = 0`, and an orthonormal pair, the trace factor
 `d - 2 + R_ij²` of `eq:Dij_explicit_clean` vanishes, so the drift of the
-overlap is `0`, while `b(0) = g(0) = 1/2`.  With it the lemma's own statement
+overlap is `0`, while `b(0) = g(0) = 1/2`. With it the lemma's own statement
 is false too, since at `R = R(γ)` the right-hand side is `0` and the left-hand
 side is not.
 
@@ -21,8 +26,7 @@ of `b(γ)`: that is `gram_stability`.
 Source: arXiv:2604.01978v1, `lem:Gram_stability`.
 -/
 
-import Transformer.Homogenized.SimplexDrift
-import Transformer.Homogenized.Section7_OverlapDriftGramComparison
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory
@@ -49,7 +53,7 @@ and `𝐏_{x_2}` onto two orthogonal lines compose to `0`, so
 
 `σ_A = 0` is not what the refutation rests on: at `γ = 0` the gap of
 `overlapDrift_simplex_sub_simplexDrift` is `-2g(0)/d`, and `g(0) > 0` for
-every head law, since attention probabilities are positive.  It is only what
+every head law, since attention probabilities are positive. It is only what
 makes `f` and `g` computable in closed form here.
 
 The general gap is `overlapDrift_simplex_sub_simplexDrift`, which is `O(1/d)`;
@@ -126,11 +130,11 @@ differ by at most `ε` entrywise, then for every `i ≠ j`
 
 * The source writes the right-hand side of the comparison as `b(γ)` of
   `eq:Phi_def_selfcontained`, on the strength of the parenthetical
-  `𝒟_ij(R(γ)) = b(γ)`.  That identity is false —
+  `𝒟_ij(R(γ)) = b(γ)`. That identity is false —
   `not_forall_overlapDrift_eq_simplexDrift` — and with `b(γ)` in place the
   lemma is false as well, since at `X = Y` the right-hand side is `0` and the
   left-hand side is the nonzero gap of
-  `overlapDrift_simplex_sub_simplexDrift`.  What is stated here is the source's
+  `overlapDrift_simplex_sub_simplexDrift`. What is stated here is the source's
   own intended reading, the drift at a configuration realizing `R(γ)`.
 * `‖R - R(γ)‖_∞ = max_{k,l}|R_kl - R(γ)_kl|` is carried as a bound `ε` on every
   entry rather than as a supremum, which is the same statement and avoids

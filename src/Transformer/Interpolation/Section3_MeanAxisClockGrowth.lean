@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_MeanAxisLaw
+
+/-!
 # Sign preservation and growth of the actual mean-attention clock
 
 ArXiv:2411.04551v3, §3.2, `eq: cauchy.pb.reloaded`, Step 1 of
@@ -10,7 +14,7 @@ and negative means decrease. Integrating these inequalities gives
 linear lower or upper bounds for the original intrinsic clock.
 -/
 
-import Transformer.Interpolation.Section3_MeanAxisLaw
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped Topology NNReal

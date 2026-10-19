@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_CirclePotential
+public import Transformer.Perceptron.Section5_DominatedVariation
+public import Transformer.Perceptron.MinMax
+
+/-!
 # Twice differentiating the actual transported perceptron integral
 
 ArXiv:2601.21366v2, §2.3, `eq: primitive.field`, and §5.2,
@@ -14,9 +20,7 @@ The raw potential integrand retains the factor two from `φ'=2σ`;
 the energy will subsequently multiply its integral by one half.
 -/
 
-import Transformer.Perceptron.Section5_CirclePotential
-import Transformer.Perceptron.Section5_DominatedVariation
-import Transformer.Perceptron.MinMax
+@[expose] public section
 
 open Real MeasureTheory
 

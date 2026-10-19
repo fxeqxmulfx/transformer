@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section8_AttentionRoot
+
+/-!
 # A quadratic metric built from finitely many value-map powers
 
 ArXiv:2305.05465v6, §9, `r:notdiagonalizable` and `e:notdi`, as used in §10.
@@ -13,7 +17,7 @@ The finite-power contraction estimate will give the required operator
 bound in this metric; no spectral conclusion is assumed in its definition.
 -/
 
-import Transformer.Clusters.Section8_AttentionRoot
+@[expose] public section
 
 open scoped BigOperators
 open Real

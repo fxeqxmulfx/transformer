@@ -1,4 +1,12 @@
-/-
+module
+
+public import Mathlib.RingTheory.Noetherian.Basic
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Mathlib.RingTheory.Ideal.Operations
+public import Mathlib.LinearAlgebra.Span.Basic
+public import Transformer.Landscape.AnalyticPreparation.Basic
+
+/-!
 # Real analytic germs: NoetherianRemainder
 
 Adapted from Bochao Kong's LocalComplexGeometry, revision
@@ -8,11 +16,7 @@ dependency closure is retained. Apache-2.0 license:
 third_party/LocalComplexGeometry/LICENSE.
 -/
 
-import Mathlib.RingTheory.Noetherian.Basic
-import Mathlib.RingTheory.Finiteness.Defs
-import Mathlib.RingTheory.Ideal.Operations
-import Mathlib.LinearAlgebra.Span.Basic
-import Transformer.Landscape.AnalyticPreparation.Basic
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

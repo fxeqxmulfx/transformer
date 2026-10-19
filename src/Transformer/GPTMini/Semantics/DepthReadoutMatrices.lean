@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthReadoutPresence
+module
+
+public import Transformer.GPTMini.Semantics.DepthReadoutPresence
 
 /-!
 # Seven-unit ordinary original depth readout matrices
@@ -16,6 +18,8 @@ real inputs. Subsequent prenorm and presence theorems must derive the
 common positive RMS-square amplitude and the two semantic indicators;
 neither indicators nor desired labels define this network.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

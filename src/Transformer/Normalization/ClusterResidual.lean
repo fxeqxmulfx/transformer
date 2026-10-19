@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.Normalization.ClusterGeometry
+public import Transformer.Normalization.ClusterWeights
+public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+
+/-!
 # The attention-weight error in variance decay
 
 Appendix C, proof of Theorem 4.3 of arXiv:2510.22026v2, the term `I₂`.
 Centering the weight error before Cauchy--Schwarz gives a direct variance bound.
 -/
 
-import Transformer.Normalization.ClusterGeometry
-import Transformer.Normalization.ClusterWeights
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+@[expose] public section
 
 open scoped BigOperators
 

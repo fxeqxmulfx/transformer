@@ -1,8 +1,10 @@
-import Transformer.Modes.Section3_Cumulants
-import Mathlib.Analysis.Calculus.ParametricIntegral
-import Mathlib.MeasureTheory.Order.Group.Lattice
+module
 
-/-
+public import Transformer.Modes.Section3_Cumulants
+public import Mathlib.Analysis.Calculus.ParametricIntegral
+public import Mathlib.MeasureTheory.Order.Group.Lattice
+
+/-!
 # The number of modes of a Gaussian KDE — the mixed moments of `eq:psi`
 
 §3.1 of arXiv:2412.09080v3 (`sec:error-3`) reads the cumulant `κ^α` as a mixed
@@ -12,7 +14,7 @@ the mixed moments
   `expMoment μ i j u v = ∫ x₁^i x₂^j e^{u x₁ + v x₂} dμ`
 
 have to exist for small `u, v` and to differentiate under the integral, one
-index at a time.  Both come from one inequality: a monomial weight is absorbed
+index at a time. Both come from one inequality: a monomial weight is absorbed
 by four exponentials of slightly larger parameters (`abs_pow_mul_exp_le`),
 which is the integrable majorant in the first case and the domination the
 parametric-integral theorem asks for in the second.
@@ -23,6 +25,8 @@ is about `ℝ²`; `expMoment` and its API are the case `X = x₁`, `Y = x₂`.
 
 Source: arXiv:2412.09080v3, §3.1, after `eq:psi`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped Topology
@@ -36,7 +40,7 @@ variable {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {X Y : Ω → ℝ} 
 
 /-- **A monomial weight is absorbed by exponentials of larger parameters.**
 For `δ > 0`, `|z|^i |w|^j e^{uz+vw}` is at most a constant times the four
-exponentials `e^{(u±δ)z + (v±δ)w}`.  This is the majorant behind the existence
+exponentials `e^{(u±δ)z + (v±δ)w}`. This is the majorant behind the existence
 of the mixed moments of `eq:psi` and behind their differentiation.
 
 Source: arXiv:2412.09080v3, §3.1, after `eq:psi`. -/

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthLevels
+module
+
+public import Transformer.GPTMini.Semantics.DepthLevels
 
 /-!
 # Explicit quantified invariant for actual depth residual arrays
@@ -20,6 +22,8 @@ The actual block-preservation and complete hidden-state induction are
 subsequent obligations; later invariant instances are not assumed as
 inputs to the final model correctness theorem.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

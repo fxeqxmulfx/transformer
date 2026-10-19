@@ -1,7 +1,9 @@
-import Transformer.Modes.Section1_Sketch
-import Transformer.Modes.Section4_TwoPointModes
+module
 
-/-
+public import Transformer.Modes.Section1_Sketch
+public import Transformer.Modes.Section4_TwoPointModes
+
+/-!
 # The number of modes of a Gaussian KDE — `lem:scale-space`
 
 §4.2 of arXiv:2412.09080v3, `sec:tail`: `lem:scale-space`, the bound on the
@@ -28,6 +30,8 @@ modes far from the origin by the sample points beyond them.
 
 Source: arXiv:2412.09080v3, §4.2, `lem:scale-space`.
 -/
+
+@[expose] public section
 
 open Real
 open scoped ENNReal

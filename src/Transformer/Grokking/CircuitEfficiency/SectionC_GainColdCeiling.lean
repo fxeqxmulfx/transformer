@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdRegime
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryMass
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdRegime
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryMass
 
 /-!
 # Actual clipped CE feedback has its cold value as a global ceiling
@@ -28,6 +30,8 @@ confidence selection or learned GPTMini transfer is proved here.
 Fixed gained tables/plain CE/uniform native decay differ from the
 source's coupled-cost GD; a thermodynamic system-size limit is separate.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Causality.Block
-import Transformer.GPTMini.Model
+module
+
+public import Transformer.GPTMini.Causality.Block
+public import Transformer.GPTMini.Model
 
 /-!
 # Causality of the complete GPTMini forward
@@ -15,6 +17,8 @@ Position agreement is essential: changing an old RoPE position changes
 its computation. Suffix tokens and their positions are unrestricted.
 Task-dependent answer distinctions are separate from this causal law.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Causality
 

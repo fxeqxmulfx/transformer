@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_AtomicQuadrantReduction
+public import Transformer.Interpolation.Section4_QuadrantAtomicMatching
+
+/-!
 # Exact interpolation of arbitrary finite original atom families
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, §3.1,
@@ -24,8 +29,7 @@ does not identify the paper's perceptron-only interpolation theorem
 with a construction that also uses rank-one attention.
 -/
 
-import Transformer.Interpolation.Section4_AtomicQuadrantReduction
-import Transformer.Interpolation.Section4_QuadrantAtomicMatching
+@[expose] public section
 
 open Real MeasureTheory Set
 

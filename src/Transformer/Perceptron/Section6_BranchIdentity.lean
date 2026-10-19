@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_BranchCalculus
+public import Mathlib.Analysis.Analytic.IsolatedZeros
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Order.Interval.Set.Infinite
+
+/-!
 # The global identity of an accumulating normalized circle branch
 
 ArXiv:2601.21366v2, §6, proof of `prop: unified.log`, part (b),
@@ -18,10 +25,7 @@ invertibility. Invertibility is used later to recover the measure's
 antipodal invariance from evenness of its actual interaction transform.
 -/
 
-import Transformer.Perceptron.Section6_BranchCalculus
-import Mathlib.Analysis.Analytic.IsolatedZeros
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Order.Interval.Set.Infinite
+@[expose] public section
 
 open Real Set Filter
 open scoped Topology

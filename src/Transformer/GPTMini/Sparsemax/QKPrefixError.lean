@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.QKPrefixDirections
+module
+
+public import Transformer.GPTMini.Sparsemax.QKPrefixDirections
 
 /-!
 # Incorrect matrix outputs are not minima under partial anchor access
@@ -19,6 +21,8 @@ is an unrotated single-row readout before XSA and output projection;
 shared-row cancellation, uniform gradient bounds and global convergence
 are not established. The target is ordinary output data, not a route.
 -/
+
+@[expose] public section
 
 noncomputable section
 

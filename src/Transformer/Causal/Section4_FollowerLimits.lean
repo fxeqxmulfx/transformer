@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section4_FollowerDrift
+public import Transformer.Causal.Section4_ScalarLimits
+
+/-!
 # A last follower converges to the leader or its antipode
 
 ArXiv:2411.04990v2, §4, proof of `thm1`.
@@ -16,8 +21,7 @@ manuscript's unstable-equilibrium avoidance step; that separate
 measure argument is needed to eliminate the antipodal alternative.
 -/
 
-import Transformer.Causal.Section4_FollowerDrift
-import Transformer.Causal.Section4_ScalarLimits
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

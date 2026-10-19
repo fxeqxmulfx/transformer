@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section4_ODE
+public import Transformer.FrankWolfe.Section4_Faces
+
+/-!
 # Attention's forward pass and Frank-Wolfe — the solution of the singular ODE
 
 Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
@@ -20,8 +25,7 @@ The source obtains the solution as the limit of the Euler scheme of
 Source: arXiv:2508.09628v1, `sec: proof.thm.ode`, Part 1.
 -/
 
-import Transformer.FrankWolfe.Section4_ODE
-import Transformer.FrankWolfe.Section4_Faces
+@[expose] public section
 
 open scoped BigOperators
 open Real Set

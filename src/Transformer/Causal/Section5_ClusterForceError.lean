@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Section5_ClusterCurvature
+
+/-!
 # Actual cluster curvature with its original nonzero force retained
 
 ArXiv:2411.04990v2, §5, the same-cluster stability estimate
@@ -20,7 +24,7 @@ premise. A genuine positive-force example checks that the error
 term is realized.
 -/
 
-import Transformer.Causal.Section5_ClusterCurvature
+@[expose] public section
 
 open scoped BigOperators
 open Real Set

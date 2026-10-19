@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Magma.Section3_DampingBounds
+
+/-!
 # Cosine invariance and conditional variance of lazy moments
 
 Formalization of arXiv:2602.15322v1, Sections 2--3, Why dense momentum
@@ -7,7 +11,7 @@ explicit unbiased lazy estimator at fixed state and gradient; it is not
 a general claim about the variance of an entire training trajectory.
 -/
 
-import Transformer.Magma.Section3_DampingBounds
+@[expose] public section
 
 open scoped InnerProductSpace
 

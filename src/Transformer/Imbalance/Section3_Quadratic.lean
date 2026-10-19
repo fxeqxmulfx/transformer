@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_Model
+public import Mathlib.Analysis.SpecificLimits.Normed
+public import Mathlib.Basic.Real.Sign
+
+/-!
 # The weighted quadratic illustration
 
 arXiv:2402.19449v2, Section 3.1. The same scalar learning rate scales
@@ -7,9 +13,7 @@ threshold 1/π_max is incorrect for gradient descent: convergence continues
 up to, but excluding, 2/π_max.
 -/
 
-import Transformer.Imbalance.Section3_Model
-import Mathlib.Analysis.SpecificLimits.Normed
-import Mathlib.Basic.Real.Sign
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

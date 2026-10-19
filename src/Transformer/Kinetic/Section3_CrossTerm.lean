@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_InnerCovariance
+
+/-!
 # How the cross term moves
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 4, `eq:est-kap3-th`: the
@@ -10,7 +14,7 @@ deterministic content of the source's second-order chain rule
 `eq:chain-rule-Glaub-2nd` applied to a product.
 -/
 
-import Transformer.Kinetic.Section3_InnerCovariance
+@[expose] public section
 
 namespace Transformer
 namespace Kinetic

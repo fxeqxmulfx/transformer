@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.Subformulas
+public import Transformer.CRASP.StateCounts
+
+/-!
 # A past term as a constant and a list of counts
 
 arXiv:2506.16055v3, Appendix B.2, `thm:TLCl_to_rtfr`.
@@ -6,8 +11,7 @@ A comparison is an integer constant plus signed counts of formulas
 from the previous layer; its uniform average has the same sign.
 -/
 
-import Transformer.CRASP.Subformulas
-import Transformer.CRASP.StateCounts
+@[expose] public section
 
 namespace Transformer.CRASP
 

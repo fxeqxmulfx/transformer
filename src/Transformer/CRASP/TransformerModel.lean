@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Fixed
+
+/-!
 # Future-masked fixed-precision transformers
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -13,15 +17,15 @@ A *future-masked rounded transformer* of depth `k` is the map `Σ* → 𝔽` giv
 
 with the attention reading as the average of all `vⱼ` when the denominator
 rounds to zero — the device that keeps attention informative even when
-`i ≫ 2^s`.  The transformer *accepts* `w` when `𝒯(w) > 0`.
+`i ≫ 2^s`. The transformer *accepts* `w` when `𝒯(w) > 0`.
 
-Two modelling notes.  The weight families are indexed by `ℕ` rather than by
+Two modelling notes. The weight families are indexed by `ℕ` rather than by
 `[k]`, with only the first `k` layers reachable from `RTfr.out`; and the
 residual connection `cᵢ + h^{prev}ᵢ` is rounded, since `𝔽` is not closed under
 addition and the paper does not say what happens on overflow.
 -/
 
-import Transformer.CRASP.Fixed
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -87,7 +91,7 @@ def Accepts (T : RTfr σ p s d k) (w : List σ) : Prop := 0 < (T.out w).val
 
 end RTfr
 
-/-- `⊲ · w`, the input with the beginning-of-sequence symbol prepended.  The
+/-- `⊲ · w`, the input with the beginning-of-sequence symbol prepended. The
 transformer works over `Σ ∪ {⊲}`, which is `Option σ` with `⊲ = none`. -/
 def bos (w : List σ) : List (Option σ) := none :: w.map some
 

@@ -1,6 +1,8 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainSigns
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainGradientLimits
-import Transformer.Grokking.AdamW.PairEnvelope
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainSigns
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainGradientLimits
+public import Transformer.Grokking.AdamW.PairEnvelope
 
 /-!
 # Actual gained CE generates the retained-pair envelope
@@ -22,6 +24,8 @@ from appendix C's GD/coupled norm cost. These numerical feedback
 identities do not prove source-seed attraction, a delayed crossing,
 or learned stochastic/floating-point GPTMini generalization.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,4 +1,7 @@
-import Transformer.Modes.Section3_SmallFrequency
+module
+
+public import Transformer.Modes.Section3_SmallFrequency
+
 /-!
 # A quantitative Gaussian comparison for the actual normalized sum
 
@@ -9,6 +12,7 @@ estimate retains Gaussian damping while summing the single-summand
 errors. Its normalization gives the explicit `1 / sqrt n` factor.
 -/
 
+@[expose] public section
 open Real MeasureTheory Filter
 open scoped ENNReal
 namespace Transformer.Modes

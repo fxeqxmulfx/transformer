@@ -1,16 +1,20 @@
-/-
+module
+
+public import Transformer.Homogenized.GaussianCrossIntegrable
+public import Mathlib.MeasureTheory.SpecificCodomains.WithLp
+
+/-!
 # Homogenized Transformers — the Gaussian matrix covariance identity
 
 For bounded query/key-dependent vectors `a,b`, the Gaussian value matrix
-satisfies `E[(V a) ⟨V b,v⟩] = σ_V² E[⟨a,b⟩] v`.  This is the vector form of the
+satisfies `E[(V a) ⟨V b,v⟩] = σ_V² E[⟨a,b⟩] v`. This is the vector form of the
 calculation used in `lem:lemma_app`, before identifying `a,b` with softmax
 barycenters.
 
 Source: arXiv:2604.01978v1, proof of `lem:lemma_app`.
 -/
 
-import Transformer.Homogenized.GaussianCrossIntegrable
-import Mathlib.MeasureTheory.SpecificCodomains.WithLp
+@[expose] public section
 
 open scoped BigOperators NNReal
 open MeasureTheory

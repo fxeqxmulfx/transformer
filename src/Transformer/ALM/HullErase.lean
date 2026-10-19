@@ -1,36 +1,40 @@
-/-
+module
+
+public import Transformer.ALM.Envelope
+
+/-!
 # The erase loops of `add_line`, and why they change nothing
 
 `Transformer.ALM.Envelope` proves three things separately: the equal-slope
 test is sound (`lineEval_le_of_slope_eq`), the breakpoint test is sound and
 necessary (`dominated_iff_le_at_interX`, `interX_le_interX_iff`), and erasing
 a pointwise-dominated line leaves the upper envelope alone
-(`sup'_erase_of_le`).  It then says in prose that "applying this at every `x`
+(`sup'_erase_of_le`). It then says in prose that "applying this at every `x`
 for a line the two tests above reject is what makes the erase loops correct" —
-and never applies it.  The composition was the claim; the pieces were the
+and never applies it. The composition was the claim; the pieces were the
 theorems.
 
 The same split reappeared one level up: `erase_preserves_isGreatest` carries an
 erase to the lookup, but only from a hypothesis naming a surviving line that
 matches the erased one, and nothing discharged that hypothesis from the loop
-conditions.  `erase_slope_eq_preserves_isGreatest` and
+conditions. `erase_slope_eq_preserves_isGreatest` and
 `erase_interX_le_preserves_isGreatest` close it: what `add_line` erases, the
 tests in `add_line` prove it may erase.
 
 This file makes the composition a theorem, once for each of the two erases
 `_HullCHT::add_line` performs (`transformer_vm/attention/hull2d_cht.h`,
 lines 132-139 for the equal-slope early return, lines 140-192 for the two
-breakpoint loops).  In both cases the conclusion is the strongest one
+breakpoint loops). In both cases the conclusion is the strongest one
 available: not that the erased line is dominated, but that the envelope of
 the family is *equal* at every query to the envelope of the family without
-it.  `erase_preserves_isGreatest` then carries that to the lookup: the best
+it. `erase_preserves_isGreatest` then carries that to the lookup: the best
 score over the pruned hull is the best score over everything it was built
 from, so the erase loops cost the machine no exactness.
 
 Lines are the pairs `(slope, intercept)` of `Transformer.ALM.lineEval`.
 -/
 
-import Transformer.ALM.Envelope
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -97,7 +101,7 @@ example :
 /-- **Pruning loses no argmax.**  Whatever the erased line, if some surviving
 line matches it at `x` then the best value over the pruned family is the best
 value over the whole one — so a query answered against the hull is answered
-against every line ever inserted.  This is what the erase loops have to
+against every line ever inserted. This is what the erase loops have to
 preserve, stated on the lookup rather than on the envelope. -/
 theorem erase_preserves_isGreatest {s : Finset (ℝ × ℝ)} {l : ℝ × ℝ} (hl : l ∈ s)
     (hne : (s.erase l).Nonempty) (x : ℝ)

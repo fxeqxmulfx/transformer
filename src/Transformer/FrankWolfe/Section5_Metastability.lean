@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section5_Process
+public import Transformer.FrankWolfe.Section4_Cells
+public import Mathlib.Geometry.Euclidean.Angle.Unoriented.Basic
+
+/-!
 # Attention's forward pass and Frank-Wolfe — dynamic metastability
 
 Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
@@ -14,9 +20,7 @@ configuration already close to the vertices, is in `Section5_MetaBound`,
 after the transition, drift, and stopped-event probability estimates.
 -/
 
-import Transformer.FrankWolfe.Section5_Process
-import Transformer.FrankWolfe.Section4_Cells
-import Mathlib.Geometry.Euclidean.Angle.Unoriented.Basic
+@[expose] public section
 
 open scoped BigOperators Pointwise
 open Real MeasureTheory
@@ -33,7 +37,7 @@ def erosion (A : Set (EucSpace d)) (δ : ℝ) : Set (EucSpace d) :=
   {x | Metric.closedBall x δ ⊆ A}
 
 /-- `𝓘_i(η) = {x ∈ 𝒦 : ⟨v_i - v_j, x⟩ ≥ η for all j ≠ i}`, the cone in which
-`v_i` dominates every other vertex by at least `η`.  For `η = 0` and `B = I_d`
+`v_i` dominates every other vertex by at least `η`. For `η = 0` and `B = I_d`
 this is the cell `𝒞_i(v)` of `Section4_Cells`.
 
 Source: arXiv:2508.09628v1, §5. -/
@@ -45,12 +49,12 @@ def dominanceCone (K : Set (EucSpace d)) (v : Idx κ → EucSpace d) (i : Idx κ
 vertices `v_1, …, v_κ`.
 
 **What the source says and what is changed here.**  `eq: hypothesis.polytope`
-is written `sup_{x,y ∈ 𝒦} arccos⟨x - v_i, y - v_i⟩ < π/2`.  `arccos` of an
+is written `sup_{x,y ∈ 𝒦} arccos⟨x - v_i, y - v_i⟩ < π/2`. `arccos` of an
 unnormalized inner product is not an angle, and the intended quantity is the
 angle of the cone of `𝒦` at `v_i`, so it is recorded here as
-`InnerProductGeometry.angle`.  The supremum being `< π/2` is recorded as a
+`InnerProductGeometry.angle`. The supremum being `< π/2` is recorded as a
 uniform bound `θ < π/2`, which is what a supremum over a compact set gives and
-what the proof uses.  The pair `x = y = v_i` is excluded: the directions are
+what the proof uses. The pair `x = y = v_i` is excluded: the directions are
 then `0`, and Mathlib's `angle 0 0 = π/2` would make the hypothesis
 unsatisfiable while saying nothing about the cone.
 
@@ -93,7 +97,7 @@ stronger than letting it depend on the data.
 `τ` and the quantity `m = min_{j > κ} ‖x_j^0 - v_{σ(j)}‖` it is built from are
 carried as parameters pinned by the properties that characterize them
 (`IsGreatest`, `IsLeast`), rather than written as iterated `min`s needing
-nonemptiness side conditions.  `IsGreatest` of the three-fold constraint set
+nonemptiness side conditions. `IsGreatest` of the three-fold constraint set
 *is* the source's minimum.
 
 The particles `i ∈ [1, κ]` and `i ∈ [κ+1, n]` are separated by `(i : ℕ) < κ`,

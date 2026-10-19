@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.RecallGateBlock
+module
+
+public import Transformer.GPTMini.Semantics.RecallGateBlock
 
 /-!
 # Gate real raw table records in the full original first block
@@ -17,6 +19,8 @@ table indicator, copied key, gate sign or correct logits occur as
 inputs. Coupling the alphabet/boundary to the complete validated
 Basis parser and robust final latest-write retrieval is still needed.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

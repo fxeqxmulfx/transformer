@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Analysis.Convex.Jensen
+public import Mathlib.Analysis.Convex.SpecificFunctions.Basic
+
+/-!
 # Metastability — the scalar function behind the collapse of a cap
 
 In the direct proof of `thm: metastability` (arXiv:2410.06833v1, §2) the within-cap
@@ -18,8 +23,7 @@ This file collects the elementary facts about `F_β` used to build the subsoluti
   `2n² e^{-(1-α)β}`, is a strict subsolution of the differential inequality.
 -/
 
-import Mathlib.Analysis.Convex.Jensen
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
+@[expose] public section
 
 open Set Real
 
@@ -31,7 +35,7 @@ within-cap minimum to `1`, the gain term of `eq: ze.equation` is `(2/n) F_β(s)`
 noncomputable def collapseRate (β s : ℝ) : ℝ := s * (1 - s) * Real.exp (-(β * s))
 
 /-- **`F_β` is log-concave on `(0, 1)`**: `log F_β(s) = log s + log (1 - s) - β s` is a sum of
-concave functions.  Hence `F_β(s) ≥ min (F_β(a)) (F_β(b))` for `s ∈ [a, b] ⊂ (0, 1)`. -/
+concave functions. Hence `F_β(s) ≥ min (F_β(a)) (F_β(b))` for `s ∈ [a, b] ⊂ (0, 1)`. -/
 theorem collapseRate_min_le {β a b s : ℝ} (ha : 0 < a) (hb : b < 1) (hs : s ∈ Icc a b) :
     min (collapseRate β a) (collapseRate β b) ≤ collapseRate β s := by
   have h1 : ConcaveOn ℝ (Ioo (0 : ℝ) 1) Real.log :=

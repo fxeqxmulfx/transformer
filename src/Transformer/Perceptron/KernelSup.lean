@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Kernel
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # Perceptrons and attention's mean-field landscape — the sup-norm of `K_β''`
 
 Formalization of the computation `‖K_β''‖_∞ = β e^β` of
@@ -7,15 +12,15 @@ condition for strict second-order positive-definiteness is written in.
 
 **What the source says and what is carried here.**
 
-* The source states the value of the sup-norm without proof.  `‖·‖_∞` over `ℝ`
+* The source states the value of the sup-norm without proof. `‖·‖_∞` over `ℝ`
   is carried as `IsGreatest (Set.range fun θ => |K_β''(θ)|) (β e^β)`: the value
   is an upper bound *and* it is attained — at `θ = 0`, where
-  `K_β''(0) = -β e^β`.  A supremum that is attained leaves no room for a junk
+  `K_β''(0) = -β e^β`. A supremum that is attained leaves no room for a junk
   value, which the bare `sSup` of an unbounded family would.
 
 * The bound itself is `|e^{β cos θ}(β²sin²θ - β cos θ)| ≤ β e^β`, which after
   dividing by `β > 0` and writing `c = cos θ` is
-  `|e^{βc}(β(1 - c²) - c)| ≤ e^β`.  Below `-1 ≤ β(1-c²) - c` gives the lower
+  `|e^{βc}(β(1 - c²) - c)| ≤ e^β`. Below `-1 ≤ β(1-c²) - c` gives the lower
   bound, and the upper bound splits at `c = 0`: for `c ≤ 0` the exponential is
   `≤ 1` and the bracket is `≤ β + 1 ≤ e^β`; for `c > 0` the bracket is
   `≤ 2β(1-c)` and `e^{βc} = e^β / e^{β(1-c)}`, so the product is at most
@@ -24,8 +29,7 @@ condition for strict second-order positive-definiteness is written in.
 Source: arXiv:2601.21366v2, `rem:strictSOPD-perceptron`.
 -/
 
-import Transformer.Perceptron.Kernel
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open Real
 

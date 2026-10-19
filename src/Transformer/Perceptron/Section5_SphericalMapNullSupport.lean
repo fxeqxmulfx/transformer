@@ -1,6 +1,8 @@
-import Transformer.Perceptron.Section5_SphericalMapHessian
-import Transformer.Perceptron.Section5_SphericalNorms
-import Transformer.Perceptron.Section5_NonatomicGradients
+module
+
+public import Transformer.Perceptron.Section5_SphericalMapHessian
+public import Transformer.Perceptron.Section5_SphericalNorms
+public import Transformer.Perceptron.Section5_NonatomicGradients
 
 /-!
 # Uniform-null support for analytic strict matrix critical points
@@ -24,6 +26,8 @@ symmetry, which is used in the actual energy cancellation.
 Adding one to the nonnegative curvature bound gives a positive
 localization scale even for the zero matrix.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set
 

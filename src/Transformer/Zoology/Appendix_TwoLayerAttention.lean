@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Section4_PairedRecall
+
+/-!
 # The two attention stages for one-hot MQAR triples
 
 Arora et al., arXiv:2312.04927v1, Appendix Proposition
@@ -8,7 +12,7 @@ one-hot score over all triple positions. A strict prior-pair mask is needed:
 the unmasked display in the paper also reads current and future keys.
 -/
 
-import Transformer.Zoology.Section4_PairedRecall
+@[expose] public section
 
 open scoped BigOperators
 

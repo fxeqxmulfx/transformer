@@ -1,8 +1,13 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section4_Polytope
+public import Transformer.FrankWolfe.Section4_Faces
+
+/-!
 # Attention's forward pass and Frank-Wolfe — `thm: exp.fast.polytope`
 
 §4 of arXiv:2508.09628v1: for `B ≻ 0` and a generic initial polytope, the
-dynamics `(SA_∞)` is solved exactly.  As in the source's proof, the vertices
+dynamics `(SA_∞)` is solved exactly. As in the source's proof, the vertices
 never move, so the hull `𝒦^t = 𝒦` is constant; a particle in the cell of
 `v_{σ(i)}` has `v_{σ(i)}` as its only maximizer and moves along the segment
 towards it, never meeting another cell.
@@ -15,8 +20,7 @@ Source: arXiv:2508.09628v1, §4, `thm: exp.fast.polytope` and its proof in
 `sec: proof.exp.fast`.
 -/
 
-import Transformer.FrankWolfe.Section4_Polytope
-import Transformer.FrankWolfe.Section4_Faces
+@[expose] public section
 
 open scoped BigOperators
 open Set
@@ -50,7 +54,7 @@ theorem sum_gammaProd (γ : ℕ → ℝ) (t : ℕ) :
 
 /-- **Theorem (thm: exp.fast.polytope) — the dynamics, solved.**
 
-Let `B^t ≡ B` and `γ^t ∈ (0, 1)`.  For an initial configuration
+Let `B^t ≡ B` and `γ^t ∈ (0, 1)`. For an initial configuration
 satisfying `GenericPolytope` and an assignment `σ` with `x_i^0 ∈ 𝒞_{σ(i)}(v)`,
 particles evolving according to `(SA_∞)` satisfy
 
@@ -63,7 +67,7 @@ as data, with `x_i^0 ∈ 𝒞_{σ(i)}(v)` as a hypothesis, which `uniqueCell`
 makes available and determines uniquely.
 
 The `argmax` of `(SA_∞)` is a relation, not a function, so the theorem covers
-every selection of maximizers.  That costs nothing: `ownCell` forces the
+every selection of maximizers. That costs nothing: `ownCell` forces the
 maximizing face of `⟨B x, ·⟩` at `x = x_i^t` to be the single vertex
 `v_{σ(i)}`.
 
@@ -170,8 +174,8 @@ particular, `x_i^t` converges to `v_{σ(i)}` at least exponentially fast" from
 `γ^t ∈ (0,1)` alone, and that is false: for `γ^t = 2^{-t-1}` the product
 `∏_{τ<t}(1 - γ^τ)` decreases to a strictly positive limit, so the solution
 formula leaves `x_i^t` at a nontrivial convex combination of `x_i^0` and
-`v_{σ(i)}` forever.  A uniform lower bound on the step-size repairs it, and is
-what "exponentially fast" needs in any case.  As in `exp_fast_polytope`,
+`v_{σ(i)}` forever. A uniform lower bound on the step-size repairs it, and is
+what "exponentially fast" needs in any case. As in `exp_fast_polytope`,
 `B ≻ 0` is not needed.
 
 Source: arXiv:2508.09628v1, §4, `thm: exp.fast.polytope`, final sentence. -/

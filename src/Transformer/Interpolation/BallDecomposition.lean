@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Interpolation.Section5_BallConstruction
+
+/-!
 # Measure-to-measure interpolation — Decomposing a measure into equal-mass balls
 
 Formalization of `Claim cl: balls` of arXiv:2411.04551v3, the combinatorial
@@ -18,12 +23,11 @@ measures. Carriers are explicit full-measure sets.
 
 The survey's measures are absolutely continuous, and that is not decoration:
 `not_exists_ball_of_mass_of_dirac` shows that a Dirac mass admits no ball of
-mass `1/M` at all.  The statement here had dropped it; it is restored, in the
+mass `1/M` at all. The statement here had dropped it; it is restored, in the
 form the survey's proof uses — every geodesic sphere is null.
 -/
 
-import Transformer.Basic
-import Transformer.Interpolation.Section5_BallConstruction
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -35,10 +39,10 @@ variable (d : ℕ)
 
 /-- **A measure with an atom admits no such decomposition.**
 
-Requirement 1 of `cl: balls` asks for a ball of mass exactly `1/M`.  A Dirac
+Requirement 1 of `cl: balls` asks for a ball of mass exactly `1/M`. A Dirac
 mass gives every set measure `0` or `1`, so as soon as `M ≥ 2` no ball — of
 any centre, of any radius — carries mass `1/M`, and the claim fails for
-`ν = δ_{x₀}`.  Absolute continuity is what rules that out: it is what the
+`ν = δ_{x₀}`. Absolute continuity is what rules that out: it is what the
 source has, and `claim_balls` below carries it in the form its proof uses.
 
 Source: arXiv:2411.04551v3, §5, `cl: balls` (the "Since `ν^i` is absolutely
@@ -85,13 +89,13 @@ The survey's measures are absolutely continuous — the flow maps of
 `prop: targets.atoms` that produce them go from `𝒫_ac(𝕊)` to `𝒫_ac(𝕊)`, and
 the proof of the claim opens with "Since `ν^i` is absolutely continuous" to
 get the continuity of `(s, r) ↦ ν^i(B(γ(s), r))` that its intermediate-value
-argument runs on.  That hypothesis was missing from the statement here, and
+argument runs on. That hypothesis was missing from the statement here, and
 without it the claim is false, not merely unproved:
 `not_exists_ball_of_mass_of_dirac` refutes requirement 1 for a Dirac mass at
-every `M ≥ 2`.  It is carried below in the form the proof uses it — every
+every `M ≥ 2`. It is carried below in the form the proof uses it — every
 geodesic sphere is `ν^i`-null, which is what makes
 `(s, r) ↦ ν^i(B(γ(s), r))` continuous, and which at `r = 0` is the absence of
-atoms that the Dirac counterexample violates.  That form is implied by
+atoms that the Dirac counterexample violates. That form is implied by
 absolute continuity and mentions no reference measure.
 
 The source also assumes the support is sufficiently small relative to the

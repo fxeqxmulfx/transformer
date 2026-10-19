@@ -1,16 +1,20 @@
-/-
+module
+
+public import Transformer.Interpolation.Basic
+
+/-!
 # Measure-to-measure interpolation — `lem: hyp.propagation` is false
 
 `lem: hyp.propagation` of arXiv:2411.04551v3 asks for an invertible map
 carrying `Φ_1(μ_0^i)` to `Φ_3(μ_1^i)` from nothing more than a transport map
-`T^i` with `T^i_# μ_0^i = μ_1^i`.  When `T^i` merges atoms no injective map
+`T^i` with `T^i_# μ_0^i = μ_1^i`. When `T^i` merges atoms no injective map
 can do it: `not_hyp_propagation`, built on the even two-atom mixture
 `halfDirac`.
 
 Source: arXiv:2411.04551v3, §5, `lem: hyp.propagation`.
 -/
 
-import Transformer.Interpolation.Basic
+@[expose] public section
 
 open MeasureTheory
 
@@ -43,8 +47,8 @@ represents this way in its first line.
 
 Refuted here for *every* such representation at once, and with less asked of
 the maps than the source gives: `T^i_{Φ_1}` measurable and bijective,
-`T^i_{Φ_3}` arbitrary, `ψ` measurable and injective.  The data: `d = 3`,
-`N = 1`, `μ_0 = ½δ_x + ½δ_{-x}`, `μ_1 = δ_x`, `T ≡ x`.  An injective map
+`T^i_{Φ_3}` arbitrary, `ψ` measurable and injective. The data: `d = 3`,
+`N = 1`, `μ_0 = ½δ_x + ½δ_{-x}`, `μ_1 = δ_x`, `T ≡ x`. An injective map
 sends the two atoms of `μ_0` to two distinct atoms, of mass `½` each, while
 `Φ_3(δ_x)` is a Dirac mass.
 

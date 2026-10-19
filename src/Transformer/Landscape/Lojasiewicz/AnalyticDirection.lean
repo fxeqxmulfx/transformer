@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.AnalyticCurveGradient
+public import Mathlib.Analysis.Analytic.Uniqueness
+
+/-!
 # A finite-order direction for a nonconstant real analytic germ
 
 Every nonconstant analytic energy germ has a nonconstant restriction to
@@ -14,8 +19,7 @@ The original code is licensed under Apache-2.0; the license is preserved
 in third_party/LocalComplexGeometry/LICENSE. No package dependency is added.
 -/
 
-import Transformer.Landscape.Lojasiewicz.AnalyticCurveGradient
-import Mathlib.Analysis.Analytic.Uniqueness
+@[expose] public section
 
 open Filter Set
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_PhaseSequenceControls
+
+/-!
 # Exact inverses of finite original autonomous phase sequences
 
 ArXiv:2411.04551v3, §1, invertible solution maps, §3.2,
@@ -14,7 +18,7 @@ an inverse map, with the same phase count and zero scores whenever
 the original phases have zero scores.
 -/
 
-import Transformer.Interpolation.Section1_PhaseSequenceControls
+@[expose] public section
 
 open Real MeasureTheory Set
 

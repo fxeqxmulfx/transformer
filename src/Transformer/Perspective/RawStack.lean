@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.RawStream
+
+/-!
 # A stack of different blocks, and the gauge that its residual gains are
 
 **Not a statement of any paper.**  Each block of modded-nanogpt
@@ -10,11 +14,11 @@ rescales the residual stream before adding to it,
 
 (`normed = norm(x)`), and `resid_lambdas` is one *scalar* per layer and
 sublayer, `nn.Parameter(torch.full((num_layers, 2), 1.1**0.5))`, above `1` at
-the start.  A step of the stack below is one of those updates, so a model of
+the start. A step of the stack below is one of those updates, so a model of
 eleven layers is a stack of twenty-two.
 
 `Perspective.RawGrowth` had that gain in continuous time, as one constant `c`
-in `ẋ = c x + g`: one block, applied for a while.  A stack is not that — eleven
+in `ẋ = c x + g`: one block, applied for a while. A stack is not that — eleven
 blocks, each with its own gain and its own output — and in discrete time
 nothing has to be assumed away to say so: `x_{k+1,i} = λ_{k,i} x_{k,i} + g_{k,i}`
 with the gains positive and the outputs `g_{k,i}` arbitrary, attention, MLP and
@@ -22,20 +26,20 @@ injection of the `k`-th block together.
 
 The gains then factor out exactly (`rawStack_eq_gauge`): the stack is its gauge
 `Λ_{k,i} = ∏_{j<k} λ_{j,i}` times the stack of the same blocks with the gains
-removed, whose `k`-th step is `g_{k,i} / Λ_{k+1,i}`.  A positive scalar does not
+removed, whose `k`-th step is `g_{k,i} / Λ_{k+1,i}`. A positive scalar does not
 turn a vector, so the directions — all a pre-norm block ever reads — are those
 of the gauge stack whatever the gains are (`normalize_rawStack`), and only the
 ratios `‖g_{k,i}‖ / Λ_{k+1,i}` reach them.
 
 The gain may differ from token to token here, which is more than
-modded-nanogpt asks: a gate on the residual branch is a gauge too.  A gain that
+modded-nanogpt asks: a gate on the residual branch is a gauge too. A gain that
 differs from channel to channel — `mix[0] ⊙ x` of parameter-golf — is not.
 
 `Perspective.RawStackFrozen` reads the ratios off a stack whose gains exceed
 `1`, and finds `rawStream_frozen` there without its continuous time.
 -/
 
-import Transformer.Perspective.RawStream
+@[expose] public section
 
 open scoped BigOperators
 
@@ -126,7 +130,7 @@ example : (∀ (_ : ℕ) (_ : Idx 1), (0 : ℝ) < 1) ∧
 refuted: `normalize_rawStack` for a per-channel gain — that a stack whose
 blocks do nothing but rescale each channel by a positive factor,
 `x_{k+1} = A x_k` with `A e_p = a_p e_p`, `a_p > 0`, and no output at all, keeps
-the direction it started with.  It fails in `ℝ²` already, at `a = (2, 1)` and
+the direction it started with. It fails in `ℝ²` already, at `a = (2, 1)` and
 `x_k = 2^k e₀ + e₁`: the direction at depth `1` is not the direction at depth
 `0`, and deeper in the stack it turns all the way onto `e₀`.
 

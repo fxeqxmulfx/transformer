@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Causal.Section5_RowField
+public import Transformer.Causal.Section5_CriticalSets
+public import Transformer.Causal.SectionA_ScalarConvergence
+
+/-!
 # Bounded lifted last angles for the actual frozen dynamics
 
 ArXiv:2411.04990v2, §5 and Appendix A, the smooth frozen
@@ -17,9 +23,7 @@ barriers then keep its lift in that fixed bounded interval.
 No bounded-lift assumption is added to the original dynamics.
 -/
 
-import Transformer.Causal.Section5_RowField
-import Transformer.Causal.Section5_CriticalSets
-import Transformer.Causal.SectionA_ScalarConvergence
+@[expose] public section
 
 open scoped BigOperators
 open Real Set Filter

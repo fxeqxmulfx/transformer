@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section5_Mix
+public import Transformer.Clusters.Section8_Polytope
+
+/-!
 # The emergence of clusters in self-attention dynamics — the projected hull
 
 §10 of arXiv:2305.05465v6, `sec: clustering.hyperplanes.and.polytopes`: the
@@ -7,9 +12,9 @@ replaced by its projection onto `ℱ`.
 
 **What the source says and what is carried here.**
 
-* `π_ℱ` is "the projection onto `ℱ` parallel to `𝒢`".  That is
+* `π_ℱ` is "the projection onto `ℱ` parallel to `𝒢`". That is
   `IsProjOnto`: a linear map landing in `ℱ`, the identity on `ℱ`, zero on
-  `𝒢`.  It is carried as data rather than constructed from `IsCompl ℱ 𝒢`
+  `𝒢`. It is carried as data rather than constructed from `IsCompl ℱ 𝒢`
   because the statements below quantify over it.
 
 * "The set `π_ℱ(Cx({z_i(t)}))` is a convex subset of `ℱ` which is
@@ -35,8 +40,7 @@ Source: arXiv:2305.05465v6, `sec: clustering.hyperplanes.and.polytopes`,
 `p:noninc`, `cl:propofS`.
 -/
 
-import Transformer.Clusters.Section5_Mix
-import Transformer.Clusters.Section8_Polytope
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -98,7 +102,7 @@ example (z : EucSpace d) :
 
 /-! ### The limiting polytope `𝒦` and its set `𝒮` -/
 
-/-- The polytope `𝒦 ⊂ ℱ`, seen in `ℝ^d`.  `𝒦` itself lives in `↥ℱ`, where
+/-- The polytope `𝒦 ⊂ ℱ`, seen in `ℝ^d`. `𝒦` itself lives in `↥ℱ`, where
 `frontier` is the relative one that `t:multiplicity` names.
 
 Source: arXiv:2305.05465v6, `sec: clustering.hyperplanes.and.polytopes`. -/

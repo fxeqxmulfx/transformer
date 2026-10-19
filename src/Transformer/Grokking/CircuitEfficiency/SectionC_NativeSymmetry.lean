@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativePositive
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativePositive
 
 /-!
 # A retained native symmetry obstruction to automatic rule selection
@@ -16,6 +18,8 @@ Both circuits can be formed and training decisions correct, while their
 held-out CE is at least log two forever. No tie-breaking error or learned
 GPTMini feature model is inferred from the absence of strict test margin.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

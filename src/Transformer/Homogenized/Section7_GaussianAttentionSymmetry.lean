@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianQuerySecondMoment
+
+/-!
 # Genuine attention-matrix sign symmetry of the original Gaussian head
 
 ArXiv:2604.01978v1, §2.3.3, initialization (G), and §7,
@@ -17,7 +21,7 @@ exact original query second moment, rather than being assumed in the
 symmetry argument or inferred from a fictitious Gaussian product law.
 -/
 
-import Transformer.Homogenized.Section7_GaussianQuerySecondMoment
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped NNReal

@@ -1,5 +1,8 @@
-import Transformer.Modes.Section3_DerivativeIntegralComparison
-import Mathlib.Analysis.Fourier.FourierTransformDeriv
+module
+
+public import Transformer.Modes.Section3_DerivativeIntegralComparison
+public import Mathlib.Analysis.Fourier.FourierTransformDeriv
+
 /-!
 # Second-order spatial weights through Fourier derivatives
 
@@ -18,6 +21,7 @@ integral by `(2π)⁻²` times the second-derivative norm integral. All required
 derivatives are genuinely integrable; no boundary term is assumed.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter VectorFourier
 open scoped ENNReal Topology FourierTransform
 namespace Transformer.Modes

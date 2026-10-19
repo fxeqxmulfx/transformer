@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_ScaledGeneratorIdentity
+
+/-!
 # Scaled C2 bounds for the true optimizer generator
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The covariance part is bounded by a model constant times eta and
 the Hessian bound. The complete generator is continuous and bounded.
 -/
 
-import Transformer.BatchSize.Section4_ScaledGeneratorIdentity
+@[expose] public section
 
 open MeasureTheory
 open scoped BigOperators

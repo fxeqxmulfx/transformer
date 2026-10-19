@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadOrder
+public import Transformer.Clusters.Section7_OnlyOneSpread
+
+/-!
 # Bounded distinct configurations spread under the original discrete head sum
 
 ArXiv:2305.05465v6, §7, the first paragraph of the proof of `l:onlyone`,
@@ -15,8 +20,7 @@ lower bound contradicts that interval. The conclusion concerns the
 original separate head matrices and the original finite-step equation.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadOrder
-import Transformer.Clusters.Section7_OnlyOneSpread
+@[expose] public section
 
 open scoped BigOperators
 open Real

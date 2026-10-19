@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.CompactMaxCurve
+
+/-!
 # Preservation of a positive floor for a compact family
 
 Auxiliary for arXiv:2411.04551v3, §2, `prop: targets.atoms`. The
@@ -14,7 +18,7 @@ positive, and the minimum principle preserves the full initial floor
 on every future interval. No derivative of the minimum is assumed.
 -/
 
-import Transformer.Perspective.CompactMaxCurve
+@[expose] public section
 
 open Set Filter
 open scoped Topology

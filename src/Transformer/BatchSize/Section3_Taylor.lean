@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_ErrorFunction
+
+/-!
 # Directional Taylor expansion
 
 arXiv:2506.12543v1, Section 3.2, equation (1).
@@ -8,7 +12,7 @@ implicit in the source, are explicit here. Derivatives are taken along
 the actual parameter line, an intrinsic form of the gradient/Hessian terms.
 -/
 
-import Transformer.BatchSize.Section4_ErrorFunction
+@[expose] public section
 
 noncomputable section
 

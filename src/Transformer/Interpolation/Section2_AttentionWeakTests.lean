@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_AttentionRegularity
+public import Transformer.Interpolation.Section1_FiniteTransport
+
+/-!
 # Moving tests for the original attention equation
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §2, `prop: targets.atoms`.
@@ -8,8 +13,7 @@ Applying this to finite smooth transport cones uses the current field
 and the actual particle velocities at that time.
 -/
 
-import Transformer.Interpolation.Section2_AttentionRegularity
-import Transformer.Interpolation.Section1_FiniteTransport
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal

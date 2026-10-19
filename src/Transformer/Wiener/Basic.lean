@@ -1,9 +1,12 @@
-import Transformer.Wiener.Defs
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.Probability.BrownianMotion.Basic
-import Mathlib.Probability.ConditionalExpectation
-import Mathlib.Probability.Independence.Integration
-import Mathlib.Probability.Martingale.Basic
+module
+
+public import Transformer.Wiener.Defs
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.Probability.BrownianMotion.Basic
+public import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Basic
+public import Mathlib.Probability.ConditionalExpectation
+public import Mathlib.Probability.Independence.Integration
+public import Mathlib.Probability.Martingale.Basic
 
 /-!
 # Brownian motion and the cylindrical Wiener process: moments and martingale property
@@ -16,6 +19,8 @@ independent of `ℱ`, and `c • B` is Brownian of variance `c² v`. For a cylin
 `W`, `W t 0 = 0` almost surely and `𝔼[W(t)[h] W(s)[g]] = (s ∧ t) ⟪h, g⟫`, the source's
 "Equivalently" (l. 3378).
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped NNReal InnerProductSpace

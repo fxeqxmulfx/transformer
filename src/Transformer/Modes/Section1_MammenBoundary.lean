@@ -1,7 +1,9 @@
-import Transformer.Modes.Section1_IntervalCounts
-import Transformer.Modes.Growth
+module
 
-/-
+public import Transformer.Modes.Section1_IntervalCounts
+public import Transformer.Modes.Growth
+
+/-!
 # The number of modes of a Gaussian KDE — the boundary case of Mammen's formula
 
 The first bullet of `thm:mammen`, arXiv:2412.09080v3, §1.1, says that the
@@ -25,6 +27,8 @@ zero in the interval's interior would require a separate proof.
 
 Source: arXiv:2412.09080v3, §1.1, first bullet of `thm:mammen` and `eq:gkde`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Filter Asymptotics
 open scoped Topology ENNReal

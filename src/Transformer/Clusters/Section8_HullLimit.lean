@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section8_HullContinuity
+public import Mathlib.Topology.Sequences
+
+/-!
 # The shrinking token hull converges to a polytope
 
 The opening step in the proof of `t:Idcase11`, arXiv:2305.05465v6, §8.1.
@@ -15,8 +20,7 @@ an empty proposed limit. Every input is witnessed by an actual stationary
 solution of `e:dynIdzi`.
 -/
 
-import Transformer.Clusters.Section8_HullContinuity
-import Mathlib.Topology.Sequences
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

@@ -1,7 +1,9 @@
-import Transformer.GPTMini.Semantics.Block
-import Transformer.GPTMini.Semantics.Counting
-import Transformer.GPTMini.TokenInterface.Control
-import Mathlib.Analysis.InnerProductSpace.LinearMap
+module
+
+public import Transformer.GPTMini.Semantics.Block
+public import Transformer.GPTMini.Semantics.Counting
+public import Transformer.GPTMini.TokenInterface.Control
+public import Mathlib.Analysis.InnerProductSpace.LinearMap
 
 /-!
 # A raw ONE feature in the original embedding and fused QKV
@@ -20,6 +22,8 @@ feature, not a complete parity model or its EOS decoder. The context cap
 is parity's 19 tokens; real arithmetic uses the existing shared-epsilon
 formalization, rather than certifying floating-point rounding.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

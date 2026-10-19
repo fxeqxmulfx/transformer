@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # Metastability — §3.3, acceleration of the gradient between metastable states
 
 arXiv:2410.06833v1, `sec: acceleration`.
@@ -7,18 +13,16 @@ Where the Otto–Reznikoff framework of §3.1 bounds the energy gap by the
 gradient and so forces decay, §3.3 runs the comparison the other way: along
 the ascent flow `Ẋ = ∇𝖤(X)`, a Hessian bounded *below* on the gradient
 direction — `eq: hessian.lb.reverse.pl` — makes `‖∇𝖤(X(t))‖²` grow
-exponentially.  That is the whole of the paragraph: a chain rule, an
+exponentially. That is the whole of the paragraph: a chain rule, an
 inequality, and Grönwall.
 
 `reversePL` is the inequality; `reverse_PL_acceleration` is the Grönwall step
-that integrates it.  The chain rule is a hypothesis, for the reason its
+that integrates it. The chain rule is a hypothesis, for the reason its
 docstring records, and `not_forall_reverse_PL_acceleration` shows that it has
 to be.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open Real
 
@@ -29,7 +33,7 @@ namespace Metastability
 
   `⟨Hess 𝖤(X(t)) ∇𝖤(X(t)), ∇𝖤(X(t))⟩ ≥ c ‖∇𝖤(X(t))‖²`  for `t ∈ [0, T]`,
 
-with `T = T_u` the exit time from the accelerating manifold `𝒜`.  The two
+with `T = T_u` the exit time from the accelerating manifold `𝒜`. The two
 scalar fields are the paper's `H` and `‖∇𝖤‖`: the Riemannian structure of
 §3.1 is not formalized, so they are carried abstractly.
 
@@ -50,15 +54,15 @@ two lines: the chain rule along the ascent flow `Ẋ = ∇𝖤(X)`,
 
   `d/dt ‖∇𝖤(X(t))‖² = 2 ⟨∇𝖤(X(t)), Hess 𝖤(X(t)) ∇𝖤(X(t))⟩`,
 
-followed by Grönwall.  `gradNorm` and `gradHess` are abstract fields here —
+followed by Grönwall. `gradNorm` and `gradHess` are abstract fields here —
 the Hessian is not constructed, and nothing ties either of them to a
 derivative of the other — so that identity cannot be derived and is carried
-as the hypothesis `hchain`, in the same way the flow itself is carried.  It is
+as the hypothesis `hchain`, in the same way the flow itself is carried. It is
 not a technicality: without it the statement is false, which is
 `not_forall_reverse_PL_acceleration` below.
 
 The conclusion is stated on `[0, T]` rather than on `[0, T_u]`; the exit time
-enters only through the range on which the hypotheses are assumed.  The sign
+enters only through the range on which the hypotheses are assumed. The sign
 of `c` is not used either — Grönwall gives the estimate as written for every
 `c`, and `c > 0` is what makes it an acceleration rather than a decay.
 

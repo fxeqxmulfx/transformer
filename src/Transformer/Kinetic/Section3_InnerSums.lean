@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_PairEnvelope
+
+/-!
 # Sums over the later token of a pair
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 4, `eq:est-kap3-th`: the
@@ -8,7 +12,7 @@ For `x < z` only `M ≤ x` contribute, where `Ĝ^M_z = τ q_γ(z, x) q_γ(x, M)/
 (`sum_profileEnv_pairDecay_down`). Both sums vanish unless `n` precedes `min(x, z)`.
 -/
 
-import Transformer.Kinetic.Section3_PairEnvelope
+@[expose] public section
 
 namespace Transformer
 namespace Kinetic

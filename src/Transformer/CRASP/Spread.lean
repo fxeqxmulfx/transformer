@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Data.List.ReduceOption
+public import Transformer.CRASP.Positional
+
+/-!
 # The string map of the reduction from `TL[◁#]^pos`
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -6,18 +11,17 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 `f(w₁ ⋯ wₙ) = e^r w₁ e^{r−1} w₂ e^{r−1} ⋯ wₙ e^{r−1}`.
 
 For `r ≥ 1` the string `f(w)` falls into `n + 1` blocks of `r` positions:
-block `0` is `e^r`, and block `i ≥ 1` is `wᵢ e^{r−1}`.  Position `r·i + ρ`,
+block `0` is `e^r`, and block `i ≥ 1` is `wᵢ e^{r−1}`. Position `r·i + ρ`,
 for `1 ≤ ρ ≤ r`, is the `ρ`-th position of block `i`; `getElem?_spread`
 reads a symbol off this layout.
 
 A `TL[◁#]^pos` formula at a position `j` looks only at positions up to `j`,
 so its value there survives extending the string on the right
-(`FormP.sat_append`).  In particular every formula sees the first block of
+(`FormP.sat_append`). In particular every formula sees the first block of
 `f(w)` as the string `e^r`, whatever `w` is (`FormP.sat_spread_of_le`).
 -/
 
-import Mathlib.Data.List.ReduceOption
-import Transformer.CRASP.Positional
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Clusters.Section4_SquareCounterexample
+
+/-!
 # The emergence of clusters in self-attention dynamics — the codimension
   conjecture
 
@@ -12,10 +16,10 @@ Its stated numerical bound is false; a genuine four-token trajectory refutes it.
   That count is the dimension of the unstable subspace, and it is carried by
   the `V`-invariant splitting it produces: `ℝ^d = F ⊕ G` with `dim F = k`, the
   flow `e^{tV}` growing at a definite exponential rate on `F` and at most
-  polynomially on `G`.  Over ℂ, `F` is the sum of the generalized eigenspaces
+  polynomially on `G`. Over ℂ, `F` is the sum of the generalized eigenspaces
   of the eigenvalues with `Re λ > 0` and `G` that of the rest; the polynomial
   factor on `G` is what the Jordan blocks of the eigenvalues on the imaginary
-  axis contribute.  This needs no complexification.
+  axis contribute. This needs no complexification.
 
 * The source states the conjecture with **no hypothesis on `(Q,K)`** — unlike
   `l:3hyperplanes11`, which assumes `⟨Qφ₁, Kφ₁⟩ > 0`. The counterexample
@@ -43,7 +47,7 @@ Its stated numerical bound is false; a genuine four-token trajectory refutes it.
 Source: arXiv:2305.05465v6, `c:codim`.
 -/
 
-import Transformer.Clusters.Section4_SquareCounterexample
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -55,7 +59,7 @@ variable {d n : ℕ}
 
 /-- **The unstable subspace and its dimension `k`.**  A `V`-invariant
 splitting `ℝ^d = F ⊕ G` with `dim F = k`, on which `e^{tV}` grows at least
-like `e^{εt}`, against at most polynomial growth on `G`.  This is the eigenvalue
+like `e^{εt}`, against at most polynomial growth on `G`. This is the eigenvalue
 count of `c:codim`: `k` is the number of eigenvalues of `V`, with multiplicity,
 whose real part is positive.
 

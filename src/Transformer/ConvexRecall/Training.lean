@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ConvexRecall.Basic
+
+/-!
 # Convex metric training with a certified global optimum
 
 Extension of arXiv:2211.11052v1, §3.2: convex loss of a linear feature lift,
@@ -9,7 +13,7 @@ additional matching supervision; it is not the training protocol of the
 MQAR experiments in arXiv:2312.04927v1, Appendix `app:synthetic`.
 -/
 
-import Transformer.ConvexRecall.Basic
+@[expose] public section
 
 open scoped BigOperators
 

@@ -1,5 +1,7 @@
-import Transformer.Homogenized.Section7_LogisticAngle
-import Mathlib.Probability.Martingale.Convergence
+module
+
+public import Transformer.Homogenized.Section7_LogisticAngle
+public import Mathlib.Probability.Martingale.Convergence
 
 /-!
 # Integer-time limits of the original bounded logistic angle
@@ -19,6 +21,8 @@ integer times; extension to every real time requires a separate maximal
 estimate and is not assumed by the integer convergence theorem here.
 Bounded convergence of the second moments is also recorded for that step.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology ENNReal

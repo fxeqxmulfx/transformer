@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_BoundedXNLimit
+public import Transformer.Clusters.Section7_Bounded
+
+/-!
 # The emergence of clusters in self-attention dynamics — `l:boundedxn`
 
 §7 of arXiv:2305.05465v6: if an extreme token stays bounded, its row of the
@@ -6,22 +11,21 @@ self-attention matrix tends to the standard basis row of that token.
 
 **What the source says and what is carried here.**  The second sentence of
 `l:boundedxn` says "if `x_1(t)` is bounded then `P_11(t) → 1` and
-`P_{1j}(t) → 0` for any `j ∈ [n-1]`".  As written it is false: `1 ∈ [n-1]`
-whenever `n ≥ 2`, so it asks for `P_11(t) → 0` and `P_11(t) → 1` at once.  The
+`P_{1j}(t) → 0` for any `j ∈ [n-1]`". As written it is false: `1 ∈ [n-1]`
+whenever `n ≥ 2`, so it asks for `P_11(t) → 0` and `P_11(t) → 1` at once. The
 range is a copy of the first sentence's, where `[n-1] = [n] \ {n}` is correct;
-symmetrically it must be `[n] \ {1}`, and that is how it is carried.  Nothing
+symmetrically it must be `[n] \ {1}`, and that is how it is carried. Nothing
 else is changed.
 
 The proof is the source's: by `l:onlyone` every other token is unbounded and
 runs off like `-c e^t` (`e:convdeladiff`, `tendsto_softmaxWeight_of_bounded`);
-the diagonal entry follows by the row sum.  The case of `x_1` is the mirror
+the diagonal entry follows by the row sum. The case of `x_1` is the mirror
 image under `x ↦ -x`.
 
 Source: arXiv:2305.05465v6, `l:boundedxn`.
 -/
 
-import Transformer.Clusters.Section7_BoundedXNLimit
-import Transformer.Clusters.Section7_Bounded
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -103,7 +107,7 @@ theorem tendsto_attention_of_bounded_last (X : ℝ → Idx (m + 1) → EucSpace 
 then `P_11(t) → 1` and `P_{1j}(t) → 0` for every `j ∈ [n] \ {1}`.
 
 The source writes `j ∈ [n-1]` here, copying the range of its first sentence;
-that range contains `j = 1` and would contradict `P_11(t) → 1`.  The
+that range contains `j = 1` and would contradict `P_11(t) → 1`. The
 symmetric range is `[n] \ {1}`, and that is what is stated.
 
 Source: arXiv:2305.05465v6, `l:boundedxn`, second sentence, corrected. -/

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CircuitSimulation
+
+/-!
 # Parallel Coyote stages for circuit levels
 
 Arora et al., arXiv:2312.04927v1, Appendix Theorem `thm: gen-ac`,
@@ -8,7 +12,7 @@ multiplication gates after their right operands have been copied to their
 target slots.
 -/
 
-import Transformer.Zoology.Appendix_CircuitSimulation
+@[expose] public section
 
 open scoped BigOperators
 

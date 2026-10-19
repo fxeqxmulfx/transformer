@@ -1,30 +1,34 @@
-/-
+module
+
+public import Transformer.NoiseScale.SectionC_ToyModel
+public import Transformer.NoiseScale.Section2_NoiseScale
+public import Mathlib.Probability.Distributions.Gaussian.Real
+
+/-!
 # Temperature and the noise scale
 
 arXiv:1812.06162, Appendix C.
 
 The temperature `T(ε, B) = ε/ε_max(B)` of eq. (C.1), whose `ε_max(B)` is read as the best step
-`ε_opt(B)` of eq. (2.6), the paper's notation elsewhere (`temperature`).  "In the case of pure
+`ε_opt(B)` of eq. (2.6), the paper's notation elsewhere (`temperature`). "In the case of pure
 SGD it is approximated by `T ≈ ε/B` in the small batch regime", up to a factor independent of
 `ε` and `B`: `T = (ε/B)(B + B_noise)/ε_max` (`temperature_eq`), `T/(ε/B) → B_noise/ε_max` as
-`B → 0` (`tendsto_temperature_div`).  At the best step `T = 1` at every batch size, as the
+`B → 0` (`tendsto_temperature_div`). At the best step `T = 1` at every batch size, as the
 definition intends (`temperature_stepOpt`).
 
 In the toy model of `SectionC_ToyModel`, with `|G|²` and `GᵀHG` replaced by their means, as the
 paper's `≈` does, `B_simple ≈ (B/ε) 2tr(Σ)/tr(HΣ)` and `B_noise ≈ (B/ε) 2tr(HΣ)/tr(H²Σ)`
-(`toy_noiseScales`): eq. (C.2), `B_noise ∝ B_simple ∝ 1/T` at `T ∝ ε/B`.  The paper states
+(`toy_noiseScales`): eq. (C.2), `B_noise ∝ B_simple ∝ 1/T` at `T ∝ ε/B`. The paper states
 `(B/ε) tr(Σ)/tr(H²Σ)` and `(B/ε) tr(HΣ)/tr(H³Σ)`, the values for `M = (ε/B)Σ`, which does not
 solve `MH + HM = (ε/B)Σ`; in one dimension the model's values are `2H` times these
-(`toy_counterexample`).  Its `B_noise = tr(Σ)H/GᵀHG` is read as `tr(HΣ)/GᵀHG`, eq. (2.8).  The
+(`toy_counterexample`). Its `B_noise = tr(Σ)H/GᵀHG` is read as `tr(HΣ)/GᵀHG`, eq. (2.8). The
 conclusions survive: the noise scales grow as `ε` decreases or `B` increases and are unchanged
 when both scale together (`toy_noiseScales_lt`), and `E[L(θ)] = (ε/B) tr(Σ)/4`: at larger `T`,
-"higher up the 'walls' of the potential" (`integral_toyLoss`).  The footnote's `ε/(1 - m)` for
+"higher up the 'walls' of the potential" (`integral_toyLoss`). The footnote's `ε/(1 - m)` for
 momentum `m` is an instance of the hypothesis on `M`.
 -/
 
-import Transformer.NoiseScale.SectionC_ToyModel
-import Transformer.NoiseScale.Section2_NoiseScale
-import Mathlib.Probability.Distributions.Gaussian.Real
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped Matrix
@@ -78,7 +82,7 @@ example := temperature_stepOpt (G := fun _ : Unit => 1) (H := 1) (S := 0) (by si
 
 /-- **Appendix C, toy model**, corrected: for symmetric `H` and `θ` of mean zero and
 covariance `M` with `MH + HM = (ε/B)Σ`, and `G = Hθ`, `tr(Σ)/E|G|² = (B/ε) 2tr(Σ)/tr(HΣ)` and
-`tr(HΣ)/E[GᵀHG] = (B/ε) 2tr(HΣ)/tr(H²Σ)`.  The paper's values `(B/ε) tr(Σ)/tr(H²Σ)` and
+`tr(HΣ)/E[GᵀHG] = (B/ε) 2tr(HΣ)/tr(H²Σ)`. The paper's values `(B/ε) tr(Σ)/tr(H²Σ)` and
 `(B/ε) tr(HΣ)/tr(H³Σ)` are refuted by `toy_counterexample`. -/
 theorem toy_noiseScales [IsProbabilityMeasure P] [DecidableEq ι] {H S : Matrix ι ι ℝ}
     (hH : Hᵀ = H) {θ : Ω → ι → ℝ} (hθ : ∀ a, MemLp (fun ω => θ ω a) 2 P)
@@ -119,7 +123,7 @@ example := And.intro
     (by ext; simp [covMatrix]))
 
 /-- **Appendix C, toy model**: the paper's `B_simple ≈ (B/ε) tr(Σ)/tr(H²Σ)` and
-`B_noise ≈ (B/ε) tr(HΣ)/tr(H³Σ)` are false.  In one dimension, for `H = h > 0`,
+`B_noise ≈ (B/ε) tr(HΣ)/tr(H³Σ)` are false. In one dimension, for `H = h > 0`,
 `Σ = ε = B = 1` and `θ` Gaussian of mean zero and variance `M = 1/(2h)`, which solves
 `MH + HM = (ε/B)Σ`, both noise scales are `2/h`, the paper's values `1/h²`: no constant factor
 reconciles them. -/

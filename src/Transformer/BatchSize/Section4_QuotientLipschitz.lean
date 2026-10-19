@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_CoefficientRegularity
+
+/-!
 # Positive-noise normalization preserves global Lipschitz bounds
 
 arXiv:2506.12543v1, Section 4.3, equation (3), Theorem 1.
@@ -7,7 +11,7 @@ state-dependent standard deviation. Division in the ordinary real field
 requires these bounds; it is not an isometric group operation.
 -/
 
-import Transformer.BatchSize.Section4_CoefficientRegularity
+@[expose] public section
 
 noncomputable section
 

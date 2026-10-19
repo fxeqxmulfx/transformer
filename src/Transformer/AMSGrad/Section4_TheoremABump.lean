@@ -1,6 +1,8 @@
-import Transformer.AMSGrad.Section4_TheoremASparse
+module
 
-/-
+public import Transformer.AMSGrad.Section4_TheoremASparse
+
+/-!
 # AMSGrad — Theorem A's constants for an upward-jumping schedule
 
 Theorem A of arXiv:1904.03590v4, §1, allows every schedule bounded by its
@@ -10,6 +12,8 @@ bound for an actual AMSGrad run at `T = 3` with
 only ones for which the printed constants can be proved. This is a special
 case, not a proof of the source's claim for every bounded schedule.
 -/
+
+@[expose] public section
 
 open Finset
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_VectorGaussianGenerator
+public import Transformer.BatchSize.Section4_GaussianGenerator
+
+/-!
 # Integrated generator identity for the actual vector Gaussian law
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The fundamental theorem of calculus includes the zero-time endpoint;
 no stochastic Taylor or martingale identity is assumed.
 -/
 
-import Transformer.BatchSize.Section4_VectorGaussianGenerator
-import Transformer.BatchSize.Section4_GaussianGenerator
+@[expose] public section
 
 open MeasureTheory
 

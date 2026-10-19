@@ -1,26 +1,30 @@
-/-
+module
+
+public import Transformer.ALM.SoftmaxTie
+public import Transformer.ALM.HullCost
+
+/-!
 # The tie the head averages is the tie the hull found
 
 `Transformer.ALM.SoftmaxTie` proves that a softmax head returns the centroid of
 a level set of its scores, and instantiates that at two keys carrying the same
-score.  Which two, it does not say: `hb : s b = σ` and `hc : s c = σ` are
-handed to it.  `Transformer.ALM.HullCost` proves the other half — the walk of
+score. Which two, it does not say: `hb : s b = σ` and `hc : s c = σ` are
+handed to it. `Transformer.ALM.HullCost` proves the other half — the walk of
 `HullHalf::query` collects the winner and at most one neighbour, and `resolve`
-averages exactly those two.  So one file knew *that* a tie is averaged and the
+averages exactly those two. So one file knew *that* a tie is averaged and the
 other knew *where* the ties are, and nothing said they are the same tie.
 
 `score_eq_of_mem_argmaxSet` is the missing step, and it is short: two indices
 of `argmaxSet` are tied *as lines* (`argmaxSet_tie`), and in dimension one a
 line value at `q` is a score (`score_eq_lineEval`), so any key the walk
-collects scores exactly what the winner scores.  `hullTie_head_resolves` then
+collects scores exactly what the winner scores. `hullTie_head_resolves` then
 needs no hypothesis about scores at all: the geometry the search landed in
 supplies it, and the head's output sits within `ε·C` of the aggregate the walk
 built — the machine's `TieBreak::AVERAGE` answer
 (`transformer_vm/attention/hull2d_cht.h`, lines 70-83, 276-306).
 -/
 
-import Transformer.ALM.SoftmaxTie
-import Transformer.ALM.HullCost
+@[expose] public section
 
 open scoped BigOperators
 
@@ -59,7 +63,7 @@ example [Nonempty (Fin n)] (Kv : Fin n → EucSpace 1) (qv : EucSpace 1) :
 collect.**  Both keys are named by positions the tie set contains, and nothing
 says either is the one the exact search returns: two keys collected by *any*
 walk over `argmaxSet` score alike, because each of them scores what `hullIdx`
-scores.  `hullTie_head_resolves` is the case where one of them is `hullIdx`;
+scores. `hullTie_head_resolves` is the case where one of them is `hullIdx`;
 `Transformer.ALM.FloatHeadTie` is the case where one of them is the index the
 floating-point search returned, which at a tie need not be the same. -/
 theorem argmaxTie_head_resolves [Nonempty (Fin n)] (Kv : Fin n → EucSpace 1) (qv : EucSpace 1)
@@ -86,7 +90,7 @@ theorem argmaxTie_head_resolves [Nonempty (Fin n)] (Kv : Fin n → EucSpace 1) (
 /-- **The head returns what the walk resolved, on the hull's own tie.**  No
 hypothesis names a score: the second key is given by a position the search
 collected, and `score_eq_of_mem_argmaxSet` turns that into the level-set
-hypothesis of `softmax_head_resolves_average`.  So where the machine has to
+hypothesis of `softmax_head_resolves_average`. So where the machine has to
 choose, the running head is within `ε·C` of the choice it makes, `ε` being the
 mass outside the two tied keys. -/
 theorem hullTie_head_resolves [Nonempty (Fin n)] (Kv : Fin n → EucSpace 1) (qv : EucSpace 1)

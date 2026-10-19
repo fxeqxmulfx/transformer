@@ -1,18 +1,22 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_Network
+
+/-!
 # Input and output dimensions of a Coyote model
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: gated-conv` and
-`def: W-kmat`.  A model may use larger inner sequence and feature dimensions.
+`def: W-kmat`. A model may use larger inner sequence and feature dimensions.
 The input is embedded in the upper-left corner with zeros elsewhere, then
 the same corner is extracted after the stacked layers.
 -/
 
-import Transformer.Zoology.Appendix_Network
+@[expose] public section
 
 namespace Transformer.Zoology
 
 /-- Embed an `n × d` sequence into the upper-left corner of an `N × D`
-inner sequence.  Source: Appendix `def: gated-conv`, display after the
+inner sequence. Source: Appendix `def: gated-conv`, display after the
 definition. -/
 def padSequence {n d N D : ℕ} (u : RealSequence n d) :
     RealSequence N D :=
@@ -21,7 +25,7 @@ def padSequence {n d N D : ℕ} (u : RealSequence n d) :
       if hq : q.val < d then u ⟨i.val, hi⟩ ⟨q.val, hq⟩ else 0
     else 0
 
-/-- Extract the upper-left output corner.  Source: Appendix
+/-- Extract the upper-left output corner. Source: Appendix
 `def: gated-conv`, paragraph after the zero-padding display. -/
 def cropSequence {n d N D : ℕ} (hn : n ≤ N) (hd : d ≤ D)
     (u : RealSequence N D) : RealSequence n d :=

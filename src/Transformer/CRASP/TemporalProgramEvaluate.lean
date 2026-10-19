@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.TemporalProgramState
+
+/-!
 # Correct Boolean evaluation from memory and comparison signs
 
 arXiv:2506.16055v3, Appendix B.2, `thm:TLCl_to_rtfr`.
@@ -6,7 +10,7 @@ The feed-forward map takes Boolean combinations of already correct
 symbol features and newly computed comparison features.
 -/
 
-import Transformer.CRASP.TemporalProgramState
+@[expose] public section
 
 namespace Transformer.CRASP.TemporalProgram
 

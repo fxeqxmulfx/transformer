@@ -1,14 +1,21 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Lojasiewicz
+public import Transformer.Landscape.Lojasiewicz.AnalyticMonomialCharts
+public import Transformer.Landscape.Lojasiewicz.LojasiewiczInnerProduct
+public import Transformer.Landscape.Lojasiewicz.OneDimensionalGradientInequality
+
+/-!
 # Saddle avoidance — the local gradient inequality of `Lojasiewicz`
 
 `Lojasiewicz` states the Łojasiewicz gradient inequality at a point `z` in
 the form of the hypothesis `hlocal` of
 `Landscape.Lojasiewicz.lojasiewicz_modulated_of_local_gradient_inequality`: for some
 `0 < α < 1`, `k > 0` and an open `V ∋ z`, `|E y - E z| ^ α ≤ k ‖∇E(y)‖` for
-every `y ∈ V`.  That form gives `IsLojasiewiczAt E z α` with `m = 1/k`
+every `y ∈ V`. That form gives `IsLojasiewiczAt E z α` with `m = 1/k`
 (`isLojasiewiczAt_of_forall_mem`), so it supplies the hypothesis `hloj` of
 the convergence theorems of this directory at `z`
-(`exists_isLojasiewiczAt_of_local_gradient_inequality`).  Every case of the
+(`exists_isLojasiewiczAt_of_local_gradient_inequality`). Every case of the
 local inequality that `Lojasiewicz` proves therefore plugs in, the general
 analytic case `Landscape.Lojasiewicz.analytic_gradient_inequality` included:
 Łojasiewicz's theorem, degenerate critical points included.
@@ -17,14 +24,11 @@ analytic case `Landscape.Lojasiewicz.analytic_gradient_inequality` included:
 and linear isometries preserve it (`isLojasiewiczAt_comp_linearIsometryEquiv_symm_iff`),
 so Łojasiewicz's theorem carries from `EucSpace N` to every finite-dimensional real
 inner product space (`exists_isLojasiewiczAt_of_analyticAt`; for `hloj`,
-`exists_isLojasiewiczAt_of_analyticOnNhd`).  In dimension at most one an elementary
+`exists_isLojasiewiczAt_of_analyticOnNhd`). In dimension at most one an elementary
 proof gives it at the critical points (`exists_isLojasiewiczAt_of_analyticAt_low_dimension`).
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Lojasiewicz
-import Transformer.Landscape.Lojasiewicz.AnalyticMonomialCharts
-import Transformer.Landscape.Lojasiewicz.LojasiewiczInnerProduct
-import Transformer.Landscape.Lojasiewicz.OneDimensionalGradientInequality
+@[expose] public section
 
 open Filter
 open scoped Topology
@@ -37,7 +41,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
 /-- **The local gradient inequality on an open set gives the Łojasiewicz
 inequality**: if `|f y - f z| ^ a ≤ k ‖∇f(y)‖` for every `y` in an open set
 `V ∋ z`, with `k > 0`, then `IsLojasiewiczAt f z a`, with `m = 1/k` and
-`ε = 1`.  The hypothesis asks the inequality on both sides of the level
+`ε = 1`. The hypothesis asks the inequality on both sides of the level
 `f z`; `IsLojasiewiczAt` asks it only above. -/
 theorem isLojasiewiczAt_of_forall_mem {a k : ℝ} {V : Set E} (hk : 0 < k) (hV : IsOpen V)
     (hzV : z ∈ V) (h : ∀ y ∈ V, |f y - f z| ^ a ≤ k * ‖gradient f y‖) :
@@ -107,7 +111,7 @@ end Isometry
 
 /-- **Analytic functions in dimension at most one satisfy the Łojasiewicz
 inequality at every critical point**, with an exponent `0 ≤ a < 1`,
-degenerate critical points included.  The local inequality is
+degenerate critical points included. The local inequality is
 `Landscape.Lojasiewicz.analytic_gradient_inequality_low_dimension`. -/
 theorem exists_isLojasiewiczAt_of_analyticAt_low_dimension {N : ℕ} (hN : N ≤ 1)
     {g : EucSpace N → ℝ} {w : EucSpace N} (hg : AnalyticAt ℝ g w) (hw : gradient g w = 0) :
@@ -118,7 +122,7 @@ theorem exists_isLojasiewiczAt_of_analyticAt_low_dimension {N : ℕ} (hN : N ≤
 /-- **Łojasiewicz's theorem: analytic functions satisfy the Łojasiewicz
 inequality at every point** of a finite-dimensional real inner product space, with
 an exponent `0 ≤ a < 1`, degenerate critical points included
-(`lojasiewicz1963propriete`).  On `EucSpace N` the local inequality is
+(`lojasiewicz1963propriete`). On `EucSpace N` the local inequality is
 `Landscape.Lojasiewicz.analytic_gradient_inequality`, from local uniformization; the
 isometry `(stdOrthonormalBasis ℝ E).repr` onto `EucSpace (finrank ℝ E)` carries it to `E`
 (`isLojasiewiczAt_comp_linearIsometryEquiv_symm_iff`), as in

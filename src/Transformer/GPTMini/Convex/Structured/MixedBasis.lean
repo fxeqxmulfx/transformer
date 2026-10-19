@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Convex.Structured.MixedInterface
-import Transformer.GPTMini.Convex.Structured.SharedDepth
-import Transformer.GPTMini.Convex.Structured.SharedParity
+module
+
+public import Transformer.GPTMini.Convex.Structured.MixedInterface
+public import Transformer.GPTMini.Convex.Structured.SharedDepth
+public import Transformer.GPTMini.Convex.Structured.SharedParity
 
 /-!
 # Full raw Basis correctness of the actual freely learned mixed head
@@ -22,6 +24,8 @@ block realization, output-only CE convexity, floating-point equivalence
 or successful AdamW training. Complete data likelihood is the proved
 convex objective; auxiliary data-target generation remains explicit.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

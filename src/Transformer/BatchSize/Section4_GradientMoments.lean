@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_Sampling
+
+/-!
 # Bochner moments of an unsigned Gaussian gradient
 
 arXiv:2506.12543v1, Section 4.3, equation (2).
@@ -6,7 +10,7 @@ The square-integrable full gradient has second moment equal to squared
 mean norm plus the trace of the minibatch noise covariance.
 -/
 
-import Transformer.BatchSize.Section4_Sampling
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped BigOperators

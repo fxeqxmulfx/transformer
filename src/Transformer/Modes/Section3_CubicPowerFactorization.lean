@@ -1,6 +1,8 @@
-import Transformer.Modes.Section3_CubicFrequency
-import Transformer.Modes.Section3_ThirdPowerBounds
-import Mathlib.Algebra.Ring.GeomSum
+module
+
+public import Transformer.Modes.Section3_CubicFrequency
+public import Transformer.Modes.Section3_ThirdPowerBounds
+public import Mathlib.Algebra.Ring.GeomSum
 
 /-!
 # Exact factorization of the cubic-corrected power error
@@ -18,6 +20,8 @@ so the identities remain valid when both characteristic values agree.
 The normalized-sum specialization keeps the actual Gaussian damping
 and the exact cubic coefficient scale `1 / sqrt n`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

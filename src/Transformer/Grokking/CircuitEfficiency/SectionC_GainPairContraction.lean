@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainPairDifference
-import Mathlib.Analysis.SpecificLimits.Basic
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainPairDifference
+public import Mathlib.Analysis.SpecificLimits.Basic
 
 /-!
 # Actual unbalanced native pair difference decay
@@ -24,6 +26,8 @@ remain separate obligations. Fixed gained tables, legal zero betas,
 exact reals and uniform native decay differ from coupled-cost GD
 and preserved learned GPTMini with nonzero betas.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

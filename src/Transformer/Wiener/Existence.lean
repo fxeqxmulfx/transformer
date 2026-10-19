@@ -1,6 +1,8 @@
-import BrownianMotion.Gaussian.BrownianMotion
-import Transformer.Wiener.Basic
-import Transformer.Wiener.Filtration
+module
+
+public import BrownianMotion.Gaussian.BrownianMotion
+public import Transformer.Wiener.Basic
+public import Transformer.Wiener.Filtration
 
 /-!
 # A cylindrical Wiener process on `L²(δ_θ₀)` with an independent initial datum
@@ -18,6 +20,8 @@ E. Marion, P. Pfaffelhuber et al. (github.com/RemyDegenne/brownian-motion, Apach
 of the filtration of the datum and the noise. Nothing is assumed beyond `μ₀` being a probability
 measure.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped NNReal InnerProductSpace

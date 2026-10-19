@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_ZipfBasic
+public import Mathlib.NumberTheory.Harmonic.EulerMascheroni
+public import Mathlib.Analysis.Asymptotics.SpecificAsymptotics
+
+/-!
 # Harmonic, logarithmic, and rounding limits for the Zipf argument
 
 arXiv:2402.19449v2, Appendix H's opening paragraph.
 -/
 
-import Transformer.Imbalance.Section3_ZipfBasic
-import Mathlib.NumberTheory.Harmonic.EulerMascheroni
-import Mathlib.Analysis.Asymptotics.SpecificAsymptotics
+@[expose] public section
 
 open Filter Asymptotics
 open scoped Topology

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_QuadrantPhaseSequence
+public import Transformer.Interpolation.Section4_GenericQuadrantPoints
+
+/-!
 # Reducing arbitrary finite original atoms to the positive quadrant
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, and §3.1,
@@ -18,8 +23,7 @@ original finite family. The new quadrant family is constructed from
 the data before any physical horizon is chosen.
 -/
 
-import Transformer.Interpolation.Section3_QuadrantPhaseSequence
-import Transformer.Interpolation.Section4_GenericQuadrantPoints
+@[expose] public section
 
 open Real MeasureTheory Set
 

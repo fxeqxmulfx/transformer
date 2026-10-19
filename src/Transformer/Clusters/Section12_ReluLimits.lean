@@ -1,6 +1,8 @@
-import Transformer.Clusters.Section12_ReluFlow
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Topology.Order.MonotoneConvergence
+module
+
+public import Transformer.Clusters.Section12_ReluFlow
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Topology.Order.MonotoneConvergence
 
 /-!
 # A genuine ReLU scalar trajectory with a separated limit
@@ -23,6 +25,8 @@ this yields four separated limiting tokens. The following module
 will verify the full vector feed-forward equation and its good
 triple hypotheses before drawing the hyperplane conclusion.
 -/
+
+@[expose] public section
 
 open Real Filter Topology
 namespace Transformer.Clusters

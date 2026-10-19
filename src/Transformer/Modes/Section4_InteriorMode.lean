@@ -1,8 +1,10 @@
-import Transformer.Modes.Section2_Field
-import Mathlib.Analysis.Calculus.Deriv.Slope
-import Mathlib.Topology.Order.Compact
+module
 
-/-
+public import Transformer.Modes.Section2_Field
+public import Mathlib.Analysis.Calculus.Deriv.Slope
+public import Mathlib.Topology.Order.Compact
+
+/-!
 # The number of modes of a Gaussian KDE — an interior maximum from endpoint signs
 
 The counterexample to `lem:scale-space`, arXiv:2412.09080v3, §4.2, needs
@@ -23,6 +25,8 @@ does not assert that every critical point is a mode or is nondegenerate.
 
 Source: arXiv:2412.09080v3, §2.1, `eq:Fn`; §4.2, `lem:scale-space`.
 -/
+
+@[expose] public section
 
 open Real Filter
 open scoped Topology

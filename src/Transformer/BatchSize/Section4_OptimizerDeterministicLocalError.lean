@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_OptimizerLocalWeakDrift
+public import Transformer.BatchSize.Section4_C2DiscreteError
+
+/-!
 # Local diffusion error against the actual deterministic Euler step
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ The constructed diffusion and deterministic mean Euler step have the
 same first-order drift. Their proved weak Taylor defects give O(eta^2).
 -/
 
-import Transformer.BatchSize.Section4_OptimizerLocalWeakDrift
-import Transformer.BatchSize.Section4_C2DiscreteError
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal

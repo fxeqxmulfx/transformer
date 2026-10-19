@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.IncidentMemorySelection
+module
+
+public import Transformer.GPTMini.Sparsemax.IncidentMemorySelection
 
 /-!
 # An additional convex geometry criterion computed from observations
@@ -16,6 +18,8 @@ projection still exists. Positive scale and nonnegative distances prefer
 positive edges, with stronger preferences for closer observed neighbors.
 This selects otherwise equivalent geometry, not semantic output-only routes.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.Metastability.CapGeometry
+
+/-!
 # Metastability — from cap containment and cap collapse to `thm: metastability`
 
 The statement of `thm: metastability` (arXiv:2410.06833v1, §2) is about the caps `𝒮_q(2ε)` of
 the centres `w_q`; the proof works with the *classes* `I_q = {i : x_i(0) ∈ 𝒮_q(ε)}` of the tokens.
 Because `γ(β) > 0` forces `α < 1`, the caps `𝒮_q(2ε)` are pairwise disjoint (`cap_eq_of_mem`),
-so a token lying in `𝒮_q(2ε)` at time `t ≤ T₂` belongs to the class `I_q`.  This file turns
+so a token lying in `𝒮_q(2ε)` at time `t ≤ T₂` belongs to the class `I_q`. This file turns
 
 * `hcont` — the token `i` stays in `𝒮_{q(i)}(2ε)` on `[0, T₂]` (`cap_containment`), and
 * `hpair` — tokens of one class have `⟨x_i, x_j⟩ ≥ 1 - δ` on `[T₁, T₂]` (`collapse_dynamic`),
@@ -12,7 +16,7 @@ so a token lying in `𝒮_q(2ε)` at time `t ≤ T₂` belongs to the class `I_q
 into the two items of the theorem.
 -/
 
-import Transformer.Metastability.CapGeometry
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 open Real Set
@@ -41,7 +45,7 @@ theorem sphericalCap_mono {w : SSphere d} {c c' : ℝ} (h : c ≤ c') :
   linarith
 
 /-- **Assembly of `thm: metastability`.**  Let `q i` be a cap with `x_i(0) ∈ 𝒮_{q(i)}(ε)`, and
-assume `α = α(ε) < 1`.  If token `i` stays in `𝒮_{q(i)}(2ε)` on `[0, T₂]` and tokens of one class
+assume `α = α(ε) < 1`. If token `i` stays in `𝒮_{q(i)}(2ε)` on `[0, T₂]` and tokens of one class
 satisfy `⟨x_i, x_j⟩ ≥ 1 - δ` on `[T₁, T₂]`, then
 
 1. if `x_i(0) ∈ 𝒮_{q'}(ε)` then `x_i(t) ∈ 𝒮_{q'}(2ε)` for `t ∈ [0, T₂]`;

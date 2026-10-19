@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_UniformLaplaceCounterexample
+public import Transformer.Homogenized.Section7_DeltaNormCovariance
+public import Transformer.Homogenized.Section7_GaussianHeadDelta
+public import Transformer.Homogenized.Metastability
+
+/-!
 # Homogenized Transformers — the barycenter at low temperature
 
 The dimension-uniform version of `lemma:Laplace_method` of
@@ -20,10 +27,7 @@ required by that argument. Exact dimension-dependent barycenter bounds
 and the actual Gaussian query moments are proved in the imported modules.
 -/
 
-import Transformer.Homogenized.Section7_UniformLaplaceCounterexample
-import Transformer.Homogenized.Section7_DeltaNormCovariance
-import Transformer.Homogenized.Section7_GaussianHeadDelta
-import Transformer.Homogenized.Metastability
+@[expose] public section
 
 open scoped BigOperators ENNReal NNReal
 open Real MeasureTheory
@@ -99,10 +103,10 @@ theorem laplace_method_false :
 
 **What the source says and what is written here.**  The statement is written
 at the head law's own `A = W W'ᵀ` of `eq: tformers.at.initialization` rather
-than at the source's `Â`.  The two differ by the positive constant `(dσ_A²)⁻¹`,
+than at the source's `Â`. The two differ by the positive constant `(dσ_A²)⁻¹`,
 which `normalizeLayer_smul` shows the left-hand side does not see, and by
 transposing both factors, which is a relabeling of independent identically
-distributed entries and so does not change the law of `A`.  Stating it at `Â`
+distributed entries and so does not change the law of `A`. Stating it at `Â`
 would therefore be the same lemma written in a matrix the rest of the
 development never forms.
 

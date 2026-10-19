@@ -1,12 +1,14 @@
-import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-import Mathlib.Analysis.Calculus.Deriv.Pow
+module
 
-/-
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+
+/-!
 # The number of modes of a Gaussian KDE — third derivatives along a chain
 
 The moment generating function of a sum of `n` i.i.d. summands is the `n`-th
 power of the moment generating function of one of them, and the third moment of
-the sum is read off the third derivative of that power at `0`.  Two pieces of
+the sum is read off the third derivative of that power at `0`. Two pieces of
 one-variable calculus do it, both stated for a *chain* `F, F₁, F₂, F₃` of
 derivative functions rather than for a function known to be three times
 differentiable, because differentiating under the integral sign supplies
@@ -15,11 +17,13 @@ exactly such a chain and nothing more:
 * `iteratedDeriv_three_of_chain` — `F''' = F₃` along a chain;
 * `iteratedDeriv_three_pow` — `(Gⁿ)''' = n G₃` at a point where `G = 1` and
   `G' = 0`, the normalization a moment generating function has at the origin
-  when the law is centred.  Every term of the third derivative of a power
+  when the law is centred. Every term of the third derivative of a power
   carries a factor `G'` except the last one.
 
 Source: arXiv:2412.09080v3, §3.1, the display after `eq:psi`.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

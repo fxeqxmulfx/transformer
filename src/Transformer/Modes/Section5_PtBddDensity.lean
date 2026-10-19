@@ -1,6 +1,8 @@
-import Transformer.Modes.Section5_PtBddBoxBounds
+module
 
-/-
+public import Transformer.Modes.Section5_PtBddBoxBounds
+
+/-!
 # The number of modes of a Gaussian KDE — the continuous-density claim is false
 
 `lem: pt.bdd` of arXiv:2412.09080v3, §4.1, claims a continuous joint density
@@ -21,6 +23,8 @@ source's universal application claims.
 
 Source: arXiv:2412.09080v3, §4.1, `lem: pt.bdd`; §5.5, its proposed proof.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped ENNReal

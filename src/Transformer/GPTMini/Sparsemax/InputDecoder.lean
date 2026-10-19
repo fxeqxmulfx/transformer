@@ -1,7 +1,9 @@
-import Transformer.GPTMini.Sparsemax.QKProjection
-import Mathlib.LinearAlgebra.Basis.VectorSpace
-import Mathlib.Topology.Algebra.Module.FiniteDimension
-import Mathlib.LinearAlgebra.Dimension.Constructions
+module
+
+public import Transformer.GPTMini.Sparsemax.QKProjection
+public import Mathlib.LinearAlgebra.Basis.VectorSpace
+public import Mathlib.Topology.Algebra.Module.FiniteDimension
+public import Mathlib.LinearAlgebra.Dimension.Constructions
 
 /-!
 # Input independence gives a proved linear coordinate decoder
@@ -20,6 +22,8 @@ to span their ambient input space. It still requires independence
 of the whole considered family; this is a finite-row restriction.
 It is not a claim that arbitrary learned embeddings have that rank.
 -/
+
+@[expose] public section
 
 noncomputable section
 

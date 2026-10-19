@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_NormalizedCircleAtomicity
+public import Transformer.Perceptron.Atomicity
+public import Transformer.Metastability.Section4_UniformLaw
+public import Mathlib.MeasureTheory.Measure.Typeclasses.NullSingletonClass
+
+/-!
 # Null support and singularity for normalized circle stationary measures
 
 ArXiv:2601.21366v2, §6, `prop: unified.log` and
@@ -14,10 +21,7 @@ mutual singularity. All uniform-law hypotheses below are exhibited
 by the already constructed normalized spherical Lebesgue law.
 -/
 
-import Transformer.Perceptron.Section6_NormalizedCircleAtomicity
-import Transformer.Perceptron.Atomicity
-import Transformer.Metastability.Section4_UniformLaw
-import Mathlib.MeasureTheory.Measure.Typeclasses.NullSingletonClass
+@[expose] public section
 
 open MeasureTheory Set
 

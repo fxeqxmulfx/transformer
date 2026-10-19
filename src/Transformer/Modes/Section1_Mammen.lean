@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Modes.Section1_KDE
+public import Transformer.Modes.Growth
+public import Transformer.Modes.Section1_MammenBoundary
+
+/-!
 # The number of modes of a Gaussian KDE — modes in a fixed interval
 
 §1.1 of arXiv:2412.09080v3, `thm:mammen` (Mammen, *Statist. Probab. Lett.* 1995,
@@ -32,16 +38,14 @@ Thm. 1): the expected number of modes of `eq:gkde` in a **fixed** interval
   Kac–Rice density `√β e^{-A_t}` with `A_t ≍ β^{-3/2} n t² e^{-t²/2}`
   (`rmk:empirical`, the belt-width remark) is exponentially small at a fixed
   `t ≠ 0` as soon as `β ≪ n^{2/3}`, so the count there tends to `0` while
-  `Θ(1)` and `Θ(n^{-1/2}β^{5/4})` do not.  In the fourth regime `β ≳ n^{2/3}`
+  `Θ(1)` and `Θ(n^{-1/2}β^{5/4})` do not. In the fourth regime `β ≳ n^{2/3}`
   no such hypothesis is needed: there `A_t = O(1)` at every fixed `t`, and the
   modes have density `≍ √β` throughout the interval.
 
 Source: arXiv:2412.09080v3, `thm:mammen`.
 -/
 
-import Transformer.Modes.Section1_KDE
-import Transformer.Modes.Growth
-import Transformer.Modes.Section1_MammenBoundary
+@[expose] public section
 
 open Filter Asymptotics
 open scoped Topology ENNReal
@@ -80,7 +84,7 @@ example : (0 : ℝ) ≤ 1 ∧ Tendsto (fun k : ℕ => ((k + 1 : ℕ) : ℝ)) atT
 /-- **Theorem (thm:mammen), second bullet.**  If `β ≍ n^{2/5}`, the expected
 number of modes of `P̂_n` in a fixed `[a, b] ∋ 0` is `Θ(1)`.
 
-Not proved here.  See the file header for the added hypotheses.
+Not proved here. See the file header for the added hypotheses.
 
 Source: arXiv:2412.09080v3, `thm:mammen`. -/
 theorem mammen_crit (a b : ℝ) (hab : a < b) (h0 : (0 : ℝ) ∈ Set.Icc a b)
@@ -105,7 +109,7 @@ example : (-1 : ℝ) < 1 ∧ (0 : ℝ) ∈ Set.Icc (-1 : ℝ) 1 ∧
 expected number of modes of `P̂_n` in a fixed `[a, b] ∋ 0` is
 `Θ(n^{-1/2} β^{5/4})`.
 
-Not proved here.  See the file header for the added hypotheses.
+Not proved here. See the file header for the added hypotheses.
 
 Source: arXiv:2412.09080v3, `thm:mammen`. -/
 theorem mammen_mid (a b : ℝ) (hab : a < b) (h0 : (0 : ℝ) ∈ Set.Icc a b)
@@ -118,7 +122,7 @@ theorem mammen_mid (a b : ℝ) (hab : a < b) (h0 : (0 : ℝ) ∈ Set.Icc a b)
   sorry
 
 /-- **`Θ(n^{-1/2} β^{5/4}) = o(√β)`**, the identity the source appends to the
-third bullet.  It holds for the sole reason that `β ≪ n^{2/3}`, so it is proved
+third bullet. It holds for the sole reason that `β ≪ n^{2/3}`, so it is proved
 here rather than assumed.
 
 Source: arXiv:2412.09080v3, `thm:mammen`, third bullet. -/

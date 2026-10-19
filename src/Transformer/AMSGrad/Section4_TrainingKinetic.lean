@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AMSGrad.Section4_TrainingModels
+
+/-!
 # AMSGrad — displacement energy in its actual monotone metric
 
 Training extension of arXiv:1904.03590v4, Algorithm 1 and §4.
@@ -6,7 +10,7 @@ The epsilon lower bound is derived from the implemented denominator,
 not assumed for a free preconditioner sequence.
 -/
 
-import Transformer.AMSGrad.Section4_TrainingModels
+@[expose] public section
 
 open scoped BigOperators
 

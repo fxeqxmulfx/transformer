@@ -1,8 +1,13 @@
-/-
+module
+
+public import Transformer.GPTMini.AttentionBounds
+public import Transformer.GPTMini.TotalVariation
+
+/-!
 # How far the causal softmax can move
 
 `reference/model.py` (`CausalMHA.forward`) turns the scores into weights with
-one `softmax` per query position.  Everything downstream of it only ever sees
+one `softmax` per query position. Everything downstream of it only ever sees
 the weight *vector*, so the quantity that controls the whole head is the ℓ¹
 distance between the weight vectors of two different score matrices.
 
@@ -17,13 +22,12 @@ The estimate is elementary and has nothing to do with attention:
 
 The second form is the one that matters: `2 (e^{2r} - 1)` is unbounded in `r`
 while the ℓ¹ distance it estimates never exceeds `2`, so only `8 r` makes a
-head *globally* Lipschitz.  Combined with `QKNormLipschitz.score_lipschitz`,
+head *globally* Lipschitz. Combined with `QKNormLipschitz.score_lipschitz`,
 which bounds `r` by the movement of the normalized queries and keys, this is
 what carries the Lipschitz constant of the whole block.
 -/
 
-import Transformer.GPTMini.AttentionBounds
-import Transformer.GPTMini.TotalVariation
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -40,7 +44,7 @@ If `|s_{i,j} - s'_{i,j}| ≤ r` for every key position `j`, then
   `a_{i,j} ≤ e^{2r} · a'_{i,j}`
 
 for every `j` — one factor `e^{r}` from the numerator, one from the partition
-function.  The masked positions `j > i` are `0` on both sides.
+function. The masked positions `j > i` are `0` on both sides.
 
 Source: `reference/model.py` (`CausalMHA.forward`), the `softmax` over
 `scores + mask`. -/

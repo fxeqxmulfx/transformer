@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.GPTMini.Config
+public import Transformer.GPTMini.RMSNorm
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.SpecialFunctions.Exp
+
+/-!
 # QK-Normalization with learnable per-head temperature
 
 Formalization of the QK-norm block of `CausalMHA.forward` from `reference/model.py`:
@@ -26,11 +34,7 @@ analogue of the partition-function bounds of
 §2.2 in 2312.10794v5 with `e^{α_h}` in place of `β`.
 -/
 
-import Transformer.Basic
-import Transformer.GPTMini.Config
-import Transformer.GPTMini.RMSNorm
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.SpecialFunctions.Exp
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -152,7 +156,7 @@ stacks of `openai/parameter-golf` (`train_gpt.py`, 2026-09-13) normalize them
 by their **RMS** norm, `x / √(mean x²)`, and carry a learned per-head gain.
 The two differ by the constant `√d_head`, which the gain absorbs — so the
 bounds above cover both parameterizations, and that is a theorem rather than a
-remark.  `rmsNorm` is the one already formalized in
+remark. `rmsNorm` is the one already formalized in
 `Transformer.GPTMini.RMSNorm`, the block normalization of `reference/model.py`;
 the point is that the same map, applied per head to `q` and `k`, is the QK-norm
 of this file up to that constant. -/

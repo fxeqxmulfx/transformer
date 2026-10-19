@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.DASH.Section4_Blocking
+
+/-!
 # DASH — block sizes, remainders, and tensor dimensions
 
 arXiv:2602.02016v2, §4 and Appendix D. The numerical block
 example and the vision-layer reshape are exact dimension counts.
 -/
 
-import Transformer.DASH.Section4_Blocking
+@[expose] public section
 
 namespace Transformer.DASH
 

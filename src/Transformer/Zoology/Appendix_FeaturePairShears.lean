@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_FeaturePairPrimitives
+
+/-!
 # Arbitrary feature-pair shears without extra coordinates
 
 Arora et al., arXiv:2312.04927v1, Appendix `prop: butterfly-hyena`
@@ -7,7 +11,7 @@ diagonal conjugation of a fixed unit shear. Splitting any coefficient into
 two nonzero parts gives six layers, including coefficient zero.
 -/
 
-import Transformer.Zoology.Appendix_FeaturePairPrimitives
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Basic
+public import Mathlib.Topology.UniformSpace.HeineCantor
+
+/-!
 # Great circle arcs between points off each other's line
 
 ArXiv:2411.04551v3, §2.2, proof of `prop: compression`, Step 3: "we can
@@ -10,8 +15,7 @@ lies in the geodesic hull and in the plane of its end points, and equally
 spaced parameters give chains of points with small steps.
 -/
 
-import Transformer.Interpolation.Basic
-import Mathlib.Topology.UniformSpace.HeineCantor
+@[expose] public section
 
 open Set
 

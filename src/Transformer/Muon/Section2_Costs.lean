@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Muon.Section2_Models
+
+/-!
 # Muon — the distributed resource calculation
 
 arXiv:2502.16982, §2.3, “Analysis”. The source's communication bound is a
@@ -7,7 +11,7 @@ a theorem about wall-clock latency. The factor-of-two memory saving is
 for momentum buffers, excluding shared master weights and workspaces.
 -/
 
-import Transformer.Muon.Section2_Models
+@[expose] public section
 
 namespace Transformer.Muon
 

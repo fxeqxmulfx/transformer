@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_VectorBridge
+
+/-!
 # Recovering vector attention heads
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §3.3 and Appendix A.2/A.5.
 -/
 
-import Transformer.Convexifying.Section3_VectorBridge
+@[expose] public section
 
 open scoped BigOperators
 

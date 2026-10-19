@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section5_ConcentrationDefect
+public import Mathlib.Analysis.ODE.Gronwall
+
+/-!
 # Every zero-temperature weak solution from a Dirac law is stationary
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb` and `eq: vf`, and §5,
@@ -16,8 +21,7 @@ without adding uniqueness or concentration to the definition of a solution.
 The theorem concerns arbitrary weak solutions, including non-empirical laws.
 -/
 
-import Transformer.Interpolation.Section5_ConcentrationDefect
-import Mathlib.Analysis.ODE.Gronwall
+@[expose] public section
 
 open Real MeasureTheory
 

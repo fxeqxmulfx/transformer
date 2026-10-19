@@ -1,5 +1,7 @@
-import Transformer.Clusters.Section4_SquareScalar
-import Mathlib.Topology.Order.MonotoneConvergence
+module
+
+public import Transformer.Clusters.Section4_SquareScalar
+public import Mathlib.Topology.Order.MonotoneConvergence
 
 /-!
 # A positive limiting amplitude for the rescaled square
@@ -16,6 +18,8 @@ to apply the library's order convergence theorem. The genuine scalar
 solution and its rescaling remain defined by the original equations.
 No convergence property is included in their definitions.
 -/
+
+@[expose] public section
 
 open Real Filter Topology
 namespace Transformer.Clusters

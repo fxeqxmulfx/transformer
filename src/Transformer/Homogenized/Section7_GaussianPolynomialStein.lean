@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianStein
+
+/-!
 # Gaussian integration by parts with polynomial growth
 
 ArXiv:2604.01978v1, §7, `lem:gaussian_interp` and the paragraph after
@@ -15,7 +19,7 @@ original Dirac law when the variance is zero. The bounds refer to the test
 and its actual derivative, rather than an assumed integration identity.
 -/
 
-import Transformer.Homogenized.Section7_GaussianStein
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped Topology NNReal

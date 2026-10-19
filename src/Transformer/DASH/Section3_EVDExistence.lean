@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section3_MatrixConvergence
+public import Mathlib.Analysis.Matrix.PosDef
+
+/-!
 # DASH — existence of the EVD data used by the solvers
 
 arXiv:2602.02016v2, §3.1. The spectral representation is
@@ -6,8 +11,7 @@ available for every real symmetric preconditioner, and positive
 definiteness supplies the positive spectrum required for inverse roots.
 -/
 
-import Transformer.DASH.Section3_MatrixConvergence
-import Mathlib.Analysis.Matrix.PosDef
+@[expose] public section
 
 open scoped Matrix
 

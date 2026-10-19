@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.MarkovTeacher
-import Transformer.GPTMini.Convex.Structured.MarkovEmissions
+module
+
+public import Transformer.GPTMini.Convex.Structured.MarkovTeacher
+public import Transformer.GPTMini.Convex.Structured.MarkovEmissions
 
 /-!
 # Finite joint state and output confidence
@@ -18,6 +20,8 @@ all learned state rows and mixes every learned emission. Raw Basis
 semantic rules, compact shared-slot realization and genuine tied integer
 readout must still connect these local capacity bounds to a full solver.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

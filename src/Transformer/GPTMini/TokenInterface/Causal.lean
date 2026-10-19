@@ -1,6 +1,8 @@
-import Transformer.GPTMini.TokenInterface.Basic
-import Transformer.GPTMini.TokenInterface.Correctness
-import Transformer.GPTMini.Causality.Model
+module
+
+public import Transformer.GPTMini.TokenInterface.Basic
+public import Transformer.GPTMini.TokenInterface.Correctness
+public import Transformer.GPTMini.Causality.Model
 
 /-!
 # Teacher-forced rows and List Int continuations have the same prediction
@@ -12,6 +14,8 @@ and greedy answer. This proves the causal property needed by the common
 List Int interface for depth, recall and parity, for arbitrary parameters.
 It does not assume that the answer matches a task oracle.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.TokenInterface
 

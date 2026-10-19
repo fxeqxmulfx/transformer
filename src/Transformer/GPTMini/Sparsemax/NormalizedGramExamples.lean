@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.NormalizedGram
+module
+
+public import Transformer.GPTMini.Sparsemax.NormalizedGram
 
 /-!
 # Exact convex attention while embeddings and sparse supports change
@@ -16,6 +18,8 @@ singleton saturation. These are exact real-valued witnesses, not a trained
 Python model, a fixed-width recovery theorem for every feasible matrix,
 or a guarantee for arbitrary new contexts. Values and task loss are deferred.
 -/
+
+@[expose] public section
 
 noncomputable section
 

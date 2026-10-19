@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_BoundedObservableLimits
+
+/-!
 # Bounded generator integrals with moving grid endpoints
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ Uniform actual generator bounds permit dominated convergence on a fixed
 interval and control the vanishing piece at a neighboring grid endpoint.
 -/
 
-import Transformer.BatchSize.Section4_BoundedObservableLimits
+@[expose] public section
 
 open MeasureTheory Filter
 open scoped Topology

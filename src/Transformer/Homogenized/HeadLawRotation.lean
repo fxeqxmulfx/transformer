@@ -1,21 +1,25 @@
-/-
+module
+
+public import Transformer.Homogenized.HeadConj
+public import Transformer.Homogenized.GaussianInit
+public import Mathlib.Probability.Distributions.Gaussian.Multivariate
+
+/-!
 # Homogenized Transformers — the Gaussian head law is rotation invariant
 
 Under assumption (G) of arXiv:2604.01978v1 the head is `(V, A) = (V, W W'ᵀ)` with
-`V, W, W'` independent i.i.d. Gaussian matrices.  For an orthogonal `O`,
+`V, W, W'` independent i.i.d. Gaussian matrices. For an orthogonal `O`,
 `Oᵀ A O = (Oᵀ W)(Oᵀ W')ᵀ` (`conjMat_mul_transpose`), and rotating the columns of
 `W` and `W'` is an isometry of the i.i.d. Gaussian vector `(V, W, W')`, so the
 law of the head is invariant under `(V, A) ↦ (V, Oᵀ A O)`
-(`measurePreserving_conjHead`).  This is the "orthogonal invariance of the
+(`measurePreserving_conjHead`). This is the "orthogonal invariance of the
 Gaussian law" the source invokes.
 
 Source: arXiv:2604.01978v1, assumption (G) and the proof of
 `lem:drift_on_simplex_selfcontained`.
 -/
 
-import Transformer.Homogenized.HeadConj
-import Transformer.Homogenized.GaussianInit
-import Mathlib.Probability.Distributions.Gaussian.Multivariate
+@[expose] public section
 
 open scoped NNReal
 open MeasureTheory ProbabilityTheory

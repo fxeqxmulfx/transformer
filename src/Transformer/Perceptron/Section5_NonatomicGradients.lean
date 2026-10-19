@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_SphericalLocalGradients
+public import Transformer.Perceptron.Section6_CircleNullSupport
+public import Transformer.Perceptron.Section5_UniformSupport
+public import Mathlib.MeasureTheory.Measure.Regular
+
+/-!
 # Nonzero smooth gradients with arbitrarily small support mass
 
 ArXiv:2601.21366v2, §5.3, the localization argument for
@@ -15,10 +22,7 @@ This replaces the circle proof's zero-mean kernel subtraction by
 the small-mass Cauchy–Schwarz estimate, without changing its goal.
 -/
 
-import Transformer.Perceptron.Section5_SphericalLocalGradients
-import Transformer.Perceptron.Section6_CircleNullSupport
-import Transformer.Perceptron.Section5_UniformSupport
-import Mathlib.MeasureTheory.Measure.Regular
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology ENNReal

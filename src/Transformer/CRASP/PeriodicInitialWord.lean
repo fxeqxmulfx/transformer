@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.PeriodicInitial
+public import Transformer.CRASP.StatePermutation
+
+/-!
 # Source permutations at positions with the same periodic encoding
 
 arXiv:2506.16055v3, Appendix F, periodicity assumption of
@@ -6,8 +11,7 @@ arXiv:2506.16055v3, Appendix F, periodicity assumption of
 positions permutes the decorated source states.
 -/
 
-import Transformer.CRASP.PeriodicInitial
-import Transformer.CRASP.StatePermutation
+@[expose] public section
 
 namespace Transformer.CRASP.PeriodicAttention
 

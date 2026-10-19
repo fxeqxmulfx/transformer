@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.MaxCurve
+public import Mathlib.Topology.Order.Compact
+
+/-!
 # A maximum principle for compact families of differentiable curves
 
 Auxiliary for arXiv:2411.04551v3, §2, `prop: targets.atoms`, extending
@@ -18,8 +23,7 @@ the time derivatives need no continuity in the index. Duality gives the
 corresponding minimum principle.
 -/
 
-import Transformer.Perspective.MaxCurve
-import Mathlib.Topology.Order.Compact
+@[expose] public section
 
 open Set Filter
 open scoped Topology

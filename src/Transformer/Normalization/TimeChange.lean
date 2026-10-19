@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Normalization.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+
+/-!
 # Rescaling normalized attention dynamics by a change of time
 
 Proposition `sprop: time_change` from Appendix D of arXiv:2510.22026v2
@@ -6,8 +11,7 @@ is the chain rule. The convergence proof is developed separately in
 `Lojasiewicz` and its supporting modules.
 -/
 
-import Transformer.Normalization.Basic
-import Mathlib.Analysis.Calculus.Deriv.Comp
+@[expose] public section
 
 namespace Transformer.Normalization
 

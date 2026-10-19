@@ -1,5 +1,7 @@
-import Transformer.Homogenized.Section7_WeightedExpectation
-import Mathlib.MeasureTheory.Function.AEEqOfIntegral
+module
+
+public import Transformer.Homogenized.Section7_WeightedExpectation
+public import Mathlib.MeasureTheory.Function.AEEqOfIntegral
 
 /-!
 # Conditional order for the random integrating factor
@@ -16,6 +18,8 @@ The first lemma transfers all sub-sigma-algebra set integral
 inequalities to conditional order by trimming the measure.
 The endpoint result is then available on each shifted time interval.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory
 namespace Transformer.Homogenized

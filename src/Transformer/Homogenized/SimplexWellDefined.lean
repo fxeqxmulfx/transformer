@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Simplex
+public import Transformer.Homogenized.HeadLawRotation
+
+/-!
 # Homogenized Transformers — `f` and `g` are well defined
 
 The first half of `thm:clustering_random_init` of arXiv:2604.01978v1: the two
@@ -15,8 +20,7 @@ Source: arXiv:2604.01978v1, `eq:f_g_def_selfcontained` and the proof of
 `lem:drift_on_simplex_selfcontained`.
 -/
 
-import Transformer.Homogenized.Simplex
-import Transformer.Homogenized.HeadLawRotation
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory ProbabilityTheory

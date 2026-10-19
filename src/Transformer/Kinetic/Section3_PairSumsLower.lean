@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_PairSums
+
+/-!
 # The sums of a pair below the earliest observable
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 4, `eq:est-kap3-th`: the
@@ -8,7 +12,7 @@ decays at `k` (`pairSum_first_le`). The earlier token `n < k` is then weighted b
 `τ q_γ(y, k) F(k, n)`, and `Σ_{n<k} q_γ(k, n)^r F(k, n) ≤ 2` absorbs the sum.
 -/
 
-import Transformer.Kinetic.Section3_PairSums
+@[expose] public section
 
 namespace Transformer
 namespace Kinetic

@@ -1,58 +1,60 @@
-import Transformer.GPTMini.Semantics.FinalBlock
-import Transformer.GPTMini.Semantics.Order
-import Transformer.GPTMini.Semantics.ParityCorrectness
-import Transformer.GPTMini.Semantics.AdjacencyRouting
-import Transformer.GPTMini.Semantics.RecallMatching
-import Transformer.GPTMini.Semantics.RecallLatestGap
-import Transformer.GPTMini.Semantics.RecallSlots
-import Transformer.GPTMini.Semantics.RecallEmbedding
-import Transformer.GPTMini.Semantics.RecallEmbeddingFeatures
-import Transformer.GPTMini.Semantics.RecallQKV
-import Transformer.GPTMini.Semantics.RecallHeadValues
-import Transformer.GPTMini.Semantics.RecallRawHeads
-import Transformer.GPTMini.Semantics.RecallRawCopy
-import Transformer.GPTMini.Semantics.RecallMarkerWeights
-import Transformer.GPTMini.Semantics.RecallRawMarker
-import Transformer.GPTMini.Semantics.RecallRawGate
-import Transformer.GPTMini.Semantics.RecallRawBinding
-import Transformer.GPTMini.Semantics.RecallRotaryInsert
-import Transformer.GPTMini.Semantics.RecallSaturation
-import Transformer.GPTMini.Semantics.RecallStateBounds
-import Transformer.GPTMini.Semantics.RecallProjectionScale
-import Transformer.GPTMini.Semantics.RecallSecondQKV
-import Transformer.GPTMini.Semantics.RecallNormalizedInputs
-import Transformer.GPTMini.Semantics.RecallScoreError
-import Transformer.GPTMini.Semantics.RecallRawScoreGap
-import Transformer.GPTMini.Semantics.RecallRawExcluded
-import Transformer.GPTMini.Semantics.RecallRawRouting
-import Transformer.GPTMini.Semantics.RecallRetrievalAccuracy
-import Transformer.GPTMini.Semantics.RecallRetrievalBlock
-import Transformer.GPTMini.Semantics.RecallFinalState
-import Transformer.GPTMini.Semantics.RecallReadoutCoordinates
-import Transformer.GPTMini.Semantics.RecallReadout
-import Transformer.GPTMini.Semantics.RecallConstruction
-import Transformer.GPTMini.Semantics.RecallIntegerArray
-import Transformer.GPTMini.Semantics.RecallParserLayout
-import Transformer.GPTMini.Semantics.RecallParserLatest
-import Transformer.GPTMini.Semantics.RecallCorrectness
-import Transformer.GPTMini.Semantics.DepthStep
-import Transformer.GPTMini.Semantics.DepthPresence
-import Transformer.GPTMini.Semantics.DepthUniformProjection
-import Transformer.GPTMini.Semantics.DepthMatrices
-import Transformer.GPTMini.Semantics.DepthRecurrence
-import Transformer.GPTMini.Semantics.DepthEmbedding
-import Transformer.GPTMini.Semantics.DepthQKV
-import Transformer.GPTMini.Semantics.DepthNormalization
-import Transformer.GPTMini.Semantics.DepthAttention
-import Transformer.GPTMini.Semantics.DepthAttentionBounds
-import Transformer.GPTMini.Semantics.DepthSignalPresence
-import Transformer.GPTMini.Semantics.DepthDetector
-import Transformer.GPTMini.Semantics.DepthLayout
-import Transformer.GPTMini.Semantics.DepthResidual
-import Transformer.GPTMini.Semantics.DepthTransition
-import Transformer.GPTMini.Semantics.DepthFeatureBounds
-import Transformer.GPTMini.Semantics.DepthWordInput
-import Transformer.GPTMini.Semantics.BasisCorrectness
+module
+
+public import Transformer.GPTMini.Semantics.FinalBlock
+public import Transformer.GPTMini.Semantics.Order
+public import Transformer.GPTMini.Semantics.ParityCorrectness
+public import Transformer.GPTMini.Semantics.AdjacencyRouting
+public import Transformer.GPTMini.Semantics.RecallMatching
+public import Transformer.GPTMini.Semantics.RecallLatestGap
+public import Transformer.GPTMini.Semantics.RecallSlots
+public import Transformer.GPTMini.Semantics.RecallEmbedding
+public import Transformer.GPTMini.Semantics.RecallEmbeddingFeatures
+public import Transformer.GPTMini.Semantics.RecallQKV
+public import Transformer.GPTMini.Semantics.RecallHeadValues
+public import Transformer.GPTMini.Semantics.RecallRawHeads
+public import Transformer.GPTMini.Semantics.RecallRawCopy
+public import Transformer.GPTMini.Semantics.RecallMarkerWeights
+public import Transformer.GPTMini.Semantics.RecallRawMarker
+public import Transformer.GPTMini.Semantics.RecallRawGate
+public import Transformer.GPTMini.Semantics.RecallRawBinding
+public import Transformer.GPTMini.Semantics.RecallRotaryInsert
+public import Transformer.GPTMini.Semantics.RecallSaturation
+public import Transformer.GPTMini.Semantics.RecallStateBounds
+public import Transformer.GPTMini.Semantics.RecallProjectionScale
+public import Transformer.GPTMini.Semantics.RecallSecondQKV
+public import Transformer.GPTMini.Semantics.RecallNormalizedInputs
+public import Transformer.GPTMini.Semantics.RecallScoreError
+public import Transformer.GPTMini.Semantics.RecallRawScoreGap
+public import Transformer.GPTMini.Semantics.RecallRawExcluded
+public import Transformer.GPTMini.Semantics.RecallRawRouting
+public import Transformer.GPTMini.Semantics.RecallRetrievalAccuracy
+public import Transformer.GPTMini.Semantics.RecallRetrievalBlock
+public import Transformer.GPTMini.Semantics.RecallFinalState
+public import Transformer.GPTMini.Semantics.RecallReadoutCoordinates
+public import Transformer.GPTMini.Semantics.RecallReadout
+public import Transformer.GPTMini.Semantics.RecallConstruction
+public import Transformer.GPTMini.Semantics.RecallIntegerArray
+public import Transformer.GPTMini.Semantics.RecallParserLayout
+public import Transformer.GPTMini.Semantics.RecallParserLatest
+public import Transformer.GPTMini.Semantics.RecallCorrectness
+public import Transformer.GPTMini.Semantics.DepthStep
+public import Transformer.GPTMini.Semantics.DepthPresence
+public import Transformer.GPTMini.Semantics.DepthUniformProjection
+public import Transformer.GPTMini.Semantics.DepthMatrices
+public import Transformer.GPTMini.Semantics.DepthRecurrence
+public import Transformer.GPTMini.Semantics.DepthEmbedding
+public import Transformer.GPTMini.Semantics.DepthQKV
+public import Transformer.GPTMini.Semantics.DepthNormalization
+public import Transformer.GPTMini.Semantics.DepthAttention
+public import Transformer.GPTMini.Semantics.DepthAttentionBounds
+public import Transformer.GPTMini.Semantics.DepthSignalPresence
+public import Transformer.GPTMini.Semantics.DepthDetector
+public import Transformer.GPTMini.Semantics.DepthLayout
+public import Transformer.GPTMini.Semantics.DepthResidual
+public import Transformer.GPTMini.Semantics.DepthTransition
+public import Transformer.GPTMini.Semantics.DepthFeatureBounds
+public import Transformer.GPTMini.Semantics.DepthWordInput
+public import Transformer.GPTMini.Semantics.BasisCorrectness
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -61,7 +63,8 @@ Source: the archived GPTMini at f11b6e2 and Basis raw-token semantics at
 cbafbe9. These results verify original operators, rather than replacing
 the model by the task oracle or merely quantifying over possible weights.
 
-Finite-softmax gaps retain RoPE/QKNorm/XSA and copy errors; actual ordered depth encoder invariants derive from raw words.
+Finite-softmax gaps retain RoPE/QKNorm/XSA and copy errors; actual ordered depth encoder
+invariants derive from raw words.
 Raw MQAR's last adjacent binding is independently proved in Transformer.Basis.RecallAnswer.
 
 Concrete original parameters compute raw ONE counts and phase through
@@ -73,16 +76,20 @@ a 68-unit homogeneous bounded-count parity decoder and a simultaneous
 has distinct tied EVEN/ODD/EOS codes and exactly the same actual count
 projection. Its full hidden state is connected to the real decoder FFN,
 and exact pre-FFN prompt/answer formulas are proved for all raw bit words.
-Uniform finite weights give strict margins through final RMSNorm; checked List Int solves every legal parity prefix in
+Uniform finite weights give strict margins through final RMSNorm; checked List Int
+solves every legal parity prefix in
 both modes and freely generates label then EOS in two calls.
 
-Three homogeneous ReLU2 hinges compute presence/type exclusion; six original units realize both gates
+Three homogeneous ReLU2 hinges compute presence/type exclusion; six original units
+realize both gates
 simultaneously, preserve unwritten coordinates and retain true RMS square.
 The actual FFN gives binary amplitudes and norm at most 256 on matching-type gaps.
 The genuine uniform softmax/XSA head gives exact absence
 and floor L/128 at zero self-value. Actual two-head attention adds norm at most 32.
-Actual ordered depth encoding/readout derives strict whole-vocabulary tied margins and correct original full forward logits.
-BasisCorrectness proves all six full grammars through actual original List Int models, with explicit epsilon and dimension scope.
+Actual ordered depth encoding/readout derives strict whole-vocabulary tied margins and
+correct original full forward logits.
+BasisCorrectness proves all six full grammars through actual original List Int models,
+with explicit epsilon and dimension scope.
 
 An explicit original RoPE pair gives a positive predecessor score gap
 across all Basis context lengths. Actual finite softmax/XSA copies that
@@ -103,7 +110,8 @@ copy, position and gated-key channels start at zero for true fused QKV.
 
 Actual fused QKV/W_o realize predecessor and marker heads simultaneously,
 retaining raw query/value codes and a derived finite-softmax copy error.
-The actual BOS marker is exactly 1/(i+1); sixteen ReLU2 units realize the cutoff and protect raw channels.
+The actual BOS marker is exactly 1/(i+1); sixteen ReLU2 units realize the cutoff and
+protect raw channels.
 The full first block's gated-key slot is exactly zero on keys/BOS and
 post-table values, excluding false writes after queries. Table values
 retain the genuine compact predecessor copy with its derived positive
@@ -177,7 +185,8 @@ lower scale is achieved without an assumed leakage bound, and one shared
 output gain has gain*lowerScale=2. No floating-point or AdamW success is inferred.
 
 The genuine second block has matching fused QKV, finite temperature, W_o and zero FFN.
-Its full state writes compact retrieval, preserves query/type coordinates and transports head accuracy
+Its full state writes compact retrieval, preserves query/type coordinates and transports
+head accuracy
 through the real merge/output matrix.
 
 Both real blocks now yield a full final-state error at most one eighth
@@ -198,3 +207,5 @@ last write, including all chronological bounds, without routing premises.
 These results cover given real parameters, without floating-point
 equivalence or optimizer convergence. No new unproved claims are exported.
 -/
+
+@[expose] public section

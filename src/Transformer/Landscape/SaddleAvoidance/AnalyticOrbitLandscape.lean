@@ -1,10 +1,16 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.OrbitLandscape
+public import Transformer.Landscape.SaddleAvoidance.LocalInequality
+public import Transformer.Landscape.SaddleAvoidance.SecondOrderCritical
+
+/-!
 # Saddle avoidance — the scheme along the orbit for analytic functions
 
 An analytic function on a finite-dimensional real inner product space is `C²`
 (`AnalyticOnNhd.contDiff`) and satisfies the Łojasiewicz inequality at every point
 (`exists_isLojasiewiczAt_of_analyticOnNhd`), so for it the scheme along the orbit of
-`OrbitLandscape` needs neither that hypothesis nor a level.  Almost every start whose
+`OrbitLandscape` needs neither that hypothesis nor a level. Almost every start whose
 orbit has `‖∇²f‖ ≤ L`, `η L < 1`, on the segment of every step (S) converges to a
 critical point that is not a strict saddle, or runs off to infinity
 (`ae_exists_tendsto_not_isStrictSaddle_or_tendsto_norm_of_segment_of_analyticOnNhd`);
@@ -13,15 +19,13 @@ to a global minimizer if every critical point is one or a strict saddle
 
 The double well `x⁴/4 - x²/2` on the line shows that (S) asks for no global bound.
 Its Hessian `3x² - 1` is unbounded, yet for `η = 1/10` gradient descent maps
-`[-3/2, 3/2]` into itself, and there the Hessian is at most `23/4`.  So almost every
+`[-3/2, 3/2]` into itself, and there the Hessian is at most `23/4`. So almost every
 start in `[-3/2, 3/2]` converges to one of the global minimizers `±1`.
 
 Source: item M8.3 of `landscape_plan.md`.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.OrbitLandscape
-import Transformer.Landscape.SaddleAvoidance.LocalInequality
-import Transformer.Landscape.SaddleAvoidance.SecondOrderCritical
+@[expose] public section
 
 open Set Filter MeasureTheory
 open scoped Topology

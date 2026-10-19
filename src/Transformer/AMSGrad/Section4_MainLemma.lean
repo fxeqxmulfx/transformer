@@ -1,8 +1,10 @@
-import Transformer.AMSGrad.Section4_Lemmas
-import Transformer.AMSGrad.Section2_Prelim
-import Transformer.AMSGrad.Section3_Issue
+module
 
-/-
+public import Transformer.AMSGrad.Section4_Lemmas
+public import Transformer.AMSGrad.Section2_Prelim
+public import Transformer.AMSGrad.Section3_Issue
+
+/-!
 # AMSGrad — Lemma 4.4
 
 §4 of arXiv:1904.03590v4: the bound on `Σ_t m²_{t,i}/√(t v̂_{t,i})` behind the
@@ -12,7 +14,7 @@ corrected convergence theorem of AMSGrad.
 
 * The source assumes `γ = β₁/√β₂ ≤ 1`; the bound divides by `1 - γ`, so
   `γ < 1` is assumed instead, together with `0 ≤ β_{1,t} ≤ β₁ < 1` and
-  `0 < β₂ < 1`.  The lemma holds for every rule with `v_t ≤ v̂_t`, which is all
+  `0 < β₂ < 1`. The lemma holds for every rule with `v_t ≤ v̂_t`, which is all
   its proof uses of `v̂_t`, and for every `T`: at `T = 0` both sides vanish.
 
 * The proof follows the source with the closed forms of `m_t` and `v_t`
@@ -25,6 +27,8 @@ corrected convergence theorem of AMSGrad.
 Source: arXiv:1904.03590v4, §4, Lemma 4.4 and its proof.
 -/
 
+@[expose] public section
+
 open Finset
 
 namespace Transformer
@@ -33,7 +37,7 @@ namespace AMSGrad
 variable {d : ℕ}
 
 /-- `s_t = Σ_{k=1}^t c^{t-k} f_k`, through its recursion `s₀ = 0`,
-`s_t = c s_{t-1} + f_t`.  arXiv:1904.03590v4, §4, proof of Lemma 4.4. -/
+`s_t = c s_{t-1} + f_t`. arXiv:1904.03590v4, §4, proof of Lemma 4.4. -/
 noncomputable def geomSum (c : ℝ) (f : ℕ → ℝ) : ℕ → ℝ
   | 0 => 0
   | n + 1 => c * geomSum c f n + f (n + 1)

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_KaleidoscopeMatrix
+public import Transformer.Zoology.Section4_Coyote
+
+/-!
 # Coyote layers with kaleidoscope-constrained projection weights
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: W-kmat`,
@@ -8,8 +13,7 @@ the matrix representation to the Coyote layer and computes its exact stored
 coefficient count at power-of-two feature width.
 -/
 
-import Transformer.Zoology.Appendix_KaleidoscopeMatrix
-import Transformer.Zoology.Section4_Coyote
+@[expose] public section
 
 namespace Transformer.Zoology
 

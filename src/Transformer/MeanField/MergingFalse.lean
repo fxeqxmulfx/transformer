@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.MeanField.MergingPaths
+
+/-!
 # Mean-Field Dynamics — `thm: agazzi_merge` is false as printed (§5 of 2512.01868v4)
 
 The survey states, after Bruno, Pasqualotto & Agazzi, that for a discrete
@@ -10,14 +14,14 @@ converge as `β → ∞`, uniformly on any `[0, T]` on which the limit pair stay
 `not_agazzi_merge` refutes this with the source's own hypotheses:
 `eq: init_clust` allows `α_j ≥ 0`, and at `α = (0, 1)` on a great circle the
 cluster of mass `1` attends only to itself and never moves, while the pairing
-dynamics moves it at once.  The limit system does not see the masses; `eq: SA`
+dynamics moves it at once. The limit system does not see the masses; `eq: SA`
 does.
 
-The masses are not the only obstruction.  With `α_ī, α_j̄ > 0` the pair's
+The masses are not the only obstruction. With `α_ī, α_j̄ > 0` the pair's
 rescaled speed is `(α_j̄ / α_ī) e^{β(ρ(s) - ρ(0))}` to leading order, with
 `ρ = ⟨x_ī, x_j̄⟩`: it carries the mass ratio, which the limit system lacks, and
 it grows without bound in `β` as soon as `ρ` rises above `ρ(0)`, so the rescaled
-pair closes in a time of order `1/β` rather than following `hardmaxPair`.  That
+pair closes in a time of order `1/β` rather than following `hardmaxPair`. That
 argument is not formalized here; no positive-mass restatement is put on the
 books, since the survey's paraphrase is the only source in `papers/` and the
 original statement of Bruno, Pasqualotto & Agazzi is not.
@@ -26,7 +30,7 @@ The condition `⟨y_ī(s), y_j̄(s)⟩ ≤ 1 - ε` is read on the limit trajecto
 `Merging`: on the `β`-dependent trajectory it would make `[0, T_ε]` depend on `β`.
 -/
 
-import Transformer.MeanField.MergingPaths
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -43,7 +47,7 @@ orthonormal `f, e` — the only pair, so the unique closest one — and `ε = 1/
 `T = 1/4`: the heavy cluster is stationary under `eq: SA` for every `β`, while
 the pairing dynamics `hardmaxPair` moves it to
 `(cosh ½)^{-1/2}(sinh ¼ · f + cosh ¼ · e) ≠ e` by `s = 1/4`; so no `β` brings
-the rescaled trajectory within `δ = ‖e - y_j̄(1/4)‖` of the limit.  Both
+the rescaled trajectory within `δ = ‖e - y_j̄(1/4)‖` of the limit. Both
 trajectories are the closed forms of `MeanField.MergingPaths`.
 
 Source: arXiv:2512.01868v4, §5, `thm: agazzi_merge` and `eq: init_clust`. -/

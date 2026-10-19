@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Metastability.Basic
+public import Transformer.Metastability.AlphaDist
+public import Transformer.Perspective.Section2_FlowMap
+public import Mathlib.MeasureTheory.Constructions.Pi
+
+/-!
 # Metastability — On the initial configuration, uniform initialization
   (§4 of 2410.06833v1)
 
@@ -10,7 +18,7 @@
   proved in `Metastability.LowDimDecay`.
 
 All three bound the probability of an event under the *uniform* measure on
-`𝕊^{d-1}`, which this development does not construct.  It is pinned down
+`𝕊^{d-1}`, which this development does not construct. It is pinned down
 instead of built: `IsUniformFamily` asks for a probability measure on each
 nonempty sphere invariant under every linear isometry of `ℝ^d`, and such a measure is
 unique, so quantifying over all families satisfying it is not a strengthening.
@@ -23,11 +31,7 @@ carried as an explicit hypothesis, and from `Metastability.AlphaDist`, whose
 which imports the initialization vocabulary defined here.
 -/
 
-import Transformer.Basic
-import Transformer.Metastability.Basic
-import Transformer.Metastability.AlphaDist
-import Transformer.Perspective.Section2_FlowMap
-import Mathlib.MeasureTheory.Constructions.Pi
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -40,7 +44,7 @@ linear isometry of the ambient `ℝ^d`.
 
 Such a measure is unique — a rotation-invariant Borel probability measure on
 `𝕊^{d-1}` *is* `σ_d` — so the statements below, read against every measure
-satisfying this, say exactly what the survey says about the uniform one.  The
+satisfying this, say exactly what the survey says about the uniform one. The
 invariance is stated through `Perspective.sphereMap`, which keeps the Haar
 machinery out. -/
 def IsUniformOn (d : ℕ) (ν : Measure (SSphere d)) : Prop :=
@@ -60,7 +64,7 @@ def IsUniformFamily (σ : ∀ d : ℕ, Measure (SSphere d)) : Prop :=
   ∀ d : ℕ, 1 ≤ d → IsUniformOn d (σ d)
 
 /-- `𝕊^{-1}` carries no uniform law: it is empty, and the empty space carries
-no probability measure.  This is why `IsUniformFamily` starts at `d = 1`. -/
+no probability measure. This is why `IsUniformFamily` starts at `d = 1`. -/
 theorem not_isUniformOn_zero (ν : Measure (SSphere 0)) : ¬ IsUniformOn 0 ν := by
   rintro ⟨hν, -⟩
   have h1 := hν.measure_univ
@@ -104,13 +108,13 @@ conclusion, and the dependence is legible in the signature. Given `h_conc` the r
 `(β, ε)`-separated — and monotonicity of the measure.
 
 **What the source says and what is changed here.**  The technical condition is
-different.  `eq: technical.cond` reads
+different. `eq: technical.cond` reads
 
   `(16 log² d)/d² + (40 log d)/d + β⁻¹ log(n² d / (2 log d)) < 1`,
 
 whose first two terms are `ε² + 10ε`; that is `eq: gamma` rewritten with the
 proof's bound `α(ε) ≤ ε² + 2ε`, which is false — see
-`αDist_le_of_orthogonal`, where the correct order is `4√ε`.  With the correct
+`αDist_le_of_orthogonal`, where the correct order is `4√ε`. With the correct
 bound `α(ε) ≤ 4ε + 4√ε` the condition `γ(β) > 0` becomes
 `4√ε + 12ε + β⁻¹ log(2n²/ε) < 1`, which is what is assumed above, written out
 at `ε = 4 log d / d` and with `2n²/ε = n² d / (2 log d)` as in the source.

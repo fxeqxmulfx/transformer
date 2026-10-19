@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_RidgeExtension
+
+/-!
 # The actual one-neuron flow exists globally and is unique
 
 ArXiv:2411.04551v3, §1, `eq: vf` and `eq: neural.ode.sphere`,
@@ -14,7 +18,7 @@ real times, depends continuously on time, obeys the autonomous flow
 law, and has a two-sided inverse given by reversing time.
 -/
 
-import Transformer.Interpolation.Section3_RidgeExtension
+@[expose] public section
 
 open Real MeasureTheory Filter Set
 

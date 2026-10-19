@@ -1,24 +1,28 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_ConvexAttention
+public import Transformer.Convexifying.Section3_ScalarCounterexample
+
+/-!
 # The original and simplex-relaxed training objectives differ
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §2–§3.1, equations (3)–(4)
-(`eq:attention_only_obj` and `eq:simplex_regression`).  The paper says the
+(`eq:attention_only_obj` and `eq:simplex_regression`). The paper says the
 original regularized self-attention problem can be reformulated using one
-simplex attention matrix.  This file gives a one-sample counterexample to
-equality of the two optimal values.  It retains the query and key penalties
+simplex attention matrix. This file gives a one-sample counterexample to
+equality of the two optimal values. It retains the query and key penalties
 in the original objective and omits them in the relaxed objective, exactly
 as the two printed equations do.
 -/
 
-import Transformer.Convexifying.Section3_ConvexAttention
-import Transformer.Convexifying.Section3_ScalarCounterexample
+@[expose] public section
 
 open scoped BigOperators
 
 namespace Transformer.Convexifying
 
 /-- The one-sample token matrix `X = [1, -1]ᵀ`, with two tokens and one
-feature.  Source: arXiv:2211.11052v1, equations (3)–(4), specialized. -/
+feature. Source: arXiv:2211.11052v1, equations (3)–(4), specialized. -/
 def oppositeTokens : Fin 2 → Vec 1 :=
   fun r _ => if r = 0 then 1 else -1
 
@@ -39,7 +43,7 @@ def twoRowSquareLoss (u : Vec 2) : ℝ :=
   ∑ r, (u r - 1) ^ 2
 
 /-- The chosen two-row loss is convex, as required by the paper's loss
-hypothesis.  Source: arXiv:2211.11052v1, equation (3). -/
+hypothesis. Source: arXiv:2211.11052v1, equation (3). -/
 theorem twoRowSquareLoss_convex (u v : Vec 2) (t : ℝ)
     (ht0 : 0 ≤ t) (ht1 : t ≤ 1) :
     twoRowSquareLoss (fun r => (1 - t) * u r + t * v r) ≤
@@ -59,7 +63,7 @@ theorem twoRowSquareLoss_convex (u v : Vec 2) (t : ℝ)
 example : (0 : ℝ) ≤ 1 / 2 ∧ (1 / 2 : ℝ) ≤ 1 := by norm_num
 
 /-- Equation (3), specialized to `N = 1`, `n = 2`, `d = c = 1`, squared
-loss, and `β = 1`.  All four weight-decay terms are present. -/
+loss, and `β = 1`. All four weight-decay terms are present. -/
 noncomputable def originalObjective (q k v o : ℝ) : ℝ :=
   twoRowSquareLoss (originalOutput q k v o) +
     (q ^ 2 + k ^ 2 + v ^ 2 + o ^ 2) / 2
@@ -76,8 +80,8 @@ noncomputable def relaxedObjective (W : Mat 2 2) (v o : ℝ) : ℝ :=
 
 /-- The valid one-sample relation is a relaxation: taking `W` to be the
 softmax matrix preserves predictions, and dropping the nonnegative query/key
-penalty cannot increase the objective.  This does not give one shared `W`
-across multiple samples.  Source: arXiv:2211.11052v1, §3.1, (3)–(4). -/
+penalty cannot increase the objective. This does not give one shared `W`
+across multiple samples. Source: arXiv:2211.11052v1, §3.1, (3)–(4). -/
 theorem one_sample_relaxation_bound (q k v o : ℝ) :
     IsRowStochastic (rowSoftmax (originalScores q k)) ∧
       relaxedObjective (rowSoftmax (originalScores q k)) v o ≤
@@ -100,14 +104,14 @@ theorem witnessW_stochastic : IsRowStochastic witnessW := by
   exact simplex_basis 0
 
 /-- The relaxed objective has value `1` at this feasible point; both target
-rows are fitted exactly.  Source: arXiv:2211.11052v1, equation (4). -/
+rows are fitted exactly. Source: arXiv:2211.11052v1, equation (4). -/
 theorem witness_value : relaxedObjective witnessW 1 1 = 1 := by
   norm_num [relaxedObjective, twoRowSquareLoss, relaxedOutput, witnessW,
     oppositeTokens, Fin.sum_univ_two]
 
 /-- A strictly positive shared attention matrix, so the counterexample is
-not caused solely by the simplex boundary.  Both rows use weights `3/4`
-and `1/4`.  Source: arXiv:2211.11052v1, equation (4). -/
+not caused solely by the simplex boundary. Both rows use weights `3/4`
+and `1/4`. Source: arXiv:2211.11052v1, equation (4). -/
 noncomputable def positiveW : Mat 2 2 :=
   fun _ t => if t = 0 then 3 / 4 else 1 / 4
 
@@ -125,7 +129,7 @@ theorem positiveW_strict : ∀ r t, 0 < positiveW r t := by
   fin_cases t <;> norm_num [positiveW]
 
 /-- The positive witness reaches value `7/4`, still below the original
-optimum `2`.  Source: arXiv:2211.11052v1, equation (4). -/
+optimum `2`. Source: arXiv:2211.11052v1, equation (4). -/
 theorem positiveW_value : relaxedObjective positiveW (3 / 2) 1 = 7 / 4 := by
   norm_num [relaxedObjective, twoRowSquareLoss, relaxedOutput, positiveW,
     oppositeTokens, Fin.sum_univ_two]
@@ -183,7 +187,7 @@ theorem attention_only_reformulation_false :
   linarith
 
 /-- The same inequivalence remains when the relaxed matrix is required to
-have strictly positive entries.  Thus excluding boundary points of the
+have strictly positive entries. Thus excluding boundary points of the
 simplex does not repair the reformulation from equation (3) to (4).
 Source: arXiv:2211.11052v1, §3.1. -/
 theorem positive_attention_reformulation_false :

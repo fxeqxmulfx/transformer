@@ -1,23 +1,27 @@
-/-
+module
+
+public import Transformer.ALM.SoftmaxTie
+
+/-!
 # The other tie-break mode, and what it costs the head
 
 `Transformer.ALM.SoftmaxTie` proves the softmax head implements
 `TieBreak::AVERAGE`: where two keys tie it returns their mean, which is what
-`resolve` writes out, up to `ε·C`.  The machine has a second mode
+`resolve` writes out, up to `ε·C`. The machine has a second mode
 (`transformer_vm/attention/hull2d_cht.h`, lines 70-83), and
 `Transformer.ALM.HullResolve` formalizes it — `scanCombined_resolveLatest_of_ne`
 returns the payload of whichever tied line was appended later — but no
-statement related it to the head at all.  That silence is not neutral: it left
+statement related it to the head at all. That silence is not neutral: it left
 open whether the head is close to the `LATEST` answer too.
 
-It is not, and by an amount that can be named.  `LATEST` returns one of the two
+It is not, and by an amount that can be named. `LATEST` returns one of the two
 payloads and the head returns their mean, so the two differ by exactly half the
 distance between the payloads, and `softmax_head_resolves_latest` is that bound:
 `ε·C + ‖V b - V c‖/2`, with the two modes coinciding precisely when the tied
 payloads agree.
 -/
 
-import Transformer.ALM.SoftmaxTie
+@[expose] public section
 
 open scoped BigOperators
 
@@ -28,10 +32,10 @@ variable {n : ℕ}
 
 /-- **And it is off `TieBreak::LATEST` by half the spread, never more.**  The
 other mode returns one of the two payloads outright, so it cannot agree with
-the head in general — the head averages.  What can be said is the exact
+the head in general — the head averages. What can be said is the exact
 penalty: whichever of the two the later insertion carries, it sits half the
 distance between them from their mean, so the head's output is within
-`ε·C + ‖V b - V c‖/2` of what `resolve` writes out under `LATEST`.  The two
+`ε·C + ‖V b - V c‖/2` of what `resolve` writes out under `LATEST`. The two
 modes coincide, as they should, exactly when the tied payloads agree. -/
 theorem softmax_head_resolves_latest [Nonempty (Fin n)] (β : ℝ) (s : Fin n → ℝ)
     (V : Fin n → ℝ × ℝ) (b c : Fin n) (hbc : b ≠ c) (σ : ℝ) (hb : s b = σ) (hc : s c = σ)

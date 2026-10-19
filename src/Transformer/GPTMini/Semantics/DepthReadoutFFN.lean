@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthReadoutMatrices
+module
+
+public import Transformer.GPTMini.Semantics.DepthReadoutMatrices
 
 /-!
 # Actual depth readout FFN amplitudes, protection and bounds
@@ -16,6 +18,8 @@ and readout attention already derive them from raw words. Semantic and
 complete-model coupling are subsequent steps, not hidden assumptions
 in the definition of these actual matrices or outputs.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

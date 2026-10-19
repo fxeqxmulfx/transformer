@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section5_CenterForce
+public import Transformer.Causal.Section5_FrozenLastRow
+
+/-!
 # Nondegenerate critical points of the first original frozen token
 
 ArXiv:2411.04990v2, §5, induction base and diagonal stability
@@ -19,8 +24,7 @@ scalar critical point. No zero derivative is discarded, and the
 original normalization and every actual frozen mass remain present.
 -/
 
-import Transformer.Causal.Section5_CenterForce
-import Transformer.Causal.Section5_FrozenLastRow
+@[expose] public section
 
 open scoped BigOperators
 open Real Set

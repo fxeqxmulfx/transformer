@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.LearnedParityRows
+module
+
+public import Transformer.GPTMini.Convex.Structured.LearnedParityRows
 
 /-!
 # Actual learned full parity weights satisfy sufficient raw logit gaps
@@ -20,6 +22,8 @@ No learned matrix is replaced by a hard transition in inference.
 The stored coordinates are from completed ordinary-AdamW runs; this
 result does not supply an optimizer-convergence or IEEE arithmetic proof.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

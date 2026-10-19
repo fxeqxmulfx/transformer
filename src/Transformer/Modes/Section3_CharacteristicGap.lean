@@ -1,8 +1,11 @@
-import Transformer.Modes.Section3_DensityInversion
-import Mathlib.Analysis.Fourier.RiemannLebesgueLemma
-import Mathlib.Analysis.Convex.Integral
-import Mathlib.Analysis.InnerProductSpace.Convex
-import Mathlib.Analysis.Normed.Group.CocompactMap
+module
+
+public import Transformer.Modes.Section3_DensityInversion
+public import Mathlib.Analysis.Fourier.RiemannLebesgueLemma
+public import Mathlib.Analysis.Convex.Integral
+public import Mathlib.Analysis.InnerProductSpace.Convex
+public import Mathlib.Analysis.Normed.Group.CocompactMap
+
 /-!
 # A strict characteristic-function bound for the general Edgeworth law
 
@@ -17,6 +20,7 @@ decay. This supplies the pointwise strict inequality needed in §5.4's
 large-frequency argument, without extra moment or density hypotheses.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped FourierTransform Topology ENNReal
 namespace Transformer.Modes

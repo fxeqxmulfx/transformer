@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_OptimizerDeterministicLocalError
+public import Transformer.BatchSize.Section4_DeterministicHorizonBounds
+public import Transformer.BatchSize.Section4_DriftDerivativeBounds
+
+/-!
 # Finite-horizon comparison for the actual optimizer diffusion
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -7,9 +13,7 @@ continuous process. Uniform C2 bounds and the proved local defects yield
 an unconditional O(eta) estimate on a physical time horizon.
 -/
 
-import Transformer.BatchSize.Section4_OptimizerDeterministicLocalError
-import Transformer.BatchSize.Section4_DeterministicHorizonBounds
-import Transformer.BatchSize.Section4_DriftDerivativeBounds
+@[expose] public section
 
 open MeasureTheory
 open scoped BigOperators NNReal

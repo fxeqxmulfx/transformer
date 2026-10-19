@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_GaussianIntegration
+public import Transformer.BatchSize.Section4_DiagonalNoise
+public import Mathlib.MeasureTheory.Integral.Pi
+
+/-!
 # Coordinate integration by parts for the genuine vector Gaussian law
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,9 +12,7 @@ Splitting off one actual independent coordinate reduces the vector
 Gaussian generator calculation to the proved scalar identity.
 -/
 
-import Transformer.BatchSize.Section4_GaussianIntegration
-import Transformer.BatchSize.Section4_DiagonalNoise
-import Mathlib.MeasureTheory.Integral.Pi
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped NNReal ENNReal

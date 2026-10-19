@@ -1,4 +1,6 @@
-import Transformer.Homogenized.Section7_GaussianOverlapChernoff
+module
+
+public import Transformer.Homogenized.Section7_GaussianOverlapChernoff
 
 /-!
 # The actual Gaussian overlap noise: two sides and all token pairs
@@ -17,6 +19,8 @@ test identity under a genuine positive-value-variance Gaussian
 head law. This realizes the stochastic hypotheses used here.
 The witnesses and bound concern the selected overlap observables.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory
 open scoped NNReal ENNReal BigOperators

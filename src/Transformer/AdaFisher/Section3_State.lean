@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_Algorithm
+public import Mathlib.Logic.Equiv.Fin.Basic
+
+/-!
 # AdaFisher: complete state transition for a layer block
 
 arXiv:2405.16397v3, Algorithm 1 and equations `eq:expkronfactors`, `eq:FIMDiag`.
@@ -6,8 +11,7 @@ Fresh factor diagonals come from the layer formulas in Appendix A.3.
 The transition explicitly carries raw momentum and unnormalized EMA factors.
 -/
 
-import Transformer.AdaFisher.Section3_Algorithm
-import Mathlib.Logic.Equiv.Fin.Basic
+@[expose] public section
 
 noncomputable section
 

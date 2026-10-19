@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Convex.Structured.ChannelMarginals
-import Transformer.GPTMini.Convex.Structured.PointerTraining
+module
+
+public import Transformer.GPTMini.Convex.Structured.ChannelMarginals
+public import Transformer.GPTMini.Convex.Structured.PointerTraining
 
 /-!
 # Exact joint Gibbs values through the compact pointer
@@ -20,6 +22,8 @@ Source: exact finite normalization/distributivity, motivated by §7's
 log-sum-exp construction in arXiv:2305.05465v6. Raw task capability and
 the genuine residual/tied-embedding integer adapter remain unproved here.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

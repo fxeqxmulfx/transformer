@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.TensorLossCertificate
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorLossCertificate
 
 /-!
 # Finite row certificates at arbitrary learned parameters
@@ -20,6 +22,8 @@ Transition checks range over the actual finite token/state tables,
 and output checks over the actual finite state/channel tables. Their
 number does not grow with the number of possible input prefixes.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section5_ZeroTemperatureMoments
+public import Transformer.Perspective.Section2_EnergyKernel
+
+/-!
 # Concentration controls the actual attention flux
 
 ArXiv:2411.04551v3, §1, `eq: vf` and `eq: cauchy.pb`, and §5,
@@ -16,8 +21,7 @@ from a one-token empirical initial law, as required by the quantified
 cluster hypothesis in `prop:generic-discrete`.
 -/
 
-import Transformer.Interpolation.Section5_ZeroTemperatureMoments
-import Transformer.Perspective.Section2_EnergyKernel
+@[expose] public section
 
 open Real MeasureTheory
 

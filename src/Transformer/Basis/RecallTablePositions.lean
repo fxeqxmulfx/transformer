@@ -1,4 +1,6 @@
-import Transformer.Basis.RecallParsed
+module
+
+public import Transformer.Basis.RecallParsed
 
 /-!
 # Exact raw recall table positions and the last matching index
@@ -17,6 +19,8 @@ selected record index. These data-side index facts preserve arbitrary
 earlier repeated writes and later unrelated rows; query regions and
 model logits do not enter them.
 -/
+
+@[expose] public section
 
 namespace Transformer.Basis
 

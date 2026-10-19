@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_GaussianParameters
+public import Transformer.BatchSize.Section4_RandomGaussianIdentity
+public import Transformer.BatchSize.Section4_BoundedCoefficients
+
+/-!
 # The actual optimizer generator and bounded diagonal coefficients
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,9 +12,7 @@ The square of the constructed Brownian amplitude is precisely the paper's
 covariance, including eta. No martingale or approximation premise is used.
 -/
 
-import Transformer.BatchSize.Section4_GaussianParameters
-import Transformer.BatchSize.Section4_RandomGaussianIdentity
-import Transformer.BatchSize.Section4_BoundedCoefficients
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal

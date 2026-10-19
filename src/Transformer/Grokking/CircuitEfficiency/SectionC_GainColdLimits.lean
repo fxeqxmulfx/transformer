@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdRegime
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdRegime
 
 /-!
 # Efficient Gen finite limits under a static cold-feedback regime
@@ -23,6 +25,8 @@ Global convergence, attraction and delayed crossing remain open.
 Tables/gains are fixed; plain CE/uniform native decay differ from
 the source's norm-cost GD and learned stochastic/numerical GPTMini.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

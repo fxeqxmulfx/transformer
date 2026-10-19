@@ -1,107 +1,111 @@
-/-
+module
+
+public import Transformer.Causal.Basic
+public import Transformer.Causal.Section4_ParticleWeights
+public import Transformer.Causal.Section4_ParticleField
+public import Transformer.Causal.Section4_SphereFlow
+public import Transformer.Causal.Section4_FlowContinuity
+public import Transformer.Causal.Section4_FlowPrefix
+public import Transformer.Causal.Section4_ParticleDrift
+public import Transformer.Causal.Section4_WeightFloor
+public import Transformer.Causal.Section4_SecondOverlap
+public import Transformer.Causal.Section4_TwoTokenConvergence
+public import Transformer.Causal.Section4_ScalarLimits
+public import Transformer.Causal.Section4_FollowerDrift
+public import Transformer.Causal.Section4_WeightSensitivity
+public import Transformer.Causal.Section4_FollowerLimits
+public import Transformer.Causal.Section4_AntipodalField
+public import Transformer.Causal.Section4_AntipodalExpansion
+public import Transformer.Causal.Section4_ConditionalMeasure
+public import Transformer.Causal.Section4_AntipodalFibers
+public import Transformer.Causal.Section4_ConsensusInduction
+public import Transformer.Causal.SingleToken
+public import Transformer.Causal.MainTheorem
+public import Transformer.Causal.Interaction
+public import Transformer.Causal.InteractionBounds
+public import Transformer.Causal.InteractionNumerics
+public import Transformer.Causal.InteractionPeak
+public import Transformer.Causal.SectionB_PeakTemperature
+public import Transformer.Causal.SectionB_CentralCurvature
+public import Transformer.Causal.SectionB_CurvaturePolynomial
+public import Transformer.Causal.SectionB_FarCurvature
+public import Transformer.Causal.SectionB_PeakHeight
+public import Transformer.Causal.SectionB_DoublePeak
+public import Transformer.Causal.SectionB_LogSlopeAlgebra
+public import Transformer.Causal.SectionB_LogSlope
+public import Transformer.Causal.SectionB_FarLogSlope
+public import Transformer.Causal.InteractionWindow
+public import Transformer.Causal.InteractionRemark
+public import Transformer.Causal.Packing
+public import Transformer.Causal.Metastability
+public import Transformer.Causal.Section5_CircleGeometry
+public import Transformer.Causal.Section5_InteractionDecay
+public import Transformer.Causal.Section5_CausalWeights
+public import Transformer.Causal.Section5_ClosestDrift
+public import Transformer.Causal.Section5_GapBarrier
+public import Transformer.Causal.Section5_StrongGap
+public import Transformer.Causal.Section5_StrongCenterWitness
+public import Transformer.Causal.FixedCenters
+public import Transformer.Causal.Section5_CircularInteraction
+public import Transformer.Causal.Section5_WeightedInteraction
+public import Transformer.Causal.Section5_ParameterGeometry
+public import Transformer.Causal.Section5_ParameterTemperature
+public import Transformer.Causal.Section5_NarrowWindow
+public import Transformer.Causal.Section5_ForceRatio
+public import Transformer.Causal.Section5_NarrowParameters
+public import Transformer.Causal.Section5_AlignedForce
+public import Transformer.Causal.Section5_PrefixGeometry
+public import Transformer.Causal.Section5_PrefixForce
+public import Transformer.Causal.Section5_PrefixCurvature
+public import Transformer.Causal.Section5_CriticalSets
+public import Transformer.Causal.Section5_CenterForce
+public import Transformer.Causal.Section5_CenterCurvature
+public import Transformer.Causal.Section5_ClusterCurvature
+public import Transformer.Causal.Section5_ClusterForceError
+public import Transformer.Causal.Section5_CriticalCluster
+public import Transformer.Causal.Section5_FrozenWeights
+public import Transformer.Causal.Section5_FrozenField
+public import Transformer.Causal.Section5_FrozenLastRow
+public import Transformer.Causal.Section5_RowField
+public import Transformer.Causal.Section5_RowBounds
+public import Transformer.Causal.Section5_RowConvergence
+public import Transformer.Causal.Section5_RowDerivative
+public import Transformer.Causal.Section5_RowRepulsion
+public import Transformer.Causal.Section5_RepellerDetector
+public import Transformer.Causal.Section5_RowAvoidance
+public import Transformer.Causal.Section5_AEConvergence
+public import Transformer.Causal.Section5_LocalStability
+public import Transformer.Causal.Section5_ClusteredStability
+public import Transformer.Causal.Section5_OneCenterField
+public import Transformer.Causal.Section5_SimpleRows
+public import Transformer.Causal.Section5_OneCenterConvergence
+public import Transformer.Causal.Section5_FrozenFlow
+public import Transformer.Causal.Section5_FlowContinuity
+public import Transformer.Causal.Section5_ConditionalVolume
+public import Transformer.Causal.SequentialFlow
+public import Transformer.Causal.SectionA_ScalarConvergence
+public import Transformer.Causal.SectionA_ScalarRepulsion
+public import Transformer.Causal.SectionA_ScalarAttraction
+public import Transformer.Causal.AppendixA_Cusp
+public import Transformer.Causal.AppendixA_CuspEnergy
+public import Transformer.Causal.AppendixA_CuspCritical
+public import Transformer.Causal.AppendixA_CuspJacobian
+public import Transformer.Causal.AppendixA_CuspHyperbolicity
+public import Transformer.Causal.AppendixA_CuspClock
+public import Transformer.Causal.AppendixA_CuspCollapse
+public import Transformer.Causal.AppendixA_SequentialRefutation
+public import Transformer.Causal.ParkingCount
+public import Transformer.Causal.CapCone
+public import Transformer.Causal.CapPolar
+public import Transformer.Causal.CapHalfPlane
+public import Transformer.Causal.CapSpace
+public import Transformer.Causal.CapMass
+public import Transformer.Causal.UniformAtoms
+
+/-!
 Formalization of:
   Karagodin, Polyanskiy, Rigollet,
   "Clustering in Causal Attention Masking", arXiv:2411.04990v2.
 -/
 
-import Transformer.Causal.Basic
-import Transformer.Causal.Section4_ParticleWeights
-import Transformer.Causal.Section4_ParticleField
-import Transformer.Causal.Section4_SphereFlow
-import Transformer.Causal.Section4_FlowContinuity
-import Transformer.Causal.Section4_FlowPrefix
-import Transformer.Causal.Section4_ParticleDrift
-import Transformer.Causal.Section4_WeightFloor
-import Transformer.Causal.Section4_SecondOverlap
-import Transformer.Causal.Section4_TwoTokenConvergence
-import Transformer.Causal.Section4_ScalarLimits
-import Transformer.Causal.Section4_FollowerDrift
-import Transformer.Causal.Section4_WeightSensitivity
-import Transformer.Causal.Section4_FollowerLimits
-import Transformer.Causal.Section4_AntipodalField
-import Transformer.Causal.Section4_AntipodalExpansion
-import Transformer.Causal.Section4_ConditionalMeasure
-import Transformer.Causal.Section4_AntipodalFibers
-import Transformer.Causal.Section4_ConsensusInduction
-import Transformer.Causal.SingleToken
-import Transformer.Causal.MainTheorem
-import Transformer.Causal.Interaction
-import Transformer.Causal.InteractionBounds
-import Transformer.Causal.InteractionNumerics
-import Transformer.Causal.InteractionPeak
-import Transformer.Causal.SectionB_PeakTemperature
-import Transformer.Causal.SectionB_CentralCurvature
-import Transformer.Causal.SectionB_CurvaturePolynomial
-import Transformer.Causal.SectionB_FarCurvature
-import Transformer.Causal.SectionB_PeakHeight
-import Transformer.Causal.SectionB_DoublePeak
-import Transformer.Causal.SectionB_LogSlopeAlgebra
-import Transformer.Causal.SectionB_LogSlope
-import Transformer.Causal.SectionB_FarLogSlope
-import Transformer.Causal.InteractionWindow
-import Transformer.Causal.InteractionRemark
-import Transformer.Causal.Packing
-import Transformer.Causal.Metastability
-import Transformer.Causal.Section5_CircleGeometry
-import Transformer.Causal.Section5_InteractionDecay
-import Transformer.Causal.Section5_CausalWeights
-import Transformer.Causal.Section5_ClosestDrift
-import Transformer.Causal.Section5_GapBarrier
-import Transformer.Causal.Section5_StrongGap
-import Transformer.Causal.Section5_StrongCenterWitness
-import Transformer.Causal.FixedCenters
-import Transformer.Causal.Section5_CircularInteraction
-import Transformer.Causal.Section5_WeightedInteraction
-import Transformer.Causal.Section5_ParameterGeometry
-import Transformer.Causal.Section5_ParameterTemperature
-import Transformer.Causal.Section5_NarrowWindow
-import Transformer.Causal.Section5_ForceRatio
-import Transformer.Causal.Section5_NarrowParameters
-import Transformer.Causal.Section5_AlignedForce
-import Transformer.Causal.Section5_PrefixGeometry
-import Transformer.Causal.Section5_PrefixForce
-import Transformer.Causal.Section5_PrefixCurvature
-import Transformer.Causal.Section5_CriticalSets
-import Transformer.Causal.Section5_CenterForce
-import Transformer.Causal.Section5_CenterCurvature
-import Transformer.Causal.Section5_ClusterCurvature
-import Transformer.Causal.Section5_ClusterForceError
-import Transformer.Causal.Section5_CriticalCluster
-import Transformer.Causal.Section5_FrozenWeights
-import Transformer.Causal.Section5_FrozenField
-import Transformer.Causal.Section5_FrozenLastRow
-import Transformer.Causal.Section5_RowField
-import Transformer.Causal.Section5_RowBounds
-import Transformer.Causal.Section5_RowConvergence
-import Transformer.Causal.Section5_RowDerivative
-import Transformer.Causal.Section5_RowRepulsion
-import Transformer.Causal.Section5_RepellerDetector
-import Transformer.Causal.Section5_RowAvoidance
-import Transformer.Causal.Section5_AEConvergence
-import Transformer.Causal.Section5_LocalStability
-import Transformer.Causal.Section5_ClusteredStability
-import Transformer.Causal.Section5_OneCenterField
-import Transformer.Causal.Section5_SimpleRows
-import Transformer.Causal.Section5_OneCenterConvergence
-import Transformer.Causal.Section5_FrozenFlow
-import Transformer.Causal.Section5_FlowContinuity
-import Transformer.Causal.Section5_ConditionalVolume
-import Transformer.Causal.SequentialFlow
-import Transformer.Causal.SectionA_ScalarConvergence
-import Transformer.Causal.SectionA_ScalarRepulsion
-import Transformer.Causal.SectionA_ScalarAttraction
-import Transformer.Causal.AppendixA_Cusp
-import Transformer.Causal.AppendixA_CuspEnergy
-import Transformer.Causal.AppendixA_CuspCritical
-import Transformer.Causal.AppendixA_CuspJacobian
-import Transformer.Causal.AppendixA_CuspHyperbolicity
-import Transformer.Causal.AppendixA_CuspClock
-import Transformer.Causal.AppendixA_CuspCollapse
-import Transformer.Causal.AppendixA_SequentialRefutation
-import Transformer.Causal.ParkingCount
-import Transformer.Causal.CapCone
-import Transformer.Causal.CapPolar
-import Transformer.Causal.CapHalfPlane
-import Transformer.Causal.CapSpace
-import Transformer.Causal.CapMass
-import Transformer.Causal.UniformAtoms
+@[expose] public section

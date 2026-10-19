@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Subsequence
+
+/-!
 # Testing a fixed subsequence from its middle symbol
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -10,15 +14,15 @@ guess the position `j` of the middle symbol `σ_{k+1}`, check that
 `σ₁ ⋯ σ_k` fits into `w[1:j-1]` with the past-only formula of
 `Transformer.CRASP.Subsequence`, and that `σ_{k+2} ⋯ σ_{2k+1}` fits into
 `w[j+1:n]` with its mirror image, which consumes the pattern from the *left*
-through `Form.exAfter`.  The guess itself is one more `◁#`.
+through `Form.exAfter`. The guess itself is one more `◁#`.
 
 As in the one-sided formula, both halves must quantify strictly — the paper's
 `φ_L` and `φ_R` use `◁#[⋯] ≥ 1` and `▷#[⋯] ≥ 1`, which let a symbol of a half
-reuse the position of the middle symbol.  Patterns shorter than `k + 1`
+reuse the position of the middle symbol. Patterns shorter than `k + 1`
 symbols have no middle to guess and are tested one-sidedly.
 -/
 
-import Transformer.CRASP.Subsequence
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

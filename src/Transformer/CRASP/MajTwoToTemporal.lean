@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.MajTwoTranslation
+
+/-!
 # The reverse translation and language inclusion
 
 arXiv:2506.16055v3, Appendix E, `thm:majtwo_to_tlc` and the reverse
@@ -6,7 +10,7 @@ inclusion of `thm:logical_inclusions`. Binary rectangle normalization gives
 the temporal formula; the empty-word guard gives the language statement.
 -/
 
-import Transformer.CRASP.MajTwoTranslation
+@[expose] public section
 
 namespace Transformer.CRASP
 
@@ -17,22 +21,22 @@ variable {σ : Type u} [DecidableEq σ]
 free variable `x` is matched by a `TL[◁#,▷#]_k` formula.
 
 **What the source says and what is changed here.**  A hypothesis is added:
-`φ` must not use the second variable `y`.  The paper says "a `MAJ²_k` formula
+`φ` must not use the second variable `y`. The paper says "a `MAJ²_k` formula
 with one free variable", and `Maj2.freeIn φ .y = false` is what that means; the
 formalization had `φ` range over all of `MajTwo σ k` and read it at the
 valuation `x ↦ i`, `y ↦ 0`, which is a different and false claim.
 
 *Why it is false without it.*  Take `φ = Q_a(y)`, of depth `0`, hence in
-`MajTwo σ k` for every `k`.  At the valuation above `ξ y = 0`, and
+`MajTwo σ k` for every `k`. At the valuation above `ξ y = 0`, and
 `Maj2.sat` reads `w[ξ y - 1]?`, which is `w[0]?` in truncated subtraction — so
 `φ` says "the first symbol of `w` is `a`", the same answer at every position
-`i`.  That is not a `TL[◁#,▷#]_0` property: a depth-`0` formula is a Boolean
+`i`. That is not a `TL[◁#,▷#]_0` property: a depth-`0` formula is a Boolean
 combination of `Q_b` and comparisons of constants, so it cannot see past the
 current position, and `w = [a, b]`, `w' = [b, b]` read at `i = 2` agree on all
-of them while requiring different answers.  Depth `1` does not suffice either
+of them while requiring different answers. Depth `1` does not suffice either
 — `[a,b,b]` and `[b,a,b]` at `i = 3` agree on every `◁#`- and `▷#`-count of a
 depth-`0` formula — and the property is first expressible at depth `2`, as
-`◁#[Q_a ∧ ◁#[⊤] = 0] = 1`.  So no fixed `k` bounds the translation, and the
+`◁#[Q_a ∧ ◁#[⊤] = 0] = 1`. So no fixed `k` bounds the translation, and the
 hypothesis is the paper's own reading of its statement.
 
 The forward direction already produces formulas with this property:

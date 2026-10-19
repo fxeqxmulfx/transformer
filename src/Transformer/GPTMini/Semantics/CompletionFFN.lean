@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.CountFFN
+module
+
+public import Transformer.GPTMini.Semantics.CountFFN
 
 /-!
 # A simultaneous parity and completion decoder in the original FFN
@@ -16,6 +18,8 @@ weights. Tied embeddings and sufficient readout margins must still be
 verified; a nonzero EOS channel alone does not prove a final token answer.
 The real-arithmetic and shared-epsilon conventions remain unchanged.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

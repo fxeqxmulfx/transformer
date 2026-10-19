@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.RetainedInputDissipation
+module
+
+public import Transformer.Grokking.AdamW.RetainedInputDissipation
 
 /-!
 # A generated geometric error from the native first-clock correction
@@ -28,6 +30,8 @@ must combine them with the true moment-feedback law and input-induced
 dissipation. Exact reals and non-AMSGrad native AdamW are explicit;
 frozen transformer optimizers, buffers and checkpoints are unchanged.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

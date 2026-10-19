@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Defs
+
+/-!
 # Fixed-precision numbers
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -10,13 +14,13 @@ rational number of the form `m · 2^{-s}` where `m` is an integer and
 which is what `Fx` records; `Fx.val` reads it back as a real number.
 
 `Fx.bit` is the paper's two's-complement bit extraction `[x]_b`, and `Fx.round`
-is `round_𝔽`, the greatest element of `𝔽` below a given real.  The paper does
+is `round_𝔽`, the greatest element of `𝔽` below a given real. The paper does
 not say what `round` does outside the representable range; `Fx.round` saturates
 there, and `val_round_le` is the defining inequality under the hypothesis that
 no saturation occurs.
 -/
 
-import Transformer.CRASP.Defs
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -54,7 +58,7 @@ instance : Zero (Fx p s) where
 noncomputable def bit (x : Fx p s) (b : ℕ) : Bool :=
   decide (Odd ⌊x.val * (2 : ℝ) ^ ((s : ℤ) + 1 - b)⌋)
 
-/-- Mantissas are clamped into the representable range.  Inside the range this
+/-- Mantissas are clamped into the representable range. Inside the range this
 is the identity; outside it saturates, which is the one point where `Fx.round`
 goes beyond `def:fixed_precision`. -/
 def clamp (p : ℕ) (m : ℤ) : ℤ := max (-2 ^ (p - 1)) (min (2 ^ (p - 1) - 1) m)

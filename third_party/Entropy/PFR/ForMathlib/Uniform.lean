@@ -5,6 +5,12 @@ public import Mathlib.Probability.IdentDistrib
 public import PFR.ForMathlib.FiniteRange.Defs
 public import PFR.Mathlib.Probability.UniformOn
 
+/-!
+# Uniform random variables
+
+Uniform distributions on finite sets, their images, and point probabilities.
+-/
+
 public section
 
 open Function MeasureTheory Measure Set

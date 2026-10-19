@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.CRASP.PositionalTransformers
+public import Transformer.CRASP.PeriodicEncodingsToLogic
+public import Transformer.CRASP.ZeroModulus
+public import Transformer.CRASP.AlibiToLogic
+public import Transformer.CRASP.PositionalDepth
+
+/-!
 # What the position encodings buy, and what they do not
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -12,20 +20,16 @@ state counts describe this tail and `Y` corrects a bounded recent window.
 Since `thm:tlclpos_depth_hierarchy` separates the depths of both fragments,
 none of the three collapses the transformer depth hierarchy — which is
 `thm:rtfr_pes_depth_hierarchy`, the statement the paper puts in the main
-text, in `CRASP.EncodingHierarchy`.  The three unnamed theorems of Appendix F,
+text, in `CRASP.EncodingHierarchy`. The three unnamed theorems of Appendix F,
 one per encoding, are its three instances.
 
 Appendix F also carries `thm:mnf`, `thm:tlmod_to_rtfr` and
-`thm:TLCmod_to_rtfr`, the converse simulations for `MOD`.  They sit inside an
+`thm:TLCmod_to_rtfr`, the converse simulations for `MOD`. They sit inside an
 `\iffalse` block in the source and so are not part of the paper; like
 `lem:bb` they are deliberately left out here.
 -/
 
-import Transformer.CRASP.PositionalTransformers
-import Transformer.CRASP.PeriodicEncodingsToLogic
-import Transformer.CRASP.ZeroModulus
-import Transformer.CRASP.AlibiToLogic
-import Transformer.CRASP.PositionalDepth
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -41,7 +45,7 @@ def PosEnc.IsStandard : PosEnc → Prop
 
 For a fixed-precision representation `𝔽` and a slope `a > 0` there is a
 `Δ_a` such that `round(exp(x - a(i - j))) = 0` whenever `j ≤ i - Δ_a` and
-`x ∈ 𝔽`.  The attention logits are bounded above, and the smallest positive
+`x ∈ 𝔽`. The attention logits are bounded above, and the smallest positive
 element of `𝔽` is `2^{-s}`, so a large enough linear bias pushes the rounded
 weight to zero.
 

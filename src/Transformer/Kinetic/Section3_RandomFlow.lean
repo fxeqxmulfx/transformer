@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Kinetic.Fluctuations
+public import Transformer.Kinetic.Section3_Observables
+
+/-!
 # Observables of a random flow
 
 ArXiv:2605.09213v1, §3, `lem:correl`: the angles at time `t` are the flow map of the
@@ -8,8 +13,7 @@ of observables of the random flow are therefore those of the flow map under the
 product law (`covariance_randomFlow`, `thirdCumulant_randomFlow`).
 -/
 
-import Transformer.Kinetic.Fluctuations
-import Transformer.Kinetic.Section3_Observables
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

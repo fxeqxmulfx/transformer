@@ -1,5 +1,7 @@
-import Transformer.Grokking.AdamW.CurvatureBound
-import Transformer.Grokking.Composition.Basic
+module
+
+public import Transformer.Grokking.AdamW.CurvatureBound
+public import Transformer.Grokking.Composition.Basic
 
 /-!
 # Initial CE slope and Hessian cannot certify a finite rate
@@ -23,6 +25,8 @@ This refutes a uniform certificate based on identical initial data across
 that family; it does not say that one fixed curve has no improving rate.
 Controlling the interval remainder remains a sufficient remedy.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

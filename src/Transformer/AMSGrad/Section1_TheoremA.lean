@@ -1,9 +1,11 @@
-import Transformer.AMSGrad.Section1_AMSGrad
-import Mathlib.Analysis.Convex.Function
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.Calculus.FDeriv.Const
+module
 
-/-
+public import Transformer.AMSGrad.Section1_AMSGrad
+public import Mathlib.Analysis.Convex.Function
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Analysis.Calculus.FDeriv.Const
+
+/-!
 # AMSGrad — standing assumptions for Theorem A
 
 §1 of arXiv:1904.03590v4: the assumptions every convergence theorem of the
@@ -14,7 +16,7 @@ paper is made under. Theorem A itself is proved in `Section4_TheoremAFinite`.
 * The assumptions are bundled as `IsOnlineConvex S F D G`: the projection
   projects onto `F`, `F` is convex, contains `x₁` and has `ℓ^∞` diameter at
   most `D`, and each `f_t` is convex and differentiable with
-  `‖∇f_t(x)‖_∞ ≤ G` on `F`.  `isOnlineConvex_zero` witnesses them.
+  `‖∇f_t(x)‖_∞ ≤ G` on `F`. `isOnlineConvex_zero` witnesses them.
 
 * The theorem's printed constants are established by an alternative proof in
   `Section4_TheoremAFinite`. The invalid telescoping step identified by the
@@ -22,6 +24,8 @@ paper is made under. Theorem A itself is proved in `Section4_TheoremAFinite`.
 
 Source: arXiv:1904.03590v4, §1, Theorem A.
 -/
+
+@[expose] public section
 
 open Finset
 

@@ -1,32 +1,36 @@
-/-
+module
+
+public import Transformer.Quartet.Section3_Grids
+
+/-!
 # The two NVFP4 quantizers: `Q_SR` and the clipping `Q_RTN`
 
 arXiv:2601.22813v2, "Quartet II: Accurate LLM Pre-Training in NVFP4 by
 Improved Unbiased Gradient Estimation" (ICML 2026), §3.1 and §3.3.
 
 A tensor here is `2^k` groups of `16` entries — the layout NVFP4 quantizes,
-and the one the randomized rotation of §3.2 will need.  Both quantizers of the
+and the one the randomized rotation of §3.2 will need. Both quantizers of the
 paper build the same three levels, and differ in how they round:
 
 * `qSR` (§3.1) is the scheme of every earlier FP4 training method: the per-
   tensor scale is `max|x| / (6 · 16/17 · 448)`, the group scales are rounded to
-  nearest in E4M3, and the entries are rounded *stochastically* to E2M1.  The
+  nearest in E4M3, and the entries are rounded *stochastically* to E2M1. The
   factor `16/17` is the most `RTN_FP8` can raise a group scale, which is what
-  keeps the E2M1 argument inside `[-6, 6]`.  The grid maximum is a parameter
+  keeps the E2M1 argument inside `[-6, 6]`. The grid maximum is a parameter
   `c`, `6.0` in §3.1 and one of `4.0`, `6.0` in §4.2.
 * `qRTN s` (§3.3) is what `MS-EDEN` quantizes with: round-to-nearest at both
   levels, a free clipping factor `s` in place of `6 · 16/17`, and group scales
   capped by `256` rather than `448` "for them not to overflow when applying
-  EDEN correction".  It is unbiased for no `s` at all — the rotation and the
+  EDEN correction". It is unbiased for no `s` at all — the rotation and the
   rescaling of §3.2 are what will restore unbiasedness.
 
 `qSRAt` and `qRTN` return the *dequantized* value `x^FP4 · x^FP8 · x^FP32`,
-since that is what the guarantees of the paper speak about.  That neither of
+since that is what the guarantees of the paper speak about. That neither of
 them clips, and that `Q_SR` is unbiased, is
 `Transformer.Quartet.Section3_NonClipping`.
 -/
 
-import Transformer.Quartet.Section3_Grids
+@[expose] public section
 
 namespace Transformer
 namespace Quartet
@@ -63,7 +67,7 @@ theorem groupAbsMax_nonneg (x : Fin (2 ^ k) → Fin 16 → ℝ) (i : Fin (2 ^ k)
     (Finset.le_sup' (fun j : Fin 16 => |x i j|) (Finset.mem_univ (0 : Fin 16)))
 
 /-- The per-tensor FP32 scale of `Q_SR`, `max|x| / (c · 16/17 · 448)` (§3.1),
-where the grid maximum `c` is `6.0`.  The Four Over Six heuristic of §4.2 is
+where the grid maximum `c` is `6.0`. The Four Over Six heuristic of §4.2 is
 the same display with `c = 4.0`, which is why `c` is a parameter here. -/
 noncomputable def tensorScaleSR (c : ℝ) (x : Fin (2 ^ k) → Fin 16 → ℝ) : ℝ :=
   absMax x / (c * (16 / 17) * 448)

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ControlledFeatureSwap
+
+/-!
 # Exchange a row bit with a feature bit without changing dimensions
 
 Arora et al., arXiv:2312.04927v1, Appendix `prop: butterfly-hyena`.
@@ -7,7 +11,7 @@ one row bit and one feature bit. The resulting five-layer permutation is
 its own inverse and uses exactly the original n × d coordinates.
 -/
 
-import Transformer.Zoology.Appendix_ControlledFeatureSwap
+@[expose] public section
 
 noncomputable section
 

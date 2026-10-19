@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.Basic
-import Transformer.GPTMini.CausalMHA
+module
+
+public import Transformer.GPTMini.Sparsemax.Basic
+public import Transformer.GPTMini.CausalMHA
 
 /-!
 # A saturated self route through the implemented XSA projection
@@ -10,6 +12,8 @@ normalizes values with `max(norm, eps)`. Exact self-route erasure therefore
 requires the self-value norm to exceed epsilon. A strict score gap and
 strict norm bound make the whole head locally zero, including value paths.
 -/
+
+@[expose] public section
 
 noncomputable section
 

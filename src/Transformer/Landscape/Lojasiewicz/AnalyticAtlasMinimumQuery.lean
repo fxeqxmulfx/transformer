@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.AnalyticBoxMinimumQuery
+public import Transformer.Landscape.Lojasiewicz.AnalyticAtlasSource
+public import Transformer.Landscape.Lojasiewicz.GradientEnergyImage
+
+/-!
 # Arithmetic comparison on every chart of a finite analytic source
 
 One threshold is compared with all points on the same energy level
@@ -6,9 +12,7 @@ in the entire source, including charts outside the candidate's chart.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.AnalyticBoxMinimumQuery
-import Transformer.Landscape.Lojasiewicz.AnalyticAtlasSource
-import Transformer.Landscape.Lojasiewicz.GradientEnergyImage
+@[expose] public section
 
 noncomputable section
 open scoped BigOperators

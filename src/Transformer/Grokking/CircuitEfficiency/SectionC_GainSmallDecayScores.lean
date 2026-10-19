@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainSmallDecayMixing
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainSmallDecayMixing
 
 /-!
 # Recurrent actual product logits from weak-decay internal mass
@@ -31,6 +33,8 @@ grokking time. Fixed physical tables/plain CE and native uniform decay
 differ from appendix C's coupled norm-cost GD and learned stochastic/
 floating-point GPTMini. Confidence transfer is the next separate step.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

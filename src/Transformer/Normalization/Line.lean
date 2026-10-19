@@ -1,4 +1,12 @@
-/-
+module
+
+public import Mathlib.Probability.Distributions.Gaussian.Fernique
+
+public import Transformer.Perspective.SphereInvariant
+public import Transformer.Perspective.Section3_SmallBeta
+public import Mathlib.Probability.Distributions.Gaussian.Multivariate
+
+/-!
 # Normalization — the two laws of `thm: convergence` on the line
 
 At `d = 1` the sphere is `𝕊⁰ = {±1}` and the two initial laws of
@@ -16,9 +24,7 @@ These are the measure-theoretic halves of the refutations in `ClusteringLine`.
 Source: arXiv:2510.22026v2, §3, `thm: convergence`, its initializations.
 -/
 
-import Transformer.Perspective.SphereInvariant
-import Transformer.Perspective.Section3_SmallBeta
-import Mathlib.Probability.Distributions.Gaussian.Multivariate
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

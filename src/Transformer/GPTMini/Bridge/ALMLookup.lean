@@ -1,24 +1,29 @@
-/-
+module
+
+public import Transformer.GPTMini.QKNorm
+public import Transformer.ALM.Basic
+
+/-!
 # Bridge: QK-norm obstructs the lookup head, and what survives anyway
 
 `Transformer.ALM` builds an exact lookup head out of the paraboloid score
 `score q k = 2⟪k,q⟫ - ‖k‖²`, which is `-‖k - q‖²` up to a term independent of
 the key: its argmax is the nearest stored key, and on integer keys the gap to
-the runner-up is at least `1` (`Transformer.ALM.Lattice`).  `gpt-mini` does not
-compute that score.  `GPTMini.preScore` normalizes `q` and `k` first, so the
+the runner-up is at least `1` (`Transformer.ALM.Lattice`). `gpt-mini` does not
+compute that score. `GPTMini.preScore` normalizes `q` and `k` first, so the
 head sees only directions.
 
 Both halves of the consequence are theorems here, and they point opposite
 ways.
 
 **The obstruction.**  `score_smul_key` and `score_smul_query`: the normalized
-score is invariant under positive rescaling of either argument.  The lookup
+score is invariant under positive rescaling of either argument. The lookup
 score is not — `-‖k - q‖²` is a statement about position, not direction, and
 the whole point of the query lift `q ↦ (q, 1)` is a coordinate that is
-constant rather than radial.  `qknorm_indifferent_where_lookup_is_not` makes
+constant rather than radial. `qknorm_indifferent_where_lookup_is_not` makes
 this a counterexample rather than a slogan: at *every* temperature `α`, the
 QK-normalized head is exactly indifferent between a unit key and twice that
-key, while the lookup head strictly prefers the first.  So the ALM head is not
+key, while the lookup head strictly prefers the first. So the ALM head is not
 `GPTMini.preScore` at any weights, and no per-head gain repairs it.
 
 **What survives.**  Restrict to keys of one common norm `R` — the sphere the
@@ -26,7 +31,7 @@ tokens already live on after `RMSNorm` (`Bridge.SphereResidence`) — and the
 obstruction vanishes: `score_sub_eq_const_mul_lookup_sub` shows the two scores
 differ by the *positive constant factor* `e^α / (2‖q‖R)` on differences, so
 `score_le_iff_lookup_le` gives the same ranking and `score_le_iff_dist_le` the
-same nearest-neighbour answer.  What the normalization costs is that constant:
+same nearest-neighbour answer. What the normalization costs is that constant:
 the unit integer gap of the lattice becomes `e^α / (2‖q‖R)`, which is a change
 of temperature, not a loss of the retrieval property.
 
@@ -38,8 +43,7 @@ Source: `reference/model.py` (`CausalMHA.forward`) against Percepta,
 *Can LLMs Be Computers?* (2026-03-11), the paraboloid lookup head.
 -/
 
-import Transformer.GPTMini.QKNorm
-import Transformer.ALM.Basic
+@[expose] public section
 
 open scoped BigOperators
 
@@ -79,7 +83,7 @@ theorem score_smul_query (alpha : ℝ) {c : ℝ} (hc : 0 < c) (q k : EucSpace d)
 
 /-- **The lookup head is not an instance of this one.**  For any unit vector
 `v` and *any* temperature `α`: the paraboloid head strictly prefers `v` to
-`2v`, and the QK-normalized head is exactly indifferent between them.  No
+`2v`, and the QK-normalized head is exactly indifferent between them. No
 choice of per-head gain makes the normalized score a monotone function of the
 paraboloid score.
 
@@ -105,7 +109,7 @@ example : ‖(WithLp.toLp 2 (fun j => if j = (0 : Fin (d + 1)) then (1 : ℝ) el
 
 /-! ### On a common sphere the two heads agree -/
 
-/-- The normalized score in closed form.  At `q = 0` or `k = 0` both sides are
+/-- The normalized score in closed form. At `q = 0` or `k = 0` both sides are
 `0`, so no nondegeneracy is needed. -/
 theorem score_eq_inner_div (alpha : ℝ) (q k : EucSpace d) :
     GPTMini.score alpha 0 q k
@@ -154,7 +158,7 @@ theorem score_le_iff_lookup_le (alpha : ℝ) {R : ℝ} (hR : 0 < R)
 
 /-- **Which is nearest-neighbour retrieval.**  Restated through
 `ALM.score_gap`: on a common sphere the normalized head's argmax is the key
-closest to the query, exactly as the lookup head's is.  The retrieval property
+closest to the query, exactly as the lookup head's is. The retrieval property
 is intact; the lattice gap is what the normalization rescales. -/
 theorem score_le_iff_dist_le (alpha : ℝ) {R : ℝ} (hR : 0 < R)
     (q k₁ k₂ : EucSpace d) (hq : q ≠ 0) (h1 : ‖k₁‖ = R) (h2 : ‖k₂‖ = R) :

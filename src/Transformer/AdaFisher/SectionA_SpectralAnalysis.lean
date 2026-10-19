@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.AdaFisher.SectionA_Gershgorin
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+
+/-!
 # AdaFisher: Fourier and SNR formulas used in the structural experiments
 
 arXiv:2405.16397v3, Appendix A.1, `eq:fft` and `eq:SNR`.
@@ -6,9 +12,7 @@ The definitions give exact formulas; the measured diagonal concentration
 and noise robustness require the source's trained matrices and are empirical.
 -/
 
-import Transformer.AdaFisher.SectionA_Gershgorin
-import Mathlib.Analysis.Complex.Exponential
-import Mathlib.Analysis.SpecialFunctions.Log.Base
+@[expose] public section
 
 open scoped BigOperators Matrix
 

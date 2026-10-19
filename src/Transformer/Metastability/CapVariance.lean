@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Metastability.MainTheorem
+public import Transformer.Metastability.CapVelocityBound
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
 # Metastability — the within-cap variance (`rem: variance` of 2410.06833v1)
 
 The remark closing §2: inside a cap `𝒮_q(2ε)` the concentration
@@ -10,7 +16,7 @@ around the token that attains the minimum, up to the leakage `n e^{-(1-α)β}`
 from outside.
 
 `η_q` and the reference token `i(t)` are not free here: `IsCapMin` pins them
-down as the minimum and its argmin, exactly as §2 defines them.  Read over an
+down as the minimum and its argmin, exactly as §2 defines them. Read over an
 arbitrary `η` the inequality would be false — `η t = -t` refutes it as soon
 as `n e^{-(1-α)β} < 1` — so the pinning is what makes the statement the
 paper's.
@@ -22,9 +28,7 @@ is `Metastability.inner_proj_softmax_ge`, a statement about a plain tuple of
 unit vectors.
 -/
 
-import Transformer.Metastability.MainTheorem
-import Transformer.Metastability.CapVelocityBound
-import Mathlib.Analysis.InnerProductSpace.Calculus
+@[expose] public section
 
 open scoped BigOperators Classical
 open Real
@@ -66,10 +70,10 @@ two separated sub-caps makes it rise and then fall.
 *The `α`-separation is a hypothesis.*  The remark is stated with no relation
 between `α` and the configuration, and without one the leakage term is not a
 bound on anything: nothing makes the weight `a_{i(t)j}` of a token outside the
-cap small.  `h_far` supplies what the leakage estimate needs and what the
+cap small. `h_far` supplies what the leakage estimate needs and what the
 section's other statements assume — `rho_diff_ineq` carries the same
 hypothesis — namely `⟨x_{i(t)}, x_j⟩ ≤ α` for `x_j` outside the cap on
-`[0, T_esc]`.  Together with `β ≥ 0` it gives
+`[0, T_esc]`. Together with `β ≥ 0` it gives
 `a_{i(t)j} ≤ e^{βα}/e^{β} = e^{-(1-α)β}`, the partition function being at
 least its own diagonal term.
 
@@ -83,7 +87,7 @@ tokens.
 minimum of finitely many smooth functions has corners, so `hη_diff` is a
 hypothesis exactly as in `rho_diff_ineq`; and the envelope argument that
 identifies `η̇_q` with the derivative of the attaining token needs that token to
-stay admissible for nearby times, which is `h_stay`.  Below the escape time
+stay admissible for nearby times, which is `h_stay`. Below the escape time
 that is what `T_esc` means; stated for an arbitrary `i` it has to be assumed.
 
 Source: arXiv:2410.06833v1, §2, `rem: variance`. -/

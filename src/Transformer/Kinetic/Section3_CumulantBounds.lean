@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_RandomFlow
+public import Transformer.Kinetic.Section3_KappaBound
+public import Transformer.Kinetic.Section3_GammaChoice
+public import Transformer.Kinetic.Section3_Amplitudes
+public import Transformer.Homogenized.RademacherLaw
+
+/-!
 # Cumulant bounds — `lem:correl`
 
 ArXiv:2605.09213v1, §3, `lem:correl`: for independent initial data the
@@ -16,11 +24,7 @@ second differences of the flow (`abs_covariance_flow_le`,
 (`exists_gamma_exp_le`).
 -/
 
-import Transformer.Kinetic.Section3_RandomFlow
-import Transformer.Kinetic.Section3_KappaBound
-import Transformer.Kinetic.Section3_GammaChoice
-import Transformer.Kinetic.Section3_Amplitudes
-import Transformer.Homogenized.RademacherLaw
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 
@@ -37,24 +41,24 @@ variable {Ω : Type*} [MeasurableSpace Ω]
       ≲ (ij)⁻¹ e^{√(CT log(i/k))} e^{CT} ‖φ'‖_∞² ‖φ'‖_{W^{1,∞}}`.
 
 The source's `i, j, k` are `1`-based positions, so they are `i+1, j+1, k+1`
-here.  The two norms of `φ'` are carried as bounds `K ≥ ‖φ'‖_∞` and
+here. The two norms of `φ'` are carried as bounds `K ≥ ‖φ'‖_∞` and
 `K' ≥ ‖φ'‖_{W^{1,∞}} = max{‖φ'‖_∞, ‖φ''‖_∞}`, which is what `≲ ‖·‖` means and
 avoids the junk value an unbounded supremum would take.
 
 **What the source says and what is changed here.**
 
-* *The test is periodic.*  The source takes `φ ∈ C²(𝕋)`.  The statement took
+* *The test is periodic.*  The source takes `φ ∈ C²(𝕋)`. The statement took
   every `φ : ℝ → ℝ` with bounded `φ'` and `φ''`, which reads the winding numbers
-  of the angles; `correlation_bounds_aperiodic_false` refutes it.  `φ` is now
+  of the angles; `correlation_bounds_aperiodic_false` refutes it. `φ` is now
   `2π`-periodic.
 * *The initial data are random variables.*  The source's initial data are
-  random variables, hence measurable; this is now explicit.  Without it the
-  integrals of the covariance take junk values.  Let the second token rest at
+  random variables, hence measurable; this is now explicit. Without it the
+  integrals of the covariance take junk values. Let the second token rest at
   `0` or `π` according to a set of outer measure one and inner measure zero.
   Take a test `A + ψ` whose values make the product of the two observables the
-  constant `A²`.  Both observables are then non-measurable, so their means are
+  constant `A²`. Both observables are then non-measurable, so their means are
   `0`, and the covariance is `A²`, while `φ'` stays bounded independently of
-  `A`.  This derivation is not checked in Lean.
+  `A`. This derivation is not checked in Lean.
 
 The constant is `C = 3π²/2 + 9π³/2 + 96(27ω + 2)π⁴ + 272α + (17α + 6)²` with
 `α = 2e^{2|λ|}L₁ + 1`, `ω = 2e^{2|λ|}L₂` and `L₁, L₂` Lipschitz constants of

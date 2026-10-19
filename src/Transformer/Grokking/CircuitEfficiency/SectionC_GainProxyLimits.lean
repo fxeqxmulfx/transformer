@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainPairProxy
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainPairProxy
 
 /-!
 # Actual unequal native pair-mass laws approach their balanced proxies
@@ -21,6 +23,8 @@ Efficient Gen/Mem crossing and positive limiting mass/margin are still
 separate claims. Exact reals, fixed tables, zero betas and a sufficient
 small rate differ from coupled-cost GD and preserved learned GPTMini.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

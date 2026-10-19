@@ -1,17 +1,19 @@
-import Transformer.AdamBeyond.Section3_StochMean
+module
 
-/-
+public import Transformer.AdamBeyond.Section3_StochMean
+
+/-!
 # Adam and beyond — §3: the lemma of the proof of Theorem 3
 
 For `C` large enough, Adam's step on the stochastic problem drifts upward in
 expectation: `E[x_{t+1} - x_t] ≥ 0`.
 
 **What the source says and what is carried here.**  The statement is the
-source's, for step sizes `α_t ≥ 0`.  The proof splits `m_t/√v_t` on the last
+source's, for step sizes `α_t ≥ 0`. The proof splits `m_t/√v_t` on the last
 coin as the source does, `T₁` when it is `C` and `T₂ + T₃` when it is `-1`,
 and bounds `E[T₁]` as the source does; it bounds `E[T₂]` by
 `β₁ K p/(1-γ)` with no event (`stoch_T2_le`), and `E[T₃]` by the tangent of
-`1/√x` in place of Jensen's inequality (`stoch_int_inv`).  The source's
+`1/√x` in place of Jensen's inequality (`stoch_int_inv`). The source's
 `E[T₃]` display reads `√(β₂(1+δ)C² + 1 - β₂)`, while its own estimate of
 `E[v_{t-1}]` is `≤ (1+δ)C`; the constant here is `a = 1 + (1+δ)C`, and `C₀` is
 explicit: `C₀ = max(2(1+δ), 4(1+δ)³B²/(1-β₁)²)` with
@@ -19,6 +21,8 @@ explicit: `C₀ = max(2(1+δ), 4(1+δ)³B²/(1-β₁)²)` with
 
 Source: arXiv:1904.09237, Appendix, proof of Theorem 3, the lemma.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Finset Function
 

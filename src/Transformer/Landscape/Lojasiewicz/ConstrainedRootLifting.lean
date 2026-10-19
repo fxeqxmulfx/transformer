@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.RamifiedBranchIdentity
+public import Transformer.Landscape.Lojasiewicz.AnalyticSignStability
+
+/-!
 # Ramified root branches retain finite analytic sign conditions
 
 Complete finite branch coverage and one-variable sign stability select a
@@ -6,8 +11,7 @@ branch satisfying all accumulating analytic equality and inequality
 conditions on a positive interval.
 -/
 
-import Transformer.Landscape.Lojasiewicz.RamifiedBranchIdentity
-import Transformer.Landscape.Lojasiewicz.AnalyticSignStability
+@[expose] public section
 
 open Filter Set
 

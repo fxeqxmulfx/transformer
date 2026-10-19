@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Causal.Section5_PrefixGeometry
+public import Transformer.Causal.Section5_AlignedForce
+public import Transformer.Causal.Section5_NarrowParameters
+
+/-!
 # The next nonrepelling original critical token is clustered
 
 ArXiv:2411.04990v2, §5, the critical-point induction in the
@@ -18,9 +24,7 @@ contradicts criticality. Every predecessor and frozen mass is
 retained, and all distances use the original circular metric.
 -/
 
-import Transformer.Causal.Section5_PrefixGeometry
-import Transformer.Causal.Section5_AlignedForce
-import Transformer.Causal.Section5_NarrowParameters
+@[expose] public section
 
 open scoped BigOperators
 open Real Set

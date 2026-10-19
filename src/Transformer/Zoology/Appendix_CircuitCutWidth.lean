@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_CircuitParallel
+
+/-!
 # Gate count and live-wire width are different
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: circuit-tuple` and
@@ -9,7 +13,7 @@ live gate values after its second level. It explains why a width-sensitive
 simulation needs a liveness condition in addition to level cardinality.
 -/
 
-import Transformer.Zoology.Appendix_CircuitParallel
+@[expose] public section
 
 namespace Transformer.Zoology
 

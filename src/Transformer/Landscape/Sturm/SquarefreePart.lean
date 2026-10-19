@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.EuclideanChain
+public import Mathlib.Algebra.Polynomial.Roots
+
+/-!
 # Removing multiplicities by division by the derivative gcd
 
 The construction preserves every actual real root and gives it
@@ -6,8 +11,7 @@ multiplicity one. Auxiliary for Appendix D.1, `lem: loj`, of
 arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.EuclideanChain
-import Mathlib.Algebra.Polynomial.Roots
+@[expose] public section
 
 noncomputable section
 open Polynomial

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_AngularFirstVariation
+public import Transformer.Perceptron.Section5_AngularSupport
+public import Transformer.Perceptron.Section5_StrictCurvatureWitness
+
+/-!
 # Curvature of the actual angular first variation
 
 ArXiv:2601.21366v2, §5.5, `rem:strictSOPD-perceptron` and
@@ -13,9 +19,7 @@ an arbitrary sphere probability measure before using any
 atomicity theorem or any finite Dirac presentation.
 -/
 
-import Transformer.Perceptron.Section5_AngularFirstVariation
-import Transformer.Perceptron.Section5_AngularSupport
-import Transformer.Perceptron.Section5_StrictCurvatureWitness
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory Filter

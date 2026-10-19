@@ -1,5 +1,7 @@
-import Transformer.Memorization.Section3_PrecisionData
-import Mathlib.Tactic
+module
+
+public import Transformer.Memorization.Section3_PrecisionData
+public import Mathlib.Tactic
 
 /-!
 # Certified arithmetic of the precision experiment
@@ -8,6 +10,8 @@ arXiv:2505.24832v3, Section 3.2, Table 1. These statements concern all
 the printed observations. They do not turn empirical estimates into a
 universal 3.6-bits-per-parameter capacity theorem.
 -/
+
+@[expose] public section
 
 namespace Transformer.Memorization
 

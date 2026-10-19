@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Basic
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Order
+
+/-!
 # Real threshold tests for the barycenter perturbation argument
 
 Auxiliary for arXiv:2411.04551v3, §3.2, `lem: perturbation`, Part 2.
@@ -16,9 +22,7 @@ perturbation. It asserts neither existence nor uniqueness of the
 continuity-equation solution in the source's still-open lemma.
 -/
 
-import Transformer.Interpolation.Basic
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Order
+@[expose] public section
 
 open Real MeasureTheory Filter Set
 

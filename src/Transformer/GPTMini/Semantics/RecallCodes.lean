@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.AdjacencyRouting
+module
+
+public import Transformer.GPTMini.Semantics.AdjacencyRouting
 
 /-!
 # Compact four-pair codes for the raw recall vocabulary
@@ -14,6 +16,8 @@ key/value semantic oracle is part of the encoding.
 Raw embedding/QKV realization, the effect of original RoPE and the
 latest-write/tied-readout proofs remain separate construction steps.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

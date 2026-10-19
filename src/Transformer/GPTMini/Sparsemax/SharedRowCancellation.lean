@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.SharedRowDerivative
+module
+
+public import Transformer.GPTMini.Sparsemax.SharedRowDerivative
 
 /-!
 # Counterexample to an unconditional summed-loss transfer
@@ -16,6 +18,8 @@ zero ordinary weights. Both rows are wrong, their total error is one half,
 and the matrix point is a global and local minimum. No common target fit
 exists. This is a shared-target conflict, not a one-hot saturated route.
 -/
+
+@[expose] public section
 
 noncomputable section
 

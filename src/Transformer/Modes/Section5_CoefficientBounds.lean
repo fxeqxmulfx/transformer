@@ -1,4 +1,6 @@
-import Transformer.Modes.Section5_PhaseCurve
+module
+
+public import Transformer.Modes.Section5_PhaseCurve
 
 /-!
 # Coefficient bounds for the Gaussian phase
@@ -30,6 +32,8 @@ contains its square. Keeping that factor separate lets the cofactor bound
 cancel one copy, which gives the required dependence on the argument radius.
 Source: arXiv:2412.09080v3, §5.5, proof of `eq:uniform-decay`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 open scoped Interval

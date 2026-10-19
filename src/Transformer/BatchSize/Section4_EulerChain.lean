@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_VectorItoSums
+public import Transformer.BatchSize.Section4_NoiseLipschitz
+
+/-!
 # Adapted Euler chains for the actual Brownian driver
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ These are finite stochastic approximations to the continuous diffusion.
 Every update uses a fresh Brownian increment and the current random state.
 -/
 
-import Transformer.BatchSize.Section4_VectorItoSums
-import Transformer.BatchSize.Section4_NoiseLipschitz
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal ENNReal

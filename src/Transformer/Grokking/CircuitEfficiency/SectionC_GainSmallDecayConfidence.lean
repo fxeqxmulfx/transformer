@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainSmallDecayScores
-import Transformer.Grokking.CircuitEfficiency.SectionC_TrainProbability
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainSmallDecayScores
+public import Transformer.Grokking.CircuitEfficiency.SectionC_TrainProbability
 
 /-!
 # Joint original weak-decay training confidence and CE excursions
@@ -32,6 +34,8 @@ Fixed gains/tables/plain CE and uniform native decay differ from the
 source's coupled norm-cost GD and learned stochastic/floating-point
 GPTMini. Actual native constants are unchanged throughout each path.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

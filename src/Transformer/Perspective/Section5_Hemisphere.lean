@@ -1,4 +1,10 @@
-/-
+module
+
+public import Mathlib.Analysis.Convex.Combination
+public import Transformer.Perspective.MinCurve
+public import Transformer.Perspective.Section5_HighD
+
+/-!
 # §6.1, step 1 — the minimum along `w` does not decrease
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -8,7 +14,7 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 If all the particles start in the open hemisphere `⟨x, w⟩ > 0`, none of them
 ever leaves it: `r(t) = min_i ⟨x_i(t), w⟩` is non-decreasing on `ℝ_{≥0}`.
 
-The proof is the one the survey sketches, in two halves.  `step1_deriv_nonneg`
+The proof is the one the survey sketches, in two halves. `step1_deriv_nonneg`
 is the algebraic half: at an index `i` attaining the minimum, every bracket of
 `eq: therighthandside` is non-negative, because `⟨x_j, w⟩ ≥ ⟨x_i, w⟩ ≥ 0` and
 `⟨x_i, x_j⟩ ≤ 1` by Cauchy–Schwarz on the sphere — this is exactly where the
@@ -21,15 +27,13 @@ from `ṙ ≥ 0`.
 Step 2 of the same lemma opens with `e:decompox*.step2`, the decomposition of
 `x⋆` along the particles, which the survey reads off `η x⋆` being a convex
 combination of them for some `η ∈ (0,1]`: that deduction is
-`step2_decomposition`.  That the limit `x⋆` of step 1 satisfies the cone
+`step2_decomposition`. That the limit `x⋆` of step 1 satisfies the cone
 condition is proved in `Perspective.Section5_HemisphereCone`.
 `exists_inner_le_of_mem_convexHull` is the one consequence of the hull
 Appendix D uses, `e:mineqalpha`.
 -/
 
-import Mathlib.Analysis.Convex.Combination
-import Transformer.Perspective.MinCurve
-import Transformer.Perspective.Section5_HighD
+@[expose] public section
 
 open scoped BigOperators
 
@@ -42,7 +46,7 @@ variable (d n : ℕ)
 non-negative**, as soon as that minimum is itself non-negative.
 
 `h0` and `hmin` are the two facts available at a time when `i` attains
-`min_j ⟨x_j, w⟩ ≥ 0`.  Each bracket is then
+`min_j ⟨x_j, w⟩ ≥ 0`. Each bracket is then
 `⟨x_j, w⟩ - ⟨x_i, x_j⟩ ⟨x_i, w⟩ ≥ ⟨x_i, w⟩ (1 - ⟨x_i, x_j⟩) ≥ 0`,
 and the prefactor `Z_{β,i}⁻¹` and the weights `e^{β ⟨x_i,x_j⟩}` are positive.
 
@@ -75,7 +79,7 @@ theorem step1_deriv_nonneg
 
 The hemisphere hypothesis `hinit` enters twice: it makes `r(0)` positive, and
 the conclusion feeds it back, since `r` stays above `r(0) > 0` and so
-`step1_deriv_nonneg` applies at every later time.  Without it the statement is
+`step1_deriv_nonneg` applies at every later time. Without it the statement is
 false — a pair of antipodal particles has `r ≡ -1 < 0` at one of them only
 because it is at the other, and the minimum of two curves crossing at a time
 `t` is not monotone there.
@@ -153,9 +157,9 @@ example :
 
 The survey derives it from `x⋆` lying in the convex cone of the particles:
 "there exists some `η ∈ (0,1]` such that `η x⋆` is a convex combination of the
-points `x_1(t), …, x_n(t)`, which implies" the decomposition.  That sentence is
+points `x_1(t), …, x_n(t)`, which implies" the decomposition. That sentence is
 the hypothesis `hcone` here, and dividing the convex weights by `η` is the
-proof.  The cone condition itself holds for the limit `x⋆` of step 1:
+proof. The cone condition itself holds for the limit `x⋆` of step 1:
 `Perspective.limit_mem_cone`, and the two together are
 `Perspective.step2_decomposition_of_limit`.
 

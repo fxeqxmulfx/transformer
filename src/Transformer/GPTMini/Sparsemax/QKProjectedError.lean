@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.QKProjection
-import Transformer.GPTMini.Sparsemax.QKSquaredError
+module
+
+public import Transformer.GPTMini.Sparsemax.QKProjection
+public import Transformer.GPTMini.Sparsemax.QKSquaredError
 
 /-!
 # Squared-error correction in joint Q/K projection parameters
@@ -17,6 +19,8 @@ perturbations. The row is unrotated and is read before XSA and the output
 projection. These results do not exclude cancellations in a multi-row
 objective or assert global convergence with arbitrary embeddings.
 -/
+
+@[expose] public section
 
 noncomputable section
 

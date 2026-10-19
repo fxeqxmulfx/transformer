@@ -1,4 +1,6 @@
-import Transformer.DoubleDescent.Section6_ResNetLog
+module
+
+public import Transformer.DoubleDescent.Section6_ResNetLog
 
 /-!
 # Verified epoch-wise double descent
@@ -8,6 +10,8 @@ from the authors' ResNet/Adam log. The four epochs below certify the
 reported qualitative phenomenon; they do not certify global minima or
 monotonicity between the checkpoints.
 -/
+
+@[expose] public section
 
 namespace Transformer.DoubleDescent
 

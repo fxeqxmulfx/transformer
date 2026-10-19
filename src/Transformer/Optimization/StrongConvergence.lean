@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Optimization.Descent
+public import Transformer.Optimization.StrongConvexity
+public import Mathlib.Analysis.SpecificLimits.Normed
+public import Mathlib.Analysis.Real.Sqrt
+
+/-!
 # Convergence of corrected training to a strongly convex minimum
 
 User-requested extension of arXiv:2502.16982, §2.1–2.2, and
@@ -7,10 +14,7 @@ Strong convexity and the smooth quadratic model are additional objective
 assumptions; neither manuscript asserts them for neural-network losses.
 -/
 
-import Transformer.Optimization.Descent
-import Transformer.Optimization.StrongConvexity
-import Mathlib.Analysis.SpecificLimits.Normed
-import Mathlib.Analysis.Real.Sqrt
+@[expose] public section
 
 open scoped InnerProductSpace Topology
 open Filter

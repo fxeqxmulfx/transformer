@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section2_TrainingScalarRoot
+
+/-!
 # DASH — the finite numerical candidate on a quadratic cycle
 
 arXiv:2602.02016v2, §2.2–2.3 and §3.3–3.5. The counterexample uses
@@ -7,7 +11,7 @@ momentum and current squared gradients for the Adam reference (`ν=0`).
 Both roots use one actual NDB step per call and nonzero PI starts.
 -/
 
-import Transformer.DASH.Section2_TrainingScalarRoot
+@[expose] public section
 
 open scoped Matrix
 

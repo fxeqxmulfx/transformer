@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_FieldSecondDifference
+
+/-!
 # The bound on second differences of the flow
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 3, `eq:est-Glaub-2nd`:
@@ -7,7 +11,7 @@ the mixed second difference of the flow in the initial angles of tokens `l` and
 `crossProfile` (`abs_flowMap_second_diff_le`).
 -/
 
-import Transformer.Kinetic.Section3_FieldSecondDifference
+@[expose] public section
 
 open Real
 

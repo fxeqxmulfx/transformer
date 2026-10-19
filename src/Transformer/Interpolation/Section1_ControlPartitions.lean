@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_WeakConcatenation
+public import Transformer.Interpolation.Section1_TimeRescaling
+public import Transformer.Interpolation.Section4_NeuralSpeed
+public import Mathlib.Order.Fin.Basic
+
+/-!
 # Counting original control pieces under joining and time changes
 
 ArXiv:2411.04551v3, §1, `eq: vf`, and Appendix,
@@ -17,10 +24,7 @@ and preserves its number of pieces, including for the actual output
 rescaling of both original matrices `V,W`.
 -/
 
-import Transformer.Interpolation.Section1_WeakConcatenation
-import Transformer.Interpolation.Section1_TimeRescaling
-import Transformer.Interpolation.Section4_NeuralSpeed
-import Mathlib.Order.Fin.Basic
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

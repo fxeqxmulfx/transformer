@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Modes.Section2_OscillatingField
+public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+
+/-!
 # The signed scale and disk probability law
 
 Source: arXiv:2412.09080v3, §2.1, the probability hypotheses
@@ -20,8 +25,7 @@ The example uses a genuinely positive scale interval, so the
 probability law and its small-scale events are nontrivial.
 -/
 
-import Transformer.Modes.Section2_OscillatingField
-import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 open scoped ENNReal

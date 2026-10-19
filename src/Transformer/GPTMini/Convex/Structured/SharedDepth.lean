@@ -1,6 +1,8 @@
-import Transformer.GPTMini.Convex.Structured.SharedInterface
-import Transformer.GPTMini.Convex.Structured.DepthReference
-import Transformer.Basis.Encoding.Tasks
+module
+
+public import Transformer.GPTMini.Convex.Structured.SharedInterface
+public import Transformer.GPTMini.Convex.Structured.DepthReference
+public import Transformer.Basis.Encoding.Tasks
 
 /-!
 # Actual finite learned causal head solves both raw Basis depth modes
@@ -18,6 +20,8 @@ realization or AdamW/finite-precision convergence. Complete recall and
 two-head mixing remain open. The globally convex training objective uses
 explicit raw data-derived complete state/channel labels, not output-only CE.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

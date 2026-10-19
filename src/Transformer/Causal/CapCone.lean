@@ -1,20 +1,24 @@
-/-
+module
+
+public import Transformer.Causal.ParkingCount
+
+/-!
 # Causal attention — The cone over a geodesic cap
 
 `Measure.toSphere` gives a set `C` of the sphere the mass `d · λ((0,1) · C)`,
-the Lebesgue measure of the cone over `C` inside the unit ball.  For the
+the Lebesgue measure of the cone over `C` inside the unit ball. For the
 closed geodesic cap of radius `δ` around `x` that cone is
 
   `{y : 0 < ‖y‖ < 1, ‖y‖ cos δ ≤ ⟨y, x⟩}`   (`coneCap`),
 
 and its volume does not depend on `x`, a reflection carrying one centre to
-another.  This reduces the cap masses of `Causal.CapMass` to one volume per
+another. This reduces the cap masses of `Causal.CapMass` to one volume per
 dimension, computed in polar coordinates in `Causal.CapPolar`.
 
 Source: arXiv:2411.04990v2, §"R'enyi centers vs strong R'enyi centers".
 -/
 
-import Transformer.Causal.ParkingCount
+@[expose] public section
 
 open scoped ENNReal Pointwise
 open Real MeasureTheory

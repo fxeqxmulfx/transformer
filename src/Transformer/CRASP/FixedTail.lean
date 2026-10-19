@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.FixedFinite
+
+/-!
 # Fixed-point rounding near zero and at the saturation endpoints
 
 arXiv:2506.16055v3, Appendix B.1, `def:fixed_precision`, and Appendix F,
@@ -6,7 +10,7 @@ arXiv:2506.16055v3, Appendix B.1, `def:fixed_precision`, and Appendix F,
 minus one mantissa unit, even when a small positive weight rounds to zero.
 -/
 
-import Transformer.CRASP.FixedFinite
+@[expose] public section
 
 namespace Transformer.CRASP.Fx
 

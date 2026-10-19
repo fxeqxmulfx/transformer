@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_GaussianCDF
+
+/-!
 # Exact mean and variance of Gaussian signed updates
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1 and its proof sketch.
 All expectations are integrals against genuine Gaussian probability laws.
 -/
 
-import Transformer.BatchSize.Section4_GaussianCDF
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

@@ -1,21 +1,26 @@
-/-
+module
+
+public import Transformer.Quartet.Section3_Eden
+public import Transformer.Quartet.Section3_Unbiased
+
+/-!
 # Four Over Six, and why it is not unbiased
 
 arXiv:2601.22813v2, "Quartet II: Accurate LLM Pre-Training in NVFP4 by
 Improved Unbiased Gradient Estimation" (ICML 2026), §4.2 and Appendix A.
 
 Four Over Six (Cook et al.) quantizes a block twice, with the grid maximum
-`4.0` and with `6.0`, and keeps whichever rounding came out closer.  `Quartet
+`4.0` and with `6.0`, and keeps whichever rounding came out closer. `Quartet
 II` uses it on the forward pass, where nothing has to be unbiased, and refuses
 it on the backward pass: "In the form proposed, it *does not constitute an
 unbiased estimation*, as the act of picking a lower MSE scale branch
 introduces bias, even if both scale branches are individually unbiased via
 SR."
 
-That sentence fixes the model below.  Each branch is `qSRAt c` of §3.1, which
+That sentence fixes the model below. Each branch is `qSRAt c` of §3.1, which
 is unbiased for its own `c`; the selection, however, reads the *realized*
 rounding — the errors it compares are those of the drawn E2M1 values — so it
-correlates the branch with the coins, and the expectation moves.  The paper
+correlates the branch with the coins, and the expectation moves. The paper
 validates the claim empirically (Appendix A, Figure 5: the curve for
 NVIDIA + 4/6 plateaus instead of falling as `1/B`) and gives no witness; one is
 built in `Transformer.Quartet.Section4_Bias`, where the claim is proved.
@@ -24,8 +29,7 @@ built in `Transformer.Quartet.Section4_Bias`, where the claim is proved.
 argued from pre-training loss curves, not from a statement.
 -/
 
-import Transformer.Quartet.Section3_Eden
-import Transformer.Quartet.Section3_Unbiased
+@[expose] public section
 
 namespace Transformer
 namespace Quartet
@@ -53,7 +57,7 @@ noncomputable def q46At (x : Fin (2 ^ k) → Fin 16 → ℝ) (i : Fin (2 ^ k)) (
   qSRAt (fourOverSix x i t) x i j (t j)
 
 /-- The expectation over the `16` rounding coins of one group, each uniform on
-`[0,1]`.  A branch that reads the realized rounding couples all of them, so the
+`[0,1]`. A branch that reads the realized rounding couples all of them, so the
 coins can no longer be averaged one at a time. -/
 noncomputable def meanGroup (f : (Fin 16 → ℝ) → ℝ) : ℝ :=
   ∫ t in Set.univ.pi fun _ : Fin 16 => Set.Icc (0 : ℝ) 1, f t

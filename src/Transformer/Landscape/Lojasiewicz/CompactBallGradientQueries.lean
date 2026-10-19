@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.CompactBallQueryAtlas
+public import Transformer.Landscape.Lojasiewicz.GradientMinimumCluster
+
+/-!
 # Exact scalar query tests for compact-ball gradient minimizers
 
 The finite atlas is constructed from analyticity, and comparisons retain
@@ -6,8 +11,7 @@ every point of the original ball on the candidate's energy level.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.CompactBallQueryAtlas
-import Transformer.Landscape.Lojasiewicz.GradientMinimumCluster
+@[expose] public section
 
 noncomputable section
 

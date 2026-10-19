@@ -1,5 +1,7 @@
-import Transformer.FrankWolfe.Section5_HistoryKernel
-import Transformer.FrankWolfe.Section5_Transition
+module
+
+public import Transformer.FrankWolfe.Section5_HistoryKernel
+public import Transformer.FrankWolfe.Section5_Transition
 
 /-!
 # Existence of the actual softmax attention process
@@ -17,6 +19,8 @@ The bounded nonnegative row expectation converts this integral identity
 to the original real-valued transition identity. The constructed law is
 a probability measure and has the required original initial value.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Set
 open scoped BigOperators ENNReal

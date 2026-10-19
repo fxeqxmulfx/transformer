@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.WendelCountRecurrence
+public import Transformer.Perspective.WendelCircuitSigns
+
+/-!
 # From strict linear sign patterns to spherical hemispheres
 
 For a nonempty spherical sample, a strict sign pattern realized by a nonzero
@@ -9,8 +14,7 @@ This connects the deterministic recurrence with the probability reduction in
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962).
 -/
 
-import Transformer.Perspective.WendelCountRecurrence
-import Transformer.Perspective.WendelCircuitSigns
+@[expose] public section
 
 namespace Transformer.Perspective
 

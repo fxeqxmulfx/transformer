@@ -1,8 +1,10 @@
-import Transformer.GPTMini.QKNorm
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Calculus.Deriv.Add
+module
+
+public import Transformer.GPTMini.QKNorm
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.Calculus.Deriv.Add
 
 /-!
 # Unit keys realizing prescribed QKNorm scores
@@ -21,6 +23,8 @@ key vectors, additional to QKNorm: unconstrained key learning need not
 stay in this chart. A fixed orthogonal frame requires head dimension
 at least two. Normalization epsilon may be any value at most one.
 -/
+
+@[expose] public section
 
 noncomputable section
 

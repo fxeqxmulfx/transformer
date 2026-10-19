@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.WendelProjectionIsometry
+
+/-!
 # General position in the projected Wendel sample
 
 Appending one vector to a general-position sample and projecting the old
@@ -8,7 +12,7 @@ independent. This is the nondegeneracy transfer in the dimension reduction.
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962).
 -/
 
-import Transformer.Perspective.WendelProjectionIsometry
+@[expose] public section
 
 namespace Transformer.Perspective
 

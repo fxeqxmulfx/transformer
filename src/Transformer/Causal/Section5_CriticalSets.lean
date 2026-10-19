@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Causal.Section5_PrefixCurvature
+public import Mathlib.Analysis.Calculus.Deriv.Inverse
+public import Mathlib.Topology.DiscreteSubset
+public import Mathlib.Topology.Compactness.Lindelof
+
+/-!
 # Isolated and countable critical sets for the actual frozen row
 
 ArXiv:2411.04990v2, §5, the smooth frozen specialization of
@@ -18,10 +25,7 @@ The elementary simple-zero statements below also record their
 precise derivative premises for the specialized argument.
 -/
 
-import Transformer.Causal.Section5_PrefixCurvature
-import Mathlib.Analysis.Calculus.Deriv.Inverse
-import Mathlib.Topology.DiscreteSubset
-import Mathlib.Topology.Compactness.Lindelof
+@[expose] public section
 
 open Real Set
 

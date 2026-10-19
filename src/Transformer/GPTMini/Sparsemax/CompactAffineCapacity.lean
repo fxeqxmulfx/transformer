@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.CompactAffineMinimum
-import Mathlib.LinearAlgebra.Dimension.Constructions
+module
+
+public import Transformer.GPTMini.Sparsemax.CompactAffineMinimum
+public import Mathlib.LinearAlgebra.Dimension.Constructions
 
 /-!
 # Capacity cost and genuine learned witnesses for compact values
@@ -18,6 +20,8 @@ fits; their actual sparse supports also change. Common values are genuinely
 inverse-adjusted. This capacity example states the loss of arbitrary
 memorization explicitly, rather than disguising a table in a fixed basis.
 -/
+
+@[expose] public section
 
 noncomputable section
 

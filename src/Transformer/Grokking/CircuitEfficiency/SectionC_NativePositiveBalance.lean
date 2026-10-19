@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativeLimitBalance
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativeSymmetry
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativeLimitBalance
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativeSymmetry
 
 /-!
 # Positive allocations allowed by uniform native finite-limit balance
@@ -24,6 +26,8 @@ at the limit. Native uniform decay differs from appendix C's asymmetric
 coupled circuit-norm penalty. Physical forward efficiency, learned
 stochastic features and finite-precision transfer remain separate work.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

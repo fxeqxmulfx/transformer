@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.InitialGeometry
+public import Transformer.Metastability.NotSeparated
+
+/-!
 # Numerical bounds in the projected Gaussian-mixture proposition
 
 The centred-cap condition bounds the cap height in the nontrivial range
@@ -9,8 +14,7 @@ exponential-moment estimate.
 Source: arXiv:2410.06833v1, §4, `prop: mixture.of.gaussians`.
 -/
 
-import Transformer.Metastability.InitialGeometry
-import Transformer.Metastability.NotSeparated
+@[expose] public section
 
 open Real
 

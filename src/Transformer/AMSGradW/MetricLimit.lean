@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.AMSGradW.Bounds
+
+/-!
 # A finite limit for the actual AMSGradW metric
 
 arXiv:1904.03590v4, Algorithm 1 and §6, AMSGradW extension.
 All bounds follow from the actual run, objective and initial data.
 -/
 
-import Transformer.AMSGradW.Bounds
+@[expose] public section
 
 open scoped Topology
 open Filter

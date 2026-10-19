@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.Normalization.ClusterRadii
+
+/-!
 # Comparing normalization speed factors to their asymptotic scales
 
 Table 2 and Appendix C, proof of Theorem 4.3 of arXiv:2510.22026v2.
 The starting time absorbs the initial radii and the Mix-LN switching time.
 -/
 
-import Transformer.Normalization.ClusterRadii
+@[expose] public section
 
 open scoped BigOperators
 

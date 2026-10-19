@@ -1,5 +1,7 @@
-import Transformer.Clusters.Section4_SquareDynamics
-import Transformer.Clusters.Section4_Hyperplanes
+module
+
+public import Transformer.Clusters.Section4_SquareDynamics
+public import Transformer.Clusters.Section4_Hyperplanes
 
 /-!
 # Four limiting corners contradict the codimension conjecture
@@ -29,6 +31,8 @@ The final existence theorem includes the actual rescaled dynamics.
 It refutes the source's universal conjecture; it does not substitute
 an arbitrary curve for a solution or alter the proposed bound.
 -/
+
+@[expose] public section
 
 open Real Filter Topology
 namespace Transformer.Clusters

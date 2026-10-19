@@ -1,22 +1,27 @@
-/-
+module
+
+public import Transformer.ALM.HullLift
+public import Transformer.ALM.HullLines
+
+/-!
 # The other half keeps two lines, whatever the trace does
 
 A head is two containers: `HullHalf` inserts every key into an upper envelope
 and the negated key into a lower one, and a query goes to whichever half the
-sign of `qy` selects.  `Transformer.ALM.HullLift` prices the upper half — under
+sign of `qy` selects. `Transformer.ALM.HullLift` prices the upper half — under
 the lift `k ↦ (2k, -k²)` no erase rule applies at all, so it ends holding one
-line per distinct key.  This file prices the other half, and the answer is the
+line per distinct key. This file prices the other half, and the answer is the
 opposite: `2`.
 
-The reason is the same concavity read the other way.  Negating a lifted key
+The reason is the same concavity read the other way. Negating a lifted key
 turns the score into `k² - 2kx`, which is *convex* in the key, so a key with
 one neighbour on each side is below the higher of them at every query and the
-erase loop discards it — `eraseStep_neg_liftKey`.  What survives is the two
+erase loop discards it — `eraseStep_neg_liftKey`. What survives is the two
 extremes, and `lower_envelope_eq_extremes` shows they answer every query the
 whole family would have.
 
 That is `vm-rs/alm-hull/src/bin/alm-stress.rs` measured: `262144` keys in five
-arrival orders, `upper 262144` and `lower 2` on every line of the table.  The
+arrival orders, `upper 262144` and `lower 2` on every line of the table. The
 `128` bytes per token `todo3.md` §5 measures is therefore the upper half alone,
 and halving the container is not among the ways to reclaim it.
 
@@ -24,8 +29,7 @@ Source: `todo3.md` §5; `transformer_vm/attention/hull2d_cht.h` (the two halves)
 `vm-rs/alm-hull/src/bin/alm-stress.rs`.
 -/
 
-import Transformer.ALM.HullLift
-import Transformer.ALM.HullLines
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -62,7 +66,7 @@ theorem neg_liftKey_dominated {k₁ k₂ k₃ : ℝ} (h₁₂ : k₁ < k₂) (h�
 /-- **So the erase loop fires on it.**  With both neighbours in the container,
 the middle negated key satisfies the erase relation of
 `Transformer.ALM.HullPrune`: some surviving line is at least as high at every
-query.  This is the loop of `add_line` doing on the lower half exactly what
+query. This is the loop of `add_line` doing on the lower half exactly what
 `not_eraseStep_of_lift` forbids it on the upper. -/
 theorem eraseStep_neg_liftKey {s : Finset (ℝ × ℝ)} {k₁ k₂ k₃ : ℝ}
     (h₁₂ : k₁ < k₂) (h₂₃ : k₂ < k₃) (h₂ : -liftKey k₂ ∈ s)

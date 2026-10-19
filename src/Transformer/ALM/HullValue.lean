@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ALM.HullCost
+
+/-!
 # The value the walk hands back, wherever it starts
 
 `Transformer.ALM.HullResolve` prices one end of the merge walk and
@@ -10,20 +14,20 @@ trichotomy at the index the search returns.
 at `hullProbe`: which of the three cases holds decides what `resolve` returns
 under `TieBreak::AVERAGE` — the payload of the line the search found when it
 is the only maximizer, the componentwise mean of two payloads when the walk
-merged the neighbour on one side.  `argmaxSet_resolveLatest` does the same for
+merged the neighbour on one side. `argmaxSet_resolveLatest` does the same for
 the other tie-break mode, where the order the walk merges in would matter and
 `scanCombined_comm` says it does not.
 
 Stating them at an arbitrary maximizer is what lets
 `Transformer.ALM.FloatResolve` re-use them at the index the *floating-point*
-search returns, which at a tie need not be `hullProbe`.  The corollaries here
+search returns, which at a tie need not be `hullProbe`. The corollaries here
 are the real-arithmetic case.
 
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 276-306 (the walk) and
 70-83 (`resolve`).
 -/
 
-import Transformer.ALM.HullCost
+@[expose] public section
 
 namespace Transformer
 namespace ALM

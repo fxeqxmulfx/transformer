@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.InjectedFlow
+
+/-!
 # Flows with an arbitrary drive, on a window of time
 
 **Not a statement of any paper.**  The flow
@@ -7,21 +11,21 @@
 
 where the drive `v_i(t)` is any vector: attention with any values `V`, several
 heads, a feed-forward term, an input injection — whatever a residual block adds
-to token `i`.  Only the window is required to carry the flow, so a stack of
+to token `i`. Only the window is required to carry the flow, so a stack of
 different blocks is one flow per block, each on its own window.
 
 This file holds the estimate behind `IsDrivenFlowOn.spread`
-(`Perspective.DrivenSpread`).  The injected flow of `Perspective.InjectedFlow`
+(`Perspective.DrivenSpread`). The injected flow of `Perspective.InjectedFlow`
 needed the attention term to be killed by `Proj_{x_i}` near consensus, which
-is what `V = I_d` gives.  For a general drive nothing is killed, but whatever
+is what `V = I_d` gives. For a general drive nothing is killed, but whatever
 the tokens share cancels in a *difference* `v_k - v_l`, so the Lyapunov
-function is `ψ = ⟨x_k - x_l, w₁⟩ + ⟨x_m - x_p, w₂⟩`.  Near consensus
+function is `ψ = ⟨x_k - x_l, w₁⟩ + ⟨x_m - x_p, w₂⟩`. Near consensus
 `ψ̇ ≈ ‖Proj_x w₁‖² + ‖Proj_x w₂‖²` at one point `x`, where `w₁ ≈ v_k - v_l` and
 `w₂ ≈ v_m - v_p`, and no unit `x` makes that small when `w₁`, `w₂` are
 independent (`gram_le_tangent`).
 -/
 
-import Transformer.Perspective.InjectedFlow
+@[expose] public section
 
 open scoped BigOperators
 
@@ -31,7 +35,7 @@ namespace Perspective
 variable {d n : ℕ}
 
 /-- **A driven flow on a window:** `ẋ_i = Proj_{x_i}(v_i(t))` for
-`t₀ < t < t₁`, the particles continuous on `[t₀, t₁]`.  The drive `v` is any
+`t₀ < t < t₁`, the particles continuous on `[t₀, t₁]`. The drive `v` is any
 function of time; a drive that depends on the particles is `v t = F (X t)`.
 
 Source: none — posed here; the right-hand side of `eq: albert`
@@ -114,7 +118,7 @@ within `δ`, the drives are bounded by `M`, and the drive differences
   `⟨Proj_{x_k} v_k - Proj_{x_l} v_l, w₁⟩ + ⟨Proj_{x_m} v_m - Proj_{x_p} v_p, w₂⟩ ≥ c - K δ`
 
 with `c = (‖w₁‖²‖w₂‖² - ⟨w₁, w₂⟩²) / (2(‖w₁‖² + ‖w₂‖²))` and
-`K = (L + 2M)(‖w₁‖ + ‖w₂‖) + 2 ‖w₂‖²`.  Along a driven flow the left side is the
+`K = (L + 2M)(‖w₁‖ + ‖w₂‖) + 2 ‖w₂‖²`. Along a driven flow the left side is the
 derivative of `⟨x_k - x_l, w₁⟩ + ⟨x_m - x_p, w₂⟩`. -/
 theorem le_inner_proj_sub_proj_add (X : SphereTuple d n) (v : Idx n → EucSpace d)
     (k l m p : Idx n) (w₁ w₂ : EucSpace d) {L M δ : ℝ} (hδ : 0 ≤ δ)

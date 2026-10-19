@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_TemperatureCorrelation
+public import Transformer.Homogenized.Section7_GaussianAttentionSymmetry
+public import Transformer.Homogenized.Section7_MeanOverlap
+
+/-!
 # Actual Gaussian cancellation of the original temperature linear term
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -20,9 +26,7 @@ as its first-order term. These are the original terms to which the
 proved uniform temperature Taylor remainder will be applied.
 -/
 
-import Transformer.Homogenized.Section7_TemperatureCorrelation
-import Transformer.Homogenized.Section7_GaussianAttentionSymmetry
-import Transformer.Homogenized.Section7_MeanOverlap
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

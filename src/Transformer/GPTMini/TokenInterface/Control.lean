@@ -1,5 +1,7 @@
-import Transformer.GPTMini.TokenInterface.Basic
-import Transformer.Basis.Depth
+module
+
+public import Transformer.GPTMini.TokenInterface.Basic
+public import Transformer.Basis.Depth
 
 /-!
 # Concrete actual-model controls for the integer interface
@@ -14,6 +16,8 @@ This is a satisfiable logit-margin witness, not a construction solving
 depth on all prefixes. Head epsilon is immaterial here because the output
 projections are zero; the final RMSNorm uses Python's 1e-5 epsilon.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.TokenInterface
 

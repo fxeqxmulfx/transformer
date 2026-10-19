@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_ProjectionDynamics
+
+/-!
 # A smooth ambient extension of the spherical projection flow
 
 ArXiv:2411.04551v3, §3.1, `lem: first.quadrant`, and §1,
@@ -10,7 +14,7 @@ The extension transports the actual tangent field into itself, as follows
 from the proved group law and differentiation of the original trajectories.
 -/
 
-import Transformer.Interpolation.Section3_ProjectionDynamics
+@[expose] public section
 
 open Real
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.ActiveDirection
+module
+
+public import Transformer.GPTMini.Sparsemax.ActiveDirection
 
 /-!
 # A task-loss plateau that survives a sub-unit score range
@@ -16,6 +18,8 @@ under the same absolute score bound `2/5`. The score-to-weight map itself
 has a nonzero active direction. This is a frozen row counterexample, not
 a stationary point of the entire trainable transformer.
 -/
+
+@[expose] public section
 
 noncomputable section
 

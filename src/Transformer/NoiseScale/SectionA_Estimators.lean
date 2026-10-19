@@ -1,13 +1,17 @@
-/-
+module
+
+public import Transformer.NoiseScale.Section2_Batches
+
+/-!
 # Unbiased estimates of the simple noise scale
 
-arXiv:1812.06162, Appendix A.1.  The squared norm of the batch gradient has the mean
-`E[|G_est|²] = |G|² + tr(Σ)/B`, eq. (A.1) (`integral_dotProduct_self_batchGrad`).  From the
+arXiv:1812.06162, Appendix A.1. The squared norm of the batch gradient has the mean
+`E[|G_est|²] = |G|² + tr(Σ)/B`, eq. (A.1) (`integral_dotProduct_self_batchGrad`). From the
 squared norms at two batch sizes `B_small ≠ B_big`, eq. (A.2) builds
 `|𝒢|² = (B_big|G_big|² - B_small|G_small|²)/(B_big - B_small)` and
 `𝒮 = (|G_small|² - |G_big|²)/(1/B_small - 1/B_big)` (`gradSqEst`, `traceEst`), unbiased for
 `|G|²` and `tr(Σ)` by eq. (A.1) alone (`integral_gradSqEst`, `integral_traceEst`), whatever
-the joint law of the two batches.  In the paper's data-parallel use the local batch of
+the joint law of the two batches. In the paper's data-parallel use the local batch of
 `B_small` examples is part of the global one of `B_big` (`integral_estimates_batchGrad`).
 
 For `B_small = 1` and `B_big = n`, `𝒮` is `n/(n-1)` times `|G_small|² - |G_big|²`
@@ -16,7 +20,7 @@ is their sample variance with Bessel's correction, the footnote after eq. (A.2)
 (`traceEst_one_mean`).
 -/
 
-import Transformer.NoiseScale.Section2_Batches
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped Matrix

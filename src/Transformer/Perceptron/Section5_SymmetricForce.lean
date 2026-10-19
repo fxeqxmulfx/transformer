@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_AtomicForce
+public import Transformer.Perceptron.Section5_PotentialForce
+public import Transformer.Perceptron.Section5_CircleGeodesics
+public import Transformer.Perceptron.Section5_AngularFirstVariation
+
+/-!
 # Actual stationary quadratic two-atom configurations
 
 ArXiv:2601.21366v2, §2.3, `eq: primitive.field` and
@@ -15,10 +22,7 @@ configurations for the first-order strengthening of the mass bound.
 No SOPD condition is asserted for these configurations.
 -/
 
-import Transformer.Perceptron.Section5_AtomicForce
-import Transformer.Perceptron.Section5_PotentialForce
-import Transformer.Perceptron.Section5_CircleGeodesics
-import Transformer.Perceptron.Section5_AngularFirstVariation
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

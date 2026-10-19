@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdCollapse
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdCollapse
 
 /-!
 # Complete retained native limits at the sharp strict cold threshold
@@ -31,6 +33,8 @@ tables/plain CE/uniform native decay differ from assigned coupled norm
 cost and GD in appendix C. No thermodynamic system-size scaling follows,
 and no optimizer, buffer or experiment checkpoint is changed.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

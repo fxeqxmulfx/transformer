@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section2_SliceKernel
+
+/-!
 # The actual finite joint density of the oscillating field
 
 Source: arXiv:2412.09080v3, §2.1, the joint-law condition
@@ -22,7 +26,7 @@ in the paper's hypothesis. Continuity near level zero is a
 separate property, not presumed in this calculation.
 -/
 
-import Transformer.Modes.Section2_SliceKernel
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 open scoped ENNReal

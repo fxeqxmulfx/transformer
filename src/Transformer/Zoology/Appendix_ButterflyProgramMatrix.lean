@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_BinaryButterflyTranspose
+
+/-!
 # Genuine matrix transpose and multiplication for factor products
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: kaleidoscope` and
@@ -7,7 +11,7 @@ transposes each factor. Matrix entries and matrix-vector multiplication
 are proved from the adjoint identity, not assumed in a representation.
 -/
 
-import Transformer.Zoology.Appendix_BinaryButterflyTranspose
+@[expose] public section
 
 open scoped BigOperators
 

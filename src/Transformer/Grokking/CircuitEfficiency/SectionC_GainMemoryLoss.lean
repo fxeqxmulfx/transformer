@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryCollapse
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainGradientLimits
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryCollapse
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainGradientLimits
 
 /-!
 # Actual loss and confidence limits with retained nonzero-beta memory
@@ -26,6 +28,8 @@ tables, exact reals and uniform decoupled decay differ from appendix C
 coupled-cost GD and from learned stochastic/floating-point GPTMini.
 The actual trained transformer transfer remains open.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_Swap
+
+/-!
 # The covariance inequality
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 2, `eq:est-cov-phi`: for
@@ -12,7 +16,7 @@ where `s_l(U)` bounds the change of `U` when coordinate `l` alone moves
 its supremum. It follows from the swap identity `covariance_eq_sum_swap`.
 -/
 
-import Transformer.Kinetic.Section3_Swap
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

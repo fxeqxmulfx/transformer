@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_CapRegime
+public import Transformer.Metastability.EnergyLevel
+public import Transformer.Metastability.Section4_UniformEnergy
+
+/-!
 # A nonempty energy window for metastability
 
 The energy-level question of arXiv:2410.06833v1, §4,
@@ -11,9 +17,7 @@ Consensus still witnesses nonemptiness, and the lower endpoint forces
 the required cap condition for every actual configuration in the interval.
 -/
 
-import Transformer.Metastability.Section4_CapRegime
-import Transformer.Metastability.EnergyLevel
-import Transformer.Metastability.Section4_UniformEnergy
+@[expose] public section
 
 open Real MeasureTheory
 
@@ -76,7 +80,7 @@ theorem energy_level_window_at_threshold (hd : 2 ≤ d) (hn : 2 ≤ n)
 
 /-- **Problem (sec: energy.levels).** *Metastability from an energy level.*
 
-Fix `d, n ≥ 2`, and let `U_1,…,U_n` be i.i.d. uniform on `𝕊^{d-1}`.  Can one
+Fix `d, n ≥ 2`, and let `U_1,…,U_n` be i.i.d. uniform on `𝕊^{d-1}`. Can one
 find `1 > c₂ > c₁ > 0`, depending on `β`, such that every
 `(x_1,…,x_n) ∈ (𝕊^{d-1})^n` with
 
@@ -101,7 +105,7 @@ configuration or a prescribed window width.
 **What the source says and what is changed here.**
 
 * *`IsMetastable`.*  The source asks for "metastability, as stated in
-  `thm: metastability`".  The earlier predicate kept only the conclusion of the
+  `thm: metastability`". The earlier predicate kept only the conclusion of the
   theorem and admitted `k = 0` caps, for which it held for every configuration;
   it is now the theorem with its hypotheses (a nonempty cover of the initial
   configuration by caps, `γ(β) > 0`, the bounds of `eq: lambda.3`) and its
@@ -109,16 +113,16 @@ configuration or a prescribed window width.
 * *The window is nonempty.*  The source does not say how large the window
   `[c₁, c₂]` is, and read literally the question is answered by an empty
   window: `printed_energy_level_trivial` gives, for `β > 1/2`, a `c₁ ≥ 1/(2β)`
-  with no configuration in it.  A nonempty window is required here.  That does
+  with no configuration in it. A nonempty window is required here. That does
   not make the window large: the remark of the source that "any configuration
   which breaks the symmetry of uniformly distributed random points will lead to
   metastability" would ask for more, and the source gives no size to encode.
   A window of configurations with strongly clustered tokens is not excluded by
   the statement.
-* *Large `β`.*  The source fixes `β > 0`.  `thm: metastability` needs `β > 1`,
+* *Large `β`.*  The source fixes `β > 0`. `thm: metastability` needs `β > 1`,
   and `γ(β) > 0` forces `β > (1/2) log(32 n²)` (as `α ≥ -1` and `ε < 1/16`),
   so below that no configuration is metastable in the sense of `IsMetastable`
-  and no nonempty window can work.  The statement is for `β ≥ β₀`, some `β₀`;
+  and no nonempty window can work. The statement is for `β ≥ β₀`, some `β₀`;
   the regime of the source is the low temperature limit `β → +∞`.
 
 Source: arXiv:2410.06833v1, §4, `sec: energy.levels`. -/

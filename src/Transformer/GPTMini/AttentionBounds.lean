@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.GPTMini.CausalMHA
+
+/-!
 # How large an attention head can get
 
 Everything the Pre-LN growth estimate needs about one head of `CausalMHA`,
@@ -17,7 +21,7 @@ Together: a head is bounded by twice a uniform bound on its values, with no
 dependence on the residual stream.
 -/
 
-import Transformer.GPTMini.CausalMHA
+@[expose] public section
 
 open scoped BigOperators
 open Real

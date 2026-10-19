@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section4_GaussianTails
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Probability.Independence.Basic
+
+/-!
 # Gaussian vertices: fixed balls lose their mass in high dimension
 
 For a standard Gaussian vector in `ℝ^d`, membership in a fixed ball forces
@@ -12,9 +18,7 @@ chi-square concentration about `d`. Both arguments give the same asserted
 limit; the bound here is only for a radius fixed before taking that limit.
 -/
 
-import Transformer.FrankWolfe.Section4_GaussianTails
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Probability.Independence.Basic
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped BigOperators NNReal ENNReal

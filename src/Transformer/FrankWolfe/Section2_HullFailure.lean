@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section2_Derivations
+
+/-!
 # Attention's forward pass and Frank-Wolfe — the hull need not shrink
 
 Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
@@ -6,13 +10,13 @@ Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
 `lem:convHullDecreases`.
 
 `configHull_subset_of_isHardmaxStep` holds because the step is a convex
-combination of `x_i^t` and a point of `𝒦^t`.  With a general positive
+combination of `x_i^t` and a point of `𝒦^t`. With a general positive
 diagonal value matrix `V^t` each *coordinate* of `x_i^{t+1}` is still a convex
 combination of coordinates of points of `𝒦^t`, and that is not enough: the
 source exhibits a configuration leaving its own hull, and it is proved here.
 -/
 
-import Transformer.FrankWolfe.Section2_Derivations
+@[expose] public section
 
 open scoped BigOperators
 
@@ -64,7 +68,7 @@ theorem inner_single_one (i : Fin 2) (z : EucSpace 2) :
 /-- **The remark after `lem:convHullDecreases`, proved.**
 
 Take `V = diag(3/2, 7/3)`, so that `P = (I₂ + V)⁻¹V = diag(0.6, 0.7)`, and the
-unit triangle `(x_1, x_2, x_3) = (0, e₁, e₂)` in `ℝ²`.  With a key-query matrix
+unit triangle `(x_1, x_2, x_3) = (0, e₁, e₂)` in `ℝ²`. With a key-query matrix
 for which `argmax_{y ∈ 𝒦} ⟨B x_2, y⟩ = x_3` — the functional `y ↦ ⟨e₂, y⟩`
 attains its maximum over the triangle at `e₂` and nowhere else — the
 preconditioned hardmax step sends `x_2` to
@@ -78,7 +82,7 @@ convex combination, and fails for the renormalized layer
 **What the source says and what is changed here.**  The source names `P`
 directly; here `V` is exhibited too, together with `IsPreconditioner V P`, so
 that `P` is a preconditioner of an admissible value matrix and not merely a
-diagonal matrix with entries in `(0,1)`.  The key-query matrix `B` is replaced
+diagonal matrix with entries in `(0,1)`. The key-query matrix `B` is replaced
 by the vector `a = B x_2` it enters through, and the maximizer is shown to be
 unique, so no choice of `argmax` avoids the conclusion.
 

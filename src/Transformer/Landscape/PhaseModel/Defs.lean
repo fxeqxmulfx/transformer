@@ -1,8 +1,13 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+
+/-!
 # Phase model — definitions
 
 A phase model fits one phase `ψ_i` on the circle to each token `i`, so that
-a finite set of integer relations `⟪m_r, ψ⟫ ∈ 2πℤ` holds.  Gradient descent
+a finite set of integer relations `⟪m_r, ψ⟫ ∈ 2πℤ` holds. Gradient descent
 runs on the energy `V(ψ) = Σ_r (1 - cos ⟪m_r, ψ⟫)` (`phaseEnergy`) over
 `ℝⁿ`, which vanishes exactly where every relation holds and is invariant
 under the lattice `2πℤⁿ` (`periods`); every point has a translate in the
@@ -11,14 +16,13 @@ cube `[0, 2π]ⁿ` (`cube`).
 For division in a cyclic group of order `n`, with phases indexed by discrete
 logarithms, the relation of the row `x / y = x - y` is
 `ψ_x - ψ_y - ψ_{x-y} ∈ 2πℤ`, with integer row `e_x - e_y - e_{x-y}`
-(`divisionRow`): the relation `χ(a) = χ(b) χ(a/b)` of a character `χ`.  The
-energy of a set `S` of rows is `divisionEnergy S`.  The character
+(`divisionRow`): the relation `χ(a) = χ(b) χ(a/b)` of a character `χ`. The
+energy of a set `S` of rows is `divisionEnergy S`. The character
 `x ↦ e^{2πijx/n}` of `ℤ/n` has the phases `ψ_x = 2πjx/n`
 (`characterPhase`).
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+@[expose] public section
 
 open Real
 

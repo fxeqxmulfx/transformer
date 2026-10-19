@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_MeanAxisClockGrowth
+public import Transformer.Interpolation.Section3_MeanAxisTransport
+public import Transformer.Interpolation.Section1_TimeDependentFlowBounds
+
+/-!
 # Uniform control of rank-one attention near stationary poles
 
 ArXiv:2411.04551v3, §3.2, Steps 1 and 3 of `lem: induction.barycenter`.
@@ -14,9 +20,7 @@ when choosing the clustering radius before applying the reverse phase.
 Exact time scaling also puts each actual phase in a prescribed horizon.
 -/
 
-import Transformer.Interpolation.Section3_MeanAxisClockGrowth
-import Transformer.Interpolation.Section3_MeanAxisTransport
-import Transformer.Interpolation.Section1_TimeDependentFlowBounds
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal

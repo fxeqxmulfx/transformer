@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Modes.Section2_ZeroCharts
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # A genuine regular zero-set point with a degenerate KDE query
 
 ArXiv:2412.09080v3, §2.1, the assertion about modes following
@@ -13,8 +18,7 @@ projection argument. The point uses the actual Gaussian score,
 not a prescribed derivative or an auxiliary field.
 -/
 
-import Transformer.Modes.Section2_ZeroCharts
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open Real Set
 
@@ -119,7 +123,7 @@ theorem symmetricFiveSample_pair_gaps (a : ℝ) (ha : 1 < a) (har : a < Real.sqr
     all_goals norm_num [symmetricFiveSample]
     all_goals constructor
     all_goals first
-      | (constructor <;> first | assumption | (intro he; linarith))
+      | (constructor <;> (intro he; linarith))
       | (intro he; linarith)
   intro i j hij
   refine ⟨(hp i j hij).1, ?_⟩

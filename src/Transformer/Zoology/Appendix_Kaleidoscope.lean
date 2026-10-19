@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_ButterflyTree
+
+/-!
 # The kaleidoscope matrix hierarchy
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: kaleidoscope`.
 This implementation uses power-of-two matrix sizes, as required by the
-paper's butterfly factors.  A `BB*` factor is a butterfly matrix multiplied
+paper's butterfly factors. A `BB*` factor is a butterfly matrix multiplied
 by the transpose of another, and a width-`w` hierarchy element is a
-product of `w` such factors.  Expansion takes the upper-left corner of a
+product of `w` such factors. Expansion takes the upper-left corner of a
 larger power-of-two matrix.
 -/
 
-import Transformer.Zoology.Appendix_ButterflyTree
+@[expose] public section
 
 open scoped BigOperators
 
@@ -21,7 +25,7 @@ def ButterflyTree.matrix {k : ℕ} (tree : ButterflyTree k)
     (i j : Fin (butterflyWidth k)) : ℝ :=
   tree.apply (fun t => if t = j then 1 else 0) i
 
-/-- One factor of the paper's `BB*` class.  Real `*` is transpose.
+/-- One factor of the paper's `BB*` class. Real `*` is transpose.
 Source: Appendix `def: kaleidoscope`. -/
 structure BBStar (k : ℕ) where
   left : ButterflyTree k
@@ -86,7 +90,7 @@ theorem Kaleidoscope.parameterCount_eq {k : ℕ} (K : Kaleidoscope k) :
       ring
 
 /-- A power-of-two expansion of the dimension is at least as large as the
-original dimension.  Source: Appendix `def: kaleidoscope`, `e > 0`. -/
+original dimension. Source: Appendix `def: kaleidoscope`, `e > 0`. -/
 theorem butterflyWidth_le_expanded (k e : ℕ) :
     butterflyWidth k ≤ butterflyWidth (k + e) := by
   rw [butterflyWidth_eq_pow, butterflyWidth_eq_pow]

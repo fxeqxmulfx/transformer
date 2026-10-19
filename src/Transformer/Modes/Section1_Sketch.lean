@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section1_Main
+
+/-!
 # The number of modes of a Gaussian KDE — the two intervals of the proof
 
 §1.3 of arXiv:2412.09080v3, `sec: sketch`: the truncation `eq:T` of `ℝ` to an
@@ -13,7 +17,7 @@ interval `T` on which the Gaussian approximation is valid, the inner interval
   error terms `e^{-ω(β)/4}` are meant to kill.
 
 * `prop:main-int` and `prop:main-tail` are the two propositions; both are
-  unproved here.  `thm:main-result` "follows from them provided
+  unproved here. `thm:main-result` "follows from them provided
   `1 ≪ ω(β) ≪ log log β`", and the arithmetic that makes the window the right
   one is proved: `e^{ω(β)/2}√β = o(√(β log β))` is `isLittleO_tail_sqrt` — the
   tail bound of `prop:main-tail` is negligible against the count in `T`
@@ -25,7 +29,7 @@ Source: arXiv:2412.09080v3, `sec: sketch`, `eq:T`, `eq:T'`, `prop:main-int`,
 `prop:main-tail`.
 -/
 
-import Transformer.Modes.Section1_Main
+@[expose] public section
 
 open Filter Asymptotics
 open scoped Topology ENNReal
@@ -142,7 +146,7 @@ theorem prop_main_int_T (c : ℝ) (N : ℕ → ℕ) (B : ℕ → ℝ) (hreg : Is
   sorry
 
 /-- **Proposition (prop:main-int), point 2.**  In the same regime, the expected
-number of modes of `P̂_n` in `T'` is finite and `O(√β)`.  Finiteness is
+number of modes of `P̂_n` in `T'` is finite and `O(√β)`. Finiteness is
 stated, since `expectedModesReal` reads `∞` as `0`.
 
 Not proved here.
@@ -155,7 +159,7 @@ theorem prop_main_int_T' (c : ℝ) (N : ℕ → ℕ) (B : ℕ → ℝ) (hreg : I
   sorry
 
 /-- **Proposition (prop:main-tail).**  In the same regime, the expected number
-of modes of `P̂_n` outside `T` is finite and `O(e^{ω(β)/2}√β)`.  Finiteness
+of modes of `P̂_n` outside `T` is finite and `O(e^{ω(β)/2}√β)`. Finiteness
 is stated, since `expectedModesReal` reads `∞` as `0`.
 
 Not proved here; `sec:tail` proves it by the scale-space argument.

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.NormalCrossing
+
+/-!
 # Local uniformization: operations on monomial charts
 
 One chart from normal crossings; restriction of charts to a neighbourhood;
@@ -8,7 +12,7 @@ domains of finitely many analytic maps `Φ` give charts for `f`. Auxiliary for
 Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Uniformization.NormalCrossing
+@[expose] public section
 
 open Filter Set
 open scoped Topology

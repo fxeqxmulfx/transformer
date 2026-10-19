@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_ProjectionWeakTests
+
+/-!
 # Inverse-characteristic tests after the source's time rescaling
 
 ArXiv:2411.04551v3, §3.1, the final time-rescaling step of
@@ -8,7 +12,7 @@ of `κ Proj_x w`. Conservation still holds at both phase endpoints.
 The formulas hold for every real speed; the construction uses positive ones.
 -/
 
-import Transformer.Interpolation.Section3_ProjectionWeakTests
+@[expose] public section
 
 open Real MeasureTheory
 

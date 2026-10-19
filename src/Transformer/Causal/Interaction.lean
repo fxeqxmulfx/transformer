@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Causal.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Analysis.Real.Pi.Bounds
+
+/-!
 # Causal attention — The interaction functions (§B of 2411.04990v2)
 
 The interaction potential of `eq: def_h` and its derivative,
@@ -9,7 +17,7 @@ and what the paper proves about them:
 
 `Lemma lemma:interaction` — periodicity and parity, positivity on `[0, π]`,
 the unimodality with peak at `τ_β^*`, and two-sided Gaussian bounds on both
-`h` and `g`.  The two inequalities `thm: fixed_centers` asks of them are in
+`h` and `g`. The two inequalities `thm: fixed_centers` asks of them are in
 `Causal.InteractionWindow`.
 
 Periodicity, parity, positivity and the formula for `g` are proved here; the
@@ -18,11 +26,7 @@ the unimodality of item (3) — which needs the quartic bound on the cosine
 proved there — is in `Causal.InteractionPeak`.
 -/
 
-import Transformer.Basic
-import Transformer.Causal.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Mathlib.Analysis.Real.Pi.Bounds
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -89,7 +93,7 @@ there, and for `x < π/2` because `sin x ≥ (2/π) x` there, so
 
 The threshold is the crude one the argument gives, not a sharp one: the sign
 changes at the peak `τ_β^* < β^{-1/2}` of `h_pot_unimodal`, i.e. already at
-`β x² > 1`.  What it is for is `interaction_window`, which needs the sign of
+`β x² > 1`. What it is for is `interaction_window`, which needs the sign of
 `g` at `(c - 2ε) β^{-1/2}` with `c - 2ε ≥ 5.5`.
 
 Source: arXiv:2411.04990v2, §B, `lemma:interaction` (3). -/

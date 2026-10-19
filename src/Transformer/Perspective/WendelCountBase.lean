@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.WendelProjectionGeneralPosition
+
+/-!
 # Base cases for Wendel's strict-sign count
 
 An independent family realizes every sign pattern. In zero-dimensional space,
@@ -8,7 +12,7 @@ dimension-reduction recurrence.
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962).
 -/
 
-import Transformer.Perspective.WendelProjectionGeneralPosition
+@[expose] public section
 
 namespace Transformer.Perspective
 

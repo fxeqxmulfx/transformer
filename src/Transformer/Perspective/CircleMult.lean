@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.CircleGaps
+
+/-!
 # Multiplicities and the largest gap
 
 Polyanskiy, Rigollet, Yao — arXiv:2507.22857v1, *Synchronization of mean-field
@@ -17,7 +21,7 @@ on `𝕋`, so that `N_{k+K} = N_k`) and `τ_max` for the largest gap
   (`circleGap_lt_two_pi`).
 -/
 
-import Transformer.Perspective.CircleGaps
+@[expose] public section
 
 open scoped BigOperators
 open Real

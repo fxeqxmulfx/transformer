@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section8_Polytope
+public import Mathlib.Analysis.Convex.KreinMilman
+public import Mathlib.Analysis.Calculus.LocalExtr.Basic
+
+/-!
 # Supporting hyperplanes of candidate limits
 
 The geometric part of Claim `cl:propofS` in arXiv:2305.05465v6, §8.1:
@@ -13,9 +19,7 @@ require token convergence or the assertion that all vertices are candidates.
 That latter assertion uses the dynamics of the limiting hull in the paper.
 -/
 
-import Transformer.Clusters.Section8_Polytope
-import Mathlib.Analysis.Convex.KreinMilman
-import Mathlib.Analysis.Calculus.LocalExtr.Basic
+@[expose] public section
 
 open Real Filter Topology
 

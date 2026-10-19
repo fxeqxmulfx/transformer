@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Bound
+
+/-!
 # Counting heavy atoms from the cluster-mass estimate
 
 The conditional counting step of arXiv:2601.21366v2, §3.2, `cor: bound`.
@@ -21,7 +25,7 @@ already at least one. For one shorter interval all atoms form a cluster,
 and the explicit input supplies the missing lower bound on that factor.
 -/
 
-import Transformer.Perceptron.Bound
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

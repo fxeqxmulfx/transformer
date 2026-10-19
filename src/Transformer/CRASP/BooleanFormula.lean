@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Conjunctions
+
+/-!
 # Boolean functions of finitely many formulas
 
 arXiv:2506.16055v3, Appendix E, the Boolean normalization in
@@ -6,7 +10,7 @@ arXiv:2506.16055v3, Appendix E, the Boolean normalization in
 function without increasing counting depth.
 -/
 
-import Transformer.CRASP.Conjunctions
+@[expose] public section
 
 namespace Transformer.CRASP
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.TemporalProgramComparison
+
+/-!
 # The complete truth-value induction
 
 arXiv:2506.16055v3, Appendix B.2, `thm:TLCl_to_rtfr`.
@@ -7,7 +11,7 @@ reads the formula's stored Boolean value at the final token, including BOS
 for the empty word.
 -/
 
-import Transformer.CRASP.TemporalProgramComparison
+@[expose] public section
 
 namespace Transformer.CRASP.TemporalProgram
 

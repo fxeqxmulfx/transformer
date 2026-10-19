@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section10_ProjectedHullLimit
+public import Transformer.Clusters.Section8_CandidateFinite
+
+/-!
 # Correct leading candidates lie on the relative boundary or at zero
 
 ArXiv:2305.05465v6, §10, the candidate geometry in `t:multiplicity`.
@@ -14,8 +19,7 @@ is `||A p||²`; injectivity forces `p = 0`. Thus the correct conclusion
 retains the origin, which the source's auxiliary boundary claim omits.
 -/
 
-import Transformer.Clusters.Section10_ProjectedHullLimit
-import Transformer.Clusters.Section8_CandidateFinite
+@[expose] public section
 
 open Real Filter Topology
 

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.AnalyticAtlasGradientQuery
+
+/-!
 # Joint witnesses for analytic energy-atlas arithmetic comparisons
 
 The two charts have opposite distinguished directions and the objective
@@ -6,7 +10,7 @@ is the actual squared gradient norm of a degenerate energy.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.AnalyticAtlasGradientQuery
+@[expose] public section
 
 namespace Transformer.Landscape.Lojasiewicz
 

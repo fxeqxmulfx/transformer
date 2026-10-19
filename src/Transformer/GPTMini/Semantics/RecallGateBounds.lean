@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.RecallGateMatrices
-import Transformer.GPTMini.Semantics.RecallRawCopy
+module
+
+public import Transformer.GPTMini.Semantics.RecallGateMatrices
+public import Transformer.GPTMini.Semantics.RecallRawCopy
 
 /-!
 # Bound the real first residual before table gating
@@ -17,6 +19,8 @@ all nonvalues, including the initial BOS where reciprocal-prefix
 mass need not describe XSA. Exact positive/negative table decisions
 for later value positions use the separately derived raw BOS formula.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

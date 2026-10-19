@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.ModulatedCritical
+public import Mathlib.Analysis.Analytic.Linear
+public import Mathlib.Topology.Order.Compact
+
+/-!
 # The analytic energy-gradient image and its level minima
 
 For an analytic energy the map `x ↦ (E(x), ‖∇E(x)‖²)` is analytic.
@@ -7,9 +13,7 @@ fiber has a point of minimum gradient norm. These are the elementary
 inputs to the curve-selection route for Appendix D.1 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.ModulatedCritical
-import Mathlib.Analysis.Analytic.Linear
-import Mathlib.Topology.Order.Compact
+@[expose] public section
 
 open Set
 open scoped BigOperators

@@ -1,20 +1,24 @@
-/-
+module
+
+public import Transformer.CRASP.YNormalForm
+
+/-!
 # The `Y`-normal form of `TL[◁#]^pos`: equivalence
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 (COLM 2025), Appendix F (`app:tlclpos`, "Depth Hierarchy"): `thm:ynf`.
 
 The invariant of `N^c⟦·⟧` is that `N^c⟦φ⟧` holds where `Y^c φ` does, and
-that `N^c⟦t⟧` takes at `i` the value `t` takes at `i − c`.  The paper states it
+that `N^c⟦t⟧` takes at `i` the value `t` takes at `i − c`. The paper states it
 with `i` and `i − c` exchanged, and as its transformation is written the
-invariant fails at the first `c` positions.  `Y^c φ` is false there whatever
+invariant fails at the first `c` positions. `Y^c φ` is false there whatever
 `φ` is, but `¬` and `<` do not preserve falsity: `N^1⟦¬Q_a⟧ = ¬Y Q_a` holds at
-position `1`, where `Y ¬Q_a` does not (`pushY_unguarded_unsound`).  With the
+position `1`, where `Y ¬Q_a` does not (`pushY_unguarded_unsound`). With the
 guard of `FormP.pushY` the invariant holds everywhere, and `thm:ynf` follows at
 `c = 0`.
 -/
 
-import Transformer.CRASP.YNormalForm
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
@@ -116,7 +120,7 @@ example (a : σ) (k : ℕ) : (FormP.sym a : FormP σ) ∈ TLClPos σ k := Nat.ze
 /-- **`N^c⟦·⟧` needs the guard.**  Without it the transformation of `thm:ynf`
 sends `Y ¬Q_a` to `N^1⟦¬Q_a⟧ = ¬Y Q_a`, and the two disagree on the
 one-letter string `a`: its only position has no predecessor, so `Y ¬Q_a` fails
-there while `¬Y Q_a` holds.  `Y (1 < 1 + 1)` and `N^1⟦1 < 1 + 1⟧ = 1 < 1 + 1`
+there while `¬Y Q_a` holds. `Y (1 < 1 + 1)` and `N^1⟦1 < 1 + 1⟧ = 1 < 1 + 1`
 disagree in the same way.
 
 Source: arXiv:2506.16055v3, Appendix F, proof of `thm:ynf`. -/

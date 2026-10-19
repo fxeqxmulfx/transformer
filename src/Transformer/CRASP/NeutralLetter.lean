@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Data.List.ReduceOption
+public import Transformer.CRASP.PiecewiseTestable
+
+/-!
 # A neutral letter does not change piecewise testability
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -6,16 +11,15 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 `E_k = del⁻¹(L_k)` of `thm:tlclpos_depth_hierarchy`.
 
 The theorem asserts that `E_{k+1}` is definable in `TL[◁#]^pos_{k+1}`, but its
-proof argues only the other half.  The missing half starts here: a pattern
+proof argues only the other half. The missing half starts here: a pattern
 `σ₁ ⋯ σ_k` over `Σ` is a subsequence of `del(w)` exactly when it is one of
-`w`, because no letter of the pattern is `e`.  So `del⁻¹` takes a Boolean
+`w`, because no letter of the pattern is `e`. So `del⁻¹` takes a Boolean
 combination of 𝒥-expressions over `Σ` to the same combination over
-`Σ ∪ {e}`, and `E_k` is `k`-piecewise testable because `L_k` is.  `del` is
+`Σ ∪ {e}`, and `E_k` is `k`-piecewise testable because `L_k` is. `del` is
 `List.reduceOption`, with `e` written `none`.
 -/
 
-import Mathlib.Data.List.ReduceOption
-import Transformer.CRASP.PiecewiseTestable
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

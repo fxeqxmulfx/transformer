@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.MeanField
+
+/-!
 # Kinetic theory for Transformers — the vocabulary's codewords
 
 The geometry the retrieval task of `eq:Acc-def` of arXiv:2605.09213v1,
@@ -8,13 +12,13 @@ distance the decoder minimizes, and the two facts that make the decoder a
 radius test — the codewords are `2π/M` apart, and every angle of `𝕋` is within
 `π/M` of one of them.
 
-Everything here is proved.  `Accuracy.lean` turns it into the identity of
+Everything here is proved. `Accuracy.lean` turns it into the identity of
 `eq:Acc-def`.
 
 Source: arXiv:2605.09213v1, §1.1.
 -/
 
-import Transformer.Kinetic.MeanField
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -134,7 +138,7 @@ theorem exists_codeword_close {M : ℕ} (hM : 0 < M) (θ : ℝ) :
 example : 0 < 1 := Nat.one_pos
 
 /-- **The decoder of `eq:Acc-def`:** `m̂ = argmin_{m ∈ 𝒱} |θ - ϑ_m|_𝕋`, written
-as "`m` is a word of the vocabulary and no word is closer".  `argmin` over a
+as "`m` is a word of the vocabulary and no word is closer". `argmin` over a
 finite non-empty set returns a minimizer; which one it returns on a tie is not
 determined, and this predicate says exactly that much.
 

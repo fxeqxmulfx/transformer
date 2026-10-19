@@ -1,4 +1,8 @@
-/-
+module
+
+public import Mathlib.Tactic
+
+/-!
 # Algebra of the optimizer overhead model
 
 arXiv:2606.25971v2, Appendix G. Elementwise gain work is proportional
@@ -6,7 +10,7 @@ to parameter count, forward/backward work to parameters times tokens.
 These theorems verify that model, not measured distributed throughput.
 -/
 
-import Mathlib.Tactic
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_GeneralPhaseUniqueness
+public import Transformer.Interpolation.Section3_RidgeWellPosed
+
+/-!
 # Exact autonomous phases of the original weak equation
 
 ArXiv:2411.04551v3, §1, `eq: vf` and `eq: cauchy.pb`, and the
@@ -14,8 +19,7 @@ actual weak uniqueness give the group and inverse identities for every
 such phase, and hence bijectivity of each finite composition.
 -/
 
-import Transformer.Interpolation.Section1_GeneralPhaseUniqueness
-import Transformer.Interpolation.Section3_RidgeWellPosed
+@[expose] public section
 
 open Real MeasureTheory Set
 

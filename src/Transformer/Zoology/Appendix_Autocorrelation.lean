@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_RequiredDistances
+
+/-!
 # One-hot autocorrelation and the distance-selection gap
 
 Arora et al., arXiv:2312.04927v1, Appendix `sec: data-dep-ar`,
@@ -9,7 +13,7 @@ unrelated repeated values and queries can create a larger peak. Thus a
 `Top` selector requires an additional coverage argument or assumption.
 -/
 
-import Transformer.Zoology.Appendix_RequiredDistances
+@[expose] public section
 
 open scoped BigOperators
 

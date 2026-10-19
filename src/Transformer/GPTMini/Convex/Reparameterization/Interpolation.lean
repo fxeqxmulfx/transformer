@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Reparameterization.Basic
+module
+
+public import Transformer.GPTMini.Convex.Reparameterization.Basic
 
 /-!
 # Likelihood interpolation between actual shared-key heads
@@ -17,6 +19,8 @@ The first endpoint favors the first category in only the first query row;
 the second favors the second category in only the second row. All other
 endpoint rows are uniform, with no zero or infinite scores involved.
 -/
+
+@[expose] public section
 
 noncomputable section
 

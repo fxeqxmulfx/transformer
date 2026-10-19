@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.UniformCap
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # Metastability — Two obstructions to being `(β, ε)`-separated
 
 Both read off `γ(β) = 1 - α - 8ε - β⁻¹ log(2n²/ε)` of `eq: gamma`.
@@ -14,8 +19,7 @@ Both read off `γ(β) = 1 - α - 8ε - β⁻¹ log(2n²/ε)` of `eq: gamma`.
 Source: arXiv:2410.06833v1, `hyp: init`, `eq: gamma`, `eq: alpha.dist`.
 -/
 
-import Transformer.Metastability.UniformCap
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open Real
 

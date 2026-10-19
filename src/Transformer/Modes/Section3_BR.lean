@@ -1,7 +1,12 @@
-import Transformer.Modes.Section3_Cumulants
-import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+module
 
-/-
+public import Mathlib.MeasureTheory.Group.Measure
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+
+public import Transformer.Modes.Section3_Cumulants
+public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+
+/-!
 # The cited Edgeworth condition and the Gaussian reference law
 
 §3 of arXiv:2412.09080v3 (`sec:error`) cites Bhattacharya–Rao, *Normal
@@ -28,17 +33,26 @@ i.i.d. `X₁, X₂, …` in `ℝ^k` with mean `0`, covariance `I` and
 
 * For `s = 3` the cumulants in `ψ` are the derivatives of `log 𝔼 e^{⟨u, X⟩}`
   (`cumulantOf`), as the paper defines them, so exponential moments are
-  assumed (`HasExpMoments`).  The law the paper applies it to, `Y(t)` of
+  assumed (`HasExpMoments`). The law the paper applies it to, `Y(t)` of
   `eq:Yi`, is bounded.
 
 Source: arXiv:2412.09080v3, §3, `thm:br`; Bhattacharya–Rao, Theorems 19.2–19.3.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal
 
 namespace Transformer
 namespace Modes
+
+/-- Product Lebesgue measure inherits the component Haar laws.
+Source: Mathlib's `Measure.volume_eq_prod` and `Measure.prod.instIsAddHaarMeasure`.
+The explicit identity makes this instance available across module boundaries. -/
+instance instIsAddHaarMeasureVolumeProd : Measure.IsAddHaarMeasure (volume : Measure (ℝ × ℝ)) := by
+  rw [Measure.volume_eq_prod]
+  infer_instance
 
 /-- Some power `|𝔼 e^{i⟨ξ, X⟩}|^ν`, `ν ≥ 1`, of the characteristic function of
 `μ` is integrable: the condition under which Bhattacharya–Rao, Theorem 19.2,
@@ -48,7 +62,7 @@ def HasIntegrableCharFun (μ : Measure (ℝ × ℝ)) : Prop :=
     ‖∫ x, Complex.exp (((ξ.1 * x.1 + ξ.2 * x.2 : ℝ) : ℂ) * Complex.I) ∂μ‖ ^ ν)
 
 /-- The characteristic function of `N(0, I₂)` has modulus
-`e^{-ξ₁²/2} e^{-ξ₂²/2}`.  arXiv:2412.09080v3, §3.1. -/
+`e^{-ξ₁²/2} e^{-ξ₂²/2}`. arXiv:2412.09080v3, §3.1. -/
 theorem norm_charFun_stdGauss2 (ξ : ℝ × ℝ) :
     ‖∫ x, Complex.exp (((ξ.1 * x.1 + ξ.2 * x.2 : ℝ) : ℂ) * Complex.I) ∂stdGauss2‖
       = Real.exp (-(1 / 2) * ξ.1 ^ 2) * Real.exp (-(1 / 2) * ξ.2 ^ 2) := by

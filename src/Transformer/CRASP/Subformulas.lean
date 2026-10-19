@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.DepthZero
+
+/-!
 # The finite collection of subformulas
 
 arXiv:2506.16055v3, Appendix B.2, `thm:TLCl_to_rtfr`.
@@ -6,7 +10,7 @@ The simulated formula and all its Boolean/counting descendants are
 stored in parallel Boolean coordinates.
 -/
 
-import Transformer.CRASP.DepthZero
+@[expose] public section
 
 namespace Transformer.CRASP
 

@@ -1,21 +1,25 @@
-/-
+module
+
+public import Transformer.Perspective.Section1_IPS
+public import Transformer.Perspective.Section2_GradientFlow
+public import Transformer.Perspective.Section3_SmallBeta
+public import Transformer.Perspective.ConeFields
+public import Transformer.Perspective.UniformHemisphere
+
+/-!
 # §6.1 — Exponential rate when `d ≥ n`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
 `Theorem thm: d.infty`, `eq: expconvtocons`, and the lemma it is a corollary
-of, `lem: hemisphere.clustering` (*cone collapse*).  Both are asserted for
+of, `lem: hemisphere.clustering` (*cone collapse*). Both are asserted for
 four dynamics at once: `SA`, `USA`, `eq: transformerSd.QKV` with arbitrary
 constant `Q, K` and `V = I_d`, and "the natural analogue of `USA` with these
 parameters", which the survey does not write out and which is `usaQKV` here.
 -/
 
-import Transformer.Perspective.Section1_IPS
-import Transformer.Perspective.Section2_GradientFlow
-import Transformer.Perspective.Section3_SmallBeta
-import Transformer.Perspective.ConeFields
-import Transformer.Perspective.UniformHemisphere
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -57,7 +61,7 @@ def ExpConvergent (dyn : (ℝ → SphereTuple d n) → Prop) (X₀ : SphereTuple
 /-- **Lemma (lem: hemisphere.clustering).** *Cone collapse.*
 
 Let `(x_i(0))_{i ∈ [n]} ∈ (𝕊^{d-1})^n` lie in an open hemisphere:
-`⟨x_i(0), w⟩ > 0` for some `w ∈ 𝕊^{d-1}` and every `i`.  Then there are
+`⟨x_i(0), w⟩ > 0` for some `w ∈ 𝕊^{d-1}` and every `i`. Then there are
 `x⋆ ∈ 𝕊^{d-1}` and `C, λ > 0` with `‖x_i(t) - x⋆‖ ≤ C e^{-λ t}` for all `i`
 and `t ≥ 0`, for the solution of `SA` and of `USA`, and — for arbitrary
 `d × d` matrices `Q, K` — of `eq: transformerSd.QKV` with `V = I_d` and of
@@ -65,21 +69,21 @@ and `t ≥ 0`, for the solution of `SA` and of `USA`, and — for arbitrary
 
 **What the source says and what is changed here.**  The survey assumes
 `β > 0`, and states the lemma for `n ≥ 1` and `d ≥ 2` ("which holds for any
-`n ≥ 1` and `d ≥ 2`").  None of them is used, and all are dropped: the proof
+`n ≥ 1` and `d ≥ 2`"). None of them is used, and all are dropped: the proof
 needs of the weights `a_ij = c_i e^{β⟨Q x_i, K x_j⟩}` only that they lie in
 some `[m, M]` with `m > 0`, which holds for every real `β` — on the sphere
 they lie in `[e^{-2L}/n, e^{2L}/n]`, `L = |β| ‖Q‖ ‖K‖`
-(`softmaxNorm_bounds`, `usaNorm_bounds`) — and `n = 0` is vacuous.  A
+(`softmaxNorm_bounds`, `usaNorm_bounds`) — and `n = 0` is vacuous. A
 solution is one on all of `ℝ`, as `SA`, `USA`, `transformerODE` and `usaQKV`
 are defined, where the survey's Cauchy problem is posed on `ℝ_{≥0}`; the
 survey's "the unique solution" is `ExpConvergent`'s "every solution through
 `X₀`", and uniqueness is how one `x⋆` serves them all
 (`expLimit_of_attnField`).
 
-The proof is not the survey's.  The survey first obtains `x⋆` qualitatively
+The proof is not the survey's. The survey first obtains `x⋆` qualitatively
 (`eq: qual.conv`), then integrates `α̇ ≥ (1 - α)/(2 n e^{2β})` for
 `α(t) = min_i ⟨x_i(t), x⋆⟩` (`e:diffineqalpha.step2`; its integration is
-`exp_rate_of_diffineqalpha`).  Here the chart `y = x / ⟨x, w⟩` of the
+`exp_rate_of_diffineqalpha`). Here the chart `y = x / ⟨x, w⟩` of the
 hemisphere makes the flow a consensus dynamics
 `ẏ_i = Σ_j b_ij (y_j - y_i)`, `b_ij ≥ m r₀`, whose width decays like
 `e^{-2 m r₀ t}` (`Perspective.ConeWidth`); the `y_i` converge at that rate to
@@ -145,7 +149,7 @@ surely there exist `x⋆ ∈ 𝕊^{d-1}` and constants `C, λ > 0` such that
 
 for the solution of `SA`, of `USA`, and — for arbitrary `d × d` matrices `Q`
 and `K` — of `eq: transformerSd.QKV` with `V = I_d` and of its `USA` analogue
-`usaQKV`.  `x⋆`, `C` and `λ` depend on the dynamics; the null set does not
+`usaQKV`. `x⋆`, `C` and `λ` depend on the dynamics; the null set does not
 depend on `Q, K`, which is how "almost surely … arbitrary `Q, K`" reads.
 
 The proof is the survey's: almost surely the initial points lie in an open
@@ -154,7 +158,7 @@ independent, and independent points lie in one), and `cone_collapse` applies
 to every such initial sequence.
 
 **What the source says and what is changed here.**  The survey assumes
-`n ≥ 1` and `β > 0`.  Neither is used and both are dropped, as in
+`n ≥ 1` and `β > 0`. Neither is used and both are dropped, as in
 `cone_collapse`: the theorem holds for every real `β`, and for `n = 0` the
 uniform law, a probability measure on the sphere, supplies the point `x⋆`.
 Solutions are taken on all of `ℝ` and "the unique solution" is "every
@@ -162,7 +166,7 @@ solution through `X₀`", as in `cone_collapse`.
 
 *Almost surely* is part of the statement and not a turn of phrase: for `n = 2`
 the antipodal pair admits no such rate for `SA` at any `β`
-(`antipodalPair_not_exponential`), so the `∀ X₀` reading is false.  The
+(`antipodalPair_not_exponential`), so the `∀ X₀` reading is false. The
 initial sequence is drawn from the uniform law `UniformTuple` of §4.
 
 Source: arXiv:2312.10794v5, §6.1, `thm: d.infty`, `eq: expconvtocons`. -/

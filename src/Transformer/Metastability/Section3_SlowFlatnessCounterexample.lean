@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Metastability.Section3_SlowManifold
+public import Transformer.Metastability.Section3_EnergyAlgebra
+public import Mathlib.Analysis.Real.Pi.Bounds
+
+/-!
 # The unrestricted slow manifold does not satisfy the required flatness
 
 ArXiv:2410.06833v1, §3.1 (H2), and §3.2, `eq: otto.attention`.
@@ -19,9 +25,7 @@ the part of the slow manifold contained in the original caps.
 No definition of `𝒩_β` or of the energy is changed.
 -/
 
-import Transformer.Metastability.Section3_SlowManifold
-import Transformer.Metastability.Section3_EnergyAlgebra
-import Mathlib.Analysis.Real.Pi.Bounds
+@[expose] public section
 
 open scoped BigOperators
 open Real

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.PairedRecallGeometry
+module
+
+public import Transformer.GPTMini.Sparsemax.PairedRecallGeometry
 
 /-!
 # A genuine width-eight recall head with bounded original values
@@ -15,6 +17,8 @@ thirty, distinct keys score at most twenty-nine, and nonkeys score zero. All
 coordinates fit cap four. Later routing uses actual sparsemax Eq. (1) from
 arXiv:1602.02068v2, not a supplied inference response or pair-value dictionary.
 -/
+
+@[expose] public section
 
 noncomputable section
 

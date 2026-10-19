@@ -1,17 +1,21 @@
-/-
+module
+
+public import Transformer.Surge.Section2_SmallBatch
+
+/-!
 # The small batch approximation
 
-arXiv:2405.14578, §2.1, Theorem 3, proved in Appendix D.  The proof replaces
-`𝓔_i(B) = erf(√(B/2)μ_i/σ_i)` by `√(2B/π)μ_i/σ_i` when `B ≪ πσ_i²/(2μ_i²)`, eq. (39).  Their
+arXiv:2405.14578, §2.1, Theorem 3, proved in Appendix D. The proof replaces
+`𝓔_i(B) = erf(√(B/2)μ_i/σ_i)` by `√(2B/π)μ_i/σ_i` when `B ≪ πσ_i²/(2μ_i²)`, eq. (39). Their
 ratio tends to `1` as `B → 0` (`tendsto_signMean_div_signLin`): both are `(2/√π)(μ_i/σ_i)√(B/2)`
-to first order (`tendsto_signMean_div_sqrt`, `signLin_div_sqrt`).  So does the ratio of the
+to first order (`tendsto_signMean_div_sqrt`, `signLin_div_sqrt`). So does the ratio of the
 learning rate of eq. (9) to the one with `√(2B/π)μ_i/σ_i`, the first line of eq. (40), when
 `M = Σμ_i²/σ_i ≠ 0` and `ΣH_ii ≠ 0` (`tendsto_lrSign_div_lrSign_signLin`): divided by `√(B/2)`,
-both tend to `(2/√π)M/ΣH_ii` (`tendsto_lrSign_div`).  With the paper's `ΣH_ii > 0` and `S > 0`,
+both tend to `(2/√π)M/ΣH_ii` (`tendsto_lrSign_div`). With the paper's `ΣH_ii > 0` and `S > 0`,
 this is the "≈" of eq. (13) (`tendsto_lrSign_div_peak`).
 -/
 
-import Transformer.Surge.Section2_SmallBatch
+@[expose] public section
 
 open Filter Topology Real
 

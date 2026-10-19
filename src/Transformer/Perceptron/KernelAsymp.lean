@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Kernel
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Analysis.Real.Pi.Bounds
+
+/-!
 # Perceptrons and attention's mean-field landscape — `θ_c(β)` for large `β`
 
 The large-`β` expansion of the concavity window of `lem: concavity` of
@@ -7,15 +13,13 @@ arXiv:2601.21366v2, `θ_c(β) = β^{-1/2} + O(β^{-3/2})`.
 The proof reads everything off the quadratic `β c² + c - β = 0` that
 `c = cos θ_c` solves (`quadratic_cos_thetaC`): it says `β sin²θ_c = cos θ_c`,
 so `sin²θ_c = 1/β + O(β^{-2})`, and `θ - θ³/6 < sin θ ≤ θ` carries this over
-to `θ_c² = 1/β + O(β^{-2})`.  Then
+to `θ_c² = 1/β + O(β^{-2})`. Then
 `|θ_c - β^{-1/2}| = |θ_c² - 1/β| / (θ_c + β^{-1/2}) ≤ 3β^{-3/2}`.
 
 Source: arXiv:2601.21366v2, `lem: concavity`.
 -/
 
-import Transformer.Perceptron.Kernel
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Mathlib.Analysis.Real.Pi.Bounds
+@[expose] public section
 
 open Real
 
@@ -62,7 +66,7 @@ example : 1 - 1 ≤ (1 : ℝ) ^ 2 * thetaC 1 ^ 2 ∧ (1 : ℝ) ^ 2 * thetaC 1 ^ 
 
 /-- **Lemma (lem: concavity), the large-`β` expansion.**
 `θ_c(β) = β^{-1/2} + O(β^{-3/2})` as `β → ∞`, written with `β^{-1/2} = 1/√β`
-and `β^{-3/2} = 1/(β√β)` so that no real power is needed.  The constant is
+and `β^{-3/2} = 1/(β√β)` so that no real power is needed. The constant is
 `3`, from `β = 1` on.
 
 Source: arXiv:2601.21366v2, `lem: concavity`. -/

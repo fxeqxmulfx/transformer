@@ -1,30 +1,34 @@
-/-
+module
+
+public import Transformer.ALM.FloatGrid
+public import Transformer.ALM.HullValue
+
+/-!
 # The value the running code returns
 
 `Transformer.ALM.FloatWalk` ends at a set: on integer data the lines the two
 merge loops collect are exactly the maximizers, and there are at most two of
-them.  `Transformer.ALM.HullValue` ends at a value, but at the index the
-*exact* search returns.  The last line of `HullHalf::query` is
+them. `Transformer.ALM.HullValue` ends at a value, but at the index the
+*exact* search returns. The last line of `HullHalf::query` is
 `combined.resolve(tb, out)`, and what it writes into `out` had no statement in
 the arithmetic that runs: at a tie the floating-point search need not land on
 `hullProbe`, so the real-arithmetic theorem does not apply to it.
 
-`fp_query_resolve` and `fp_query_resolveLatest` state it.  Both are
+`fp_query_resolve` and `fp_query_resolveLatest` state it. Both are
 `argmaxSet_resolve` at `fpProbe` — legitimate because that index is a
 maximizer (`fpProbe_mem_argmaxSet_of_int`) and because `argmaxSet_resolve` was
 stated at an arbitrary maximizer — with the tie set rewritten as the set the
-loops actually collect (`fp_walk_collects_of_grid`).  So the conclusion is
+loops actually collect (`fp_walk_collects_of_grid`). So the conclusion is
 about the index the running search returns, the comparison the running loops
 make, and the value the running `resolve` writes out, under three conditions
-on the arithmetic and none on the query.  `fp_query_cost_total` carries the
+on the arithmetic and none on the query. `fp_query_cost_total` carries the
 price over the same way: the search costs what the index charges for it, and
 the loops merge at most one line.
 
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 268-306.
 -/
 
-import Transformer.ALM.FloatGrid
-import Transformer.ALM.HullValue
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -86,7 +90,7 @@ theorem fp_query_resolveLatest (S : FPScore) (F : FPArith) [Nonempty (Fin n)]
 
 /-- **And the price, in the arithmetic that runs.**  `hullQuery_cost_total`
 charges the search and bounds the merges at `hullProbe`; the same two bounds
-hold of the running query.  The search count is unchanged — `bcount` depends
+hold of the running query. The search count is unchanged — `bcount` depends
 on the length of the range and not on how the comparisons come out — and the
 merge bound is the trichotomy above: the loops merge at most one line on top
 of the one the search found.

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.ContextMemory
+module
+
+public import Transformer.GPTMini.Sparsemax.ContextMemory
 
 /-!
 # Exact embedding recovery with a dictionary-size width bound
@@ -14,6 +16,8 @@ The spectral proof below retains the explicit dimension in Mathlib's
 the width; their proofs already use an orthonormal eigenvector basis.
 The bound grows with the dictionary and does not imply constant head width.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,6 @@
-import Transformer.Grokking.AdamW.SquareHistory
+module
+
+public import Transformer.Grokking.AdamW.SquareHistory
 
 /-!
 # Uniform actual corrected AdamW direction bounds
@@ -24,6 +26,8 @@ task generalization is implied by numerical boundedness. Exact-real
 estimates do not certify floating-point kernels. Frozen optimizer
 states and training schedules are unchanged.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

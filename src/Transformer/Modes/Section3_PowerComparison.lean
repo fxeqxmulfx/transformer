@@ -1,5 +1,8 @@
-import Transformer.Modes.Section3_PowerDerivatives
-import Transformer.Modes.Section3_GaussianComparison
+module
+
+public import Transformer.Modes.Section3_PowerDerivatives
+public import Transformer.Modes.Section3_GaussianComparison
+
 /-!
 # Comparing the first two derivatives of characteristic powers
 
@@ -22,6 +25,7 @@ These fixed thresholds are sufficient for the eventual estimates
 of the normalized sums in the manuscript.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

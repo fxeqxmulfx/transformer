@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Kinetic.MeanField
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+
+/-!
 # Smooth position tests obstruct the printed uniform mean-field rate
 
 ArXiv:2605.09213v1, §1.1, `th:mf-gpt` (ii),
@@ -19,9 +25,7 @@ printed uniform bound, including for jointly smooth test functions;
 it does not dispute convergence for each fixed continuous test.
 -/
 
-import Transformer.Kinetic.MeanField
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory Filter Set

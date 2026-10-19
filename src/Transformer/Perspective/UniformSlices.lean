@@ -1,8 +1,13 @@
-/-
+module
+
+public import Transformer.Perspective.UniformAtomless
+public import Mathlib.MeasureTheory.Integral.Marginal
+
+/-!
 # Sets of tuples with thin slices are null for the uniform law
 
 `Perspective.UniformTuple` is the product `σ^{⊗ n}` of a rotation-invariant
-law, which has no atoms once `d ≥ 2` (`Perspective.SphereInvariant`).  By
+law, which has no atoms once `d ≥ 2` (`Perspective.SphereInvariant`). By
 Fubini, a measurable set of tuples is then null as soon as its slices along
 one fixed coordinate — the positions of that particle with all the others
 frozen — have at most one point each (`measure_eq_zero_of_slices`).
@@ -13,8 +18,7 @@ Appendix A) are recognized: the tuples with vanishing barycentre
 `Perspective.AppendixA_Cone`.
 -/
 
-import Transformer.Perspective.UniformAtomless
-import Mathlib.MeasureTheory.Integral.Marginal
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open MeasureTheory

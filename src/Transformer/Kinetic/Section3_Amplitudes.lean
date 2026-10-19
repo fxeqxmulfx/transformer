@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_PairSums
+
+/-!
 # The amplitudes of the envelopes
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 5: for `α ≥ max(1, L₁)` and
@@ -10,7 +14,7 @@ ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 5: for `α ≥ max(1, L
 through `q`, its `e^{√(CT log(i/k))}`.
 -/
 
-import Transformer.Kinetic.Section3_PairSums
+@[expose] public section
 
 open Real
 

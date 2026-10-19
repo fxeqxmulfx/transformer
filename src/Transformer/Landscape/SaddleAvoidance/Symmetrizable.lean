@@ -1,17 +1,21 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Global
+
+/-!
 # Saddle avoidance — symmetrizable derivatives
 
 The avoidance theorem for maps, `measure_tendsto_symmetricUnstable_eq_zero`,
-asks for a symmetric derivative at the unstable fixed point.  It suffices that
+asks for a symmetric derivative at the unstable fixed point. It suffices that
 the derivative be conjugate to a symmetric map by a continuous linear
 automorphism `T` (`IsSymmetrizableUnstable`); in finite dimension these are
-the derivatives diagonalizable with real eigenvalues.  The derivative
+the derivatives diagonalizable with real eigenvalues. The derivative
 `exp (-G(z) ∇²f(z))` of the time-one map of `ẋ = -G(x) ∇f(x)` at a critical
 point `z` is one when `G(z)` is symmetric positive definite.
 
 * The conjugate `T ∘ g ∘ T⁻¹` has the derivative `T Dg(z) T⁻¹` at `T z`
   (`hasFDerivAt_conj`), symmetric with the eigenvalues of `Dg(z)`, and its
-  iterates are those of `g` conjugated (`conj_iterate`).  So the starts whose
+  iterates are those of `g` conjugated (`conj_iterate`). So the starts whose
   `g`-orbit stays within `r / (‖T‖ + 1)` of `z` lie in the preimage under `T`
   of a stay set of `T ∘ g ∘ T⁻¹`, null by `exists_measure_stayNear_eq_zero`,
   and `T` preserves null sets (`exists_measure_stayNear_eq_zero_of_conj`).
@@ -24,7 +28,7 @@ This is the proof of `thm:main-general` in §4 of arXiv:1710.07406 for fixed
 points with a symmetrizable derivative.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Global
+@[expose] public section
 
 open Set Metric Filter MeasureTheory
 open scoped Topology
@@ -108,7 +112,7 @@ theorem exists_measure_stayNear_eq_zero_of_conj (μ : Measure E) [μ.IsAddHaarMe
 
 /-- **The starts converging to points with null stay sets form a null set.**
 Let `g` be `C¹`, map `S` into itself, and have a derivative of nonzero
-determinant on `S`.  If every point with the property `P` has a null stay set
+determinant on `S`. If every point with the property `P` has a null stay set
 `stayNear g z r` for some `r > 0`, the starts in `S` whose orbit converges to
 such a point form a null set: countably many of the balls `B(z, r_z)` cover
 these points (Lindelöf), and an orbit converging into one of them lies from

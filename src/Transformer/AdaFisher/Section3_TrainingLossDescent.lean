@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_TrainingCoefficients
+public import Transformer.AdaFisher.Section3_TrainingInner
+
+/-!
 # AdaFisher — actual loss descent up to the controlled momentum error
 
 arXiv:2405.16397v3, §3.4 and Appendix A.2, full-gradient specialization.
@@ -6,8 +11,7 @@ The KF metric is allowed to change arbitrarily within its derived bounds.
 The explicit error term replaces an assumed gradient-alignment premise.
 -/
 
-import Transformer.AdaFisher.Section3_TrainingCoefficients
-import Transformer.AdaFisher.Section3_TrainingInner
+@[expose] public section
 
 open scoped InnerProductSpace
 

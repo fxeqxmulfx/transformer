@@ -1,4 +1,14 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.Section3_Factorization
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.FDeriv.Linear
+public import Mathlib.Topology.Algebra.Module.FiniteDimension
+public import Mathlib.Analysis.Matrix.Normed
+
+/-!
 # Gradient splitting for the fused weight
 
 arXiv:2606.25971v2, §3.1, Algorithm 1, and Appendix A, Algorithm 2.
@@ -6,13 +16,7 @@ These are adjoint identities for the actual differential of the factorization.
 The following module uses them to prove a loss chain rule.
 -/
 
-import Transformer.MagnitudeDirection.Section3_Factorization
-import Mathlib.Analysis.Calculus.Deriv.Prod
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.FDeriv.Linear
-import Mathlib.Topology.Algebra.Module.FiniteDimension
-import Mathlib.Analysis.Matrix.Normed
+@[expose] public section
 
 open scoped BigOperators Matrix.Norms.Elementwise
 

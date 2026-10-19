@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.ALM.Defs
+public import Transformer.ALM.Lattice
+
+/-!
 # The construction as implemented: scalar integer keys
 
 The `LookUp` primitive compiles to a head with *distinct integer scalar* keys.
@@ -10,8 +15,7 @@ Contrast `softmax_winner_ge`, whose bound `1 - (n-1)e^{-β}` is vacuous once
 `n > 1 + e^{β}`.
 -/
 
-import Transformer.ALM.Defs
-import Transformer.ALM.Lattice
+@[expose] public section
 
 open scoped BigOperators
 open Real

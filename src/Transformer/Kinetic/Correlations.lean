@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.CorrelationEquations
+
+/-!
 # Kinetic theory for Transformers — the limiting correlations
 
 Formalization of `th:lost` of arXiv:2605.09213v1,
@@ -7,11 +11,11 @@ Formalization of `th:lost` of arXiv:2605.09213v1,
 The autocorrelation `Â^N_φ` of a token with its own initial value converges, at rate `N^{-ζ}`, to
 the solution `A_φ` of the transported equation `eq:Aphi-lambda`; the cross-correlation
 `N Ĉ^N_φ` of a token with an earlier one converges to the solution `C_φ` of the linearization
-`eq:Cphi-lambda`, forced at the source position through the graphon.  The equations and the
+`eq:Cphi-lambda`, forced at the source position through the graphon. The equations and the
 observables are in `Transformer.Kinetic.CorrelationEquations`.
 -/
 
-import Transformer.Kinetic.CorrelationEquations
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory ProbabilityTheory
@@ -50,36 +54,36 @@ use, since a weak solution is determined only up to a null set in `θ`.
 **How the two constants are quantified.**  The source's `≲_{ζ,φ}` names its
 implicit prefactor's dependence: on `ζ`, on the test function `φ`, and — as
 data fixed by the standing assumption — on `δ`, `γ` and the constant of
-`eq:init-conv`.  The exponent `C` of `⟨n⟩^C e^{Ct}` is written explicitly and
-is a constant of the model alone.  So `C` is quantified outside `φ` and outside
-that data, and the prefactor `K` after them.  A single constant uniform in `ζ`
+`eq:init-conv`. The exponent `C` of `⟨n⟩^C e^{Ct}` is written explicitly and
+is a constant of the model alone. So `C` is quantified outside `φ` and outside
+that data, and the prefactor `K` after them. A single constant uniform in `ζ`
 and `φ` would be a strengthening the source does not claim, and is the shape
 this statement had before the audit.
 
 **What the source says and what is changed here.**
 
-* *The initial profile.*  The source takes `f_∘ ∈ C⁰([0,1]; 𝒫(𝕋))`.  The statement had an
+* *The initial profile.*  The source takes `f_∘ ∈ C⁰([0,1]; 𝒫(𝕋))`. The statement had an
   arbitrary function `f₀ : ℝ → ℝ → ℝ` — with no positivity, no unit mass and no continuity — and
   now assumes `IsProbabilityProfile f₀`.
 * *The test function.*  The source takes `φ ∈ C^∞(𝕋)`; the statement had every `φ : ℝ → ℝ`, for
   which the covariances are integrals of non-measurable or non-integrable functions and the
-  initial datum of `eq:Aphi-lambda` is junk.  It is now smooth and `2π`-periodic.
+  initial datum of `eq:Aphi-lambda` is junk. It is now smooth and `2π`-periodic.
 * *The cross-correlation is estimated for distinct tokens.*  The source states `eq:estim-CNC` for
-  all `σ₀ < σ`.  When `⌈Nσ₀⌉ = ⌈Nσ⌉` — both in one cell of the grid — `Ĉ^N_φ = 0` by the
+  all `σ₀ < σ`. When `⌈Nσ₀⌉ = ⌈Nσ⌉` — both in one cell of the grid — `Ĉ^N_φ = 0` by the
   indicator of `eq:def-Covn-2`, whereas `Ĉ_φ(t,σ,n;σ₀)` does not tend to `0` as `σ ↓ σ₀`: the
   coefficient `k_λ(σ,σ₀)` of the forcing in `eq:Cphi-lambda` tends to `λ (1 - e^{-λσ₀})⁻¹ > 0`
-  (`σ₀⁻¹` at `λ = 0`).  For `f_∘ ≡ 1` one has `V[f] = 0`, `A_φ = φ - ∫_𝕋 φ`, and in Fourier
+  (`σ₀⁻¹` at `λ = 0`). For `f_∘ ≡ 1` one has `V[f] = 0`, `A_φ = φ - ∫_𝕋 φ`, and in Fourier
   `∂_t Ĉ_φ = a_n(∫_{σ₀}^σ k_λ(σ,σ') Ĉ_φ(t,σ') dσ' + k_λ(σ,σ₀) φ̂(n))`, so
-  `Ĉ_φ(t,σ,n;σ₀) → t a_n λ (1 - e^{-λσ₀})⁻¹ φ̂(n)` as `σ ↓ σ₀`.  Along `N → ∞` with `σ` and `σ₀`
-  in one cell the bound `N^{-ζ} → 0` cannot hold.  The source's proof (Step 1) works with the
+  `Ĉ_φ(t,σ,n;σ₀) → t a_n λ (1 - e^{-λσ₀})⁻¹ φ̂(n)` as `σ ↓ σ₀`. Along `N → ∞` with `σ` and `σ₀`
+  in one cell the bound `N^{-ζ} → 0` cannot hold. The source's proof (Step 1) works with the
   token indices `ℓ ≤ j`, and the case `ℓ = j` carries no cross-correlation; the estimate is
-  therefore asked for `j₀ < j` (the autocorrelation estimate is unchanged).  This derivation is
+  therefore asked for `j₀ < j` (the autocorrelation estimate is unchanged). This derivation is
   from the equations, not checked in Lean.
 * *Densities, not measures (not repaired).*  The source's `f_∘`, `f`, `A_φ`, `C_φ` are measures or
   distributions on `𝕋` — its own example `f_∘ = Σ_m p_m(σ) δ_{ϑ_m}` is not a density, and for such
   data `C_φ` carries derivatives of the atoms, which is why its estimates are on Fourier
-  coefficients.  Here they are densities, the form in which `eq:Aphi-lambda` and `eq:Cphi-lambda`
-  are written in `CorrelationEquations`.  The theorem is thus for profiles whose correlation
+  coefficients. Here they are densities, the form in which `eq:Aphi-lambda` and `eq:Cphi-lambda`
+  are written in `CorrelationEquations`. The theorem is thus for profiles whose correlation
   solutions are functions; the existence of those solutions is not asserted, only their uniqueness
   (at the Fourier level) and the estimates for solutions that exist.
 

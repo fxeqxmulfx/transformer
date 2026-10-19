@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section3_Standardized
+
+/-!
 # The number of modes of a Gaussian KDE — bounds for the centered summand
 
 The boundedness argument for `lem:eta` of arXiv:2412.09080v3. The first
@@ -9,7 +13,7 @@ pointwise; its second moment then controls every higher moment.
 Source: arXiv:2412.09080v3, `eq:Yi`, `lem:eta`, §5.3.
 -/
 
-import Transformer.Modes.Section3_Standardized
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

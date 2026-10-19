@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_WeakContinuity
+public import Mathlib.Geometry.Manifold.SmoothApprox
+
+/-!
 # A uniform time modulus for continuous tests of weak solutions
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, with applications to
@@ -15,8 +20,7 @@ pair of times. No uniqueness or time regularity of the measure curve
 is added to the definition of a solution.
 -/
 
-import Transformer.Interpolation.Section1_WeakContinuity
-import Mathlib.Geometry.Manifold.SmoothApprox
+@[expose] public section
 
 open Real MeasureTheory Filter Set
 

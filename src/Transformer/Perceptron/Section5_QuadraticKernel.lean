@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_LinearKernel
+
+/-!
 # The original exponential kernel tested against quadratic functions
 
 ArXiv:2601.21366v2, §5.1, `eq:FH-basic` and `lem: quadpol` (i),
@@ -18,7 +22,7 @@ The actual quadratic integral is defined directly below; neither its
 symmetry, coefficients nor polynomial preservation are assumed.
 -/
 
-import Transformer.Perceptron.Section5_LinearKernel
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped ENNReal

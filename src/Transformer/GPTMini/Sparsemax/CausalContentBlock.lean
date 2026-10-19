@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.CausalContentBits
-import Transformer.GPTMini.Sparsemax.CubeContentBudget
+module
+
+public import Transformer.GPTMini.Sparsemax.CausalContentBits
+public import Transformer.GPTMini.Sparsemax.CubeContentBudget
 
 /-!
 # An expressive causal content block with a jointly affine learned forward
@@ -18,6 +20,8 @@ token code, free physical embeddings, GPTMini normalization, a trainable
 layer stack and FFN/language objectives are separate questions. A convex
 criterion is preserved conditionally; no empirical Basis pass is claimed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

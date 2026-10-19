@@ -1,10 +1,14 @@
-/-
+module
+
+public import Transformer.Causal.CapSpace
+
+/-!
 # Causal attention — The uniform cap masses in dimensions two and three
 
 The count of strong R'enyi centers, `Transformer.Causal.ParkingCount`, is the
-reciprocal of the common mass of the geodesic caps of radius `δ`.  For the
+reciprocal of the common mass of the geodesic caps of radius `δ`. For the
 uniform measure on the sphere that mass is an explicit function of `δ`, and
-the survey records it in the two dimensions it draws pictures in.  The mass of
+the survey records it in the two dimensions it draws pictures in. The mass of
 a cap is the ratio `λ(coneCap x δ) / λ(coneCap x π)` of the volumes of the
 cones over it and over the whole sphere (`Causal.CapCone`), computed in polar
 coordinates on the plane (`Causal.CapPolar`) and in cylindrical coordinates in
@@ -13,7 +17,7 @@ space (`Causal.CapSpace`).
 Source: arXiv:2411.04990v2, §"R'enyi centers vs strong R'enyi centers".
 -/
 
-import Transformer.Causal.CapSpace
+@[expose] public section
 
 open scoped ENNReal
 open Real MeasureTheory
@@ -97,7 +101,7 @@ expected number of strong R'enyi centers is `(sin²(δ/2))^{-1}`.
 
 The survey writes this cap mass as `3 sin²(δ/2)`; that cannot be a normalized
 cap mass, since at `δ = π` the cap is the whole sphere and the value would be
-`3`.  What is stated here is the cap mass itself, `(1 - cos δ) / 2 =
+`3`. What is stated here is the cap mass itself, `(1 - cos δ) / 2 =
 sin²(δ/2)`, which agrees with the two-dimensional case in being a probability.
 
 Source: arXiv:2411.04990v2, §"R'enyi centers vs strong R'enyi centers". -/

@@ -1,5 +1,7 @@
-import Transformer.Grokking.AdamW.FirstStep
-import Transformer.Grokking.Composition.Basic
+module
+
+public import Transformer.Grokking.AdamW.FirstStep
+public import Transformer.Grokking.Composition.Basic
 
 /-!
 # Native first update of an actual compositional CE score
@@ -19,6 +21,8 @@ CE, but can be confidence growth with no new correct held-out decisions.
 No accumulated moments, stochastic gradient noise or repeated-step rule
 formation are supplied by this fresh-buffer specialization.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

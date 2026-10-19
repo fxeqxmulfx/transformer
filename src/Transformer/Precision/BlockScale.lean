@@ -1,27 +1,31 @@
-/-
+module
+
+public import Transformer.Precision.Float
+
+/-!
 # Block scaling: the dead zone becomes relative
 
 Microscaled formats store a block of numbers as a shared scale `σ` times
 elements of a small format: in NVFP4, blocks of `16` elements in E2M1 with an
 E4M3 scale chosen so that the largest element `a` of the block maps to the top
 `6` of E2M1 (NVIDIA, "Pretraining Large Language Models with NVFP4",
-arXiv:2509.25149, §2).  The dead zone of the element format then scales with
+arXiv:2509.25149, §2). The dead zone of the element format then scales with
 the block: an element is stored as `0` once it is below `θ / K` of the block's
 maximum, `K` the top of the format and `[0, θ)` its dead zone
-(`blockScale_eq_zero`).  For NVFP4 that is `a / 24`, a key `ln 24 ≈ 3.2` below
+(`blockScale_eq_zero`). For NVFP4 that is `a / 24`, a key `ln 24 ≈ 3.2` below
 the top of its block.
 
-Unlike `tail_eq`, this does not grow with the context.  Every block keeps its
+Unlike `tail_eq`, this does not grow with the context. Every block keeps its
 own maximum, so the dropped elements of a block are at most `B - 1` elements
 below `θ c` times its maximum, `c` the ratio of the scale to that maximum; the
 mass they carry is at most `(B - 1) θ c` of the total, whatever `n`
-(`blockScale_dropped_le`).  For NVFP4 with the scale rounded to nearest in
+(`blockScale_dropped_le`). For NVFP4 with the scale rounded to nearest in
 E4M3, `c ≤ (1 + 2^{-4}) / 6` and the bound is `255/384 < 2/3`.
 
 The statements are this repository's own.
 -/
 
-import Transformer.Precision.Float
+@[expose] public section
 
 open scoped BigOperators
 

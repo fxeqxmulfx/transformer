@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianMatrixLaw
+public import Transformer.Homogenized.Section7_GaussianMixedFourth
+public import Mathlib.Probability.Moments.Covariance
+
+/-!
 # Covariance of averages over the original independent Gaussian rows
 
 ArXiv:2604.01978v1, §7.3, `lem:delta_method`, the covariance
@@ -18,9 +24,7 @@ value is assumed. The next step substitutes the genuine row polynomials
 whose Gaussian mixed moments have already been proved.
 -/
 
-import Transformer.Homogenized.Section7_GaussianMatrixLaw
-import Transformer.Homogenized.Section7_GaussianMixedFourth
-import Mathlib.Probability.Moments.Covariance
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

@@ -1,13 +1,21 @@
-/-
+module
+
+public import Transformer.Perspective.CircleAngles
+public import Transformer.Perspective.SphereUnique
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
+public import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.Unique
+
+/-!
 # The uniform law on the circle in angles
 
 On the circle the uniform law `σ_2` of `UniformTuple` is the image of the
 normalized Lebesgue measure on `[0, 2π)` (`angleLaw`) under
-`θ ↦ (cos θ, sin θ)` (`circleLaw`).  That image is a rotation-invariant
+`θ ↦ (cos θ, sin θ)` (`circleLaw`). That image is a rotation-invariant
 probability measure (`circleLaw_isometry`): every isometry of the plane acts on
 angles by a translation or a reflection (`exists_sphereMap_circlePoint`), and
 the image of Lebesgue measure on an interval `(t, t + 2π]` does not depend on
-`t` (`map_circlePoint_restrict_Ioc`).  The uniform law is unique
+`t` (`map_circlePoint_restrict_Ioc`). The uniform law is unique
 (`eq_of_rotation_invariant`), so every `UniformTuple 2 n P` is the image under
 `anglesToSphere` of the normalized Lebesgue measure on `[0, 2π)ⁿ`
 (`eq_map_angleCube`).
@@ -17,11 +25,7 @@ the sphere, normalized), §4 (the uniform law of `p:beta0` and
 `thm: beta.tiny`), §7.1 (particles on the circle as angles).
 -/
 
-import Transformer.Perspective.CircleAngles
-import Transformer.Perspective.SphereUnique
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
-import Mathlib.MeasureTheory.Measure.Haar.Unique
+@[expose] public section
 
 open MeasureTheory Complex Set
 open scoped Real ENNReal
@@ -49,7 +53,7 @@ instance isProbabilityMeasure_circleLaw : IsProbabilityMeasure circleLaw :=
   (Measure.isProbabilityMeasure_map_iff measurable_circlePoint.aemeasurable).2 inferInstance
 
 /-- **One period of the circle**: the image of Lebesgue measure on `(t, t + 2π]`
-under `θ ↦ (cos θ, sin θ)` does not depend on `t`.  Both are the image of the
+under `θ ↦ (cos θ, sin θ)` does not depend on `t`. Both are the image of the
 Haar measure of `ℝ / 2πℤ` under the map that `θ ↦ (cos θ, sin θ)` induces. -/
 theorem map_circlePoint_restrict_Ioc (t : ℝ) :
     (volume.restrict (Ioc t (t + 2 * π))).map circlePoint =

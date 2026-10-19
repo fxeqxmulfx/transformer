@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.RecallEnergy
+module
+
+public import Transformer.GPTMini.Convex.Structured.RecallEnergy
 
 /-!
 # Uniform whole-configuration gap from complete raw recall semantics
@@ -18,6 +20,8 @@ a positive finite logarithmic gain. Data target construction is absent
 from the true free-parameter inference normalizer. Full tensor-stack
 realization and successful AdamW training remain separate obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

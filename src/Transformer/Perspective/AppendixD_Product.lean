@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixD_AlphaDeriv
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Appendix D — the differential inequality for `α` and its integration
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -18,8 +23,7 @@ What the survey builds on top of `e:productcloseto1` is in
 `Perspective.AppendixD_Assembly`.
 -/
 
-import Transformer.Perspective.AppendixD_AlphaDeriv
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -53,7 +57,7 @@ two forced by the survey's own derivation.
 *The two inputs are carried as hypotheses.*  `hdiff` is `e:diffineqalpha`
 (`diff_ineq_alpha`, proved in `Perspective.AppendixD_AlphaDeriv` under the
 hypotheses the survey's derivation uses), and `hone` is `e:1/n`
-(`alpha_at_one_over_n`, proved).  What is proved below is the deduction, and
+(`alpha_at_one_over_n`, proved). What is proved below is the deduction, and
 its dependence is visible in its signature.
 
 *The range is `t ≥ 1/n`.*  The survey does not display it; it obtains the
@@ -63,7 +67,7 @@ range on which it holds.
 *`γ_β(1/n)` enters only through `hγpos`, `hγle` and `hone`.*  The solution of
 `eq: ybeta` is not otherwise used, so the hypothesis `ybetaODE_SA n β γ` is
 dropped; what is proved is the stronger statement in which `γ_β(1/n)` is any
-number in `(0, 1]` that `e:1/n` holds for.  A cosine of an angle is such a
+number in `(0, 1]` that `e:1/n` holds for. A cosine of an angle is such a
 number.
 
 Source: arXiv:2312.10794v5, Appendix D, `e:productcloseto1`. -/
@@ -173,9 +177,9 @@ example :
   `1 - α(t) ≤ exp( (1 - γ_β(1/n) t) / (2 n e^{2β}) )`,  `t ≥ 1/n`,
 
 for `α(t) = min_i ⟨x_i(t), x⋆⟩` and `x⋆` the common limit of particles that
-start in an open hemisphere — the survey's setting.  `e:diffineqalpha` is
+start in an open hemisphere — the survey's setting. `e:diffineqalpha` is
 discharged by `diff_ineq_alpha`; `e:1/n` stays a hypothesis, `hone`, and is
-`alpha_at_one_over_n` under the high-dimensional estimates of Appendix D.  As
+`alpha_at_one_over_n` under the high-dimensional estimates of Appendix D. As
 in `diff_ineq_alpha`, `α` is assumed differentiable (`hdα`), and `β ≥ 0`.
 
 Source: arXiv:2312.10794v5, Appendix D, `e:productcloseto1`. -/

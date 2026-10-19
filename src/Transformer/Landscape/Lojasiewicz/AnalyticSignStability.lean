@@ -1,4 +1,9 @@
-/-
+module
+
+public import Mathlib.Analysis.Analytic.IsolatedZeros
+public import Mathlib.Analysis.Analytic.Constructions
+
+/-!
 # Positive-side sign stability of real analytic germs
 
 Finite analytic order makes a scalar germ either zero, positive, or negative
@@ -6,7 +11,7 @@ on a sufficiently small positive interval. Accumulating sign constraints
 therefore hold eventually on that interval.
 -/
 
-import Mathlib.Analysis.Analytic.IsolatedZeros
+@[expose] public section
 
 open Filter Set
 

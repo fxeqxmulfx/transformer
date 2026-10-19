@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.AMSGradW.Basic
+
+/-!
 # Vanishing errors under a strict contraction
 
 Analytic helper for the AMSGradW training extension of
@@ -6,7 +10,7 @@ arXiv:1904.03590v4, Algorithm 1 and §4. The later proof derives both
 the recurrence and its vanishing forcing from the actual buffers.
 -/
 
-import Transformer.AMSGradW.Basic
+@[expose] public section
 
 open scoped Topology
 open Filter

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_InverseQuadrantSupports
+public import Transformer.Interpolation.Section4_AtomicQuadrantReduction
+
+/-!
 # Existence and linear piece count for original atomic-target interpolation
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, with its
@@ -19,8 +24,7 @@ The parameter-norm conclusion requires its own quantitative estimates;
 the overstrong uniform-data norm formalization is separately refuted.
 -/
 
-import Transformer.Interpolation.Section1_InverseQuadrantSupports
-import Transformer.Interpolation.Section4_AtomicQuadrantReduction
+@[expose] public section
 
 open Real MeasureTheory Set
 

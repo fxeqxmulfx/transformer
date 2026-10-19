@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Parikh
+
+/-!
 # What a depth-0 formula reads
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -7,13 +11,13 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 
 A formula of depth `0` counts nothing: its terms are built from `1` and `+`.
 At a position it reads the letter there and the values of its Parikh numerical
-predicates, and nothing else (`Form.sat_eq_of_depth_eq_zero`).  A PNP reads the
+predicates, and nothing else (`Form.sat_eq_of_depth_eq_zero`). A PNP reads the
 Parikh vector of the whole string and the position, so two strings with the
 same Parikh vector agree on it position by position
 (`Form.sat_eq_of_mem_pnps`).
 -/
 
-import Transformer.CRASP.Parikh
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

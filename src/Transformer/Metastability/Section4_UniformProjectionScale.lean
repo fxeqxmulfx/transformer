@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_UniformProjectionTail
+public import Mathlib.Algebra.Order.Archimedean.Real.Basic
+
+/-!
 # The original radius and dimension rate for uniform projection
 
 ArXiv:2410.06833v1, §4, `prop: concentration unif`, and
@@ -17,8 +22,7 @@ one, so a successful projection has a genuine nonzero residual.
 The final independent-sample union bound remains a separate step.
 -/
 
-import Transformer.Metastability.Section4_UniformProjectionTail
-import Mathlib.Algebra.Order.Archimedean.Real.Basic
+@[expose] public section
 
 open Real MeasureTheory
 

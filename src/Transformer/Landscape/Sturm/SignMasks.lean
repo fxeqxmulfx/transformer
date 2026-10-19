@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.TarskiQuery
+public import Transformer.Landscape.Lojasiewicz.AnalyticSignStability
+
+/-!
 # Polynomial masks for finite real sign constraints
 
 The masks are twice the indicator of the actual sign requirement.
@@ -7,8 +12,7 @@ Sturm--Tarski queries. Auxiliary for Appendix D.1, `lem: loj`, of
 arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.TarskiQuery
-import Transformer.Landscape.Lojasiewicz.AnalyticSignStability
+@[expose] public section
 
 noncomputable section
 open Polynomial Transformer.Landscape.Lojasiewicz

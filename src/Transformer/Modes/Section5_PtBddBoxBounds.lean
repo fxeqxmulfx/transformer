@@ -1,7 +1,9 @@
-import Transformer.Modes.Section5_PtBddTailMass
-import Mathlib.Analysis.Normed.Group.Bounded
+module
 
-/-
+public import Transformer.Modes.Section5_PtBddTailMass
+public import Mathlib.Analysis.Normed.Group.Bounded
+
+/-!
 # The number of modes of a Gaussian KDE — consequences of a continuous density
 
 The continuity conclusion of `lem: pt.bdd`, arXiv:2412.09080v3, §4.1 and
@@ -17,6 +19,8 @@ between that area estimate and the Gaussian tail estimate in
 
 Source: arXiv:2412.09080v3, §4.1, `lem: pt.bdd`; §5.5, its proposed proof.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 open scoped ENNReal

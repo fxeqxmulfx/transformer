@@ -1,36 +1,40 @@
-/-
+module
+
+public import Transformer.Perceptron.Basic
+public import Transformer.Perspective.Section2_EnergyMax
+
+/-!
 # Perceptrons and attention's mean-field landscape — the extremal points
 
 Formalization of `prop: min.max` (i) of arXiv:2601.21366v2: the global
 maximizers of the coupled energy are exactly the Dirac masses at the maximizers
-of the perceptron potential.  Part (ii), the unique minimizer and its
+of the perceptron potential. Part (ii), the unique minimizer and its
 symmetries, is `Minimizer`.
 
 **What the source says and what is carried here.**
 
 * "the global maximizers are exactly those `μ = δ_x` with
   `x ∈ argmax_y Σ_j ω_j φ(a_j · y)`" is carried as two theorems, one per
-  inclusion, both proved.  `argmax` over `𝕊^{d-1}` is written out as
+  inclusion, both proved. `argmax` over `𝕊^{d-1}` is written out as
   `∀ y : 𝕊^{d-1}, v_ϑ(y) ≤ v_ϑ(x)`; that the maximum is attained at all is
   part of the proof, not a hypothesis — `v_ϑ` is continuous, because `φ` is
   differentiable, and the sphere is compact.
 
 * The maximizer half needs only `β > 0`, not `d ≥ 2`: the sphere being
   nonempty is what the argument uses, and a probability measure on it
-  witnesses that.  The standing `d ≥ 2` of the source is therefore dropped
+  witnesses that. The standing `d ≥ 2` of the source is therefore dropped
   here, which strengthens the statement.
 
 * The interaction half of both directions is the theorem of arXiv:2312.10794v5
   already in this tree — `Perspective.interactionEnergy_le` and
-  `Perspective.exists_eq_dirac_of_isMaxEnergy`.  Coupling adds `∫ v_ϑ dμ`,
+  `Perspective.exists_eq_dirac_of_isMaxEnergy`. Coupling adds `∫ v_ϑ dμ`,
   which is maximized by the same Dirac masses, so the two maximizations do not
   compete.
 
 Source: arXiv:2601.21366v2, `prop: min.max`.
 -/
 
-import Transformer.Perceptron.Basic
-import Transformer.Perspective.Section2_EnergyMax
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

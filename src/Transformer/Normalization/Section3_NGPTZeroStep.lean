@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Normalization.ClusteringLine
+public import Transformer.Perspective.UniformHemisphere
+public import Transformer.Metastability.Section4_UniformLaw
+
+/-!
 # The unrestricted nGPT clustering claim has a zero-step counterexample
 
 ArXiv:2510.22026v2, §3, `thm:convergence`, includes nGPT for the
@@ -22,9 +28,7 @@ a weaker theorem under the source's name. The Gaussian alternative
 and its conditional corollary remain in `Clustering`.
 -/
 
-import Transformer.Normalization.ClusteringLine
-import Transformer.Perspective.UniformHemisphere
-import Transformer.Metastability.Section4_UniformLaw
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped BigOperators

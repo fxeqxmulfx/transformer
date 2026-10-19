@@ -1,10 +1,15 @@
-/-
+module
+
+public import Transformer.Clusters.Section7_OnlyOneEscape
+public import Transformer.Clusters.Section7_Symmetric
+
+/-!
 # The emergence of clusters in self-attention dynamics — two bounded tokens beside an escaping one
 
 The case of `l:onlyone` (§7 of arXiv:2305.05465v6) where the largest token
-runs off to `+∞`: two bounded tokens cannot keep a gap `g > 0`.  The upper
+runs off to `+∞`: two bounded tokens cannot keep a gap `g > 0`. The upper
 one ends up below `g/2` (`eventually_le_of_bounded`), so the lower one stays
-below `-g/2`, which `frequently_lt_of_bounded` excludes.  This is the source's
+below `-g/2`, which `frequently_lt_of_bounded` excludes. This is the source's
 "if `i ∈ ℬ`, necessarily `x_i(t) → 0`", used for two tokens at once.
 
 The witness for the hypotheses is the symmetric triple `(-u, 0, u)` of
@@ -14,8 +19,7 @@ The witness for the hypotheses is the symmetric triple `(-u, 0, u)` of
 Source: arXiv:2305.05465v6, proof of `l:onlyone`.
 -/
 
-import Transformer.Clusters.Section7_OnlyOneEscape
-import Transformer.Clusters.Section7_Symmetric
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -128,7 +132,7 @@ theorem symTriple_escape_extremes (u : ℝ → ℝ) (hu : ∀ t : ℝ, HasDerivA
 /-- The hypotheses of `eventually_le_of_bounded` and `not_gap_of_bounded` are
 satisfiable on the symmetric triple, for a solution `u` of the scalar equation
 with `u(0) > 2`: the largest token `u` escapes, the smallest `-u` runs off to
-`-∞`, and the middle token is bounded.  The solution `u` is the hypothesis, as
+`-∞`, and the middle token is bounded. The solution `u` is the hypothesis, as
 in `Section7_Bounded`: no solution with three distinct tokens is available in
 closed form. -/
 example (u : ℝ → ℝ) (hu : ∀ t : ℝ, HasDerivAt u (symDrift (u t)) t) (hu0 : 2 < u 0) :

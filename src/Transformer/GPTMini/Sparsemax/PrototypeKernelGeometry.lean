@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.PrototypeKernelTraining
-import Mathlib.LinearAlgebra.Matrix.Rank
+module
+
+public import Transformer.GPTMini.Sparsemax.PrototypeKernelTraining
+public import Mathlib.LinearAlgebra.Matrix.Rank
 
 /-!
 # Convex geometry, evaluation and the finite-sample memory lower bound
@@ -20,6 +22,8 @@ structural diagonal floor. This is a proved architectural cost. Memory Gram
 supports can still vary, but sparsity of query attention is not retained.
 The input features are fixed from data and output-only Gram freedom remains.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.CubeContentExpressivity
-import Transformer.GPTMini.Sparsemax.MatrixOutputError
+module
+
+public import Transformer.GPTMini.Sparsemax.CubeContentExpressivity
+public import Transformer.GPTMini.Sparsemax.MatrixOutputError
 
 /-!
 # Joint convex learning of content embeddings, attention and generated values
@@ -18,6 +20,8 @@ stacked layers and a downstream FFN are not included in this chart.
 The later causal block supplies a conditional convex-output-criterion
 theorem; no particular language loss or successful Basis training is assumed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

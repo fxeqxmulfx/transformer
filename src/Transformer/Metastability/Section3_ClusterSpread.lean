@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.Section3_ForceCoercivity
+public import Transformer.Metastability.Section3_SlowManifold
+
+/-!
 # The collapsed configuration's displacement is controlled by the true gradient
 
 ArXiv:2410.06833v1, §3.2, `lem: PL.borjan`, `eq: Ht.second.lb`.
@@ -14,8 +19,7 @@ Chart replacement preserves the original torus configuration's gradient.
 No evolution or off-slow-manifold gap is assumed in this static estimate.
 -/
 
-import Transformer.Metastability.Section3_ForceCoercivity
-import Transformer.Metastability.Section3_SlowManifold
+@[expose] public section
 
 open scoped BigOperators
 open Set Real

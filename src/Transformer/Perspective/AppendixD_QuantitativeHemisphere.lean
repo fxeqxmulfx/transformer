@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.ConeLimit
+
+/-!
 # A uniform hemisphere for almost orthogonal initial data
 
 ArXiv:2312.10794v5, Appendix D, Step 3, and §6.1,
@@ -14,7 +18,7 @@ will give constants uniform over the initial configurations in Appendix D's
 almost-orthogonality event.
 -/
 
-import Transformer.Perspective.ConeLimit
+@[expose] public section
 
 open scoped BigOperators
 open Real

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.QKIndependentDirections
+module
+
+public import Transformer.GPTMini.Sparsemax.QKIndependentDirections
 
 /-!
 # Incorrect outputs are not matrix minima on independent inputs
@@ -18,6 +20,8 @@ exclude gradient cancellation between multiple rows or give a uniform
 gradient lower bound. Arbitrary dependent embeddings are not covered;
 the input-width obstruction is proved in `InputDecoder`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

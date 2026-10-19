@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixD_PhaseTransition
+public import Transformer.Perspective.AppendixD_PairContraction
+public import Transformer.Perspective.Section2_SphereFlow
+public import Transformer.Perspective.Section6_EquiangularFlow
+
+/-!
 # The complete quantitative phase-transition comparison
 
 ArXiv:2312.10794v5, §6.2, `thm: phase.transition.curve`, proved by combining
@@ -16,10 +23,7 @@ This argument supplies actual constants and avoids assuming differentiability
 of a minimum over particles or using any of the remaining clustering claims.
 -/
 
-import Transformer.Perspective.AppendixD_PhaseTransition
-import Transformer.Perspective.AppendixD_PairContraction
-import Transformer.Perspective.Section2_SphereFlow
-import Transformer.Perspective.Section6_EquiangularFlow
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

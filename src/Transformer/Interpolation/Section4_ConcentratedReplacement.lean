@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_StableProtectedTransfers
+public import Transformer.Interpolation.Section4_GenericQuadrantPoints
+public import Transformer.Interpolation.Section3_SelectivePhaseClocks
+
+/-!
 # Moving one original quadrant law while restoring every other law
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, §3.2,
@@ -19,9 +25,7 @@ A genuine dummy law outside the selected-target plane supplies the
 nonempty protected family when the actual selected family is a singleton.
 -/
 
-import Transformer.Interpolation.Section4_StableProtectedTransfers
-import Transformer.Interpolation.Section4_GenericQuadrantPoints
-import Transformer.Interpolation.Section3_SelectivePhaseClocks
+@[expose] public section
 
 open Real MeasureTheory Set
 

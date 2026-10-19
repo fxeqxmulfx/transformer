@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.InitialGeometry
+
+/-!
 # Quadratic radial-projection bound for Gaussian-mixture initialization
 
 The distance between two unit vectors controls their inner-product deficit
@@ -10,7 +14,7 @@ this square and is too weak for the mixture tail bound.
 Source: arXiv:2410.06833v1, §4, proof of `prop: mixture.of.gaussians`.
 -/
 
-import Transformer.Metastability.InitialGeometry
+@[expose] public section
 
 open Real
 

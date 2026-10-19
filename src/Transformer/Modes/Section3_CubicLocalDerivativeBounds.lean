@@ -1,6 +1,8 @@
-import Transformer.Modes.Section3_CubicHigherGaussianComparison
-import Transformer.Modes.Section3_CubicDerivativeTaylor
-import Transformer.Modes.Section3_CubicProductDerivativeBounds
+module
+
+public import Transformer.Modes.Section3_CubicHigherGaussianComparison
+public import Transformer.Modes.Section3_CubicDerivativeTaylor
+public import Transformer.Modes.Section3_CubicProductDerivativeBounds
 
 /-!
 # Common local derivative bounds for the actual one-summand errors
@@ -18,6 +20,8 @@ unit-ball hypotheses belong only to the zero and first Taylor
 comparisons. They are retained in the combined statements. The
 cubic coefficient's own homogeneous derivative bounds hold globally.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

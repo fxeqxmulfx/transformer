@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.EnergyMemoryExamples
-import Mathlib.Analysis.Matrix.Order
+module
+
+public import Transformer.GPTMini.Sparsemax.EnergyMemoryExamples
+public import Mathlib.Analysis.Matrix.Order
 
 /-!
 # Meaning of the PSD coupling in the original common values
@@ -15,6 +17,8 @@ and the proved self-weight floor, rather than taken as unproved inputs.
 The equivalence applies to arbitrary candidate original value tables at
 each feasible geometry and does not fix their entries.
 -/
+
+@[expose] public section
 
 noncomputable section
 

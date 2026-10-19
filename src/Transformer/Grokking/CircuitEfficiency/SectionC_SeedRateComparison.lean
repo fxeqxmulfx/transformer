@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_AdaptiveFirstStep
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_AdaptiveFirstStep
 
 /-!
 # The source's squared seed suppression does not transfer to AdamW
@@ -17,6 +19,8 @@ memSeed^2*(mu*genSeed+eps), where mu=(q-1)/q.
 No repeated-step convergence, learned-circuit decomposition or delayed
 crossing for GPTMini follows from this exact-real first-step comparison.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

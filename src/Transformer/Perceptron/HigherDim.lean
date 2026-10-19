@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Perceptron.Atomicity
+public import Transformer.Perceptron.Section3_ReLUGenericity
+public import Transformer.Perceptron.Section5_AnalyticNullSupport
+public import Transformer.Perceptron.Section5_ReLUAtomicity
+public import Transformer.Metastability.InitialUniform
+
+/-!
 # Perceptrons and attention's mean-field landscape — higher dimensions
 
 Formalization of `thm: any.d` of arXiv:2601.21366v2, §3.1: in `d ≥ 2` the
@@ -9,7 +17,7 @@ with respect to the uniform law, and atomicity remains generic.
 
 * `σ_d`, the uniform measure on `𝕊^{d-1}`, is the tree's single device for
   the uniform law: a rotation-invariant probability measure,
-  `Metastability.IsUniformOn`.  Such a measure is unique, so "`σ_d(supp μ) = 0`"
+  `Metastability.IsUniformOn`. Such a measure is unique, so "`σ_d(supp μ) = 0`"
   is carried as "`ν(supp μ) = 0` for every rotation-invariant probability
   measure `ν`", and that quantifier sits in the conclusion, not among the
   hypotheses: the tree never constructs `σ_d`, and a hypothesis it cannot
@@ -32,11 +40,7 @@ with respect to the uniform law, and atomicity remains generic.
 Source: arXiv:2601.21366v2, `thm: any.d`.
 -/
 
-import Transformer.Perceptron.Atomicity
-import Transformer.Perceptron.Section3_ReLUGenericity
-import Transformer.Perceptron.Section5_AnalyticNullSupport
-import Transformer.Perceptron.Section5_ReLUAtomicity
-import Transformer.Metastability.InitialUniform
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -46,13 +50,13 @@ namespace Perceptron
 
 variable {d : ℕ}
 
-/-- **Theorem (thm: any.d) (i).**  Let `d ≥ 2` and `β > 0`.  If `μ` is
+/-- **Theorem (thm: any.d) (i).**  Let `d ≥ 2` and `β > 0`. If `μ` is
 stationary for `σ(s) = s_+` with weights whose potential `v_ϑ` is not
 real-analytic, or `μ` is a strict SOPD critical point for a real-analytic `σ`,
 then `σ_d(supp μ) = 0`.
 
 The uniform law is quantified over inside the conclusion; see the module
-docstring.  Singularity of `μ` with respect to it then follows, by
+docstring. Singularity of `μ` with respect to it then follows, by
 `mutuallySingular_of_measure_support_eq_zero`.
 
 The ReLU branch uses the actual analytic branch obstruction. In the

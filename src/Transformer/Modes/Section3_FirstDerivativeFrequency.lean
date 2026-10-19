@@ -1,6 +1,9 @@
-import Transformer.Modes.Section3_PowerComparison
-import Transformer.Modes.Section3_GaussianDerivativeComparison
-import Transformer.Modes.Section3_GaussianDensity
+module
+
+public import Transformer.Modes.Section3_PowerComparison
+public import Transformer.Modes.Section3_GaussianDerivativeComparison
+public import Transformer.Modes.Section3_GaussianDensity
+
 /-!
 # First-derivative Gaussian error for normalized sums
 
@@ -17,6 +20,7 @@ The exact Gaussian scaling identity permits comparison with its actual
 characteristic derivative without introducing a model derivative.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

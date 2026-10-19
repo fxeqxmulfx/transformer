@@ -1,8 +1,15 @@
-/-
+module
+
+public import Mathlib.Probability.Independence.Integration
+
+public import Transformer.Homogenized.GaussianInit
+public import Mathlib.Analysis.Matrix.MeasurableSpace
+
+/-!
 # Homogenized Transformers — the entries of a Gaussian head
 
 Assumption (G) of arXiv:2604.01978v1 draws the value matrix `V` and the two
-factors of `A = W W'ᵀ` with independent centered Gaussian entries.  This file
+factors of `A = W W'ᵀ` with independent centered Gaussian entries. This file
 reads off what consequence (i) of (G) uses:
 
 * a centered Gaussian of variance `v` is square-integrable, with mean `0` and
@@ -18,8 +25,7 @@ reads off what consequence (i) of (G) uses:
 Source: arXiv:2604.01978v1, `eq: tformers.at.initialization`.
 -/
 
-import Transformer.Homogenized.GaussianInit
-import Mathlib.Analysis.Matrix.MeasurableSpace
+@[expose] public section
 
 open scoped BigOperators NNReal
 open MeasureTheory ProbabilityTheory

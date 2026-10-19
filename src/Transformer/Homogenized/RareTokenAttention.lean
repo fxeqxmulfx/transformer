@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.RareTokenMeasure
+public import Transformer.Homogenized.MeanField
+
+/-!
 # Homogenized Transformers — exact softmax amplification of a rare token
 
 For the admissible product head and the two-atom token law, at query `e₂`
@@ -13,8 +18,7 @@ Source: arXiv:2604.01978v1, `EQ:VELOCITY_FIELD_SELF_ATTENTION`,
 auxiliary to `prop:satisfying_MF`, `eq:Lipschitz_measure`.
 -/
 
-import Transformer.Homogenized.RareTokenMeasure
-import Transformer.Homogenized.MeanField
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory

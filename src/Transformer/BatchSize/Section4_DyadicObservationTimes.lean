@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_DyadicEuler
+
+/-!
 # Genuine dyadic grid neighbors of an arbitrary observation time
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ Floor and ceiling indices give actual grid states, with time errors
 bounded by the dyadic mesh independently of the finite horizon.
 -/
 
-import Transformer.BatchSize.Section4_DyadicEuler
+@[expose] public section
 
 open scoped NNReal
 

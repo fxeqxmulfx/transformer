@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_ScalarBridge
+public import Transformer.Convexifying.Section3_Vector
+
+/-!
 # Aggregating vector attention heads
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §3.3 and Appendix A.2/A.5.
 -/
 
-import Transformer.Convexifying.Section3_ScalarBridge
-import Transformer.Convexifying.Section3_Vector
+@[expose] public section
 
 open scoped BigOperators
 

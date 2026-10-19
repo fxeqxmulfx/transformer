@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.FiniteTailSums
+
+/-!
 # Exact tail corrections from finite recent-state profiles
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLCly`.
@@ -6,7 +10,7 @@ Long prefixes have an all-ordinary recent window. Short prefixes add the
 known BOS correction at their last available distance.
 -/
 
-import Transformer.CRASP.FiniteTailSums
+@[expose] public section
 
 namespace Transformer.CRASP.WindowTailSums
 

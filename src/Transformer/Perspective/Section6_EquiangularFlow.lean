@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perspective.Section6_AngleFlow
+public import Transformer.Perspective.Section6_GramFlow
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # §6.2 — Common-angle solutions of the Gram-matrix ODE
 
 Auxiliary to arXiv:2312.10794v5, *A mathematical perspective on Transformers*,
@@ -6,8 +12,7 @@ Auxiliary to arXiv:2312.10794v5, *A mathematical perspective on Transformers*,
 partition function and the zero contribution of the self-attention term.
 -/
 
-import Transformer.Perspective.Section6_AngleFlow
-import Transformer.Perspective.Section6_GramFlow
+@[expose] public section
 
 open scoped BigOperators
 open Real

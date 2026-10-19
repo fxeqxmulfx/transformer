@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianRowAverages
+
+/-!
 # Actual single-factor Gaussian Gram covariances
 
 ArXiv:2604.01978v1, §7.3, `lem:delta_method`, the covariance
@@ -19,7 +23,7 @@ two factors; these single-factor formulas are not assigned directly
 to that product, whose norm covariance was already shown different.
 -/
 
-import Transformer.Homogenized.Section7_GaussianRowAverages
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

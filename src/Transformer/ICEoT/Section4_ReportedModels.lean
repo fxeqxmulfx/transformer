@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section4_EncoderMPC
+
+/-!
 # IC-EoT: reported model dimensions and predictive metrics
 
 arXiv:2603.22095v2, §3.4, Table 1, and §4.3, Tables 2–4.
@@ -7,7 +11,7 @@ Theorems check consequences of those reported values; they do not assert
 that unprovided training trajectories or fitted weights were reproduced.
 -/
 
-import Transformer.ICEoT.Section4_EncoderMPC
+@[expose] public section
 
 namespace Transformer.ICEoT
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_Shift
+public import Transformer.Zoology.Appendix_Network
+
+/-!
 # Two-layer block addition primitive
 
 Arora et al., arXiv:2312.04927v1, Appendix Proposition `prop: prim-add`
@@ -7,8 +12,7 @@ zero and at the block length, then keeps only the second block. The second
 layer inserts ones in the first block, as the primitive's stated output does.
 -/
 
-import Transformer.Zoology.Appendix_Shift
-import Transformer.Zoology.Appendix_Network
+@[expose] public section
 
 open scoped BigOperators
 

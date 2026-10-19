@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Basic
+
+/-!
 # Temporal logic with counting: syntax, semantics, and depth
 
 Huang, Yang, Chiang, Cotterell (as posted) — arXiv:2506.16055v3, "Knee-Deep
@@ -11,15 +15,15 @@ and integer-valued terms:
     φ ::= Q_σ | t₁ < t₂ | ¬φ₁ | φ₁ ∧ φ₂
     t ::= ◁#[φ₁] | t₁ + t₂ | 1
 
-and `TL[◁#, ▷#]` adds the future-counting term `▷#[φ]`.  One inductive pair
+and `TL[◁#, ▷#]` adds the future-counting term `▷#[φ]`. One inductive pair
 carries both: `Form.past` and `Term.past` cut out the fragment that does not
 use `▷#`, which is the one equivalent to C-RASP and to future-masked
 transformers.
 
 The semantics is a satisfaction relation `w, i ⊨ φ` at a position `i` of a
 string `w`, with `◁#[φ]` counting the positions of `w[1:i]` that satisfy `φ`
-and `▷#[φ]` those of `w[i:n]`.  Positions are numbered from `1`, as in the
-paper.  Satisfaction is `Bool`-valued here because the counting terms filter
+and `▷#[φ]` those of `w[i:n]`. Positions are numbered from `1`, as in the
+paper. Satisfaction is `Bool`-valued here because the counting terms filter
 by it; the logic is decidable, so nothing is lost.
 
 A string is judged at its *last* position — `w ⊨ φ` iff `w, |w| ⊨ φ` — which
@@ -28,12 +32,12 @@ that "mimics the behavior of generative transformer decoders".
 
 The syntax carries one further constructor: a *Parikh numerical predicate*
 (Definition `def:PNP`), a predicate on the Parikh vector of the string and
-the current position.  The paper writes `TL[◁#]^P` for the logic augmented
+the current position. The paper writes `TL[◁#]^P` for the logic augmented
 with these, and the depth-hierarchy proof lives in the augmented logic
 throughout; `Form.pnpFree` cuts back to the plain logic.
 -/
 
-import Transformer.Basic
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section2_FlowMap
+public import Transformer.Interpolation.Basic
+public import Mathlib.MeasureTheory.Measure.Support
+
+/-!
 # Dirac stationary laws and the radius characterization of W∞
 
 ArXiv:2411.04551v3, §2, `prop: targets.atoms`. A Dirac law is
@@ -12,10 +19,7 @@ bound gives the displayed approximation by a point mass. The actual
 diameter collapse is proved in `Section2_AttentionClustering`.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section2_FlowMap
-import Transformer.Interpolation.Basic
-import Mathlib.MeasureTheory.Measure.Support
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -74,10 +78,10 @@ example (B : ParamMatrix 1) :
 
 /-- **`prop: targets.atoms` with an unconstrained `W_∞` is false.**
 
-A parameter `Winf` that no hypothesis constrains may be the constant `1`.  For
+A parameter `Winf` that no hypothesis constrains may be the constant `1`. For
 `d = 1` take `μ_0 = δ_{e_0}`: its support is `{e_0}`, which lies in the open
 hemisphere around `e_0`, and the constant curve at `δ_{e_0}` solves
-`eq: cauchy.pb` for the parameters of the proposition.  At `ε = 1/2` the
+`eq: cauchy.pb` for the parameters of the proposition. At `ε = 1/2` the
 second conclusion would then read `1 ≤ 1/2`.
 
 Source: arXiv:2411.04551v3, §2, `prop: targets.atoms`. -/
@@ -112,7 +116,7 @@ theorem not_forall_clustering_to_atom :
 
 `W_∞(μ, δ_z)` is `sup_{x ∈ supp μ} d(x, z)`; what the proof of
 `prop: targets.atoms` uses is one inequality, that a ball of radius `r ≥ 0`
-around `z` containing `supp μ` bounds it.  This is the property that pins the
+around `z` containing `supp μ` bounds it. This is the property that pins the
 parameter `Winf` down; `not_forall_clustering_to_atom` is what happens without
 it.
 
@@ -133,7 +137,7 @@ example : IsWinfToDirac 1 (fun _ _ => 0) ∧ ¬ IsWinfToDirac 1 (fun _ _ => 1) :
 /-- **The second conclusion of `prop: targets.atoms` follows from the first.**
 
 Once `diam(supp μ(t)) → 0`, pick a time `T > 0` where the diameter is below
-`ε`.  The support of a probability measure is nonempty, so it holds some `z`,
+`ε`. The support of a probability measure is nonempty, so it holds some `z`,
 and every point of the support is then within `ε` of `z` — which is exactly
 what `IsWinfToDirac` turns into `W_∞(μ(T), δ_z) ≤ ε`.
 

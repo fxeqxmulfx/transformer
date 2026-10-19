@@ -1,7 +1,12 @@
-/-
+module
+
+public import Transformer.Modes.Section2_PhiTAsymp
+public import Transformer.Modes.Section2_ProxyKRInner
+
+/-!
 # The number of modes of a Gaussian KDE — `eq:int-phi-final`
 
-§2.3 of arXiv:2412.09080v3.  The proxy Kac-Rice integral
+§2.3 of arXiv:2412.09080v3. The proxy Kac-Rice integral
 `∫_S ∫_0^∞ y (det Σ_t)^{-1/2} φ(Σ_t^{-1/2}[(0,y) - μ_t]) dy dt` is `proxyKR`,
 written with `lintegral` like `eq:krf` in `kacRice`; `eq:int-phi-final` compares it
 with `√β ∫_S e^{-A_t/2} dt`.
@@ -9,16 +14,15 @@ with `√β ∫_S e^{-A_t/2} dt`.
 **`eq:int-phi-final` is carried for `S ⊆ T`, and with `n ≲ β^{5/2}`.**  The
 source states it "for any measurable `S ⊂ ℝ`", but derives it from
 `lem:phi-t`, which holds only on `T`, and only with `n ≲ β^{5/2}`
-(`integral_krPhi_isTheta`).  Without that hypothesis it fails for `S` a small
-interval around `0`, for the reason given in `Section2_PhiTDelta.lean`.  The
+(`integral_krPhi_isTheta`). Without that hypothesis it fails for `S` a small
+interval around `0`, for the reason given in `Section2_PhiTDelta.lean`. The
 bound over `T'` that needs no such hypothesis is `main_int_phi_T'`
 (`Section2_MainIntPhi.lean`), which handles the shift directly.
 
 Source: arXiv:2412.09080v3, §2.3 (`sec: 2.3`), `eq:approx`, `eq:int-phi-final`.
 -/
 
-import Transformer.Modes.Section2_PhiTAsymp
-import Transformer.Modes.Section2_ProxyKRInner
+@[expose] public section
 
 open Real Filter Asymptotics MeasureTheory
 open scoped Topology ENNReal
@@ -36,7 +40,7 @@ noncomputable def proxyKR (n : ℕ) (β : ℝ) (S : Set ℝ) : ℝ≥0∞ :=
 
 /-- **Equation (eq:int-phi-final), for `S ⊆ T` and `n ≲ β^{5/2}`.**
 `∫_S ∫_0^∞ y (det Σ_t)^{-1/2} φ(…) dy dt ≍ √β ∫_S e^{-A_t/2} dt`, uniformly in
-`S`.  The source states it for every measurable `S ⊂ ℝ` and no bound on `n`;
+`S`. The source states it for every measurable `S ⊂ ℝ` and no bound on `n`;
 see the module docstring.
 
 Source: arXiv:2412.09080v3, `eq:int-phi-final`. -/

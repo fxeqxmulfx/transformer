@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_CapAttractor
+public import Transformer.Interpolation.Section3_MassConcentration
+public import Transformer.Interpolation.Section3_TwoRidgeScaling
+public import Transformer.Interpolation.Section3_NullRepeller
+
+/-!
 # Constant original controls for spherical ball concentration
 
 Auxiliaries for arXiv:2411.04551v3, Appendix, `lem: two.balls`,
@@ -15,10 +22,7 @@ solutions are identified with their actual flow pushforwards. The source's
 fixed-complement, Lipschitz and bijective flow clauses hold as stated.
 -/
 
-import Transformer.Interpolation.Section3_CapAttractor
-import Transformer.Interpolation.Section3_MassConcentration
-import Transformer.Interpolation.Section3_TwoRidgeScaling
-import Transformer.Interpolation.Section3_NullRepeller
+@[expose] public section
 
 open Real Set MeasureTheory Filter
 open scoped Topology ENNReal

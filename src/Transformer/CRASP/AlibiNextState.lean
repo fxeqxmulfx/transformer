@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.AlibiProfiles
+
+/-!
 # One ALiBi layer in previous-position counting logic
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLCly`.
@@ -6,7 +10,7 @@ Enumerate the recent profile, current query, and rounded attention vector.
 All distance dependence has become a constant correction to state counts.
 -/
 
-import Transformer.CRASP.AlibiProfiles
+@[expose] public section
 
 namespace Transformer.CRASP.AlibiTables
 

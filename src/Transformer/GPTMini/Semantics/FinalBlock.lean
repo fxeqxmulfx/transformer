@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.Block
-import Transformer.GPTMini.Semantics.Readout
+module
+
+public import Transformer.GPTMini.Semantics.Block
+public import Transformer.GPTMini.Semantics.Readout
 
 /-!
 # Internal semantic certificates imply an actual List Int answer
@@ -24,6 +26,8 @@ Basis.RecallAnswer, not an unordered value-code mixture.
 It uses the existing mathematical shared-epsilon model, as documented in
 TokenInterface.Basic, and does not certify PyTorch rounding.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.ALM.HullMark
+
+/-!
 # The live head answers with the key nearest the query
 
 `Transformer.ALM.HullMark` settles what the container *holds* — every key
-inserted, because the recency offset is too small to make an erase fire.  It
+inserted, because the recency offset is too small to make an erase fire. It
 says nothing about what the container *answers*, and everything it proves about
 the offset is proved at one query, `x = k`, the abscissa of the key itself.
 That left the reduction the machine actually wants unlicensed: a lookup is an
 argmax over a general query, and the claim that it returns the nearest key is
 the claim that turns the hull into an ordered set of integers.
 
-Here it is.  Completing the square,
+Here it is. Completing the square,
 
     lineEval (markKey d k) q = q^2 - (q - k)^2 + d,
 
@@ -19,24 +23,24 @@ minimising `(q - k)^2 - d`: squared distance, tilted by the offset.
 squared-distance lead exceeds the whole offset spread `A` — and it needs no
 integrality at all.
 
-`sq_dist_gap_of_near_int` is where the integrality is spent.  For integer keys
+`sq_dist_gap_of_near_int` is where the integrality is spent. For integer keys
 the lead of the nearest key over any other is at least `1 - 2|q - z|`, so a
 query within `(1 - A) / 2` of a key present in the head is answered by that key
-and by nothing else (`lineEval_markKey_lt_of_near`, `isGreatest_of_near`).  For
+and by nothing else (`lineEval_markKey_lt_of_near`, `isGreatest_of_near`). For
 the shipped `A = LATEST_ALPHA / log 2` the window is `0.283`
 (`the_shipped_window`), and `ALM.QueryScale` measures the machine's queries at
 `2e-6` off an integer, five orders inside it.
 
 What is *not* claimed is the converse, and the converse is false: at the
 midpoint of two keys the squared distances are equal and the offsets decide,
-which is exactly what the compiler added them for.  `the_window_is_needed`
+which is exactly what the compiler added them for. `the_window_is_needed`
 exhibits that, so the window above is not slack to be optimised away.
 
 Source: `alm-compile/src/graph.rs` lines 231-269 (`embed_key`, `embed_query`);
 `alm-hull/src/head.rs`, `argmax`.
 -/
 
-import Transformer.ALM.HullMark
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -44,7 +48,7 @@ namespace ALM
 /-! ### The score is a squared distance -/
 
 /-- **Completing the square.**  Against the query `(q, 1)` that `embed_query`
-emits, a marked key scores `q² - (q - k)² + δ`.  The first term is the same for
+emits, a marked key scores `q² - (q - k)² + δ`. The first term is the same for
 every key in the head, so an argmax over the container is an argmin of
 `(q - k)² - δ`. -/
 theorem lineEval_markKey_eq (δ k q : ℝ) :
@@ -55,7 +59,7 @@ theorem lineEval_markKey_eq (δ k q : ℝ) :
 /-- **A squared-distance lead wider than the offset spread decides the
 query.**  No integrality, no separation between keys: whatever the two offsets
 are inside `[0, A]`, a key closer to the query by more than `A` in squared
-distance beats the other one.  This is the whole comparison the head performs,
+distance beats the other one. This is the whole comparison the head performs,
 with the query's own term already cancelled. -/
 theorem lineEval_markKey_lt_of_gap {A δ δ' q k k' : ℝ} (hδ0 : 0 ≤ δ) (hδ'A : δ' ≤ A)
     (hgap : A < (q - k') ^ 2 - (q - k) ^ 2) :
@@ -73,9 +77,9 @@ example : lineEval (markKey (0.4 : ℝ) 3) 0 < lineEval (markKey (0 : ℝ) 0) 0 
 /-- **The nearest integer key leads by more than the offset spread.**  Writing
 `M = z' - z` and `u = q - z`, the lead is `M² - 2uM`, which is at least
 `|M| - 2|u| ≥ 1 - 2|u|` — so a query within `(1 - A) / 2` of `z` puts every
-other integer key more than `A` behind.  The unit separation of the keys is
+other integer key more than `A` behind. The unit separation of the keys is
 what is being spent, exactly as in `not_eraseStep_of_marked`, but now at every
-query rather than at the key's own abscissa.  `A < 1` is not a hypothesis
+query rather than at the key's own abscissa. `A < 1` is not a hypothesis
 because it is already one: an offset spread of a unit or more leaves the window
 `(1 - A) / 2` empty, and `hq` says a query is in it. -/
 theorem sq_dist_gap_of_near_int {A q : ℝ} {z z' : ℤ} (hA0 : 0 ≤ A)
@@ -140,10 +144,10 @@ theorem Marked.offset_mem {A : ℝ} {s : Finset (ℝ × ℝ)} (hs : Marked A s) 
 
 /-- **The container's answer, over the whole container.**  On a live head — no
 clear marker, integer keys, offsets inside `[0, A]` with `A < 1` — a query
-within `(1 - A) / 2` of a key the head holds is answered by that key.  This is
+within `(1 - A) / 2` of a key the head holds is answered by that key. This is
 the statement `hullProbe` and `argmax` need and that `HullMark` stopped short
 of: not that the container holds every key, but that finding the nearest one is
-finding the maximiser.  The hull, its breakpoints and its exact predicates are
+finding the maximiser. The hull, its breakpoints and its exact predicates are
 not consulted anywhere in the proof — a sorted set of keys and a predecessor
 search would answer identically. -/
 theorem isGreatest_of_near {A : ℝ} {s : Finset (ℝ × ℝ)} (hs : Marked A s)
@@ -176,7 +180,7 @@ example : ∀ l ∈ ({markKey 0 ((0 : ℤ) : ℝ), markKey 0.4 ((1 : ℤ) : ℝ)
 
 /-- **The shipped window is `0.283`.**  `LATEST_ALPHA / log 2` is the whole
 range of the recency offset (`marked_sep_of_shipped`), so `(1 - A) / 2` is how
-far off a key a query may sit and still be answered by it.  `ALM.QueryScale`
+far off a key a query may sit and still be answered by it. `ALM.QueryScale`
 and `alm-hull/src/query.rs` measure the machine's queries at `1.9e-6` off an
 integer: five orders inside this. -/
 theorem the_shipped_window : (0.283 : ℝ) < (1 - 0.3 / Real.log 2) / 2 := by
@@ -188,7 +192,7 @@ theorem the_shipped_window : (0.283 : ℝ) < (1 - 0.3 / Real.log 2) / 2 := by
 
 /-- **And the window is not slack.**  At the midpoint of two keys the squared
 distances are equal and the offsets decide, so the later write wins — which is
-what `LATEST_ALPHA` was added to do.  `0.5` is outside the window of `0` at
+what `LATEST_ALPHA` was added to do. `0.5` is outside the window of `0` at
 `A = 0.4`, and there the nearest-key rule genuinely fails: the two keys are
 equidistant and the key `1` wins on its offset alone. -/
 theorem the_window_is_needed :

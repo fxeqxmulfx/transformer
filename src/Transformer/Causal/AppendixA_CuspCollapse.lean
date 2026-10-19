@@ -1,6 +1,8 @@
-import Transformer.Causal.AppendixA_CuspClock
-import Transformer.Causal.AppendixA_CuspHyperbolicity
-import Transformer.Perceptron.Analytic
+module
+
+public import Transformer.Causal.AppendixA_CuspClock
+public import Transformer.Causal.AppendixA_CuspHyperbolicity
+public import Transformer.Perceptron.Analytic
 
 /-!
 # Actual cusp trajectories with finite-time collapse
@@ -27,6 +29,8 @@ strongly stable limit. The initial parameters used here are genuine
 real parameters; positivity and an actual initial-value formula are
 proved explicitly for the subsequent positive-measure construction.
 -/
+
+@[expose] public section
 
 open Real Filter Topology
 namespace Transformer.Causal

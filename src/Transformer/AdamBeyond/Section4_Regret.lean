@@ -1,13 +1,15 @@
-import Transformer.AdamBeyond.Section4_AMSGrad
-import Transformer.AdamBeyond.Section4_Abel
+module
 
-/-
+public import Transformer.AdamBeyond.Section4_AMSGrad
+public import Transformer.AdamBeyond.Section4_Abel
+
+/-!
 # Adam and beyond — §4: Theorem 4
 
 The proof of Theorem 4 of arXiv:1904.09237 (appendix, §"Proof of Theorem 4"):
 the bound of Lemma 3.1 of arXiv:1904.03590 (`prepare_lem`), then per coordinate
 Abel summation of the first term with the weights
-`c_t = √v̂_{t,i}/(2α_t(1-β_{1,t}))`.  The source splits `c_t - c_{t-1}` at
+`c_t = √v̂_{t,i}/(2α_t(1-β_{1,t}))`. The source splits `c_t - c_{t-1}` at
 `√v̂_{t,i}/(2α_t(1-β_{1,t-1}))`; `abel_beta_le` (`Section4_Abel`) instead
 uses `c_t - c_{t-1} ≤ (a_t - a_{t-1} + β_{1,t}a_{t-1})/(2(1-β₁))` with
 `a_t = √v̂_{t,i}/α_t`, which gives the stated bound.
@@ -20,6 +22,8 @@ that sum by `amsgrad_moment_sum`, the `β₁/t` remark by
 Source: arXiv:1904.09237, §4, Theorem 4 (thm:amsgrad-proof); appendix,
 §"Proof of Theorem 4".
 -/
+
+@[expose] public section
 
 open Finset
 

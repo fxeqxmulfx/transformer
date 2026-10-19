@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_RobustPlanes
+public import Transformer.Interpolation.Section4_GenericQuadrantFamily
+public import Transformer.Interpolation.Section3_SeparatedCaps
+
+/-!
 # Common robust geometry for original quadrant law matching
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, and §3.2,
@@ -14,9 +20,7 @@ their actual perturbed means meet the needed plane conditions without
 assuming preservation of their mean directions during contraction.
 -/
 
-import Transformer.Interpolation.Section4_RobustPlanes
-import Transformer.Interpolation.Section4_GenericQuadrantFamily
-import Transformer.Interpolation.Section3_SeparatedCaps
+@[expose] public section
 
 open Real MeasureTheory Set
 

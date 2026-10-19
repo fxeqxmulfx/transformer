@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Causal.Section4_SphereFlow
+public import Transformer.Perspective.Section2_FlowContinuity
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Continuous dependence of the original causal flow on its initial tokens
 
 ArXiv:2411.04990v2, §4, proof of `thm1`.
@@ -17,9 +24,7 @@ These are the measurable events needed for conditioning on a causal
 prefix. No null-set or convergence assertion is part of their definition.
 -/
 
-import Transformer.Causal.Section4_SphereFlow
-import Transformer.Perspective.Section2_FlowContinuity
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
+@[expose] public section
 
 open Real Set MeasureTheory Filter
 open scoped NNReal

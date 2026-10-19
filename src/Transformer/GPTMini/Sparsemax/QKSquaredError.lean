@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.QKTaskDirections
-import Transformer.GPTMini.Sparsemax.AnchoredCorrection
+module
+
+public import Transformer.GPTMini.Sparsemax.QKTaskDirections
+public import Transformer.GPTMini.Sparsemax.AnchoredCorrection
 
 /-!
 # Wrong QKNorm anchored outputs are not local minima in key vectors
@@ -18,6 +20,8 @@ These are single-row statements, with frozen values and query on the
 key perturbation. They neither assert a uniform gradient bound nor prove
 global convergence of the shared transformer objective.
 -/
+
+@[expose] public section
 
 noncomputable section
 

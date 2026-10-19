@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.SectionA_TrainingStorage
+public import Transformer.Optimization.Matrix
+public import Transformer.Optimization.Basic
+
+/-!
 # Actual training with stateful base and gain optimizers
 
 arXiv:2606.25971v2, §3.1 and Appendix A, Algorithm 2. The auxiliary
@@ -8,9 +14,7 @@ fixed objective at the current fused weight, rather than supplied as
 an arbitrary gradient history.
 -/
 
-import Transformer.MagnitudeDirection.SectionA_TrainingStorage
-import Transformer.Optimization.Matrix
-import Transformer.Optimization.Basic
+@[expose] public section
 
 noncomputable section
 

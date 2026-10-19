@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.OutputTiedMemoryBounds
+module
+
+public import Transformer.GPTMini.Sparsemax.OutputTiedMemoryBounds
 
 /-!
 # Strict ordinary-loss curvature in every tied intrinsic direction
@@ -15,6 +17,8 @@ unique in intrinsic coordinates. The fixed structural mask and affine
 parameter sharing are explicit architectural restrictions, not a claim of
 strict convexity for unrestricted physical Q/K/value parameter training.
 -/
+
+@[expose] public section
 
 noncomputable section
 

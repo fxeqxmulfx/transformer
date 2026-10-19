@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainRelativeRate
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainRelativeRate
 
 /-!
 # Uniform multiplicative ratio growth before the native balance crossing
@@ -22,6 +24,8 @@ decay differ from appendix C's coupled assigned circuit norm/GD.
 The finite-time path crossing and persistent held-out ordering
 remain subsequent obligations; this file proves one actual-form step.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_QuadrantLawMatching
+public import Transformer.Interpolation.Monge
+
+/-!
 # Original target-support bounds imply the genuine Wasserstein accuracy
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms`, and §5,
@@ -18,8 +23,7 @@ existence and switch conclusions for positive-quadrant data; no
 quantitative parameter-norm bound is asserted in this auxiliary.
 -/
 
-import Transformer.Interpolation.Section4_QuadrantLawMatching
-import Transformer.Interpolation.Monge
+@[expose] public section
 
 open Real MeasureTheory Set
 

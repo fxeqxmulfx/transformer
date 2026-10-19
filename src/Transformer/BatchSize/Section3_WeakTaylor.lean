@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section3_Taylor
+
+/-!
 # A uniform Taylor estimate for weak-error analysis
 
 arXiv:2506.12543v1, Section 3.2, equation (1), and Section 4.3, Theorem 1.
@@ -6,7 +10,7 @@ This estimate controls the expectation remainder of a single optimizer step.
 It is independent of the unproved diffusion approximation.
 -/
 
-import Transformer.BatchSize.Section3_Taylor
+@[expose] public section
 
 open scoped BigOperators
 

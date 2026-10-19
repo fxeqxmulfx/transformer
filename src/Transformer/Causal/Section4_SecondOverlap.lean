@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Causal.Section4_ParticleDrift
+public import Transformer.Causal.Section4_WeightFloor
+public import Transformer.Perspective.Gronwall
+
+/-!
 # The actual two-token overlap and its exponential decay
 
 ArXiv:2411.04990v2, §4, proof of `thm1`, base case `k=2`.
@@ -14,9 +20,7 @@ No score, temperature, original normalization, or original initial
 condition is replaced. All statements concern actual CSA solutions.
 -/
 
-import Transformer.Causal.Section4_ParticleDrift
-import Transformer.Causal.Section4_WeightFloor
-import Transformer.Perspective.Gronwall
+@[expose] public section
 
 open scoped BigOperators
 open Real

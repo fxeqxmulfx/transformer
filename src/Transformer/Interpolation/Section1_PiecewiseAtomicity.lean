@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_PhaseDerivatives
+public import Transformer.Interpolation.Section1_ControlPartitions
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+
+/-!
 # Atomicity across all original complete control phases
 
 ArXiv:2411.04551v3, §1, `eq: ips`, `eq: vf` and `eq: cauchy.pb`.
@@ -14,9 +20,7 @@ Dirac. The complete nonlinear field and all original weak solutions
 are covered; no atomicity or weak uniqueness is assumed.
 -/
 
-import Transformer.Interpolation.Section1_PhaseDerivatives
-import Transformer.Interpolation.Section1_ControlPartitions
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
+@[expose] public section
 
 open Real MeasureTheory Set
 

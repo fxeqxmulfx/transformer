@@ -1,7 +1,10 @@
-import Transformer.Modes.Section3_CharacteristicDerivatives
-import Mathlib.Analysis.Calculus.FDeriv.Pow
-import Mathlib.Analysis.Calculus.FDeriv.Equiv
-import Mathlib.Analysis.Calculus.ContDiff.Basic
+module
+
+public import Transformer.Modes.Section3_CharacteristicDerivatives
+public import Mathlib.Analysis.Calculus.FDeriv.Pow
+public import Mathlib.Analysis.Calculus.FDeriv.Equiv
+public import Mathlib.Analysis.Calculus.ContDiff.Basic
+
 /-!
 # Exact derivatives of normalized-sum characteristic functions
 
@@ -18,6 +21,7 @@ function to be twice continuously differentiable. The identities also
 hold for `n = 0` and `n = 1`, with natural-number subtraction as in Lean.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

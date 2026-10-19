@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.McKeanVlasov
+
+/-!
 # Homogenized Transformers — two systems under one noise
 
 The object `prop: poc` of arXiv:2604.01978v1, *Homogenized Transformers*, §4
@@ -14,7 +18,7 @@ noises the two families decorrelate and no pathwise bound between them holds.
 Mathlib has no stochastic integral, so "the same `W`" is written here as
 `CoupledPair.lean` writes it for two tokens — through the joint martingale
 problem, whose generator `pocGenerator` sends a single `θ` into all `2n`
-coordinates at once.  The `n` particles are driven by their own empirical
+coordinates at once. The `n` particles are driven by their own empirical
 measure `μ^n = μ_{X^n}` and the `n` copies by the conditional law `μ(t)`,
 which is what makes the two blocks different equations under one noise.
 
@@ -24,7 +28,7 @@ martingale problem read on test functions of the first block alone.
 Source: arXiv:2604.01978v1, `prop: poc`.
 -/
 
-import Transformer.Homogenized.McKeanVlasov
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open Real MeasureTheory

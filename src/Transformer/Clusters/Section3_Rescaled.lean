@@ -1,14 +1,21 @@
-/-
+module
+
+public import Transformer.Clusters.Section1_Dynamics
+public import Mathlib.Analysis.SpecialFunctions.Exponential
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.Calculus.Deriv.Add
+
+/-!
 # The emergence of clusters in self-attention dynamics — the rescaled tokens
 
 §3 of arXiv:2305.05465v6: the change of variables `z_i(t) = e^{-tV} x_i(t)`,
-and the equation `e:Rres` it turns `eq:trans_dyn` into.  The discrete analogue
+and the equation `e:Rres` it turns `eq:trans_dyn` into. The discrete analogue
 of `r:discreterescaling` is in `Section3_Discrete`.
 
 **What the source says and what is carried here.**
 
 * `e^{tV}` is `expTime V t := NormedSpace.exp (t • V)`, the operator
-  exponential of Mathlib.  The two facts the source uses it through are
+  exponential of Mathlib. The two facts the source uses it through are
   `expTime V 0 = 1` and, for `V = I_d`, `e^{tI}x = e^t x`
   (`expTime_one_apply`), both proved below.
 
@@ -20,16 +27,13 @@ of `r:discreterescaling` is in `Section3_Discrete`.
 
 * The source states the change of variables as a derivation: `z_i := e^{-tV}x_i`
   "solve" `e:Rres`, and conversely each result on `z_i` transfers to `x_i` "by
-  virtue of the relation `x_i(t) = e^{tV}z_i(t)`".  Both directions are carried
+  virtue of the relation `x_i(t) = e^{tV}z_i(t)`". Both directions are carried
   as one `iff` under that relation, in `transformerDynamics_iff_rescaled`.
 
 Source: arXiv:2305.05465v6, `e:Rres`.
 -/
 
-import Transformer.Clusters.Section1_Dynamics
-import Mathlib.Analysis.SpecialFunctions.Exponential
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Calculus.Deriv.Add
+@[expose] public section
 
 open scoped BigOperators
 open Real
@@ -58,7 +62,7 @@ theorem expTime_zero_map (t : ℝ) : expTime (0 : ParamMatrix d) t = 1 := by
   have h : t • (0 : ParamMatrix d) = 0 := by ext x; simp
   rw [expTime, h, NormedSpace.exp_zero]
 
-/-- **The case `V = I_d`**: `e^{tI}x = e^t x`.  This is what turns the exponent
+/-- **The case `V = I_d`**: `e^{tI}x = e^t x`. This is what turns the exponent
 `⟨Qe^{tV}z_i, Ke^{tV}z_j⟩` of `e:Rres` into the `e^{2t}⟨Az_i,Az_j⟩` of
 `e:dynIdzi`. -/
 theorem expTime_one_apply (t : ℝ) (x : EucSpace d) :
@@ -117,7 +121,7 @@ theorem rescaledDynamics_const (Q K : ParamMatrix d) (Z : Idx n → EucSpace d) 
   simpa using (hasDerivAt_const t (Z i))
 
 /-- **The change of variables `x_i(t) = e^{tV}z_i(t)`.**  Under that relation,
-`x` solves `eq:trans_dyn` exactly when `z` solves `e:Rres`.  The forward
+`x` solves `eq:trans_dyn` exactly when `z` solves `e:Rres`. The forward
 direction is the source's "which solve (e:Rres)"; the backward one is how
 every conclusion about `z_i` is read back on `x_i`.
 

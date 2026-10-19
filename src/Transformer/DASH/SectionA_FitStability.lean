@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_FitReproduction
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.RootsExtrema
+public import Mathlib.Algebra.BigOperators.Fin
+
+/-!
 # DASH — stability bounds for the actual fitted coefficients
 
 arXiv:2602.02016v2, Appendix A, coefficient fitting followed by scalar
@@ -6,9 +12,7 @@ Clenshaw. Sample errors are amplified by at most `1+2d` on the fitting
 interval, without an unproved assumption about the fitted coefficients.
 -/
 
-import Transformer.DASH.SectionA_FitReproduction
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.RootsExtrema
-import Mathlib.Algebra.BigOperators.Fin
+@[expose] public section
 
 open scoped BigOperators
 

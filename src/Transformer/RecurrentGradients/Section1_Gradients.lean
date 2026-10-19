@@ -1,9 +1,16 @@
-/-
+module
+
+public import Transformer.RecurrentGradients.Section1_Recurrence
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Analysis.Calculus.FDeriv.Add
+public import Mathlib.Analysis.Calculus.FDeriv.Comp
+
+/-!
 # The gradient as a sum of products
 
-arXiv:1211.5063, §1.1, eqs. (3)–(5).  Let `A_i = ∂x_{i+1}/∂x_i` and
+arXiv:1211.5063, §1.1, eqs. (3)–(5). Let `A_i = ∂x_{i+1}/∂x_i` and
 `B_i = ∂⁺x_{i+1}/∂θ` be the partial derivatives of eq. (1) at `x_i`, the latter
-"where `x_i` is taken as a constant with respect to `θ`".  The chain rule gives
+"where `x_i` is taken as a constant with respect to `θ`". The chain rule gives
 `∂x_{k+l}/∂x_k = A_{k+l-1} ⋯ A_k` (`transport`; eq. (5), `hasFDerivAt_states`),
 the derivative of `x_t` in `θ` as the sum over `1 ≤ k ≤ t` of the temporal
 contributions `∂x_t/∂x_k ∂⁺x_k/∂θ` (`hasFDerivAt_states_param`), that of
@@ -16,10 +23,7 @@ The Jacobian is `W_rec diag(σ'(x_{i-1}))` (`hasFDerivAt_step`), so
 `W_recᵀ`; the bounds of §2.1 hold for both, as `‖W_recᵀ‖ = ‖W_rec‖`.
 -/
 
-import Transformer.RecurrentGradients.Section1_Recurrence
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Analysis.Calculus.FDeriv.Add
-import Mathlib.Analysis.Calculus.FDeriv.Comp
+@[expose] public section
 
 open scoped Matrix
 
@@ -150,7 +154,7 @@ variable {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ] {σ σ' : �
   {W : Matrix ι ι ℝ} {Win : Matrix ι κ ℝ} {b : EuclideanSpace ℝ ι}
 
 /-- **Eq. (5) for eq. (2), corrected.**  `∂x_{k+l}/∂x_k` is the product of the
-matrices `W_rec diag(σ'(x_i))` for `k ≤ i < k + l`, the latest on the left.  The
+matrices `W_rec diag(σ'(x_i))` for `k ≤ i < k + l`, the latest on the left. The
 paper writes `∏_{t ≥ i > k} W_recᵀ diag(σ'(x_{i-1}))`; the transpose is an
 error, since the `(a, b)` entry of `∂x_i/∂x_{i-1}` is `W_{ab} σ'(x_{i-1,b})`
 (`hasFDerivAt_step`). -/

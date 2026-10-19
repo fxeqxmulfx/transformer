@@ -1,6 +1,8 @@
-import Transformer.Modes.Section3_Edgeworth
+module
 
-/-
+public import Transformer.Modes.Section3_Edgeworth
+
+/-!
 # The number of modes of a Gaussian KDE — the third-order error for large `y`
 
 §3 and §3.1 of arXiv:2412.09080v3: why `thm:br` with `s = 2` does not suffice
@@ -10,26 +12,28 @@ term `n^{-1/2}ψ` for `y ≥ Δ_t`.
 
 **What the source says and what is carried here.**
 
-* `eq:tilde-y-fail`: `∫_0^∞ ỹ/(1 + ỹ²) dỹ` diverges.  Proved,
+* `eq:tilde-y-fail`: `∫_0^∞ ỹ/(1 + ỹ²) dỹ` diverges. Proved,
   `not_integrableOn_tildeY`.
 
 * **`eq:H3-bound`, "`|H^{(k,3-k)}(Σ_t^{-1/2}[(0,y) - μ_t])| ≲ ỹ³` for `y ≥ Δ_t`",
   fails for small `ỹ`**, as the cubic bound it rests on does
-  (`not_exists_hermite_le_cube`).  At `t = 0` one has `𝔼G(0) = 0` (the
+  (`not_exists_hermite_le_cube`). At `t = 0` one has `𝔼G(0) = 0` (the
   integrand is odd), so `A_0 = 0`, `Δ_0 = δ_0`, the whitened point is
   `(0, ỹ)`, and `H^{(2,1)}(0, ỹ) = He₂(0) He₁(ỹ) = -ỹ`, which no `C ỹ³` bounds
-  as `ỹ → 0⁺`.  What holds, for every positive definite `Σ` and every centre,
+  as `ỹ → 0⁺`. What holds, for every positive definite `Σ` and every centre,
   is `ỹ ≤ ‖Σ^{-1/2}[(0,y) - μ]‖ ≤ 2ỹ` and `|H^{(k,3-k)}| ≤ 24(ỹ + ỹ³)` for
-  `y ≥ Δ`: `eucl_whiten_bounds`, `abs_hermite_whiten_le`, both proved.  The
+  `y ≥ Δ`: `eucl_whiten_bounds`, `abs_hermite_whiten_le`, both proved. The
   extra `ỹ` changes the proof of `lem:error-3` only by the harmless
   `∫ ỹ² e^{-ỹ²/2}`.
 
 * `lem:error-3` is stated with `|ψ|` in the integrand: the proof bounds
-  `|ψ|`, and `eq:error-goal` needs the absolute value.  Both bounds are on the
+  `|ψ|`, and `eq:error-goal` needs the absolute value. Both bounds are on the
   `ℝ≥0∞`-valued integral itself, so an infinite integral cannot satisfy them.
 
 Source: arXiv:2412.09080v3, §3, `eq:tilde-y-fail`, `eq:H3-bound`, `lem:error-3`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped ENNReal
@@ -92,7 +96,7 @@ theorem eucl_whiten_bounds {a b d : ℝ} (ha : 0 < a) (hD : 0 < a * d - b ^ 2) (
 
 /-- **Equation (eq:H3-bound), corrected.**  In the notation of
 `eucl_whiten_bounds`, `|H^{(k,3-k)}(Σ^{-1/2}[(0,y) - μ])| ≤ 24(ỹ + ỹ³)` for
-`y ≥ Δ`.  The source claims `≲ ỹ³`, which fails as `ỹ → 0⁺`; see the module
+`y ≥ Δ`. The source claims `≲ ỹ³`, which fails as `ỹ → 0⁺`; see the module
 docstring.
 
 Source: arXiv:2412.09080v3, §3.1, `eq:H3-bound`. -/
@@ -126,7 +130,7 @@ noncomputable def deltaCut (n : ℕ) (β t : ℝ) : ℝ :=
 
 /-- `∫_S ∫_{Δ_t}^∞ y (n det Σ_t)^{-1/2} |ψ|(Σ_t^{-1/2}[(0,y) - μ_t]) dy dt`, the
 contribution of the Edgeworth term `n^{-1/2}ψ` to the Kac–Rice integral for
-large `y`.  arXiv:2412.09080v3, `lem:error-3`. -/
+large `y`. arXiv:2412.09080v3, `lem:error-3`. -/
 noncomputable def psiKR (n : ℕ) (β : ℝ) (S : Set ℝ) : ℝ≥0∞ :=
   ∫⁻ t in S, ∫⁻ y in Set.Ioi (deltaCut n β t),
     ENNReal.ofReal (y * ((n : ℝ) * sigmaDet β t) ^ (-(1 : ℝ) / 2) *
@@ -134,7 +138,7 @@ noncomputable def psiKR (n : ℕ) (β : ℝ) (S : Set ℝ) : ℝ≥0∞ :=
         (whiten (sigmaFst β t) (sigmaCov β t) (sigmaSnd β t) (-muFst n β t, y - muSnd n β t))|)
 
 /-- Restricting the location window decreases the nonnegative Edgeworth
-contribution.  Source: arXiv:2412.09080v3, §3.1, `lem:error-3`.
+contribution. Source: arXiv:2412.09080v3, §3.1, `lem:error-3`.
 The estimates themselves are proved in `Section3_ErrorThirdT` and
 `Section3_ErrorThirdTPrime`. -/
 theorem psiKR_mono_set {S U : Set ℝ} (hSU : S ⊆ U) (n : ℕ) (β : ℝ) :

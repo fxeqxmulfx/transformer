@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_EulerTimeChange
+public import BrownianMotion.Continuity.KolmogorovChentsov
+
+/-!
 # Converting actual fourth moments to Kolmogorov's condition
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,8 +11,7 @@ This bridge keeps integrability explicit when passing from Bochner
 moment estimates to the extended-distance condition for continuous paths.
 -/
 
-import Transformer.BatchSize.Section4_EulerTimeChange
-import BrownianMotion.Continuity.KolmogorovChentsov
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped NNReal ENNReal

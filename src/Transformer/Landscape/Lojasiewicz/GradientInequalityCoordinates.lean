@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.MonomialGradientInequality
+
+/-!
 # Transporting a local gradient inequality through linear coordinates
 
 An invertible linear coordinate change preserves the analytic gradient
 estimate required by Appendix D.1 of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Lojasiewicz.MonomialGradientInequality
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators

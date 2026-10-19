@@ -1,4 +1,15 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section1_IPS
+public import Transformer.Perspective.Section2_FlowMap
+public import Transformer.Perspective.Section2_GradientFlow
+public import Transformer.Perspective.Section3_SmallBeta
+public import Transformer.Perspective.Section5_HighD
+public import Transformer.Perspective.Section5_ExpRate
+public import Transformer.MeanField.Basic
+
+/-!
 # Mean-Field Dynamics — clustering & rates (§4 of 2512.01868v4)
 
 * `Theorem thm: clustering_finite`  — global clustering for `d ≥ 3` (revisits
@@ -13,20 +24,13 @@
 variants as well; it is not restated here.
 
 `thm: clustering_finite` is read against the uniform law
-`Perspective.UniformTuple`, and is not proved.  `cor: d-ge-n` is
+`Perspective.UniformTuple`, and is not proved. `cor: d-ge-n` is
 `d_ge_n_exponential`, proved: `n ≤ d` uniform particles lie in an open
 hemisphere almost surely (`Perspective.ae_exists_openHemisphere`), which is
 the hypothesis `thm: cone-collapse` runs on.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section1_IPS
-import Transformer.Perspective.Section2_FlowMap
-import Transformer.Perspective.Section2_GradientFlow
-import Transformer.Perspective.Section3_SmallBeta
-import Transformer.Perspective.Section5_HighD
-import Transformer.Perspective.Section5_ExpRate
-import Transformer.MeanField.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -49,9 +53,9 @@ trajectories exist globally and converge to a single cluster:
   `lim_{t → ∞} ‖x_i(t) - x_j(t)‖ = 0`.
 
 "Almost every" is with respect to the uniform law on `(𝕊^{d-1})^n`,
-`Perspective.UniformTuple`.  Against an arbitrary reference measure the claim
+`Perspective.UniformTuple`. Against an arbitrary reference measure the claim
 is false: the Dirac mass at an antipodal pair, a stationary configuration of
-both dynamics, is a counterexample.  The two dynamics are one conjunction, as
+both dynamics, is a counterexample. The two dynamics are one conjunction, as
 the source states them in one theorem; for each, global existence is the first
 half and convergence of every solution the second.
 
@@ -90,7 +94,7 @@ yields exponential convergence to a single cluster: there are `x⋆` and
 
 **What the source says and what is changed here.**  The corollary inherits
 the hypotheses `n ≥ 1`, `β > 0`, `d ≥ 2` of `thm: cone-collapse`; none is used
-and all are dropped, as in `Perspective.d_infty_exponential`.  The source
+and all are dropped, as in `Perspective.d_infty_exponential`. The source
 justifies the hemisphere by "`n` points in dimension `d ≥ n` must lie in the
 same hemisphere"; that holds almost surely and not for every configuration —
 the antipodal pair `(x, -x)` lies in no open hemisphere and obeys no

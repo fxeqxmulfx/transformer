@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section2_Merger
+
+/-!
 # Attention's forward pass and Frank-Wolfe — almost-sure single leaders
 
 A proof of arXiv:2508.09628v1, §2.1, lem:singleLeader that allows token
@@ -6,7 +10,7 @@ mergers. It uses the finite linear branches and their null sets of ties,
 rather than requiring an invertible update.
 -/
 
-import Transformer.FrankWolfe.Section2_Merger
+@[expose] public section
 
 open MeasureTheory
 

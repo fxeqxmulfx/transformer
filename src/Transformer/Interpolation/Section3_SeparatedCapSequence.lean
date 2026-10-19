@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_SelectivePhaseClocks
+public import Transformer.Interpolation.Section3_SeparatedCaps
+
+/-!
 # Finite contraction into prescribed disjoint quadrant caps
 
 ArXiv:2411.04551v3, §3.2, `prop: separation`.
@@ -12,8 +17,7 @@ gated perceptron preserves a mean ray. Every concrete phase retains
 its original weak law and zero scores. Three phases per input suffice.
 -/
 
-import Transformer.Interpolation.Section3_SelectivePhaseClocks
-import Transformer.Interpolation.Section3_SeparatedCaps
+@[expose] public section
 
 open Real MeasureTheory Set
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section3_NewtonSpectra
+public import Transformer.DASH.Section3_CNConvergence
+
+/-!
 # DASH — convergence of the preconditioner inverse-root solvers
 
 arXiv:2602.02016v2, §3.2–3.3. These are the symmetric positive-definite
@@ -6,8 +11,7 @@ matrices arising from regularized Shampoo preconditioners. Eigenvalue
 conditions express the source's convergence conditions in its EVD frame.
 -/
 
-import Transformer.DASH.Section3_NewtonSpectra
-import Transformer.DASH.Section3_CNConvergence
+@[expose] public section
 
 open scoped BigOperators Matrix
 

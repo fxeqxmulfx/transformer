@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_ProjectionWeakTests
+public import Transformer.Perspective.SphereMoments
+
+/-!
 # The characteristic formula for every original weak solution
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §3.1,
@@ -11,8 +16,7 @@ equal endpoint laws. The measure curve has no extra representation
 or regularity assumption.
 -/
 
-import Transformer.Interpolation.Section3_ProjectionWeakTests
-import Transformer.Perspective.SphereMoments
+@[expose] public section
 
 open Real MeasureTheory
 

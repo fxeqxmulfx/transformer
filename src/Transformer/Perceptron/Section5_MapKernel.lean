@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.GeneralAttention
+public import Transformer.Perceptron.Section5_RotatedKernel
+
+/-!
 # Actual circle kernel derivatives for a general attention matrix
 
 ArXiv:2601.21366v2, §3.1, `rem: ext` (ii), §5.1,
@@ -14,8 +19,7 @@ will allow their use under an arbitrary probability measure.
 Invertibility is not needed for these calculus identities.
 -/
 
-import Transformer.Perceptron.GeneralAttention
-import Transformer.Perceptron.Section5_RotatedKernel
+@[expose] public section
 
 open Real
 

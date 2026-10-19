@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.KernelAsymp
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+/-!
 # Perceptrons and attention's mean-field landscape — the two bounds on `K_β''`
 
 The two Hessian bounds of `lem: concavity` of arXiv:2601.21366v2: inside a
@@ -7,7 +12,7 @@ fixed fraction `λ` of the window, `K_β''` is at most
 
 **How they are proved here.**  The source goes through the monotonicity of
 `K_β''` on `[0, θ_c]` and the location `cos θ_* = t_*` of its maximum on
-`[θ_c, π]`.  Neither is needed:
+`[θ_c, π]`. Neither is needed:
 
 * inside the window, `cos θ ≥ 1 - θ²/2`, `sin²θ ≤ θ²` and
   `β²θ_c² ≤ β + 3` (`sq_mul_sq_thetaC_mem`) bound the exponential below and the
@@ -21,8 +26,7 @@ Source: arXiv:2601.21366v2, `lem: concavity`, `eq:kernel-hess-bound-lambda`,
 `eq:kernel-hess-bound-max`.
 -/
 
-import Transformer.Perceptron.KernelAsymp
-import Mathlib.Analysis.Complex.ExponentialBounds
+@[expose] public section
 
 open Real
 
@@ -31,7 +35,7 @@ namespace Perceptron
 
 /-- **`eq:kernel-hess-bound-lambda`.**  For every `λ ∈ (0,1)` there is `β₀(λ)`
 with `K_β''(θ) ≤ -e^{-λ²/2}((1-λ²)/2) β e^β` for every `β ≥ β₀(λ)` and every
-`|θ| ≤ λ θ_c(β)`.  Here `β₀(λ) = 12/(1-λ²) + 3`.
+`|θ| ≤ λ θ_c(β)`. Here `β₀(λ) = 12/(1-λ²) + 3`.
 
 Source: arXiv:2601.21366v2, `eq:kernel-hess-bound-lambda`. -/
 theorem kernelK2_le_of_abs_le_lambda_thetaC (lam : ℝ) (hlam : lam ∈ Set.Ioo (0 : ℝ) 1) :

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_TrainingBudget
+public import Mathlib.Topology.Algebra.InfiniteSum.Real
+public import Mathlib.Topology.Algebra.InfiniteSum.NatInt
+
+/-!
 # AdaFisher — vanishing actual displacement and momentum error
 
 arXiv:2405.16397v3, §3.4 and Appendix A.2, deterministic extension.
@@ -6,9 +12,7 @@ A lower loss bound makes the proved dissipation budget finite. Its two
 strictly positive weights give convergence along the entire trajectory.
 -/
 
-import Transformer.AdaFisher.Section3_TrainingBudget
-import Mathlib.Topology.Algebra.InfiniteSum.Real
-import Mathlib.Topology.Algebra.InfiniteSum.NatInt
+@[expose] public section
 
 open scoped Topology
 open Filter

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Section5_CircularInteraction
+
+/-!
 # Consequences of the original frozen-center parameter hypotheses
 
 ArXiv:2411.04990v2, §5, `thm:fixed_centers`.
@@ -16,7 +20,7 @@ actual original mass bound and the uniqueness of a center within
 the peak-plus-neighborhood radius used in the manuscript's induction.
 -/
 
-import Transformer.Causal.Section5_CircularInteraction
+@[expose] public section
 
 open scoped BigOperators
 open Real Set

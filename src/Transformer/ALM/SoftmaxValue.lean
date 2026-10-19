@@ -1,27 +1,31 @@
-/-
+module
+
+public import Transformer.ALM.SoftmaxIndex
+
+/-!
 # What the head returns, not just where its mass sits
 
 Every softmax bound in this development — `softmax_winner_ge`,
 `softmax_winner_lengthfree`, `softmax_winner_int_sharp_one`,
-`softmax_at_index_ge` — bounds one *weight* from below.  A head does not
-return a weight.  It returns
+`softmax_at_index_ge` — bounds one *weight* from below. A head does not
+return a weight. It returns
 
     out = ∑ⱼ wⱼ · Vⱼ,
 
 the convex combination of the stored values, and the claim the machine rests
-on is that this vector is the value of the key the index names.  That step was
+on is that this vector is the value of the key the index names. That step was
 never taken: concentration of the weights was proved and concentration of the
 output asserted.
 
 `dist_weighted_sum_le` takes it, and takes it for an arbitrary convex
 combination in an arbitrary normed space — nothing about softmax, scores or
-the lattice enters.  If the weights are nonnegative, sum to one, and put mass
+the lattice enters. If the weights are nonnegative, sum to one, and put mass
 `w i₀` on one index, the output sits within `(1 - w i₀) · C` of `V i₀`, where
-`C` bounds the spread of the values around `V i₀`.  That is the exact
+`C` bounds the spread of the values around `V i₀`. That is the exact
 statement: the weight bound *is* the output bound, with the diameter as the
 only extra constant.
 
-The rest is instantiation.  `softmax_output_close` supplies the softmax
+The rest is instantiation. `softmax_output_close` supplies the softmax
 weights, and `head_output_at_index` composes it with
 `Transformer.ALM.SoftmaxIndex`: on the lookup path the running head's output
 differs from the value of the index's own answer by at most
@@ -32,7 +36,7 @@ Source of the head: `transformer_vm/attention/hull2d_cht.h`, lines 203-215
 (the lookup) and 70-83 (`resolve`, which aggregates the values).
 -/
 
-import Transformer.ALM.SoftmaxIndex
+@[expose] public section
 
 open scoped BigOperators
 
@@ -114,7 +118,7 @@ example (β : ℝ) (s : Fin 2 → ℝ) :
 /-- **The running head returns the value of the key the index names.**  On the
 lookup path — the query is one of the stored keys — the head's output is within
 `(n-1)·e^{-β}·C` of the value stored at the index's own answer, `C` bounding
-how far the values spread from it.  This is `softmax_at_index_ge` carried from
+how far the values spread from it. This is `softmax_at_index_ge` carried from
 the weight to the vector the head actually emits. -/
 theorem head_output_at_index {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (I : NNIndex) [Nonempty (Fin n)] (β : ℝ) (hβ : 0 ≤ β)

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.DASH.Section4_GuardedNdb
+public import Transformer.DASH.Section4_BatchedUpdates
+public import Transformer.DASH.Section2_GraftingContinuity
+
+/-!
 # DASH — the numerical inverse-root pipeline inside batched Shampoo
 
 arXiv:2602.02016v2, §2–4. Both finite inverse-fourth-root buffers
@@ -7,9 +13,7 @@ Shampoo, regularization and the EMA invariant prove their input domain;
 callers supply neither eigenframes nor a PI reliability assumption.
 -/
 
-import Transformer.DASH.Section4_GuardedNdb
-import Transformer.DASH.Section4_BatchedUpdates
-import Transformer.DASH.Section2_GraftingContinuity
+@[expose] public section
 
 open scoped Matrix Topology
 open Filter

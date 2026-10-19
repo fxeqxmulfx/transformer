@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdLimits
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdLimits
 
 /-!
 # Eventual efficient Gen decisions under a static native regime
@@ -25,6 +27,8 @@ decoupled decay differ from the source's norm-cost GD. Learned
 stochastic/numerical GPTMini generalization is not identified with
 this conditional fixed-table decision theorem.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

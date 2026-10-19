@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_BallFlow
+public import Transformer.Interpolation.Section1_ConcatenatedPrimitives
+public import Transformer.Interpolation.Section3_TwoRidgeScaling
+
+/-!
 # Joining actual particle flows at an original neural control switch
 
 ArXiv:2411.04551v3, §4, `eq: neural.ode.sphere`, and Appendix,
@@ -15,9 +21,7 @@ bijective. The two fixed complements combine to the complement of their
 union, as required for the source's chain of supported ball transports.
 -/
 
-import Transformer.Interpolation.Section3_BallFlow
-import Transformer.Interpolation.Section1_ConcatenatedPrimitives
-import Transformer.Interpolation.Section3_TwoRidgeScaling
+@[expose] public section
 
 open Real MeasureTheory Set
 

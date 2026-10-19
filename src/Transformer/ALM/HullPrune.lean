@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ALM.HullErase
+
+/-!
 # One erase, and then all of them
 
 `Transformer.ALM.HullErase` proves that each erase `add_line` performs leaves
@@ -7,34 +11,34 @@ value over the pruned family is still the best value over the family before
 the erase (`erase_slope_eq_preserves_isGreatest`,
 `erase_interX_le_preserves_isGreatest`).
 
-That is a statement about a single call.  The container the queries are run
+That is a statement about a single call. The container the queries are run
 against is the result of a whole build — thousands of erases, interleaved with
 insertions — and "so a query answered against the hull is answered against
 every line ever inserted" was the conclusion drawn in prose from a one-step
-lemma.  One step preserving a property does not by itself give it after many:
+lemma. One step preserving a property does not by itself give it after many:
 the induction has to be done, and after each erase the family the *next* erase
 is justified against is a different one.
 
 `EraseStep` is one loop iteration as a relation on containers, `erases_*` its
 reflexive-transitive closure, and `erases_preserves_isGreatest` the induction:
 however long the sequence of erases, the surviving lines still contain a
-maximizer over the original family.  `eraseStep_of_slope_eq` and
+maximizer over the original family. `eraseStep_of_slope_eq` and
 `eraseStep_of_interX_le` say the two loop conditions each produce such a step,
 so the chain is the one the code walks and not an abstraction of it.
 
 A build is not a sequence of erases either: `add_line` inserts, then erases,
 then the next call inserts again, and the family a query has to be answered
-against grows while the container shrinks.  `BuildStep` is one call on both at
+against grows while the container shrinks. `BuildStep` is one call on both at
 once, and `build_isGreatest_of_inserted` is the build's correctness — the
 container standing at the end holds a line that is highest at every query
-among all the lines ever inserted.  `Transformer.ALM.HullBuild` prices that
+among all the lines ever inserted. `Transformer.ALM.HullBuild` prices that
 build and `Transformer.ALM.HullCover` counts what it holds; neither says it
 answers anything.
 
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 143-195.
 -/
 
-import Transformer.ALM.HullErase
+@[expose] public section
 
 namespace Transformer
 namespace ALM
@@ -82,7 +86,7 @@ def ErasesTo (s t : Finset (ℝ × ℝ)) : Prop := Relation.ReflTransGen EraseSt
 sequence of erase steps the surviving lines still contain a line that is
 highest at `x` among *all* the lines the build ever held — so the query the
 machine answers against the final container is the query it would have
-answered against the whole input.  This is the induction the one-step
+answered against the whole input. This is the induction the one-step
 statements of `Transformer.ALM.HullErase` do not give: each step is justified
 against the family standing at that moment, and the maximizer is carried
 forward through them all. -/
@@ -120,7 +124,7 @@ def BuildStep (p q : Finset (ℝ × ℝ) × Finset (ℝ × ℝ)) : Prop :=
   (∃ l, q = (insert l p.1, insert l p.2)) ∨ (EraseStep p.1 q.1 ∧ q.2 = p.2)
 
 /-- The container is empty only before anything was inserted, and while it is
-not, it holds a maximizer over every line inserted so far.  The first half is
+not, it holds a maximizer over every line inserted so far. The first half is
 what makes the second inductive: an erase step cannot empty the container,
 since the line it drops is dominated by one that stays. -/
 private lemma build_invariant (x : ℝ) {p : Finset (ℝ × ℝ) × Finset (ℝ × ℝ)}
@@ -162,7 +166,7 @@ private lemma build_invariant (x : ℝ) {p : Finset (ℝ × ℝ) × Finset (ℝ 
 /-- **The hull the build ends with answers every query the input could ask.**
 However insertions and erases interleave — and `add_line` interleaves them on
 every call — the container standing at the end contains a line that is highest
-at `x` among all the lines ever inserted.  This is the correctness of the
+at `x` among all the lines ever inserted. This is the correctness of the
 build, as against `Transformer.ALM.HullBuild`, which prices it, and
 `Transformer.ALM.HullCover`, which counts what it holds. -/
 theorem build_isGreatest_of_inserted {c s : Finset (ℝ × ℝ)}

@@ -1,4 +1,16 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section2_FlowMap
+public import Transformer.Interpolation.Basic
+public import Transformer.Interpolation.Clustering
+public import Transformer.Interpolation.Section3_PositiveBarycenters
+public import Transformer.Interpolation.Section3_NoncolinearControls
+public import Transformer.Interpolation.HypPropagationFalse
+public import Transformer.Interpolation.Section3_PerturbationFalse
+public import Transformer.Interpolation.Section3_BarycenterInduction
+
+/-!
 # Measure-to-measure interpolation — The pair of lemmas behind separation
 
 Formalization of §3.2 of arXiv:2411.04551v3:
@@ -16,15 +28,7 @@ solution exists, and every solution satisfies the conclusion; `O(d · N)` is a
 constant chosen before `d`, `N` and the data.
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section2_FlowMap
-import Transformer.Interpolation.Basic
-import Transformer.Interpolation.Clustering
-import Transformer.Interpolation.Section3_PositiveBarycenters
-import Transformer.Interpolation.Section3_NoncolinearControls
-import Transformer.Interpolation.HypPropagationFalse
-import Transformer.Interpolation.Section3_PerturbationFalse
-import Transformer.Interpolation.Section3_BarycenterInduction
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -36,14 +40,14 @@ open Interpolation Perspective
 
 /-- **Lemma (lem: induction.barycenter).** *Inductive barycenter shrinking.*
 
-Let `μ_0^i ∈ 𝒫(ℚ_1^{d-1})` have pairwise non-collinear barycenters.  For any
+Let `μ_0^i ∈ 𝒫(ℚ_1^{d-1})` have pairwise non-collinear barycenters. For any
 `T, ε > 0` and any `ν_0 ∈ 𝒫(ℚ_1^{d-1})` whose barycenter is collinear with
 `𝔼_{μ_0^j}[x]`, there is a piecewise-constant `θ : [0, T] → Θ` with at most
 `O(d · N)` switches such that
 
   `conv_g supp ν(T) ∪ conv_g supp μ^j(T) ⊂ B(𝔼_{μ_0^j}[z] / ‖𝔼_{μ_0^j}[z]‖, ε)`,
 
-while `μ^i(T) = μ_0^i` for `i ≠ j`.  The ball is geodesic (§1.5), i.e.
+while `μ^i(T) = μ_0^i` for `i ≠ j`. The ball is geodesic (§1.5), i.e.
 `arccos ⟨x, p⟩ < ε`.
 
 The source writes the collinearity hypothesis and the hull with `μ_0^N`, the

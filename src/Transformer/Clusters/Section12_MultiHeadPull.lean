@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadScalar
+public import Transformer.Clusters.Section7_UnboundedParticles
+
+/-!
 # Quantitative pull of the original scalar heads
 
 ArXiv:2305.05465v6, §7, `e:lowerboundxi` and the proof of
@@ -15,8 +20,7 @@ error. Simultaneous sign reversal supplies the corresponding negative
 query bound. No escape or limiting configuration is assumed here.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadScalar
-import Transformer.Clusters.Section7_UnboundedParticles
+@[expose] public section
 
 open scoped BigOperators
 open Real

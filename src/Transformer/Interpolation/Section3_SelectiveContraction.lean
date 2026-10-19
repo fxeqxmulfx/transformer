@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_SelectiveClocks
+public import Transformer.Interpolation.Section3_MeanAxisAttraction
+
+/-!
 # Selective contraction by three actual control phases
 
 ArXiv:2411.04551v3, §3.2, Steps 1–3 of `lem: induction.barycenter`.
@@ -14,8 +19,7 @@ absolute three-piece control count. The unselected family may be empty;
 no nonemptiness or stronger weak-solution assumption is introduced.
 -/
 
-import Transformer.Interpolation.Section3_SelectiveClocks
-import Transformer.Interpolation.Section3_MeanAxisAttraction
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

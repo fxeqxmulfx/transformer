@@ -1,6 +1,8 @@
-import Transformer.Modes.Section3_CubicDensity
-import Transformer.Modes.Section3_CubicWeightedFourier
-import Transformer.Modes.Section3_CubicDerivativeIntegral
+module
+
+public import Transformer.Modes.Section3_CubicDensity
+public import Transformer.Modes.Section3_CubicWeightedFourier
+public import Transformer.Modes.Section3_CubicDerivativeIntegral
 
 /-!
 # Cubically weighted Edgeworth estimates for actual sum densities
@@ -22,6 +24,8 @@ characteristic-power condition. Continuous densities also exist
 eventually; neither their existence nor a derivative-error estimate
 is added to the original `edgeworth_three` hypotheses.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology FourierTransform

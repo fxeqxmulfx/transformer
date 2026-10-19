@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section3_Product
+
+/-!
 # IC-EoT: the actual additive attention equations
 
 arXiv:2603.22095v2, §3.2, Eqs. (15)–(22). A sequence is a real
@@ -7,7 +11,7 @@ their diagonals; there are no off-diagonal coefficients to assume away.
 The look-back length is `n + 1`, so averaging and the last token are defined.
 -/
 
-import Transformer.ICEoT.Section3_Product
+@[expose] public section
 
 noncomputable section
 

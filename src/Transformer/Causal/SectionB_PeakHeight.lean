@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.Section5_ParameterGeometry
+
+/-!
 # A uniform Gaussian height bound for the actual original interaction peak
 
 ArXiv:2411.04990v2, Appendix B, the original peak and Gaussian
@@ -17,7 +21,7 @@ paper hypothesis. Original circular unimodality transports the
 same bound to the magnitude of every original interaction.
 -/
 
-import Transformer.Causal.Section5_ParameterGeometry
+@[expose] public section
 
 open Real Set
 

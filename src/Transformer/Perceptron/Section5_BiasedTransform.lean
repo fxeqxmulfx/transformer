@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_BiasedBranches
+public import Transformer.Perceptron.Section5_AffineQuadraticDensity
+
+/-!
 # The original affine-quadratic transform of a zero biased branch
 
 ArXiv:2601.21366v2, §3.1, `rem: ext` (i), with §5.2 and §5.3,
@@ -19,8 +24,7 @@ No field identity, polynomial representation, inverse or support result
 is hidden in a definition or supplied as an unproved conclusion.
 -/
 
-import Transformer.Perceptron.Section5_BiasedBranches
-import Transformer.Perceptron.Section5_AffineQuadraticDensity
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

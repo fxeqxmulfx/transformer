@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainProxyLimits
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainRatioGrowth
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainProxyLimits
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainRatioGrowth
 
 /-!
 # Unequal native pair mass rates at the actual current CE scale
@@ -28,6 +30,8 @@ reals, zero betas and fixed tables; appendix C used coupled-cost GD,
 and preserved learned GPTMini uses nonzero betas. A current mass rate
 is neither a positive mass limit nor a held-out success certificate.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

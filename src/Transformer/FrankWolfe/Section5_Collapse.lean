@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.FrankWolfe.Section5_Contraction
+
+/-!
 # Attention's forward pass and Frank-Wolfe — softmax attention collapses
 
 Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
@@ -6,14 +10,14 @@ Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
 
 A trajectory of `eq: softmax.ODE` never leaves the convex hull of its initial
 configuration (`softmaxFlow_mem_configHull`), hence stays in a ball, where
-every score is at least one `c > 0`.  Each step then shrinks the diameter by
+every score is at least one `c > 0`. Each step then shrinks the diameter by
 `1 - γc` and moves a particle by at most the diameter, so every particle is a
 Cauchy sequence and all of them share the limit (`exists_tendsto_softmaxFlow`).
 The hardmax dynamics, whose particles stop at the vertices of the hull, is
 therefore an approximation of `(SA_β)` on finite time horizons only.
 -/
 
-import Transformer.FrankWolfe.Section5_Contraction
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology
@@ -94,21 +98,21 @@ example : (0 : ℝ) < 1 ∧ (1 : ℝ) ≤ 1 ∧ 0 < 1 ∧
   ⟨one_pos, le_rfl, one_pos, fun _ _ => by simp [softmaxStep]⟩
 
 /-- **Proposition (prop: origin).**
-Suppose `β > 0`.  There is `γ_* ∈ (0,1)` such that for every `γ ∈ (0, γ_*)` and
+Suppose `β > 0`. There is `γ_* ∈ (0,1)` such that for every `γ ∈ (0, γ_*)` and
 every initial configuration `(x_i^0)_{i ∈ ⟦1,n⟧}` there is `x^* ∈ conv{x_i^0}`
 with `x_i^t → x^*` for every particle `i` following `eq: softmax.ODE`, that is
 `x_i^{t+1} = softmaxStep β γ (x^t) i`, the model `(SA_β)` with `V^t = γ I_d` and
 `B^t ≡ I_d`.
 
 Differences from the source, recorded here so that they can be audited:
-- `0 < n` is added.  With no particles the hull is empty and there is no `x^*`
+- `0 < n` is added. With no particles the hull is empty and there is no `x^*`
   (`not_softmax_collapse_zero`); the source's `⟦1,n⟧` presupposes a particle.
 - `β > 0` is dropped and `γ_* = 1/2` is one admissible choice: the proof
   (`exists_tendsto_softmaxFlow`) works for every real `β` and every
   `γ ∈ (0, 1]`, so the statement proved is stronger than the source's.
 - The source defers the proof, "mutatis mutandis", to Geshkovski, Rigollet,
   Ruiz-Balet, arXiv:2411.04551, Proposition 2.1, a continuous-time result on
-  the sphere.  The proof here is the discrete contraction instead: on the hull
+  the sphere. The proof here is the discrete contraction instead: on the hull
   every score is at least one `c > 0`, so a step shrinks the diameter by
   `1 - γc`.
 
@@ -127,7 +131,7 @@ theorem softmax_collapse (β : ℝ) (hn : 0 < n) :
 example : 0 < 1 := one_pos
 
 /-- **`prop: origin` fails without particles**: the hull of the empty
-configuration is empty, so no `x^*` exists, whatever `β` and `γ_*`.  This is
+configuration is empty, so no `x^*` exists, whatever `β` and `γ_*`. This is
 why `softmax_collapse` assumes `0 < n`.
 
 Source: arXiv:2508.09628v1, §5, `prop: origin`, at `n = 0`. -/

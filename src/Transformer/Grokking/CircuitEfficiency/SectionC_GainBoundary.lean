@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainPositiveLimits
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainPositiveLimits
 
 /-!
 # An efficient absent circuit cannot beat a native Mem-only boundary path
@@ -25,6 +27,8 @@ universal grokking impossibility or learned stochastic GPTMini.
 Both retained buffers and growing clocks remain in the actual path;
 no stale nonzero Gen numerator is assumed to vanish or reset.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

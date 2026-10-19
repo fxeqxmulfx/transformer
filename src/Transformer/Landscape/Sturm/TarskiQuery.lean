@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Sturm.GlobalQuery
+public import Transformer.Landscape.Sturm.CoprimePart
+
+/-!
 # Sturm--Tarski queries with arbitrary multiplicities and common roots
 
 Only derivative, gcd, field division, and sign variations are used to
@@ -6,8 +11,7 @@ compute the query. Auxiliary for Appendix D.1, `lem: loj`, of
 arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Sturm.GlobalQuery
-import Transformer.Landscape.Sturm.CoprimePart
+@[expose] public section
 
 noncomputable section
 open Polynomial

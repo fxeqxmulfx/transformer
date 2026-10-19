@@ -1,6 +1,8 @@
-import Transformer.GPTMini.TokenInterface.Causal
-import Transformer.Basis.Encoding.Tasks
-import Transformer.Basis.Requirements
+module
+
+public import Transformer.GPTMini.TokenInterface.Causal
+public import Transformer.Basis.Encoding.Tasks
+public import Transformer.Basis.Requirements
 
 /-!
 # The exact task property required of a given GPTMini
@@ -16,6 +18,8 @@ The comparison includes depth order, raw key/value binding, hard recall
 overwrites and both parity answer/EOS positions. Architectural causality
 already lets the same property be checked in full teacher-forced rows.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.TokenInterface
 

@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_PhaseConcatenation
+public import Transformer.Interpolation.Section1_TimeTranslation
+public import Transformer.Interpolation.Section3_MeanAxisTransport
+
+/-!
 # Original weak uniqueness for general joined phases
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and the control
@@ -14,9 +20,7 @@ proved uniqueness applies. This argument works for nonlinear attention
 as well as perceptron fields; it assumes no characteristic representation.
 -/
 
-import Transformer.Interpolation.Section1_PhaseConcatenation
-import Transformer.Interpolation.Section1_TimeTranslation
-import Transformer.Interpolation.Section3_MeanAxisTransport
+@[expose] public section
 
 open Real MeasureTheory Set
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.JointInteractionFactorization
+module
+
+public import Transformer.GPTMini.Convex.JointInteractionFactorization
 
 /-!
 # Capacity and compactness boundaries of the direct joint-coefficient route
@@ -17,6 +19,8 @@ This is not an impossibility theorem for every compact reparameterization,
 every changed attention operator, or multiple heads. No AdamW convergence
 or normalized-softmax equivalence is asserted.
 -/
+
+@[expose] public section
 
 noncomputable section
 

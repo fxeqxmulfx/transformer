@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_SphereTransport
+
+/-!
 # Actual pair-kernel calculus on spherical geodesics
 
 ArXiv:2601.21366v2, §2.3, the interaction kernel `exp(β x·y)`,
@@ -14,7 +18,7 @@ the cancellation in §5.2, `eq:Hess-bilinear-analytic`, without
 assuming that a Hessian exists or assigning a total derivative.
 -/
 
-import Transformer.Perceptron.Section5_SphereTransport
+@[expose] public section
 
 open Real
 

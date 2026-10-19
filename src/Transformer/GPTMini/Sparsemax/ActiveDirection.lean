@@ -1,7 +1,9 @@
-import Transformer.GPTMini.Sparsemax.NonSaturation
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Calculus.FDeriv.Linear
+module
+
+public import Transformer.GPTMini.Sparsemax.NonSaturation
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.Calculus.FDeriv.Linear
 
 /-!
 # An actual nonzero sparsemax direction on two active coordinates
@@ -17,6 +19,8 @@ projection, including when other coordinates are at a support boundary.
 This does not guarantee a nonzero derivative for an outer loss, or for
 parameters whose score map annihilates this direction.
 -/
+
+@[expose] public section
 
 noncomputable section
 

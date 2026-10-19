@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_FullFieldLipschitz
+public import Transformer.Interpolation.Section1_SquaredDistance
+public import Transformer.Interpolation.Section3_PerturbationGeometry
+public import Mathlib.MeasureTheory.Integral.Prod
+
+/-!
 # Original spherical variance and tangent-field flux
 
 ArXiv:2411.04551v3, §1, `eq: vf` and `eq: cauchy.pb`.
@@ -13,10 +20,7 @@ No atomicity, characteristic representation, or weak uniqueness is
 assumed. They apply to every original network field at a fixed time.
 -/
 
-import Transformer.Interpolation.Section1_FullFieldLipschitz
-import Transformer.Interpolation.Section1_SquaredDistance
-import Transformer.Interpolation.Section3_PerturbationGeometry
-import Mathlib.MeasureTheory.Integral.Prod
+@[expose] public section
 
 open Real MeasureTheory
 open scoped NNReal

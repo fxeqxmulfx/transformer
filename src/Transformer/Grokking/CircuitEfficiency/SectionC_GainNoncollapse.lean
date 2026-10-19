@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainEnvelope
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedPath
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainEnvelope
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedPath
 
 /-!
 # Positive retained Gen mass excludes zero limits above the decay threshold
@@ -32,6 +34,8 @@ factor to start at zero with a positive partner; it does not require
 a future positive lower bound, successful margin or train/test label
 correspondence to be inserted into the optimizer recurrence.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

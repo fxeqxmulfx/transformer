@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.NoiseScale.Section2_NoiseScale
+
+/-!
 # Implications and simplifications
 
-arXiv:1812.06162, §2.2, "Implications and Simplifications".  The best drop of eq. (2.7),
+arXiv:1812.06162, §2.2, "Implications and Simplifications". The best drop of eq. (2.7),
 `ΔL_opt(B) = ΔL_max/(1 + B_noise/B)`, as a function of the batch: up to `B_noise` it grows
 linearly in `B` within a factor 2 (`lossDrop_le`, `le_lossDrop_of_le`), beyond it it lies
 within a factor 2 of its limit `ΔL_max` (`le_lossDrop_of_ge`, `tendsto_lossDrop`), and at
 `B = B_noise` both the drop and the step are half the largest, the turning point of
-Fig. 3 (`lossDrop_noiseScale`, `stepOpt_noiseScale`).  The paper's `B ≪ B_noise` and
+Fig. 3 (`lossDrop_noiseScale`, `stepOpt_noiseScale`). The paper's `B ≪ B_noise` and
 `B ≫ B_noise` are read as these bounds; they need `B_noise > 0`, that is `tr(HΣ) > 0`.
 
 For a Hessian `hI`, `h ≠ 0`, the noise scale is the simple one `B_simple = tr(Σ)/|G|²` of
@@ -15,7 +19,7 @@ eq. (2.9) (`simpleNoiseScale`, `noiseScale_smul_one`), and
 (`integral_dotProduct_sub_batchGrad`).
 -/
 
-import Transformer.NoiseScale.Section2_NoiseScale
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped Matrix

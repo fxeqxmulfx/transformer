@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perspective.Section8_General
+public import Transformer.Perspective.Section3_SmallBeta
+public import Mathlib.Algebra.MvPolynomial.Degrees
+public import Mathlib.Data.Set.Card
+
+/-!
 # §9.1 — Sharp configurations and the Cohn–Kumar dichotomy
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -10,18 +17,15 @@ configurations, and quotes the dichotomy: a global minimiser is a *sharp
 configuration*, or it is the vertices of the 600-cell.
 
 As the survey prints it the dichotomy is false, and `not_cohn_kumar_dichotomy`
-refutes it.  What kills it is the clause `m > 1` of the printed definition of a
+refutes it. What kills it is the clause `m > 1` of the printed definition of a
 sharp configuration: an antipodal pair `{x, -x}` has one inner product between
 distinct points, so it is excluded by that clause, and it is a global minimiser
-of `𝖧_β` among two-point configurations for every `β ≥ 0`.  In dimension `2`
+of `𝖧_β` among two-point configurations for every `β ≥ 0`. In dimension `2`
 there are infinitely many antipodal pairs and only one `exceptional`
 configuration to except, so no choice of the exception repairs it.
 -/
 
-import Transformer.Perspective.Section8_General
-import Transformer.Perspective.Section3_SmallBeta
-import Mathlib.Algebra.MvPolynomial.Degrees
-import Mathlib.Data.Set.Card
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -36,7 +40,7 @@ reference measure `σ` if
 
   `(1/#𝒞) Σ_{x ∈ 𝒞} p(x) = ∫ p dσ`
 
-for every polynomial `p` of total degree `≤ t`.  The survey takes `σ` to be the
+for every polynomial `p` of total degree `≤ t`. The survey takes `σ` to be the
 uniform measure on the sphere; this development does not fix a normalized
 surface measure on `SSphere d`, so it is carried as a parameter.
 Source: arXiv:2312.10794v5, §9.1. -/
@@ -54,7 +58,7 @@ of `𝒞` and `𝒞` is a spherical `(2m-1)`-design.
 counted between *pairwise distinct* points, which is what the survey's sentence
 says; the earlier rendering took them over all of `𝒞 ×ˢ 𝒞`, adding the
 diagonal value `⟨x, x⟩ = 1` and so inflating the count by one on every
-configuration.  The clause `m > 1` is the survey's and is kept, so that
+configuration. The clause `m > 1` is the survey's and is kept, so that
 `not_cohn_kumar_dichotomy` refutes what is printed.
 Source: arXiv:2312.10794v5, §9.1. -/
 def sharpConfiguration (σ : Measure (SSphere d)) (𝒞 : Finset (SSphere d)) : Prop :=
@@ -64,7 +68,7 @@ def sharpConfiguration (σ : Measure (SSphere d)) (𝒞 : Finset (SSphere d)) : 
     sphericalDesign d σ (2 * m - 1) 𝒞
 
 /-- `⟨x, -x⟩ = -1` on the sphere, for `Perspective.antipode` of
-`Transformer.Perspective.Section3_SmallBeta`.  Source: arXiv:2312.10794v5, §9.1. -/
+`Transformer.Perspective.Section3_SmallBeta`. Source: arXiv:2312.10794v5, §9.1. -/
 theorem inner_antipode (x : SSphere d) :
     inner (𝕜 := ℝ) ((x : EucSpace d)) ((antipode d x : SSphere d) : EucSpace d) = -1 := by
   have hx : ‖(x : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
@@ -73,7 +77,7 @@ theorem inner_antipode (x : SSphere d) :
   norm_num
 
 /-- A point of the sphere is not its own antipode, so `{x, -x}` really is a
-two-point configuration.  Source: arXiv:2312.10794v5, §9.1. -/
+two-point configuration. Source: arXiv:2312.10794v5, §9.1. -/
 theorem ne_antipode (x : SSphere d) : x ≠ antipode d x := by
   intro h
   have hx : ‖(x : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
@@ -134,7 +138,7 @@ example : (0 : ℝ) ≤ 0 := le_rfl
 
 /-- **An antipodal pair is not a sharp configuration** in the printed sense:
 its only inner product between distinct points is `-1`, so the count is `1`,
-and the clause `m > 1` fails.  Source: arXiv:2312.10794v5, §9.1. -/
+and the clause `m > 1` fails. Source: arXiv:2312.10794v5, §9.1. -/
 theorem not_sharpConfiguration_antipodal (σ : Measure (SSphere d)) (x : SSphere d) :
     ¬ sharpConfiguration d σ {x, antipode d x} := by
   rintro ⟨m, hm, hncard, -⟩
@@ -153,7 +157,7 @@ theorem not_sharpConfiguration_antipodal (σ : Measure (SSphere d)) (x : SSphere
   omega
 
 /-- Two orthogonal unit vectors of `ℝ²`, hence two antipodal pairs of `𝕊^1`
-that share no point.  Source: arXiv:2312.10794v5, §9.1. -/
+that share no point. Source: arXiv:2312.10794v5, §9.1. -/
 theorem exists_orthogonal_pair :
     ∃ x y : SSphere 2, inner (𝕜 := ℝ) ((x : EucSpace 2)) ((y : EucSpace 2)) = 0 := by
   refine ⟨⟨EuclideanSpace.single (0 : Fin 2) (1 : ℝ), ?_⟩,

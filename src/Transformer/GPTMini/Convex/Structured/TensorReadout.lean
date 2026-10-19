@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.TensorHeads
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorHeads
 
 /-!
 # Genuine residual output and tied Euclidean readout
@@ -18,6 +20,8 @@ actual greedy decoding therefore matches the verified mixed head for
 all parameters. Causal full-array blocks and stack/loss integration
 remain separate obligations.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

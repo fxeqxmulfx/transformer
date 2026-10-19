@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.Section3_SharpEnergy
+public import Transformer.Metastability.Section3_SlowGradient
+
+/-!
 # A uniform energy bound for a projection onto the slow manifold
 
 ArXiv:2410.06833v1, §3.1 (H1), and §3.2, `eq: otto.attention`.
@@ -8,8 +13,7 @@ gradient at the projection. No dynamics or regularity of that
 projection is needed for this static estimate.
 -/
 
-import Transformer.Metastability.Section3_SharpEnergy
-import Transformer.Metastability.Section3_SlowGradient
+@[expose] public section
 
 open scoped BigOperators
 open Real

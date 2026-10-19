@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.ICEoT.Section2_LSTMModel
+
+/-!
 # IC-EoT: refutation of the cited IC-LSTM sequence-convexity claim
 
 arXiv:2603.22095v2, §2.2.3, the conditions following Eqs. (4)–(11).
@@ -8,7 +12,7 @@ to the product of a new forget gate with the preceding cell state.
 This does not refute §3.3's IC-EoT Theorem 1 or the conditional Corollary 2.
 -/
 
-import Transformer.ICEoT.Section2_LSTMModel
+@[expose] public section
 
 noncomputable section
 

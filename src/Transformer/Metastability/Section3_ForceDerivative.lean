@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Metastability.Section3_CapTemperature
+public import Transformer.Metastability.AngularEnergy
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+
+/-!
 # A quantitative derivative bound for the actual angular force
 
 ArXiv:2410.06833v1, §3.2, `claim: 1` and `eq: Ht.third.lb`.
@@ -12,9 +18,7 @@ at least `1/2`, while the entire possible cross-cap deficit is below `1/4`.
 The factor `1/n²` is exactly the normalization of the actual energy gradient.
 -/
 
-import Transformer.Metastability.Section3_CapTemperature
-import Transformer.Metastability.AngularEnergy
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
+@[expose] public section
 
 open scoped BigOperators
 open Set Real

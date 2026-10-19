@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_MeanOverlap
+public import Transformer.Homogenized.OverlapDrift
+
+/-!
 # The actual zero-temperature mean-overlap drift
 
 ArXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`,
@@ -22,8 +27,7 @@ identification with the original Gaussian generator separately requires
 the original value-variance hypothesis of `ito_formula_overlap`.
 -/
 
-import Transformer.Homogenized.Section7_MeanOverlap
-import Transformer.Homogenized.OverlapDrift
+@[expose] public section
 
 open Real MeasureTheory
 open scoped BigOperators

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.BlockMLP
+public import Transformer.Perspective.InjectedAttention
+
+/-!
 # A block with the feed-forward term of parameter-golf does not collapse
 
 **Not a statement of any paper.**  `blockDrive_spread` for a block of
@@ -9,7 +14,7 @@ and rows of sum one — softmax attention for any `β`, `Q`, `K`, causal or not,
 with rotary embedding, normalised queries and keys, or a gain on the queries —,
 values `V_h` that carry `attn_scale` and the output map, the residual weight as
 the linear term `D = mix[0] - 1`, the feed-forward term `W₂ σ_α(W₁ x)²` of
-`Perspective.BlockMLP`, and injections `z_i`.  The bounds `IsBoundedBlockOn` of
+`Perspective.BlockMLP`, and injections `z_i`. The bounds `IsBoundedBlockOn` of
 such a block follow from the norms of its weights (`isBoundedBlockOn_sqMLP`),
 so what `blockDrive_spread` assumes of the feed-forward term becomes
 `‖W₁‖ ≤ K₁`, `‖W₂‖ ≤ K₂` (`sqMLP_block_spread`).
@@ -17,13 +22,12 @@ so what `blockDrive_spread` assumes of the feed-forward term becomes
 The attention of the record is not of this form: every layer runs XSA
 (`XSA_LAST_N = 11`), and the run enables a sigmoid gate on the output of every
 head (`SPARSE_ATTN_GATE_ENABLED=1`), so the rows of a head act differently on
-different tokens.  It is a drive of `Perspective.BlockXSA` instead, where the
+different tokens. It is a drive of `Perspective.BlockXSA` instead, where the
 projection of `eq:xsa` makes the common row sum unnecessary and the gate a
 factor on the row (`gatedXSA_block_spread`).
 -/
 
-import Transformer.Perspective.BlockMLP
-import Transformer.Perspective.InjectedAttention
+@[expose] public section
 
 open scoped BigOperators
 
@@ -74,13 +78,13 @@ example (β : ℝ) (Q K : TimeParam 1) (X : ℝ → SphereTuple 1 1) :
 
 /-- **Theorem (a block with the feed-forward term of parameter-golf does not
 collapse).**  Let `w₁`, `w₂` be linearly independent, `H` a number of heads,
-`|α| ≤ 1`, `N, L, K₂, Z ≥ 0` and `τ > 0`.  There is `δ > 0` such that along
+`|α| ≤ 1`, `N, L, K₂, Z ≥ 0` and `τ > 0`. There is `δ > 0` such that along
 every flow `ẋ_i = Proj_{x_i}(v_i(t))` driven on a window `[t₀, t₀ + τ]` by a
 block whose heads have nonnegative weights with rows of sum one and values
 `‖V_h‖ ≤ N`, whose feed-forward part is `D x + W₂ σ_α(W₁ x)²` with `‖D‖ ≤ L`,
 `‖W₁‖ ≤ K₁`, `‖W₂‖ ≤ K₂`, and whose injections are bounded by `Z` and satisfy
 `z_k - z_l = w₁`, `z_q - z_p = w₂` throughout, some time of the window has two
-tokens more than `δ` apart.  `δ` depends on neither the number of tokens nor the
+tokens more than `δ` apart. `δ` depends on neither the number of tokens nor the
 hidden width, the flow, the weights or `t₀`.
 
 Source: none — posed here; `blockDrive_spread` at `A = 1`, `B = L + K₂ K₁²` and

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DenominatorHead
+module
+
+public import Transformer.GPTMini.Semantics.DenominatorHead
 
 /-!
 # Recover the raw count from the actual residual stream
@@ -16,6 +18,8 @@ continuation in DenominatorHead. No correct logits or parity answer is a
 premise. This removes the representation collision; realization of a
 bounded parity/EOS decoder by the actual ReLU2 FFN is still required.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

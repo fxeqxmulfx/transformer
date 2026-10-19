@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_GaussianExpansion
+
+/-!
 # Spatial regularity of Gaussian transitions
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3).
@@ -7,7 +11,7 @@ Gaussian expectation. Its spatial derivative commutes with expectation,
 with all integrability and differentiation hypotheses discharged.
 -/
 
-import Transformer.BatchSize.Section4_GaussianExpansion
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped Topology

@@ -12,7 +12,18 @@ https://github.com/formal-applied-math/formal-mathfin.
 Here adaptedness is relative to the entire vector driver's filtration.
 -/
 
-import Transformer.BatchSize.Section4_BrownianFiltration
+module
+
+public import Transformer.BatchSize.Section4_BrownianFiltration
+
+/-!
+# Brownian increments and adapted moments
+
+Moments and independence of coordinate increments relative to the joint vector
+filtration. Source: arXiv:2506.12543v1, Section 4.3, equations (2)--(3).
+-/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal ENNReal

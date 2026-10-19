@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianHeadDelta
+public import Transformer.Homogenized.Section7_ConditionalQueryMoments
+
+/-!
 # Exact second moments of the original two-factor Gaussian query
 
 ArXiv:2604.01978v1, §2.3.3, initialization (G), and §7,
@@ -22,8 +27,7 @@ which would introduce an unnecessary extra dimension factor in the
 temperature Taylor remainder. No product matrix is declared Gaussian.
 -/
 
-import Transformer.Homogenized.Section7_GaussianHeadDelta
-import Transformer.Homogenized.Section7_ConditionalQueryMoments
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

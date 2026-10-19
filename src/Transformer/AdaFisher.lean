@@ -1,4 +1,53 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section2_Fisher
+public import Transformer.AdaFisher.Section2_Likelihood
+public import Transformer.AdaFisher.Section2_Score
+public import Transformer.AdaFisher.Section2_FisherIdentities
+public import Transformer.AdaFisher.Section2_Backprop
+public import Transformer.AdaFisher.Section3_Normalization
+public import Transformer.AdaFisher.Section3_NormalizationGradient
+public import Transformer.AdaFisher.Section3_MinMax
+public import Transformer.AdaFisher.Section3_Efficient
+public import Transformer.AdaFisher.Section3_Spectrum
+public import Transformer.AdaFisher.Section3_MinMaxMatrix
+public import Transformer.AdaFisher.Section3_NaturalGradient
+public import Transformer.AdaFisher.Section3_InverseError
+public import Transformer.AdaFisher.Section3_Algorithm
+public import Transformer.AdaFisher.Section3_State
+public import Transformer.AdaFisher.Section3_TrainingModels
+public import Transformer.AdaFisher.Section3_TrainingBias
+public import Transformer.AdaFisher.Section3_TrainingCoefficients
+public import Transformer.AdaFisher.Section3_TrainingError
+public import Transformer.AdaFisher.Section3_TrainingInner
+public import Transformer.AdaFisher.Section3_TrainingLossDescent
+public import Transformer.AdaFisher.Section3_TrainingEnergy
+public import Transformer.AdaFisher.Section3_TrainingBudget
+public import Transformer.AdaFisher.Section3_TrainingGradientEnergy
+public import Transformer.AdaFisher.Section3_TrainingErrorLimit
+public import Transformer.AdaFisher.Section3_TrainingStationarity
+public import Transformer.AdaFisher.Section3_TrainingLossLimit
+public import Transformer.AdaFisher.Section3_TrainingMinimum
+public import Transformer.AdaFisher.Section3_TrainingWitness
+public import Transformer.AdaFisher.Section3_ConvexFalse
+public import Transformer.AdaFisher.Section3_ConvexWitness
+public import Transformer.AdaFisher.Section3_ConvexCorrected
+public import Transformer.AdaFisher.Section3_ConvexLimit
+public import Transformer.AdaFisher.Section3_RegretFalse
+public import Transformer.AdaFisher.Section3_NonconvexFalse
+public import Transformer.AdaFisher.Section3_NonconvexWitness
+public import Transformer.AdaFisher.SectionA_Descent
+public import Transformer.AdaFisher.SectionA_Variation
+public import Transformer.AdaFisher.SectionA_StochasticTerms
+public import Transformer.AdaFisher.SectionA_GradientBound
+public import Transformer.AdaFisher.SectionA_Gershgorin
+public import Transformer.AdaFisher.SectionA_SpectralAnalysis
+public import Transformer.AdaFisher.SectionA_Factors
+public import Transformer.AdaFisher.SectionA_Distributed
+public import Transformer.AdaFisher.Section4_ReportedResults
+public import Transformer.AdaFisher.SectionC_Visualization
+
+/-!
 # AdaFisher: Adaptive Second Order Optimization via Fisher Information
 
 Gomes, Zhang, Belilovsky, Wolf, Hosseini, arXiv:2405.16397v3 (ICLR 2025).
@@ -128,49 +177,4 @@ or equivalence of different literature training setups. The future-research
 directions in §6 are proposals rather than quantified conjectures.
 -/
 
-import Transformer.AdaFisher.Section2_Fisher
-import Transformer.AdaFisher.Section2_Likelihood
-import Transformer.AdaFisher.Section2_Score
-import Transformer.AdaFisher.Section2_FisherIdentities
-import Transformer.AdaFisher.Section2_Backprop
-import Transformer.AdaFisher.Section3_Normalization
-import Transformer.AdaFisher.Section3_NormalizationGradient
-import Transformer.AdaFisher.Section3_MinMax
-import Transformer.AdaFisher.Section3_Efficient
-import Transformer.AdaFisher.Section3_Spectrum
-import Transformer.AdaFisher.Section3_MinMaxMatrix
-import Transformer.AdaFisher.Section3_NaturalGradient
-import Transformer.AdaFisher.Section3_InverseError
-import Transformer.AdaFisher.Section3_Algorithm
-import Transformer.AdaFisher.Section3_State
-import Transformer.AdaFisher.Section3_TrainingModels
-import Transformer.AdaFisher.Section3_TrainingBias
-import Transformer.AdaFisher.Section3_TrainingCoefficients
-import Transformer.AdaFisher.Section3_TrainingError
-import Transformer.AdaFisher.Section3_TrainingInner
-import Transformer.AdaFisher.Section3_TrainingLossDescent
-import Transformer.AdaFisher.Section3_TrainingEnergy
-import Transformer.AdaFisher.Section3_TrainingBudget
-import Transformer.AdaFisher.Section3_TrainingGradientEnergy
-import Transformer.AdaFisher.Section3_TrainingErrorLimit
-import Transformer.AdaFisher.Section3_TrainingStationarity
-import Transformer.AdaFisher.Section3_TrainingLossLimit
-import Transformer.AdaFisher.Section3_TrainingMinimum
-import Transformer.AdaFisher.Section3_TrainingWitness
-import Transformer.AdaFisher.Section3_ConvexFalse
-import Transformer.AdaFisher.Section3_ConvexWitness
-import Transformer.AdaFisher.Section3_ConvexCorrected
-import Transformer.AdaFisher.Section3_ConvexLimit
-import Transformer.AdaFisher.Section3_RegretFalse
-import Transformer.AdaFisher.Section3_NonconvexFalse
-import Transformer.AdaFisher.Section3_NonconvexWitness
-import Transformer.AdaFisher.SectionA_Descent
-import Transformer.AdaFisher.SectionA_Variation
-import Transformer.AdaFisher.SectionA_StochasticTerms
-import Transformer.AdaFisher.SectionA_GradientBound
-import Transformer.AdaFisher.SectionA_Gershgorin
-import Transformer.AdaFisher.SectionA_SpectralAnalysis
-import Transformer.AdaFisher.SectionA_Factors
-import Transformer.AdaFisher.SectionA_Distributed
-import Transformer.AdaFisher.Section4_ReportedResults
-import Transformer.AdaFisher.SectionC_Visualization
+@[expose] public section

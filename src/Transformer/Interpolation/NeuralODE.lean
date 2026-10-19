@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section4_NeuralBoundFalse
+
+/-!
 # Measure-to-measure interpolation — Neural dynamics and the norm obstruction
 
 Formalization of arXiv:2411.04551v3, §4:
@@ -16,4 +20,4 @@ Formalization of arXiv:2411.04551v3, §4:
 Source: arXiv:2411.04551v3, §4, `eq: neural.ode.sphere` and the two propositions.
 -/
 
-import Transformer.Interpolation.Section4_NeuralBoundFalse
+@[expose] public section

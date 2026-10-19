@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainDelayPrefix
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainBounds
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainDelayPrefix
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainBounds
 
 /-!
 # Positive efficient Gen seeds allow arbitrarily long wrong-test prefixes
@@ -21,6 +23,8 @@ may require seeds below machine range, so this exact-real fixed-table
 possibility is not a measured or numerical GPTMini delay prediction.
 Uniform decoupled AdamW and physical gains differ from coupled-cost GD.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

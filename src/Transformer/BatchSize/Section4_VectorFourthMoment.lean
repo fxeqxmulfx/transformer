@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_ItoFourthBound
+public import Transformer.BatchSize.Section4_VectorItoSums
+
+/-!
 # Dimension-explicit fourth moment of vector Brownian sums
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
 No independence of the adapted coordinate amplitudes is required.
 -/
 
-import Transformer.BatchSize.Section4_ItoFourthBound
-import Transformer.BatchSize.Section4_VectorItoSums
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal BigOperators

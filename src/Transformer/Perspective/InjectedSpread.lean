@@ -1,16 +1,20 @@
-/-
+module
+
+public import Transformer.Perspective.InjectedFlow
+
+/-!
 # Injected flows do not collapse
 
 **Not a statement of any paper.**  The theorem that `Perspective.InjectedFlow`
 prepares: along `ẋ_i = Proj_{x_i}(Σ_j a_ij(t) x_j + z_i)` with two linearly
 independent `z_k`, `z_l` and absolute row sums at most `A`, the particles
 cannot stay pairwise within `δ` of each other for a time `T`, where `δ` and
-`T` depend on `A`, `z_k` and `z_l` only (`IsInjectedFlow.spread`).  This is
+`T` depend on `A`, `z_k` and `z_l` only (`IsInjectedFlow.spread`). This is
 the opposite of cone collapse (`lem: hemisphere.clustering` of
 arXiv:2312.10794v5, §6.1), which the same flow undergoes at `z = 0`.
 -/
 
-import Transformer.Perspective.InjectedFlow
+@[expose] public section
 
 open scoped BigOperators
 
@@ -26,7 +30,7 @@ pairwise within `δ` and the weight rows `a`, `b` have absolute sums at most
   `⟨Proj_{x_k}(Σ_j a_j x_j + u), u⟩ + ⟨Proj_{x_l}(Σ_j b_j x_j + v), v⟩ ≥ c - K δ`
 
 with `c = (‖u‖²‖v‖² - ⟨u, v⟩²) / (2(‖u‖² + ‖v‖²))` and
-`K = A (‖u‖ + ‖v‖) + 2 ‖v‖²`.  Along an injected flow the left side is the
+`K = A (‖u‖ + ‖v‖) + 2 ‖v‖²`. Along an injected flow the left side is the
 derivative of `⟨x_k, u⟩ + ⟨x_l, v⟩` for `u = z_k`, `v = z_l`. -/
 theorem le_inner_proj_add_inner_proj (X : SphereTuple d n) (a b : Idx n → ℝ) (k l : Idx n)
     {A δ : ℝ} (ha : ∑ j, |a j| ≤ A) (hb : ∑ j, |b j| ≤ A) (hδ : 0 ≤ δ)
@@ -59,7 +63,7 @@ example : ∑ j : Idx 1, |(fun _ => (0 : ℝ)) j| ≤ 0 ∧ (0 : ℝ) ≤ 0 ∧
   simp
 
 /-- **Theorem (no collapse under injection).**  Let `z_k`, `z_l` be linearly
-independent and `A ≥ 0`.  There are `δ, T > 0`, depending on `A`, `z_k` and
+independent and `A ≥ 0`. There are `δ, T > 0`, depending on `A`, `z_k` and
 `z_l` only, such that along every injected flow
 `ẋ_i = Proj_{x_i}(Σ_j a_ij(t) x_j + z_i)` whose weights have absolute row sums
 at most `A`, every time window of length `T` contains a time at which two

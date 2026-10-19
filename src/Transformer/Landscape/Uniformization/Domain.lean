@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.NormalCrossing
+public import Transformer.Landscape.AnalyticPreparation.AnalyticDivision
+public import Mathlib.Analysis.Analytic.Uniqueness
+public import Mathlib.Topology.Algebra.Module.FiniteDimension
+
+/-!
 # Local uniformization: germs of analytic functions form a domain
 
 If a product of two analytic functions vanishes near a point, one factor
@@ -11,10 +18,7 @@ An analytic function vanishing on the hyperplane `x i = w i` near `w` is
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Uniformization.NormalCrossing
-import Transformer.Landscape.AnalyticPreparation.AnalyticDivision
-import Mathlib.Analysis.Analytic.Uniqueness
-import Mathlib.Topology.Algebra.Module.FiniteDimension
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators Topology

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianAttentionQueryTrace
+
+/-!
 # Pointwise original query and key trace bounds after output normalization
 
 ArXiv:2604.01978v1, §7, `eq:estimate_bound_h`,
@@ -16,7 +20,7 @@ The source places random softmax factors outside expectation; the
 proved normalization occurs pointwise before any expectation.
 -/
 
-import Transformer.Homogenized.Section7_GaussianAttentionQueryTrace
+@[expose] public section
 
 open scoped BigOperators
 
@@ -152,4 +156,3 @@ example : ∃ (z : EuclideanSpace ℝ (GaussianFeatureIdx 2 2))
   fin_cases j <;> simp [gaussianFeatureScores, z, PiLp.single_apply]
 
 end Transformer.Homogenized
-

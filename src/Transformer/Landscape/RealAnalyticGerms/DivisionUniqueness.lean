@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.RealAnalyticGerms.DivisionExistence
+
+/-!
 # Real analytic germs: DivisionUniqueness
 
 Adapted from Bochao Kong's LocalComplexGeometry, revision
@@ -8,7 +12,7 @@ dependency closure is retained. Apache-2.0 license:
 third_party/LocalComplexGeometry/LICENSE.
 -/
 
-import Transformer.Landscape.RealAnalyticGerms.DivisionExistence
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology
@@ -18,7 +22,7 @@ namespace Transformer.Landscape.RealAnalyticGerms
 
 open Transformer.Landscape.AnalyticPreparation
 
-/-- Germ-level uniqueness.  In particular, the quotient and coefficient
+/-- Germ-level uniqueness. In particular, the quotient and coefficient
 germs do not depend on any analytic representatives used to construct them.
 Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2. -/
 theorem preparedGermDivision_unique {n d : ℕ}

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Causal.SectionB_FarLogSlope
+
+/-!
 # Preserving the original force inequality at half the peak
 
 ArXiv:2411.04990v2, §5, `thm:fixed_centers`.
@@ -19,7 +23,7 @@ Both denominator arguments stay strictly inside the first
 semicircle, where the original force is strictly positive.
 -/
 
-import Transformer.Causal.SectionB_FarLogSlope
+@[expose] public section
 
 open Real Set
 

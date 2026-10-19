@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.Section5_DiracCaps
+
+/-!
 # Evolution of a cap under a stationary Dirac law
 
 ArXiv:2410.06833v1, §5, Step 2 of the proof of `thm: metastability MF`
@@ -16,7 +20,7 @@ upper bound on `T_*`. They concern the actual global characteristic flow,
 including points outside the support of the stationary measure.
 -/
 
-import Transformer.Metastability.Section5_DiracCaps
+@[expose] public section
 
 open Real MeasureTheory
 

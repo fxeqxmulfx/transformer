@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Landscape.Uniformization.Charts
+
+/-!
 # Local uniformization: the last variable
 
 `ℝⁿ⁺¹` as `ℝⁿ × ℝ` through `Fin.init` and `Fin.snoc`: analyticity, monomials,
@@ -7,7 +11,7 @@ charts on `ℝⁿ` with an interval in the last variable. Auxiliary for
 Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.Uniformization.Charts
+@[expose] public section
 
 open Filter Set
 open scoped BigOperators Topology

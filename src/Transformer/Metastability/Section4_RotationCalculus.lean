@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_OrthogonalRotations
+
+/-!
 # Actual coordinate derivatives along uniform spherical rotations
 
 ArXiv:2410.06833v1, §4, `prop: concentration unif`, and
@@ -15,7 +19,7 @@ is minus four times the first coordinate. These bounds hold at
 every real parameter, including the original identity parameter.
 -/
 
-import Transformer.Metastability.Section4_OrthogonalRotations
+@[expose] public section
 
 open Real MeasureTheory
 

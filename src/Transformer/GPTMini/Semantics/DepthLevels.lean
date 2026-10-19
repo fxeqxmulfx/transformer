@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthWordInput
+module
+
+public import Transformer.GPTMini.Semantics.DepthWordInput
 
 /-!
 # Quantitative original depth coordinates and independent occurrences
@@ -20,6 +22,8 @@ Within this explicit representation, threshold/positivity detect the
 independent occurrence, and a matching current letter excludes opposite
 self. These statements keep original positions and neutral letters.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

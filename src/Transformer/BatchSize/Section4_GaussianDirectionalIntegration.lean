@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_DiagonalGaussianState
+
+/-!
 # Gaussian integration by parts for Euclidean directional derivatives
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -6,7 +10,7 @@ The affine-state derivative and coordinate Fubini identity give the
 actual diagonal generator contraction for bounded derivative fields.
 -/
 
-import Transformer.BatchSize.Section4_DiagonalGaussianState
+@[expose] public section
 
 open MeasureTheory
 

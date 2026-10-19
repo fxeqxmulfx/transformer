@@ -3,6 +3,12 @@ module
 public import Mathlib.Probability.ConditionalProbability
 public import PFR.ForMathlib.FiniteRange.Defs
 
+/-!
+# Conditioning finite-range variables
+
+Expressing a distribution as a finite weighted sum of its conditional fiber laws.
+-/
+
 public section
 
 open MeasureTheory Set

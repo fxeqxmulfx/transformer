@@ -1,11 +1,16 @@
-/-
+module
+
+public import Transformer.Homogenized.RegimeRefutation
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+
+/-!
 # Homogenized Transformers — the improved rate off the grid is false
 
 The paragraph after `thm:weak_error_clean` of arXiv:2604.01978v1 states that
 the chain is approximated by the modified equation `eq:SDE_ito_clean` at the
 improved rate `C e^{C t_L} η (t_L+1) max(η,α)`, uniformly on `[0, t_L]` as the
 theorem's display has it; `cor:SDE` states the same display in the diffusive
-scaling.  Both are false for the piecewise-constant `X^η(t) = X^{⌊t/η⌋}`, for
+scaling. Both are false for the piecewise-constant `X^η(t) = X^{⌊t/η⌋}`, for
 the reason of `RegimeRefutation`: at the rotation head of `RotationHead` the
 noise vanishes (`σ = 0`, so `√α/σ = 0`), the deterministic rotation solves
 `eq:SDE_ito_clean`, and at `t = η/2` it has turned by `η/2` while the chain
@@ -19,7 +24,7 @@ Source: arXiv:2604.01978v1, §2.3.2 (the paragraph after
 `thm:weak_error_clean`), `cor:SDE`.
 -/
 
-import Transformer.Homogenized.RegimeRefutation
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real MeasureTheory ProbabilityTheory Filter
@@ -103,7 +108,7 @@ theorem not_weak_error_modified_printed :
 
 /-- **`cor:SDE` is false as printed.**  Its display, uniform in
 `t ∈ [0, t_L]`, fails at the rotation head with `η_m = 1/(m+1)`, `L_m = 1`:
-see the module docstring.  `diffusive_regime` states it at grid times.
+see the module docstring. `diffusive_regime` states it at grid times.
 
 Source: arXiv:2604.01978v1, `cor:SDE`. -/
 theorem not_diffusive_regime_printed :

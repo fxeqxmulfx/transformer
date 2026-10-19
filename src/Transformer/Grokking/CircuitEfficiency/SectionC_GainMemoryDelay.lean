@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemorySelection
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainDelaySeeds
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemorySelection
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainDelaySeeds
 
 /-!
 # Arbitrarily delayed permanent accuracy with original nonzero-beta memory
@@ -29,6 +31,8 @@ Static strong decay makes the selected margin vanish. Fixed gained tables
 and uniform decoupled native decay differ from appendix C coupled-cost
 GD. Learned stochastic/numerical GPTMini transfer remains open.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

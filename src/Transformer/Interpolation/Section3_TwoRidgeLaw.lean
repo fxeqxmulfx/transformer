@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_TwoRidgeFlow
+public import Transformer.Interpolation.Section1_AutonomousLaw
+
+/-!
 # Original weak well-posedness for the constant two-neuron construction
 
 ArXiv:2411.04551v3, §1, `eq: vf`, `eq: ips`, and `eq: cauchy.pb`,
@@ -15,8 +20,7 @@ by the actual flow and by every original weak solution. This is the mass
 accounting needed for the subsequent concentration argument.
 -/
 
-import Transformer.Interpolation.Section3_TwoRidgeFlow
-import Transformer.Interpolation.Section1_AutonomousLaw
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal

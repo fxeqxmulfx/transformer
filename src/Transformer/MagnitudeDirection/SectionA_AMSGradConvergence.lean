@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.SectionA_AMSGradCallbacks
+public import Transformer.MagnitudeDirection.SectionA_TrainingMinimum
+
+/-!
 # Concrete safeguarded AMSGradMD convergence
 
 User-requested extension of arXiv:2606.25971v2, §3.1 and Appendix A,
@@ -9,8 +14,7 @@ algorithm changes. No convergence claim for unmodified AMSGradMD follows
 by inheriting the theorem for ordinary AMSGrad.
 -/
 
-import Transformer.MagnitudeDirection.SectionA_AMSGradCallbacks
-import Transformer.MagnitudeDirection.SectionA_TrainingMinimum
+@[expose] public section
 
 open scoped Topology
 open Filter

@@ -1,14 +1,18 @@
-/-
+module
+
+public import Transformer.Perspective.AppendixA_FiniteLength
+
+/-!
 # Appendix A — every trajectory of `e:gradfl` converges to a critical point
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*, Appendix A, proof of `p:beta0`.
 
 The proof of `p:beta0` cites Łojasiewicz's theorem for the convergence of every
-trajectory of `e:gradfl` to a single critical point of `𝖤_0`.  Here it follows
+trajectory of `e:gradfl` to a single critical point of `𝖤_0`. Here it follows
 from the finite length of the trajectories (`exists_norm_sub_le`): a trajectory
 is Cauchy, so it converges, and at the limit the gradient vanishes
-(`exists_tendsto_isCriticalE0`).  For the gradient is small at arbitrarily late
+(`exists_tendsto_isCriticalE0`). For the gradient is small at arbitrarily late
 times (`frequently_tangentSq_lt`): `‖s‖²` grows at rate
 `(4/n) Σ_i ‖Proj_{x_i} s‖²` but stays below `n²`.
 The solutions of `e:Snonres0` are those of `e:gradfl` at half speed
@@ -16,7 +20,7 @@ The solutions of `e:Snonres0` are those of `e:gradfl` at half speed
 `exists_tendsto_isCriticalE0_of_beta0Dynamics`.
 -/
 
-import Transformer.Perspective.AppendixA_FiniteLength
+@[expose] public section
 
 open Filter Set
 open scoped Topology
@@ -144,7 +148,7 @@ theorem tendsto_of_beta0Dynamics {X₀ Z : SphereTuple d n}
 The source: since `e:Snonres0` is the gradient ascent of the real-analytic
 `𝖤_0` on the compact real-analytic manifold `(𝕊^{d-1})^n`, Łojasiewicz's
 theorem implies that for any initial condition `X`, the solution `Φ^t(X)`
-converges to some critical point `X^*` of `𝖤_0` as `t → +∞`.  Here the
+converges to some critical point `X^*` of `𝖤_0` as `t → +∞`. Here the
 gradient inequality of `𝖤_0` is explicit (`exists_int_mul_abs_sub_le`), and
 the convergence is `exists_tendsto_isCriticalE0` for `e:gradfl`, run at half
 speed (`tendsto_of_beta0Dynamics`).

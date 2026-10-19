@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_UniformEvenMoments
+public import Mathlib.Data.Nat.Factorial.Basic
+
+/-!
 # Quantitative even-moment bounds for the original uniform sphere law
 
 ArXiv:2410.06833v1, §4, `prop: concentration unif`, and
@@ -16,8 +21,7 @@ These estimates assume neither a concentration bound nor a
 Gaussian representation of the original uniform measure.
 -/
 
-import Transformer.Metastability.Section4_UniformEvenMoments
-import Mathlib.Data.Nat.Factorial.Basic
+@[expose] public section
 
 open Real MeasureTheory
 open scoped Nat

@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.DASH.Section3_Spectral
+public import Mathlib.LinearAlgebra.Matrix.Rank
+
+/-!
 # DASH — shifted ReLU and rank of the spectral inverse
 
 arXiv:2602.02016v2, Appendix B, “Shifted-ReLU heuristic”.
 Inactive eigenvalues are set to zero before taking inverse powers.
 -/
 
-import Transformer.DASH.Section3_Spectral
-import Mathlib.LinearAlgebra.Matrix.Rank
+@[expose] public section
 
 open scoped BigOperators Matrix
 

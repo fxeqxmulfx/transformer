@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.Basic
+public import Mathlib.Analysis.Normed.Lp.lpSpace
+public import Mathlib.Analysis.Normed.Operator.NormedSpace
+public import Mathlib.Analysis.Normed.Ring.InfiniteSum
+public import Mathlib.Data.Finsupp.Antidiagonal
+public import Mathlib.Data.Finsupp.Weight
+
+/-!
 # Real analytic preparation: SequenceConvolution
 
 Adapted from Bochao Kong's classical-complex-wpt, revision
@@ -9,12 +18,7 @@ The scalar field is real; no complex root or complex differentiation result
 is used. Apache-2.0 license: third_party/classical-complex-wpt/LICENSE.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.Basic
-import Mathlib.Analysis.Normed.Lp.lpSpace
-import Mathlib.Analysis.Normed.Operator.NormedSpace
-import Mathlib.Analysis.Normed.Ring.InfiniteSum
-import Mathlib.Data.Finsupp.Antidiagonal
-import Mathlib.Data.Finsupp.Weight
+@[expose] public section
 
 open Filter Finset
 open scoped BigOperators ENNReal NNReal Topology

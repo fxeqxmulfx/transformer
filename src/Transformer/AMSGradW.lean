@@ -1,4 +1,16 @@
-/-
+module
+
+public import Transformer.AMSGradW.Basic
+public import Transformer.AMSGradW.Bounds
+public import Transformer.AMSGradW.MetricLimit
+public import Transformer.AMSGradW.Contraction
+public import Transformer.AMSGradW.Error
+public import Transformer.AMSGradW.Perturbation
+public import Transformer.AMSGradW.Convergence
+public import Transformer.AMSGradW.Minimum
+public import Transformer.AMSGradW.ShiftedQuadratic
+
+/-!
 # AMSGradW: original decoupled-decay training convergence
 
 User-requested deterministic extension of Tran and Le,
@@ -51,12 +63,4 @@ bias-corrected updates and floating-point implementations are not covered.
 Every statement is proved without `sorry` or extra axioms.
 -/
 
-import Transformer.AMSGradW.Basic
-import Transformer.AMSGradW.Bounds
-import Transformer.AMSGradW.MetricLimit
-import Transformer.AMSGradW.Contraction
-import Transformer.AMSGradW.Error
-import Transformer.AMSGradW.Perturbation
-import Transformer.AMSGradW.Convergence
-import Transformer.AMSGradW.Minimum
-import Transformer.AMSGradW.ShiftedQuadratic
+@[expose] public section

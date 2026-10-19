@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_Algorithm
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.Probability.Independence.Basic
+
+/-!
 # AdaFisher: refutation of the printed nonconvex endpoint
 
 arXiv:2405.16397v3, §3.4, Proposition 3.4, Appendix A.2, `eq:gradient_bound`.
@@ -8,11 +16,7 @@ and the stated monotonicity of the effective preconditioner.
 Algorithm 1's requirement β<1 must also apply to the convergence statement.
 -/
 
-import Transformer.AdaFisher.Section3_Algorithm
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Probability.Independence.Basic
+@[expose] public section
 
 open Filter Topology MeasureTheory ProbabilityTheory
 

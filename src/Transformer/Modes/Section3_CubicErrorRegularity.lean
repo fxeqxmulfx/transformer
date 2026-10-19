@@ -1,5 +1,7 @@
-import Transformer.Modes.Section3_ThirdDerivativeTail
-import Transformer.Modes.Section3_CubicCorrectionDerivativeBounds
+module
+
+public import Transformer.Modes.Section3_ThirdDerivativeTail
+public import Transformer.Modes.Section3_CubicCorrectionDerivativeBounds
 
 /-!
 # Regularity of the actual cubic-corrected characteristic error
@@ -21,6 +23,8 @@ the proved third-derivative integrability result. Norm integrability
 is sufficient in real-pair coordinates, where the product norm is
 not the Euclidean norm used by Fourier inversion.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology

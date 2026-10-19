@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section1_RidgeParameterBounds
+public import Transformer.Interpolation.Section3_RidgeClassProgress
+public import Transformer.Interpolation.Section4_GatedTransfers
+
+/-!
 # Actual original weak phases with balanced ridge clock costs
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb` and `eq: vf`,
@@ -16,9 +22,7 @@ clock is realized by one actual constant piece whose complete
 parameter norm grows as sqrt(clock/horizon).
 -/
 
-import Transformer.Interpolation.Section1_RidgeParameterBounds
-import Transformer.Interpolation.Section3_RidgeClassProgress
-import Transformer.Interpolation.Section4_GatedTransfers
+@[expose] public section
 
 open Real MeasureTheory Set
 

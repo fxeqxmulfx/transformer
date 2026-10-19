@@ -1,15 +1,19 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_AtomicPenalty
+
+/-!
 # The genuine-softmax atomic mixture is convex
 
-Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §2–§3.1.  This is a candidate
+Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §2–§3.1. This is a candidate
 convex surrogate for the attention-only model in `eq:attention_only_obj`:
 atoms retain trainable softmax score products, while coefficients carry a
-weighted total-variation cost.  The surrogate's prediction-budget set is
-convex.  The following module proves that it does not preserve the paper's
+weighted total-variation cost. The surrogate's prediction-budget set is
+convex. The following module proves that it does not preserve the paper's
 four-matrix weight decay.
 -/
 
-import Transformer.Convexifying.Section3_AtomicPenalty
+@[expose] public section
 
 namespace Transformer.Convexifying
 
@@ -19,7 +23,7 @@ Source: arXiv:2211.11052v1, §3.1, candidate convexification of equation
 def atomicMixtureCost (heads : List (ℝ × ℝ)) : ℝ :=
   (heads.map fun h => atomicHeadCost h.1 h.2).sum
 
-/-- The full two-row output of the atomic mixture.  Each atom is a genuine
+/-- The full two-row output of the atomic mixture. Each atom is a genuine
 softmax head with trainable score product `p`, realized by `q = p`, `k = 1`,
 and output coefficient `t`, realized by `v = t`, `o = 1`.
 Source: arXiv:2211.11052v1, equation `eq:attention_only`, specialized. -/
@@ -27,7 +31,7 @@ noncomputable def atomicMixtureRows (heads : List (ℝ × ℝ)) : Fin 2 → ℝ 
   fun r => (heads.map fun h => toyOutput 0 r h.1 1 h.2 1).sum
 
 /-- The projected atomic prediction is exactly the difference of its two
-full output rows.  Source: equation `eq:attention_only`, atomic mixture. -/
+full output rows. Source: equation `eq:attention_only`, atomic mixture. -/
 theorem reducedMixtureDifference_eq_atomicRows (heads : List (ℝ × ℝ)) :
     reducedMixtureDifference heads =
       atomicMixtureRows heads 0 - atomicMixtureRows heads 1 := by
@@ -46,7 +50,7 @@ theorem reducedMixtureDifference_eq_atomicRows (heads : List (ℝ × ℝ)) :
       linarith
 
 /-- Scale only the output coefficients, leaving trainable score atoms
-unchanged.  Source: equation `eq:attention_only`, atomic mixture. -/
+unchanged. Source: equation `eq:attention_only`, atomic mixture. -/
 def scaleAtomicHeads (a : ℝ) (heads : List (ℝ × ℝ)) : List (ℝ × ℝ) :=
   heads.map fun h => (h.1, a * h.2)
 
@@ -58,7 +62,7 @@ private theorem reducedHeadDifference_scale (p t a : ℝ) :
   ring
 
 /-- The weighted atomic cost is positively homogeneous in its signed
-coefficient.  Source: equation `eq:attention_only_obj`, candidate penalty. -/
+coefficient. Source: equation `eq:attention_only_obj`, candidate penalty. -/
 private theorem atomicHeadCost_scale (p t a : ℝ) (ha : 0 ≤ a) :
     atomicHeadCost p (a * t) = a * atomicHeadCost p t := by
   simp [atomicHeadCost, abs_mul, abs_of_nonneg ha]
@@ -78,7 +82,7 @@ theorem reducedMixtureDifference_scale (a : ℝ) (heads : List (ℝ × ℝ)) :
       ring
 
 /-- Scaling every coefficient by a nonnegative number scales its total
-weighted atomic cost.  Source: candidate convexification of §3.1. -/
+weighted atomic cost. Source: candidate convexification of §3.1. -/
 theorem atomicMixtureCost_scale (a : ℝ) (ha : 0 ≤ a)
     (heads : List (ℝ × ℝ)) :
     atomicMixtureCost (scaleAtomicHeads a heads) =
@@ -109,15 +113,15 @@ theorem atomicMixtureCost_append (u v : List (ℝ × ℝ)) :
   simp [atomicMixtureCost, List.map_append, List.sum_append]
 
 /-- Achievable prediction-budget pairs under the positively homogeneous
-atomic cost.  Score parameters range over all real numbers, so query and
-key scores are not fixed.  Source: §3.1, candidate convexification. -/
+atomic cost. Score parameters range over all real numbers, so query and
+key scores are not fixed. Source: §3.1, candidate convexification. -/
 def atomicMixtureEpigraph : Set (ℝ × ℝ) :=
   {dc | ∃ heads : List (ℝ × ℝ),
     reducedMixtureDifference heads = dc.1 ∧ atomicMixtureCost heads ≤ dc.2}
 
-/-- The finite atomic prediction-budget epigraph is convex.  Both score
+/-- The finite atomic prediction-budget epigraph is convex. Both score
 products remain free; convex combinations scale coefficients and concatenate
-the two finite atom lists.  Source: §3.1, candidate convexification. -/
+the two finite atom lists. Source: §3.1, candidate convexification. -/
 theorem atomicMixtureEpigraph_convex : Convex ℝ atomicMixtureEpigraph := by
   apply convex_iff_forall_pos.mpr
   intro x hx y hy a b ha hb hab

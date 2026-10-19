@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Convexifying.Section3_Models
+
+/-!
 # Euclidean norms and balanced head factors
 
 Ergen, Neyshabur, Mehta, arXiv:2211.11052v1, §3.2 and Appendix A.1/A.2.
@@ -6,7 +10,7 @@ These finite-dimensional norm identities make the rescaling and recovery
 arguments precise, including zero rows that the paper divides by implicitly.
 -/
 
-import Transformer.Convexifying.Section3_Models
+@[expose] public section
 
 open scoped BigOperators
 
@@ -65,7 +69,7 @@ theorem norm₂_eq_zero_iff {d : ℕ} (v : Vec d) :
     simp
 
 /-- Balance a product vector into value and output weights with quadratic
-penalty equal to its Euclidean norm.  The zero case is handled explicitly.
+penalty equal to its Euclidean norm. The zero case is handled explicitly.
 Source: arXiv:2211.11052v1, Appendix A.1/A.2, `eq:scaling`. -/
 theorem exists_balanced_factor {d : ℕ} (v : Vec d) :
     ∃ u : Vec d, ∃ b : ℝ,
@@ -92,7 +96,7 @@ theorem exists_balanced_factor {d : ℕ} (v : Vec d) :
       ring
 
 /-- Put a product vector into the unit value ball, moving its norm into
-the scalar output weight.  The zero case is handled explicitly.
+the scalar output weight. The zero case is handled explicitly.
 Source: arXiv:2211.11052v1, §3.2, `lemma:scaling`. -/
 theorem exists_unit_factor {d : ℕ} (v : Vec d) :
     ∃ u : Vec d, ∃ b : ℝ,
@@ -119,7 +123,7 @@ theorem exists_unit_factor {d : ℕ} (v : Vec d) :
     · exact abs_of_pos hvpos
 
 /-- A pair form of balanced factorization. -/
-private theorem exists_balanced_pair {d : ℕ} (v : Vec d) :
+theorem exists_balanced_pair {d : ℕ} (v : Vec d) :
     ∃ p : Vec d × ℝ,
     (∀ q, p.1 q * p.2 = v q) ∧
       (normSq p.1 + p.2 ^ 2) / 2 = norm₂ v := by
@@ -137,7 +141,7 @@ theorem balancedPair_spec {d : ℕ} (v : Vec d) :
   Classical.choose_spec (exists_balanced_pair v)
 
 /-- A pair form of unit-ball factorization. -/
-private theorem exists_unit_pair {d : ℕ} (v : Vec d) :
+theorem exists_unit_pair {d : ℕ} (v : Vec d) :
     ∃ p : Vec d × ℝ,
     (∀ q, p.1 q * p.2 = v q) ∧ norm₂ p.1 ≤ 1 ∧ |p.2| = norm₂ v := by
   obtain ⟨u, b, hprod, hunit, hscale⟩ := exists_unit_factor v

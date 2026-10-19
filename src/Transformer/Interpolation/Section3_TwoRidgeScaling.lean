@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_TwoRidgeLaw
+
+/-!
 # Prescribed-time realization by the original constant two-neuron controls
 
 Auxiliaries for arXiv:2411.04551v3, Appendix, `lem: two.balls`,
@@ -15,7 +19,7 @@ These statements connect the constructed attractor to the exact controls
 and prescribed terminal time required by the original ball-transport lemma.
 -/
 
-import Transformer.Interpolation.Section3_TwoRidgeLaw
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal

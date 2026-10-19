@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_Algorithm
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.Convex.Strong
+public import Mathlib.Analysis.SpecificLimits.Basic
+
+/-!
 # AdaFisher: the printed convex convergence claim is false
 
 arXiv:2405.16397v3, §3.4, Proposition 3.3, Appendix A.2.
@@ -7,11 +15,7 @@ Fisher eigenvalue. The quadratic `J(x)=x²/2` with damping 0.001 and α=1
 has multiplier -999 and diverges. The example also refutes its 1/k bound.
 -/
 
-import Transformer.AdaFisher.Section3_Algorithm
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Convex.Strong
-import Mathlib.Analysis.SpecificLimits.Basic
+@[expose] public section
 
 open Filter Topology
 

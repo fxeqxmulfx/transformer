@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.GaussianInit
+
+/-!
 # Homogenized Transformers — the Gaussian head ensemble
 
 The head law of `eq: tformers.at.initialization` (assumption (G)) of
@@ -7,7 +11,7 @@ entries and `2d²` query/key entries, independent and centered Gaussian with
 variances `σ_V²` and `σ_A²`, and the head `(V, W W'ᵀ)` read off them.
 
 `IsGaussianHeadLaw` had one witness, the degenerate `σ_V = σ_A = 0`, at which
-every Gaussian is a Dirac mass and the law of the head is `δ_0`.  That witness
+every Gaussian is a Dirac mass and the law of the head is `δ_0`. That witness
 cannot carry the standard scaling `σ_V² = 1/d` of §2.5, under which the whole
 Gaussian section is written; `gaussHeadLaw` carries every pair `(σ_V, σ_A)`,
 and `exists_isGaussianHeadLaw_stdScaling` is that scaling.
@@ -15,7 +19,7 @@ and `exists_isGaussianHeadLaw_stdScaling` is that scaling.
 Source: arXiv:2604.01978v1, `eq: tformers.at.initialization`, §2.5.
 -/
 
-import Transformer.Homogenized.GaussianInit
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open MeasureTheory ProbabilityTheory
@@ -160,7 +164,7 @@ noncomputable def stdSigmaV (d : ℕ) : ℝ≥0 := NNReal.sqrt (d : ℝ≥0)⁻�
 
 /-- **Assumption (G) is satisfiable at the standard scaling.**  The source
 adopts `σ_V² = 1/d` throughout §2.5 — "the standard scaling, which we adopt
-henceforth" — and every theorem of that section is written under it.  The
+henceforth" — and every theorem of that section is written under it. The
 degenerate witness `isGaussianHeadLaw_dirac_zero` has `σ_V = 0` and cannot
 carry it; this one does, at every `σ_A` and every `d ≥ 1`.
 

@@ -1,38 +1,42 @@
-/-
+module
+
+public import Transformer.Homogenized.McKeanVlasov
+public import Transformer.Homogenized.RandomChain
+
+/-!
 # Homogenized Transformers — well-posedness of the mean-field limit
 
 Formalization of `prop:mckean_vlasov_common_noise` and `thm:PoC_wellposedness`
 of arXiv:2604.01978v1, *Homogenized Transformers*, §4: the conditional
 McKean–Vlasov SDE with common noise has a unique solution, and the conditional
 law of that solution is the unique weak solution of the nonlinear
-Fokker–Planck SPDE `eq: the.spde`.  Existence is stated here; the rest is false
+Fokker–Planck SPDE `eq: the.spde`. Existence is stated here; the rest is false
 for the formal solution concepts.
 
 **What the formal solution concepts cannot carry.**  The source fixes a
 filtered probability space carrying a cylindrical Wiener process `W` on
 `L²(ρ*)`, an `ℱ_0`-measurable `x_0` independent of `W`, and the noise
-filtration `𝒢 = (ℱ_t^W)`.  None of the three can be written without `W`, and
+filtration `𝒢 = (ℱ_t^W)`. None of the three can be written without `W`, and
 this has two consequences.
 
 *Existence is stated on some filtered space, not on a given one.*  The space is
 what makes the source's statement true: on a space too small to carry `W` — a
-one-point space, say — there is no solution unless the fields vanish.  Since
+one-point space, say — there is no solution unless the fields vanish. Since
 "carries `W`" cannot be a hypothesis, the space is existentially quantified.
 
 *Uniqueness, `prop: prop.3` and `thm:PoC_wellposedness` are false.*  The
 formal `𝒢` is any filtration below `ℱ`; one that learns `x_0` after time `0`
-makes `μ(t) = Law(x(t) | 𝒢_t)` jump.  Under the trivial head, two solutions
+makes `μ(t) = Law(x(t) | 𝒢_t)` jump. Under the trivial head, two solutions
 with one initial law then differ in law, the conditional law of a solution need
 not solve the SPDE, and it need not have the law of the weak solution at rest:
 `not_mckeanVlasovSolution_unique` and
 `not_isWeakSpdeSolution_of_isMcKeanVlasovSolution`, in
 `Section4_WellPosedRefutation`, and `not_poc_wellposedness`, in
-`Section4_PocRefutation`.  The source's pathwise uniqueness, for solutions
+`Section4_PocRefutation`. The source's pathwise uniqueness, for solutions
 driven by one `W`, is not refuted by them, and is not stated here.
 -/
 
-import Transformer.Homogenized.McKeanVlasov
-import Transformer.Homogenized.RandomChain
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open Real MeasureTheory
@@ -73,7 +77,7 @@ McKean–Vlasov SDE `eq:non_linear_SDE_common` has a solution on `[0,T]`.
 The source's proof is a fixed-point argument on the given filtered space,
 Lipschitz continuity of `G_μ(x,·)` in `(x,μ)` coming from `prop:satisfying_MF`.
 
-Not proved here.  See the module docstring for the existential over the space.
+Not proved here. See the module docstring for the existential over the space.
 
 Source: arXiv:2604.01978v1, `prop:mckean_vlasov_common_noise`. -/
 theorem exists_mckeanVlasovSolution {d : ℕ} (β : ℝ) (σV σA : ℝ≥0)

@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Sparsemax.PeriodicMemoryAttention
-import Transformer.GPTMini.Sparsemax.EnergyMemoryIdentification
+module
+
+public import Transformer.GPTMini.Sparsemax.PeriodicMemoryAttention
+public import Transformer.GPTMini.Sparsemax.EnergyMemoryIdentification
 
 /-!
 # Joint constant-width attention and original common-value learning
@@ -16,6 +18,8 @@ the physical embedding Gram is the explicit width-three one. Probability
 mixtures of differently masked query rows are not asserted to commute with
 this new mask. Registered and nearest categorical observations do apply.
 -/
+
+@[expose] public section
 
 noncomputable section
 

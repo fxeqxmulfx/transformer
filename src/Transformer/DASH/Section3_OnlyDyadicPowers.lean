@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section3_Spectral
+
+/-!
 # DASH — the algebraic restriction of square-root chaining
 
 arXiv:2602.02016v2, §3.3, after `equation:NDB-Y-Z`. Arbitrary
@@ -8,7 +12,7 @@ finite numerical convergence requires the separately proved domains
 and, when needed, normalization between calls.
 -/
 
-import Transformer.DASH.Section3_Spectral
+@[expose] public section
 
 noncomputable section
 

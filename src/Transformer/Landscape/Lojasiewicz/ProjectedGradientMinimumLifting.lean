@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.EnergyGradientMinimumLifting
+public import Transformer.Landscape.Lojasiewicz.ApproachingFiberWitnesses
+
+/-!
 # Lifting projected curves to global energy-level gradient minima
 
 A prescribed analytic base curve with approaching global-minimum
@@ -7,8 +12,7 @@ remove the last fiber quantifier, including comparisons with points
 outside the coordinate neighborhood.
 -/
 
-import Transformer.Landscape.Lojasiewicz.EnergyGradientMinimumLifting
-import Transformer.Landscape.Lojasiewicz.ApproachingFiberWitnesses
+@[expose] public section
 
 open Filter Set
 

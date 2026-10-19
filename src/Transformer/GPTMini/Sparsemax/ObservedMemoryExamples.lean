@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.ObservedMemoryPreferences
+module
+
+public import Transformer.GPTMini.Sparsemax.ObservedMemoryPreferences
 
 /-!
 # Observation changes produce different selected attention and embedding norms
@@ -14,6 +16,8 @@ These examples verify dependence on observations after constrained selection,
 not just dependence of an unprojected preference formula. They do not claim
 semantic usefulness of the metric or identification by output-only targets.
 -/
+
+@[expose] public section
 
 noncomputable section
 

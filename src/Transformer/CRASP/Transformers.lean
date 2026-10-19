@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.CRASP.TransformerToLogic
+public import Transformer.CRASP.LogicToTransformer
+public import Transformer.CRASP.Depth
+public import Transformer.CRASP.Frame
+
+/-!
 # The two transformer simulations and their depth hierarchy
 
 arXiv:2506.16055v3, Appendix B.2, `thm:TLCl_to_rtfr`,
@@ -6,10 +13,7 @@ arXiv:2506.16055v3, Appendix B.2, `thm:TLCl_to_rtfr`,
 The rounded model is defined in `CRASP.TransformerModel`.
 -/
 
-import Transformer.CRASP.TransformerToLogic
-import Transformer.CRASP.LogicToTransformer
-import Transformer.CRASP.Depth
-import Transformer.CRASP.Frame
+@[expose] public section
 
 namespace Transformer.CRASP
 

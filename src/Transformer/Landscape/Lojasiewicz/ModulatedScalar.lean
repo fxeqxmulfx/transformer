@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.Landscape.Lojasiewicz.LojasiewiczConditional
+public import Transformer.Landscape.Lojasiewicz.OneDimensionalGradientInequality
+
+/-!
 # Analytic modulated gradient convergence in dimensions at most one
 
 The specialization of Appendix D.1, `lem: loj`, of arXiv:2510.22026v2
 has a complete proof, including its analytic gradient inequality.
 -/
 
-import Transformer.Landscape.Lojasiewicz.LojasiewiczConditional
-import Transformer.Landscape.Lojasiewicz.OneDimensionalGradientInequality
+@[expose] public section
 
 namespace Transformer.Landscape.Lojasiewicz
 

@@ -1,5 +1,7 @@
-import Transformer.Grokking.EffectiveTheory.Section3_Conservation
-import Mathlib.Analysis.Real.Sqrt
+module
+
+public import Transformer.Grokking.EffectiveTheory.Section3_Conservation
+public import Mathlib.Analysis.Real.Sqrt
 
 /-!
 # Euclidean norm conservation does not transfer to native AdamW
@@ -18,6 +20,8 @@ The squared norm has strictly negative learning-rate derivative at zero,
 and the finite update at the experimental recipe's rate also lowers it.
 This refutes an unrestricted conservation transfer, not grokking itself.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

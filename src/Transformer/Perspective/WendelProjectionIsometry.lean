@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.WendelHyperplaneProjection
+public import Mathlib.Analysis.InnerProductSpace.GramSchmidtOrtho
+
+/-!
 # Euclidean coordinates for the projected Wendel sample
 
 An orthogonal hyperplane of dimension `d` is linearly isometric to `ℝ^d`.
@@ -8,8 +13,7 @@ Wendel's recurrence becomes an ordinary lower-dimensional sign count.
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962).
 -/
 
-import Transformer.Perspective.WendelHyperplaneProjection
-import Mathlib.Analysis.InnerProductSpace.GramSchmidtOrtho
+@[expose] public section
 
 namespace Transformer.Perspective
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.DASH.Section2_Models
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+
+/-!
 # Rectangular training parameters with Frobenius geometry
 
 Source: arXiv:2502.16982, §2.1–2.2, and arXiv:2602.02016v2, §2–4.
@@ -7,8 +12,7 @@ Flattening into `EuclideanSpace` equips the actual parameter entries with
 the inner product and norm used in both manuscripts and in the guard.
 -/
 
-import Transformer.DASH.Section2_Models
-import Mathlib.Analysis.InnerProductSpace.PiL2
+@[expose] public section
 
 open scoped BigOperators
 

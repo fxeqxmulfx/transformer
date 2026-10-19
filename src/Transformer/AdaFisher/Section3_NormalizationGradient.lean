@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.AdaFisher.Section3_Normalization
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+
+/-!
 # AdaFisher: the actual scale and shift derivatives
 
 arXiv:2405.16397v3, Proposition 3.1, Appendix A.2.
@@ -6,11 +14,7 @@ The loss may depend jointly on all normalization sites. Its given
 preactivation derivative is composed with the affine normalization map.
 -/
 
-import Transformer.AdaFisher.Section3_Normalization
-import Mathlib.Analysis.Calculus.Deriv.Prod
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Mul
+@[expose] public section
 
 open scoped BigOperators
 

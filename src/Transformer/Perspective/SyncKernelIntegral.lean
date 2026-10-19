@@ -1,10 +1,15 @@
-/-
+module
+
+public import Transformer.Perspective.SyncKernelRegions
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+
+/-!
 # `∫ |f_β'''|₊` through `f_β''`
 
 Polyanskiy, Rigollet, Yao — arXiv:2507.22857v1, *Synchronization of mean-field
 models on the circle*, §5, proof of `cor:conjecture`.
 
-The criterion of `thm:main` involves `⟨1, |f'''|₊⟩ = ∫_{-π}^{π} |f'''|₊`.  §5 reads
+The criterion of `thm:main` involves `⟨1, |f'''|₊⟩ = ∫_{-π}^{π} |f'''|₊`. §5 reads
 it off the regions of `lemma:positiveregion` and `lemma:positiveregion2`
 (`Perspective.SyncKernelRegions`) by the fundamental theorem of calculus,
 `f_β''` being a primitive of `f_β'''` and `f_β'''` being even:
@@ -13,12 +18,11 @@ it off the regions of `lemma:positiveregion` and `lemma:positiveregion2`
 * `0 < β ≤ 1/3`: `∫_{-π}^{π} |f_β'''|₊ = -2 f_β''(a)`.
 
 For every `β > 0`, then, `∫_{-π}^{π} |f_β'''|₊ ≤ 2(U - L)` whenever
-`L ≤ f_β'' ≤ U` on `[0, π]` (`integral_posPart_f_β'''_le`).  Here `|y|₊` is
+`L ≤ f_β'' ≤ U` on `[0, π]` (`integral_posPart_f_β'''_le`). Here `|y|₊` is
 `max y 0`.
 -/
 
-import Transformer.Perspective.SyncKernelRegions
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+@[expose] public section
 
 open Real MeasureTheory
 
@@ -128,7 +132,7 @@ theorem integral_posPart_f_β'''_of_le_one_third {β : ℝ} (hβ : 0 < β) (hβ'
 on `[0, π]`, then `∫_{-π}^{π} |f_β'''|₊ ≤ 2(U - L)`.
 
 For `β > 1/3` this is `f_β''(a) ≤ U` and `f_β''(b) ≥ L`; for `0 < β ≤ 1/3`,
-`-2 f_β''(a) ≤ -2L ≤ 2(U - L)`, since `U ≥ f_β''(0) = 0`.  Not a statement of the
+`-2 f_β''(a) ≤ -2L ≤ 2(U - L)`, since `U ≥ f_β''(0) = 0`. Not a statement of the
 source, which bounds `f''(a)` and `f''(b)` directly (`lemma:beta1`, …,
 `lemma:beta_final`); any such bounds give `L` and `U`. -/
 theorem integral_posPart_f_β'''_le {β L U : ℝ} (hβ : 0 < β)

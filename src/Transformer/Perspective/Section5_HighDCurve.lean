@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Perspective.Section5_HighD
+public import Transformer.Perspective.Section6_EquiangularFlow
+public import Transformer.Perspective.AppendixD_UniformCurve
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+
+/-!
 # §6.2-§6.3 — Quantitative convergence and the phase-transition curve
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -13,11 +21,7 @@ Continues `Perspective.Section5_HighD`:
 * `eq: gamma.infty`                — phase-transition curve.
 -/
 
-import Transformer.Perspective.Section5_HighD
-import Transformer.Perspective.Section6_EquiangularFlow
-import Transformer.Perspective.AppendixD_UniformCurve
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -133,8 +137,8 @@ the comparison trajectory's common inner product with the prescribed `γ_β`.
 
 The i.i.d. uniform initial sequence is every `P` with `UniformTuple d n P`,
 and "with probability at least `1 - 2n²d^{-1/64}`" is the measure of the set
-of initial sequences on which `eq: upto-t` holds.  `C = C(n, β)` and
-`λ = λ(n, β)`, as the source writes them, are chosen before `d`.  Over every
+of initial sequences on which `eq: upto-t` holds. `C = C(n, β)` and
+`λ = λ(n, β)`, as the source writes them, are chosen before `d`. Over every
 initial sequence instead of most of them the claim is false: a constant
 consensus has `⟨x_i, x_j⟩ ≡ 1` while `γ_β(0) = 0`.
 

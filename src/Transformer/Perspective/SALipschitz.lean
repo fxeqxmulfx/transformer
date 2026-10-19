@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perspective.SAField
+
+/-!
 # Step 1 of Appendix D — the drift of `SA` is Lipschitz
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -18,14 +22,14 @@ What the argument costs, term by term, for `β ≥ 0`:
 * hence the drift moves by at most `(3 + 8 β) δ`
   (`Transformer.norm_proj_sub_proj_le`).
 
-And `3 + 8 β ≤ 10 n max{1, β}` as soon as `n ≥ 2`.  At `n = 1` it is false —
+And `3 + 8 β ≤ 10 n max{1, β}` as soon as `n ≥ 2`. At `n = 1` it is false —
 `3 + 8 β > 10` for `β` just below `1` — but there the field vanishes
-identically (`Perspective.saField_of_one`), so any constant works.  This is the
+identically (`Perspective.saField_of_one`), so any constant works. This is the
 only place where the survey's `n` is needed; the estimate above is uniform in
 `n`, whereas the survey's passage through the Euclidean norm pays `√n` twice.
 -/
 
-import Transformer.Perspective.SAField
+@[expose] public section
 
 open scoped BigOperators NNReal
 open Real
@@ -44,7 +48,7 @@ bound on the vector field rather than as an integral inequality along
 trajectories.
 
 **What the source says and what is changed here.**  The sign condition
-`0 ≤ β` is added.  The survey's `β` is an inverse temperature and is positive
+`0 ≤ β` is added. The survey's `β` is an inverse temperature and is positive
 throughout, but the constant `10 n max{1, β}` does depend on it: for `β < 0`
 the drift's actual Lipschitz constant grows like `8 |β|` while
 `10 n max{1, β} = 10 n` stays bounded, so the bound is false for `β` negative

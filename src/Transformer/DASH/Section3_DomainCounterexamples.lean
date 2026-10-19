@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section3_InverseRootCorrectness
+
+/-!
 # DASH — why symmetry and closed endpoints do not suffice
 
 arXiv:2602.02016v2, §3.1–3.2. Real inverse roots require a positive
@@ -6,7 +10,7 @@ spectrum. The source's symmetric-input wording by itself does not
 exclude singular matrices or negative eigenvalues.
 -/
 
-import Transformer.DASH.Section3_InverseRootCorrectness
+@[expose] public section
 
 open scoped Matrix
 

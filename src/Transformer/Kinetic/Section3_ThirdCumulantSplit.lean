@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section3_ThirdCumulant
+
+/-!
 # The third cumulant with its diagonal split off
 
 ArXiv:2605.09213v1, §3, the proof of `lem:correl`, Step 4, `eq:est-kap3-th`: the
@@ -7,7 +11,7 @@ envelopes `w_{l,m}` off it. The diagonal gives `(3/2) Σ_l s_l(F) s_l(G) s_l(H)`
 (`abs_thirdCumulant_le_split`), the source's term with a single token.
 -/
 
-import Transformer.Kinetic.Section3_ThirdCumulant
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_Correlation
+public import Mathlib.Analysis.Asymptotics.AsymptoticEquivalent
+
+/-!
 # Relative asymptotics for the correlation formula
 
 arXiv:2402.19449v2, Proposition 2, equation (2), Appendix H.
@@ -7,8 +12,7 @@ equivalence when its coefficient is nonzero. The cπ_k domination condition
 also gives exactly the relative-error criterion used in that proof.
 -/
 
-import Transformer.Imbalance.Section3_Correlation
-import Mathlib.Analysis.Asymptotics.AsymptoticEquivalent
+@[expose] public section
 
 open Filter Asymptotics
 open scoped Topology

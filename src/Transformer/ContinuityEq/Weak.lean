@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.GlobalFlow.Variational
+public import Transformer.SmoothApprox
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+
+/-!
 # The weak continuity equation against `C¹` test functions
 
 A curve `t ↦ μ_t` of probability measures on a finite-dimensional space solves
@@ -6,7 +12,7 @@ the linear continuity equation `∂_t μ + div(w μ) = 0` weakly on `[0, T]` whe
 
   `∫ g dμ_t = ∫ g dμ_0 + ∫_0^t ∫ Dg(x) w(σ, x) dμ_σ(x) dσ`
 
-for every smooth `g` with compact support and every `t ∈ [0, T]`.  If the
+for every smooth `g` with compact support and every `t ∈ [0, T]`. If the
 measures live near each time in a fixed ball and are weakly continuous, the
 identity extends to `C¹` test functions with compact support
 (`weak_of_contDiff_one`), and between any two times of `[0, T]`
@@ -18,9 +24,7 @@ arXiv:2305.05465v6, §6, tests the equation against `h ∘ Φ`, with `Φ` the
 flow of `w`, which is only `C¹`.
 -/
 
-import Transformer.Landscape.GlobalFlow.Variational
-import Transformer.SmoothApprox
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+@[expose] public section
 
 open Set Metric Filter Topology MeasureTheory
 open scoped NNReal

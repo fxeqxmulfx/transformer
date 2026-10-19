@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Modes.Section2_RegularDegenerate
+public import Mathlib.LinearAlgebra.Determinant
+
+/-!
 # Singular projections at degenerate original KDE queries
 
 ArXiv:2412.09080v3, §2.1, the original `eq:Fn`.
@@ -15,8 +20,7 @@ and the original query-critical equation; it assumes no
 measure or nondegeneracy conclusion.
 -/
 
-import Transformer.Modes.Section2_RegularDegenerate
-import Mathlib.LinearAlgebra.Determinant
+@[expose] public section
 
 open Real Set
 

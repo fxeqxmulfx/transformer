@@ -1,4 +1,13 @@
-/-
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Transformer.Perspective.Section2_FlowMap
+public import Transformer.Perspective.PartitionGradient
+
+/-!
 # §3.3–§3.4 — `USA` as a Wasserstein gradient flow, `SA` for a modified metric
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -19,12 +28,7 @@ what distinguishes them is exactly the identity `e:XmuE`, which says the first
 two coincide.
 -/
 
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Transformer.Perspective.Section2_FlowMap
-import Transformer.Perspective.PartitionGradient
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -116,7 +120,7 @@ def aggregationEquation (β : ℝ) (μ : ℝ → ProbSphere d) : Prop :=
 
 /-- A Dirac mass is a stationary point of the `USA` vector field too: the only
 point `δ_x` sees is `x`, so the integral is a multiple of `x` and `Proj_x`
-kills it.  Dropping the partition function changes the length of the velocity,
+kills it. Dropping the partition function changes the length of the velocity,
 never its direction. -/
 theorem usaVectorField_diracProb_self (β : ℝ) (x : SSphere d) :
     usaVectorField d β (diracProb d x) (x : EucSpace d) = 0 := by
@@ -182,7 +186,7 @@ through `ContinuousLinearMap.adjoint`, which would need the
 
 The paper's standing assumption `V = Q^⊤K` is `hQK`, `⟨Q x, K y⟩ = ⟨V x, y⟩`,
 and it is what makes the statement true: the attention weight the dynamics
-uses has to be the exponent the energy differentiates.  Instantiating the
+uses has to be the exponent the energy differentiates. Instantiating the
 dynamics at `Q = K = V` instead — as this file did before the proof was
 attempted — gives the weight `⟨V x_i, V x_j⟩ = ⟨V² x_i, x_j⟩` against the
 value `V x_j`, and the identity is then false unless `V² = V`.

@@ -1,5 +1,7 @@
-import Transformer.GPTMini.Semantics.DepthReadoutScores
-import Transformer.GPTMini.TokenInterface.Decoding
+module
+
+public import Transformer.GPTMini.Semantics.DepthReadoutScores
+public import Transformer.GPTMini.TokenInterface.Decoding
 
 /-!
 # Strict original depth tied readout and greedy answer
@@ -20,6 +22,8 @@ Complete ModelParams/loop and checked integer-prefix coupling remain.
 The criterion rejects both-pattern and neither-pattern cases as well
 as the wrong active start; final-position visibility retains neutrals.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

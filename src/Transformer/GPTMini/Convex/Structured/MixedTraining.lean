@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.MixedHeads
+module
+
+public import Transformer.GPTMini.Convex.Structured.MixedHeads
 
 /-!
 # Globally convex complete training of the genuine learned mixture
@@ -19,6 +21,8 @@ Correct semantic label generation remains data-only. This proves neither
 convex output-only CE nor strong convexity, AdamW convergence, numerical
 equivalence or a full prenorm/residual/tied tensor-stack implementation.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

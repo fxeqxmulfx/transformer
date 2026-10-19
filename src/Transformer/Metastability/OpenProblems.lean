@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Metastability.Section4_EnergyWindow
+public import Transformer.Metastability.Section6_StaircaseCounterexample
+
+/-!
 # Metastability — the staircase questions of 2410.06833v1
 
 The energy-level question of §4 is proved for a nonempty window near
@@ -21,5 +26,4 @@ predicates of their arguments in `Section6_Profile`, with a complete
 stationary witness there. No theorem may rest on this unproved claim.
 -/
 
-import Transformer.Metastability.Section4_EnergyWindow
-import Transformer.Metastability.Section6_StaircaseCounterexample
+@[expose] public section

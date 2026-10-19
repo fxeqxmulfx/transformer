@@ -1,12 +1,22 @@
-/-
+module
+
+public import Mathlib.Probability.Distributions.Uniform
+public import Mathlib.Probability.ProbabilityMassFunction.Integrals
+public import Mathlib.Probability.StrongLaw
+public import Mathlib.Probability.Independence.Integration
+public import Mathlib.MeasureTheory.Integral.Prod
+public import Transformer.NoiseScale.Section2_NoiseScale
+public import Transformer.NoiseScale.SectionA_Estimators
+
+/-!
 # The bias of the ratio of the estimates
 
-arXiv:1812.06162, Appendix A.1.  After eq. (A.2) the paper notes that the ratio `𝒮/|𝒢|²` is
+arXiv:1812.06162, Appendix A.1. After eq. (A.2) the paper notes that the ratio `𝒮/|𝒢|²` is
 not an unbiased estimator for `B_noise`, with the footnote "In fact `E[x/y] ≥ E[x]/E[y]` in
 general for positive variables".
 
 The footnote is false: for `y` uniform on `{1, 2}` and `x = y²`, `E[x/y] = 3/2 < 5/3 =
-E[x]/E[y]` (`not_div_integral_le_integral_div`).  It holds for `x` independent of `y > 0`
+E[x]/E[y]` (`not_div_integral_le_integral_div`). It holds for `x` independent of `y > 0`
 with `E[x] ≥ 0` (`div_integral_le_integral_div`): then `E[x/y] = E[x] E[1/y]` and
 `E[1/y] ≥ 1/E[y]`.
 
@@ -14,17 +24,13 @@ The remark holds (`integral_traceEst_div_gradSqEst`): two independent per-exampl
 uniform on `{1, 3}`, those of the per-example losses `(θ + x)²/2` at `θ = 0`, so `H = 1`,
 with `B_small = 1` and `B_big = 2`, give the ratio the mean `-19/7`, while
 `B_noise = tr(Σ)/|G|² = 1/4`, although `𝒮` and `|𝒢|²` are unbiased
-(`integral_estimates_batchGrad`).  Averaging over many batches, as the paper does instead
+(`integral_estimates_batchGrad`). Averaging over many batches, as the paper does instead
 of correcting the bias, makes the ratio consistent: over independent steps the ratio of the
 plain averages of `𝒮` and `|𝒢|²` tends almost surely to `tr(Σ)/|G|²` (`tendsto_sum_div_sum`).
 The paper averages exponentially, with decays tuned until the estimates are stable.
 -/
 
-import Mathlib.Probability.Distributions.Uniform
-import Mathlib.Probability.ProbabilityMassFunction.Integrals
-import Mathlib.Probability.StrongLaw
-import Transformer.NoiseScale.Section2_NoiseScale
-import Transformer.NoiseScale.SectionA_Estimators
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped Matrix
@@ -32,12 +38,15 @@ open scoped Matrix
 namespace Transformer.NoiseScale
 
 /-- A fair coin. -/
-noncomputable def coin : Measure Bool := (PMF.uniformOfFintype Bool).toMeasure
+noncomputable def coin : Measure Bool := Measure.uniformOfFinset Finset.univ
 
-instance : IsProbabilityMeasure coin := PMF.toMeasure.isProbabilityMeasure _
+instance : IsProbabilityMeasure coin := ⟨by
+  simpa [coin, Measure.uniformOfFinset, Fintype.sum_bool] using
+    ENNReal.inv_two_add_inv_two⟩
 
 theorem integral_coin (f : Bool → ℝ) : ∫ b, f b ∂coin = (f false + f true) / 2 := by
-  simp [coin, PMF.integral_eq_sum, PMF.uniformOfFintype_apply]
+  rw [integral_fintype Integrable.of_finite, Fintype.sum_bool]
+  simp [Measure.real, coin]
   ring
 
 theorem integral_coin_prod (f : Bool × Bool → ℝ) :
@@ -62,7 +71,7 @@ theorem not_div_integral_le_integral_div :
 variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
 
 /-- The footnote to the remark after eq. (A.2), corrected: `E[x/y] ≥ E[x]/E[y]` for `x`
-independent of `y > 0` with `E[x] ≥ 0`.  The footnote reads "in general for positive
+independent of `y > 0` with `E[x] ≥ 0`. The footnote reads "in general for positive
 variables"; added are the independence and the integrability of `y` and `1/y`, and the
 positivity of `x` is relaxed to `E[x] ≥ 0`. -/
 theorem div_integral_le_integral_div [IsProbabilityMeasure P] {x y : Ω → ℝ}
@@ -99,7 +108,7 @@ example := div_integral_le_integral_div (P := Measure.dirac ()) (x := fun _ => (
   (y := fun _ => 1) (indepFun_const_left _ _) aestronglyMeasurable_const (integrable_const _)
   (integrable_const _) (by simp) (by simp)
 
-/-- The remark after eq. (A.2): `𝒮/|𝒢|²` is not an unbiased estimator for `B_noise`.  Two
+/-- The remark after eq. (A.2): `𝒮/|𝒢|²` is not an unbiased estimator for `B_noise`. Two
 independent per-example gradients uniform on `{1, 3}`, of mean `G = 2` and variance `Σ = 1`,
 the first the batch of `B_small = 1` and both that of `B_big = 2`, and `H = 1`: the ratio has
 the mean `-19/7`, and `B_noise = 1/4`. -/
@@ -135,7 +144,7 @@ theorem integral_traceEst_div_gradSqEst :
   · simp [noiseScale, dotProduct]
     norm_num
 
-/-- The remark after eq. (A.2): averaging over many batches removes the bias.  For the
+/-- The remark after eq. (A.2): averaging over many batches removes the bias. For the
 estimates `𝒮_k`, `|𝒢|²_k` of independent steps `k`, the ratio of their sums tends almost
 surely to `E[𝒮]/E[|𝒢|²]`, by the strong law of large numbers. -/
 theorem tendsto_sum_div_sum {S N : ℕ → Ω → ℝ} (hS : Integrable (S 0) P)

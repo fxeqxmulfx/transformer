@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section2_AttentionAverages
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Spatial bounds for original attention weights and their integrals
 
 ArXiv:2411.04551v3, §1, `eq: vf`, and §2, `prop: targets.atoms`.
@@ -15,8 +20,7 @@ will control the quotient defining the actual attention average, including
 for the time-dependent probability supplied by an original weak solution.
 -/
 
-import Transformer.Interpolation.Section2_AttentionAverages
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

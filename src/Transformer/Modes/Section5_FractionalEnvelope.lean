@@ -1,4 +1,6 @@
-import Transformer.Modes.Section5_PhaseSummation
+module
+
+public import Transformer.Modes.Section5_PhaseSummation
 
 /-!
 # Fractional decay for every positive bandwidth
@@ -22,6 +24,8 @@ completing the square leaves the summable envelope
 In particular `p = 1 / (β + 1)` meets both requirements for all `β > 0`.
 Source: arXiv:2412.09080v3, §5.5, `eq:uniform-decay` and its proof.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory
 open scoped Interval

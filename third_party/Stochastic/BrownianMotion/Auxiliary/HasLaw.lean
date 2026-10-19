@@ -2,6 +2,12 @@ module
 
 public import Mathlib.Probability.Distributions.Gaussian.Real
 
+/-!
+# Degenerate Gaussian laws
+
+A random variable with a zero-variance Gaussian law equals its mean almost surely.
+-/
+
 @[expose] public section
 
 open MeasureTheory ENNReal WithLp

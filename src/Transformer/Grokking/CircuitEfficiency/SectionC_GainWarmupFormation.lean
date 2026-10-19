@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainWarmupBounds
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainWarmupBounds
 
 /-!
 # Actual circuit formation with zero-rate first native warmup
@@ -29,6 +31,8 @@ bridges. These exact-real finite-clock results supply neither a
 transition time, attraction, nor numerical or stochastic transfer.
 Frozen runs, checkpoints, moments and measurements are unchanged.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

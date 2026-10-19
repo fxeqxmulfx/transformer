@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.AlibiAttention
+public import Transformer.CRASP.WindowTailSums
+
+/-!
 # ALiBi coefficient sums from a stable table and a recent profile
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLCly`.
@@ -6,8 +11,7 @@ The same correction identity applies to denominator and numerator entries;
 short prefixes include their known BOS coefficient explicitly.
 -/
 
-import Transformer.CRASP.AlibiAttention
-import Transformer.CRASP.WindowTailSums
+@[expose] public section
 
 namespace Transformer.CRASP.AlibiTables
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section5_ClusteredStability
+public import Transformer.Causal.Section5_OneCenterConvergence
+
+/-!
 # Clustering to frozen tokens
 
 ArXiv:2411.04990v2, §5, `thm:fixed_centers`, with the documented
@@ -23,8 +28,7 @@ almost everywhere. Prefix stability and inward scalar barriers
 prove asymptotic stability in the original maximum norm.
 -/
 
-import Transformer.Causal.Section5_ClusteredStability
-import Transformer.Causal.Section5_OneCenterConvergence
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -49,16 +53,16 @@ probability one `φ(t)` converges to an asymptotically stable critical point
 **What the source says and what is changed here.**
 
 * *The sign in the condition on `g`.*  The theorem prints
-  `N g((c - 2ε) β^{-1/2}) < g(ε β^{-1/2})`.  Its left side is negative in the
+  `N g((c - 2ε) β^{-1/2}) < g(ε β^{-1/2})`. Its left side is negative in the
   regime the theorem is meant for (`g` is negative between the peak
   `τ_β^* < β^{-1/2}` of `h` and `π`), where the printed condition holds for
   free, while the proof ends on
   `g(ε β^{-1/2}) < -N g((c - 2ε) β^{-1/2})` "contradicts the parameters
-  choice" — a contradiction only with the minus sign.  `lem:interaction`,
-  which supplies these conditions, has the minus sign too.  It is restored.
+  choice" — a contradiction only with the minus sign. `lem:interaction`,
+  which supplies these conditions, has the minus sign too. It is restored.
 * *`m ≥ 1`.*  At `m = 0` and `n ≥ 1` the statement is false: with no frozen
   token the conclusion `∃ j ∈ [m]` fails for every `φ*`, and one particle
-  alone does not move.  The proof's induction starts from a centre; `0 < m`
+  alone does not move. The proof's induction starts from a centre; `0 < m`
   is taken as a hypothesis.
 * The angles are lifted to `ℝ`, with `|θ_i - θ_j|` read as the geodesic
   distance on `𝕊^1` (`circDist`); `μ₀` is a probability measure on the

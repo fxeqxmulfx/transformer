@@ -1,4 +1,6 @@
-import Transformer.Homogenized.Section7_GaussianOverlapVille
+module
+
+public import Transformer.Homogenized.Section7_GaussianOverlapVille
 
 /-!
 # Chernoff control of the actual compensated Gaussian overlap
@@ -18,6 +20,8 @@ from the actual Gaussian field continuity and unit paths.
 The only stochastic input is the original compensated exponential
 test martingale, rather than a tail or weighted-process premise.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory
 open scoped NNReal

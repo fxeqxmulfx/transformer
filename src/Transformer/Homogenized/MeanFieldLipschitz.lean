@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Homogenized.RademacherLaw
+public import Transformer.Homogenized.MeanField
+public import Transformer.Wasserstein
+
+/-!
 # Homogenized Transformers — the displayed mean-field Lipschitz rate is false
 
 This module computes the diffusion coefficient at point masses and refutes
@@ -22,9 +28,7 @@ rather than asserting a weakened bound under the source claim's name.
 Source: arXiv:2604.01978v1, `prop:satisfying_MF`, `eq:G_def`.
 -/
 
-import Transformer.Homogenized.RademacherLaw
-import Transformer.Homogenized.MeanField
-import Transformer.Wasserstein
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open Real MeasureTheory
@@ -41,7 +45,7 @@ theorem attnFieldOf_dirac {d : ℕ} (β : ℝ) (θ : HeadParam d) (z x : EucSpac
   rw [attnFieldOf, integral_dirac, integral_dirac, smul_smul,
     inv_mul_cancel₀ (attnWeight_pos β θ x z).ne', one_smul]
 
-/-- **`eq:G_def` at a point mass**: `G_{δ_z}(x,θ) = Proj_x(V z - 𝔼V z)`.  The
+/-- **`eq:G_def` at a point mass**: `G_{δ_z}(x,θ) = Proj_x(V z - 𝔼V z)`. The
 head enters only through its value matrix, and the point only through the
 projection. -/
 theorem GfieldOf_dirac {d : ℕ} (β : ℝ) (ρ : Measure (HeadParam d)) (z x : EucSpace d)
@@ -71,7 +75,7 @@ theorem integral_valueMap_radLaw :
   norm_num
 
 /-- `Proj_{e₁}(c e₁) - Proj_{e₂}(c e₁) = -c e₁`: the first projection kills a
-multiple of its own direction and the second leaves it alone.  This is the
+multiple of its own direction and the second leaves it alone. This is the
 `β`-free part of the left-hand side of `prop:satisfying_MF`. -/
 theorem norm_proj_sub_proj_sq (c : ℝ) :
     ‖proj 2 (EuclideanSpace.single 0 1)
@@ -117,16 +121,16 @@ it depends on the model data `(d, σ_V, σ_A, ρ*, Ā)`, satisfies
 
   `‖G_μ(x,·) - G_ν(y,·)‖_{L²(ρ*)} ≤ K β² e^{4β‖Ā‖} e^{β²dσ_A²} (W₂(μ,ν) + ‖x-y‖)`
 
-for every `β > 0`.  This is the weakest reading of `O(·)`: the constant is
+for every `β > 0`. This is the weakest reading of `O(·)`: the constant is
 only required not to depend on `β`, which the display does make explicit, nor
-on the points and measures the inequality is quantified over.  The bound on
+on the points and measures the inequality is quantified over. The bound on
 `Ā` is
 carried as an operator bound `opA`, so the refutation does not depend on which
 matrix norm `‖Ā‖` is read in.
 
 The witness is `d = 2` and the Rademacher law of `isHighOrderLaw_rademacher`:
 `Ā = 0` and `A ≡ 0`, so `σ_A = 0` and both exponentials are `1`; `μ = ν` is
-the point mass at `e₁`, so `W₂(μ,ν) = 0`; and `x = e₁`, `y = e₂`.  The
+the point mass at `e₁`, so `W₂(μ,ν) = 0`; and `x = e₁`, `y = e₂`. The
 left-hand side is `1` at every `β`, by `sqrt_integral_norm_GfieldOf_radLaw`,
 while the right-hand side is at most `2Kβ²`, which is `< 1` at `β = 1/(K+2)`.
 

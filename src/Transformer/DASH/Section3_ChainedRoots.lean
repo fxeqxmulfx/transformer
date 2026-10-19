@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section3_InverseRootCorrectness
+
+/-!
 # DASH — chaining the square-root solvers
 
 arXiv:2602.02016v2, §3.3. A square-root call followed by an inverse
@@ -6,7 +10,7 @@ square-root call computes the inverse fourth root. Iteration convergence
 is proved on the domain required by both calls.
 -/
 
-import Transformer.DASH.Section3_InverseRootCorrectness
+@[expose] public section
 
 open scoped Matrix
 

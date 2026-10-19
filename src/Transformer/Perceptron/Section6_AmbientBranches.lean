@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Perceptron.Section6_AmbientGradient
+public import Transformer.Perceptron.Section6_NormalizedForce
+public import Mathlib.Analysis.Calculus.FDeriv.Pow
+
+/-!
 # Actual normalized branch fields in every ambient dimension
 
 ArXiv:2601.21366v2, §6, proof of `prop: unified.log` and
@@ -15,9 +21,7 @@ weights and every activation boundary are retained. No identity
 between the stationary field and a gradient is assumed.
 -/
 
-import Transformer.Perceptron.Section6_AmbientGradient
-import Transformer.Perceptron.Section6_NormalizedForce
-import Mathlib.Analysis.Calculus.FDeriv.Pow
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

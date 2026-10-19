@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.AdaFisher.SectionA_Descent
+public import Mathlib.Analysis.SpecificLimits.Basic
+
+/-!
 # AdaFisher: a corrected convex convergence theorem
 
 arXiv:2405.16397v3, Proposition 3.3 and Appendix A.2.
@@ -7,8 +12,7 @@ geometric objective bound with step η L ≤ δ and η μ ≤ B. Unlike the
 printed result, the step and rate explicitly account for the preconditioner.
 -/
 
-import Transformer.AdaFisher.SectionA_Descent
-import Mathlib.Analysis.SpecificLimits.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Filter Topology

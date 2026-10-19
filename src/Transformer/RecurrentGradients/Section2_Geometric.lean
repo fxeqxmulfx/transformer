@@ -1,7 +1,13 @@
-/-
+module
+
+public import Transformer.RecurrentGradients.Section1_Recurrence
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Order.Filter.AtTopBot.Basic
+
+/-!
 # The geometrical interpretation
 
-arXiv:1211.5063, §2.3.  The one hidden unit model of eq. (8),
+arXiv:1211.5063, §2.3. The one hidden unit model of eq. (8),
 `x_t = w σ(x_{t-1}) + b`, with no input (`unitStates`), simplified to be
 linear with `b = 0`, has `x_t = x₀ w^t` (`unitStates_id`), from which
 `∂x_t/∂w = t x₀ w^{t-1}` (`deriv_unitStates_id`) and
@@ -12,9 +18,7 @@ an eventual lower bound `C α^t` on the first is one on the second
 (`eventually_le_abs_deriv_deriv`).
 -/
 
-import Transformer.RecurrentGradients.Section1_Recurrence
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Order.Filter.AtTopBot.Basic
+@[expose] public section
 
 open Filter
 

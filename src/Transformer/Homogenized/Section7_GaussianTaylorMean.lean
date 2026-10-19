@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianQueryCovariance
+public import Transformer.Homogenized.Section7_CorrelationTaylorExpectation
+
+/-!
 # Exact mean of the genuine Gaussian correlation Taylor polynomial
 
 ArXiv:2604.01978v1, §7.3, `lem:delta_method`, the contraction
@@ -19,8 +24,7 @@ the full product must instead be treated by composing the independent
 factor laws, including the actual Taylor remainder at both stages.
 -/
 
-import Transformer.Homogenized.Section7_GaussianQueryCovariance
-import Transformer.Homogenized.Section7_CorrelationTaylorExpectation
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 

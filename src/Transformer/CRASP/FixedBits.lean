@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.CRASP.Fixed
+
+/-!
 # The bits of a fixed-precision number determine it
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 (COLM 2025), Appendix B.1, `def:fixed_precision`.
 
-`Fx.bit x b` is the paper's `[x]_b`, the parity of `⌊x · 2^{b-s-1}⌋`.  The
+`Fx.bit x b` is the paper's `[x]_b`, the parity of `⌊x · 2^{b-s-1}⌋`. The
 scale `2^{-s}` cancels: `bit x (b + 1)` is the parity of `m / 2^b`, the
-mantissa shifted right by `b` places (`bit_succ`).  So `bit x 0` is always
+mantissa shifted right by `b` places (`bit_succ`). So `bit x 0` is always
 `0` — it reads the parity of `2m` — and the bits that carry information are
 `1, …, p`, the last of them the two's-complement sign.
 
@@ -14,12 +18,12 @@ What the `TL[◁#]` construction of `Transformer.CRASP.FiniteFunction` needs is
 that these determine the number (`ext_of_bit`): two mantissas whose shifts
 `m / 2^j` all have the same parity for `j < K` agree modulo `2^K`
 (`emod_pow_eq_of_parity`), and two mantissas of `Fx p s` differ by less than
-`2^{p+1}`.  The range `b < p + 2` of `ext_of_bit` is not tight for `p ≥ 1`,
+`2^{p+1}`. The range `b < p + 2` of `ext_of_bit` is not tight for `p ≥ 1`,
 where `b < p + 1` suffices; it is what also covers `p = 0`, where `Fx 0 s`
 still holds the two mantissas `-1` and `0` and only bit `1` tells them apart.
 -/
 
-import Transformer.CRASP.Fixed
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

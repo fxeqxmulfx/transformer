@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Landscape.AnalyticPreparation.AnalyticDivisionUniqueness
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # Joint witnesses for real analytic Weierstrass division
 
 The prepared divisor is `y² - z₀`. An exponential dividend exercises the
@@ -7,8 +12,7 @@ remainder `z₀ y`. Auxiliary examples for Appendix D.1, `lem: loj`, of
 arXiv:2510.22026v2.
 -/
 
-import Transformer.Landscape.AnalyticPreparation.AnalyticDivisionUniqueness
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open Filter
 open scoped BigOperators ENNReal NNReal Topology

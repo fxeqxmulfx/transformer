@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Clustering
+public import Transformer.Interpolation.Section1_WeakContinuity
+public import Transformer.Interpolation.Section3_QuadrantGeometry
+
+/-!
 # Positive barycenters and transverse hemisphere directions
 
 ArXiv:2411.04551v3, §3.2, `lem: perturbation`, Part 2.
@@ -15,9 +21,7 @@ quadrant in ambient dimension one is the singleton `+1`. Thus no
 low-dimensional case is discarded when applying the ridge variation.
 -/
 
-import Transformer.Interpolation.Clustering
-import Transformer.Interpolation.Section1_WeakContinuity
-import Transformer.Interpolation.Section3_QuadrantGeometry
+@[expose] public section
 
 open Real MeasureTheory Filter Set
 open scoped BigOperators

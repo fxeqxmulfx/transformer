@@ -1,28 +1,32 @@
-/-
+module
+
+public import Transformer.Perspective.Section2_EnergyKernel
+
+/-!
 # §3.2 — The maximisers of the interaction energy
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*, §3.2,
 `prop: existence.uniqueness.energy`.
 
-That proposition has two halves.  The minimiser half — `σ_d` is the unique
+That proposition has two halves. The minimiser half — `σ_d` is the unique
 global minimiser of `𝖤_β` — is `existence_uniqueness_energy_min`, in
 `Perspective.Section2_EnergyMin`: it rests on the positive definiteness of the
 kernel `exp(β⟨x, y⟩)` on the sphere (`Perspective.PositiveDefinite`).
 
-The maximiser half is elementary, and is proved here.  On the sphere
+The maximiser half is elementary, and is proved here. On the sphere
 `⟨x, x'⟩ ≤ 1`, with equality exactly at `x = x'`, so
 
   `𝖤_β[μ] ≤ (2β)⁻¹ e^β = 𝖤_β[δ_x]`   for every `μ` and every `x`,
 
 which already says that the Dirac masses are global maximisers
-(`isMaxEnergy_diracProb`).  Conversely, write
+(`isMaxEnergy_diracProb`). Conversely, write
 
   `g(x) = e^β - Z_{β,μ}(x) = ∫ (e^β - e^{β⟨x,x'⟩}) dμ(x')`
 
-for the deficit at `x`.  The bound says `g ≥ 0`, and a maximiser attains it,
+for the deficit at `x`. The bound says `g ≥ 0`, and a maximiser attains it,
 which says `∫ g dμ = 0`; so `g` vanishes `μ`-almost everywhere, and in
-particular at some point `x⋆`.  There `∫ (e^β - e^{β⟨x⋆,x'⟩}) dμ(x') = 0`
+particular at some point `x⋆`. There `∫ (e^β - e^{β⟨x⋆,x'⟩}) dμ(x') = 0`
 with a non-negative integrand, so `⟨x⋆, x'⟩ = 1` for `μ`-almost every `x'`,
 i.e. `x' = x⋆`; and a probability measure carried by a single point is the
 Dirac mass there.
@@ -31,7 +35,7 @@ The paper's `d ≥ 2` is not needed for this half and is not assumed; the
 dimension enters only through the minimiser.
 -/
 
-import Transformer.Perspective.Section2_EnergyKernel
+@[expose] public section
 
 open Real MeasureTheory
 

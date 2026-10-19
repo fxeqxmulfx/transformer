@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Clusters.Section1_Dynamics
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+
+/-!
 # The emergence of clusters in self-attention dynamics — asymptotic
   low-rankness
 
@@ -10,9 +16,9 @@ Boolean matrix of low rank, `t:boolean`.
 * The target set `𝒫` is given by a figure (`e:star`) rather than by a
   formula: "asterisks denote arbitrary non-negative reals which add up to 1",
   and "the row of asterisks may actually be any row between the first and the
-  last one".  The proof in §7 says what this amounts to: all rows but at most
+  last one". The proof in §7 says what this amounts to: all rows but at most
   one are `e_1` or `e_n`, and the remaining row is an arbitrary probability
-  vector.  `IsBooleanLimit` is that, with the two distinguished columns and
+  vector. `IsBooleanLimit` is that, with the two distinguished columns and
   the exceptional row existentially quantified — the figure's permutation
   matrices are exactly this freedom of labelling.
 
@@ -23,7 +29,7 @@ Boolean matrix of low rank, `t:boolean`.
   actually of rank 1 or 2" asserts.
 
 * "For almost all initial sequences" is read as: outside a Lebesgue-null set
-  of `ℝ^n`, the initial tokens being scalars.  `Idx n → EucSpace 1` carries no
+  of `ℝ^n`, the initial tokens being scalars. `Idx n → EucSpace 1` carries no
   measure in Mathlib, so the initial datum is read through its single
   coordinate, `fun i => X 0 i 0`.
 
@@ -37,9 +43,7 @@ Boolean matrix of low rank, `t:boolean`.
 Source: arXiv:2305.05465v6, `t:boolean`, `e:star`.
 -/
 
-import Transformer.Clusters.Section1_Dynamics
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory Filter Topology

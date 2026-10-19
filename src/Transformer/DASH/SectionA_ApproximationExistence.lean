@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.DASH.SectionA_ScalarChebyshev
+public import Mathlib.Topology.ContinuousMap.Weierstrass
+public import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+
+/-!
 # DASH — the Chebyshev basis and existence of uniform approximants
 
 arXiv:2602.02016v2, Appendix A. Chebyshev polynomials span all real
@@ -7,9 +13,7 @@ Chebyshev expansions approximating inverse powers to any requested accuracy.
 This does not identify them with a particular finite cosine-fit output.
 -/
 
-import Transformer.DASH.SectionA_ScalarChebyshev
-import Mathlib.Topology.ContinuousMap.Weierstrass
-import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+@[expose] public section
 
 noncomputable section
 
@@ -18,7 +22,7 @@ namespace Transformer.DASH
 /-- The first-kind Chebyshev polynomial basis, arXiv:2602.02016v2,
 Appendix A, the basis used for finite function approximations. -/
 def chebyshevBasis : Module.Basis ℕ ℝ (Polynomial ℝ) :=
-  (Polynomial.Chebyshev.chebyshevTsequence ℝ).basis (fun k => by
+  (Polynomial.Chebyshev.chebyshevTSequence ℝ).basis (fun k => by
     change IsUnit (Polynomial.Chebyshev.T ℝ (k : ℤ)).leadingCoeff
     rw [Polynomial.Chebyshev.leadingCoeff_T]
     exact isUnit_iff_ne_zero.2 (pow_ne_zero _ (by norm_num)))

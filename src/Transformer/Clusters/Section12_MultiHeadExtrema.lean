@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section12_MultiHeadRows
+public import Transformer.Clusters.Section12_MultiHeadOnlyOne
+
+/-!
 # Fixed separated extreme tokens of actual discrete multi-head trajectories
 
 ArXiv:2305.05465v6, §7's ordering and `e:infdist`, for the original
@@ -18,8 +23,7 @@ Combining these indices with the proved escape classification gives
 basis-row limits for every original head outside at most one row.
 -/
 
-import Transformer.Clusters.Section12_MultiHeadRows
-import Transformer.Clusters.Section12_MultiHeadOnlyOne
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

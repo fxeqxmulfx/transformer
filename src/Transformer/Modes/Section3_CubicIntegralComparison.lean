@@ -1,4 +1,7 @@
-import Transformer.Modes.Section3_CubicCorrectionTail
+module
+
+public import Transformer.Modes.Section3_CubicCorrectionTail
+
 /-!
 # The full integrated cubic Edgeworth characteristic error
 
@@ -23,6 +26,7 @@ spectral correction with `ψ`, and controlling third-order Fourier
 derivatives for the spatial weight, are further proof steps.
 -/
 
+@[expose] public section
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology
 namespace Transformer.Modes

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section4_FlowPrefix
+public import Mathlib.Analysis.Calculus.MeanValue
+
+/-!
 # Original causal projected interactions and the fixed leader
 
 ArXiv:2411.04990v2, §4, proof of `thm1`, and §2, `eqn:csa`.
@@ -14,8 +19,7 @@ identities retain the original exponential normalization and every
 masked term, so subsequent overlap estimates concern the actual flow.
 -/
 
-import Transformer.Causal.Section4_FlowPrefix
-import Mathlib.Analysis.Calculus.MeanValue
+@[expose] public section
 
 open scoped BigOperators
 open Real

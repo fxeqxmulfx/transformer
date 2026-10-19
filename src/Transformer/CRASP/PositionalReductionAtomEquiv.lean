@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.CRASP.PositionalReductionAtom
+public import Transformer.CRASP.Spread
+public import Transformer.CRASP.YNormalFormEquiv
+
+/-!
 # `TL[◁#]^pos` reduces to `TL[◁#]`: the `Y`-atoms preserve meaning
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -7,16 +13,14 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 
 The translation simulates `φ` at the positions `r·i + ρ` of
 `f(w) = e^r w₁ e^{r−1} ⋯ wₙ e^{r−1}` with `i ∈ [|w|]` and `ρ ∈ [r]`, as the
-paper does, and also at `i = 0` with `ρ = r`, the end of the first block.  At
+paper does, and also at `i = 0` with `ρ = r`, the end of the first block. At
 such a position, `Y^c` looks back to `r·i + ρ − c`, which is still on `f(w)`
 once `c + 2 ≤ r`, and which carries `wᵢ` when `ρ − c = 1` and `e` otherwise;
 at `i = 0` it lands in the first block, which is where `c + 2 ≤ r` rather than
 the paper's `c < r` is needed.
 -/
 
-import Transformer.CRASP.PositionalReductionAtom
-import Transformer.CRASP.Spread
-import Transformer.CRASP.YNormalFormEquiv
+@[expose] public section
 
 namespace Transformer
 namespace CRASP

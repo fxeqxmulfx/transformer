@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.ParityCoordinates
+module
+
+public import Transformer.GPTMini.Semantics.ParityCoordinates
 
 /-!
 # Uniform finite-weight bounds for every legal parity context
@@ -15,6 +17,8 @@ label margin and an EOS score above every parity competitor. These are
 ordinary model weights, not an optimization or convexity assertion.
 All scalar bounds below are consequences of the raw-input grammar.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

@@ -1,4 +1,12 @@
-/-
+module
+
+public import Transformer.Basic
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+
+/-!
 # Smooth finite minima for weak transport comparisons
 
 Auxiliary to arXiv:2411.04551v3, §1, the Lipschitz well-posedness
@@ -18,11 +26,7 @@ Only finitely many actual particle paths will be used in these tests;
 there is no spatial differentiability assumption on their common flow.
 -/
 
-import Transformer.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Mul
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal BigOperators

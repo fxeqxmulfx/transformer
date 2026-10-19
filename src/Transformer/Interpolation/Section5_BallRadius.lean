@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Interpolation.Section5_BallQuantiles
+public import Transformer.Interpolation.Section5_BallSweep
+public import Transformer.Interpolation.Section5_SphericalBallLaws
+
+/-!
 # A common radius and ordered centers for each small carrying cap
 
 ArXiv:2411.04551v3, §5, proof of `cl: balls`. For a geometric
@@ -14,9 +20,7 @@ give strictly decreasing center times by the proved quantile theorem.
 Every mass is measured under the original probability.
 -/
 
-import Transformer.Interpolation.Section5_BallQuantiles
-import Transformer.Interpolation.Section5_BallSweep
-import Transformer.Interpolation.Section5_SphericalBallLaws
+@[expose] public section
 
 open Real MeasureTheory Metric Set
 

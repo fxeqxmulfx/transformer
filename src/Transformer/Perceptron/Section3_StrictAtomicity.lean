@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_LocalHessianBound
+public import Transformer.Perceptron.Section5_Accumulation
+
+/-!
 # Finite strict SOPD support on the circle with a continuous derivative
 
 ArXiv:2601.21366v2, §3.1, `thm: circle.gelu`, and its proof in
@@ -18,8 +23,7 @@ original energy, first variation, measure and smooth gradient field.
 The analytic source theorem is retained below as a corollary.
 -/
 
-import Transformer.Perceptron.Section5_LocalHessianBound
-import Transformer.Perceptron.Section5_Accumulation
+@[expose] public section
 
 open Real MeasureTheory Set Filter
 open scoped Topology

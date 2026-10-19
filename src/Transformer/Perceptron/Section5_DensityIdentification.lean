@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_SignedTransform
+
+/-!
 # Identifying the original measure from a continuous signed candidate
 
 ArXiv:2601.21366v2, §5.1, proof of `lem: quadpol` (i).
@@ -20,7 +24,7 @@ the missing positivity step in a polynomial inverse argument without
 putting the inverse, measure equality or nonnegativity into a definition.
 -/
 
-import Transformer.Perceptron.Section5_SignedTransform
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped ENNReal

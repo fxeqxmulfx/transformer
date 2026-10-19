@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.Modes.Section2_MainIntPhi
+
+/-!
 # The number of modes of a Gaussian KDE — `eq:int-phi-b` on `T`
 
 The half of `eq:int-phi-b` of arXiv:2412.09080v3 that lives on `T`:
 `∫_T e^{-C β^{-3/2} n t² e^{-t²/2}} dt ≍ √(log β)`.
 
 The upper bound is the source's: the integrand is at most `1`, and `T` has
-length `2√(2 log n - log β - ω) ≲ √(log β)`.  For the lower bound the source
+length `2√(2 log n - log β - ω) ≲ √(log β)`. For the lower bound the source
 integrates over `[t₁, t₂]`, `t_k² = 2 log n - (1 + c/10^k) log β`; here the
 window is `t² ∈ [max(2 log n - (5/2) log β, 0), 2 log n - log β - ω]`, where the
 exponent is at most `C (log β) β^{-1/4}` and the integrand at least `e^{-1}`.
@@ -14,7 +18,7 @@ The same argument, with a window that needs no case split on `c`.
 Source: arXiv:2412.09080v3, `eq:int-phi-b`, proof of `lem:main-int-phi`.
 -/
 
-import Transformer.Modes.Section2_MainIntPhi
+@[expose] public section
 
 open Real Filter Asymptotics MeasureTheory
 open scoped Topology
@@ -22,7 +26,7 @@ open scoped Topology
 namespace Transformer
 namespace Modes
 
-/-- The rate is nonnegative.  arXiv:2412.09080v3, `eq:int-phi-b`. -/
+/-- The rate is nonnegative. arXiv:2412.09080v3, `eq:int-phi-b`. -/
 theorem phiRate_nonneg (n : ℕ) {β : ℝ} (hβ : 0 < β) (t : ℝ) : 0 ≤ phiRate n β t := by
   unfold phiRate; have := Real.rpow_nonneg hβ.le (-(3 : ℝ) / 2); positivity
 
@@ -47,7 +51,7 @@ theorem norm_integral_exp_phiRate_T_le (n : ℕ) {β : ℝ} (hβ : 0 < β) (w : 
     exact max_le (by linarith) (by positivity)
 
 /-- The lower half: if `C β^{-3/2} n t² e^{-t²/2} ≤ 1` whenever `s₀ ≤ t² ≤ D`, the
-integral over `T` is at least `e^{-1} (√D - √s₀)`.  arXiv:2412.09080v3, proof of
+integral over `T` is at least `e^{-1} (√D - √s₀)`. arXiv:2412.09080v3, proof of
 `lem:main-int-phi` (the source's `t_k`). -/
 theorem integral_exp_phiRate_T_ge {n : ℕ} {β w C s₀ : ℝ} (hs₀ : 0 ≤ s₀)
     (hs₀D : s₀ ≤ 2 * Real.log n - Real.log β - w)

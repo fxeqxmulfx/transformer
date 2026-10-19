@@ -1,4 +1,14 @@
-/-
+module
+
+public import Transformer.Basic
+public import Transformer.Perspective.Section3_SmallBeta
+public import Transformer.Perspective.AppendixA_Beta0
+public import Transformer.Perspective.CircleClustering
+public import Transformer.Perspective.Section5_HighD
+public import Mathlib.Analysis.Calculus.Deriv.Slope
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+/-!
 # Appendix C — Proof of Theorem (thm: beta.tiny)
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
@@ -7,32 +17,26 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 This file formalizes what Appendix C of the survey says about the modified
 energy `𝖤_β` in the regime `β ≪ 1`:
 
-* `e:contebeta`         — the expansion of `𝖤_β` around `β = 0`.  The exact
+* `e:contebeta`         — the expansion of `𝖤_β` around `β = 0`. The exact
                           identity `𝖤_β = 𝖤_0 + β 𝖱_β` and the limit
                           `𝖤_β → 𝖤_0` are proved; the survey's companion
                           statements for `∇ 𝖤_β` and `Hess 𝖤_β` are not.
 * `eq: eigval.beta`     — the explicit constant `c = 2(d-1)/(d n)` and its
                           positivity, which is all the proof of
-                          `thm: beta.tiny` uses it for.  The eigenvalue bound
+                          `thm: beta.tiny` uses it for. The eigenvalue bound
                           on `Hess 𝖤_0` itself needs the Hessian on the
                           sphere, which this development does not carry.
 * `eq: metric.grad`, `eq: metric.hess` — already in `AppendixB`.
 
 The synthesis of the appendix — non-synchronized critical points of `𝖤_β`
 are strict saddles for `β ≤ c/n`, hence (with `l:nosaddleconv`) clustering for
-a.e. initial condition — is not formalized.  `thm: beta.tiny` itself,
+a.e. initial condition — is not formalized. `thm: beta.tiny` itself,
 `beta_tiny`, is proved at the end by another route: almost every initial tuple
 clusters for every `β ≥ 0` (`clustering_of_nonneg`), on the circle by
 `clustering_circle` and for `d ≥ 3` by `thm: boumal` (`boumal_clustering`).
 -/
 
-import Transformer.Basic
-import Transformer.Perspective.Section3_SmallBeta
-import Transformer.Perspective.AppendixA_Beta0
-import Transformer.Perspective.CircleClustering
-import Transformer.Perspective.Section5_HighD
-import Mathlib.Analysis.Calculus.Deriv.Slope
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -56,7 +60,7 @@ noncomputable def Etilde (β : ℝ) (X : SphereTuple d n) : ℝ :=
 
   `𝖤_0(x_1,…,x_n) = (1/2) Σ_i Σ_j ⟨x_i, x_j⟩`,
 
-i.e. `Etilde` with `(e^{βc} - 1)/β` replaced by its value at `β = 0`.  (This
+i.e. `Etilde` with `(e^{βc} - 1)/β` replaced by its value at `β = 0`. (This
 is `AppendixA_Beta0.E0` up to the survey's `n`-normalization, which `Etilde`
 does not carry.) -/
 noncomputable def Etilde0 (X : SphereTuple d n) : ℝ :=
@@ -64,7 +68,7 @@ noncomputable def Etilde0 (X : SphereTuple d n) : ℝ :=
     inner (𝕜 := ℝ) ((X i : EucSpace d)) ((X j : EucSpace d))
 
 /-- The remainder `𝖱_β` defined by `𝖤_β = 𝖤_0 + β · 𝖱_β`: solving that
-equation for `𝖱_β` is the definition.  At `β = 0` Lean's `0⁻¹ = 0` makes it
+equation for `𝖱_β` is the definition. At `β = 0` Lean's `0⁻¹ = 0` makes it
 `0`, which is the value the equation leaves free. -/
 noncomputable def Rβ (β : ℝ) (X : SphereTuple d n) : ℝ :=
   β⁻¹ * (Etilde d n β X - Etilde0 d n X)
@@ -83,7 +87,7 @@ example : (1 : ℝ) ≠ 0 := one_ne_zero
 
 `𝖤_β → 𝖤_0` as `β → 0`: each term of the double sum is the slope of
 `β ↦ e^{β ⟨x_i, x_j⟩}` at `0`, which converges to its derivative
-`⟨x_i, x_j⟩`.  The survey states the same continuity for `∇ 𝖤_β` and
+`⟨x_i, x_j⟩`. The survey states the same continuity for `∇ 𝖤_β` and
 `Hess 𝖤_β`, which are not formalized here. -/
 theorem tendsto_Etilde_zero (X : SphereTuple d n) :
     Filter.Tendsto (fun β : ℝ => Etilde d n β X) (nhdsWithin 0 {(0 : ℝ)}ᶜ)
@@ -123,7 +127,7 @@ noncomputable def eigvalBetaConst : ℝ :=
 
 The proof of `thm: beta.tiny` uses `eq: eigval.beta` only through the fact
 that the constant it exhibits is *strictly positive*, so that the threshold
-`β ≤ c(d, n) / n` describes a nonempty range of inverse temperatures.  That
+`β ≤ c(d, n) / n` describes a nonempty range of inverse temperatures. That
 positivity is what is proved here: for `d ≥ 2` and `n ≥ 1`,
 
   `c(d, n) = 2 (d - 1) / (d n) > 0`.
@@ -159,7 +163,7 @@ theorem clustering_of_nonneg (hd : 2 ≤ d) (hn : 2 ≤ n) {β : ℝ} (hβ : 0 �
 
 /-- **Theorem (thm: beta.tiny).** *Cluster collapse when `β ≤ C/n`.*
 
-"Fix `d, n ≥ 2`.  There exists a numerical constant `C > 0` such that whenever
+"Fix `d, n ≥ 2`. There exists a numerical constant `C > 0` such that whenever
 `β ≤ C n⁻¹` the following holds": for Lebesgue-almost any
 `(x_i(0))_{i ∈ [n]} ∈ (𝕊^{d-1})^n` there exists `x⋆ ∈ 𝕊^{d-1}` with
 `lim_{t→∞} x_i(t) = x⋆` for all `i`, for the solution of `SA` (resp. `USA`)
@@ -167,7 +171,7 @@ starting there — that is, `𝒮_β = clusteringSet` is co-null, and so is its
 `USA` counterpart `clusteringSetUSA`; both are concluded.
 
 Change: the constant is *numerical*, so `C` is chosen before `d` and `n`; the
-former statement chose it after them.  `C = 1` works: the conclusion holds for
+former statement chose it after them. `C = 1` works: the conclusion holds for
 every `β ≥ 0` (`clustering_of_nonneg`).
 
 Moreover, when `d = 2` one can take `β ≤ 1` (`beta_tiny_circle`, in

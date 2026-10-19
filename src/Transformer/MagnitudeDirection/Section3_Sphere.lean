@@ -1,12 +1,16 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.Section2_Interference
+public import Transformer.MagnitudeDirection.Section3_Factorization
+
+/-!
 # Sphere projection and normalized updates
 
 arXiv:2606.25971v2, §3.1, Algorithms 1–2. The candidate must be
 nonzero: the displayed division does not project zero onto a positive sphere.
 -/
 
-import Transformer.MagnitudeDirection.Section2_Interference
-import Transformer.MagnitudeDirection.Section3_Factorization
+@[expose] public section
 
 noncomputable section
 

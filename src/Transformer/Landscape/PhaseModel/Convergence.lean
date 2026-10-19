@@ -1,22 +1,26 @@
-/-
+module
+
+public import Transformer.Landscape.PhaseModel.Descent
+public import Transformer.Landscape.PhaseModel.Landscape
+public import Transformer.Landscape.SaddleAvoidance.AnalyticLevelLandscape
+
+/-!
 # Phase model — convergence to a character from below `n²/8`
 
 For `n ≥ 4`, every critical point of `V_full` below `n²/8` is a zero, a
 global minimizer, or a strict saddle (`Landscape.PhaseModel.Landscape`), and `V_full`
-is analytic.  So gradient descent with `0 < η`, `9 n² η < 1`, started below
+is analytic. So gradient descent with `0 < η`, `9 n² η < 1`, started below
 `n²/8`, converges for almost every start, and its limit is the phases of a
 character up to periods (`ae_exists_tendsto_characterPhase`):
 `Landscape.SaddleAvoidance.ae_exists_tendsto_isMinOn_of_lt_of_analyticOnNhd` applies at
 the level `n²/8`, with the periods as translations, every orbit having a
-limit point up to periods in the cube.  In particular a convergent orbit ends
+limit point up to periods in the cube. In particular a convergent orbit ends
 at a character (`ae_tendsto_characterPhase`).
 
 Source: item M6.4 of `landscape_plan.md`.
 -/
 
-import Transformer.Landscape.PhaseModel.Descent
-import Transformer.Landscape.PhaseModel.Landscape
-import Transformer.Landscape.SaddleAvoidance.AnalyticLevelLandscape
+@[expose] public section
 
 open Filter MeasureTheory
 open scoped Topology
@@ -28,11 +32,11 @@ open Landscape.SaddleAvoidance (gradientStep)
 variable {n : ℕ}
 
 /-- **Gradient descent on `V_full` started below `n²/8` converges to the
-phases of a character**, for almost every start.  Let `n ≥ 4` and `0 < η`
-with `9 n² η < 1`.  For a start `x` drawn from a law `ν` absolutely
+phases of a character**, for almost every start. Let `n ≥ 4` and `0 < η`
+with `9 n² η < 1`. For a start `x` drawn from a law `ν` absolutely
 continuous with respect to a Haar measure, almost surely: if
 `V_full(x) < n²/8`, the orbit converges, and its limit is the phases of a
-character up to periods.  Below `n²/8` every critical point of `V_full` is a
+character up to periods. Below `n²/8` every critical point of `V_full` is a
 zero, a global minimizer, or a strict saddle
 (`isStrictSaddle_of_divisionEnergy_lt`), and the zeros are the characters up
 to periods (`divisionEnergy_univ_eq_zero_iff`). -/
@@ -72,11 +76,11 @@ theorem ae_exists_tendsto_characterPhase (hn : 4 ≤ n) (μ : Measure (EucSpace 
     (divisionEnergy_characterPhase _ 1)
 
 /-- **Gradient descent on `V_full` started below `n²/8` converges, if at
-all, to the phases of a character**, for almost every start.  Let `n ≥ 4`
-and `0 < η` with `9 n² η < 1`.  For a start `x` drawn from a law `ν`
+all, to the phases of a character**, for almost every start. Let `n ≥ 4`
+and `0 < η` with `9 n² η < 1`. For a start `x` drawn from a law `ν`
 absolutely continuous with respect to a Haar measure, almost surely: if
 `V_full(x) < n²/8` and the orbit converges to `w`, then `w` is the phases of
-a character up to periods.  The orbit converges anyway
+a character up to periods. The orbit converges anyway
 (`ae_exists_tendsto_characterPhase`), and limits are unique. -/
 theorem ae_tendsto_characterPhase (hn : 4 ≤ n) (μ : Measure (EucSpace n)) [μ.IsAddHaarMeasure]
     {ν : Measure (EucSpace n)} (hν : ν ≪ μ) {η : ℝ} (hη : 0 < η) (hηn : 9 * n ^ 2 * η < 1) :

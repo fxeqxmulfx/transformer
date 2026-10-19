@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Interpolation.Section3_MomentVariation
+public import Transformer.Interpolation.Section3_PerturbationGeometry
+
+/-!
 # One common separation time for every original weak solution
 
 ArXiv:2411.04551v3, §3.2, `lem: perturbation`, Part 2.
@@ -13,8 +18,7 @@ solution pairs. The conclusion rules out every real collinearity factor.
 No uniqueness of weak solutions is presumed in this argument.
 -/
 
-import Transformer.Interpolation.Section3_MomentVariation
-import Transformer.Interpolation.Section3_PerturbationGeometry
+@[expose] public section
 
 open Real MeasureTheory Filter Set
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.MagnitudeDirection.Section4_MuonScaling
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+
+/-!
 # Initialization second moments
 
 arXiv:2606.25971v2, §4.1.1 and Appendix D. Standard deviation `1/sqrt(d)`
@@ -6,8 +11,7 @@ for centered entries specifies a second moment, not an exact realized norm.
 The norm identity below needs no independence between different entries.
 -/
 
-import Transformer.MagnitudeDirection.Section4_MuonScaling
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
+@[expose] public section
 
 open MeasureTheory
 open scoped BigOperators

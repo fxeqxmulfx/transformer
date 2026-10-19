@@ -1,35 +1,39 @@
-/-
+module
+
+public import Transformer.Landscape.SaddleAvoidance.Minimizers
+public import Transformer.Landscape.SaddleAvoidance.Periodic
+public import Transformer.Landscape.SaddleAvoidance.CriticalPoints
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+
+/-!
 # Saddle avoidance — gradient descent finds a global minimizer
 
 Let `f` be `C²` on a finite-dimensional real inner product space with an
-`L`-Lipschitz gradient, and `0 < η`, `η L < 1`.  Suppose every critical
+`L`-Lipschitz gradient, and `0 < η`, `η L < 1`. Suppose every critical
 point of `f` is a global minimizer or a strict saddle, and `f` satisfies the
 Łojasiewicz inequality with an exponent `0 ≤ a < 1` at each critical point.
 Suppose also that almost every orbit of gradient descent has a limit point
-up to translations leaving `f` invariant.  Then almost every orbit converges
-to a global minimizer (`ae_exists_tendsto_isMinOn`).  The orbit converges to
+up to translations leaving `f` invariant. Then almost every orbit converges
+to a global minimizer (`ae_exists_tendsto_isMinOn`). The orbit converges to
 a critical point that is almost surely not a strict saddle
 (`ae_exists_tendsto_not_isStrictSaddle`), and the landscape hypothesis
 leaves only the global minimizers.
 
 When the translations span `E`, as the periods `2πℤⁿ` of a function of `n`
 angles do, every point has a translate in one closed ball by an integer
-combination of them (`exists_add_mem_closedBall_of_span_eq_top`).  These
+combination of them (`exists_add_mem_closedBall_of_span_eq_top`). These
 combinations leave `f` invariant too (`periodic_of_mem_span`), so every orbit
 has a limit point up to translations (`exists_frequently_norm_add_sub_lt`),
 and that hypothesis can be dropped
 (`ae_exists_tendsto_isMinOn_of_span_eq_top`).
 
 The sources prove convergence to a local minimizer: `thm:local-min` of
-arXiv:1602.04915, formalized as `ae_exists_tendsto_isLocalMin`.  The global
+arXiv:1602.04915, formalized as `ae_exists_tendsto_isLocalMin`. The global
 statement is the scheme that combines a landscape theorem, which gives
 `hcrit`, with the Łojasiewicz inequality, which gives `hloj`.
 -/
 
-import Transformer.Landscape.SaddleAvoidance.Minimizers
-import Transformer.Landscape.SaddleAvoidance.Periodic
-import Transformer.Landscape.SaddleAvoidance.CriticalPoints
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+@[expose] public section
 
 open Filter Metric MeasureTheory
 open scoped Topology NNReal
@@ -43,7 +47,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDim
 every critical point is a global minimizer or a strict saddle, `f`
 satisfies the Łojasiewicz inequality with an exponent `0 ≤ a < 1` at each
 critical point, and almost every orbit has a limit point up to translations
-in a set `Λ` leaving `f` invariant.  `thm:local-min` of arXiv:1602.04915
+in a set `Λ` leaving `f` invariant. `thm:local-min` of arXiv:1602.04915
 reads: "Assume the same conditions as Theorem `thm:no-saddles` and
 `lim_k x_k` exists, then `Pr(lim_k x_k = x*) = 1`, where `x*` is a local
 minimizer."  As in `ae_exists_tendsto_not_isStrictSaddle`, `hloj` and `hcl`
@@ -65,7 +69,7 @@ theorem ae_exists_tendsto_isMinOn (μ : Measure E) [μ.IsAddHaarMeasure] {ν : M
 
 /-- **Gradient descent on a periodic function almost surely converges to a
 global minimizer** if every critical point is a global minimizer or a strict
-saddle and the Łojasiewicz inequality holds at each.  The translations `Λ`
+saddle and the Łojasiewicz inequality holds at each. The translations `Λ`
 leaving `f` invariant span `E`, so every orbit has a limit point up to their
 integer combinations. -/
 theorem ae_exists_tendsto_isMinOn_of_span_eq_top (μ : Measure E) [μ.IsAddHaarMeasure]
@@ -123,7 +127,7 @@ example : let f := fun x : ℝ => (1 / 2 : ℝ) * ‖x‖ ^ 2
 
 /-- The hypotheses of `ae_exists_tendsto_isMinOn_of_span_eq_top` hold for
 `f(x) = 1 - cos x` on the line with Lebesgue measure, `L = 1`, `η = 1/2` and
-the period `2π`, which spans `ℝ`.  The critical points are the multiples of
+the period `2π`, which spans `ℝ`. The critical points are the multiples of
 `π`: the even ones are global minimizers, the odd ones strict saddles, where
 the Hessian `cos x = -1` is negative, and the Hessian `±1` is injective at
 both, so the Łojasiewicz inequality holds with `a = 1/2`. -/

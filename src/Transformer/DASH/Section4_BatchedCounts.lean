@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section4_BatchedNewton
+
+/-!
 # DASH — counts of batched products in the Newton solvers
 
 arXiv:2602.02016v2, §3.2–3.3 and §4. The counter counts calls to
@@ -6,7 +10,7 @@ the batched multiplication primitive, independently of the number of
 matrices in that call. It makes no assertion about hardware runtime.
 -/
 
-import Transformer.DASH.Section4_BatchedNewton
+@[expose] public section
 
 open scoped Matrix
 

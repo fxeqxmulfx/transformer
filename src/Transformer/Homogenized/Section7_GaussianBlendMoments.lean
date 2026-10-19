@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianCoordinateMoments
+public import Transformer.Homogenized.Section7_GaussianHeadFeatures
+
+/-!
 # Actual Gaussian interpolation moments
 
 ArXiv:2604.01978v1, §7, eq:interpolation_gaussian and the Gaussian
@@ -13,8 +18,7 @@ included. These statements will integrate the pointwise Hessian trace
 bound after the random softmax weights have been summed pointwise.
 -/
 
-import Transformer.Homogenized.Section7_GaussianCoordinateMoments
-import Transformer.Homogenized.Section7_GaussianHeadFeatures
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Set
 open scoped BigOperators NNReal

@@ -1,27 +1,31 @@
-/-
+module
+
+public import Transformer.Perspective.RawStackDense
+
+/-!
 # A discrete Gronwall bound for the dense stack
 
 **Not a statement of any paper.**  In the gauge, the dense stack of
 `Perspective.RawStackDense` is the skip-free gauge stack plus the rescaled skips
 it has taken (`ungauged_sub_gaugeStack_dense`), and the skips read the stream's
 own states: the displacement of the ungauged stream feeds back into itself, and
-what bounds it is a discrete Gronwall inequality.  Write
+what bounds it is a discrete Gronwall inequality. Write
 
   `W_{k,i} = Σ_{j ≤ k} |s_{k,j,i} Λ_{j,i} / Λ_{k+1,i}|`   (`skipMass`)
 
 for the weight of the skips of step `k` as the directions see it, and
-`P_{k,i} = Π_{j<k} (1 + W_{j,i})` (`skipGrowth`).  If the gauge stack stays
+`P_{k,i} = Π_{j<k} (1 + W_{j,i})` (`skipGrowth`). If the gauge stack stays
 within `D` of the start up to depth `k`, then
 
   `‖y_{k,i} - x_{0,i}‖ ≤ D + (‖x_{0,i}‖ + D) (P_{k,i} - 1)`
 
 (`norm_ungauged_sub_le_dense`), and the direction of token `i` is within twice
 that, divided by `‖x_{0,i}‖`, of where it started
-(`norm_normalize_sub_le_dense`).  Without skips `P = 1` and the bound is `D`;
+(`norm_normalize_sub_le_dense`). Without skips `P = 1` and the bound is `D`;
 each step multiplies the growth by one plus what its skips weigh.
 -/
 
-import Transformer.Perspective.RawStackDense
+@[expose] public section
 
 open scoped BigOperators
 
@@ -99,7 +103,7 @@ stack stays within `D` of the start up to depth `k`, then
 
   `‖y_{k,i} - x_{0,i}‖ ≤ D + (‖x_{0,i}‖ + D) (P_{k,i} - 1)`,
 
-with `y` the ungauged stream and `P = skipGrowth`.  The gains are any positive
+with `y` the ungauged stream and `P = skipGrowth`. The gains are any positive
 numbers, and the skips any number per step, onto any depth: each state a skip
 reads is at most `(‖x_{0,i}‖ + D) P` long, so the skips of step `j` move the
 stream by at most `(‖x_{0,i}‖ + D) W_{j,i} P_{j,i}`, and these telescope.

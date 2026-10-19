@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_CircleGeometry
+public import Transformer.Perceptron.Section5_CriticalSupport
+public import Mathlib.MeasureTheory.Measure.Support
+public import Mathlib.MeasureTheory.Measure.Dirac.Basic
+
+/-!
 # Finite stationary support from an actual angular curvature condition
 
 ArXiv:2601.21366v2, §5.5, `rem:strictSOPD-perceptron` and
@@ -17,10 +24,7 @@ The later first-variation calculation must establish them for the
 actual interaction and perceptron energy before applying this result.
 -/
 
-import Transformer.Perceptron.Section5_CircleGeometry
-import Transformer.Perceptron.Section5_CriticalSupport
-import Mathlib.MeasureTheory.Measure.Support
-import Mathlib.MeasureTheory.Measure.Dirac.Basic
+@[expose] public section
 
 open Set Real MeasureTheory
 open scoped Topology

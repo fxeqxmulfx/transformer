@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_CircleGeodesics
+public import Transformer.Perceptron.Section5_FiniteVariation
+public import Transformer.Perceptron.Section5_WeightedVariance
+public import Transformer.Perceptron.Section5_FirstVariationCurvature
+
+/-!
 # Strict lower bound for the actual finite-support geodesic Hessian
 
 ArXiv:2601.21366v2, §5.2, `eq:Hess-bilinear.std`, and §5.5,
@@ -17,10 +24,7 @@ It is needed earlier to deduce finite support from strict curvature,
 and later for the source's definition of a strict SOPD critical point.
 -/
 
-import Transformer.Perceptron.Section5_CircleGeodesics
-import Transformer.Perceptron.Section5_FiniteVariation
-import Transformer.Perceptron.Section5_WeightedVariance
-import Transformer.Perceptron.Section5_FirstVariationCurvature
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

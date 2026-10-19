@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianMeanPathError
+
+/-!
 # Homogenized Transformers — high temperature and the dimension limit
 
 Formalization of arXiv:2604.01978v1, §2.3.5 and §7,
@@ -12,7 +16,7 @@ The original mean and its elementary geometry live in Section7_MeanOverlap,
 before the Gaussian estimates used by the probability theorem here.
 -/
 
-import Transformer.Homogenized.Section7_GaussianMeanPathError
+@[expose] public section
 
 open scoped BigOperators NNReal ENNReal
 open Real MeasureTheory ProbabilityTheory

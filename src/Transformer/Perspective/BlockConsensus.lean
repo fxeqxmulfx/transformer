@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.BlockDrive
+public import Transformer.Perspective.InjectedAttention
+
+/-!
 # Collinear differences of injections allow consensus
 
 **Not a statement of any paper.**  The hypothesis of `blockDrive_spread` is two
@@ -20,8 +25,7 @@ If the differences `z_i - z_j` span two dimensions, `blockDrive_spread`
 applies; if they span at most one, `blockDrive_consensus` does.
 -/
 
-import Transformer.Perspective.BlockDrive
-import Transformer.Perspective.InjectedAttention
+@[expose] public section
 
 open scoped BigOperators
 
@@ -36,7 +40,7 @@ tokens resting at `x` is a flow driven by a block (`blockDrive`) with one head,
 any weights whose rows sum to one, the rank-one value
 `V(t) y = -⟨x, y⟩ z_{i₀}(t)` and no feed-forward term: at `x` the head returns
 `-z_{i₀}`, and what is left of the drive of token `i`, `z_i - z_{i₀}`, is normal
-to the sphere.  The weights may be softmax attention of any `β`, `Q` and `K`
+to the sphere. The weights may be softmax attention of any `β`, `Q` and `K`
 (`sum_attention`).
 
 Source: none — posed here, against `blockDrive_spread`. -/
@@ -79,7 +83,7 @@ example (β : ℝ) (Q K : TimeParam 2) (Y : ℝ → SphereTuple 2 3) :
 /-- **Two tokens can always reach consensus.**  For any two injections `z_0`,
 `z_1` in `ℝ^{d+1}` there is a unit vector `x` — along `z_1 - z_0` when they
 differ — at which two resting tokens are a flow driven by a block as in
-`blockDrive_consensus`.  So for `n = 2` nothing about the injections alone
+`blockDrive_consensus`. So for `n = 2` nothing about the injections alone
 rules collapse out once `V ≠ I_d`, and `blockDrive_spread`, whose two
 independent differences need three tokens, has nothing to say.
 
@@ -108,7 +112,7 @@ example (β : ℝ) (Q K : TimeParam 2) (Y : ℝ → SphereTuple 2 2) :
 /-- **Two independent injections do not rule collapse out once `V ≠ I_d`.**
 The claim refuted: `blockDrive_spread` with two linearly independent injections
 `z_0`, `z_1` in place of two independent differences — the hypothesis of
-`IsInjectedFlow.spread`, where `V = I_d`.  It fails already for two tokens in
+`IsInjectedFlow.spread`, where `V = I_d`. It fails already for two tokens in
 `ℝ²`, one head of uniform weights (softmax attention at `β = 0`), values of
 norm at most `1`, no feed-forward term and injections of norm at most `2`:
 `z_0 = e₁` and `z_1 = e₀ + e₁` are independent, and both tokens resting at

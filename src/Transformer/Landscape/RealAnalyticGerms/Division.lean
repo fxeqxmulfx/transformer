@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Landscape.RealAnalyticGerms.DivisionMaps
+public import Mathlib.RingTheory.Ideal.Operations
+public import Mathlib.RingTheory.Ideal.Span
+
+/-!
 # Real analytic germs: Division
 
 Adapted from Bochao Kong's LocalComplexGeometry, revision
@@ -8,9 +14,7 @@ dependency closure is retained. Apache-2.0 license:
 third_party/LocalComplexGeometry/LICENSE.
 -/
 
-import Transformer.Landscape.RealAnalyticGerms.DivisionMaps
-import Mathlib.RingTheory.Ideal.Operations
-import Mathlib.RingTheory.Ideal.Span
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

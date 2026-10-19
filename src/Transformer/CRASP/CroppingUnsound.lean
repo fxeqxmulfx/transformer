@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.CRASP.Middle
+
+/-!
 # The cropping lemmas are false as stated
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
@@ -7,29 +11,29 @@ Appendix D `lem:cropping`.
 
 Both cropping lemmas take a family of intervals `I` on which the PNPs of `φ`
 are constant and promise a sub-family on which the minimal depth-1
-subformulas of `φ` are constant too.  The proof reads a minimal depth-1
+subformulas of `φ` are constant too. The proof reads a minimal depth-1
 subformula as a comparison of affine functions of the prefix vector: "each
 `◁#[ψ]` is `α x + β y`", since the depth-0 formula `ψ` is a Boolean
-combination of `Q_a`, `Q_b` and PNPs that are constant on `I`.  That describes
-the positions *inside* the interval only.  `◁#[ψ]` also counts the positions
+combination of `Q_a`, `Q_b` and PNPs that are constant on `I`. That describes
+the positions *inside* the interval only. `◁#[ψ]` also counts the positions
 before the prefix vector enters `I(n⃗)`, where the PNPs are unconstrained and
 which the prefix vector does not determine.
 
-`◁#[Q_a ∧ Π] < 1` with `Π(n⃗, j) = [j = 1]` makes this concrete.  `Π` is
+`◁#[Q_a ∧ Π] < 1` with `Π(n⃗, j) = [j = 1]` makes this concrete. `Π` is
 constant on `I(n⃗) = [(1,1), n⃗]`, because a position whose prefix holds an `a`
-and a `b` is at least the second.  The formula is its own minimal depth-1
+and a `b` is at least the second. The formula is its own minimal depth-1
 subformula and says "the string does not start with `a`", which no nonempty
 interval inside `I(n⃗)` decides: each of its points is the prefix vector of a
 string starting with `a` and of one starting with `b`.
 -/
 
-import Transformer.CRASP.Middle
+@[expose] public section
 
 namespace Transformer
 namespace CRASP
 
 /-- `◁#[Q_a ∧ Π] < 1` with `Π(n⃗, j) = [j = 1]`: from the first position on,
-"the string does not start with `a`".  It refutes `lem:cropping_oneway` and
+"the string does not start with `a`". It refutes `lem:cropping_oneway` and
 `lem:cropping` (arXiv:2506.16055v3, §4.4 and Appendix D). -/
 def Form.firstNotA : Form Bool :=
   .lt (.countL (.and (.sym false) (.pnp fun _ j => decide (j = 1)))) .one

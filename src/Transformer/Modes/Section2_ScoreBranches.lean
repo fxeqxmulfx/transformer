@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Modes.Section2_ParameterTransversality
+
+/-!
 # Three original score branches for Gaussian KDE critical-point charts
 
 ArXiv:2412.09080v3, §2.1, `eq:Fn` and its derivative.
@@ -15,7 +19,7 @@ solving the original field equation in one sample coordinate;
 no inverse, implicit chart, or query nondegeneracy is postulated here.
 -/
 
-import Transformer.Modes.Section2_ParameterTransversality
+@[expose] public section
 
 open Real Set
 

@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Semantics.DepthReadoutBlock
+module
+
+public import Transformer.GPTMini.Semantics.DepthReadoutBlock
 
 /-!
 # Actual raw-word depth final state and semantic coordinates
@@ -16,6 +18,8 @@ the common coordinate has the same positive true scale. This is the
 last substantive hidden-state input for strict tied-label margins.
 Full ModelParams/hidden-loop and integer-prefix coupling remain to do.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Semantics
 

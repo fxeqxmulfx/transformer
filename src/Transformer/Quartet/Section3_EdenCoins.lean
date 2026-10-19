@@ -1,20 +1,24 @@
-/-
+module
+
+public import Transformer.Quartet.Section3_Eden
+public import Transformer.Quartet.Section3_Unbiased
+public import Transformer.Quartet.Fp8Grid
+public import Mathlib.MeasureTheory.Integral.Pi
+
+/-!
 # Integrating one coin out of the cube of `MS-EDEN`
 
 The expectation of Algorithm 1 (`Transformer.Quartet.mean`) integrates over the sign seeds, and
-over a cube of coins, one per group.  A function of a single coin `u_g` integrates against the
+over a cube of coins, one per group. A function of a single coin `u_g` integrates against the
 cube as against the unit interval — the other coordinates have total mass `1` — so a sum over
 the groups of a stochastic rounding of a fixed argument integrates to `2^k` times that argument
-(`integral_sum_sr`), by the unbiasedness of `SR` (`integral_sr`).  And the mean of a function
+(`integral_sum_sr`), by the unbiasedness of `SR` (`integral_sr`). And the mean of a function
 whose integral does not depend on the seed is that integral (`mean_eq_of_forall`).
 
 Source: arXiv:2601.22813v2, §3.1 (`SR` is unbiased), Algorithm 1 (one seed `ω_SR` per group).
 -/
 
-import Transformer.Quartet.Section3_Eden
-import Transformer.Quartet.Section3_Unbiased
-import Transformer.Quartet.Fp8Grid
-import Mathlib.MeasureTheory.Integral.Pi
+@[expose] public section
 
 open MeasureTheory
 

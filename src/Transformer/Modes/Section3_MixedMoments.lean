@@ -1,13 +1,15 @@
-import Transformer.Modes.Section3_ExpMoments
+module
 
-/-
+public import Transformer.Modes.Section3_ExpMoments
+
+/-!
 # The number of modes of a Gaussian KDE — the mixed moments of a law on `ℝ²`
 
 `expMoment μ i j u v = ∫ x₁^i x₂^j e^{u x₁ + v x₂} dμ`, the quantity every
 derivative of the cumulant generating function of arXiv:2412.09080v3, §3.1, is
 built from: the moment generating function is `expMoment μ 0 0`, a derivative
 in `u` raises `i` by one and a derivative in `v` raises `j` by one
-(`hasDerivAt_expMoment_fst`, `hasDerivAt_expMoment_snd`).  Both come from the
+(`hasDerivAt_expMoment_fst`, `hasDerivAt_expMoment_snd`). Both come from the
 general lemmas of `Section3_ExpMoments.lean`, the second by exchanging the two
 coordinates.
 
@@ -17,6 +19,8 @@ moments on the open square of half-side `ε` — of which `HasExpMoments` of
 
 Source: arXiv:2412.09080v3, §3.1, after `eq:psi`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory Filter
 open scoped Topology
@@ -43,7 +47,7 @@ theorem hasExpMomentsOn_stdGauss2 : HasExpMomentsOn stdGauss2 1 := fun u v _ _ =
     (ProbabilityTheory.integrable_exp_mul_gaussianReal (μ := 0) (v := 1) u).mul_prod
       (ProbabilityTheory.integrable_exp_mul_gaussianReal (μ := 0) (v := 1) v)
 
-/-- The mixed moment `∫ x₁^i x₂^j e^{u x₁ + v x₂} dμ`.  For `i = j = 0` this is
+/-- The mixed moment `∫ x₁^i x₂^j e^{u x₁ + v x₂} dμ`. For `i = j = 0` this is
 the moment generating function whose logarithm `cumulantOf` differentiates.
 
 Source: arXiv:2412.09080v3, §3.1, after `eq:psi`. -/

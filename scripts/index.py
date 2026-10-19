@@ -157,7 +157,11 @@ def scan(path, incomplete):
 
 
 def arxiv_id(path):
-    head = "\n".join(open(path).read().split("\n")[:12])
+    """The first source citation in the preamble, regardless of module-header length."""
+    with open(path) as file:
+        source = file.read()
+    declaration = DECL.search(code(source))
+    head = source[:declaration.start()] if declaration else source
     m = re.search(r"arXiv:(\d{4}\.\d{4,5})", head)
     return m.group(1) if m else None
 

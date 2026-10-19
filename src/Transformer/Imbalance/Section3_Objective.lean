@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_SimpleModel
+
+/-!
 # Connecting the simple matrix field to the actual objective
 
 arXiv:2402.19449v2, Section 3.2, equation (4), and Appendix I, Lemma 4.
@@ -6,7 +10,7 @@ The ODE field is the negative partial derivative of the weighted loss,
 not an independent surrogate for the optimization problem.
 -/
 
-import Transformer.Imbalance.Section3_SimpleModel
+@[expose] public section
 
 open scoped BigOperators
 

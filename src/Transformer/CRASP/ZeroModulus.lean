@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.CRASP.PeriodicOutputPermutation
+public import Transformer.CRASP.PositionalPeriod
+
+/-!
 # Modulus zero gives an absolute-position predicate
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_eq_tlclmod`.
@@ -7,8 +12,7 @@ remainder, `i % 0 = i`, so this is an exact-position test rather than a
 periodic predicate. It can read the first letter at counting depth one.
 -/
 
-import Transformer.CRASP.PeriodicOutputPermutation
-import Transformer.CRASP.PositionalPeriod
+@[expose] public section
 
 namespace Transformer.CRASP
 

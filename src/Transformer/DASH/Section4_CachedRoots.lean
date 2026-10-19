@@ -1,11 +1,15 @@
-/-
+module
+
+public import Transformer.DASH.Section4_Blocking
+
+/-!
 # DASH — inverse-root buffers between refreshes
 
 arXiv:2602.02016v2, §4. A refresh frequency `f>0` recomputes at multiples
 of `f` and reuses the last computed inverse root at all intervening steps.
 -/
 
-import Transformer.DASH.Section4_Blocking
+@[expose] public section
 
 namespace Transformer.DASH
 

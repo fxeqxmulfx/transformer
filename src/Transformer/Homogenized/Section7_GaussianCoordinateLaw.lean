@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.Homogenized.GaussianEntries
+public import Transformer.Homogenized.GaussianEnsemble
+public import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Basic
+public import Mathlib.Probability.Distributions.Gaussian.Multivariate
+
+/-!
 # The actual joint Gaussian law of the original independent coordinates
 
 ArXiv:2604.01978v1, §7, the Gaussian variables used in `eq:SIGMA_R`,
@@ -17,10 +24,7 @@ in the Gram-covariance argument. The attention matrix itself is a product
 of Gaussian matrices and is not assigned a Gaussian law.
 -/
 
-import Transformer.Homogenized.GaussianEntries
-import Transformer.Homogenized.GaussianEnsemble
-import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Basic
-import Mathlib.Probability.Distributions.Gaussian.Multivariate
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

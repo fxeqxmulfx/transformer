@@ -1,6 +1,8 @@
-import Transformer.Modes.Section5_FractionalFourier
-import Transformer.Modes.Section3_BR
-import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
+module
+
+public import Transformer.Modes.Section5_FractionalFourier
+public import Transformer.Modes.Section3_BR
+public import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
 
 /-!
 # Integrable Fourier powers for every positive bandwidth
@@ -32,6 +34,8 @@ proved for a sufficiently large power, rather than deduced merely from
 boundedness of a density. No density existence is assumed in this proof.
 Source: arXiv:2412.09080v3, §5.4 and §5.5, after `eq:uniform-decay`.
 -/
+
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped ENNReal

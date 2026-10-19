@@ -1,4 +1,11 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_Regularity
+public import Transformer.BatchSize.Section4_GeneratorBound
+public import Transformer.BatchSize.Section4_LocalWeakError
+public import Transformer.BatchSize.Section4_SGDWeakError
+
+/-!
 # Uniform local weak consistency of both optimizers
 
 arXiv:2506.12543v1, Section 4.3, equations (2)--(3), Theorem 1.
@@ -7,10 +14,7 @@ to order eta^2, uniformly in the state and normalized smooth tests.
 This does not assert existence of the SDE or global weak approximation.
 -/
 
-import Transformer.BatchSize.Section4_Regularity
-import Transformer.BatchSize.Section4_GeneratorBound
-import Transformer.BatchSize.Section4_LocalWeakError
-import Transformer.BatchSize.Section4_SGDWeakError
+@[expose] public section
 
 open MeasureTheory
 open scoped BigOperators

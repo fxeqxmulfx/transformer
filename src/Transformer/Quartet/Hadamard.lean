@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.Quartet.Walsh
+public import Mathlib.Algebra.BigOperators.Field
+public import Mathlib.Analysis.Real.Sqrt
+
+/-!
 # The randomized Hadamard transform and its orthogonality
 
 arXiv:2601.22813v2, "Quartet II: Accurate LLM Pre-Training in NVFP4 by
@@ -7,7 +13,7 @@ Improved Unbiased Gradient Estimation" (ICML 2026), §3.2.
 The rotation of §3.2 is the Walsh–Hadamard matrix with random signs, written
 on the two-level index of a tensor: `2^k` groups of `16` entries, so
 `hadamard` is the tensor product of the transform on the group index and the
-transform on the entry index.  The rotation group is the whole tensor, which
+transform on the entry index. The rotation group is the whole tensor, which
 the paper allows — "any multiple of the quantization group size 16 is
 valid".
 
@@ -21,9 +27,7 @@ further processing, as the rotations cancel out along the inner GEMM
 dimensions".
 -/
 
-import Transformer.Quartet.Walsh
-import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Analysis.Real.Sqrt
+@[expose] public section
 
 namespace Transformer
 namespace Quartet
@@ -174,7 +178,7 @@ theorem sum_hadamard_mul_sum_hadamard_mul (u v : Fin (2 ^ k) → Fin 16 → ℝ)
         (hsum fun i j => u i j * v i j).symm
 
 /-- **The rotation cancels along the inner dimension of a product**: rotating
-both factors with the same seed leaves every inner product where it was.  This
+both factors with the same seed leaves every inner product where it was. This
 is why §5 can say that the outputs of the NVFP4 GEMMs "need no further
 processing, as the rotations cancel out along the inner GEMM dimensions". -/
 theorem sum_rht_mul_rht (ε : Fin (2 ^ k) → Fin 16 → Bool) (x y : Fin (2 ^ k) → Fin 16 → ℝ) :

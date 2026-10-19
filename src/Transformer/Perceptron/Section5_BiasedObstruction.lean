@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perceptron.Section5_BiasedTransform
+public import Transformer.Perceptron.Section5_ReLUObstruction
+
+/-!
 # Non-analytic original biased potentials obstruct zero branches
 
 ArXiv:2601.21366v2, §3.1, `rem: ext` (i), with the contradiction
@@ -19,8 +24,7 @@ ReLU, every original bias, and the original stationary probability remain.
 The actual supplied sphere point fixes the source's constant value.
 -/
 
-import Transformer.Perceptron.Section5_BiasedTransform
-import Transformer.Perceptron.Section5_ReLUObstruction
+@[expose] public section
 
 open Real MeasureTheory Set
 open scoped BigOperators

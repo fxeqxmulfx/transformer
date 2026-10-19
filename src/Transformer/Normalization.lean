@@ -1,4 +1,25 @@
-/-
+module
+
+public import Transformer.Normalization.Basic
+public import Transformer.Normalization.Section2_RadialInvariant
+public import Transformer.Normalization.Section2_SphereInvariant
+public import Transformer.Normalization.Section3_RadialBounds
+public import Transformer.Normalization.Clustering
+public import Transformer.Normalization.ClusteringLine
+public import Transformer.Normalization.Section3_NGPTZeroStep
+public import Transformer.Normalization.ClusterSpeed
+public import Transformer.Normalization.Convergence
+public import Transformer.Normalization.Line
+public import Transformer.Landscape.Lojasiewicz.Modulated
+public import Transformer.Landscape.Lojasiewicz.LojasiewiczInnerProduct
+public import Transformer.Normalization.TimeChange
+public import Transformer.Normalization.Radial
+public import Transformer.Normalization.Rates
+public import Transformer.Normalization.Symmetric
+public import Transformer.Normalization.UnstableProduct
+public import Transformer.Normalization.Velocities
+
+/-!
 Formalization of:
   Karagodin, Polyanskiy, Rigollet,
   "Normalization in Attention Dynamics", arXiv:2510.22026v2.
@@ -7,21 +28,4 @@ Lemma `lem: loj` of Appendix D.1 and the analytic geometry behind it hold for an
 analytic energy; they live in `Transformer.Landscape.Lojasiewicz`.
 -/
 
-import Transformer.Normalization.Basic
-import Transformer.Normalization.Section2_RadialInvariant
-import Transformer.Normalization.Section2_SphereInvariant
-import Transformer.Normalization.Section3_RadialBounds
-import Transformer.Normalization.Clustering
-import Transformer.Normalization.ClusteringLine
-import Transformer.Normalization.Section3_NGPTZeroStep
-import Transformer.Normalization.ClusterSpeed
-import Transformer.Normalization.Convergence
-import Transformer.Normalization.Line
-import Transformer.Landscape.Lojasiewicz.Modulated
-import Transformer.Landscape.Lojasiewicz.LojasiewiczInnerProduct
-import Transformer.Normalization.TimeChange
-import Transformer.Normalization.Radial
-import Transformer.Normalization.Rates
-import Transformer.Normalization.Symmetric
-import Transformer.Normalization.UnstableProduct
-import Transformer.Normalization.Velocities
+@[expose] public section

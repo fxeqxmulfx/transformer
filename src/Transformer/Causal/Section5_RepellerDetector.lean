@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Causal.Section5_FlowContinuity
+public import Transformer.Causal.Section5_RowDerivative
+
+/-!
 # A Borel detector for actual frozen repelling limits
 
 ArXiv:2411.04990v2, §5 and Appendix A, the probability-one
@@ -19,8 +24,7 @@ existential convergence assertion is presumed. The definition
 contains only the actual original field and its actual flow.
 -/
 
-import Transformer.Causal.Section5_FlowContinuity
-import Transformer.Causal.Section5_RowDerivative
+@[expose] public section
 
 open Real Set Filter MeasureTheory
 

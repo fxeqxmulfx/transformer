@@ -1,4 +1,6 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainMassBalanceScore
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainMassBalanceScore
 
 /-!
 # Permanent actual task correctness from unequal native initialization
@@ -27,6 +29,8 @@ mass/margin, CE convergence and measured formation time are separate.
 Fixed tables, zero betas and uniform native decay differ from the
 source's coupled-cost GD and preserved learned nonzero-beta GPTMini.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

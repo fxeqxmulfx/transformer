@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Homogenized.Section7_GaussianRowDeviationFourth
+public import Transformer.Homogenized.Section7_CorrelationTaylorExpectation
+
+/-!
 # The actual normalized Gaussian row deviation has a cubic-moment rate
 
 ArXiv:2604.01978v1, §7.3, `lem:delta_method`, the third-order
@@ -20,8 +25,7 @@ correlation expansion. The original two-factor query still requires
 its original joint law and mixed second-moment calculations.
 -/
 
-import Transformer.Homogenized.Section7_GaussianRowDeviationFourth
-import Transformer.Homogenized.Section7_CorrelationTaylorExpectation
+@[expose] public section
 
 open Real MeasureTheory ProbabilityTheory
 open scoped BigOperators NNReal

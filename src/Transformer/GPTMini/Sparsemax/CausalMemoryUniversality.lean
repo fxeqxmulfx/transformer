@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Sparsemax.CausalPrefixKeys
+module
+
+public import Transformer.GPTMini.Sparsemax.CausalPrefixKeys
 
 /-!
 # All consistent finite causal outputs in the convex shared-memory chart
@@ -18,6 +20,8 @@ cost is the exponential dictionary already counted in `CausalPrefixKeys`.
 It addresses a bounded finite window and the stated memory architecture;
 it does not prove efficient ordinary self-attention or language generalization.
 -/
+
+@[expose] public section
 
 noncomputable section
 

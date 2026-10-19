@@ -1,4 +1,6 @@
-import Transformer.GPTMini.Convex.Structured.TensorDeferredFFN
+module
+
+public import Transformer.GPTMini.Convex.Structured.TensorDeferredFFN
 
 /-!
 # Actual shared-weight tensor stack and final tied decoder
@@ -18,6 +20,8 @@ shared-weight prototype, not a claim for independently trained deep
 attention matrices. Repeated computations must all be charged. Raw
 integer/Basis capability and full-stack training follow separately.
 -/
+
+@[expose] public section
 
 namespace Transformer.GPTMini.Convex.Structured
 

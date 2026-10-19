@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.DASH.Section3_FiniteChaining
+
+/-!
 # DASH — finite NDB chains for every dyadic root
 
 arXiv:2602.02016v2, §3.3. For any fixed number of calls, the computed
@@ -6,7 +10,7 @@ square-root chain and a final inverse-square-root call converge to
 the stated dyadic powers as the iteration count of each call grows.
 -/
 
-import Transformer.DASH.Section3_FiniteChaining
+@[expose] public section
 
 open scoped Topology
 open Filter

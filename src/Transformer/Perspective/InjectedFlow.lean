@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Perspective.ConeChart
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+
+/-!
 # Weighted flows with the input mixed back in — no collapse
 
 **Not a statement of any paper.**  A companion to `lem: hemisphere.clustering`
@@ -7,24 +12,23 @@ of arXiv:2312.10794v5 (§6.1, `cone_collapse`), for the flow
   `ẋ_i = Proj_{x_i}( Σ_j a_ij(t) x_j + z_i )`   (`IsInjectedFlow`),
 
 a weighted flow (`IsWeightedFlow`) with a constant vector `z_i` added to the
-drive of particle `i`.  If two of the `z_i` are linearly independent, the
+drive of particle `i`. If two of the `z_i` are linearly independent, the
 particles never collapse, whatever the weights, as long as their absolute row
 sums are at most some `A`: they cannot stay within `δ` of each other for a time
 `T`, where `δ` and `T` depend on `A` and on `z` only
 (`IsInjectedFlow.spread`, in `Perspective.InjectedSpread`; this file holds the
 estimates it is made of).
 
-The proof is one Lyapunov-type function.  For `u = z_k`, `v = z_l`
-independent, `ψ = ⟨x_k, u⟩ + ⟨x_l, v⟩` is bounded by `‖u‖ + ‖v‖`.  While the
+The proof is one Lyapunov-type function. For `u = z_k`, `v = z_l`
+independent, `ψ = ⟨x_k, u⟩ + ⟨x_l, v⟩` is bounded by `‖u‖ + ‖v‖`. While the
 particles are `δ`-close, the attention term of `ψ̇` is `O(δ)`, because
 `Proj_x` kills `x` itself, and what remains is `‖Proj_x u‖² + ‖Proj_x v‖²` at
 one point `x`, which no unit `x` makes small: it is at least
-`(‖u‖²‖v‖² - ⟨u, v⟩²) / (2(‖u‖² + ‖v‖²))` (`gram_le_tangent`).  So `ψ`
+`(‖u‖²‖v‖² - ⟨u, v⟩²) / (2(‖u‖² + ‖v‖²))` (`gram_le_tangent`). So `ψ`
 would grow without bound.
 -/
 
-import Transformer.Perspective.ConeChart
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
+@[expose] public section
 
 open scoped BigOperators
 
@@ -39,7 +43,7 @@ projection, where `eq: albert` adds the feed-forward layer.
 
 Source: none — posed here; `IsWeightedFlow` (arXiv:2312.10794v5, §6.1) with the
 term `z_i` added inside the projection, at the place where `eq: albert`
-(arXiv:2312.10794v5, §2.3) adds the feed-forward term `w σ(a x_i + b)`.  Unlike
+(arXiv:2312.10794v5, §2.3) adds the feed-forward term `w σ(a x_i + b)`. Unlike
 that term, the same map for every particle, `z_i` depends on the particle. -/
 def IsInjectedFlow (X : ℝ → SphereTuple d n) (a : ℝ → Idx n → Idx n → ℝ)
     (z : Idx n → EucSpace d) : Prop :=
@@ -87,7 +91,7 @@ example : ‖(EuclideanSpace.single (0 : Fin 1) (1 : ℝ))‖ = 1 := by
 
   `‖u‖²‖v‖² - ⟨u, v⟩² ≤ 2 (‖u‖² + ‖v‖²) (‖Proj_x u‖² + ‖Proj_x v‖²)`,
 
-with `‖Proj_x u‖² = ‖u‖² - ⟨x, u⟩²`.  The certificate is
+with `‖Proj_x u‖² = ‖u‖² - ⟨x, u⟩²`. The certificate is
 `‖⟨x, v⟩ u + ⟨x, u⟩ v - 2 ⟨x, u⟩⟨x, v⟩ x‖² ≥ 0`, the vector
 `⟨x, v⟩ Proj_x u + ⟨x, u⟩ Proj_x v`. -/
 theorem gram_le_tangent {x : EucSpace d} (hx : ‖x‖ = 1) (u v : EucSpace d) :

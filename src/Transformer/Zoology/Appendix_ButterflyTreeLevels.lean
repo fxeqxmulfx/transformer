@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Zoology.Appendix_RowMajorCoyoteResources
+
+/-!
 # Binary factor coefficients of a recursive butterfly
 
 Arora et al., arXiv:2312.04927v1, Appendix `def: butterfly`, equivalence
@@ -7,7 +11,7 @@ is read from the unique recursive node containing the coordinate. Only
 levels below the tree's depth are compiled.
 -/
 
-import Transformer.Zoology.Appendix_RowMajorCoyoteResources
+@[expose] public section
 
 namespace Transformer.Zoology
 

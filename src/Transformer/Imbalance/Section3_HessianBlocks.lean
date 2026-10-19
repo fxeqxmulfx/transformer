@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Imbalance.Section3_AssignmentBounds
+
+/-!
 # Hessian block balance and diagonal dominance
 
 arXiv:2402.19449v2, Appendix H.1. The exact algebra implies diagonal
@@ -6,7 +10,7 @@ dominance of the matrix of block traces. An orders-of-magnitude separation
 is an empirical observation, not a universal consequence of the identity.
 -/
 
-import Transformer.Imbalance.Section3_AssignmentBounds
+@[expose] public section
 
 open scoped BigOperators
 

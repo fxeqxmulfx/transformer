@@ -1,4 +1,13 @@
-/-
+module
+
+public import Transformer.Kinetic.MeanField
+public import Transformer.Kinetic.Section1_GridQuadrature
+public import Transformer.Homogenized.RandomChain
+public import Mathlib.Probability.Independence.Basic
+public import Mathlib.Probability.Moments.Covariance
+public import Mathlib.Analysis.Fourier.AddCircle
+
+/-!
 # Kinetic theory for Transformers — fluctuations
 
 Formalization of `th:mf-gpt`(ii) of arXiv:2605.09213v1,
@@ -10,12 +19,7 @@ position test. The third cumulant the Glauber-calculus estimates of
 `Section3_CumulantBounds`.
 -/
 
-import Transformer.Kinetic.MeanField
-import Transformer.Kinetic.Section1_GridQuadrature
-import Transformer.Homogenized.RandomChain
-import Mathlib.Probability.Independence.Basic
-import Mathlib.Probability.Moments.Covariance
-import Mathlib.Analysis.Fourier.AddCircle
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory ProbabilityTheory
@@ -37,7 +41,7 @@ profile `f_∘` at rate `N^{-δ}` with polynomial loss in the frequency:
 
 **What the source says and what is changed here.**  The source pairs
 `E[e^{+inθ⁰}]` with `f̂_∘(σ,n) = ∫_𝕋 e^{-inθ} f_∘(σ,dθ)`, whose limit is in fact
-`f̂_∘(σ,-n)`.  Since the condition is imposed for every `n ∈ ℤ` and
+`f̂_∘(σ,-n)`. Since the condition is imposed for every `n ∈ ℤ` and
 `⟨n⟩ = ⟨-n⟩`, the two readings define the same assumption; the one written here
 is `∫_𝕋 e^{inθ} f_∘(σ,dθ)`, which is `fourier n`.
 

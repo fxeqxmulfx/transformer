@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_ErrorFunction
+
+/-!
 # Grafting and adaptive momentum clipping
 
 arXiv:2506.12543v1, Sections 4.1--4.2 and Appendix C, Algorithm 1.
@@ -6,7 +10,7 @@ The manuscript does not choose an interpolation rule for the quantile.
 We use the nearest-rank empirical quantile, preserving repeated values.
 -/
 
-import Transformer.BatchSize.Section4_ErrorFunction
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,9 @@
-/-
+module
+
+public import Transformer.Clusters.Section10_ScoreError
+public import Transformer.Clusters.Section8_SoftmaxEnergy
+
+/-!
 # The corrected projected energy derivative
 
 ArXiv:2305.05465v6, §10, Step 2' and `e:derivativenorm123`.
@@ -12,8 +17,7 @@ their error plus `n/c`. The proved exponential score error therefore
 gives an integrable lower bound on the actual projected energy derivative.
 -/
 
-import Transformer.Clusters.Section10_ScoreError
-import Transformer.Clusters.Section8_SoftmaxEnergy
+@[expose] public section
 
 open scoped BigOperators
 open Real Filter Topology

@@ -1,31 +1,35 @@
-/-
+module
+
+public import Transformer.Clusters.Section1_Dynamics
+public import Mathlib.Analysis.MeanInequalities
+
+/-!
 # The emergence of clusters in self-attention dynamics — the log-sum-exp
   potential
 
 §7 of arXiv:2305.05465v6, `sec: self-att`: the dynamics `e:Idnonresca` the
 proof of `t:boolean` runs on and the convexity of its potential
-`l:logsumexp`.  The non-collision lemma `l:distnondec` that follows from it is
+`l:logsumexp`. The non-collision lemma `l:distnondec` that follows from it is
 in `Section7_DistNonDec`.
 
 **What the source says and what is carried here.**
 
 * `e:Idnonresca` is `eq:trans_dyn` at `Q = K = V = I_d`, and
-  `transformerDynamics_one_iff` proves that literally.  The source writes it
+  `transformerDynamics_one_iff` proves that literally. The source writes it
   for `d = 1`, where the inner products are products of scalars, but
   `l:logsumexp` and `l:distnondec` are stated there "for any `d ≥ 1`", so they
   are carried in `ℝ^d`.
 
-* `l:logsumexp` is proved, though not by the source's computation.  The
+* `l:logsumexp` is proved, though not by the source's computation. The
   source deduces midpoint convexity from `(a+b) ≥ 2√(ab)`; the same inequality
   in its weighted form, `p₁^{w₁} p₂^{w₂} ≤ w₁p₁ + w₂p₂`, gives convexity
-  outright, after normalising by the two sums.  That is `sum_rpow_mul_rpow_le`
+  outright, after normalising by the two sums. That is `sum_rpow_mul_rpow_le`
   below, Hölder's inequality for a finite sum.
 
 Source: arXiv:2305.05465v6, `e:Idnonresca`, `e:logsumexpfct`, `l:logsumexp`.
 -/
 
-import Transformer.Clusters.Section1_Dynamics
-import Mathlib.Analysis.MeanInequalities
+@[expose] public section
 
 open scoped BigOperators
 open Real

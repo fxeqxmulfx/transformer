@@ -1,5 +1,7 @@
-import Transformer.Grokking.AdamW.LossDirection
-import Mathlib.Analysis.Calculus.Deriv.Slope
+module
+
+public import Transformer.Grokking.AdamW.LossDirection
+public import Mathlib.Analysis.Calculus.Deriv.Slope
 
 /-!
 # Local descent of the actual effective loss under native AdamW
@@ -17,6 +19,8 @@ The interval depends on the initial state and optimizer parameters.
 No prescribed numerical rate, repeated-step convergence, rule selection
 or identification with GPTMini cross-entropy is asserted.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.AdamW
 

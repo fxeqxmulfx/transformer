@@ -1,5 +1,7 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainAllocation
-import Transformer.Grokking.CircuitEfficiency.SectionC_NativeHistory
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainAllocation
+public import Transformer.Grokking.CircuitEfficiency.SectionC_NativeHistory
 
 /-!
 # Native balanced points are actual retained zero-buffer CE trajectories
@@ -25,6 +27,8 @@ finite positive parameter limits, not their attraction from other
 seeds, a delayed transition, learned feature discovery, stochastic
 GPTMini or a floating-point implementation bridge.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

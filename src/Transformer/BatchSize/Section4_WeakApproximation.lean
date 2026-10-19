@@ -1,4 +1,10 @@
-/-
+module
+
+public import Transformer.BatchSize.Section4_DiffusionLaw
+public import Transformer.BatchSize.Section4_DiscreteDeterministicComparison
+public import Transformer.BatchSize.Section4_OptimizerDeterministicComparison
+
+/-!
 # First-order weak approximation by the constructed diffusion law
 
 arXiv:2506.12543v1, Section 4.3, Theorem 1 and equations (2)--(3).
@@ -7,9 +13,7 @@ Here the continuous process is specified by the generator martingale problem
 on continuous paths, and the error compares actual optimizer expectations.
 -/
 
-import Transformer.BatchSize.Section4_DiffusionLaw
-import Transformer.BatchSize.Section4_DiscreteDeterministicComparison
-import Transformer.BatchSize.Section4_OptimizerDeterministicComparison
+@[expose] public section
 
 open MeasureTheory
 

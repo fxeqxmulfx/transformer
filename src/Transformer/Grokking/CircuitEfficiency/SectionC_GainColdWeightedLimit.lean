@@ -1,7 +1,9 @@
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdCeiling
-import Transformer.Grokking.CircuitEfficiency.SectionC_GainFeedbackFloor
-import Transformer.Grokking.AdamW.ScalarBiasError
-import Transformer.Grokking.AdamW.GeometricError
+module
+
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdCeiling
+public import Transformer.Grokking.CircuitEfficiency.SectionC_GainFeedbackFloor
+public import Transformer.Grokking.AdamW.ScalarBiasError
+public import Transformer.Grokking.AdamW.GeometricError
 
 /-!
 # An actual weighted native observer at the cold threshold
@@ -34,6 +36,8 @@ assigned coupled norm-cost GD. Exact-real proofs do not establish
 learned GPTMini, numerical kernels or thermodynamic size scaling.
 Frozen transformer optimizers and checkpoints remain unchanged.
 -/
+
+@[expose] public section
 
 namespace Transformer.Grokking.CircuitEfficiency
 

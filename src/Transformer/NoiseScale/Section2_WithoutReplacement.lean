@@ -1,11 +1,17 @@
-/-
+module
+
+public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+public import Mathlib.Probability.UniformOn
+public import Transformer.NoiseScale.Section2_Batches
+
+/-!
 # Batches sampled without replacement
 
 arXiv:1812.06162, §2.2, the footnote to eq. (2.2): "when batches are sampled without
 replacement from a dataset of size `D`, the variance instead scales like `(1/B - 1/D)`".
 
 A batch is an injection `σ : Fin B ↪ Fin D`, uniform, and its gradient is
-`G_est = (1/B) Σ_i g_{σ(i)}` for the per-example gradients `g_1, …, g_D`.  It is unbiased
+`G_est = (1/B) Σ_i g_{σ(i)}` for the per-example gradients `g_1, …, g_D`. It is unbiased
 (`integral_batchGrad_embedding`), and its covariance is `(1/B - 1/D) D/(D-1) Σ` for `Σ` the
 covariance of the gradient of a uniform example (`covMatrix_batchGrad_embedding`), where
 independent examples give `Σ/B` (`covMatrix_batchGrad`).
@@ -15,9 +21,7 @@ permutations of the dataset act transitively on the injections `Fin n ↪ Fin D`
 (`Equiv.Perm.isMultiplyPretransitive`).
 -/
 
-import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
-import Mathlib.Probability.UniformOn
-import Transformer.NoiseScale.Section2_Batches
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Finset
 open scoped Matrix

@@ -1,4 +1,8 @@
-/-
+module
+
+public import Transformer.Kinetic.Section6_ModeProfile
+
+/-!
 # Kinetic theory for Transformers — the actual Goursat solution series
 
 The solution in arXiv:2605.09213v1, §6, proof of `prop:Bessel`, is
@@ -9,7 +13,7 @@ series. The coefficient identity `Σ(k+1)a_k z^k=Σa_k z^k+z(Σa_k z^k)'`
 justifies the time derivative, including at `t=0`.
 -/
 
-import Transformer.Kinetic.Section6_ModeProfile
+@[expose] public section
 
 open scoped BigOperators
 
