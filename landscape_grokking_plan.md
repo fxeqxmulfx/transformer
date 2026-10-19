@@ -193,6 +193,19 @@ matrix of the complete SiLU parameterization. This supplies a necessary
 operand interaction, not an attraction theorem or a scalar-MLP barrier.
 See [the statement and source review](review/rotate90_interaction.md).
 
+### M9.5 exact-real optimizer container
+
+`Transformer.Landscape.Neural.AdamW` matches the inclusive warmup and
+AdamW betas, optimizer epsilon and decay of the experiments. For every
+base rate between zero and one, initialized native buffers and the actual
+recurrence imply a coordinate ceiling `max(abs(initial), 1.7)`, with no
+future gradient bound. The computed box is a compact Euclidean parameter
+container at the finite indices of both analytic networks. This discharges
+a boundedness obligation for that exact-real recurrence; AdamW convergence,
+stochastic attraction and the FP32 bridge remain open.
+The [optimizer statement review](review/rotate90_adamw.md) records its
+nonconstant initialization witness, topology and verification outcomes.
+
 ## Activation comparisons
 
 SiLU is a direct scalar replacement, s(t) = t / (1 + exp(-t)). Standard

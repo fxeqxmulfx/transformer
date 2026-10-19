@@ -6,6 +6,7 @@ public import Transformer.Landscape.Neural.Residual
 public import Transformer.Landscape.Neural.SiLU
 public import Transformer.Landscape.Neural.SwiGLU
 public import Transformer.Landscape.Neural.Interaction
+public import Transformer.Landscape.Neural.AdamW
 
 /-!
 # Analytic neural losses for the Landscape framework
@@ -18,6 +19,8 @@ including the competing classes of the browser model.
 actual Euclidean weights and discharge the local Lojasiewicz hypothesis.
 `Interaction` proves that the actual normalized tied readout requires a
 nonlinear operand interaction to separate a division checkerboard.
+`AdamW` derives a compact parameter container for the source-matched
+exact-real optimizer recurrence, with its actual inclusive warmup.
 Sources and the remaining bridge to the Rotate90 lab are recorded in
 `landscape_grokking_plan.md`.
 -/
