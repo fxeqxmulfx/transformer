@@ -1,11 +1,20 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-Updated on 2026-10-08 UTC. **Active direction: [Grokking: how it works and when it fails](grokking_plan.md),
+Updated on 2026-10-19 UTC. **Active direction: [Landscape explanation of modular
+arithmetic generalization](landscape_grokking_plan.md), requested on 2026-10-19:
+connect the published Rotate90 network and analytic activation variants to the
+Landscape framework, explain why an expressible scalar MLP solution is hard
+to reach by training, then investigate encoders of numbers.** Matched controls
+must distinguish fitting the full table from held-out generalization. The
+[scalar MLP study](experiments/mod97_scalar_mlp/README.md) is the existing
+baseline; its completed results remain below.
+
+Previous direction: [Grokking: how it works and when it fails](grokking_plan.md),
 rebuilt on 2026-10-08 at the user's request around three measured boundaries
 (whether the rule is expressible at the model's size, memorization capacity and
 the critical data size) on RASP and C-RASP tasks, on ordinary softmax
 transformers with unchanged AdamW. The earlier [route list](grokking_lean_plan.md)
-is closed and kept as the ledger of its results.** The user changed
+is closed and kept as the ledger of its results. The user changed
 direction on 2026-10-07. The [Basis correctness and convex architecture](plan.md)
 cycle is paused and unfinished in stages 3 and 4; its checkpoints and original
 FLOP budgets are retained. Complete real-model Basis semantics and the explicit

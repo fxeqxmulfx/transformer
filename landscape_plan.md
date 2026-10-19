@@ -5,6 +5,12 @@ AGENTS.md. Only Lean results without `sorry` count as proved: check
 `dt show` or the `INDEX.md` status before you use one. Literature, hand
 arguments and numerics are hypotheses until they are proved in Lean.
 
+Active extension from 2026-10-19: [Landscape explanation of modular arithmetic
+generalization](landscape_grokking_plan.md). It asks for a bridge to the actual
+Rotate90 browser model, analytic SiLU/SwiGLU variants, and an explanation of
+the gap between representability and gradient access for a scalar MLP. M0-M8
+below remain the ledger of the framework's existing results.
+
 ## Objective and constraints
 
 The goal is one reusable proof pattern for gradient descent and for gradient
