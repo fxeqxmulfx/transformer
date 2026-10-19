@@ -13,6 +13,14 @@ experiments in `experiments/`. `./make.py` runs every task.
 - Never stage `.discrtree/`, `discrtree.toml`, `.claude/skills/discrtree/`,
   `.kanban/`.
 
+## Local compute
+
+- An NVIDIA GPU is available: GeForce RTX 3050 Laptop GPU, 4 GiB VRAM,
+  verified on 2026-10-19. Use it for suitable experiments.
+- A sandboxed `nvidia-smi` can fail to communicate with the driver. Check
+  with an authorized elevated query before concluding that CUDA is unavailable;
+  GPU training may need the same execution context.
+
 ## Board
 
 - `agent-kanban` keeps the work in `.kanban/board.db` at the root, untracked: one

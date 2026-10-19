@@ -88,6 +88,13 @@ the lab's trained network. Preserve this distinction in every new result.
 
 ## Work sequence
 
+The machine has an NVIDIA GeForce RTX 3050 Laptop GPU with 4 GiB VRAM.
+An elevated `nvidia-smi` query verified it on 2026-10-19 with driver
+615.71.09; the sandboxed query failed to communicate with the driver.
+Use the GPU for suitable training and curvature measurements, checking
+PyTorch CUDA access in the permitted execution context. A sandbox failure
+alone does not establish that the GPU is absent.
+
 | Stage | Deliverable | Acceptance criterion |
 | --- | --- | --- |
 | M9.0 | Record the research question, exact model and existing evidence | Formulas checked against the live page and recorded local revision; task saved in English |
