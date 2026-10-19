@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Reusable, non-checkpointed work tensors for eager and captured updates.
 
 Buffers are fully overwritten before use. They are not mathematical state:

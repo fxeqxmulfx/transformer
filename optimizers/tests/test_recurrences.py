@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Independent arithmetic translations of the cited Lean recurrence definitions.
 
 Expected values are calculated here from scalar equations, never by calling

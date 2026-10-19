@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Types shared by the public constructors and the numerical kernels."""
 
 from __future__ import annotations

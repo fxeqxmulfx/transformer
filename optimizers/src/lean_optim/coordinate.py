@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Coordinate-wise adaptive rules: AMSGradW, AdamW, Adam, AdamX, AdaGrad, AdamNC and RMSProp.
 
 Ports of the rules of `optimizer_benchmark.coordinate.CoordinateOptimizer`

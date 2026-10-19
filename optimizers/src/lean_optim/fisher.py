@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """AdaFisher: momentum over a damped, normalized Kronecker-factored Fisher diagonal.
 
 A port of `optimizer_benchmark.fisher.AdaFisherOptimizer` with the arithmetic

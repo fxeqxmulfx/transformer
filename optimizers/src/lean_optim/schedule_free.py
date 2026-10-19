@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Schedule-Free methods, arXiv:2405.15682v4, Sections 2 and 4.4.
 
 SGD implements mix/query/average of Transformer.ScheduleFree.Section2_Averaging,

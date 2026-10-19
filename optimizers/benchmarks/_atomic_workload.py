@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Small physical order-matching family for profiling AtomicColumns.
 
 This is the two-token final-position case of matchingHeadOutput and

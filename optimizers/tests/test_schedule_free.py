@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Actual query/evaluation buffers, indexing and Appendix D.1 projections."""
 
 from __future__ import annotations

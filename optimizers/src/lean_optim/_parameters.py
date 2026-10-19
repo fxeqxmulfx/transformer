@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Adapt ordinary PyTorch parameters to the historical numerical kernels.
 
 This module contains no experiment or network architecture dependency.

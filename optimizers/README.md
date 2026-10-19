@@ -109,10 +109,11 @@ independent recurrence calculations and checkpoint continuation checks.
 
 Development checks use Ruff 0.17.1 with `select = ["ALL"]` and `preview = false`.
 Run `./run.py optimizer-lint` from the repository root. Both lint and formatting
-are mandatory in `./run.py verify`. The only global exceptions select compatible
-docstring conventions and let the formatter own trailing commas. Unittest
-assertions and a few established public signatures have documented, narrow
-exceptions; annotation, correctness, security and complexity rules remain enabled.
+are mandatory in `./run.py verify`. Global exceptions select compatible
+docstring conventions, let the formatter own trailing commas and allow files
+without copyright headers (CPY001). Unittest assertions and a few established
+public signatures have documented, narrow exceptions; annotation, correctness,
+security and complexity rules remain enabled.
 
 Updates reuse work tensors after warmup. Scratch is separate from `state_dict`
 and discarded on checkpoint load; replacing gradients does not retain their

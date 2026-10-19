@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Public PyTorch constructors for coordinate rules.
 
 The numerical kernels were moved from lab at commit 470f9b6b. Their source

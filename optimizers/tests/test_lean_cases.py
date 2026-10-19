@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Values checked from the actual definitions by scripts/OptimizerParity.lean.
 
 The rational expected outputs below also appear literally in that script.

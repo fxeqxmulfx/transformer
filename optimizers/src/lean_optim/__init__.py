@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """PyTorch optimizers with explicit Lean recurrence correspondence.
 
 Importing this package needs only PyTorch and Python's standard library.

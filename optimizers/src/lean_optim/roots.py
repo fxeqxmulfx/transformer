@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Inverse fourth roots of regularized Shampoo histories, batched over blocks.
 
 Ports of `optimizer_benchmark.roots`, with its arithmetic. Each solver takes

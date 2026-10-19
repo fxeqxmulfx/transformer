@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Appendix D.1 clipped optimistic method, arXiv:2405.15682v4.
 
 This is Transformer.ScheduleFree.optimisticStep, using both ball projections

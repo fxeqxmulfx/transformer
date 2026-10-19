@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Direction optimizers: every direction is computed before any parameter moves.
 
 A port of `optimizer_benchmark.common.DirectionOptimizer`, with its

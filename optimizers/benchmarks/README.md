@@ -2,8 +2,9 @@
 
 Measured on 2026-10-19 with Python 3.14.8, PyTorch 2.14.1+cu126,
 CUDA 12.6 and an NVIDIA GeForce RTX 3050 Laptop GPU. CPU workloads use one
-thread. The baseline is commit `0a70e33d`. The exact source digests and all
-case measurements are in [allocation_results.json](allocation_results.json).
+thread. The baseline is commit `0a70e33d`; the updated measurements use commit
+`7de0c85d`. The exact source digests and all case measurements are in
+[allocation_results.json](allocation_results.json).
 
 ## Stable Ruff
 
@@ -12,10 +13,11 @@ explicitly disabled at the user's request. `./run.py optimizer-lint` checks
 source, tests, benchmark drivers and formatting; `./run.py verify` includes it.
 The package's development dependency does not enter wheel runtime requirements.
 
-Global exclusions are D203/D213, in favor of D211/D212, and COM812, whose
-trailing commas are handled by the formatter. Tests retain standard-library
-unittest assertions (PT009/PT027). Function-local compatibility exceptions
-preserve established optimizer/recurrence signatures, capitalized composition
+Global exclusions are D203/D213, in favor of D211/D212, COM812, whose
+trailing commas are handled by the formatter, and CPY001, which requires copyright
+headers. Tests retain standard-library unittest assertions (PT009/PT027).
+Function-local compatibility exceptions preserve established optimizer/recurrence
+signatures, capitalized composition
 constructors and required interface arguments. No annotation or security rule
 family is disabled. Public APIs, internal numerical helpers and tests have
 explicit annotations and docstrings.

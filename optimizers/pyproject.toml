@@ -27,8 +27,8 @@ preview = false
 [tool.ruff.lint]
 select = ["ALL"]
 # D211/D212 select one consistent docstring layout. COM812 conflicts with
-# Ruff's formatter, which owns trailing commas.
-ignore = ["D203", "D213", "COM812"]
+# Ruff's formatter, which owns trailing commas. Copyright headers are optional.
+ignore = ["D203", "D213", "COM812", "CPY001"]
 
 [tool.ruff.lint.per-file-ignores]
 # Tests run with the standard-library unittest runner, including wheel tests.

@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Public matrix optimizers and direction stages, ported from lab at 470f9b6b.
 
 Source equations and deliberate extensions are in LEAN_CORRESPONDENCE.md.

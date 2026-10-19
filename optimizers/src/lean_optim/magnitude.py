@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """AMSGradMD: AMSGrad on the magnitude-direction factorization of the hidden matrices.
 
 A port of `amsgrad_extensions_benchmark.optimizer.ExtensionOptimizer`, with

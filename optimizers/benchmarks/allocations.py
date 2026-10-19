@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Measure optimizer-only allocations after initialization and warmup.
 
 The tensors and dense gradients are allocated before profiling. This measures

@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Column generation for the genuine sparsemax matching family.
 
 Source: matchingMixture_criterion_convex, matchingMixture_gap_certificate

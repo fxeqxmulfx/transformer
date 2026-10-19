@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Matrix rules: Muon's orthogonalized momentum and DASH's blocked Shampoo.
 
 Ports of `optimizer_benchmark.matrix.MuonOptimizer` and of the batched DASH

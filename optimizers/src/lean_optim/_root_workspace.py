@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Buffered inverse-fourth-root kernels used by DASH during training.
 
 The operation order is the one in roots.py. Matrix products always write

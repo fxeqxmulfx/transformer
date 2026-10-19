@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Stages between a rule's directions and the update.
 
 A stage is called with the optimizer, the parameters and their directions,

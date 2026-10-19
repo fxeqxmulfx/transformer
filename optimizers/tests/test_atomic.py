@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Standalone atomic solver boundary cases."""
 
 from __future__ import annotations

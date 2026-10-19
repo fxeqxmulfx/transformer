@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """The standard namespace exposes the actual installed PyTorch classes."""
 
 from __future__ import annotations

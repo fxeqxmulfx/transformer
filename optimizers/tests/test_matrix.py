@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Check matrix recurrences against direct translations of the Lean equations."""
 
 from __future__ import annotations

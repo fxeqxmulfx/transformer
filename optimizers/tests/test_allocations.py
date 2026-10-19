@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Regressions for allocation churn, cache lifetime and retained Fisher graphs."""
 
 from __future__ import annotations

@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Pure configuration values for coefficient schedules and inverse roots.
 
 Schedules multiply the coefficient at update t = 1, 2, ... . They mirror

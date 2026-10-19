@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Mikhail Borisov
 """Small device and graph checks; no training experiment or GPU benchmark."""
 
 from __future__ import annotations
