@@ -18,6 +18,21 @@ if TYPE_CHECKING:
     from ._types import StateDict
 
 
+def _check_optimizer(optimizer: optim.Optimizer) -> None:
+    """Reject optimizers that do not apply the current outer learning rate."""
+    if not isinstance(optimizer, optim.Optimizer) or any(
+        "lr" not in group for group in optimizer.param_groups
+    ):
+        msg = "LearningRateSchedule requires an optimizer with an outer learning rate"
+        raise TypeError(msg)
+    if isinstance(optimizer, optim.Rprop):
+        msg = "Native Rprop uses lr only to initialize its adaptive step sizes"
+        raise TypeError(msg)
+    if isinstance(optimizer, optim.ASGD):
+        msg = "Native ASGD applies a stored learning rate with a one-step delay"
+        raise TypeError(msg)
+
+
 class LearningRateSchedule(optim.lr_scheduler.LRScheduler):
     """Warm up linearly, then keep or decay the rate, preserving device storage.
 
@@ -26,7 +41,8 @@ class LearningRateSchedule(optim.lr_scheduler.LRScheduler):
     Linear/cosine decay reaches final_factor at total_steps completed updates
     and stays there. Their horizon must exceed warmup. Constant decay needs
     no horizon. Built-in warmup and outer warmup are alternative choices.
-    Automatic-step methods and native Rprop have no supported outer LR schedule.
+    Automatic-step methods, native Rprop and native ASGD have no supported
+    outer LR schedule. ASGD applies a stored eta with a one-step delay.
     """
 
     def __init__(
@@ -39,14 +55,7 @@ class LearningRateSchedule(optim.lr_scheduler.LRScheduler):
         final_factor: float = 0.0,
     ) -> None:
         """Validate compatibility and remember scalar peak rates before the zero start."""
-        if not isinstance(optimizer, optim.Optimizer) or any(
-            "lr" not in group for group in optimizer.param_groups
-        ):
-            msg = "LearningRateSchedule requires an optimizer with an outer learning rate"
-            raise TypeError(msg)
-        if isinstance(optimizer, optim.Rprop):
-            msg = "Native Rprop uses lr only to initialize its adaptive step sizes"
-            raise TypeError(msg)
+        _check_optimizer(optimizer)
         if type(warmup) is not int or warmup < 0:
             msg = "warmup must be a nonnegative integer"
             raise ValueError(msg)

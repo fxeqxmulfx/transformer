@@ -180,6 +180,13 @@ through decay, CPU-to-CUDA loading, live rate tensors during CUDA graph replay
 and raw allocation events for optimizer and host scheduler steps together.
 These runtime and storage properties are outside Lean's real-arithmetic model.
 
+Native ASGD is excluded from this outer-schedule interface: its PyTorch
+update uses the previous stored `eta`, then computes the next one from
+`lr`. Thus a displayed zero rate does not freeze that update. The common
+scheduler rejects ASGD before changing parameters, rates or optimizer state,
+as it already does for Rprop's initialization-only rate. This compatibility
+check changes no optimizer recurrence or Lean declaration.
+
 ## Inverse-root pipeline
 
 `roots.py` implements `DASH.countedBatchPiInverseFourth` (NDB),

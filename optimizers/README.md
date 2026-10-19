@@ -181,9 +181,11 @@ storage in the tested float32/float64 cases. Schedule-Free remains eager.
 
 ClippedOptimistic chooses its own rate; AtomicColumns uses its own column
 steps and line searches. Native `standard.Rprop` adapts per-coordinate step
-sizes and reads `lr` only at initialization. The common scheduler rejects
-these methods because they do not consume a live outer rate. Built-in
-Schedule-Free warmup and outer warmup are alternative choices; requesting
+sizes and reads `lr` only at initialization. Native `standard.ASGD` applies
+its stored `eta` before reading the current `lr`, delaying warmup and decay
+by one update and allowing a nonzero step after `lr` reaches zero. The common
+scheduler rejects these methods before modifying their rates or state.
+Built-in Schedule-Free warmup and outer warmup are alternative choices; requesting
 both raises an error. An outer decay with `warmup=0` can accompany built-in
 warmup when explicitly desired.
 

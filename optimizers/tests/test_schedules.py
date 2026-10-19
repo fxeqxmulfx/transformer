@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import copy
 import math
 import unittest
+from itertools import product
 
 import torch
 from _warmup_cases import gradients, parameters
@@ -13,6 +15,38 @@ import lean_optim as opt
 
 class ScheduleTests(unittest.TestCase):
     """Check warmup boundaries, independent parameter groups and decayed endpoints."""
+
+    def test_native_asgd_is_rejected_before_changing_rates_or_existing_state(self) -> None:
+        """ASGD's saved eta applies the previous rate and can move after lr reaches zero."""
+        schedules = (
+            (opt.LinearWarmup, {"warmup": 4}),
+            (opt.LearningRateSchedule, {"total_steps": 4, "decay": "linear"}),
+        )
+        for initialized, foreach, (scheduler, options) in product(
+            (False, True), (False, True), schedules
+        ):
+            with self.subTest(initialized=initialized, foreach=foreach, scheduler=scheduler):
+                parameter = torch.nn.Parameter(torch.tensor([2.0], dtype=torch.float64))
+                rate = torch.tensor(0.125, dtype=torch.float64)
+                optimizer = opt.standard.ASGD([parameter], lr=rate, lambd=0.0, foreach=foreach)
+                if initialized:
+                    parameter.grad = torch.ones_like(parameter)
+                    optimizer.step()
+                before = copy.deepcopy(optimizer.state_dict())
+                weight = parameter.detach().clone()
+                step = optimizer.step
+                with self.assertRaisesRegex(TypeError, "ASGD"):
+                    scheduler(optimizer, **options)
+                self.assertIs(optimizer.param_groups[0]["lr"], rate)
+                self.assertEqual(optimizer.state_dict()["param_groups"], before["param_groups"])
+                self.assertEqual(optimizer.step, step)
+                torch.testing.assert_close(parameter, weight, rtol=0, atol=0)
+                self.assertEqual(optimizer.state_dict()["state"].keys(), before["state"].keys())
+                for key, state in before["state"].items():
+                    for name, value in state.items():
+                        torch.testing.assert_close(
+                            optimizer.state_dict()["state"][key][name], value, rtol=0, atol=0
+                        )
 
     def test_rates_match_analytic_values_in_every_parameter_group(self) -> None:
         """Check all transition points and the clamped tail against explicit values."""
