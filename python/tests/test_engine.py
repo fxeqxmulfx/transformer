@@ -2,8 +2,9 @@
 
 Golden records: the `runs` and `cuda_runs` of `fixtures/legacy_modular.json`,
 written by `paper_reproduction.grokking.train` under AdamW and AMSGradW, and by
-its sparsemax and cosine variants, at the commit the fixture names. Timing
-fields are left out.
+its sparsemax and cosine variants, at the commit the fixture names. CPU
+numerical expectations are replayed from that immutable implementation on the
+current backend; timing fields are left out. Archived measurements are preserved.
 """
 
 import hashlib
@@ -24,6 +25,7 @@ from lab.infrastructure.nn.legacy import DERIVED, rename
 from lab.infrastructure.store import RunDirectories, RunDirectory
 
 from examples import gptmini, modular, reference
+from reference_fixtures import runtime_run
 
 FIXTURE = json.loads((Path(__file__).parent / "fixtures" / "legacy_modular.json").read_text())
 TIMING = {"training_seconds", "wall_seconds"}
@@ -87,6 +89,7 @@ class Interrupted(Exception):
 
 class HistoricalRunTests(unittest.TestCase):
     def assert_reproduces(self, golden, root):
+        golden = runtime_run("modular", golden)
         run = RunDirectory(Path(root) / "run")
         self.assertEqual(untimed(run.records("history")), golden["history"])
         self.assertEqual(untimed(run.records("probes")), golden["probes"])
@@ -108,6 +111,8 @@ class HistoricalRunTests(unittest.TestCase):
     def test_every_historical_cuda_run_on_the_fixture_gpu(self):
         if FIXTURE["source"].get("gpu") != torch.cuda.get_device_name():
             self.skipTest("CUDA golden records were written on another GPU")
+        if FIXTURE["source"].get("torch") != torch.__version__:
+            self.skipTest("CUDA golden records were written with another PyTorch build")
         for name, golden in FIXTURE["cuda_runs"].items():
             with self.subTest(run=name), tempfile.TemporaryDirectory() as root:
                 train(historical(name, device="cuda"), root)

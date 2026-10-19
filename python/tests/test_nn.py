@@ -1,9 +1,10 @@
-"""The built models are the historical models, bit for bit.
+"""The built models match the independent historical implementations.
 
 Golden values: `fixtures/legacy_modular.json` and `fixtures/legacy_recall.json`,
 produced by the historical code itself (each `source` field names the
-commit). CPU values hold for this torch build; CUDA values also need the GPU
-the fixture names.
+commit). CPU initialization, outputs and gradients are compared with the
+independent original code on today's runtime;
+CUDA archives additionally require the recorded GPU and numerical backend.
 """
 
 import hashlib
@@ -22,6 +23,7 @@ from lab.infrastructure.nn import build_model
 from lab.infrastructure.nn.legacy import import_state, rename
 
 from examples import gptmini, reference, rope
+from reference_fixtures import runtime_fixture
 
 FIXTURE = json.loads((Path(__file__).parent / "fixtures" / "legacy_modular.json").read_text())
 RECALL = json.loads((Path(__file__).parent / "fixtures" / "legacy_recall.json").read_text())
@@ -58,7 +60,7 @@ class LegacyModelTests(unittest.TestCase):
     def test_initialization_forward_and_gradients_on_cpu(self):
         for name in SPECS:
             with self.subTest(model=name):
-                expected = FIXTURE["models"][name]
+                expected = runtime_fixture("modular")["models"][name]
                 parameters, logits, loss, gradients = self.measure(name, "cpu")
                 self.assertEqual(parameters, renamed(expected["parameters"]))
                 self.assertEqual(logits, expected["logits"])
@@ -69,6 +71,8 @@ class LegacyModelTests(unittest.TestCase):
     def test_forward_and_gradients_on_the_fixture_gpu(self):
         if FIXTURE["source"].get("gpu") != torch.cuda.get_device_name():
             self.skipTest("CUDA golden values were recorded on another GPU")
+        if FIXTURE["source"].get("torch") != torch.__version__:
+            self.skipTest("CUDA golden values were recorded with another PyTorch build")
         for name in SPECS:
             with self.subTest(model=name):
                 expected = FIXTURE["models"][name]["cuda"]
@@ -133,6 +137,7 @@ class LegacyRecallModelTests(unittest.TestCase):
                 run = RECALL["runs"][name]
                 spec = recall_model(run["config"], expected["length"], expected["width"], run["attention"])
                 model = build_model(spec, expected["vocab"], seed=expected["seed"])
+                expected = runtime_fixture("recall")["models"][name]
                 self.assertEqual({key: sha(value) for key, value in model.named_parameters()},
                                  dict(renamed(expected["parameters"])))
                 # The batch the fixture drew: tokens, query positions and labels.

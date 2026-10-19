@@ -4,7 +4,8 @@ Golden records: the `runs` and `cuda_runs` of `fixtures/legacy_text.json`,
 written by `full_compile_benchmark.training.train_one` with its step
 uncompiled, under SGD, at the commit the fixture names: every validation
 loss, why and where the run stopped, the best observation, the test loss of
-its model, and that model's parameters.
+its model, and that model's parameters. CPU comparisons replay the frozen
+trainer with the current numerical backend instead of comparing different wheels.
 
 On CUDA the historical step differentiated through `torch.func.grad_and_value`,
 whose kernels round otherwise than autograd's `backward` (on the CPU the two
@@ -32,6 +33,7 @@ from lab.infrastructure.store import RunDirectory
 
 from examples import gptmini
 from test_engine import Interrupted, sha, train
+from reference_fixtures import runtime_run
 
 FIXTURE = json.loads((Path(__file__).parent / "fixtures" / "legacy_text.json").read_text())
 REASONS = {"max_steps": "budget", "patience": "patience", "validation_divergence": "divergence",
@@ -67,7 +69,8 @@ class WindowSamplerTests(unittest.TestCase):
 
 
 def reproduces(test, golden, root):
-    """The run under `root` makes the golden observations, decisions and best model, bit for bit."""
+    """The run reproduces the independent archived trainer on this numerical runtime."""
+    golden = runtime_run("zoo" if "family" in golden["config"] else "text", golden)
     run = RunDirectory(Path(root) / "run")
     test.assertEqual([(row["step"], row["validation"]["loss"]) for row in run.records("history")],
                      [(check["step"], check["validation_loss"]) for check in golden["curves"]])
@@ -98,6 +101,8 @@ class HistoricalTextTests(unittest.TestCase):
     def test_every_historical_cuda_run_on_the_fixture_gpu_up_to_rounding(self):
         if FIXTURE["source"].get("gpu") != torch.cuda.get_device_name():
             self.skipTest("CUDA golden records were written on another GPU")
+        if FIXTURE["source"].get("torch") != torch.__version__:
+            self.skipTest("CUDA golden records were written with another PyTorch build")
         for name, golden in FIXTURE["cuda_runs"].items():
             with self.subTest(run=name), tempfile.TemporaryDirectory() as root:
                 result = train(historical(golden, device="cuda"), root)

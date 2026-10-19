@@ -1,8 +1,9 @@
-"""The eager engine trains a synthetic benchmark as the historical synthetic trainer did, bit for bit.
+"""The eager engine matches the original synthetic trainer on the current backend.
 
 Golden records: `fixtures/legacy_synthetic.json`, short CPU runs of
 `experiments/synthetic_trainers/training.train_run` without a study, at the
-commit the fixture names: every observation's validation metrics, the best
+commit the fixture names. The original trainer is independently replayed for
+current numerical expectations: every observation's validation metrics, the best
 observation and the test metrics of its model, the time to target, the split
 fingerprints, and the best and final parameters.
 """
@@ -30,6 +31,7 @@ from lab.infrastructure.store import RunDirectory
 from examples import gptmini
 from test_engine import Interrupted, sha, train
 from test_synthetic import block
+from reference_fixtures import runtime_run
 
 FIXTURE = json.loads((Path(__file__).parent / "fixtures" / "legacy_synthetic.json").read_text())
 
@@ -78,6 +80,7 @@ def untimed(hit):
 
 class HistoricalTrainingTests(unittest.TestCase):
     def assert_reproduces(self, golden, root):
+        golden = runtime_run("synthetic", golden)
         run = RunDirectory(Path(root) / "run")
         self.assertEqual([{key: row[key] for key in ("step", "examples_seen", "validation")}
                           for row in run.records("history")], golden["history"])

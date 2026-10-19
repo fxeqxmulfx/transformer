@@ -4,24 +4,19 @@ Golden records: the `runs` of `fixtures/legacy_zoo.json`, written by the
 `train_one` of the all24 benchmark and of the AMSGrad extensions with the step
 uncompiled, for every recipe on GPTMini of width 32, at the top rate of its
 grid, or the middle one where the top rate diverges within 40 updates.
+The pinned trainers are replayed on the current backend for numerical comparisons;
+the archived observations and configurations remain intact.
 
 A rule reproduces its run bit for bit when it computes as the historical step
 did, the coefficients that change with the update included: both compute them
-from a float64 update count. A first moment with a constant coefficient is
-the exception. It is averaged as the modular trainer averaged it,
-`m.mul_(b).add_(g, alpha=1 - b)`, where the historical step wrote
-`m.mul_(b).add_(g * (1 - b))`: under the historical form Adam, AMSGrad, and
-MAGMA over Adam and over AdamW's direction reproduce their runs bit for bit,
-and under their own they part in the last bits, which Adam's normalization
-amplifies to 3.1e-5 relative over 40 updates (AMSGrad 1.3e-5, MAGMA over
-AdamW 8.7e-8). The zoo's bias-corrected AdamW is PyTorch's, within 9e-8, and
-the AMSGradW of the extensions, which subtracts its decay apart from the step,
-is lab's within 1.1e-5. They are held to a relative 1e-4 of every
-observation, with the same decisions; MAGMA over Adam, run at three times
-Adam's rate, amplifies its last bits to 2.2e-3 and is held to 3e-3. A rule
-under stages reports what they counted, the guard's acceptance and MAGMA's
-masks and scales, and AMSGradMD the factorizations it ends with and its
-guard's counts, as its run did.
+from a float64 update count. Constant first moments and the extensions' decay
+use different operation orders. Their equations are compared with the frozen
+optimizers on shared inputs and gradients in both float32 and float64, within
+64 machine epsilons. This measures update arithmetic without amplifying rounding
+differences through a training trajectory. Under the historical first-moment
+arithmetic the complete Adam, AMSGrad and MAGMA runs still agree bit for bit.
+Stage reports, MAGMA masks and scales, and AMSGradMD factorizations are also
+compared with the frozen trainers.
 """
 
 import json
@@ -42,7 +37,8 @@ from lab.infrastructure.optim import build_optimizer, coordinate
 from lab.infrastructure.store import RunDirectory
 
 from test_engine import Interrupted, train
-from test_text import REASONS, historical, reproduces
+from test_text import historical, reproduces
+from reference_fixtures import runtime_fixture, runtime_run
 
 FIXTURE = json.loads((Path(__file__).parent / "fixtures" / "legacy_zoo.json").read_text())
 BETAS = (0.9, 0.999)
@@ -79,12 +75,9 @@ CLOSE = {
     "magma_adamw": lambda rate: Magma(AdamW(lr=rate, betas=BETAS, weight_decay=0.01)),
     "amsgradw": lambda rate: AMSGradW(lr=rate, betas=BETAS, weight_decay=0.01),
 }
-# Relative distances other than 1e-4 that a rule of other arithmetic keeps from its run.
-TOLERANCE = {"magma_adam": 3e-3}
-
 
 def recipe(name, recipes):
-    golden = FIXTURE["runs"][name]
+    golden = runtime_run("zoo", FIXTURE["runs"][name])
     return golden, swap(historical(golden), "optimizer", recipes[name](golden["config"]["rate"]))
 
 
@@ -162,19 +155,31 @@ class ZooTests(unittest.TestCase):
                 reproduces(self, golden, root)
                 stages_agree(self, golden, result)
 
-    def test_rules_of_other_arithmetic_follow_their_runs(self):
-        for name in CLOSE:
-            golden, experiment = recipe(name, CLOSE)
-            with self.subTest(recipe=name), tempfile.TemporaryDirectory() as root:
-                result = train(experiment, root)
-                history = RunDirectory(Path(root) / "run").records("history")
-                self.assertEqual([row["step"] for row in history], [check["step"] for check in golden["curves"]])
-                tolerance = TOLERANCE.get(name, 1e-4)
-                for row, check in zip(history, golden["curves"], strict=True):
-                    self.assertLess(abs(row["validation"]["loss"] / check["validation_loss"] - 1), tolerance)
-                self.assertEqual((result["stop"]["reason"], result["best"]["step"]),
-                                 (REASONS[golden["stop_reason"]], golden["best_step"]))
-                self.assertLess(abs(result["best"]["test"]["loss"] / golden["test_loss"] - 1), tolerance)
+    def test_other_arithmetic_matches_updates_on_shared_gradients(self):
+        references = runtime_fixture("zoo", "optimizer_steps")["optimizer_steps"]
+        for name, variants in references.items():
+            for dtype_name, rows in variants.items():
+                dtype = getattr(torch, dtype_name)
+                with self.subTest(recipe=name, dtype=dtype_name):
+                    keys = tuple(rows[0]["point"])
+                    model = torch.nn.Module()
+                    model.weights = torch.nn.ParameterList([
+                        torch.nn.Parameter(torch.tensor(rows[0]["point"][key], dtype=dtype)) for key in keys])
+                    model.hidden_matrices = lambda: [model.weights[1]]
+                    config = FIXTURE["runs"][name]["config"]
+                    optimizer = build_optimizer(CLOSE[name](config["rate"]), model,
+                                                updates=len(rows), seed=config["seed"])
+                    optimizer.param_groups[0]["lr"] = config["rate"]
+                    tolerance = 64 * torch.finfo(dtype).eps
+                    for step, row in enumerate(rows, start=1):
+                        for key, parameter in zip(keys, model.weights, strict=True):
+                            parameter.data.copy_(torch.tensor(row["point"][key], dtype=dtype))
+                            parameter.grad = torch.tensor(row["gradient"][key], dtype=dtype)
+                        optimizer.step()
+                        for key, parameter in zip(keys, model.weights, strict=True):
+                            torch.testing.assert_close(parameter, torch.tensor(row["next"][key], dtype=dtype),
+                                                       rtol=tolerance, atol=tolerance,
+                                                       msg=lambda message: f"{name}/{dtype_name}/{step}/{key}: {message}")
 
 
 if __name__ == "__main__":

@@ -1,8 +1,9 @@
-"""The eager engine trains a memorization study as the historical synthetic trainer did, bit for bit.
+"""The eager engine matches the original study trainer on the current backend.
 
 Golden records: `fixtures/legacy_memorization.json`, short CPU runs of
 `experiments/synthetic_trainers/training.train_run` under its memorization and
-double-descent studies, at the commit the fixture names: each observation's
+double-descent studies, at the commit the fixture names. Independent replays
+provide current numerical expectations: each observation's
 metrics of every observed split, with the compression of the random control
 and the fit of noisy labels; the best observation, and the test metrics of
 its model and of the last; the study's report, and its diagnostics of both
@@ -24,6 +25,7 @@ from lab.infrastructure.store import RunDirectory
 
 from test_engine import Interrupted, sha, train
 from test_synthetic_training import current, experiment, renamed, untimed
+from reference_fixtures import runtime_run
 
 FIXTURE = json.loads((Path(__file__).parent / "fixtures" / "legacy_memorization.json").read_text())
 # Times, and the size of the last batch, which the historical history did not record.
@@ -61,6 +63,7 @@ def fingerprints(golden):
 
 class HistoricalStudyTests(unittest.TestCase):
     def assert_reproduces(self, golden, root):
+        golden = runtime_run("memorization", golden)
         run = RunDirectory(Path(root) / "run")
         self.assertEqual([{key: value for key, value in row.items() if key not in UNCOMPARED}
                           for row in run.records("history")], [observation(row) for row in golden["history"]])
