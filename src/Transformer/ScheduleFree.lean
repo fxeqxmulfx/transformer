@@ -46,9 +46,10 @@ arXiv:2405.15682v4. Sources and PDF are downloaded locally into
   expected optimistic-regret bound. `optimistic_expectation` derives
   that oracle bound from pathwise regret and variance bounds by Jensen.
 * Appendix D.1, Lemma 1: the full projected clipped optimistic algorithm
-  is defined; the unrestricted printed claim has a proved counterexample.
-  The bounded-comparator correction `optimistic_regret` is the single
-  unfinished proof in this paper. No proved theorem uses it.
+  and its corrected bounded-comparator regret bound are proved, including
+  zero radius and zero gradient prefixes. The source constant `7` follows
+  from a stronger intermediate scale bound with constant `6`. The
+  unrestricted printed claim has a proved counterexample.
 * Appendix E, Theorem 6: the strong convexity conversion and the actual
   projected stochastic method's `2(G+2μD)²/(μ(T+1))` rate. Projection,
   ball invariance of the average/query, surrogate gradients, and the
