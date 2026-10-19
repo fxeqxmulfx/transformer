@@ -23,10 +23,10 @@ def main():
     if completed["stop"]["reason"] != "budget" or completed["stop"]["step"] != 150_000:
         raise RuntimeError("Primary CUDA run did not complete its declared budget")
     repeat = STUDY.parent / "grokking_internals"
-    status = subprocess.call([str(ROOT / "make.py"), "run", str(repeat)], cwd=ROOT)
+    status = subprocess.call([str(ROOT / "run.py"), "run", str(repeat)], cwd=ROOT)
     if status:
         raise SystemExit(status)
-    raise SystemExit(subprocess.call([str(ROOT / "make.py"), "run", str(STUDY),
+    raise SystemExit(subprocess.call([str(ROOT / "run.py"), "run", str(STUDY),
                                      "gptmini-seed2", "gptmini-seed3"], cwd=ROOT))
 
 

@@ -40,7 +40,7 @@ alternatives on several paths. `lab blocks` lists the whole language.
 
 ## Commands
 
-Run from the repository root through `make.py`, or from here with `uv run`:
+Run from the repository root through `run.py`, or from here with `uv run`:
 
 ```bash
 uv sync --locked

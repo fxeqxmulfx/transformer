@@ -61,7 +61,7 @@ attention or FFN circuit. The local manuscript is in
 
 ## Causal phase evidence
 
-`./make.py report experiments/grokking_progress` includes `grokking_progress`.
+`./run.py report experiments/grokking_progress` includes `grokking_progress`.
 Every reported point uses only observations available at that update.
 The report stores all thresholds and distinguishes four events:
 
@@ -84,7 +84,7 @@ trajectories are unchanged by the observer. A constructed training-only
 memorizer has full-domain restricted loss below 0.01 but held-out-only
 restricted loss `log(5)` and no structural signal. A wrong invariant rule
 has `S = 1` and zero answer accuracy, confirming why correctness is needed.
-The complete `./make.py test` suite also passes all 233 tests.
+The complete `./run.py test` suite also passes all 233 tests.
 
 Existing mod-193 histories already contain a counterexample to using a
 held-out loss slope alone: the sparsemax run records falling loss but

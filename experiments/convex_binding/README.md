@@ -118,7 +118,7 @@ Lean passes the full build, audit, generated index and forbidden checks:
 157 existing `sorry`, zero results resting on them, zero extra axioms,
 zero vacuous claims and zero placeholders.
 
-Use `./make.py check experiments/convex_binding` and
-`./make.py report experiments/convex_binding` to inspect the study. With
+Use `./run.py check experiments/convex_binding` and
+`./run.py report experiments/convex_binding` to inspect the study. With
 the local runs present, regenerate the analysis from `python/` using
 `uv run --locked python ../experiments/convex_binding/analyze.py`.

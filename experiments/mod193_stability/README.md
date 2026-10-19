@@ -127,11 +127,11 @@ including CUDA checks, in 886.968 seconds.
 ## Running
 
 ```sh
-./make.py check experiments/mod193_stability              # the runs, and what differs between them
-./make.py run experiments/mod193_stability [label ...]    # train every run, or the labeled ones
-./make.py report experiments/mod193_stability [label ...] # what the runs recorded, as JSON
+./run.py check experiments/mod193_stability              # the runs, and what differs between them
+./run.py run experiments/mod193_stability [label ...]    # train every run, or the labeled ones
+./run.py report experiments/mod193_stability [label ...] # what the runs recorded, as JSON
 
-./make.py run experiments/mod193_stability base sparsemax repair-qknorm-one
+./run.py run experiments/mod193_stability base sparsemax repair-qknorm-one
 ```
 
 A run trains into `runs/<label>/` here, which git ignores, and continues

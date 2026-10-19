@@ -63,7 +63,7 @@ and `checkpoint.pt` record progress independently. Running the same labels
 again resumes their populations, generator state and data order.
 
 ```
-./make.py check experiments/basis_ansr
-./make.py run experiments/basis_ansr ansr-low-easy-small-depth-seed0
-./make.py report experiments/basis_ansr
+./run.py check experiments/basis_ansr
+./run.py run experiments/basis_ansr ansr-low-easy-small-depth-seed0
+./run.py report experiments/basis_ansr
 ```

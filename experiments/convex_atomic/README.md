@@ -51,9 +51,9 @@ The single content-only layer also has expressivity limits distinct from the
 ordinary two-layer softmax GPTMini used in `basis` and `basis_ansr`.
 
 ```sh
-./make.py check experiments/convex_atomic
-./make.py run experiments/convex_atomic
-./make.py report experiments/convex_atomic
+./run.py check experiments/convex_atomic
+./run.py run experiments/convex_atomic
+./run.py report experiments/convex_atomic
 ```
 
 All 38 runs finished on 2026-10-06 UTC. The generated

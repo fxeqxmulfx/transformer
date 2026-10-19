@@ -53,9 +53,9 @@ results must state these differences.
 From `python/`, validate or run using the locked environment:
 
 ```sh
-uv run --locked ../make.py check experiments/mod97_size_search
-uv run --locked ../make.py run experiments/mod97_size_search graph-w128
-uv run --locked ../make.py report experiments/mod97_size_search graph-w128
+uv run --locked ../run.py check experiments/mod97_size_search
+uv run --locked ../run.py run experiments/mod97_size_search graph-w128
+uv run --locked ../run.py report experiments/mod97_size_search graph-w128
 ```
 
 Runs, full model/optimizer/sampler checkpoints, engine fingerprints and
@@ -94,7 +94,7 @@ uses a shorter two-observation patience and is reported separately.
 
 The study checker accepts all twelve configurations, and direct PyTorch model
 construction verifies every parameter count in the table. The required
-`uv run --locked ../make.py test` ran 196 tests in 905 seconds and reported
+`uv run --locked ../run.py test` ran 196 tests in 905 seconds and reported
 69 failures and three skips. A later required rerun took 511 seconds with
 the same failure and skip counts. The final refinement rerun took 516
 seconds, again with 69 failures and three skips. The failures include exact historical CPU

@@ -29,16 +29,16 @@ histogram; the mode, without a scratchpad, with counts or itemized; the most
 frequent symbols; copy, reverse and sort, of repeating or unique symbols;
 counting; addition of 2 to 4 digits in 8 variants, tested at 8 and 16;
 parity in 4; Boolean AND with the zero early or anywhere; and C-RASP
-formulas of depths 1, 2 and 3. `./make.py check` lists the labels, and
-`./make.py show` describes a run. The studies run from model seeds 0, 1
+formulas of depths 1, 2 and 3. `./run.py check` lists the labels, and
+`./run.py show` describes a run. The studies run from model seeds 0, 1
 and 2. Every run replays from CUDA graphs.
 
 ## Running
 
 ```sh
-./make.py check experiments/synthetic_amsgradw              # the runs, and what differs between them
-./make.py run experiments/synthetic_amsgradw [label ...]    # train every run, or the labeled ones
-./make.py report experiments/synthetic_amsgradw [label ...] # what the runs recorded, as JSON
+./run.py check experiments/synthetic_amsgradw              # the runs, and what differs between them
+./run.py run experiments/synthetic_amsgradw [label ...]    # train every run, or the labeled ones
+./run.py report experiments/synthetic_amsgradw [label ...] # what the runs recorded, as JSON
 ```
 
 A run trains into `runs/<label>/` here, which git ignores, and continues

@@ -50,9 +50,9 @@ take 1.2 GB of device memory.
 ## Running
 
 ```sh
-./make.py check experiments/mqar_sparsemax              # the runs, and what differs between them
-./make.py run experiments/mqar_sparsemax [label ...]    # train every run, or the labeled ones
-./make.py report experiments/mqar_sparsemax [label ...] # what the runs recorded, as JSON
+./run.py check experiments/mqar_sparsemax              # the runs, and what differs between them
+./run.py run experiments/mqar_sparsemax [label ...]    # train every run, or the labeled ones
+./run.py report experiments/mqar_sparsemax [label ...] # what the runs recorded, as JSON
 ```
 
 A run trains into `runs/<label>/` here, which git ignores, and continues

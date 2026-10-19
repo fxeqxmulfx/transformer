@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Project tasks: one entry point for the Lean tree and the Python lab.
 
-    ./make.py <task> [arguments]
+    ./run.py <task> [arguments]
 
 Lean
     lean                          build the tree (lake build)
+    kernel                        replay the project through Lean's kernel
+    lint                          run all built-in linters and code-quality checks; fail on warnings
     audit                         axioms of every Transformer.* declaration; `rests` must be 0
     index                         regenerate INDEX.md from src/ and the build
     forbidden                     search src/ for native_decide, axioms and disabled linters
@@ -20,7 +22,7 @@ Python (the uv project in python/; an experiment is a folder under experiments/)
     profile <experiment> <label>  train one run afresh under Scalene's CPU profiler; print where its time goes
 
 Together
-    verify                        lean, audit, index, forbidden and test: the checks before a commit
+    verify                        build, lint, audit, index, forbidden and test
     papers [--dry-run]            fetch every cited arXiv paper missing from papers/
     clean                         remove Python bytecode caches
 
@@ -58,6 +60,14 @@ def lean(_):
     execute(["lake", "build"])
 
 
+def kernel(_):
+    execute(["lake", "check"])
+
+
+def lint(_):
+    execute(["lake", "--wfail", "lint", "--builtin-lint", "--linters=linter.all", "--code-quality"])
+
+
 def audit(_):
     execute(["lake", "env", "lean", "scripts/Axioms.lean"])
 
@@ -85,7 +95,7 @@ def test(arguments):
 
 
 def verify(arguments):
-    for task in (lean, audit, index, forbidden):
+    for task in (lean, lint, audit, index, forbidden):
         task(arguments)
     test(argparse.Namespace(patterns=[]))
 
@@ -122,7 +132,7 @@ def clean(_):
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     tasks = parser.add_subparsers(required=True, metavar="task")
-    for task in (lean, audit, index, forbidden, setup, verify, clean):
+    for task in (lean, kernel, lint, audit, index, forbidden, setup, verify, clean):
         tasks.add_parser(task.__name__).set_defaults(handler=task)
     command = tasks.add_parser("papers")
     command.add_argument("--dry-run", action="store_true")

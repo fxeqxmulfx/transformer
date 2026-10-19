@@ -49,7 +49,7 @@ must match every contemporary softmax pass and retain actual sparsity;
 record support and visible exact zeros per layer and head. Dense-only
 passes do not count as a sparse-attention repair.
 
-`./make.py check experiments/basis_qknorm` checks the definitions;
+`./run.py check experiments/basis_qknorm` checks the definitions;
 `run` trains selected labels and resumes an existing run. The completed
 screen retains source hashes, pass updates, final batch losses, head gains
 and all initial/final per-head sparsity.
@@ -160,7 +160,7 @@ hashes and all 78 runtime-source hashes verify. The complete comparison,
 checkpoint hashes for all 45 runs and its program are retained in
 [small_control_repetition.json](small_control_repetition.json).
 
-Before committing these findings, `./make.py test` checks 171 tests again
+Before committing these findings, `./run.py test` checks 171 tests again
 in 818.584 seconds: 165 pass and the same six CUDA-only checks are skipped.
 The runtime and experiment sources remain unchanged during the large runs.
 

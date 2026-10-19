@@ -8,7 +8,7 @@ build/
 
 # ── Papers ───────────────────────────────────────────────────────────────
 # arXiv sources of the papers the tree cites, each in papers/arXiv-<id>/ at
-# the version cited; `./make.py papers` fetches the missing ones.  No
+# the version cited; `./run.py papers` fetches the missing ones.  No
 # trailing slash: in a worktree it is a link to the root's.
 /papers
 

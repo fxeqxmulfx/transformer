@@ -423,7 +423,7 @@ observations and every non-timing model/optimizer/sampler/best checkpoint
 field exactly, excluding the new attention-observer state. All 225 raw
 reduction hashes verify; the independent comparison is retained in
 [small_control_repetition.json](experiments/basis_qknorm/small_control_repetition.json).
-The findings' required `./make.py test` gate checks 171 tests in 818.584
+The findings' required `./run.py test` gate checks 171 tests in 818.584
 seconds: 165 pass and the same six CUDA-only checks are skipped. Runtime
 and experiment sources remained unchanged during the large runs.
 
@@ -493,7 +493,7 @@ fixed-256-example attention records and 300,000 verified finite gradient
 updates. [control_repetition.json](experiments/mod193_stability/control_repetition.json)
 independently verifies both archived histories, all four canonical reductions,
 matched descriptions, fresh seeds and all 78 runtime source hashes.
-The complete-findings `./make.py test` gate passes all 166 tests, including
+The complete-findings `./run.py test` gate passes all 166 tests, including
 CUDA checks, in 886.968 seconds.
 
 Train the best repair as a label of `experiments/mod193_stability` beside
@@ -556,8 +556,8 @@ every explicit hypothesis and no new `sorry`:
 Sources were reread beside the statements: arXiv:1602.02068v2, §2.2,
 Proposition 1, and arXiv:2603.09078v1, §2, equation `xsa` and Algorithm 1,
 plus the epsilon-clipped lab code at `73f8a0b`. All modules are reachable
-from `src/Transformer.lean`. The full `lake build`, `./make.py audit`,
-`./make.py index` and `./make.py forbidden` checks pass: 157 existing
+from `src/Transformer.lean`. The full `lake build`, `./run.py audit`,
+`./run.py index` and `./run.py forbidden` checks pass: 157 existing
 `sorry`, zero resting on them, zero extra axioms, zero vacuous statements
 and zero placeholders. The generated index has 1,836 modules and 7,556
 theorems. New modules have no warnings. H1's intervention did not isolate
@@ -565,8 +565,8 @@ a whole-training cause, so no such theorem is claimed.
 
 Prove only what the experiments support, under AGENTS.md: statements checked
 against their sources, an example for every theorem with hypotheses, no axiom
-or new `sorry`; then `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden`. Distinguish a real-arithmetic theorem, a
+or new `sorry`; then `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden`. Distinguish a real-arithmetic theorem, a
 floating-point measurement and a certificate of supplied data; a theorem
 about one row says nothing about a whole training run. Candidates, beside
 `Transformer.GPTMini.Sparsemax`:
@@ -644,12 +644,12 @@ No Python implementation or training run of the bounded gain has been
 added. The original cycle remains complete with its qualified negative
 complete-basis outcome and its pinned manifest.
 
-Validation: the full `lake build`, `./make.py audit`, `./make.py index`
-and `./make.py forbidden` pass. The generated index has 1,842 modules,
+Validation: the full `lake build`, `./run.py audit`, `./run.py index`
+and `./run.py forbidden` pass. The generated index has 1,842 modules,
 7,599 theorems and the same 157 existing `sorry`; there are zero results
 resting on them, zero extra axioms, zero vacuous statements and zero
 placeholders. The five new Lean modules have no warnings.
-The required `./make.py test` also passes all 171 Python tests.
+The required `./run.py test` also passes all 171 Python tests.
 
 ## Pure sparse follow-up: active value span
 
@@ -684,8 +684,8 @@ output target is retained; no attention-position labels are introduced.
 These additions are Lean results only. The Python code and previous
 experimental outcomes are unchanged.
 
-Validation: the full `lake build`, `./make.py audit`, `./make.py index`
-and `./make.py forbidden` pass. The new modules have no warnings. The
+Validation: the full `lake build`, `./run.py audit`, `./run.py index`
+and `./run.py forbidden` pass. The new modules have no warnings. The
 index now has 1,844 modules and 7,609 theorems, with the same 157 existing
 `sorry`, zero results resting on them, zero extra axioms, zero vacuous
 statements and zero placeholders. Python is unchanged since the passing
@@ -727,8 +727,8 @@ a zero output derivative or whole-model nonconvexity is repaired. No route
 target, teacher, dense weight branch, Python implementation or new training
 run is introduced. The completed benchmark cycle remains unchanged.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden`; the new modules have no warnings. Python is unchanged
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden`; the new modules have no warnings. Python is unchanged
 since the passing 171-test run recorded above.
 
 ## Pure sparse follow-up: reaching trainable parameters
@@ -774,8 +774,8 @@ Fixed value hulls can still make a target unattainable. All results use
 the actual causal variational sparsemax with exact zeros and ordinary
 output losses. Python and the completed benchmark cycle are unchanged.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass; the new modules have no warnings. No new
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass; the new modules have no warnings. No new
 `sorry`, extra axiom, result resting on a `sorry`, vacuous statement or
 placeholder is introduced. Python is unchanged since its passing 171-test
 run recorded above.
@@ -836,8 +836,8 @@ transformer. Shared-row gradient cancellation, target attainability with fixed
 values and global convergence remain open; no basis or Shakespeare training
 claim is made. Python and the completed experiment cycle are unchanged.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass; the new modules have no warnings, new `sorry`,
 extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -887,8 +887,8 @@ embeddings; long contexts, shared-row cancellation and whole-model
 convergence remain open. No new basis or Shakespeare training claim is
 made. The completed experiment cycle and Python implementation are unchanged.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass; the new modules have no warnings, new `sorry`,
 extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -944,8 +944,8 @@ bounds and whole-model convergence remain open. The completed experiment
 cycle and Python implementation are unchanged; no new dataset training
 claim is made.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass; the new modules have no warnings, new `sorry`,
 extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -1024,8 +1024,8 @@ bounds, unrestricted support changes and whole-model convergence remain
 open. The completed experiment cycle and Python implementation are unchanged;
 no new basis or Shakespeare training claim is made.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass; the new modules have no warnings, new `sorry`,
 extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -1093,8 +1093,8 @@ finite contexts. Jointly learned value mixtures, arbitrary-context
 normalization, a practical embedding-width bound, FFN and task loss remain
 outside the guarantee. No new basis or Shakespeare training is claimed.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass; the new modules have no warnings, new `sorry`,
 extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -1146,8 +1146,8 @@ proved. Original value penalties or norm bounds and a fixed small embedding
 width are not preserved, and no uniform inverse conditioning bound is proved.
 No new basis or Shakespeare training is claimed.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass; the new modules have no warnings, new `sorry`,
 extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -1224,8 +1224,8 @@ a fixed small embedding width, original value penalties or inverse norm bounds.
 Outputs precede XSA and output projection. No new basis or Shakespeare training
 is claimed, and the completed experiment cycle is unchanged.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass; the new modules have no warnings, new `sorry`,
 extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -1284,8 +1284,8 @@ Fixed data codes and the learned-memory architecture remain explicit. An
 output-only objective still leaves the Gram undetermined. FFN, task-loss choice
 and new training remain deferred; the completed experiment cycle is unchanged.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass; the new modules have no warnings, new `sorry`,
 extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -1359,8 +1359,8 @@ FFN, task-loss choice and new training remain deferred; the completed sparsemax
 experiment cycle is unchanged. A sample-independent compact construction for
 structured text targets remains a mathematical question.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass; the new modules have no warnings, new `sorry`,
 extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -1400,8 +1400,8 @@ and output-only Gram nonidentifiability remain to address. Prototype selection
 and distance stay fixed data choices. FFN, task-loss selection and new
 training remain deferred; the completed experiment cycle is unchanged.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass; the modules have no warnings, new `sorry`, extra
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass; the modules have no warnings, new `sorry`, extra
 axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -1472,8 +1472,8 @@ to select parameters. Unseen regularity and coverage have not been established
 for Shakespeare or arbitrary text. FFN, task-loss selection and new training
 remain deferred; the completed sparsemax experiment cycle is unchanged.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass; the modules have no warnings, new `sorry`, extra
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass; the modules have no warnings, new `sorry`, extra
 axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -1524,8 +1524,8 @@ coverage and useful numerical generalization constants remain to establish.
 FFN, task-loss selection and new training remain deferred; the completed
 sparsemax experiment cycle is unchanged.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass; the modules have no warnings, new `sorry`, extra
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass; the modules have no warnings, new `sorry`, extra
 axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -1572,8 +1572,8 @@ Shakespeare and a bounded prototype count/width remain unproved. Data-derived
 parameter selection is the next extension. FFN and task-loss selection remain
 deferred; the completed experimental training cycle is unchanged.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass. No new `sorry`, warnings in the new modules,
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -1652,8 +1652,8 @@ cycle is unchanged. These results remove the supplied-reference gap and
 geometric flatness of the additional criterion, not output-only semantic
 learning or every unrestricted transformer obstruction.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass. No new `sorry`, warnings in the new modules,
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -1716,8 +1716,8 @@ interior flatness, useful language-model objectives, a numerical solver and
 Shakespeare generalization remain open. Prototype count and feature width
 still grow; FFN and new model training remain deferred.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass. No new `sorry`, warnings in the new modules,
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -1778,8 +1778,8 @@ convex. General output-conditioned identifiability and removal of intrinsic
 flat directions are the next extension. FFN, new model training and useful
 Shakespeare generalization remain deferred.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass. No new `sorry`, warnings in the new modules,
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -1851,8 +1851,8 @@ are not covered. Minimum attainment for arbitrary targets and quantitative
 descent to an attained minimum are the next extension. Prototype records
 and values still grow with P; FFN and new model training remain deferred.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass. No new `sorry`, warnings in the new modules,
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -1914,8 +1914,8 @@ Physical Q/K width is three for arbitrary P; stored prototype records,
 values and nearest search still grow with P. A numerical solver, useful
 Shakespeare generalization and new model training remain deferred.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass. No new `sorry`, warnings in the new modules,
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -1997,8 +1997,8 @@ readout, coefficient caps and full observation are explicit restrictions.
 No numerical implementation, useful language-model criterion, FFN or
 Shakespeare generalization is established. New model training remains deferred.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass. No new `sorry`, warnings in the new modules,
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -2098,8 +2098,8 @@ head remain outside the guarantee. The Python port and a ConvexGPT versus
 GPTMini-softmax Basis comparison have not started; new model training remains
 deferred.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass. No new `sorry`, warnings in the new modules,
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
@@ -2224,8 +2224,8 @@ layers, FFN, language-head loss, constant storage, arbitrary exact fitting,
 generalization on new text and a successful Basis comparison are not proved.
 Python is unchanged and new model training remains deferred.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass. No new `sorry`, warnings in the new modules,
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
 
 
@@ -2270,8 +2270,8 @@ not an efficient global head search or convergence of a practical optimizer.
 Fixed-width raw matrices, FFN training and unseen-text generalization remain
 outside these statements. Numerical bounds and unit total mass are unchanged.
 
-Validation: full `lake build`, `./make.py audit`, `./make.py index` and
-`./make.py forbidden` pass. No new `sorry`, new-module warnings, extra axioms,
+Validation: full `lake build`, `./run.py audit`, `./run.py index` and
+`./run.py forbidden` pass. No new `sorry`, new-module warnings, extra axioms,
 results resting on `sorry`, vacuous conclusions or placeholder definitions.
 Python sources are unchanged; the previously passing 178-test suite applies.
 

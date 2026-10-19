@@ -125,15 +125,15 @@ update at which it reaches 1, null if none. For the AdamW runs it is not
 applicable.
 
 ```sh
-./make.py check experiments/mod97_scalar_mlp
-./make.py run experiments/mod97_scalar_mlp [labels]
-./make.py report experiments/mod97_scalar_mlp [labels]
+./run.py check experiments/mod97_scalar_mlp
+./run.py run experiments/mod97_scalar_mlp [labels]
+./run.py report experiments/mod97_scalar_mlp [labels]
 ```
 
 ## Findings
 
 All ten runs trained their 200,000 updates on 2026-10-18 (task #56). The
-numbers are those of `./make.py report experiments/mod97_scalar_mlp`, to
+numbers are those of `./run.py report experiments/mod97_scalar_mlp`, to
 three significant digits, unless they name `history.jsonl`: the final
 observation, the extreme Ritz values of the last model from 64 Lanczos
 steps, and for gradient descent `step_curvature`. A slope is the log-log

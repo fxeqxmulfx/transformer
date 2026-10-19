@@ -2,8 +2,8 @@
 
 Lean in `src/` formalizes the manuscripts in `papers/`; the lab in
 [`python/`](python/README.md) trains the experiments in
-[`experiments/`](experiments/README.md). `./make.py` runs every task;
-`./make.py -h` lists them.
+[`experiments/`](experiments/README.md). `./run.py` runs every task;
+`./run.py -h` lists them.
 
 ## Requirements
 
@@ -16,12 +16,18 @@ Lean in `src/` formalizes the manuscripts in `papers/`; the lab in
 - For the Lean tree, elan. It installs the toolchain that `lean-toolchain`
   names.
 
+Before committing, `./run.py verify` builds Lean, runs
+`lake --wfail lint --builtin-lint --linters=linter.all --code-quality`, audits
+axioms, regenerates the index, checks forbidden constructs, and runs the Python
+tests. `./run.py kernel` is an optional kernel replay; the 39 existing unfinished
+statements are retained and are not claimed to pass that checker.
+
 ## The minimal run
 
 ```sh
-./make.py setup                                          # install the locked environment
-./make.py run experiments/basis easy-small-depth-seed0   # train one run of the benchmark
-./make.py report experiments/basis easy-small-depth-seed0
+./run.py setup                                          # install the locked environment
+./run.py run experiments/basis easy-small-depth-seed0   # train one run of the benchmark
+./run.py report experiments/basis easy-small-depth-seed0
 ```
 
 The run trains the two-layer model of width 64 on one core until it passes
@@ -57,14 +63,14 @@ The smallest complete version takes one mode on one model from one seed.
 Its three runs train side by side in about four minutes:
 
 ```sh
-./make.py run experiments/basis easy-small-{depth,recall,parity}-seed0
+./run.py run experiments/basis easy-small-{depth,recall,parity}-seed0
 ```
 
 All 15 runs of the small model, both modes from three seeds, train side by
 side on 15 cores in about nine minutes:
 
 ```sh
-./make.py run experiments/basis easy-small-{depth,recall,parity}-seed{0,1,2} \
+./run.py run experiments/basis easy-small-{depth,recall,parity}-seed{0,1,2} \
                                 hard-small-{depth,recall}-seed{0,1,2}
 ```
 
@@ -84,7 +90,7 @@ and 2. A hard parity run is its easy one, so the hard mode lists only depth
 and recall:
 
 ```sh
-./make.py run experiments/basis easy-{small,large}-{depth,recall,parity}-seed{0,1,2} \
+./run.py run experiments/basis easy-{small,large}-{depth,recall,parity}-seed{0,1,2} \
                                 hard-{small,large}-{depth,recall}-seed{0,1,2}
 ```
 
@@ -92,7 +98,7 @@ Each run trains on the physical cores it asks for: four for the large
 model's recall, two for its depth and parity, one for every task of the
 small model. On 28 cores the 30 runs took 19 min 52 s. Without labels, `run`
 trains all 180 runs of `experiments/basis`, including the 150 GPU runs that
-set the recipes. `./make.py check experiments/basis` lists every label.
+set the recipes. `./run.py check experiments/basis` lists every label.
 [`experiments/basis/README.md`](experiments/basis/README.md) says what the
 benchmark asks and what it found.
 
@@ -108,6 +114,8 @@ a fresh clone, where `runs/` is empty, and train the same labels:
 git checkout bd63e50   # the CPU benchmark of the basis
 ./make.py run experiments/basis <labels>
 ```
+
+That historical revision predates the `run.py` rename.
 
 A run repeats its own losses on the same machine, with the same build of
 torch and the same number of threads. A different number of threads rounds

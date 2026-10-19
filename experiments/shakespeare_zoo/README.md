@@ -56,9 +56,9 @@ eigendecomposition torch cannot capture, and which runs eagerly.
 ## Running
 
 ```sh
-./make.py check experiments/shakespeare_zoo              # the runs, and what differs between them
-./make.py run experiments/shakespeare_zoo [label ...]    # train every run, or the labeled ones
-./make.py report experiments/shakespeare_zoo [label ...] # what the runs recorded, as JSON
+./run.py check experiments/shakespeare_zoo              # the runs, and what differs between them
+./run.py run experiments/shakespeare_zoo [label ...]    # train every run, or the labeled ones
+./run.py report experiments/shakespeare_zoo [label ...] # what the runs recorded, as JSON
 ```
 
 A run trains into `runs/<label>/` here, which git ignores, and continues

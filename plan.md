@@ -1056,8 +1056,8 @@ Keep the baseline protocol and measured budgets fixed across candidates.
 This file is the active plan and must be updated with dates, commits,
 theorems, remaining obligations, candidate decisions and run artifacts.
 EXPERIMENT_PLAN.md points here while retaining earlier completed research.
-Each Lean commit passes lake build, make.py audit, index and forbidden.
-Each Python commit passes make.py test and the relevant experiment checks.
+Each Lean commit passes lake build, run.py audit, index and forbidden.
+Each Python commit passes run.py test and the relevant experiment checks.
 Do not mark the cycle complete while a required proof or comparison remains.
 
 | Date | Stage | Result | Remaining work |

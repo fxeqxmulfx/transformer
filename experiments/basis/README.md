@@ -125,10 +125,10 @@ The recipes, rows per update, rate and budget in updates:
 ## Running
 
 ```sh
-./make.py check experiments/basis              # the runs, and what differs between them
-./make.py run experiments/basis [label ...]    # train every run, or the labeled ones
-./make.py report experiments/basis [label ...] # what the runs recorded, as JSON; `stop` says solved or budget
-./make.py profile experiments/basis <label>    # train one run afresh under Scalene's CPU profiler
+./run.py check experiments/basis              # the runs, and what differs between them
+./run.py run experiments/basis [label ...]    # train every run, or the labeled ones
+./run.py report experiments/basis [label ...] # what the runs recorded, as JSON; `stop` says solved or budget
+./run.py profile experiments/basis <label>    # train one run afresh under Scalene's CPU profiler
 ```
 
 A run trains into `runs/<label>/` here, which git ignores, and continues
@@ -380,7 +380,7 @@ Setup is mostly importing TorchDynamo and compiling: TorchInductor builds a
 run's updates and evaluations from its cache on disk, or in 40 to 80 s
 without it, as for the first large parity run here; drawing the splits
 takes 0.9 s for parity, 1.7 s for depth and 2.1 to 2.5 s for recall. Under
-Scalene's CPU profiler (`./make.py profile`, `runs/<label>.scalene.json`;
+Scalene's CPU profiler (`./run.py profile`, `runs/<label>.scalene.json`;
 the GPU's in `runs/_superseded`) the easy recall on the small model, 167 s
 there, spends 81% of its time in the compiled update, 9% setting it up and
 compiling it, 7% evaluating and 1% drawing its splits; the easy depth on

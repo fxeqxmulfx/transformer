@@ -1,8 +1,8 @@
 # AGENTS.md
 
-Lean in `src/` formalizes the manuscripts in `papers/` (gitignored; `./make.py papers`
+Lean in `src/` formalizes the manuscripts in `papers/` (gitignored; `./run.py papers`
 fetches missing ones; read them there, not on the web). The lab in `python/` runs the
-experiments in `experiments/`. `./make.py` runs every task.
+experiments in `experiments/`. `./run.py` runs every task.
 
 ## Always
 
@@ -38,7 +38,7 @@ experiments in `experiments/`. `./make.py` runs every task.
   the `runs` of every experiment it trains to the root's. Its first `lake build`
   links into `.lake/build`, read-only, every module that Lake's artifact cache
   (`lakefile.toml`) holds: all of `main`, in seconds. `lake` runs with
-  `LAKE_ARTIFACT_CACHE=false` (`~/.profile`, `make.py`), which keeps Mathlib out of
+  `LAKE_ARTIFACT_CACHE=false` (`~/.profile`, `run.py`), which keeps Mathlib out of
   the cache. `lake update`, `lake clean`, `lake exe cache` and a build with a
   `lake-manifest.json` other than the root's change the shared packages: never in a
   worktree. A Mathlib bump is made in the root while none exists, after
@@ -79,7 +79,7 @@ experiments in `experiments/`. `./make.py` runs every task.
   the definitions. A file without `sorry` has no warnings.
 - `sorry` in `INDEX.md` only falls, except for a new paper's statements entering
   `src/Transformer.lean` in that commit. `vacuous` and `placeholder` stay 0.
-- `./make.py audit`: 0 `rests`, 0 extra axioms (only `propext`, `Classical.choice`,
+- `./run.py audit`: 0 `rests`, 0 extra axioms (only `propext`, `Classical.choice`,
   `Quot.sound`). A result needing an unproved input takes it as a hypothesis.
 - Read the statement, hypotheses and instances of every library lemma used. Find
   lemmas with `dt find '<pattern>'`, `dt find --name <part>`, `dt show <name>`, not
@@ -95,7 +95,12 @@ experiments in `experiments/`. `./make.py` runs every task.
 - `INDEX.md` locates declarations. Never edit it; regenerate it in the commit of
   every `src/` change.
 - Iterate with `lake build Transformer.<Module>`. Before committing: `lake build`,
-  `./make.py audit`, `./make.py index`, `./make.py forbidden`.
+  `lake --wfail lint --builtin-lint --linters=linter.all --code-quality`,
+  `./run.py audit`, `./run.py index`, `./run.py forbidden`.
+  `./run.py verify` runs these mandatory checks and the Python suite.
+- `./run.py kernel` (`lake check`) is optional while the existing 39 unfinished
+  statements remain. The user explicitly retained them on 2026-10-19; do not
+  remove them or present them as proved to obtain a green kernel check.
 - A Mathlib bump fixes its deprecations in the same commit.
 
 ## Python
@@ -103,10 +108,10 @@ experiments in `experiments/`. `./make.py` runs every task.
 - Experiment: `experiments/<name>/experiment.py` and `README.md`, and a row in
   `experiments/README.md`. The file: `from lab.dsl import *`, then
   `experiments = {label: Experiment(...)}`; variants by `swap(base, "path", value)`,
-  `substitute(base, Block, block)`, `grid`, never by flags. `./make.py blocks` lists
+  `substitute(base, Block, block)`, `grid`, never by flags. `./run.py blocks` lists
   the words.
 - README: the question, a table of how the runs differ, what they found.
-- `./make.py check experiments/<name>`, `show … <label>`, `run … [labels]`,
+- `./run.py check experiments/<name>`, `show … <label>`, `run … [labels]`,
   `report … [labels]`, `profile … <label>`. `run` trains into `runs/<label>/` beside
   the file (gitignored) and resumes on rerun; `report` prints JSON; `profile` trains
   one run afresh under Scalene.
@@ -117,6 +122,6 @@ experiments in `experiments/`. `./make.py` runs every task.
   last two.
 - A block's docstring cites its source (paper §, Lean declaration, ported module and
   commit) and every deviation from it.
-- uv only through `./make.py` or plain `uv run --locked` inside `python/`; never
+- uv only through `./run.py` or plain `uv run --locked` inside `python/`; never
   `--active`, never at the root.
-- Before committing: `./make.py test`.
+- Before committing: `./run.py test`.

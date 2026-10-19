@@ -33,9 +33,9 @@ cites Section 3 for that condition. Every run replays from CUDA graphs.
 ## Running
 
 ```sh
-./make.py check experiments/synthetic_scaling              # the runs, and what differs between them
-./make.py run experiments/synthetic_scaling [label ...]    # train every run, or the labeled ones
-./make.py report experiments/synthetic_scaling [label ...] # what the runs recorded, as JSON
+./run.py check experiments/synthetic_scaling              # the runs, and what differs between them
+./run.py run experiments/synthetic_scaling [label ...]    # train every run, or the labeled ones
+./run.py report experiments/synthetic_scaling [label ...] # what the runs recorded, as JSON
 ```
 
 A run trains into `runs/<label>/` here, which git ignores, and continues

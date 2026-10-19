@@ -111,7 +111,7 @@ Sixteen focused tests pass on CPU and CUDA, including equality of actual
 AdamW parameters, optimizer state, existing gradients and RNG through the
 next update, intervention/capture cleanup after failures, a training-only
 memorizer, fixed-probe held-out-label independence, exact known spectra
-and confidence-only counterexamples. The complete `./make.py test` suite
+and confidence-only counterexamples. The complete `./run.py test` suite
 passes: **249 tests in 1,181.248 seconds**, including available CUDA tests.
 
 ## Answer versus shared EOS gradients
@@ -355,8 +355,8 @@ create the interaction pattern by itself. The follow-up below retains
 four-corner logit contrasts before CE, removing common row shifts, and
 distinguishes normalization and downstream FFN nonlinearities.
 
-Validation on 2026-10-08: `./make.py check experiments/grokking_internals`
-and the full `./make.py test` pass (275 tests, including nine new pair
+Validation on 2026-10-08: `./run.py check experiments/grokking_internals`
+and the full `./run.py test` pass (275 tests, including nine new pair
 controls/noninterference checks). Lean build, audit, generated index and
 forbidden checks pass; no new sorry or additional axioms were introduced.
 
@@ -515,7 +515,7 @@ EagerStepper, zero-quotient scopes, noninterference and failure cleanup,
 invalid clocks/variance/registration, and the reachable scalar momentum
 counterexample. Reproduce from `python/` with
 `uv run --locked python ../experiments/grokking_internals/compare_momentum.py`.
-The full `./make.py test` passes **293 tests in 904.206 seconds**;
+The full `./run.py test` passes **293 tests in 904.206 seconds**;
 experiment check, Lean build/audit, generated index and forbidden checks
 pass. No training implementation or earlier observer/result is modified.
 
@@ -599,7 +599,7 @@ invalid states/directions. Reproduce from `python/` with
 `uv run --locked python ../experiments/grokking_internals/compare_curvature.py`,
 and plot with `uv run --locked --with matplotlib==3.10.8 python
 ../experiments/grokking_internals/plot_curvature.py`.
-The full `./make.py test` passes **300 tests in 915.584 seconds**;
+The full `./run.py test` passes **300 tests in 915.584 seconds**;
 the experiment check and Lean build/audit/index/forbidden checks pass.
 
 ## Same-gradient native-moment reset counterfactuals
@@ -689,6 +689,6 @@ Reproduce from `python/` with `uv run --locked python
 ../experiments/grokking_internals/compare_moment_resets.py`; plot with
 `uv run --locked --with matplotlib==3.10.8 python
 ../experiments/grokking_internals/plot_moment_resets.py`.
-The full `./make.py test` passes **307 tests in 943.004 seconds**;
+The full `./run.py test` passes **307 tests in 943.004 seconds**;
 experiment check, full Lean build, audit, generated index and forbidden
 checks pass. The moment theorems are committed as `afffd88`.

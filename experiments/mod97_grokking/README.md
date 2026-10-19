@@ -38,9 +38,9 @@ execution issues the updates as the historical trainer did.
 ## Running
 
 ```sh
-./make.py check experiments/mod97_grokking              # the runs, and what differs between them
-./make.py run experiments/mod97_grokking [label ...]    # train every run, or the labeled ones
-./make.py report experiments/mod97_grokking [label ...] # what the runs recorded, as JSON
+./run.py check experiments/mod97_grokking              # the runs, and what differs between them
+./run.py run experiments/mod97_grokking [label ...]    # train every run, or the labeled ones
+./run.py report experiments/mod97_grokking [label ...] # what the runs recorded, as JSON
 ```
 
 A run trains into `runs/<label>/` here, which git ignores, and continues

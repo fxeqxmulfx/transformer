@@ -544,7 +544,7 @@ The complete source/raw-file and gate manifest is in
 Run a pair with:
 
 ```sh
-./make.py check experiments/basis_sparsemax
-./make.py run experiments/basis_sparsemax softmax-easy-small-depth-seed0 sparsemax-easy-small-depth-seed0
-./make.py report experiments/basis_sparsemax softmax-easy-small-depth-seed0 sparsemax-easy-small-depth-seed0
+./run.py check experiments/basis_sparsemax
+./run.py run experiments/basis_sparsemax softmax-easy-small-depth-seed0 sparsemax-easy-small-depth-seed0
+./run.py report experiments/basis_sparsemax softmax-easy-small-depth-seed0 sparsemax-easy-small-depth-seed0
 ```
