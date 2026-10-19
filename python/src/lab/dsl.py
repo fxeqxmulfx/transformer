@@ -15,7 +15,8 @@ from .domain.generative import (Addition, BooleanAnd, Copy, Count, DoubleHistogr
                                 Parity, RandomLM, Reverse, Sort)
 from .domain.model import (FFN, GELU, XSA, Attention, Block, FusedQKV, LayerNorm, NoPositions, Normal,
                            LearnedScaledDot, PerHeadQKV, PostNorm, PreNorm, QKNorm, ReLU, ReLU2, RMSNorm, RoPE, ScaledDot,
-                           ScaledResidual, Sinusoidal, Softmax, Sparsemax, SurrogateWeights, Tied, TorchDefault, Transformer, Untied)
+                           ScaledResidual, SiLU, Sinusoidal, Softmax, Sparsemax, SurrogateWeights, Tied, TorchDefault, Transformer, Untied)
+from .domain.rotary import DenseBranch, LabDivision, Rotate90, SwiGLU
 from .domain.regression import MLP, ModularRegression, OneHot, Scalar
 from .domain.optimizers import (ANSR, EVD, SGD, AdaFisher, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradMD, AMSGradW,
                                 Chebyshev, Clipped, Constant, CoupledNewton, Dash, Geometric, Guarded, Inverse,
@@ -35,9 +36,10 @@ __all__ = [
     "RMSNorm", "LayerNorm", "PreNorm", "PostNorm",
     "RoPE", "Sinusoidal", "NoPositions",
     "FusedQKV", "PerHeadQKV", "ScaledDot", "LearnedScaledDot", "QKNorm", "Softmax", "Sparsemax", "SurrogateWeights",
-    "ReLU", "ReLU2", "GELU", "Tied", "Untied", "TorchDefault", "Normal", "ScaledResidual",
+    "ReLU", "ReLU2", "GELU", "SiLU", "Tied", "Untied", "TorchDefault", "Normal", "ScaledResidual",
+    "Rotate90", "DenseBranch", "SwiGLU",
     # benchmarks
-    "ModularDivision", "ModularRegression", "TinyShakespeare", "Synthetic", "Memorization", "MatchingOrders", "MatchingBindings",
+    "ModularDivision", "ModularRegression", "LabDivision", "TinyShakespeare", "Synthetic", "Memorization", "MatchingOrders", "MatchingBindings",
     # synthetic tasks
     "MQAR", "Lookup", "Dyck", "AlternatingBlocks", "TypedDyck", "CRASP",
     "Histogram", "DoubleHistogram", "Mode", "MostFrequent", "Copy", "Reverse", "Sort", "Count", "Addition",

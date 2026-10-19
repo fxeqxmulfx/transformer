@@ -242,6 +242,15 @@ class GELU(Activation):
 
 
 @dataclass(frozen=True)
+class SiLU(Activation):
+    """x / (1 + exp(-x)), with unit sigmoid slope.
+
+    Source: landscape_grokking_plan.md, Activation comparisons, and
+    Transformer.Landscape.Neural.silu. No approximation is requested.
+    """
+
+
+@dataclass(frozen=True)
 class FFN(Spec):
     """Two matrices around an activation; the hidden width is multiplier * width."""
     activation: Activation

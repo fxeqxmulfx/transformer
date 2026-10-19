@@ -37,6 +37,8 @@ def norm_module(spec, width):
 
 
 def activation(spec):
+    if isinstance(spec, model.SiLU):
+        return F.silu
     if isinstance(spec, model.GELU):
         return partial(F.gelu, approximate="tanh" if spec.tanh else "none")
     if isinstance(spec, model.ReLU2):

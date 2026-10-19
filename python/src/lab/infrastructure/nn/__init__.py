@@ -7,9 +7,11 @@ import torch
 from ...domain import model
 from ...domain.atomic import AtomicMatching as AtomicSpec
 from ...domain.regression import MLP as MLPSpec
+from ...domain.rotary import Rotate90 as Rotate90Spec
 from ...domain.tensor import TensorStack as TensorSpec
 from .atomic import AtomicMatching
 from .mlp import MLP
+from .rotary import Rotate90
 from .tensor import TensorStack
 from .transformer import Transformer
 
@@ -22,6 +24,8 @@ def build_model(spec, vocab, seed):
     same spec and seed starts from bit-identical parameters.
     """
     torch.manual_seed(seed)
+    if isinstance(spec, Rotate90Spec):
+        return Rotate90(spec, vocab, seed)
     if isinstance(spec, AtomicSpec):
         return AtomicMatching(spec, vocab)
     if isinstance(spec, TensorSpec):

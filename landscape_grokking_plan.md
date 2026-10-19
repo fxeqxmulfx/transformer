@@ -145,6 +145,26 @@ The parameter dimensions are proved: `|V| W + W^2` for SiLU and
 budget for an activation comparison; initialization, runtime and training
 behavior still need to be measured.
 
+### M9.3 protocol controls
+
+The [Rotate90 analytic controls](experiments/rotate90_analytic/README.md)
+port the browser's SplitMix64 initialization, complete arithmetic split,
+continuing epoch sampler and model into the lab. Independent source
+fixtures match exactly at seed 11, including the width-128 checkpoint,
+both splits and 21 batches across three epochs. Finite-difference tests
+cover all parameters of each branch, and a separate calculation verifies
+that the tied E gradient sums its three roles.
+An unmodified vendored source export independently reproduces 20 complete
+CPU updates on the current runtime, with exact losses, accuracies and final
+weights. Detached observers retain the full nonconstant character spectrum,
+participation rank and overlap of the two centered operand subspaces.
+
+The prepared CUDA experiment pairs seeds 11, 17 and 23 across ReLU, SiLU
+and SwiGLU (H = 43), with the browser's W128 Fast optimizer settings and a
+1,000-epoch budget. The lab's locked PyTorch CUDA backend is an explicit
+deviation from the native/browser kernels. Tests check the protocol;
+training results and a mechanism for gradient access remain to be measured.
+
 ## Activation comparisons
 
 SiLU is a direct scalar replacement, s(t) = t / (1 + exp(-t)). Standard
