@@ -145,6 +145,15 @@ The parameter dimensions are proved: `|V| W + W^2` for SiLU and
 budget for an activation comparison; initialization, runtime and training
 behavior still need to be measured.
 
+`Transformer.Landscape.Neural.MLP` also instantiates the ordinary two-hidden-
+layer SiLU perceptrons with every matrix and bias trainable. Scalar and vector
+half-squared losses and full-class CE are analytic and satisfy the same local
+Lojasiewicz inequality at every actual parameter vector. Their exact dimensions
+match all four executable architectures. The normalized scalar half-MSE differs
+from continuous residue-value MSE by a proved factor of 4,608 at modulus 97.
+These common regularity properties do not explain the training gap; the
+[statement review](review/mod97_mlp.md) makes that limitation explicit.
+
 ### M9.3 protocol controls
 
 The [Rotate90 analytic controls](experiments/rotate90_analytic/README.md)

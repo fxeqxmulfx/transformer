@@ -7,6 +7,7 @@ public import Transformer.Landscape.Neural.SiLU
 public import Transformer.Landscape.Neural.SwiGLU
 public import Transformer.Landscape.Neural.Interaction
 public import Transformer.Landscape.Neural.AdamW
+public import Transformer.Landscape.Neural.MLP
 
 /-!
 # Analytic neural losses for the Landscape framework
@@ -21,6 +22,8 @@ actual Euclidean weights and discharge the local Lojasiewicz hypothesis.
 nonlinear operand interaction to separate a division checkerboard.
 `AdamW` derives a compact parameter container for the source-matched
 exact-real optimizer recurrence, with its actual inclusive warmup.
+`MLP` instantiates both ordinary perceptron readouts in their full biased
+parameter spaces and proves the same analytic local-inequality properties.
 Sources and the remaining bridge to the Rotate90 lab are recorded in
 `landscape_grokking_plan.md`.
 -/
