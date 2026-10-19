@@ -7,6 +7,7 @@ import torch
 from ...domain import model
 from ...domain.atomic import AtomicMatching as AtomicSpec
 from ...domain.regression import MLP as MLPSpec
+from ...domain.paired import VectorReadout as VectorReadoutSpec
 from ...domain.rotary import Rotate90 as Rotate90Spec
 from ...domain.tensor import TensorStack as TensorSpec
 from .atomic import AtomicMatching
@@ -30,7 +31,9 @@ def build_model(spec, vocab, seed):
         return AtomicMatching(spec, vocab)
     if isinstance(spec, TensorSpec):
         return TensorStack(spec, vocab)
-    built = MLP(spec, vocab) if isinstance(spec, MLPSpec) else Transformer(spec, vocab)
+    vector = isinstance(spec, VectorReadoutSpec)
+    spec = spec.network if vector else spec
+    built = MLP(spec, vocab, outputs=vocab if vector else 1) if isinstance(spec, MLPSpec) else Transformer(spec, vocab)
     if not isinstance(spec.init, (model.TorchDefault, model.Normal, model.ScaledResidual)):
         raise NotImplementedError(f"No builder for {spec.init!r}")
     if isinstance(spec.init, (model.Normal, model.ScaledResidual)):

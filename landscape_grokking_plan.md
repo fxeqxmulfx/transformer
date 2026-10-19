@@ -171,7 +171,13 @@ Eight energy-selected character pairs retain 100% held-out accuracy in all
 nine final checkpoints. The [experiment results](experiments/rotate90_analytic/README.md)
 contain every seed, full curves, projection ablations and provenance.
 An actual gradient-attraction mechanism and matched scalar-input/readout
-controls remain open.
+results remain open. The [matched MLP controls](experiments/mod97_representation_controls/README.md)
+now separate scalar/one-hot operands, scalar/vector answers, vector MSE/CE
+and decay 0/1 across the same three source splits. All have two SiLU hidden
+layers of width 195. The parameter counts and input fan-in changes are
+explicit; these are not matched-capacity controls. Tests construct finite
+scalar SiLU weights that classify every equation, independently of the
+random starts used for training. Training outcomes are not yet recorded.
 
 The [SwiGLU stability study](experiments/rotate90_swiglu_stability/README.md)
 tests rates 0.01, 0.003 and 0.001 on the same three seeds. It retains a

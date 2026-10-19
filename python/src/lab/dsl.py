@@ -17,6 +17,7 @@ from .domain.model import (FFN, GELU, XSA, Attention, Block, FusedQKV, LayerNorm
                            LearnedScaledDot, PerHeadQKV, PostNorm, PreNorm, QKNorm, ReLU, ReLU2, RMSNorm, RoPE, ScaledDot,
                            ScaledResidual, SiLU, Sinusoidal, Softmax, Sparsemax, SurrogateWeights, Tied, TorchDefault, Transformer, Untied)
 from .domain.rotary import DenseBranch, LabDivision, Rotate90, SwiGLU
+from .domain.paired import CrossEntropyAnswers, DivisionPairs, SquaredAnswers, VectorReadout
 from .domain.regression import MLP, ModularRegression, OneHot, Scalar
 from .domain.optimizers import (ANSR, EVD, SGD, AdaFisher, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradMD, AMSGradW,
                                 Chebyshev, Clipped, Constant, CoupledNewton, Dash, Geometric, Guarded, Inverse,
@@ -38,8 +39,10 @@ __all__ = [
     "FusedQKV", "PerHeadQKV", "ScaledDot", "LearnedScaledDot", "QKNorm", "Softmax", "Sparsemax", "SurrogateWeights",
     "ReLU", "ReLU2", "GELU", "SiLU", "Tied", "Untied", "TorchDefault", "Normal", "ScaledResidual",
     "Rotate90", "DenseBranch", "SwiGLU",
+    "VectorReadout", "SquaredAnswers", "CrossEntropyAnswers",
     # benchmarks
     "ModularDivision", "ModularRegression", "LabDivision", "TinyShakespeare", "Synthetic", "Memorization", "MatchingOrders", "MatchingBindings",
+    "DivisionPairs",
     # synthetic tasks
     "MQAR", "Lookup", "Dyck", "AlternatingBlocks", "TypedDyck", "CRASP",
     "Histogram", "DoubleHistogram", "Mode", "MostFrequent", "Copy", "Reverse", "Sort", "Count", "Addition",

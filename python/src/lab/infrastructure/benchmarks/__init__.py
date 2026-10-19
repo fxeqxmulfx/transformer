@@ -23,12 +23,14 @@ the best model; `analyze` summarizes the history of observations.
 from ...domain.benchmarks import ModularDivision, TinyShakespeare
 from ...domain.atomic import MatchingBindings, MatchingOrders
 from ...domain.regression import ModularRegression
+from ...domain.paired import DivisionPairs, VectorReadout, check_division_model
 from ...domain.rotary import LabDivision
 from ...domain.synthetic import Synthetic
 from ...domain.tensor import TensorStack
 from .modular import ModularTask
 from .matching import MatchingTask
 from .regression import RegressionTask
+from .paired import PairTask
 from .rotary import LabDivisionTask
 from .synthetic.training import SyntheticTask
 from .synthetic.tensor import TensorBasisTask
@@ -40,6 +42,11 @@ TASKS = {ModularDivision: ModularTask, TinyShakespeare: TextTask, Synthetic: Syn
 
 
 def build_task(spec, data_seed, device, model_spec=None):
+    if isinstance(spec, DivisionPairs):
+        if model_spec is None:
+            raise ValueError("DivisionPairs needs its explicit model specification")
+        check_division_model(model_spec, spec)
+        return PairTask(spec, data_seed, device, isinstance(model_spec, VectorReadout))
     if isinstance(model_spec, TensorStack):
         return TensorBasisTask(spec, data_seed, device)
     if type(spec) not in TASKS:

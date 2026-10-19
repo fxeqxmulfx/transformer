@@ -16,6 +16,7 @@ from .atomic import (AtomicColumns, AtomicMatching, BindingPricing, MatchingBind
                      MatchingOrders, OrderPricing, PairedMatching)
 from .optimizers import ANSR, EVD, AdamW, Clipped, Optimizer
 from .regression import MLP, ModularRegression
+from .paired import DivisionPairs, VectorReadout, check_division_model
 from .rotary import LabDivision, Rotate90
 from .spec import Spec, describe, require, require_kind, swap, walk
 from .stopping import Solved, Stopping
@@ -104,11 +105,16 @@ class Experiment(Spec):
                     "AtomicMatching reports physical heads through the benchmark, not Transformer diagnostics")
             require(columns or isinstance(self.optimizer, AdamW),
                     "AtomicMatching supports AtomicColumns or raw AdamW control")
-        if isinstance(self.model, MLP) or isinstance(self.benchmark, ModularRegression):
+        if isinstance(self.benchmark, ModularRegression) or (
+                isinstance(self.model, MLP) and not isinstance(self.benchmark, DivisionPairs)):
             require(isinstance(self.model, MLP) and isinstance(self.benchmark, ModularRegression),
                     "An MLP fits a ModularRegression, and a ModularRegression needs an MLP")
             require(self.model.context == self.benchmark.context, "An MLP reads exactly the benchmark's inputs")
             require(isinstance(self.execution, Eager), "MLP regression runs Eager")
+        if isinstance(self.benchmark, DivisionPairs) or isinstance(self.model, VectorReadout):
+            require(isinstance(self.benchmark, DivisionPairs), "VectorReadout needs DivisionPairs")
+            check_division_model(self.model, self.benchmark)
+            require(isinstance(self.execution, Eager), "DivisionPairs controls run Eager")
         if isinstance(self.model, Rotate90) or isinstance(self.benchmark, LabDivision):
             require(isinstance(self.model, Rotate90) and isinstance(self.benchmark, LabDivision),
                     "Rotate90 uses the separate LabDivision arithmetic protocol")
