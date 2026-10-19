@@ -6,7 +6,8 @@ Transformer.ScheduleFree.adamStep exactly, including epsilon placement, decay
 at the query, warmup and squared effective-rate weights. These explicit-buffer
 implementations store the query in parameters during training and evaluation
 weights after eval(). They do not use the upstream package's algebraic buffer
-compression or its extra weighting options.
+compression or its extra weighting options. Interpolation uses stable lerp
+operations; AdamW reuses one denominator scratch tensor per parameter.
 """
 
 from __future__ import annotations
@@ -64,10 +65,12 @@ class ScheduleFreeSGD(BufferedOptimizer):
         group = self.param_groups[0]
         beta = group.get("beta", group.get("betas", (0.9,))[0])
         if training:
-            work = self.workspace.like(output, "work")
-            torch.mul(state["evaluation"], beta, out=output)
-            torch.mul(state["base"], 1 - beta, out=work)
-            output.add_(work)
+            if beta == 0:
+                output.copy_(state["base"])
+            elif beta == 1:
+                output.copy_(state["evaluation"])
+            else:
+                torch.lerp(state["base"], state["evaluation"], beta, out=output)
         else:
             output.copy_(state["evaluation"])
 
@@ -103,7 +106,7 @@ class ScheduleFreeSGD(BufferedOptimizer):
             s["base"].add_(p.grad, alpha=-group["lr"])
             s["step"] += 1
             c = 1 / (s["step"] + 1)
-            s["evaluation"].mul_(1 - c).add_(s["base"], alpha=c)
+            s["evaluation"].lerp_(s["base"], c)
         self.train()
         return loss
 
@@ -161,15 +164,11 @@ class ScheduleFreeAdamW(ScheduleFreeSGD):
         variance = self._variance(state, gradient)
         state["total"] += eta**2
         c = eta**2 / state["total"] if state["total"] else 0.0
-        direction = self.workspace.like(query, "direction")
         work = self.workspace.like(query, "work")
         torch.sqrt(variance, out=work)
         work.add_(group["eps"])
-        torch.mul(gradient, eta, out=direction)
-        direction.div_(work)
-        torch.mul(query, eta * state.get("weight_decay", group["weight_decay"]), out=work)
-        direction.add_(work)
-        state["base"].sub_(direction)
+        state["base"].addcdiv_(gradient, work, value=-eta)
+        state["base"].add_(query, alpha=-eta * state.get("weight_decay", group["weight_decay"]))
         if eta and "radius" in state:
             norm = self.workspace.norm(state["base"])
             scale = torch.div(
@@ -186,7 +185,10 @@ class ScheduleFreeAdamW(ScheduleFreeSGD):
     @staticmethod
     def _average(state: StateDict, coefficient: float) -> None:
         """Average a completed base update after any physical factor-space correction."""
-        state["evaluation"].mul_(1 - coefficient).add_(state["base"], alpha=coefficient)
+        if coefficient == 1:
+            state["evaluation"].copy_(state["base"])
+        elif coefficient:
+            state["evaluation"].lerp_(state["base"], coefficient)
 
     @torch.no_grad()
     def step(self, closure: Closure = None) -> Loss:

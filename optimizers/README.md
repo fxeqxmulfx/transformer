@@ -225,6 +225,16 @@ implements the paper's Algorithm 1, with raw-second-moment epsilon placement,
 decay at the query and squared effective-rate averaging. ScheduleFreeAMSGradW
 adds a running maximum of the raw second moment. In both, beta1 controls
 interpolation and the gradient is used directly, without a first-moment EMA.
+Query interpolation and iterate averaging use stable `lerp` operations so that
+equal iterates remain equal in floating point. AdamW and its AMSGrad variant
+keep explicit base and evaluation histories and one reusable denominator scratch
+tensor, rather than a second full-sized direction workspace.
+
+The lab DSL also exports `ScheduleFreeAdamW(lr=..., warmup=...)`. It supports
+`Eager()` and `Compiled()` forward/backward execution with eager optimizer steps,
+including outer `Clipped(...)`. Both training and held-out evaluations use the
+averaged weights. Use either its built-in warmup or `Schedule(warmup=...)`;
+requesting both is rejected. An outer decay schedule is optional.
 
 ScheduleFreeAMSGradMD applies that rule separately to the direction and raw
 row/column gains. It computes all three chain-rule gradients at the old

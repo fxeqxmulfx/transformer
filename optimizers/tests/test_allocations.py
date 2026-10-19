@@ -7,6 +7,7 @@ import json
 import tempfile
 import unittest
 import weakref
+from itertools import product
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -58,16 +59,22 @@ class AllocationTests(unittest.TestCase):
     """Check actual allocations and ownership beyond the mathematical recurrences."""
 
     @unittest.skipUnless(torch.cuda.is_available(), "CUDA unavailable")
-    def test_schedule_free_amsgrad_warmed_cuda_steps_allocate_no_device_storage(self) -> None:
+    def test_schedule_free_warmed_cuda_steps_allocate_no_device_storage(self) -> None:
         """Check positive raw CUDA allocator events with active kernel tracing."""
-        for factory in (opt.ScheduleFreeAMSGradW, opt.ScheduleFreeAMSGradMD):
-            with self.subTest(rule=factory.__name__), tempfile.TemporaryDirectory() as directory:
+        factories = (opt.ScheduleFreeAdamW, opt.ScheduleFreeAMSGradW, opt.ScheduleFreeAMSGradMD)
+        for factory, dtype in product(factories, (torch.float32, torch.float64)):
+            with (
+                self.subTest(rule=factory.__name__, dtype=dtype),
+                tempfile.TemporaryDirectory() as directory,
+            ):
                 parameters = [
-                    torch.nn.Parameter(torch.full(shape, 0.25, device="cuda"))
+                    torch.nn.Parameter(torch.full(shape, 0.25, device="cuda", dtype=dtype))
                     for shape in ((64, 96), (64,))
                 ]
                 for p in parameters:
-                    p.grad = torch.linspace(-0.1, 0.2, p.numel(), device="cuda").reshape_as(p)
+                    p.grad = torch.linspace(
+                        -0.1, 0.2, p.numel(), device="cuda", dtype=dtype
+                    ).reshape_as(p)
                 optimizer = factory(parameters)
                 for _ in range(5):
                     optimizer.step()

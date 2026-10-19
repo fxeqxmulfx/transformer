@@ -18,6 +18,16 @@ on every update. Missing gradients are not silently identified with zero
 gradients in the correspondence. Dash, AMSGradMD, Schedule-Free and the
 optimistic method require all participating parameters' gradients.
 
+Schedule-Free query interpolation and averaging use `lerp` in PyTorch. This
+is algebraically the same exact-real affine combination as the Lean definitions,
+with exact copies at interpolation endpoints and no averaging at zero weight.
+The numerical form preserves equal float32 iterates and removes the query's
+scratch tensor. AdamW updates its base directly with `addcdiv_` and old-query
+decay, reusing one denominator workspace. These changes preserve the modeled
+recurrence while changing floating-point rounding. Regression tests check
+stationary iterates, zero rates and the scratch-memory budget; they are not
+a formal IEEE arithmetic refinement.
+
 ## Update correspondence
 
 `standard` is an alias of the installed `torch.optim` module: its optimizers

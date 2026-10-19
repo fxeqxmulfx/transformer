@@ -70,7 +70,7 @@ class MDWIntegrationTests(unittest.TestCase):
                     Magma(spec)
         for cls in (ScheduleFreeAMSGradMDW, ScheduleFreeAdamMDW):
             experiment = swap(base, "optimizer", cls(lr=.01))
-            with self.assertRaisesRegex(ValueError, "Schedule-Free MDW"):
+            with self.assertRaisesRegex(ValueError, "Schedule-Free"):
                 swap(experiment, "execution", CudaGraph())
             with self.assertRaisesRegex(ValueError, "warmup"):
                 swap(base, "optimizer", cls(lr=.01, warmup=3))

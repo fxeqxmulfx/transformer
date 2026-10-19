@@ -23,6 +23,7 @@ from .domain.optimizers import (ANSR, EVD, SGD, AdaFisher, AdaGrad, Adam, AdamNC
                                 Chebyshev, Clipped, Constant, CoupledNewton, Dash, Geometric, Guarded, Inverse,
                                 InverseSqrt, Magma, Muon, NewtonDB, RMSProp)
 from .domain.mdw import AMSGradMDW, AdamMDW, ScheduleFreeAMSGradMDW, ScheduleFreeAdamMDW
+from .domain.schedule_free import ScheduleFreeAdamW
 from .domain.spec import describe, fingerprint, substitute, swap, walk
 from .domain.memorization import Memorization
 from .domain.stopping import EarlyStopping, Solved
@@ -51,7 +52,7 @@ __all__ = [
     # optimizers
     "ANSR", "AtomicColumns", "OrderPricing", "BindingPricing", "SearchPricing", "SGD", "AdamW", "AMSGradW", "Adam", "AdamX", "AdaGrad", "AdamNC", "RMSProp", "Muon", "Guarded", "Magma", "Clipped",
     "Dash", "NewtonDB", "CoupledNewton", "EVD", "Chebyshev", "AdaFisher", "AMSGradMD",
-    "AMSGradMDW", "AdamMDW", "ScheduleFreeAMSGradMDW", "ScheduleFreeAdamMDW",
+    "AMSGradMDW", "AdamMDW", "ScheduleFreeAdamW", "ScheduleFreeAMSGradMDW", "ScheduleFreeAdamMDW",
     "Constant", "Inverse", "InverseSqrt", "Geometric",
     # training
     "Schedule", "Cosine", "Budget", "FlopBudget", "Seeds", "Evaluate", "Diagnostics", "AttentionDiagnostics", "GrokkingDiagnostics", "Checkpoint",

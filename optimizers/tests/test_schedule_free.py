@@ -44,17 +44,21 @@ class ScheduleFreeTests(unittest.TestCase):
             )
             base, evaluation, variance = [2.0, -1.0], [2.0, -1.0], [0.0, 0.0]
             total = 0.0
-            for t, gradient in enumerate(([1.0, -2.0], [0.0, 3.0], [-1.0, 0.0]), 1):
+            gradients = ([1.0, -2.0], [0.0, 3.0], [-1.0, 0.0], [2.0, -0.5], [0.1, 0.3])
+            for t, (rate, gradient) in enumerate(
+                zip((0.0, 0.2, 0.1, 0.0, 0.3), gradients, strict=True), 1
+            ):
                 query = [0.6 * x + 0.4 * z for x, z in zip(evaluation, base, strict=False)]
                 torch.testing.assert_close(p, p.new_tensor(query))
-                eta = 0.2 * math.sqrt(1 - 0.75**t) * (min(1, t / warmup) if warmup else 1)
+                eta = rate * math.sqrt(1 - 0.75**t) * (min(1, t / warmup) if warmup else 1)
                 total += eta**2
-                c = eta**2 / total
+                c = eta**2 / total if total else 0.0
                 for i, g in enumerate(gradient):
                     variance[i] = 0.75 * variance[i] + 0.25 * g * g
                     base[i] -= eta * g / (math.sqrt(variance[i]) + 0.125) + eta * 0.3 * query[i]
                     evaluation[i] = (1 - c) * evaluation[i] + c * base[i]
                 p.grad = p.new_tensor(gradient)
+                optimizer.param_groups[0]["lr"] = rate
                 optimizer.step()
                 state = optimizer.state[p]
                 torch.testing.assert_close(
