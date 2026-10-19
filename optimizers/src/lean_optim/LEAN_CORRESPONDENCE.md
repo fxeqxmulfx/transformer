@@ -98,6 +98,35 @@ rate. The Python suite freezes their expected results and independently
 compares the full MD recurrence to autograd, including large signed raw
 gains, changing rates, warmup, auxiliary parameters and checkpoints.
 
+## Outer learning-rate schedules
+
+`LearningRateSchedule` and `LinearWarmup` supply explicit per-update rates;
+they add no convergence claim. A rate multiplier is linear from zero to one
+during warmup, then constant or linearly/cosinusoidally decayed to the chosen
+nonnegative floor. Coordinate and matrix direction rules consume that rate
+in their existing callbacks. Configured internal coefficient schedules remain
+in effect.
+
+For AMSGradMD and ScheduleFreeAMSGradMD, attaching any PyTorch scheduler
+introduces the common multiplier `lr / initial_lr` for every independently
+configured component rate. This is an explicit extension of the source's
+independent-rate interface. It instantiates the same Lean callbacks at the
+effective per-step rates; it does not replace their recurrence. Without a
+scheduler, gain and auxiliary rates remain independent. If the nominal main
+rate is zero, all components freeze while the scheduled main rate remains
+zero; a later positive main rate reactivates the configured component rates.
+Checked MD retains its true-gradient fallback at the scheduled outer rate.
+When all rates that can move a stored tensor are zero, its numerical writes
+are masked to avoid projection/rebalance roundoff moving frozen physical
+weights. Moments and clocks still advance.
+
+The Python tests compare scheduled MD runs with independent, manually
+supplied component rates, including zero prefixes, a guarded direction-rate
+override and built-in Schedule-Free warmup. They check checkpoint continuation
+through decay, CPU-to-CUDA loading, live rate tensors during CUDA graph replay
+and raw allocation events for optimizer and host scheduler steps together.
+These runtime and storage properties are outside Lean's real-arithmetic model.
+
 ## Inverse-root pipeline
 
 `roots.py` implements `DASH.countedBatchPiInverseFourth` (NDB),

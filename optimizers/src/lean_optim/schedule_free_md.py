@@ -21,6 +21,7 @@ import torch
 from torch import Tensor
 
 from ._parameters import Parameters, settings
+from ._rates import component_rates
 from .schedule_free import ScheduleFreeAMSGradW
 
 if TYPE_CHECKING:
@@ -110,7 +111,7 @@ class ScheduleFreeAMSGradMD(ScheduleFreeAMSGradW):
             parameter.mul_(column[None, :])
         return self
 
-    def _step_factors(self, parameter: Tensor, state: StateDict) -> None:
+    def _step_factors(self, parameter: Tensor, state: StateDict, gain_rate: float) -> None:
         direction = self._point(state["direction"], training=True)
         row = self._point(state["row"], training=True)
         column = self._point(state["column"], training=True)
@@ -139,20 +140,19 @@ class ScheduleFreeAMSGradMD(ScheduleFreeAMSGradW):
         gradient.mul_(column_gain[None, :])
         group = self.param_groups[0]
         self._advance(direction, gradient, state["direction"], group["lr"])
-        self._advance(row, row_gradient, state["row"], group["gain_rate"])
-        self._advance(column, column_gradient, state["column"], group["gain_rate"])
+        self._advance(row, row_gradient, state["row"], gain_rate)
+        self._advance(column, column_gradient, state["column"], gain_rate)
 
     @torch.no_grad()
     def step(self, closure: Closure = None) -> Loss:
         """Apply chain-rule gradients at the query to the latent base factors."""
         loss, parameters = self._gradients(closure)
+        gain_rate, auxiliary_rate = component_rates(self, "gain_rate", "auxiliary_rate")
         for parameter in parameters:
             state = self.state[parameter]
             if "direction" in state:
-                self._step_factors(parameter, state)
+                self._step_factors(parameter, state, gain_rate)
             else:
-                self._advance(
-                    parameter, parameter.grad, state, self.param_groups[0]["auxiliary_rate"]
-                )
+                self._advance(parameter, parameter.grad, state, auxiliary_rate)
         self.train()
         return loss

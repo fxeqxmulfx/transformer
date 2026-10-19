@@ -36,6 +36,7 @@ from .geometry import AdaFisher, AMSGradMD, Dash, Guarded, Magma, Muon
 from .optimistic import ClippedOptimistic
 from .schedule_free import ScheduleFreeAdamW, ScheduleFreeAMSGradW, ScheduleFreeSGD
 from .schedule_free_md import ScheduleFreeAMSGradMD
+from .schedules import LearningRateSchedule, LinearWarmup
 
 # Explicit names for paper conventions that differ from torch.optim defaults.
 PaperAdam = Adam
@@ -67,6 +68,8 @@ __all__ = [
     "Guarded",
     "Inverse",
     "InverseSqrt",
+    "LearningRateSchedule",
+    "LinearWarmup",
     "Magma",
     "Muon",
     "NewtonDB",

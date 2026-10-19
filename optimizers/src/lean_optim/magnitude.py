@@ -30,6 +30,7 @@ import torch
 from torch import Tensor
 from torch.nn import functional
 
+from ._rates import active_rates, component_rates, copy_active
 from ._workspace import BufferedOptimizer, Workspace, descent_test, joint_metrics
 
 if TYPE_CHECKING:
@@ -102,7 +103,7 @@ def proposal(  # noqa: PLR0913, PLR0917 - Preserve the established optimizer/rec
     state: TensorState,
     gradient: Tensor,
     direction_rate: Scalar,
-    gain_rate: float,
+    gain_rate: Scalar,
     beta: float,
     beta2: float,
     eps: float,
@@ -156,7 +157,7 @@ def buffered_proposal(  # noqa: PLR0913, PLR0917 - Preserve the established opti
     state: TensorState,
     gradient: Tensor,
     direction_rate: Scalar,
-    gain_rate: float,
+    gain_rate: Scalar,
     beta: float,
     beta2: float,
     eps: float,
@@ -242,7 +243,8 @@ class AMSGradMD(BufferedOptimizer):
     `rate` is the rate the schedule sets: a float, or the one-element device
     tensor of the capturable form, read when an update runs. The direction
     moves at it unless the spec gives the guarded variant its own direction
-    rate; the gains and the other parameters move at their constant rates.
+    rate; the gains and the other parameters have independent base rates.
+    An attached PyTorch scheduler scales all those rates by lr / initial_lr.
     """
 
     moments = "raw_AMSGrad_buffers_of_directions_and_auxiliary_parameters_for_AMSGradMD"
@@ -303,7 +305,22 @@ class AMSGradMD(BufferedOptimizer):
         if hasattr(self, "_clip_norm"):
             torch.nn.utils.clip_grad_norm_(parameters, self._clip_norm)
         beta, beta2 = spec.betas
-        direction_rate = rate if spec.direction_rate is None else spec.direction_rate
+        direction_rate, gain_rate, auxiliary_rate = component_rates(
+            self, "direction_rate", "gain_rate", "auxiliary_rate"
+        )
+        direction_rate = rate if direction_rate is None else direction_rate
+        fallback_rates = () if self.sigma is None else (rate,)
+        matrix_active = active_rates(
+            self.workspace,
+            parameters[0],
+            "matrix.active",
+            direction_rate,
+            gain_rate,
+            *fallback_rates,
+        )
+        auxiliary_active = active_rates(
+            self.workspace, parameters[0], "auxiliary.active", auxiliary_rate, *fallback_rates
+        )
         candidates, gains = [], {}
         for parameter in parameters:
             state, gradient = self.state[parameter], parameter.grad
@@ -313,7 +330,7 @@ class AMSGradMD(BufferedOptimizer):
                     state,
                     gradient,
                     direction_rate,
-                    spec.gain_rate,
+                    gain_rate,
                     beta,
                     beta2,
                     spec.eps,
@@ -325,7 +342,7 @@ class AMSGradMD(BufferedOptimizer):
                     gradient,
                     state,
                     "",
-                    spec.auxiliary_rate,
+                    auxiliary_rate,
                     beta,
                     beta2,
                     spec.eps,
@@ -343,9 +360,13 @@ class AMSGradMD(BufferedOptimizer):
                         candidate, row, column, state["radius"], self.workspace, reference=parameter
                     )
                     torch.where(accepted, row, balanced, out=row)
-                state["row"].copy_(row)
-                state["column"].copy_(column)
-            parameter.copy_(candidate)
+                copy_active(state["row"], row, active=matrix_active)
+                copy_active(state["column"], column, active=matrix_active)
+            copy_active(
+                parameter,
+                candidate,
+                active=matrix_active if parameter in self.hidden else auxiliary_active,
+            )
         return loss
 
     def check(self, parameters: list[Tensor], candidates: list[Tensor], rate: Scalar) -> Tensor:

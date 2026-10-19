@@ -80,6 +80,50 @@ uses the promoted dtype of all participating parameters for its batched
 histories, including mixed-dtype groups in either parameter order. Construct
 the optimizer after placing the model parameters on their intended device.
 
+`LearningRateSchedule` adds optional linear warmup and constant, linear or
+cosine learning rates to every rule that consumes an outer `lr`. Existing
+PyTorch schedulers also work. For both MD methods, attaching a scheduler
+scales the direction, gain and auxiliary base rates together by
+`lr / initial_lr`, including an explicit guarded `direction_rate` override.
+Without a scheduler, these component rates retain their independent meaning.
+Internal `lr_decay` settings still multiply the scheduled rate where configured.
+
+```python
+from lean_optim import AMSGradMD, LearningRateSchedule
+
+optimizer = AMSGradMD(model, lr=1e-3, gain_rate=1e-3, auxiliary_rate=3e-4)
+scheduler = LearningRateSchedule(
+    optimizer, warmup=100, total_steps=10_000, decay="cosine", final_factor=0.01
+)
+# After backward(), once per optimizer update:
+optimizer.step()
+scheduler.step()
+```
+
+Construct with the desired peak rate. A positive `warmup` makes the first
+update use zero; after that many completed updates the next uses the peak.
+`LinearWarmup(optimizer, warmup)` keeps the peak afterwards. With
+`LearningRateSchedule`, linear/cosine decay reaches `peak * final_factor`
+at `total_steps` completed updates and stays there. Omit `total_steps` for
+constant rates; `warmup=0` starts immediately at the peak. Native parameter
+groups keep their distinct peak rates.
+
+Construct the scheduler before loading optimizer state, then load optimizer
+and scheduler state, in that order. Schedules preserve caller-held device
+rate tensors across loading. With capturable direction rules, pass
+`rate=device_tensor`, warm the buffers, capture only `optimizer.step()` and
+call `scheduler.step()` outside the graph after each replay. It updates the
+same scalar storage in place; warmed scheduled MD steps allocate no CUDA
+storage in the tested float32/float64 cases. Schedule-Free remains eager.
+
+ClippedOptimistic chooses its own rate; AtomicColumns uses its own column
+steps and line searches. Native `standard.Rprop` adapts per-coordinate step
+sizes and reads `lr` only at initialization. The common scheduler rejects
+these methods because they do not consume a live outer rate. Built-in
+Schedule-Free warmup and outer warmup are alternative choices; requesting
+both raises an error. An outer decay with `warmup=0` can accompany built-in
+warmup when explicitly desired.
+
 ```python
 # Select matrices explicitly to exclude embeddings and readouts.
 optimizer = Muon(model.parameters(), lr=0.02, matrix_params=[model.weight])

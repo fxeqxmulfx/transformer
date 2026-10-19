@@ -11,6 +11,8 @@ from typing import TYPE_CHECKING
 import torch
 from torch import Tensor
 
+from ._checkpoint import rate_references, restore_clocks, restore_rates
+
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
@@ -144,6 +146,7 @@ class BufferedOptimizer(torch.optim.Optimizer):
     def load_state_dict(self, state_dict: StateDict) -> None:
         """Restore shared tensors to their constructed placement and discard scratch."""
         shared = {name: state for name, state in self.state.items() if isinstance(name, str)}
+        rates = rate_references(self)
         super().load_state_dict(state_dict)
         # PyTorch casts parameter states, but copies string-keyed state as is.
         # Each constructed tensor supplies its own dtype/device, including
@@ -156,4 +159,6 @@ class BufferedOptimizer(torch.optim.Optimizer):
                     else value
                     for key, value in self.state[name].items()
                 }
+        restore_rates(self, rates)
+        restore_clocks(self)
         self.workspace.buffers.clear()
