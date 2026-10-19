@@ -4,6 +4,7 @@ Source: landscape_grokking_plan.md, M9.3--M9.4. Character pairs are selected
 by final embedding energy, without held-out labels. The common row mean,
 zero row and all branch matrices are retained. Replacing E changes all three
 of its tied roles. This is a checkpoint ablation, not a training intervention.
+An optional experiment-folder argument selects another modulus-97 study.
 Run from python/: uv run --locked python ../experiments/rotate90_analytic/analyze.py
 """
 
@@ -12,6 +13,7 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import sys
 
 import torch
 
@@ -75,14 +77,16 @@ def projections(model, task, batch):
     return output
 
 
-def main():
+def main(folder=HERE):
     torch.set_num_threads(1)
-    study, runs = load(HERE), RunDirectories(HERE / "runs")
+    folder = Path(folder).resolve()
+    study, runs = load(folder), RunDirectories(folder / "runs")
     current_code, common_engine, summaries, curves = code(), None, {}, []
     for label, experiment in study.experiments.items():
         run = runs.open(label)
         result, manifest = run.result(), run.manifest()
-        assert result is not None and result["updates"] == 10000, f"Incomplete run: {label}"
+        budget = experiment.budget.updates
+        assert result is not None and result["updates"] == budget, f"Incomplete run: {label}"
         assert manifest["description"] == describe(experiment), f"Changed experiment: {label}"
         provenance = run.provenance()
         engine = provenance["engine"]
@@ -91,14 +95,15 @@ def main():
         common_engine = engine if common_engine is None else common_engine
         assert engine == common_engine, "The controls used different engines"
         history, gradients = run.records("history"), run.records("gradients")
-        assert [row["step"] for row in history] == list(range(0, 10001, 10))
-        assert [row["step"] for row in gradients] == list(range(1, 10001))
+        assert [row["step"] for row in history] == list(range(0, budget + 1, 10))
+        assert [row["step"] for row in gradients] == list(range(1, budget + 1))
         assert all(math.isfinite(row["gradient_l2"]) for row in gradients)
         device = torch.device(experiment.execution.device)
         task = build_task(experiment.benchmark, experiment.seeds.data, device)
+        assert task.vocab == 97, "The exported character pairs require modulus 97"
         model = build_model(experiment.model, task.vocab, experiment.seeds.model).to(device)
         checkpoint = run.checkpoint(device)
-        assert checkpoint["step"] == 10000
+        assert checkpoint["step"] == budget
         model.load_state_dict(checkpoint["model"])
         for split in ("train", "heldout"):
             assert evaluate(task, model, task.splits[split], experiment.evaluate.batch) == result["final"][split]
@@ -117,7 +122,11 @@ def main():
             "post99_observations_below99": sum(row["heldout"]["accuracy"] < .99 for row in after_first),
             "worst_post99_observation": min(after_first, key=lambda row: row["heldout"]["accuracy"], default=None),
             "last_1000_updates_min_heldout_accuracy": min(row["heldout"]["accuracy"] for row in history
-                                                          if row["step"] >= 9000),
+                                                          if row["step"] >= budget - 1000),
+            "nominal_decay_clock_at_first99": (None if first is None else experiment.optimizer.weight_decay *
+                math.fsum(row["learning_rate"] for row in gradients if row["step"] <= first)),
+            "nominal_decay_clock_at_end": experiment.optimizer.weight_decay *
+                math.fsum(row["learning_rate"] for row in gradients),
             "training_seconds": result["training_seconds"], "wall_seconds": result["wall_seconds"],
             "peak_cuda_allocated_bytes": result["peak_cuda_allocated_bytes"],
             "initial_geometry": history[0]["embedding_geometry"],
@@ -131,6 +140,15 @@ def main():
             "gradients_sha256": sha256(run.path / "gradients.jsonl"),
             "checkpoint_sha256": sha256(run.path / "checkpoint.pt"),
             "character_projections": ablations,
+        }
+        prefix = [row for row in history if row["step"] <= 10000]
+        prefix_first = next((row["step"] for row in prefix if row["heldout"]["accuracy"] >= .99), None)
+        prefix_after = [row for row in prefix if prefix_first is not None and row["step"] >= prefix_first]
+        summaries[label]["common_10000_update_prefix"] = {
+            "last_update": prefix[-1]["step"], "train": prefix[-1]["train"], "heldout": prefix[-1]["heldout"],
+            "first_heldout99_update": prefix_first,
+            "post99_observations_below99": sum(row["heldout"]["accuracy"] < .99 for row in prefix_after),
+            "worst_post99_heldout_accuracy": min((row["heldout"]["accuracy"] for row in prefix_after), default=None),
         }
         for row in history:
             geometry = row["embedding_geometry"]
@@ -147,19 +165,21 @@ def main():
         print(label, "first99", first, "sustained99", sustained,
               "projection heldout", [round(probe["heldout"]["accuracy"], 6) for probe in ablations], flush=True)
     portable = {"protocol_commit": "c59d4426", "source_revision": "f49969393a7482490d45483d8a4fd3046b1adede",
-                "source_export_sha256": sha256(HERE.parent.parent / "third_party/rotate90/reference.py"),
+                "source_export_sha256": sha256(folder.parent.parent / "third_party/rotate90/reference.py"),
                 "analysis_script_sha256": sha256(Path(__file__)),
                 "engine": {key: value for key, value in common_engine.items() if key != "code"},
                 "cuda": provenance["cuda"], "python": provenance["python"],
                 "engine_code_sha256": hashlib.sha256(json.dumps(current_code, sort_keys=True).encode()).hexdigest(),
                 "projection_pair_counts": COUNTS, "runs": summaries}
-    (HERE / "results.json").write_text(json.dumps(portable, indent=2, allow_nan=False) + "\n")
-    (HERE / "engine_code.json").write_text(json.dumps(current_code, indent=2, sort_keys=True) + "\n")
-    with (HERE / "curves.csv").open("w", newline="") as file:
+    (folder / "results.json").write_text(json.dumps(portable, indent=2, allow_nan=False) + "\n")
+    (folder / "engine_code.json").write_text(json.dumps(current_code, indent=2, sort_keys=True) + "\n")
+    with (folder / "curves.csv").open("w", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=list(curves[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(curves)
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 2:
+        raise SystemExit("Usage: analyze.py [experiment_folder]")
+    main(sys.argv[1] if len(sys.argv) == 2 else HERE)

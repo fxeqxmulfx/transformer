@@ -21,6 +21,7 @@ it, which git ignores.
 | [`mod97_size_search`](mod97_size_search) | 12 | What is the smallest tested dense GPTMini that groks mod 97 within 10,000 full epochs? |
 | [`mod97_scalar_mlp`](mod97_scalar_mlp) | 10 | A perceptron reading x and y as two numbers can represent x / y mod 97: why does gradient descent not fit it? A spurious minimum, slowness, divergence, or a step past the curvature? |
 | [`rotate90_analytic`](rotate90_analytic) | 9 | Does SiLU or a near-budget SwiGLU branch improve the published Rotate90 classifier with the same shared E, split, sampler and AdamW settings? |
+| [`rotate90_swiglu_stability`](rotate90_swiglu_stability) | 9 | Do smaller SwiGLU steps prevent the observed loss of fit at matched update and nominal optimizer-time horizons? |
 | [`grokking_progress`](grokking_progress) | 4 | Does a causal held-out symmetry projection reveal rule formation in ordinary softmax transformers before accuracy rises, while rejecting memorization and immediate learning? |
 | [`grokking_internals`](grokking_internals) | 1 | Which frozen probes, answer/EOS gradients, spectra, neuron statistics, head ablations, computation-stage interactions, archived AdamW directions, finite-step curvature, same-gradient moment resets and exact current-logit certificates track ordinary transformer grokking? |
 | [`mod97_stability`](mod97_stability) | 6 | Once GPTMini generalizes x / y mod 97, does it stay generalized, under AdamW and raw AMSGradW? |

@@ -174,6 +174,14 @@ The next control varies the step to test the gated model's instability.
 An actual gradient-attraction mechanism and matched scalar-input/readout
 controls remain open.
 
+The [SwiGLU stability study](experiments/rotate90_swiglu_stability/README.md)
+tests rates 0.01, 0.003 and 0.001 on the same three seeds. It retains a
+common 10,000-update prefix and extends the smaller-rate budgets to nearly
+equal cumulative learning-rate times decay. Per-tensor update and moment
+observations help distinguish optimizer motion from held-out-only failures.
+The nominal clock is an experimental comparison, not an assumed gradient
+flow or exact AdamW orbit equivalence.
+
 ### M9.4 interaction obstruction
 
 `Transformer.Landscape.Neural.Interaction` proves that the actual normalized
