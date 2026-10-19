@@ -181,8 +181,8 @@ the dense controls never fall below 99% after their first crossing.
 Eight energy-selected character pairs retain 100% held-out accuracy in all
 nine final checkpoints. The [experiment results](experiments/rotate90_analytic/README.md)
 contain every seed, full curves, projection ablations and provenance.
-An actual gradient-attraction mechanism and matched scalar-input/readout
-results remain open. The [matched MLP controls](experiments/mod97_representation_controls/README.md)
+An actual gradient-attraction mechanism remains open. The
+[matched MLP controls](experiments/mod97_representation_controls/README.md)
 now separate scalar/one-hot operands, scalar/vector answers, vector MSE/CE
 and decay 0/1 across the same three source splits. All have two SiLU hidden
 layers of width 195. The parameter counts and input fan-in changes are
@@ -197,11 +197,17 @@ The resumed workspace does not contain the ignored raw runs behind that
 snapshot. Its available device is an NVIDIA GeForce GTX 1050 (2 GiB),
 verified with `nvidia-smi` and the locked PyTorch runtime on 2026-10-19;
 the earlier RTX 3050 observation describes the previous environment.
-Board task #74 runs the entire unchanged 36-case grid afresh on one runtime
+Board task #74 completed the entire unchanged 36-case grid afresh on one runtime
 and device. Preserve `progress.json` as the earlier partial cohort and
 do not combine its measurements with the new trajectories. Every new run
-must reach its original 30,000-update budget and pass the checkpoint-replay
-analyzer before a complete comparison is reported.
+reached its original 30,000-update budget and passed exact final-checkpoint
+replay, finite-record, split, source and initialization audits. All three
+one-hot/vector MSE runs without decay finish at 100% on both splits;
+changing either code alone loses this outcome. One-hot/vector CE without
+decay memorizes all three training splits and fails on held-out equations.
+With decay one, CE succeeds only at seed 17 and MSE succeeds in no seed.
+These qualified finite results and every numeric error are retained in the
+complete findings. They do not yet identify the actual attraction mechanism.
 
 Task #75 prepares a full-table Jacobian diagnostic for all twelve scalar
 readouts, at their original initialization and final trained coordinates.

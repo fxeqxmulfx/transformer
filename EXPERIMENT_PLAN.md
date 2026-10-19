@@ -12,11 +12,14 @@ baseline; its completed results remain below. The earlier MLP snapshot has 11
 completed runs, one checkpoint at 25,000 updates and 24 not started; see
 [the retained progress](experiments/mod97_representation_controls/progress.json).
 Those raw ignored checkpoints are absent from the resumed workspace. Task
-#74 runs all 36 cases afresh on the available GTX 1050 and locked runtime,
+#74 completed all 36 cases afresh on the available GTX 1050 and locked runtime,
 preserving the earlier partial snapshot as a separate cohort. The experiment
 definitions, seeds, splits, optimizer and original budgets remain fixed.
-All twelve fresh scalar-output cases and their initial/final Jacobian
-diagnostics have completed; the vector-output arm remains incomplete.
+All 36 cases pass exact final-checkpoint replay and source/split audits;
+all twelve scalar-output cases also have initial/final Jacobian diagnostics.
+The [complete findings](experiments/mod97_representation_controls/README.md)
+include three one-hot/vector MSE successes without decay, three memorizing
+CE failures without decay, and one of three CE successes with decay one.
 The [tangent control](review/mod97_tangent.md) proves a frozen-quadratic GD
 speed limit with a positive-mode, attainable-fit witness. It does not
 identify the actual AdamW attraction or held-out generalization mechanism.

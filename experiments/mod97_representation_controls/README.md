@@ -69,23 +69,87 @@ equations, with raw numeric MSE below 1e-8. That construction only certifies
 expressivity in the test; training always starts from random parameters
 and never receives held-out answers or constructed teacher weights.
 
-## Resumed cohort
+## Completed fresh cohort
 
-Active again at the user's request on 2026-10-19, board task #74. This
-workspace contains the portable partial snapshot below but none of its raw
-ignored run directories. The currently available GPU is an NVIDIA GeForce
-GTX 1050 with 2 GiB VRAM, driver 580.178.04. The locked environment reports
-Python 3.14.8 and PyTorch 2.14.1+cu126 with CUDA 12.6 and working CUDA access.
-The earlier RTX 3050 measurements describe a different environment.
+All 36 original cases completed 30,000 updates, or 3,000 source epochs,
+on 2026-10-19, board task #74. This workspace had the portable partial
+snapshot below but none of its ignored raw checkpoints, so every case was
+run afresh from its original random initialization. No earlier result was
+used to fill a missing case. The available device is an NVIDIA GeForce
+GTX 1050 with 2 GiB VRAM, driver 580.178.04; Python 3.14.8 and the locked
+PyTorch 2.14.1+cu126 use CUDA 12.6. The earlier RTX 3050 observations belong
+to a different environment.
 
-All 36 cases are therefore being run afresh, from their original random
-initializations, on the current device and runtime. No saved result from the
-earlier cohort is used to fill a missing case. The grid, fingerprints, data,
-sampler and budgets are unchanged. `progress.json` remains the historical
-partial cohort; complete new results require every original run and the
-analyzer's source, split, initialization and final-checkpoint replay checks.
+[results.json](results.json) and [curves.csv](curves.csv) retain every seed,
+objective loss, accuracy, numeric error and full canonical curve. The analyzer
+replayed every final checkpoint exactly, verified all split and source pins,
+checked every update's finite gradient record, and confirmed the shared
+initial hidden weights and identical vector-head initializations across
+MSE/CE. `progress.json` remains the unchanged earlier partial cohort.
 Raw new runs are retained at the repository root and linked into the isolated
-worktree so that removing that worktree cannot delete the trajectories.
+worktree. Timings were collected alongside tests and other checks and are
+not uncontended performance benchmarks.
+
+Each triplet below is seed **11 / 17 / 23**. Accuracy is percent; crossings
+are the first observed held-out 99% update at the fixed 100-update cadence.
+A dash means that threshold was never observed within the budget.
+
+| Model / objective | Decay | Final train % | Final held-out % | First held-out 99% update |
+| --- | ---: | --- | --- | --- |
+| `scalar-number-mse` | 0 | 1.37 / 0.99 / 0.79 | 1.22 / 1.27 / 1.10 | — / — / — |
+| `scalar-number-mse` | 1 | 0.95 / 1.10 / 1.42 | 0.86 / 1.12 / 1.70 | — / — / — |
+| `onehot-number-mse` | 0 | 52.96 / 56.98 / 51.91 | 1.18 / 0.97 / 0.95 | — / — / — |
+| `onehot-number-mse` | 1 | 1.22 / 1.25 / 1.05 | 1.03 / 1.12 / 1.18 | — / — / — |
+| `scalar-vector-mse` | 0 | 2.79 / 3.01 / 3.18 | 2.19 / 1.91 / 2.02 | — / — / — |
+| `scalar-vector-mse` | 1 | 2.00 / 2.02 / 2.38 | 2.04 / 1.68 / 1.78 | — / — / — |
+| `onehot-vector-mse` | 0 | 100.00 / 100.00 / 100.00 | 100.00 / 100.00 / 100.00 | 3100 / 3300 / 3300 |
+| `onehot-vector-mse` | 1 | 8.76 / 10.89 / 9.34 | 1.12 / 0.95 / 0.92 | — / — / — |
+| `scalar-vector-ce` | 0 | 25.97 / 24.36 / 26.14 | 8.59 / 8.35 / 7.13 | — / — / — |
+| `scalar-vector-ce` | 1 | 4.47 / 4.25 / 4.64 | 3.59 / 3.35 / 2.90 | — / — / — |
+| `onehot-vector-ce` | 0 | 100.00 / 100.00 / 100.00 | 1.03 / 0.95 / 0.90 | — / — / — |
+| `onehot-vector-ce` | 1 | 52.62 / 100.00 / 70.34 | 2.34 / 100.00 / 6.23 | — / 9800 / — |
+
+Numeric errors are squared residue-value errors. Decoded vector error uses
+argmax labels; scalar continuous error is measured before rounding and can
+differ from decoded error. Full objective losses remain in the portable
+results and have different units across objectives.
+
+| Model / objective | Decay | Held-out decoded numeric MSE | Held-out continuous numeric MSE |
+| --- | ---: | --- | --- |
+| `scalar-number-mse` | 0 | 759.96 / 752.39 / 754.89 | 759.73 / 752.06 / 754.45 |
+| `scalar-number-mse` | 1 | 789.28 / 778.89 / 775.52 | 789.35 / 779.08 / 775.39 |
+| `onehot-number-mse` | 0 | 755.27 / 810.37 / 757.57 | 755.51 / 809.82 / 757.64 |
+| `onehot-number-mse` | 1 | 803.29 / 821.63 / 793.39 | 803.57 / 821.63 / 793.56 |
+| `scalar-vector-mse` | 0 | 2447.60 / 1370.22 / 1719.71 | — |
+| `scalar-vector-mse` | 1 | 1677.82 / 1691.59 / 1721.30 | — |
+| `onehot-vector-mse` | 0 | 0.00 / 0.00 / 0.00 | — |
+| `onehot-vector-mse` | 1 | 1595.98 / 1629.45 / 1571.34 | — |
+| `scalar-vector-ce` | 0 | 1386.58 / 1290.82 / 1412.90 | — |
+| `scalar-vector-ce` | 1 | 2189.47 / 2123.97 / 2131.49 | — |
+| `onehot-vector-ce` | 0 | 1521.97 / 1399.46 / 1539.08 | — |
+| `onehot-vector-ce` | 1 | 1742.51 / 0.00 / 1109.96 | — |
+
+All three one-hot-input, vector-output MSE runs without decay finish at
+100% on both splits. First train 99% is at updates 2,700 / 2,800 / 2,800,
+followed by held-out 99% at 3,100 / 3,300 / 3,300. Therefore this plain MLP
+can learn the division table under the stated split and optimizer protocol;
+CE, tying, a residual branch and normalization are not necessary for these
+three successes. Replacing only the output code by a number, or only the
+input code by two scalars, loses that outcome in these controls. Parameter
+counts and initialization conditioning still differ as documented above.
+
+The loss and decay also interact strongly. Vector CE without decay fits
+every training equation from all three one-hot starts but stays near 1%
+held-out accuracy. With decay one, only seed 17 generalizes: first train
+99% is at 8,600 and first held-out 99% at 9,800. The other two seeds end
+at 52.62% / 70.34% training and 2.34% / 6.23% held-out accuracy. Vector MSE
+with decay one does not fit or generalize in any seed. These finite results
+refute a blanket claim that CE or weight decay alone makes this MLP learn
+the rule. They do not prove asymptotic failure, a trap or a probabilistic
+success rate over unspecified starts.
+Zero FP32 CE losses in the histories reflect rounding; the corresponding
+exact-real loss is positive at every finite parameter vector. They do not
+certify an attained minimum or a stationary point.
 
 ## Jacobian access diagnostic
 
@@ -138,8 +202,8 @@ paired checkpoints are available and the diagnostic finishes.
 All twelve scalar-output controls completed their original budgets. The
 [portable measurements](access_results.json) contain every initial and final
 Jacobian contraction, per-tensor contribution, frozen spectrum and trajectory,
-with source and checkpoint hashes. The vector-output comparison is still
-incomplete at this milestone.
+with source and checkpoint hashes. The complete vector-output comparison is recorded above; this diagnostic
+continues to concern only scalar outputs.
 
 The full-table target Rayleigh quotient below measures absolute local
 sensitivity. The numerical ranks refer to the separate 512-row training
@@ -201,9 +265,9 @@ Stopped at the user's explicit request on 2026-10-19. Eleven of 36 runs
 completed their 30,000-update budget: all six scalar-input number-output
 controls, all three one-hot number-output controls without decay, and the
 one-hot number-output controls with decay at seeds 11 and 17. The remaining
-one-hot number-output run, `onehot-number-mse-wd1-s23`, has a valid checkpoint
+one-hot number-output run, `onehot-number-mse-wd1-s23`, had a valid checkpoint
 at update 25,000 and observations through 25,300. All 24 vector-output
-controls have not started. This is an incomplete comparison.
+controls had not started. That comparison was incomplete.
 
 [progress.json](progress.json) preserves every run's status, completed
 results, the partial observation and raw-file hashes. The recorded lab
@@ -214,12 +278,11 @@ workspace; the new trajectories at `runs/` belong to the fresh cohort above.
 When a checkpoint is available, the normal run command resumes from it and
 rewinds later observations, rather than resuming at an unsaved observation.
 
-The new [analyzer](analyze.py) is committed and syntax-checked; its full-grid
-audit remains unexecuted because the grid is incomplete. Once all 36 runs
-are complete with the recorded lab code and runtime, run it from `python/`
-with `uv run --locked python ../experiments/mod97_representation_controls/analyze.py`.
-It requires every run and replays checkpoints before writing final curves
-and results; no final-results artifact is claimed here.
+At that stop, the [analyzer](analyze.py) had been committed and syntax-checked
+but the full-grid audit remained unexecuted. The completed fresh cohort above
+now passes that audit with its own recorded sources and runtime. Run it from
+`python/` with `uv run --locked python ../experiments/mod97_representation_controls/analyze.py`
+to replay the retained fresh checkpoints.
 
 The full Python suite previously passed 339 tests in 804.625 seconds, with
 three archived GPU comparisons skipped. At the stop, the repeated
