@@ -81,6 +81,10 @@ def cases(device: str, optim: ModuleType) -> Iterator[Workload]:
         "torch-SGD": torch.optim.SGD,
         "torch-AdamW": torch.optim.AdamW,
     }
+    for name in ("ScheduleFreeAMSGradW", "ScheduleFreeAMSGradMD"):
+        factory = getattr(optim, name, None)
+        if factory is not None:
+            factories[name] = factory
     for name, factory in factories.items():
         # Mixed matrix/vector parameters exercise the auxiliary paths too.
         initial = 0.0 if name == "ClippedOptimistic" else 0.25

@@ -84,6 +84,8 @@ class CudaTests(unittest.TestCase):
             (opt.Muon, {}),
             (opt.Dash, {"block": 2, "solver": opt.CoupledNewton(12)}),
             (opt.ScheduleFreeAdamW, {}),
+            (opt.ScheduleFreeAMSGradW, {}),
+            (opt.ScheduleFreeAMSGradMD, {}),
         ):
             with self.subTest(rule=cls.__name__):
                 cpu = torch.nn.Parameter(torch.arange(6, dtype=torch.float64).reshape(2, 3) / 10)

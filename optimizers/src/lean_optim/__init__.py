@@ -34,7 +34,8 @@ from .config import (
 )
 from .geometry import AdaFisher, AMSGradMD, Dash, Guarded, Magma, Muon
 from .optimistic import ClippedOptimistic
-from .schedule_free import ScheduleFreeAdamW, ScheduleFreeSGD
+from .schedule_free import ScheduleFreeAdamW, ScheduleFreeAMSGradW, ScheduleFreeSGD
+from .schedule_free_md import ScheduleFreeAMSGradMD
 
 # Explicit names for paper conventions that differ from torch.optim defaults.
 PaperAdam = Adam
@@ -73,6 +74,8 @@ __all__ = [
     "PaperAdaGrad",
     "PaperAdam",
     "RMSProp",
+    "ScheduleFreeAMSGradMD",
+    "ScheduleFreeAMSGradW",
     "ScheduleFreeAdamW",
     "ScheduleFreeSGD",
     "standard",

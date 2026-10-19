@@ -89,6 +89,33 @@ adds to the logical workspace size.
 
 ## Remaining allocations
 
+### Added Schedule-Free AMSGrad variants
+
+Measured on 2026-10-20 with the same hardware, float32 matrix/vector shapes,
+five warmup steps and five profiled steps. The exact source digest and CPU/CUDA
+records are in [schedule_free_amsgrad_results.json](schedule_free_amsgrad_results.json).
+The allocation regression also requires actual CUDA kernel events in the trace.
+
+| Variant | CUDA allocated bytes/step | Mathematical state bytes | Persistent scratch bytes |
+| --- | ---: | ---: | ---: |
+| ScheduleFreeAMSGradW | 0 | 99,328 | 49,664 |
+| ScheduleFreeAMSGradMD | 0 | 101,892 | 127,257 |
+
+These byte counts are logical storage, with allocator padding excluded. The
+fixed-gradient workloads have 24,832 bytes of parameters. CPU eager execution
+still allocates native scalar wrappers: 168 bytes/step for W and 420 for MD
+in the CPU workloads; their CUDA workloads allocate 112 and 280 host bytes/step.
+Python dispatch also allocates ordinary objects. These measurements concern
+optimizer steps after warmup with fixed shapes; model forward/backward and
+the first initialization or checkpoint reload have their own allocations.
+
+Reproduce with `./run.py optimizer-profile --device cpu` and
+`./run.py optimizer-profile --device cuda`; both variants are included in the
+driver. Older revision snapshots omit variants absent from their public API.
+Profile timings are omitted from the committed records.
+
+### Existing variants
+
 - CPU eager execution still allocates tiny scalar wrappers inside PyTorch:
   Adam uses 72 bytes/step, NDB 960 bytes/step in this workload. Python dispatch
   also creates temporary objects. Zero CUDA tensor traffic is not a claim of

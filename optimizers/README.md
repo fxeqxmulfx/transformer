@@ -26,7 +26,8 @@ optimizer.step()
 Available rules: SGD, native AdamW, AdamWDirection (for stages), raw-moment
 Adam, AMSGrad, AMSGradW, AdamX, AdaGrad, AdamNC, RMSProp, Muon, Dash (blocked
 Shampoo), AdaFisher, AMSGradMD, AtomicColumns, ScheduleFreeSGD,
-ScheduleFreeAdamW and ClippedOptimistic. Guarded, Magma and Clipped compose
+ScheduleFreeAdamW, ScheduleFreeAMSGradW, ScheduleFreeAMSGradMD and
+ClippedOptimistic. Guarded, Magma and Clipped compose
 with the rules described below. The separate
 [correspondence audit](src/lean_optim/LEAN_CORRESPONDENCE.md) maps each rule to Lean and
 records numerical extensions and missing formal coverage. This is a manual
@@ -54,9 +55,15 @@ paper_adam = PaperAdam(model.parameters(), lr=1e-3)  # raw moments, no debiasing
 paper conventions (`Adam`, `AMSGrad`, `AdaGrad`). Guarded and the checked
 AMSGradMD variant add the stated descent/fallback corrections. The latter
 requires `guard_sigma <= 0.5`, including at a halved fallback. Muon, Dash,
-AdaFisher, Magma and the Schedule-Free rules implement their cited methods;
+AdaFisher, Magma, ScheduleFreeSGD and ScheduleFreeAdamW implement their cited methods;
 their presence here is not a claim that this package invented them. The
 audit records the AMSGradW schedule correction as well.
+
+ScheduleFreeAMSGradW and ScheduleFreeAMSGradMD are additional combinations
+defined by this package. Their recurrences, buffer invariants, query-point
+chain rule and base projection are checked in Lean. A convergence theorem
+for these combinations remains unproved; their exact scope is recorded in
+the correspondence audit.
 
 Joint-direction methods take a module or one iterable of tensors. They
 support one parameter group, closures, learning-rate schedulers and ordinary
@@ -81,7 +88,7 @@ optimizer = Clipped(
 )
 ```
 
-Muon and AMSGradMD apply their matrix rule to all 2D tensors by default;
+Muon, AMSGradMD and ScheduleFreeAMSGradMD apply their matrix rule to all 2D tensors by default;
 other parameters use the documented auxiliary rule. AdaFisher takes a module
 with bias-free Linear layers so it can collect input/output-gradient
 factors; call `close()` when replacing it. AtomicColumns uses an explicit matching-family model, task
@@ -94,7 +101,34 @@ evaluation weights; `optimizer.train()` restores the query weights before
 the next training forward. Save the model and optimizer in the same mode.
 ScheduleFreeSGD includes the initial point in its average. ScheduleFreeAdamW
 implements the paper's Algorithm 1, with raw-second-moment epsilon placement,
-decay at the query and squared effective-rate averaging. ClippedOptimistic
+decay at the query and squared effective-rate averaging. ScheduleFreeAMSGradW
+adds a running maximum of the raw second moment. In both, beta1 controls
+interpolation and the gradient is used directly, without a first-moment EMA.
+
+ScheduleFreeAMSGradMD applies that rule separately to the direction and raw
+row/column gains. It computes all three chain-rule gradients at the old
+query factors, projects the updated base direction to its initial radius,
+then averages the latent factors and fuses their next query. Evaluation
+fuses the averaged factors. Component rates may be zero, freezing that
+component while its variance history advances. Each component accumulates
+its own squared-effective-rate averaging weights. Smooth softplus uses
+logaddexp so that sigmoid remains its derivative for large raw gains too.
+
+```python
+from lean_optim import ScheduleFreeAMSGradW, ScheduleFreeAMSGradMD
+
+optimizer = ScheduleFreeAMSGradW(model, lr=1e-3, weight_decay=0.01, warmup=100)
+optimizer = ScheduleFreeAMSGradMD(
+    model,
+    lr=1e-3,
+    gain_rate=1e-3,
+    auxiliary_rate=3e-4,
+    matrix_params=[model.weight],
+    warmup=100,
+)
+```
+
+ClippedOptimistic
 requires zero-initialized tensors and uses one joint radius ball; it chooses
 its own learning rate and takes no external scheduler.
 
@@ -126,7 +160,7 @@ warmup. `--revision 0a70e33d` measures the original implementation without chang
 the checkout. `--scalene` adds CPU/native memory sampling. Reports and Chrome
 traces go to the ignored `optimizers/profiles/` directory.
 
-On the measured float32 CUDA workloads, 22 custom variants make **zero new
+On the measured float32 CUDA workloads, 24 custom variants make **zero new
 device allocations per warmed step**, including coordinate rules, iterative
 DASH, Muon, guarded/masked variants and Schedule-Free methods. This concerns
 optimizer steps with fixed parameter shapes. EVD, native clipping, ordinary

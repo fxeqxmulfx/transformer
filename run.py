@@ -129,8 +129,10 @@ def optimizer_parity(_):
              "Transformer.MagnitudeDirection.SectionA_AMSGradCallbacks", "Transformer.AdamBeyond.Section5_AdamNC",
              "Transformer.AMSGrad.Section5_AdamX", "Transformer.DASH.Section2_Models",
              "Transformer.Magma.Section3_Algorithm", "Transformer.AdaFisher.Section3_Algorithm",
-             "Transformer.Optimization.Basic"])
+             "Transformer.Optimization.Basic", "Transformer.ScheduleFree.AMSGrad",
+             "Transformer.MagnitudeDirection.SectionA_TrainingQuadratic"])
     execute(["lake", "env", "lean", "scripts/OptimizerParity.lean"])
+    execute(["lake", "env", "lean", "scripts/ScheduleFreeAMSGradParity.lean"])
 
 
 def optimizer_lint(_):

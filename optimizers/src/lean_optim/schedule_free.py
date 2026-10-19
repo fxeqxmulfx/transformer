@@ -56,17 +56,20 @@ class ScheduleFreeSGD(BufferedOptimizer):
     def _mode(self, *, training: bool) -> ScheduleFreeSGD:
         group = self.param_groups[0]
         group["training"] = training
-        beta = group.get("beta", group.get("betas", (0.9,))[0])
         for p in group["params"]:
-            state = self.state[p]
-            if training:
-                work = self.workspace.like(p, "work")
-                torch.mul(state["evaluation"], beta, out=p)
-                torch.mul(state["base"], 1 - beta, out=work)
-                p.add_(work)
-            else:
-                p.copy_(state["evaluation"])
+            self._write(p, self.state[p], training=training)
         return self
+
+    def _write(self, output: Tensor, state: StateDict, *, training: bool) -> None:
+        group = self.param_groups[0]
+        beta = group.get("beta", group.get("betas", (0.9,))[0])
+        if training:
+            work = self.workspace.like(output, "work")
+            torch.mul(state["evaluation"], beta, out=output)
+            torch.mul(state["base"], 1 - beta, out=work)
+            output.add_(work)
+        else:
+            output.copy_(state["evaluation"])
 
     def train(self) -> ScheduleFreeSGD:
         """Write the training query into the parameters."""
@@ -132,32 +135,69 @@ class ScheduleFreeAdamW(ScheduleFreeSGD):
         self.param_groups[0].update(betas=betas, weight_decay=weight_decay, eps=eps, warmup=warmup)
         del self.param_groups[0]["beta"]
         for p in self.param_groups[0]["params"]:
-            self.state[p].update(second=torch.zeros_like(p), total=0.0)
+            self.state[p].update(self._second_state(p))
+
+    def _second_state(self, value: Tensor) -> StateDict:
+        return {"second": torch.zeros_like(value), "total": 0.0}
+
+    def _variance(self, state: StateDict, gradient: Tensor) -> Tensor:
+        beta2 = self.param_groups[0]["betas"][1]
+        state["second"].mul_(beta2).addcmul_(gradient, gradient, value=1 - beta2)
+        return state["second"]
+
+    def _advance(self, query: Tensor, gradient: Tensor, state: StateDict, rate: float) -> None:
+        group = self.param_groups[0]
+        state["step"] += 1
+        warmup = min(1.0, state["step"] / group["warmup"]) if group["warmup"] else 1.0
+        eta = rate * (1 - group["betas"][1] ** state["step"]) ** 0.5 * warmup
+        variance = self._variance(state, gradient)
+        state["total"] += eta**2
+        c = eta**2 / state["total"] if state["total"] else 0.0
+        direction = self.workspace.like(query, "direction")
+        work = self.workspace.like(query, "work")
+        torch.sqrt(variance, out=work)
+        work.add_(group["eps"])
+        torch.mul(gradient, eta, out=direction)
+        direction.div_(work)
+        torch.mul(query, eta * group["weight_decay"], out=work)
+        direction.add_(work)
+        state["base"].sub_(direction)
+        if eta and "radius" in state:
+            norm = self.workspace.norm(state["base"])
+            scale = torch.div(
+                state["radius"],
+                self.workspace.safe(norm),
+                out=self.workspace.like(norm, "projection.scale"),
+            )
+            state["base"].mul_(scale)
+        state["evaluation"].mul_(1 - c).add_(state["base"], alpha=c)
 
     @torch.no_grad()
     def step(self, closure: Closure = None) -> Loss:
         """Apply one update, evaluating an optional closure with gradients enabled."""
         loss, parameters = self._gradients(closure)
-        group = self.param_groups[0]
-        beta2 = group["betas"][1]
         for p in parameters:
-            s, g = self.state[p], p.grad
-            s["step"] += 1
-            warmup = min(1.0, s["step"] / group["warmup"]) if group["warmup"] else 1.0
-            eta = group["lr"] * (1 - beta2 ** s["step"]) ** 0.5 * warmup
-            s["second"].mul_(beta2).addcmul_(g, g, value=1 - beta2)
-            s["total"] += eta**2
-            c = eta**2 / s["total"] if s["total"] else 0.0
-            # p is the old query y, needed for the source's independent decay.
-            direction = self.workspace.like(p, "direction")
-            work = self.workspace.like(p, "work")
-            torch.sqrt(s["second"], out=work)
-            work.add_(group["eps"])
-            torch.mul(g, eta, out=direction)
-            direction.div_(work)
-            torch.mul(p, eta * group["weight_decay"], out=work)
-            direction.add_(work)
-            s["base"].sub_(direction)
-            s["evaluation"].mul_(1 - c).add_(s["base"], alpha=c)
+            self._advance(p, p.grad, self.state[p], self.param_groups[0]["lr"])
         self.train()
         return loss
+
+
+class ScheduleFreeAMSGradW(ScheduleFreeAdamW):
+    """Schedule-Free AdamW with a running maximum of the raw second moment.
+
+    This package's extension combines arXiv:2405.15682v4, Section 4.4,
+    Algorithm 1 with arXiv:1904.03590v4, Algorithm 1 and Section 6.
+    beta1 controls interpolation; there is no first-moment EMA. Effective
+    rates, epsilon, query decay and squared-rate averaging follow
+    ScheduleFreeAdamW. The maximum is taken before bias correction.
+    Lean: Transformer.ScheduleFree.AMSGrad.step.
+    """
+
+    def _second_state(self, value: Tensor) -> StateDict:
+        state = super()._second_state(value)
+        state["maximum"] = torch.zeros_like(value)
+        return state
+
+    def _variance(self, state: StateDict, gradient: Tensor) -> Tensor:
+        variance = super()._variance(state, gradient)
+        return torch.maximum(state["maximum"], variance, out=state["maximum"])

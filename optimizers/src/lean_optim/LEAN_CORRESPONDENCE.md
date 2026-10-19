@@ -52,7 +52,51 @@ The PyTorch implementation is the module in this package.
 | AtomicColumns / `atomic.py` | `GPTMini.Sparsemax.matchingMixture_criterion_convex`, `matchingMixture_gap_certificate`, `matchingHeadPrice_minimum_exists`, `GPTMini/Sparsemax/AtomicMatching*.lean`; paired equivalents in `PairedMatching*.lean` | The active weights live on a simplex over physical heads. Order/binding prices are exact only for the two specified scalar cap-one contexts. Q/K Adam search is local and is never called a global price. Finite capacity, finite corrective iterations, line-search tolerances and numerical QP solves are extensions; the abstract Lean theorem does not verify those solvers. A model/task/head-factory protocol supplies the actual family. |
 | ScheduleFreeSGD / `schedule_free.py` | `ScheduleFree.mix`, `query`, `average`, `ScheduleFree/Section2_Averaging.lean`; `schedule_free_sgd`, `Section2_SGD.lean` | Stored base z and evaluation x start at the initial point; x averages z including that initial point. Query y=beta x+(1-beta)z, base moves by -lr g(y). The first new average uses 1/2. The optimal rate theorem additionally specifies lr=D/(G sqrt(T)) and bounded unbiased convex-oracle assumptions. |
 | ScheduleFreeAdamW / `schedule_free.py` | `ScheduleFree.adamStep`, `adamRun`, `ScheduleFree/Section4_AdamW.lean` | Zero raw second moment and total; eta=lr sqrt(1-beta2^t) warmup(t); eta^2 weighted average; decay at the **old query** y. Epsilon is added to sqrt(raw_v). Initial total is zero, so the first positive eta gets weight one. No-warmup and zero-rate total-division cases are explicit. No nonconvex convergence theorem is claimed. |
+| ScheduleFreeAMSGradW / `schedule_free.py` | `ScheduleFree.AMSGrad.step`, `run`, `ScheduleFree/AMSGrad/Defs.lean`; invariants in `Basic.lean` | Package combination of §4.4 Schedule-Free AdamW and AMSGrad's maximum of raw second moments. The first coefficient controls interpolation; the base proposal uses the gradient directly. Query decay, raw epsilon placement and squared-effective-rate averaging follow ScheduleFreeAdamW. Running maxima are monotone, denominators are positive for positive epsilon and reachable averaging coefficients lie in [0,1]. |
+| ScheduleFreeAMSGradMD / `schedule_free_md.py` | `ScheduleFree.AMSGrad.mdStep`, `mdRun`, `mdQueryWeight`, `ScheduleFree/AMSGrad/MagnitudeDirection.lean`; proofs in `MagnitudeInvariants.lean` | Package combination in latent direction/raw-row/raw-column coordinates. The three gradients use the old interpolated factors, and the oracle sees their fused query weight. Project the base direction before averaging; evaluation fuses averaged factors. Each component has independent raw histories, squared-rate totals and rates. Auxiliary tensors follow the W recurrence with zero decay. |
 | ClippedOptimistic / `optimistic.py` | `ScheduleFree.optimisticStep`, `optimisticRun`, `ScheduleFree/SectionD_OptimisticBasic.lean`; `optimistic_regret`, `SectionD_Optimistic.lean` | All buffers and parameters start at zero. Clip g-previous using the **old** peak; update the peak and clipped energy; eta=D/sqrt(new_peak^2+new_energy); project auxiliary after the clipped gradient, then project query after g. One joint Euclidean ball over all tensors; safe division reproduces zero prefixes and D=0. Comparator norm <= D is required by the regret theorem. |
+
+## Schedule-Free AMSGrad combinations
+
+These additions combine arXiv:2405.15682v4, Section 4.4, arXiv:1904.03590v4,
+Algorithm 1 and Section 6, and for MD arXiv:2606.25971v2, Appendix A,
+Algorithm 2. They are local compositions with explicit definitions and
+proved recurrence properties. A convergence theorem for the combined
+optimizers remains unproved.
+
+For every component, v_new=beta2*v+(1-beta2)*g^2 and
+maximum_new=max(maximum,v_new), before the bias-correction factor enters
+eta=rate*sqrt(1-beta2^t)*warmup(t). The actual base proposal uses
+eta*g/(sqrt(maximum_new)+epsilon). `proposal_eq_callback` proves agreement
+with the existing AMSGrad callback at beta-one zero, plus query decay.
+The first coefficient supplies interpolation between the average and base.
+
+MD averages the direction and both **raw** gain vectors. All three chain-rule
+gradients are computed before any factor advances. `md_query_hasDerivAt`
+proves the complete loss directional derivative at the actual fused query,
+under its explicit differentiability hypothesis; linear objectives witness
+that hypothesis. `softplusDerivative_eq_sigmoid` identifies the derivative
+used by PyTorch. Smooth softplus is evaluated with logaddexp rather than a
+finite linear threshold.
+
+`md_base_norm` proves the initial-radius projection property for a nonzero
+candidate and nonzero effective rate. Zero candidates project to zero.
+Zero effective rates freeze the component iterates while histories and
+clocks advance, as `zero_rate_iterates` proves. Averages and queries keep
+their interpolated direction; the two-step scalar checkpoint has base
+direction 2, evaluation direction 0 and training query weight 1.
+
+The Python clocks advance for every participating component on every step;
+all gradients must be dense and present. This keeps their clocks aligned
+with the common time index in Lean. Checkpoints preserve those clocks,
+component totals and train/eval mode. Scratch is discarded on load.
+
+`scripts/ScheduleFreeAMSGradParity.lean` checks three shared checkpoints in
+Lean's kernel: a reachable decreasing-variance AMSGradW run, the MD sphere
+and average case, and a raw-zero-gain chain-rule update with nonzero gain
+rate. The Python suite freezes their expected results and independently
+compares the full MD recurrence to autograd, including large signed raw
+gains, changing rates, warmup, auxiliary parameters and checkpoints.
 
 ## Inverse-root pipeline
 
@@ -94,7 +138,8 @@ its valid sigma <= 1 range. The boundary and rejection are tested.
 ## Reproducible checks
 
 - `./run.py optimizer-parity`: kernel-check rational checkpoints from actual
-  definitions in `scripts/OptimizerParity.lean`; print the optimistic regret
+  definitions in `scripts/OptimizerParity.lean` and the new combinations in
+  `scripts/ScheduleFreeAMSGradParity.lean`; print the optimistic regret
   theorem's axioms. Their literal values are used in `test_lean_cases.py`.
 - `./run.py test`: independent scalar/matrix recurrences, initialization,
   clocks, zero cases, auxiliary selections, checkpoints, all historical

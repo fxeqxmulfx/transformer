@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "date": "2026-10-20",
+  "runtime": {
+    "python": "3.14.8",
+    "torch": "2.14.1+cu126",
+    "cuda": "12.6",
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "cpu_threads": 1
+  },
+  "measurement": {
+    "warmup_steps": 5,
+    "measured_steps": 5,
+    "default_dtype": "float32",
+    "parameter_shapes": [
+      [
+        64,
+        96
+      ],
+      [
+        64
+      ]
+    ],
+    "gradients": "Fixed dense linspace(-0.1,0.2) allocated before profiling.",
+    "allocation_events": "Positive Bytes in raw PyTorch Profiler [memory] events.",
+    "storage_bytes": "Logical unique storage; excludes allocator padding. State and scratch are separate.",
+    "timing": "Profiler timing and process-wide resident totals are omitted; no throughput claim."
+  },
+  "runs": {
+    "cpu": {
+      "source": "working-tree",
+      "source_sha256": "bbbd2435e1009afcda23536f803ed0215a0dbec76bd4af955535f3c96ab284f5",
+      "cases": {
+        "ScheduleFreeAMSGradW": {
+          "iterations": 5,
+          "parameter_bytes": 24832,
+          "parameter_dtypes": "torch.float32",
+          "state_bytes": 99328,
+          "workspace_bytes": 49664,
+          "cpu_allocation_events_per_step": 28.0,
+          "cpu_bytes_per_step": 168.0,
+          "cpu_peak_extra_bytes": 12,
+          "device_allocation_events_per_step": 0.0,
+          "device_bytes_per_step": 0.0,
+          "device_peak_extra_bytes": 0
+        },
+        "ScheduleFreeAMSGradMD": {
+          "iterations": 5,
+          "parameter_bytes": 24832,
+          "parameter_dtypes": "torch.float32",
+          "state_bytes": 101892,
+          "workspace_bytes": 127257,
+          "cpu_allocation_events_per_step": 70.0,
+          "cpu_bytes_per_step": 420.0,
+          "cpu_peak_extra_bytes": 12,
+          "device_allocation_events_per_step": 0.0,
+          "device_bytes_per_step": 0.0,
+          "device_peak_extra_bytes": 0
+        }
+      }
+    },
+    "cuda": {
+      "source": "working-tree",
+      "source_sha256": "bbbd2435e1009afcda23536f803ed0215a0dbec76bd4af955535f3c96ab284f5",
+      "cases": {
+        "ScheduleFreeAMSGradW": {
+          "iterations": 5,
+          "parameter_bytes": 24832,
+          "parameter_dtypes": "torch.float32",
+          "state_bytes": 99328,
+          "workspace_bytes": 49664,
+          "cpu_allocation_events_per_step": 14.0,
+          "cpu_bytes_per_step": 112.0,
+          "cpu_peak_extra_bytes": 8,
+          "device_allocation_events_per_step": 0.0,
+          "device_bytes_per_step": 0.0,
+          "device_peak_extra_bytes": 0,
+          "peak_extra_bytes": 0
+        },
+        "ScheduleFreeAMSGradMD": {
+          "iterations": 5,
+          "parameter_bytes": 24832,
+          "parameter_dtypes": "torch.float32",
+          "state_bytes": 101892,
+          "workspace_bytes": 127257,
+          "cpu_allocation_events_per_step": 35.0,
+          "cpu_bytes_per_step": 280.0,
+          "cpu_peak_extra_bytes": 8,
+          "device_allocation_events_per_step": 0.0,
+          "device_bytes_per_step": 0.0,
+          "device_peak_extra_bytes": 0,
+          "peak_extra_bytes": 0
+        }
+      }
+    }
+  }
+}

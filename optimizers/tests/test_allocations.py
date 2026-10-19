@@ -40,6 +40,8 @@ def _factories() -> dict[str, Callable[[list[torch.Tensor]], torch.optim.Optimiz
         "Clipped": lambda p: opt.Clipped(opt.Adam(p)),
         "ScheduleFreeSGD": opt.ScheduleFreeSGD,
         "ScheduleFreeAdamW": opt.ScheduleFreeAdamW,
+        "ScheduleFreeAMSGradW": opt.ScheduleFreeAMSGradW,
+        "ScheduleFreeAMSGradMD": opt.ScheduleFreeAMSGradMD,
         "ClippedOptimistic": opt.ClippedOptimistic,
     }
 
@@ -54,6 +56,44 @@ def _parameters(name: str) -> list[torch.Tensor]:
 
 class AllocationTests(unittest.TestCase):
     """Check actual allocations and ownership beyond the mathematical recurrences."""
+
+    @unittest.skipUnless(torch.cuda.is_available(), "CUDA unavailable")
+    def test_schedule_free_amsgrad_warmed_cuda_steps_allocate_no_device_storage(self) -> None:
+        """Check positive raw CUDA allocator events with active kernel tracing."""
+        for factory in (opt.ScheduleFreeAMSGradW, opt.ScheduleFreeAMSGradMD):
+            with self.subTest(rule=factory.__name__), tempfile.TemporaryDirectory() as directory:
+                parameters = [
+                    torch.nn.Parameter(torch.full(shape, 0.25, device="cuda"))
+                    for shape in ((64, 96), (64,))
+                ]
+                for p in parameters:
+                    p.grad = torch.linspace(-0.1, 0.2, p.numel(), device="cuda").reshape_as(p)
+                optimizer = factory(parameters)
+                for _ in range(5):
+                    optimizer.step()
+                torch.cuda.synchronize()
+                with torch.profiler.profile(
+                    activities=[
+                        torch.profiler.ProfilerActivity.CPU,
+                        torch.profiler.ProfilerActivity.CUDA,
+                    ],
+                    profile_memory=True,
+                ) as profile:
+                    for _ in range(5):
+                        optimizer.step()
+                    torch.cuda.synchronize()
+                trace = Path(directory) / "trace.json"
+                profile.export_chrome_trace(str(trace))
+                events = json.loads(trace.read_text())["traceEvents"]
+                self.assertTrue(any(event.get("cat") == "kernel" for event in events))
+                allocations = [
+                    event["args"]["Bytes"]
+                    for event in events
+                    if event["name"] == "[memory]"
+                    and event["args"]["Device Type"] == 1
+                    and event["args"]["Bytes"] > 0
+                ]
+                self.assertEqual(allocations, [])
 
     def test_warmed_steps_do_not_allocate_parameter_sized_tensors(self) -> None:
         """Check raw allocator events, including temporaries freed within one operator."""

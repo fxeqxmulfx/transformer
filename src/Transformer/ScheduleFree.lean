@@ -8,6 +8,7 @@ public import Transformer.ScheduleFree.SectionD_Optimistic
 public import Transformer.ScheduleFree.SectionE_StrongConvex
 public import Transformer.ScheduleFree.SectionF_LargeSteps
 public import Transformer.ScheduleFree.Section4_AdamW
+public import Transformer.ScheduleFree.AMSGrad
 
 /-!
 # The Road Less Scheduled
