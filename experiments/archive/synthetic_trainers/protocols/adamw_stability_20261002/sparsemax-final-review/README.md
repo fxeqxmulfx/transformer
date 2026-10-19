@@ -14,9 +14,12 @@ to their former paths, so replaying it needs that historical checkout and
 its frozen inputs. Its `all_original_frozen_sources_unchanged` assertion
 checks sources at startup; it is not a continuous filesystem monitor.
 
-`verify_observations.py` independently recomputes the inspection using the
-lab at `d03f594`. The source and its output, `independent_review.json`, are
-exact snapshots. The embedded lab source hashes have been checked against
+`verify_observations.py` independently recomputes the inspection. The original
+review used the lab at `d03f594`; its output, `independent_review.json`, retains
+the exact original program source and its hash. The current verifier resolves
+its paths from this bundle and reads the bundled inspector and observations,
+so it needs no old Git objects or author workspace. Its numerical operations
+are unchanged. The embedded lab source hashes have been checked against
 that git commit, and the current frozen checkpoint bytes against both
 recorded hashes. `manifest.json` records all bundle file hashes and input
 provenance. The later optional QKNorm initialization field was absent from
@@ -62,8 +65,12 @@ evaluations with both accuracies at least 99%, and a final accuracy of
 accuracy are reported separately; the archived softmax reference itself
 does not satisfy strict persistence.
 
-The scripts preserve their original source and workspace paths for
-provenance. To replay the independent inspection, use the pinned lab
-source, retain the ignored frozen inputs at those paths, and run the
-verifier with plain `uv run --locked python` from `python/`. A new output
-should be compared with the archived record rather than replacing it.
+Historical paths remain in the archived records as provenance. To replay the
+independent inspection, use the pinned lab source and put the two frozen
+checkpoints under this checkout's
+`experiments/archive/synthetic_trainers/runs/adamw_stability_20261002/attention_mod193_fraction25_lr0003_budget300k/`.
+Run the verifier with plain `uv run --locked python` from `python/`.
+The new record is written to
+`experiments/archive/synthetic_trainers/runs/mod193-archive-independent-review.json`.
+The original machine's absolute paths are not required. Compare this output
+with the archived record rather than replacing it.

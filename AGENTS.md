@@ -31,9 +31,12 @@ experiments in `experiments/`. `./run.py` runs every task.
   hour another agent may take it over: claim again to renew, `release ID` to give up.
 - Each agent works in its own worktree, made when it starts and removed with its
   branch when it stops: `git worktree add -b <name> .claude/worktrees/<name> main`.
-  One that trains nothing leaves out `experiments/` (43 MB instead of 1.3 GB): add
-  `--no-checkout`, then run `git sparse-checkout set --no-cone '/*' '!/experiments/'`
-  and `git checkout` in it. `agent-kanban` and `dt` find their files from there.
+  One that trains nothing may leave out the large archived outputs: add
+  `--no-checkout`, then run
+  `git sparse-checkout set --no-cone '/*' '!/experiments/archive/'` and
+  `git checkout` in it. Keep active experiment sources local: Python tests import
+  them. Do not replace `experiments/` with a link to another checkout.
+  `agent-kanban` and `dt` find their files from there.
 - A worktree's ignored files die with it: link its `papers`, `.lake/packages` and
   the `runs` of every experiment it trains to the root's. Its first `lake build`
   links into `.lake/build`, read-only, every module that Lake's artifact cache
@@ -128,3 +131,8 @@ experiments in `experiments/`. `./run.py` runs every task.
 - uv only through `./run.py` or plain `uv run --locked` inside `python/`; never
   `--active`, never at the root.
 - Before committing: `./run.py test`.
+- Historical numerical references are bundled in `python/tests/references/sources/`;
+  measured benchmark sources are frozen in `scripts/fixtures/optimizer_benchmark/`.
+  `./run.py references` checks their hashes without Git or another checkout.
+  Only an explicit `./run.py references --rebuild` needs the pinned Git history;
+  never regenerate references from the implementation under test.

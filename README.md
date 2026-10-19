@@ -17,11 +17,18 @@ Lean in `src/` formalizes the manuscripts in `papers/`; the lab in
   names.
 
 Before committing, `./run.py verify` builds Lean, audits axioms, regenerates
-the index, checks forbidden constructs, and runs the Python tests. Strict
+the index, checks forbidden constructs and reference source hashes, and runs
+the Python tests. Strict
 lint is optional following the user's instruction: `./run.py lint` runs
 `lake --wfail lint --builtin-lint --linters=linter.all --code-quality` manually.
 `./run.py kernel` is an optional kernel replay; the 39 existing unfinished
 statements are retained and are not claimed to pass that checker.
+
+The checkout contains the experiment sources and historical regression
+references it needs. It does not require neighboring repositories, the
+original author's local paths, or old Git objects to run tests. Mathlib and
+the locked Python packages remain normal dependencies. `./run.py references`
+checks the local reference snapshots without Git or network access.
 
 ## The minimal run
 

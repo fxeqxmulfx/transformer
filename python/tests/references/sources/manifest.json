@@ -1,0 +1,64 @@
+{
+  "benchmark": {
+    "files": {
+      "__init__.py": "350183f29d81e839357d0299c03b16a9bf715077096e02dcb974c1c3f52ae82e",
+      "attention.py": "11416591081b0b54ec2e904434ba16a92556707e40db14ac5f299fd5ad70f9fa",
+      "common.py": "b3d57ccafe3350631acc31ac000d3b55627d2ed8c4c87b1c30173cfe66fa834d",
+      "coordinate.py": "4446687f796f85090acb7ac37834f5c7e31a11f34912cc08ffa28c81683dc85f",
+      "data.py": "b497162a9831c390956fd417fccad642cb19276b7f91d3143c1db98f116059f1",
+      "fisher.py": "d5b3d5a676955e98a4406543d5a1cceabfa4ba304fe49993d09d46eccad7fece",
+      "matrix.py": "3c39943d1486460c1f5a798456ba02ec40245bbfb5645654be20ad5a9831b21e",
+      "registry.py": "c98eedcdd130580dcfab4114478e4b41bc5e59d8aec1f77e0639202cb3fc8264",
+      "report.py": "d16bd30b8b975db12c63f6d2a92f7e8a016d52330e831169f597048b5e0a6a3c",
+      "roots.py": "bd3d428e961a7bdfab0ea66d70880d2d34de2c1f1ac39373ac66e3212f893ce6",
+      "runner.py": "b314df5abb9dcbaa96a05cf5b666ca19f4fa86a87119b85c6089d327a9faeb26",
+      "storage.py": "c3e4f4c3c932d142bd4e517c50fa2af6ed780fef2a4c83367238078654a1b7eb",
+      "tests/__init__.py": "cc0b4384f9fbca36b47d789ba0273e564298ad142af79663c2be4261ffc40203",
+      "tests/test_coordinate.py": "3037c882871cc7f25ca05c2dd31850f9c94512005652f46f51e95cc07a8a49e2",
+      "tests/test_fisher.py": "3e03b5a81728e13672355c5c27b2e64d00d4ae0795f27722eb9db4643c0a31a8",
+      "tests/test_matrix.py": "14af5d6db15b022dc46b0ea77a5814a6d544abdb60be820af140fdbba8a01b92",
+      "tests/test_protocol.py": "08d41e2753f197fadde4287a1f3b4822bd4720a15a45aecc5a99f5779197c3f4",
+      "tests/test_storage.py": "1dd44bae1153895e968dab2f6de00bb7ff5da9306aab5d813ce0aa711ec64a25"
+    },
+    "revision": "2aec5b9711b600d8cebd5ba4ebd653bb06e5bd4b"
+  },
+  "format": 1,
+  "references": {
+    "253d5c6d44a51ff0a828056319bf29d8a84b161b": {
+      "archive": "253d5c6d44a51ff0a828056319bf29d8a84b161b.tar.gz",
+      "kind": "synthetic",
+      "members": 296,
+      "sha256": "bfc023c91d2d1069bda4841f54f2675b4a69ae79826888738d277280f7443e38"
+    },
+    "317db81d49ec6895ccb0c7d2f1e58bf39eb05403": {
+      "archive": "317db81d49ec6895ccb0c7d2f1e58bf39eb05403.tar.gz",
+      "kind": "text",
+      "members": 294,
+      "sha256": "32b8da6a6f755fc291bde85174c2a3ad60fcc5fe3b7225f28007acee95a454d7"
+    },
+    "3bae214fd24752fa7a36a668c8cbeb6209ba0000": {
+      "archive": "3bae214fd24752fa7a36a668c8cbeb6209ba0000.tar.gz",
+      "kind": "recall",
+      "members": 298,
+      "sha256": "45c598bc9bc3d07186c8b5cff3c1d6dddc83a9989851ab7f67e692b741d4390e"
+    },
+    "83a4c81702cde67d0de94c2e7c65bb983ee1a79c": {
+      "archive": "83a4c81702cde67d0de94c2e7c65bb983ee1a79c.tar.gz",
+      "kind": "zoo",
+      "members": 295,
+      "sha256": "b4d8fcfe483d37a591df4a277eb0449dcb5f6ef3f21581e5aa231224c0fa8c24"
+    },
+    "95f73a907cff8eec1b637c144a3b900234152b9b": {
+      "archive": "95f73a907cff8eec1b637c144a3b900234152b9b.tar.gz",
+      "kind": "modular",
+      "members": 293,
+      "sha256": "8a08d26629ef8deb4d2af143e70cbab07e7e4f226354fbed9016ea5d6e5112c0"
+    },
+    "f5def7e425f4f8b3e911c5c72c4cc193a7d99614": {
+      "archive": "f5def7e425f4f8b3e911c5c72c4cc193a7d99614.tar.gz",
+      "kind": "memorization",
+      "members": 296,
+      "sha256": "747792f6ee3a528bb7cbb1265dc8490dde5fe742c1261e5040537f456744956b"
+    }
+  }
+}

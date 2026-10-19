@@ -119,6 +119,15 @@ read a cited source with `git show <commit>:<path>`:
 | the synthetic trainers' modules, `paper_reproduction.*` | `experiments/synthetic_trainers/` | `5d64147` |
 | the convex MQAR comparison's modules | `experiments/convex_mqar/src/convex_mqar/` | `9416d03` |
 
+Regression tests use the exact historical source snapshots checked in under
+`tests/references/sources/`, with pinned revisions and SHA256 hashes. They do
+not need those Git objects or another local repository. The optimizer
+benchmark's measured source files are also retained, byte for byte, under
+`scripts/fixtures/optimizer_benchmark/`. Old absolute paths in archived
+metadata identify those files; checks resolve them to these local snapshots.
+`../run.py references` verifies both sets; see
+[`tests/fixtures/README.md`](tests/fixtures/README.md) for replay and maintenance.
+
 Their records are kept in [`experiments/archive/`](../experiments/archive),
 a folder per codebase: the reference `gpt_mini.py`, which the Lean
 formalization and the lab cite as GPTMini, with the plans and results of its

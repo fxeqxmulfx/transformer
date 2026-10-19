@@ -3,10 +3,12 @@
 The checked-in JSON files retain the original measurements and configurations.
 Floating-point outputs and gradients are compared to the original implementation
 running with this test process's PyTorch, rather than another wheel or CPU.
-No reference imports lab, and missing Git history is an error, never a skip.
+No reference imports lab. Sources are bundled locally with their original Git
+revision and SHA256, so replays also work in a source archive or shallow clone.
 """
 
 from functools import cache
+import hashlib
 import io
 import json
 import os
@@ -30,17 +32,16 @@ REVISIONS = {
 
 
 def export_sources(revision, destination):
-    """Export tracked Python sources only, without a worktree or executable hooks."""
-    entries = subprocess.check_output(
-        ["git", "ls-tree", "-r", revision, "--", "experiments", "legacy/gpt_mini"],
-        cwd=ROOT, text=True).splitlines()
-    paths = [entry.split("\t", 1)[1] for entry in entries
-             if entry.startswith("120000 ") or entry.endswith((".py", "reference-source.json", "/migration.json"))]
-    paths = [path for path in paths
-             if not any(part in path.split("/") for part in ("baselines", "protocols", "runs", "tests"))
-             and not path.endswith("tinyshakespeare.txt")]
-    archive = subprocess.check_output(["git", "archive", revision, "--", *paths], cwd=ROOT)
-    with tarfile.open(fileobj=io.BytesIO(archive)) as source:
+    """Extract the checked-in independent sources; missing or changed bundles fail."""
+    bundles = REFERENCES / "sources"
+    manifest = json.loads((bundles / "manifest.json").read_text())
+    entry = manifest["references"][revision]
+    if entry["archive"] != f"{revision}.tar.gz":
+        raise ValueError(f"Unexpected reference archive path: {revision}")
+    data = (bundles / entry["archive"]).read_bytes()
+    if hashlib.sha256(data).hexdigest() != entry["sha256"]:
+        raise ValueError(f"Historical reference source has changed: {revision}")
+    with tarfile.open(fileobj=io.BytesIO(data)) as source:
         source.extractall(destination, filter="data")
 
 

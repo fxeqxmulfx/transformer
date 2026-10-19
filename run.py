@@ -14,6 +14,7 @@ Lean
 Python (the uv project in python/; an experiment is a folder under experiments/)
     setup                         install the locked environment
     test [pattern ...]            run the test suite, optionally only tests matching patterns
+    references [--rebuild]         check bundled reference sources; optionally rebuild from pinned Git objects
     blocks                        list the experiment language
     check <experiment>            load an experiment and list its runs
     show <experiment> <label>     print one run's description
@@ -22,7 +23,7 @@ Python (the uv project in python/; an experiment is a folder under experiments/)
     profile <experiment> <label>  train one run afresh under Scalene's CPU profiler; print where its time goes
 
 Together
-    verify                        build, audit, index, forbidden and test
+    verify                        build, audit, index, forbidden, reference integrity and test
     papers [--dry-run]            fetch every cited arXiv paper missing from papers/
     clean                         remove Python bytecode caches
 
@@ -89,9 +90,14 @@ def setup(_):
 
 
 def test(arguments):
+    references(argparse.Namespace(rebuild=False))
     patterns = [flag for pattern in arguments.patterns for flag in ("-k", pattern)]
     execute(["uv", "run", "--locked", "python", "-m", "unittest", "discover", "-s", "tests", *patterns],
             cwd=PYTHON)
+
+
+def references(arguments):
+    execute([sys.executable, "scripts/reference_sources.py", *(["--rebuild"] if arguments.rebuild else [])])
 
 
 def verify(arguments):
@@ -140,6 +146,9 @@ def main():
     command = tasks.add_parser("test")
     command.add_argument("patterns", nargs="*")
     command.set_defaults(handler=test)
+    command = tasks.add_parser("references")
+    command.add_argument("--rebuild", action="store_true")
+    command.set_defaults(handler=references)
     tasks.add_parser("blocks").set_defaults(handler=lambda _: lab("blocks"))
     command = tasks.add_parser("check")
     command.add_argument("experiment")

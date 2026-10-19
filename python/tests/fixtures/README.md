@@ -6,7 +6,7 @@ PyTorch wheel or another CPU produce an old wheel's floating-point bytes.
 
 Numerical model and training tests replay those immutable implementations
 with the current test interpreter and PyTorch. `reference_fixtures.py`
-exports Python sources from the pinned Git commits to a temporary directory;
+extracts the bundled Python sources from the pinned Git commits to a temporary directory;
 the helpers in `../references/` measure the original models and trainers in
 an isolated subprocess. A reference importing `lab` fails. Initialization is
 compared exactly to that independent replay, and scientific configurations
@@ -29,10 +29,17 @@ dedicated nonfinite-handling test exercises its failure condition explicitly.
 Archived CUDA measurements are compared only on their recorded GPU and PyTorch
 build; current CUDA execution is covered separately by the engine and kernel tests.
 
-These tests need the repository's historical Git objects, as well as the
-locked Python environment. Use a full clone when running them; missing
-history fails visibly and never skips a regression. Replays require no
-network access and create no worktrees or persistent fixtures.
+The six immutable source archives and their SHA256 manifest are checked in
+under `../references/sources/`. Tests need only this checkout and the locked
+Python environment; shallow clones and source archives work without Git,
+network access, or another checkout. Missing or modified bundles fail visibly
+and never skip a regression. Links inside the archives resolve within each
+exported tree. Replays create no worktrees or persistent fixtures.
+
+`./run.py references` verifies the bundled archives and the frozen optimizer
+benchmark sources without Git. An explicit `./run.py references --rebuild`
+recreates them from the pinned historical commits and checks the original
+benchmark hashes; only this maintenance operation needs the old Git objects.
 
 The frozen text trainers call CUDA timing hooks even for CPU runs. The replay
 replaces only those timing hooks with no-ops in the trainer's local `torch`

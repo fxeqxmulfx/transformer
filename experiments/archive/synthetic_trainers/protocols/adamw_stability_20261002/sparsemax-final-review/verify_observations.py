@@ -16,7 +16,6 @@ import json
 import math
 from pathlib import Path
 import runpy
-import subprocess
 import time
 
 import torch
@@ -28,11 +27,12 @@ from lab.infrastructure.nn import build_model
 from lab.infrastructure.nn.legacy import import_state
 
 
-ROOT = Path('/home/misha/lean_projects/transformer')
+BUNDLE = Path(__file__).resolve().parent
+ROOT = BUNDLE.parents[5]
 ARCHIVE = ROOT / 'experiments/archive/synthetic_trainers'
 RAW = ARCHIVE / 'runs/adamw_stability_20261002/attention_mod193_fraction25_lr0003_budget300k'
-OBSERVATIONS = ARCHIVE / 'runs/adamw_stability_20261002/bootstrap/sparsemax-generalization-inspection-20261003/observations.json'
-OUTPUT = Path('/tmp/mod193-archive-independent-review.json')
+OBSERVATIONS = BUNDLE / 'observations.json'
+OUTPUT = ARCHIVE / 'runs/mod193-archive-independent-review.json'
 ROUNDING_FIELDS = {'entropy_sum', 'mean_entropy', 'numerator_mass_sum', 'denominator_mass_sum',
                    'score_gradient_L2', 'CPU_loss'}
 DIFFERENCES = []
@@ -183,8 +183,7 @@ def main():
     assert not torch.cuda.is_initialized()
     torch.set_num_threads(1)
     archived = json.loads(OBSERVATIONS.read_text())
-    program = subprocess.run(['git', 'show', '441f47b:experiments/archive/synthetic_trainers/protocols/adamw_stability_20261002/inspect_sparsemax_generalization.py'],
-                             cwd=ROOT, check=True, capture_output=True).stdout
+    program = (BUNDLE / 'inspector_441f47b.py').read_bytes()
     assert hashlib.sha256(program).hexdigest() == archived['program_sha256']
     study = runpy.run_path(str(ROOT / 'experiments/mod193_stability/experiment.py'))['experiments']
     corpus = make_corpus(study['base'].benchmark, 0)
