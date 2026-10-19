@@ -25,20 +25,31 @@ class MatrixTests(unittest.TestCase):
     """Numerical checks for matrix."""
 
     def test_dash_promotes_packed_gradients_like_torch_cat(self) -> None:
-        """Check a float32 matrix and float64 auxiliary vector against a float64 update."""
-        matrix = torch.nn.Parameter(torch.tensor([[0.25, 0.75], [-0.125, 0.5]]))
-        auxiliary = torch.nn.Parameter(torch.tensor([1.0, -1.0], dtype=torch.float64))
-        reference = [torch.nn.Parameter(p.detach().double()) for p in (matrix, auxiliary)]
-        optimizer = opt.Dash([matrix, auxiliary], solver=opt.NewtonDB(3), block=2)
-        control = opt.Dash(reference, solver=opt.NewtonDB(3), block=2)
-        matrix.grad = torch.tensor([[0.125, -0.75], [0.25, 0.5]])
-        auxiliary.grad = torch.tensor([1.0 + 2**-40, 2**-40], dtype=torch.float64)
-        for original, copied in zip((matrix, auxiliary), reference, strict=True):
-            copied.grad = original.grad.double()
-        optimizer.step()
-        control.step()
-        torch.testing.assert_close(matrix, reference[0].float(), rtol=0, atol=0)
-        torch.testing.assert_close(auxiliary, reference[1], rtol=0, atol=0)
+        """Check both parameter orders against a float64 matrix/vector update."""
+        for reverse in (False, True):
+            with self.subTest(reverse=reverse):
+                matrix = torch.nn.Parameter(torch.tensor([[0.25, 0.75], [-0.125, 0.5]]))
+                auxiliary = torch.nn.Parameter(torch.tensor([1.0, -1.0], dtype=torch.float64))
+                parameters = [auxiliary, matrix] if reverse else [matrix, auxiliary]
+                reference = [torch.nn.Parameter(p.detach().double().clone()) for p in parameters]
+                optimizer = opt.Dash(parameters, solver=opt.NewtonDB(3), block=2)
+                control = opt.Dash(reference, solver=opt.NewtonDB(3), block=2)
+                for sign in (1, -1, 0):
+                    matrix.grad = sign * torch.tensor([[0.125, -0.75], [0.25, 0.5]])
+                    auxiliary.grad = sign * torch.tensor(
+                        [1.0 + 2**-40, 2**-40], dtype=torch.float64
+                    )
+                    for original, copied in zip(parameters, reference, strict=True):
+                        copied.grad = original.grad.double()
+                    optimizer.step()
+                    control.step()
+                    for original, copied in zip(parameters, reference, strict=True):
+                        torch.testing.assert_close(
+                            original, copied.to(original.dtype), rtol=0, atol=0
+                        )
+                self.assertTrue(
+                    all(value.dtype == torch.float64 for value in optimizer.state["dash"].values())
+                )
 
     def test_buffered_roots_preserve_the_functional_operation_order(self) -> None:
         """Check float32/64 results against the original allocating recurrences bit for bit."""

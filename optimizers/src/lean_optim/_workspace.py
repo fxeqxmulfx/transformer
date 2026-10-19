@@ -142,6 +142,18 @@ class BufferedOptimizer(torch.optim.Optimizer):
         self.workspace = Workspace()
 
     def load_state_dict(self, state_dict: StateDict) -> None:
-        """Restore mathematical state and discard temporary work buffers."""
+        """Restore shared tensors to their constructed placement and discard scratch."""
+        shared = {name: state for name, state in self.state.items() if isinstance(name, str)}
         super().load_state_dict(state_dict)
+        # PyTorch casts parameter states, but copies string-keyed state as is.
+        # Each constructed tensor supplies its own dtype/device, including
+        # int64 counters and MAGMA scales for matrices with different dtypes.
+        for name, template in shared.items():
+            if name in self.state:
+                self.state[name] = {
+                    key: value.to(template[key])
+                    if isinstance(value, Tensor) and isinstance(template.get(key), Tensor)
+                    else value
+                    for key, value in self.state[name].items()
+                }
         self.workspace.buffers.clear()

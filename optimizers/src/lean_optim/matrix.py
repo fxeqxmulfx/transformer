@@ -162,7 +162,7 @@ class Dash(DirectionOptimizer):
         self.positions = {shape: torch.stack(group) for shape, group in blocks.items()}
 
         def zeros(*shape: int) -> Tensor:
-            return parameter.new_zeros(shape)
+            return parameter.new_zeros(shape, dtype=self.packed_dtype)
 
         self.state["dash"] = {
             f"{height}x{width}.{name}": zeros(len(positions), *shape)

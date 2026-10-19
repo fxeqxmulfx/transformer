@@ -74,6 +74,11 @@ captured. Schedule-Free uses eager execution. Moment hyperparameters
 are stored in the parameter group; schedule/solver settings use plain dicts
 in state dictionaries. Recreate the same matrix selection and stages before
 loading a checkpoint. Clipping/stage settings must also match construction.
+Shared histories and stage buffers load onto the constructed optimizer's
+device and dtype, while integer counters retain their integer dtype. DASH
+uses the promoted dtype of all participating parameters for its batched
+histories, including mixed-dtype groups in either parameter order. Construct
+the optimizer after placing the model parameters on their intended device.
 
 ```python
 # Select matrices explicitly to exclude embeddings and readouts.
