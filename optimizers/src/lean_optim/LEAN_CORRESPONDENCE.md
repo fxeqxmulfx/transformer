@@ -101,6 +101,13 @@ its valid sigma <= 1 range. The boundary and rejection are tested.
   optimizer trajectories, active matching examples and lab integration.
 - CUDA tests: shared-gradient CPU/GPU updates and graph replay reading
   current gradient/rate tensors; skipped explicitly when CUDA is absent.
+- Buffered root tests compare float32/64 outputs bit for bit with the original
+  allocating recurrences, including reverse scalar division and Chebyshev degrees
+  0, 1 and larger. Workspaces change storage lifetimes, not the paper recurrences.
+- Allocation tests check raw warmed-step allocator events, released old gradients,
+  bounded caches, checkpoint invalidation, retained Fisher graphs and dtype
+  promotion across autocast contexts. Mixed-dtype DASH packing retains the
+  promotion of the original `torch.cat` implementation.
 - `./run.py package`: build a copied standalone directory, install the
   wheel without dependencies into a fresh target, block lab imports, check
   torch-only runtime metadata, and rerun the package tests from another cwd.

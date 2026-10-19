@@ -1,14 +1,38 @@
+# Copyright (c) 2026 Mikhail Borisov
 """PyTorch optimizers with explicit Lean recurrence correspondence.
 
 Importing this package needs only PyTorch and Python's standard library.
 See README.md for usage and LEAN_CORRESPONDENCE.md for certification limits.
 """
 
+from __future__ import annotations
+
 from torch import optim as standard
 
-from .api import AdaGrad, Adam, AdamNC, AdamW, AdamWDirection, AdamX, AMSGrad, AMSGradW, Clipped, RMSProp, SGD
+from .api import (
+    SGD,
+    AdaGrad,
+    Adam,
+    AdamNC,
+    AdamW,
+    AdamWDirection,
+    AdamX,
+    AMSGrad,
+    AMSGradW,
+    Clipped,
+    RMSProp,
+)
 from .atomic import AtomicColumns
-from .config import Chebyshev, Constant, CoupledNewton, EVD, Geometric, Inverse, InverseSqrt, NewtonDB
+from .config import (
+    EVD,
+    Chebyshev,
+    Constant,
+    CoupledNewton,
+    Geometric,
+    Inverse,
+    InverseSqrt,
+    NewtonDB,
+)
 from .geometry import AdaFisher, AMSGradMD, Dash, Guarded, Magma, Muon
 from .optimistic import ClippedOptimistic
 from .schedule_free import ScheduleFreeAdamW, ScheduleFreeSGD
@@ -19,7 +43,38 @@ PaperAMSGrad = AMSGrad
 PaperAdaGrad = AdaGrad
 
 __version__ = "0.1.0"
-__all__ = ["AdaGrad", "AdaFisher", "Adam", "AdamNC", "AdamW", "AdamWDirection", "AdamX", "AMSGrad", "AMSGradW",
-           "AMSGradMD", "AtomicColumns", "Clipped", "ClippedOptimistic", "Dash", "Guarded", "Magma", "Muon",
-           "RMSProp", "SGD", "ScheduleFreeAdamW", "ScheduleFreeSGD", "Chebyshev", "Constant", "CoupledNewton", "EVD",
-           "Geometric", "Inverse", "InverseSqrt", "NewtonDB", "PaperAdam", "PaperAMSGrad", "PaperAdaGrad", "standard"]
+__all__ = [
+    "EVD",
+    "SGD",
+    "AMSGrad",
+    "AMSGradMD",
+    "AMSGradW",
+    "AdaFisher",
+    "AdaGrad",
+    "Adam",
+    "AdamNC",
+    "AdamW",
+    "AdamWDirection",
+    "AdamX",
+    "AtomicColumns",
+    "Chebyshev",
+    "Clipped",
+    "ClippedOptimistic",
+    "Constant",
+    "CoupledNewton",
+    "Dash",
+    "Geometric",
+    "Guarded",
+    "Inverse",
+    "InverseSqrt",
+    "Magma",
+    "Muon",
+    "NewtonDB",
+    "PaperAMSGrad",
+    "PaperAdaGrad",
+    "PaperAdam",
+    "RMSProp",
+    "ScheduleFreeAdamW",
+    "ScheduleFreeSGD",
+    "standard",
+]

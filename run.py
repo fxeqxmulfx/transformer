@@ -16,6 +16,8 @@ Python (the uv project in python/; an experiment is a folder under experiments/)
     lock                          refresh the lab lockfile after dependency changes
     package                       build the standalone optimizer wheel and source distribution
     optimizer-parity              check optimizer recurrence examples with Lean's kernel
+    optimizer-lint                check all stable Ruff rules and optimizer package formatting
+    optimizer-profile             measure warmed optimizer steps, optionally under Scalene
     test [pattern ...]            run the test suite, optionally only tests matching patterns
     references [--rebuild]         check bundled reference sources; optionally rebuild from pinned Git objects
     blocks                        list the experiment language
@@ -39,11 +41,13 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import tarfile
 import tempfile
 
 ROOT = Path(__file__).resolve().parent
 PYTHON = ROOT / "python"
 SCALENE = "scalene==2.3.0"
+RUFF = "ruff==0.17.1"
 
 
 def execute(command, cwd=ROOT):
@@ -101,14 +105,22 @@ def package(_):
     with tempfile.TemporaryDirectory(prefix="lean-optim-package-") as temporary:
         scratch = Path(temporary)
         source = scratch / "source"
-        shutil.copytree(ROOT / "optimizers", source, ignore=shutil.ignore_patterns("dist", "__pycache__", ".venv"))
+        shutil.copytree(ROOT / "optimizers", source,
+                        ignore=shutil.ignore_patterns("dist", "profiles", ".ruff_cache", "__pycache__", ".venv"))
         output = ROOT / "optimizers/dist"
         execute(["uv", "build", "--offline", "--project", str(source), "--out-dir", str(output)])
+        unpacked = scratch / "unpacked"
+        with tarfile.open(output / "lean_optim-0.1.0.tar.gz") as archive:
+            archive.extractall(unpacked, filter="data")
+        packaged = next(unpacked.iterdir())
+        for required in ("tests/test_allocations.py", "benchmarks/README.md", "benchmarks/allocation_results.json"):
+            if not (packaged / required).is_file():
+                sys.exit(f"Source distribution is missing {required}")
         wheel = next(output.glob("lean_optim-0.1.0-*.whl"))
         target = scratch / "installed"
         execute(["uv", "pip", "install", "--offline", "--no-deps", "--link-mode=copy", "--target", str(target), str(wheel)])
         execute(["uv", "run", "--locked", "python", "-I", str(ROOT / "scripts/check_optimizer_package.py"),
-                 str(target), str(source / "tests")], cwd=PYTHON)
+                 str(target), str(packaged / "tests")], cwd=PYTHON)
 
 
 def optimizer_parity(_):
@@ -121,13 +133,64 @@ def optimizer_parity(_):
     execute(["lake", "env", "lean", "scripts/OptimizerParity.lean"])
 
 
+def optimizer_lint(_):
+    command = ["uv", "run", "--locked", "--project", str(PYTHON), "--with", RUFF, "ruff"]
+    execute([*command, "check", str(ROOT / "optimizers")])
+    execute([*command, "format", "--check", str(ROOT / "optimizers")])
+
+
+def _optimizer_profile(arguments, source=None, revision="working-tree"):
+    output = ROOT / arguments.output
+    output.parent.mkdir(parents=True, exist_ok=True)
+    benchmark = ROOT / "optimizers/benchmarks/allocations.py"
+    command = ["uv", "run", "--locked", "--project", str(PYTHON)]
+    options = ["--device", arguments.device, "--output", str(output), "--source-label", revision]
+    if source is not None:
+        options.extend(["--source", str(source)])
+    if arguments.scalene:
+        execute([*command, "--with", SCALENE, "scalene", "run", "--memory",
+                 "--allocation-sampling-window", "65536",
+                 "--profile-only", "lean_optim/", "--program-path", str(source or ROOT / "optimizers/src"),
+                 "-o", str(output.with_suffix(".scalene.json")), str(benchmark),
+                 "---", *options, "--seconds", "20"])
+    else:
+        execute([*command, "python", str(benchmark), *options])
+
+
+def optimizer_profile(arguments):
+    if arguments.revision is None:
+        _optimizer_profile(arguments)
+        return
+    revision = subprocess.run(["git", "rev-parse", "--verify", "--end-of-options",
+                               f"{arguments.revision}^{{commit}}"],
+                              cwd=ROOT, check=True, text=True, capture_output=True).stdout.strip()
+    with tempfile.TemporaryDirectory(prefix="lean-optim-profile-") as temporary:
+        scratch = Path(temporary)
+        archive = scratch / "source.tar"
+        with archive.open("wb") as stream:
+            subprocess.run(["git", "archive", f"{revision}:optimizers/src"], cwd=ROOT,
+                           stdout=stream, check=True)
+        with tarfile.open(archive) as bundle:
+            bundle.extractall(scratch / "source", filter="data")
+        _optimizer_profile(arguments, scratch / "source", revision)
+
+
 def test(arguments):
     references(argparse.Namespace(rebuild=False))
     patterns = [flag for pattern in arguments.patterns for flag in ("-k", pattern)]
-    execute(["uv", "run", "--locked", "python", "-m", "unittest", "discover", "-s", "tests", *patterns],
-            cwd=PYTHON)
-    execute(["uv", "run", "--locked", "python", "-m", "unittest", "discover", "-s", "../optimizers/tests", *patterns],
-            cwd=PYTHON)
+    ran_tests = False
+    for directory in ("tests", "../optimizers/tests"):
+        try:
+            execute(["uv", "run", "--locked", "python", "-m", "unittest", "discover", "-s", directory, *patterns],
+                    cwd=PYTHON)
+            ran_tests = True
+        except subprocess.CalledProcessError as error:
+            # unittest 3.14 uses 5 for an empty selection. A package-only
+            # pattern must still reach the standalone suite (and vice versa).
+            if not patterns or error.returncode != 5:
+                raise
+    if not ran_tests:
+        sys.exit(5)
 
 
 def references(arguments):
@@ -135,7 +198,7 @@ def references(arguments):
 
 
 def verify(arguments):
-    for task in (lean, audit, index, forbidden, optimizer_parity):
+    for task in (lean, audit, index, forbidden, optimizer_parity, optimizer_lint):
         task(arguments)
     test(argparse.Namespace(patterns=[]))
 
@@ -175,6 +238,13 @@ def main():
     for task in (lean, kernel, lint, audit, index, forbidden, setup, lock, package, verify, clean):
         tasks.add_parser(task.__name__).set_defaults(handler=task)
     tasks.add_parser("optimizer-parity").set_defaults(handler=optimizer_parity)
+    tasks.add_parser("optimizer-lint").set_defaults(handler=optimizer_lint)
+    command = tasks.add_parser("optimizer-profile")
+    command.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
+    command.add_argument("--output", default="optimizers/profiles/allocations.json")
+    command.add_argument("--scalene", action="store_true")
+    command.add_argument("--revision", help="profile optimizer sources from a local Git commit")
+    command.set_defaults(handler=optimizer_profile)
     command = tasks.add_parser("papers")
     command.add_argument("--dry-run", action="store_true")
     command.set_defaults(handler=papers)

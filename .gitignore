@@ -20,6 +20,8 @@ venv/
 .ipynb_checkpoints/
 *.egg-info/
 dist/
+.ruff_cache/
+/optimizers/profiles/
 
 # ── Editors / OS ─────────────────────────────────────────────────────────
 .vscode/

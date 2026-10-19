@@ -11,3 +11,28 @@ license-files = ["LICENSE"]
 [build-system]
 requires = ["uv_build>=0.13.1,<0.14"]
 build-backend = "uv_build"
+
+[tool.uv.build-backend]
+source-include = ["tests/**", "benchmarks/**"]
+
+[dependency-groups]
+dev = ["ruff==0.17.1"]
+
+[tool.ruff]
+required-version = "==0.17.1"
+target-version = "py310"
+line-length = 100
+preview = false
+
+[tool.ruff.lint]
+select = ["ALL"]
+# D211/D212 select one consistent docstring layout. COM812 conflicts with
+# Ruff's formatter, which owns trailing commas.
+ignore = ["D203", "D213", "COM812"]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests run with the standard-library unittest runner, including wheel tests.
+"tests/*.py" = ["PT009", "PT027"]
+
+[tool.ruff.format]
+docstring-code-format = true

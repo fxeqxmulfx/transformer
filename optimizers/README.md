@@ -15,8 +15,9 @@ import torch
 from lean_optim import AMSGradW, Guarded, Inverse, InverseSqrt, Muon
 
 model = torch.nn.Linear(8, 4)
-optimizer = AMSGradW(model.parameters(), lr=1e-3, weight_decay=0.01,
-                    beta1_decay=Inverse(), lr_decay=InverseSqrt())
+optimizer = AMSGradW(
+    model.parameters(), lr=1e-3, weight_decay=0.01, beta1_decay=Inverse(), lr_decay=InverseSqrt()
+)
 optimizer.zero_grad()
 model(torch.randn(2, 8)).square().mean().backward()
 optimizer.step()
@@ -73,8 +74,11 @@ optimizer = Muon(model.parameters(), lr=0.02, matrix_params=[model.weight])
 optimizer = Guarded(optimizer, sigma=0.5)
 
 from lean_optim import AdamWDirection, Clipped, Magma
-optimizer = Clipped(Magma(AdamWDirection(model, lr=1e-3),
-                         updates=1000, seed=7, matrix_params=[model.weight]), norm=1.0)
+
+optimizer = Clipped(
+    Magma(AdamWDirection(model, lr=1e-3), updates=1000, seed=7, matrix_params=[model.weight]),
+    norm=1.0,
+)
 ```
 
 Muon and AMSGradMD apply their matrix rule to all 2D tensors by default;
@@ -102,3 +106,29 @@ After installing this directory on its own, its standard-library test suite
 runs with `python -m unittest discover -s tests`. The tests include frozen
 Lean-checked vectors when a rational specialization is available, direct
 independent recurrence calculations and checkpoint continuation checks.
+
+Development checks use Ruff 0.17.1 with `select = ["ALL"]` and `preview = false`.
+Run `./run.py optimizer-lint` from the repository root. Both lint and formatting
+are mandatory in `./run.py verify`. The only global exceptions select compatible
+docstring conventions and let the formatter own trailing commas. Unittest
+assertions and a few established public signatures have documented, narrow
+exceptions; annotation, correctness, security and complexity rules remain enabled.
+
+Updates reuse work tensors after warmup. Scratch is separate from `state_dict`
+and discarded on checkpoint load; replacing gradients does not retain their
+old storage. Matrix roots share work by shape, and their internal return buffers
+are consumed before reuse. Fisher keeps a small independent input-factor vector
+for each retained forward, preserving gradient accumulation and repeated backward.
+
+`./run.py optimizer-profile --device cuda` records raw allocator events after
+warmup. `--revision 0a70e33d` measures the original implementation without changing
+the checkout. `--scalene` adds CPU/native memory sampling. Reports and Chrome
+traces go to the ignored `optimizers/profiles/` directory.
+
+On the measured float32 CUDA workloads, 22 custom variants make **zero new
+device allocations per warmed step**, including coordinate rules, iterative
+DASH, Muon, guarded/masked variants and Schedule-Free methods. This concerns
+optimizer steps with fixed parameter shapes. EVD, native clipping, ordinary
+training activations/backward and AtomicColumns still allocate. Persistent
+scratch also consumes memory: see the measured sizes, backend limits and full
+before/after data in [the allocation audit](benchmarks/README.md).

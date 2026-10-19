@@ -1,4 +1,7 @@
+# Copyright (c) 2026 Mikhail Borisov
 """The standard namespace exposes the actual installed PyTorch classes."""
+
+from __future__ import annotations
 
 import unittest
 
@@ -8,7 +11,10 @@ import lean_optim
 
 
 class StandardTests(unittest.TestCase):
-    def test_standard_is_torch_optim_and_paper_variants_have_explicit_names(self):
+    """Numerical checks for standard."""
+
+    def test_standard_is_torch_optim_and_paper_variants_have_explicit_names(self) -> None:
+        """Check standard is torch optim and paper variants have explicit names."""
         self.assertIs(lean_optim.standard, torch.optim)
         for name in ("Adam", "AdamW", "SGD", "Adagrad", "RMSprop"):
             self.assertIs(getattr(lean_optim.standard, name), getattr(torch.optim, name))
