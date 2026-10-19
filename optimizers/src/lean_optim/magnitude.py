@@ -34,6 +34,8 @@ from ._rates import active_rates, component_rates, copy_active
 from ._workspace import BufferedOptimizer, Workspace, descent_test, joint_metrics
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from ._types import (
         Closure,
         Loss,
@@ -80,7 +82,7 @@ def amsgrad(  # noqa: PLR0913, PLR0917 - Preserve the established optimizer/recu
     return torch.sub(x, output, out=output)
 
 
-def factored_state(weight: Tensor) -> TensorState:
+def factored_state(weight: Tensor, buffers: tuple[str, ...] = BUFFERS) -> TensorState:
     """Initialize unit gains, the matrix radius and zero AMSGrad buffers."""
     radius = torch.linalg.vector_norm(weight.detach()).clone()
     if not bool(torch.isfinite(radius) & (radius > 0)):
@@ -94,7 +96,7 @@ def factored_state(weight: Tensor) -> TensorState:
         "radius": radius,
     }
     for prefix, like in (("", weight), ("row.", state["row"]), ("column.", state["column"])):
-        state.update({prefix + name: torch.zeros_like(like) for name in BUFFERS})
+        state.update({prefix + name: torch.zeros_like(like) for name in buffers})
     return state
 
 
@@ -108,11 +110,22 @@ def proposal(  # noqa: PLR0913, PLR0917 - Preserve the established optimizer/rec
     beta2: float,
     eps: float,
     workspace: Workspace | None = None,
+    *,
+    update: Callable[..., Tensor] = amsgrad,
 ) -> tuple[Tensor, Tensor, Tensor]:
     """Compute amsgradMDProposal from gradients evaluated at the old factors."""
     if workspace is not None:
         return buffered_proposal(
-            weight, state, gradient, direction_rate, gain_rate, beta, beta2, eps, workspace
+            weight,
+            state,
+            gradient,
+            direction_rate,
+            gain_rate,
+            beta,
+            beta2,
+            eps,
+            workspace,
+            update=update,
         )
     row, column = state["row"], state["column"]
     gains_row, gains_column = functional.softplus(row), functional.softplus(column)
@@ -120,9 +133,9 @@ def proposal(  # noqa: PLR0913, PLR0917 - Preserve the established optimizer/rec
     direction_gradient = gradient * gains_row[:, None] * gains_column[None, :]
     row_gradient = (direction * gradient * gains_column[None, :]).sum(1) * row.sigmoid()
     column_gradient = (direction * gradient * gains_row[:, None]).sum(0) * column.sigmoid()
-    candidate = amsgrad(direction, direction_gradient, state, "", direction_rate, beta, beta2, eps)
-    next_row = amsgrad(row, row_gradient, state, "row.", gain_rate, beta, beta2, eps)
-    next_column = amsgrad(column, column_gradient, state, "column.", gain_rate, beta, beta2, eps)
+    candidate = update(direction, direction_gradient, state, "", direction_rate, beta, beta2, eps)
+    next_row = update(row, row_gradient, state, "row.", gain_rate, beta, beta2, eps)
+    next_column = update(column, column_gradient, state, "column.", gain_rate, beta, beta2, eps)
     norm = torch.linalg.vector_norm(candidate)
     # The projection of a zero candidate is zero, as in `matrixProject`; the guard rejects it.
     scale = torch.where(norm > 0, state["radius"] / torch.where(norm > 0, norm, 1.0), 0.0)
@@ -162,6 +175,8 @@ def buffered_proposal(  # noqa: PLR0913, PLR0917 - Preserve the established opti
     beta2: float,
     eps: float,
     workspace: Workspace,
+    *,
+    update: Callable[..., Tensor] = amsgrad,
 ) -> tuple[Tensor, Tensor, Tensor]:
     """Compute the factorized AMSGrad candidate in reusable work buffers."""
     row, column = state["row"], state["column"]
@@ -181,7 +196,7 @@ def buffered_proposal(  # noqa: PLR0913, PLR0917 - Preserve the established opti
     work.mul_(gains_row[:, None])
     column_gradient = torch.sum(work, dim=0, out=workspace.like(column, "gradient"))
     column_gradient.mul_(torch.sigmoid(column, out=workspace.like(column, "sigmoid")))
-    candidate = amsgrad(
+    candidate = update(
         direction,
         direction_gradient,
         state,
@@ -194,8 +209,8 @@ def buffered_proposal(  # noqa: PLR0913, PLR0917 - Preserve the established opti
         output=work,
         denominator=direction_gradient,
     )
-    next_row = amsgrad(row, row_gradient, state, "row.", gain_rate, beta, beta2, eps, workspace)
-    next_column = amsgrad(
+    next_row = update(row, row_gradient, state, "row.", gain_rate, beta, beta2, eps, workspace)
+    next_column = update(
         column, column_gradient, state, "column.", gain_rate, beta, beta2, eps, workspace
     )
     norm = workspace.norm(candidate)
@@ -248,6 +263,8 @@ class AMSGradMD(BufferedOptimizer):
     """
 
     moments = "raw_AMSGrad_buffers_of_directions_and_auxiliary_parameters_for_AMSGradMD"
+    moment_update = staticmethod(amsgrad)
+    moment_buffers = BUFFERS
 
     def add_param_group(self, group: StateDict) -> None:
         """Register the supported parameter group."""
@@ -277,9 +294,9 @@ class AMSGradMD(BufferedOptimizer):
         self.hidden = set(model.hidden_matrices())
         for parameter in parameters:
             self.state[parameter].update(
-                factored_state(parameter)
+                factored_state(parameter, self.moment_buffers)
                 if parameter in self.hidden
-                else {name: torch.zeros_like(parameter) for name in BUFFERS}
+                else {name: torch.zeros_like(parameter) for name in self.moment_buffers}
             )
         if sigma is not None:
             self.state["guard"] = {
@@ -335,9 +352,10 @@ class AMSGradMD(BufferedOptimizer):
                     beta2,
                     spec.eps,
                     self.workspace,
+                    update=self.moment_update,
                 )
             else:
-                candidate = amsgrad(
+                candidate = self.moment_update(
                     parameter,
                     gradient,
                     state,

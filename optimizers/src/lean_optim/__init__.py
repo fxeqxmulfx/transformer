@@ -33,9 +33,11 @@ from .config import (
     NewtonDB,
 )
 from .geometry import AdaFisher, AMSGradMD, Dash, Guarded, Magma, Muon
+from .mdw import AdamMDW, AMSGradMDW
 from .optimistic import ClippedOptimistic
 from .schedule_free import ScheduleFreeAdamW, ScheduleFreeAMSGradW, ScheduleFreeSGD
 from .schedule_free_md import ScheduleFreeAMSGradMD
+from .schedule_free_mdw import ScheduleFreeAdamMDW, ScheduleFreeAMSGradMDW
 from .schedules import LearningRateSchedule, LinearWarmup
 
 # Explicit names for paper conventions that differ from torch.optim defaults.
@@ -49,10 +51,12 @@ __all__ = [
     "SGD",
     "AMSGrad",
     "AMSGradMD",
+    "AMSGradMDW",
     "AMSGradW",
     "AdaFisher",
     "AdaGrad",
     "Adam",
+    "AdamMDW",
     "AdamNC",
     "AdamW",
     "AdamWDirection",
@@ -78,7 +82,9 @@ __all__ = [
     "PaperAdam",
     "RMSProp",
     "ScheduleFreeAMSGradMD",
+    "ScheduleFreeAMSGradMDW",
     "ScheduleFreeAMSGradW",
+    "ScheduleFreeAdamMDW",
     "ScheduleFreeAdamW",
     "ScheduleFreeSGD",
     "standard",

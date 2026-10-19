@@ -45,6 +45,7 @@ public import Transformer.BatchSize
 public import Transformer.DoubleDescent
 public import Transformer.Memorization
 public import Transformer.MagnitudeDirection
+public import Transformer.MDW
 public import Transformer.RecurrentGradients
 public import Transformer.NoiseScale
 public import Transformer.Surge

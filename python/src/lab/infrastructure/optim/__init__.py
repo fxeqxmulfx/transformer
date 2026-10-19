@@ -6,11 +6,13 @@ matrix selection, stage ordering and seeds. Steppers clip gradients once.
 """
 
 from dataclasses import fields
+from contextlib import contextmanager
 
 import lean_optim
 from lean_optim import coordinate
 
 from ...domain import optimizers
+from ...domain.mdw import AMSGradMDW
 from .ansr import ANSR
 
 
@@ -47,10 +49,10 @@ def construct(spec, model, rate, **extra):
                if field.name != "schedule_components"}
     name = "AdamWDirection" if isinstance(spec, optimizers.AdamW) else type(spec).__name__
     cls = getattr(lean_optim, name)
-    if isinstance(spec, (optimizers.Muon, optimizers.AMSGradMD)):
+    if isinstance(spec, (optimizers.Muon, optimizers.AMSGradMD, AMSGradMDW)):
         options["matrix_params"] = list(model.hidden_matrices())
     optimizer = cls(model, **options, rate=rate, **extra)
-    if isinstance(spec, optimizers.AMSGradMD) and spec.schedule_components:
+    if isinstance(spec, (optimizers.AMSGradMD, AMSGradMDW)) and spec.schedule_components:
         optimizer.param_groups[0]["initial_lr"] = spec.lr
     if rate is None:
         optimizer.param_groups[0]["lr"] = 0.0
@@ -59,6 +61,26 @@ def construct(spec, model, rate, **extra):
 
 def report(optimizer):
     return optimizer.report() if hasattr(optimizer, "report") else {}
+
+
+def training_weights(optimizer):
+    """Restore a Schedule-Free query before a training forward when needed."""
+    if isinstance(optimizer, lean_optim.ScheduleFreeSGD) and not optimizer.param_groups[0]["training"]:
+        optimizer.train()
+
+
+@contextmanager
+def evaluation_weights(optimizer):
+    """Install Schedule-Free averages for both training and held-out evaluation."""
+    free = isinstance(optimizer, lean_optim.ScheduleFreeSGD)
+    training = free and optimizer.param_groups[0]["training"]
+    if free:
+        optimizer.eval()
+    try:
+        yield
+    finally:
+        if training:
+            optimizer.train()
 
 
 def build_optimizer(spec, model, rate=None, updates=None, seed=None, fused=False):

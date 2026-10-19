@@ -27,7 +27,7 @@ import torch
 
 from ...domain.optimizers import clipping
 from ..benchmarks.samplers import gather
-from ..optim import build_optimizer
+from ..optim import build_optimizer, evaluation_weights, training_weights
 from . import measure
 from .loop import evaluate
 
@@ -72,6 +72,7 @@ class CompiledStepper:
 
     def step(self, parts, rate, sampled):
         batch = self.task.inputs(gather(parts), static=True)
+        training_weights(self.optimizer)
         if not self.model.training:
             self.model.train()
         self.optimizer.zero_grad(set_to_none=True)
@@ -98,4 +99,5 @@ class CompiledStepper:
         return norms
 
     def evaluate(self, split):
-        return evaluate(self.task, self.inference, self.task.splits[split], self.batch, static=True)
+        with evaluation_weights(self.optimizer):
+            return evaluate(self.task, self.inference, self.task.splits[split], self.batch, static=True)

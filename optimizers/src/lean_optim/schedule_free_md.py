@@ -111,7 +111,9 @@ class ScheduleFreeAMSGradMD(ScheduleFreeAMSGradW):
             parameter.mul_(column[None, :])
         return self
 
-    def _step_factors(self, parameter: Tensor, state: StateDict, gain_rate: float) -> None:
+    def _factor_gradients(
+        self, parameter: Tensor, state: StateDict
+    ) -> tuple[tuple[Tensor, Tensor, Tensor], tuple[Tensor, Tensor, Tensor]]:
         direction = self._point(state["direction"], training=True)
         row = self._point(state["row"], training=True)
         column = self._point(state["column"], training=True)
@@ -138,6 +140,12 @@ class ScheduleFreeAMSGradMD(ScheduleFreeAMSGradW):
             parameter.grad, row_gain[:, None], out=self.workspace.like(parameter, "md.gradient")
         )
         gradient.mul_(column_gain[None, :])
+        return (direction, row, column), (gradient, row_gradient, column_gradient)
+
+    def _step_factors(self, parameter: Tensor, state: StateDict, gain_rate: float) -> None:
+        (direction, row, column), (gradient, row_gradient, column_gradient) = (
+            self._factor_gradients(parameter, state)
+        )
         group = self.param_groups[0]
         self._advance(direction, gradient, state["direction"], group["lr"])
         self._advance(row, row_gradient, state["row"], gain_rate)

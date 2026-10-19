@@ -56,6 +56,59 @@ The PyTorch implementation is the module in this package.
 | ScheduleFreeAMSGradMD / `schedule_free_md.py` | `ScheduleFree.AMSGrad.mdStep`, `mdRun`, `mdQueryWeight`, `ScheduleFree/AMSGrad/MagnitudeDirection.lean`; proofs in `MagnitudeInvariants.lean` | Package combination in latent direction/raw-row/raw-column coordinates. The three gradients use the old interpolated factors, and the oracle sees their fused query weight. Project the base direction before averaging; evaluation fuses averaged factors. Each component has independent raw histories, squared-rate totals and rates. Auxiliary tensors follow the W recurrence with zero decay. |
 | ClippedOptimistic / `optimistic.py` | `ScheduleFree.optimisticStep`, `optimisticRun`, `ScheduleFree/SectionD_OptimisticBasic.lean`; `optimistic_regret`, `SectionD_Optimistic.lean` | All buffers and parameters start at zero. Clip g-previous using the **old** peak; update the peak and clipped energy; eta=D/sqrt(new_peak^2+new_energy); project auxiliary after the clipped gradient, then project query after g. One joint Euclidean ball over all tensors; safe division reproduces zero prefixes and D=0. Comparator norm <= D is required by the regret theorem. |
 
+## Physical MDW combinations
+
+The user-requested `AMSGradMDW`, `AdamMDW`, `ScheduleFreeAMSGradMDW` and
+`ScheduleFreeAdamMDW` are local extensions of MD Appendix A, Algorithm 2,
+with decoupled physical-weight decay. They are not claims made by that
+manuscript, whose MD experiments omit weight decay. No convergence theorem
+for these combinations is asserted.
+
+`Transformer.MDW.stepWith`, `amsgradMDWProposal` and `adamMDWProposal`
+compute the old-factor chain-rule proposal first, then subtract
+`eta_direction * decay * old_weight` from its fused weight. `correctWeight`
+repairs its raw row gains with the existing `rebalanceStorage` operation.
+`correctWeight_weight` proves the exact physical update; `correctWeight_norm`
+proves the fixed direction radius for a positive radius and nonzero result.
+The explicit zero-result branch keeps proposed finite raw gains and zero
+direction. Physical correction retains every adaptive memory returned by
+the factor callback.
+
+AMSGradMDW preserves the existing raw-moment callback. AdamMDW uses native
+Adam's two bias corrections and epsilon after the corrected variance square
+root. Its single float64 parameter clock advances before the direction,
+row and column callbacks. There is no maximum buffer. `adam_auxiliary_native`
+connects an unprojected auxiliary coordinate plus physical decay to
+`Grokking.AdamW.scalarNativeStep` exactly over the reals.
+
+`Transformer.MDW.freeMDStep` selects raw variance or its AMSGrad maximum.
+All factor gradients are computed at `mdQuery`; after adaptive base updates
+and direction projection, the fused base loses the direction's effective
+rate times decay times the old fused query. Repair precedes averaging.
+`freeMDStep_base_weight` proves this physical base update, and
+`freeMDStep_base_norm` proves its nonzero base direction radius.
+`freeMDStep_histories` verifies that decay changes no variances, maxima or
+squared-rate totals. `freeStepWith_adam` and `freeStepWith_amsgrad` connect
+the selected callbacks to the existing Schedule-Free recurrences.
+
+Each factor keeps its own squared-rate averaging coefficient. Physical
+repair can move its base gain even if that gain's adaptive rate is zero;
+its own zero averaging coefficient remains zero. For the Adam case Lean's
+shared mathematical history type has a redundant maximum field equal to
+the new variance; the Python representation omits that field entirely.
+Auxiliary parameters use ScheduleFreeAdamW or ScheduleFreeAMSGradW at their
+auxiliary rate. Beta1 supplies interpolation without a first-moment EMA.
+
+Ordinary MDW retains the existing thresholded softplus kernel; Schedule-Free
+MDW uses smooth logaddexp. Kernel-checked checkpoints in
+`Transformer.MDW.Checkpoints` distinguish bias corrections, raw variance
+and maxima, and check physical decay with zero loss gradient. Python tests
+independently differentiate the actual factor query with autograd, compare
+every history and iterate, check checkpoints and CUDA graph replay, and
+inspect warmed CUDA allocations in both float32 and float64. These are
+manual recurrence and numerical correspondence checks, not a formal
+verification of PyTorch floating-point execution.
+
 ## Schedule-Free AMSGrad combinations
 
 These additions combine arXiv:2405.15682v4, Section 4.4, arXiv:1904.03590v4,

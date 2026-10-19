@@ -25,8 +25,9 @@ optimizer.step()
 
 Available rules: SGD, native AdamW, AdamWDirection (for stages), raw-moment
 Adam, AMSGrad, AMSGradW, AdamX, AdaGrad, AdamNC, RMSProp, Muon, Dash (blocked
-Shampoo), AdaFisher, AMSGradMD, AtomicColumns, ScheduleFreeSGD,
-ScheduleFreeAdamW, ScheduleFreeAMSGradW, ScheduleFreeAMSGradMD and
+Shampoo), AdaFisher, AMSGradMD, AMSGradMDW, AdamMDW, AtomicColumns, ScheduleFreeSGD,
+ScheduleFreeAdamW, ScheduleFreeAMSGradW, ScheduleFreeAMSGradMD,
+ScheduleFreeAMSGradMDW, ScheduleFreeAdamMDW and
 ClippedOptimistic. Guarded, Magma and Clipped compose
 with the rules described below. The separate
 [correspondence audit](src/lean_optim/LEAN_CORRESPONDENCE.md) maps each rule to Lean and
@@ -64,6 +65,61 @@ defined by this package. Their recurrences, buffer invariants, query-point
 chain rule and base projection are checked in Lean. A convergence theorem
 for these combinations remains unproved; their exact scope is recorded in
 the correspondence audit.
+
+`AMSGradMDW`, `AdamMDW`, `ScheduleFreeAMSGradMDW` and `ScheduleFreeAdamMDW`
+are local physical-weight-decay compositions. Ordinary AMSGrad uses raw
+moments; ordinary Adam uses both native bias corrections and stores no
+maximum. The Schedule-Free variants use their paper's interpolation and
+raw-variance epsilon convention, with a maximum only in the AMSGrad case.
+
+For ordinary MDW, the fused MD proposal loses
+`lr * weight_decay * old_weight`. Repairing its row gains preserves that
+physical weight and restores the direction radius whenever it is nonzero.
+Zero results retain finite gains and a zero direction. Decay stays outside
+all moment histories. Auxiliary tensors decay at their auxiliary rate;
+`AdamMDW(..., matrix_params=[])` agrees with native AdamW in exact arithmetic.
+
+Schedule-Free MDW applies `eta_direction * weight_decay * old_query_weight`
+to the fused **base**, repairs its factors, then averages the corrected
+direction and raw gains. `eta_direction` includes the paper's warmup and
+second-moment rate correction. Each factor retains its independent
+squared-rate averaging coefficient. A zero gain rate freezes its adaptive
+step and averaging coefficient, while physical storage repair can still
+change its base gain. Evaluation fuses the actual latent averages.
+These combinations have checked Lean recurrences and storage properties;
+they have no general convergence theorem.
+
+```python
+from lean_optim import AdamMDW, LearningRateSchedule, ScheduleFreeAdamMDW
+
+# For the tied E/A model, select only A for the matrix rule; E uses auxiliary AdamW.
+optimizer = AdamMDW(
+    [E, A],
+    lr=1e-3,
+    gain_rate=1e-3,
+    auxiliary_rate=1e-3,
+    weight_decay=0.1,
+    matrix_params=[A],
+)
+scheduler = LearningRateSchedule(optimizer, warmup=100)
+# Or use the Schedule-Free version and its own warmup:
+optimizer = ScheduleFreeAdamMDW(
+    [E, A],
+    lr=1e-3,
+    gain_rate=1e-3,
+    auxiliary_rate=1e-3,
+    weight_decay=0.1,
+    matrix_params=[A],
+    warmup=100,
+)
+```
+
+The ordinary MDW variants support live device rate tensors and CUDA graphs
+after buffer warmup. Schedule-Free MDW uses eager optimizer steps. Recreate
+the same adaptive rule and matrix selection before loading checkpoints.
+MDW does not support Guarded or Magma direction stages. The lab DSL exports
+all four blocks, schedules their component rates by default and evaluates
+both train and held-out accuracy with Schedule-Free averaged weights.
 
 Joint-direction methods take a module or one iterable of tensors. They
 support one parameter group, closures, learning-rate schedulers and ordinary
@@ -219,3 +275,9 @@ optimizer steps with fixed parameter shapes. EVD, native clipping, ordinary
 training activations/backward and AtomicColumns still allocate. Persistent
 scratch also consumes memory: see the measured sizes, backend limits and full
 before/after data in [the allocation audit](benchmarks/README.md).
+
+MDW's additional allocation tests cover all four variants on 128-by-128
+matrices in float32 and float64, including the host scheduler through warmup
+and decay. They inspect raw CUDA allocator events after warming all buffers.
+Physical decay and repair require additional persistent scratch; no maximum
+buffer is allocated by either AdamMDW variant.

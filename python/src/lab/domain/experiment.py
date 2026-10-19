@@ -15,6 +15,7 @@ from .model import Model
 from .atomic import (AtomicColumns, AtomicMatching, BindingPricing, MatchingBindings,
                      MatchingOrders, OrderPricing, PairedMatching)
 from .optimizers import ANSR, EVD, AdamW, Clipped, Optimizer
+from .mdw import ScheduleFreeAMSGradMDW
 from .regression import MLP, ModularRegression
 from .paired import DivisionPairs, VectorReadout, check_division_model
 from .rotary import LabDivision, Rotate90
@@ -59,6 +60,11 @@ class Experiment(Spec):
                 "torch cannot capture an eigendecomposition: run Dash with EVD under Eager()")
         require(not any(isinstance(block, Clipped) for path, block in walk(self.optimizer) if path),
                 "Clipping acts on the gradient before the whole rule: write Clipped outermost")
+        free_md = [block for _, block in walk(self.optimizer) if isinstance(block, ScheduleFreeAMSGradMDW)]
+        require(not free_md or not isinstance(self.execution, CudaGraph),
+                "Schedule-Free MDW uses eager optimizer steps; choose Eager or Compiled")
+        require(not self.schedule.warmup or not any(block.warmup for block in free_md),
+                "Use built-in warmup or outer warmup, not both")
         if isinstance(self.execution, Measured):
             require(isinstance(self.optimizer, AdamW), "Measured execution covers ordinary AdamW")
             require(isinstance(self.benchmark, Synthetic), "Measured execution currently covers synthetic benchmarks")

@@ -145,7 +145,15 @@ class ScheduleFreeAdamW(ScheduleFreeSGD):
         state["second"].mul_(beta2).addcmul_(gradient, gradient, value=1 - beta2)
         return state["second"]
 
-    def _advance(self, query: Tensor, gradient: Tensor, state: StateDict, rate: float) -> None:
+    def _advance(
+        self,
+        query: Tensor,
+        gradient: Tensor,
+        state: StateDict,
+        rate: float,
+        *,
+        average: bool = True,
+    ) -> tuple[float, float] | None:
         group = self.param_groups[0]
         state["step"] += 1
         warmup = min(1.0, state["step"] / group["warmup"]) if group["warmup"] else 1.0
@@ -159,7 +167,7 @@ class ScheduleFreeAdamW(ScheduleFreeSGD):
         work.add_(group["eps"])
         torch.mul(gradient, eta, out=direction)
         direction.div_(work)
-        torch.mul(query, eta * group["weight_decay"], out=work)
+        torch.mul(query, eta * state.get("weight_decay", group["weight_decay"]), out=work)
         direction.add_(work)
         state["base"].sub_(direction)
         if eta and "radius" in state:
@@ -170,7 +178,15 @@ class ScheduleFreeAdamW(ScheduleFreeSGD):
                 out=self.workspace.like(norm, "projection.scale"),
             )
             state["base"].mul_(scale)
-        state["evaluation"].mul_(1 - c).add_(state["base"], alpha=c)
+        if average:
+            self._average(state, c)
+            return None
+        return eta, c
+
+    @staticmethod
+    def _average(state: StateDict, coefficient: float) -> None:
+        """Average a completed base update after any physical factor-space correction."""
+        state["evaluation"].mul_(1 - coefficient).add_(state["base"], alpha=coefficient)
 
     @torch.no_grad()
     def step(self, closure: Closure = None) -> Loss:
@@ -193,11 +209,16 @@ class ScheduleFreeAMSGradW(ScheduleFreeAdamW):
     Lean: Transformer.ScheduleFree.AMSGrad.step.
     """
 
+    _use_maximum = True
+
     def _second_state(self, value: Tensor) -> StateDict:
         state = super()._second_state(value)
-        state["maximum"] = torch.zeros_like(value)
+        if self._use_maximum:
+            state["maximum"] = torch.zeros_like(value)
         return state
 
     def _variance(self, state: StateDict, gradient: Tensor) -> Tensor:
         variance = super()._variance(state, gradient)
+        if not self._use_maximum:
+            return variance
         return torch.maximum(state["maximum"], variance, out=state["maximum"])

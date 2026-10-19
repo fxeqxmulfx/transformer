@@ -285,6 +285,7 @@ class Guarded(Optimizer):
     def check(self):
         require_kind(self.base, Optimizer, "base")
         require(not any(isinstance(base, Guarded) for base in bases(self)), "The guard applies once")
+        require(getattr(self.base, "allows_guard", True), "Physical MDW does not support Guarded")
         require(0 < self.sigma <= 1, "The guard's sigma lies in (0, 1]")
         if isinstance(self.base, AMSGradMD):
             require(self.sigma <= 0.5, "AMSGradMD's halved nonzero fallback requires sigma <= 0.5")
@@ -321,6 +322,8 @@ class Magma(Optimizer):
         require(not any(isinstance(base, Magma) for base in bases(self)), "MAGMA applies once")
         require(not any(isinstance(base, AMSGradMD) for base in bases(self)),
                 "MAGMA damps the directions of a rule, and AMSGradMD writes new values")
+        require(all(getattr(base, "direction_stages", True) for base in bases(self)),
+                "MAGMA needs a direction optimizer; MDW writes physical weights")
         require(math.isfinite(self.tau) and self.tau > 0, "MAGMA's temperature is finite and positive")
         require(0 < self.survival <= 1, "MAGMA's survival probability lies in (0, 1]")
         require(self.seed is None or self.seed >= 0, "Seeds are nonnegative")
