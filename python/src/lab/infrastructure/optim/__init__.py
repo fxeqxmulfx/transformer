@@ -43,12 +43,15 @@ def rule(spec, model, rate, updates, seed):
 
 
 def construct(spec, model, rate, **extra):
-    options = {field.name: setting(getattr(spec, field.name)) for field in fields(spec)}
+    options = {field.name: setting(getattr(spec, field.name)) for field in fields(spec)
+               if field.name != "schedule_components"}
     name = "AdamWDirection" if isinstance(spec, optimizers.AdamW) else type(spec).__name__
     cls = getattr(lean_optim, name)
     if isinstance(spec, (optimizers.Muon, optimizers.AMSGradMD)):
         options["matrix_params"] = list(model.hidden_matrices())
     optimizer = cls(model, **options, rate=rate, **extra)
+    if isinstance(spec, optimizers.AMSGradMD) and spec.schedule_components:
+        optimizer.param_groups[0]["initial_lr"] = spec.lr
     if rate is None:
         optimizer.param_groups[0]["lr"] = 0.0
     return optimizer

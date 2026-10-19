@@ -500,6 +500,10 @@ class AMSGradMD(Optimizer):
     every value finite and no matrix zero, and a rejected proposal becomes a
     gradient step at `lr`, halved for a matrix it would zero, with the row
     gains rebalanced onto the sphere (`rebalanceStorage`).
+
+    By default the lab's outer schedule scales every component rate by
+    lr / initial_lr. schedule_components=False retains the independent
+    gain and auxiliary rates used by the historical benchmark.
     """
     lr: float
     direction_rate: float | None = None
@@ -507,6 +511,7 @@ class AMSGradMD(Optimizer):
     auxiliary_rate: float = 3e-4
     betas: tuple[float, float] = (0.9, 0.999)
     eps: float = 1e-8
+    schedule_components: bool = True
 
     def check(self):
         for rate in (self.lr, self.gain_rate, self.auxiliary_rate):
@@ -516,3 +521,4 @@ class AMSGradMD(Optimizer):
         require(len(self.betas) == 2 and 0 <= self.betas[0] < 1 and 0 <= self.betas[1] <= 1,
                 "AMSGradMD needs beta1 in [0, 1) and beta2 in [0, 1]")
         require(self.eps > 0, "Epsilon must be positive")
+        require(type(self.schedule_components) is bool, "schedule_components must be a boolean")

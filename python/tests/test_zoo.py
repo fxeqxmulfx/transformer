@@ -64,8 +64,11 @@ EXACT = {
     "magma_rmsprop": lambda rate: Magma(RMSProp(lr=rate)),
     "magma_muon": lambda rate: Magma(Muon(lr=rate)),
     "magma_sgd": lambda rate: Magma(SGD(lr=rate)),
-    "amsgradmd": lambda rate: AMSGradMD(lr=rate),
-    "amsgradmd_guarded": lambda rate: Guarded(AMSGradMD(lr=rate, direction_rate=3e-4), sigma=0.25),
+    # These sources used independent gain/auxiliary rates; new lab runs
+    # schedule every component by default. Keep the source convention explicit.
+    "amsgradmd": lambda rate: AMSGradMD(lr=rate, schedule_components=False),
+    "amsgradmd_guarded": lambda rate: Guarded(
+        AMSGradMD(lr=rate, direction_rate=3e-4, schedule_components=False), sigma=0.25),
 }
 CLOSE = {
     "adam": lambda rate: Adam(lr=rate),
