@@ -45,12 +45,18 @@ class Factors:
         self.fresh = {}
         self.handles = []
         self.workspace = {}
-        for module in model.modules():
-            if isinstance(module, nn.Linear):
-                if module.bias is not None:
-                    msg = "AdaFisher's factors are collected for bias-free linear layers"
-                    raise NotImplementedError(msg)
+        modules = [module for module in model.modules() if isinstance(module, nn.Linear)]
+        if any(module.bias is not None for module in modules):
+            msg = "AdaFisher's factors are collected for bias-free linear layers"
+            raise NotImplementedError(msg)
+        try:
+            for module in modules:
                 self.handles.append(module.register_forward_hook(self.capture))
+        except Exception:
+            for handle in self.handles:
+                handle.remove()
+            self.handles.clear()
+            raise
 
     def _buffers(self, dtype: torch.dtype) -> Workspace:
         buffers = self.workspace.get(dtype)

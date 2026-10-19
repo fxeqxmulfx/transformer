@@ -208,7 +208,9 @@ optimizer = Clipped(
 Muon, AMSGradMD and ScheduleFreeAMSGradMD apply their matrix rule to all 2D tensors by default;
 other parameters use the documented auxiliary rule. AdaFisher takes a module
 with bias-free Linear layers so it can collect input/output-gradient
-factors; call `close()` when replacing it. AtomicColumns uses an explicit matching-family model, task
+factors. It validates these layers before registering hooks and removes its
+own hooks if registration fails, preserving existing user hooks. Call
+`close()` when replacing it. AtomicColumns uses an explicit matching-family model, task
 and head-factory protocol; [its module](src/lean_optim/atomic.py) documents
 the required physical head operations. Its numerical solver and pricing
 logic live here; the lab only supplies its matching model and data adapter.
