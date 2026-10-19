@@ -48,7 +48,7 @@ class DirectionOptimizer(BufferedOptimizer):
         """Initialize the parameters, hyperparameters and persistent state."""
         parameters = [parameter for parameter in model.parameters() if parameter.requires_grad]
         super().__init__(parameters, {"lr": 0.0 if rate is None else rate})
-        self.capturable = rate is not None
+        self.capturable = isinstance(rate, Tensor)
         self.stages = []
 
     def add_param_group(self, param_group: StateDict) -> None:
@@ -96,7 +96,7 @@ class DirectionOptimizer(BufferedOptimizer):
             directions = stage(self, parameters, directions)
         rate = self.param_groups[0]["lr"]
         for parameter, direction in zip(parameters, directions, strict=True):
-            if self.capturable:
+            if isinstance(rate, Tensor):
                 parameter.addcmul_(direction, rate, value=-1)
             else:
                 parameter.add_(direction, alpha=-rate)

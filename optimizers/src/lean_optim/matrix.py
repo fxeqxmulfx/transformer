@@ -139,7 +139,7 @@ class Dash(DirectionOptimizer):
     def __init__(self, spec: DashSpec, model: ParameterModel, rate: Scalar | None = None) -> None:
         """Initialize the parameters, hyperparameters and persistent state."""
         super().__init__(model, rate)
-        if rate is not None and isinstance(spec.solver, optimizers.EVD):
+        if self.capturable and isinstance(spec.solver, optimizers.EVD):
             msg = "torch cannot capture an eigendecomposition: run Dash with EVD under Eager()"
             raise ValueError(msg)
         self.spec, self.root = spec, build_root(spec.solver)

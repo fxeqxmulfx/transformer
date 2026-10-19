@@ -80,6 +80,9 @@ uses the promoted dtype of all participating parameters for its batched
 histories, including mixed-dtype groups in either parameter order. Construct
 the optimizer after placing the model parameters on their intended device.
 
+A float `rate` overrides `lr` with ordinary eager arithmetic, including for
+Dash with EVD. Direction updates read the current rate's type on every step.
+
 `LearningRateSchedule` adds optional linear warmup and constant, linear or
 cosine learning rates to every rule that consumes an outer `lr`. Existing
 PyTorch schedulers also work. For both MD methods, attaching a scheduler
