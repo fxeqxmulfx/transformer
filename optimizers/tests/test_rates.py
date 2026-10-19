@@ -114,6 +114,43 @@ class RateTests(unittest.TestCase):
         restored.step()
         torch.testing.assert_close(p, torch.full_like(p, 0.5))
 
+    def test_tensor_rate_shapes_update_matrices_and_scalars_and_survive_loading(self) -> None:
+        """Keep every one-element shape equivalent to a live scalar, including guarded MD."""
+        names = (*_TENSOR_RATE_RULES, "AMSGradMD-guard")
+        for name, shape in product(names, ((), (1,), (1, 1), (1, 1, 1))):
+            with self.subTest(rule=name, shape=shape):
+                model = torch.nn.Linear(3, 2, bias=False, dtype=torch.float64)
+                model.register_parameter("scale", torch.nn.Parameter(torch.tensor(0.5).double()))
+                control = copy.deepcopy(model)
+                rate = torch.full(shape, 0.125, dtype=torch.float64)
+                scalar = torch.tensor(0.125, dtype=torch.float64)
+                cls = getattr(opt, name.removesuffix("-guard"))
+                options = {"guard_sigma": 0.5} if name.endswith("-guard") else {}
+                actual, expected = (
+                    cls(model, rate=rate, **options),
+                    cls(control, rate=scalar, **options),
+                )
+                for value, gradient in ((0.0, 0.125), (0.125, -0.0625), (0.25, 0.0)):
+                    rate.fill_(value)
+                    scalar.fill_(value)
+                    for parameter in (*model.parameters(), *control.parameters()):
+                        parameter.grad = torch.full_like(parameter, gradient)
+                    actual.step()
+                    expected.step()
+                    for parameter, reference in zip(
+                        model.parameters(), control.parameters(), strict=True
+                    ):
+                        torch.testing.assert_close(parameter, reference, rtol=0, atol=0)
+                    saved = copy.deepcopy(actual.state_dict())
+                    actual.load_state_dict(saved)
+                    expected.load_state_dict(copy.deepcopy(saved))
+                    self.assertIs(actual.param_groups[0]["lr"], rate)
+                    self.assertIs(expected.param_groups[0]["lr"], scalar)
+                    self.assertEqual(rate.shape, shape)
+                if name == "AdaFisher":
+                    actual.close()
+                    expected.close()
+
 
 if __name__ == "__main__":
     unittest.main()

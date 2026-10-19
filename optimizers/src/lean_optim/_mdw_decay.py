@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING
 import torch
 from torch import Tensor
 
-from ._rates import copy_active
+from ._rates import copy_active, scalar_rate
 from .magnitude import softplus
 
 if TYPE_CHECKING:
@@ -36,7 +36,7 @@ class PhysicalDecay:
     def apply(self, weight: Tensor, old: Tensor, rate: Scalar, decay: float) -> Tensor:
         """Return a borrowed corrected weight without changing either input."""
         output = self.workspace.like(weight, "mdw.correction").copy_(old)
-        output.mul_(rate).mul_(decay)
+        output.mul_(scalar_rate(rate)).mul_(decay)
         return torch.sub(weight, output, out=output)
 
     def repair(

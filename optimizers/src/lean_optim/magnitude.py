@@ -30,7 +30,7 @@ import torch
 from torch import Tensor
 from torch.nn import functional
 
-from ._rates import active_rates, component_rates, copy_active
+from ._rates import active_rates, component_rates, copy_active, scalar_rate
 from ._workspace import BufferedOptimizer, Workspace, descent_test, joint_metrics
 
 if TYPE_CHECKING:
@@ -313,7 +313,7 @@ class AMSGradMD(BufferedOptimizer):
                 loss = closure()
         spec, rate, parameters = (
             self.spec,
-            self.param_groups[0]["lr"],
+            scalar_rate(self.param_groups[0]["lr"]),
             self.param_groups[0]["params"],
         )
         if any(parameter.grad is None for parameter in parameters):

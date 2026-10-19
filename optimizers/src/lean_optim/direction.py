@@ -23,6 +23,7 @@ from typing import TYPE_CHECKING
 import torch
 from torch import Tensor
 
+from ._rates import scalar_rate
 from ._workspace import BufferedOptimizer
 
 if TYPE_CHECKING:
@@ -94,7 +95,7 @@ class DirectionOptimizer(BufferedOptimizer):
         directions = self.directions(parameters)
         for stage in self.stages:
             directions = stage(self, parameters, directions)
-        rate = self.param_groups[0]["lr"]
+        rate = scalar_rate(self.param_groups[0]["lr"])
         for parameter, direction in zip(parameters, directions, strict=True):
             if isinstance(rate, Tensor):
                 parameter.addcmul_(direction, rate, value=-1)

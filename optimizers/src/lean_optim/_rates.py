@@ -34,6 +34,11 @@ def validate_rate(rate: Scalar) -> None:
         raise ValueError(msg)
 
 
+def scalar_rate(value: Scalar) -> Scalar:
+    """Borrow a scalar view of one-element rate storage, without a copy or device read."""
+    return value.reshape(()) if isinstance(value, Tensor) and value.ndim else value
+
+
 def copy_scalar(output: Tensor, value: Scalar) -> Tensor:
     """Write a scalar without replacing its storage."""
     return output.copy_(value.reshape(())) if isinstance(value, Tensor) else output.fill_(value)

@@ -141,7 +141,10 @@ Dash with EVD. Direction updates read the current rate's type on every step.
 Overrides must be finite and nonnegative; Tensor overrides must contain one
 real value. Constructors check them before creating optimizer state or hooks.
 The check preserves live rate storage and adds no per-step validation or
-device synchronization.
+device synchronization. Every one-element Tensor shape is read through a
+zero-dimensional view, including for scalar parameters, guarded MD and MDW
+decay. The parameter group retains the caller's original Tensor object;
+views copy no data and remain live through schedulers and checkpoint loads.
 
 `LearningRateSchedule` adds optional linear warmup and constant, linear or
 cosine learning rates to every rule that consumes an outer `lr`. Existing
