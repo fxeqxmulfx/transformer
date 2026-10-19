@@ -25,11 +25,12 @@ class Factors:
 
     def __init__(self, model):
         self.fresh = {}
+        self.handles = []
         for module in model.modules():
             if isinstance(module, nn.Linear):
                 if module.bias is not None:
                     raise NotImplementedError("AdaFisher's factors are collected for bias-free linear layers")
-                module.register_forward_hook(self.capture)
+                self.handles.append(module.register_forward_hook(self.capture))
 
     def capture(self, module, inputs, output):
         if not module.training or not output.requires_grad:

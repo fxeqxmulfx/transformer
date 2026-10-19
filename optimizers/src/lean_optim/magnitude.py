@@ -90,6 +90,11 @@ class AMSGradMD(torch.optim.Optimizer):
     """
     moments = "raw_AMSGrad_buffers_of_directions_and_auxiliary_parameters_for_AMSGradMD"
 
+    def add_param_group(self, group):
+        if self.param_groups:
+            raise ValueError("AMSGradMD supports one joint parameter group")
+        super().add_param_group(group)
+
     def __init__(self, spec, model, rate=None, sigma=None):
         if sigma is None and spec.direction_rate is not None:
             raise ValueError("Unguarded, AMSGradMD moves its directions at its rate; direction_rate is the guard's")
@@ -107,9 +112,15 @@ class AMSGradMD(torch.optim.Optimizer):
 
     @torch.no_grad()
     def step(self, closure=None):
+        loss = None
         if closure is not None:
-            raise ValueError("AMSGradMD updates on the gradients in place")
+            with torch.enable_grad():
+                loss = closure()
         spec, rate, parameters = self.spec, self.param_groups[0]["lr"], self.param_groups[0]["params"]
+        if any(parameter.grad is None for parameter in parameters):
+            raise ValueError("AMSGradMD requires a gradient for every parameter")
+        if hasattr(self, "_clip_norm"):
+            torch.nn.utils.clip_grad_norm_(parameters, self._clip_norm)
         beta, beta2 = spec.betas
         direction_rate = rate if spec.direction_rate is None else spec.direction_rate
         candidates, gains = [], {}
@@ -130,6 +141,7 @@ class AMSGradMD(torch.optim.Optimizer):
                 state["row"].copy_(row)
                 state["column"].copy_(column)
             parameter.copy_(candidate)
+        return loss
 
     def check(self, parameters, candidates, rate):
         """Replace the candidates by the checked ones in place, and return whether the proposal was accepted."""

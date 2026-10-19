@@ -94,6 +94,11 @@ issued eagerly (`tests/test_graphs.py`), not an Eager run. On the GTX 1050 it tr
 ## Layout
 
 `src/lab/` is layered by dependency; inner layers never import outer ones.
+The optimizer specifications remain in the domain. Their PyTorch arithmetic
+lives in the independent [`lean-optim`](../optimizers/README.md) package;
+`infrastructure/optim/` translates specifications and matching model/task
+protocols into its public API. Population search remains local to the lab.
+Trajectory provenance includes the optimizer sources as well as lab sources.
 
 ```
 domain/          the language (spec, model, optimizers, training, benchmarks,

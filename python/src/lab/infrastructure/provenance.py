@@ -10,15 +10,20 @@ import platform
 import subprocess
 
 import torch
+import lean_optim
 
 PACKAGE = Path(__file__).resolve().parents[1]
 
 
 def code():
-    """sha256 of every lab source a run executes: all but the command line."""
-    return {str(path.relative_to(PACKAGE)): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in sorted(PACKAGE.rglob("*.py"))
-            if path.relative_to(PACKAGE).parts[0] not in ("interfaces", "__main__.py")}
+    """Hash the lab and optimizer sources, independently of installation paths."""
+    sources = {str(path.relative_to(PACKAGE)): hashlib.sha256(path.read_bytes()).hexdigest()
+               for path in sorted(PACKAGE.rglob("*.py"))
+               if path.relative_to(PACKAGE).parts[0] not in ("interfaces", "__main__.py")}
+    optimizer_package = Path(lean_optim.__file__).resolve().parent
+    sources.update({f"lean_optim/{path.relative_to(optimizer_package)}": hashlib.sha256(path.read_bytes()).hexdigest()
+                    for path in sorted(optimizer_package.rglob("*.py"))})
+    return sources
 
 
 def device_name(device):

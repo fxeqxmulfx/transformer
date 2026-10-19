@@ -19,6 +19,7 @@ __pycache__/
 venv/
 .ipynb_checkpoints/
 *.egg-info/
+dist/
 
 # ── Editors / OS ─────────────────────────────────────────────────────────
 .vscode/

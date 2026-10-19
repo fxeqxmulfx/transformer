@@ -13,7 +13,7 @@ A captured update therefore reads the count it advances, and replays.
 
 import torch
 
-from ...domain import optimizers
+from . import config as optimizers
 from .direction import DirectionOptimizer
 
 
@@ -74,6 +74,14 @@ class Coordinate(DirectionOptimizer):
     def first_moment(self, parameter):
         return "m" if "m" in self.buffers else None
 
+    def load_state_dict(self, state_dict):
+        super().load_state_dict(state_dict)
+        # A restored nonconstant schedule needs its existing update clock,
+        # even if this instance was constructed with constant coefficients.
+        self.counted = (isinstance(self, (AdamW, AdaGrad, AdamNC))
+                        or varies(*(getattr(self.spec, name) for name in ("beta1_decay", "lr_decay")
+                                    if name in self.param_groups[0])))
+
 
 def varies(*decays):
     return any(not isinstance(decay, optimizers.Constant) for decay in decays)
@@ -94,9 +102,11 @@ class AMSGradW(Coordinate):
         average(m, gradient, scaled(beta, spec.beta1_decay, step))
         v.mul_(beta2).addcmul_(gradient, gradient, value=1 - beta2)
         torch.maximum(maximum, v, out=maximum)
-        direction = ratio(m, maximum.sqrt() + spec.eps, factor(spec.lr_decay, step))
+        coefficient = factor(spec.lr_decay, step)
+        direction = ratio(m, maximum.sqrt() + spec.eps, coefficient)
         if spec.weight_decay:
-            direction = direction + spec.weight_decay * parameter
+            decay = spec.weight_decay * parameter
+            direction = direction + (decay if coefficient is None else coefficient * decay)
         return direction
 
 

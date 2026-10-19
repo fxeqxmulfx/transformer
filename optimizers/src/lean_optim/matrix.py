@@ -10,7 +10,7 @@ import math
 
 import torch
 
-from ...domain import optimizers
+from . import config as optimizers
 from .direction import DirectionOptimizer
 from .roots import build_root
 
@@ -67,6 +67,12 @@ class Dash(DirectionOptimizer):
     order; the directions are scattered back the same way.
     """
     buffers = ("left", "right", "moment", "accumulator")
+
+    def load_state_dict(self, state_dict):
+        if state_dict["param_groups"][0].get("block", self.spec.block) != self.spec.block:
+            raise ValueError("Recreate Dash with the checkpoint's block size")
+        super().load_state_dict(state_dict)
+        self.root = build_root(self.spec.solver)
 
     def __init__(self, spec, model, rate=None):
         super().__init__(model, rate)

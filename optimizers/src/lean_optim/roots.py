@@ -12,7 +12,7 @@ import math
 
 import torch
 
-from ...domain import optimizers
+from . import config as optimizers
 
 
 def rayleigh_estimate(matrix, steps=3):

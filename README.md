@@ -30,6 +30,15 @@ original author's local paths, or old Git objects to run tests. Mathlib and
 the locked Python packages remain normal dependencies. `./run.py references`
 checks the local reference snapshots without Git or network access.
 
+The PyTorch optimizers are also available as the independent
+[`lean-optim` package](optimizers/README.md), installable from `optimizers/`
+or its wheel with PyTorch as the only runtime dependency. The lab consumes
+that package through a local dependency inside this checkout.
+`./run.py package` builds and tests a standalone wheel; `./run.py optimizer-parity`
+kernel-checks the Lean recurrence checkpoints. The
+[correspondence audit](optimizers/src/lean_optim/LEAN_CORRESPONDENCE.md)
+records the formulas, initialization, numerical extensions and theorem limits.
+
 ## The minimal run
 
 ```sh

@@ -127,7 +127,7 @@ class AMSGradW(Optimizer):
     Source: arXiv:1904.03590v4, Algorithm 1 and Section 6, with the decay of
     arXiv:2606.25971v2, Sections 2 and 4.1; `Transformer.AMSGradW.trainingStep`.
     m <- b1_t m + (1 - b1_t) g, v <- b2 v + (1 - b2) g^2, vmax <- max(vmax, v),
-    and x <- x - lr (c_t m / (sqrt(vmax) + eps) + weight_decay x), with c_t the
+    and x <- x - lr c_t (m / (sqrt(vmax) + eps) + weight_decay x), with c_t the
     `lr_decay`. Weight decay 0 is AMSGrad, `Transformer.AMSGrad.amsgradRule`;
     its Theorem 4.1 takes alpha_t = lr / sqrt(t) (`InverseSqrt()`) with
     b1_t = b1 / t (`Inverse()`) or b1 lambda^(t-1) (`Geometric(lambda)`).
@@ -286,6 +286,8 @@ class Guarded(Optimizer):
         require_kind(self.base, Optimizer, "base")
         require(not any(isinstance(base, Guarded) for base in bases(self)), "The guard applies once")
         require(0 < self.sigma <= 1, "The guard's sigma lies in (0, 1]")
+        if isinstance(self.base, AMSGradMD):
+            require(self.sigma <= 0.5, "AMSGradMD's halved nonzero fallback requires sigma <= 0.5")
 
     @property
     def lr(self):

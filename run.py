@@ -13,6 +13,9 @@ Lean
 
 Python (the uv project in python/; an experiment is a folder under experiments/)
     setup                         install the locked environment
+    lock                          refresh the lab lockfile after dependency changes
+    package                       build the standalone optimizer wheel and source distribution
+    optimizer-parity              check optimizer recurrence examples with Lean's kernel
     test [pattern ...]            run the test suite, optionally only tests matching patterns
     references [--rebuild]         check bundled reference sources; optionally rebuild from pinned Git objects
     blocks                        list the experiment language
@@ -89,10 +92,41 @@ def setup(_):
     execute(["uv", "sync", "--locked"], cwd=PYTHON)
 
 
+def lock(_):
+    execute(["uv", "lock", "--offline"], cwd=PYTHON)
+
+
+def package(_):
+    # Build a copy that has no access to the surrounding repository layout.
+    with tempfile.TemporaryDirectory(prefix="lean-optim-package-") as temporary:
+        scratch = Path(temporary)
+        source = scratch / "source"
+        shutil.copytree(ROOT / "optimizers", source, ignore=shutil.ignore_patterns("dist", "__pycache__", ".venv"))
+        output = ROOT / "optimizers/dist"
+        execute(["uv", "build", "--offline", "--project", str(source), "--out-dir", str(output)])
+        wheel = next(output.glob("lean_optim-0.1.0-*.whl"))
+        target = scratch / "installed"
+        execute(["uv", "pip", "install", "--offline", "--no-deps", "--link-mode=copy", "--target", str(target), str(wheel)])
+        execute(["uv", "run", "--locked", "python", "-I", str(ROOT / "scripts/check_optimizer_package.py"),
+                 str(target), str(source / "tests")], cwd=PYTHON)
+
+
+def optimizer_parity(_):
+    execute(["lake", "build", "Transformer.ScheduleFree.SectionD_Optimistic",
+             "Transformer.ScheduleFree.Section4_AdamW", "Transformer.Grokking.AdamW.ScalarRecurrence",
+             "Transformer.MagnitudeDirection.SectionA_AMSGradCallbacks", "Transformer.AdamBeyond.Section5_AdamNC",
+             "Transformer.AMSGrad.Section5_AdamX", "Transformer.DASH.Section2_Models",
+             "Transformer.Magma.Section3_Algorithm", "Transformer.AdaFisher.Section3_Algorithm",
+             "Transformer.Optimization.Basic"])
+    execute(["lake", "env", "lean", "scripts/OptimizerParity.lean"])
+
+
 def test(arguments):
     references(argparse.Namespace(rebuild=False))
     patterns = [flag for pattern in arguments.patterns for flag in ("-k", pattern)]
     execute(["uv", "run", "--locked", "python", "-m", "unittest", "discover", "-s", "tests", *patterns],
+            cwd=PYTHON)
+    execute(["uv", "run", "--locked", "python", "-m", "unittest", "discover", "-s", "../optimizers/tests", *patterns],
             cwd=PYTHON)
 
 
@@ -101,7 +135,7 @@ def references(arguments):
 
 
 def verify(arguments):
-    for task in (lean, audit, index, forbidden):
+    for task in (lean, audit, index, forbidden, optimizer_parity):
         task(arguments)
     test(argparse.Namespace(patterns=[]))
 
@@ -129,7 +163,7 @@ def papers(arguments):
 
 
 def clean(_):
-    for directory in (PYTHON, ROOT / "experiments", ROOT / "scripts"):
+    for directory in (PYTHON, ROOT / "optimizers", ROOT / "experiments", ROOT / "scripts"):
         for cache in directory.rglob("__pycache__"):
             if ".venv" not in cache.parts:
                 shutil.rmtree(cache)
@@ -138,8 +172,9 @@ def clean(_):
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     tasks = parser.add_subparsers(required=True, metavar="task")
-    for task in (lean, kernel, lint, audit, index, forbidden, setup, verify, clean):
+    for task in (lean, kernel, lint, audit, index, forbidden, setup, lock, package, verify, clean):
         tasks.add_parser(task.__name__).set_defaults(handler=task)
+    tasks.add_parser("optimizer-parity").set_defaults(handler=optimizer_parity)
     command = tasks.add_parser("papers")
     command.add_argument("--dry-run", action="store_true")
     command.set_defaults(handler=papers)

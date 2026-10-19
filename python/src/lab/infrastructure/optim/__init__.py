@@ -1,83 +1,64 @@
-"""PyTorch optimizers for optimizer specs.
+"""Translate lab optimizer specifications into the standalone lean_optim API.
 
-The native AdamW is constructed as `paper_reproduction.grokking.make_optimizer`
-constructed it: every trainable parameter in `parameters()` order, the rate
-left for the schedule to set before each update, and PyTorch's default
-implementation (foreach on CUDA, a loop over tensors on the CPU), or its
-fused kernel when a stepper asks for it. Every other rule is a direction
-optimizer (`.direction`), with the arithmetic of the historical optimizer
-zoo, and so is AdamW under a stage (`.stages`), which transforms the
-directions of a rule. AMSGradMD (`.magnitude`) writes new values instead,
-and carries its own guard.
+Numerical implementations live in optimizers/, installable on its own. This
+adapter preserves native AdamW selection, the initial rate of zero, hidden
+matrix selection, stage ordering and seeds. Steppers clip gradients once.
 """
 
-import torch
+from dataclasses import fields
+
+import lean_optim
+from lean_optim import coordinate
 
 from ...domain import optimizers
-from . import coordinate, direction, fisher, magnitude, matrix, stages
 from .ansr import ANSR
 
 
+def setting(value):
+    if isinstance(value, (optimizers.Decay, optimizers.InverseRoot)):
+        return getattr(lean_optim, type(value).__name__)(**vars(value))
+    return value
+
+
 def parameter_groups(spec, model):
-    """One group, or decayed matrices apart from undecayed vectors."""
-    parameters = [parameter for parameter in model.parameters() if parameter.requires_grad]
+    parameters = [p for p in model.parameters() if p.requires_grad]
     if spec.decay == "all":
         return parameters
-    return [{"params": [parameter for parameter in parameters if parameter.ndim >= 2]},
-            {"params": [parameter for parameter in parameters if parameter.ndim < 2], "weight_decay": 0.0}]
-
-
-def adamw(spec, model, rate=None, fused=False):
-    groups = parameter_groups(spec, model)
-    if rate is None:
-        return torch.optim.AdamW(groups, lr=0.0, betas=spec.betas, eps=spec.eps, weight_decay=spec.weight_decay,
-                                 **({"fused": True} if fused else {}))
-    return torch.optim.AdamW(groups, lr=rate, betas=spec.betas, eps=spec.eps, weight_decay=spec.weight_decay,
-                             foreach=True, capturable=True)
-
-
-RULES = {optimizers.SGD: direction.SGD, optimizers.AdamW: coordinate.AdamW, optimizers.AMSGradW: coordinate.AMSGradW,
-         optimizers.Adam: coordinate.Adam, optimizers.AdamX: coordinate.AdamX, optimizers.AdaGrad: coordinate.AdaGrad,
-         optimizers.AdamNC: coordinate.AdamNC, optimizers.RMSProp: coordinate.RMSProp, optimizers.Muon: matrix.Muon,
-         optimizers.Dash: matrix.Dash, optimizers.AdaFisher: fisher.AdaFisher,
-         optimizers.AMSGradMD: magnitude.AMSGradMD}
+    return [{"params": [p for p in parameters if p.ndim >= 2]},
+            {"params": [p for p in parameters if p.ndim < 2], "weight_decay": 0.0}]
 
 
 def rule(spec, model, rate, updates, seed):
-    """The optimizer of `spec`, with the stages it names applied innermost first."""
-    if isinstance(spec, optimizers.Guarded) and isinstance(spec.base, optimizers.AMSGradMD):
-        return magnitude.AMSGradMD(spec.base, model, rate, spec.sigma)
     if isinstance(spec, optimizers.Guarded):
-        optimizer = rule(spec.base, model, rate, updates, seed)
-        optimizer.stages.append(stages.Guard(spec.sigma, optimizer))
-        return optimizer
+        if isinstance(spec.base, optimizers.AMSGradMD):
+            return construct(spec.base, model, rate, guard_sigma=spec.sigma)
+        return lean_optim.Guarded(rule(spec.base, model, rate, updates, seed), spec.sigma)
     if isinstance(spec, optimizers.Magma):
         if updates is None or (spec.seed is None and seed is None):
             raise ValueError("MAGMA draws the masks of the run's updates from its seed or the model's")
         optimizer = rule(spec.base, model, rate, updates, seed)
-        mask_seed = seed + 20_000 if spec.seed is None else spec.seed
-        optimizer.stages.append(stages.Magma(spec, optimizer, model, updates, mask_seed))
-        return optimizer
-    if type(spec) not in RULES:
-        raise NotImplementedError(f"No optimizer for {spec!r}")
-    return RULES[type(spec)](spec, model, rate)
+        return lean_optim.Magma(optimizer, updates=updates, seed=seed + 20_000 if spec.seed is None else spec.seed,
+                               tau=spec.tau, survival=spec.survival, matrix_params=list(model.hidden_matrices()))
+    return construct(spec, model, rate)
+
+
+def construct(spec, model, rate, **extra):
+    options = {field.name: setting(getattr(spec, field.name)) for field in fields(spec)}
+    name = "AdamWDirection" if isinstance(spec, optimizers.AdamW) else type(spec).__name__
+    cls = getattr(lean_optim, name)
+    if isinstance(spec, (optimizers.Muon, optimizers.AMSGradMD)):
+        options["matrix_params"] = list(model.hidden_matrices())
+    optimizer = cls(model, **options, rate=rate, **extra)
+    if rate is None:
+        optimizer.param_groups[0]["lr"] = 0.0
+    return optimizer
 
 
 def report(optimizer):
-    """What the optimizer and its stages counted; nothing for a native optimizer."""
     return optimizer.report() if hasattr(optimizer, "report") else {}
 
 
 def build_optimizer(spec, model, rate=None, updates=None, seed=None, fused=False):
-    """The optimizer for `spec`; given `rate`, its capturable form; `fused`, the native AdamW's fused kernel.
-
-    `rate` is a one-element tensor on the parameters' device. The capturable
-    optimizer keeps all its state there and reads the rate from `rate` when an
-    update runs, so a captured update replays with whatever `rate` holds.
-    `updates` and `seed`, the run's budget and model seed, are what MAGMA
-    draws its masks for and from. A stepper clips the gradient
-    (`optimizers.clipping`) before the optimizer steps.
-    """
     if isinstance(spec, optimizers.Clipped):
         spec = spec.base
     if isinstance(spec, optimizers.ANSR):
@@ -85,5 +66,10 @@ def build_optimizer(spec, model, rate=None, updates=None, seed=None, fused=False
             raise ValueError("ANSR requires eager population evaluation without a learning rate")
         return ANSR(spec, model, seed)
     if isinstance(spec, optimizers.AdamW):
-        return adamw(spec, model, rate, fused)
+        options = dict(betas=spec.betas, eps=spec.eps, weight_decay=spec.weight_decay)
+        if rate is not None:
+            options.update(foreach=True, capturable=True)
+        elif fused:
+            options["fused"] = True
+        return lean_optim.AdamW(parameter_groups(spec, model), lr=0.0 if rate is None else rate, **options)
     return rule(spec, model, rate, updates, seed)

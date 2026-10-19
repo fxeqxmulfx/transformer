@@ -5,6 +5,7 @@ description = "Transformer experiments composed from swappable blocks, trained e
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "lean-optim",
     "numpy>=2.5.4",
     "torch==2.14.1",
 ]
@@ -19,6 +20,7 @@ build-backend = "uv_build"
 # The PyPI wheel of torch 2.14 is built for CUDA 13, which no longer supports
 # Pascal GPUs (compute capability 6.1); the CUDA 12.6 build still does.
 [tool.uv.sources]
+lean-optim = { path = "../optimizers", editable = true }
 torch = { index = "pytorch-cu126" }
 
 [[tool.uv.index]]

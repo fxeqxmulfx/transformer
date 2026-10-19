@@ -29,6 +29,11 @@ class DirectionOptimizer(torch.optim.Optimizer):
         self.capturable = rate is not None
         self.stages = []
 
+    def add_param_group(self, param_group):
+        if self.param_groups:
+            raise ValueError("Joint-direction rules support one parameter group")
+        super().add_param_group(param_group)
+
     def direction(self, parameter, state):
         raise NotImplementedError
 
@@ -46,9 +51,17 @@ class DirectionOptimizer(torch.optim.Optimizer):
 
     @torch.no_grad()
     def step(self, closure=None):
+        loss = None
         if closure is not None:
-            raise ValueError("A direction optimizer updates on the gradients in place")
+            with torch.enable_grad():
+                loss = closure()
         parameters = [parameter for parameter in self.param_groups[0]["params"] if parameter.grad is not None]
+        if not parameters:
+            return loss
+        if any(parameter.grad.is_sparse for parameter in parameters):
+            raise RuntimeError("These optimizers require dense gradients")
+        if hasattr(self, "_clip_norm"):
+            torch.nn.utils.clip_grad_norm_(parameters, self._clip_norm)
         directions = self.directions(parameters)
         for stage in self.stages:
             directions = stage(self, parameters, directions)
@@ -58,6 +71,7 @@ class DirectionOptimizer(torch.optim.Optimizer):
                 parameter.addcmul_(direction, rate, value=-1)
             else:
                 parameter.add_(direction, alpha=-rate)
+        return loss
 
 
 class SGD(DirectionOptimizer):
@@ -69,7 +83,8 @@ class SGD(DirectionOptimizer):
 
     def direction(self, parameter, state):
         direction = parameter.grad.clone()
-        if self.decay:
-            direction = direction + self.decay * parameter
+        decay = self.param_groups[0].get("weight_decay", self.decay)
+        if decay:
+            direction = direction + decay * parameter
         return direction
 

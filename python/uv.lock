@@ -103,15 +103,28 @@ name = "lab"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "lean-optim" },
     { name = "numpy" },
     { name = "torch" },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "lean-optim", editable = "../optimizers" },
     { name = "numpy", specifier = ">=2.5.4" },
     { name = "torch", specifier = "==2.14.1", index = "https://download.pytorch.org/whl/cu126" },
 ]
+
+[[package]]
+name = "lean-optim"
+version = "0.1.0"
+source = { editable = "../optimizers" }
+dependencies = [
+    { name = "torch" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "torch", specifier = ">=2.0" }]
 
 [[package]]
 name = "markupsafe"
