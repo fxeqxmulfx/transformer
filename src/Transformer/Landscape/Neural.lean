@@ -8,6 +8,7 @@ public import Transformer.Landscape.Neural.SwiGLU
 public import Transformer.Landscape.Neural.Interaction
 public import Transformer.Landscape.Neural.AdamW
 public import Transformer.Landscape.Neural.MLP
+public import Transformer.Landscape.Neural.Products
 
 /-!
 # Analytic neural losses for the Landscape framework
@@ -24,6 +25,8 @@ nonlinear operand interaction to separate a division checkerboard.
 exact-real optimizer recurrence, with its actual inclusive warmup.
 `MLP` instantiates both ordinary perceptron readouts in their full biased
 parameter spaces and proves the same analytic local-inequality properties.
+`Products` compiles exact paired-gate products into the actual SwiGLU
+parameters while retaining both normalizations, skip and shared readout.
 Sources and the remaining bridge to the Rotate90 lab are recorded in
 `landscape_grokking_plan.md`.
 -/

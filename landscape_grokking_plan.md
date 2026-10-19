@@ -215,6 +215,19 @@ matrix of the complete SiLU parameterization. This supplies a necessary
 operand interaction, not an attraction theorem or a scalar-MLP barrier.
 See [the statement and source review](review/rotate90_interaction.md).
 
+`Neural.Products` proves that opposite SiLU gates realize exact products
+and compiles sums of those products into the actual SwiGLU parameter vector,
+including both normalizations, residual and tied logits. A separate
+[constructive checkpoint](experiments/rotate90_analytic/expressivity.py) uses
+nine products and 18 of H=43 individual gates to compute a faithful quotient
+character and retain zero numerators. Every one of the 9,312 equations is
+classified correctly in CPU float64, CPU float32 and CUDA float32, with
+all parameters bounded by one. The full character-checkpoint correctness
+is numerically checked; the paired-gate compiler is proved in Lean. This
+also puts a correct classifier inside the known AdamW parameter container.
+It supplies a representable structured solution, not its random-start
+attraction mechanism; see [the source review](review/rotate90_products.md).
+
 ### M9.5 exact-real optimizer container
 
 `Transformer.Landscape.Neural.AdamW` matches the inclusive warmup and

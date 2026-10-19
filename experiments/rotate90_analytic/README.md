@@ -151,3 +151,35 @@ To regenerate the portable artifacts from the retained runs, run this from
 ```sh
 uv run --locked python ../experiments/rotate90_analytic/analyze.py
 ```
+
+## Constructive product witness
+
+The separate [expressivity script](expressivity.py) constructs a checkpoint
+of the unchanged width-128, H=43 SwiGLU model using a faithful multiplicative
+character, a constant feature and an explicit zero-residue feature. Nine
+products, realized by 18 individual channels in opposed pairs, cancel
+the unwanted skip coordinates and form the quotient character. All 43
+gates remain in the actual model, with 25 set to zero. Both RMSNorms, the
+residual and all three tied uses of E are retained.
+
+All 9,312 equations classify correctly in CPU float64, CPU float32 and
+CUDA float32, including the 96 zero-numerator rows. Every parameter has
+absolute value at most one. The minimum correct-class margin is about
+0.02409; CE is about 2.42165, so correct classification is not zero loss.
+Float64's maximum raw state and logit errors against the intended E[q]
+are 1.89e-15 and 2.31e-14; the FP32 checks remain below 6e-7 and 5e-6.
+[division_witness.json](division_witness.json) retains every check and hash.
+
+`Neural.Products` proves the exact SiLU difference, paired-gate product,
+and their compilation into the actual full residual state and tied logits.
+The complete character checkpoint is numerically checked here; a Lean proof
+of that entire finite-table checkpoint is still a separate obligation.
+This certificate establishes existence of a bounded low-width solution,
+not attraction from the random initialization, and is not used to initialize
+any learning run. Its single character differs from the multi-character
+geometry of the trained networks measured above. The
+[statement review](../../review/rotate90_products.md) gives the formulas.
+
+```sh
+uv run --locked python ../experiments/rotate90_analytic/expressivity.py
+```

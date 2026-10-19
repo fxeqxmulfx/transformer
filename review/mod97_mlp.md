@@ -1,6 +1,6 @@
 # The ordinary MLP in Landscape
 
-M9.2c instantiates the same two-hidden-layer SiLU MLP used by the matched
+Commit `ff48aaeb` (M9.2c) instantiates the same two-hidden-layer SiLU MLP used by the matched
 M9.3b numerical controls. It does not assume an analytic model, fixed
 features, attainable minima or gradient accessibility. The executable
 sources are `python/src/lab/infrastructure/nn/mlp.py` and
