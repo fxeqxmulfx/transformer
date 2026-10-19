@@ -7,6 +7,7 @@ global optimality of its nonconvex Q/K search.
 """
 
 from copy import deepcopy
+import math
 from pathlib import Path
 import tempfile
 import unittest
@@ -125,6 +126,36 @@ class AtomicTests(unittest.TestCase):
         solver = Columns(self.experiment.optimizer, self.model, task, 0)
         self.assertAlmostEqual(solver.step(self.batch), 2)
         self.assertLess(solver.report()["global_gap_bound_after"], 1e-12)
+
+    def test_exact_pricing_corrects_the_supplied_weighted_squared_loss(self):
+        task = build_task(MatchingOrders(targets=(0.5, -0.5)), 0, torch.device("cpu"))
+
+        def loss(output, targets):
+            return (output.sub(targets).square() * output.new_tensor([100., 1.]).view(2, 1, 1)).sum()
+
+        task.loss = loss
+        solver = Columns(self.experiment.optimizer, self.model, task, 0)
+        before = float(loss(*task.forward(self.model, self.batch)).detach())
+        after = solver.step(self.batch)
+        self.assertAlmostEqual(before, 7.8125)
+        self.assertLess(after, before)
+        self.assertAlmostEqual(after, 100 / 101, places=9)
+        self.assertTrue(solver.report()["pricing_is_global"])
+
+    def test_exact_pricing_corrects_a_nonsquared_convex_loss(self):
+        task = build_task(MatchingOrders(targets=(0.5, -0.5)), 0, torch.device("cpu"))
+
+        def loss(output, targets):
+            # The scalar optimum is -log(cosh(.5)); the MSE optimum is zero.
+            return (torch.exp(output - targets) - output).sum()
+
+        task.loss = loss
+        solver = Columns(self.experiment.optimizer, self.model, task, 0)
+        before = float(loss(*task.forward(self.model, self.batch)).detach())
+        after = solver.step(self.batch)
+        self.assertLess(after, before)
+        output, _ = task.forward(self.model, self.batch)
+        self.assertAlmostEqual(float(output[0].detach()), -math.log(math.cosh(.5)), places=6)
 
     def test_small_qp_handles_duplicate_columns_and_boundary_optima(self):
         columns = torch.tensor([[0.75, 0.75], [0.75, 0.75], [1.0, -1.0]], dtype=torch.float64)

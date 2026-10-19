@@ -99,7 +99,9 @@ class AtomicColumns:
     the family's actual head from original q/k/values and forward_map.
 
     The exact order/binding modes require their two formal scalar cap-one
-    contexts; arbitrary families use search. The factory/task must implement
+    contexts; arbitrary families use search. Every correction uses task.loss;
+    a squared-loss QP supplies an optional seed in the exact scalar modes.
+    The factory/task must implement
     those physical maps; a callable's semantic correctness is not inferred
     from Python duck typing. Local search never asserts a global found price.
     """
@@ -271,38 +273,44 @@ class AtomicColumns:
         """Refit the active simplex weights using the configured convex correction."""
         columns = self.columns(batch)
         count = len(columns)
+        mass = self.model.mass[:count].detach().clone()
         if self.spec.pricing.kind in ("order", "binding"):
-            mass = simplex_squared_fit(columns, targets)
-        else:
-            mass = self.model.mass[:count].detach().clone()
-            step_size = 1.0
-            for _ in range(self.spec.correction_steps):
-                variable = mass.detach().requires_grad_()
-                prediction = torch.tensordot(variable, columns, dims=([0], [0]))
-                loss = self.task.loss(prediction, targets)
-                gradient = torch.autograd.grad(loss, variable)[0]
-                accepted = False
-                for _ in range(30):
-                    proposal = simplex_project(mass - step_size * gradient)
-                    new_loss = self.task.loss(
-                        torch.tensordot(proposal, columns, dims=([0], [0])), targets
-                    )
-                    descent = torch.dot(gradient, proposal - mass)
-                    if float(new_loss) <= float(loss.detach() + 0.01 * descent):
-                        accepted = True
-                        break
-                    step_size *= 0.5
-                if not accepted:
-                    break
-                displacement = float((proposal - mass).abs().max())
-                mass = proposal
-                if displacement <= self.spec.tolerance:
-                    break
-                step_size = min(2 * step_size, 1e6)
+            seed = simplex_squared_fit(columns, targets)
+            with torch.no_grad():
+                old_loss = self.task.loss(torch.tensordot(mass, columns, dims=([0], [0])), targets)
+                seed_loss = self.task.loss(torch.tensordot(seed, columns, dims=([0], [0])), targets)
+            if float(seed_loss) <= float(old_loss):
+                mass = seed
+        mass = self._refine(columns, targets, mass)
         with torch.no_grad():
             self.model.mass.zero_()
             self.model.mass[:count].copy_(mass)
             self.model.prune()
+
+    def _refine(self, columns: Tensor, targets: Tensor, mass: Tensor) -> Tensor:
+        """Backtrack on the supplied convex loss, independently of the pricing oracle."""
+        step_size = 1.0
+        for _ in range(self.spec.correction_steps):
+            variable = mass.detach().requires_grad_()
+            prediction = torch.tensordot(variable, columns, dims=([0], [0]))
+            loss = self.task.loss(prediction, targets)
+            gradient = torch.autograd.grad(loss, variable)[0]
+            accepted = False
+            for _ in range(30):
+                proposal = simplex_project(mass - step_size * gradient)
+                new_loss = self.task.loss(
+                    torch.tensordot(proposal, columns, dims=([0], [0])), targets
+                )
+                descent = torch.dot(gradient, proposal - mass)
+                if float(new_loss) <= float(loss.detach() + 0.01 * descent):
+                    accepted = True
+                    break
+                step_size *= 0.5
+            if not accepted or float((proposal - mass).abs().max()) <= self.spec.tolerance:
+                break
+            mass = proposal
+            step_size = min(2 * step_size, 1e6)
+        return mass
 
     def step(self, batch: Tensor) -> float:
         """Price a new column, correct the mixture and record its certificate."""
