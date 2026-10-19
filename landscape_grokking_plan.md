@@ -165,6 +165,17 @@ and SwiGLU (H = 43), with the browser's W128 Fast optimizer settings and a
 deviation from the native/browser kernels. Tests check the protocol;
 training results and a mechanism for gradient access remain to be measured.
 
+### M9.4 interaction obstruction
+
+`Transformer.Landscape.Neural.Interaction` proves that the actual normalized
+tied readout without its residual branch cannot separate a division
+checkerboard, for any shared embedding. The concrete modulus-97 theorem
+keeps width 128, epsilon 1e-5 and the smallest-index tie policy's necessary
+comparisons. An additional bridge identifies this readout at a zero dense
+matrix of the complete SiLU parameterization. This supplies a necessary
+operand interaction, not an attraction theorem or a scalar-MLP barrier.
+See [the statement and source review](review/rotate90_interaction.md).
+
 ## Activation comparisons
 
 SiLU is a direct scalar replacement, s(t) = t / (1 + exp(-t)). Standard
