@@ -111,8 +111,32 @@ coordinate and positive-epsilon RMSNorm, including at zero activations.
 `Neural.Loss` proves analyticity and nonnegativity of finite cross-entropy
 and squared error. Its `crossEntropy_pos` proves that a competing class
 prevents finite logits from attaining zero cross-entropy. All proofs have
-concrete witnesses and no `sorry`. These are closure results; M9.2 must still
-instantiate the actual shared parameters and residual branch.
+concrete witnesses and no `sorry`. These are closure results; their concrete
+shared-parameter instantiation follows in M9.2.
+
+### M9.2 results
+
+`Neural.SiLU` instantiates the complete Rotate90 network with the sole ReLU
+to SiLU change. `Neural.SwiGLU` instantiates the three-projection gated
+variant. Every embedding and matrix entry is a free coordinate of a single
+Euclidean parameter vector, and each model reuses the same embedding in
+its three roles. The residual, both positive-epsilon normalizations, every
+answer class and the full cross-entropy remain. The labels and split are
+arbitrary fixed data, so the results include the zero residue whenever the
+data include it.
+
+`analyticOnNhd_siluLoss` and `analyticOnNhd_gatedLoss` prove analyticity in
+those actual weights. `exists_isLojasiewiczAt_siluLoss` and its gated twin
+discharge the local inequality at every parameter vector using the existing
+proved Landscape theorem. These results permit the analytic M8 theorems
+to be instantiated; their step and curvature assumptions still require
+separate evidence, and neither variant has a proved generalization result.
+
+The parameter dimensions are proved: `|V| W + W^2` for SiLU and
+`|V| W + 3 W H` for full SwiGLU. At vocabulary 97 and width 128 these are
+28,800 and, with H = 43, 28,928. This is the first near-matched parameter
+budget for an activation comparison; initialization, runtime and training
+behavior still need to be measured.
 
 ## Activation comparisons
 
