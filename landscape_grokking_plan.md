@@ -1,7 +1,7 @@
 # Landscape explanation of modular arithmetic generalization
 
-Started on 2026-10-19 at the user's request. Status: paused at the user's
-explicit stop on 2026-10-19. The original explanation and the later
+Started on 2026-10-19 at the user's request. Status: active, resumed at the
+user's request on 2026-10-19. The original explanation and the later
 number-encoder question remain unfinished. Work solo through
 the task board and follow [AGENTS.md](AGENTS.md). This extends
 [the Landscape framework plan](landscape_plan.md).
@@ -193,6 +193,24 @@ one retained its 25,000-update checkpoint, and 24 had not started. The
 [partial snapshot](experiments/mod97_representation_controls/progress.json)
 preserves this incomplete grid; it is not a final comparison result.
 
+The resumed workspace does not contain the ignored raw runs behind that
+snapshot. Its available device is an NVIDIA GeForce GTX 1050 (2 GiB),
+verified with `nvidia-smi` and the locked PyTorch runtime on 2026-10-19;
+the earlier RTX 3050 observation describes the previous environment.
+Board task #74 runs the entire unchanged 36-case grid afresh on one runtime
+and device. Preserve `progress.json` as the earlier partial cohort and
+do not combine its measurements with the new trajectories. Every new run
+must reach its original 30,000-update budget and pass the checkpoint-replay
+analyzer before a complete comparison is reported.
+
+Task #75 prepares a full-table Jacobian diagnostic for all twelve scalar
+readouts, at their original initialization and final trained coordinates.
+It measures the target and residual contractions after projecting away
+additive operand effects, with all zero-numerator equations retained.
+Independent parameter derivatives and finite differences check the
+diagnostic. These are local Euclidean tangent measurements on CPU float64,
+not an AdamW reduction or a claimed gradient-attraction theorem.
+
 The [SwiGLU stability study](experiments/rotate90_swiglu_stability/README.md)
 tests rates 0.01, 0.003 and 0.001 on the same three seeds. It retains a
 common 10,000-update prefix and extends the smaller-rate budgets to nearly
@@ -232,6 +250,32 @@ is numerically checked; the paired-gate compiler is proved in Lean. This
 also puts a correct classifier inside the known AdamW parameter container.
 It supplies a representable structured solution, not its random-start
 attraction mechanism; see [the source review](review/rotate90_products.md).
+
+### M9.4 tangent control
+
+Tasks #75 and #76 measure and formalize the explicitly frozen MLP control.
+All twelve fresh scalar-output runs now have initial and final full-table
+Jacobians, centered target/residual contractions, and 512-row frozen-kernel
+spectra and GD trajectories in the [access results](experiments/mod97_representation_controls/access_results.json).
+One-hot inputs start with smaller target Rayleigh quotients than scalar
+inputs, but without decay develop much larger sensitivity during training.
+Their initial frozen kernels interpolate the 512 sampled training equations
+at the long numerical horizon while retaining large held-out numeric error.
+The scalar initial kernels have only 30–32 retained numerical directions
+at the stated relative cutoff. These are measurements of conditioning,
+feature changes and sampled interpolation, not exact rank or attraction claims.
+
+`Neural.Tangent` differentiates the actual frozen half-squared objective,
+derives its normalized `J J^T / n` kernel and proves its GD eigenmode
+recurrence. A unit mode with `eta * mu <= 1` and `k * eta * mu <= 1/2`
+forces loss at least its initial squared component divided by `8 n`.
+The nonempty witness has `J x = x/10`, positive eigenvalue `1/100` and a
+zero-loss point, yet loss at least `1/8` after 50 GD steps of size one.
+An exact null mode also gives a permanent frozen-model error floor;
+numerical cutoff directions are not certified as exact null modes.
+The [statement review](review/mod97_tangent.md) separates this theorem from
+the changing neural features, original minibatches and AdamW. The actual
+Rotate90 attraction and generalization mechanism remains open.
 
 ### M9.5 exact-real optimizer container
 

@@ -9,6 +9,7 @@ public import Transformer.Landscape.Neural.Interaction
 public import Transformer.Landscape.Neural.AdamW
 public import Transformer.Landscape.Neural.MLP
 public import Transformer.Landscape.Neural.Products
+public import Transformer.Landscape.Neural.Tangent
 
 /-!
 # Analytic neural losses for the Landscape framework
@@ -27,6 +28,8 @@ exact-real optimizer recurrence, with its actual inclusive warmup.
 parameter spaces and proves the same analytic local-inequality properties.
 `Products` compiles exact paired-gate products into the actual SwiGLU
 parameters while retaining both normalizations, skip and shared readout.
+`Tangent` derives the exact quadratic gradient and normalized prediction
+kernel used by the frozen-Jacobian GD diagnostic, separately from AdamW.
 Sources and the remaining bridge to the Rotate90 lab are recorded in
 `landscape_grokking_plan.md`.
 -/
