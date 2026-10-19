@@ -71,11 +71,36 @@ and never receives held-out answers or constructed teacher weights.
 
 ## Status
 
-The experiment is prepared; no training outcome is recorded yet. A failure
-to learn within this finite budget will distinguish observed fitting from
-generalization, and will not prove that gradient training can never reach
-a good solution. Quantitative gradient-access and attraction claims remain
-the next Landscape obligation.
+Stopped at the user's explicit request on 2026-10-19. Eleven of 36 runs
+completed their 30,000-update budget: all six scalar-input number-output
+controls, all three one-hot number-output controls without decay, and the
+one-hot number-output controls with decay at seeds 11 and 17. The remaining
+one-hot number-output run, `onehot-number-mse-wd1-s23`, has a valid checkpoint
+at update 25,000 and observations through 25,300. All 24 vector-output
+controls have not started. This is an incomplete comparison.
+
+[progress.json](progress.json) preserves every run's status, completed
+results, the partial observation and raw-file hashes. The recorded lab
+sources are identified by [engine_code.json](engine_code.json). Raw ignored
+run directories and their model/optimizer/sampler checkpoints remain at
+the repository root's `experiments/mod97_representation_controls/runs/`.
+The normal run command resumes from the checkpoint and rewinds any later
+observations; it does not resume at the unsaved observation at 25,300.
+
+The new [analyzer](analyze.py) is committed and syntax-checked; its full-grid
+audit remains unexecuted because the grid is incomplete. Once all 36 runs
+are complete with the recorded lab code and runtime, run it from `python/`
+with `uv run --locked python ../experiments/mod97_representation_controls/analyze.py`.
+It requires every run and replays checkpoints before writing final curves
+and results; no final-results artifact is claimed here.
+
+The full Python suite previously passed 339 tests in 804.625 seconds, with
+three archived GPU comparisons skipped. At the stop, the repeated
+`./run.py verify` had completed its Lean stages; its Python phase was
+interrupted. A failure within this finite training budget would distinguish
+observed fitting from generalization and would not prove that gradient
+training can never reach a good solution. Quantitative gradient-access
+and attraction claims remain the next Landscape obligation.
 
 ```sh
 ./run.py check experiments/mod97_representation_controls

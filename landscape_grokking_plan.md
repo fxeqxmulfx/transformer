@@ -1,6 +1,8 @@
 # Landscape explanation of modular arithmetic generalization
 
-Started on 2026-10-19 at the user's request. Status: active. Work solo through
+Started on 2026-10-19 at the user's request. Status: paused at the user's
+explicit stop on 2026-10-19. The original explanation and the later
+number-encoder question remain unfinished. Work solo through
 the task board and follow [AGENTS.md](AGENTS.md). This extends
 [the Landscape framework plan](landscape_plan.md).
 
@@ -186,7 +188,10 @@ and decay 0/1 across the same three source splits. All have two SiLU hidden
 layers of width 195. The parameter counts and input fan-in changes are
 explicit; these are not matched-capacity controls. Tests construct finite
 scalar SiLU weights that classify every equation, independently of the
-random starts used for training. Training outcomes are not yet recorded.
+random starts used for training. At the user's stop, 11 of 36 runs completed,
+one retained its 25,000-update checkpoint, and 24 had not started. The
+[partial snapshot](experiments/mod97_representation_controls/progress.json)
+preserves this incomplete grid; it is not a final comparison result.
 
 The [SwiGLU stability study](experiments/rotate90_swiglu_stability/README.md)
 tests rates 0.01, 0.003 and 0.001 on the same three seeds. It retains a

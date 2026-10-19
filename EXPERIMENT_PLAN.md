@@ -1,13 +1,16 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-Updated on 2026-10-19 UTC. **Active direction: [Landscape explanation of modular
+Updated on 2026-10-19 UTC. **Paused at the user's explicit stop on 2026-10-19.
+Current direction: [Landscape explanation of modular
 arithmetic generalization](landscape_grokking_plan.md), requested on 2026-10-19:
 connect the published Rotate90 network and analytic activation variants to the
 Landscape framework, explain why an expressible scalar MLP solution is hard
 to reach by training, then investigate encoders of numbers.** Matched controls
 must distinguish fitting the full table from held-out generalization. The
 [scalar MLP study](experiments/mod97_scalar_mlp/README.md) is the existing
-baseline; its completed results remain below.
+baseline; its completed results remain below. The latest MLP grid has 11
+completed runs, one checkpoint at 25,000 updates and 24 not started; see
+[the retained progress](experiments/mod97_representation_controls/progress.json).
 
 Previous direction: [Grokking: how it works and when it fails](grokking_plan.md),
 rebuilt on 2026-10-08 at the user's request around three measured boundaries
