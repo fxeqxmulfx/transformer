@@ -12,6 +12,7 @@ import torch
 from torch import Tensor
 
 from ._checkpoint import rate_references, restore_clocks, restore_rates
+from ._rates import validate_rate
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -140,6 +141,8 @@ class BufferedOptimizer(torch.optim.Optimizer):
 
     def __init__(self, params: Iterable[Tensor], defaults: StateDict) -> None:
         """Initialize the parameters, hyperparameters and persistent state."""
+        if "lr" in defaults:
+            validate_rate(defaults["lr"])
         super().__init__(params, defaults)
         self.workspace = Workspace()
 

@@ -3,11 +3,29 @@
 from __future__ import annotations
 
 import copy
+import math
 import unittest
+from itertools import product
 
 import torch
 
 import lean_optim as opt
+
+_DIRECTION_RULES = (
+    "SGD",
+    "Adam",
+    "AdamWDirection",
+    "AMSGrad",
+    "AMSGradW",
+    "AdamX",
+    "AdaGrad",
+    "AdamNC",
+    "RMSProp",
+    "Muon",
+    "Dash",
+    "AdaFisher",
+)
+_TENSOR_RATE_RULES = (*_DIRECTION_RULES, "AMSGradMD", "AMSGradMDW", "AdamMDW")
 
 
 class RateTests(unittest.TestCase):
@@ -15,20 +33,7 @@ class RateTests(unittest.TestCase):
 
     def test_float_rate_overrides_match_the_ordinary_learning_rate(self) -> None:
         """Exercise every direction family, including eager eigendecomposition."""
-        for name in (
-            "SGD",
-            "Adam",
-            "AdamWDirection",
-            "AMSGrad",
-            "AMSGradW",
-            "AdamX",
-            "AdaGrad",
-            "AdamNC",
-            "RMSProp",
-            "Muon",
-            "Dash",
-            "AdaFisher",
-        ):
+        for name in _DIRECTION_RULES:
             with self.subTest(rule=name):
                 model = torch.nn.Linear(3, 2, bias=False, dtype=torch.float64)
                 control = copy.deepcopy(model)
@@ -42,6 +47,55 @@ class RateTests(unittest.TestCase):
                     actual.step()
                     expected.step()
                     torch.testing.assert_close(model.weight, control.weight, rtol=0, atol=0)
+                if name == "AdaFisher":
+                    actual.close()
+                    expected.close()
+
+    def test_invalid_float_overrides_fail_before_mutation_or_hook_registration(self) -> None:
+        """Reject nonfinite and negative overrides across every public rate constructor."""
+        names = (*_TENSOR_RATE_RULES, "ScheduleFreeAMSGradMDW", "ScheduleFreeAdamMDW")
+        for name, rate in product(names, (-0.125, math.nan, math.inf, -math.inf)):
+            with self.subTest(rule=name, rate=rate):
+                model = torch.nn.Linear(3, 2, bias=False, dtype=torch.float64)
+                before = model.weight.detach().clone()
+                with self.assertRaisesRegex(ValueError, "rate"):
+                    getattr(opt, name)(model, lr=0.125, rate=rate)
+                torch.testing.assert_close(model.weight, before, rtol=0, atol=0)
+                self.assertFalse(model._forward_hooks)  # noqa: SLF001 - Check failed constructor cleanup.
+
+    def test_invalid_tensor_overrides_fail_before_state_or_hooks_are_created(self) -> None:
+        """Reject invalid values, non-scalar storage and complex rates without copying them."""
+        rates = (
+            *(torch.tensor(value) for value in (-0.125, math.nan, math.inf, -math.inf)),
+            torch.empty(0),
+            torch.tensor([0.125, 0.25]),
+            torch.tensor(0.125 + 0j),
+        )
+        for name, rate in product(_TENSOR_RATE_RULES, rates):
+            with self.subTest(rule=name, rate=rate):
+                model = torch.nn.Linear(3, 2, bias=False, dtype=torch.float64)
+                before = model.weight.detach().clone()
+                with self.assertRaisesRegex(ValueError, "rate"):
+                    getattr(opt, name)(model, lr=0.125, rate=rate)
+                torch.testing.assert_close(model.weight, before, rtol=0, atol=0)
+                self.assertFalse(model._forward_hooks)  # noqa: SLF001 - Check failed constructor cleanup.
+
+    def test_valid_zero_and_positive_tensor_rates_keep_caller_storage(self) -> None:
+        """Keep live scalar tensors usable by all direction and ordinary MD constructors."""
+        for name, value in product(_TENSOR_RATE_RULES, (0.0, 0.125)):
+            with self.subTest(rule=name, rate=value):
+                model = torch.nn.Linear(3, 2, bias=False, dtype=torch.float64)
+                control = copy.deepcopy(model)
+                rate = torch.tensor(value, dtype=torch.float64)
+                actual = getattr(opt, name)(model, lr=0.5, rate=rate)
+                expected = getattr(opt, name)(control, lr=value)
+                model.weight.grad = torch.full_like(model.weight, 0.125)
+                control.weight.grad = torch.full_like(control.weight, 0.125)
+                actual.step()
+                expected.step()
+                self.assertIs(actual.param_groups[0]["lr"], rate)
+                self.assertEqual(float(rate), value)
+                torch.testing.assert_close(model.weight, control.weight, rtol=1e-13, atol=1e-13)
                 if name == "AdaFisher":
                     actual.close()
                     expected.close()

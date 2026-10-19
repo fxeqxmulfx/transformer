@@ -7,6 +7,7 @@ Tensor multipliers use persistent scalar buffers so graph replay reads live rate
 
 from __future__ import annotations
 
+import math
 from typing import TYPE_CHECKING
 
 import torch
@@ -15,6 +16,22 @@ from torch import Tensor
 if TYPE_CHECKING:
     from ._types import Scalar
     from ._workspace import BufferedOptimizer, Workspace
+
+
+def validate_rate(rate: Scalar) -> None:
+    """Validate one real, finite, nonnegative rate before creating optimizer state.
+
+    Read a Tensor once during construction, preserving its caller-owned
+    storage. Per-step updates and CUDA graph replays do not call this check.
+    """
+    if isinstance(rate, Tensor):
+        if rate.numel() != 1 or rate.is_complex():
+            msg = "Learning rate tensor must contain one real value"
+            raise ValueError(msg)
+        rate = rate.item()
+    if not math.isfinite(rate) or rate < 0:
+        msg = "Learning rate must be finite and nonnegative"
+        raise ValueError(msg)
 
 
 def copy_scalar(output: Tensor, value: Scalar) -> Tensor:

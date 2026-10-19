@@ -138,6 +138,10 @@ the optimizer after placing the model parameters on their intended device.
 
 A float `rate` overrides `lr` with ordinary eager arithmetic, including for
 Dash with EVD. Direction updates read the current rate's type on every step.
+Overrides must be finite and nonnegative; Tensor overrides must contain one
+real value. Constructors check them before creating optimizer state or hooks.
+The check preserves live rate storage and adds no per-step validation or
+device synchronization.
 
 `LearningRateSchedule` adds optional linear warmup and constant, linear or
 cosine learning rates to every rule that consumes an outer `lr`. Existing
