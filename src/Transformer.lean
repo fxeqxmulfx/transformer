@@ -48,11 +48,12 @@ public import Transformer.MagnitudeDirection
 public import Transformer.RecurrentGradients
 public import Transformer.NoiseScale
 public import Transformer.Surge
+public import Transformer.ScheduleFree
 public import Transformer.Grokking
 public import Transformer.Landscape
 
 /-!
-Formalization of thirty-four papers on the mathematics of Transformers:
+Formalization of thirty-five papers on the mathematics of Transformers:
 
 1. Weiss, Goldberg, Yahav — arXiv:2106.06981v2
    "Thinking Like Transformers".
@@ -166,6 +167,9 @@ Formalization of thirty-four papers on the mathematics of Transformers:
 34. Li, Zhao, Zhang, Sun, Wu, Jiao, Wang, Liu, Fang, Xue, Tao, Cui, Wang —
    arXiv:2405.14578v5
    "Surge Phenomenon in Optimal Learning Rate and Batch Size Scaling".
+
+35. Defazio, Yang, Mehta, Mishchenko, Khaled, Cutkosky — arXiv:2405.15682v4
+   "The Road Less Scheduled".
 
 Alongside these, `Transformer.ALM` formalizes the paraboloid-lifted lookup
 used by the append-only lookup machine (Percepta, transformer-vm), and
