@@ -210,7 +210,9 @@ other parameters use the documented auxiliary rule. AdaFisher takes a module
 with bias-free Linear layers so it can collect input/output-gradient
 factors. It validates these layers before registering hooks and removes its
 own hooks if registration fails, preserving existing user hooks. Call
-`close()` when replacing it. AtomicColumns uses an explicit matching-family model, task
+`close()` when replacing it. Only trainable weights collect factors;
+frozen layers keep propagating gradients without Fisher work buffers.
+AtomicColumns uses an explicit matching-family model, task
 and head-factory protocol; [its module](src/lean_optim/atomic.py) documents
 the required physical head operations. Its numerical solver and pricing
 logic live here; the lab only supplies its matching model and data adapter.

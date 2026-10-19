@@ -51,7 +51,8 @@ class Factors:
             raise NotImplementedError(msg)
         try:
             for module in modules:
-                self.handles.append(module.register_forward_hook(self.capture))
+                if module.weight.requires_grad:
+                    self.handles.append(module.register_forward_hook(self.capture))
         except Exception:
             for handle in self.handles:
                 handle.remove()
@@ -75,7 +76,7 @@ class Factors:
 
     def capture(self, module: torch.nn.Linear, inputs: tuple[Tensor, ...], output: Tensor) -> None:
         """Collect input factors and register their paired derivative hook."""
-        if not module.training or not output.requires_grad:
+        if not module.weight.requires_grad or not module.training or not output.requires_grad:
             return
         with torch.no_grad():
             squared = self._buffers(inputs[0].dtype).tensor(
