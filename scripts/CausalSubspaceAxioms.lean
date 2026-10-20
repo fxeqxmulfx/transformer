@@ -1,12 +1,15 @@
 import Transformer.Causal.Section4_SubspaceTwoTokens
+import Transformer.Causal.Section4_SubspaceConeConsensus
 
 /-!
-# Axiom inspection of the complete two-token subspace proof
+# Axiom inspection of the causal leading-subspace convergence proofs
 
-ArXiv:2411.04990v2, Section 4, Conjecture `thm2`, restricted to two tokens.
-All 29 new results must use only `propext`, `Classical.choice`, and
-`Quot.sound`. The original assertion for three or more tokens remains
-unfinished in `Causal.MainTheorem` and is not used by these proofs.
+ArXiv:2411.04990v2, Section 4, Conjecture `thm2`: the complete two-token
+case, the arbitrary-count positive-leading-covector case, and the
+almost-everywhere case up to the leading dimension.
+All 48 inspected results must use only `propext`, `Classical.choice`, and
+`Quot.sound`. The unrestricted assertion for counts above the leading
+dimension remains unfinished in `Causal.MainTheorem` and is not used here.
 
 Run with `lake env lean scripts/CausalSubspaceAxioms.lean`.
 -/
@@ -40,3 +43,23 @@ Run with `lake env lean scripts/CausalSubspaceAxioms.lean`.
 #print axioms Transformer.Causal.csaSecond_leading_field_lower
 #print axioms Transformer.Causal.hasDerivAt_csaSecond_fieldOverlap
 #print axioms Transformer.Causal.csaSecond_tendsto_of_eventually_nonneg_leading
+
+#print axioms Transformer.Causal.scalar_pos_of_nonneg_forcing
+#print axioms Transformer.Causal.continuous_csaLastLeadingCoefficient
+#print axioms Transformer.Causal.hasDerivAt_csaLast_leading
+#print axioms Transformer.Causal.csaLeading_pos_of_initial_pos
+#print axioms Transformer.Causal.eventually_nonneg_of_positive_reference
+#print axioms Transformer.Causal.csaLast_eventually_nonneg_leading_of_positive_covector
+#print axioms Transformer.Causal.measurableSet_projectedLinearIndependent
+#print axioms Transformer.Causal.ae_projectedLinearIndependent_pi
+#print axioms Transformer.Causal.ae_projectedLinearIndependent_of_uniformTuple
+#print axioms Transformer.Causal.exists_positive_leading_covector_of_independent
+#print axioms Transformer.Causal.ae_exists_positive_leading_covector
+#print axioms Transformer.Causal.csaLastLeadingOverlap_lower
+#print axioms Transformer.Causal.hasDerivAt_csaLast_fieldOverlap
+#print axioms Transformer.Causal.tendsto_csaLeadingPrefixError
+#print axioms Transformer.Causal.csaLast_tendsto_of_eventually_nonneg_leading
+#print axioms Transformer.Causal.csaLast_tendsto_of_positive_leading_covector
+#print axioms Transformer.Causal.csa_tendsto_of_leader_limit_positive_covector
+#print axioms Transformer.Causal.subspace_cluster_of_positive_leading_covector
+#print axioms Transformer.Causal.subspace_cluster_of_count_le_finrank
