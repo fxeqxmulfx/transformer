@@ -54,6 +54,10 @@ the printed strict inequality cannot hold at the zero vector.
 | `Section4_TransverseQuotient` | If longitudinal overlap stays uniformly negative, its quotient with each transverse leading component has a uniformly expanding coefficient and vanishing forcing. Every transverse leading component tends to zero. |
 | `Section4_LeadingDirection` | Fixed-covector convergence gives norm convergence of the off-axis leading projection by a finite coordinate test. Uniformly negative overlap bounds the leading projection away from zero and controls its normalized distance from `-u`. |
 | `Section4_NegativeLeadingBranch` | Every actual last follower of a converging original leading prefix either converges to `u`, or stays uniformly negative with normalized leading projection tending to `-u`. There is no bound on prefix length or additional initialization condition. |
+| `Section4_FrozenFollowerField` | The actual last-row field at a leading consensus prefix retains every original weight and self term. Its exact leading component is the positive original predecessor mass plus the original common radial coefficient. Negative critical overlap makes that coefficient positive. |
+| `Section4_TransverseLinearization` | Differentiating an exact transverse scalar factorization keeps the derivative of the coefficient and yields a left eigenvector when the actual transverse component is zero. Finite dimension gives a right eigenvector without symmetry. Projection retains a positive eigenvalue in a genuine tangent direction, and the derivative at a critical projected field maps tangent directions into the tangent space. |
+| `Section4_LeadingCriticalInstability` | At every actual negative critical follower of a leading consensus prefix, leading dimension at least two supplies a nonzero transverse left eigenvector of the full original derivative. Its positive right eigenvalue has a nonzero original tangent eigenvector. No symmetry of the value matrix or omission of attention derivatives is used. |
+| `Section4_SubspaceLimitInstability` | Actual original token limits give the original limiting velocity. Boundedness forces that limiting velocity to vanish. An actual non-consensus follower limit is therefore a negative critical point with a positive actual tangent eigenvalue. Existence of the full follower limit is an explicit premise of this necessary-condition theorem. |
 
 The projected-independence proof adapts
 `Perspective.ae_linearIndependent_pi` from
@@ -151,15 +155,63 @@ asymptotic lower-dimensional set does not by itself prove that the basin
 has measure zero. The original `subspace_cluster` statement has not been
 weakened, and its remaining `sorry` is retained.
 
+## Exact tangent eigenvalues at actual non-consensus limits
+
+For `n` original predecessors all equal to a leading unit vector `u`, let
+`F(x)` be the original last-row field, `a(x)` its original self weight,
+and `A(x)` its full original value average. The auxiliary limiting field
+uses the same `n+1` tokens in the denominator; it is not substituted for
+an arbitrary moving-prefix trajectory. For every original leading `v`,
+
+```text
+<v,F(x)> = lambda*(1-a(x))*<v,u> + h(x)*<v,x>,
+h(x) = lambda*a(x) - <x,A(x)>.
+```
+
+At a critical point with `q=<u,x><0`, the exact longitudinal identity is
+`0=lambda*(1-a)+h*q`. Nonempty original predecessor mass is strictly
+positive, so `h>0`. For every `v` in `L` perpendicular to `u`, the same
+identity gives `<v,x>=0` and, upon differentiating the full field,
+
+```text
+<v,DF(x)w> = Dh(x)w*<v,x> + h(x)*<v,w> = h(x)*<v,w>.
+```
+
+The attention derivatives are present in `Dh`; their contribution here
+vanishes because the actual transverse component is zero. It is not a
+frozen-weight approximation. Leading dimension at least two supplies a
+nonzero `v`, tangent to the original unit sphere at `x`.
+
+The left eigenvector makes `DF-h I` non-surjective. In finite dimension
+it consequently has a nonzero kernel. Applying the same argument to the
+derivative projected on both sides onto the original tangent space gives
+a nonzero tangent right eigenvector. Differentiating the actual projected
+field at an actual critical point also proves that `DF` maps tangent
+directions to tangent directions. Thus `h>0` belongs to the actual
+tangent derivative, without a symmetry assumption on `V`.
+
+For a moving original prefix converging to `u`, existence of a full last
+limit `x` makes the actual velocity tend to `F(x)`. A nonzero `F(x)` would
+give a uniformly positive eventual derivative of `<F(x),x_last(t)>`,
+contradicting its boundedness on the original sphere. Hence `F(x)=0`.
+If `x` differs from `u`, the previous exact negative-branch dichotomy
+makes `<u,x>` strictly negative, so the tangent eigenvalue result applies.
+
+This is a local algebraic instability result and a necessary condition on
+convergent exceptional trajectories. It does not supply measure zero of
+their original basins, nor does it establish full follower convergence
+from convergence of the normalized leading projection. Those steps must
+not be inferred from the positive eigenvalue alone.
+
 ## Validation
 
 The module build, full `lake build`, `./run.py audit`, `./run.py index`, and
 `./run.py forbidden` are the required checks. Every new theorem is also
 inspected with `#print axioms` by
-`lake env lean scripts/CausalSubspaceAxioms.lean` (67 results, including the
+`lake env lean scripts/CausalSubspaceAxioms.lean` (86 results, including the
 original two-token development). Witness examples include actual orthogonal
 two-token and three-token flows, actual consensus, the original shell law,
 and collinear exceptional initial data.
 The overall count remains 36 unfinished statements; the new two-token results
-and their extensions, including the unrestricted follower dichotomy, have
-no `sorry` dependencies.
+and their extensions, including the unrestricted follower dichotomy and
+the exact critical-limit tangent eigenvalues, have no `sorry` dependencies.

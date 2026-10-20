@@ -1,6 +1,7 @@
 import Transformer.Causal.Section4_SubspaceTwoTokens
 import Transformer.Causal.Section4_SubspaceConeConsensus
 import Transformer.Causal.Section4_NegativeLeadingBranch
+import Transformer.Causal.Section4_SubspaceLimitInstability
 
 /-!
 # Axiom inspection of the causal leading-subspace convergence proofs
@@ -8,8 +9,9 @@ import Transformer.Causal.Section4_NegativeLeadingBranch
 ArXiv:2411.04990v2, Section 4, Conjecture `thm2`: the complete two-token
 case, the arbitrary-count positive-leading-covector case, and the
 almost-everywhere case up to the leading dimension, and the unrestricted
-follower angular dichotomy for a converging original leading prefix.
-All 67 inspected results must use only `propext`, `Classical.choice`, and
+follower angular dichotomy for a converging original leading prefix,
+and positive actual tangent eigenvalues at non-consensus follower limits.
+All 86 inspected results must use only `propext`, `Classical.choice`, and
 `Quot.sound`. The unrestricted assertion for counts above the leading
 dimension remains unfinished in `Causal.MainTheorem` and is not used here.
 
@@ -85,3 +87,23 @@ Run with `lake env lean scripts/CausalSubspaceAxioms.lean`.
 #print axioms Transformer.Causal.csaLast_tendsto_or_negative_leading
 #print axioms Transformer.Causal.csaLast_negative_leading_of_not_tendsto
 #print axioms Transformer.Causal.csaLast_tendsto_or_negative_direction
+
+#print axioms Transformer.Causal.contDiff_csaConsensusInsertion
+#print axioms Transformer.Causal.contDiff_csaFrozenFollowerField
+#print axioms Transformer.Causal.contDiff_csaFrozenLeadingCoefficient
+#print axioms Transformer.Causal.inner_csaFrozenFollowerField
+#print axioms Transformer.Causal.csaFrozenPredecessorMass_pos
+#print axioms Transformer.Causal.csaFrozenLeadingCoefficient_pos_of_critical
+#print axioms Transformer.Causal.inner_fderiv_of_transverse_factor
+#print axioms Transformer.Causal.exists_eigenvector_of_left_inner
+#print axioms Transformer.Causal.csaTangentProjection_apply
+#print axioms Transformer.Causal.inner_csaTangentProjection
+#print axioms Transformer.Causal.exists_tangent_eigenvector_of_left_inner
+#print axioms Transformer.Causal.inner_fderiv_projectedField_of_critical
+#print axioms Transformer.Causal.inner_csaFrozenCritical_transverse_eq_zero
+#print axioms Transformer.Causal.inner_fderiv_csaFrozenFollowerField_transverse
+#print axioms Transformer.Causal.csaFrozenFollowerField_fderiv_tangent
+#print axioms Transformer.Causal.csaFrozenNegativeCritical_exists_positive_tangent_eigenvalue
+#print axioms Transformer.Causal.tendsto_csaLastField_of_limits
+#print axioms Transformer.Causal.csaFrozenFollowerField_eq_zero_of_limits
+#print axioms Transformer.Causal.csaLast_nonconsensus_limit_has_positive_tangent_eigenvalue

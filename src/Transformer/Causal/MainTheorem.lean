@@ -7,6 +7,7 @@ public import Transformer.Causal.Section4_SubspaceLeader
 public import Transformer.Causal.Section4_SubspaceTwoTokens
 public import Transformer.Causal.Section4_SubspaceConeConsensus
 public import Transformer.Causal.Section4_NegativeLeadingBranch
+public import Transformer.Causal.Section4_SubspaceLimitInstability
 public import Transformer.Causal.SectionA_Scalar
 public import Transformer.Perspective.Section2_FlowMap
 public import Transformer.Perspective.Section3_SmallBeta
@@ -38,6 +39,9 @@ For any count, a follower of a converging leading prefix either converges
 to its limit or has a nonzero leading projection with the antipodal
 normalized limit. Nullity of this exceptional basin for arbitrary longer
 prefixes, and hence the unrestricted assertion, remains unproved.
+Every non-consensus full follower limit is proved critical for the actual
+limiting field and has a positive eigenvalue in an actual tangent direction.
+This local derivative property does not assert exceptional-basin nullity.
 The geometric `lemma:scalar` and its equality cases are in `SectionA_Scalar`.
 -/
 
