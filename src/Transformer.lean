@@ -52,9 +52,12 @@ public import Transformer.Surge
 public import Transformer.ScheduleFree
 public import Transformer.Grokking
 public import Transformer.Landscape
+public import Transformer.MHC
+public import Transformer.AttentionResiduals
+public import Transformer.DeepSeekV41
 
 /-!
-Formalization of thirty-five papers on the mathematics of Transformers:
+Formalizations of papers on the mathematics and architecture of Transformers:
 
 1. Weiss, Goldberg, Yahav — arXiv:2106.06981v2
    "Thinking Like Transformers".
@@ -171,6 +174,26 @@ Formalization of thirty-five papers on the mathematics of Transformers:
 
 35. Defazio, Yang, Mehta, Mishchenko, Khaled, Cutkosky — arXiv:2405.15682v4
    "The Road Less Scheduled".
+
+36. Zhu et al. — arXiv:2409.19606v3, "Hyper-Connections".
+   The residual operator and its standard-residual specialization.
+
+37. Xie et al. — arXiv:2512.24880v2, "mHC: Manifold-Constrained Hyper-Connections".
+   Residual sections §§1, 4.1–4.2, with ideal and finite normalization kept distinct.
+
+38. Kimi Team — arXiv:2603.15031v1, "Attention Residuals".
+   Residual sections §§3–4.2: Full/Block AttnRes and exact two-phase merging.
+
+39. DeepSeek-AI — "DeepSeek-V4.1-Flash Technical Report", §2.4.1.
+   Single-Pass mHC and its activation traffic model.
+
+40. Kimi Team — "Kimi K3: Open Frontier Intelligence", §2.2.
+   The AttnRes residual mechanism, shared with item 38, and concrete block counts.
+
+The latest GLM-5.3-Flash residual is instantiated from its pinned official
+configuration and Transformers implementation. The older GLM-5 report
+(arXiv:2602.15763v2) was downloaded for context; its scope is not silently
+extended to cover the Flash model's later architectural changes.
 
 Alongside these, `Transformer.ALM` formalizes the paraboloid-lifted lookup
 used by the append-only lookup machine (Percepta, transformer-vm), and
