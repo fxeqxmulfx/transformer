@@ -48,6 +48,7 @@ witness examples beside them.
 | Shared notation and existing model | `Basic.lean`, `Scores.lean` | Agreement with `GPTMini.invFreq`; actual last coordinate of an even head; monotone frequency grid; field/period rescaling; bounded integrable contrast; real query/key score expansion; realization of arbitrary score coefficients; amplitude bounds. |
 | Liu §3.2, Eq. (4) | `ScalingLaws/Section3_Periods.lean` | Full periods and the exact integer cutoff between complete and incomplete periods, with a strict inequality matching the boundary convention. |
 | YaRN §3.2 and A.2, Eqs. (19)–(22) | `YaRN/SectionA2_NTK.lean`, `YaRN/Section3_Bands.lean` | Coordinatewise NTK factors; preservation of the highest frequency; matching of the lowest-frequency phase; positivity and bounds for the actual interpolation blend. |
+| YaRN §3.2–3.4, Eqs. (10)–(15), Definitions 1–2 | `YaRN/Section3_Ramp.lean`, `YaRN/Section3_Temperature.lean`, `YaRN/Section3_Algorithm.lean` | The actual rotation-count ramp in all three regimes; context-derived scale; positive compressed frequencies; the squared Q/K temperature gain; exact softmax odds and preservation of logit order; the complete score construction, identity without extension, and fixed-activation slope and margin bounds. |
 | Men §4.2–4.3, Appendix A | `BaseBounds/Section4_ExpectedScores.lean` | The integral identity for the expected score gap under explicit coefficient moments; its nonzero-variance sign criterion; a counterexample to the omitted zero-mean/cross-moment implication. |
 | LongRoPE2 §2.2, Eqs. (8)–(10), and §3.3 | `LongRoPE2/Section2_Rescaling.lean` | The scaling-factor constraint is necessary and sufficient for endpoint phase coverage; it bounds every in-window phase; period scaling and the mixed-context rule preserve the original short-context phases. |
 | Oka §5.1, Eqs. (4)–(9) | `FrequencyBands/Section5_Variance.lean` | The variance formula from actual integrals; the exact continuous band-coordinate identity; a counterexample to the global-unimodality assertion in Step 2. |
@@ -172,6 +173,45 @@ measured/certified hypotheses; they do not follow from a parameter vector being
 trained. Recomputing Q/K when an input or preceding layer changes requires
 additional control of those activation changes. The generic bounds here freeze
 the activations and never hide that distinction in a performance claim.
+
+## Complete YaRN algorithm and empirical defaults
+
+The implementation of Definition 2 now includes every mathematical operation
+in fixed-context YaRN, not just NTK-by-parts frequency blending:
+
+```text
+s = max(1, target_context / original_training_context)
+r_i = original_training_context * omega_i / (2*pi)
+gamma_i = clip((r_i - 1) / (32 - 1), 0, 1)
+omega'_i = (1 - gamma_i) * omega_i / s + gamma_i * omega_i
+m = 1 + log(s) / 10
+Q' = m * rotate(Q, omega')
+K' = m * rotate(K, omega')
+logits = Q' * transpose(K') / sqrt(head_dimension)
+```
+
+The ramp is linear in **rotation count**, exactly as manuscript Eq. (11).
+It is not replaced by a ramp linear in frequency index, which is used by
+some implementations. The original training context is required provenance;
+it cannot be inferred from the configured target context. For shorter targets
+the clamping convention gives native RoPE and unit temperature gain. For
+extensions it is precisely §3.4's fixed configured-context rule. Dynamic
+per-sequence rescaling and its KV-cache implications are not implemented here.
+
+The constants `alpha=1`, `beta=32`, and `m=1+0.1*log(s)` are **empirical
+recommendations for LLaMA**, not proved optima. Section 3.3 Eq. (15) fits the
+temperature giving the lowest perplexity at different extension factors for
+unfinetuned LLaMA 7B, 13B, 33B, and 65B; it reports transfer to Llama 2. No
+theorem here asserts that these constants minimize an arbitrary model's loss.
+The complete algorithm is formalized; the paper's empirical evaluation is not
+a mathematical theorem.
+
+The temperature scales logits by `m^2`, preserves their ranking, and multiplies
+softmax odds by changing `exp(margin)` into `exp(m^2*margin)`. For positive
+frequencies, the interpolated slope before temperature lies in `[C/s,C]`.
+After temperature its budget is `m^2*C_interpolated`. Reference margins are
+also multiplied by `m^2`, so temperature cannot improve the margin/slope
+certificate. All statements about score changes keep Q/K activations fixed.
 
 ## Validation
 

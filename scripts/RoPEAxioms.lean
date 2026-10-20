@@ -1,6 +1,5 @@
 import Transformer.RoPE
 
--- Every named theorem introduced by the RoPE paper development.
 #print axioms Transformer.RoPE.BaseBounds.expected_score_of_moments
 #print axioms Transformer.RoPE.BaseBounds.discrimination_iff
 #print axioms Transformer.RoPE.BaseBounds.zero_mean_noise_not_orthogonal
@@ -76,9 +75,33 @@ import Transformer.RoPE
 #print axioms Transformer.RoPE.score_quadrature
 #print axioms Transformer.RoPE.score_amplitude_bound
 #print axioms Transformer.RoPE.head_amplitude_bound
+#print axioms Transformer.RoPE.YaRN.full_score_query_key
+#print axioms Transformer.RoPE.YaRN.full_score_unextended
+#print axioms Transformer.RoPE.YaRN.yarn_spectral_slope_bounds
+#print axioms Transformer.RoPE.YaRN.full_score_lipschitz
+#print axioms Transformer.RoPE.YaRN.temperature_margin_certificate
 #print axioms Transformer.RoPE.YaRN.blended_frequency_bounds
 #print axioms Transformer.RoPE.YaRN.blended_frequency_endpoints
 #print axioms Transformer.RoPE.YaRN.blended_frequency_positive
+#print axioms Transformer.RoPE.YaRN.ramp_bounds
+#print axioms Transformer.RoPE.YaRN.ramp_low
+#print axioms Transformer.RoPE.YaRN.ramp_high
+#print axioms Transformer.RoPE.YaRN.ramp_middle
+#print axioms Transformer.RoPE.YaRN.context_scale_ge_one
+#print axioms Transformer.RoPE.YaRN.context_scale_extension
+#print axioms Transformer.RoPE.YaRN.context_scale_unextended
+#print axioms Transformer.RoPE.YaRN.yarn_frequency_bounds
+#print axioms Transformer.RoPE.YaRN.yarn_frequency_positive
+#print axioms Transformer.RoPE.YaRN.yarn_frequency_one
+#print axioms Transformer.RoPE.YaRN.length_gain_ge_one
+#print axioms Transformer.RoPE.YaRN.logit_gain_ge_one
+#print axioms Transformer.RoPE.YaRN.temperature_bounds
+#print axioms Transformer.RoPE.YaRN.inverse_temperature
+#print axioms Transformer.RoPE.YaRN.scaled_pair_score
+#print axioms Transformer.RoPE.YaRN.temperature_preserves_order
+#print axioms Transformer.RoPE.YaRN.softmax_odds
+#print axioms Transformer.RoPE.YaRN.softmax_odds_increase
+#print axioms Transformer.RoPE.YaRN.gains_one
 #print axioms Transformer.RoPE.YaRN.slow_frequency_adjusted
 #print axioms Transformer.RoPE.YaRN.coordinate_frequency_adjusted
 #print axioms Transformer.RoPE.YaRN.highest_frequency_preserved
