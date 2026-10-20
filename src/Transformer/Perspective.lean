@@ -2,6 +2,7 @@ module
 
 public import Transformer.Perspective.Section1_IPS
 public import Transformer.Perspective.Section2_FlowMap
+public import Transformer.Perspective.Section2_USAFlow
 public import Transformer.Perspective.Section2_EnergyKernel
 public import Transformer.Perspective.Section2_EnergyMoments
 public import Transformer.Perspective.Section2_EnergySeries

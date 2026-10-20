@@ -3,6 +3,7 @@ module
 public import Transformer.Basic
 public import Transformer.Perspective.Section1_IPS
 public import Transformer.Perspective.Section2_FlowMap
+public import Transformer.Perspective.Section2_USAFlow
 public import Transformer.Perspective.Section2_GradientFlow
 public import Transformer.Perspective.Section3_SmallBeta
 public import Transformer.Perspective.Section5_HighD
@@ -23,8 +24,9 @@ public import Transformer.MeanField.Basic
 `d`, `n` — the source assumes `β > 0`, `d ≥ 2`, `n ≥ 1` — and for the `Q, K`
 variants as well; it is not restated here.
 
-`thm: clustering_finite` is read against the uniform law
-`Perspective.UniformTuple`, and is not proved. `cor: d-ge-n` is
+`thm: clustering_finite` is proved against the uniform law
+`Perspective.UniformTuple`, using actual global solutions and the proved
+high-dimensional clustering theorem. `cor: d-ge-n` is
 `d_ge_n_exponential`, proved: `n ≤ d` uniform particles lie in an open
 hemisphere almost surely (`Perspective.ae_exists_openHemisphere`), which is
 the hypothesis `thm: cone-collapse` runs on.
@@ -59,7 +61,20 @@ both dynamics, is a counterexample. The two dynamics are one conjunction, as
 the source states them in one theorem; for each, global existence is the first
 half and convergence of every solution the second.
 
-Not proved here.
+Global existence is supplied separately for the original SA and USA
+equations. The common cluster limits follow from `Perspective.boumal_clustering`;
+subtracting the two convergent offsets gives the source's pairwise distance limit.
+
+The USA existence construction uses a smooth ambient extension: its
+exponential damping and projection scale equal one on unit tuples.
+The squared-norm defect obeys a homogeneous scalar ODE, so invariance
+is proved from the original datum rather than assumed along the path.
+This supplies the existential conjunct as well as convergence of every
+actual solution, with the same uniform initialization law in both cases.
+The almost-everywhere exceptions are retained; antipodal equilibria
+already show why convergence cannot be asserted for every initial tuple.
+Both global-existence constructions are valid at zero temperature too,
+so the source's endpoint `β = 0` remains included in the theorem.
 
 Source: arXiv:2512.01868v4, §4, `thm:clustering_finite`. -/
 theorem global_clustering (β : ℝ) (hd : 3 ≤ d) (hn : 2 ≤ n) (hβ : 0 ≤ β) :
@@ -77,7 +92,21 @@ theorem global_clustering (β : ℝ) (hd : 3 ≤ d) (hn : 2 ≤ n) (hβ : 0 ≤ 
             Filter.Tendsto
               (fun t : ℝ => ‖(X t i : EucSpace d) - (X t j : EucSpace d)‖)
               Filter.atTop (nhds 0)) := by
-  sorry
+  intro P hP
+  filter_upwards [boumal_clustering d n hd hn β hβ P hP] with X₀ hX₀
+  obtain ⟨xSA, hSA⟩ := hX₀.1
+  obtain ⟨xUSA, hUSA⟩ := hX₀.2
+  constructor
+  · refine ⟨exists_SA β X₀, ?_⟩
+    intro X h0 hX i j
+    have hi := hSA X h0 hX i
+    have hj := hSA X h0 hX j
+    convert (hi.sub hj).norm using 1 <;> simp
+  · refine ⟨exists_USA β X₀, ?_⟩
+    intro X h0 hX i j
+    have hi := hUSA X h0 hX i
+    have hj := hUSA X h0 hX j
+    convert (hi.sub hj).norm using 1 <;> simp
 
 /-- The hypotheses of `global_clustering` are satisfiable: `d = 3`, `n = 2`,
 `β = 0`. -/
