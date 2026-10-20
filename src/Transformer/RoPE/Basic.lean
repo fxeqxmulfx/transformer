@@ -23,7 +23,7 @@ namespace Transformer.RoPE
 noncomputable def frequency (base : ℝ) (dimension index : ℕ) : ℝ :=
   base ^ (-(2 * (index : ℝ)) / (dimension : ℝ))
 
-/-- The slowest frequency of an even rotary dimension `dimension > 2`.
+/-- The last pair's frequency, the slowest for `base >= 1` in an even dimension `dimension > 2`.
 The real-valued dimension permits the same algebra without integer division. -/
 noncomputable def slowFrequency (base dimension : ℝ) : ℝ :=
   base ^ (-(dimension - 2) / dimension)

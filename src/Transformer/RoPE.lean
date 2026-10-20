@@ -11,6 +11,7 @@ public import Transformer.RoPE.LongRoPE2.Section2_Rescaling
 public import Transformer.RoPE.BaseBounds.Section4_ExpectedScores
 public import Transformer.RoPE.FrequencyBands.Section5_Variance
 public import Transformer.RoPE.Diagnostics.SectionA4_Response
+public import Transformer.RoPE.Diagnostics.SectionC6_Margins
 
 /-!
 # RoPE parameter selection and context length

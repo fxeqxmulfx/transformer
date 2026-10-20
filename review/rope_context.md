@@ -56,6 +56,7 @@ witness examples beside them.
 | Derived endpoint design results | `FrequencyMatching/Section3_WorstCase.lean`, `FrequencyMatching/Section3_Retention.lean` | Actual maximum token distance; exact slow-frequency base threshold; guarantees at all nearer distances; opposite directions of retention and contrast; a unique contrast optimum under a fixed retention floor; a realizable attention-score counterexample. |
 | LeRoPE §3.1, Eq. (5), and §3.2 | `LeRoPE/Section3_LearnedFrequencies.lean` | Positive frequencies, zero initialization, representation of every positive target, multiplicative increments, and the exact local log-frequency score derivative. |
 | Wu/Du/Peng A.2, Proposition 2, and A.4/C.6 | `Scores.lean`, `Diagnostics/SectionA4_Response.lean` | Real score representation and its converse; exact adjacent-position response; deterministic frequency/amplitude bounds for arbitrary coefficients and complete heads. |
+| Wu/Du/Peng C.6 generalized to arbitrary shifts; derived margin guarantees | `Diagnostics/SectionC6_Stability.lean`, `Diagnostics/SectionC6_Margins.lean` | Exact response for any displacement; spectral Lipschitz budget; common query shifts with different baseline key phases; pairwise and whole-window ranking preservation under explicit reference margins; unbounded score changes without amplitude restrictions. |
 
 ## Worst-case design and the meaning of optimality
 
@@ -134,6 +135,43 @@ retrieval, perplexity, and positional-resolution metrics.
    conditional context-length theorem are outside the deterministic response
    results covered here. No unproved probability estimate is introduced as an
    axiom or hidden in a structure field.
+
+## Arbitrary coefficients and learned weights
+
+For fixed query/key activations, any rotary head has the real score form
+
+```text
+S(r) = sum_i (a_i*cos(omega_i*r) + b_i*sin(omega_i*r)).
+A_i = sqrt(a_i^2 + b_i^2).
+C = sum_i |omega_i| * A_i.
+```
+
+The development proves, without distributional assumptions on those coefficients,
+
+```text
+|S(r + delta) - S(r)| <= 2 * sum_i A_i * |sin(omega_i * delta / 2)|
+                    <= |delta| * C.
+```
+
+For a target and competitor, use their coefficient differences to compute
+`C_margin`. If the reference margin exceeds `|delta| * C_margin`, their order
+is preserved. If every competitor's reference margin exceeds `W * C_margin`,
+the target remains the unique highest-scoring key everywhere in `[0,W]`.
+Different keys' baseline positional phases can be absorbed into their
+coefficients, so the same parameter may represent a common query shift.
+
+These are sufficient bounds on variations, even when actual scores are not
+monotone. They do not say that the actual score at the far endpoint is always
+the smallest. An explicit construction shows that without a bound on coefficient
+magnitudes, a fixed nonzero in-field phase change can cause arbitrarily large
+score changes for realizable query/key vectors.
+
+Training may create favorable spectral amplitudes, phases, and margins. Such
+properties must be proved from a learning model or supplied as explicit
+measured/certified hypotheses; they do not follow from a parameter vector being
+trained. Recomputing Q/K when an input or preceding layer changes requires
+additional control of those activation changes. The generic bounds here freeze
+the activations and never hide that distinction in a performance claim.
 
 ## Validation
 
