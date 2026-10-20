@@ -3,6 +3,7 @@ module
 public import Transformer.Basic
 public import Transformer.Causal.Section4_TwoClusterRefutation
 public import Transformer.Causal.Section4_ConsensusInduction
+public import Transformer.Causal.Section4_SubspaceLeader
 public import Transformer.Causal.SectionA_Scalar
 public import Transformer.Perspective.Section2_FlowMap
 public import Transformer.Perspective.Section3_SmallBeta
@@ -121,7 +122,9 @@ and then in symbols as `y_1 := P_{L^⊥}(x_1(0))`, `ξ := y_1/|y_1|`. The
 symbols contradict the words and the surrounding discussion (tokens are
 attracted *into* `L`); the words are taken, `ξ` is the projection on `L`.
 
-Not proved here.
+The first-token limit and the full singleton case are proved from the
+original projected equation in `Section4_SubspaceLeader`. The remaining
+assertion for followers at `n ≥ 2` is not proved here.
 
 Source: arXiv:2411.04990v2, §4, `thm2`. -/
 theorem subspace_cluster (β : ℝ) (Q K V : ParamMatrix d)
@@ -138,7 +141,17 @@ theorem subspace_cluster (β : ℝ) (Q K V : ParamMatrix d)
           Filter.Tendsto (fun t : ℝ => (X t k : EucSpace d)) Filter.atTop
             (nhds (‖L.starProjection ((X₀ ⟨0, hn⟩ : SSphere d) : EucSpace d)‖⁻¹ •
               L.starProjection ((X₀ ⟨0, hn⟩ : SSphere d) : EucSpace d))) := by
-  sorry
+  by_cases hn1 : n = 1
+  · subst n
+    intro σ
+    refine fun _ => Filter.Eventually.of_forall ?_
+    intro X₀ X h0 hX hp i
+    have hi : (⟨0, hn⟩ : Idx 1) = 0 := Subsingleton.elim _ _
+    rw [hi] at hp ⊢
+    have hp' : L.starProjection (X 0 0 : EucSpace d) ≠ 0 := by rwa [h0]
+    have h := subspace_cluster_singleton β Q K V L lam heig hinv hdecay X hX hp' i
+    simpa only [h0] using h
+  · sorry
 
 /-- The hypotheses of `subspace_cluster` are satisfiable: in the plane, with
 `L = ⊤`, `V = I_2` and `λ = 1`. The whole plane has rank `2`, is invariant, and

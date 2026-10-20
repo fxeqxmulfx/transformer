@@ -29,12 +29,15 @@ and the result is not the survey's lemma:
   outright with `L = L' = ⊤` and `E = ⊥`, because the flow keeps `‖x(t)‖ = 1`
   and the distance to `⊤ ∩ 𝕊^{d-1}` is therefore `0` at every time.
 
-What survives is `norm_eq_one_of_singleTokenODE`, the invariance of the sphere,
-which the survey uses without comment and which the two statements above rest
-on. Stating `lemma1` itself needs the real Jordan decomposition of `V` — that
+Sphere invariance is `norm_eq_one_of_singleTokenODE`, which the survey uses
+without comment and which the two statements above rest on. The real leading
+eigenvalue case with an invariant orthogonal complement and a strict transverse
+quadratic gap, as assumed in `thm2`, is proved in `Section4_SubspaceLeader`:
+the original solution converges to its normalized initial leading projection.
+`Section3_TransverseDecay` proves exponential decay of its positive linear lift.
+Stating the full `lemma1` needs the real Jordan decomposition of `V` — that
 is what names `L'(V)` and `L(V)` — and neither Mathlib nor this development
-has it; a statement that does not name them is not the lemma, so none is made
-here.
+has it. No unrestricted replacement of that spectral statement is asserted here.
 
 Source: arXiv:2411.04990v2, §3, `lemma1`.
 -/
