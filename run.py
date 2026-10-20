@@ -125,7 +125,8 @@ def package(_):
 
 def optimizer_parity(_):
     execute(["lake", "build", "Transformer.ScheduleFree.SectionD_Optimistic",
-             "Transformer.ScheduleFree.Section4_AdamW", "Transformer.ScheduleFree.Section2_Muon",
+             "Transformer.ScheduleFree.Section4_AdamW", "Transformer.ScheduleFree.AdamW",
+             "Transformer.ScheduleFree.Section2_Muon",
              "Transformer.Grokking.AdamW.ScalarRecurrence",
              "Transformer.MagnitudeDirection.SectionA_AMSGradCallbacks", "Transformer.AdamBeyond.Section5_AdamNC",
              "Transformer.AMSGrad.Section5_AdamX", "Transformer.DASH.Section2_Models",
@@ -133,6 +134,7 @@ def optimizer_parity(_):
              "Transformer.Optimization.Basic", "Transformer.ScheduleFree.AMSGrad",
              "Transformer.MagnitudeDirection.SectionA_TrainingQuadratic", "Transformer.MDW"])
     execute(["lake", "env", "lean", "scripts/OptimizerParity.lean"])
+    execute(["lake", "env", "lean", "scripts/ScheduleFreeAdamWParity.lean"])
     execute(["lake", "env", "lean", "scripts/ScheduleFreeAMSGradParity.lean"])
     execute(["lake", "env", "lean", "scripts/MDWParity.lean"])
     execute(["lake", "env", "lean", "scripts/ScheduleFreeMuonParity.lean"])

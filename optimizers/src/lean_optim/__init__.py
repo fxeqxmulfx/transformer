@@ -35,7 +35,12 @@ from .config import (
 from .geometry import AdaFisher, AMSGradMD, Dash, Guarded, Magma, Muon
 from .mdw import AdamMDW, AMSGradMDW
 from .optimistic import ClippedOptimistic
-from .schedule_free import ScheduleFreeAdamW, ScheduleFreeAMSGradW, ScheduleFreeSGD
+from .schedule_free import (
+    ScheduleFreeAdamW,
+    ScheduleFreeAdamWPaper,
+    ScheduleFreeAMSGradW,
+    ScheduleFreeSGD,
+)
 from .schedule_free_md import ScheduleFreeAMSGradMD
 from .schedule_free_mdw import ScheduleFreeAdamMDW, ScheduleFreeAMSGradMDW
 from .schedule_free_muon import ScheduleFreeMuon
@@ -87,6 +92,7 @@ __all__ = [
     "ScheduleFreeAMSGradW",
     "ScheduleFreeAdamMDW",
     "ScheduleFreeAdamW",
+    "ScheduleFreeAdamWPaper",
     "ScheduleFreeMuon",
     "ScheduleFreeSGD",
     "standard",

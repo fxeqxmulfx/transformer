@@ -1,9 +1,10 @@
 # PyTorch / Lean recurrence audit
 
-Audited against the Transformer tree at `470f9b6b` (2026-10-19). The
-implementation kernels were extracted from `python/src/lab/infrastructure/optim`
-at that commit. The public API removes experiment-specification and GPTMini
-dependencies.
+The original kernels were audited against the Transformer tree at `470f9b6b`
+(2026-10-19) and extracted from `python/src/lab/infrastructure/optim` at that
+commit. Revised ScheduleFreeAdamW corresponds to the Lean model at `e7ee4beb`
+and the published schedulefree 1.4.1 source. The public API removes
+experiment-specification and GPTMini dependencies.
 
 This audit compares definitions, not theorem titles. Lean models exact real
 arithmetic. Numerical recurrence tests, CUDA checks and historical trajectory
@@ -18,13 +19,13 @@ on every update. Missing gradients are not silently identified with zero
 gradients in the correspondence. Dash, AMSGradMD, Schedule-Free and the
 optimistic method require all participating parameters' gradients.
 
-Schedule-Free query interpolation and averaging use `lerp` in PyTorch. This
-is algebraically the same exact-real affine combination as the Lean definitions,
-with exact copies at interpolation endpoints and no averaging at zero weight.
-The numerical form preserves equal float32 iterates and removes the query's
-scratch tensor. AdamW updates its base directly with `addcdiv_` and old-query
-decay, reusing one denominator workspace. These changes preserve the modeled
-recurrence while changing floating-point rounding. Regression tests check
+Schedule-Free interpolation uses `lerp` in PyTorch, algebraically the same
+exact-real affine combination as the Lean definitions. ScheduleFreeAdamWPaper
+and its AMSGrad extensions store x and z, update z with `addcdiv_` and old-query
+decay, and reuse one denominator workspace. Revised ScheduleFreeAdamW stores
+z and v while the parameters hold y or x; its one workspace holds first the
+corrected denominator and then the update. Its mode round trips can round.
+These numerical forms preserve equal float32 iterates. Regression tests check
 stationary iterates, zero rates and the scratch-memory budget; they are not
 a formal IEEE arithmetic refinement.
 
@@ -62,8 +63,9 @@ The PyTorch implementation is the module in this package.
 | AtomicColumns / `atomic.py` | `GPTMini.Sparsemax.matchingMixture_criterion_convex`, `matchingMixture_gap_certificate`, `matchingHeadPrice_minimum_exists`, `GPTMini/Sparsemax/AtomicMatching*.lean`; paired equivalents in `PairedMatching*.lean` | The active weights live on a simplex over physical heads. Order/binding prices are exact only for the two specified scalar cap-one contexts. Q/K Adam search is local and is never called a global price. Finite capacity, finite corrective iterations, line-search tolerances and numerical QP solves are extensions; the abstract Lean theorem does not verify those solvers. A model/task/head-factory protocol supplies the actual family. |
 | ScheduleFreeSGD / `schedule_free.py` | `ScheduleFree.mix`, `query`, `average`, `ScheduleFree/Section2_Averaging.lean`; `schedule_free_sgd`, `Section2_SGD.lean` | Stored base z and evaluation x start at the initial point; x averages z including that initial point. Query y=beta x+(1-beta)z, base moves by -lr g(y). The first new average uses 1/2. The optimal rate theorem additionally specifies lr=D/(G sqrt(T)) and bounded unbiased convex-oracle assumptions. |
 | ScheduleFreeMuon / `schedule_free_muon.py` | `ScheduleFree.wrapperRun`, `wrapperRun_evaluation`, `ScheduleFree/Section2_Wrapper.lean`; `muonWrapperRun`, `muonWrapperStep_base`, `muonWrapperRun_evaluation`, `Section2_Muon.lean` | Local composition of the general Schedule-Free scheme and native Muon. Query y=beta x+(1-beta)z; gradients at y update Muon's raw momentum and its five-step finite Newton–Schulz direction. Decay acts on z. Evaluation is the equal prefix mean including the initial z, first coefficient 1/2. Outer beta and Muon momentum are independent. Python's nonselected tensors reuse native Muon's auxiliary bias-corrected Adam inside the same wrapper; the Lean specialization covers selected matrices. Optional warmup supplies the rate sequence. No nonconvex convergence guarantee is inferred. |
-| ScheduleFreeAdamW / `schedule_free.py` | `ScheduleFree.adamStep`, `adamRun`, `ScheduleFree/Section4_AdamW.lean` | Zero raw second moment and total; eta=lr sqrt(1-beta2^t) warmup(t); eta^2 weighted average; decay at the **old query** y. Epsilon is added to sqrt(raw_v). Initial total is zero, so the first positive eta gets weight one. No-warmup and zero-rate total-division cases are explicit. No nonconvex convergence theorem is claimed. |
-| ScheduleFreeAMSGradW / `schedule_free.py` | `ScheduleFree.AMSGrad.step`, `run`, `ScheduleFree/AMSGrad/Defs.lean`; invariants in `Basic.lean` | Package combination of §4.4 Schedule-Free AdamW and AMSGrad's maximum of raw second moments. The first coefficient controls interpolation; the base proposal uses the gradient directly. Query decay, raw epsilon placement and squared-effective-rate averaging follow ScheduleFreeAdamW. Running maxima are monotone, denominators are positive for positive epsilon and reachable averaging coefficients lie in [0,1]. |
+| ScheduleFreeAdamW / `schedule_free_adamw.py` | `ScheduleFree.AdamW.trainingStep`, `trainingRun_pack`, `evaluation_pack`, `ScheduleFree/AdamW/` | Authors' stability revision since 1.3, identical in published 1.4.1. Rate=lr warmup(t); denominator=sqrt(raw_v/(1-beta2^t))+eps; decay at the **old query** y. Default weights use the squared largest rate so far. Parameters hold y or x, with only z and v stored. The group owns the clock, maximum rate and weight sum. Initialization uses maximum=0 instead of upstream -1, equivalent after the first nonnegative rate. Local validation requires 0<beta1<1, 0≤beta2<1 and dense gradients for every parameter. No nonconvex convergence theorem is claimed. |
+| ScheduleFreeAdamWPaper / `schedule_free.py` | `ScheduleFree.adamStep`, `adamRun`, `ScheduleFree/Section4_AdamW.lean` | Previous local paper variant: zero raw second moment and total; eta=lr sqrt(1-beta2^t) warmup(t); eta^2 weighted average; decay at the **old query** y. Epsilon is added to sqrt(raw_v). Initial total is zero, so the first positive eta gets weight one. Explicit x and z buffers preserve old checkpoints. No-warmup and zero-rate total-division cases are explicit. No nonconvex convergence theorem is claimed. |
+| ScheduleFreeAMSGradW / `schedule_free.py` | `ScheduleFree.AMSGrad.step`, `run`, `ScheduleFree/AMSGrad/Defs.lean`; invariants in `Basic.lean` | Package combination of §4.4 Schedule-Free AdamW and AMSGrad's maximum of raw second moments. The first coefficient controls interpolation; the base proposal uses the gradient directly. Query decay, raw epsilon placement and squared-effective-rate averaging follow ScheduleFreeAdamWPaper. Running maxima are monotone, denominators are positive for positive epsilon and reachable averaging coefficients lie in [0,1]. |
 | ScheduleFreeAMSGradMD / `schedule_free_md.py` | `ScheduleFree.AMSGrad.mdStep`, `mdRun`, `mdQueryWeight`, `ScheduleFree/AMSGrad/MagnitudeDirection.lean`; proofs in `MagnitudeInvariants.lean` | Package combination in latent direction/raw-row/raw-column coordinates. The three gradients use the old interpolated factors, and the oracle sees their fused query weight. Project the base direction before averaging; evaluation fuses averaged factors. Each component has independent raw histories, squared-rate totals and rates. Auxiliary tensors follow the W recurrence with zero decay. |
 | ClippedOptimistic / `optimistic.py` | `ScheduleFree.optimisticStep`, `optimisticRun`, `ScheduleFree/SectionD_OptimisticBasic.lean`; `optimistic_regret`, `SectionD_Optimistic.lean` | All buffers and parameters start at zero. Clip g-previous using the **old** peak; update the peak and clipped energy; eta=D/sqrt(new_peak^2+new_energy); project auxiliary after the clipped gradient, then project query after g. One joint Euclidean ball over all tensors; safe division reproduces zero prefixes and D=0. Comparator norm <= D is required by the regret theorem. |
 
@@ -107,7 +109,7 @@ repair can move its base gain even if that gain's adaptive rate is zero;
 its own zero averaging coefficient remains zero. For the Adam case Lean's
 shared mathematical history type has a redundant maximum field equal to
 the new variance; the Python representation omits that field entirely.
-Auxiliary parameters use ScheduleFreeAdamW or ScheduleFreeAMSGradW at their
+Auxiliary parameters use ScheduleFreeAdamWPaper or ScheduleFreeAMSGradW at their
 auxiliary rate. Beta1 supplies interpolation without a first-moment EMA.
 
 Ordinary MDW retains the existing thresholded softplus kernel; Schedule-Free
@@ -238,9 +240,11 @@ its valid sigma <= 1 range. The boundary and rejection are tested.
 ## Reproducible checks
 
 - `./run.py optimizer-parity`: kernel-check rational checkpoints from actual
-  definitions in `scripts/OptimizerParity.lean` and the new combinations in
+  definitions in `scripts/OptimizerParity.lean`, revised AdamW in
+  `scripts/ScheduleFreeAdamWParity.lean`, and the local combinations in
   `scripts/ScheduleFreeAMSGradParity.lean`; print the optimistic regret
-  theorem's axioms. Their literal values are used in `test_lean_cases.py`.
+  theorem's axioms. Revised AdamW also compares with both execution paths of
+  the unmodified, hash-pinned 1.4.1 source archive, on CPU and available CUDA.
 - `./run.py test`: independent scalar/matrix recurrences, initialization,
   clocks, zero cases, auxiliary selections, checkpoints, all historical
   optimizer trajectories, active matching examples and lab integration.

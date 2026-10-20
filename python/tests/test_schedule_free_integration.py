@@ -36,7 +36,7 @@ class ScheduleFreeIntegrationTests(unittest.TestCase):
         spec = ScheduleFreeAdamW(lr=.01)
         self.assertIn(ScheduleFreeAdamW, blocks_of(Optimizer))
         self.assertEqual(describe(spec)["type"], "ScheduleFreeAdamW")
-        for options in ({"lr": 0.}, {"lr": math.inf}, {"betas": (.9, 1.)},
+        for options in ({"lr": 0.}, {"lr": math.inf}, {"betas": (.9, 1.)}, {"betas": (0., .9)},
                         {"betas": (math.nan, .9)}, {"weight_decay": math.inf},
                         {"weight_decay": -.1}, {"eps": math.nan}, {"eps": 0.},
                         {"warmup": -1}, {"warmup": True}):
@@ -76,15 +76,20 @@ class ScheduleFreeIntegrationTests(unittest.TestCase):
                 parts = ((rows, 0, 4),)
                 for rate in (0., .005, .02, 0., .01):
                     before = [p.detach().clone() for p in model.parameters()]
+                    base = [stepper.optimizer.state[p]["base"].clone() for p in model.parameters()]
                     manual.param_groups[0]["lr"] = rate
                     manual.zero_grad(set_to_none=True)
                     task.loss(*task.forward(reference, task.inputs(rows))).backward()
                     manual.step()
                     stepper.step(parts, rate, False)
-                    for p, q, previous in zip(model.parameters(), reference.parameters(), before, strict=True):
+                    for p, q in zip(model.parameters(), reference.parameters(), strict=True):
                         self.assertTrue(torch.equal(p, q))
-                        if not rate:
-                            self.assertTrue(torch.equal(p, previous))
+                    if not rate:
+                        for p, previous in zip(model.parameters(), base, strict=True):
+                            self.assertTrue(torch.equal(stepper.optimizer.state[p]["base"], previous))
+                        if not stepper.optimizer.param_groups[0]["maximum"]:
+                            for p, previous in zip(model.parameters(), before, strict=True):
+                                self.assertTrue(torch.equal(p, previous))
                 stepper.optimizer.eval()
                 checkpoint = copy.deepcopy(stepper.state_dict())
                 resumed_model = build_model(spec.model, task.vocab, 0)
@@ -105,13 +110,16 @@ class ScheduleFreeIntegrationTests(unittest.TestCase):
         for rate in (.01, .02, .005):
             stepper.step(((torch.arange(4), 0, 4),), rate, False)
         query = [p.detach().clone() for p in model.parameters()]
-        self.assertTrue(any(not torch.equal(p, stepper.optimizer.state[p]["evaluation"])
-                            for p in model.parameters()))
+        beta = spec.optimizer.betas[0]
+        evaluation = [p.detach() + (1 - 1 / beta) * (stepper.optimizer.state[p]["base"] - p.detach())
+                      for p in model.parameters()]
+        self.assertTrue(any(not torch.equal(p, x)
+                            for p, x in zip(model.parameters(), evaluation, strict=True)))
 
         def observe(task, network, rows, batch):
             self.assertFalse(stepper.optimizer.param_groups[0]["training"])
-            for p in network.parameters():
-                self.assertTrue(torch.equal(p, stepper.optimizer.state[p]["evaluation"]))
+            for p, x in zip(network.parameters(), evaluation, strict=True):
+                torch.testing.assert_close(p, x)
             return {"observations": len(rows)}
 
         for split in ("train", "heldout"):
@@ -119,12 +127,12 @@ class ScheduleFreeIntegrationTests(unittest.TestCase):
                 self.assertGreater(stepper.evaluate(split)["observations"], 0)
             self.assertTrue(stepper.optimizer.param_groups[0]["training"])
             for p, previous in zip(model.parameters(), query, strict=True):
-                self.assertTrue(torch.equal(p, previous))
+                torch.testing.assert_close(p, previous)
         with mock.patch("lab.infrastructure.engine.eager.evaluate", side_effect=RuntimeError("observe")):
             with self.assertRaisesRegex(RuntimeError, "observe"):
                 stepper.evaluate("heldout")
         for p, previous in zip(model.parameters(), query, strict=True):
-            self.assertTrue(torch.equal(p, previous))
+            torch.testing.assert_close(p, previous)
 
     def test_compiled_forward_with_clipping_follows_eager_updates(self):
         spec = modular(gptmini(8, 1, 2), prime=5, updates=4, batch=4, every=2)

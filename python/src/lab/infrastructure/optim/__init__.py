@@ -74,14 +74,15 @@ def report(optimizer):
 
 def training_weights(optimizer):
     """Restore a Schedule-Free query before a training forward when needed."""
-    if isinstance(optimizer, lean_optim.ScheduleFreeSGD) and not optimizer.param_groups[0]["training"]:
+    free = isinstance(optimizer, (lean_optim.ScheduleFreeSGD, lean_optim.ScheduleFreeAdamW))
+    if free and not optimizer.param_groups[0]["training"]:
         optimizer.train()
 
 
 @contextmanager
 def evaluation_weights(optimizer):
     """Install Schedule-Free averages for both training and held-out evaluation."""
-    free = isinstance(optimizer, lean_optim.ScheduleFreeSGD)
+    free = isinstance(optimizer, (lean_optim.ScheduleFreeSGD, lean_optim.ScheduleFreeAdamW))
     training = free and optimizer.param_groups[0]["training"]
     if free:
         optimizer.eval()

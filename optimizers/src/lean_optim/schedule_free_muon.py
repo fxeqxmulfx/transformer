@@ -31,7 +31,7 @@ class ScheduleFreeMuon(ScheduleFreeSGD):
     """Wrap native Muon; beta interpolates, momentum is Muon's separate EMA.
 
     Decay acts on the base z. The first averaging coefficient is 1/2,
-    unlike ScheduleFreeAdamW's squared-rate weights. Optional linear warmup
+    unlike ScheduleFreeAdamW's squared maximum-rate weights. Optional linear warmup
     scales the native rate; a constant rate afterwards needs no scheduler.
     Call eval() for averaged validation and train() before the next forward.
     """

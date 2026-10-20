@@ -1,4 +1,4 @@
-"""Schedule-Free compositions and the paper's specialized AdamW algorithm."""
+"""Schedule-Free compositions and the authors' revised AdamW algorithm."""
 
 from dataclasses import dataclass
 import math
@@ -10,13 +10,16 @@ from .spec import require
 
 @dataclass(frozen=True)
 class ScheduleFreeAdamW(Optimizer):
-    """Query decay and squared effective-rate averages; Transformer.ScheduleFree.adamStep.
+    """Revised AdamW; Transformer.ScheduleFree.AdamW.trainingStep (e7ee4beb).
 
-    Port: lean_optim.schedule_free.ScheduleFreeAdamW at 4f764a4d, with stable
-    interpolation and one denominator workspace. Beta1 interpolates iterates;
-    there is no first-moment EMA. Epsilon is added to the raw variance root.
-    A zero warmup means none, completing the source's undefined division by zero.
-    Rates follow the lab's schedule; constant rates after warmup match the paper.
+    Source: schedulefree 1.4.1, stability commit 59ed9b662d5ec5799aded7390b2482758423653c.
+    Port: lean_optim.schedule_free_adamw.ScheduleFreeAdamW, with one reusable
+    workspace and unchanged gradients. Bias correction divides the raw variance;
+    epsilon is outside its corrected root. Decay acts at y. Averaging uses the
+    squared largest rate so far (r=0, weight_lr_power=2), even at a zero rate
+    after a positive one. Only z and v are stored. Beta1 interpolates iterates;
+    eval() divides by it. Mode round trips can round in floating point.
+    Rates follow the lab's schedule; a zero built-in warmup means none.
     Evaluation uses the averaged weights for both training and held-out data.
     """
     lr: float
@@ -29,8 +32,8 @@ class ScheduleFreeAdamW(Optimizer):
 
     def check(self):
         check_rate(self.lr)
-        require(len(self.betas) == 2 and all(0 <= beta < 1 for beta in self.betas),
-                "Schedule-Free AdamW needs two betas in [0, 1)")
+        require(len(self.betas) == 2 and 0 < self.betas[0] < 1 and 0 <= self.betas[1] < 1,
+                "Schedule-Free AdamW needs beta1 in (0, 1) and beta2 in [0, 1)")
         require(math.isfinite(self.eps) and self.eps > 0, "Epsilon must be finite and positive")
         require(math.isfinite(self.weight_decay) and self.weight_decay >= 0,
                 "Weight decay must be finite and nonnegative")

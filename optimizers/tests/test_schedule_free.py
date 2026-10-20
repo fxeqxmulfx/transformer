@@ -8,7 +8,7 @@ import unittest
 
 import torch
 
-from lean_optim import ClippedOptimistic, ScheduleFreeAdamW, ScheduleFreeSGD
+from lean_optim import ClippedOptimistic, ScheduleFreeAdamW, ScheduleFreeAdamWPaper, ScheduleFreeSGD
 
 
 class ScheduleFreeTests(unittest.TestCase):
@@ -39,7 +39,7 @@ class ScheduleFreeTests(unittest.TestCase):
         """Check adamw uses raw variance epsilon query decay and squared effective rate."""
         for warmup in (0, 3):
             p = torch.nn.Parameter(torch.tensor([2.0, -1.0], dtype=torch.float64))
-            optimizer = ScheduleFreeAdamW(
+            optimizer = ScheduleFreeAdamWPaper(
                 [p], lr=0.2, betas=(0.6, 0.75), eps=0.125, weight_decay=0.3, warmup=warmup
             )
             base, evaluation, variance = [2.0, -1.0], [2.0, -1.0], [0.0, 0.0]

@@ -1,13 +1,14 @@
 """Schedule-Free methods, arXiv:2405.15682v4, Sections 2 and 4.4.
 
 SGD implements mix/query/average of Transformer.ScheduleFree.Section2_Averaging,
-including the initial base point in the equal-weighted average. AdamW follows
+including the initial base point in the equal-weighted average. AdamWPaper follows
 Transformer.ScheduleFree.adamStep exactly, including epsilon placement, decay
 at the query, warmup and squared effective-rate weights. These explicit-buffer
 implementations store the query in parameters during training and evaluation
 weights after eval(). They do not use the upstream package's algebraic buffer
 compression or its extra weighting options. Interpolation uses stable lerp
-operations; AdamW reuses one denominator scratch tensor per parameter.
+operations; AdamWPaper reuses one denominator scratch tensor per parameter.
+The public revised ScheduleFreeAdamW is re-exported from schedule_free_adamw.
 """
 
 from __future__ import annotations
@@ -19,9 +20,12 @@ from torch import Tensor
 
 from ._parameters import Parameters, settings
 from ._workspace import BufferedOptimizer
+from .schedule_free_adamw import ScheduleFreeAdamW
 
 if TYPE_CHECKING:
     from ._types import Closure, Loss, Params, StateDict
+
+__all__ = ["ScheduleFreeAMSGradW", "ScheduleFreeAdamW", "ScheduleFreeAdamWPaper", "ScheduleFreeSGD"]
 
 
 class ScheduleFreeSGD(BufferedOptimizer):
@@ -111,7 +115,7 @@ class ScheduleFreeSGD(BufferedOptimizer):
         return loss
 
 
-class ScheduleFreeAdamW(ScheduleFreeSGD):
+class ScheduleFreeAdamWPaper(ScheduleFreeSGD):
     """Section 4.4 Algorithm 1; Transformer.ScheduleFree.adamStep.
 
     eta_t = lr * sqrt(1-beta2**t) * min(1,t/warmup); epsilon is added to
@@ -200,14 +204,14 @@ class ScheduleFreeAdamW(ScheduleFreeSGD):
         return loss
 
 
-class ScheduleFreeAMSGradW(ScheduleFreeAdamW):
+class ScheduleFreeAMSGradW(ScheduleFreeAdamWPaper):
     """Schedule-Free AdamW with a running maximum of the raw second moment.
 
     This package's extension combines arXiv:2405.15682v4, Section 4.4,
     Algorithm 1 with arXiv:1904.03590v4, Algorithm 1 and Section 6.
     beta1 controls interpolation; there is no first-moment EMA. Effective
     rates, epsilon, query decay and squared-rate averaging follow
-    ScheduleFreeAdamW. The maximum is taken before bias correction.
+    ScheduleFreeAdamWPaper. The maximum is taken before bias correction.
     Lean: Transformer.ScheduleFree.AMSGrad.step.
     """
 

@@ -6,7 +6,12 @@ import unittest
 
 import torch
 
-from lean_optim import ScheduleFreeAdamW, ScheduleFreeAMSGradW, ScheduleFreeSGD
+from lean_optim import (
+    ScheduleFreeAdamW,
+    ScheduleFreeAdamWPaper,
+    ScheduleFreeAMSGradW,
+    ScheduleFreeSGD,
+)
 
 
 class ScheduleFreeStabilityTests(unittest.TestCase):
@@ -36,12 +41,13 @@ class ScheduleFreeStabilityTests(unittest.TestCase):
                 for _ in range(20):
                     optimizer.step()
                     for key in ("base", "evaluation"):
-                        self.assertTrue(torch.equal(optimizer.state[parameter][key], initial))
+                        if key in optimizer.state[parameter]:
+                            self.assertTrue(torch.equal(optimizer.state[parameter][key], initial))
                     self.assertTrue(torch.equal(parameter, initial))
 
     def test_zero_rates_preserve_initial_and_later_queries_while_moments_advance(self) -> None:
         """Pause AdamW averaging at zero weight without stopping its variance clock."""
-        for factory in (ScheduleFreeAdamW, ScheduleFreeAMSGradW):
+        for factory in (ScheduleFreeAdamWPaper, ScheduleFreeAMSGradW):
             with self.subTest(rule=factory.__name__):
                 parameter = torch.nn.Parameter(torch.tensor([1.5, -0.7], dtype=torch.float32))
                 optimizer = factory([parameter], lr=0.0, weight_decay=0.3)

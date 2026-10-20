@@ -69,7 +69,7 @@ class LeanCases(unittest.TestCase):
     def test_schedule_free_explicit_evaluation_weights(self) -> None:
         """Check schedule free explicit evaluation weights."""
         p = torch.nn.Parameter(torch.tensor([2.0], dtype=torch.float64))
-        optimizer = opt.ScheduleFreeAdamW(
+        optimizer = opt.ScheduleFreeAdamWPaper(
             [p], lr=1 / 5, betas=(3 / 5, 0.0), weight_decay=3 / 10, eps=1 / 2
         )
         p.grad = p.new_tensor([2.0])

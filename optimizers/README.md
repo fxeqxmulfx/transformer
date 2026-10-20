@@ -220,15 +220,25 @@ logic live here; the lab only supplies its matching model and data adapter.
 For Schedule-Free methods, `optimizer.eval()` installs the averaged
 evaluation weights; `optimizer.train()` restores the query weights before
 the next training forward. Save the model and optimizer in the same mode.
-ScheduleFreeSGD includes the initial point in its average. ScheduleFreeAdamW
-implements the paper's Algorithm 1, with raw-second-moment epsilon placement,
-decay at the query and squared effective-rate averaging. ScheduleFreeAMSGradW
-adds a running maximum of the raw second moment. In both, beta1 controls
-interpolation and the gradient is used directly, without a first-moment EMA.
-Query interpolation and iterate averaging use stable `lerp` operations so that
-equal iterates remain equal in floating point. AdamW and its AMSGrad variant
-keep explicit base and evaluation histories and one reusable denominator scratch
-tensor, rather than a second full-sized direction workspace.
+ScheduleFreeSGD includes the initial point in its average. `ScheduleFreeAdamW`
+implements the authors' stability revision from schedulefree 1.3, unchanged in
+1.4.1: bias correction divides the second moment before its square root, decay
+acts at the old query, and averaging weights are the square of the largest
+warmed learning rate so far. The averaging powers are fixed at upstream's
+defaults (0 and 2). A zero current rate freezes z but continues averaging after
+a positive rate. Beta1 must be in (0,1), since evaluation divides by it.
+Only base z and raw variance v are stored; parameters contain y or x. Mode
+switches use `lerp`, are idempotent, and can round on a train/eval round trip.
+One reusable workspace holds the denominator and then the update, preserving
+gradients and avoiding device storage allocations after warmup.
+
+`ScheduleFreeAdamWPaper` preserves the paper's Algorithm 1 and the previous
+local implementation: bias correction scales the rate, epsilon is outside the
+raw variance root, and averaging uses squared current effective rates.
+Use this explicit class to resume old paper-variant checkpoints; revised AdamW
+rejects them. `ScheduleFreeAMSGradW` and the local MD/MDW extensions retain
+the paper conventions and their existing Lean correspondence. Beta1 controls
+interpolation; these methods use the gradient without a first-moment EMA.
 
 `ScheduleFreeMuon` composes the general Schedule-Free scheme with the existing
 Muon base update. It keeps native Nesterov momentum, five Newton–Schulz steps,
@@ -252,7 +262,7 @@ optimizer = ScheduleFreeMuon(
     warmup=100,
     matrix_params=[model.weight],
 )
-# Alternatively, the paper's specialized Algorithm 1:
+# Alternatively, the authors' revised specialized AdamW:
 optimizer = ScheduleFreeAdamW(model, lr=1e-3, weight_decay=0.01, warmup=100)
 ```
 
@@ -263,7 +273,7 @@ including outer `Clipped(...)`. Both training and held-out evaluations use the
 averaged weights. Use either its built-in warmup or `Schedule(warmup=...)`;
 requesting both is rejected. An outer decay schedule is optional.
 
-ScheduleFreeAMSGradMD applies that rule separately to the direction and raw
+ScheduleFreeAMSGradMD applies the paper-based AMSGradW rule to the direction and raw
 row/column gains. It computes all three chain-rule gradients at the old
 query factors, projects the updated base direction to its initial radius,
 then averages the latent factors and fuses their next query. Evaluation
