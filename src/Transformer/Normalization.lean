@@ -13,6 +13,8 @@ public import Transformer.Normalization.Line
 public import Transformer.Landscape.Lojasiewicz.Modulated
 public import Transformer.Landscape.Lojasiewicz.LojasiewiczInnerProduct
 public import Transformer.Normalization.TimeChange
+public import Transformer.Normalization.Section3_LogarithmicClock
+public import Transformer.Normalization.Section3_PreLimit
 public import Transformer.Normalization.Radial
 public import Transformer.Normalization.Rates
 public import Transformer.Normalization.Symmetric

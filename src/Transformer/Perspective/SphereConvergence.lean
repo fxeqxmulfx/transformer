@@ -69,13 +69,14 @@ theorem hasDerivAt_toLp_tuple_iff {x : ℝ → Idx n → EucSpace d} {v : TupleS
   let e := PiLp.continuousLinearEquiv 2 ℝ fun _ : Idx n => EucSpace d
   exact ⟨fun h => e.hasFDerivAt.comp_hasDerivAt t h, fun h => e.symm.hasFDerivAt.comp_hasDerivAt t h⟩
 
-/-- **Łojasiewicz on the product of unit spheres:** a curve of tuples of unit vectors
-with `ẏ = M(t) ∇g(y)`, `M(t)` a block scaling by numbers in `[a, b]`, `0 < a ≤ b`,
-converges to a tuple of unit vectors where `∇g` vanishes. -/
-theorem exists_tendsto_of_hasDerivAt_blockScale (hd : 1 ≤ d) {β a b : ℝ} (ha : 0 < a)
-    (hab : a ≤ b) {c : ℝ → Idx n → ℝ} (hc : ∀ t i, a ≤ c t i ∧ c t i ≤ b)
-    {y : ℝ → TupleSpace d n} (hy1 : ∀ t i, ‖(y t).ofLp i‖ = 1)
-    (hy : ∀ t, HasDerivAt y (blockScale (c t) (gradient (tupleEnergy hd β) (y t))) t) :
+/-- **Forward Łojasiewicz on the product of unit spheres:** a curve with
+`ẏ = M(t) ∇g(y)` and positive bounded block scalings converges to a critical
+unit tuple. The equations and bounds are needed only for `t ≥ 0`, as in
+arXiv:2510.22026v2, Appendix D, `lem:loj` and Step 2. -/
+theorem exists_tendsto_of_hasDerivAt_blockScale_forward (hd : 1 ≤ d) {β a b : ℝ} (ha : 0 < a)
+    (hab : a ≤ b) {c : ℝ → Idx n → ℝ} (hc : ∀ t, 0 ≤ t → ∀ i, a ≤ c t i ∧ c t i ≤ b)
+    {y : ℝ → TupleSpace d n} (hy1 : ∀ t, 0 ≤ t → ∀ i, ‖(y t).ofLp i‖ = 1)
+    (hy : ∀ t, 0 ≤ t → HasDerivAt y (blockScale (c t) (gradient (tupleEnergy hd β) (y t))) t) :
     ∃ ystar : TupleSpace d n, (∀ i, ‖ystar.ofLp i‖ = 1) ∧
       gradient (tupleEnergy hd β) ystar = 0 ∧ Tendsto y atTop (𝓝 ystar) := by
   set K : Set (TupleSpace d n) := {x | ∀ i, ‖x.ofLp i‖ = 1}
@@ -102,12 +103,12 @@ theorem exists_tendsto_of_hasDerivAt_blockScale (hd : 1 ≤ d) {β a b : ℝ} (h
     (fun t _ v w => by
       rw [inner_blockScale, real_inner_comm, inner_blockScale]
       exact Finset.sum_congr rfl fun i _ => by rw [real_inner_comm])
-    (fun t _ v hv => by
-      have h := (inner_blockScale_self_mem_Icc (hc t) v).1
+    (fun t ht v hv => by
+      have h := (inner_blockScale_self_mem_Icc (hc t ht) v).1
       have hv2 : 0 < a * ‖v‖ ^ 2 := mul_pos ha (by positivity)
       linarith)
-    (fun t _ v hv => by
-      have h := (inner_blockScale_self_mem_Icc (hc t) v).2
+    (fun t ht v hv => by
+      have h := (inner_blockScale_self_mem_Icc (hc t ht) v).2
       have hv2 : 0 < b * ‖v‖ ^ 2 := mul_pos hb (by positivity)
       have : 4 * b / a * (a / 2) * ‖v‖ ^ 2 = 2 * (b * ‖v‖ ^ 2) := by
         field_simp [ha.ne']
@@ -124,10 +125,39 @@ theorem exists_tendsto_of_hasDerivAt_blockScale (hd : 1 ≤ d) {β a b : ℝ} (h
       have h1 : ‖x.ofLp i‖ = 1 := hx i
       rw [h, norm_zero] at h1
       exact zero_ne_one h1)
-    (fun t _ => hy1 t) (fun t _ => by rw [hgrad, map_neg, neg_neg]; exact hy t)
-  refine ⟨ystar, hKc.mem_of_tendsto hlim (Eventually.of_forall hy1), ?_, hlim⟩
+    (fun t ht => hy1 t ht) (fun t ht => by rw [hgrad, map_neg, neg_neg]; exact hy t ht)
+  refine ⟨ystar, hKc.mem_of_tendsto hlim (eventually_atTop.2 ⟨0, hy1⟩), ?_, hlim⟩
   rw [hgrad, neg_eq_zero] at hcrit
   exact hcrit
+
+/-- A stationary unit tuple and the scaling by one satisfy all forward
+hypotheses. At `β = 0`, the extended energy is constant. -/
+example : ∃ ystar : TupleSpace 2 1, (∀ i, ‖ystar.ofLp i‖ = 1) ∧
+    gradient (tupleEnergy (by decide : 1 ≤ 2) 0) ystar = 0 ∧
+      Tendsto (fun _ : ℝ => (WithLp.toLp 2 fun _ : Idx 1 => (basePoint 1 : EucSpace 2)))
+        atTop (𝓝 ystar) := by
+  have hg : tupleEnergy (n := 1) (by decide : 1 ≤ 2) 0 = fun _ => 0 := by
+    funext x
+    simp [tupleEnergy, selfEnergy, particleEnergy]
+  apply exists_tendsto_of_hasDerivAt_blockScale_forward (d := 2) (n := 1) (β := 0)
+    (by decide) (a := 1) (b := 1)
+    one_pos le_rfl (c := fun _ _ => 1) (fun _ _ _ => ⟨le_rfl, le_rfl⟩)
+    (fun _ _ _ => by simp [basePoint, PiLp.norm_single])
+  intro t ht
+  rw [hg, gradient_fun_const, map_zero]
+  exact hasDerivAt_const t _
+
+/-- **Łojasiewicz on the product of unit spheres:** the original all-time
+statement follows from the forward theorem. Source: arXiv:2312.10794v5,
+§5, gradient-flow outline, and arXiv:2510.22026v2, Appendix D, `lem:loj`. -/
+theorem exists_tendsto_of_hasDerivAt_blockScale (hd : 1 ≤ d) {β a b : ℝ} (ha : 0 < a)
+    (hab : a ≤ b) {c : ℝ → Idx n → ℝ} (hc : ∀ t i, a ≤ c t i ∧ c t i ≤ b)
+    {y : ℝ → TupleSpace d n} (hy1 : ∀ t i, ‖(y t).ofLp i‖ = 1)
+    (hy : ∀ t, HasDerivAt y (blockScale (c t) (gradient (tupleEnergy hd β) (y t))) t) :
+    ∃ ystar : TupleSpace d n, (∀ i, ‖ystar.ofLp i‖ = 1) ∧
+      gradient (tupleEnergy hd β) ystar = 0 ∧ Tendsto y atTop (𝓝 ystar) :=
+  exists_tendsto_of_hasDerivAt_blockScale_forward hd ha hab (fun t _ => hc t)
+    (fun t _ => hy1 t) (fun t _ => hy t)
 
 /-- The hypotheses of `exists_tendsto_of_hasDerivAt_blockScale` hold for one token at
 rest and the scaling by `1`: with a single unit vector `∇g = 0`. -/

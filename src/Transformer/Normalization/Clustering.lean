@@ -37,7 +37,11 @@ three statements at `d = 1`, `n = 2`.
 The gradient-flow identification the proof starts from is in
 `Normalization.Convergence`, the velocity lower bound behind the corollary in
 `Normalization.Radial`, and the convergence machinery of the proof in
-`Landscape.Lojasiewicz.Modulated`.
+`Landscape.Lojasiewicz.Modulated`. The original polar equations imply the
+logarithmic system in `Section3_LogarithmicClock`. The positive radial
+lower-limit event implies convergence to a critical configuration for Pre-LN
+in `Section3_PreLimit`; the Gaussian synchronization alternative still needs
+the separate null-basin argument of Appendix D, Steps 3–5.
 -/
 
 @[expose] public section
