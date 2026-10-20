@@ -9,13 +9,14 @@ from .domain.basis import basis
 from .domain.atomic import (AtomicColumns, AtomicMatching, BindingPricing, MatchingBindings,
                            MatchingOrders, OrderPricing, PairedMatching, SearchPricing)
 from .domain.benchmarks import ModularDivision, TinyShakespeare
+from .domain.context import extend_context
 from .domain.grokking import GrokkingDiagnostics
 from .domain.experiment import Experiment, grid
 from .domain.generative import (Addition, BooleanAnd, Copy, Count, DoubleHistogram, Histogram, Mode, MostFrequent,
                                 Parity, RandomLM, Reverse, Sort)
 from .domain.model import (FFN, GELU, XSA, Attention, Block, FusedQKV, LayerNorm, NoPositions, Normal,
                            LearnedScaledDot, PerHeadQKV, PostNorm, PreNorm, QKNorm, ReLU, ReLU2, RMSNorm, RoPE, ScaledDot,
-                           ScaledResidual, SiLU, Sinusoidal, Softmax, Sparsemax, SurrogateWeights, Tied, TorchDefault, Transformer, Untied)
+                           ScaledResidual, SiLU, Sinusoidal, Softmax, Sparsemax, SurrogateWeights, Tied, TorchDefault, Transformer, Untied, YaRN)
 from .domain.rotary import DenseBranch, LabDivision, Rotate90, SwiGLU
 from .domain.paired import CrossEntropyAnswers, DivisionPairs, SquaredAnswers, VectorReadout
 from .domain.regression import MLP, ModularRegression, OneHot, Scalar
@@ -37,7 +38,7 @@ __all__ = [
     # model
     "Transformer", "TensorStack", "TensorGain", "AtomicMatching", "PairedMatching", "MLP", "Scalar", "OneHot", "Block", "Attention", "FFN", "XSA",
     "RMSNorm", "LayerNorm", "PreNorm", "PostNorm",
-    "RoPE", "Sinusoidal", "NoPositions",
+    "RoPE", "YaRN", "Sinusoidal", "NoPositions",
     "FusedQKV", "PerHeadQKV", "ScaledDot", "LearnedScaledDot", "QKNorm", "Softmax", "Sparsemax", "SurrogateWeights",
     "ReLU", "ReLU2", "GELU", "SiLU", "Tied", "Untied", "TorchDefault", "Normal", "ScaledResidual",
     "Rotate90", "DenseBranch", "SwiGLU",
@@ -58,7 +59,7 @@ __all__ = [
     "Schedule", "Cosine", "Budget", "FlopBudget", "Seeds", "Evaluate", "Diagnostics", "AttentionDiagnostics", "GrokkingDiagnostics", "Checkpoint",
     "EarlyStopping", "Solved", "Eager", "CudaGraph", "Compiled", "Measured",
     # composition
-    "Experiment", "grid", "swap", "substitute", "walk", "describe", "fingerprint",
+    "Experiment", "grid", "swap", "substitute", "walk", "describe", "fingerprint", "extend_context",
     # suites
     "basis",
 ]

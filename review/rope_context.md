@@ -288,9 +288,13 @@ experiments or perplexity predictions:
 | 16 | 1.277259 | 1.942374 | 1.246821 | 1.130169 |
 | 128 | 1.485203 | 2.419147 | 1.403729 | 1.218699 |
 
-No fitted-temperature default has been added to the Python lab. Derivation
-alone cannot supply a parameter-free policy for arbitrary trained attention:
-the objective and the score-gap information are essential inputs.
+The Python lab ports these results as `YaRN` and `extend_context` (see
+`python/README.md`). The current row's top-two visible logits supply the gap;
+there is no fitted-temperature constant or manually supplied gap. This is a
+derived variant, with the winner-concentration objective and numerical guards
+explicit. It is not paper YaRN's empirical temperature or an automatic quality
+guarantee for arbitrary trained attention. Reference-gap changes between the
+old and new model are not estimated by this implementation.
 
 ## Validation
 

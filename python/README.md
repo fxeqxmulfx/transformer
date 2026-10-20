@@ -38,6 +38,62 @@ experiments = {
 `substitute` every occurrence of a block, and `grid` crosses labeled
 alternatives on several paths. `lab blocks` lists the whole language.
 
+## Context extension with a derived temperature
+
+```python
+# Copy training length, RoPE base and pair layout from an existing model spec.
+extended = swap(base, "model", extend_context(base.model, 16_384))
+```
+
+`extend_context` installs `YaRN` and retains the original training context
+across subsequent extensions. Only the new target length is supplied.
+`YaRN(original_context=4096)` is also available when that metadata comes
+from an external pretrained configuration. Model parameters and state-dict
+keys retain their names, so the original model weights load with `strict=True`.
+The lab's run-continuation checks still require the original experiment spec;
+context extension is a new model configuration, not a continuation bypass.
+
+This is a **derived variant** of YaRN: the frequency ramp follows
+arXiv:2309.00071v3, Section 3.2, Eqs. (10)-(13), with the paper's LLaMA
+band defaults `alpha=1`, `beta=32` and fixed configured-context scaling.
+It replaces the paper's empirical temperature fit with the formula proved
+in `Transformer.RoPE.YaRN.Calibration`, commit `4f4bbc61`:
+
+```text
+N = original_training_context - 1
+M = number_of_visible_keys - 1
+Delta = largest_visible_logit - second_largest_visible_logit
+g = 1 + log(M / N) / Delta            # when M > N and the gap is resolved
+adjusted_logits = g * (logits - largest_visible_logit)
+```
+
+The measured gap includes rotation and ordinary score normalization, so it
+also includes QKNorm's or LearnedScaledDot's learned head scale. Each head,
+sample and causal query has its own gain. There is no manual gap, temperature
+or extension factor. Multiplying logits by `g` has the same softmax effect
+as multiplying both Q and K by `sqrt(g)`; it is applied only once.
+
+For one winner and equal losing scores this preserves its reference
+probability `1/(1+N*exp(-Delta))`. For arbitrary losing scores it preserves
+that lower bound, not an actual old model's probability. The reference uses
+the current measured gap; a change in gap caused by rescaling or earlier
+layers is not inferred from the old model. The current winner need not be
+the desired token, so this is not a retrieval or perplexity guarantee.
+
+Implementation choices beyond the real-arithmetic proof: rows no longer
+than the training context use gain one. Ties and gaps no larger than
+`machine_epsilon * max(1, visible_score_span)` also use gain one, without a
+retention certificate. Other rows differentiate through the measured gap.
+Half and bfloat16 logits are calibrated in float32, with probabilities cast
+to the value dtype for the weighted sum. Future keys never enter calibration.
+The original frequency tables and attention path are recovered exactly
+when the configured target is no longer than the original context.
+
+The variant requires `Softmax`. Extended models materialize scores and use
+explicit attention even with `Softmax(fused=True)`, so their memory and runtime
+differ from fused attention. It supports both projection layouts, both rotary
+pair layouts, and ScaledDot, LearnedScaledDot and QKNorm scores.
+
 ## Commands
 
 Run from the repository root through `run.py`, or from here with `uv run`:

@@ -16,6 +16,7 @@ from torch.nn import functional as F
 from ...domain import model
 from .attention import Attention
 from .positions import rope_tables, sinusoid_table
+from .yarn import yarn_tables
 
 
 class RMSNorm(nn.Module):
@@ -60,9 +61,9 @@ class FeedForward(nn.Module):
 
 
 class Block(nn.Module):
-    def __init__(self, spec, width):
+    def __init__(self, spec, width, original_context=None):
         super().__init__()
-        self.attention = Attention(spec.attention, width)
+        self.attention = Attention(spec.attention, width, original_context)
         self.attention_norm = norm_module(spec.norm, width)
         self.ffn = FeedForward(spec.ffn, width)
         self.ffn_norm = norm_module(spec.norm, width)
@@ -81,7 +82,10 @@ class Transformer(nn.Module):
         super().__init__()
         self.context = spec.context
         self.embed = nn.Embedding(vocab, spec.width)
-        self.blocks = nn.ModuleList(Block(spec.block, spec.width) for _ in range(spec.depth))
+        original_context = (spec.positions.original_context
+                            if isinstance(spec.positions, model.YaRN) and spec.context > spec.positions.original_context
+                            else None)
+        self.blocks = nn.ModuleList(Block(spec.block, spec.width, original_context) for _ in range(spec.depth))
         self.final_norm = None if spec.final_norm is None else norm_module(spec.final_norm, spec.width)
         bias = isinstance(spec.readout, model.Untied) and spec.readout.bias
         if isinstance(spec.readout, model.Tied) and isinstance(spec.init, model.ScaledResidual):
@@ -93,13 +97,16 @@ class Transformer(nn.Module):
         if isinstance(spec.readout, model.Tied):
             self.readout.weight = self.embed.weight
         self.sinusoid = isinstance(spec.positions, model.Sinusoidal)
-        self.rotary = isinstance(spec.positions, model.RoPE)
+        self.rotary = isinstance(spec.positions, (model.RoPE, model.YaRN))
         if self.sinusoid:
             self.register_buffer("positions", sinusoid_table(spec.context, spec.width, spec.positions.base),
                                  persistent=False)
         if self.rotary:
             self.interleaved = spec.positions.interleaved
-            cos, sin = rope_tables(spec.head_width, spec.context, spec.positions.theta)
+            if isinstance(spec.positions, model.YaRN):
+                cos, sin = yarn_tables(spec.head_width, spec.context, spec.positions.original_context, spec.positions.theta)
+            else:
+                cos, sin = rope_tables(spec.head_width, spec.context, spec.positions.theta)
             self.register_buffer("cos", cos, persistent=False)
             self.register_buffer("sin", sin, persistent=False)
 

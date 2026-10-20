@@ -66,6 +66,44 @@ class RoPE(Positions):
 
 
 @dataclass(frozen=True)
+class YaRN(Positions):
+    """YaRN frequencies with a derived, automatic margin-retention temperature.
+
+    Sources: arXiv:2309.00071v3, Sections 3.2 and 3.4, Eqs. (10)-(13);
+    Transformer.RoPE.YaRN.yarnFrequency at 97e19a48 and
+    retentionGain/calibrated_mass_lower_bound at 4f4bbc61, in
+    src/Transformer/RoPE/YaRN/{Section3_Ramp,Calibration}.lean.
+    Original implementation of these equations, not a port of vendor code.
+
+    Deviation from paper YaRN: replace its fitted Eq. (15) with
+    g = 1 + log(new_competitors / original_competitors) / gap.
+    The gap is measured between the two largest visible logits per head
+    and query, after rotation and ordinary score normalization. Scaling
+    centered logits by g equals multiplying both Q and K by sqrt(g).
+    It preserves the old worst-case probability bound for the current
+    winner; it does not certify that the winner is the desired token.
+
+    Frequencies use the fixed configured context and the paper's LLaMA
+    defaults alpha=1, beta=32. Temperature uses the actual causal row length;
+    short rows, ties and numerically unresolved gaps keep gain one.
+    Calibration is differentiated on resolved gaps. Softmax is required;
+    an extended context materializes logits even if fused=True was requested.
+    Only original training-context metadata is supplied, not a gap or factor.
+    """
+    original_context: int
+    theta: float = 10_000.0
+    interleaved: bool = False
+
+    def check(self):
+        require(type(self.original_context) is int and self.original_context >= 2,
+                "YaRN original_context must be an integer of at least two tokens")
+        require(isinstance(self.theta, (int, float)) and not isinstance(self.theta, bool)
+                and math.isfinite(self.theta) and self.theta > 1,
+                "YaRN base must be finite and exceed one")
+        require(type(self.interleaved) is bool, "YaRN interleaved must be boolean")
+
+
+@dataclass(frozen=True)
 class Sinusoidal(Positions):
     """Add the fixed sine/cosine table of Vaswani et al. to token embeddings."""
     base: float = 10_000.0
@@ -373,8 +411,10 @@ class Transformer(Model):
             require_kind(self.final_norm, Norm, "final_norm")
         heads = self.block.attention.heads
         require(self.width % heads == 0, f"Width {self.width} is not divisible by {heads} heads")
-        if isinstance(self.positions, RoPE):
+        if isinstance(self.positions, (RoPE, YaRN)):
             require(self.width // heads % 2 == 0, "RoPE needs an even head width")
+        if isinstance(self.positions, YaRN):
+            require(isinstance(self.block.attention.weights, Softmax), "YaRN requires Softmax attention")
 
     @property
     def head_width(self):

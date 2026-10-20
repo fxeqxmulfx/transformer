@@ -20,6 +20,7 @@ from ...domain import model
 from .positions import rotate
 from .sparsemax import causal_sparsemax
 from .surrogate import surrogate_weights
+from .yarn import retention_logits
 
 
 class FusedProjections(nn.Module):
@@ -61,17 +62,21 @@ class PerHeadProjections(nn.Module):
 
 
 class ScaledDotScores(nn.Module):
-    def __init__(self, head):
+    def __init__(self, head, original_context=None):
         super().__init__()
         self.scale = math.sqrt(head)
+        self.original_context = original_context
 
     def forward(self, q, k, rotary, index):
         if rotary is not None:
             q, k = rotate(q, *rotary), rotate(k, *rotary)
-        return torch.matmul(q, k.transpose(-2, -1)) / self.scale
+        scores = torch.matmul(q, k.transpose(-2, -1)) / self.scale
+        return scores if self.original_context is None else retention_logits(scores, self.original_context)
 
     def attend(self, q, k, v, rotary, index):
         """Causal softmax attention by the fused kernel, at its default scale 1 / sqrt(head width)."""
+        if self.original_context is not None:
+            return softmax(self.forward(q, k, rotary, index)).to(v.dtype) @ v
         if rotary is not None:
             q, k = rotate(q, *rotary), rotate(k, *rotary)
         return F.scaled_dot_product_attention(q, k, v, dropout_p=0.0, is_causal=True)
@@ -80,10 +85,11 @@ class ScaledDotScores(nn.Module):
 class LearnedScaledDotScores(nn.Module):
     """ScaledDotScores at 73f8a0b with QKNorm's learned head gain, without L2 normalization."""
 
-    def __init__(self, heads, head, initial_scale):
+    def __init__(self, heads, head, initial_scale, original_context=None):
         super().__init__()
         self.scale = math.sqrt(head)
         self.log_alpha = nn.Parameter(torch.full((heads,), math.log(initial_scale)))
+        self.original_context = original_context
 
     def gain(self, index):
         alpha = self.log_alpha.exp()
@@ -92,21 +98,25 @@ class LearnedScaledDotScores(nn.Module):
     def forward(self, q, k, rotary, index):
         if rotary is not None:
             q, k = rotate(q, *rotary), rotate(k, *rotary)
-        return (q @ k.transpose(-2, -1)) / self.scale * self.gain(index)
+        scores = (q @ k.transpose(-2, -1)) / self.scale * self.gain(index)
+        return scores if self.original_context is None else retention_logits(scores, self.original_context)
 
     def attend(self, q, k, v, rotary, index):
         """Fused causal softmax: raw queries carry the head gain at ScaledDot's default scale."""
+        if self.original_context is not None:
+            return softmax(self.forward(q, k, rotary, index)).to(v.dtype) @ v
         if rotary is not None:
             q, k = rotate(q, *rotary), rotate(k, *rotary)
         return F.scaled_dot_product_attention(q * self.gain(index), k, v, dropout_p=0.0, is_causal=True)
 
 
 class QKNormScores(nn.Module):
-    def __init__(self, heads, head, eps, initial_scale=None):
+    def __init__(self, heads, head, eps, initial_scale=None, original_context=None):
         super().__init__()
         self.eps = eps
         start = 0.5 * math.log(head) if initial_scale is None else math.log(initial_scale)
         self.log_alpha = nn.Parameter(torch.full((heads,), start))
+        self.original_context = original_context
 
     def unit(self, q, k, rotary, index):
         """Unit queries and keys, rotated, and the scale of their head group."""
@@ -119,10 +129,13 @@ class QKNormScores(nn.Module):
 
     def forward(self, q, k, rotary, index):
         q, k, alpha = self.unit(q, k, rotary, index)
-        return (q @ k.transpose(-2, -1)) * alpha
+        scores = (q @ k.transpose(-2, -1)) * alpha
+        return scores if self.original_context is None else retention_logits(scores, self.original_context)
 
     def attend(self, q, k, v, rotary, index):
         """Causal softmax attention by the fused kernel: the scale multiplies the unit queries, not their scores."""
+        if self.original_context is not None:
+            return softmax(self.forward(q, k, rotary, index)).to(v.dtype) @ v
         q, k, alpha = self.unit(q, k, rotary, index)
         return F.scaled_dot_product_attention(q * alpha, k, v, dropout_p=0.0, is_causal=True, scale=1.0)
 
@@ -146,28 +159,28 @@ def weights_function(spec):
     return WEIGHTS[type(spec)]
 
 
-def scores_module(spec, heads, head):
+def scores_module(spec, heads, head, original_context=None):
     if isinstance(spec, model.ScaledDot):
-        return ScaledDotScores(head)
+        return ScaledDotScores(head, original_context)
     if isinstance(spec, model.LearnedScaledDot):
-        return LearnedScaledDotScores(heads, head, spec.initial_scale)
+        return LearnedScaledDotScores(heads, head, spec.initial_scale, original_context)
     if isinstance(spec, model.QKNorm):
-        return QKNormScores(heads, head, spec.eps, spec.initial_scale)
+        return QKNormScores(heads, head, spec.eps, spec.initial_scale, original_context)
     raise NotImplementedError(f"No builder for {spec!r}")
 
 
 class Attention(nn.Module):
-    def __init__(self, spec, width):
+    def __init__(self, spec, width, original_context=None):
         super().__init__()
         head = width // spec.heads
         # Scores draw no random numbers; built first, their parameters come first, as in GPTMini.
-        self.scores = scores_module(spec.scores, spec.heads, head)
+        self.scores = scores_module(spec.scores, spec.heads, head, original_context)
         self.projections = PROJECTIONS[type(spec.projections)](width, spec.heads, spec.projections.bias)
         self.output = nn.Linear(width, width, bias=spec.output_bias)
         normalizer = spec.weights
         if isinstance(normalizer, model.SurrogateWeights) and normalizer.forward == normalizer.backward:
             normalizer = normalizer.forward
-        self.fused = isinstance(normalizer, model.Softmax) and normalizer.fused
+        self.fused = isinstance(normalizer, model.Softmax) and normalizer.fused and original_context is None
         self.weights = weights_function(normalizer)
         self.exclusive = None if spec.exclusive is None else spec.exclusive.eps
 
@@ -177,7 +190,8 @@ class Attention(nn.Module):
             if self.fused:
                 y = self.scores.attend(q, k, v, rotary, index)
             else:
-                y = self.weights(self.scores(q, k, rotary, index)) @ v
+                weights = self.weights(self.scores(q, k, rotary, index))
+                y = weights.to(v.dtype) @ v
             if self.exclusive is not None:
                 v_hat = F.normalize(v, dim=-1, eps=self.exclusive)
                 y = y - (y * v_hat).sum(dim=-1, keepdim=True) * v_hat
