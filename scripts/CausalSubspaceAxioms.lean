@@ -1,13 +1,15 @@
 import Transformer.Causal.Section4_SubspaceTwoTokens
 import Transformer.Causal.Section4_SubspaceConeConsensus
+import Transformer.Causal.Section4_NegativeLeadingBranch
 
 /-!
 # Axiom inspection of the causal leading-subspace convergence proofs
 
 ArXiv:2411.04990v2, Section 4, Conjecture `thm2`: the complete two-token
 case, the arbitrary-count positive-leading-covector case, and the
-almost-everywhere case up to the leading dimension.
-All 48 inspected results must use only `propext`, `Classical.choice`, and
+almost-everywhere case up to the leading dimension, and the unrestricted
+follower angular dichotomy for a converging original leading prefix.
+All 67 inspected results must use only `propext`, `Classical.choice`, and
 `Quot.sound`. The unrestricted assertion for counts above the leading
 dimension remains unfinished in `Causal.MainTheorem` and is not used here.
 
@@ -63,3 +65,23 @@ Run with `lake env lean scripts/CausalSubspaceAxioms.lean`.
 #print axioms Transformer.Causal.csa_tendsto_of_leader_limit_positive_covector
 #print axioms Transformer.Causal.subspace_cluster_of_positive_leading_covector
 #print axioms Transformer.Causal.subspace_cluster_of_count_le_finrank
+
+#print axioms Transformer.Causal.csaScalar_lt_of_tail_growth
+#print axioms Transformer.Causal.tendsto_zero_of_bounded_expanding
+#print axioms Transformer.Causal.eventually_nonneg_or_uniformly_negative
+#print axioms Transformer.Causal.hasDerivAt_csaLast_leading_forcing
+#print axioms Transformer.Causal.abs_csaLastLeadingCoefficient_le
+#print axioms Transformer.Causal.eventually_csaLastLeadingForcing_pos
+#print axioms Transformer.Causal.tendsto_csaLastLeadingForcing_zero
+#print axioms Transformer.Causal.tendsto_transverse_of_negative_companion
+#print axioms Transformer.Causal.csaLast_transverse_tendsto_of_uniformly_negative
+#print axioms Transformer.Causal.leadingOffAxis_mem
+#print axioms Transformer.Causal.inner_leadingOffAxis
+#print axioms Transformer.Causal.leadingOffAxis_inner_axis
+#print axioms Transformer.Causal.tendsto_leadingOffAxis
+#print axioms Transformer.Causal.norm_starProjection_ge_of_negative
+#print axioms Transformer.Causal.norm_normalized_projection_neg_le
+#print axioms Transformer.Causal.tendsto_normalized_projection_neg
+#print axioms Transformer.Causal.csaLast_tendsto_or_negative_leading
+#print axioms Transformer.Causal.csaLast_negative_leading_of_not_tendsto
+#print axioms Transformer.Causal.csaLast_tendsto_or_negative_direction

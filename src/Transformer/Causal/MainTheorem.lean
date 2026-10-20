@@ -6,6 +6,7 @@ public import Transformer.Causal.Section4_ConsensusInduction
 public import Transformer.Causal.Section4_SubspaceLeader
 public import Transformer.Causal.Section4_SubspaceTwoTokens
 public import Transformer.Causal.Section4_SubspaceConeConsensus
+public import Transformer.Causal.Section4_NegativeLeadingBranch
 public import Transformer.Causal.SectionA_Scalar
 public import Transformer.Perspective.Section2_FlowMap
 public import Transformer.Perspective.Section3_SmallBeta
@@ -33,7 +34,10 @@ with its conditional antipodal exception null by the actual follower
 expansion and Fubini. Subspace convergence is proved almost surely
 when the token count is at most the leading dimension, and pointwise
 for any count with a common positive initial leading covector.
-The unrestricted assertion for longer tuples remains unproved.
+For any count, a follower of a converging leading prefix either converges
+to its limit or has a nonzero leading projection with the antipodal
+normalized limit. Nullity of this exceptional basin for arbitrary longer
+prefixes, and hence the unrestricted assertion, remains unproved.
 The geometric `lemma:scalar` and its equality cases are in `SectionA_Scalar`.
 -/
 
