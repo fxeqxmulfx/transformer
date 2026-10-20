@@ -70,6 +70,48 @@ def buffered_polar(matrix: Tensor, workspace: Workspace, steps: int = 5) -> Tens
     return x.T if transpose else x
 
 
+def muon_direction(
+    parameter: Tensor,
+    state: StateDict,
+    spec: MuonSpec,
+    workspace: Workspace,
+    *,
+    matrix_update: bool,
+) -> Tensor:
+    """Native Muon/auxiliary Adam direction, reusable by Schedule-Free.
+
+    Source: arXiv:2502.16982, Sections 2.1-2.2; the original operation order
+    is retained. Matrix membership is supplied explicitly, so a wrapper can
+    restore it with its state. Extra averaging buffers do not change moments.
+    """
+    gradient = parameter.grad
+    if matrix_update:
+        if "momentum" not in state:
+            state["momentum"] = torch.zeros_like(parameter)
+        moment = state["momentum"]
+        moment.mul_(spec.momentum).add_(gradient)
+        nesterov = workspace.like(parameter, "nesterov")
+        torch.mul(moment, spec.momentum, out=nesterov)
+        nesterov.add_(gradient)
+        return buffered_polar(nesterov, workspace).mul_(0.2 * math.sqrt(max(parameter.shape)))
+    if "m" not in state:
+        state.update(
+            m=torch.zeros_like(parameter),
+            v=torch.zeros_like(parameter),
+            step=parameter.new_zeros((), dtype=torch.float64),
+        )
+    (beta, beta2), m, v, step = (0.9, 0.999), state["m"], state["v"], state["step"].add_(1)
+    m.mul_(beta).add_(gradient, alpha=1 - beta)
+    v.mul_(beta2).addcmul_(gradient, gradient, value=1 - beta2)
+    direction = workspace.like(parameter, "direction")
+    numerator = workspace.like(parameter, "numerator")
+    torch.div(m, bias_correction(beta, step, workspace, "bias1"), out=numerator)
+    torch.div(v, bias_correction(beta2, step, workspace, "bias2"), out=direction)
+    direction.sqrt_().add_(1e-8)
+    torch.div(numerator, direction, out=direction)
+    return direction.mul_(spec.auxiliary)
+
+
 class Muon(DirectionOptimizer):
     """Apply Muon to selected matrices and bias-corrected auxiliary Adam elsewhere."""
 
@@ -88,34 +130,9 @@ class Muon(DirectionOptimizer):
 
     def direction(self, parameter: Tensor, state: TensorState) -> Tensor:
         """Compute the update direction from the current gradient and state."""
-        spec, gradient = self.spec, parameter.grad
-        if parameter in self.hidden:
-            if not state:
-                state["momentum"] = torch.zeros_like(parameter)
-            moment = state["momentum"]
-            moment.mul_(spec.momentum).add_(gradient)
-            nesterov = self.workspace.like(parameter, "nesterov")
-            torch.mul(moment, spec.momentum, out=nesterov)
-            nesterov.add_(gradient)
-            return buffered_polar(nesterov, self.workspace).mul_(
-                0.2 * math.sqrt(max(parameter.shape))
-            )
-        if not state:
-            state.update(
-                m=torch.zeros_like(parameter),
-                v=torch.zeros_like(parameter),
-                step=parameter.new_zeros((), dtype=torch.float64),
-            )
-        (beta, beta2), m, v, step = (0.9, 0.999), state["m"], state["v"], state["step"].add_(1)
-        m.mul_(beta).add_(gradient, alpha=1 - beta)
-        v.mul_(beta2).addcmul_(gradient, gradient, value=1 - beta2)
-        direction = self.workspace.like(parameter, "direction")
-        numerator = self.workspace.like(parameter, "numerator")
-        torch.div(m, bias_correction(beta, step, self.workspace, "bias1"), out=numerator)
-        torch.div(v, bias_correction(beta2, step, self.workspace, "bias2"), out=direction)
-        direction.sqrt_().add_(1e-8)
-        torch.div(numerator, direction, out=direction)
-        return direction.mul_(spec.auxiliary)
+        return muon_direction(
+            parameter, state, self.spec, self.workspace, matrix_update=parameter in self.hidden
+        )
 
 
 class Dash(DirectionOptimizer):

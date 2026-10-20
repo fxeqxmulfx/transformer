@@ -1,6 +1,7 @@
 module
 
 public import Transformer.ScheduleFree.Section2_SGD
+public import Transformer.ScheduleFree.Section2_Muon
 public import Transformer.ScheduleFree.SectionB_Momentum
 public import Transformer.ScheduleFree.SectionC_ExpectationTransfer
 public import Transformer.ScheduleFree.SectionD_Acceleration
@@ -61,6 +62,11 @@ arXiv:2405.15682v4. Sources and PDF are downloaded locally into
   cumulative weights remain nonnegative; positive epsilon removes
   denominator singularities. No AdamW convergence result is inferred
   from its empirical evaluation.
+* §2.1's arbitrary base sequence, composed with practical Muon from
+  arXiv:2502.16982, §§2.1–2.2: explicit native state, query-driven oracle,
+  base decay, independent outer beta and native momentum, and a proof
+  that evaluation is the equal prefix mean, including initialization.
+  This local composition is not a convergence theorem for Muon.
 
 ## Source corrections and scope
 

@@ -16,7 +16,7 @@ from .atomic import (AtomicColumns, AtomicMatching, BindingPricing, MatchingBind
                      MatchingOrders, OrderPricing, PairedMatching)
 from .optimizers import ANSR, EVD, AdamW, Clipped, Optimizer
 from .mdw import ScheduleFreeAMSGradMDW
-from .schedule_free import ScheduleFreeAdamW
+from .schedule_free import ScheduleFreeAdamW, ScheduleFreeMuon
 from .regression import MLP, ModularRegression
 from .paired import DivisionPairs, VectorReadout, check_division_model
 from .rotary import LabDivision, Rotate90
@@ -62,7 +62,7 @@ class Experiment(Spec):
         require(not any(isinstance(block, Clipped) for path, block in walk(self.optimizer) if path),
                 "Clipping acts on the gradient before the whole rule: write Clipped outermost")
         free = [block for _, block in walk(self.optimizer)
-                if isinstance(block, (ScheduleFreeAdamW, ScheduleFreeAMSGradMDW))]
+                if isinstance(block, (ScheduleFreeAdamW, ScheduleFreeMuon, ScheduleFreeAMSGradMDW))]
         require(not free or not isinstance(self.execution, CudaGraph),
                 "Schedule-Free uses eager optimizer steps; choose Eager or Compiled")
         require(not self.schedule.warmup or not any(block.warmup for block in free),

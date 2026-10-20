@@ -1,4 +1,4 @@
-"""Schedule-Free AdamW from arXiv:2405.15682v4, Section 4.4, Algorithm 1."""
+"""Schedule-Free compositions and the paper's specialized AdamW algorithm."""
 
 from dataclasses import dataclass
 import math
@@ -32,6 +32,40 @@ class ScheduleFreeAdamW(Optimizer):
         require(len(self.betas) == 2 and all(0 <= beta < 1 for beta in self.betas),
                 "Schedule-Free AdamW needs two betas in [0, 1)")
         require(math.isfinite(self.eps) and self.eps > 0, "Epsilon must be finite and positive")
+        require(math.isfinite(self.weight_decay) and self.weight_decay >= 0,
+                "Weight decay must be finite and nonnegative")
+        require(type(self.warmup) is int and self.warmup >= 0,
+                "Built-in warmup must be a nonnegative integer")
+
+
+@dataclass(frozen=True)
+class ScheduleFreeMuon(Optimizer):
+    """General Schedule-Free wrapper around native Muon; equal prefix averages.
+
+    Sources: arXiv:2405.15682v4, Sections 2-2.1, and arXiv:2502.16982,
+    Sections 2.1-2.2. Lean: Transformer.ScheduleFree.muonWrapperRun.
+    This composition keeps Muon's native momentum and finite Newton-Schulz
+    direction. Beta controls outer interpolation independently. Decay acts
+    on the base point. Auxiliary Adam blocks share the same wrapper.
+    The initial point has weight one; optional warmup is linear. The lab's
+    external schedule may vary rates; constant rates after warmup need none.
+    Neither source provides a convergence theorem for this composition.
+    """
+    lr: float
+    beta: float = 0.9
+    momentum: float = 0.95
+    auxiliary: float = 0.05
+    weight_decay: float = 0.0
+    warmup: int = 0
+    allows_guard: ClassVar[bool] = False
+    direction_stages: ClassVar[bool] = False
+
+    def check(self):
+        check_rate(self.lr)
+        require(0 <= self.beta <= 1, "Schedule-Free beta must lie in [0, 1]")
+        require(0 <= self.momentum < 1, "Muon momentum must lie in [0, 1)")
+        require(math.isfinite(self.auxiliary) and self.auxiliary > 0,
+                "Auxiliary Adam multiplier must be finite and positive")
         require(math.isfinite(self.weight_decay) and self.weight_decay >= 0,
                 "Weight decay must be finite and nonnegative")
         require(type(self.warmup) is int and self.warmup >= 0,

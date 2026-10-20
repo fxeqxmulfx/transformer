@@ -13,7 +13,7 @@ from lean_optim import coordinate
 
 from ...domain import optimizers
 from ...domain.mdw import AMSGradMDW
-from ...domain.schedule_free import ScheduleFreeAdamW
+from ...domain.schedule_free import ScheduleFreeAdamW, ScheduleFreeMuon
 from .ansr import ANSR
 
 
@@ -50,11 +50,14 @@ def construct(spec, model, rate, **extra):
                if field.name != "schedule_components"}
     name = "AdamWDirection" if isinstance(spec, optimizers.AdamW) else type(spec).__name__
     cls = getattr(lean_optim, name)
-    if isinstance(spec, (optimizers.Muon, optimizers.AMSGradMD, AMSGradMDW)):
+    if isinstance(spec, ScheduleFreeMuon):
+        matrices = getattr(model, "hidden_matrices", None)
+        options["matrix_params"] = list(matrices()) if matrices is not None else None
+    elif isinstance(spec, (optimizers.Muon, optimizers.AMSGradMD, AMSGradMDW)):
         options["matrix_params"] = list(model.hidden_matrices())
-    if isinstance(spec, ScheduleFreeAdamW):
+    if isinstance(spec, (ScheduleFreeAdamW, ScheduleFreeMuon)):
         if rate is not None:
-            raise ValueError("Schedule-Free AdamW uses eager optimizer steps without tensor rates")
+            raise ValueError("Schedule-Free uses eager optimizer steps without tensor rates")
         optimizer = cls(model, **options, **extra)
     else:
         optimizer = cls(model, **options, rate=rate, **extra)

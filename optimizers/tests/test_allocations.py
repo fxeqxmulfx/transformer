@@ -41,6 +41,7 @@ def _factories() -> dict[str, Callable[[list[torch.Tensor]], torch.optim.Optimiz
         "Clipped": lambda p: opt.Clipped(opt.Adam(p)),
         "ScheduleFreeSGD": opt.ScheduleFreeSGD,
         "ScheduleFreeAdamW": opt.ScheduleFreeAdamW,
+        "ScheduleFreeMuon": opt.ScheduleFreeMuon,
         "ScheduleFreeAMSGradW": opt.ScheduleFreeAMSGradW,
         "ScheduleFreeAMSGradMD": opt.ScheduleFreeAMSGradMD,
         "ClippedOptimistic": opt.ClippedOptimistic,
@@ -61,7 +62,12 @@ class AllocationTests(unittest.TestCase):
     @unittest.skipUnless(torch.cuda.is_available(), "CUDA unavailable")
     def test_schedule_free_warmed_cuda_steps_allocate_no_device_storage(self) -> None:
         """Check positive raw CUDA allocator events with active kernel tracing."""
-        factories = (opt.ScheduleFreeAdamW, opt.ScheduleFreeAMSGradW, opt.ScheduleFreeAMSGradMD)
+        factories = (
+            opt.ScheduleFreeAdamW,
+            opt.ScheduleFreeMuon,
+            opt.ScheduleFreeAMSGradW,
+            opt.ScheduleFreeAMSGradMD,
+        )
         for factory, dtype in product(factories, (torch.float32, torch.float64)):
             with (
                 self.subTest(rule=factory.__name__, dtype=dtype),

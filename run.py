@@ -125,7 +125,8 @@ def package(_):
 
 def optimizer_parity(_):
     execute(["lake", "build", "Transformer.ScheduleFree.SectionD_Optimistic",
-             "Transformer.ScheduleFree.Section4_AdamW", "Transformer.Grokking.AdamW.ScalarRecurrence",
+             "Transformer.ScheduleFree.Section4_AdamW", "Transformer.ScheduleFree.Section2_Muon",
+             "Transformer.Grokking.AdamW.ScalarRecurrence",
              "Transformer.MagnitudeDirection.SectionA_AMSGradCallbacks", "Transformer.AdamBeyond.Section5_AdamNC",
              "Transformer.AMSGrad.Section5_AdamX", "Transformer.DASH.Section2_Models",
              "Transformer.Magma.Section3_Algorithm", "Transformer.AdaFisher.Section3_Algorithm",
@@ -134,6 +135,7 @@ def optimizer_parity(_):
     execute(["lake", "env", "lean", "scripts/OptimizerParity.lean"])
     execute(["lake", "env", "lean", "scripts/ScheduleFreeAMSGradParity.lean"])
     execute(["lake", "env", "lean", "scripts/MDWParity.lean"])
+    execute(["lake", "env", "lean", "scripts/ScheduleFreeMuonParity.lean"])
 
 
 def optimizer_lint(_):

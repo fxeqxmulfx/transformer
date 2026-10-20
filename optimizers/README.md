@@ -26,7 +26,7 @@ optimizer.step()
 Available rules: SGD, native AdamW, AdamWDirection (for stages), raw-moment
 Adam, AMSGrad, AMSGradW, AdamX, AdaGrad, AdamNC, RMSProp, Muon, Dash (blocked
 Shampoo), AdaFisher, AMSGradMD, AMSGradMDW, AdamMDW, AtomicColumns, ScheduleFreeSGD,
-ScheduleFreeAdamW, ScheduleFreeAMSGradW, ScheduleFreeAMSGradMD,
+ScheduleFreeAdamW, ScheduleFreeMuon, ScheduleFreeAMSGradW, ScheduleFreeAMSGradMD,
 ScheduleFreeAMSGradMDW, ScheduleFreeAdamMDW and
 ClippedOptimistic. Guarded, Magma and Clipped compose
 with the rules described below. The separate
@@ -205,7 +205,7 @@ optimizer = Clipped(
 )
 ```
 
-Muon, AMSGradMD and ScheduleFreeAMSGradMD apply their matrix rule to all 2D tensors by default;
+Muon, ScheduleFreeMuon, AMSGradMD and ScheduleFreeAMSGradMD apply their matrix rule to all 2D tensors by default;
 other parameters use the documented auxiliary rule. AdaFisher takes a module
 with bias-free Linear layers so it can collect input/output-gradient
 factors. It validates these layers before registering hooks and removes its
@@ -230,7 +230,34 @@ equal iterates remain equal in floating point. AdamW and its AMSGrad variant
 keep explicit base and evaluation histories and one reusable denominator scratch
 tensor, rather than a second full-sized direction workspace.
 
-The lab DSL also exports `ScheduleFreeAdamW(lr=..., warmup=...)`. It supports
+`ScheduleFreeMuon` composes the general Schedule-Free scheme with the existing
+Muon base update. It keeps native Nesterov momentum, five Newton–Schulz steps,
+shape scaling and auxiliary bias-corrected Adam for nonselected tensors.
+`beta` controls query interpolation independently of Muon's `momentum`.
+Decay acts on the base z. Its evaluation is the equal mean of every base point,
+including initialization; the first coefficient is 1/2. A zero-rate step still
+advances this mean and native histories. This local composition has no claimed
+nonconvex convergence guarantee. Lean proves its prefix mean and native update
+identities in `Transformer.ScheduleFree.Section2_Muon`.
+
+```python
+from lean_optim import ScheduleFreeAdamW, ScheduleFreeMuon
+
+optimizer = ScheduleFreeMuon(
+    model,
+    lr=0.02,
+    beta=0.9,
+    momentum=0.95,
+    weight_decay=0.01,
+    warmup=100,
+    matrix_params=[model.weight],
+)
+# Alternatively, the paper's specialized Algorithm 1:
+optimizer = ScheduleFreeAdamW(model, lr=1e-3, weight_decay=0.01, warmup=100)
+```
+
+The lab DSL exports `ScheduleFreeAdamW(lr=..., warmup=...)` and
+`ScheduleFreeMuon(lr=..., beta=..., momentum=..., warmup=...)`. Both support
 `Eager()` and `Compiled()` forward/backward execution with eager optimizer steps,
 including outer `Clipped(...)`. Both training and held-out evaluations use the
 averaged weights. Use either its built-in warmup or `Schedule(warmup=...)`;
