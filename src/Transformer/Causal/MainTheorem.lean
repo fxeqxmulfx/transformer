@@ -4,6 +4,7 @@ public import Transformer.Basic
 public import Transformer.Causal.Section4_TwoClusterRefutation
 public import Transformer.Causal.Section4_ConsensusInduction
 public import Transformer.Causal.Section4_SubspaceLeader
+public import Transformer.Causal.Section4_SubspaceTwoTokens
 public import Transformer.Causal.SectionA_Scalar
 public import Transformer.Perspective.Section2_FlowMap
 public import Transformer.Perspective.Section3_SmallBeta
@@ -28,7 +29,8 @@ the uniform law, which is read as every `σ` with `Perspective.UniformTuple d n 
 positive-measure counterexample in `Section4_TwoClusterRefutation`.
 The single-cluster theorem is proved by the original prefix induction,
 with its conditional antipodal exception null by the actual follower
-expansion and Fubini. The subspace convergence assertion remains unproved.
+expansion and Fubini. Subspace convergence is proved for one and two
+tokens; the assertion for three or more tokens remains unproved.
 The geometric `lemma:scalar` and its equality cases are in `SectionA_Scalar`.
 -/
 
@@ -121,10 +123,13 @@ The source defines `ξ` in words as "the normalized `L`-component of `x_1(0)`"
 and then in symbols as `y_1 := P_{L^⊥}(x_1(0))`, `ξ := y_1/|y_1|`. The
 symbols contradict the words and the surrounding discussion (tokens are
 attracted *into* `L`); the words are taken, `ξ` is the projection on `L`.
+The source's strict transverse inequality is restricted to nonzero `z`;
+at `z = 0` both sides are zero, so its printed unrestricted version is impossible.
 
 The first-token limit and the full singleton case are proved from the
-original projected equation in `Section4_SubspaceLeader`. The remaining
-assertion for followers at `n ≥ 2` is not proved here.
+original projected equation in `Section4_SubspaceLeader`. The complete
+two-token case, including its exceptional-set argument, is proved in
+`Section4_SubspaceTwoTokens`. The assertion at `n ≥ 3` remains unproved.
 
 Source: arXiv:2411.04990v2, §4, `thm2`. -/
 theorem subspace_cluster (β : ℝ) (Q K V : ParamMatrix d)
@@ -151,7 +156,12 @@ theorem subspace_cluster (β : ℝ) (Q K V : ParamMatrix d)
     have hp' : L.starProjection (X 0 0 : EucSpace d) ≠ 0 := by rwa [h0]
     have h := subspace_cluster_singleton β Q K V L lam heig hinv hdecay X hX hp' i
     simpa only [h0] using h
-  · sorry
+  · by_cases hn2 : n = 2
+    · subst n
+      have hi : (⟨0, hn⟩ : Idx 2) = 0 := rfl
+      simpa only [hi] using
+        subspace_cluster_twoTokens β Q K V L lam hlam heig hdim hinv hdecay
+    · sorry
 
 /-- The hypotheses of `subspace_cluster` are satisfiable: in the plane, with
 `L = ⊤`, `V = I_2` and `λ = 1`. The whole plane has rank `2`, is invariant, and
