@@ -107,6 +107,7 @@ public import Transformer.Perspective.AppendixA_Convergence
 public import Transformer.Perspective.AppendixA_SaddleNull
 public import Transformer.Perspective.AppendixA_Saddle
 public import Transformer.Perspective.Section3_ClusteredSets
+public import Transformer.Perspective.Section3_ClusteringProbability
 public import Transformer.Perspective.AppendixB_BetaInterval
 public import Transformer.Perspective.AppendixB_Taylor
 public import Transformer.Perspective.CircleCritical

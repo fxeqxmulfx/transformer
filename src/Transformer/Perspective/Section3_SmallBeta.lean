@@ -18,7 +18,9 @@ This file formalizes §4 of the survey:
 * `Theorem p:beta0`         — almost-sure consensus at `β = 0`, whose
   exceptional set is not empty; the theorem itself, `beta0_consensus`, is in
   `Transformer.Perspective.AppendixA_Saddle`, after its proof,
-* `Theorem th:beta_small`   — probability of clustering tends to `1` as `β → 0`,
+* `Theorem th:beta_small`   — probability of clustering tends to `1` as `β → 0`;
+  this theorem and `e:Ps0n` are proved after their dependencies in
+  `Transformer.Perspective.Section3_ClusteringProbability`,
 * the auxiliary equations  `eq: harry.potter`, `e:Ps0n`
   (`e:approxsphere` and `eq: youareawizardharry` are in
    `Transformer.Perspective.Section3_Gronwall`),
@@ -194,32 +196,6 @@ theorem antipodalPair_not_mem_clusteringSet (β : ℝ) (x : SSphere d) :
   rw [hx0] at hx
   norm_num at hx
 
-/-- **Theorem (th:beta_small).** *Clustering with high probability at small β.*
-
-For fixed `d, n ≥ 2`, the probability (w.r.t. uniform initialization on
-`(𝕊^{d-1})^n`) that the initial sequence belongs to `𝒮_β` tends to `1` as
-`β → 0⁺`:
-
-  `ℙ(𝒮_β) →[β → 0⁺] 1`.
-
-Not proved here: the proof runs through `beta0_consensus`,
-`sset0_probability_tendsto_one` and `distance_bound_at_time_m`. Of the three
-only `sset0_probability_tendsto_one` is not proved; `beta0_consensus` is proved
-after Appendix A, in `Perspective.AppendixA_Saddle`. Measurability of `clusteringSet` is part of what is being
-asserted: `P (𝒮_β)` is the outer measure when the set is not measurable, so the
-statement is the one the paper makes in either case.
-
-Source: arXiv:2312.10794v5, §4, `th:beta_small`. -/
-theorem clustering_probability_small_beta (hd : 2 ≤ d) (hn : 2 ≤ n) :
-    ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
-      Filter.Tendsto (fun β : ℝ => (P (clusteringSet d n β)).toReal)
-        (nhdsWithin 0 (Set.Ioi 0)) (nhds 1) := by
-  sorry
-
-/-- The hypotheses of `clustering_probability_small_beta` are satisfiable:
-`d = n = 2`. -/
-example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
-
 /-! ### Auxiliary objects used inside the proof of `th:beta_small`. -/
 
 /-- A set of `n` points on `𝕊^{d-1}` is *α-clustered* if all pairwise inner
@@ -238,24 +214,6 @@ def Sset0 (m : ℕ) : Set (SphereTuple d n) :=
   { X₀ | ∃ X : ℝ → SphereTuple d n,
             X 0 = X₀ ∧ beta0Dynamics d n X ∧
               alphaClustered d n (3/4 : ℝ) (X (m : ℝ)) }
-
-/-- **Equation (e:Ps0n).** As `m → ∞`, `ℙ(𝒮_0^m) → 1`: almost every initial
-sequence is `(3/4)`-clustered by the `β = 0` dynamics at a late enough integer
-time, so the measure of `Sset0 d n m` tends to `1`.
-
-Not proved here: it is the quantitative form of `beta0_consensus`, which is
-proved after Appendix A, in `Perspective.AppendixA_Saddle`.
-
-Source: arXiv:2312.10794v5, §4, `e:Ps0n`. -/
-theorem sset0_probability_tendsto_one (hd : 2 ≤ d) (hn : 2 ≤ n) :
-    ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
-      Filter.Tendsto (fun m : ℕ => (P (Sset0 d n m)).toReal)
-        Filter.atTop (nhds 1) := by
-  sorry
-
-/-- The hypotheses of `sset0_probability_tendsto_one` are satisfiable:
-`d = n = 2`. -/
-example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
 
 end Perspective
 end Transformer
