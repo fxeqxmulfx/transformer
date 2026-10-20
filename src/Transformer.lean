@@ -55,6 +55,7 @@ public import Transformer.Landscape
 public import Transformer.MHC
 public import Transformer.AttentionResiduals
 public import Transformer.DeepSeekV41
+public import Transformer.RoPE
 
 /-!
 Formalizations of papers on the mathematics and architecture of Transformers:
@@ -189,6 +190,35 @@ Formalizations of papers on the mathematics and architecture of Transformers:
 
 40. Kimi Team — "Kimi K3: Open Frontier Intelligence", §2.2.
    The AttnRes residual mechanism, shared with item 38, and concrete block counts.
+
+41. Liu et al. — arXiv:2310.05209v2, "Scaling Laws of RoPE-based Extrapolation".
+   Exact periods and the integer critical-coordinate cutoff, §3.2.
+
+42. Peng et al. — arXiv:2309.00071v3, "YaRN: Efficient Context Window Extension
+   of Large Language Models". Bandwise interpolation and NTK scaling, §3/A.2.
+
+43. Men et al. — arXiv:2405.14591v1, "Base of RoPE Bounds Context Length".
+   Expected-score discrimination with explicit corrected moments, §4/Appendix A.
+
+44. Shang et al. — arXiv:2502.20082v1, "LongRoPE2: Near-Lossless LLM Context
+   Window Scaling". Coordinatewise phase constraints and mixed windows, §2/§3.3.
+
+45. Oka et al. — "Frequency Bands in RoPE", ICLR 2026, §5.
+   The variance formula, the band-coordinate identity, and a counterexample
+   to the source's global-unimodality assertion.
+
+46. Wu, Liu and Jadbabaie — arXiv:2607.07678v1, "How Data Shapes RoPE Frequency
+   Usage". Optimal contrast frequency and matched dependency dilation, §§3–4.
+
+47. Karypis et al. — arXiv:2607.10134v1, "LeRoPE: Learnable RoPE Frequencies
+   Improve Language Modeling". Log-frequency parametrization and derivative, §3.
+
+48. Wu, Du and Peng — arXiv:2609.39929v1, "RoPE at the End of Its Rope?".
+   Score realization and deterministic adjacent-response bounds, A.2/A.4/C.6.
+
+The RoPE development formalizes the mathematical results specified in
+`review/rope_context.md`; empirical accuracy, training behavior, and calibrated
+probability bounds outside that coverage are not claimed as proved.
 
 The latest GLM-5.3-Flash residual is instantiated from its pinned official
 configuration and Transformers implementation. The older GLM-5 report
