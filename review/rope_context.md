@@ -49,6 +49,7 @@ witness examples beside them.
 | Liu §3.2, Eq. (4) | `ScalingLaws/Section3_Periods.lean` | Full periods and the exact integer cutoff between complete and incomplete periods, with a strict inequality matching the boundary convention. |
 | YaRN §3.2 and A.2, Eqs. (19)–(22) | `YaRN/SectionA2_NTK.lean`, `YaRN/Section3_Bands.lean` | Coordinatewise NTK factors; preservation of the highest frequency; matching of the lowest-frequency phase; positivity and bounds for the actual interpolation blend. |
 | YaRN §3.2–3.4, Eqs. (10)–(15), Definitions 1–2 | `YaRN/Section3_Ramp.lean`, `YaRN/Section3_Temperature.lean`, `YaRN/Section3_Algorithm.lean` | The actual rotation-count ramp in all three regimes; context-derived scale; positive compressed frequencies; the squared Q/K temperature gain; exact softmax odds and preservation of logit order; the complete score construction, identity without extension, and fixed-activation slope and margin bounds. |
+| Derived investigation of YaRN §3.3, Eq. (14), using existing ALM and Imbalance softmax results | `YaRN/Retention.lean`, `YaRN/Calibration.lean`, `YaRN/Approximation.lean` | Exact probability-preserving temperature under an explicit score model; a worst-case bound for arbitrary scores with a certified positive gap; changed-gap calibration; impossibility of a length-only rule even with positive margins; the local linear coefficient and exact quadratic approximation error. |
 | Men §4.2–4.3, Appendix A | `BaseBounds/Section4_ExpectedScores.lean` | The integral identity for the expected score gap under explicit coefficient moments; its nonzero-variance sign criterion; a counterexample to the omitted zero-mean/cross-moment implication. |
 | LongRoPE2 §2.2, Eqs. (8)–(10), and §3.3 | `LongRoPE2/Section2_Rescaling.lean` | The scaling-factor constraint is necessary and sufficient for endpoint phase coverage; it bounds every in-window phase; period scaling and the mixed-context rule preserve the original short-context phases. |
 | Oka §5.1, Eqs. (4)–(9) | `FrequencyBands/Section5_Variance.lean` | The variance formula from actual integrals; the exact continuous band-coordinate identity; a counterexample to the global-unimodality assertion in Step 2. |
@@ -212,6 +213,84 @@ frequencies, the interpolated slope before temperature lies in `[C/s,C]`.
 After temperature its budget is `m^2*C_interpolated`. Reference margins are
 also multiplied by `m^2`, so temperature cannot improve the margin/slope
 certificate. All statements about score changes keep Q/K activations fixed.
+
+## Deriving temperature instead of fitting it
+
+The repository already supplies useful results:
+`Transformer.ALM.softmax_winner_sharp` bounds arbitrary-score softmax mass
+through the competing exponentials; `Transformer.Imbalance.sum_exp_twoLevel`
+and `softmax_twoLevel` calculate the exact equal-tail softmax. The new proofs
+reuse these results rather than treating a fitted temperature as an optimum.
+
+An explicit objective is necessary. For retention of one desired token's
+attention probability, let `N=L-1` be its original competitor count, `M=L'-1`
+the new count, and let the desired token exceed every equal losing logit by
+`Delta`. Logits include the ordinary division by `sqrt(head_dimension)`.
+At logit gain `g=m^2`, its exact softmax probability is
+
+```text
+P(N, Delta, g) = 1 / (1 + N * exp(-g * Delta)).
+```
+
+For positive competitor counts and a nonzero gap, solving
+`P(M,Delta,g)=P(N,Delta,1)` gives the **unique** answer
+
+```text
+g = 1 + log(M/N) / Delta
+m = sqrt(1 + log(M/N) / Delta).
+```
+
+If RoPE rescaling or activation changes alter the gap, the exact equation is
+instead `g=(Delta_old+log(M/N))/Delta_new`, with `Delta_new != 0`.
+A physically positive temperature requires a positive resulting gain.
+For a positive gap and `M>=N`, the unchanged-gap gain is at least one.
+These equations optimize no unspecified loss: they solve the stated
+probability-retention constraint in the equal-tail model.
+
+For **arbitrary** competing logits, a certified lower gap `Delta>0` gives
+`p_target >= P(M,Delta,g)`. The derived gain therefore preserves the old
+**worst-case lower bound** `P(N,Delta,1)`. It does not in general preserve
+the actual old probability, which can be larger than that bound. The gap
+must hold for the scores at the new context and frequencies. Taking the
+largest logit as the target certifies concentration on the existing winner,
+not that this winner is the desired first token.
+
+Two impossibility results rule out a universal default based only on length:
+
+* With tied logits, extending two visible keys to three changes a token's
+  probability from `1/2` to `1/3` at every finite temperature.
+* Even with strictly positive winner gaps, extending one competitor to two
+  needs `g=1+log(2)` at gap one, and `g=1+log(2)/2` at gap two. These are
+  unequal. `no_length_only_retention` rules out every function of the two
+  context lengths with retention for all such rows.
+
+This is not a refutation of the measured LLaMA perplexities in YaRN. It
+refutes promotion of any length-only fit to a universal retention law.
+
+Write `u=log(M/N)`. The exact conditional Q/K gain is
+`sqrt(1+u/Delta)` and its derivative at `u=0` is `1/(2*Delta)`.
+Consequently a coefficient `0.1` occurs at **gap five** as a local tangent,
+not as a universal constant. The squared tangent has the exact excess
+
+```text
+(1 + u/(2*Delta))^2 - (sqrt(1+u/Delta))^2 = u^2/(4*Delta^2).
+```
+
+This excess is strictly positive for positive growth. Also `M/N` is a
+competitor-count ratio, while the empirical formula uses the token-count
+ratio `s=L'/L`; they are close only for sufficiently large `L`.
+The following are algebraic illustrations at `L=4096`, not language-model
+experiments or perplexity predictions:
+
+| Token extension `s` | YaRN fitted Q/K gain | Exact retention, gap 1 | Gap 5 | Gap 10 |
+| --- | ---: | ---: | ---: | ---: |
+| 4 | 1.138629 | 1.544823 | 1.130175 | 1.067074 |
+| 16 | 1.277259 | 1.942374 | 1.246821 | 1.130169 |
+| 128 | 1.485203 | 2.419147 | 1.403729 | 1.218699 |
+
+No fitted-temperature default has been added to the Python lab. Derivation
+alone cannot supply a parameter-free policy for arbitrary trained attention:
+the objective and the score-gap information are essential inputs.
 
 ## Validation
 
