@@ -9,6 +9,7 @@ public import Transformer.ScheduleFree.SectionD_Optimistic
 public import Transformer.ScheduleFree.SectionE_StrongConvex
 public import Transformer.ScheduleFree.SectionF_LargeSteps
 public import Transformer.ScheduleFree.Section4_AdamW
+public import Transformer.ScheduleFree.AdamW
 public import Transformer.ScheduleFree.AMSGrad
 
 /-!
@@ -62,6 +63,11 @@ arXiv:2405.15682v4. Sources and PDF are downloaded locally into
   cumulative weights remain nonnegative; positive epsilon removes
   denominator singularities. No AdamW convergence result is inferred
   from its empirical evaluation.
+* The authors' version 1.3 stability revision, upstream commit `59ed9b6`:
+  bias correction inside the denominator, warmup-only decay, epsilon rescaling,
+  and running-maximum rate weights. The two-buffer implementation is proved
+  equivalent to the explicit reference recurrence for entire query-driven runs.
+  Exact comparisons retain the distinct manuscript algorithm above.
 * §2.1's arbitrary base sequence, composed with practical Muon from
   arXiv:2502.16982, §§2.1–2.2: explicit native state, query-driven oracle,
   base decay, independent outer beta and native momentum, and a proof
