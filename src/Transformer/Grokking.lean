@@ -10,6 +10,7 @@ public import Transformer.Grokking.Geometry
 public import Transformer.Grokking.DivisionOrbits
 public import Transformer.Grokking.Composition
 public import Transformer.Grokking.CircuitEfficiency
+public import Transformer.Grokking.FlatSpectrum
 
 /-! Exact mathematical formulations of grokking and its candidate
 measurements. Current scope: finite-class confidence and decisions, and
@@ -29,6 +30,7 @@ finite-step bounds with actual CE counterexamples to initial-curvature
 certificates, and corrected fixed-circuit efficiency allocation with
 positive-penalty and global-optimality premises, including source
 counterexamples, repaired real-power increment estimates, actual feasible
-transfers, superlinear minimum cost balance/ratios and fixed-table margins. -/
+transfers, superlinear minimum cost balance/ratios and fixed-table margins,
+plus the nuclear norm as the minimum balanced factorization cost. -/
 
 @[expose] public section
