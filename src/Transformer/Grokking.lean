@@ -32,6 +32,7 @@ positive-penalty and global-optimality premises, including source
 counterexamples, repaired real-power increment estimates, actual feasible
 transfers, superlinear minimum cost balance/ratios and fixed-table margins,
 plus the nuclear norm as the minimum balanced factorization cost and
-the flat spectrum of the modular `a³ + a b` answer table. -/
+the flat spectrum of the character kernel `ψ (a³ + a b)`, which no proper
+training set recovers by minimum-nuclear-norm interpolation. -/
 
 @[expose] public section
