@@ -18,6 +18,7 @@ public import Transformer.Grokking.FlatSpectrum.CubicSums
 public import Transformer.Grokking.FlatSpectrum.CubicBound
 public import Transformer.Grokking.FlatSpectrum.Conditional
 public import Transformer.Grokking.FlatSpectrum.Intermediate
+public import Transformer.Grokking.FlatSpectrum.OneHotFill
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -33,6 +34,8 @@ rank-one `ψ (a + b)` is the truth. Theorem B: for prime `p` and `r ≠ 0`, the 
 `S_r = ∑_x ψ(r x³)` has `|S_r| ≤ 2 √p`, and `S_r = 0` when `p ≡ 2 mod 3`; over uniform
 `(a, b)`, `‖E[ψ_r(a b) | a³ + a b]‖²` is the source's exact expression in `S_r`, at most
 `9/(2p) + 8/p^{3/2}`, so a readout of the label correlates with `ψ_r(a b)` by at most its
-norm times `O(p^{-1/2})`. -/
+norm times `O(p^{-1/2})`. Torch check: every minimum-nuclear-norm completion is zero on a row
+whose seen entries are zero, so a hidden 1 of the one-hot kernel `[a³ + a b = c]` in a row
+`a ≠ 0` is never recovered, from any training set. -/
 
 @[expose] public section

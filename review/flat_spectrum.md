@@ -3,8 +3,9 @@
 Source note for `Transformer.Grokking.FlatSpectrum`, received from the user on
 2026-10-28 and kept verbatim below. Section names (Setting, Lemma 1,
 Proposition 2, Theorem A, Corollary, Theorem B, Readout-free version) are the
-labels the Lean docstrings cite. The section *Lean status* after the note maps
-each claim to its declarations.
+labels the Lean docstrings cite. The section *Torch check* after the note keeps
+another session's recomputation of it, and *Lean status* maps each claim to its
+declarations.
 
 ## How to say it in math
 
@@ -98,6 +99,41 @@ Proven: Lemma 1, Proposition 2, Theorem A with its corollary, and Theorem B. The
 
 ---
 
+## Torch check
+
+Received from another session on 2026-10-28; its claims and completion checks are kept
+verbatim below. Its training runs, scripts and setup questions are left out.
+
+The numbers in the readout-free paragraph all check out in torch, but the conclusion doesn't. The readout with the lowest effective rank, the indicator of 0, can't be completed at any data fraction. The real Fourier readouts can, because f is odd in a: f(−a, b) = −f(a, b). The trained networks generalize through that same symmetry, but only partly and only with 85% data or more.
+
+**The claims**
+
+| Claim | Torch result |
+|---|---|
+| (a+b)²: search finds 2.0 | 2.00 at p = 47, 61, 97 |
+| Best readout is the indicator of answer 0 | Yes, after centering: every random start converges to it. r_eff = 0.359p, 0.345p, 0.325p, 0.302p at p = 47, 61, 97, 199 |
+| 31.5 at p=97, 60.0 at p=199 | These are the centered values. Uncentered, the exact value is (√(p+1)+1+(p−3)/√2)²/(2p−1) = 31.01 and 59.53; the spectrum matches to 1e-14. p/4+√(p/2) gives 31.21 and 59.72 |
+| Other one-hots 0.56p–0.67p | 0.556–0.670p at p=97, 0.575–0.649p at p=199 |
+| r ≤ (1−√(1−ρ))p | The arithmetic is right: 28.4 at ½, 0.553p at 80% |
+
+One caveat on the best readout. If you remove the additive part g(a)+h(b), which E[a] + J·E[b] gives the network for free, the indicator of 0 rises to about 0.48p. The minimum is then 0.38–0.41p and comes from a different readout.
+
+**Where it breaks: effective rank doesn't decide whether a kernel can be completed** (min-nuclear-norm completion, p=97)
+- **One-hot class kernels [f = c]**, including the indicator of 0: not a single hidden 1 is recovered, at any fraction up to 99%. Each row holds a single 1, which is the worst case for completion.
+- **Random matrices of the same rank** do follow the counting rule, but need about 0.1–0.2 more data than it says. At rank 49 the rule says 0.76; completion error is 0.47, 0.08 and 0.00 at 80%, 90% and 95%.
+- **Real Fourier kernels:** cos(2πr·f/p) has rank (p+1)/2 and sin has rank (p−1)/2, with every singular value exactly √p. Rows a and −a are equal for cos and opposite for sin, so a hidden entry can be copied from the pair (−a, b). Completing every cos and sin kernel and decoding by argmax:
+
+| Data | Hidden pairs decoded | (−a, b) seen | (−a, b) hidden |
+|---|---|---|---|
+| 50% | 48.5% | 99% | 0% |
+| 70% | 70.2% | 100% | 0% |
+| 80% | 79.9% | 100% | 0% |
+| 90% | 89.4% | 100% | 0% |
+
+So the flat-spectrum argument (Prop 2 and Theorem A) covers the complex kernel ψ(f) only. Its real and imaginary parts, which are what a real network outputs, have half rank, and Theorem A needs an invertible kernel.
+
+---
+
 ## Lean status
 
 Added after the note; the note above is unchanged. All declarations are in
@@ -122,6 +158,7 @@ proved without `sorry`. `ψ` is `ZMod.stdAddChar`, `K_φ` is `taskKernel f φ`, 
 | Theorem B, formula | `meanSq_condMean_cube_add_mul` | Prime `p`, every `r`, `r = 0` included. |
 | Theorem B, "at most 4.5/p + O(p^{-3/2})" | `meanSq_condMean_cube_add_mul_le` | `≤ 9/(2p) + 8/p^{3/2}` for `r ≠ 0`. |
 | Theorem B, Cauchy–Schwarz | `norm_mean_star_mul_cube_add_mul_le` | `|E[conj φ(f) ψ_r(a b)]| ≤ ‖φ(f)‖ √(9/(2p) + 8/p^{3/2})` for every `φ : ℤ/p → ℂ`. |
+| Torch check, one-hot kernels | `classKernel`, `nuclearNorm_updateRow_zero_lt`, `eq_zero_of_isMinOn_of_row`, `eq_zero_of_isMinOn_classKernel`, `eq_zero_of_isMinOn_classKernel_cube_add_mul`, `isMinOn_updateRow_zero` | Exact for every training set: a hidden 1 in a row `a ≠ 0` of `[a³ + a b = c]` is `0` in every minimum-nuclear-norm completion. More generally, a row whose seen entries are all `0` is all `0` in every completion. The all-ones row `a = 0` of `[f = 0]` is not covered. A minimum is shown to exist only for one hidden cell. |
 
 Not formalized:
 
@@ -134,11 +171,10 @@ Not formalized:
 - the readout-free version, which the note calls a conjecture;
 - "How it fits together", which the note calls a heuristic.
 
-Scope: Proposition 2, Theorem A and the Corollary are about the complex kernel `ψ(f)`.
-Another session reported on 2026-10-28 that the real readouts `cos(2πr f/p)` and
-`sin(2πr f/p)` of `f = a³ + a b` have rank `(p + 1)/2` and `(p − 1)/2`, with every nonzero
-singular value `√p`. That follows from `conj K = P K`, where `P` is the row flip `a ↦ −a`.
-These kernels are singular, so Theorem A does not apply to them. The same session found that
-they can be completed, through the symmetry `f(−a, b) = −f(a, b)`, while the indicator of
-answer `0` cannot be completed at any data fraction. None of this is formalized. Theorem B
-covers real readouts: `φ` is any complex function of the label.
+Scope: Proposition 2, Theorem A and the Corollary are about the complex kernel `ψ(f)`. By
+the torch check, the real readouts `cos(2πr f/p)` and `sin(2πr f/p)` of `f = a³ + a b` have
+rank `(p + 1)/2` and `(p − 1)/2`, with every nonzero singular value `√p`. That follows from
+`conj K = P K`, where `P` is the row flip `a ↦ −a`. These kernels are singular, so Theorem A
+does not apply to them. That rank statement is not formalized yet, and neither are the
+completion rates of the real kernels or the readout numbers. Theorem B covers real readouts:
+`φ` is any complex function of the label.
