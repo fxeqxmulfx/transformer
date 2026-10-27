@@ -27,6 +27,8 @@ noncomputable def cubicSum (r : ZMod p) : ℂ := ∑ x : ZMod p, ZMod.stdAddChar
 lemma cubicSum_zero : cubicSum (0 : ZMod p) = p := by
   simp [cubicSum, ZMod.card]
 
+example := @cubicSum_zero 7 ⟨Nat.prime_seven⟩
+
 /-- `S_{r h³} = S_r` for `h ≠ 0`: substitute `x ↦ h x`. -/
 lemma cubicSum_mul_cube (r : ZMod p) {h : ZMod p} (hh : h ≠ 0) :
     cubicSum (r * h ^ 3) = cubicSum r :=
@@ -35,15 +37,21 @@ lemma cubicSum_mul_cube (r : ZMod p) {h : ZMod p} (hh : h ≠ 0) :
     congr 1
     ring
 
+example := @cubicSum_mul_cube 7 ⟨Nat.prime_seven⟩ 1 2 (by decide)
+
 /-- `S_{−r} = conj S_r`. -/
 lemma cubicSum_neg (r : ZMod p) : cubicSum (-r) = star (cubicSum r) := by
   simp only [cubicSum, star_sum, neg_mul, AddChar.map_neg_eq_conj, Complex.star_def]
+
+example := @cubicSum_neg 7 ⟨Nat.prime_seven⟩ 1
 
 /-- `∑_c S_c = p`: only `x = 0` has `x³ = 0`. -/
 lemma sum_cubicSum : ∑ c : ZMod p, cubicSum c = p := by
   simp only [cubicSum]
   rw [Finset.sum_comm]
   simp [sum_stdAddChar_mul]
+
+example := @sum_cubicSum 7 ⟨Nat.prime_seven⟩
 
 /-- `∑_c |S_c|² = p #{(x, y) | x³ = y³}`. -/
 lemma sum_norm_cubicSum_sq :
@@ -62,6 +70,8 @@ lemma sum_norm_cubicSum_sq :
   rw [Finset.sum_comm]
   simp_rw [sum_stdAddChar_mul, sub_eq_zero]
   rw [← Finset.sum_filter, Finset.sum_const, nsmul_eq_mul, mul_comm]
+
+example := @sum_norm_cubicSum_sq 7 ⟨Nat.prime_seven⟩
 
 /-- `x³ = a` has at most three roots. -/
 lemma card_pow_three_eq_le (a : ZMod p) : #{x : ZMod p | x ^ 3 = a} ≤ 3 := by
@@ -95,5 +105,7 @@ lemma card_cube_eq_le : #{xy : ZMod p × ZMod p | xy.1 ^ 3 = xy.2 ^ 3} ≤ 3 * p
         rw [Finset.sum_const, Finset.card_erase_of_mem (Finset.mem_univ 0), Finset.card_univ,
           ZMod.card, smul_eq_mul]
         omega
+
+example := @card_cube_eq_le 7 ⟨Nat.prime_seven⟩
 
 end Transformer.Grokking.FlatSpectrum
