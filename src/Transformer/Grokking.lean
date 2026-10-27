@@ -31,6 +31,7 @@ certificates, and corrected fixed-circuit efficiency allocation with
 positive-penalty and global-optimality premises, including source
 counterexamples, repaired real-power increment estimates, actual feasible
 transfers, superlinear minimum cost balance/ratios and fixed-table margins,
-plus the nuclear norm as the minimum balanced factorization cost. -/
+plus the nuclear norm as the minimum balanced factorization cost and
+the flat spectrum of the modular `a³ + a b` answer table. -/
 
 @[expose] public section
