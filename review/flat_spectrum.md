@@ -3,7 +3,8 @@
 Source note for `Transformer.Grokking.FlatSpectrum`, received from the user on
 2026-10-28 and kept verbatim below. Section names (Setting, Lemma 1,
 Proposition 2, Theorem A, Corollary, Theorem B, Readout-free version) are the
-labels the Lean docstrings cite.
+labels the Lean docstrings cite. The section *Lean status* after the note maps
+each claim to its declarations.
 
 ## How to say it in math
 
@@ -94,3 +95,50 @@ E chooses the readout, so the right invariant is the minimum of r_eff(φ∘f) ov
 - Theorem A depends only on the objective and Theorem B only on the labels. That fits AdamW and ScheduleFree failing the same way.
 
 Proven: Lemma 1, Proposition 2, Theorem A with its corollary, and Theorem B. They are finite-dimensional linear algebra plus Gauss sums, so they could go into Lean when you say so. Nothing is written there. Still open: the readout-free bound, and whether the real network (norms, SiLU) behaves like the factorization model.
+
+---
+
+## Lean status
+
+Added after the note; the note above is unchanged. All declarations are in
+`Transformer.Grokking.FlatSpectrum` (`src/Transformer/Grokking/FlatSpectrum/`) and are
+proved without `sorry`. `ψ` is `ZMod.stdAddChar`, `K_φ` is `taskKernel f φ`, and
+`addKernel p`, `cubicKernel p` are the kernels of `ψ(a + b)` and `ψ(a³ + a b)`.
+
+| Claim | Lean | Differences from the note |
+| --- | --- | --- |
+| Setting | `nuclearNorm`, `frobeniusSq` (`‖·‖²_S2`), `effectiveRank`, `taskKernel` | |
+| Lemma 1 | `nuclearNorm_isLeast`, `nuclearNorm_le_of_eq_mul` | The minimum runs over every inner dimension. |
+| Prop. 2, `a + b` | `addKernel_eq_vecMulVec`, `rank_addKernel`, `nuclearNorm_addKernel`, `effectiveRank_addKernel` | |
+| Prop. 2, `a³ + a b` | `cubicKernel_eq_diagonal_mul`, `stdAddChar_mul_conjTranspose`, `cubicKernel_mul_conjTranspose`, `singularValues_cubicKernel`, `nuclearNorm_cubicKernel`, `effectiveRank_cubicKernel` | |
+| Prop. 2, extremes | `card_le_nuclearNorm_le_of_unimodular`, `nuclearNorm_unimodular_extremes` | The bounds hold for every unimodular `N × N` matrix. |
+| Prop. 2, relabeling | `singularValues_taskKernel_relabel`, `nuclearNorm_submatrix` | |
+| Theorem A | `isMinOn_nuclearNorm_iff` | Invertible means `K.det ≠ 0`. |
+| Theorem A, `x³ + x y` | `polarFactor_cubicKernel`, `norm_polarFactor_cubicKernel`, `not_isMinOn_cubicKernel` | |
+| Corollary, the fill | `nuclearNorm_flat_fill`, `nuclearNorm_flat_fill_real`, `isMinOn_flat_fill_iff` | Proved for every `K` with `K* K = N I`, `N ≥ 2` and `|K_ij| = 1`. The formula `√p[(p−2) + √(4 − 4s/p + s²/p)]` needs `s ≤ p`. `nuclearNorm_flat_fill` gives the value for every complex `s`. |
+| Corollary, decoding | `isMinOn_cubic_fill_iff`, `isMinOn_decode_cubic_fill_iff`, `not_isMinOn_decode_cubic_fill` | Nearest `ψ(c)` is exactly `c = f + (p ± 1)/2` for odd `p`. It is never `f` for `p ≥ 2`. |
+| Corollary, `a + b` | `isMinOn_add_fill_iff`, `isMinOn_decode_add_fill_iff` | |
+| Theorem B, `S_r` | `cubicSum`, `norm_cubicSum_le`, `cubicSum_eq_zero` | `|S_r| ≤ 2√p` holds for every prime `p` and `r ≠ 0`. The proof counts the solutions of `x³ = y³` instead of using cubic Gauss sums. |
+| Theorem B, formula | `meanSq_condMean_cube_add_mul` | Prime `p`, every `r`, `r = 0` included. |
+| Theorem B, "at most 4.5/p + O(p^{-3/2})" | `meanSq_condMean_cube_add_mul_le` | `≤ 9/(2p) + 8/p^{3/2}` for `r ≠ 0`. |
+| Theorem B, Cauchy–Schwarz | `norm_mean_star_mul_cube_add_mul_le` | `|E[conj φ(f) ψ_r(a b)]| ≤ ‖φ(f)‖ √(9/(2p) + 8/p^{3/2})` for every `φ : ℤ/p → ℂ`. |
+
+Not formalized:
+
+- the numerical checks;
+- Lemma 1's modeling step: training with weight decay behaves like minimum-nuclear-norm
+  interpolation;
+- in Theorem B, that each step is rank 1 in its own character basis, that the two bases are
+  mutually unbiased, and the cubic-Gauss-sum route to `|S_r| ≤ 2√p`;
+- the Weil-bound remark on multiplicative characters of `a b`, and the `b/a²` remark;
+- the readout-free version, which the note calls a conjecture;
+- "How it fits together", which the note calls a heuristic.
+
+Scope: Proposition 2, Theorem A and the Corollary are about the complex kernel `ψ(f)`.
+Another session reported on 2026-10-28 that the real readouts `cos(2πr f/p)` and
+`sin(2πr f/p)` of `f = a³ + a b` have rank `(p + 1)/2` and `(p − 1)/2`, with every nonzero
+singular value `√p`. That follows from `conj K = P K`, where `P` is the row flip `a ↦ −a`.
+These kernels are singular, so Theorem A does not apply to them. The same session found that
+they can be completed, through the symmetry `f(−a, b) = −f(a, b)`, while the indicator of
+answer `0` cannot be completed at any data fraction. None of this is formalized. Theorem B
+covers real readouts: `φ` is any complex function of the label.
