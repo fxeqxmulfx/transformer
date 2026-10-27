@@ -33,6 +33,7 @@ counterexamples, repaired real-power increment estimates, actual feasible
 transfers, superlinear minimum cost balance/ratios and fixed-table margins,
 plus the nuclear norm as the minimum balanced factorization cost and
 the flat spectrum of the character kernel `ψ (a³ + a b)`, which no proper
-training set recovers by minimum-nuclear-norm interpolation. -/
+training set recovers by minimum-nuclear-norm interpolation and whose
+minimum-norm fill of one missing cell decodes to a wrong answer. -/
 
 @[expose] public section
