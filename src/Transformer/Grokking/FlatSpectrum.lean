@@ -14,6 +14,8 @@ public import Transformer.Grokking.FlatSpectrum.FlatFill
 public import Transformer.Grokking.FlatSpectrum.RankOneFill
 public import Transformer.Grokking.FlatSpectrum.Decoding
 public import Transformer.Grokking.FlatSpectrum.CubicFill
+public import Transformer.Grokking.FlatSpectrum.CubicSums
+public import Transformer.Grokking.FlatSpectrum.CubicBound
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -25,6 +27,7 @@ the spectrum. Theorem A: an invertible `K` is the least-`‖·‖_S1` matrix agr
 with no zero entry, so no proper `Ω` recovers that kernel. Corollary: with one cell missing,
 the least-`‖·‖_S1` fill of a flat kernel (`K* K = N I`) is the opposite phase `−K_ij`, so for
 `ψ (a³ + a b)` it decodes to `f + (p ± 1)/2` for odd `p` and never to `f`; the fill of the
-rank-one `ψ (a + b)` is the truth. -/
+rank-one `ψ (a + b)` is the truth. Theorem B's input: for prime `p` and `r ≠ 0`, the cubic sum
+`S_r = ∑_x ψ(r x³)` has `|S_r| ≤ 2 √p`, and `S_r = 0` when `p ≡ 2 mod 3`. -/
 
 @[expose] public section
