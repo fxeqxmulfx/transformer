@@ -120,7 +120,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 ### `Transformer`
 
-**[Transformer](src/Transformer.lean)** — 268 lines, aggregator
+**[Transformer](src/Transformer.lean)** — 270 lines, aggregator
 
 **[Transformer.Basic](src/Transformer/Basic.lean)** — 186 lines
 
@@ -20094,12 +20094,12 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`meanSq_condMean_poly_add_mul`](src/Transformer/Grokking/FlatSpectrum/PolynomialFibers.lean#L92) | theorem | proved |
 | [`meanSq_condMean_poly_add_mul_le`](src/Transformer/Grokking/FlatSpectrum/PolynomialFibers.lean#L125) | theorem | proved |
 
-**[Transformer.Grokking.FlatSpectrum.PolynomialLegendre](src/Transformer/Grokking/FlatSpectrum/PolynomialLegendre.lean)** — 68 lines
+**[Transformer.Grokking.FlatSpectrum.PolynomialLegendre](src/Transformer/Grokking/FlatSpectrum/PolynomialLegendre.lean)** — 60 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`norm_sum_quadraticChar_sub_poly_le`](src/Transformer/Grokking/FlatSpectrum/PolynomialLegendre.lean#L29) | theorem | proved |
-| [`meanSq_condMean_poly_add_mul_quadraticChar_le`](src/Transformer/Grokking/FlatSpectrum/PolynomialLegendre.lean#L48) | theorem | proved |
+| [`norm_sum_quadraticChar_sub_poly_le`](src/Transformer/Grokking/FlatSpectrum/PolynomialLegendre.lean#L28) | theorem | proved |
+| [`meanSq_condMean_poly_add_mul_quadraticChar_le`](src/Transformer/Grokking/FlatSpectrum/PolynomialLegendre.lean#L40) | theorem | proved |
 
 **[Transformer.Grokking.FlatSpectrum.PolynomialMulChar](src/Transformer/Grokking/FlatSpectrum/PolynomialMulChar.lean)** — 95 lines
 

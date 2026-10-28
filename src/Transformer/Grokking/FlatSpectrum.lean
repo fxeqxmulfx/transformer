@@ -78,9 +78,9 @@ nontrivial `χ` and odd `p`, the kernel `[χ(a³ + a b)]` has rank `(p − 1)/2`
 `r_eff = (√(p + 1) + (p − 3)/2 · √(2p))²/(p − 1)²`, between `47.9` and `48` at `p = 97`. For any
 function `P` of `a`, the fibers of `P(a) + a b` give `‖E[ψ_r(a b) | f]‖²` exactly in terms of
 `T = ∑_{a ≠ 0} ψ(−r P(a))`, and a bound on `∑_x ψ(r P(x))` or on `∑_a χ(c − P(a))` bounds the
-additive or the multiplicative readout. For `P` of odd degree `m`, `p ≥ 64` and `8 m ≤ p`,
-Stepanov's bound (`Transformer.Weil`) gives `|∑_a χ₂(c − P(a))| ≤ 7 m √p`, so the Legendre readout
-`‖E[χ₂(a b) | P(a) + a b]‖²` is at most `(7 m √p + 1)²/p² + (p − 1)²/(p² (2p − 1))`. For a
+additive or the multiplicative readout. For `P` of odd degree `m` and odd `p`, Weil's bound
+(`Transformer.Weil`) gives `|∑_a χ₂(c − P(a))| ≤ (m − 1) √p`, so the Legendre readout
+`‖E[χ₂(a b) | P(a) + a b]‖²` is at most `((m − 1) √p + 1)²/p² + (p − 1)²/(p² (2p − 1))`. For a
 polynomial `P` of degree `m ≥ 1` prime to `p` and `r ≠ 0`, Weil's bound (`Transformer.Weil`)
 gives `|∑_x ψ(r P(x))| ≤ (m − 1) √p`, so the additive readout `‖E[ψ_r(a b) | P(a) + a b]‖²` is
 at most `((m − 1) √p + 1)²/p² + (p + (m − 1) √p + 1)²/(p² (2p − 1))`. Without a fixed

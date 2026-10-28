@@ -255,7 +255,9 @@ field of characteristic `p` and order `q ≥ 5`, for `f` of degree `m ≥ 1` pri
 to `p` and a nontrivial additive character `ψ` of `𝔽_p`,
 `|∑_x ψ(Tr f(x))| ≤ 4 p m √q`. Through the `L`-function of `y^p − y = f(x)`,
 this bound over every extension of `𝔽_p` gives Weil's bound
-`|∑_{x ∈ 𝔽_p} ψ(f(x))| ≤ (m − 1) √p`.
+`|∑_{x ∈ 𝔽_p} ψ(f(x))| ≤ (m − 1) √p`. Through the `L`-function of `χ₂(f(x))`,
+the bound for `y² = f(x)` over every extension gives Weil's bound
+`|∑_{x ∈ 𝔽_p} χ₂(f(x))| ≤ (m − 1) √p` for odd `p` and odd `m`.
 
 This top-level module re-exports all included formalizations. Per-paper
 subdirectories follow the manuscript sections, splitting larger arguments
