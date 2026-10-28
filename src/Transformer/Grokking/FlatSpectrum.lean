@@ -40,6 +40,8 @@ public import Transformer.Grokking.FlatSpectrum.OneHotSpectrum
 public import Transformer.Grokking.FlatSpectrum.ZeroIndicator
 public import Transformer.Grokking.FlatSpectrum.ZeroIndicatorSpectrum
 public import Transformer.Grokking.FlatSpectrum.ZeroIndicatorRank
+public import Transformer.Grokking.FlatSpectrum.AddReadoutSpectrum
+public import Transformer.Grokking.FlatSpectrum.SquareReadout
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -84,6 +86,9 @@ for the column counts `N_b`, so `r_eff = (∑_b √N_b)²/∑_b N_b`, with `∑_
 `a³ + a b` and `c ≠ 0`. For odd prime `p`, the indicator `[a³ + a b = 0]` of answer `0` has the
 singular values `√(p + 1)` and `1` once each, `√2` `(p − 3)/2` times and `0` otherwise, so its rank
 is `(p + 1)/2` and `r_eff = (√(p + 1) + 1 + (p − 3)/√2)²/(2p − 1)`, between `31.014` and `31.015`
-at `p = 97` and between `59.532` and `59.533` at `p = 199`. -/
+at `p = 97` and between `59.532` and `59.533` at `p = 199`. The singular values of a kernel
+`[g(a + b)]` are the `|ĝ(k)|` of the discrete Fourier transform. For odd prime `p`, the least
+`r_eff` of `[φ((a + b)²)]` over the centered readouts, `∑_s φ(s²) = 0` with `φ` not zero on the
+squares, is `2`, attained by `φ(s²) = cos(2π s/p)`; a constant readout gives `1`. -/
 
 @[expose] public section
