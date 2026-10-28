@@ -32,6 +32,7 @@ public import Transformer.Weil.PowSystem
 public import Transformer.Weil.PowStepanov
 public import Transformer.Weil.PowBound
 public import Transformer.Weil.PowCharSum
+public import Transformer.Weil.PowWeil
 
 /-!
 # Stepanov's method for `y² = f(x)` and `y^p − y = f(x)`
@@ -128,7 +129,11 @@ Stepanov's method for `y^d = f(x)`, `d c + 1 = q` and `d` prime to `m = deg f`, 
 * `PowBound`: with `ℓ = ⌊√q⌋`, `K = ⌊(q − (d − 1) m)/d⌋`, `J = ⌊ℓ/d⌋ + 2 m`, for `q ≥ 64`,
   `8 d m ≤ q` and `d² ≤ q`: `#{x : f(x)^c = a} ≤ q/d + 4 m √q`;
 * `PowCharSum`: for `χ` with `χ^d = 1`, `d ≥ 2`, and `χ(u) = 1 ⇒ u^c = 1`, each fiber of
-  `x ↦ χ(f(x))` lies in such a level set, so `‖∑_x χ(f(x))‖ ≤ 5 d m √q`.
+  `x ↦ χ(f(x))` lies in such a level set, so `‖∑_x χ(f(x))‖ ≤ 5 d m √q`;
+* `PowWeil`: for `χ ≠ 1` of order `d` on `𝔽_p`, `χ_L = χ ∘ N_{L/𝔽_p}` on the field `L` with
+  `p^k` elements has `χ_L^d = 1` and `χ_L(u) = 1 ⇒ u^c = 1` for `d c + 1 = p^k`, so
+  `PowCharSum` bounds `|S_k|` by `5 d m √p^k`; `χ^m ≠ 1` gives `c_n = 0` for `n ≥ m`, and
+  `|∑_{x ∈ 𝔽_p} χ(f(x))| ≤ (m − 1) √p` for `d` prime to `m`.
 
 The proofs are written from the mathematics (S. A. Stepanov, 1969; W. M. Schmidt, *Equations
 over Finite Fields*, Ch. I); no other formalization is used.
