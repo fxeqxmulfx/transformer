@@ -250,7 +250,10 @@ critical points are strict saddles.
 `Transformer.Weil` proves Stepanov's form of the Riemann hypothesis for the
 curves `y² = f(x)`: over a finite field of odd order `q ≥ 64`, for `f` of odd
 degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine curve has
-`q` points up to `7 m √q`.
+`q` points up to `7 m √q`; and for the curves `y^p − y = f(x)`: over a finite
+field of characteristic `p` and order `q ≥ 5`, for `f` of degree `m ≥ 1` prime
+to `p` and a nontrivial additive character `ψ` of `𝔽_p`,
+`|∑_x ψ(Tr f(x))| ≤ 4 p m √q`.
 
 This top-level module re-exports all included formalizations. Per-paper
 subdirectories follow the manuscript sections, splitting larger arguments
