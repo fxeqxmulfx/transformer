@@ -709,6 +709,24 @@ For `N = 4`, all 65 535 proper patterns, 20000 iterations each, on the GPU:
   3.5e-5, 1.8e-5, 8.9e-6 and 4.5e-6 after 50000, 100000, 200000 and 400000 iterations, about
   half each time the iterations double. Their gap stays positive, below 7.9e-9 at the end.
 
+### Margin check (torch, 2026-10-29)
+
+`recovery margin 20000 --sizes 3 4 5 6 7 --count 2000` (`experiments/recovery` in the grokking
+repository) runs ADMM on `J`, 20000 iterations, for `N = 3` to `7`.
+
+- Off each `k × l` block with `k + l > N`, `‖Z‖_S1` is item 1's least norm
+  `√(k (N − l)) + √(l (N − k))` to within 5e-15, a rounding error.
+- 2000 random patterns of each size without a permutation graph: each draws a density uniform
+  in [0.3, 0.9] and keeps each cell with it (seed 0). A pattern's least block value is the
+  least of these values over the blocks with `k + l > N` it misses; item 1's best witness is a
+  completion with this norm. `‖Z‖_S1` is never more than 7.7e-7 above it.
+- In each size the largest gap `‖Z‖_S1 − N`, rigid and other patterns apart, is to six
+  decimals the largest least block value of the drawn patterns minus `N`, so at most item 3's
+  largest least norm minus `N`. For `N = 3` to `6` both kinds reach it: `√8 − 3`,
+  `√2 + √6 − 4`, `√24 − 5` and `√6 + √12 − 6`, that is −0.171573, −0.136297, −0.101021 and
+  −0.086409. For `N = 7` the rigid patterns reach `√48 − 7`, −0.071797, and the others the
+  `3 × 5` block's −0.078374.
+
 ### Theorem F (proven)
 
 Let no entry of `a` or `b` vanish. Scaling `a` by `t > 0` and `b` by `1/t` keeps `a bᵀ`, so
