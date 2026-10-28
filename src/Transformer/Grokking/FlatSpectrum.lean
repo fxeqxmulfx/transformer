@@ -87,6 +87,7 @@ public import Transformer.Grokking.FlatSpectrum.WeightDecay
 public import Transformer.Grokking.FlatSpectrum.ReadoutChoice
 public import Transformer.Grokking.FlatSpectrum.FewestCells
 public import Transformer.Grokking.FlatSpectrum.ProductCells
+public import Transformer.Grokking.FlatSpectrum.DiagonalsMinusCell
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -204,6 +205,9 @@ with the columns and contain the graph of a permutation, and
 contain the graph of a permutation of them. The diagonal and the cells just right of it,
 `2N − 1` cells, recover every `N × N` rank-one matrix with entries of modulus one, and no set of
 fewer cells recovers one of them, so `2N − 1` is the least size of a set that recovers them all.
+For `N ≥ 2`, two diagonals `b = a + s₁`, `b = a + s₂` of `ℤ/N` with `s₂ − s₁` a unit, minus any
+one cell, are also such `2N − 1` cells: they connect the rows with the columns and keep one
+diagonal whole, so they recover these matrices, `ψ(a + b)` among them.
 For prime `p` and every multiplicative character `χ`, the `2p − 3` cells `(a, a)` and `(1, b)`,
 `a, b ≠ 0`, recover `[χ(a b)]`, and no set of fewer cells does.
 The readout decides: through `ψ_r`, `r ≠ 0`, the table of `a b` has equal singular values and
