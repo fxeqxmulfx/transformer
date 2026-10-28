@@ -58,6 +58,9 @@ public import Transformer.Grokking.FlatSpectrum.CyclePoincare
 public import Transformer.Grokking.FlatSpectrum.TwoPermutations
 public import Transformer.Grokking.FlatSpectrum.TwoDiagonals
 public import Transformer.Grokking.FlatSpectrum.OneDiagonal
+public import Transformer.Grokking.FlatSpectrum.Rigidity
+public import Transformer.Grokking.FlatSpectrum.CrossCertificate
+public import Transformer.Grokking.FlatSpectrum.CrossWitness
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -120,9 +123,14 @@ rounds to `0.359`, `0.345`, `0.325` and `0.302` at `p = 47, 61, 97, 199`. Exact 
 `Y` vanishes off `Ω`, has unit row and column sums and `c (Y − J/N)` is a contraction for some
 `c > 1`, and entries `r_i + s_j` vanishing on `Ω` vanish everywhere, then the all-ones `J` is
 the unique least-`‖·‖_S1` matrix equal to it on `Ω`. When `τ σ⁻¹` is one `N`-cycle,
-`(P_σ + P_τ)/2` is such a `Y` with `c = √(1 + 1/(4N²))`, and rescaling carries the result to
-every `a bᵀ` with `|a i| = |b j| = 1`. So the `2p` values of `ψ(a + b)` on two diagonals
-`b = a + s₁`, `b = a + s₂` with `s₂ − s₁` a unit determine it as the least-`‖·‖_S1` completion,
-while on one diagonal that completion is not unique. -/
+`(P_σ + P_τ)/2` is such a `Y` with `c = √(1 + 1/(4N²))`, and rescaling carries every
+recovery of `J` to every `a bᵀ` with `|a i| = |b j| = 1`. So the `2p` values of `ψ(a + b)` on
+two diagonals `b = a + s₁`, `b = a + s₂` with `s₂ − s₁` a unit determine it as the
+least-`‖·‖_S1` completion, while on one diagonal that completion is not unique. The rigidity
+hypothesis is necessary: if some `r_i + s_j` vanish on `Ω` but not everywhere, a second
+rank-one matrix with entries of modulus one agrees with `a bᵀ` on `Ω`, so two diagonals
+recover `ψ(a + b)` exactly when `s₂ − s₁` is a unit. It is not sufficient: row `i₀` and
+column `j₀` are rigid and determine `a bᵀ` among rank-one matrices, yet the least nuclear norm
+of the matrices equal to `a bᵀ` there is `2√(N − 1)`, below `N = ‖a bᵀ‖_S1` once `N ≥ 3`. -/
 
 @[expose] public section

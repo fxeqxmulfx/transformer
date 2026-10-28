@@ -9,7 +9,8 @@ Source: `review/flat_spectrum.md`, *Exact recovery of a rank-one kernel* (added)
 with entries of modulus one, `Y ↦ diag a · Y · diag b` keeps the nuclear norm
 (`nuclearNorm_isometry`), sends `J` to `K = a bᵀ`, and maps the matrices equal to `J` on `Ω`
 onto those equal to `K` on `Ω`, with inverse `X ↦ diag (star a) · X · diag (star b)`. So
-`isMinOn_onesMatrix_iff_of_cycle` carries over to `K` (`isMinOn_vecMulVec_iff_of_cycle`).
+every `Ω` that recovers `J` recovers `K` (`isMinOn_vecMulVec_iff_of_onesMatrix`), in particular
+the graphs of two permutations with cyclic ratio (`isMinOn_vecMulVec_iff_of_cycle`).
 The kernel `ψ(a + b) = ψ(a) ψ(b)` of addition modulo `p` is such a `K`. Its diagonals
 `b = a + s₁` and `b = a + s₂` are the graphs of `σ = (· + s₁)` and `τ = (· + s₂)`, and
 `τ σ⁻¹ = (· + (s₂ − s₁))` is one `p`-cycle, `e l = l (s₂ − s₁)`, when `s₂ − s₁` is a unit.
@@ -59,17 +60,15 @@ theorem nuclearNorm_vecMulVec_of_norm_eq_one {a b : n → ℂ} (ha : ∀ i, ‖a
 example := nuclearNorm_vecMulVec_of_norm_eq_one (a := fun _ : Fin 2 => -1)
   (b := fun _ => Complex.I) (by simp) (by simp)
 
-variable {N : ℕ} [NeZero N]
-
-/-- **Two permutations recover a rank-one matrix of modulus-one entries**,
-`review/flat_spectrum.md`, *Exact recovery of a rank-one kernel*: if `|a i| = |b j| = 1`, `Ω`
-contains the graphs of `σ` and `τ` and `τ σ⁻¹` is one `N`-cycle, then `a bᵀ` is the unique
-minimum of the nuclear norm among the matrices equal to it on `Ω`. -/
-theorem isMinOn_vecMulVec_iff_of_cycle {a b : n → ℂ} (ha : ∀ i, ‖a i‖ = 1)
-    (hb : ∀ j, ‖b j‖ = 1) {σ τ : Equiv.Perm n} (e : ZMod N ≃ n)
-    (he : ∀ l, τ (σ.symm (e l)) = e (l + 1)) {Ω : Set (n × n)} (hσ : ∀ i, (i, σ i) ∈ Ω)
-    (hτ : ∀ i, (i, τ i) ∈ Ω) {X : Matrix n n ℂ}
-    (hX : ∀ ij ∈ Ω, X ij.1 ij.2 = vecMulVec a b ij.1 ij.2) :
+/-- **Recovery carries over to rescaled matrices**, `review/flat_spectrum.md`, *Exact recovery
+of a rank-one kernel*: if the completion of least nuclear norm from `Ω` recovers `J`, it
+recovers every `a bᵀ` with `|a i| = |b j| = 1` from the same `Ω`. -/
+theorem isMinOn_vecMulVec_iff_of_onesMatrix {a b : n → ℂ} (ha : ∀ i, ‖a i‖ = 1)
+    (hb : ∀ j, ‖b j‖ = 1) {Ω : Set (n × n)}
+    (hJ : ∀ Y : Matrix n n ℂ, (∀ ij ∈ Ω, Y ij.1 ij.2 = onesMatrix n ij.1 ij.2) →
+      (IsMinOn nuclearNorm {X' | ∀ ij ∈ Ω, X' ij.1 ij.2 = onesMatrix n ij.1 ij.2} Y ↔
+        Y = onesMatrix n))
+    {X : Matrix n n ℂ} (hX : ∀ ij ∈ Ω, X ij.1 ij.2 = vecMulVec a b ij.1 ij.2) :
     IsMinOn nuclearNorm {X' | ∀ ij ∈ Ω, X' ij.1 ij.2 = vecMulVec a b ij.1 ij.2} X ↔
       X = vecMulVec a b := by
   have hsa (i : n) : star (a i) * a i = 1 := by
@@ -101,11 +100,11 @@ theorem isMinOn_vecMulVec_iff_of_cycle {a b : n → ℂ} (ha : ∀ i, ‖a i‖ 
         onesMatrix n ij.1 ij.2 := fun ij hij => by
     rw [hΨ, hX' ij hij, vecMulVec_apply, onesMatrix, of_apply]
     linear_combination (star (b ij.2) * b ij.2) * hsa ij.1 + hsb ij.2
-  have hJ := isMinOn_onesMatrix_iff_of_cycle e he hσ hτ (X := onesMatrix n) fun _ _ => rfl
-  rw [isMinOn_iff] at hJ ⊢
+  have hJJ := hJ (onesMatrix n) fun _ _ => rfl
+  rw [isMinOn_iff] at hJJ ⊢
   constructor
   · intro hmin
-    have h := (isMinOn_onesMatrix_iff_of_cycle e he hσ hτ (hΨmem X hX)).mp <| isMinOn_iff.mpr
+    have h := (hJ _ (hΨmem X hX)).mp <| isMinOn_iff.mpr
       fun Y hY => by
         rw [nuclearNorm_diagonal_mul_mul_diagonal ha' hb',
           ← nuclearNorm_diagonal_mul_mul_diagonal ha hb Y]
@@ -114,7 +113,30 @@ theorem isMinOn_vecMulVec_iff_of_cycle {a b : n → ℂ} (ha : ∀ i, ‖a i‖ 
   · intro hXK X' hX'
     rw [hXK, ← hΦJ, nuclearNorm_diagonal_mul_mul_diagonal ha hb,
       ← nuclearNorm_diagonal_mul_mul_diagonal ha' hb' X']
-    exact hJ.mpr rfl _ (hΨmem X' hX')
+    exact hJJ.mpr rfl _ (hΨmem X' hX')
+
+example := (isMinOn_vecMulVec_iff_of_onesMatrix (a := fun _ : Fin 2 => -1)
+  (b := fun _ => Complex.I) (by simp) (by simp) (Ω := Set.univ)
+  (fun _ hY => isMinOn_onesMatrix_iff_of_cycle (N := 2) (σ := Equiv.refl (Fin 2))
+    (τ := Equiv.swap 0 1) (Equiv.refl _) (by decide) (fun _ => Set.mem_univ _)
+    (fun _ => Set.mem_univ _) hY)
+  (X := vecMulVec (fun _ => -1) fun _ => Complex.I) fun _ _ => rfl).mpr rfl
+
+variable {N : ℕ} [NeZero N]
+
+/-- **Two permutations recover a rank-one matrix of modulus-one entries**,
+`review/flat_spectrum.md`, *Exact recovery of a rank-one kernel*: if `|a i| = |b j| = 1`, `Ω`
+contains the graphs of `σ` and `τ` and `τ σ⁻¹` is one `N`-cycle, then `a bᵀ` is the unique
+minimum of the nuclear norm among the matrices equal to it on `Ω`. -/
+theorem isMinOn_vecMulVec_iff_of_cycle {a b : n → ℂ} (ha : ∀ i, ‖a i‖ = 1)
+    (hb : ∀ j, ‖b j‖ = 1) {σ τ : Equiv.Perm n} (e : ZMod N ≃ n)
+    (he : ∀ l, τ (σ.symm (e l)) = e (l + 1)) {Ω : Set (n × n)} (hσ : ∀ i, (i, σ i) ∈ Ω)
+    (hτ : ∀ i, (i, τ i) ∈ Ω) {X : Matrix n n ℂ}
+    (hX : ∀ ij ∈ Ω, X ij.1 ij.2 = vecMulVec a b ij.1 ij.2) :
+    IsMinOn nuclearNorm {X' | ∀ ij ∈ Ω, X' ij.1 ij.2 = vecMulVec a b ij.1 ij.2} X ↔
+      X = vecMulVec a b :=
+  isMinOn_vecMulVec_iff_of_onesMatrix ha hb
+    (fun _ hY => isMinOn_onesMatrix_iff_of_cycle e he hσ hτ hY) hX
 
 example := (isMinOn_vecMulVec_iff_of_cycle (N := 2) (a := fun _ : Fin 2 => -1)
   (b := fun _ => Complex.I) (by simp) (by simp) (σ := Equiv.refl (Fin 2)) (τ := Equiv.swap 0 1)

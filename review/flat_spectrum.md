@@ -312,7 +312,9 @@ Scope:
 
 Added on 2026-10-28 and proved in Lean. Theorem A says no proper `Ω` recovers `ψ(a³ + a b)`.
 This section gives the positive side for `ψ(a + b)`. The model of Lemma 1 recovers it exactly
-from `2p` cells on two diagonals, and not from the `p` cells of one diagonal.
+from `2p` cells on two diagonals, and not from the `p` cells of one diagonal. Items 7–9 mark
+the limits: a pattern must be rigid, and a rigid pattern that determines `ψ(a + b)` can still
+fail.
 
 ### Setting
 
@@ -322,6 +324,10 @@ from `2p` cells on two diagonals, and not from the `p` cells of one diagonal.
   `Π = 1 − Q`. A matrix `W` is a contraction when `‖W v‖ ≤ ‖v‖` for every `v`.
 - The diagonal of offset `s` is `{(a, a + s)}`. It has `p` cells and is the graph of the
   permutation `a ↦ a + s`.
+- `Ω` is rigid when `r_i + s_j = 0` on `Ω` forces `r_i + s_j = 0` everywhere. This holds
+  exactly when the bipartite graph on rows and columns, with an edge for each cell of `Ω`, is
+  connected.
+- The cross of `(i₀, j₀)` is row `i₀` together with column `j₀`: `2N − 1` cells.
 
 ### Theorem D (proven)
 
@@ -333,13 +339,26 @@ from `2p` cells on two diagonals, and not from the `p` cells of one diagonal.
 3. Two permutations. Let `Ω` contain the graphs of permutations `σ` and `τ`, with `τ σ⁻¹` a
    single `N`-cycle. Then `Y = (P_σ + P_τ)/2` has `‖(Y − Q) v‖² ≤ (1 − 1/(4N²)) ‖v‖²`, so item 1
    holds with `c = √(1 + 1/(4N²))`. Such an `Ω` is rigid, so M recovers `J` from it.
-4. Transfer. For `|a_i| = |b_j| = 1`, the same `Ω` recovers `K = a bᵀ`.
+4. Transfer. If M recovers `J` from `Ω`, it recovers every `K = a bᵀ` with
+   `|a_i| = |b_j| = 1` from the same `Ω`. In particular item 3's `Ω` does.
 5. Two diagonals. Let `Ω` contain the diagonals of offsets `s₁` and `s₂`, with `s₂ − s₁` a unit
    of `ℤ/p`. For prime `p`, that means `s₁ ≠ s₂`. Then M recovers `ψ(a + b)` from `Ω`. The two
    diagonals are `2p` of the `p²` cells.
 6. One diagonal is not enough. Let `Ω` be exactly the graph of one permutation `σ`, with
    `N ≥ 2`. Then `K = a bᵀ` and the different matrix `Z = diag(a) P_σ diag(b)` both have the
    least nuclear norm, `N`. So one diagonal does not recover `ψ(a + b)`.
+7. Rigidity is necessary. Let `r_i + s_j = 0` on `Ω` with `r_{i₀} + s_{j₀} ≠ 0`, and let
+   `|a_i| = |b_j| = 1`. Then a different `K' = a' b'ᵀ`, with `|a'_i| = |b'_j| = 1`, equals
+   `K = a bᵀ` on `Ω`. No method that sees only the values on `Ω` can return both, and M
+   recovers `K` from no such `Ω`.
+8. Two diagonals, sharp. Let `Ω` be exactly the diagonals of offsets `s₁` and `s₂`. Then M
+   recovers `ψ(a + b)` from `Ω` if and only if `s₂ − s₁` is a unit of `ℤ/p`.
+9. The cross. Let `Ω` be the cross of `(i₀, j₀)`, `N ≥ 2` and `|a_i| = |b_j| = 1`. Then `Ω` is
+   rigid, and every rank-one `a' b'ᵀ` equal to `K = a bᵀ` on `Ω` is `K`. Yet the least nuclear
+   norm of the matrices equal to `K` on `Ω` is `2√(N − 1)`. For `N ≥ 3` this is below
+   `N = ‖K‖_S1`, so `K` is not even a minimum. For `ψ(a + b)` and `p ≥ 3`, column 0 holds
+   `ψ(a)` and row 0 holds `ψ(b)`. They fix `ψ(a + b) = ψ(a) ψ(b)`, yet M returns a matrix of
+   norm `2√(p − 1) < p`.
 
 ### Proof
 
@@ -364,6 +383,31 @@ from `2p` cells on two diagonals, and not from the `p` cells of one diagonal.
    - Each `X` equal to `K` on the graph has `tr(Zᴴ X) = ∑_i |a_i b_{σ i}|² = N`, so
      `‖X‖_S1 ≥ N`.
    - Both `K` and `Z` reach `N`. They differ because `Z` is zero off the graph.
+7. Item 7. Divide `r` and `s` by `w = r_{i₀} + s_{j₀}` and take real parts `ρ`, `σ`.
+   - Then `ρ_i + σ_j = 0` on `Ω` and `ρ_{i₀} + σ_{j₀} = 1`.
+   - The phases `u_i = e^{iπρ_i}` and `v_j = e^{iπσ_j}` have `u_i v_j = 1` on `Ω` and
+     `u_{i₀} v_{j₀} = −1`.
+   - So `K' = (u a)(v b)ᵀ` equals `K` on `Ω` and differs from it at `(i₀, j₀)`.
+   - Both have nuclear norm `N`. If M recovered `K`, then `K'` would be a second minimum.
+8. Item 8. If `g = s₂ − s₁` is a unit, item 5 applies. Otherwise:
+   - The multiples `H` of `g` miss `1`, since `k g = 1` would make `g` a unit.
+   - `r = 1_H` and `s = −1_{s₁ + H}` vanish on both diagonals, because `a + g ∈ H` exactly
+     when `a ∈ H`.
+   - But `r_0 + s_{s₁ + 1} = 1`, so item 7 applies.
+9. Item 9.
+   - Rigidity: `r_i + s_j = (r_i + s_{j₀}) + (r_{i₀} + s_j) − (r_{i₀} + s_{j₀})`.
+   - Rank one: `a'_i b'_j · a'_{i₀} b'_{j₀} = a'_i b'_{j₀} · a'_{i₀} b'_j`, and
+     `a_{i₀} b_{j₀} ≠ 0` can be cancelled.
+   - Lower bound: let `m = √(N − 1)` and let `Z` be `1/m` on the cross except at `(i₀, j₀)`,
+     zero elsewhere. Cauchy–Schwarz gives
+     `‖Z v‖² = |∑_{j ≠ j₀} v_j|²/(N − 1) + |v_{j₀}|² ≤ ‖v‖²`. `Z` pairs with every `X` equal
+     to `J` on the cross to `2(N − 1)/m = 2m`.
+   - Upper bound: `X₀`, equal to 1 on the cross and `1/(N − 1)` elsewhere, is `U Vᴴ`, with
+     `U = [α f, β g]` and `V = [α f, −β g]`. Here `f = e + 1'/m`, `g = e − 1'/m`,
+     `α² = (m + 1)/2` and `β² = (m − 1)/2`, where `1'` is the indicator of the other indices.
+     Both factors have `‖·‖²_F = 2m`, so `‖X₀‖_S1 ≤ 2m`.
+   - The map of item 4 carries both bounds to `K`. Finally, `2√(N − 1) < N` exactly when
+     `(N − 2)² > 0`.
 
 ### Numerical check (torch, 2026-10-28)
 
@@ -398,6 +442,88 @@ stops when both residuals fall below `10⁻⁹`, or after 20000 iterations. The 
   - One diagonal gives error 1.0: ADMM returns the matrix `Z` of item 6, zero off `Ω`.
   - `‖Y − Q‖_op = cos(π/p)` is 0.998674 and 0.999476 there.
 
+### Patterns (torch, 2026-10-28)
+
+Which patterns recover `ψ(a + b)`? ADMM is run as above, with a cap of 20000 iterations, for
+`p = 31, 61, 97`. For each `Ω` the run reports:
+- whether `Ω` is rigid;
+- `‖Y − Q‖_op` for the least-Frobenius `Y` that vanishes off `Ω` with unit row and column sums
+  (`Y_ij = u_i + v_j` on `Ω`). Below 1 it is item 2's certificate, with `c = 1/‖Y − Q‖_op`.
+  "None" means no such `Y` exists;
+- the error off `Ω`, and `‖X‖_S1`.
+
+The training split of `grok-simple.py` is reproduced exactly:
+- the rows `(a, b)` are listed `a`-major;
+- they are shuffled by SplitMix64 seeded with `seed ^ 0x73706C6974730002`;
+- the first `⌊p²/2⌋` rows are for training.
+
+Every operation uses the same `Ω` for a given seed. The random patterns keep each cell with the
+given probability, three draws each.
+
+| `Ω` at `p = 97` | cells | rigid | `‖Y − Q‖_op` | error | `‖X‖_S1` |
+| --- | --- | --- | --- | --- | --- |
+| diagonals `{0, 1}` | 194 | yes | 0.9995 | 4.5e-10 | 97.000 |
+| row 0 and column 0 | 193 | yes | 96 | 0.99 | 19.596 |
+| training split, seed 7 | 4704 | yes | 0.2091 | 1.8e-11 | 97.000 |
+| training split, seed 11 | 4704 | yes | 0.2087 | 1.4e-11 | 97.000 |
+| random 2% | 185–193 | no | none | 0.61–0.70 | 82.4–84.8 |
+| random 4% | 373–380 | no | none | 0.21–0.26 | 93.8–94.9 |
+| random 6%, draws 0 and 1 | 546, 555 | no | none | 0.15 | 96.0 |
+| random 6%, draw 2 | 536 | yes | 1.1169 | 5.4e-5, not converged | 97.000 |
+| random 8% | 717–736 | yes | 1.003–1.008 | 2.2e-5–2.4e-5, not converged | 97.000 |
+| random 12% | 1083–1127 | yes | 0.72–0.73 | 7e-12–7e-11 | 97.000 |
+| random 20% | 1802–1921 | yes | 0.42–0.44 | 2e-11–4e-11 | 97.000 |
+| random 30% | 2716–2888 | yes | 0.31–0.33 | 3e-12–2e-11 | 97.000 |
+
+Over the three primes (63 random draws):
+- The training splits are rigid. Their `‖Y − Q‖_op` is 0.37 and 0.38 at `p = 31`, 0.26 and
+  0.25 at `p = 61`, 0.21 and 0.21 at `p = 97`.
+  - So item 2 applies to the network's own training data.
+  - ADMM recovers `ψ(a + b)` from them with error below 7e-11.
+- On the same splits `ψ(a³ + a b)` fails, as Theorem A says. The error is 1.29–1.30 and
+  `‖X‖_S1 ≈ 0.55 p^{3/2}` for all six splits.
+- All 32 non-rigid draws fail, with error 0.13 to 1.0.
+- All 21 rigid draws with `‖Y − Q‖_op < 1` are recovered, with error at most 1.1e-10 within
+  310 iterations.
+- The other 10 rigid draws split by Hall's condition:
+  - One, `p = 61` at 8%, draw 1, contains no permutation graph: its maximum matching has 60
+    cells. It fails, with `‖X‖_S1 = 60.912 < 61` and error 0.056.
+  - The other nine contain a permutation graph. Each has a row or a column with a single cell.
+    ADMM stops at the cap with `‖X‖_S1 = p` to three decimals and error 2.2e-5–5.4e-5.
+  - Projected subgradient descent over all admissible `Y` finds 1.0000 for all nine and 1.5566
+    for the failure, never below 1.
+- All 21 recovered draws and all six training splits are elementary: connected, with every cell
+  on a permutation graph inside `Ω`. Checked by a matching and strong connectivity.
+
+The block bound explains the split (by hand, not formalized):
+- Let `Ω` miss a block `R × C` with `|R| = k` and `|C| = l`, both nonempty and proper.
+  - Take any `Y` vanishing off `Ω` with unit row and column sums.
+  - Pair `Y − Q` with the centered indicators of `R` and `C`. This gives
+    `1_Rᵀ (Y − Q) 1_C = −k l/N`.
+  - Hence `‖Y − Q‖_op ≥ √(k l / ((N − k)(N − l)))`.
+  - This is at least 1 when `k + l ≥ N`, and above 1 when `k + l > N`.
+  - For a rigid `Ω`, such a block with `k + l > N` exists exactly when Hall's condition
+    fails.
+- A row with a single cell is the case `k = 1`, `l = N − 1`, so no certificate is below 1.
+  This also covers two diagonals minus a cell.
+- Two rows with a single cell in the same column give `k = 2`, `l = N − 1`. That is the
+  failure, with bound 1.4261.
+- When `k + l > N`, the matrix `X = J − t 1_R 1_Cᵀ` equals `J` on `Ω`. It has rank 2, and
+  `‖X‖²_S1 = N² − 2t (k l − g) + t² k l` for `t ≥ 0`, with `g = √(k l (N − k)(N − l))`.
+  - The best `t` gives `‖X‖²_S1 = N² − (k l − g)²/(k l) < N²`.
+  - At `k = 2`, `l = 60`, `N = 61` this is `60.912²`, the norm ADMM found.
+  - For the cross, `k = l = N − 1`, it is item 9's `2√(N − 1)`.
+
+Between the two cases, Theorem D has no certificate. Longer runs at `p = 31` keep lowering the
+error, while `‖X‖_S1 − p` stays positive and shrinks:
+- 12%, draw 1: 3.4e-5, 8.2e-6 and 3.1e-6 after 20000, 100000 and 300000 iterations;
+- 20%, draw 0: 2.5e-5, 5.1e-6 and 1.7e-6;
+- two diagonals minus a cell: 2.1e-4 after 20000 iterations, then 3.7e-9 when both residuals
+  fall below `10⁻⁹` after 67491.
+
+This looks like slow convergence to `K`, not a second minimum. So M probably recovers these
+patterns, though Theorem D cannot show it.
+
 ### Lean status
 
 All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved without `sorry`.
@@ -407,25 +533,42 @@ All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved witho
 | Theorem D.1 | `onesMatrix`, `meanProj`, `IsContraction.proj_add`, `le_nuclearNorm_onesMatrix_add` | A contraction is `IsContraction W`: `1 − Wᴴ W` is positive semidefinite. |
 | Theorem D.2 | `eq_zero_of_nuclearNorm_eq_zero`, `nuclearNorm_onesMatrix`, `isMinOn_onesMatrix_iff` | Stated as `IsMinOn nuclearNorm S X ↔ X = J` for every `X` equal to `J` on `Ω`. |
 | Theorem D.3 | `isContraction_of_forall_sum_norm_sq_le`, `sum_norm_sq_add_const`, `norm_sq_sub_le_cycle`, `sum_norm_sq_le_cycle`, `permAvg`, `add_eq_zero_of_cycle`, `sum_norm_sq_mulVec_permAvg_sub_le`, `isContraction_permAvg`, `isMinOn_onesMatrix_iff_of_cycle` | The cycle is a bijection `e : ℤ/N ≃ n` with `τ(σ⁻¹(e l)) = e(l + 1)`. |
-| Theorem D.4 | `nuclearNorm_diagonal_mul_mul_diagonal`, `diagonal_mul_onesMatrix_mul_diagonal`, `nuclearNorm_vecMulVec_of_norm_eq_one`, `isMinOn_vecMulVec_iff_of_cycle` | |
+| Theorem D.4 | `nuclearNorm_diagonal_mul_mul_diagonal`, `diagonal_mul_onesMatrix_mul_diagonal`, `nuclearNorm_vecMulVec_of_norm_eq_one`, `isMinOn_vecMulVec_iff_of_onesMatrix`, `isMinOn_vecMulVec_iff_of_cycle` | |
 | Theorem D.5 | `isMinOn_addKernel_iff_of_diagonals`, `isMinOn_addKernel_iff_of_ne` | `Ω` may hold more cells than the two diagonals. |
 | Theorem D.6 | `graphMatrix`, `conjTranspose_graphMatrix_mul`, `isMinOn_vecMulVec_and_graphMatrix`, `exists_ne_isMinOn_addKernel_of_diagonal` | `Ω` is exactly one diagonal. |
+| Theorem D.7 | `exists_vecMulVec_ne_of_not_rigid`, `not_forall_isMinOn_iff_of_not_rigid` | The failure of rigidity is given as explicit `r`, `s`, `i₀`, `j₀`. "M recovers no such `Ω`" is the negation of D.2's conclusion. |
+| Theorem D.8 | `forall_isMinOn_addKernel_iff_isUnit` | `Ω` is exactly the two diagonals. |
+| Theorem D.9 | `rigid_cross`, `vecMulVec_eq_of_cross`, `crossCert`, `card_compl_singleton_cast`, `isContraction_crossCert`, `two_mul_sqrt_le_nuclearNorm_of_cross`, `crossWitness`, `crossFactor`, `crossWitness_eq_mul`, `frobeniusSq_crossFactor`, `two_mul_sqrt_lt`, `isLeast_nuclearNorm_vecMulVec_cross`, `vecMulVec_cross_determined_not_isMinOn`, `isLeast_nuclearNorm_addKernel_cross` | The least norm is `IsLeast` of the set of nuclear norms. Rank-one determination needs only `a_{i₀} b_{j₀} ≠ 0`. |
 
 Not formalized:
-- the numerical table;
+- the numerical tables, including the certificates found for random patterns and for the
+  training splits;
 - the sharp value `‖Y − Q‖_op = cos(π/p)`;
 - recovery from two diagonals minus one cell. On those `2p − 1` cells the only `Y` with unit
   row and column sums is a permutation matrix, with `‖Y − Q‖_op = 1`, so item 1 gives no
   `c > 1`;
-- the failures on row 0 and column 0 and on `2p` random cells;
+- the failures on `2p` random cells;
+- the block bound, the witness `J − t 1_R 1_Cᵀ`, and the split of the rigid patterns by
+  Hall's condition (*Patterns*);
+- that rigidity is the same as connectivity, and that a connected pattern has at least
+  `2N − 1` cells;
 - that training behaves like model M (Lemma 1's modeling step).
 
 Scope:
 - The spectrum alone does not decide recovery; the pattern does. `ψ(a + b)` has the best
-  spectrum, rank one. It is recovered from two diagonals, `2p` cells. It is not recovered from
-  one diagonal, from row 0 and column 0, or from `2p` random cells.
-- Any `Ω` that determines every unimodular `a bᵀ` must connect all rows and columns, so it has
-  at least `2p − 1` cells. Otherwise a phase on one component changes `K` off `Ω`. Two
-  diagonals use one cell more than that.
+  spectrum, rank one. It is recovered from two diagonals, `2p` cells, and numerically from the
+  50% training splits. It is not recovered from one diagonal, from two diagonals whose offset
+  is not a unit, from row 0 and column 0, or from `2p` random cells.
+- Rigidity is necessary (item 7): otherwise a phase on one component changes `K` off `Ω`. A
+  rigid pattern is connected, so it has at least `2p − 1` cells; two diagonals use one more.
+- Rigidity is not sufficient. The cross is rigid and determines `ψ(a + b)` among rank-one
+  matrices, yet M misses it (item 9). What decides is a certificate as in item 1. In the
+  numerics every rigid pattern with `‖Y − Q‖_op < 1` was recovered.
+- In the numerics the rigid patterns split by matchings, though this is not proved:
+  - one with no permutation graph inside fails, like the cross;
+  - every elementary one had a certificate below 1;
+  - in between, a single-cell row or column pins every certificate at `‖Y − Q‖_op ≥ 1`, so
+    Theorem D says nothing.
+- The 50% training splits are deep in the elementary regime, with `‖Y − Q‖_op ≈ 0.2`.
 - `ψ(a³ + a b)` is recovered from no proper `Ω` (Theorem A). Numerically it fails on every
   pattern above.
