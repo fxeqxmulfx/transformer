@@ -36,6 +36,10 @@ public import Transformer.Grokking.FlatSpectrum.PolynomialFibers
 public import Transformer.Grokking.FlatSpectrum.PolynomialMulChar
 public import Transformer.Grokking.FlatSpectrum.PolynomialLegendre
 public import Transformer.Grokking.FlatSpectrum.PolynomialWeil
+public import Transformer.Grokking.FlatSpectrum.OneHotSpectrum
+public import Transformer.Grokking.FlatSpectrum.ZeroIndicator
+public import Transformer.Grokking.FlatSpectrum.ZeroIndicatorSpectrum
+public import Transformer.Grokking.FlatSpectrum.ZeroIndicatorRank
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -74,6 +78,12 @@ Torch check: every minimum-nuclear-norm completion is zero on a row whose seen e
 a hidden 1 of the one-hot kernel `[a³ + a b = c]` in a row `a ≠ 0` is never recovered, from any
 training set. The real readouts `cos(2πr f/p)` and `sin(2πr f/p)` of `f = a³ + a b` have rows `a`
 and `−a` equal and opposite, so both are singular and Theorem A does not apply; for odd prime `p`
-and `r ≠ 0` they have rank `(p + 1)/2` and `(p − 1)/2`, and every nonzero singular value is `√p`. -/
+and `r ≠ 0` they have rank `(p + 1)/2` and `(p − 1)/2`, and every nonzero singular value is `√p`.
+If every row of a one-hot kernel `[f = c]` holds at most one 1, its singular values are the `√N_b`
+for the column counts `N_b`, so `r_eff = (∑_b √N_b)²/∑_b N_b`, with `∑_b N_b = p − 1` for
+`a³ + a b` and `c ≠ 0`. For odd prime `p`, the indicator `[a³ + a b = 0]` of answer `0` has the
+singular values `√(p + 1)` and `1` once each, `√2` `(p − 3)/2` times and `0` otherwise, so its rank
+is `(p + 1)/2` and `r_eff = (√(p + 1) + 1 + (p − 3)/√2)²/(2p − 1)`, between `31.014` and `31.015`
+at `p = 97` and between `59.532` and `59.533` at `p = 199`. -/
 
 @[expose] public section
