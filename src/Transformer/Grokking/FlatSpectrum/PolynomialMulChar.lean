@@ -11,7 +11,8 @@ On the fiber `P(a) + a b = c` the line `a = 0` contributes `χ(0) = 0`, and each
 point with `a b = c − P(a)`, so the fiber sum of `χ(a b)` is `∑_{a ≠ 0} χ(c − P(a))`. If
 `|∑_a χ(c − P(a))| ≤ B` for every `c ≠ P(0)`, then
 `‖E[χ(a b) | f]‖² ≤ (B + 1)²/p² + (p − 1)²/(p² (2p − 1))`: the fibers `c ≠ P(0)` give
-`(B + 1)²/(p − 1)` each, and the fiber `c = P(0)` at most `(p − 1)²/(2p − 1)`.
+`(B + 1)²/(p − 1)` each, and the fiber `c = P(0)` at most `(p − 1)²/(2p − 1)`. A set `E` of
+fibers where the bound fails adds at most `|E| (p − 1)/p²`.
 -/
 
 @[expose] public section
@@ -48,36 +49,48 @@ lemma norm_sum_erase_mulChar_le (χ : MulChar (ZMod p) ℂ) (F : ZMod p → ZMod
 
 example := @norm_sum_erase_mulChar_le 5 ⟨Nat.prime_five⟩ 1 (· ^ 3)
 
-/-- **Theorem B for any `P` and a multiplicative character**, `review/flat_spectrum.md` with
-`a³` replaced by `P(a)`: if `|∑_a χ(c − P(a))| ≤ B` for every `c ≠ P(0)`, then
-`‖E[χ(a b) | f]‖² ≤ (B + 1)²/p² + (p − 1)²/(p² (2p − 1))`. -/
-theorem meanSq_condMean_poly_add_mul_mulChar_le (P : ZMod p → ZMod p) (χ : MulChar (ZMod p) ℂ)
-    {B : ℝ} (hB : ∀ c, c ≠ P 0 → ‖∑ a, χ (c - P a)‖ ≤ B) :
+/-- **Theorem B for any `P` and a multiplicative character, with exceptional fibers**,
+`review/flat_spectrum.md` with `a³` replaced by `P(a)`: if `|∑_a χ(c − P(a))| ≤ B` for every
+`c ≠ P(0)` outside a set `E`, then
+`‖E[χ(a b) | f]‖² ≤ (B + 1)²/p² + |E| (p − 1)/p² + (p − 1)²/(p² (2p − 1))`: a fiber `c ∈ E`
+adds at most `(p − 1)²/(p − 1)`. -/
+theorem meanSq_condMean_poly_add_mul_mulChar_le_of_finset (P : ZMod p → ZMod p)
+    (χ : MulChar (ZMod p) ℂ) (E : Finset (ZMod p)) {B : ℝ}
+    (hB : ∀ c, c ≠ P 0 → c ∉ E → ‖∑ a, χ (c - P a)‖ ≤ B) :
     meanSq (condMean (fun ab : ZMod p × ZMod p => P ab.1 + ab.1 * ab.2)
-      fun ab => χ (ab.1 * ab.2)) ≤ (B + 1) ^ 2 / p ^ 2 + (p - 1) ^ 2 / (p ^ 2 * (2 * p - 1)) := by
+      fun ab => χ (ab.1 * ab.2)) ≤
+      (B + 1) ^ 2 / p ^ 2 + #E * (p - 1) / p ^ 2 + (p - 1) ^ 2 / (p ^ 2 * (2 * p - 1)) := by
+  classical
   have hp := (Fact.out : p.Prime).one_lt
   have hp1 : (1 : ℝ) < p := by exact_mod_cast hp
   have hterm (c : ZMod p) (hc : c ≠ P 0) :
       ‖∑ a ∈ univ.erase 0, χ (c - P a)‖ ^ 2 / ((p : ℝ) - 1 + if c = P 0 then (p : ℝ) else 0) ≤
-        (B + 1) ^ 2 / (p - 1) := by
+        (B + 1) ^ 2 / (p - 1) + if c ∈ E then (p : ℝ) - 1 else 0 := by
     rw [ite_eq_right hc, add_zero]
-    have hle : ‖∑ a ∈ univ.erase 0, χ (c - P a)‖ ≤ B + 1 := by
-      rw [Finset.sum_erase_eq_sub (mem_univ 0)]
-      exact (norm_sub_le _ _).trans
-        (add_le_add (hB c hc) (DirichletCharacter.norm_le_one χ _))
-    exact div_le_div_of_nonneg_right (pow_le_pow_left₀ (norm_nonneg _) hle 2) (by linarith)
+    by_cases hcE : c ∈ E
+    · rw [ite_eq_left hcE, div_le_iff₀ (by linarith), add_mul, div_mul_cancel₀ _ (by linarith)]
+      nlinarith [norm_sum_erase_mulChar_le χ fun a => c - P a,
+        norm_nonneg (∑ a ∈ univ.erase 0, χ (c - P a))]
+    · rw [ite_eq_right hcE, add_zero]
+      have hle : ‖∑ a ∈ univ.erase 0, χ (c - P a)‖ ≤ B + 1 := by
+        rw [Finset.sum_erase_eq_sub (mem_univ 0)]
+        exact (norm_sub_le _ _).trans
+          (add_le_add (hB c hc hcE) (DirichletCharacter.norm_le_one χ _))
+      exact div_le_div_of_nonneg_right (pow_le_pow_left₀ (norm_nonneg _) hle 2) (by linarith)
   have hzero : ‖∑ a ∈ univ.erase 0, χ (P 0 - P a)‖ ^ 2 /
       ((p : ℝ) - 1 + if P 0 = P 0 then (p : ℝ) else 0) ≤ (p - 1) ^ 2 / (2 * p - 1) := by
     rw [ite_eq_left rfl, show (p : ℝ) - 1 + p = 2 * p - 1 by ring]
     exact div_le_div_of_nonneg_right
       (pow_le_pow_left₀ (norm_nonneg _) (norm_sum_erase_mulChar_le χ _) 2) (by linarith)
   have hsum : ∑ c ∈ univ.erase (P 0), ‖∑ a ∈ univ.erase 0, χ (c - P a)‖ ^ 2 /
-      ((p : ℝ) - 1 + if c = P 0 then (p : ℝ) else 0) ≤ (B + 1) ^ 2 := by
-    refine (Finset.sum_le_sum fun c hc => hterm c (ne_of_mem_erase hc)).trans_eq ?_
-    rw [Finset.sum_const, card_erase_of_mem (mem_univ _), card_univ, ZMod.card, nsmul_eq_mul,
-      Nat.cast_sub hp.le, Nat.cast_one]
-    have h1 : (p : ℝ) - 1 ≠ 0 := by linarith
-    field_simp
+      ((p : ℝ) - 1 + if c = P 0 then (p : ℝ) else 0) ≤ (B + 1) ^ 2 + #E * ((p : ℝ) - 1) := by
+    refine (Finset.sum_le_sum fun c hc => hterm c (ne_of_mem_erase hc)).trans ?_
+    rw [Finset.sum_add_distrib, Finset.sum_const, card_erase_of_mem (mem_univ _), card_univ,
+      ZMod.card, nsmul_eq_mul, Nat.cast_sub hp.le, Nat.cast_one, Finset.sum_ite_mem,
+      Finset.sum_const, nsmul_eq_mul, mul_div_cancel₀ _ (by linarith)]
+    have hcard : ((univ.erase (P 0) ∩ E).card : ℝ) ≤ #E := by
+      exact_mod_cast card_le_card inter_subset_right
+    linarith [mul_le_mul_of_nonneg_right hcard (by linarith : (0 : ℝ) ≤ p - 1)]
   rw [meanSq, sum_norm_condMean_sq]
   simp_rw [sum_fiber_poly_add_mul_mulChar, card_fiber_poly_add_mul]
   rw [← Finset.add_sum_erase _ _ (mem_univ (P 0)), Fintype.card_prod, ZMod.card]
@@ -87,6 +100,19 @@ theorem meanSq_condMean_poly_add_mul_mulChar_le (P : ZMod p → ZMod p) (χ : Mu
   push_cast
   field_simp
   ring
+
+example := @meanSq_condMean_poly_add_mul_mulChar_le_of_finset 7 ⟨Nat.prime_seven⟩ (· ^ 3) _ ∅ _
+  fun c hc _ => @norm_sum_mulChar_sub_cube_le 7 ⟨Nat.prime_seven⟩ _
+    (@quadraticChar_ringHomComp_ne_one 7 ⟨Nat.prime_seven⟩ (by decide)) c (by simpa using hc)
+
+/-- **Theorem B for any `P` and a multiplicative character**, `review/flat_spectrum.md` with
+`a³` replaced by `P(a)`: if `|∑_a χ(c − P(a))| ≤ B` for every `c ≠ P(0)`, then
+`‖E[χ(a b) | f]‖² ≤ (B + 1)²/p² + (p − 1)²/(p² (2p − 1))`. -/
+theorem meanSq_condMean_poly_add_mul_mulChar_le (P : ZMod p → ZMod p) (χ : MulChar (ZMod p) ℂ)
+    {B : ℝ} (hB : ∀ c, c ≠ P 0 → ‖∑ a, χ (c - P a)‖ ≤ B) :
+    meanSq (condMean (fun ab : ZMod p × ZMod p => P ab.1 + ab.1 * ab.2)
+      fun ab => χ (ab.1 * ab.2)) ≤ (B + 1) ^ 2 / p ^ 2 + (p - 1) ^ 2 / (p ^ 2 * (2 * p - 1)) := by
+  simpa using meanSq_condMean_poly_add_mul_mulChar_le_of_finset P χ ∅ fun c hc _ => hB c hc
 
 example := @meanSq_condMean_poly_add_mul_mulChar_le 7 ⟨Nat.prime_seven⟩ (· ^ 3) _ _
   fun c hc => @norm_sum_mulChar_sub_cube_le 7 ⟨Nat.prime_seven⟩ _
