@@ -159,6 +159,7 @@ proved without `sorry`. `ψ` is `ZMod.stdAddChar`, `K_φ` is `taskKernel f φ`, 
 | Theorem B, "at most 4.5/p + O(p^{-3/2})" | `meanSq_condMean_cube_add_mul_le` | `≤ 9/(2p) + 8/p^{3/2}` for `r ≠ 0`. |
 | Theorem B, Cauchy–Schwarz | `norm_mean_star_mul_cube_add_mul_le` | `|E[conj φ(f) ψ_r(a b)]| ≤ ‖φ(f)‖ √(9/(2p) + 8/p^{3/2})` for every `φ : ℤ/p → ℂ`. |
 | Torch check, one-hot kernels | `classKernel`, `nuclearNorm_updateRow_zero_lt`, `eq_zero_of_isMinOn_of_row`, `eq_zero_of_isMinOn_classKernel`, `eq_zero_of_isMinOn_classKernel_cube_add_mul`, `isMinOn_updateRow_zero` | Exact for every training set: a hidden 1 in a row `a ≠ 0` of `[a³ + a b = c]` is `0` in every minimum-nuclear-norm completion. More generally, a row whose seen entries are all `0` is all `0` in every completion. The all-ones row `a = 0` of `[f = 0]` is not covered. A minimum is shown to exist only for one hidden cell. |
+| Torch check, real Fourier kernels | `cosKernel`, `sinKernel`, `cosKernel_neg`, `sinKernel_neg`, `det_cosKernel`, `det_sinKernel`, `rank_cosKernel`, `rank_sinKernel`, `singularValues_cosKernel`, `singularValues_sinKernel`, `nuclearNorm_effectiveRank_cosKernel`, `nuclearNorm_effectiveRank_sinKernel` | Odd prime `p` and `r ≠ 0`; the cos kernel needs both. "Every singular value exactly √p" holds for the nonzero ones; the others are `0`. Also `‖·‖_S1 = √p (p ± 1)/2` and `r_eff = (p ± 1)/2`. |
 
 Not formalized:
 
@@ -171,10 +172,10 @@ Not formalized:
 - the readout-free version, which the note calls a conjecture;
 - "How it fits together", which the note calls a heuristic.
 
-Scope: Proposition 2, Theorem A and the Corollary are about the complex kernel `ψ(f)`. By
-the torch check, the real readouts `cos(2πr f/p)` and `sin(2πr f/p)` of `f = a³ + a b` have
-rank `(p + 1)/2` and `(p − 1)/2`, with every nonzero singular value `√p`. That follows from
-`conj K = P K`, where `P` is the row flip `a ↦ −a`. These kernels are singular, so Theorem A
-does not apply to them. That rank statement is not formalized yet, and neither are the
-completion rates of the real kernels or the readout numbers. Theorem B covers real readouts:
-`φ` is any complex function of the label.
+Scope: Proposition 2, Theorem A and the Corollary are about the complex kernel `ψ(f)`. The
+real readouts `cos(2πr f/p)` and `sin(2πr f/p)` of `f = a³ + a b` are singular, as rows `a`
+and `−a` are equal or opposite, so Theorem A does not apply to them. They have rank
+`(p + 1)/2` and `(p − 1)/2`, and every nonzero singular value is `√p` (row *Torch check, real
+Fourier kernels*); the proof uses `conj K = P K`, where `P` is the row flip `a ↦ −a`. The
+completion rates of the real kernels and the readout numbers are not formalized. Theorem B
+covers real readouts: `φ` is any complex function of the label.

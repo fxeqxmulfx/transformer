@@ -35,6 +35,7 @@ plus the nuclear norm as the minimum balanced factorization cost and
 the flat spectrum of the character kernel `ψ (a³ + a b)`, which no proper
 training set recovers by minimum-nuclear-norm interpolation, whose
 minimum-norm fill of one missing cell decodes to a wrong answer, and whose
-label correlates with the intermediate `ψ_r(a b)` only to order `p^{-1/2}`. -/
+label correlates with the intermediate `ψ_r(a b)` only to order `p^{-1/2}`,
+while its real readouts `cos` and `sin` are singular, of rank `(p ± 1)/2`. -/
 
 @[expose] public section
