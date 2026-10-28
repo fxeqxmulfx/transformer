@@ -3,16 +3,16 @@ module
 public import Transformer.Weil.HasseDeriv
 
 /-!
-# Stepanov's independence lemma for odd degree
+# Stepanov's independence lemma
 
-Let `q = |F|` be odd, `c = (q − 1)/2` and `f` of odd degree `m`. If
-`∑_{j < J} (r_j + s_j f^c) X^{q j} = 0` with `deg r_j, deg s_j < K` and `m + 2K ≤ q + 1`, then
-every `r_j` and `s_j` is `0`. With `A = ∑ r_j X^{qj}` and `B = ∑ s_j X^{qj}`, `A = −f^c B`
-gives `f A² = f^q B² = f(X^q) B²`. Both sides are values at `Y = X^q` of
-`Φ = f(X) R(X, Y)² − f(Y) S(X, Y)²`, `R = ∑ r_j Y^j`, `S = ∑ s_j Y^j`, whose coefficients in `Y`
-have degree `< q` in `X`; such a `Φ` vanishes at `Y = X^q` only if it is `0` (base-`q`
-digits). And `f(X) R² = f(Y) S²` is impossible unless `R = S = 0`: the degrees in `Y` are
-`2 deg_Y R` and `m + 2 deg_Y S`, of different parity.
+Let `q = |F|` be odd and `c = (q − 1)/2`. If `∑_{j < J} (r_j + s_j f^c) X^{q j} = 0` with
+`deg r_j, deg s_j < K` and `m + 2K ≤ q + 1`, `m = deg f`, then with `A = ∑ r_j X^{qj}` and
+`B = ∑ s_j X^{qj}`, `A = −f^c B` gives `f A² = f^q B² = f(X^q) B²`. Both sides are values at
+`Y = X^q` of `Φ = f(X) R(X, Y)² − f(Y) S(X, Y)²`, `R = ∑ r_j Y^j`, `S = ∑ s_j Y^j`, whose
+coefficients in `Y` have degree `< q` in `X`; such a `Φ` vanishes at `Y = X^q` only if it is `0`
+(base-`q` digits). So every `r_j` and `s_j` is `0` as soon as `f(X) R² = f(Y) S²` forces
+`S = 0`. It does for odd `m`, the degrees in `Y` being `2 deg_Y R` and `m + 2 deg_Y S`, and for
+`f` with a root of odd multiplicity (`IndependenceRoot`).
 -/
 
 @[expose] public section
@@ -81,19 +81,15 @@ end Digits
 
 variable {F : Type*} [Field F] [Fintype F]
 
-/-- **Stepanov's independence lemma** for `f` of odd degree `m` over `F` with `q = |F|` odd:
-if `∑_{j < J} (r_j + s_j f^{(q−1)/2}) X^{q j} = 0` with `deg r_j, deg s_j < K` and
-`m + 2K ≤ q + 1`, then all `r_j` and `s_j` are `0`. -/
-theorem eq_zero_of_sum_add_mul_pow_eq_zero {f : F[X]} (hf : Odd f.natDegree)
-    (hq : Odd (Fintype.card F)) {J K : ℕ} (hK : f.natDegree + 2 * K ≤ Fintype.card F + 1)
-    {r s : Fin J → F[X]} (hr : ∀ j, (r j).natDegree < K) (hs : ∀ j, (s j).natDegree < K)
+/-- The first half of Stepanov's independence lemma: if
+`∑_{j < J} (r_j + s_j f^{(q−1)/2}) X^{q j} = 0` with `deg r_j, deg s_j < K`, `K ≥ 1` and
+`m + 2K ≤ q + 1`, then `f(X) R(X, Y)² = f(Y) S(X, Y)²` for `R = ∑ r_j Y^j`, `S = ∑ s_j Y^j`. -/
+theorem C_mul_sq_eq_map_C_mul_sq {f : F[X]} (hq : Odd (Fintype.card F)) {J K : ℕ} (hK0 : 0 < K)
+    (hK : f.natDegree + 2 * K ≤ Fintype.card F + 1) {r s : Fin J → F[X]}
+    (hr : ∀ j, (r j).natDegree < K) (hs : ∀ j, (s j).natDegree < K)
     (h : ∑ j, (r j + s j * f ^ (Fintype.card F / 2)) * X ^ (Fintype.card F * (j : ℕ)) = 0) :
-    r = 0 ∧ s = 0 := by
-  rcases Nat.eq_zero_or_pos K with hK0 | hK0
-  · exact ⟨funext fun j => absurd (hr j) (by omega), funext fun j => absurd (hs j) (by omega)⟩
+    C f * (∑ j, C (r j) * X ^ (j : ℕ)) ^ 2 = f.map C * (∑ j, C (s j) * X ^ (j : ℕ)) ^ 2 := by
   set q := Fintype.card F
-  set m := f.natDegree with hm
-  have hf0 : f ≠ 0 := fun h0 => by simp [m, h0] at hf
   set Rb : F[X][X] := ∑ j, C (r j) * X ^ (j : ℕ)
   set Sb : F[X][X] := ∑ j, C (s j) * X ^ (j : ℕ)
   have hev (t : Fin J → F[X]) : (∑ j, C (t j) * X ^ (j : ℕ)).eval (X ^ q) =
@@ -133,31 +129,72 @@ theorem eq_zero_of_sum_add_mul_pow_eq_zero {f : F[X]} (hf : Odd f.natDegree)
         (fun i => by rw [coeff_map]; simp) hSc
       have := natDegree_coeff_mul_le h1 hSc k
       omega
-  have heq : C f * Rb ^ 2 = f.map C * Sb ^ 2 := sub_eq_zero.mp (eq_zero_of_eval_X_pow_eq_zero hdeg key)
+  exact sub_eq_zero.mp (eq_zero_of_eval_X_pow_eq_zero hdeg key)
+
+example := C_mul_sq_eq_map_C_mul_sq (F := ZMod 3) (f := X) (by rw [ZMod.card]; exact ⟨1, rfl⟩)
+  (J := 0) (K := 1) one_pos (by simp) (r := 0) (s := 0) (by simp) (by simp) (by simp)
+
+omit [Fintype F] in
+/-- `f(X) R(X, Y)² = f(Y) S(X, Y)²` forces `S = 0` for `f` of odd degree: if `S ≠ 0`, the
+degrees in `Y` are `2 deg_Y R` and `m + 2 deg_Y S`, of different parity. -/
+theorem eq_zero_of_C_mul_sq_eq_of_odd {f : F[X]} (hf : Odd f.natDegree) {R S : F[X][X]}
+    (h : C f * R ^ 2 = f.map C * S ^ 2) : S = 0 := by
+  have hf0 : f ≠ 0 := fun h0 => by simp [h0] at hf
   have hmap0 : f.map C ≠ 0 := (Polynomial.map_ne_zero_iff C_injective).mpr hf0
-  have hSb : Sb = 0 := by
-    by_contra hS
-    have hR : Rb ≠ 0 := by
-      rintro hR0
-      rw [hR0, zero_pow two_ne_zero, mul_zero] at heq
-      exact (mul_ne_zero hmap0 (pow_ne_zero 2 hS)) heq.symm
-    have := congrArg natDegree heq
-    rw [natDegree_C_mul hf0, natDegree_pow, natDegree_mul hmap0 (pow_ne_zero 2 hS),
-      natDegree_pow, natDegree_map_eq_of_injective C_injective] at this
-    obtain ⟨t, ht⟩ := hf
-    omega
-  have hRb : Rb = 0 := by
-    rw [hSb, zero_pow two_ne_zero, mul_zero] at heq
-    exact pow_eq_zero_iff two_ne_zero |>.mp ((mul_eq_zero.mp heq).resolve_left (C_ne_zero.mpr hf0))
+  by_contra hS
+  have hR : R ≠ 0 := by
+    rintro hR0
+    rw [hR0, zero_pow two_ne_zero, mul_zero] at h
+    exact (mul_ne_zero hmap0 (pow_ne_zero 2 hS)) h.symm
+  have := congrArg natDegree h
+  rw [natDegree_C_mul hf0, natDegree_pow, natDegree_mul hmap0 (pow_ne_zero 2 hS),
+    natDegree_pow, natDegree_map_eq_of_injective C_injective] at this
+  obtain ⟨t, ht⟩ := hf
+  omega
+
+example := eq_zero_of_C_mul_sq_eq_of_odd (F := ZMod 3) (f := X) (by simp) (R := 0) (S := 0)
+  (by simp)
+
+/-- **Stepanov's independence lemma**: let `q = |F|` be odd and suppose `f(X) R² = f(Y) S²`
+forces `S = 0`. If `∑_{j < J} (r_j + s_j f^{(q−1)/2}) X^{q j} = 0` with `deg r_j, deg s_j < K`
+and `m + 2K ≤ q + 1`, then all `r_j` and `s_j` are `0`. -/
+theorem eq_zero_of_sum_add_mul_pow_eq_zero_of_sq {f : F[X]}
+    (hsq : ∀ R S : F[X][X], C f * R ^ 2 = f.map C * S ^ 2 → S = 0)
+    (hq : Odd (Fintype.card F)) {J K : ℕ} (hK : f.natDegree + 2 * K ≤ Fintype.card F + 1)
+    {r s : Fin J → F[X]} (hr : ∀ j, (r j).natDegree < K) (hs : ∀ j, (s j).natDegree < K)
+    (h : ∑ j, (r j + s j * f ^ (Fintype.card F / 2)) * X ^ (Fintype.card F * (j : ℕ)) = 0) :
+    r = 0 ∧ s = 0 := by
+  rcases Nat.eq_zero_or_pos K with hK0 | hK0
+  · exact ⟨funext fun j => absurd (hr j) (by omega), funext fun j => absurd (hs j) (by omega)⟩
+  have hf0 : f ≠ 0 := by
+    rintro rfl
+    exact one_ne_zero (hsq 0 1 (by simp))
+  have heq := C_mul_sq_eq_map_C_mul_sq hq hK0 hK hr hs h
+  have hSb := hsq _ _ heq
+  rw [hSb, zero_pow two_ne_zero, mul_zero] at heq
+  have hRb := pow_eq_zero_iff two_ne_zero |>.mp
+    ((mul_eq_zero.mp heq).resolve_left (C_ne_zero.mpr hf0))
   refine ⟨funext fun j => ?_, funext fun j => ?_⟩
-  · rw [Pi.zero_apply, ← coeff_sum_C_mul_X_pow r j]
-    change Rb.coeff j = 0
-    rw [hRb, coeff_zero]
-  · rw [Pi.zero_apply, ← coeff_sum_C_mul_X_pow s j]
-    change Sb.coeff j = 0
-    rw [hSb, coeff_zero]
+  · rw [Pi.zero_apply, ← coeff_sum_C_mul_X_pow r j, hRb, coeff_zero]
+  · rw [Pi.zero_apply, ← coeff_sum_C_mul_X_pow s j, hSb, coeff_zero]
+
+example := eq_zero_of_sum_add_mul_pow_eq_zero_of_sq (F := ZMod 3) (f := X)
+  (fun _ _ => eq_zero_of_C_mul_sq_eq_of_odd (by simp)) (by rw [ZMod.card]; exact ⟨1, rfl⟩)
+  (J := 0) (K := 1) (by simp) (r := 0) (s := 0) (by simp) (by simp) (by simp)
+
+/-- **Stepanov's independence lemma** for `f` of odd degree `m` over `F` with `q = |F|` odd:
+if `∑_{j < J} (r_j + s_j f^{(q−1)/2}) X^{q j} = 0` with `deg r_j, deg s_j < K` and
+`m + 2K ≤ q + 1`, then all `r_j` and `s_j` are `0`. -/
+theorem eq_zero_of_sum_add_mul_pow_eq_zero {f : F[X]} (hf : Odd f.natDegree)
+    (hq : Odd (Fintype.card F)) {J K : ℕ} (hK : f.natDegree + 2 * K ≤ Fintype.card F + 1)
+    {r s : Fin J → F[X]} (hr : ∀ j, (r j).natDegree < K) (hs : ∀ j, (s j).natDegree < K)
+    (h : ∑ j, (r j + s j * f ^ (Fintype.card F / 2)) * X ^ (Fintype.card F * (j : ℕ)) = 0) :
+    r = 0 ∧ s = 0 :=
+  eq_zero_of_sum_add_mul_pow_eq_zero_of_sq (fun _ _ => eq_zero_of_C_mul_sq_eq_of_odd hf) hq hK
+    hr hs h
 
 example := eq_zero_of_sum_add_mul_pow_eq_zero (F := ZMod 3) (f := X) (by simp)
-  (by rw [ZMod.card]; exact ⟨1, rfl⟩) (J := 0) (K := 1) (by simp) (r := 0) (s := 0) (by simp) (by simp) (by simp)
+  (by rw [ZMod.card]; exact ⟨1, rfl⟩) (J := 0) (K := 1) (by simp) (r := 0) (s := 0) (by simp)
+  (by simp) (by simp)
 
 end Transformer.Weil

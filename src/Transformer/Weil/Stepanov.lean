@@ -5,13 +5,14 @@ public import Transformer.Weil.LinearSystem
 /-!
 # Stepanov's bound for the fibers of `f^{(q − 1)/2}`
 
-Let `q = |F|` be odd, `c = (q − 1)/2`, `f ∈ F[X]` of odd degree `m`, and `a ≠ 0`. For
-parameters `ℓ, J, K` with `m + 2K ≤ q + 1`, `ℓ ≤ c + 1` and
-`ℓ (K + J + (ℓ − 1)(m − 1)) < 2 J K`, Siegel's lemma gives `r_j, s_j` of degree `< K`, not all
-`0`, with `T_k(r, s) = 0` for every `k < ℓ`. The auxiliary polynomial
-`R = ∑_{j < J} (r_j + s_j f^c) X^{q j}` is then nonzero (independence) and, for `k < ℓ`,
-`f^k E^{(k)} R` vanishes at every `x` with `f(x)^c = a`, where `f(x) ≠ 0`. So `R` vanishes to
-order `ℓ` on that set, and `ℓ · #{x : f(x)^c = a} ≤ deg R ≤ K − 1 + c m + q (J − 1)`.
+Let `q = |F|` be odd, `c = (q − 1)/2`, `f ∈ F[X]` of degree `m ≥ 1` such that
+`f(X) R(X, Y)² = f(Y) S(X, Y)²` forces `S = 0` (odd `m`, or a root of odd multiplicity:
+`Independence`, `IndependenceRoot`), and `a ≠ 0`. For parameters `ℓ, J, K` with
+`m + 2K ≤ q + 1`, `ℓ ≤ c + 1` and `ℓ (K + J + (ℓ − 1)(m − 1)) < 2 J K`, Siegel's lemma gives
+`r_j, s_j` of degree `< K`, not all `0`, with `T_k(r, s) = 0` for every `k < ℓ`. The auxiliary
+polynomial `R = ∑_{j < J} (r_j + s_j f^c) X^{q j}` is then nonzero (independence) and, for
+`k < ℓ`, `f^k E^{(k)} R` vanishes at every `x` with `f(x)^c = a`, where `f(x) ≠ 0`. So `R`
+vanishes to order `ℓ` on that set, and `ℓ · #{x : f(x)^c = a} ≤ deg R ≤ K − 1 + c m + q (J − 1)`.
 
 Reference: S. A. Stepanov, *On the number of points of a hyperelliptic curve over a finite prime
 field* (1969); W. M. Schmidt, *Equations over Finite Fields*, Ch. I. The proof here is written
@@ -48,17 +49,18 @@ example := natDegree_auxiliary_le (F := ZMod 3) X (J := 1) le_rfl 0
 
 variable [DecidableEq F]
 
-/-- **Stepanov's bound**: for `q = |F|` odd, `f` of odd degree `m`, `a ≠ 0` and parameters with
-`m + 2K ≤ q + 1`, `ℓ ≤ (q − 1)/2 + 1` and `ℓ (K + J + (ℓ − 1)(m − 1)) < 2 J K`,
+/-- **Stepanov's bound**: for `q = |F|` odd, `f` of degree `m ≥ 1` such that
+`f(X) R(X, Y)² = f(Y) S(X, Y)²` forces `S = 0`, `a ≠ 0` and parameters with `m + 2K ≤ q + 1`,
+`ℓ ≤ (q − 1)/2 + 1` and `ℓ (K + J + (ℓ − 1)(m − 1)) < 2 J K`,
 `ℓ · #{x : f(x)^{(q−1)/2} = a} ≤ K − 1 + (q − 1)/2 · m + q (J − 1)`. -/
-theorem mul_card_pow_eq_le {f : F[X]} (hf : Odd f.natDegree) (hq : Odd (Fintype.card F))
+theorem mul_card_pow_eq_le {f : F[X]} (hm : 1 ≤ f.natDegree)
+    (hsq : ∀ R S : F[X][X], C f * R ^ 2 = f.map C * S ^ 2 → S = 0) (hq : Odd (Fintype.card F))
     {a : F} (ha : a ≠ 0) {ℓ J K : ℕ} (hK : f.natDegree + 2 * K ≤ Fintype.card F + 1)
     (hℓ : ℓ ≤ Fintype.card F / 2 + 1)
     (hD : ℓ * (K + J + (ℓ - 1) * (f.natDegree - 1)) < 2 * (J * K)) :
     ℓ * #{x | f.eval x ^ (Fintype.card F / 2) = a} ≤
       K - 1 + Fintype.card F / 2 * f.natDegree + Fintype.card F * (J - 1) := by
-  have hf0 : f ≠ 0 := fun h0 => by simp [h0] at hf
-  have hm : 1 ≤ f.natDegree := hf.pos
+  have hf0 : f ≠ 0 := ne_zero_of_natDegree_gt hm
   have hq2 : 1 < Fintype.card F := Fintype.one_lt_card
   have hJ : 1 ≤ J := Nat.pos_of_ne_zero fun h0 => by simp [h0] at hD
   have hK1 : 1 ≤ K := Nat.pos_of_ne_zero fun h0 => by simp [h0] at hD
@@ -71,7 +73,7 @@ theorem mul_card_pow_eq_le {f : F[X]} (hf : Odd f.natDegree) (hq : Odd (Fintype.
     X ^ (Fintype.card F * (j : ℕ)) with hRdef
   have hR : R ≠ 0 := by
     intro hR0
-    obtain ⟨h1, h2⟩ := eq_zero_of_sum_add_mul_pow_eq_zero hf hq hK
+    obtain ⟨h1, h2⟩ := eq_zero_of_sum_add_mul_pow_eq_zero_of_sq hsq hq hK
       (r := fun j => (v.1 j : F[X])) (s := fun j => (v.2 j : F[X]))
       (fun j => natDegree_lt_of_mem_degreeLT hK1 (v.1 j).2)
       (fun j => natDegree_lt_of_mem_degreeLT hK1 (v.2 j).2) hR0
@@ -91,7 +93,7 @@ theorem mul_card_pow_eq_le {f : F[X]} (hf : Odd f.natDegree) (hq : Odd (Fintype.
   exact (mul_card_le_natDegree hR _ hvan).trans (natDegree_auxiliary_le f hK1 v)
 
 example := mul_card_pow_eq_le (F := ZMod 3) (f := X) (by simp)
-  (by rw [ZMod.card]; exact ⟨1, rfl⟩) (a := 1) one_ne_zero (ℓ := 1) (J := 2) (K := 1)
-  (by simp) (by simp) (by norm_num)
+  (fun _ _ => eq_zero_of_C_mul_sq_eq_of_odd (by simp)) (by rw [ZMod.card]; exact ⟨1, rfl⟩)
+  (a := 1) one_ne_zero (ℓ := 1) (J := 2) (K := 1) (by simp) (by simp) (by norm_num)
 
 end Transformer.Weil

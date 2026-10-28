@@ -89,7 +89,9 @@ theorem norm_lPowerSum_quadraticChar_le (hp : p ≠ 2) {f : (ZMod p)[X]} (hf : O
     rw [MulChar.ringHomComp_apply, quadraticChar_norm hK, eval_map_algebraMap]
     rfl
   have hb := abs_sum_quadraticChar_le hL (f := f.map (algebraMap (ZMod p) (GaloisField p d)))
-    (by rwa [natDegree_map]) (by rwa [hcard]) (by rwa [hcard, natDegree_map])
+    (by rw [natDegree_map]; exact hf.pos)
+    (fun _ _ => eq_zero_of_C_mul_sq_eq_of_odd (by rwa [natDegree_map])) (by rwa [hcard])
+    (by rwa [hcard, natDegree_map])
   rw [natDegree_map, hcard, Nat.cast_pow, sqrt_pow_eq_pow_sqrt (Nat.cast_nonneg _)] at hb
   rw [← hS, hsum, Complex.norm_intCast]
   exact hb
