@@ -713,8 +713,8 @@ Rigid Hall patterns are recovered (item 2). A Hall pattern that is not rigid rea
 `‖a‖ ‖b‖` (item 1) at another matrix (item 3's phases). Without Hall the least norm falls
 below `‖a‖ ‖b‖` (item 3's witness). A rigid Hall pattern at tight weights converges slowly.
 For the worst one at A, `{(0, 1), (0, 2), (1, 0), (1, 1), (2, 0), (2, 1), (2, 2)}`, the error
-is 2.4e-4, 5.0e-5 and 1.0e-5 after 6000, 30000 and 150000 iterations. Item 2 proves that the
-limit is `K`.
+is 2.4e-4, 5.0e-5 and 1.0e-5 after 6000, 30000 and 150000 iterations. Item 2 proves that `K`
+is the only minimum there, so the slowness is ADMM's.
 
 ### Cross check (torch, 2026-10-28)
 
