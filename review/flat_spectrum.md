@@ -312,9 +312,9 @@ Scope:
 
 Added on 2026-10-28 and proved in Lean. Theorem A says no proper `Ω` recovers `ψ(a³ + a b)`.
 This section gives the positive side for `ψ(a + b)`. The model of Lemma 1 recovers it exactly
-from `2p` cells on two diagonals, and not from the `p` cells of one diagonal. Items 7–9 mark
-the limits: a pattern must be rigid, and a rigid pattern that determines `ψ(a + b)` can still
-fail.
+from `2p` cells on two diagonals, and not from the `p` cells of one diagonal. Items 7–10 mark
+the limits: a pattern must be rigid, a rigid pattern that determines `ψ(a + b)` can still
+fail, and a large missed block leaves item 2 without a certificate.
 
 ### Setting
 
@@ -359,6 +359,11 @@ fail.
    `N = ‖K‖_S1`, so `K` is not even a minimum. For `ψ(a + b)` and `p ≥ 3`, column 0 holds
    `ψ(a)` and row 0 holds `ψ(b)`. They fix `ψ(a + b) = ψ(a) ψ(b)`, yet M returns a matrix of
    norm `2√(p − 1) < p`.
+10. Missed blocks. Let `Ω` miss `R × C`, with `k = |R|` and `l = |C|`. Let `Y` vanish off `Ω`
+    with unit row and column sums, and let `c (Y − Q)` be a contraction. Then
+    `c² k l ≤ (N − k)(N − l)`. So if `R` and `C` are nonempty and `k + l ≥ N`, no `c > 1`
+    works and item 2 has no certificate. This happens when a row meets `Ω` in a single cell:
+    `k = 1`, `l = N − 1`.
 
 ### Proof
 
@@ -408,6 +413,14 @@ fail.
      Both factors have `‖·‖²_F = 2m`, so `‖X₀‖_S1 ≤ 2m`.
    - The map of item 4 carries both bounds to `K`. Finally, `2√(N − 1) < N` exactly when
      `(N − 2)² > 0`.
+10. Item 10. Let `u = 1_R − k/N` and `v = 1_C − l/N`, so `‖u‖² = k (N − k)/N` and
+    `‖v‖² = l (N − l)/N`.
+    - `Q v = 0`, and the unit row sums give `(Y v)_i = ∑_{j ∈ C} Y_ij − l/N`.
+    - `∑_i u_i = 0`, `Y` vanishes on `R × C`, and the unit column sums give
+      `∑_i ∑_{j ∈ C} Y_ij = l`. Hence `⟨u, (Y − Q) v⟩ = −k l/N`.
+    - Cauchy–Schwarz and the contraction give `|c| k l/N ≤ ‖u‖ ‖v‖`. Squaring and dividing by
+      `k l` gives the bound; it is trivial when `k l = 0`.
+    - When `k + l ≥ N`, `(N − k)(N − l) = N (N − k − l) + k l ≤ k l`, so `c² ≤ 1`.
 
 ### Numerical check (torch, 2026-10-28)
 
@@ -495,7 +508,8 @@ Over the three primes (63 random draws):
 - All 21 recovered draws and all six training splits are elementary: connected, with every cell
   on a permutation graph inside `Ω`. Checked by a matching and strong connectivity.
 
-The block bound explains the split (by hand, not formalized):
+The block bound, item 10, explains the split. Item 10 is proved in Lean; the rest of this
+list is by hand, not formalized:
 - Let `Ω` miss a block `R × C` with `|R| = k` and `|C| = l`, both nonempty and proper.
   - Take any `Y` vanishing off `Ω` with unit row and column sums.
   - Pair `Y − Q` with the centered indicators of `R` and `C`. This gives
@@ -539,6 +553,7 @@ All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved witho
 | Theorem D.7 | `exists_vecMulVec_ne_of_not_rigid`, `not_forall_isMinOn_iff_of_not_rigid` | The failure of rigidity is given as explicit `r`, `s`, `i₀`, `j₀`. "M recovers no such `Ω`" is the negation of D.2's conclusion. |
 | Theorem D.8 | `forall_isMinOn_addKernel_iff_isUnit` | `Ω` is exactly the two diagonals. |
 | Theorem D.9 | `rigid_cross`, `vecMulVec_eq_of_cross`, `crossCert`, `card_compl_singleton_cast`, `isContraction_crossCert`, `two_mul_sqrt_le_nuclearNorm_of_cross`, `crossWitness`, `crossFactor`, `crossWitness_eq_mul`, `frobeniusSq_crossFactor`, `two_mul_sqrt_lt`, `isLeast_nuclearNorm_vecMulVec_cross`, `vecMulVec_cross_determined_not_isMinOn`, `isLeast_nuclearNorm_addKernel_cross` | The least norm is `IsLeast` of the set of nuclear norms. Rank-one determination needs only `a_{i₀} b_{j₀} ≠ 0`. |
+| Theorem D.10 | `IsContraction.sum_norm_sq_mulVec_le`, `centeredIndicator`, `sum_centeredIndicator`, `sum_sq_centeredIndicator`, `sum_centeredIndicator_mul_mulVec`, `sq_mul_le_of_block`, `not_isContraction_of_block`, `not_isContraction_of_row` | `c` is any real number. The single-cell row is `∀ j ≠ j₀, (i₀, j) ∉ Ω`, with `N ≥ 2`. |
 
 Not formalized:
 - the numerical tables, including the certificates found for random patterns and for the
@@ -548,8 +563,8 @@ Not formalized:
   row and column sums is a permutation matrix, with `‖Y − Q‖_op = 1`, so item 1 gives no
   `c > 1`;
 - the failures on `2p` random cells;
-- the block bound, the witness `J − t 1_R 1_Cᵀ`, and the split of the rigid patterns by
-  Hall's condition (*Patterns*);
+- the witness `J − t 1_R 1_Cᵀ`, and the split of the rigid patterns by Hall's condition
+  (*Patterns*);
 - that rigidity is the same as connectivity, and that a connected pattern has at least
   `2N − 1` cells;
 - that training behaves like model M (Lemma 1's modeling step).

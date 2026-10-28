@@ -61,6 +61,7 @@ public import Transformer.Grokking.FlatSpectrum.OneDiagonal
 public import Transformer.Grokking.FlatSpectrum.Rigidity
 public import Transformer.Grokking.FlatSpectrum.CrossCertificate
 public import Transformer.Grokking.FlatSpectrum.CrossWitness
+public import Transformer.Grokking.FlatSpectrum.BlockBound
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -131,6 +132,9 @@ hypothesis is necessary: if some `r_i + s_j` vanish on `Ω` but not everywhere, 
 rank-one matrix with entries of modulus one agrees with `a bᵀ` on `Ω`, so two diagonals
 recover `ψ(a + b)` exactly when `s₂ − s₁` is a unit. It is not sufficient: row `i₀` and
 column `j₀` are rigid and determine `a bᵀ` among rank-one matrices, yet the least nuclear norm
-of the matrices equal to `a bᵀ` there is `2√(N − 1)`, below `N = ‖a bᵀ‖_S1` once `N ≥ 3`. -/
+of the matrices equal to `a bᵀ` there is `2√(N − 1)`, below `N = ‖a bᵀ‖_S1` once `N ≥ 3`.
+A missed block bounds the certificate: if `Ω` misses `R × C`, every such `Y` with
+`c (Y − J/N)` a contraction has `c² #R #C ≤ (N − #R)(N − #C)`, so none exists with `c > 1`
+once `R`, `C` are nonempty and `#R + #C ≥ N`, as when a row meets `Ω` in a single cell. -/
 
 @[expose] public section
