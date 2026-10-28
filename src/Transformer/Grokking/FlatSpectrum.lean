@@ -32,6 +32,8 @@ public import Transformer.Grokking.FlatSpectrum.ThreeEigenvalues
 public import Transformer.Grokking.FlatSpectrum.MulCharKernel
 public import Transformer.Grokking.FlatSpectrum.MulCharSpectrum
 public import Transformer.Grokking.FlatSpectrum.NumericalChecks
+public import Transformer.Grokking.FlatSpectrum.PolynomialFibers
+public import Transformer.Grokking.FlatSpectrum.PolynomialMulChar
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -55,13 +57,16 @@ products of the two bases are Gauss sums of modulus `√p`, and for `p ≡ 1 mod
 `‖E[χ(a b) | a³ + a b]‖²` has the same bound `9/(2p) + 8/p^{3/2}`. Over `a ≠ 0`,
 `1 + b/a² = f/a³`, and `E[χ(1 + b/a²) | f]` is `χ(f)` if `χ³ = 1` and `0` otherwise. For
 nontrivial `χ` and odd `p`, the kernel `[χ(a³ + a b)]` has rank `(p − 1)/2` and
-`r_eff = (√(p + 1) + (p − 3)/2 · √(2p))²/(p − 1)²`, between `47.9` and `48` at `p = 97`. Of the
-numerical checks, the bound at `p = 97` is below `0.053`, `‖E[ψ_r(a + b) | (a + b)²]‖² = ½`, and the
-counting rule `r (2p − r) ≤ ρ p²` iff `r ≤ (1 − √(1 − ρ)) p` gives `28.4` at `ρ = ½`, `p = 97`.
-Torch check: every minimum-nuclear-norm completion is zero on a row whose seen entries are zero, so
-a hidden 1 of the one-hot kernel `[a³ + a b = c]` in a row `a ≠ 0` is never recovered, from any
-training set. The real readouts `cos(2πr f/p)` and `sin(2πr f/p)` of `f = a³ + a b` have rows `a`
-and `−a` equal and opposite, so both are singular and Theorem A does not apply; for odd prime `p`
-and `r ≠ 0` they have rank `(p + 1)/2` and `(p − 1)/2`, and every nonzero singular value is `√p`. -/
+`r_eff = (√(p + 1) + (p − 3)/2 · √(2p))²/(p − 1)²`, between `47.9` and `48` at `p = 97`. For any
+function `P` of `a`, the fibers of `P(a) + a b` give `‖E[ψ_r(a b) | f]‖²` exactly in terms of
+`T = ∑_{a ≠ 0} ψ(−r P(a))`, and a bound on `∑_x ψ(r P(x))` or on `∑_a χ(c − P(a))` bounds the
+additive or the multiplicative readout. Of the numerical checks, the bound at `p = 97` is below
+`0.053`, `‖E[ψ_r(a + b) | (a + b)²]‖² = ½`, and the counting rule `r (2p − r) ≤ ρ p²` iff
+`r ≤ (1 − √(1 − ρ)) p` gives `28.4` at `ρ = ½`, `p = 97`. Torch check: every minimum-nuclear-norm
+completion is zero on a row whose seen entries are zero, so a hidden 1 of the one-hot kernel
+`[a³ + a b = c]` in a row `a ≠ 0` is never recovered, from any training set. The real readouts
+`cos(2πr f/p)` and `sin(2πr f/p)` of `f = a³ + a b` have rows `a` and `−a` equal and opposite, so
+both are singular and Theorem A does not apply; for odd prime `p` and `r ≠ 0` they have rank
+`(p + 1)/2` and `(p − 1)/2`, and every nonzero singular value is `√p`. -/
 
 @[expose] public section
