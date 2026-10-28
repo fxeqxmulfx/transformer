@@ -31,7 +31,8 @@ variable {n : Type*} [Fintype n] [DecidableEq n]
 omit [Fintype n] [DecidableEq n] in
 /-- `‖u − v‖² = ‖u‖² + ‖v‖² − 2 Re ⟨u, v⟩` for the rows `u = U i` and `v = V j`, with
 `⟨u, v⟩ = (U Vᴴ)_ij`. -/
-lemma sum_norm_sq_sub_eq {r : Type*} [Fintype r] (U V : Matrix n r ℂ) (i j : n) :
+lemma sum_norm_sq_sub_eq {m r : Type*} [Fintype r] (U : Matrix m r ℂ) (V : Matrix n r ℂ)
+    (i : m) (j : n) :
     ∑ k, ‖U i k - V j k‖ ^ 2 =
       ∑ k, ‖U i k‖ ^ 2 + ∑ k, ‖V j k‖ ^ 2 - 2 * ((U * Vᴴ) i j).re := by
   rw [mul_apply, Complex.re_sum, mul_sum, ← sum_add_distrib, ← sum_sub_distrib]

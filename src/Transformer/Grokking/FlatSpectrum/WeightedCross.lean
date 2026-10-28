@@ -1,7 +1,7 @@
 module
 
 public import Transformer.Grokking.FlatSpectrum.CrossCertificate
-public import Transformer.Grokking.FlatSpectrum.WeightedUniqueness
+public import Transformer.Grokking.FlatSpectrum.WeightedMinimum
 public import Transformer.Grokking.FlatSpectrum.WeightedWitness
 
 /-!
@@ -179,9 +179,10 @@ theorem forall_isMinOn_vecMulVec_cross_iff {a b : n → ℂ} (ha : ∀ i, a i �
     have hT := isTransportPlan_cross (i₀ := i₀) (j₀ := j₀)
       (α := fun i => ‖(c : ℂ) * a i‖ ^ 2) (β := fun j => ‖((c⁻¹ : ℝ) : ℂ) * b j‖ ^ 2)
       (fun _ => sq_nonneg _) (fun _ => sq_nonneg _) hbal hcorner
-    have := isMinOn_vecMulVec_iff_of_transport (fun i => mul_ne_zero hc' (ha i))
-      (fun j => mul_ne_zero (Complex.ofReal_ne_zero.mpr (inv_pos.mpr hc0).ne') (hb j)) hT
-      (fun r s h => rigid_cross h) (X := X) (by rw [hK]; exact hX)
+    have := isMinOn_vecMulVec_iff_of_transport hT
+      (rigid_support_of_ne_zero (fun i => mul_ne_zero hc' (ha i))
+        (fun j => mul_ne_zero (Complex.ofReal_ne_zero.mpr (inv_pos.mpr hc0).ne') (hb j))
+        fun r s h => rigid_cross h) (X := X) (by rw [hK]; exact hX)
     rwa [hK] at this
 
 /-- `(3, 1, 1)(1, 1, 1)ᵀ` is recovered from its first row and column: `9/11 + 1/3 ≥ 1`. -/

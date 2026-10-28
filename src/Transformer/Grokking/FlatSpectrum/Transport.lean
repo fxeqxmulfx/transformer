@@ -1,11 +1,13 @@
 module
 
 public import Mathlib.Algebra.BigOperators.Field
+public import Mathlib.Algebra.BigOperators.Fin
 public import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
 public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
 public import Mathlib.Algebra.Group.End
 public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 public import Mathlib.Basic.Real.Basic
+public import Mathlib.Data.Fin.VecNotation
 public import Mathlib.Tactic.FieldSimp
 
 /-!
@@ -14,10 +16,12 @@ public import Mathlib.Tactic.FieldSimp
 Source: `review/flat_spectrum.md`, *Exact recovery of a rank-one kernel*, Theorem F (added).
 A transport plan on `Ω ⊆ ι × κ` from row masses `α` to column masses `β` is a nonnegative `T`
 that vanishes off `Ω`, with row sums `α` and column sums `β` (`IsTransportPlan`). Its masses
-agree in total (`IsTransportPlan.sum_eq`). The rows `R` send all their mass into the columns
-`N(R)` they meet in `Ω` (`nbhd`), so `∑_R α ≤ ∑_{N(R)} β`: Hall's weighted condition
-(`IsTransportPlan.sum_le_sum_nbhd`). The graph of a permutation inside `Ω` carries a plan
-(`isTransportPlan_perm`), and so does the full pattern (`isTransportPlan_univ`).
+agree in total (`IsTransportPlan.sum_eq`), and it sends nothing from a row or into a column of
+mass `0` (`IsTransportPlan.eq_zero_of_row`, `IsTransportPlan.eq_zero_of_col`). The rows `R`
+send all their mass into the columns `N(R)` they meet in `Ω` (`nbhd`), so
+`∑_R α ≤ ∑_{N(R)} β`: Hall's weighted condition (`IsTransportPlan.sum_le_sum_nbhd`). The graph
+of a permutation inside `Ω` carries a plan (`isTransportPlan_perm`), and so does the full
+pattern (`isTransportPlan_univ`).
 -/
 
 @[expose] public section
@@ -63,6 +67,18 @@ lemma IsTransportPlan.sum_eq {Ω : Set (ι × κ)} {α : ι → ℝ} {β : κ �
   calc ∑ i, α i = ∑ i, ∑ j, T i j := sum_congr rfl fun i _ => (hT.2.2.1 i).symm
     _ = ∑ j, ∑ i, T i j := sum_comm
     _ = ∑ j, β j := sum_congr rfl fun j _ => hT.2.2.2 j
+
+/-- A plan sends nothing from a row of mass `0`. -/
+lemma IsTransportPlan.eq_zero_of_row {Ω : Set (ι × κ)} {α : ι → ℝ} {β : κ → ℝ}
+    {T : ι → κ → ℝ} (hT : IsTransportPlan Ω α β T) {i : ι} (hi : α i = 0) (j : κ) :
+    T i j = 0 :=
+  (sum_eq_zero_iff_of_nonneg fun j _ => hT.1 i j).mp ((hT.2.2.1 i).trans hi) j (mem_univ j)
+
+/-- A plan sends nothing into a column of mass `0`. -/
+lemma IsTransportPlan.eq_zero_of_col {Ω : Set (ι × κ)} {α : ι → ℝ} {β : κ → ℝ}
+    {T : ι → κ → ℝ} (hT : IsTransportPlan Ω α β T) {j : κ} (hj : β j = 0) (i : ι) :
+    T i j = 0 :=
+  (sum_eq_zero_iff_of_nonneg fun i _ => hT.1 i j).mp ((hT.2.2.2 j).trans hj) i (mem_univ i)
 
 /-- **A plan meets Hall's weighted condition**, `review/flat_spectrum.md`, Theorem F: the rows
 `R` send their mass into the columns `N(R)`, so `∑_R α ≤ ∑_{N(R)} β`. -/
@@ -112,5 +128,15 @@ example := (isTransportPlan_univ (ι := Fin 2) (κ := Fin 2) (α := fun _ => 1) 
 
 example := (isTransportPlan_univ (ι := Fin 2) (κ := Fin 2) (α := fun _ => 1) (β := fun _ => 1)
   (fun _ => zero_le_one) (fun _ => zero_le_one) rfl (by simp)).sum_eq
+
+example := (isTransportPlan_univ (ι := Fin 2) (κ := Fin 2) (α := ![1, 0]) (β := ![0, 1])
+  (by simp [Fin.forall_fin_two]) (by simp [Fin.forall_fin_two]) (by simp [Fin.sum_univ_two])
+  (by simp [Fin.sum_univ_two])).eq_zero_of_row
+  (i := 1) (by simp) 0
+
+example := (isTransportPlan_univ (ι := Fin 2) (κ := Fin 2) (α := ![1, 0]) (β := ![0, 1])
+  (by simp [Fin.forall_fin_two]) (by simp [Fin.forall_fin_two]) (by simp [Fin.sum_univ_two])
+  (by simp [Fin.sum_univ_two])).eq_zero_of_col
+  (j := 0) (by simp) 1
 
 end Transformer.Grokking.FlatSpectrum
