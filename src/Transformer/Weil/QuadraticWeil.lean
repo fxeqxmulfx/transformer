@@ -1,7 +1,7 @@
 module
 
 public import Transformer.Weil.Hyperelliptic
-public import Transformer.Weil.NormSum
+public import Transformer.Weil.QuadraticUnit
 public import Transformer.Weil.Rationality
 public import Transformer.Weil.WeilBound
 
@@ -11,8 +11,8 @@ public import Transformer.Weil.WeilBound
 For `p` odd, `χ₂` the Legendre symbol of `𝔽_p` and `f ∈ 𝔽_p[X]` of odd degree `m`,
 `|∑_{x ∈ 𝔽_p} χ₂(f(x))| ≤ (m − 1) √p`:
 
-* Euler's criterion through the norm: `χ_L(y) = χ_K(N_{L/K} y)` for a finite extension `L` of a
-  finite field `K` of odd order `q`, since `(q^d − 1)/2 = (1 + q + ⋯ + q^{d − 1}) (q − 1)/2`;
+* Euler's criterion through the norm (`QuadraticUnit`): `χ_L(y) = χ_K(N_{L/K} y)` for a finite
+  extension `L` of a finite field `K` of odd order;
 * so `S_d = ∑_{x ∈ L} χ_L(f(x))` for `L` with `p^d` elements (`NormSum`), and Stepanov's bound
   (`Hyperelliptic`) gives `|S_d| ≤ 7 m √p^d` once `p^d ≥ 64` and `p^d ≥ 8 m`;
 * `χ₂(t)^m = −1` for a non-square `t`, since `m` is odd, so `c_n = 0` for `n ≥ m` (`MulWeight`);
@@ -24,29 +24,6 @@ For `p` odd, `χ₂` the Legendre symbol of `𝔽_p` and `f ∈ 𝔽_p[X]` of od
 namespace Transformer.Weil
 
 open Polynomial Finset
-
-/-- **Euler's criterion through the norm**: `χ_L(y) = χ_K(N_{L/K} y)` for `K` of odd
-characteristic. -/
-theorem quadraticChar_norm {K L : Type*} [Field K] [Fintype K] [DecidableEq K] [Field L]
-    [Fintype L] [DecidableEq L] [Algebra K L] (hK : ringChar K ≠ 2) (y : L) :
-    quadraticChar K (Algebra.norm K y) = quadraticChar L y := by
-  have hL : ringChar L ≠ 2 := by rwa [← Algebra.ringChar_eq K L]
-  refine Int.cast_injOn_of_ringChar_ne_two hL (quadraticChar_isQuadratic K _)
-    (quadraticChar_isQuadratic L y) ?_
-  obtain ⟨a, ha⟩ : ∃ a, Fintype.card K = 2 * a + 1 :=
-    ⟨Fintype.card K / 2, by have := FiniteField.odd_card_of_char_ne_two hK; omega⟩
-  have hgeom := geom_sum_mul_add (2 * a) (Module.finrank K L)
-  rw [quadraticChar_eq_pow_of_char_ne_two' hL, ← map_intCast (algebraMap K L),
-    quadraticChar_eq_pow_of_char_ne_two' hK, map_pow, FiniteField.algebraMap_norm_eq_prod_pow,
-    prod_pow_eq_pow_sum, ← pow_mul, Module.card_eq_pow_finrank (K := K) (V := L),
-    Nat.card_eq_fintype_card, ha, ← hgeom, show (2 * a + 1) / 2 = a by omega]
-  congr 1
-  generalize ∑ i ∈ range (Module.finrank K L), (2 * a + 1) ^ i = s
-  rw [show s * (2 * a) = 2 * (s * a) by ring]
-  omega
-
-example := quadraticChar_norm (K := ZMod 3) (L := ZMod 3)
-  (by rw [ZMod.ringChar_zmod_n]; norm_num) 2
 
 /-- `c_n = 0` for `n ≥ m` for `χ₂(f(x))`, `m` odd: `χ₂(t)^m = −1` for a non-square `t`. -/
 theorem lCoeff_mulWeight_quadraticChar_eq_zero {K : Type*} [Field K] [Fintype K] [DecidableEq K]

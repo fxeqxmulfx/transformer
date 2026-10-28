@@ -2,6 +2,7 @@ module
 
 public import Mathlib.FieldTheory.Perfect
 public import Mathlib.FieldTheory.SplittingField.Construction
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicity
 public import Transformer.Weil.Independence
 
 /-!
@@ -13,7 +14,9 @@ If `f ∈ F[X]` has a root `β` of odd multiplicity in an extension `E` of `F`, 
 right. With `Independence` this gives Stepanov's independence lemma for every such `f`, of any
 degree. Over a perfect field `K`, `f = P^e Q` with `P` irreducible, `e` odd and `P ∤ Q` has such
 a root over every extension `L` of `K`: a root of `P`, a simple root since `P` is separable,
-and not a root of `Q`, since `P` and `Q` are coprime.
+and not a root of `Q`, since `P` and `Q` are coprime. Every `f` that is not a constant times a
+square has this form: split off the highest power `P^e` of an irreducible factor, and if `e` is
+even, recurse on the rest.
 -/
 
 @[expose] public section
@@ -98,5 +101,71 @@ theorem exists_odd_rootMultiplicity {K L : Type*} [Field K] [PerfectField K] [Fi
 
 example := exists_odd_rootMultiplicity (K := ZMod 3) (L := ZMod 3) (f := X) (P := X) (Q := 1)
   (e := 1) irreducible_X odd_one (by rw [X_dvd_iff]; simp) (by simp)
+
+/-- A polynomial of odd degree is not `c g²`. -/
+theorem ne_C_mul_sq_of_odd {K : Type*} [Field K] {f : K[X]} (hf : Odd f.natDegree) (c : K)
+    (g : K[X]) : f ≠ C c * g ^ 2 := by
+  rintro rfl
+  by_cases hc : c = 0
+  · rw [hc, C_0, zero_mul, natDegree_zero] at hf
+    exact Nat.not_odd_zero hf
+  · rw [natDegree_C_mul hc, natDegree_pow] at hf
+    exact Nat.not_odd_iff_even.mpr (even_two_mul _) hf
+
+example := ne_C_mul_sq_of_odd (K := ZMod 3) (f := X) (by rw [natDegree_X]; exact odd_one) 1 1
+
+/-- **The odd part of `f`**: if `f` is not `c g²`, then `f = P^e Q` with `P` monic irreducible,
+`e` odd and `P ∤ Q`. -/
+theorem exists_monic_irreducible_odd_pow_mul {K : Type*} [Field K] {f : K[X]}
+    (hf : ∀ (c : K) (g : K[X]), f ≠ C c * g ^ 2) :
+    ∃ P Q : K[X], ∃ e : ℕ, P.Monic ∧ Irreducible P ∧ Odd e ∧ ¬P ∣ Q ∧ f = P ^ e * Q := by
+  classical
+  obtain ⟨n, hn⟩ : ∃ n, f.natDegree = n := ⟨_, rfl⟩
+  induction n using Nat.strong_induction_on generalizing f with
+  | _ n ih =>
+  have hf0 : f ≠ 0 := fun h => hf 0 1 (by rw [h, C_0, zero_mul])
+  have hu : ¬IsUnit f := fun h => by
+    obtain ⟨c, -, rfl⟩ := Polynomial.isUnit_iff.mp h
+    exact hf c 1 (by rw [one_pow, mul_one])
+  obtain ⟨P₀, hP₀, hP₀f⟩ := WfDvdMonoid.exists_irreducible_factor hu hf0
+  have hP : Irreducible (normalize P₀) := (normalize_associated P₀).symm.irreducible hP₀
+  have hPm : (normalize P₀).Monic := monic_normalize hP₀.ne_zero
+  obtain ⟨e, Q, hPQ, hfeq⟩ := WfDvdMonoid.max_power_factor hf0 hP
+  rcases Nat.even_or_odd e with ⟨k, rfl⟩ | he
+  · have hQ0 : Q ≠ 0 := fun h => hf0 (by rw [hfeq, h, mul_zero])
+    have hk : k ≠ 0 := fun h => hPQ (by
+      rw [h, add_zero, pow_zero, one_mul] at hfeq
+      exact hfeq ▸ normalize_dvd_iff.mpr hP₀f)
+    have hdeg : Q.natDegree < n := by
+      have := hP.natDegree_pos
+      rw [← hn, hfeq, natDegree_mul (pow_ne_zero _ hP.ne_zero) hQ0, natDegree_pow]
+      nlinarith [Nat.pos_of_ne_zero hk]
+    have hQ (c : K) (g : K[X]) : Q ≠ C c * g ^ 2 := fun h =>
+      hf c (normalize P₀ ^ k * g) (by rw [hfeq, h]; ring)
+    obtain ⟨P, Q', e, hPm', hP', he, hPQ', hQeq⟩ := ih _ hdeg hQ rfl
+    refine ⟨P, normalize P₀ ^ (k + k) * Q', e, hPm', hP', he, fun hdvd => ?_,
+      by rw [hfeq, hQeq]; ring⟩
+    rcases hP'.prime.dvd_or_dvd hdvd with h | h
+    · refine hPQ ((hP'.dvd_symm hP (hP'.prime.dvd_of_dvd_pow h)).trans ?_)
+      exact (dvd_pow_self P (Nat.pos_iff_ne_zero.mp he.pos)).trans (Dvd.intro _ hQeq.symm)
+    · exact hPQ' h
+  · exact ⟨normalize P₀, Q, e, hPm, hP, he, hPQ, hfeq⟩
+
+example := exists_monic_irreducible_odd_pow_mul (K := ZMod 3) (f := X)
+  (ne_C_mul_sq_of_odd (by rw [natDegree_X]; exact odd_one))
+
+/-- Over a perfect field `K`, if `f` is not `c g²`, then over every extension `L`,
+`f(X) R(X, Y)² = f(Y) S(X, Y)²` forces `S = 0`. -/
+theorem eq_zero_of_C_mul_sq_eq_of_ne_C_mul_sq {K L : Type*} [Field K] [PerfectField K]
+    [Field L] [Algebra K L] {f : K[X]}
+    (hf : ∀ (c : K) (g : K[X]), f ≠ C c * g ^ 2) {R S : L[X][X]}
+    (h : C (f.map (algebraMap K L)) * R ^ 2 = (f.map (algebraMap K L)).map C * S ^ 2) :
+    S = 0 := by
+  obtain ⟨P, Q, e, -, hP, he, hPQ, hfeq⟩ := exists_monic_irreducible_odd_pow_mul hf
+  obtain ⟨β, hβ⟩ := exists_odd_rootMultiplicity (L := L) hP he hPQ hfeq
+  exact eq_zero_of_C_mul_sq_eq_of_rootMultiplicity hβ h
+
+example := eq_zero_of_C_mul_sq_eq_of_ne_C_mul_sq (K := ZMod 3) (L := ZMod 3) (f := X)
+  (ne_C_mul_sq_of_odd (by rw [natDegree_X]; exact odd_one)) (R := 0) (S := 0) (by simp)
 
 end Transformer.Weil

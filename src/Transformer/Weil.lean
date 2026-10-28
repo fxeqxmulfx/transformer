@@ -25,6 +25,7 @@ public import Transformer.Weil.WeilBound
 public import Transformer.Weil.MulWeight
 public import Transformer.Weil.MulMod
 public import Transformer.Weil.NormSum
+public import Transformer.Weil.QuadraticUnit
 public import Transformer.Weil.QuadraticWeil
 
 /-!
@@ -101,6 +102,10 @@ The same `L`-function machinery for `χ(f(x))`, `χ` a multiplicative character:
   the monics of degree `n` and `λ^N Res(f, g') = Res(f, u) Res(f, g)`;
 * `NormSum`: `N_{L/K} f(x) = Res(P, f)^{d/k}` for `x` with minimal polynomial `P` of degree `k`,
   so `S_d = ∑_{x ∈ L} χ(N_{L/K} f(x))`;
+* `QuadraticUnit`: Euler's criterion `χ_L(y) = χ₂(N_{L/𝔽_p} y)`; for `f` not a constant times
+  a square, `f = P^e Q` with `e` odd and `P ∤ Q`, and `u ≡ v` modulo `P`, `u ≡ 1` modulo `Q`,
+  with `v(α)` a non-square in `𝔽_p[X]/(P)`, has `χ₂(Res(f, u)) = −χ₂(λ)^N`, so `c_n = 0` for
+  `n ≥ m`;
 * `QuadraticWeil`: for the Legendre symbol `χ₂` and odd `m`, `χ_L(y) = χ₂(N_{L/𝔽_p} y)`, so
   `Hyperelliptic` over the fields with `p^d` elements bounds `|S_d|` by `7 m √p^d`, `c_n = 0` for
   `n ≥ m`, and `|∑_{x ∈ 𝔽_p} χ₂(f(x))| ≤ (m − 1) √p`.
