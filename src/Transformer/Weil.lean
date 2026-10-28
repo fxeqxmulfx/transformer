@@ -20,6 +20,7 @@ public import Transformer.Weil.NewtonIdentity
 public import Transformer.Weil.FrobeniusOrbit
 public import Transformer.Weil.FieldSum
 public import Transformer.Weil.Rationality
+public import Transformer.Weil.WeilBound
 
 /-!
 # Stepanov's method for `y² = f(x)` and `y^p − y = f(x)`
@@ -54,7 +55,8 @@ For `q = p^ν` and `f` of degree `m ≥ 1` prime to `p`, the same method counts 
 * `ArtinSchreier`: for `q ≥ 5`, `#{x : Tr(f(x)) = c} ≤ q/p + 4 m √q`, and
   `|∑_x ψ(Tr f(x))| ≤ 4 p m √q` for a nontrivial additive character `ψ` of `𝔽_p`.
 
-Toward the `L`-function of `y^p − y = f(x)`:
+Weil's bound `|∑_{x ∈ 𝔽_p} ψ(f(x))| ≤ (m − 1) √p`, through the `L`-function of
+`y^p − y = f(x)`:
 
 * `Transfer`: if `‖∑_{ω ∈ s} ω^n‖ ≤ M R^n` for every large `n`, then every `ω ∈ s` has
   `‖ω‖ ≤ R`;
@@ -73,7 +75,9 @@ Toward the `L`-function of `y^p − y = f(x)`:
   degree `k`, `P = ∏_{i < k} (X − x^{q^i})` and `Tr_{L/K} f(x) = (d/k) ∑_i f(β_i)`;
 * `FieldSum`: `S_d = ∑_{x ∈ L} ψ(Tr_{L/K} f(x))` for `L` of degree `d`;
 * `Rationality`: `L^*(X) = ∑_{k < m} c_k X^{m − 1 − k}` is monic of degree `m − 1`, and
-  `S_n = −∑_ω ω^n` over its roots `ω ∈ ℂ` for `n ≥ 1`.
+  `S_n = −∑_ω ω^n` over its roots `ω ∈ ℂ` for `n ≥ 1`;
+* `WeilBound`: `ArtinSchreier` over the fields with `p^d` elements bounds `|S_d|` by
+  `4 p m √p^d`, so `Transfer` gives `|ω| ≤ √p`, and `∑_{x ∈ 𝔽_p} ψ(f(x)) = S_1 = −∑_ω ω`.
 
 The proofs are written from the mathematics (S. A. Stepanov, 1969; W. M. Schmidt, *Equations
 over Finite Fields*, Ch. I); no other formalization is used.

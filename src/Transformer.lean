@@ -253,7 +253,9 @@ degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine c
 `q` points up to `7 m √q`; and for the curves `y^p − y = f(x)`: over a finite
 field of characteristic `p` and order `q ≥ 5`, for `f` of degree `m ≥ 1` prime
 to `p` and a nontrivial additive character `ψ` of `𝔽_p`,
-`|∑_x ψ(Tr f(x))| ≤ 4 p m √q`.
+`|∑_x ψ(Tr f(x))| ≤ 4 p m √q`. Through the `L`-function of `y^p − y = f(x)`,
+this bound over every extension of `𝔽_p` gives Weil's bound
+`|∑_{x ∈ 𝔽_p} ψ(f(x))| ≤ (m − 1) √p`.
 
 This top-level module re-exports all included formalizations. Per-paper
 subdirectories follow the manuscript sections, splitting larger arguments
