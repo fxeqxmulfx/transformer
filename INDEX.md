@@ -19963,20 +19963,20 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`frobeniusSq_of_gram_eq_add`](src/Transformer/Grokking/FlatSpectrum/GramBlock.lean#L134) | theorem | proved |
 | [`effectiveRank_of_gram_eq_proj_add_diagonal`](src/Transformer/Grokking/FlatSpectrum/GramBlock.lean#L147) | theorem | proved |
 
-**[Transformer.Grokking.FlatSpectrum.HallWitness](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean)** — 138 lines
+**[Transformer.Grokking.FlatSpectrum.HallWitness](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean)** — 139 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`blockFactorL`](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean#L30) | def |  |
 | [`blockFactorR`](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean#L34) | def |  |
 | [`blockWitness_apply`](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean#L39) | lemma | proved |
-| [`sum_ite_mem_univ`](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean#L46) | lemma | proved |
-| [`frobeniusSq_blockFactorL`](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean#L54) | lemma | proved |
-| [`frobeniusSq_blockFactorR`](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean#L64) | lemma | proved |
-| [`nuclearNorm_blockWitness_le`](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean#L73) | theorem | proved |
-| [`exists_nuclearNorm_lt_of_block`](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean#L82) | theorem | proved |
-| [`exists_nuclearNorm_lt_of_not_perm`](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean#L104) | theorem | proved |
-| [`not_isMinOn_onesMatrix_of_not_perm`](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean#L127) | theorem | proved |
+| [`sum_ite_mem_univ`](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean#L47) | lemma | proved |
+| [`frobeniusSq_blockFactorL`](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean#L55) | lemma | proved |
+| [`frobeniusSq_blockFactorR`](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean#L65) | lemma | proved |
+| [`nuclearNorm_blockWitness_le`](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean#L74) | theorem | proved |
+| [`exists_nuclearNorm_lt_of_block`](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean#L83) | theorem | proved |
+| [`exists_nuclearNorm_lt_of_not_perm`](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean#L105) | theorem | proved |
+| [`not_isMinOn_onesMatrix_of_not_perm`](src/Transformer/Grokking/FlatSpectrum/HallWitness.lean#L128) | theorem | proved |
 
 **[Transformer.Grokking.FlatSpectrum.Intermediate](src/Transformer/Grokking/FlatSpectrum/Intermediate.lean)** — 195 lines
 
@@ -20483,24 +20483,24 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`singularValues_taskKernel_relabel`](src/Transformer/Grokking/FlatSpectrum/Unimodular.lean#L99) | theorem | proved |
 | [`nuclearNorm_unimodular_extremes`](src/Transformer/Grokking/FlatSpectrum/Unimodular.lean#L112) | theorem | proved |
 
-**[Transformer.Grokking.FlatSpectrum.WeightedCriterion](src/Transformer/Grokking/FlatSpectrum/WeightedCriterion.lean)** — 130 lines
+**[Transformer.Grokking.FlatSpectrum.WeightedCriterion](src/Transformer/Grokking/FlatSpectrum/WeightedCriterion.lean)** — 131 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`forall_isMinOn_vecMulVec_iff_of_ne_zero`](src/Transformer/Grokking/FlatSpectrum/WeightedCriterion.lean#L37) | theorem | proved |
-| [`forall_isMinOn_vecMulVec_iff_exists_transport`](src/Transformer/Grokking/FlatSpectrum/WeightedCriterion.lean#L62) | theorem | proved |
-| [`nbhd_ne_one_zero`](src/Transformer/Grokking/FlatSpectrum/WeightedCriterion.lean#L86) | lemma | proved |
+| [`forall_isMinOn_vecMulVec_iff_exists_transport`](src/Transformer/Grokking/FlatSpectrum/WeightedCriterion.lean#L63) | theorem | proved |
+| [`nbhd_ne_one_zero`](src/Transformer/Grokking/FlatSpectrum/WeightedCriterion.lean#L87) | lemma | proved |
 
-**[Transformer.Grokking.FlatSpectrum.WeightedCross](src/Transformer/Grokking/FlatSpectrum/WeightedCross.lean)** — 197 lines
+**[Transformer.Grokking.FlatSpectrum.WeightedCross](src/Transformer/Grokking/FlatSpectrum/WeightedCross.lean)** — 198 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`exists_nuclearNorm_lt_of_nbhd`](src/Transformer/Grokking/FlatSpectrum/WeightedCross.lean#L40) | theorem | proved |
-| [`nbhd_diag_zero`](src/Transformer/Grokking/FlatSpectrum/WeightedCross.lean#L52) | lemma | proved |
-| [`not_isMinOn_vecMulVec_of_nbhd`](src/Transformer/Grokking/FlatSpectrum/WeightedCross.lean#L62) | theorem | proved |
-| [`crossPlan`](src/Transformer/Grokking/FlatSpectrum/WeightedCross.lean#L74) | def |  |
-| [`isTransportPlan_cross`](src/Transformer/Grokking/FlatSpectrum/WeightedCross.lean#L79) | lemma | proved |
-| [`forall_isMinOn_vecMulVec_cross_iff`](src/Transformer/Grokking/FlatSpectrum/WeightedCross.lean#L120) | theorem | proved |
+| [`exists_nuclearNorm_lt_of_nbhd`](src/Transformer/Grokking/FlatSpectrum/WeightedCross.lean#L41) | theorem | proved |
+| [`nbhd_diag_zero`](src/Transformer/Grokking/FlatSpectrum/WeightedCross.lean#L53) | lemma | proved |
+| [`not_isMinOn_vecMulVec_of_nbhd`](src/Transformer/Grokking/FlatSpectrum/WeightedCross.lean#L63) | theorem | proved |
+| [`crossPlan`](src/Transformer/Grokking/FlatSpectrum/WeightedCross.lean#L75) | def |  |
+| [`isTransportPlan_cross`](src/Transformer/Grokking/FlatSpectrum/WeightedCross.lean#L80) | lemma | proved |
+| [`forall_isMinOn_vecMulVec_cross_iff`](src/Transformer/Grokking/FlatSpectrum/WeightedCross.lean#L121) | theorem | proved |
 
 **[Transformer.Grokking.FlatSpectrum.WeightedMinimum](src/Transformer/Grokking/FlatSpectrum/WeightedMinimum.lean)** — 184 lines
 
@@ -20510,14 +20510,14 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`isMinOn_vecMulVec_iff_of_transport`](src/Transformer/Grokking/FlatSpectrum/WeightedMinimum.lean#L47) | theorem | proved |
 | [`isMinOn_vecMulVec_iff_of_transport_mul`](src/Transformer/Grokking/FlatSpectrum/WeightedMinimum.lean#L89) | theorem | proved |
 
-**[Transformer.Grokking.FlatSpectrum.WeightedPhases](src/Transformer/Grokking/FlatSpectrum/WeightedPhases.lean)** — 142 lines
+**[Transformer.Grokking.FlatSpectrum.WeightedPhases](src/Transformer/Grokking/FlatSpectrum/WeightedPhases.lean)** — 160 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`star_dotProduct_self_eq_sum_norm_sq`](src/Transformer/Grokking/FlatSpectrum/WeightedPhases.lean#L32) | lemma | proved |
-| [`nuclearNorm_vecMulVec`](src/Transformer/Grokking/FlatSpectrum/WeightedPhases.lean#L38) | theorem | proved |
-| [`exists_vecMulVec_ne_of_not_rigid_of_ne_zero`](src/Transformer/Grokking/FlatSpectrum/WeightedPhases.lean#L81) | theorem | proved |
-| [`not_forall_isMinOn_vecMulVec_of_not_rigid`](src/Transformer/Grokking/FlatSpectrum/WeightedPhases.lean#L117) | theorem | proved |
+| [`star_dotProduct_self_eq_sum_norm_sq`](src/Transformer/Grokking/FlatSpectrum/WeightedPhases.lean#L34) | lemma | proved |
+| [`nuclearNorm_vecMulVec`](src/Transformer/Grokking/FlatSpectrum/WeightedPhases.lean#L40) | theorem | proved |
+| [`exists_vecMulVec_ne_of_not_rigid_of_ne_zero`](src/Transformer/Grokking/FlatSpectrum/WeightedPhases.lean#L84) | theorem | proved |
+| [`not_forall_isMinOn_vecMulVec_of_not_rigid`](src/Transformer/Grokking/FlatSpectrum/WeightedPhases.lean#L125) | theorem | proved |
 
 **[Transformer.Grokking.FlatSpectrum.WeightedRecovery](src/Transformer/Grokking/FlatSpectrum/WeightedRecovery.lean)** — 160 lines
 
@@ -20536,19 +20536,19 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`eq_vecMulVec_of_transport`](src/Transformer/Grokking/FlatSpectrum/WeightedUniqueness.lean#L31) | theorem | proved |
 | [`rigid_support_of_ne_zero`](src/Transformer/Grokking/FlatSpectrum/WeightedUniqueness.lean#L146) | lemma | proved |
 
-**[Transformer.Grokking.FlatSpectrum.WeightedWitness](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean)** — 181 lines
+**[Transformer.Grokking.FlatSpectrum.WeightedWitness](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean)** — 187 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`weightedFactorL`](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean#L32) | def |  |
-| [`weightedFactorR`](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean#L36) | def |  |
-| [`weightedWitness_apply`](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean#L41) | lemma | proved |
-| [`sum_mul_ite_mem`](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean#L58) | lemma | proved |
-| [`frobeniusSq_weightedFactorL`](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean#L70) | lemma | proved |
-| [`frobeniusSq_weightedFactorR`](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean#L84) | lemma | proved |
-| [`nuclearNorm_weightedWitness_le`](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean#L99) | theorem | proved |
-| [`exists_weighted_bound_lt`](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean#L110) | lemma | proved |
-| [`exists_nuclearNorm_lt_of_weighted_block`](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean#L162) | theorem | proved |
+| [`weightedFactorL`](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean#L33) | def |  |
+| [`weightedFactorR`](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean#L37) | def |  |
+| [`weightedWitness_apply`](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean#L42) | lemma | proved |
+| [`sum_mul_ite_mem`](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean#L59) | lemma | proved |
+| [`frobeniusSq_weightedFactorL`](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean#L71) | lemma | proved |
+| [`frobeniusSq_weightedFactorR`](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean#L85) | lemma | proved |
+| [`nuclearNorm_weightedWitness_le`](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean#L100) | theorem | proved |
+| [`exists_weighted_bound_lt`](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean#L111) | lemma | proved |
+| [`exists_nuclearNorm_lt_of_weighted_block`](src/Transformer/Grokking/FlatSpectrum/WeightedWitness.lean#L163) | theorem | proved |
 
 **[Transformer.Grokking.FlatSpectrum.ZeroIndicator](src/Transformer/Grokking/FlatSpectrum/ZeroIndicator.lean)** — 177 lines
 

@@ -7,8 +7,9 @@ public import Transformer.Grokking.FlatSpectrum.WeightedPhases
 /-!
 # Without the weighted Hall condition the least nuclear norm misses `a bᵀ`
 
-Source: `review/flat_spectrum.md`, *Exact recovery of a rank-one kernel*, Theorem F, item 3,
-second half (added). Let `Ω` miss the block `R × C`, and write `A = ‖a‖²`, `B = ‖b‖²`,
+Source: `review/flat_spectrum.md`, *Exact recovery of a rank-one kernel*, Theorem G, item 3,
+second half, which contains Theorem F's: the table `m × n` may be rectangular, and `a`, `b` may
+have zero entries. Let `Ω` miss the block `R × C`, and write `A = ‖a‖²`, `B = ‖b‖²`,
 `A_R = ∑_R |a_i|²` and `B_C = ∑_C |b_j|²`. For `p ≠ 0` the factors `U = p diag(a) U₀` and
 `V = p⁻¹ diag(b̄) V₀`, with `U₀`, `V₀` of Theorem E.3, give `U Vᴴ = a bᵀ − s² a_R b_Cᵀ`
 (`weightedWitness_apply`), which equals `a bᵀ` on `Ω`. Lemma 1 bounds its norm by
@@ -26,20 +27,20 @@ namespace Transformer.Grokking.FlatSpectrum
 
 open Matrix Finset
 
-variable {n : Type*} [Fintype n] [DecidableEq n]
+variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
 /-- The left factor `p a_i [1 − s² 1_R, s 1_R]` of the weighted block witness. -/
-noncomputable def weightedFactorL (a : n → ℂ) (R : Finset n) (p s : ℝ) : Matrix n (Fin 2) ℂ :=
+noncomputable def weightedFactorL (a : m → ℂ) (R : Finset m) (p s : ℝ) : Matrix m (Fin 2) ℂ :=
   of fun i k => (p : ℂ) * a i * blockFactorL R s i k
 
 /-- The right factor `p⁻¹ b̄_j [1, s 1_{Cᶜ}]` of the weighted block witness. -/
 noncomputable def weightedFactorR (b : n → ℂ) (C : Finset n) (p s : ℝ) : Matrix n (Fin 2) ℂ :=
   of fun j k => ((p⁻¹ : ℝ) : ℂ) * star (b j) * blockFactorR C s j k
 
-omit [Fintype n] in
+omit [Fintype m] [Fintype n] in
 /-- The weighted block witness is `a bᵀ − s² a_R b_Cᵀ`. -/
-lemma weightedWitness_apply (a b : n → ℂ) (R C : Finset n) {p : ℝ} (hp : p ≠ 0) (s : ℝ)
-    (i j : n) :
+lemma weightedWitness_apply (a : m → ℂ) (b : n → ℂ) (R : Finset m) (C : Finset n) {p : ℝ}
+    (hp : p ≠ 0) (s : ℝ) (i : m) (j : n) :
     (weightedFactorL a R p s * (weightedFactorR b C p s)ᴴ) i j =
       if i ∈ R ∧ j ∈ C then (1 - (s : ℂ) ^ 2) * vecMulVec a b i j else vecMulVec a b i j := by
   have h := blockWitness_apply R C s i j
@@ -67,10 +68,10 @@ lemma sum_mul_ite_mem (w : n → ℝ) (R : Finset n) (x y : ℝ) :
   ring
 
 /-- `‖U‖² = p² (A − s² A_R + s⁴ A_R)`. -/
-lemma frobeniusSq_weightedFactorL (a : n → ℂ) (R : Finset n) (p s : ℝ) :
+lemma frobeniusSq_weightedFactorL (a : m → ℂ) (R : Finset m) (p s : ℝ) :
     frobeniusSq (weightedFactorL a R p s) = p ^ 2 * (∑ i, ‖a i‖ ^ 2 -
       s ^ 2 * ∑ i ∈ R, ‖a i‖ ^ 2 + s ^ 4 * ∑ i ∈ R, ‖a i‖ ^ 2) := by
-  have h (i : n) : ∑ k, ‖weightedFactorL a R p s i k‖ ^ 2 =
+  have h (i : m) : ∑ k, ‖weightedFactorL a R p s i k‖ ^ 2 =
       p ^ 2 * (‖a i‖ ^ 2 * if i ∈ R then (1 - s ^ 2) ^ 2 + s ^ 2 else 1) := by
     by_cases hi : i ∈ R
     · simp [weightedFactorL, blockFactorL, hi, Fin.sum_univ_two, Complex.norm_real, mul_pow,
@@ -96,14 +97,14 @@ lemma frobeniusSq_weightedFactorR (b : n → ℂ) (C : Finset n) (p s : ℝ) :
 
 /-- **The weighted block witness is short**: by Lemma 1, `‖a bᵀ − s² a_R b_Cᵀ‖_S1` is at most
 `(p² (A − s² A_R + s⁴ A_R) + p⁻² (B + s² (B − B_C))) / 2`. -/
-theorem nuclearNorm_weightedWitness_le (a b : n → ℂ) (R C : Finset n) (p s : ℝ) :
+theorem nuclearNorm_weightedWitness_le (a : m → ℂ) (b : n → ℂ) (R : Finset m) (C : Finset n)
+    (p s : ℝ) :
     nuclearNorm (weightedFactorL a R p s * (weightedFactorR b C p s)ᴴ) ≤
       (p ^ 2 * (∑ i, ‖a i‖ ^ 2 - s ^ 2 * ∑ i ∈ R, ‖a i‖ ^ 2 + s ^ 4 * ∑ i ∈ R, ‖a i‖ ^ 2) +
         (p⁻¹) ^ 2 * (∑ j, ‖b j‖ ^ 2 + s ^ 2 * (∑ j, ‖b j‖ ^ 2 - ∑ j ∈ C, ‖b j‖ ^ 2))) / 2 := by
   rw [← frobeniusSq_weightedFactorL, ← frobeniusSq_weightedFactorR]
   exact nuclearNorm_le_of_eq_mul _ _ rfl
 
-omit [Fintype n] [DecidableEq n] in
 /-- **The real inequality behind the witness**: if `0 ≤ A_R ≤ A`, `0 ≤ B_C ≤ B` and
 `A B < A_R B + A B_C`, some `p ≠ 0` and `s` give
 `(p² (A − s² A_R + s⁴ A_R) + p⁻² (B + s² (B − B_C))) / 2 < √A √B`. -/
@@ -157,13 +158,13 @@ example := exists_weighted_bound_lt (A := 5) (B := 2) (AR := 4) (BC := 1) (by no
   (by norm_num) (by norm_num) (by norm_num) (by norm_num)
 
 /-- **A block that breaks the weighted condition gives a shorter completion**,
-`review/flat_spectrum.md`, Theorem F, item 3: if `Ω` misses `R × C` and
+`review/flat_spectrum.md`, Theorem G, item 3: if `Ω` misses `R × C` and
 `A B < A_R B + A B_C`, some `X` equal to `a bᵀ` on `Ω` has `‖X‖_S1 < ‖a bᵀ‖_S1`. -/
-theorem exists_nuclearNorm_lt_of_weighted_block {a b : n → ℂ} {Ω : Set (n × n)}
-    {R C : Finset n} (hRC : ∀ i ∈ R, ∀ j ∈ C, (i, j) ∉ Ω)
+theorem exists_nuclearNorm_lt_of_weighted_block {a : m → ℂ} {b : n → ℂ} {Ω : Set (m × n)}
+    {R : Finset m} {C : Finset n} (hRC : ∀ i ∈ R, ∀ j ∈ C, (i, j) ∉ Ω)
     (hab : (∑ i, ‖a i‖ ^ 2) * ∑ j, ‖b j‖ ^ 2 <
       (∑ i ∈ R, ‖a i‖ ^ 2) * ∑ j, ‖b j‖ ^ 2 + (∑ i, ‖a i‖ ^ 2) * ∑ j ∈ C, ‖b j‖ ^ 2) :
-    ∃ X : Matrix n n ℂ, (∀ ij ∈ Ω, X ij.1 ij.2 = vecMulVec a b ij.1 ij.2) ∧
+    ∃ X : Matrix m n ℂ, (∀ ij ∈ Ω, X ij.1 ij.2 = vecMulVec a b ij.1 ij.2) ∧
       nuclearNorm X < nuclearNorm (vecMulVec a b) := by
   obtain ⟨p, s, hp, hlt⟩ := exists_weighted_bound_lt (sum_nonneg fun i _ => sq_nonneg ‖a i‖)
     (sum_le_sum_of_subset_of_nonneg (subset_univ R) fun i _ _ => sq_nonneg ‖a i‖)
@@ -177,5 +178,10 @@ theorem exists_nuclearNorm_lt_of_weighted_block {a b : n → ℂ} {Ω : Set (n �
 example := exists_nuclearNorm_lt_of_weighted_block (a := ![2, 1]) (b := ![1, 1])
   (Ω := {ij | ij.2 = ij.1}) (R := {0}) (C := {1}) (by simp)
   (by norm_num [Fin.sum_univ_two])
+
+/-- In the `1 × 2` table, `(1)(1, 1)ᵀ` is not a minimum from its cell `(0, 0)`: the row carries
+the mass `1`, the column it meets only `1/2`. -/
+example := exists_nuclearNorm_lt_of_weighted_block (a := ![(1 : ℂ)]) (b := ![1, 1])
+  (Ω := {(0, 0)}) (R := {0}) (C := {1}) (by simp) (by norm_num [Fin.sum_univ_two])
 
 end Transformer.Grokking.FlatSpectrum

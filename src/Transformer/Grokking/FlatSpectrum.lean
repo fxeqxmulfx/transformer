@@ -167,9 +167,9 @@ theorem gives rows `R` that miss a set `C` of columns with `#R + #C > N`, and
 `Ω` is rigid and contains the graph of a permutation. For any `a : m → ℂ` and `b : n → ℂ`, a
 transport plan on `Ω` from `|a_i|²` to `|b_j|²` gives `‖X‖_S1 ≥ ∑ |a_i|² = ‖a bᵀ‖_S1` for every
 `X` equal to `a bᵀ` on `Ω`, and if `Ω` is also rigid on the supports of `a` and `b`, `a bᵀ` is
-the unique minimum: zero rows and columns need no cells. Conversely, for `a`, `b` without zero
-entries, `‖a bᵀ‖_S1 = ‖a‖ ‖b‖`; without rigidity a second rank-one matrix of the same
-moduli agrees with `a bᵀ` on `Ω`, and if rows `R` carry more than the columns `N(R)` they meet,
+the unique minimum: zero rows and columns need no cells. Conversely, `‖a bᵀ‖_S1 = ‖a‖ ‖b‖`;
+without rigidity on the supports a second rank-one matrix of the same moduli agrees with
+`a bᵀ` on `Ω`, and if rows `R` carry more than the columns `N(R)` they meet,
 `‖a‖² ∑_{N(R)} |b_j|² < ‖b‖² ∑_R |a_i|²`, some completion is shorter than `a bᵀ`. From row
 `i₀` and column `j₀`, `a bᵀ` is recovered exactly when `|a_{i₀}|²/‖a‖² + |b_{j₀}|²/‖b‖² ≥ 1`.
 Gale's supply–demand theorem: nonnegative masses `α`, `β` have a plan on `Ω` exactly when

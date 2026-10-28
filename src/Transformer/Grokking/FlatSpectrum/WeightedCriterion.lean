@@ -44,7 +44,8 @@ theorem forall_isMinOn_vecMulVec_iff_of_ne_zero {a b : n → ℂ} (ha : ∀ i, a
           (∑ i, ‖a i‖ ^ 2) * ∑ j ∈ nbhd Ω R, ‖b j‖ ^ 2 := by
   refine ⟨fun H => ⟨fun r s hrs i j => ?_, fun R => ?_⟩, fun ⟨hΩ, hall⟩ X hX => ?_⟩
   · by_contra hne
-    exact not_forall_isMinOn_vecMulVec_of_not_rigid hrs hne (ha i) (hb j) H
+    exact not_forall_isMinOn_vecMulVec_of_not_rigid (fun ij hij _ _ => hrs ij hij) hne (ha i)
+      (hb j) H
   · by_contra hlt
     exact not_isMinOn_vecMulVec_of_nbhd (not_le.mp hlt) ((H _ fun _ _ => rfl).mpr rfl)
   · obtain ⟨T, hT⟩ := (exists_isTransportPlan_iff (Ω := Ω)

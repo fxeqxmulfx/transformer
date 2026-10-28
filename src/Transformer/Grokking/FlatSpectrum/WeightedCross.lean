@@ -7,12 +7,13 @@ public import Transformer.Grokking.FlatSpectrum.WeightedWitness
 /-!
 # Rows that carry too much, and the weighted cross
 
-Source: `review/flat_spectrum.md`, *Exact recovery of a rank-one kernel*, Theorem F, items 3
-and 4 (added). Write `A = ‖a‖²` and `B = ‖b‖²`. If the rows `R` carry more than the columns
-`N(R)` they meet in `Ω` hold, `A ∑_{N(R)} |b_j|² < B ∑_R |a_i|²`, then `Ω` misses the block
-`R × N(R)ᶜ`, which breaks the inequality of `exists_nuclearNorm_lt_of_weighted_block`. So a
-completion is shorter than `a bᵀ` (`exists_nuclearNorm_lt_of_nbhd`), and `a bᵀ` is not a
-minimum (`not_isMinOn_vecMulVec_of_nbhd`).
+Source: `review/flat_spectrum.md`, *Exact recovery of a rank-one kernel*, Theorem G, item 3,
+and Theorem F, item 4 (added). Write `A = ‖a‖²` and `B = ‖b‖²`. If the rows `R` carry more
+than the columns `N(R)` they meet in `Ω` hold, `A ∑_{N(R)} |b_j|² < B ∑_R |a_i|²`, then `Ω`
+misses the block `R × N(R)ᶜ`, which breaks the inequality of
+`exists_nuclearNorm_lt_of_weighted_block`. So a completion is shorter than `a bᵀ`
+(`exists_nuclearNorm_lt_of_nbhd`), and `a bᵀ` is not a minimum
+(`not_isMinOn_vecMulVec_of_nbhd`).
 
 On the cross of row `i₀` and column `j₀` the plan is explicit. For masses with `∑ α = ∑ β`,
 column `j₀` takes `α i` from each row `i ≠ i₀`, row `i₀` gives `β j` to each column `j ≠ j₀`,
@@ -32,14 +33,14 @@ namespace Transformer.Grokking.FlatSpectrum
 
 open Matrix Finset
 
-variable {n : Type*} [Fintype n] [DecidableEq n]
+variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
 /-- **Rows that carry more than their columns hold have a shorter completion**,
-`review/flat_spectrum.md`, Theorem F, item 3: if `‖a‖² ∑_{N(R)} |b_j|² < ‖b‖² ∑_R |a_i|²`,
+`review/flat_spectrum.md`, Theorem G, item 3: if `‖a‖² ∑_{N(R)} |b_j|² < ‖b‖² ∑_R |a_i|²`,
 some `X` equal to `a bᵀ` on `Ω` has `‖X‖_S1 < ‖a bᵀ‖_S1`. -/
-theorem exists_nuclearNorm_lt_of_nbhd {a b : n → ℂ} {Ω : Set (n × n)} {R : Finset n}
+theorem exists_nuclearNorm_lt_of_nbhd {a : m → ℂ} {b : n → ℂ} {Ω : Set (m × n)} {R : Finset m}
     (h : (∑ i, ‖a i‖ ^ 2) * ∑ j ∈ nbhd Ω R, ‖b j‖ ^ 2 < (∑ i ∈ R, ‖a i‖ ^ 2) * ∑ j, ‖b j‖ ^ 2) :
-    ∃ X : Matrix n n ℂ, (∀ ij ∈ Ω, X ij.1 ij.2 = vecMulVec a b ij.1 ij.2) ∧
+    ∃ X : Matrix m n ℂ, (∀ ij ∈ Ω, X ij.1 ij.2 = vecMulVec a b ij.1 ij.2) ∧
       nuclearNorm X < nuclearNorm (vecMulVec a b) := by
   refine exists_nuclearNorm_lt_of_weighted_block (C := (nbhd Ω R)ᶜ)
     (fun i hi j hj hij => mem_compl.mp hj (mem_nbhd.mpr ⟨i, hi, hij⟩)) ?_
@@ -57,9 +58,9 @@ example := exists_nuclearNorm_lt_of_nbhd (a := ![2, 1]) (b := ![1, 1])
   (Ω := {ij | ij.2 = ij.1}) (R := {0}) (by rw [nbhd_diag_zero]; norm_num [Fin.sum_univ_two])
 
 /-- **Without the weighted Hall condition M does not recover `a bᵀ`**,
-`review/flat_spectrum.md`, Theorem F, item 3: if `‖a‖² ∑_{N(R)} |b_j|² < ‖b‖² ∑_R |a_i|²`,
+`review/flat_spectrum.md`, Theorem G, item 3: if `‖a‖² ∑_{N(R)} |b_j|² < ‖b‖² ∑_R |a_i|²`,
 then `a bᵀ` is not a minimum of the nuclear norm among the matrices equal to it on `Ω`. -/
-theorem not_isMinOn_vecMulVec_of_nbhd {a b : n → ℂ} {Ω : Set (n × n)} {R : Finset n}
+theorem not_isMinOn_vecMulVec_of_nbhd {a : m → ℂ} {b : n → ℂ} {Ω : Set (m × n)} {R : Finset m}
     (h : (∑ i, ‖a i‖ ^ 2) * ∑ j ∈ nbhd Ω R, ‖b j‖ ^ 2 < (∑ i ∈ R, ‖a i‖ ^ 2) * ∑ j, ‖b j‖ ^ 2) :
     ¬ IsMinOn nuclearNorm {X | ∀ ij ∈ Ω, X ij.1 ij.2 = vecMulVec a b ij.1 ij.2}
       (vecMulVec a b) := fun hmin => by

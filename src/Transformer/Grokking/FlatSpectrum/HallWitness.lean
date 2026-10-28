@@ -36,7 +36,8 @@ noncomputable def blockFactorR (C : Finset n) (s : ℝ) : Matrix n (Fin 2) ℂ :
 
 omit [Fintype n] in
 /-- The block witness is `J − s² 1_R 1_Cᵀ`. -/
-lemma blockWitness_apply (R C : Finset n) (s : ℝ) (i j : n) :
+lemma blockWitness_apply {m : Type*} [DecidableEq m] (R : Finset m) (C : Finset n) (s : ℝ)
+    (i : m) (j : n) :
     (blockFactorL R s * (blockFactorR C s)ᴴ) i j =
       if i ∈ R ∧ j ∈ C then 1 - (s : ℂ) ^ 2 else 1 := by
   by_cases hi : i ∈ R <;> by_cases hj : j ∈ C <;>
