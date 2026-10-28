@@ -307,3 +307,125 @@ Scope:
 - Theorem C does not rule out exact structure spread over many modes. For odd `P`, rows `a`
   and `−a` of `cos(2πr f/p)` are equal (*Torch check*). That kernel has rank `(p + 1)/2` and
   is still flat in every mode.
+
+## Exact recovery of a rank-one kernel (added)
+
+Added on 2026-10-28 and proved in Lean. Theorem A says no proper `Ω` recovers `ψ(a³ + a b)`.
+This section gives the positive side for `ψ(a + b)`. The model of Lemma 1 recovers it exactly
+from `2p` cells on two diagonals, and not from the `p` cells of one diagonal.
+
+### Setting
+
+- Model M: given the values of `K` on `Ω ⊆ G × G`, return a matrix of least nuclear norm among
+  those equal to `K` on `Ω`. M recovers `K` from `Ω` when `K` is the only such matrix.
+- `J` is the all-ones `N × N` matrix, `Q = J/N` the projection onto the constant vectors and
+  `Π = 1 − Q`. A matrix `W` is a contraction when `‖W v‖ ≤ ‖v‖` for every `v`.
+- The diagonal of offset `s` is `{(a, a + s)}`. It has `p` cells and is the graph of the
+  permutation `a ↦ a + s`.
+
+### Theorem D (proven)
+
+1. Certificate bound. Let `Y` vanish off `Ω` and have unit row and column sums. Let `c (Y − Q)`
+   be a contraction for some `c > 0`. Then every `H` vanishing on `Ω` has
+   `N + (1 − 1/c) ‖Π H Π‖_S1 ≤ ‖J + H‖_S1`.
+2. Uniqueness. Let also `c > 1`, and let `Ω` be rigid: `r_i + s_j = 0` on `Ω` only if
+   `r_i + s_j = 0` everywhere. Then M recovers `J` from `Ω`.
+3. Two permutations. Let `Ω` contain the graphs of permutations `σ` and `τ`, with `τ σ⁻¹` a
+   single `N`-cycle. Then `Y = (P_σ + P_τ)/2` has `‖(Y − Q) v‖² ≤ (1 − 1/(4N²)) ‖v‖²`, so item 1
+   holds with `c = √(1 + 1/(4N²))`. Such an `Ω` is rigid, so M recovers `J` from it.
+4. Transfer. For `|a_i| = |b_j| = 1`, the same `Ω` recovers `K = a bᵀ`.
+5. Two diagonals. Let `Ω` contain the diagonals of offsets `s₁` and `s₂`, with `s₂ − s₁` a unit
+   of `ℤ/p`. For prime `p`, that means `s₁ ≠ s₂`. Then M recovers `ψ(a + b)` from `Ω`. The two
+   diagonals are `2p` of the `p²` cells.
+6. One diagonal is not enough. Let `Ω` be exactly the graph of one permutation `σ`, with
+   `N ≥ 2`. Then `K = a bᵀ` and the different matrix `Z = diag(a) P_σ diag(b)` both have the
+   least nuclear norm, `N`. So one diagonal does not recover `ψ(a + b)`.
+
+### Proof
+
+1. Item 1. Take a contraction `Z₀` with `tr(Z₀ᴴ Π H Π) = ‖Π H Π‖_S1`. Then `Q + Π Z₀ Π` is a
+   contraction, and its pairing with `J + H` is `N + tr(Q H) + ‖Π H Π‖_S1`.
+   - `H` vanishes on `Ω` and `Y` vanishes off it, so `tr(Yᴴ H) = 0`.
+   - The unit row and column sums give `Π (Y − Q)ᴴ Π = (Y − Q)ᴴ`.
+   - Hence `tr(Q H) = −tr((Y − Q)ᴴ Π H Π)`, of modulus at most `‖Π H Π‖_S1 / c`.
+2. Item 2. Let `X` be a minimum and `H = X − J`. Then `‖X‖_S1 ≤ ‖J‖_S1 = N`, so item 1 gives
+   `Π H Π = 0`. So `H = Q H + Π H Q` has entries `r_i + s_j`, and rigidity forces `H = 0`.
+3. Item 3. Write `w = v − mean(v)`. Then `(Y − Q) v = (w∘σ + w∘τ)/2`.
+   - The parallelogram law gives `‖(Y − Q) v‖² = ‖w‖² − D/4`, with
+     `D = ∑_i |w(σ i) − w(τ i)|²`.
+   - A Poincaré inequality along the cycle gives `‖w‖² ≤ N (N − 1) D` for a centered `w`.
+   - Hence `‖(Y − Q) v‖² ≤ (1 − 1/(4N²)) ‖w‖² ≤ (1 − 1/(4N²)) ‖v‖²`.
+   - Rigidity: `r_i + s(σ i) = 0 = r_i + s(τ i)` makes `s` constant along the cycle.
+4. Item 4. The map `X ↦ diag(a) X diag(b)` keeps the nuclear norm and sends `J` to `K`. It also
+   maps the matrices equal to `J` on `Ω` onto those equal to `K` on `Ω`.
+5. Item 5. Take `σ = (· + s₁)` and `τ = (· + s₂)`. Then `τ σ⁻¹ = (· + (s₂ − s₁))` is one
+   `p`-cycle, through `e(l) = l (s₂ − s₁)`.
+6. Item 6. `Z` is unitary, so it is a contraction and `‖Z‖_S1 = N`.
+   - Each `X` equal to `K` on the graph has `tr(Zᴴ X) = ∑_i |a_i b_{σ i}|² = N`, so
+     `‖X‖_S1 ≥ N`.
+   - Both `K` and `Z` reach `N`. They differ because `Z` is zero off the graph.
+
+### Numerical check (torch, 2026-10-28)
+
+The check runs ADMM for model M (singular value thresholding, step `1/√p`) in complex128. It
+stops when both residuals fall below `10⁻⁹`, or after 20000 iterations. The error is
+`‖X − K‖/‖K‖` on the unseen cells.
+
+| `Ω` for `ψ(a + b)` | cells | `p = 7` | `p = 13` | `p = 31` |
+| --- | --- | --- | --- | --- |
+| diagonals `{0, 1}` | `2p` | 2.4e-10 | 1.3e-10 | 1.1e-10 |
+| diagonals `{0, 3}` | `2p` | 2.4e-10 | 1.3e-10 | 1.1e-10 |
+| diagonal `{0}` | `p` | 1.0 | 1.0 | 1.0 |
+| diagonals `{0, 1}` minus one cell | `2p − 1` | 2.0e-9 | 2.5e-9 | 2.1e-4, not converged |
+| row 0 and column 0 | `2p − 1` | 0.83 | 0.92 | 0.97 |
+| random | `2p` | 0.45 | 0.58 | 0.66 |
+| random | `4p` | 4.6e-10 | 6.7e-10 | 0.19 |
+| random | `p²/2` | 2.7e-5 | 1.6e-10 | 5.8e-11 |
+
+- Recovered completions reach `‖X‖_S1 = p = ‖K‖_S1`.
+- On one diagonal, ADMM returns the matrix `Z` of item 6, with the same norm `p`.
+- On row 0 and column 0, it returns a matrix of norm `2√(p − 1) < p`, so `K` is not even a
+  minimum there. The `2p` random cells also give norms below `p`: 6.47, 11.07 and 26.33.
+- `ψ(a³ + a b)` has `‖K‖_S1 = p^{3/2}`. Its error is between 1.0 and 1.4 for every pattern
+  above, half the table included.
+- The certificate of item 3 for the diagonals `{0, 1}` has `‖Y − Q‖_op = cos(π/p)`: 0.900969,
+  0.970942 and 0.994869. The proved bound `√(1 − 1/(4p²))` is 0.997446, 0.999260 and 0.999870.
+- At `p = 61` and `p = 97` the cap was raised to 200000 iterations.
+  - The diagonals `{0, 1}`, `{0, 5}` and `{3, (p − 1)/2}` give errors 8.8e-11 and 6.6e-11,
+    after 6812 and 20196 iterations.
+  - The three pairs give the same numbers, since relabeling and rescaling map one problem onto
+    another.
+  - One diagonal gives error 1.0: ADMM returns the matrix `Z` of item 6, zero off `Ω`.
+  - `‖Y − Q‖_op = cos(π/p)` is 0.998674 and 0.999476 there.
+
+### Lean status
+
+All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved without `sorry`.
+
+| Claim | Lean | Differences |
+| --- | --- | --- |
+| Theorem D.1 | `onesMatrix`, `meanProj`, `IsContraction.proj_add`, `le_nuclearNorm_onesMatrix_add` | A contraction is `IsContraction W`: `1 − Wᴴ W` is positive semidefinite. |
+| Theorem D.2 | `eq_zero_of_nuclearNorm_eq_zero`, `nuclearNorm_onesMatrix`, `isMinOn_onesMatrix_iff` | Stated as `IsMinOn nuclearNorm S X ↔ X = J` for every `X` equal to `J` on `Ω`. |
+| Theorem D.3 | `isContraction_of_forall_sum_norm_sq_le`, `sum_norm_sq_add_const`, `norm_sq_sub_le_cycle`, `sum_norm_sq_le_cycle`, `permAvg`, `add_eq_zero_of_cycle`, `sum_norm_sq_mulVec_permAvg_sub_le`, `isContraction_permAvg`, `isMinOn_onesMatrix_iff_of_cycle` | The cycle is a bijection `e : ℤ/N ≃ n` with `τ(σ⁻¹(e l)) = e(l + 1)`. |
+| Theorem D.4 | `nuclearNorm_diagonal_mul_mul_diagonal`, `diagonal_mul_onesMatrix_mul_diagonal`, `nuclearNorm_vecMulVec_of_norm_eq_one`, `isMinOn_vecMulVec_iff_of_cycle` | |
+| Theorem D.5 | `isMinOn_addKernel_iff_of_diagonals`, `isMinOn_addKernel_iff_of_ne` | `Ω` may hold more cells than the two diagonals. |
+| Theorem D.6 | `graphMatrix`, `conjTranspose_graphMatrix_mul`, `isMinOn_vecMulVec_and_graphMatrix`, `exists_ne_isMinOn_addKernel_of_diagonal` | `Ω` is exactly one diagonal. |
+
+Not formalized:
+- the numerical table;
+- the sharp value `‖Y − Q‖_op = cos(π/p)`;
+- recovery from two diagonals minus one cell. On those `2p − 1` cells the only `Y` with unit
+  row and column sums is a permutation matrix, with `‖Y − Q‖_op = 1`, so item 1 gives no
+  `c > 1`;
+- the failures on row 0 and column 0 and on `2p` random cells;
+- that training behaves like model M (Lemma 1's modeling step).
+
+Scope:
+- The spectrum alone does not decide recovery; the pattern does. `ψ(a + b)` has the best
+  spectrum, rank one. It is recovered from two diagonals, `2p` cells. It is not recovered from
+  one diagonal, from row 0 and column 0, or from `2p` random cells.
+- Any `Ω` that determines every unimodular `a bᵀ` must connect all rows and columns, so it has
+  at least `2p − 1` cells. Otherwise a phase on one component changes `K` off `Ω`. Two
+  diagonals use one cell more than that.
+- `ψ(a³ + a b)` is recovered from no proper `Ω` (Theorem A). Numerically it fails on every
+  pattern above.

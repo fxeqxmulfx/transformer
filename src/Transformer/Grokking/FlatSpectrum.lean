@@ -52,6 +52,12 @@ public import Transformer.Grokking.FlatSpectrum.DilationFibers
 public import Transformer.Grokking.FlatSpectrum.FiberTransport
 public import Transformer.Grokking.FlatSpectrum.ReadoutFree
 public import Transformer.Grokking.FlatSpectrum.AffineReadout
+public import Transformer.Grokking.FlatSpectrum.OnesCertificate
+public import Transformer.Grokking.FlatSpectrum.OnesRecovery
+public import Transformer.Grokking.FlatSpectrum.CyclePoincare
+public import Transformer.Grokking.FlatSpectrum.TwoPermutations
+public import Transformer.Grokking.FlatSpectrum.TwoDiagonals
+public import Transformer.Grokking.FlatSpectrum.OneDiagonal
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -110,6 +116,13 @@ shift `μ`, the kernel `[a³ + a b = 0] − μ` has
 `‖K_μ‖²_S2 = 2p − 1 − 2(2p − 1)μ + p²μ²`. Centered by its mean `μ = (2p − 1)/p²`, it has
 `r_eff = (p(p − 3)/√2 + √(p³ − 2p² + 4p − 1 + 2(p − 1)²√(p + 1)))²/((2p − 1)(p − 1)²)`, between
 `31.498` and `31.499` at `p = 97` and between `60.024` and `60.025` at `p = 199`, and `r_eff/p`
-rounds to `0.359`, `0.345`, `0.325` and `0.302` at `p = 47, 61, 97, 199`. -/
+rounds to `0.359`, `0.345`, `0.325` and `0.302` at `p = 47, 61, 97, 199`. Exact recovery: if
+`Y` vanishes off `Ω`, has unit row and column sums and `c (Y − J/N)` is a contraction for some
+`c > 1`, and entries `r_i + s_j` vanishing on `Ω` vanish everywhere, then the all-ones `J` is
+the unique least-`‖·‖_S1` matrix equal to it on `Ω`. When `τ σ⁻¹` is one `N`-cycle,
+`(P_σ + P_τ)/2` is such a `Y` with `c = √(1 + 1/(4N²))`, and rescaling carries the result to
+every `a bᵀ` with `|a i| = |b j| = 1`. So the `2p` values of `ψ(a + b)` on two diagonals
+`b = a + s₁`, `b = a + s₂` with `s₂ − s₁` a unit determine it as the least-`‖·‖_S1` completion,
+while on one diagonal that completion is not unique. -/
 
 @[expose] public section
