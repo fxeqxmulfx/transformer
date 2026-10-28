@@ -205,3 +205,105 @@ formula for the other one-hots are formalized (rows *Readout-free version, (a+b)
 check, the indicator of 0*, *the centered indicator of 0* and *Other one-hots*); that the search
 for `x³ + x y` finds the indicator of 0, and the values of the other readouts it found, are not.
 Theorem B covers real readouts: `φ` is any complex function of the label.
+
+---
+
+## Readout-free bound for P(a) + a b (added)
+
+Added on 2026-10-28 and proved in Lean. The note fixes the readout `ψ` in Proposition 2 and
+Theorem A. This section lets the readout be any function, for the family
+`f(a, b) = P(a) + a b` with a polynomial `P` over `𝔽_p`.
+
+### Setting
+
+- `ρ, g, h : ℤ/p → ℂ`, with `‖h‖² = ∑_b |h(b)|²`.
+- The readout kernel acts by `(K_ρ h)(a) = ∑_b ρ(f(a, b)) h(b)`.
+- `h` is centered when `∑_b h(b) = 0`. Centering removes what `b` alone predicts.
+- `m = deg P` and `κ = (m − 1)(2p − 1)`.
+
+### Theorem C (proven)
+
+1. For every `P`, every `ρ` and every centered `h`: `‖K_ρ h‖² ≤ (p − 1) ‖ρ‖² ‖h‖²`.
+2. For `deg P ≤ 1` this bound is reached. Take `r = 1 − p δ₀`, `ρ(c) = r(c − P(0))` and
+   `h(b) = r(b + P'(0))`; then `‖K_ρ h‖² = (p − 1) ‖ρ‖² ‖h‖²`.
+3. For `deg P ≥ 2`, every `ρ`, every `g` and every centered `h`:
+   `|∑_{a,b} ρ(f(a, b)) g(a) h(b)|² ≤ (1 + √κ) ‖ρ‖² ‖g‖² ‖h‖²`. Hence
+   `‖K_ρ h‖² ≤ (1 + √κ) ‖ρ‖² ‖h‖²`.
+4. Dichotomy: once `κ < (p − 2)²`, some `ρ` and centered `h` with `‖ρ‖ ‖h‖ > 0` reach
+   item 1's bound if and only if `deg P ≤ 1`.
+5. Phase readouts, `|ρ| = 1`: `|∑ ρ(f) g h|² / (p² ‖g‖² ‖h‖²) ≤ (1 + √κ)/p`.
+
+The normalized peak `‖K_ρ h‖² / ((p − 1) ‖ρ‖² ‖h‖²)` lies in `[0, 1]`. It is `1` for affine
+`P`. For `deg P ≥ 2` it is at most `(1 + √κ)/(p − 1) ≈ √(2(m − 1)/p)`. For `a³ + a b` at
+`p = 97` that is `0.215`. So no readout of `P(a) + a b` with `deg P ≥ 2` has one centered
+mode carrying more than `O(p^{−1/2})` of the kernel. This holds for every readout, not only `ψ`.
+
+### Proof
+
+1. Row `a = 0` is constant, so it vanishes against a centered `h`. For `a ≠ 0` the map
+   `b ↦ P(a) + a b` is a bijection. Hence `∑_{a,b} ρ(f) g h = ∑_c ρ(c) G(c)`, with
+   `G(c) = ∑_{a ≠ 0} g(a) h((c − P(a))/a)`, and Cauchy–Schwarz gives
+   `|·|² ≤ ‖ρ‖² ‖G‖²`.
+2. Substitute `c = P(a) + a x` in the Gram entries of `G`. This gives
+   `‖G‖² = ∑_{a' ≠ 0} ∑_{λ ≠ 0} g(λ a') conj g(a') E_h(λ, μ_λ(a'))`. Here
+   `E_h(λ, μ) = ∑_x h(x) conj h(λ x + μ)` and `μ_λ(a') = (P(λ a') − P(a'))/a'`.
+3. The term `λ = 1` is at most `‖g‖² ‖h‖²`, since `|E_h(λ, μ)| ≤ ‖h‖²`. Cauchy–Schwarz over
+   the pairs `(a', λ)` with `λ ≠ 1` bounds the rest by `‖g‖²` times the square root of the
+   off-diagonal energy.
+4. Affine energy: for a centered `h`, `∑_{λ,μ} |E_h(λ, μ)|² = p ‖h‖⁴`.
+5. Call `λ` degenerate when `P(λ t) − P(t)` is linear in `t`.
+   - For a nondegenerate `λ`, each value of `μ_λ` is taken by at most `m − 1` nonzero `a'`.
+     They are roots of `P(λ t) − P(t) − μ t` other than `0`.
+   - A degenerate `λ ≠ 0` has `λ^m = 1`, from the coefficient of `t^m`. So at most `m − 1` of
+     them differ from `1`.
+6. The off-diagonal energy is therefore at most `(m − 1) p ‖h‖⁴ + (m − 1)(p − 1) ‖h‖⁴ = κ ‖h‖⁴`.
+
+Items 1 and 2 are direct. In item 2, `f − P(0) = a (b + P'(0))` and `r(a u) = r(u)` for
+`a ≠ 0`, so every row `a ≠ 0` of `K_ρ h` equals `‖r‖²`. Item 4 follows from items 1–3,
+because `√κ < p − 2` makes `1 + √κ < p − 1`. Item 5 is item 3 with `‖ρ‖² = p`.
+
+### Numerical check (torch, 2026-10-28)
+
+Alternating maximization of `‖K_ρ h‖² / (‖ρ‖² ‖h‖²)` over `ρ` and centered `h`, in
+complex128. Each round sets `h` to the top centered right singular vector of `K_ρ`, then `ρ`
+to the top singular vector of `ρ ↦ K_ρ h`. 24 random starts of 40 rounds each. The values
+found are lower estimates of the maximum.
+
+| `p` | `P` | `m` | found | `1 + √κ` | `p − 1` |
+| --- | --- | --- | --- | --- | --- |
+| 61, 97, 199 | `a`, `3 + 5a` | 1 | `p − 1` exactly | — | 60, 96, 198 |
+| 61 | `a²`, `a³`, `a⁴`, `a⁵` | 2–5 | 8.011, 10.159, 11.836, 12.586 | 12.000, 16.556, 20.053, 23.000 | 60 |
+| 97 | `a²`, `a³`, `a⁴`, `a⁵` | 2–5 | 8.515, 11.009, 14.433, 11.050 | 14.892, 20.647, 25.062, 28.785 | 96 |
+| 199 | `a²`, `a³`, `a⁴`, `a⁵` | 2–5 | 10.630, 12.710, 12.893, 8.830 | 20.925, 29.178, 35.511, 40.850 | 198 |
+| 61, 97, 199 | `a³ + a²` | 3 | 6.869, 7.123, 7.483 | 16.556, 20.647, 29.178 | |
+| 61, 97, 199 | `2 + a + 4a² + a⁴` | 4 | 8.615, 9.010, 9.546 | 20.053, 25.062, 35.511 | |
+
+Every value found is below the bound, and the affine cases reach `p − 1`. The bound is not
+sharp. The values found stay between 6.8 and 14.5 while `1 + √κ` grows like `√(2(m − 1)p)`. The true
+growth is open.
+
+### Lean status
+
+All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved without `sorry`.
+
+| Claim | Lean | Differences |
+| --- | --- | --- |
+| Proof, item 4, affine energy | `affineCorr`, `sum_mul_add_eq`, `norm_affineCorr_le`, `sum_star_mul_shift`, `sum_autocorr_mul`, `affineCorr_mul_star`, `sum_sum_affineCorr_mul_star`, `sum_sum_norm_sq_affineCorr` | The sum includes `λ = 0`, where `E_h(0, μ) = 0` for centered `h`. |
+| Proof, item 5, slopes and degenerate dilations | `dilationDiff`, `eval_dilationDiff`, `dilationSlope`, `IsDegenerate`, `sum_comp_le_of_card_fiber_le`, `pow_eq_one_of_isDegenerate`, `card_slope_fiber_le`, `card_le_of_forall_isDegenerate` | |
+| Proof, item 6, off-diagonal energy | `sum_sum_norm_sq_affineCorr_slope_le` | |
+| Proof, items 1–2, transport | `fiberSum`, `sum_sum_poly_add_mul_eq`, `sum_fiber_mul_star`, `sum_fiberSum_mul_star` | |
+| Theorem C.1 | `sum_norm_sq_sum_poly_add_mul_le_sub_one` | |
+| Theorem C.2 | `centeredDelta`, `centeredDelta_mul`, `sum_centeredDelta`, `sum_sq_centeredDelta_pos`, `sum_norm_sq_centeredDelta_add`, `sum_norm_sq_sum_affine_add_mul_eq` | `ρ(c)` is written `r(c + −P(0))`. `P'(0)` is `P.coeff 1`. |
+| Theorem C.3 | `norm_sum_sum_mul_le`, `sum_norm_sq_fiberSum_le`, `norm_sq_sum_poly_add_mul_le`, `sum_norm_sq_sum_poly_add_mul_le` | |
+| Theorem C.4 | `exists_sum_norm_sq_eq_iff_natDegree_le_one` | |
+| Theorem C.5 | `norm_sq_sum_poly_add_mul_div_le` | When `‖g‖ ‖h‖ = 0` the left side is `0`. |
+
+Not formalized: the numerical maxima above; that training behaves like the factorization model
+(Lemma 1's modeling step); the note's readout-free conjecture about the least `r_eff`. Theorem C
+bounds the largest centered mode, which is a different quantity.
+
+Scope:
+- Real readouts are covered, since `ρ` is any complex function of the label.
+- Theorem C does not rule out exact structure spread over many modes. For odd `P`, rows `a`
+  and `−a` of `cos(2πr f/p)` are equal (*Torch check*). That kernel has rank `(p + 1)/2` and
+  is still flat in every mode.

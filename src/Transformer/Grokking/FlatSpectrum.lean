@@ -47,6 +47,11 @@ public import Transformer.Grokking.FlatSpectrum.ZeroIndicatorShift
 public import Transformer.Grokking.FlatSpectrum.ZeroIndicatorShiftGram
 public import Transformer.Grokking.FlatSpectrum.ZeroIndicatorCentered
 public import Transformer.Grokking.FlatSpectrum.ZeroIndicatorCenteredValues
+public import Transformer.Grokking.FlatSpectrum.AffineEnergy
+public import Transformer.Grokking.FlatSpectrum.DilationFibers
+public import Transformer.Grokking.FlatSpectrum.FiberTransport
+public import Transformer.Grokking.FlatSpectrum.ReadoutFree
+public import Transformer.Grokking.FlatSpectrum.AffineReadout
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -78,7 +83,12 @@ Stepanov's bound (`Transformer.Weil`) gives `|∑_a χ₂(c − P(a))| ≤ 7 m �
 `‖E[χ₂(a b) | P(a) + a b]‖²` is at most `(7 m √p + 1)²/p² + (p − 1)²/(p² (2p − 1))`. For a
 polynomial `P` of degree `m ≥ 1` prime to `p` and `r ≠ 0`, Weil's bound (`Transformer.Weil`)
 gives `|∑_x ψ(r P(x))| ≤ (m − 1) √p`, so the additive readout `‖E[ψ_r(a b) | P(a) + a b]‖²` is
-at most `((m − 1) √p + 1)²/p² + (p + (m − 1) √p + 1)²/(p² (2p − 1))`. Of the
+at most `((m − 1) √p + 1)²/p² + (p + (m − 1) √p + 1)²/(p² (2p − 1))`. Without a fixed
+readout, for `f = P(a) + a b` with a polynomial `P` of degree `m ≥ 2`, every `ρ`, every `g` and
+every centered `h` satisfy
+`|∑_{a, b} ρ(f(a, b)) g(a) h(b)|² ≤ (1 + √((m − 1)(2p − 1))) ‖ρ‖² ‖g‖² ‖h‖²`. Every `P` has
+`∑_a |∑_b ρ(f(a, b)) h(b)|² ≤ (p − 1) ‖ρ‖² ‖h‖²` for centered `h`, affine `P` reach it, and
+once `(m − 1)(2p − 1) < (p − 2)²` it is reached iff `deg P ≤ 1`. Of the
 numerical checks, the bound at `p = 97` is below `0.053`, `‖E[ψ_r(a + b) | (a + b)²]‖² = ½`, and the
 counting rule `r (2p − r) ≤ ρ p²` iff `r ≤ (1 − √(1 − ρ)) p` gives `28.4` at `ρ = ½`, `p = 97`.
 Torch check: every minimum-nuclear-norm completion is zero on a row whose seen entries are zero, so
