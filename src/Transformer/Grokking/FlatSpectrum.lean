@@ -173,8 +173,9 @@ without rigidity on the supports a second rank-one matrix of the same moduli agr
 `‖a‖² ∑_{N(R)} |b_j|² < ‖b‖² ∑_R |a_i|²`, some completion is shorter than `a bᵀ`. From row
 `i₀` and column `j₀`, `a bᵀ` is recovered exactly when `|a_{i₀}|²/‖a‖² + |b_{j₀}|²/‖b‖² ≥ 1`.
 Gale's supply–demand theorem: nonnegative masses `α`, `β` have a plan on `Ω` exactly when
-`∑ α = ∑ β` and every set of rows `R` has `∑_R α ≤ ∑_{N(R)} β`. So, for `a`, `b` without zero
-entries, `a bᵀ` is recovered from `Ω` exactly when `Ω` is rigid and every `R` has
-`‖b‖² ∑_R |a_i|² ≤ ‖a‖² ∑_{N(R)} |b_j|²`. -/
+`∑ α = ∑ β` and every set of rows `R` has `∑_R α ≤ ∑_{N(R)} β`. So `a bᵀ` is recovered from
+`Ω` exactly when `Ω` is rigid on the supports and every `R` has
+`‖b‖² ∑_R |a_i|² ≤ ‖a‖² ∑_{N(R)} |b_j|²`; without zero entries, rigidity on the supports is
+rigidity. -/
 
 @[expose] public section

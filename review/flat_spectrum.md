@@ -743,9 +743,12 @@ rigid on the supports when `r_i + s_j = 0` on the cells of `Ω` inside `I × J` 
 3. Converse. M recovers `a bᵀ` from `Ω` only if `Ω` is rigid on the supports and every set
    of rows `R` has `‖b‖² ∑_R |a_i|² ≤ ‖a‖² ∑_{N(R)} |b_j|²`.
 
-A zero row or column of `a bᵀ` needs no cell: its mass is `0`. From its entry `1` alone, M
-completes the row `(1, ?)` to `(1, 0)`. For `I` and `J` all of the rows and columns, rigidity on
-the supports is rigidity, and Theorem G is Theorem F.
+By the supply–demand theorem the condition of item 3 gives the plan of item 2. So M recovers
+`a bᵀ` from `Ω` exactly when `Ω` is rigid on the supports and every set of rows `R` has
+`‖b‖² ∑_R |a_i|² ≤ ‖a‖² ∑_{N(R)} |b_j|²`. A zero row or column of `a bᵀ` needs no cell: its
+mass is `0`. From its entry `1` alone, M completes the row `(1, ?)` to `(1, 0)`, but not
+`(1, ?)` to `(1, 1)`. For `I` and `J` all of the rows and columns, rigidity on the supports is
+rigidity, and Theorem G is Theorem F.
 
 ### Proof of Theorem G
 
@@ -767,6 +770,37 @@ the supports is rigidity, and Theorem G is Theorem F.
      they agree on `Ω`; they differ at a cell `(i₀, j₀)` of `I × J`.
    - If the condition fails at `R`, Theorem F's witness applies as it stands: it uses neither
      the shape of the table nor nonzero entries.
+
+### Zero-entry check (torch, 2026-10-28)
+
+Theorem G on every pattern of an `m × n` table except the full one, batched ADMM on `K = a bᵀ`
+for 30000 iterations with `ρ = 1/√max(m, n)`; gap and error as in the weighted check.
+"Recovered" means an error below 1e-6, and "rigid" means rigid on the supports.
+
+Generic weights: moduli uniform in `[0.3, 2]` with random phases, and zeros at fixed places:
+`2 × 3` with `a_0 = 0` or `b_1 = 0`; `3 × 3` with `a_2 = 0`, `a_0 = b_0 = 0`, `b_1 = b_2 = 0` or
+none; `3 × 2` with `a_1 = b_0 = 0`; `2 × 4` with `b_3 = 0`; `3 × 4` with `a_1 = b_2 = 0`.
+
+| class | patterns | recovered | gap | error |
+| --- | --- | --- | --- | --- |
+| rigid, condition | 790 | 790 | within 3.6e-15 of 0 | at most 4.8e-16 |
+| rigid, no condition | 1118 | 0 | −2.86 to −3.5e-4 | 0.017 to 0.91 |
+| not rigid, no condition | 4675 | 0 | −5.11 to −3.5e-4 | 0.15 to 1.00 |
+
+Tight weights, with random phases: `|a| = (1, 1, 0)` with `|b| = (1, 1, 0)` or `(1, 1, 1)`;
+`|a| = (2, 1, 0)` with `|b| = (1, 1, √3, 0)`; `|a| = (1, √2, 0)` with `|b| = (1, 0, √2)`.
+
+| class | patterns | recovered | gap | error |
+| --- | --- | --- | --- | --- |
+| rigid, condition | 1220 | 1220 | within 1.8e-15 of 0 | at most 7.1e-16 |
+| not rigid, condition | 224 | 0 | within 1.8e-15 of 0 | 0.57 to 0.71 |
+| rigid, no condition | 464 | 0 | −1.00 to −0.035 | 0.17 to 0.60 |
+| not rigid, no condition | 3720 | 0 | −5.00 to −0.035 | 0.45 to 1.00 |
+
+Every class behaves as Theorem G says. The rigid patterns that meet the condition are recovered.
+A pattern that meets the condition without rigidity reaches `‖a‖ ‖b‖` at another matrix, and
+without the condition some completion is shorter. As in the weighted check, no generic draw
+meets the condition without rigidity.
 
 ### Lean status
 
@@ -793,10 +827,11 @@ All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved witho
 | Theorem F.3 | `nbhd`, `mem_nbhd`, `nbhd_mono`, `nbhd_union`, `IsTransportPlan.sum_le_sum_nbhd`, `isTransportPlan_univ`, `nbhd_diag_zero`, and G.3 | The witness needs no scaling: `U` carries a factor `p` and `V` a factor `p⁻¹`, with `p² = ‖b‖/‖a‖`. A failed condition gives `¬ IsMinOn`, stronger than non-recovery. "Only if `Ω` carries a plan" is in `forall_isMinOn_vecMulVec_iff_exists_transport`, below. |
 | Theorem F.3, supply–demand | `IsSubPlan`, `IsTransportPlan.isSubPlan`, `IsSubPlan.mono`, `IsSubPlan.ship`, `IsSubPlan.add_split`, `sum_le_sum_nbhd_ship`, `nbhd_diag`, `sum_le_sum_nbhd_diff_of_row`, `sum_le_sum_nbhd_diff_of_col`, `sum_le_sum_nbhd_inside`, `sum_le_sum_nbhd_outside`, `exists_ship`, `exists_isSubPlan`, `exists_isTransportPlan_iff` | For any nonnegative real masses on finite index types. The equivalence adds `∑ α = ∑ β`, which the scaling `‖a‖ = ‖b‖` gives in item 3. `exists_isSubPlan` is the form with capacities: the condition alone gives row sums `α` and column sums `≤ β`. The induction runs on `Ω.ncard`. |
 | Theorem F.4 | `crossPlan`, `isTransportPlan_cross`, `forall_isMinOn_vecMulVec_cross_iff` | Stated as `A B ≤ ‖a i₀‖² B + A ‖b j₀‖²` with `A = ‖a‖²` and `B = ‖b‖²`. The proof scales `a` by `c` and `b` by `c⁻¹` with `c⁴ = B/A`. |
-| Theorem F, items 2–3 | `forall_isMinOn_vecMulVec_iff_of_ne_zero`, `forall_isMinOn_vecMulVec_iff_exists_transport`, `nbhd_ne_one_zero`, and G.2's `isMinOn_vecMulVec_iff_of_transport_mul` | Without the scaling: the plan goes from `‖b‖² |a_i|²` to `‖a‖² |b_j|²`, and "M recovers" is D.2's form. The examples: the triangle `{(0, 0), (0, 1), (1, 1)}` recovers `(2, 1)(1, 2)ᵀ`, through the plan `[[5, 15], [0, 5]]`, and not `(1, 2)(2, 1)ᵀ`. |
+| Theorem F, items 2–3 | `forall_isMinOn_vecMulVec_iff_of_ne_zero`, `forall_isMinOn_vecMulVec_iff_exists_transport`, `nbhd_ne_one_zero` | Corollaries of Theorem G's criteria. Without the scaling: the plan goes from `‖b‖² |a_i|²` to `‖a‖² |b_j|²`, and "M recovers" is D.2's form. The examples: the triangle `{(0, 0), (0, 1), (1, 1)}` recovers `(2, 1)(1, 2)ᵀ`, through the plan `[[5, 15], [0, 5]]`, and not `(1, 2)(2, 1)ᵀ`. |
 | Theorem G.1 | `IsTransportPlan.eq_zero_of_row`, `IsTransportPlan.eq_zero_of_col`, `sum_sum_mul_norm_sq_sub_of_transport`, `sum_norm_sq_le_nuclearNorm_of_transport`, `nuclearNorm_vecMulVec_le`, `nuclearNorm_vecMulVec_of_transport` | `a : m → ℂ` and `b : n → ℂ` on any finite types. `x_i = a_i⁻¹ u_i` uses Lean's `0⁻¹ = 0`. |
 | Theorem G.2 | `eq_vecMulVec_of_transport`, `rigid_support_of_ne_zero`, `isMinOn_vecMulVec_iff_of_transport`, `isMinOn_vecMulVec_iff_of_transport_mul` | Rigidity on the supports is `∀ r s, (∀ ij ∈ Ω, a ij.1 ≠ 0 → b ij.2 ≠ 0 → r ij.1 + s ij.2 = 0) → ∀ i j, a i ≠ 0 → b j ≠ 0 → r i + s j = 0`. The examples: the triangle recovers `(2, 1)(1, 2)ᵀ` through the plan `[[1, 3], [0, 1]]`, and `{(0, 0)}` recovers `(1, 0)`. |
 | Theorem G.3 | `star_dotProduct_self_eq_sum_norm_sq`, `nuclearNorm_vecMulVec`, `exists_vecMulVec_ne_of_not_rigid_of_ne_zero`, `not_forall_isMinOn_vecMulVec_of_not_rigid`, `weightedFactorL`, `weightedFactorR`, `weightedWitness_apply`, `sum_mul_ite_mem`, `frobeniusSq_weightedFactorL`, `frobeniusSq_weightedFactorR`, `nuclearNorm_weightedWitness_le`, `exists_weighted_bound_lt`, `exists_nuclearNorm_lt_of_weighted_block`, `exists_nuclearNorm_lt_of_nbhd`, `not_isMinOn_vecMulVec_of_nbhd` | The failure of rigidity on the supports is given as explicit `r`, `s`, `i₀`, `j₀` with `a i₀ b j₀ ≠ 0`; `r i + s j = 0` is required only on the cells of `Ω` with `a i b j ≠ 0`. A failed condition gives `¬ IsMinOn`. The examples: `{(0, 0), (1, 2)}` does not recover `(1, 1)(1, 1, 0)ᵀ`, and `(1)(1, 1)ᵀ` has a shorter completion from its cell `(0, 0)`. |
+| Theorem G, items 2–3 | `forall_isMinOn_vecMulVec_iff_support`, `forall_isMinOn_vecMulVec_iff_exists_transport_support`, `rigid_support_iff_of_ne_zero` | For any `a : m → ℂ` and `b : n → ℂ`; "M recovers" is D.2's form. Theorem F's criteria follow by `rigid_support_iff_of_ne_zero`. The examples: in the `1 × 2` table the cell `(0, 0)` recovers `(1)(1, 0)ᵀ`, through the plan `[[1, 0]]`, and not `(1)(1, 1)ᵀ`. |
 
 Not formalized:
 - the numerical tables, including the certificates found for random patterns and for the
