@@ -13,8 +13,8 @@ irreducible and `1 ≤ e ≤ N`, count the degree: `∑_{P, e : P^e ∣ g} deg P
 and `∑_P v_P(g) deg P = deg g`.
 
 For `P` monic of degree `k`, `h ↦ P^e h` maps the monics of degree `n − k e` onto those of
-degree `n` divisible by `P^e`. So for the multiplicative `λ(g) = ψ(∑_i f(β_i))`,
-`∑_{deg g = n, P^e ∣ g} λ(g) = λ(P)^e c_{n − k e}` if `k e ≤ n`, and `0` otherwise.
+degree `n` divisible by `P^e`. So for a weight `w` multiplicative on the monics,
+`∑_{deg g = n, P^e ∣ g} w(g) = w(P)^e c_{n − k e}` if `k e ≤ n`, and `0` otherwise.
 -/
 
 @[expose] public section
@@ -24,14 +24,6 @@ namespace Transformer.Weil
 open Polynomial Finset UniqueFactorizationMonoid
 
 variable {K : Type*} [Field K]
-
-theorem rootSum_pow (f : K[X]) {P : K[X]} (hP : P ≠ 0) (e : ℕ) :
-    rootSum f (P ^ e) = e • rootSum f P := by
-  induction e with
-  | zero => simp [rootSum_one]
-  | succ e ih => rw [pow_succ, rootSum_mul f (pow_ne_zero e hP) hP, ih, succ_nsmul]
-
-example := rootSum_pow (K := ℚ) X X_ne_zero 2
 
 /-- `P^e ∣ g` exactly for `e ≤ v_P(g)`, the multiplicity of `P` among the normalized factors of
 `g`. -/
@@ -114,12 +106,12 @@ theorem sum_irreducibles_pow_dvd {g : K[X]} (hg : g.Monic) {N : ℕ}
 example := sum_irreducibles_pow_dvd (K := ZMod 2) monic_X (N := 1) natDegree_X.le
 
 open Classical in
-/-- For `P` monic of degree `k`: `∑_{deg g = n, P^e ∣ g} λ(g) = λ(P)^e c_{n − k e}` if
+/-- For `P` monic of degree `k`: `∑_{deg g = n, P^e ∣ g} w(g) = w(P)^e c_{n − k e}` if
 `k e ≤ n`, and `0` otherwise. -/
-theorem sum_monics_pow_dvd (ψ : AddChar K ℂ) (f : K[X]) {P : K[X]} (hP : P.Monic) (e n : ℕ) :
-    ∑ g ∈ monics K n, (if P ^ e ∣ g then ψ (rootSum f g) else 0) =
-      if P.natDegree * e ≤ n then ψ (rootSum f P) ^ e * lCoeff ψ f (n - P.natDegree * e)
-      else 0 := by
+theorem sum_monics_pow_dvd {w : K[X] → ℂ} (hw : IsMonicMul w) {P : K[X]} (hP : P.Monic)
+    (e n : ℕ) :
+    ∑ g ∈ monics K n, (if P ^ e ∣ g then w g else 0) =
+      if P.natDegree * e ≤ n then w P ^ e * lCoeff w (n - P.natDegree * e) else 0 := by
   classical
   rw [← sum_filter]
   have hPe : (P ^ e).Monic := hP.pow e
@@ -141,8 +133,7 @@ theorem sum_monics_pow_dvd (ψ : AddChar K ℂ) (f : K[X]) {P : K[X]} (hP : P.Mo
         omega
     rw [hmap, sum_map, lCoeff, mul_sum]
     refine sum_congr rfl fun h hh => ?_
-    rw [Function.Embedding.coeFn_mk, rootSum_mul f hPe.ne_zero (mem_monics.mp hh).1.ne_zero,
-      AddChar.map_add_eq_mul, rootSum_pow f hP.ne_zero, AddChar.map_nsmul_eq_pow]
+    rw [Function.Embedding.coeFn_mk, hw.map_mul hPe (mem_monics.mp hh).1, hw.map_pow hP]
   · refine sum_eq_zero fun g hg => ?_
     obtain ⟨hg', hdvd⟩ := mem_filter.mp hg
     obtain ⟨hgm, hgn⟩ := mem_monics.mp hg'
@@ -150,6 +141,6 @@ theorem sum_monics_pow_dvd (ψ : AddChar K ℂ) (f : K[X]) {P : K[X]} (hP : P.Mo
     rw [hdeg, hgn] at h1
     exact absurd h1 hn
 
-example := sum_monics_pow_dvd (K := ZMod 2) 1 X monic_X 1 1
+example := sum_monics_pow_dvd (isMonicMul_addWeight (K := ZMod 2) 1 X) monic_X 1 1
 
 end Transformer.Weil

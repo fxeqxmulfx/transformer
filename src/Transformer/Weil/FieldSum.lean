@@ -5,19 +5,20 @@ public import Transformer.Weil.FrobeniusOrbit
 public import Transformer.Weil.NewtonIdentity
 
 /-!
-# `S_d` is the character sum over the extension of degree `d`
+# `S_d` is a sum over the extension of degree `d`
 
-For a finite extension `L` of degree `d` of the finite field `K`,
-`∑_{x ∈ L} ψ(Tr_{L/K} f(x)) = S_d = ∑_{e deg P = d} deg P · λ(P)^e`. Group the `x` by their
+Let `L` be a finite extension of degree `d` of the finite field `K`, `w` a weight on the monic
+polynomials, and `F : L → ℂ` with `F(x) = w(P)^{d/k}` for each `x` with minimal polynomial `P` of
+degree `k`. Then `∑_{x ∈ L} F(x) = S_d = ∑_{e deg P = d} deg P · w(P)^e`. Group the `x` by their
 minimal polynomial `P`, monic irreducible of degree `k ∣ d`:
 
-* the `x` with minimal polynomial `P` are the `k` conjugates `x^{q^i}`, `i < k`, and each has
-  `ψ(Tr f(x)) = λ(P)^{d/k}`;
+* the `x` with minimal polynomial `P` are the `k` conjugates `x^{q^i}`, `i < k`;
 * every monic irreducible `P` of degree `k ∣ d` is a minimal polynomial: `K[X]/P` has degree `k`
   over `K`, so it embeds in `L`.
 
-So the fiber of `P` contributes `k λ(P)^{d/k}` if `k ∣ d` and `0` otherwise, which is the term of
-`P` in `S_d`.
+So the fiber of `P` contributes `k w(P)^{d/k}` if `k ∣ d` and `0` otherwise, which is the term of
+`P` in `S_d`. For `F(x) = ψ(Tr_{L/K} f(x))` and `w(P) = ψ(rootSum f P)`, this is
+`∑_{x ∈ L} ψ(Tr_{L/K} f(x)) = S_d`.
 -/
 
 @[expose] public section
@@ -75,10 +76,11 @@ theorem exists_minpoly_eq {P : K[X]} (hP : P.Monic) (hPi : Irreducible P)
 example := exists_minpoly_eq (K := ZMod 2) (L := ZMod 2) monic_X irreducible_X
   (by rw [natDegree_X]; exact one_dvd _)
 
-/-- **`S_d` is the character sum over `L`**: `∑_{x ∈ L} ψ(Tr_{L/K} f(x)) = S_d` for
-`d = [L : K]`. -/
-theorem sum_addChar_trace_aeval [Fintype L] (ψ : AddChar K ℂ) (f : K[X]) :
-    ∑ x : L, ψ (Algebra.trace K L (aeval x f)) = lPowerSum ψ f (Module.finrank K L) := by
+/-- **`S_d` is a sum over `L`**: if `F(x) = w(P)^{d/k}` for each `x ∈ L` with minimal polynomial
+`P` of degree `k`, then `∑_{x ∈ L} F(x) = S_d` for `d = [L : K]`. -/
+theorem sum_eq_lPowerSum [Fintype L] (w : K[X] → ℂ) {F : L → ℂ}
+    (hF : ∀ x, F x = w (minpoly K x) ^ (Module.finrank K L / (minpoly K x).natDegree)) :
+    ∑ x : L, F x = lPowerSum w (Module.finrank K L) := by
   classical
   have hd0 : 0 < Module.finrank K L := Module.finrank_pos
   have hmaps (x : L) (_ : x ∈ (univ : Finset L)) :
@@ -92,9 +94,8 @@ theorem sum_addChar_trace_aeval [Fintype L] (ψ : AddChar K ℂ) (f : K[X]) :
   by_cases hex : ∃ x : L, minpoly K x = P
   · obtain ⟨x, rfl⟩ := hex
     have hconst (y : L) (hy : y ∈ univ.filter fun y : L => minpoly K y = minpoly K x) :
-        ψ (Algebra.trace K L (aeval y f)) =
-          ψ (rootSum f (minpoly K x)) ^ (Module.finrank K L / (minpoly K x).natDegree) := by
-      rw [addChar_trace_aeval, (mem_filter.mp hy).2]
+        F y = w (minpoly K x) ^ (Module.finrank K L / (minpoly K x).natDegree) := by
+      rw [hF, (mem_filter.mp hy).2]
     have hfib : (univ.filter fun y : L => minpoly K y = minpoly K x) =
         (range (minpoly K x).natDegree).image (fun i => x ^ Fintype.card K ^ i) := by
       ext y
@@ -103,5 +104,15 @@ theorem sum_addChar_trace_aeval [Fintype L] (ψ : AddChar K ℂ) (f : K[X]) :
       hfib, card_image_of_injOn (pow_card_pow_injOn x), card_range, nsmul_eq_mul]
   · rw [ite_eq_right fun h => hex (exists_minpoly_eq hPm hPi h)]
     exact sum_eq_zero fun y hy => absurd ⟨y, (mem_filter.mp hy).2⟩ hex
+
+/-- **`S_d` is the character sum over `L`**: `∑_{x ∈ L} ψ(Tr_{L/K} f(x)) = S_d` for
+`d = [L : K]` and the weight `w(P) = ψ(rootSum f P)`. -/
+theorem sum_addChar_trace_aeval [Fintype L] (ψ : AddChar K ℂ) (f : K[X]) :
+    ∑ x : L, ψ (Algebra.trace K L (aeval x f)) =
+      lPowerSum (addWeight ψ f) (Module.finrank K L) :=
+  sum_eq_lPowerSum _ fun x => addChar_trace_aeval ψ f x
+
+example := sum_eq_lPowerSum (K := ZMod 2) (L := ZMod 2) (fun _ => 1) (F := fun _ => 1)
+  fun _ => (one_pow _).symm
 
 end Transformer.Weil

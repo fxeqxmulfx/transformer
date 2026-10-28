@@ -31,15 +31,10 @@ example := sqrt_pow_eq_pow_sqrt (x := 4) (by norm_num) 2
 
 variable {p : ℕ} [Fact p.Prime]
 
-/-- The standard additive character of `𝔽_p` is nontrivial. -/
-theorem stdAddChar_ne_one : (ZMod.stdAddChar : AddChar (ZMod p) ℂ) ≠ 1 :=
-  AddChar.ne_one_iff.mpr ⟨1, fun h => one_ne_zero
-    (ZMod.injective_stdAddChar (h.trans (AddChar.map_zero_eq_one _).symm))⟩
-
 /-- `|S_d| ≤ 4 p m √p^d` for `d ≥ 3`: Stepanov's bound over the field with `p^d` elements. -/
 theorem norm_lPowerSum_le {ψ : AddChar (ZMod p) ℂ} (hψ : ψ ≠ 1) {f : (ZMod p)[X]}
     (hm : 1 ≤ f.natDegree) (hpm : ¬p ∣ f.natDegree) {d : ℕ} (hd : 3 ≤ d) :
-    ‖lPowerSum ψ f d‖ ≤ 4 * p * f.natDegree * √p ^ d := by
+    ‖lPowerSum (addWeight ψ f) d‖ ≤ 4 * p * f.natDegree * √p ^ d := by
   have hd0 : d ≠ 0 := by omega
   let _ : Fintype (GaloisField p d) := Fintype.ofFinite _
   have hcard : Fintype.card (GaloisField p d) = p ^ d := by
@@ -61,23 +56,32 @@ theorem norm_lPowerSum_le {ψ : AddChar (ZMod p) ℂ} (hψ : ψ ≠ 1) {f : (ZMo
 example := norm_lPowerSum_le (p := 2) stdAddChar_ne_one (f := X) (by rw [natDegree_X])
   (by rw [natDegree_X]; norm_num) le_rfl
 
+/-- `c_n = 0` for `n ≥ m`, in the form the transfer takes. -/
+theorem lCoeff_addWeight_eq_zero {ψ : AddChar (ZMod p) ℂ} (hψ : ψ ≠ 1) {f : (ZMod p)[X]}
+    (hm : 1 ≤ f.natDegree) (hpm : ¬p ∣ f.natDegree) (n : ℕ) (hn : f.natDegree ≤ n) :
+    lCoeff (addWeight ψ f) n = 0 :=
+  lCoeff_eq_zero hψ (by omega) (fun h => hpm ((ZMod.natCast_eq_zero_iff _ _).mp h)) hn
+
+example := lCoeff_addWeight_eq_zero (p := 2) stdAddChar_ne_one (f := X) (by rw [natDegree_X])
+  (by rw [natDegree_X]; norm_num) 1 (by rw [natDegree_X])
+
 /-- The roots of `L^*` have absolute value at most `√p`. -/
 theorem norm_le_sqrt_of_mem_roots {ψ : AddChar (ZMod p) ℂ} (hψ : ψ ≠ 1) {f : (ZMod p)[X]}
-    (hm : 1 ≤ f.natDegree) (hpm : ¬p ∣ f.natDegree) {ω : ℂ} (hω : ω ∈ (lReverse ψ f).roots) :
-    ‖ω‖ ≤ √p := by
-  have hm' : (f.natDegree : ZMod p) ≠ 0 := fun h => hpm ((ZMod.natCast_eq_zero_iff _ _).mp h)
-  refine norm_le_of_norm_sum_pow_le (Real.sqrt_nonneg _) (M := 4 * p * f.natDegree) (n₀ := 3)
-    (fun n hn => ?_) hω
-  rw [← norm_neg, ← lPowerSum_eq_neg_sum_roots hψ hm hm' (by omega)]
-  exact norm_lPowerSum_le hψ hm hpm hn
+    (hm : 1 ≤ f.natDegree) (hpm : ¬p ∣ f.natDegree) {ω : ℂ}
+    (hω : ω ∈ (lReverse (addWeight ψ f) f.natDegree).roots) : ‖ω‖ ≤ √p :=
+  norm_le_of_mem_roots_lReverse (isMonicMul_addWeight ψ f) hm
+    (lCoeff_addWeight_eq_zero hψ hm hpm) (Real.sqrt_nonneg _) (n₀ := 3)
+    (fun _ hd => norm_lPowerSum_le hψ hm hpm hd) hω
 
 /-- For `f = X²` over `𝔽₃`, `L^*` has degree `1`, so it has a root, and the root is bounded. -/
-example : ∃ ω ∈ (lReverse ZMod.stdAddChar (X ^ 2 : (ZMod 3)[X])).roots, ‖ω‖ ≤ √3 := by
+example : ∃ ω ∈ (lReverse (addWeight ZMod.stdAddChar (X ^ 2 : (ZMod 3)[X])) 2).roots,
+    ‖ω‖ ≤ √3 := by
   have hm : 1 ≤ (X ^ 2 : (ZMod 3)[X]).natDegree := by rw [natDegree_X_pow]; norm_num
   obtain ⟨ω, hω⟩ := Multiset.card_pos_iff_exists_mem.mp (by
-    rw [card_roots_lReverse _ hm, natDegree_X_pow]; norm_num :
-      0 < (lReverse ZMod.stdAddChar (X ^ 2 : (ZMod 3)[X])).roots.card)
-  have hb := norm_le_sqrt_of_mem_roots stdAddChar_ne_one hm (by rw [natDegree_X_pow]; norm_num) hω
+    rw [card_roots_lReverse (isMonicMul_addWeight _ _) (by norm_num : 1 ≤ 2)]; norm_num :
+      0 < (lReverse (addWeight ZMod.stdAddChar (X ^ 2 : (ZMod 3)[X])) 2).roots.card)
+  have hb := norm_le_sqrt_of_mem_roots stdAddChar_ne_one hm (by rw [natDegree_X_pow]; norm_num)
+    (ω := ω) (by rwa [natDegree_X_pow])
   exact ⟨ω, hω, by exact_mod_cast hb⟩
 
 /-- **Weil's bound**: for a nontrivial additive character `ψ` of `𝔽_p` and `f ∈ 𝔽_p[X]` of
@@ -85,21 +89,12 @@ degree `m ≥ 1` prime to `p`, `|∑_{x ∈ 𝔽_p} ψ(f(x))| ≤ (m − 1) √p
 theorem norm_sum_addChar_eval_le {ψ : AddChar (ZMod p) ℂ} (hψ : ψ ≠ 1) {f : (ZMod p)[X]}
     (hm : 1 ≤ f.natDegree) (hpm : ¬p ∣ f.natDegree) :
     ‖∑ x : ZMod p, ψ (f.eval x)‖ ≤ ((f.natDegree : ℝ) - 1) * √p := by
-  have hm' : (f.natDegree : ZMod p) ≠ 0 := fun h => hpm ((ZMod.natCast_eq_zero_iff _ _).mp h)
   have h1 := sum_addChar_trace_aeval (L := ZMod p) ψ f
   rw [Module.finrank_self] at h1
   simp only [Algebra.trace_self, LinearMap.id_apply, coe_aeval_eq_eval] at h1
-  rw [h1, lPowerSum_eq_neg_sum_roots hψ hm hm' one_ne_zero, norm_neg]
-  simp only [pow_one, Multiset.map_id']
-  calc ‖(lReverse ψ f).roots.sum‖ ≤ ((lReverse ψ f).roots.map (‖·‖)).sum :=
-        norm_multiset_sum_le _
-    _ ≤ ((lReverse ψ f).roots.map (‖·‖)).card • √p :=
-        Multiset.sum_le_card_nsmul _ _ fun x hx => by
-          obtain ⟨ω, hω, rfl⟩ := Multiset.mem_map.mp hx
-          exact norm_le_sqrt_of_mem_roots hψ hm hpm hω
-    _ = ((f.natDegree : ℝ) - 1) * √p := by
-        rw [Multiset.card_map, card_roots_lReverse ψ hm, nsmul_eq_mul, Nat.cast_sub hm,
-          Nat.cast_one]
+  rw [h1]
+  exact norm_lPowerSum_one_le (isMonicMul_addWeight ψ f) hm (lCoeff_addWeight_eq_zero hψ hm hpm)
+    (Real.sqrt_nonneg _) (n₀ := 3) fun _ hd => norm_lPowerSum_le hψ hm hpm hd
 
 example := norm_sum_addChar_eval_le (p := 2) stdAddChar_ne_one (f := X) (by rw [natDegree_X])
   (by rw [natDegree_X]; norm_num)

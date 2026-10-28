@@ -19,7 +19,7 @@ Let `L` be a finite extension of degree `d` of a finite field `K` with `q` eleme
 * `Tr_{L/K} f(x) = ∑_{i < d} f(x)^{q^i} = (d/k) · rootSum f P`, since `i ↦ f(x)^{q^i}` has
   period `k` and `k ∣ d`.
 
-Hence `ψ(Tr_{L/K} f(x)) = λ(P)^{d/k}` for the character `λ(P) = ψ(rootSum f P)` of the
+Hence `ψ(Tr_{L/K} f(x)) = w(P)^{d/k}` for the weight `w(P) = ψ(rootSum f P)` of the
 `L`-function.
 -/
 
@@ -124,7 +124,7 @@ theorem trace_aeval_eq_nsmul_rootSum (f : K[X]) (x : L) :
     (fun i => ?_) e
   rw [pow_add, pow_mul', ← aeval_pow_card_pow f x, (pow_card_pow_eq_self_iff x _).mpr dvd_rfl]
 
-/-- `ψ(Tr_{L/K} f(x)) = λ(P)^{d/k}` for `λ(P) = ψ(rootSum f P)`. -/
+/-- `ψ(Tr_{L/K} f(x)) = w(P)^{d/k}` for `w(P) = ψ(rootSum f P)`. -/
 theorem addChar_trace_aeval {M : Type*} [Monoid M] (ψ : AddChar K M) (f : K[X]) (x : L) :
     ψ (Algebra.trace K L (aeval x f)) =
       ψ (rootSum f (minpoly K x)) ^ (Module.finrank K L / (minpoly K x).natDegree) := by

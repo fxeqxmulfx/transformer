@@ -65,19 +65,23 @@ Weil's bound `|∑_{x ∈ 𝔽_p} ψ(f(x))| ≤ (m − 1) √p`, through the `L`
   `p_j(X − β) = β^j`;
 * `RootSum`: `∑_i f(β_i) = ∑_j f_j p_j(g)` without a splitting field; adding `t X^{n − m}` to a
   monic `g` of degree `n ≥ m = deg f` moves it by `−m f_m t`;
-* `LFunction`: the coefficients `c_n = ∑_{g monic, deg g = n} ψ(∑_i f(β_i))` of the
-  `L`-function, `c_0 = 1`, and `c_n = 0` for `n ≥ m` when `ψ ≠ 1` and `m` is prime to `p`;
+* `LFunction`: a weight `w` multiplicative on the monic polynomials and the coefficients
+  `c_n = ∑_{g monic, deg g = n} w(g)` of its `L`-function, `c_0 = 1`; for the weight
+  `w(g) = ψ(∑_i f(β_i))` of `y^p − y = f(x)`, `c_n = 0` for `n ≥ m` when `ψ ≠ 1` and `m` is prime
+  to `p`;
 * `Divisors`: for monic `g` of degree `≤ N`, `∑_{P^e ∣ g} deg P = deg g` over monic irreducible
-  `P` and `1 ≤ e ≤ N`, and `∑_{deg g = n, P^e ∣ g} λ(g) = λ(P)^e c_{n − e deg P}`;
+  `P` and `1 ≤ e ≤ N`, and `∑_{deg g = n, P^e ∣ g} w(g) = w(P)^e c_{n − e deg P}`;
 * `NewtonIdentity`: `n c_n = ∑_{1 ≤ d ≤ n} S_d c_{n − d}`, with
-  `S_d = ∑_{e deg P = d} deg P · λ(P)^e`;
+  `S_d = ∑_{e deg P = d} deg P · w(P)^e`;
 * `FrobeniusOrbit`: for `x` in an extension `L` of degree `d`, with minimal polynomial `P` of
   degree `k`, `P = ∏_{i < k} (X − x^{q^i})` and `Tr_{L/K} f(x) = (d/k) ∑_i f(β_i)`;
-* `FieldSum`: `S_d = ∑_{x ∈ L} ψ(Tr_{L/K} f(x))` for `L` of degree `d`;
-* `Rationality`: `L^*(X) = ∑_{k < m} c_k X^{m − 1 − k}` is monic of degree `m − 1`, and
-  `S_n = −∑_ω ω^n` over its roots `ω ∈ ℂ` for `n ≥ 1`;
+* `FieldSum`: `∑_{x ∈ L} F(x) = S_d` for `L` of degree `d` when `F(x) = w(P)^{d/k}` for the `x`
+  with minimal polynomial `P` of degree `k`; so `S_d = ∑_{x ∈ L} ψ(Tr_{L/K} f(x))`;
+* `Rationality`: if `c_n = 0` for `n ≥ m`, `L^*(X) = ∑_{k < m} c_k X^{m − 1 − k}` is monic of
+  degree `m − 1` and `S_n = −∑_ω ω^n` over its roots `ω ∈ ℂ` for `n ≥ 1`; so a bound
+  `|S_d| ≤ M R^d` for all large `d` gives `|ω| ≤ R` and `|S_1| ≤ (m − 1) R`;
 * `WeilBound`: `ArtinSchreier` over the fields with `p^d` elements bounds `|S_d|` by
-  `4 p m √p^d`, so `Transfer` gives `|ω| ≤ √p`, and `∑_{x ∈ 𝔽_p} ψ(f(x)) = S_1 = −∑_ω ω`.
+  `4 p m √p^d`, so `|∑_{x ∈ 𝔽_p} ψ(f(x))| = |S_1| ≤ (m − 1) √p`.
 
 The proofs are written from the mathematics (S. A. Stepanov, 1969; W. M. Schmidt, *Equations
 over Finite Fields*, Ch. I); no other formalization is used.

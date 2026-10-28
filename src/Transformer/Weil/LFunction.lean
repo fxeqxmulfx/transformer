@@ -6,16 +6,18 @@ public import Mathlib.Analysis.SpecialFunctions.Complex.CircleAddChar
 public import Transformer.Weil.RootSum
 
 /-!
-# The coefficients of the `L`-function of `y^p − y = f(x)`
+# The coefficients of an `L`-function over a finite field
 
 Over a finite field `K`, every monic `g` of degree `n` is `X^n + ∑_{i < n} b_i X^i` for exactly
-one `b ∈ K^n`. For an additive character `ψ` of `K` and `f ∈ K[X]`, the character
-`λ(g) = ψ(∑_i f(β_i))` of the monic `g` is multiplicative, and the coefficients of
-`L(T) = ∑_g λ(g) T^{deg g}` are `c_n = ∑_{deg g = n} λ(g)`, with `c_0 = 1`.
+one `b ∈ K^n`. A weight `w` on the monic polynomials with `w 1 = 1` and `w (g h) = w g · w h`
+defines the `L`-function `L(T) = ∑_g w(g) T^{deg g}`; its coefficients are
+`c_n = ∑_{deg g = n} w(g)`, with `c_0 = 1`.
 
-For `ψ ≠ 1` and `m = deg f ≥ 1` prime to the characteristic, `c_n = 0` for every `n ≥ m`: the
-translation `b_{n − m} ↦ b_{n − m} + t` permutes the monics of degree `n` and multiplies `λ` by
-`ψ(−m f_m t)`, which is not `1` for a suitable `t`. So `L` is a polynomial of degree `< m`.
+For an additive character `ψ` of `K` and `f ∈ K[X]`, `w(g) = ψ(∑_i f(β_i))` over the roots `β_i`
+of `g` is such a weight, the one of `y^p − y = f(x)`. For `ψ ≠ 1` and `m = deg f ≥ 1` prime to
+the characteristic, `c_n = 0` for every `n ≥ m`: the translation `b_{n − m} ↦ b_{n − m} + t`
+permutes the monics of degree `n` and multiplies `w` by `ψ(−m f_m t)`, which is not `1` for a
+suitable `t`. So `L` is a polynomial of degree `< m`.
 -/
 
 @[expose] public section
@@ -56,6 +58,29 @@ theorem monicOfCoeffs_coeff {g : K[X]} (hg : g.Monic) {n : ℕ} (hn : g.natDegre
 
 example := monicOfCoeffs_coeff (K := ℚ) monic_X natDegree_X
 
+/-- A weight on the monic polynomials: `w 1 = 1` and `w (g h) = w g · w h` for monic `g`, `h`. -/
+structure IsMonicMul (w : K[X] → ℂ) : Prop where
+  map_one : w 1 = 1
+  map_mul : ∀ {g h : K[X]}, g.Monic → h.Monic → w (g * h) = w g * w h
+
+theorem IsMonicMul.map_pow {w : K[X] → ℂ} (hw : IsMonicMul w) {P : K[X]} (hP : P.Monic)
+    (e : ℕ) : w (P ^ e) = w P ^ e := by
+  induction e with
+  | zero => rw [pow_zero, pow_zero, hw.map_one]
+  | succ e ih => rw [pow_succ, hw.map_mul (hP.pow e) hP, ih, pow_succ]
+
+/-- The weight `w(g) = ψ(∑_i f(β_i))` of `y^p − y = f(x)`, `β_i` the roots of `g`. -/
+noncomputable def addWeight (ψ : AddChar K ℂ) (f g : K[X]) : ℂ :=
+  ψ (rootSum f g)
+
+theorem isMonicMul_addWeight (ψ : AddChar K ℂ) (f : K[X]) : IsMonicMul (addWeight ψ f) where
+  map_one := by rw [addWeight, rootSum_one, AddChar.map_zero_eq_one]
+  map_mul hg hh := by
+    rw [addWeight, addWeight, addWeight, rootSum_mul f hg.ne_zero hh.ne_zero,
+      AddChar.map_add_eq_mul]
+
+example := (isMonicMul_addWeight (K := ℚ) 1 X).map_pow monic_X 2
+
 variable [Fintype K]
 
 /-- The monic polynomials of degree `n` over the finite field `K`. -/
@@ -68,23 +93,26 @@ theorem mem_monics {n : ℕ} {g : K[X]} : g ∈ monics K n ↔ g.Monic ∧ g.nat
   rintro ⟨b, rfl⟩
   exact ⟨monicOfCoeffs_monic n b, natDegree_monicOfCoeffs n b⟩
 
-/-- The coefficients `c_n = ∑_{g monic, deg g = n} ψ(∑_i f(β_i))` of the `L`-function. -/
-noncomputable def lCoeff (ψ : AddChar K ℂ) (f : K[X]) (n : ℕ) : ℂ :=
-  ∑ g ∈ monics K n, ψ (rootSum f g)
+/-- The coefficients `c_n = ∑_{g monic, deg g = n} w(g)` of the `L`-function. -/
+noncomputable def lCoeff (w : K[X] → ℂ) (n : ℕ) : ℂ :=
+  ∑ g ∈ monics K n, w g
 
-theorem lCoeff_eq_sum (ψ : AddChar K ℂ) (f : K[X]) (n : ℕ) :
-    lCoeff ψ f n = ∑ b : Fin n → K, ψ (rootSum f (monicOfCoeffs n b)) := by
+theorem lCoeff_eq_sum (w : K[X] → ℂ) (n : ℕ) :
+    lCoeff w n = ∑ b : Fin n → K, w (monicOfCoeffs n b) := by
   rw [lCoeff, monics, sum_map]
   rfl
 
-theorem lCoeff_zero (ψ : AddChar K ℂ) (f : K[X]) : lCoeff ψ f 0 = 1 := by
+theorem lCoeff_zero {w : K[X] → ℂ} (hw : IsMonicMul w) : lCoeff w 0 = 1 := by
   rw [lCoeff_eq_sum, Fintype.sum_unique]
-  simp [monicOfCoeffs, rootSum_one]
+  simp [monicOfCoeffs, hw.map_one]
 
-/-- **`L` is a polynomial of degree `< m`**: for `ψ ≠ 1` and `m = deg f ≥ 1` with `m ≠ 0` in
-`K`, `c_n = 0` for every `n ≥ m`. -/
+example := lCoeff_zero (isMonicMul_addWeight (K := ZMod 2) 1 X)
+
+/-- **`L` is a polynomial of degree `< m`** for `y^p − y = f(x)`: for `ψ ≠ 1` and
+`m = deg f ≥ 1` with `m ≠ 0` in `K`, `c_n = 0` for every `n ≥ m`. -/
 theorem lCoeff_eq_zero {ψ : AddChar K ℂ} (hψ : ψ ≠ 1) {f : K[X]} (hm0 : f.natDegree ≠ 0)
-    (hm : (f.natDegree : K) ≠ 0) {n : ℕ} (hn : f.natDegree ≤ n) : lCoeff ψ f n = 0 := by
+    (hm : (f.natDegree : K) ≠ 0) {n : ℕ} (hn : f.natDegree ≤ n) :
+    lCoeff (addWeight ψ f) n = 0 := by
   set m := f.natDegree with hmdef
   obtain ⟨a, ha⟩ := AddChar.ne_one_iff.mp hψ
   have hlc : f.coeff m ≠ 0 := leadingCoeff_ne_zero.mpr fun h0 => by simp [h0, m] at hm0
@@ -106,19 +134,24 @@ theorem lCoeff_eq_zero {ψ : AddChar K ℂ} (hψ : ψ ≠ 1) {f : K[X]} (hm0 : f
     congr 1
     rw [← hut]
     ring
-  have key : lCoeff ψ f n = ψ a * lCoeff ψ f n := by
+  have key : lCoeff (addWeight ψ f) n = ψ a * lCoeff (addWeight ψ f) n := by
     rw [lCoeff_eq_sum, mul_sum]
+    simp only [addWeight]
     calc ∑ b : Fin n → K, ψ (rootSum f (monicOfCoeffs n b))
         = ∑ b : Fin n → K, ψ (rootSum f (monicOfCoeffs n (b + s))) :=
           (Fintype.sum_equiv (Equiv.addRight s) _ _ fun b => rfl).symm
       _ = _ := sum_congr rfl fun b _ => hshift b
-  have h1 : (1 - ψ a) * lCoeff ψ f n = 0 := by rw [sub_mul, one_mul, ← key, sub_self]
+  have h1 : (1 - ψ a) * lCoeff (addWeight ψ f) n = 0 := by rw [sub_mul, one_mul, ← key, sub_self]
   exact (mul_eq_zero.mp h1).resolve_left (sub_ne_zero.mpr (Ne.symm ha))
 
-example := lCoeff_eq_zero (K := ZMod 2) (ψ := ZMod.stdAddChar)
-  (AddChar.ne_one_iff.mpr ⟨1, fun h => one_ne_zero
-    (ZMod.injective_stdAddChar (h.trans (AddChar.map_zero_eq_one _).symm))⟩)
-  (f := X) (by rw [natDegree_X]; exact one_ne_zero)
-  (by rw [natDegree_X, Nat.cast_one]; exact one_ne_zero) (n := 1) (by rw [natDegree_X])
+/-- The standard additive character of `𝔽_p` is nontrivial. -/
+theorem stdAddChar_ne_one {p : ℕ} [Fact p.Prime] :
+    (ZMod.stdAddChar : AddChar (ZMod p) ℂ) ≠ 1 :=
+  AddChar.ne_one_iff.mpr ⟨1, fun h => one_ne_zero
+    (ZMod.injective_stdAddChar (h.trans (AddChar.map_zero_eq_one _).symm))⟩
+
+example := lCoeff_eq_zero (K := ZMod 2) stdAddChar_ne_one (f := X)
+  (by rw [natDegree_X]; exact one_ne_zero) (by rw [natDegree_X, Nat.cast_one]; exact one_ne_zero)
+  (n := 1) (by rw [natDegree_X])
 
 end Transformer.Weil
