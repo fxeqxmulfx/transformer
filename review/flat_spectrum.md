@@ -616,6 +616,26 @@ condition. Batched ADMM on `J` then runs 20000 iterations for each. The error is
 The four rows are Theorem E.2, E.3, E.1 with D.7, and E.3. The nine rigid patterns without a
 permutation graph are the crosses, and `−0.172 = 2√2 − 3` is item D.9's least norm.
 
+For `N = 4`, all 65 535 proper patterns, 20000 iterations each, on the GPU:
+
+| `N = 4` | patterns | `‖X‖_S1 − N` | error |
+| --- | --- | --- | --- |
+| rigid, permutation graph | 33 852 | within 7e-7 of 0 | at most 8.5e-5 |
+| rigid, no permutation graph | 2464 | −0.536 to −0.136 | 0.345–0.667 |
+| not rigid, permutation graph | 3970 | within 2e-14 of 0 | 0.775–1.00 |
+| not rigid, no permutation graph | 25 249 | −4.00 to −0.136 | 0.632–1.00 |
+
+- The ends −0.536 and −0.136 agree to three decimals with `2√3 − 4`, item D.9's least norm,
+  and `√2 + √6 − 4`, the least norm of the block witness with `k = 3`, `l = 2` (*Patterns*).
+- Theorem E.2 makes `J` the only solution on the first row, so its error up to 8.5e-5 is
+  ADMM's slowness. It comes from the 27 068 of these patterns in which a proper set of rows
+  meets exactly as many columns as it has rows; on the other 6784 the error is below 1e-13, a
+  rounding error.
+- The port's rerun (`experiments/recovery` in the grokking repository, `slow 4`, 2026-10-29)
+  leaves 4464 of the 27 068 above 1e-6 after 20000 iterations. Run on, their error stays below
+  3.5e-5, 1.8e-5 and 8.9e-6 after 50000, 100000 and 200000 iterations, about half each time
+  the iterations double, and their gap is positive and below 2.3e-8.
+
 ### Theorem F (proven)
 
 Let no entry of `a` or `b` vanish. Scaling `a` by `t > 0` and `b` by `1/t` keeps `a bᵀ`, so
