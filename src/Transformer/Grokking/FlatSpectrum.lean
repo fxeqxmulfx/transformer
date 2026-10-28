@@ -92,7 +92,8 @@ public import Transformer.Grokking.FlatSpectrum.ProductCells
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
 factorization cost `½ (‖U‖² + ‖V‖²)`, the weight-decay penalty of a bilinear layer, so
 weight decay at its optimum is M: among the factorizations `U Vᴴ` of any width lying in a set
-`S`, those of least weight decay multiply to exactly the matrices of least nuclear norm in `S`.
+`S`, those of least weight decay multiply to exactly the matrices of least nuclear norm in `S`;
+read through it, Theorems A and E below hold for weight decay at its optimum as well.
 Proposition 2: `ψ (a + b)` has rank one and `‖K‖_S1 = p`; `ψ (a³ + a b)` has `K K* = p I`
 and `‖K‖_S1 = p^{3/2}`; these are the extremes for unimodular entries, and relabeling keeps
 the spectrum. Theorem A: an invertible `K` is the least-`‖·‖_S1` matrix agreeing with it on

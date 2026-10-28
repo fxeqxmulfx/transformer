@@ -1,6 +1,8 @@
 module
 
+public import Transformer.Grokking.FlatSpectrum.CubicInterpolant
 public import Transformer.Grokking.FlatSpectrum.Factorization
+public import Transformer.Grokking.FlatSpectrum.FewestCells
 
 /-!
 # Weight decay at its optimum is M
@@ -21,6 +23,16 @@ its weight decay is `½ (‖U‖² + ‖V‖²)`. A fit to a set `S` of matrices
 * for `K ∈ S`, some fit is optimal and every optimal fit multiplies to `K` exactly when `K` is
   the only matrix of least nuclear norm in `S`, that is, when M recovers `K`
   (`forall_isMinOn_iff_iff_isOptimalFit`).
+
+Read through the last item, two theorems of M become theorems about weight decay:
+
+* a square `K` without zero entries whose singular values are all equal is the product of no
+  optimal fit to its values on a proper `Ω` (`not_exists_isOptimalFit_of_singularValues_eq`,
+  from Theorem A, `not_isMinOn_of_singularValues_eq`);
+* for `u vᵀ` with `|u_i v_j| = 1`, some fit to its values on `Ω` is optimal and every optimal
+  fit multiplies to `u vᵀ` exactly when the cells of `Ω` connect the rows with the columns and
+  contain a permutation (`isOptimalFit_vecMulVec_iff_connected`, from Theorem E,
+  `forall_isMinOn_vecMulVec_iff_connected_of_entries`).
 
 That training reaches this optimum is the modeling step of the source, and is not proved.
 -/
@@ -112,5 +124,44 @@ theorem forall_isMinOn_iff_iff_isOptimalFit {S : Set (Matrix m n ℂ)} {K : Matr
 
 example := forall_isMinOn_iff_iff_isOptimalFit (S := {X : Matrix (Fin 1) (Fin 1) ℂ | X = 1})
   (K := 1) rfl
+
+/-- **Theorem A for weight decay** (added; `not_isMinOn_of_singularValues_eq` through
+`isOptimalFit_iff`): if the singular values of a square `K` are all equal and no entry of `K`
+vanishes, then for every proper `Ω` no optimal fit to the values of `K` on `Ω` multiplies to
+`K`. -/
+theorem not_exists_isOptimalFit_of_singularValues_eq {K : Matrix n n ℂ} {c : ℝ}
+    (h : ∀ i, singularValues K i = c) (hK : ∀ i j, K i j ≠ 0) {Ω : Set (n × n)}
+    (hΩ : Ω ≠ Set.univ) :
+    ¬ ∃ (r : ℕ) (U V : Matrix n (Fin r) ℂ),
+      IsOptimalFit {X | ∀ ij ∈ Ω, X ij.1 ij.2 = K ij.1 ij.2} U V ∧ U * Vᴴ = K := by
+  rintro ⟨r, U, V, hopt, hUV⟩
+  exact not_isMinOn_of_singularValues_eq h hK hΩ (hUV ▸ (isOptimalFit_iff.mp hopt).2.1)
+
+/-- With no cell seen, no optimal fit multiplies to the `a³ + a b` kernel for `p = 3`. -/
+example := not_exists_isOptimalFit_of_singularValues_eq (singularValues_cubicKernel 3)
+  (fun a b => norm_ne_zero_iff.mp (by simp [cubicKernel, taskKernel]))
+  (Set.empty_ne_univ (α := ZMod 3 × ZMod 3))
+
+/-- **Theorem E for weight decay** (`review/flat_spectrum.md`, Theorem E with Lemma 1, "exact
+for a pure factorization"): for `u vᵀ` with `|u_i v_j| = 1`, some fit to its values on `Ω` is
+optimal and every optimal fit multiplies to `u vᵀ` exactly when the cells of `Ω` connect the rows
+with the columns and contain the graph of a permutation. -/
+theorem isOptimalFit_vecMulVec_iff_connected [Nonempty n] {u v : n → ℂ}
+    (h : ∀ i j, ‖vecMulVec u v i j‖ = 1) {Ω : Set (n × n)} :
+    ((∃ (r : ℕ) (U V : Matrix n (Fin r) ℂ),
+        IsOptimalFit {X | ∀ ij ∈ Ω, X ij.1 ij.2 = vecMulVec u v ij.1 ij.2} U V) ∧
+      ∀ (r : ℕ) (U V : Matrix n (Fin r) ℂ),
+        IsOptimalFit {X | ∀ ij ∈ Ω, X ij.1 ij.2 = vecMulVec u v ij.1 ij.2} U V →
+          U * Vᴴ = vecMulVec u v) ↔
+      (patternGraph Ω).Connected ∧ ∃ σ : Equiv.Perm n, ∀ i, (i, σ i) ∈ Ω := by
+  have hK : vecMulVec u v ∈ {X : Matrix n n ℂ | ∀ ij ∈ Ω, X ij.1 ij.2 = vecMulVec u v ij.1 ij.2} :=
+    fun _ _ => rfl
+  exact (forall_isMinOn_iff_iff_isOptimalFit hK).symm.trans
+    (forall_isMinOn_vecMulVec_iff_connected_of_entries h)
+
+/-- The all-ones `3 × 3` matrix from the five cells of the staircase. -/
+example := (isOptimalFit_vecMulVec_iff_connected (n := Fin 3) (u := fun _ => 1) (v := fun _ => 1)
+  (fun i j => by simp [vecMulVec_apply]) (Ω := staircase 2)).mpr
+  ⟨staircase_connected 2, Equiv.refl _, fun i => Or.inl ⟨i, rfl⟩⟩
 
 end Transformer.Grokking.FlatSpectrum
