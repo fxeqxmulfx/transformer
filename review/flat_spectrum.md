@@ -700,6 +700,25 @@ For the worst one at A, `{(0, 1), (0, 2), (1, 0), (1, 1), (2, 0), (2, 1), (2, 2)
 is 2.4e-4, 5.0e-5 and 1.0e-5 after 6000, 30000 and 150000 iterations. Item 2 proves that the
 limit is `K`.
 
+### Cross check (torch, 2026-10-28)
+
+Item 4 with `Ω` the row 0 and the column 0, for `N = 3, 4, 5, 6`, 400 draws each. The moduli
+are uniform in `[0.3, 2]` with random phases; then `|a_0|` and `|b_0|` are set so that the
+shares `α₀ = |a_0|²/‖a‖²` and `β₀ = |b_0|²/‖b‖²` are uniform in `(0.05, 0.95)`. Batched ADMM,
+100000 iterations, `ρ = 1/√N`; gap and error as in the weighted check. Item 4 says that M
+recovers `a bᵀ` exactly when the margin `m = α₀ + β₀ − 1` is `≥ 0`.
+
+| margin | draws | gap | error |
+| --- | --- | --- | --- |
+| `m ≤ −0.05` | 723 | −3.88 to −2.6e-3 | 0.099 to 0.94 |
+| `−0.05 < m ≤ 0` | 72 | −4.4e-2 to −3.7e-6 | 2.5e-3 to 0.23 |
+| `0 < m ≤ 0.05` | 73 | within 1.5e-14 of 0 | at most 1.8e-15 |
+| `m > 0.05` | 732 | within 4.3e-14 of 0 | at most 1.6e-15 |
+
+Every draw with `m > 0` is recovered, and every draw with `m ≤ 0` has a completion shorter than
+`a bᵀ`. Each `N` splits the same way; the smallest gap below the threshold is −3.7e-6, −1.5e-4,
+−7.0e-5 and −2.5e-5 for `N = 3, 4, 5, 6`.
+
 ### Lean status
 
 All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved without `sorry`.
@@ -738,7 +757,7 @@ Not formalized:
 - that rigidity is the same as connectivity, and that a connected pattern has at least
   `2N − 1` cells;
 - the supply–demand theorem of Theorem F.3, which turns its condition into a plan;
-- the weighted tables;
+- the weighted and cross tables;
 - that training behaves like model M (Lemma 1's modeling step).
 
 Scope:
