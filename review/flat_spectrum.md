@@ -602,7 +602,7 @@ condition. Batched ADMM on `J` then runs 20000 iterations for each. The error is
 The four rows are Theorem E.2, E.3, E.1 with D.7, and E.3. The nine rigid patterns without a
 permutation graph are the crosses, and `−0.172 = 2√2 − 3` is item D.9's least norm.
 
-### Theorem F (items 1–2 proven, item 3 by hand)
+### Theorem F (proven, except the supply–demand theorem in item 3)
 
 Let no entry of `a` or `b` vanish. Scaling `a` by `t > 0` and `b` by `1/t` keeps `a bᵀ`, so
 let `‖a‖ = ‖b‖`; then `‖a bᵀ‖_S1 = ‖a‖ ‖b‖ = ‖a‖²`. Let `α_i = |a_i|²` and `β_j = |b_j|²`. A
@@ -617,10 +617,12 @@ transport plan on `Ω` from `α` to `β` is a matrix `T ≥ 0` that vanishes off
    `∑_{i ∈ R} α_i ≤ ∑_{j ∈ N(R)} β_j` for every set `R` of rows, where `N(R)` is the set of
    columns that meet `R` in `Ω`. Without the scaling the condition reads
    `‖b‖² ∑_R |a_i|² ≤ ‖a‖² ∑_{N(R)} |b_j|²`.
+4. The cross. Let `Ω` be row `i₀` and column `j₀`. M recovers `a bᵀ` from `Ω` if and only if
+   `|a_{i₀}|²/‖a‖² + |b_{j₀}|²/‖b‖² ≥ 1`.
 
 For `|a_i| = |b_j| = 1` the permutation matrix of a graph inside `Ω` is a plan, so item 2
 contains Theorem E.2. The condition of item 3 is then Hall's `|R| ≤ |N(R)|`, and items 2–3
-give Theorem E.4.
+give Theorem E.4. Item 4 then reads `2/N ≥ 1`, that is `N ≤ 2`, as item D.9 found.
 
 ### Proof of Theorem F
 
@@ -639,15 +641,25 @@ give Theorem E.4.
    - On a cell `(i, j)` of `Ω`, `‖x_i − y_j‖² = 1 + 1 − 2 = 0`, so `x_i = y_j`.
    - Rigidity, applied to each coordinate as in Theorem E.2, makes all `x_i` and `y_j` equal.
      So `X_ij = a_i ⟨x_i, y_j⟩ b_j = a_i b_j`.
-3. Item 3, by hand; not yet in Lean.
+3. Item 3.
    - If `Ω` is not rigid, the phases of item D.7, `u_i v_j = 1` on `Ω` and
-     `u_{i₀} v_{j₀} ≠ 1`, give `(u a)(v b)ᵀ`. It equals `a bᵀ` on `Ω`, has its norm and
-     differs at `(i₀, j₀)`.
+     `u_{i₀} v_{j₀} = −1`, give `(u a)(v b)ᵀ`. It equals `a bᵀ` on `Ω` and differs at
+     `(i₀, j₀)`. It has the moduli of `a bᵀ`, so the same norm: `‖a bᵀ‖_S1 = ‖a‖ ‖b‖`, since
+     `P = (‖a‖/‖b‖) conj(b) bᵀ` is positive semidefinite with `P² = (a bᵀ)ᴴ (a bᵀ)`.
    - If the condition fails at `R`, let `C = N(R)ᶜ`. Then `Ω` misses `R × C` and
      `δ = ∑_R α + ∑_C β − ‖a‖² > 0`. With `U₀`, `V₀` of item E.3, `U = diag(a) U₀` and
      `V = diag(conj b) V₀` give `U Vᴴ = a bᵀ − s² a_R b_Cᵀ`, equal to `a bᵀ` on `Ω`, with
-     `½ (‖U‖² + ‖V‖²) = ‖a‖² − ½ s² (δ − s² ∑_R α)`. This is below `‖a‖²` for small `s`.
-   - The supply–demand theorem is classical; Mathlib has only the unweighted Hall theorem.
+     `½ (‖U‖² + ‖V‖²) = ‖a‖² − ½ s² (δ − s² ∑_R α)`. This is below `‖a‖²` for
+     `s = δ / (∑_R α + δ)`, since then `s² ∑_R α < δ`.
+   - The supply–demand theorem is classical; Mathlib has only the unweighted Hall theorem, so
+     the step from the condition to a plan is not yet in Lean.
+4. Item 4. With `‖a‖ = ‖b‖` the condition reads `‖a‖² ≤ α_{i₀} + β_{j₀}`.
+   - If it holds, let each row `i ≠ i₀` send `α_i` to column `j₀`, let row `i₀` send `β_j` to
+     each column `j ≠ j₀`, and leave `α_{i₀} + β_{j₀} − ‖a‖² ≥ 0` at `(i₀, j₀)`. This is a
+     plan on the cross, and the cross is rigid (item D.9), so item 2 applies.
+   - If it fails, the rows `R` other than `i₀` meet only column `j₀`, and
+     `∑_R α = ‖a‖² − α_{i₀} > β_{j₀}`. Item 3's witness, with `C` the columns other than
+     `j₀`, is shorter than `a bᵀ`.
 
 ### Weighted check (torch, 2026-10-28)
 
@@ -710,7 +722,8 @@ All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved witho
 | Theorem E.4 | `forall_isMinOn_vecMulVec_iff`, `forall_isMinOn_onesMatrix_iff`, `forall_isMinOn_addKernel_iff` | "M recovers `K` from `Ω`" is D.2's form, `∀ X ∈ S, IsMinOn nuclearNorm S X ↔ X = K`. An example derives the failure of the cross for `N = 3`. |
 | Theorem F.1 | `IsTransportPlan`, `IsTransportPlan.sum_eq`, `isTransportPlan_perm`, `sum_sum_mul_norm_sq_sub`, `rowDiv_mul_apply`, `sum_sum_mul_norm_sq_sub_of_transport`, `sum_norm_sq_le_nuclearNorm_of_transport`, `nuclearNorm_vecMulVec_le`, `nuclearNorm_vecMulVec_of_transport` | The plan has the marginals `‖a i‖²` and `‖b j‖²`, so it carries the scaling `‖a‖ = ‖b‖`. |
 | Theorem F.2 | `eq_vecMulVec_of_transport`, `isMinOn_vecMulVec_iff_of_transport` | Stated as `IsMinOn nuclearNorm S X ↔ X = a bᵀ` for every `X` equal to `a bᵀ` on `Ω`. |
-| Theorem F.3, tools | `nbhd`, `mem_nbhd`, `nbhd_mono`, `nbhd_union`, `IsTransportPlan.sum_le_sum_nbhd`, `isTransportPlan_univ` | A plan meets the condition of item 3; the converse is not yet in Lean. |
+| Theorem F.3 | `nbhd`, `mem_nbhd`, `nbhd_mono`, `nbhd_union`, `IsTransportPlan.sum_le_sum_nbhd`, `isTransportPlan_univ`, `star_dotProduct_self_eq_sum_norm_sq`, `nuclearNorm_vecMulVec`, `exists_vecMulVec_ne_of_not_rigid_of_ne_zero`, `not_forall_isMinOn_vecMulVec_of_not_rigid`, `weightedFactorL`, `weightedFactorR`, `weightedWitness_apply`, `sum_mul_ite_mem`, `frobeniusSq_weightedFactorL`, `frobeniusSq_weightedFactorR`, `nuclearNorm_weightedWitness_le`, `exists_weighted_bound_lt`, `exists_nuclearNorm_lt_of_weighted_block`, `exists_nuclearNorm_lt_of_nbhd`, `nbhd_diag_zero`, `not_isMinOn_vecMulVec_of_nbhd` | The phases need only `a_{i₀} b_{j₀} ≠ 0`. The witness needs no scaling and no nonzero entries: `U` carries a factor `p` and `V` a factor `p⁻¹`, with `p² = ‖b‖/‖a‖`. A failed condition gives `¬ IsMinOn`, stronger than non-recovery. The supply–demand theorem is not in Lean, so "only if `Ω` carries a plan" is proved as "only if the condition holds". |
+| Theorem F.4 | `crossPlan`, `isTransportPlan_cross`, `forall_isMinOn_vecMulVec_cross_iff` | Stated as `A B ≤ ‖a i₀‖² B + A ‖b j₀‖²` with `A = ‖a‖²` and `B = ‖b‖²`. The proof scales `a` by `c` and `b` by `c⁻¹` with `c⁴ = B/A`. |
 
 Not formalized:
 - the numerical tables, including the certificates found for random patterns and for the
@@ -724,7 +737,7 @@ Not formalized:
   proves only `‖X‖_S1 < N`;
 - that rigidity is the same as connectivity, and that a connected pattern has at least
   `2N − 1` cells;
-- Theorem F.3: the phases and the witness for general weights, and the supply–demand theorem;
+- the supply–demand theorem of Theorem F.3, which turns its condition into a plan;
 - the weighted tables;
 - that training behaves like model M (Lemma 1's modeling step).
 

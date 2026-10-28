@@ -71,6 +71,9 @@ public import Transformer.Grokking.FlatSpectrum.PatternRecovery
 public import Transformer.Grokking.FlatSpectrum.Transport
 public import Transformer.Grokking.FlatSpectrum.WeightedRecovery
 public import Transformer.Grokking.FlatSpectrum.WeightedUniqueness
+public import Transformer.Grokking.FlatSpectrum.WeightedPhases
+public import Transformer.Grokking.FlatSpectrum.WeightedWitness
+public import Transformer.Grokking.FlatSpectrum.WeightedCross
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -158,6 +161,10 @@ theorem gives rows `R` that miss a set `C` of columns with `#R + #C > N`, and
 `J − s² 1_R 1_Cᵀ` is shorter than `J`. So these kernels are recovered from `Ω` exactly when
 `Ω` is rigid and contains the graph of a permutation. For `a`, `b` without zero entries, a
 transport plan on `Ω` from `|a_i|²` to `|b_j|²` gives `‖X‖_S1 ≥ ∑ |a_i|² = ‖a bᵀ‖_S1` for every
-`X` equal to `a bᵀ` on `Ω`, and if `Ω` is also rigid, `a bᵀ` is the unique minimum. -/
+`X` equal to `a bᵀ` on `Ω`, and if `Ω` is also rigid, `a bᵀ` is the unique minimum.
+Conversely, `‖a bᵀ‖_S1 = ‖a‖ ‖b‖`; without rigidity a second rank-one matrix of the same
+moduli agrees with `a bᵀ` on `Ω`, and if rows `R` carry more than the columns `N(R)` they meet,
+`‖a‖² ∑_{N(R)} |b_j|² < ‖b‖² ∑_R |a_i|²`, some completion is shorter than `a bᵀ`. From row
+`i₀` and column `j₀`, `a bᵀ` is recovered exactly when `|a_{i₀}|²/‖a‖² + |b_{j₀}|²/‖b‖² ≥ 1`. -/
 
 @[expose] public section
