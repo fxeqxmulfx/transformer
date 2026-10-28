@@ -14,6 +14,7 @@ public import Transformer.Weil.ArtinSchreier
 public import Transformer.Weil.Transfer
 public import Transformer.Weil.PowerSums
 public import Transformer.Weil.RootSum
+public import Transformer.Weil.LFunction
 
 /-!
 # Stepanov's method for `y² = f(x)` and `y^p − y = f(x)`
@@ -56,7 +57,9 @@ Toward the `L`-function of `y^p − y = f(x)`:
   those of `−X A′/A` (`A` the reverse of `g`): Newton's recursion, `p_j(g h) = p_j(g) + p_j(h)`,
   `p_j(X − β) = β^j`;
 * `RootSum`: `∑_i f(β_i) = ∑_j f_j p_j(g)` without a splitting field; adding `t X^{n − m}` to a
-  monic `g` of degree `n ≥ m = deg f` moves it by `−m f_m t`.
+  monic `g` of degree `n ≥ m = deg f` moves it by `−m f_m t`;
+* `LFunction`: the coefficients `c_n = ∑_{g monic, deg g = n} ψ(∑_i f(β_i))` of the
+  `L`-function, `c_0 = 1`, and `c_n = 0` for `n ≥ m` when `ψ ≠ 1` and `m` is prime to `p`.
 
 The proofs are written from the mathematics (S. A. Stepanov, 1969; W. M. Schmidt, *Equations
 over Finite Fields*, Ch. I); no other formalization is used.
