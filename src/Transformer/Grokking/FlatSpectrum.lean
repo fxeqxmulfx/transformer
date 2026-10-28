@@ -91,6 +91,9 @@ public import Transformer.Grokking.FlatSpectrum.DiagonalsMinusCell
 public import Transformer.Grokking.FlatSpectrum.BlockWitnessNorm
 public import Transformer.Grokking.FlatSpectrum.BlockWitnessBest
 public import Transformer.Grokking.FlatSpectrum.BlockWitnessCases
+public import Transformer.Grokking.FlatSpectrum.BlockCertificate
+public import Transformer.Grokking.FlatSpectrum.FailureMargin
+public import Transformer.Grokking.FlatSpectrum.MarginSharp
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -184,8 +187,17 @@ theorem gives rows `R` that miss a set `C` of columns with `#R + #C > N`, and
 every real `t`, `‖J − t 1_R 1_Cᵀ‖²_S1 = m n − 2t k l + t² k l + 2|t| √(k l (m − k)(n − l))`; for
 nonempty `R`, `C` with `m n ≤ k n + l m` the least norm over `t` is `√(k (n − l)) + √(l (m − k))`,
 and when `k n + l m ≤ m n` it is `√(m n) = ‖J‖_S1`, so some `t` beats `J` exactly when
-`m n < k n + l m`, for `N × N` when `N < k + l`. So these kernels are recovered from `Ω` exactly
-when `Ω` is rigid and contains the graph of a permutation. For any `a : m → ℂ` and `b : n → ℂ`, a
+`m n < k n + l m`, for `N × N` when `N < k + l`. Under the same conditions on `R` and `C`, the
+least value over `t` is the least norm of all matrices equal to `J` off `R × C`: the matrix equal
+to `1/√(k (n − l))` on `R × Cᶜ`, to `1/√(l (m − k))` on `Rᶜ × C` and zero elsewhere is a
+contraction, so every matrix equal to 1 on `R × Cᶜ` and `Rᶜ × C` has
+`‖X‖_S1 ≥ √(k (n − l)) + √(l (m − k))`. Hall's block can be taken with `k + l = N + 1`, and by
+Cauchy–Schwarz every `Ω` without a permutation graph has a completion of `J` of norm at most
+`√(N² − 1) < N − 1/(2N)`. For `k + l > N` the cells off a `k × l` block contain no permutation
+graph and have least completion norm `√(k (N − l)) + √(l (N − k))`: `√(N² − 1)` for odd `N` and
+`k = l = (N + 1)/2`, and for `N = 4` the largest least completion norm without a permutation
+graph is `√2 + √6`. So these kernels are recovered from `Ω` exactly when `Ω` is rigid and
+contains the graph of a permutation. For any `a : m → ℂ` and `b : n → ℂ`, a
 transport plan on `Ω` from `|a_i|²` to `|b_j|²` gives `‖X‖_S1 ≥ ∑ |a_i|² = ‖a bᵀ‖_S1` for every
 `X` equal to `a bᵀ` on `Ω`, and if `Ω` is also rigid on the supports of `a` and `b`, `a bᵀ` is
 the unique minimum: zero rows and columns need no cells. Conversely, `‖a bᵀ‖_S1 = ‖a‖ ‖b‖`;

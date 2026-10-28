@@ -600,6 +600,53 @@ smallest is `{(0, 0), (0, 1), (1, 1)}` for `N = 2`.
    `Ω` contains no permutation graph, take `Y` from item 3. Then `diag(a) Y diag(b)` equals
    `a bᵀ` on `Ω` and has the norm of `Y` (item D.4), below `N = ‖a bᵀ‖_S1`.
 
+### The failure margin (proven)
+
+Theorem E.3 gives a completion of `J` shorter than `N` when `Ω` contains no permutation graph.
+How much shorter, sharply:
+
+1. Least norm off a block. In an `m × n` table, let `R` be `k` rows and `C` be `l` columns.
+   Every `X` equal to 1 on `R × Cᶜ` and on `Rᶜ × C` has
+   `‖X‖_S1 ≥ √(k (n − l)) + √(l (m − k))`. For nonempty `R` and `C` with `m n ≤ k n + l m`,
+   the best witness `J − t 1_R 1_Cᵀ` of *Patterns* has this norm. So it is the least norm of
+   the matrices equal to `J` off `R × C`.
+2. The margin. Let `Ω ⊂ N × N` contain no permutation graph. Then `Ω` misses a block `R × C`
+   with `k + l = N + 1`, and some `X` equal to `J` on `Ω` has
+   `‖X‖_S1 = √(k (N − l)) + √(l (N − k)) ≤ √(N² − 1) < N − 1/(2N)`. So the least norm on `Ω`
+   is below `‖J‖_S1 = N` by more than `1/(2N)`.
+3. Sharpness. Let `k + l > N`. The cells off a `k × l` block contain no permutation graph, and
+   by item 1 the least norm on them is `√(k (N − l)) + √(l (N − k))`. With item 2, the largest
+   least norm over the patterns without a permutation graph is the largest of these values with
+   `k + l = N + 1`. Lean states it for two cases:
+   - odd `N`: `√(N² − 1)`, at `k = l = (N + 1)/2`;
+   - `N = 4`: `√2 + √6`, between 3.8637 and 3.8638, at `k = 2`, `l = 3`.
+
+### Proof of the failure margin
+
+1. Item 1. Let `Z` be `c₁ = 1/√(k (n − l))` on `R × Cᶜ`, `c₂ = 1/√(l (m − k))` on `Rᶜ × C`,
+   and 0 elsewhere; a `c` is 0 when its product is 0.
+   - `(Z v)_i` is `c₁ ∑_{Cᶜ} v_j` for `i ∈ R` and `c₂ ∑_C v_j` otherwise. By Cauchy–Schwarz,
+     `‖Z v‖² ≤ c₁² k (n − l) ∑_{Cᶜ} |v_j|² + c₂² l (m − k) ∑_C |v_j|² ≤ ‖v‖²`. So `Z` is a
+     contraction.
+   - `X` is 1 wherever `Z` is not 0, so `tr(Zᴴ X) = c₁ k (n − l) + c₂ l (m − k)`. This is
+     `√(k (n − l)) + √(l (m − k))`.
+   - `|tr(Zᴴ X)| ≤ ‖X‖_S1` for a contraction `Z` gives the bound. The best witness reaches it
+     (*Patterns*).
+   - Item D.9's certificate is the case `R = {i₀}ᶜ`, `C = {j₀}ᶜ`, `c₁ = c₂`.
+2. Item 2. Hall's theorem gives rows `R` that meet fewer than `k = |R|` columns. The other
+   columns number more than `N − k`; keep `N + 1 − k` of them as `C`.
+   - The best witness for `R × C` equals `J` on `Ω` and has the norm above.
+   - By Cauchy–Schwarz, `√(x₁ y₁) + √(x₂ y₂) ≤ √((x₁ + x₂)(y₁ + y₂))` for `x, y ≥ 0`. With
+     `x₁ = k`, `y₁ = N − l`, `x₂ = l`, `y₂ = N − k` the right side is
+     `√(N² − (k + l − N)²) = √(N² − 1)`.
+   - `(N − 1/(2N))² = N² − 1 + 1/(4N²)`.
+3. Item 3. A permutation `σ` with every `(i, σ i)` off `R × C` maps `R` into `Cᶜ`, so
+   `k ≤ N − l`. The least norm is item 1 with `m = n = N`, whose condition `N² ≤ (k + l) N`
+   holds.
+   - Odd `N`, `k = l = (N + 1)/2`: the value is `2 √((N + 1)(N − 1)/4) = √(N² − 1)`.
+   - `N = 4`: the values with `k + l = 5` are `√12`, `√2 + √6`, `√6 + √2` and `√12` for
+     `k = 1, 2, 3, 4`, and `√12 < 3.5 < √2 + √6`.
+
 ### Exhaustive check (torch, 2026-10-28)
 
 Every proper pattern `Ω ⊂ {0, 1, 2}²`, 511 in all, is classified by rigidity and by Hall's
@@ -614,7 +661,8 @@ condition. Batched ADMM on `J` then runs 20000 iterations for each. The error is
 | not rigid, no permutation graph | 256 | −3.00 to −0.172 | 0.77–1.00 |
 
 The four rows are Theorem E.2, E.3, E.1 with D.7, and E.3. The nine rigid patterns without a
-permutation graph are the crosses, and `−0.172 = 2√2 − 3` is item D.9's least norm.
+permutation graph are the crosses, and `−0.172 = 2√2 − 3` is item D.9's least norm. It is also
+`√8 − 3`, the largest least norm without a permutation graph (*The failure margin*, odd `N`).
 
 For `N = 4`, all 65 535 proper patterns, 20000 iterations each, on the GPU:
 
@@ -626,7 +674,10 @@ For `N = 4`, all 65 535 proper patterns, 20000 iterations each, on the GPU:
 | not rigid, no permutation graph | 25 249 | −4.00 to −0.136 | 0.632–1.00 |
 
 - The ends −0.536 and −0.136 agree to three decimals with `2√3 − 4`, item D.9's least norm,
-  and `√2 + √6 − 4`, the least norm of the block witness with `k = 3`, `l = 2` (*Patterns*).
+  and `√2 + √6 − 4`, the largest least norm without a permutation graph (*The failure
+  margin*, `N = 4`). The patterns that are not rigid reach the same end: for `k = 2`, `l = 3`
+  the union of `R × Cᶜ` and `Rᶜ × C` is not rigid, and its least norm is again `√2 + √6`,
+  since item 1 needs `X = 1` only there.
 - Theorem E.2 makes `J` the only solution on the first row, so its error up to 8.5e-5 is
   ADMM's slowness. It comes from the 27 068 of these patterns in which a proper set of rows
   meets exactly as many columns as it has rows; on the other 6784 the error is below 1e-13, a
@@ -951,6 +1002,7 @@ All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved witho
 | Theorem E.2 | `eq_onesMatrix_of_perm`, `isMinOn_onesMatrix_iff_of_perm`, `isMinOn_vecMulVec_iff_of_perm`, `isMinOn_addKernel_iff_of_perm`, `rigid_ne_one_zero` | The examples use the rigid pattern `{(0, 0), (0, 1), (1, 1)}`. |
 | Theorem E.3 | `blockFactorL`, `blockFactorR`, `blockWitness_apply`, `sum_ite_mem_univ`, `frobeniusSq_blockFactorL`, `frobeniusSq_blockFactorR`, `nuclearNorm_blockWitness_le`, `exists_nuclearNorm_lt_of_block`, `exists_nuclearNorm_lt_of_not_perm`, `not_isMinOn_onesMatrix_of_not_perm` | Hall's theorem is Mathlib's `Finset.all_card_le_biUnion_card_iff_exists_injective`. `sum_ite_mem_univ` holds in any commutative ring. |
 | The exact witness (*Patterns*) | `onesSubBlock`, `splitColumns`, `splitColumns_gram`, `gram_onesSubBlock`, `nuclearNorm_onesSubBlock`, `nuclearNorm_onesSubBlock_sq_of_nonneg`, `radicand_ge`, `radicand_best`, `radicand_ge_of_le`, `sq_sqrt_add_sqrt`, `sqrt_le_mul_of_le`, `sqrt_lt_mul_of_lt`, `mul_le_sqrt_of_le`, `isLeast_nuclearNorm_onesSubBlock`, `isLeast_nuclearNorm_onesSubBlock_of_le`, `nuclearNorm_onesSubBlock_best_sq`, `nuclearNorm_onesSubBlock_best`, `exists_nuclearNorm_onesSubBlock_lt_iff`, `exists_nuclearNorm_onesSubBlock_lt_card_iff`, `isLeast_nuclearNorm_onesSubBlock_sixtyOne`, `isLeast_nuclearNorm_onesSubBlock_cross` | Generalized to `m × n` and every real `t`: `‖J − t 1_R 1_Cᵀ‖²_S1 = m n − 2t k l + t² k l + 2|t| g` with `g = √(k l (m − k)(n − l))`, from `Xᴴ X = U M Uᴴ` with the orthogonal columns `U = [1_C, 1_{Cᶜ}]`. For nonempty `R`, `C` with `m n ≤ k n + l m`, the least norm over `t` is `√(k (n − l)) + √(l (m − k))` (`IsLeast`), reached at `t = 1 − g/(k l)`, where `‖X‖²_S1 = m n − (k l − g)²/(k l)`; when `k n + l m ≤ m n` it is `√(m n) = ‖J‖_S1`. So some `t` beats `J` iff `m n < k n + l m`, for `N × N` iff `N < k + l`. At `N = 61`, `k = 2`, `l = 60` the least is `√2 + √3540`, between 60.912 and 60.913; for `k = l = N − 1` and `N ≥ 2` it is `2√(N − 1)`. |
+| The failure margin | `blockCert`, `blockCert_mulVec`, `card_compl_cast`, `blockCert_compl_singleton`, `isContraction_blockCert`, `inv_sqrt_sq_mul_le_one`, `trace_blockCert_mul`, `sqrt_add_sqrt_le_nuclearNorm_of_block`, `isLeast_nuclearNorm_compl_block`, `sqrt_mul_add_sqrt_mul_le`, `sqrt_add_sqrt_le_sqrt_sq_sub`, `sqrt_add_sqrt_le_sqrt_sq_sub_one`, `sqrt_sq_sub_one_lt`, `exists_block_of_not_perm`, `exists_nuclearNorm_eq_of_block`, `exists_nuclearNorm_eq_of_not_perm`, `exists_nuclearNorm_le_sqrt_of_not_perm`, `not_exists_perm_of_block`, `isLeast_nuclearNorm_compl_block_card`, `isLeast_nuclearNorm_compl_half_block`, `exists_compl_block_isLeast`, `failureMargin_odd`, `sqrt_two_add_sqrt_six_mem`, `failureMargin_four` | Added. Item 1 is for `m × n`. Its lower bound needs `X = 1` only on `R × Cᶜ` and `Rᶜ × C`; the least norm off `R × C` is `IsLeast` of the nuclear norms of the matrices with `X i j = 1` whenever `¬(i ∈ R ∧ j ∈ C)`. Item 2's block has `#R + #C = N + 1`, and both `≤ √(N² − 1)` and `< N − 1/(2N)` are stated. In item 3 the pattern is `{ij | ¬(ij.1 ∈ R ∧ ij.2 ∈ C)}`, and "no permutation graph" is `¬ ∃ σ : Equiv.Perm n, ∀ i, (i, σ i) ∈ Ω`. For all `k, l ≤ N` with `N < k + l`, `exists_compl_block_isLeast` gives `R` and `C` of these sizes. `failureMargin_odd` and `failureMargin_four` state both halves: every pattern without a permutation graph has a completion of `J` of norm at most the value, and some such pattern has the value as least norm. |
 | Theorem E.4 | `forall_isMinOn_vecMulVec_iff`, `forall_isMinOn_onesMatrix_iff`, `forall_isMinOn_addKernel_iff` | "M recovers `K` from `Ω`" is D.2's form, `∀ X ∈ S, IsMinOn nuclearNorm S X ↔ X = K`. An example derives the failure of the cross for `N = 3`. |
 | Theorem F.1 | `IsTransportPlan`, `IsTransportPlan.sum_eq`, `isTransportPlan_perm`, `sum_sum_mul_norm_sq_sub`, `rowDiv_mul_apply`, and G.1 | The plan has the marginals `‖a i‖²` and `‖b j‖²`, so it carries the scaling `‖a‖ = ‖b‖`. |
 | Theorem F.2 | G.2 with `rigid_support_of_ne_zero` | Stated as `IsMinOn nuclearNorm S X ↔ X = a bᵀ` for every `X` equal to `a bᵀ` on `Ω`. |
@@ -975,6 +1027,8 @@ Not formalized:
 - the numerical tables, including the certificates found for random patterns and for the
   training splits;
 - the sharp value `‖Y − Q‖_op = cos(π/p)`;
+- for even `N ≥ 6`, the largest least norm without a permutation graph: items 2 and 3 of *The
+  failure margin* make it the largest of the `N` values with `k + l = N + 1`;
 - on the diagonals `{0, 1}` minus a cell, that the only `Y` with unit row and column sums is a
   permutation matrix, with `‖Y − Q‖_op = 1`. That no `Y` has `c > 1` is item D.10 for the row
   of the removed cell, which keeps a single cell (`not_isContraction_of_row`), and recovery is
