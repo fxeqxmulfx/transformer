@@ -11,7 +11,8 @@ Source: `review/flat_spectrum.md`, *Patterns*: "When `k + l > N`, the matrix
 norm ADMM found. For the cross, `k = l = N − 1`, it is item 9's `2√(N − 1)`."
 
 At the best `t = 1 − g/(k l)`, `‖X‖²_S1 = m n − (k l − g)²/(k l)`, for `m = n = N` the source's
-value (`nuclearNorm_onesSubBlock_best_sq`). Some real `t` has
+value (`nuclearNorm_onesSubBlock_best_sq`), so `‖X‖_S1 = √(k (n − l)) + √(l (m − k))`, the
+least value (`nuclearNorm_onesSubBlock_best`). Some real `t` has
 `‖X‖_S1 < √(m n) = ‖J‖_S1` iff `m n < k n + l m` (`exists_nuclearNorm_onesSubBlock_lt_iff`),
 for `N × N` iff `N < k + l` (`exists_nuclearNorm_onesSubBlock_lt_card_iff`): the witness of
 Theorem E.3 (`exists_nuclearNorm_lt_of_block`) beats `J` exactly for the blocks it uses. At
@@ -49,6 +50,26 @@ theorem nuclearNorm_onesSubBlock_best_sq {R : Finset m} {C : Finset n} (hR : R.N
     Real.sq_sqrt (by rw [← sq_sqrt_add_sqrt hk hl hkM hlN]; positivity)]
 
 example := nuclearNorm_onesSubBlock_best_sq (R := ({0, 1} : Finset (Fin 2)))
+  (C := ({0} : Finset (Fin 2))) ⟨0, by decide⟩ ⟨0, by decide⟩ (by norm_num)
+
+/-- **The best `t` reaches the least value**: under the hypotheses of
+`isLeast_nuclearNorm_onesSubBlock`, `t = 1 − g/(k l)` gives
+`‖J − t 1_R 1_Cᵀ‖_S1 = √(k (n − l)) + √(l (m − k))`, the least value over every real `t`. -/
+theorem nuclearNorm_onesSubBlock_best {R : Finset m} {C : Finset n} (hR : R.Nonempty)
+    (hC : C.Nonempty)
+    (h : (Fintype.card m * Fintype.card n : ℝ) ≤ #R * Fintype.card n + #C * Fintype.card m) :
+    nuclearNorm (onesSubBlock R C
+        (1 - √(#R * #C * (Fintype.card m - #R) * (Fintype.card n - #C)) / (#R * #C))) =
+      √(#R * (Fintype.card n - #C)) + √(#C * (Fintype.card m - #R)) := by
+  have hk : (0 : ℝ) < #R := by exact_mod_cast hR.card_pos
+  have hl : (0 : ℝ) < #C := by exact_mod_cast hC.card_pos
+  have hkM : (#R : ℝ) ≤ Fintype.card m := by exact_mod_cast card_le_univ R
+  have hlN : (#C : ℝ) ≤ Fintype.card n := by exact_mod_cast card_le_univ C
+  have hab : 0 ≤ √(#R * (Fintype.card n - #C)) + √(#C * (Fintype.card m - #R)) := by positivity
+  rw [← Real.sqrt_sq (nuclearNorm_nonneg _), nuclearNorm_onesSubBlock_best_sq hR hC h,
+    ← sq_sqrt_add_sqrt hk hl hkM hlN, Real.sqrt_sq hab]
+
+example := nuclearNorm_onesSubBlock_best (R := ({0, 1} : Finset (Fin 2)))
   (C := ({0} : Finset (Fin 2))) ⟨0, by decide⟩ ⟨0, by decide⟩ (by norm_num)
 
 /-- **The block witness beats `J` exactly when the block is large**, `review/flat_spectrum.md`,
