@@ -96,6 +96,7 @@ public import Transformer.Grokking.FlatSpectrum.FailureMargin
 public import Transformer.Grokking.FlatSpectrum.MarginSharp
 public import Transformer.Grokking.FlatSpectrum.MarginLargest
 public import Transformer.Grokking.FlatSpectrum.MarginRankOne
+public import Transformer.Grokking.FlatSpectrum.Discontinuity
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -235,6 +236,10 @@ For prime `p` and every multiplicative character `χ`, the `2p − 3` cells `(a,
 `a, b ≠ 0`, recover `[χ(a b)]`, and no set of fewer cells does.
 The readout decides: through `ψ_r`, `r ≠ 0`, the table of `a b` has equal singular values and
 is of least `‖·‖_S1` on no proper `Ω`; some multiplicative character `χ` is injective, and
-through it the table `χ χᵀ` of `a b` determines `a b`. -/
+through it the table `χ χᵀ` of `a b` determines `a b`.
+Read at `x = a/p`, `y = b/p` and divided by `p`, the table of `a b` is `frac(p x y)`: for
+rational `α`, `frac(p α)` converges as `p → ∞` through the primes exactly when `2 α` is an
+integer, by Dirichlet's theorem on primes in arithmetic progressions, and the points of the plane
+where `2 x y` is an integer form a set of area zero. -/
 
 @[expose] public section
