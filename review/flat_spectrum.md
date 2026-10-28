@@ -452,13 +452,13 @@ stops when both residuals fall below `10⁻⁹`, or after 20000 iterations. The 
 - On one diagonal, ADMM returns the matrix `Z` of item 6, with the same norm `p`.
 - On row 0 and column 0, it returns a matrix of norm `2√(p − 1) < p`, so `K` is not even a
   minimum there. The `2p` random cells also give norms below `p`: 6.47, 11.07 and 26.33.
-- `ψ(a³ + a b)` has `‖K‖_S1 = p^{3/2}`. Its error is between 1.0 and 1.4 for every pattern
-  above, half the table included.
+- `ψ(a³ + a b)` has `‖K‖_S1 = p^{3/2}`. Its error is 1.0 on one diagonal and between 1.001
+  and 1.405 on every other pattern above, half the table included.
 - The certificate of item 3 for the diagonals `{0, 1}` has `‖Y − Q‖_op = cos(π/p)`: 0.900969,
   0.970942 and 0.994869. The proved bound `√(1 − 1/(4p²))` is 0.997446, 0.999260 and 0.999870.
 - At `p = 61` and `p = 97` the cap was raised to 200000 iterations.
   - The diagonals `{0, 1}`, `{0, 5}` and `{3, (p − 1)/2}` give errors 8.8e-11 and 6.6e-11,
-    after 6812 and 20196 iterations.
+    after 6813 and 20197 iterations.
   - The three pairs give the same numbers, since relabeling and rescaling map one problem onto
     another.
   - One diagonal gives error 1.0: ADMM returns the matrix `Z` of item 6, zero off `Ω`.
@@ -494,7 +494,7 @@ given probability, three draws each.
 | random 6%, draw 2 | 536 | yes | 1.1169 | 5.4e-5, not converged | 97.000 |
 | random 8% | 717–736 | yes | 1.003–1.008 | 2.2e-5–2.4e-5, not converged | 97.000 |
 | random 12% | 1083–1127 | yes | 0.72–0.73 | 7e-12–7e-11 | 97.000 |
-| random 20% | 1802–1921 | yes | 0.42–0.44 | 2e-11–4e-11 | 97.000 |
+| random 20% | 1802–1921 | yes | 0.42–0.44 | 2.3e-11–3.5e-11 | 97.000 |
 | random 30% | 2716–2888 | yes | 0.31–0.33 | 3e-12–2e-11 | 97.000 |
 
 Over the three primes (63 random draws):
@@ -600,7 +600,7 @@ condition. Batched ADMM on `J` then runs 20000 iterations for each. The error is
 
 | `N = 3` | patterns | `‖X‖_S1 − N` | error |
 | --- | --- | --- | --- |
-| rigid, permutation graph | 195 | within 4e-15 of 0 | at most 4.8e-14 |
+| rigid, permutation graph | 195 | within 5e-15 of 0 | at most 4.8e-14 |
 | rigid, no permutation graph | 9 | −0.172 | 0.5 |
 | not rigid, permutation graph | 51 | within 9e-16 of 0 | 0.89–1.00 |
 | not rigid, no permutation graph | 256 | −3.00 to −0.172 | 0.77–1.00 |
@@ -695,7 +695,8 @@ No pattern satisfies Hall without being rigid. For a component with rows `R`, th
 for `R` and for its complement would force `∑_R α = ∑_{N(R)} β`, which generic weights avoid.
 
 Tight weights: shares `|a_i|²/‖a‖²` and `|b_j|²/‖b‖²` of `(½, ¼, ¼)` for both (A), and of
-`(⅗, ⅕, ⅕)` and `(⅕, ⅖, ⅖)` (C). Permuting the shares of `b` (B) changed no count or range.
+`(⅗, ⅕, ⅕)` and `(⅕, ⅖, ⅖)` (C). Permuting the shares of `b` (B) changed no count and, to the
+digits shown, no range but one: the gap of the non-rigid Hall patterns is within 4e-15 of 0.
 
 | weights | class | patterns | gap | error |
 | --- | --- | --- | --- | --- |
@@ -704,7 +705,7 @@ Tight weights: shares `|a_i|²/‖a‖²` and `|b_j|²/‖b‖²` of `(½, ¼, �
 | A | rigid, no Hall | 60 | −0.54 to −0.14 | 0.37 to 0.67 |
 | A | not rigid, no Hall | 282 | −3.00 to −0.14 | 0.69 to 1.00 |
 | C | rigid, Hall | 110 | 0 to 3.9e-6 | at most 2.4e-4 |
-| C | not rigid, Hall | 8 | within 2e-15 of 0 | 0.89 to 1.00 |
+| C | not rigid, Hall | 8 | within 3e-15 of 0 | 0.89 to 1.00 |
 | C | rigid, no Hall | 94 | −1.00 to −0.10 | 0.29 to 0.75 |
 | C | not rigid, no Hall | 298 | −4.00 to −0.10 | 0.63 to 1.00 |
 
@@ -731,7 +732,7 @@ recovers `a bᵀ` exactly when the margin `m = α₀ + β₀ − 1` is `≥ 0`.
 | `m > 0.05` | 732 | within 4.3e-14 of 0 | at most 1.6e-15 |
 
 Every draw with `m > 0` is recovered, and every draw with `m ≤ 0` has a completion shorter than
-`a bᵀ`. Each `N` splits the same way; the smallest gap below the threshold is −3.7e-6, −1.5e-4,
+`a bᵀ`. Each `N` splits the same way; the largest gap with `m ≤ 0` is −3.7e-6, −1.4e-4,
 −7.0e-5 and −2.5e-5 for `N = 3, 4, 5, 6`.
 
 ### Theorem G (proven)
@@ -891,14 +892,16 @@ residue whose `χ` is nearest to the entry of `X`.
 | p | kernel | rigid | bijection | relative error off `Ω` | on the zero row and column | decoded | `‖X‖_S1` |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 31 | `χ(ab)` | yes | yes | 3.0e-11, 6.9e-11 | 0 | 100 % | 30 |
-| 31 | `χ(a + ab)` | yes | yes | 7.1e-11, 7.5e-11 | at most 3.0e-15 | 100 % | 30 |
+| 31 | `χ(a + ab)` | yes | yes | 7.1e-11, 7.5e-11 | below 5e-15 | 100 % | 30 |
 | 61 | `χ(ab)` | yes | yes | 2.0e-11, 3.2e-11 | 0 | 100 % | 60 |
-| 61 | `χ(a + ab)` | yes | yes | 1.5e-11, 2.7e-11 | at most 4.3e-15 | 100 % | 60 |
+| 61 | `χ(a + ab)` | yes | yes | 1.5e-11, 2.7e-11 | below 5e-15 | 100 % | 60 |
 | 97 | `χ(ab)` | yes | yes | 1.5e-11, 1.9e-11 | 0 | 100 % | 96 |
-| 97 | `χ(a + ab)` | yes | yes | 1.6e-11, 1.9e-11 | at most 3.3e-15 | 100 % | 96 |
+| 97 | `χ(a + ab)` | yes | yes | 1.6e-11, 1.9e-11 | below 5e-15 | 100 % | 96 |
 
-Every split meets both conditions and is recovered, as the corollary says: M returns the
-kernel, `‖X‖_S1 = p − 1 = ‖K‖_S1`, and puts nothing on the zero row and column.
+Every split meets both conditions, so by the corollary M recovers the kernel. ADMM agrees:
+`‖X‖_S1 = p − 1 = ‖K‖_S1` to three decimals, and its entries on the zero row and column are 0
+for `χ(ab)` and below 5e-15 for `χ(a + ab)`: rounding errors, which change with the number of
+threads from run to run.
 
 ### Lean status
 
