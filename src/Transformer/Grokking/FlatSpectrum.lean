@@ -84,6 +84,7 @@ public import Transformer.Grokking.FlatSpectrum.CharacterRecovery
 public import Transformer.Grokking.FlatSpectrum.PatternGraph
 public import Transformer.Grokking.FlatSpectrum.ConnectedRecovery
 public import Transformer.Grokking.FlatSpectrum.WeightDecay
+public import Transformer.Grokking.FlatSpectrum.ReadoutChoice
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -94,8 +95,9 @@ Proposition 2: `ψ (a + b)` has rank one and `‖K‖_S1 = p`; `ψ (a³ + a b)` 
 and `‖K‖_S1 = p^{3/2}`; these are the extremes for unimodular entries, and relabeling keeps
 the spectrum. Theorem A: an invertible `K` is the least-`‖·‖_S1` matrix agreeing with it on
 `Ω` iff its polar factor vanishes off `Ω`; the polar factor of `ψ (a³ + a b)` is `K / √p`,
-with no zero entry, so no proper `Ω` recovers that kernel, nor any square kernel with equal
-singular values and no zero entry. Corollary: with one cell missing,
+with no zero entry, so on no proper `Ω` is that kernel, or any square kernel with equal
+singular values and no zero entry, even of least `‖·‖_S1` among the matrices equal to it
+there. Corollary: with one cell missing,
 the least-`‖·‖_S1` fill of a flat kernel (`K* K = N I`) is the opposite phase `−K_ij`, so for
 `ψ (a³ + a b)` it decodes to `f + (p ± 1)/2` for odd `p` and never to `f`; the fill of the
 rank-one `ψ (a + b)` is the truth. Theorem B: for prime `p` and `r ≠ 0`, the cubic sum
@@ -196,6 +198,9 @@ and columns with an edge for each cell of `Ω` is connected, so a rigid pattern 
 matrix with entries of modulus one, is recovered exactly when the cells of `Ω` connect the rows
 with the columns and contain the graph of a permutation, and
 `[χ(a b)]` exactly when the cells with `a, b ≠ 0` connect the nonzero rows and columns and
-contain the graph of a permutation of them. -/
+contain the graph of a permutation of them. The readout decides: through `ψ_r`, `r ≠ 0`, the
+table of `a b` has equal singular values and is of least `‖·‖_S1` on no proper `Ω`; some
+multiplicative character `χ` is injective, and through it the table `χ χᵀ` of `a b` determines
+`a b`. -/
 
 @[expose] public section

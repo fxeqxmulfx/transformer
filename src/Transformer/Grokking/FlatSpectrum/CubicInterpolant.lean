@@ -13,8 +13,9 @@ of `W` has modulus `p^{-1/2}` and none vanishes. By Theorem A, `K` minimizes `�
 `{X = K on Ω}` for no proper training set `Ω`.
 
 The same holds for every square `K` with equal singular values and no zero entry (added,
-`not_forall_isMinOn_iff_of_singularValues_eq`): `∑ σ_i² = ‖K‖_S2² > 0` gives `c ≠ 0`, so `K` is
-invertible and `W = K / c` vanishes nowhere. So M recovers such a `K` from no proper `Ω`.
+`not_isMinOn_of_singularValues_eq`): `∑ σ_i² = ‖K‖_S2² > 0` gives `c ≠ 0`, so `K` is invertible
+and `W = K / c` vanishes nowhere. So `K` does not have the least nuclear norm on any proper `Ω`,
+and M recovers it from none (`not_forall_isMinOn_iff_of_singularValues_eq`).
 -/
 
 @[expose] public section
@@ -48,13 +49,12 @@ lemma det_ne_zero_of_singularValues_eq {K : Matrix n n ℂ} {c : ℝ} (hc : c �
 
 /-- **Theorem A for a flat kernel** (`review/flat_spectrum.md`, Theorem A, last paragraph,
 stated there for `a³ + a b`): if all singular values of `K` are equal and no entry of `K`
-vanishes, M recovers `K` from no proper `Ω`; `K` is not even a minimum. -/
-theorem not_forall_isMinOn_iff_of_singularValues_eq {K : Matrix n n ℂ} {c : ℝ}
+vanishes, then for every proper `Ω` some matrix equal to `K` on `Ω` has a smaller nuclear norm
+than `K`. -/
+theorem not_isMinOn_of_singularValues_eq {K : Matrix n n ℂ} {c : ℝ}
     (h : ∀ i, singularValues K i = c) (hK : ∀ i j, K i j ≠ 0) {Ω : Set (n × n)}
     (hΩ : Ω ≠ Set.univ) :
-    ¬ ∀ X ∈ {X' : Matrix n n ℂ | ∀ ij ∈ Ω, X' ij.1 ij.2 = K ij.1 ij.2},
-      (IsMinOn nuclearNorm {X' : Matrix n n ℂ | ∀ ij ∈ Ω, X' ij.1 ij.2 = K ij.1 ij.2} X ↔
-        X = K) := by
+    ¬ IsMinOn nuclearNorm {X' : Matrix n n ℂ | ∀ ij ∈ Ω, X' ij.1 ij.2 = K ij.1 ij.2} K := by
   obtain ⟨⟨a, b⟩, hab⟩ := (Set.ne_univ_iff_exists_notMem Ω).mp hΩ
   have hc : c ≠ 0 := by
     rintro rfl
@@ -62,12 +62,20 @@ theorem not_forall_isMinOn_iff_of_singularValues_eq {K : Matrix n n ℂ} {c : �
       rw [← sum_singularValues_sq]
       simp [h]
     exact hK a b (by rw [eq_zero_of_frobeniusSq_eq_zero h2, Matrix.zero_apply])
-  intro hrec
-  have hmin := (hrec K fun _ _ => rfl).mpr rfl
+  intro hmin
   rw [isMinOn_nuclearNorm_iff (det_ne_zero_of_singularValues_eq hc h)] at hmin
   have hW := hmin a b hab
   rw [polarFactor_of_singularValues_eq h, Matrix.smul_apply, smul_eq_mul] at hW
   exact mul_ne_zero (Complex.ofReal_ne_zero.mpr (inv_ne_zero hc)) (hK a b) hW
+
+/-- **Theorem A for a flat kernel**, as recovery: M recovers such a `K` from no proper `Ω`. -/
+theorem not_forall_isMinOn_iff_of_singularValues_eq {K : Matrix n n ℂ} {c : ℝ}
+    (h : ∀ i, singularValues K i = c) (hK : ∀ i j, K i j ≠ 0) {Ω : Set (n × n)}
+    (hΩ : Ω ≠ Set.univ) :
+    ¬ ∀ X ∈ {X' : Matrix n n ℂ | ∀ ij ∈ Ω, X' ij.1 ij.2 = K ij.1 ij.2},
+      (IsMinOn nuclearNorm {X' : Matrix n n ℂ | ∀ ij ∈ Ω, X' ij.1 ij.2 = K ij.1 ij.2} X ↔
+        X = K) :=
+  fun hrec => not_isMinOn_of_singularValues_eq h hK hΩ ((hrec K fun _ _ => rfl).mpr rfl)
 
 variable (p : ℕ) [NeZero p]
 
@@ -120,7 +128,12 @@ example : polarFactor (cubicKernel 2) = ((((√(2 : ℕ) : ℝ))⁻¹ : ℝ) : �
 example := det_ne_zero_of_singularValues_eq (K := cubicKernel 2)
   (Real.sqrt_ne_zero'.mpr (by norm_num)) (singularValues_cubicKernel 2)
 
-/-- No proper set of cells recovers the `a³ + a b` kernel for `p = 3`, the empty one included. -/
+/-- With no cell seen, the `a³ + a b` kernel for `p = 3` does not have the least nuclear norm. -/
+example := not_isMinOn_of_singularValues_eq (singularValues_cubicKernel 3)
+  (fun a b => norm_ne_zero_iff.mp (by simp [cubicKernel, taskKernel]))
+  (Set.empty_ne_univ (α := ZMod 3 × ZMod 3))
+
+/-- M does not recover the `a³ + a b` kernel for `p = 3` from the empty set of cells. -/
 example := not_forall_isMinOn_iff_of_singularValues_eq (singularValues_cubicKernel 3)
   (fun a b => norm_ne_zero_iff.mp (by simp [cubicKernel, taskKernel]))
   (Set.empty_ne_univ (α := ZMod 3 × ZMod 3))
