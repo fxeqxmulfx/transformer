@@ -94,6 +94,7 @@ public import Transformer.Grokking.FlatSpectrum.BlockWitnessCases
 public import Transformer.Grokking.FlatSpectrum.BlockCertificate
 public import Transformer.Grokking.FlatSpectrum.FailureMargin
 public import Transformer.Grokking.FlatSpectrum.MarginSharp
+public import Transformer.Grokking.FlatSpectrum.MarginLargest
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -194,10 +195,11 @@ contraction, so every matrix equal to 1 on `R × Cᶜ` and `Rᶜ × C` has
 `‖X‖_S1 ≥ √(k (n − l)) + √(l (m − k))`. Hall's block can be taken with `k + l = N + 1`, and by
 Cauchy–Schwarz every `Ω` without a permutation graph has a completion of `J` of norm at most
 `√(N² − 1) < N − 1/(2N)`. For `k + l > N` the cells off a `k × l` block contain no permutation
-graph and have least completion norm `√(k (N − l)) + √(l (N − k))`: `√(N² − 1)` for odd `N` and
-`k = l = (N + 1)/2`, and for `N = 4` the largest least completion norm without a permutation
-graph is `√2 + √6`. So these kernels are recovered from `Ω` exactly when `Ω` is rigid and
-contains the graph of a permutation. For any `a : m → ℂ` and `b : n → ℂ`, a
+graph and have least completion norm `√(k (N − l)) + √(l (N − k))`. With `k + l = N + 1` fixed
+this value grows with `k l`, so for `a + b = N + 1` with `a ≤ b ≤ a + 1` the largest least
+completion norm without a permutation graph is `√(a (a − 1)) + √(b (b − 1))`: `√(N² − 1)` for
+odd `N`, `√2 + √6` for `N = 4`. So these kernels are recovered from `Ω` exactly when `Ω` is
+rigid and contains the graph of a permutation. For any `a : m → ℂ` and `b : n → ℂ`, a
 transport plan on `Ω` from `|a_i|²` to `|b_j|²` gives `‖X‖_S1 ≥ ∑ |a_i|² = ‖a bᵀ‖_S1` for every
 `X` equal to `a bᵀ` on `Ω`, and if `Ω` is also rigid on the supports of `a` and `b`, `a bᵀ` is
 the unique minimum: zero rows and columns need no cells. Conversely, `‖a bᵀ‖_S1 = ‖a‖ ‖b‖`;
