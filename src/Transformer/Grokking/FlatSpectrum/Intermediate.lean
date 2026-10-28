@@ -121,9 +121,33 @@ theorem meanSq_condMean_cube_add_mul (r : ZMod p) :
 
 example := @meanSq_condMean_cube_add_mul 5 ⟨Nat.prime_five⟩ 1
 
+/-- The arithmetic of the bound of Theorem B: for `x ≥ 2`,
+`(2√x + 1)²/x² + (x − 1 + 2√x)²/(x² (2x − 1)) ≤ 9/(2x) + 8/x^{3/2}`. With `q = √x` the gap is
+`(4q − 9/2)/(x (2x − 1)) ≥ 0`. -/
+lemma cube_bound_le {x : ℝ} (hx : 2 ≤ x) :
+    (2 * √x + 1) ^ 2 / x ^ 2 + (x - 1 + 2 * √x) ^ 2 / (x ^ 2 * (2 * x - 1)) ≤
+      9 / (2 * x) + 8 / (x * √x) := by
+  set q := √x
+  have hq : x = q ^ 2 := (Real.sq_sqrt (by linarith)).symm
+  have hq0 : 0 < q := Real.sqrt_pos.mpr (by linarith)
+  have hq98 : 9 / 8 ≤ q := by nlinarith
+  have h2q : 0 < 2 * q ^ 2 - 1 := by nlinarith
+  rw [hq, ← sub_nonneg]
+  have key : 9 / (2 * q ^ 2) + 8 / (q ^ 2 * q) - ((2 * q + 1) ^ 2 / (q ^ 2) ^ 2 +
+      (q ^ 2 - 1 + 2 * q) ^ 2 / ((q ^ 2) ^ 2 * (2 * q ^ 2 - 1))) =
+      (4 * q - 9 / 2) / (q ^ 2 * (2 * q ^ 2 - 1)) := by
+    have hq0' : q ≠ 0 := hq0.ne'
+    have h2q' : 2 * q ^ 2 - 1 ≠ 0 := h2q.ne'
+    field_simp
+    ring
+  rw [key]
+  exact div_nonneg (by linarith) (by positivity)
+
+example := cube_bound_le (x := 2) le_rfl
+
 /-- The bound of Theorem B, `review/flat_spectrum.md`: "the quantity is at most
 4.5/p + O(p^{-3/2})", here with the explicit `‖E[ψ_r(a b) | f]‖² ≤ 9/(2p) + 8/p^{3/2}` for
-`r ≠ 0`. From `|S_r| ≤ 2 √p`; with `q = √p` the gap is `(4q − 9/2)/(p (2p − 1)) ≥ 0`. -/
+`r ≠ 0`, from `|S_r| ≤ 2 √p` and `cube_bound_le`. -/
 theorem meanSq_condMean_cube_add_mul_le {r : ZMod p} (hr : r ≠ 0) :
     meanSq (condMean (fun ab : ZMod p × ZMod p => ab.1 ^ 3 + ab.1 * ab.2)
       fun ab => ZMod.stdAddChar (r * (ab.1 * ab.2))) ≤ 9 / (2 * p) + 8 / (p * √p) := by
@@ -142,22 +166,7 @@ theorem meanSq_condMean_cube_add_mul_le {r : ZMod p} (hr : r ≠ 0) :
         ‖((p : ℂ) - 1) + star (cubicSum r)‖ ^ 2 / (p ^ 2 * (2 * p - 1))
       ≤ (2 * √p + 1) ^ 2 / p ^ 2 + (p - 1 + 2 * √p) ^ 2 / (p ^ 2 * (2 * p - 1)) := by
         gcongr
-    _ ≤ 9 / (2 * p) + 8 / (p * √p) := by
-        set q := √(p : ℝ)
-        have hq : (p : ℝ) = q ^ 2 := (Real.sq_sqrt (Nat.cast_nonneg _)).symm
-        have hq0 : 0 < q := Real.sqrt_pos.mpr (by linarith)
-        have hq98 : 9 / 8 ≤ q := by nlinarith
-        have h2q : 0 < 2 * q ^ 2 - 1 := by nlinarith
-        rw [hq, ← sub_nonneg]
-        have key : 9 / (2 * q ^ 2) + 8 / (q ^ 2 * q) - ((2 * q + 1) ^ 2 / (q ^ 2) ^ 2 +
-            (q ^ 2 - 1 + 2 * q) ^ 2 / ((q ^ 2) ^ 2 * (2 * q ^ 2 - 1))) =
-            (4 * q - 9 / 2) / (q ^ 2 * (2 * q ^ 2 - 1)) := by
-          have hq0' : q ≠ 0 := hq0.ne'
-          have h2q' : 2 * q ^ 2 - 1 ≠ 0 := h2q.ne'
-          field_simp
-          ring
-        rw [key]
-        exact div_nonneg (by linarith) (by positivity)
+    _ ≤ 9 / (2 * p) + 8 / (p * √p) := cube_bound_le hp2
 
 example := @meanSq_condMean_cube_add_mul_le 7 ⟨Nat.prime_seven⟩ 1 (by decide)
 
