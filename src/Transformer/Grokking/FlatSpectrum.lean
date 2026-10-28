@@ -79,6 +79,8 @@ public import Transformer.Grokking.FlatSpectrum.SupplyDemand
 public import Transformer.Grokking.FlatSpectrum.SubPlan
 public import Transformer.Grokking.FlatSpectrum.Gale
 public import Transformer.Grokking.FlatSpectrum.WeightedCriterion
+public import Transformer.Grokking.FlatSpectrum.SupportRecovery
+public import Transformer.Grokking.FlatSpectrum.CharacterRecovery
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -176,6 +178,11 @@ Gale's supply–demand theorem: nonnegative masses `α`, `β` have a plan on `Ω
 `∑ α = ∑ β` and every set of rows `R` has `∑_R α ≤ ∑_{N(R)} β`. So `a bᵀ` is recovered from
 `Ω` exactly when `Ω` is rigid on the supports and every `R` has
 `‖b‖² ∑_R |a_i|² ≤ ‖a‖² ∑_{N(R)} |b_j|²`; without zero entries, rigidity on the supports is
-rigidity. -/
+rigidity. If `|a_i| = 1` and `|b_j| = 1` on supports of the same size, Hall's theorem turns the
+inequality into a bijection between the supports whose graph lies in `Ω`. A multiplicative
+character `χ` of `ZMod p` is such a vector, vanishing only at `0`: `[χ(a b)]` is recovered
+exactly when the cells with `a, b ≠ 0` are rigid on the nonzero residues and contain the graph
+of a permutation of them, and `[χ(a + a b)] = χ ⊗ χ(1 + ·)` exactly when the cells with
+`a ≠ 0`, `b ≠ −1` are rigid there and contain the graph of a bijection. -/
 
 @[expose] public section
