@@ -598,10 +598,10 @@ condition. Batched ADMM on `J` then runs 20000 iterations for each. The error is
 
 | `N = 3` | patterns | `‖X‖_S1 − N` | error |
 | --- | --- | --- | --- |
-| rigid, permutation graph | 195 | within 4e-15 of 0 | at most 4.7e-14 |
+| rigid, permutation graph | 195 | within 4e-15 of 0 | at most 4.8e-14 |
 | rigid, no permutation graph | 9 | −0.172 | 0.5 |
 | not rigid, permutation graph | 51 | within 9e-16 of 0 | 0.89–1.00 |
-| not rigid, no permutation graph | 256 | −3.00 to −0.172 | 0.78–1.00 |
+| not rigid, no permutation graph | 256 | −3.00 to −0.172 | 0.77–1.00 |
 
 The four rows are Theorem E.2, E.3, E.1 with D.7, and E.3. The nine rigid patterns without a
 permutation graph are the crosses, and `−0.172 = 2√2 − 3` is item D.9's least norm.
@@ -701,7 +701,7 @@ Tight weights: shares `|a_i|²/‖a‖²` and `|b_j|²/‖b‖²` of `(½, ¼, �
 | A | not rigid, Hall | 24 | within 2e-15 of 0 | 0.87 to 1.00 |
 | A | rigid, no Hall | 60 | −0.54 to −0.14 | 0.37 to 0.67 |
 | A | not rigid, no Hall | 282 | −3.00 to −0.14 | 0.69 to 1.00 |
-| C | rigid, Hall | 110 | 0 to 3.9e-6 | at most 2.3e-4 |
+| C | rigid, Hall | 110 | 0 to 3.9e-6 | at most 2.4e-4 |
 | C | not rigid, Hall | 8 | within 2e-15 of 0 | 0.89 to 1.00 |
 | C | rigid, no Hall | 94 | −1.00 to −0.10 | 0.29 to 0.75 |
 | C | not rigid, no Hall | 298 | −4.00 to −0.10 | 0.63 to 1.00 |
@@ -859,7 +859,7 @@ none; `3 × 2` with `a_1 = b_0 = 0`; `2 × 4` with `b_3 = 0`; `3 × 4` with `a_1
 | class | patterns | recovered | gap | error |
 | --- | --- | --- | --- | --- |
 | rigid, condition | 790 | 790 | within 3.6e-15 of 0 | at most 4.8e-16 |
-| rigid, no condition | 1118 | 0 | −2.86 to −3.5e-4 | 0.017 to 0.91 |
+| rigid, no condition | 1118 | 0 | −2.86 to −3.5e-4 | 0.017 to 0.90 |
 | not rigid, no condition | 4675 | 0 | −5.11 to −3.5e-4 | 0.15 to 1.00 |
 
 Tight weights, with random phases: `|a| = (1, 1, 0)` with `|b| = (1, 1, 0)` or `(1, 1, 1)`;
