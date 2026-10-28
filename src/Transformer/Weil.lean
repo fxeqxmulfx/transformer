@@ -15,6 +15,8 @@ public import Transformer.Weil.Transfer
 public import Transformer.Weil.PowerSums
 public import Transformer.Weil.RootSum
 public import Transformer.Weil.LFunction
+public import Transformer.Weil.Divisors
+public import Transformer.Weil.NewtonIdentity
 
 /-!
 # Stepanov's method for `y² = f(x)` and `y^p − y = f(x)`
@@ -59,7 +61,11 @@ Toward the `L`-function of `y^p − y = f(x)`:
 * `RootSum`: `∑_i f(β_i) = ∑_j f_j p_j(g)` without a splitting field; adding `t X^{n − m}` to a
   monic `g` of degree `n ≥ m = deg f` moves it by `−m f_m t`;
 * `LFunction`: the coefficients `c_n = ∑_{g monic, deg g = n} ψ(∑_i f(β_i))` of the
-  `L`-function, `c_0 = 1`, and `c_n = 0` for `n ≥ m` when `ψ ≠ 1` and `m` is prime to `p`.
+  `L`-function, `c_0 = 1`, and `c_n = 0` for `n ≥ m` when `ψ ≠ 1` and `m` is prime to `p`;
+* `Divisors`: for monic `g` of degree `≤ N`, `∑_{P^e ∣ g} deg P = deg g` over monic irreducible
+  `P` and `1 ≤ e ≤ N`, and `∑_{deg g = n, P^e ∣ g} λ(g) = λ(P)^e c_{n − e deg P}`;
+* `NewtonIdentity`: `n c_n = ∑_{1 ≤ d ≤ n} S_d c_{n − d}`, with
+  `S_d = ∑_{e deg P = d} deg P · λ(P)^e`.
 
 The proofs are written from the mathematics (S. A. Stepanov, 1969; W. M. Schmidt, *Equations
 over Finite Fields*, Ch. I); no other formalization is used.
