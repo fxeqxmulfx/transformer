@@ -19,6 +19,7 @@ public import Transformer.Weil.Divisors
 public import Transformer.Weil.NewtonIdentity
 public import Transformer.Weil.FrobeniusOrbit
 public import Transformer.Weil.FieldSum
+public import Transformer.Weil.Rationality
 
 /-!
 # Stepanov's method for `y² = f(x)` and `y^p − y = f(x)`
@@ -70,7 +71,9 @@ Toward the `L`-function of `y^p − y = f(x)`:
   `S_d = ∑_{e deg P = d} deg P · λ(P)^e`;
 * `FrobeniusOrbit`: for `x` in an extension `L` of degree `d`, with minimal polynomial `P` of
   degree `k`, `P = ∏_{i < k} (X − x^{q^i})` and `Tr_{L/K} f(x) = (d/k) ∑_i f(β_i)`;
-* `FieldSum`: `S_d = ∑_{x ∈ L} ψ(Tr_{L/K} f(x))` for `L` of degree `d`.
+* `FieldSum`: `S_d = ∑_{x ∈ L} ψ(Tr_{L/K} f(x))` for `L` of degree `d`;
+* `Rationality`: `L^*(X) = ∑_{k < m} c_k X^{m − 1 − k}` is monic of degree `m − 1`, and
+  `S_n = −∑_ω ω^n` over its roots `ω ∈ ℂ` for `n ≥ 1`.
 
 The proofs are written from the mathematics (S. A. Stepanov, 1969; W. M. Schmidt, *Equations
 over Finite Fields*, Ch. I); no other formalization is used.
