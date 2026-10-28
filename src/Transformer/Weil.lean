@@ -23,6 +23,7 @@ public import Transformer.Weil.FieldSum
 public import Transformer.Weil.Rationality
 public import Transformer.Weil.WeilBound
 public import Transformer.Weil.MulWeight
+public import Transformer.Weil.MulMod
 public import Transformer.Weil.NormSum
 public import Transformer.Weil.QuadraticWeil
 
@@ -95,6 +96,9 @@ The same `L`-function machinery for `χ(f(x))`, `χ` a multiplicative character:
 * `MulWeight`: the weight `w(g) = χ(Res(g, f))`, and `c_n = 0` for `n ≥ m` when `χ(t)^m ≠ 1` for
   some `t ≠ 0`: `g ↦ g + (t − 1)(g mod f)` permutes the monics of degree `n` and multiplies
   `Res(g, f)` by `t^m`;
+* `MulMod`: `c_n = 0` for `n ≥ m` also when `χ(Res(f, u)) ≠ χ(λ)^N` for some `u` prime to `f`
+  with `deg u ≤ N`, `λ` the leading coefficient of `f`: `g ↦ g + ((u g) mod f − g mod f)` permutes
+  the monics of degree `n` and `λ^N Res(f, g') = Res(f, u) Res(f, g)`;
 * `NormSum`: `N_{L/K} f(x) = Res(P, f)^{d/k}` for `x` with minimal polynomial `P` of degree `k`,
   so `S_d = ∑_{x ∈ L} χ(N_{L/K} f(x))`;
 * `QuadraticWeil`: for the Legendre symbol `χ₂` and odd `m`, `χ_L(y) = χ₂(N_{L/𝔽_p} y)`, so
