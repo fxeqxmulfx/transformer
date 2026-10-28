@@ -88,6 +88,9 @@ public import Transformer.Grokking.FlatSpectrum.ReadoutChoice
 public import Transformer.Grokking.FlatSpectrum.FewestCells
 public import Transformer.Grokking.FlatSpectrum.ProductCells
 public import Transformer.Grokking.FlatSpectrum.DiagonalsMinusCell
+public import Transformer.Grokking.FlatSpectrum.BlockWitnessNorm
+public import Transformer.Grokking.FlatSpectrum.BlockWitnessBest
+public import Transformer.Grokking.FlatSpectrum.BlockWitnessCases
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -177,8 +180,12 @@ Without any certificate: if `Ω` contains the graph of a permutation, every matr
 on `Ω` has `‖X‖_S1 ≥ N`, and if `Ω` is also rigid, `J` is the unique minimum, as is every
 `a bᵀ` with `|a i| = |b j| = 1`, `ψ(a + b)` among them. Without a permutation graph, Hall's
 theorem gives rows `R` that miss a set `C` of columns with `#R + #C > N`, and
-`J − s² 1_R 1_Cᵀ` is shorter than `J`. So these kernels are recovered from `Ω` exactly when
-`Ω` is rigid and contains the graph of a permutation. For any `a : m → ℂ` and `b : n → ℂ`, a
+`J − s² 1_R 1_Cᵀ` is shorter than `J`. Exactly: for an `m × n` block `R × C` of size `k × l` and
+every real `t`, `‖J − t 1_R 1_Cᵀ‖²_S1 = m n − 2t k l + t² k l + 2|t| √(k l (m − k)(n − l))`; for
+nonempty `R`, `C` with `m n ≤ k n + l m` the least norm over `t` is `√(k (n − l)) + √(l (m − k))`,
+and when `k n + l m ≤ m n` it is `√(m n) = ‖J‖_S1`, so some `t` beats `J` exactly when
+`m n < k n + l m`, for `N × N` when `N < k + l`. So these kernels are recovered from `Ω` exactly
+when `Ω` is rigid and contains the graph of a permutation. For any `a : m → ℂ` and `b : n → ℂ`, a
 transport plan on `Ω` from `|a_i|²` to `|b_j|²` gives `‖X‖_S1 ≥ ∑ |a_i|² = ‖a bᵀ‖_S1` for every
 `X` equal to `a bᵀ` on `Ω`, and if `Ω` is also rigid on the supports of `a` and `b`, `a bᵀ` is
 the unique minimum: zero rows and columns need no cells. Conversely, `‖a bᵀ‖_S1 = ‖a‖ ‖b‖`;

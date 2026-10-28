@@ -43,8 +43,8 @@ lemma blockWitness_apply {m : Type*} [DecidableEq m] (R : Finset m) (C : Finset 
   by_cases hi : i ∈ R <;> by_cases hj : j ∈ C <;>
     simp [mul_apply, blockFactorL, blockFactorR, Fin.sum_univ_two, hi, hj, sq]
 
-/-- `∑_i (a if i ∈ R else b) = #R a + (N − #R) b`. -/
-lemma sum_ite_mem_univ (R : Finset n) (a b : ℝ) :
+/-- `∑_i (a if i ∈ R else b) = #R a + (N − #R) b`, in any commutative ring. -/
+lemma sum_ite_mem_univ {S : Type*} [CommRing S] (R : Finset n) (a b : S) :
     ∑ i, (if i ∈ R then a else b) = #R * a + (Fintype.card n - #R) * b := by
   have h1 (i : n) (hi : i ∈ R) : (if i ∈ R then a else b) = a := ite_eq_left hi
   have h2 (i : n) (hi : i ∈ Rᶜ) : (if i ∈ R then a else b) = b := ite_eq_right (mem_compl.mp hi)
