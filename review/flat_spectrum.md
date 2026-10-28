@@ -315,7 +315,9 @@ Added on 2026-10-28 and proved in Lean. Theorem A says no proper `Ω` recovers `
 This section gives the positive side for `ψ(a + b)`. The model of Lemma 1 recovers it exactly
 from `2p` cells on two diagonals, and not from the `p` cells of one diagonal. Items 7–10 mark
 the limits: a pattern must be rigid, a rigid pattern that determines `ψ(a + b)` can still
-fail, and a large missed block leaves item 2 without a certificate.
+fail, and a large missed block leaves item 2 without a certificate. Theorem E recovers
+`ψ(a + b)` from every rigid pattern that contains a permutation graph, with or without a
+certificate.
 
 ### Setting
 
@@ -536,8 +538,34 @@ error, while `‖X‖_S1 − p` stays positive and shrinks:
 - two diagonals minus a cell: 2.1e-4 after 20000 iterations, then 3.7e-9 when both residuals
   fall below `10⁻⁹` after 67491.
 
-This looks like slow convergence to `K`, not a second minimum. So M probably recovers these
-patterns, though Theorem D cannot show it.
+This looks like slow convergence to `K`, not a second minimum. Theorem E shows that M does
+recover these patterns: each is rigid and contains a permutation graph.
+
+### Theorem E (proven)
+
+1. Lower bound. Let `Ω` contain the graph of a permutation `σ`. Then every `X` equal to `J` on
+   `Ω` has `‖X‖_S1 ≥ N`, so `J` is a minimum.
+2. Uniqueness. Let also `Ω` be rigid. Then M recovers `J` from `Ω`. By item D.4 it recovers
+   every `K = a bᵀ` with `|a_i| = |b_j| = 1`, and for `G = ℤ/p` it recovers `ψ(a + b)`.
+
+Item 2 needs no certificate with `c > 1`. So it covers the patterns of item D.10, where every
+admissible `Y` has `‖Y − Q‖_op ≥ 1`, such as a rigid pattern with a single-cell row. The
+smallest is `{(0, 0), (0, 1), (1, 1)}` for `N = 2`.
+
+### Proof of Theorem E
+
+1. Item 1. By Lemma 1, `X = U Vᴴ` with `½ (‖U‖² + ‖V‖²) = ‖X‖_S1`. Let `u_i` and `v_j` be the
+   rows of `U` and `V`, so `X_ij = ⟨u_i, v_j⟩ = ∑_k U_ik conj(V_jk)`.
+   - `‖u − v‖² = ‖u‖² + ‖v‖² − 2 Re⟨u, v⟩`, and `⟨u_i, v_{σ i}⟩ = X_{i, σ i} = 1`.
+   - Summing over `i`, `∑_i ‖u_i − v_{σ i}‖² = ‖U‖² + ‖V‖² − 2N = 2 (‖X‖_S1 − N)`. This is
+     `≥ 0`.
+2. Item 2. Let `X` be a minimum, so `‖X‖_S1 ≤ ‖J‖_S1 = N`.
+   - The sum above is then `0`, so `u_i = v_{σ i}` for every `i`.
+   - Hence `1 = X_{i, σ i} = ‖u_i‖²`, so every `u_i` and every `v_j` is a unit vector.
+   - On a cell `(i, j)` of `Ω`, `‖u_i − v_j‖² = 1 + 1 − 2 = 0`, so `u_i = v_j`.
+   - Rigidity, applied to each coordinate `k` with `r_i = U_ik` and `s_j = −V_jk`, gives
+     `u_i = v_j` for all `i` and `j`.
+   - So `X_ij = ‖u_i‖² = 1`, that is, `X = J`.
 
 ### Lean status
 
@@ -555,14 +583,16 @@ All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved witho
 | Theorem D.8 | `forall_isMinOn_addKernel_iff_isUnit` | `Ω` is exactly the two diagonals. |
 | Theorem D.9 | `rigid_cross`, `vecMulVec_eq_of_cross`, `crossCert`, `card_compl_singleton_cast`, `isContraction_crossCert`, `two_mul_sqrt_le_nuclearNorm_of_cross`, `crossWitness`, `crossFactor`, `crossWitness_eq_mul`, `frobeniusSq_crossFactor`, `two_mul_sqrt_lt`, `isLeast_nuclearNorm_vecMulVec_cross`, `vecMulVec_cross_determined_not_isMinOn`, `isLeast_nuclearNorm_addKernel_cross` | The least norm is `IsLeast` of the set of nuclear norms. Rank-one determination needs only `a_{i₀} b_{j₀} ≠ 0`. |
 | Theorem D.10 | `IsContraction.sum_norm_sq_mulVec_le`, `centeredIndicator`, `sum_centeredIndicator`, `sum_sq_centeredIndicator`, `sum_centeredIndicator_mul_mulVec`, `sq_mul_le_of_block`, `not_isContraction_of_block`, `not_isContraction_of_row` | `c` is any real number. The single-cell row is `∀ j ≠ j₀, (i₀, j) ∉ Ω`, with `N ≥ 2`. |
+| Theorem E.1 | `sum_norm_sq_sub_eq`, `sum_sum_norm_sq_sub_perm`, `card_le_nuclearNorm_of_perm` | The permutation is an `Equiv.Perm` with `(i, σ i) ∈ Ω`. |
+| Theorem E.2 | `eq_onesMatrix_of_perm`, `isMinOn_onesMatrix_iff_of_perm`, `isMinOn_vecMulVec_iff_of_perm`, `isMinOn_addKernel_iff_of_perm`, `rigid_ne_one_zero` | The examples use the rigid pattern `{(0, 0), (0, 1), (1, 1)}`. |
 
 Not formalized:
 - the numerical tables, including the certificates found for random patterns and for the
   training splits;
 - the sharp value `‖Y − Q‖_op = cos(π/p)`;
-- recovery from two diagonals minus one cell. On those `2p − 1` cells the only `Y` with unit
-  row and column sums is a permutation matrix, with `‖Y − Q‖_op = 1`, so item 1 gives no
-  `c > 1`;
+- that two diagonals minus one cell are rigid. With Theorem E.2 this gives recovery from those
+  `2p − 1` cells, where item D.1 gives no `c > 1`: the only `Y` with unit row and column sums
+  is a permutation matrix, with `‖Y − Q‖_op = 1`;
 - the failures on `2p` random cells;
 - the witness `J − t 1_R 1_Cᵀ`, and the split of the rigid patterns by Hall's condition
   (*Patterns*);
@@ -572,19 +602,21 @@ Not formalized:
 
 Scope:
 - The spectrum alone does not decide recovery; the pattern does. `ψ(a + b)` has the best
-  spectrum, rank one. It is recovered from two diagonals, `2p` cells, and numerically from the
-  50% training splits. It is not recovered from one diagonal, from two diagonals whose offset
+  spectrum, rank one. It is recovered from two diagonals, `2p` cells, and from the 50% training
+  splits, which are rigid and contain a permutation graph (checked numerically), so Theorem E
+  applies. It is not recovered from one diagonal, from two diagonals whose offset
   is not a unit, from row 0 and column 0, or from `2p` random cells.
 - Rigidity is necessary (item 7): otherwise a phase on one component changes `K` off `Ω`. A
   rigid pattern is connected, so it has at least `2p − 1` cells; two diagonals use one more.
 - Rigidity is not sufficient. The cross is rigid and determines `ψ(a + b)` among rank-one
-  matrices, yet M misses it (item 9). What decides is a certificate as in item 1. In the
-  numerics every rigid pattern with `‖Y − Q‖_op < 1` was recovered.
-- In the numerics the rigid patterns split by matchings, though this is not proved:
-  - one with no permutation graph inside fails, like the cross;
-  - every elementary one had a certificate below 1;
-  - in between, a single-cell row or column pins every certificate at `‖Y − Q‖_op ≥ 1`, so
-    Theorem D says nothing.
+  matrices, yet M misses it (item 9). The cross holds no permutation graph once `N ≥ 3`.
+- A rigid pattern that contains a permutation graph is recovered (Theorem E.2). Theorem D's
+  certificate is not needed:
+  - every elementary pattern in the numerics had a certificate below 1;
+  - a single-cell row or column pins every certificate at `‖Y − Q‖_op ≥ 1` (item D.10), yet
+    such patterns are recovered too.
+- In the numerics every rigid pattern with no permutation graph inside failed, like the
+  cross. The witness `J − t 1_R 1_Cᵀ` explains this, by hand.
 - The 50% training splits are deep in the elementary regime, with `‖Y − Q‖_op ≈ 0.2`.
 - `ψ(a³ + a b)` is recovered from no proper `Ω` (Theorem A). Numerically it fails on every
   pattern above.

@@ -63,6 +63,7 @@ public import Transformer.Grokking.FlatSpectrum.Rigidity
 public import Transformer.Grokking.FlatSpectrum.CrossCertificate
 public import Transformer.Grokking.FlatSpectrum.CrossWitness
 public import Transformer.Grokking.FlatSpectrum.BlockBound
+public import Transformer.Grokking.FlatSpectrum.PermutationRecovery
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -139,6 +140,9 @@ column `j₀` are rigid and determine `a bᵀ` among rank-one matrices, yet the 
 of the matrices equal to `a bᵀ` there is `2√(N − 1)`, below `N = ‖a bᵀ‖_S1` once `N ≥ 3`.
 A missed block bounds the certificate: if `Ω` misses `R × C`, every such `Y` with
 `c (Y − J/N)` a contraction has `c² #R #C ≤ (N − #R)(N − #C)`, so none exists with `c > 1`
-once `R`, `C` are nonempty and `#R + #C ≥ N`, as when a row meets `Ω` in a single cell. -/
+once `R`, `C` are nonempty and `#R + #C ≥ N`, as when a row meets `Ω` in a single cell.
+Without any certificate: if `Ω` contains the graph of a permutation, every matrix equal to `J`
+on `Ω` has `‖X‖_S1 ≥ N`, and if `Ω` is also rigid, `J` is the unique minimum, as is every
+`a bᵀ` with `|a i| = |b j| = 1`, `ψ(a + b)` among them. -/
 
 @[expose] public section
