@@ -189,8 +189,9 @@ of a permutation of them, and `[χ(a + a b)] = χ ⊗ χ(1 + ·)` exactly when t
 `a ≠ 0`, `b ≠ −1` are rigid there and contain the graph of a bijection. Rigidity is
 connectivity: with a row and a column, `Ω` is rigid exactly when the bipartite graph on the rows
 and columns with an edge for each cell of `Ω` is connected, so a rigid pattern has at least
-`#rows + #columns − 1` cells. Hence `a bᵀ` with `|a i| = |b j| = 1` is recovered exactly when the
-cells of `Ω` connect the rows with the columns and contain the graph of a permutation, and
+`#rows + #columns − 1` cells. Hence `a bᵀ` with `|a i| = |b j| = 1`, and so every rank-one
+matrix with entries of modulus one, is recovered exactly when the cells of `Ω` connect the rows
+with the columns and contain the graph of a permutation, and
 `[χ(a b)]` exactly when the cells with `a, b ≠ 0` connect the nonzero rows and columns and
 contain the graph of a permutation of them. -/
 

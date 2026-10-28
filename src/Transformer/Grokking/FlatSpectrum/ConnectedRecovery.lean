@@ -13,7 +13,9 @@ the corollaries for characters, with rigidity read as connectivity (`rigid_iff_c
 * For `|a_i| = |b_j| = 1`, M recovers `a bᵀ` from `Ω` exactly when the cells of `Ω` connect the
   rows with the columns and contain the graph of a permutation
   (`forall_isMinOn_vecMulVec_iff_connected`); for `ψ(a + b)`,
-  `forall_isMinOn_addKernel_iff_connected`.
+  `forall_isMinOn_addKernel_iff_connected`. Added: every rank-one `u vᵀ` with entries of
+  modulus one is such an `a bᵀ` (`exists_norm_eq_one_of_vecMulVec`), so the criterion holds for
+  it (`forall_isMinOn_vecMulVec_iff_connected_of_entries`).
 * Rigidity on the supports of `a ≠ 0` and `b ≠ 0` is connectivity of the cells inside them
   (`rigid_support_iff_connected`).
 * M recovers `[χ(a b)]` exactly when the cells with `a, b ≠ 0` connect the nonzero rows and
@@ -43,6 +45,49 @@ theorem forall_isMinOn_vecMulVec_iff_connected [Fintype n] [DecidableEq n] [None
 
 example := (forall_isMinOn_vecMulVec_iff_connected (n := Fin 2) (a := fun _ => 1)
   (b := fun _ => 1) (by simp) (by simp) (Ω := {ij | ij ≠ (1, 0)})).mpr
+  ⟨(rigid_iff_connected _).mp rigid_ne_one_zero, 1, Fin.forall_fin_two.mpr ⟨by simp, by simp⟩⟩
+
+/-- A matrix `u vᵀ` whose entries have modulus one is `a bᵀ` with `|a i| = |b j| = 1`. -/
+lemma exists_norm_eq_one_of_vecMulVec [Nonempty m] [Nonempty n] {u : m → ℂ} {v : n → ℂ}
+    (h : ∀ i j, ‖vecMulVec u v i j‖ = 1) :
+    ∃ (a : m → ℂ) (b : n → ℂ), (∀ i, ‖a i‖ = 1) ∧ (∀ j, ‖b j‖ = 1) ∧
+      vecMulVec a b = vecMulVec u v := by
+  obtain ⟨i₀⟩ := ‹Nonempty m›
+  obtain ⟨j₀⟩ := ‹Nonempty n›
+  simp only [vecMulVec_apply, norm_mul] at h
+  have hu : ‖u i₀‖ ≠ 0 := fun h0 => by simpa [h0] using h i₀ j₀
+  have hv : ‖v j₀‖ ≠ 0 := fun h0 => by simpa [h0] using h i₀ j₀
+  have ht : ((‖u i₀‖ : ℝ) : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hu
+  refine ⟨fun i => u i / (‖u i₀‖ : ℂ), fun j => (‖u i₀‖ : ℂ) * v j, fun i => ?_, fun j => ?_, ?_⟩
+  · rw [norm_div, Complex.norm_real, Real.norm_of_nonneg (norm_nonneg _), div_eq_one_iff_eq hu]
+    exact mul_right_cancel₀ hv ((h i j₀).trans (h i₀ j₀).symm)
+  · rw [norm_mul, Complex.norm_real, Real.norm_of_nonneg (norm_nonneg _)]
+    exact h i₀ j
+  · ext i j
+    rw [vecMulVec_apply, vecMulVec_apply, show u i / (‖u i₀‖ : ℂ) * ((‖u i₀‖ : ℂ) * v j) =
+      u i * v j * ((‖u i₀‖ : ℂ) / (‖u i₀‖ : ℂ)) by ring, div_self ht, mul_one]
+
+example := exists_norm_eq_one_of_vecMulVec (u := fun _ : Fin 1 => (2 : ℂ))
+  (v := fun _ : Fin 1 => 1 / 2) fun i j => by norm_num [vecMulVec_apply]
+
+/-- **Theorem E for any rank-one matrix with entries of modulus one, with graphs**
+(`review/flat_spectrum.md`, Theorem E, stated there for `a bᵀ` with `|a i| = |b j| = 1`): M
+recovers `u vᵀ` with `|u_i v_j| = 1` from `Ω` exactly when the cells of `Ω` connect the rows with
+the columns and contain the graph of a permutation. -/
+theorem forall_isMinOn_vecMulVec_iff_connected_of_entries [Fintype n] [DecidableEq n]
+    [Nonempty n] {u v : n → ℂ} (h : ∀ i j, ‖vecMulVec u v i j‖ = 1) {Ω : Set (n × n)} :
+    (∀ X ∈ {X' : Matrix n n ℂ | ∀ ij ∈ Ω, X' ij.1 ij.2 = vecMulVec u v ij.1 ij.2},
+      (IsMinOn nuclearNorm {X' | ∀ ij ∈ Ω, X' ij.1 ij.2 = vecMulVec u v ij.1 ij.2} X ↔
+        X = vecMulVec u v)) ↔
+      (patternGraph Ω).Connected ∧ ∃ σ : Equiv.Perm n, ∀ i, (i, σ i) ∈ Ω := by
+  obtain ⟨a, b, ha, hb, hab⟩ := exists_norm_eq_one_of_vecMulVec h
+  rw [← hab]
+  exact forall_isMinOn_vecMulVec_iff_connected ha hb
+
+/-- `(2, 2)(½, ½)ᵀ` is recovered from `{(0, 0), (0, 1), (1, 1)}`. -/
+example := (forall_isMinOn_vecMulVec_iff_connected_of_entries (n := Fin 2) (u := fun _ => 2)
+  (v := fun _ => 1 / 2) (fun i j => by norm_num [vecMulVec_apply])
+  (Ω := {ij | ij ≠ (1, 0)})).mpr
   ⟨(rigid_iff_connected _).mp rigid_ne_one_zero, 1, Fin.forall_fin_two.mpr ⟨by simp, by simp⟩⟩
 
 /-- **`ψ(a + b)` with graphs** (`review/flat_spectrum.md`, Theorem E): M recovers `[ψ(a + b)]`
