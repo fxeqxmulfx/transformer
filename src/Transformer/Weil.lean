@@ -11,6 +11,7 @@ public import Transformer.Weil.TraceIndependence
 public import Transformer.Weil.TraceSystem
 public import Transformer.Weil.TraceStepanov
 public import Transformer.Weil.ArtinSchreier
+public import Transformer.Weil.Transfer
 
 /-!
 # Stepanov's method for `y² = f(x)` and `y^p − y = f(x)`
@@ -44,6 +45,11 @@ For `q = p^ν` and `f` of degree `m ≥ 1` prime to `p`, the same method counts 
   `ℓ · #{x : g(x) = c} ≤ K − 1 + (p − 1) m p^{ν − 1} + q (J − 1)`;
 * `ArtinSchreier`: for `q ≥ 5`, `#{x : Tr(f(x)) = c} ≤ q/p + 4 m √q`, and
   `|∑_x ψ(Tr f(x))| ≤ 4 p m √q` for a nontrivial additive character `ψ` of `𝔽_p`.
+
+Toward the `L`-function of `y^p − y = f(x)`:
+
+* `Transfer`: if `‖∑_{ω ∈ s} ω^n‖ ≤ M R^n` for every large `n`, then every `ω ∈ s` has
+  `‖ω‖ ≤ R`.
 
 The proofs are written from the mathematics (S. A. Stepanov, 1969; W. M. Schmidt, *Equations
 over Finite Fields*, Ch. I); no other formalization is used.
