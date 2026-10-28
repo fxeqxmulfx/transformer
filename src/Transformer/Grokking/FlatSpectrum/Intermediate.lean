@@ -145,12 +145,13 @@ lemma cube_bound_le {x : ℝ} (hx : 2 ≤ x) :
 
 example := cube_bound_le (x := 2) le_rfl
 
-/-- The bound of Theorem B, `review/flat_spectrum.md`: "the quantity is at most
-4.5/p + O(p^{-3/2})", here with the explicit `‖E[ψ_r(a b) | f]‖² ≤ 9/(2p) + 8/p^{3/2}` for
-`r ≠ 0`, from `|S_r| ≤ 2 √p` and `cube_bound_le`. -/
-theorem meanSq_condMean_cube_add_mul_le {r : ZMod p} (hr : r ≠ 0) :
+/-- Theorem B's formula with `|S_r| ≤ 2 √p`: for `r ≠ 0`, `‖E[ψ_r(a b) | f]‖²` is at most
+`(2√p + 1)²/p² + (p − 1 + 2√p)²/(p² (2p − 1))`, the "bound 0.053" of the source's numerical
+check at `p = 97`. -/
+theorem meanSq_condMean_cube_add_mul_le_sqrt {r : ZMod p} (hr : r ≠ 0) :
     meanSq (condMean (fun ab : ZMod p × ZMod p => ab.1 ^ 3 + ab.1 * ab.2)
-      fun ab => ZMod.stdAddChar (r * (ab.1 * ab.2))) ≤ 9 / (2 * p) + 8 / (p * √p) := by
+      fun ab => ZMod.stdAddChar (r * (ab.1 * ab.2))) ≤
+      (2 * √p + 1) ^ 2 / p ^ 2 + (p - 1 + 2 * √p) ^ 2 / (p ^ 2 * (2 * p - 1)) := by
   have hp2 : (2 : ℝ) ≤ p := by exact_mod_cast (Fact.out : p.Prime).two_le
   have hS := norm_cubicSum_le hr
   have hB : ‖cubicSum r - 1‖ ≤ 2 * √p + 1 :=
@@ -162,11 +163,18 @@ theorem meanSq_condMean_cube_add_mul_le {r : ZMod p} (hr : r ≠ 0) :
     linarith
   rw [meanSq_condMean_cube_add_mul]
   have h2p : (0 : ℝ) < 2 * p - 1 := by linarith
-  calc ‖cubicSum r - 1‖ ^ 2 / p ^ 2 +
-        ‖((p : ℂ) - 1) + star (cubicSum r)‖ ^ 2 / (p ^ 2 * (2 * p - 1))
-      ≤ (2 * √p + 1) ^ 2 / p ^ 2 + (p - 1 + 2 * √p) ^ 2 / (p ^ 2 * (2 * p - 1)) := by
-        gcongr
-    _ ≤ 9 / (2 * p) + 8 / (p * √p) := cube_bound_le hp2
+  gcongr
+
+example := @meanSq_condMean_cube_add_mul_le_sqrt 7 ⟨Nat.prime_seven⟩ 1 (by decide)
+
+/-- The bound of Theorem B, `review/flat_spectrum.md`: "the quantity is at most
+4.5/p + O(p^{-3/2})", here with the explicit `‖E[ψ_r(a b) | f]‖² ≤ 9/(2p) + 8/p^{3/2}` for
+`r ≠ 0`, from `|S_r| ≤ 2 √p` and `cube_bound_le`. -/
+theorem meanSq_condMean_cube_add_mul_le {r : ZMod p} (hr : r ≠ 0) :
+    meanSq (condMean (fun ab : ZMod p × ZMod p => ab.1 ^ 3 + ab.1 * ab.2)
+      fun ab => ZMod.stdAddChar (r * (ab.1 * ab.2))) ≤ 9 / (2 * p) + 8 / (p * √p) :=
+  (meanSq_condMean_cube_add_mul_le_sqrt hr).trans
+    (cube_bound_le (by exact_mod_cast (Fact.out : p.Prime).two_le))
 
 example := @meanSq_condMean_cube_add_mul_le 7 ⟨Nat.prime_seven⟩ 1 (by decide)
 
