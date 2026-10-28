@@ -81,6 +81,8 @@ public import Transformer.Grokking.FlatSpectrum.Gale
 public import Transformer.Grokking.FlatSpectrum.WeightedCriterion
 public import Transformer.Grokking.FlatSpectrum.SupportRecovery
 public import Transformer.Grokking.FlatSpectrum.CharacterRecovery
+public import Transformer.Grokking.FlatSpectrum.PatternGraph
+public import Transformer.Grokking.FlatSpectrum.ConnectedRecovery
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -183,6 +185,12 @@ inequality into a bijection between the supports whose graph lies in `Ω`. A mul
 character `χ` of `ZMod p` is such a vector, vanishing only at `0`: `[χ(a b)]` is recovered
 exactly when the cells with `a, b ≠ 0` are rigid on the nonzero residues and contain the graph
 of a permutation of them, and `[χ(a + a b)] = χ ⊗ χ(1 + ·)` exactly when the cells with
-`a ≠ 0`, `b ≠ −1` are rigid there and contain the graph of a bijection. -/
+`a ≠ 0`, `b ≠ −1` are rigid there and contain the graph of a bijection. Rigidity is
+connectivity: with a row and a column, `Ω` is rigid exactly when the bipartite graph on the rows
+and columns with an edge for each cell of `Ω` is connected, so a rigid pattern has at least
+`#rows + #columns − 1` cells. Hence `a bᵀ` with `|a i| = |b j| = 1` is recovered exactly when the
+cells of `Ω` connect the rows with the columns and contain the graph of a permutation, and
+`[χ(a b)]` exactly when the cells with `a, b ≠ 0` connect the nonzero rows and columns and
+contain the graph of a permutation of them. -/
 
 @[expose] public section
