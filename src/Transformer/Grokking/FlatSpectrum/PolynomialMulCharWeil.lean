@@ -15,10 +15,9 @@ degree `m ≥ 1` and `χ ≠ 1` a multiplicative character whose order `d` is pr
 `‖E[χ(a b) | P(a) + a b]‖² ≤ ((m − 1) √p + 1)²/p² + (p − 1)²/(p² (2p − 1))`, of order `m²/p`.
 For `d = 2` this is the odd-degree case of `PolynomialLegendre`.
 
-Not covered: `d` and `m` with a common factor. Weil's bound still holds for every `c` with
-`c − P` not a constant times a `d`-th power, but the Stepanov argument behind it here needs `d`
-prime to `m`. For `d ∣ m` a fiber can fail: `P = a^d` and `c = 0` give
-`|∑_a χ(−a^d)| = p − 1`.
+For `d` and `m` with a common factor, `PolynomialMulCharAnyOrder` proves Weil's bound for every
+`c` but one, and the readout bound with an added `(p − 1)/p²`. The excluded fiber can fail
+Weil's bound: for `d ∣ m`, `P = (a − 1)^d` and `c = 0` give `|∑_a χ(−(a − 1)^d)| = p − 1`.
 -/
 
 @[expose] public section

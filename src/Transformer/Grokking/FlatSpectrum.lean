@@ -37,6 +37,8 @@ public import Transformer.Grokking.FlatSpectrum.PolynomialMulChar
 public import Transformer.Grokking.FlatSpectrum.PolynomialLegendre
 public import Transformer.Grokking.FlatSpectrum.PolynomialWeil
 public import Transformer.Grokking.FlatSpectrum.PolynomialMulCharWeil
+public import Transformer.Grokking.FlatSpectrum.PowerfulFibers
+public import Transformer.Grokking.FlatSpectrum.PolynomialMulCharAnyOrder
 public import Transformer.Grokking.FlatSpectrum.OneHotSpectrum
 public import Transformer.Grokking.FlatSpectrum.ZeroIndicator
 public import Transformer.Grokking.FlatSpectrum.ZeroIndicatorSpectrum
@@ -97,8 +99,11 @@ additive or the multiplicative readout. For `P` of odd degree `m` and odd `p`, W
 `‖E[χ₂(a b) | P(a) + a b]‖²` is at most `((m − 1) √p + 1)²/p² + (p − 1)²/(p² (2p − 1))`; for
 even `m` at most one fiber fails, which adds `(p − 1)/p²`. The bound without that term holds for
 every `χ ≠ 1` of order prime to `m`, by Weil's bound `|∑_a χ(c − P(a))| ≤ (m − 1) √p` for such
-`χ`; a common factor of the order and `m` is not covered. For a
-polynomial `P` of degree `m ≥ 1` prime to `p` and `r ≠ 0`, Weil's bound (`Transformer.Weil`)
+`χ`. For every `χ ≠ 1`, of any order, Weil's bound holds for `c − P` with an irreducible factor
+`R`, `R² ∤ c − P`, which is every `c` but one: if all factors of `c − P` are squared, then
+`c − P ∣ P'²`, and two such `c − P` are coprime, of total degree above `deg P'²` (for `P' = 0`
+the trivial bound suffices). So the bound with the term `(p − 1)/p²` holds for every `χ ≠ 1`.
+For a polynomial `P` of degree `m ≥ 1` prime to `p` and `r ≠ 0`, Weil's bound (`Transformer.Weil`)
 gives `|∑_x ψ(r P(x))| ≤ (m − 1) √p`, so the additive readout `‖E[ψ_r(a b) | P(a) + a b]‖²` is
 at most `((m − 1) √p + 1)²/p² + (p + (m − 1) √p + 1)²/(p² (2p − 1))`. Without a fixed
 readout, for `f = P(a) + a b` with a polynomial `P` of degree `m ≥ 2`, every `ρ`, every `g` and
