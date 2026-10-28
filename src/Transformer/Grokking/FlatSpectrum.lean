@@ -42,6 +42,11 @@ public import Transformer.Grokking.FlatSpectrum.ZeroIndicatorSpectrum
 public import Transformer.Grokking.FlatSpectrum.ZeroIndicatorRank
 public import Transformer.Grokking.FlatSpectrum.AddReadoutSpectrum
 public import Transformer.Grokking.FlatSpectrum.SquareReadout
+public import Transformer.Grokking.FlatSpectrum.GramBlock
+public import Transformer.Grokking.FlatSpectrum.ZeroIndicatorShift
+public import Transformer.Grokking.FlatSpectrum.ZeroIndicatorShiftGram
+public import Transformer.Grokking.FlatSpectrum.ZeroIndicatorCentered
+public import Transformer.Grokking.FlatSpectrum.ZeroIndicatorCenteredValues
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -89,6 +94,12 @@ is `(p + 1)/2` and `r_eff = (√(p + 1) + 1 + (p − 3)/√2)²/(2p − 1)`, bet
 at `p = 97` and between `59.532` and `59.533` at `p = 199`. The singular values of a kernel
 `[g(a + b)]` are the `|ĝ(k)|` of the discrete Fourier transform. For odd prime `p`, the least
 `r_eff` of `[φ((a + b)²)]` over the centered readouts, `∑_s φ(s²) = 0` with `φ` not zero on the
-squares, is `2`, attained by `φ(s²) = cos(2π s/p)`; a constant readout gives `1`. -/
+squares, is `2`, attained by `φ(s²) = cos(2π s/p)`; a constant readout gives `1`. For every
+shift `μ`, the kernel `[a³ + a b = 0] − μ` has
+`‖K_μ‖_S1 = (p − 3)/√2 + √(p + 2 − 2(2p − 1)μ + p²μ² + 2|1 − μ|√(p + 1))` and
+`‖K_μ‖²_S2 = 2p − 1 − 2(2p − 1)μ + p²μ²`. Centered by its mean `μ = (2p − 1)/p²`, it has
+`r_eff = (p(p − 3)/√2 + √(p³ − 2p² + 4p − 1 + 2(p − 1)²√(p + 1)))²/((2p − 1)(p − 1)²)`, between
+`31.498` and `31.499` at `p = 97` and between `60.024` and `60.025` at `p = 199`, and `r_eff/p`
+rounds to `0.359`, `0.345`, `0.325` and `0.302` at `p = 47, 61, 97, 199`. -/
 
 @[expose] public section
