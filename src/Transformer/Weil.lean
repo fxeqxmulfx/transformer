@@ -106,9 +106,10 @@ The same `L`-function machinery for `χ(f(x))`, `χ` a multiplicative character:
   a square, `f = P^e Q` with `e` odd and `P ∤ Q`, and `u ≡ v` modulo `P`, `u ≡ 1` modulo `Q`,
   with `v(α)` a non-square in `𝔽_p[X]/(P)`, has `χ₂(Res(f, u)) = −χ₂(λ)^N`, so `c_n = 0` for
   `n ≥ m`;
-* `QuadraticWeil`: for the Legendre symbol `χ₂` and odd `m`, `χ_L(y) = χ₂(N_{L/𝔽_p} y)`, so
-  `Hyperelliptic` over the fields with `p^d` elements bounds `|S_d|` by `7 m √p^d`, `c_n = 0` for
-  `n ≥ m`, and `|∑_{x ∈ 𝔽_p} χ₂(f(x))| ≤ (m − 1) √p`.
+* `QuadraticWeil`: for the Legendre symbol `χ₂` and `f` not a constant times a square (odd `m`
+  in particular), `χ_L(y) = χ₂(N_{L/𝔽_p} y)` and `IndependenceRoot` let `Hyperelliptic` bound
+  `|S_d|` by `7 m √p^d` over the fields with `p^d` elements, `c_n = 0` for `n ≥ m`, and
+  `|∑_{x ∈ 𝔽_p} χ₂(f(x))| ≤ (m − 1) √p`.
 
 The proofs are written from the mathematics (S. A. Stepanov, 1969; W. M. Schmidt, *Equations
 over Finite Fields*, Ch. I); no other formalization is used.

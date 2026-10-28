@@ -114,6 +114,22 @@ theorem ne_C_mul_sq_of_odd {K : Type*} [Field K] {f : K[X]} (hf : Odd f.natDegre
 
 example := ne_C_mul_sq_of_odd (K := ZMod 3) (f := X) (by rw [natDegree_X]; exact odd_one) 1 1
 
+/-- A polynomial with a root of odd multiplicity is not `c g²`. -/
+theorem ne_C_mul_sq_of_rootMultiplicity {K : Type*} [Field K] {f : K[X]} {a : K}
+    (ha : Odd (rootMultiplicity a f)) (c : K) (g : K[X]) : f ≠ C c * g ^ 2 := by
+  rintro rfl
+  by_cases h0 : C c * g ^ 2 = 0
+  · rw [h0, rootMultiplicity_zero] at ha
+    exact Nat.not_odd_zero ha
+  · have hg : g ≠ 0 := fun hg => h0 (by rw [hg]; ring)
+    rw [rootMultiplicity_mul h0, rootMultiplicity_C, sq, rootMultiplicity_mul (mul_ne_zero hg hg),
+      zero_add] at ha
+    exact Nat.not_odd_iff_even.mpr ⟨_, rfl⟩ ha
+
+example := ne_C_mul_sq_of_rootMultiplicity (K := ZMod 3) (f := X) (a := 0) (by
+  rw [show (X : (ZMod 3)[X]) = X - C 0 by simp, rootMultiplicity_X_sub_C_self]
+  exact odd_one) 1 1
+
 /-- **The odd part of `f`**: if `f` is not `c g²`, then `f = P^e Q` with `P` monic irreducible,
 `e` odd and `P ∤ Q`. -/
 theorem exists_monic_irreducible_odd_pow_mul {K : Type*} [Field K] {f : K[X]}
