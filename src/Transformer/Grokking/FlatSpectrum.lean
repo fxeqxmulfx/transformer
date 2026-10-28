@@ -27,6 +27,7 @@ public import Transformer.Grokking.FlatSpectrum.CharacterBases
 public import Transformer.Grokking.FlatSpectrum.ShiftKernel
 public import Transformer.Grokking.FlatSpectrum.JacobiSums
 public import Transformer.Grokking.FlatSpectrum.MulIntermediate
+public import Transformer.Grokking.FlatSpectrum.QuotientRoute
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -47,12 +48,13 @@ norm times `O(p^{-1/2})`. Each step of `v = a b`, `f = a³ + v` is rank 1 in its
 products of the two bases are Gauss sums of modulus `√p`, and for `p ≡ 1 mod 3`,
 `S_r = g(χ, ψ_r) + g(χ², ψ_r)` with `χ` of order 3. For a nontrivial multiplicative character
 `χ` and `c ≠ 0`, Jacobi sums give Weil's bound `|∑_a χ(c − a³)| ≤ 2 √p`, so
-`‖E[χ(a b) | a³ + a b]‖²` has the same bound `9/(2p) + 8/p^{3/2}`. Torch check: every
-minimum-nuclear-norm completion is zero on a row whose seen entries are zero, so a hidden 1 of
-the one-hot kernel `[a³ + a b = c]` in a row `a ≠ 0` is never recovered, from any training
-set. The real readouts `cos(2πr f/p)` and
-`sin(2πr f/p)` of `f = a³ + a b` have rows `a` and `−a` equal and opposite, so both are
-singular and Theorem A does not apply; for odd prime `p` and `r ≠ 0` they have rank
-`(p + 1)/2` and `(p − 1)/2`, and every nonzero singular value is `√p`. -/
+`‖E[χ(a b) | a³ + a b]‖²` has the same bound `9/(2p) + 8/p^{3/2}`. Over `a ≠ 0`,
+`1 + b/a² = f/a³`, and `E[χ(1 + b/a²) | f]` is `χ(f)` if `χ³ = 1` and `0` otherwise. Torch
+check: every minimum-nuclear-norm completion is zero on a row whose seen entries are zero, so a
+hidden 1 of the one-hot kernel `[a³ + a b = c]` in a row `a ≠ 0` is never recovered, from any
+training set. The real readouts `cos(2πr f/p)` and `sin(2πr f/p)` of `f = a³ + a b` have rows
+`a` and `−a` equal and opposite, so both are singular and Theorem A does not apply; for odd
+prime `p` and `r ≠ 0` they have rank `(p + 1)/2` and `(p − 1)/2`, and every nonzero singular
+value is `√p`. -/
 
 @[expose] public section
