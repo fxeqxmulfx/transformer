@@ -27,6 +27,7 @@ public import Transformer.Weil.MulMod
 public import Transformer.Weil.NormSum
 public import Transformer.Weil.QuadraticUnit
 public import Transformer.Weil.QuadraticWeil
+public import Transformer.Weil.PowIndependence
 
 /-!
 # Stepanov's method for `y² = f(x)` and `y^p − y = f(x)`
@@ -110,6 +111,12 @@ The same `L`-function machinery for `χ(f(x))`, `χ` a multiplicative character:
   in particular), `χ_L(y) = χ₂(N_{L/𝔽_p} y)` and `IndependenceRoot` let `Hyperelliptic` bound
   `|S_d|` by `7 m √p^d` over the fields with `p^d` elements, `c_n = 0` for `n ≥ m`, and
   `|∑_{x ∈ 𝔽_p} χ₂(f(x))| ≤ (m − 1) √p`.
+
+Stepanov's method for `y^d = f(x)`, `d c + 1 = q` and `d` prime to `m = deg f`, with
+`R = ∑_{i < d, j < J} r_{ij} f^{c i} X^{q j}`:
+
+* `PowIndependence`: `R ≠ 0` unless every `r_{ij}` is `0`, for `deg r_{ij} < K` with
+  `d (K − 1) + (d − 1) m < q`: the nonzero terms have distinct degrees.
 
 The proofs are written from the mathematics (S. A. Stepanov, 1969; W. M. Schmidt, *Equations
 over Finite Fields*, Ch. I); no other formalization is used.
