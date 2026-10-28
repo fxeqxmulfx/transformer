@@ -315,9 +315,9 @@ Added on 2026-10-28 and proved in Lean. Theorem A says no proper `Ω` recovers `
 This section gives the positive side for `ψ(a + b)`. The model of Lemma 1 recovers it exactly
 from `2p` cells on two diagonals, and not from the `p` cells of one diagonal. Items 7–10 mark
 the limits: a pattern must be rigid, a rigid pattern that determines `ψ(a + b)` can still
-fail, and a large missed block leaves item 2 without a certificate. Theorem E recovers
-`ψ(a + b)` from every rigid pattern that contains a permutation graph, with or without a
-certificate.
+fail, and a large missed block leaves item 2 without a certificate. Theorem E: M recovers
+`ψ(a + b)` from `Ω` exactly when `Ω` is rigid and contains a permutation graph, with or
+without a certificate.
 
 ### Setting
 
@@ -511,21 +511,21 @@ Over the three primes (63 random draws):
 - All 21 recovered draws and all six training splits are elementary: connected, with every cell
   on a permutation graph inside `Ω`. Checked by a matching and strong connectivity.
 
-The block bound, item 10, explains the split. Item 10 is proved in Lean; the rest of this
-list is by hand, not formalized:
+The block bound, item 10, and the witness of Theorem E.3 explain the split:
 - Let `Ω` miss a block `R × C` with `|R| = k` and `|C| = l`, both nonempty and proper.
   - Take any `Y` vanishing off `Ω` with unit row and column sums.
   - Pair `Y − Q` with the centered indicators of `R` and `C`. This gives
     `1_Rᵀ (Y − Q) 1_C = −k l/N`.
   - Hence `‖Y − Q‖_op ≥ √(k l / ((N − k)(N − l)))`.
   - This is at least 1 when `k + l ≥ N`, and above 1 when `k + l > N`.
-  - For a rigid `Ω`, such a block with `k + l > N` exists exactly when Hall's condition
-    fails.
+  - Such a block with `k + l > N` exists exactly when Hall's condition fails, that is, when
+    `Ω` contains no permutation graph. Lean proves the direction Theorem E.3 uses.
 - A row with a single cell is the case `k = 1`, `l = N − 1`, so no certificate is below 1.
   This also covers two diagonals minus a cell.
 - Two rows with a single cell in the same column give `k = 2`, `l = N − 1`. That is the
   failure, with bound 1.4261.
-- When `k + l > N`, the matrix `X = J − t 1_R 1_Cᵀ` equals `J` on `Ω`. It has rank 2, and
+- When `k + l > N`, the matrix `X = J − t 1_R 1_Cᵀ` equals `J` on `Ω` and has rank 2.
+  Theorem E.3 proves `‖X‖_S1 < N` for `t = 1/(k + 1)²`. By hand, not formalized:
   `‖X‖²_S1 = N² − 2t (k l − g) + t² k l` for `t ≥ 0`, with `g = √(k l (N − k)(N − l))`.
   - The best `t` gives `‖X‖²_S1 = N² − (k l − g)²/(k l) < N²`.
   - At `k = 2`, `l = 60`, `N = 61` this is `60.912²`, the norm ADMM found.
@@ -547,6 +547,12 @@ recover these patterns: each is rigid and contains a permutation graph.
    `Ω` has `‖X‖_S1 ≥ N`, so `J` is a minimum.
 2. Uniqueness. Let also `Ω` be rigid. Then M recovers `J` from `Ω`. By item D.4 it recovers
    every `K = a bᵀ` with `|a_i| = |b_j| = 1`, and for `G = ℤ/p` it recovers `ψ(a + b)`.
+3. Witness. Let `Ω` miss a block `R × C` with `|R| = k`, `|C| = l` and `k + l > N`. Then
+   `X = J − s² 1_R 1_Cᵀ` equals `J` on `Ω`, and `‖X‖_S1 < N` for `s = 1/(k + 1)`. If `Ω`
+   contains no permutation graph, such a block exists, so `J` is not a minimum.
+4. Characterization. Let `|a_i| = |b_j| = 1`. M recovers `a bᵀ` from `Ω` if and only if `Ω`
+   is rigid and contains the graph of a permutation. This covers `J` and, for `G = ℤ/p`,
+   `ψ(a + b)`.
 
 Item 2 needs no certificate with `c > 1`. So it covers the patterns of item D.10, where every
 admissible `Y` has `‖Y − Q‖_op ≥ 1`, such as a rigid pattern with a single-cell row. The
@@ -566,6 +572,33 @@ smallest is `{(0, 0), (0, 1), (1, 1)}` for `N = 2`.
    - Rigidity, applied to each coordinate `k` with `r_i = U_ik` and `s_j = −V_jk`, gives
      `u_i = v_j` for all `i` and `j`.
    - So `X_ij = ‖u_i‖² = 1`, that is, `X = J`.
+3. Item 3. Let `U` have the rows `(1 − s², s)` on `R` and `(1, 0)` elsewhere, and `V` the rows
+   `(1, 0)` on `C` and `(1, s)` elsewhere.
+   - Then `U Vᴴ = J − s² 1_R 1_Cᵀ`. It equals `J` on `Ω`, since `Ω` misses `R × C`.
+   - `‖U‖² = N − k s² + k s⁴` and `‖V‖² = N + (N − l) s²`.
+   - By Lemma 1, `‖X‖_S1 ≤ ½ (‖U‖² + ‖V‖²) = N − ½ s² (k + l − N − k s²)`.
+   - For `s = 1/(k + 1)`, `k s² < 1 ≤ k + l − N`, so `‖X‖_S1 < N`.
+   - If `Ω` contains no permutation graph, Hall's theorem gives rows `R` with fewer than `k`
+     neighbouring columns. The other columns form `C`, with `l > N − k`.
+4. Item 4. Sufficiency is item 2. If `Ω` is not rigid, item D.7 gives a second minimum. If
+   `Ω` contains no permutation graph, take `Y` from item 3. Then `diag(a) Y diag(b)` equals
+   `a bᵀ` on `Ω` and has the norm of `Y` (item D.4), below `N = ‖a bᵀ‖_S1`.
+
+### Exhaustive check (torch, 2026-10-28)
+
+Every proper pattern `Ω ⊂ {0, 1, 2}²`, 511 in all, is classified by rigidity and by Hall's
+condition. Batched ADMM on `J` then runs 20000 iterations for each. The error is the RMS of
+`X − J` off `Ω`.
+
+| `N = 3` | patterns | `‖X‖_S1 − N` | error |
+| --- | --- | --- | --- |
+| rigid, permutation graph | 195 | within 4e-15 of 0 | at most 4.7e-14 |
+| rigid, no permutation graph | 9 | −0.172 | 0.5 |
+| not rigid, permutation graph | 51 | within 9e-16 of 0 | 0.89–1.00 |
+| not rigid, no permutation graph | 256 | −3.00 to −0.172 | 0.78–1.00 |
+
+The four rows are Theorem E.2, E.3, E.1 with D.7, and E.3. The nine rigid patterns without a
+permutation graph are the crosses, and `−0.172 = 2√2 − 3` is item D.9's least norm.
 
 ### Lean status
 
@@ -585,6 +618,8 @@ All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved witho
 | Theorem D.10 | `IsContraction.sum_norm_sq_mulVec_le`, `centeredIndicator`, `sum_centeredIndicator`, `sum_sq_centeredIndicator`, `sum_centeredIndicator_mul_mulVec`, `sq_mul_le_of_block`, `not_isContraction_of_block`, `not_isContraction_of_row` | `c` is any real number. The single-cell row is `∀ j ≠ j₀, (i₀, j) ∉ Ω`, with `N ≥ 2`. |
 | Theorem E.1 | `sum_norm_sq_sub_eq`, `sum_sum_norm_sq_sub_perm`, `card_le_nuclearNorm_of_perm` | The permutation is an `Equiv.Perm` with `(i, σ i) ∈ Ω`. |
 | Theorem E.2 | `eq_onesMatrix_of_perm`, `isMinOn_onesMatrix_iff_of_perm`, `isMinOn_vecMulVec_iff_of_perm`, `isMinOn_addKernel_iff_of_perm`, `rigid_ne_one_zero` | The examples use the rigid pattern `{(0, 0), (0, 1), (1, 1)}`. |
+| Theorem E.3 | `blockFactorL`, `blockFactorR`, `blockWitness_apply`, `sum_ite_mem_univ`, `frobeniusSq_blockFactorL`, `frobeniusSq_blockFactorR`, `nuclearNorm_blockWitness_le`, `exists_nuclearNorm_lt_of_block`, `exists_nuclearNorm_lt_of_not_perm`, `not_isMinOn_onesMatrix_of_not_perm` | Hall's theorem is Mathlib's `Finset.all_card_le_biUnion_card_iff_exists_injective`. |
+| Theorem E.4 | `forall_isMinOn_vecMulVec_iff`, `forall_isMinOn_onesMatrix_iff`, `forall_isMinOn_addKernel_iff` | "M recovers `K` from `Ω`" is D.2's form, `∀ X ∈ S, IsMinOn nuclearNorm S X ↔ X = K`. An example derives the failure of the cross for `N = 3`. |
 
 Not formalized:
 - the numerical tables, including the certificates found for random patterns and for the
@@ -594,8 +629,8 @@ Not formalized:
   `2p − 1` cells, where item D.1 gives no `c > 1`: the only `Y` with unit row and column sums
   is a permutation matrix, with `‖Y − Q‖_op = 1`;
 - the failures on `2p` random cells;
-- the witness `J − t 1_R 1_Cᵀ`, and the split of the rigid patterns by Hall's condition
-  (*Patterns*);
+- the exact norm of the witness `J − t 1_R 1_Cᵀ` and its best `t` (*Patterns*); Theorem E.3
+  proves only `‖X‖_S1 < N`;
 - that rigidity is the same as connectivity, and that a connected pattern has at least
   `2N − 1` cells;
 - that training behaves like model M (Lemma 1's modeling step).
@@ -615,8 +650,9 @@ Scope:
   - every elementary pattern in the numerics had a certificate below 1;
   - a single-cell row or column pins every certificate at `‖Y − Q‖_op ≥ 1` (item D.10), yet
     such patterns are recovered too.
-- In the numerics every rigid pattern with no permutation graph inside failed, like the
-  cross. The witness `J − t 1_R 1_Cᵀ` explains this, by hand.
+- A pattern with no permutation graph inside is not recovered, like the cross (Theorem E.3).
+  So M recovers `ψ(a + b)` from `Ω` exactly when `Ω` is rigid and contains a permutation
+  graph (Theorem E.4). Every pattern in the numerics agrees.
 - The 50% training splits are deep in the elementary regime, with `‖Y − Q‖_op ≈ 0.2`.
 - `ψ(a³ + a b)` is recovered from no proper `Ω` (Theorem A). Numerically it fails on every
   pattern above.
