@@ -95,6 +95,7 @@ public import Transformer.Grokking.FlatSpectrum.BlockCertificate
 public import Transformer.Grokking.FlatSpectrum.FailureMargin
 public import Transformer.Grokking.FlatSpectrum.MarginSharp
 public import Transformer.Grokking.FlatSpectrum.MarginLargest
+public import Transformer.Grokking.FlatSpectrum.MarginRankOne
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced

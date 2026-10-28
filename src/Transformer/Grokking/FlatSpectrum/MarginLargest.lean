@@ -1,7 +1,6 @@
 module
 
 public import Transformer.Grokking.FlatSpectrum.MarginSharp
-public import Transformer.Grokking.FlatSpectrum.ConnectedRecovery
 
 /-!
 # The largest failure margin, for every `N`
@@ -14,11 +13,8 @@ by at most one (`mul_le_mul_of_add_eq`). So for `a + b = N + 1` with `a ≤ b �
 largest least completion norm of `J` over the patterns without a permutation graph is
 `√(a (a − 1)) + √(b (b − 1))` (`failureMargin`). For odd `N` this is `failureMargin_odd`'s
 `√(N² − 1)`; for `N = 2m` it is `√(m (m − 1)) + √((m + 1) m)`, `failureMargin_four`'s
-`√2 + √6` at `N = 4`. Rescaling by `diag a · X · diag b` keeps the completion norms
-(`image_nuclearNorm_vecMulVec`), so both hold for every `N × N` table `u vᵀ` with entries of
-modulus one: some completion is shorter than `‖u vᵀ‖_S1` by more than `1/(2N)`
-(`exists_nuclearNorm_le_sqrt_vecMulVec_of_not_perm`), and the largest least completion norm is
-the same (`failureMargin_vecMulVec`).
+`√2 + √6` at `N = 4`. `MarginRankOne` carries these bounds to every rank-one table with entries
+of modulus one.
 -/
 
 @[expose] public section
@@ -122,79 +118,4 @@ example := failureMargin (n := Fin 4) (by simp) (a := 2) (b := 3) (by simp) (by 
 example := failureMargin (n := Fin 1) (by simp) (a := 1) (b := 1) (by simp) le_rfl
   (by norm_num)
 
-/-- **Rescaling keeps the completion norms**: for `|a i| = |b j| = 1`, the nuclear norms of the
-matrices equal to `a bᵀ` on `Ω` are those of the matrices equal to `J` on `Ω`. -/
-theorem image_nuclearNorm_vecMulVec {a b : n → ℂ} (ha : ∀ i, ‖a i‖ = 1) (hb : ∀ j, ‖b j‖ = 1)
-    (Ω : Set (n × n)) :
-    nuclearNorm '' {X | ∀ ij ∈ Ω, X ij.1 ij.2 = vecMulVec a b ij.1 ij.2} =
-      nuclearNorm '' {X | ∀ ij ∈ Ω, X ij.1 ij.2 = onesMatrix n ij.1 ij.2} := by
-  have hsa (i : n) : star (a i) * a i = 1 := by
-    rw [Complex.star_def, Complex.conj_mul', ha i]
-    norm_num
-  have hsb (j : n) : star (b j) * b j = 1 := by
-    rw [Complex.star_def, Complex.conj_mul', hb j]
-    norm_num
-  have ha' (i : n) : ‖star a i‖ = 1 := by rw [Pi.star_apply, norm_star, ha i]
-  have hb' (j : n) : ‖star b j‖ = 1 := by rw [Pi.star_apply, norm_star, hb j]
-  ext x
-  constructor
-  · rintro ⟨X, hX, rfl⟩
-    refine ⟨diagonal (star a) * X * diagonal (star b), fun ij hij => ?_,
-      nuclearNorm_diagonal_mul_mul_diagonal ha' hb' X⟩
-    rw [mul_diagonal, diagonal_mul, Pi.star_apply, Pi.star_apply, hX ij hij, vecMulVec_apply,
-      onesMatrix, of_apply]
-    linear_combination (star (b ij.2) * b ij.2) * hsa ij.1 + hsb ij.2
-  · rintro ⟨Y, hY, rfl⟩
-    refine ⟨diagonal a * Y * diagonal b, fun ij hij => ?_,
-      nuclearNorm_diagonal_mul_mul_diagonal ha hb Y⟩
-    rw [mul_diagonal, diagonal_mul, hY ij hij, vecMulVec_apply, onesMatrix, of_apply, mul_one]
-
-example := image_nuclearNorm_vecMulVec (n := Fin 2) (a := fun _ => -1) (b := fun _ => Complex.I)
-  (by simp) (by simp) ∅
-
-/-- **The margin for every table of rank one with entries of modulus one**: if `Ω` contains no
-permutation graph, some `X` equal to `u vᵀ` on `Ω` has `‖X‖_S1 ≤ √(N² − 1)` and
-`‖X‖_S1 < ‖u vᵀ‖_S1 − 1/(2N)`. -/
-theorem exists_nuclearNorm_le_sqrt_vecMulVec_of_not_perm {u v : n → ℂ}
-    (h : ∀ i j, ‖vecMulVec u v i j‖ = 1) {Ω : Set (n × n)}
-    (hΩ : ¬ ∃ σ : Equiv.Perm n, ∀ i, (i, σ i) ∈ Ω) :
-    ∃ X : Matrix n n ℂ, (∀ ij ∈ Ω, X ij.1 ij.2 = vecMulVec u v ij.1 ij.2) ∧
-      nuclearNorm X ≤ √((Fintype.card n : ℝ) ^ 2 - 1) ∧
-      nuclearNorm X < nuclearNorm (vecMulVec u v) - 1 / (2 * Fintype.card n) := by
-  have : Nonempty n := not_isEmpty_iff.mp fun _ => hΩ ⟨1, fun i => (IsEmpty.false i).elim⟩
-  obtain ⟨a, b, ha, hb, hab⟩ := exists_norm_eq_one_of_vecMulVec h
-  obtain ⟨X, hX, hle⟩ := exists_nuclearNorm_le_sqrt_of_not_perm hΩ
-  obtain ⟨Y, hY, hYX⟩ : nuclearNorm X ∈
-      nuclearNorm '' {X | ∀ ij ∈ Ω, X ij.1 ij.2 = vecMulVec a b ij.1 ij.2} := by
-    rw [image_nuclearNorm_vecMulVec ha hb]
-    exact ⟨X, hX, rfl⟩
-  rw [← hab, nuclearNorm_vecMulVec_of_norm_eq_one ha hb]
-  exact ⟨Y, hY, by rwa [hYX]⟩
-
-example := exists_nuclearNorm_le_sqrt_vecMulVec_of_not_perm (n := Fin 2) (u := fun _ => 1)
-  (v := fun _ => 1) (fun _ _ => by simp [vecMulVec_apply]) (Ω := ∅) fun ⟨_, h⟩ => h 0
-
-/-- **The largest margin for every table of rank one with entries of modulus one**:
-`failureMargin` for `u vᵀ` in place of `J`. -/
-theorem failureMargin_vecMulVec [Nonempty n] {u v : n → ℂ} (h : ∀ i j, ‖vecMulVec u v i j‖ = 1)
-    {a b : ℕ} (hab : a + b = Fintype.card n + 1) (hba : a ≤ b) (hb : b ≤ a + 1) :
-    (∀ Ω : Set (n × n), (¬ ∃ σ : Equiv.Perm n, ∀ i, (i, σ i) ∈ Ω) →
-      ∃ X : Matrix n n ℂ, (∀ ij ∈ Ω, X ij.1 ij.2 = vecMulVec u v ij.1 ij.2) ∧
-        nuclearNorm X ≤ √((a : ℝ) * (a - 1)) + √((b : ℝ) * (b - 1))) ∧
-    ∃ Ω : Set (n × n), (¬ ∃ σ : Equiv.Perm n, ∀ i, (i, σ i) ∈ Ω) ∧
-      IsLeast (nuclearNorm '' {X | ∀ ij ∈ Ω, X ij.1 ij.2 = vecMulVec u v ij.1 ij.2})
-        (√((a : ℝ) * (a - 1)) + √((b : ℝ) * (b - 1))) := by
-  obtain ⟨a', b', ha', hb', hab'⟩ := exists_norm_eq_one_of_vecMulVec h
-  rw [← hab']
-  obtain ⟨h₁, Ω, hΩ, hleast⟩ := failureMargin Fintype.card_pos hab hba hb
-  refine ⟨fun Ω' hΩ' => ?_, Ω, hΩ, by rwa [image_nuclearNorm_vecMulVec ha' hb']⟩
-  obtain ⟨X, hX, hle⟩ := h₁ Ω' hΩ'
-  obtain ⟨Y, hY, hYX⟩ : nuclearNorm X ∈
-      nuclearNorm '' {X | ∀ ij ∈ Ω', X ij.1 ij.2 = vecMulVec a' b' ij.1 ij.2} := by
-    rw [image_nuclearNorm_vecMulVec ha' hb']
-    exact ⟨X, hX, rfl⟩
-  exact ⟨Y, hY, by rwa [hYX]⟩
-
-example := failureMargin_vecMulVec (n := Fin 4) (u := fun _ => Complex.I)
-  (v := fun _ => -Complex.I) (fun _ _ => by simp [vecMulVec_apply]) (a := 2) (b := 3) (by simp)
-  (by norm_num) (by norm_num)
+end Transformer.Grokking.FlatSpectrum
