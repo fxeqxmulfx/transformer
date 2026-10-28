@@ -684,8 +684,8 @@ For `N = 4`, all 65 535 proper patterns, 20000 iterations each, on the GPU:
   rounding error.
 - The port's rerun (`experiments/recovery` in the grokking repository, `slow 4`, 2026-10-29)
   leaves 4464 of the 27 068 above 1e-6 after 20000 iterations. Run on, their error stays below
-  3.5e-5, 1.8e-5 and 8.9e-6 after 50000, 100000 and 200000 iterations, about half each time
-  the iterations double, and their gap is positive and below 2.3e-8.
+  3.5e-5, 1.8e-5, 8.9e-6 and 4.5e-6 after 50000, 100000, 200000 and 400000 iterations, about
+  half each time the iterations double. Their gap stays positive, below 7.9e-9 at the end.
 
 ### Theorem F (proven)
 
