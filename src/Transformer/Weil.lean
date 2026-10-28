@@ -33,6 +33,10 @@ public import Transformer.Weil.PowStepanov
 public import Transformer.Weil.PowBound
 public import Transformer.Weil.PowCharSum
 public import Transformer.Weil.PowWeil
+public import Transformer.Weil.PowRoot
+public import Transformer.Weil.PowUnit
+public import Transformer.Weil.PowExtension
+public import Transformer.Weil.PowWeilRoot
 
 /-!
 # Stepanov's method for `y² = f(x)` and `y^p − y = f(x)`
@@ -134,6 +138,19 @@ Stepanov's method for `y^d = f(x)`, `d c + 1 = q` and `d` prime to `m = deg f`, 
   `p^k` elements has `χ_L^d = 1` and `χ_L(u) = 1 ⇒ u^c = 1` for `d c + 1 = p^k`, so
   `PowCharSum` bounds `|S_k|` by `5 d m √p^k`; `χ^m ≠ 1` gives `c_n = 0` for `n ≥ m`, and
   `|∑_{x ∈ 𝔽_p} χ(f(x))| ≤ (m − 1) √p` for `d` prime to `m`.
+
+A root of multiplicity prime to the order replaces `d` prime to `m`:
+
+* `PowRoot`: for `f = (X − α)^e G`, `G(α) ≠ 0`, `e` prime to `d`, the substitution
+  `x = α + 1/y` turns `∑_x χ(f(x))` into `∑_y χ(f̃(y))`, `f̃ = X^N f(α + 1/X)` of degree `N − e`
+  prime to `d` for `d ∣ N > m`, and `PowCharSum` bounds it by `5 d N √q`;
+* `PowUnit`: for `f = P^e Q`, `P` monic irreducible, `P ∤ Q` and `χ^e ≠ 1`, a unit `u` modulo `f`
+  with `χ(Res(f, u)) ≠ χ(λ)^N`, through the surjective norm of `𝔽_p[X]/(P)`, gives `c_n = 0`
+  for `n ≥ m` (`MulMod`), even when `d ∣ m`;
+* `PowExtension`: `P` has a simple root in the field with `p^k` elements for `deg P ∣ k`, and
+  bounds on `S_k` for these `k` alone suffice for `Rationality`;
+* `PowWeilRoot`: `|∑_{x ∈ 𝔽_p} χ(f(x))| ≤ (m − 1) √p` for `χ ≠ 1` of order `d` and `f = P^e Q`
+  with `P` monic irreducible, `P ∤ Q` and `e` prime to `d`; `d` may share a factor with `m`.
 
 The proofs are written from the mathematics (S. A. Stepanov, 1969; W. M. Schmidt, *Equations
 over Finite Fields*, Ch. I); no other formalization is used.
