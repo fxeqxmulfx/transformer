@@ -35,6 +35,7 @@ public import Transformer.Grokking.FlatSpectrum.NumericalChecks
 public import Transformer.Grokking.FlatSpectrum.PolynomialFibers
 public import Transformer.Grokking.FlatSpectrum.PolynomialMulChar
 public import Transformer.Grokking.FlatSpectrum.PolynomialLegendre
+public import Transformer.Grokking.FlatSpectrum.PolynomialWeil
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -63,7 +64,10 @@ function `P` of `a`, the fibers of `P(a) + a b` give `‖E[ψ_r(a b) | f]‖²` 
 `T = ∑_{a ≠ 0} ψ(−r P(a))`, and a bound on `∑_x ψ(r P(x))` or on `∑_a χ(c − P(a))` bounds the
 additive or the multiplicative readout. For `P` of odd degree `m`, `p ≥ 64` and `8 m ≤ p`,
 Stepanov's bound (`Transformer.Weil`) gives `|∑_a χ₂(c − P(a))| ≤ 7 m √p`, so the Legendre readout
-`‖E[χ₂(a b) | P(a) + a b]‖²` is at most `(7 m √p + 1)²/p² + (p − 1)²/(p² (2p − 1))`. Of the
+`‖E[χ₂(a b) | P(a) + a b]‖²` is at most `(7 m √p + 1)²/p² + (p − 1)²/(p² (2p − 1))`. For a
+polynomial `P` of degree `m ≥ 1` prime to `p` and `r ≠ 0`, Weil's bound (`Transformer.Weil`)
+gives `|∑_x ψ(r P(x))| ≤ (m − 1) √p`, so the additive readout `‖E[ψ_r(a b) | P(a) + a b]‖²` is
+at most `((m − 1) √p + 1)²/p² + (p + (m − 1) √p + 1)²/(p² (2p − 1))`. Of the
 numerical checks, the bound at `p = 97` is below `0.053`, `‖E[ψ_r(a + b) | (a + b)²]‖² = ½`, and the
 counting rule `r (2p − r) ≤ ρ p²` iff `r ≤ (1 − √(1 − ρ)) p` gives `28.4` at `ρ = ½`, `p = 97`.
 Torch check: every minimum-nuclear-norm completion is zero on a row whose seen entries are zero, so
