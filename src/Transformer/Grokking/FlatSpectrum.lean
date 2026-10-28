@@ -74,6 +74,10 @@ public import Transformer.Grokking.FlatSpectrum.WeightedUniqueness
 public import Transformer.Grokking.FlatSpectrum.WeightedPhases
 public import Transformer.Grokking.FlatSpectrum.WeightedWitness
 public import Transformer.Grokking.FlatSpectrum.WeightedCross
+public import Transformer.Grokking.FlatSpectrum.SupplyDemand
+public import Transformer.Grokking.FlatSpectrum.SubPlan
+public import Transformer.Grokking.FlatSpectrum.Gale
+public import Transformer.Grokking.FlatSpectrum.WeightedCriterion
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -165,6 +169,10 @@ transport plan on `Ω` from `|a_i|²` to `|b_j|²` gives `‖X‖_S1 ≥ ∑ |a_
 Conversely, `‖a bᵀ‖_S1 = ‖a‖ ‖b‖`; without rigidity a second rank-one matrix of the same
 moduli agrees with `a bᵀ` on `Ω`, and if rows `R` carry more than the columns `N(R)` they meet,
 `‖a‖² ∑_{N(R)} |b_j|² < ‖b‖² ∑_R |a_i|²`, some completion is shorter than `a bᵀ`. From row
-`i₀` and column `j₀`, `a bᵀ` is recovered exactly when `|a_{i₀}|²/‖a‖² + |b_{j₀}|²/‖b‖² ≥ 1`. -/
+`i₀` and column `j₀`, `a bᵀ` is recovered exactly when `|a_{i₀}|²/‖a‖² + |b_{j₀}|²/‖b‖² ≥ 1`.
+Gale's supply–demand theorem: nonnegative masses `α`, `β` have a plan on `Ω` exactly when
+`∑ α = ∑ β` and every set of rows `R` has `∑_R α ≤ ∑_{N(R)} β`. So, for `a`, `b` without zero
+entries, `a bᵀ` is recovered from `Ω` exactly when `Ω` is rigid and every `R` has
+`‖b‖² ∑_R |a_i|² ≤ ‖a‖² ∑_{N(R)} |b_j|²`. -/
 
 @[expose] public section
