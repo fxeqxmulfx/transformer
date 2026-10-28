@@ -10,7 +10,7 @@ The second step adds `u = a³` and `v`. Read by `ψ_r` it is rank 1 (`rank_taskK
 read by a nontrivial multiplicative character `χ` it is flat: `C = [χ(u + v)]` has
 `C* C = p I − J`, `J` the all-ones matrix, as `∑_w conj χ(w) χ(w + d) = p [d = 0] − 1`. Since
 `J² = p J`, `(C* C)² = p C* C`, so `C` has rank `p − 1`, every nonzero singular value is `√p`,
-and `r_eff C = p − 1`.
+and `r_eff C = p − 1`. As `|χ(x)|² = 1` off `0`, `∑ conj χ(x) χ(x) F(x) = ∑ F − F(0)`.
 -/
 
 @[expose] public section
@@ -102,5 +102,17 @@ theorem effectiveRank_taskKernel_add {χ : MulChar (ZMod p) ℂ} (hχ : χ ≠ 1
 
 example := @effectiveRank_taskKernel_add 5 ⟨Nat.prime_five⟩ _
   (@quadraticChar_ringHomComp_ne_one 5 ⟨Nat.prime_five⟩ (by decide))
+
+/-- `|χ(x)|² = 1` off `0`: `∑ conj χ(x) χ(x) F(x) = ∑ F − F(0)`. -/
+lemma sum_star_mulChar_mul_self_mul (χ : MulChar (ZMod p) ℂ) (F : ZMod p → ℂ) :
+    ∑ x, star (χ x) * χ x * F x = ∑ x, F x - F 0 := by
+  have hpt (x : ZMod p) : star (χ x) * χ x * F x = F x - if x = 0 then F x else 0 := by
+    by_cases hx : x = 0
+    · rw [hx, ite_eq_left rfl, MulChar.map_zero, star_zero, zero_mul, zero_mul, sub_self]
+    · rw [ite_eq_right hx, star_mulChar_mul_self χ hx, one_mul, sub_zero]
+  rw [Finset.sum_congr rfl fun x _ => hpt x, Finset.sum_sub_distrib, Finset.sum_ite_eq']
+  simp
+
+example := @sum_star_mulChar_mul_self_mul 5 ⟨Nat.prime_five⟩ 1 fun _ => 1
 
 end Transformer.Grokking.FlatSpectrum

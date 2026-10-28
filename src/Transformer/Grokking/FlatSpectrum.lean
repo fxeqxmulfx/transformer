@@ -28,6 +28,9 @@ public import Transformer.Grokking.FlatSpectrum.ShiftKernel
 public import Transformer.Grokking.FlatSpectrum.JacobiSums
 public import Transformer.Grokking.FlatSpectrum.MulIntermediate
 public import Transformer.Grokking.FlatSpectrum.QuotientRoute
+public import Transformer.Grokking.FlatSpectrum.ThreeEigenvalues
+public import Transformer.Grokking.FlatSpectrum.MulCharKernel
+public import Transformer.Grokking.FlatSpectrum.MulCharSpectrum
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -49,7 +52,9 @@ products of the two bases are Gauss sums of modulus `√p`, and for `p ≡ 1 mod
 `S_r = g(χ, ψ_r) + g(χ², ψ_r)` with `χ` of order 3. For a nontrivial multiplicative character
 `χ` and `c ≠ 0`, Jacobi sums give Weil's bound `|∑_a χ(c − a³)| ≤ 2 √p`, so
 `‖E[χ(a b) | a³ + a b]‖²` has the same bound `9/(2p) + 8/p^{3/2}`. Over `a ≠ 0`,
-`1 + b/a² = f/a³`, and `E[χ(1 + b/a²) | f]` is `χ(f)` if `χ³ = 1` and `0` otherwise. Torch
+`1 + b/a² = f/a³`, and `E[χ(1 + b/a²) | f]` is `χ(f)` if `χ³ = 1` and `0` otherwise. For
+nontrivial `χ` and odd `p`, the kernel `[χ(a³ + a b)]` has rank `(p − 1)/2` and
+`r_eff = (√(p + 1) + (p − 3)/2 · √(2p))²/(p − 1)²`, between `47.9` and `48` at `p = 97`. Torch
 check: every minimum-nuclear-norm completion is zero on a row whose seen entries are zero, so a
 hidden 1 of the one-hot kernel `[a³ + a b = c]` in a row `a ≠ 0` is never recovered, from any
 training set. The real readouts `cos(2πr f/p)` and `sin(2πr f/p)` of `f = a³ + a b` have rows
