@@ -28,6 +28,7 @@ public import Transformer.Weil.NormSum
 public import Transformer.Weil.QuadraticUnit
 public import Transformer.Weil.QuadraticWeil
 public import Transformer.Weil.PowIndependence
+public import Transformer.Weil.PowSystem
 
 /-!
 # Stepanov's method for `y² = f(x)` and `y^p − y = f(x)`
@@ -116,7 +117,10 @@ Stepanov's method for `y^d = f(x)`, `d c + 1 = q` and `d` prime to `m = deg f`, 
 `R = ∑_{i < d, j < J} r_{ij} f^{c i} X^{q j}`:
 
 * `PowIndependence`: `R ≠ 0` unless every `r_{ij}` is `0`, for `deg r_{ij} < K` with
-  `d (K − 1) + (d − 1) m < q`: the nonzero terms have distinct degrees.
+  `d (K − 1) + (d − 1) m < q`: the nonzero terms have distinct degrees;
+* `PowSystem`: at a point with `f(x)^c = a`, `f^k E^{(k)} R` takes the value of
+  `T_k = ∑_{i,j} a^i σ_k^{(i)}(r_{ij}) X^j`, linear in the `r_{ij}`, of degree
+  `< K + J + (ℓ − 1)(m − 1)` for `k < ℓ ≤ c + 1`.
 
 The proofs are written from the mathematics (S. A. Stepanov, 1969; W. M. Schmidt, *Equations
 over Finite Fields*, Ch. I); no other formalization is used.
