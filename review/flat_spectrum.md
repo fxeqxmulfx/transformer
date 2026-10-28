@@ -318,7 +318,8 @@ from `2p` cells on two diagonals, and not from the `p` cells of one diagonal. It
 the limits: a pattern must be rigid, a rigid pattern that determines `ψ(a + b)` can still
 fail, and a large missed block leaves item 2 without a certificate. Theorem E: M recovers
 `ψ(a + b)` from `Ω` exactly when `Ω` is rigid and contains a permutation graph, with or
-without a certificate.
+without a certificate. Theorem F replaces the permutation by a transport plan between the
+weights `|a_i|²` and `|b_j|²`, for any `a bᵀ` without zero entries.
 
 ### Setting
 
@@ -601,6 +602,92 @@ condition. Batched ADMM on `J` then runs 20000 iterations for each. The error is
 The four rows are Theorem E.2, E.3, E.1 with D.7, and E.3. The nine rigid patterns without a
 permutation graph are the crosses, and `−0.172 = 2√2 − 3` is item D.9's least norm.
 
+### Theorem F (items 1–2 proven, item 3 by hand)
+
+Let no entry of `a` or `b` vanish. Scaling `a` by `t > 0` and `b` by `1/t` keeps `a bᵀ`, so
+let `‖a‖ = ‖b‖`; then `‖a bᵀ‖_S1 = ‖a‖ ‖b‖ = ‖a‖²`. Let `α_i = |a_i|²` and `β_j = |b_j|²`. A
+transport plan on `Ω` from `α` to `β` is a matrix `T ≥ 0` that vanishes off `Ω`, with row sums
+`α_i` and column sums `β_j`.
+
+1. Lower bound. If `Ω` carries a plan, every `X` equal to `a bᵀ` on `Ω` has
+   `‖X‖_S1 ≥ ‖a‖²`, so `a bᵀ` is a minimum.
+2. Uniqueness. If also `Ω` is rigid, M recovers `a bᵀ` from `Ω`.
+3. Converse. M recovers `a bᵀ` from `Ω` only if `Ω` is rigid and carries a plan. By the
+   supply–demand theorem (Gale, 1957), a plan exists if and only if
+   `∑_{i ∈ R} α_i ≤ ∑_{j ∈ N(R)} β_j` for every set `R` of rows, where `N(R)` is the set of
+   columns that meet `R` in `Ω`. Without the scaling the condition reads
+   `‖b‖² ∑_R |a_i|² ≤ ‖a‖² ∑_{N(R)} |b_j|²`.
+
+For `|a_i| = |b_j| = 1` the permutation matrix of a graph inside `Ω` is a plan, so item 2
+contains Theorem E.2. The condition of item 3 is then Hall's `|R| ≤ |N(R)|`, and items 2–3
+give Theorem E.4.
+
+### Proof of Theorem F
+
+1. Item 1. Write `X = U Vᴴ` with `½ (‖U‖² + ‖V‖²) = ‖X‖_S1` (Lemma 1), and let
+   `x_i = u_i / a_i` and `y_j = v_j / conj(b_j)`. Then `⟨x_i, y_j⟩ = X_ij / (a_i b_j)`, which
+   is `1` on `Ω`.
+   - Expanding the squares and using the row and column sums of `T`,
+     `∑_ij T_ij ‖x_i − y_j‖² = ∑_i α_i ‖x_i‖² + ∑_j β_j ‖y_j‖² − 2 ∑_ij T_ij Re⟨x_i, y_j⟩`.
+   - `α_i ‖x_i‖² = ‖u_i‖²` and `β_j ‖y_j‖² = ‖v_j‖²`. `T` vanishes off `Ω`, so
+     `T_ij Re⟨x_i, y_j⟩ = T_ij`.
+   - So the sum is `‖U‖² + ‖V‖² − 2 ‖a‖² = 2 (‖X‖_S1 − ‖a‖²)`, and it is `≥ 0`.
+2. Item 2. Let `X` be a minimum, so `‖X‖_S1 ≤ ‖a bᵀ‖_S1 = ‖a‖²` and the sum above is `0`.
+   - `x_i = y_j` wherever `T_ij > 0`.
+   - Row `i` carries the mass `α_i > 0`, so `T_ij > 0` for some `j`, and
+     `‖x_i‖² = ⟨x_i, y_j⟩ = 1`. Likewise every `y_j` is a unit vector.
+   - On a cell `(i, j)` of `Ω`, `‖x_i − y_j‖² = 1 + 1 − 2 = 0`, so `x_i = y_j`.
+   - Rigidity, applied to each coordinate as in Theorem E.2, makes all `x_i` and `y_j` equal.
+     So `X_ij = a_i ⟨x_i, y_j⟩ b_j = a_i b_j`.
+3. Item 3, by hand; not yet in Lean.
+   - If `Ω` is not rigid, the phases of item D.7, `u_i v_j = 1` on `Ω` and
+     `u_{i₀} v_{j₀} ≠ 1`, give `(u a)(v b)ᵀ`. It equals `a bᵀ` on `Ω`, has its norm and
+     differs at `(i₀, j₀)`.
+   - If the condition fails at `R`, let `C = N(R)ᶜ`. Then `Ω` misses `R × C` and
+     `δ = ∑_R α + ∑_C β − ‖a‖² > 0`. With `U₀`, `V₀` of item E.3, `U = diag(a) U₀` and
+     `V = diag(conj b) V₀` give `U Vᴴ = a bᵀ − s² a_R b_Cᵀ`, equal to `a bᵀ` on `Ω`, with
+     `½ (‖U‖² + ‖V‖²) = ‖a‖² − ½ s² (δ − s² ∑_R α)`. This is below `‖a‖²` for small `s`.
+   - The supply–demand theorem is classical; Mathlib has only the unweighted Hall theorem.
+
+### Weighted check (torch, 2026-10-28)
+
+For `N = 3`, all 510 nonempty proper patterns, batched ADMM on `K = a bᵀ` for 6000
+iterations. The gap is `‖X‖_S1 − ‖a‖ ‖b‖`; the error is the relative norm of `X − K` off `Ω`.
+"Hall" is the condition of item 3.
+
+Random weights: moduli uniform in `[0.3, 2]`, random phases, three draws. Each draw gave the
+same counts.
+
+| class | patterns | gap | error |
+| --- | --- | --- | --- |
+| rigid, Hall | 90 | within 7e-15 of 0 | at most 1.8e-15 |
+| rigid, no Hall | 114 | −1.63 to −3e-6 | 1.7e-3 to 0.88 |
+| not rigid, no Hall | 306 | −6.16 to −3e-6 | 0.44 to 1.00 |
+
+No pattern satisfies Hall without being rigid. For a component with rows `R`, the condition
+for `R` and for its complement would force `∑_R α = ∑_{N(R)} β`, which generic weights avoid.
+
+Tight weights: shares `|a_i|²/‖a‖²` and `|b_j|²/‖b‖²` of `(½, ¼, ¼)` for both (A), and of
+`(⅗, ⅕, ⅕)` and `(⅕, ⅖, ⅖)` (C). Permuting the shares of `b` (B) changed no count or range.
+
+| weights | class | patterns | gap | error |
+| --- | --- | --- | --- | --- |
+| A | rigid, Hall | 144 | 0 to 3.1e-6 | at most 2.4e-4 |
+| A | not rigid, Hall | 24 | within 2e-15 of 0 | 0.87 to 1.00 |
+| A | rigid, no Hall | 60 | −0.54 to −0.14 | 0.37 to 0.67 |
+| A | not rigid, no Hall | 282 | −3.00 to −0.14 | 0.69 to 1.00 |
+| C | rigid, Hall | 110 | 0 to 3.9e-6 | at most 2.3e-4 |
+| C | not rigid, Hall | 8 | within 2e-15 of 0 | 0.89 to 1.00 |
+| C | rigid, no Hall | 94 | −1.00 to −0.10 | 0.29 to 0.75 |
+| C | not rigid, no Hall | 298 | −4.00 to −0.10 | 0.63 to 1.00 |
+
+Rigid Hall patterns are recovered (item 2). A Hall pattern that is not rigid reaches
+`‖a‖ ‖b‖` (item 1) at another matrix (item 3's phases). Without Hall the least norm falls
+below `‖a‖ ‖b‖` (item 3's witness). A rigid Hall pattern at tight weights converges slowly.
+For the worst one at A, `{(0, 1), (0, 2), (1, 0), (1, 1), (2, 0), (2, 1), (2, 2)}`, the error
+is 2.4e-4, 5.0e-5 and 1.0e-5 after 6000, 30000 and 150000 iterations. Item 2 proves that the
+limit is `K`.
+
 ### Lean status
 
 All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved without `sorry`.
@@ -621,6 +708,9 @@ All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved witho
 | Theorem E.2 | `eq_onesMatrix_of_perm`, `isMinOn_onesMatrix_iff_of_perm`, `isMinOn_vecMulVec_iff_of_perm`, `isMinOn_addKernel_iff_of_perm`, `rigid_ne_one_zero` | The examples use the rigid pattern `{(0, 0), (0, 1), (1, 1)}`. |
 | Theorem E.3 | `blockFactorL`, `blockFactorR`, `blockWitness_apply`, `sum_ite_mem_univ`, `frobeniusSq_blockFactorL`, `frobeniusSq_blockFactorR`, `nuclearNorm_blockWitness_le`, `exists_nuclearNorm_lt_of_block`, `exists_nuclearNorm_lt_of_not_perm`, `not_isMinOn_onesMatrix_of_not_perm` | Hall's theorem is Mathlib's `Finset.all_card_le_biUnion_card_iff_exists_injective`. |
 | Theorem E.4 | `forall_isMinOn_vecMulVec_iff`, `forall_isMinOn_onesMatrix_iff`, `forall_isMinOn_addKernel_iff` | "M recovers `K` from `Ω`" is D.2's form, `∀ X ∈ S, IsMinOn nuclearNorm S X ↔ X = K`. An example derives the failure of the cross for `N = 3`. |
+| Theorem F.1 | `IsTransportPlan`, `IsTransportPlan.sum_eq`, `isTransportPlan_perm`, `sum_sum_mul_norm_sq_sub`, `rowDiv_mul_apply`, `sum_sum_mul_norm_sq_sub_of_transport`, `sum_norm_sq_le_nuclearNorm_of_transport`, `nuclearNorm_vecMulVec_le`, `nuclearNorm_vecMulVec_of_transport` | The plan has the marginals `‖a i‖²` and `‖b j‖²`, so it carries the scaling `‖a‖ = ‖b‖`. |
+| Theorem F.2 | `eq_vecMulVec_of_transport`, `isMinOn_vecMulVec_iff_of_transport` | Stated as `IsMinOn nuclearNorm S X ↔ X = a bᵀ` for every `X` equal to `a bᵀ` on `Ω`. |
+| Theorem F.3, tools | `nbhd`, `mem_nbhd`, `nbhd_mono`, `nbhd_union`, `IsTransportPlan.sum_le_sum_nbhd`, `isTransportPlan_univ` | A plan meets the condition of item 3; the converse is not yet in Lean. |
 
 Not formalized:
 - the numerical tables, including the certificates found for random patterns and for the
@@ -634,6 +724,8 @@ Not formalized:
   proves only `‖X‖_S1 < N`;
 - that rigidity is the same as connectivity, and that a connected pattern has at least
   `2N − 1` cells;
+- Theorem F.3: the phases and the witness for general weights, and the supply–demand theorem;
+- the weighted tables;
 - that training behaves like model M (Lemma 1's modeling step).
 
 Scope:

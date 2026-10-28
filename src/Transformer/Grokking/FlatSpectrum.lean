@@ -68,6 +68,9 @@ public import Transformer.Grokking.FlatSpectrum.BlockBound
 public import Transformer.Grokking.FlatSpectrum.PermutationRecovery
 public import Transformer.Grokking.FlatSpectrum.HallWitness
 public import Transformer.Grokking.FlatSpectrum.PatternRecovery
+public import Transformer.Grokking.FlatSpectrum.Transport
+public import Transformer.Grokking.FlatSpectrum.WeightedRecovery
+public import Transformer.Grokking.FlatSpectrum.WeightedUniqueness
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -153,6 +156,8 @@ on `Ω` has `‖X‖_S1 ≥ N`, and if `Ω` is also rigid, `J` is the unique min
 `a bᵀ` with `|a i| = |b j| = 1`, `ψ(a + b)` among them. Without a permutation graph, Hall's
 theorem gives rows `R` that miss a set `C` of columns with `#R + #C > N`, and
 `J − s² 1_R 1_Cᵀ` is shorter than `J`. So these kernels are recovered from `Ω` exactly when
-`Ω` is rigid and contains the graph of a permutation. -/
+`Ω` is rigid and contains the graph of a permutation. For `a`, `b` without zero entries, a
+transport plan on `Ω` from `|a_i|²` to `|b_j|²` gives `‖X‖_S1 ≥ ∑ |a_i|² = ‖a bᵀ‖_S1` for every
+`X` equal to `a bᵀ` on `Ω`, and if `Ω` is also rigid, `a bᵀ` is the unique minimum. -/
 
 @[expose] public section
