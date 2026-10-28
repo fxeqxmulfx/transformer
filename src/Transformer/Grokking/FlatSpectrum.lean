@@ -22,6 +22,9 @@ public import Transformer.Grokking.FlatSpectrum.OneHotFill
 public import Transformer.Grokking.FlatSpectrum.RealKernels
 public import Transformer.Grokking.FlatSpectrum.PartialIsometry
 public import Transformer.Grokking.FlatSpectrum.RealSpectrum
+public import Transformer.Grokking.FlatSpectrum.GaussSums
+public import Transformer.Grokking.FlatSpectrum.CharacterBases
+public import Transformer.Grokking.FlatSpectrum.ShiftKernel
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -37,7 +40,10 @@ rank-one `ψ (a + b)` is the truth. Theorem B: for prime `p` and `r ≠ 0`, the 
 `S_r = ∑_x ψ(r x³)` has `|S_r| ≤ 2 √p`, and `S_r = 0` when `p ≡ 2 mod 3`; over uniform
 `(a, b)`, `‖E[ψ_r(a b) | a³ + a b]‖²` is the source's exact expression in `S_r`, at most
 `9/(2p) + 8/p^{3/2}`, so a readout of the label correlates with `ψ_r(a b)` by at most its
-norm times `O(p^{-1/2})`. Torch check: every minimum-nuclear-norm completion is zero on a row
+norm times `O(p^{-1/2})`. Each step of `v = a b`, `f = a³ + v` is rank 1 in its own basis,
+`χ(a b) = χ(a) χ(b)` and `ψ_r(a³ + v) = ψ_r(a³) ψ_r(v)`, and flat in the other; the inner
+products of the two bases are Gauss sums of modulus `√p`, and for `p ≡ 1 mod 3`,
+`S_r = g(χ, ψ_r) + g(χ², ψ_r)` with `χ` of order 3. Torch check: every minimum-nuclear-norm completion is zero on a row
 whose seen entries are zero, so a hidden 1 of the one-hot kernel `[a³ + a b = c]` in a row
 `a ≠ 0` is never recovered, from any training set. The real readouts `cos(2πr f/p)` and
 `sin(2πr f/p)` of `f = a³ + a b` have rows `a` and `−a` equal and opposite, so both are
