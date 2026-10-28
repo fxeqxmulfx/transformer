@@ -110,9 +110,9 @@ theorem card_pow_eq_le_of_coprime {f : F[X]} (hm : 1 ≤ f.natDegree) {d c : ℕ
 
 section Examples
 
-local instance fact_prime_67 : Fact (Nat.Prime 67) := ⟨by norm_num⟩
+local instance fact_prime_71 : Fact (Nat.Prime 71) := ⟨by norm_num⟩
 
-example := card_pow_eq_le_of_coprime (F := ZMod 67) (f := X) (by simp) (d := 3) (c := 22)
+example := card_pow_eq_le_of_coprime (F := ZMod 71) (f := X) (by simp) (d := 5) (c := 14)
   (by rw [ZMod.card]) (by simp) (by simp) (by simp) (by simp) (a := 1) one_ne_zero
 
 end Examples
