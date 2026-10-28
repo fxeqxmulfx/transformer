@@ -198,8 +198,9 @@ Cauchy–Schwarz every `Ω` without a permutation graph has a completion of `J` 
 graph and have least completion norm `√(k (N − l)) + √(l (N − k))`. With `k + l = N + 1` fixed
 this value grows with `k l`, so for `a + b = N + 1` with `a ≤ b ≤ a + 1` the largest least
 completion norm without a permutation graph is `√(a (a − 1)) + √(b (b − 1))`: `√(N² − 1)` for
-odd `N`, `√2 + √6` for `N = 4`. So these kernels are recovered from `Ω` exactly when `Ω` is
-rigid and contains the graph of a permutation. For any `a : m → ℂ` and `b : n → ℂ`, a
+odd `N`, `√2 + √6` for `N = 4`. By rescaling, the same bounds hold for every `u vᵀ` with entries
+of modulus one, whose nuclear norm is `N`. So these kernels are recovered from `Ω` exactly when
+`Ω` is rigid and contains the graph of a permutation. For any `a : m → ℂ` and `b : n → ℂ`, a
 transport plan on `Ω` from `|a_i|²` to `|b_j|²` gives `‖X‖_S1 ≥ ∑ |a_i|² = ‖a bᵀ‖_S1` for every
 `X` equal to `a bᵀ` on `Ω`, and if `Ω` is also rigid on the supports of `a` and `b`, `a bᵀ` is
 the unique minimum: zero rows and columns need no cells. Conversely, `‖a bᵀ‖_S1 = ‖a‖ ‖b‖`;
