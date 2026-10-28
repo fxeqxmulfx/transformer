@@ -818,6 +818,18 @@ every column reachable, and `r_i + s_{j₀} = 0` every row. A connected graph on
 at least `V − 1` edges. The source's statement needs the row and the column: without rows every
 pattern is rigid, and the graph on the columns alone has no edges.
 
+### The fewest cells (proven)
+
+Every `N × N` matrix `u vᵀ` with `|u_i v_j| = 1` is recovered by M from the `2N − 1` cells
+`(i, i)` and `(j, j + 1)`, `j < N − 1`: the diagonals of offsets `0` and `1` without the cell
+`(N − 1, 0)`. No set of fewer cells recovers even one of these matrices. So `2N − 1` is the
+least number of cells from which M recovers all of them; at `N = 97` that is 193 of 9409.
+
+Proof. The cells join row `0`, column `1`, row `1`, column `2`, …, row `N − 1`, and column `0`
+to row `0`, so their graph is connected; they contain the diagonal, the graph of the identity.
+Rigidity is connectivity, so the criterion above holds. Conversely, a recovering set is
+connected, and a connected graph on `2N` vertices has at least `2N − 1` edges.
+
 ### The readout decides (proven)
 
 The same task `a b` has two tables. Read through `ψ_r`, `r ≠ 0`, `[ψ_r(ab)]` has every singular
@@ -914,15 +926,16 @@ All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved witho
 | Rigidity is connectivity (Setting) | `patternGraph`, `patternGraph_adj_inl_inr`, `patternGraph_adj_inr_inl`, `not_patternGraph_adj_inl_inl`, `not_patternGraph_adj_inr_inr`, `rigid_of_preconnected`, `connected_of_rigid`, `rigid_iff_connected`, `rigid_iff_connected'`, `card_add_card_le_ncard_add_one_of_rigid` | The graph is Mathlib's `SimpleGraph.fromRel` on `m ⊕ n`, row `i` adjacent to column `j` when `(i, j) ∈ Ω`. Corrected: the equivalence needs a row and a column, `[Nonempty m] [Nonempty n]`, which the source's `N × N` tables with `N ≥ 1` have; without rows every pattern is rigid. The count is `#m + #n ≤ #Ω + 1`, from Mathlib's `Connected.card_vert_le_card_edgeSet_add_one`; for `N × N`, the source's `2N − 1`. The example is `{(0, 0), (0, 1), (1, 1)}`. |
 | Theorems E and G with graphs | `forall_isMinOn_vecMulVec_iff_connected`, `exists_norm_eq_one_of_vecMulVec`, `forall_isMinOn_vecMulVec_iff_connected_of_entries`, `forall_isMinOn_addKernel_iff_connected`, `rigid_support_iff_connected`, `forall_isMinOn_taskKernel_mul_mulChar_iff_connected`, `forall_isMinOn_taskKernel_add_mul_mulChar_iff_connected` | Rigidity replaced by `(patternGraph Ω).Connected`; on the supports, by connectivity of the graph of the cells inside them, on the subtypes. Added: a rank-one `u vᵀ` with `|u_i v_j| = 1` rescales to `|a_i| = |b_j| = 1`, so the criterion holds for every rank-one matrix with entries of modulus one. The examples: `{(0, 0), (0, 1), (1, 1)}` recovers `(1, 1)(1, 1)ᵀ` and `(2, 2)(½, ½)ᵀ`, all of `ℤ/3 × ℤ/3` recovers `ψ(a + b)`, and for `p = 3` the cells with `a, b ≠ 0`, and those with `a ≠ 0`, `b ≠ −1`, recover `[χ(ab)]` and `[χ(a + ab)]`. |
 | `χ(ab)`, `χ(a + ab)` | `mulChar_ne_zero_iff`, `forall_isMinOn_taskKernel_mul_mulChar_iff`, `taskKernel_add_mul_mulChar`, `forall_isMinOn_taskKernel_add_mul_mulChar_iff`, `nonzero_zmod_three` | For every `χ : MulChar (ZMod p) ℂ`, `p` prime. The nonzero residues are `{x : ZMod p // x ≠ 0}`, the columns of `χ(a + ab)` `{x // x ≠ −1}`. The examples, for `p = 3` and the principal character: `{(1, 1), (1, 2), (2, 2)}` recovers `[χ(ab)]` and `{(1, 1), (2, 1)}` does not; the cells off row `0` and column `−1` recover `[χ(a + ab)]`. |
+| The fewest cells | `staircase`, `ncard_staircase`, `staircase_connected`, `forall_isMinOn_vecMulVec_staircase`, `two_mul_card_le_ncard_add_one_of_forall_isMinOn`, `isLeast_ncard_forall_isMinOn_vecMulVec` | Added. On `Fin N`, `N = k + 1`, the staircase `{(i, i)} ∪ {(j, j + 1) : j < N − 1}` is the diagonals `{0, 1}` without the cell `(N − 1, 0)`, `2N − 1` cells. It is connected and contains the diagonal, so M recovers from it every `N × N` matrix `u vᵀ` with `|u_i v_j| = 1`. A set from which M recovers one such matrix has at least `2N − 1` cells. So `2N − 1` is the least size of a set from which M recovers all of them (`IsLeast`). |
 | The readout decides | `eq_of_taskKernel_eq`, `not_isMinOn_taskKernel_mul`, `exists_injective_mulChar` | Added. For prime `p`, `r ≠ 0` and every proper `Ω`, `[ψ_r(ab)]` does not minimize `‖·‖_S1` among the matrices equal to it on `Ω` (its singular values all equal `√p`, its entries have modulus one). Some `χ : MulChar (ZMod p) ℂ` is injective: `χ(g^k) = e^{2πik/(p−1)}` for a generator `g` of `(ZMod p)ˣ`, `χ(0) = 0`. Through an injective readout `φ`, `[φ(f(a, b))] = [φ(g(a, b))]` forces `f = g`. |
 
 Not formalized:
 - the numerical tables, including the certificates found for random patterns and for the
   training splits;
 - the sharp value `‖Y − Q‖_op = cos(π/p)`;
-- that two diagonals minus one cell are rigid. With Theorem E.2 this gives recovery from those
-  `2p − 1` cells, where item D.1 gives no `c > 1`: the only `Y` with unit row and column sums
-  is a permutation matrix, with `‖Y − Q‖_op = 1`;
+- recovery from the diagonals `{0, 1}` minus a cell other than `(p − 1, 0)`; minus `(p − 1, 0)`
+  it is proved (row *The fewest cells*). On these `2p − 1` cells item D.1 gives no `c > 1`: the
+  only `Y` with unit row and column sums is a permutation matrix, with `‖Y − Q‖_op = 1`;
 - the failures on `2p` random cells;
 - the exact norm of the witness `J − t 1_R 1_Cᵀ` and its best `t` (*Patterns*); Theorem E.3
   proves only `‖X‖_S1 < N`;
@@ -936,7 +949,8 @@ Scope:
   applies. It is not recovered from one diagonal, from two diagonals whose offset
   is not a unit, from row 0 and column 0, or from `2p` random cells.
 - Rigidity is necessary (item 7): otherwise a phase on one component changes `K` off `Ω`. A
-  rigid pattern is connected, so it has at least `2p − 1` cells; two diagonals use one more.
+  rigid pattern is connected, so it has at least `2p − 1` cells, and `2p − 1` cells suffice
+  (*The fewest cells*); two diagonals use one more.
 - Rigidity is not sufficient. The cross is rigid and determines `ψ(a + b)` among rank-one
   matrices, yet M misses it (item 9). The cross holds no permutation graph once `N ≥ 3`.
 - A rigid pattern that contains a permutation graph is recovered (Theorem E.2). Theorem D's

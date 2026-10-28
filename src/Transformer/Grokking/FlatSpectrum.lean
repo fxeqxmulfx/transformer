@@ -85,6 +85,7 @@ public import Transformer.Grokking.FlatSpectrum.PatternGraph
 public import Transformer.Grokking.FlatSpectrum.ConnectedRecovery
 public import Transformer.Grokking.FlatSpectrum.WeightDecay
 public import Transformer.Grokking.FlatSpectrum.ReadoutChoice
+public import Transformer.Grokking.FlatSpectrum.FewestCells
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -198,9 +199,11 @@ and columns with an edge for each cell of `Ω` is connected, so a rigid pattern 
 matrix with entries of modulus one, is recovered exactly when the cells of `Ω` connect the rows
 with the columns and contain the graph of a permutation, and
 `[χ(a b)]` exactly when the cells with `a, b ≠ 0` connect the nonzero rows and columns and
-contain the graph of a permutation of them. The readout decides: through `ψ_r`, `r ≠ 0`, the
-table of `a b` has equal singular values and is of least `‖·‖_S1` on no proper `Ω`; some
-multiplicative character `χ` is injective, and through it the table `χ χᵀ` of `a b` determines
-`a b`. -/
+contain the graph of a permutation of them. The diagonal and the cells just right of it,
+`2N − 1` cells, recover every `N × N` rank-one matrix with entries of modulus one, and no set of
+fewer cells recovers one of them, so `2N − 1` is the least size of a set that recovers them all.
+The readout decides: through `ψ_r`, `r ≠ 0`, the table of `a b` has equal singular values and
+is of least `‖·‖_S1` on no proper `Ω`; some multiplicative character `χ` is injective, and
+through it the table `χ χᵀ` of `a b` determines `a b`. -/
 
 @[expose] public section
