@@ -21,6 +21,8 @@ public import Transformer.Weil.FrobeniusOrbit
 public import Transformer.Weil.FieldSum
 public import Transformer.Weil.Rationality
 public import Transformer.Weil.WeilBound
+public import Transformer.Weil.MulWeight
+public import Transformer.Weil.NormSum
 
 /-!
 # Stepanov's method for `y² = f(x)` and `y^p − y = f(x)`
@@ -82,6 +84,14 @@ Weil's bound `|∑_{x ∈ 𝔽_p} ψ(f(x))| ≤ (m − 1) √p`, through the `L`
   `|S_d| ≤ M R^d` for all large `d` gives `|ω| ≤ R` and `|S_1| ≤ (m − 1) R`;
 * `WeilBound`: `ArtinSchreier` over the fields with `p^d` elements bounds `|S_d|` by
   `4 p m √p^d`, so `|∑_{x ∈ 𝔽_p} ψ(f(x))| = |S_1| ≤ (m − 1) √p`.
+
+The same `L`-function machinery for `χ(f(x))`, `χ` a multiplicative character:
+
+* `MulWeight`: the weight `w(g) = χ(Res(g, f))`, and `c_n = 0` for `n ≥ m` when `χ(t)^m ≠ 1` for
+  some `t ≠ 0`: `g ↦ g + (t − 1)(g mod f)` permutes the monics of degree `n` and multiplies
+  `Res(g, f)` by `t^m`;
+* `NormSum`: `N_{L/K} f(x) = Res(P, f)^{d/k}` for `x` with minimal polynomial `P` of degree `k`,
+  so `S_d = ∑_{x ∈ L} χ(N_{L/K} f(x))`.
 
 The proofs are written from the mathematics (S. A. Stepanov, 1969; W. M. Schmidt, *Equations
 over Finite Fields*, Ch. I); no other formalization is used.
