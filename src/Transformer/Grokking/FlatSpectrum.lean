@@ -34,6 +34,7 @@ public import Transformer.Grokking.FlatSpectrum.MulCharSpectrum
 public import Transformer.Grokking.FlatSpectrum.NumericalChecks
 public import Transformer.Grokking.FlatSpectrum.PolynomialFibers
 public import Transformer.Grokking.FlatSpectrum.PolynomialMulChar
+public import Transformer.Grokking.FlatSpectrum.PolynomialLegendre
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -60,13 +61,15 @@ nontrivial `χ` and odd `p`, the kernel `[χ(a³ + a b)]` has rank `(p − 1)/2`
 `r_eff = (√(p + 1) + (p − 3)/2 · √(2p))²/(p − 1)²`, between `47.9` and `48` at `p = 97`. For any
 function `P` of `a`, the fibers of `P(a) + a b` give `‖E[ψ_r(a b) | f]‖²` exactly in terms of
 `T = ∑_{a ≠ 0} ψ(−r P(a))`, and a bound on `∑_x ψ(r P(x))` or on `∑_a χ(c − P(a))` bounds the
-additive or the multiplicative readout. Of the numerical checks, the bound at `p = 97` is below
-`0.053`, `‖E[ψ_r(a + b) | (a + b)²]‖² = ½`, and the counting rule `r (2p − r) ≤ ρ p²` iff
-`r ≤ (1 − √(1 − ρ)) p` gives `28.4` at `ρ = ½`, `p = 97`. Torch check: every minimum-nuclear-norm
-completion is zero on a row whose seen entries are zero, so a hidden 1 of the one-hot kernel
-`[a³ + a b = c]` in a row `a ≠ 0` is never recovered, from any training set. The real readouts
-`cos(2πr f/p)` and `sin(2πr f/p)` of `f = a³ + a b` have rows `a` and `−a` equal and opposite, so
-both are singular and Theorem A does not apply; for odd prime `p` and `r ≠ 0` they have rank
-`(p + 1)/2` and `(p − 1)/2`, and every nonzero singular value is `√p`. -/
+additive or the multiplicative readout. For `P` of odd degree `m`, `p ≥ 64` and `8 m ≤ p`,
+Stepanov's bound (`Transformer.Weil`) gives `|∑_a χ₂(c − P(a))| ≤ 7 m √p`, so the Legendre readout
+`‖E[χ₂(a b) | P(a) + a b]‖²` is at most `(7 m √p + 1)²/p² + (p − 1)²/(p² (2p − 1))`. Of the
+numerical checks, the bound at `p = 97` is below `0.053`, `‖E[ψ_r(a + b) | (a + b)²]‖² = ½`, and the
+counting rule `r (2p − r) ≤ ρ p²` iff `r ≤ (1 − √(1 − ρ)) p` gives `28.4` at `ρ = ½`, `p = 97`.
+Torch check: every minimum-nuclear-norm completion is zero on a row whose seen entries are zero, so
+a hidden 1 of the one-hot kernel `[a³ + a b = c]` in a row `a ≠ 0` is never recovered, from any
+training set. The real readouts `cos(2πr f/p)` and `sin(2πr f/p)` of `f = a³ + a b` have rows `a`
+and `−a` equal and opposite, so both are singular and Theorem A does not apply; for odd prime `p`
+and `r ≠ 0` they have rank `(p + 1)/2` and `(p − 1)/2`, and every nonzero singular value is `√p`. -/
 
 @[expose] public section
