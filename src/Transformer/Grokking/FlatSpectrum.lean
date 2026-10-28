@@ -83,10 +83,13 @@ public import Transformer.Grokking.FlatSpectrum.SupportRecovery
 public import Transformer.Grokking.FlatSpectrum.CharacterRecovery
 public import Transformer.Grokking.FlatSpectrum.PatternGraph
 public import Transformer.Grokking.FlatSpectrum.ConnectedRecovery
+public import Transformer.Grokking.FlatSpectrum.WeightDecay
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
-factorization cost `½ (‖U‖² + ‖V‖²)`, the weight-decay penalty of a bilinear layer.
+factorization cost `½ (‖U‖² + ‖V‖²)`, the weight-decay penalty of a bilinear layer, so
+weight decay at its optimum is M: among the factorizations `U Vᴴ` of any width lying in a set
+`S`, those of least weight decay multiply to exactly the matrices of least nuclear norm in `S`.
 Proposition 2: `ψ (a + b)` has rank one and `‖K‖_S1 = p`; `ψ (a³ + a b)` has `K K* = p I`
 and `‖K‖_S1 = p^{3/2}`; these are the extremes for unimodular entries, and relabeling keeps
 the spectrum. Theorem A: an invertible `K` is the least-`‖·‖_S1` matrix agreeing with it on

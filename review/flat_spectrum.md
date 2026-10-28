@@ -145,6 +145,7 @@ proved without `sorry`. `ψ` is `ZMod.stdAddChar`, `K_φ` is `taskKernel f φ`, 
 | --- | --- | --- |
 | Setting | `nuclearNorm`, `frobeniusSq` (`‖·‖²_S2`), `effectiveRank`, `taskKernel` | |
 | Lemma 1 | `nuclearNorm_isLeast`, `nuclearNorm_le_of_eq_mul` | The minimum runs over every inner dimension. |
+| Lemma 1, "exact for a pure factorization" | `IsOptimalFit`, `isOptimalFit_iff`, `setOf_isOptimalFit_eq`, `forall_isMinOn_iff_iff_isOptimalFit` | Added. A fit of a set `S` of matrices is a factorization `U Vᴴ ∈ S` of any width `r`; it is optimal when its weight decay `½(‖U‖² + ‖V‖²)` is the least among the fits of every width. A fit is optimal exactly when its product minimizes `‖·‖_S1` on `S` and its weight decay equals that norm; the products of the optimal fits are exactly the minimizers of `‖·‖_S1` on `S`. So for `K ∈ S`, some fit is optimal and every optimal fit multiplies to `K` exactly when M recovers `K`, in D.2's form. That training reaches an optimal fit is the modeling step, not proved. |
 | Prop. 2, `a + b` | `addKernel_eq_vecMulVec`, `rank_addKernel`, `nuclearNorm_addKernel`, `effectiveRank_addKernel` | |
 | Prop. 2, `a³ + a b` | `cubicKernel_eq_diagonal_mul`, `stdAddChar_mul_conjTranspose`, `cubicKernel_mul_conjTranspose`, `singularValues_cubicKernel`, `nuclearNorm_cubicKernel`, `effectiveRank_cubicKernel` | |
 | Prop. 2, extremes | `card_le_nuclearNorm_le_of_unimodular`, `nuclearNorm_unimodular_extremes` | The bounds hold for every unimodular `N × N` matrix. |
@@ -192,8 +193,9 @@ Not formalized:
 - the results of the readout searches for `x³ + x y`: that the indicator of 0 is the best
   readout, the range `0.56p–0.67p` of the other one-hots, and the caveat's `0.48p` and
   `0.38–0.41p`;
-- Lemma 1's modeling step: training with weight decay behaves like minimum-nuclear-norm
-  interpolation;
+- Lemma 1's modeling step: that training with weight decay reaches an optimal fit; at an
+  optimal fit it is exactly minimum-nuclear-norm interpolation (row *Lemma 1, "exact for a pure
+  factorization"*);
 - the readout-free version for `x³ + x y`, which the note calls a conjecture;
 - "How it fits together", which the note calls a heuristic.
 
