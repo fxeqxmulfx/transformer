@@ -29,6 +29,8 @@ public import Transformer.Weil.QuadraticUnit
 public import Transformer.Weil.QuadraticWeil
 public import Transformer.Weil.PowIndependence
 public import Transformer.Weil.PowSystem
+public import Transformer.Weil.PowStepanov
+public import Transformer.Weil.PowBound
 
 /-!
 # Stepanov's method for `y² = f(x)` and `y^p − y = f(x)`
@@ -120,7 +122,10 @@ Stepanov's method for `y^d = f(x)`, `d c + 1 = q` and `d` prime to `m = deg f`, 
   `d (K − 1) + (d − 1) m < q`: the nonzero terms have distinct degrees;
 * `PowSystem`: at a point with `f(x)^c = a`, `f^k E^{(k)} R` takes the value of
   `T_k = ∑_{i,j} a^i σ_k^{(i)}(r_{ij}) X^j`, linear in the `r_{ij}`, of degree
-  `< K + J + (ℓ − 1)(m − 1)` for `k < ℓ ≤ c + 1`.
+  `< K + J + (ℓ − 1)(m − 1)` for `k < ℓ ≤ c + 1`;
+* `PowStepanov`: for `a ≠ 0`, `ℓ · #{x : f(x)^c = a} ≤ K − 1 + (d − 1) c m + q (J − 1)`;
+* `PowBound`: with `ℓ = ⌊√q⌋`, `K = ⌊(q − (d − 1) m)/d⌋`, `J = ⌊ℓ/d⌋ + 2 m`, for `q ≥ 64`,
+  `8 d m ≤ q` and `d² ≤ q`: `#{x : f(x)^c = a} ≤ q/d + 4 m √q`.
 
 The proofs are written from the mathematics (S. A. Stepanov, 1969; W. M. Schmidt, *Equations
 over Finite Fields*, Ch. I); no other formalization is used.
