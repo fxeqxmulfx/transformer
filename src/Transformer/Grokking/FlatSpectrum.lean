@@ -103,6 +103,9 @@ public import Transformer.Grokking.FlatSpectrum.RankCertificate
 public import Transformer.Grokking.FlatSpectrum.RankRecovery
 public import Transformer.Grokking.FlatSpectrum.ThreeCells
 public import Transformer.Grokking.FlatSpectrum.ThreeCellsRank
+public import Transformer.Grokking.FlatSpectrum.ContractionDual
+public import Transformer.Grokking.FlatSpectrum.DualCertificate
+public import Transformer.Grokking.FlatSpectrum.RankMinimum
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -262,6 +265,12 @@ M recovers `K` there at rank at most one exactly when `|k₀₁| ≤ |k₁₀|`,
 `k₀₁ = conj(k₁₀) det K / |det K|`, and with entries of modulus one exactly when `det K = 0`:
 `!![2, 1; 1, 1]` is recovered and `!![2, 1; 1, −1]`, with the same moduli, is not. The condition on
 `U Aᴴ + B Vᴴ` is not necessary: at rank two it fails on these three cells, yet `!![2, 1; 1, 1]` is
-recovered. -/
+recovered. The nuclear norm is subadditive, and `Y` is a contraction exactly when
+`Re tr(Yᴴ X) ≤ ‖X‖_S1` for every `X`. By the Hahn–Banach theorem, a matrix `K` of any rank is a
+minimum of the nuclear norm among the matrices equal to it on `Ω` exactly when some contraction
+vanishing off `Ω` has `tr(Yᴴ K) = ‖K‖_S1`. For `K = U diag(s) Vᴴ` with `s > 0` these contractions
+are the `U Vᴴ + W` with `Uᴴ W = 0`, `W V = 0` and `W` a contraction, so `K` is a minimum exactly
+when such a `W` makes `U Vᴴ + W` vanish off `Ω`: Theorem A at every rank. At full column rank,
+`V` square, `W = 0` and the condition is that `U Vᴴ` vanishes off `Ω`. -/
 
 @[expose] public section
