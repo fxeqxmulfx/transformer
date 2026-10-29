@@ -97,6 +97,8 @@ public import Transformer.Grokking.FlatSpectrum.MarginSharp
 public import Transformer.Grokking.FlatSpectrum.MarginLargest
 public import Transformer.Grokking.FlatSpectrum.MarginRankOne
 public import Transformer.Grokking.FlatSpectrum.Discontinuity
+public import Transformer.Grokking.FlatSpectrum.CycleSpectrum
+public import Transformer.Grokking.FlatSpectrum.SharpCertificate
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -170,8 +172,11 @@ rounds to `0.359`, `0.345`, `0.325` and `0.302` at `p = 47, 61, 97, 199`. Exact 
 `Y` vanishes off `Ω`, has unit row and column sums and `c (Y − J/N)` is a contraction for some
 `c > 1`, and entries `r_i + s_j` vanishing on `Ω` vanish everywhere, then the all-ones `J` is
 the unique least-`‖·‖_S1` matrix equal to it on `Ω`. When `τ σ⁻¹` is one `N`-cycle,
-`(P_σ + P_τ)/2` is such a `Y` with `c = √(1 + 1/(4N²))`, and rescaling carries every
-recovery of `J` to every `a bᵀ` with `|a i| = |b j| = 1`. So the `2p` values of `ψ(a + b)` on
+`(P_σ + P_τ)/2` is such a `Y` with `c = √(1 + 1/(4N²))`. For `N ≥ 2` the L2 operator norm
+of `Y − J/N` is exactly `cos(π/N)`, reached by a character read along the cycle, so
+`c (Y − J/N)` is a contraction exactly when `|c| cos(π/N) ≤ 1`; for `N ≥ 3` the best `c` is
+`1/cos(π/N)`. Rescaling carries every recovery of `J` to every `a bᵀ` with
+`|a i| = |b j| = 1`. So the `2p` values of `ψ(a + b)` on
 two diagonals `b = a + s₁`, `b = a + s₂` with `s₂ − s₁` a unit determine it as the
 least-`‖·‖_S1` completion, while on one diagonal that completion is not unique. The rigidity
 hypothesis is necessary: if some `r_i + s_j` vanish on `Ω` but not everywhere, a second
