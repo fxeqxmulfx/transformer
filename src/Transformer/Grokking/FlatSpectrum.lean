@@ -111,6 +111,7 @@ public import Transformer.Grokking.FlatSpectrum.TangentGrowth
 public import Transformer.Grokking.FlatSpectrum.LinearGrowth
 public import Transformer.Grokking.FlatSpectrum.GrowthCertificate
 public import Transformer.Grokking.FlatSpectrum.SlowGrowth
+public import Transformer.Grokking.FlatSpectrum.TangentDimension
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -283,6 +284,7 @@ when such a `W` makes `U Vᴴ + W` vanish off `Ω`: Theorem A at every rank. At 
 and no nonzero `U Aᴴ + B Vᴴ` vanishes on `Ω`. Linear growth makes `K` the only minimum, and when `U`
 or `V` is square one missing cell rules it out. M recovers `!![2, 1; 1, 1]` from the three cells
 other than `(0, 1)`, where `‖K + h E₀₁‖_S1 = √(9 + h²)` for real `h ≤ 1` and no `c > 0` gives linear
-growth. -/
+growth. If no nonzero `U Aᴴ + B Vᴴ` vanishes on `Ω`, then `|Ω| ≥ r (m + n − r)`, so linear growth
+needs that many cells, while M recovers `!![2, 1; 1, 1]`, of rank two, from three. -/
 
 @[expose] public section
