@@ -260,6 +260,8 @@ of `K`. From the three cells of a `2 × 2` table other than `(0, 1)`, M has exac
 `conj(k₁₀) k₀₀ k₁₁ / max(|k₁₀|², |k₀₀ k₁₁|)` at `(0, 1)`, and `0` there when `k₁₀ = k₀₀ k₁₁ = 0`. So
 M recovers `K` there at rank at most one exactly when `|k₀₁| ≤ |k₁₀|`, at rank two exactly when
 `k₀₁ = conj(k₁₀) det K / |det K|`, and with entries of modulus one exactly when `det K = 0`:
-`!![2, 1; 1, 1]` is recovered and `!![2, 1; 1, −1]`, with the same moduli, is not. -/
+`!![2, 1; 1, 1]` is recovered and `!![2, 1; 1, −1]`, with the same moduli, is not. The condition on
+`U Aᴴ + B Vᴴ` is not necessary: at rank two it fails on these three cells, yet `!![2, 1; 1, 1]` is
+recovered. -/
 
 @[expose] public section

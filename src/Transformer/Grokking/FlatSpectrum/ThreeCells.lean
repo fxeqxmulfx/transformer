@@ -5,8 +5,8 @@ public import Transformer.Grokking.FlatSpectrum.Blocks
 /-!
 # A `2 × 2` table from three cells
 
-Source: `review/flat_spectrum.md`, *Rank above one* (added), item 3. M sees the cells `(0, 0)`,
-`(1, 0)` and `(1, 1)` of a `2 × 2` table `K` and fills `(0, 1)`. Since
+Source: `review/flat_spectrum.md`, *Rank above one* (added), items 3 and 4. M sees the cells
+`(0, 0)`, `(1, 0)` and `(1, 1)` of a `2 × 2` table `K` and fills `(0, 1)`. Since
 `‖X‖²_S1 = ‖X‖²_S2 + 2 |det X|` (`nuclearNorm_fin_two`), the fill `x` minimizes
 `|x|² + 2 |c − x b|`, with `b = k₁₀` and `c = k₀₀ k₁₁` (`nuclearNorm_threeCells`). At
 `x* = conj(b) c / max(|b|², |c|)` (`threeCellFill`; `x* = 0` when `b = c = 0`) the number
@@ -14,7 +14,9 @@ Source: `review/flat_spectrum.md`, *Rank above one* (added), item 3. M sees the 
 so the cost exceeds its value at `x*` by at least `|x − x*|²` (`sq_norm_threeCellFill_add_le`). So M
 has exactly one minimum, the table with `x*` at `(0, 1)` (`isMinOn_threeCells_iff`), and recovers
 `K` exactly when `k₀₁ = x*` (`forall_isMinOn_threeCells_iff`). `ThreeCellsRank` reads this by the
-rank of `K`.
+rank of `K`. At rank two the condition of item 1.2 fails on these cells: every `U` with `U Uᴴ K = K`
+has `U Uᴴ = 1`, so the matrix unit at `(0, 1)` is a nonzero `U Aᴴ + B Vᴴ` vanishing on them
+(`exists_ne_zero_threeCells_of_det_ne_zero`); yet M recovers `!![2, 1; 1, 1]`.
 -/
 
 @[expose] public section
@@ -168,5 +170,29 @@ theorem forall_isMinOn_threeCells_iff {K : Matrix (Fin 2) (Fin 2) ℂ} :
 /-- M recovers `!![2, 1; 1, 1]` from its three cells other than `(0, 1)`. -/
 example := (forall_isMinOn_threeCells_iff (K := !![(2 : ℂ), 1; 1, 1])).mpr
   (by norm_num [threeCellFill])
+
+/-- **Item 1.2's condition fails at rank two**: if `det K ≠ 0`, every `U` with `U Uᴴ K = K`, as
+item 1.2 asks, has `U Uᴴ = 1`, so `U (Uᴴ E)`, with `E` the matrix unit at `(0, 1)`, is a nonzero
+`U Aᴴ + B Vᴴ` vanishing on the three cells other than `(0, 1)`. Yet M recovers `!![2, 1; 1, 1]`
+from them (the example above): the condition is sufficient, not necessary. -/
+theorem exists_ne_zero_threeCells_of_det_ne_zero {r : Type*} [Fintype r]
+    {K : Matrix (Fin 2) (Fin 2) ℂ} (hK : K.det ≠ 0) {U V : Matrix (Fin 2) r ℂ}
+    (hKU : U * Uᴴ * K = K) :
+    ∃ A B : Matrix (Fin 2) r ℂ, (∀ ij ∈ {ij : Fin 2 × Fin 2 | ij ≠ (0, 1)},
+      (U * Aᴴ + B * Vᴴ) ij.1 ij.2 = 0) ∧ U * Aᴴ + B * Vᴴ ≠ 0 := by
+  have hUU : U * Uᴴ = 1 := by
+    rw [← Matrix.mul_one (U * Uᴴ), ← K.mul_nonsing_inv hK.isUnit, ← Matrix.mul_assoc, hKU]
+  refine ⟨(!![0, 1; 0, 0] : Matrix (Fin 2) (Fin 2) ℂ)ᴴ * U, 0, ?_, ?_⟩ <;>
+    rw [conjTranspose_mul, conjTranspose_conjTranspose, ← Matrix.mul_assoc, hUU,
+      Matrix.one_mul, Matrix.zero_mul, add_zero]
+  · rintro ⟨i, j⟩ hij
+    fin_cases i <;> fin_cases j <;> simp_all
+  · intro h
+    have h01 := congrFun (congrFun h 0) 1
+    simp at h01
+
+/-- `!![2, 1; 1, 1]`, recovered from the three cells, with `U = V = 1`. -/
+example := exists_ne_zero_threeCells_of_det_ne_zero (K := !![(2 : ℂ), 1; 1, 1])
+  (U := (1 : Matrix (Fin 2) (Fin 2) ℂ)) (V := 1) (by norm_num) (by simp)
 
 end Transformer.Grokking.FlatSpectrum

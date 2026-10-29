@@ -1176,7 +1176,8 @@ a table of rank `r`? Theorem G is `r = 1`. Added on 2026-10-29 and proved in Lea
 carries Theorem D's certificate to a table of any rank. Item 2 is a necessary condition for any
 table. Item 3 settles the smallest case past rank one, a `2 × 2` table seen on three cells. Its
 examples show that from rank two on, no criterion in `Ω`, the support of `K`, the moduli of its
-entries and its rank decides recovery.
+entries and its rank decides recovery. Item 4 shows that item 1's condition on `U Aᴴ + B Vᴴ` is
+not necessary.
 
 ### Setting
 
@@ -1226,6 +1227,10 @@ entries and its rank decides recovery.
    determinant `−3`, has the same support, moduli and rank and is not: M's unique minimum is
    `[[2, −1], [1, −1]]`. At rank one `[[2, 1], [2, 1]]` is recovered and `[[1, 2], [1, 2]]` is
    not. The Hadamard matrix `[[1, 1], [1, −1]]` is not.
+4. Item 1.2's condition is sufficient, not necessary. In item 3, let `det K ≠ 0`. Every `U`
+   with `U Uᴴ K = K`, as item 1 asks, has `U Uᴴ = 1`. So the matrix unit `E` at `(0, 1)` equals
+   `U (Uᴴ E)`, a nonzero `U Aᴴ + B Vᴴ` vanishing on the three cells, for every `V`. Yet M
+   recovers `[[2, 1], [1, 1]]` from them, and every table of item 3.5.
 
 ### Proof
 
@@ -1274,6 +1279,7 @@ entries and its rank decides recovery.
      such points coincide.
    - 3.6. `|b| = |c| = 1` gives `x* = conj(b) c = c / b`, and `k₀₁ = c / b` exactly when
      `det K = c − k₀₁ b = 0`.
+5. Item 4. `U Uᴴ = U Uᴴ K K⁻¹ = K K⁻¹ = 1`, so `U (Uᴴ E) = E`, which vanishes off `(0, 1)`.
 
 ### Lean status
 
@@ -1292,3 +1298,4 @@ All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved witho
 | Item 3.5 | `eq_threeCellFill_iff_of_sub_ne_zero`, `forall_isMinOn_threeCells_iff_of_det_ne_zero` | Rank two is `K.det ≠ 0`. |
 | Item 3.6 | `threeCellFill_of_norm_eq_one`, `eq_threeCellFill_iff_of_norm_eq_one`, `forall_isMinOn_threeCells_iff_det_eq_zero` | Moduli one is `∀ i j, ‖K i j‖ = 1`. |
 | Item 3, examples | `example`s after `isMinOn_threeCells_iff`, `forall_isMinOn_threeCells_iff` and the three theorems of 3.4–3.6 | The matrices are `!![2, 1; 1, 1]`, `!![2, 1; 1, -1]` with minimum `!![2, -1; 1, -1]`, `!![2, 1; 2, 1]`, `!![1, 2; 1, 2]` and `!![1, 1; 1, -1]`. |
+| Item 4 | `exists_ne_zero_threeCells_of_det_ne_zero` | `U : Matrix (Fin 2) r ℂ` for any finite type `r`, with only `U * Uᴴ * K = K` assumed; `V` is arbitrary. The matrix is `!![0, 1; 0, 0]`. Its `example` is `!![2, 1; 1, 1]` with `U = V = 1`. |
