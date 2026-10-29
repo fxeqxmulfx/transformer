@@ -1299,3 +1299,34 @@ All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved witho
 | Item 3.6 | `threeCellFill_of_norm_eq_one`, `eq_threeCellFill_iff_of_norm_eq_one`, `forall_isMinOn_threeCells_iff_det_eq_zero` | Moduli one is `∀ i j, ‖K i j‖ = 1`. |
 | Item 3, examples | `example`s after `isMinOn_threeCells_iff`, `forall_isMinOn_threeCells_iff` and the three theorems of 3.4–3.6 | The matrices are `!![2, 1; 1, 1]`, `!![2, 1; 1, -1]` with minimum `!![2, -1; 1, -1]`, `!![2, 1; 2, 1]`, `!![1, 2; 1, 2]` and `!![1, 1; 1, -1]`. |
 | Item 4 | `exists_ne_zero_threeCells_of_det_ne_zero` | `U : Matrix (Fin 2) r ℂ` for any finite type `r`, with only `U * Uᴴ * K = K` assumed; `V` is arbitrary. The matrix is `!![0, 1; 0, 0]`. Its `example` is `!![2, 1; 1, 1]` with `U = V = 1`. |
+
+### Rank check (torch, 2026-10-29)
+
+`recovery three-cells 20000` and `recovery rank 20000` (`experiments/recovery` in the grokking
+repository, `e5cfbe6`) run ADMM, 20000 iterations, on the CPU, seed 0. Entries and factor
+entries have moduli uniform in [0.3, 2] and uniform phases.
+
+- Item 3: 1000 tables of each of five kinds: random; rank one, `u vᵀ`; rank two with
+  `k₀₁ = x*`; moduli one; moduli one and rank one. On every table ADMM's entry at `(0, 1)` is
+  `x*` to within `2.67e-15 ‖K‖_S2`, and ADMM returns `K` (to within `1e-6 ‖K‖_S2` at `(0, 1)`)
+  exactly when `k₀₁ = x*` (to within `1e-12 ‖K‖_S2`): 0, 521, 1000, 0 and 1000 tables. The five
+  examples of item 3 come out as stated.
+- Items 1 and 2: 300 random patterns for each `N × N` with `N = 4, 6, 8`, each rank
+  `r = 2, 3` and two kinds of table: `A Bᵀ` with `N × r` factors, and `r` diagonal blocks
+  `a bᵀ` of nearly equal sizes with zeros off them. Each pattern keeps every cell with one
+  density uniform in [0.3, 0.95]. Joined is item 2's condition. Injective means that the least
+  singular value, on `Ω`, of an orthonormal basis of the matrices `U Aᴴ + B Vᴴ` exceeds `1e-9`.
+  The certificate is the least `‖W‖_op` that least squares and then 2000 steps of projected
+  subgradient descent found among the `W` of item 1. Recovered means
+  `‖Z − K‖_S2 < 1e-6 ‖K‖_S2`.
+
+  | class | patterns | recovered | `‖Z‖_S1 − ‖K‖_S1` |
+  | --- | --- | --- | --- |
+  | not joined | 1446 | 0 | −18.5 to −2.71e-5 |
+  | joined, not injective | 1037 | 117 | −15.4 to 8.88e-15 |
+  | injective, certificate below 1 | 468 | 468 | −1.42e-14 to 3.55e-14 |
+  | injective, no certificate below 1 found | 649 | 0 | −4.18 to −5.50e-6 |
+
+  Each of the twelve runs agrees with items 1.2 and 2. In the last class ADMM finds a completion
+  of smaller nuclear norm than `K` every time. The 117 recovered patterns that are not
+  injective are all block tables: as in item 4, recovery does not need the injectivity.
