@@ -99,6 +99,10 @@ public import Transformer.Grokking.FlatSpectrum.MarginRankOne
 public import Transformer.Grokking.FlatSpectrum.Discontinuity
 public import Transformer.Grokking.FlatSpectrum.CycleSpectrum
 public import Transformer.Grokking.FlatSpectrum.SharpCertificate
+public import Transformer.Grokking.FlatSpectrum.RankCertificate
+public import Transformer.Grokking.FlatSpectrum.RankRecovery
+public import Transformer.Grokking.FlatSpectrum.ThreeCells
+public import Transformer.Grokking.FlatSpectrum.ThreeCellsRank
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -245,6 +249,17 @@ through it the table `χ χᵀ` of `a b` determines `a b`.
 Read at `x = a/p`, `y = b/p` and divided by `p`, the table of `a b` is `frac(p x y)`: for
 rational `α`, `frac(p α)` converges as `p → ∞` through the primes exactly when `2 α` is an
 integer, by Dirichlet's theorem on primes in arithmetic progressions, and the points of the plane
-where `2 x y` is an integer form a set of area zero. -/
+where `2 x y` is an integer form a set of area zero.
+At any rank, let `U`, `V` have orthonormal columns with `U Uᴴ K = K` and `tr((U Vᴴ)ᴴ K) = ‖K‖_S1`,
+as a compact singular value decomposition of `K` gives. If `Y = U Vᴴ + W` vanishes off `Ω`,
+`Uᴴ W = 0`, `W V = 0` and `c W` is a contraction, `c > 0`, then every `H` vanishing on `Ω` has
+`‖K‖_S1 + (1 − 1/c) ‖(1 − U Uᴴ) H (1 − V Vᴴ)‖_S1 ≤ ‖K + H‖_S1`; for `c > 1`, if no nonzero
+`U Aᴴ + B Vᴴ` vanishes on `Ω`, `K` is the unique minimum. A necessary condition: if M recovers `K`
+from `Ω`, the cells of `Ω` where `K` is nonzero join the row and the column of every nonzero entry
+of `K`. From the three cells of a `2 × 2` table other than `(0, 1)`, M has exactly one minimum, with
+`conj(k₁₀) k₀₀ k₁₁ / max(|k₁₀|², |k₀₀ k₁₁|)` at `(0, 1)`, and `0` there when `k₁₀ = k₀₀ k₁₁ = 0`. So
+M recovers `K` there at rank at most one exactly when `|k₀₁| ≤ |k₁₀|`, at rank two exactly when
+`k₀₁ = conj(k₁₀) det K / |det K|`, and with entries of modulus one exactly when `det K = 0`:
+`!![2, 1; 1, 1]` is recovered and `!![2, 1; 1, −1]`, with the same moduli, is not. -/
 
 @[expose] public section
