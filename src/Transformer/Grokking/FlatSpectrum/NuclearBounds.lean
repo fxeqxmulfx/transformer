@@ -6,10 +6,11 @@ public import Transformer.Grokking.FlatSpectrum.Interpolation
 /-!
 # The nuclear norm against entries, contractions and linear maps
 
-Source: `review/flat_spectrum.md`, *Rank above one* (added), item 6, the lemmas of its proof.
+Source: `review/flat_spectrum.md`, *Rank above one* (added), item 6.1, the lemmas of its proof.
 A matrix unit is a contraction (`isContraction_single_one`), so no entry exceeds the nuclear norm
 (`norm_apply_le_nuclearNorm`). A product of contractions is a contraction
-(`IsContraction.mul`), and so is the projection `1 − U Uᴴ` (`isContraction_one_sub_mul_conjTranspose`).
+(`IsContraction.mul`), and so is the projection `1 − U Uᴴ`
+(`isContraction_one_sub_mul_conjTranspose`).
 Multiplying by contractions does not increase the nuclear norm (`nuclearNorm_mul_mul_le`): a
 contraction `Z` attaining `‖P X Q‖_S1` gives the contraction `Pᴴ Z Qᴴ`, which pairs with `X` to
 the same value. Every real-linear map `g` between matrix spaces is bounded in the nuclear norm

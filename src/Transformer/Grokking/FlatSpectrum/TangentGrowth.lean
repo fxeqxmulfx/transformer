@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.RankMinimum
 /-!
 # The nuclear norm near `K`, along the tangent space
 
-Source: `review/flat_spectrum.md`, *Rank above one* (added), item 6, the lemmas of its proof.
+Source: `review/flat_spectrum.md`, *Rank above one* (added), item 6.1, the lemmas of its proof.
 Let `K = U diag(s) Vᴴ` with orthonormal columns in `U` and `V` and `s > 0`, and let
 `H = U Aᴴ + B Vᴴ`. With `R = diag(√s)` and `R' = diag(1/√s)`, the factors `P = U R + t B R'` and
 `Q = V R + t A R'` have `P Qᴴ = K + t H + t² B R'² Aᴴ`, and Lemma 1 (`nuclearNorm_le_of_eq_mul`)

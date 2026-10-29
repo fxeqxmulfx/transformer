@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.LinearGrowth
 /-!
 # Linear growth exactly when item 1.2's certificate exists
 
-Source: `review/flat_spectrum.md`, *Rank above one* (added), item 6. Let `K = U diag(s) Vᴴ` with
+Source: `review/flat_spectrum.md`, *Rank above one* (added), item 6.1. Let `K = U diag(s) Vᴴ` with
 `s > 0`, `P = 1 − U Uᴴ`, `P' = 1 − V Vᴴ`, and let `‖K‖_S1 + c ‖H‖_S1 ≤ ‖K + H‖_S1`, `c > 0`, for
 every `H` vanishing on `Ω`. The first-order bound (`exists_nuclearNorm_add_smul_le`) at `t → 0⁺`
 gives `c ‖H‖_S1 ≤ Re tr((U Vᴴ)ᴴ H) + ‖P H P'‖_S1` for every such `H`. So for

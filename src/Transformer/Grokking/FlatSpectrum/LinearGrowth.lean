@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.TangentGrowth
 /-!
 # Linear growth of the nuclear norm around `K`
 
-Source: `review/flat_spectrum.md`, *Rank above one* (added), item 6, its two easy halves. If no
+Source: `review/flat_spectrum.md`, *Rank above one* (added), item 6.1, its two easy halves. If no
 nonzero `U Aᴴ + B Vᴴ` vanishes on `Ω`, the real-linear map `H ↦ ((1 − U Uᴴ) H (1 − V Vᴴ), H on Ω)`
 is injective, since `H = U (Hᴴ U)ᴴ + ((1 − U Uᴴ) H V) Vᴴ + (1 − U Uᴴ) H (1 − V Vᴴ)`. A left inverse
 is bounded in the nuclear norm (`exists_nuclearNorm_map_le`), so

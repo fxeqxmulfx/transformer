@@ -1179,7 +1179,7 @@ examples show that from rank two on, no criterion in `Ω`, the support of `K`, t
 entries and its rank decides recovery. Item 4 shows that item 1's condition on `U Aᴴ + B Vᴴ` is
 not necessary. Item 5 decides when `K` is a minimum, at every rank: Theorem A without its
 invertibility. Item 6 shows that item 1.2's hypotheses hold exactly when the nuclear norm grows
-linearly away from `K`.
+linearly away from `K`, which at full rank fails as soon as one cell is missing.
 
 ### Setting
 
@@ -1249,14 +1249,21 @@ linearly away from `K`.
    Item 5 decides whether `K` is a minimum, not whether it is the only one. Lemmas of the proof:
    the nuclear norm is subadditive, and a matrix `Y` is a contraction exactly when
    `Re tr(Yᴴ X) ≤ ‖X‖_S1` for every `X`, and then so is `Yᴴ`.
-6. Linear growth. Let `K = U diag(s) Vᴴ` with `s > 0`. Some real `c > 0` has
-   `‖K‖_S1 + c ‖H‖_S1 ≤ ‖K + H‖_S1` for every `H` vanishing on `Ω` exactly when item 1.2's
-   hypotheses hold: some `W` with `Uᴴ W = 0`, `W V = 0` and `c' W` a contraction for a real
-   `c' > 1` makes `U Vᴴ + W` vanish off `Ω`, and no nonzero `U Aᴴ + B Vᴴ` vanishes on `Ω`.
+6. Linear growth. Let `K = U diag(s) Vᴴ` with `s > 0`. Linear growth means that some real
+   `c > 0` has `‖K‖_S1 + c ‖H‖_S1 ≤ ‖K + H‖_S1` for every `H` vanishing on `Ω`.
+   1. Linear growth holds exactly when item 1.2's hypotheses do: some `W` with `Uᴴ W = 0`,
+      `W V = 0` and `c' W` a contraction for a real `c' > 1` makes `U Vᴴ + W` vanish off `Ω`,
+      and no nonzero `U Aᴴ + B Vᴴ` vanishes on `Ω`.
+   2. Linear growth makes `K` the only minimum. So the tables that M recovers and item 1.2
+      misses are exactly the tables that M recovers without linear growth.
+   3. Full rank. If `V` or `U` is square and some cell is not in `Ω`, linear growth fails. So
+      with such `U` and `V`, item 1.2's hypotheses fail on every `Ω` that misses a cell, while
+      item 5.4 still decides whether `K` is a minimum.
+   4. Example. In item 3, `K = [[2, 1], [1, 1]]` has `‖K + h E₀₁‖_S1 = √(9 + h²)` for real
+      `h ≤ 1`, with `E₀₁` the matrix unit at `(0, 1)`. M recovers `K` from the three cells
+      (item 3), and linear growth fails: along `E₀₁` the nuclear norm grows quadratically.
 
-   Linear growth makes `K` the only minimum, as `c ‖H‖_S1 > 0` for `H ≠ 0` (a remark, not in
-   Lean). So the tables that M recovers and item 1.2 misses are exactly those around which no
-   `c > 0` gives linear growth. Lemmas of the proof: no entry exceeds the nuclear norm; products
+   Lemmas of the proof: no entry exceeds the nuclear norm; products
    of contractions, `Π` and `Π'` are contractions, and multiplying by contractions does not
    increase the nuclear norm; every real-linear map between matrix spaces is bounded in the
    nuclear norm; and, for every `H`, some `C` has
@@ -1375,6 +1382,15 @@ linearly away from `K`.
      and at `X = (W V) Vᴴ`, where `Π X Π' = 0`, this says `‖Uᴴ W‖²_S2 ≤ 0` and
      `‖W V‖²_S2 ≤ 0`. With `‖Π X Π'‖_S1 ≤ ‖X‖_S1` it makes `W / a` a contraction, by item 5's
      lemma, and `c' = 1/a > 1`.
+   - 6.2. For `X` equal to `K` on `Ω`, `X − K` vanishes on `Ω`, so
+     `‖K‖_S1 + c ‖X − K‖_S1 ≤ ‖X‖_S1`. A minimum `X` has `‖X‖_S1 ≤ ‖K‖_S1`, so `X = K`.
+   - 6.3. A square `V` with `Vᴴ V = 1` has `V Vᴴ = 1`, so the matrix unit `E` at the missing
+     cell is `(E V) Vᴴ`, a nonzero `U Aᴴ + B Vᴴ` vanishing on `Ω`, and linear growth leaves none.
+     For a square `U`, `E = U (Eᴴ U)ᴴ`.
+   - 6.4. By item 3.1 with `x = 1 + h`,
+     `‖K + h E₀₁‖²_S1 = 4 + 1 + 1 + (1 + h)² + 2 |1 − h| = 9 + h²` for `h ≤ 1`. If `c > 0` gave
+     linear growth, let `t = min(1, c)`. As `‖t E₀₁‖_S1 ≥ t`, `3 + c t ≤ √(9 + t²)`, so
+     `6 c t + c² t² ≤ t² ≤ c t`, which is false for `c t > 0`.
 
 ### Lean status
 
@@ -1399,9 +1415,12 @@ All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved witho
 | Item 5.2 | `mul_eq_of_isContraction`, `isContraction_trace_eq_iff` | `K = U * diagonal (fun k => (s k : ℂ)) * Vᴴ` with `∀ k, 0 < s k`. |
 | Item 5.3 | `isMinOn_iff_exists_certificate` | |
 | Item 5.4 | `isMinOn_iff_of_full_rank` | `V : Matrix n n ℂ`, `s : n → ℝ`. Its `example` is `diag(1, 2)` from its diagonal. That `U Vᴴ` is `polarFactor K` for invertible `K` is not proved; `isMinOn_nuclearNorm_iff` is Theorem A itself. |
-| Item 6 | `exists_pos_le_nuclearNorm_add_iff` | Linear growth is `∃ c > 0, ∀ H, (∀ ij ∈ Ω, H ij.1 ij.2 = 0) → nuclearNorm K + c * nuclearNorm H ≤ nuclearNorm (K + H)`, with `K = U * diagonal (fun k => (s k : ℂ)) * Vᴴ` and `∀ k, 0 < s k`; the certificate is written as in item 1.1, with `1 < c`. |
-| Item 6, its three parts | `exists_pos_le_nuclearNorm_add_of_certificate`, `eq_zero_of_exists_pos_le_nuclearNorm_add`, `exists_certificate_of_exists_pos_le_nuclearNorm_add` | The first takes item 1.2's hypotheses as `isMinOn_iff_of_certificate` does, with `U Uᴴ K = K` and `tr((U Vᴴ)ᴴ K) = ‖K‖_S1` in place of the decomposition. The Hahn–Banach theorem is `exists_extension_of_le_sublinear`, as in item 5.1. |
+| Item 6.1 | `exists_pos_le_nuclearNorm_add_iff` | Linear growth is `∃ c > 0, ∀ H, (∀ ij ∈ Ω, H ij.1 ij.2 = 0) → nuclearNorm K + c * nuclearNorm H ≤ nuclearNorm (K + H)`, with `K = U * diagonal (fun k => (s k : ℂ)) * Vᴴ` and `∀ k, 0 < s k`; the certificate is written as in item 1.1, with `1 < c`. |
+| Item 6.1, its three parts | `exists_pos_le_nuclearNorm_add_of_certificate`, `eq_zero_of_exists_pos_le_nuclearNorm_add`, `exists_certificate_of_exists_pos_le_nuclearNorm_add` | The first takes item 1.2's hypotheses as `isMinOn_iff_of_certificate` does, with `U Uᴴ K = K` and `tr((U Vᴴ)ᴴ K) = ‖K‖_S1` in place of the decomposition. The Hahn–Banach theorem is `exists_extension_of_le_sublinear`, as in item 5.1. |
 | Item 6, the lemmas | `isContraction_single_one`, `norm_apply_le_nuclearNorm`, `IsContraction.mul`, `isContraction_one_sub_mul_conjTranspose`, `nuclearNorm_mul_mul_le`, `nuclearNorm_real_smul_eq_abs`, `eq_sum_re_smul_single_add`, `exists_nuclearNorm_map_le`, `exists_nuclearNorm_add_smul_tangent_le`, `exists_nuclearNorm_add_smul_le`, `exists_nuclearNorm_le_of_tangent` | `t` is real and enters as `(t : ℂ) • H`. The left inverse is Mathlib's `LinearMap.exists_leftInverse_of_injective`. Lemma 1 is `nuclearNorm_le_of_eq_mul`. |
+| Item 6.2 | `isMinOn_iff_of_exists_pos_le_nuclearNorm_add` | Stated for each `X` equal to `K` on `Ω`, as `isMinOn_iff_of_certificate` is; it needs no decomposition of `K`. |
+| Item 6.3 | `not_exists_pos_le_nuclearNorm_add_of_full_column_rank`, `not_exists_pos_le_nuclearNorm_add_of_full_row_rank`, `single_apply_of_notMem` | `V : Matrix n n ℂ` with `s : n → ℝ`, or `U : Matrix m m ℂ` with `s : m → ℝ`; the missing cell is `(i, j) ∉ Ω`. |
+| Item 6.4 | `nuclearNorm_add_smul_single_threeCells`, `not_exists_pos_le_nuclearNorm_add_threeCells` | `h E₀₁` is `(h : ℂ) • single 0 1 1`; `K` is `!![(2 : ℂ), 1; 1, 1]` and `Ω` is `{ij \| ij ≠ (0, 1)}`, with no decomposition of `K`. Recovery is the `example` after `forall_isMinOn_threeCells_iff`. |
 
 ### Rank check (torch, 2026-10-29)
 
