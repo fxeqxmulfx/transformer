@@ -57,6 +57,7 @@ public import Transformer.AttentionResiduals
 public import Transformer.DeepSeekV41
 public import Transformer.RoPE
 public import Transformer.Weil
+public import Transformer.Rotate90
 
 /-!
 Formalizations of papers on the mathematics and architecture of Transformers:
@@ -247,6 +248,10 @@ on every set of rows generating it, the zeros are the phases of the
 characters up to periods, all nondegenerate; for `n ≥ 4`, below `n²/8` the
 local minimizers of the full table's energy are these zeros and its other
 critical points are strict saddles.
+`Transformer.Rotate90` proves that the current tied SwiGLU architecture, including
+all four RMSNorm calls, represents modular division at every prime with eight
+active residual channels and fourteen hidden units; padding gives the documented
+width-16 and width-128 models. This is an existence theorem for weights.
 `Transformer.Weil` proves Stepanov's form of the Riemann hypothesis for the
 curves `y² = f(x)`: over a finite field of odd order `q ≥ 64`, for `f` of odd
 degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine curve has
