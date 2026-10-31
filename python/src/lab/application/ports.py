@@ -26,8 +26,8 @@ class Run(Protocol):
     def checkpoint(self, device: Any) -> dict | None:
         """The last saved state, if any."""
 
-    def save(self, checkpoint: dict) -> None:
-        """Replace the saved state."""
+    def save(self, checkpoint: dict, *, retain: bool = False) -> None:
+        """Replace the saved state, optionally retaining this numbered checkpoint."""
 
     def records(self, stream: str) -> list[dict]:
         """The rows of a record stream: history, probes, diagnostics or gradients."""

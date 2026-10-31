@@ -38,7 +38,7 @@ from ...domain import cadence
 from ...domain.optimizers import ANSR
 from ...domain.atomic import AtomicColumns
 from ...domain.stopping import Selection
-from ...domain.training import AttentionDiagnostics, rate
+from ...domain.training import AttentionDiagnostics, CheckpointHistory, rate
 from ...domain.training import FlopBudget, Measured
 from ..benchmarks import build_task
 from ..nn import build_model
@@ -209,12 +209,16 @@ class Training:
                 self.run.record("gradients", {**row, "gradient_l2": norm})
 
     def save(self, step):
-        self.run.save({"model": self.model.state_dict(), "optimizer": self.stepper.state_dict(), "step": step,
+        checkpoint = {"model": self.model.state_dict(), "optimizer": self.stepper.state_dict(), "step": step,
                        "examples_seen": self.seen, "training_seconds": self.clock.training,
                        "diagnostic_seconds": self.clock.diagnostics, "last_batch_size": self.last_batch_size,
                        "wall_seconds": self.clock.wall(), **self.sampler.state(),
                        **({} if self.attention is None else {"attention": self.attention.state_dict()}),
-                       **({} if self.selection is None else {"best": self.best})})
+                       **({} if self.selection is None else {"best": self.best})}
+        if isinstance(self.experiment.checkpoint, CheckpointHistory):
+            self.run.save(checkpoint, retain=True)
+        else:
+            self.run.save(checkpoint)
 
     def stopped(self):
         return self.selection is not None and self.selection.stop is not None
@@ -222,6 +226,8 @@ class Training:
     def __call__(self):
         if not self.history:
             self.observe(0, probe=False)
+            if isinstance(self.experiment.checkpoint, CheckpointHistory):
+                self.save(0)
         try:
             if not self.stopped():
                 self.train()

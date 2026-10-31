@@ -33,7 +33,7 @@ from .domain.stopping import EarlyStopping, Solved
 from .domain.synthetic import Synthetic
 from .domain.tensor import TensorGain, TensorStack
 from .domain.tasks import CRASP, MQAR, AlternatingBlocks, Dyck, Lookup, TypedDyck
-from .domain.training import (AttentionDiagnostics, Budget, FlopBudget, Checkpoint, Compiled, Measured, Cosine, CudaGraph, Diagnostics, Eager, Evaluate, Schedule,
+from .domain.training import (AttentionDiagnostics, Budget, FlopBudget, Checkpoint, CheckpointHistory, Compiled, Measured, Cosine, CudaGraph, Diagnostics, Eager, Evaluate, Schedule,
                                Seeds, MaxAutotune)
 
 __all__ = [
@@ -58,7 +58,7 @@ __all__ = [
     "AMSGradMDW", "AdamMDW", "ScheduleFreeAdamW", "ScheduleFreeMuon", "ScheduleFreeAMSGradMDW", "ScheduleFreeAdamMDW",
     "Constant", "Inverse", "InverseSqrt", "Geometric",
     # training
-    "Schedule", "Cosine", "Budget", "FlopBudget", "Seeds", "Evaluate", "Diagnostics", "AttentionDiagnostics", "GrokkingDiagnostics", "Checkpoint",
+    "Schedule", "Cosine", "Budget", "FlopBudget", "Seeds", "Evaluate", "Diagnostics", "AttentionDiagnostics", "GrokkingDiagnostics", "Checkpoint", "CheckpointHistory",
     "EarlyStopping", "Solved", "Eager", "CudaGraph", "Compiled", "Measured", "MaxAutotune",
     # composition
     "Experiment", "grid", "swap", "substitute", "walk", "describe", "fingerprint", "extend_context",

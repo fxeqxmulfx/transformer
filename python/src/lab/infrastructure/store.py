@@ -13,6 +13,7 @@
 import hashlib
 import json
 from pathlib import Path
+import shutil
 import time
 
 import torch
@@ -71,10 +72,17 @@ class RunDirectory:
         path = self.path / "checkpoint.pt"
         return torch.load(path, map_location=device, weights_only=True) if path.exists() else None
 
-    def save(self, checkpoint):
+    def save(self, checkpoint, *, retain=False):
         temporary = self.path / "checkpoint.pt.tmp"
         torch.save(checkpoint, temporary)
         temporary.replace(self.path / "checkpoint.pt")
+        if retain:
+            snapshots = self.path / "checkpoints"
+            snapshots.mkdir(exist_ok=True)
+            snapshot = snapshots / f"step-{checkpoint['step']:08d}.pt"
+            pending = snapshot.with_suffix(".pt.tmp")
+            shutil.copyfile(self.path / "checkpoint.pt", pending)
+            pending.replace(snapshot)
 
     def records(self, stream):
         path = self.path / f"{stream}.jsonl"
@@ -90,6 +98,10 @@ class RunDirectory:
             path = self.path / f"{stream}.jsonl"
             if path.exists():
                 replace(path, "".join(line(row) for row in self.records(stream) if row["step"] <= step))
+        for snapshot in (self.path / "checkpoints").glob("step-*.pt"):
+            suffix = snapshot.stem.removeprefix("step-")
+            if suffix.isdecimal() and int(suffix) > step:
+                snapshot.unlink()
 
     def finish(self, result):
         replace(self.path / "result.json", json.dumps(result, indent=2, allow_nan=False) + "\n")

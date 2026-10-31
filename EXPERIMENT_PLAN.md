@@ -2724,6 +2724,25 @@ is active; retain the fixed architecture-specific data and report the
 vocabulary, loss and split differences. See the experiment README and the
 Rust repository's portable histories for the complete outcomes.
 
+## Rotate90 learning transfer (2026-10-31)
+
+Status: active, requested by the user; board #119. After the finite sampled
+alias-escape proof, test the gap between static character capacity and actual
+learning. `experiments/rotate90_transfer` declares 15 fresh Schedule-Free AdamW
+runs at P17/97/193, widths16/64, depth1 and initialization seeds31/37/41, keeping
+data and batch seeds fixed at11. Train 1500 updates with CUDA max-autotune;
+retain initial and every50-update model/optimizer/sampler state using the new
+`CheckpointHistory` block. Ordinary checkpoint recipes retain their fingerprints.
+
+Before training, freeze the exact evaluation-update identity, next-step heldout
+loss sign test, step400 extrapolation and matched width test in hypotheses.json.
+Replay independently with all parameter derivatives and the original RMS epsilon.
+Do not feed heldout gradients to training. Formalize actual joint analyticity,
+the source optimizer's evaluation displacement and conditional finite-time
+loss/accuracy bounds. Report every failed forecast. Sampled remainders are not
+segment curvature certificates; these tests cannot establish random-start
+convergence or a success probability.
+
 ## Scalar MLP on mod 97 (2026-10-18)
 
 Status: active, requested by the user. The runs are done (#56,

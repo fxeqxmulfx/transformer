@@ -161,6 +161,16 @@ class Checkpoint(Spec):
 
 
 @dataclass(frozen=True)
+class CheckpointHistory(Checkpoint):
+    """Retain the initial state and every checkpoint for independent step replay.
+
+    Source: EXPERIMENT_PLAN.md, Rotate90 learning-transfer study. States retain
+    the actual model, optimizer and sampler together. This adds storage only;
+    the ordinary Checkpoint block and its historical fingerprints are unchanged.
+    """
+
+
+@dataclass(frozen=True)
 class Execution(Spec, kind=True):
     """How updates are issued to the device."""
 

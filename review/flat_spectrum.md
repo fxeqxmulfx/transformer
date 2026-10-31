@@ -2278,3 +2278,110 @@ Validation on 2026-10-31: full `lake build` passed (13070 jobs); all 25 new
 `./run.py audit` reports 36 existing unfinished statements, zero results resting
 on them, and zero extra axioms. Regenerated `INDEX.md` has zero vacuous or
 placeholder entries; `./run.py forbidden` passed. No Python code changed.
+
+## Learning transfer
+
+The next comparison replaces the static rank condition with the actual effect
+of a sampled optimizer update on unseen equations. Static character capacity
+and fixed-code matrix completion do not explain why width16 and width64 train
+differently, or why P17 fits its training split without generalizing. This is a
+conditional dynamics extension, not a proof that a neural optimizer solves the
+nuclear-norm interpolation problem of Theorem A.
+
+Let theta contain every embedding, gate, value and output entry, with its usual
+Euclidean metric. For any finite ordered stack, let F(theta) be the mean full
+softmax cross-entropy on a fixed evaluation split. All normalizations, both
+input lookups and the tied output embedding remain in the forward pass.
+
+```
+(T1) epsilon > 0 implies F is analytic, hence C^2, jointly in all parameters.
+```
+
+At update t, Schedule-Free stores query y, base z, raw variance v and scalar
+averaging history. It evaluates at x = y + (1 - 1/beta1)(z-y). The training
+gradient g is the gradient of the actual minibatch loss at y. Set
+
+```
+v_next = beta2*v + (1-beta2)*g^2,
+P_i = 1 / (sqrt(v_next_i / (1-beta2^(t+1))) + epsilon_optimizer),
+c = weight_next / (weight_total + weight_next),
+eta = current warmup rate.
+
+(T2) delta = x_next-x = c*(z-x) - c*eta*P*g - c*eta*lambda*y.
+(T3) <grad F(x),delta>
+     = c*<grad F(x),z-x> - c*eta*<grad F(x),P*g>
+       - c*eta*lambda*<grad F(x),y>.
+```
+
+T2 follows by expanding the independently defined source `trainingStep` and
+`evaluation`, with beta1 nonzero. The gradient at y and evaluation derivative
+at x generally differ. The preconditioner depends on the actual sampled
+gradient and stored second moment; it is not a freely chosen positive matrix.
+The two extra terms show why training/heldout gradient alignment alone is an
+incomplete test. T3 includes the change caused by averaging and weight decay.
+
+For a bound L_t on the operator norm of D(grad F) throughout the entire segment
+from x_t to x_(t+1), the existing mean-value descent lemma proves
+
+```
+(T4) F(x_(t+1)) <= F(x_t) + <grad F(x_t),delta_t> + L_t*||delta_t||^2.
+(T5) failed_strict_winner_fraction <= F(x_t) / log(2).
+(T6) F(x_N) <= F(x_0) + sum_(t<N) [<grad F(x_t),delta_t> + L_t*||delta_t||^2].
+```
+
+T5 includes ties as failures: any competitor at least as large as the correct
+logit contributes enough softmax mass to force row loss at least log2. It counts
+all answer classes. The conservative Taylor coefficient in T4 is L, not L/2.
+Joint C^2 regularity and compactness prove that a finite L_t exists for every
+finite segment. They do not compute a useful certified value.
+
+If for every t<N the bracket in T6 is at most -mu*F(x_t), with 0<mu<=1,
+`geometric_loss_le` proves F(x_N)<=(1-mu)^N F(x_0). Combined with T5, a value
+below .01*log2 certifies at least99% strict correct winners. The Lean rate lemma
+only needs mu<=1 algebraically; positive mu is what makes the rate useful.
+Its hypotheses have a nonzero, strictly improving witness at every finite
+horizon. The actual-model additive theorem has a positive-depth, nonempty-data,
+positive-rate five-update witness, with curvature existence proved rather than
+assumed. Neither witness asserts positive heldout transfer from random starts.
+
+### Formal scope and prospective test
+
+`Transformer.Rotate90.Learning.runFrom` uses the real revised Schedule-Free
+update and the full gradient of the actual minibatch network. Its initial
+history is explicit, including the lab's zero initial maximum. Its samples may
+change at every step and may have short epoch tails. The model and optimizer
+are not replaced with a linearized kernel or infinite-width limit.
+
+| Module | Result |
+| --- | --- |
+| `Learning.Defs` | Full finite-stack parameterization, actual parameter count, and T1 |
+| `Learning.Basic` | Exact evaluation displacement and directional effect, T2--T3; segment-curvature existence and T4; full-softmax calibration T5 |
+| `Learning.Trajectory` | Additive and geometric T6; actual minibatch path and finite-time failure bound using source transfer terms |
+
+`experiments/rotate90_transfer/hypotheses.json` declares fifteen fresh runs
+before training: P97K2 and P193K3, widths16/64; P17K1 width64; depth1 and model
+seeds31/37/41. Data and batch seeds stay fixed at11. Only Schedule-Free AdamW is
+used, with Python3.15/Torch2.15 and compiled CUDA max-autotune. Every50-update
+checkpoint retains all model, optimizer and sampler state.
+
+Independent CPU float64 copies preserve the trained float32 RMS epsilon and
+replay the next actual batch. H1 checks T2 against the source optimizer. H2
+tests whether T3 predicts the next-step heldout-loss sign in at least90% of
+eligible probes. H3 freezes a step400 forecast using relative first-order
+progress at100/200/400; every false positive and false negative is retained.
+H4 compares matched widths. Heldout gradients never enter training.
+
+A measured finite-step remainder is not a certified segment-curvature bound.
+The H3 forecast extrapolates future progress without proving it. The unresolved
+claim is whether typical random starts maintain enough favorable transfer,
+with controlled curvature, to obtain a success probability or training-time
+prediction. This study tests that missing premise instead of assuming it.
+
+Validation before training (2026-10-31): full `lake build` passed (13074 jobs).
+All 17 new theorem axiom sets contain only `propext`, `Classical.choice` and
+`Quot.sound`. `./run.py audit` retains the 36 existing unfinished statements,
+with zero results resting on them and zero extra axioms. The source check passes.
+`./run.py test` passed 410 lab tests (13 skipped) and 104 optimizer tests
+(14 skipped), including bit-exact retained-checkpoint/resume comparisons,
+independent source-update replays and a full-network finite-difference derivative
+check. All 15 experiment recipes pass `./run.py check`.

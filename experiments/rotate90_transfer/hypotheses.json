@@ -1,0 +1,14 @@
+{
+  "recorded_before_training": "2026-10-31",
+  "source_commit_before_setup": "7cdf8ddc",
+  "question": "Does the actual Schedule-Free evaluation update transfer learning to unseen equations, and can early transfer forecast later accuracy?",
+  "controls": "15 fresh runs; P97 K2 and P193 K3 at widths 16/64, P17 K1 at width64; depth1; model seeds31/37/41; fixed data seed11 and batch seed11; 1500 updates; Schedule-Free AdamW only; Python3.15/Torch2.15 CUDA max-autotune.",
+  "probe_steps": [0, 50, 100, 200, 400, 750, 1000, 1500],
+  "replay": "Independent CPU float64 copies of saved query, base, raw variance, scalar history and next sampler batch. Preserve original float32 RMS epsilon. Compute all training gradients at y, heldout gradient at x, then one actual source optimizer update. Probes do not modify training.",
+  "H1": "The evaluation displacement equals c*(z-x)-c*eta*(P*g+lambda*y) in every replay, max absolute coordinate residual <=1e-10. P is the actual corrected second-moment inverse denominator, not a free preconditioner.",
+  "H2": "The sign of the all-parameter heldout directional derivative predicts the sign of the next-step heldout loss change in at least 90% of probes with absolute predicted change >1e-8. Count all eligible probes, including worsening loss.",
+  "H3": "At step400, r_hat is the median of -directional_derivative/heldout_loss at steps100,200,400. Predict final >=99% heldout accuracy iff r_hat>0 and F400*exp(-r_hat*1100)<=0.01*log(2). Report every prediction, false positive and false negative; no retuning.",
+  "H4": "Width64 has larger early r_hat than width16 in at least four of the six matched prime/initialization pairs. Report all pairs, not only successes.",
+  "theory": "For the actual analytic loss, a bound L on the gradient-derivative norm over each update segment gives F_next <= F + directional_derivative + L*norm(delta)^2. Uniform relative progress at least mu yields F_N <= (1-mu)^N F_0; the fraction without a strict correct winner is at most F_N/log(2).",
+  "limits": "H3 is an empirical extrapolation, not a theorem: future directional alignment and segment curvature are not certified by a few probes. Finite differences are measured remainders, not bounds on the entire segment. No random-initialization success probability or all-prime convergence claim. Equal updates do not mean equal FLOPs."
+}

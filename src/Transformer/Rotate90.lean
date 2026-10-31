@@ -3,6 +3,7 @@ module
 public import Transformer.Rotate90.Division
 public import Transformer.Rotate90.Power
 public import Transformer.Rotate90.Training
+public import Transformer.Rotate90.Learning
 
 /-!
 # Powered-division expressivity and a training obstruction for Rotate90 SwiGLU
@@ -34,4 +35,10 @@ invariant at arbitrary finite width/depth. Under its subgroup/coprimality
 conditions, `trainingRun_not_solves` proves that Schedule-Free AdamW cannot
 separate exact aliases, even though successful weights exist. Partial-table
 escape experiments and the theorem's scope are recorded in the source note.
+
+`Learning` connects the entire finite network and actual sampled optimizer to
+evaluation-loss movement. It proves conditional finite-time bounds using the
+complete update direction and curvature over each step segment, and converts
+full-softmax loss into a bound on classification failures. It does not infer
+random-start convergence from static character rank or representational capacity.
 -/
