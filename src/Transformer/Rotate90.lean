@@ -4,6 +4,7 @@ public import Transformer.Rotate90.Division
 public import Transformer.Rotate90.Power
 public import Transformer.Rotate90.Training
 public import Transformer.Rotate90.Learning
+public import Transformer.Rotate90.Memory
 
 /-!
 # Powered-division expressivity and a training obstruction for Rotate90 SwiGLU
@@ -41,4 +42,9 @@ evaluation-loss movement. It proves conditional finite-time bounds using the
 complete update direction and curvature over each step segment, and converts
 full-softmax loss into a bound on classification failures. It does not infer
 random-start convergence from static character rank or representational capacity.
+
+`Memory` derives the exact zero-rate continuation with retained Schedule-Free
+history. Evaluation converges to the saved base and inherits its strict logit
+comparisons. Perfect antipodal powered-division solutions with a tied midpoint
+prove that correctness cannot be transferred through arbitrary parameter averages.
 -/

@@ -1,0 +1,252 @@
+{
+  "recorded_before_counterfactuals": "2026-10-31",
+  "source_setup_commit": "d47112d52add36da9184ba8210aaf453611f81ed",
+  "question": "Does the averaging term represent delayed arrival at an already good base, and can its current benefit persist without continued base optimization?",
+  "exploration": "Before this declaration, x/y/z at steps100/200/300/400/500/600/750 were inspected for width64 seed31 at P17/97/193. memory_exploration.json retains those 21 observations. They showed poor base predictions despite strong evaluation predictions. No zero-rate continuation or negation test was inspected before this declaration.",
+  "sources": [
+    {
+      "label": "p97k2-w16-s31",
+      "step": 200,
+      "sha256": "cd2af273e5ca293d24d4a215349db571f1c1c3f1111d53f21ed64fb1738f71c8"
+    },
+    {
+      "label": "p97k2-w16-s31",
+      "step": 400,
+      "sha256": "242640977358e74a9ca24948bffe1d25dfa8c6fd3412d059e3c6b59fea57ab36"
+    },
+    {
+      "label": "p97k2-w16-s31",
+      "step": 750,
+      "sha256": "3aea1eb1eb951993f6a92d4c4d59365a1690c73173bf48734d5c8c8c66021239"
+    },
+    {
+      "label": "p97k2-w16-s37",
+      "step": 200,
+      "sha256": "307743b1d0819bf007270e7f03ca147491e45324e20ef0b3d679659a2587d593"
+    },
+    {
+      "label": "p97k2-w16-s37",
+      "step": 400,
+      "sha256": "4c92814e811a20e36905ab8d1e8f777fbdd6ff192f9f6d43ff43facaacd76639"
+    },
+    {
+      "label": "p97k2-w16-s37",
+      "step": 750,
+      "sha256": "0467ae471d58325ff16534bc2b9de9b7ec9cb3206fa9d7f8086e191c9571ca4f"
+    },
+    {
+      "label": "p97k2-w16-s41",
+      "step": 200,
+      "sha256": "2d70562658574bba0a900327c9983fd4887c771db99a4fd0e0760faeed18af42"
+    },
+    {
+      "label": "p97k2-w16-s41",
+      "step": 400,
+      "sha256": "c362dbfd7820e79ee88ff36ee561f800f8104637ecaaae7355e47901b85107a3"
+    },
+    {
+      "label": "p97k2-w16-s41",
+      "step": 750,
+      "sha256": "028d72dd0c9450d326c5ac9ae8b4bdd146d755bd27ccf757b2676b9bbdad7c59"
+    },
+    {
+      "label": "p97k2-w64-s31",
+      "step": 200,
+      "sha256": "45c2c9ba10b910bbd1dc18a58d21716433fa69a87435ceba2fa5f1f0c4972e8b"
+    },
+    {
+      "label": "p97k2-w64-s31",
+      "step": 400,
+      "sha256": "42aaadd96105bc788a948eea75a36c724a5402ff6c324e69cce63d7420b2c563"
+    },
+    {
+      "label": "p97k2-w64-s31",
+      "step": 750,
+      "sha256": "61760fc0f6029f33bc6b9220ffa68d75a528ad4f6ea6f95f3904dfbaea97c27f"
+    },
+    {
+      "label": "p97k2-w64-s37",
+      "step": 200,
+      "sha256": "b93e590011f4febf23c49b8e58c547b233a77677c3fd974acb93221673e4cf72"
+    },
+    {
+      "label": "p97k2-w64-s37",
+      "step": 400,
+      "sha256": "5c7bbcf743503f15f96497233957ef482a7eebd74a3a37d3e3af722b97db91f0"
+    },
+    {
+      "label": "p97k2-w64-s37",
+      "step": 750,
+      "sha256": "ff41e8c714d4d0a070952f8ee632f59ba59b93fd344895082170a51fb25215b7"
+    },
+    {
+      "label": "p97k2-w64-s41",
+      "step": 200,
+      "sha256": "b0466dedcfb2d675df0e561b761c34dedbfd80914c01cbf83d0ba1f825fdf716"
+    },
+    {
+      "label": "p97k2-w64-s41",
+      "step": 400,
+      "sha256": "8d25efd637ff574b2e9fe03b31471dad7ea1514fccb264f901f8bb9e406a0bf2"
+    },
+    {
+      "label": "p97k2-w64-s41",
+      "step": 750,
+      "sha256": "7baf4a993e2e4d2655053981f5b618fdcd2f8269bcdccaadaeee7a16c7c82f0e"
+    },
+    {
+      "label": "p193k3-w16-s31",
+      "step": 200,
+      "sha256": "e930cb5901e2c0c0eaaa86c815da650e3b5353d0fbf76c07f7403428c67b0aa5"
+    },
+    {
+      "label": "p193k3-w16-s31",
+      "step": 400,
+      "sha256": "950aac3d9fcb78fe35d2a84111982ae0e03bb995c2ff2a159d636c2800bc8ce0"
+    },
+    {
+      "label": "p193k3-w16-s31",
+      "step": 750,
+      "sha256": "f4f022cd04ae3d9db4a0f018746dba7fabe59d7b3715e4842990c0c828ec6d2c"
+    },
+    {
+      "label": "p193k3-w16-s37",
+      "step": 200,
+      "sha256": "eca33837c5f2ecbd08cd2f36d9be00f62af7688d2f828f7859ad10f039b64418"
+    },
+    {
+      "label": "p193k3-w16-s37",
+      "step": 400,
+      "sha256": "35b325f10dfcffcc4a02634114ac74c892a01db7d200bf968d635557ccf5e31d"
+    },
+    {
+      "label": "p193k3-w16-s37",
+      "step": 750,
+      "sha256": "84fb0a1b20d0bf3c518e7b33ce06ab53b708c08c62425e673d97b556c954abd5"
+    },
+    {
+      "label": "p193k3-w16-s41",
+      "step": 200,
+      "sha256": "bfd7641864d85d84e8ed969d99ed76f9b4e0a90cddc66a4eb81e36ee96d657c9"
+    },
+    {
+      "label": "p193k3-w16-s41",
+      "step": 400,
+      "sha256": "4f2913d43ea9047f781414a6b5038b54ed98c850d4fa0d46057c992f7f868c15"
+    },
+    {
+      "label": "p193k3-w16-s41",
+      "step": 750,
+      "sha256": "e8f9cbe08c5023eba950667bba0fd09414d7341366f7dc36d9ab0554dc7b131c"
+    },
+    {
+      "label": "p193k3-w64-s31",
+      "step": 200,
+      "sha256": "07d3223aa2938310da55918a3793b50a2c0936ca96ef72196a1e31a52880711a"
+    },
+    {
+      "label": "p193k3-w64-s31",
+      "step": 400,
+      "sha256": "2e6bcf7f6d50938d0791f69657895b485c57a7418b54217b4b7ba8d56e2e5d06"
+    },
+    {
+      "label": "p193k3-w64-s31",
+      "step": 750,
+      "sha256": "1ed8b136b55650da0309dc6eaf7c740f1d97b0a547d45a2c98d8bb15c46899ff"
+    },
+    {
+      "label": "p193k3-w64-s37",
+      "step": 200,
+      "sha256": "9acd16b100c224a83d364e77f98f88bbf43de732ae3be56c3df2d78e27ba905a"
+    },
+    {
+      "label": "p193k3-w64-s37",
+      "step": 400,
+      "sha256": "e29fd24e1d2d415786c8a2835c2f84d1dc9e33d916a01d87cf8c8976dd27b150"
+    },
+    {
+      "label": "p193k3-w64-s37",
+      "step": 750,
+      "sha256": "00a9d5c271bb9841697ce7c14b2d7570f2516091bfcc2802f92b714c484e7c2c"
+    },
+    {
+      "label": "p193k3-w64-s41",
+      "step": 200,
+      "sha256": "cfc3e4b5f8988a87ef90c57e5f186ae5ada872f2bd17583a88ea46183c4c7743"
+    },
+    {
+      "label": "p193k3-w64-s41",
+      "step": 400,
+      "sha256": "0117010f73adfe2d6475bd59b8478f2d41059c9b2c5c5519418c961624e4b841"
+    },
+    {
+      "label": "p193k3-w64-s41",
+      "step": 750,
+      "sha256": "424ed1327cfb6493fe2230ac28dc688d18626e01cee9b95d85e6079bdee409ad"
+    },
+    {
+      "label": "p17k1-w64-s31",
+      "step": 200,
+      "sha256": "71701a7f3fce94af1502431acf7d8324535df7e4a6be0bb31add595b8bb25f2e"
+    },
+    {
+      "label": "p17k1-w64-s31",
+      "step": 400,
+      "sha256": "8dedcedb3623fadb569816652432e456c9fa721e078e643a83d16ad462de365c"
+    },
+    {
+      "label": "p17k1-w64-s31",
+      "step": 750,
+      "sha256": "6d847062ff251cdbb97505728aec7feccc744ebf601c7eb896c9379c13c94875"
+    },
+    {
+      "label": "p17k1-w64-s37",
+      "step": 200,
+      "sha256": "ac75aec68951280f87b6b19e18d036060bbe7634ff7380a895ac814729f1fc38"
+    },
+    {
+      "label": "p17k1-w64-s37",
+      "step": 400,
+      "sha256": "6d5f1d423a4a620f42bc742cbdb021cad4ee6c07020e46223feb016bd4a972f2"
+    },
+    {
+      "label": "p17k1-w64-s37",
+      "step": 750,
+      "sha256": "d4bd61df0319c99d006a97ce66389a20e2596843be5340529b3498b7933f644b"
+    },
+    {
+      "label": "p17k1-w64-s41",
+      "step": 200,
+      "sha256": "2ba9ac30bb741075a47701012c49e2f48112836b00893ddcc3c595c9ea30b325"
+    },
+    {
+      "label": "p17k1-w64-s41",
+      "step": 400,
+      "sha256": "dd406dad50599f8b5ea8c622283c368ed8973d4a4d2e944e9e2f5cf7c79cadd7"
+    },
+    {
+      "label": "p17k1-w64-s41",
+      "step": 750,
+      "sha256": "42b2ba5e2f4c51f0b636d928f3361103bf08dea7de8d0522d07c6ba65ba0b34e"
+    }
+  ],
+  "zero_rate_updates": [
+    0,
+    1,
+    10,
+    50,
+    100,
+    200,
+    500,
+    1500,
+    5000,
+    50000
+  ],
+  "source_check_updates": 32,
+  "H1": "Every closed-form evaluation point after32 zero-rate updates matches32 actual source Schedule-Free steps with real gradients and saved sampler state to max coordinate error <=1e-10. The base is bitwise unchanged; changing second moments are retained.",
+  "H2": "All45 positive-history, nonstationary states move their evaluation weights despite learning rate zero. Report every state and any exception.",
+  "H3": "For all six width64 P97/P193 checkpoints at750, the first zero-rate update lowers heldout CE but the50000-update endpoint has higher CE than initially and heldout accuracy below50%. Count every conjunct separately and retain failures.",
+  "H4": "Negating every parameter of the actual model leaves all heldout logits unchanged within1e-6 at all45 checkpoints. The exact midpoint has uniform logits and zero strict-correct-winner fraction, even where both antipodal endpoints exceed99%.",
+  "arithmetic": "CUDA float32 torch.compile(mode=max-autotune,fullgraph=True,dynamic=False) for all path evaluations. Independently checked CPU float64 source updates retain float32 RMS epsilon2^-23. The path formula is evaluated in float64 before copying into the compiled model.",
+  "scope": "Counterfactual analysis of existing pinned runs, not new fits or a claim that zero-rate controls follow the original positive-rate future. The50000 endpoint is computed from the proved closed form, not simulated gradient updates. Positive stored total/maximum and default averaging powers are required. Negation is a symmetry/counterexample control, not an assertion that observed training visits antipodal states. No random-start convergence guarantee."
+}

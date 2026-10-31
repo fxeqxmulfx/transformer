@@ -2756,6 +2756,23 @@ step is deriving sustained favorable transfer and useful curvature bounds from
 random initialization and the observed training sample. See the study README
 for all seeds, false negatives and numerical limitations.
 
+## Rotate90 optimizer memory (2026-10-31)
+
+Status: active, requested by the user; board #120. Extend the completed transfer
+study by separating its dominant averaging term from new gradient-driven base
+updates. Existing seed31 x/y/z exploration is disclosed in memory_exploration.json:
+high-accuracy evaluation parameters can coexist with poor base parameters.
+
+The frozen `experiments/rotate90_transfer/memory_hypotheses.json` selects all 15
+sources at updates 200/400/750. Preserve each source model, second moment, base,
+scalar history and sampler. Check 32 actual zero-rate Schedule-Free updates against
+the exact averaging formula, then evaluate its declared longer horizons using
+compiled CUDA max-autotune. Include all failures, P17 and narrow controls. Test
+the full-network sign symmetry and its zero midpoint independently. No new fit,
+optimizer or tuned forecast is introduced. Prove the source clock and the actual
+finite-network averaging obstruction in Lean; distinguish it from typical
+random-start learning. Retain the two original transfer-study failures unchanged.
+
 ## Scalar MLP on mod 97 (2026-10-18)
 
 Status: active, requested by the user. The runs are done (#56,

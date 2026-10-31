@@ -2426,3 +2426,94 @@ and optimizer to evaluation loss; they do not explain why the late acceleration
 arises, prove a random-start success probability, or turn a few early derivative
 probes into future guarantees. That remains the next gap, alongside obtaining
 useful accuracy bounds when mean cross-entropy calibration is conservative.
+
+## Optimizer memory
+
+The next comparison separates new base optimization from the effect of stored
+Schedule-Free averaging history. This is an extension of the actual-network
+learning-transfer account, not a change to the flat-spectrum matrix theorem.
+The source is `optimizers/src/lean_optim/schedule_free_adamw.py`, `step`, `train`
+and `eval`, with default averaging powers 0 and 2. Write x for the evaluation
+weights, y for the query, z for the base, W for the stored averaging total and
+M for the stored maximum learning rate. The source relation is
+y = beta1*x + (1-beta1)*z, with beta1 positive in the executable API.
+
+**M1, zero-rate continuation.** Setting the current rate to zero, while keeping
+the saved state, fixes z and M but advances W by M² per update. Raw second
+moments still use each supplied gradient. With M nonnegative, the exact source
+evaluation update is x' = (1-c)*x + c*z, where c = M²/(W+M²). Thus a zero
+learning rate does not freeze the evaluated model when historical weights
+remain positive. This is a continuation, not reinitialization of the optimizer.
+
+**M2, exact clock.** For W > 0, induction through the source recurrence gives
+
+```
+z_n = z_0,  M_n = M_0,  W_n = W_0 + n*M_0²,
+x_n = z_0 + W_0/(W_0 + n*M_0²) * (x_0-z_0).
+```
+
+The Euclidean distance to z_0 is multiplied by that exact scalar. If M_0 > 0,
+x_n tends to z_0 regardless of future gradients, decay and changing second
+moments. The time scale is W_0/M_0². The real-arithmetic theorem is checked
+independently against actual finite-precision source steps; it does not assert
+bitwise equality of floating-point repeated averaging and the closed form.
+
+**M3, complete-parameter sign symmetry.** At every finite ordered depth,
+`score(-w, a, b, q) = score(w, a, b, q)`. All trainable entries change sign.
+The input and normalized hidden states change sign; simultaneously negating
+gate and value matrices keeps their preactivations equal; negating the output
+matrix reverses the branch; the negative tied embedding reverses the final
+readout again. No oddness of SiLU is assumed. Full-softmax losses agree too.
+
+**M4, nonconvex solver region.** Zero weights have zero logits on every row,
+and per-row cross-entropy log(p). The existing powered-division construction
+supplies a w solving the entire valid table for every prime p and natural k.
+By M3, -w solves it too, while their midpoint is zero. Consequently the set
+of parameters strictly solving the entire task is not convex, already at
+width 16 and one block, with arbitrary additional width/hidden padding allowed.
+The witness a=b=1, competing answer 0 works even at k=0. M3 itself covers all
+finite depths. This is about parameter averaging; it does not assert a loss
+convexity theorem or describe a typical training trajectory.
+
+**M5, an actual source averaging counterexample.** An admissible saved state
+with evaluation w, base -w, W=M²=1 and source query y=(2*beta1-1)*w has c=1/2.
+One zero-rate source update has evaluation zero for every supplied gradient.
+Combining M4 gives perfect endpoints and complete loss of strict winners at
+the evaluation midpoint. Admissibility does not prove that random-start
+training reaches this particular state.
+
+**M6, classification and loss limit.** For positive RMS epsilon, the actual
+all-parameter finite network is analytic. M2 and continuity give convergence
+of every logit and every fixed split's full-softmax loss to its base value.
+Every strict base logit comparison eventually holds along the stopped path;
+finiteness gives one eventual time for all strict comparisons on the whole
+table. This includes incorrect base winners. Ties at the base are excluded,
+and continuity alone supplies no useful numerical time bound.
+
+The declaration `experiments/rotate90_transfer/memory_hypotheses.json` pins
+45 existing checkpoints: all fifteen runs at updates 200, 400 and 750. It
+retains narrow models and P17 controls alongside all successful wide models.
+The prior seed31 inspection is disclosed in `memory_exploration.json`: strong
+evaluation predictions coexisted with poor base predictions, so the local
+averaging benefit was not simply delayed arrival at an already solved base.
+The counterfactual horizons, source-replay tolerance and transient-benefit
+prediction are fixed before their evaluation. The 50000-update point uses
+M2 directly; 32 actual source updates independently check the formula using
+real gradients and the saved sampler. Compiled CUDA evaluation retains Python
+3.15, Torch 2.15 and max-autotune. No new optimizer or fitting recipe is used.
+
+These results distinguish historical averaging from continuing base learning.
+They do not yet explain the favorable parameter-path geometry that emerges
+under positive-rate Schedule-Free training, predict its late acceleration,
+or prove a success probability from random starts.
+
+Setup validation (2026-10-31): all 27 `Rotate90.Memory` theorems pass the full
+Lean build (13080 jobs) and individual `#print axioms`; only `propext`,
+`Classical.choice` and `Quot.sound` occur. Audit retains 36 existing unfinished
+statements, zero results resting on them and zero extra axioms. The regenerated
+index has zero vacuous/placeholder declarations, and the forbidden-source check
+passes. The full Python suite passes 412 lab tests (13 skipped) and 104 optimizer
+tests (14 skipped), including independent real-gradient continuation and a
+depth-three sign-symmetry check. The compiled CUDA smoke check has exactly zero
+negation logit error and no strict winner at the zero midpoint. All fifteen
+source experiment recipes pass their definition check.

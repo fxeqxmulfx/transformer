@@ -110,3 +110,20 @@ tests pass as part of 410 lab tests plus 104 optimizer tests. The accompanying
 17 Lean theorems pass the full build and axiom audit, retaining the 36 existing
 unfinished statements. No global curvature certificate or random-start success
 probability is claimed from these fifteen runs.
+
+## Optimizer memory follow-up
+
+The next cycle tests whether the averaging term's local benefit survives when
+new base updates stop. The seed31 exploration in `memory_exploration.json`
+compares query, base and evaluation weights before declaring the interventions.
+At P193 update 750 the evaluation model scores 99.94% but its base only 3.92%.
+Thus the local averaging term is not simply approaching an already solved base.
+
+`memory_hypotheses.json` pins all 15 source runs at steps 200/400/750. It freezes
+the zero-rate horizons, 32-step actual-source identity check, transient-benefit
+prediction and whole-parameter negation control. This reuses existing runs;
+`memory.py` introduces no new fitting recipe. Path evaluation uses compiled CUDA
+max-autotune. The exact zero-rate formula permits long-horizon evaluation without
+simulating 50000 gradient steps. CPU float64 source steps independently verify
+that the retained optimizer history, rather than newly learned weights, drives
+this intervention. Status: declared before counterfactual evaluation.
