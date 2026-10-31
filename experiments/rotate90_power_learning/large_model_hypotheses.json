@@ -1,0 +1,13 @@
+{
+  "requested": "2026-10-31, after specifying the first theory retry",
+  "question": "Are the apparent failures chiefly instability of small models?",
+  "models": [{"width": 256, "depth": 1}, {"width": 512, "depth": 1}, {"width": 256, "depth": 4}],
+  "tasks": [{"prime": 97, "exponent": 2}, {"prime": 193, "exponent": 2}, {"prime": 193, "exponent": 3}],
+  "seeds": [11, 17, 23],
+  "small_data_control": "P=17, K=1, W=512, D=1, all three seeds",
+  "fixed": "Schedule-Free AdamW only, as subsequently requested before these runs started: lr=.003, betas=(.9,.98), decay=1; 10-step external warmup, no built-in warmup or rate decay; 50% train; batch 512; 5000 updates; evaluate complete splits every 250 steps with averaged weights",
+  "matched_small_controls": "Repeat the three original Schedule-Free aliasing controls at lr=.003 on seeds 17 and 23, supplementing the completed seed 11. Add W64/D1 on P17/K1 at all three seeds. All nine added controls use Schedule-Free AdamW.",
+  "measurements": ["final accuracy", "best accuracy", "first update at 99%", "standard deviation of heldout accuracy at steps 3500 through 5000", "best-minus-final accuracy", "range and standard deviation of final accuracy over three seeds", "character-alias diagnostic and actual readout margins"],
+  "interpretation": "Improvement with size and smaller temporal/seed fluctuations supports the small-model instability explanation in these cases. Persistent poor heldout accuracy with high training accuracy is memorization; low accuracy on both splits is fitting failure. Neither result alone identifies the cause or proves impossibility.",
+  "prospective": "All definitions and metrics were written before any large-* run was started. The initial smaller-model results motivated this comparison."
+}

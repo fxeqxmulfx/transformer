@@ -13,6 +13,10 @@ recoverable rank-one characters from a jointly separating answer code; its
 fresh-seed retry and Schedule-Free controls are specified before training in
 the study's `hypotheses.json`. Training outcomes will be reported with their
 finite budgets and held-out accuracies, including failures of the new rule.
+The user's subsequent request tests larger models (widths 256 and 512, up to
+four blocks) with three seeds and matched smaller controls. All these new
+runs use Schedule-Free AdamW exclusively, per the user's latest restriction;
+prior completed AdamW records remain available for comparison.
 
 Updated on 2026-10-19 UTC. **Active, resumed at the user's request on 2026-10-19.
 Current direction: [Landscape explanation of modular

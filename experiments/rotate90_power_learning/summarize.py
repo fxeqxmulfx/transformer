@@ -7,7 +7,10 @@ The JSON and CSV are portable; ignored raw checkpoints remain under runs/.
 import csv
 import hashlib
 import json
+import statistics
 from pathlib import Path
+
+from lab.infrastructure.loader import load
 
 ROOT = Path(__file__).resolve().parent
 
@@ -30,6 +33,8 @@ def collect():
         final = result["final"]
         provenance = manifest["segments"][-1]["provenance"]
         heldout = final.get("heldout")
+        late = [point["heldout"]["accuracy"] for point in history
+                if point["step"] >= 3500 and "heldout" in point]
         row = {"label": folder.name, "prime": config["benchmark"]["prime"],
                "exponent": config["benchmark"]["exponent"], "width": config["model"]["width"],
                "depth": config["model"]["depth"], "parameters": final["parameters"],
@@ -45,6 +50,9 @@ def collect():
                "train_loss": final["train"]["loss"],
                "heldout_loss": None if heldout is None else heldout["loss"],
                "best_heldout_accuracy": result["best_heldout_accuracy"],
+               "late_heldout_accuracy_std": statistics.pstdev(late) if late else None,
+               "best_minus_final_heldout_accuracy": (None if heldout is None else
+                    result["best_heldout_accuracy"] - heldout["accuracy"]),
                "first_train99_update": result["first_train99_update"],
                "first_heldout99_update": result["first_heldout99_update"],
                "label_classes": final["task"]["label_classes"],
@@ -72,8 +80,15 @@ def collect():
 
 def main():
     rows, curves, incomplete = collect()
+    declared = set(load(ROOT).experiments)
+    completed = {row["label"] for row in rows}
+    not_started = sorted(declared - completed - set(incomplete))
     payload = {"scope": "exploratory finite-budget training; heldout is used for sweep comparisons",
-               "completed": len(rows), "incomplete": incomplete, "runs": rows}
+               "declared": len(declared), "completed": len(rows), "incomplete": incomplete,
+               "not_started": not_started, "unexpected": sorted(completed - declared),
+               "hypotheses_sha256": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+                                      for name in ("hypotheses.json", "large_model_hypotheses.json")},
+               "runs": rows}
     (ROOT / "results.json").write_text(json.dumps(payload, indent=2, allow_nan=False) + "\n")
     for name, table in (("summary.csv", rows), ("curves.csv", curves)):
         if table:
@@ -81,7 +96,8 @@ def main():
                 writer = csv.DictWriter(stream, fieldnames=list(table[0]))
                 writer.writeheader()
                 writer.writerows(table)
-    print(json.dumps({"completed": len(rows), "incomplete": incomplete,
+    print(json.dumps({"declared": len(declared), "completed": len(rows), "incomplete": incomplete,
+                      "not_started": not_started,
                       "heldout_99": sum(row["heldout_accuracy"] is not None and row["heldout_accuracy"] >= .99
                                         for row in rows)}, indent=2))
 

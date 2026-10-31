@@ -23,6 +23,20 @@ from lab.infrastructure.store import RunDirectory
 ROOT = Path(__file__).resolve().parent
 
 
+def small_energy_counterexample():
+    """Four centered labels: parity has 99% energy, tiny faithful features decode all."""
+    circle = torch.tensor([[1., 0.], [0., 1.], [-1., 0.], [0., -1.]], dtype=torch.float64)
+    parity = torch.tensor([10., -10., 10., -10.], dtype=torch.float64)
+    embedding = torch.cat((parity[:, None], torch.zeros(4, 1), circle), dim=1)
+    states = torch.cat((torch.zeros(4, 2), circle), dim=1)
+    scores = states @ embedding.T
+    accuracy = float((scores.argmax(1) == torch.arange(4)).double().mean())
+    assert accuracy == 1. and bool((embedding.mean(0) == 0).all())
+    return {"parity_energy_fraction": 100 / 101, "parity_alias_size": 2,
+            "full_readout_accuracy": accuracy, "faithful_energy_fraction": 1 / 101,
+            "scope": "A normalized tied-readout counterexample, not a construction of the full network's hidden states."}
+
+
 def exact_checks(prime, exponent):
     """Compare direct task matrices and analytic character products in complex128."""
     generator, order = multiplicative_ordering(prime)
@@ -76,6 +90,33 @@ def output_spectrum(embedding, prime, exponent):
             "minimum_squared_separation_over_mean_centered_energy": relative_separation}
 
 
+def alias_margin_bound(logits, rows, embedding, prime, g):
+    """Validate the current model's final-RMSNorm Cauchy--Schwarz bound.
+
+    For a nontrivial g-th root z, compare the true label c with c*z. The
+    normalized state has norm at most sqrt(width), so the gap is at most
+    sqrt(width)*||E[c]-E[c*z]||. No energy-to-accuracy assumption is used.
+    """
+    if g == 1:
+        return None
+    generator, _ = multiplicative_ordering(prime)
+    labels = rows[rows[:, 2] != 0, 2]
+    scores = logits[rows[:, 2] != 0].double()
+    other = labels * pow(generator, (prime - 1) // g, prime) % prime
+    index = torch.arange(len(labels))
+    gaps = scores[index, labels] - scores[index, other]
+    difference = embedding.detach().cpu().double()[labels] - embedding.detach().cpu().double()[other]
+    bound = math.sqrt(embedding.shape[1]) * difference.norm(dim=1)
+    excess = float((gaps.abs() - bound).max())
+    if excess > 1e-4:
+        raise AssertionError(("RMSNorm readout bound", excess))
+    return {"pairwise_bound_verified": True, "maximum_excess": excess,
+            "maximum_gap_to_bound_ratio": float((gaps.abs() / bound.clamp_min(1e-30)).max()),
+            "median_correct_minus_alias_logit": float(gaps.median()),
+            "fraction_correct_beats_one_alias": float((gaps > 0).double().mean()),
+            "median_pairwise_bound": float(bound.median())}
+
+
 @torch.no_grad()
 def main():
     torch.set_num_threads(1)
@@ -94,7 +135,10 @@ def main():
             model.eval()
             spectrum = output_spectrum(model.E, task.vocab, experiment.benchmark.exponent)
             rows = task.splits["heldout"]
-            predictions = torch.cat([model(chunk[:, :2]).argmax(-1) for chunk in rows.split(1024)])
+            logits = torch.cat([model(chunk[:, :2]) for chunk in rows.split(1024)])
+            predictions = logits.argmax(-1)
+            bound = alias_margin_bound(logits, rows, model.E, task.vocab,
+                                       spectrum["alias_at_threshold"]["0.95"])
         g = spectrum["alias_at_threshold"]["0.95"]
         nonzero = rows[:, 2] != 0
         valid = torch.tensor([pow(value, experiment.benchmark.exponent, task.vocab)
@@ -105,6 +149,7 @@ def main():
         row = {"label": label, "prime": task.vocab, "exponent": experiment.benchmark.exponent,
                "seed": experiment.seeds.model, "optimizer": type(experiment.optimizer).__name__,
                "spectrum": spectrum, "predicted_alias": g, "nonzero_heldout_accuracy": exact,
+               "actual_model_margin_bound": bound,
                "nonzero_heldout_quotient_accuracy": quotient,
                "fraction_predictions_in_valid_image": float(torch.isin(predictions, valid).double().mean()),
                "hypothesis_applies": g > 1,
@@ -114,6 +159,9 @@ def main():
             print(label, "g=", g, "exact=", round(exact, 4), "quotient=", round(quotient, 4),
                   "prediction=", row["hypothesis_pass"], flush=True)
     payload = {"hypotheses_sha256": hashlib.sha256((ROOT / "hypotheses.json").read_bytes()).hexdigest(),
+               "large_model_hypotheses_sha256": hashlib.sha256(
+                   (ROOT / "large_model_hypotheses.json").read_bytes()).hexdigest(),
+               "small_energy_counterexample": small_energy_counterexample(),
                "exact_checks": [exact_checks(p, k) for p in (17, 97, 193) for k in (1, 2, 3, 5)],
                "scope": "The algebra is exact; concentration-to-confusion is a diagnostic hypothesis, not an optimization theorem.",
                "runs": findings}

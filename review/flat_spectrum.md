@@ -1541,6 +1541,34 @@ the triangle inequality makes every other code farther away. This is a sufficien
 condition for that decoder, not an assertion that the trained tied-readout network
 uses nearest-code decoding. Margin and recovery error are needed as well as rank.
 
+### A bound for the actual normalized, tied readout
+
+For the current model, write `L_c(a,b)=<h(a,b),E_c>`, where `h` is the final RMSNorm
+output, of width `W` and positive epsilon. Directly from its definition,
+`||h||²=||x||²/(||x||²/W+epsilon)≤W`. Thus for every pair of candidate labels,
+
+```
+|L_c(a,b) − L_c'(a,b)| ≤ sqrt(W) ||E_c − E_c'||.
+```
+
+This follows from Cauchy--Schwarz and applies to every depth and all branch weights.
+If a projection gives identical rows to the two labels and `E=E_projected+R`, the
+right-hand side is `sqrt(W)||R_c−R_c'||`. An exact collision forbids a strict margin
+between them. A small residual only bounds the margin; it does **not** bound accuracy.
+This is a direct statement about the current forward pass, unlike the assumed
+identification of weight decay with nuclear-norm completion.
+
+There is no universal energy threshold below which a mode is irrelevant to accuracy,
+even after centering. For four cyclic labels `c=0,1,2,3`, put
+`v_c=(cos(pi*c/2),sin(pi*c/2))` and `E_c=(A*(-1)^c,0,epsilon*v_c)` with
+`epsilon>0`. Both the parity coordinate and the faithful circle code are centered.
+States `h_c=(0,0,v_c)` have norm 1 and give the correct label strictly highest score.
+The separating energy fraction is `epsilon²/(A²+epsilon²)`, arbitrarily small as
+`A` grows. These states are compatible with width-4 RMSNorm's norm bound (and can
+be its outputs for suitable inputs). This readout example does not claim that the
+full network learns those states; it disproves an accuracy conclusion from energy
+alone. The experiment records the pairwise bound and actual gaps between aliases.
+
 ### Comparison and a prospective retry
 
 The [powered-division experiment](../experiments/rotate90_power_learning/README.md)

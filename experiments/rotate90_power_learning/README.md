@@ -61,9 +61,21 @@ attainable output-group order.
 The prospective retry in [hypotheses.json](hypotheses.json) adds twelve fresh
 seed runs (17 and 23 on six cases) and nine Schedule-Free AdamW controls
 (three aliasing cases at three learning rates). There are 136 definitions in
-total, including the timing pilot. The spectral threshold is fixed before
+in the first screen and retry, including the timing pilot. The spectral threshold is fixed before
 these follow-ups and its failures will be retained. The criterion is a
 diagnostic hypothesis, not a claim about convergence.
+
+The user's next request adds 30 larger-model runs, exclusively with
+Schedule-Free AdamW: widths/depths 256/1,
+512/1 and 256/4 on P97/K2, P193/K2 and P193/K3 at seeds 11, 17 and 23,
+plus W512/D1 on P17/K1 at the same seeds. Nine additional smaller-model
+Schedule-Free controls complete matched three-seed comparisons. All use
+lr=.003, betas=(.9,.98), decay=1, the same split fraction, batch and budget.
+The total is 175 definitions, with earlier AdamW runs retained as historical
+comparisons; every run added after the optimizer restriction is Schedule-Free.
+The [large-model specification](large_model_hypotheses.json) records the
+accuracy and stability measurements before training, including standard
+deviation over the final 1500 updates and variation across seeds.
 
 Status: source parity, arithmetic labels, gradients, compiled continuation,
 and compiled Schedule-Free averaging are validated. The initial 103 runs

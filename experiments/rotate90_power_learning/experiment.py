@@ -69,3 +69,24 @@ free = {f"sf-{name}": swap(case, "optimizer", ScheduleFreeAdamW(
         for name, case in cases.items() if name in (
             "w16d1-p97-k2", "w64d4-p193-k2", "w16d1-p193-k3")}
 experiments.update(grid(free, {"optimizer.lr": {"lr001": .001, "lr003": .003, "lr01": .01}}))
+
+# User-requested larger-model stability check, now exclusively Schedule-Free AdamW.
+large_base = swap(base, "optimizer", ScheduleFreeAdamW(
+    lr=.003, betas=(.9, .98), weight_decay=1., warmup=0))
+large_shapes = {"w256d1": PeriRotate90(256, 1), "w512d1": PeriRotate90(512, 1),
+                "w256d4": PeriRotate90(256, 4)}
+large_tasks = {"p97k2": PowerDivision(97, 2), "p193k2": PowerDivision(193, 2),
+               "p193k3": PowerDivision(193, 3)}
+experiments.update(grid({"large": large_base}, {
+    "model": large_shapes, "benchmark": large_tasks,
+    "seeds": {f"s{seed}": Seeds(seed, seed, seed) for seed in (11, 17, 23)}}))
+experiments.update(grid({"large-small-data": swap(swap(large_base, "model", PeriRotate90(512, 1)),
+                                                "benchmark", PowerDivision(17, 1))}, {
+    "seeds": {f"s{seed}": Seeds(seed, seed, seed) for seed in (11, 17, 23)}}))
+# The seed-11 small controls already exist above at lr=.003. Add the other seeds.
+experiments.update(grid({f"sf-confirm-{name}": swap(case, "optimizer", large_base.optimizer)
+                        for name, case in cases.items() if name in (
+                            "w16d1-p97-k2", "w64d4-p193-k2", "w16d1-p193-k3")}, {
+    "seeds": {f"s{seed}": Seeds(seed, seed, seed) for seed in (17, 23)}}))
+experiments.update(grid({"sf-small-data": swap(large_base, "benchmark", PowerDivision(17, 1))}, {
+    "seeds": {f"s{seed}": Seeds(seed, seed, seed) for seed in (11, 17, 23)}}))
