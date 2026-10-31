@@ -6,7 +6,9 @@ and optimizer settings, using Python 3.15, PyTorch 2.15 and max-autotune
 compilation. [The powered-division study](experiments/rotate90_power_learning/README.md)
 defines matched half-table learning screens and full-table fitting controls.
 Arithmetic uniqueness is proved in `Transformer.Rotate90.existsUnique_div_pow`;
-the existing neural existence theorem concerns K=1. The user's next direction
+`Transformer.Rotate90.Power.exists_weights_width16_any_depth` now proves actual
+neural representability for every prime and natural K, including zero numerators,
+at width 16, hidden size 43 and every positive finite depth. The user's next direction
 is to compare the flat-spectrum account with what the model actually learns,
 revise the theory where needed and test again. The first revision distinguishes
 recoverable rank-one characters from a jointly separating answer code; its
@@ -24,6 +26,12 @@ separation and actual-readout margin arguments correct the scope of the spectral
 explanation. The approximate 95%-energy rule passes 16 of 17 applicable cases;
 its counterexample is retained, and no convergence theorem is claimed. See the
 study README and portable results for the complete three-seed comparisons.
+The completed Lean extension constructs actual SwiGLU matrices, retains every
+RMSNorm, and allows arbitrary finite width/hidden padding. Thus the small-model
+failures are compatible with sufficient capacity; the remaining gap concerns
+optimization and generalization. Quantification over finite architectures avoids
+assuming that a particular infinite-width or infinite-depth limit contains their
+learned functions. See the note's *Actual network expressivity for every exponent*.
 
 Updated on 2026-10-19 UTC. **Active, resumed at the user's request on 2026-10-19.
 Current direction: [Landscape explanation of modular

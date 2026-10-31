@@ -64,10 +64,18 @@ keeps the proved completion theorems and corrects their application to training.
 | Dominant embedding energy predicts accuracy | Not universally: a centered four-label example puts over 99% of energy in parity, yet small faithful features permit 100% decoding. |
 | The actual model bounds classification margins | Final RMSNorm gives `abs(L_c-L_c') <= sqrt(W)*norm(E_c-E_c')`. Every reported alias-pair bound is checked directly. |
 
-The new separation and margin arguments have elementary proofs in the note,
-not new Lean formalizations. Existing Lean results prove arithmetic uniqueness
-for every prime/natural K and neural representability for K=1. They do not
-prove convergence of this nonlinear normalized classifier under Schedule-Free.
+The feature-code separation, positive-margin and low-rank-score arguments are
+now formalized in `Transformer.Grokking.FlatSpectrum.FeatureCodes`. The frequency-gcd
+formula and the actual-readout norm bound remain mathematical arguments in the note.
+The further [actual-network construction](../../review/flat_spectrum.md#actual-network-expressivity-for-every-exponent)
+is formalized in `Transformer.Rotate90.Power`: for every prime and natural K,
+width 16 with hidden size 43 has weights that classify the entire valid table,
+including zero numerators and K=0. This holds at every positive finite depth,
+with all RMSNorms and the tied embedding retained. The weights depend on the
+fixed task exponent; it is not an additional model input. Arbitrary finite
+padding is allowed. Consequently, even the W16 failures above do not establish
+insufficient capacity. Neither result proves that Schedule-Free finds these
+weights or generalizes from the observed split.
 
 The prospective rule in [hypotheses.json](hypotheses.json) was committed before
 the fresh-seed retry. It predicts quotient confusion when at least 95% of

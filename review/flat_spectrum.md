@@ -1770,5 +1770,163 @@ The cyclic frequency-gcd formula, the general powered-division indicator rank
 `(p−1)/gcd(k,p−1)`, and optimal margins for full Fourier banks are outside this Lean
 extension. Item 7 formalizes the full-rank indicator comparison at `k=1`; it does not
 silently treat the more general formula as proved in Lean. Nonzero operands are explicit
-throughout item 6; the earlier arithmetic theorem covers zero numerators, and the earlier
-neural construction handles them for `k=1`.
+throughout item 6; the arithmetic theorem covers zero numerators. The actual-network
+extension below covers them at every natural exponent.
+
+## Actual network expressivity for every exponent
+
+**2026-10-31, new constructive result.** The previous feature-code theorem supplies
+ideal scores for every exponent. The earlier actual-network proof only constructs
+weights for ordinary division. This section closes that gap: actual tied Rotate90
+SwiGLU weights solve `(a/b)^k` for every prime p and natural k, including zero
+numerators and k=0. Width 16 with the source hidden size 43 suffices, at every
+positive finite depth. All statements concern exact real arithmetic and positive
+RMSNorm epsilon. No training-convergence claim is added.
+
+### Statement and quantifiers
+
+Fix a prime p, k in the natural numbers, epsilon > 0, any finite sets of padding
+pairs and hidden units, and any depth D >= 1. There exist one embedding table E
+and D sets of three branch matrices such that
+
+```
+for every a in ZMod p, every b != 0, and every q != (a/b)^k:
+    logit(E, blocks, a, b, q) < logit(E, blocks, a, b, (a/b)^k).
+```
+
+The width is 14 plus twice the number of padding pairs; hidden size is 20 plus
+the number of padding units. Thus the source sizes W=14/H=37, W=16/H=43 and
+W=128/H=341 all contain the construction. These are sufficient sizes, with no
+assertion of minimality. A one-block W=16 witness has 16p+2064 parameters, or
+3616 at p=97. Weights may depend on p, k, epsilon and architecture, but never on
+the queried operand pair. The exponent is fixed for each task. There is no
+extra input specifying k, and the construction stores no operand-pair lookup table.
+
+The forward pass is the source's shared embedding, quarter-turn, initial RMSNorm,
+residual SwiGLU blocks with both branch normalizers, final RMSNorm and tied readout.
+`Power.stackLogit_singleton` proves agreement with the existing one-block
+`Rotate90.logit`; the stack is the actual loop in `PeriRotate90.forward`.
+
+### The embedding and residual geometry
+
+Choose a faithful complex multiplicative character chi of ZMod p, extended by
+chi(0)=0. Define the real answer code
+
+```
+C(a) = (Re chi(a), Im chi(a), [a=0]).
+```
+
+Every code has squared norm one, including C(0). Faithfulness makes the codes
+distinct. Their inner product is one on the diagonal and strictly below one
+off the diagonal. Use seven adjacent channel pairs, with embedding
+
+```
+E(a) even slots = (1, C(a), C(a^k)),    E(a) odd slots = 0.
+```
+
+All padding is zero. One row has squared norm three. The quarter-turn places
+b's features in odd slots, so the raw input R=E(a)+J E(b) has squared norm six
+for every a,b,k. In particular, C(a^0)=C(1), even when a=0.
+
+Write t=(a/b)^k. Construct the following branch output B, before its RMSNorm:
+
+| Pair block | Even slots | Odd slots |
+| --- | --- | --- |
+| Constant | 0 | 0 |
+| Faithful code, three pairs | C(t)-C(a) | C(t)+C(a) |
+| Powered code, three pairs | -C(a^k) | C(a^k) |
+
+The parallelogram identity gives
+
+```
+norm(B)^2 = 2 norm(C(t))^2 + 2 norm(C(a))^2 + 2 norm(C(a^k))^2 = 6.
+```
+
+Let W be the full width, including padding, and define
+
+```
+alpha = 1 / sqrt(epsilon + 6/W)
+beta  = alpha / sqrt(epsilon + alpha^2 * 6/W).
+```
+
+The actual block input is alpha R, its normalized branch input is beta R,
+and its normalized branch output is alpha B. Equality of the two raw norms
+makes residual cancellation exact, even with positive epsilon. The state is
+alpha(R+B). Its even slots are alpha times `(1,C(t),0,0,0)`; every powered
+lookup coordinate cancels out of the tied readout. Odd slots may be nonzero
+and remain in the final RMSNorm denominator. Consequently, for a positive
+common scalar s depending on the input,
+
+```
+logit(a,b,q) = s * (1 + dot(C(t), C(q))).
+```
+
+The faithful-code strict inequality makes t the unique winning residue,
+including comparisons with zero and with nonzero labels unattainable under k.
+
+### Realizing the branch with actual SwiGLU matrices
+
+The displayed target-dependent B is a specification to be proved, not a new
+model operation. It is implemented by fixed matrices as follows. Write
+chi(a^k)=x+iy and chi(b^k)=u+iv. Since b is nonzero,
+
+```
+chi(t) = chi(a^k) conjugate(chi(b^k)) = (xu+yv) + i(yu-xv),
+[t=0] = [a^k=0].
+```
+
+Four products compute xu, yv, yu, xv. Six further products multiply the
+constant input coordinate by the six coordinates of C(a) and C(a^k). Their
+sparse output directions supply the cancellations and copy the powered zero
+flag into the target-code slot. This is ten products in total.
+
+Each product is implemented by two genuine SwiGLU units using
+`SiLU(z)-SiLU(-z)=z`. Their gates are opposite coordinate projections, their
+values select the same second coordinate, and their output directions are
+opposite. Since the actual branch input is beta R, output coefficients are
+multiplied by beta^-2. The resulting pair computes the unscaled product
+exactly. All twenty active hidden units are ordinary trainable units; no
+activation is replaced in the forward definition. Unused hidden units are zero.
+
+`Power.branch_weights` checks all sparse coordinate formulas. Gate, value and
+output matrices have no dependence on k: only the shared embedding's powered
+lookup block changes with the fixed task exponent. The construction includes
+p=2, a=0 and k=0; these cases also have explicit Lean examples.
+
+### Depth, unbounded size and what remains unexplained
+
+Set all matrices of each extra residual block to zero. Its output before and
+after branch-output RMSNorm is zero, so the block is exactly the identity.
+Induction proves that any finite number of these blocks preserves all logits.
+Thus for every positive finite depth there are correct weights, with the same
+width and hidden size per block.
+
+Quantifying over all finite sizes is enough to state a universal finite-model
+impossibility theorem: it would have to exclude every allowed size and every
+weight choice. Failure of one infinite-width or infinite-depth limiting model
+only implies such impossibility after an additional inclusion argument showing
+that all finite networks' functions are covered by its failure theorem. In
+particular, failure of a frozen-kernel training limit alone supplies no such
+argument about finite feature-learning networks. No infinite limit is needed
+for the positive expressivity theorem here.
+
+The W16/D1 failures in the Schedule-Free study therefore cannot be explained
+by the absence of a correct function in that architecture. The larger models'
+success remains evidence about training under the measured data, initialization
+and optimizer settings. This theorem does not establish convergence, a basin
+size, finite-precision accuracy for arbitrary p, or a generalization guarantee
+from a partial table. It separates that remaining optimization question from
+the now-proved capacity result.
+
+### Lean inventory
+
+All declarations are in `Transformer.Rotate90.Power`, imported by
+`Transformer.Rotate90` and the project root module.
+
+| Module | Main declarations |
+| --- | --- |
+| `Defs` | `width_eq`, `width_add_pairs`, `rmsNorm_of_sum_sq`, `rmsNorm_twice_of_sum_sq` |
+| `Geometry` | `character_div_pow`, `zeroFlag_div_pow`, `embedding_sq`, `raw_sq`, `branchVector_sq`, `readout_raw_add_branchVector`, `residual_even` |
+| `Products` | `weights`, `branch_weights`, `gateMatrix_weights_eq`, `valueMatrix_weights_eq`, `outputMatrix_weights_eq` |
+| `Expressivity` | `state_weights`, `logit_weights`, `weights_correct`, `exists_weights`, `exists_weights_width14`, `exists_weights_width16`, `exists_weights_width128`, `width16_parameter_count` |
+| `Depth` | `stackLogit_singleton`, `block_zero`, `stackLogit_padded`, `exists_weights_any_depth`, `exists_weights_width16_any_depth` |
