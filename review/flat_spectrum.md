@@ -1468,9 +1468,13 @@ entries have moduli uniform in [0.3, 2] and uniform phases.
 
 This extension addresses the user's request to compare predictions with the current
 Peri-RMSNorm SwiGLU model, revise the explanation, and test it again. The earlier source
-note is retained verbatim. The new algebra below has an elementary proof and exhaustive
-numerical checks; it has not yet been added to Lean. The existing arithmetic uniqueness
-and the K=1 neural existence result are in `Transformer.Rotate90`.
+note is retained verbatim. The new algebra below has elementary proofs and exhaustive
+numerical checks. The later *Joint feature recovery and classification* section formalizes
+the generic bank separation and robustness results, the powered-division character route,
+and its connection to ideal recovery in Lean. The frequency-gcd criterion and the bound
+for the actual normalized neural readout below remain mathematical arguments rather than
+Lean theorems. Arithmetic uniqueness and the K=1 neural existence result are in
+`Transformer.Rotate90`.
 
 ### What the existing theorems predict
 
@@ -1618,3 +1622,153 @@ at 90%, 99% and 99.9% is recorded. This threshold rule is explicitly falsifiable
 the exact separation theorem does not justify it for approximate codes. `g=1` supplies
 no convergence prediction. Results, including counterexamples, belong in the experiment
 report and must not be used to silently retune the rule.
+
+## Joint feature recovery and classification (2026-10-31)
+
+This section answers the user's request to generalize the Lean theory beyond a single
+rank-one readout. It builds on *Rank above one*: matrix recovery already covers arbitrary
+rank. The new results connect recovered feature banks to classification, distinguish the
+ranks of feature, score and indicator matrices, and quantify robustness. All seven items
+below are formalized in `Transformer.Grokking.FlatSpectrum.FeatureCodes`; there are no
+additional axioms or unfinished proofs in these modules.
+
+### Setting and statements
+
+Let `A` be an answer type, `R` a finite feature index, `C : A → R → ℂ` an answer code,
+and `w : R → ℝ` nonnegative weights. Assume `|C(a,r)|² = 1` for all answers and features.
+For a computed feature vector `z`, define the real class score and the ideal code score by
+
+```
+S(z,c) = ∑_r w_r Re(z_r conjugate(C(c,r))),
+Q(a,c) = S(C(a),c),
+D²(a,c) = ∑_r w_r |C(a,r) − C(c,r)|².
+```
+
+1. **Exact gap.** `Q(a,a) = ∑_r w_r` and
+   `2(Q(a,a) − Q(a,c)) = D²(a,c)`. Thus `Q(a,c) ≤ Q(a,a)`. The identity itself needs
+   no sign condition on the weights; nonnegativity is used for the inequality.
+2. **Joint separation.** `Q(a,c) < Q(a,a)` exactly when there is an `r` with
+   `w_r > 0` and `C(a,r) ≠ C(c,r)`. When every weight is positive, unique classification
+   of every answer is equivalent to injectivity of the entire map `C`. Individual features
+   may collide. For example, on the four binary pairs `(a,b)`, the two features
+   `(-1)^a` and `(-1)^b` jointly separate all four answers, although each feature alone
+   identifies pairs of answers. With weights `1/2`, self-scores are one.
+3. **Finite margin and score errors.** If `A` is finite and the active features separate
+   each distinct pair, there is a `δ > 0` such that
+   `δ ≤ Q(a,a) − Q(a,c)` whenever `a ≠ c`. More generally, for arbitrary ideal real
+   scores `s` and approximate scores `L`, if the true answer `a` satisfies
+   `s(a) − s(c) ≥ δ` for every competitor, `|L(c) − s(c)| ≤ ε` for every class including
+   the true one, and `2ε < δ`, then `L(c) < L(a)` for every competitor. Equality in the
+   error threshold is deliberately excluded because it can permit a tie.
+4. **Feature errors.** For a unit-modulus answer code,
+   `|S(z,c) − Q(a,c)| ≤ ∑_r w_r |z_r − C(a,r)|` for every class `c`. Consequently,
+   weighted feature error at most `ε` preserves classification when `2ε < δ`.
+   If `∑_r w_r = 1`, coordinate errors at most `ε` imply this score-error bound.
+   Fixing the total weight fixes the scale of this comparison.
+5. **Joint ideal recovery at arbitrary rank.** Let `K_r` be complex matrices on finite
+   operand sets and let `Ω` be the observed cells. Suppose each `K_r` is the unique
+   minimum-nuclear-norm completion of its values on `Ω`. Then the bank `K` is exactly
+   the minimum of
+
+   ```
+   Φ(X) = ∑_r ||X_r||_S1,
+   subject to X_r(i,j) = K_r(i,j) for all r and (i,j) ∈ Ω.
+   ```
+
+   The existing arbitrary-rank dual certificates imply these hypotheses component by
+   component; each component can use its own singular vectors and certificate. In the
+   explicit certificate corollary, the auxiliary singular-vector index and strict
+   contraction factor are shared across the bank. No rank-one assumption is imposed.
+   If `K_r(i,j) = C(f(i,j),r)` and the active answer code separates labels, every minimizing
+   bank classifies every input correctly, including unobserved cells. The statement
+   explicitly assumes observed agreement and global optimality of this objective.
+6. **Powered division for every prime and natural exponent.** Work on the unit group
+   `G = (ZMod p)ˣ`. For a multiplicative character `χ`, put
+   `K_(χ,k)(a,b) = χ((a/b)^k)`. Then
+
+   ```
+   K_(χ,k)(a,b) = χ(a)^k conjugate(χ(b))^k,
+   rank_ℂ K_(χ,k) = 1.
+   ```
+
+   This includes `k=0`. Each character supplies an explicit separable computation.
+   If the observation graph on `G × G` is connected and contains a perfect matching,
+   every character kernel is uniquely recovered by the ideal learner. The same two
+   mask conditions suffice for all natural exponents. A jointly separating bank then
+   classifies `(a/b)^k` after joint recovery by item 5. For every prime there is also a
+   faithful character and a positive margin working for all exponents: choose a faithful
+   character on the whole unit group and take its finite code margin from item 3.
+   The conclusion uses the explicit operand formula, not an assumed computed target.
+7. **Different ranks.** For arbitrary complex operand factors `u_r(i), v_r(j)`, the
+   real class-score matrix
+
+   ```
+   L_c(i,j) = ∑_r w_r Re(u_r(i) conjugate(v_r(j)) conjugate(C(c,r)))
+   ```
+
+   has rank at most `2|R|`. Indeed, write `v_r(j) C(c,r)` in real and imaginary parts:
+   its score contribution is the sum of the two outer products
+   `w_r Re(u_r) Re(v_r C_c)` and `w_r Im(u_r) Im(v_r C_c)`. The left factors are shared
+   across classes. This bound needs no positivity, unit norms, or separation assumption.
+   By contrast, the division indicator `T(a,b) = [a/b = 1]` is the identity matrix on
+   any finite group and has full rank `|G|`. Therefore, for every prime, one faithful
+   complex character classifies every powered-division task with real score ranks at
+   most two; for ordinary division (`k=1`), the identity-class indicator has rank `p−1`.
+   The Lean examples include rank 192 at `p=193`. This is not a claim that the trained
+   network's logits have rank two or that additional learned modes are unnecessary for
+   robust optimization.
+
+### Proofs
+
+For item 1, expand `|z−v|² = |z|² + |v|² − 2 Re(z conjugate(v))` coordinate by
+coordinate. Each summand of `D²` is nonnegative, and it is positive precisely when its
+weight is positive and its two code values differ. A finite sum of nonnegative terms is
+positive precisely when one is positive, proving item 2.
+
+For item 3, take the minimum of the distinct-pair score gaps together with the sentinel
+value one. Every entry is positive; including one handles empty and singleton answer
+sets without an extra hypothesis. For the perturbation bound,
+`L(a)−L(c) ≥ s(a)−s(c)−2ε ≥ δ−2ε > 0`. Item 4 follows from the triangle inequality,
+`|Re z| ≤ |z|`, and `|C(c,r)|=1`.
+
+For item 5, every feasible component has nuclear norm at least that of `K_r`. A bank
+minimum cannot have a larger total norm than `K`, so the nonnegative component gaps sum
+to zero. Each gap is therefore zero, and componentwise uniqueness gives `X_r=K_r`.
+The reverse implication follows by summing the component lower bounds. Applying the
+arbitrary-rank certificate to each component supplies a direct certificate corollary;
+substitution into item 2 proves classification.
+
+For item 6, characters preserve powers and multiplication, and conjugation is inversion
+on nonzero character values. The outer product gives rank at most one and the entry at
+`(1,1)` is one, proving the lower bound. Unit-modulus factors permit the existing
+connected-graph and perfect-matching recovery theorem to be applied unchanged. A faithful
+character exists by `exists_injective_mulChar`; restricted to units it supplies the
+separating code needed for a uniform margin. The factorization and identity-matrix
+calculations in item 7 prove its two rank statements.
+
+### Lean inventory and scope
+
+All declarations below are in `Transformer.Grokking.FlatSpectrum.FeatureCodes`.
+
+| Module | Main declarations |
+| --- | --- |
+| `Basic` | `twice_score_gap`, `codeScore_lt_self_iff`, `unique_classification_iff_injective`, `binaryCode_injective`, `binaryCode_coordinate_not_injective` |
+| `Margins` | `exists_positive_margin`, `strict_winner_of_score_error`, `score_error_le`, `score_error_le_of_coordinate_error`, `strict_winner_of_feature_error` |
+| `Recovery` | `bank_minimum_iff`, `bank_minimum_iff_of_certificates`, `classification_of_bank_minimum` |
+| `PoweredDivision` | `rank_powerKernel`, `power_scores_correct`, `powerKernel_minimum_iff`, `power_classification_of_minimum`, `exists_power_division_margin` |
+| `RankSeparation` | `score_matrix_factorization`, `rank_score_matrix_le`, `rank_divisionIndicator`, `rank_power_scores_le`, `exists_low_rank_power_classifier` |
+
+This generalization proves representation, exact recovery under explicit hypotheses, and
+conditional error tolerance. The neural network's objective is still cross-entropy, its
+readout is tied, and its state is normalized and nonlinear. No theorem identifies its
+parameter penalty with `Φ`, proves convergence of Schedule-Free AdamW, or guarantees a
+width/depth-dependent success rate. The new margin results can be applied to actual logits
+once their error relative to an ideal score construction is bounded. A small discarded
+spectral-energy fraction alone does not supply that uniform error bound.
+
+The cyclic frequency-gcd formula, the general powered-division indicator rank
+`(p−1)/gcd(k,p−1)`, and optimal margins for full Fourier banks are outside this Lean
+extension. Item 7 formalizes the full-rank indicator comparison at `k=1`; it does not
+silently treat the more general formula as proved in Lean. Nonzero operands are explicit
+throughout item 6; the earlier arithmetic theorem covers zero numerators, and the earlier
+neural construction handles them for `k=1`.
