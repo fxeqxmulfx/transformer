@@ -2649,3 +2649,151 @@ is not established by that check, and H1 remains failed. One narrow P193
 CUDA capture failure completed on an unchanged retry and passed replay.
 All results, controls, hashes and attempt records are retained in
 `experiments/rotate90_forcing`; no threshold or recipe was adjusted.
+
+## General positional models
+
+The next extension follows the user's request for arbitrary rotations, more
+than two input variables, other positional mixers and attention. The supplied
+normalization reference is
+`/home/misha/python_projects/gpt/src/diff_gpt/domain/model`, at commit
+`b98c665bd8faa30729fd368d257a13b6d58712a1`. The five inspected source-file hashes
+and the exact scope are retained in `review/sequence_model_source.json`.
+All results below concern real arithmetic at finite architecture sizes.
+
+**G1, arbitrary inputs and full predictors.** `SequenceModel` takes an input
+type X, a finite set of scalar trainable coordinates I, a finite label type V,
+and the complete score function `forward : R^I -> X -> V -> R`. X can be
+`Fin N -> ZMod P`, a token tuple, or a variable-length sequence. Sample IDs
+can be independent of their data values, retaining multiplicity of repeated
+examples and losses at distinct token positions. The source Schedule-Free
+recurrence is stated independently, then identified with F1--F4's run.
+Its finite matrix-product/normalized-gradient decomposition and zero-gradient
+parameter-plane invariant therefore apply without a two-operand assumption.
+The nonlinear forward is evaluated after adding the parameter response; logits
+and attention probabilities are not assumed to depend linearly on it.
+
+The source identities hold for arbitrary update oracles. The sampled classical
+loss gradient is justified at differentiable queries by an explicit theorem
+with that hypothesis. An arbitrary forward is not declared differentiable by
+definition, and the clipped XSA normalizer does not acquire a global smoothness
+guarantee. At a clipping boundary, relating a chosen autodiff convention to an
+update oracle is an additional step, not an implicit assumption of this theory.
+
+**G2, arbitrary rotations and positional mixing.** The rotary operator has an
+arbitrary real angle for every channel pair. Lean proves angle addition under
+composition, the inverse rotation, preservation of squared length and norm,
+and the relative-position dot-product identity for every frequency vector:
+
+```
+<R(s*omega) x, R(t*omega) y> = <x, R((t-s)*omega) y>.
+```
+
+The half-split layout agrees with the existing actual RoPE operator. The
+geometric frequency grid is an instance, and pi/2 is another instance; neither
+is required by the general theorem. A positional mixer can also transform
+each token embedding by an arbitrary position-dependent map before summing.
+The ensuing predictor retains the shared embedding, input/final RMSNorm and
+the full Peri-RMSNorm SwiGLU stack. The two-input zero/pi-over-two instance
+has exactly the previous Rotate90 scores. For arbitrary fixed rotary phase
+tables and positive epsilon, the pooled forward is analytic jointly in all
+its trainable weights, at every finite tuple length, width and depth.
+
+**G3, information lost in pooling.** An invertible rotation of each vector
+does not make a sum of rotated vectors injective. If the positional operators
+repeat under a permutation, the pooled representation is invariant under that
+permutation, for every embedding. In the special sequence of fixed quarter
+turns, positions 0 and 4 use the same rotation. Consequently
+`[a,b,c,d,e]` and `[e,b,c,d,a]` have identical pooled representations and all
+downstream logits. Lean proves that no finite width, depth or weights of that
+special pooled network can strictly predict the first of five binary variables
+on every input. This is a limitation of the repeated-phase pooling rule;
+the theorem does not impose it on arbitrary RoPE or attention operating on
+the unpooled token stream. It supplies no universal variable-count threshold
+at which attention becomes necessary.
+
+**G4, the supplied normalized attention model.** `SequenceModel.Attention`
+formalizes the supplied diff_gpt no-cache training forward with the following
+operations in their source order:
+
+1. Normalize the learned token embeddings by parameter-free RMSNorm.
+2. In every block, normalize the attention input; project fused QKV; reshape
+   heads; RMS-normalize each Q/K head; apply its specified rotary phases;
+   use causal softmax with scale `1/sqrt(head_dim)` on unnormalized values.
+3. Apply XSA with clipped L2 normalization of the own value, and explicitly
+   zero the first position's attention output. Merge heads and project.
+   RMS-normalize that branch output before adding it to the residual stream.
+4. Normalize the updated stream; apply bias-free SwiGLU; normalize its output;
+   add that branch to the residual stream.
+5. Apply final RMSNorm and the original shared embedding as tied readout.
+
+RMS epsilon remains explicit: it is 2^-23 for float32 in the supplied source.
+XSA's L2 epsilon is separately 1e-12. The proof does not replace either
+normalizer by an exactly unit-length vector. RoPE can be disabled independently
+per layer by zero angles, or the forward can take arbitrary angle tables.
+The source uses hidden size H=(8W+1)//3; other finite H are a stated extension.
+The coordinate encoder and decoder are inverse and cover every source weight,
+with parameter count `V*W + D*(4*W^2 + 3*W*H)`. This includes embedding, QKV,
+attention output and all three SwiGLU matrices; there are no learned norm
+gains, head temperatures or biases. The Schedule-Free theorems now instantiate
+this complete model for arbitrary finite input length. KV-cache execution and
+floating-point rounding are outside the formal forward's scope. The mathematical
+forward receives its phase table directly; correspondence with Python execution
+uses positions within the configured block_size. Larger finite contexts are
+a mathematical extension or require correspondingly larger source tables.
+
+**G5, normalization changes the quantitative theory.** With positive RMS
+epsilon and positive width, Lean proves, for every choice of weights and phases:
+
+```
+|head_score| <= sqrt(d_head)
+||block(x)_i|| <= ||x_i|| + 2*sqrt(W)
+||hidden_L(i)|| <= (1 + 2*L)*sqrt(W)
+|logit(i,v)| <= sqrt(W)*||E[v]||.
+```
+
+Both normalized branch outputs are responsible for the residual bound; it
+does not require a bound on the attention or FFN matrices. The final logit
+bound still contains the tied embedding row norm. From the actual normalized
+Q/K score bound and the positive causal softmax denominator, every attention
+weight with N visible positions satisfies
+
+```
+attention(i,j) <= exp(2*sqrt(d_head)) / N,   N = i+1.
+```
+
+The bound can exceed one for short contexts. It limits concentration of one
+attention row; it does not bound the computational power of the entire stack
+or prove failure on all tasks with many variables. Conversely, these bounds
+and the source-response identity do not guarantee learning. The static
+flat-spectrum/nuclear-norm surrogate still does not describe the complete
+normalized nonlinear network's optimizer or generalization.
+
+Source correspondence was checked with `review/sequence_model_source_check.py`
+against the pinned Python files, using Python 3.15.2 and Torch 2.15.0+cu132.
+Three CPU float64 cases cover width 8/16, depth 1/2/3, length 1/5/7 and all,
+mixed or disabled RoPE layers. Logits agree within 2.78e-16 and every trainable
+gradient within 6.89e-15. A CUDA float32 max-autotune/fullgraph/static case
+agrees within 5.97e-8 in logits and 1.50e-6 in gradients. The equation checker
+uses the source's rounded RoPE tables; it is a numerical source check, not
+Lean extraction or a floating-point proof. No training outcome is inferred.
+All configurations, parameter counts, errors and hashes are retained in
+`review/sequence_model_source_check.json`.
+
+Validation adds 37 proved theorems. The complete `lake build` passes (13096
+jobs); individual `#print axioms` checks use only the three allowed standard
+axioms. Audit remains at 36 existing `sorry`, with zero results resting on
+them and zero extra axioms. The regenerated index has 3999 modules and 20682
+theorems, with zero vacuous or placeholder declarations; `./run.py forbidden`
+passes. Every new module is reachable from `Transformer.lean`.
+
+The 40 lab tests selected by `./run.py test rotary compiled schedule_free`
+pass on an unchanged retry after a CUDA graph-capture error in the existing
+power-division resume test. The following 31 optimizer tests report two
+failures in the float32/float64 Schedule-Free Muon allocation subtests. Both
+failures reproduce on unchanged main `2006c06b` with
+`./run.py test schedule_free_warmed_cuda_steps_allocate_no_device_storage`:
+each records 75 positive allocations of 8519680 bytes. The AdamW allocation
+subtests pass, and `./run.py test schedule_free_adamw` separately passes all
+six selected tests. No production Python or optimizer code changes here.
+The unsuccessful attempts and final checks are retained in the root board's
+`.kanban/artifacts/122/`; the broader Python command is not reported green.

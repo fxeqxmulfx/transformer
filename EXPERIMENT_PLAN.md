@@ -2812,6 +2812,27 @@ zero-gradient span invariance. The remaining gap is to derive useful
 normalized-gradient directions and their accumulation from sampled data;
 neither fresh-start no-decay success nor general convergence is established.
 
+## General positional inputs and normalized attention (2026-10-31)
+
+Status: completed theory and source validation; requested by the user; board
+#122. Extend beyond fixed quarter turns and two variables, with arbitrary
+positional mixers and a concrete attention model. The user supplied diff_gpt
+at `b98c665b`; retain its embedding/final RMSNorm, Peri-RMSNorm on attention
+and SwiGLU branches, Q/K RMSNorm, arbitrary rotary phases, causal softmax, XSA
+clipping and explicit first-position zero. Source hashes and numerical checks
+are in `review/sequence_model_source*.json`.
+
+Outcome: the source-response theory now accepts arbitrary input types and
+full finite predictors. Lean proves arbitrary-angle rotation geometry, the
+relative-position law, exact recovery of the current two-input Rotate90
+forward, and an impossibility example specific to repeated-quarter-turn
+pooling of five variables. Full coordinate coverage and normalization bounds
+are proved for the supplied attention architecture, including the bound
+exp(2*sqrt(head_width))/visible_positions on one attention weight. Three
+CPU float64 and one compiled CUDA source comparisons pass for all logits and
+trainable gradients. This is a formal-model extension and correspondence
+check, not a new learning experiment or a convergence/generalization claim.
+
 ## Scalar MLP on mod 97 (2026-10-18)
 
 Status: active, requested by the user. The runs are done (#56,

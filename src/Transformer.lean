@@ -58,6 +58,7 @@ public import Transformer.DeepSeekV41
 public import Transformer.RoPE
 public import Transformer.Weil
 public import Transformer.Rotate90
+public import Transformer.SequenceModel
 
 /-!
 Formalizations of papers on the mathematics and architecture of Transformers:

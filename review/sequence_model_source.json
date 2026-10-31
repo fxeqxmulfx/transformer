@@ -1,0 +1,26 @@
+{
+  "repository_commit": "b98c665bd8faa30729fd368d257a13b6d58712a1",
+  "source_root": "/home/misha/python_projects/gpt/src/diff_gpt/domain/model",
+  "files": {
+    "gpt.py": "112502e5d16d7502929d14e7db9feb24ecd77bc04448aeba5b2a3f4cd216047e",
+    "block.py": "a73f554b9ce698794619409cdca39b60260c2de9ee102af8d619eef7dec50b80",
+    "mha.py": "e4114f20b84388e48e7a1a9364a34fbd7828c3f7f3a1817bbe31b9f352acce36",
+    "feed_forward.py": "5177da621997e1855adf4268839204c09870c586b96d2d8704ced3333847abbc",
+    "rope.py": "23592356d7f268405938ad28585a1e34c1b17655ab73f59b0e59c4ea961128ba"
+  },
+  "scope": "No-cache training forward in real arithmetic, with all independent weights, exact source normalization placement and explicit first-position attention zero.",
+  "rms_epsilon": "dtype machine epsilon; 2^-23 for float32 and 2^-52 for float64",
+  "xsa_l2_epsilon": 1e-12,
+  "hidden_size": "(8 * width + 1) // 3",
+  "generalizations": [
+    "Arbitrary finite context and architecture dimensions, subject to the actual head reshape constraints.",
+    "Arbitrary per-layer, per-position, per-pair angle tables; source grid and disabled RoPE are special cases."
+  ],
+  "excluded": [
+    "KV-cache storage and incremental execution",
+    "Floating-point rounding guarantee",
+    "Global differentiability at the XSA clipping boundary",
+    "Convergence or modular generalization guarantee"
+  ],
+  "source_execution_conditions": "Use source hidden size, source RoPE phases/enable flags and positions within configured block_size. Arbitrary phases, hidden sizes and longer directly supplied phase tables are explicit mathematical generalizations."
+}

@@ -1,0 +1,86 @@
+{
+  "source_commit": "b98c665bd8faa30729fd368d257a13b6d58712a1",
+  "source_hashes": {
+    "gpt.py": "112502e5d16d7502929d14e7db9feb24ecd77bc04448aeba5b2a3f4cd216047e",
+    "block.py": "a73f554b9ce698794619409cdca39b60260c2de9ee102af8d619eef7dec50b80",
+    "mha.py": "e4114f20b84388e48e7a1a9364a34fbd7828c3f7f3a1817bbe31b9f352acce36",
+    "feed_forward.py": "5177da621997e1855adf4268839204c09870c586b96d2d8704ced3333847abbc",
+    "rope.py": "23592356d7f268405938ad28585a1e34c1b17655ab73f59b0e59c4ea961128ba"
+  },
+  "script_sha256": "f1f01821d98f5daba51d48db837f5bced8165be5a6811b3def61b09bf91b8d5b",
+  "python": "3.15.2",
+  "torch": "2.15.0+cu132",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "cases": [
+    {
+      "width": 8,
+      "heads": 2,
+      "depth": 2,
+      "length": 5,
+      "rotary_layers": [
+        true,
+        true
+      ],
+      "dtype": "torch.float64",
+      "device": "cpu",
+      "max_logit_error": 2.220446049250313e-16,
+      "max_gradient_error": 6.8833827526759706e-15,
+      "parameter_count": 1576,
+      "rtol": 1e-08,
+      "atol": 1e-10
+    },
+    {
+      "width": 16,
+      "heads": 2,
+      "depth": 3,
+      "length": 7,
+      "rotary_layers": [
+        true,
+        false,
+        true
+      ],
+      "dtype": "torch.float64",
+      "device": "cpu",
+      "max_logit_error": 2.7755575615628914e-16,
+      "max_gradient_error": 2.6645352591003757e-15,
+      "parameter_count": 9376,
+      "rtol": 1e-08,
+      "atol": 1e-10
+    },
+    {
+      "width": 8,
+      "heads": 1,
+      "depth": 1,
+      "length": 1,
+      "rotary_layers": [
+        false
+      ],
+      "dtype": "torch.float64",
+      "device": "cpu",
+      "max_logit_error": 2.7755575615628914e-17,
+      "max_gradient_error": 4.440892098500626e-16,
+      "parameter_count": 816,
+      "rtol": 1e-08,
+      "atol": 1e-10
+    },
+    {
+      "width": 8,
+      "heads": 2,
+      "depth": 2,
+      "length": 5,
+      "rotary_layers": [
+        true,
+        true
+      ],
+      "compile": "max-autotune/fullgraph/static",
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "max_logit_error": 5.960464477539063e-08,
+      "max_gradient_error": 1.4901161193847656e-06,
+      "parameter_count": 1576,
+      "rtol": 0.003,
+      "atol": 0.0003
+    }
+  ],
+  "scope": "Numerical correspondence to G4 equations, not training or a floating-point proof. Source RoPE tables are reused, including their rounding."
+}
