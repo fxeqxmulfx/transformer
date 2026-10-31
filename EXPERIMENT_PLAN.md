@@ -1,5 +1,14 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+**2026-10-31 active extension, requested by the user:** test the current
+Rotate90 Peri-RMSNorm SwiGLU on `(a/b)^K mod P` across primes, widths, depths
+and optimizer settings, using Python 3.15, PyTorch 2.15 and max-autotune
+compilation. [The powered-division study](experiments/rotate90_power_learning/README.md)
+defines matched half-table learning screens and full-table fitting controls.
+Arithmetic uniqueness is proved in `Transformer.Rotate90.existsUnique_div_pow`;
+the existing neural existence theorem concerns K=1. Training outcomes will
+be reported with their finite budgets and held-out accuracies.
+
 Updated on 2026-10-19 UTC. **Active, resumed at the user's request on 2026-10-19.
 Current direction: [Landscape explanation of modular
 arithmetic generalization](landscape_grokking_plan.md), requested on 2026-10-19:

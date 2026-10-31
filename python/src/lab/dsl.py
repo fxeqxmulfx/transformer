@@ -18,6 +18,7 @@ from .domain.model import (FFN, GELU, XSA, Attention, Block, FusedQKV, LayerNorm
                            LearnedScaledDot, PerHeadQKV, PostNorm, PreNorm, QKNorm, ReLU, ReLU2, RMSNorm, RoPE, ScaledDot,
                            ScaledResidual, SiLU, Sinusoidal, Softmax, Sparsemax, SurrogateWeights, Tied, TorchDefault, Transformer, Untied, YaRN)
 from .domain.rotary import DenseBranch, LabDivision, Rotate90, SwiGLU
+from .domain.peri_rotary import PeriRotate90, PowerDivision
 from .domain.paired import CrossEntropyAnswers, DivisionPairs, SquaredAnswers, VectorReadout
 from .domain.regression import MLP, ModularRegression, OneHot, Scalar
 from .domain.optimizers import (ANSR, EVD, SGD, AdaFisher, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradMD, AMSGradW,
@@ -32,7 +33,7 @@ from .domain.synthetic import Synthetic
 from .domain.tensor import TensorGain, TensorStack
 from .domain.tasks import CRASP, MQAR, AlternatingBlocks, Dyck, Lookup, TypedDyck
 from .domain.training import (AttentionDiagnostics, Budget, FlopBudget, Checkpoint, Compiled, Measured, Cosine, CudaGraph, Diagnostics, Eager, Evaluate, Schedule,
-                               Seeds)
+                               Seeds, MaxAutotune)
 
 __all__ = [
     # model
@@ -41,7 +42,7 @@ __all__ = [
     "RoPE", "YaRN", "Sinusoidal", "NoPositions",
     "FusedQKV", "PerHeadQKV", "ScaledDot", "LearnedScaledDot", "QKNorm", "Softmax", "Sparsemax", "SurrogateWeights",
     "ReLU", "ReLU2", "GELU", "SiLU", "Tied", "Untied", "TorchDefault", "Normal", "ScaledResidual",
-    "Rotate90", "DenseBranch", "SwiGLU",
+    "Rotate90", "DenseBranch", "SwiGLU", "PeriRotate90", "PowerDivision",
     "VectorReadout", "SquaredAnswers", "CrossEntropyAnswers",
     # benchmarks
     "ModularDivision", "ModularRegression", "LabDivision", "TinyShakespeare", "Synthetic", "Memorization", "MatchingOrders", "MatchingBindings",
@@ -57,7 +58,7 @@ __all__ = [
     "Constant", "Inverse", "InverseSqrt", "Geometric",
     # training
     "Schedule", "Cosine", "Budget", "FlopBudget", "Seeds", "Evaluate", "Diagnostics", "AttentionDiagnostics", "GrokkingDiagnostics", "Checkpoint",
-    "EarlyStopping", "Solved", "Eager", "CudaGraph", "Compiled", "Measured",
+    "EarlyStopping", "Solved", "Eager", "CudaGraph", "Compiled", "Measured", "MaxAutotune",
     # composition
     "Experiment", "grid", "swap", "substitute", "walk", "describe", "fingerprint", "extend_context",
     # suites

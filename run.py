@@ -13,7 +13,7 @@ Lean
 
 Python (the uv project in python/; an experiment is a folder under experiments/)
     setup                         install the locked environment
-    lock                          refresh the lab lockfile after dependency changes
+    lock [--online]               refresh the lab lockfile (offline unless requested)
     package                       build the standalone optimizer wheel and source distribution
     optimizer-parity              check optimizer recurrence examples with Lean's kernel
     optimizer-lint                check all stable Ruff rules and optimizer package formatting
@@ -96,8 +96,8 @@ def setup(_):
     execute(["uv", "sync", "--locked"], cwd=PYTHON)
 
 
-def lock(_):
-    execute(["uv", "lock", "--offline"], cwd=PYTHON)
+def lock(arguments):
+    execute(["uv", "lock", *([] if arguments.online else ["--offline"])], cwd=PYTHON)
 
 
 def package(_):
@@ -242,8 +242,11 @@ def clean(_):
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     tasks = parser.add_subparsers(required=True, metavar="task")
-    for task in (lean, kernel, lint, audit, index, forbidden, setup, lock, package, verify, clean):
+    for task in (lean, kernel, lint, audit, index, forbidden, setup, package, verify, clean):
         tasks.add_parser(task.__name__).set_defaults(handler=task)
+    command = tasks.add_parser("lock")
+    command.add_argument("--online", action="store_true", help="Fetch missing package metadata")
+    command.set_defaults(handler=lock)
     tasks.add_parser("optimizer-parity").set_defaults(handler=optimizer_parity)
     tasks.add_parser("optimizer-lint").set_defaults(handler=optimizer_lint)
     command = tasks.add_parser("optimizer-profile")

@@ -25,6 +25,7 @@ from ...domain.atomic import MatchingBindings, MatchingOrders
 from ...domain.regression import ModularRegression
 from ...domain.paired import DivisionPairs, VectorReadout, check_division_model
 from ...domain.rotary import LabDivision
+from ...domain.peri_rotary import PowerDivision
 from ...domain.synthetic import Synthetic
 from ...domain.tensor import TensorStack
 from .modular import ModularTask
@@ -32,13 +33,14 @@ from .matching import MatchingTask
 from .regression import RegressionTask
 from .paired import PairTask
 from .rotary import LabDivisionTask
+from .power_division import PowerDivisionTask
 from .synthetic.training import SyntheticTask
 from .synthetic.tensor import TensorBasisTask
 from .text import TextTask
 
 TASKS = {ModularDivision: ModularTask, TinyShakespeare: TextTask, Synthetic: SyntheticTask,
          MatchingOrders: MatchingTask, MatchingBindings: MatchingTask, ModularRegression: RegressionTask,
-         LabDivision: LabDivisionTask}
+         LabDivision: LabDivisionTask, PowerDivision: PowerDivisionTask}
 
 
 def build_task(spec, data_seed, device, model_spec=None):

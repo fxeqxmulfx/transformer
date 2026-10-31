@@ -20,6 +20,7 @@ from .schedule_free import ScheduleFreeAdamW, ScheduleFreeMuon
 from .regression import MLP, ModularRegression
 from .paired import DivisionPairs, VectorReadout, check_division_model
 from .rotary import LabDivision, Rotate90
+from .peri_rotary import PeriRotate90, PowerDivision
 from .spec import Spec, describe, require, require_kind, swap, walk
 from .stopping import Solved, Stopping
 from .synthetic import Synthetic
@@ -127,6 +128,9 @@ class Experiment(Spec):
             require(isinstance(self.model, Rotate90) and isinstance(self.benchmark, LabDivision),
                     "Rotate90 uses the separate LabDivision arithmetic protocol")
             require(isinstance(self.execution, Eager), "Rotate90 controls currently run Eager")
+        if isinstance(self.model, PeriRotate90) or isinstance(self.benchmark, PowerDivision):
+            require(isinstance(self.model, PeriRotate90) and isinstance(self.benchmark, PowerDivision),
+                    "PeriRotate90 uses the PowerDivision arithmetic protocol")
         if isinstance(self.model, TensorStack):
             check_tensor_benchmark(self.benchmark)
             require(isinstance(self.optimizer, AdamW), "TensorStack uses ordinary AdamW")

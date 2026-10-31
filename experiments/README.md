@@ -23,6 +23,7 @@ it, which git ignores.
 | [`mod97_representation_controls`](mod97_representation_controls) | 36 | Which difficulty comes from scalar versus one-hot operands, scalar versus vector answers, MSE versus cross-entropy, or decay on identical division splits and samplers? |
 | [`rotate90_analytic`](rotate90_analytic) | 9 | Does SiLU or a near-budget SwiGLU branch improve the published Rotate90 classifier with the same shared E, split, sampler and AdamW settings? |
 | [`rotate90_swiglu_stability`](rotate90_swiglu_stability) | 9 | Do smaller SwiGLU steps prevent the observed loss of fit at matched update and nominal optimizer-time horizons? |
+| [`rotate90_power_learning`](rotate90_power_learning) | 115 | Can the current Peri-RMSNorm SwiGLU learn powered division across primes, widths, depths and AdamW settings under Python 3.15 / PyTorch 2.15 max-autotune? |
 | [`grokking_progress`](grokking_progress) | 4 | Does a causal held-out symmetry projection reveal rule formation in ordinary softmax transformers before accuracy rises, while rejecting memorization and immediate learning? |
 | [`grokking_internals`](grokking_internals) | 1 | Which frozen probes, answer/EOS gradients, spectra, neuron statistics, head ablations, computation-stage interactions, archived AdamW directions, finite-step curvature, same-gradient moment resets and exact current-logit certificates track ordinary transformer grokking? |
 | [`mod97_stability`](mod97_stability) | 6 | Once GPTMini generalizes x / y mod 97, does it stay generalized, under AdamW and raw AMSGradW? |

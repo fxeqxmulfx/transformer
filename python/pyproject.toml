@@ -3,11 +3,11 @@ name = "lab"
 version = "0.1.0"
 description = "Transformer experiments composed from swappable blocks, trained eagerly or under CUDA graphs"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.15,<3.16"
 dependencies = [
     "lean-optim",
     "numpy>=2.5.4",
-    "torch==2.14.1",
+    "torch==2.15.0",
 ]
 
 [project.scripts]
@@ -17,13 +17,6 @@ lab = "lab.interfaces.cli:main"
 requires = ["uv_build>=0.13.1,<0.14"]
 build-backend = "uv_build"
 
-# The PyPI wheel of torch 2.14 is built for CUDA 13, which no longer supports
-# Pascal GPUs (compute capability 6.1); the CUDA 12.6 build still does.
+# The requested PyTorch 2.15 runtime uses its PyPI CUDA wheel on the RTX 3050.
 [tool.uv.sources]
 lean-optim = { path = "../optimizers", editable = true }
-torch = { index = "pytorch-cu126" }
-
-[[tool.uv.index]]
-name = "pytorch-cu126"
-url = "https://download.pytorch.org/whl/cu126"
-explicit = true

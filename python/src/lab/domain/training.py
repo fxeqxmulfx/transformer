@@ -210,6 +210,18 @@ class Compiled(Execution):
 
 
 @dataclass(frozen=True)
+class MaxAutotune(Compiled):
+    """PyTorch 2.15 max-autotune with full-graph forward/loss and inference.
+
+    Source: the user's 2026-10-31 request and torch.compile's mode API.
+    TorchInductor autotunes kernels and enables CUDA graphs on supported
+    CUDA paths. Native fused AdamW remains outside the compiled forward.
+    Gradient norms transfer to the host together at observation boundaries.
+    """
+    device: str = "cuda"
+
+
+@dataclass(frozen=True)
 class Measured(Compiled):
     """Compiled training with audited ATen reference arithmetic by real shape.
 

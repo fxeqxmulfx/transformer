@@ -12,7 +12,7 @@ from .atomic import AtomicStepper
 from .measured import MeasuredStepper
 
 STEPPERS = {training.Eager: EagerStepper, training.CudaGraph: GraphStepper, training.Compiled: CompiledStepper,
-            training.Measured: MeasuredStepper}
+            training.Measured: MeasuredStepper, training.MaxAutotune: CompiledStepper}
 
 
 class Engine:

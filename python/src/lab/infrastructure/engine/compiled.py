@@ -26,6 +26,7 @@ import math
 import torch
 
 from ...domain.optimizers import clipping
+from ...domain.training import MaxAutotune
 from ..benchmarks.samplers import gather
 from ..optim import build_optimizer, evaluation_weights, training_weights
 from . import measure
@@ -44,8 +45,10 @@ class CompiledStepper:
         self.optimizer = build_optimizer(experiment.optimizer, model, None, experiment.budget.updates,
                                          experiment.seeds.model, fused=True)
         self.parameters = [parameter for parameter in model.parameters() if parameter.requires_grad]
-        self.update = torch.compile(self.forward, dynamic=False)
-        self.inference = torch.compile(model, dynamic=False)
+        self.max_autotune = isinstance(experiment.execution, MaxAutotune)
+        options = {"mode": "max-autotune", "fullgraph": True} if self.max_autotune else {}
+        self.update = torch.compile(self.forward, dynamic=False, **options)
+        self.inference = torch.compile(model, dynamic=False, **options)
         self.norms = []
 
     def state_dict(self):
@@ -71,6 +74,8 @@ class CompiledStepper:
                 self.evaluate(name)
 
     def step(self, parts, rate, sampled):
+        if self.max_autotune:
+            torch.compiler.cudagraph_mark_step_begin()
         batch = self.task.inputs(gather(parts), static=True)
         training_weights(self.optimizer)
         if not self.model.training:
@@ -88,14 +93,16 @@ class CompiledStepper:
             with self.clock.diagnosing():
                 before = measure.before_update(self.model, self.task, output, targets)
         self.optimizer.step()
-        self.norms.append(float(norm))
+        self.norms.append(norm.detach() if self.max_autotune else float(norm))
         if not sampled:
             return len(batch), None
         with self.clock.diagnosing():
-            return len(batch), measure.after_update(self.model, self.optimizer, self.task, *before, self.norms[-1])
+            return len(batch), measure.after_update(self.model, self.optimizer, self.task, *before, float(norm))
 
     def gradient_norms(self):
         norms, self.norms = self.norms, []
+        if self.max_autotune and norms:
+            return torch.stack(norms).cpu().tolist()
         return norms
 
     def evaluate(self, split):
