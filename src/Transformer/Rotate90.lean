@@ -5,6 +5,7 @@ public import Transformer.Rotate90.Power
 public import Transformer.Rotate90.Training
 public import Transformer.Rotate90.Learning
 public import Transformer.Rotate90.Memory
+public import Transformer.Rotate90.Forcing
 
 /-!
 # Powered-division expressivity and a training obstruction for Rotate90 SwiGLU
@@ -47,4 +48,9 @@ random-start convergence from static character rank or representational capacity
 history. Evaluation converges to the saved base and inherits its strict logit
 comparisons. Perfect antipodal powered-division solutions with a tied midpoint
 prove that correctness cannot be transferred through arbitrary parameter averages.
+
+`Forcing` separates decay/averaging evolution from the finite history of actual
+normalized gradients. Without gradients every parameter stays in the initial
+query/base span; the full sampled network supplies the exact forcing response.
+New directions are necessary for span escape but do not certify generalization.
 -/

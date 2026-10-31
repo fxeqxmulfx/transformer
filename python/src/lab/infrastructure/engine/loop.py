@@ -40,6 +40,8 @@ from ...domain.atomic import AtomicColumns
 from ...domain.stopping import Selection
 from ...domain.training import AttentionDiagnostics, CheckpointHistory, rate
 from ...domain.training import FlopBudget, Measured
+from ...domain.continuation import ScheduleFreeContinuation
+from ..continuation import source_checkpoint
 from ..benchmarks import build_task
 from ..nn import build_model
 from ..optim import report
@@ -136,6 +138,9 @@ class Training:
                                                                   experiment.benchmark.solved)
         self.best = None
         checkpoint = run.checkpoint(self.device)
+        self.forked = checkpoint is None and isinstance(experiment.checkpoint, ScheduleFreeContinuation)
+        if self.forked:
+            checkpoint = source_checkpoint(experiment, self.device)
         if checkpoint is not None:
             self.model.load_state_dict(checkpoint["model"])
             self.stepper.load_state_dict(checkpoint["optimizer"])
@@ -160,7 +165,20 @@ class Training:
                 [row["step"] for row in run.records("gradients")] != list(range(1, self.completed + 1))):
             raise ValueError("The gradient trace does not cover every checkpointed update")
         self.trace = []
-        self.stepper.prepare(self.sampler.sizes())
+        with self.preserve_initial_query():
+            self.stepper.prepare(self.sampler.sizes())
+
+    @contextmanager
+    def preserve_initial_query(self):
+        """Additional compilation/initial observations must not perturb a pinned query."""
+        saved = [p.detach().clone() for p in self.model.parameters()] if self.forked else None
+        try:
+            yield
+        finally:
+            if saved is not None:
+                with torch.no_grad():
+                    for parameter, value in zip(self.model.parameters(), saved, strict=True):
+                        parameter.copy_(value)
 
     def measure(self):
         """The metrics of each observed split, evaluated once for all the names that share its rows."""
@@ -225,9 +243,10 @@ class Training:
 
     def __call__(self):
         if not self.history:
-            self.observe(0, probe=False)
+            with self.preserve_initial_query():
+                self.observe(self.completed, probe=False)
             if isinstance(self.experiment.checkpoint, CheckpointHistory):
-                self.save(0)
+                self.save(self.completed)
         try:
             if not self.stopped():
                 self.train()

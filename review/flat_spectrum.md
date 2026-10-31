@@ -2547,3 +2547,75 @@ ongoing base optimization shapes a favorable nonlinear averaging path; the
 present theorems do not derive that geometry or its probability from random
 initialization. Exact eventual comparison transfer also excludes ties at the
 base and supplies no calibrated finite stopping time.
+
+## Gradient forcing
+
+The memory control changed the learning rate to zero, which removes both
+normalized-gradient movement and query decay. The next test varies decay
+alone in matched positive-rate continuations and uses a zero-gradient decay
+control. It preserves each source's query, base, raw second moment, averaging
+total, maximum rate, absolute optimizer time and next minibatch. Only the
+declared rate/decay may change; the beta, epsilon and warmup settings agree.
+
+**F1, actual two-buffer source update.** Let c be the current averaging
+coefficient, eta the current rate, beta the first beta, d the query decay,
+h = beta*(1-c)-1, and v the normalized gradient using the updated raw second
+moment and its actual bias correction. The source update is exactly
+
+```
+[ y' ]   [ 1-c+eta*d*h    c ] [ y ]   [ eta*h*v ]
+[ z' ] = [ -eta*d         1 ] [ z ] + [ -eta*v  ].
+```
+
+This is an identity for the existing `AdamW.trainingStep`, with the old query
+in decay. The gradient input and its changing second moment are retained.
+The scalar averaging history depends on rates and time, not the gradient
+values. Therefore the same coefficient matrices govern every parameter and
+both the original and zero-gradient trajectories from one saved history.
+
+**F2, homogeneous evolution and forcing.** Denote those matrices by A_t and
+the normalized-gradient terms by b_t. Independently define the matrix product
+Phi from ordered source transitions and R_0=0, R_(t+1)=A_t R_t+b_t. Induction
+through the actual source proves buffers_t = Phi_(0,t)*buffers_0 + R_t.
+The response also equals the finite sum of past b_j transported by all
+subsequent matrices. The b_j remain dependent on the actual trajectory and
+variance; this is not a linear model of the neural network or a forecast
+that replaces the unknown future gradients.
+
+**F3, the gradient-free parameter plane.** With zero gradient tensors, b_t=0
+even while the raw second moments decay from their saved values. Query and
+base, and hence evaluation parameters, stay in the linear span of the initial
+query and base. More generally any subspace containing the initial buffers
+and all normalized-gradient inputs contains the entire finite trajectory.
+Escaping it therefore requires at least one normalized-gradient input outside
+it. Coordinatewise Adam normalization matters: this statement concerns v,
+not merely the unnormalized minibatch gradient.
+
+**F4, actual finite network.** The source identities permit the oracle to be
+the gradient of the full finite Rotate90 sampled loss. The evaluation response
+uses the source linear recovery x=y+(1-1/beta)*(z-y), and logits are evaluated
+by the actual nonlinear tied network. An escape from the initial parameter
+plane supplies a new direction; it does not prove correct labels, heldout
+generalization, or favorable future transfer from random initialization.
+
+`experiments/rotate90_forcing/hypotheses.json` pins fifteen step-400 sources
+and thirty continuations, plus fixed zero-gradient diagnostic horizons. It
+declares source replay, gradient-removal and decay-removal predictions before
+their outcomes are observed. The initial new observation and compilation
+preserve the loaded query exactly; later evaluations use the ordinary engine.
+Full and no-decay arms continue to absolute update 1500 with the same samples.
+The zero-gradient long-horizon evaluation uses F1's scalar recurrence, checked
+against 32 actual source steps with zero tensors. All arithmetic diagnostics
+and controls use the original finite architecture and Schedule-Free AdamW.
+
+Setup validation (2026-10-31): all 27 `Rotate90.Forcing` theorems pass the
+full build (13085 jobs) and individual axiom checks, using only `propext`,
+`Classical.choice` and `Quot.sound`. The audit retains 36 existing unfinished
+statements, zero dependencies on them and zero extra axioms; index and source
+checks report zero vacuous/placeholder declarations and no forbidden constructs.
+All 418 lab tests (13 skipped) and 104 optimizer tests (14 skipped) pass. The
+new tests verify preserved source buffers, moments and sampler, exact CPU
+continuation, changed decay behavior and independent forced/homogeneous source
+identities. An independent P7 CUDA max-autotune smoke test also preserves the
+initial query and reproduces the final query bit for bit. All thirty declared
+recipes pass their definition check before the scientific continuations run.

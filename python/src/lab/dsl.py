@@ -20,6 +20,7 @@ from .domain.model import (FFN, GELU, XSA, Attention, Block, FusedQKV, LayerNorm
 from .domain.rotary import DenseBranch, LabDivision, Rotate90, SwiGLU
 from .domain.peri_rotary import PeriRotate90, PowerDivision
 from .domain.peri_restart import PeriRotate90Restart
+from .domain.continuation import ScheduleFreeContinuation
 from .domain.paired import CrossEntropyAnswers, DivisionPairs, SquaredAnswers, VectorReadout
 from .domain.regression import MLP, ModularRegression, OneHot, Scalar
 from .domain.optimizers import (ANSR, EVD, SGD, AdaFisher, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradMD, AMSGradW,
@@ -59,7 +60,7 @@ __all__ = [
     "Constant", "Inverse", "InverseSqrt", "Geometric",
     # training
     "Schedule", "Cosine", "Budget", "FlopBudget", "Seeds", "Evaluate", "Diagnostics", "AttentionDiagnostics", "GrokkingDiagnostics", "Checkpoint", "CheckpointHistory",
-    "EarlyStopping", "Solved", "Eager", "CudaGraph", "Compiled", "Measured", "MaxAutotune",
+    "ScheduleFreeContinuation", "EarlyStopping", "Solved", "Eager", "CudaGraph", "Compiled", "Measured", "MaxAutotune",
     # composition
     "Experiment", "grid", "swap", "substitute", "walk", "describe", "fingerprint", "extend_context",
     # suites

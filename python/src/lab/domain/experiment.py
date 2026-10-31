@@ -22,6 +22,7 @@ from .paired import DivisionPairs, VectorReadout, check_division_model
 from .rotary import LabDivision, Rotate90
 from .peri_rotary import PeriRotate90, PowerDivision
 from .peri_restart import PeriRotate90Restart
+from .continuation import ScheduleFreeContinuation
 from .spec import Spec, describe, require, require_kind, swap, walk
 from .stopping import Solved, Stopping
 from .synthetic import Synthetic
@@ -69,6 +70,12 @@ class Experiment(Spec):
                 "Schedule-Free uses eager optimizer steps; choose Eager or Compiled")
         require(not self.schedule.warmup or not any(block.warmup for block in free),
                 "Use built-in warmup or outer warmup, not both")
+        if isinstance(self.checkpoint, ScheduleFreeContinuation):
+            require(isinstance(self.optimizer, ScheduleFreeAdamW),
+                    "Full-state continuation requires ScheduleFreeAdamW")
+            require(isinstance(self.model, PeriRotate90), "Continuation currently covers PeriRotate90")
+            require(not self.diagnostics.gradients,
+                    "Continuation cannot reconstruct an earlier per-step gradient trace")
         if isinstance(self.execution, Measured):
             require(isinstance(self.optimizer, AdamW), "Measured execution covers ordinary AdamW")
             require(isinstance(self.benchmark, Synthetic), "Measured execution currently covers synthetic benchmarks")
