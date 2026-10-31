@@ -3448,3 +3448,162 @@ each reporting 75 allocations of 8519680 bytes. Schedule-Free AdamW tests
 pass. Thus `./run.py test` exits unsuccessfully, as at the parent commit;
 this Lean-only extension does not fix those unrelated optimizer failures.
 The full log is `.kanban/artifacts/126/tests.log`.
+
+## Uniform nonperiodic RoPE
+
+The model's RoPE does not need to be made periodic. The theory needs a
+position representation that can express the actual source coefficients.
+R5 rules out an exact finite periodic code; it does not rule out a counting
+language that directly uses a query/source position pair. U1--U4 provide that
+extension and remove the context-bound restriction from the simulation theorem.
+
+### U1: position-dependent weighted counts
+
+The new syntax contains token tests, a first-position test, Boolean operations,
+integer constants, addition, integer scaling, comparisons, and the operation
+
+```
+Count_K[phi](w, i) = sum_{1 <= j <= i} K(i,j) * 1[phi(w,j)].
+```
+
+K is fixed independently of the input word. The count retains the query
+position i while evaluating phi at each source position j. A nested count in
+phi uses j as its own query position. The constant-one kernel recovers ordinary
+causal counting; `Term.ordinary_count` proves this identity.
+
+The grammar does not contain attention, a transformer forward, rounded
+division, or arbitrary predicates of the whole word. Rounded quotients are
+compiled into integer comparisons of numerator and denominator sums. For
+positive D, the unsaturated cell for mantissa y is
+
+```
+y*D <= 2^s*N < (y+1)*D.
+```
+
+The lower or upper comparison is omitted at the corresponding saturation
+endpoint. A zero denominator returns zero, matching R4. Lean proves these
+endpoint-aware cells from `Fx.round_eq_iff`, including signed numerators and
+complete denominator underflow. Thus division adds no counting level.
+
+### U2: one uniform formula for a finite-state stack
+
+Each coefficient name records its layer, numerator/denominator choice,
+fixed query state, head coordinate and fixed source state. Its interpretation
+is the corresponding integer mantissa at the position pair (i,j). It cannot
+inspect the input word. The actual query state is selected by its previous-layer
+formula, and source states are selected inside the count. Reordering finite
+sums proves that this enumeration recovers the actual attention sums.
+
+Parallel heads use parallel coordinate formulas. The arbitrary local finite-state
+map is then a Boolean test of the current state and rounded aggregate vector.
+The induction proves exact simulation with one additional counting level per
+block. Tokenwise embedding, the first-position flag and final local readout
+add no counting level.
+
+The order of quantifiers is essential: for fixed layers, embedding, output test
+and depth D, construct **one formula**, then quantify over **all finite token
+words and positive readable positions**. Neither its syntax nor its kernels
+depend on a word's length. There is no context bound or annotated token alphabet.
+`classifier_correct` proves this statement; `classifier_depth` bounds its
+counting depth by D.
+
+Each positional coefficient remains a fixed-point mantissa in
+`[-2^(r-1), 2^(r-1))`, even when its dependence on positions is nonperiodic.
+This is proved by `kernel_bounds`. Prefix sums still use unbounded integers,
+as in the source paper's idealized `sumdiv`; this is not an IEEE accumulation
+guarantee.
+
+### U3: construct the kernels from the supplied RoPE architecture
+
+The concrete kernels evaluate the source head score: pre-attention RMSNorm,
+fused-QKV projection and reshape, head Q/K RMSNorm, exact half-split rotary
+phases, division by sqrt(head_dim), and exponentiation. Numerator kernels
+also multiply by the source's unnormalized value coordinate before rounding.
+The source phase is exactly
+
+```
+angle(layer, position, pair) =
+  position * theta^(-2*pair/head_dim)
+```
+
+at enabled layers, and zero at disabled layers. Position is an unrestricted
+natural number, with no modulus or rational-angle assumption. The logic's
+one-based positions are converted to the source's zero-based positions before
+computing these phases. `sourceAngles_restrict` identifies this formula with
+the existing finite source angle table.
+
+The local map retains clipped XSA, its exact first-position zero, output
+projection, both branches' input/output RMSNorm, the two residual additions
+and SwiGLU. Only the first-position bit is retained in the state; the absolute
+position is supplied to the coefficient computation. That bit is proved
+invariant under the stack. For r>=1 activation bits and width W, the finite
+state count is `2 * 2^(r*W)`, independent of input length.
+
+`denominator_restrict`, `numerator_restrict` and `finish_restrict` identify
+the new operators with the earlier rounded source model at every finite
+position. `coefficient_sum` then proves equality of the complete prefix sums.
+`aggregate_restrict` covers the rounded attention quotient, including the
+zero-denominator case, and `step_restrict` covers the whole normalized block.
+The final normalized tied readout is also unchanged. These are exact
+agreement results under R4's specified rounding semantics.
+
+### U4: the complete normalized model at every finite length
+
+`uniform_source_classifier` instantiates the compiler with the complete
+source parameter table, the exact geometric RoPE grid, arbitrary per-layer
+enable flags, normalized/rounded token embeddings, all configured blocks,
+and the final RMSNorm and tied embedding readout. It proves
+
+```
+for every fixed model and target label,
+  there exists one formula phi with depth(phi) <= model.n_layers,
+    such that for every finite original-token word w and 0 < i <= length(w),
+      phi(w,i) = the rounded source model's strict classification test at i.
+```
+
+The formula is chosen before the word, and no premise asserts that trained
+logits already solve a task. The stored residual state and formula no longer
+grow with a prescribed context bound. This closes the nonperiodic-position
+coverage gap in the rounded model's counting simulation. It leaves the
+actual RoPE frequencies unchanged and preserves the earlier finite-code
+impossibility result.
+
+This is an extension of the language, not a proof that the periodic language's
+strict lower-bound hierarchy also holds in the extension. Its source-generated
+kernel family must be analyzed to establish new lower bounds; arbitrary kernel
+families can have greater power. The upper simulation bound alone does not
+prove that every extra layer increases expressivity. The exact real phase
+calculation and the fixed-point/real-local-map rounding semantics also remain
+distinct from actual float32 execution. No new training or convergence result
+is asserted, and the mathematical all-position grid does not enlarge the
+Python implementation's configured context storage or KV cache.
+
+| Lean module | Contents |
+| --- | --- |
+| `CRASP.Rotary.Logic` | explicit syntax, weighted-count semantics, ordinary-count special case |
+| `CRASP.Rotary.Cells` | exact quotient cells and position-sensitive state-sum identity |
+| `CRASP.Rotary.Layer` | bounded coefficient alphabet and one-layer compilation |
+| `CRASP.Rotary.Program` | uniform stack/input/output simulation and counting-depth bound |
+| `CRASP.Rotary.Source` | source-generated kernels, exact phases, finite states and tied readout |
+| `CRASP.Rotary.Model` | complete prefix/block agreement and the all-length source classifier |
+
+Validation of U1--U4: full `lake build` passes (13156 jobs), with no warnings
+in the new modules. All 43 public theorems have individual `#print axioms`
+checks using only `propext`, `Classical.choice` and `Quot.sound`. The audit
+remains at 36 existing `sorry`, zero dependent results and zero extra axioms.
+The regenerated index has 4059 modules, 20959 theorems, zero vacuous results
+and zero placeholders. Forbidden checks and `git diff --check` pass. All
+five pinned source-file hashes still match. Concrete witnesses cover Boolean
+state predicates, positive and zero rounding denominators, nonempty prefix
+sums, finite activation-state counts and the full source classifier.
+
+The required Python 3.15.2 lab run completed 418 tests with three skips and
+one CUDA graph-capture error in
+`test_compiled_training_resumes_with_float32_tolerance`. Rerunning that test
+alone in a fresh process passed (one test, 8.544 seconds); the original full
+run is still recorded as unsuccessful. The separately completed 104-test
+optimizer suite reproduces the two existing Schedule-Free Muon allocation
+failures, float32 and float64, each with 75 allocations of 8519680 bytes.
+Schedule-Free AdamW tests pass. No Python implementation was changed.
+The theorem script, source checks and all original/retry validation logs
+are retained in `.kanban/artifacts/127/`.
