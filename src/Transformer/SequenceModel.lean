@@ -1,12 +1,17 @@
 module
 
 public import Transformer.SequenceModel.Pooling
-public import Transformer.SequenceModel.Attention.Training
+public import Transformer.SequenceModel.RotarySpectrum
+public import Transformer.SequenceModel.Transfer.Alignment
+public import Transformer.SequenceModel.Attention.FiniteStep
+public import Transformer.SequenceModel.Attention.ZeroRun
+public import Transformer.SequenceModel.Attention.Expressivity.Existence
 
 /-!
 # General positional inputs and normalized multi-variable attention
 
-Source: `review/flat_spectrum.md`, *General positional models*, G1--G5.
+Source: `review/flat_spectrum.md`, *General positional models*, G1--G5,
+and *Transformer learning bridges*, R1, S1--S2, T1--T4, E1--E8.
 The sampled source dynamics apply to arbitrary finite parameterized predictors.
 Arbitrary rotations, per-pair RoPE frequencies, other positional mixers and
 finite input tuples are included; fixed 90 degrees is only one special case.
@@ -16,7 +21,11 @@ embedding/final RMSNorm, Peri-RMSNorm on both branches, Q/K RMSNorm, arbitrary
 rotary phases, causal softmax, clipped XSA, SwiGLU and tied output. Inverse
 coordinate maps prove that every trainable matrix entry participates.
 
-The proven normalization bounds depend on head width, residual width and
-depth. They do not assert convergence, injective pooling, or a universal
-number of variables beyond which attention is required or impossible.
+Local analyticity is proved from actual XSA activation regularity. Actual
+CE gradients and Adam preconditioning derive cross-Jacobian transfer and
+finite prediction bounds. A finite source-shaped Transformer represents
+every binary finite task, including powered division, with a strict margin.
+RoPE spectrum and zero-initialization counterexamples rule out unconditional
+spectral invariance and learning guarantees. Larger-context forward and
+learning formulas are general; the constructive task theorem uses two tokens.
 -/

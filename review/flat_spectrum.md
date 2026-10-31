@@ -2797,3 +2797,205 @@ subtests pass, and `./run.py test schedule_free_adamw` separately passes all
 six selected tests. No production Python or optimizer code changes here.
 The unsuccessful attempts and final checks are retained in the root board's
 `.kanban/artifacts/122/`; the broader Python command is not reported green.
+
+## Transformer learning bridges
+
+This extension addresses the review at `cabf2119`. Static matrix completion,
+representational capacity, and learning under the actual optimizer have
+different hypotheses; the bridge results keep those hypotheses explicit.
+
+**R1, actual local regularity.** With positive RMS and XSA epsilons, every
+score of the supplied finite Transformer is analytic jointly in every
+embedding and matrix entry at weights where each actual own-value norm
+avoids the XSA clipping threshold. `Attention.Regular` spells out this
+condition on the values computed from the actual normalized hidden states,
+at each layer, position and head. This is a sufficient condition; it is not
+claimed necessary at exceptional boundary points where cancellation occurs.
+
+The proof follows scalar coordinates through fused QKV, head reshaping,
+Q/K RMSNorm, arbitrary fixed rotary phases, causal softmax, clipped XSA,
+attention projection, Peri-RMSNorm, SwiGLU, final RMSNorm and tied readout.
+Both open sides of the clipping sphere are covered. Zero value vectors are
+inside the clipped region and are included, not excluded as singular. The
+causal softmax denominator is proved positive. Induction through all layers
+then proves score analyticity and analyticity of the full sampled softmax
+cross-entropy, with independent example IDs retaining repeated examples.
+
+The condition is witnessed by zero weights at every positive finite source
+configuration, context, rotary phase table and positive clipping epsilon.
+The component proofs also have nonconstant and nonzero witnesses on both
+sides of the clipping sphere. This discharges differentiability of the
+actual loss at regular query points; it does not assign a classical gradient
+to arbitrary clipping-boundary points or assert that a training trajectory
+always avoids those points.
+
+**S1, the rotary spectrum correction.** Norm preservation of individual
+tokens does not preserve the spectrum of their Gram table when different
+positions use different rotations. `SequenceModel.RotarySpectrum` proves
+an exact counterexample using the genuine rotary operator: the two unit
+basis vectors have Gram matrix `[[1,0],[0,1]]`; RoPE frequency pi/2 at
+positions 0 and 1 changes it to `[[1,-1],[-1,1]]`. The independent vectors
+`[1,1]` and `[1,-1]` change eigenvalues from `(1,1)` to `(0,2)`. Both Gram
+diagonal entries remain one. The same lost mode persists after positive
+common normalization/scaling. This corrects a possible extrapolation from
+orthogonal invariance; it does not change the existing valid common-rotation
+or relative-position identities. The counterexample concerns pre-softmax
+Gram scores, not a claim that softmax has those same eigenvalues.
+
+**T1--T2, the actual learning operator.** Let `F` be the complete finite
+logit table, indexed by independent example IDs and classes, and let `ell`
+be ordinary sampled softmax cross-entropy in those logit coordinates. At a
+regular query `y`, the proved chain rule gives
+
+```
+g = J_train(y)^T r,      r = gradient ell(F_train(y)).
+P_t = diag(1 / actual_Adam_denominator(t, history, g)).
+K_eval,train = J_eval(x) P_t J_train(y)^T.
+```
+
+Here `y` is the source optimizer's query and `x` its evaluation average.
+Every embedding and matrix coordinate participates in both Jacobians.
+`P_t` includes the actual second-moment history, current-gradient update,
+bias correction and optimizer epsilon. Positive optimizer epsilon proves
+its nonnegative quadratic form. The same-Jacobian operator `J P_t J^T`
+is positive semidefinite. Across splits or parameter points, symmetry and
+positivity are not automatic. The full table can include held-out examples;
+only the sampled IDs contribute to `ell` and its residual `r`.
+
+**T3, finite updates, not just infinitesimal identities.** Write `c_t` for
+the source averaging coefficient, `eta_t` for its rate and `lambda` for
+decay. Its exact evaluation displacement is
+
+```
+delta = drift - c_t eta_t P_t g,
+drift = c_t (base - x) - c_t eta_t lambda y.
+predicted_change = J_eval(x) drift - c_t eta_t K_eval,train r.
+```
+
+The derivation requires nonzero source beta1 to recover the evaluation
+average. It includes the source's drift and query decay; replacing it with
+plain gradient descent would give a different formula. If the actual
+network is regular along `[x,x+delta]` and
+`||J_eval(w)-J_eval(x)|| <= C` on that segment, the mean-value theorem gives
+
+```
+||F_eval(x+delta) - F_eval(x) - predicted_change|| <= C ||delta||.
+```
+
+`Attention.actual_finite_prediction_error` discharges differentiability and
+the gradient factorization for the full supplied forward from its actual
+activation regularity. A predicted correct-class margin exceeding
+`2 C ||delta||` therefore implies true finite-step strict classification on
+every indexed example (`Transfer.source_step_correct`). A scalar version
+proves true loss decrease when `D(delta) + C ||delta|| < 0`.
+These conditions are certificates to establish or measure; no theorem says
+they hold automatically throughout a run, or assigns a useful numerical C
+solely from width, depth or flatness. The margin theorem is distribution-free
+over its explicit finite row set, not a claim about unseen distributions.
+
+**T4, alignment cannot be replaced by a spectrum.** Negating an evaluation
+Jacobian leaves its entire self Gram operator `J P J^T` unchanged but
+reverses `J P K^T` against a fixed training Jacobian K. Lean proves both
+identities and opposite signs of residual transfer with the same self Gram.
+Thus even knowing its whole self spectrum does not determine whether a
+held-out residual improves. The necessary generalization of the static
+spectral view is to retain cross-split alignment, changing Jacobians, the
+actual preconditioner and finite nonlinear error. No equivalence between
+nonlinear CE training and fixed-matrix nuclear-norm minimization is asserted.
+The existing flat-spectrum completion theorems retain their original scope.
+
+**E1--E8, constructive full-Transformer expressivity.** For every nonempty
+finite vocabulary of size p and every binary function `f(a,b)`, the actual
+source-shaped model has one fixed set of weights giving the correct label
+a strictly larger logit than every rival, on every ordered pair. A sufficient
+family is
+
+```
+W = 2 (p+1)^2 + 2 padding,
+H = floor((8 W + 1)/3),
+heads = 1,      depth = extraDepth + 1,      context length = 2.
+```
+
+Both padding and extraDepth are arbitrary naturals. This is a finite,
+deliberately generous construction, not a minimal-width or efficient-learning
+claim. RMS epsilon must be positive and XSA epsilon at most one; the actual
+float32 source values `2^-23` and `1e-12` satisfy these conditions. All
+embedding/final, Q/K and branch normalizers remain in their actual positions.
+
+The proof has eight concrete steps, each connected to the actual forward:
+
+1. **E1:** positive-epsilon RMSNorm has the explicit inverse
+   `sqrt(W eps / (W-||v||^2)) v` for `||v||^2 < W`.
+2. **E2:** two opposed actual SwiGLU gates compute one exact product, by
+   `swiglu(g,u) - swiglu(-g,u) = g u`, with optional zero padding.
+3. **E3:** normalized embeddings are unit token vectors. Zero Q/K gives
+   uniform causal scores at any RoPE phases. With unit values, XSA keeps
+   half of the earlier token when operands differ and returns zero when
+   they agree. The current token's residual is retained.
+4. **E4:** a fixed projection and its output RMSNorm produce the ordered
+   code `x_ab = e_b + [a!=b] e'_a` in two disjoint banks. Its squared norm is
+   one or two. Squares identify diagonal pairs, and context/current products
+   identify unequal pairs, canceling the square contribution. Fixed output
+   weights compensate both exact RMSNorm input scales.
+5. **E5:** the source's fused-QKV cuts and head reshape are proved to realize
+   that construction. Attention values, XSA and the context projection are
+   active. The arbitrary RoPE table is present, but the chosen zero Q/K
+   means this existence witness does not need position-dependent Q/K scores.
+6. **E6:** the source H contains all `2(p+p^2)` opposed hidden features;
+   residual width contains both token banks.
+7. **E7:** the FFN interpolates the inverse-normalized displacement
+   `e_f(a,b) - x_ab`, whose squared norm is at most three. Its output RMSNorm
+   and residual therefore give exactly `e_f(a,b)`.
+8. **E8:** extra blocks are identity residuals. The final normalizer and
+   tied raw embedding give logits `L * 1[q=f(a,b)]` with `L>0`.
+
+The main theorem is `Attention.Expressivity.exists_binary_classifier`.
+`exists_power_division_classifier` instantiates it with `(a/b)^k` over
+`ZMod p`, for every prime p and every natural k. It covers zero numerators,
+exponent zero and all nonzero denominators; its stronger statement also
+specifies Lean's totalized value at denominator zero. The weights depend
+on the task, never on the queried operands. Concrete Lean examples include
+p=2,3,97,193, exponents 0,5,17, varied depth and padding. Neither an infinite
+width nor an infinite depth limit is needed.
+
+The forward, regularity and learning results cover arbitrary finite context
+lengths, heads, widths and depths. The constructive arbitrary-task theorem
+above specifically covers binary tasks with one head and two token positions.
+It does not prove arbitrary-arity universality, require that a learned model
+use the particular constructed circuit, or predict the required training set.
+
+**S2, representability does not force optimizer convergence.** At all-zero
+parameters the full model's hidden state and tied embedding both vanish.
+Lean differentiates the actual forward and proves every logit derivative,
+the full logit Jacobian and the ordinary CE parameter gradient are zero.
+This point is inside the clipped-XSA region and is locally analytic, so the
+result is not an artifact of a total derivative at a singularity. Starting
+with zero query/base buffers, actual Schedule-Free AdamW keeps both buffers
+zero for every finite step, even with averaging, weight decay and evolving
+Adam history. All logits remain zero. With multiple classes this cannot
+strictly classify any example. The result holds at every positive finite
+architecture size: more width, depth, epochs or altered optimizer parameters
+alone cannot establish a universal learning guarantee.
+
+Together, the exact successful weights and the genuine stationary run close
+the logical gap between capacity and guaranteed learning: capacity is proved,
+unconditional convergence is refuted, and finite learning conclusions require
+the explicit transfer, regularity and remainder conditions above. Whether
+typical random initializations satisfy sufficiently strong conditions on the
+experiment tasks remains a mathematical and empirical question.
+
+Validation of this extension: the full `lake build` passes (13121 jobs).
+There are 97 new public theorems, plus two private witness lemmas, across
+25 new modules; every module is reachable from `Transformer.lean`.
+Individual `#print axioms` checks for all 97 public theorems use only the
+allowed standard axioms. `./run.py audit` reports 36 existing `sorry`, zero
+results resting on them and zero extra axioms. The regenerated index has
+4024 modules and 20781 theorems, with zero vacuous or placeholder declarations.
+`./run.py forbidden` and `git diff --check` pass. Every theorem with explicit
+mathematical hypotheses has a concrete Lean witness, including both sides
+of clipping, ordered/equal token pairs, real source epsilons, and nonempty CE
+training rows. `./run.py test schedule_free_adamw` passes all six selected
+optimizer tests on Python 3.15.2. No production Python code changes or new
+training run is part of this proof extension; the previously recorded wider
+Muon allocation failures are not claimed fixed. Logs and the theorem-level
+axiom script are retained in `.kanban/artifacts/123/`.
