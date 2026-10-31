@@ -9,6 +9,7 @@ public import Transformer.SequenceModel.Attention.Expressivity.Existence
 public import Transformer.SequenceModel.Attention.Finite.Witnesses
 public import Transformer.SequenceModel.Attention.Grid.Model
 public import Transformer.SequenceModel.Information.Distribution
+public import Transformer.SequenceModel.Resources
 
 /-!
 # General positional inputs and normalized multi-variable attention
@@ -40,4 +41,9 @@ guarantees. Neither capacity proof gives a floating-point conditioning bound
 or convergence from typical random initialization.
 Sampled-label indistinguishability and a finite-distribution unseen-label
 bound identify information limits independently of architecture and optimizer size.
+Finite parameter alphabets additionally give a necessary joint depth, width
+and stored precision budget for universal classification; this is not a
+task-specific lower bound for powered modular division. The normalized rounded
+source's counting-logic compiler and nonperiodic-RoPE boundary are in
+`Transformer.CRASP.Normalized`.
 -/

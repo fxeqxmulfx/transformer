@@ -1,6 +1,7 @@
 module
 
 public import Transformer.CRASP.Defs
+public import Transformer.CRASP.Normalized
 public import Transformer.CRASP.Basic
 public import Transformer.CRASP.Parikh
 public import Transformer.CRASP.Alternating

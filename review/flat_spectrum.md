@@ -3284,3 +3284,167 @@ complete Python command exits 1, rather than being reported as green. No
 Python or optimizer implementation changed in this proof extension, and
 those existing Muon failures are not claimed fixed. The complete log is
 retained as `.kanban/artifacts/125/tests.log`.
+
+## Depth, width and precision
+
+The earlier capacity constructions establish existence at a sufficient finite
+width. Their additional blocks are identities, so they do not establish a
+benefit from active depth or a necessary depth/width tradeoff. A flat spectrum
+alone does not supply either conclusion. The following results add explicit
+resource accounting and a counting-logic model of the normalized architecture.
+They distinguish stored parameter bits, stored activation bits, counting depth,
+fixed context length, and optimization success.
+
+### R1: finite parameter information
+
+Fix the architecture, input set X, label set V, and a parameter alphabet before
+choosing a target table. One setting of the parameters can strictly classify
+at most one complete table X -> V: two different labels on the same row would
+require contradictory strict score inequalities. Therefore, universality needs
+
+```
+|V|^|X| <= number of parameter settings.
+```
+
+With b bits in each of M parameter coordinates and at least two labels, this
+implies `|X| <= b*M`. Below that budget there is one fixed table which every
+allowed weight setting fails to classify strictly. The target is quantified
+before the weights. This argument permits any nonlinear forward and even
+exact real arithmetic after decoding the finite weight alphabet. It does not
+require finite-precision activations, a kernel approximation, or a rank bound.
+
+### R2: the actual source parameter count
+
+For vocabulary p, residual width W, FFN width H and D blocks, the full source
+parameter count is
+
+```
+M = p*W + D*(4*W^2 + 3*W*H).
+```
+
+The tied embedding is counted once; fused QKV, output projection and all three
+SwiGLU matrices are included. For the source ratio `H = (8*W+1)/3`, integer
+division gives `M <= p*W + D*(12*W^2+W)`. Consequently, universality on the
+complete length-N input space requires
+
+```
+p^N <= b*[p*W + D*(4*W^2+3*W*H)]
+     <= b*[p*W + D*(12*W^2+W)].
+```
+
+The implemented source obstruction uses its actual RMSNorm/RoPE/XSA/SwiGLU
+scores, arbitrary fixed phases and any fixed b-bit value codebook. A concrete
+instance uses p=3, W=4, H=11, D=2, N=8 and b=8: M=404, hence 3232 stored bits
+are fewer than the 6561 input rows. Some complete task cannot be represented
+with that budget, even with exact forward evaluation.
+
+This is a worst-case statement about representing **all** tables. It is not
+a necessary budget for `(a/b)^K mod P`, whose algebraic structure can make it
+much cheaper, nor a claim that increasing the budget guarantees learning.
+The precise table-count inequality in R1 is stronger than the one-bit-per-row
+consequence displayed here. Inputs restricted to nonzero denominators use
+their own finite input set in R1.
+
+### R3: extend the counting model to parallel heads and local nonlinearities
+
+The construction extends the finite-state argument of arXiv:2506.16055v3,
+Appendix B.2 and Appendix F, rather than identifying the source block with the
+paper's different transformer definition. A counted layer has a denominator
+and numerator table for each head coordinate, followed by an arbitrary local
+finite-state map. Quotients are compiled using the existing proved rounded
+count-cell formulas. Enumerating the query state and the rounded head vector
+then implements the local map by Boolean tests.
+
+All parallel heads add **at most one counting level per layer**. The number of
+heads and width affect the number of coordinates and enumerated states, not
+the number of nested counting operations. The induction proves exact state
+simulation for every finite stack and every positive prefix. Initial finite
+embedding and final local readout add no counting level.
+
+This compiler is not claimed efficient. With activation precision r>=1 bits,
+W coordinates, T possible position tags and a separate sentinel, the state
+count is exactly `T * 2^(r*W) + 1`. The proof exposes that width/precision cost
+rather than treating arbitrary finite local maps as a bounded-size circuit.
+
+### R4: normalized source adapter and unchanged token inputs
+
+The concrete counted layer uses the source fused-QKV split, head reshape,
+RMS-normalized Q/K, arbitrary half-split rotary phases, scaled logits, clipped
+XSA and its explicit zero at the first source position. It preserves both
+branches' input and output RMSNorm, both residual additions and SwiGLU.
+`local_sourceAverage` proves that substituting the unrounded source averages
+into this local computation gives exactly the existing real `Attention.block`.
+The source exponential establishes the denominator nonnegativity required by
+the counting-cell proof.
+
+The **rounded variant** has explicit numerical semantics: round exponential
+coefficients and weighted value coordinates before summing; accumulate their
+integer mantissas without overflow; round the quotient; then round the stored
+residual after each complete block. Round the normalized embedding once on
+entry. A zero rounded denominator produces zero attention. The local maps and
+final normalized tied scores use real arithmetic. This differs from the
+paper's uniform-attention zero-denominator fallback and from IEEE float32
+execution, including its accumulation and intermediate rounding.
+
+For a fixed context bound T, residues modulo T+1 identify every positive
+position on words of length at most T. The compiler uses those predicates to
+recover zero-based source position tags without changing the input vocabulary
+or inserting a source token. Its sentinel contributes zero to attention sums.
+Thus `source_classifier_mem` and `source_classifier_correct` give an
+end-to-end depth-D counting formula on the **original token words**, including
+embedding normalization, all rounded blocks, final RMSNorm and tied readout.
+The readout tests strict classification; ties are rejected, consistently with
+the capacity results. There is no hypothesis assuming that trained logits
+already solve the target task.
+
+### R5: exact source RoPE is outside the existing periodic hierarchy
+
+Appendix F, `sec:rope_pes`, assumes rational multiples of pi so that RoPE is
+periodic in the integer position. The actual geometric source grid has first
+frequency exactly one radian, regardless of its base. Lean proves that this
+is not a rational multiple of pi, that its first-pair cosine has no positive
+integer period, and that **no finite positional code** can reproduce that
+cosine at every natural position. The latter follows from cosine injectivity
+on natural numbers and the finite pigeonhole principle.
+
+The bounded-context compiler in R4 is therefore not a uniform simulation for
+unbounded context: its modulo T+1 predicates and state space change with T.
+It does not transfer the paper's all-length depth hierarchy unchanged to the
+exact source model. This obstruction concerns exact real rotations; it makes
+no assertion about the eventual behavior of a particular float32 RoPE routine.
+
+| Lean module | Results |
+| --- | --- |
+| `SequenceModel.Resources.Parameters` | unique strict target, table/bit counting, complete parameter count, source depth/width/precision obstruction |
+| `CRASP.Normalized.Counting` | parallel attention-cell compilation and arbitrary local output tests |
+| `CRASP.Normalized.Program` | stack simulation, depth-zero embedding, exact RoPE positional obstruction |
+| `CRASP.Normalized.Source` | actual source local computation, rounded adapter, stack simulation, activation-state count |
+| `CRASP.Normalized.Input` | normalized tied readout and complete bounded-context compiler on original tokens |
+
+The remaining questions are sharper: a task-specific active-depth advantage,
+useful tight width/depth lower bounds for powered modular division, a uniform
+hierarchy allowing the source's nonperiodic positions, and a quantitative
+connection between this rounding model and IEEE execution. None is replaced
+by identity padding or inferred from the flat spectrum. Training convergence
+and optimal Schedule-Free AdamW settings also remain separate questions.
+
+Validation of R1--R5: the full `lake build` passes (13149 jobs), with no
+warnings in the new modules. Individual `#print axioms` checks cover all
+31 new public theorems and use only `propext`, `Classical.choice` and
+`Quot.sound`; the private lookup witness is also covered by the project
+audit. Audit remains at 36 existing `sorry`, zero results resting on a
+`sorry`, and zero extra axioms. The regenerated index has 4052 modules,
+20916 theorems, zero vacuous declarations and zero placeholders. Forbidden
+checks and `git diff --check` pass. Concrete witnesses cover the resource
+obstruction, finite state counts, initial-state predicates, positive readable
+prefixes, and the actual first geometric frequency. All five source hashes
+match the pinned manifest. Proof and validation logs are retained in
+`.kanban/artifacts/126/`.
+
+The required Python 3.15.2 regression run passes all 418 lab tests (three
+skips). Its 104-test optimizer suite reproduces the two pre-existing
+Schedule-Free Muon warmed CUDA allocation failures, float32 and float64,
+each reporting 75 allocations of 8519680 bytes. Schedule-Free AdamW tests
+pass. Thus `./run.py test` exits unsuccessfully, as at the parent commit;
+this Lean-only extension does not fix those unrelated optimizer failures.
+The full log is `.kanban/artifacts/126/tests.log`.
