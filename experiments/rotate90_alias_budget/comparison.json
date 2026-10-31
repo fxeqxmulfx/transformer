@@ -1,0 +1,209 @@
+{
+  "scope": "Specifications and split fingerprints are checked. Independent CUDA runs may differ; duration effects use the same long run's 5000 and 20000 observations.",
+  "comparisons": [
+    {
+      "label": "long-wd1-p97k2-s11",
+      "matched_control": "restart-p97k2-s11",
+      "only_spec_difference": "budget.updates:5000->20000",
+      "within_run_5000_accuracy": 0.31529209621993126,
+      "within_run_20000_accuracy": 0.3180841924398625,
+      "independent_5000_control_accuracy": 0.31572164948453607,
+      "independent_5000_replay_delta": -0.00042955326460480947
+    },
+    {
+      "label": "long-wd01-p97k2-s11",
+      "matched_control": "wd01-p97k2-s11",
+      "only_spec_difference": "budget.updates:5000->20000",
+      "within_run_5000_accuracy": 0.21563573883161513,
+      "within_run_20000_accuracy": 0.3017611683848797,
+      "independent_5000_control_accuracy": 0.21413230240549827,
+      "independent_5000_replay_delta": 0.001503436426116861
+    },
+    {
+      "label": "long-wd0-p97k2-s11",
+      "matched_control": "wd0-p97k2-s11",
+      "only_spec_difference": "budget.updates:5000->20000",
+      "within_run_5000_accuracy": 0.19952749140893472,
+      "within_run_20000_accuracy": 0.27985395189003437,
+      "independent_5000_control_accuracy": 0.19974226804123713,
+      "independent_5000_replay_delta": -0.00021477663230240474
+    },
+    {
+      "label": "fresh-w64-p97k2-s11",
+      "matched_control": "sf-w16d1-p97-k2-lr003",
+      "only_spec_difference": "model.width:16->64 (hidden size follows width)",
+      "fresh_width16_accuracy": 0.311426116838488,
+      "fresh_width64_accuracy": 1.0
+    },
+    {
+      "label": "long-wd1-p97k2-s17",
+      "matched_control": "restart-p97k2-s17",
+      "only_spec_difference": "budget.updates:5000->20000",
+      "within_run_5000_accuracy": 0.3125,
+      "within_run_20000_accuracy": 0.30627147766323026,
+      "independent_5000_control_accuracy": 0.311426116838488,
+      "independent_5000_replay_delta": 0.0010738831615120237
+    },
+    {
+      "label": "long-wd01-p97k2-s17",
+      "matched_control": "wd01-p97k2-s17",
+      "only_spec_difference": "budget.updates:5000->20000",
+      "within_run_5000_accuracy": 0.22207903780068727,
+      "within_run_20000_accuracy": 0.5558419243986255,
+      "independent_5000_control_accuracy": 0.22100515463917525,
+      "independent_5000_replay_delta": 0.0010738831615120237
+    },
+    {
+      "label": "long-wd0-p97k2-s17",
+      "matched_control": "wd0-p97k2-s17",
+      "only_spec_difference": "budget.updates:5000->20000",
+      "within_run_5000_accuracy": 0.21370274914089346,
+      "within_run_20000_accuracy": 0.31894329896907214,
+      "independent_5000_control_accuracy": 0.20897766323024056,
+      "independent_5000_replay_delta": 0.004725085910652904
+    },
+    {
+      "label": "fresh-w64-p97k2-s17",
+      "matched_control": "sf-confirm-w16d1-p97-k2-s17",
+      "only_spec_difference": "model.width:16->64 (hidden size follows width)",
+      "fresh_width16_accuracy": 0.3159364261168385,
+      "fresh_width64_accuracy": 0.9997852233676976
+    },
+    {
+      "label": "long-wd1-p97k2-s23",
+      "matched_control": "restart-p97k2-s23",
+      "only_spec_difference": "budget.updates:5000->20000",
+      "within_run_5000_accuracy": 0.3172250859106529,
+      "within_run_20000_accuracy": 0.3122852233676976,
+      "independent_5000_control_accuracy": 0.31529209621993126,
+      "independent_5000_replay_delta": 0.0019329896907216426
+    },
+    {
+      "label": "long-wd01-p97k2-s23",
+      "matched_control": "wd01-p97k2-s23",
+      "only_spec_difference": "budget.updates:5000->20000",
+      "within_run_5000_accuracy": 0.20468213058419243,
+      "within_run_20000_accuracy": 0.43492268041237114,
+      "independent_5000_control_accuracy": 0.20468213058419243,
+      "independent_5000_replay_delta": 0.0
+    },
+    {
+      "label": "long-wd0-p97k2-s23",
+      "matched_control": "wd0-p97k2-s23",
+      "only_spec_difference": "budget.updates:5000->20000",
+      "within_run_5000_accuracy": 0.20060137457044674,
+      "within_run_20000_accuracy": 0.2663230240549828,
+      "independent_5000_control_accuracy": 0.20060137457044674,
+      "independent_5000_replay_delta": 0.0
+    },
+    {
+      "label": "fresh-w64-p97k2-s23",
+      "matched_control": "sf-confirm-w16d1-p97-k2-s23",
+      "only_spec_difference": "model.width:16->64 (hidden size follows width)",
+      "fresh_width16_accuracy": 0.3163659793814433,
+      "fresh_width64_accuracy": 0.9995704467353952
+    },
+    {
+      "label": "long-wd1-p193k3-s11",
+      "matched_control": "restart-p193k3-s11",
+      "only_spec_difference": "budget.updates:5000->20000",
+      "within_run_5000_accuracy": 0.11749784110535406,
+      "within_run_20000_accuracy": 0.11787564766839378,
+      "independent_5000_control_accuracy": 0.11787564766839378,
+      "independent_5000_replay_delta": -0.0003778065630397204
+    },
+    {
+      "label": "long-wd01-p193k3-s11",
+      "matched_control": "wd01-p193k3-s11",
+      "only_spec_difference": "budget.updates:5000->20000",
+      "within_run_5000_accuracy": 0.08241580310880829,
+      "within_run_20000_accuracy": 0.8587003454231433,
+      "independent_5000_control_accuracy": 0.08149827288428324,
+      "independent_5000_replay_delta": 0.0009175302245250511
+    },
+    {
+      "label": "long-wd0-p193k3-s11",
+      "matched_control": "wd0-p193k3-s11",
+      "only_spec_difference": "budget.updates:5000->20000",
+      "within_run_5000_accuracy": 0.07896157167530224,
+      "within_run_20000_accuracy": 0.9212003454231433,
+      "independent_5000_control_accuracy": 0.08014896373056994,
+      "independent_5000_replay_delta": -0.0011873920552677025
+    },
+    {
+      "label": "fresh-w64-p193k3-s11",
+      "matched_control": "sf-w16d1-p193-k3-lr003",
+      "only_spec_difference": "model.width:16->64 (hidden size follows width)",
+      "fresh_width16_accuracy": 0.11792962003454231,
+      "fresh_width64_accuracy": 1.0
+    },
+    {
+      "label": "long-wd1-p193k3-s17",
+      "matched_control": "restart-p193k3-s17",
+      "only_spec_difference": "budget.updates:5000->20000",
+      "within_run_5000_accuracy": 0.7261981865284974,
+      "within_run_20000_accuracy": 0.7558290155440415,
+      "independent_5000_control_accuracy": 0.7261981865284974,
+      "independent_5000_replay_delta": 0.0
+    },
+    {
+      "label": "long-wd01-p193k3-s17",
+      "matched_control": "wd01-p193k3-s17",
+      "only_spec_difference": "budget.updates:5000->20000",
+      "within_run_5000_accuracy": 0.9427892918825561,
+      "within_run_20000_accuracy": 0.9940630397236615,
+      "independent_5000_control_accuracy": 0.9427892918825561,
+      "independent_5000_replay_delta": 0.0
+    },
+    {
+      "label": "long-wd0-p193k3-s17",
+      "matched_control": "wd0-p193k3-s17",
+      "only_spec_difference": "budget.updates:5000->20000",
+      "within_run_5000_accuracy": 0.9581174438687392,
+      "within_run_20000_accuracy": 0.9974093264248705,
+      "independent_5000_control_accuracy": 0.9581174438687392,
+      "independent_5000_replay_delta": 0.0
+    },
+    {
+      "label": "fresh-w64-p193k3-s17",
+      "matched_control": "sf-confirm-w16d1-p193-k3-s17",
+      "only_spec_difference": "model.width:16->64 (hidden size follows width)",
+      "fresh_width16_accuracy": 0.5813903281519862,
+      "fresh_width64_accuracy": 1.0
+    },
+    {
+      "label": "long-wd1-p193k3-s23",
+      "matched_control": "restart-p193k3-s23",
+      "only_spec_difference": "budget.updates:5000->20000",
+      "within_run_5000_accuracy": 0.7430915371329879,
+      "within_run_20000_accuracy": 0.7503778065630398,
+      "independent_5000_control_accuracy": 0.7430915371329879,
+      "independent_5000_replay_delta": 0.0
+    },
+    {
+      "label": "long-wd01-p193k3-s23",
+      "matched_control": "wd01-p193k3-s23",
+      "only_spec_difference": "budget.updates:5000->20000",
+      "within_run_5000_accuracy": 0.9826208981001727,
+      "within_run_20000_accuracy": 0.9996761658031088,
+      "independent_5000_control_accuracy": 0.9826208981001727,
+      "independent_5000_replay_delta": 0.0
+    },
+    {
+      "label": "long-wd0-p193k3-s23",
+      "matched_control": "wd0-p193k3-s23",
+      "only_spec_difference": "budget.updates:5000->20000",
+      "within_run_5000_accuracy": 0.9838622625215889,
+      "within_run_20000_accuracy": 0.999892055267703,
+      "independent_5000_control_accuracy": 0.9838622625215889,
+      "independent_5000_replay_delta": 0.0
+    },
+    {
+      "label": "fresh-w64-p193k3-s23",
+      "matched_control": "sf-confirm-w16d1-p193-k3-s23",
+      "only_spec_difference": "model.width:16->64 (hidden size follows width)",
+      "fresh_width16_accuracy": 0.45088514680483593,
+      "fresh_width64_accuracy": 1.0
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "recorded_before_training": "2026-10-31",
+  "source_commit": "a7c012ea",
+  "question": "What keeps narrow powered-division models near a quotient-code solution despite sufficient representational capacity?",
+  "mathematical_prediction": "For full-table powered division, if the embedding is invariant under a multiplicative subgroup S and powering by K permutes S, its actual embedding gradient is S-invariant. Coordinatewise Schedule-Free AdamW preserves this equality when its query, base and second-moment rows initially share the symmetry. This holds at any finite width and depth, for arbitrary branch matrices.",
+  "diagnostic_controls": "CPU float64 full-table gradient at projected source embeddings; repeat on the half-table split and with a noncoprime exponent. The latter two do not satisfy the theorem hypotheses.",
+  "restart_control": "Every causal restart loads the pinned source training query, resets Schedule-Free state and batch order, and trains 5000 further updates with lr .003, betas .9/.98, 10-step warmup and the original half-table split. All reports use evaluation averages.",
+  "interventions": ["decay .1", "decay 0", "freeze embedding", "freeze branch matrices", "relative parameter noise .03", "relative parameter noise .3"],
+  "escape_measure": "Report final and best heldout accuracy, training loss, embedding subgroup-projection residual and quotient accuracy. Prespecified successful escape: at least 99% final heldout accuracy. Report each seed and every failed intervention.",
+  "symmetry_runs": "For seed-11 sources, 200 additional updates on the full table compare the original checkpoint, projected embedding, projected embedding plus .03 relative noise, and projected embedding with minibatches. The full-batch and minibatch controls have matched update counts, not examples or FLOPs.",
+  "precision_scope": "Exact invariance is a real-arithmetic theorem. Floating-point reduction errors can break it and will be measured rather than classified as a contradiction.",
+  "scope": "No global convergence claim, no prediction for arbitrary random starts, and no claim that full-table symmetry is exact on the original half-table data. P17 memorization remains a separate generalization question. These are exploratory causal tests, not external preregistration."
+}

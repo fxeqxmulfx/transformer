@@ -1,0 +1,10 @@
+{
+  "recorded_before_training": "2026-10-31",
+  "adaptive_after": "All 50 rotate90_alias_escape runs, including P193 seed17/23 final heldout accuracies 95.81/98.39 percent at zero decay",
+  "request": "Separate insufficient update budget, weight decay and width after the user's follow-up",
+  "long_runs": "18 cases: same six original W16 query checkpoints, independently reset optimizer and sampler, 20000 updates, decay 1/.1/0. Compare the 5000-update checkpoint metrics and final metrics within each run; the prior 5000-update runs are independent replay controls.",
+  "width_runs": "Six fresh W64/D1 runs, 5000 updates, decay 1. Match tasks/seeds/batches/rates to the six original W16/D1 runs. This is an initialization-and-architecture comparison, not a widening intervention on a trained W16 model.",
+  "success": "Report all runs; at least 99 percent final heldout accuracy is the inherited threshold. Do not select a best epoch as final success.",
+  "runtime": "Python3.15/Torch2.15, CUDA max-autotune, Schedule-Free AdamW only",
+  "scope": "Adaptive follow-up, not an unseen confirmatory test. Width16 capacity is already proved; failures concern training and sample generalization, not representability. No more hyperparameter searches are silently added."
+}

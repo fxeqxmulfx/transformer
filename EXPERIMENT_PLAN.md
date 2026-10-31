@@ -1,5 +1,25 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+**2026-10-31 completed learning-gap cycle, requested by the user.**
+The [alias-escape study](experiments/rotate90_alias_escape/README.md) completed
+50 Schedule-Free interventions with hypotheses recorded before training. The
+actual full-table model preserves subgroup aliases when the exponent is coprime
+to the subgroup order; 48 new Lean theorems carry this through the actual
+Schedule-Free recurrence, evaluation averages, a log-cardinality loss floor,
+and pointwise limits. No arbitrary-initialization convergence assertion survives
+this counterexample. Exact full-table symmetry is not imposed on partial data.
+
+The user's subsequent duration/size question produced an explicitly adaptive
+[24-run follow-up](experiments/rotate90_alias_budget/README.md): matched width 16
+restarts at 20000 updates and decay 1/.1/0, plus fresh width 64 controls at 5000.
+The two P193 zero-decay runs rise from 95.81/98.39% to 99.74/99.989%; all six width 64
+runs finish at 99.96--100%. Some width 16 starts still fail, including every P97
+restart in this follow-up. Thus finite plateaus need not be permanent, and the
+width effect concerns training/generalization despite sufficient proved capacity.
+All 74 runs use Schedule-Free AdamW, Python 3.15/Torch 2.15, CUDA max-autotune;
+every failure and split/provenance record is retained. Predicting random-start
+basin selection and the separate P17 memorization failure remain open.
+
 **2026-10-31 completed comparison cycle, requested by the user:** test the current
 Rotate90 Peri-RMSNorm SwiGLU on `(a/b)^K mod P` across primes, widths, depths
 and optimizer settings, using Python 3.15, PyTorch 2.15 and max-autotune

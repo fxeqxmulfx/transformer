@@ -1930,3 +1930,218 @@ All declarations are in `Transformer.Rotate90.Power`, imported by
 | `Products` | `weights`, `branch_weights`, `gateMatrix_weights_eq`, `valueMatrix_weights_eq`, `outputMatrix_weights_eq` |
 | `Expressivity` | `state_weights`, `logit_weights`, `weights_correct`, `exists_weights`, `exists_weights_width14`, `exists_weights_width16`, `exists_weights_width128`, `width16_parameter_count` |
 | `Depth` | `stackLogit_singleton`, `block_zero`, `stackLogit_padded`, `exists_weights_any_depth`, `exists_weights_width16_any_depth` |
+
+## Alias symmetry and training
+
+The expressivity result above removes insufficient representational capacity as
+an explanation for the width-16 failures. It does not say which weights training
+will find. The next result concerns the actual normalized, tied network and the
+actual Schedule-Free AdamW update, at arbitrary finite width and depth.
+
+### Full-table symmetry of the actual loss
+
+Fix a prime p, natural exponent k, positive RMSNorm epsilon and a finite list of
+branch matrices B. Write F(A,Bin,C) for the mean cross-entropy on all
+`a in ZMod p`, `b in (ZMod p)^units`, with independent names for the first input
+embedding, second input embedding and output embedding. The actual tied loss is
+`L(E) = F(E,E,E)`. This auxiliary notation changes no layer: it retains the fixed
+quarter-turn, every RMSNorm, every residual SwiGLU block and the full softmax.
+
+For units r,s, define row pullback by `T_r E(q)=E(r*q)`. The arithmetic identity
+
+```
+((r*a)/(s*b))^k = (r/s)^k * (a/b)^k
+```
+
+gives the global identity
+
+```
+F(T_r A, T_s Bin, T_((r/s)^k) C) = F(A,Bin,C).
+```
+
+Indeed the output transformation reindexes every competing softmax class and
+its target. Reindexing a by r and b by s then permutes the complete dataset.
+This also holds at a=0 and k=0. It generally fails for a sampled half-table or
+one minibatch, because the transformed pair need not belong to that sample.
+`Training.fullLoss_permute` proves this identity for the existing arbitrary-depth
+forward, rather than postulating symmetry of a surrogate loss.
+
+### The embedding gradient preserves exact aliases
+
+Let S be a multiplicative subgroup of nonzero residues. An embedding is
+S-aliased when `E(h*q)=E(q)` for every h in S and every q. Zero is a fixed row;
+it need not equal any nonzero row. Assume `gcd(k, |S|)=1`.
+
+At the tied point (E,E,E), each of the three table transformations above fixes
+the parameters whenever r,s belong to S. Differentiate the global identity,
+first in a direction supported only in A, then only in Bin, then only in C.
+The A and Bin partial gradients are constant on S-orbits. The C partial is
+constant under multiplication by h^k; coprimality makes these kth powers cover
+S. The actual tied derivative is the sum of all three partial derivatives.
+Consequently,
+
+```
+E(h*q)=E(q) for all h in S  ==>  grad L(E)(h*q)=grad L(E)(q).
+```
+
+Every derivative used here exists: the finite network and its cross-entropy are
+real analytic in the embedding when RMSNorm epsilon is positive. No generic
+position assumption excludes repeated rows or zero activations. The proof does
+not assume fixed branch matrices throughout training: the result holds for each
+possible matrix choice at each step. It covers simultaneous learning of all
+branches. `gradient_sharedLoss_aliased` proves the gradient equality;
+`alias_difference_derivative_zero` proves the corresponding zero first-order
+signal in a direction that separates two aliased rows.
+
+This is an invariant subspace, not a stationary point theorem. Common embedding
+rows and branch matrices can keep moving. It also is not a Hessian, attraction,
+or random-initialization probability theorem. Coprimality is a real hypothesis:
+without it, the output gradient need not preserve the whole subgroup.
+
+### The source Schedule-Free update preserves the invariant
+
+Use the revised optimizer recurrence in `ScheduleFree.AdamW.Defs`, corresponding
+to the lab's `lean_optim/schedule_free_adamw.py`: query y, base z, raw second
+moment v, group averaging coefficient c, scalar rate eta and query decay lambda.
+In each embedding coordinate the update is
+
+```
+v_new = beta2*v + (1-beta2)*g^2
+d     = g / (sqrt(v_new/(1-beta2^(t+1))) + eps_opt) + lambda*y
+z_new = z - eta*d
+y_new = y + c*(z-y) + eta*(beta1*(1-c)-1)*d.
+```
+
+The evaluation embedding is `x=y+(1-1/beta1)*(z-y)`. The source's warmup,
+maximum-rate history, bias correction and weighted averaging determine scalar
+eta and c equally for all coordinates. If two rows of y,z,v and g agree, these
+formulas preserve their equality. Initialization sets y=z=E and v=0. Combining
+this coordinate fact with the actual-gradient theorem proves that every query,
+base, second moment and evaluation embedding stays S-aliased forever.
+
+`trainingRun_aliased` proves this by induction on the independently defined
+optimizer recurrence. `trajectory_aliased` permits arbitrary external scalar
+parameter schedules satisfying the same source update, including the lab's
+external warmup. It also permits the lab's initial maximum-rate history of 0,
+where the upstream recurrence starts at -1: no scalar-history condition enters
+`StateAliased`. The branch trajectory remains arbitrary. The statements are
+real-arithmetic results; implementation roundoff and missing/sparse gradients
+are not silently included in the recurrence. The experiment uses ordinary valid
+parameters beta1=.9, beta2=.98 and positive epsilons.
+
+### An incorrect model can remain incorrect despite enough capacity
+
+Tied readout gives `logit(h*q)=logit(q)` whenever E is S-aliased, for every input
+and hidden state. If S contains h unequal to 1, the query a=b=1 has target 1
+for every k, yet class h ties its score. Thus the model does not have the unique
+correct winner on the complete task. `trainingRun_not_solves` proves this for
+every finite update count, at every finite width/depth, regardless of the branch
+trajectory or the chosen evaluation branch matrices.
+
+There is also a quantitative obstruction. For a nonzero target q, its |S|
+distinct orbit classes all have the target's score, so
+
+```
+sum_c exp(logit(c)) >= |S| * exp(logit(q))
+cross_entropy(logit,q) >= log(|S|).
+```
+
+`crossEntropy_ge_log_subgroup` and `trainingRun_loss_floor` prove this bound.
+`poweredLoss_floor` applies it directly to every nonzero numerator and unit
+denominator, including exponent zero. The zero target is excluded from the
+orbit-cardinality claim because its orbit is a singleton.
+
+Nonzero witnesses satisfy all hypotheses: at p=3, k=1, take S to be the entire
+unit group, put 2 in every coordinate of the zero embedding row and 1 in every
+coordinate of each nonzero row. The examples use positive rate and epsilon,
+width 16, hidden size 43 and actual Schedule-Free states. Branch matrices are
+unrestricted by the theorem. These witnesses refute unconditional convergence
+from every initialization; they do not establish failure for almost every
+initialization or for the measured random starts.
+
+`aliased_limit` proves that any pointwise limit of aliased embeddings remains
+aliased, and `limit_not_solves` retains the readout obstruction at that limit.
+Together with the trajectory theorem, even unlimited training time cannot split
+these exact aliases if a limit exists. No convergence or infinite-width/depth
+limit is assumed. Wider finite networks still admit these bad starts, while the
+preceding expressivity theorem supplies good weights at width 16 already.
+
+### Tests of the mechanism and its limits
+
+The [50-run intervention study](../experiments/rotate90_alias_escape/README.md)
+records its hypotheses and source checkpoint hashes before training. All runs
+use Schedule-Free AdamW, Python 3.15.2, Torch 2.15.0+cu132 and CUDA compile
+max-autotune. Each restart resets optimizer histories and batch order from a
+pinned original training query; unchanged restarts provide matched controls.
+The original averaged checkpoints and original 175-run study remain intact.
+
+The portable [gradient checks](../experiments/rotate90_alias_escape/gradient_checks.json)
+use CPU float64 while explicitly retaining the original FP32 RMSNorm epsilon.
+At seed 11's embeddings projected onto the observed subgroup, the transverse
+fraction of the actual embedding gradient is:
+
+| Task | Subgroup order | Complete table | Original half-table | Noncoprime exponent, complete table |
+| --- | ---: | ---: | ---: | ---: |
+| P97/K2 | 3 | 2.41e-16 | .22285 | .39131 with K3 |
+| P193/K3 | 8 | 3.15e-16 | .22040 | .63062 with K8 |
+
+The complete-table controls satisfy the exact theorem to float64 roundoff.
+The other columns demonstrate why its data and exponent hypotheses matter.
+After 200 compiled FP32 full-batch steps from exactly projected embeddings,
+relative embedding asymmetry is about 7.3e-8 and 7.6e-8 in the evaluation averages.
+Minibatches on the same complete table produce about .00888 and .01074 instead.
+All eight symmetry-control runs have 100% quotient accuracy, which merges the
+aliased classes; their actual task accuracy is only about 34% or 13%. The
+nonzero-target entropy floors are log 3 and log 8. FP32 tie-breaking also changes
+argmax accuracy between compiled CUDA and eager CPU replay by up to .226
+percentage points in the projected controls; this drift is retained separately.
+
+On the half-table interventions, no run crosses the prespecified 99% final
+heldout threshold within 5000 new updates. At P193, seeds 17 and 23 improve from
+58.14% and 45.09% originally to 72.62% and 74.31% under unchanged restarts, and to
+95.81% and 98.39% at zero decay. These two embeddings are far from the seed 11
+order-eight alias subspace: their initial relative projection residuals are .94
+and .91. The exact symmetry theorem is not an explanation for their remaining
+errors. At P193 seed 11, zero decay instead reduces heldout accuracy from 11.79%
+to 8.01%; at P97 it also initially improves fitting without reliable generalization.
+Freezing either parameter family or injecting the tested noise does not produce
+a 99% solution. Every seed and failed intervention remains in the report.
+
+The user's follow-up asks whether more updates or width repair the remaining
+errors. [The adaptive budget study](../experiments/rotate90_alias_budget/README.md)
+compares 20000-update restarts at decay 1/.1/0 and fresh width 64 controls, with its
+hypotheses recorded before those additional runs. This is a finite empirical
+test of duration and architecture, not a proof that any failed random start is
+trapped forever. All 24 additional runs finished. At zero decay, the two P193
+runs above reach 99.74% and 99.989% after 20000 updates; even seed 11 rises to 92.12%.
+All six fresh width 64 controls reach 99.96--100% at 5000 updates, with their first
+measured 99% points at 750. The P97 width 16 restarts remain below 56% in these
+conditions after 20000 updates. The recorded specifications and split hashes
+confirm that the duration controls change only the budget, and the fresh width
+controls change only width (with hidden size following it). These outcomes
+refute a permanent-trap interpretation of the earlier half-table plateaus.
+They support an optimization effect of width and decay in this finite study,
+while leaving a theorem about typical random-start learning open.
+
+The corrected theory now separates an actual capacity construction from an
+actual optimizer obstruction. Predicting which approximate quotient codes
+random partial-table training selects, the stability of their neighborhoods,
+and the separate P17 memorization failures remain unresolved. Increasing
+width or changing decay can help measured training without falsifying the exact
+invariant theorem; its hypotheses must be checked before applying it.
+
+### Lean inventory for training
+
+All declarations are in `Transformer.Rotate90.Training`, reachable from the
+project root. Every theorem has hypothesis witnesses; no new unfinished claim
+or extra axiom is introduced.
+
+| Module | Main declarations |
+| --- | --- |
+| `Defs` | `untiedLogit_diagonal`, `crossEntropy_permute`, `aliased_iff`, `aliased_zero_nonzero` |
+| `Basic` | Analyticity and differentiability of the actual untied and tied full-table loss |
+| `Symmetry` | `fullLoss_permute`, `differential_fixed`, `differential_fullLoss_fixed` |
+| `Gradient` | Three partial-gradient equalities, `gradient_sharedLoss_aliased`, `alias_difference_derivative_zero` |
+| `Optimizer` | `trainingStep_equal_coordinates`, `trainingRun_aliased`, `trajectory_aliased`, `evaluation_trainingRun_aliased` |
+| `Readout` | `crossEntropy_ge_log_subgroup`, `poweredLoss_floor`, `not_solves_of_aliased` |
+| `Failure` | `aliased_limit`, `limit_not_solves`, `trainingRun_not_solves`, `trainingRun_loss_floor`, `trajectory_not_solves` |

@@ -1,0 +1,330 @@
+{
+  "script_sha256": "2a5c0bb01a7aec9fc17bfd7ab9eff81b23ffacf12693e69c26437404f6337c63",
+  "python": "3.15.2",
+  "torch": "2.15.0+cu132",
+  "arithmetic": "CPU float64, actual forward with explicit original float32 RMSNorm epsilon",
+  "epsilon": 1.1920928955078125e-07,
+  "prediction": "Only full-table rows with coprime exponent/subgroup order must have zero transverse gradient",
+  "checks": [
+    {
+      "source": "sf-w16d1-p97-k2-lr003",
+      "checkpoint_sha256": "13fb693f29e2988ce289c6a694d1a3893d3648e719e72062eef6a89c828f9efa",
+      "prime": 97,
+      "exponent": 2,
+      "subgroup_order": 3,
+      "train_fraction": 1.0,
+      "initial_embedding": {
+        "norm": 8.603981313155085,
+        "transverse_norm": 0.2604309403367294,
+        "relative": 0.03026865480734398
+      },
+      "loss": 1.6724493157399396,
+      "embedding_gradient": {
+        "norm": 0.40185109589690876,
+        "transverse_norm": 9.686546691593669e-17,
+        "relative": 2.410481591439697e-16
+      },
+      "task": {
+        "prime": 97,
+        "domain_size": 9312,
+        "train_examples": 9312,
+        "heldout_examples": 0,
+        "train_fraction": 1.0,
+        "data_seed": 11,
+        "vocab_size": 97,
+        "train_fingerprint": "bc8b471806381d9d57bc588664d990ee324498ebbe1ca0659e1421b0ebd52121",
+        "heldout_fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "split_policy": "rotate90_splitmix64_numerator_denominator_order",
+        "character_generator": 5,
+        "scope": "full_table_fitting_only",
+        "exponent": 2,
+        "label_oracle": "pow(b,k,p)*c % p == pow(a,k,p)",
+        "operand_train_fingerprint": "c5207f406440c8de665847ff4a2c2665b9d70ff2a88bb6356a50f3da93dd712a",
+        "operand_heldout_fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "label_classes": 49,
+        "train_majority_accuracy": 0.020618556701030927,
+        "heldout_majority_accuracy": null
+      }
+    },
+    {
+      "source": "sf-w16d1-p97-k2-lr003",
+      "checkpoint_sha256": "13fb693f29e2988ce289c6a694d1a3893d3648e719e72062eef6a89c828f9efa",
+      "prime": 97,
+      "exponent": 2,
+      "subgroup_order": 3,
+      "train_fraction": 0.5,
+      "initial_embedding": {
+        "norm": 8.603981313155085,
+        "transverse_norm": 0.2604309403367294,
+        "relative": 0.03026865480734398
+      },
+      "loss": 1.666361947254833,
+      "embedding_gradient": {
+        "norm": 0.4139553517669767,
+        "transverse_norm": 0.09224899440462489,
+        "relative": 0.22284769120838327
+      },
+      "task": {
+        "prime": 97,
+        "domain_size": 9312,
+        "train_examples": 4656,
+        "heldout_examples": 4656,
+        "train_fraction": 0.5,
+        "data_seed": 11,
+        "vocab_size": 97,
+        "train_fingerprint": "8c74c8b9fe56c22a8ad2b6f0d1129c036cc2eb4bc82549aeee03005120254000",
+        "heldout_fingerprint": "6a448b94fdbd76c77948d38981a5dd35435ab8077dde98d2de88877c153486d9",
+        "split_policy": "rotate90_splitmix64_numerator_denominator_order",
+        "character_generator": 5,
+        "scope": "unseen_pairs_at_each_fixed_prime_and_power",
+        "exponent": 2,
+        "label_oracle": "pow(b,k,p)*c % p == pow(a,k,p)",
+        "operand_train_fingerprint": "8a6f28dbbdef69c4a33cf6ca734631373c196881611b526a7fe75f55644c564b",
+        "operand_heldout_fingerprint": "d363b1153657172393acce692f0c7a04e50a89d01a30e38132c7758ecac08f8a",
+        "label_classes": 49,
+        "train_majority_accuracy": 0.02469931271477663,
+        "heldout_majority_accuracy": 0.024054982817869417
+      }
+    },
+    {
+      "source": "sf-w16d1-p97-k2-lr003",
+      "checkpoint_sha256": "13fb693f29e2988ce289c6a694d1a3893d3648e719e72062eef6a89c828f9efa",
+      "prime": 97,
+      "exponent": 3,
+      "subgroup_order": 3,
+      "train_fraction": 1.0,
+      "initial_embedding": {
+        "norm": 8.603981313155085,
+        "transverse_norm": 0.2604309403367294,
+        "relative": 0.03026865480734398
+      },
+      "loss": 5.869237491729778,
+      "embedding_gradient": {
+        "norm": 1.337654344336184,
+        "transverse_norm": 0.52343424287643,
+        "relative": 0.39130754898881315
+      },
+      "task": {
+        "prime": 97,
+        "domain_size": 9312,
+        "train_examples": 9312,
+        "heldout_examples": 0,
+        "train_fraction": 1.0,
+        "data_seed": 11,
+        "vocab_size": 97,
+        "train_fingerprint": "bb81d66f8aef76328e142b5751c0761bfb0b59d2b96b80f0c0771c86a90ee136",
+        "heldout_fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "split_policy": "rotate90_splitmix64_numerator_denominator_order",
+        "character_generator": 5,
+        "scope": "full_table_fitting_only",
+        "exponent": 3,
+        "label_oracle": "pow(b,k,p)*c % p == pow(a,k,p)",
+        "operand_train_fingerprint": "c5207f406440c8de665847ff4a2c2665b9d70ff2a88bb6356a50f3da93dd712a",
+        "operand_heldout_fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "label_classes": 33,
+        "train_majority_accuracy": 0.030927835051546393,
+        "heldout_majority_accuracy": null
+      }
+    },
+    {
+      "source": "sf-w16d1-p97-k2-lr003",
+      "checkpoint_sha256": "13fb693f29e2988ce289c6a694d1a3893d3648e719e72062eef6a89c828f9efa",
+      "prime": 97,
+      "exponent": 3,
+      "subgroup_order": 3,
+      "train_fraction": 0.5,
+      "initial_embedding": {
+        "norm": 8.603981313155085,
+        "transverse_norm": 0.2604309403367294,
+        "relative": 0.03026865480734398
+      },
+      "loss": 5.885120652324819,
+      "embedding_gradient": {
+        "norm": 1.5158273608123811,
+        "transverse_norm": 0.7084182187805294,
+        "relative": 0.4673475602134962
+      },
+      "task": {
+        "prime": 97,
+        "domain_size": 9312,
+        "train_examples": 4656,
+        "heldout_examples": 4656,
+        "train_fraction": 0.5,
+        "data_seed": 11,
+        "vocab_size": 97,
+        "train_fingerprint": "6f556860b354ea3302bd1967918ea4657c8c90f20c35151b5e06007b14d01626",
+        "heldout_fingerprint": "2eadbb01d04438eaaa871e2a45f353381500c24fbd7e9d75c51d9066e65fd467",
+        "split_policy": "rotate90_splitmix64_numerator_denominator_order",
+        "character_generator": 5,
+        "scope": "unseen_pairs_at_each_fixed_prime_and_power",
+        "exponent": 3,
+        "label_oracle": "pow(b,k,p)*c % p == pow(a,k,p)",
+        "operand_train_fingerprint": "8a6f28dbbdef69c4a33cf6ca734631373c196881611b526a7fe75f55644c564b",
+        "operand_heldout_fingerprint": "d363b1153657172393acce692f0c7a04e50a89d01a30e38132c7758ecac08f8a",
+        "label_classes": 33,
+        "train_majority_accuracy": 0.03436426116838488,
+        "heldout_majority_accuracy": 0.035438144329896906
+      }
+    },
+    {
+      "source": "sf-w16d1-p193-k3-lr003",
+      "checkpoint_sha256": "9827d06cdb1c326f1b42ce92037290de907a11927eccdc657e94264595938356",
+      "prime": 193,
+      "exponent": 3,
+      "subgroup_order": 8,
+      "train_fraction": 1.0,
+      "initial_embedding": {
+        "norm": 10.74051863198198,
+        "transverse_norm": 0.22581966880606155,
+        "relative": 0.021025024632762113
+      },
+      "loss": 2.3034454543853715,
+      "embedding_gradient": {
+        "norm": 0.14924627660907655,
+        "transverse_norm": 4.6974207301222363e-17,
+        "relative": 3.1474290929389645e-16
+      },
+      "task": {
+        "prime": 193,
+        "domain_size": 37056,
+        "train_examples": 37056,
+        "heldout_examples": 0,
+        "train_fraction": 1.0,
+        "data_seed": 11,
+        "vocab_size": 193,
+        "train_fingerprint": "b383f1057c3c30258cb7f9fe7f9e9dd23e103b5c7961590ca3a97c976ebb3db2",
+        "heldout_fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "split_policy": "rotate90_splitmix64_numerator_denominator_order",
+        "character_generator": 5,
+        "scope": "full_table_fitting_only",
+        "exponent": 3,
+        "label_oracle": "pow(b,k,p)*c % p == pow(a,k,p)",
+        "operand_train_fingerprint": "37fb018f6539cfe1e766f02d62f947f616e9ba8a3b858b02cc175f038531b82d",
+        "operand_heldout_fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "label_classes": 65,
+        "train_majority_accuracy": 0.015544041450777202,
+        "heldout_majority_accuracy": null
+      }
+    },
+    {
+      "source": "sf-w16d1-p193-k3-lr003",
+      "checkpoint_sha256": "9827d06cdb1c326f1b42ce92037290de907a11927eccdc657e94264595938356",
+      "prime": 193,
+      "exponent": 3,
+      "subgroup_order": 8,
+      "train_fraction": 0.5,
+      "initial_embedding": {
+        "norm": 10.74051863198198,
+        "transverse_norm": 0.22581966880606155,
+        "relative": 0.021025024632762113
+      },
+      "loss": 2.302710186141717,
+      "embedding_gradient": {
+        "norm": 0.15325898905196797,
+        "transverse_norm": 0.033778634700046786,
+        "relative": 0.2204023066379025
+      },
+      "task": {
+        "prime": 193,
+        "domain_size": 37056,
+        "train_examples": 18528,
+        "heldout_examples": 18528,
+        "train_fraction": 0.5,
+        "data_seed": 11,
+        "vocab_size": 193,
+        "train_fingerprint": "c56fa19ee394345367f07bf0af525a6a498bbba18ac099e306a40c68a760a13e",
+        "heldout_fingerprint": "74e1291e19d9ea0b8b98ae6a1155a45320201edda2fb2b76c55b1b69c8cba7e1",
+        "split_policy": "rotate90_splitmix64_numerator_denominator_order",
+        "character_generator": 5,
+        "scope": "unseen_pairs_at_each_fixed_prime_and_power",
+        "exponent": 3,
+        "label_oracle": "pow(b,k,p)*c % p == pow(a,k,p)",
+        "operand_train_fingerprint": "88e8eb7c8b83b5d80717d618483683cf20cbcb219713f71a5aa563bbcdc7d119",
+        "operand_heldout_fingerprint": "65c85bfe6ea6c32f22bcb1b34af180cef4597160a2911723e49e1e53f4c619fd",
+        "label_classes": 65,
+        "train_majority_accuracy": 0.01737910189982729,
+        "heldout_majority_accuracy": 0.017001295336787566
+      }
+    },
+    {
+      "source": "sf-w16d1-p193-k3-lr003",
+      "checkpoint_sha256": "9827d06cdb1c326f1b42ce92037290de907a11927eccdc657e94264595938356",
+      "prime": 193,
+      "exponent": 8,
+      "subgroup_order": 8,
+      "train_fraction": 1.0,
+      "initial_embedding": {
+        "norm": 10.74051863198198,
+        "transverse_norm": 0.22581966880606155,
+        "relative": 0.021025024632762113
+      },
+      "loss": 6.960319758702271,
+      "embedding_gradient": {
+        "norm": 1.1808230109744384,
+        "transverse_norm": 0.7446507650717384,
+        "relative": 0.6306201337127043
+      },
+      "task": {
+        "prime": 193,
+        "domain_size": 37056,
+        "train_examples": 37056,
+        "heldout_examples": 0,
+        "train_fraction": 1.0,
+        "data_seed": 11,
+        "vocab_size": 193,
+        "train_fingerprint": "2c16160e119faa15644ba1d36628ceef5e41b9e8bdd1f5ebc8064d19a9948f96",
+        "heldout_fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "split_policy": "rotate90_splitmix64_numerator_denominator_order",
+        "character_generator": 5,
+        "scope": "full_table_fitting_only",
+        "exponent": 8,
+        "label_oracle": "pow(b,k,p)*c % p == pow(a,k,p)",
+        "operand_train_fingerprint": "37fb018f6539cfe1e766f02d62f947f616e9ba8a3b858b02cc175f038531b82d",
+        "operand_heldout_fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "label_classes": 25,
+        "train_majority_accuracy": 0.04145077720207254,
+        "heldout_majority_accuracy": null
+      }
+    },
+    {
+      "source": "sf-w16d1-p193-k3-lr003",
+      "checkpoint_sha256": "9827d06cdb1c326f1b42ce92037290de907a11927eccdc657e94264595938356",
+      "prime": 193,
+      "exponent": 8,
+      "subgroup_order": 8,
+      "train_fraction": 0.5,
+      "initial_embedding": {
+        "norm": 10.74051863198198,
+        "transverse_norm": 0.22581966880606155,
+        "relative": 0.021025024632762113
+      },
+      "loss": 6.954805334328933,
+      "embedding_gradient": {
+        "norm": 1.1943680579734735,
+        "transverse_norm": 0.7628247948170424,
+        "relative": 0.6386848590972486
+      },
+      "task": {
+        "prime": 193,
+        "domain_size": 37056,
+        "train_examples": 18528,
+        "heldout_examples": 18528,
+        "train_fraction": 0.5,
+        "data_seed": 11,
+        "vocab_size": 193,
+        "train_fingerprint": "e935b845a4341157c4b083e365fcb7b4f8cb27898ebd290c525a25188de9a91f",
+        "heldout_fingerprint": "e91a17efcb2a7cf1cdd30bcbb691423bcbf334904d231a97e551e322e1a289b9",
+        "split_policy": "rotate90_splitmix64_numerator_denominator_order",
+        "character_generator": 5,
+        "scope": "unseen_pairs_at_each_fixed_prime_and_power",
+        "exponent": 8,
+        "label_oracle": "pow(b,k,p)*c % p == pow(a,k,p)",
+        "operand_train_fingerprint": "88e8eb7c8b83b5d80717d618483683cf20cbcb219713f71a5aa563bbcdc7d119",
+        "operand_heldout_fingerprint": "65c85bfe6ea6c32f22bcb1b34af180cef4597160a2911723e49e1e53f4c619fd",
+        "label_classes": 25,
+        "train_majority_accuracy": 0.04317789291882556,
+        "heldout_majority_accuracy": 0.04280008635578584
+      }
+    }
+  ]
+}

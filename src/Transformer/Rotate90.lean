@@ -2,9 +2,10 @@ module
 
 public import Transformer.Rotate90.Division
 public import Transformer.Rotate90.Power
+public import Transformer.Rotate90.Training
 
 /-!
-# Exact powered-division expressivity of the current Rotate90 SwiGLU model
+# Powered-division expressivity and a training obstruction for Rotate90 SwiGLU
 
 Source: `grokking_abmod/docs/rotate90-swiglu-model.md` and the actual
 `scripts/grok-simple.py` forward pass, inspected 2026-10-31.
@@ -27,4 +28,10 @@ It uses a faithful multiplicative character plus a zero coordinate. Matching
 the branch and input norms makes cancellation exact despite Peri-RMSNorm.
 These are expressivity results in real arithmetic, independent of the
 flat-spectrum interpolation surrogate and of optimizer convergence.
+
+`Training.gradient_sharedLoss_aliased` supplies an actual full-table training
+invariant at arbitrary finite width/depth. Under its subgroup/coprimality
+conditions, `trainingRun_not_solves` proves that Schedule-Free AdamW cannot
+separate exact aliases, even though successful weights exist. Partial-table
+escape experiments and the theorem's scope are recorded in the source note.
 -/

@@ -1,0 +1,119 @@
+{
+  "script_sha256": "fa81f691d371bb8d025e07cb85723c374de58f3c6088b18ebcd638c580a149f1",
+  "checks": [
+    {
+      "label": "frozen-branch-p193k3-s11",
+      "source_sha256": "9827d06cdb1c326f1b42ce92037290de907a11927eccdc657e94264595938356",
+      "final_sha256": "17c89930eea18c0e67984bfd123674d410268d0487e76662a6ef05d0352fd839",
+      "bitwise_unchanged": [
+        "gate_value.0",
+        "output.0"
+      ],
+      "optimizer_tensor_count": 1
+    },
+    {
+      "label": "frozen-branch-p193k3-s17",
+      "source_sha256": "8a63cfaefd327109871b48cd7508867c90da8d59c1e6104359e9c47ad8eb5cf3",
+      "final_sha256": "98790747de6ba19d8937229f976e5f0c3ff303c03d2c806ffd6794e4967e13ba",
+      "bitwise_unchanged": [
+        "gate_value.0",
+        "output.0"
+      ],
+      "optimizer_tensor_count": 1
+    },
+    {
+      "label": "frozen-branch-p193k3-s23",
+      "source_sha256": "8b79b28210fc349454ae6e41a04996f712b86fb3e91eeb9c3a38afb843fe7f48",
+      "final_sha256": "dddfe4698af2def314c1d8cab77dec5b545402499200b8ee03f2c709f63ef591",
+      "bitwise_unchanged": [
+        "gate_value.0",
+        "output.0"
+      ],
+      "optimizer_tensor_count": 1
+    },
+    {
+      "label": "frozen-branch-p97k2-s11",
+      "source_sha256": "13fb693f29e2988ce289c6a694d1a3893d3648e719e72062eef6a89c828f9efa",
+      "final_sha256": "10520651b4300c56cc9d3d4aff4dcb7e6c720d1181ede16d539e649b17fff87a",
+      "bitwise_unchanged": [
+        "gate_value.0",
+        "output.0"
+      ],
+      "optimizer_tensor_count": 1
+    },
+    {
+      "label": "frozen-branch-p97k2-s17",
+      "source_sha256": "eef4398bd09fb2dcb70798e70ef429fd91cc502e23d80c24d0ab700aeb8a5c5e",
+      "final_sha256": "09dfc8bbb9e56a72953e399f3d06fa87cd158c3fafaca695680d83a64bde68ff",
+      "bitwise_unchanged": [
+        "gate_value.0",
+        "output.0"
+      ],
+      "optimizer_tensor_count": 1
+    },
+    {
+      "label": "frozen-branch-p97k2-s23",
+      "source_sha256": "3a3de4f95b25e490d8b4f111c56e589a54e8cd5a7c63c1fa13274949b850e6b8",
+      "final_sha256": "dc040343288d4e666cc2d8db76613b3bbf75d1279fac5580fd23a06f853bf5ea",
+      "bitwise_unchanged": [
+        "gate_value.0",
+        "output.0"
+      ],
+      "optimizer_tensor_count": 1
+    },
+    {
+      "label": "frozen-e-p193k3-s11",
+      "source_sha256": "9827d06cdb1c326f1b42ce92037290de907a11927eccdc657e94264595938356",
+      "final_sha256": "824c764489612ec98c1ef2dc01aec7e378b2cb781c18572c982c9c5e9d82fff0",
+      "bitwise_unchanged": [
+        "E"
+      ],
+      "optimizer_tensor_count": 2
+    },
+    {
+      "label": "frozen-e-p193k3-s17",
+      "source_sha256": "8a63cfaefd327109871b48cd7508867c90da8d59c1e6104359e9c47ad8eb5cf3",
+      "final_sha256": "fc96448af0b5812a59e2a3aae9fc5c1229241f29f0474003190bc356c157c7a8",
+      "bitwise_unchanged": [
+        "E"
+      ],
+      "optimizer_tensor_count": 2
+    },
+    {
+      "label": "frozen-e-p193k3-s23",
+      "source_sha256": "8b79b28210fc349454ae6e41a04996f712b86fb3e91eeb9c3a38afb843fe7f48",
+      "final_sha256": "e7fc67c24bbee1f82e1079412cc2af1e3d5bf8eed3538289fbdc7bed94e3ae9b",
+      "bitwise_unchanged": [
+        "E"
+      ],
+      "optimizer_tensor_count": 2
+    },
+    {
+      "label": "frozen-e-p97k2-s11",
+      "source_sha256": "13fb693f29e2988ce289c6a694d1a3893d3648e719e72062eef6a89c828f9efa",
+      "final_sha256": "b8ca8620b3d80076b64548e689b395de92829571c495a194bff1514492a25f99",
+      "bitwise_unchanged": [
+        "E"
+      ],
+      "optimizer_tensor_count": 2
+    },
+    {
+      "label": "frozen-e-p97k2-s17",
+      "source_sha256": "eef4398bd09fb2dcb70798e70ef429fd91cc502e23d80c24d0ab700aeb8a5c5e",
+      "final_sha256": "dba19dde2c76323e3f37a5059051f77adb9d5203a017a0b3ebe8def542bd970a",
+      "bitwise_unchanged": [
+        "E"
+      ],
+      "optimizer_tensor_count": 2
+    },
+    {
+      "label": "frozen-e-p97k2-s23",
+      "source_sha256": "3a3de4f95b25e490d8b4f111c56e589a54e8cd5a7c63c1fa13274949b850e6b8",
+      "final_sha256": "3c568e025c7e18cc1b3cb5fd08f886c590bc3737b4bb27f61b69b608eca3bd3e",
+      "bitwise_unchanged": [
+        "E"
+      ],
+      "optimizer_tensor_count": 2
+    }
+  ]
+}

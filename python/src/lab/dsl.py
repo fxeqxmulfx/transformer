@@ -19,6 +19,7 @@ from .domain.model import (FFN, GELU, XSA, Attention, Block, FusedQKV, LayerNorm
                            ScaledResidual, SiLU, Sinusoidal, Softmax, Sparsemax, SurrogateWeights, Tied, TorchDefault, Transformer, Untied, YaRN)
 from .domain.rotary import DenseBranch, LabDivision, Rotate90, SwiGLU
 from .domain.peri_rotary import PeriRotate90, PowerDivision
+from .domain.peri_restart import PeriRotate90Restart
 from .domain.paired import CrossEntropyAnswers, DivisionPairs, SquaredAnswers, VectorReadout
 from .domain.regression import MLP, ModularRegression, OneHot, Scalar
 from .domain.optimizers import (ANSR, EVD, SGD, AdaFisher, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradMD, AMSGradW,
@@ -42,7 +43,7 @@ __all__ = [
     "RoPE", "YaRN", "Sinusoidal", "NoPositions",
     "FusedQKV", "PerHeadQKV", "ScaledDot", "LearnedScaledDot", "QKNorm", "Softmax", "Sparsemax", "SurrogateWeights",
     "ReLU", "ReLU2", "GELU", "SiLU", "Tied", "Untied", "TorchDefault", "Normal", "ScaledResidual",
-    "Rotate90", "DenseBranch", "SwiGLU", "PeriRotate90", "PowerDivision",
+    "Rotate90", "DenseBranch", "SwiGLU", "PeriRotate90", "PeriRotate90Restart", "PowerDivision",
     "VectorReadout", "SquaredAnswers", "CrossEntropyAnswers",
     # benchmarks
     "ModularDivision", "ModularRegression", "LabDivision", "TinyShakespeare", "Synthetic", "Memorization", "MatchingOrders", "MatchingBindings",
