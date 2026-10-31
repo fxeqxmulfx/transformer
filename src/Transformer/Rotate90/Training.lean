@@ -1,6 +1,7 @@
 module
 
 public import Transformer.Rotate90.Training.Failure
+public import Transformer.Rotate90.Training.Sampling
 
 /-!
 # Actual Rotate90 training can preserve an incorrect quotient code
@@ -22,4 +23,10 @@ These results complement the actual-model capacity construction in `Power`.
 They disprove an all-initializations convergence assertion, not convergence
 from a specified random initialization distribution. Partial-table experiments
 have nonsymmetric gradients; their observed plateaus are not proved permanent.
+
+`Sampling` proves an actual escape mechanism: at collapsed nonzero embeddings,
+sampled label imbalance creates row-separating gradients. A valid singleton
+breaks aliases in one source Schedule-Free update, even where the full division
+table has zero embedding gradient. Its explicit finite-depth witness includes
+both query and evaluation parameters; it does not imply eventual generalization.
 -/

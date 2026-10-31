@@ -2145,3 +2145,136 @@ or extra axiom is introduced.
 | `Optimizer` | `trainingStep_equal_coordinates`, `trainingRun_aliased`, `trajectory_aliased`, `evaluation_trainingRun_aliased` |
 | `Readout` | `crossEntropy_ge_log_subgroup`, `poweredLoss_floor`, `not_solves_of_aliased` |
 | `Failure` | `aliased_limit`, `limit_not_solves`, `trainingRun_not_solves`, `trainingRun_loss_floor`, `trajectory_not_solves` |
+
+## Sampled updates can break aliases
+
+The next gap is demonstrated by the existing symmetry controls: minibatches on
+the complete table produce unequal embedding rows even where a full-table update
+preserves their equality. The theorem above concerns the loss used in each step,
+not merely the dataset from which that step was sampled. A symmetric mean gradient
+does not make each sampled gradient symmetric. The following local calculation
+gives an exact mechanism in the actual model, with no change to the architecture.
+It treats a completely collapsed embedding; the measured controls merge smaller
+subgroup orbits. Thus this is a rigorous escape mechanism and counterexample to
+extending the full-table invariant to every batch, not a quantitative prediction
+for those particular checkpoints.
+
+### The tied derivative and empirical label counts
+
+Let all embedding rows initially equal a vector v, which need not be zero. For
+arbitrary finite branch weights B and positive RMSNorm epsilon, every pair then
+has the same actual final hidden vector h = hidden(eps,B,v,v). A perturbation D
+of the tied embedding changes each logit by
+
+```
+(S1) d logit_q[D] = <D_q,h> + <v, d hidden[D]>.
+```
+
+The second term includes both operand lookups, all residual blocks, SiLU and
+every normalization. It is common to every output class. Equal initial logits
+give uniform softmax, so this indirect derivative cancels in cross-entropy:
+
+```
+(S2) d CE_t[D] = (1/p) sum_q <D_q,h> - <D_t,h>.
+(S3) grad_E CE_t(q,i) = (1/p - indicator[t=q]) * h_i.
+```
+
+This is a derivative at the collapsed point in the full parameter space. It is
+not a derivative restricted to moving all rows together or a frozen-feature
+approximation. The branch weights are arbitrary, and their input-dependent
+derivative is retained until its exact cancellation.
+
+For any nonempty finite indexed batch J, let f_J(q) be its empirical label
+frequency, counting repetitions. Ordinary mean cross-entropy therefore satisfies
+
+```
+(S4) grad_E L_J(q,i) = (1/p - f_J(q)) * h_i.
+(S5) grad_E L_J(q,i) - grad_E L_J(r,i) = (f_J(r)-f_J(q)) * h_i.
+```
+
+Different label counts and a nonzero hidden coordinate give a transverse signal.
+A label-balanced batch has zero embedding gradient at this point. Sampling with
+replacement and fixed subsets are both covered by the indexed-family definition.
+The formula does not claim a whole dataset's labels are uniform for every K:
+powering can merge distinct quotients, and K=0 has only target 1.
+
+For K=1, fixing a unit denominator makes division a permutation of all p
+residues. The full table therefore has frequency exactly 1/p for every label,
+including zero. Its embedding gradient at the collapsed point is zero. This
+cancellation coexists with a nonzero sampled signal: for two distinct classes
+q,r and a uniformly sampled target t, equation (S3) gives
+
+```
+(S7) mean_t (grad CE_t(q,i) - grad CE_t(r,i))^2 = (2/p) * h_i^2.
+```
+
+Only t=q and t=r contribute, each with squared magnitude h_i^2. The formal
+statement is a finite average over labels with arbitrary chosen operand pairs;
+the division witness uses a=t, b=1. It also describes uniform sampling from
+the complete division table because every label has the same multiplicity and
+the collapsed hidden vector is input independent. No independence assumption
+about successive optimizer steps or stochastic convergence theorem is used.
+
+### An actual Schedule-Free escape step
+
+Start the source optimizer with y=z=E and zero second moment. At a positive first
+rate eta, the averaging coefficient is one, for all real averaging powers. With
+beta2<1, the first bias correction cancels 1-beta2, giving
+
+```
+(S6) y_new = z_new = E - eta * (g / (|g| + eps_opt) + decay*E).
+```
+
+The evaluation embedding agrees with these buffers. If E(q,i)=E(r,i) and
+g(q,i)<0<g(r,i), positive eta and eps_opt imply
+`y_new(q,i)>y_new(r,i)`. Equal weight-decay terms cancel. This uses the source
+AdamW normalization and averaging, not a substitute SGD step. The legal numerical
+witness uses beta1=.9, beta2=.98, rate=.003, decay=1, eps_opt=1e-8, with no warmup.
+The theorem concerns a fresh first step with positive rate; it does not silently
+identify this with the lab's initial zero-rate external warmup step.
+
+For every prime p and natural K, the valid example a=b=1 has target 1. At a
+nonzero collapsed hidden coordinate, its gradient has negative target and
+positive competitor components. Consequently the optimizer can separate rows
+that full-table training preserves under its symmetry hypotheses. Breaking an
+alias is necessary progress away from that particular equality constraint; it
+does not imply correct predictions on unseen examples, loss convergence, or
+reliable escape from every partially collapsed state.
+
+The nonzero witness is explicit: v is the all-ones vector, width is 16, hidden
+size is 43, and there are d+1 zero-matrix residual blocks for any natural d.
+The rotated input has even coordinates zero and odd coordinates two. Positive
+epsilon makes both outer normalization factors positive, so every odd hidden
+coordinate is positive. At p=3, classes 1 and 2 share the initial row but separate
+after the singleton update. `full_zero_sample_escapes` proves in one statement
+that the full-table embedding gradient is zero, the initial table is aliased,
+and both the next query and evaluation tables are no longer aliased. The general
+`rowStep_not_aliased` covers any prime, exponent and subgroup containing a
+nonidentity unit, with the stated positive hidden-coordinate hypothesis.
+
+### Lean inventory for sampled training
+
+The 25 theorems in `Transformer.Rotate90.Training.Sampling` add no unfinished
+claims. Every hypothesis has a satisfying example; all modules are reachable
+through `Transformer.Rotate90.Training`. The proof uses the existing forward
+and optimizer definitions, with no new numerical experiment or optimizer change.
+
+| Module | Main declarations |
+| --- | --- |
+| `Sampling.Basic` | Actual row-loss analyticity, `fderiv_tiedLoss_constant`, `hidden_ones_pos` |
+| `Sampling.Gradient` | `gradient_batchLoss_constant`, `gradient_row_difference`, `singleton_transverse_energy`, `row_gradient_signs` |
+| `Sampling.Optimizer` | Source initial-step identities, `initial_step_separates`, `rowStep_separates` |
+| `Sampling.Escape` | `frequency_full_division`, `gradient_sharedLoss_division_constant`, `rowStep_not_aliased`, `full_zero_sample_escapes` |
+
+The next unresolved gap is the behavior after this local escape: whether a
+sampled trajectory develops a separating answer code and generalizes, with a
+prediction of success probability or training time. The new theorem does not
+derive those outcomes from breaking one equality. The measured width and decay
+effects, partially collapsed checkpoints and P17 memorization remain separate
+questions for that next comparison cycle.
+
+Validation on 2026-10-31: full `lake build` passed (13070 jobs); all 25 new
+`#print axioms` checks contain only `propext`, `Classical.choice`, and `Quot.sound`.
+`./run.py audit` reports 36 existing unfinished statements, zero results resting
+on them, and zero extra axioms. Regenerated `INDEX.md` has zero vacuous or
+placeholder entries; `./run.py forbidden` passed. No Python code changed.

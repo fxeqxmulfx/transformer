@@ -1,5 +1,22 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+**2026-10-31 sampled-gradient theory extension, requested by the user.**
+The existing minibatch symmetry controls expose the next gap: a symmetric
+full-table gradient does not imply a symmetric sampled update. The 25 theorems
+in `Rotate90.Training.Sampling` now compute the actual tied embedding gradient
+at a collapsed table from empirical label counts, prove its mean squared
+row-separating signal, and carry a valid singleton through the source
+Schedule-Free AdamW update. An explicit nonzero width-16, hidden-43 model at
+every positive finite depth has zero full-table division embedding gradient,
+yet the sampled update breaks aliases in both query and evaluation buffers.
+The arithmetic example a=b=1 works at every natural exponent; the general
+escape theorem covers every prime with a nontrivial subgroup and a positive
+hidden coordinate. This is a local escape mechanism, not a convergence or
+generalization theorem for random starts or partially collapsed checkpoints.
+No new training run or optimizer change was needed; the completed controls
+remain the empirical source. See `review/flat_spectrum.md`, *Sampled updates
+can break aliases*, for the exact scope and the remaining learning gap.
+
 **2026-10-31 completed learning-gap cycle, requested by the user.**
 The [alias-escape study](experiments/rotate90_alias_escape/README.md) completed
 50 Schedule-Free interventions with hypotheses recorded before training. The
