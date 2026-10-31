@@ -167,3 +167,12 @@ From `python/`, rebuild analyses with `uv run --locked python` on
 `../experiments/rotate90_power_learning/summarize.py`, `audit.py` and `theory.py`.
 If a new CPU/CUDA discrepancy appears, `replay_roundoff.py` checks the original
 compiled device before another audit. Both hypothesis specifications are retained.
+
+The 175 recorded runs contain 174 distinct canonical specifications. The original
+`w16d1-p193-k1` case and the later sweep's `narrow-lr003-wd1` repeat the same
+AdamW specification and seed; both completed checkpoints and outcomes are
+retained (42.01% versus 41.28% heldout). They are not independent seed evidence.
+`python/tests/fixtures/historical_repeated_runs.json` pins this historical pair's
+labels and exact specification fingerprint. The experiment regression test
+rejects every undeclared duplicate, and rejects changes to this declared pair,
+without changing historical definitions or deleting either measured run.

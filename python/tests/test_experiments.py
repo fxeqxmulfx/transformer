@@ -26,6 +26,9 @@ from test_nn import RECALL, recall_model
 
 EXPERIMENTS = Path(__file__).resolve().parents[2] / "experiments"
 FIXTURES = Path(__file__).parent / "fixtures"
+# Preserve completed historical repeats without permitting undeclared duplicates.
+# Both labels and the exact canonical specification fingerprint are frozen here.
+REPEATED_RUNS = json.loads((FIXTURES / "historical_repeated_runs.json").read_text())
 
 
 def experiment_folders():
@@ -40,7 +43,11 @@ class ExperimentFolderTests(unittest.TestCase):
         for path in folders:
             with self.subTest(path.name):
                 rows = survey(load(path))
-                self.assertEqual(len({row["fingerprint"] for row in rows}), len(rows))
+                groups = {}
+                for row in rows:
+                    groups.setdefault(row["fingerprint"], []).append(row["label"])
+                repeats = {key: sorted(labels) for key, labels in groups.items() if len(labels) > 1}
+                self.assertEqual(repeats, REPEATED_RUNS.get(path.name, {}))
 
     def test_every_experiment_has_a_readme(self):
         for path in experiment_folders():
