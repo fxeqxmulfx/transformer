@@ -2517,3 +2517,33 @@ tests (14 skipped), including independent real-gradient continuation and a
 depth-three sign-symmetry check. The compiled CUDA smoke check has exactly zero
 negation logit error and no strict winner at the zero midpoint. All fifteen
 source experiment recipes pass their definition check.
+
+### Outcome of the declared memory controls
+
+The analysis at setup `daab04d6` completed every pinned checkpoint and all ten
+declared horizons. H1's maximum coordinate error against 32 actual source
+updates is 6.661e-16. All 45 bases remain bitwise unchanged, while every raw
+second moment changes and every evaluation point moves. H4's maximum negation
+logit error is exactly zero; every zero midpoint has zero strict-winner fraction.
+All 450 curve points and all controls are retained in `memory_results.json`.
+
+All six wide P97/P193 update-750 checkpoints satisfy every H3 condition. Their
+first stopped-base update improves loss, but their 50000-update closed-form
+points drop from initial accuracies 99.76--99.98% to 4.06--7.28%, approaching
+the poor base classifiers as M2 and M6 describe. Their lowest loss among the
+declared horizons occurs at 100 or 200 additional updates, and every final
+loss is above its initial value. Thus locally favorable averaging is not a
+uniform benefit over the future path. The genuine trained models exhibit the
+behavioral failure; the antipodal theorem independently excludes a general
+convex solver-region argument, without claiming those trained paths are
+antipodal or cross the zero model.
+
+The intervention removes both gradient and decay movement of the base, while
+retaining the actual historical clock and second moments. It therefore tests
+stopped base optimization, not the separate causal roles of gradient and decay.
+Narrow/P17 controls remain unsuccessful, and the earlier transfer forecast
+failures remain recorded. These observations narrow the learning gap to how
+ongoing base optimization shapes a favorable nonlinear averaging path; the
+present theorems do not derive that geometry or its probability from random
+initialization. Exact eventual comparison transfer also excludes ties at the
+base and supplies no calibrated finite stopping time.

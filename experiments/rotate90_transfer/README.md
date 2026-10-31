@@ -126,4 +126,65 @@ prediction and whole-parameter negation control. This reuses existing runs;
 max-autotune. The exact zero-rate formula permits long-horizon evaluation without
 simulating 50000 gradient steps. CPU float64 source steps independently verify
 that the retained optimizer history, rather than newly learned weights, drives
-this intervention. Status: declared before counterfactual evaluation.
+this intervention. The declaration was recorded before counterfactual evaluation.
+
+The setup was frozen in `daab04d6`, before executing any of the declared
+counterfactuals. All 45 checkpoint controls completed; `memory_results.json`
+retains every role, all 450 path points, all source checks, checkpoint hashes,
+script/declaration hashes and the runtime. The source training setup remains
+`d47112d5`. Reproduce from `python/`:
+
+```
+uv run --locked python ../experiments/rotate90_transfer/memory.py
+```
+
+All four declared hypotheses pass. H1's maximum coordinate discrepancy after
+32 actual source updates is 6.661e-16; every base is bitwise unchanged, every
+raw second moment changes, and the maximum total-clock discrepancy is 1.041e-17.
+All 45 evaluation vectors move (H2). Negating every parameter gives exactly
+identical heldout logits at all 45 checkpoints, and the zero midpoint has no
+strict correct winner (H4). Ordinary argmax can still select a tied correct
+class; the strict-winner metric deliberately counts ties as failures.
+
+H3 passes each of its three conditions for all six wide P97/P193 checkpoints
+at update 750. The first zero-rate step lowers heldout cross-entropy, but the
+declared long continuation has higher loss than the initial point and accuracy
+below 50%. All six cases are shown below; accuracies are percentages.
+
+| Task / seed | Initial accuracy | Base accuracy | After 50000 averaging updates | Initial / final CE |
+| --- | ---: | ---: | ---: | ---: |
+| P97 K2 / 31 | 99.850 | 5.799 | 6.035 | 0.03916 / 6.02115 |
+| P97 K2 / 37 | 99.764 | 4.639 | 4.790 | 0.06119 / 6.56472 |
+| P97 K2 / 41 | 99.850 | 4.940 | 5.026 | 0.05304 / 6.51308 |
+| P193 K3 / 31 | 99.935 | 3.924 | 4.059 | 0.14724 / 8.04662 |
+| P193 K3 / 37 | 99.978 | 6.941 | 7.281 | 0.08361 / 6.75362 |
+| P193 K3 / 41 | 99.984 | 6.018 | 6.347 | 0.06159 / 6.93682 |
+
+The 50000-update points are direct evaluations of the proved closed form, not
+50000 simulated gradients. The stored clock W/M² is 743.85 at these checkpoints.
+Their lowest losses among the declared horizons occur at 100 or 200 additional
+averaging updates; no horizon was tuned or added after inspecting outcomes.
+At update 400, the P193 seed31 continuation improves from 28.15% to 48.47% at
+the declared 100-update point without moving the base, then deteriorates.
+The corresponding original positive-rate run later reaches above 99%.
+
+The narrow and P17 controls remain in the report. Across every declared source
+time and horizon, P97 width 16 reaches at most 15.38%, P193 width 16 at most
+2.07%, and P17 at most 13.24%. The intervention does not repair those failures.
+Stopping the rate removes both gradient and decay movement of the base, so
+this test does not isolate those two contributions from each other.
+
+The theory correction is now explicit: static spectral rank and local favorable
+averaging are insufficient to predict continued learning. Actual optimizer
+history determines a moving evaluation point, and the neural parameter path
+can leave the region of correct predictions. The 27 new Lean theorems prove
+the exact clock, its loss/classification limit and a nonconvex whole-table
+solver region with genuine perfect powered-division endpoints. They do not
+explain why continued positive-rate training creates a favorable path from
+typical random starts. The original transfer study's failed early forecast
+and width-ranking hypothesis remain unchanged.
+
+Validation: full Lean build and axiom/source checks pass; no new unfinished
+proof or extra axiom was introduced. All 412 lab tests (13 skipped) and 104
+optimizer tests (14 skipped) pass. Runtime remains Python 3.15.2, Torch
+2.15.0+cu132, CUDA 13.2, compiled max-autotune/fullgraph/static shapes.
