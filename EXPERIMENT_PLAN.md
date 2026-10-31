@@ -2726,7 +2726,7 @@ Rust repository's portable histories for the complete outcomes.
 
 ## Rotate90 learning transfer (2026-10-31)
 
-Status: active, requested by the user; board #119. After the finite sampled
+Status: completed, requested by the user; board #119. After the finite sampled
 alias-escape proof, test the gap between static character capacity and actual
 learning. `experiments/rotate90_transfer` declares 15 fresh Schedule-Free AdamW
 runs at P17/97/193, widths16/64, depth1 and initialization seeds31/37/41, keeping
@@ -2742,6 +2742,19 @@ the source optimizer's evaluation displacement and conditional finite-time
 loss/accuracy bounds. Report every failed forecast. Sampled remainders are not
 segment curvature certificates; these tests cannot establish random-start
 convergence or a success probability.
+
+Outcome: all 15 runs finished. The six P97/P193 width64 runs reach 99.87--99.97%
+heldout accuracy; width16 remains at 1.96--17.93% after 1500 updates. P17 fits
+training perfectly and reaches only 7.35--9.56% heldout accuracy. All 120 source
+update identities and next-step loss signs pass. The frozen early forecast
+predicts only one of six successes; its sufficient CE threshold is conservative,
+and the three P193 large runs accelerate after weak early progress. The matched
+early width hypothesis fails (three of six pairs, below the four-pair threshold).
+Seventeen Lean theorems now connect all actual parameters and the source
+optimizer to conditional finite-time loss/classification bounds. The unresolved
+step is deriving sustained favorable transfer and useful curvature bounds from
+random initialization and the observed training sample. See the study README
+for all seeds, false negatives and numerical limitations.
 
 ## Scalar MLP on mod 97 (2026-10-18)
 

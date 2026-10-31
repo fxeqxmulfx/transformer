@@ -2283,7 +2283,7 @@ placeholder entries; `./run.py forbidden` passed. No Python code changed.
 
 The next comparison replaces the static rank condition with the actual effect
 of a sampled optimizer update on unseen equations. Static character capacity
-and fixed-code matrix completion do not explain why width16 and width64 train
+and fixed-code matrix completion do not explain why width 16 and width 64 train
 differently, or why P17 fits its training split without generalizing. This is a
 conditional dynamics extension, not a proof that a neural optimizer solves the
 nuclear-norm interpolation problem of Theorem A.
@@ -2337,7 +2337,7 @@ finite segment. They do not compute a useful certified value.
 
 If for every t<N the bracket in T6 is at most -mu*F(x_t), with 0<mu<=1,
 `geometric_loss_le` proves F(x_N)<=(1-mu)^N F(x_0). Combined with T5, a value
-below .01*log2 certifies at least99% strict correct winners. The Lean rate lemma
+below .01*log2 certifies at least 99% strict correct winners. The Lean rate lemma
 only needs mu<=1 algebraically; positive mu is what makes the rate useful.
 Its hypotheses have a nonzero, strictly improving witness at every finite
 horizon. The actual-model additive theorem has a positive-depth, nonempty-data,
@@ -2359,16 +2359,16 @@ are not replaced with a linearized kernel or infinite-width limit.
 | `Learning.Trajectory` | Additive and geometric T6; actual minibatch path and finite-time failure bound using source transfer terms |
 
 `experiments/rotate90_transfer/hypotheses.json` declares fifteen fresh runs
-before training: P97K2 and P193K3, widths16/64; P17K1 width64; depth1 and model
-seeds31/37/41. Data and batch seeds stay fixed at11. Only Schedule-Free AdamW is
-used, with Python3.15/Torch2.15 and compiled CUDA max-autotune. Every50-update
+before training: P97K2 and P193K3, widths16/64; P17K1 width 64; depth1 and model
+seeds 31/37/41. Data and batch seeds stay fixed at 11. Only Schedule-Free AdamW is
+used, with Python 3.15/Torch 2.15 and compiled CUDA max-autotune. Every 50-update
 checkpoint retains all model, optimizer and sampler state.
 
 Independent CPU float64 copies preserve the trained float32 RMS epsilon and
 replay the next actual batch. H1 checks T2 against the source optimizer. H2
-tests whether T3 predicts the next-step heldout-loss sign in at least90% of
-eligible probes. H3 freezes a step400 forecast using relative first-order
-progress at100/200/400; every false positive and false negative is retained.
+tests whether T3 predicts the next-step heldout-loss sign in at least 90% of
+eligible probes. H3 freezes a step 400 forecast using relative first-order
+progress at 100/200/400; every false positive and false negative is retained.
 H4 compares matched widths. Heldout gradients never enter training.
 
 A measured finite-step remainder is not a certified segment-curvature bound.
@@ -2385,3 +2385,44 @@ with zero results resting on them and zero extra axioms. The source check passes
 (14 skipped), including bit-exact retained-checkpoint/resume comparisons,
 independent source-update replays and a full-network finite-difference derivative
 check. All 15 experiment recipes pass `./run.py check`.
+
+### Outcome of the frozen transfer test
+
+All fifteen runs completed their declared 1500 updates at setup commit
+`d47112d5`, with unchanged definitions and hypotheses. Every P97/P193 width 64
+run reaches 99.87--99.97% heldout accuracy, crossing 99% at updates 600--650.
+The six width 16 runs remain at 1.96--17.93% within this budget. All P17 controls
+fit training perfectly but reach only 7.35--9.56% heldout accuracy. These results
+are scoped to the declared update cap and fixed split, not a capacity bound.
+
+H1 and H2 pass all 120 probes. Maximum evaluation-displacement coordinate error
+is 2.042e-16 in the independent float64 source replay. The complete directional
+derivative predicts 98 improving and 22 worsening next-step heldout losses, with
+no sign errors. Initial-state and checkpoint provenance, identical matched
+sample fingerprints and all failed forecasts are retained in the study artifacts.
+Before-update replay accuracy exactly matches the recorded CUDA evaluation;
+the largest mean-loss difference is 4.040e-7. These are local numerical checks,
+not a certified supremum of curvature over each segment.
+
+H3 predicts one of the six final successes, with five misses and no false
+positives. This has two causes which should not be conflated. The log2
+calibration is sufficient, not necessary: every successful run's final CE is
+above 0.01*log2. P97 seed31's predicted loss 0.009553 nearly matches its actual
+0.009550, yet neither certifies its observed 99.8711% accuracy. The dynamics
+forecast is also inaccurate for P193: width 64 seed31 is forecast at loss 1.977,
+but reaches 0.01189 after its relative progress increases later in training.
+
+H4 is rejected: width 64 improves the early statistic in only three of six pairs,
+below the preset four-pair threshold. All three P193 early comparisons favor
+width 16 even though all three wider models later generalize. At P193 width 64
+seed31, relative first-order progress rises from about 0.000275 at update 200 to
+0.00440 at 400 and 0.00990 at 750. The measured early statistic is not an invariant
+ordering of model sizes or a uniform lower bound on future progress.
+
+Thus the finite-time Lean bound must retain the evolving full update, and its
+geometric specialization must quantify over every step in the horizon. T1--T6
+do exactly that. They close the algebraic connection from this actual model
+and optimizer to evaluation loss; they do not explain why the late acceleration
+arises, prove a random-start success probability, or turn a few early derivative
+probes into future guarantees. That remains the next gap, alongside obtaining
+useful accuracy bounds when mean cross-entropy calibration is conservative.
