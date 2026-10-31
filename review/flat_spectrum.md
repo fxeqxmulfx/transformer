@@ -2619,3 +2619,33 @@ continuation, changed decay behavior and independent forced/homogeneous source
 identities. An independent P7 CUDA max-autotune smoke test also preserves the
 initial query and reproduces the final query bit for bit. All thirty declared
 recipes pass their definition check before the scientific continuations run.
+
+The declared study at setup `9f769888` completed all thirty continuations and
+all 150 zero-gradient diagnostic points. H2's maximum coordinate error over
+32 actual source updates is 1.11e-15, and its maximum zero-gradient relative
+span residual is 2.00e-14. All saved raw moments change under zero gradients;
+they were not reset. All six wide P97/P193 full and no-decay continuations
+exceed 99% heldout accuracy at update 1500. Their zero-gradient decay controls
+finish at 2.95--5.15%; their best accuracies among the fixed horizons are
+48.50--94.63%, all below 99%. H3 and H4 pass. This separates continued
+gradient information from subsequent decay for those step-400 states; it
+does not test no-decay training from random initialization.
+
+Every full trajectory leaves its initial parameter span, with relative
+distance 0.395--0.764, so H5 passes even for the failed narrow/P17 controls.
+New directions alone do not explain generalization. The remaining theory
+gap is the task alignment and accumulation of the normalized gradients that
+drive F2's response. Its exact finite history still depends on those actual
+gradients; it cannot be used as a learning forecast without controlling them.
+
+H1 fails for all three P17 controls: CE differs from the original endpoint
+by 0.34223, 0.01828 and 0.14770, and seed 37 also differs in accuracy by
+0.7353 percentage points. All twelve P97/P193 cases pass the declared
+tolerances. Initial state equality and matched samples hold in every case.
+Post-outcome original/continuation comparisons at four saved steps confirm
+identical samplers and scalar optimizer states; P17 parameter discrepancies
+grow from about 1e-8 at update 450 to order one by update 1500. Their cause
+is not established by that check, and H1 remains failed. One narrow P193
+CUDA capture failure completed on an unchanged retry and passed replay.
+All results, controls, hashes and attempt records are retained in
+`experiments/rotate90_forcing`; no threshold or recipe was adjusted.

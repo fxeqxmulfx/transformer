@@ -1,0 +1,40 @@
+{
+  "setup_commit": "9f769888",
+  "date": "2026-10-31",
+  "initial_batch": {
+    "declared_runs": 30,
+    "completed": 29,
+    "failed": [
+      "full-p193k3-w16-s31"
+    ]
+  },
+  "failure": {
+    "label": "full-p193k3-w16-s31",
+    "stage": "CUDA graph capture during evaluation after the initial update-400 observation",
+    "last_saved_checkpoint_step": 400,
+    "exception": "RuntimeError: info.status != cudaStreamCaptureStatusInvalidated INTERNAL ASSERT FAILED at CUDACachingAllocator.cpp:2362: Invalid stream capture status",
+    "secondary_exception": "torch.AcceleratorError: CUDA error: operation failed due to a previous error during capture",
+    "classification": "Infrastructure failure; no scientific outcome inferred from this attempt"
+  },
+  "retry": {
+    "command": "OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 UV_OFFLINE=true ./run.py run experiments/rotate90_forcing full-p193k3-w16-s31",
+    "configuration_changed": false,
+    "resume_step": 400,
+    "completed_step": 1500,
+    "exit_code": 0,
+    "note": "Ordinary engine resume from the saved checkpoint, with unchanged recipe and CUDA max-autotune compilation. The initial pinned snapshot remains available; endpoint replay is checked against the frozen H1 tolerances."
+  },
+  "final_completed_runs": 30,
+  "logs": [
+    {
+      "attempt": "initial-batch",
+      "log": "runs/initial-batch.log",
+      "sha256": "128147c63a179a860f1e1cac359bd9414e3006fc22840b1b423e559863d589a5"
+    },
+    {
+      "attempt": "unchanged-retry",
+      "log": "runs/unchanged-retry.log",
+      "sha256": "b14c3a19e9fa91b51640471eaa579f747fbcf641dc87523f0e6a76db320f203a"
+    }
+  ]
+}

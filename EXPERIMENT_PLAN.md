@@ -2787,7 +2787,7 @@ starts. The stopped-base control does not isolate gradient from decay updates.
 
 ## Rotate90 gradient forcing (2026-10-31)
 
-Status: active, requested by the user; board #121. The completed memory test
+Status: completed; board #121, setup `9f769888`. The completed memory test
 stopped both gradient and decay movement. Separate them with all fifteen
 transfer-study states at update 400. Thirty declared full-state continuations
 retain all optimizer and sampler history and run to absolute update 1500:
@@ -2797,6 +2797,20 @@ definitions and predictions are in `experiments/rotate90_forcing` and must be
 committed before observing these outcomes. Preserve narrow/P17 controls and
 every failed prediction. Prove the actual-source linear response and its
 initial-span constraint without assuming generalization from new directions.
+
+Outcome: all thirty continuations and all fixed diagnostics completed. All
+six wide P97/P193 no-decay continuations exceed 99%, while their zero-gradient
+controls finish at 2.95--5.15%. Independent actual-source recurrence errors
+are at most 1.11e-15 over 32 steps. All fifteen full trajectories leave their
+initial parameter span, including unsuccessful narrow/P17 controls, so span
+escape is insufficient to predict learning. H1 replay fails on all three
+P17 controls; the twelve P97/P193 cases pass. All source histories and matched
+samples are preserved. The unchanged retry of one CUDA graph-capture failure
+is retained with the initial attempt. H2--H5 pass their declared checks.
+Twenty-seven Lean theorems prove the finite actual-model response and
+zero-gradient span invariance. The remaining gap is to derive useful
+normalized-gradient directions and their accumulation from sampled data;
+neither fresh-start no-decay success nor general convergence is established.
 
 ## Scalar MLP on mod 97 (2026-10-18)
 
