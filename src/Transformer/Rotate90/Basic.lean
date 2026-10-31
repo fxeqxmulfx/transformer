@@ -8,6 +8,8 @@ public import Transformer.Grokking.FlatSpectrum.ReadoutChoice
 
 Source: `review/flat_spectrum.md`, The readout decides, and the user-requested
 existence theorem for `grokking_abmod/docs/rotate90-swiglu-model.md`, Model.
+The user's 2026-10-31 extension to `(a/b)^k` has a unique arithmetic value
+for every natural k: it is the unique c with b^k*c = a^k, provided b ≠ 0.
 A faithful character puts nonzero residues on the circle; an extra coordinate
 represents zero. Every code has unit length and uniquely maximizes its own
 inner-product score. The shared embedding has four adjacent pairs:
@@ -29,6 +31,37 @@ namespace Transformer.Rotate90
 open Landscape.Neural Grokking.FlatSpectrum
 
 variable {p : ℕ} [Fact p.Prime] {K : Type*} [Fintype K]
+
+/-- The user's powered division `(a/b)^k` is characterized by `b^k*c = a^k`.
+Source: the 2026-10-31 request, every natural exponent and nonzero denominator. -/
+theorem eq_div_pow_iff (a c : ZMod p) {b : ZMod p} (hb : b ≠ 0) (k : ℕ) :
+    c = (a / b) ^ k ↔ b ^ k * c = a ^ k := by
+  rw [div_pow, eq_div_iff (pow_ne_zero k hb), mul_comm c]
+
+/-- Arithmetic existence and uniqueness for every prime and every natural power.
+Source: the user's 2026-10-31 request. The witness is `(a/b)^k`; k = 0 gives
+one even when a = 0, using the natural-power convention `0^0 = 1`. -/
+theorem existsUnique_div_pow (a : ZMod p) {b : ZMod p} (hb : b ≠ 0) (k : ℕ) :
+    ∃! c : ZMod p, b ^ k * c = a ^ k := by
+  refine ⟨(a / b) ^ k, (eq_div_pow_iff a _ hb k).mp rfl, ?_⟩
+  intro c hc
+  exact (eq_div_pow_iff a c hb k).mpr hc
+
+section
+
+local instance : Fact (Nat.Prime 7) := ⟨by decide⟩
+
+example := eq_div_pow_iff (p := 7) 3 4 (b := 2) (by decide) 2
+example := existsUnique_div_pow (p := 2) 0 (b := 1) (by decide) 0
+example := existsUnique_div_pow (p := 7) 0 (b := 2) (by decide) 3
+example := existsUnique_div_pow (p := 7) 3 (b := 2) (by decide) 2
+example : ((0 : ZMod 7) / 2) ^ 0 = 1 := by decide
+example : (0 : ZMod 7) = (0 / 2) ^ 3 :=
+  (eq_div_pow_iff 0 0 (b := 2) (by decide) 3).mpr (by decide)
+example : (4 : ZMod 7) = (3 / 2) ^ 2 :=
+  (eq_div_pow_iff 3 4 (b := 2) (by decide) 2).mpr (by decide)
+
+end
 
 /-- The zero-numerator coordinate; it is part of the shared embedding. -/
 def zeroFlag (a : ZMod p) : ℝ := if a = 0 then 1 else 0
