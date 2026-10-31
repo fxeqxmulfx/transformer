@@ -6,6 +6,7 @@ public import Transformer.SequenceModel.Transfer.Alignment
 public import Transformer.SequenceModel.Attention.FiniteStep
 public import Transformer.SequenceModel.Attention.ZeroRun
 public import Transformer.SequenceModel.Attention.Expressivity.Existence
+public import Transformer.SequenceModel.Information.Distribution
 
 /-!
 # General positional inputs and normalized multi-variable attention
@@ -28,4 +29,6 @@ every binary finite task, including powered division, with a strict margin.
 RoPE spectrum and zero-initialization counterexamples rule out unconditional
 spectral invariance and learning guarantees. Larger-context forward and
 learning formulas are general; the constructive task theorem uses two tokens.
+Sampled-label indistinguishability and a finite-distribution unseen-label
+bound identify information limits independently of architecture and optimizer size.
 -/

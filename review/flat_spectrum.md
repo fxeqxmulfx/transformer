@@ -2999,3 +2999,58 @@ optimizer tests on Python 3.15.2. No production Python code changes or new
 training run is part of this proof extension; the previously recorded wider
 Muon allocation failures are not claimed fixed. Logs and the theorem-level
 axiom script are retained in `.kanban/artifacts/123/`.
+
+## Finite sequence capacity and information limits
+
+**N1, what the actual learner observes.** For an arbitrary parameterized
+predictor, two target functions agreeing on every row sampled during the
+first n updates induce the same CE function at each update, hence the same
+full parameter gradient and the same complete Schedule-Free AdamW state.
+This includes query/base buffers, moments, averaging, weight decay, any
+initial state and a nonzero starting step. A label at an unobserved row
+can therefore be replaced without changing the trained weights. Two
+different replacements cannot both be strictly classified. The Lean
+theorems are `Information.trajectory_eq_of_labels`,
+`unseen_trajectory_eq`, `unseen_correct_incompatible` and
+`exists_unseen_failure`. The sampling plan is fixed independently of the
+replacement; no claim about label-adaptive sampling is hidden here.
+
+**N2, a target independent of the random seed.** Let a finite seed space
+carry arbitrary nonnegative masses summing to one. Each seed may select
+its own initialization and sampling plan, provided the same designated row
+is unobserved throughout the finite training horizon. There is one fixed
+replacement label v such that
+
+```
+card(V) * Pr_seed[strictly correct on that row when its target is v] <= 1.
+```
+
+The order is `exists v, probability bound over seeds`, not a different
+adversarial target chosen after observing each seed. For any seed, at most
+one label can strictly win; summing those winner masses and averaging over
+labels proves the bound. `Information.exists_unseen_low_success` connects
+this counting argument to the actual CE/SFAdamW trajectory using N1.
+Ties count as failures, and an equally weighted two-seed/two-label Lean
+example attains the bound. Other examples use nonempty observed rows,
+nonzero initial weights, the source optimizer parameters and 100 updates.
+
+N2 covers finite distributions, including finite ensembles of PRNG seeds;
+it does not assert a measure-theoretic result for a continuous Gaussian.
+More importantly, these are **unconstrained target extensions**: changing
+one label can leave a known modular-arithmetic family. The result does not
+refute learning that family from few examples. It identifies the missing
+assumption in a guarantee for arbitrary tasks: information about unseen
+labels must come from additional observations or a justified restriction
+on the target family. More width, depth, epochs or random starts alone
+cannot supply it. Positive transfer certificates T1--T4 retain their stated
+scope; convergence from typical starts on the algebraic experiments remains
+unproved.
+
+Validation of N1--N2: all 11 new public theorems have individual axiom
+checks using only `propext`, `Classical.choice` and `Quot.sound`. The full
+build passes (13123 jobs), with no warnings in the new modules. Audit
+remains at 36 existing `sorry`, zero dependent results and zero extra
+axioms. Index regeneration reports 4026 modules, 20792 theorems and zero
+vacuous or placeholder declarations. Forbidden checks and all six selected
+Schedule-Free AdamW Python tests pass. No new training run is claimed.
+Logs and axiom checks are retained in `.kanban/artifacts/124/`.
