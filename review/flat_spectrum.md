@@ -3607,3 +3607,199 @@ failures, float32 and float64, each with 75 allocations of 8519680 bytes.
 Schedule-Free AdamW tests pass. No Python implementation was changed.
 The theorem script, source checks and all original/retry validation logs
 are retained in `.kanban/artifacts/127/`.
+
+## Quantitative RoPE approximation
+
+This extension keeps exact source RoPE in the model and asks what changing
+its frequencies or rounding its attention coefficients can change. The
+source is still `diff_gpt/domain/model/{gpt,block,mha,feed_forward,rope}.py`
+at `b98c665b`, with the hashes in `sequence_model_source.json`. The periodic
+comparison is with arXiv:2506.16055v3, Appendix F, `sec:rope_pes`, read from
+`papers/`. As in the earlier correction, periodic frequencies are rational
+multiples of pi, rather than rational numbers of radians.
+
+### A1. Quantitative phase and frequency errors
+
+For the actual half-split rotation, including an unchanged odd leftover
+coordinate in the mathematical generalization,
+
+\[
+ \|R_a x-R_b x\|_2\le\delta\|x\|_2
+ \quad\text{if}\quad |a_c-b_c|\le\delta\text{ for every pair }c.
+\]
+
+The proof bounds the squared chord between two unit-circle phases by the
+squared angle difference and sums over the source channel pairs. With
+positive RMS epsilon and positive head width, the normalized source logit
+therefore obeys
+
+\[
+ |s(a,b;q,k)-s(a',b';q,k)|
+ \le (\delta_q+\delta_k)\sqrt d.
+\]
+
+This holds for arbitrary query/key magnitudes. For frequencies f and g
+with coordinate errors at most eta, the phase error at position t is at
+most `|t| eta`. A fixed frequency error does not supply a fixed phase-error
+budget at arbitrarily large positions. These statements bound exact plane
+rotations; separately rounded sine/cosine entries need not form an exact
+plane rotation and are not automatically covered by a phase-error premise.
+
+### A2. Causal softmax and the actual XSA head
+
+If all unmasked logits at a query move by at most r, the L1 change in the
+entire causal softmax row is at most `8 r`. The constant is conservative.
+For the same value stream with `norm(v_j) <= B`, its average changes by at
+most `8 r B`. Applying the source XSA correction with nonnegative clipped-L2
+epsilon gives a whole-head phase-error bound
+
+\[
+ \|H_a(q,k,v)_i-H_b(q,k,v)_i\|_2
+ \le 32\delta\sqrt d B.
+\]
+
+The explicit first-position zero is retained. The constants do not grow
+with the number of keys when the phase-error and value-norm premises are
+fixed. This theorem holds Q/K/V fixed; it is not by itself a stack bound,
+since changing early phases changes later residuals and hence later Q/K/V.
+
+### A3. Continuity through the complete source stack
+
+Joint continuity is proved through every actual operation: epsilon RMSNorm,
+half-split rotations, fused QKV and head reshaping, causal softmax, clipped
+XSA, projection, all four branch normalizers, SwiGLU, residual additions,
+normalized embedding, final RMSNorm and tied readout. Weights are arbitrary
+and fixed, depth and width are arbitrary valid finite source dimensions,
+and both normalizer epsilons are positive.
+
+This includes the XSA clipping sphere. Continuity needs no exclusion of
+that sphere, although the earlier analyticity/gradient theorem still does.
+The entire residual stream is recomputed in every subsequent block. There
+is no premise assuming continuity of a black-box model or assuming a bound
+on the final change in logits.
+
+### A4. What a finite-context periodic replacement preserves
+
+`frequencyAngles` varies the shared frequency vector, retaining the source
+per-layer RoPE flags and positions. Substitution of `invFreq` is exactly
+`sourceAngles`. Finite vectors of rational multiples of pi are dense; for
+any rational vector q the actual half-split rotations have a common positive
+integer period `2 * product(q_c.den)`.
+
+For every fixed finite T, fixed weights and positive error tolerance eta,
+one such rational-pi frequency vector approximates **every logit, every
+readout position and every input tuple of length T** to error less than
+eta. This is uniform over the finite input domain, not just selected
+training examples. A strict source classifier at this fixed T consequently
+has a periodic frequency replacement with the same weights, width, depth
+and strict decisions. A nonconstant two-token binary sum task witnesses
+the hypotheses using the existing exact-source capacity theorem.
+
+The replacement frequencies may cease to be a geometric grid. The theorem
+does not claim that merely changing the source's single base parameter can
+produce the replacement. Its period and tolerance may depend on T, the
+weights, the epsilons and the strict margins. Ties have no such certificate.
+The frequency tolerance is existential; this proof does not numerically
+compute it for a trained model.
+
+The quantifiers are crucial for the depth question:
+
+\[
+ \forall T\ \exists q_T\ \text{(same finite-context decisions)},
+ \qquad\text{not established:}\qquad
+ \exists q\ \forall T\ \text{(same language)}.
+\]
+
+Thus the finite-context replacement preserves the given depth, but does
+not transfer the periodic language's strict depth lower bounds to exact
+source RoPE. The earlier impossibility of a finite exact position code
+remains true. The weighted-count compiler in U1--U4 still supplies the
+uniform upper bound of one count nesting per source block. A strict lower
+hierarchy for its particular source-generated nonperiodic kernels remains
+unproved; the present approximation argument does not remove that gap.
+
+### A5. Quantitative readout and classification certificates
+
+For a final residual error `norm(x-y) <= E`, positive RMS epsilon eps and
+a tied embedding row e, the logit error is bounded by
+
+\[
+ \frac{2}{\sqrt{\mathrm{eps}}}E\|e\|_2.
+\]
+
+A target-versus-competitor decision is preserved if the original strict
+margin exceeds
+
+\[
+ \frac{2}{\sqrt{\mathrm{eps}}}E
+ (\|e_{\rm target}\|_2+\|e_{\rm competitor}\|_2).
+\]
+
+The raw tied embedding norms are necessary; final RMSNorm does not bound
+them. This certificate requires a separately established final residual
+error E. It does not silently treat the local head estimate as that error.
+
+### A6. Rounding certificates for the existing nonperiodic counting head
+
+`Fx.NoSaturation p s x` checks that `floor(x * 2^s)` lies in the format's
+mantissa interval. Under that condition, the existing floor-and-saturate
+`Fx.round` has absolute error strictly smaller than `u = 2^-s`. There is
+also a theorem that no finite uniform absolute error bound exists without
+a range restriction, and a concrete saturated counterexample at p=8,s=0.
+
+The source normalized logits give every unrounded exponential coefficient
+a floor `a = exp(-sqrt(d))`. If `u < a` and every exponential coefficient
+avoids saturation, the sum of the rounded coefficients is strictly positive
+at every nonempty prefix. This rules out the counting model's zero-denominator
+fallback under these assumptions, rather than assuming division is safe.
+
+For a value coordinate bounded by B, if all exponential coefficients,
+weighted numerator coefficients **and the final quotient** avoid saturation,
+then the actual `CRASP.Rotary.sourceLayer` attention aggregate has error
+
+\[
+ \left|\widehat y-y\right|
+ \le \frac{u(1+B)}{\exp(-\sqrt d)-u}+u.
+\]
+
+The comparison y is the exact real softmax average on the **same stored
+residual stream**. The proof relates the implementation's integer-mantissa
+quotient to the ratio of interpreted coefficients, bounds both sums, and
+cancels their common prefix-length factor. The last u accounts for the
+existing final quotient rounding. Concrete source-layer witnesses retain
+the source epsilons and nonzero positions.
+
+This remains the specified counting model: exact integer sums, rounded
+coefficients and quotient, real local nonlinearities, and separately rounded
+stored residuals. It is not IEEE round-to-nearest. In particular, fixed-point
+u is not float32 machine epsilon. The local attention estimate has not yet
+been propagated through the whole rounded residual stack, and no hardware
+error bounds for projections, RMSNorm, SwiGLU or RoPE table generation are
+asserted. No new training or optimizer convergence guarantee follows.
+
+| Lean module | Result |
+| --- | --- |
+| `SequenceModel.RotaryStability` | phase chord, half-split rotation, normalized logit and frequency-error bounds |
+| `Attention.Stability.Softmax` | causal row, average and source XSA phase-error bounds |
+| `Attention.Stability.Continuity`, `Model` | joint phase/residual continuity of the complete source |
+| `Attention.Stability.Periodic` | genuine rational-pi periods and simultaneous finite logit approximation |
+| `Attention.Stability.Classification` | finite-context same-depth classifier replacement and quantitative tied readout certificate |
+| `CRASP.FixedError` | conditional quantum error, no-underflow criterion and saturation counterexample |
+| `Attention.Stability.Quotient`, `Rounding` | length-independent coefficient error, exact source-aggregate connection and denominator positivity |
+
+Validation of A1--A6: full `lake build` passes (13166 jobs), with no warnings
+in the new modules. Individual `#print axioms` checks for all 41 new public
+theorems use only `propext`, `Classical.choice` and `Quot.sound`. The audit
+remains at 36 existing `sorry`, zero dependent results and zero extra axioms.
+The regenerated index has 4069 modules, 21004 theorems, zero vacuous results
+and zero placeholders. Forbidden checks and `git diff --check` pass; all
+five pinned source hashes still match. Witnesses include nonzero phases,
+nonzero rounding errors, saturation, source epsilon values, positive rounded
+denominators and strict decisions on all four binary input pairs.
+
+The required Python regression run passed all 418 lab tests with three skips.
+The 104-test optimizer suite reproduced the two existing Schedule-Free Muon
+allocation failures (float32 and float64), each with 75 allocations of
+8519680 bytes. Schedule-Free AdamW tests pass. No Python implementation was
+changed. All validation logs, source review and the theorem axiom-check
+script are retained in `.kanban/artifacts/128/`.

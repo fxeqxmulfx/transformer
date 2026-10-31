@@ -10,6 +10,7 @@ public import Transformer.SequenceModel.Attention.Finite.Witnesses
 public import Transformer.SequenceModel.Attention.Grid.Model
 public import Transformer.SequenceModel.Information.Distribution
 public import Transformer.SequenceModel.Resources
+public import Transformer.SequenceModel.Attention.Stability
 
 /-!
 # General positional inputs and normalized multi-variable attention
@@ -44,6 +45,10 @@ bound identify information limits independently of architecture and optimizer si
 Finite parameter alphabets additionally give a necessary joint depth, width
 and stored precision budget for universal classification; this is not a
 task-specific lower bound for powered modular division. The normalized rounded
-source's counting-logic compiler and nonperiodic-RoPE boundary are in
-`Transformer.CRASP.Normalized`.
+source's counting-logic compilers are in `Transformer.CRASP.Normalized` and
+`Transformer.CRASP.Rotary`. Quantitative phase and attention-rounding bounds
+keep saturation and underflow assumptions explicit. A strict exact-source
+classifier at any fixed finite context admits a periodic frequency replacement
+with unchanged weights, width and depth; its context-dependent period does
+not transfer a uniform language depth lower bound.
 -/
