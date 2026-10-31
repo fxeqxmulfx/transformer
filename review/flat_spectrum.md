@@ -3077,9 +3077,9 @@ Padding and extraDepth are arbitrary naturals, RMS epsilon is positive, and
 XSA epsilon is at most one. The main theorem is
 `Attention.Finite.exists_finite_sequence_classifier`. Unlike E8, its query
 and key are nonzero and its rotary attention weights depend on position.
-It constructs a phase table; it does **not** quantify over all prescribed
-tables or prove that the usual integer-position geometric grid suffices.
-The generic forward and learning theorems still accept that source grid.
+It constructs a phase table; that theorem alone does **not** quantify over
+prescribed tables. P1--P6 below establish capacity for the usual source
+integer-position geometric grid, using the original input tokens.
 
 1. **F1, bounded separation:** any finite collection of distinct real
    vectors can be separated by one linear functional chosen in any open
@@ -3141,9 +3141,9 @@ well conditioned or easy to discover numerically. No useful parameter-size
 optimum, floating-point error bound, new training result, or typical-start
 convergence claim follows. In particular, N1--N2 still separate available
 label information from expressivity; T1--T4 still state the explicit
-conditions needed for finite optimizer progress. Prescribed source phases,
-unaugmented input protocols and learning the algebraic task family from
-typical random starts remain distinct questions.
+conditions needed for finite optimizer progress. P1--P6 below close the
+prescribed-source-phase and unaugmented-input capacity questions. Learning
+the algebraic task family from typical random starts remains a separate question.
 
 Validation of F1--F6: the full `lake build` passes (13138 jobs), with no
 warnings in the 15 new modules. All 55 new public theorems have individual
@@ -3157,3 +3157,130 @@ nonzero Q/K, positive-epsilon normalization, nonempty inputs, N=0, p=2,3,97,193,
 three/four-variable tasks, source hidden widths, padding and varied depth.
 No production Python change or training run is included. Logs and the
 theorem-level axiom script are retained in `.kanban/artifacts/124/`.
+
+## Prescribed RoPE capacity
+
+The source's actual integer-position geometric grid suffices. For every
+nonempty finite vocabulary of size p, every **positive** finite arity m,
+and every table `f : (Fin m -> Fin p) -> Fin p`, Lean proves that one finite
+set of model weights strictly classifies all original input tuples at the
+last original token. Positions are `0,...,m-1`, every layer enables RoPE,
+and its angles are exactly `position * base^(-2*pair/head_dim)`.
+No positional table is selected by the proof and no readout token is added.
+The full forward retains embedding/final RMSNorm, both Peri-RMSNorm branches,
+Q/K RMSNorm, causal softmax, clipped XSA, bias-free SwiGLU and tied readout.
+
+The public theorem is `Attention.Grid.exists_finite_sequence_classifier`.
+Its Lean index is `N=m-1`, so the original input type is `Fin (N+1) -> Fin p`.
+A sufficient source-shaped family, with arbitrary natural padding and extraDepth, is
+
+```
+W = 2 (p+1)^2 + 6 p^m + 2 padding,
+H = floor((8 W + 1)/3),
+heads = 1,      depth = extraDepth + 1,      context length = m.
+```
+
+RMS epsilon is positive and XSA epsilon is at most one; the source values
+`2^-23` and `1e-12` satisfy these hypotheses. The displayed family uses
+base 10000. `Grid.exists_classifier` works for any valid configured positive
+base, with one head, width above nine, disjoint token/context banks, and
+`3 p^m <= H`. The family theorem configures enough source table positions
+for the entire input. As in G4, the generic mathematical forward can accept
+longer directly supplied phase tables; Python execution requires them to
+fit the configured context window.
+
+1. **P1, fixed integer offsets:** source rotary pair zero has frequency one,
+   independently of the base or width. Its final-row cosine values are
+   `cos(N-j)` for prefix positions `j<N`. Cosines of distinct nonnegative
+   integers are distinct: equality would make an integer difference or sum
+   equal to `2 k pi`; irrationality of pi forces `k=0`, then equality of the
+   original integers. Thus the fixed slopes
+   `a_j = cos(N-j)/sqrt(W)` are injective. This proof concerns the actual
+   integer positions, not an assumption that arbitrary phases separate inputs.
+2. **P2, a bounded ordinary query gain:** for distinct slopes, the functions
+   `s -> exp(a_j s)` are linearly independent by Dedekind's theorem for
+   multiplicative characters of the additive reals. Every difference of two
+   unequal positional subset sums is therefore nonzero somewhere and is
+   globally real analytic. Analytic uniqueness makes its nonzero set dense
+   and open. There are finitely many subset pairs, so their nonzero sets
+   intersect every open gain interval. In particular, some `0<s<1` gives
+   weights `w_j=exp(a_j s)` with all subset sums distinct. The proof neither
+   assumes independent learned features nor adjusts the prescribed RoPE phases.
+3. **P3, genuine fixed-grid attention:** normalize the query to `s e_0` and
+   key to `e_0` in the first actual half-split rotary pair. Both are inside
+   the positive-epsilon RMSNorm image and have exact finite raw preimages.
+   Fixed fused-QKV weights generate these same nonzero queries/keys at every
+   token; values are unit token vectors. Source scores are
+   `s cos(N-j)/sqrt(W)`, and the self score is `s/sqrt(W)`. The real causal
+   denominator is `D=sum_j w_j + exp(s/sqrt(W))`. Actual clipped XSA removes
+   the final label's value coordinate. A fixed projection multiplies by D
+   and copies the rest to the disjoint context bank. For m=1 the source's
+   explicit first-position attention zero gives the empty prefix context.
+4. **P4, original last-token readout:** the final label is an input variable,
+   not a fixed extra token. Its unit residual has zero coordinates in the
+   context bank, while the normalized context has zero coordinates in the
+   entire residual token bank. Equality of resulting states first forces
+   equality of final labels. Distinct subset sums then recover every prefix
+   token, including repeated occurrences of the final label. Positive-epsilon
+   RMSNorm preserves this injectivity. The sum of residual token coordinates
+   is one on every state, giving the common positive FFN channel even when
+   the last label varies. `split_input` proves the prefix/last decomposition
+   reassembles the exact original token tuple.
+5. **P5, complete normalized model:** choose one positive projection scale
+   making the finitely many normalized contexts have norm below one. The
+   F2--F3 finite SwiGLU interpolator uses `3 p^m` channels to reach each
+   requested unit answer by the actual normalized residual branch. Every
+   matrix is fixed across all inputs. Additional identity blocks preserve
+   that answer at any positive finite depth. Final RMSNorm and tied raw
+   embeddings give logits `L * 1[q=f(x)]`, with `L>0`. The conclusion uses
+   `sourceAngles cfg (fun _ => true) (fun j => j.val)` directly; only
+   `weights`, not phases or input tokens, is existentially quantified.
+6. **P6, finite source dimensions:** the displayed even width contains both
+   token banks, has width above nine, and its source FFN ratio contains all
+   interpolation channels. Its context window is exactly m, with no hidden
+   position beyond the original input. Concrete Lean instances cover m=1,
+   two-, three- and four-variable tasks, p=2,3,97,193, padding and varied depth.
+
+The modules follow proof dependencies: `Grid.Separation` proves P1--P2,
+`Grid.Head` the actual P3 scores and XSA code, `Grid.Encoder` the fixed matrix
+and P4 injectivity statements, and `Grid.Model` P5--P6 for the full forward.
+The source remains diff_gpt commit `b98c665bd8faa30729fd368d257a13b6d58712a1`;
+its geometric table, half-split layout, source normalization order and
+context-window conditions were reread beside these statements.
+
+This closes two capacity gaps left by F1--F6: a prescribed source grid and
+the original input protocol. It does not change the earlier flat-spectrum
+matrix-completion theorem into a learning impossibility theorem for this
+nonlinear model. The sufficient width grows exponentially in arity. The
+argument supplies finite real weights but no useful bound on feature
+separation, gate size, numerical conditioning or floating-point error.
+It also makes no claim that every smaller architecture can implement every
+table. Typical-random-start Schedule-Free AdamW convergence, efficient
+learning of the modular family, and generalization from partial labels
+remain unproved; N1--N2's information limits and T1--T4's conditional
+progress statements retain their existing scope. No new training result
+is asserted by this capacity proof.
+
+Validation of P1--P6: `lake build` passes (13142 jobs), with no warnings in
+the four new modules. All 29 new public theorems have individual
+`#print axioms` checks using only `propext`, `Classical.choice` and
+`Quot.sound`; the private concrete-witness lemma is covered by the project
+audit. Audit remains at 36 existing `sorry`, zero dependent results and
+zero extra axioms. The generated index has 4045 modules, 20884 theorems,
+zero vacuous declarations and zero placeholders. Forbidden checks and
+`git diff --check` pass. Every conditional theorem has a concrete Lean
+instance, including a nonempty prefix, both possible final labels, the
+source epsilons, a bounded nonzero query gain, and the finite source-shaped
+width/depth examples above. All five source hashes still match the pinned
+manifest. Logs and the theorem-level axiom script are retained in
+`.kanban/artifacts/125/`.
+
+The required `./run.py test` run uses Python 3.15.2. All 418 lab tests pass
+with three skips. The standalone optimizer suite runs 104 tests and reports
+the two previously recorded Schedule-Free Muon CUDA allocation failures
+(float32 and float64); each reports 75 allocations of 8519680 bytes in the
+warmed-step allocation assertion. Schedule-Free AdamW tests pass. Thus the
+complete Python command exits 1, rather than being reported as green. No
+Python or optimizer implementation changed in this proof extension, and
+those existing Muon failures are not claimed fixed. The complete log is
+retained as `.kanban/artifacts/125/tests.log`.
