@@ -2961,8 +2961,11 @@ width nor an infinite depth limit is needed.
 The forward, regularity and learning results cover arbitrary finite context
 lengths, heads, widths and depths. The constructive arbitrary-task theorem
 above specifically covers binary tasks with one head and two token positions.
-It does not prove arbitrary-arity universality, require that a learned model
-use the particular constructed circuit, or predict the required training set.
+The binary theorem alone does not prove arbitrary-arity universality. The
+F1--F6 extension below supplies a finite-arity theorem with a different,
+explicit readout protocol and constructed active rotary phases. Neither
+construction requires a learned model to use its particular circuit or
+predicts the required training set.
 
 **S2, representability does not force optimizer convergence.** At all-zero
 parameters the full model's hidden state and tied embedding both vanish.
@@ -3054,3 +3057,103 @@ axioms. Index regeneration reports 4026 modules, 20792 theorems and zero
 vacuous or placeholder declarations. Forbidden checks and all six selected
 Schedule-Free AdamW Python tests pass. No new training run is claimed.
 Logs and axiom checks are retained in `.kanban/artifacts/124/`.
+
+**F1--F6, finite capacity for arbitrary arity.** For every nonempty finite
+vocabulary of size p, every natural N, and every table
+`f : (Fin N -> Fin p) -> Fin p`, there are fixed finite Transformer weights
+and a fixed positional rotary phase table strictly classifying every input.
+The input is the N ordered operands **followed by the fixed token 0 for
+readout**. That token already belongs to the vocabulary. Its use is part of
+the theorem's input protocol; this is not an unstated claim about the
+unaugmented N-token protocol. A sufficient source-shaped family is
+
+```
+W = 2 (p+1)^2 + 6 p^N + 2 padding,
+H = floor((8 W + 1)/3),
+heads = 1,      depth = extraDepth + 1,      context length = N + 1.
+```
+
+Padding and extraDepth are arbitrary naturals, RMS epsilon is positive, and
+XSA epsilon is at most one. The main theorem is
+`Attention.Finite.exists_finite_sequence_classifier`. Unlike E8, its query
+and key are nonzero and its rotary attention weights depend on position.
+It constructs a phase table; it does **not** quantify over all prescribed
+tables or prove that the usual integer-position geometric grid suffices.
+The generic forward and learning theorems still accept that source grid.
+
+1. **F1, bounded separation:** any finite collection of distinct real
+   vectors can be separated by one linear functional chosen in any open
+   ball. A finite union of proper hyperplanes cannot contain an open ball.
+   Applied to all zero/one subsets of N positions, this gives coefficients
+   `1 < w_j < exp(1/sqrt(W))` with distinct subset sums. They can be chosen
+   arbitrarily close to uniform. The proof does not demand unbounded
+   attention temperatures or increasingly concentrated softmax weights.
+2. **F2, actual finite SwiGLU interpolation:** positive common-channel
+   values u_i and distinct projective input directions admit a linear
+   measurement with distinct ratios alpha_i. Choose a positive common
+   separation delta. Three actual SiLU gates at each center, using the
+   common channel for offsets, converge after gain rescaling to a triangular
+   feature. The evaluation matrices converge to a diagonal matrix with
+   entries `u_i^2 delta > 0`. Continuity of the determinant gives an
+   invertible matrix at a **finite** positive gain. Its inverse supplies
+   fixed output weights interpolating arbitrary vector targets exactly.
+   The model activation remains SiLU throughout; ReLU occurs only in the
+   auxiliary limit argument. There are three hidden channels per input row.
+3. **F3, actual normalization and branch reachability:** these features
+   compile into the source's gate, value and output matrices with zero
+   padding. Positive-epsilon RMSNorm is injective, and projective coordinates
+   relative to a positive common channel survive its row-dependent scale.
+   For a finite context table, one fixed positive projection scale makes all
+   normalized contexts have norm below one. A unit readout residual and unit
+   answer then differ by norm below three. Width above nine places every
+   desired displacement inside the true branch-output ball; E1 supplies
+   its exact inverse-normalized raw target. Both FFN normalizers remain.
+4. **F4, ordered context after XSA:** a disjoint context bank stores
+   `sum_j w_j e_(x_j)` with the readout label's coordinate removed. Distinct
+   subset sums recover the positions of each other label; remaining
+   positions necessarily contain the readout label. Thus this code is
+   injective on ordered sequences, including repeated tokens and any finite
+   N. The readout residual supplies a fixed common coordinate equal to one.
+5. **F5, connection to actual rotary attention:** normalized embeddings are
+   unit token vectors. A fixed linear sum of their coordinates creates the
+   same nonzero query/key at each position, normalized to a unit vector in
+   one actual half-split rotary pair. Set the readout phase to zero and
+   operand phase j to `acos(log(w_j) sqrt(W))`. The normalized score
+   exponentiates to w_j. The actual causal denominator is
+   `D = sum_j w_j + exp(1/sqrt(W))`, including self attention. Unit values
+   are above the XSA clip at the source epsilon. Actual own-value subtraction
+   deletes exactly the readout coordinate, and a fixed projection copies
+   the retained code to the workspace. The explicit zero output at the first
+   position handles N=0. Neither a modified mask nor an assumed context
+   representation enters the forward.
+6. **F6, full source model:** the exact FFN maps each normalized context to
+   the inverse-normalized displacement to the answer's unit token vector.
+   The actual residual reaches that answer. Additional blocks have zero
+   projections and are identity residuals. Final RMSNorm and the tied raw
+   embedding give logits `L * 1[q=f(x)]` with `L>0`, so every rival has a
+   strictly smaller score. The source hidden-width ratio has room for all
+   `3 p^N` channels, and its context window contains the appended token.
+
+This closes the finite-arity **capacity** gap for the stated input protocol
+and freely chosen rotary phases. The sufficient size is exponential in N,
+and the real-valued generic coefficients and finite gate gain need not be
+well conditioned or easy to discover numerically. No useful parameter-size
+optimum, floating-point error bound, new training result, or typical-start
+convergence claim follows. In particular, N1--N2 still separate available
+label information from expressivity; T1--T4 still state the explicit
+conditions needed for finite optimizer progress. Prescribed source phases,
+unaugmented input protocols and learning the algebraic task family from
+typical random starts remain distinct questions.
+
+Validation of F1--F6: the full `lake build` passes (13138 jobs), with no
+warnings in the 15 new modules. All 55 new public theorems have individual
+`#print axioms` checks using only the three standard allowed axioms; seven
+private witness lemmas are also covered by the whole-project audit. Audit
+remains at 36 existing `sorry`, zero dependent results and zero extra axioms.
+The regenerated index has 4041 modules and 20854 theorems, with zero vacuous
+or placeholder declarations. `./run.py forbidden` and `git diff --check`
+pass. Every conditional construction has a concrete Lean witness, including
+nonzero Q/K, positive-epsilon normalization, nonempty inputs, N=0, p=2,3,97,193,
+three/four-variable tasks, source hidden widths, padding and varied depth.
+No production Python change or training run is included. Logs and the
+theorem-level axiom script are retained in `.kanban/artifacts/124/`.
