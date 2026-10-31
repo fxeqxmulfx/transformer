@@ -13,6 +13,7 @@ from pathlib import Path
 
 import torch
 
+from lab.dsl import PowerDivision
 from lab.infrastructure.benchmarks import build_task
 from lab.infrastructure.loader import load
 from lab.infrastructure.nn import build_model
@@ -21,6 +22,50 @@ from lab.infrastructure.rotary_geometry import multiplicative_ordering
 from lab.infrastructure.store import RunDirectory
 
 ROOT = Path(__file__).resolve().parent
+
+
+def rank_one_recovery_pattern(prime, seed):
+    """Exact integer graph/matching witnesses for the existing Theorem E criterion.
+
+    Unit-modulus character kernels on nonzero operands are recovered by ideal
+    nuclear-norm completion iff the observed bipartite graph is connected and
+    contains a perfect matching. This supplies no training convergence claim.
+    """
+    task = build_task(PowerDivision(prime, 1), seed, torch.device("cpu"))
+    n = prime - 1
+    neighbors = [set() for _ in range(n)]
+    adjacency = [set() for _ in range(2 * n)]
+    for a, b, _ in task.splits["train"].tolist():
+        if a:
+            neighbors[a - 1].add(b - 1)
+            adjacency[a - 1].add(n + b - 1)
+            adjacency[n + b - 1].add(a - 1)
+    reached, pending = {0}, [0]
+    while pending:
+        vertex = pending.pop()
+        for other in adjacency[vertex] - reached:
+            reached.add(other)
+            pending.append(other)
+    matching = [-1] * n
+
+    def augment(a, visited):
+        for b in sorted(neighbors[a]):
+            if b not in visited:
+                visited.add(b)
+                if matching[b] == -1 or augment(matching[b], visited):
+                    matching[b] = a
+                    return True
+        return False
+
+    perfect = all(augment(a, set()) for a in range(n))
+    if perfect:
+        assert sorted(matching) == list(range(n))
+        assert all(b in neighbors[a] for b, a in enumerate(matching))
+    connected = len(reached) == 2 * n
+    return {"prime": prime, "data_seed": seed, "nonzero_training_cells": sum(map(len, neighbors)),
+            "connected": connected, "perfect_matching": perfect,
+            "column_to_row_witness_zero_indexed": matching if perfect else None,
+            "ideal_character_kernel_uniquely_recovered": connected and perfect}
 
 
 def small_energy_counterexample():
@@ -162,6 +207,8 @@ def main():
                "large_model_hypotheses_sha256": hashlib.sha256(
                    (ROOT / "large_model_hypotheses.json").read_bytes()).hexdigest(),
                "small_energy_counterexample": small_energy_counterexample(),
+               "rank_one_recovery_patterns": [rank_one_recovery_pattern(p, seed)
+                                               for p in (17, 97, 193) for seed in (11, 17, 23)],
                "exact_checks": [exact_checks(p, k) for p in (17, 97, 193) for k in (1, 2, 3, 5)],
                "scope": "The algebra is exact; concentration-to-confusion is a diagnostic hypothesis, not an optimization theorem.",
                "runs": findings}

@@ -1,0 +1,40 @@
+{
+  "runs": [
+    {
+      "label": "sf-w16d1-p193-k3-lr003",
+      "checkpoint_sha256": "9827d06cdb1c326f1b42ce92037290de907a11927eccdc657e94264595938356",
+      "splits": {
+        "heldout": {
+          "compiled_cuda": {
+            "loss": 2.3075540275771385,
+            "accuracy": 0.11792962003454231,
+            "answer_loss": 2.3075540275771385,
+            "answer_accuracy": 0.11792962003454231,
+            "examples": 18528
+          },
+          "recorded": {
+            "loss": 2.3075540275771385,
+            "accuracy": 0.11792962003454231,
+            "answer_loss": 2.3075540275771385,
+            "answer_accuracy": 0.11792962003454231,
+            "examples": 18528
+          },
+          "accuracy_matches": true,
+          "loss_matches": true,
+          "changed_decisions": 1,
+          "all_changes_near_ties": true,
+          "logits_close": true,
+          "max_logit_difference": 1.5020370483398438e-05,
+          "changed_cpu_margins": [
+            4.76837158203125e-07
+          ],
+          "changed_example_max_errors": [
+            2.1457672119140625e-06
+          ],
+          "pass": true
+        }
+      },
+      "pass": true
+    }
+  ]
+}

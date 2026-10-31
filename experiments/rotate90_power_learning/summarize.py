@@ -5,6 +5,7 @@ The JSON and CSV are portable; ignored raw checkpoints remain under runs/.
 """
 
 import csv
+from collections import defaultdict
 import hashlib
 import json
 import statistics
@@ -83,12 +84,30 @@ def main():
     declared = set(load(ROOT).experiments)
     completed = {row["label"] for row in rows}
     not_started = sorted(declared - completed - set(incomplete))
+    grouped = defaultdict(list)
+    for row in rows:
+        if row["optimizer"] == "ScheduleFreeAdamW":
+            key = tuple(row[field] for field in ("prime", "exponent", "width", "depth", "lr",
+                                                 "weight_decay", "beta1", "beta2"))
+            grouped[key].append(row)
+    groups = []
+    for key, cases in sorted(grouped.items()):
+        accuracies = [case["heldout_accuracy"] for case in cases]
+        groups.append({**dict(zip(("prime", "exponent", "width", "depth", "lr", "weight_decay",
+                                  "beta1", "beta2"), key, strict=True)),
+                       "runs": [case["label"] for case in cases],
+                       "seeds": [case["seed"] for case in cases],
+                       "heldout_mean": statistics.mean(accuracies),
+                       "heldout_std": statistics.pstdev(accuracies),
+                       "heldout_min": min(accuracies), "heldout_max": max(accuracies),
+                       "max_late_heldout_std": max(case["late_heldout_accuracy_std"] for case in cases),
+                       "max_best_minus_final": max(case["best_minus_final_heldout_accuracy"] for case in cases)})
     payload = {"scope": "exploratory finite-budget training; heldout is used for sweep comparisons",
                "declared": len(declared), "completed": len(rows), "incomplete": incomplete,
                "not_started": not_started, "unexpected": sorted(completed - declared),
                "hypotheses_sha256": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
                                       for name in ("hypotheses.json", "large_model_hypotheses.json")},
-               "runs": rows}
+               "schedule_free_groups": groups, "runs": rows}
     (ROOT / "results.json").write_text(json.dumps(payload, indent=2, allow_nan=False) + "\n")
     for name, table in (("summary.csv", rows), ("curves.csv", curves)):
         if table:

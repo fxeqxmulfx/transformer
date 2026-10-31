@@ -1491,6 +1491,22 @@ norm of the answer kernel by the pure-factorization lemma. AdamW and Schedule-Fr
 also supply no theorem here that their finite iterates find a global penalty minimum.
 The missing connection is an assumption to measure, not a consequence of flatness.
 
+For this comparison the existing Theorem E gives an exact, testable ideal-learner
+prediction. On the nonzero operand table each character kernel has unit-modulus
+entries. If the training bipartite graph is connected and contains a perfect matching,
+the minimum-nuclear-norm interpolant uniquely recovers that character kernel. The
+experiment checks these two finite conditions on every prime/seed pattern and saves
+the matching witness. The conclusion concerns training on the fixed transformed targets
+`χ((a/b)^K)` and solving the completion problem. Discovering `χ` from class labels and
+reaching such a solution with the actual optimizer are additional tasks.
+
+The finite check passes for all nine combinations of `p=17,97,193` and data seed
+`11,17,23`: every graph is connected and every saved matching is a permutation
+whose edges are observed. The same operand masks serve every exponent at a fixed
+prime/seed. Thus, on these nonzero tables, ideal recovery of a chosen faithful
+character predicts exact decoding even in configurations where the network fails.
+That discrepancy tests the modeling connection, not the proved completion criterion.
+
 ### Rank-one features and a separating answer code
 
 Let `p` be any prime, `n=p−1`, `K` a natural number, `d=gcd(K,n)` and `m=n/d`.

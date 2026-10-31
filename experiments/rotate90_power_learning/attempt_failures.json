@@ -1,0 +1,15 @@
+{
+  "failures": [
+    {
+      "label": "large-w512d1-p193k2-s11",
+      "attempt": 1,
+      "last_recorded_step": 0,
+      "checkpoint_present": false,
+      "stage": "compiled CUDA inference at the first training-time observation",
+      "error": "CUDACachingAllocator.cpp:2362 INTERNAL ASSERT FAILED: Invalid stream capture status; cudaErrorStreamCaptureInvalidated",
+      "comparison": "Seeds 17 and 23 with the same shape and settings completed successfully.",
+      "retry": "Completed all 5000 updates from the same initialization and unchanged specification, with 100% final heldout accuracy. No checkpoint was available; the existing runner rewound the incomplete observation stream. Both attempts remain in the run manifest.",
+      "interpretation": "Execution failure; not a measured learning failure. The cause has not been established."
+    }
+  ]
+}

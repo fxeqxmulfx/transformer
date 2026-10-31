@@ -1,6 +1,6 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-**2026-10-31 active extension, requested by the user:** test the current
+**2026-10-31 completed comparison cycle, requested by the user:** test the current
 Rotate90 Peri-RMSNorm SwiGLU on `(a/b)^K mod P` across primes, widths, depths
 and optimizer settings, using Python 3.15, PyTorch 2.15 and max-autotune
 compilation. [The powered-division study](experiments/rotate90_power_learning/README.md)
@@ -16,7 +16,14 @@ finite budgets and held-out accuracies, including failures of the new rule.
 The user's subsequent request tests larger models (widths 256 and 512, up to
 four blocks) with three seeds and matched smaller controls. All these new
 runs use Schedule-Free AdamW exclusively, per the user's latest restriction;
-prior completed AdamW records remain available for comparison.
+prior completed AdamW records remain available for comparison. All 175 definitions
+are complete (48 Schedule-Free), and all checkpoints are verified. All 27 larger
+models on the main P97/P193 tasks finish above 99%; P17 still fits the training
+table without strong held-out generalization at width 512. The exact character
+separation and actual-readout margin arguments correct the scope of the spectral
+explanation. The approximate 95%-energy rule passes 16 of 17 applicable cases;
+its counterexample is retained, and no convergence theorem is claimed. See the
+study README and portable results for the complete three-seed comparisons.
 
 Updated on 2026-10-19 UTC. **Active, resumed at the user's request on 2026-10-19.
 Current direction: [Landscape explanation of modular
