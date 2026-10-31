@@ -6,8 +6,13 @@ and optimizer settings, using Python 3.15, PyTorch 2.15 and max-autotune
 compilation. [The powered-division study](experiments/rotate90_power_learning/README.md)
 defines matched half-table learning screens and full-table fitting controls.
 Arithmetic uniqueness is proved in `Transformer.Rotate90.existsUnique_div_pow`;
-the existing neural existence theorem concerns K=1. Training outcomes will
-be reported with their finite budgets and held-out accuracies.
+the existing neural existence theorem concerns K=1. The user's next direction
+is to compare the flat-spectrum account with what the model actually learns,
+revise the theory where needed and test again. The first revision distinguishes
+recoverable rank-one characters from a jointly separating answer code; its
+fresh-seed retry and Schedule-Free controls are specified before training in
+the study's `hypotheses.json`. Training outcomes will be reported with their
+finite budgets and held-out accuracies, including failures of the new rule.
 
 Updated on 2026-10-19 UTC. **Active, resumed at the user's request on 2026-10-19.
 Current direction: [Landscape explanation of modular

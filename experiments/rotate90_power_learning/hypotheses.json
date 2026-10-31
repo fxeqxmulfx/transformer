@@ -1,0 +1,13 @@
+{
+  "recorded_before_followup_training": "2026-10-31",
+  "discovery_seed": 11,
+  "confirmation_seeds": [17, 23],
+  "discovery_cases": ["w16d1-p97-k2", "w64d4-p193-k2", "w16d1-p193-k3"],
+  "controls": ["w64d1-p97-k2", "w64d1-p193-k3", "w64d1-p17-k1"],
+  "mathematical_claim": "On nonzero labels, character readouts of powered division have rank one. A bank with frequencies R on the image group of order m has fibers of size gcd(m,R). Exact identification requires gcd(m,R)=1.",
+  "diagnostic_rule": "Fourier transform the averaged evaluation embedding restricted to reachable nonzero output labels in generator order. Choose the largest divisor g>1 of m for which frequencies divisible by g carry at least 95% of nonconstant energy; otherwise g=1. Report sensitivity at 90%, 99% and 99.9% too.",
+  "empirical_prediction": "When g>1, heldout prediction^g=target^g accuracy should exceed 95%, and exact nonzero heldout accuracy should be within 10 percentage points of 1/g. This approximate-energy rule is a falsifiable hypothesis, not a theorem.",
+  "nonprediction": "g=1 does not predict successful learning. The kernel theorem alone predicts neither optimizer trajectories nor a sufficient update budget.",
+  "schedule_free_control": "The three discovery cases, seed 11, lr in {0.001,0.003,0.01}, betas=(0.9,0.98), weight_decay=1, same 10-step external warmup and 5000-update budget. Evaluate averaged weights, report training-weight metrics separately.",
+  "selection": "These cases and the 95% threshold were chosen after inspecting seed-11 spectra and confusions. Confirmation labels were not trained when this file was created. This is an internal prospective check, not external preregistration."
+}

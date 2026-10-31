@@ -1463,3 +1463,114 @@ entries have moduli uniform in [0.3, 2] and uniform phases.
   Each of the twelve runs agrees with items 1.2 and 2. In the last class ADMM finds a completion
   of smaller nuclear norm than `K` every time. The 117 recovered patterns that are not
   injective are all block tables: as in item 4, recovery does not need the injectivity.
+
+## Powered division and the current Rotate90 model (2026-10-31)
+
+This extension addresses the user's request to compare predictions with the current
+Peri-RMSNorm SwiGLU model, revise the explanation, and test it again. The earlier source
+note is retained verbatim. The new algebra below has an elementary proof and exhaustive
+numerical checks; it has not yet been added to Lean. The existing arithmetic uniqueness
+and the K=1 neural existence result are in `Transformer.Rotate90`.
+
+### What the existing theorems predict
+
+Theorem A and the later rank-general certificate characterize **minimum-nuclear-norm
+interpolation of a specified matrix**. They do not assert that a neural classifier reaches
+that interpolant. Their concrete flat example is `a³+ab`, not `(a/b)^K`. A successful neural
+run cannot refute those theorems without satisfying their hypotheses. Conversely, a
+rank-one kernel alone does not promise that training finds it, that its code identifies
+the answer, or that 5000 updates suffice. The pattern still needs the recovery conditions.
+
+The actual model learns a tied embedding, passes through input and branch RMSNorms,
+multiplies SiLU gates by values, adds residuals, and minimizes cross-entropy. These are
+different constraints from matching one fixed scalar readout on the training cells.
+In particular, a low classification loss fixes inequalities between logits, not their
+values. With positive epsilon RMSNorm is only approximately invariant to positive
+rescaling away from zero. Its parameter penalty cannot be identified with the nuclear
+norm of the answer kernel by the pure-factorization lemma. AdamW and Schedule-Free AdamW
+also supply no theorem here that their finite iterates find a global penalty minimum.
+The missing connection is an assumption to measure, not a consequence of flatness.
+
+### Rank-one features and a separating answer code
+
+Let `p` be any prime, `n=p−1`, `K` a natural number, `d=gcd(K,n)` and `m=n/d`.
+On nonzero inputs the attainable answers form the subgroup `H={q^K}` of order `m`.
+For a generator `u` of the nonzero residues, define
+`χ_r(u^t)=exp(2πi r t/n)`. Then
+
+```
+χ_r((a/b)^K) = χ_(rK)(a) · conjugate(χ_(rK)(b)).
+```
+
+This is an outer product, hence a rank-one complex matrix for **every** `K`.
+Its real and imaginary parts each have rank at most two. Thus powered division has
+an available low-rank route regardless of the size of the integer exponent. The
+nonzero task depends on `K mod (p−1)`. When `K>0`, zero numerators are handled by the
+additional rank-one feature `[a=0]`; for `K=0`, every answer is 1, including `0^0=1`.
+
+Rank is only part of the question. Write `z=u^d`, a generator of `H`, and retain a
+nonempty finite bank of output-character frequencies `R`. Its answer code is
+
+```
+C_R(z^t) = (exp(2πi r t/m))_(r∈R),       g = gcd(m, R).
+```
+
+**Exact separation criterion.** Two answers `z^t` and `z^s` have the same code exactly
+when `t−s` is a multiple of `m/g`. Every code fiber has size `g`; the bank separates
+all attainable nonzero answers exactly when `g=1`. Equal codes also imply
+`(z^t)^g=(z^s)^g`.
+
+Proof. Code equality says `m | r(t−s)` for every `r∈R`. Bezout's identity for the
+integers `m` and the frequencies makes this equivalent to `m | g(t−s)`, and then to
+`m/g | t−s`. There are exactly `g` such residues modulo `m`. Raising their ratio to
+power `g` gives 1. The outer-product identity follows directly from multiplication
+and division of character values. A single faithful complex character (`r=1`) already
+separates `H`; several nonfaithful ones can jointly do so, for example frequencies
+2 and 3. A constant character has rank one and separates nothing when `m>1`.
+
+**Conditional decoding bound.** Under uniform nonzero inputs, all answers in `H` have
+the same number of preimages. Any decoder receiving only `C_R(c)` is correct on at
+most `1/g` of those inputs. This bound does not apply to a model with additional
+features that distinguish the fibers. In particular, discarding a small fraction of
+embedding energy can discard the entire distinction between answers.
+
+For an injective finite vector code with at least two labels let
+`γ=min_(c≠c') ||C(c)−C(c')||>0`. If a predicted
+code differs from the true one by less than `γ/2`, nearest-code decoding is correct:
+the triangle inequality makes every other code farther away. This is a sufficient
+condition for that decoder, not an assertion that the trained tied-readout network
+uses nearest-code decoding. Margin and recovery error are needed as well as rank.
+
+### Comparison and a prospective retry
+
+The [powered-division experiment](../experiments/rotate90_power_learning/README.md)
+records matched train/heldout tables, actual checkpoints and an independent arithmetic
+oracle. In the discovery seed, width 64/depth 1 learns the P=97 and P=193 tasks almost
+perfectly, while narrow or deeper variants sometimes learn only a quotient of the
+answer group. Examples from the initial audit:
+
+| Case | Exact heldout accuracy | Accuracy after powering both prediction and target |
+| --- | ---: | ---: |
+| P=97, K=2, W=16, D=1 | 32.11% | 99.98% after power 3 |
+| P=193, K=2, W=64, D=4 | 31.67% | 99.70% after power 3 |
+| P=193, K=3, W=16, D=1 | 11.95% | 100% after power 8 |
+
+These are descriptive measurements, not proofs of the optimization mechanism. The
+original flat-spectrum account alone does not distinguish them from the successful
+variants: each task admits separating rank-one characters. The revised account asks
+which modes are learned, whether their joint code separates the answer image, and how
+the small remaining modes affect margins. It retains the exact completion theorems
+and rejects treating the minimum effective rank of one readout as a learning criterion.
+
+The retry is specified before new training in
+[`hypotheses.json`](../experiments/rotate90_power_learning/hypotheses.json): repeat the
+three aliasing cases and three controls with seeds 17 and 23; compare Schedule-Free
+AdamW at three rates in the aliasing cases. Fourier analysis uses the reachable
+nonzero **output** labels, not an assumed full label group. The approximate rule calls
+an alias of size `g` when at least 95% of centered output-embedding energy lies at
+frequencies divisible by `g`. It predicts over 95% accuracy after raising both outputs
+to `g` and exact nonzero accuracy within ten percentage points of `1/g`. Sensitivity
+at 90%, 99% and 99.9% is recorded. This threshold rule is explicitly falsifiable;
+the exact separation theorem does not justify it for approximate codes. `g=1` supplies
+no convergence prediction. Results, including counterexamples, belong in the experiment
+report and must not be used to silently retune the rule.

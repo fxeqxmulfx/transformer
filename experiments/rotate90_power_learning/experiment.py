@@ -54,3 +54,18 @@ experiments.update(grid({"narrow": narrow}, {
 # K=5 is coprime to P-1 at every chosen prime, preserving all output classes.
 experiments.update(grid({"power5": swap(base, "benchmark.exponent", 5)}, {
     "benchmark.prime": {f"p{p}": p for p in (17, 97, 193)}}))
+
+# Theory follow-up: cases chosen before inspecting seeds 17 and 23.
+cases = {name: experiments[name] for name in (
+    "w16d1-p97-k2", "w64d4-p193-k2", "w16d1-p193-k3",
+    "w64d1-p97-k2", "w64d1-p193-k3", "w64d1-p17-k1")}
+experiments.update(grid({f"confirm-{name}": case for name, case in cases.items()}, {
+    "seeds": {f"s{seed}": Seeds(seed, seed, seed) for seed in (17, 23)}}))
+
+# Schedule-Free is a targeted control for the three observed aliasing failures.
+# Keep the external 10-step warmup; built-in warmup is zero, with no decay schedule.
+free = {f"sf-{name}": swap(case, "optimizer", ScheduleFreeAdamW(
+    lr=.003, betas=(.9, .98), weight_decay=1., warmup=0))
+        for name, case in cases.items() if name in (
+            "w16d1-p97-k2", "w64d4-p193-k2", "w16d1-p193-k3")}
+experiments.update(grid(free, {"optimizer.lr": {"lr001": .001, "lr003": .003, "lr01": .01}}))

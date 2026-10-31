@@ -13,9 +13,10 @@ from torch.func import functional_call
 from torch.nn import functional as F
 
 from lab.dsl import (AdamW, Budget, Checkpoint, Eager, Evaluate, Experiment, MaxAutotune,
-                     PeriRotate90, PowerDivision, Schedule, Seeds, swap)
+                     PeriRotate90, PowerDivision, Schedule, ScheduleFreeAdamW, Seeds, swap)
 from lab.infrastructure.benchmarks import build_task
 from lab.infrastructure.engine.compiled import CompiledStepper
+from lab.infrastructure.engine.eager import EagerStepper
 from lab.infrastructure.nn import build_model
 from lab.infrastructure.store import RunDirectory, STREAMS
 from test_engine import Interrupted
@@ -120,6 +121,31 @@ class PowerDivisionTests(unittest.TestCase):
 
 @unittest.skipUnless(torch.cuda.is_available(), "needs CUDA")
 class PowerDivisionCompileTests(unittest.TestCase):
+    def test_schedule_free_compilation_uses_averages_and_restores_training_weights(self):
+        torch.set_num_threads(1)
+        experiment = swap(recipe("cuda"), "optimizer", ScheduleFreeAdamW(
+            lr=.003, betas=(.9, .98), weight_decay=1.))
+        task = build_task(experiment.benchmark, 11, torch.device("cuda"))
+        model = build_model(experiment.model, task.vocab, 11).cuda()
+        reference = copy.deepcopy(model)
+        compiled = CompiledStepper(experiment, task, model, None)
+        eager = EagerStepper(experiment, task, reference, None)
+        parts = ((torch.arange(8), 0, 8),)
+        for rate in (.001, .002, .003, .003):
+            compiled.step(parts, rate, False)
+            eager.step(parts, rate, False)
+        query = [p.detach().clone() for p in model.parameters()]
+        for split in ("train", "heldout"):
+            actual, expected = compiled.evaluate(split), eager.evaluate(split)
+            self.assertAlmostEqual(actual["loss"], expected["loss"], places=4)
+            self.assertEqual(actual["accuracy"], expected["accuracy"])
+            self.assertTrue(compiled.optimizer.param_groups[0]["training"])
+        for p, previous in zip(model.parameters(), query, strict=True):
+            torch.testing.assert_close(p, previous, rtol=2e-6, atol=2e-7)
+        compiled.optimizer.eval()
+        self.assertTrue(any(not torch.equal(p, previous)
+                            for p, previous in zip(model.parameters(), query, strict=True)))
+
     def test_max_autotune_forward_and_backward_match_eager_on_gpu(self):
         torch.set_num_threads(1)
         for depth in (1, 2):

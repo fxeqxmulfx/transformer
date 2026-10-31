@@ -15,6 +15,7 @@ from lab.infrastructure.benchmarks import build_task
 from lab.infrastructure.engine.loop import evaluate
 from lab.infrastructure.loader import load
 from lab.infrastructure.nn import build_model
+from lab.infrastructure.optim import build_optimizer, evaluation_weights, training_weights
 from lab.infrastructure.provenance import code
 from lab.infrastructure.store import RunDirectory
 
@@ -35,17 +36,24 @@ def main():
         task = build_task(experiment.benchmark, experiment.seeds.data, torch.device("cpu"), experiment.model)
         model = build_model(experiment.model, task.vocab, experiment.seeds.model)
         model.load_state_dict(checkpoint["model"])
+        optimizer = build_optimizer(experiment.optimizer, model)
+        optimizer.load_state_dict(checkpoint["optimizer"])
         row = {"label": label, "checkpoint_step": checkpoint["step"],
                "step_matches": checkpoint["step"] == result["stop"]["step"],
                "source_matches": run.provenance()["engine"]["code"] == current_code,
                "label_oracle": "all rows passed independent powered multiplication check", "splits": {}}
-        for split in experiment.benchmark.observed:
-            actual = evaluate(task, model, task.splits[split], experiment.evaluate.batch)
-            expected = result["final"][split]
-            row["splits"][split] = {"actual": actual, "recorded": expected,
-                                     "accuracy_matches": actual["accuracy"] == expected["accuracy"],
-                                     "loss_matches": math.isclose(actual["loss"], expected["loss"],
-                                                                   rel_tol=5e-5, abs_tol=5e-6)}
+        training_weights(optimizer)
+        row["training_weights"] = {
+            split: evaluate(task, model, task.splits[split], experiment.evaluate.batch)
+            for split in experiment.benchmark.observed}
+        with evaluation_weights(optimizer):
+            for split in experiment.benchmark.observed:
+                actual = evaluate(task, model, task.splits[split], experiment.evaluate.batch)
+                expected = result["final"][split]
+                row["splits"][split] = {"actual": actual, "recorded": expected,
+                                         "accuracy_matches": actual["accuracy"] == expected["accuracy"],
+                                         "loss_matches": math.isclose(actual["loss"], expected["loss"],
+                                                                       rel_tol=5e-5, abs_tol=5e-6)}
         row["pass"] = row["step_matches"] and row["source_matches"] and all(
             split["accuracy_matches"] and split["loss_matches"] for split in row["splits"].values())
         reports.append(row)
