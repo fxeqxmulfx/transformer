@@ -11,6 +11,7 @@ public import Transformer.SequenceModel.Attention.Grid.Model
 public import Transformer.SequenceModel.Information.Distribution
 public import Transformer.SequenceModel.Resources
 public import Transformer.SequenceModel.Attention.Stability
+public import Transformer.SequenceModel.Attention.Execution
 
 /-!
 # General positional inputs and normalized multi-variable attention

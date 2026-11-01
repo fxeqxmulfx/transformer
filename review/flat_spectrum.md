@@ -4039,3 +4039,242 @@ allocation failures (float32 and float64, 75 allocations of 8519680 bytes
 each); Schedule-Free AdamW passes. These are unchanged from A1--A6's
 validation. Logs, the individual theorem axiom-check script and source
 review are retained in `.kanban/artifacts/129/`.
+
+
+## Primitive execution certificates
+
+C1--C8 extend B1--B9 from exact local operations in a fixed-point counting
+model to a finite tensor trace with explicit operation errors. The reference
+is still the pinned `diff_gpt` no-cache forward at `b98c665b`. The conclusion
+is conditional on those local errors; it is not a proof that an arbitrary
+PyTorch/CUDA backend satisfies them. All widths, block matrices, finite
+depths, input words and reference phase tables remain parameters.
+
+### C1. Finite binary32 and explicit arithmetic order
+
+`binary32Value` decodes a sign, exponent field `e<255` and fraction field
+`m<2^23`; `binary32_value_mem` proves membership in the existing finite
+`Precision.grid 8 23`, including subnormals. For a nearest map Q and two
+represented endpoints bracketing x, `IsNearest.error_of_bracket` proves
+
+\[
+ |Q(x)-x|\le (b-a)/2.
+\]
+
+`binary32_bracket_error` instantiates this with actual binary32 patterns.
+Inside a positive normal binade, consecutive fraction fields give absolute
+error at most `2^(e-150)/2`, and `binary32_normal_relative_error` gives
+`2^-24 |x|`. The normal theorem requires `0<e<255` and `m+1<2^23`;
+it does not silently include binade boundaries. Positive subnormal
+intervals instead give the absolute bound `2^-149/2`, including intervals
+next to zero. Negative values and boundary-crossing intervals can use the
+general represented-endpoint theorem. There is no universal relative-error
+claim near zero, or an overflow/NaN/flush-to-zero emulator.
+
+`roundedDot mulRound addRound a b n` specifies the sequential recurrence
+`z[0]=0`, `z[k+1]=addRound(z[k]+mulRound(a[k]*b[k]))`. The proved error is
+at most the sum of all local product and accumulator errors, each evaluated
+at the actual rounded partial sum. Uniform bounds P and A give `n(P+A)`.
+Represented brackets discharge those premises. Identity product rounding
+with nearest accumulator rounding models one correctly rounded FMA per
+step; two nearest maps model separate multiply/add. No selected GPU kernel
+is asserted to use this order or these formats. `binary32_quarter_ulp`
+proves that nearest binary32 rounding of `1+2^-25` is one, giving an actual
+nonzero rounding witness.
+
+### C2. Stored RoPE tables need not be exact rotations
+
+`tableRotate` retains the source half-split arithmetic with independently
+stored cosine and sine entries. Given coordinate errors at most tau from
+`cos(a)` and `sin(a)`, `tableRotate_error` proves
+
+\[
+ \|\widehat R x-R_a x\|\le 2\tau\|x\|.
+\]
+
+It assumes neither a unit-circle identity for the stored entries nor that
+they represent any exact phase. Thus frequency/position computation, table
+generation and table-storage errors can be included in tau. Arithmetic
+applying those entries is checked separately. An explicit example uses
+`c=1+1/1024`, `s=1/1024` at reference phase zero. Odd leftover coordinates
+are unchanged in the mathematical helper; the source configuration has
+even head width. Disabled RoPE uses the identity phase/table and exact copy.
+
+### C3. Finite traces and local contracts
+
+`AttentionTrace`, `FFNTrace`, `BlockTrace` and `ModelTrace` contain numerical
+data only. `AttentionAccurate`, `FFNAccurate`, `BlockAccurate` and
+`ModelAccurate` are predicates checking the recorded operations against
+their own recorded inputs. They do not assume a final state, block or
+prediction error. A common nonnegative delta bounds Euclidean vector errors
+and absolute scalar errors; tau bounds table entries independently.
+
+The checks include input RMSNorm, fused QKV, head Q/K RMSNorm, stored table
+application, scaled scores, causal weighted averaging, clipped L2
+normalization, XSA and the explicit first-position zero, head merge/output
+projection, branch RMSNorm, gate/value projections, SiLU, multiplication,
+FFN projection, both residual additions, embedding-table error, final
+RMSNorm and tied logit dot products. Reshape and slices are exact indexing.
+The fused FFN matrix's two halves are represented by their independent
+gate/value maps, preserving its exact mathematical function.
+
+`roundedVector_error` turns coordinate brackets of half-width at most eta
+into Euclidean error `sqrt(d)*eta`. `roundedMatrix_error` turns explicit
+rowwise product/add bounds into `sqrt(m)*n*(P+A)` for an m-by-n reduction.
+These supply operation-contract bounds when their rounding/order premises
+hold. Weight quantization can be included in the matrix operation error
+relative to the reference matrix; the shared embedding-table perturbation
+is represented separately and used at both ends of the model.
+
+RMSNorm, L2 normalization and SiLU accuracy remain primitive implementation
+contracts. In particular, the causal average check is an explicit SDPA
+kernel contract, covering softmax and the weighted reduction at the
+recorded scores and values. A fused implementation may use a logical score
+trace instead of materializing that tensor. This is not yet a scalar IEEE
+proof of its exponential, reciprocal, scaling, summation or reduction
+order. Finite real traces also require excluding backend nonfinite results.
+A single delta is convenient notation, not a backend-independent error
+constant; it may depend on width, context, input range and kernel choice.
+
+### C4. Attention and the approximately normalized XSA direction
+
+Write `L_R=2/sqrt(eps)`, `M=||Q||sqrt(W)` and let H be the head count,
+d the head width. `attentionBudget` derives, in execution order,
+
+\[
+\begin{aligned}
+ e_Q&=\|Q\|\delta+\delta,&
+ e_N&=L_R e_Q+\delta,\\
+ e_R&=2\tau(\sqrt d+e_N)+e_N+\delta,&
+ e_S&=(2\sqrt d+e_R)e_R/\sqrt d+\delta,\\
+ e_A&=8e_S M+e_Q+\delta,&
+ e_U&=(2/\epsilon_X)e_Q+\delta,\\
+ e_H&=[1+(1+e_U)^2]e_A+M(2+e_U)e_U+\delta,\\
+ e_P&=\|O\|\sqrt H\,e_H+\delta,&
+ e_{\rm attn}&=L_R e_P+\delta.
+\end{aligned}
+\]
+
+`attention_scores_error` includes the bilinear cross term from perturbing
+both Q and K. `attention_error` derives the complete branch bound from
+the local checks. The exact clipped direction has norm at most one, but
+the computed direction can have norm as large as `1+e_U`.
+`xsa_pair_error` proves the corresponding bound, instead of incorrectly
+reusing the earlier theorem requiring both directions to have norm at
+most one. Its witness has a computed direction of norm two.
+
+### C5. SwiGLU including activation and product execution
+
+Set `e_g=||G||delta+delta`, `e_v=||V||delta+delta`,
+`R_g=||G||sqrt(W)` and `R_v=||V||sqrt(W)+e_v`. Then `ffnBudget` gives
+
+\[
+ e_{\rm product}=\sqrt F\,[\delta+\delta R_v+
+                   R_v(1+R_g)e_g+R_g e_v],\qquad
+ e_{\rm ffn}=L_R(\|U\|e_{\rm product}+\delta)+\delta.
+\]
+
+`ffn_error` derives this from the actual independent gate and value
+projections, the SiLU error, multiplication error, output projection and
+post-normalizer. The approximate pre-normalized input need not satisfy
+the exact source norm bound; its error is propagated through both matrices.
+Examples admit arbitrary block weights at the source float32 epsilons.
+
+### C6. Both residuals and the complete depth recurrence
+
+With the actual B3 FFN residual gain `f` and B4 full-block Lipschitz
+constant `L`, the new block radius is
+
+\[
+ r=f(e_{\rm attn}+\delta)+e_{\rm ffn}+\delta.
+\]
+
+`block_error` and `block_movement_error` prove the same-input and moving-input
+bounds. `model_error` derives the complete layer recurrence
+
+\[
+ E_0=L_R\delta+\delta,\qquad E_{\ell+1}=L_\ell E_\ell+r_\ell.
+\]
+
+The base includes the shared embedding-table perturbation and input
+normalizer; each independently weighted block supplies its own constants.
+The result bounds every recorded residual state at every depth up to D.
+Width affects matrix norms, head/FFN sizes and local arithmetic bounds;
+depth affects repeated amplification and accumulated operation error.
+This is a sufficient stability bound, not a sharp width/depth lower bound.
+
+### C7. Executed logits and the uniform counting bridge
+
+For raw reference class embedding e, `logitRadius` is
+
+\[
+ r_e=(L_R E_D+\delta)\|e\|+(\sqrt W+\delta)\delta+\delta.
+\]
+
+`logit_error` proves this bound for the recorded logit, including final
+RMSNorm error, the perturbed tied embedding and the executed dot product.
+`predict_true` proves a strict computed target prediction when each exact
+source target-versus-competitor margin exceeds `r_target+r_competitor`.
+Neither an assumed hidden-state error nor an assumed final-logit error
+appears among the primitive contracts.
+
+`uniform_execution_certificate` chooses the existing nonperiodic RoPE
+counting formula before any input word, with counting depth at most D.
+When both B8's fixed-point range/precision/margin certificate and C7's
+execution certificate hold against the same exact source, the formula
+accepts the target and the executed trace predicts it. These are explicit
+conditional target agreements for all finite words. This does not assert
+unrestricted equivalence for arbitrary hardware, a context-independent
+floating-point error budget, or a strict hierarchy for exact RoPE kernels.
+
+### C8. Witnesses, remaining gap and validation
+
+Every new theorem with hypotheses has a concrete Lean `example`. Exact
+source traces witness all operation contracts for arbitrary weights and
+phases. `shiftedModel` additionally perturbs each final dot product by
+`delta`; `shiftedModel_accurate` proves every local check, and
+`shiftedModel_logit_error` proves that its actual logit error equals delta.
+This synthetic trace is not attributed to a CUDA implementation.
+
+For B9's W=4, H=1, F=11, D=2, three unit embeddings and zero block matrices,
+use `eps=3/4`, `epsilon_X=1`, `delta=1/1024`, `tau=0`, with source RoPE
+active. The complete derived budget is `(5 L_R+9)/1024`; each logit bound
+is below 1/2, while each correct source margin is one. Thus
+`example_executed_prediction` certifies the nonconstant three-class
+classifier on every finite word despite its nonzero logit errors.
+`example_uniform_execution` also instantiates the counting bridge with
+p=8,s=5. The synthetic normalization epsilons are not the source defaults.
+
+| Lean module | Proved connection |
+| --- | --- |
+| `Precision.Binary32Error`, `ArithmeticError` | finite represented brackets, normal/subnormal bounds, explicit multiply/add or FMA accumulation |
+| `Attention.Execution.Tables`, `Rounding` | independent stored RoPE coefficients and scalar-to-tensor operation bounds |
+| `Attention.Execution.Trace`, `Basic`, `Budget` | concrete numerical traces, local predicates and derived constants |
+| `Attention.Execution.Scores`, `Attention`, `FFN` | complete branch errors, including non-unit computed XSA direction |
+| `Attention.Execution.Block`, `Model`, `Readout` | both residuals, arbitrary finite depth, tied logits and strict prediction |
+| `Attention.Execution.Witness`, `Certificate` | nonzero-error classifier and conditional uniform exact-RoPE counting transfer |
+
+The closed gap is the propagation of local execution errors, including
+independent stored RoPE tables, through the full normalized source stack.
+Connecting a selected PyTorch/CUDA kernel to the local contracts remains:
+its dtypes and reduction order, transcendental/normalization accuracy,
+SDPA error, table-generation bounds and finite-range behavior must still
+be established. The scalar/vector adapters are reusable pieces of that
+connection, not a completed backend proof. A strict exact-RoPE depth
+hierarchy and optimizer/generalization guarantees remain unproved. No
+training experiments or Python implementations change in C1--C8.
+
+
+Validation of C1--C8: full `lake build` passes (13190 jobs); new modules
+have no warnings. All 46 new named theorems pass individual `#print axioms`
+checks using only `propext`, `Classical.choice` and `Quot.sound`. The audit
+remains at 36 pre-existing `sorry`, zero dependent results and zero extra
+axioms. The regenerated index has 4093 modules, 21096 theorems, zero vacuous
+results and zero placeholders. Forbidden checks and `git diff --check`
+pass, and all five pinned source hashes match after reviewing the forward.
+
+All 418 lab tests pass with three skips. The 104-test optimizer suite
+reproduces the two existing ScheduleFreeMuon allocation failures, float32
+and float64, each with 75 allocations of 8519680 bytes. Schedule-Free AdamW
+passes. These failures match B1--B9's baseline. Build/test logs, individual
+axiom checks and the source review are retained in `.kanban/artifacts/130/`.

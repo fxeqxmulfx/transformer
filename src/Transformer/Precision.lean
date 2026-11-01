@@ -11,6 +11,7 @@ public import Transformer.Precision.Float
 public import Transformer.Precision.FloatSum
 public import Transformer.Precision.Tail
 public import Transformer.Precision.BlockScale
+public import Transformer.Precision.ArithmeticError
 
 /-!
 # Numerical precision and context length
@@ -31,6 +32,7 @@ still read.
 | `Precision.Tail` | FP8 flash attention storing `exp(s - max)` in E4M3 drops every key `ln 2^{10}` below the top; the output shrinks by `1 + (n - 1) e^{-D}` (below `1/40` at `n = 2^{17}`, `D = 8`) |
 | `Precision.BlockScale` | block scaling makes the dead zone relative: NVFP4 drops a key below `1/24` of its block maximum, but at most `255/384` of the mass, at any length |
 | `Precision.ContextLength` | past `2^{b+1} e^D` tokens a `b`-bit head outputs `0`; below `2^{b+1} e^{-D}` it reads every token |
+| `Precision.Binary32Error`, `ArithmeticError` | finite binary32 brackets, normal/subnormal error bounds, and explicit sequential or FMA product/reduction certificates |
 -/
 
 @[expose] public section
