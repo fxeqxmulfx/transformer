@@ -10,6 +10,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`residual_gradient_paths`](residual_gradient_paths) | 36 | Known-solution CPU controls: post-RMS gates recover in 12/12 cases; pre-RMS gates in 4/12; depth scaling keeps transport gain at least 1/2 in the linear witness. |
 | [`residual_generalization`](residual_generalization) | 16 | Closed two-hour cohort: ordinary residuals reach99.96–100% test; scaling generalizes earlier at23k; depth attention remains near chance within its allowance. All16 cases and execution failures retained. |
 | [`modular_composition`](modular_composition) | 48 | Can the normalized source RoPE transformer learn flat-spectrum mixed arithmetic and composed modular chains with Schedule-Free AdamW? All48 completed; full curves and replay discrepancies retained. |
 | [`modular_composition_long`](modular_composition_long) | 10 | All10 reached100000 updates in1h44m43s: division groks, mixed pairs remain near chance; full-state and gradient audits retained. |

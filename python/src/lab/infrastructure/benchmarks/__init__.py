@@ -20,6 +20,8 @@ observation beyond its splits' metrics, and `inspect` measures the last and
 the best model; `analyze` summarizes the history of observations.
 """
 
+from ...domain.gradient_paths import GradientTargets
+from .gradient_paths import GradientTask
 from ...domain.benchmarks import ModularDivision, TinyShakespeare
 from ...domain.atomic import MatchingBindings, MatchingOrders
 from ...domain.regression import ModularRegression
@@ -49,6 +51,8 @@ TASKS = {ResidualPairs: ResidualPairsTask, ModularDivision: ModularTask, TinySha
 
 
 def build_task(spec, data_seed, device, model_spec=None):
+    if isinstance(spec, GradientTargets):
+        return GradientTask(spec, data_seed, device, model_spec)
     if isinstance(spec, DivisionPairs):
         if model_spec is None:
             raise ValueError("DivisionPairs needs its explicit model specification")

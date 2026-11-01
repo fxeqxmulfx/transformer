@@ -1,5 +1,7 @@
 """Training engines: one stepper per execution block, all driven by one loop."""
 
+from ...domain.gradient_paths import GradientTargets
+from .gradient_paths import GradientCompiledStepper, GradientEagerStepper
 from ...domain import optimizers, training
 from ...domain.atomic import AtomicColumns
 from ..provenance import provenance
@@ -29,6 +31,8 @@ class Engine:
         stepper = PopulationStepper if isinstance(experiment.optimizer, optimizers.ANSR) else STEPPERS[type(experiment.execution)]
         if isinstance(experiment.optimizer, AtomicColumns):
             stepper = AtomicStepper
+        if isinstance(experiment.benchmark, GradientTargets):
+            stepper = GradientEagerStepper if type(experiment.execution) is training.Eager else GradientCompiledStepper
         if isinstance(experiment.benchmark, ResidualPairs):
             stepper = ResidualEagerStepper if type(experiment.execution) is training.Eager else ResidualCompiledStepper
             return ResidualTraining(experiment, run, progress, stepper)()

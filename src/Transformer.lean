@@ -53,6 +53,7 @@ public import Transformer.ScheduleFree
 public import Transformer.Grokking
 public import Transformer.Landscape
 public import Transformer.MHC
+public import Transformer.Residual.GradientPaths
 public import Transformer.AttentionResiduals
 public import Transformer.DeepSeekV41
 public import Transformer.RoPE

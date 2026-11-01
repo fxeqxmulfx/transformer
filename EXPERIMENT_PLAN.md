@@ -32,10 +32,10 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 | #147 numerical XSA correction | Self-reviewed;17 Lean theorems and fresh compiled checks pass; all6 division checkpoint reports reproduce identically | Preserve clipping/backward conventions; all failures retained; actual-source checks pass and original long trajectories stay frozen |
 | #149 repeated-token length collisions | Backlog after#147; structural follow-up | Check guarded constant-prefix invariance across lengths, the P97 chain labels3 versus31 on repeated token1, and an explicit boundary-token repair; do not turn a rare conditional collision into an average-error explanation |
 | #148 paired deep numerical correction | Backlog after#147; separate budget required | Compare legacy and guarded XSA with matched seeds, gradients and sufficiently long learning curves; numerical fidelity alone is not improved generalization |
-| #145 residual training comparison | Results complete; self-review pending; 16 cases retained, GPU phase closed at7165.75s | Freeze matched seeds and sufficiently long budgets for ordinary residual, branch-scale control, source-faithful AttnRes and the separately labeled conditioned Q/K variant from#150; preserve source branches and disclose added parameters/compute |
+| #145 residual training comparison | Complete; self-reviewed at 79a6f443; 16 cases retained, GPU phase closed at 7165.75s | Freeze matched seeds and sufficiently long budgets for ordinary residual, branch-scale control, source-faithful AttnRes and the separately labeled conditioned Q/K variant from#150; preserve source branches and disclose added parameters/compute |
 | #146 normalized depth-attention verification | Self-reviewed; eight Lean theorems rechecked;21-case synthetic report reproduces identically | Prove Q/K score and sensitivity bounds with explicit gain/temperature assumptions; reuse diff_gpt; run a known-solution synthetic task and inspect gradients before full-model changes; commit both repositories |
 | #150 depth-query coordinate repair | Self-reviewed; all30 cases complete and replay byte-identically;6/6 huge-query repairs versus0/6 controls | Preserve finite-epsilon Q/K outputs and complete Schedule-Free state under coordinate changes; prove identities and bounds, test all30 fresh/resumed cases, retain failures, then self-review |
-| #151 normalization and residual gradient benchmark | Queued after#145; explicitly requested on2026-11-02 | Known-solution synthetic tasks for gate placement around RMSNorm and depth-dependent gradient transport; independent derivatives, paired Schedule-Free recovery, held-out inputs, and diff_gpt regressions for verified repairs |
+| #151 normalization and residual gradient benchmark | Complete; 36 CPU cases, proved mechanisms and self-reviewed GPT regression | Known-solution synthetic tasks for gate placement around RMSNorm and depth-dependent gradient transport; independent derivatives, paired Schedule-Free recovery, held-out inputs, and diff_gpt regressions for verified repairs |
 | #139 polynomial-resource construction | Backlog; core theory target | Route local arithmetic states and compose real source blocks; aim for fixed width at fixed prime with growing depth, otherwise explicit polynomial bounds; include precision and margins |
 | #133 optimizer-to-recovery bridge | Backlog after#131 | Derive useful routing or separating feature recovery from actual sampled CE/Schedule-Free dynamics under witnessed conditions; retain alias/memorization counterexamples |
 | #134 structured depth/width tradeoffs | Backlog after#131 | Task-specific bounds for exact nonperiodic RoPE; do not substitute arbitrary-table counting or periodic C-RASP lower bounds |
@@ -3132,3 +3132,18 @@ known-solution task151 must distinguish coefficient/coordinate conditioning
 from missing features and actual modular generalization. Both prior GPU phase
 budgets are now closed. GPT5d71786 adds two held-out regression fixtures for
 scaling, with a disabled-scaling control falling to36.21%/43.77%.
+
+
+Task151 measured outcome (2026-11-02): all 36 CPU cases reached 10,000 updates
+(360,000 total), in 171.11 scored seconds. Post-RMS bounded gates recovered
+12/12 cases; pre-RMS gates recovered 4/12, only at scale .001. Depth-scaled
+transport recovered 6/6; ordinary contracting transport recovered 2/6 (depth
+one). Known optima and independent derivatives establish equal representability.
+FP32 radial cancellation and depth-dependent parameter conditioning explain
+the controlled failures; depth-eight ordinary transport still moves and is
+not an impossibility result. Nine Lean statements in Residual.GradientPaths
+formalize the exact mechanisms without a convergence claim. GPT379a9f2 adds
+an optional post-RMS gain and meaningful recovery/negative-control tests.
+The next full-transformer learning comparison needs a new explicit GPU budget;
+the previous phase remains closed. Preserve ordinary and fixed-scale controls,
+QK norms, source RoPE/XSA/Peri branches, paired seeds and long continuations.

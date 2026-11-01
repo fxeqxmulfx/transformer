@@ -9,6 +9,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 import re
 
+from .gradient_paths import BranchGates, LinearTransport, GradientTargets
 from .benchmarks import Benchmark, ModularDivision
 from .grokking import GrokkingDiagnostics
 from .model import Model
@@ -153,6 +154,12 @@ class Experiment(Spec):
             require(isinstance(self.model, SourceTransformer) and
                     isinstance(self.benchmark, (ModularPairs, ModularChain)),
                     "SourceTransformer uses final-answer ModularPairs or ModularChain")
+        if isinstance(self.model, (BranchGates, LinearTransport)) or isinstance(self.benchmark, GradientTargets):
+            require(isinstance(self.model, (BranchGates, LinearTransport))
+                    and isinstance(self.benchmark, GradientTargets), "GradientTargets needs its witness model")
+            require(type(self.optimizer) is ScheduleFreeAdamW, "Gradient witnesses use Schedule-Free AdamW")
+            require(type(self.execution) is Eager or isinstance(self.execution, Compiled),
+                    "Gradient witnesses support eager or compiled execution")
         if isinstance(self.execution, ResidualMaxAutotune):
             require(isinstance(self.model, ResidualTransformer), "ResidualMaxAutotune needs ResidualTransformer")
         if isinstance(self.model, ResidualTransformer) or isinstance(self.benchmark, ResidualPairs):

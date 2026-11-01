@@ -4,6 +4,8 @@ import math
 
 import torch
 
+from ...domain.gradient_paths import BranchGates, LinearTransport
+from .gradient_paths import build as build_gradient_model
 from ...domain import model
 from ...domain.atomic import AtomicMatching as AtomicSpec
 from ...domain.regression import MLP as MLPSpec
@@ -33,6 +35,8 @@ def build_model(spec, vocab, seed):
     same spec and seed starts from bit-identical parameters.
     """
     torch.manual_seed(seed)
+    if isinstance(spec, (BranchGates, LinearTransport)):
+        return build_gradient_model(spec)
     if isinstance(spec, ResidualSpec):
         return ResidualTransformer(spec, vocab)
     if isinstance(spec, SourceSpec):
