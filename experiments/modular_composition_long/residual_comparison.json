@@ -1,0 +1,1586 @@
+{
+  "scope": "Same first512 rows per split at2000 and100000 updates; original arithmetic, CPU FP32; all eight pairs retained",
+  "limits": "Ambient state gradients can cancel under shared parameters. Tiny gradients at solved endpoints reflect low CE loss, not proof of trainability. Existing early exits are not trained classifiers. No causal residual ablation.",
+  "input_sha256": {
+    "early": "64de731f88577c89224c2bd3dc372f1fa065fa69b0d182280efe4bddfe4065d0",
+    "long": "0286f2a0ed5a442c4f28a0f8506e41e95ffd41cc6e374e85fc3a211a42ca7f0f"
+  },
+  "cases": [
+    {
+      "label": "pairs-division-p97-w256d1",
+      "early_step": 2000,
+      "long_step": 100000,
+      "early_checkpoint_sha256": "b3bc378f98151191722298d367ace038af1822f17f3bbf4eb94dedfbf020612c",
+      "long_checkpoint_sha256": "bb1e1323f189a96112a9b195b9ff947d3a0e85d3c9b072d27748964563642be4",
+      "splits": {
+        "train": {
+          "early": {
+            "accuracy": 1.0,
+            "loss": 1.776497668970478e-07,
+            "final_state_mean_rms": 0.8263777512143369,
+            "largest_parameter_gradient_rms": 3.1651751131445932e-09,
+            "largest_ambient_state_gradient_rms": 8.157157045089584e-09,
+            "initial_ambient_state_gradient_rms": 8.157157045089584e-09,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9902385665343695,
+              "block1.ffn": 0.9249992653160974
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.40269821612128,
+              "block1.ffn": -0.685692487997585
+            },
+            "prefix_tied_readout_accuracy": [
+              0.0078125,
+              0.0078125,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 5,
+                "ambient_initial_state_gradient_rms": 8.254107014660159e-08,
+                "position_sum_gradient_rms": 1.2497680931619545e-10,
+                "position_sum_cancellation_ratio_mean": 0.0008758529536956976,
+                "first_attention_raw_answer_rms_mean": 6.361484887385661e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 507,
+                "ambient_initial_state_gradient_rms": 7.608203160540692e-11,
+                "position_sum_gradient_rms": 9.723880075665242e-11,
+                "position_sum_cancellation_ratio_mean": 0.657001840862487,
+                "first_attention_raw_answer_rms_mean": 0.24783703093130538
+              }
+            }
+          },
+          "long": {
+            "accuracy": 1.0,
+            "loss": 9.778886145284105e-09,
+            "final_state_mean_rms": 0.88983816423758,
+            "largest_parameter_gradient_rms": 2.86996422519837e-09,
+            "largest_ambient_state_gradient_rms": 2.2880966785595995e-09,
+            "initial_ambient_state_gradient_rms": 2.2880966785595995e-09,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9902307838910968,
+              "block1.ffn": 1.8185642798029331
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.8391602311749011,
+              "block1.ffn": -0.46302921280584997
+            },
+            "prefix_tied_readout_accuracy": [
+              0.0078125,
+              0.01171875,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 5,
+                "ambient_initial_state_gradient_rms": 2.3151513131797468e-08,
+                "position_sum_gradient_rms": 3.9479264630332536e-11,
+                "position_sum_cancellation_ratio_mean": 0.001945973418953995,
+                "first_attention_raw_answer_rms_mean": 2.1679787093810002e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 507,
+                "ambient_initial_state_gradient_rms": 3.308707906124296e-11,
+                "position_sum_gradient_rms": 4.5694437500734794e-11,
+                "position_sum_cancellation_ratio_mean": 0.7479845418281331,
+                "first_attention_raw_answer_rms_mean": 0.11479526321588962
+              }
+            }
+          }
+        },
+        "heldout": {
+          "early": {
+            "accuracy": 0.046875,
+            "loss": 7.056765079498291,
+            "final_state_mean_rms": 0.8723632500502685,
+            "largest_parameter_gradient_rms": 0.03310911445909869,
+            "largest_ambient_state_gradient_rms": 0.034311757015779584,
+            "initial_ambient_state_gradient_rms": 0.034311757015779584,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9843794677818619,
+              "block1.ffn": 0.8835244732429925
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.34025158816439216,
+              "block1.ffn": -0.6702292761983699
+            },
+            "prefix_tied_readout_accuracy": [
+              0.005859375,
+              0.009765625,
+              0.046875
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 8,
+                "ambient_initial_state_gradient_rms": 0.27443221977689497,
+                "position_sum_gradient_rms": 0.0006149290074161713,
+                "position_sum_cancellation_ratio_mean": 0.0010913004934552134,
+                "first_attention_raw_answer_rms_mean": 5.082612811420376e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 504,
+                "ambient_initial_state_gradient_rms": 0.000734021289423389,
+                "position_sum_gradient_rms": 0.0009231448576868681,
+                "position_sum_cancellation_ratio_mean": 0.6503000480463188,
+                "first_attention_raw_answer_rms_mean": 0.23629973662743337
+              }
+            }
+          },
+          "long": {
+            "accuracy": 1.0,
+            "loss": 3.073364140959711e-08,
+            "final_state_mean_rms": 0.8902628586160796,
+            "largest_parameter_gradient_rms": 2.7352195023811137e-09,
+            "largest_ambient_state_gradient_rms": 4.168484733955098e-09,
+            "initial_ambient_state_gradient_rms": 4.168484733955098e-09,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9843718781803293,
+              "block1.ffn": 1.807637628068045
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.840848536347039,
+              "block1.ffn": -0.46323190844850615
+            },
+            "prefix_tied_readout_accuracy": [
+              0.005859375,
+              0.0078125,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 8,
+                "ambient_initial_state_gradient_rms": 3.334474314432625e-08,
+                "position_sum_gradient_rms": 4.9077078263038685e-11,
+                "position_sum_cancellation_ratio_mean": 0.0013944002154897017,
+                "first_attention_raw_answer_rms_mean": 2.6475471282936445e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 504,
+                "ambient_initial_state_gradient_rms": 5.760610372987951e-11,
+                "position_sum_gradient_rms": 8.108065245841199e-11,
+                "position_sum_cancellation_ratio_mean": 0.7426611396921236,
+                "first_attention_raw_answer_rms_mean": 0.11331381159250696
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "label": "pairs-division-p97-w128d4",
+      "early_step": 2000,
+      "long_step": 100000,
+      "early_checkpoint_sha256": "cab2073fd2d658ab49583523c8c8a14a44f9fdac91c9a0b5cb1748009831d430",
+      "long_checkpoint_sha256": "8c37298eeaff460a5b260a9e8d20de9f64bac6ed577e001628b43cb920d89002",
+      "splits": {
+        "train": {
+          "early": {
+            "accuracy": 1.0,
+            "loss": 0.0009486622293479741,
+            "final_state_mean_rms": 2.4090202182203715,
+            "largest_parameter_gradient_rms": 3.065382418297353e-05,
+            "largest_ambient_state_gradient_rms": 0.04805976706583062,
+            "initial_ambient_state_gradient_rms": 0.04805976706583062,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9902369417298345,
+              "block1.ffn": 0.7157719322901981,
+              "block2.attention": 0.6101777035793714,
+              "block2.ffn": 0.5494977514885051,
+              "block3.attention": 0.5216257701497878,
+              "block3.ffn": 0.5110849459486905,
+              "block4.attention": 0.48959955153468304,
+              "block4.ffn": 0.4884179277652513
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.010571668710326776,
+              "block1.ffn": -0.11332747914912034,
+              "block2.attention": -0.08709895393667466,
+              "block2.ffn": -0.1717529025318072,
+              "block3.attention": -0.2167775081588843,
+              "block3.ffn": -0.15869158391979,
+              "block4.attention": -0.2341517594340985,
+              "block4.ffn": 0.1323566708861108
+            },
+            "prefix_tied_readout_accuracy": [
+              0.0078125,
+              0.0078125,
+              0.0078125,
+              0.009765625,
+              0.22265625,
+              0.193359375,
+              0.826171875,
+              0.99609375,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 5,
+                "ambient_initial_state_gradient_rms": 0.4863306487142369,
+                "position_sum_gradient_rms": 2.0754277504990493e-07,
+                "position_sum_cancellation_ratio_mean": 4.2615895178147414e-07,
+                "first_attention_raw_answer_rms_mean": 4.178679620675704e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 507,
+                "ambient_initial_state_gradient_rms": 8.212642512350362e-07,
+                "position_sum_gradient_rms": 1.1447653133449697e-06,
+                "position_sum_cancellation_ratio_mean": 0.6925849318318923,
+                "first_attention_raw_answer_rms_mean": 0.24788123583262253
+              }
+            }
+          },
+          "long": {
+            "accuracy": 1.0,
+            "loss": 1.0856883818632923e-06,
+            "final_state_mean_rms": 2.6469655415208106,
+            "largest_parameter_gradient_rms": 6.360908622918658e-08,
+            "largest_ambient_state_gradient_rms": 4.9231611635213346e-05,
+            "initial_ambient_state_gradient_rms": 4.9231611635213346e-05,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9902031238478181,
+              "block1.ffn": 1.0225326628093097,
+              "block2.attention": 0.9465133818419316,
+              "block2.ffn": 0.805574449973432,
+              "block3.attention": 0.7815889593847398,
+              "block3.ffn": 0.8250123525595349,
+              "block4.attention": 0.6310162656118926,
+              "block4.ffn": 0.5066329191092762
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.5150484445912298,
+              "block1.ffn": -0.4423726436798461,
+              "block2.attention": -0.2473593814720516,
+              "block2.ffn": -0.3626327067759121,
+              "block3.attention": -0.44854682371078525,
+              "block3.ffn": 0.0189531847681792,
+              "block4.attention": 0.12532272531461786,
+              "block4.ffn": 0.5208782018744387
+            },
+            "prefix_tied_readout_accuracy": [
+              0.0078125,
+              0.0078125,
+              0.103515625,
+              0.11328125,
+              0.755859375,
+              0.951171875,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 5,
+                "ambient_initial_state_gradient_rms": 0.0004981888820273634,
+                "position_sum_gradient_rms": 3.099381406695229e-10,
+                "position_sum_cancellation_ratio_mean": 7.587994338872878e-07,
+                "first_attention_raw_answer_rms_mean": 3.547006448079727e-09
+              },
+              "distinct_input_tokens": {
+                "examples": 507,
+                "ambient_initial_state_gradient_rms": 6.768529812929114e-10,
+                "position_sum_gradient_rms": 9.496365720485807e-10,
+                "position_sum_cancellation_ratio_mean": 0.6773546546205178,
+                "first_attention_raw_answer_rms_mean": 0.04728745184855557
+              }
+            }
+          }
+        },
+        "heldout": {
+          "early": {
+            "accuracy": 0.021484375,
+            "loss": 9.363033294677734,
+            "final_state_mean_rms": 2.082825159453605,
+            "largest_parameter_gradient_rms": 0.030873179922751424,
+            "largest_ambient_state_gradient_rms": 339.28573921860306,
+            "initial_ambient_state_gradient_rms": 339.28573921860306,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9843780303201796,
+              "block1.ffn": 0.7105735895131549,
+              "block2.attention": 0.6015025910585691,
+              "block2.ffn": 0.5433494941111634,
+              "block3.attention": 0.518558030019877,
+              "block3.ffn": 0.5099503669573281,
+              "block4.attention": 0.49592031294197625,
+              "block4.ffn": 0.4950978316849435
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": 0.009400999289027823,
+              "block1.ffn": -0.10870946224349609,
+              "block2.attention": -0.07154743582941592,
+              "block2.ffn": -0.17828549601290433,
+              "block3.attention": -0.22216229276091326,
+              "block3.ffn": -0.19402962978165306,
+              "block4.attention": -0.23911129189582425,
+              "block4.ffn": -0.18442054986735457
+            },
+            "prefix_tied_readout_accuracy": [
+              0.005859375,
+              0.005859375,
+              0.005859375,
+              0.013671875,
+              0.017578125,
+              0.017578125,
+              0.0234375,
+              0.025390625,
+              0.021484375
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 8,
+                "ambient_initial_state_gradient_rms": 2714.285913740232,
+                "position_sum_gradient_rms": 0.0014851699738742332,
+                "position_sum_cancellation_ratio_mean": 3.842823088792192e-07,
+                "first_attention_raw_answer_rms_mean": 4.55558515796948e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 504,
+                "ambient_initial_state_gradient_rms": 0.0008604602575496666,
+                "position_sum_gradient_rms": 0.0011801937752218303,
+                "position_sum_cancellation_ratio_mean": 0.6936063445240098,
+                "first_attention_raw_answer_rms_mean": 0.24603904532830362
+              }
+            }
+          },
+          "long": {
+            "accuracy": 1.0,
+            "loss": 1.2936054645251716e-06,
+            "final_state_mean_rms": 2.6493647472675272,
+            "largest_parameter_gradient_rms": 9.96121262697003e-08,
+            "largest_ambient_state_gradient_rms": 3.668530117816912e-05,
+            "initial_ambient_state_gradient_rms": 3.668530117816912e-05,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9843412645186308,
+              "block1.ffn": 1.0253578539178712,
+              "block2.attention": 0.9390526796162356,
+              "block2.ffn": 0.8067907890740474,
+              "block3.attention": 0.7841667909066986,
+              "block3.ffn": 0.8213702910385675,
+              "block4.attention": 0.628729953671054,
+              "block4.ffn": 0.5078814772186688
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.513701367075555,
+              "block1.ffn": -0.43958176468731835,
+              "block2.attention": -0.24453998027456691,
+              "block2.ffn": -0.3628447678493103,
+              "block3.attention": -0.4365640050600632,
+              "block3.ffn": 0.022021138827767572,
+              "block4.attention": 0.11344616531005158,
+              "block4.ffn": 0.518822520156391
+            },
+            "prefix_tied_readout_accuracy": [
+              0.005859375,
+              0.005859375,
+              0.091796875,
+              0.109375,
+              0.716796875,
+              0.93359375,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 8,
+                "ambient_initial_state_gradient_rms": 0.0002934824092725073,
+                "position_sum_gradient_rms": 2.644326477126746e-10,
+                "position_sum_cancellation_ratio_mean": 2.81403027079776e-06,
+                "first_attention_raw_answer_rms_mean": 7.777569561620107e-09
+              },
+              "distinct_input_tokens": {
+                "examples": 504,
+                "ambient_initial_state_gradient_rms": 1.1933349117368764e-09,
+                "position_sum_gradient_rms": 1.4004305918469502e-09,
+                "position_sum_cancellation_ratio_mean": 0.6712159990623104,
+                "first_attention_raw_answer_rms_mean": 0.04592126569116538
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "label": "pairs-mixed-p97-w256d1",
+      "early_step": 2000,
+      "long_step": 100000,
+      "early_checkpoint_sha256": "99ca9e511113cdfd21548a70eb40798a595ac6e467d0a15705fcb9aa520a40e1",
+      "long_checkpoint_sha256": "da92512a8f19d5d90c0f06e3a8b4b5ea3e981c1bec66befd03739b84202bd745",
+      "splits": {
+        "train": {
+          "early": {
+            "accuracy": 1.0,
+            "loss": 6.747430347786576e-07,
+            "final_state_mean_rms": 0.9244582256155113,
+            "largest_parameter_gradient_rms": 1.0604009254756428e-08,
+            "largest_ambient_state_gradient_rms": 4.740954729468315e-08,
+            "initial_ambient_state_gradient_rms": 4.740954729468315e-08,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9921909281955388,
+              "block1.ffn": 0.854835919935714
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.30455072535824,
+              "block1.ffn": -0.6437911682805861
+            },
+            "prefix_tied_readout_accuracy": [
+              0.0078125,
+              0.0078125,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 4,
+                "ambient_initial_state_gradient_rms": 5.363705997052626e-07,
+                "position_sum_gradient_rms": 6.47959604581049e-10,
+                "position_sum_cancellation_ratio_mean": 0.0007766204514198892,
+                "first_attention_raw_answer_rms_mean": 6.331929158870277e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 508,
+                "ambient_initial_state_gradient_rms": 2.4658504988591044e-10,
+                "position_sum_gradient_rms": 3.247089406945386e-10,
+                "position_sum_cancellation_ratio_mean": 0.665368829751656,
+                "first_attention_raw_answer_rms_mean": 0.20867606165095806
+              }
+            }
+          },
+          "long": {
+            "accuracy": 1.0,
+            "loss": 2.9336593598827676e-08,
+            "final_state_mean_rms": 0.9587894721159027,
+            "largest_parameter_gradient_rms": 2.1565142212145715e-08,
+            "largest_ambient_state_gradient_rms": 4.2801363169924786e-10,
+            "initial_ambient_state_gradient_rms": 4.2801363169924786e-10,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9921890122536113,
+              "block1.ffn": 1.3363562981694574
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.7124870682018809,
+              "block1.ffn": -0.4220503755732352
+            },
+            "prefix_tied_readout_accuracy": [
+              0.0078125,
+              0.0078125,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 4,
+                "ambient_initial_state_gradient_rms": 1.693995961180528e-09,
+                "position_sum_gradient_rms": 5.261543242994417e-12,
+                "position_sum_cancellation_ratio_mean": 0.0018587644782230863,
+                "first_attention_raw_answer_rms_mean": 6.313009112383294e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 508,
+                "ambient_initial_state_gradient_rms": 4.025452809205915e-10,
+                "position_sum_gradient_rms": 4.982785091536437e-10,
+                "position_sum_cancellation_ratio_mean": 0.6709641580918925,
+                "first_attention_raw_answer_rms_mean": 0.15722414050769049
+              }
+            }
+          }
+        },
+        "heldout": {
+          "early": {
+            "accuracy": 0.015625,
+            "loss": 11.115762710571289,
+            "final_state_mean_rms": 0.9832446419819628,
+            "largest_parameter_gradient_rms": 0.02898238585557055,
+            "largest_ambient_state_gradient_rms": 0.03004551651543436,
+            "initial_ambient_state_gradient_rms": 0.03004551651543436,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9921904182495954,
+              "block1.ffn": 0.8135956301094653
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.23137878289890068,
+              "block1.ffn": -0.6265652328147553
+            },
+            "prefix_tied_readout_accuracy": [
+              0.015625,
+              0.015625,
+              0.015625
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 4,
+                "ambient_initial_state_gradient_rms": 0.33984886381595153,
+                "position_sum_gradient_rms": 0.0009119419725458267,
+                "position_sum_cancellation_ratio_mean": 0.0013362172068219157,
+                "first_attention_raw_answer_rms_mean": 4.759699148170272e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 508,
+                "ambient_initial_state_gradient_rms": 0.0006434514827285149,
+                "position_sum_gradient_rms": 0.0008332723643561741,
+                "position_sum_cancellation_ratio_mean": 0.658695723517967,
+                "first_attention_raw_answer_rms_mean": 0.19839588131639055
+              }
+            }
+          },
+          "long": {
+            "accuracy": 0.01171875,
+            "loss": 9.626518249511719,
+            "final_state_mean_rms": 0.9548031342236395,
+            "largest_parameter_gradient_rms": 0.04460037416768768,
+            "largest_ambient_state_gradient_rms": 0.009206635705425171,
+            "initial_ambient_state_gradient_rms": 0.009206635705425171,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9921886044051931,
+              "block1.ffn": 1.300867325687524
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.6986529233399779,
+              "block1.ffn": -0.43805036113553797
+            },
+            "prefix_tied_readout_accuracy": [
+              0.015625,
+              0.015625,
+              0.01171875
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 4,
+                "ambient_initial_state_gradient_rms": 0.10385817215725882,
+                "position_sum_gradient_rms": 0.0008512361509722998,
+                "position_sum_cancellation_ratio_mean": 0.004286508307468122,
+                "first_attention_raw_answer_rms_mean": 5.2346120797934904e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 508,
+                "ambient_initial_state_gradient_rms": 0.0007045081253988074,
+                "position_sum_gradient_rms": 0.0009321524434984081,
+                "position_sum_cancellation_ratio_mean": 0.7091687217456318,
+                "first_attention_raw_answer_rms_mean": 0.15288336938740046
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "label": "pairs-mixed-p97-w128d4",
+      "early_step": 2000,
+      "long_step": 100000,
+      "early_checkpoint_sha256": "3a349dc098b70235f0f737c1e65b5762b08a6ccebf9e5ba3315fecc1987098d7",
+      "long_checkpoint_sha256": "88efcb8454f129cca49c9d656155dcf5e122145a7386a4b3ff2e7b039c3cb8e6",
+      "splits": {
+        "train": {
+          "early": {
+            "accuracy": 1.0,
+            "loss": 0.0011416850611567497,
+            "final_state_mean_rms": 2.5914823149651895,
+            "largest_parameter_gradient_rms": 2.5217204529132667e-05,
+            "largest_ambient_state_gradient_rms": 0.03168269920568113,
+            "initial_ambient_state_gradient_rms": 0.03168269920568113,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9921891634910163,
+              "block1.ffn": 0.7156832650147368,
+              "block2.attention": 0.6069010092938709,
+              "block2.ffn": 0.5396330692452156,
+              "block3.attention": 0.4992950286063923,
+              "block3.ffn": 0.47829745046337646,
+              "block4.attention": 0.44145618452295227,
+              "block4.ffn": 0.45196557648515845
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.012048505457642023,
+              "block1.ffn": -0.09835184918756568,
+              "block2.attention": -0.06295626023074874,
+              "block2.ffn": -0.11166761935965042,
+              "block3.attention": -0.15525911603799614,
+              "block3.ffn": -0.049433114200837736,
+              "block4.attention": -0.2670367761638772,
+              "block4.ffn": 0.1686494558434788
+            },
+            "prefix_tied_readout_accuracy": [
+              0.0078125,
+              0.0078125,
+              0.0078125,
+              0.009765625,
+              0.20703125,
+              0.291015625,
+              0.9453125,
+              0.998046875,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 4,
+                "ambient_initial_state_gradient_rms": 0.35844882319173743,
+                "position_sum_gradient_rms": 5.041731286338689e-07,
+                "position_sum_cancellation_ratio_mean": 5.566933433001781e-07,
+                "first_attention_raw_answer_rms_mean": 3.4450486079059035e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 508,
+                "ambient_initial_state_gradient_rms": 6.81822514328032e-07,
+                "position_sum_gradient_rms": 9.504717084207753e-07,
+                "position_sum_cancellation_ratio_mean": 0.6960148051356473,
+                "first_attention_raw_answer_rms_mean": 0.23454496823819676
+              }
+            }
+          },
+          "long": {
+            "accuracy": 1.0,
+            "loss": 7.268589979503304e-05,
+            "final_state_mean_rms": 2.203881561288434,
+            "largest_parameter_gradient_rms": 9.153311906507188e-07,
+            "largest_ambient_state_gradient_rms": 0.0016666236549531803,
+            "initial_ambient_state_gradient_rms": 0.0016666236549531803,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9921875562481356,
+              "block1.ffn": 0.7178403347092301,
+              "block2.attention": 0.6222252699809868,
+              "block2.ffn": 0.5569565307420448,
+              "block3.attention": 0.5379840370552582,
+              "block3.ffn": 0.5158942194501681,
+              "block4.attention": 0.5018103834952075,
+              "block4.ffn": 0.5520137696246036
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.01818088474283286,
+              "block1.ffn": -0.14222227778373053,
+              "block2.attention": -0.08725897874592192,
+              "block2.ffn": -0.21131059653089324,
+              "block3.attention": -0.1814794957444974,
+              "block3.ffn": -0.195890285564019,
+              "block4.attention": -0.4156070567041752,
+              "block4.ffn": 0.13776802982192748
+            },
+            "prefix_tied_readout_accuracy": [
+              0.0078125,
+              0.0078125,
+              0.0078125,
+              0.0078125,
+              0.314453125,
+              0.37109375,
+              0.98828125,
+              1.0,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 4,
+                "ambient_initial_state_gradient_rms": 0.018855694208395394,
+                "position_sum_gradient_rms": 1.550424945927104e-08,
+                "position_sum_cancellation_ratio_mean": 8.761982630547762e-07,
+                "first_attention_raw_answer_rms_mean": 2.378233149759037e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 508,
+                "ambient_initial_state_gradient_rms": 1.932320386056536e-08,
+                "position_sum_gradient_rms": 2.7111794663082043e-08,
+                "position_sum_cancellation_ratio_mean": 0.7098957069287428,
+                "first_attention_raw_answer_rms_mean": 0.14597078637062944
+              }
+            }
+          }
+        },
+        "heldout": {
+          "early": {
+            "accuracy": 0.0234375,
+            "loss": 9.344614028930664,
+            "final_state_mean_rms": 2.3406988350789155,
+            "largest_parameter_gradient_rms": 0.027832848913437725,
+            "largest_ambient_state_gradient_rms": 124.65383269876142,
+            "initial_ambient_state_gradient_rms": 124.65383269876142,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9921891926400755,
+              "block1.ffn": 0.7114072256306305,
+              "block2.attention": 0.6045095753080146,
+              "block2.ffn": 0.5366086110384507,
+              "block3.attention": 0.4989535065554972,
+              "block3.ffn": 0.4792516237508578,
+              "block4.attention": 0.44639667999749677,
+              "block4.ffn": 0.45612315070849196
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.0004564413411571877,
+              "block1.ffn": -0.09852741084523586,
+              "block2.attention": -0.05799153869247675,
+              "block2.ffn": -0.11940555899491301,
+              "block3.attention": -0.1620443897008954,
+              "block3.ffn": -0.07534962093632203,
+              "block4.attention": -0.26620589952472073,
+              "block4.ffn": -0.07721418494293175
+            },
+            "prefix_tied_readout_accuracy": [
+              0.015625,
+              0.015625,
+              0.015625,
+              0.015625,
+              0.025390625,
+              0.025390625,
+              0.0234375,
+              0.01953125,
+              0.0234375
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 4,
+                "ambient_initial_state_gradient_rms": 1410.29712640868,
+                "position_sum_gradient_rms": 0.0011021222068286162,
+                "position_sum_cancellation_ratio_mean": 5.947136383537943e-07,
+                "first_attention_raw_answer_rms_mean": 3.861122818097605e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 508,
+                "ambient_initial_state_gradient_rms": 0.0007645806492034076,
+                "position_sum_gradient_rms": 0.001053113786574261,
+                "position_sum_cancellation_ratio_mean": 0.6960267929262939,
+                "first_attention_raw_answer_rms_mean": 0.22647754244318677
+              }
+            }
+          },
+          "long": {
+            "accuracy": 0.01171875,
+            "loss": 10.158350944519043,
+            "final_state_mean_rms": 1.3647672233236676,
+            "largest_parameter_gradient_rms": 0.04197708463390333,
+            "largest_ambient_state_gradient_rms": 158.69775125195105,
+            "initial_ambient_state_gradient_rms": 158.69775125195105,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9921873485340797,
+              "block1.ffn": 0.7072943168897715,
+              "block2.attention": 0.6134774603463269,
+              "block2.ffn": 0.551587350875894,
+              "block3.attention": 0.5376246148266666,
+              "block3.ffn": 0.5168181841294865,
+              "block4.attention": 0.5146817987728994,
+              "block4.ffn": 0.5723670940941429
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": 0.012796123221960443,
+              "block1.ffn": -0.13516236181294516,
+              "block2.attention": -0.08903495885169832,
+              "block2.ffn": -0.22390564632041787,
+              "block3.attention": -0.18723098702503194,
+              "block3.ffn": -0.2460379180010932,
+              "block4.attention": -0.43652749224202125,
+              "block4.ffn": -0.6116490959739167
+            },
+            "prefix_tied_readout_accuracy": [
+              0.015625,
+              0.015625,
+              0.015625,
+              0.015625,
+              0.01953125,
+              0.025390625,
+              0.015625,
+              0.009765625,
+              0.01171875
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 4,
+                "ambient_initial_state_gradient_rms": 1795.4600970786548,
+                "position_sum_gradient_rms": 0.001188396823469771,
+                "position_sum_cancellation_ratio_mean": 6.747979062767364e-07,
+                "first_attention_raw_answer_rms_mean": 3.0823036406619995e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 508,
+                "ambient_initial_state_gradient_rms": 0.0009257958092452328,
+                "position_sum_gradient_rms": 0.0013075930269264853,
+                "position_sum_cancellation_ratio_mean": 0.7032586134123325,
+                "first_attention_raw_answer_rms_mean": 0.14375557210514264
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "label": "pairs-division-p193-w256d1",
+      "early_step": 2000,
+      "long_step": 100000,
+      "early_checkpoint_sha256": "c91258e735e761a5dbe8739e0e0840861483eead964f0a66acf412afa6761e63",
+      "long_checkpoint_sha256": "3d03d1e1ad08af90f8c1f9e4d9cbbc5f646c9bc06125025e83f07b3074da853d",
+      "splits": {
+        "train": {
+          "early": {
+            "accuracy": 1.0,
+            "loss": 1.166402580565773e-05,
+            "final_state_mean_rms": 0.8780003311572748,
+            "largest_parameter_gradient_rms": 8.399240470930433e-08,
+            "largest_ambient_state_gradient_rms": 2.3959291943695803e-07,
+            "initial_ambient_state_gradient_rms": 2.3959291943695803e-07,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.994147250208766,
+              "block1.ffn": 1.005804648262313
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.48440156439028215,
+              "block1.ffn": -0.615504366447567
+            },
+            "prefix_tied_readout_accuracy": [
+              0.005859375,
+              0.041015625,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 3,
+                "ambient_initial_state_gradient_rms": 3.129608740421532e-06,
+                "position_sum_gradient_rms": 1.5370786115590347e-09,
+                "position_sum_cancellation_ratio_mean": 0.00016754474483529822,
+                "first_attention_raw_answer_rms_mean": 2.2724406267552578e-07
+              },
+              "distinct_input_tokens": {
+                "examples": 509,
+                "ambient_initial_state_gradient_rms": 3.936660179729346e-09,
+                "position_sum_gradient_rms": 4.671862365020016e-09,
+                "position_sum_cancellation_ratio_mean": 0.6463052783143899,
+                "first_attention_raw_answer_rms_mean": 1.216357925082764
+              }
+            }
+          },
+          "long": {
+            "accuracy": 1.0,
+            "loss": 2.579763247467781e-07,
+            "final_state_mean_rms": 0.7947407189076032,
+            "largest_parameter_gradient_rms": 9.536377513345078e-09,
+            "largest_ambient_state_gradient_rms": 2.4739710025865643e-10,
+            "initial_ambient_state_gradient_rms": 2.4739710025865643e-10,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9941431759168142,
+              "block1.ffn": 1.183892233209172
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.6323453182412777,
+              "block1.ffn": -0.6432554669445381
+            },
+            "prefix_tied_readout_accuracy": [
+              0.005859375,
+              0.009765625,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 3,
+                "ambient_initial_state_gradient_rms": 3.0107688617273957e-09,
+                "position_sum_gradient_rms": 4.283957474932279e-12,
+                "position_sum_cancellation_ratio_mean": 0.0008751694888541514,
+                "first_attention_raw_answer_rms_mean": 3.232388940576624e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 509,
+                "ambient_initial_state_gradient_rms": 9.021845452803848e-11,
+                "position_sum_gradient_rms": 1.1409176244326257e-10,
+                "position_sum_cancellation_ratio_mean": 0.6584322609758776,
+                "first_attention_raw_answer_rms_mean": 0.19060405436509348
+              }
+            }
+          }
+        },
+        "heldout": {
+          "early": {
+            "accuracy": 1.0,
+            "loss": 3.609196937759407e-05,
+            "final_state_mean_rms": 0.87268704401347,
+            "largest_parameter_gradient_rms": 2.601221708810358e-06,
+            "largest_ambient_state_gradient_rms": 2.3443658874401705e-07,
+            "initial_ambient_state_gradient_rms": 2.3443658874401705e-07,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9960987231848806,
+              "block1.ffn": 1.0064373191306795
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.4888749589736108,
+              "block1.ffn": -0.6197233600541949
+            },
+            "prefix_tied_readout_accuracy": [
+              0.001953125,
+              0.025390625,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 2,
+                "ambient_initial_state_gradient_rms": 2.8017390378252623e-06,
+                "position_sum_gradient_rms": 1.3513351778661365e-09,
+                "position_sum_cancellation_ratio_mean": 0.0002568995036110354,
+                "first_attention_raw_answer_rms_mean": 1.9462729254690113e-07
+              },
+              "distinct_input_tokens": {
+                "examples": 510,
+                "ambient_initial_state_gradient_rms": 1.561817692188026e-07,
+                "position_sum_gradient_rms": 1.243847847715806e-07,
+                "position_sum_cancellation_ratio_mean": 0.6403942804411288,
+                "first_attention_raw_answer_rms_mean": 1.1961180273590013
+              }
+            }
+          },
+          "long": {
+            "accuracy": 1.0,
+            "loss": 3.4598630804794084e-07,
+            "final_state_mean_rms": 0.7941052938094983,
+            "largest_parameter_gradient_rms": 1.1666016944820876e-08,
+            "largest_ambient_state_gradient_rms": 1.697461117161689e-08,
+            "initial_ambient_state_gradient_rms": 1.697461117161689e-08,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9960965232687992,
+              "block1.ffn": 1.1763216354649255
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.6287928301026113,
+              "block1.ffn": -0.645694364560768
+            },
+            "prefix_tied_readout_accuracy": [
+              0.001953125,
+              0.001953125,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 2,
+                "ambient_initial_state_gradient_rms": 2.7158624710545063e-07,
+                "position_sum_gradient_rms": 5.026197114631498e-10,
+                "position_sum_cancellation_ratio_mean": 0.0009346990902028243,
+                "first_attention_raw_answer_rms_mean": 5.4180053484917885e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 510,
+                "ambient_initial_state_gradient_rms": 1.2666207377309425e-10,
+                "position_sum_gradient_rms": 1.5554541857190583e-10,
+                "position_sum_cancellation_ratio_mean": 0.6508918790768591,
+                "first_attention_raw_answer_rms_mean": 0.18844814516767044
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "label": "pairs-division-p193-w128d4",
+      "early_step": 2000,
+      "long_step": 100000,
+      "early_checkpoint_sha256": "bdb2a7f38d151a64941fe1944af6acee32cd0b2c4b01ead383ebf14e9c41fcb4",
+      "long_checkpoint_sha256": "64f07538734864a4fa19bbf40733befee6d2dae19a2908e93798f31aa5087fd5",
+      "splits": {
+        "train": {
+          "early": {
+            "accuracy": 1.0,
+            "loss": 0.0047846222296357155,
+            "final_state_mean_rms": 2.1923560992312816,
+            "largest_parameter_gradient_rms": 0.00015145576126711626,
+            "largest_ambient_state_gradient_rms": 0.0450071773443997,
+            "initial_ambient_state_gradient_rms": 0.0450071773443997,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9941422599668905,
+              "block1.ffn": 0.7155118630554764,
+              "block2.attention": 0.6516681937310087,
+              "block2.ffn": 0.5878782451670868,
+              "block3.attention": 0.5806000208651918,
+              "block3.ffn": 0.5771023819819132,
+              "block4.attention": 0.5441353084327143,
+              "block4.ffn": 0.5556699964058605
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.012650336059323308,
+              "block1.ffn": -0.21864500176525326,
+              "block2.attention": -0.1353526023303857,
+              "block2.ffn": -0.2676999784562213,
+              "block3.attention": -0.2724527023929113,
+              "block3.ffn": -0.17490834056934546,
+              "block4.attention": -0.3012805896651116,
+              "block4.ffn": 0.13784423840115778
+            },
+            "prefix_tied_readout_accuracy": [
+              0.005859375,
+              0.005859375,
+              0.005859375,
+              0.01171875,
+              0.267578125,
+              0.328125,
+              0.9296875,
+              0.994140625,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 3,
+                "ambient_initial_state_gradient_rms": 0.587971299839952,
+                "position_sum_gradient_rms": 3.027813126474704e-07,
+                "position_sum_cancellation_ratio_mean": 5.670815578522849e-07,
+                "first_attention_raw_answer_rms_mean": 4.902924674117024e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 509,
+                "ambient_initial_state_gradient_rms": 4.45426383667376e-06,
+                "position_sum_gradient_rms": 6.058579189459867e-06,
+                "position_sum_cancellation_ratio_mean": 0.682311913912419,
+                "first_attention_raw_answer_rms_mean": 0.24153205046514772
+              }
+            }
+          },
+          "long": {
+            "accuracy": 1.0,
+            "loss": 9.101345312956255e-07,
+            "final_state_mean_rms": 2.3002369735628085,
+            "largest_parameter_gradient_rms": 2.922001982850265e-08,
+            "largest_ambient_state_gradient_rms": 1.2683891133300724e-05,
+            "initial_ambient_state_gradient_rms": 1.2683891133300724e-05,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9941399062492458,
+              "block1.ffn": 0.7466919465795121,
+              "block2.attention": 0.6929032270515298,
+              "block2.ffn": 0.5782361918747465,
+              "block3.attention": 0.5484543267535763,
+              "block3.ffn": 0.5533971198195436,
+              "block4.attention": 0.5367827316445061,
+              "block4.ffn": 0.5360472527367921
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.09635238281225611,
+              "block1.ffn": -0.2742864592728438,
+              "block2.attention": -0.01861374825648454,
+              "block2.ffn": -0.19148709993987723,
+              "block3.attention": -0.2827130697987741,
+              "block3.ffn": -0.21773633175325813,
+              "block4.attention": -0.264292652860604,
+              "block4.ffn": 0.20957617940439377
+            },
+            "prefix_tied_readout_accuracy": [
+              0.005859375,
+              0.005859375,
+              0.0078125,
+              0.03125,
+              0.595703125,
+              0.828125,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 3,
+                "ambient_initial_state_gradient_rms": 0.00016570165979180483,
+                "position_sum_gradient_rms": 2.6249515103211872e-11,
+                "position_sum_cancellation_ratio_mean": 2.4144901014954334e-07,
+                "first_attention_raw_answer_rms_mean": 8.757045890981205e-09
+              },
+              "distinct_input_tokens": {
+                "examples": 509,
+                "ambient_initial_state_gradient_rms": 4.4060225077636815e-10,
+                "position_sum_gradient_rms": 5.207107164936945e-10,
+                "position_sum_cancellation_ratio_mean": 0.6458709599682024,
+                "first_attention_raw_answer_rms_mean": 0.16879224168025087
+              }
+            }
+          }
+        },
+        "heldout": {
+          "early": {
+            "accuracy": 0.015625,
+            "loss": 8.755099296569824,
+            "final_state_mean_rms": 1.99032192808931,
+            "largest_parameter_gradient_rms": 0.03349407925529706,
+            "largest_ambient_state_gradient_rms": 25.053862882686058,
+            "initial_ambient_state_gradient_rms": 25.053862882686058,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9960948148109239,
+              "block1.ffn": 0.7091420612489372,
+              "block2.attention": 0.651571404537159,
+              "block2.ffn": 0.5921895311461101,
+              "block3.attention": 0.5872290683762627,
+              "block3.ffn": 0.586480436234206,
+              "block4.attention": 0.5632244880740609,
+              "block4.ffn": 0.5849912522778395
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": 0.004546351223325473,
+              "block1.ffn": -0.22691323284016107,
+              "block2.attention": -0.1513625675943331,
+              "block2.ffn": -0.2767010313564242,
+              "block3.attention": -0.28321962845802773,
+              "block3.ffn": -0.2172319937380962,
+              "block4.attention": -0.3404960519364977,
+              "block4.ffn": -0.0023521603598055663
+            },
+            "prefix_tied_readout_accuracy": [
+              0.001953125,
+              0.001953125,
+              0.001953125,
+              0.00390625,
+              0.0078125,
+              0.009765625,
+              0.013671875,
+              0.013671875,
+              0.015625
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 2,
+                "ambient_initial_state_gradient_rms": 400.86180579080735,
+                "position_sum_gradient_rms": 0.0002022192010669396,
+                "position_sum_cancellation_ratio_mean": 3.236301348904386e-07,
+                "first_attention_raw_answer_rms_mean": 3.731609628004787e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 510,
+                "ambient_initial_state_gradient_rms": 0.001021932489577788,
+                "position_sum_gradient_rms": 0.0013760337220435567,
+                "position_sum_cancellation_ratio_mean": 0.6789192610249115,
+                "first_attention_raw_answer_rms_mean": 0.23627737958452574
+              }
+            }
+          },
+          "long": {
+            "accuracy": 1.0,
+            "loss": 9.296923053625505e-07,
+            "final_state_mean_rms": 2.2744556196236556,
+            "largest_parameter_gradient_rms": 2.9790581552727883e-08,
+            "largest_ambient_state_gradient_rms": 3.942095037450643e-06,
+            "initial_ambient_state_gradient_rms": 3.942095037450643e-06,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9960928914642919,
+              "block1.ffn": 0.7427034551198254,
+              "block2.attention": 0.6960945399449486,
+              "block2.ffn": 0.5780112578124326,
+              "block3.attention": 0.5524797919707631,
+              "block3.ffn": 0.5549915859102375,
+              "block4.attention": 0.5417820994969222,
+              "block4.ffn": 0.5422128753924651
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.08857184227053949,
+              "block1.ffn": -0.2834070230310317,
+              "block2.attention": -0.015565427432193246,
+              "block2.ffn": -0.20324211892329913,
+              "block3.attention": -0.2784508747081418,
+              "block3.ffn": -0.23031224352598656,
+              "block4.attention": -0.27187293896713527,
+              "block4.ffn": 0.20179439769344754
+            },
+            "prefix_tied_readout_accuracy": [
+              0.001953125,
+              0.001953125,
+              0.001953125,
+              0.01171875,
+              0.5546875,
+              0.80859375,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 2,
+                "ambient_initial_state_gradient_rms": 6.307352040668523e-05,
+                "position_sum_gradient_rms": 3.039502215641094e-11,
+                "position_sum_cancellation_ratio_mean": 2.5286123085803026e-07,
+                "first_attention_raw_answer_rms_mean": 1.2257380495590637e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 510,
+                "ambient_initial_state_gradient_rms": 3.086114793633069e-10,
+                "position_sum_gradient_rms": 4.1746294672045333e-10,
+                "position_sum_cancellation_ratio_mean": 0.6507636928328234,
+                "first_attention_raw_answer_rms_mean": 0.1648581315941567
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "label": "pairs-mixed-p193-w256d1",
+      "early_step": 2000,
+      "long_step": 100000,
+      "early_checkpoint_sha256": "e383989ed9bb63a71b91deb279b24f3427d7a99101583241ff5db49d593e6471",
+      "long_checkpoint_sha256": "0eb69138c7f2cdc250f8ad92755672e7505a8e77723997678e33e092b09baa2c",
+      "splits": {
+        "train": {
+          "early": {
+            "accuracy": 1.0,
+            "loss": 0.0036061229184269905,
+            "final_state_mean_rms": 1.1265616321504066,
+            "largest_parameter_gradient_rms": 6.239712328571555e-05,
+            "largest_ambient_state_gradient_rms": 2.7052061231933106e-05,
+            "initial_ambient_state_gradient_rms": 2.7052061231933106e-05,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9941434891400089,
+              "block1.ffn": 0.7500104452479
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.10271731309921961,
+              "block1.ffn": -0.565532969776541
+            },
+            "prefix_tied_readout_accuracy": [
+              0.0078125,
+              0.0078125,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 3,
+                "ambient_initial_state_gradient_rms": 0.00035233438711997116,
+                "position_sum_gradient_rms": 4.281900576884876e-07,
+                "position_sum_cancellation_ratio_mean": 0.0006346416966974902,
+                "first_attention_raw_answer_rms_mean": 7.058007415704233e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 509,
+                "ambient_initial_state_gradient_rms": 2.111906376885357e-06,
+                "position_sum_gradient_rms": 2.8583949005809627e-06,
+                "position_sum_cancellation_ratio_mean": 0.6817020882987174,
+                "first_attention_raw_answer_rms_mean": 0.35240488477176074
+              }
+            }
+          },
+          "long": {
+            "accuracy": 1.0,
+            "loss": 2.8312604626989923e-05,
+            "final_state_mean_rms": 1.0112452750052097,
+            "largest_parameter_gradient_rms": 7.716345094430735e-07,
+            "largest_ambient_state_gradient_rms": 1.4464800493600623e-06,
+            "initial_ambient_state_gradient_rms": 1.4464800493600623e-06,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9941440988216232,
+              "block1.ffn": 1.0041321515311115
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.49705656075639126,
+              "block1.ffn": -0.4855116006510798
+            },
+            "prefix_tied_readout_accuracy": [
+              0.0078125,
+              0.0078125,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 3,
+                "ambient_initial_state_gradient_rms": 1.8895004234666926e-05,
+                "position_sum_gradient_rms": 2.295950569289451e-08,
+                "position_sum_cancellation_ratio_mean": 0.0005682429361224911,
+                "first_attention_raw_answer_rms_mean": 1.0139212972968428e-07
+              },
+              "distinct_input_tokens": {
+                "examples": 509,
+                "ambient_initial_state_gradient_rms": 1.964147772625831e-08,
+                "position_sum_gradient_rms": 2.4617746928393993e-08,
+                "position_sum_cancellation_ratio_mean": 0.6446529280901023,
+                "first_attention_raw_answer_rms_mean": 0.3272618793125236
+              }
+            }
+          }
+        },
+        "heldout": {
+          "early": {
+            "accuracy": 0.001953125,
+            "loss": 12.276206970214844,
+            "final_state_mean_rms": 1.1464752044143087,
+            "largest_parameter_gradient_rms": 0.018913751173363857,
+            "largest_ambient_state_gradient_rms": 0.09784802198035107,
+            "initial_ambient_state_gradient_rms": 0.09784802198035107,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9960961786853868,
+              "block1.ffn": 0.7360746308806989
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.0700725123117536,
+              "block1.ffn": -0.5632055724272504
+            },
+            "prefix_tied_readout_accuracy": [
+              0.0,
+              0.0,
+              0.001953125
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 2,
+                "ambient_initial_state_gradient_rms": 1.5655343249577793,
+                "position_sum_gradient_rms": 0.001873282450892899,
+                "position_sum_cancellation_ratio_mean": 0.0005959801874477383,
+                "first_attention_raw_answer_rms_mean": 7.210763106296413e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 510,
+                "ambient_initial_state_gradient_rms": 0.0006463811132523859,
+                "position_sum_gradient_rms": 0.0008713730266098833,
+                "position_sum_cancellation_ratio_mean": 0.6788107944210464,
+                "first_attention_raw_answer_rms_mean": 0.3416215722510243
+              }
+            }
+          },
+          "long": {
+            "accuracy": 0.0078125,
+            "loss": 11.126463890075684,
+            "final_state_mean_rms": 1.0133424702526597,
+            "largest_parameter_gradient_rms": 0.027365206767595605,
+            "largest_ambient_state_gradient_rms": 0.03719641189426086,
+            "initial_ambient_state_gradient_rms": 0.03719641189426086,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9960963816808044,
+              "block1.ffn": 0.9925055553257565
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.48604300162696745,
+              "block1.ffn": -0.48996633145725355
+            },
+            "prefix_tied_readout_accuracy": [
+              0.0,
+              0.0,
+              0.0078125
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 2,
+                "ambient_initial_state_gradient_rms": 0.595041254068544,
+                "position_sum_gradient_rms": 0.0008725652568964956,
+                "position_sum_cancellation_ratio_mean": 0.0007328092599718501,
+                "first_attention_raw_answer_rms_mean": 8.168656845198168e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 510,
+                "ambient_initial_state_gradient_rms": 0.0006877321504864631,
+                "position_sum_gradient_rms": 0.000860985876830813,
+                "position_sum_cancellation_ratio_mean": 0.641374379062959,
+                "first_attention_raw_answer_rms_mean": 0.320006792665184
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "label": "pairs-mixed-p193-w128d4",
+      "early_step": 2000,
+      "long_step": 100000,
+      "early_checkpoint_sha256": "4b337464af09d28d625882f03e2ce3a21ddb9bad3f781f7720df75f38770ca28",
+      "long_checkpoint_sha256": "fa75a7f98639633a530791ce23aedb07fa25907cb7a03e14e1faf5575cf6ebf4",
+      "splits": {
+        "train": {
+          "early": {
+            "accuracy": 1.0,
+            "loss": 0.004939395003020763,
+            "final_state_mean_rms": 2.2519414103798825,
+            "largest_parameter_gradient_rms": 0.00014193768636105072,
+            "largest_ambient_state_gradient_rms": 0.3130378739230148,
+            "initial_ambient_state_gradient_rms": 0.3130378739230148,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.994140976936317,
+              "block1.ffn": 0.7151920980582854,
+              "block2.attention": 0.6356637388374301,
+              "block2.ffn": 0.5625188111226445,
+              "block3.attention": 0.5465828830491697,
+              "block3.ffn": 0.5224479799565593,
+              "block4.attention": 0.4994717379164135,
+              "block4.ffn": 0.5273995565111205
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.009840112311849225,
+              "block1.ffn": -0.1792940995455865,
+              "block2.attention": -0.08086875331537158,
+              "block2.ffn": -0.22497724039021705,
+              "block3.attention": -0.18433209796785377,
+              "block3.ffn": -0.16608714010817494,
+              "block4.attention": -0.3471246286026144,
+              "block4.ffn": 0.11198897783197026
+            },
+            "prefix_tied_readout_accuracy": [
+              0.0078125,
+              0.0078125,
+              0.0078125,
+              0.0078125,
+              0.185546875,
+              0.26953125,
+              0.896484375,
+              0.984375,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 3,
+                "ambient_initial_state_gradient_rms": 4.089509659737941,
+                "position_sum_gradient_rms": 2.7729625447087006e-06,
+                "position_sum_cancellation_ratio_mean": 4.199716825202724e-07,
+                "first_attention_raw_answer_rms_mean": 2.8530519040172203e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 509,
+                "ambient_initial_state_gradient_rms": 4.4266043009144475e-06,
+                "position_sum_gradient_rms": 6.2027466062128465e-06,
+                "position_sum_cancellation_ratio_mean": 0.6915010169836471,
+                "first_attention_raw_answer_rms_mean": 0.2055258924313012
+              }
+            }
+          },
+          "long": {
+            "accuracy": 1.0,
+            "loss": 0.0009864061139523983,
+            "final_state_mean_rms": 1.578246767234711,
+            "largest_parameter_gradient_rms": 1.777373127466088e-05,
+            "largest_ambient_state_gradient_rms": 0.21494215129612182,
+            "initial_ambient_state_gradient_rms": 0.21494215129612182,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9941424254548408,
+              "block1.ffn": 0.7175225918706745,
+              "block2.attention": 0.6475711969416373,
+              "block2.ffn": 0.5741777264773639,
+              "block3.attention": 0.5661129847300455,
+              "block3.ffn": 0.59881378502195,
+              "block4.attention": 0.5989498074025974,
+              "block4.ffn": 0.7313993578489084
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.017779920433895313,
+              "block1.ffn": -0.20693311048307805,
+              "block2.attention": -0.09378056015702896,
+              "block2.ffn": -0.2606958931683039,
+              "block3.attention": -0.37356664420076413,
+              "block3.ffn": -0.29868925247501465,
+              "block4.attention": -0.5683091868413612,
+              "block4.ffn": -0.14582905138740898
+            },
+            "prefix_tied_readout_accuracy": [
+              0.0078125,
+              0.0078125,
+              0.0078125,
+              0.0078125,
+              0.087890625,
+              0.099609375,
+              0.74609375,
+              0.97265625,
+              1.0
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 3,
+                "ambient_initial_state_gradient_rms": 2.807992506087035,
+                "position_sum_gradient_rms": 1.8278561211583042e-06,
+                "position_sum_cancellation_ratio_mean": 4.955116895763675e-07,
+                "first_attention_raw_answer_rms_mean": 2.9383476052794676e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 509,
+                "ambient_initial_state_gradient_rms": 2.2288621959168317e-07,
+                "position_sum_gradient_rms": 3.0734216270002154e-07,
+                "position_sum_cancellation_ratio_mean": 0.7036420600633897,
+                "first_attention_raw_answer_rms_mean": 0.1536651897780046
+              }
+            }
+          }
+        },
+        "heldout": {
+          "early": {
+            "accuracy": 0.005859375,
+            "loss": 10.491998672485352,
+            "final_state_mean_rms": 2.1476472630006143,
+            "largest_parameter_gradient_rms": 0.031107009297394628,
+            "largest_ambient_state_gradient_rms": 84.93840099077809,
+            "initial_ambient_state_gradient_rms": 84.93840099077809,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9960941363073202,
+              "block1.ffn": 0.7089642494984139,
+              "block2.attention": 0.6336169645140171,
+              "block2.ffn": 0.5591056021375831,
+              "block3.attention": 0.5457576521524983,
+              "block3.ffn": 0.5203518745675587,
+              "block4.attention": 0.5010733560110924,
+              "block4.ffn": 0.5324155367249656
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": 0.005067629133918672,
+              "block1.ffn": -0.17827894859692606,
+              "block2.attention": -0.07950009694195614,
+              "block2.ffn": -0.22995966723465244,
+              "block3.attention": -0.1780210826655093,
+              "block3.ffn": -0.1814481283618079,
+              "block4.attention": -0.36004151518136496,
+              "block4.ffn": 0.012755981692862406
+            },
+            "prefix_tied_readout_accuracy": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.005859375,
+              0.00390625,
+              0.005859375
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 2,
+                "ambient_initial_state_gradient_rms": 1359.0144157678462,
+                "position_sum_gradient_rms": 0.0011611990388195438,
+                "position_sum_cancellation_ratio_mean": 4.5766531957525635e-07,
+                "first_attention_raw_answer_rms_mean": 4.936007809491713e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 510,
+                "ambient_initial_state_gradient_rms": 0.0009496209904118891,
+                "position_sum_gradient_rms": 0.0013068303504994042,
+                "position_sum_cancellation_ratio_mean": 0.687205967214582,
+                "first_attention_raw_answer_rms_mean": 0.20247527120202757
+              }
+            }
+          },
+          "long": {
+            "accuracy": 0.0078125,
+            "loss": 9.287406921386719,
+            "final_state_mean_rms": 0.7051657784784353,
+            "largest_parameter_gradient_rms": 0.044661859931560695,
+            "largest_ambient_state_gradient_rms": 228.61486080892632,
+            "initial_ambient_state_gradient_rms": 228.61486080892632,
+            "branch_to_state_rms_means": {
+              "block1.attention": 0.9960951753924598,
+              "block1.ffn": 0.7112184584622955,
+              "block2.attention": 0.643353630210138,
+              "block2.ffn": 0.5700700236472591,
+              "block3.attention": 0.5654088879022788,
+              "block3.ffn": 0.6016753510849084,
+              "block4.attention": 0.6107934825364412,
+              "block4.ffn": 0.7652922087723462
+            },
+            "branch_residual_cosine_means": {
+              "block1.attention": -0.0028528567290777573,
+              "block1.ffn": -0.2038783523676102,
+              "block2.attention": -0.09220575254039431,
+              "block2.ffn": -0.2671578573572333,
+              "block3.attention": -0.383133516239468,
+              "block3.ffn": -0.32302845353115117,
+              "block4.attention": -0.5985445163678378,
+              "block4.ffn": -0.8355335756787099
+            },
+            "prefix_tied_readout_accuracy": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.005859375,
+              0.00390625,
+              0.01171875,
+              0.005859375,
+              0.0078125
+            ],
+            "input_strata": {
+              "identical_input_tokens": {
+                "examples": 2,
+                "ambient_initial_state_gradient_rms": 3657.837772902641,
+                "position_sum_gradient_rms": 0.0010331530468759653,
+                "position_sum_cancellation_ratio_mean": 6.582001088333341e-07,
+                "first_attention_raw_answer_rms_mean": 2.3451078517617435e-08
+              },
+              "distinct_input_tokens": {
+                "examples": 510,
+                "ambient_initial_state_gradient_rms": 0.0010736575174248053,
+                "position_sum_gradient_rms": 0.0014924527039869833,
+                "position_sum_cancellation_ratio_mean": 0.6947940455855847,
+                "first_attention_raw_answer_rms_mean": 0.15203369636523761
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -201,3 +201,27 @@ they do not claim bitwise-equivalent saved-state metrics.
 
 The long continuation is a separate adaptive cohort and does not replace
 these endpoints. Its protocol was frozen before starting, after profiling.
+## Residual and numerical follow-up
+
+The fixed-batch residual audit is in `residual_diagnostics.json`; it includes
+all parameter gradients and separates repeated-token ambient gradients from
+their sum over shared positions. `precision_diagnostics.json` records the
+original versus centered forward comparison. Centering alone subsequently
+failed the full parameter-gradient audit. `parameter_precision.json` retains
+all six original/centered/guarded FP32/FP64 variants on all eight P97/P193
+checkpoints, using the actual diff_gpt source. The guarded common-prefix path
+fixes the measured failure. These diagnostic copies never alter frozen runs.
+
+The exact algebra and full-depth prefix equalities are proved in Lean's
+`SequenceModel.Attention.CenteredXSA`, `ConstantTokens`, and `ConstantPrefixes`.
+The proof's clipping guard matters; it is not a floating-point error bound or
+a learning guarantee. The source fix is diff_gpt commit `5b84da8`. To reproduce
+its CPU diagnostic from this repository's `python/` directory:
+
+```sh
+PYTHONPATH=/home/misha/python_projects/gpt/src CUDA_VISIBLE_DEVICES='' \
+  uv run --locked python ../experiments/modular_composition/parameter_precision.py
+```
+
+The [long continuation](../modular_composition_long/README.md) retains the
+original arithmetic and compares the same early and late residual batches.

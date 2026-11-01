@@ -337,3 +337,41 @@ cache shapes and division-protocol checks. The required lab suite passes446
 plus104 optimizer tests (13 and14 CPU-only skips). CUDA compile and learning
 regression checks remain separately recorded; the long frozen cohort is not
 modified by this correction.
+
+
+## Residual diagnostics after long training (2026-11-01)
+
+All eight pair continuations finish100000 updates with the original residual
+and XSA arithmetic. The same first512 train and heldout rows are replayed at
+2000 and100000 updates. Dataset fingerprints agree, and manual unrolling
+reproduces source logits bitwise in all32 batches. Full measurements and a
+compact comparison are in `experiments/modular_composition_long/` as
+`residual_diagnostics.json` and `residual_comparison.json`.
+
+| Heldout batch | Final state RMS, early → long | Largest parameter-gradient RMS, early → long |
+| --- | --- | --- |
+| Division P97 W256D1 | .872 → .890 | .0331 → 2.74e-9 |
+| Division P97 W128D4 | 2.083 → 2.649 | .0309 → 9.96e-8 |
+| Mixed P97 W256D1 | .983 → .955 | .0290 → .0446 |
+| Mixed P97 W128D4 | 2.341 → 1.365 | .0278 → .0420 |
+| Division P193 W256D1 | .873 → .794 | 2.60e-6 → 1.17e-8 |
+| Division P193 W128D4 | 1.990 → 2.274 | .0335 → 2.98e-8 |
+| Mixed P193 W256D1 | 1.146 → 1.013 | .0189 → .0274 |
+| Mixed P193 W128D4 | 2.148 → .705 | .0311 → .0447 |
+
+RMS here averages per-row answer-position state RMS; each parameter gradient
+is for the same full-batch mean CE, and the table takes the largest parameter
+RMS. The source's deep mixed-model ambient state-gradient RMS remains large:
+159 for P97 and229 for P193. Shared-parameter gradients are much smaller;
+large independent-position derivatives must not be called an equally large
+optimizer update. Every repeated/distinct-token stratum is retained.
+
+Ordinary residual addition is compatible with late100% division accuracy in
+both depths. Small division endpoint gradients accompany nearly zero loss;
+they are not evidence of a failed optimizer. Mixed endpoints fit training
+rows but remain near chance on heldout rows, with nonzero heldout parameter
+gradients and no observed forward state-norm explosion in these batches.
+These observations do not identify the causal reason for failed generalization.
+Source-faithful residual alternatives remain task#145; paired retraining with
+the numerical correction is task#148. Neither improvement is assumed from
+aggregation bounds, normalized scores, or the corrected exact algebra.
