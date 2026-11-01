@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.ConstantTokens
 # The stable repeated-token path applies to causal prefixes
 
 Source: `review/residual_connections.md`, *Repeated-input numerical audit*,
-C11--C13. Future tokens need not repeat. Their causal weights are zero, so
+C11--C15. Future tokens need not repeat. Their causal weights are zero, so
 every still-constant prefix has the same block output as its first position
 while the value heads remain above clipping. The implementation carries the
 token-derived prefix mask across blocks and permanently disables it after a
@@ -92,6 +92,48 @@ theorem block_prefix_eq_first (cfg : Config) (B : BlockParams cfg)
     block_constant_prefix cfg B eps xeps angle x first (x first)
       (fun j hj => hstate j (le_trans hj hfirst)) hclip]
 
+/-- C14: arbitrary later tokens do not disrupt the common prefix state at
+any finite depth, provided the actual first-position value heads stay above
+clipping. The guard is evaluated on source hidden states at each layer. -/
+theorem hidden_prefix_unclipped (cfg : Config) (p : ModelParams cfg)
+    (eps xeps : ℝ) {T : ℕ}
+    (angle : Fin cfg.n_layers → Fin T → Fin (cfg.head_dim / 2) → ℝ)
+    (input : Fin T → Fin cfg.vocab_size) (first i : Fin T) (hfirst : first ≤ i)
+    (hinput : ∀ j ≤ i, input j = input first)
+    (hclip : ∀ (n : ℕ) (hn : n < cfg.n_layers) (h : Fin cfg.n_heads),
+      xeps ≤ ‖normalizedValueHead cfg (p.blocks ⟨n, hn⟩) eps
+        (hidden cfg p eps xeps angle input n first) h‖) (n : ℕ) :
+    ∀ j ≤ i, hidden cfg p eps xeps angle input n j =
+      hidden cfg p eps xeps angle input n first := by
+  induction n with
+  | zero => intro j hj; simp only [hidden]; rw [hinput j hj]
+  | succ n ih =>
+    intro j hj
+    simp only [hidden]
+    split_ifs with hn
+    · rw [block_constant_prefix cfg (p.blocks ⟨n, hn⟩) eps xeps (angle ⟨n, hn⟩)
+        _ j _ (fun k hk => ih k (le_trans hk hj)) (hclip n hn),
+        block_constant_prefix cfg (p.blocks ⟨n, hn⟩) eps xeps (angle ⟨n, hn⟩)
+          _ first _ (fun k hk => ih k (le_trans hk hfirst)) (hclip n hn)]
+    · exact ih j hj
+
+/-- C15: the actual tied readout is identical at a guarded constant prefix's
+end and first position, with arbitrary future tokens and rotary phases. -/
+theorem score_prefix_unclipped (cfg : Config) (eps xeps : ℝ) {T : ℕ}
+    (angle : Fin cfg.n_layers → Fin T → Fin (cfg.head_dim / 2) → ℝ)
+    (input : Fin T → Fin cfg.vocab_size) (first i : Fin T) (hfirst : first ≤ i)
+    (hinput : ∀ j ≤ i, input j = input first) (w : Parameters cfg)
+    (hclip : ∀ (n : ℕ) (hn : n < cfg.n_layers) (h : Fin cfg.n_heads),
+      xeps ≤ ‖normalizedValueHead cfg ((decode cfg w).blocks ⟨n, hn⟩) eps
+        (hidden cfg (decode cfg w) eps xeps angle input n first) h‖)
+    (symbol : Fin cfg.vocab_size) :
+    score cfg eps xeps angle i w input symbol =
+      score cfg eps xeps angle first w input symbol := by
+  unfold score
+  dsimp only
+  rw [hidden_prefix_unclipped cfg (decode cfg w) eps xeps angle input first i
+    hfirst hinput hclip cfg.n_layers i le_rfl]
+
 example := headOutput_constant_prefix (T := 3) (d := 2) (1 / 8388608)
   (1 / 1000000000000) (fun j _ => (j.val : ℝ) / 7)
   (fun j => EuclideanSpace.single 0 j.val) (fun j => EuclideanSpace.single 1 j.val)
@@ -115,5 +157,17 @@ example (B : BlockParams witnessConfig) (c : EucSpace 4) :=
     (fun j k => (j.val * (k.val + 1) : ℝ) / 7)
     (fun j => if j ≤ 1 then c else 2 • c) 0 1 (by decide)
     (by intro j hj; simp [hj]) (fun _ => norm_nonneg _)
+
+example (p : ModelParams witnessConfig) :=
+  hidden_prefix_unclipped witnessConfig p (1 / 8388608) 0 (T := 3)
+    (fun n j k => (n.val + j.val * (k.val + 1) : ℝ) / 7)
+    (fun j => if j ≤ 1 then 1 else 2) 0 1 (by decide)
+    (by intro j hj; simp [hj]) (fun _ _ _ => norm_nonneg _) 2
+
+example (w : Parameters witnessConfig) :=
+  score_prefix_unclipped witnessConfig (1 / 8388608) 0 (T := 3)
+    (fun n j k => (n.val + j.val * (k.val + 1) : ℝ) / 7)
+    (fun j => if j ≤ 1 then 1 else 2) 0 1 (by decide)
+    (by intro j hj; simp [hj]) w (fun _ _ _ => norm_nonneg _) 2
 
 end Transformer.SequenceModel.Attention

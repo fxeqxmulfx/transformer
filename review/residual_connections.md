@@ -300,7 +300,9 @@ C8 propagates the common state through every finite layer; C9 proves equal
 tied readouts. C10 witnesses the guard at clipping zero. C11 restricts the
 head result to visible constant prefixes, allowing arbitrary future values;
 C12 lifts it to multihead attention; C13 proves a full block's prefix output
-equals its first output. These nine additional statements are in
+equals its first output. C14 propagates the prefix equality through every finite depth while allowing
+arbitrary future tokens, and C15 carries it to the tied readout. These eleven
+additional statements are in
 `ConstantTokens.lean` and `ConstantPrefixes.lean`. The runtime guard uses the
 actual fused-projection values and requires **strictly above** epsilon in every
 head. A failed guard permanently disables sharing for that row. The guard
@@ -325,9 +327,9 @@ below5e-9. The earlier prototype audit is retained separately; its different
 backward accumulation order must not be mistaken for the actual-source audit.
 This validates measured numerical accuracy, not better generalization.
 
-Validation: all15 new Lean theorems build in13262 jobs; audit retains36 sorry,
+Validation: all17 new Lean theorems build in13262 jobs; audit retains36 sorry,
 zero results resting on them and zero extra axioms. INDEX records4165 modules,
-21390 theorems, zero vacuous/placeholder statements. Forbidden patterns and
+21392 theorems, zero vacuous/placeholder statements. Forbidden patterns and
 explicit axiom checks pass. The affected diff_gpt CPU suite passes123 tests
 with14 skips, including clipping, independent equations/all gradients,
 finite differences, arbitrary suffixes, shared-parameter repeated prefixes,
