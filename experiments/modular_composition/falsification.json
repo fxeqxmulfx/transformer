@@ -3,28 +3,67 @@
   "claims": [
     {
       "claim": "A flat final task kernel prevents transformer generalization.",
-      "status": "Unsupported extension of the exact completion theorem; no counterexample observed yet in the initial completed mixed cases.",
+      "status": "No successful heldout counterexample in this cohort; four mixed pair endpoints remain0.816--1.445% at100000 updates. The proposed unrestricted-transformer impossibility extension remains unsupported.",
       "counterexample_criterion": "At least99% final heldout accuracy on a mixed case whose fixed additive-character ground-truth kernel remains flat; verify saved-state replay and absence of label leakage.",
-      "correction_if_found": "Retain the exact nuclear-norm theorem; reject its transfer to unrestricted transformer learning and investigate learned composition/readout."
+      "correction_if_found": "Retain the exact nuclear-norm theorem; reject its transfer to unrestricted transformer learning and investigate learned composition/readout.",
+      "status_at_long_protocol": "Unsupported extension of the exact completion theorem; no counterexample observed yet in the initial completed mixed cases.",
+      "final_scope": "Full-table P193 fitting reaches100%, but supplies every label and is not heldout recovery. One-step P97 chain heldout1.270%, doubled length0.684%. Retain all48 early cases and all10 continuations."
     },
     {
       "claim": "Rank-one character availability predicts learning within2000 updates.",
-      "status": "Early candidate counterexample: P97 wide division ends at4.725%, P193 wide division at100%, with the same width/depth/optimizer/update budget and rank-one character availability.",
+      "status": "The2000-update learning implication is falsified by verified source-model division endpoints. Late discovery does not repair the claimed short-budget guarantee.",
       "premises_to_audit": "Check faithful characters, connected nonzero-input observation graphs, perfect matchings and source checkpoint replay. Prime changes also change the number of training pairs; do not call this a single-variable causal effect of prime.",
-      "correction": "Separate recoverability under an ideal objective from optimizer discovery and data/parameter scaling. The long phase tests whether delayed grokking accounts for the early difference."
+      "correction": "Separate recoverability under an ideal objective from optimizer discovery and data/parameter scaling. The long phase tests whether delayed grokking accounts for the early difference.",
+      "status_at_long_protocol": "Early candidate counterexample: P97 wide division ends at4.725%, P193 wide division at100%, with the same width/depth/optimizer/update budget and rank-one character availability.",
+      "premise_audit": "Faithful character kernels checked; every declared nonzero-input division observation graph has connectedness and perfect-matching witnesses in recovery_patterns.json. All early and long final success classifications reproduce.",
+      "final_scope": "All four long division pairs reach100% at100000 updates with unchanged full optimizer/sampler states. Ideal recovery is distinct from sampled CE/Schedule-Free discovery time."
     },
     {
       "claim": "Task spectrum alone predicts benefits from width or depth.",
-      "status": "Exploratory comparison; no depth advantage asserted from the currently completed cases.",
+      "status": "Unchanged task spectra coexist with large differences in finite-horizon discovery times: P97 wide/deep first99 at12500/27500, P193 at750/12250.",
       "counterexample_criterion": "Different reproducible learning outcomes for matched task/splits with identical task spectrum; report approximate parameter matching, head dimensions and actual compute.",
-      "correction_if_found": "Include architecture-specific routing/composition and training dynamics; no necessary-depth theorem follows from these finite runs."
+      "correction_if_found": "Include architecture-specific routing/composition and training dynamics; no necessary-depth theorem follows from these finite runs.",
+      "status_at_long_protocol": "Exploratory comparison; no depth advantage asserted from the currently completed cases.",
+      "final_scope": "All four end at100%; approximate parameter matching changes head dimension and compute too. This rejects a spectrum-only timing account, not a necessary-depth or isolated causal depth claim."
     },
     {
       "claim": "An early memorization plateau is permanent failure.",
-      "status": "Unjustified before the long grokking phase.",
+      "status": "Falsified: three failing2000-update division states later exceed99% without changing model, split, optimizer recipe or sampler state.",
       "counterexample_criterion": "A fixed full-state continuation crosses99% heldout accuracy after the2000-update screen, with no change to model/task/optimizer recipe.",
-      "correction_if_found": "Reject finite-horizon impossibility inferences; record transition time, epochs and any later relapse."
+      "correction_if_found": "Reject finite-horizon impossibility inferences; record transition time, epochs and any later relapse.",
+      "status_at_long_protocol": "Unjustified before the long grokking phase.",
+      "final_scope": "P97 deep relapses below99% at30000 and returns at32000; every curve and the100000-update endpoint is retained. All10 continuations complete within6283.38 seconds of the7200-second cap."
     }
   ],
-  "formalization_rule": "If an actual Lean statement is false, identify its precise hypothesis/definition mismatch and correct it with a counterexample. Do not weaken valid spectral theorems to fit outcomes."
+  "formalization_rule": "If an actual Lean statement is false, identify its precise hypothesis/definition mismatch and correct it with a counterexample. Do not weaken valid spectral theorems to fit outcomes.",
+  "additional_exploratory_findings": [
+    {
+      "claim": "Exact real-equivalent forward formulas automatically have equally accurate FP32 shared-parameter gradients.",
+      "status": "Rejected by the actual deep XSA checkpoint audit: centering-only forward is accurate but parameter-gradient RMS error reaches2.284 versus FP64.",
+      "correction": "Preserve clipped projection semantics and share a guarded constant-prefix path.17 Lean theorems prove exact algebra/source-state/readout equalities, including arbitrary finite depth and rotary phases. Numerical accuracy is independently measured, not inferred from real equality.",
+      "evidence": "parameter_precision.json; review/residual_connections.md; diff_gpt research/centered_xsa/validation_results.json",
+      "scope": "No uniform floating-point bound, independent-input derivative equivalence, or improved learning guarantee is claimed."
+    },
+    {
+      "claim": "Bounded normalized Q/K scores guarantee query trainability from any scale.",
+      "status": "Rejected as a finite-budget inference by the known-solution synthetic probe: normalized queries at RMS1e6 have tiny gradients and fail all3 declared data seeds, while unit-scale queries learn all3.",
+      "correction": "Keep proved score/sensitivity upper bounds. Specify query initialization/scale and optimizer dynamics; no gradient lower bound or convergence theorem follows.",
+      "evidence": "residual_probe_summary.json; diff_gpt research/residual_attention/results.json",
+      "scope": "Query-only toy with fixed initial direction and varying data/minibatch seeds; no full-transformer residual-architecture conclusion."
+    }
+  ],
+  "final_audit": {
+    "long_results": "../modular_composition_long/results.json",
+    "long_replay": "All10 initial complete states match source bitwise; allfinal classification outcomes reproduce. Two CPU one-answer differences match counts and original tolerance on compiled follow-up; CPU differences retained.",
+    "early_replay": "All48 replayed; the two existing one-answer compiled discrepancies remain explicitly recorded in early results.",
+    "formal_changes": "No valid exact spectral theorem was weakened. Source numerical equalities and normalized depth-attention bounds were added; optimizer-to-feature discovery remains open.",
+    "next_tasks": [
+      139,
+      133,
+      134,
+      145,
+      148,
+      149
+    ]
+  }
 }

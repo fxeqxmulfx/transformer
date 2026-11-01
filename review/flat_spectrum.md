@@ -5179,3 +5179,77 @@ theorems use only propext, Classical.choice and Quot.sound. The audit has
 the unchanged36 sorry, zero results resting on sorry and zero extra axioms.
 The regenerated index contains4161 modules and21367 theorems, with zero
 vacuous statements and placeholders; the forbidden-pattern check passes.
+
+
+## Experimental corrections to learning implications (2026-11-01)
+
+The actual normalized RoPE source transformer was tested with Schedule-Free
+AdamW on division and `a^3 + ab mod P`, including approximately parameter-matched
+W256D1/W128D4 models. A frozen 48-case screen, profiles, and a separate ten-case
+full-state continuation are recorded in `experiments/modular_composition/`
+and `modular_composition_long/`. The continuation preserves query, base,
+second moments, averaging clock, sampler, labels and splits. Python 3.15,
+Torch 2.15 and CUDA max-autotune are used throughout learning.
+
+All four long division pairs finish at 100% heldout accuracy. P97 W256D1
+first reaches 99% at 12,500 updates (657.93 sampled-table epochs); W128D4
+first reaches it at 27,500 (1,447.38 epochs), relapses below it at 30,000,
+and returns at 32,000. P193 W256D1 first crosses at 750 updates (10.28
+epochs); W128D4 crosses at 12,250 (167.82 epochs). Every run continues to
+100,000; no checkpoint is selected by heldout performance. The P97 deep
+relapse is retained. The actual nonzero-input division observation graphs
+have verified connectedness and perfect matchings, so an absent ideal rank-one
+recovery premise does not explain the early failures.
+
+These observations reject the **learning interpretations** that rank-one
+character availability predicts discovery within 2,000 updates, or that an
+early memorization plateau is permanent. They do not contradict the exact
+kernel-completion theorems. Width/depth changes leave the target spectrum
+unchanged but strongly change the observed discovery time. This comparison
+also changes head dimension and compute, so it is not an isolated causal
+estimate of depth. A source-faithful optimizer-to-feature recovery theorem
+remains missing; neither unlimited representational capacity nor an ideal
+nuclear-norm optimum supplies it.
+
+All four mixed pair models fit the observed training half at 100%, but their
+100,000-update heldout accuracies are only 1.360%/1.445% at P97 and
+0.816%/0.854% at P193 (wide/deep respectively). Their exact fixed character
+kernels remain flat. This supplies no successful heldout counterexample to
+the proposed flat-task barrier, and also no theorem that transformers cannot
+learn such tasks. The full-table P193 fitting control reaches 100% training
+accuracy after its early 58.62% endpoint; fitting with every label supplied
+is a separate statement from heldout recovery.
+
+The residual audit identified a second gap: an exact real identity does not
+ensure stable floating-point execution or backward accumulation. Original
+XSA cancellation on repeated values is amplified by Peri-RMSNorm over depth.
+Centering improves outputs but alone can make shared-parameter FP32 gradients
+much less accurate. The final guarded common-prefix implementation passes an
+actual-source FP32/FP64 audit. Seventeen Lean theorems prove centered/clipped
+source equivalence, common prefix states through arbitrary finite depth and
+the tied readout, for arbitrary rotary phases. Those equalities justify the
+implementation; the numerical errors are measured separately. The frozen long
+runs retain the old arithmetic, so their late grokking is not attributed to
+this correction. See `review/residual_connections.md` for every failure stage.
+
+Finally, the known-solution depth-attention toy rejects an unconditional
+trainability inference from bounded Q/K scores: unit-scale normalized queries
+learn all three declared data seeds, whereas magnitude 1e6 can leave tiny
+query gradients and fail within the same 2,000 updates. Key-only queries can
+saturate to exact zero FP32 gradients; their zero-initialized controls succeed.
+The normalized score and Lipschitz theorems remain valid. Initialization,
+parameter scaling, optimizer dynamics and execution fidelity are additional
+premises, not consequences of flat or rank-one spectra. Full-model residual
+ablation and paired deep numerical retraining remain tasks #145 and #148;
+polynomial-resource source constructions and learning guarantees remain #139
+and #133/#134.
+
+
+The complete continuation audit finishes all ten cases within 6,283.38 seconds
+of the 7,200-second cap. Every source-to-initial full state matches bitwise;
+all final classifications survive checkpoint replay. Two deep mixed CPU
+one-answer differences disappear on the original compiled CUDA path within
+the unchanged loss tolerance; both measurements remain recorded. The chain
+case finishes at 1.270% heldout and 0.684% at doubled length, so it supplies
+no successful length-generalization counterexample in this cohort. These
+finite outcomes leave structured composition and optimizer recovery open.

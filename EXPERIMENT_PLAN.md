@@ -26,10 +26,11 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 | #138 source model and early mixed-arithmetic screen | 48 completed; all replayed, two one-answer compiled discrepancies retained | All cases retained, final-checkpoint replay, exact split/source hashes, train/heldout/longer accuracy and baselines;2000 updates alone cannot rule out grokking |
 | #140 local attention theory | Seven theorems landed at730c0155; in review | Useful-set mass, weighted retrieval error and normalized head-width bounds; arbitrary rotary phases; distinguish a local constraint from a task lower bound |
 | #142 training profile | Landed bc0c2433; in review;292/134 warmed updates per second | Warmed W256D1/W128D4 Python sampling plus CUDA traces; separate startup, compilation, optimizer, kernels, synchronization and evaluation; retain profiler overhead |
-| #141 long grokking phase | Running under one7200-second cap; frozen at a2f8e380 | Freeze selected cases and checkpoint hashes before continuation; retain query/base/moments/averaging clock/sampler; target100000 absolute updates within two hours; save incomplete runs as resumable |
-| #143 theory falsification ledger | Active, explicitly requested | Seek reproducible counterexamples to current learning interpretations; record prediction, premises, outcome and correction; update Lean if a formal claim is false |
-| #144 residual mechanism audit | Active, requested during the screen | Connect existing AttnRes/mHC proofs to fixed-checkpoint measurements of branch/residual norms, cancellation, depth readouts and gradients; compare early and long states |
-| #147 numerical XSA correction | 17 exact Lean theorems; centering-only backward failure retained; guarded common-prefix path passes actual-source FP32/FP64 replay | Preserve clipping and backward conventions; test compiled CUDA and div97 regression after the frozen phase; do not mix arithmetic in running trajectories |
+| #141 long grokking phase | All10 completed100000 updates in6283.38s; full states and compiled discrepancies audited | Freeze selected cases and checkpoint hashes before continuation; retain query/base/moments/averaging clock/sampler; target100000 absolute updates within two hours; save incomplete runs as resumable |
+| #143 theory falsification ledger | Complete for this cohort; valid spectral theorems retained | Seek reproducible counterexamples to current learning interpretations; record prediction, premises, outcome and correction; update Lean if a formal claim is false |
+| #144 residual mechanism audit | In review;0b781d25 compares all8 early/long pairs | Connect existing AttnRes/mHC proofs to fixed-checkpoint measurements of branch/residual norms, cancellation, depth readouts and gradients; compare early and long states |
+| #147 numerical XSA correction | 17 Lean theorems; CPU and compiled CUDA gradient checks pass; all6 paired div97 regressions finish100% | Preserve clipping/backward conventions; all failures retained; actual-source checks pass and original long trajectories stay frozen |
+| #149 repeated-token length collisions | Backlog after#147; structural follow-up | Check guarded constant-prefix invariance across lengths, the P97 chain labels3 versus31 on repeated token1, and an explicit boundary-token repair; do not turn a rare conditional collision into an average-error explanation |
 | #148 paired deep numerical correction | Backlog after#147; separate budget required | Compare legacy and guarded XSA with matched seeds, gradients and sufficiently long learning curves; numerical fidelity alone is not improved generalization |
 | #145 residual training comparison | Backlog, separate cohort | Freeze matched seeds and sufficiently long budgets for ordinary residual, branch-scale control and source-faithful AttnRes; preserve source branches and disclose added parameters/compute |
 | #146 normalized depth-attention verification | In review; Lean1a9b522e; diff_gpt e13cf13;21 synthetic cases replayed | Prove Q/K score and sensitivity bounds with explicit gain/temperature assumptions; reuse diff_gpt; run a known-solution synthetic task and inspect gradients before full-model changes; commit both repositories |
@@ -74,8 +75,8 @@ mid-trajectory or spend the two-hour phase budget twice.
 
 Persistent locations: `experiments/modular_composition/` holds the frozen
 screen, hypotheses, source/compile checks and analysis. Ignored runs are
-linked to the root's `experiments/modular_composition/runs/`. Worktree/agent:
-`mixed_arithmetic`. Board evidence belongs in `.kanban/artifacts/<task>/`.
+linked to the root's `experiments/modular_composition/runs/`. Task agent: `mixed_arithmetic`; completed results are landed in the root.
+Its temporary worktree is removed after the final audit. Board evidence belongs in `.kanban/artifacts/<task>/`.
 The screen's execution log is `/tmp/modular-composition-screen.log` and is
 copied into board evidence before cleanup. Source fixture CPU initialization,
 logits and gradients are bitwise equal; CUDA errors are7.45e-8/3.50e-7.
