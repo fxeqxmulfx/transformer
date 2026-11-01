@@ -23,10 +23,10 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 
 | Board task | Current status | Required outcome |
 | --- | --- | --- |
-| #138 source model and early mixed-arithmetic screen | Setup landed at33e412cb;48 runs executing | All cases retained, final-checkpoint replay, exact split/source hashes, train/heldout/longer accuracy and baselines;2000 updates alone cannot rule out grokking |
+| #138 source model and early mixed-arithmetic screen | 48 completed; eager replay complete, compiled rounding follow-up active | All cases retained, final-checkpoint replay, exact split/source hashes, train/heldout/longer accuracy and baselines;2000 updates alone cannot rule out grokking |
 | #140 local attention theory | Seven theorems landed at730c0155; in review | Useful-set mass, weighted retrieval error and normalized head-width bounds; arbitrary rotary phases; distinguish a local constraint from a task lower bound |
-| #142 training profile | Requested; next before long phase | Warmed W256D1/W128D4 Python sampling plus CUDA traces; separate startup, compilation, optimizer, kernels, synchronization and evaluation; retain profiler overhead |
-| #141 long grokking phase | Preparing; starts only after profiling | Freeze selected cases and checkpoint hashes before continuation; retain query/base/moments/averaging clock/sampler; target100000 absolute updates within two hours; save incomplete runs as resumable |
+| #142 training profile | Measured before long phase;292/134 warmed updates per second | Warmed W256D1/W128D4 Python sampling plus CUDA traces; separate startup, compilation, optimizer, kernels, synchronization and evaluation; retain profiler overhead |
+| #141 long grokking phase | Frozen at a2f8e380; profiling complete, ready to start | Freeze selected cases and checkpoint hashes before continuation; retain query/base/moments/averaging clock/sampler; target100000 absolute updates within two hours; save incomplete runs as resumable |
 | #143 theory falsification ledger | Active, explicitly requested | Seek reproducible counterexamples to current learning interpretations; record prediction, premises, outcome and correction; update Lean if a formal claim is false |
 | #144 residual mechanism audit | Active, requested during the screen | Connect existing AttnRes/mHC proofs to fixed-checkpoint measurements of branch/residual norms, cancellation, depth readouts and gradients; compare early and long states |
 | #145 residual training comparison | Backlog, separate cohort | Freeze matched seeds and sufficiently long budgets for ordinary residual, branch-scale control and source-faithful AttnRes; preserve source branches and disclose added parameters/compute |

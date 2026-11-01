@@ -109,9 +109,38 @@ Run from `python/`, substituting the fixed `wide` or `deep` case:
 
 ```sh
 uv run --locked python ../experiments/modular_composition/profile_updates.py wide plain
-uv run --locked python -m profiling.sampling run --binary -o ../experiments/modular_composition/runs/profiles/wide.bin ../experiments/modular_composition/profile_updates.py wide sampling
+uv run --locked python -m profiling.sampling run --jsonl -o ../experiments/modular_composition/runs/profiles/wide.jsonl ../experiments/modular_composition/profile_updates.py wide sampling
 uv run --locked python ../experiments/modular_composition/profile_updates.py wide torch
 ```
 
-Raw profiles stay in the root-linked ignored `runs/profiles/`. Portable
-timing summaries will be committed before the separately bounded long phase.
+Raw profiles stay in the root-linked ignored `runs/profiles/`. Their hashes
+and portable measurements are in `profile_summary.json`, regenerated with
+`python3 experiments/modular_composition/report_profiles.py`.
+
+| Warmed measurement | W256 D1 | W128 D4 |
+| --- | ---: | ---: |
+| Plain median updates/second, three2000-update repetitions | 292.31 | 133.68 |
+| Python sampling overhead relative to plain wall time | 1.73% | 0.50% |
+| Cached compilation/preparation, seconds | 1.91 | 4.19 |
+| Full P97 heldout evaluation, seconds | .048 | .083 |
+| Attention forward/backward share of GPU kernel time | 51.16% | 70.97% |
+
+The30-update CUDA traces show attention kernels dominate, especially at
+four layers. Optimizer device annotations cover12.27/15.58ms respectively;
+they overlap kernel events and are not added to kernel totals. Wall-stack
+samples spend49.16%/63.81% of valid samples in batch input transfer, which
+includes waiting for queued GPU work: this is not evidence that Python data
+arithmetic consumes that much CPU. Device-resident/pinned index transfer and
+short-context attention kernels are candidates for a separately validated
+performance change. Do not replace the attention backend or update ordering
+inside the frozen long cohort. Evaluation costs about5.6%/4.5% of a250-update
+interval for both train and heldout at this prime, before other observations.
+Long trajectories amortize compilation better than many short fresh runs.
+
+The Python3.15 binary collector failed with a UnicodeEncodeError on a
+surrogate-containing frame; the failure artifact is retained. JSONL worked.
+The sampler reported error rates12.69 and8.28, with24454/49517 valid samples;
+coverage is incomplete. JSONL provides aggregate frames, so these figures
+cover the whole worker, including startup, not an isolated CPU-only steady
+region. Plain timed repetitions define throughput; the CUDA trace supplies
+kernel attribution. These profiles were completed before long training.

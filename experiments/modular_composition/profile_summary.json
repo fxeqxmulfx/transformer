@@ -1,0 +1,322 @@
+{
+  "scope": "Uncontended warmed diagnostic copies; no checkpoint or learning recipe changed.",
+  "limits": [
+    "Wall-stack samples include startup and GPU waits; JSONL has aggregate frames only.",
+    "Sampler reported errors and an earlier binary collector UnicodeEncodeError are retained.",
+    "Profiler ranges overlap kernels; optimizer annotation is not added to kernel time.",
+    "CUDA traces perturb execution; plain repetitions define throughput."
+  ],
+  "cases": [
+    {
+      "case": "pairs-division-p97-w256d1",
+      "source_checkpoint_sha256": "b3bc378f98151191722298d367ace038af1822f17f3bbf4eb94dedfbf020612c",
+      "python": "3.15.2",
+      "torch": "2.15.0+cu132",
+      "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "plain": {
+        "case": "pairs-division-p97-w256d1",
+        "mode": "plain",
+        "source_checkpoint_sha256": "b3bc378f98151191722298d367ace038af1822f17f3bbf4eb94dedfbf020612c",
+        "python": "3.15.2",
+        "torch": "2.15.0+cu132",
+        "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+        "prepare_seconds": 1.9069575510002323,
+        "warmup100_seconds": 0.7304438430001028,
+        "updates_per_repeat": 2000,
+        "repeat_seconds": [
+          6.829518079000991,
+          6.842048145001172,
+          6.912869916999625
+        ],
+        "median_updates_per_second": 292.31013252387123,
+        "heldout_evaluation_seconds": 0.048203788999671815
+      },
+      "sampling": {
+        "case": "pairs-division-p97-w256d1",
+        "mode": "sampling",
+        "source_checkpoint_sha256": "b3bc378f98151191722298d367ace038af1822f17f3bbf4eb94dedfbf020612c",
+        "python": "3.15.2",
+        "torch": "2.15.0+cu132",
+        "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+        "prepare_seconds": 2.0033184669991897,
+        "warmup100_seconds": 0.7186149910012318,
+        "updates_per_repeat": 2000,
+        "repeat_seconds": [
+          6.960532837998471,
+          7.017660723999143,
+          6.823700043001736
+        ],
+        "median_updates_per_second": 287.3343243324326,
+        "heldout_evaluation_seconds": 0.04450371299753897
+      },
+      "sampler_wall_overhead_fraction": 0.017317138156045297,
+      "sampling_valid_samples": 24454,
+      "sampler_reported_error_rate": 12.69,
+      "sampling_top_self_frames": [
+        {
+          "function": "ModularCompositionTask.inputs",
+          "samples": 12021,
+          "fraction_of_valid": 0.4915760202829803
+        },
+        {
+          "function": "_engine_run_backward",
+          "samples": 2680,
+          "fraction_of_valid": 0.10959352253210108
+        },
+        {
+          "function": "ScheduleFreeAdamW.step",
+          "samples": 1945,
+          "fraction_of_valid": 0.07953709004661814
+        },
+        {
+          "function": "_get_total_norm",
+          "samples": 736,
+          "fraction_of_valid": 0.030097325590905374
+        },
+        {
+          "function": "Popen._wait_pidfd",
+          "samples": 679,
+          "fraction_of_valid": 0.027766418581827105
+        },
+        {
+          "function": "_TorchDynamoContext.__call__.<locals>.compile_wrapper",
+          "samples": 369,
+          "fraction_of_valid": 0.015089555900875112
+        },
+        {
+          "function": "<GC>",
+          "samples": 348,
+          "fraction_of_valid": 0.01423080068700417
+        },
+        {
+          "function": "SplitMix64.next",
+          "samples": 339,
+          "fraction_of_valid": 0.013862762738202338
+        },
+        {
+          "function": "_compile_bytecode",
+          "samples": 325,
+          "fraction_of_valid": 0.013290259262288379
+        },
+        {
+          "function": "triton_key",
+          "samples": 303,
+          "fraction_of_valid": 0.012390610942995012
+        },
+        {
+          "function": "_FuncBuilder.add_fns_to_class",
+          "samples": 300,
+          "fraction_of_valid": 0.012267931626727733
+        },
+        {
+          "function": "_call_with_frames_removed",
+          "samples": 263,
+          "fraction_of_valid": 0.01075488672609798
+        }
+      ],
+      "torch_profile_updates": 30,
+      "kernel_time_us": 88217.607,
+      "attention_kernel_time_us": 45132.569,
+      "attention_fraction_of_kernel_time": 0.5116050019357247,
+      "optimizer_annotation_device_us": 10841.385999999968,
+      "top_kernels": [
+        {
+          "name": "fmha_cutlassB_f32_aligned_64x64_k64_sm80(PyTorchMemEffAttention::AttentionBackwardKernel<cutlass::arch::Sm80, float, true, false, false, 64, 64, 64, false>::Params)",
+          "microseconds": 32599.277
+        },
+        {
+          "name": "fmha_cutlassF_f32_aligned_64x64_rf_sm80(PyTorchMemEffAttention::AttentionKernel<float, cutlass::arch::Sm80, true, 64, 64, 64, true, true>::Params)",
+          "microseconds": 12533.292000000005
+        },
+        {
+          "name": "void cutlass::Kernel2<cutlass_80_simt_sgemm_128x32_8x5_nn_align1>(cutlass_80_simt_sgemm_128x32_8x5_nn_align1::Params)",
+          "microseconds": 5601.432
+        },
+        {
+          "name": "void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctor_add<float>, std::array<char*, 3ul>, false>(int, at::native::CUDAFunctor_add<float>, std::array<char*, 3ul>)",
+          "microseconds": 3962.171000000003
+        },
+        {
+          "name": "ampere_sgemm_64x64_nt",
+          "microseconds": 2919.419
+        },
+        {
+          "name": "ampere_sgemm_128x64_tn",
+          "microseconds": 2738.01
+        },
+        {
+          "name": "ampere_sgemm_128x32_tn",
+          "microseconds": 2584.5059999999985
+        },
+        {
+          "name": "ampere_sgemm_128x32_nt",
+          "microseconds": 1606.0119999999997
+        }
+      ],
+      "artifacts": {
+        "wide-cuda-table.txt": "f2143647fef259a321db2969aece853acba84a05ccfdb0cf18e17d3bad3c7f64",
+        "wide-cuda.json": "d4c6170828d83e1295a19a37efdbe523840da2bae3e4a951aef6d1ccbf3c56e7",
+        "wide-failed-binary.bin": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+        "wide-plain.json": "959446902769b4619485150a138b6f6380dbe6038c03b100de0a795adeacf108",
+        "wide-sampling.json": "451720d1db1ab3fcce695d26e2115c7c51d8b19811c1edef778b68fc20973069",
+        "wide-torch.json": "d51e67f7e55107e112e05545875e5031798750ab1bd29241605926a12c612383",
+        "wide.jsonl": "6c4b298ff88df46bdb720cdfc2ab7d47fefb5937adb2e377b194bc72680eeb9c"
+      }
+    },
+    {
+      "case": "pairs-division-p97-w128d4",
+      "source_checkpoint_sha256": "cab2073fd2d658ab49583523c8c8a14a44f9fdac91c9a0b5cb1748009831d430",
+      "python": "3.15.2",
+      "torch": "2.15.0+cu132",
+      "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "plain": {
+        "case": "pairs-division-p97-w128d4",
+        "mode": "plain",
+        "source_checkpoint_sha256": "cab2073fd2d658ab49583523c8c8a14a44f9fdac91c9a0b5cb1748009831d430",
+        "python": "3.15.2",
+        "torch": "2.15.0+cu132",
+        "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+        "prepare_seconds": 4.193429293001827,
+        "warmup100_seconds": 0.9521108230001118,
+        "updates_per_repeat": 2000,
+        "repeat_seconds": [
+          14.904363898996962,
+          14.96128482000131,
+          15.240898547999677
+        ],
+        "median_updates_per_second": 133.67835878147696,
+        "heldout_evaluation_seconds": 0.08342389799872763
+      },
+      "sampling": {
+        "case": "pairs-division-p97-w128d4",
+        "mode": "sampling",
+        "source_checkpoint_sha256": "cab2073fd2d658ab49583523c8c8a14a44f9fdac91c9a0b5cb1748009831d430",
+        "python": "3.15.2",
+        "torch": "2.15.0+cu132",
+        "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+        "prepare_seconds": 3.5703246020020742,
+        "warmup100_seconds": 0.9644488619996991,
+        "updates_per_repeat": 2000,
+        "repeat_seconds": [
+          15.03117213600126,
+          15.098514494999108,
+          15.035797409000224
+        ],
+        "median_updates_per_second": 133.01589171471724,
+        "heldout_evaluation_seconds": 0.08750444200268248
+      },
+      "sampler_wall_overhead_fraction": 0.00498036030296678,
+      "sampling_valid_samples": 49517,
+      "sampler_reported_error_rate": 8.28,
+      "sampling_top_self_frames": [
+        {
+          "function": "ModularCompositionTask.inputs",
+          "samples": 31598,
+          "fraction_of_valid": 0.638124280550114
+        },
+        {
+          "function": "ScheduleFreeAdamW.step",
+          "samples": 5819,
+          "fraction_of_valid": 0.1175151968010986
+        },
+        {
+          "function": "_engine_run_backward",
+          "samples": 3749,
+          "fraction_of_valid": 0.0757113718520912
+        },
+        {
+          "function": "_get_total_norm",
+          "samples": 872,
+          "fraction_of_valid": 0.017610113698325828
+        },
+        {
+          "function": "Popen._wait_pidfd",
+          "samples": 693,
+          "fraction_of_valid": 0.01399519356988509
+        },
+        {
+          "function": "_TorchDynamoContext.__call__.<locals>.compile_wrapper",
+          "samples": 412,
+          "fraction_of_valid": 0.008320374820768625
+        },
+        {
+          "function": "SplitMix64.next",
+          "samples": 339,
+          "fraction_of_valid": 0.006846133651069329
+        },
+        {
+          "function": "triton_key",
+          "samples": 303,
+          "fraction_of_valid": 0.006119110608477896
+        },
+        {
+          "function": "_compile_bytecode",
+          "samples": 291,
+          "fraction_of_valid": 0.005876769594280752
+        },
+        {
+          "function": "_FuncBuilder.add_fns_to_class",
+          "samples": 290,
+          "fraction_of_valid": 0.0058565745097643234
+        },
+        {
+          "function": "<GC>",
+          "samples": 284,
+          "fraction_of_valid": 0.005735404002665751
+        },
+        {
+          "function": "_call_with_frames_removed",
+          "samples": 240,
+          "fraction_of_valid": 0.004846820283942888
+        }
+      ],
+      "torch_profile_updates": 30,
+      "kernel_time_us": 206735.68,
+      "attention_kernel_time_us": 146725.837,
+      "attention_fraction_of_kernel_time": 0.7097267244821988,
+      "optimizer_annotation_device_us": 10079.450999999708,
+      "top_kernels": [
+        {
+          "name": "fmha_cutlassB_f32_aligned_64x64_k32_sm80(PyTorchMemEffAttention::AttentionBackwardKernel<cutlass::arch::Sm80, float, true, false, false, 64, 64, 32, false>::Params)",
+          "microseconds": 105000.57999999997
+        },
+        {
+          "name": "fmha_cutlassF_f32_aligned_64x64_rf_sm80(PyTorchMemEffAttention::AttentionKernel<float, cutlass::arch::Sm80, true, 64, 64, 64, true, true>::Params)",
+          "microseconds": 41725.25700000002
+        },
+        {
+          "name": "ampere_sgemm_32x32_sliced1x4_nt",
+          "microseconds": 5005.713000000003
+        },
+        {
+          "name": "ampere_sgemm_128x32_tn",
+          "microseconds": 4918.374000000002
+        },
+        {
+          "name": "ampere_sgemm_32x128_tn",
+          "microseconds": 4827.019999999997
+        },
+        {
+          "name": "ampere_sgemm_64x32_sliced1x4_nt",
+          "microseconds": 4665.870000000004
+        },
+        {
+          "name": "ampere_sgemm_32x32_sliced1x4_nn",
+          "microseconds": 4576.592
+        },
+        {
+          "name": "ampere_sgemm_32x128_nn",
+          "microseconds": 4376.281
+        }
+      ],
+      "artifacts": {
+        "deep-cuda-table.txt": "665daea80144c65e2b2b03da3ac8cc304025815d4e41ce4ca92ae3b092ee5338",
+        "deep-cuda.json": "48a89433e5e11e890bf47d1ea29d3763d89f6a39844468bbd3e3317caffddcbb",
+        "deep-plain.json": "7e792e9ec65afb9900c5d74654f02ac38ac3dbc7a597e439befb2fcef8a6e90d",
+        "deep-sampling.json": "fbd661f36aedfc862bae9a2cc65d47a82a59cdac98a64e28b289ac2ec1cd3cfa",
+        "deep-torch.json": "970742b4ac98722ae3babee71394208cbd16256a8cf45d36968c4ec7a88e5a21",
+        "deep.jsonl": "03238169cdb0f600bb69b42b71abde44ea7ca2eb79b89451e7e3de62c5cb818e"
+      }
+    }
+  ]
+}
