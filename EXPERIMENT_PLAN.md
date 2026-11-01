@@ -23,21 +23,27 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 
 | Board task | Current status | Required outcome |
 | --- | --- | --- |
-| #138 source model and early mixed-arithmetic screen | 48 completed; all replayed, two one-answer compiled discrepancies retained | All cases retained, final-checkpoint replay, exact split/source hashes, train/heldout/longer accuracy and baselines;2000 updates alone cannot rule out grokking |
-| #140 local attention theory | Seven theorems landed at730c0155; in review | Useful-set mass, weighted retrieval error and normalized head-width bounds; arbitrary rotary phases; distinguish a local constraint from a task lower bound |
-| #142 training profile | Landed bc0c2433; in review;292/134 warmed updates per second | Warmed W256D1/W128D4 Python sampling plus CUDA traces; separate startup, compilation, optimizer, kernels, synchronization and evaluation; retain profiler overhead |
-| #141 long grokking phase | All10 completed100000 updates in6283.38s; full states and compiled discrepancies audited | Freeze selected cases and checkpoint hashes before continuation; retain query/base/moments/averaging clock/sampler; target100000 absolute updates within two hours; save incomplete runs as resumable |
-| #143 theory falsification ledger | Complete for this cohort; valid spectral theorems retained | Seek reproducible counterexamples to current learning interpretations; record prediction, premises, outcome and correction; update Lean if a formal claim is false |
-| #144 residual mechanism audit | In review;0b781d25 compares all8 early/long pairs | Connect existing AttnRes/mHC proofs to fixed-checkpoint measurements of branch/residual norms, cancellation, depth readouts and gradients; compare early and long states |
-| #147 numerical XSA correction | 17 Lean theorems; CPU and compiled CUDA gradient checks pass; all6 paired div97 regressions finish100% | Preserve clipping/backward conventions; all failures retained; actual-source checks pass and original long trajectories stay frozen |
+| #138 source model and early mixed-arithmetic screen | Self-reviewed; all48 replayed; fresh old-model compiled count drift retained separately | All cases retained, final-checkpoint replay, exact split/source hashes, train/heldout/longer accuracy and baselines;2000 updates alone cannot rule out grokking |
+| #140 local attention theory | Self-reviewed; seven theorems at730c0155 rechecked | Useful-set mass, weighted retrieval error and normalized head-width bounds; arbitrary rotary phases; distinguish a local constraint from a task lower bound |
+| #142 training profile | Self-reviewed after57935e11; historical missing rates explicit; fresh retained logs and wide/deep profiles pass | Warmed W256D1/W128D4 Python sampling plus CUDA traces; separate startup, compilation, optimizer, kernels, synchronization and evaluation; retain profiler overhead |
+| #141 long grokking phase | Self-reviewed; all10 completed100000 updates in6283.38s; full states and compiled follow-up rechecked | Freeze selected cases and checkpoint hashes before continuation; retain query/base/moments/averaging clock/sampler; target100000 absolute updates within two hours; save incomplete runs as resumable |
+| #143 theory falsification ledger | Self-reviewed; complete for this cohort; valid spectral theorems retained | Seek reproducible counterexamples to current learning interpretations; record prediction, premises, outcome and correction; update Lean if a formal claim is false |
+| #144 residual mechanism audit | Self-reviewed; all8 early/long pair diagnostics reproduce identically | Connect existing AttnRes/mHC proofs to fixed-checkpoint measurements of branch/residual norms, cancellation, depth readouts and gradients; compare early and long states |
+| #147 numerical XSA correction | Self-reviewed;17 Lean theorems and fresh compiled checks pass; all6 division checkpoint reports reproduce identically | Preserve clipping/backward conventions; all failures retained; actual-source checks pass and original long trajectories stay frozen |
 | #149 repeated-token length collisions | Backlog after#147; structural follow-up | Check guarded constant-prefix invariance across lengths, the P97 chain labels3 versus31 on repeated token1, and an explicit boundary-token repair; do not turn a rare conditional collision into an average-error explanation |
 | #148 paired deep numerical correction | Backlog after#147; separate budget required | Compare legacy and guarded XSA with matched seeds, gradients and sufficiently long learning curves; numerical fidelity alone is not improved generalization |
 | #145 residual training comparison | Backlog, separate cohort | Freeze matched seeds and sufficiently long budgets for ordinary residual, branch-scale control and source-faithful AttnRes; preserve source branches and disclose added parameters/compute |
-| #146 normalized depth-attention verification | In review; Lean1a9b522e; diff_gpt e13cf13;21 synthetic cases replayed | Prove Q/K score and sensitivity bounds with explicit gain/temperature assumptions; reuse diff_gpt; run a known-solution synthetic task and inspect gradients before full-model changes; commit both repositories |
+| #146 normalized depth-attention verification | Self-reviewed; eight Lean theorems rechecked;21-case synthetic report reproduces identically | Prove Q/K score and sensitivity bounds with explicit gain/temperature assumptions; reuse diff_gpt; run a known-solution synthetic task and inspect gradients before full-model changes; commit both repositories |
 | #139 polynomial-resource construction | Backlog; core theory target | Route local arithmetic states and compose real source blocks; aim for fixed width at fixed prime with growing depth, otherwise explicit polynomial bounds; include precision and margins |
 | #133 optimizer-to-recovery bridge | Backlog after#131 | Derive useful routing or separating feature recovery from actual sampled CE/Schedule-Free dynamics under witnessed conditions; retain alias/memorization counterexamples |
 | #134 structured depth/width tradeoffs | Backlog after#131 | Task-specific bounds for exact nonperiodic RoPE; do not substitute arbitrary-table counting or periodic C-RASP lower bounds |
 | #137 backend range/precision certificate | Existing queued task after#136 | Complete the captured invocation's numerical certificate; this single invocation does not prove modular learning |
+
+The user explicitly requested self-review by the same assistant. The
+[self-review record](review/mixed_arithmetic_self_review.md) retains checks,
+findings and fresh replay discrepancies; it is not independent review.
+The long phase is finished. Its two-hour budget must not be reused for
+the separate deep numerical or residual cohorts.
 
 Execution order: finish and audit the frozen early screen while completing
 local retrieval lemmas; profile representative warmed updates; commit a

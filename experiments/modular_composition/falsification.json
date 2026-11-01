@@ -64,6 +64,7 @@
       145,
       148,
       149
-    ]
+    ],
+    "self_review": "The user-requested self-review replays all48 early and10 long states. Fresh old-model compiled follow-up has five discrepant early splits (-3,-3,+1,+2,-1 answers); the original two one-answer differences remain historical evidence, not a deterministic replay bound. Every99-percent classification agrees; long compiled counts and tolerances pass again. See ../../review/mixed_arithmetic_self_review.json."
   }
 }
