@@ -20,17 +20,17 @@
   <main class="wrap">
     <section class="intro">
       <div><p class="eyebrow">MODEL NOTES / 02 NOV 2026</p><h1>A transformer for<br><em>modular generalization.</em></h1>
-      <p class="lede">Keep the normalized RoPE attention and the additive residual path. Choose branch strength from the evidence.</p></div>
+      <p class="lede">One current architecture: normalized RoPE attention, fixed residual scaling, and a more accurate RMS backward.</p></div>
       <aside class="reference"><span class="small-label">THE TESTED REFERENCE</span><div class="dimensions"><strong>128<span>width</span></strong><b>×</b><strong>4<span>blocks</span></strong><b>×</b><strong>4<span>heads</span></strong></div>
       <p>32 dimensions per head · SwiGLU hidden width 341<br>Parameter-free RMSNorm · Tied readout</p></aside>
     </section>
 
     <section id="diagram" class="workspace" aria-labelledby="architecture-title">
       <div class="section-bar"><div><span class="section-number">01</span><h2 id="architecture-title">Follow the signal</h2></div><label class="prime-label">Modulus <select id="prime"><option value="97">P = 97</option><option value="193">P = 193</option></select></label></div>
-      <div class="mode-controls" role="group" aria-label="Residual architecture">
-        <button class="mode active" data-mode="add" aria-pressed="true"><span>01 / Ordinary addition</span><small>Strongest completed accuracy</small></button>
-        <button class="mode" data-mode="scaled" aria-pressed="false"><span>02 / Fixed scaling</span><small>Earlier transition on P97</small></button>
-        <button class="mode" data-mode="gated" aria-pressed="false"><span>03 / Learned gates</span><small>Experimental · synthetic evidence</small></button>
+      <div class="mode-controls" role="group" aria-label="Current architecture and historical comparisons">
+        <button class="mode" data-mode="add" aria-pressed="false"><span>01 / Ordinary addition</span><small>Historical accuracy baseline</small></button>
+        <button class="mode active" data-mode="scaled" aria-pressed="true"><span>02 / Fixed scaling</span><small>Current architecture</small></button>
+        <button class="mode" data-mode="gated" aria-pressed="false"><span>03 / Learned gates</span><small>Historical · synthetic evidence</small></button>
       </div>
       <div class="model-flow" aria-label="Full model flow">
         <span><b>[a, b]</b><small>[B, 2] input tokens</small></span><i>→</i><span><b>Embedding + RMS</b><small>[B, 2, 128]</small></span><i>→</i><span class="flow-highlight"><b>Transformer block × 4</b><small>[B, 2, 128]</small></span><i>→</i><span><b>Final RMS → Eᵀ</b><small id="readout-shape">[B, 97] final logits</small></span>
@@ -82,8 +82,9 @@
       <div class="recipe-grid"><div><h3>Preserve these settings.</h3><dl class="settings"><div><dt>Optimizer</dt><dd>Schedule-Free AdamW</dd></div><div><dt>Learning rate / betas</dt><dd>0.003 / (0.9, 0.98)</dd></div><div><dt>Weight decay / batch</dt><dd>0.1 / 256</dd></div><div><dt>Warmup</dt><dd>10 inclusive updates, then constant</dd></div><div><dt>Precision / execution</dt><dd>FP32 · fullgraph max-autotune</dd></div><div><dt>Validation</dt><dd>Every 1,000 updates, averaged weights</dd></div></dl><p class="note">A short plateau is not a failure verdict. The ordinary P97 controls needed 40k–45k updates to confirm stable validation. Save the complete optimizer and sampler state for continuations.</p></div>
       <div class="code-panel"><div class="code-top"><span>Actual diff_gpt constructor</span><button id="copy-config" type="button" aria-live="polite">Copy config</button></div><pre><code id="model-code"></code></pre><p id="code-note">The residual mode is explicit; the class default differs from this recommendation.</p></div></div>
     </section>
-    <section class="scope"><div><span class="small-label">WHAT THE EVIDENCE COVERS</span><p>Unseen operand pairs at fixed primes 97 and 193. Two-token inputs, despite context capacity 33. Width 128 and depth 4 are a tested reference—not a universal optimum.</p></div><div><span class="small-label">WHAT LEAN ESTABLISHES</span><p>Nine new theorems describe finite-epsilon normalization, gain derivatives and linear residual transport. They do not prove that training discovers a generalizing transformer.</p></div></section>
-    <footer><div><a class="brand" href="#"><span class="brand-mark" aria-hidden="true">∑</span> Generalization lab</a><p>Grounded in experiments 145, 151 &amp; 154 · measured learning curves</p></div><div class="footer-links"><a href="architecture.md" download>Architecture specification ↗</a><a href="evidence.json" download>Measured curve data ↗</a><a href="transformer-results.json" download>Original transformer results ↗</a><a id="continuation-download" href="continuation-results.json" download hidden>Longer scaled runs ↗</a></div></footer>
+    <section class="scope"><div><span class="small-label">RMS BACKWARD REPAIR</span><h3 id="rms-recovery">Loading recorded recovery…</h3><p>Matched unit-scale amplitude tasks, two seeds and two depths. Native forward values stay the same; the current backward preserves small radial derivatives. At scale 1000 both versions still fail. <a href="rms-results.json" download>All 48 cases ↗</a></p></div><div><span class="small-label">MEASURED LIMIT</span><p>An exploratory GPU profile found about 9% forward/backward overhead. The transformer learning curves predate this repair; faster grokking after retraining is unmeasured. Historical diagrams do not select a production architecture.</p></div></section>
+    <section class="scope"><div><span class="small-label">WHAT THE EVIDENCE COVERS</span><p>Unseen operand pairs at fixed primes 97 and 193. Two-token inputs, despite context capacity 33. Width 128 and depth 4 are a tested reference—not a universal optimum.</p></div><div><span class="small-label">WHAT LEAN ESTABLISHES</span><p>Lean describes finite-epsilon normalization, the radial/tangent backward, gain derivatives and linear residual transport. They do not prove that training discovers a generalizing transformer.</p></div></section>
+    <footer><div><a class="brand" href="#"><span class="brand-mark" aria-hidden="true">∑</span> Generalization lab</a><p>Grounded in experiments 145, 151, 154 &amp; 155 · measured learning curves</p></div><div class="footer-links"><a href="architecture.md" download>Architecture specification ↗</a><a href="evidence.json" download>Measured curve data ↗</a><a href="transformer-results.json" download>Original transformer results ↗</a><a id="continuation-download" href="continuation-results.json" download hidden>Longer scaled runs ↗</a></div></footer>
   </main>
 </body>
 </html>

@@ -1,7 +1,7 @@
 "use strict";
 
 // Recorded evidence is generated from the repository reports by build.py.
-const state = { mode: "add", prime: 97, part: "attention", evidence: null, evidenceError: false };
+const state = { mode: "scaled", prime: 97, part: "attention", evidence: null, evidenceError: false };
 const byId = id => document.getElementById(id);
 const put = (id, value) => { byId(id).textContent = value; };
 const percent = value => `${(100 * value).toFixed(3)}%`;
@@ -17,7 +17,7 @@ const components = {
     tag: "Input normalization", title: "Control scale, without learned gain.",
     copy: "Parameter-free RMSNorm prepares the input of each branch. The embedding and final residual stream use the same normalization convention.",
     formula: "N(x) = x / √(mean(x²) + ε)\nε = 2⁻²³ in measured FP32\nlearned gain = none\nbias = none",
-    note: "Q/K normalization acts separately within each attention head. The default epsilon follows dtype; these measurements do not validate mixed-precision training.",
+    note: "Q/K normalization acts separately within each attention head. Torch 2.15 uses FP32 epsilon for FP16/BF16/FP32 and FP64 epsilon for FP64. The current backward separates radial/tangent terms in FP64; mixed-precision grokking is unmeasured.",
   },
   outputnorm: {
     tag: "Output normalization", title: "Normalize first. Apply strength second.",
@@ -159,9 +159,11 @@ function render() {
     node.textContent = mode === "scaled" ? "× 0.3536" : mode === "gated" ? "× 2σ(s)" : "× 1";
   });
   put("branch-formula", mode === "add" ? "h ← h + N(Branch(N(h)))" : `h ← h + ${mode === "scaled" ? "1/√8" : "2σ(s)"} · N(Branch(N(h)))`);
-  put("model-code", `from diff_gpt.domain.model.residual_gpt import ResidualGPT\n\nmodel = ResidualGPT(\n    vocab_size=${prime}, n_embd=128,\n    n_head=4, n_layer=4, block_size=33,\n    mixing="${mode}", centered_xsa=True,\n    rope_base=10_000.0, rope_layers=None,\n    pad_vocab_size_to=1, use_checkpoint=False,\n).float()`);
-  put("code-note", `Set mixing explicitly: the class default differs. Supervise final-position logits only.${mode === "gated" ? " This extension is in diff_gpt; the lab block does not yet expose gated mode." : ""}`);
+  put("model-code", `from diff_gpt.domain.model.gpt import GPT\n\nmodel = GPT(\n    vocab_size=${prime}, n_embd=128,\n    n_head=4, n_layer=4, block_size=33,\n    rope_base=10_000.0,\n    pad_vocab_size_to=1, use_checkpoint=False,\n).float()`);
+  put("code-note", `Current GPT always uses fixed scaling and the accurate RMS backward. Supervise final-position logits only.${mode === "scaled" ? "" : " The selected diagram is a historical comparison; replay it at its original Git revision."}`);
   put("copy-config", "Copy config");
+  const recovery = state.evidence?.rms_backward;
+  put("rms-recovery", recovery ? `${recovery.accurate}/4 recovered · native ${recovery.native}/4` : "Loading recorded recovery…");
   byId("continuation-download").hidden = !state.evidence?.continuation?.length;
   inspect(state.part);
   renderProfile();

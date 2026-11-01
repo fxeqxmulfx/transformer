@@ -24,6 +24,7 @@ def build():
     for experiment, filename in (
         ("residual_generalization", "transformer-results.json"),
         ("residual_gradient_paths", "synthetic-results.json"),
+        ("rms_backward", "rms-results.json"),
     ):
         source = ROOT / "experiments" / experiment / "results.json"
         content = source.read_bytes()
@@ -79,6 +80,11 @@ def build():
             "ordinary_first99_update": case["ordinary_first99"]["step"],
             "additional_updates": case["additional_updates"],
         } for case in continued.values()],
+        "rms_backward": {
+            kind: sum(bool(case["recovered"]) for case in reports["rms_backward"]["cases"]
+                      if f"-{kind}-" in case["label"] and "-a1-before-" in case["label"])
+            for kind in ("native", "accurate")
+        },
         "chart_note": "Recorded validation observations connected linearly; no extrapolation.",
     }
     (output / "evidence.json").write_text(json.dumps(evidence, indent=2) + "\n")

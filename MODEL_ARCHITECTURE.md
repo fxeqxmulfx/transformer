@@ -3,19 +3,21 @@
 Run `./run.py site` for the [interactive local diagram](sites/model_architecture/README.md).
 
 Use a **Q/K-normalized, causal RoPE transformer with parameter-free Peri-RMSNorm,
-SwiGLU, centered XSA and additive residuals**. The most supported starting point
-is width 128, four blocks and four heads. Ordinary addition is the default for
-the strongest completed accuracy result; fixed post-normalization branch scaling
-is the measured option for an earlier generalization transition.
+SwiGLU, centered XSA and fixed additive residual scaling**. The reference size is
+width 128, four blocks and four heads. Each normalized attention/FFN branch is
+multiplied by 1/sqrt(2L), about 0.353553 at four blocks. `diff_gpt.GPT` now has one
+architecture: there are no residual-mixing, legacy-XSA or per-layer RoPE switches.
+Its RMS backward also preserves small finite-epsilon radial gradients.
 
-This recommendation concerns the local modular-division experiments. It is not
-a global optimum for language, unseen primes, longer contexts or every task.
+This choice concerns the local modular-division experiments. It is not a global
+optimum for language, unseen primes, longer contexts or every task. Historical
+comparisons remain evidence, not selectable production architectures:
 
-| Residual option | Coefficient after each branch output RMSNorm | Evidence | Use |
-| --- | --- | --- | --- |
-| `add` | 1 | All four P97/P193 controls reached stable validation; 99.957–100% final test | Default accuracy baseline |
-| `scaled` | 1/sqrt(2L), about 0.353553 at L=4 | Both P97 seeds cross 99% validation at 24k updates; ordinary controls first cross at 32k/37k | Earlier-onset alternative |
-| `gated` | 2 sigmoid(s), s initialized to zero independently for each branch | Post-RMS amplitude recovery 12/12 synthetic cases; actual GPT integration/regressions pass | Experimental learned branch strength |
+| Historical comparison | Coefficient after output RMSNorm | Evidence |
+| --- | --- | --- |
+| Ordinary addition | 1 | All four P97/P193 controls reached stable validation; 99.957–100% final test |
+| Fixed scaling, selected architecture | 1/sqrt(2L) | Both P97 seeds crossed 99% validation at 24k updates; ordinary controls first crossed at 32k/37k |
+| Learned gates, removed experimental option | 2 sigmoid(s), initially 1 | Post-RMS amplitude recovery 12/12 synthetic cases; no full-transformer grokking comparison |
 
 The original scaled runs were capped at 23k. Their complete-state continuations
 needed only 1,000 more updates: validation 99.270%/99.098%, final test 99.227%/98.711%.
@@ -24,8 +26,7 @@ than the paired ordinary controls. The test split was reused from the earlier
 report; seed 17's test remains below 99%. Time to the stricter 99.9% stability
 target and eventual final accuracy remain unknown. Learned gates have no
 full-transformer grokking comparison yet.
-The implemented `gated` mode starts at coefficient 1; it does **not** multiply
-the gate by 1/sqrt(2L). That combination would be a separate untested variant.
+The historical gate started at coefficient 1; no gate-times-depth-scale combination was tested.
 
 ## Exact reference configuration
 
@@ -45,13 +46,15 @@ the gate by 1/sqrt(2L). That combination would be a separate untested variant.
 | Norm epsilon in measured FP32 execution | dtype epsilon = 2^-23, about 1.19209e-7 |
 | XSA | Centered clipped projection; own-value L2 clipping at 1e-12 |
 | Linear biases / norm affine parameters / dropout | None / none / zero |
-| Parameters, `add` or `scaled` | 798,336 at P97; 810,624 at P193 |
-| Additional parameters for `gated` | 8 scalar logits, one per attention/FFN branch |
+| Parameters | 798,336 at P97; 810,624 at P193 |
+| Residual coefficient | Fixed 1/sqrt(2L); no learned gate |
+| RMS backward | Separate tangent/radial terms, computed in FP64 and returned in input dtype |
 
 The two epsilons serve different operations: RMSNorm adds epsilon to mean-square
 energy; XSA clamps an own-value L2 norm. Preserve the actual source convention.
-Casting the whole model to another dtype changes default RMS epsilon; the
-measured results are FP32, not a validation of mixed-precision training.
+Torch 2.15 uses FP32 opmath epsilon for FP16/BF16/FP32 and FP64 epsilon for
+FP64. Forward/dtype regressions pass, but the measured grokking runs are FP32.
+This does not establish mixed-precision training quality.
 
 ## Forward pass
 
@@ -100,36 +103,49 @@ not a fixed 90-degree transform or a single periodic position encoding.
 
 ## Construction in diff_gpt
 
-This matches the implementation at GPT commit `379a9f2`:
+The current production constructor is:
 
 ```python
-from diff_gpt.domain.model.residual_gpt import ResidualGPT
+from diff_gpt.domain.model.gpt import GPT
 
-model = ResidualGPT(
+model = GPT(
     vocab_size=97,
     n_embd=128,
     n_head=4,
     n_layer=4,
     block_size=33,
-    mixing="add",             # "scaled" for the measured earlier-onset option
-    centered_xsa=True,
     rope_base=10_000.0,
-    rope_layers=None,          # RoPE in every block
     pad_vocab_size_to=1,       # exactly 97 output classes for this task
     use_checkpoint=False,     # matches the small measured training model
 ).float()
 ```
 
-Specify `mixing` explicitly: `ResidualGPT` currently defaults to `conditioned_qk`,
-which is a different depth-aggregation architecture. The lab's
-`ResidualTransformer` defaults to `add` and supports the measured `scaled` option.
-The optional `gated` extension currently lives in diff_gpt, not that lab block.
+The former `ResidualGPT` class and its architecture switches were removed.
+Use the historical Git revision to replay an old architecture. The lab retains
+explicit comparison blocks and frozen results for research. Checkpoint verification
+uses a new architecture marker so old ordinary-model weights are not silently
+interpreted as this scaled model.
 
 Initialization uses N(0, 0.02) for embedding/linear weights, then redraws attention
 and FFN output projections with standard deviation 0.02/sqrt(2L). Preserve both
-the initialization and, for `scaled`, the separate post-RMS branch coefficient.
+the initialization and the separate post-RMS branch coefficient.
 At fixed P, total parameters for addition are
-P×d + L×(4d² + 3d×floor((8d+1)/3)); learned gates add 2L.
+P×d + L×(4d² + 3d×floor((8d+1)/3)).
+
+## RMS backward repair
+
+For m=mean(x²), r=1/sqrt(m+epsilon), and p=x*mean(x*g)/m, the real RMS VJP is
+`r*(g-p) + epsilon*r³*p`. At x=0 it is `g/sqrt(epsilon)`. The implementation
+computes this decomposition in FP64 and returns the input dtype; native forward
+values are preserved. Lean proves the identities and conditioning ratio.
+
+In 48 matched synthetic runs, all four unit-scale pre-RMS amplitude cases
+recovered with this backward; all four native controls stayed stuck. Post-RMS
+control curves matched exactly. Scale-1000 cases still failed: tiny true gradients,
+upstream rounding and optimizer conditioning remain. An exploratory GPU profile
+measured about 9% forward/backward overhead. The full-transformer grokking curves
+below predate this backward repair; fixed-weight division regressions pass, but
+faster grokking after retraining is not established.
 
 ## Training conditions that accompany the recommendation
 
@@ -189,7 +205,10 @@ cannot help or that width must grow exponentially with context.
 Sources: [full-transformer comparison](experiments/residual_generalization/README.md),
 [fixed-scale continuations](experiments/residual_scaled_long/README.md),
 [synthetic mechanisms](experiments/residual_gradient_paths/README.md),
+[RMS recovery benchmark](experiments/rms_backward/README.md),
 [formal gradient statements](src/Transformer/Residual/GradientPaths.lean),
+[RMS backward identities](src/Transformer/Residual/RMSBackward.lean),
 [lab residual implementation](python/src/lab/infrastructure/nn/residual_transformer.py),
-and diff_gpt `domain/model/{gpt,block,mha,feed_forward,rope,residual_gpt}.py` at
-commit `379a9f2`.
+and current diff_gpt `domain/model/{gpt,block,mha,feed_forward,rope,rms_norm}.py`.
+Historical architecture comparisons used commit `379a9f2`; the RMS repair is
+commit `7314dec`; the single-architecture migration is `df1e9f7`.
