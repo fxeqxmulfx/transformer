@@ -195,8 +195,23 @@ these exact finite-epsilon equations, with no learned gain or temperature.
 Its default query has unit RMS, avoiding the zero-norm initialization region.
 Independent float64 forward equations, every query/value gradient and
 finite-difference gradient checks pass, including zero and extreme scales.
-A synthetic known-solution routing task will separately check optimization
-and saturated or poorly conditioned initializations before full-model use.
+The known-solution routing probe has now completed21 cases; all saved states
+replay independently on CPU. The portable summary is in
+`experiments/modular_composition/residual_probe_summary.json`; full curves and
+replay code are committed in diff_gpt at e13cf13 under
+`research/residual_attention/`. Q/K, at unit RMS and the fixed wrong direction,
+solves all three data/minibatch seeds. At query RMS1e6, key-only gradients are
+exactly zero in FP32. Normalized scores remain bounded by4, but normalized
+query gradients are only about8e-9 and all three oversized-query cases remain
+stuck after2000 updates. Zero-initialized key-only controls solve the task too.
+
+Thus ND2 does not imply trainability from arbitrary parameter scales. ND3 is
+an upper sensitivity bound, not a positive gradient lower bound. Unit-RMS
+initialization is the tested correction in the implementation; it is not a
+formal optimizer guarantee. This comparison changes query normalization and
+score scaling together. It is a query-only known-solution mechanism check,
+not evidence that replacing full-transformer residuals improves div97.
+The declared full-model residual cohort remains a separate task (#145).
 
 The source repository at b98c665b already has a div97 generalization test:
 W128 D1 H4, padded vocabulary128, batch512 with replacement, learning
