@@ -1,0 +1,4638 @@
+{
+  "scope": "Fixed-batch geometry and gradients; correlation, not a causal residual-architecture comparison.",
+  "phase": "early",
+  "cases": [
+    {
+      "label": "pairs-division-p97-w256d1",
+      "status": "measured",
+      "step": 2000,
+      "checkpoint_sha256": "b3bc378f98151191722298d367ace038af1822f17f3bbf4eb94dedfbf020612c",
+      "task": {
+        "prime": 97,
+        "data_seed": 11,
+        "vocab_size": 97,
+        "split_policy": "unique_inputs_splitmix64_no_replacement",
+        "supervision": "final_answer_only; no target or intermediates in model input",
+        "operation": "division",
+        "exponent": 1,
+        "domain_size": 9312,
+        "scope": "unseen_pairs_at_fixed_prime",
+        "train": {
+          "examples": 4656,
+          "input_length": 2,
+          "fingerprint": "af1518d3d6d9f078a11a6cfcdd0ed6318c2386ea41a9b6d9826d4064e1c1b01e",
+          "input_fingerprint": "8a6f28dbbdef69c4a33cf6ca734631373c196881611b526a7fe75f55644c564b",
+          "copy_last_accuracy": 0.01138316151202749,
+          "majority_accuracy": 0.013530927835051547
+        },
+        "heldout": {
+          "examples": 4656,
+          "input_length": 2,
+          "fingerprint": "fabbebaf7ab9a960308e775938abe42b8f5ced24da85f69f9890c078467c94ec",
+          "input_fingerprint": "d363b1153657172393acce692f0c7a04e50a89d01a30e38132c7758ecac08f8a",
+          "copy_last_accuracy": 0.009235395189003437,
+          "majority_accuracy": 0.01288659793814433
+        }
+      },
+      "batches": {
+        "train": {
+          "examples": 512,
+          "loss": 1.776497668970478e-07,
+          "accuracy": 1.0,
+          "prefix_tied_readout_accuracy": [
+            0.0078125,
+            0.0078125,
+            1.0
+          ],
+          "prefix_scope": "Diagnostic early exits using the existing final norm/readout, not separately trained heads.",
+          "state_gradient_rms_all_positions": [
+            8.157157045089584e-09,
+            6.008470876529752e-11,
+            3.1750549087345026e-11
+          ],
+          "state_gradient_rms_mean_by_position": [
+            [
+              7.843433685709896e-10,
+              8.127551363143054e-10
+            ],
+            [
+              0.0,
+              8.010027462519831e-11
+            ],
+            [
+              0.0,
+              4.0870990376206e-11
+            ]
+          ],
+          "state_rms_mean_by_position": [
+            [
+              0.9999962612109858,
+              0.9999962895755301
+            ],
+            [
+              0.9999962612109858,
+              1.0853430466906293
+            ],
+            [
+              0.7587503424077534,
+              0.8263777512143369
+            ]
+          ],
+          "state_rms_min_by_position": [
+            [
+              0.9999948470987844,
+              0.9999948470987844
+            ],
+            [
+              0.9999948470987844,
+              0.9149801767619323
+            ],
+            [
+              0.5393949027043596,
+              0.5393355434967004
+            ]
+          ],
+          "branches": [
+            {
+              "branch": "block1.attention",
+              "residual_rms_before": 0.9999962895755301,
+              "branch_rms": 0.9902348896002763,
+              "branch_to_residual_rms_mean": 0.9902385665343695,
+              "branch_to_residual_rms_min": 0.00011293523111548821,
+              "branch_to_residual_rms_max": 1.0000045829275368,
+              "cosine_with_residual_mean": -0.40269821612128,
+              "norm_shrink_fraction": 0.103515625,
+              "residual_rms_after": 1.085343046690629,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.24541674804735558
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                3.8992698119122115e-08
+              ]
+            },
+            {
+              "branch": "block1.ffn",
+              "residual_rms_before": 1.085343046690629,
+              "branch_rms": 0.9999986823464528,
+              "branch_to_residual_rms_mean": 0.9249992653160974,
+              "branch_to_residual_rms_min": 0.7577865726793105,
+              "branch_to_residual_rms_max": 1.0929187157939675,
+              "cosine_with_residual_mean": -0.685692487997585,
+              "norm_shrink_fraction": 0.98046875,
+              "residual_rms_after": 0.8263777512143369,
+              "raw_output_rms_mean_by_position": [
+                0.24111443040682193,
+                0.22178985722722477
+              ],
+              "raw_output_rms_min_by_position": [
+                0.1697669121653941,
+                0.14957681473165776
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "token_embedding_table.weight",
+              "parameter_rms": 0.1280031128695065,
+              "gradient_rms": 2.3609206367903826e-09
+            },
+            {
+              "name": "blocks.0.sa.c_attn.weight",
+              "parameter_rms": 0.03228761287373139,
+              "gradient_rms": 1.6108402446350282e-09
+            },
+            {
+              "name": "blocks.0.sa.c_proj.weight",
+              "parameter_rms": 0.030832941645176734,
+              "gradient_rms": 3.1651751131445932e-09
+            },
+            {
+              "name": "blocks.0.ffwd.c_fc.weight",
+              "parameter_rms": 0.03630959336814947,
+              "gradient_rms": 1.3668800279506663e-09
+            },
+            {
+              "name": "blocks.0.ffwd.c_proj.weight",
+              "parameter_rms": 0.035794964845688386,
+              "gradient_rms": 9.001515620944064e-10
+            }
+          ],
+          "manual_forward_bitwise_equal": true,
+          "input_strata": {
+            "identical_input_tokens": {
+              "examples": 5,
+              "ambient_initial_state_gradient_rms": 8.254107014660159e-08,
+              "position_sum_gradient_rms": 1.2497680931619545e-10,
+              "position_sum_cancellation_ratio_mean": 0.0008758529536956976,
+              "first_attention_raw_answer_rms_mean": 6.361484887385661e-08
+            },
+            "distinct_input_tokens": {
+              "examples": 507,
+              "ambient_initial_state_gradient_rms": 7.608203160540692e-11,
+              "position_sum_gradient_rms": 9.723880075665242e-11,
+              "position_sum_cancellation_ratio_mean": 0.657001840862487,
+              "first_attention_raw_answer_rms_mean": 0.24783703093130538
+            }
+          },
+          "gradient_scope": "Gradients of the same full512-row mean loss; strata do not renormalize it. Position sums are not the complete tied-parameter gradient."
+        },
+        "heldout": {
+          "examples": 512,
+          "loss": 7.056765079498291,
+          "accuracy": 0.046875,
+          "prefix_tied_readout_accuracy": [
+            0.005859375,
+            0.009765625,
+            0.046875
+          ],
+          "prefix_scope": "Diagnostic early exits using the existing final norm/readout, not separately trained heads.",
+          "state_gradient_rms_all_positions": [
+            0.034311757015779584,
+            0.0005644842666370979,
+            0.00023122102719101996
+          ],
+          "state_gradient_rms_mean_by_position": [
+            [
+              0.004206018451636583,
+              0.004477863536918614
+            ],
+            [
+              0.0,
+              0.0007666153009597773
+            ],
+            [
+              0.0,
+              0.0003179244568007194
+            ]
+          ],
+          "state_rms_mean_by_position": [
+            [
+              0.9999963236101564,
+              0.9999962640643707
+            ],
+            [
+              0.9999963236101564,
+              1.1381564848419559
+            ],
+            [
+              0.7690617438083065,
+              0.8723632500502685
+            ]
+          ],
+          "state_rms_min_by_position": [
+            [
+              0.9999948470987844,
+              0.9999948470987844
+            ],
+            [
+              0.9999948470987844,
+              0.9375360948487643
+            ],
+            [
+              0.5393949027043596,
+              0.5986692016788813
+            ]
+          ],
+          "branches": [
+            {
+              "branch": "block1.attention",
+              "residual_rms_before": 0.9999962640643709,
+              "branch_rms": 0.9843757924901422,
+              "branch_to_residual_rms_mean": 0.9843794677818619,
+              "branch_to_residual_rms_min": 9.194631972081066e-05,
+              "branch_to_residual_rms_max": 1.0000044964668329,
+              "cosine_with_residual_mean": -0.34025158816439216,
+              "norm_shrink_fraction": 0.052734375,
+              "residual_rms_after": 1.138156484841956,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.23260755403678796
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                3.174590424608793e-08
+              ]
+            },
+            {
+              "branch": "block1.ffn",
+              "residual_rms_before": 1.138156484841956,
+              "branch_rms": 0.9999987734545042,
+              "branch_to_residual_rms_mean": 0.8835244732429925,
+              "branch_to_residual_rms_min": 0.6978660133204296,
+              "branch_to_residual_rms_max": 1.0666237935638838,
+              "cosine_with_residual_mean": -0.6702292761983699,
+              "norm_shrink_fraction": 0.978515625,
+              "residual_rms_after": 0.8723632500502684,
+              "raw_output_rms_mean_by_position": [
+                0.23360180670552813,
+                0.2303389645425477
+              ],
+              "raw_output_rms_min_by_position": [
+                0.1697669121653941,
+                0.1637712903379004
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "token_embedding_table.weight",
+              "parameter_rms": 0.1280031128695065,
+              "gradient_rms": 0.021019286967111413
+            },
+            {
+              "name": "blocks.0.sa.c_attn.weight",
+              "parameter_rms": 0.03228761287373139,
+              "gradient_rms": 0.017471640501679413
+            },
+            {
+              "name": "blocks.0.sa.c_proj.weight",
+              "parameter_rms": 0.030832941645176734,
+              "gradient_rms": 0.03310911445909869
+            },
+            {
+              "name": "blocks.0.ffwd.c_fc.weight",
+              "parameter_rms": 0.03630959336814947,
+              "gradient_rms": 0.014814355010092047
+            },
+            {
+              "name": "blocks.0.ffwd.c_proj.weight",
+              "parameter_rms": 0.035794964845688386,
+              "gradient_rms": 0.007872715817431033
+            }
+          ],
+          "manual_forward_bitwise_equal": true,
+          "input_strata": {
+            "identical_input_tokens": {
+              "examples": 8,
+              "ambient_initial_state_gradient_rms": 0.27443221977689497,
+              "position_sum_gradient_rms": 0.0006149290074161713,
+              "position_sum_cancellation_ratio_mean": 0.0010913004934552134,
+              "first_attention_raw_answer_rms_mean": 5.082612811420376e-08
+            },
+            "distinct_input_tokens": {
+              "examples": 504,
+              "ambient_initial_state_gradient_rms": 0.000734021289423389,
+              "position_sum_gradient_rms": 0.0009231448576868681,
+              "position_sum_cancellation_ratio_mean": 0.6503000480463188,
+              "first_attention_raw_answer_rms_mean": 0.23629973662743337
+            }
+          },
+          "gradient_scope": "Gradients of the same full512-row mean loss; strata do not renormalize it. Position sums are not the complete tied-parameter gradient."
+        }
+      }
+    },
+    {
+      "label": "pairs-division-p97-w128d4",
+      "status": "measured",
+      "step": 2000,
+      "checkpoint_sha256": "cab2073fd2d658ab49583523c8c8a14a44f9fdac91c9a0b5cb1748009831d430",
+      "task": {
+        "prime": 97,
+        "data_seed": 11,
+        "vocab_size": 97,
+        "split_policy": "unique_inputs_splitmix64_no_replacement",
+        "supervision": "final_answer_only; no target or intermediates in model input",
+        "operation": "division",
+        "exponent": 1,
+        "domain_size": 9312,
+        "scope": "unseen_pairs_at_fixed_prime",
+        "train": {
+          "examples": 4656,
+          "input_length": 2,
+          "fingerprint": "af1518d3d6d9f078a11a6cfcdd0ed6318c2386ea41a9b6d9826d4064e1c1b01e",
+          "input_fingerprint": "8a6f28dbbdef69c4a33cf6ca734631373c196881611b526a7fe75f55644c564b",
+          "copy_last_accuracy": 0.01138316151202749,
+          "majority_accuracy": 0.013530927835051547
+        },
+        "heldout": {
+          "examples": 4656,
+          "input_length": 2,
+          "fingerprint": "fabbebaf7ab9a960308e775938abe42b8f5ced24da85f69f9890c078467c94ec",
+          "input_fingerprint": "d363b1153657172393acce692f0c7a04e50a89d01a30e38132c7758ecac08f8a",
+          "copy_last_accuracy": 0.009235395189003437,
+          "majority_accuracy": 0.01288659793814433
+        }
+      },
+      "batches": {
+        "train": {
+          "examples": 512,
+          "loss": 0.0009486622293479741,
+          "accuracy": 1.0,
+          "prefix_tied_readout_accuracy": [
+            0.0078125,
+            0.0078125,
+            0.0078125,
+            0.009765625,
+            0.22265625,
+            0.193359375,
+            0.826171875,
+            0.99609375,
+            1.0
+          ],
+          "prefix_scope": "Diagnostic early exits using the existing final norm/readout, not separately trained heads.",
+          "state_gradient_rms_all_positions": [
+            0.04805976706583062,
+            7.261824816066658e-05,
+            5.525493948169219e-05,
+            4.443037255203432e-07,
+            3.5740819123435985e-07,
+            3.214417024922352e-07,
+            2.2198562635466723e-07,
+            2.0771090424003558e-07,
+            1.0558799577587158e-07
+          ],
+          "state_gradient_rms_mean_by_position": [
+            [
+              0.003630614753771582,
+              0.003630649946104191
+            ],
+            [
+              6.263678350713084e-06,
+              6.468949159655586e-06
+            ],
+            [
+              4.78556785093683e-06,
+              4.9611989090576865e-06
+            ],
+            [
+              1.0783915924528883e-07,
+              3.547979836051507e-07
+            ],
+            [
+              8.868224573594156e-08,
+              2.859831743221572e-07
+            ],
+            [
+              3.264453672971782e-08,
+              2.7097722033103597e-07
+            ],
+            [
+              2.7302659512300846e-08,
+              1.9296242238118664e-07
+            ],
+            [
+              0.0,
+              1.818636596707725e-07
+            ],
+            [
+              0.0,
+              1.0358209537319042e-07
+            ]
+          ],
+          "state_rms_mean_by_position": [
+            [
+              0.9999973614186786,
+              0.9999973590878927
+            ],
+            [
+              0.9999973614186786,
+              1.4015150378427976
+            ],
+            [
+              1.2949981420510748,
+              1.6257272743480047
+            ],
+            [
+              1.2949981420510748,
+              1.8278838246314735
+            ],
+            [
+              1.5059236843059707,
+              1.9256472775299822
+            ],
+            [
+              1.5059236843059707,
+              1.9668517555475007
+            ],
+            [
+              1.9472813331982226,
+              2.0574949358138537
+            ],
+            [
+              1.9472813331982226,
+              2.0662088594622166
+            ],
+            [
+              2.69752163773186,
+              2.4090202182203715
+            ]
+          ],
+          "state_rms_min_by_position": [
+            [
+              0.9999968994810303,
+              0.9999968994810303
+            ],
+            [
+              0.9999968994810303,
+              0.9999857484328122
+            ],
+            [
+              1.1381871635526184,
+              1.1954580489003328
+            ],
+            [
+              1.1381871635526184,
+              1.2404265955419103
+            ],
+            [
+              1.2769626140938288,
+              1.3887840433404004
+            ],
+            [
+              1.2769626140938288,
+              1.5380372304368384
+            ],
+            [
+              1.5268465014000723,
+              1.526818120502086
+            ],
+            [
+              1.5268465014000723,
+              1.5845619337410806
+            ],
+            [
+              2.060280702716314,
+              1.6748633005288458
+            ]
+          ],
+          "branches": [
+            {
+              "branch": "block1.attention",
+              "residual_rms_before": 0.9999973590878927,
+              "branch_rms": 0.9902343262800688,
+              "branch_to_residual_rms_mean": 0.9902369417298345,
+              "branch_to_residual_rms_min": 3.671484143595065e-05,
+              "branch_to_residual_rms_max": 1.0000027875655766,
+              "cosine_with_residual_mean": -0.010571668710326776,
+              "norm_shrink_fraction": 0.0078125,
+              "residual_rms_after": 1.4015150378427976,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.24546052104701876
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                1.2676389712203634e-08
+              ]
+            },
+            {
+              "branch": "block1.ffn",
+              "residual_rms_before": 1.4015150378427976,
+              "branch_rms": 0.9999994890993348,
+              "branch_to_residual_rms_mean": 0.7157719322901981,
+              "branch_to_residual_rms_min": 0.6331952951283673,
+              "branch_to_residual_rms_max": 1.000013918772555,
+              "cosine_with_residual_mean": -0.11332747914912034,
+              "norm_shrink_fraction": 0.001953125,
+              "residual_rms_after": 1.6257272743480045,
+              "raw_output_rms_mean_by_position": [
+                0.4666347403973632,
+                0.3585424890360103
+              ],
+              "raw_output_rms_min_by_position": [
+                0.09985106903194078,
+                0.18701044658337151
+              ]
+            },
+            {
+              "branch": "block2.attention",
+              "residual_rms_before": 1.6257272743480045,
+              "branch_rms": 0.9911497377672147,
+              "branch_to_residual_rms_mean": 0.6101777035793714,
+              "branch_to_residual_rms_min": 0.018753819046890222,
+              "branch_to_residual_rms_max": 0.731378945981539,
+              "cosine_with_residual_mean": -0.08709895393667466,
+              "norm_shrink_fraction": 0.001953125,
+              "residual_rms_after": 1.8278838246314733,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.35789689435208016
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                8.2323387850465e-06
+              ]
+            },
+            {
+              "branch": "block2.ffn",
+              "residual_rms_before": 1.8278838246314733,
+              "branch_rms": 0.9999994304545538,
+              "branch_to_residual_rms_mean": 0.5494977514885051,
+              "branch_to_residual_rms_min": 0.4456797372590217,
+              "branch_to_residual_rms_max": 0.8061740959667999,
+              "cosine_with_residual_mean": -0.1717529025318072,
+              "norm_shrink_fraction": 0.150390625,
+              "residual_rms_after": 1.9256472775299822,
+              "raw_output_rms_mean_by_position": [
+                0.4732938993261511,
+                0.3386392424957745
+              ],
+              "raw_output_rms_min_by_position": [
+                0.2128341191832696,
+                0.20597678126864796
+              ]
+            },
+            {
+              "branch": "block3.attention",
+              "residual_rms_before": 1.9256472775299822,
+              "branch_rms": 0.9999843401882202,
+              "branch_to_residual_rms_mean": 0.5216257701497878,
+              "branch_to_residual_rms_min": 0.4164557611139674,
+              "branch_to_residual_rms_max": 0.7148396118765303,
+              "cosine_with_residual_mean": -0.2167775081588843,
+              "norm_shrink_fraction": 0.326171875,
+              "residual_rms_after": 1.9668517555475007,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.6630193989971331
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                0.0028532413484340918
+              ]
+            },
+            {
+              "branch": "block3.ffn",
+              "residual_rms_before": 1.9668517555475007,
+              "branch_rms": 0.9999994101512601,
+              "branch_to_residual_rms_mean": 0.5110849459486905,
+              "branch_to_residual_rms_min": 0.41050064207169157,
+              "branch_to_residual_rms_max": 0.6501790804401858,
+              "cosine_with_residual_mean": -0.15869158391979,
+              "norm_shrink_fraction": 0.232421875,
+              "residual_rms_after": 2.0574949358138537,
+              "raw_output_rms_mean_by_position": [
+                0.6759888712392934,
+                0.3323137965442103
+              ],
+              "raw_output_rms_min_by_position": [
+                0.32584597173015145,
+                0.18188451203907594
+              ]
+            },
+            {
+              "branch": "block4.attention",
+              "residual_rms_before": 2.0574949358138537,
+              "branch_rms": 0.9999999214132795,
+              "branch_to_residual_rms_mean": 0.48959955153468304,
+              "branch_to_residual_rms_min": 0.3475006903329834,
+              "branch_to_residual_rms_max": 0.6549568246001323,
+              "cosine_with_residual_mean": -0.2341517594340985,
+              "norm_shrink_fraction": 0.458984375,
+              "residual_rms_after": 2.0662088594622166,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                1.182107617376326
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                0.151315760826514
+              ]
+            },
+            {
+              "branch": "block4.ffn",
+              "residual_rms_before": 2.0662088594622166,
+              "branch_rms": 0.9999997429951988,
+              "branch_to_residual_rms_mean": 0.4884179277652513,
+              "branch_to_residual_rms_min": 0.329652246002544,
+              "branch_to_residual_rms_max": 0.6310890774076033,
+              "cosine_with_residual_mean": 0.1323566708861108,
+              "norm_shrink_fraction": 0.01953125,
+              "residual_rms_after": 2.4090202182203715,
+              "raw_output_rms_mean_by_position": [
+                1.724466169453786,
+                0.5803216830187791
+              ],
+              "raw_output_rms_min_by_position": [
+                0.5816400330913365,
+                0.24175983197772852
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "token_embedding_table.weight",
+              "parameter_rms": 0.15224796145504277,
+              "gradient_rms": 1.9977369670870773e-05
+            },
+            {
+              "name": "blocks.0.sa.c_attn.weight",
+              "parameter_rms": 0.04779691551995228,
+              "gradient_rms": 1.4706625864006558e-05
+            },
+            {
+              "name": "blocks.0.sa.c_proj.weight",
+              "parameter_rms": 0.0436454122310686,
+              "gradient_rms": 3.065382418297353e-05
+            },
+            {
+              "name": "blocks.0.ffwd.c_fc.weight",
+              "parameter_rms": 0.05106449803762208,
+              "gradient_rms": 1.168629151216659e-05
+            },
+            {
+              "name": "blocks.0.ffwd.c_proj.weight",
+              "parameter_rms": 0.048674031366334726,
+              "gradient_rms": 1.4955693598094247e-05
+            },
+            {
+              "name": "blocks.1.sa.c_attn.weight",
+              "parameter_rms": 0.052605893034214146,
+              "gradient_rms": 8.79767620532293e-06
+            },
+            {
+              "name": "blocks.1.sa.c_proj.weight",
+              "parameter_rms": 0.04483769773259542,
+              "gradient_rms": 1.5664674513761608e-05
+            },
+            {
+              "name": "blocks.1.ffwd.c_fc.weight",
+              "parameter_rms": 0.05466099326786475,
+              "gradient_rms": 1.004181579872849e-05
+            },
+            {
+              "name": "blocks.1.ffwd.c_proj.weight",
+              "parameter_rms": 0.051821828016682794,
+              "gradient_rms": 9.79669877245348e-06
+            },
+            {
+              "name": "blocks.2.sa.c_attn.weight",
+              "parameter_rms": 0.05441844499519504,
+              "gradient_rms": 4.315621952148815e-06
+            },
+            {
+              "name": "blocks.2.sa.c_proj.weight",
+              "parameter_rms": 0.04520518080944445,
+              "gradient_rms": 8.901430540228562e-06
+            },
+            {
+              "name": "blocks.2.ffwd.c_fc.weight",
+              "parameter_rms": 0.05693517514657304,
+              "gradient_rms": 7.874100288651256e-06
+            },
+            {
+              "name": "blocks.2.ffwd.c_proj.weight",
+              "parameter_rms": 0.05348651640926719,
+              "gradient_rms": 6.6592880187022465e-06
+            },
+            {
+              "name": "blocks.3.sa.c_attn.weight",
+              "parameter_rms": 0.05586570825080167,
+              "gradient_rms": 2.6775077971179942e-06
+            },
+            {
+              "name": "blocks.3.sa.c_proj.weight",
+              "parameter_rms": 0.04596891678771802,
+              "gradient_rms": 5.3560195189638014e-06
+            },
+            {
+              "name": "blocks.3.ffwd.c_fc.weight",
+              "parameter_rms": 0.05803704549483973,
+              "gradient_rms": 3.664776977837422e-06
+            },
+            {
+              "name": "blocks.3.ffwd.c_proj.weight",
+              "parameter_rms": 0.05460938441079513,
+              "gradient_rms": 2.4341187462776055e-06
+            }
+          ],
+          "manual_forward_bitwise_equal": true,
+          "input_strata": {
+            "identical_input_tokens": {
+              "examples": 5,
+              "ambient_initial_state_gradient_rms": 0.4863306487142369,
+              "position_sum_gradient_rms": 2.0754277504990493e-07,
+              "position_sum_cancellation_ratio_mean": 4.2615895178147414e-07,
+              "first_attention_raw_answer_rms_mean": 4.178679620675704e-08
+            },
+            "distinct_input_tokens": {
+              "examples": 507,
+              "ambient_initial_state_gradient_rms": 8.212642512350362e-07,
+              "position_sum_gradient_rms": 1.1447653133449697e-06,
+              "position_sum_cancellation_ratio_mean": 0.6925849318318923,
+              "first_attention_raw_answer_rms_mean": 0.24788123583262253
+            }
+          },
+          "gradient_scope": "Gradients of the same full512-row mean loss; strata do not renormalize it. Position sums are not the complete tied-parameter gradient."
+        },
+        "heldout": {
+          "examples": 512,
+          "loss": 9.363033294677734,
+          "accuracy": 0.021484375,
+          "prefix_tied_readout_accuracy": [
+            0.005859375,
+            0.005859375,
+            0.005859375,
+            0.013671875,
+            0.017578125,
+            0.017578125,
+            0.0234375,
+            0.025390625,
+            0.021484375
+          ],
+          "prefix_scope": "Diagnostic early exits using the existing final norm/readout, not separately trained heads.",
+          "state_gradient_rms_all_positions": [
+            339.28573921860306,
+            0.5711059202703228,
+            0.46978301017484436,
+            0.001003368217925662,
+            0.000790846344606816,
+            0.0003293144581686594,
+            0.00022976326292662084,
+            0.00021243333930913774,
+            0.0001229529384829086
+          ],
+          "state_gradient_rms_mean_by_position": [
+            [
+              21.68815595724334,
+              21.688203361825476
+            ],
+            [
+              0.03999989907970768,
+              0.04032530296476046
+            ],
+            [
+              0.031486507272410764,
+              0.03175537790428277
+            ],
+            [
+              0.00021439216138735554,
+              0.0006096928378123388
+            ],
+            [
+              0.00017042781855837233,
+              0.00048095947812294563
+            ],
+            [
+              4.986476121518885e-05,
+              0.00042367649989361695
+            ],
+            [
+              4.136257760903322e-05,
+              0.0002982488443203573
+            ],
+            [
+              0.0,
+              0.00028037645737586335
+            ],
+            [
+              0.0,
+              0.00016976422581745014
+            ]
+          ],
+          "state_rms_mean_by_position": [
+            [
+              0.9999973739395648,
+              0.9999973636044301
+            ],
+            [
+              0.9999973739395648,
+              1.4127154590111266
+            ],
+            [
+              1.2905122361717987,
+              1.6385403065206001
+            ],
+            [
+              1.2905122361717987,
+              1.8502841457772083
+            ],
+            [
+              1.5018516569272522,
+              1.9388059790465701
+            ],
+            [
+              1.5018516569272522,
+              1.972915270503906
+            ],
+            [
+              1.946475744426174,
+              2.0298459233396713
+            ],
+            [
+              1.946475744426174,
+              2.0366828757133884
+            ],
+            [
+              2.6949094997349508,
+              2.082825159453605
+            ]
+          ],
+          "state_rms_min_by_position": [
+            [
+              0.9999968994810303,
+              0.9999968994810303
+            ],
+            [
+              0.9999968994810303,
+              0.9999723873516084
+            ],
+            [
+              1.1381871635526184,
+              1.2218667241349799
+            ],
+            [
+              1.1381871635526184,
+              1.2377746618790828
+            ],
+            [
+              1.2769626140938288,
+              1.3983851723744867
+            ],
+            [
+              1.2769626140938288,
+              1.6064159655291506
+            ],
+            [
+              1.5268465014000723,
+              1.6040209433441952
+            ],
+            [
+              1.5268465014000723,
+              1.6202744934147852
+            ],
+            [
+              2.060280702716314,
+              1.1957337967662847
+            ]
+          ],
+          "branches": [
+            {
+              "branch": "block1.attention",
+              "residual_rms_before": 0.9999973636044301,
+              "branch_rms": 0.9843754354289682,
+              "branch_to_residual_rms_mean": 0.9843780303201796,
+              "branch_to_residual_rms_min": 7.771179231703009e-05,
+              "branch_to_residual_rms_max": 1.000002858025209,
+              "cosine_with_residual_mean": 0.009400999289027823,
+              "norm_shrink_fraction": 0.0078125,
+              "residual_rms_after": 1.4127154590111268,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.24219468595685903
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                2.683125599428862e-08
+              ]
+            },
+            {
+              "branch": "block1.ffn",
+              "residual_rms_before": 1.4127154590111268,
+              "branch_rms": 0.9999994686520246,
+              "branch_to_residual_rms_mean": 0.7105735895131549,
+              "branch_to_residual_rms_min": 0.6260379381276364,
+              "branch_to_residual_rms_max": 1.0000273576614798,
+              "cosine_with_residual_mean": -0.10870946224349609,
+              "norm_shrink_fraction": 0.0,
+              "residual_rms_after": 1.6385403065206001,
+              "raw_output_rms_mean_by_position": [
+                0.4580023491682368,
+                0.3502196602811138
+              ],
+              "raw_output_rms_min_by_position": [
+                0.09985106903194078,
+                0.2095585964498805
+              ]
+            },
+            {
+              "branch": "block2.attention",
+              "residual_rms_before": 1.6385403065206001,
+              "branch_rms": 0.9855923957145445,
+              "branch_to_residual_rms_mean": 0.6015025910585691,
+              "branch_to_residual_rms_min": 0.03963595708204655,
+              "branch_to_residual_rms_max": 0.7364918613939732,
+              "cosine_with_residual_mean": -0.07154743582941592,
+              "norm_shrink_fraction": 0.0078125,
+              "residual_rms_after": 1.8502841457772083,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.3553659266115635
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                1.8078132753287172e-05
+              ]
+            },
+            {
+              "branch": "block2.ffn",
+              "residual_rms_before": 1.8502841457772083,
+              "branch_rms": 0.9999993892506993,
+              "branch_to_residual_rms_mean": 0.5433494941111634,
+              "branch_to_residual_rms_min": 0.4646323398468523,
+              "branch_to_residual_rms_max": 0.8079011601350455,
+              "cosine_with_residual_mean": -0.17828549601290433,
+              "norm_shrink_fraction": 0.181640625,
+              "residual_rms_after": 1.9388059790465701,
+              "raw_output_rms_mean_by_position": [
+                0.4717104149687703,
+                0.32676952384776514
+              ],
+              "raw_output_rms_min_by_position": [
+                0.2128341191832696,
+                0.21001702489876162
+              ]
+            },
+            {
+              "branch": "block3.attention",
+              "residual_rms_before": 1.9388059790465701,
+              "branch_rms": 0.9999953931563905,
+              "branch_to_residual_rms_mean": 0.518558030019877,
+              "branch_to_residual_rms_min": 0.43331986260243005,
+              "branch_to_residual_rms_max": 0.7149942640289257,
+              "cosine_with_residual_mean": -0.22216229276091326,
+              "norm_shrink_fraction": 0.400390625,
+              "residual_rms_after": 1.972915270503906,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.6621993456991346
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                0.007924271308962946
+              ]
+            },
+            {
+              "branch": "block3.ffn",
+              "residual_rms_before": 1.972915270503906,
+              "branch_rms": 0.9999993222546119,
+              "branch_to_residual_rms_mean": 0.5099503669573281,
+              "branch_to_residual_rms_min": 0.40055023538001566,
+              "branch_to_residual_rms_max": 0.6225033363294392,
+              "cosine_with_residual_mean": -0.19402962978165306,
+              "norm_shrink_fraction": 0.2734375,
+              "residual_rms_after": 2.0298459233396713,
+              "raw_output_rms_mean_by_position": [
+                0.6685705863666995,
+                0.3096637251059696
+              ],
+              "raw_output_rms_min_by_position": [
+                0.32584597173015145,
+                0.19046850135624854
+              ]
+            },
+            {
+              "branch": "block4.attention",
+              "residual_rms_before": 2.0298459233396713,
+              "branch_rms": 0.999999917693499,
+              "branch_to_residual_rms_mean": 0.49592031294197625,
+              "branch_to_residual_rms_min": 0.3810728355206412,
+              "branch_to_residual_rms_max": 0.6234332483563091,
+              "cosine_with_residual_mean": -0.23911129189582425,
+              "norm_shrink_fraction": 0.478515625,
+              "residual_rms_after": 2.0366828757133884,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                1.1661907345786693
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                0.16181854000211535
+              ]
+            },
+            {
+              "branch": "block4.ffn",
+              "residual_rms_before": 2.0366828757133884,
+              "branch_rms": 0.9999992546332555,
+              "branch_to_residual_rms_mean": 0.4950978316849435,
+              "branch_to_residual_rms_min": 0.3283134697868038,
+              "branch_to_residual_rms_max": 0.6171786376643346,
+              "cosine_with_residual_mean": -0.18442054986735457,
+              "norm_shrink_fraction": 0.423828125,
+              "residual_rms_after": 2.082825159453605,
+              "raw_output_rms_mean_by_position": [
+                1.7023502105830617,
+                0.33018126089897104
+              ],
+              "raw_output_rms_min_by_position": [
+                0.5816400330913365,
+                0.18445582426283894
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "token_embedding_table.weight",
+              "parameter_rms": 0.15224796145504277,
+              "gradient_rms": 0.020115823668100732
+            },
+            {
+              "name": "blocks.0.sa.c_attn.weight",
+              "parameter_rms": 0.04779691551995228,
+              "gradient_rms": 0.015748657368765108
+            },
+            {
+              "name": "blocks.0.sa.c_proj.weight",
+              "parameter_rms": 0.0436454122310686,
+              "gradient_rms": 0.030873179922751424
+            },
+            {
+              "name": "blocks.0.ffwd.c_fc.weight",
+              "parameter_rms": 0.05106449803762208,
+              "gradient_rms": 0.012342985405036264
+            },
+            {
+              "name": "blocks.0.ffwd.c_proj.weight",
+              "parameter_rms": 0.048674031366334726,
+              "gradient_rms": 0.015145159461555969
+            },
+            {
+              "name": "blocks.1.sa.c_attn.weight",
+              "parameter_rms": 0.052605893034214146,
+              "gradient_rms": 0.008891951821184036
+            },
+            {
+              "name": "blocks.1.sa.c_proj.weight",
+              "parameter_rms": 0.04483769773259542,
+              "gradient_rms": 0.016968680023746508
+            },
+            {
+              "name": "blocks.1.ffwd.c_fc.weight",
+              "parameter_rms": 0.05466099326786475,
+              "gradient_rms": 0.010490992492706802
+            },
+            {
+              "name": "blocks.1.ffwd.c_proj.weight",
+              "parameter_rms": 0.051821828016682794,
+              "gradient_rms": 0.010441824874701987
+            },
+            {
+              "name": "blocks.2.sa.c_attn.weight",
+              "parameter_rms": 0.05441844499519504,
+              "gradient_rms": 0.004628241017367581
+            },
+            {
+              "name": "blocks.2.sa.c_proj.weight",
+              "parameter_rms": 0.04520518080944445,
+              "gradient_rms": 0.009997344008996446
+            },
+            {
+              "name": "blocks.2.ffwd.c_fc.weight",
+              "parameter_rms": 0.05693517514657304,
+              "gradient_rms": 0.008098101410121775
+            },
+            {
+              "name": "blocks.2.ffwd.c_proj.weight",
+              "parameter_rms": 0.05348651640926719,
+              "gradient_rms": 0.007381296914036251
+            },
+            {
+              "name": "blocks.3.sa.c_attn.weight",
+              "parameter_rms": 0.05586570825080167,
+              "gradient_rms": 0.0029880032334529487
+            },
+            {
+              "name": "blocks.3.sa.c_proj.weight",
+              "parameter_rms": 0.04596891678771802,
+              "gradient_rms": 0.006178921753286025
+            },
+            {
+              "name": "blocks.3.ffwd.c_fc.weight",
+              "parameter_rms": 0.05803704549483973,
+              "gradient_rms": 0.004838668327834337
+            },
+            {
+              "name": "blocks.3.ffwd.c_proj.weight",
+              "parameter_rms": 0.05460938441079513,
+              "gradient_rms": 0.00356704317177755
+            }
+          ],
+          "manual_forward_bitwise_equal": true,
+          "input_strata": {
+            "identical_input_tokens": {
+              "examples": 8,
+              "ambient_initial_state_gradient_rms": 2714.285913740232,
+              "position_sum_gradient_rms": 0.0014851699738742332,
+              "position_sum_cancellation_ratio_mean": 3.842823088792192e-07,
+              "first_attention_raw_answer_rms_mean": 4.55558515796948e-08
+            },
+            "distinct_input_tokens": {
+              "examples": 504,
+              "ambient_initial_state_gradient_rms": 0.0008604602575496666,
+              "position_sum_gradient_rms": 0.0011801937752218303,
+              "position_sum_cancellation_ratio_mean": 0.6936063445240098,
+              "first_attention_raw_answer_rms_mean": 0.24603904532830362
+            }
+          },
+          "gradient_scope": "Gradients of the same full512-row mean loss; strata do not renormalize it. Position sums are not the complete tied-parameter gradient."
+        }
+      }
+    },
+    {
+      "label": "pairs-mixed-p97-w256d1",
+      "status": "measured",
+      "step": 2000,
+      "checkpoint_sha256": "99ca9e511113cdfd21548a70eb40798a595ac6e467d0a15705fcb9aa520a40e1",
+      "task": {
+        "prime": 97,
+        "data_seed": 11,
+        "vocab_size": 97,
+        "split_policy": "unique_inputs_splitmix64_no_replacement",
+        "supervision": "final_answer_only; no target or intermediates in model input",
+        "operation": "mixed",
+        "exponent": 1,
+        "domain_size": 9409,
+        "scope": "unseen_pairs_at_fixed_prime",
+        "train": {
+          "examples": 4704,
+          "input_length": 2,
+          "fingerprint": "3713cfe490d5da73da1daa3f947da78ecbb80925d181d1299cce1b984911c372",
+          "input_fingerprint": "914e1833f44ceb6ff29d14f0652cbc6d47224bcd72d8a97e7934fb2e741601e1",
+          "copy_last_accuracy": 0.008715986394557822,
+          "majority_accuracy": 0.021258503401360544
+        },
+        "heldout": {
+          "examples": 4705,
+          "input_length": 2,
+          "fingerprint": "72cd2026954badebedb924753ec7ce27e022b6a2693ed22d29c836385d6ee01f",
+          "input_fingerprint": "68c220d7b5d919b839f1189faf4c1ca7fce4664dfca8e3ba8c893d031b46265d",
+          "copy_last_accuracy": 0.011689691817215728,
+          "majority_accuracy": 0.019766206163655684
+        }
+      },
+      "batches": {
+        "train": {
+          "examples": 512,
+          "loss": 6.747430347786576e-07,
+          "accuracy": 1.0,
+          "prefix_tied_readout_accuracy": [
+            0.0078125,
+            0.0078125,
+            1.0
+          ],
+          "prefix_scope": "Diagnostic early exits using the existing final norm/readout, not separately trained heads.",
+          "state_gradient_rms_all_positions": [
+            4.740954729468315e-08,
+            1.91068404350745e-10,
+            1.1274601968585522e-10
+          ],
+          "state_gradient_rms_mean_by_position": [
+            [
+              3.3863120753074997e-09,
+              3.4516709988893676e-09
+            ],
+            [
+              0.0,
+              2.558107359964764e-10
+            ],
+            [
+              0.0,
+              1.4497614556944322e-10
+            ]
+          ],
+          "state_rms_mean_by_position": [
+            [
+              0.9999961400101834,
+              0.999996145718346
+            ],
+            [
+              0.9999961400101834,
+              1.1738317921759442
+            ],
+            [
+              0.6704336618403962,
+              0.9244582256155113
+            ]
+          ],
+          "state_rms_min_by_position": [
+            [
+              0.9999949986661626,
+              0.9999949986661626
+            ],
+            [
+              0.9999949986661626,
+              0.9999925744320365
+            ],
+            [
+              0.5018579068163939,
+              0.5798474209041554
+            ]
+          ],
+          "branches": [
+            {
+              "branch": "block1.attention",
+              "residual_rms_before": 0.999996145718346,
+              "branch_rms": 0.9921871060262084,
+              "branch_to_residual_rms_mean": 0.9921909281955388,
+              "branch_to_residual_rms_min": 9.343274386434411e-05,
+              "branch_to_residual_rms_max": 1.0000044187204362,
+              "cosine_with_residual_mean": -0.30455072535824,
+              "norm_shrink_fraction": 0.001953125,
+              "residual_rms_after": 1.173831792175944,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.20704578041399196
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                3.2259138197691067e-08
+              ]
+            },
+            {
+              "branch": "block1.ffn",
+              "residual_rms_before": 1.173831792175944,
+              "branch_rms": 0.9999985114580439,
+              "branch_to_residual_rms_mean": 0.854835919935714,
+              "branch_to_residual_rms_min": 0.677038457400956,
+              "branch_to_residual_rms_max": 1.0000057120074899,
+              "cosine_with_residual_mean": -0.6437911682805861,
+              "norm_shrink_fraction": 0.962890625,
+              "residual_rms_after": 0.9244582256155114,
+              "raw_output_rms_mean_by_position": [
+                0.2355454722321085,
+                0.21235957329246266
+              ],
+              "raw_output_rms_min_by_position": [
+                0.15744109872213122,
+                0.13185648758789703
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "token_embedding_table.weight",
+              "parameter_rms": 0.1250149348119209,
+              "gradient_rms": 8.067251570886986e-09
+            },
+            {
+              "name": "blocks.0.sa.c_attn.weight",
+              "parameter_rms": 0.030804323921461464,
+              "gradient_rms": 5.484931993122102e-09
+            },
+            {
+              "name": "blocks.0.sa.c_proj.weight",
+              "parameter_rms": 0.030161566565659947,
+              "gradient_rms": 1.0604009254756428e-08
+            },
+            {
+              "name": "blocks.0.ffwd.c_fc.weight",
+              "parameter_rms": 0.03612530823942986,
+              "gradient_rms": 4.4413501418007705e-09
+            },
+            {
+              "name": "blocks.0.ffwd.c_proj.weight",
+              "parameter_rms": 0.03526161180070628,
+              "gradient_rms": 3.0737280667237644e-09
+            }
+          ],
+          "manual_forward_bitwise_equal": true,
+          "input_strata": {
+            "identical_input_tokens": {
+              "examples": 4,
+              "ambient_initial_state_gradient_rms": 5.363705997052626e-07,
+              "position_sum_gradient_rms": 6.47959604581049e-10,
+              "position_sum_cancellation_ratio_mean": 0.0007766204514198892,
+              "first_attention_raw_answer_rms_mean": 6.331929158870277e-08
+            },
+            "distinct_input_tokens": {
+              "examples": 508,
+              "ambient_initial_state_gradient_rms": 2.4658504988591044e-10,
+              "position_sum_gradient_rms": 3.247089406945386e-10,
+              "position_sum_cancellation_ratio_mean": 0.665368829751656,
+              "first_attention_raw_answer_rms_mean": 0.20867606165095806
+            }
+          },
+          "gradient_scope": "Gradients of the same full512-row mean loss; strata do not renormalize it. Position sums are not the complete tied-parameter gradient."
+        },
+        "heldout": {
+          "examples": 512,
+          "loss": 11.115762710571289,
+          "accuracy": 0.015625,
+          "prefix_tied_readout_accuracy": [
+            0.015625,
+            0.015625,
+            0.015625
+          ],
+          "prefix_scope": "Diagnostic early exits using the existing final norm/readout, not separately trained heads.",
+          "state_gradient_rms_all_positions": [
+            0.03004551651543436,
+            0.00047531735548432747,
+            0.0002070496319795753
+          ],
+          "state_gradient_rms_mean_by_position": [
+            [
+              0.0031613436170628228,
+              0.0033250784992933384
+            ],
+            [
+              0.0,
+              0.0006543418138577465
+            ],
+            [
+              0.0,
+              0.0002878495641409545
+            ]
+          ],
+          "state_rms_mean_by_position": [
+            [
+              0.9999961264853136,
+              0.9999961423453119
+            ],
+            [
+              0.9999961264853136,
+              1.2340597953626902
+            ],
+            [
+              0.6761982114527022,
+              0.9832446419819628
+            ]
+          ],
+          "state_rms_min_by_position": [
+            [
+              0.9999949986661626,
+              0.9999949986661626
+            ],
+            [
+              0.9999949986661626,
+              0.9997176739009873
+            ],
+            [
+              0.5018579068163939,
+              0.6484505705696568
+            ]
+          ],
+          "branches": [
+            {
+              "branch": "block1.attention",
+              "residual_rms_before": 0.9999961423453119,
+              "branch_rms": 0.9921865921758193,
+              "branch_to_residual_rms_mean": 0.9921904182495954,
+              "branch_to_residual_rms_min": 0.00010227911734835704,
+              "branch_to_residual_rms_max": 1.0000040918259387,
+              "cosine_with_residual_mean": -0.23137878289890068,
+              "norm_shrink_fraction": 0.005859375,
+              "residual_rms_after": 1.2340597953626902,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.19684591386545777
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                3.531346050518245e-08
+              ]
+            },
+            {
+              "branch": "block1.ffn",
+              "residual_rms_before": 1.2340597953626902,
+              "branch_rms": 0.9999986461250339,
+              "branch_to_residual_rms_mean": 0.8135956301094653,
+              "branch_to_residual_rms_min": 0.6918921207735363,
+              "branch_to_residual_rms_max": 1.0002815795798752,
+              "cosine_with_residual_mean": -0.6265652328147553,
+              "norm_shrink_fraction": 0.978515625,
+              "residual_rms_after": 0.9832446419819628,
+              "raw_output_rms_mean_by_position": [
+                0.24022397997341122,
+                0.21774324476154494
+              ],
+              "raw_output_rms_min_by_position": [
+                0.15744109872213122,
+                0.12560479826537088
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "token_embedding_table.weight",
+              "parameter_rms": 0.1250149348119209,
+              "gradient_rms": 0.018309261731777278
+            },
+            {
+              "name": "blocks.0.sa.c_attn.weight",
+              "parameter_rms": 0.030804323921461464,
+              "gradient_rms": 0.015152911335704478
+            },
+            {
+              "name": "blocks.0.sa.c_proj.weight",
+              "parameter_rms": 0.030161566565659947,
+              "gradient_rms": 0.02898238585557055
+            },
+            {
+              "name": "blocks.0.ffwd.c_fc.weight",
+              "parameter_rms": 0.03612530823942986,
+              "gradient_rms": 0.01313233143118112
+            },
+            {
+              "name": "blocks.0.ffwd.c_proj.weight",
+              "parameter_rms": 0.03526161180070628,
+              "gradient_rms": 0.0071138352063162295
+            }
+          ],
+          "manual_forward_bitwise_equal": true,
+          "input_strata": {
+            "identical_input_tokens": {
+              "examples": 4,
+              "ambient_initial_state_gradient_rms": 0.33984886381595153,
+              "position_sum_gradient_rms": 0.0009119419725458267,
+              "position_sum_cancellation_ratio_mean": 0.0013362172068219157,
+              "first_attention_raw_answer_rms_mean": 4.759699148170272e-08
+            },
+            "distinct_input_tokens": {
+              "examples": 508,
+              "ambient_initial_state_gradient_rms": 0.0006434514827285149,
+              "position_sum_gradient_rms": 0.0008332723643561741,
+              "position_sum_cancellation_ratio_mean": 0.658695723517967,
+              "first_attention_raw_answer_rms_mean": 0.19839588131639055
+            }
+          },
+          "gradient_scope": "Gradients of the same full512-row mean loss; strata do not renormalize it. Position sums are not the complete tied-parameter gradient."
+        }
+      }
+    },
+    {
+      "label": "pairs-mixed-p97-w128d4",
+      "status": "measured",
+      "step": 2000,
+      "checkpoint_sha256": "3a349dc098b70235f0f737c1e65b5762b08a6ccebf9e5ba3315fecc1987098d7",
+      "task": {
+        "prime": 97,
+        "data_seed": 11,
+        "vocab_size": 97,
+        "split_policy": "unique_inputs_splitmix64_no_replacement",
+        "supervision": "final_answer_only; no target or intermediates in model input",
+        "operation": "mixed",
+        "exponent": 1,
+        "domain_size": 9409,
+        "scope": "unseen_pairs_at_fixed_prime",
+        "train": {
+          "examples": 4704,
+          "input_length": 2,
+          "fingerprint": "3713cfe490d5da73da1daa3f947da78ecbb80925d181d1299cce1b984911c372",
+          "input_fingerprint": "914e1833f44ceb6ff29d14f0652cbc6d47224bcd72d8a97e7934fb2e741601e1",
+          "copy_last_accuracy": 0.008715986394557822,
+          "majority_accuracy": 0.021258503401360544
+        },
+        "heldout": {
+          "examples": 4705,
+          "input_length": 2,
+          "fingerprint": "72cd2026954badebedb924753ec7ce27e022b6a2693ed22d29c836385d6ee01f",
+          "input_fingerprint": "68c220d7b5d919b839f1189faf4c1ca7fce4664dfca8e3ba8c893d031b46265d",
+          "copy_last_accuracy": 0.011689691817215728,
+          "majority_accuracy": 0.019766206163655684
+        }
+      },
+      "batches": {
+        "train": {
+          "examples": 512,
+          "loss": 0.0011416850611567497,
+          "accuracy": 1.0,
+          "prefix_tied_readout_accuracy": [
+            0.0078125,
+            0.0078125,
+            0.0078125,
+            0.009765625,
+            0.20703125,
+            0.291015625,
+            0.9453125,
+            0.998046875,
+            1.0
+          ],
+          "prefix_scope": "Diagnostic early exits using the existing final norm/readout, not separately trained heads.",
+          "state_gradient_rms_all_positions": [
+            0.03168269920568113,
+            5.4921546078603924e-05,
+            3.7483595027677074e-05,
+            3.74850149644981e-07,
+            2.922896206112283e-07,
+            2.712883037345157e-07,
+            1.9526761748659172e-07,
+            1.820748796902638e-07,
+            1.0789386134013174e-07
+          ],
+          "state_gradient_rms_mean_by_position": [
+            [
+              0.0025084001789496585,
+              0.0025084207464265785
+            ],
+            [
+              4.746641784597105e-06,
+              4.967229361187366e-06
+            ],
+            [
+              3.2838634245082828e-06,
+              3.4630350516359607e-06
+            ],
+            [
+              1.4474432460266357e-07,
+              3.931704610694263e-07
+            ],
+            [
+              1.136397920844433e-07,
+              3.077522672495902e-07
+            ],
+            [
+              7.231404485060767e-08,
+              2.9706258854556493e-07
+            ],
+            [
+              5.984686084551258e-08,
+              2.0967401594159952e-07
+            ],
+            [
+              0.0,
+              2.0405184153316323e-07
+            ],
+            [
+              0.0,
+              1.2336998243578822e-07
+            ]
+          ],
+          "state_rms_mean_by_position": [
+            [
+              0.999997589394235,
+              0.9999975750133034
+            ],
+            [
+              0.999997589394235,
+              1.4010455293606587
+            ],
+            [
+              1.3032343210415882,
+              1.6379534675557805
+            ],
+            [
+              1.3032343210415882,
+              1.860984373956981
+            ],
+            [
+              1.5509012361625525,
+              2.0105439196873753
+            ],
+            [
+              1.5509012361625525,
+              2.1004939989592577
+            ],
+            [
+              1.789242742727662,
+              2.279780704373094
+            ],
+            [
+              1.789242742727662,
+              2.2307472319747728
+            ],
+            [
+              2.1760993407210867,
+              2.5914823149651895
+            ]
+          ],
+          "state_rms_min_by_position": [
+            [
+              0.9999970725750646,
+              0.9999970725750646
+            ],
+            [
+              0.9999970725750646,
+              0.999989897198457
+            ],
+            [
+              1.1216322712233722,
+              1.2643889724677255
+            ],
+            [
+              1.1216322712233722,
+              1.2622218692303495
+            ],
+            [
+              1.2770811540081939,
+              1.5306905612718218
+            ],
+            [
+              1.2770811540081939,
+              1.731602225934485
+            ],
+            [
+              1.4936490742626294,
+              1.786119121001514
+            ],
+            [
+              1.4936490742626294,
+              1.760930642844213
+            ],
+            [
+              1.4427953449614188,
+              1.8541393335128153
+            ]
+          ],
+          "branches": [
+            {
+              "branch": "block1.attention",
+              "residual_rms_before": 0.9999975750133033,
+              "branch_rms": 0.992186757507924,
+              "branch_to_residual_rms_mean": 0.9921891634910163,
+              "branch_to_residual_rms_min": 6.688843755627916e-05,
+              "branch_to_residual_rms_max": 1.000002200383922,
+              "cosine_with_residual_mean": -0.012048505457642023,
+              "norm_shrink_fraction": 0.005859375,
+              "residual_rms_after": 1.4010455293606583,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.23271258594298028
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                2.309431538761419e-08
+              ]
+            },
+            {
+              "branch": "block1.ffn",
+              "residual_rms_before": 1.4010455293606583,
+              "branch_rms": 0.9999994763275641,
+              "branch_to_residual_rms_mean": 0.7156832650147368,
+              "branch_to_residual_rms_min": 0.6417027087301684,
+              "branch_to_residual_rms_max": 1.0000098771030774,
+              "cosine_with_residual_mean": -0.09835184918756568,
+              "norm_shrink_fraction": 0.00390625,
+              "residual_rms_after": 1.6379534675557805,
+              "raw_output_rms_mean_by_position": [
+                0.45703887536190146,
+                0.35014026749761756
+              ],
+              "raw_output_rms_min_by_position": [
+                0.30905485708994074,
+                0.22891908973385203
+              ]
+            },
+            {
+              "branch": "block2.attention",
+              "residual_rms_before": 1.6379534675557805,
+              "branch_rms": 0.9927820401282832,
+              "branch_to_residual_rms_mean": 0.6069010092938709,
+              "branch_to_residual_rms_min": 0.02936426840488448,
+              "branch_to_residual_rms_max": 0.7284652915710758,
+              "cosine_with_residual_mean": -0.06295626023074874,
+              "norm_shrink_fraction": 0.009765625,
+              "residual_rms_after": 1.8609843739569811,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.3474650489575184
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                1.340405999015972e-05
+              ]
+            },
+            {
+              "branch": "block2.ffn",
+              "residual_rms_before": 1.8609843739569811,
+              "branch_rms": 0.9999993826725951,
+              "branch_to_residual_rms_mean": 0.5396330692452156,
+              "branch_to_residual_rms_min": 0.4503003203041811,
+              "branch_to_residual_rms_max": 0.792253298326636,
+              "cosine_with_residual_mean": -0.11166761935965042,
+              "norm_shrink_fraction": 0.064453125,
+              "residual_rms_after": 2.010543919687376,
+              "raw_output_rms_mean_by_position": [
+                0.4481639774809537,
+                0.3235115698717966
+              ],
+              "raw_output_rms_min_by_position": [
+                0.3047296657390382,
+                0.19783200879721674
+              ]
+            },
+            {
+              "branch": "block3.attention",
+              "residual_rms_before": 2.010543919687376,
+              "branch_rms": 0.9999981370836222,
+              "branch_to_residual_rms_mean": 0.4992950286063923,
+              "branch_to_residual_rms_min": 0.39656575033881447,
+              "branch_to_residual_rms_max": 0.6529907655237686,
+              "cosine_with_residual_mean": -0.15525911603799614,
+              "norm_shrink_fraction": 0.173828125,
+              "residual_rms_after": 2.1004939989592577,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.5721480998020362
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                0.011219966936071999
+              ]
+            },
+            {
+              "branch": "block3.ffn",
+              "residual_rms_before": 2.1004939989592577,
+              "branch_rms": 0.9999994458125622,
+              "branch_to_residual_rms_mean": 0.47829745046337646,
+              "branch_to_residual_rms_min": 0.3599838396026198,
+              "branch_to_residual_rms_max": 0.5774996242935734,
+              "cosine_with_residual_mean": -0.049433114200837736,
+              "norm_shrink_fraction": 0.05078125,
+              "residual_rms_after": 2.2797807043730947,
+              "raw_output_rms_mean_by_position": [
+                0.4805598052697981,
+                0.34368477124933117
+              ],
+              "raw_output_rms_min_by_position": [
+                0.30956540638427216,
+                0.22760773504498838
+              ]
+            },
+            {
+              "branch": "block4.attention",
+              "residual_rms_before": 2.2797807043730947,
+              "branch_rms": 0.9999997142300947,
+              "branch_to_residual_rms_mean": 0.44145618452295227,
+              "branch_to_residual_rms_min": 0.30854138332075404,
+              "branch_to_residual_rms_max": 0.5598728945975787,
+              "cosine_with_residual_mean": -0.2670367761638772,
+              "norm_shrink_fraction": 0.70703125,
+              "residual_rms_after": 2.230747231974773,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.6022706575059887
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                0.11947599303745256
+              ]
+            },
+            {
+              "branch": "block4.ffn",
+              "residual_rms_before": 2.230747231974773,
+              "branch_rms": 0.999999759169764,
+              "branch_to_residual_rms_mean": 0.45196557648515845,
+              "branch_to_residual_rms_min": 0.285264355751106,
+              "branch_to_residual_rms_max": 0.5678811944998493,
+              "cosine_with_residual_mean": 0.1686494558434788,
+              "norm_shrink_fraction": 0.015625,
+              "residual_rms_after": 2.591482314965189,
+              "raw_output_rms_mean_by_position": [
+                0.6492537060498585,
+                0.6202085453310539
+              ],
+              "raw_output_rms_min_by_position": [
+                0.23435607457250648,
+                0.2574146364153385
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "token_embedding_table.weight",
+              "parameter_rms": 0.15739948084172253,
+              "gradient_rms": 1.6964158219362215e-05
+            },
+            {
+              "name": "blocks.0.sa.c_attn.weight",
+              "parameter_rms": 0.04804466092218158,
+              "gradient_rms": 1.279138421656843e-05
+            },
+            {
+              "name": "blocks.0.sa.c_proj.weight",
+              "parameter_rms": 0.04392524977998608,
+              "gradient_rms": 2.5217204529132667e-05
+            },
+            {
+              "name": "blocks.0.ffwd.c_fc.weight",
+              "parameter_rms": 0.051139270314631044,
+              "gradient_rms": 9.829567206575748e-06
+            },
+            {
+              "name": "blocks.0.ffwd.c_proj.weight",
+              "parameter_rms": 0.04894137523376726,
+              "gradient_rms": 1.1946637811737953e-05
+            },
+            {
+              "name": "blocks.1.sa.c_attn.weight",
+              "parameter_rms": 0.05266810858675239,
+              "gradient_rms": 6.469713064708085e-06
+            },
+            {
+              "name": "blocks.1.sa.c_proj.weight",
+              "parameter_rms": 0.045076148903958224,
+              "gradient_rms": 1.3664733528448203e-05
+            },
+            {
+              "name": "blocks.1.ffwd.c_fc.weight",
+              "parameter_rms": 0.05492487863438414,
+              "gradient_rms": 8.72650922087811e-06
+            },
+            {
+              "name": "blocks.1.ffwd.c_proj.weight",
+              "parameter_rms": 0.051853782017439995,
+              "gradient_rms": 8.431894540830376e-06
+            },
+            {
+              "name": "blocks.2.sa.c_attn.weight",
+              "parameter_rms": 0.054765628470239296,
+              "gradient_rms": 3.647193983468073e-06
+            },
+            {
+              "name": "blocks.2.sa.c_proj.weight",
+              "parameter_rms": 0.04569697999665451,
+              "gradient_rms": 7.533486586345477e-06
+            },
+            {
+              "name": "blocks.2.ffwd.c_fc.weight",
+              "parameter_rms": 0.057156344870807584,
+              "gradient_rms": 6.375259600644461e-06
+            },
+            {
+              "name": "blocks.2.ffwd.c_proj.weight",
+              "parameter_rms": 0.05385213948319329,
+              "gradient_rms": 5.662344872617009e-06
+            },
+            {
+              "name": "blocks.3.sa.c_attn.weight",
+              "parameter_rms": 0.05611143981843731,
+              "gradient_rms": 2.737368332576155e-06
+            },
+            {
+              "name": "blocks.3.sa.c_proj.weight",
+              "parameter_rms": 0.04706175520852591,
+              "gradient_rms": 5.2475199742111534e-06
+            },
+            {
+              "name": "blocks.3.ffwd.c_fc.weight",
+              "parameter_rms": 0.057652488676181675,
+              "gradient_rms": 3.2047107108229765e-06
+            },
+            {
+              "name": "blocks.3.ffwd.c_proj.weight",
+              "parameter_rms": 0.055722294116697685,
+              "gradient_rms": 2.402411206319437e-06
+            }
+          ],
+          "manual_forward_bitwise_equal": true,
+          "input_strata": {
+            "identical_input_tokens": {
+              "examples": 4,
+              "ambient_initial_state_gradient_rms": 0.35844882319173743,
+              "position_sum_gradient_rms": 5.041731286338689e-07,
+              "position_sum_cancellation_ratio_mean": 5.566933433001781e-07,
+              "first_attention_raw_answer_rms_mean": 3.4450486079059035e-08
+            },
+            "distinct_input_tokens": {
+              "examples": 508,
+              "ambient_initial_state_gradient_rms": 6.81822514328032e-07,
+              "position_sum_gradient_rms": 9.504717084207753e-07,
+              "position_sum_cancellation_ratio_mean": 0.6960148051356473,
+              "first_attention_raw_answer_rms_mean": 0.23454496823819676
+            }
+          },
+          "gradient_scope": "Gradients of the same full512-row mean loss; strata do not renormalize it. Position sums are not the complete tied-parameter gradient."
+        },
+        "heldout": {
+          "examples": 512,
+          "loss": 9.344614028930664,
+          "accuracy": 0.0234375,
+          "prefix_tied_readout_accuracy": [
+            0.015625,
+            0.015625,
+            0.015625,
+            0.015625,
+            0.025390625,
+            0.025390625,
+            0.0234375,
+            0.01953125,
+            0.0234375
+          ],
+          "prefix_scope": "Diagnostic early exits using the existing final norm/readout, not separately trained heads.",
+          "state_gradient_rms_all_positions": [
+            124.65383269876142,
+            0.30948865089494454,
+            0.2743886363769978,
+            0.0006566504797470027,
+            0.0005590861635602489,
+            0.0002786402281860226,
+            0.00019536846417964366,
+            0.00017996079983143205,
+            0.00011124697307660925
+          ],
+          "state_gradient_rms_mean_by_position": [
+            [
+              9.048545295548658,
+              9.048565208156635
+            ],
+            [
+              0.020835248007654544,
+              0.02111095002757744
+            ],
+            [
+              0.01787388675648512,
+              0.018092339974891503
+            ],
+            [
+              0.00020386096542163463,
+              0.000501380995419314
+            ],
+            [
+              0.00016452193646726018,
+              0.0003944935028686954
+            ],
+            [
+              8.678703965328365e-05,
+              0.00035615758138362165
+            ],
+            [
+              7.255518653677558e-05,
+              0.00024954601253866825
+            ],
+            [
+              0.0,
+              0.00024166605826043288
+            ],
+            [
+              0.0,
+              0.00015446037605390287
+            ]
+          ],
+          "state_rms_mean_by_position": [
+            [
+              0.9999975895970405,
+              0.9999975891520377
+            ],
+            [
+              0.9999975895970405,
+              1.4096708525933248
+            ],
+            [
+              1.309502954844025,
+              1.6447594559428573
+            ],
+            [
+              1.309502954844025,
+              1.8710463245729727
+            ],
+            [
+              1.563733016743573,
+              2.0122292841364047
+            ],
+            [
+              1.563733016743573,
+              2.095671156929199
+            ],
+            [
+              1.8063283689946317,
+              2.2517563867716284
+            ],
+            [
+              1.8063283689946317,
+              2.2059156917654654
+            ],
+            [
+              2.197756356629764,
+              2.3406988350789155
+            ]
+          ],
+          "state_rms_min_by_position": [
+            [
+              0.9999970725750646,
+              0.9999970725750646
+            ],
+            [
+              0.9999970725750646,
+              0.9999862422959142
+            ],
+            [
+              1.1216322712233722,
+              1.3173341582407088
+            ],
+            [
+              1.1216322712233722,
+              1.3189518294447682
+            ],
+            [
+              1.2770811540081939,
+              1.522905897609688
+            ],
+            [
+              1.2770811540081939,
+              1.7036744676043427
+            ],
+            [
+              1.4936490742626294,
+              1.7123014524193811
+            ],
+            [
+              1.4936490742626294,
+              1.6584801315798319
+            ],
+            [
+              1.4427953449614188,
+              1.5320014585335981
+            ]
+          ],
+          "branches": [
+            {
+              "branch": "block1.attention",
+              "residual_rms_before": 0.9999975891520377,
+              "branch_rms": 0.9921867996898256,
+              "branch_to_residual_rms_mean": 0.9921891926400755,
+              "branch_to_residual_rms_min": 7.337517687467006e-05,
+              "branch_to_residual_rms_max": 1.000002217841255,
+              "cosine_with_residual_mean": -0.0004564413411571877,
+              "norm_shrink_fraction": 0.0078125,
+              "residual_rms_after": 1.409670852593325,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.22470818694449957
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                2.533397277194187e-08
+              ]
+            },
+            {
+              "branch": "block1.ffn",
+              "residual_rms_before": 1.409670852593325,
+              "branch_rms": 0.9999994550356861,
+              "branch_to_residual_rms_mean": 0.7114072256306305,
+              "branch_to_residual_rms_min": 0.6405101174903416,
+              "branch_to_residual_rms_max": 1.000013510229859,
+              "cosine_with_residual_mean": -0.09852741084523586,
+              "norm_shrink_fraction": 0.0,
+              "residual_rms_after": 1.6447594559428573,
+              "raw_output_rms_mean_by_position": [
+                0.4569431940121316,
+                0.34538804546661017
+              ],
+              "raw_output_rms_min_by_position": [
+                0.30905485708994074,
+                0.2009157271024377
+              ]
+            },
+            {
+              "branch": "block2.attention",
+              "residual_rms_before": 1.6447594559428573,
+              "branch_rms": 0.9927545656799907,
+              "branch_to_residual_rms_mean": 0.6045095753080146,
+              "branch_to_residual_rms_min": 0.028738769735598895,
+              "branch_to_residual_rms_max": 0.7143310764598471,
+              "cosine_with_residual_mean": -0.05799153869247675,
+              "norm_shrink_fraction": 0.00390625,
+              "residual_rms_after": 1.8710463245729727,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.3368691387867311
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                1.308068871878097e-05
+              ]
+            },
+            {
+              "branch": "block2.ffn",
+              "residual_rms_before": 1.8710463245729727,
+              "branch_rms": 0.999999357662224,
+              "branch_to_residual_rms_mean": 0.5366086110384507,
+              "branch_to_residual_rms_min": 0.4620479563194056,
+              "branch_to_residual_rms_max": 0.7581776683514176,
+              "cosine_with_residual_mean": -0.11940555899491301,
+              "norm_shrink_fraction": 0.052734375,
+              "residual_rms_after": 2.0122292841364047,
+              "raw_output_rms_mean_by_position": [
+                0.4541786179930211,
+                0.31662933955983186
+              ],
+              "raw_output_rms_min_by_position": [
+                0.3047296657390382,
+                0.20729774366359957
+              ]
+            },
+            {
+              "branch": "block3.attention",
+              "residual_rms_before": 2.0122292841364047,
+              "branch_rms": 0.9999968828793006,
+              "branch_to_residual_rms_mean": 0.4989535065554972,
+              "branch_to_residual_rms_min": 0.41043044688826436,
+              "branch_to_residual_rms_max": 0.656591812661936,
+              "cosine_with_residual_mean": -0.1620443897008954,
+              "norm_shrink_fraction": 0.171875,
+              "residual_rms_after": 2.0956711569291993,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.5620145787206635
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                0.008661199962453793
+              ]
+            },
+            {
+              "branch": "block3.ffn",
+              "residual_rms_before": 2.0956711569291993,
+              "branch_rms": 0.9999993774948102,
+              "branch_to_residual_rms_mean": 0.4792516237508578,
+              "branch_to_residual_rms_min": 0.38544881132873887,
+              "branch_to_residual_rms_max": 0.5869663927794473,
+              "cosine_with_residual_mean": -0.07534962093632203,
+              "norm_shrink_fraction": 0.0703125,
+              "residual_rms_after": 2.2517563867716284,
+              "raw_output_rms_mean_by_position": [
+                0.47912941803981607,
+                0.32189023646603254
+              ],
+              "raw_output_rms_min_by_position": [
+                0.30956540638427216,
+                0.21583339408567673
+              ]
+            },
+            {
+              "branch": "block4.attention",
+              "residual_rms_before": 2.2517563867716284,
+              "branch_rms": 0.9999997020020303,
+              "branch_to_residual_rms_mean": 0.44639667999749677,
+              "branch_to_residual_rms_min": 0.33881258355889404,
+              "branch_to_residual_rms_max": 0.5840089470106906,
+              "cosine_with_residual_mean": -0.26620589952472073,
+              "norm_shrink_fraction": 0.712890625,
+              "residual_rms_after": 2.2059156917654654,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.58063924303846
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                0.11073119936891633
+              ]
+            },
+            {
+              "branch": "block4.ffn",
+              "residual_rms_before": 2.2059156917654654,
+              "branch_rms": 0.9999993765028636,
+              "branch_to_residual_rms_mean": 0.45612315070849196,
+              "branch_to_residual_rms_min": 0.31675767317122605,
+              "branch_to_residual_rms_max": 0.602961033925392,
+              "cosine_with_residual_mean": -0.07721418494293175,
+              "norm_shrink_fraction": 0.279296875,
+              "residual_rms_after": 2.340698835078916,
+              "raw_output_rms_mean_by_position": [
+                0.641612276432782,
+                0.36172503505073667
+              ],
+              "raw_output_rms_min_by_position": [
+                0.23435607457250648,
+                0.18583135207340606
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "token_embedding_table.weight",
+              "parameter_rms": 0.15739948084172253,
+              "gradient_rms": 0.017063206848959837
+            },
+            {
+              "name": "blocks.0.sa.c_attn.weight",
+              "parameter_rms": 0.04804466092218158,
+              "gradient_rms": 0.014389632715105518
+            },
+            {
+              "name": "blocks.0.sa.c_proj.weight",
+              "parameter_rms": 0.04392524977998608,
+              "gradient_rms": 0.027832848913437725
+            },
+            {
+              "name": "blocks.0.ffwd.c_fc.weight",
+              "parameter_rms": 0.051139270314631044,
+              "gradient_rms": 0.010824816445440956
+            },
+            {
+              "name": "blocks.0.ffwd.c_proj.weight",
+              "parameter_rms": 0.04894137523376726,
+              "gradient_rms": 0.012814598898943345
+            },
+            {
+              "name": "blocks.1.sa.c_attn.weight",
+              "parameter_rms": 0.05266810858675239,
+              "gradient_rms": 0.007667578914663415
+            },
+            {
+              "name": "blocks.1.sa.c_proj.weight",
+              "parameter_rms": 0.045076148903958224,
+              "gradient_rms": 0.013972755822637833
+            },
+            {
+              "name": "blocks.1.ffwd.c_fc.weight",
+              "parameter_rms": 0.05492487863438414,
+              "gradient_rms": 0.00916041027560408
+            },
+            {
+              "name": "blocks.1.ffwd.c_proj.weight",
+              "parameter_rms": 0.051853782017439995,
+              "gradient_rms": 0.00904841042420445
+            },
+            {
+              "name": "blocks.2.sa.c_attn.weight",
+              "parameter_rms": 0.054765628470239296,
+              "gradient_rms": 0.004193855552661376
+            },
+            {
+              "name": "blocks.2.sa.c_proj.weight",
+              "parameter_rms": 0.04569697999665451,
+              "gradient_rms": 0.0082349796541388
+            },
+            {
+              "name": "blocks.2.ffwd.c_fc.weight",
+              "parameter_rms": 0.057156344870807584,
+              "gradient_rms": 0.007024378651044056
+            },
+            {
+              "name": "blocks.2.ffwd.c_proj.weight",
+              "parameter_rms": 0.05385213948319329,
+              "gradient_rms": 0.006125735127866291
+            },
+            {
+              "name": "blocks.3.sa.c_attn.weight",
+              "parameter_rms": 0.05611143981843731,
+              "gradient_rms": 0.0031678236608686508
+            },
+            {
+              "name": "blocks.3.sa.c_proj.weight",
+              "parameter_rms": 0.04706175520852591,
+              "gradient_rms": 0.005964471648342303
+            },
+            {
+              "name": "blocks.3.ffwd.c_fc.weight",
+              "parameter_rms": 0.057652488676181675,
+              "gradient_rms": 0.00434929171515883
+            },
+            {
+              "name": "blocks.3.ffwd.c_proj.weight",
+              "parameter_rms": 0.055722294116697685,
+              "gradient_rms": 0.0030500689708504694
+            }
+          ],
+          "manual_forward_bitwise_equal": true,
+          "input_strata": {
+            "identical_input_tokens": {
+              "examples": 4,
+              "ambient_initial_state_gradient_rms": 1410.29712640868,
+              "position_sum_gradient_rms": 0.0011021222068286162,
+              "position_sum_cancellation_ratio_mean": 5.947136383537943e-07,
+              "first_attention_raw_answer_rms_mean": 3.861122818097605e-08
+            },
+            "distinct_input_tokens": {
+              "examples": 508,
+              "ambient_initial_state_gradient_rms": 0.0007645806492034076,
+              "position_sum_gradient_rms": 0.001053113786574261,
+              "position_sum_cancellation_ratio_mean": 0.6960267929262939,
+              "first_attention_raw_answer_rms_mean": 0.22647754244318677
+            }
+          },
+          "gradient_scope": "Gradients of the same full512-row mean loss; strata do not renormalize it. Position sums are not the complete tied-parameter gradient."
+        }
+      }
+    },
+    {
+      "label": "pairs-division-p193-w256d1",
+      "status": "measured",
+      "step": 2000,
+      "checkpoint_sha256": "c91258e735e761a5dbe8739e0e0840861483eead964f0a66acf412afa6761e63",
+      "task": {
+        "prime": 193,
+        "data_seed": 11,
+        "vocab_size": 193,
+        "split_policy": "unique_inputs_splitmix64_no_replacement",
+        "supervision": "final_answer_only; no target or intermediates in model input",
+        "operation": "division",
+        "exponent": 1,
+        "domain_size": 37056,
+        "scope": "unseen_pairs_at_fixed_prime",
+        "train": {
+          "examples": 18528,
+          "input_length": 2,
+          "fingerprint": "e3ee443b70bca6ba04111829c68824314102907b3e8d9caa7aed93b23a37b7ed",
+          "input_fingerprint": "88e8eb7c8b83b5d80717d618483683cf20cbcb219713f71a5aa563bbcdc7d119",
+          "copy_last_accuracy": 0.00469559585492228,
+          "majority_accuracy": 0.0062068221070811745
+        },
+        "heldout": {
+          "examples": 18528,
+          "input_length": 2,
+          "fingerprint": "e4d242bbb4fc8e6e9f2cad1910bf100efa894daa200afccea4dd28732999a7b2",
+          "input_fingerprint": "65c85bfe6ea6c32f22bcb1b34af180cef4597160a2911723e49e1e53f4c619fd",
+          "copy_last_accuracy": 0.005667098445595855,
+          "majority_accuracy": 0.0062068221070811745
+        }
+      },
+      "batches": {
+        "train": {
+          "examples": 512,
+          "loss": 1.166402580565773e-05,
+          "accuracy": 1.0,
+          "prefix_tied_readout_accuracy": [
+            0.005859375,
+            0.041015625,
+            1.0
+          ],
+          "prefix_scope": "Diagnostic early exits using the existing final norm/readout, not separately trained heads.",
+          "state_gradient_rms_all_positions": [
+            2.3959291943695803e-07,
+            2.758353578638226e-09,
+            1.5563248171524173e-09
+          ],
+          "state_gradient_rms_mean_by_position": [
+            [
+              1.5126937416129764e-08,
+              1.6451581055964578e-08
+            ],
+            [
+              0.0,
+              3.181782871125509e-09
+            ],
+            [
+              0.0,
+              1.7977764936331874e-09
+            ]
+          ],
+          "state_rms_mean_by_position": [
+            [
+              0.9999971733703477,
+              0.999997160427695
+            ],
+            [
+              0.9999971733703477,
+              1.0064494076413573
+            ],
+            [
+              0.7982978654826398,
+              0.8780003311572748
+            ]
+          ],
+          "state_rms_min_by_position": [
+            [
+              0.9999967348311104,
+              0.9999967348311104
+            ],
+            [
+              0.9999967348311104,
+              0.7389818349336528
+            ],
+            [
+              0.4043661470691543,
+              0.5458705425119526
+            ]
+          ],
+          "branches": [
+            {
+              "branch": "block1.attention",
+              "residual_rms_before": 0.999997160427695,
+              "branch_rms": 0.9941444270554242,
+              "branch_to_residual_rms_mean": 0.994147250208766,
+              "branch_to_residual_rms_min": 0.00023277605411036207,
+              "branch_to_residual_rms_max": 1.0000032480162573,
+              "cosine_with_residual_mean": -0.48440156439028215,
+              "norm_shrink_fraction": 0.501953125,
+              "residual_rms_after": 1.0064494076413573,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                1.2092308291969904
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                8.036966528493058e-08
+              ]
+            },
+            {
+              "branch": "block1.ffn",
+              "residual_rms_before": 1.0064494076413573,
+              "branch_rms": 0.9999999982719586,
+              "branch_to_residual_rms_mean": 1.005804648262313,
+              "branch_to_residual_rms_min": 0.7230217136834508,
+              "branch_to_residual_rms_max": 1.3532132562450396,
+              "cosine_with_residual_mean": -0.615504366447567,
+              "norm_shrink_fraction": 0.83203125,
+              "residual_rms_after": 0.8780003311572746,
+              "raw_output_rms_mean_by_position": [
+                3.4681873393732268,
+                5.451153322921911
+              ],
+              "raw_output_rms_min_by_position": [
+                1.3420924893457604,
+                1.9791152659281583
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "token_embedding_table.weight",
+              "parameter_rms": 0.14530487082754348,
+              "gradient_rms": 8.399240470930433e-08
+            },
+            {
+              "name": "blocks.0.sa.c_attn.weight",
+              "parameter_rms": 0.04613618258563253,
+              "gradient_rms": 3.945250517794897e-08
+            },
+            {
+              "name": "blocks.0.sa.c_proj.weight",
+              "parameter_rms": 0.04655837237597164,
+              "gradient_rms": 6.709210767044511e-08
+            },
+            {
+              "name": "blocks.0.ffwd.c_fc.weight",
+              "parameter_rms": 0.05206401947011216,
+              "gradient_rms": 2.4534106812300822e-08
+            },
+            {
+              "name": "blocks.0.ffwd.c_proj.weight",
+              "parameter_rms": 0.056567173723957025,
+              "gradient_rms": 1.7235314995212702e-08
+            }
+          ],
+          "manual_forward_bitwise_equal": true,
+          "input_strata": {
+            "identical_input_tokens": {
+              "examples": 3,
+              "ambient_initial_state_gradient_rms": 3.129608740421532e-06,
+              "position_sum_gradient_rms": 1.5370786115590347e-09,
+              "position_sum_cancellation_ratio_mean": 0.00016754474483529822,
+              "first_attention_raw_answer_rms_mean": 2.2724406267552578e-07
+            },
+            "distinct_input_tokens": {
+              "examples": 509,
+              "ambient_initial_state_gradient_rms": 3.936660179729346e-09,
+              "position_sum_gradient_rms": 4.671862365020016e-09,
+              "position_sum_cancellation_ratio_mean": 0.6463052783143899,
+              "first_attention_raw_answer_rms_mean": 1.216357925082764
+            }
+          },
+          "gradient_scope": "Gradients of the same full512-row mean loss; strata do not renormalize it. Position sums are not the complete tied-parameter gradient."
+        },
+        "heldout": {
+          "examples": 512,
+          "loss": 3.609196937759407e-05,
+          "accuracy": 1.0,
+          "prefix_tied_readout_accuracy": [
+            0.001953125,
+            0.025390625,
+            1.0
+          ],
+          "prefix_scope": "Diagnostic early exits using the existing final norm/readout, not separately trained heads.",
+          "state_gradient_rms_all_positions": [
+            2.3443658874401705e-07,
+            7.848931812534536e-08,
+            4.6867901109181724e-08
+          ],
+          "state_gradient_rms_mean_by_position": [
+            [
+              2.2296870981640418e-08,
+              2.6544865809650694e-08
+            ],
+            [
+              0.0,
+              1.4271943040328376e-08
+            ],
+            [
+              0.0,
+              8.108105283202917e-09
+            ]
+          ],
+          "state_rms_mean_by_position": [
+            [
+              0.9999971516925927,
+              0.9999971606207743
+            ],
+            [
+              0.9999971516925927,
+              1.0048738680966152
+            ],
+            [
+              0.7775780926904285,
+              0.87268704401347
+            ]
+          ],
+          "state_rms_min_by_position": [
+            [
+              0.9999967348311104,
+              0.9999967998349528
+            ],
+            [
+              0.9999967348311104,
+              0.7660166539802074
+            ],
+            [
+              0.4043661470691543,
+              0.6020830637781129
+            ]
+          ],
+          "branches": [
+            {
+              "branch": "block1.attention",
+              "residual_rms_before": 0.9999971606207743,
+              "branch_rms": 0.9960958943669371,
+              "branch_to_residual_rms_mean": 0.9960987231848806,
+              "branch_to_residual_rms_min": 0.0005471106063088977,
+              "branch_to_residual_rms_max": 1.0000031940747787,
+              "cosine_with_residual_mean": -0.4888749589736108,
+              "norm_shrink_fraction": 0.484375,
+              "residual_rms_after": 1.0048738680966152,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                1.191445692074893
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                1.8889874460929383e-07
+              ]
+            },
+            {
+              "branch": "block1.ffn",
+              "residual_rms_before": 1.0048738680966152,
+              "branch_rms": 0.9999999993697998,
+              "branch_to_residual_rms_mean": 1.0064373191306795,
+              "branch_to_residual_rms_min": 0.7648469264570985,
+              "branch_to_residual_rms_max": 1.3054545878071877,
+              "cosine_with_residual_mean": -0.6197233600541949,
+              "norm_shrink_fraction": 0.859375,
+              "residual_rms_after": 0.87268704401347,
+              "raw_output_rms_mean_by_position": [
+                3.553262454838143,
+                5.435798530343086
+              ],
+              "raw_output_rms_min_by_position": [
+                1.3420924893457604,
+                2.0730664024079206
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "token_embedding_table.weight",
+              "parameter_rms": 0.14530487082754348,
+              "gradient_rms": 2.601221708810358e-06
+            },
+            {
+              "name": "blocks.0.sa.c_attn.weight",
+              "parameter_rms": 0.04613618258563253,
+              "gradient_rms": 1.4032817141410629e-06
+            },
+            {
+              "name": "blocks.0.sa.c_proj.weight",
+              "parameter_rms": 0.04655837237597164,
+              "gradient_rms": 1.7921892151099156e-06
+            },
+            {
+              "name": "blocks.0.ffwd.c_fc.weight",
+              "parameter_rms": 0.05206401947011216,
+              "gradient_rms": 6.959629421897729e-07
+            },
+            {
+              "name": "blocks.0.ffwd.c_proj.weight",
+              "parameter_rms": 0.056567173723957025,
+              "gradient_rms": 3.8058482531017983e-07
+            }
+          ],
+          "manual_forward_bitwise_equal": true,
+          "input_strata": {
+            "identical_input_tokens": {
+              "examples": 2,
+              "ambient_initial_state_gradient_rms": 2.8017390378252623e-06,
+              "position_sum_gradient_rms": 1.3513351778661365e-09,
+              "position_sum_cancellation_ratio_mean": 0.0002568995036110354,
+              "first_attention_raw_answer_rms_mean": 1.9462729254690113e-07
+            },
+            "distinct_input_tokens": {
+              "examples": 510,
+              "ambient_initial_state_gradient_rms": 1.561817692188026e-07,
+              "position_sum_gradient_rms": 1.243847847715806e-07,
+              "position_sum_cancellation_ratio_mean": 0.6403942804411288,
+              "first_attention_raw_answer_rms_mean": 1.1961180273590013
+            }
+          },
+          "gradient_scope": "Gradients of the same full512-row mean loss; strata do not renormalize it. Position sums are not the complete tied-parameter gradient."
+        }
+      }
+    },
+    {
+      "label": "pairs-division-p193-w128d4",
+      "status": "measured",
+      "step": 2000,
+      "checkpoint_sha256": "bdb2a7f38d151a64941fe1944af6acee32cd0b2c4b01ead383ebf14e9c41fcb4",
+      "task": {
+        "prime": 193,
+        "data_seed": 11,
+        "vocab_size": 193,
+        "split_policy": "unique_inputs_splitmix64_no_replacement",
+        "supervision": "final_answer_only; no target or intermediates in model input",
+        "operation": "division",
+        "exponent": 1,
+        "domain_size": 37056,
+        "scope": "unseen_pairs_at_fixed_prime",
+        "train": {
+          "examples": 18528,
+          "input_length": 2,
+          "fingerprint": "e3ee443b70bca6ba04111829c68824314102907b3e8d9caa7aed93b23a37b7ed",
+          "input_fingerprint": "88e8eb7c8b83b5d80717d618483683cf20cbcb219713f71a5aa563bbcdc7d119",
+          "copy_last_accuracy": 0.00469559585492228,
+          "majority_accuracy": 0.0062068221070811745
+        },
+        "heldout": {
+          "examples": 18528,
+          "input_length": 2,
+          "fingerprint": "e4d242bbb4fc8e6e9f2cad1910bf100efa894daa200afccea4dd28732999a7b2",
+          "input_fingerprint": "65c85bfe6ea6c32f22bcb1b34af180cef4597160a2911723e49e1e53f4c619fd",
+          "copy_last_accuracy": 0.005667098445595855,
+          "majority_accuracy": 0.0062068221070811745
+        }
+      },
+      "batches": {
+        "train": {
+          "examples": 512,
+          "loss": 0.0047846222296357155,
+          "accuracy": 1.0,
+          "prefix_tied_readout_accuracy": [
+            0.005859375,
+            0.005859375,
+            0.005859375,
+            0.01171875,
+            0.267578125,
+            0.328125,
+            0.9296875,
+            0.994140625,
+            1.0
+          ],
+          "prefix_scope": "Diagnostic early exits using the existing final norm/readout, not separately trained heads.",
+          "state_gradient_rms_all_positions": [
+            0.0450071773443997,
+            7.434732880855178e-05,
+            4.718865648589571e-05,
+            2.2657897748403426e-06,
+            1.8631638485821714e-06,
+            1.7997040623090165e-06,
+            1.2749351292286431e-06,
+            1.1311166046286883e-06,
+            6.189191211881976e-07
+          ],
+          "state_gradient_rms_mean_by_position": [
+            [
+              0.002313066631040006,
+              0.002313164192071766
+            ],
+            [
+              5.517791658523421e-06,
+              6.967848007213957e-06
+            ],
+            [
+              3.682677264805037e-06,
+              4.915260453560795e-06
+            ],
+            [
+              5.020540794721253e-07,
+              2.30954286683241e-06
+            ],
+            [
+              4.0233022879617784e-07,
+              1.8816462306056812e-06
+            ],
+            [
+              1.8998623380605483e-07,
+              1.8438494018063233e-06
+            ],
+            [
+              1.6389443757133754e-07,
+              1.2873564982575934e-06
+            ],
+            [
+              0.0,
+              1.146195139799249e-06
+            ],
+            [
+              0.0,
+              6.305695178903339e-07
+            ]
+          ],
+          "state_rms_mean_by_position": [
+            [
+              0.9999979051118331,
+              0.9999979010344666
+            ],
+            [
+              0.9999979051118331,
+              1.4017532761124072
+            ],
+            [
+              1.1954572089805489,
+              1.5313808495828476
+            ],
+            [
+              1.1954572089805489,
+              1.7089380646628032
+            ],
+            [
+              1.466362506299559,
+              1.7314651036094277
+            ],
+            [
+              1.466362506299559,
+              1.7450742154276466
+            ],
+            [
+              1.96229299771925,
+              1.8516044005023848
+            ],
+            [
+              1.96229299771925,
+              1.8191509137559774
+            ],
+            [
+              2.6269163113393077,
+              2.1923560992312816
+            ]
+          ],
+          "state_rms_min_by_position": [
+            [
+              0.9999972474454188,
+              0.9999972474454188
+            ],
+            [
+              0.9999972474454188,
+              0.9999539456360412
+            ],
+            [
+              1.0170933244021958,
+              1.1373624975894219
+            ],
+            [
+              1.0170933244021958,
+              1.1410111175824162
+            ],
+            [
+              1.2505093960399536,
+              1.3656025989341962
+            ],
+            [
+              1.2505093960399536,
+              1.4164842307974952
+            ],
+            [
+              1.732764535036045,
+              1.4420177414133741
+            ],
+            [
+              1.732764535036045,
+              1.3614792426745468
+            ],
+            [
+              2.341374246726156,
+              1.420900586094783
+            ]
+          ],
+          "branches": [
+            {
+              "branch": "block1.attention",
+              "residual_rms_before": 0.9999979010344666,
+              "branch_rms": 0.9941401737691087,
+              "branch_to_residual_rms_mean": 0.9941422599668905,
+              "branch_to_residual_rms_min": 0.00010490168053488764,
+              "branch_to_residual_rms_max": 1.0000018479877235,
+              "cosine_with_residual_mean": -0.012650336059323308,
+              "norm_shrink_fraction": 0.005859375,
+              "residual_rms_after": 1.4017532761124074,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.24011682389423425
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                3.621901155223182e-08
+              ]
+            },
+            {
+              "branch": "block1.ffn",
+              "residual_rms_before": 1.4017532761124074,
+              "branch_rms": 0.999999543678114,
+              "branch_to_residual_rms_mean": 0.7155118630554764,
+              "branch_to_residual_rms_min": 0.6208595411225094,
+              "branch_to_residual_rms_max": 1.0000456500516903,
+              "cosine_with_residual_mean": -0.21864500176525326,
+              "norm_shrink_fraction": 0.08984375,
+              "residual_rms_after": 1.5313808495828476,
+              "raw_output_rms_mean_by_position": [
+                0.4400016710322257,
+                0.3751926620755144
+              ],
+              "raw_output_rms_min_by_position": [
+                0.16140760161066064,
+                0.2324847120417566
+              ]
+            },
+            {
+              "branch": "block2.attention",
+              "residual_rms_before": 1.5313808495828476,
+              "branch_rms": 0.9951233789440911,
+              "branch_to_residual_rms_mean": 0.6516681937310087,
+              "branch_to_residual_rms_min": 0.07954134627683668,
+              "branch_to_residual_rms_max": 0.8241726770651653,
+              "cosine_with_residual_mean": -0.1353526023303857,
+              "norm_shrink_fraction": 0.01953125,
+              "residual_rms_after": 1.7089380646628032,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.39105520770436664
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                3.1363997185471476e-05
+              ]
+            },
+            {
+              "branch": "block2.ffn",
+              "residual_rms_before": 1.7089380646628032,
+              "branch_rms": 0.9999995858750711,
+              "branch_to_residual_rms_mean": 0.5878782451670868,
+              "branch_to_residual_rms_min": 0.47905666664036745,
+              "branch_to_residual_rms_max": 0.8764155739337456,
+              "cosine_with_residual_mean": -0.2676999784562213,
+              "norm_shrink_fraction": 0.42578125,
+              "residual_rms_after": 1.7314651036094277,
+              "raw_output_rms_mean_by_position": [
+                0.60051667935696,
+                0.39380578042257786
+              ],
+              "raw_output_rms_min_by_position": [
+                0.30999841819589435,
+                0.24918818942279364
+              ]
+            },
+            {
+              "branch": "block3.attention",
+              "residual_rms_before": 1.7314651036094277,
+              "branch_rms": 0.9999986148185416,
+              "branch_to_residual_rms_mean": 0.5806000208651918,
+              "branch_to_residual_rms_min": 0.4623783579493877,
+              "branch_to_residual_rms_max": 0.732115489967844,
+              "cosine_with_residual_mean": -0.2724527023929113,
+              "norm_shrink_fraction": 0.45703125,
+              "residual_rms_after": 1.7450742154276466,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.9847423589342643
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                0.015153599728262988
+              ]
+            },
+            {
+              "branch": "block3.ffn",
+              "residual_rms_before": 1.7450742154276466,
+              "branch_rms": 0.9999995649626967,
+              "branch_to_residual_rms_mean": 0.5771023819819132,
+              "branch_to_residual_rms_min": 0.41667532187644263,
+              "branch_to_residual_rms_max": 0.7059727346677735,
+              "cosine_with_residual_mean": -0.17490834056934546,
+              "norm_shrink_fraction": 0.169921875,
+              "residual_rms_after": 1.851604400502385,
+              "raw_output_rms_mean_by_position": [
+                1.0585644166358925,
+                0.38658271480272044
+              ],
+              "raw_output_rms_min_by_position": [
+                0.40657010905177277,
+                0.26376872386941824
+              ]
+            },
+            {
+              "branch": "block4.attention",
+              "residual_rms_before": 1.851604400502385,
+              "branch_rms": 0.9999999560897341,
+              "branch_to_residual_rms_mean": 0.5441353084327143,
+              "branch_to_residual_rms_min": 0.3768927675013542,
+              "branch_to_residual_rms_max": 0.6934727423275137,
+              "cosine_with_residual_mean": -0.3012805896651116,
+              "norm_shrink_fraction": 0.642578125,
+              "residual_rms_after": 1.8191509137559772,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                1.72259908393599
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                0.14961640307350021
+              ]
+            },
+            {
+              "branch": "block4.ffn",
+              "residual_rms_before": 1.8191509137559772,
+              "branch_rms": 0.9999998820910432,
+              "branch_to_residual_rms_mean": 0.5556699964058605,
+              "branch_to_residual_rms_min": 0.33935012574432716,
+              "branch_to_residual_rms_max": 0.7344951283116438,
+              "cosine_with_residual_mean": 0.13784423840115778,
+              "norm_shrink_fraction": 0.00390625,
+              "residual_rms_after": 2.192356099231281,
+              "raw_output_rms_mean_by_position": [
+                4.3831919305964036,
+                0.7736365602767026
+              ],
+              "raw_output_rms_min_by_position": [
+                0.8360932165611253,
+                0.39091065296947464
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "token_embedding_table.weight",
+              "parameter_rms": 0.16923286210135702,
+              "gradient_rms": 6.548846073667977e-05
+            },
+            {
+              "name": "blocks.0.sa.c_attn.weight",
+              "parameter_rms": 0.05233779362312008,
+              "gradient_rms": 8.019971292014578e-05
+            },
+            {
+              "name": "blocks.0.sa.c_proj.weight",
+              "parameter_rms": 0.04664540578061756,
+              "gradient_rms": 0.00015145576126711626
+            },
+            {
+              "name": "blocks.0.ffwd.c_fc.weight",
+              "parameter_rms": 0.05556625506120395,
+              "gradient_rms": 6.234552928804376e-05
+            },
+            {
+              "name": "blocks.0.ffwd.c_proj.weight",
+              "parameter_rms": 0.053290791011466485,
+              "gradient_rms": 7.18505348678685e-05
+            },
+            {
+              "name": "blocks.1.sa.c_attn.weight",
+              "parameter_rms": 0.056843449001828125,
+              "gradient_rms": 3.7885372910519325e-05
+            },
+            {
+              "name": "blocks.1.sa.c_proj.weight",
+              "parameter_rms": 0.04909153614141237,
+              "gradient_rms": 7.565856640435553e-05
+            },
+            {
+              "name": "blocks.1.ffwd.c_fc.weight",
+              "parameter_rms": 0.06113094578947848,
+              "gradient_rms": 4.9737891485911305e-05
+            },
+            {
+              "name": "blocks.1.ffwd.c_proj.weight",
+              "parameter_rms": 0.05800321846518819,
+              "gradient_rms": 4.781016989183946e-05
+            },
+            {
+              "name": "blocks.2.sa.c_attn.weight",
+              "parameter_rms": 0.059805982627336024,
+              "gradient_rms": 1.9219144007885047e-05
+            },
+            {
+              "name": "blocks.2.sa.c_proj.weight",
+              "parameter_rms": 0.052537762093503276,
+              "gradient_rms": 3.499464804524994e-05
+            },
+            {
+              "name": "blocks.2.ffwd.c_fc.weight",
+              "parameter_rms": 0.06465967028385756,
+              "gradient_rms": 4.111544513104928e-05
+            },
+            {
+              "name": "blocks.2.ffwd.c_proj.weight",
+              "parameter_rms": 0.061325116263593604,
+              "gradient_rms": 3.359592364130522e-05
+            },
+            {
+              "name": "blocks.3.sa.c_attn.weight",
+              "parameter_rms": 0.0636000848308737,
+              "gradient_rms": 1.564068009682563e-05
+            },
+            {
+              "name": "blocks.3.sa.c_proj.weight",
+              "parameter_rms": 0.05961111395222668,
+              "gradient_rms": 2.6744465129085194e-05
+            },
+            {
+              "name": "blocks.3.ffwd.c_fc.weight",
+              "parameter_rms": 0.07031150986074919,
+              "gradient_rms": 1.8308308444637563e-05
+            },
+            {
+              "name": "blocks.3.ffwd.c_proj.weight",
+              "parameter_rms": 0.07039331908973644,
+              "gradient_rms": 1.351437723172999e-05
+            }
+          ],
+          "manual_forward_bitwise_equal": true,
+          "input_strata": {
+            "identical_input_tokens": {
+              "examples": 3,
+              "ambient_initial_state_gradient_rms": 0.587971299839952,
+              "position_sum_gradient_rms": 3.027813126474704e-07,
+              "position_sum_cancellation_ratio_mean": 5.670815578522849e-07,
+              "first_attention_raw_answer_rms_mean": 4.902924674117024e-08
+            },
+            "distinct_input_tokens": {
+              "examples": 509,
+              "ambient_initial_state_gradient_rms": 4.45426383667376e-06,
+              "position_sum_gradient_rms": 6.058579189459867e-06,
+              "position_sum_cancellation_ratio_mean": 0.682311913912419,
+              "first_attention_raw_answer_rms_mean": 0.24153205046514772
+            }
+          },
+          "gradient_scope": "Gradients of the same full512-row mean loss; strata do not renormalize it. Position sums are not the complete tied-parameter gradient."
+        },
+        "heldout": {
+          "examples": 512,
+          "loss": 8.755099296569824,
+          "accuracy": 0.015625,
+          "prefix_tied_readout_accuracy": [
+            0.001953125,
+            0.001953125,
+            0.001953125,
+            0.00390625,
+            0.0078125,
+            0.009765625,
+            0.013671875,
+            0.013671875,
+            0.015625
+          ],
+          "prefix_scope": "Diagnostic early exits using the existing final norm/readout, not separately trained heads.",
+          "state_gradient_rms_all_positions": [
+            25.053862882686058,
+            0.043197643151086366,
+            0.027294878757439384,
+            0.0004958898585429201,
+            0.0003910379891748735,
+            0.000370770726201625,
+            0.0002479715635684732,
+            0.00021914825958226541,
+            0.0001321027622333912
+          ],
+          "state_gradient_rms_mean_by_position": [
+            [
+              1.1093412752630334,
+              1.1093890711400511
+            ],
+            [
+              0.0023756504301236693,
+              0.0027852545215085503
+            ],
+            [
+              0.0015442701235095398,
+              0.0018943178047525087
+            ],
+            [
+              0.00013721435398522292,
+              0.000647365539097057
+            ],
+            [
+              0.0001102257428431675,
+              0.0005109796538345282
+            ],
+            [
+              5.04225308249378e-05,
+              0.0004959662360654587
+            ],
+            [
+              4.3676887298668845e-05,
+              0.0003347869495906808
+            ],
+            [
+              0.0,
+              0.0003002619504124999
+            ],
+            [
+              0.0,
+              0.0001843350667581186
+            ]
+          ],
+          "state_rms_mean_by_position": [
+            [
+              0.9999979075006431,
+              0.9999978977275406
+            ],
+            [
+              0.9999979075006431,
+              1.4142571559040116
+            ],
+            [
+              1.1902474465820487,
+              1.5335192967864544
+            ],
+            [
+              1.1902474465820487,
+              1.6966676625088288
+            ],
+            [
+              1.462335010431364,
+              1.7124493648192316
+            ],
+            [
+              1.462335010431364,
+              1.7180253336873998
+            ],
+            [
+              1.960766559460293,
+              1.7887828075659133
+            ],
+            [
+              1.960766559460293,
+              1.7263264603288613
+            ],
+            [
+              2.6250553162584476,
+              1.99032192808931
+            ]
+          ],
+          "state_rms_min_by_position": [
+            [
+              0.9999972474454188,
+              0.9999972474454188
+            ],
+            [
+              0.9999972474454188,
+              0.9999913443210161
+            ],
+            [
+              1.0170933244021958,
+              1.109034808187681
+            ],
+            [
+              1.0170933244021958,
+              1.1152493777702572
+            ],
+            [
+              1.2505093960399536,
+              1.3656842555208284
+            ],
+            [
+              1.2505093960399536,
+              1.3590862040318483
+            ],
+            [
+              1.7329404080726085,
+              1.4026338319109855
+            ],
+            [
+              1.7329404080726085,
+              1.3126234884949914
+            ],
+            [
+              2.341374246726156,
+              1.4353012683350628
+            ]
+          ],
+          "branches": [
+            {
+              "branch": "block1.attention",
+              "residual_rms_before": 0.9999978977275406,
+              "branch_rms": 0.9960927204673141,
+              "branch_to_residual_rms_mean": 0.9960948148109239,
+              "branch_to_residual_rms_min": 0.0001001437235474403,
+              "branch_to_residual_rms_max": 1.0000019314596647,
+              "cosine_with_residual_mean": 0.004546351223325473,
+              "norm_shrink_fraction": 0.00390625,
+              "residual_rms_after": 1.4142571559040116,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.2353544212162897
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                3.457625157410393e-08
+              ]
+            },
+            {
+              "branch": "block1.ffn",
+              "residual_rms_before": 1.4142571559040116,
+              "branch_rms": 0.9999995519725626,
+              "branch_to_residual_rms_mean": 0.7091420612489372,
+              "branch_to_residual_rms_min": 0.6279157082472185,
+              "branch_to_residual_rms_max": 1.000008275047217,
+              "cosine_with_residual_mean": -0.22691323284016107,
+              "norm_shrink_fraction": 0.103515625,
+              "residual_rms_after": 1.5335192967864544,
+              "raw_output_rms_mean_by_position": [
+                0.4366602320344982,
+                0.378491079353423
+              ],
+              "raw_output_rms_min_by_position": [
+                0.16140760161066064,
+                0.22699191890905715
+              ]
+            },
+            {
+              "branch": "block2.attention",
+              "residual_rms_before": 1.5335192967864544,
+              "branch_rms": 0.9963853339483504,
+              "branch_to_residual_rms_mean": 0.651571404537159,
+              "branch_to_residual_rms_min": 0.060564074232390276,
+              "branch_to_residual_rms_max": 0.7717211445042765,
+              "cosine_with_residual_mean": -0.1513625675943331,
+              "norm_shrink_fraction": 0.0234375,
+              "residual_rms_after": 1.6966676625088288,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.3988675432222472
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                2.5805481124331982e-05
+              ]
+            },
+            {
+              "branch": "block2.ffn",
+              "residual_rms_before": 1.6966676625088288,
+              "branch_rms": 0.999999568609,
+              "branch_to_residual_rms_mean": 0.5921895311461101,
+              "branch_to_residual_rms_min": 0.47609802642655036,
+              "branch_to_residual_rms_max": 0.8966602529755681,
+              "cosine_with_residual_mean": -0.2767010313564242,
+              "norm_shrink_fraction": 0.439453125,
+              "residual_rms_after": 1.7124493648192318,
+              "raw_output_rms_mean_by_position": [
+                0.5941683117795441,
+                0.3890036680106945
+              ],
+              "raw_output_rms_min_by_position": [
+                0.30999841819589435,
+                0.24269289813200998
+              ]
+            },
+            {
+              "branch": "block3.attention",
+              "residual_rms_before": 1.7124493648192318,
+              "branch_rms": 0.9999825073853655,
+              "branch_to_residual_rms_mean": 0.5872290683762627,
+              "branch_to_residual_rms_min": 0.467941153206039,
+              "branch_to_residual_rms_max": 0.7322331468054508,
+              "cosine_with_residual_mean": -0.28321962845802773,
+              "norm_shrink_fraction": 0.484375,
+              "residual_rms_after": 1.7180253336873998,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.974827545682916
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                0.0031337072473291384
+              ]
+            },
+            {
+              "branch": "block3.ffn",
+              "residual_rms_before": 1.7180253336873998,
+              "branch_rms": 0.9999995151641475,
+              "branch_to_residual_rms_mean": 0.586480436234206,
+              "branch_to_residual_rms_min": 0.4109970437723276,
+              "branch_to_residual_rms_max": 0.7357883149828864,
+              "cosine_with_residual_mean": -0.2172319937380962,
+              "norm_shrink_fraction": 0.2421875,
+              "residual_rms_after": 1.7887828075659131,
+              "raw_output_rms_mean_by_position": [
+                1.0507810672406306,
+                0.36386935134782733
+              ],
+              "raw_output_rms_min_by_position": [
+                0.40657010905177277,
+                0.21569923825458712
+              ]
+            },
+            {
+              "branch": "block4.attention",
+              "residual_rms_before": 1.7887828075659131,
+              "branch_rms": 0.9999999585204096,
+              "branch_to_residual_rms_mean": 0.5632244880740609,
+              "branch_to_residual_rms_min": 0.3673224432275448,
+              "branch_to_residual_rms_max": 0.7129443504338508,
+              "cosine_with_residual_mean": -0.3404960519364977,
+              "norm_shrink_fraction": 0.751953125,
+              "residual_rms_after": 1.726326460328861,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                1.7281916933027124
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                0.13962063322845433
+              ]
+            },
+            {
+              "branch": "block4.ffn",
+              "residual_rms_before": 1.726326460328861,
+              "branch_rms": 0.9999998020375102,
+              "branch_to_residual_rms_mean": 0.5849912522778395,
+              "branch_to_residual_rms_min": 0.3373124106281104,
+              "branch_to_residual_rms_max": 0.7618330192182811,
+              "cosine_with_residual_mean": -0.0023521603598055663,
+              "norm_shrink_fraction": 0.044921875,
+              "residual_rms_after": 1.99032192808931,
+              "raw_output_rms_mean_by_position": [
+                4.358639662817058,
+                0.5954878008201654
+              ],
+              "raw_output_rms_min_by_position": [
+                0.8360932165611253,
+                0.3439502415829017
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "token_embedding_table.weight",
+              "parameter_rms": 0.16923286210135702,
+              "gradient_rms": 0.014634564280222912
+            },
+            {
+              "name": "blocks.0.sa.c_attn.weight",
+              "parameter_rms": 0.05233779362312008,
+              "gradient_rms": 0.01873133907321296
+            },
+            {
+              "name": "blocks.0.sa.c_proj.weight",
+              "parameter_rms": 0.04664540578061756,
+              "gradient_rms": 0.03349407925529706
+            },
+            {
+              "name": "blocks.0.ffwd.c_fc.weight",
+              "parameter_rms": 0.05556625506120395,
+              "gradient_rms": 0.013808775531327548
+            },
+            {
+              "name": "blocks.0.ffwd.c_proj.weight",
+              "parameter_rms": 0.053290791011466485,
+              "gradient_rms": 0.015814938578830484
+            },
+            {
+              "name": "blocks.1.sa.c_attn.weight",
+              "parameter_rms": 0.056843449001828125,
+              "gradient_rms": 0.008727609930944248
+            },
+            {
+              "name": "blocks.1.sa.c_proj.weight",
+              "parameter_rms": 0.04909153614141237,
+              "gradient_rms": 0.01635294490153552
+            },
+            {
+              "name": "blocks.1.ffwd.c_fc.weight",
+              "parameter_rms": 0.06113094578947848,
+              "gradient_rms": 0.010950600449901971
+            },
+            {
+              "name": "blocks.1.ffwd.c_proj.weight",
+              "parameter_rms": 0.05800321846518819,
+              "gradient_rms": 0.010331100522571732
+            },
+            {
+              "name": "blocks.2.sa.c_attn.weight",
+              "parameter_rms": 0.059805982627336024,
+              "gradient_rms": 0.004217192511033593
+            },
+            {
+              "name": "blocks.2.sa.c_proj.weight",
+              "parameter_rms": 0.052537762093503276,
+              "gradient_rms": 0.007195087557789264
+            },
+            {
+              "name": "blocks.2.ffwd.c_fc.weight",
+              "parameter_rms": 0.06465967028385756,
+              "gradient_rms": 0.008548190699042064
+            },
+            {
+              "name": "blocks.2.ffwd.c_proj.weight",
+              "parameter_rms": 0.061325116263593604,
+              "gradient_rms": 0.006869641452159378
+            },
+            {
+              "name": "blocks.3.sa.c_attn.weight",
+              "parameter_rms": 0.0636000848308737,
+              "gradient_rms": 0.003473140542920517
+            },
+            {
+              "name": "blocks.3.sa.c_proj.weight",
+              "parameter_rms": 0.05961111395222668,
+              "gradient_rms": 0.005768240551968887
+            },
+            {
+              "name": "blocks.3.ffwd.c_fc.weight",
+              "parameter_rms": 0.07031150986074919,
+              "gradient_rms": 0.004108102292606017
+            },
+            {
+              "name": "blocks.3.ffwd.c_proj.weight",
+              "parameter_rms": 0.07039331908973644,
+              "gradient_rms": 0.0032167628549285344
+            }
+          ],
+          "manual_forward_bitwise_equal": true,
+          "input_strata": {
+            "identical_input_tokens": {
+              "examples": 2,
+              "ambient_initial_state_gradient_rms": 400.86180579080735,
+              "position_sum_gradient_rms": 0.0002022192010669396,
+              "position_sum_cancellation_ratio_mean": 3.236301348904386e-07,
+              "first_attention_raw_answer_rms_mean": 3.731609628004787e-08
+            },
+            "distinct_input_tokens": {
+              "examples": 510,
+              "ambient_initial_state_gradient_rms": 0.001021932489577788,
+              "position_sum_gradient_rms": 0.0013760337220435567,
+              "position_sum_cancellation_ratio_mean": 0.6789192610249115,
+              "first_attention_raw_answer_rms_mean": 0.23627737958452574
+            }
+          },
+          "gradient_scope": "Gradients of the same full512-row mean loss; strata do not renormalize it. Position sums are not the complete tied-parameter gradient."
+        }
+      }
+    },
+    {
+      "label": "pairs-mixed-p193-w256d1",
+      "status": "measured",
+      "step": 2000,
+      "checkpoint_sha256": "e383989ed9bb63a71b91deb279b24f3427d7a99101583241ff5db49d593e6471",
+      "task": {
+        "prime": 193,
+        "data_seed": 11,
+        "vocab_size": 193,
+        "split_policy": "unique_inputs_splitmix64_no_replacement",
+        "supervision": "final_answer_only; no target or intermediates in model input",
+        "operation": "mixed",
+        "exponent": 1,
+        "domain_size": 37249,
+        "scope": "unseen_pairs_at_fixed_prime",
+        "train": {
+          "examples": 18624,
+          "input_length": 2,
+          "fingerprint": "da0a230570b999e0afb8bed00d9db85eeb91634bfa118269e5eb42ea07e33cb1",
+          "input_fingerprint": "2c3e82345e8d877d7d93468d7af4ff045b2dfac13d4f4311a77253e602a8ebe1",
+          "copy_last_accuracy": 0.005315721649484536,
+          "majority_accuracy": 0.011222079037800687
+        },
+        "heldout": {
+          "examples": 18625,
+          "input_length": 2,
+          "fingerprint": "ef47bc767b2ad275316af5c801bcafadcf920f67210b7fb7b1a857acb85dda3d",
+          "input_fingerprint": "1a5266fdbb081159e200252ec8e1779f02933b55670f9e16f8554f97b7164fa0",
+          "copy_last_accuracy": 0.004993288590604027,
+          "majority_accuracy": 0.009449664429530201
+        }
+      },
+      "batches": {
+        "train": {
+          "examples": 512,
+          "loss": 0.0036061229184269905,
+          "accuracy": 1.0,
+          "prefix_tied_readout_accuracy": [
+            0.0078125,
+            0.0078125,
+            1.0
+          ],
+          "prefix_scope": "Diagnostic early exits using the existing final norm/readout, not separately trained heads.",
+          "state_gradient_rms_all_positions": [
+            2.7052061231933106e-05,
+            1.446667901200282e-06,
+            8.621555748109767e-07
+          ],
+          "state_gradient_rms_mean_by_position": [
+            [
+              3.050343875624581e-06,
+              3.2107067293565142e-06
+            ],
+            [
+              0.0,
+              1.6911298823598522e-06
+            ],
+            [
+              0.0,
+              9.988453023630054e-07
+            ]
+          ],
+          "state_rms_mean_by_position": [
+            [
+              0.9999977438865342,
+              0.9999977400904735
+            ],
+            [
+              0.9999977438865342,
+              1.3362523906346688
+            ],
+            [
+              0.4613577223368188,
+              1.1265616321504066
+            ]
+          ],
+          "state_rms_min_by_position": [
+            [
+              0.9999973443518227,
+              0.9999973443518227
+            ],
+            [
+              0.9999973443518227,
+              0.9999830632797816
+            ],
+            [
+              0.362767615109259,
+              0.45949350675688916
+            ]
+          ],
+          "branches": [
+            {
+              "branch": "block1.attention",
+              "residual_rms_before": 0.9999977400904734,
+              "branch_rms": 0.9941412423890085,
+              "branch_to_residual_rms_mean": 0.9941434891400089,
+              "branch_to_residual_rms_min": 0.0001794711095540656,
+              "branch_to_residual_rms_max": 1.0000023636720419,
+              "cosine_with_residual_mean": -0.10271731309921961,
+              "norm_shrink_fraction": 0.00390625,
+              "residual_rms_after": 1.3362523906346686,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.35034001281360627
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                6.19652996108385e-08
+              ]
+            },
+            {
+              "branch": "block1.ffn",
+              "residual_rms_before": 1.3362523906346686,
+              "branch_rms": 0.9999999327603967,
+              "branch_to_residual_rms_mean": 0.7500104452479,
+              "branch_to_residual_rms_min": 0.6735177971239494,
+              "branch_to_residual_rms_max": 1.0000169478891157,
+              "cosine_with_residual_mean": -0.565532969776541,
+              "norm_shrink_fraction": 0.986328125,
+              "residual_rms_after": 1.1265616321504066,
+              "raw_output_rms_mean_by_position": [
+                1.3088474867103341,
+                0.9590731181584408
+              ],
+              "raw_output_rms_min_by_position": [
+                1.0397176348179586,
+                0.654565672196587
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "token_embedding_table.weight",
+              "parameter_rms": 0.1632587042250539,
+              "gradient_rms": 3.341738994067431e-05
+            },
+            {
+              "name": "blocks.0.sa.c_attn.weight",
+              "parameter_rms": 0.04985068044585789,
+              "gradient_rms": 3.5331258432244264e-05
+            },
+            {
+              "name": "blocks.0.sa.c_proj.weight",
+              "parameter_rms": 0.04708100462380267,
+              "gradient_rms": 6.239712328571555e-05
+            },
+            {
+              "name": "blocks.0.ffwd.c_fc.weight",
+              "parameter_rms": 0.05730966725976581,
+              "gradient_rms": 2.6811753502910777e-05
+            },
+            {
+              "name": "blocks.0.ffwd.c_proj.weight",
+              "parameter_rms": 0.0557283925939468,
+              "gradient_rms": 1.6389483927644358e-05
+            }
+          ],
+          "manual_forward_bitwise_equal": true,
+          "input_strata": {
+            "identical_input_tokens": {
+              "examples": 3,
+              "ambient_initial_state_gradient_rms": 0.00035233438711997116,
+              "position_sum_gradient_rms": 4.281900576884876e-07,
+              "position_sum_cancellation_ratio_mean": 0.0006346416966974902,
+              "first_attention_raw_answer_rms_mean": 7.058007415704233e-08
+            },
+            "distinct_input_tokens": {
+              "examples": 509,
+              "ambient_initial_state_gradient_rms": 2.111906376885357e-06,
+              "position_sum_gradient_rms": 2.8583949005809627e-06,
+              "position_sum_cancellation_ratio_mean": 0.6817020882987174,
+              "first_attention_raw_answer_rms_mean": 0.35240488477176074
+            }
+          },
+          "gradient_scope": "Gradients of the same full512-row mean loss; strata do not renormalize it. Position sums are not the complete tied-parameter gradient."
+        },
+        "heldout": {
+          "examples": 512,
+          "loss": 12.276206970214844,
+          "accuracy": 0.001953125,
+          "prefix_tied_readout_accuracy": [
+            0.0,
+            0.0,
+            0.001953125
+          ],
+          "prefix_scope": "Diagnostic early exits using the existing final norm/readout, not separately trained heads.",
+          "state_gradient_rms_all_positions": [
+            0.09784802198035107,
+            0.0004416427390272893,
+            0.00023240110826971576
+          ],
+          "state_gradient_rms_mean_by_position": [
+            [
+              0.0065977765396087,
+              0.006660696707792633
+            ],
+            [
+              0.0,
+              0.0006110066549229419
+            ],
+            [
+              0.0,
+              0.0003242691576366959
+            ]
+          ],
+          "state_rms_mean_by_position": [
+            [
+              0.9999977527190798,
+              0.99999775473355
+            ],
+            [
+              0.9999977527190798,
+              1.3612688670502215
+            ],
+            [
+              0.4561249123642098,
+              1.1464752044143087
+            ]
+          ],
+          "state_rms_min_by_position": [
+            [
+              0.9999973443518227,
+              0.9999973443518227
+            ],
+            [
+              0.9999973443518227,
+              0.9999796190352671
+            ],
+            [
+              0.362767615109259,
+              0.4075494761180968
+            ]
+          ],
+          "branches": [
+            {
+              "branch": "block1.attention",
+              "residual_rms_before": 0.99999775473355,
+              "branch_rms": 0.9960939421797314,
+              "branch_to_residual_rms_mean": 0.9960961786853868,
+              "branch_to_residual_rms_min": 0.00015629517742743923,
+              "branch_to_residual_rms_max": 1.0000023023846978,
+              "cosine_with_residual_mean": -0.0700725123117536,
+              "norm_shrink_fraction": 0.00390625,
+              "residual_rms_after": 1.3612688670502215,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.3402871132660891
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                5.396345121745548e-08
+              ]
+            },
+            {
+              "branch": "block1.ffn",
+              "residual_rms_before": 1.3612688670502215,
+              "branch_rms": 0.9999999328313205,
+              "branch_to_residual_rms_mean": 0.7360746308806989,
+              "branch_to_residual_rms_min": 0.6636292484732591,
+              "branch_to_residual_rms_max": 1.0000203683169961,
+              "cosine_with_residual_mean": -0.5632055724272504,
+              "norm_shrink_fraction": 0.990234375,
+              "residual_rms_after": 1.1464752044143087,
+              "raw_output_rms_mean_by_position": [
+                1.320938464587588,
+                0.974759860791808
+              ],
+              "raw_output_rms_min_by_position": [
+                1.0397176348179586,
+                0.634947369530818
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "token_embedding_table.weight",
+              "parameter_rms": 0.1632587042250539,
+              "gradient_rms": 0.010147631433998553
+            },
+            {
+              "name": "blocks.0.sa.c_attn.weight",
+              "parameter_rms": 0.04985068044585789,
+              "gradient_rms": 0.010754637585279503
+            },
+            {
+              "name": "blocks.0.sa.c_proj.weight",
+              "parameter_rms": 0.04708100462380267,
+              "gradient_rms": 0.018913751173363857
+            },
+            {
+              "name": "blocks.0.ffwd.c_fc.weight",
+              "parameter_rms": 0.05730966725976581,
+              "gradient_rms": 0.008519154722254603
+            },
+            {
+              "name": "blocks.0.ffwd.c_proj.weight",
+              "parameter_rms": 0.0557283925939468,
+              "gradient_rms": 0.00476467435927232
+            }
+          ],
+          "manual_forward_bitwise_equal": true,
+          "input_strata": {
+            "identical_input_tokens": {
+              "examples": 2,
+              "ambient_initial_state_gradient_rms": 1.5655343249577793,
+              "position_sum_gradient_rms": 0.001873282450892899,
+              "position_sum_cancellation_ratio_mean": 0.0005959801874477383,
+              "first_attention_raw_answer_rms_mean": 7.210763106296413e-08
+            },
+            "distinct_input_tokens": {
+              "examples": 510,
+              "ambient_initial_state_gradient_rms": 0.0006463811132523859,
+              "position_sum_gradient_rms": 0.0008713730266098833,
+              "position_sum_cancellation_ratio_mean": 0.6788107944210464,
+              "first_attention_raw_answer_rms_mean": 0.3416215722510243
+            }
+          },
+          "gradient_scope": "Gradients of the same full512-row mean loss; strata do not renormalize it. Position sums are not the complete tied-parameter gradient."
+        }
+      }
+    },
+    {
+      "label": "pairs-mixed-p193-w128d4",
+      "status": "measured",
+      "step": 2000,
+      "checkpoint_sha256": "4b337464af09d28d625882f03e2ce3a21ddb9bad3f781f7720df75f38770ca28",
+      "task": {
+        "prime": 193,
+        "data_seed": 11,
+        "vocab_size": 193,
+        "split_policy": "unique_inputs_splitmix64_no_replacement",
+        "supervision": "final_answer_only; no target or intermediates in model input",
+        "operation": "mixed",
+        "exponent": 1,
+        "domain_size": 37249,
+        "scope": "unseen_pairs_at_fixed_prime",
+        "train": {
+          "examples": 18624,
+          "input_length": 2,
+          "fingerprint": "da0a230570b999e0afb8bed00d9db85eeb91634bfa118269e5eb42ea07e33cb1",
+          "input_fingerprint": "2c3e82345e8d877d7d93468d7af4ff045b2dfac13d4f4311a77253e602a8ebe1",
+          "copy_last_accuracy": 0.005315721649484536,
+          "majority_accuracy": 0.011222079037800687
+        },
+        "heldout": {
+          "examples": 18625,
+          "input_length": 2,
+          "fingerprint": "ef47bc767b2ad275316af5c801bcafadcf920f67210b7fb7b1a857acb85dda3d",
+          "input_fingerprint": "1a5266fdbb081159e200252ec8e1779f02933b55670f9e16f8554f97b7164fa0",
+          "copy_last_accuracy": 0.004993288590604027,
+          "majority_accuracy": 0.009449664429530201
+        }
+      },
+      "batches": {
+        "train": {
+          "examples": 512,
+          "loss": 0.004939395003020763,
+          "accuracy": 1.0,
+          "prefix_tied_readout_accuracy": [
+            0.0078125,
+            0.0078125,
+            0.0078125,
+            0.0078125,
+            0.185546875,
+            0.26953125,
+            0.896484375,
+            0.984375,
+            1.0
+          ],
+          "prefix_scope": "Diagnostic early exits using the existing final norm/readout, not separately trained heads.",
+          "state_gradient_rms_all_positions": [
+            0.3130378739230148,
+            0.0006091848629925691,
+            0.00045486102561356165,
+            2.3305567693061875e-06,
+            1.8241202848547138e-06,
+            1.6313785665220212e-06,
+            1.2237837807790122e-06,
+            1.112834914369366e-06,
+            6.410010147341438e-07
+          ],
+          "state_gradient_rms_mean_by_position": [
+            [
+              0.01755365896591777,
+              0.017553474463811974
+            ],
+            [
+              3.574683254226151e-05,
+              3.6724403609633e-05
+            ],
+            [
+              2.646296431618302e-05,
+              2.735457207000804e-05
+            ],
+            [
+              1.0305003903836204e-06,
+              2.285228433027585e-06
+            ],
+            [
+              7.911244852303748e-07,
+              1.829520279118138e-06
+            ],
+            [
+              5.026241323603707e-07,
+              1.7432474936510152e-06
+            ],
+            [
+              4.15225692572949e-07,
+              1.2884504637316724e-06
+            ],
+            [
+              0.0,
+              1.2364468812500067e-06
+            ],
+            [
+              0.0,
+              7.104365114303253e-07
+            ]
+          ],
+          "state_rms_mean_by_position": [
+            [
+              0.9999982462439135,
+              0.9999982494268829
+            ],
+            [
+              0.9999982462439135,
+              1.402707010034575
+            ],
+            [
+              1.2630549435449072,
+              1.5682891627729512
+            ],
+            [
+              1.2630549435449072,
+              1.7872221453722628
+            ],
+            [
+              1.491585963640141,
+              1.8394781558970195
+            ],
+            [
+              1.491585963640141,
+              1.9236502866969571
+            ],
+            [
+              1.682167943004609,
+              2.0135611719510798
+            ],
+            [
+              1.682167943004609,
+              1.9107680641049702
+            ],
+            [
+              2.0450516153837666,
+              2.2519414103798825
+            ]
+          ],
+          "state_rms_min_by_position": [
+            [
+              0.9999979041642562,
+              0.9999979041642562
+            ],
+            [
+              0.9999979041642562,
+              1.000000345380427
+            ],
+            [
+              1.1120166362659962,
+              1.160705214960262
+            ],
+            [
+              1.1120166362659962,
+              1.1649954142313683
+            ],
+            [
+              1.1286098648385352,
+              1.4291745645804546
+            ],
+            [
+              1.1286098648385352,
+              1.5655700220833408
+            ],
+            [
+              1.2256601504695335,
+              1.5847458124167824
+            ],
+            [
+              1.2256601504695335,
+              1.4609591950955938
+            ],
+            [
+              1.6283534566314644,
+              1.7561800274637276
+            ]
+          ],
+          "branches": [
+            {
+              "branch": "block1.attention",
+              "residual_rms_before": 0.9999982494268829,
+              "branch_rms": 0.9941392361597177,
+              "branch_to_residual_rms_mean": 0.994140976936317,
+              "branch_to_residual_rms_min": 4.1614192732488834e-05,
+              "branch_to_residual_rms_max": 1.0000015824846156,
+              "cosine_with_residual_mean": -0.009840112311849225,
+              "norm_shrink_fraction": 0.0,
+              "residual_rms_after": 1.402707010034575,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.20432163932250758
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                1.4367982074031443e-08
+              ]
+            },
+            {
+              "branch": "block1.ffn",
+              "residual_rms_before": 1.402707010034575,
+              "branch_rms": 0.9999993970068469,
+              "branch_to_residual_rms_mean": 0.7151920980582854,
+              "branch_to_residual_rms_min": 0.6311138021049231,
+              "branch_to_residual_rms_max": 0.9999993149624609,
+              "cosine_with_residual_mean": -0.1792940995455865,
+              "norm_shrink_fraction": 0.02734375,
+              "residual_rms_after": 1.568289162772951,
+              "raw_output_rms_mean_by_position": [
+                0.38342463945227667,
+                0.32415392458303777
+              ],
+              "raw_output_rms_min_by_position": [
+                0.25825526081389244,
+                0.21514551344953212
+              ]
+            },
+            {
+              "branch": "block2.attention",
+              "residual_rms_before": 1.568289162772951,
+              "branch_rms": 0.9945613750620119,
+              "branch_to_residual_rms_mean": 0.6356637388374301,
+              "branch_to_residual_rms_min": 0.041907435901425594,
+              "branch_to_residual_rms_max": 0.7922211090728095,
+              "cosine_with_residual_mean": -0.08086875331537158,
+              "norm_shrink_fraction": 0.01171875,
+              "residual_rms_after": 1.7872221453722628,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.35920403999723083
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                1.6920605919734326e-05
+              ]
+            },
+            {
+              "branch": "block2.ffn",
+              "residual_rms_before": 1.7872221453722628,
+              "branch_rms": 0.9999994538426529,
+              "branch_to_residual_rms_mean": 0.5625188111226445,
+              "branch_to_residual_rms_min": 0.4580472822157485,
+              "branch_to_residual_rms_max": 0.8583720246946056,
+              "cosine_with_residual_mean": -0.22497724039021705,
+              "norm_shrink_fraction": 0.310546875,
+              "residual_rms_after": 1.8394781558970195,
+              "raw_output_rms_mean_by_position": [
+                0.4457172144393845,
+                0.3428477964199975
+              ],
+              "raw_output_rms_min_by_position": [
+                0.28782008071919163,
+                0.22282480793282092
+              ]
+            },
+            {
+              "branch": "block3.attention",
+              "residual_rms_before": 1.8394781558970195,
+              "branch_rms": 0.9999984363227274,
+              "branch_to_residual_rms_mean": 0.5465828830491697,
+              "branch_to_residual_rms_min": 0.4511734349879475,
+              "branch_to_residual_rms_max": 0.6995960709217619,
+              "cosine_with_residual_mean": -0.18433209796785377,
+              "norm_shrink_fraction": 0.1796875,
+              "residual_rms_after": 1.9236502866969574,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.5288099291263859
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                0.01295122390924203
+              ]
+            },
+            {
+              "branch": "block3.ffn",
+              "residual_rms_before": 1.9236502866969574,
+              "branch_rms": 0.9999994996410366,
+              "branch_to_residual_rms_mean": 0.5224479799565593,
+              "branch_to_residual_rms_min": 0.41896898423178536,
+              "branch_to_residual_rms_max": 0.6387447578121311,
+              "cosine_with_residual_mean": -0.16608714010817494,
+              "norm_shrink_fraction": 0.20703125,
+              "residual_rms_after": 2.0135611719510798,
+              "raw_output_rms_mean_by_position": [
+                0.49481252575204193,
+                0.35682362818970703
+              ],
+              "raw_output_rms_min_by_position": [
+                0.34147595095978167,
+                0.2110257699496435
+              ]
+            },
+            {
+              "branch": "block4.attention",
+              "residual_rms_before": 2.0135611719510798,
+              "branch_rms": 0.9999997123058227,
+              "branch_to_residual_rms_mean": 0.4994717379164135,
+              "branch_to_residual_rms_min": 0.3996070090464504,
+              "branch_to_residual_rms_max": 0.6310156723089041,
+              "cosine_with_residual_mean": -0.3471246286026144,
+              "norm_shrink_fraction": 0.828125,
+              "residual_rms_after": 1.9107680641049702,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.5776156022511185
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                0.10035093130166055
+              ]
+            },
+            {
+              "branch": "block4.ffn",
+              "residual_rms_before": 1.9107680641049702,
+              "branch_rms": 0.9999997995144845,
+              "branch_to_residual_rms_mean": 0.5273995565111205,
+              "branch_to_residual_rms_min": 0.3431346926842054,
+              "branch_to_residual_rms_max": 0.6844816937407746,
+              "cosine_with_residual_mean": 0.11198897783197026,
+              "norm_shrink_fraction": 0.001953125,
+              "residual_rms_after": 2.2519414103798825,
+              "raw_output_rms_mean_by_position": [
+                0.6715158275312045,
+                0.581024628038034
+              ],
+              "raw_output_rms_min_by_position": [
+                0.373460950101091,
+                0.32263791837682854
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "token_embedding_table.weight",
+              "parameter_rms": 0.1846963973815992,
+              "gradient_rms": 5.989208666022702e-05
+            },
+            {
+              "name": "blocks.0.sa.c_attn.weight",
+              "parameter_rms": 0.05147973484332871,
+              "gradient_rms": 8.148687007563669e-05
+            },
+            {
+              "name": "blocks.0.sa.c_proj.weight",
+              "parameter_rms": 0.04611814178564099,
+              "gradient_rms": 0.00014193768636105072
+            },
+            {
+              "name": "blocks.0.ffwd.c_fc.weight",
+              "parameter_rms": 0.05465211254639448,
+              "gradient_rms": 6.370028896432684e-05
+            },
+            {
+              "name": "blocks.0.ffwd.c_proj.weight",
+              "parameter_rms": 0.0517370237881145,
+              "gradient_rms": 7.306163053518903e-05
+            },
+            {
+              "name": "blocks.1.sa.c_attn.weight",
+              "parameter_rms": 0.055883551861242754,
+              "gradient_rms": 3.990214351470201e-05
+            },
+            {
+              "name": "blocks.1.sa.c_proj.weight",
+              "parameter_rms": 0.04880990134240577,
+              "gradient_rms": 7.679829601791705e-05
+            },
+            {
+              "name": "blocks.1.ffwd.c_fc.weight",
+              "parameter_rms": 0.05969292228719498,
+              "gradient_rms": 5.013018244111714e-05
+            },
+            {
+              "name": "blocks.1.ffwd.c_proj.weight",
+              "parameter_rms": 0.055743411624056986,
+              "gradient_rms": 5.039331546449411e-05
+            },
+            {
+              "name": "blocks.2.sa.c_attn.weight",
+              "parameter_rms": 0.05902028993258888,
+              "gradient_rms": 2.367954572070352e-05
+            },
+            {
+              "name": "blocks.2.sa.c_proj.weight",
+              "parameter_rms": 0.05133645477470964,
+              "gradient_rms": 4.6674059026230254e-05
+            },
+            {
+              "name": "blocks.2.ffwd.c_fc.weight",
+              "parameter_rms": 0.06291364506310122,
+              "gradient_rms": 3.9572780560744126e-05
+            },
+            {
+              "name": "blocks.2.ffwd.c_proj.weight",
+              "parameter_rms": 0.059218155845258504,
+              "gradient_rms": 3.3507143011833166e-05
+            },
+            {
+              "name": "blocks.3.sa.c_attn.weight",
+              "parameter_rms": 0.0610809546929177,
+              "gradient_rms": 1.8705738865752697e-05
+            },
+            {
+              "name": "blocks.3.sa.c_proj.weight",
+              "parameter_rms": 0.054485882006433124,
+              "gradient_rms": 3.173460430155357e-05
+            },
+            {
+              "name": "blocks.3.ffwd.c_fc.weight",
+              "parameter_rms": 0.0676104234188498,
+              "gradient_rms": 2.0630233776750637e-05
+            },
+            {
+              "name": "blocks.3.ffwd.c_proj.weight",
+              "parameter_rms": 0.06589489533897114,
+              "gradient_rms": 1.532603720553036e-05
+            }
+          ],
+          "manual_forward_bitwise_equal": true,
+          "input_strata": {
+            "identical_input_tokens": {
+              "examples": 3,
+              "ambient_initial_state_gradient_rms": 4.089509659737941,
+              "position_sum_gradient_rms": 2.7729625447087006e-06,
+              "position_sum_cancellation_ratio_mean": 4.199716825202724e-07,
+              "first_attention_raw_answer_rms_mean": 2.8530519040172203e-08
+            },
+            "distinct_input_tokens": {
+              "examples": 509,
+              "ambient_initial_state_gradient_rms": 4.4266043009144475e-06,
+              "position_sum_gradient_rms": 6.2027466062128465e-06,
+              "position_sum_cancellation_ratio_mean": 0.6915010169836471,
+              "first_attention_raw_answer_rms_mean": 0.2055258924313012
+            }
+          },
+          "gradient_scope": "Gradients of the same full512-row mean loss; strata do not renormalize it. Position sums are not the complete tied-parameter gradient."
+        },
+        "heldout": {
+          "examples": 512,
+          "loss": 10.491998672485352,
+          "accuracy": 0.005859375,
+          "prefix_tied_readout_accuracy": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.005859375,
+            0.00390625,
+            0.005859375
+          ],
+          "prefix_scope": "Diagnostic early exits using the existing final norm/readout, not separately trained heads.",
+          "state_gradient_rms_all_positions": [
+            84.93840099077809,
+            0.169379891357937,
+            0.12010740081789704,
+            0.0005232289805494388,
+            0.0004070398448247888,
+            0.000326542972425994,
+            0.0002383986239328919,
+            0.00021319252389673165,
+            0.00013682449468195175
+          ],
+          "state_gradient_rms_mean_by_position": [
+            [
+              5.21784597132774,
+              5.2178043075171905
+            ],
+            [
+              0.010820606201477496,
+              0.011091794681859645
+            ],
+            [
+              0.007646848851002122,
+              0.007886981592045218
+            ],
+            [
+              0.00025882344902059456,
+              0.0005758326556416737
+            ],
+            [
+              0.00019923032549897397,
+              0.0004561981199366385
+            ],
+            [
+              0.00012054860536292339,
+              0.0004271621837121937
+            ],
+            [
+              9.943932864022905e-05,
+              0.00031065758790941396
+            ],
+            [
+              0.0,
+              0.00029434963085874476
+            ],
+            [
+              0.0,
+              0.0001917799926515945
+            ]
+          ],
+          "state_rms_mean_by_position": [
+            [
+              0.9999982463072006,
+              0.9999982497149348
+            ],
+            [
+              0.9999982463072006,
+              1.4145474206941657
+            ],
+            [
+              1.2613937785769136,
+              1.5780593102712641
+            ],
+            [
+              1.2613937785769136,
+              1.7971903247859897
+            ],
+            [
+              1.4869572355841303,
+              1.842755892136443
+            ],
+            [
+              1.4869572355841303,
+              1.9325149833657054
+            ],
+            [
+              1.6801667245126013,
+              2.006185226441231
+            ],
+            [
+              1.6801667245126013,
+              1.8908349386587653
+            ],
+            [
+              2.055608315932225,
+              2.1476472630006143
+            ]
+          ],
+          "state_rms_min_by_position": [
+            [
+              0.9999979041642562,
+              0.9999979041642562
+            ],
+            [
+              0.9999979041642562,
+              0.9999952368471251
+            ],
+            [
+              1.1120166362659962,
+              1.2116911198143743
+            ],
+            [
+              1.1120166362659962,
+              1.219979811989328
+            ],
+            [
+              1.1286098648385352,
+              1.4197551969853852
+            ],
+            [
+              1.1286098648385352,
+              1.5127798150109781
+            ],
+            [
+              1.2256601504695335,
+              1.5669836864616535
+            ],
+            [
+              1.2256601504695335,
+              1.457216260940614
+            ],
+            [
+              1.6283534566314644,
+              1.598918679097496
+            ]
+          ],
+          "branches": [
+            {
+              "branch": "block1.attention",
+              "residual_rms_before": 0.9999982497149349,
+              "branch_rms": 0.996092393015165,
+              "branch_to_residual_rms_mean": 0.9960941363073202,
+              "branch_to_residual_rms_min": 9.47763898272832e-05,
+              "branch_to_residual_rms_max": 1.000001490130132,
+              "cosine_with_residual_mean": 0.005067629133918672,
+              "norm_shrink_fraction": 0.00390625,
+              "residual_rms_after": 1.414547420694166,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.20168435236670748
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                3.272309574284279e-08
+              ]
+            },
+            {
+              "branch": "block1.ffn",
+              "residual_rms_before": 1.414547420694166,
+              "branch_rms": 0.9999994051829297,
+              "branch_to_residual_rms_mean": 0.7089642494984139,
+              "branch_to_residual_rms_min": 0.6122301119758963,
+              "branch_to_residual_rms_max": 1.0000044090923317,
+              "cosine_with_residual_mean": -0.17827894859692606,
+              "norm_shrink_fraction": 0.04296875,
+              "residual_rms_after": 1.5780593102712641,
+              "raw_output_rms_mean_by_position": [
+                0.3810258467406164,
+                0.3290047072678468
+              ],
+              "raw_output_rms_min_by_position": [
+                0.25825526081389244,
+                0.22036532855806237
+              ]
+            },
+            {
+              "branch": "block2.attention",
+              "residual_rms_before": 1.5780593102712641,
+              "branch_rms": 0.9965273945449971,
+              "branch_to_residual_rms_mean": 0.6336169645140171,
+              "branch_to_residual_rms_min": 0.0517745114145954,
+              "branch_to_residual_rms_max": 0.7867097797362727,
+              "cosine_with_residual_mean": -0.07950009694195614,
+              "norm_shrink_fraction": 0.0078125,
+              "residual_rms_after": 1.79719032478599,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.34170353008971627
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                2.1702974529987208e-05
+              ]
+            },
+            {
+              "branch": "block2.ffn",
+              "residual_rms_before": 1.79719032478599,
+              "branch_rms": 0.9999994296251511,
+              "branch_to_residual_rms_mean": 0.5591056021375831,
+              "branch_to_residual_rms_min": 0.4671023598449768,
+              "branch_to_residual_rms_max": 0.8196854510575734,
+              "cosine_with_residual_mean": -0.22995966723465244,
+              "norm_shrink_fraction": 0.341796875,
+              "residual_rms_after": 1.842755892136443,
+              "raw_output_rms_mean_by_position": [
+                0.44355097056150317,
+                0.33485825205024866
+              ],
+              "raw_output_rms_min_by_position": [
+                0.28782008071919163,
+                0.19631523292447758
+              ]
+            },
+            {
+              "branch": "block3.attention",
+              "residual_rms_before": 1.842755892136443,
+              "branch_rms": 0.9999991025465023,
+              "branch_to_residual_rms_mean": 0.5457576521524983,
+              "branch_to_residual_rms_min": 0.4366482750334866,
+              "branch_to_residual_rms_max": 0.7042110781223815,
+              "cosine_with_residual_mean": -0.1780210826655093,
+              "norm_shrink_fraction": 0.197265625,
+              "residual_rms_after": 1.9325149833657052,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.5374374704224312
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                0.01758283697310818
+              ]
+            },
+            {
+              "branch": "block3.ffn",
+              "residual_rms_before": 1.9325149833657052,
+              "branch_rms": 0.9999994601220619,
+              "branch_to_residual_rms_mean": 0.5203518745675587,
+              "branch_to_residual_rms_min": 0.4223317293054496,
+              "branch_to_residual_rms_max": 0.6610345152917508,
+              "cosine_with_residual_mean": -0.1814481283618079,
+              "norm_shrink_fraction": 0.244140625,
+              "residual_rms_after": 2.0061852264412305,
+              "raw_output_rms_mean_by_position": [
+                0.4911460204911965,
+                0.3465611720288476
+              ],
+              "raw_output_rms_min_by_position": [
+                0.34147595095978167,
+                0.21157374617344832
+              ]
+            },
+            {
+              "branch": "block4.attention",
+              "residual_rms_before": 2.0061852264412305,
+              "branch_rms": 0.9999996655020381,
+              "branch_to_residual_rms_mean": 0.5010733560110924,
+              "branch_to_residual_rms_min": 0.4049860587982913,
+              "branch_to_residual_rms_max": 0.6381686463301558,
+              "cosine_with_residual_mean": -0.36004151518136496,
+              "norm_shrink_fraction": 0.859375,
+              "residual_rms_after": 1.8908349386587653,
+              "raw_output_rms_mean_by_position": [
+                0.0,
+                0.5843953587449582
+              ],
+              "raw_output_rms_min_by_position": [
+                0.0,
+                0.06486797579252057
+              ]
+            },
+            {
+              "branch": "block4.ffn",
+              "residual_rms_before": 1.8908349386587653,
+              "branch_rms": 0.9999997329052153,
+              "branch_to_residual_rms_mean": 0.5324155367249656,
+              "branch_to_residual_rms_min": 0.39702403139897074,
+              "branch_to_residual_rms_max": 0.6862398314943551,
+              "cosine_with_residual_mean": 0.012755981692862406,
+              "norm_shrink_fraction": 0.025390625,
+              "residual_rms_after": 2.1476472630006143,
+              "raw_output_rms_mean_by_position": [
+                0.671609835139287,
+                0.4899598570691508
+              ],
+              "raw_output_rms_min_by_position": [
+                0.373460950101091,
+                0.2854447583624713
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "token_embedding_table.weight",
+              "parameter_rms": 0.1846963973815992,
+              "gradient_rms": 0.012466726986418044
+            },
+            {
+              "name": "blocks.0.sa.c_attn.weight",
+              "parameter_rms": 0.05147973484332871,
+              "gradient_rms": 0.01775724094786397
+            },
+            {
+              "name": "blocks.0.sa.c_proj.weight",
+              "parameter_rms": 0.04611814178564099,
+              "gradient_rms": 0.031107009297394628
+            },
+            {
+              "name": "blocks.0.ffwd.c_fc.weight",
+              "parameter_rms": 0.05465211254639448,
+              "gradient_rms": 0.013480182671043768
+            },
+            {
+              "name": "blocks.0.ffwd.c_proj.weight",
+              "parameter_rms": 0.0517370237881145,
+              "gradient_rms": 0.01550749292987825
+            },
+            {
+              "name": "blocks.1.sa.c_attn.weight",
+              "parameter_rms": 0.055883551861242754,
+              "gradient_rms": 0.008850569116954728
+            },
+            {
+              "name": "blocks.1.sa.c_proj.weight",
+              "parameter_rms": 0.04880990134240577,
+              "gradient_rms": 0.01563912902056008
+            },
+            {
+              "name": "blocks.1.ffwd.c_fc.weight",
+              "parameter_rms": 0.05969292228719498,
+              "gradient_rms": 0.010274352749367468
+            },
+            {
+              "name": "blocks.1.ffwd.c_proj.weight",
+              "parameter_rms": 0.055743411624056986,
+              "gradient_rms": 0.010286571409343154
+            },
+            {
+              "name": "blocks.2.sa.c_attn.weight",
+              "parameter_rms": 0.05902028993258888,
+              "gradient_rms": 0.00494449373903001
+            },
+            {
+              "name": "blocks.2.sa.c_proj.weight",
+              "parameter_rms": 0.05133645477470964,
+              "gradient_rms": 0.009329978176465808
+            },
+            {
+              "name": "blocks.2.ffwd.c_fc.weight",
+              "parameter_rms": 0.06291364506310122,
+              "gradient_rms": 0.008063457388268094
+            },
+            {
+              "name": "blocks.2.ffwd.c_proj.weight",
+              "parameter_rms": 0.059218155845258504,
+              "gradient_rms": 0.006772018554137263
+            },
+            {
+              "name": "blocks.3.sa.c_attn.weight",
+              "parameter_rms": 0.0610809546929177,
+              "gradient_rms": 0.003899847285145688
+            },
+            {
+              "name": "blocks.3.sa.c_proj.weight",
+              "parameter_rms": 0.054485882006433124,
+              "gradient_rms": 0.006216176462803841
+            },
+            {
+              "name": "blocks.3.ffwd.c_fc.weight",
+              "parameter_rms": 0.0676104234188498,
+              "gradient_rms": 0.004716449553500399
+            },
+            {
+              "name": "blocks.3.ffwd.c_proj.weight",
+              "parameter_rms": 0.06589489533897114,
+              "gradient_rms": 0.003602614002348553
+            }
+          ],
+          "manual_forward_bitwise_equal": true,
+          "input_strata": {
+            "identical_input_tokens": {
+              "examples": 2,
+              "ambient_initial_state_gradient_rms": 1359.0144157678462,
+              "position_sum_gradient_rms": 0.0011611990388195438,
+              "position_sum_cancellation_ratio_mean": 4.5766531957525635e-07,
+              "first_attention_raw_answer_rms_mean": 4.936007809491713e-08
+            },
+            "distinct_input_tokens": {
+              "examples": 510,
+              "ambient_initial_state_gradient_rms": 0.0009496209904118891,
+              "position_sum_gradient_rms": 0.0013068303504994042,
+              "position_sum_cancellation_ratio_mean": 0.687205967214582,
+              "first_attention_raw_answer_rms_mean": 0.20247527120202757
+            }
+          },
+          "gradient_scope": "Gradients of the same full512-row mean loss; strata do not renormalize it. Position sums are not the complete tied-parameter gradient."
+        }
+      }
+    }
+  ]
+}

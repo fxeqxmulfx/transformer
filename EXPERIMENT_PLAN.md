@@ -29,8 +29,9 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 | #141 long grokking phase | Running under one7200-second cap; frozen at a2f8e380 | Freeze selected cases and checkpoint hashes before continuation; retain query/base/moments/averaging clock/sampler; target100000 absolute updates within two hours; save incomplete runs as resumable |
 | #143 theory falsification ledger | Active, explicitly requested | Seek reproducible counterexamples to current learning interpretations; record prediction, premises, outcome and correction; update Lean if a formal claim is false |
 | #144 residual mechanism audit | Active, requested during the screen | Connect existing AttnRes/mHC proofs to fixed-checkpoint measurements of branch/residual norms, cancellation, depth readouts and gradients; compare early and long states |
+| #147 numerical XSA correction | 15 exact Lean theorems; centering-only backward failure retained; guarded common-prefix path passes actual-source FP32/FP64 replay | Preserve clipping and backward conventions; test compiled CUDA and div97 regression after the frozen phase; do not mix arithmetic in running trajectories |
 | #145 residual training comparison | Backlog, separate cohort | Freeze matched seeds and sufficiently long budgets for ordinary residual, branch-scale control and source-faithful AttnRes; preserve source branches and disclose added parameters/compute |
-| #146 normalized depth-attention verification | Lean1a9b522e; diff_gpt e13cf13;21 synthetic cases replayed | Prove Q/K score and sensitivity bounds with explicit gain/temperature assumptions; reuse diff_gpt; run a known-solution synthetic task and inspect gradients before full-model changes; commit both repositories |
+| #146 normalized depth-attention verification | In review; Lean1a9b522e; diff_gpt e13cf13;21 synthetic cases replayed | Prove Q/K score and sensitivity bounds with explicit gain/temperature assumptions; reuse diff_gpt; run a known-solution synthetic task and inspect gradients before full-model changes; commit both repositories |
 | #139 polynomial-resource construction | Backlog; core theory target | Route local arithmetic states and compose real source blocks; aim for fixed width at fixed prime with growing depth, otherwise explicit polynomial bounds; include precision and margins |
 | #133 optimizer-to-recovery bridge | Backlog after#131 | Derive useful routing or separating feature recovery from actual sampled CE/Schedule-Free dynamics under witnessed conditions; retain alias/memorization counterexamples |
 | #134 structured depth/width tradeoffs | Backlog after#131 | Task-specific bounds for exact nonperiodic RoPE; do not substitute arbitrary-table counting or periodic C-RASP lower bounds |
@@ -77,10 +78,10 @@ linked to the root's `experiments/modular_composition/runs/`. Worktree/agent:
 The screen's execution log is `/tmp/modular-composition-screen.log` and is
 copied into board evidence before cleanup. Source fixture CPU initialization,
 logits and gradients are bitwise equal; CUDA errors are7.45e-8/3.50e-7.
-Setup validation:443 lab tests passed,3 skips, followed by the eight updated
-arithmetic tests. The optimizer suite retains two known ScheduleFreeMuon
-allocation failures; Schedule-Free AdamW passed. Do not report the whole
-mandatory test command as green.
+Latest CPU-visible validation:446 lab tests and104 optimizer tests pass,
+with13 and14 CUDA-dependent skips. Earlier CUDA runs retain two documented
+ScheduleFreeMuon allocation failures; Schedule-Free AdamW passed. CPU-only
+success does not erase that CUDA baseline.
 
 **2026-11-01 mixed-arithmetic progression, requested by the user.** Active:
 board #138 adds the exact normalized source RoPE model to the lab and tests

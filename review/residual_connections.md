@@ -221,3 +221,117 @@ different width, rate, decay, vocabulary and sampling, so its P97 result
 is not a reproduction failure of that regression test. Q/K score tests
 in that repository check finite-epsilon equations and approximate scale
 invariance. They do not establish a universal generalization theorem.
+
+
+## Repeated-input numerical audit (2026-11-01)
+
+The fixed first512 heldout rows of each P97/P193 pair case expose a separate
+numerical problem in the original source XSA. For identical input tokens,
+all projected values initially coincide. Their attention average is the same
+value, regardless of Q/K scores or RoPE. Above the L2 clipping threshold,
+XSA should remove it exactly. The original FP32 subtraction instead leaves a
+small nonzero vector, which the following Peri-RMSNorm can amplify repeatedly.
+This is distinct from the learned pseudo-query saturation in depth attention.
+
+The P97 deep division checkpoint has initial-state gradient RMS2714 on its
+eight repeated-token heldout rows, versus.000860 on the504 other rows. The
+position-summed gradient RMS on those repeated rows is only.00149, and the
+maximum parameter-gradient RMS in the full batch is.0309. The same token
+uses one shared embedding; independent position derivatives largely cancel.
+Thus the ambient derivative alone is not evidence of exploding optimizer
+updates or of a faulty residual sum. Diagnostics use the same512-row mean
+loss and do not silently renormalize the smaller stratum.
+
+FP64 replay preserves exactly the averaged FP32 parameter values, rotary
+tables and RMS epsilon2^-23. Letting RMSNorm choose its FP64 epsilon would
+change the model. In the original deep models, repeated-input logits differ
+by5.33--8.09 between precisions, changing seven predictions across the four
+fixed batches. Even the original FP64 computation has up to.000943 logit
+difference from the centered FP64 evaluation. All differences, gradients and
+counts are retained in `experiments/modular_composition/precision_diagnostics.json`.
+
+The correction centers every value at an anchor c before attention. For a
+normalized row alpha and own value v, write
+
+```
+delta = sum_j alpha_j * (v_j - c) - (v - c)
+u = v / max(norm(v), epsilon)
+output = delta - inner(delta, u) * u + own_remainder
+own_remainder = 0                              if norm(v) >= epsilon
+                (1 - norm(v)^2 / epsilon^2)*v  otherwise
+```
+
+`SequenceModel/Attention/CenteredXSA.lean` proves: C1 weighted centering;
+C2 the exact clipped own-value remainder; C3 equality with the original XSA;
+C4 equality for the actual normalized rotary causal head, including the
+explicit first-position zero; C5 constant-value annihilation above clipping.
+The below-epsilon term is essential: deleting it would change the model.
+The formulas agree at the clipping boundary, while autodiff's chosen branch
+there also needs testing; the implementation preserves F.normalize's actual
+clamp backward convention. These are six proved identities, not a numerical
+error bound or a convergence theorem. Concrete examples witness hypotheses.
+
+The diff_gpt implementation centers values without altering cached raw values,
+handles shared prefixes and chunked decoding, and retains `centered_xsa=False`
+for legacy floating-point replay. Q/K normalization, RoPE, attention weights
+and trainable parameter counts are retained. Centering cached prefixes adds
+value transforms and temporary storage; no cache-speed improvement is claimed.
+The frozen lab learning trajectories use the original implementation throughout.
+`centered_replay.py` applies the correction only to diagnostic copies.
+
+After correction, every repeated-input first attention output is exactly zero
+in both precisions. Deep repeated-input logit differences fall below5.4e-6;
+all eight batches have zero FP32/FP64 prediction disagreements with the centered
+formula. This supports the numerical correction on the tested inputs. It does
+not establish improved learning, global conditioning or residual superiority.
+The unchanged long trajectories still test whether depth needs more updates.
+
+The subsequent **parameter-gradient** check rejected centering alone. In the
+lab prototype, its deep FP32 gradient RMS error reached0.827 against FP64,
+although the forward was accurate. The actual diff_gpt implementation exposes
+the same problem, reaching2.284. Independent position derivatives become large
+and cancel poorly when accumulated into shared parameters. These are retained
+failures, not a reason to treat the output-only test as sufficient.
+
+The complete correction shares the first-position state after each block on
+still-constant token prefixes. C6 says actual attention vanishes for a common
+state whose value heads are above clipping. C7 gives the common FFN update.
+C8 propagates the common state through every finite layer; C9 proves equal
+tied readouts. C10 witnesses the guard at clipping zero. C11 restricts the
+head result to visible constant prefixes, allowing arbitrary future values;
+C12 lifts it to multihead attention; C13 proves a full block's prefix output
+equals its first output. These nine additional statements are in
+`ConstantTokens.lean` and `ConstantPrefixes.lean`. The runtime guard uses the
+actual fused-projection values and requires **strictly above** epsilon in every
+head. A failed guard permanently disables sharing for that row. The guard
+has no extra matrix multiplication. A clipped-value test shows why the
+unconditional shortcut would change the function.
+
+These proofs establish exact source-state equalities, with arbitrary rotary
+phases. They do not establish floating-point guard reliability, accuracy of
+arbitrary independent-input derivatives, or an optimizer convergence theorem.
+For the shared-parameter repeated-token map, the common path avoids the
+measured cancellation. Cache forwards use centering without this token-prefix
+path; no uniform cache-gradient stability guarantee is claimed.
+
+`parameter_precision.py/json` replay **actual diff_gpt**, including its
+in-place first-position handling, on all eight frozen checkpoints. Original,
+centered-only and guarded versions are each evaluated in FP32 and FP64 with
+identical parameters/tables and RMS epsilon. Guarded FP32 parameter-gradient
+RMS errors are1.78e-10--2.57e-8; maximum logit differences over all512 rows
+are1.14e-5--1.88e-5, with no changed predictions. The corresponding lab
+implementation has identical logits and parameter-gradient RMS differences
+below5e-9. The earlier prototype audit is retained separately; its different
+backward accumulation order must not be mistaken for the actual-source audit.
+This validates measured numerical accuracy, not better generalization.
+
+Validation: all15 new Lean theorems build in13262 jobs; audit retains36 sorry,
+zero results resting on them and zero extra axioms. INDEX records4165 modules,
+21390 theorems, zero vacuous/placeholder statements. Forbidden patterns and
+explicit axiom checks pass. The affected diff_gpt CPU suite passes123 tests
+with14 skips, including clipping, independent equations/all gradients,
+finite differences, arbitrary suffixes, shared-parameter repeated prefixes,
+cache shapes and division-protocol checks. The required lab suite passes446
+plus104 optimizer tests (13 and14 CPU-only skips). CUDA compile and learning
+regression checks remain separately recorded; the long frozen cohort is not
+modified by this correction.

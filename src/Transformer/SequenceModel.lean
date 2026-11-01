@@ -15,6 +15,9 @@ public import Transformer.SequenceModel.Attention.Execution
 public import Transformer.SequenceModel.Attention.Spectral
 public import Transformer.SequenceModel.Attention.Backend
 public import Transformer.SequenceModel.Attention.Retrieval
+public import Transformer.SequenceModel.Attention.CenteredXSA
+public import Transformer.SequenceModel.Attention.ConstantTokens
+public import Transformer.SequenceModel.Attention.ConstantPrefixes
 
 /-!
 # General positional inputs and normalized multi-variable attention
