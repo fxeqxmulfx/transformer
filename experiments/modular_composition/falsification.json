@@ -1,0 +1,30 @@
+{
+  "recording_scope": "Explicit user-requested ledger, written after observing the early screen begin and before any long continuation. It is not a retrospective preregistration of the early outcomes.",
+  "claims": [
+    {
+      "claim": "A flat final task kernel prevents transformer generalization.",
+      "status": "Unsupported extension of the exact completion theorem; no counterexample observed yet in the initial completed mixed cases.",
+      "counterexample_criterion": "At least99% final heldout accuracy on a mixed case whose fixed additive-character ground-truth kernel remains flat; verify saved-state replay and absence of label leakage.",
+      "correction_if_found": "Retain the exact nuclear-norm theorem; reject its transfer to unrestricted transformer learning and investigate learned composition/readout."
+    },
+    {
+      "claim": "Rank-one character availability predicts learning within2000 updates.",
+      "status": "Early candidate counterexample: P97 wide division ends at4.725%, P193 wide division at100%, with the same width/depth/optimizer/update budget and rank-one character availability.",
+      "premises_to_audit": "Check faithful characters, connected nonzero-input observation graphs, perfect matchings and source checkpoint replay. Prime changes also change the number of training pairs; do not call this a single-variable causal effect of prime.",
+      "correction": "Separate recoverability under an ideal objective from optimizer discovery and data/parameter scaling. The long phase tests whether delayed grokking accounts for the early difference."
+    },
+    {
+      "claim": "Task spectrum alone predicts benefits from width or depth.",
+      "status": "Exploratory comparison; no depth advantage asserted from the currently completed cases.",
+      "counterexample_criterion": "Different reproducible learning outcomes for matched task/splits with identical task spectrum; report approximate parameter matching, head dimensions and actual compute.",
+      "correction_if_found": "Include architecture-specific routing/composition and training dynamics; no necessary-depth theorem follows from these finite runs."
+    },
+    {
+      "claim": "An early memorization plateau is permanent failure.",
+      "status": "Unjustified before the long grokking phase.",
+      "counterexample_criterion": "A fixed full-state continuation crosses99% heldout accuracy after the2000-update screen, with no change to model/task/optimizer recipe.",
+      "correction_if_found": "Reject finite-horizon impossibility inferences; record transition time, epochs and any later relapse."
+    }
+  ],
+  "formalization_rule": "If an actual Lean statement is false, identify its precise hypothesis/definition mismatch and correct it with a counterexample. Do not weaken valid spectral theorems to fit outcomes."
+}

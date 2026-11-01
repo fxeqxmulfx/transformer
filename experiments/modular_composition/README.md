@@ -11,7 +11,7 @@ fixed across all chain lengths. The next construction should reuse local
 operations with polynomial resources, ideally fixed width at fixed prime
 and growing depth, while accounting for routing and numerical precision.
 
-Protocol is frozen before training. No result is available yet. The
+Protocol was frozen before training; the screen is in progress. The
 exponent-one division control has a rank-one multiplicative-character
 route. For the mixed task, the additive-character matrix is exactly flat;
 minimum-nuclear-norm completion fails on every proper observation pattern.
@@ -83,3 +83,35 @@ CUDA-allocation failures (float32/float64,75 allocations of8519680 bytes).
 Schedule-Free AdamW passed. After adding the copying baseline, the affected
 eight-test arithmetic suite passed. The mandatory command's overall exit
 status remains nonzero; these existing failures are not relabeled as passes.
+
+## Falsification and profiling follow-up
+
+`falsification.json` records explicit claims to challenge. It was written
+after the early screen began and before any long continuation. The exact
+spectral results are retained even if a learning interpretation fails.
+`recovery_patterns.py` checks the actual division training splits for the
+connected graph and perfect matching needed by ideal character recovery,
+and records integer witnesses and faithful-character phase checks.
+
+`profile_updates.py` copies the frozen P97 division checkpoints for W256D1
+and W128D4. After compilation and100 warmup updates, plain and sampling
+modes each measure three2000-update intervals from the same restored state.
+The torch mode records30 complete updates with CPU/CUDA events. Evaluation
+is timed separately. Nothing is written back to the learning checkpoints.
+These copies are diagnostics, not additional learning outcomes.
+
+Use Python3.15's [sampling profiler](https://docs.python.org/3.15/library/profiling.sampling.html)
+to launch the diagnostic worker; inspect the `steady_updates` frame rather
+than attributing compilation to ordinary updates. The sampled-versus-plain
+wall-time difference estimates profiler overhead. Python stack samples do
+not measure GPU kernels; the PyTorch CUDA trace supplies that measurement.
+Run from `python/`, substituting the fixed `wide` or `deep` case:
+
+```sh
+uv run --locked python ../experiments/modular_composition/profile_updates.py wide plain
+uv run --locked python -m profiling.sampling run --binary -o ../experiments/modular_composition/runs/profiles/wide.bin ../experiments/modular_composition/profile_updates.py wide sampling
+uv run --locked python ../experiments/modular_composition/profile_updates.py wide torch
+```
+
+Raw profiles stay in the root-linked ignored `runs/profiles/`. Portable
+timing summaries will be committed before the separately bounded long phase.
