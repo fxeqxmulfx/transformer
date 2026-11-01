@@ -27,7 +27,8 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 
 | Board task | Current status | Required outcome |
 | --- | --- | --- |
-| #154 fixed-scale continuation | Active; user requested longer runs until99% validation | Resume both P97 scaled23k checkpoints with complete optimizer/sampler state; freeze source/split hashes; stop at first canonical99% validation; compare ordinary first99% crossings32k/37k, then replay endpoints and update the local architecture site |
+| #154 fixed-scale continuation | Both completed 24k; CPU replay and full-state checks pass; pending final self-review | Both reach 99% validation 1,000 updates after 23k, versus ordinary 32k/37k; final test 99.227%/98.711%; original reports and parents preserved |
+| #155 remaining gradient paths and direct model repair | Next after #154; user requested a new synthetic benchmark and no new architecture flag | Lean-inspired known-solution controls, independent derivatives and matched recovery; add regression for a verified improvement and change the actual model directly, distinguishing mechanism recovery from grokking |
 | #153 local architecture site | Complete; self-reviewed at709b6f70; root server on127.0.0.1:8765 | Interactive source diagram, residual options, measured curves, config and training recipe; loopback server remains running after worktree cleanup |
 | #138 source model and early mixed-arithmetic screen | Self-reviewed; all48 replayed; fresh old-model compiled count drift retained separately | All cases retained, final-checkpoint replay, exact split/source hashes, train/heldout/longer accuracy and baselines;2000 updates alone cannot rule out grokking |
 | #140 local attention theory | Self-reviewed; seven theorems at730c0155 rechecked | Useful-set mass, weighted retrieval error and normalized head-width bounds; arbitrary rotary phases; distinguish a local constraint from a task lower bound |

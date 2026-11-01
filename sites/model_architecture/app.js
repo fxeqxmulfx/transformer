@@ -44,7 +44,7 @@ function gainNotes() {
     tag: "Fixed branch strength", title: "A smaller step after each branch.",
     copy: "Multiply each normalized branch by 1/√(2L). At four blocks, both attention and feed-forward use the fixed coefficient 0.353553.",
     formula: "α = 1 / √(2 × 4)\nα ≈ 0.353553\nh_next = h + α · N(Branch(N(h)))",
-    note: "This moved P97 generalization earlier in both measured seeds. The runs ended at 23k updates before the final stability target. Their eventual accuracy is unknown.",
+    note: state.evidence?.continuation?.length ? "Both P97 continuations reached 99% validation at 24k updates, versus 32k/37k for ordinary addition. The final test scores were 99.227%/98.711%. The 99.9% stability target is still unconfirmed." : "This moved P97 generalization earlier in both measured seeds. The runs ended at 23k updates before the final stability target. Their eventual accuracy is unknown.",
   };
   if (state.mode === "gated") return {
     tag: "Learned branch strength", title: "Learn amplitude after normalization.",
@@ -83,11 +83,12 @@ function renderProfile() {
     put("result-label", `Final test · both P${prime} seeds`);
     put("profile-limit", prime === 97 ? "Stable validation confirmed at 40k and 45k updates. The reported test score is on unseen operand pairs at the same prime." : "Stable validation confirmed at 19k and 11k updates. The larger prime was a separately trained task, not a transfer test.");
   } else if (mode === "scaled") {
+    const continued = evidence?.continuation?.length;
     put("profile-badge", prime === 97 ? "Earlier transition · measured" : "Unmeasured at P193");
-    put("profile-heading", "An earlier transition, with an open endpoint.");
-    put("profile-description", "At update 23k on P97, scaled validation accuracy was 97.595–98.368%; ordinary addition was 27.234–34.966% at that same update.");
-    put("result-label", prime === 97 ? "Final test · P97 at update 23k" : "No scaled P193 run in this cohort");
-    put("profile-limit", "The scaled P97 runs stopped when their time allowance ended. Neither confirmed the 99.9% stability target; final convergence and speed to that target remain unknown.");
+    put("profile-heading", continued ? "Earlier at the 99% validation target." : "An earlier transition, with an open endpoint.");
+    put("profile-description", continued ? "Both P97 seeds crossed 99% validation at 24k updates. Ordinary addition first crossed it at 32k/37k: scaling needed 25%/35% fewer updates." : "At update 23k on P97, scaled validation accuracy was 97.595–98.368%; ordinary addition was 27.234–34.966% at that same update.");
+    put("result-label", prime === 97 ? `Final test · P97 at update ${continued ? "24k" : "23k"}` : "No scaled P193 run in this cohort");
+    put("profile-limit", continued ? "The continuations stopped at the requested first 99% validation crossing. Seed 17’s test score remains below 99%. The original test split was reused; 99.9% stability is still unconfirmed." : "The scaled P97 runs stopped when their time allowance ended. Neither confirmed the 99.9% stability target; final convergence and speed to that target remain unknown.");
   } else {
     put("profile-badge", "Experimental · synthetic evidence");
     put("profile-heading", "A gradient-path candidate.");
@@ -140,7 +141,7 @@ function renderChart() {
   put("chart-caption", `Validation accuracy · P${state.prime} · two initialization seeds`);
   byId("learning-chart").setAttribute("aria-label", `Measured P${state.prime} validation curves for ordinary addition${state.prime === 97 ? " and fixed scaling" : " only"}. Solid is seed 11, dashed is seed 17.`);
   document.querySelector(".legend-scaled").parentElement.hidden = state.prime !== 97;
-  const note = state.prime === 97 ? "Scaled curves end at 23k updates because their time allowance ended. Lines connect recorded observations; they do not extrapolate." : "Only ordinary addition was measured at P193 in this comparison. Both seeds reached stable validation.";
+  const note = state.prime === 97 ? state.evidence.continuation?.length ? "Scaled curves include the full-state continuations to 24k, stopping at the first 99% validation crossing. The original 23k endpoints remain in the archived report." : "Scaled curves end at 23k updates because their time allowance ended. Lines connect recorded observations; they do not extrapolate." : "Only ordinary addition was measured at P193 in this comparison. Both seeds reached stable validation.";
   put("chart-note", `${note}${state.mode === "gated" ? " No learned-gate curve is available; these are reference curves." : ""}`);
 }
 
@@ -161,6 +162,7 @@ function render() {
   put("model-code", `from diff_gpt.domain.model.residual_gpt import ResidualGPT\n\nmodel = ResidualGPT(\n    vocab_size=${prime}, n_embd=128,\n    n_head=4, n_layer=4, block_size=33,\n    mixing="${mode}", centered_xsa=True,\n    rope_base=10_000.0, rope_layers=None,\n    pad_vocab_size_to=1, use_checkpoint=False,\n).float()`);
   put("code-note", `Set mixing explicitly: the class default differs. Supervise final-position logits only.${mode === "gated" ? " This extension is in diff_gpt; the lab block does not yet expose gated mode." : ""}`);
   put("copy-config", "Copy config");
+  byId("continuation-download").hidden = !state.evidence?.continuation?.length;
   inspect(state.part);
   renderProfile();
   renderChart();

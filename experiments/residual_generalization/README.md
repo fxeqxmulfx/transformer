@@ -15,6 +15,12 @@ These shorter controls were time-censored before the 99.9% stability rule; ordin
 addition subsequently reached 99.96% test. The result motivates branch-strength
 experiments, not a claim of superiority at the final target.
 
+The separate [task154 continuation](../residual_scaled_long/README.md) subsequently
+resumed both scaled endpoints for 1,000 more updates. Both crossed 99% validation
+at 24k, versus 32k/37k for ordinary addition. The final test scores were 99.227% and
+98.711%. This original cohort and its 23k results remain unchanged; the continued
+runs stopped at the user's 99% target, not the original 99.9% stability rule.
+
 The paper-style key-only control reached 20k updates in one seed, with 2.79% test;
 the second seed was stopped during setup by the global deadline. Keeping the
 host's Peri output norms, QK-normalized token attention and centered XSA differs

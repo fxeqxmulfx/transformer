@@ -10,7 +10,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
-| [`residual_scaled_long`](residual_scaled_long) | 2 | Continue both fixed-scale P97 trajectories from 23k to the user's 99% validation target, preserving complete Schedule-Free state and comparing matched first-crossing updates. |
+| [`residual_scaled_long`](residual_scaled_long) | 2 | Both complete-state scaled continuations cross 99% validation at 24k versus 32k/37k for ordinary addition; final test 99.227%/98.711%; parents remain unchanged. |
 | [`residual_gradient_paths`](residual_gradient_paths) | 36 | Known-solution CPU controls: post-RMS gates recover in 12/12 cases; pre-RMS gates in 4/12; depth scaling keeps transport gain at least 1/2 in the linear witness. |
 | [`residual_generalization`](residual_generalization) | 16 | Closed two-hour cohort: ordinary residuals reach99.96–100% test; scaling generalizes earlier at23k; depth attention remains near chance within its allowance. All16 cases and execution failures retained. |
 | [`modular_composition`](modular_composition) | 48 | Can the normalized source RoPE transformer learn flat-spectrum mixed arithmetic and composed modular chains with Schedule-Free AdamW? All48 completed; full curves and replay discrepancies retained. |

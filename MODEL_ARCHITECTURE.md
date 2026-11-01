@@ -14,12 +14,16 @@ a global optimum for language, unseen primes, longer contexts or every task.
 | Residual option | Coefficient after each branch output RMSNorm | Evidence | Use |
 | --- | --- | --- | --- |
 | `add` | 1 | All four P97/P193 controls reached stable validation; 99.957–100% final test | Default accuracy baseline |
-| `scaled` | 1/sqrt(2L), about 0.353553 at L=4 | P97 validation 97.595%/98.368% at update 23,000; ordinary addition 34.966%/27.234% at that update | Earlier-onset alternative |
+| `scaled` | 1/sqrt(2L), about 0.353553 at L=4 | Both P97 seeds cross 99% validation at 24k updates; ordinary controls first cross at 32k/37k | Earlier-onset alternative |
 | `gated` | 2 sigmoid(s), s initialized to zero independently for each branch | Post-RMS amplitude recovery 12/12 synthetic cases; actual GPT integration/regressions pass | Experimental learned branch strength |
 
-The scaled endpoints scored 97.766%/98.368% on final test and were capped before
-the 99.9% stability target. Their eventual final accuracy and time to that target
-are unknown. Learned gates have no full-transformer grokking comparison yet.
+The original scaled runs were capped at 23k. Their complete-state continuations
+needed only 1,000 more updates: validation 99.270%/99.098%, final test 99.227%/98.711%.
+They stopped at the user's first 99% validation target, using 25%/35% fewer updates
+than the paired ordinary controls. The test split was reused from the earlier
+report; seed 17's test remains below 99%. Time to the stricter 99.9% stability
+target and eventual final accuracy remain unknown. Learned gates have no
+full-transformer grokking comparison yet.
 The implemented `gated` mode starts at coefficient 1; it does **not** multiply
 the gate by 1/sqrt(2L). That combination would be a separate untested variant.
 
@@ -150,6 +154,8 @@ accuracy >=99.9% at three consecutive observations, all at or after update 5,000
 Ordinary P97 controls stopped at 40k/45k updates and P193 at 19k/11k. These numbers
 describe these runs, not a sufficient epoch budget for every depth or seed.
 Long plateaus require complete-state continuations within a declared budget.
+Task154 separately stopped the continued scaled models at their first 99%
+validation crossing, at 24k. This is not the preceding 99.9% stability rule.
 
 Use the measured Python 3.15/Torch 2.15 FP32 path and compile with
 `mode="max-autotune", fullgraph=True, dynamic=False`. For this two-token workload,
@@ -181,6 +187,7 @@ Width 128/depth 4 is the supported reference, not a claim that larger models
 cannot help or that width must grow exponentially with context.
 
 Sources: [full-transformer comparison](experiments/residual_generalization/README.md),
+[fixed-scale continuations](experiments/residual_scaled_long/README.md),
 [synthetic mechanisms](experiments/residual_gradient_paths/README.md),
 [formal gradient statements](src/Transformer/Residual/GradientPaths.lean),
 [lab residual implementation](python/src/lab/infrastructure/nn/residual_transformer.py),

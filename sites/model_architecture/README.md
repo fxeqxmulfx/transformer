@@ -26,5 +26,11 @@ records the source paths and SHA-256 hashes. Both complete reports and the
 architecture document are also included. Lines connect recorded observations;
 there are no extrapolated curves or invented learned-gate results.
 
+When `experiments/residual_scaled_long/results.json` is present, the builder
+extends the two scaled curves with those complete-state continuations and adds
+their downloadable report. The original task145 report stays available. The
+first-99%-validation endpoint is distinguished from test accuracy and the older
+three-observation 99.9% stability target.
+
 The site describes the completed local comparison. It is not a training dashboard
 and does not claim a universal optimal architecture or convergence theorem.

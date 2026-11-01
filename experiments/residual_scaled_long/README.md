@@ -5,6 +5,31 @@ run. The user requested continuing until 99%. Both P97 seeds resume their comple
 23,000-update task145 states. Ordinary controls first reached 99% validation at
 32,000 updates (seed 11) and 37,000 updates (seed 17).
 
+Both continuations reached the requested target at **24,000 updates**, just
+1,000 additional updates each. CPU replay exactly reproduced the CUDA counts.
+
+| Seed | Validation | Final test | Scaled first 99% | Ordinary first 99% | Fewer updates |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 11 | 99.270% | 99.227% | 24,000 | 32,000 | 25.0% |
+| 17 | 99.098% | 98.711% | 24,000 | 37,000 | 35.1% |
+
+Seed 17's final test is below 99%; the result is an earlier validation crossing,
+not uniformly 99% test accuracy or 99.9% stable convergence. All four CPU/CUDA
+train/validation counts agree, with zero FP32/FP64 prediction disagreements
+across train/validation/test. All 48,000 cumulative gradient records are finite.
+
+The two continuation sessions took 48.05 seconds combined, including their
+per-case preparation/compilation and learning. Only 2,000 new optimizer updates
+were needed. Cumulative training time to 99% was 108.63s/108.58s versus the ordinary
+controls' 144.61s/166.90s. Cumulative recorded wall time, including resumed setup,
+was 158.88s/146.64s versus 169.04s/189.57s. Timing is host-dependent; the matched
+update-count comparison is the stronger result. These measurements do not
+identify the causal mechanism behind the speedup.
+
+Both parents remained byte-identical, and model/optimizer/sampler/step/example
+state checks passed exactly after compilation. [Results](results.json) include
+every canonical observation, endpoint audit, checkpoint hash and comparison.
+
 | Case | Parent | Residual coefficient | Stop |
 | --- | --- | --- | --- |
 | scaled-s11 | mechanism-s11-scaled at 23k | 1/sqrt(8) | First canonical validation >=99% |
@@ -34,4 +59,4 @@ Reproduction: `./run.py scaled-continuation freeze`, then
 `./run.py scaled-continuation run`, then `./run.py scaled-continuation report`.
 Freeze verifies parent checkpoints, source hashes and split fingerprints before
 learning. A started phase cannot be overwritten silently. `protocol.json` pins
-the declaration; `results.json` will record the measured outcomes.
+the declaration; `results.json` records the measured outcomes.
