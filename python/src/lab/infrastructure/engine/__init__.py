@@ -10,6 +10,8 @@ from .loop import Training
 from .population import PopulationStepper
 from .atomic import AtomicStepper
 from .measured import MeasuredStepper
+from ...domain.residual_transformer import ResidualPairs
+from .residual import ResidualTraining, ResidualCompiledStepper, ResidualEagerStepper
 
 STEPPERS = {training.Eager: EagerStepper, training.CudaGraph: GraphStepper, training.Compiled: CompiledStepper,
             training.Measured: MeasuredStepper, training.MaxAutotune: CompiledStepper}
@@ -27,4 +29,7 @@ class Engine:
         stepper = PopulationStepper if isinstance(experiment.optimizer, optimizers.ANSR) else STEPPERS[type(experiment.execution)]
         if isinstance(experiment.optimizer, AtomicColumns):
             stepper = AtomicStepper
+        if isinstance(experiment.benchmark, ResidualPairs):
+            stepper = ResidualEagerStepper if type(experiment.execution) is training.Eager else ResidualCompiledStepper
+            return ResidualTraining(experiment, run, progress, stepper)()
         return Training(experiment, run, progress, stepper)()

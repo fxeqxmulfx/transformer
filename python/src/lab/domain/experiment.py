@@ -22,6 +22,7 @@ from .paired import DivisionPairs, VectorReadout, check_division_model
 from .rotary import LabDivision, Rotate90
 from .peri_rotary import PeriRotate90, PowerDivision
 from .source_transformer import SourceTransformer
+from .residual_transformer import ResidualTransformer, ResidualPairs
 from .modular_composition import ModularPairs, ModularChain
 from .peri_restart import PeriRotate90Restart
 from .continuation import ScheduleFreeContinuation
@@ -30,7 +31,7 @@ from .stopping import Solved, Stopping
 from .synthetic import Synthetic
 from .tensor import TensorStack, check_tensor_benchmark
 from .training import AttentionDiagnostics, Budget, Checkpoint, CudaGraph, Diagnostics, Eager, Evaluate, Execution, Schedule, Seeds
-from .training import FlopBudget, Measured
+from .training import FlopBudget, Measured, Compiled
 
 LABEL = re.compile(r"[a-z0-9][a-z0-9._-]*")
 
@@ -152,6 +153,13 @@ class Experiment(Spec):
             require(isinstance(self.model, SourceTransformer) and
                     isinstance(self.benchmark, (ModularPairs, ModularChain)),
                     "SourceTransformer uses final-answer ModularPairs or ModularChain")
+        if isinstance(self.model, ResidualTransformer) or isinstance(self.benchmark, ResidualPairs):
+            require(isinstance(self.model, ResidualTransformer) and isinstance(self.benchmark, ResidualPairs),
+                    "ResidualTransformer uses the reserved-test ResidualPairs protocol")
+            require(type(self.optimizer) is ScheduleFreeAdamW, "Residual comparison uses Schedule-Free AdamW")
+            require(type(self.execution) is Eager or isinstance(self.execution, Compiled),
+                    "Residual comparison supports eager or compiled execution")
+            require(self.stopping is None, "ResidualPairs declares its own stable validation stop")
         if isinstance(self.diagnostics, AttentionDiagnostics):
             require(isinstance(self.benchmark, (Synthetic, ModularDivision)),
                     "AttentionDiagnostics needs a Synthetic or ModularDivision benchmark")

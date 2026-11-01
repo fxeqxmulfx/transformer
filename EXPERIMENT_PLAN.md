@@ -32,7 +32,7 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 | #147 numerical XSA correction | Self-reviewed;17 Lean theorems and fresh compiled checks pass; all6 division checkpoint reports reproduce identically | Preserve clipping/backward conventions; all failures retained; actual-source checks pass and original long trajectories stay frozen |
 | #149 repeated-token length collisions | Backlog after#147; structural follow-up | Check guarded constant-prefix invariance across lengths, the P97 chain labels3 versus31 on repeated token1, and an explicit boundary-token repair; do not turn a rare conditional collision into an average-error explanation |
 | #148 paired deep numerical correction | Backlog after#147; separate budget required | Compare legacy and guarded XSA with matched seeds, gradients and sufficiently long learning curves; numerical fidelity alone is not improved generalization |
-| #145 residual training comparison | Backlog, separate cohort | Freeze matched seeds and sufficiently long budgets for ordinary residual, branch-scale control, source-faithful AttnRes and the separately labeled conditioned Q/K variant from#150; preserve source branches and disclose added parameters/compute |
+| #145 residual training comparison | In progress; fresh two-hour GPU ceiling authorized | Freeze matched seeds and sufficiently long budgets for ordinary residual, branch-scale control, source-faithful AttnRes and the separately labeled conditioned Q/K variant from#150; preserve source branches and disclose added parameters/compute |
 | #146 normalized depth-attention verification | Self-reviewed; eight Lean theorems rechecked;21-case synthetic report reproduces identically | Prove Q/K score and sensitivity bounds with explicit gain/temperature assumptions; reuse diff_gpt; run a known-solution synthetic task and inspect gradients before full-model changes; commit both repositories |
 | #150 depth-query coordinate repair | Self-reviewed; all30 cases complete and replay byte-identically;6/6 huge-query repairs versus0/6 controls | Preserve finite-epsilon Q/K outputs and complete Schedule-Free state under coordinate changes; prove identities and bounds, test all30 fresh/resumed cases, retain failures, then self-review |
 | #139 polynomial-resource construction | Backlog; core theory target | Route local arithmetic states and compose real source blocks; aim for fixed width at fixed prime with growing depth, otherwise explicit polynomial bounds; include precision and margins |
@@ -3027,3 +3027,23 @@ experiment's README.
 
 The explicit representation can itself be proved in Lean as a statement
 about two-hidden-layer ReLU networks on a finite grid.
+
+
+## Residual transformer comparison — task145, 2026-11-01
+
+Active target: determine whether the verified query-coordinate repair improves
+full-transformer generalization. The user authorized up to **two new GPU hours**,
+including profiling, compilation, evaluation and continuations, and requested
+early completion if generalization is stable. The old two-hour cohort is closed.
+Use Python3.15, Torch2.15, max-autotune and Schedule-Free AdamW only. Preserve
+Q/K normalization, centered XSA, its constant-prefix guard and all source
+Peri/RoPE/SwiGLU/tied-readout branches in every comparison.
+
+Implement ordinary addition, fixed branch scaling, paper key-only AttnRes,
+raw Q/K depth attention and complete-state conditioned Q/K depth attention.
+Freeze seeds, cases, data hashes, source hashes, ordered runtime allocation
+and validation stopping before learning. Reserve a disjoint final test set;
+never select a checkpoint or stop from its scores. A stable validation stop
+keeps the current endpoint. Report incomplete runs as budget-censored.
+Source equation/gradient checks and save/resume tests precede GPU learning.
+The same assistant will review the final commits and measured evidence.

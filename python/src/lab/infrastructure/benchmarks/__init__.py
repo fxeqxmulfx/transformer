@@ -36,11 +36,13 @@ from .paired import PairTask
 from .rotary import LabDivisionTask
 from .power_division import PowerDivisionTask
 from .modular_composition import ModularCompositionTask
+from ...domain.residual_transformer import ResidualPairs
+from .residual_pairs import ResidualPairsTask
 from .synthetic.training import SyntheticTask
 from .synthetic.tensor import TensorBasisTask
 from .text import TextTask
 
-TASKS = {ModularDivision: ModularTask, TinyShakespeare: TextTask, Synthetic: SyntheticTask,
+TASKS = {ResidualPairs: ResidualPairsTask, ModularDivision: ModularTask, TinyShakespeare: TextTask, Synthetic: SyntheticTask,
          MatchingOrders: MatchingTask, MatchingBindings: MatchingTask, ModularRegression: RegressionTask,
          LabDivision: LabDivisionTask, PowerDivision: PowerDivisionTask,
          ModularPairs: ModularCompositionTask, ModularChain: ModularCompositionTask}

@@ -21,6 +21,8 @@ from .peri_restart import restart
 from .tensor import TensorStack
 from .transformer import Transformer
 from .source_transformer import SourceTransformer
+from ...domain.residual_transformer import ResidualTransformer as ResidualSpec
+from .residual_transformer import ResidualTransformer
 
 
 def build_model(spec, vocab, seed):
@@ -31,6 +33,8 @@ def build_model(spec, vocab, seed):
     same spec and seed starts from bit-identical parameters.
     """
     torch.manual_seed(seed)
+    if isinstance(spec, ResidualSpec):
+        return ResidualTransformer(spec, vocab)
     if isinstance(spec, SourceSpec):
         return SourceTransformer(spec, vocab)
     if isinstance(spec, PeriRotate90Restart):
