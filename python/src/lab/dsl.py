@@ -5,7 +5,7 @@
     experiments = {"softmax": base, "sparsemax": substitute(base, Softmax, Sparsemax())}
 """
 
-from .domain.gradient_paths import BranchGates, LinearTransport, GradientTargets
+from .domain.gradient_paths import AccurateBranchGates, BranchGates, LinearTransport, GradientTargets
 from .domain.basis import basis
 from .domain.atomic import (AtomicColumns, AtomicMatching, BindingPricing, MatchingBindings,
                            MatchingOrders, OrderPricing, PairedMatching, SearchPricing)
@@ -43,7 +43,7 @@ from .domain.training import (AttentionDiagnostics, Budget, FlopBudget, Checkpoi
 
 __all__ = [
     # model
-    "BranchGates", "LinearTransport", "GradientTargets",
+    "AccurateBranchGates", "BranchGates", "LinearTransport", "GradientTargets",
     "Transformer", "TensorStack", "TensorGain", "AtomicMatching", "PairedMatching", "MLP", "Scalar", "OneHot", "Block", "Attention", "FFN", "XSA",
     "RMSNorm", "LayerNorm", "PreNorm", "PostNorm",
     "RoPE", "YaRN", "Sinusoidal", "NoPositions",

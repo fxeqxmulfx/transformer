@@ -42,6 +42,16 @@ class BranchGates(Model):
 
 
 @dataclass(frozen=True)
+class AccurateBranchGates(BranchGates):
+    """Task155: identical features/forward, FP64 radial/tangent RMS backward.
+
+    Source: Residual.radialRMS_hasDerivAt and the task155 VJP decomposition.
+    This comparison block is confined to the synthetic laboratory; the
+    production model does not receive a precision or architecture switch.
+    """
+
+
+@dataclass(frozen=True)
 class LinearTransport(Model):
     """Learn a scalar before D fixed residual branches c*x; matched output at init.
 

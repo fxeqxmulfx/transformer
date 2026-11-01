@@ -32,6 +32,7 @@ Python (the uv project in python/; an experiment is a folder under experiments/)
     report <experiment> [labels]  print what the runs recorded and what their records say, as JSON
     profile <experiment> <label>  train one run afresh under Scalene's CPU profiler; print where its time goes
     scaled-continuation <action>  freeze, run or report the fixed-scale continuation to 99%
+    rms-backward <action>         freeze, run or report the RMS gradient benchmark
 
 Together
     verify                        build, audit, index, forbidden, reference integrity and test
@@ -274,6 +275,11 @@ def scaled_continuation(arguments):
     execute(["uv", "run", "--locked", "python", str(directory / script), *extra], cwd=PYTHON)
 
 
+def rms_backward(arguments):
+    execute(["uv", "run", "--locked", "python", str(ROOT / "experiments/rms_backward/cohort.py"),
+             arguments.action], cwd=PYTHON)
+
+
 def clean(_):
     for directory in (PYTHON, ROOT / "optimizers", ROOT / "experiments", ROOT / "scripts"):
         for cache in directory.rglob("__pycache__"):
@@ -311,6 +317,9 @@ def main():
     command = tasks.add_parser("scaled-continuation")
     command.add_argument("action", choices=("freeze", "run", "report"))
     command.set_defaults(handler=scaled_continuation)
+    command = tasks.add_parser("rms-backward")
+    command.add_argument("action", choices=("freeze", "run", "report"))
+    command.set_defaults(handler=rms_backward)
     command = tasks.add_parser("test")
     command.add_argument("patterns", nargs="*")
     command.set_defaults(handler=test)

@@ -10,7 +10,8 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from ...domain.gradient_paths import BranchGates
+from ...domain.gradient_paths import AccurateBranchGates, BranchGates
+from .rms_backward import rms_norm
 
 
 class GatedBranches(nn.Module):
@@ -19,13 +20,16 @@ class GatedBranches(nn.Module):
         self.spec = spec
         self.logits = nn.Parameter(torch.zeros(spec.depth))
 
+    def normalize(self, value):
+        return F.rms_norm(value, (self.spec.width,), eps=self.spec.eps)
+
     def forward(self, inputs):
         gains = (2 * self.logits.sigmoid())[None, :, None]
         branches = self.spec.scale * inputs[:, 1:]
         if self.spec.placement == "before":
-            branches = F.rms_norm(gains * branches, (self.spec.width,), eps=self.spec.eps)
+            branches = self.normalize(gains * branches)
         else:
-            branches = gains * F.rms_norm(branches, (self.spec.width,), eps=self.spec.eps)
+            branches = gains * self.normalize(branches)
         return inputs[:, 0] + branches.sum(dim=1)
 
     def coefficients(self):
@@ -34,6 +38,13 @@ class GatedBranches(nn.Module):
             amplitude = gain * self.spec.scale
             return amplitude / (amplitude.square() + self.spec.eps).sqrt()
         return gain * (self.spec.scale / (self.spec.scale ** 2 + self.spec.eps) ** .5)
+
+
+class AccurateGatedBranches(GatedBranches):
+    """Identical forward with a cancellation-resistant local RMS VJP."""
+
+    def normalize(self, value):
+        return rms_norm(value, self.spec.width, self.spec.eps)
 
 
 class ResidualTransport(nn.Module):
@@ -54,4 +65,6 @@ class ResidualTransport(nn.Module):
 
 
 def build(spec):
+    if isinstance(spec, AccurateBranchGates):
+        return AccurateGatedBranches(spec)
     return GatedBranches(spec) if isinstance(spec, BranchGates) else ResidualTransport(spec)

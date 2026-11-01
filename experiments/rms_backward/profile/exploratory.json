@@ -1,0 +1,48 @@
+{
+  "torch": "2.15.0+cu132",
+  "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "cases": [
+    {
+      "variant": "native",
+      "preparation_seconds": 49.57361935800145,
+      "step_seconds": [
+        0.0062823749199742455,
+        0.005827356990048429,
+        0.0058277469900349385,
+        0.005827864300008514,
+        0.005827491659947555
+      ],
+      "peak_bytes": 1832448,
+      "finite_gradients": true
+    },
+    {
+      "variant": "accurate",
+      "preparation_seconds": 41.275576717998774,
+      "step_seconds": [
+        0.006586398449944682,
+        0.006333608559943968,
+        0.006332209350002813,
+        0.006333595260002767,
+        0.006332801929966081
+      ],
+      "peak_bytes": 1901568,
+      "finite_gradients": true
+    }
+  ],
+  "model_sha256": {
+    "__init__.py": "b8583ecc51bae8eb1cc2009627b9d3be4c8f26bbd11f34d32841410d133522f4",
+    "attention_residual.py": "27016eaed58e5e41cb704f05c1ae14d3f2937c65c68e02d073782e30b053c599",
+    "block.py": "b683f18842786110a7cb23ae650c242b055d5a696d5578427f8c4ffadb41b5b3",
+    "centered_xsa.py": "5a40e578608ec16c565966c03dc7a5f2cd9a0ad026af9bef493f4e0dd6e4ab4d",
+    "conditioned_attention_residual.py": "06df098e6aebb2a59d554aecc5e501afa53370bea2b0cb6a8dd0c524fe74dc24",
+    "engine.py": "de3a0a6f130e790959067a982bd4be69a2be3aabdc952f838639005f1fdec43a",
+    "feed_forward.py": "5177da621997e1855adf4268839204c09870c586b96d2d8704ced3333847abbc",
+    "gpt.py": "ddccf63c5aef0eadccc2c95f8f5b1e65e81165f9198c31a76e69fe344a4641f5",
+    "kv_cache.py": "7e60cda6058b6e2b3af460303ee5fb482d99362b82145f6feaf2affec193d895",
+    "mha.py": "cba3160117fdb500e8252ee81678e30036a35bea12f4560a88f1b8644d5f4f82",
+    "residual_gpt.py": "da9380aa47d78692877ed4b419ea644c872786a5086ba6c3f0dbb72e50bd0bf7",
+    "rms_norm.py": "9849661932ddbbc26e31c64389f012ea6d5db2b91887426125cb9d81a74c2aca",
+    "rope.py": "23592356d7f268405938ad28585a1e34c1b17655ab73f59b0e59c4ea961128ba"
+  },
+  "context": "Exploratory ordinary GPT forward/backward profile; lab suite was running concurrently. Batch 256, context 2, width 64, 4 layers/heads; FP32, no optimizer updates. Five warmed batches of 100 passes, five prep passes including compilation. Do not treat this as a strict isolated throughput comparison."
+}

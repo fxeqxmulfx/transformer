@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 import torch
 
-from lab.dsl import (BranchGates, LinearTransport, GradientTargets, Experiment, ScheduleFreeAdamW,
+from lab.dsl import (AccurateBranchGates, BranchGates, LinearTransport, GradientTargets, Experiment, ScheduleFreeAdamW,
                      Schedule, Budget, Seeds, Evaluate, Checkpoint, Eager, MaxAutotune, Diagnostics, describe, swap)
 from lab.infrastructure.benchmarks import build_task
 from lab.infrastructure.engine.gradient_paths import GradientEagerStepper, GradientCompiledStepper
@@ -125,7 +125,11 @@ class GradientPathTests(unittest.TestCase):
     def test_compiled_complete_state_resume_and_sealed_test(self):
         self.check_resume(MaxAutotune(device="cpu"), GradientCompiledStepper)
 
-    def check_resume(self, execution, stepper):
+    def test_accurate_compiled_complete_state_resume_and_sealed_test(self):
+        self.check_resume(MaxAutotune(device="cpu"), GradientCompiledStepper,
+                          AccurateBranchGates(depth=8, placement="before"))
+
+    def check_resume(self, execution, stepper, model=BranchGates(depth=8)):
         def train(path, spec):
             run = RunDirectory(path)
             run.begin(describe(spec), {}, "independent resume test")
@@ -139,7 +143,7 @@ class GradientPathTests(unittest.TestCase):
             return run, trainer
 
         with tempfile.TemporaryDirectory() as directory:
-            spec = swap(recipe(BranchGates(depth=8)), "execution", execution)
+            spec = swap(recipe(model), "execution", execution)
             uninterrupted, _ = train(directory+'/whole', spec)
             train(directory+'/resumed', swap(spec, "budget.updates", 4))
             resumed, trainer = train(directory+'/resumed', spec)
