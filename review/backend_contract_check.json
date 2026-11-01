@@ -1,0 +1,481 @@
+{
+  "source_commit": "b98c665bd8faa30729fd368d257a13b6d58712a1",
+  "source_hashes": {
+    "gpt.py": "112502e5d16d7502929d14e7db9feb24ecd77bc04448aeba5b2a3f4cd216047e",
+    "block.py": "a73f554b9ce698794619409cdca39b60260c2de9ee102af8d619eef7dec50b80",
+    "mha.py": "e4114f20b84388e48e7a1a9364a34fbd7828c3f7f3a1817bbe31b9f352acce36",
+    "feed_forward.py": "5177da621997e1855adf4268839204c09870c586b96d2d8704ced3333847abbc",
+    "rope.py": "23592356d7f268405938ad28585a1e34c1b17655ab73f59b0e59c4ea961128ba"
+  },
+  "python": "3.15.2",
+  "torch": "2.15.0+cu132",
+  "cuda": "13.2",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "scripts": {
+    "backend_contract_check.py": "190265ce66e0f6b5eaa1852e29b402cb032b10893454b3c9f9df760260f8e2f8",
+    "backend_contract_arithmetic.py": "f921f7f7760aaf9a28d4fb2a11b6748c63340e234c1541f3ccd0b05ddff705b0"
+  },
+  "normalization": {
+    "rms_epsilon": "1/8388608",
+    "l2_epsilon": "1e-12"
+  },
+  "rope": {
+    "head_dim": 4,
+    "position": 1,
+    "base": 10000,
+    "table_compute_dtype": "torch.float32",
+    "real_phases": [
+      "1",
+      "1/100"
+    ]
+  },
+  "scope": "Exact rational premise checks for finite primitive fixtures; not universal backend or whole-model certification.",
+  "cases": [
+    {
+      "device": "cpu",
+      "dtype": "torch.float32",
+      "compile": "eager",
+      "sdpa_backend": "MATH",
+      "outputs": {
+        "rms": [
+          0.3651483654975891,
+          0.7302967309951782,
+          1.095445156097412,
+          1.4605934619903564
+        ],
+        "l2": [
+          0.18257418274879456,
+          0.3651483654975891,
+          0.5477225184440613,
+          0.7302967309951782
+        ],
+        "silu": [
+          0.3112296760082245
+        ],
+        "sdpa": [
+          0.3775406777858734,
+          0.622459352016449,
+          0.0,
+          0.0
+        ],
+        "cos": [
+          0.5403023362159729,
+          0.9999499917030334
+        ],
+        "sin": [
+          0.8414709568023682,
+          0.009999833069741726
+        ],
+        "matrix": [
+          1.25,
+          7.375
+        ]
+      },
+      "checks": {
+        "rms": {
+          "maximum_exact_residual": "37763/819200000000",
+          "per_coordinate_allowance": "1/1000000",
+          "exact_values": [
+            "6126173/16777216",
+            "6126173/8388608",
+            "2297315/2097152",
+            "6126173/4194304"
+          ]
+        },
+        "l2": {
+          "maximum_exact_residual": "337877/6553600000000",
+          "per_coordinate_allowance": "1/1000000",
+          "exact_values": [
+            "6126173/33554432",
+            "6126173/16777216",
+            "9189259/16777216",
+            "6126173/8388608"
+          ]
+        },
+        "silu": {
+          "maximum_exact_residual": "45862589235/4406812576298565632",
+          "per_coordinate_allowance": "1/1000000",
+          "exact_values": [
+            "10443135/33554432"
+          ]
+        },
+        "sdpa": {
+          "maximum_exact_residual": "45862589235/2203406288149282816",
+          "per_coordinate_allowance": "1/1000000",
+          "exact_values": [
+            "12668163/33554432",
+            "10443135/16777216",
+            "0",
+            "0"
+          ]
+        },
+        "cos": {
+          "maximum_exact_residual": "7711/237817036800",
+          "per_coordinate_allowance": "1/1000000",
+          "exact_values": [
+            "9064769/16777216",
+            "16776377/16777216"
+          ]
+        },
+        "sin": {
+          "maximum_exact_residual": "18211/653996851200",
+          "per_coordinate_allowance": "1/1000000",
+          "exact_values": [
+            "3529385/4194304",
+            "10737239/1073741824"
+          ]
+        },
+        "matrix": {
+          "maximum_exact_residual": "0",
+          "per_coordinate_allowance": "0",
+          "exact_values": [
+            "5/4",
+            "59/8"
+          ]
+        }
+      },
+      "observed_events": [
+        "aten::_fused_rms_norm",
+        "aten::_reshape_alias",
+        "aten::_safe_softmax",
+        "aten::_scaled_dot_product_attention_math",
+        "aten::_softmax",
+        "aten::_to_copy",
+        "aten::_unsafe_view",
+        "aten::add_",
+        "aten::addmv_",
+        "aten::all",
+        "aten::arange",
+        "aten::as_strided",
+        "aten::bmm",
+        "aten::clamp_min",
+        "aten::copy_",
+        "aten::cos",
+        "aten::div",
+        "aten::div_",
+        "aten::empty",
+        "aten::empty_strided",
+        "aten::expand",
+        "aten::expand_as",
+        "aten::fill_",
+        "aten::isneginf",
+        "aten::linalg_vector_norm",
+        "aten::matmul",
+        "aten::mean",
+        "aten::mul",
+        "aten::mv",
+        "aten::neg",
+        "aten::ones",
+        "aten::pow",
+        "aten::reshape",
+        "aten::resize_",
+        "aten::resolve_conj",
+        "aten::result_type",
+        "aten::rms_norm",
+        "aten::rsqrt",
+        "aten::scalar_tensor",
+        "aten::scaled_dot_product_attention",
+        "aten::select",
+        "aten::silu",
+        "aten::sin",
+        "aten::softmax",
+        "aten::sum",
+        "aten::to",
+        "aten::transpose",
+        "aten::tril",
+        "aten::type_as",
+        "aten::view",
+        "aten::where"
+      ],
+      "reduction_order": "backend-managed; no sequential-reduction premise is used"
+    },
+    {
+      "device": "cpu",
+      "dtype": "torch.float64",
+      "compile": "eager",
+      "sdpa_backend": "MATH",
+      "outputs": {
+        "rms": [
+          0.3651483687681722,
+          0.7302967375363444,
+          1.0954451063045165,
+          1.4605934750726888
+        ],
+        "l2": [
+          0.18257418583505536,
+          0.3651483716701107,
+          0.5477225575051661,
+          0.7302967433402214
+        ],
+        "silu": [
+          0.3112296656009273
+        ],
+        "sdpa": [
+          0.37754066879814546,
+          0.6224593312018547,
+          0.0,
+          0.0
+        ],
+        "cos": [
+          0.5403023362159729,
+          0.9999499917030334
+        ],
+        "sin": [
+          0.8414709568023682,
+          0.009999833069741726
+        ],
+        "matrix": [
+          1.25,
+          7.375
+        ]
+      },
+      "checks": {
+        "rms": {
+          "maximum_exact_residual": "8668217578893/1759218604441600000000",
+          "per_coordinate_allowance": "1/1000000",
+          "exact_values": [
+            "6577928230077139/18014398509481984",
+            "6577928230077139/9007199254740992",
+            "2466723086278927/2251799813685248",
+            "6577928230077139/4503599627370496"
+          ]
+        },
+        "l2": {
+          "maximum_exact_residual": "7327048100429/439804651110400000000",
+          "per_coordinate_allowance": "1/1000000",
+          "exact_values": [
+            "822241035294227/4503599627370496",
+            "822241035294227/2251799813685248",
+            "2466723105882681/4503599627370496",
+            "822241035294227/1125899906842624"
+          ]
+        },
+        "silu": {
+          "maximum_exact_residual": "224900745319779/2365889486850480515143696384",
+          "per_coordinate_allowance": "1/1000000",
+          "exact_values": [
+            "5606615224107921/18014398509481984"
+          ]
+        },
+        "sdpa": {
+          "maximum_exact_residual": "449932823888659/2365889486850480515143696384",
+          "per_coordinate_allowance": "1/1000000",
+          "exact_values": [
+            "6801168061266143/18014398509481984",
+            "2803307612053961/4503599627370496",
+            "0",
+            "0"
+          ]
+        },
+        "cos": {
+          "maximum_exact_residual": "7711/237817036800",
+          "per_coordinate_allowance": "1/1000000",
+          "exact_values": [
+            "9064769/16777216",
+            "16776377/16777216"
+          ]
+        },
+        "sin": {
+          "maximum_exact_residual": "18211/653996851200",
+          "per_coordinate_allowance": "1/1000000",
+          "exact_values": [
+            "3529385/4194304",
+            "10737239/1073741824"
+          ]
+        },
+        "matrix": {
+          "maximum_exact_residual": "0",
+          "per_coordinate_allowance": "0",
+          "exact_values": [
+            "5/4",
+            "59/8"
+          ]
+        }
+      },
+      "observed_events": [
+        "aten::_fused_rms_norm",
+        "aten::_reshape_alias",
+        "aten::_safe_softmax",
+        "aten::_scaled_dot_product_attention_math",
+        "aten::_softmax",
+        "aten::_to_copy",
+        "aten::_unsafe_view",
+        "aten::add_",
+        "aten::addmv_",
+        "aten::all",
+        "aten::arange",
+        "aten::as_strided",
+        "aten::bmm",
+        "aten::clamp_min",
+        "aten::copy_",
+        "aten::cos",
+        "aten::div",
+        "aten::div_",
+        "aten::empty",
+        "aten::empty_strided",
+        "aten::expand",
+        "aten::expand_as",
+        "aten::fill_",
+        "aten::isneginf",
+        "aten::linalg_vector_norm",
+        "aten::matmul",
+        "aten::mean",
+        "aten::mul",
+        "aten::mv",
+        "aten::neg",
+        "aten::ones",
+        "aten::pow",
+        "aten::reshape",
+        "aten::resize_",
+        "aten::resolve_conj",
+        "aten::result_type",
+        "aten::rms_norm",
+        "aten::rsqrt",
+        "aten::scalar_tensor",
+        "aten::scaled_dot_product_attention",
+        "aten::select",
+        "aten::silu",
+        "aten::sin",
+        "aten::softmax",
+        "aten::sum",
+        "aten::to",
+        "aten::transpose",
+        "aten::tril",
+        "aten::type_as",
+        "aten::view",
+        "aten::where"
+      ],
+      "reduction_order": "backend-managed; no sequential-reduction premise is used"
+    },
+    {
+      "device": "cuda",
+      "dtype": "torch.float32",
+      "compile": "max-autotune/fullgraph/static",
+      "sdpa_backend": "MATH",
+      "outputs": {
+        "rms": [
+          0.3651483654975891,
+          0.7302967309951782,
+          1.095445156097412,
+          1.4605934619903564
+        ],
+        "l2": [
+          0.18257418274879456,
+          0.3651483654975891,
+          0.547722578048706,
+          0.7302967309951782
+        ],
+        "silu": [
+          0.3112296760082245
+        ],
+        "sdpa": [
+          0.3775406777858734,
+          0.622459352016449,
+          0.0,
+          0.0
+        ],
+        "cos": [
+          0.5403022766113281,
+          0.9999499917030334
+        ],
+        "sin": [
+          0.8414710164070129,
+          0.009999833069741726
+        ],
+        "matrix": [
+          1.25,
+          7.375
+        ]
+      },
+      "checks": {
+        "rms": {
+          "maximum_exact_residual": "37763/819200000000",
+          "per_coordinate_allowance": "1/1000000",
+          "exact_values": [
+            "6126173/16777216",
+            "6126173/8388608",
+            "2297315/2097152",
+            "6126173/4194304"
+          ]
+        },
+        "l2": {
+          "maximum_exact_residual": "95043/3276800000000",
+          "per_coordinate_allowance": "1/1000000",
+          "exact_values": [
+            "6126173/33554432",
+            "6126173/16777216",
+            "2297315/4194304",
+            "6126173/8388608"
+          ]
+        },
+        "silu": {
+          "maximum_exact_residual": "45862589235/4406812576298565632",
+          "per_coordinate_allowance": "1/1000000",
+          "exact_values": [
+            "10443135/33554432"
+          ]
+        },
+        "sdpa": {
+          "maximum_exact_residual": "45862589235/2203406288149282816",
+          "per_coordinate_allowance": "1/1000000",
+          "exact_values": [
+            "12668163/33554432",
+            "10443135/16777216",
+            "0",
+            "0"
+          ]
+        },
+        "cos": {
+          "maximum_exact_residual": "101/3715891200",
+          "per_coordinate_allowance": "1/1000000",
+          "exact_values": [
+            "141637/262144",
+            "16776377/16777216"
+          ]
+        },
+        "sin": {
+          "maximum_exact_residual": "83081/2615987404800",
+          "per_coordinate_allowance": "1/1000000",
+          "exact_values": [
+            "14117541/16777216",
+            "10737239/1073741824"
+          ]
+        },
+        "matrix": {
+          "maximum_exact_residual": "0",
+          "per_coordinate_allowance": "0",
+          "exact_values": [
+            "5/4",
+            "59/8"
+          ]
+        }
+      },
+      "observed_events": [
+        "## Call CompiledFxGraph ftbtbjoi6frfxxlufgzfdbqiipmn5ulc5wenf3tnbqaje7niblon ##",
+        "AOTDispatcher Runtime Wrapper Prologue",
+        "CUDAGraphNode.record",
+        "CUDAGraphNode.record (dynamo_timed)",
+        "CUDAGraphNode.record_data: is_backward=False, compile_id=0/0",
+        "Pregraph bytecode",
+        "PythonDispatchMode",
+        "Torch-Compiled Region: 0/0",
+        "TorchDynamo Cache Lookup",
+        "aten::_debug_has_internal_overlap",
+        "aten::_foreach_copy_",
+        "aten::clone",
+        "aten::copy_",
+        "aten::empty_strided",
+        "aten::mm",
+        "triton_poi_fused__fused_rms_norm_clamp_min_div_expand_linalg_vector_norm_0",
+        "triton_poi_fused__safe_softmax_add_bmm_ones_prepare_softmax_online_scalar_tensor_tril_view_where_4",
+        "triton_poi_fused_arange_cos_div_neg_pow_5",
+        "triton_poi_fused_arange_div_neg_pow_sin_6",
+        "triton_poi_fused_mul_2",
+        "triton_poi_fused_mul_transpose_3",
+        "triton_poi_fused_mv_7",
+        "triton_poi_fused_silu_1"
+      ],
+      "reduction_order": "backend-managed; no sequential-reduction premise is used"
+    }
+  ]
+}

@@ -10,6 +10,8 @@ Lean
     audit                         axioms of every Transformer.* declaration; `rests` must be 0
     index                         regenerate INDEX.md from src/ and the build
     forbidden                     search src/ for native_decide, axioms and disabled linters
+    backend-contracts             capture and check finite CPU/CUDA primitive certificates
+    backend-certificates          export captured binary outputs to checked Lean proof sources
 
 Python (the uv project in python/; an experiment is a folder under experiments/)
     setup                         install the locked environment
@@ -90,6 +92,14 @@ def forbidden(_):
     if found.stdout:
         sys.exit("Forbidden constructs in src/:\n" + found.stdout)
     print("src/ has no native_decide, axiom or disabled linter")
+
+
+def backend_contracts(_):
+    execute(["uv", "run", "--locked", "python", str(ROOT / "review/backend_contract_check.py")], cwd=PYTHON)
+
+
+def backend_certificates(_):
+    execute([sys.executable, "review/backend_contract_lean.py"])
 
 
 def setup(_):
@@ -248,6 +258,8 @@ def main():
     command.add_argument("--online", action="store_true", help="Fetch missing package metadata")
     command.set_defaults(handler=lock)
     tasks.add_parser("optimizer-parity").set_defaults(handler=optimizer_parity)
+    tasks.add_parser("backend-contracts").set_defaults(handler=backend_contracts)
+    tasks.add_parser("backend-certificates").set_defaults(handler=backend_certificates)
     tasks.add_parser("optimizer-lint").set_defaults(handler=optimizer_lint)
     command = tasks.add_parser("optimizer-profile")
     command.add_argument("--device", choices=("cpu", "cuda"), default="cpu")

@@ -13,6 +13,7 @@ public import Transformer.SequenceModel.Resources
 public import Transformer.SequenceModel.Attention.Stability
 public import Transformer.SequenceModel.Attention.Execution
 public import Transformer.SequenceModel.Attention.Spectral
+public import Transformer.SequenceModel.Attention.Backend
 
 /-!
 # General positional inputs and normalized multi-variable attention
@@ -60,4 +61,9 @@ Under explicit numerical certificates, a fixed RoPE-aware counting family
 agrees with every executed class decision; see *Unified spectral transformer
 certificate*, J1--J7. This uses ideal feature recovery and finite interpolation,
 and does not establish optimizer convergence or efficient arithmetic circuits.
+Concrete backend certificates in *Concrete backend contracts*, K1--K6,
+derive primitive error bounds from algebraic and finite polynomial checks.
+Captured CPU/CUDA outputs satisfy them by ordinary Lean proofs; this certifies
+finite primitive cases, without asserting a complete hardware-model trace or
+uniform guarantees over all kernel inputs.
 -/

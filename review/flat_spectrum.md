@@ -4484,3 +4484,204 @@ float64, 75 allocations of 8519680 bytes each). Schedule-Free AdamW passes;
 the overall Python command exits unsuccessfully because of those existing
 Muon failures. Logs, axiom checks and the source crosswalk are retained
 in `.kanban/artifacts/131/`.
+
+## Concrete backend contracts
+
+K1--K6 replace several opaque primitive-error assumptions with algebraic
+and polynomial checks and prove those checks for actual captured PyTorch
+outputs. This is a finite backend conformance result: the captured CPU and
+CUDA numbers have ordinary Lean proofs of their local error bounds. It
+does not establish `ModelAccurate` for a complete captured transformer,
+every checkpoint, or every future execution of these kernels. That
+composition is tracked separately in task #135.
+
+### K1. Certify normalization scales without trusting sqrt
+
+For a nonnegative scalar t,
+
+\[
+ |t-1|\le |t^2-1|.
+\]
+
+Let x be an operation's actual input, z its stored output, b>0 its exact
+normalizing denominator, and a>=0 a rational certificate scale. Suppose
+
+\[
+ |a^2b^2-1|\le\rho,\qquad
+ \|z-ax\|\le\beta,\qquad \|x/b\|\le B.
+\]
+
+`normalization_residual` proves
+
+\[
+ \|z-x/b\|\le\beta+\rho B.
+\]
+
+The proof factors the scale error through the normalized vector. The scale
+a is a certificate witness; it need not be the hidden intermediate used
+by a fused kernel. The product residual is checked at the stored input and
+output. No sqrt/rsqrt accuracy claim about a library or device is assumed.
+
+### K2. Source RMSNorm and clipped L2
+
+For RMSNorm at width d and eps>0,
+
+\[
+ b^2=(\|x\|^2+d\,\mathrm{eps})/d,\qquad B=\sqrt d.
+\]
+
+Thus `rms_residual_error` checks the polynomial residual
+`abs(a^2*(norm(x)^2+d*eps)/d-1)` and the observed multiplication residual.
+Its local error bound is beta+rho*sqrt(d), retaining the actual epsilon.
+It does not multiply this local residual by inverse sqrt(eps). This is a
+local execution certificate, not a replacement for the moving-input
+Lipschitz bound in C6.
+
+For clipped L2, b=max(norm(x),xeps)>0 and B=1. `l2_residual_error` gives
+beta+rho, keeping the clipping boundary. On a known side of the boundary,
+b^2 is either the exact sum of coordinate squares or xeps^2, so the scale
+check is rational for rational stored inputs. For any width, a coordinate
+product-residual bound eta gives beta=sqrt(d)*eta by B1.
+
+### K3. Exponential and SiLU certificates
+
+Define the finite polynomial P_n(x)=sum_{m<n} x^m/m!. For abs(x)<=1 and
+n>0, Mathlib's proved exponential-series remainder yields
+
+\[
+ |\exp x-P_n(x)|\le |x|^n\frac{n+1}{n!\,n}.
+\]
+
+`exponential_error` adds a checked rational residual between a witness e
+and P_n(x). For SiLU, check e>=0, an exponential certificate
+abs(e-exp(-x))<=E, and the rational division residual
+abs(z-x/(1+e))<=beta. `silu_residual_error` gives
+
+\[
+ |z-\mathrm{SiLU}(x)|\le\beta+|x|E.
+\]
+
+`silu_polynomial_error` composes these checks, so neither exp nor SiLU
+accuracy is assumed. This polynomial certificate has an explicit input
+range and order; it is not a claim about the accuracy of an arbitrary
+CUDA exponential over the whole real line.
+
+### K4. Source causal SDPA from checked masses and a reduction residual
+
+Let a_j be approximate masses with A=sum a_j>0 and b_j the exact
+nonnegative masses with B=sum b_j>0. If sum abs(a_j-b_j)<=E,
+`normalized_weights_error` proves
+
+\[
+ \sum_j\left|a_j/A-b_j/B\right|\le 2E/A.
+\]
+
+For stored values with norm at most M, a checked residual beta between
+the stored output and the rational weighted sum sum_j (a_j/A)v_j gives
+`average_residual_error`:
+
+\[
+ \left\|z-\sum_j(b_j/B)v_j\right\|\le\beta+(2E/A)M.
+\]
+
+`causalMass` retains exactly the original visible-prefix mask, including
+the current token. `causalMass_weight` identifies its normalized masses
+with the existing source `causalWeight`. `causal_average_residual` therefore
+fills the SDPA-average field of `Execution.AttentionAccurate` directly.
+Polynomial witnesses supply mass errors; the reduction residual compares
+the actual stored output with an exact rational sum. A fused kernel need
+not expose its hidden softmax weights or use the sequential reduction
+order of C3's different adapter. These checks still have to be discharged
+at each operation in a complete model trace.
+
+### K5. Stored RoPE coefficients
+
+The complex exponential polynomial at ix supplies a common real/imaginary
+reference. If abs(x)/(n+1)<=1/2, its proved norm remainder is
+
+\[
+ \left\|e^{ix}-\sum_{m<n}(ix)^m/m!\right\|
+ \le 2|x|^n/n!.
+\]
+
+`rotation_polynomial_error` transfers this to cosine and sine separately.
+`stored_rotation_error` adds the rational residual of each stored table
+entry. It assumes neither unit-circle identities for those entries nor
+correctness of a second floating-point trigonometric implementation.
+`head4_phases` proves that the actual base-10000 source frequencies at head
+width four are 1 and 1/100. The captured position-one checks therefore
+include frequency computation and table generation against exact source
+phases, not against reused rounded tables.
+
+### K6. Identified executions and exact-value Lean replay
+
+`./run.py backend-contracts` captures seven fixed operation sites using
+Python 3.15.2, PyTorch 2.15.0+cu132 and CUDA 13.2 on the RTX 3050 Laptop GPU:
+CPU float32, CPU float64, and CUDA float32 compiled with
+`max-autotune/fullgraph/static`. SDPA explicitly selects the MATH backend;
+matrix float32 precision is IEEE, with TF32 disabled. Kernel event names
+are retained in `review/backend_contract_check.json`. The CUDA run records
+fused Triton RMS/L2, softmax, RoPE and SiLU kernels. The GPU reports too few
+SMs for GEMM max-autotuning, so the requested compile mode uses its fallback
+there. Reduction order remains backend-managed and is not assumed by the
+output-residual certificates.
+
+The RMS and L2 input is [1,2,3,4]. All three cases use RMS eps=2^-23 and
+L2 eps=10^-12; in particular, the float64 comparison intentionally uses
+the same RMS epsilon rather than the source's float64 default. SiLU uses
+input 1/2. The last row of the two-token causal SDPA has actual scaled
+scores [0,1/2] and distinct unit value vectors. RoPE uses the source
+float32 table-construction dtype, even in the float64 case. The matrix
+fixture is a nonzero 2-by-4 dyadic product.
+
+`backend_contract_arithmetic.py` decodes every finite recorded binary
+value exactly with rational arithmetic. The normalizer scales, order-12
+polynomials, coordinate boxes of radius 10^-6 and exact matrix result are
+fixed independently of those outputs. It rejects nonfinite values, changed
+operation sets, wrong shapes and any violated check. All 21 site checks
+pass. The rational exponential witness at -1/2 is
+49583642701/81749606400; its analytic error is proved below 10^-10.
+
+`./run.py backend-certificates` exports the actual binary values as rational
+literals to `CapturedCPU32`, `CapturedCPU64` and `CapturedCUDA32`. Their
+18 named theorems prove the following bounds with ordinary Lean tactics:
+
+| Captured operation | Proved error bound |
+| --- | --- |
+| RMSNorm | Euclidean error <= 4e-6 |
+| Clipped L2 | Euclidean error <= 3e-6 |
+| SiLU at 1/2 | absolute error <= 2e-6 |
+| Two-token causal SDPA | Euclidean error <= 3e-6 |
+| Each source RoPE cosine/sine | absolute error <= 2e-6 |
+| Dyadic matrix product | exact equality |
+
+The tests also require the exported Lean literals to equal the frozen
+capture, check capture/checker hashes and source hashes, and reject corrupted
+coordinates, invalid layouts, missing sites and nonfinite results. The
+analytic consequences are proved in Lean rather than inferred from
+agreement with a higher-precision floating-point calculation.
+
+Task #132 supplies these concrete primitive certificates. The remaining
+task #135 is to collect and discharge them throughout one complete,
+nontrivial transformer trace and check the derived model budget against
+its margin. The fixed probes above do not prove that a whole model satisfies
+`ModelAccurate`, that the bound is useful for the constructed powered-division
+weights, or that every future invocation of these kernels is accurate.
+Learning conditions (#133) and exact-RoPE depth/width lower bounds (#134)
+remain separate. No training or optimizer implementation changes here.
+
+Validation: the full Lean build passes (13217 jobs). Individual axiom checks
+cover all 42 new public theorems and use only propext, Classical.choice and
+Quot.sound. The global audit reports 36 unchanged sorry, zero results resting
+on a sorry and zero extra axioms. The regenerated index has 4120 modules and
+21185 theorems, with zero vacuous results and zero placeholders; forbidden
+and whitespace checks pass. All new modules build without warnings.
+
+The 424-test lab suite passes with three skips. A final seven-test certificate
+run also passes, including the export-consistency test added after full-suite
+discovery. The 104-test optimizer suite reproduces the two existing
+ScheduleFreeMuon allocation failures (float32/float64, 75 allocations of
+8519680 bytes each); Schedule-Free AdamW passes. Consequently the overall
+Python command exits unsuccessfully, matching the baseline recorded for
+#130 and #131. Logs and the statement/source crosswalk are retained in
+`.kanban/artifacts/132/`.
