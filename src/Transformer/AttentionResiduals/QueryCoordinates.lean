@@ -13,6 +13,7 @@ QC1--QC5. This is a correction to the proposed Q/K variant, not an equation
 attributed to the key-only AttnRes paper. Physical query `q = s • u` uses
 positive coordinate scale `s`. Query RMS epsilon must become `eps / s²`;
 simply renormalizing the stored query changes the finite-epsilon function.
+The coordinate scale is metadata, not a learned normalization gain or bias.
 Keys keep their original epsilon. The chain rule gives ordinary coordinate
 derivatives, without replacing or detaching the normalization backward.
 These are real identities; floating-point preservation is tested separately.

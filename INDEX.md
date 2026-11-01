@@ -2741,19 +2741,19 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`queryRMS_rechart`](src/Transformer/AttentionResiduals/QueryConditioning.lean#L124) | theorem | proved |
 | [`conditioned_queryRMS_bound`](src/Transformer/AttentionResiduals/QueryConditioning.lean#L132) | theorem | proved |
 
-**[Transformer.AttentionResiduals.QueryCoordinates](src/Transformer/AttentionResiduals/QueryCoordinates.lean)** — 149 lines
+**[Transformer.AttentionResiduals.QueryCoordinates](src/Transformer/AttentionResiduals/QueryCoordinates.lean)** — 150 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`rmsNormEps_scaled`](src/Transformer/AttentionResiduals/QueryCoordinates.lean#L31) | theorem | proved |
-| [`rmsNormEps_coordinates`](src/Transformer/AttentionResiduals/QueryCoordinates.lean#L46) | theorem | proved |
-| [`coordinateDepthScore`](src/Transformer/AttentionResiduals/QueryCoordinates.lean#L58) | def |  |
-| [`coordinateDepthScore_eq`](src/Transformer/AttentionResiduals/QueryCoordinates.lean#L65) | theorem | proved |
-| [`coordinateDepthScore_rechart`](src/Transformer/AttentionResiduals/QueryCoordinates.lean#L74) | theorem | proved |
-| [`coordinateDepthScore_bound`](src/Transformer/AttentionResiduals/QueryCoordinates.lean#L88) | theorem | proved |
-| [`coordinateAttentionResidual`](src/Transformer/AttentionResiduals/QueryCoordinates.lean#L96) | def |  |
-| [`coordinateAttentionResidual_rechart`](src/Transformer/AttentionResiduals/QueryCoordinates.lean#L102) | theorem | proved |
-| [`query_coordinate_hasFDerivAt`](src/Transformer/AttentionResiduals/QueryCoordinates.lean#L115) | theorem | proved |
+| [`rmsNormEps_scaled`](src/Transformer/AttentionResiduals/QueryCoordinates.lean#L32) | theorem | proved |
+| [`rmsNormEps_coordinates`](src/Transformer/AttentionResiduals/QueryCoordinates.lean#L47) | theorem | proved |
+| [`coordinateDepthScore`](src/Transformer/AttentionResiduals/QueryCoordinates.lean#L59) | def |  |
+| [`coordinateDepthScore_eq`](src/Transformer/AttentionResiduals/QueryCoordinates.lean#L66) | theorem | proved |
+| [`coordinateDepthScore_rechart`](src/Transformer/AttentionResiduals/QueryCoordinates.lean#L75) | theorem | proved |
+| [`coordinateDepthScore_bound`](src/Transformer/AttentionResiduals/QueryCoordinates.lean#L89) | theorem | proved |
+| [`coordinateAttentionResidual`](src/Transformer/AttentionResiduals/QueryCoordinates.lean#L97) | def |  |
+| [`coordinateAttentionResidual_rechart`](src/Transformer/AttentionResiduals/QueryCoordinates.lean#L103) | theorem | proved |
+| [`query_coordinate_hasFDerivAt`](src/Transformer/AttentionResiduals/QueryCoordinates.lean#L116) | theorem | proved |
 
 **[Transformer.AttentionResiduals.Section3_Attention](src/Transformer/AttentionResiduals/Section3_Attention.lean)** — 155 lines
 

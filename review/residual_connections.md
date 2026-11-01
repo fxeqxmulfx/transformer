@@ -450,7 +450,7 @@ only propext, Classical.choice and Quot.sound. The full build has13264 jobs;
 audit retains36 existing sorry, zero dependent results and zero extra axioms.
 INDEX has4167 modules and21407 theorems, zero vacuous/placeholder statements;
 forbidden checks pass. The affected diff_gpt suite passes166 tests, with one
-existing skip. Three compiled FP32 repetitions agree with independent FP64 to
+existing skip. Three compiled FP32 repetitions agree with a separate FP64 execution to
 2.67e-7 in output and8.28e-9 in query gradient. The state kernel compiles but
 Torch skips CUDA graph capture for its mutated optimizer buffers.
 
@@ -461,3 +461,41 @@ unchanged root source reproduces both failures in the targeted allocation test;
 there are no Python/optimizer changes in this Lean worktree. The separate CPU
 optimizer check passes104 tests with14 GPU-only skips. This is not a fully green
 CUDA verification result; the Schedule-Free AdamW checks used here pass.
+
+
+The unchanged retry completed all30 declared cases in105.05 seconds; the first
+attempt took27.62 seconds before CUDA capture failed. The complete raw outcomes
+and failure trace remain in diff_gpt `research/residual_conditioning/`, committed
+at `24b3b49`. The fixed query direction is shared; seeds vary data and minibatches.
+
+| Cases, three seeds per variant | Original success | Conditioned success |
+| --- | ---: | ---: |
+| Zero queries, 2000 updates | 3/3 | 3/3 |
+| Tiny queries, 2000 updates | 3/3 | 3/3 |
+| Unit queries, 2000 updates | 3/3 | 3/3 |
+| RMS1e6 queries, fresh2000 updates | 0/3 | 3/3 |
+| All saved RMS1e6 failures, 10000 more updates | 0/3 | 3/3 |
+
+Every corrected huge-query case reaches100% heldout routing, versus0% for each
+unchanged counterpart. Fresh corrected heldout MSE is1.81e-9--2.72e-9; resumed
+corrected MSE is8.52e-15--9.24e-15. Unchanged huge-query MSE stays4.216--4.226.
+The immediate coordinate gradient is about1e6 times larger, as QC5 predicts;
+the physical-query gradient is not thereby increased. These are actual ordinary
+autodiff gradients, and all original optimizer history is retained. Later chart
+changes also occur: unit/fresh-huge/resumed-huge runs have2/3/4 events respectively.
+
+Independent CPU FP64 physical-query equations replay every initial, corrected
+initial and final state. Counts and success classifications agree exactly, with
+maximum scalar metric error6.28e-7. The largest absolute gradient-norm error is
+1.67e-4 at norm1463.36 (relative1.14e-7); all differences remain in the report,
+without a near-zero relative-error claim. All source states, data fingerprints,
+optimizer clocks and sampled minibatch streams pass. A committed CUDA regression
+also checks independent physical equations and both query/value gradients; the
+final affected GPT suite passes167 tests with one existing skip.
+
+This closes the demonstrated raw-query conditioning gap in the synthetic task.
+It does not prove that normalized scores ensure learnability, nor that these
+residuals outperform ordinary addition in the full transformer. The repaired
+variant joins task#145 as a separately labeled control, preserving key-only
+source AttnRes as a different architecture. No new modular learning or old long
+cohort continuation occurred. Compact evidence is `residual_conditioning.json`.
