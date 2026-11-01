@@ -2,6 +2,7 @@ module
 
 public import Transformer.SequenceModel.Attention.Spectral.RecoveryWitness
 public import Transformer.SequenceModel.Attention.Spectral.CountingWitness
+public import Transformer.SequenceModel.Attention.Spectral.LocalCounting
 
 /-!
 # From recovered spectral features to normalized RoPE transformer decisions

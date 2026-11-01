@@ -14,6 +14,7 @@ Lean
     backend-certificates          export captured binary outputs to checked Lean proof sources
     model-trace-capture           capture a complete compiled source transformer invocation
     model-trace-certificates      check all trace premises and export ordinary Lean proofs
+    model-trace-refined           check separate local allowances and export refined proofs
 
 Python (the uv project in python/; an experiment is a folder under experiments/)
     setup                         install the locked environment
@@ -111,6 +112,10 @@ def model_trace_capture(_):
 def model_trace_certificates(_):
     execute([sys.executable, "review/model_trace_arithmetic.py"])
     execute([sys.executable, "review/model_trace_lean.py"])
+
+
+def model_trace_refined(_):
+    execute([sys.executable, "review/model_trace_refined.py"])
 
 
 def setup(_):
@@ -273,6 +278,7 @@ def main():
     tasks.add_parser("backend-certificates").set_defaults(handler=backend_certificates)
     tasks.add_parser("model-trace-capture").set_defaults(handler=model_trace_capture)
     tasks.add_parser("model-trace-certificates").set_defaults(handler=model_trace_certificates)
+    tasks.add_parser("model-trace-refined").set_defaults(handler=model_trace_refined)
     tasks.add_parser("optimizer-lint").set_defaults(handler=optimizer_lint)
     command = tasks.add_parser("optimizer-profile")
     command.add_argument("--device", choices=("cpu", "cuda"), default="cpu")

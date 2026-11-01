@@ -4851,14 +4851,13 @@ the old uniform budget. Increasing the independent counting precision
 does not remove that execution-budget obstruction. No spectral recovery
 assumption or optimizer convergence claim has been added.
 
-The next required change is numerical: use verified norm intervals for
+The required change is numerical: use verified norm intervals for
 normalization sensitivity, individual operation errors and exact stored
 embedding identification, then propagate those bounds through the actual
-source stack. Task #136 requires that improved bound to certify source and
-captured decision agreement and reconnect to the existing counting bridge,
-or to identify a remaining obstruction rigorously. The present result does
-not claim that the improved bound has already been proved or that the
-captured classifier has already been certified as a C-RASP computation.
+source stack. Section M supplies this improved execution certificate for
+task #136. The obstruction in L4 remains valid for the old uniform budget;
+the new certificate uses a different, operation-dependent bound. Its
+counting transfer retains the independent fixed-point conditions.
 
 Validation: the full Lean build passes (13233 jobs), without warnings in the
 new modules. Individual axiom checks cover all 56 new public theorems and
@@ -4876,3 +4875,214 @@ ScheduleFreeMuon allocation failures (float32/float64, 75 allocations of
 therefore exits unsuccessfully for the same baseline failures recorded in
 #130--#132. Validation logs and the source/statement review are preserved in
 `.kanban/artifacts/135/`.
+
+## Trace-dependent execution bounds
+
+This extension closes the execution-bound gap exhibited in L4 for the same
+frozen width-four, one-head, one-block, two-token CUDA invocation. It changes
+neither the checkpoint nor the captured tensors, source epsilons or exact
+RoPE phases. The new result proves agreement of all captured class decisions
+with exact-real source arithmetic. It does not assert that a specific
+fixed-point counting execution has already satisfied its separate range and
+rounding conditions, or that this checkpoint solves modular division.
+
+### M1. Normalization sensitivity at a recorded input
+
+For dimension d>0, eps>0 and arbitrary real vectors x,y, write
+
+\[
+ R_\epsilon(x)=\frac{\sqrt d\,x}{\sqrt{\|x\|^2+d\epsilon}}.
+\]
+
+The asymmetric, globally valid secant estimate is
+
+\[
+ \|R_\epsilon(x)-R_\epsilon(y)\|
+ \le \frac{2\sqrt d}{\sqrt{\|x\|^2+d\epsilon}}\|x-y\|.
+\]
+
+Here x is the recorded input. No lower norm bound on the unknown exact
+input y is assumed. To prove this, put a=||x||^2+d eps and
+b=||y||^2+d eps. The difference of square roots satisfies
+
+\[
+ |\sqrt b-\sqrt a|\,\|y\|\le\|x-y\|\sqrt b.
+\]
+
+Splitting the normalized difference into the scaled displacement and the
+change of scale gives two copies of sqrt(d)/sqrt(a). The old global proof
+substituted sqrt(a)>=sqrt(d eps) at this point; the new proof retains a.
+`Adaptive.rms_secant` formalizes the estimate. A rational gain L>=0 is valid
+whenever 4d<=L^2(||x||^2+d eps), an exact polynomial check on the recorded
+coordinates. `rms_step` then gives L E+delta, where E is the previously
+proved input error and delta is this normalizer's local residual.
+
+For clipped normalization U_eps(x)=x/max(||x||,eps), eps>0,
+
+\[
+ \|U_\epsilon(x)-U_\epsilon(y)\|
+ \le\frac{2}{\max(\|x\|,\epsilon)}\|x-y\|.
+\]
+
+`l2_secant` retains the first denominator in the original proof and uses
+that max with a constant is 1-Lipschitz. The estimate covers zero inputs and
+crossings of the clipping boundary. `l2_step` accepts the recorded check
+2<=L max(||x||,eps). These are proved analytic estimates, not Jacobians
+assumed to remain constant in a neighborhood.
+
+### M2. Composition with distinct residuals and stored weights
+
+Each operation keeps its own error allowance, verified at its own recorded
+inputs. For an exact stored matrix A with ||A||<=L, the next error is
+L E+delta. `matrix_checked` derives L from the squared Frobenius norm of
+its entries by Cauchy--Schwarz. Q, K and V use separate submatrices of the
+same fused source matrix, with exact selector identities. The captured
+embedding table equals the reference table exactly.
+
+The generic operation rules retain the following terms:
+
+- RMS and clipped L2: the recorded gain from M1 times input error, plus
+  the particular normalizer residual.
+- Arbitrary RoPE: 2 tau R+E+delta, where R bounds the recorded normalized
+  vector, tau bounds both stored coefficients against the exact phase,
+  and delta bounds arithmetic applying the stored table.
+- Scaled dot product: (2R+E)E/sqrt(d)+delta when both recorded vectors have
+  norm at most R and both input errors are at most E.
+- Causal average: 8 E_score R_value+E_value+delta_SDPA. The value norm is
+  checked on the recorded tensor; the mask includes the current token.
+- SiLU: (1+R_gate)E_gate+delta_activation using recorded coordinate bounds.
+- Hadamard product: V E_activation+(A+E_activation)E_value+delta_product,
+  where V and A bound recorded value and activation coordinates. The cross
+  term remains. Squared-coordinate aggregation avoids repeating a
+  sqrt(FFN width) loss for every product.
+- Residual addition: the two input radii plus its own addition residual.
+
+XSA uses the existing two-input estimate, including the excess norm of a
+computed direction; its exact direction has norm at most one. Source head
+merging and learned projection are retained. At position zero, the source
+and captured attention branches are both exactly zero. That case is proved
+separately, so its small post-normalization denominator cannot amplify an
+error from another position. The rules hold at arbitrary finite dimensions
+and can be composed repeatedly; the fully instantiated certificate below
+concerns the actual one-block capture, not every depth or checkpoint.
+
+### M3. Rechecking the frozen operations
+
+`./run.py model-trace-refined` rechecks all 52 original residual sites with
+separate allowances, the squared scale residuals at tolerance 10^-12, and
+separate Q/K/V arithmetic. Seven generated Lean modules import the original
+stored literals unchanged and independently prove the sharper contracts.
+The SiLU, softmax and RoPE checks retain their analytic Taylor remainders.
+No floating transcendental calculation is accepted as an exact reference.
+
+Representative certified constants are:
+
+| Operation or recorded quantity | Bound |
+| --- | ---: |
+| Stored Q and K matrix norms, separately | 1/8000 |
+| Stored V matrix norm | 101/100 |
+| Stored attention projection norm | 13/50 |
+| Stored gate, value and FFN output norms | 21/50 each |
+| Attention and FFN input RMS gains | 21/10 |
+| Q/K RMS gains | 6000 |
+| Own-value clipped L2 gain | 2 |
+| Active attention output RMS gain | 60 |
+| FFN output RMS gain, both tokens | 1500 |
+| Final RMS gain | 3/2 |
+| Stored RoPE coefficient error | 10^-7 |
+| Q/K slice arithmetic error, separately | 4*10^-12 |
+| V slice arithmetic error | 4*10^-8 |
+| Initial normalized embedding error | 1/4000000 |
+| First residual addition error | 0 |
+| Second residual addition error | 12*10^-8 |
+
+The actual late addition still has a coordinate error of 2^-24, exactly as
+in L4. It is charged at that addition alone. It is not an assumed error in
+the stored embedding, either Q/K projection, or an earlier normalizer.
+Rejection tests include perturbations small enough to pass the old 10^-6
+coordinate checks but fail the new pre-RMS, Q-projection or residual checks.
+
+### M4. Source agreement and a derived numerical margin
+
+`Refined.Source` exposes the exact-real operations of the pinned source.
+`source_hidden` proves that this graph is exactly its actual hidden-state
+forward, including both residual additions and all normalization placements.
+The propagation theorems have no unproved operation, hidden-state error,
+source-margin or decision hypotheses. The following conservative radii hold
+at both captured token positions:
+
+| Stage | Euclidean error bound |
+| --- | ---: |
+| Attention input RMS | 53/100000000 |
+| Each normalized Q/K | 48/100000000 |
+| Each rotated query/key | 6/10000000 |
+| Causal average | 31/10000000 |
+| Own-value direction | 135/100000000 |
+| XSA head | 93/10000000 |
+| Attention branch output | 146/1000000 |
+| First residual | 147/1000000 |
+| FFN pre-RMS | 31/100000 |
+| Gate and value, separately | 131/1000000 |
+| Activated gate | 164/1000000 |
+| Hadamard product | 575/10000000 |
+| FFN output projection | 242/10000000 |
+| FFN output RMS | 364/10000 |
+| Final residual | 366/10000 |
+| Final normalized state | 55/1000 |
+
+The tied embeddings have norm one and the recorded final dot products have
+zero local residual. Thus `error_logits` proves, for every token i and class v,
+
+\[
+ |\widehat\ell_{i,v}-\ell_{i,v}^{\rm source}|\le1/16.
+\]
+
+The strict captured winners are 0 and 2. Every competing captured class is
+at least 17/20 below its winner, verified directly on the stored rationals.
+Subtracting the two logit radii gives at least 17/20-2/16=29/40; in particular
+`source_margin` proves the uniform source margin 7/10. `decisions_agree`
+proves equality of the complete Boolean class-test vectors, including every
+rejected class. The earlier `no_global_margin` and `no_execution_below`
+theorems are unchanged: they concern the old sufficient bound, not the
+classifier or these new operation-dependent radii.
+
+### M5. Reconnecting to flat spectrum and the counting model
+
+`Spectral.executed_of_logit_bound` accepts any independently proved
+classwise execution radii whose pairwise sums fit below the source margin.
+`uniform_local_certificate` uses this interface in the existing J7 bridge.
+The source margin can therefore come from the same spectral construction;
+its hypotheses about recovered, separating characters have not changed.
+The formula family is fixed before all input words and traces, and retains
+the depth upper bound n_layers and exact source RoPE kernels. This result
+asserts no strict nonperiodic depth hierarchy or optimization convergence.
+
+`Refined.source_score` identifies the captured invocation's exact readout
+with `Spectral.sourceLogit`. `captured_counting_bridge` supplies its proved
+radius 1/16 and source margin 7/10 to the generic theorem. It no longer
+requires the impossible old `ExecutionBelow` premise. The formula agrees
+with every captured final-token class decision provided the independently
+rounded counting execution satisfies `TraceInRange` and `CountingBelow`;
+the softmax precision inequality is also explicit. No concrete integer
+width/fractional precision for this active checkpoint is certified here.
+Those fixed-point premises are the remaining numerical work for an
+unconditional captured-to-counting instance. The exact source/captured
+agreement in M4 is already unconditional for the recorded tensors.
+
+Validation: the full Lean build passes (13257 jobs), with no warnings in the
+new modules. All 119 new public theorems use only propext, Classical.choice
+and Quot.sound. The repository audit reports the unchanged 36 sorry, zero
+results resting on a sorry and zero extra axioms. The regenerated index has
+4160 modules and 21360 theorems, with zero vacuous results and placeholders.
+All eleven original/refined trace tests pass, including exact export replay
+and the tighter residual rejection cases. All five pinned physical source
+hashes still match. Logs and the statement/source review are preserved in
+`.kanban/artifacts/136/`.
+
+The final 436-test lab suite passes with three skips. The 104-test optimizer
+suite reproduces the two existing ScheduleFreeMuon allocation failures in
+float32/float64 (75 allocations of 8519680 bytes each); Schedule-Free AdamW
+passes. Consequently the overall `./run.py test` exit status is unsuccessful
+for the same baseline failures as L5, while all eleven trace certificate
+and rejection tests pass. Task #137 records the remaining fixed-point range
+and precision proofs for this active captured checkpoint.
