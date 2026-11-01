@@ -2,6 +2,10 @@
 
 ## Active research target and handoff (2026-11-02)
 
+The current model recommendation is in [MODEL_ARCHITECTURE.md](MODEL_ARCHITECTURE.md).
+It retains the strongest completed baseline, the measured fixed-scale option,
+and the separate experimental learned-gate extension.
+
 The current user target is to connect flat spectrum, the actual normalized
 RoPE transformer, and C-RASP through **efficient structured computation and
 its learnability**. Preserve this target across sessions. Real transformers
