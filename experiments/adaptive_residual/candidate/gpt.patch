@@ -1,0 +1,1665 @@
+diff --git a/src/diff_gpt/application/grokking/div97.py b/src/diff_gpt/application/grokking/div97.py
+index bb3c9b2..86952cc 100644
+--- a/src/diff_gpt/application/grokking/div97.py
++++ b/src/diff_gpt/application/grokking/div97.py
+@@ -59,6 +59,7 @@ LIBRARY_SOURCES = (
+     ROOT / "src/diff_gpt/domain/model/block.py",
+     ROOT / "src/diff_gpt/domain/model/mha.py",
+     ROOT / "src/diff_gpt/domain/model/rms_norm.py",
++    ROOT / "src/diff_gpt/domain/model/residual_gain.py",
+     ROOT / "src/diff_gpt/domain/model/centered_xsa.py",
+     ROOT / "src/diff_gpt/domain/model/feed_forward.py",
+     ROOT / "src/diff_gpt/domain/model/rope.py",
+@@ -66,7 +67,7 @@ LIBRARY_SOURCES = (
+ )
+ # Peri-RMSNorm and Q/K RMSNorm have no parameters, so weights of an earlier model
+ # load without error and compute another function; saved runs carry this marker.
+-NORMALIZATION = "scaled_peri_rms_qk_rms_centered_xsa"
++NORMALIZATION = "adaptive_scaled_peri_rms_qk_rms_centered_xsa"
+ 
+ 
+ class SplitMix64:
+diff --git a/src/diff_gpt/application/grokking/mqar_div97_diagnostics.py b/src/diff_gpt/application/grokking/mqar_div97_diagnostics.py
+index 8fad2e7..702ea58 100644
+--- a/src/diff_gpt/application/grokking/mqar_div97_diagnostics.py
++++ b/src/diff_gpt/application/grokking/mqar_div97_diagnostics.py
+@@ -426,7 +426,15 @@ class Diagnostics:
+         hooks = [
+             getattr(block, name).register_forward_hook(hook(f"{i}.{name}"))
+             for i, block in enumerate(model.blocks)
+-            for name in ("ln_1", "ln_2", "sa", "attn_out_norm", "ffn_out_norm")
++            for name in (
++                "ln_1",
++                "ln_2",
++                "sa",
++                "attn_out_norm",
++                "ffn_out_norm",
++                "attn_gain",
++                "ffn_gain",
++            )
+         ]
+         try:
+             logits, _ = model(self.inputs)
+@@ -440,8 +448,10 @@ class Diagnostics:
+             (after_attention,), _ = captured[f"{i}.ln_2"]
+             _, attn = captured[f"{i}.attn_out_norm"]
+             _, ffwd = captured[f"{i}.ffn_out_norm"]
+-            attn = block.residual_scale * attn
+-            ffwd = block.residual_scale * ffwd
++            _, attn_gain = captured[f"{i}.attn_gain"]
++            _, ffn_gain = captured[f"{i}.ffn_gain"]
++            attn = block.residual_scale * attn_gain * attn
++            ffwd = block.residual_scale * ffn_gain * ffwd
+             heads, mean_attention, reconstructed = _head_stats(
+                 block.sa,
+                 normalized,
+diff --git a/src/diff_gpt/application/synthetic_pretrain.py b/src/diff_gpt/application/synthetic_pretrain.py
+index ef05863..25b7573 100644
+--- a/src/diff_gpt/application/synthetic_pretrain.py
++++ b/src/diff_gpt/application/synthetic_pretrain.py
+@@ -106,6 +106,7 @@ LIBRARY_SOURCES = (
+     ROOT / "src/diff_gpt/domain/model/block.py",
+     ROOT / "src/diff_gpt/domain/model/mha.py",
+     ROOT / "src/diff_gpt/domain/model/rms_norm.py",
++    ROOT / "src/diff_gpt/domain/model/residual_gain.py",
+     ROOT / "src/diff_gpt/domain/model/centered_xsa.py",
+     ROOT / "src/diff_gpt/domain/model/feed_forward.py",
+     ROOT / "src/diff_gpt/domain/model/rope.py",
+diff --git a/src/diff_gpt/domain/model/block.py b/src/diff_gpt/domain/model/block.py
+index 2ef2b97..2d75798 100644
+--- a/src/diff_gpt/domain/model/block.py
++++ b/src/diff_gpt/domain/model/block.py
+@@ -7,6 +7,7 @@ from torch import nn
+ 
+ from diff_gpt.domain.model.feed_forward import FeedForward
+ from diff_gpt.domain.model.mha import MultiHeadAttention
++from diff_gpt.domain.model.residual_gain import ResidualGain
+ from diff_gpt.domain.model.rms_norm import RMSNorm
+ 
+ if TYPE_CHECKING:
+@@ -33,7 +34,9 @@ class Block(nn.Module):
+         before residual addition: the Peri-LN update of
+         arXiv:2510.22026v2, Table 1, adapted to parameter-free RMSNorm.
+         The owner supplies its total depth `n_layer`; each branch receives
+-        fixed coefficient 1/sqrt(2*n_layer) after normalization.
++        coefficient 1/sqrt(2*n_layer) after normalization, multiplied by a
++        conditional gain 2*sigmoid(W*x_norm). Zero gain rows preserve the
++        initial function and common gradients; no bias or mode is added.
+         """
+         super().__init__()
+         self.residual_scale = (2 * n_layer) ** -0.5
+@@ -47,6 +50,8 @@ class Block(nn.Module):
+         self.ffwd = FeedForward(n_embd=n_embd)
+         self.attn_out_norm = RMSNorm(n_embd)
+         self.ffn_out_norm = RMSNorm(n_embd)
++        self.attn_gain = ResidualGain(n_embd)
++        self.ffn_gain = ResidualGain(n_embd)
+ 
+     def forward(
+         self,
+@@ -64,18 +69,20 @@ class Block(nn.Module):
+         A non-cached model supplies its still-constant token-prefix mask.
+         Heads below clipping permanently disable that prefix rewrite.
+         """
++        normalized = self.ln_1(x)
+         if constant is None:
+-            branch = self.sa(self.ln_1(x), cos, sin, kv_cache=kv_cache)
++            branch = self.sa(normalized, cos, sin, kv_cache=kv_cache)
+         else:
+             branch, valid = self.sa(
+-                self.ln_1(x), cos, sin, kv_cache=kv_cache, return_guard=True
++                normalized, cos, sin, kv_cache=kv_cache, return_guard=True
+             )
+             constant = constant & valid[:, None]
+-        branch = self.attn_out_norm(branch)
++        branch = self.attn_gain(normalized) * self.attn_out_norm(branch)
+         if constant is not None:
+             branch = torch.where(constant[..., None], branch[:, :1], branch)
+         x = x + self.residual_scale * branch
+-        branch = self.ffn_out_norm(self.ffwd(self.ln_2(x)))
++        normalized = self.ln_2(x)
++        branch = self.ffn_gain(normalized) * self.ffn_out_norm(self.ffwd(normalized))
+         if constant is not None:
+             branch = torch.where(constant[..., None], branch[:, :1], branch)
+         output = x + self.residual_scale * branch
+diff --git a/src/diff_gpt/domain/model/gpt.py b/src/diff_gpt/domain/model/gpt.py
+index bf47ded..0d7b0f1 100644
+--- a/src/diff_gpt/domain/model/gpt.py
++++ b/src/diff_gpt/domain/model/gpt.py
+@@ -10,6 +10,7 @@ from torch.nn import functional as F
+ from torch.utils.checkpoint import checkpoint
+ 
+ from diff_gpt.domain.model.block import Block
++from diff_gpt.domain.model.residual_gain import ResidualGain
+ from diff_gpt.domain.model.rms_norm import RMSNorm
+ from diff_gpt.domain.model.rope import rope_tables
+ 
+@@ -85,6 +86,8 @@ class GPT(BaseGPT):
+     stream, a final norm and an lm_head tied to the token embedding.
+     Each block normalizes both branch inputs and outputs before residual
+     addition, with coefficient 1/sqrt(2*n_layer) after the output norm.
++    A bias-free linear row on each normalized branch input supplies a
++    conditional gain 2*sigmoid(W*x_norm), initially one.
+     Positions enter only as rotations of the attention queries and
+     keys (RoPE). The attention is
+     exclusive (XSA): each head's output is orthogonal to the token's own
+@@ -124,7 +127,8 @@ class GPT(BaseGPT):
+         Q/K use per-head RMSNorm followed by standard 1/sqrt(head_dim) scaling.
+         Centered XSA and shared states for repeated-token prefixes avoid
+         cancellation in forward and parameter gradients. Both branches use
+-        coefficient 1/sqrt(2*n_layer), after their output RMS normalization.
++        coefficient 1/sqrt(2*n_layer), after their output RMS normalization,
++        multiplied by a bounded input-dependent gain initialized to one.
+         """
+         if n_layer < 1:
+             msg = f"n_layer must be >= 1, got {n_layer}"
+@@ -180,7 +184,9 @@ class GPT(BaseGPT):
+ 
+     @staticmethod
+     def _init_weights(module: nn.Module) -> None:
+-        if isinstance(module, (nn.Linear, nn.Embedding)):
++        if isinstance(module, ResidualGain):
++            module.reset_parameters()
++        elif isinstance(module, (nn.Linear, nn.Embedding)):
+             nn.init.normal_(module.weight, mean=0.0, std=0.02)
+ 
+     def estimate_flops(self) -> int:
+@@ -202,7 +208,7 @@ class GPT(BaseGPT):
+         targets: torch.Tensor | None = None,
+         kv_cache: KVCache | None = None,
+     ) -> tuple[torch.Tensor, torch.Tensor | None]:
+-        """Apply fixed post-RMS residual scaling, with causal cache support."""
++        """Apply conditional post-RMS residual gains, with causal cache support."""
+         start = 0 if kv_cache is None else kv_cache.get_pos()
+         end = start + idx.shape[1]
+         if end > self.block_size:
+diff --git a/src/diff_gpt/domain/model/residual_gain.py b/src/diff_gpt/domain/model/residual_gain.py
+new file mode 100644
+index 0000000..4aa1edf
+--- /dev/null
++++ b/src/diff_gpt/domain/model/residual_gain.py
+@@ -0,0 +1,34 @@
++"""
++Conditional residual amplitude after output RMS; transformer lab task158.
++
++The known-solution context_gains benchmark extends the Lean declaration
++Transformer.Residual.gain_derivative_ratio to input-dependent amplitudes.
++A zero-initialized, bias-free row gives initial gain one without consuming
++random draws. This gate is separate from the parameter-free RMS operation.
++Its range is (0, 2); it is not a universal gradient or generalization bound.
++"""
++
++from __future__ import annotations
++
++from typing import TYPE_CHECKING
++
++from torch import nn
++
++if TYPE_CHECKING:
++    from torch import Tensor
++
++
++class ResidualGain(nn.Linear):
++    """A bounded conditional branch gain, initialized to preserve the model."""
++
++    def __init__(self, width: int) -> None:
++        """Read the branch's already normalized input without a bias."""
++        super().__init__(width, 1, bias=False)
++
++    def reset_parameters(self) -> None:
++        """Preserve common-model initialization and its random-generator state."""
++        nn.init.zeros_(self.weight)
++
++    def forward(self, value: Tensor) -> Tensor:
++        """Return one gain per token, initially exactly one."""
++        return 2 * super().forward(value).sigmoid()
+diff --git a/tests/diff_gpt/application/grokking/test_div97.py b/tests/diff_gpt/application/grokking/test_div97.py
+index d6ca238..18ea08c 100644
+--- a/tests/diff_gpt/application/grokking/test_div97.py
++++ b/tests/diff_gpt/application/grokking/test_div97.py
+@@ -185,7 +185,7 @@ def test_a_checkpoint_of_an_earlier_model_is_rejected(tmp_path: Path) -> None:
+         RunConfig(width=8, heads=1, epochs=1), directory, git_head=provenance.git_head
+     )
+     checkpoint = torch.load(directory / "checkpoint.pt", weights_only=True)
+-    assert checkpoint.pop("normalization") == "scaled_peri_rms_qk_rms_centered_xsa"
++    assert checkpoint.pop("normalization") == "adaptive_scaled_peri_rms_qk_rms_centered_xsa"
+     torch.save(checkpoint, directory / "checkpoint.pt")
+     with pytest.raises(ValueError, match="Peri/QK-RMSNorm"):
+         verify_checkpoint(directory)
+diff --git a/tests/diff_gpt/application/grokking/test_mqar_div97.py b/tests/diff_gpt/application/grokking/test_mqar_div97.py
+index b164624..2ed19cf 100644
+--- a/tests/diff_gpt/application/grokking/test_mqar_div97.py
++++ b/tests/diff_gpt/application/grokking/test_mqar_div97.py
+@@ -493,7 +493,7 @@ def test_current_records_replay_the_same_config() -> None:
+     config = RunConfig(loads=2, labels="dividend", **TINY)
+     current = {
+         "config": asdict(config),
+-        "normalization": "scaled_peri_rms_qk_rms_centered_xsa",
++        "normalization": "adaptive_scaled_peri_rms_qk_rms_centered_xsa",
+         "data_protocol": config.data_protocol,
+     }
+     assert config_from_record(current) == config
+@@ -506,7 +506,7 @@ def test_old_copy_data_cannot_silently_replay_as_independent_queries() -> None:
+         config_from_record(
+             {
+                 "config": asdict(config),
+-                "normalization": "scaled_peri_rms_qk_rms_centered_xsa",
++                "normalization": "adaptive_scaled_peri_rms_qk_rms_centered_xsa",
+             }
+         )
+ 
+diff --git a/tests/diff_gpt/application/grokking/test_recurrence.py b/tests/diff_gpt/application/grokking/test_recurrence.py
+index a964966..db51c63 100644
+--- a/tests/diff_gpt/application/grokking/test_recurrence.py
++++ b/tests/diff_gpt/application/grokking/test_recurrence.py
+@@ -244,7 +244,7 @@ def test_a_checkpoint_of_an_earlier_model_cannot_resume_or_verify(
+     directory = tmp_path / "run"
+     run(config, directory, "cpu")
+     checkpoint = torch.load(directory / "checkpoint.pt", weights_only=True)
+-    assert checkpoint.pop("normalization") == "scaled_peri_rms_qk_rms_centered_xsa"
++    assert checkpoint.pop("normalization") == "adaptive_scaled_peri_rms_qk_rms_centered_xsa"
+     torch.save(checkpoint, directory / "checkpoint.pt")
+     files = contents(directory)
+     with pytest.raises(ValueError, match="Peri/QK-RMSNorm"):
+diff --git a/tests/diff_gpt/domain/model/source_equations.py b/tests/diff_gpt/domain/model/source_equations.py
+index 17f14ec..6e4c419 100644
+--- a/tests/diff_gpt/domain/model/source_equations.py
++++ b/tests/diff_gpt/domain/model/source_equations.py
+@@ -42,9 +42,13 @@ def source_gpt(model: GPT, tokens: torch.Tensor) -> torch.Tensor:
+     value = model.embedding_norm(model.token_embedding_table(tokens))
+     cos, sin = model.rope_cos[: tokens.shape[1]], model.rope_sin[: tokens.shape[1]]
+     for block in model.blocks:
+-        branch = source_attention(block.sa, block.ln_1(value), cos, sin)
+-        value = value + model.branch_scale * block.attn_out_norm(branch)
+-        value = value + model.branch_scale * block.ffn_out_norm(
+-            block.ffwd(block.ln_2(value))
++        normalized = block.ln_1(value)
++        branch = source_attention(block.sa, normalized, cos, sin)
++        gain = 2 * F.linear(normalized, block.attn_gain.weight).sigmoid()
++        value = value + model.branch_scale * gain * block.attn_out_norm(branch)
++        normalized = block.ln_2(value)
++        gain = 2 * F.linear(normalized, block.ffn_gain.weight).sigmoid()
++        value = value + model.branch_scale * gain * block.ffn_out_norm(
++            block.ffwd(normalized)
+         )
+     return model.lm_head(model.ln_f(value))
+diff --git a/tests/diff_gpt/domain/model/test_conditional_gain.py b/tests/diff_gpt/domain/model/test_conditional_gain.py
+new file mode 100644
+index 0000000..df8753c
+--- /dev/null
++++ b/tests/diff_gpt/domain/model/test_conditional_gain.py
+@@ -0,0 +1,188 @@
++"""Preserve initialization and recover conditional amplitude in the real block."""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import math
++from pathlib import Path
++from typing import TYPE_CHECKING
++
++import pytest
++import torch
++from torch import nn
++
++from diff_gpt.domain.model.block import Block
++from diff_gpt.domain.model.gpt import GPT
++from diff_gpt.domain.model.rope import rope_tables
++from diff_gpt.domain.optimizer.schedule_free import ScheduleFreeAdamW
++from tests.refgpt_df1e9f7.gpt import GPT as FrozenGPT
++
++if TYPE_CHECKING:
++    from diff_gpt.domain.model.kv_cache import KVCache
++
++
++def test_frozen_source_reference_hashes() -> None:
++    """The baseline must come from the recorded old source, not today's model."""
++    root = Path(__file__).resolve().parents[3] / "refgpt_df1e9f7"
++    manifest = json.loads((root / "manifest.json").read_text())
++    assert manifest["commit"].startswith("df1e9f7")
++    for name, entry in manifest["files"].items():
++        local = (root / name).read_bytes()
++        assert hashlib.sha256(local).hexdigest() == entry["local_sha256"]
++        original = local.replace(
++            b"from tests.refgpt_df1e9f7.", b"from diff_gpt.domain.model."
++        )
++        if name == "gpt.py":
++            # Undo the recorded type-only import sort as well as redirection.
++            original = original.replace(
++                b"    from diff_gpt.domain.sampler.sampler import Sampler\n"
++                b"    from diff_gpt.domain.model.kv_cache import KVCache\n",
++                b"    from diff_gpt.domain.model.kv_cache import KVCache\n"
++                b"    from diff_gpt.domain.sampler.sampler import Sampler\n",
++            )
++        assert hashlib.sha256(original).hexdigest() == entry["source_sha256"]
++
++
++@pytest.mark.parametrize("seed", [11, 17])
++def test_zero_rows_preserve_source_rng_logits_and_common_gradients(seed: int) -> None:
++    """Adding the amplitude path must not improve a comparison by changing its start."""
++    torch.set_num_threads(1)
++    torch.manual_seed(seed)
++    expected = FrozenGPT(97, 128, 33, 4, 4, use_checkpoint=False, pad_vocab_size_to=1)
++    rng = torch.get_rng_state()
++    torch.manual_seed(seed)
++    actual = GPT(97, 128, 33, 4, 4, use_checkpoint=False, pad_vocab_size_to=1)
++    assert torch.equal(rng, torch.get_rng_state())
++    common = dict(expected.named_parameters())
++    extra = []
++    for name, parameter in actual.named_parameters():
++        if name in common:
++            torch.testing.assert_close(parameter, common[name], rtol=0, atol=0)
++        else:
++            assert name.endswith("_gain.weight")
++            assert torch.count_nonzero(parameter) == 0
++            extra.append(parameter)
++    assert sum(p.numel() for p in extra) == 2 * actual.n_layer * actual.n_embd
++    tokens = torch.tensor([[1, 2], [1, 1], [12, 33], [94, 96]])
++    a, b = actual(tokens)[0], expected(tokens)[0]
++    torch.testing.assert_close(a, b, rtol=0, atol=0)
++    a.square().mean().backward()
++    b.square().mean().backward()
++    for name, parameter in actual.named_parameters():
++        assert parameter.grad is not None
++        if name in common:
++            torch.testing.assert_close(
++                parameter.grad, common[name].grad, rtol=0, atol=0
++            )
++        else:
++            assert parameter.grad.norm() > 0
++
++
++class ZeroAttention(nn.Module):
++    """Fixed zero attention isolates the block's feed-forward amplitude path."""
++
++    def forward(
++        self,
++        value: torch.Tensor,
++        cos: torch.Tensor,
++        sin: torch.Tensor,
++        kv_cache: KVCache | None,
++    ) -> torch.Tensor:
++        """Return a zero context branch under the fixture's no-cache contract."""
++        assert kv_cache is None
++        assert cos.shape == sin.shape
++        return torch.zeros_like(value)
++
++
++class FixedBranch(nn.Module):
++    """A supplied unit-RMS direction gives both placements a finite exact optimum."""
++
++    def forward(self, value: torch.Tensor) -> torch.Tensor:
++        """Return the fixed unit-RMS feature in the input layout."""
++        return torch.ones_like(value)
++
++
++class BeforeRMSControl(Block):
++    """Broken control: move the same gain before the output RMS normalization."""
++
++    def forward(
++        self,
++        value: torch.Tensor,
++        cos: torch.Tensor,
++        sin: torch.Tensor,
++        kv_cache: KVCache | None,
++    ) -> torch.Tensor:
++        """Evaluate the alternative placement for the same fixed branch."""
++        assert kv_cache is None
++        assert cos.shape == sin.shape
++        normalized = self.ln_2(value)
++        branch = self.ffn_out_norm(self.ffn_gain(normalized) * self.ffwd(normalized))
++        return value + self.residual_scale * branch
++
++
++def block(kind: type[Block]) -> Block:
++    """Freeze every degree of freedom except the production branch gain row."""
++    result = kind(2, 1, 0, n_layer=1)
++    result.sa = ZeroAttention()
++    result.ffwd = FixedBranch()
++    result.requires_grad_(requires_grad=False)
++    result.ffn_gain.weight.requires_grad_(requires_grad=True)
++    return result
++
++
++def test_block_learns_conditional_gain_and_rejects_pre_rms_control() -> None:
++    """Equal representability and starts; only the normalized gradient path differs."""
++    torch.set_num_threads(1)
++    gain_limit, solved_mse, stalled_mse = 2.0, 1e-8, 1e-3
++    inputs = torch.tensor([[[1.0, -1.0]], [[1.0, 1.0]]])
++    coefficients = torch.tensor([0.25, 0.75])[:, None, None]
++    cos, sin = rope_tables(2, 1)
++    eps = torch.finfo(torch.float32).eps
++    amplitude = 1 / math.sqrt(1 + eps)
++    starts, errors = [], []
++    for kind in (Block, BeforeRMSControl):
++        model = block(kind)
++        target = inputs + model.residual_scale * coefficients * torch.ones_like(inputs)
++        starts.append(model(inputs, cos, sin, None).detach())
++        # Solve both conditional logits analytically, accounting for input RMS.
++        gains = [
++            math.sqrt(eps) * c / math.sqrt(1 - c * c)
++            if kind is BeforeRMSControl
++            else c / amplitude
++            for c in (0.25, 0.75)
++        ]
++        assert all(0 < gain < gain_limit for gain in gains)
++        negative, positive = [math.log(gain / (2 - gain)) for gain in gains]
++        with torch.no_grad():
++            model.ffn_gain.weight.copy_(
++                torch.tensor(
++                    [
++                        [
++                            (negative + positive) / (2 * amplitude),
++                            (positive - negative) / (2 * amplitude),
++                        ]
++                    ]
++                )
++            )
++        torch.testing.assert_close(
++            model(inputs, cos, sin, None), target, rtol=1e-6, atol=1e-6
++        )
++        with torch.no_grad():
++            model.ffn_gain.weight.zero_()
++        optimizer = ScheduleFreeAdamW(
++            [model.ffn_gain.weight], lr=0.01, betas=(0.9, 0.98), weight_decay=0
++        )
++        for _ in range(3000):
++            optimizer.zero_grad(set_to_none=True)
++            loss = (model(inputs, cos, sin, None) - target).square().mean()
++            loss.backward()
++            optimizer.step()
++        optimizer.eval()
++        with torch.no_grad():
++            errors.append(
++                (model(inputs, cos, sin, None) - target).square().mean().item()
++            )
++    torch.testing.assert_close(starts[0], starts[1], rtol=0, atol=0)
++    assert errors[0] < solved_mse
++    assert errors[1] > stalled_mse
+diff --git a/tests/diff_gpt/domain/model/test_constant_prefix.py b/tests/diff_gpt/domain/model/test_constant_prefix.py
+index f7b6b8a..8ad32db 100644
+--- a/tests/diff_gpt/domain/model/test_constant_prefix.py
++++ b/tests/diff_gpt/domain/model/test_constant_prefix.py
+@@ -30,12 +30,23 @@ class ConstantPrefixTests(unittest.TestCase):
+     def test_repeated_tokens_match_independent_ffn_path_and_gradients(self) -> None:
+         """Shared-token gradients need no ambient-position subtraction."""
+         model = self.model()
++        with torch.no_grad():
++            for block in model.blocks:
++                block.attn_gain.weight.uniform_(-0.2, 0.2)
++                block.ffn_gain.weight.uniform_(-0.2, 0.2)
+         tokens = torch.tensor([[3, 3, 3, 3], [7, 7, 7, 7]])
+         logits, _ = model(tokens)
+         state = model.embedding_norm(model.token_embedding_table(tokens[:, :1]))
+         for block in model.blocks:
+-            state = state + model.branch_scale * block.ffn_out_norm(
+-                block.ffwd(block.ln_2(state))
++            normalized = block.ln_2(state)
++            gain = (
++                2
++                * torch.nn.functional.linear(
++                    normalized, block.ffn_gain.weight
++                ).sigmoid()
++            )
++            state = state + model.branch_scale * gain * block.ffn_out_norm(
++                block.ffwd(normalized)
+             )
+         expected = model.lm_head(model.ln_f(state)).expand(-1, tokens.shape[1], -1)
+         torch.testing.assert_close(logits, expected, rtol=1e-6, atol=1e-7)
+diff --git a/tests/diff_gpt/domain/model/test_gpt.py b/tests/diff_gpt/domain/model/test_gpt.py
+index cf0a0ca..b68a622 100644
+--- a/tests/diff_gpt/domain/model/test_gpt.py
++++ b/tests/diff_gpt/domain/model/test_gpt.py
+@@ -67,6 +67,9 @@ def test_gpt_init() -> None:
+     assert residual <= dict(model.named_parameters()).keys()
+ 
+     for name, p in model.named_parameters():
++        if name.endswith("_gain.weight"):
++            assert torch.equal(p, torch.zeros_like(p)), name
++            continue
+         std = residual_std if name in residual else 0.02
+         assert p.std().item() == pytest.approx(std, rel=0.1), name
+ 
+diff --git a/tests/diff_gpt/domain/model/test_residual_generalization.py b/tests/diff_gpt/domain/model/test_residual_generalization.py
+index 11a09b5..98a52a0 100644
+--- a/tests/diff_gpt/domain/model/test_residual_generalization.py
++++ b/tests/diff_gpt/domain/model/test_residual_generalization.py
+@@ -47,13 +47,23 @@ def test_scaled_residual_preserves_learned_unseen_division(seed: int) -> None:
+     with np.load(path, allow_pickle=False) as archive:
+         rows = torch.from_numpy(archive["test_rows"]).long()
+         training = torch.from_numpy(archive["train_inputs"]).long()
+-        model.load_state_dict(
+-            {
+-                name: torch.from_numpy(archive[name])
+-                for name in archive.files
+-                if name not in {"test_rows", "train_inputs"}
+-            }
++        state = {
++            name: torch.from_numpy(archive[name])
++            for name in archive.files
++            if name not in {"test_rows", "train_inputs"}
++        }
++        # These historical fixtures predate conditional gains. Zero rows
++        # explicitly reproduce their original function; production has no mode.
++        missing = model.state_dict().keys() - state.keys()
++        assert missing == {
++            f"blocks.{i}.{branch}_gain.weight"
++            for i in range(model.n_layer)
++            for branch in ("attn", "ffn")
++        }
++        state.update(
++            {name: torch.zeros_like(model.state_dict()[name]) for name in missing}
+         )
++        model.load_state_dict(state)
+     prime = case["configuration"]["vocab_size"]
+     assert len(rows) == case["test_examples"]
+     assert all(
+diff --git a/tests/diff_gpt/domain/model/test_residual_gpt.py b/tests/diff_gpt/domain/model/test_residual_gpt.py
+index ecddea6..9d10def 100644
+--- a/tests/diff_gpt/domain/model/test_residual_gpt.py
++++ b/tests/diff_gpt/domain/model/test_residual_gpt.py
+@@ -67,7 +67,8 @@ def manual(model: GPT, tokens: torch.Tensor) -> torch.Tensor:
+                 2, -1
+             )
+             branch = F.linear(F.silu(gate) * activation, block.ffwd.c_proj.weight)
+-        branch = norm(branch)
++        gain_weight = (block.attn_gain if index % 2 == 0 else block.ffn_gain).weight
++        branch = 2 * F.linear(norm(value), gain_weight).sigmoid() * norm(branch)
+         branch = torch.where(still_constant[..., None], branch[:, :1], branch)
+         value = value + model.branch_scale * branch
+     return F.linear(norm(value), model.lm_head.weight)
+@@ -76,6 +77,10 @@ def manual(model: GPT, tokens: torch.Tensor) -> torch.Tensor:
+ def test_full_equations_and_every_parameter_gradient() -> None:
+     """Include constant prefixes, arbitrary suffixes and all depth-query parameters."""
+     actual = make()
++    with torch.no_grad():
++        for block in actual.blocks:
++            block.attn_gain.weight.normal_(std=0.2)
++            block.ffn_gain.weight.normal_(std=0.2)
+     reference = copy.deepcopy(actual)
+     tokens = torch.tensor([[1, 2, 3, 4], [2, 2, 2, 5], [3, 3, 3, 3]])
+     a = actual(tokens)[0]
+@@ -94,6 +99,10 @@ def test_full_equations_and_every_parameter_gradient() -> None:
+ def test_causality_chunked_cache_and_checkpointing() -> None:
+     """Depth sources stay local to a token; source K/V cache positions still advance."""
+     model = make()
++    with torch.no_grad():
++        for block in model.blocks:
++            block.attn_gain.weight.normal_(std=0.2)
++            block.ffn_gain.weight.normal_(std=0.2)
+     tokens = torch.tensor([[1, 1, 2, 3], [2, 2, 2, 4]])
+     changed = tokens.clone()
+     changed[:, -1] = 7
+diff --git a/tests/refgpt_df1e9f7/__init__.py b/tests/refgpt_df1e9f7/__init__.py
+new file mode 100644
+index 0000000..6343506
+--- /dev/null
++++ b/tests/refgpt_df1e9f7/__init__.py
+@@ -0,0 +1 @@
++"""Frozen GPT at df1e9f7; see manifest.json for original and local hashes."""
+diff --git a/tests/refgpt_df1e9f7/block.py b/tests/refgpt_df1e9f7/block.py
+new file mode 100644
+index 0000000..48ab651
+--- /dev/null
++++ b/tests/refgpt_df1e9f7/block.py
+@@ -0,0 +1,84 @@
++"""Transformer block: causal self-attention and an MLP on a residual stream."""
++
++from typing import TYPE_CHECKING
++
++import torch
++from torch import nn
++
++from tests.refgpt_df1e9f7.feed_forward import FeedForward
++from tests.refgpt_df1e9f7.mha import MultiHeadAttention
++from tests.refgpt_df1e9f7.rms_norm import RMSNorm
++
++if TYPE_CHECKING:
++    from tests.refgpt_df1e9f7.kv_cache import KVCache
++
++
++class Block(nn.Module):
++    """Peri-RMSNorm transformer block with a residual stream."""
++
++    def __init__(
++        self,
++        n_embd: int,
++        n_head: int,
++        layer_idx: int,
++        *,
++        n_layer: int,
++    ) -> None:
++        """
++        Normalize the input and output of each attention and MLP branch.
++
++        `layer_idx` is the block's index in the stack; the attention uses it to
++        address its layer in the KV cache.
++        Every layer applies RoPE. Each branch output is RMS-normalized
++        before residual addition: the Peri-LN update of
++        arXiv:2510.22026v2, Table 1, adapted to parameter-free RMSNorm.
++        The owner supplies its total depth `n_layer`; each branch receives
++        fixed coefficient 1/sqrt(2*n_layer) after normalization.
++        """
++        super().__init__()
++        self.residual_scale = (2 * n_layer) ** -0.5
++        self.ln_1 = RMSNorm(n_embd)
++        self.sa = MultiHeadAttention(
++            n_embd=n_embd,
++            n_head=n_head,
++            layer_idx=layer_idx,
++        )
++        self.ln_2 = RMSNorm(n_embd)
++        self.ffwd = FeedForward(n_embd=n_embd)
++        self.attn_out_norm = RMSNorm(n_embd)
++        self.ffn_out_norm = RMSNorm(n_embd)
++
++    def forward(
++        self,
++        x: torch.Tensor,
++        cos: torch.Tensor,
++        sin: torch.Tensor,
++        kv_cache: KVCache | None,
++        *,
++        constant: torch.Tensor | None = None,
++    ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
++        """
++        Apply attention, then the MLP, normalizing each branch before addition.
++
++        `cos` and `sin` are the RoPE tables of the positions of `x`.
++        A non-cached model supplies its still-constant token-prefix mask.
++        Heads below clipping permanently disable that prefix rewrite.
++        """
++        if constant is None:
++            branch = self.sa(self.ln_1(x), cos, sin, kv_cache=kv_cache)
++        else:
++            branch, valid = self.sa(
++                self.ln_1(x), cos, sin, kv_cache=kv_cache, return_guard=True
++            )
++            constant = constant & valid[:, None]
++        branch = self.attn_out_norm(branch)
++        if constant is not None:
++            branch = torch.where(constant[..., None], branch[:, :1], branch)
++        x = x + self.residual_scale * branch
++        branch = self.ffn_out_norm(self.ffwd(self.ln_2(x)))
++        if constant is not None:
++            branch = torch.where(constant[..., None], branch[:, :1], branch)
++        output = x + self.residual_scale * branch
++        if constant is not None:
++            return output, constant
++        return output
+diff --git a/tests/refgpt_df1e9f7/centered_xsa.py b/tests/refgpt_df1e9f7/centered_xsa.py
+new file mode 100644
+index 0000000..be2d521
+--- /dev/null
++++ b/tests/refgpt_df1e9f7/centered_xsa.py
+@@ -0,0 +1,46 @@
++"""
++Numerically centered evaluation of the existing clipped XSA projection.
++
++Source: mha.py at b98c665b and the companion Lean theorem
++Transformer.SequenceModel.Attention.centeredXSA_eq. Centering changes the
++floating-point evaluation, not the real function. The below-epsilon own
++remainder is essential. Q/K normalization and attention weights are unchanged.
++"""
++
++from typing import TYPE_CHECKING
++
++import torch
++
++if TYPE_CHECKING:
++    from torch import Tensor
++
++XSA_EPS = 1e-12
++
++
++def centered_projection(
++    centered_average: Tensor,
++    own_delta: Tensor,
++    own: Tensor,
++    eps: float = XSA_EPS,
++) -> Tensor:
++    """
++    Remove the own direction after averaging values relative to an anchor.
++
++    The same anchor must define centered_average and own_delta=own-anchor.
++    Normalized attention then gives delta=original_average-own. For own
++    values above eps the own projection is exactly zero, without subtracting
++    two nonzero vectors. Below eps its original clipped remainder is retained.
++    """
++    if eps <= 0:
++        msg = "XSA clipping epsilon must be positive"
++        raise ValueError(msg)
++    norm = torch.linalg.vector_norm(own, dim=-1, keepdim=True)
++    denominator = norm.clamp_min(eps)
++    unit = own / denominator
++    delta = centered_average - own_delta
++    # Zero the unused numerator before squaring, avoiding overflow. At equality
++    # retain clamp_min's own backward convention, as F.normalize does.
++    above = norm > eps
++    ratio = torch.where(above, torch.zeros_like(norm), norm) / denominator
++    remainder = torch.where(above, torch.zeros_like(norm), 1 - ratio.square())
++    return delta - (delta * unit).sum(-1, keepdim=True) * unit + remainder * own
+diff --git a/tests/refgpt_df1e9f7/feed_forward.py b/tests/refgpt_df1e9f7/feed_forward.py
+new file mode 100644
+index 0000000..085ab03
+--- /dev/null
++++ b/tests/refgpt_df1e9f7/feed_forward.py
+@@ -0,0 +1,37 @@
++"""Position-wise feed-forward network of a transformer block."""
++
++from typing import TYPE_CHECKING
++
++from torch import nn
++from torch.nn import functional as F
++
++if TYPE_CHECKING:
++    import torch
++
++
++class FeedForward(nn.Module):
++    """
++    SwiGLU MLP: FFN_SwiGLU(x) = (Swish_1(x W) ⊗ x V) W_2, without biases.
++
++    Shazeer, "GLU Variants Improve Transformer", arXiv:2002.05202. Swish_1 is
++    SiLU, x · sigmoid(x); the gate x W scales the value x V elementwise.
++    """
++
++    def __init__(self, n_embd: int) -> None:
++        """
++        Build the bias-free gate/value and output projections.
++
++        Three matrices instead of the two of a 4x MLP, so the hidden size is
++        2/3 of 4 * n_embd, to the nearest integer, as in the paper: the
++        parameters and FLOPs stay those of the 4x MLP.
++        """
++        super().__init__()
++        hidden = (8 * n_embd + 1) // 3
++        # The gate W and the value V in one matmul
++        self.c_fc = nn.Linear(n_embd, 2 * hidden, bias=False)
++        self.c_proj = nn.Linear(hidden, n_embd, bias=False)
++
++    def forward(self, x: torch.Tensor) -> torch.Tensor:
++        """Apply the MLP to each position of `x` independently."""
++        gate, value = self.c_fc(x).chunk(2, dim=-1)
++        return self.c_proj(F.silu(gate) * value)
+diff --git a/tests/refgpt_df1e9f7/gpt.py b/tests/refgpt_df1e9f7/gpt.py
+new file mode 100644
+index 0000000..9fd6560
+--- /dev/null
++++ b/tests/refgpt_df1e9f7/gpt.py
+@@ -0,0 +1,298 @@
++"""Decoder-only GPT: the `BaseGPT` interface and the plain `GPT` model."""
++
++import math
++from abc import ABC, abstractmethod
++from typing import TYPE_CHECKING
++
++import torch
++from torch import nn
++from torch.nn import functional as F
++from torch.utils.checkpoint import checkpoint
++
++from tests.refgpt_df1e9f7.block import Block
++from tests.refgpt_df1e9f7.rms_norm import RMSNorm
++from tests.refgpt_df1e9f7.rope import rope_tables
++
++if TYPE_CHECKING:
++    from diff_gpt.domain.sampler.sampler import Sampler
++    from tests.refgpt_df1e9f7.kv_cache import KVCache
++
++
++class BaseGPT(nn.Module, ABC):
++    """Interface shared by GPT models: size attributes, forward pass and sampling."""
++
++    def __init__(
++        self,
++        block_size: int,
++        vocab_size: int,
++        n_embd: int,
++        n_head: int,
++        n_layer: int,
++    ) -> None:
++        """Store the model sizes."""
++        super().__init__()
++        self.block_size = block_size
++        self.vocab_size = vocab_size
++        self.n_embd = n_embd
++        self.n_head = n_head
++        self.n_layer = n_layer
++
++    @abstractmethod
++    def forward(
++        self,
++        idx: torch.Tensor,
++        targets: torch.Tensor | None = None,
++        kv_cache: KVCache | None = None,
++    ) -> tuple[torch.Tensor, torch.Tensor | None]:
++        """
++        Return the logits for `idx` and the loss (None when `targets` is None).
++
++        `kv_cache`, when given, holds the keys/values of earlier positions and
++        receives those of `idx`.
++        """
++
++    @abstractmethod
++    def generate(
++        self,
++        idx: torch.Tensor,
++        max_new_tokens: int,
++        sampler: Sampler | None,
++        seed: int | None = None,
++    ) -> torch.Tensor:
++        """
++        Extend `idx` by `max_new_tokens` sampled tokens and return the result.
++
++        `sampler` draws each new token from the logits; `seed`, when given,
++        makes the draws reproducible.
++        """
++
++    @property
++    @abstractmethod
++    def device_type(self) -> str:
++        """Return the device type of the model weights, such as `cpu` or `cuda`."""
++
++    @property
++    @abstractmethod
++    def device(self) -> torch.device:
++        """Return the device of the model weights, with its index (`cuda:1`)."""
++
++
++class GPT(BaseGPT):
++    """
++    Canonical GPT with parameter-free Peri-RMSNorm, QK-norm, RoPE, XSA and SwiGLU.
++
++    A normalized learned token embedding, Peri-norm blocks on a residual
++    stream, a final norm and an lm_head tied to the token embedding.
++    Each block normalizes both branch inputs and outputs before residual
++    addition, with coefficient 1/sqrt(2*n_layer) after the output norm.
++    Positions enter only as rotations of the attention queries and
++    keys (RoPE). The attention is
++    exclusive (XSA): each head's output is orthogonal to the token's own
++    value. The MLP is a SwiGLU with the parameter count of a 4x MLP. Every
++    norm is an RMSNorm without learnable parameters, and no Linear layer has
++    a bias. The model reads the token stream as ordinary text; everything
++    series-specific lives in the encoder/decoder.
++    """
++
++    # RoPE tables of positions 0..block_size-1, registered in __init__
++    rope_cos: torch.Tensor
++    rope_sin: torch.Tensor
++
++    def __init__(
++        self,
++        vocab_size: int,
++        n_embd: int = 64,
++        block_size: int = 32,
++        n_head: int = 4,
++        n_layer: int = 4,
++        *,
++        use_checkpoint: bool = True,
++        pad_vocab_size_to: int = 64,
++        rope_base: float = 10_000.0,
++    ) -> None:
++        """
++        Build the layers and initialize the weights.
++
++        `vocab_size` must be a multiple of `pad_vocab_size_to`: the encoder owns
++        the vocabulary and pads it. `use_checkpoint` turns on gradient
++        checkpointing of the blocks in training mode. `n_layer` must be at
++        least 1: the KV cache advances its position in the last block.
++        `rope_base`, positive and finite, sets the RoPE frequencies: channel
++        pair i turns by rope_base^(-2i / head_dim) radians per position.
++        Parameter-free Peri-RMSNorm normalizes the embedding stream and both
++        the input and output of every attention and MLP branch.
++        Q/K use per-head RMSNorm followed by standard 1/sqrt(head_dim) scaling.
++        Centered XSA and shared states for repeated-token prefixes avoid
++        cancellation in forward and parameter gradients. Both branches use
++        coefficient 1/sqrt(2*n_layer), after their output RMS normalization.
++        """
++        if n_layer < 1:
++            msg = f"n_layer must be >= 1, got {n_layer}"
++            raise ValueError(msg)
++        if not 0 < rope_base < math.inf:
++            msg = f"rope_base must be positive and finite, got {rope_base}"
++            raise ValueError(msg)
++        super().__init__(
++            block_size=block_size,
++            vocab_size=vocab_size,
++            n_embd=n_embd,
++            n_head=n_head,
++            n_layer=n_layer,
++        )
++        if pad_vocab_size_to < 1:
++            msg = "pad_vocab_size_to must be >= 1"
++            raise ValueError(msg)
++        # GPT does not pad — the encoder owns vocab_size, so the caller is
++        # responsible for choosing a tensor-core-friendly multiple.
++        if vocab_size % pad_vocab_size_to != 0:
++            msg = (
++                f"vocab_size ({vocab_size}) must be a multiple of "
++                f"pad_vocab_size_to ({pad_vocab_size_to}); pad it in the encoder"
++            )
++            raise ValueError(msg)
++        self.token_embedding_table = nn.Embedding(vocab_size, n_embd)
++        # RoPE tables, shared by all layers; they follow from the sizes, so
++        # they stay out of the state dict.
++        cos, sin = rope_tables(n_embd // n_head, block_size, rope_base)
++        self.register_buffer("rope_cos", cos, persistent=False)
++        self.register_buffer("rope_sin", sin, persistent=False)
++        self.blocks = nn.ModuleList(
++            Block(
++                n_embd=n_embd,
++                n_head=n_head,
++                layer_idx=i,
++                n_layer=n_layer,
++            )
++            for i in range(n_layer)
++        )
++        self.ln_f = RMSNorm(n_embd)
++        self.embedding_norm = RMSNorm(n_embd)
++        self.lm_head = nn.Linear(n_embd, vocab_size, bias=False)
++        self.lm_head.weight = self.token_embedding_table.weight
++        # Keep the N(0, 0.02) initialization and 1/sqrt(2·n_layer) scaling of
++        # c_proj weights. Peri-RMSNorm controls the scale of their outputs.
++        self.apply(self._init_weights)
++        for name, p in self.named_parameters():
++            if name.endswith("c_proj.weight"):
++                nn.init.normal_(p, mean=0.0, std=0.02 / math.sqrt(2 * n_layer))
++        self.use_checkpoint = use_checkpoint
++        self.branch_scale = 1 / math.sqrt(2 * n_layer)
++
++    @staticmethod
++    def _init_weights(module: nn.Module) -> None:
++        if isinstance(module, (nn.Linear, nn.Embedding)):
++            nn.init.normal_(module.weight, mean=0.0, std=0.02)
++
++    def estimate_flops(self) -> int:
++        """
++        Return the model FLOPs per training token, forward and backward.
++
++        6 per parameter plus 12·n_layer·n_embd·block_size for attention over
++        the full block (PaLM appendix B, as in nanoGPT and nanochat). The tied
++        token embedding counts once, as the lm_head matmul. Elementwise work
++        such as RoPE, the norms, the XSA projection and the SwiGLU gate is not
++        counted, nor is the recompute under gradient checkpointing.
++        """
++        n_params = sum(p.numel() for p in self.parameters())
++        return 6 * n_params + 12 * self.n_layer * self.n_embd * self.block_size
++
++    def forward(
++        self,
++        idx: torch.Tensor,
++        targets: torch.Tensor | None = None,
++        kv_cache: KVCache | None = None,
++    ) -> tuple[torch.Tensor, torch.Tensor | None]:
++        """Apply fixed post-RMS residual scaling, with causal cache support."""
++        start = 0 if kv_cache is None else kv_cache.get_pos()
++        end = start + idx.shape[1]
++        if end > self.block_size:
++            msg = f"positions up to {end} exceed block_size {self.block_size}"
++            raise ValueError(msg)
++        cos, sin = self.rope_cos[start:end], self.rope_sin[start:end]
++        x = self.embedding_norm(self.token_embedding_table(idx))
++        guarded = kv_cache is None
++        constant = (idx != idx[:, :1]).cumsum(dim=1) == 0 if guarded else None
++        for block in self.blocks:
++            if self.training and self.use_checkpoint:
++                result = checkpoint(
++                    block,
++                    x,
++                    cos,
++                    sin,
++                    kv_cache,
++                    constant=constant,
++                    use_reentrant=False,
++                )
++            else:
++                result = block(x, cos, sin, kv_cache, constant=constant)
++            if constant is None:
++                x = result
++            else:
++                x, constant = result
++        if constant is not None:
++            x = torch.where(constant[..., None], x[:, :1], x)
++        logits = self.lm_head(self.ln_f(x))
++        loss = (
++            None
++            if targets is None
++            else F.cross_entropy(
++                logits.reshape(-1, self.vocab_size), targets.reshape(-1)
++            )
++        )
++        return logits, loss
++
++    @torch.inference_mode()
++    def generate(
++        self,
++        idx: torch.Tensor,
++        max_new_tokens: int,
++        sampler: Sampler | None,
++        seed: int | None = None,
++    ) -> torch.Tensor:
++        """
++        Extend `idx` by `max_new_tokens` sampled tokens and return the result.
++
++        Each step re-runs the model on the last `block_size` tokens, without a
++        KV cache. Without `sampler`, tokens are drawn from the softmax of the
++        logits; `seed` seeds a dedicated generator.
++        """
++        block_size = self.block_size
++        device = idx.device
++        rng: torch.Generator | None = None
++        if seed is not None:
++            rng = torch.Generator(device=device)
++            rng.manual_seed(seed)
++        B, T = idx.shape
++        all_tokens = torch.full(
++            (B, T + max_new_tokens),
++            0,
++            dtype=torch.int64,
++            device=device,
++        )
++        all_tokens[:, :T] = idx[:, :T]
++        for current_pos in range(T, T + max_new_tokens):
++            start_slice = max(0, current_pos - block_size)
++            idx_cond = all_tokens[:, start_slice:current_pos]
++            logits, _ = self(idx_cond)
++            logits = logits[:, -1]  # (B, C)
++            if sampler is not None:
++                idx_next = sampler(logits, rng=rng)
++            else:
++                probs = F.softmax(logits, dim=-1)  # (B, C)
++                idx_next = torch.multinomial(
++                    probs,
++                    num_samples=1,
++                    generator=rng,
++                )  # (B, 1)
++            all_tokens[:, current_pos] = idx_next.squeeze()
++        return all_tokens
++
++    @property
++    def device_type(self) -> str:
++        """Return the device type of the model weights, such as `cpu` or `cuda`."""
++        return str(self.lm_head.weight.device.type)
++
++    @property
++    def device(self) -> torch.device:
++        """Return the device of the model weights, with its index (`cuda:1`)."""
++        return self.lm_head.weight.device
+diff --git a/tests/refgpt_df1e9f7/kv_cache.py b/tests/refgpt_df1e9f7/kv_cache.py
+new file mode 100644
+index 0000000..03c2c93
+--- /dev/null
++++ b/tests/refgpt_df1e9f7/kv_cache.py
+@@ -0,0 +1,212 @@
++"""Per-layer key/value cache for incremental decoding."""
++
++import torch
++
++
++class KVCache:
++    """
++    Works hand-in-hand with the GPT model to maintain the KV cache.
++
++    Note that the .pos advances automatically after the last layer of the
++    Transformer inserts.
++
++    A cache can continue the positions of another without copying them
++    (`share_prefix`): groups of its rows then share one copy of their
++    prompt's keys and values, and the cache itself holds only the positions
++    inserted after it.
++    """
++
++    __slots__ = (
++        "kv_cache",
++        "kv_shape",
++        "pos",
++        "prefix",
++    )
++
++    def __init__(
++        self,
++        batch_size: int,
++        num_heads: int,
++        seq_len: int,
++        head_dim: int,
++        num_layers: int,
++    ) -> None:
++        """
++        Record the cache shape; the storage is allocated lazily.
++
++        Allocation happens on the first `insert_kv` or `prefill`, which supply
++        the dtype and device. `seq_len` is the initial capacity in positions;
++        `insert_kv` grows the cache past it when needed.
++        """
++        # Each of K/V is of shape (B, H, T, D) and we have one per layer of the
++        # Transformer.
++        self.kv_shape = (num_layers, 2, batch_size, num_heads, seq_len, head_dim)
++        self.kv_cache = torch.zeros(0)
++        self.pos = 0  # positions in this cache's own storage
++        # Keys/values (L, 2, prompts, H, T, D) that groups of rows share
++        # before their own positions (share_prefix), or None
++        self.prefix: torch.Tensor | None = None
++
++    def reset(self) -> None:
++        """Rewind to the end of the shared prefix (0 without one), keeping storage."""
++        self.pos = 0
++
++    def get_pos(self) -> int:
++        """Return the current position in time, i.e. how many steps are cached."""
++        if self.prefix is None:
++            return self.pos
++        return self.prefix.size(4) + self.pos
++
++    def _check_rows_of(self, other: KVCache) -> None:
++        """Raise ValueError unless every row of `other` can lead rows of self."""
++        # Extract dimensions explicitly
++        self_layers, self_kv, self_batch, self_heads, _, self_head_dim = self.kv_shape
++        # other's capacity is irrelevant: only its cached positions count
++        other_layers, other_kv, other_batch, other_heads, _, other_head_dim = (
++            other.kv_shape
++        )
++
++        # Validate dimensions
++        if self_layers != other_layers:
++            msg = f"Layer count mismatch: {self_layers} != {other_layers}"
++            raise ValueError(msg)
++        if self_kv != other_kv:
++            msg = f"K/V dimension mismatch: {self_kv} != {other_kv}"
++            raise ValueError(msg)
++        if self_heads != other_heads:
++            msg = f"Head count mismatch: {self_heads} != {other_heads}"
++            raise ValueError(msg)
++        if self_head_dim != other_head_dim:
++            msg = f"Head dim mismatch: {self_head_dim} != {other_head_dim}"
++            raise ValueError(msg)
++
++        # Batch size can be expanded: every row of other leads as many rows
++        if self_batch % other_batch != 0:
++            msg = (
++                f"Batch size mismatch: {self_batch} vs {other_batch} "
++                "(self must hold every row of other the same number of times)"
++            )
++            raise ValueError(msg)
++
++    def prefill(self, other: KVCache) -> None:
++        """
++        Prefill given another KV cache, optionally expanding along the batch dim.
++
++        Each row of `other` fills self_batch / other_batch consecutive rows,
++        so a batch-1 prefill fills them all: a copy of each prompt's
++        positions for every row of its samples. `share_prefix` continues
++        them without the copies.
++        """
++        # 1) validate the shapes
++        if self.kv_cache.size(0) != 0 or self.prefix is not None:
++            msg = "Cannot prefill a non-empty KV cache"
++            raise RuntimeError(msg)
++        if other.kv_cache.size(0) == 0:
++            msg = "Cannot prefill with a None KV cache"
++            raise ValueError(msg)
++        if other.prefix is not None:
++            msg = "Cannot prefill from a KV cache that shares a prefix"
++            raise ValueError(msg)
++        self._check_rows_of(other)
++        # Sequence length: self must hold every position cached in other (its
++        # capacity may be larger, after it grew)
++        self_seq = self.kv_shape[4]
++        if self_seq < other.pos:
++            msg = (
++                f"Sequence length mismatch: capacity {self_seq} < "
++                f"{other.pos} cached positions"
++            )
++            raise ValueError(msg)
++
++        # 2) initialize the cache
++        dtype, device = other.kv_cache.dtype, other.kv_cache.device
++        self.kv_cache = torch.empty(self.kv_shape, dtype=dtype, device=device)
++        # 3) copy the data over: row i of other fills rows i·r to i·r + r - 1,
++        # r = self_batch / other_batch, broadcast from a view of other, so no
++        # copy of the whole cache is made on the way
++        other_batch = other.kv_shape[2]
++        cached = other.kv_cache[..., : other.pos, :].unsqueeze(3)
++        self.kv_cache[..., : other.pos, :].unflatten(2, (other_batch, -1)).copy_(cached)
++        # 4) update the pos
++        self.pos = other.pos
++
++    def share_prefix(self, other: KVCache) -> None:
++        """
++        Continue the positions cached in `other` without copying them.
++
++        Row i of `other` leads rows i·r to i·r + r - 1 of self, r = self_batch
++        / other_batch, as after `prefill`, but stays one copy: attention reads
++        it once for all of them (`prefix_kv`). Self holds only the positions
++        inserted after it, so its capacity counts those alone. Self keeps a
++        view of `other`'s keys and values, so `other` must not change after.
++        """
++        if self.kv_cache.size(0) != 0 or self.prefix is not None:
++            msg = "Cannot share a prefix with a non-empty KV cache"
++            raise RuntimeError(msg)
++        if other.kv_cache.size(0) == 0:
++            msg = "Cannot share the prefix of an empty KV cache"
++            raise ValueError(msg)
++        if other.prefix is not None:
++            msg = "Cannot share the prefix of a KV cache that shares one"
++            raise ValueError(msg)
++        self._check_rows_of(other)
++        self.prefix = other.kv_cache[..., : other.pos, :]
++
++    def prefix_kv(self, layer_idx: int) -> tuple[torch.Tensor, torch.Tensor] | None:
++        """
++        Return the shared keys and values of layer `layer_idx`, or None.
++
++        Each is (prompts, H, T, D): the T positions of each prompt, which
++        batch / prompts consecutive rows of this cache continue.
++        """
++        if self.prefix is None:
++            return None
++        return self.prefix[layer_idx, 0], self.prefix[layer_idx, 1]
++
++    def insert_kv(
++        self,
++        layer_idx: int,
++        k: torch.Tensor,
++        v: torch.Tensor,
++    ) -> tuple[torch.Tensor, torch.Tensor]:
++        """
++        Insert `k`, `v` of layer `layer_idx` and return its keys/values so far.
++
++        `k` and `v` are (B, H, T_add, D). The returned tensors are views of the
++        cache up to the new position; the cache grows when it runs out of room.
++        With a shared prefix they hold the positions after it.
++        """
++        # Lazy initialize the cache here because we need to know the dtype/device
++        if self.kv_cache.size(0) == 0:
++            self.kv_cache = torch.empty(self.kv_shape, dtype=k.dtype, device=k.device)
++        # Insert new keys/values to the cache and return the full cache so far
++        _B, _H, T_add, _D = k.size()
++        t0, t1 = self.pos, self.pos + T_add
++        # Dynamically grow the cache if needed
++        if t1 > self.kv_cache.size(4):
++            t_needed = t1 + 1024  # as much as we need plus buffer of 1024
++            t_needed = (
++                t_needed + 1023
++            ) & ~1023  # then round up to the nearest multiple of 1024
++            additional_shape = list(self.kv_cache.shape)
++            additional_shape[4] = t_needed - self.kv_cache.size(4)
++            additional_cache = torch.empty(
++                additional_shape,
++                dtype=k.dtype,
++                device=k.device,
++            )
++            self.kv_cache = torch.cat(
++                [self.kv_cache, additional_cache],
++                dim=4,
++            ).contiguous()
++            self.kv_shape = self.kv_cache.shape
++        # Insert k, v into the cache
++        self.kv_cache[layer_idx, 0, :, :, t0:t1, :] = k
++        self.kv_cache[layer_idx, 1, :, :, t0:t1, :] = v
++        # Return the full cached keys/values up to current position (as a view)
++        key_view = self.kv_cache[layer_idx, 0, :, :, :t1, :]
++        value_view = self.kv_cache[layer_idx, 1, :, :, :t1, :]
++        # Increment pos after the last layer of the Transformer processes
++        if layer_idx == self.kv_cache.size(0) - 1:
++            self.pos = t1
++        return key_view, value_view
+diff --git a/tests/refgpt_df1e9f7/manifest.json b/tests/refgpt_df1e9f7/manifest.json
+new file mode 100644
+index 0000000..ec88506
+--- /dev/null
++++ b/tests/refgpt_df1e9f7/manifest.json
+@@ -0,0 +1,38 @@
++{
++  "commit": "df1e9f7afb16b2878adc13808e1e4bb66680040e",
++  "rewrite": "Absolute model imports redirected to tests.refgpt_df1e9f7; two type-only imports in gpt.py sorted by Ruff.",
++  "files": {
++    "gpt.py": {
++      "source_sha256": "35c28d8ecaf4c8f7ebf63c949fb213e193992eabe7c4acd417f5915422ada43d",
++      "local_sha256": "401d746b9e569736fd0ed2890dd924bb23f2854c53b251e8f783f3e921e53102"
++    },
++    "block.py": {
++      "source_sha256": "d3f55fb85933240da2e30defcd7bf66a7e234108aba3a91b9ce891d92dcd7784",
++      "local_sha256": "69d921385c4d838f0a213d594932e97045484192597dfd8625c8b7b8560a784c"
++    },
++    "mha.py": {
++      "source_sha256": "65045c01bc1819597b3d3f19ada6cf8277cbdcd2d1466bc1376b4e30ded0aa88",
++      "local_sha256": "e04945287ad47928ee7e306cb3a45b4927907767ca7912474aefb1b081ab9eb2"
++    },
++    "feed_forward.py": {
++      "source_sha256": "5177da621997e1855adf4268839204c09870c586b96d2d8704ced3333847abbc",
++      "local_sha256": "5177da621997e1855adf4268839204c09870c586b96d2d8704ced3333847abbc"
++    },
++    "rope.py": {
++      "source_sha256": "23592356d7f268405938ad28585a1e34c1b17655ab73f59b0e59c4ea961128ba",
++      "local_sha256": "23592356d7f268405938ad28585a1e34c1b17655ab73f59b0e59c4ea961128ba"
++    },
++    "rms_norm.py": {
++      "source_sha256": "9849661932ddbbc26e31c64389f012ea6d5db2b91887426125cb9d81a74c2aca",
++      "local_sha256": "9849661932ddbbc26e31c64389f012ea6d5db2b91887426125cb9d81a74c2aca"
++    },
++    "centered_xsa.py": {
++      "source_sha256": "5a40e578608ec16c565966c03dc7a5f2cd9a0ad026af9bef493f4e0dd6e4ab4d",
++      "local_sha256": "5a40e578608ec16c565966c03dc7a5f2cd9a0ad026af9bef493f4e0dd6e4ab4d"
++    },
++    "kv_cache.py": {
++      "source_sha256": "7e60cda6058b6e2b3af460303ee5fb482d99362b82145f6feaf2affec193d895",
++      "local_sha256": "7e60cda6058b6e2b3af460303ee5fb482d99362b82145f6feaf2affec193d895"
++    }
++  }
++}
+diff --git a/tests/refgpt_df1e9f7/mha.py b/tests/refgpt_df1e9f7/mha.py
+new file mode 100644
+index 0000000..3d74f0c
+--- /dev/null
++++ b/tests/refgpt_df1e9f7/mha.py
+@@ -0,0 +1,201 @@
++"""Causal multi-head exclusive self-attention with an optional KV cache."""
++
++from typing import TYPE_CHECKING
++
++import torch
++from torch import nn
++from torch.nn import functional as F
++
++from tests.refgpt_df1e9f7.centered_xsa import XSA_EPS, centered_projection
++from tests.refgpt_df1e9f7.rms_norm import rms_norm
++from tests.refgpt_df1e9f7.rope import apply_rope
++
++if TYPE_CHECKING:
++    from tests.refgpt_df1e9f7.kv_cache import KVCache
++
++
++def one_query_attention(
++    q: torch.Tensor,
++    k: torch.Tensor,
++    v: torch.Tensor,
++    prefix: tuple[torch.Tensor, torch.Tensor] | None = None,
++) -> torch.Tensor:
++    """
++    Attend from one query per row to the cached keys and values of the row.
++
++    `q` is (B, H, 1, D), and `k`, `v` are the row's own positions, (B, H, T,
++    D). `prefix`, the keys and values (N, H, P, D) of N prompts, comes before
++    them: rows i·S to i·S + S - 1 continue prompt i, S = B / N. The S queries
++    of a prompt score its prefix together in one matrix product, so a decode
++    step reads each prefix once rather than once per row, and one softmax
++    spans the prefix and the row's own positions. Matrix products and a
++    softmax, in place of scaled_dot_product_attention: for one query per row
++    they read the cache 1.4 to 1.7 times as fast as its best backend on a
++    GTX 1050 (from 20 rows of 576 positions up) and at 0.92 to 1.26 times
++    the speed of flash attention on a Xeon E5-2680 v4, and they copy no
++    keys. The softmax runs in float32; the scale is 1/sqrt(D), as in
++    scaled_dot_product_attention.
++    """
++    rows, heads, _, dim = q.shape
++    q = q * dim**-0.5
++    scores = q @ k.transpose(-1, -2)  # (B, H, 1, T)
++    if prefix is None:
++        return scores.softmax(dim=-1, dtype=torch.float32).to(v.dtype) @ v
++    prefix_k, prefix_v = prefix
++    prompts, _, prefix_len, _ = prefix_k.shape
++    samples = rows // prompts
++    # (N, H, S, D): the queries of the rows that continue each prompt
++    grouped = q.reshape(prompts, samples, heads, dim).transpose(1, 2)
++    scores = torch.cat(
++        (
++            grouped @ prefix_k.transpose(-1, -2),  # (N, H, S, P)
++            scores.reshape(prompts, samples, heads, -1).transpose(1, 2),
++        ),
++        dim=-1,
++    )  # (N, H, S, P + T)
++    weights = scores.softmax(dim=-1, dtype=torch.float32).to(v.dtype)
++    y = weights[..., :prefix_len] @ prefix_v  # (N, H, S, D)
++    own = weights[..., prefix_len:].transpose(1, 2).reshape(rows, heads, 1, -1)
++    return y.transpose(1, 2).reshape(rows, heads, 1, dim) + own @ v
++
++
++class MultiHeadAttention(nn.Module):
++    """
++    Causal multi-head exclusive self-attention (XSA).
++
++    Zhai, "Exclusive Self Attention", arXiv:2603.09078: each head's output
++    loses its component along the token's own value, so attention carries
++    only the context; the token itself reaches the next layer through the
++    residual stream. XSA adds no parameters.
++
++    QK-norm RMS-normalizes each head's queries and keys, without parameters,
++    before RoPE. Standard 1/sqrt(head_dim) attention scaling makes a logit
++    sqrt(head_dim) times their cosine, up to the norm's numerical epsilon.
++    """
++
++    def __init__(
++        self,
++        n_embd: int,
++        n_head: int,
++        layer_idx: int,
++    ) -> None:
++        """
++        Create the fused query/key/value and output projections, without biases.
++
++        `n_embd` must split into `n_head` heads of even size, since RoPE
++        rotates channel pairs. `layer_idx` is the index of the owning block; it
++        selects this layer's slot in the KV cache. Each head's queries and
++        keys are RMS-normalized before the standard q·k / sqrt(head_dim).
++        Centered XSA evaluates the same real projection while avoiding
++        constant-value cancellation. Every layer applies RoPE.
++        """
++        super().__init__()
++        if n_embd % n_head != 0:
++            msg = f"n_embd {n_embd} must be divisible by n_head {n_head}"
++            raise ValueError(msg)
++        self.n_embd = n_embd
++        self.n_head = n_head
++        self.layer_idx = layer_idx
++        self.head_dim = self.n_embd // self.n_head
++        if self.head_dim % 2 != 0:
++            msg = f"head size {self.head_dim} must be even: RoPE rotates pairs"
++            raise ValueError(msg)
++        # Query, key and value projections for all heads in one matmul
++        self.c_attn = nn.Linear(self.n_embd, 3 * self.n_embd, bias=False)
++        self.c_proj = nn.Linear(self.n_embd, self.n_embd, bias=False)
++
++    def forward(
++        self,
++        x: torch.Tensor,
++        cos: torch.Tensor,
++        sin: torch.Tensor,
++        kv_cache: KVCache | None,
++        *,
++        return_guard: bool = False,
++    ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
++        """
++        Apply causal exclusive self-attention to `x` of shape (B, T, C).
++
++        `cos` and `sin` are the RoPE tables of the T positions of `x`, shape
++        (T, head_dim / 2); they rotate the queries and keys. With `kv_cache`,
++        the new keys/values are appended to this
++        layer's slot and the queries also attend to all cached positions
++        before them, a shared prefix among them (one_query_attention): rows
++        that share one take one position (T = 1) per call. Each head's output
++        is then made orthogonal to the token's own value; the first position
++        attends only to itself, so its output is zero. `return_guard` also
++        returns whether all first-position value heads are above clipping;
++        the full model uses that predicate to stabilize repeated prefixes.
++        """
++        B, T, _ = x.size()
++        q, k, v = self.c_attn(x).split(self.n_embd, dim=2)
++        q, k, v = (
++            q.view(B, T, self.n_head, self.head_dim).transpose(1, 2),
++            k.view(B, T, self.n_head, self.head_dim).transpose(1, 2),
++            v.view(B, T, self.n_head, self.head_dim).transpose(1, 2),
++        )  # make head be batch dim, i.e. (B, T, H, D) -> (B, H, T, D)
++        # RoPE keeps the norms, and the cache stores normalized keys.
++        q = rms_norm(q)
++        k = rms_norm(k)
++        q, k = apply_rope(q, cos, sin), apply_rope(k, cos, sin)
++        # XSA removes the direction of each token's own value, so keep these
++        # values: the cache returns those of every position so far
++        own_value = v
++        # Keys/values that groups of rows share before their own, or None
++        prefix = None if kv_cache is None else kv_cache.prefix_kv(self.layer_idx)
++        if prefix is not None and T != 1:
++            msg = f"rows that share a cached prefix take one position, got {T}"
++            raise ValueError(msg)
++        # Apply KV cache: insert current k,v into cache, get the full view so far
++        if kv_cache is not None:
++            k, v = kv_cache.insert_kv(self.layer_idx, k, v)
++        if prefix is None:
++            anchor = v[:, :, :1]
++        else:
++            prefix_k, prefix_v = prefix
++            prefix_anchor = prefix_v[:, :, :1]
++            anchor = prefix_anchor.repeat_interleave(B // prefix_v.size(0), dim=0)
++            prefix = (prefix_k, prefix_v - prefix_anchor)
++        # Cache storage retains raw values; only this attention call is centered.
++        v = v - anchor
++        Tq = q.size(2)  # number of queries in this forward pass
++        # number of keys/values in total (shared prefix + cache + this pass)
++        Tk = k.size(2) + (0 if prefix is None else prefix[0].size(2))
++        if kv_cache is None or Tq == Tk:
++            # During training (no KV cache), attend as usual with causal attention
++            # And even if there is KV cache, we can still use this simple version
++            # when Tq == Tk
++            y = F.scaled_dot_product_attention(q, k, v, is_causal=True)
++        elif Tq == 1:
++            # During inference but with a single query in this forward pass:
++            # The query has to attend to all the keys/values in the cache
++            y = one_query_attention(q, k, v, prefix)
++        else:
++            # During inference AND we have a chunk of queries in this forward pass:
++            # First, each query attends to all the cached keys/values (i.e. full prefix)
++            attn_mask = torch.zeros(
++                (Tq, Tk),
++                dtype=torch.bool,
++                device=q.device,
++            )  # True = keep, False = mask
++            prefix_len = Tk - Tq
++            attn_mask[:, :prefix_len] = True
++            # Then, causal attention within this chunk
++            attn_mask[:, prefix_len:] = torch.tril(
++                torch.ones((Tq, Tq), dtype=torch.bool, device=q.device),
++            )
++            y = F.scaled_dot_product_attention(q, k, v, attn_mask=attn_mask)
++        # XSA: drop each head's component along the token's own value
++        y = centered_projection(y, own_value - anchor, own_value)
++        if Tq == Tk:
++            # Position 0 has no context: its XSA output is exactly zero.
++            # Avoid amplifying cancellation roundoff in the branch's RMSNorm.
++            y[:, :, 0, :] = 0
++        # Re-assemble the heads side by side and project back to residual stream
++        y = y.transpose(1, 2).contiguous().view(B, T, -1)
++        output = self.c_proj(y)
++        if return_guard:
++            # Reuse the values from the actual fused projection: no extra matmul.
++            valid = (own_value[:, :, 0].norm(dim=-1) > XSA_EPS).all(dim=1)
++            return output, valid
++        return output
+diff --git a/tests/refgpt_df1e9f7/rms_norm.py b/tests/refgpt_df1e9f7/rms_norm.py
+new file mode 100644
+index 0000000..f984268
+--- /dev/null
++++ b/tests/refgpt_df1e9f7/rms_norm.py
+@@ -0,0 +1,63 @@
++"""
++Parameter-free RMSNorm with a separated radial and tangent backward.
++
++Source: transformer lab task155, Eqs. (1)-(3), and the Lean theorems
++Transformer.Residual.rms_vjp_decomposition and rms_vjp_parallel.
++Forward uses the native operation. The backward projects in FP64 before
++returning the input dtype, retaining small radial derivatives lost by the
++native FP32 subtraction. This does not enlarge a mathematically tiny
++derivative or guarantee faster transformer grokking.
++"""
++
++from __future__ import annotations
++
++from typing import TYPE_CHECKING
++
++import torch
++from torch import nn
++from torch.nn import functional as F
++
++if TYPE_CHECKING:
++    from torch.autograd.function import FunctionCtx
++
++
++class _RMSBackward(torch.autograd.Function):
++    @staticmethod
++    def forward(ctx: FunctionCtx, value: torch.Tensor, eps: float) -> torch.Tensor:
++        ctx.save_for_backward(value)
++        ctx.eps = eps
++        return F.rms_norm(value, (value.shape[-1],), eps=eps)
++
++    @staticmethod
++    def backward(ctx: FunctionCtx, upstream: torch.Tensor) -> tuple[torch.Tensor, None]:
++        (value,) = ctx.saved_tensors
++        value64, upstream64 = value.double(), upstream.double()
++        energy = value64.square().mean(-1, keepdim=True)
++        denominator = torch.where(energy > 0, energy, torch.ones_like(energy))
++        parallel = value64 * (value64 * upstream64).mean(-1, keepdim=True) / denominator
++        inverse = (energy + ctx.eps).rsqrt()
++        gradient = (
++            inverse * (upstream64 - parallel) + ctx.eps * inverse.pow(3) * parallel
++        )
++        return gradient.to(value.dtype), None
++
++
++def rms_norm(value: torch.Tensor, eps: float | None = None) -> torch.Tensor:
++    """Normalize the last axis, retaining native opmath epsilon for each dtype."""
++    if eps is None:
++        # Native RMSNorm accumulates half and bfloat16 inputs in float32.
++        dtype = torch.float64 if value.dtype == torch.float64 else torch.float32
++        eps = torch.finfo(dtype).eps
++    return _RMSBackward.apply(value, eps)
++
++
++class RMSNorm(nn.RMSNorm):
++    """A parameter-free native forward with the separated RMS backward."""
++
++    def __init__(self, width: int) -> None:
++        """Normalize one channel axis without a trainable gain or bias."""
++        super().__init__(width, elementwise_affine=False)
++
++    def forward(self, value: torch.Tensor) -> torch.Tensor:
++        """Preserve native epsilon behavior, including an explicit test epsilon."""
++        return rms_norm(value, self.eps)
+diff --git a/tests/refgpt_df1e9f7/rope.py b/tests/refgpt_df1e9f7/rope.py
+new file mode 100644
+index 0000000..3c86e5a
+--- /dev/null
++++ b/tests/refgpt_df1e9f7/rope.py
+@@ -0,0 +1,32 @@
++"""Rotary position embeddings (RoPE) of the attention queries and keys."""
++
++import torch
++
++
++def rope_tables(
++    head_dim: int,
++    n_pos: int,
++    base: float = 10_000.0,
++) -> tuple[torch.Tensor, torch.Tensor]:
++    """
++    Return the cos and sin of the RoPE angles, each of shape (n_pos, head_dim / 2).
++
++    At position p, channel pair i turns by p · base^(-2i / head_dim): pair 0
++    by a radian per position, the last pairs by almost nothing.
++    """
++    exponents = torch.arange(0, head_dim, 2, dtype=torch.float32) / head_dim
++    angles = torch.outer(torch.arange(n_pos, dtype=torch.float32), base**-exponents)
++    return angles.cos(), angles.sin()
++
++
++def apply_rope(x: torch.Tensor, cos: torch.Tensor, sin: torch.Tensor) -> torch.Tensor:
++    """
++    Rotate every channel pair of `x` (..., T, D) by the angle of its position.
++
++    Pair i is channels i and i + D/2, the half-split layout of GPT-NeoX and
++    LLaMA. `cos` and `sin` are the `rope_tables` rows of the T positions. The
++    rotation keeps norms, and the dot product of a rotated query and key
++    depends on their positions only through the offset between them.
++    """
++    x1, x2 = x.chunk(2, dim=-1)
++    return torch.cat((x1 * cos - x2 * sin, x1 * sin + x2 * cos), dim=-1)

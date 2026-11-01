@@ -1,0 +1,52 @@
+Profile Stats:
+       nsamples   sample%   tottime (s)    cumul%   cumtime (s)  filename:lineno(function)
+      6901/6901      72.7         6.901      72.7         6.901  modular_composition.py:100(ModularCompositionTask.inputs)
+      1044/1044      11.0         1.044      11.0         1.044  graph.py:1113(_engine_run_backward)
+        125/130       1.3         0.125       1.4         0.130  clip_grad.py:95(_get_total_norm)
+        116/352       1.2         0.116       3.7         0.352  eval_frame.py:1265(_TorchDynamoContext.__call__.<locals>.compile_wrapper)
+          72/73       0.8         0.072       0.8         0.073  residual_schedule_free.py:64(ResidualScheduleFreeAdamW.step)
+          65/65       0.7         0.065       0.7         0.065  residual_schedule_free.py:61(ResidualScheduleFreeAdamW.step)
+         57/192       0.6         0.057       2.0         0.192  rotary_random.py:39(SplitMix64.shuffle)
+         51/196       0.5         0.051       2.1         0.196  utils.py:118(make_boxed_func.<locals>.g)
+          50/50       0.5         0.050       0.5         0.050  clip_grad.py:106(_get_total_norm)
+          44/44       0.5         0.044       0.5         0.044  loop.py:112(evaluate)
+          42/42       0.4         0.042       0.4         0.042  rotary_random.py:22(SplitMix64.next)
+          41/41       0.4         0.041       0.4         0.041  __init__.py:233(_make_grads)
+          38/38       0.4         0.038       0.4         0.038  clip_grad.py:105(_get_total_norm)
+          32/32       0.3         0.032       0.3         0.032  residual_schedule_free.py:66(ResidualScheduleFreeAdamW.step)
+          31/31       0.3         0.031       0.3         0.031  __init__.py:1292(Path.replace)
+          28/28       0.3         0.028       0.3         0.028  graphs.py:725(CUDAGraph.replay)
+          28/28       0.3         0.028       0.3         0.028  rotary_random.py:21(SplitMix64.next)
+         25/127       0.3         0.025       1.3         0.127  rotary_random.py:33(SplitMix64.index)
+          25/25       0.3         0.025       0.3         0.025  residual_schedule_free.py:58(ResidualScheduleFreeAdamW.step)
+         24/422       0.3         0.024       4.4         0.422  _contextlib.py:158(no_grad)
+          23/23       0.2         0.023       0.2         0.023  residual_schedule_free.py:63(ResidualScheduleFreeAdamW.step)
+          22/22       0.2         0.022       0.2         0.022  residual_schedule_free.py:70(ResidualScheduleFreeAdamW.step)
+          21/21       0.2         0.021       0.2         0.021  rotary.py:32(LabSampler.shuffle)
+          21/21       0.2         0.021       0.2         0.021  residual_schedule_free.py:59(ResidualScheduleFreeAdamW.step)
+          20/20       0.2         0.020       0.2         0.020  rotary_random.py:23(SplitMix64.next)
+
+Legend:
+  nsamples: Direct/Cumulative samples (direct executing / on call stack)
+  sample%: Percentage of total samples this function was directly executing
+  tottime: Estimated total time spent directly in this function
+  cumul%: Percentage of total samples when this function was on the call stack
+  cumtime: Estimated cumulative time (including time in called functions)
+  filename:lineno(function): Function location and name
+
+Summary of Interesting Functions:
+
+Functions with Highest Direct/Cumulative Ratio (Hot Spots):
+  1.000 direct/cumulative ratio, 72.7% direct samples: modular_composition.py:(ModularCompositionTask.inputs)
+  1.000 direct/cumulative ratio, 11.0% direct samples: graph.py:(_engine_run_backward)
+  1.000 direct/cumulative ratio, 0.5% direct samples: loop.py:(evaluate)
+
+Functions with Highest Call Frequency (Indirect Calls):
+  398 indirect calls, 4.4% total stack presence: _contextlib.py:(no_grad)
+  236 indirect calls, 3.7% total stack presence: eval_frame.py:(_TorchDynamoContext.__call__.<locals>.compile_wrapper)
+  145 indirect calls, 2.1% total stack presence: utils.py:(make_boxed_func.<locals>.g)
+
+Functions with Highest Call Magnification (Cumulative/Direct):
+  17.6x call magnification, 398 indirect calls from 24 direct: _contextlib.py:(no_grad)
+  5.1x call magnification, 102 indirect calls from 25 direct: rotary_random.py:(SplitMix64.index)
+  3.8x call magnification, 145 indirect calls from 51 direct: utils.py:(make_boxed_func.<locals>.g)

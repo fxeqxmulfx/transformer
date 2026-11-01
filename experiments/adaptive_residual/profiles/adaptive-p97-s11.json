@@ -1,0 +1,418 @@
+{
+  "label": "adaptive-p97-s11",
+  "python": "3.15.2",
+  "step_before": 1000,
+  "requested_seconds": 10,
+  "interval_microseconds": 1000,
+  "mode": "nonblocking main-thread wall sampling with native call markers",
+  "status": "complete",
+  "top_direct": [
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/benchmarks/modular_composition.py",
+      "line": 100,
+      "function": "ModularCompositionTask.inputs",
+      "total_rec_calls": 0,
+      "direct_calls": 6633,
+      "cumulative_calls": 6633
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/autograd/graph.py",
+      "line": 1113,
+      "function": "_engine_run_backward",
+      "total_rec_calls": 0,
+      "direct_calls": 1097,
+      "cumulative_calls": 1097
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/nn/utils/clip_grad.py",
+      "line": 95,
+      "function": "_get_total_norm",
+      "total_rec_calls": 0,
+      "direct_calls": 157,
+      "cumulative_calls": 159
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/_dynamo/eval_frame.py",
+      "line": 1265,
+      "function": "_TorchDynamoContext.__call__.<locals>.compile_wrapper",
+      "total_rec_calls": 0,
+      "direct_calls": 137,
+      "cumulative_calls": 426
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/optim/residual_schedule_free.py",
+      "line": 61,
+      "function": "ResidualScheduleFreeAdamW.step",
+      "total_rec_calls": 0,
+      "direct_calls": 109,
+      "cumulative_calls": 109
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/optim/residual_schedule_free.py",
+      "line": 64,
+      "function": "ResidualScheduleFreeAdamW.step",
+      "total_rec_calls": 0,
+      "direct_calls": 93,
+      "cumulative_calls": 94
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/_functorch/_aot_autograd/utils.py",
+      "line": 118,
+      "function": "make_boxed_func.<locals>.g",
+      "total_rec_calls": 0,
+      "direct_calls": 76,
+      "cumulative_calls": 247
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/nn/utils/clip_grad.py",
+      "line": 106,
+      "function": "_get_total_norm",
+      "total_rec_calls": 0,
+      "direct_calls": 52,
+      "cumulative_calls": 52
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/utils/_contextlib.py",
+      "line": 158,
+      "function": "no_grad",
+      "total_rec_calls": 0,
+      "direct_calls": 46,
+      "cumulative_calls": 507
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/rotary_random.py",
+      "line": 39,
+      "function": "SplitMix64.shuffle",
+      "total_rec_calls": 0,
+      "direct_calls": 45,
+      "cumulative_calls": 184
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/rotary_random.py",
+      "line": 22,
+      "function": "SplitMix64.next",
+      "total_rec_calls": 0,
+      "direct_calls": 40,
+      "cumulative_calls": 40
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/autograd/__init__.py",
+      "line": 233,
+      "function": "_make_grads",
+      "total_rec_calls": 0,
+      "direct_calls": 39,
+      "cumulative_calls": 39
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/optim/residual_schedule_free.py",
+      "line": 59,
+      "function": "ResidualScheduleFreeAdamW.step",
+      "total_rec_calls": 0,
+      "direct_calls": 36,
+      "cumulative_calls": 36
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/cuda/graphs.py",
+      "line": 725,
+      "function": "CUDAGraph.replay",
+      "total_rec_calls": 0,
+      "direct_calls": 31,
+      "cumulative_calls": 31
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/rotary_random.py",
+      "line": 33,
+      "function": "SplitMix64.index",
+      "total_rec_calls": 0,
+      "direct_calls": 30,
+      "cumulative_calls": 134
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/optim/residual_schedule_free.py",
+      "line": 58,
+      "function": "ResidualScheduleFreeAdamW.step",
+      "total_rec_calls": 0,
+      "direct_calls": 28,
+      "cumulative_calls": 28
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/optim/residual_schedule_free.py",
+      "line": 66,
+      "function": "ResidualScheduleFreeAdamW.step",
+      "total_rec_calls": 0,
+      "direct_calls": 28,
+      "cumulative_calls": 28
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/benchmarks/samplers.py",
+      "line": 101,
+      "function": "gather",
+      "total_rec_calls": 0,
+      "direct_calls": 27,
+      "cumulative_calls": 27
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/optim/residual_schedule_free.py",
+      "line": 70,
+      "function": "ResidualScheduleFreeAdamW.step",
+      "total_rec_calls": 0,
+      "direct_calls": 27,
+      "cumulative_calls": 27
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/nn/utils/clip_grad.py",
+      "line": 105,
+      "function": "_get_total_norm",
+      "total_rec_calls": 0,
+      "direct_calls": 26,
+      "cumulative_calls": 26
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/rotary_random.py",
+      "line": 21,
+      "function": "SplitMix64.next",
+      "total_rec_calls": 0,
+      "direct_calls": 25,
+      "cumulative_calls": 25
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/optim/residual_schedule_free.py",
+      "line": 62,
+      "function": "ResidualScheduleFreeAdamW.step",
+      "total_rec_calls": 0,
+      "direct_calls": 25,
+      "cumulative_calls": 25
+    },
+    {
+      "file": "/home/misha/.local/share/uv/python/cpython-3.15.2-linux-x86_64-gnu/lib/python3.15/pathlib/__init__.py",
+      "line": 1292,
+      "function": "Path.replace",
+      "total_rec_calls": 0,
+      "direct_calls": 25,
+      "cumulative_calls": 25
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/engine/residual.py",
+      "line": 80,
+      "function": "ResidualCompiledStepper.forward",
+      "total_rec_calls": 0,
+      "direct_calls": 24,
+      "cumulative_calls": 287
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/optim/residual_schedule_free.py",
+      "line": 68,
+      "function": "ResidualScheduleFreeAdamW.step",
+      "total_rec_calls": 0,
+      "direct_calls": 24,
+      "cumulative_calls": 24
+    }
+  ],
+  "top_cumulative": [
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/engine/loop.py",
+      "line": 252,
+      "function": "Training.__call__",
+      "total_rec_calls": 0,
+      "direct_calls": 0,
+      "cumulative_calls": 9457
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<native>",
+      "total_rec_calls": 0,
+      "direct_calls": 0,
+      "cumulative_calls": 9457
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/experiments/adaptive_residual/cohort.py",
+      "line": 87,
+      "function": "run",
+      "total_rec_calls": 0,
+      "direct_calls": 0,
+      "cumulative_calls": 9457
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/experiments/adaptive_residual/cohort.py",
+      "line": 112,
+      "function": "<module>",
+      "total_rec_calls": 0,
+      "direct_calls": 0,
+      "cumulative_calls": 9457
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/engine/loop.py",
+      "line": 279,
+      "function": "Training.train",
+      "total_rec_calls": 0,
+      "direct_calls": 6,
+      "cumulative_calls": 9174
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/engine/residual.py",
+      "line": 57,
+      "function": "QueryConditioning.step",
+      "total_rec_calls": 0,
+      "direct_calls": 0,
+      "cumulative_calls": 9155
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/engine/compiled.py",
+      "line": 79,
+      "function": "CompiledStepper.step",
+      "total_rec_calls": 0,
+      "direct_calls": 1,
+      "cumulative_calls": 6661
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/benchmarks/modular_composition.py",
+      "line": 100,
+      "function": "ModularCompositionTask.inputs",
+      "total_rec_calls": 0,
+      "direct_calls": 6633,
+      "cumulative_calls": 6633
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/engine/compiled.py",
+      "line": 87,
+      "function": "CompiledStepper.step",
+      "total_rec_calls": 0,
+      "direct_calls": 2,
+      "cumulative_calls": 1162
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/_tensor.py",
+      "line": 623,
+      "function": "Tensor.backward",
+      "total_rec_calls": 0,
+      "direct_calls": 4,
+      "cumulative_calls": 1160
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/autograd/graph.py",
+      "line": 1113,
+      "function": "_engine_run_backward",
+      "total_rec_calls": 0,
+      "direct_calls": 1097,
+      "cumulative_calls": 1097
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/autograd/__init__.py",
+      "line": 395,
+      "function": "backward",
+      "total_rec_calls": 0,
+      "direct_calls": 4,
+      "cumulative_calls": 1097
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/engine/compiled.py",
+      "line": 95,
+      "function": "CompiledStepper.step",
+      "total_rec_calls": 0,
+      "direct_calls": 3,
+      "cumulative_calls": 526
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/utils/_contextlib.py",
+      "line": 158,
+      "function": "no_grad",
+      "total_rec_calls": 0,
+      "direct_calls": 46,
+      "cumulative_calls": 507
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/optim/optimizer.py",
+      "line": 567,
+      "function": "Optimizer.profile_hook_step.<locals>.wrapper",
+      "total_rec_calls": 0,
+      "direct_calls": 4,
+      "cumulative_calls": 500
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/engine/compiled.py",
+      "line": 86,
+      "function": "CompiledStepper.step",
+      "total_rec_calls": 0,
+      "direct_calls": 1,
+      "cumulative_calls": 449
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/_dynamo/eval_frame.py",
+      "line": 1265,
+      "function": "_TorchDynamoContext.__call__.<locals>.compile_wrapper",
+      "total_rec_calls": 0,
+      "direct_calls": 137,
+      "cumulative_calls": 426
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/_dynamo/eval_frame.py",
+      "line": 1552,
+      "function": "DisableContext.__call__.<locals>._fn",
+      "total_rec_calls": 0,
+      "direct_calls": 4,
+      "cumulative_calls": 300
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/engine/compiled.py",
+      "line": 88,
+      "function": "CompiledStepper.step",
+      "total_rec_calls": 0,
+      "direct_calls": 16,
+      "cumulative_calls": 294
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_spec/python/src/lab/infrastructure/engine/residual.py",
+      "line": 80,
+      "function": "ResidualCompiledStepper.forward",
+      "total_rec_calls": 0,
+      "direct_calls": 24,
+      "cumulative_calls": 287
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/nn/utils/clip_grad.py",
+      "line": 41,
+      "function": "_no_grad.<locals>._no_grad_wrapper",
+      "total_rec_calls": 0,
+      "direct_calls": 10,
+      "cumulative_calls": 275
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/_functorch/aot_autograd.py",
+      "line": 1289,
+      "function": "aot_module_simplified.<locals>.forward",
+      "total_rec_calls": 0,
+      "direct_calls": 3,
+      "cumulative_calls": 260
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/_functorch/_aot_autograd/runtime_wrappers.py",
+      "line": 1204,
+      "function": "_create_runtime_wrapper.<locals>.runtime_wrapper",
+      "total_rec_calls": 0,
+      "direct_calls": 2,
+      "cumulative_calls": 257
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/_functorch/_aot_autograd/codegen.py:codegen(runtime_wrapper_orchestration)",
+      "line": 11,
+      "function": "_runtime_wrapper",
+      "total_rec_calls": 0,
+      "direct_calls": 4,
+      "cumulative_calls": 251
+    },
+    {
+      "file": "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/_functorch/_aot_autograd/utils.py",
+      "line": 118,
+      "function": "make_boxed_func.<locals>.g",
+      "total_rec_calls": 0,
+      "direct_calls": 76,
+      "cumulative_calls": 247
+    }
+  ],
+  "direct_samples": 9457,
+  "elapsed_seconds": 10.007746067996777,
+  "step_after": 2000,
+  "label_after": "adaptive-p97-s11",
+  "single_case_window": true
+}

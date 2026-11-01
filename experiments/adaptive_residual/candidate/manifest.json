@@ -1,0 +1,37 @@
+{
+  "base_commit": "df1e9f7afb16b2878adc13808e1e4bb66680040e",
+  "patch_sha256": "4dd906eee442a576ed44647cc9efbfe784e80bf955b32304d271267a5377b6e9",
+  "files": [
+    "src/diff_gpt/application/grokking/div97.py",
+    "src/diff_gpt/application/grokking/mqar_div97_diagnostics.py",
+    "src/diff_gpt/application/synthetic_pretrain.py",
+    "src/diff_gpt/domain/model/block.py",
+    "src/diff_gpt/domain/model/gpt.py",
+    "src/diff_gpt/domain/model/residual_gain.py",
+    "tests/diff_gpt/application/grokking/test_div97.py",
+    "tests/diff_gpt/application/grokking/test_mqar_div97.py",
+    "tests/diff_gpt/application/grokking/test_recurrence.py",
+    "tests/diff_gpt/domain/model/source_equations.py",
+    "tests/diff_gpt/domain/model/test_conditional_gain.py",
+    "tests/diff_gpt/domain/model/test_constant_prefix.py",
+    "tests/diff_gpt/domain/model/test_gpt.py",
+    "tests/diff_gpt/domain/model/test_residual_generalization.py",
+    "tests/diff_gpt/domain/model/test_residual_gpt.py",
+    "tests/refgpt_df1e9f7/__init__.py",
+    "tests/refgpt_df1e9f7/block.py",
+    "tests/refgpt_df1e9f7/centered_xsa.py",
+    "tests/refgpt_df1e9f7/feed_forward.py",
+    "tests/refgpt_df1e9f7/gpt.py",
+    "tests/refgpt_df1e9f7/kv_cache.py",
+    "tests/refgpt_df1e9f7/manifest.json",
+    "tests/refgpt_df1e9f7/mha.py",
+    "tests/refgpt_df1e9f7/rms_norm.py",
+    "tests/refgpt_df1e9f7/rope.py"
+  ],
+  "status": "Not promoted: earlier99% validation in three of four arithmetic pairs, one tie; frozen requirement was four earlier crossings. Production remains unchanged.",
+  "checks": {
+    "cpu_initial": "302 passed, 19 skipped; two reference defects corrected",
+    "cpu_followup": "52 passed",
+    "source_state_cache_fullgraph_cpu_cuda": "8 passed in42.87 seconds"
+  }
+}

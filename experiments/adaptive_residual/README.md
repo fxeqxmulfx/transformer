@@ -74,3 +74,42 @@ replacement runner hashes. The repaired check permits only that one-ULP
 diagnostic difference. Model, engine, optimizer, sampler, data, stopping and
 selection rules are unchanged; the original protocol remains byte-identical.
 Preparation errors are now recorded explicitly before the runner exits.
+
+## Measured outcome
+
+All eight runs crossed99% validation; all135,000 recorded update gradients
+were finite and nonzero. The candidate crossed earlier in three pairs and
+tied in one. It **did not satisfy the predeclared all-four-earlier promotion
+rule**, so production GPT remains `df1e9f7`. The user-requested Basis
+comparison is a separate follow-up; final test did not alter this decision.
+
+| Prime / seed | Canonical first99% | Candidate first99% | Canonical test | Candidate test |
+| --- | ---: | ---: | ---: | ---: |
+| 97 / 11 | 26,000 | 21,000 | 99.5704% | 99.2698% |
+| 97 / 17 | 24,000 | 20,000 | 99.1838% | 99.2698% |
+| 193 / 11 | 8,000 | 8,000 | 99.9244% | 99.2552% |
+| 193 / 17 | 15,000 | 13,000 | 99.8057% | 99.6978% |
+
+Final test was opened after all learning closed. These are CPU replays of
+complete Schedule-Free evaluation states; their validation counts match
+the canonical CUDA history exactly. A tie at the1,000-update observation
+cadence does not establish equal underlying crossing times. The comparison
+shows conditional amplitude can help these runs, not a universal grokking
+improvement or a flat-spectrum impossibility result.
+
+Training-clock seconds were138.64/115.06,131.30/111.05,43.71/47.60 and
+85.90/74.95 for canonical/candidate in table order. Preparation ranged from
+22.45 to132.23 seconds. Compilation caches, CPU regression work, and the
+recorded metadata interruption make end-to-end times unsuitable as an
+isolated throughput comparison. The full phase lasted37m27s including the
+interruption; per-case timers and complete histories remain in `results.json`.
+
+Python3.15 sampled all eight warmed cases for ten seconds each, with every
+window contained in its intended case. Sampling error rates were about5–6%.
+The main thread spent about63–74% of successful samples at the blocking
+batch-index upload. That can include waiting for earlier CUDA work, so it
+does not prove a CPU preprocessing bottleneck. Task159 records the separate
+CUDA-timed transfer experiment needed to test that interpretation.
+
+Replay the measured learning/report sources at commit `23d16a5e`; the
+original protocol remains pinned to its engine sources at `598979b6`.

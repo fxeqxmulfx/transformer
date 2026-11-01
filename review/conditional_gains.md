@@ -58,3 +58,40 @@ unchanged in `preflight/`. Before any GPU outcome, the new protocol adds P193
 and per-parameter diagnostics and requires earlier crossing in all four pairs.
 Python3.15's parent-owned sampler was independently checked on its child:
 1,000 samples in one second, zero errors, without changing tracing permissions.
+
+The eight-case transformer comparison is complete: P97 seed11 crosses at
+26k/21k updates and seed17 at24k/20k (canonical/candidate); P193 crosses at
+8k/8k and15k/13k. Every case reaches the requested99% validation stop.
+The candidate fails the predeclared requirement to improve all four pairs.
+Retain production GPT `df1e9f7`; do not relabel three wins and a tie as a
+passed promotion criterion. The independently reserved final tests are all
+above99%, but do not choose the architecture or stopping step. CPU replay
+reproduces every canonical CUDA validation count at the endpoints.
+
+P193 initially failed a metadata comparison before learning. CPU and CUDA
+float64 means for the descriptive copy-last statistic differed by one ULP;
+all labels, row hashes, input hashes and counts were exact. Commit23d16a5e
+retains the original protocol and completed checkpoint hashes, pins the
+replacement runner in an explicit amendment, and permits only that diagnostic
+difference. A regression rejects changed rows, counts, other floats, NaN and
+a two-ULP deviation. Preparation failures now leave an explicit phase record.
+No engine or training source changed, so completed P97 trajectories are intact.
+
+All135k measured gradients are finite and nonzero. All eight Python3.15
+parent-owned profiling windows completed within their intended case. They
+show63–74% main-thread wall residency at the blocking index upload, with
+roughly5–6% sampler errors. This is not a CUDA timing proof: queued compute
+can account for an upload wait. Task159 requires an isolated timing/control
+experiment before changing that path. Training clocks and full histories
+are retained; concurrent CPU checks and cache differences limit throughput
+interpretation.
+
+The proposed actual GPT implementation was also tested in an isolated
+checkout. Initial CPU model/grokking coverage passed302 cases, skipped19,
+and exposed two test-reference defects: the frozen reference's import-sort
+hash round trip and a constant-prefix oracle missing the new gain gradient.
+Both were corrected;52 focused/application cases passed. Eight actual GPT
+source, cache/state and fullgraph CPU/CUDA tests then passed, including
+checkpointed backward and nonzero gains. These checks establish that the
+candidate was implemented faithfully; they do not override its failed
+promotion criterion. The user-requested Basis follow-up is tracked by160.
