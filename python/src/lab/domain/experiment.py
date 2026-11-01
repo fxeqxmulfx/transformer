@@ -75,7 +75,8 @@ class Experiment(Spec):
         if isinstance(self.checkpoint, ScheduleFreeContinuation):
             require(isinstance(self.optimizer, ScheduleFreeAdamW),
                     "Full-state continuation requires ScheduleFreeAdamW")
-            require(isinstance(self.model, PeriRotate90), "Continuation currently covers PeriRotate90")
+            require(isinstance(self.model, (PeriRotate90, SourceTransformer)),
+                    "Continuation covers PeriRotate90 and SourceTransformer")
             require(not self.diagnostics.gradients,
                     "Continuation cannot reconstruct an earlier per-step gradient trace")
         if isinstance(self.execution, Measured):

@@ -1,0 +1,67 @@
+{
+  "scope": "Adaptive full-state continuation after the early screen, frozen before long training.",
+  "absolute_update_target": 100000,
+  "source_update": 2000,
+  "cohort_wall_budget_seconds": 7200,
+  "optimizer": "Schedule-Free AdamW only; preserve source lr, decay, betas, epsilon and warmup",
+  "state": "query, base, second moment, averaging clock and next sampler state retained",
+  "evaluation_every": 250,
+  "checkpoint_every": 10000,
+  "early_stopping": false,
+  "final_accuracy_target": 0.99,
+  "ordered_sources": [
+    {
+      "label": "pairs-division-p97-w256d1",
+      "sha256": "b3bc378f98151191722298d367ace038af1822f17f3bbf4eb94dedfbf020612c"
+    },
+    {
+      "label": "pairs-mixed-p97-w256d1",
+      "sha256": "99ca9e511113cdfd21548a70eb40798a595ac6e467d0a15705fcb9aa520a40e1"
+    },
+    {
+      "label": "pairs-division-p193-w128d4",
+      "sha256": "bdb2a7f38d151a64941fe1944af6acee32cd0b2c4b01ead383ebf14e9c41fcb4"
+    },
+    {
+      "label": "pairs-mixed-p193-w128d4",
+      "sha256": "4b337464af09d28d625882f03e2ce3a21ddb9bad3f781f7720df75f38770ca28"
+    },
+    {
+      "label": "pairs-division-p193-w256d1",
+      "sha256": "c91258e735e761a5dbe8739e0e0840861483eead964f0a66acf412afa6761e63"
+    },
+    {
+      "label": "pairs-mixed-p193-w256d1",
+      "sha256": "e383989ed9bb63a71b91deb279b24f3427d7a99101583241ff5db49d593e6471"
+    },
+    {
+      "label": "pairs-division-p97-w128d4",
+      "sha256": "cab2073fd2d658ab49583523c8c8a14a44f9fdac91c9a0b5cb1748009831d430"
+    },
+    {
+      "label": "pairs-mixed-p97-w128d4",
+      "sha256": "3a349dc098b70235f0f737c1e65b5762b08a6ccebf9e5ba3315fecc1987098d7"
+    },
+    {
+      "label": "full-mixed-p193",
+      "sha256": "79b1207c10cdb81bc48de003814c9b76bd71ca45b1cb4418201617a659aadc89"
+    },
+    {
+      "label": "chain-p97-l1-w128d4",
+      "sha256": "353ebf457502e79ec313a9757ec3f2c330ed42f888d2e419dd8f1d597f1cf5a3"
+    }
+  ],
+  "questions": [
+    "Does unchanged training cross99% after the2000-update plateau?",
+    "Does the deeper source model close its early division gap with more updates?",
+    "Can the mixed flat-character task generalize despite its completion obstruction?",
+    "Does incomplete full-table fitting resolve with more updates?",
+    "Can the short chain learn its local update or extrapolate to double length?"
+  ],
+  "report": "All endpoints, curves, epochs, source/replay hashes, transitions and relapses; timeout and not-started are unfinished.",
+  "limits": [
+    "One initialization per long case; no universal convergence or impossibility result.",
+    "The current recipe differs from diff_gpt test_div97 (lr.01, decay1, batch512, W128D1, padded vocabulary and replacement sampling).",
+    "No residual architecture change during a continuation. Residual tests are a separate diagnostic/cohort."
+  ]
+}
