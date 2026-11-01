@@ -2,6 +2,7 @@ module
 
 public import Transformer.AttentionResiduals.Section4_OnlineMerge
 public import Transformer.AttentionResiduals.Normalized
+public import Transformer.AttentionResiduals.QueryConditioning
 
 /-!
 # Attention Residuals and the residual mechanism of Kimi K3

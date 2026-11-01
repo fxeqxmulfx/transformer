@@ -375,3 +375,89 @@ These observations do not identify the causal reason for failed generalization.
 Source-faithful residual alternatives remain task#145; paired retraining with
 the numerical correction is task#148. Neither improvement is assumed from
 aggregation bounds, normalized scores, or the corrected exact algebra.
+
+
+## Query coordinate conditioning (2026-11-01)
+
+Task #150 repairs the remaining huge-query failure of the proposed Q/K depth
+attention variant. The source AttnRes paper uses key-only normalization; this
+is our explicitly separate correction, not a statement attributed to that paper.
+The original synthetic probe at diff_gpt `386ae01` found that Q/K normalization
+bounds scores but leaves a raw query of RMS 1e6 almost unable to change direction.
+Parameter-free RMS alone therefore does not establish useful optimization.
+
+Write RMS_e(v) = v / sqrt(mean(v^2) + e) at positive width. The Lean definition
+uses Euclidean norm and totalized real division/square root, including dimension
+zero. With positive coordinate scale s, physical query q = s*u, and positive
+rechart factor c, the precise claims formalized here are:
+
+- **QC1:** RMS_(s^2 e)(s*u) = RMS_e(u), for any real e and any finite width.
+- **QC2:** RMS_(e/s^2)(u) = RMS_e(s*u). Keeping e fixed while shrinking only
+  the stored query would change this finite-epsilon function.
+- **QC3:** score(e,s,u,k) = inner(RMS_(e/s^2)(u), RMS_e(k))/sqrt(d) equals
+  the original Q/K score of s*u and k. The change (s,u) to (s*c,u/c) preserves
+  every score and hence softmax aggregation of the original raw values, for
+  any finite source set. The key epsilon and score divisor do not change.
+- **QC4:** when d>0 and e>0, absolute score is at most sqrt(d), in every
+  positive frame. This supplies no positive lower bound on a loss gradient.
+- **QC5:** if a scalar loss has Frechet derivative D at s*u, the derivative
+  of u -> loss(s*u) is s*D. Differentiability is an explicit hypothesis and
+  this statement holds for any real s. No backward is detached or substituted.
+- **QC6:** use the actual Schedule-Free reference average x, base z and
+  training query y = beta*x + (1-beta)*z. Dividing both x and z by c divides
+  y by c. The history stores c^2 times the old raw gradient second moment,
+  with unchanged averaging total and maximum learning rate.
+- **QC7:** recovering x from y,z and packing x,z into y,z both commute with
+  this linear rescaling. These algebraic identities use the existing source
+  definitions and totalized inverse, so need no extra beta or c assumptions;
+  the runtime uses beta=.9 and positive c.
+- **QC8:** for the actual exponential second-moment recurrence, updating
+  history c^2*v with gradient c*g gives c^2 times the original next moment.
+  No claim equates subsequent AdamW steps at unchanged scalar learning rate.
+- **QC9:** let M be the maximum of the three current RMS magnitudes of y,z,x.
+  For a threshold T>=1, choose c=M when M>T, otherwise c=1. The factor is
+  positive. Each input magnitude divided by c is at most T. For actual
+  vectors RMS(v/c)=RMS(v)/c, so all three coordinates satisfy the bound
+  immediately after the change. Small and zero states remain unchanged.
+
+`AttentionResiduals/QueryCoordinates.lean` proves QC1--QC5; the dependent
+`QueryConditioning.lean` proves QC6--QC9 using the existing Schedule-Free
+AdamW definitions. Concrete examples instantiate every hypothesis-bearing
+statement. The conditioner is a separate operation before differentiation,
+following zero_grad(set_to_none=True), and changes the complete y/z/moment
+state and the model's nontrainable scale. Training/evaluation mode, clocks
+and sampler history remain intact. Neither RMS has trainable gain or bias.
+
+This preserves the represented function at the change of coordinates. Ordinary
+Schedule-Free steps in the new coordinates intentionally change the physical
+learning rate. It is an optimization-geometry correction, not equality of the
+old and new trajectories, a convergence proof, or a finite-precision guarantee.
+The immediate real coordinate bound does not bound future updates or physical
+query norms. Overflow/underflow beyond the tested range remains a limitation.
+
+Before new learning, the separate diff_gpt `research/residual_conditioning/`
+protocol declares 24 paired fresh cases (scales 0, 1e-8, 1, 1e6; seeds 11,17,23;
+2000 updates) and six continuations from all three saved huge-query failures
+(10000 more updates with complete history). The original implementation is an
+unchanged control. Every curve and endpoint is retained, using Schedule-Free
+AdamW and Python3.15/Torch2.15 CUDA max-autotune. The separate 900-second cap
+does not reopen the completed two-hour transformer cohort. Full-transformer
+residual comparisons remain task #145.
+
+
+Validation before the retry: all15 new theorems build; explicit axiom lists use
+only propext, Classical.choice and Quot.sound. The full build has13264 jobs;
+audit retains36 existing sorry, zero dependent results and zero extra axioms.
+INDEX has4167 modules and21407 theorems, zero vacuous/placeholder statements;
+forbidden checks pass. The affected diff_gpt suite passes166 tests, with one
+existing skip. Three compiled FP32 repetitions agree with independent FP64 to
+2.67e-7 in output and8.28e-9 in query gradient. The state kernel compiles but
+Torch skips CUDA graph capture for its mutated optimizer buffers.
+
+The full repository verification runs452 lab tests successfully (three skips).
+Its104-test optimizer stage has the same two ScheduleFreeMuon CUDA allocation
+failures already recorded in the earlier self-review, at FP32 and FP64. The
+unchanged root source reproduces both failures in the targeted allocation test;
+there are no Python/optimizer changes in this Lean worktree. The separate CPU
+optimizer check passes104 tests with14 GPU-only skips. This is not a fully green
+CUDA verification result; the Schedule-Free AdamW checks used here pass.
