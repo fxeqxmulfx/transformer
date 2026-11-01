@@ -24,6 +24,8 @@ from .rotary import LabDivision, Rotate90
 from .peri_rotary import PeriRotate90, PowerDivision
 from .source_transformer import SourceTransformer
 from .residual_transformer import ResidualTransformer, ResidualPairs, ResidualMaxAutotune
+from .adaptive_residual import CanonicalResidual
+from .residual_basis import ResidualBasis
 from .modular_composition import ModularPairs, ModularChain
 from .peri_restart import PeriRotate90Restart
 from .continuation import ScheduleFreeContinuation
@@ -150,10 +152,13 @@ class Experiment(Spec):
             require(isinstance(self.optimizer, AdamW), "TensorStack uses ordinary AdamW")
             require(not isinstance(self.diagnostics, AttentionDiagnostics),
                     "TensorStack has joint distributions, not the original attention diagnostics")
+        source_basis = isinstance(self.model, CanonicalResidual) and isinstance(self.benchmark, ResidualBasis)
+        if isinstance(self.benchmark, ResidualBasis):
+            require(source_basis, "ResidualBasis needs the current canonical or adaptive source GPT")
         if isinstance(self.model, SourceTransformer) or isinstance(self.benchmark, (ModularPairs, ModularChain)):
-            require(isinstance(self.model, SourceTransformer) and
-                    isinstance(self.benchmark, (ModularPairs, ModularChain)),
-                    "SourceTransformer uses final-answer ModularPairs or ModularChain")
+            require(source_basis or (isinstance(self.model, SourceTransformer) and
+                    isinstance(self.benchmark, (ModularPairs, ModularChain))),
+                    "SourceTransformer uses final-answer ModularPairs/ModularChain, or current GPT with ResidualBasis")
         if isinstance(self.model, (BranchGates, LinearTransport)) or isinstance(self.benchmark, GradientTargets):
             require(isinstance(self.model, (BranchGates, LinearTransport))
                     and isinstance(self.benchmark, GradientTargets), "GradientTargets needs its witness model")
@@ -165,8 +170,8 @@ class Experiment(Spec):
         if isinstance(self.execution, ResidualMaxAutotune):
             require(isinstance(self.model, ResidualTransformer), "ResidualMaxAutotune needs ResidualTransformer")
         if isinstance(self.model, ResidualTransformer) or isinstance(self.benchmark, ResidualPairs):
-            require(isinstance(self.model, ResidualTransformer) and isinstance(self.benchmark, ResidualPairs),
-                    "ResidualTransformer uses the reserved-test ResidualPairs protocol")
+            require(source_basis or (isinstance(self.model, ResidualTransformer) and isinstance(self.benchmark, ResidualPairs)),
+                    "ResidualTransformer uses reserved-test ResidualPairs or current GPT with ResidualBasis")
             require(type(self.optimizer) is ScheduleFreeAdamW, "Residual comparison uses Schedule-Free AdamW")
             require(type(self.execution) is Eager or isinstance(self.execution, Compiled),
                     "Residual comparison supports eager or compiled execution")

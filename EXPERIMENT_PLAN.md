@@ -32,6 +32,8 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 | #156 remove legacy architecture flags | Complete: canonical scaled GPT atdf1e9f7; legacy residual/XSA/RoPE switches removed; migrated callers and diagram checks pass | Remove existing residual-mixing, legacy XSA and per-layer RoPE architecture switches; one current model, migrated callers/tests and updated site; historical variants live in Git |
 | #157 existing Muon allocation failures | Queued, separate baseline regression | Reproduced on unchanged main; AdamW grokking work does not use Muon |
 | #158 repeated gradient search loop | Active: input-dependent gains after branch RMS; user requested continued iterations | Independent mathematical/derivative oracle, known-solution synthetic recovery, direct flag-free model fix if verified; stop each promising transformer run at first 99% validation, final test reported separately |
+| #159 batch-transfer profiling follow-up | Queued after158 | Separate sampled host wait at index upload from GPU work; require isolated timing and exact trajectory/state preservation before an execution change |
+| #160 conditional gains on Basis | Active, user-requested extension | Standard small/easy and large/hard depth, recall and parity; two paired seeds; Schedule-Free AdamW; first99% sequence validation, reserved final test and length-transfer scores |
 | #153 local architecture site | Complete; self-reviewed at709b6f70; root server on127.0.0.1:8765 | Interactive source diagram, residual options, measured curves, config and training recipe; loopback server remains running after worktree cleanup |
 | #138 source model and early mixed-arithmetic screen | Self-reviewed; all48 replayed; fresh old-model compiled count drift retained separately | All cases retained, final-checkpoint replay, exact split/source hashes, train/heldout/longer accuracy and baselines;2000 updates alone cannot rule out grokking |
 | #140 local attention theory | Self-reviewed; seven theorems at730c0155 rechecked | Useful-set mass, weighted retrieval error and normalized head-width bounds; arbitrary rotary phases; distinguish a local constraint from a task lower bound |
@@ -3198,7 +3200,7 @@ rediscover the already repaired native cancellation. Sweep branch scale and
 branch count; retain full held-out recovery, per-condition coefficient errors,
 independent derivatives and compiled-state continuation checks.
 
-Only after those checks, compare the actual fixed baseline and the unconditional
+Only after those checks, compare the actual fixed baseline and the
 candidate architecture on modular division, matched common initialization and
 splits. Source snapshots/hashes must pin both; no runtime architecture toggle
 enters production. The user's new stop instruction is **first 99% validation for
@@ -3239,3 +3241,48 @@ all four pairs. Record per-parameter gradient/update diagnostics every1,000
 steps and a10-second Python3.15 parent-owned sampling window per warmed case.
 No system tracing-policy changes are needed. The final test remains sealed
 until the entire learning phase closes.
+
+The arithmetic cohort has now closed: canonical/candidate first crossings
+are26k/21k and24k/20k on P97, and8k/8k and15k/13k on P193. All eight reserved
+final tests exceed99%; those results did not select the architecture. Three
+wins and a tie do not satisfy the frozen all-four-earlier promotion rule.
+Production remains GPT `df1e9f7`; retain the actual tested candidate as a
+replayable patch. The engine pin stays at598979b6. Runner amendment23d16a5e
+fixes only a one-ULP CPU/CUDA metadata diagnostic mismatch before P193
+training and preserves exact split hashes and the original protocol.
+
+
+## User-requested Basis confirmation — task160
+
+The user explicitly requested testing improvement on Basis during task158.
+Keep the active P97/P193 source pin at598979b6 intact and prepare this work in
+an isolated checkout. The arithmetic cohort and its final-test boundary stay
+unchanged. A modular-arithmetic gain alone will not be described as a broad
+model improvement; the production integration decision also needs this check.
+
+Compare CanonicalResidual and AdaptiveResidual in the standard diagonal Basis
+settings: small/easy (width64, depth2) and large/hard (width128, depth6), four
+heads, all three tasks in each setting, model seeds0/1. This is24 runs, not the
+full crossed-size historical matrix. Preserve the original task generators,
+20,000 training rows,512 validation/test rows, data seed1, batch order convention,
+training batches, task learning rates, warmup50 and3,200-example observation
+cadence. Use only Schedule-Free AdamW (betas .9/.98, decay .1), Python3.15,
+Torch2.15, and CUDA fullgraph max-autotune with math attention. Evaluate in
+batches64 to fit the4GiB GPU; disclose this execution deviation from historical
+Basis. No comparison to old AdamW wall times is causal.
+
+Use exactly Basis sequence accuracy, including free generation for parity;
+for hard depth, the stopping distribution is length128. Stop at the first99%
+canonical validation crossing and retain that endpoint. Final test and easy
+length-transfer test remain sealed until learning closes. Report all cases,
+including numerical failures and unresolved continuation checkpoints. Initial
+100,000-update chunks are not proof of impossibility; continue promising runs.
+Original Basis samples can repeat inputs across splits, especially short parity
+strings: report overlap/novel-input test results separately without changing the
+original distributions or using them to select a model.
+
+Register the source-GPT synthetic adapter as a proper lab block and retain the
+legacy Synthetic/GPTMini behavior. Check exact original split fingerprints,
+full-logit versus supervised-position loss/gradients, free-generation semantics,
+complete Schedule-Free continuation and source correspondence. Keep the model
+candidate flag-free. Review this work in the same assistant.

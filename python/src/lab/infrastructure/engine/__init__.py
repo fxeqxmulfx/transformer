@@ -14,6 +14,8 @@ from .atomic import AtomicStepper
 from .measured import MeasuredStepper
 from ...domain.residual_transformer import ResidualPairs, ResidualMaxAutotune
 from .residual import ResidualTraining, ResidualCompiledStepper, ResidualEagerStepper
+from ...domain.residual_basis import ResidualBasis
+from .basis_residual import BasisTraining
 
 STEPPERS = {training.Eager: EagerStepper, training.CudaGraph: GraphStepper, training.Compiled: CompiledStepper,
             training.Measured: MeasuredStepper, training.MaxAutotune: CompiledStepper, ResidualMaxAutotune: CompiledStepper}
@@ -33,7 +35,9 @@ class Engine:
             stepper = AtomicStepper
         if isinstance(experiment.benchmark, GradientTargets):
             stepper = GradientEagerStepper if type(experiment.execution) is training.Eager else GradientCompiledStepper
-        if isinstance(experiment.benchmark, ResidualPairs):
+        if isinstance(experiment.benchmark, (ResidualPairs, ResidualBasis)):
             stepper = ResidualEagerStepper if type(experiment.execution) is training.Eager else ResidualCompiledStepper
+            if isinstance(experiment.benchmark, ResidualBasis):
+                return BasisTraining(experiment, run, progress, stepper)()
             return ResidualTraining(experiment, run, progress, stepper)()
         return Training(experiment, run, progress, stepper)()

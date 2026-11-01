@@ -35,6 +35,7 @@ Python (the uv project in python/; an experiment is a folder under experiments/)
     rms-backward <action>         freeze, run or report the RMS gradient benchmark
     context-gains <action>        freeze, run or report conditional gain recovery
     adaptive-residual <action>    matched transformer comparison to 99% validation
+    basis-residual <action>       matched current GPT on the original Basis tasks
 
 Together
     verify                        build, audit, index, forbidden, reference integrity and test
@@ -294,6 +295,11 @@ def adaptive_residual(arguments):
     execute(["uv", "run", "--locked", "python", str(directory / script), *extra], cwd=PYTHON)
 
 
+def basis_residual(arguments):
+    execute(["uv", "run", "--locked", "python", str(ROOT / "experiments/basis_residual/cohort.py"),
+             arguments.action], cwd=PYTHON)
+
+
 def clean(_):
     for directory in (PYTHON, ROOT / "optimizers", ROOT / "experiments", ROOT / "scripts"):
         for cache in directory.rglob("__pycache__"):
@@ -340,6 +346,9 @@ def main():
     command = tasks.add_parser("adaptive-residual")
     command.add_argument("action", choices=("freeze", "run", "profile-run", "report"))
     command.set_defaults(handler=adaptive_residual)
+    command = tasks.add_parser("basis-residual")
+    command.add_argument("action", choices=("freeze", "run", "report"))
+    command.set_defaults(handler=basis_residual)
     command = tasks.add_parser("test")
     command.add_argument("patterns", nargs="*")
     command.set_defaults(handler=test)
