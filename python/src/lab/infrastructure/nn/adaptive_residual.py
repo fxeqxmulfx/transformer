@@ -7,9 +7,12 @@ Every RMS, including per-head Q/K, uses the task155 separated backward.
 
 import torch
 from torch import nn
+from torch.nn import functional as F
 
+from .centered_xsa import centered_projection, XSA_EPS
 from .residual_transformer import ResidualTransformer
 from .rms_backward import rms_norm
+from .source_transformer import rotate
 
 
 class AccurateRMSNorm(nn.RMSNorm):
@@ -28,9 +31,38 @@ def accurate_norms(module):
             accurate_norms(child)
 
 
+class CanonicalAttention(nn.Module):
+    """Preserve df1e9f7's subtraction graph and first-position assignment.
+
+    Sharing the two centered subtractions is equal over the reals but changes
+    FP32 backward accumulation. Reuse the initialized modules without a draw.
+    The lab interface omits cache support and always returns the prefix guard.
+    """
+    def __init__(self, attention):
+        super().__init__()
+        self.n_head, self.head_dim = attention.n_head, attention.head_dim
+        for name, child in attention.named_children():
+            self.add_module(name, child)
+
+    def forward(self, x, cos, sin):
+        batch, length, width = x.shape
+        q, k, v = self.c_attn(x).split(width, dim=2)
+        q, k, v = (z.view(batch, length, self.n_head, self.head_dim).transpose(1, 2)
+                   for z in (q, k, v))
+        q, k = rotate(self.q_norm(q), cos, sin), rotate(self.k_norm(k), cos, sin)
+        anchor = v[:, :, :1]
+        average = F.scaled_dot_product_attention(q, k, v - anchor, is_causal=True)
+        y = centered_projection(average, v - anchor, v)
+        y[:, :, 0, :] = 0
+        valid = (v[:, :, 0].norm(dim=-1) > XSA_EPS).all(dim=1)
+        return self.c_proj(y.transpose(1, 2).contiguous().view(batch, length, -1)), valid
+
+
 class CanonicalResidual(ResidualTransformer):
     def __init__(self, spec, vocab):
         super().__init__(spec, vocab)
+        for block in self.blocks:
+            block.sa = CanonicalAttention(block.sa)
         accurate_norms(self)
 
 

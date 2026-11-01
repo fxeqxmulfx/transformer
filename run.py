@@ -288,8 +288,10 @@ def context_gains(arguments):
 
 
 def adaptive_residual(arguments):
-    execute(["uv", "run", "--locked", "python", str(ROOT / "experiments/adaptive_residual/cohort.py"),
-             arguments.action], cwd=PYTHON)
+    directory = ROOT / "experiments/adaptive_residual"
+    script = "profile_loop.py" if arguments.action == "profile-run" else "cohort.py"
+    extra = [] if arguments.action == "profile-run" else [arguments.action]
+    execute(["uv", "run", "--locked", "python", str(directory / script), *extra], cwd=PYTHON)
 
 
 def clean(_):
@@ -336,7 +338,7 @@ def main():
     command.add_argument("action", choices=("freeze", "run", "report"))
     command.set_defaults(handler=context_gains)
     command = tasks.add_parser("adaptive-residual")
-    command.add_argument("action", choices=("freeze", "run", "report"))
+    command.add_argument("action", choices=("freeze", "run", "profile-run", "report"))
     command.set_defaults(handler=adaptive_residual)
     command = tasks.add_parser("test")
     command.add_argument("patterns", nargs="*")

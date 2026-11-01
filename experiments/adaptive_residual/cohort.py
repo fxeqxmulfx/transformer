@@ -26,7 +26,9 @@ def freeze():
     study = load(HERE)
     cases = []
     # Reverse order in the second pair to expose simple thermal/order confounds.
-    order = ("canonical-s11", "adaptive-s11", "adaptive-s17", "canonical-s17")
+    order = tuple(f"{variant}-p{prime}-s{seed}" for prime in (97, 193)
+                  for seed in (11, 17)
+                  for variant in (("canonical", "adaptive") if seed == 11 else ("adaptive", "canonical")))
     for label in order:
         spec = study.experiments[label]
         task = build_task(spec.benchmark, spec.seeds.data, torch.device("cpu"))
@@ -37,14 +39,14 @@ def freeze():
         "frozen_utc": datetime.now(timezone.utc).isoformat(), "cases": cases,
         "engine_sources": code(), "cohort_sources": sources(),
         "python": platform.python_version(), "torch": str(torch.__version__),
-        "source_gpt_commit": "df1e9f7", "selection": "two matched model seeds, unchanged data/batches11; no search",
+        "source_gpt_commit": "df1e9f7", "selection": "P97/P193 with two matched model seeds each, unchanged data/batches11; no search",
         "stop": "first canonical validation>=99%, every1000 updates; current endpoint, not best checkpoint",
         "continuation": "100000 is a checkpointed chunk ceiling, not success or an automatic rejection; promising uncrossed cases need continuation",
         "test_policy": "sealed until every case has crossed99 or has an explicitly recorded numerical failure",
-        "decision": "promote only if both seeds cross99 earlier than their current-GPT controls, and every source/gradient/cache regression passes; final test is reported, not used for selection",
+        "decision": "promote only if both seeds on both primes cross99 earlier than their current-GPT controls, and every source/gradient/cache regression passes; final test is reported, not used for selection",
         "synthetic_scope": "input-dependent branch amplitude; no claim that all grokking obstructions are removed",
     })
-    print("Frozen four fresh matched transformer runs", flush=True)
+    print("Frozen eight fresh matched transformer runs", flush=True)
 
 
 def run():

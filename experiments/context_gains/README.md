@@ -83,3 +83,6 @@ regression suite shared the CPU during this cohort, so these times are not an
 isolated throughput comparison. `results.json` retains full curves, per-condition
 test scores, coefficient errors, gradient summaries and checkpoint hashes.
 The four-case transformer comparison remains a separate test of generalization.
+
+Replay this scored cohort at commit `63c2d22a`: later lab additions deliberately
+invalidate its all-source fingerprint. The retained JSON is readable at any revision.

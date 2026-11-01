@@ -49,3 +49,12 @@ lab phase passed 487 tests with 3 skips in 815.82s. The optimizer phase passed
 task157 remain (75 allocations of 8,519,680 bytes in FP32 and FP64). No optimizer
 source changed, and this cohort uses Schedule-Free AdamW. The overall command
 therefore remains nonzero; the unrelated failures are not reported as green.
+
+The follow-up source port now preserves GPT's exact attention graph. Eight
+focused tests pass, including bit-identical FP32 logits and every parameter
+gradient for both seeds, primes97/193, and lengths2/4; compiled CPU/CUDA checks
+and complete-state resume also pass. The original unused protocol is archived
+unchanged in `preflight/`. Before any GPU outcome, the new protocol adds P193
+and per-parameter diagnostics and requires earlier crossing in all four pairs.
+Python3.15's parent-owned sampler was independently checked on its child:
+1,000 samples in one second, zero errors, without changing tracing permissions.

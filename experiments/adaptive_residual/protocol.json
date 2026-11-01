@@ -1,8 +1,8 @@
 {
-  "frozen_utc": "2026-11-01T22:49:45.845165+00:00",
+  "frozen_utc": "2026-11-01T23:08:21.894601+00:00",
   "cases": [
     {
-      "label": "canonical-s11",
+      "label": "canonical-p97-s11",
       "experiment": {
         "type": "Experiment",
         "model": {
@@ -64,7 +64,7 @@
         },
         "diagnostics": {
           "type": "Diagnostics",
-          "every": 0,
+          "every": 1000,
           "neighbors": false,
           "gradients": true
         },
@@ -112,7 +112,7 @@
       "parameters": 798336
     },
     {
-      "label": "adaptive-s11",
+      "label": "adaptive-p97-s11",
       "experiment": {
         "type": "Experiment",
         "model": {
@@ -174,7 +174,7 @@
         },
         "diagnostics": {
           "type": "Diagnostics",
-          "every": 0,
+          "every": 1000,
           "neighbors": false,
           "gradients": true
         },
@@ -222,7 +222,7 @@
       "parameters": 799360
     },
     {
-      "label": "adaptive-s17",
+      "label": "adaptive-p97-s17",
       "experiment": {
         "type": "Experiment",
         "model": {
@@ -284,7 +284,7 @@
         },
         "diagnostics": {
           "type": "Diagnostics",
-          "every": 0,
+          "every": 1000,
           "neighbors": false,
           "gradients": true
         },
@@ -332,7 +332,7 @@
       "parameters": 799360
     },
     {
-      "label": "canonical-s17",
+      "label": "canonical-p97-s17",
       "experiment": {
         "type": "Experiment",
         "model": {
@@ -394,7 +394,7 @@
         },
         "diagnostics": {
           "type": "Diagnostics",
-          "every": 0,
+          "every": 1000,
           "neighbors": false,
           "gradients": true
         },
@@ -440,6 +440,446 @@
         }
       },
       "parameters": 798336
+    },
+    {
+      "label": "canonical-p193-s11",
+      "experiment": {
+        "type": "Experiment",
+        "model": {
+          "type": "CanonicalResidual",
+          "width": 128,
+          "depth": 4,
+          "heads": 4,
+          "context": 33,
+          "rope_base": 10000.0
+        },
+        "benchmark": {
+          "type": "ResidualPairs",
+          "prime": 193,
+          "operation": "division",
+          "exponent": 1,
+          "train_fraction": 0.5,
+          "target_accuracy": 0.99,
+          "stable_observations": 3,
+          "minimum_updates": 5000
+        },
+        "optimizer": {
+          "type": "ScheduleFreeAdamW",
+          "lr": 0.003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "warmup": 0
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 10,
+          "anneal": null,
+          "inclusive": true
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 100000,
+          "batch": 256
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 11,
+          "data": 11,
+          "batches": 11
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 1000,
+          "batch": 512
+        },
+        "execution": {
+          "type": "ResidualMaxAutotune",
+          "device": "cuda",
+          "threads": 1,
+          "attention_backend": "math"
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 1000,
+          "neighbors": false,
+          "gradients": true
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 1000
+        },
+        "stopping": null
+      },
+      "task": {
+        "prime": 193,
+        "data_seed": 11,
+        "vocab_size": 193,
+        "split_policy": "unique_inputs_splitmix64_no_replacement; heldout_first_half_validation_rest_final_test",
+        "supervision": "final_answer_only; no target or intermediates in model input",
+        "operation": "division",
+        "exponent": 1,
+        "domain_size": 37056,
+        "scope": "unseen_pairs_at_fixed_prime",
+        "train": {
+          "examples": 18528,
+          "input_length": 2,
+          "fingerprint": "e3ee443b70bca6ba04111829c68824314102907b3e8d9caa7aed93b23a37b7ed",
+          "input_fingerprint": "88e8eb7c8b83b5d80717d618483683cf20cbcb219713f71a5aa563bbcdc7d119",
+          "copy_last_accuracy": 0.00469559585492228,
+          "majority_accuracy": 0.0062068221070811745
+        },
+        "validation": {
+          "examples": 9264,
+          "input_length": 2,
+          "fingerprint": "0acb276cc51f7fc25b9f203d9257aa76051218b78e3c406d7b0a89bf9c32f791",
+          "input_fingerprint": "f28b8440f522684df2f00100d2e995f2de26d47d987ba2a57fce96b84b424485",
+          "copy_last_accuracy": 0.005613126079447323,
+          "majority_accuracy": 0.0069084628670120895
+        },
+        "test": {
+          "examples": 9264,
+          "input_length": 2,
+          "fingerprint": "9827cf1f71e6153b2069d52d1583e14f4a6dd0675d76d5b0708a82f0c0c17951",
+          "input_fingerprint": "9f5968715424fc8270fe582dbba3001653da9f42ee9fa74493f62b133bc202f9",
+          "copy_last_accuracy": 0.005721070811744387,
+          "majority_accuracy": 0.0072322970639032815
+        }
+      },
+      "parameters": 810624
+    },
+    {
+      "label": "adaptive-p193-s11",
+      "experiment": {
+        "type": "Experiment",
+        "model": {
+          "type": "AdaptiveResidual",
+          "width": 128,
+          "depth": 4,
+          "heads": 4,
+          "context": 33,
+          "rope_base": 10000.0
+        },
+        "benchmark": {
+          "type": "ResidualPairs",
+          "prime": 193,
+          "operation": "division",
+          "exponent": 1,
+          "train_fraction": 0.5,
+          "target_accuracy": 0.99,
+          "stable_observations": 3,
+          "minimum_updates": 5000
+        },
+        "optimizer": {
+          "type": "ScheduleFreeAdamW",
+          "lr": 0.003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "warmup": 0
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 10,
+          "anneal": null,
+          "inclusive": true
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 100000,
+          "batch": 256
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 11,
+          "data": 11,
+          "batches": 11
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 1000,
+          "batch": 512
+        },
+        "execution": {
+          "type": "ResidualMaxAutotune",
+          "device": "cuda",
+          "threads": 1,
+          "attention_backend": "math"
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 1000,
+          "neighbors": false,
+          "gradients": true
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 1000
+        },
+        "stopping": null
+      },
+      "task": {
+        "prime": 193,
+        "data_seed": 11,
+        "vocab_size": 193,
+        "split_policy": "unique_inputs_splitmix64_no_replacement; heldout_first_half_validation_rest_final_test",
+        "supervision": "final_answer_only; no target or intermediates in model input",
+        "operation": "division",
+        "exponent": 1,
+        "domain_size": 37056,
+        "scope": "unseen_pairs_at_fixed_prime",
+        "train": {
+          "examples": 18528,
+          "input_length": 2,
+          "fingerprint": "e3ee443b70bca6ba04111829c68824314102907b3e8d9caa7aed93b23a37b7ed",
+          "input_fingerprint": "88e8eb7c8b83b5d80717d618483683cf20cbcb219713f71a5aa563bbcdc7d119",
+          "copy_last_accuracy": 0.00469559585492228,
+          "majority_accuracy": 0.0062068221070811745
+        },
+        "validation": {
+          "examples": 9264,
+          "input_length": 2,
+          "fingerprint": "0acb276cc51f7fc25b9f203d9257aa76051218b78e3c406d7b0a89bf9c32f791",
+          "input_fingerprint": "f28b8440f522684df2f00100d2e995f2de26d47d987ba2a57fce96b84b424485",
+          "copy_last_accuracy": 0.005613126079447323,
+          "majority_accuracy": 0.0069084628670120895
+        },
+        "test": {
+          "examples": 9264,
+          "input_length": 2,
+          "fingerprint": "9827cf1f71e6153b2069d52d1583e14f4a6dd0675d76d5b0708a82f0c0c17951",
+          "input_fingerprint": "9f5968715424fc8270fe582dbba3001653da9f42ee9fa74493f62b133bc202f9",
+          "copy_last_accuracy": 0.005721070811744387,
+          "majority_accuracy": 0.0072322970639032815
+        }
+      },
+      "parameters": 811648
+    },
+    {
+      "label": "adaptive-p193-s17",
+      "experiment": {
+        "type": "Experiment",
+        "model": {
+          "type": "AdaptiveResidual",
+          "width": 128,
+          "depth": 4,
+          "heads": 4,
+          "context": 33,
+          "rope_base": 10000.0
+        },
+        "benchmark": {
+          "type": "ResidualPairs",
+          "prime": 193,
+          "operation": "division",
+          "exponent": 1,
+          "train_fraction": 0.5,
+          "target_accuracy": 0.99,
+          "stable_observations": 3,
+          "minimum_updates": 5000
+        },
+        "optimizer": {
+          "type": "ScheduleFreeAdamW",
+          "lr": 0.003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "warmup": 0
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 10,
+          "anneal": null,
+          "inclusive": true
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 100000,
+          "batch": 256
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 17,
+          "data": 11,
+          "batches": 11
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 1000,
+          "batch": 512
+        },
+        "execution": {
+          "type": "ResidualMaxAutotune",
+          "device": "cuda",
+          "threads": 1,
+          "attention_backend": "math"
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 1000,
+          "neighbors": false,
+          "gradients": true
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 1000
+        },
+        "stopping": null
+      },
+      "task": {
+        "prime": 193,
+        "data_seed": 11,
+        "vocab_size": 193,
+        "split_policy": "unique_inputs_splitmix64_no_replacement; heldout_first_half_validation_rest_final_test",
+        "supervision": "final_answer_only; no target or intermediates in model input",
+        "operation": "division",
+        "exponent": 1,
+        "domain_size": 37056,
+        "scope": "unseen_pairs_at_fixed_prime",
+        "train": {
+          "examples": 18528,
+          "input_length": 2,
+          "fingerprint": "e3ee443b70bca6ba04111829c68824314102907b3e8d9caa7aed93b23a37b7ed",
+          "input_fingerprint": "88e8eb7c8b83b5d80717d618483683cf20cbcb219713f71a5aa563bbcdc7d119",
+          "copy_last_accuracy": 0.00469559585492228,
+          "majority_accuracy": 0.0062068221070811745
+        },
+        "validation": {
+          "examples": 9264,
+          "input_length": 2,
+          "fingerprint": "0acb276cc51f7fc25b9f203d9257aa76051218b78e3c406d7b0a89bf9c32f791",
+          "input_fingerprint": "f28b8440f522684df2f00100d2e995f2de26d47d987ba2a57fce96b84b424485",
+          "copy_last_accuracy": 0.005613126079447323,
+          "majority_accuracy": 0.0069084628670120895
+        },
+        "test": {
+          "examples": 9264,
+          "input_length": 2,
+          "fingerprint": "9827cf1f71e6153b2069d52d1583e14f4a6dd0675d76d5b0708a82f0c0c17951",
+          "input_fingerprint": "9f5968715424fc8270fe582dbba3001653da9f42ee9fa74493f62b133bc202f9",
+          "copy_last_accuracy": 0.005721070811744387,
+          "majority_accuracy": 0.0072322970639032815
+        }
+      },
+      "parameters": 811648
+    },
+    {
+      "label": "canonical-p193-s17",
+      "experiment": {
+        "type": "Experiment",
+        "model": {
+          "type": "CanonicalResidual",
+          "width": 128,
+          "depth": 4,
+          "heads": 4,
+          "context": 33,
+          "rope_base": 10000.0
+        },
+        "benchmark": {
+          "type": "ResidualPairs",
+          "prime": 193,
+          "operation": "division",
+          "exponent": 1,
+          "train_fraction": 0.5,
+          "target_accuracy": 0.99,
+          "stable_observations": 3,
+          "minimum_updates": 5000
+        },
+        "optimizer": {
+          "type": "ScheduleFreeAdamW",
+          "lr": 0.003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "warmup": 0
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 10,
+          "anneal": null,
+          "inclusive": true
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 100000,
+          "batch": 256
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 17,
+          "data": 11,
+          "batches": 11
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 1000,
+          "batch": 512
+        },
+        "execution": {
+          "type": "ResidualMaxAutotune",
+          "device": "cuda",
+          "threads": 1,
+          "attention_backend": "math"
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 1000,
+          "neighbors": false,
+          "gradients": true
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 1000
+        },
+        "stopping": null
+      },
+      "task": {
+        "prime": 193,
+        "data_seed": 11,
+        "vocab_size": 193,
+        "split_policy": "unique_inputs_splitmix64_no_replacement; heldout_first_half_validation_rest_final_test",
+        "supervision": "final_answer_only; no target or intermediates in model input",
+        "operation": "division",
+        "exponent": 1,
+        "domain_size": 37056,
+        "scope": "unseen_pairs_at_fixed_prime",
+        "train": {
+          "examples": 18528,
+          "input_length": 2,
+          "fingerprint": "e3ee443b70bca6ba04111829c68824314102907b3e8d9caa7aed93b23a37b7ed",
+          "input_fingerprint": "88e8eb7c8b83b5d80717d618483683cf20cbcb219713f71a5aa563bbcdc7d119",
+          "copy_last_accuracy": 0.00469559585492228,
+          "majority_accuracy": 0.0062068221070811745
+        },
+        "validation": {
+          "examples": 9264,
+          "input_length": 2,
+          "fingerprint": "0acb276cc51f7fc25b9f203d9257aa76051218b78e3c406d7b0a89bf9c32f791",
+          "input_fingerprint": "f28b8440f522684df2f00100d2e995f2de26d47d987ba2a57fce96b84b424485",
+          "copy_last_accuracy": 0.005613126079447323,
+          "majority_accuracy": 0.0069084628670120895
+        },
+        "test": {
+          "examples": 9264,
+          "input_length": 2,
+          "fingerprint": "9827cf1f71e6153b2069d52d1583e14f4a6dd0675d76d5b0708a82f0c0c17951",
+          "input_fingerprint": "9f5968715424fc8270fe582dbba3001653da9f42ee9fa74493f62b133bc202f9",
+          "copy_last_accuracy": 0.005721070811744387,
+          "majority_accuracy": 0.0072322970639032815
+        }
+      },
+      "parameters": 810624
     }
   ],
   "engine_sources": {
@@ -542,7 +982,7 @@
     "infrastructure/farm.py": "626b5b1c3a92ca5bfc3c4078c0c59a2e7b6ff8acdbc38782cbc5949640821b27",
     "infrastructure/loader.py": "b1cc1bc0463910c78abd30f587ae5a66fa5d091ce7639785bba58b6a1016b97c",
     "infrastructure/nn/__init__.py": "eb925aaa030067354687f48a95b00172185d191611c0c433d8ecfbed7fdc37bb",
-    "infrastructure/nn/adaptive_residual.py": "c16958c439bfdbf3662c7bb2163dcc7a9826d78b4e5b02c97d8f6ccf9a0821f0",
+    "infrastructure/nn/adaptive_residual.py": "0c305023986a226a1c912d1a1a9c418ba838351cc4773b5cd8afffb5497f75df",
     "infrastructure/nn/atomic.py": "76ab8eed161a2547f36cc7c97cdb2de98ec5a6ce9bd077695918b6b7c371fb05",
     "infrastructure/nn/attention.py": "48f1f270bbca0bb91195e556dcfecc299e7c8318ff48c8a36078f7fb1f98b991",
     "infrastructure/nn/centered_xsa.py": "5a40e578608ec16c565966c03dc7a5f2cd9a0ad026af9bef493f4e0dd6e4ab4d",
@@ -602,18 +1042,19 @@
     "lean_optim/stages.py": "280a99a2b64c5acfa7cf9fc091dd5da5f84b23bfefab6397be422f19e050cbe5"
   },
   "cohort_sources": {
-    "cohort.py": "95bc447ffea21bb17681c4bc86f2e77ee52ad074d76380310afa7d4003408bac",
-    "experiment.py": "d4f2232994d7f66b18fbc02916610a2ed71f6091c66f6aaad38a427d06846ab6",
+    "cohort.py": "0172b14d755eccdeb22d2d1a9a104a516920ff44d0c573a4d21601cfb7594d8f",
+    "experiment.py": "b2bbdc9f0c397aa41bb015b8fe3c2b10ddb104ff5dfe91f20b884153faba001e",
+    "profile_loop.py": "3b47ec8f2749a78b83a1dbb6aad07b3ed1f0f53ddbd3bf0c584ac383a71dd33a",
     "protocol.py": "63956ebb061e8e4198b4a508749037557260da49919ace8283e3b42e96145e8f",
     "report.py": "6294e16edf81cf3d5d8a5798c64bc1a939ee58c9b73f5fe4c4a9c9d613170a2d"
   },
   "python": "3.15.2",
   "torch": "2.15.0+cu132",
   "source_gpt_commit": "df1e9f7",
-  "selection": "two matched model seeds, unchanged data/batches11; no search",
+  "selection": "P97/P193 with two matched model seeds each, unchanged data/batches11; no search",
   "stop": "first canonical validation>=99%, every1000 updates; current endpoint, not best checkpoint",
   "continuation": "100000 is a checkpointed chunk ceiling, not success or an automatic rejection; promising uncrossed cases need continuation",
   "test_policy": "sealed until every case has crossed99 or has an explicitly recorded numerical failure",
-  "decision": "promote only if both seeds cross99 earlier than their current-GPT controls, and every source/gradient/cache regression passes; final test is reported, not used for selection",
+  "decision": "promote only if both seeds on both primes cross99 earlier than their current-GPT controls, and every source/gradient/cache regression passes; final test is reported, not used for selection",
   "synthetic_scope": "input-dependent branch amplitude; no claim that all grokking obstructions are removed"
 }

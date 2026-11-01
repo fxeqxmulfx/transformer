@@ -105,6 +105,25 @@ class AdaptiveResidualTests(unittest.TestCase):
             else:
                 self.assertGreater(value.grad.norm().item(), 0)
 
+    def test_actual_measured_sizes_match_source_fp32_gradients_exactly(self):
+        for prime in (97, 193):
+            for seed in (11, 17):
+                with self.subTest(prime=prime, seed=seed):
+                    actual = build_model(CanonicalResidual(128, 4, 4, 33), prime, seed)
+                    torch.manual_seed(seed)
+                    expected = GPT(prime, 128, 33, 4, 4, use_checkpoint=False, pad_vocab_size_to=1)
+                    torch.testing.assert_close(actual.state_dict(), expected.state_dict(), rtol=0, atol=0)
+                    for tokens in (self.tokens, torch.tensor([[1, 2], [1, 1], [12, 33], [94, 96]])):
+                        actual.zero_grad(set_to_none=True)
+                        expected.zero_grad(set_to_none=True)
+                        a, b = actual(tokens), expected(tokens)[0]
+                        torch.testing.assert_close(a, b, rtol=0, atol=0)
+                        a.square().mean().backward()
+                        b.square().mean().backward()
+                        reference = dict(expected.named_parameters())
+                        for name, value in actual.named_parameters():
+                            torch.testing.assert_close(value.grad, reference[name].grad, rtol=0, atol=0, msg=name)
+
     def test_nonzero_gains_match_independent_frozen_gpt_recurrence_and_gradients(self):
         spec = AdaptiveResidual(8, 2, 2, 8)
         actual, expected = build_model(spec, 11, 145).double(), source(spec).double()

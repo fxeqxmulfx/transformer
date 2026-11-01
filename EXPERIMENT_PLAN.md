@@ -3230,3 +3230,12 @@ Preserve the already-scored synthetic source pin; commit that evidence before
 updating the new canonical port. Archive the unused initial transformer protocol
 as unscored, then freeze the source-exact GPU comparison. Do not mutate a frozen
 protocol or treat this numerical audit as a learning result.
+
+The synthetic evidence and initial unused protocol are committed at `63c2d22a`.
+The source-exact GPU protocol extends the comparison to P97 and P193, with
+two model seeds per prime and reversed variant order in each second pair.
+Before any GPU outcomes, promotion requires an earlier first99% crossing in
+all four pairs. Record per-parameter gradient/update diagnostics every1,000
+steps and a10-second Python3.15 parent-owned sampling window per warmed case.
+No system tracing-policy changes are needed. The final test remains sealed
+until the entire learning phase closes.

@@ -11,10 +11,11 @@ base = Experiment(
     seeds=Seeds(model=11, data=11, batches=11),
     evaluate=Evaluate(every=1000, batch=512),
     checkpoint=Checkpoint(every=1000),
-    diagnostics=Diagnostics(gradients=True),
+    diagnostics=Diagnostics(every=1000, gradients=True),
     execution=ResidualMaxAutotune(device="cuda", attention_backend="math"),
 )
 
 variants = {"canonical": base, "adaptive": substitute(
     base, CanonicalResidual, AdaptiveResidual(width=128, depth=4, heads=4, context=33))}
-experiments = grid(variants, {"seeds.model": {"s11": 11, "s17": 17}})
+experiments = grid(variants, {"benchmark.prime": {"p97": 97, "p193": 193},
+                             "seeds.model": {"s11": 11, "s17": 17}})
