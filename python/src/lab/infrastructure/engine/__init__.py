@@ -10,11 +10,11 @@ from .loop import Training
 from .population import PopulationStepper
 from .atomic import AtomicStepper
 from .measured import MeasuredStepper
-from ...domain.residual_transformer import ResidualPairs
+from ...domain.residual_transformer import ResidualPairs, ResidualMaxAutotune
 from .residual import ResidualTraining, ResidualCompiledStepper, ResidualEagerStepper
 
 STEPPERS = {training.Eager: EagerStepper, training.CudaGraph: GraphStepper, training.Compiled: CompiledStepper,
-            training.Measured: MeasuredStepper, training.MaxAutotune: CompiledStepper}
+            training.Measured: MeasuredStepper, training.MaxAutotune: CompiledStepper, ResidualMaxAutotune: CompiledStepper}
 
 
 class Engine:

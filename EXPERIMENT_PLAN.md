@@ -3047,3 +3047,9 @@ never select a checkpoint or stop from its scores. A stable validation stop
 keeps the current endpoint. Report incomplete runs as budget-censored.
 Source equation/gradient checks and save/resume tests precede GPU learning.
 The same assistant will review the final commits and measured evidence.
+
+User follow-up for task145: any architectural fix or generalization improvement
+found in this comparison must get a regression test in the diff_gpt repository.
+A numerical/equation test alone must not be described as evidence of improved
+held-out learning. Keep the useful failure mechanism and learning protocol in
+the test or its explicitly slow integration fixture.

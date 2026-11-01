@@ -5,8 +5,10 @@ Stopping returns the current state, not a retrospectively selected checkpoint.
 """
 
 import copy
+from contextlib import nullcontext
 
 import torch
+from torch.nn.attention import SDPBackend, sdpa_kernel
 
 from .compiled import CompiledStepper
 from .eager import EagerStepper
@@ -18,6 +20,7 @@ from ..optim.residual_schedule_free import ResidualScheduleFreeAdamW
 
 class QueryConditioning:
     def __init__(self, experiment, task, model, clock):
+        self.attention_backend = getattr(experiment.execution, "attention_backend", "auto")
         super().__init__(experiment, task, model, clock)
         self.optimizer = ResidualScheduleFreeAdamW(model.parameters(), **vars(experiment.optimizer))
         self.optimizer.param_groups[0]["lr"] = 0.
@@ -25,13 +28,21 @@ class QueryConditioning:
                             compiled=getattr(self, "max_autotune", False))
                             if experiment.model.mixing == "conditioned_qk" else None)
 
+    def attention_policy(self):
+        return sdpa_kernel(SDPBackend.MATH) if self.attention_backend == "math" else nullcontext()
+
+    def evaluate(self, split):
+        with self.attention_policy():
+            return super().evaluate(split)
+
     def prepare(self, sizes):
         # Compilation evaluates Schedule-Free averages, whose mode round trips
         # can round. Restore the complete saved frame before real updates.
         saved = copy.deepcopy((self.model.state_dict(), self.optimizer.state_dict()))
         training = self.model.training
         try:
-            return super().prepare(sizes)
+            with self.attention_policy():
+                return super().prepare(sizes)
         finally:
             self.model.load_state_dict(saved[0])
             self.optimizer.load_state_dict(saved[1])
@@ -42,11 +53,33 @@ class QueryConditioning:
             training_weights(self.optimizer)
             self.optimizer.zero_grad(set_to_none=True)
             self.conditioner()
-        return super().step(parts, rate, sampled)
+        with self.attention_policy():
+            return super().step(parts, rate, sampled)
+
+
+class AttentionInference(torch.nn.Module):
+    """Keep module eval semantics while recording the backend inside inference."""
+    def __init__(self, model, backend):
+        super().__init__()
+        self.model, self.backend = model, backend
+
+    def forward(self, inputs):
+        policy = sdpa_kernel(SDPBackend.MATH) if self.backend == "math" else nullcontext()
+        with policy:
+            return self.model(inputs)
 
 
 class ResidualCompiledStepper(QueryConditioning, CompiledStepper):
-    """Compile the host and all coordinate changes with max-autotune when set."""
+    """Record SDPA selection inside each graph, including inference cache keys."""
+
+    def __init__(self, experiment, task, model, clock):
+        super().__init__(experiment, task, model, clock)
+        options = {"mode": "max-autotune", "fullgraph": True} if self.max_autotune else {}
+        self.inference = torch.compile(AttentionInference(model, self.attention_backend), dynamic=False, **options)
+
+    def forward(self, batch):
+        with self.attention_policy():
+            return super().forward(batch)
 
 
 class ResidualEagerStepper(QueryConditioning, EagerStepper):

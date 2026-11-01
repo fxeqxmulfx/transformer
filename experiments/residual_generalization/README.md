@@ -26,7 +26,7 @@ and ten warmup updates. The original half-table training split is retained;
 the old held-out half is split into disjoint validation and final test sets.
 Only train and validation are observed while learning. Stop at the current
 endpoint after three consecutive observations at or after update5000 have both
-accuracies >=99%. This is a validation rule, not proof of universal correctness.
+accuracies >=99.9%. This is a validation rule, not proof of universal correctness.
 
 Primary cases pair add/raw-QK/conditioned-QK across P97/P193 and seeds11/17.
 Secondary key-only and branch-scale controls use P97 and both seeds. Data and
@@ -45,8 +45,19 @@ including the reserved test. The report will compare validation counts with
 the original CUDA observations. An FP64 audit will keep every RMS epsilon at
 its FP32 value so it checks the same finite-epsilon model.
 
-First-pass learning allowances are360s per primary case and180s per mechanism
-control. If time remains, one fixed-order round continues time-censored cases
+First-pass learning allowances are frozen after profiling from the remaining
+phase time: min(360, floor((remaining_seconds-1200)/14)), floored at60s,
+per primary case, and half that per mechanism control. If time remains, one fixed-order round continues time-censored cases
 from their complete state, sharing the remaining allowance equally. Successful
 runs stop early; no failed run is automatically retried. The durable phase
 deadline applies to every process and leaves180s for final GPU checks.
+
+Profiling identified expensive default memory-efficient SDPA kernels at length2.
+The explicit ResidualMaxAutotune block selects mathematical SDPA while retaining
+fullgraph max-autotune; independent forward/gradient checks compare backends.
+This is an execution change, not a new attention equation.
+
+Before any learning run, the validation threshold was tightened to99.9%:
+at99%, an entire rare zero-numerator or diagonal category can be missed.
+The final report also separates these categories; near-perfect average
+accuracy is not an exact all-input theorem.

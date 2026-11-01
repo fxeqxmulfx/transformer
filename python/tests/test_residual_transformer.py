@@ -120,6 +120,29 @@ class ResidualTransformerTests(unittest.TestCase):
             torch.testing.assert_close(run.checkpoint("cpu")["model"], before["model"], rtol=0, atol=0)
             self.assertEqual(run.checkpoint("cpu")["step"], 6)
 
+    def test_attention_backend_is_explicit_and_restores_torch_policy(self):
+        from lab.dsl import ResidualMaxAutotune
+        spec = swap(recipe(), "execution", ResidualMaxAutotune(device="cpu"))
+        task = build_task(spec.benchmark, 11, torch.device("cpu"))
+        model = build_model(spec.model, 7, 11)
+        stepper = ResidualEagerStepper(spec, task, model, Clock(torch.device("cpu")))
+        def flags():
+            return (torch.backends.cuda.math_sdp_enabled(), torch.backends.cuda.flash_sdp_enabled(),
+                    torch.backends.cuda.mem_efficient_sdp_enabled(), torch.backends.cuda.cudnn_sdp_enabled())
+        before = flags()
+        with stepper.attention_policy():
+            self.assertEqual(flags(), (True, False, False, False))
+        self.assertEqual(flags(), before)
+        from lab.infrastructure.engine.residual import AttentionInference
+        inference = AttentionInference(model, "math")
+        inference.eval()
+        self.assertFalse(model.training)
+        tokens = torch.tensor([[1, 2], [2, 3]])
+        torch.testing.assert_close(inference(tokens), model(tokens), rtol=1e-5, atol=1e-7)
+        self.assertEqual(flags(), before)
+        with self.assertRaises(ValueError):
+            ResidualMaxAutotune(attention_backend="unknown")
+
     def test_prepare_restores_complete_state_even_if_compilation_changes_it(self):
         from lab.infrastructure.engine.eager import EagerStepper
         spec = recipe()

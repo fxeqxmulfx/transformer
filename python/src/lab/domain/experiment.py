@@ -22,7 +22,7 @@ from .paired import DivisionPairs, VectorReadout, check_division_model
 from .rotary import LabDivision, Rotate90
 from .peri_rotary import PeriRotate90, PowerDivision
 from .source_transformer import SourceTransformer
-from .residual_transformer import ResidualTransformer, ResidualPairs
+from .residual_transformer import ResidualTransformer, ResidualPairs, ResidualMaxAutotune
 from .modular_composition import ModularPairs, ModularChain
 from .peri_restart import PeriRotate90Restart
 from .continuation import ScheduleFreeContinuation
@@ -153,6 +153,8 @@ class Experiment(Spec):
             require(isinstance(self.model, SourceTransformer) and
                     isinstance(self.benchmark, (ModularPairs, ModularChain)),
                     "SourceTransformer uses final-answer ModularPairs or ModularChain")
+        if isinstance(self.execution, ResidualMaxAutotune):
+            require(isinstance(self.model, ResidualTransformer), "ResidualMaxAutotune needs ResidualTransformer")
         if isinstance(self.model, ResidualTransformer) or isinstance(self.benchmark, ResidualPairs):
             require(isinstance(self.model, ResidualTransformer) and isinstance(self.benchmark, ResidualPairs),
                     "ResidualTransformer uses the reserved-test ResidualPairs protocol")

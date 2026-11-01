@@ -39,3 +39,28 @@ already classify at least one validation example correctly. The cache tolerance
 now reflects source arithmetic. The stopping test uses declared fixed metrics
 so it tests control flow independently of random learning success. No learned
 cohort has been retuned or discarded.
+
+
+The follow-up execution audit found that default CUDA memory-efficient SDPA
+kernels dominated length2 training. `ResidualMaxAutotune` now records the math
+backend inside both compiled graphs; setting only an external context had left
+cached kernels unchanged. Its inference wrapper remains an nn.Module so eval
+propagates normally. All11 targeted CPU tests pass. Four completed CUDA cases
+(add, raw Q/K, conditioned Q/K, scaled addition) match eager logits within
+2.9e-6 and every parameter gradient within3.9e-7. The paper AttnRes diagnostic
+reached its compilation time limit and remains explicitly incomplete before
+learning. The full source equation/gradient tests for that mode still pass.
+
+Warmed math-backend rates are about228/198/194/224 updates per second in those
+four modes. The retained unprofiled external-context diagnostic still executed
+the automatic kernels, at133 updates/s for addition; the kernel trace identifies
+that fact. The successful inner-context trace has no memory-efficient SDPA
+kernels. Conditioner state kernels compile, but PyTorch declines CUDA graph
+capture for their mutated optimizer buffers; model forward/backward use graphs.
+All attempted diagnostics and their elapsed wall time stay in the one budget.
+
+Before any learning, the stop threshold was tightened to99.9% for three
+consecutive train/validation observations at or after update5000. The final
+report audits zero numerators and equal operands separately. First-pass time
+allocations are frozen from remaining phase time; the predeclared continuation
+round uses complete saved state. No test outcome selects a checkpoint or recipe.

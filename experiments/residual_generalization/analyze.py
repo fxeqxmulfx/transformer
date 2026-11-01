@@ -47,8 +47,15 @@ def score(model, rows, batch=512):
         competing = output.clone().scatter_(1, target[:, None], -torch.inf).amax(1)
         margins.append(actual - competing)
     predictions, margins = torch.cat(predictions), torch.cat(margins)
+    subsets = {}
+    masks = {"zero_numerator": rows[:, 0] == 0, "equal_operands": rows[:, 0] == rows[:, 1],
+             "other": (rows[:, 0] != 0) & (rows[:, 0] != rows[:, 1])}
+    for name, mask in masks.items():
+        count = int(mask.sum())
+        hits = int(((predictions == rows[:, -1]) & mask).sum())
+        subsets[name] = {"examples": count, "correct": hits, "accuracy": hits / count if count else None}
     return {"examples": len(rows), "correct": correct, "accuracy": correct / len(rows),
-        "loss": total_loss / len(rows), "minimum_target_margin": float(margins.min()),
+        "loss": total_loss / len(rows), "subsets": subsets, "minimum_target_margin": float(margins.min()),
         "prediction_sha256": hashlib.sha256(predictions.numpy().astype("<i8").tobytes()).hexdigest()}, predictions
 
 
@@ -102,6 +109,7 @@ def final_case(declaration, spec):
     return {"label": label, "mode": spec.model.mixing, "prime": spec.benchmark.prime,
         "seed": spec.seeds.model, "step": checkpoint["step"], "stop": original_stop,
         "stable_validation": valid, "first_validation99_update": first99,
+        "first_validation999_update": next((r["step"] for r in history if r["validation"]["accuracy"] >= .999), None),
         "checkpoint_sha256": checkpoint_hash, "parameters": declaration["parameters"],
         "source_wall_seconds": checkpoint["wall_seconds"], "final_cpu_fp32": metrics,
         "fp64_fixed_epsilon_audit": audit, "cpu_minus_cuda_correct": cuda_drift,

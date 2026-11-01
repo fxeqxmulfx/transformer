@@ -9,7 +9,7 @@ from lab.dsl import *
 
 base = Experiment(
     model=ResidualTransformer(width=128, depth=4, heads=4, context=33),
-    benchmark=ResidualPairs(prime=97, operation="division"),
+    benchmark=ResidualPairs(prime=97, operation="division", target_accuracy=.999),
     optimizer=ScheduleFreeAdamW(lr=.003, betas=(.9, .98), weight_decay=.1, warmup=0),
     schedule=Schedule(warmup=10, inclusive=True),
     budget=Budget(updates=100000, batch=256),
@@ -17,7 +17,7 @@ base = Experiment(
     evaluate=Evaluate(every=1000, batch=512),
     checkpoint=Checkpoint(every=1000),
     diagnostics=Diagnostics(gradients=True),
-    execution=MaxAutotune(device="cuda"),
+    execution=ResidualMaxAutotune(device="cuda", attention_backend="math"),
 )
 
 # The primary comparison includes the raw Q/K control for the repair itself.

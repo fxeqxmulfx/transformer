@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from .source_transformer import SourceTransformer
 from .modular_composition import ModularPairs
 from .spec import require
+from .training import MaxAutotune
 
 
 @dataclass(frozen=True)
@@ -68,3 +69,19 @@ class ResidualPairs(ModularPairs):
                 rows[0]["step"] >= self.minimum_updates and
                 all(row[name]["accuracy"] >= self.target_accuracy
                     for row in rows for name in self.observed))
+
+
+@dataclass(frozen=True)
+class ResidualMaxAutotune(MaxAutotune):
+    """Task145 short-context backend selection, still fullgraph max-autotune.
+
+    Source: local Torch2.15 torch.nn.attention.sdpa_kernel/SDPBackend API.
+    Math preserves scaled causal softmax attention and ordinary gradients;
+    it changes floating-point evaluation and kernel selection. All variants
+    in a declared cohort use the same backend; historical runs stay unchanged.
+    """
+    attention_backend: str = "math"
+
+    def check(self):
+        super().check()
+        require(self.attention_backend in ("math", "auto"), "Unknown SDPA backend")
