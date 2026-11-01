@@ -9,7 +9,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 import re
 
-from .gradient_paths import BranchGates, LinearTransport, GradientTargets
+from .gradient_paths import BranchGates, ContextGates, ContextTargets, LinearTransport, GradientTargets
 from .benchmarks import Benchmark, ModularDivision
 from .grokking import GrokkingDiagnostics
 from .model import Model
@@ -160,6 +160,8 @@ class Experiment(Spec):
             require(type(self.optimizer) is ScheduleFreeAdamW, "Gradient witnesses use Schedule-Free AdamW")
             require(type(self.execution) is Eager or isinstance(self.execution, Compiled),
                     "Gradient witnesses support eager or compiled execution")
+            require(isinstance(self.model, ContextGates) == isinstance(self.benchmark, ContextTargets),
+                    "ContextGates and ContextTargets must be used together")
         if isinstance(self.execution, ResidualMaxAutotune):
             require(isinstance(self.model, ResidualTransformer), "ResidualMaxAutotune needs ResidualTransformer")
         if isinstance(self.model, ResidualTransformer) or isinstance(self.benchmark, ResidualPairs):

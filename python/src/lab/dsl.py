@@ -5,7 +5,7 @@
     experiments = {"softmax": base, "sparsemax": substitute(base, Softmax, Sparsemax())}
 """
 
-from .domain.gradient_paths import AccurateBranchGates, BranchGates, LinearTransport, GradientTargets
+from .domain.gradient_paths import AccurateBranchGates, BranchGates, ContextGates, ContextTargets, LinearTransport, GradientTargets
 from .domain.basis import basis
 from .domain.atomic import (AtomicColumns, AtomicMatching, BindingPricing, MatchingBindings,
                            MatchingOrders, OrderPricing, PairedMatching, SearchPricing)
@@ -22,6 +22,7 @@ from .domain.rotary import DenseBranch, LabDivision, Rotate90, SwiGLU
 from .domain.peri_rotary import PeriRotate90, PowerDivision
 from .domain.source_transformer import SourceTransformer
 from .domain.residual_transformer import ResidualTransformer, ResidualPairs, ResidualMaxAutotune
+from .domain.adaptive_residual import AdaptiveResidual, CanonicalResidual
 from .domain.modular_composition import ModularPairs, ModularChain
 from .domain.peri_restart import PeriRotate90Restart
 from .domain.continuation import ScheduleFreeContinuation
@@ -43,7 +44,7 @@ from .domain.training import (AttentionDiagnostics, Budget, FlopBudget, Checkpoi
 
 __all__ = [
     # model
-    "AccurateBranchGates", "BranchGates", "LinearTransport", "GradientTargets",
+    "AccurateBranchGates", "BranchGates", "ContextGates", "ContextTargets", "LinearTransport", "GradientTargets",
     "Transformer", "TensorStack", "TensorGain", "AtomicMatching", "PairedMatching", "MLP", "Scalar", "OneHot", "Block", "Attention", "FFN", "XSA",
     "RMSNorm", "LayerNorm", "PreNorm", "PostNorm",
     "RoPE", "YaRN", "Sinusoidal", "NoPositions",
@@ -51,6 +52,7 @@ __all__ = [
     "ReLU", "ReLU2", "GELU", "SiLU", "Tied", "Untied", "TorchDefault", "Normal", "ScaledResidual",
     "Rotate90", "DenseBranch", "SwiGLU", "PeriRotate90", "PeriRotate90Restart", "PowerDivision",
     "SourceTransformer", "ModularPairs", "ModularChain", "ResidualTransformer", "ResidualPairs", "ResidualMaxAutotune",
+    "CanonicalResidual", "AdaptiveResidual",
     "VectorReadout", "SquaredAnswers", "CrossEntropyAnswers",
     # benchmarks
     "ModularDivision", "ModularRegression", "LabDivision", "TinyShakespeare", "Synthetic", "Memorization", "MatchingOrders", "MatchingBindings",

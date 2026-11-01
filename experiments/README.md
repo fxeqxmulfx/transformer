@@ -11,6 +11,8 @@ it, which git ignores.
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
 | [`rms_backward`](rms_backward) | 48 | Does separating the finite-epsilon radial RMS backward from its tangent term restore correct gradients and known-solution recovery without changing the forward function? |
+| [`context_gains`](context_gains) | 24 | Can input-dependent post-RMS gains recover conditional amplitudes that a correctly differentiated pre-RMS path learns poorly? |
+| [`adaptive_residual`](adaptive_residual) | 4 | Does a conditional post-RMS gain improve first99% validation over the current corrected, fixed-scale GPT on two matched P97 seeds? |
 | [`residual_scaled_long`](residual_scaled_long) | 2 | Both complete-state scaled continuations cross 99% validation at 24k versus 32k/37k for ordinary addition; final test 99.227%/98.711%; parents remain unchanged. |
 | [`residual_gradient_paths`](residual_gradient_paths) | 36 | Known-solution CPU controls: post-RMS gates recover in 12/12 cases; pre-RMS gates in 4/12; depth scaling keeps transport gain at least 1/2 in the linear witness. |
 | [`residual_generalization`](residual_generalization) | 16 | Closed two-hour cohort: ordinary residuals reach99.96–100% test; scaling generalizes earlier at23k; depth attention remains near chance within its allowance. All16 cases and execution failures retained. |

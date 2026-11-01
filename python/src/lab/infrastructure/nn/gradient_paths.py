@@ -10,7 +10,8 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from ...domain.gradient_paths import AccurateBranchGates, BranchGates
+from ...domain.gradient_paths import AccurateBranchGates, BranchGates, ContextGates
+from .context_gates import ContextGatedBranches
 from .rms_backward import rms_norm
 
 
@@ -65,6 +66,8 @@ class ResidualTransport(nn.Module):
 
 
 def build(spec):
+    if isinstance(spec, ContextGates):
+        return ContextGatedBranches(spec)
     if isinstance(spec, AccurateBranchGates):
         return AccurateGatedBranches(spec)
     return GatedBranches(spec) if isinstance(spec, BranchGates) else ResidualTransport(spec)

@@ -33,6 +33,8 @@ Python (the uv project in python/; an experiment is a folder under experiments/)
     profile <experiment> <label>  train one run afresh under Scalene's CPU profiler; print where its time goes
     scaled-continuation <action>  freeze, run or report the fixed-scale continuation to 99%
     rms-backward <action>         freeze, run or report the RMS gradient benchmark
+    context-gains <action>        freeze, run or report conditional gain recovery
+    adaptive-residual <action>    matched transformer comparison to 99% validation
 
 Together
     verify                        build, audit, index, forbidden, reference integrity and test
@@ -280,6 +282,16 @@ def rms_backward(arguments):
              arguments.action], cwd=PYTHON)
 
 
+def context_gains(arguments):
+    execute(["uv", "run", "--locked", "python", str(ROOT / "experiments/context_gains/cohort.py"),
+             arguments.action], cwd=PYTHON)
+
+
+def adaptive_residual(arguments):
+    execute(["uv", "run", "--locked", "python", str(ROOT / "experiments/adaptive_residual/cohort.py"),
+             arguments.action], cwd=PYTHON)
+
+
 def clean(_):
     for directory in (PYTHON, ROOT / "optimizers", ROOT / "experiments", ROOT / "scripts"):
         for cache in directory.rglob("__pycache__"):
@@ -320,6 +332,12 @@ def main():
     command = tasks.add_parser("rms-backward")
     command.add_argument("action", choices=("freeze", "run", "report"))
     command.set_defaults(handler=rms_backward)
+    command = tasks.add_parser("context-gains")
+    command.add_argument("action", choices=("freeze", "run", "report"))
+    command.set_defaults(handler=context_gains)
+    command = tasks.add_parser("adaptive-residual")
+    command.add_argument("action", choices=("freeze", "run", "report"))
+    command.set_defaults(handler=adaptive_residual)
     command = tasks.add_parser("test")
     command.add_argument("patterns", nargs="*")
     command.set_defaults(handler=test)

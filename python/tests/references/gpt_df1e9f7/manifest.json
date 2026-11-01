@@ -1,0 +1,47 @@
+{
+  "commit": "df1e9f7afb16b2878adc13808e1e4bb66680040e",
+  "source": "diff_gpt.domain.model",
+  "rewrite": "Replace absolute model imports with relative imports only.",
+  "files": {
+    "gpt.py": {
+      "source_path": "src/diff_gpt/domain/model/gpt.py",
+      "source_sha256": "35c28d8ecaf4c8f7ebf63c949fb213e193992eabe7c4acd417f5915422ada43d",
+      "local_sha256": "a5d82ed83a99c335af8adaa64514659b0c836f36127a484743b33643d15be847"
+    },
+    "block.py": {
+      "source_path": "src/diff_gpt/domain/model/block.py",
+      "source_sha256": "d3f55fb85933240da2e30defcd7bf66a7e234108aba3a91b9ce891d92dcd7784",
+      "local_sha256": "d1e4722be4fc063c888c849c24e20da5cd611c4e0d132750382e3520ac7bae1c"
+    },
+    "mha.py": {
+      "source_path": "src/diff_gpt/domain/model/mha.py",
+      "source_sha256": "65045c01bc1819597b3d3f19ada6cf8277cbdcd2d1466bc1376b4e30ded0aa88",
+      "local_sha256": "1f4115dfe5b8c235d0db568d4d132a92a26e2da39ae2096d3fbb784ca7ac4bbc"
+    },
+    "feed_forward.py": {
+      "source_path": "src/diff_gpt/domain/model/feed_forward.py",
+      "source_sha256": "5177da621997e1855adf4268839204c09870c586b96d2d8704ced3333847abbc",
+      "local_sha256": "5177da621997e1855adf4268839204c09870c586b96d2d8704ced3333847abbc"
+    },
+    "rope.py": {
+      "source_path": "src/diff_gpt/domain/model/rope.py",
+      "source_sha256": "23592356d7f268405938ad28585a1e34c1b17655ab73f59b0e59c4ea961128ba",
+      "local_sha256": "23592356d7f268405938ad28585a1e34c1b17655ab73f59b0e59c4ea961128ba"
+    },
+    "rms_norm.py": {
+      "source_path": "src/diff_gpt/domain/model/rms_norm.py",
+      "source_sha256": "9849661932ddbbc26e31c64389f012ea6d5db2b91887426125cb9d81a74c2aca",
+      "local_sha256": "9849661932ddbbc26e31c64389f012ea6d5db2b91887426125cb9d81a74c2aca"
+    },
+    "centered_xsa.py": {
+      "source_path": "src/diff_gpt/domain/model/centered_xsa.py",
+      "source_sha256": "5a40e578608ec16c565966c03dc7a5f2cd9a0ad026af9bef493f4e0dd6e4ab4d",
+      "local_sha256": "5a40e578608ec16c565966c03dc7a5f2cd9a0ad026af9bef493f4e0dd6e4ab4d"
+    },
+    "kv_cache.py": {
+      "source_path": "src/diff_gpt/domain/model/kv_cache.py",
+      "source_sha256": "7e60cda6058b6e2b3af460303ee5fb482d99362b82145f6feaf2affec193d895",
+      "local_sha256": "7e60cda6058b6e2b3af460303ee5fb482d99362b82145f6feaf2affec193d895"
+    }
+  }
+}

@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 import torch
 
-from lab.dsl import (AccurateBranchGates, BranchGates, LinearTransport, GradientTargets, Experiment, ScheduleFreeAdamW,
+from lab.dsl import (AccurateBranchGates, BranchGates, ContextGates, ContextTargets, LinearTransport, GradientTargets, Experiment, ScheduleFreeAdamW,
                      Schedule, Budget, Seeds, Evaluate, Checkpoint, Eager, MaxAutotune, Diagnostics, describe, swap)
 from lab.infrastructure.benchmarks import build_task
 from lab.infrastructure.engine.gradient_paths import GradientEagerStepper, GradientCompiledStepper
@@ -19,7 +19,8 @@ from lab.infrastructure.store import RunDirectory
 
 
 def recipe(model=BranchGates()):
-    return Experiment(model, GradientTargets(64, 32, 32), ScheduleFreeAdamW(.01, betas=(.9, .98)),
+    targets = ContextTargets if isinstance(model, ContextGates) else GradientTargets
+    return Experiment(model, targets(64, 32, 32), ScheduleFreeAdamW(.01, betas=(.9, .98)),
                       Schedule(), Budget(8, 16), Seeds(data=11, batches=11), Evaluate(4, 32),
                       Eager(device="cpu"), checkpoint=Checkpoint(4), diagnostics=Diagnostics(gradients=True))
 
@@ -128,6 +129,10 @@ class GradientPathTests(unittest.TestCase):
     def test_accurate_compiled_complete_state_resume_and_sealed_test(self):
         self.check_resume(MaxAutotune(device="cpu"), GradientCompiledStepper,
                           AccurateBranchGates(depth=8, placement="before"))
+
+    def test_context_compiled_complete_state_resume_and_sealed_test(self):
+        self.check_resume(MaxAutotune(device="cpu"), GradientCompiledStepper,
+                          ContextGates(depth=8, placement="after"))
 
     def check_resume(self, execution, stepper, model=BranchGates(depth=8)):
         def train(path, spec):

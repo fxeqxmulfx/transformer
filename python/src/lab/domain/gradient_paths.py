@@ -52,6 +52,18 @@ class AccurateBranchGates(BranchGates):
 
 
 @dataclass(frozen=True)
+class ContextGates(AccurateBranchGates):
+    """Task158: conditional branch amplitudes from two supplied gate features.
+
+    Source: Residual.gain_derivative_ratio, applied at each fixed input.
+    Features are (1, the first sign of the identity stream). Both placements
+    use the corrected RMS backward; each branch has two zero-initialized
+    coefficients. The constant feature is supplied data, not a model bias.
+    This witness isolates amplitude learning, not full-transformer discovery.
+    """
+
+
+@dataclass(frozen=True)
 class LinearTransport(Model):
     """Learn a scalar before D fixed residual branches c*x; matched output at init.
 
@@ -97,3 +109,13 @@ class GradientTargets(Benchmark):
     @property
     def observed(self):
         return ("train", "validation")
+
+
+@dataclass(frozen=True)
+class ContextTargets(GradientTargets):
+    """Task158: exact conditional coefficients on disjoint sign-vector inputs.
+
+    Negative/positive control signs select cyclic (1/4,1/2,3/4) /
+    (3/4,1/4,1/2) teacher rows. Both finite optima are computed independently
+    in the benchmark specification. Test is sealed until all runs end.
+    """

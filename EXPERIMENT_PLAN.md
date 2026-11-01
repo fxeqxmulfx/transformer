@@ -3190,7 +3190,7 @@ This extends the scalar task151 mechanism to conditional amplitude; it does not
 assume a transformer grokking improvement.
 
 First freeze a supplied-feature benchmark with two independent gate features
-(constant 1 and a balanced sign) and analytic conditional target coefficients.
+(constant 1 and an independent random sign) and analytic conditional target coefficients.
 Both before-RMS and after-RMS parameterizations must have explicit finite optima,
 the same initial outputs, parameter count, data, batch order and Schedule-Free
 AdamW recipe. Use the corrected RMS backward in both so the benchmark cannot
@@ -3213,3 +3213,20 @@ that the output RMS then attenuates. A synthetic attention-only benchmark would
 not establish that this fixes the complete transformer. Repeated-token length
 collisions remain task149, with their clipping guard; do not silently turn that
 conditional source invariant into an unconditional impossibility claim.
+
+Task158 synthetic outcome: all24 cases completed10,000 updates. Conditional
+post-RMS gains recovered12/12; pre-RMS gains recovered4/12 (scale.001 only),
+despite explicit finite optima for both. The largest post-RMS coefficient error
+was3.52e-6. The failure at larger scales is conditioning within the measured
+updates, not an expressivity impossibility or a refutation of a flat-spectrum
+rank theorem. Full transformer validation remains necessary.
+
+Before GPU learning, an actual-size source audit found a last-bit backward
+difference in the historical lab attention port: it shares the centered value
+subtraction where GPT computes it twice. Its logits matched exactly, but seed11
+had maximum FP32 gradient difference1.49e-8 (seed17:7.45e-9). A preflight using
+GPT's exact subtraction/first-position assignment order removed both differences.
+Preserve the already-scored synthetic source pin; commit that evidence before
+updating the new canonical port. Archive the unused initial transformer protocol
+as unscored, then freeze the source-exact GPU comparison. Do not mutate a frozen
+protocol or treat this numerical audit as a learning result.

@@ -88,3 +88,21 @@ class GradientTask:
     def analyze(history):
         return {"first_validation_relative_mse_1e4": next(
             (row["step"] for row in history if row["validation"]["relative_mse"] <= 1e-4), None)}
+
+
+class ContextGradientTask(GradientTask):
+    """Independent two-condition teacher for task158's matched gain models."""
+    def __init__(self, spec, data_seed, device, model_spec):
+        super().__init__(spec, data_seed, device, model_spec)
+        self.teacher = torch.tensor([
+            [(1, 2, 3)[i % 3] / 4 for i in range(model_spec.depth)],
+            [(3, 1, 2)[i % 3] / 4 for i in range(model_spec.depth)],
+        ])
+        for name, packed in self.splits.items():
+            inputs = packed[:, :-1]
+            selected = (inputs[:, 0, 0] > 0).long()
+            coefficients = self.teacher.to(device)[selected]
+            target = inputs[:, 0] + (inputs[:, 1:] * coefficients[:, :, None]).sum(1)
+            self.splits[name] = torch.cat((inputs, target[:, None]), 1)
+        self.hashes = {name: hashlib.sha256(value.cpu().numpy().tobytes()).hexdigest()
+                       for name, value in self.splits.items()}

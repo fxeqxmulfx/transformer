@@ -25,6 +25,8 @@ from .transformer import Transformer
 from .source_transformer import SourceTransformer
 from ...domain.residual_transformer import ResidualTransformer as ResidualSpec
 from .residual_transformer import ResidualTransformer
+from ...domain.adaptive_residual import AdaptiveResidual as AdaptiveSpec, CanonicalResidual as CanonicalSpec
+from .adaptive_residual import AdaptiveResidual, CanonicalResidual
 
 
 def build_model(spec, vocab, seed):
@@ -37,6 +39,10 @@ def build_model(spec, vocab, seed):
     torch.manual_seed(seed)
     if isinstance(spec, (BranchGates, LinearTransport)):
         return build_gradient_model(spec)
+    if isinstance(spec, AdaptiveSpec):
+        return AdaptiveResidual(spec, vocab)
+    if isinstance(spec, CanonicalSpec):
+        return CanonicalResidual(spec, vocab)
     if isinstance(spec, ResidualSpec):
         return ResidualTransformer(spec, vocab)
     if isinstance(spec, SourceSpec):
