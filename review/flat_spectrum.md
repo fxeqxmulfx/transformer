@@ -5086,3 +5086,96 @@ passes. Consequently the overall `./run.py test` exit status is unsuccessful
 for the same baseline failures as L5, while all eleven trace certificate
 and rejection tests pass. Task #137 records the remaining fixed-point range
 and precision proofs for this active captured checkpoint.
+
+## Local attention routing (2026-11-01)
+
+The user's proposed mechanism is per-position retrieval and composition:
+each query forms a weighted sum of relevant earlier value vectors, and
+successive feed-forward/residual blocks combine these pieces. A context of
+N tokens has N separate states of width W. A whole-table interpolation
+construction with exponential width is a sufficient universality result;
+it is not a necessary width for structured arithmetic. The next construction
+target is polynomial resources, ideally width independent of chain length
+at fixed prime with growing active depth. That construction and its learning
+guarantee remain open in tasks#139 and#133.
+
+The following local bounds are formalized in
+`Transformer.SequenceModel.Attention.Retrieval`. They use the existing actual
+source `causalWeight` and `headScore`, including positive RMS epsilon and
+arbitrary rotary phases. Causal softmax includes the current position before
+the source XSA operation; a useful set may consist solely of earlier tokens.
+
+### LR1. Weighted pieces and retrieval error
+
+Fix one causal row i, coefficients alpha_j, values v_j and target t.
+The source coefficients are nonnegative and sum to one. If
+`norm(v_j-t) <= e_j` at every position, then
+
+```
+norm(sum_j alpha_j*v_j - t) <= sum_j alpha_j*e_j.
+```
+
+For a useful set S, let alpha=sum_(j in S) alpha_j. If useful values have
+error at most g and remaining values error at most b, the error is at most
+`alpha*g + (1-alpha)*b`. Multiple positions may support the desired feature;
+no unique best position is assumed. These are bounds on the raw attention
+average, before XSA, output projection and Peri-RMSNorm. Propagation through
+those operations needs the existing source stability/execution bounds; a
+small raw error alone is not a final classification certificate.
+
+### LR2. Useful mass under actual Q/K normalization
+
+Let N=i+1 be the visible prefix size and r=card(S). For scores bounded in
+absolute value by B, the useful mass is at most `r*exp(2B)/N`. For the actual
+source normalized rotary head of positive width d and positive epsilon,
+the proved score bound gives B=sqrt(d). Hence
+
+```
+sum_(j in S) alpha_j <= r*exp(2*sqrt(d))/N.
+```
+
+The upper bound can exceed one. Future positions contribute zero, so the
+bound remains valid without assuming every member of S is visible. A larger
+useful set changes the bound: selecting one distinguished token and
+aggregating a broad set are different local requirements.
+
+### LR3--LR4. A necessary local score/width budget
+
+Suppose S is nonempty and reaches mass at least mu>0. Then
+
+```
+log(N*mu/r) <= 2*sqrt(d),
+max(0, log(N*mu/r))^2 <= 4*d.
+```
+
+For fixed r and mu this necessary single-head concentration condition grows
+as log(N)^2, not exponentially in N. It is not a sufficient construction,
+a task-specific width lower bound, or a multi-layer impossibility theorem.
+It does not assert that training creates the required query/key scores.
+In particular, it supplies no unconditional constant-width routing guarantee
+for arbitrarily long contexts in this source with bounded normalized scores.
+
+| Claim | Lean declaration |
+| --- | --- |
+| Nonnegative coefficients | `causalWeight_nonneg` |
+| Weighted retrieval error | `retrieval_error_le` |
+| Useful-set error | `retrieval_error_of_useful_set` |
+| Bounded-score useful mass | `useful_mass_le` |
+| Actual normalized useful mass | `normalized_useful_mass_le` |
+| Necessary log score budget | `retrieval_log_budget` |
+| Necessary squared-log width budget | `retrieval_width_budget` |
+
+Each theorem with hypotheses has a concrete witness. These local statements
+refine what attention must accomplish; they neither assume nor establish an
+optimizer convergence theorem. The source-model experiments are intended to
+find counterexamples to current learning interpretations. The frozen early
+screen, subsequent profiling and bounded long-grokking phase are tracked in
+`EXPERIMENT_PLAN.md`, tasks#138/#140--#143. A finite plateau is not permanent
+failure, and a transformer succeeding at a flat task would invalidate an
+impossibility inference, not the exact nuclear-norm completion theorem.
+
+Validation of LR1--LR4: `lake build` passes13258 jobs. The seven new
+theorems use only propext, Classical.choice and Quot.sound. The audit has
+the unchanged36 sorry, zero results resting on sorry and zero extra axioms.
+The regenerated index contains4161 modules and21367 theorems, with zero
+vacuous statements and placeholders; the forbidden-pattern check passes.

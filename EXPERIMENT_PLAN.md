@@ -1,5 +1,74 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Active research target and handoff (2026-11-01)
+
+The current user target is to connect flat spectrum, the actual normalized
+RoPE transformer, and C-RASP through **efficient structured computation and
+its learnability**. Preserve this target across sessions. Real transformers
+reuse local computations; the exponential width of a universal table
+interpolator is not a necessary width for arithmetic or natural tasks.
+At fixed width each token still has a separate state: context supplies
+distributed working memory. Attention scores select weighted earlier pieces,
+and the feed-forward/residual blocks combine them over depth. Correct
+selection must be proved or measured, not assumed from a high attention score.
+
+User constraints: work solo; Python3.15/Torch2.15; CUDA max-autotune;
+**Schedule-Free AdamW only** for new learning runs. Preserve all source
+normalizations, exact geometric RoPE, XSA, SwiGLU and tied readout. Grokking
+can occur very late: the 2000-update screen is an early endpoint, not an
+impossibility test. The separately authorized **long phase has a two-hour
+wall-time cap**, including compilation and evaluation; this is not a cap
+on the earlier setup/screen. Profile before beginning that phase, using
+Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
+
+| Board task | Current status | Required outcome |
+| --- | --- | --- |
+| #138 source model and early mixed-arithmetic screen | Setup landed at33e412cb;48 runs executing | All cases retained, final-checkpoint replay, exact split/source hashes, train/heldout/longer accuracy and baselines;2000 updates alone cannot rule out grokking |
+| #140 local attention theory | Seven theorems proved; checks pass; ready to land | Useful-set mass, weighted retrieval error and normalized head-width bounds; arbitrary rotary phases; distinguish a local constraint from a task lower bound |
+| #142 training profile | Requested; next before long phase | Warmed W256D1/W128D4 Python sampling plus CUDA traces; separate startup, compilation, optimizer, kernels, synchronization and evaluation; retain profiler overhead |
+| #141 long grokking phase | Preparing; starts only after profiling | Freeze selected cases and checkpoint hashes before continuation; retain query/base/moments/averaging clock/sampler; target100000 absolute updates within two hours; save incomplete runs as resumable |
+| #143 theory falsification ledger | Active, explicitly requested | Seek reproducible counterexamples to current learning interpretations; record prediction, premises, outcome and correction; update Lean if a formal claim is false |
+| #139 polynomial-resource construction | Backlog; core theory target | Route local arithmetic states and compose real source blocks; aim for fixed width at fixed prime with growing depth, otherwise explicit polynomial bounds; include precision and margins |
+| #133 optimizer-to-recovery bridge | Backlog after#131 | Derive useful routing or separating feature recovery from actual sampled CE/Schedule-Free dynamics under witnessed conditions; retain alias/memorization counterexamples |
+| #134 structured depth/width tradeoffs | Backlog after#131 | Task-specific bounds for exact nonperiodic RoPE; do not substitute arbitrary-table counting or periodic C-RASP lower bounds |
+| #137 backend range/precision certificate | Existing queued task after#136 | Complete the captured invocation's numerical certificate; this single invocation does not prove modular learning |
+
+Execution order: finish and audit the frozen early screen while completing
+local retrieval lemmas; profile representative warmed updates; commit a
+separate long-run protocol; run it under the two-hour cap; audit every saved
+endpoint and update the empirical/theory comparison. Then use the evidence
+for the polynomial construction and conditional learning bridge. Do not
+silently retune an existing cohort or discard failed seeds. Any performance
+change must preserve the algorithm and pass independent numerical checks;
+an arithmetic or optimizer change needs a separately declared cohort.
+
+Keep five statements separate: mathematical labels are well-defined;
+weights can represent them; attention retrieves the required information;
+training discovers the computation (possibly after long grokking); execution
+preserves the answer margin. A flat whole-table kernel settles none of the
+last four by itself. Existing spectral theorems are about specified feature
+readouts and recovery objectives, not arbitrary transformer impossibility.
+The purpose of the experiments is to find where the account fails, not to
+collect confirmation. Candidate claims to challenge: flat final kernels
+prevent transformer generalization; rank-one character availability guarantees
+learning; task spectrum predicts depth/width benefit; an early plateau means
+permanent failure. Each needs a declared endpoint and checked premises.
+Exact nuclear-norm theorems are not contradicted merely because a transformer
+uses a different computation or objective. Correct the inference at the point
+where evidence fails, retaining the stronger proved statements when valid.
+
+Persistent locations: `experiments/modular_composition/` holds the frozen
+screen, hypotheses, source/compile checks and analysis. Ignored runs are
+linked to the root's `experiments/modular_composition/runs/`. Worktree/agent:
+`mixed_arithmetic`. Board evidence belongs in `.kanban/artifacts/<task>/`.
+The screen's execution log is `/tmp/modular-composition-screen.log` and is
+copied into board evidence before cleanup. Source fixture CPU initialization,
+logits and gradients are bitwise equal; CUDA errors are7.45e-8/3.50e-7.
+Setup validation:443 lab tests passed,3 skips, followed by the eight updated
+arithmetic tests. The optimizer suite retains two known ScheduleFreeMuon
+allocation failures; Schedule-Free AdamW passed. Do not report the whole
+mandatory test command as green.
+
 **2026-11-01 mixed-arithmetic progression, requested by the user.** Active:
 board #138 adds the exact normalized source RoPE model to the lab and tests
 `a^3+ab mod P` against powered-division controls, then final-answer chains

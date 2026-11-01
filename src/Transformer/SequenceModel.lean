@@ -14,6 +14,7 @@ public import Transformer.SequenceModel.Attention.Stability
 public import Transformer.SequenceModel.Attention.Execution
 public import Transformer.SequenceModel.Attention.Spectral
 public import Transformer.SequenceModel.Attention.Backend
+public import Transformer.SequenceModel.Attention.Retrieval
 
 /-!
 # General positional inputs and normalized multi-variable attention
