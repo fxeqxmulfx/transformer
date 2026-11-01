@@ -31,6 +31,7 @@ Python (the uv project in python/; an experiment is a folder under experiments/)
     run <experiment> [labels]     train an experiment's runs, or the labeled ones
     report <experiment> [labels]  print what the runs recorded and what their records say, as JSON
     profile <experiment> <label>  train one run afresh under Scalene's CPU profiler; print where its time goes
+    scaled-continuation <action>  freeze, run or report the fixed-scale continuation to 99%
 
 Together
     verify                        build, audit, index, forbidden, reference integrity and test
@@ -266,6 +267,13 @@ def site(arguments):
              "--bind", "127.0.0.1", "--directory", str(ROOT / "sites/model_architecture/dist")])
 
 
+def scaled_continuation(arguments):
+    directory = ROOT / "experiments/residual_scaled_long"
+    script = "replay.py" if arguments.action == "report" else "cohort.py"
+    extra = [] if arguments.action == "report" else [arguments.action]
+    execute(["uv", "run", "--locked", "python", str(directory / script), *extra], cwd=PYTHON)
+
+
 def clean(_):
     for directory in (PYTHON, ROOT / "optimizers", ROOT / "experiments", ROOT / "scripts"):
         for cache in directory.rglob("__pycache__"):
@@ -300,6 +308,9 @@ def main():
     command = tasks.add_parser("site")
     command.add_argument("--port", type=int, default=8765)
     command.set_defaults(handler=site)
+    command = tasks.add_parser("scaled-continuation")
+    command.add_argument("action", choices=("freeze", "run", "report"))
+    command.set_defaults(handler=scaled_continuation)
     command = tasks.add_parser("test")
     command.add_argument("patterns", nargs="*")
     command.set_defaults(handler=test)

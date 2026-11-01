@@ -27,6 +27,8 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 
 | Board task | Current status | Required outcome |
 | --- | --- | --- |
+| #154 fixed-scale continuation | Active; user requested longer runs until99% validation | Resume both P97 scaled23k checkpoints with complete optimizer/sampler state; freeze source/split hashes; stop at first canonical99% validation; compare ordinary first99% crossings32k/37k, then replay endpoints and update the local architecture site |
+| #153 local architecture site | Complete; self-reviewed at709b6f70; root server on127.0.0.1:8765 | Interactive source diagram, residual options, measured curves, config and training recipe; loopback server remains running after worktree cleanup |
 | #138 source model and early mixed-arithmetic screen | Self-reviewed; all48 replayed; fresh old-model compiled count drift retained separately | All cases retained, final-checkpoint replay, exact split/source hashes, train/heldout/longer accuracy and baselines;2000 updates alone cannot rule out grokking |
 | #140 local attention theory | Self-reviewed; seven theorems at730c0155 rechecked | Useful-set mass, weighted retrieval error and normalized head-width bounds; arbitrary rotary phases; distinguish a local constraint from a task lower bound |
 | #142 training profile | Self-reviewed after57935e11; historical missing rates explicit; fresh retained logs and wide/deep profiles pass | Warmed W256D1/W128D4 Python sampling plus CUDA traces; separate startup, compilation, optimizer, kernels, synchronization and evaluation; retain profiler overhead |
@@ -50,6 +52,15 @@ The user explicitly requested self-review by the same assistant. The
 findings and fresh replay discrepancies; it is not independent review.
 The long phase is finished. Its two-hour budget must not be reused for
 the separate deep numerical or residual cohorts.
+
+**Task154 authorization, 2026-11-02:** the user requested rechecking fixed
+scaling in longer runs and specified "until 99%". Continue both original P97
+scaled seeds from23000 updates and stop each at its first canonical validation
+accuracy>=99%. This is a new target-stopped continuation, not a reopening of the
+closed task145 budget. Preserve the original source states and report the
+previously published test split as reused. The recipe is unchanged; the runner's
+first-crossing stop replaces the original three-observation99.9% rule. Start with
+a100000-update checkpoint horizon and retain complete states if it is insufficient.
 
 Execution order: finish and audit the frozen early screen while completing
 local retrieval lemmas; profile representative warmed updates; commit a
