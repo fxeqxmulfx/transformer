@@ -4278,3 +4278,209 @@ reproduces the two existing ScheduleFreeMuon allocation failures, float32
 and float64, each with 75 allocations of 8519680 bytes. Schedule-Free AdamW
 passes. These failures match B1--B9's baseline. Build/test logs, individual
 axiom checks and the source review are retained in `.kanban/artifacts/130/`.
+
+## Unified spectral transformer certificate
+
+`Attention.Spectral.exists_power_certificate` connects feature recovery,
+the actual normalized source transformer and exact-RoPE counting logic in
+one theorem. It constructs weights from the recovered real score table and
+proves a source margin. Under explicit numerical contracts, every class
+decision agrees with the task and one fixed family of counting formulae.
+The task is (a/b)^K for every prime P, natural K, numerator a and nonzero b.
+This is finite representation and conditional execution; the ideal feature
+optimization premise is separate from training with Schedule-Free AdamW.
+The counting language is the existing exact-RoPE extension, not the periodic
+hierarchy.
+
+### J1. Bounded vector outputs in the actual source
+
+P5's prescribed-RoPE construction extends from unit answer vectors to any
+finite table t(x) with norm at most one. The actual state after attention is
+base + context, where base has norm one and the normalized context has norm
+less than one. Thus
+
+\[
+ \|t(x)-(\mathrm{base}+\mathrm{context})\|<3<\sqrt W
+ \quad\text{when }W>9.
+\]
+
+The existing inverse of output RMSNorm reaches the residual displacement.
+The source RoPE encoder distinguishes the whole input word projectively,
+and the actual bias-free SwiGLU interpolates this finite vector table.
+`exists_bounded_block` and `exists_bounded_model` retain attention, Q/K
+normalization, XSA, both Peri-RMSNorm branches, embedding normalization and
+tied final readout. The original final input token is the readout position.
+Extra layers are identity residual blocks; they do not prove an advantage
+from active depth.
+
+### J2. Preserve every recovered score
+
+For any real score table S on V^(N+1) by V, let e_v be orthonormal token
+coordinates, A the positive raw embedding amplitude, and
+
+\[
+ M=1+\sum_x\sum_v |S(x,v)|,\qquad
+ t(x)=M^{-1}\sum_v S(x,v)e_v.
+\]
+
+The triangle inequality bounds norm t(x) by one. J1 realizes t(x) exactly
+before final RMSNorm. Since the tied raw embedding is A e_v, every actual
+source logit satisfies
+
+\[
+ L_v(x)=g(x)S(x,v),\qquad
+ g(x)=\frac{A\sqrt W}{M\sqrt{\|t(x)\|^2+W\,\mathrm{eps}}}
+ \ \ge\ g_0=\frac{A\sqrt W}{M\sqrt{1+W\,\mathrm{eps}}}>0.
+\]
+
+`exists_score_model` proves this for the complete table; `minimumGain` is
+g_0. A spectral score gap m transfers to a source gap at least g_0 m. The
+construction uses S, not an assumed table of correct predictions. Positive
+row scaling preserves ordering, but need not preserve softmax probabilities.
+
+### J3. Supply the scores by spectral recovery
+
+Let chi_r be a finite bank of multiplicative characters on F_P, with
+nonnegative weights w_r summing to one. Require joint separation on the
+unit group: each distinct a,b has a positively weighted character with
+chi_r(a) != chi_r(b). Individual characters need not each separate answers.
+The true feature kernel is
+
+\[
+ K_r(a,b)=\chi_r((a/b)^K),\qquad a,b\in\mathbb F_P^\times.
+\]
+
+`Fits` requires agreement on an observation pattern Omega. `Minimizes`
+requires a global minimum of the sum of coordinate nuclear norms under
+those same feature observations. If the bipartite observation graph is
+connected and contains a perfect matching, `recovered_bank` proves X_r=K_r
+on every pair, including pairs outside Omega. This composes the existing
+unique kernel and bank recovery theorems. `recovered_unit_margin` gives a
+uniform positive margin for the recovered bank's weighted character readout.
+
+`true_bank_minimizes` supplies witnesses to the ideal premise. A faithful
+character exists for every prime, so a singleton bank with weight one
+satisfies separation; larger jointly separating banks are also admitted.
+Full observation gives explicit witnesses in `RecoveryWitness`; the general
+theorem permits any pattern satisfying the two graph conditions. Nothing
+here identifies transformer cross-entropy with feature nuclear norm or
+asserts that Schedule-Free AdamW finds its minimum.
+
+### J4. Original residues, zero numerators and exponent zero
+
+The source vocabulary is all of F_P, not just its units. On nonzero input
+pairs, `powerScores` reads the recovered coordinates and takes their fixed
+character-code score for each nonzero candidate; candidate zero receives
+score -1. The true unit answer scores one. For a=0, the scores are +1 at
+the elementary boundary answer and -1 elsewhere: the boundary answer is
+one when K=0 and zero when K>0, using the natural-power convention 0^0=1.
+
+If the unit-bank margin is m>0, the full residue margin is at least
+min(1,m)>0. Denominator-zero rows are totalized for interpolation and
+excluded from every powered-division correctness claim. No answer oracle
+is used on nonzero pairs. `powerLabel_residue` and `tokenUnit_power` prove
+that the unit and original-token labels describe the same field computation.
+
+### J5. Finite resources and actual recovered-score computation
+
+`exists_recovered_power_model` composes J2--J4. For two original operands,
+its sufficient source family has
+
+\[
+ V=P,\quad H=1,\quad W=2(P+1)^2+6P^2+2\,\mathrm{padding},\quad
+ F=\lfloor(8W+1)/3\rfloor,\quad D=\mathrm{extraDepth}+1.
+\]
+
+It uses the geometric integer-position RoPE grid at the configured source
+base, enabled at every layer, and context length two within the configured
+block size. It permits eps>0 and 0<xeps<=1. Examples use the source float32
+RMS epsilon 2^-23 and XSA epsilon 10^-12. A prime vocabulary can use the
+source constructor with `pad_vocab_size_to=1`.
+
+For a general fixed length N+1, `exists_finite_score_model` replaces 6P^2
+by 6P^(N+1). This is finite interpolation of recovered scores, not efficient
+character arithmetic inside the transformer. These sufficient bounds are
+not minimal. Additional depth is identity padding; neither a sharp
+width/depth tradeoff nor useful weight-conditioning bounds follow.
+
+### J6. A positive execution allowance exists
+
+Fix the constructed finite weights and positive margin gamma=g_0 m. C6's
+recurrence E_n(delta,tau) is continuous along delta=tau=eta and vanishes
+at eta=0 for every finite n. The same holds for C7's logit radii. All
+budgets and radii are nonnegative for nonnegative local errors. The finite
+sum of twice each class radius bounds every pair of class radii. Continuity
+therefore yields eta>0 such that
+
+\[
+ r_u(\eta,\eta)+r_v(\eta,\eta)<\gamma
+ \quad\text{for all classes }u,v.
+\]
+
+`exists_execution_tolerance` proves this for any fixed finite model with
+positive margin; it does not assume a small final-state error.
+`exists_robust_power_source` instantiates all spectral premises for every
+prime and K and applies the allowance to C8's synthetic shifted trace.
+Its actual logit error equals eta>0, all primitive contracts hold, and
+every class decision is correct. Examples include P=3,K=0 and P=97,K=5.
+This gives no useful lower bound on eta and does not assert that a selected
+hardware format or kernel satisfies the allowance.
+
+### J7. Fixed counting formulae and complete decision agreement
+
+For each format (bits,frac), choose the existing RoPE-aware formula phi_v
+for each class before the input word. Each has counting depth at most D
+and represents the rounded source classifier. `uniform_margin_certificate`
+strengthens the earlier positive-target connection to every class, including
+rejection of competitors. `exists_power_certificate` composes it with J5:
+
+\[
+ \varphi_v(x)=\widehat{\mathrm{predict}}_v(x)
+ =\mathbf 1\{v=(a/b)^K\}.
+\]
+
+The conditions remain explicit: positive normalization epsilons;
+2^-frac < exp(-sqrt(head_dim)); the rounded trace's `TraceInRange`; its
+derived budget below gamma (`CountingBelow`); the executed trace's local
+`ModelAccurate` contracts; and its derived pairwise radii below gamma
+(`ExecutionBelow`). Both numerical executions are compared through the
+same exact source. A format meeting all counting conditions for the
+compiled powered-division weights is not constructed here. The formulae
+are uniform over words; this task guarantee is for two-token inputs, not
+an unbounded arithmetic language or a strict exact-RoPE depth hierarchy.
+
+`example_uniform_decisions` discharges every numerical premise for the
+existing nonconstant three-class source: W=4,D=2,eps=3/4,xeps=1,bits=8,frac=5,
+delta=1/1024,tau=0. All class decisions agree on equal two-token words
+despite nonzero executed logit errors. This witnesses the joint certificate
+independently of any unverified backend contract.
+
+| Lean module under `Attention.Spectral` | Proved connection |
+| --- | --- |
+| `Realization`, `Geometry`, `Scores` | bounded vector interpolation and all positively scaled source logits |
+| `Recovery`, `Residues`, `PoweredScores`, `Powered` | ideal bank recovery, zero boundary and source margin |
+| `Numerics`, `Decisions`, `Counting` | positive error allowance and every-class numerical/counting agreement |
+| `Certificate`, `Existence` | composed theorem and all-prime perturbed execution witnesses |
+| `RecoveryWitness`, `CountingWitness` | concrete spectral and numerical premise checks |
+
+Board task #131 covers this composition. Tasks #132--#134 separately track
+concrete backend operation contracts, Schedule-Free AdamW reaching the
+spectral conditions, and task-specific depth/width lower bounds for exact
+nonperiodic RoPE. Those remain questions, not corollaries of this certificate.
+No training experiment or Python implementation changes in J1--J7.
+
+Validation of J1--J7: full `lake build` passes (13205 jobs), with no warnings
+in the new modules. Individual `#print axioms` checks for all 45 new public
+theorems use only `propext`, `Classical.choice` and `Quot.sound`. The global
+audit remains at 36 pre-existing `sorry`, zero dependent results and zero
+extra axioms. The regenerated index has 4108 modules and 21143 theorems,
+with zero vacuous results and zero placeholders. Forbidden checks and
+`git diff --check` pass; all five pinned source hashes still match after
+reviewing the forward and every new statement against J1--J7.
+
+All 418 lab tests pass with three skips. The 104-test optimizer suite
+reproduces C1--C8's two ScheduleFreeMuon allocation failures (float32 and
+float64, 75 allocations of 8519680 bytes each). Schedule-Free AdamW passes;
+the overall Python command exits unsuccessfully because of those existing
+Muon failures. Logs, axiom checks and the source crosswalk are retained
+in `.kanban/artifacts/131/`.

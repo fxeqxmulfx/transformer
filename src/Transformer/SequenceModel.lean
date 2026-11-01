@@ -12,6 +12,7 @@ public import Transformer.SequenceModel.Information.Distribution
 public import Transformer.SequenceModel.Resources
 public import Transformer.SequenceModel.Attention.Stability
 public import Transformer.SequenceModel.Attention.Execution
+public import Transformer.SequenceModel.Attention.Spectral
 
 /-!
 # General positional inputs and normalized multi-variable attention
@@ -52,4 +53,11 @@ keep saturation and underflow assumptions explicit. A strict exact-source
 classifier at any fixed finite context admits a periodic frequency replacement
 with unchanged weights, width and depth; its context-dependent period does
 not transfer a uniform language depth lower bound.
+Recovered powered-division feature scores also compile into the actual
+normalized source, preserving the entire score table up to positive row
+scaling. Their proved margin gives a positive local execution allowance.
+Under explicit numerical certificates, a fixed RoPE-aware counting family
+agrees with every executed class decision; see *Unified spectral transformer
+certificate*, J1--J7. This uses ideal feature recovery and finite interpolation,
+and does not establish optimizer convergence or efficient arithmetic circuits.
 -/
