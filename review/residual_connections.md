@@ -157,3 +157,52 @@ lake env lean scripts/ResidualAxioms.lean
 
 Strict lint and the whole-project kernel replay remain optional under the
 repository's existing instructions. New module builds must emit no warnings.
+
+## Normalized depth attention (2026-11-01)
+
+The user requested a Q/K-normalized depth-attention variant before changing
+the arithmetic transformer. The paper's pseudo-query is an unrestricted
+learned vector, and its key RMSNorm has a learned gain. The original
+aggregation theorems remain correct. A uniform score bound cannot be
+transferred from the supplied token-attention model to that formula.
+
+`AttentionResiduals/Normalized.lean` makes the distinction explicit:
+
+- **ND1:** `source_score_unbounded` fixes width1, epsilon1, gain1 and key1.
+  Choosing query `(B+1)*sqrt(2)` makes the score `B+1`, for every real B.
+  `source_gain_unbounded` instead fixes the normalized query `1/sqrt(2)`
+  and chooses gain `2*(B+1)`. Thus normalizing Q alone does not control an
+  unbounded affine gain applied after key normalization.
+- **ND2:** `qkDepthScore` applies parameter-free RMSNorm to both operands
+  and divides their inner product by `sqrt(d)`. With d>0 and epsilon>0,
+  `qkDepthScore_bound` proves absolute score at most `sqrt(d)`, including
+  zero operands. A temperature with absolute value at most T gives the
+  explicit cap `T*sqrt(d)`; an unbounded temperature is excluded.
+- **ND3:** `qkDepthScore_lipschitz` bounds score changes by
+  `2/sqrt(epsilon) * (norm(delta_query)+norm(delta_key))`. This global
+  estimate becomes large for small epsilon. A bounded score is not a
+  guarantee of small gradients or invariance under arbitrarily small scales.
+- **ND4:** `qkAttentionResidual` keeps the original source values. Its norm
+  stays within a common bound on those values. This does not bound the
+  transformations that produced them or prove information preservation.
+- **ND5:** a normalized depth weight is at most
+  `exp(2*sqrt(d))/N` for N nonempty sources. Preventing arbitrary sharpening
+  also imposes a retrieval limit at fixed width; this is a necessary local
+  condition, not a construction or optimizer-convergence theorem.
+
+The companion diff_gpt module `domain/model/attention_residual.py` uses
+these exact finite-epsilon equations, with no learned gain or temperature.
+Its default query has unit RMS, avoiding the zero-norm initialization region.
+Independent float64 forward equations, every query/value gradient and
+finite-difference gradient checks pass, including zero and extreme scales.
+A synthetic known-solution routing task will separately check optimization
+and saturated or poorly conditioned initializations before full-model use.
+
+The source repository at b98c665b already has a div97 generalization test:
+W128 D1 H4, padded vocabulary128, batch512 with replacement, learning
+rate.01, decay1, seeds11/17/23,1000 updates, evaluation every10. Its ledger
+records first99% at400/430/360 updates. The new Lean-lab screen uses
+different width, rate, decay, vocabulary and sampling, so its P97 result
+is not a reproduction failure of that regression test. Q/K score tests
+in that repository check finite-epsilon equations and approximate scale
+invariance. They do not establish a universal generalization theorem.

@@ -28,6 +28,9 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 | #142 training profile | Requested; next before long phase | Warmed W256D1/W128D4 Python sampling plus CUDA traces; separate startup, compilation, optimizer, kernels, synchronization and evaluation; retain profiler overhead |
 | #141 long grokking phase | Preparing; starts only after profiling | Freeze selected cases and checkpoint hashes before continuation; retain query/base/moments/averaging clock/sampler; target100000 absolute updates within two hours; save incomplete runs as resumable |
 | #143 theory falsification ledger | Active, explicitly requested | Seek reproducible counterexamples to current learning interpretations; record prediction, premises, outcome and correction; update Lean if a formal claim is false |
+| #144 residual mechanism audit | Active, requested during the screen | Connect existing AttnRes/mHC proofs to fixed-checkpoint measurements of branch/residual norms, cancellation, depth readouts and gradients; compare early and long states |
+| #145 residual training comparison | Backlog, separate cohort | Freeze matched seeds and sufficiently long budgets for ordinary residual, branch-scale control and source-faithful AttnRes; preserve source branches and disclose added parameters/compute |
+| #146 normalized depth-attention verification | Active, requested by user | Prove Q/K score and sensitivity bounds with explicit gain/temperature assumptions; reuse diff_gpt; run a known-solution synthetic task and inspect gradients before full-model changes; commit both repositories |
 | #139 polynomial-resource construction | Backlog; core theory target | Route local arithmetic states and compose real source blocks; aim for fixed width at fixed prime with growing depth, otherwise explicit polynomial bounds; include precision and margins |
 | #133 optimizer-to-recovery bridge | Backlog after#131 | Derive useful routing or separating feature recovery from actual sampled CE/Schedule-Free dynamics under witnessed conditions; retain alias/memorization counterexamples |
 | #134 structured depth/width tradeoffs | Backlog after#131 | Task-specific bounds for exact nonperiodic RoPE; do not substitute arbitrary-table counting or periodic C-RASP lower bounds |
@@ -56,6 +59,16 @@ permanent failure. Each needs a declared endpoint and checked premises.
 Exact nuclear-norm theorems are not contradicted merely because a transformer
 uses a different computation or objective. Correct the inference at the point
 where evidence fails, retaining the stronger proved statements when valid.
+
+The user's residual hypothesis is now a separate competing explanation for
+depth effects. The source uses unit-coefficient residual addition after both
+Peri-RMSNorm branches. Existing `Residual`, `AttentionResiduals` and `MHC`
+modules describe alternative mixing and its limits; none proves that a
+particular residual rule optimizes arithmetic learning. First measure saved
+states and continue the unchanged deeper model long enough. A subsequent
+residual ablation must be a separately declared cohort, with its own budget,
+source correspondence and multiple seeds. Do not silently replace the model
+mid-trajectory or spend the two-hour phase budget twice.
 
 Persistent locations: `experiments/modular_composition/` holds the frozen
 screen, hypotheses, source/compile checks and analysis. Ignored runs are
