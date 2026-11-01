@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An interactive architecture diagram grounded in the local transformer generalization experiments.">
+  <meta name="color-scheme" content="light">
+  <title>Transformer architecture · Generalization lab</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23172e35'/%3E%3Ctext x='8' y='25' fill='white' font-size='25'%3EΣ%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#diagram">Skip to architecture</a>
+  <header class="masthead wrap">
+    <a class="brand" href="#"><span class="brand-mark" aria-hidden="true">∑</span> Generalization lab</a>
+    <nav aria-label="Page sections"><a href="#diagram">Architecture</a><a href="#evidence">Evidence</a><a href="#recipe">Training</a></nav>
+    <span class="local"><i></i> Local research notebook</span>
+  </header>
+  <main class="wrap">
+    <section class="intro">
+      <div><p class="eyebrow">MODEL NOTES / 02 NOV 2026</p><h1>A transformer for<br><em>modular generalization.</em></h1>
+      <p class="lede">Keep the normalized RoPE attention and the additive residual path. Choose branch strength from the evidence.</p></div>
+      <aside class="reference"><span class="small-label">THE TESTED REFERENCE</span><div class="dimensions"><strong>128<span>width</span></strong><b>×</b><strong>4<span>blocks</span></strong><b>×</b><strong>4<span>heads</span></strong></div>
+      <p>32 dimensions per head · SwiGLU hidden width 341<br>Parameter-free RMSNorm · Tied readout</p></aside>
+    </section>
+
+    <section id="diagram" class="workspace" aria-labelledby="architecture-title">
+      <div class="section-bar"><div><span class="section-number">01</span><h2 id="architecture-title">Follow the signal</h2></div><label class="prime-label">Modulus <select id="prime"><option value="97">P = 97</option><option value="193">P = 193</option></select></label></div>
+      <div class="mode-controls" role="group" aria-label="Residual architecture">
+        <button class="mode active" data-mode="add" aria-pressed="true"><span>01 / Ordinary addition</span><small>Strongest completed accuracy</small></button>
+        <button class="mode" data-mode="scaled" aria-pressed="false"><span>02 / Fixed scaling</span><small>Earlier transition on P97</small></button>
+        <button class="mode" data-mode="gated" aria-pressed="false"><span>03 / Learned gates</span><small>Experimental · synthetic evidence</small></button>
+      </div>
+      <div class="model-flow" aria-label="Full model flow">
+        <span><b>[a, b]</b><small>[B, 2] input tokens</small></span><i>→</i><span><b>Embedding + RMS</b><small>[B, 2, 128]</small></span><i>→</i><span class="flow-highlight"><b>Transformer block × 4</b><small>[B, 2, 128]</small></span><i>→</i><span><b>Final RMS → Eᵀ</b><small id="readout-shape">[B, 97] final logits</small></span>
+      </div>
+      <div class="task-caption"><span>Target: a · b⁻¹ mod P, with b ≠ 0</span><span>50% train · 25% validation · 25% test</span></div>
+      <div class="diagram-layout">
+        <div class="diagram-canvas">
+          <div class="diagram-caption"><span>ONE BLOCK · REPEATED FOUR TIMES</span><span class="hint">Select a component to inspect it</span></div>
+          <div class="diagram-scroll" tabindex="0" aria-label="Block diagram; scroll horizontally on a narrow screen">
+          <svg id="network" viewBox="0 0 880 540" role="group" aria-label="Transformer block with sequential attention and SwiGLU branches and identity residual paths">
+            <defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7" fill="#84959c"/></marker><marker id="arrow-accent" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7" fill="#0a7d72"/></marker></defs>
+            <g class="wires"><path d="M190 56 V105 M190 153 V178 M190 256 V280 M190 328 V352 M190 400 V425"/><path d="M640 56 V105 M640 153 V178 M640 256 V280 M640 328 V352 M640 400 V425"/>
+              <path d="M190 70 H45 V440 H174" class="skip-wire"/><path d="M640 70 H805 V440 H656" class="skip-wire"/><path d="M190 455 V480 H420 V70 H640" class="between-wire"/><path d="M640 455 V500"/>
+            </g>
+            <circle class="junction" cx="190" cy="70" r="4"/><circle class="junction" cx="640" cy="70" r="4"/>
+            <text class="state-label" x="190" y="39">hℓ</text><text class="state-label" x="640" y="528">hℓ₊₁</text>
+            <text class="skip-label" transform="translate(28 280) rotate(-90)">IDENTITY SKIP · coefficient 1</text><text class="skip-label" transform="translate(834 280) rotate(90)">IDENTITY SKIP · coefficient 1</text>
+            <text class="skip-label" transform="translate(443 285) rotate(-90)">UPDATED RESIDUAL STREAM</text>
+            <g class="node norm" data-part="norm" tabindex="0" role="button" aria-label="Inspect attention input RMSNorm"><rect x="120" y="105" width="140" height="48" rx="10"/><text x="190" y="134">RMSNorm</text></g>
+            <g class="node attention selected" data-part="attention" tabindex="0" role="button" aria-label="Inspect normalized RoPE exclusive self-attention"><rect x="95" y="178" width="190" height="78" rx="12"/><text x="190" y="208">Causal attention</text><text class="node-small" x="190" y="231">Q/K RMS → RoPE → XSA</text></g>
+            <g class="node norm" data-part="outputnorm" tabindex="0" role="button" aria-label="Inspect attention output RMSNorm"><rect x="120" y="280" width="140" height="48" rx="10"/><text x="190" y="309">Output RMSNorm</text></g>
+            <g class="node gain" data-part="gain" tabindex="0" role="button" aria-label="Inspect attention branch gain"><rect x="120" y="352" width="140" height="48" rx="10"/><text class="gain-value" x="190" y="381">× 1</text></g>
+            <g class="node merge" data-part="skip" tabindex="0" role="button" aria-label="Inspect attention residual addition"><circle cx="190" cy="440" r="16"/><text x="190" y="447">+</text></g>
+            <g class="node norm" data-part="norm" tabindex="0" role="button" aria-label="Inspect feed-forward input RMSNorm"><rect x="570" y="105" width="140" height="48" rx="10"/><text x="640" y="134">RMSNorm</text></g>
+            <g class="node ffn" data-part="ffn" tabindex="0" role="button" aria-label="Inspect the SwiGLU feed-forward branch"><rect x="545" y="178" width="190" height="78" rx="12"/><text x="640" y="208">SwiGLU</text><text class="node-small" x="640" y="231">128 → 341 → 128</text></g>
+            <g class="node norm" data-part="outputnorm" tabindex="0" role="button" aria-label="Inspect feed-forward output RMSNorm"><rect x="570" y="280" width="140" height="48" rx="10"/><text x="640" y="309">Output RMSNorm</text></g>
+            <g class="node gain" data-part="gain" tabindex="0" role="button" aria-label="Inspect feed-forward branch gain"><rect x="570" y="352" width="140" height="48" rx="10"/><text class="gain-value" x="640" y="381">× 1</text></g>
+            <g class="node merge" data-part="skip" tabindex="0" role="button" aria-label="Inspect feed-forward residual addition"><circle cx="640" cy="440" r="16"/><text x="640" y="447">+</text></g>
+          </svg>
+          </div>
+          <div class="formula-strip"><span>BRANCH UPDATE</span><code id="branch-formula">h ← h + N(Branch(N(h)))</code><b>Gain comes after output RMS.</b></div>
+        </div>
+        <aside class="inspector" aria-live="polite" aria-atomic="true">
+          <p class="eyebrow">COMPONENT NOTES</p><span id="component-tag" class="tag">Attention</span><h3 id="component-title">Normalize, rotate, retrieve.</h3><p id="component-copy"></p><pre id="component-formula"></pre><p id="component-note" class="note"></p>
+          <div class="model-numbers"><div><span>Trainable parameters</span><strong id="parameter-count">798,336</strong></div><div><span>RMS affine parameters</span><strong>0</strong></div><div><span>Branch coefficient at init</span><strong id="initial-gain">1</strong></div></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="evidence" class="evidence-section" aria-labelledby="evidence-title">
+      <div class="section-bar"><div><span class="section-number">02</span><h2 id="evidence-title">Let the measurements choose</h2></div><span class="small-label">ACTUAL HELD-OUT RESULTS</span></div>
+      <div class="evidence-layout"><div class="evidence-copy"><span id="profile-badge" class="tag">Default · measured</span><h3 id="profile-heading">The accuracy baseline.</h3><p id="profile-description"></p><div class="result-metric"><strong id="result-value">99.957%</strong><span id="result-label">Final test · both P97 seeds</span></div><p id="profile-limit" class="note"></p></div>
+        <div class="chart-panel"><div class="chart-top"><div><h3>When generalization arrives</h3><p id="chart-caption">Validation accuracy · P97 · two initialization seeds</p></div><span class="small-label">SEEDS 11 / 17</span></div><svg id="learning-chart" viewBox="0 0 700 275" role="img" aria-label="Measured validation learning curves"></svg><div class="chart-legend"><span><i class="legend-add"></i> Ordinary addition</span><span><i class="legend-scaled"></i> Fixed scaling</span><span>Solid: seed 11 · dashed: seed 17</span></div><p id="chart-note" class="chart-note">Scaled curves end at 23k updates because their time allowance ended.</p></div>
+      </div>
+      <div class="mechanism"><span class="mechanism-icon" aria-hidden="true">∂</span><div><h3>A useful gradient needs the right path.</h3><p>In the known-solution benchmark, gains <strong>after RMS recovered <span id="synthetic-after">12/12</span></strong> cases; gains before RMS recovered <span id="synthetic-before">4/12</span>. This supports the placement. A grokking advantage from learned gates remains unmeasured.</p></div><a href="synthetic-results.json" download>Synthetic evidence <span aria-hidden="true">↗</span></a></div>
+    </section>
+
+    <section id="recipe" class="recipe-section" aria-labelledby="recipe-title"><div class="section-bar"><div><span class="section-number">03</span><h2 id="recipe-title">The architecture and its training recipe</h2></div></div>
+      <div class="recipe-grid"><div><h3>Preserve these settings.</h3><dl class="settings"><div><dt>Optimizer</dt><dd>Schedule-Free AdamW</dd></div><div><dt>Learning rate / betas</dt><dd>0.003 / (0.9, 0.98)</dd></div><div><dt>Weight decay / batch</dt><dd>0.1 / 256</dd></div><div><dt>Warmup</dt><dd>10 inclusive updates, then constant</dd></div><div><dt>Precision / execution</dt><dd>FP32 · fullgraph max-autotune</dd></div><div><dt>Validation</dt><dd>Every 1,000 updates, averaged weights</dd></div></dl><p class="note">A short plateau is not a failure verdict. The ordinary P97 controls needed 40k–45k updates to confirm stable validation. Save the complete optimizer and sampler state for continuations.</p></div>
+      <div class="code-panel"><div class="code-top"><span>Actual diff_gpt constructor</span><button id="copy-config" type="button" aria-live="polite">Copy config</button></div><pre><code id="model-code"></code></pre><p id="code-note">The residual mode is explicit; the class default differs from this recommendation.</p></div></div>
+    </section>
+    <section class="scope"><div><span class="small-label">WHAT THE EVIDENCE COVERS</span><p>Unseen operand pairs at fixed primes 97 and 193. Two-token inputs, despite context capacity 33. Width 128 and depth 4 are a tested reference—not a universal optimum.</p></div><div><span class="small-label">WHAT LEAN ESTABLISHES</span><p>Nine new theorems describe finite-epsilon normalization, gain derivatives and linear residual transport. They do not prove that training discovers a generalizing transformer.</p></div></section>
+    <footer><div><a class="brand" href="#"><span class="brand-mark" aria-hidden="true">∑</span> Generalization lab</a><p>Grounded in experiments 145 &amp; 151 · no simulated learning curves</p></div><div class="footer-links"><a href="architecture.md" download>Architecture specification ↗</a><a href="evidence.json" download>Measured curve data ↗</a><a href="transformer-results.json" download>Full transformer results ↗</a></div></footer>
+  </main>
+</body>
+</html>

@@ -34,6 +34,7 @@ Python (the uv project in python/; an experiment is a folder under experiments/)
 
 Together
     verify                        build, audit, index, forbidden, reference integrity and test
+    site [--port 8765]             serve the local interactive architecture diagram
     papers [--dry-run]            fetch every cited arXiv paper missing from papers/
     clean                         remove Python bytecode caches
 
@@ -258,6 +259,13 @@ def papers(arguments):
     execute([sys.executable, "scripts/papers.py", *(["--dry-run"] if arguments.dry_run else [])])
 
 
+def site(arguments):
+    execute([sys.executable, "sites/model_architecture/build.py"])
+    print(f"Local architecture: http://127.0.0.1:{arguments.port}", flush=True)
+    execute([sys.executable, "-m", "http.server", str(arguments.port),
+             "--bind", "127.0.0.1", "--directory", str(ROOT / "sites/model_architecture/dist")])
+
+
 def clean(_):
     for directory in (PYTHON, ROOT / "optimizers", ROOT / "experiments", ROOT / "scripts"):
         for cache in directory.rglob("__pycache__"):
@@ -289,6 +297,9 @@ def main():
     command = tasks.add_parser("papers")
     command.add_argument("--dry-run", action="store_true")
     command.set_defaults(handler=papers)
+    command = tasks.add_parser("site")
+    command.add_argument("--port", type=int, default=8765)
+    command.set_defaults(handler=site)
     command = tasks.add_parser("test")
     command.add_argument("patterns", nargs="*")
     command.set_defaults(handler=test)

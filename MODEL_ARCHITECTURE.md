@@ -1,5 +1,7 @@
 # Transformer architecture for modular generalization
 
+Run `./run.py site` for the [interactive local diagram](sites/model_architecture/README.md).
+
 Use a **Q/K-normalized, causal RoPE transformer with parameter-free Peri-RMSNorm,
 SwiGLU, centered XSA and additive residuals**. The most supported starting point
 is width 128, four blocks and four heads. Ordinary addition is the default for
