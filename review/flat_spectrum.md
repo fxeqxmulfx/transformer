@@ -4493,7 +4493,7 @@ outputs. This is a finite backend conformance result: the captured CPU and
 CUDA numbers have ordinary Lean proofs of their local error bounds. It
 does not establish `ModelAccurate` for a complete captured transformer,
 every checkpoint, or every future execution of these kernels. That
-composition is tracked separately in task #135.
+composition is addressed by task #135 in L1--L5 below.
 
 ### K1. Certify normalization scales without trusting sqrt
 
@@ -4661,10 +4661,10 @@ coordinates, invalid layouts, missing sites and nonfinite results. The
 analytic consequences are proved in Lean rather than inferred from
 agreement with a higher-precision floating-point calculation.
 
-Task #132 supplies these concrete primitive certificates. The remaining
-task #135 is to collect and discharge them throughout one complete,
-nontrivial transformer trace and check the derived model budget against
-its margin. The fixed probes above do not prove that a whole model satisfies
+Task #132 supplies these concrete primitive certificates. Task #135 below
+collects and discharges them throughout one complete, nontrivial transformer
+trace and checks the derived model budget against its margin. The fixed
+probes above do not prove that a whole model satisfies
 `ModelAccurate`, that the bound is useful for the constructed powered-division
 weights, or that every future invocation of these kernels is accurate.
 Learning conditions (#133) and exact-RoPE depth/width lower bounds (#134)
@@ -4685,3 +4685,194 @@ ScheduleFreeMuon allocation failures (float32/float64, 75 allocations of
 Python command exits unsuccessfully, matching the baseline recorded for
 #130 and #131. Logs and the statement/source crosswalk are retained in
 `.kanban/artifacts/132/`.
+
+## Complete captured execution
+
+L1--L5 discharge every operation premise for one complete compiled CUDA
+invocation of the pinned source transformer. They also prove a limitation
+of the current global error budget: it cannot certify this invocation's
+decision margin, for any valid uniform operation allowance. This is a
+proved obstruction in the sufficient numerical bound, not evidence that
+the model computes the wrong decision. Task #135 records this result;
+task #136 tracks a replacement bound using the observed norm ranges and
+individual operation errors.
+
+### L1. Capture the actual source forward
+
+`./run.py model-trace-capture` imports the unchanged diff_gpt `GPT.forward`
+at commit b98c665bd8faa30729fd368d257a13b6d58712a1, checking all five pinned
+file hashes first. It uses width four, one head, one block, the source
+SwiGLU width eleven, three tied token embeddings, context length two and
+the input word [0,1]. The stored weights are deterministic dyadic values;
+all five branch matrices are nonzero. Both attention and SwiGLU change the
+second residual, as proved by `active_branches`. This is a finite execution
+certificate, not a training run or a modular-division accuracy experiment.
+
+The invocation uses Python 3.15.2, PyTorch 2.15.0+cu132, CUDA 13.2 and the
+RTX 3050 Laptop GPU. Compilation requests max-autotune, fullgraph and static
+shapes. SDPA selects MATH; float32 matrix precision is IEEE. RMS epsilon
+is the source float32 value 2^-23, and clipped L2 retains epsilon 10^-12.
+The original source constructs its RoPE tables on CPU in float32 before
+the model moves to CUDA. Their exact mathematical phases are checked
+independently, including the source base-10000 frequency calculation.
+
+Observational hooks and functional wrappers retain 24 tensors from the
+actual source call. The wrappers return each original operation's result.
+The trace includes all RMS calls, the fused QKV projection, source reshapes,
+Q/K rotations, SDPA output, clipped own-value direction, first-position
+zero, head merge, both learned output projections, all SwiGLU operations,
+both residual additions, final RMSNorm and tied logits. The shared embedding
+and cosine/sine tables are also saved. Auxiliary scores are explicitly
+computed from the stored Q/K values; they are not claimed to expose the
+SDPA kernel's internal scores. The average certificate checks its output
+against those auxiliary scores and the captured values.
+
+Returning intermediates can affect compiler fusion. The claim concerns
+this instrumented compiled invocation. Its six final logit bits match the
+separately compiled uninstrumented forward in this capture; that numerical
+comparison is retained as evidence, not used as a Lean premise. Observed
+kernel names are retained in `review/model_trace_capture.json`. The GPU's
+GEMM autotuning fallback is permitted; no particular reduction order is
+assumed by the output-residual checks.
+
+### L2. Check all local premises with exact arithmetic
+
+`model_trace_arithmetic.py` decodes every finite captured value as its exact
+binary rational. It checks the complete operation/parameter/table sets,
+shapes, source dimensions, input word and epsilons. It rejects nonfinite
+values, Boolean or string substitutes, missing sites and corrupt outputs.
+There are 52 checked vector/scalar sites, in addition to the exact stored
+embedding identification.
+
+Each normalization has its own rational scale witness. Decimal square roots
+only propose scales; exact rational squared residuals and coordinate boxes
+verify them. Therefore no Decimal sqrt correctness is assumed. Matrix
+products, source rotations, scaled dot products, elementwise products, XSA,
+residual additions and final logits are checked against their actual stored
+inputs using rational sums. Source QKV/head/half-split layouts are retained.
+
+Order-12 polynomial witnesses certify all 22 SiLU coordinates and both
+causal average rows. On abs(x)<=1, `exp_checked` bounds the analytic
+exponential error by 10^-8 after a rational polynomial residual at most
+10^-10. `silu_checked` and `average_checked` transfer those certificates
+to the source activation and causal average. The approximate mass sum is
+checked above 1/2 and each stored value coordinate below one in magnitude.
+The actual source input ranges, rather than a uniform CUDA exp guarantee,
+discharge these requirements.
+
+Most rational coordinate boxes have radius 10^-6; widths up to sixteen
+convert them to the common Euclidean operation allowance delta=10^-4.
+Normalizer and nonlinear analytic remainders are included before that
+conversion. The independently checked cosine/sine allowance is tau=2e-6.
+These convenient common allowances are upper bounds, not measurements of
+each primitive's maximum error.
+
+### L3. A complete ordinary Lean certificate
+
+`./run.py model-trace-certificates` rechecks the rational premises, saves
+`review/model_trace_certificates.json`, and exports exact rational literals
+and ordinary Lean proof scripts. Lean independently proves all numeric
+premises and their analytic consequences. The exporter introduces no
+axioms, native decision procedures or unchecked Python-derived equalities.
+Tests require its output to equal the committed Lean source exactly.
+
+`Complete.captured` is a full `Execution.ModelTrace`, linked at every
+operation boundary to its actual stored input. `attention_accurate`,
+`ffn_accurate` and `block_accurate` assemble the checked primitive results.
+`captured_accurate` proves
+
+```
+ModelAccurate cfg weights (1/8388608) (1/1000000000000)
+  angles tokens captured (1/10000) (2/1000000).
+```
+
+There is no remaining operation-accuracy hypothesis in this theorem.
+`captured_logit_error` applies the existing complete-stack composition
+theorem to the actual saved logits. `captured_decisions` proves that the
+first token's strict winner is class zero and the second token's strict
+winner is class two. These are statements about the captured outputs;
+agreement with the exact-real source's decisions requires a useful
+comparison bound, which the existing global one does not provide.
+
+The capture process, PyTorch runtime, driver and hardware are not themselves
+verified in Lean. The mathematical statements concern the exact encoded
+data and the pinned source equations. The scope is one checkpoint and word,
+not all weights, future invocations, context lengths or modular tasks.
+
+### L4. An unavoidable obstruction in the existing uniform budget
+
+The final residual addition at token one, coordinate two has exact error
+
+\[
+ |\widehat x_{\mathrm{out},1,2}
+   -(\widehat x_{\mathrm{mid},1,2}+\widehat f_{1,2})|=2^{-24}.
+\]
+
+`residual_error_exact` checks this equality directly on the captured binary
+rationals. A coordinate's absolute error is at most its Euclidean error,
+so `allowance_floor` proves that **every** `ModelAccurate` certificate for
+these same tensors must have delta>=2^-24. Thus the obstruction below cannot
+be removed merely by choosing a tighter common allowance than 10^-4.
+
+Let L=2/sqrt(eps), the existing `rmsLip`. `budget_ge_initial` proves that
+the old depth recurrence always satisfies
+
+\[
+ E_D\ge E_0=L\,\delta+\delta.
+\]
+
+Each residual block gain is at least one and its new error charge is
+nonnegative. At eps=2^-23, L^2=2^25. Each tied embedding has norm one, so
+the existing final logit radius satisfies
+
+\[
+ R_v > L^2\delta\ge 2^{25}2^{-24}=2.
+\]
+
+This uses only the unavoidable residual error and the old recurrence's
+uniform initial/final normalization charge. It holds before considering
+any additional inflation from XSA's small clipping epsilon or learned
+matrix norms. The true source final RMSNorm has norm at most two; hence
+every exact source logit is between -2 and 2 and every class margin is
+at most four. Two class radii strictly exceed four.
+
+`no_global_margin` consequently proves that, for these weights and captured
+tensors, no valid nonnegative table allowance and uniform operation
+allowance can satisfy `MarginAbove`, at any residual vector or target class.
+The earlier error theorem remains sound; its sufficient bound is too coarse.
+The captured decisions and active branches remain proved.
+
+### L5. Consequence for the flat-spectrum / transformer / C-RASP connection
+
+`no_execution_below` connects the obstruction to the exact
+`Spectral.ExecutionBelow` premise used by J6--J7. For every margin gamma<=4,
+it is impossible to discharge this premise for the captured trace using
+the old uniform budget. Increasing the independent counting precision
+does not remove that execution-budget obstruction. No spectral recovery
+assumption or optimizer convergence claim has been added.
+
+The next required change is numerical: use verified norm intervals for
+normalization sensitivity, individual operation errors and exact stored
+embedding identification, then propagate those bounds through the actual
+source stack. Task #136 requires that improved bound to certify source and
+captured decision agreement and reconnect to the existing counting bridge,
+or to identify a remaining obstruction rigorously. The present result does
+not claim that the improved bound has already been proved or that the
+captured classifier has already been certified as a C-RASP computation.
+
+Validation: the full Lean build passes (13233 jobs), without warnings in the
+new modules. Individual axiom checks cover all 56 new public theorems and
+use only propext, Classical.choice and Quot.sound. The audit reports 36
+unchanged sorry, zero results resting on a sorry and zero extra axioms.
+The regenerated index has 4136 modules and 21241 theorems, with zero
+vacuous results and zero placeholders. Forbidden and whitespace checks pass.
+The certificate command reproduces its saved witnesses and Lean sources
+exactly, and all five pinned source hashes still match.
+
+All seven certificate tests pass. The final 432-test lab suite passes with
+three skips; the 104-test optimizer suite reproduces the two existing
+ScheduleFreeMuon allocation failures (float32/float64, 75 allocations of
+8519680 bytes each). Schedule-Free AdamW passes. The overall Python command
+therefore exits unsuccessfully for the same baseline failures recorded in
+#130--#132. Validation logs and the source/statement review are preserved in
+`.kanban/artifacts/135/`.

@@ -63,7 +63,10 @@ certificate*, J1--J7. This uses ideal feature recovery and finite interpolation,
 and does not establish optimizer convergence or efficient arithmetic circuits.
 Concrete backend certificates in *Concrete backend contracts*, K1--K6,
 derive primitive error bounds from algebraic and finite polynomial checks.
-Captured CPU/CUDA outputs satisfy them by ordinary Lean proofs; this certifies
-finite primitive cases, without asserting a complete hardware-model trace or
-uniform guarantees over all kernel inputs.
+Captured CPU/CUDA outputs satisfy them by ordinary Lean proofs. A complete
+compiled source invocation satisfies every ModelAccurate check (L1--L3).
+Its unavoidable residual error proves that the current uniform global bound
+cannot meet any attainable decision margin (L4--L5); this identifies the next
+numerical gap without asserting source decision agreement or uniform backend
+guarantees.
 -/
