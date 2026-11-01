@@ -1,6 +1,6 @@
 {
   "task": 150,
-  "status": "learning_complete_self_review_pending",
+  "status": "self_review_complete",
   "scope": "Synthetic normalized depth-attention query repair; full GPT residual comparison remains task145.",
   "proof_commit": "4f4c5aec",
   "gpt_implementation_commit": "ec39481",
@@ -718,6 +718,7 @@
     "gpu_optimizer_failures": "Two existing ScheduleFreeMuon allocation subtests at FP32/FP64; reproduced on unchanged root. Full CUDA verify is not green."
   },
   "evidence_sha256": {
+    "axioms.lean": "b354adf1e047852679f78246e351529c80cd495b00d838238f5fb009b9068e04",
     "axioms.log": "287161de8ea9bd755f6986615ebcaf8521a467854bee54f285ae3ab2bdbd6280",
     "baseline-cuda-allocation.log": "2a19fa65b5d694e5904bf100ea316ad7de37a17c7a5d233dfd981fd0023f88ef",
     "compiled-numerics.log": "cf5e2fc62a0781ea6365999b4c81d48e884e6c6dda3ce367020c3b9624407944",
@@ -725,6 +726,8 @@
     "compiled_numerics.json": "d7084696eb89b2ce4628a9d3002c629e8b432bd798d3ef4469c876741890c9a1",
     "conditioning-build.log": "ae6f9fe6472995213da587c6dae81d96cc082efd6a0bd1f8b1d5f2241d14e0b2",
     "coordinate-build.log": "1df25d471e2d1385cde0864cc996110ca27f406549dd39d0576ab4c467cb9aca",
+    "final-audit.log": "64f40f0f49704909b316ee81aaf4f80ff3babfd1cd3e396d021be00177103d1e",
+    "final-build.log": "166e03894b1f5ec3ce13e31bf471e0a918b5a8a6590ae682ec4cd095bfca1b78",
     "gpt-tests-complete.log": "5c3ce33ef8f41a35b95c822a87c77baf86be946ec556b38ff12511b201f26311",
     "gpt-tests-final.log": "f7af43b02280f816e9afaa330c55fc7bc4b9f46968670554ca847e4e12c5fa80",
     "gpt-tests-validated.log": "74251d2b7c0f9deb51da6511e771695053359c3287ffb9ea28c2052b37752e80",
@@ -734,7 +737,22 @@
     "optimizer-cpu.log": "66a14e312ac76a269fd81c36effc2c1d961638aed562154e9192c114af52e035",
     "replay-partial.log": "cb8bc213b4248b354d6213e6b606595755c0e78bd481dfc211c734b556ecf6f0",
     "replay.log": "f3571f20223ab3d87dfc31efeb391251d64795fc6ac8d440ae41dacb96706cc7",
+    "self-review-gpt.log": "ce2f4ff09281630580ce8340633097c55443fcd6f3552244ea1b9a0c2b288cf0",
+    "self-review-lean.log": "0051505239a5da4db20a97d2b540cf86d39857524043d0696fb75097c6f9ad60",
+    "self-review-replay.log": "f3571f20223ab3d87dfc31efeb391251d64795fc6ac8d440ae41dacb96706cc7",
+    "self-review-results.json": "beb63d595e5be514c1099e3ea236b8b79c175cef5eb2949e2b57e1e20b68c2c5",
     "validation-stack.txt": "322e6b77b58b69d7fa0045a300f481666d0557a27fe8264d953e2a1fd6fe0257",
     "verify.log": "88ecc218ec2f49ab3121f25109470b50d33193919cc4027dff2073586f7ccfe0"
+  },
+  "self_review": {
+    "author": "mixed_arithmetic",
+    "independent_review": false,
+    "submitted_transformer_commit": "9ec890da",
+    "submitted_gpt_commit": "24b3b49",
+    "lean_acceptance_rechecked": true,
+    "gpt_passed": 167,
+    "gpt_skipped": 1,
+    "full_30_case_report_byte_identical": true,
+    "board_task_status": "done"
   }
 }

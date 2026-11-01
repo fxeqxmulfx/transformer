@@ -499,3 +499,13 @@ residuals outperform ordinary addition in the full transformer. The repaired
 variant joins task#145 as a separately labeled control, preserving key-only
 source AttnRes as a different architecture. No new modular learning or old long
 cohort continuation occurred. Compact evidence is `residual_conditioning.json`.
+
+
+Requested author self-review: the same assistant rechecked submitted transformer
+`9ec890da` and diff_gpt `24b3b49`, without delegation. Lean build, audit, regenerated
+index comparison, forbidden patterns and all15 axiom lists pass again; QC1--QC9
+and the source state mapping were reread. The167-test affected GPT suite passes
+again (one existing skip). Replaying all30 saved cases reproduces the entire
+committed results JSON byte-for-byte. Task#150 is approved as self-reviewed,
+not independently reviewed. The existing Muon CUDA allocation failures and the
+full-transformer/learning-theory boundaries above remain explicit.
