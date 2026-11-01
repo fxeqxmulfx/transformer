@@ -2,7 +2,8 @@
   "scope": "Uncontended warmed diagnostic copies; no checkpoint or learning recipe changed.",
   "limits": [
     "Wall-stack samples include startup and GPU waits; JSONL has aggregate frames only.",
-    "Sampler reported errors and an earlier binary collector UnicodeEncodeError are retained.",
+    "Sampler error rates require a retained console log; missing evidence is null, not zero.",
+    "An earlier binary collector UnicodeEncodeError artifact is retained.",
     "Profiler ranges overlap kernels; optimizer annotation is not added to kernel time.",
     "CUDA traces perturb execution; plain repetitions define throughput."
   ],
@@ -51,7 +52,12 @@
       },
       "sampler_wall_overhead_fraction": 0.017317138156045297,
       "sampling_valid_samples": 24454,
-      "sampler_reported_error_rate": 12.69,
+      "sampler_reported_error_rate": null,
+      "sampler_reported_error_rate_unit": "percent",
+      "sampler_error_rate_evidence": {
+        "status": "missing_console_log",
+        "source": null
+      },
       "sampling_top_self_frames": [
         {
           "function": "ModularCompositionTask.inputs",
@@ -207,7 +213,12 @@
       },
       "sampler_wall_overhead_fraction": 0.00498036030296678,
       "sampling_valid_samples": 49517,
-      "sampler_reported_error_rate": 8.28,
+      "sampler_reported_error_rate": null,
+      "sampler_reported_error_rate_unit": "percent",
+      "sampler_error_rate_evidence": {
+        "status": "missing_console_log",
+        "source": null
+      },
       "sampling_top_self_frames": [
         {
           "function": "ModularCompositionTask.inputs",

@@ -109,7 +109,7 @@ Run from `python/`, substituting the fixed `wide` or `deep` case:
 
 ```sh
 uv run --locked python ../experiments/modular_composition/profile_updates.py wide plain
-uv run --locked python -m profiling.sampling run --jsonl -o ../experiments/modular_composition/runs/profiles/wide.jsonl ../experiments/modular_composition/profile_updates.py wide sampling
+uv run --locked python -m profiling.sampling run --jsonl -o ../experiments/modular_composition/runs/profiles/wide.jsonl ../experiments/modular_composition/profile_updates.py wide sampling > ../experiments/modular_composition/runs/profiles/wide-sampling.log 2>&1
 uv run --locked python ../experiments/modular_composition/profile_updates.py wide torch
 ```
 
@@ -139,8 +139,13 @@ Long trajectories amortize compilation better than many short fresh runs.
 
 The Python3.15 binary collector failed with a UnicodeEncodeError on a
 surrogate-containing frame; the failure artifact is retained. JSONL worked.
-The sampler reported error rates12.69 and8.28, with24454/49517 valid samples;
-coverage is incomplete. JSONL provides aggregate frames, so these figures
+The JSONL traces retain24454/49517 valid samples. The original report copied
+error rates12.69% and8.28% into the exporter, but the console logs needed to
+verify them were not retained. Self-review found and removed those constants:
+the portable report now marks these historical rates as missing evidence.
+Future runs retain the console log and parse its actual percentage; an absent
+log produces `null`, never zero or a previous run's rate. Coverage cannot be
+quantified from the retained JSONL alone. JSONL provides aggregate frames, so these figures
 cover the whole worker, including startup, not an isolated CPU-only steady
 region. Plain timed repetitions define throughput; the CUDA trace supplies
 kernel attribution. These profiles were completed before long training.

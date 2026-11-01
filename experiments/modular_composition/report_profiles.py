@@ -9,15 +9,42 @@ import collections
 import hashlib
 import json
 from pathlib import Path
+import re
 
 HERE = Path(__file__).parent
 RAW = HERE / "runs" / "profiles"
 
 
+def sampler_error_rate(path):
+    """Read the percentage printed by Python 3.15's sampling profiler.
+
+    Its JSONL collector omits error statistics. A missing console log is
+    missing evidence, never a zero error rate or a value from another run.
+    """
+    if not path.exists():
+        return None, {"status": "missing_console_log", "source": None}
+    matches = re.findall(r"^Error rate: ([0-9]+(?:\.[0-9]+)?)%?\s*$",
+                         path.read_text(), flags=re.MULTILINE)
+    if len(matches) != 1 or not 0 <= float(matches[0]) <= 100:
+        raise ValueError(f"Expected exactly one valid sampler error percentage in {path}")
+    return float(matches[0]), {"status": "recorded", "source": path.name}
+
+
 def report(shape):
     plain, sampled, traced = [json.loads((RAW / f"{shape}-{mode}.json").read_text())
                               for mode in ("plain", "sampling", "torch")]
+    for mode, record in zip(("plain", "sampling", "torch"), (plain, sampled, traced), strict=True):
+        if record["mode"] != mode:
+            raise ValueError(f"Unexpected profile mode for {shape}: {record['mode']}")
+        for key in ("case", "source_checkpoint_sha256", "recipe", "python", "torch", "gpu"):
+            if record[key] != plain[key]:
+                raise ValueError(f"Mismatched {key} in {shape}-{mode} profile")
+    error_rate, error_evidence = sampler_error_rate(RAW / f"{shape}-sampling.log")
     rows = [json.loads(line) for line in (RAW / f"{shape}.jsonl").read_text().splitlines()]
+    if (not rows or rows[0]["type"] != "meta" or rows[-1]["type"] != "end"
+            or any(r["run_id"] != rows[0]["run_id"] for r in rows)
+            or sum(r["type"] == "end" for r in rows) != 1):
+        raise ValueError(f"Expected one complete JSONL sampler run for {shape}")
     strings = {s["str_id"]: s["value"] for r in rows if r["type"] == "string_table" for s in r["strings"]}
     frames = {f["frame_id"]: f for r in rows if r["type"] == "frame_table" for f in r["frames"]}
     samples = collections.Counter()
@@ -43,10 +70,14 @@ def report(shape):
         "sampling": {k: v for k, v in sampled.items() if k not in ("recipe", "events")},
         "sampler_wall_overhead_fraction": plain["median_updates_per_second"] / sampled["median_updates_per_second"] - 1,
         "sampling_valid_samples": total,
-        "sampler_reported_error_rate": 12.69 if shape == "wide" else 8.28,
+        "sampler_reported_error_rate": error_rate,
+        "sampler_reported_error_rate_unit": "percent",
+        "sampler_error_rate_evidence": error_evidence,
         "sampling_top_self_frames": [{"function": name, "samples": count, "fraction_of_valid": count / total}
                                       for name, count in samples.most_common(12)],
-        "torch_profile_updates": 30, "kernel_time_us": kernel_us,
+        "torch_profile_updates": next(e["calls"] for e in traced["events"]
+                                      if e["name"] == "complete_schedule_free_update"),
+        "kernel_time_us": kernel_us,
         "attention_kernel_time_us": attention_us, "attention_fraction_of_kernel_time": attention_us / kernel_us,
         "optimizer_annotation_device_us": optimizer["device_total_us"],
         "top_kernels": [{"name": name, "microseconds": value} for name, value in kernels.most_common(8)],
@@ -58,7 +89,8 @@ def report(shape):
 def main():
     result = {"scope": "Uncontended warmed diagnostic copies; no checkpoint or learning recipe changed.",
               "limits": ["Wall-stack samples include startup and GPU waits; JSONL has aggregate frames only.",
-                         "Sampler reported errors and an earlier binary collector UnicodeEncodeError are retained.",
+                         "Sampler error rates require a retained console log; missing evidence is null, not zero.",
+                         "An earlier binary collector UnicodeEncodeError artifact is retained.",
                          "Profiler ranges overlap kernels; optimizer annotation is not added to kernel time.",
                          "CUDA traces perturb execution; plain repetitions define throughput."],
               "cases": [report(shape) for shape in ("wide", "deep")]}
