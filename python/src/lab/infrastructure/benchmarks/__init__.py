@@ -26,6 +26,7 @@ from ...domain.regression import ModularRegression
 from ...domain.paired import DivisionPairs, VectorReadout, check_division_model
 from ...domain.rotary import LabDivision
 from ...domain.peri_rotary import PowerDivision
+from ...domain.modular_composition import ModularPairs, ModularChain
 from ...domain.synthetic import Synthetic
 from ...domain.tensor import TensorStack
 from .modular import ModularTask
@@ -34,13 +35,15 @@ from .regression import RegressionTask
 from .paired import PairTask
 from .rotary import LabDivisionTask
 from .power_division import PowerDivisionTask
+from .modular_composition import ModularCompositionTask
 from .synthetic.training import SyntheticTask
 from .synthetic.tensor import TensorBasisTask
 from .text import TextTask
 
 TASKS = {ModularDivision: ModularTask, TinyShakespeare: TextTask, Synthetic: SyntheticTask,
          MatchingOrders: MatchingTask, MatchingBindings: MatchingTask, ModularRegression: RegressionTask,
-         LabDivision: LabDivisionTask, PowerDivision: PowerDivisionTask}
+         LabDivision: LabDivisionTask, PowerDivision: PowerDivisionTask,
+         ModularPairs: ModularCompositionTask, ModularChain: ModularCompositionTask}
 
 
 def build_task(spec, data_seed, device, model_spec=None):

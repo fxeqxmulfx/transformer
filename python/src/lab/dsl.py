@@ -19,6 +19,8 @@ from .domain.model import (FFN, GELU, XSA, Attention, Block, FusedQKV, LayerNorm
                            ScaledResidual, SiLU, Sinusoidal, Softmax, Sparsemax, SurrogateWeights, Tied, TorchDefault, Transformer, Untied, YaRN)
 from .domain.rotary import DenseBranch, LabDivision, Rotate90, SwiGLU
 from .domain.peri_rotary import PeriRotate90, PowerDivision
+from .domain.source_transformer import SourceTransformer
+from .domain.modular_composition import ModularPairs, ModularChain
 from .domain.peri_restart import PeriRotate90Restart
 from .domain.continuation import ScheduleFreeContinuation
 from .domain.paired import CrossEntropyAnswers, DivisionPairs, SquaredAnswers, VectorReadout
@@ -45,6 +47,7 @@ __all__ = [
     "FusedQKV", "PerHeadQKV", "ScaledDot", "LearnedScaledDot", "QKNorm", "Softmax", "Sparsemax", "SurrogateWeights",
     "ReLU", "ReLU2", "GELU", "SiLU", "Tied", "Untied", "TorchDefault", "Normal", "ScaledResidual",
     "Rotate90", "DenseBranch", "SwiGLU", "PeriRotate90", "PeriRotate90Restart", "PowerDivision",
+    "SourceTransformer", "ModularPairs", "ModularChain",
     "VectorReadout", "SquaredAnswers", "CrossEntropyAnswers",
     # benchmarks
     "ModularDivision", "ModularRegression", "LabDivision", "TinyShakespeare", "Synthetic", "Memorization", "MatchingOrders", "MatchingBindings",

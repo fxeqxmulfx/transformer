@@ -11,6 +11,7 @@ from ...domain.paired import VectorReadout as VectorReadoutSpec
 from ...domain.rotary import Rotate90 as Rotate90Spec
 from ...domain.peri_rotary import PeriRotate90 as PeriRotate90Spec
 from ...domain.peri_restart import PeriRotate90Restart
+from ...domain.source_transformer import SourceTransformer as SourceSpec
 from ...domain.tensor import TensorStack as TensorSpec
 from .atomic import AtomicMatching
 from .mlp import MLP
@@ -19,6 +20,7 @@ from .peri_rotary import PeriRotate90
 from .peri_restart import restart
 from .tensor import TensorStack
 from .transformer import Transformer
+from .source_transformer import SourceTransformer
 
 
 def build_model(spec, vocab, seed):
@@ -29,6 +31,8 @@ def build_model(spec, vocab, seed):
     same spec and seed starts from bit-identical parameters.
     """
     torch.manual_seed(seed)
+    if isinstance(spec, SourceSpec):
+        return SourceTransformer(spec, vocab)
     if isinstance(spec, PeriRotate90Restart):
         return restart(spec, vocab, seed)
     if isinstance(spec, PeriRotate90Spec):

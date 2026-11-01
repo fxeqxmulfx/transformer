@@ -1,5 +1,22 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+**2026-11-01 mixed-arithmetic progression, requested by the user.** Active:
+board #138 adds the exact normalized source RoPE model to the lab and tests
+`a^3+ab mod P` against powered-division controls, then final-answer chains
+`z <- z^3+b*z+c mod P`. The frozen 48-case protocol is in
+[modular_composition](experiments/modular_composition/README.md), with
+P17/97/193, approximate parameter-matched width/depth comparisons,
+initialization and optimizer controls, full-table fitting controls and
+final-only doubled-length evaluation. Every training case uses Schedule-Free
+AdamW, Python3.15/Torch2.15 and CUDA max-autotune. No convergence or
+task-specific depth lower bound follows from the local flat spectrum.
+Board #139 tracks a polynomial-resource actual-source construction using
+active depth. The user clarified that exponential whole-table interpolation
+must not be interpreted as necessary width for structured tasks. Aim for
+width independent of chain length at fixed prime, with explicit routing,
+depth and precision costs; this remains a target, not an established result.
+Tasks #133/#134 retain the optimizer and exact-RoPE lower-bound gaps.
+
 **2026-10-31 sampled-gradient theory extension, requested by the user.**
 The existing minibatch symmetry controls expose the next gap: a symmetric
 full-table gradient does not imply a symmetric sampled update. The 25 theorems

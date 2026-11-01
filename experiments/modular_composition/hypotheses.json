@@ -1,0 +1,27 @@
+{
+  "status": "frozen_before_training",
+  "date": "2026-11-01",
+  "success_threshold": 0.99,
+  "primary_endpoint": "final averaged-weight heldout accuracy at update2000",
+  "length_endpoint": "final averaged-weight accuracy on independent inputs at twice the trained chain length",
+  "baselines": "Report measured majority and last-input copying on every split; uniform-chain copying succeeds with probability (2P-1)/P^2, not1/P.",
+  "exact_checks": [
+    "For f(a,b)=a^3+ab over each chosen prime, K=exp(2*pi*i*f/p) satisfies K K*=p I.",
+    "For every fixed c, adding c to this local transition only multiplies K by a unit scalar.",
+    "The single missing-entry opposite-phase fill has lower nuclear norm than the true mixed kernel.",
+    "For nonzero a,b, exponent-one division has a rank-one multiplicative-character kernel."
+  ],
+  "exploratory_comparisons": [
+    "Mixed versus division at each prime and architecture; no optimizer-success theorem is asserted.",
+    "Depth4 versus depth1 at approximately matched parameter counts; report head dimensions and measured time.",
+    "Full-table mixed fitting versus heldout learning on the half table.",
+    "Same-length and doubled-length chain accuracy as L ranges over1,2,4,8.",
+    "Initialization seeds11/17 and predeclared zero-decay or lower-rate controls for mixed P97."
+  ],
+  "limits": [
+    "Do not infer a whole-chain flat spectrum from flatness of each local transition.",
+    "Do not infer transformer failure from failure of nuclear-norm completion.",
+    "Do not infer a necessary layer count or an infinite-length algorithm from the finite cases.",
+    "Do not select checkpoints, alter the declared budgets, or drop unsuccessful runs using heldout results."
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "dtype": "torch.float32",
+  "device": "cuda:0",
+  "max_logit_error": 7.450580596923828e-08,
+  "max_gradient_error": 3.501772880554199e-07,
+  "parameter_count": 6448,
+  "rtol": 0.003,
+  "atol": 0.0003,
+  "python": "3.15.2",
+  "torch": "2.15.0+cu132",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "compilation": "max-autotune/fullgraph/static",
+  "width": 16,
+  "depth": 2,
+  "heads": 2,
+  "context": 9
+}

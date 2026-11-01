@@ -21,6 +21,8 @@ from .regression import MLP, ModularRegression
 from .paired import DivisionPairs, VectorReadout, check_division_model
 from .rotary import LabDivision, Rotate90
 from .peri_rotary import PeriRotate90, PowerDivision
+from .source_transformer import SourceTransformer
+from .modular_composition import ModularPairs, ModularChain
 from .peri_restart import PeriRotate90Restart
 from .continuation import ScheduleFreeContinuation
 from .spec import Spec, describe, require, require_kind, swap, walk
@@ -145,6 +147,10 @@ class Experiment(Spec):
             require(isinstance(self.optimizer, AdamW), "TensorStack uses ordinary AdamW")
             require(not isinstance(self.diagnostics, AttentionDiagnostics),
                     "TensorStack has joint distributions, not the original attention diagnostics")
+        if isinstance(self.model, SourceTransformer) or isinstance(self.benchmark, (ModularPairs, ModularChain)):
+            require(isinstance(self.model, SourceTransformer) and
+                    isinstance(self.benchmark, (ModularPairs, ModularChain)),
+                    "SourceTransformer uses final-answer ModularPairs or ModularChain")
         if isinstance(self.diagnostics, AttentionDiagnostics):
             require(isinstance(self.benchmark, (Synthetic, ModularDivision)),
                     "AttentionDiagnostics needs a Synthetic or ModularDivision benchmark")

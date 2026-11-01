@@ -1,0 +1,32 @@
+{
+  "scope": "Local two-variable kernels only; numerical checks accompany existing Lean theorems.",
+  "cases": [
+    {
+      "prime": 17,
+      "mixed_gram_max_error": 5.32970267914064e-15,
+      "mixed_singular_max_error": 8.881784197001252e-16,
+      "constant_shift_max_error": 1.0429598422709816e-15,
+      "true_mixed_nuclear_norm": 70.09279563550024,
+      "one_wrong_entry_nuclear_norm": 69.8465843842649,
+      "division_second_singular_value": 2.386056685638242e-15
+    },
+    {
+      "prime": 97,
+      "mixed_gram_max_error": 4.9738175004702367e-14,
+      "mixed_singular_max_error": 1.0658141036401503e-14,
+      "constant_shift_max_error": 1.0235750533041806e-15,
+      "true_mixed_nuclear_norm": 955.3392067742221,
+      "one_wrong_entry_nuclear_norm": 955.2374091128954,
+      "division_second_singular_value": 2.7136675683406684e-14
+    },
+    {
+      "prime": 193,
+      "mixed_gram_max_error": 8.792977306561516e-14,
+      "mixed_singular_max_error": 1.9539925233402755e-14,
+      "constant_shift_max_error": 1.2560739669470201e-15,
+      "true_mixed_nuclear_norm": 2681.241689963812,
+      "one_wrong_entry_nuclear_norm": 2681.1696149060144,
+      "division_second_singular_value": 4.4623942344160535e-13
+    }
+  ]
+}

@@ -10,6 +10,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`modular_composition`](modular_composition) | 48 | Can the normalized source RoPE transformer learn flat-spectrum mixed arithmetic and composed modular chains with Schedule-Free AdamW? Frozen screen; pending results. |
 | [`basis`](basis) | 180 | Does a two-layer GPTMini of width 64 pass depth, recall and parity in the easy mode, while the hard mode takes width 128 and six layers? At what batch and rate do the runs go fastest? |
 | [`basis_sparsemax`](basis_sparsemax) | 222 | Where does sparsemax fail where softmax passes the basis, and do a smaller QKNorm starting scale or ScaledDot repair it while retaining sparse attention? |
 | [`basis_qknorm`](basis_qknorm) | 150 | Does sparsemax need query/key L2 normalization when its learned head gain and starting score dispersion are controlled? |
