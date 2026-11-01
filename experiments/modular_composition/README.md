@@ -144,3 +144,60 @@ coverage is incomplete. JSONL provides aggregate frames, so these figures
 cover the whole worker, including startup, not an isolated CPU-only steady
 region. Plain timed repetitions define throughput; the CUDA trace supplies
 kernel attribution. These profiles were completed before long training.
+
+## Frozen early outcomes (2000 updates)
+
+All48 declared runs completed, including one100-update timing pilot excluded
+from learning conclusions. The original CUDA capture failure for the P193
+deep mixed case and its unchanged successful retry are both retained.
+`results.json` includes every recorded learning curve, final result, parameter
+count, runtime, split/checkpoint hash and replay comparison.
+
+| Task | Prime | W256 D1 heldout | W128 D4 heldout |
+| --- | ---: | ---: | ---: |
+| mixed | 17 | 4.828% | 6.897% |
+| mixed | 97 | 1.467% | 1.700% |
+| mixed | 193 | 0.881% | 0.838% |
+| division | 17 | 5.882% | 8.088% |
+| division | 97 | 4.725% | 2.255% |
+| division | 193 | 100.000% | 2.062% |
+
+Training accuracy is100% in these cases except the two P193 deep models,
+which each miss one training row. The full-table mixed controls fit100% at
+P17/P97 but only58.62% at P193. The four model-seed17 confirmations and
+four P97 rate/decay controls remain below2% heldout; see the complete JSON.
+These are fixed finite-budget observations, not impossibility results.
+
+| Chain prime | Updates in chain | W256 D1 heldout / doubled length | W128 D4 heldout / doubled length |
+| --- | ---: | ---: | ---: |
+| 17 | 1 | 6.93% / 7.81% | 8.59% / 7.52% |
+| 17 | 2 | 8.59% / 6.64% | 8.01% / 7.32% |
+| 17 | 4 | 6.54% / 6.93% | 6.54% / 6.15% |
+| 17 | 8 | 8.11% / 7.03% | 6.74% / 6.54% |
+| 97 | 1 | 2.34% / 1.76% | 1.07% / 1.37% |
+| 97 | 2 | 1.37% / 0.68% | 1.86% / 1.66% |
+| 97 | 4 | 0.88% / 0.68% | 1.27% / 1.37% |
+| 97 | 8 | 0.98% / 1.76% | 0.88% / 1.66% |
+| 193 | 1 | 1.17% / 1.27% | 1.07% / 1.07% |
+| 193 | 2 | 1.27% / 0.29% | 0.78% / 0.78% |
+| 193 | 4 | 0.98% / 0.39% | 0.68% / 0.29% |
+| 193 | 8 | 1.46% / 0.88% | 1.07% / 0.39% |
+
+No chain reaches the99% criterion. Compare with the measured copy-last and
+majority baselines in each split; the uniform copy baseline is not1/P.
+All pair labels, source correspondence and faithful-character recovery graph
+premises pass their independent checks. The connected/perfect-matching
+division splits do not imply that sampled CE training discovers that kernel.
+
+All48 final saved states replay eagerly on CUDA. Eight cases with discrepancies
+also replay through the original compiled path; tolerances were not widened.
+Two compiled comparisons retain a one-answer difference: model17 P193 deep
+mixed training, and P17 one-step deep chain heldout. The latter loss differs
+by.007345, exceeding the declared3e-4 relative/absolute tolerance. Saving
+training queries after evaluation adds an FP32 mode roundtrip on replay;
+that is a possible contributor, not an isolated causal diagnosis. Every
+99% success classification agrees. The reports preserve both measured values;
+they do not claim bitwise-equivalent saved-state metrics.
+
+The long continuation is a separate adaptive cohort and does not replace
+these endpoints. Its protocol was frozen before starting, after profiling.
