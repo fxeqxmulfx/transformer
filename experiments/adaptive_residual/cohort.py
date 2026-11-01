@@ -17,7 +17,7 @@ from lab.infrastructure.loader import load
 from lab.infrastructure.nn import build_model
 from lab.infrastructure.provenance import code, provenance
 from lab.infrastructure.store import RunDirectory
-from protocol import HERE, CrossingTraining, frozen, sha, sources, write
+from protocol import HERE, CrossingTraining, frozen, same_data, sha, sources, write
 
 
 def freeze():
@@ -75,11 +75,17 @@ def run():
         write(phase_path, phase)
         start = time.monotonic()
         directory.begin(describe(spec), provenance(spec.execution.device), study.source)
-        trainer = CrossingTraining(spec, directory,
-            lambda row: print(json.dumps({"label": label, **row}, allow_nan=False), flush=True),
-            ResidualCompiledStepper)
-        if trainer.task.metadata != case["task"]:
-            raise ValueError("Frozen split changed")
+        try:
+            trainer = CrossingTraining(spec, directory,
+                lambda row: print(json.dumps({"label": label, **row}, allow_nan=False), flush=True),
+                ResidualCompiledStepper)
+            if not same_data(trainer.task.metadata, case["task"]):
+                raise ValueError("Frozen split changed")
+        except Exception:
+            record.update(status="preparation_failure", traceback=traceback.format_exc(),
+                          elapsed_seconds=time.monotonic() - start)
+            write(phase_path, phase)
+            raise
         record["preparation_seconds"] = time.monotonic() - start
         record["status"] = "learning"
         write(phase_path, phase)

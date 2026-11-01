@@ -1,0 +1,60 @@
+{
+  "recorded_utc": "2026-11-01T23:36:43.899028+00:00",
+  "original_protocol_sha256": "a459819d4b6ac3e6d4bc23b0f6e7b14f6cbd78d13ff97d2426040209a25df980",
+  "original_replay_commit": "598979b6",
+  "reason": "P193 preparation failed before learning: CPU and CUDA copy_last_accuracy differ by one float64 ULP; all split and input hashes and counts agree. Permit only that diagnostic difference. Record preparation errors. No engine, model, optimizer, sampler, data, stopping, selection or final-test change.",
+  "difference": {
+    "path": "validation/copy_last_accuracy",
+    "cpu": 0.005613126079447323,
+    "cuda": 0.005613126079447322
+  },
+  "completed_cases": {
+    "canonical-p97-s11": {
+      "status": "validation99",
+      "preparation_seconds": 132.23380392900435,
+      "stop": {
+        "step": 26000,
+        "reason": "validation99"
+      },
+      "elapsed_seconds": 273.2167447210013,
+      "checkpoint_sha256": "3e2260b63a1ffb4576161f24c53bcc67ad5c4afdbb2b68daf10abd5e524dbe96"
+    },
+    "adaptive-p97-s11": {
+      "status": "validation99",
+      "preparation_seconds": 131.62955926399445,
+      "stop": {
+        "step": 21000,
+        "reason": "validation99"
+      },
+      "elapsed_seconds": 248.49492404599732,
+      "checkpoint_sha256": "0fee1c14f8760a2c33ec24eb2fd1c3f1edbc1e0d14bf6c4a89fc67b2bac13b61"
+    },
+    "adaptive-p97-s17": {
+      "status": "validation99",
+      "preparation_seconds": 43.67118494999886,
+      "stop": {
+        "step": 20000,
+        "reason": "validation99"
+      },
+      "elapsed_seconds": 156.53099861399824,
+      "checkpoint_sha256": "23471bfbf40bc181e8d7603885805f5b10fef7d6b4e641567df5a5242102091f"
+    },
+    "canonical-p97-s17": {
+      "status": "validation99",
+      "preparation_seconds": 22.4476956590006,
+      "stop": {
+        "step": 24000,
+        "reason": "validation99"
+      },
+      "elapsed_seconds": 155.88085849100025,
+      "checkpoint_sha256": "3fd8c4ea6d6fea6346773a8bf0fa6254718815e18ca53c930b05273c6ecf00f0"
+    }
+  },
+  "cohort_sources": {
+    "cohort.py": "0d0d86b8be6f37f912c51a64d5d9666422033fed3b49cbf07a22391bab02bc7a",
+    "experiment.py": "b2bbdc9f0c397aa41bb015b8fe3c2b10ddb104ff5dfe91f20b884153faba001e",
+    "profile_loop.py": "3b47ec8f2749a78b83a1dbb6aad07b3ed1f0f53ddbd3bf0c584ac383a71dd33a",
+    "protocol.py": "24e5137393b5003518cf6723aab95f9c4695945b05943e5eaffa3a3c49c5b7b4",
+    "report.py": "6294e16edf81cf3d5d8a5798c64bc1a939ee58c9b73f5fe4c4a9c9d613170a2d"
+  }
+}

@@ -1,6 +1,8 @@
 """First99% is validation-only, checkpointed, resumable and independent of test."""
 
 import importlib.util
+import copy
+import math
 from pathlib import Path
 import tempfile
 import unittest
@@ -20,6 +22,23 @@ SPEC.loader.exec_module(protocol)
 
 
 class AdaptiveProtocolTests(unittest.TestCase):
+    def test_metadata_repair_accepts_only_one_ulp_copy_diagnostic(self):
+        frozen = {"validation": {"fingerprint": "exact-rows", "examples": 9264,
+                                 "copy_last_accuracy": 0.005613126079447323,
+                                 "majority_accuracy": .01}}
+        actual = copy.deepcopy(frozen)
+        actual["validation"]["copy_last_accuracy"] = 0.005613126079447322
+        self.assertTrue(protocol.same_data(actual, frozen))
+        actual["validation"]["copy_last_accuracy"] = math.nextafter(
+            actual["validation"]["copy_last_accuracy"], 0.)
+        self.assertFalse(protocol.same_data(actual, frozen))
+        for key, bad in (("fingerprint", "other-rows"), ("examples", 9263),
+                         ("majority_accuracy", math.nextafter(.01, 0.)),
+                         ("copy_last_accuracy", float("nan"))):
+            actual = copy.deepcopy(frozen)
+            actual["validation"][key] = bad
+            self.assertFalse(protocol.same_data(actual, frozen), key)
+
     def test_first99_validation_stops_without_training_threshold_or_test_access(self):
         spec = swap(recipe(updates=20), "model", AdaptiveResidual(8, 2, 2, 8))
         calls = []

@@ -65,3 +65,12 @@ pins every lab/optimizer source, cohort script, split and recipe. Learning
 cannot silently continue after source changes or final-test disclosure.
 The unused initial P97 protocol is retained in `preflight/`; no GPU learning
 ran under it. P193 and diagnostics were added before observing any GPU outcome.
+
+The first P193 preparation stopped before any update: the CPU and CUDA
+`copy_last_accuracy` diagnostic differed by one float64 ULP, while every
+row, label, count and fingerprint agreed. `metadata_amendment.json` retains
+the original protocol hash, completed P97 checkpoint hashes, and the exact
+replacement runner hashes. The repaired check permits only that one-ULP
+diagnostic difference. Model, engine, optimizer, sampler, data, stopping and
+selection rules are unchanged; the original protocol remains byte-identical.
+Preparation errors are now recorded explicitly before the runner exits.
