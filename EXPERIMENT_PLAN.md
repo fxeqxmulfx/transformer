@@ -1,6 +1,6 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-## Active research target and handoff (2026-11-01)
+## Active research target and handoff (2026-11-02)
 
 The current user target is to connect flat spectrum, the actual normalized
 RoPE transformer, and C-RASP through **efficient structured computation and
@@ -32,9 +32,10 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 | #147 numerical XSA correction | Self-reviewed;17 Lean theorems and fresh compiled checks pass; all6 division checkpoint reports reproduce identically | Preserve clipping/backward conventions; all failures retained; actual-source checks pass and original long trajectories stay frozen |
 | #149 repeated-token length collisions | Backlog after#147; structural follow-up | Check guarded constant-prefix invariance across lengths, the P97 chain labels3 versus31 on repeated token1, and an explicit boundary-token repair; do not turn a rare conditional collision into an average-error explanation |
 | #148 paired deep numerical correction | Backlog after#147; separate budget required | Compare legacy and guarded XSA with matched seeds, gradients and sufficiently long learning curves; numerical fidelity alone is not improved generalization |
-| #145 residual training comparison | In progress; fresh two-hour GPU ceiling authorized | Freeze matched seeds and sufficiently long budgets for ordinary residual, branch-scale control, source-faithful AttnRes and the separately labeled conditioned Q/K variant from#150; preserve source branches and disclose added parameters/compute |
+| #145 residual training comparison | Results complete; self-review pending; 16 cases retained, GPU phase closed at7165.75s | Freeze matched seeds and sufficiently long budgets for ordinary residual, branch-scale control, source-faithful AttnRes and the separately labeled conditioned Q/K variant from#150; preserve source branches and disclose added parameters/compute |
 | #146 normalized depth-attention verification | Self-reviewed; eight Lean theorems rechecked;21-case synthetic report reproduces identically | Prove Q/K score and sensitivity bounds with explicit gain/temperature assumptions; reuse diff_gpt; run a known-solution synthetic task and inspect gradients before full-model changes; commit both repositories |
 | #150 depth-query coordinate repair | Self-reviewed; all30 cases complete and replay byte-identically;6/6 huge-query repairs versus0/6 controls | Preserve finite-epsilon Q/K outputs and complete Schedule-Free state under coordinate changes; prove identities and bounds, test all30 fresh/resumed cases, retain failures, then self-review |
+| #151 normalization and residual gradient benchmark | Queued after#145; explicitly requested on2026-11-02 | Known-solution synthetic tasks for gate placement around RMSNorm and depth-dependent gradient transport; independent derivatives, paired Schedule-Free recovery, held-out inputs, and diff_gpt regressions for verified repairs |
 | #139 polynomial-resource construction | Backlog; core theory target | Route local arithmetic states and compose real source blocks; aim for fixed width at fixed prime with growing depth, otherwise explicit polynomial bounds; include precision and margins |
 | #133 optimizer-to-recovery bridge | Backlog after#131 | Derive useful routing or separating feature recovery from actual sampled CE/Schedule-Free dynamics under witnessed conditions; retain alias/memorization counterexamples |
 | #134 structured depth/width tradeoffs | Backlog after#131 | Task-specific bounds for exact nonperiodic RoPE; do not substitute arbitrary-table counting or periodic C-RASP lower bounds |
@@ -3053,3 +3054,81 @@ found in this comparison must get a regression test in the diff_gpt repository.
 A numerical/equation test alone must not be described as evidence of improved
 held-out learning. Keep the useful failure mechanism and learning protocol in
 the test or its explicitly slow integration fixture.
+
+
+## Normalization and residual gradient benchmark — task151, 2026-11-02
+
+The user asks whether another residual extension, gradient path, or normalization
+may interfere with grokking, and explicitly requests a new synthetic benchmark
+inspired by this Lean project. Keep ordinary residual addition as the working
+transformer baseline while task145 closes. A candidate extension is one bounded
+learned strength per completed branch, `alpha = 2*sigmoid(s)`, initialized at
+`s=0` so the initial function is the ordinary residual model. Place this strength
+after the existing branch output RMSNorm. Its identity path is not a proof of
+well-conditioned gradients or improved generalization.
+
+Task151 starts after the frozen task145 cohort, replay, and self-review. Its
+small mechanism probes and learning runs use CPU, Python3.15/Torch2.15 and
+Schedule-Free AdamW; the existing GPU deadline is not renewed. Freeze the
+concrete cohort after independent formula checks and disposable compilation
+profiling, before any scored learning. CPU learning should use max-autotune.
+
+Mathematical anchors already inspected: `GPTMini.rmsNorm_pos_homog` removes
+positive scaling for the ideal zero-epsilon norm; `GPTMini.rmsNormEps_lipschitz`
+gives an upper sensitivity bound with positive epsilon, not a lower gradient
+bound; `Residual.residualRun` and `residualRun_unroll` retain the actual branch
+recursion. The complete coordinate-state identities in `AttentionResiduals`
+also do not imply convergence. The refreshed discrtree index still reports
+unbuilt newer modules, so read the relevant statements in their sources and
+refresh after any required Lean build.
+
+Proposed gate-placement probe: supply independent Rademacher branch directions
+(their RMS is exactly one), and fit known coefficients in a residual sum.
+Compare a bounded scalar gate before versus after finite-epsilon branch RMSNorm.
+Both variants start with the same outputs and both have explicit finite optimal
+gates. Sweep branch scale and branch count with paired data and batch seeds.
+For a unit-RMS direction, the normalized coefficient is
+`a/sqrt(a*a+eps)` and its derivative is `eps/(a*a+eps)^(3/2)`.
+A gate before normalization can have a tiny radial derivative even while the
+function is representable. A gate after normalization directly controls branch
+amplitude. Check scalar derivatives with high-precision independent arithmetic,
+FP64 autograd, and actual compiled FP32 gradients; record precision loss as such.
+Use zero weight decay in this mechanism isolation so shrinking a large parameter
+is not mistaken for learning from a useful gradient. This is still Schedule-Free
+AdamW, with a disclosed recipe distinct from task145.
+
+Proposed depth probe: frozen linear residual branches give a known transport
+Jacobian `(1+c)^depth`. Contrast repeated contraction with depth-scaled branches;
+match the initial input-output function and use an unbounded scalar readout so
+both families can represent the same teacher. Measure parameter scale, true
+transport derivatives, finite-precision update size, and coefficient recovery.
+A tiny unnormalized MSE is not success when the target signal is tiny: score
+relative error and the recovered coefficient. Include a depth-one control where
+the compared transports coincide. This isolates a mechanism and does not model
+the full source transformer's Peri/RoPE/XSA computation.
+
+All learning cases keep disjoint train/validation/test directions and full
+trajectories. Final test opens only after learning closes. Use coefficient error
+as well as held-out prediction error; the known coefficient oracle allows an
+all-input error bound through `Residual.weightedSum_norm_le`. Do not describe
+these synthetic regressions as evidence of improved modular CE grokking. Any
+verified architecture/placement repair must get a meaningful diff_gpt regression
+that rejects a broken control, followed by same-assistant review.
+
+
+Task145 measured outcome (2026-11-02): all four ordinary residual controls
+passed stable validation and scored99.96–100% on final test. Raw/conditioned
+Q/K depth mixing stayed near chance within37–40k updates; one conditioned P193
+case failed at initial CUDA capture. Query conditioning never activated.
+Fixed scaling at23k updates improved paired validation from34.97%/27.23% to
+97.60%/98.37%; final test was97.77%/98.37%, still short of the stable99.9% target.
+One key-only control reached20k at2.79% test; the other was globally censored
+during setup. No continuation fit. Keep these censoring limits in any claim.
+
+All449,000 gradient records are finite, and CPU/CUDA counts and fixed-epsilon
+FP32/FP64 predictions agree. Local normalization gains occur in successful
+models too; this does not establish a general normalization defect. The new
+known-solution task151 must distinguish coefficient/coordinate conditioning
+from missing features and actual modular generalization. Both prior GPU phase
+budgets are now closed. GPT5d71786 adds two held-out regression fixtures for
+scaling, with a disabled-scaling control falling to36.21%/43.77%.

@@ -29,6 +29,10 @@ def main():
             column = (11, 17).index(case["seed"])
             axis = axes[row, column]
             points = case["learning_curve"]
+            if not points:
+                axis.text(.03, .85, f"{NAMES[case['mode']]}: no learning observations",
+                          transform=axis.transAxes, fontsize=8, color=COLORS[case["mode"]])
+                continue
             x = [point[horizontal] for point in points]
             color = COLORS[case["mode"]]
             axis.plot(x, [100 * p["validation"]["accuracy"] for p in points],
@@ -49,7 +53,7 @@ def main():
                     axis.set_ylabel("Accuracy (%)")
         axes[0, 0].legend(fontsize=8, loc="lower right")
         fig.suptitle("Residual mixing in the normalized RoPE transformer: every declared case")
-        fig.text(.5, .015, "Solid: validation; dotted: train. Circle: stable validation stop; cross: update/time cap. Final test is reported separately.",
+        fig.text(.5, .015, "Solid: validation; dotted: train. Circle: stable stop; cross: cap. Zero-update endpoints are setup only. Final test is separate.",
                  ha="center", fontsize=8)
         fig.tight_layout(rect=(0, .04, 1, .95))
         name = "learning_curves" if horizontal == "step" else "learning_wall_time"

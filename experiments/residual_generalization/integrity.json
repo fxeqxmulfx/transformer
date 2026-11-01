@@ -1,0 +1,16 @@
+{
+  "engine_sources_verified": 149,
+  "cohort_sources_verified": {
+    "plot_curves.py": true,
+    "run_case.py": true,
+    "freeze.py": true,
+    "phase.py": true,
+    "analyze.py": true,
+    "run_bounded.py": true,
+    "profile_updates.py": true,
+    "experiment.py": true
+  },
+  "gpt_model_sources_verified": 12,
+  "frozen_protocol_sha256": "36fb6160d24161231ed1fadbe9ca00f3f42c3d7a9c4bb5e74619fe3b6dcc17dd",
+  "scope": "Verified after learning closed, before any reporting-script repair or task151 implementation."
+}

@@ -1,0 +1,437 @@
+{
+  "phase": "task145, one 7200-second ceiling including every failed attempt",
+  "scope": "Disposable diagnostic copies, P97 width128 depth4 batch256; no diagnostic checkpoint initializes learning.",
+  "records": [
+    {
+      "label": "division-s11-p97-add",
+      "mode": "add",
+      "python": "3.15.2",
+      "torch": "2.15.0+cu132",
+      "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "parameters": 798336,
+      "compilation_seconds": 6.940442056002212,
+      "eager_compiled_max_logit_error": 7.301568984985352e-07,
+      "eager_compiled_max_gradient_error": 6.05359673500061e-08,
+      "warmup20_seconds": 0.20367083100427408,
+      "repeat200_seconds": [
+        1.5093152269982966,
+        1.502275216000271,
+        1.5109177949998411
+      ],
+      "updates_per_second": 132.51042354999424,
+      "peak_cuda_bytes": 71342592,
+      "diagnostic": "profiles-auto-sampled",
+      "trace_collected": true,
+      "raw_report_sha256": "93e96fc19152cdf9e125403961cc81a7a50739eccd3f2f40372d6ee478c6abda",
+      "actual_backend": "automatic",
+      "memory_efficient_attention_calls": 160,
+      "cuda_graph_launches": 40
+    },
+    {
+      "label": "division-s11-p97-qk",
+      "mode": "qk",
+      "python": "3.15.2",
+      "torch": "2.15.0+cu132",
+      "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "parameters": 799360,
+      "compilation_seconds": 453.6055346389985,
+      "eager_compiled_max_logit_error": 2.562999725341797e-06,
+      "eager_compiled_max_gradient_error": 4.6193599700927734e-07,
+      "warmup20_seconds": 0.2288467770049465,
+      "repeat200_seconds": [
+        1.6522991849997197,
+        1.6590852400040603,
+        1.6597212749984465
+      ],
+      "updates_per_second": 120.54835711726935,
+      "peak_cuda_bytes": 84082176,
+      "diagnostic": "profiles-auto-sampled",
+      "trace_collected": false,
+      "raw_report_sha256": "93e96fc19152cdf9e125403961cc81a7a50739eccd3f2f40372d6ee478c6abda",
+      "actual_backend": "automatic"
+    },
+    {
+      "label": "division-s11-p97-add",
+      "mode": "add",
+      "attention_backend": "math",
+      "python": "3.15.2",
+      "torch": "2.15.0+cu132",
+      "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "parameters": 798336,
+      "compilation_seconds": 6.487933352997061,
+      "eager_compiled_max_logit_error": 7.301568984985352e-07,
+      "eager_compiled_max_gradient_error": 6.705522537231445e-08,
+      "warmup20_seconds": 0.20832891799364006,
+      "repeat200_seconds": [
+        1.5171661759959534,
+        1.5022636529974989,
+        1.5029742370024906
+      ],
+      "updates_per_second": 133.0694798860139,
+      "peak_cuda_bytes": 71342592,
+      "diagnostic": "profiles-outer-math",
+      "trace_collected": true,
+      "raw_report_sha256": "311a564f87dc4ac15c7a33e27a413b1ca1e852c3ce29ee7ed305324c6b8b5a87",
+      "actual_backend": "automatic",
+      "memory_efficient_attention_calls": 160,
+      "cuda_graph_launches": 40
+    },
+    {
+      "label": "division-s11-p97-qk",
+      "mode": "qk",
+      "attention_backend": "math",
+      "python": "3.15.2",
+      "torch": "2.15.0+cu132",
+      "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "parameters": 799360,
+      "compilation_seconds": 18.45319830399967,
+      "eager_compiled_max_logit_error": 2.562999725341797e-06,
+      "eager_compiled_max_gradient_error": 3.725290298461914e-07,
+      "warmup20_seconds": 0.2199538190034218,
+      "repeat200_seconds": [
+        1.643234417999338,
+        1.6474803340024664,
+        1.6463201739970827
+      ],
+      "updates_per_second": 121.48305242134171,
+      "peak_cuda_bytes": 84082176,
+      "diagnostic": "profiles-outer-math",
+      "trace_collected": false,
+      "raw_report_sha256": "311a564f87dc4ac15c7a33e27a413b1ca1e852c3ce29ee7ed305324c6b8b5a87",
+      "actual_backend": "automatic"
+    },
+    {
+      "label": "division-s11-p97-add",
+      "mode": "add",
+      "attention_backend": "math",
+      "python": "3.15.2",
+      "torch": "2.15.0+cu132",
+      "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "parameters": 798336,
+      "compilation_seconds": 72.92019108699606,
+      "eager_compiled_max_logit_error": 7.748603820800781e-07,
+      "eager_compiled_max_gradient_error": 6.798654794692993e-08,
+      "warmup20_seconds": 0.12152582999988226,
+      "repeat200_seconds": [
+        0.8876329370032181,
+        0.8755177930070204,
+        0.8726176480049617
+      ],
+      "updates_per_second": 228.43624835206094,
+      "peak_cuda_bytes": 61557248,
+      "diagnostic": "profiles-math-inner",
+      "trace_collected": true,
+      "raw_report_sha256": "6d6c95d01bf40d4d93a44759d708de1539915528c6390b5fbba7b46387c4668a",
+      "actual_backend": "math",
+      "memory_efficient_attention_calls": 0,
+      "cuda_graph_launches": 40
+    },
+    {
+      "label": "division-s11-p97-add",
+      "mode": "add",
+      "attention_backend": "math",
+      "python": "3.15.2",
+      "torch": "2.15.0+cu132",
+      "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "parameters": 798336,
+      "compilation_seconds": 21.289307439998083,
+      "eager_compiled_max_logit_error": 7.748603820800781e-07,
+      "eager_compiled_max_gradient_error": 6.239861249923706e-08,
+      "warmup20_seconds": 0.1228776089992607,
+      "repeat200_seconds": [
+        0.8769803050017799,
+        0.8784112780049327,
+        0.8741316809973796
+      ],
+      "updates_per_second": 228.05529252973827,
+      "peak_cuda_bytes": 61557248,
+      "diagnostic": "profiles",
+      "trace_collected": true,
+      "raw_report_sha256": "2a878d1317b0d5b0ecb6c9ce80b928d2b62c30b69a98dd908cb62f60487bf175",
+      "actual_backend": "math",
+      "memory_efficient_attention_calls": 0,
+      "cuda_graph_launches": 40
+    },
+    {
+      "label": "division-s11-p97-qk",
+      "mode": "qk",
+      "attention_backend": "math",
+      "python": "3.15.2",
+      "torch": "2.15.0+cu132",
+      "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "parameters": 799360,
+      "compilation_seconds": 380.11632961800206,
+      "eager_compiled_max_logit_error": 2.86102294921875e-06,
+      "eager_compiled_max_gradient_error": 3.650784492492676e-07,
+      "warmup20_seconds": 0.1410377520005568,
+      "repeat200_seconds": [
+        1.0173522719996981,
+        1.0104047220011125,
+        1.006531046004966
+      ],
+      "updates_per_second": 197.94048428821554,
+      "peak_cuda_bytes": 81327104,
+      "diagnostic": "profiles",
+      "trace_collected": false,
+      "raw_report_sha256": "2a878d1317b0d5b0ecb6c9ce80b928d2b62c30b69a98dd908cb62f60487bf175",
+      "actual_backend": "math"
+    },
+    {
+      "label": "division-s11-p97-conditioned",
+      "mode": "conditioned_qk",
+      "attention_backend": "math",
+      "python": "3.15.2",
+      "torch": "2.15.0+cu132",
+      "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "parameters": 799360,
+      "compilation_seconds": 182.8654828650033,
+      "eager_compiled_max_logit_error": 2.1457672119140625e-06,
+      "eager_compiled_max_gradient_error": 3.8743019104003906e-07,
+      "warmup20_seconds": 0.14566933499736479,
+      "repeat200_seconds": [
+        1.036244233000616,
+        1.0298142370011192,
+        1.024035950002144
+      ],
+      "updates_per_second": 194.20978348717725,
+      "peak_cuda_bytes": 81327104,
+      "diagnostic": "profiles",
+      "trace_collected": true,
+      "raw_report_sha256": "2a878d1317b0d5b0ecb6c9ce80b928d2b62c30b69a98dd908cb62f60487bf175",
+      "actual_backend": "math",
+      "memory_efficient_attention_calls": 0,
+      "cuda_graph_launches": 40
+    },
+    {
+      "label": "mechanism-s11-scaled",
+      "mode": "scaled",
+      "attention_backend": "math",
+      "python": "3.15.2",
+      "torch": "2.15.0+cu132",
+      "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "parameters": 798336,
+      "compilation_seconds": 134.9126155720005,
+      "eager_compiled_max_logit_error": 5.960464477539062e-07,
+      "eager_compiled_max_gradient_error": 2.8870999813079834e-08,
+      "warmup20_seconds": 0.12288588599767536,
+      "repeat200_seconds": [
+        0.9028264180014958,
+        0.8907552270029555,
+        0.8930342029998428
+      ],
+      "updates_per_second": 223.9555879586341,
+      "peak_cuda_bytes": 81327104,
+      "diagnostic": "profiles",
+      "trace_collected": false,
+      "raw_report_sha256": "2a878d1317b0d5b0ecb6c9ce80b928d2b62c30b69a98dd908cb62f60487bf175",
+      "actual_backend": "math"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "runs/profile-attempt1.log",
+      "sha256": "f8a7f82b56a60f416581f53acf2eb7444a3f6074607a3b783e8c46d54cf1ce1b",
+      "bytes": 9231,
+      "status": "failed",
+      "reason": "Direct gradient probe kept an input view with incompatible CUDA graph lifetimes.",
+      "sampling": {
+        "samples": 175577,
+        "seconds": 175.58,
+        "reported_error_rate": 18.13
+      }
+    },
+    {
+      "path": "runs/profile-attempt2.log",
+      "sha256": "0d64057aa5f97ed940b3f85376023c5638d312d3070f3d6f4bba16337af35943",
+      "bytes": 9047,
+      "status": "failed",
+      "reason": "An edit used the wrong working directory, so the unchanged failing diagnostic repeated.",
+      "sampling": {
+        "samples": 13020,
+        "seconds": 13.02,
+        "reported_error_rate": 30.83
+      }
+    },
+    {
+      "path": "runs/profile-attempt3.log",
+      "sha256": "86bf150200d8087ca6dffc2b7a5adc7570d1449fcaf0ee0b40b4f1ddb9c37c22",
+      "bytes": 5011,
+      "status": "interrupted",
+      "reason": "The repaired step-path probe passed; profiling identified short-sequence SDPA cost.",
+      "sampling": {
+        "samples": 606479,
+        "seconds": 606.48,
+        "reported_error_rate": 14.45
+      }
+    },
+    {
+      "path": "runs/profile-math-attempt1.log",
+      "sha256": "d38d7cf994b70c5f4bf82780ff01e9658a36365f251748d142e65786a41ae091",
+      "bytes": 13135,
+      "status": "interrupted",
+      "reason": "Outer-only SDPA context left cached automatic-backend graphs unchanged."
+    },
+    {
+      "path": "runs/profile-math-final.log",
+      "sha256": "aa66680cb647ddc790c49c945ed4d89d9565ba83d86d80dbc20f97b24d50a67d",
+      "bytes": 6178,
+      "status": "partially_completed",
+      "reason": "Four modes passed; the 900-second diagnostic limit expired during key-only AttnRes preparation."
+    },
+    {
+      "path": "runs/profile-math-inner-fixed.log",
+      "sha256": "3340647b62d0e5467734250c1eefb62838c747b3fdad423779d670c38b9a365a",
+      "bytes": 1384,
+      "status": "passed",
+      "reason": "Inner backend selection and an nn.Module inference wrapper passed gradient and kernel checks."
+    },
+    {
+      "path": "runs/profile-math-inner.log",
+      "sha256": "41e02087eda723a5fa87dfb0f7f827bda9f3c764e3a2af4ea6d7c892fc27688d",
+      "bytes": 2499,
+      "status": "failed",
+      "reason": "An inference function wrapper lacked the nn.Module eval interface."
+    },
+    {
+      "path": "runs/profile-math-remainder.log",
+      "sha256": "a9fb80971d1fa6b09c76099ba410febf2cf87b4477bb921fc256b05ab3bac165",
+      "bytes": 661,
+      "status": "timed_out",
+      "reason": "The 300-second diagnostic continuation expired during key-only AttnRes preparation; no learning accuracy was measured."
+    },
+    {
+      "path": "runs/profiles-python315-attempt2.collapsed",
+      "sha256": "dee310de9217668d081672879a8db0acba93e7d3f7baa84281aa0ee08f013e4c",
+      "bytes": 9205615
+    },
+    {
+      "path": "runs/profiles-python315-attempt3.collapsed",
+      "sha256": "82ea7af873f2834923037bb66a738ff6bcd1ba422611d4350e2b87ce8aa51657",
+      "bytes": 114318173
+    },
+    {
+      "path": "runs/profiles-python315.collapsed",
+      "sha256": "6e1a657cf3432fa9d50554906a7feaa13734fdd68a300dd4e3a158e485834a4b",
+      "bytes": 42929835
+    },
+    {
+      "path": "runs/capture-checks.json",
+      "sha256": "1181f2c1ce17e1ce82402f024f561692ed51399d95d450c371f733fcff778abe",
+      "bytes": 388
+    },
+    {
+      "path": "runs/capture-fixed_batch.json",
+      "sha256": "7647fe30cbfcab47c15fe3b04657e7957cdbb5ccdc76225125778a73ea4d6915",
+      "bytes": 1278
+    },
+    {
+      "path": "runs/capture-fixed_batch.log",
+      "sha256": "c2ee9506f48c8d472d1612b977afa337d5a5409f9e5b2ae03f51b57a1468cd0c",
+      "bytes": 1721
+    },
+    {
+      "path": "runs/capture-original.log",
+      "sha256": "309274135181f021fad87d44c6075d512166832305eda47ff8e9e3e28beb6d86",
+      "bytes": 470
+    },
+    {
+      "path": "runs/capture-watch.log",
+      "sha256": "9806946181e6b3e4a20da99564282da511ecfb7b812d5590fa9e7e59ac6c7cfd",
+      "bytes": 323
+    }
+  ],
+  "limitations": [
+    "Compiler caches differ between attempts: compilation_seconds is not a matched cold-start comparison.",
+    "Automatic-backend sampling rates include Python3.15 sampler overhead; the unsampled outer-context add measurement is the speed reference.",
+    "Outer-context records report requested math but executed automatic kernels; actual_backend corrects that diagnostic label.",
+    "Only add and conditioned_qk collected CUDA kernel traces; the other completed modes passed forward and all-parameter gradient checks.",
+    "Key-only AttnRes profiling is incomplete. Setup timeout is not evidence about its learning ability.",
+    "Conditioning kernels compile, but their mutated optimizer buffers prevent CUDA graph capture; model forward/backward use captured graphs.",
+    "This execution optimization changes floating-point evaluation, not the real-arithmetic attention equation.",
+    "The retained Python3.15 sampling trace contains invalid UTF-8 in some stack records. Those rows are excluded from the descriptive stack grouping; raw bytes and hashes remain preserved.",
+    "The original-path post-phase diagnostic timed out during setup. The fixed-batch candidate passed, but this does not establish that the original capture failure is deterministic or that every resumed training path is repaired."
+  ],
+  "final_source_commit": "0ff3615b",
+  "python315_sampling_summary": {
+    "artifact": "runs/profiles-python315-attempt3.collapsed",
+    "classification": "Disjoint groups of valid decoded stack records; sample counts are not exclusive CPU or wall seconds.",
+    "valid_sample_counts": {
+      "preparation": 459488,
+      "update_loop": 9739,
+      "other_diagnostic": 47647,
+      "import_background_or_exit": 1759
+    },
+    "invalid_utf8_rows": 211,
+    "invalid_utf8_samples": 221,
+    "replacement_characters": 9504,
+    "unparseable_rows": 212,
+    "reported_sampler_error_rate": 14.45,
+    "duration_seconds": 606.48
+  },
+  "capture_checks": [
+    {
+      "mode": "original",
+      "started_monotonic": 47407.362338127,
+      "allowance_seconds": 45,
+      "status": "timed_out",
+      "returncode": -15,
+      "ended_monotonic": 47452.619852526
+    },
+    {
+      "mode": "fixed_batch",
+      "started_monotonic": 47452.619973405,
+      "allowance_seconds": 120,
+      "status": "passed",
+      "returncode": 0,
+      "ended_monotonic": 47554.615607791
+    }
+  ],
+  "fixed_batch_candidate": {
+    "mode": "fixed_batch",
+    "seconds": 98.51463309099927,
+    "checkpoint_sha256": "429dd1e667b23999d8d0daf870d0bde4a8a035447eac7db3d3e63e09867b32fa",
+    "optimizer_updates": 0,
+    "cuda": {
+      "train": {
+        "loss": 5.291942449843122,
+        "accuracy": 0.005019430051813471,
+        "answer_loss": 5.291942449843122,
+        "answer_accuracy": 0.005019430051813471,
+        "examples": 18528
+      },
+      "validation": {
+        "loss": 5.293597153843169,
+        "accuracy": 0.005505181347150259,
+        "answer_loss": 5.293597153843169,
+        "answer_accuracy": 0.005505181347150259,
+        "examples": 9264
+      }
+    },
+    "cpu": {
+      "train": {
+        "loss": 5.291942369134933,
+        "accuracy": 0.005019430051813471,
+        "answer_loss": 5.291942369134933,
+        "answer_accuracy": 0.005019430051813471,
+        "examples": 18528
+      },
+      "validation": {
+        "loss": 5.293597050075498,
+        "accuracy": 0.005505181347150259,
+        "answer_loss": 5.293597050075498,
+        "answer_accuracy": 0.005505181347150259,
+        "examples": 9264
+      }
+    },
+    "tail_max_logit_error": {
+      "1": 6.556510925292969e-07,
+      "48": 3.4570693969726562e-06,
+      "96": 1.6093254089355469e-06,
+      "512": 2.0265579223632812e-06
+    },
+    "cpu_minus_cuda_correct": {
+      "train": 0,
+      "validation": 0
+    }
+  }
+}

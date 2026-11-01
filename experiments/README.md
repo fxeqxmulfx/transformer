@@ -10,7 +10,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
-| [`residual_generalization`](residual_generalization) | 16 | Does conditioned depth attention improve paired transformer generalization? Fresh two-hour maximum; independent final test and stable validation stopping. |
+| [`residual_generalization`](residual_generalization) | 16 | Closed two-hour cohort: ordinary residuals reach99.96–100% test; scaling generalizes earlier at23k; depth attention remains near chance within its allowance. All16 cases and execution failures retained. |
 | [`modular_composition`](modular_composition) | 48 | Can the normalized source RoPE transformer learn flat-spectrum mixed arithmetic and composed modular chains with Schedule-Free AdamW? All48 completed; full curves and replay discrepancies retained. |
 | [`modular_composition_long`](modular_composition_long) | 10 | All10 reached100000 updates in1h44m43s: division groks, mixed pairs remain near chance; full-state and gradient audits retained. |
 | [`basis`](basis) | 180 | Does a two-layer GPTMini of width 64 pass depth, recall and parity in the easy mode, while the hard mode takes width 128 and six layers? At what batch and rate do the runs go fastest? |
