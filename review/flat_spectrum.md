@@ -3772,10 +3772,10 @@ the source epsilons and nonzero positions.
 This remains the specified counting model: exact integer sums, rounded
 coefficients and quotient, real local nonlinearities, and separately rounded
 stored residuals. It is not IEEE round-to-nearest. In particular, fixed-point
-u is not float32 machine epsilon. The local attention estimate has not yet
-been propagated through the whole rounded residual stack, and no hardware
-error bounds for projections, RMSNorm, SwiGLU or RoPE table generation are
-asserted. No new training or optimizer convergence guarantee follows.
+u is not float32 machine epsilon. B1--B9 below propagate this local estimate
+through the whole specified rounded residual stack. Hardware error bounds
+for projections, RMSNorm, SwiGLU and RoPE table generation remain outside
+these results. No new training or optimizer convergence guarantee follows.
 
 | Lean module | Result |
 | --- | --- |
@@ -3803,3 +3803,239 @@ allocation failures (float32 and float64), each with 75 allocations of
 8519680 bytes. Schedule-Free AdamW tests pass. No Python implementation was
 changed. All validation logs, source review and the theorem axiom-check
 script are retained in `.kanban/artifacts/128/`.
+
+## Full-stack rounding certificates
+
+The earlier A6 result compared one rounded aggregate with a real aggregate
+on the same stored residuals. B1--B9 close the propagation gap: they bound
+the **actual `CRASP.Rotary.run`** against the complete real source `hidden`,
+then transfer strict predictions to `CRASP.Rotary.predict` and its existing
+uniform weighted-count formula. There is no assumed final residual error,
+assumed block Lipschitz constant, or substituted activation.
+
+The source remains diff_gpt `b98c665b`, with the five pinned files listed in
+`review/sequence_model_source.json`. Both normalization epsilons are positive.
+The exact source RoPE frequencies and per-layer enable flags are unchanged;
+the block estimates also allow arbitrary identical phase tables on both
+sides. Dimensions are arbitrary admissible finite dimensions. As before,
+actual Python execution requires the source FFN size and positions within
+`block_size`; the mathematical forward and counting language also admit
+longer directly supplied phase tables.
+
+### B1. Pre-normalization, projections and vector rounding
+
+Write W for residual width, d for head dimension, H for the number of heads,
+F for FFN width, epsilon for RMS epsilon, and xi for XSA's clipped-L2 epsilon.
+For one block let Q, O, G, V and U be its fused-QKV, attention-output,
+gate, value and FFN-output linear maps, respectively. All matrix norms below
+are Euclidean operator norms. Define
+
+\[
+ L_R=2/\sqrt\epsilon,\qquad M=\|Q\|\sqrt W,\qquad C=\|Q\|L_R.
+\]
+
+Every actual pre-normalized Q/K/V head has norm at most M, and a residual
+change E changes each such head by at most CE. This needs no bound on the
+incoming residual itself. Keeping the same exact RoPE phases preserves the
+norm of vector differences. Rounding W coordinates without clipping adds
+at most `sqrt(W) u`, where `u=2^-s` is the fixed-point quantum.
+
+### B2. Actual SwiGLU, with independent gate and value matrices
+
+The derivative of sigmoid yields a global Lipschitz bound of one. From this
+and `abs(silu(t)) <= abs(t)`, the actual SiLU product is bounded on the
+pre-normalized input ball. A sufficient FFN constant is
+
+\[
+ L_F=\|U\|\sqrt F\left[
+   \|V\|\sqrt W(1+\|G\|\sqrt W)\|G\|
+   +\|G\|\sqrt W\|V\|\right].
+\]
+
+For inputs of norm at most `sqrt(W)`, the real `feedForward` changes by at
+most `L_F` times their distance. The two FFN normalizers make its whole
+residual map globally Lipschitz with constant
+
+\[
+ R=1+L_R L_F L_R.
+\]
+
+The proof uses the source SwiGLU formula. It does not reuse the old ReLU
+block's constants or assume that the gate and value projections coincide.
+
+### B3. Both the attention distribution and values change
+
+If every input residual changes by at most E, the source Q/K logits change
+by at most `2 L_R C E`. Causal softmax row sensitivity and the changing
+value vectors therefore give
+
+\[
+ A=(16 L_R M+1)C,\qquad
+ \|\operatorname{average}(x)-\operatorname{average}(y)\|\le AE.
+\]
+
+The reference average has norm at most M by convexity. These constants do
+not depend on the number of keys. Unlike A2, this result changes Q, K and V
+together as the residual stream moves.
+
+### B4. XSA, all branch normalizers and both residual additions
+
+Define the projection and moving-direction constants
+
+\[
+ P=L_R\|O\|\sqrt H,\qquad X=2M(2C/\xi).
+\]
+
+If the query residual error is E and each head-average error is at most B,
+while the reference averages have norm at most M, the actual local source
+update differs by at most
+
+\[
+ R\{E+P(2B+XE)\}.
+\]
+
+This includes movement of XSA's clipped own-value direction, its explicit
+first-position zero, head merging, learned projection, all four branch
+normalizers, both residual additions and SwiGLU. Substituting B=AE gives
+the full source block constant
+
+\[
+ L_{\rm block}=R\{1+P(2A+X)\}.
+\]
+
+The bounds hold at the XSA clipping sphere; no differentiability premise
+is needed. Small normalization epsilons can make these sufficient global
+constants very large. The theorem does not assert that they predict typical
+error amplification accurately.
+
+### B5. Actual rounded prefixes and their vector error
+
+One-based natural counting positions are explicitly reindexed to the
+zero-based finite source tensor. Every causal prefix term, including the
+query's own key/value, is retained. The real ratio in A6 becomes exactly
+the coordinate of `Normalized.sourceAverage` on the decoded counting stream.
+
+Let `a=exp(-sqrt(d))` and require `u<a`. Pre-normalization supplies M as the
+value-coordinate bound, so the per-coordinate new aggregate error is
+
+\[
+ r=\frac{u(1+M)}{a-u}+u.
+\]
+
+The head-vector error is at most `sqrt(d) r`. `AggregateInRange` checks
+`Fx.NoSaturation` for every actual exponential coefficient, weighted-value
+coefficient and pre-rounding quotient. It assumes no error bound or output
+correctness. The positive-denominator theorem of A6 applies to these same
+premises.
+
+### B6. One actual counted block against the real source
+
+`StepInRange` additionally checks every coordinate of the actual local
+update before stored-residual rounding. Combining B3--B5 proves
+
+\[
+ E_{\rm next}\le L_{\rm block} E+\rho,\qquad
+ \rho=RP\,2\sqrt d\,r+\sqrt W\,u.
+\]
+
+The comparison is the existing `Rotary.sourceLayer.step`, with its integer
+prefix sums and existing rounding sites, against the complete real source
+`block`. It is not a newly defined approximate forward pass. Both the
+changed input stream and the new rounding errors are included.
+
+### B7. Full stack with each layer's own weights
+
+`errorBudget` starts from `E_0=sqrt(W) u` and recursively applies B6 using
+the actual independently learned block at each layer:
+
+\[
+ E_{l+1}=L_l E_l+\rho_l,\qquad 0\le l<D.
+\]
+
+`TraceInRange` checks the normalized input and each executed layer's actual
+rounding sites, on the actual input word. `stack_error` proves, for every
+executed layer n and every source position i,
+
+\[
+ \|\operatorname{decode}(\operatorname{counted}_n(i))
+       -\operatorname{hidden}_n(i)\|\le E_n.
+\]
+
+The normalized embedding, first-token flag, exact source RoPE phases and
+entire residual recurrence are connected to the actual implementations.
+The constants and recurrence explicitly expose width, head count, FFN
+width, depth, learned matrix norms and fractional precision. Total bit
+width p controls the range premises. No finite-context cardinality factor
+appears in the numerical bound, although whether the range and margin
+conditions hold can depend on the input and its length.
+
+### B8. Strict classification and the uniform counting formula
+
+For a target and each competitor v, a sufficient real-source margin is
+
+\[
+ L_R E_D(\|e_{\rm target}\|+\|e_v\|)
+ <\operatorname{logit}_{\rm target}-\operatorname{logit}_v.
+\]
+
+`rounded_predict_true` derives the actual rounded model's strict prediction
+from this margin, positive epsilons, `u<a` and `TraceInRange`. `E_D` here is
+the computed B7 recurrence, rather than the unproved residual-error premise
+of A5. Final RMSNorm and the raw tied embedding norms remain explicit.
+
+`uniform_source_certificate` chooses one formula of counting depth at
+most D, with the same exact nonperiodic kernels, before any input word.
+It preserves every source decision on every finite word that satisfies
+the numerical certificate. This is conditional language agreement with a
+uniform formula. It supplies no strict depth lower bound for those kernels,
+and does not turn a finite-context periodic replacement into a uniform one.
+
+### B9. Nonconstant concrete witness and limits
+
+The witness has W=4, d=4, H=1, F=11, D=2 and three distinct unit embeddings.
+Both residual blocks are identities, and source RoPE is enabled. A synthetic
+RMS epsilon 3/4 makes those embeddings fixed points of normalization;
+XSA epsilon is one and the fixed-point format is p=8,s=5. These example
+epsilons are explicitly different from the source float32 defaults.
+
+Every rounding-range premise holds on every finite three-letter word.
+The computed final budget is `3/16`; every correct logit margin is one,
+and its sufficient threshold is `sqrt(3)/2 < 1`. The classification theorem
+therefore proves that the actual rounded model predicts the token at each
+position, for every word. Predictions vary across all three classes. The
+actual residual error in this witness is zero: the nonzero computed budget
+demonstrates sufficiency and is not claimed sharp. Separate B1 examples
+exercise nonzero coordinate rounding, and B2--B4 examples admit arbitrary
+learned block matrices at the actual source normalization epsilons.
+
+| Lean module | Result |
+| --- | --- |
+| `Attention.Stability.Vector`, `Gates` | projection/vector rounding and actual SwiGLU constants |
+| `Attention.Stability.Averages`, `Local` | moving logits, values and XSA; full source block sensitivity |
+| `Attention.Stability.Aggregate` | actual natural prefix/finite tensor connection and rounded head error |
+| `Attention.Stability.Stack` | actual step and full residual-stack error budgets |
+| `Attention.Stability.Certificate` | strict prediction and uniform weighted-count formula transfer |
+| `Attention.Stability.Witness`, `Certificate` | complete nonconstant witnesses for range and margin hypotheses |
+
+The closed gap is propagation through the specified fixed-point counting
+model. Local operations still use exact reals, integer sums are exact, and
+the final readout is real. Float32 projections, nonlinearities, reductions,
+overflow/underflow, quantized weights, and generated cosine/sine tables need
+their own execution-error analysis. A strict hierarchy for source-generated
+nonperiodic kernels and any optimizer/generalization guarantee also remain
+unproved. No training experiment or Python implementation changes in B1--B9.
+
+Validation of B1--B9: full `lake build` passes (13174 jobs), with no warnings
+in the new modules. All 46 new named theorems pass individual `#print axioms`
+checks using only `propext`, `Classical.choice` and `Quot.sound`. The audit
+remains at 36 existing `sorry`, zero dependent results and zero extra axioms.
+The regenerated index has 4077 modules, 21050 theorems, zero vacuous results
+and zero placeholders. Forbidden checks and `git diff --check` pass, and
+all five pinned source hashes match after rereading the actual forward.
+
+The required Python run passes all 418 lab tests with three skips. Its
+104-test optimizer suite reproduces the two previously recorded Muon
+allocation failures (float32 and float64, 75 allocations of 8519680 bytes
+each); Schedule-Free AdamW passes. These are unchanged from A1--A6's
+validation. Logs, the individual theorem axiom-check script and source
+review are retained in `.kanban/artifacts/129/`.
