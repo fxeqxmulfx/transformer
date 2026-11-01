@@ -31,7 +31,7 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 | #155 remaining gradient paths and direct model repair | Complete: 48 cases; unit-scale pre-RMS recovery 0/4 native versus 4/4 corrected; direct GPT repair at7314dec | Independent scalar/FP64 derivatives, native forward equality, known-solution recovery and runtime; verified repair gets an actual diff_gpt regression and direct integration, with no new architecture flag |
 | #156 remove legacy architecture flags | Complete: canonical scaled GPT atdf1e9f7; legacy residual/XSA/RoPE switches removed; migrated callers and diagram checks pass | Remove existing residual-mixing, legacy XSA and per-layer RoPE architecture switches; one current model, migrated callers/tests and updated site; historical variants live in Git |
 | #157 existing Muon allocation failures | Queued, separate baseline regression | Reproduced on unchanged main; AdamW grokking work does not use Muon |
-| #158 repeated gradient search loop | Next after #156; user requested continued iterations | Independent mathematical/derivative oracle, known-solution synthetic recovery, direct flag-free model fix if verified; stop each promising transformer run at first 99% validation, final test reported separately |
+| #158 repeated gradient search loop | Active: input-dependent gains after branch RMS; user requested continued iterations | Independent mathematical/derivative oracle, known-solution synthetic recovery, direct flag-free model fix if verified; stop each promising transformer run at first 99% validation, final test reported separately |
 | #153 local architecture site | Complete; self-reviewed at709b6f70; root server on127.0.0.1:8765 | Interactive source diagram, residual options, measured curves, config and training recipe; loopback server remains running after worktree cleanup |
 | #138 source model and early mixed-arithmetic screen | Self-reviewed; all48 replayed; fresh old-model compiled count drift retained separately | All cases retained, final-checkpoint replay, exact split/source hashes, train/heldout/longer accuracy and baselines;2000 updates alone cannot rule out grokking |
 | #140 local attention theory | Self-reviewed; seven theorems at730c0155 rechecked | Useful-set mass, weighted retrieval error and normalized head-width bounds; arbitrary rotary phases; distinguish a local constraint from a task lower bound |
@@ -3166,3 +3166,50 @@ an optional post-RMS gain and meaningful recovery/negative-control tests.
 The next full-transformer learning comparison needs a new explicit GPU budget;
 the previous phase remains closed. Preserve ordinary and fixed-scale controls,
 QK norms, source RoPE/XSA/Peri branches, paired seeds and long continuations.
+
+
+## Repeated gradient search — task158, 2026-11-02
+
+The user explicitly requested a loop: identify a remaining gradient/normalization
+limitation, check it with a known-solution synthetic task inspired by Lean, and
+integrate an evidenced improvement directly into the actual diff_gpt model with
+regression tests and no architecture flag. Rejected candidates remain recorded.
+Do the review in this same assistant, without delegation.
+
+The first completed pass was task155's corrected finite-epsilon RMS backward.
+Task156 removed the old architecture switches; current production GPT is
+`df1e9f7`. Every new full-model comparison must include this corrected fixed-scale
+baseline, not the older native-backward baseline.
+
+Next hypothesis: a learned input-dependent gain *after* branch RMS can expose
+conditional amplitude gradients which normalization attenuates inside a branch.
+Use gains `2*sigmoid(W_gate * RMS(branch_input))`, with zero gate weights and no
+bias. Multiply the existing `1/sqrt(2L)` coefficient by that gain. Initial forward
+values and common parameter gradients must match the current model exactly.
+This extends the scalar task151 mechanism to conditional amplitude; it does not
+assume a transformer grokking improvement.
+
+First freeze a supplied-feature benchmark with two independent gate features
+(constant 1 and a balanced sign) and analytic conditional target coefficients.
+Both before-RMS and after-RMS parameterizations must have explicit finite optima,
+the same initial outputs, parameter count, data, batch order and Schedule-Free
+AdamW recipe. Use the corrected RMS backward in both so the benchmark cannot
+rediscover the already repaired native cancellation. Sweep branch scale and
+branch count; retain full held-out recovery, per-condition coefficient errors,
+independent derivatives and compiled-state continuation checks.
+
+Only after those checks, compare the actual fixed baseline and the unconditional
+candidate architecture on modular division, matched common initialization and
+splits. Source snapshots/hashes must pin both; no runtime architecture toggle
+enters production. The user's new stop instruction is **first 99% validation for
+each promising transformer run**; report final test independently. The previous
+two-hour budgets are closed and are not reused. A synthetic win alone does not
+prove faster grokking or justify calling the whole model improved. Keep the
+current production architecture if full-model evidence fails to support a change.
+
+Other candidate mechanisms must first be checked against the real forward pass:
+Q/K temperature calibration before a post-attention RMS may simply move a gain
+that the output RMS then attenuates. A synthetic attention-only benchmark would
+not establish that this fixes the complete transformer. Repeated-token length
+collisions remain task149, with their clipping guard; do not silently turn that
+conditional source invariant into an unconditional impossibility claim.
