@@ -85,3 +85,12 @@ sources at 25f2ea22. The later generic audit reads the evidence without changing
 its engine. `./run.py basis-control-continue <decision.json>` makes explicit
 complete-state extensions or censorings at a completed boundary; the closed
 cohort rejects any new learning after its test disclosure.
+
+The later `./run.py basis-direction-probe` compares the next saved training
+batch across these two states, the current-model pair and the temperature
+pair. It performs no optimizer step or final-test prediction. Averaging
+opposes less than0.008% of fresh predicted descent in each stalled endpoint,
+rejecting the declared common-cancellation mechanism there. The
+[derivation](analysis/schedule_free_directions.md),
+[six-state measurements](analysis/schedule_free_directions.json) and
+[limitations](../../review/schedule_free_directions.md) are retained.

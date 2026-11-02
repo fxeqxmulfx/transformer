@@ -37,6 +37,7 @@ Python (the uv project in python/; an experiment is a folder under experiments/)
     adaptive-residual <action>    matched transformer comparison to 99% validation
     basis-residual <action>       matched current GPT on the original Basis tasks
     basis-gain-probe             closed-endpoint gates, trajectory norms and width oracle
+    basis-direction-probe        read-only Schedule-Free direction decomposition
     basis-state-probe <label>     training/validation replay at both Schedule-Free states
     basis-continue <decisions>    extend or censor explicit Basis chunk endpoints
     basis-recover <decision>      resume an interrupted Basis extension unchanged
@@ -321,6 +322,11 @@ def basis_gain_probe(_):
         execute(["uv", "run", "--locked", "python", str(folder / (name + ".py"))], cwd=PYTHON)
 
 
+def basis_direction_probe(_):
+    execute(["uv", "run", "--locked", "python",
+             str(ROOT / "experiments/basis_control/analysis/schedule_free_directions.py")], cwd=PYTHON)
+
+
 def basis_state_probe(arguments):
     extra = [] if arguments.snapshot is None else ["--snapshot", str(Path(arguments.snapshot).resolve())]
     execute(["uv", "run", "--locked", "python",
@@ -427,6 +433,7 @@ def main():
     command.add_argument("action", choices=("freeze", "run", "report"))
     command.set_defaults(handler=basis_residual)
     tasks.add_parser("basis-gain-probe").set_defaults(handler=basis_gain_probe)
+    tasks.add_parser("basis-direction-probe").set_defaults(handler=basis_direction_probe)
     command = tasks.add_parser("basis-state-probe")
     command.add_argument("label")
     command.add_argument("--snapshot")

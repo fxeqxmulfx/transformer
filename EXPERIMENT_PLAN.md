@@ -38,6 +38,8 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 | #162 matched original-GPTMini control | Closed; temperature candidate rejected under the new cost rule | Historical GPTMini solves one seed at12,200; temperature seeds have no exact validation sequences at24,400; actual later states at100,000/62,900 retained and final tests unopened |
 | #164 powered-division and Basis confirmation | Queued after #162 for a viable isolated candidate | Match Schedule-Free controls for P97/P193, K1/K2/K5 and both seeds; verify K0 and zero-input edges separately; require Basis, direct flag-free GPT tests and same-assistant review before adoption |
 | #165 intermediate gate trajectories | Deferred; untrained draft preserved | No depth repeats until an analytical prediction and cheap diagnostic justify them; apply the user's twice-best cost cap before any launch |
+| #166 Schedule-Free direction diagnosis | Complete CPU evidence; no repair supported | Averaging opposes less than0.008% of fresh predicted descent in each stalled endpoint; common-cancellation hypothesis rejected without learning; first-order loss predictions alone do not diagnose grokking |
+| #167 normalization and projection initialization | Analytical follow-up; no training queued | Derive finite-epsilon RMS scale identities and Schedule-Free parameter/decay transformations; require a cheap discriminating witness before changing depth-dependent initialization |
 | #163 CUDA repeatability before caching | Queued after159 | Characterize unchanged-control drift and declare a new execution-comparison protocol before revisiting the rejected cache candidate |
 | #153 local architecture site | Complete; self-reviewed at709b6f70; root server on127.0.0.1:8765 | Interactive source diagram, residual options, measured curves, config and training recipe; loopback server remains running after worktree cleanup |
 | #138 source model and early mixed-arithmetic screen | Self-reviewed; all48 replayed; fresh old-model compiled count drift retained separately | All cases retained, final-checkpoint replay, exact split/source hashes, train/heldout/longer accuracy and baselines;2000 updates alone cannot rule out grokking |
@@ -3388,3 +3390,20 @@ per-parameter norms are available, but intermediate weights and gradient
 vectors are not. Task165 records the needed matched repeats with full state
 history; all outcomes and differences from historical CUDA trajectories must
 remain visible. These diagnostics do not alter task162's temperature screen.
+
+The later cost policy closes task162's temperature screen and defers task165.
+Task165's five untrained draft sources and focused-test evidence are preserved
+under `.kanban/artifacts/165/`; the archive was verified byte-for-byte before
+removing the worktree. The board task is released with an explicit deferred
+title; its CLI retains the unclaimed in-progress status.
+
+Task166 derives the actual Schedule-Free working-weight increment before
+reading one next training batch from each of six closed hard-recall states.
+The declared common averaging-opposition signature is absent in all three
+zero-exact-validation endpoints, globally and for every parameter tensor.
+The constant-direction and reversal witnesses distinguish averaging dynamics
+from the fresh-gradient coefficient. Four first-order predictions exceed the
+nonnegative training loss itself, including a successful control; they cannot
+be used as exact next-loss predictions or grounds for a larger-rate sweep.
+See [the diagnosis](review/schedule_free_directions.md). No research training
+or new final-test prediction is made, and production GPT stays unchanged.
