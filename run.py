@@ -304,6 +304,8 @@ def basis_residual(arguments):
     if arguments.action == "report":
         execute(["uv", "run", "--locked", "python",
                  str(ROOT / "experiments/basis_residual/analysis/compact_report.py")], cwd=PYTHON)
+        execute(["uv", "run", "--locked", "python",
+                 str(ROOT / "experiments/basis_residual/analysis/final_audit.py"), str(ROOT)], cwd=PYTHON)
 
 
 def basis_state_probe(arguments):

@@ -2,8 +2,10 @@
 
 Task160 asks whether the conditional gain candidate also improves the
 repository's original Basis tasks. Modular division measures one kind of
-generalization; these runs add depth, associative recall, and parity. No
-Basis learning result is claimed until its source-pinned run is measured.
+generalization; these runs add depth, associative recall, and parity.
+Conditional gains accelerate large-model parity in both seeds but slow hard
+depth and small recall/parity. They do not qualify for general promotion;
+production GPT remains `df1e9f7`.
 
 | Setting | Small/easy | Large/hard |
 | --- | --- | --- |
@@ -84,6 +86,10 @@ reduction then retains its complete output under ignored `runs/`, records
 that file's hash, and removes only repeated per-class history tables from
 the tracked summary. Every history aggregate and all endpoint class tables
 remain unchanged. This does not change evaluation or select an endpoint.
+The final independent audit then checks the saved states, original gradient
+logs, retained first crossings, report aggregates and CPU/CUDA prediction counts.
+Replay uses the frozen lab sources at6d0f7b34 plus the committed report/audit
+files; later lab changes require that source version to satisfy the protocol.
 
 ## Historical solved baseline
 
@@ -115,11 +121,12 @@ This is a concrete difference to test, not evidence that it causes the gap.
 Task162 prioritizes the original architecture under Schedule-Free AdamW
 before attributing current misses to normalization or residual connections.
 
-## Initial validation findings and continuation
+## Completed validation findings and continuation
 
-All24 initial chunks have finished:20 reached99% sequence accuracy and the
-four hard-recall cases remain unresolved at100,000 updates. These are
-validation results; every final-test split is still sealed.
+All24 cases are closed. Twenty reached99% sequence accuracy in the initial
+chunks. Canonical hard-recall seed1 then crossed at123,550 updates; the other
+three hard-recall cases are censored at100,000. Final test was opened only
+after that last crossing. Censored runs remain unresolved.
 
 | Task / model | Seed | Canonical updates | Conditional-gain updates |
 | --- | ---: | ---: | ---: |
@@ -129,8 +136,8 @@ validation results; every final-test split is still sealed.
 | Hard depth / large | 1 | 1,600 | 7,800 |
 | Easy recall / small | 0 | 25,100 | 38,350 |
 | Easy recall / small | 1 | 11,600 | 71,100 |
-| Hard recall / large | 0 | Unresolved at100,000 | Unresolved at100,000 |
-| Hard recall / large | 1 | Unresolved at100,000 | Unresolved at100,000 |
+| Hard recall / large | 0 | Censored at100,000 | Censored at100,000 |
+| Hard recall / large | 1 | 123,550 | Censored at100,000 |
 | Parity / small | 0 | 4,600 | 5,000 |
 | Parity / small | 1 | 5,400 | 6,200 |
 | Parity / large | 0 | 14,000 | 8,400 |
@@ -146,11 +153,64 @@ At100,000 updates, canonical hard recall has29.61% and82.52% token accuracy;
 the gain candidate has9.77% and9.40%. Only canonical seed1 has any exact
 validation sequences (20.70%). Its token accuracy rose from51.27% to82.52%
 over the last25,000 updates, so [continuation1](analysis/continuation-1.json)
-extends it to at most200,000 with the same first99% stopping rule. The other
+extended it to at most200,000 with the same first99% stopping rule. It reached
+507/512 exact validation sequences at123,550 updates after recovery from an
+interruption at102,750. This is a measured late generalization transition;
+the earlier budget boundary did not establish inability to solve recall. The other
 three states are retained and explicitly censored as unresolved. Their
 different horizons must remain visible; an unobserved crossing is not an
 infinite time-to-target or a proof of impossibility. These decisions use
 validation only and prioritize the matched historically successful control.
+
+## Reserved-test results
+
+These scores use the retained first-crossing endpoints, or the explicitly
+censored endpoints. Hard depth uses the length128 test; other rows use their
+ordinary test. All are exact-sequence accuracy, replayed on CPU after closure.
+Test scores did not select the model or the stopping time.
+
+| Task / model | Seed | Canonical test | Conditional-gain test |
+| --- | ---: | ---: | ---: |
+| Depth / small | 0 | 100.00% | 100.00% |
+| Depth / small | 1 | 100.00% | 99.80% |
+| Depth / large | 0 | 99.80% | 100.00% |
+| Depth / large | 1 | 99.22% | 99.61% |
+| Recall / small | 0 | 99.02% | 99.41% |
+| Recall / small | 1 | 98.24% | 99.80% |
+| Recall / large | 0 | 0.00% | 0.00% |
+| Recall / large | 1 | 98.44% | 0.00% |
+| Parity / small | 0 | 97.46% | 97.46% |
+| Parity / small | 1 | 96.48% | 97.07% |
+| Parity / large | 0 | 98.83% | 97.46% |
+| Parity / large | 1 | 99.22% | 100.00% |
+
+Canonical hard-recall seed1 reached99.02% validation and98.44% final test.
+The three censored hard-recall endpoints score0% exact sequences on test;
+see the report for token scores and their distinct training horizons.
+
+Only184 of512 parity test examples have inputs absent from training.
+The corresponding validation count is157 of512. On the novel test subset:
+
+| Parity model | Seed | Canonical novel test | Conditional-gain novel test |
+| --- | ---: | ---: | ---: |
+| small | 0 | 92.93% | 92.93% |
+| small | 1 | 90.22% | 91.85% |
+| large | 0 | 96.74% | 92.93% |
+| large | 1 | 97.83% | 100.00% |
+
+Thus faster sampled-validation crossing on large parity does not establish
+better unseen-input accuracy in both seeds. Small easy-depth length128 test
+also varies by seed: canonical/gain63.67%/100% and99.80%/86.33%.
+
+[The complete report](results.json) retains all history aggregates and final
+class scores. [The independent audit](analysis/final_audit.json) checks all24
+checkpoint hashes and650,300 finite, nonzero, consecutive gradient records.
+Every successful endpoint is the first observed99% crossing. All validation
+prediction counts agree between the canonical CUDA observations and CPU replay.
+Training seconds are retained, but these runs are not isolated throughput
+measurements; compilation, diagnostics and the interruption are recorded separately.
+
+## Training-subset diagnostics
 
 An exploratory checkpoint probe of canonical large hard recall at26,100
 updates distinguishes memorization from a Schedule-Free weight-state
@@ -180,9 +240,9 @@ Its averaged weights still solve all512 examples of the fixed training
 subset. Working weights solve493/512 training sequences,0/512 validation
 sequences and1,193/4,096 validation tokens (29.12598%). The same gap is
 therefore visible at both weight states. Validation token accuracy and loss
-have improved since26,100, so the boundary remains an unresolved continuation
-checkpoint, not a claim that learning is impossible. The paired candidate
-is running next, under the frozen order. Final test remains sealed.
+have improved since26,100, so this censored boundary remains unresolved,
+not a claim that learning is impossible. Its state and paired candidate's
+state remain available as evidence from the closed cohort.
 
 [The boundary probe](analysis/canonical-large-recall-s0-step100000.json)
 pins the copied complete state and source. Its six validation counts and

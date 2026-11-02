@@ -32,8 +32,8 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 | #156 remove legacy architecture flags | Complete: canonical scaled GPT atdf1e9f7; legacy residual/XSA/RoPE switches removed; migrated callers and diagram checks pass | Remove existing residual-mixing, legacy XSA and per-layer RoPE architecture switches; one current model, migrated callers/tests and updated site; historical variants live in Git |
 | #157 existing Muon allocation failures | Queued, separate baseline regression | Reproduced on unchanged main; AdamW grokking work does not use Muon |
 | #158 repeated gradient search loop | Done: synthetic mechanism verified; arithmetic3 wins/1 tie did not meet the promotion rule | Complete evidence and rejected actual-GPT patch at93ffa071; production stays df1e9f7; broader checks continue in160 and the next mechanism in161 |
-| #159 batch-transfer profiling follow-up | CPU preparation in an isolated checkout; GPU timing waits for Basis | Separate sampled host wait at index upload from GPU work; require isolated timing and exact trajectory/state preservation before an execution change |
-| #160 conditional gains on Basis | Initial24 complete:20 crossings; one promising recall continuation | Large parity improves with gains in both seeds; depth and small recall/parity regress; three unresolved recall cases are censored and canonical seed1 continues to first99%; final test remains sealed |
+| #159 batch-transfer profiling follow-up | CUDA equivalence checks started after Basis learning closed | Separate sampled host wait at index upload from GPU work; require isolated timing and exact trajectory/state preservation before an execution change |
+| #160 conditional gains on Basis | All24 closed;21 crossings and3 explicit censorings; final review in progress | Large parity improves with gains in both seeds; depth and small recall/parity regress; canonical hard-recall seed1 reaches first99% at123,550; reserved tests opened only after closure |
 | #161 conditional-gain transfer diagnosis | Queued after160 | Explain slower length128 generalization despite fitting short lengths; distinguish saturation, optimizer width scaling and learned length dependence before a specific new repair |
 | #162 matched original-GPTMini control | Urgent after160; user requested the solved history | Original GPTMini solved hard recall in all three seeds; compare it under the same Schedule-Free AdamW before isolating learned QK temperature, residual normalization or activation differences |
 | #153 local architecture site | Complete; self-reviewed at709b6f70; root server on127.0.0.1:8765 | Interactive source diagram, residual options, measured curves, config and training recipe; loopback server remains running after worktree cleanup |
@@ -3289,24 +3289,24 @@ full-logit versus supervised-position loss/gradients, free-generation semantics,
 complete Schedule-Free continuation and source correspondence. Keep the model
 candidate flag-free. Review this work in the same assistant.
 
-The first twelve Basis cases have closed at their first target: easy depth
-ties at200 updates in both seeds. Hard depth is slower with gains in both
-seeds: canonical/candidate600/2000 and1600/7800. Short-length validation fits
-in both models, so task161 will investigate the length-transfer difference.
-Small recall also slows with gains:25,100/38,350 and11,600/71,100 updates.
-These are validation findings; every Basis final-test score remains sealed
-while hard recall and parity run. Do not turn this association into a causal claim
-about gate saturation or width scaling without measuring the actual paths.
-An exploratory26,100-update hard-recall checkpoint probe has a large
-train/validation gap at both Schedule-Free working and averaged weights.
-It does not explain that gap or rule out later grokking. Retain its copied
-state, independent CPU replay and source hashes beside the complete cohort.
-Task162 adds the missing contemporary original-GPTMini control, under the
-same Schedule-Free optimizer and original hard-recall data. Historical Basis
-successes changed both architecture and optimizer relative to this cohort,
-so they cannot alone locate a defect in normalization or residual paths.
-Canonical large hard recall seed0 has now reached the initial100,000-update
-boundary:0/512 validation sequences,29.6143% correct tokens. Both working
-and averaged weights retain a large training-subset/validation gap. Its
-complete state is copied and remains eligible for an explicit continuation;
-the frozen initial cohort proceeds to the paired candidate before decisions.
+The completed cohort has21 first99% crossings and three explicit hard-recall
+censorings. Conditional gains improve large parity in both seeds but slow hard
+depth, small recall and small parity. Canonical hard-recall seed1 required a
+long continuation:99.02% validation at123,550 updates and98.44% reserved test.
+Its extension resumed the complete102,750-update checkpoint after interruption;
+the fixed200,000-update horizon and all original learning sources were preserved.
+
+Every endpoint and650,300 finite nonzero gradient records are audited. CPU
+replay agrees with all canonical validation prediction counts. Parity's original
+sampled split contains repeated training inputs: only184/512 test prompts are
+novel. Large-parity novel-test scores are96.74%/97.83% for the controls and
+92.93%/100% for gains. Easy-depth length128 transfer is also mixed across seeds.
+No architecture is promoted; final tests were opened only after learning closed.
+
+Task162 is the urgent next architecture comparison: original GPTMini under
+Schedule-Free AdamW on the unchanged hard-recall problem. Historical AdamW
+successes already establish that the Basis task was solved; they do not locate
+the cause of today's architecture/optimizer gap. Keep model seeds, batches,
+rates and first99% stopping matched, and reserve new final tests. If the gap
+persists, isolate one architectural change before any flag-free production fix.
+Task161 remains the subsequent diagnosis of conditional-gain transfer.
