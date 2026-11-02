@@ -32,7 +32,7 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 | #156 remove legacy architecture flags | Complete: canonical scaled GPT atdf1e9f7; legacy residual/XSA/RoPE switches removed; migrated callers and diagram checks pass | Remove existing residual-mixing, legacy XSA and per-layer RoPE architecture switches; one current model, migrated callers/tests and updated site; historical variants live in Git |
 | #157 existing Muon allocation failures | Queued, separate baseline regression | Reproduced on unchanged main; AdamW grokking work does not use Muon |
 | #158 repeated gradient search loop | Done: synthetic mechanism verified; arithmetic3 wins/1 tie did not meet the promotion rule | Complete evidence and rejected actual-GPT patch at93ffa071; production stays df1e9f7; broader checks continue in160 and the next mechanism in161 |
-| #159 batch-transfer profiling follow-up | Complete measurement; candidate rejected, self-review pending | Same2KB copy waits0.024ms idle versus6.745ms with queued work; exact CUDA state checks fail even between control repeats; no input-cache change retained |
+| #159 batch-transfer profiling follow-up | Done; self-reviewed atb9f2a4a2; candidate rejected | Same2KB copy waits0.024ms idle versus6.745ms with queued work; exact CUDA state checks fail even between control repeats; no input-cache change retained |
 | #160 conditional gains on Basis | Done; same-assistant review at23154349 | Large parity improves with gains in both seeds; depth and small recall/parity regress; canonical hard-recall seed1 reaches first99% at123,550; reserved tests opened only after closure |
 | #161 conditional-gain transfer diagnosis | Queued after160 | Explain slower length128 generalization despite fitting short lengths; distinguish saturation, optimizer width scaling and learned length dependence before a specific new repair |
 | #162 matched original-GPTMini control | Active; original model under the required Schedule-Free optimizer | Original GPTMini solved hard recall in all three seeds; compare it under the same Schedule-Free AdamW before isolating learned QK temperature, residual normalization or activation differences |
@@ -3311,3 +3311,13 @@ the cause of today's architecture/optimizer gap. Keep model seeds, batches,
 rates and first99% stopping matched, and reserve new final tests. If the gap
 persists, isolate one architectural change before any flag-free production fix.
 Task161 remains the subsequent diagnosis of conditional-gain transfer.
+
+Task162's concrete control is `experiments/basis_control`: historical GPTMini,
+width128/depth6/four heads, model seeds0/1, unchanged original hard-recall data
+and task160's exact Schedule-Free recipe. The initial boundary is100,000 updates,
+with first99% sequence stopping and complete-state continuation for promising
+cases. Current-model references are the already closed task160 endpoints,
+not rerun or reselected using final test. The control keeps the original
+optimized readout and has nearly the same parameter count. Freeze all sources,
+runtime, data and reference hashes before updates; no component-level causal
+claim or production change follows from this whole-architecture control alone.

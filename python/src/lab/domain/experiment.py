@@ -12,7 +12,7 @@ import re
 from .gradient_paths import BranchGates, ContextGates, ContextTargets, LinearTransport, GradientTargets
 from .benchmarks import Benchmark, ModularDivision
 from .grokking import GrokkingDiagnostics
-from .model import Model
+from .model import Model, Transformer
 from .atomic import (AtomicColumns, AtomicMatching, BindingPricing, MatchingBindings,
                      MatchingOrders, OrderPricing, PairedMatching)
 from .optimizers import ANSR, EVD, AdamW, Clipped, Optimizer
@@ -26,6 +26,7 @@ from .source_transformer import SourceTransformer
 from .residual_transformer import ResidualTransformer, ResidualPairs, ResidualMaxAutotune
 from .adaptive_residual import CanonicalResidual
 from .residual_basis import ResidualBasis
+from .basis_control import BasisControl
 from .modular_composition import ModularPairs, ModularChain
 from .peri_restart import PeriRotate90Restart
 from .continuation import ScheduleFreeContinuation
@@ -153,7 +154,14 @@ class Experiment(Spec):
             require(not isinstance(self.diagnostics, AttentionDiagnostics),
                     "TensorStack has joint distributions, not the original attention diagnostics")
         source_basis = isinstance(self.model, CanonicalResidual) and isinstance(self.benchmark, ResidualBasis)
-        if isinstance(self.benchmark, ResidualBasis):
+        original_basis = isinstance(self.benchmark, BasisControl)
+        if original_basis:
+            require(isinstance(self.model, Transformer), "BasisControl needs the declarative Transformer")
+            require(type(self.optimizer) is ScheduleFreeAdamW, "BasisControl uses Schedule-Free AdamW")
+            require(type(self.execution) is Eager or isinstance(self.execution, ResidualMaxAutotune),
+                    "BasisControl uses eager checks or the matched fullgraph backend")
+            require(self.stopping is None, "BasisControl stops at its first99% validation crossing")
+        elif isinstance(self.benchmark, ResidualBasis):
             require(source_basis, "ResidualBasis needs the current canonical or adaptive source GPT")
         if isinstance(self.model, SourceTransformer) or isinstance(self.benchmark, (ModularPairs, ModularChain)):
             require(source_basis or (isinstance(self.model, SourceTransformer) and
@@ -168,7 +176,8 @@ class Experiment(Spec):
             require(isinstance(self.model, ContextGates) == isinstance(self.benchmark, ContextTargets),
                     "ContextGates and ContextTargets must be used together")
         if isinstance(self.execution, ResidualMaxAutotune):
-            require(isinstance(self.model, ResidualTransformer), "ResidualMaxAutotune needs ResidualTransformer")
+            require(isinstance(self.model, ResidualTransformer) or original_basis,
+                    "ResidualMaxAutotune needs a residual model or the matched Basis control")
         if isinstance(self.model, ResidualTransformer) or isinstance(self.benchmark, ResidualPairs):
             require(source_basis or (isinstance(self.model, ResidualTransformer) and isinstance(self.benchmark, ResidualPairs)),
                     "ResidualTransformer uses reserved-test ResidualPairs or current GPT with ResidualBasis")

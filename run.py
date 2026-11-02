@@ -39,6 +39,8 @@ Python (the uv project in python/; an experiment is a folder under experiments/)
     basis-state-probe <label>     training/validation replay at both Schedule-Free states
     basis-continue <decisions>    extend or censor explicit Basis chunk endpoints
     basis-recover <decision>      resume an interrupted Basis extension unchanged
+    basis-control <action>        original GPTMini under the matched Schedule-Free recipe
+    basis-control-probe <label>   copied-state training/validation and head-temperature probe
 
 Together
     verify                        build, audit, index, forbidden, reference integrity and test
@@ -326,6 +328,17 @@ def basis_recover(arguments):
              str(Path(arguments.decision).resolve())], cwd=PYTHON)
 
 
+def basis_control(arguments):
+    execute(["uv", "run", "--locked", "python", str(ROOT / "experiments/basis_control/cohort.py"),
+             arguments.action], cwd=PYTHON)
+
+
+def basis_control_probe(arguments):
+    extra = [] if arguments.snapshot is None else ["--snapshot", str(Path(arguments.snapshot).resolve())]
+    execute(["uv", "run", "--locked", "python",
+             str(ROOT / "experiments/basis_control/analysis/state_probe.py"), arguments.label, *extra], cwd=PYTHON)
+
+
 def clean(_):
     for directory in (PYTHON, ROOT / "optimizers", ROOT / "experiments", ROOT / "scripts"):
         for cache in directory.rglob("__pycache__"):
@@ -385,6 +398,13 @@ def main():
     command = tasks.add_parser("basis-recover")
     command.add_argument("decision")
     command.set_defaults(handler=basis_recover)
+    command = tasks.add_parser("basis-control")
+    command.add_argument("action", choices=("freeze", "run", "report"))
+    command.set_defaults(handler=basis_control)
+    command = tasks.add_parser("basis-control-probe")
+    command.add_argument("label")
+    command.add_argument("--snapshot")
+    command.set_defaults(handler=basis_control_probe)
     command = tasks.add_parser("test")
     command.add_argument("patterns", nargs="*")
     command.set_defaults(handler=test)

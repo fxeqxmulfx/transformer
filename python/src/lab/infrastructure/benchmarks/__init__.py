@@ -41,12 +41,13 @@ from .modular_composition import ModularCompositionTask
 from ...domain.residual_transformer import ResidualPairs
 from .residual_pairs import ResidualPairsTask
 from ...domain.residual_basis import ResidualBasis
-from .residual_basis import ResidualBasisTask
+from ...domain.basis_control import BasisControl
+from .residual_basis import BasisControlTask, ResidualBasisTask
 from .synthetic.training import SyntheticTask
 from .synthetic.tensor import TensorBasisTask
 from .text import TextTask
 
-TASKS = {ResidualBasis: ResidualBasisTask, ResidualPairs: ResidualPairsTask, ModularDivision: ModularTask, TinyShakespeare: TextTask, Synthetic: SyntheticTask,
+TASKS = {BasisControl: BasisControlTask, ResidualBasis: ResidualBasisTask, ResidualPairs: ResidualPairsTask, ModularDivision: ModularTask, TinyShakespeare: TextTask, Synthetic: SyntheticTask,
          MatchingOrders: MatchingTask, MatchingBindings: MatchingTask, ModularRegression: RegressionTask,
          LabDivision: LabDivisionTask, PowerDivision: PowerDivisionTask,
          ModularPairs: ModularCompositionTask, ModularChain: ModularCompositionTask}

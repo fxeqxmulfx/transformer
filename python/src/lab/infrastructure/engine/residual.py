@@ -10,6 +10,7 @@ from contextlib import nullcontext
 import torch
 from torch.nn.attention import SDPBackend, sdpa_kernel
 
+from ...domain.residual_transformer import ResidualTransformer
 from .compiled import CompiledStepper
 from .eager import EagerStepper
 from .loop import Training
@@ -26,7 +27,8 @@ class QueryConditioning:
         self.optimizer.param_groups[0]["lr"] = 0.
         self.conditioner = (TransformerQueryConditioner(model, self.optimizer,
                             compiled=getattr(self, "max_autotune", False))
-                            if experiment.model.mixing == "conditioned_qk" else None)
+                            if isinstance(experiment.model, ResidualTransformer)
+                            and experiment.model.mixing == "conditioned_qk" else None)
 
     def attention_policy(self):
         return sdpa_kernel(SDPBackend.MATH) if self.attention_backend == "math" else nullcontext()

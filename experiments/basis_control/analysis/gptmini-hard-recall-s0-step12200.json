@@ -1,0 +1,127 @@
+{
+  "label": "gptmini-hard-recall-s0",
+  "step": 12200,
+  "checkpoint_sha256": "bc51ec9d06215f03e1246e28b2355a058387c7a87f9f9bed125643b7a306b6c6",
+  "protocol_sha256": "e04dd220f6d894256a04f53f4ef606937908b87cb3bcac4c5c68a59002f39513",
+  "probe_source_sha256": "2defc09f91b458721d1df94ed29d68c0bd58b551df8e0bf9854eaa11ba1b9ed4",
+  "scope": "Exploratory CPU replay; first512 training rows and all512 validation rows; no final test, no training mutation.",
+  "attention_temperatures": {
+    "working": {
+      "blocks.0.attention.scores.log_alpha": [
+        4.471780776977539,
+        3.8844308853149414,
+        4.139556407928467,
+        5.663623332977295
+      ],
+      "blocks.1.attention.scores.log_alpha": [
+        4.469982624053955,
+        4.530357837677002,
+        4.237376689910889,
+        5.406467914581299
+      ],
+      "blocks.2.attention.scores.log_alpha": [
+        8.307211875915527,
+        8.307838439941406,
+        9.475959777832031,
+        8.192586898803711
+      ],
+      "blocks.3.attention.scores.log_alpha": [
+        9.677002906799316,
+        9.872442245483398,
+        10.008307456970215,
+        10.234156608581543
+      ],
+      "blocks.4.attention.scores.log_alpha": [
+        9.469708442687988,
+        9.090757369995117,
+        10.009846687316895,
+        9.685617446899414
+      ],
+      "blocks.5.attention.scores.log_alpha": [
+        7.056739807128906,
+        7.464813709259033,
+        8.074492454528809,
+        7.40805721282959
+      ]
+    },
+    "averaged": {
+      "blocks.0.attention.scores.log_alpha": [
+        4.523195266723633,
+        3.989243745803833,
+        4.2571024894714355,
+        5.777463912963867
+      ],
+      "blocks.1.attention.scores.log_alpha": [
+        4.588500022888184,
+        4.6465911865234375,
+        4.357703685760498,
+        5.468433856964111
+      ],
+      "blocks.2.attention.scores.log_alpha": [
+        8.030679702758789,
+        8.053874015808105,
+        8.99988842010498,
+        7.9527482986450195
+      ],
+      "blocks.3.attention.scores.log_alpha": [
+        9.162413597106934,
+        9.309556007385254,
+        9.400382041931152,
+        9.585396766662598
+      ],
+      "blocks.4.attention.scores.log_alpha": [
+        9.000959396362305,
+        8.706840515136719,
+        9.530203819274902,
+        9.205033302307129
+      ],
+      "blocks.5.attention.scores.log_alpha": [
+        6.750277996063232,
+        7.399714946746826,
+        7.593911647796631,
+        7.012668132781982
+      ]
+    }
+  },
+  "working_weights": {
+    "first512_training_examples": {
+      "loss": 0.000659763187286444,
+      "token_accuracy": 1.0,
+      "sequence_accuracy": 1.0,
+      "correct": 4096,
+      "target_count": 4096,
+      "exact": 512,
+      "example_count": 512
+    },
+    "validation": {
+      "loss": 0.01416084700031206,
+      "token_accuracy": 0.996826171875,
+      "sequence_accuracy": 0.974609375,
+      "correct": 4083,
+      "target_count": 4096,
+      "exact": 499,
+      "example_count": 512
+    }
+  },
+  "averaged_weights": {
+    "first512_training_examples": {
+      "loss": 0.00027048079755331855,
+      "token_accuracy": 1.0,
+      "sequence_accuracy": 1.0,
+      "correct": 4096,
+      "target_count": 4096,
+      "exact": 512,
+      "example_count": 512
+    },
+    "validation": {
+      "loss": 0.004564619142911397,
+      "token_accuracy": 0.998779296875,
+      "sequence_accuracy": 0.990234375,
+      "correct": 4091,
+      "target_count": 4096,
+      "exact": 507,
+      "example_count": 512
+    }
+  },
+  "full_result_sha256": "7f8a1aed25e3d9b0fd1871e0e1e085ca55fb9e35ee196ebd2a3e588764a78967"
+}

@@ -11,15 +11,12 @@ from .synthetic.training import SyntheticTask
 from .synthetic.vocabulary import IGNORE
 
 
-class ResidualBasisTask(SyntheticTask):
-    def forward(self, model, batch, supervised=False):
-        tokens, targets = batch[:, 0], batch[:, 1]
-        logits = model(tokens)
-        if not supervised:
-            return logits, targets
-        positions = (targets != IGNORE).int().argsort(dim=1, descending=True, stable=True)
-        positions = positions[:, :self.splits["train"].readout]
-        return logits.gather(1, positions[..., None].expand(-1, -1, logits.shape[-1])), targets.gather(1, positions)
+class BasisControlTask(SyntheticTask):
+    """Original GPTMini readout with task160's reserved-test endpoint summary.
+
+    Sources: SyntheticTask and ResidualBasisTask at23154349. No change to
+    the objective or original model interface; only endpoint reporting differs.
+    """
 
     def analyze(self, history):
         name, metric = self.spec.validation_name, self.spec.metric
@@ -28,3 +25,14 @@ class ResidualBasisTask(SyntheticTask):
                 "time_to_target": None if first is None else {
                     **{key: first[key] for key in ("step", "training_seconds", "wall_seconds", "examples_seen")},
                     "value": first[name][metric]}}
+
+
+class ResidualBasisTask(BasisControlTask):
+    def forward(self, model, batch, supervised=False):
+        tokens, targets = batch[:, 0], batch[:, 1]
+        logits = model(tokens)
+        if not supervised:
+            return logits, targets
+        positions = (targets != IGNORE).int().argsort(dim=1, descending=True, stable=True)
+        positions = positions[:, :self.splits["train"].readout]
+        return logits.gather(1, positions[..., None].expand(-1, -1, logits.shape[-1])), targets.gather(1, positions)

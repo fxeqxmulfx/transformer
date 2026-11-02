@@ -24,6 +24,7 @@ from .domain.source_transformer import SourceTransformer
 from .domain.residual_transformer import ResidualTransformer, ResidualPairs, ResidualMaxAutotune
 from .domain.adaptive_residual import AdaptiveResidual, CanonicalResidual
 from .domain.residual_basis import ResidualBasis
+from .domain.basis_control import BasisControl
 from .domain.basis_residual import residual_basis
 from .domain.modular_composition import ModularPairs, ModularChain
 from .domain.peri_restart import PeriRotate90Restart
@@ -54,7 +55,7 @@ __all__ = [
     "ReLU", "ReLU2", "GELU", "SiLU", "Tied", "Untied", "TorchDefault", "Normal", "ScaledResidual",
     "Rotate90", "DenseBranch", "SwiGLU", "PeriRotate90", "PeriRotate90Restart", "PowerDivision",
     "SourceTransformer", "ModularPairs", "ModularChain", "ResidualTransformer", "ResidualPairs", "ResidualMaxAutotune",
-    "CanonicalResidual", "AdaptiveResidual", "ResidualBasis", "residual_basis",
+    "CanonicalResidual", "AdaptiveResidual", "ResidualBasis", "BasisControl", "residual_basis",
     "VectorReadout", "SquaredAnswers", "CrossEntropyAnswers",
     # benchmarks
     "ModularDivision", "ModularRegression", "LabDivision", "TinyShakespeare", "Synthetic", "Memorization", "MatchingOrders", "MatchingBindings",
