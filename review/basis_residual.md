@@ -89,3 +89,13 @@ with13 skips and104 optimizer tests in12.28 seconds with14 skips. The three
 new continuation tests were added after that suite's discovery and pass
 separately as recorded above. CPU compilation used a fresh disk cache; the
 active Basis run kept its original source and CUDA cache throughout.
+
+Canonical large hard recall seed0 reached the initial100,000-update boundary
+without crossing:0/512 validation sequences,1,213/4,096 correct tokens.
+Its copied-state CPU probe matches all six canonical validation counts and
+accuracies exactly. Both the source and copied-state hashes verify. Working
+weights give0/512 validation sequences and1,193/4,096 tokens, while the same
+training subset is493/512 exact at working weights and512/512 at averages.
+The phase records a budget boundary, not success or impossibility. The paired
+candidate and the remaining initial chunks continue before any final test
+or explicit extension/censoring decisions.

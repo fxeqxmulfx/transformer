@@ -1,0 +1,50 @@
+{
+  "label": "canonical-large-recall-s0",
+  "step": 100000,
+  "checkpoint_sha256": "45610d732cdcfa93ee019494516d5f9595baa9713b1d1df24826b17ec47bff88",
+  "protocol_sha256": "cbd2ecf28f9928b3430eafbf70425c28c71a9942953fa7f701e8b6d0e3edd840",
+  "probe_source_sha256": "f86b93d7e57fc5042ec58df216e6e9ad67d09a9f5acbbed8af8afaad9ebb2db4",
+  "source_commit": "18112982",
+  "scope": "Exploratory CPU replay; first512 training rows and all512 validation rows; no final test, no training mutation.",
+  "working_weights": {
+    "first512_training_examples": {
+      "loss": 0.03880881238728762,
+      "token_accuracy": 0.995361328125,
+      "sequence_accuracy": 0.962890625,
+      "correct": 4077,
+      "target_count": 4096,
+      "exact": 493,
+      "example_count": 512
+    },
+    "validation": {
+      "loss": 5.357229650020599,
+      "token_accuracy": 0.291259765625,
+      "sequence_accuracy": 0.0,
+      "correct": 1193,
+      "target_count": 4096,
+      "exact": 0,
+      "example_count": 512
+    }
+  },
+  "averaged_weights": {
+    "first512_training_examples": {
+      "loss": 0.012476397911086679,
+      "token_accuracy": 1.0,
+      "sequence_accuracy": 1.0,
+      "correct": 4096,
+      "target_count": 4096,
+      "exact": 512,
+      "example_count": 512
+    },
+    "validation": {
+      "loss": 5.563888728618622,
+      "token_accuracy": 0.296142578125,
+      "sequence_accuracy": 0.0,
+      "correct": 1213,
+      "target_count": 4096,
+      "exact": 0,
+      "example_count": 512
+    }
+  },
+  "full_result_sha256": "d3ee106b47fe1ef25cd6648986776b92a4751203cf6fd2c5659fb0292d12de4d"
+}

@@ -117,3 +117,18 @@ measurements exactly and never reads final test or changes the active run:
 ./run.py basis-state-probe canonical-large-recall-s0 \
   --snapshot experiments/basis_residual/runs/probes/canonical-large-recall-s0-step26100.pt
 ```
+
+The same control reached its first100,000-update boundary with0/512 exact
+validation sequences and1,213/4,096 correct validation tokens (29.6143%).
+Its averaged weights still solve all512 examples of the fixed training
+subset. Working weights solve493/512 training sequences,0/512 validation
+sequences and1,193/4,096 validation tokens (29.12598%). The same gap is
+therefore visible at both weight states. Validation token accuracy and loss
+have improved since26,100, so the boundary remains an unresolved continuation
+checkpoint, not a claim that learning is impossible. The paired candidate
+is running next, under the frozen order. Final test remains sealed.
+
+[The boundary probe](analysis/canonical-large-recall-s0-step100000.json)
+pins the copied complete state and source. Its six validation counts and
+accuracies agree exactly with the canonical CUDA observation; CPU loss is
+reported as a CPU replay and differs slightly in rounding.

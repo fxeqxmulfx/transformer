@@ -3305,3 +3305,8 @@ Task162 adds the missing contemporary original-GPTMini control, under the
 same Schedule-Free optimizer and original hard-recall data. Historical Basis
 successes changed both architecture and optimizer relative to this cohort,
 so they cannot alone locate a defect in normalization or residual paths.
+Canonical large hard recall seed0 has now reached the initial100,000-update
+boundary:0/512 validation sequences,29.6143% correct tokens. Both working
+and averaged weights retain a large training-subset/validation gap. Its
+complete state is copied and remains eligible for an explicit continuation;
+the frozen initial cohort proceeds to the paired candidate before decisions.
