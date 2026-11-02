@@ -49,3 +49,23 @@ it further. Thus the initial candidate gain of one corresponds to the same
 ideal scale `sqrt(32)` as the historical initialization, not alpha=1. The
 candidate retains current finite-epsilon RMS rather than asserting equivalence
 to clamped unit normalization.
+
+A copied seed0 checkpoint at update55,800 is probed in both Schedule-Free modes.
+Averaged weights fit all512 sampled training sequences, but validation has no
+exact sequences and27.5146% correct tokens. Working weights fit500/512 sampled
+training sequences, with27.2217% validation token accuracy and no exact ones.
+The averaged per-head score gains range0.9375–2.4217. They are active and
+learned, but this snapshot does not show successful generalization. The
+reported gain*sqrt(head_width) values are real-arithmetic score bounds, not
+certified floating-point rounding bounds. No final test is opened.
+
+Replaying the exact copied checkpoint reproduces the complete per-class
+result hash `0e49790ca16f1957aa7eeb76a8b1d279ef3d89a7598c8e59759c277a5af59e3e`.
+The snapshot, summary and source hashes are retained. The active learning
+checkpoint and optimizer/sampler trajectory are not modified by this probe.
+
+The diagnostic integration passes 513 lab tests in945.769 seconds with13
+CUDA skips and104 optimizer tests in12.760 seconds with14 skips. The active
+cohort's frozen engine and top-level sources remain unchanged. Seed0's first
+100,000-update boundary has39.5264% validation token accuracy and no exact
+sequences; seed1 is still learning, and continuation decisions are pending.

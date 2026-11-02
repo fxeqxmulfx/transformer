@@ -44,6 +44,7 @@ Python (the uv project in python/; an experiment is a folder under experiments/)
     basis-control-continue <file> record a validation-only continuation or censoring
     basis-control-probe <label>   copied-state training/validation and head-temperature probe
     attention-temperature <action> isolated learned score gains in current GPT
+    attention-temperature-probe <label> copied-state training/validation and score-gain probe
     attention-temperature-continue <file> explicit continuation or censoring
 
 Together
@@ -365,6 +366,12 @@ def attention_temperature(arguments):
                  str(ROOT / "experiments/attention_temperature")], cwd=PYTHON)
 
 
+def attention_temperature_probe(arguments):
+    extra = [] if arguments.snapshot is None else ["--snapshot", str(Path(arguments.snapshot).resolve())]
+    execute(["uv", "run", "--locked", "python",
+             str(ROOT / "experiments/attention_temperature/analysis/state_probe.py"), arguments.label, *extra], cwd=PYTHON)
+
+
 def attention_temperature_continue(arguments):
     execute(["uv", "run", "--locked", "python", str(ROOT / "scripts/basis_continuation.py"),
              str(ROOT / "experiments/attention_temperature"), str(Path(arguments.decisions).resolve())], cwd=PYTHON)
@@ -443,6 +450,10 @@ def main():
     command = tasks.add_parser("attention-temperature")
     command.add_argument("action", choices=("freeze", "run", "report"))
     command.set_defaults(handler=attention_temperature)
+    command = tasks.add_parser("attention-temperature-probe")
+    command.add_argument("label")
+    command.add_argument("--snapshot")
+    command.set_defaults(handler=attention_temperature_probe)
     command = tasks.add_parser("attention-temperature-continue")
     command.add_argument("decisions")
     command.set_defaults(handler=attention_temperature_continue)

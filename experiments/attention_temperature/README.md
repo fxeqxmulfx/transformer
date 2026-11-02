@@ -35,4 +35,16 @@ are the original public Basis rows, not a fresh distribution across studies.
 This is a screening comparison, with no production replacement from two runs.
 A useful gain must be confirmed on the broader Basis and arithmetic settings,
 with a declared acceptance rule, direct GPT tests and no architecture flag.
-No result is claimed yet; GPU learning waits for the historical controls.
+The frozen source is committed at3f71f7c8. GPU learning is active; both new
+final tests remain sealed. A copied seed0 state at55,800 updates fits the
+first512 sampled training sequences in averaged mode, while validation has
+27.51% token accuracy and no exact sequences. The complete prediction record
+reproduces from the copied state. This is a diagnostic snapshot, not a completed
+learning outcome or a model-selection result. Use
+`./run.py attention-temperature-probe <label> [--snapshot <path>]` for the
+read-only working/averaged-state check.
+
+Seed0's initial100,000-update chunk ends with39.5264% validation token accuracy
+and no exact sequences. Seed1 is still learning. This is a continuation
+boundary, not a censored result or a completed cohort; both final tests remain
+sealed. Complete-state continuation decisions follow the initial pair.
