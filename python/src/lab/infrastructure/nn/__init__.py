@@ -27,6 +27,8 @@ from ...domain.residual_transformer import ResidualTransformer as ResidualSpec
 from .residual_transformer import ResidualTransformer
 from ...domain.adaptive_residual import AdaptiveResidual as AdaptiveSpec, CanonicalResidual as CanonicalSpec
 from .adaptive_residual import AdaptiveResidual, CanonicalResidual
+from ...domain.attention_temperature import TemperatureResidual as TemperatureSpec
+from .attention_temperature import TemperatureResidual
 
 
 def build_model(spec, vocab, seed):
@@ -39,6 +41,8 @@ def build_model(spec, vocab, seed):
     torch.manual_seed(seed)
     if isinstance(spec, (BranchGates, LinearTransport)):
         return build_gradient_model(spec)
+    if isinstance(spec, TemperatureSpec):
+        return TemperatureResidual(spec, vocab)
     if isinstance(spec, AdaptiveSpec):
         return AdaptiveResidual(spec, vocab)
     if isinstance(spec, CanonicalSpec):

@@ -35,7 +35,7 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 | #159 batch-transfer profiling follow-up | Done; self-reviewed atb9f2a4a2; candidate rejected | Same2KB copy waits0.024ms idle versus6.745ms with queued work; exact CUDA state checks fail even between control repeats; no input-cache change retained |
 | #160 conditional gains on Basis | Done; same-assistant review at23154349 | Large parity improves with gains in both seeds; depth and small recall/parity regress; canonical hard-recall seed1 reaches first99% at123,550; reserved tests opened only after closure |
 | #161 conditional-gain transfer diagnosis | Queued after160 | Explain slower length128 generalization despite fitting short lengths; distinguish saturation, optimizer width scaling and learned length dependence before a specific new repair |
-| #162 matched original-GPTMini control | Active; original model under the required Schedule-Free optimizer | Original GPTMini solved hard recall in all three seeds; compare it under the same Schedule-Free AdamW before isolating learned QK temperature, residual normalization or activation differences |
+| #162 matched original-GPTMini control | Active; historical control closed; isolated temperature screen frozen | Historical GPTMini solves one seed at 12,200 updates under Schedule-Free, with the second unresolved at 100,000; test learned score gains alone in current GPT before a repair |
 | #163 CUDA repeatability before caching | Queued after159 | Characterize unchanged-control drift and declare a new execution-comparison protocol before revisiting the rejected cache candidate |
 | #153 local architecture site | Complete; self-reviewed at709b6f70; root server on127.0.0.1:8765 | Interactive source diagram, residual options, measured curves, config and training recipe; loopback server remains running after worktree cleanup |
 | #138 source model and early mixed-arithmetic screen | Self-reviewed; all48 replayed; fresh old-model compiled count drift retained separately | All cases retained, final-checkpoint replay, exact split/source hashes, train/heldout/longer accuracy and baselines;2000 updates alone cannot rule out grokking |
@@ -3321,3 +3321,17 @@ not rerun or reselected using final test. The control keeps the original
 optimized readout and has nearly the same parameter count. Freeze all sources,
 runtime, data and reference hashes before updates; no component-level causal
 claim or production change follows from this whole-architecture control alone.
+
+Task162's isolated follow-up is `experiments/attention_temperature`: keep the
+current canonical architecture and every common initial parameter, and add
+one zero-initialized log-gain per head after Q/K normalization and RoPE. The
+positive gain multiplies queries entering SDPA. This adds 24 parameters without
+consuming randomness, changing epsilon, or moving residual normalization.
+The two seeds use task160's exact hard-recall data and Schedule-Free recipe.
+The complete frozen sources precede GPU learning. First99% validation selects
+the endpoint; unresolved 100,000-update boundaries require explicit decisions.
+Final tests stay sealed until both cases close. Two hard-recall runs are a
+screen, not sufficient evidence for a production replacement. A useful result
+requires broader Basis and modular-division confirmation plus direct flag-free
+GPT tests. Larger temperatures in both successful and unsuccessful historical
+controls motivate this comparison but do not establish a cause.
