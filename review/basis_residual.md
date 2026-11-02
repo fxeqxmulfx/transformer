@@ -99,3 +99,29 @@ training subset is493/512 exact at working weights and512/512 at averages.
 The phase records a budget boundary, not success or impossibility. The paired
 candidate and the remaining initial chunks continue before any final test
 or explicit extension/censoring decisions.
+
+The initial24-run phase now has20 first99% crossings and four unresolved
+hard-recall endpoints at100,000 updates. Large parity is the candidate's
+measured Basis improvement:8,400 versus14,000 updates in seed0 and10,200
+versus14,000 in seed1. Small parity instead slows:5,000 versus4,600 and6,200
+versus5,400. All data and stopping semantics remain the frozen ones.
+
+Continuation1 uses validation only: canonical hard-recall seed1 progressed
+from51.27% to82.52% token accuracy in its last25,000 updates, and20.70% of
+complete sequences are correct. It continues to first99% within a200,000
+update chunk. The other three cases retain their complete100,000-update
+states and are explicitly censored. This is a recorded research decision
+after observing the initial phase, not a predeclared numerical threshold.
+Different horizons and unobserved crossings must remain explicit in the
+final report. No final-test predictions entered this decision.
+
+The user's historical check confirms that original GPTMini solved the hard
+mode in all three seeds at bd63e509. Its hard-recall crossings were
+3,350/2,850/2,600; a later softmax repetition at b7d6e673 gives
+2,950/2,150/2,750. The committed README and structured repetition record
+agree. The original ignored run directory is absent here, so these are
+historical records, not a new checkpoint replay. Their hashes and source
+commits are retained in `analysis/historical_baseline.json`. Both optimizer
+and architecture changed: learned per-head QK temperature, PreNorm versus
+PeriRMS, activation, embedding normalization, epsilon and initialization
+must not be conflated. Task162 is now urgent after this cohort.

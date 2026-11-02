@@ -76,11 +76,41 @@ that file's hash, and removes only repeated per-class history tables from
 the tracked summary. Every history aggregate and all endpoint class tables
 remain unchanged. This does not change evaluation or select an endpoint.
 
-## Validation findings while the cohort continues
+## Historical solved baseline
 
-The first twelve runs reached99% sequence accuracy. These are validation
-crossings, not final-test results; the remaining hard recall and parity
-runs still determine the complete comparison.
+The original GPTMini already solved the standard hard mode in all three
+seeds. At width128/depth6 its depth crossings were800/1,400/5,800,
+hard recall3,350/2,850/2,600, and parity5,000/8,400/8,800. These are the
+recorded99% validation crossings from bd63e509, documented at18888e2a in
+[`basis`](../basis/README.md). The later b7d6e673 softmax controls solved
+hard recall at2,950/2,150/2,750, also in all three seeds.
+
+[The historical evidence](analysis/historical_baseline.json) pins those
+committed records and their source hashes. The original ignored
+`experiments/basis/runs/` directory is absent in this checkout; this is
+recorded history, not a new replay of its saved weights.
+
+The historical model and optimizer differ materially from this comparison:
+
+| Component | Successful historical GPTMini | Current source GPT |
+| --- | --- | --- |
+| Optimizer | AdamW | Schedule-Free AdamW |
+| Q/K normalization | Unit vectors with learned per-head temperature | Parameter-free RMSNorm and default SDPA scale |
+| Residual branches | PreNorm; unnormalized branch outputs | PeriRMS and fixed1/sqrt(2L) branch scale |
+| Feed-forward | ReLU squared, hidden width4d | SwiGLU, hidden width about8d/3 |
+| Embedding / epsilon / initialization | Historical GPTMini definitions | Source embedding RMS, dtype epsilon, depth-scaled projections |
+
+Both use RoPE, XSA and tied readout. The successful repeat's learned
+attention temperatures ranged from about5.01 to7.63 across heads and seeds.
+This is a concrete difference to test, not evidence that it causes the gap.
+Task162 prioritizes the original architecture under Schedule-Free AdamW
+before attributing current misses to normalization or residual connections.
+
+## Initial validation findings and continuation
+
+All24 initial chunks have finished:20 reached99% sequence accuracy and the
+four hard-recall cases remain unresolved at100,000 updates. These are
+validation results; every final-test split is still sealed.
 
 | Task / model | Seed | Canonical updates | Conditional-gain updates |
 | --- | ---: | ---: | ---: |
@@ -90,11 +120,28 @@ runs still determine the complete comparison.
 | Hard depth / large | 1 | 1,600 | 7,800 |
 | Easy recall / small | 0 | 25,100 | 38,350 |
 | Easy recall / small | 1 | 11,600 | 71,100 |
+| Hard recall / large | 0 | Unresolved at100,000 | Unresolved at100,000 |
+| Hard recall / large | 1 | Unresolved at100,000 | Unresolved at100,000 |
+| Parity / small | 0 | 4,600 | 5,000 |
+| Parity / small | 1 | 5,400 | 6,200 |
+| Parity / large | 0 | 14,000 | 8,400 |
+| Parity / large | 1 | 14,000 | 10,200 |
 
 Easy-depth ties have200-update observation resolution. Both hard-depth
 models fit short sequences, but the conditional gains transfer to length128
-later. Both easy-recall pairs also take more updates with gains. No measured
-Basis improvement has been established in these completed pairs.
+later. Both easy-recall and small-parity pairs also take more updates with
+gains. Large parity improves in both seeds:40% and27.14% fewer updates.
+The effect depends on the task and size; it is not a general improvement.
+
+At100,000 updates, canonical hard recall has29.61% and82.52% token accuracy;
+the gain candidate has9.77% and9.40%. Only canonical seed1 has any exact
+validation sequences (20.70%). Its token accuracy rose from51.27% to82.52%
+over the last25,000 updates, so [continuation1](analysis/continuation-1.json)
+extends it to at most200,000 with the same first99% stopping rule. The other
+three states are retained and explicitly censored as unresolved. Their
+different horizons must remain visible; an unobserved crossing is not an
+infinite time-to-target or a proof of impossibility. These decisions use
+validation only and prioritize the matched historically successful control.
 
 An exploratory checkpoint probe of canonical large hard recall at26,100
 updates distinguishes memorization from a Schedule-Free weight-state

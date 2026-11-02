@@ -1,0 +1,36 @@
+{
+  "created_utc": "2026-11-02T05:00:24.076652+00:00",
+  "protocol_sha256": "cbd2ecf28f9928b3430eafbf70425c28c71a9942953fa7f701e8b6d0e3edd840",
+  "scope": "Explicit validation-based decisions after the initial24-run cohort. Only the strongly improving recall control continues. Three unfinished cases are censored, not declared impossible; horizons differ and censored cases have no observed time-to99. No final-test predictions were consulted.",
+  "decisions": [
+    {
+      "label": "canonical-large-recall-s0",
+      "step": 100000,
+      "checkpoint_sha256": "45610d732cdcfa93ee019494516d5f9595baa9713b1d1df24826b17ec47bff88",
+      "action": "censor",
+      "reason": "Unresolved after100000 updates:0/512 exact validation sequences,29.6143% correct tokens, a4.71-point token increase in the last25000 updates. Preserve the complete state and prioritize the matched historically successful model; this censoring does not establish impossibility."
+    },
+    {
+      "label": "adaptive-large-recall-s0",
+      "step": 100000,
+      "checkpoint_sha256": "a7306d432b2ae0d4c7e8e990584a1ffaa124d592c9155c25d9170199f799b682",
+      "action": "censor",
+      "reason": "Unresolved after100000 updates:0/512 exact validation sequences and9.7656% correct tokens; token accuracy remained around9% from25000 onward. Preserve the complete state; further learning is not ruled out."
+    },
+    {
+      "label": "adaptive-large-recall-s1",
+      "step": 100000,
+      "checkpoint_sha256": "6ee14b6887e87af6668eb9106b65f113aec4fba4e3ca9bcd66e4a39bb59a4f24",
+      "action": "censor",
+      "reason": "Unresolved after100000 updates:0/512 exact validation sequences and9.3994% correct tokens; token accuracy remained around8\u20139% from25000 onward. Preserve the complete state; further learning is not ruled out."
+    },
+    {
+      "label": "canonical-large-recall-s1",
+      "step": 100000,
+      "checkpoint_sha256": "9afd5f550c4c7ec49f9bc0fd0c576fd62929f7f073075ffa41446bd367231891",
+      "action": "extend",
+      "reason": "Promising validation progress: token accuracy rose from51.2695% at75000 to82.5195% at100000, with20.7031% exact sequences. Continue the complete state to at most200000 updates and stop at the first99% sequence observation.",
+      "updates": 200000
+    }
+  ]
+}
