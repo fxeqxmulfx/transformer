@@ -1,0 +1,37 @@
+{
+  "created_utc": "2026-11-02T11:23:19.621570+00:00",
+  "protocol_sha256": "cbd2ecf28f9928b3430eafbf70425c28c71a9942953fa7f701e8b6d0e3edd840",
+  "phase_sha256": "04e541af19d51359ce5ba004b28251e6be475c33ee4826d3e81662d73990ad83",
+  "continuation_sha256": "1841bc9217224471eb8d372dca18e3e23662b8583d30d36531079417c953f2eb",
+  "label": "canonical-large-recall-s1",
+  "step": 102750,
+  "checkpoint_sha256": "5f24048e6500e3eaaaea1a4e4a24f8428607b4f3ff05d9c065866af53d0ba7f4",
+  "updates": 200000,
+  "reason": "The previous trainer process is absent after an interruption. Resume the saved complete state within continuation1; keep first99 sequence stopping and the declared200000-update horizon. No final-test predictions were consulted.",
+  "process_check": {
+    "observed_utc": "2026-11-02T11:23:19.660982+00:00",
+    "trainer_present": false,
+    "gpu_memory_used_mib": 11
+  },
+  "saved_validation": {
+    "loss": 0.8137094080448151,
+    "example_loss": 0.8137094229459763,
+    "token_accuracy": 0.873779296875,
+    "sequence_accuracy": 0.34765625,
+    "balanced_accuracy": 0.877125577625545,
+    "transition_accuracy": 0.8734084231145935,
+    "target_count": 4096,
+    "correct": 3579,
+    "example_count": 512,
+    "exact": 178,
+    "transition_count": 4084
+  },
+  "saved_logs": {
+    "history.jsonl": "01e9d610e3a6caf15e0ccbeaca796ef3b16dfb5a9fa76d94ad76f2d862022830",
+    "gradients.jsonl": "eaccb9bcda18da94b16ddfa18362731b2c147a3978ebaf336eb8c708a813a6ad",
+    "diagnostics.jsonl": "1e50c3866a10cded6174dc4945278c35857ece315108193496bb9f424389c8b3",
+    "experiment.json": "4a19449ad510442d1510f537985c7c5f5460dbecfaad1825182b47b1d52be63f"
+  },
+  "gradient_records": 102750,
+  "last_gradient_step": 102750
+}

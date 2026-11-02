@@ -50,6 +50,15 @@ the budget and stops at the first99% crossing. A censored case remains an
 unresolved result. Every decision and runner hash travels with the phase;
 closed learning and disclosed final tests cannot be reopened by this command.
 
+After a process interruption, `./run.py basis-recover <decision.json>` resumes
+the one unfinished extension from its exact saved state. The recovery names
+the phase, checkpoint and original continuation hashes and cannot change the
+declared update horizon. It preserves the interrupted phase, manifest, raw
+logs and checkpoint before the engine discards any records beyond that state.
+This is an interrupted segment, not a completed budget chunk. Recovery1 starts
+at102,750 updates, within the existing200,000-update extension; its saved
+validation is178/512 exact sequences and3,579/4,096 correct tokens.
+
 Original Basis samples can repeat inputs across splits. We keep those
 splits intact, disclose their overlap, and separately report test examples
 whose inputs never occurred in training. For parity, the input key is its

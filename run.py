@@ -38,6 +38,7 @@ Python (the uv project in python/; an experiment is a folder under experiments/)
     basis-residual <action>       matched current GPT on the original Basis tasks
     basis-state-probe <label>     training/validation replay at both Schedule-Free states
     basis-continue <decisions>    extend or censor explicit Basis chunk endpoints
+    basis-recover <decision>      resume an interrupted Basis extension unchanged
 
 Together
     verify                        build, audit, index, forbidden, reference integrity and test
@@ -317,6 +318,12 @@ def basis_continue(arguments):
              str(Path(arguments.decisions).resolve())], cwd=PYTHON)
 
 
+def basis_recover(arguments):
+    execute(["uv", "run", "--locked", "python",
+             str(ROOT / "experiments/basis_residual/analysis/recovery.py"),
+             str(Path(arguments.decision).resolve())], cwd=PYTHON)
+
+
 def clean(_):
     for directory in (PYTHON, ROOT / "optimizers", ROOT / "experiments", ROOT / "scripts"):
         for cache in directory.rglob("__pycache__"):
@@ -373,6 +380,9 @@ def main():
     command = tasks.add_parser("basis-continue")
     command.add_argument("decisions")
     command.set_defaults(handler=basis_continue)
+    command = tasks.add_parser("basis-recover")
+    command.add_argument("decision")
+    command.set_defaults(handler=basis_recover)
     command = tasks.add_parser("test")
     command.add_argument("patterns", nargs="*")
     command.set_defaults(handler=test)

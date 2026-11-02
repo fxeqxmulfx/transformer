@@ -54,6 +54,20 @@ learning cohort is in progress with every final-test split still sealed.
 
 The same assistant performs this review; no delegated reviewer was used.
 
+The first continuation was interrupted after its102,750-update checkpoint.
+An elevated process query confirmed the trainer absent and the GPU idle apart
+from11MiB. All102,750 gradient records and the canonical endpoint are present;
+no final test was opened. `analysis/recovery-1.json` pins the checkpoint,
+interrupted phase and logs. The recovery runner preserves those files before
+resuming the frozen engine, with the same200,000-update horizon and first99%
+criterion. An actual compiled interruption/resume fixture checks the complete
+state (excluding elapsed clocks), validation and gradient records against an
+uninterrupted run, and retains trailing unsaved logs separately. Changed
+horizons, stale evidence, completed cases and final-test disclosure are rejected.
+The complete recovery-version CPU verification passes500 lab tests in790.99
+seconds with13 CUDA skips and104 optimizer tests in12.09 seconds with14 skips.
+The five focused continuation/recovery checks also pass in30.04 seconds.
+
 The first twelve endpoints include both small recall pairs: canonical/gain
 crossings are25,100/38,350 and11,600/71,100 updates. Together with the depth
 results, these supply no Basis improvement so far. Every final test remains
