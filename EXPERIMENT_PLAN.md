@@ -34,9 +34,10 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 | #158 repeated gradient search loop | Done: synthetic mechanism verified; arithmetic3 wins/1 tie did not meet the promotion rule | Complete evidence and rejected actual-GPT patch at93ffa071; production stays df1e9f7; broader checks continue in160 and the next mechanism in161 |
 | #159 batch-transfer profiling follow-up | Done; self-reviewed atb9f2a4a2; candidate rejected | Same2KB copy waits0.024ms idle versus6.745ms with queued work; exact CUDA state checks fail even between control repeats; no input-cache change retained |
 | #160 conditional gains on Basis | Done; same-assistant review at23154349 | Large parity improves with gains in both seeds; depth and small recall/parity regress; canonical hard-recall seed1 reaches first99% at123,550; reserved tests opened only after closure |
-| #161 conditional-gain transfer diagnosis | Queued after160 | Explain slower length128 generalization despite fitting short lengths; distinguish saturation, optimizer width scaling and learned length dependence before a specific new repair |
+| #161 conditional-gain transfer diagnosis | Diagnostics measured; same-assistant review pending | Explain slower length128 generalization despite fitting short lengths; distinguish saturation, optimizer width scaling and learned length dependence before a specific new repair |
 | #162 matched original-GPTMini control | Active; historical control closed; isolated temperature screen frozen | Historical GPTMini solves one seed at 12,200 updates under Schedule-Free, with the second unresolved at 100,000; test learned score gains alone in current GPT before a repair |
 | #164 powered-division and Basis confirmation | Queued after #162 for a viable isolated candidate | Match Schedule-Free controls for P97/P193, K1/K2/K5 and both seeds; verify K0 and zero-input edges separately; require Basis, direct flag-free GPT tests and same-assistant review before adoption |
+| #165 intermediate gate trajectories | Queued after #161 | Retain full states every200 updates in new matched depth repeats; relate real gate activations to short/length128 learning before a repair |
 | #163 CUDA repeatability before caching | Queued after159 | Characterize unchanged-control drift and declare a new execution-comparison protocol before revisiting the rejected cache candidate |
 | #153 local architecture site | Complete; self-reviewed at709b6f70; root server on127.0.0.1:8765 | Interactive source diagram, residual options, measured curves, config and training recipe; loopback server remains running after worktree cleanup |
 | #138 source model and early mixed-arithmetic screen | Self-reviewed; all48 replayed; fresh old-model compiled count drift retained separately | All cases retained, final-checkpoint replay, exact split/source hashes, train/heldout/longer accuracy and baselines;2000 updates alone cannot rule out grokking |
@@ -3357,3 +3358,11 @@ isolated screen; broader training, length/novel-input checks and direct GPT
 tests precede any flag-free production update. The current model is retained
 when a candidate regresses. Task161's separate gate diagnosis reads closed
 states and does not alter either active or historical learning trajectories.
+
+Task161's endpoint probes and finite-solution width oracle do not justify a
+repair: hard-depth gate saturation is seed-dependent, and inference removal
+of learned conditioning harms the already learned function. The original
+per-parameter norms are available, but intermediate weights and gradient
+vectors are not. Task165 records the needed matched repeats with full state
+history; all outcomes and differences from historical CUDA trajectories must
+remain visible. These diagnostics do not alter task162's temperature screen.

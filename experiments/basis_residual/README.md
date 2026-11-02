@@ -248,3 +248,21 @@ state remain available as evidence from the closed cohort.
 pins the copied complete state and source. Its six validation counts and
 accuracies agree exactly with the canonical CUDA observation; CPU loss is
 reported as a CPU replay and differs slightly in rounding.
+
+## Conditional-gain diagnosis
+
+Task161's [diagnostic review](../../review/basis_gain_transfer.md) reads all eight
+depth endpoints, training/validation rows and original parameter-gradient norms.
+One slow hard-depth seed has no saturated endpoint gates; the other has10.76%
+at length128. Removing conditioning from the learned endpoints hurts transfer,
+so this evidence does not justify deleting the gates or claiming saturation as
+the common cause. An independent finite-solution oracle confirms width-dependent
+Schedule-Free steps for aligned features, but not saturation at the actual
+Basis widths/rate in that isolated first update. The original warmup starts at
+zero rate. Full intermediate states are the next diagnostic, task165.
+
+Run `./run.py basis-gain-probe` to reproduce the three saved reports in
+`analysis/gain_*json`. No learning or final-test evaluation occurs. The newly
+generated easy-depth length128 validation is separately fingerprinted; hard
+depth reuses its original selection split. These post-hoc probes do not replace
+the declared training comparison or support a production architecture change.

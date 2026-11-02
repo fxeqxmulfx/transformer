@@ -1,0 +1,108 @@
+{
+  "scope": "Independent analytic oracle, FP64 actual Schedule-Free first step, opposite aligned fixed features. No transformer training or final-test predictions.",
+  "formula": "At w=0, each gradient coordinate=-1/4. Thus z_after=width*rate*(1/4)/(1/4+eps). Finite exact solution w_i=log(3)/width.",
+  "limitation": "This exhibits width-dependent steps in a realizable special case; it neither proves a defect nor explains the measured depth regression. Actual depth uses rate0.001, whose first step here is not saturated at width64 or128.",
+  "source_sha256": "cbc5d7fa58e9392e27e3e14087c882123cb8a08758d9884b4025433cdeffd426",
+  "cases": [
+    {
+      "width": 16,
+      "rate": 0.001,
+      "first_logit": 0.015999999360000024,
+      "analytic_first_logit": 0.015999999360000027,
+      "gain": 1.0079998290177228,
+      "derivative_fraction_of_maximum": 0.9999360027356872,
+      "initial_loss": 0.125,
+      "first_loss": 0.12103208412329504
+    },
+    {
+      "width": 16,
+      "rate": 0.01,
+      "first_logit": 0.1599999936000002,
+      "analytic_first_logit": 0.15999999360000025,
+      "gain": 1.0798297659315244,
+      "derivative_fraction_of_maximum": 0.993627208471318,
+      "initial_loss": 0.125,
+      "first_loss": 0.08827151279857881
+    },
+    {
+      "width": 64,
+      "rate": 0.001,
+      "first_logit": 0.0639999974400001,
+      "analytic_first_logit": 0.06399999744000011,
+      "gain": 1.031989080526714,
+      "derivative_fraction_of_maximum": 0.9989766987270554,
+      "initial_loss": 0.125,
+      "first_loss": 0.10951711037311535
+    },
+    {
+      "width": 64,
+      "rate": 0.01,
+      "first_logit": 0.6399999744000007,
+      "analytic_first_logit": 0.639999974400001,
+      "gain": 1.3095069096388088,
+      "derivative_fraction_of_maximum": 0.9042054728858343,
+      "initial_loss": 0.125,
+      "first_loss": 0.018143808737678492
+    },
+    {
+      "width": 128,
+      "rate": 0.001,
+      "first_logit": 0.12799999488000013,
+      "analytic_first_logit": 0.12799999488000022,
+      "gain": 1.063912759045739,
+      "derivative_fraction_of_maximum": 0.9959151592311614,
+      "initial_loss": 0.125,
+      "first_loss": 0.09508604086154988
+    },
+    {
+      "width": 128,
+      "rate": 0.01,
+      "first_logit": 1.2799999488000013,
+      "analytic_first_logit": 1.279999948800002,
+      "gain": 1.5648995354154798,
+      "derivative_fraction_of_maximum": 0.6808885148873751,
+      "initial_loss": 0.125,
+      "first_loss": 0.0021059748485725564
+    },
+    {
+      "width": 512,
+      "rate": 0.001,
+      "first_logit": 0.5119999795200001,
+      "analytic_first_logit": 0.5119999795200009,
+      "gain": 1.2505503984009958,
+      "derivative_fraction_of_maximum": 0.9372244978611023,
+      "initial_loss": 0.125,
+      "first_loss": 0.031112551868951014
+    },
+    {
+      "width": 512,
+      "rate": 0.01,
+      "first_logit": 5.119999795199995,
+      "analytic_first_logit": 5.119999795200008,
+      "gain": 1.9881189531845358,
+      "derivative_fraction_of_maximum": 0.023620934357497153,
+      "initial_loss": 0.125,
+      "first_loss": 0.11913005622898358
+    },
+    {
+      "width": 1024,
+      "rate": 0.001,
+      "first_logit": 1.0239999590399995,
+      "analytic_first_logit": 1.0239999590400017,
+      "gain": 1.4715020206934546,
+      "derivative_fraction_of_maximum": 0.7776858444819891,
+      "initial_loss": 0.125,
+      "first_loss": 0.00040606741227814985
+    },
+    {
+      "width": 1024,
+      "rate": 0.01,
+      "first_logit": 10.239999590400032,
+      "analytic_first_logit": 10.239999590400016,
+      "gain": 1.999928576822187,
+      "derivative_fraction_of_maximum": 0.00014284125435556298,
+      "initial_loss": 0.125,
+      "first_loss": 0.12496429096172867
+    }
+  ]
+}
