@@ -1,0 +1,404 @@
+diff --git a/python/src/lab/infrastructure/engine/compiled.py b/python/src/lab/infrastructure/engine/compiled.py
+index 4b8d5227..a19d0f25 100644
+--- a/python/src/lab/infrastructure/engine/compiled.py
++++ b/python/src/lab/infrastructure/engine/compiled.py
+@@ -30,6 +30,7 @@ from ...domain.training import MaxAutotune
+ from ..benchmarks.samplers import gather
+ from ..optim import build_optimizer, evaluation_weights, training_weights
+ from . import measure
++from .indices import SamplerIndices
+ from .loop import evaluate
+ 
+ SHAPES = 64
+@@ -40,6 +41,7 @@ class CompiledStepper:
+         torch._dynamo.reset()
+         torch._dynamo.config.recompile_limit = SHAPES
+         self.task, self.model, self.clock = task, model, clock
++        self.indices = SamplerIndices(task.device) if task.device.type == "cuda" else gather
+         self.observed, self.batch = experiment.benchmark.observed, experiment.evaluate.batch
+         self.clip = clipping(experiment.optimizer)
+         self.optimizer = build_optimizer(experiment.optimizer, model, None, experiment.budget.updates,
+@@ -76,7 +78,7 @@ class CompiledStepper:
+     def step(self, parts, rate, sampled):
+         if self.max_autotune:
+             torch.compiler.cudagraph_mark_step_begin()
+-        batch = self.task.inputs(gather(parts), static=True)
++        batch = self.task.inputs(self.indices(parts), static=True)
+         training_weights(self.optimizer)
+         if not self.model.training:
+             self.model.train()
+diff --git a/python/src/lab/infrastructure/engine/indices.py b/python/src/lab/infrastructure/engine/indices.py
+new file mode 100644
+index 00000000..322f648d
+--- /dev/null
++++ b/python/src/lab/infrastructure/engine/indices.py
+@@ -0,0 +1,33 @@
++"""Reuse sampler permutations on the training device.
++
++Source: GraphStepper.stage/upload at0f457bac. Unlike its pinned reusable
++buffer, this cache makes one blocking copy per sampler tensor/version and
++returns views into that copy. Batches that cross permutations concatenate
++their views. Sampler state stays on the CPU and its random stream is unchanged.
++"""
++
++import torch
++
++
++class SamplerIndices:
++    """A bounded cache of the most recent sampler tensor on one device.
++
++    Samplers replace their permutation or window tensor between draws.
++    Retaining the source prevents object-id reuse; its version also detects
++    PyTorch in-place changes. No mutable pinned host buffer is reused while
++    a device copy is outstanding. This cache is reconstructed after resume.
++    """
++
++    def __init__(self, device):
++        self.device = torch.device(device)
++        self.source = self.version = self.uploaded = None
++
++    def __call__(self, parts):
++        chunks = []
++        for source, start, count in parts:
++            version = source._version
++            if source is not self.source or version != self.version:
++                self.uploaded = source.to(self.device, copy=True)
++                self.source, self.version = source, version
++            chunks.append(self.uploaded[start:start + count])
++        return chunks[0] if len(chunks) == 1 else torch.cat(chunks)
+diff --git a/python/tests/test_sampler_indices.py b/python/tests/test_sampler_indices.py
+new file mode 100644
+index 00000000..5487b65f
+--- /dev/null
++++ b/python/tests/test_sampler_indices.py
+@@ -0,0 +1,111 @@
++"""Index transport preserves sampler clocks, batches and complete training states."""
++
++import copy
++from pathlib import Path
++import tempfile
++import unittest
++
++import torch
++
++from lab.dsl import ResidualMaxAutotune, describe, swap
++from lab.infrastructure.benchmarks.rotary import LabSampler
++from lab.infrastructure.benchmarks.samplers import EpochSampler, WindowSampler, gather
++from lab.infrastructure.engine.basis_residual import BasisTraining
++from lab.infrastructure.engine.indices import SamplerIndices
++from lab.infrastructure.engine.residual import ResidualCompiledStepper
++from lab.infrastructure.store import RunDirectory
++from test_residual_basis import tiny
++
++
++class PerBatchUpload(ResidualCompiledStepper):
++    """The0f457bac compiled input path; all model and optimizer code is shared."""
++    def __init__(self, *args):
++        super().__init__(*args)
++        self.indices = gather
++
++
++class CachedUpload(ResidualCompiledStepper):
++    """Exercise the cache on CPU too, where production keeps its original path."""
++    def __init__(self, *args):
++        super().__init__(*args)
++        self.indices = SamplerIndices(self.task.device)
++
++
++class SamplerIndicesTests(unittest.TestCase):
++    def setUp(self):
++        torch.set_num_threads(1)
++
++    def test_epochs_windows_wraps_and_restores_preserve_every_draw(self):
++        factories = (lambda: EpochSampler(17, 4, False, 11),
++                     lambda: EpochSampler(5, 13, True, 11),
++                     lambda: WindowSampler(37, 7, 11, block=3),
++                     lambda: LabSampler(17, 4, 11))
++        for factory in factories:
++            reference, candidate = factory(), factory()
++            cached = SamplerIndices("cpu")
++            for step in range(31):
++                if step in (7, 16):
++                    state = copy.deepcopy(candidate.state())
++                    candidate, cached = factory(), SamplerIndices("cpu")
++                    candidate.restore(state)
++                a, place_a = reference.next()
++                b, place_b = candidate.next()
++                torch.testing.assert_close(gather(a), cached(b), rtol=0, atol=0)
++                torch.testing.assert_close(reference.state(), candidate.state(), rtol=0, atol=0)
++                self.assertEqual(place_a, place_b)
++
++    def test_reuse_invalidation_and_prior_batches_are_independent_of_host_mutation(self):
++        cached = SamplerIndices("cpu")
++        source = torch.arange(12)
++        first = cached([(source, 2, 4)])
++        uploaded = cached.uploaded
++        torch.testing.assert_close(cached([(source, 6, 3)]), torch.tensor([6, 7, 8]))
++        self.assertIs(cached.uploaded, uploaded)
++        source.add_(20)
++        torch.testing.assert_close(cached([(source, 2, 4)]), torch.tensor([22, 23, 24, 25]))
++        self.assertIsNot(cached.uploaded, uploaded)
++        torch.testing.assert_close(first, torch.tensor([2, 3, 4, 5]))
++        another = source.clone()
++        uploaded = cached.uploaded
++        cached([(another, 0, 2)])
++        self.assertIs(cached.source, another)
++        self.assertIsNot(cached.uploaded, uploaded)
++
++    def trajectory(self, device):
++        spec = swap(tiny(), "execution", ResidualMaxAutotune(device=device))
++
++        def train(spec, path, stepper):
++            run = RunDirectory(path)
++            run.begin(describe(spec), {}, "Sampler transport equivalence fixture")
++            result = BasisTraining(spec, run, lambda row: None, stepper)()
++            self.assertEqual(result["stop"], {"step": spec.budget.updates, "reason": "budget"})
++            return run
++
++        with tempfile.TemporaryDirectory() as temporary:
++            root = Path(temporary)
++            control = train(spec, root / "control", PerBatchUpload)
++            candidate = train(spec, root / "candidate", CachedUpload)
++            train(swap(spec, "budget.updates", 2), root / "continued", CachedUpload)
++            continued = train(spec, root / "continued", CachedUpload)
++            expected = control.checkpoint("cpu")
++            for run in (candidate, continued):
++                state = run.checkpoint("cpu")
++                for key in ("model", "optimizer", "permutation", "batch_generator_state"):
++                    torch.testing.assert_close(expected[key], state[key], rtol=0, atol=0)
++                for key in ("cursor", "step", "examples_seen", "last_batch_size"):
++                    self.assertEqual(expected[key], state[key])
++                self.assertEqual(control.records("gradients"), run.records("gradients"))
++                a, b = control.records("history"), run.records("history")
++                self.assertEqual([row["validation"] for row in a], [row["validation"] for row in b])
++                self.assertTrue(all("test" not in row for row in b))
++
++    def test_compiled_cpu_cached_indices_preserve_full_trajectory_and_resume(self):
++        self.trajectory("cpu")
++
++    @unittest.skipUnless(torch.cuda.is_available(), "CUDA unavailable")
++    def test_compiled_cuda_cached_indices_preserve_full_trajectory_and_resume(self):
++        self.trajectory("cuda")
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/run.py b/run.py
+index 57e82afa..d78af80f 100755
+--- a/run.py
++++ b/run.py
+@@ -38,6 +38,7 @@ Python (the uv project in python/; an experiment is a folder under experiments/)
+     basis-residual <action>       matched current GPT on the original Basis tasks
+     basis-state-probe <label>     training/validation replay at both Schedule-Free states
+     basis-continue <decisions>    extend or censor explicit Basis chunk endpoints
++    index-transfer-profile       isolated CUDA upload wait and exact-trajectory timing
+ 
+ Together
+     verify                        build, audit, index, forbidden, reference integrity and test
+@@ -317,6 +318,11 @@ def basis_continue(arguments):
+              str(Path(arguments.decisions).resolve())], cwd=PYTHON)
+ 
+ 
++def index_transfer_profile(arguments):
++    execute(["uv", "run", "--locked", "python", str(ROOT / "scripts/index_transfer_profile.py"),
++             str(Path(arguments.output).resolve())], cwd=PYTHON)
++
++
+ def clean(_):
+     for directory in (PYTHON, ROOT / "optimizers", ROOT / "experiments", ROOT / "scripts"):
+         for cache in directory.rglob("__pycache__"):
+@@ -373,6 +379,9 @@ def main():
+     command = tasks.add_parser("basis-continue")
+     command.add_argument("decisions")
+     command.set_defaults(handler=basis_continue)
++    command = tasks.add_parser("index-transfer-profile")
++    command.add_argument("--output", default="review/index_transfer_profile.json")
++    command.set_defaults(handler=index_transfer_profile)
+     command = tasks.add_parser("test")
+     command.add_argument("patterns", nargs="*")
+     command.set_defaults(handler=test)
+diff --git a/scripts/index_transfer_profile.py b/scripts/index_transfer_profile.py
+new file mode 100644
+index 00000000..84f77e29
+--- /dev/null
++++ b/scripts/index_transfer_profile.py
+@@ -0,0 +1,179 @@
++"""Task159: separate an index-upload wait from queued GPU work and compare exact updates.
++
++The per-batch control is CompiledStepper's input path at0f457bac. The candidate
++caches whole sampler tensors on the device; both use the same model, compiled
++graphs and Schedule-Free AdamW. All timings synchronize at their boundaries.
++No final test is evaluated. The active Basis cohort must be between chunks.
++"""
++
++import argparse
++import copy
++from datetime import datetime, timezone
++import hashlib
++import json
++from pathlib import Path
++import statistics
++import time
++import traceback
++
++import torch
++
++from lab.domain.spec import describe
++from lab.domain.training import rate
++from lab.infrastructure.benchmarks import build_task
++from lab.infrastructure.benchmarks.samplers import gather
++from lab.infrastructure.engine.indices import SamplerIndices
++from lab.infrastructure.engine.loop import Clock
++from lab.infrastructure.engine.residual import ResidualCompiledStepper
++from lab.infrastructure.loader import load
++from lab.infrastructure.nn import build_model
++from lab.infrastructure.provenance import provenance
++from lab.infrastructure.store import replace
++
++ROOT = Path(__file__).resolve().parents[1]
++
++
++def cpu_tree(value):
++    if isinstance(value, torch.Tensor):
++        return value.detach().cpu().clone()
++    if isinstance(value, dict):
++        return {key: cpu_tree(part) for key, part in value.items()}
++    if isinstance(value, (list, tuple)):
++        return type(value)(cpu_tree(part) for part in value)
++    return copy.deepcopy(value)
++
++
++def upload_wait():
++    """Compare identical copies with and without queued dense matrix multiplies.
++
++    Event intervals include host enqueue gaps; they are not pure memcpy-kernel
++    timings. Separating the preceding compute interval prevents attributing all
++    blocking-call wall time to moving a few index bytes.
++    """
++    source = torch.arange(256)
++    generator = torch.Generator(device="cuda").manual_seed(159)
++    left = torch.randn(1024, 1024, device="cuda", generator=generator)
++    right = torch.randn(1024, 1024, device="cuda", generator=generator)
++    product = torch.empty_like(left)
++    for _ in range(5):
++        torch.mm(left, right, out=product)
++    torch.cuda.synchronize()
++    trials = []
++    for repeat in range(20):
++        for queued in ((False, True) if repeat % 2 == 0 else (True, False)):
++            torch.cuda.synchronize()
++            started, compute_done, copied = (torch.cuda.Event(enable_timing=True) for _ in range(3))
++            started.record()
++            if queued:
++                for _ in range(12):
++                    torch.mm(left, right, out=product)
++            compute_done.record()
++            before = time.perf_counter()
++            result = source.to("cuda")
++            wall_ms = (time.perf_counter() - before) * 1000
++            copied.record()
++            copied.synchronize()
++            torch.testing.assert_close(result.cpu(), source, rtol=0, atol=0)
++            trials.append({"queued": queued, "repeat": repeat, "upload_call_wall_ms": wall_ms,
++                           "preceding_gpu_interval_ms": started.elapsed_time(compute_done),
++                           "post_compute_gpu_interval_ms": compute_done.elapsed_time(copied)})
++    return {"index_bytes": source.numel() * source.element_size(), "trials": trials,
++            "interpretation": "CUDA event intervals include enqueue gaps; host upload-call time may include preceding queued work."}
++
++
++def training(spec, label, result):
++    result.update(label=label, experiment=describe(spec), trials=[])
++    task = build_task(spec.benchmark, spec.seeds.data, torch.device("cuda"))
++    model = build_model(spec.model, task.vocab, spec.seeds.model).cuda()
++    stepper = ResidualCompiledStepper(spec, task, model, Clock(torch.device("cuda")))
++    sampler = task.sampler(spec.budget.batch, spec.seeds.batch_seed)
++    start = time.monotonic()
++    stepper.prepare(sampler.sizes())
++    preparation_seconds = time.monotonic() - start
++    stepper.indices = gather
++
++    def updates(first, count):
++        for index in range(first, first + count):
++            parts, _ = sampler.next()
++            stepper.step(parts, rate(spec.optimizer.lr, spec.schedule, index), False)
++
++    updates(0, 100)
++    stepper.gradient_norms()
++    initial_model, initial_optimizer = cpu_tree(model.state_dict()), cpu_tree(stepper.state_dict())
++    initial_sampler = cpu_tree(sampler.state())
++    reference, trials = None, result["trials"]
++    for repeat in range(6):
++        order = ("per_batch", "cached") if repeat % 2 == 0 else ("cached", "per_batch")
++        for arm in order:
++            model.load_state_dict(initial_model)
++            stepper.load_state_dict(copy.deepcopy(initial_optimizer))
++            sampler.restore(initial_sampler)
++            stepper.indices = gather if arm == "per_batch" else SamplerIndices("cuda")
++            stepper.norms = []
++            updates(100, 20)
++            stepper.gradient_norms()
++            torch.cuda.synchronize()
++            torch.cuda.reset_peak_memory_stats()
++            started = time.perf_counter()
++            updates(120, 200)
++            torch.cuda.synchronize()
++            seconds = time.perf_counter() - started
++            norms = stepper.gradient_norms()
++            if len(norms) != 200 or not all(0 < value < float("inf") for value in norms):
++                raise ValueError("Every measured update must have a finite nonzero gradient")
++            final = {"model": cpu_tree(model.state_dict()), "optimizer": cpu_tree(stepper.state_dict()),
++                     "sampler": cpu_tree(sampler.state()), "gradients": norms}
++            if reference is None:
++                reference = final
++            else:
++                torch.testing.assert_close(reference, final, rtol=0, atol=0)
++            trials.append({"arm": arm, "repeat": repeat, "updates": 200, "seconds": seconds,
++                           "milliseconds_per_update": 1000 * seconds / 200,
++                           "peak_cuda_allocated_bytes": torch.cuda.max_memory_allocated(),
++                           "full_state_and_gradient_trace_exact": True})
++            print(label, arm, repeat, f"{1000 * seconds / 200:.4f}ms/update; exact state", flush=True)
++    medians = {arm: statistics.median(row["milliseconds_per_update"] for row in trials if row["arm"] == arm)
++               for arm in ("per_batch", "cached")}
++    torch.cuda.empty_cache()
++    result.update(preparation_seconds=preparation_seconds, median_ms_per_update=medians,
++                  cached_speedup=medians["per_batch"] / medians["cached"],
++                  scope="Warmed isolated throughput and exact320-update state; no generalization or final-test claim.")
++
++
++def run(output):
++    phase_path = ROOT / "experiments/basis_residual/runs/phase.json"
++    if phase_path.exists():
++        phase = json.loads(phase_path.read_text())
++        if phase["status"] not in ("awaiting_continuation", "learning_closed"):
++            raise RuntimeError("Wait for the active Basis GPU cohort to finish its chunk")
++    if not torch.cuda.is_available():
++        raise RuntimeError("This timing study requires an isolated CUDA device")
++    torch.set_num_threads(1)
++    result = {"started_utc": datetime.now(timezone.utc).isoformat(), "provenance": provenance("cuda"),
++              "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
++              "reference_commit": "0f457bac", "training": [],
++              "promotion_rule": "Every exact-state check passes; median arithmetic speedup>=1.05 and median hard-recall speedup>=1.0 across six order-balanced repetitions."}
++    choices = (("modular-p97", "adaptive_residual", "canonical-p97-s11"),
++               ("basis-hard-recall", "basis_residual", "canonical-large-recall-s0"))
++    output.parent.mkdir(parents=True, exist_ok=True)
++    try:
++        result["upload_wait"] = upload_wait()
++        for label, folder, key in choices:
++            spec = load(ROOT / "experiments" / folder).experiments[key]
++            record = {}
++            result["training"].append(record)
++            training(spec, label, record)
++            replace(output, json.dumps(result, indent=2, allow_nan=False) + "\n")
++        result["status"] = "complete"
++    except BaseException:
++        result.update(status="failed", traceback=traceback.format_exc())
++        raise
++    finally:
++        result["finished_utc"] = datetime.now(timezone.utc).isoformat()
++        replace(output, json.dumps(result, indent=2, allow_nan=False) + "\n")
++
++
++if __name__ == "__main__":
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("output", type=Path)
++    run(parser.parse_args().output)

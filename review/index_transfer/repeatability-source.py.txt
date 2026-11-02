@@ -1,0 +1,68 @@
+"""Separate baseline CUDA repeatability from a candidate input-cache effect."""
+
+import copy
+from datetime import datetime, timezone
+import hashlib
+import json
+from pathlib import Path
+import sys
+
+import torch
+
+from lab.dsl import ResidualMaxAutotune, describe, swap
+from lab.infrastructure.engine.basis_residual import BasisTraining
+from lab.infrastructure.provenance import provenance
+from lab.infrastructure.store import RunDirectory
+from test_residual_basis import tiny
+from test_sampler_indices import PerBatchUpload, CachedUpload
+
+
+def differences(left, right, prefix=""):
+    found = []
+    if isinstance(left, torch.Tensor):
+        if not torch.equal(left, right):
+            delta = (left.double() - right.double()).abs()
+            found.append({"field": prefix, "count": int((left != right).sum()),
+                          "numel": left.numel(), "max_absolute": float(delta.max())})
+    elif isinstance(left, dict):
+        assert left.keys() == right.keys()
+        for key in left:
+            found += differences(left[key], right[key], f"{prefix}/{key}")
+    elif isinstance(left, (list, tuple)):
+        assert len(left) == len(right)
+        for i, (a, b) in enumerate(zip(left, right, strict=True)):
+            found += differences(a, b, f"{prefix}/{i}")
+    elif left != right:
+        found.append({"field": prefix, "left": left, "right": right})
+    return found
+
+
+root = Path(sys.argv[1]).resolve()
+root.mkdir(parents=True, exist_ok=False)
+torch.set_num_threads(1)
+spec = swap(tiny(), "execution", ResidualMaxAutotune(device="cuda"))
+result = {"started_utc": datetime.now(timezone.utc).isoformat(),
+          "provenance": provenance("cuda"), "experiment": describe(spec),
+          "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+          "deterministic_algorithms": torch.are_deterministic_algorithms_enabled(), "trials": []}
+reference = None
+for arm, repeat in (("per_batch", 0), ("per_batch", 1), ("cached", 0), ("per_batch", 2), ("cached", 1)):
+    directory = RunDirectory(root / f"{arm}-{repeat}")
+    directory.begin(describe(spec), result["provenance"], "Task159 CUDA repeatability diagnostic")
+    trainer = BasisTraining(spec, directory, lambda row: None,
+                            PerBatchUpload if arm == "per_batch" else CachedUpload)
+    trainer()
+    state = directory.checkpoint("cpu")
+    for key in ("training_seconds", "diagnostic_seconds", "wall_seconds"):
+        del state[key]
+    if reference is None:
+        reference = copy.deepcopy(state)
+    difference = differences(reference, state)
+    result["trials"].append({"arm": arm, "repeat": repeat, "differences": difference,
+                            "checkpoint_sha256": hashlib.sha256((directory.path / "checkpoint.pt").read_bytes()).hexdigest()})
+    print(arm, repeat, "differences", difference, flush=True)
+    (root / "result.json").write_text(json.dumps(result, indent=2) + "\n")
+    del trainer
+    torch.cuda.empty_cache()
+result["finished_utc"] = datetime.now(timezone.utc).isoformat()
+(root / "result.json").write_text(json.dumps(result, indent=2) + "\n")

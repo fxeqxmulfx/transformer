@@ -1,0 +1,72 @@
++ /usr/bin/python3 scripts/reference_sources.py
+Verified 6 local reference archives and 18 frozen benchmark sources
++ uv run --locked python -m unittest discover -s tests
+....W1102 06:32:07.469000 430479 torch/utils/cpp_extension.py:183] [0/0] No CUDA runtime is found, using CUDA_HOME='/usr/local/cuda-13.4'
+...........................s........................{"label": "case", "step": 4, "validation": 0.0}
+{"label": "case", "step": 6, "validation": 0.0}
+..................................s...............<frozen linecache>:311: DeprecationWarning: Module globals is missing a __spec__.loader
+..........ss...................................s..............................s........s....................<frozen linecache>:311: DeprecationWarning: Module globals is missing a __spec__.loader
+................................................................s.....................sss...........................................................................s..........................................................................................s.................s..............
+----------------------------------------------------------------------
+Ran 502 tests in 797.480s
+
+OK (skipped=14)
++ uv run --locked python -m unittest discover -s ../optimizers/tests
+Uninstalled 2 packages in 0.70ms
+Installed 2 packages in 2ms
+....sUSDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+ERROR:2026-11-02 06:45:33 433972:433972 DeviceProperties.cpp:56] gpuGetDeviceCount failed with code 100
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-02 06:45:33 433972:433972 SyncActivityProfilerHandler.cpp:46] profiler_stop
+....s.sss......................sss..........ss................./home/misha/lean_projects/transformer/.claude/worktrees/generalization_transfer/optimizers/tests/test_schedule_free_adamw.py:170: UserWarning: Sparse CSR tensor support is in beta state. If you miss a functionality in the sparse tensor support, please submit a feature request to https://github.com/pytorch/pytorch/issues. (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/SparseCsrTensorImpl.cpp:49.)
+  ScheduleFreeAdamW([torch.nn.Parameter(torch.eye(2).to_sparse(layout=layout))])
+.........................ssss.......
+----------------------------------------------------------------------
+Ran 104 tests in 12.247s
+
+OK (skipped=14)

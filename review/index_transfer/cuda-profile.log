@@ -1,0 +1,26 @@
++ uv run --locked python /home/misha/lean_projects/transformer/.claude/worktrees/generalization_transfer/scripts/index_transfer_profile.py /home/misha/lean_projects/transformer/.claude/worktrees/generalization_transfer/review/index_transfer_profile.json
+Uninstalled 2 packages in 0.71ms
+Installed 2 packages in 3ms
+W1102 16:47:12.361000 39554 torch/_inductor/utils.py:2143] [0/0] Not enough SMs to use max_autotune_gemm mode
+/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+modular-p97 per_batch 0 5.4685ms/update; exact state
+Traceback (most recent call last):
+  File "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_transfer/scripts/index_transfer_profile.py", line 179, in <module>
+    run(parser.parse_args().output)
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_transfer/scripts/index_transfer_profile.py", line 165, in run
+    training(spec, label, record)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_transfer/scripts/index_transfer_profile.py", line 129, in training
+    torch.testing.assert_close(reference, final, rtol=0, atol=0)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/testing/_comparison.py", line 1689, in assert_close
+    raise error_metas[0].to_error(msg)
+AssertionError: Scalars are not equal!
+
+Expected 2.9336001873016357 but got 2.933600425720215.
+Absolute difference: 2.384185791015625e-07
+Relative difference: 8.127166753451262e-08
+
+The failure occurred for item ['gradients'][0]

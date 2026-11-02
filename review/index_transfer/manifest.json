@@ -1,0 +1,22 @@
+{
+  "base_commit": "ef1ec800",
+  "candidate_patch_sha256": "2bc4c6fcbfab9291ebad6aff83794b90935df305736c1d538824139aa0a0aa45",
+  "source_sha256": {
+    "python/src/lab/infrastructure/engine/compiled.py": "9e2eca759ddcc87b5a080c8b7639b0dc62b1a3588061cdd513141216878a3103",
+    "python/src/lab/infrastructure/engine/indices.py": "47075882b51ef9a6ea50e7076376b5a317236e320bc2e89e5372923eb2fd1974",
+    "python/tests/test_sampler_indices.py": "9bc5d1bfa4f444aba345e1abf9ee38434c28c98b7a86fc78d5571998b940d1b3",
+    "scripts/index_transfer_profile.py": "56d9f6b70705dcf03381d34f394c3922b837d9bb379519446a495bddc6075057",
+    "run.py": "65321f5d6fb9fbe8d671957aef7e1c77961f997b040a7245d300f61ea32e0294"
+  },
+  "decision": "Not retained: strict CUDA state and gradient equality failed. Unchanged controls also differ between repeats; this is not evidence of a candidate-specific numerical defect. No complete speedup comparison qualified.",
+  "evidence_sha256": {
+    "candidate.patch": "2bc4c6fcbfab9291ebad6aff83794b90935df305736c1d538824139aa0a0aa45",
+    "cpu-tests.log": "8340736a46d16d6bba1e528651098c219ed19473d177a99fc6b86657ad9fb700",
+    "cuda-profile.log": "24b6042461163f3d22e836b9b3dfa6b8a219ef8aa542934391998dc7c2a6fe73",
+    "cuda-tests.log": "257b8ce1cd885e36647b2ea1af5cbd435f17029e3c8368d4c38a2b3c6c7c03e8",
+    "full-cpu-tests.log": "8a55f435ecebb6892eb802684ad39b4a92b6bad362af61709df4eeefb1a136f5",
+    "profile.json": "7826adc55874f42688865e6fbace40498a850e7e0828e03f612706c830248d07",
+    "repeatability-source.py.txt": "01e63070c4487add0ae81a3a28386f84b0bb5f4b266ac0a642ad7eb2b77ed2b6",
+    "repeatability.json": "eb0e2e03ad27ece9b24e10194363ad55f7739139dcf770736190c52dfb18bc56"
+  }
+}

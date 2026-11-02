@@ -1,0 +1,97 @@
++ /usr/bin/python3 scripts/reference_sources.py
+Verified 6 local reference archives and 18 frozen benchmark sources
++ uv run --locked python -m unittest discover -s tests -k SamplerIndicesTests
+Uninstalled 2 packages in 2ms
+Installed 2 packages in 6ms
+Autotune Choices Stats:
+{"num_choices": 2, "num_triton_choices": 0, "best_kernel": "cpp_CppMicroGemmFP32Vec_0", "best_time": 0.0009010000212583691}
+AUTOTUNE bmm(2x16x4, 2x4x16)
+strides: [64, 4, 1], [64, 16, 1]
+dtypes: torch.float32, torch.float32
+  cpp_CppMicroGemmFP32Vec_0 0.0009 ms 100.0% 
+  bmm 0.0057 ms 15.8% 
+SingleProcess AUTOTUNE benchmarking takes 0.2530 seconds and 2.0594 seconds precompiling for 2 choices
+Autotune Choices Stats:
+{"num_choices": 2, "num_triton_choices": 0, "best_kernel": "cpp_CppMicroGemmFP32Vec_1", "best_time": 0.0012930004231748171}
+AUTOTUNE bmm(2x16x16, 2x16x4)
+strides: [256, 16, 1], [64, 4, 1]
+dtypes: torch.float32, torch.float32
+  cpp_CppMicroGemmFP32Vec_1 0.0013 ms 100.0% 
+  bmm 0.0059 ms 21.8% 
+SingleProcess AUTOTUNE benchmarking takes 0.2509 seconds and 2.0572 seconds precompiling for 2 choices
+/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+Autotune Choices Stats:
+{"num_choices": 2, "num_triton_choices": 0, "best_kernel": "cpp_CppMicroGemmFP32Vec_2", "best_time": 0.0008810002327663824}
+AUTOTUNE bmm(2x16x4, 2x4x16)
+strides: [64, 4, 1], [4, 1, 8]
+dtypes: torch.float32, torch.float32
+  cpp_CppMicroGemmFP32Vec_2 0.0009 ms 100.0% 
+  bmm 0.0015 ms 59.0% 
+SingleProcess AUTOTUNE benchmarking takes 0.2571 seconds and 2.0507 seconds precompiling for 2 choices
+Autotune Choices Stats:
+{"num_choices": 2, "num_triton_choices": 0, "best_kernel": "cpp_CppMicroGemmFP32Vec_4", "best_time": 0.0010619996828609146}
+AUTOTUNE bmm(8x16x4, 8x4x16)
+strides: [64, 4, 1], [64, 16, 1]
+dtypes: torch.float32, torch.float32
+  cpp_CppMicroGemmFP32Vec_4 0.0011 ms 100.0% 
+  bmm 0.0066 ms 16.1% 
+SingleProcess AUTOTUNE benchmarking takes 0.2537 seconds and 2.0587 seconds precompiling for 2 choices
+Autotune Choices Stats:
+{"num_choices": 2, "num_triton_choices": 0, "best_kernel": "cpp_CppMicroGemmFP32Vec_5", "best_time": 0.002525000127207022}
+AUTOTUNE bmm(8x16x16, 8x16x4)
+strides: [256, 16, 1], [64, 4, 1]
+dtypes: torch.float32, torch.float32
+  cpp_CppMicroGemmFP32Vec_5 0.0025 ms 100.0% 
+  bmm 0.0077 ms 32.8% 
+SingleProcess AUTOTUNE benchmarking takes 0.2489 seconds and 2.1384 seconds precompiling for 2 choices
+Autotune Choices Stats:
+{"num_choices": 2, "num_triton_choices": 0, "best_kernel": "cpp_CppMicroGemmFP32Vec_6", "best_time": 0.001041999894368928}
+AUTOTUNE bmm(8x16x4, 8x4x16)
+strides: [64, 4, 1], [64, 1, 4]
+dtypes: torch.float32, torch.float32
+  cpp_CppMicroGemmFP32Vec_6 0.0010 ms 100.0% 
+  bmm 0.0023 ms 44.5% 
+SingleProcess AUTOTUNE benchmarking takes 0.2558 seconds and 2.0450 seconds precompiling for 2 choices
+Autotune Choices Stats:
+{"num_choices": 2, "num_triton_choices": 0, "best_kernel": "cpp_CppMicroGemmFP32Vec_8", "best_time": 0.002894999852287583}
+AUTOTUNE bmm(16x14x4, 16x4x14)
+strides: [56, 4, 1], [56, 14, 1]
+dtypes: torch.float32, torch.float32
+  cpp_CppMicroGemmFP32Vec_8 0.0029 ms 100.0% 
+  bmm 0.0087 ms 33.4% 
+SingleProcess AUTOTUNE benchmarking takes 0.2490 seconds and 2.2853 seconds precompiling for 2 choices
+Autotune Choices Stats:
+{"num_choices": 2, "num_triton_choices": 0, "best_kernel": "cpp_CppMicroGemmFP32Vec_9", "best_time": 0.003656999979284592}
+AUTOTUNE bmm(16x14x14, 16x14x4)
+strides: [196, 14, 1], [56, 4, 1]
+dtypes: torch.float32, torch.float32
+  cpp_CppMicroGemmFP32Vec_9 0.0037 ms 100.0% 
+  bmm 0.0103 ms 35.4% 
+SingleProcess AUTOTUNE benchmarking takes 0.2475 seconds and 2.2150 seconds precompiling for 2 choices
+.W1102 16:40:03.987000 36484 torch/_inductor/utils.py:2143] [0/0] Not enough SMs to use max_autotune_gemm mode
+F..
+======================================================================
+FAIL: test_compiled_cuda_cached_indices_preserve_full_trajectory_and_resume (test_sampler_indices.SamplerIndicesTests.test_compiled_cuda_cached_indices_preserve_full_trajectory_and_resume)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_transfer/python/tests/test_sampler_indices.py", line 107, in test_compiled_cuda_cached_indices_preserve_full_trajectory_and_resume
+    self.trajectory("cuda")
+    ~~~~~~~~~~~~~~~^^^^^^^^
+  File "/home/misha/lean_projects/transformer/.claude/worktrees/generalization_transfer/python/tests/test_sampler_indices.py", line 94, in trajectory
+    torch.testing.assert_close(expected[key], state[key], rtol=0, atol=0)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/misha/lean_projects/transformer/python/.venv/lib/python3.15/site-packages/torch/testing/_comparison.py", line 1689, in assert_close
+    raise error_metas[0].to_error(msg)
+AssertionError: Tensor-likes are not equal!
+
+Mismatched elements: 2 / 288 (0.7%)
+Greatest absolute difference: 9.313225746154785e-10 at index (9, 0)
+Greatest relative difference: 1.1903727425988109e-07 at index (11, 5)
+
+The failure occurred for item ['state'][0]['base']
+
+----------------------------------------------------------------------
+Ran 4 tests in 155.198s
+
+FAILED (failures=1)
