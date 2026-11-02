@@ -1,0 +1,38 @@
+{
+  "reviewed_utc": "2026-11-02T13:09:20.620962+00:00",
+  "result_sha256": "5da4ab774b07bba0f2c796a8eb69721256caeed6b5108d52572d29f1bd239581",
+  "audit_source_sha256": "e50c49987b29b541ab97d7f88fb8144cb44111a4b0b53715d521d4b2d821f119",
+  "status_counts": {
+    "validation99": 1,
+    "censored": 1
+  },
+  "total_updates": 112200,
+  "all_gradients_finite_nonzero_and_complete": true,
+  "all_saved_models_finite": true,
+  "every_observed_first_crossing_retained": true,
+  "all_history_aggregates_unchanged_by_storage_reduction": true,
+  "cases": [
+    {
+      "label": "gptmini-hard-recall-s0",
+      "status": "validation99",
+      "step": 12200,
+      "gradient_records": 12200,
+      "zero_gradients": 0,
+      "first99_step": 12200,
+      "validation_count_differences_cpu_cuda": {},
+      "test_sequence": 0.97265625,
+      "checkpoint_sha256": "bc51ec9d06215f03e1246e28b2355a058387c7a87f9f9bed125643b7a306b6c6"
+    },
+    {
+      "label": "gptmini-hard-recall-s1",
+      "status": "censored",
+      "step": 100000,
+      "gradient_records": 100000,
+      "zero_gradients": 0,
+      "first99_step": null,
+      "validation_count_differences_cpu_cuda": {},
+      "test_sequence": 0.0,
+      "checkpoint_sha256": "f25f70d43c7573a454856b399a976ee799092ec2635640dd51d23471a6056414"
+    }
+  ]
+}

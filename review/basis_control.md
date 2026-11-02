@@ -56,5 +56,43 @@ not explain success. This is exploratory evidence, not a causal diagnosis.
 Both copied-state probes reproduce their complete per-class result hashes
 exactly, including all aggregate scores and both sets of head temperatures.
 
-The remaining learning outcome and paired final review are pending.
+The historical cohort is now closed: seed0 stops at 12,200 updates with
+99.0234% validation and 97.2656% reserved-test exact sequences; seed1 remains
+unresolved at 100,000, with zero exact validation/test sequences and 11.2549%
+validation token accuracy. Its last 50,000 updates stay between 10.5225% and
+11.4014% token accuracy. The explicit validation-only censoring decision is
+retained, including its rationale, endpoint hash and runner hash. It leaves the
+complete checkpoint unchanged. The qualitative decision is not represented
+as a preregistered numerical criterion or a proof against later grokking.
+
+A shared continuation driver adapts the already tested task160 procedure to
+these protocols' top-level fingerprint fields and holds the same exclusive
+cohort lock. Three focused tests pass in 14.797 seconds: malformed or omitted
+decisions are rejected, a real compiled continuation exactly matches the
+uninterrupted complete state and gradient trace across an epoch remainder,
+and final-test disclosure blocks further learning. Censoring preserves the
+checkpoint and explicitly records unresolved status.
+
+The independent audit verifies 112,200 consecutive finite, nonzero gradients,
+finite saved models, the first observed crossing, all raw history/gradient
+hashes, unchanged history aggregates and exact CPU/CUDA validation prediction
+counts. Its evidence and the final report are committed. The report's frozen
+learning engine is 25f2ea22; later source additions do not silently replace it.
+The new final tests were evaluated only after both cases became terminal.
+
+The historical model solves one of two seeds under this matched optimizer;
+the current model also solves one, requiring 123,550 updates for seed1. Neither
+whole architecture is established as uniformly better. An isolated learned
+score-temperature screen was frozen before these final-test predictions and
+is the remaining part of task162. No production GPT change follows from this
+control result alone.
 The same assistant performs this review; no delegated reviewer is used.
+
+The closure implementation passes 508 lab tests in 832.285 seconds and 104
+optimizer tests in 12.284 seconds before integration. After the temperature
+block lands and this change is rebased, the complete combined suite passes
+513 lab tests in 883.860 seconds and 104 optimizer tests in 15.210 seconds,
+with 13 and 14 CUDA skips respectively. The independent audit is repeated
+against the integrated report and reproduces every recorded field except its
+review timestamp. The shared continuation/audit commands also serve the
+separately frozen temperature study without changing its learning sources.

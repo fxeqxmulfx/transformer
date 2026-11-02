@@ -50,4 +50,38 @@ an exclusive cohort lock. After an interruption it retains the prior logs
 and saved state before resuming; after a completed chunk it requires an
 explicit continuation decision. Disclosed final tests prevent further learning.
 
-Results are pending.
+The new control cohort is closed:
+
+| Model / seed | First99% validation | Validation sequence | Reserved-test sequence |
+| --- | --- | --- | --- |
+| Historical GPTMini / 0 | 12,200 updates | 99.02% | 97.27% |
+| Historical GPTMini / 1 | Unresolved at 100,000 | 0% | 0% |
+| Current canonical / 0, task160 | Unresolved at 100,000 | 0% | 0% |
+| Current canonical / 1, task160 | 123,550 updates | 99.02% | 98.44% |
+
+The second historical seed has zero exact validation sequences at all 2,001
+observations. From update 50,000 onward, token accuracy ranges from 10.52% to
+11.40%; the endpoint is 11.25%. An explicit validation-only decision records
+it as censored at the initial boundary. This qualitative continuation decision
+is not a preregistered numeric rule and does not exclude later grokking. It
+retains the unchanged complete checkpoint, rather than treating the miss as
+an impossibility result. The paired final tests opened only after closure.
+
+The audit verifies all 112,200 finite, nonzero gradient records, the first
+observed crossing, unchanged history aggregates and exact agreement between
+CPU and CUDA validation prediction counts. The successful seed's reserved-test
+token accuracy is 99.66%; exact sequences remain the declared metric.
+
+Both architectures solve one of these two seeds under this recipe, with very
+different trajectories. The historical all-seed AdamW success does not transfer
+uniformly to Schedule-Free AdamW. These outcomes do not identify a single
+normalization defect or establish superiority across seeds. The separately
+frozen `attention_temperature` screen changes only a learned score gain in
+current GPT; no production architecture is replaced here.
+
+Sources and measurements are retained in `protocol.json`, `results.json` and
+`analysis/`. Replaying the historical report requires the frozen lab/cohort
+sources at 25f2ea22. The later generic audit reads the evidence without changing
+its engine. `./run.py basis-control-continue <decision.json>` makes explicit
+complete-state extensions or censorings at a completed boundary; the closed
+cohort rejects any new learning after its test disclosure.

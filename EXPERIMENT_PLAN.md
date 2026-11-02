@@ -36,6 +36,7 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 | #160 conditional gains on Basis | Done; same-assistant review at23154349 | Large parity improves with gains in both seeds; depth and small recall/parity regress; canonical hard-recall seed1 reaches first99% at123,550; reserved tests opened only after closure |
 | #161 conditional-gain transfer diagnosis | Queued after160 | Explain slower length128 generalization despite fitting short lengths; distinguish saturation, optimizer width scaling and learned length dependence before a specific new repair |
 | #162 matched original-GPTMini control | Active; historical control closed; isolated temperature screen frozen | Historical GPTMini solves one seed at 12,200 updates under Schedule-Free, with the second unresolved at 100,000; test learned score gains alone in current GPT before a repair |
+| #164 powered-division and Basis confirmation | Queued after #162 for a viable isolated candidate | Match Schedule-Free controls for P97/P193, K1/K2/K5 and both seeds; verify K0 and zero-input edges separately; require Basis, direct flag-free GPT tests and same-assistant review before adoption |
 | #163 CUDA repeatability before caching | Queued after159 | Characterize unchanged-control drift and declare a new execution-comparison protocol before revisiting the rejected cache candidate |
 | #153 local architecture site | Complete; self-reviewed at709b6f70; root server on127.0.0.1:8765 | Interactive source diagram, residual options, measured curves, config and training recipe; loopback server remains running after worktree cleanup |
 | #138 source model and early mixed-arithmetic screen | Self-reviewed; all48 replayed; fresh old-model compiled count drift retained separately | All cases retained, final-checkpoint replay, exact split/source hashes, train/heldout/longer accuracy and baselines;2000 updates alone cannot rule out grokking |
@@ -3335,3 +3336,24 @@ screen, not sufficient evidence for a production replacement. A useful result
 requires broader Basis and modular-division confirmation plus direct flag-free
 GPT tests. Larger temperatures in both successful and unsuccessful historical
 controls motivate this comparison but do not establish a cause.
+
+The matched historical GPTMini cohort has closed: seed0 crosses first99% at
+12,200 updates (97.27% reserved-test exact sequences), while seed1 is explicitly
+censored at 100,000 with no exact validation sequences and 11.25% token
+accuracy. Its last 50,000 updates remain flat. The full state is retained;
+this validation-only censoring does not rule out later grokking. Both the
+historical and current architectures solve one of the two matched seeds, with
+different successful seeds and unequal continuation horizons. All 112,200
+gradient records and CPU/CUDA endpoint prediction counts pass the independent
+audit. The separately frozen learned-temperature screen addresses one
+component; historical AdamW success is not a causal normalization diagnosis.
+
+The active user goal explicitly requires `(a / b)^K mod P` as well as Basis.
+Task164 records that requirement so a K=1-only arithmetic success cannot stand
+in for the requested power family. Its declared matrix will include P97/P193,
+K1/K2/K5 and model seeds11/17, with b nonzero and independent label/oracle
+checks including zero inputs and K0. A candidate must first survive the
+isolated screen; broader training, length/novel-input checks and direct GPT
+tests precede any flag-free production update. The current model is retained
+when a candidate regresses. Task161's separate gate diagnosis reads closed
+states and does not alter either active or historical learning trajectories.

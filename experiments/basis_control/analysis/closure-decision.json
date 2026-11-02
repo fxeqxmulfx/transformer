@@ -1,0 +1,13 @@
+{
+  "created_utc": "2026-11-02T13:06:36.150440+00:00",
+  "protocol_sha256": "e04dd220f6d894256a04f53f4ef606937908b87cb3bcac4c5c68a59002f39513",
+  "decisions": [
+    {
+      "label": "gptmini-hard-recall-s1",
+      "step": 100000,
+      "checkpoint_sha256": "f25f70d43c7573a454856b399a976ee799092ec2635640dd51d23471a6056414",
+      "action": "censor",
+      "reason": "Validation-only censoring at the completed initial 100000-update boundary: all 2001 observations have zero exact validation sequences; the last token accuracy is 0.1125488281, and from update50000 the token-accuracy range is 0.1052246094 to 0.1140136719. No late progress justifies an extension in this screen. This is an unresolved finite run, not evidence that a solution or later grokking is impossible. The decision uses no final-test predictions, and its qualitative continuation criterion was not a preregistered numeric threshold."
+    }
+  ]
+}

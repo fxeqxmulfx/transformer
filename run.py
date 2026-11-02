@@ -40,8 +40,10 @@ Python (the uv project in python/; an experiment is a folder under experiments/)
     basis-continue <decisions>    extend or censor explicit Basis chunk endpoints
     basis-recover <decision>      resume an interrupted Basis extension unchanged
     basis-control <action>        original GPTMini under the matched Schedule-Free recipe
+    basis-control-continue <file> record a validation-only continuation or censoring
     basis-control-probe <label>   copied-state training/validation and head-temperature probe
     attention-temperature <action> isolated learned score gains in current GPT
+    attention-temperature-continue <file> explicit continuation or censoring
 
 Together
     verify                        build, audit, index, forbidden, reference integrity and test
@@ -332,6 +334,14 @@ def basis_recover(arguments):
 def basis_control(arguments):
     execute(["uv", "run", "--locked", "python", str(ROOT / "experiments/basis_control/cohort.py"),
              arguments.action], cwd=PYTHON)
+    if arguments.action == "report":
+        execute(["uv", "run", "--locked", "python", str(ROOT / "scripts/audit_basis_study.py"),
+                 str(ROOT / "experiments/basis_control")], cwd=PYTHON)
+
+
+def basis_control_continue(arguments):
+    execute(["uv", "run", "--locked", "python", str(ROOT / "scripts/basis_continuation.py"),
+             str(ROOT / "experiments/basis_control"), str(Path(arguments.decisions).resolve())], cwd=PYTHON)
 
 
 def basis_control_probe(arguments):
@@ -343,6 +353,14 @@ def basis_control_probe(arguments):
 def attention_temperature(arguments):
     execute(["uv", "run", "--locked", "python", str(ROOT / "experiments/attention_temperature/cohort.py"),
              arguments.action], cwd=PYTHON)
+    if arguments.action == "report":
+        execute(["uv", "run", "--locked", "python", str(ROOT / "scripts/audit_basis_study.py"),
+                 str(ROOT / "experiments/attention_temperature")], cwd=PYTHON)
+
+
+def attention_temperature_continue(arguments):
+    execute(["uv", "run", "--locked", "python", str(ROOT / "scripts/basis_continuation.py"),
+             str(ROOT / "experiments/attention_temperature"), str(Path(arguments.decisions).resolve())], cwd=PYTHON)
 
 
 def clean(_):
@@ -407,6 +425,9 @@ def main():
     command = tasks.add_parser("basis-control")
     command.add_argument("action", choices=("freeze", "run", "report"))
     command.set_defaults(handler=basis_control)
+    command = tasks.add_parser("basis-control-continue")
+    command.add_argument("decisions")
+    command.set_defaults(handler=basis_control_continue)
     command = tasks.add_parser("basis-control-probe")
     command.add_argument("label")
     command.add_argument("--snapshot")
@@ -414,6 +435,9 @@ def main():
     command = tasks.add_parser("attention-temperature")
     command.add_argument("action", choices=("freeze", "run", "report"))
     command.set_defaults(handler=attention_temperature)
+    command = tasks.add_parser("attention-temperature-continue")
+    command.add_argument("decisions")
+    command.set_defaults(handler=attention_temperature_continue)
     command = tasks.add_parser("test")
     command.add_argument("patterns", nargs="*")
     command.set_defaults(handler=test)
