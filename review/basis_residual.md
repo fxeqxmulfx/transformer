@@ -53,3 +53,39 @@ therefore cannot be treated as an isolated model-speed comparison. The scored
 learning cohort is in progress with every final-test split still sealed.
 
 The same assistant performs this review; no delegated reviewer was used.
+
+The first twelve endpoints include both small recall pairs: canonical/gain
+crossings are25,100/38,350 and11,600/71,100 updates. Together with the depth
+results, these supply no Basis improvement so far. Every final test remains
+sealed. The complete cohort still needs hard recall and both parity sizes.
+
+A copied26,100-update canonical large recall checkpoint was replayed at both
+Schedule-Free states. The first512 training examples reach502/512 exact
+sequences at working weights and512/512 at averaged weights, while validation
+is0/512 at both. Validation token counts are718/4096 and712/4096. All28 scalar
+measurements reproduce the initial diagnostic exactly. This identifies a
+train/validation gap at this checkpoint; it is not an averaging-mode artifact,
+a causal normalization diagnosis, or a proof that further training cannot help.
+The diagnostic script is separate from the frozen training sources. Its source,
+protocol, copied checkpoint and complete raw-result hashes are in the compact
+evidence under `experiments/basis_residual/analysis/`.
+
+Three continuation checks pass in25.09 seconds. They reject missing or
+duplicate cases, changed endpoints, invalid budgets, re-opened successes
+and final-test disclosure. A real compiled six-update trajectory agrees
+exactly with a two-update checkpoint followed by the new continuation driver:
+parameters, optimizer, sampler, epoch remainder, update counts and every
+gradient record. Censoring the unresolved fixture preserves its checkpoint
+and budget-exit reason; it does not mark it successful. The full frozen
+protocol and training source files are unchanged.
+
+The report's storage reduction was checked on a temporary fixture: the
+retained raw file is byte-identical, every aggregate survives, and the
+endpoint per-class table is unchanged. Repeating reduction is rejected.
+This is a storage check, not a final-test evaluation of the active cohort.
+
+The subsequent full CPU verification passes495 lab tests in1208.03 seconds
+with13 skips and104 optimizer tests in12.28 seconds with14 skips. The three
+new continuation tests were added after that suite's discovery and pass
+separately as recorded above. CPU compilation used a fresh disk cache; the
+active Basis run kept its original source and CUDA cache throughout.

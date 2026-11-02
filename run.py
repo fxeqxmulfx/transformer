@@ -36,6 +36,8 @@ Python (the uv project in python/; an experiment is a folder under experiments/)
     context-gains <action>        freeze, run or report conditional gain recovery
     adaptive-residual <action>    matched transformer comparison to 99% validation
     basis-residual <action>       matched current GPT on the original Basis tasks
+    basis-state-probe <label>     training/validation replay at both Schedule-Free states
+    basis-continue <decisions>    extend or censor explicit Basis chunk endpoints
 
 Together
     verify                        build, audit, index, forbidden, reference integrity and test
@@ -298,6 +300,21 @@ def adaptive_residual(arguments):
 def basis_residual(arguments):
     execute(["uv", "run", "--locked", "python", str(ROOT / "experiments/basis_residual/cohort.py"),
              arguments.action], cwd=PYTHON)
+    if arguments.action == "report":
+        execute(["uv", "run", "--locked", "python",
+                 str(ROOT / "experiments/basis_residual/analysis/compact_report.py")], cwd=PYTHON)
+
+
+def basis_state_probe(arguments):
+    extra = [] if arguments.snapshot is None else ["--snapshot", str(Path(arguments.snapshot).resolve())]
+    execute(["uv", "run", "--locked", "python",
+             str(ROOT / "experiments/basis_residual/analysis/state_probe.py"), arguments.label, *extra], cwd=PYTHON)
+
+
+def basis_continue(arguments):
+    execute(["uv", "run", "--locked", "python",
+             str(ROOT / "experiments/basis_residual/analysis/continuation.py"),
+             str(Path(arguments.decisions).resolve())], cwd=PYTHON)
 
 
 def clean(_):
@@ -349,6 +366,13 @@ def main():
     command = tasks.add_parser("basis-residual")
     command.add_argument("action", choices=("freeze", "run", "report"))
     command.set_defaults(handler=basis_residual)
+    command = tasks.add_parser("basis-state-probe")
+    command.add_argument("label")
+    command.add_argument("--snapshot")
+    command.set_defaults(handler=basis_state_probe)
+    command = tasks.add_parser("basis-continue")
+    command.add_argument("decisions")
+    command.set_defaults(handler=basis_continue)
     command = tasks.add_parser("test")
     command.add_argument("patterns", nargs="*")
     command.set_defaults(handler=test)

@@ -32,9 +32,10 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 | #156 remove legacy architecture flags | Complete: canonical scaled GPT atdf1e9f7; legacy residual/XSA/RoPE switches removed; migrated callers and diagram checks pass | Remove existing residual-mixing, legacy XSA and per-layer RoPE architecture switches; one current model, migrated callers/tests and updated site; historical variants live in Git |
 | #157 existing Muon allocation failures | Queued, separate baseline regression | Reproduced on unchanged main; AdamW grokking work does not use Muon |
 | #158 repeated gradient search loop | Done: synthetic mechanism verified; arithmetic3 wins/1 tie did not meet the promotion rule | Complete evidence and rejected actual-GPT patch at93ffa071; production stays df1e9f7; broader checks continue in160 and the next mechanism in161 |
-| #159 batch-transfer profiling follow-up | Ready; queued behind the active Basis GPU cohort | Separate sampled host wait at index upload from GPU work; require isolated timing and exact trajectory/state preservation before an execution change |
+| #159 batch-transfer profiling follow-up | CPU preparation in an isolated checkout; GPU timing waits for Basis | Separate sampled host wait at index upload from GPU work; require isolated timing and exact trajectory/state preservation before an execution change |
 | #160 conditional gains on Basis | Active, user-requested extension | Standard small/easy and large/hard depth, recall and parity; two paired seeds; Schedule-Free AdamW; first99% sequence validation, reserved final test and length-transfer scores |
 | #161 conditional-gain transfer diagnosis | Queued after160 | Explain slower length128 generalization despite fitting short lengths; distinguish saturation, optimizer width scaling and learned length dependence before a specific new repair |
+| #162 matched original-GPTMini control | Queued after160 | Compare original GPTMini and current GPT under the same Schedule-Free AdamW on hard recall; historical AdamW results do not isolate architecture effects |
 | #153 local architecture site | Complete; self-reviewed at709b6f70; root server on127.0.0.1:8765 | Interactive source diagram, residual options, measured curves, config and training recipe; loopback server remains running after worktree cleanup |
 | #138 source model and early mixed-arithmetic screen | Self-reviewed; all48 replayed; fresh old-model compiled count drift retained separately | All cases retained, final-checkpoint replay, exact split/source hashes, train/heldout/longer accuracy and baselines;2000 updates alone cannot rule out grokking |
 | #140 local attention theory | Self-reviewed; seven theorems at730c0155 rechecked | Useful-set mass, weighted retrieval error and normalized head-width bounds; arbitrary rotary phases; distinguish a local constraint from a task lower bound |
@@ -3288,10 +3289,19 @@ full-logit versus supervised-position loss/gradients, free-generation semantics,
 complete Schedule-Free continuation and source correspondence. Keep the model
 candidate flag-free. Review this work in the same assistant.
 
-The first eight Basis cases have closed at their first target: easy depth
+The first twelve Basis cases have closed at their first target: easy depth
 ties at200 updates in both seeds. Hard depth is slower with gains in both
 seeds: canonical/candidate600/2000 and1600/7800. Short-length validation fits
 in both models, so task161 will investigate the length-transfer difference.
+Small recall also slows with gains:25,100/38,350 and11,600/71,100 updates.
 These are validation findings; every Basis final-test score remains sealed
-while recall and parity run. Do not turn this association into a causal claim
+while hard recall and parity run. Do not turn this association into a causal claim
 about gate saturation or width scaling without measuring the actual paths.
+An exploratory26,100-update hard-recall checkpoint probe has a large
+train/validation gap at both Schedule-Free working and averaged weights.
+It does not explain that gap or rule out later grokking. Retain its copied
+state, independent CPU replay and source hashes beside the complete cohort.
+Task162 adds the missing contemporary original-GPTMini control, under the
+same Schedule-Free optimizer and original hard-recall data. Historical Basis
+successes changed both architecture and optimizer relative to this cohort,
+so they cannot alone locate a defect in normalization or residual paths.

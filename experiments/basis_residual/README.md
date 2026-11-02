@@ -40,6 +40,16 @@ The initial100,000-update chunk is a continuation point, not an impossibility
 result. Promising uncrossed cases need longer training before final test.
 The second seed reverses model order in each task/size pair.
 
+After a complete chunk, `./run.py basis-continue <decisions.json>` records
+an explicit validation-only decision for every unfinished case. Each record
+names its label, exact checkpoint hash and update count, an `extend` or
+`censor` action, and its reason; extensions also name a larger `updates`
+budget. The document pins `protocol_sha256`. This separate runner preserves
+the original frozen sources, retains each previous checkpoint, changes only
+the budget and stops at the first99% crossing. A censored case remains an
+unresolved result. Every decision and runner hash travels with the phase;
+closed learning and disclosed final tests cannot be reopened by this command.
+
 Original Basis samples can repeat inputs across splits. We keep those
 splits intact, disclose their overlap, and separately report test examples
 whose inputs never occurred in training. For parity, the input key is its
@@ -59,3 +69,51 @@ fingerprints. Complete-state checkpoints preserve model, optimizer,
 sampler, epoch remainders and gradient traces. Report every pair and every
 unresolved case; retain the current production model if the candidate
 regresses on a Basis task. Final test never chooses the architecture.
+
+Reporting first runs the unchanged frozen reporter. A separate storage
+reduction then retains its complete output under ignored `runs/`, records
+that file's hash, and removes only repeated per-class history tables from
+the tracked summary. Every history aggregate and all endpoint class tables
+remain unchanged. This does not change evaluation or select an endpoint.
+
+## Validation findings while the cohort continues
+
+The first twelve runs reached99% sequence accuracy. These are validation
+crossings, not final-test results; the remaining hard recall and parity
+runs still determine the complete comparison.
+
+| Task / model | Seed | Canonical updates | Conditional-gain updates |
+| --- | ---: | ---: | ---: |
+| Easy depth / small | 0 | 200 | 200 |
+| Easy depth / small | 1 | 200 | 200 |
+| Hard depth / large | 0 | 600 | 2,000 |
+| Hard depth / large | 1 | 1,600 | 7,800 |
+| Easy recall / small | 0 | 25,100 | 38,350 |
+| Easy recall / small | 1 | 11,600 | 71,100 |
+
+Easy-depth ties have200-update observation resolution. Both hard-depth
+models fit short sequences, but the conditional gains transfer to length128
+later. Both easy-recall pairs also take more updates with gains. No measured
+Basis improvement has been established in these completed pairs.
+
+An exploratory checkpoint probe of canonical large hard recall at26,100
+updates distinguishes memorization from a Schedule-Free weight-state
+mismatch. It evaluates the same first512 training rows and all512 validation
+rows at both working and averaged weights, on CPU:
+
+| Weights | Training subset sequence | Validation sequence | Validation token |
+| --- | ---: | ---: | ---: |
+| Working | 98.0469% | 0% | 17.5293% |
+| Averaged | 100% | 0% | 17.3828% |
+
+The gap occurs at both weight states. It does not establish a cause, measure
+the entire training set, or rule out later grokking. The copied checkpoint
+and complete per-class measurements are retained in ignored `runs/probes/`;
+[the compact evidence](analysis/canonical-large-recall-s0-step26100.json)
+records their hashes. The replay program reproduces all28 aggregate
+measurements exactly and never reads final test or changes the active run:
+
+```sh
+./run.py basis-state-probe canonical-large-recall-s0 \
+  --snapshot experiments/basis_residual/runs/probes/canonical-large-recall-s0-step26100.pt
+```
