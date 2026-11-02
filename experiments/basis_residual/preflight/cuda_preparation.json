@@ -1,0 +1,26 @@
+[
+  {
+    "label": "adaptive-large-depth-s0",
+    "preparation_seconds": 166.02861504299653,
+    "peak_cuda_allocated_bytes": 168967680,
+    "initial_validation_sequence_accuracy": 0.0,
+    "full_state_preserved": true,
+    "updates": 0
+  },
+  {
+    "label": "adaptive-large-recall-s0",
+    "preparation_seconds": 235.27887817600276,
+    "peak_cuda_allocated_bytes": 422605312,
+    "initial_validation_sequence_accuracy": 0.0,
+    "full_state_preserved": true,
+    "updates": 0
+  },
+  {
+    "label": "adaptive-large-parity-s0",
+    "preparation_seconds": 155.16256589299883,
+    "peak_cuda_allocated_bytes": 113093120,
+    "initial_validation_sequence_accuracy": 0.0,
+    "full_state_preserved": true,
+    "updates": 0
+  }
+]

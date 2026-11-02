@@ -30,6 +30,11 @@ completed optimizer phase passes104 tests with14 CUDA skips in12.86 seconds.
 The existing CUDA ScheduleFreeMuon allocation failures remain task157 and are
 not claimed fixed by running CPU checks. This cohort uses Schedule-Free AdamW.
 
+The complete corrected rerun at18112982 is green:495 lab tests in776.99 seconds
+with13 skips, and104 optimizer tests in12.58 seconds with14 skips. CUDA was
+hidden for this CPU suite so the Basis cohort remained the only GPU learning
+workload. Focused fullgraph CUDA preparation is checked separately below.
+
 Original Basis is sampled with replacement. All depth and recall validation
 examples are novel against training, but only157/512 parity validation examples
 are novel; its final sampled test contains184/512 novel examples. No predictions
@@ -40,7 +45,11 @@ the generator's input key, which is the prompt for generated answers.
 The source/data/runtime protocol is frozen before learning. GPU preparation
 checks take zero training updates and compare the complete model/optimizer frame
 before and afterward. Their timings are preparation measurements, not learning
-or isolated throughput results. The large-depth check has passed; remaining
-preparation checks and the scored learning cohort are still in progress.
+or isolated throughput results. All three large-model checks passed, including
+parity free generation and both recall training batch sizes. Peak allocated CUDA
+memory was161.14MiB for depth,403.03MiB for recall and107.85MiB for parity. These
+checks populated compilation caches; preparation times in the scored cohort
+therefore cannot be treated as an isolated model-speed comparison. The scored
+learning cohort is in progress with every final-test split still sealed.
 
 The same assistant performs this review; no delegated reviewer was used.
