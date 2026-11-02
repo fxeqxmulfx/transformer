@@ -35,9 +35,9 @@ Python3.15's sampling profiler where available and CUDA-aware PyTorch traces.
 | #159 batch-transfer profiling follow-up | Done; self-reviewed atb9f2a4a2; candidate rejected | Same2KB copy waits0.024ms idle versus6.745ms with queued work; exact CUDA state checks fail even between control repeats; no input-cache change retained |
 | #160 conditional gains on Basis | Done; same-assistant review at23154349 | Large parity improves with gains in both seeds; depth and small recall/parity regress; canonical hard-recall seed1 reaches first99% at123,550; reserved tests opened only after closure |
 | #161 conditional-gain transfer diagnosis | Done; same-assistant review atd652d62d | Explain slower length128 generalization despite fitting short lengths; distinguish saturation, optimizer width scaling and learned length dependence before a specific new repair |
-| #162 matched original-GPTMini control | Active; historical control closed; isolated temperature screen learning | Historical GPTMini solves one seed at 12,200 updates under Schedule-Free, with the second unresolved at 100,000; test learned score gains alone in current GPT before a repair |
+| #162 matched original-GPTMini control | Closed; temperature candidate rejected under the new cost rule | Historical GPTMini solves one seed at12,200; temperature seeds have no exact validation sequences at24,400; actual later states at100,000/62,900 retained and final tests unopened |
 | #164 powered-division and Basis confirmation | Queued after #162 for a viable isolated candidate | Match Schedule-Free controls for P97/P193, K1/K2/K5 and both seeds; verify K0 and zero-input edges separately; require Basis, direct flag-free GPT tests and same-assistant review before adoption |
-| #165 intermediate gate trajectories | Preparing declared full-state repeats; GPU queued | Retain full states every200 updates in new matched depth repeats; relate real gate activations to short/length128 learning before a repair |
+| #165 intermediate gate trajectories | Deferred; untrained draft preserved | No depth repeats until an analytical prediction and cheap diagnostic justify them; apply the user's twice-best cost cap before any launch |
 | #163 CUDA repeatability before caching | Queued after159 | Characterize unchanged-control drift and declare a new execution-comparison protocol before revisiting the rejected cache candidate |
 | #153 local architecture site | Complete; self-reviewed at709b6f70; root server on127.0.0.1:8765 | Interactive source diagram, residual options, measured curves, config and training recipe; loopback server remains running after worktree cleanup |
 | #138 source model and early mixed-arithmetic screen | Self-reviewed; all48 replayed; fresh old-model compiled count drift retained separately | All cases retained, final-checkpoint replay, exact split/source hashes, train/heldout/longer accuracy and baselines;2000 updates alone cannot rule out grokking |
@@ -63,6 +63,28 @@ The user explicitly requested self-review by the same assistant. The
 findings and fresh replay discrepancies; it is not independent review.
 The long phase is finished. Its two-hour budget must not be reused for
 the separate deep numerical or residual cohorts.
+
+**Current research policy, 2026-11-02:** the user's later instructions supersede
+the open-ended "until99%" continuation policy: stop at twice the best comparable
+run, diagnose the failure, and think through the next intervention before
+spending more laptop time. A new run needs a written mathematical mechanism,
+a falsifiable prediction, a competing explanation and a cheap diagnostic.
+Declare the matched reference, both update and elapsed-time caps, evaluation
+cadence and a bounded preparation allowance before launch. Stop at first99%
+or either cost cap. Report compilation and diagnostic time separately rather
+than hiding them as free overhead. If no comparable baseline exists, declare
+a small baseline budget first. A cost rejection does not prove eventual
+grokking impossible or establish a defect in the model.
+
+For the temperature screen the matched Schedule-Free best is12,200 updates,
+so the new update cap is24,400. The instruction arrived after the retained
+100,000/62,900-update states had been trained; preserve those actual outcomes
+and do not relabel them as checkpoints saved at the new cap. Training stopped
+on receipt. Both runs had zero exact validation sequences at24,400. The later
+seed1 state reaches81.25%, which remains below the99% target. Final tests stay
+unopened. Task165's queued depth repeats are deferred. Task164 still requires
+powered division and Basis, but only after a candidate survives this reasoning
+and cost gate. No production architecture change is justified yet.
 
 **Task154 authorization, 2026-11-02:** the user requested rechecking fixed
 scaling in longer runs and specified "until 99%". Continue both original P97

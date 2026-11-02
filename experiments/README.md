@@ -15,7 +15,7 @@ it, which git ignores.
 | [`adaptive_residual`](adaptive_residual) | 8 | Does a conditional post-RMS gain improve first99% validation over the current corrected, fixed-scale GPT on two matched seeds at P97/P193? |
 | [`basis_residual`](basis_residual) | 24 | Does the same conditional gain help original Basis depth, recall and parity at small/easy and large/hard settings, with matched seeds and Schedule-Free AdamW? |
 | [`basis_control`](basis_control) | 2 | Does the historically successful GPTMini solve hard recall under the same Schedule-Free AdamW recipe as current GPT? |
-| [`attention_temperature`](attention_temperature) | 2 | Does changing only learned per-head score temperature improve current GPT's hard-recall generalization under the same Schedule-Free recipe? |
+| [`attention_temperature`](attention_temperature) | 2 | Learned score gains fail the new twice-best cost cap: both seeds have0% exact validation at24,400 updates; later100,000/62,900 states are retained, learning closed and final tests unopened. |
 | [`residual_scaled_long`](residual_scaled_long) | 2 | Both complete-state scaled continuations cross 99% validation at 24k versus 32k/37k for ordinary addition; final test 99.227%/98.711%; parents remain unchanged. |
 | [`residual_gradient_paths`](residual_gradient_paths) | 36 | Known-solution CPU controls: post-RMS gates recover in 12/12 cases; pre-RMS gates in 4/12; depth scaling keeps transport gain at least 1/2 in the linear witness. |
 | [`residual_generalization`](residual_generalization) | 16 | Closed two-hour cohort: ordinary residuals reach99.96–100% test; scaling generalizes earlier at23k; depth attention remains near chance within its allowance. All16 cases and execution failures retained. |

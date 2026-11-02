@@ -1,0 +1,21 @@
+{
+  "status": "interrupted",
+  "started_utc": "2026-11-02T13:12:52.301189+00:00",
+  "cases": {
+    "temperature-hard-recall-s0": {
+      "status": "budget",
+      "preparation_seconds": 24.481719553999937,
+      "stop": {
+        "step": 100000,
+        "reason": "budget"
+      },
+      "elapsed_seconds": 3660.982202446001,
+      "checkpoint_sha256": "69ea46b374b2d5fcdf684473866de30d660926b6bab61971837e0db83519fb0a"
+    },
+    "temperature-hard-recall-s1": {
+      "status": "interrupted",
+      "preparation_seconds": 24.379082175000804,
+      "traceback": "Traceback (most recent call last):\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/experiments/attention_temperature/cohort.py\", line 124, in run\n    result = trainer()\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/engine/loop.py\", line 252, in __call__\n    self.train()\n    ~~~~~~~~~~^^\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/engine/loop.py\", line 279, in train\n    size, measurements = self.stepper.step(parts, learning_rate, sampled)\n                         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/engine/residual.py\", line 59, in step\n    return super().step(parts, rate, sampled)\n           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/engine/compiled.py\", line 79, in step\n    batch = self.task.inputs(gather(parts), static=True)\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/benchmarks/synthetic/training.py\", line 62, in inputs\n    return self.splits[\"train\"].select(indices, static)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/benchmarks/synthetic/rows.py\", line 116, in select\n    return self.rows.index_select(0, indices.to(self.rows.device))\n                                     ~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nKeyboardInterrupt\n"
+    }
+  }
+}

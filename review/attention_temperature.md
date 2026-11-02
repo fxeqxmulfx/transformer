@@ -31,8 +31,8 @@ studies. No final-test predictions choose the intervention. Two runs are a
 screen; broader Basis and modular-division confirmation, direct GPT tests and
 same-assistant review are required before a production change.
 
-All review work is performed by the same assistant. The learning outcome
-remains pending.
+All review work is performed by the same assistant. The later policy closure
+and its evidence are recorded below.
 
 Actual-shape CUDA preparation passes for 32- and 64-example training batches
 and the 64-example validation batch. It takes 224.290 seconds, peaks at
@@ -66,6 +66,24 @@ checkpoint and optimizer/sampler trajectory are not modified by this probe.
 
 The diagnostic integration passes 513 lab tests in945.769 seconds with13
 CUDA skips and104 optimizer tests in12.760 seconds with14 skips. The active
-cohort's frozen engine and top-level sources remain unchanged. Seed0's first
-100,000-update boundary has39.5264% validation token accuracy and no exact
-sequences; seed1 is still learning, and continuation decisions are pending.
+cohort's frozen engine and top-level sources remain unchanged.
+
+The user later imposed a twice-best cost cap and asked for deeper reasoning
+before experiments. Training was interrupted at14:52:39 UTC on2026-11-02.
+Seed0's already completed100,000-update state has no exact validation
+sequences and39.5264% correct tokens. Seed1's last complete state at62,900
+has416/512 exact sequences (81.25%) and97.3389% correct tokens. Both had
+0/512 exact sequences at24,400, twice the matched GPTMini control's12,200.
+The candidate is rejected under that cost rule, with no claim that more
+training could never help. Neither later endpoint is presented as a state
+saved at the retrospective cap.
+
+The closure audit checks all162,900 gradient records, complete-state steps,
+finite model tensors, original source/data declarations, checkpoint hashes
+and unchanged raw-record hashes. It preserves the original interrupted phase
+and traceback and marks both cases censored. Final tests remain unopened;
+only validation observations select this decision. The original frozen recipe
+is unchanged, and the existing closed-study guard prevents a learning restart.
+This documentation and evidence change requires no new training or model test
+suite: the prior source checks still apply, while the closure and seal are
+audited directly.

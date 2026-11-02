@@ -1,0 +1,215 @@
+{
+  "closed_utc": "2026-11-02T15:19:08.970934+00:00",
+  "protocol_sha256": "20de7e9b2fb25c87ddd5e4f688ab8893d50d15debbf5eb38cc1c981d91a37ade",
+  "audit_source_sha256": "134436157853e75fa5634421dbcc9470fa400916abf901b6d3e7f8cd1c7e12d0",
+  "user_stop": {
+    "requested_utc": "2026-11-02T14:52:39.487753+00:00",
+    "pid": 67851,
+    "command": "/home/misha/lean_projects/transformer/python/.venv/bin/python /home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/experiments/attention_temperature/cohort.py run",
+    "signal": "SIGINT",
+    "reason": "User now requires stopping at twice the best comparable run and deeper analysis before more GPU experiments. Matched hard-recall Schedule-Free best12200; cap24400 updates. Preserve all prior outcomes and latest complete state."
+  },
+  "previous_phase": {
+    "status": "interrupted",
+    "started_utc": "2026-11-02T13:12:52.301189+00:00",
+    "cases": {
+      "temperature-hard-recall-s0": {
+        "status": "budget",
+        "preparation_seconds": 24.481719553999937,
+        "stop": {
+          "step": 100000,
+          "reason": "budget"
+        },
+        "elapsed_seconds": 3660.982202446001,
+        "checkpoint_sha256": "69ea46b374b2d5fcdf684473866de30d660926b6bab61971837e0db83519fb0a"
+      },
+      "temperature-hard-recall-s1": {
+        "status": "interrupted",
+        "preparation_seconds": 24.379082175000804,
+        "traceback": "Traceback (most recent call last):\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/experiments/attention_temperature/cohort.py\", line 124, in run\n    result = trainer()\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/engine/loop.py\", line 252, in __call__\n    self.train()\n    ~~~~~~~~~~^^\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/engine/loop.py\", line 279, in train\n    size, measurements = self.stepper.step(parts, learning_rate, sampled)\n                         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/engine/residual.py\", line 59, in step\n    return super().step(parts, rate, sampled)\n           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/engine/compiled.py\", line 79, in step\n    batch = self.task.inputs(gather(parts), static=True)\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/benchmarks/synthetic/training.py\", line 62, in inputs\n    return self.splits[\"train\"].select(indices, static)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/benchmarks/synthetic/rows.py\", line 116, in select\n    return self.rows.index_select(0, indices.to(self.rows.device))\n                                     ~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nKeyboardInterrupt\n"
+      }
+    }
+  },
+  "previous_phase_sha256": "fbf86dd88800e4b00e7ef83dafeb6207b0dd90203bebad5b61c6e604211ebbf1",
+  "policy": {
+    "best_comparable_label": "gptmini-hard-recall-s0",
+    "first99_updates": 12200,
+    "twice_updates": 24400,
+    "retrospective_cutoff_only": true,
+    "final_test_evaluated": false,
+    "interpretation": "Both candidates fail the newly requested cost rule. Preserve their actual later checkpoints; this is not evidence that eventual grokking is impossible."
+  },
+  "cases": [
+    {
+      "label": "temperature-hard-recall-s0",
+      "status": "censored",
+      "step": 100000,
+      "previous_phase_record": {
+        "status": "budget",
+        "preparation_seconds": 24.481719553999937,
+        "stop": {
+          "step": 100000,
+          "reason": "budget"
+        },
+        "elapsed_seconds": 3660.982202446001,
+        "checkpoint_sha256": "69ea46b374b2d5fcdf684473866de30d660926b6bab61971837e0db83519fb0a"
+      },
+      "checkpoint_sha256": "69ea46b374b2d5fcdf684473866de30d660926b6bab61971837e0db83519fb0a",
+      "raw_record_sha256": {
+        "diagnostics.jsonl": "05432973da45fd5739e6e21f36de3f39776e2d2f2f1d5a76140c83b25629f1dd",
+        "experiment.json": "673dab428e97122cfbfd1d47eaaa6f8a2cc85eeae67907a87aef48c25b969931",
+        "gradients.jsonl": "2db02e405546de23f9866f0c53b9752a85596b05016169b7488b623581ab53f7",
+        "history.jsonl": "f974c5a5a11a32b7bc91de34bc218c6bf0f4380fd2b67c65d3358162fda85d47",
+        "result.json": "e808243a5f7ba96bc2f30179bc93489daaab51c69875043e034bc3410fdbcc09"
+      },
+      "gradient_count": 100000,
+      "all_gradients_finite_nonzero": true,
+      "last_diagnostic_step": 100000,
+      "at_new_update_cap": {
+        "step": 24400,
+        "examples_seen": 1559136,
+        "epochs_seen": 77.9568,
+        "training_seconds": 828.5741618719985,
+        "wall_seconds": 907.5006836760003,
+        "last_batch_size": 64,
+        "validation": {
+          "loss": 7.30457079410553,
+          "example_loss": 7.3045706152915955,
+          "token_accuracy": 0.199951171875,
+          "sequence_accuracy": 0.0,
+          "balanced_accuracy": 0.20021237164808284,
+          "transition_accuracy": 0.19931439764936337,
+          "target_count": 4096,
+          "correct": 819,
+          "example_count": 512,
+          "exact": 0,
+          "transition_count": 4084
+        }
+      },
+      "endpoint": {
+        "step": 100000,
+        "examples_seen": 6389792,
+        "epochs_seen": 319.4896,
+        "training_seconds": 3407.3743657530486,
+        "wall_seconds": 3660.7738699300007,
+        "last_batch_size": 64,
+        "validation": {
+          "loss": 4.713778972625732,
+          "example_loss": 4.713779091835022,
+          "token_accuracy": 0.395263671875,
+          "sequence_accuracy": 0.0,
+          "balanced_accuracy": 0.3937423091076045,
+          "transition_accuracy": 0.3952007835455436,
+          "target_count": 4096,
+          "correct": 1619,
+          "example_count": 512,
+          "exact": 0,
+          "transition_count": 4084
+        }
+      },
+      "training_seconds": 3407.3743657530486,
+      "wall_seconds": 3660.8338785680007
+    },
+    {
+      "label": "temperature-hard-recall-s1",
+      "status": "censored",
+      "step": 62900,
+      "previous_phase_record": {
+        "status": "interrupted",
+        "preparation_seconds": 24.379082175000804,
+        "traceback": "Traceback (most recent call last):\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/experiments/attention_temperature/cohort.py\", line 124, in run\n    result = trainer()\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/engine/loop.py\", line 252, in __call__\n    self.train()\n    ~~~~~~~~~~^^\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/engine/loop.py\", line 279, in train\n    size, measurements = self.stepper.step(parts, learning_rate, sampled)\n                         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/engine/residual.py\", line 59, in step\n    return super().step(parts, rate, sampled)\n           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/engine/compiled.py\", line 79, in step\n    batch = self.task.inputs(gather(parts), static=True)\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/benchmarks/synthetic/training.py\", line 62, in inputs\n    return self.splits[\"train\"].select(indices, static)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/benchmarks/synthetic/rows.py\", line 116, in select\n    return self.rows.index_select(0, indices.to(self.rows.device))\n                                     ~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nKeyboardInterrupt\n"
+      },
+      "checkpoint_sha256": "ccd96710648a022abc330eb148e903b115b19f6c2f28af5e23d3d91033fe4520",
+      "raw_record_sha256": {
+        "diagnostics.jsonl": "dbf9dc5c5f6b200b5410087b285e4afbea185e1462cd915d604afb40e5fbf5cd",
+        "experiment.json": "ccc55fb553c3ce0dca0e68be23ffb29687ae9edd5853036d0b8183924f5b686e",
+        "gradients.jsonl": "a5bd73962f69e1c8f68e9ccc33acf4e076a2cb8cf91240ff92f585e19a91dabd",
+        "history.jsonl": "e5b48c40cc9388966bf3f1cf455ce80524ccfb785c9a17f5b55303b085bc411c"
+      },
+      "gradient_count": 62900,
+      "all_gradients_finite_nonzero": true,
+      "last_diagnostic_step": 62900,
+      "at_new_update_cap": {
+        "step": 24400,
+        "examples_seen": 1559136,
+        "epochs_seen": 77.9568,
+        "training_seconds": 837.1131735480212,
+        "wall_seconds": 921.459548402001,
+        "last_batch_size": 64,
+        "validation": {
+          "loss": 5.5711488127708435,
+          "example_loss": 5.5711488127708435,
+          "token_accuracy": 0.34521484375,
+          "sequence_accuracy": 0.0,
+          "balanced_accuracy": 0.34395847469920043,
+          "transition_accuracy": 0.3452497551420176,
+          "target_count": 4096,
+          "correct": 1414,
+          "example_count": 512,
+          "exact": 0,
+          "transition_count": 4084
+        }
+      },
+      "endpoint": {
+        "step": 62900,
+        "examples_seen": 4019200,
+        "epochs_seen": 200.96,
+        "training_seconds": 2152.5473421498846,
+        "wall_seconds": 2324.491146833998,
+        "last_batch_size": 64,
+        "validation": {
+          "loss": 0.1504855277016759,
+          "example_loss": 0.15048552677035332,
+          "token_accuracy": 0.973388671875,
+          "sequence_accuracy": 0.8125,
+          "balanced_accuracy": 0.973554496771866,
+          "transition_accuracy": 0.9735553379040157,
+          "target_count": 4096,
+          "correct": 3987,
+          "example_count": 512,
+          "exact": 416,
+          "transition_count": 4084
+        }
+      },
+      "training_seconds": 2152.5473421498846,
+      "wall_seconds": 2324.5508936139977
+    }
+  ],
+  "closed_phase": {
+    "status": "learning_closed",
+    "started_utc": "2026-11-02T13:12:52.301189+00:00",
+    "cases": {
+      "temperature-hard-recall-s0": {
+        "status": "censored",
+        "preparation_seconds": 24.481719553999937,
+        "stop": {
+          "step": 100000,
+          "reason": "budget"
+        },
+        "elapsed_seconds": 3660.982202446001,
+        "checkpoint_sha256": "69ea46b374b2d5fcdf684473866de30d660926b6bab61971837e0db83519fb0a",
+        "policy_stop": {
+          "step": 100000,
+          "reason": "User requested stopping after twice the best comparable run; rule arrived after this state was trained.",
+          "update_cap": 24400,
+          "actual_state_is_not_a_cap_checkpoint": true
+        }
+      },
+      "temperature-hard-recall-s1": {
+        "status": "censored",
+        "preparation_seconds": 24.379082175000804,
+        "traceback": "Traceback (most recent call last):\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/experiments/attention_temperature/cohort.py\", line 124, in run\n    result = trainer()\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/engine/loop.py\", line 252, in __call__\n    self.train()\n    ~~~~~~~~~~^^\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/engine/loop.py\", line 279, in train\n    size, measurements = self.stepper.step(parts, learning_rate, sampled)\n                         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/engine/residual.py\", line 59, in step\n    return super().step(parts, rate, sampled)\n           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/engine/compiled.py\", line 79, in step\n    batch = self.task.inputs(gather(parts), static=True)\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/benchmarks/synthetic/training.py\", line 62, in inputs\n    return self.splits[\"train\"].select(indices, static)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/misha/lean_projects/transformer/.claude/worktrees/generalization_temperature/python/src/lab/infrastructure/benchmarks/synthetic/rows.py\", line 116, in select\n    return self.rows.index_select(0, indices.to(self.rows.device))\n                                     ~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nKeyboardInterrupt\n",
+        "checkpoint_sha256": "ccd96710648a022abc330eb148e903b115b19f6c2f28af5e23d3d91033fe4520",
+        "policy_stop": {
+          "step": 62900,
+          "reason": "User requested stopping after twice the best comparable run; rule arrived after this state was trained.",
+          "update_cap": 24400,
+          "actual_state_is_not_a_cap_checkpoint": true
+        }
+      }
+    },
+    "closed_utc": "2026-11-02T15:19:08.970934+00:00",
+    "test_policy": "Final test remains unopened; candidate rejected on validation and cost alone.",
+    "closure_record": "analysis/cost_cap_closure.json"
+  }
+}
