@@ -1,6 +1,7 @@
 module
 
 public import Transformer.MHC.Section4_Regularized
+public import Transformer.MHC.PeriRMS
 
 /-!
 # Manifold-Constrained Hyper-Connections

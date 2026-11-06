@@ -1,0 +1,2 @@
++ lake env lean scripts/Axioms.lean
+36 sorry · 0 resting on a sorry · 0 extra axioms

@@ -1,0 +1,2 @@
++ /usr/bin/python3 scripts/index.py
+INDEX.md: 4175 modules, 21439 theorems, 36 sorry, 0 vacuous, 0 placeholder

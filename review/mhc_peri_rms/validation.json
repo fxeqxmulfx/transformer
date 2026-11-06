@@ -1,0 +1,191 @@
+{
+  "checked_at_utc": "2026-11-06T09:02:58.223440+00:00",
+  "origin": {
+    "repository": "/home/misha/python_projects/gpt",
+    "commit": "c6c517bb061ff5163723dca0e078da555faa13f1",
+    "proof_directory": "research/mhc_scaled",
+    "historical_validation": "review/mhc_peri_rms/origin-c6c517b-validation.json",
+    "historical_output": "review/mhc_peri_rms/origin-c6c517b-lean-check.txt",
+    "legacy_theorems_preserved": 9,
+    "legacy_statement_and_proof_comparison": "All nine original theorem statements and proof bodies match after whitespace and the native score-lemma qualification are normalized."
+  },
+  "module": "Transformer.MHC.PeriRMS",
+  "namespace": "Transformer.MHC.PeriRMS",
+  "native_theorems": 17,
+  "concrete_examples": 19,
+  "lean_toolchain": "leanprover/lean4:v4.35.0",
+  "mathlib_revision": "56a005855ea17e0b0958f73ec801ae140b0a1679",
+  "four_variants": [
+    {
+      "attention_gain": "1/head_width",
+      "residual_coefficient": "1/sqrt(2L)",
+      "per_stream_and_mean_rms_bound": "1+2*sqrt(2L)",
+      "ssmax_score_absolute_bound": "log(N)"
+    },
+    {
+      "attention_gain": "1/head_width",
+      "residual_coefficient": "1",
+      "per_stream_and_mean_rms_bound": "1+4L",
+      "ssmax_score_absolute_bound": "log(N)"
+    },
+    {
+      "attention_gain": "1/sqrt(head_width)",
+      "residual_coefficient": "1/sqrt(2L)",
+      "per_stream_and_mean_rms_bound": "1+2*sqrt(2L)",
+      "ssmax_score_absolute_bound": "sqrt(head_width)*log(N)"
+    },
+    {
+      "attention_gain": "1/sqrt(head_width)",
+      "residual_coefficient": "1",
+      "per_stream_and_mean_rms_bound": "1+4L",
+      "ssmax_score_absolute_bound": "sqrt(head_width)*log(N)"
+    }
+  ],
+  "shared_conditions": [
+    "Exact real arithmetic; positive epsilon and positive feature/head widths. The scaled residual case requires positive integer depth.",
+    "Four streams, separate attention and SwiGLU sublayers, input and output Peri-RMS, normalized embedding, and twice-sigmoid write gates.",
+    "Routing logits may depend on the current streams. The paper finite Sinkhorn algorithm performs twenty column-then-row cycles, without denominator regularization. Positivity and final row normalization suffice; exact double stochasticity is not assumed.",
+    "Q/K RMS and rotary SSMax retain log(N), with the two requested attention gains as separate specializations. Mean collapse precedes the existing final RMS; its output RMS is at most one for either residual coefficient."
+  ],
+  "limitations": [
+    "Raw attention/SwiGLU branches and routing predictors are abstract functions. This is not a formally verified PyTorch translation or a claim that mHC was used by the last Python experiment.",
+    "No finite-precision, full input-dependent Jacobian, gradient stability, convergence, generalization, or empirical learning-speed guarantee is asserted.",
+    "The final-RMS bound controls features before the tied readout matrix; it does not bound logits independently of the learned matrix.",
+    "Released denominator-regularized and transposed Sinkhorn implementations are distinct from this paper-algorithm model."
+  ],
+  "axioms": {
+    "Transformer.MHC.PeriRMS.collapse_norm_le": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Transformer.MHC.PeriRMS.current_model_bounds": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Transformer.MHC.PeriRMS.final_feature_rms_le_one": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Transformer.MHC.PeriRMS.inverse_sqrt_current_model_bounds": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Transformer.MHC.PeriRMS.inverse_sqrt_score_bound": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Transformer.MHC.PeriRMS.normalized_dot": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Transformer.MHC.PeriRMS.normalized_norm": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Transformer.MHC.PeriRMS.normalized_score": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Transformer.MHC.PeriRMS.run_norm_le": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Transformer.MHC.PeriRMS.scaled_bound_lt_unscaled_bound": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Transformer.MHC.PeriRMS.scaled_model_rms_bound": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Transformer.MHC.PeriRMS.score_bound": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Transformer.MHC.PeriRMS.ssmax_score": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Transformer.MHC.PeriRMS.step_norm_le": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Transformer.MHC.PeriRMS.unscaled_current_model_bounds": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Transformer.MHC.PeriRMS.unscaled_inverse_sqrt_current_model_bounds": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Transformer.MHC.PeriRMS.unscaled_model_rms_bound": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "extra_axioms": [],
+  "new_module_warnings": 0,
+  "checks": {
+    "LAKE_ARTIFACT_CACHE=false lake build Transformer.MHC.PeriRMS": {
+      "exit_code": 0,
+      "output": "review/mhc_peri_rms/target-build.txt",
+      "sha256": "08215d3583b818b9e32849fbdd4f11c10dbe514953ec0b4b04777bde16aa8ab2"
+    },
+    "LAKE_ARTIFACT_CACHE=false lake build": {
+      "exit_code": 0,
+      "output": "review/mhc_peri_rms/full-build.txt",
+      "sha256": "e2e8ccc31bf1b76cc03875c45df9716dd2829a9d14c834cd51389298f878283e"
+    },
+    "LAKE_ARTIFACT_CACHE=false lake env lean scripts/MHCPeriRMSAxioms.lean": {
+      "exit_code": 0,
+      "output": "review/mhc_peri_rms/lean-check.txt",
+      "sha256": "9902982abeafe3b1ccca175093070895114e1eef9dae17417d942e2159a6ed5a"
+    },
+    "./run.py audit": {
+      "exit_code": 0,
+      "output": "review/mhc_peri_rms/audit.txt",
+      "sha256": "64f40f0f49704909b316ee81aaf4f80ff3babfd1cd3e396d021be00177103d1e"
+    },
+    "./run.py index": {
+      "exit_code": 0,
+      "output": "review/mhc_peri_rms/index.txt",
+      "sha256": "971762eab3670a59033b1229f8f48b160ed1a12c9f11ab6d30287cb00d00e6ff"
+    },
+    "./run.py forbidden": {
+      "exit_code": 0,
+      "output": "review/mhc_peri_rms/forbidden.txt",
+      "sha256": "d696123c2232233c4d88d1186b6d26cbb8c4d5bb3d1414b71034b7fcfa99119f"
+    }
+  },
+  "global_audit": "+ lake env lean scripts/Axioms.lean\n36 sorry \u00b7 0 resting on a sorry \u00b7 0 extra axioms",
+  "index_summary": "+ /usr/bin/python3 scripts/index.py\nINDEX.md: 4175 modules, 21439 theorems, 36 sorry, 0 vacuous, 0 placeholder",
+  "source_sha256": {
+    "src/Transformer/MHC/PeriRMS/Basic.lean": "0958d6287e95e9e30561940c768e8c25cd29a72ae5a45885b0f8ea545ea146ee",
+    "src/Transformer/MHC/PeriRMS/CurrentModel.lean": "f67384efc8adf4c6bc97b183d6c2b63eee33c15f82c22e9bee9837e05b98e859",
+    "src/Transformer/MHC/PeriRMS/Dynamics.lean": "bbf513715d52e0af2201341040f415447edf5a6a42960017d96d86fccb8d9542",
+    "src/Transformer/MHC/PeriRMS/Scores.lean": "f5604717329426ca81f08419f05182573c8afbf4607abad2ef13aea50acf23ff",
+    "src/Transformer/MHC/PeriRMS/SqrtGain.lean": "4e89b1eac05c01ba01651414b16d1db4e4818e78ac83eb7e9c1f889817fc455f",
+    "src/Transformer/MHC/PeriRMS.lean": "d8cbec2602827cec6258f55651e25ad417647b91a9dd5d0fc796597e37a326ee",
+    "src/Transformer/MHC.lean": "fea1712f49031aaab088e5362f3d9c67a79c53d65f9c580f21d5ec98a3ea4f3c",
+    "scripts/MHCPeriRMSAxioms.lean": "662847973e43ebf9f4881ab4414b40d6a8fbf99730f2457768418285d8a46ec6",
+    "INDEX.md": "1b7b9b5b7ba5bb376cfeca4d0eaa44209f60c5bce1cfd4d006d035f0d9fec2dd"
+  },
+  "python_proof_imports": false
+}

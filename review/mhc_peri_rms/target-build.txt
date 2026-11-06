@@ -1,0 +1,6 @@
+✔ [4007/4012] Built Transformer.MHC.PeriRMS.Basic (6.3s)
+✔ [4008/4012] Built Transformer.MHC.PeriRMS.Scores (6.4s)
+✔ [4009/4012] Built Transformer.MHC.PeriRMS.Dynamics (1.0s)
+✔ [4010/4012] Built Transformer.MHC.PeriRMS.CurrentModel (1.9s)
+✔ [4011/4012] Built Transformer.MHC.PeriRMS.SqrtGain (1.7s)
+Build completed successfully (4012 jobs).
