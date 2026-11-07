@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`answer_contrasts`](answer_contrasts) | 24 saved states; no training | Pooling by cubic answer exposes accurate answer probes and useful measured combined contrasts; conservative L1 and weight-norm budgets still fail. |
 | [`flat_approx`](flat_approx) | 24 saved states; no training | Quantitative recovery diagnostic: all native correctness counts reproduce, but the fixed full-character spectral budget fails on every held-out query; direct contrast budgets are useful for most trained queries. |
 | [`rms_backward`](rms_backward) | 48 | Does separating the finite-epsilon radial RMS backward from its tangent term restore correct gradients and known-solution recovery without changing the forward function? |
 | [`context_gains`](context_gains) | 24 | Can input-dependent post-RMS gains recover conditional amplitudes that a correctly differentiated pre-RMS path learns poorly? |

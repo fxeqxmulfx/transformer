@@ -1,5 +1,27 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Combined class contrasts (2026-11-08)
+
+Task #179 follows the user's approval to connect the theory to actual combined
+class-score differences. The [Lean extension](review/flat_spectrum.md#combined-answer-contrasts)
+proves answer pooling, cancellation, a sharp centered contrast bound and the
+source execution bridge with separate competitor gaps and explicit alignment.
+It includes a nonzero-error source witness and no new `sorry`.
+
+The [fixed Rust diagnostic](experiments/answer_contrasts/README.md) retains all
+24 original cubic checkpoints. At the plain-product endpoints, exact-sum probe
+accuracy is 45.40%/46.97%, while pooled-answer accuracy is 99.53%/99.66%.
+Measured combined budgets are positive on 99.30%/99.43% of held-out queries.
+Independent quotient fitting equals pooling the full probe, as predicted by
+linearity; this is not a second learned representation. The uniform half-range
+L1 bound and weight-norm alignment bound both give zero positive held-out budgets.
+These are retrospective conditions, not predictive generalization certificates.
+
+The next open obligation is to bound the relevant error directions and source
+alignment without measuring held-out target errors. No new model training,
+architecture change or continuation cohort was opened. The earlier spectral
+diagnostic and its negative result remain intact.
+
 ## Quantitative recovery and answer equivalence (2026-11-08)
 
 Task #178 extends nonunique recovery to noisy fitting, finite nuclear-norm
