@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`loss_geometry`](loss_geometry) | 24 saved states; no training | CE controls probability scatter on the same rows; two training intervals lower CE while raw contrast scatter rises, and held-out scatter can exceed twice training CE. |
 | [`contrast_transport`](contrast_transport) | 24 saved states; no training | Training-label and query-state bounds cover 21.06%/29.88% at plain-product endpoints; most coverage comes from training centering, with small covariance gains and no incorrect positive cases. |
 | [`answer_contrasts`](answer_contrasts) | 24 saved states; no training | Pooling by cubic answer exposes accurate answer probes and useful measured combined contrasts; conservative L1 and weight-norm budgets still fail. |
 | [`flat_approx`](flat_approx) | 24 saved states; no training | Quantitative recovery diagnostic: all native correctness counts reproduce, but the fixed full-character spectral budget fails on every held-out query; direct contrast budgets are useful for most trained queries. |

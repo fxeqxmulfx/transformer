@@ -1,5 +1,28 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Geometry controlled by the objective (2026-11-08)
+
+Task #181 asks which part of the required geometry follows from training loss.
+The [Lean extension](review/flat_spectrum.md#loss-controlled-geometry) proves
+that mean within-answer probability scatter is at most twice mean CE on the
+same rows. It also gives an actual shared-scalar gradient-descent counterexample:
+CE decreases while raw contrast scatter increases. No unconditional raw-state
+or raw-contrast contraction is assumed, and no new `sorry` was added.
+
+The [fixed Rust diagnostic](experiments/loss_geometry/README.md) retains all
+24 original checkpoints. All numerical objective bounds and centering
+identities pass. Among 16 adjacent training intervals, 12 lower CE and two
+of those increase raw contrast scatter: both diagonal seeds, 5000 to 10000.
+At the plain-product endpoints, training probability scatter is
+3.428e-5/1.173e-6, while validation scatter is 0.005069/0.004630. Both validation
+values exceed twice training CE, so the training inequality cannot simply be
+reused as a held-out bound.
+
+The next obligation is a transfer bound from training evidence to unseen
+prediction probabilities, or sufficient learning conditions for the raw
+contrast transport terms. Small training CE does not by itself provide either.
+No model training, checkpoint changes or architecture changes were made.
+
 ## Training-state transport (2026-11-08)
 
 Task #180 extends the theory to actual class contrasts using training states,
