@@ -1,6 +1,7 @@
 module
 
 public import Transformer.Rotate90.ComplexProduct.RecoveryWitness
+public import Transformer.Rotate90.ComplexProduct.ApproximateWitness
 
 /-!
 # A flat-spectrum bridge to the complex-product Rotate90 source model
@@ -20,6 +21,11 @@ It needs preservation of score contrasts, not unique matrix recovery.
 `copy_nonunique_bridge` supplies two distinct optimal matrices and a nonconstant
 normalized source classifier satisfying the premises. The witness uses the
 residual path; nonzero product parameters instantiate the algebraic identities.
+
+`executed_correct_of_approximate_recovery` permits noisy fitting, a finite
+objective gap and approximate contrast alignment. Its error budget retains the
+actual final normalization. A nonzero perturbation of the nonunique witness
+instantiates all bounds without exact optimality of the perturbed matrix.
 
 These are exact-arithmetic and conditional decision theorems. They do not prove
 that AdamW finds a spectral optimum, identify the normalized network's weight

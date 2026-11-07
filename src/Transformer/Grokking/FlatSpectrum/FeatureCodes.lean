@@ -2,6 +2,7 @@ module
 
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes.RankSeparation
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes.NonuniqueWitness
+public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ApproximateRecovery
 
 /-!
 # Joint feature recovery and robust classification
@@ -29,4 +30,8 @@ Unique completion can also be weakened to recovery of class-score differences.
 Under a strict dual certificate, it suffices that the score contrasts annihilate
 unobserved tangent directions. Two explicit distinct global minima demonstrate
 that all answers can agree while both feature matrices and absolute scores differ.
+
+Quantitative recovery allows noisy fitting and a finite nuclear-norm objective gap.
+Readout conditioning is finite whenever hidden tangent directions are harmless;
+its magnitude, the certificate slack and the fitting error stay explicit.
 -/

@@ -5450,3 +5450,110 @@ instances exercise every real/complex algebraic correspondence.
 | Raw margin and bounded execution error certify labels | `executed_correct_of_raw_margin` |
 | Nonunique rank-r optimum transfers to executed labels | `executed_correct_of_nonunique_minimum` |
 | Two distinct optima satisfy the concrete source bridge | `copy_nonunique_bridge` |
+
+## Approximate nonunique recovery
+
+Added 2026-11-08, following the user's request for a quantitative extension.
+These are deterministic inequalities for finite complex matrices. They do not
+identify the neural objective with nuclear-norm minimization. The empirical
+application must establish each premise for its chosen features and readout.
+
+### QR1. Condition the readout, allowing invisible ambiguity
+
+Write `N = {H : H|Omega = 0}`, `T = {U A* + B V*}` and
+`Pnormal(H) = (I-UU*) H (I-VV*)`. If a real-linear functional `L` vanishes
+on `T intersect N`, then there is a finite `kappa >= 0` such that
+
+```
+|L(H)| <= kappa ||Pnormal(H)||_*   for every H in N.
+```
+
+Proof: the kernel of `Pnormal` restricted to `N` is contained in the kernel
+of `L` restricted to `N`, by the explicit tangent/normal decomposition.
+The induced functional on the projection's range extends linearly to all
+matrices. Every finite-dimensional matrix functional has a nuclear-norm bound:
+one explicit bound is the sum over cells of `|L(e_ij)| + |L(i e_ij)|`.
+The proof uses that bound for the extended functional. It does not invert
+the full matrix or require that `T intersect N` be zero. Existence is not a
+small-constant guarantee; a useful certificate must bound or compute `kappa`.
+
+### QR2. Noisy fitting and finite objective excess
+
+Retain CP4's strict rank-r certificate: orthonormal `U,V`, the target polar
+identities, supported `UV*+W`, `U*W=0`, `WV=0` and contractive `cW` for `c>1`.
+Put `s = 1-1/c > 0`. Suppose a correction `E` makes `X-E` agree with `K`
+on the observations, `||E||_* <= rho`, and
+`||X||_* <= ||K||_* + epsilon`. The correction can be the observed residual
+with zeros elsewhere. Then
+
+```
+||Pnormal(X-E-K)||_* <= (epsilon + rho)/s.
+```
+
+Indeed, the old certificate inequality bounds its left side times `s` by
+`||X-E||_* - ||K||_*`, which is at most `epsilon + rho` by the triangle
+inequality. `epsilon` may be a signed objective excess; the premises imply
+`epsilon + rho >= 0`. No exact fitting by `X` or exact global optimum is needed.
+
+### QR3. Recover the score contrast approximately
+
+In addition to QR1's hidden conditioning, let `lambda >= 0` satisfy
+`|L(M)| <= lambda ||M||_*` for every matrix `M`. The explicit bound of QR1
+always supplies such a `lambda`, though a tighter one is preferable. Splitting
+`X-K = (X-E-K)+E` gives
+
+```
+|L(X)-L(K)| <= kappa*(epsilon+rho)/s + lambda*rho.
+```
+
+This is applied directly to a correct-versus-wrong score contrast. It does
+not demand accurate absolute scores or a uniquely determined feature matrix.
+If actual raw source contrasts differ from their recovered values by at most
+`alpha(q,v)`, their error relative to the target is bounded by
+
+```
+B(q,v) = alpha(q,v) + kappa(q,v)*(epsilon+rho)/s + lambda(q,v)*rho.
+```
+
+The alignment error here is already a contrast error; it is not doubled.
+
+### QR4. Preserve the actual source's executed decision
+
+Let the target raw gap be at least `delta(q)` for every wrong class. With
+the actual CP1 residual state `h`, denominator `D_eps(h)`, and execution
+error at most `eta(q)` per logit, every executed class is correct if
+
+```
+B(q,v) + 2*eta(q)*D_eps(h(inputs(q))) < delta(q)
+```
+
+for every wrong class. The denominator is positive for positive epsilon.
+The exact source gap is at least `delta-B`; dividing by its denominator and
+allowing the two execution errors proves the strict comparison. Both the
+direct contrast-error version and the full spectral-to-source composition
+are proved. Neither version predicts optimizer convergence or supplies a
+backend execution bound.
+
+### QR5. Nonzero noise with nonunique underlying optima
+
+Keep CP5's `K=diag(1,-1)`, alternative optimum `Z=[[1,1],[-1,-1]]`,
+diagonal observations and two-label source. Put `X=Z+E` with `||E||_*<=1/8`.
+The fitting correction is `E`, and the objective excess is at most `1/8`.
+For CP5's contrast, `kappa=0` and `lambda=2/sqrt(2)`: unobserved diagonal
+contrasts are zero, and each entry's modulus is bounded by the nuclear norm.
+Its alignment error is at most `lambda/8`. With `eta=0`, the combined bound
+is `lambda/4`, strictly below the raw gap `delta=lambda`. The explicit
+perturbation `E=K/16` is nonzero and has nuclear norm exactly `1/8`.
+This instantiates all general bounds. It is still a residual-path consistency
+witness, not a modular generalization or active-product construction.
+
+| Claim | Lean declaration |
+| --- | --- |
+| Explicit finite functional bound | `FeatureCodes.readoutBound_nonneg`, `FeatureCodes.abs_readout_le` |
+| Finite conditioning without tangent injectivity | `FeatureCodes.exists_readout_conditioning` |
+| Normal component bound from noise and objective excess | `FeatureCodes.normal_error_le_of_approximate_minimum` |
+| Approximate recovery of a linear contrast | `FeatureCodes.linear_readout_error_le_of_approximate_minimum` |
+| Add recovery and alignment errors | `FeatureCodes.contrast_error_le_of_alignment` |
+| Direct contrast-error execution bound | `ComplexProduct.executed_correct_of_contrast_error` |
+| Full quantitative spectral-to-source bridge | `ComplexProduct.executed_correct_of_approximate_recovery` |
+| Nonzero noisy witness | `ComplexProduct.witnessNoise_norm`, `ComplexProduct.witnessNoise_ne_zero`, `ComplexProduct.copy_approximate_spectral_classifies` |
