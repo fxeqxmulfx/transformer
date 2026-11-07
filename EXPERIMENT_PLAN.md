@@ -1,5 +1,31 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Signed directional transport (2026-11-08)
+
+Task #183 preserves signed training-score reconstruction and bounds only the
+remaining interaction between query-state and readout residuals. The
+[Lean derivation](review/flat_spectrum.md#signed-directional-transport) retains
+an explicit orthogonality defect and the actual normalized source execution
+allowance. It also proves the zero-residual re-expression limit and a nonzero
+extrapolation witness. Sixteen new theorems are proved, with no new `sorry`.
+
+The [fixed Rust diagnostic](experiments/signed_transport/README.md) retains all
+24 original states, both groupings and all nine requested ranks with paired
+signed/directional bounds. At the plain-product endpoints, rank-32 orbit
+probability coverage is 70.67%/72.50%; argmax coverage is 96.60%/97.43%.
+Signed reconstruction with the full readout norm gives only 29.99%/32.86%
+probability coverage at the same rank. All validation orbit bases achieve
+rank 32 of 128, with substantial query residuals still present. Numerical
+bound discrepancies stay below the fixed tolerance; no positive condition
+classifies an input incorrectly.
+
+This is useful conditional coverage from a separate training subspace per
+answer orbit. Full-rank reconstruction can simply re-express the original
+classifier. Coverage can fall with further training, as the SwiGLU seed-7
+trajectory shows. The next obligation is to derive learning conditions that
+make these residual budgets small. No model training, architecture change,
+independent statistical test or optimizer-discovery claim was introduced.
+
 ## Probability transfer through normalized geometry (2026-11-08)
 
 Task #182 extends the theory from training probability control to conditional
