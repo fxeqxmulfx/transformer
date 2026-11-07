@@ -1,5 +1,28 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Probability transfer through normalized geometry (2026-11-08)
+
+Task #182 extends the theory from training probability control to conditional
+query probability floors and loss ceilings. The
+[Lean derivation](review/flat_spectrum.md#probability-transfer) uses training
+log odds and unlabeled query-state distances, retains each actual final RMS
+denominator, and carries an explicit numerical execution allowance. It adds
+20 proved theorems and concrete witnesses, with no new `sorry`.
+
+The [fixed Rust diagnostic](experiments/probability_transfer/README.md) retains
+all 24 original checkpoints and all five declared methods. All probability,
+loss and gap bounds pass the numerical audit. At the plain-product endpoints,
+the combined orbit envelope guarantees target probability above one half on
+only 13/4705 and 43/4705 inputs (0.28%/0.91%), despite source accuracies of
+99.66%/99.68%. The weaker argmax condition covers 18.21%/28.71%. Diagonal-arm
+probability coverage is 48.20%/46.01%. Mean CE ceilings for the plain product
+are 3.5043/3.2261 versus actual 0.01974/0.01872, so this bound is still too loose.
+
+The next obligation is tighter training-derived control in the relevant
+class-contrast directions. This is a conditional geometric result, not a
+learning theorem or independent statistical test. No model training or
+architecture change was made; complex multiplication remains unchanged.
+
 ## Geometry controlled by the objective (2026-11-08)
 
 Task #181 asks which part of the required geometry follows from training loss.

@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`probability_transfer`](probability_transfer) | 24 saved states; no training | Training confidence and normalized query geometry give valid probability/loss bounds, but the above-half probability condition covers only 0.28%/0.91% at plain-product endpoints. |
 | [`loss_geometry`](loss_geometry) | 24 saved states; no training | CE controls probability scatter on the same rows; two training intervals lower CE while raw contrast scatter rises, and held-out scatter can exceed twice training CE. |
 | [`contrast_transport`](contrast_transport) | 24 saved states; no training | Training-label and query-state bounds cover 21.06%/29.88% at plain-product endpoints; most coverage comes from training centering, with small covariance gains and no incorrect positive cases. |
 | [`answer_contrasts`](answer_contrasts) | 24 saved states; no training | Pooling by cubic answer exposes accurate answer probes and useful measured combined contrasts; conservative L1 and weight-norm budgets still fail. |
