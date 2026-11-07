@@ -1,5 +1,31 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Training-state transport (2026-11-08)
+
+Task #180 extends the theory to actual class contrasts using training states,
+query states and an explicit reconstruction residual. The
+[Lean derivation](review/flat_spectrum.md#training-state-transport) proves the
+Euclidean baseline, weighted transport bound, valid per-competitor choice,
+actual plain-product source bridge and cubic routes for transferring observed
+training labels. It includes a counterexample to omitting the residual and a
+positive nonzero-residual witness, with no new `sorry`.
+
+The [fixed Rust diagnostic](experiments/contrast_transport/README.md) retains
+all 24 original checkpoints. Bound construction has no query-label, query-logit
+or target-error argument; a separate audit checks the frozen construction.
+Best orbit conditions cover 991/4705 and 1406/4705 held-out inputs at the plain
+product endpoints (21.06%/29.88%), with no incorrect positive cases. The
+Euclidean training-center baseline already covers 989/1404, so covariance
+weighting adds only two queries per endpoint. All initial states have zero
+coverage; later coverage is not monotone with classifier accuracy.
+
+This gives partial deterministic conditions from training evidence and query
+geometry, not a learning theorem, independent statistical test or verified
+floating-point certificate. Explaining how training establishes useful
+contrast geometry, improving coverage and controlling execution error remain
+open. No new training or architecture change was made; all earlier reports
+remain intact.
+
 ## Combined class contrasts (2026-11-08)
 
 Task #179 follows the user's approval to connect the theory to actual combined
