@@ -1,6 +1,7 @@
 module
 
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes.RankSeparation
+public import Transformer.Grokking.FlatSpectrum.FeatureCodes.NonuniqueWitness
 
 /-!
 # Joint feature recovery and robust classification
@@ -23,4 +24,9 @@ An r-feature bank's real class-score matrices have rank at most 2r. For ordinary
 one faithful complex feature classifies correctly although its identity-class indicator
 has full rank p-1. These results distinguish matrix completion, feature separation, and
 classification; they do not assert convergence of the actual Rotate90 training process.
+
+Unique completion can also be weakened to recovery of class-score differences.
+Under a strict dual certificate, it suffices that the score contrasts annihilate
+unobserved tangent directions. Two explicit distinct global minima demonstrate
+that all answers can agree while both feature matrices and absolute scores differ.
 -/

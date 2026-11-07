@@ -5253,3 +5253,58 @@ the unchanged loss tolerance; both measurements remain recorded. The chain
 case finishes at 1.270% heldout and 0.684% at doubled length, so it supplies
 no successful length-generalization counterexample in this cohort. These
 finite outcomes leave structured composition and optimizer recovery open.
+
+## Classification without unique recovery
+
+Added on the user's request, 2026-11-07. These are conditional statements about
+the ideal nuclear-norm learner and fixed real linear readouts. They do not
+identify neural weight decay with nuclear-norm minimization, establish global
+optimality of AdamW, or assert these conditions for the cubic experiment.
+
+1. **Recover only the readout.** Let `U,V` have orthonormal columns, with
+   `U U* K = K` and `tr((U V*)* K) = ||K||_*`. Suppose `Y = U V* + W` is
+   supported on the observations `Omega`, `U* W = 0`, `W V = 0`, and `c W`
+   is a contraction for some `c > 1`. Write
+   `T = {U A* + B V*}` and `N = {H : H|Omega = 0}`. A real linear
+   functional `L` satisfying `L(H) = 0` for every `H` in `T intersect N`
+   has `L(X) = L(K)` for every feasible global nuclear-norm minimum `X`.
+   Proof: the existing certificate inequality and optimality give
+   `(1 - U U*) (X - K) (1 - V V*) = 0`. Consequently `X - K` lies in
+   `T intersect N`, where `L` vanishes. Tangent injectivity, which would
+   force this entire intersection to be zero, is not assumed.
+
+2. **Every optimum classifies correctly.** Let `s(q,a)` be real linear
+   functionals of the feature matrix, and let `f(q)` be the correct class.
+   Suppose `s(q,f(q))(K) > s(q,a)(K)` for every incorrect `a`. Under item1's
+   certificate, require only the score contrast `s(q,f(q)) - s(q,a)` to
+   vanish on `T intersect N`. Item1 then preserves every strict correct-class
+   gap for every feasible global minimum. Absolute scores may change by a
+   common offset. This is a sufficient condition for classification without
+   unique feature recovery; the strict certificate is retained. A non-strict
+   certificate alone only proves that `K` is a minimum and cannot guarantee
+   that every optimal solution gives the desired labels.
+
+3. **Nonunique witness.** Take `K = diag(1,-1)`, observe only its diagonal,
+   and take `Z = [[1,1],[-1,-1]]`. Both have nuclear norm2 and are global
+   minima: the supported contraction `Y = K` certifies the lower bound2.
+   For query `q in {0,1}`, use features `(X[q,q], X[0,1])` and fixed class
+   codes `(1,1)` and `(-1,1)`. Thus
+   `s(q,0)(X) = Re X[q,q] + Re X[0,1]` and
+   `s(q,1)(X) = -Re X[q,q] + Re X[0,1]`.
+   Every feasible global minimum predicts class0 for query0 and class1 for
+   query1, with gap2. The two displayed minima are distinct and give different
+   absolute scores. The certificate has `U = K`, `V = I`, `W = 0`, `c = 2`;
+   its unobserved tangent directions have zero diagonal, so every contrast
+   vanishes on them. This witness checks nonunique feature recovery with
+   unchanged labels, not generalization on unobserved modular examples.
+
+| Claim | Lean declaration |
+| --- | --- |
+| Recover a real linear readout without tangent injectivity | `FeatureCodes.linear_readout_eq_of_certificate` |
+| Every optimum has the correct strict winner | `FeatureCodes.classification_of_minimum_without_unique_recovery` |
+| Distinct optimal features and scores, identical correct labels | `FeatureCodes.nonunique_recovery_correct_classification` |
+
+Each general theorem has a concrete nonunique instantiation in
+`FeatureCodes/NonuniqueWitness.lean`. No unique completion assumption is hidden
+in the readout condition: the displayed target and alternative completion
+violate uniqueness while satisfying that condition.
