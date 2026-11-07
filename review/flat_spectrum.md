@@ -5986,3 +5986,139 @@ calculations are FP64 evidence, not certified execution arithmetic.
 | Actual shared-scalar derivative and sign | `GradientEvidence.sharedContrastLoss_hasDerivAt`, `sharedContrastLoss_deriv_neg` |
 | Strict loss decrease and computed raw scatter | `GradientEvidence.sharedContrastLoss_strictAnti`, `sharedContrast_scatter` |
 | Actual descent with expanding raw contrasts | `GradientEvidence.descent_increases_contrast_scatter` |
+
+## Probability transfer
+
+Added 2026-11-08, task #182. LG1–LG4 bound probability geometry only on rows
+whose loss is known. The next step is a pointwise transfer inequality with
+training probabilities and unlabeled query-state geometry on its right side.
+It remains conditional on the measured query geometry; it is not a theorem
+that training reaches small loss or that future inputs have small distance.
+
+### PT1. Express confidence through competitor odds
+
+For finite logits `z` and target `t`, ordinary softmax gives
+
+```
+p_c/p_t = exp(z_c-z_t)
+R_true = sum_(c != t) exp(z_c-z_t)
+p_t = 1/(1+R_true),       CE(z,t) = log(1+R_true).
+```
+
+All competing classes are included. Lean derives these identities from the
+same `Geometry.probability` and actual CE definition used in LG1. A target
+index ensures a nonempty class set; no finite logits have zero softmax
+denominator. A one-class task has zero wrong odds and is covered by the
+identities, although the numerical experiment uses all 97 classes.
+
+### PT2. Valid envelopes transfer probability and loss
+
+Suppose `z_c-z_t <= U_c` for every wrong class. Define
+`R = sum_(c != t) exp(U_c)`. Monotonicity of exp, reciprocal and log gives
+
+```
+p_t >= 1/(1+R),       CE(z,t) <= log(1+R).
+```
+
+Average the latter over any declared finite query set to obtain a mean CE
+ceiling; every query stays in the average, including failed classification
+conditions. These are proved pointwise and finite-mean inequalities, not a
+statistical confidence interval or a claim about an unseen distribution.
+
+The condition `R<1` implies target probability above one half and a strict
+target winner. The weaker condition `U_c<0` for every competitor also proves
+the target wins, but need not put more than half the probability mass there.
+Both decision implications are proved and reported separately.
+
+### PT3. Derive the envelope from normalized state geometry
+
+Let `E_c` be the actual tied readout rows, `h_i` normalized training states,
+and `h` the normalized query state. For a selected training reference `i(c)`,
+put
+
+```
+d_i = ||h-h_i||_2
+L_c = ||E_c-E_t||_2
+U_c = log(p_i(c),c / p_i(c),t) + d_i(c)*L_c.
+```
+
+The training log odds are evaluated stably as training logit differences.
+The earlier Cauchy–Schwarz contrast bound proves
+
+```
+z_c(h)-z_t(h) <= z_c(h_i)-z_t(h_i) + d_i*L_c = U_c.
+```
+
+Thus the probability and loss bounds are derived from actual training scores,
+readout weights and state distances. They do not require a measured query
+target error or a query class-score evaluation on the right side. Different
+competitors may select different valid references. Taking a finite minimum
+of such valid bounds uses no query targets and preserves the inequality.
+
+A computed mean of normalized training states is also a valid reference.
+Its linear logits are the means of training logits, so its log odds are
+mean training log odds. Its softmax probabilities are not the arithmetic
+means of training probabilities. The generic geometric theorem allows this
+reference without claiming that the center is itself a network input.
+
+### PT4. Actual source normalization and numerical execution
+
+For the plain complex-product source, the reference coordinates are
+`realify(state_i)/D_i` and the query coordinates are `realify(state)/D`, with
+each actual final RMS denominator retained. Lean proves that linear readout
+of these coordinates equals the independently expanded source's real logits.
+This includes all four original normalizations; replacing the denominators
+by a fixed radius or by a mean denominator is not part of the result.
+
+If every executed query logit differs from the exact source by at most `eta`,
+replace each `U_c` by `U_c+2*eta`. The source probability and CE theorems
+retain that hypothesis explicitly. For positive `R`, the probability
+condition has available error budget `eta < -log(R)/2`, because the total
+bounded wrong odds become `exp(2*eta)*R`. The diagnostic initially sets eta
+to zero and reports this allowance; it does not establish backend arithmetic
+accuracy or verify the saved floating-point computation in Lean.
+
+Task symmetry supplies the candidate answer separately. The existing cubic
+routes `(a,b) -> (u*a+t,u*b-t)`, `u in {1,35,61}`, transfer an observed
+training label. No equivariance of the learned network is assumed. The
+generic linear-readout result applies to every numerical arm; the source
+bridge is specific to the formalized plain complex product.
+
+### PT5. Witnesses, fixed diagnostic and limits
+
+In the odds witness the training target logit is `log 4` with other logit
+zero; the query target logit drops by `log 2`. The wrong-class odds envelope
+is exactly `1/2`, giving target probability at least `2/3` and a strict winner.
+The geometric witness uses scalar readout rows two and zero, training state
+two and query state `3/2`. Its nonzero distance gives relative-logit bound
+`-3` and total wrong odds below one. Actual-source examples instantiate the
+bridge with nonzero complex branch parameters and distinct input pairs.
+
+The [fixed Rust diagnostic](../experiments/probability_transfer/README.md)
+uses all 24 original checkpoints. It constructs both same-sum and cubic-orbit
+bounds from training labels/scores and normalized query states, hashes them,
+then separately audits query labels, probabilities, losses and logits.
+The model/oracle evaluator does compute logits separately; the constructor
+does not receive them. Training queries exclude themselves from both the
+anchor family and center. Missing references cause abstention.
+
+The protocol compares the training center, nearest anchor, best complete
+anchor, per-competitor anchor envelope, and the envelope including the center.
+All methods and failed conditions remain in the report. Query evaluation and
+known task symmetry are required. Conditional correctness at these saved
+states does not imply an optimizer-discovery theorem, independent test-set
+coverage, or a priori generalization without running the query model.
+
+| Claim | Lean declaration |
+| --- | --- |
+| Exact probability ratios and odds identities | `Geometry.probability_ratio`, `probability_eq_one_div_odds`, `crossEntropy_eq_log_odds` |
+| Envelope nonnegativity and comparison | `Geometry.oddsEnvelope_nonneg`, `odds_le_envelope` |
+| Query probability floor and CE ceiling | `Geometry.probability_ge_of_contrast_bounds`, `crossEntropy_le_of_contrast_bounds` |
+| Mean query loss ceiling | `Geometry.meanCrossEntropy_le_of_contrast_bounds` |
+| Stronger probability and weaker argmax conditions | `Geometry.strict_winner_of_odds_envelope`, `strict_winner_of_negative_contrast_bounds` |
+| Nonzero odds witness | `Geometry.nonzero_probability_transfer_witness` |
+| Training-center linearity and geometric bound | `FeatureCodes.linearScore_mean`, `relative_logit_le_anchor` |
+| Probability and loss from training-state geometry | `FeatureCodes.probability_ge_anchor_bound`, `crossEntropy_le_anchor_bound` |
+| Nonzero geometric witness | `FeatureCodes.nonzero_anchor_geometry_witness` |
+| Exact normalized source readout | `ComplexProduct.readoutState_logit` |
+| Execution allowance and source bounds | `ComplexProduct.executed_relative_le_anchor`, `executed_probability_ge_anchor`, `executed_crossEntropy_le_anchor` |

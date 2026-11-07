@@ -7,6 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.CubicQuotient
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes.AnswerContrast
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes.TrainingTransport
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes.CubicTransport
+public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ProbabilityTransfer
 
 /-!
 # Joint feature recovery and robust classification

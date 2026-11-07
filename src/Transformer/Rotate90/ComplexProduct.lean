@@ -4,6 +4,7 @@ public import Transformer.Rotate90.ComplexProduct.RecoveryWitness
 public import Transformer.Rotate90.ComplexProduct.ApproximateWitness
 public import Transformer.Rotate90.ComplexProduct.AnswerContrast
 public import Transformer.Rotate90.ComplexProduct.TrainingTransport
+public import Transformer.Rotate90.ComplexProduct.ProbabilityTransfer
 
 /-!
 # A flat-spectrum bridge to the complex-product Rotate90 source model
