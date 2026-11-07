@@ -5557,3 +5557,87 @@ witness, not a modular generalization or active-product construction.
 | Direct contrast-error execution bound | `ComplexProduct.executed_correct_of_contrast_error` |
 | Full quantitative spectral-to-source bridge | `ComplexProduct.executed_correct_of_approximate_recovery` |
 | Nonzero noisy witness | `ComplexProduct.witnessNoise_norm`, `ComplexProduct.witnessNoise_ne_zero`, `ComplexProduct.copy_approximate_spectral_classifies` |
+
+## Answer equivalence
+
+Added 2026-11-08 after the user asked whether the failed diagnostic called for
+changing the complex product or extending the theory. The extension concerns
+which distinctions a class readout must preserve. It does not modify the model.
+
+### QE1. Read out a fiber in any isometric feature basis
+
+Let `S` be a finite latent set, `f : S -> A` the answer map, and `F*F=I`.
+For each possible answer `a`, let `v_a(s)=[f(s)=a]`, `C_a=F v_a` and
+`R_a(z)=Re <C_a,z>`, using the Hermitian inner product. Direct calculation gives
+
+```
+R_a(F x) = sum_{s: f(s)=a} Re x_s.
+R_a(F e_s) = [f(s)=a].
+```
+
+Here `e_s` is a coordinate vector. The readout has exact gap one against every
+incorrect answer, including answers outside the image of `f`. The answer codes
+need not have unit coordinates or equal norms. This avoids imposing the earlier
+unit-modulus code hypothesis on fiber indicators transformed by Fourier analysis.
+
+### QE2. Different features with the same complete score vector
+
+If `f(s)=f(t)`, every class score agrees at `F e_s` and `F e_t`. If `s!=t`,
+the feature vectors are nevertheless distinct, since applying `F*` recovers
+the distinct coordinate vectors. More generally, if an error `e` satisfies
+`sum_{s:f(s)=a} Re e_s=0` for each answer, then
+
+```
+R_a(F(x+e)) = R_a(F x)   for every a.
+```
+
+There is no bound on the size of the individual error coordinates. The concrete
+four-latent-state witness uses `S=Bool*Bool`, answer the first bit, and errors
+`+100` and `-100` on the two states of each answer. All class scores are unchanged.
+Thus bounding every coordinate error separately can discard cancellation that
+is essential to an accurate classification-level analysis.
+
+### QE3. Bound the combined contrast after summing
+
+For target latent state `s`, suppose, for every wrong answer `a`,
+
+```
+|sum_{t:f(t)=f(s)} Re e_t - sum_{t:f(t)=a} Re e_t| <= epsilon < 1.
+```
+
+Then `R_{f(s)}(F(e_s+e)) > R_a(F(e_s+e))`. The lower bound on the actual
+contrast is `1-epsilon`. This is a bound on the complete contrast after summing
+errors within each answer fiber. It is not a sum of separate absolute errors.
+To apply it to a learned network, one must still identify its readout with this
+construction or bound the source alignment error, as in QR4.
+
+### QE4. The cubic task's exact equivalence
+
+In `ZMod 97` the polynomial identity
+
+```
+(s-t)(s-35t)(s-61t) = s^3-t^3
+```
+
+implies `s^3=t^3` exactly when `s=t`, `s=35t`, or `s=61t`. The formula
+includes zero; it also applies to the sums of the original two operands.
+In particular, sums 1 and 35 have the same cube. The columns for those sums
+are distinct in every isometric basis, but all cubic fiber readouts agree.
+The explicit normalized basis `fourierMatrix 97 / sqrt(97)` is proved isometric
+using the existing Fourier Gram identity, so this conclusion applies to the
+actual additive-character features, not just an unspecified change of coordinates.
+
+These theorems justify allowing answer-preserving feature ambiguity. They do
+not show that a trained checkpoint learns exactly this code, give efficient
+tied-embedding source weights, or prove a rate of optimizer discovery. The
+failed full-character diagnostic must not be interpreted as a defect in
+complex multiplication.
+
+| Claim | Lean declaration in `FeatureCodes` |
+| --- | --- |
+| Hermitian readout equals the fiber sum | `fiber_readout_mulVec`, `fiber_readout_column` |
+| Distinct features can have identical complete scores | `fiber_readouts_eq_of_same_answer`, `feature_columns_ne` |
+| Balanced errors are invisible | `fiber_readouts_ignore_balanced_error` |
+| A combined contrast error below one preserves classification | `fiber_classifies_of_contrast_error` |
+| Exact modulus-97 cubic equivalence | `cubic97_factor`, `cubic97_eq_iff`, `cubic97_answers_eq_iff` |
+| Concrete additive-Fourier witness | `cubic97_distinct_features_same_readouts`, `cubicFourier97_isometry`, `cubic97_fourier_features_same_readouts` |

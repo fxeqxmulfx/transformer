@@ -13,3 +13,16 @@ import Transformer
 #print axioms Transformer.Rotate90.ComplexProduct.witnessNoise_norm
 #print axioms Transformer.Rotate90.ComplexProduct.witnessNoise_ne_zero
 #print axioms Transformer.Rotate90.ComplexProduct.copy_approximate_spectral_classifies
+
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.fiber_readout_mulVec
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.fiber_readout_column
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.fiber_readouts_eq_of_same_answer
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.feature_columns_ne
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.fiber_readouts_ignore_balanced_error
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.fiber_classifies_of_contrast_error
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.cubic97_factor
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.cubic97_eq_iff
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.cubic97_answers_eq_iff
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.cubic97_distinct_features_same_readouts
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.cubicFourier97_isometry
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.cubic97_fourier_features_same_readouts

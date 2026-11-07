@@ -3,6 +3,7 @@ module
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes.RankSeparation
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes.NonuniqueWitness
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ApproximateRecovery
+public import Transformer.Grokking.FlatSpectrum.FeatureCodes.CubicQuotient
 
 /-!
 # Joint feature recovery and robust classification
@@ -34,4 +35,9 @@ that all answers can agree while both feature matrices and absolute scores diffe
 Quantitative recovery allows noisy fitting and a finite nuclear-norm objective gap.
 Readout conditioning is finite whenever hidden tangent directions are harmless;
 its magnitude, the certificate slack and the fitting error stay explicit.
+
+Answer-fiber readouts preserve classification while ignoring distinctions between
+latent inputs with the same answer. Their error budget is on the combined fiber
+contrast. The cubic modulus-97 example proves that distinct full Fourier features
+for sums 1 and 35 give identical complete cubic score vectors.
 -/
