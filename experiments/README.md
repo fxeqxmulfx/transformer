@@ -1,5 +1,8 @@
 # Experiments
 
+New experiments and diagnostics use Rust/Kernite under the 2026-11-07 user
+override in `AGENTS.md`. The Python commands below describe the historical lab.
+
 A folder per experiment, and its `README.md` says what the runs ask, how
 they differ, and what their archived runs found. A folder with an
 `experiment.py` is written in the language of the
@@ -10,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`flat_approx`](flat_approx) | 24 saved states; no training | Quantitative recovery diagnostic: all native correctness counts reproduce, but the fixed full-character spectral budget fails on every held-out query; direct contrast budgets are useful for most trained queries. |
 | [`rms_backward`](rms_backward) | 48 | Does separating the finite-epsilon radial RMS backward from its tangent term restore correct gradients and known-solution recovery without changing the forward function? |
 | [`context_gains`](context_gains) | 24 | Can input-dependent post-RMS gains recover conditional amplitudes that a correctly differentiated pre-RMS path learns poorly? |
 | [`adaptive_residual`](adaptive_residual) | 8 | Does a conditional post-RMS gain improve first99% validation over the current corrected, fixed-scale GPT on two matched seeds at P97/P193? |

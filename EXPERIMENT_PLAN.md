@@ -1,5 +1,28 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Quantitative recovery and answer equivalence (2026-11-08)
+
+Task #178 extends nonunique recovery to noisy fitting, finite nuclear-norm
+objective excess, explicit readout conditioning and approximate source alignment.
+The actual final RMS denominator stays in the execution budget. The user's
+follow-up adds answer-fiber readouts and the exact cubic equivalence
+`s^3=t^3 iff s=t or s=35t or s=61t` in `ZMod 97`, including a concrete
+normalized Fourier witness. See [the derivation](review/flat_spectrum.md#approximate-nonunique-recovery).
+
+The [Rust diagnostic](experiments/flat_approx/README.md) is complete: all 24
+original cubic checkpoints, all arms and both seeds, no new training. Every
+stored correctness count reproduces. The declared componentwise character-bank
+spectral bound leaves zero positive held-out budgets, even at zero assumed
+execution error. Direct measured contrast budgets are positive for most trained
+queries. Plain-product endpoints remain 99.66% and 99.68%; this result supplies
+no reason to change the block. The theory should next bound the actual combined
+class contrasts while allowing answer-preserving feature ambiguity. The new
+fiber theorems do not yet identify the trained code or prove optimizer discovery.
+
+The current Rust/Lean-only override in `AGENTS.md` supersedes the older Python
+execution instructions below. This read-only diagnostic neither reopens a
+learning cohort nor spends any earlier training authorization again.
+
 ## Active research target and handoff (2026-11-02)
 
 The current model recommendation is in [MODEL_ARCHITECTURE.md](MODEL_ARCHITECTURE.md).
