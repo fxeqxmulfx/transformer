@@ -5308,3 +5308,145 @@ Each general theorem has a concrete nonunique instantiation in
 `FeatureCodes/NonuniqueWitness.lean`. No unique completion assumption is hidden
 in the readout condition: the displayed target and alternative completion
 violate uniqueness while satisfying that condition.
+
+## Complex-product Rotate90 bridge
+
+Source model: `rust_projects/grokking/experiments/rotate90_complex`,
+implementation/protocol commit `b70811e`, results commit `a9a2231`, inspected
+2026-11-07. This section derives the bridge for the plain complex-product arm,
+not the radial-gated or SwiGLU arm. The corresponding Lean namespace is
+`Transformer.Rotate90.ComplexProduct`.
+
+### CP1. Exact source model and its real expansion
+
+Let `E : labels -> C^k` be the shared embedding and let `G,U,O` be the three
+complex-linear, input-major matrices. Define
+
+```
+D_eps(z) = sqrt(eps + sum_j |z_j|^2 / (2 k))
+N_eps(z) = z / D_eps(z)
+P(g,u)_j = g_j u_j / sqrt(2)
+B(z) = P(z G, z U) O
+x(a,b) = N_eps(E[a] + i E[b])
+h(a,b) = x(a,b) + N_eps(B(N_eps(x(a,b))))
+L(a,b,c) = Re sum_j N_eps(h(a,b))_j conjugate(E[c]_j).
+```
+
+The factor `2 k` is the actual real-coordinate width, not `k`. Epsilon is
+retained in every normalization; the experiment uses float32 epsilon.
+There is one residual branch with coefficient one. All four normalizations,
+the fixed quarter-turn and the tied readout are present. No class answer or
+intermediate sum is supplied to the source model.
+
+Independently expand each complex matrix `A+iB` into real blocks with the
+signs implementing `(x+i y)(A+iB) = (xA-yB)+i(xB+yA)`. Define the real product
+using its four scalar products and the same `sqrt(2)` divisor. Pairwise
+`J(x,y)=(-y,x)` implements multiplication by `i`; the real dot product is the
+real part of the Hermitian dot product. Summing the two real squares in each
+pair gives the same RMS denominator. These identities propagate through
+the entire residual computation, proving equality of the independently
+defined real and complex logits for arbitrary parameter arrays.
+
+The Lean indices are logical pairs. The native residual uses adjacent pairs,
+whereas its hidden buffer stores all real components followed by all imaginary
+components; the pairing describes their logical coordinates. The theorem is
+an exact-arithmetic model correspondence, not a proof of buffer indexing,
+PTX execution, rounding or training. The Rust forward/gradient/replay tests
+are separate numerical evidence.
+
+### CP2. Final normalization and approximate separating features
+
+Write the actual raw tied score as `R_c = Re sum_j h_j conjugate(E[c]_j)`.
+For `eps > 0`, `D = D_eps(h) > 0` and `L_c = R_c / D`. Therefore the exact
+winner is unchanged by the final RMSNorm. Its numerical margin is divided
+by `D`; it is incorrect to drop this factor in a rounding-error bound.
+
+One sufficient feature condition uses unit-modulus embeddings, with ideal
+scores `S_t(c) = Re sum_j E[t]_j conjugate(E[c]_j)`. If the correct ideal
+code has gap at least `delta` and
+`sum_j |h_j - E[t]_j| <= eta`, then every raw score differs from its ideal
+score by at most `eta`. Thus `2 eta < delta` implies correct real-source
+classification. The feature error is on the computed residual state above;
+it is not a replacement definition of the network. Unit-modulus embeddings,
+code separation and the feature approximation are explicit hypotheses,
+not inferred properties of the trained embedding.
+
+### CP3. Executed classification from a raw source margin
+
+Suppose `R_t - R_c >= delta` for every incorrect class and an execution
+returns scores `Lhat` with `|Lhat_c - L_c| <= eta` for every class. Then
+
+```
+Lhat_t - Lhat_c >= delta / D - 2 eta.
+```
+
+Consequently `2 eta D < delta` certifies a strict correct winner for the
+execution. This bound includes the errors of both competing scores and
+the actual source denominator. It allows any embedding and matrices; it
+does not require the unit-code condition used in CP2. The execution-error
+bound must be established separately for the checkpoint/backend in question.
+
+### CP4. Rank-r nonunique recovery to the actual source classifier
+
+Use the rank-r certificate of *Classification without unique recovery*,
+item 1: orthonormal `U,V`, the stated target polar-factor identities,
+supported `UV*+W`, `U*W=0`, `WV=0`, and contractive `cW` for some `c>1`.
+Let `X` fit the observed target matrix `K` and globally minimize nuclear
+norm. For a query `q`, fix real linear matrix scores `s(q,c)` and answer
+`f(q)`. Require each contrast `s(q,f(q))-s(q,c)` to vanish on the unobserved
+tangent directions `T intersect ker(P_Omega)`. Tangent injectivity is not
+required, so multiple optimal feature matrices remain possible.
+
+The previous recovery theorem gives equality of every correct-versus-wrong
+score contrast at `X` and `K`. A **separate source-alignment premise** is
+
+```
+R_f(q)(inputs(q)) - R_c(inputs(q)) = s(q,f(q))(X) - s(q,c)(X),
+```
+
+where `R` is the actual complex-product residual state's tied readout from
+CP1. Absolute scores may differ by a common offset; only correct-versus-wrong
+contrasts need align. If the target matrix gives raw margin `delta(q)`, the
+actual source therefore inherits that raw margin. Applying CP3 proves correct executed
+labels when each execution error is bounded by `eta(q)` and
+`2 eta(q) D_eps(h(inputs(q))) < delta(q)`.
+
+This is a conditional bridge for arbitrary finite rank, not a theorem that
+the normalized neural training objective is the nuclear-norm objective.
+Observed fitting, global optimality, score-contrast preservation, alignment
+and execution accuracy are separate obligations. AdamW convergence,
+flatness of learned spectra and satisfaction of these obligations by the
+cubic-task checkpoints have not been proved. The result does not assert
+that the complex product is optimal among possible blocks or optimizers.
+
+### CP5. Jointly satisfiable, nonunique example
+
+Use two labels with one complex embedding coordinate: `E[0]=1`, `E[1]=-1`,
+epsilon one, both input projections one, and output projection zero. For
+queries `q=0,1`, use input `(q,0)` and answer `q`. The actual residual state
+is `(sigma(q)+i)/sqrt(2)`, with `sigma(0)=1`, `sigma(1)=-1`; its raw score
+is `sigma(c) sigma(q)/sqrt(2)`, giving positive gap `2/sqrt(2)` for both
+different labels. The ideal code gap is two and the actual feature error
+is `sqrt(2-sqrt(2)) < 4/5`, so CP2 applies with `delta=2`, `eta=4/5`.
+
+For the spectral bridge take `K=diag(1,-1)`, observe only the diagonal and
+use the distinct completion `Z=[[1,1],[-1,-1]]`. Both are global minima of
+nuclear norm with value two. Set `U=K`, `V=I`, `W=0`, `c=2`, and fix
+`s(q,c)(X)=sigma(c) Re X[q,q]/sqrt(2)`. Fitting the diagonal proves the
+source alignment for every optimum; every contrast annihilates unobserved
+tangent directions. CP4 therefore applies to both distinct matrices with
+exact execution (`eta=0`) and classifies both inputs correctly.
+
+This witness deliberately uses the residual path; it proves satisfiability
+with distinct labels and distinct feature optima, not modular generalization
+or the usefulness of a nonzero branch. Separate nonzero complex parameter
+instances exercise every real/complex algebraic correspondence.
+
+| Claim | Lean declaration in `Rotate90.ComplexProduct` |
+| --- | --- |
+| Entire real and complex source models agree | `realLogit_eq_logit` |
+| Final normalization preserves strict comparisons | `realLogit_lt_iff` |
+| Approximate separating features classify | `realLogit_correct_of_feature_error` |
+| Raw margin and bounded execution error certify labels | `executed_correct_of_raw_margin` |
+| Nonunique rank-r optimum transfers to executed labels | `executed_correct_of_nonunique_minimum` |
+| Two distinct optima satisfy the concrete source bridge | `copy_nonunique_bridge` |

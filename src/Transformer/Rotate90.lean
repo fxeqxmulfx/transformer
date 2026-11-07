@@ -6,6 +6,7 @@ public import Transformer.Rotate90.Training
 public import Transformer.Rotate90.Learning
 public import Transformer.Rotate90.Memory
 public import Transformer.Rotate90.Forcing
+public import Transformer.Rotate90.ComplexProduct
 
 /-!
 # Powered-division expressivity and a training obstruction for Rotate90 SwiGLU
@@ -53,4 +54,9 @@ prove that correctness cannot be transferred through arbitrary parameter average
 normalized gradients. Without gradients every parameter stays in the initial
 query/base span; the full sampled network supplies the exact forcing response.
 New directions are necessary for span escape but do not certify generalization.
+
+`ComplexProduct` formalizes the native plain-product variant with complex-linear
+projections. Its expanded real and complex source models agree exactly. Strict
+class margins survive final RMSNorm and bounded execution error; a conditional
+rank-r spectral bridge preserves labels even when feature recovery is nonunique.
 -/
