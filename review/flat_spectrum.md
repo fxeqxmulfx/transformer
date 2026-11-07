@@ -5641,3 +5641,101 @@ complex multiplication.
 | A combined contrast error below one preserves classification | `fiber_classifies_of_contrast_error` |
 | Exact modulus-97 cubic equivalence | `cubic97_factor`, `cubic97_eq_iff`, `cubic97_answers_eq_iff` |
 | Concrete additive-Fourier witness | `cubic97_distinct_features_same_readouts`, `cubicFourier97_isometry`, `cubic97_fourier_features_same_readouts` |
+
+## Combined answer contrasts
+
+Added 2026-11-08, task #179. The next step after QE1–QE4 is an arbitrary
+learned decoder on answer coordinates, with explicit error and source alignment.
+These are deterministic conditional bounds. A probe fitted on training inputs
+does not, by itself, establish its error on held-out inputs.
+
+### AC1. Pool the observable error
+
+For a finite latent set `S` and answer map `f:S->A`, put
+`P_f x(a) = sum_{s:f(s)=a} x(s)`. Coordinates are real and may be signed.
+Pooling preserves total mass and contracts absolute error:
+
+```
+sum_a P_f x(a) = sum_s x(s)
+sum_a |P_f e(a)| <= sum_s |e(s)|.
+```
+
+It also commutes with every linear prediction operator:
+`P_f(sum_i w_i x_i) = sum_i w_i P_f(x_i)`.
+Consequently, fixed-design ridge regression with the same penalty commutes
+with pooling its output targets. A smaller answer probe is not an independent
+discovery of a different representation. This identity is checked independently
+in the native diagnostic, including the affine mass correction below.
+
+### AC2. An arbitrary answer decoder and invisible offsets
+
+Let `C(v,a)` be any real answer decoder, including scores for output labels
+outside the answer image. Its score is `s_v(p)=sum_a C(v,a)p(a)`.
+If a latent decoder has weights `C(v,f(s))+b(s)`, its correct-versus-wrong
+contrast on any `x` equals `s_t(P_f x)-s_v(P_f x)`. The common latent offset
+`b(s)` cancels exactly, regardless of its magnitude or the total mass of `x`.
+Errors with zero mass in every fiber have no effect on any pooled score.
+The witness has errors `M,-M` within each of two fibers for arbitrary real `M`.
+
+### AC3. Center the contrast coefficients
+
+Given a reference `r` with total mass one, replace a prediction `p` by
+`p'(a)=p(a)+(1-sum_b p(b))*r(a)`. Then `sum_a p'(a)=1`, even if its entries
+are negative. Use the pushforward reference `P_f r` when pooling; linearity
+and conservation of total mass make correction commute with pooling too.
+
+For any zero-total-mass error `e`, coefficient vector `d`, and constant `c`,
+
+```
+sum_a d(a)e(a) = sum_a (d(a)-c)e(a).
+|sum_a d(a)e(a)| <= max_a |d(a)-c| * sum_a |e(a)|.
+```
+
+If `lo<=d(a)<=hi`, choose `c=(lo+hi)/2`. The multiplier is `(hi-lo)/2`.
+The bound is sharp: `d=(b+1,b-1)` and `e=(M,-M)` give equality for any
+`b,M`. Thus a shared coefficient offset cannot inflate this bound, and
+balanced latent errors disappear before the absolute error is computed.
+
+### AC4. The source's class contrasts
+
+For answer coordinate `a`, output target `t`, competitor `v`, and unit-mass
+prediction `p`, set `e=p-e_a` and `d_v(j)=C(t,j)-C(v,j)`. The decoder's
+ideal gap is `delta_v=C(t,a)-C(v,a)`. AC3 gives
+
+```
+|(s_t(p)-s_v(p))-delta_v| <= ((hi_v-lo_v)/2) * ||e||_1.
+```
+
+Let `alpha_v` bound the difference between the actual raw source contrast
+and this decoded contrast. If the pooled error is at most `epsilon`, the
+actual final RMS denominator is `D`, and each executed logit has error at
+most `eta`, a sufficient condition for every executed comparison is
+
+```
+alpha_v + ((hi_v-lo_v)/2)*epsilon + 2*eta*D < delta_v.
+```
+
+Each competitor keeps its own gap and bound. Combining the smallest gap
+with the largest error from a different competitor needlessly loses precision.
+The Lean source theorem retains all input/branch/final normalizations and
+tied weights. It does not identify either `epsilon` or `alpha_v` from training.
+QR3 can supply a bound on an observable error when its spectral premises are
+proved; AC1–AC4 do not replace those premises with measured accuracy.
+
+### AC5. Nonzero-error source witness
+
+For CP5's two-label source, use its raw score columns as `C` and put mass
+`7/8` on the correct answer and `1/8` on the other. The L1 error is `1/4`,
+the coefficient half-range is `g=2/sqrt(2)`, and the source alignment error
+is `g/4`. With zero execution error, their sum `g/2` is below the ideal
+gap `g`. Both labels classify. This witnesses nonzero recovery and alignment
+errors; it remains a residual-path example, not a learned active product.
+
+| Claim | Lean declaration |
+| --- | --- |
+| Pooling preserves mass, contracts error and commutes with linear prediction | `FeatureCodes.sum_answerMass`, `answerMass_abs_sum_le`, `answerMass_linear_prediction` |
+| Fiber decoder and invisible common offsets/errors | `FeatureCodes.answerScore_pool`, `answer_contrast_common_offset`, `answerScore_ignore_balanced` |
+| Exact unit-mass correction, commuting with pooling | `FeatureCodes.sum_unitMass`, `answerMass_unitMass` |
+| Centered and sharp range bounds | `FeatureCodes.centered_contrast_error_le`, `range_contrast_error_le`, `range_bound_attained` |
+| Combined learned-decoder error | `FeatureCodes.answer_contrast_error_le` |
+| Actual executed source and nonzero-error witness | `ComplexProduct.executed_correct_of_answer_mass`, `copy_answer_mass_classifies` |

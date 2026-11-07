@@ -2,6 +2,7 @@ module
 
 public import Transformer.Rotate90.ComplexProduct.RecoveryWitness
 public import Transformer.Rotate90.ComplexProduct.ApproximateWitness
+public import Transformer.Rotate90.ComplexProduct.AnswerContrast
 
 /-!
 # A flat-spectrum bridge to the complex-product Rotate90 source model
@@ -26,6 +27,10 @@ residual path; nonzero product parameters instantiate the algebraic identities.
 objective gap and approximate contrast alignment. Its error budget retains the
 actual final normalization. A nonzero perturbation of the nonunique witness
 instantiates all bounds without exact optimality of the perturbed matrix.
+
+`executed_correct_of_answer_mass` preserves each competitor's own coefficient
+range and ideal gap. It uses only pooled answer error, with source alignment
+and numerical execution error accounted for separately.
 
 These are exact-arithmetic and conditional decision theorems. They do not prove
 that AdamW finds a spectral optimum, identify the normalized network's weight

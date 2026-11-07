@@ -4,6 +4,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.RankSeparation
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes.NonuniqueWitness
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ApproximateRecovery
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes.CubicQuotient
+public import Transformer.Grokking.FlatSpectrum.FeatureCodes.AnswerContrast
 
 /-!
 # Joint feature recovery and robust classification
@@ -40,4 +41,8 @@ Answer-fiber readouts preserve classification while ignoring distinctions betwee
 latent inputs with the same answer. Their error budget is on the combined fiber
 contrast. The cubic modulus-97 example proves that distinct full Fourier features
 for sums 1 and 35 give identical complete cubic score vectors.
+
+For arbitrary learned answer decoders, pooling contracts absolute error and
+commutes with linear prediction. Unit mass allows contrast coefficients to be
+centered; half their range bounds the combined error with a sharp constant.
 -/
