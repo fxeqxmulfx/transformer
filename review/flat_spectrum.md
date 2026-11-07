@@ -6122,3 +6122,128 @@ coverage, or a priori generalization without running the query model.
 | Nonzero geometric witness | `FeatureCodes.nonzero_anchor_geometry_witness` |
 | Exact normalized source readout | `ComplexProduct.readoutState_logit` |
 | Execution allowance and source bounds | `ComplexProduct.executed_relative_le_anchor`, `executed_probability_ge_anchor`, `executed_crossEntropy_le_anchor` |
+
+## Signed directional transport
+
+Added 2026-11-08, task #183. PT3 uses a norm penalty for the entire displacement
+from a training reference. TT1 already identifies an exact signed contribution
+from reconstructed training directions. This extension preserves that term
+and bounds only the remaining state/readout interaction. It proves a pointwise
+bound, not a claim that training discovers a useful low-dimensional subspace.
+
+### ST1. Preserve the signed training contribution
+
+For normalized training states `T_i`, a center `mu`, query `x`, readout contrast
+`w=E_c-E_t` and coefficients `a_i`, define
+
+```
+r = x - mu - sum_i a_i*(T_i-mu)
+prediction = <w,mu> + sum_i a_i*(<w,T_i>-<w,mu>)
+<w,x> = prediction + <w,r>.
+```
+
+The equality follows from TT1's exact transport decomposition. The coefficients
+may have either sign, and reconstruction may extrapolate beyond the training
+states. No convexity assumption or omitted residual is introduced. In the
+diagnostic `mu` is the mean of normalized training states, so linearity gives
+mean training log odds for `<w,mu>`; the weighted terms use only training
+log-odds deviations. The baseline bound is
+
+```
+abs(<w,x> - prediction) <= ||r||_2 * ||w||_2.
+```
+
+Unlike TT2's covariance bound, the reconstructed training contribution is kept
+signed. It is not replaced by an upper bound on its absolute value.
+
+### ST2. Separate the remaining readout directions
+
+For any finite vectors `B_j` and coefficients `b_j`, let
+
+```
+u = w - sum_j b_j*B_j
+<w,r> = <u,r> + sum_j b_j*<B_j,r>
+abs(<w,r>) <= ||r||_2*||u||_2 + sum_j abs(b_j)*abs(<B_j,r>).
+```
+
+Lean proves the decomposition and bound without assuming the vectors are
+orthonormal. The second term is an explicit geometric orthogonality defect.
+If every `<B_j,r>=0`, the two residual norms suffice, as a separate theorem
+shows. This hypothesis cannot silently be imposed on floating-point SVD.
+The counterexample `B=r=w=b=1` has zero readout residual but interaction one,
+so omitting the defect without orthogonality is false even for a unit basis.
+
+The theorem allows arbitrary vectors; the diagnostic restricts `B` to a basis
+computed solely from centered training states, without query states or readout
+weights. It uses `b_j=<B_j,w>`. The constructor computes query scores against
+this training basis, but never the original query class readout. The remaining
+readout norm is computed from weights and the training basis.
+
+### ST3. Transfer probabilities and retain actual source execution
+
+Set `U_c=prediction_c+residual_bound_c` for each wrong class. ST1–ST2 give
+`z_c(x)-z_t(x)<=U_c`; PT2 then supplies
+
+```
+R = sum_(c!=t) exp(U_c)
+p_t >= 1/(1+R),       CE <= log(1+R).
+```
+
+The same finite-mean theorem includes every query, including failed decision
+conditions. `R<1` and `max U_c<0` retain their distinct probability-majority
+and argmax meanings. Task-preserving cubic routes supply the candidate answer
+from observed training labels; no learned equivariance is assumed.
+
+The plain-product source bridge uses its actual normalized `readoutState`,
+including all four RMS normalizations. With per-logit execution error at most
+`eta`, each bound increases by `2*eta`. The numerical diagnostic starts at
+eta zero and reports an available allowance. It does not prove an FP64 error
+bound for its decomposition, training readouts or source evaluator.
+
+### ST4. Rank control and the full-reconstruction limit
+
+The [frozen native protocol](../experiments/signed_transport/PROTOCOL.md) uses
+thin SVD of centered normalized training states, with singular cutoff
+`1e-10*s_max` and fixed ranks `0,1,2,4,8,16,32,64,128`. Each rank is clamped to
+the available training rank. It uses the state projection to construct signed
+training coefficients, then explicitly recomputes the residual from those
+coefficients and training states. No exact SVD identity is assumed by the bound.
+
+Rank zero gives the previous normalized training-center baseline. At the other
+extreme, Lean proves `r=0` implies the training prediction equals the original
+score. Full-dimensional reconstruction can therefore re-express the source's
+classification without explaining its learning or compression. The diagnostic
+retains every rank; successful full-rank reconstruction must not be reported
+as evidence of a useful low-rank representation. Finite training rank and the
+cutoff can also leave a residual at the requested ambient rank 128.
+
+Validation queries use all training references in their group. Training queries
+use the opposite half of alternating sorted group training indices, avoiding
+self reconstruction. Their reference sets differ from validation's. Both
+complete constructions are hashed before a separate target/score audit.
+
+### ST5. Nonzero witness and scope
+
+Take normalized-coordinate training states `(1/2,0)` and `(3/2,0)`, center
+`(1,0)`, query `(3,1/4)`, contrast `w=(-2,1)`, and coefficients `(-2,2)`.
+The signed prediction is `-6`; the residual `(0,1/4)` is genuinely nonzero.
+The training basis `(1,0)` with readout coefficient `-2` leaves readout residual
+`(0,1)`. Its defect is zero, and the upper contrast bound is exactly `-23/4`.
+Both observed training contrasts are negative. Lean proves the nonzero residual
+and exact upper bound; the native test also checks the resulting probability.
+
+Known task symmetry and query evaluation remain necessary. A successful saved
+state bound is neither optimizer convergence nor an independent statistical
+generalization result. The generic linear-readout bound applies to every native
+arm; the formal source bridge is specific to the plain complex product.
+
+| Claim | Lean declaration |
+| --- | --- |
+| Exact signed reconstruction and baseline error | `FeatureCodes.linearScore_signed_residual`, `signed_transport_norm_le` |
+| Readout residual identity and directional bound | `FeatureCodes.linearScore_readout_residual`, `directional_residual_abs_le` |
+| Signed transport error and upper bound | `FeatureCodes.signed_transport_abs_le`, `signed_transport_upper` |
+| Zero-residual re-expression limit | `FeatureCodes.exact_transport_of_zero_residual` |
+| Orthogonal specialization and necessary defect | `FeatureCodes.orthogonal_residual_abs_le`, `orthogonality_defect_necessary` |
+| Relative logit, probability and loss transfer | `FeatureCodes.relative_logit_le_signed`, `probability_ge_signed_bound`, `crossEntropy_le_signed_bound` |
+| Nonzero extrapolation witness | `FeatureCodes.signed_transport_nonzero_witness` |
+| Actual source with execution allowance | `ComplexProduct.executed_relative_le_signed`, `executed_probability_ge_signed`, `executed_crossEntropy_le_signed` |

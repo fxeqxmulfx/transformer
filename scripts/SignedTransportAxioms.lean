@@ -1,0 +1,20 @@
+import Transformer
+
+/-! Audit the signed directional transport extension ST1–ST5. -/
+
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.linearScore_signed_residual
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.signed_transport_norm_le
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.linearScore_readout_residual
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.directional_residual_abs_le
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.signed_transport_abs_le
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.signed_transport_upper
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.exact_transport_of_zero_residual
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.orthogonal_residual_abs_le
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.orthogonality_defect_necessary
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.relative_logit_le_signed
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.probability_ge_signed_bound
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.crossEntropy_le_signed_bound
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.signed_transport_nonzero_witness
+#print axioms Transformer.Rotate90.ComplexProduct.executed_relative_le_signed
+#print axioms Transformer.Rotate90.ComplexProduct.executed_probability_ge_signed
+#print axioms Transformer.Rotate90.ComplexProduct.executed_crossEntropy_le_signed
