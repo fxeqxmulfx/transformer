@@ -5865,3 +5865,124 @@ complex product; the generic linear-readout inequalities apply to all four arms.
 | Source decision from valid bound choices | `ComplexProduct.executed_correct_of_center_bounds` |
 | Euclidean and training-transport source budgets | `ComplexProduct.executed_correct_of_euclidean_center`, `executed_correct_of_training_transport` |
 | Source witness | `ComplexProduct.copy_training_transport_classifies` |
+
+## Loss-controlled geometry
+
+Added 2026-11-08, task #181. TT1–TT5 bound query contrasts from training
+geometry but do not say that the objective reduces raw state or contrast
+scatter. Before assuming such a mechanism, distinguish the quantity that
+small cross-entropy actually controls. The results below apply to the real
+finite-class CE used by the source models, including all competing labels.
+
+### LG1. The objective controls missing target probability
+
+For arbitrary finite logits `z`, write
+
+```
+p_c = exp(z_c) / sum_j exp(z_j)
+ell(z,t) = log(sum_j exp(z_j)) - z_t = -log(p_t).
+```
+
+A target index witnesses that the denominator is positive. Thus every `p_c`
+is positive, each is at most one, and the probabilities sum to one.
+The elementary inequality `log(x) <= x-1` for `x>0` yields
+
+```
+1-p_t <= ell(z,t).
+```
+
+This is a theorem about the actual objective, with no correct-classification,
+large-margin, optimizer or feature-collapse premise. The finite softmax in
+`Geometry.probability` agrees with the source's log-sum-exp CE definition in
+`Landscape.Neural.Loss`.
+
+### LG2. Small loss controls squared probability error
+
+Let `e_t` be the one-hot target vector. Since `sum_c p_c^2 <= sum_c p_c = 1`,
+
+```
+||p-e_t||_2^2 = sum_c p_c^2 + 1 - 2*p_t
+              <= 2*(1-p_t) <= 2*ell(z,t).
+```
+
+Lean derives this from the finite sums. The constant two is a convenient
+universal bound; no sharpness is claimed. This does not bound raw logits or
+hidden states: softmax is nonlinear and does not have a uniform inverse
+Lipschitz constant in the high-confidence regime.
+
+### LG3. Training probability scatter follows from training loss
+
+For a finite same-answer group of rows `S`, define the computed probability
+mean `pbar = sum_{i in S} p_i / |S|`. Coordinatewise least-squares optimality
+of that mean, already proved by `Geometry.mean_minimizes_error`, gives
+
+```
+sum_i ||p_i-pbar||_2^2 <= sum_i ||p_i-e_t||_2^2 <= 2*sum_i ell_i.
+```
+
+Consequently mean CE at most `epsilon` implies mean within-group probability
+scatter at most `2*epsilon`. Every same-answer training group obeys this;
+summing the group inequalities gives the corresponding weighted split bound.
+The exact centering identity also separates the two terms:
+
+```
+mean_i ||p_i-e_t||_2^2 = mean_i ||p_i-pbar||_2^2 + ||pbar-e_t||_2^2.
+```
+
+The mean could be confidently wrong if only its within-group scatter were
+examined. CE controls the error to the correct target as well. These statements
+apply to exactly the rows where CE is measured. Small training CE gives no
+held-out loss bound. A decreasing loss lowers this upper bound; it need not
+make the actual scatter decrease at every step. No optimizer convergence rate
+or existence of a small-loss iterate is asserted.
+
+### LG4. Actual shared-parameter descent can expand raw contrasts
+
+Consider two same-label binary examples with logits `(theta,0)` and
+`(2*theta,0)`, both targeting the first class. Their one shared trainable
+scalar has the actual objective
+
+```
+F(theta) = (CE(theta,0) + CE(2*theta,0))/2
+F'(theta) = ((sigmoid(theta)-1) + 2*(sigmoid(2*theta)-1))/2 < 0.
+```
+
+Their raw class contrasts are `theta` and `2*theta`; subtracting the actual
+mean `3*theta/2` leaves total centered energy `theta^2/2`. For every `eta>0`
+and `theta>=0`, the genuine gradient step
+`theta_next = theta - eta*F'(theta)` increases theta, strictly lowers F and
+strictly increases the raw contrast energy. Lean proves the derivative and
+strict decrease rather than inserting a prescribed gradient in a definition.
+There is no step-size restriction here because this particular scalar loss
+is strictly decreasing on the entire real line.
+
+This refutes unconditional raw-contrast contraction from CE descent, even with
+shared parameters and no label conflict. It is a two-example classifier,
+not a claim that the native transformer realizes this exact scalar trajectory.
+The normalized source has additional parameter coupling and state geometry;
+those must be established separately to explain its training dynamics.
+
+### LG5. Fixed-cohort comparison and remaining obligation
+
+The [native diagnostic](../experiments/loss_geometry/README.md) measures both
+geometries on all 24 original saved states, grouping by equal sums or cubic
+answer orbits. Training and validation means are computed independently.
+The protocol fixes the cohort, metrics and numerical tolerances before the
+measurement. Adjacent checkpoints are finite training intervals, not gradient
+steps; their geometry changes cannot identify a causal optimizer mechanism.
+
+This extension establishes which output geometry follows from the observed
+objective. It does not upgrade TT3 to a generalization theorem: its raw contrast
+transport terms still need control, or a separate probability-space transfer
+bound must connect unobserved inputs to training evidence. Validation versions
+of LG1–LG3 use validation CE and are retrospective checks only. All numerical
+calculations are FP64 evidence, not certified execution arithmetic.
+
+| Claim | Lean declaration |
+| --- | --- |
+| Probability simplex and actual CE identity | `Geometry.probability_pos`, `sum_probability`, `probability_le_one`, `crossEntropy_eq_neg_log_probability` |
+| Objective controls missing probability and one-hot error | `Geometry.missing_probability_le_loss`, `probability_error_le_twice_loss` |
+| Group scatter and its loss ceiling | `Geometry.probability_scatter_le_twice_loss`, `mean_probability_scatter_le` |
+| Actual shared-scalar derivative and sign | `GradientEvidence.sharedContrastLoss_hasDerivAt`, `sharedContrastLoss_deriv_neg` |
+| Strict loss decrease and computed raw scatter | `GradientEvidence.sharedContrastLoss_strictAnti`, `sharedContrast_scatter` |
+| Actual descent with expanding raw contrasts | `GradientEvidence.descent_increases_contrast_scatter` |
