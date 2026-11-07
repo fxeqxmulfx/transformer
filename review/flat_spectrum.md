@@ -5739,3 +5739,129 @@ errors; it remains a residual-path example, not a learned active product.
 | Centered and sharp range bounds | `FeatureCodes.centered_contrast_error_le`, `range_contrast_error_le`, `range_bound_attained` |
 | Combined learned-decoder error | `FeatureCodes.answer_contrast_error_le` |
 | Actual executed source and nonzero-error witness | `ComplexProduct.executed_correct_of_answer_mass`, `copy_answer_mass_classifies` |
+
+## Training-state transport
+
+Added 2026-11-08, task #180. AC4 still required a measured error against an
+ideal answer code and a source-alignment term. Here the bound works directly
+with the actual tied readout. Its inputs are observed training labels/states,
+the trained readout weights, raw query operands and the unlabeled query state.
+It is an input-dependent deterministic condition, not an optimizer theorem,
+a statistical coverage claim, or a prediction made without running the model.
+
+### TT1. Reconstruct a query displacement
+
+Let `T_i` be real training states in a group that preserves the task answer,
+`mu` a center computed from them, and `x` the query state. The diagnostic uses
+the training mean as `mu`. For arbitrary real coefficients `a_i`, define
+
+```
+H_i = T_i - mu
+r = x - mu - sum_i a_i H_i.
+```
+
+The residual is calculated from states and is never assumed to vanish. For
+any linear contrast `L_w(z)=sum_k w_k z_k`, exact algebra gives
+
+```
+L_w(x)-L_w(mu) = sum_i a_i (L_w(T_i)-L_w(mu)) + L_w(r).
+```
+
+Neither a fitted ideal decoder nor its alignment with the source is needed.
+
+### TT2. Joint training/residual energy
+
+For nonzero real `s`, put `lambda=s^2>0` and
+
+```
+G = sum_i a_i^2 + ||r||_2^2/lambda
+B_w = sum_i (L_w(T_i)-L_w(mu))^2 + lambda*||w||_2^2.
+```
+
+Apply Cauchy–Schwarz to the concatenated vectors
+`(a_i, r_k/s)` and `(L_w(T_i)-L_w(mu), s*w_k)`. This proves
+
+```
+|L_w(x)-L_w(mu)| <= sqrt(G*B_w).
+```
+
+All terms on the right use training contrasts, known weights and query-state
+geometry. No query target error occurs. Omitting the residual term is false:
+zero training states and center, with scalar query and readout both one, have
+zero training variation and query contrast error one. This counterexample is
+proved explicitly.
+
+A separate Euclidean-center baseline is
+`|L_w(x)-L_w(mu)| <= ||x-mu||_2*||w||_2`. It uses displacement from a
+training center, which can be much smaller than the complete query state.
+
+The numerical diagnostic chooses `a` by regularized linear reconstruction:
+`z=(H^T H+lambda I)^(-1)(x-mu)`, `a=H z`, `r=x-mu-H^T a`. The theorem
+does not depend on inversion correctness or optimality: any coefficients with
+their actual residual satisfy its inequality. Floating-point evaluation of
+the coefficients, residual and inequalities still needs arithmetic certification.
+
+### TT3. Actual source classification and valid bound selection
+
+For target label `t` supplied by training and competitor `v`, take
+`w_v=realify(E_t)-realify(E_v)`, the difference of the actual tied embedding
+rows. The existing real/complex correspondence proves
+`L_wv(realify(state)) = rawLogit_t-rawLogit_v` exactly. Put `g_v=L_wv(mu)`.
+The source classifier's executed comparison is correct whenever
+
+```
+sqrt(G_v*B_v) + 2*eta*D < g_v
+```
+
+for every wrong class, where `D` is the actual final RMS denominator and
+`eta` bounds each executed logit's error. A separate theorem supplies the
+Euclidean baseline. Another permits selecting a different valid upper bound
+for each competitor: every candidate must bound that contrast error before
+selection. This justifies the diagnostic's fixed scale grid and its mixture
+with the Euclidean baseline without using query target errors to select scales.
+There is no theorem that AdamW discovers small training variation or transport
+energy, nor a claim that every query satisfies the strict budget.
+
+### TT4. Transfer a training label along a task-preserving route
+
+In `ZMod 97`, each `u` in `{1,35,61}` satisfies `u^3=1`. The route
+
+```
+(a,b) -> (u*a+t, u*b-t)
+```
+
+therefore preserves `(a+b)^3`. Conversely, a checked sum relation
+`c+d=u*(a+b)` supplies the route with `t=c-u*a`. A theorem composes this
+identity with an observed training label. The numerical constructor groups
+equal sums, or sums in the same three-element orbit, and checks an explicit
+allowed multiplier and translation for every member. Groups without training
+anchors abstain. The constructor does not cube query sums to obtain labels.
+Task symmetry is known here; no equivariance of the trained network is assumed.
+
+### TT5. Concrete witnesses and practical scope
+
+Take two real training states `(1,1),(1,-1)`, center `(1,0)`, query
+`(9/8,1/4)`, contrast weights `(2,0)`, coefficients `(1/8,-1/8)` and
+`s=1/2`. The residual is `(1/8,0)`, and `G*B=3/32`, so its square root
+is strictly below the center margin two. Lean proves both the nonzero residual
+and the positive budget. The source theorem also has CP5's exact-center witness.
+That witness remains a residual-path example, not a learned active product.
+
+The [native diagnostic](../experiments/contrast_transport/README.md) constructs
+and hashes all candidate labels and bounds before a separate audit accesses
+query labels and logits. Positive FP64 budgets are useful evidence about these
+saved states, but they do not constitute verified backend arithmetic or an
+independent statistical test. The source-specific Lean bridge covers plain
+complex product; the generic linear-readout inequalities apply to all four arms.
+
+| Claim | Lean declaration |
+| --- | --- |
+| Center-displacement baseline | `FeatureCodes.center_contrast_error_le` |
+| Exact training/residual decomposition | `FeatureCodes.linearScore_transport` |
+| Weighted Cauchy–Schwarz and query error | `FeatureCodes.weighted_transport_sq_le`, `training_transport_error_le` |
+| Necessary residual and nonzero positive witness | `FeatureCodes.residual_penalty_necessary`, `training_transport_nonzero_witness` |
+| Exact cubic route and observed-label transfer | `FeatureCodes.cubic97_route`, `cubic97_route_of_sum`, `cubic97_transfer_label` |
+| Actual source contrast identity | `ComplexProduct.linearScore_contrastRow` |
+| Source decision from valid bound choices | `ComplexProduct.executed_correct_of_center_bounds` |
+| Euclidean and training-transport source budgets | `ComplexProduct.executed_correct_of_euclidean_center`, `executed_correct_of_training_transport` |
+| Source witness | `ComplexProduct.copy_training_transport_classifies` |
