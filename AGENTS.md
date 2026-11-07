@@ -4,6 +4,16 @@ Lean in `src/` formalizes the manuscripts in `papers/` (gitignored; `./run.py pa
 fetches missing ones; read them there, not on the web). The lab in `python/` runs the
 experiments in `experiments/`. `./run.py` runs every task.
 
+## Current user override (2026-11-07)
+
+- Do not use Python for future work, including experiments, scripts, wrappers or
+  regression suites. Use Rust/Kernite for experiments and native tooling.
+- Invoke Lean directly with `LAKE_ARTIFACT_CACHE=false`: `lake build`,
+  `lake env lean scripts/Axioms.lean`, and the applicable Lean checks.
+- This instruction supersedes the `./run.py`, `uv` and Python-suite requirements
+  below. Existing Python sources remain reference material. Keep `INDEX.md`
+  generated; use or port a native generator when regeneration is next needed.
+
 ## Always
 
 - Work solo: no subagents, no parallel agents of your own; the user's other agents
