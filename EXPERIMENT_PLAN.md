@@ -66,6 +66,17 @@ tiny. This verifies the loss implementation, not useful accuracy gains or
 efficiency. Next specify local objectives for every block and a complete
 shared-parameter update before freezing task #190's training pilot.
 
+Task #190 now freezes the [complete native pilot](experiments/forward_training/PROTOCOL.md):
+32 from-scratch runs, four original arms and two seeds, 4000 updates per run.
+CE backpropagation, pairwise backpropagation, full auxiliary-loss
+backpropagation and local pairwise credit are distinct controls. Fixed
+vocabulary/hidden heads add token reconstruction and task-label objectives;
+the shared embedding receives all applicable contributions before one AdamW
+update. The local variant does not propagate upper-block errors into earlier
+blocks. Costs, numerical checks, caps and matched-quality criteria are frozen
+before outcomes. Forward-mode/finite-difference training remains an untested
+alternative; finite differences in this pilot are correctness checks only.
+
 For optimizer efficiency, separate cheaper arithmetic per update from reaching
 the same quality in less total time. Preserve exact baseline semantics, measure
 the optimizer's share of complete step time, and validate the candidate's
