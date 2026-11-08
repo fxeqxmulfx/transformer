@@ -90,6 +90,13 @@ pilot. Next diagnose local-update alignment with terminal credit, including
 the tied embedding, before defining another candidate. That diagnosis would
 use backpropagation as measured analysis, not hidden free training.
 
+Task #193 freezes the [alignment diagnostic](experiments/forward_alignment/PROTOCOL.md):
+40 initial/endpoint states, seven one-step counterfactuals per state, three
+data scopes and independent complex-coordinate pairings. Separate current
+gradient alignment from actual AdamW motion, inspect both tied-E sources,
+and compare infinitesimal predictions with finite loss changes. All
+diagnostic backward passes are counted; no new training trajectory is run.
+
 For optimizer efficiency, separate cheaper arithmetic per update from reaching
 the same quality in less total time. Preserve exact baseline semantics, measure
 the optimizer's share of complete step time, and validate the candidate's
