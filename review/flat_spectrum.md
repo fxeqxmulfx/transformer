@@ -6565,3 +6565,112 @@ and difficult-query losses under joint forcing and moving features/bases.
 Residual contraction and average-margin improvement alone do not supply it.
 This evidence motivates that extension; it introduces no additional Lean
 claim of convergence or discovery and leaves complex multiplication unchanged.
+
+## Joint difficult-query control
+
+Task #187 extends AI's interaction analysis to the actual competing-class
+score gaps and individual query losses. Source equations are the native
+coordinate AdamW update at 14cff3b5 and the finite-class softmax CE in
+`Transformer.Landscape.Neural.Loss`. The mathematical statements below are
+exact-real identities and sufficient bounds; their numerical audit retains
+explicit parameter rounding and executed-logit discrepancies.
+
+### JC1. Keep signed parameter and feature changes together
+
+For a competitor-minus-target readout w and a normalized feature x, write
+the new readout as `w'=w+p+rho` and the new feature as `x'=x+dx`. The intended
+increment p and rounding remainder rho are distinct. Then
+
+```
+L = <p,x> + <w,dx>
+gap' - gap = L + <p,dx> + <rho,x'> + (e'-e)
+R = ||p|| ||dx|| + ||rho|| ||x'|| + |e'-e|
+gap + L - R <= gap' <= gap + L + R.
+```
+
+The two first-order terms are combined before taking any absolute value.
+Cauchy–Schwarz bounds the mixed term and rounding term; a triangle inequality
+adds the explicit execution change. The separated allowance
+`S=||p||||x||+||w||||dx||+R` also bounds the full change in both directions.
+The signed upper allowance L+R is at most S. This does not assert small
+feature movement or small forcing as a consequence of training CE.
+
+The nonzero scalar witness w=2, p=1, x=2, dx=-1 has L=0, R=1 and S=5.
+The score changes by -1 through the mixed term. Thus omitting that term is
+incorrect even when the two first-order contributions cancel exactly.
+
+### JC2. Control every competing class under the actual update
+
+For each competitor c and target t, use w=E_c-E_t and its own increment
+contrast. Define `U_c=gap_c+L_c+R_c` and `V_c=gap_c+L_c-R_c` from JC1.
+Every new gap lies in `[V_c,U_c]`. Hence if all U_c are at most -m, the
+new target has margin at least m against every competitor. In particular,
+all U_c<0 suffice for a strict correct prediction. Checking only the old
+worst competitor would miss changes in its identity.
+
+The source Adam increment is proved to be
+
+```
+p_c = -eta * (decay*E_c + D_c*M_c)
+p_c-p_t = -eta * (decay*(E_c-E_t) + D_c*M_c-D_t*M_t).
+```
+
+M and D come from the already updated moment buffers, retaining bias
+correction and epsilon. Each class has its own diagonal scale. Adding p
+reconstructs `bufferedAdamUpdate`; adding rho connects the joint bound to
+the actual rounded parameters. A concrete margin witness has nonzero
+moments, decay, parameter movement and feature movement, with different
+preconditioners for the two class rows.
+
+### JC3. Control actual query loss with old probability weights
+
+For arbitrary old/new logits z,z', define
+`delta_c=(z'_c-z'_t)-(z_c-z_t)` and the actual old softmax p_c. Lean proves
+
+```
+CE(z',t)-CE(z,t) = log(sum_c p_c * exp(delta_c)).
+```
+
+The target increment is zero. If every delta_c is bounded by B_c, the
+same expression with B gives an upper bound on loss change. A weighted
+exponential moment at most one is sufficient for loss nonincrease. This
+condition permits signed compensation across classes but does not replace
+their old probabilities by uniform weights or replace CE by a mean margin.
+
+Taking `B_c=L_c+R_c` instantiates this bound with the actual joint step.
+Equivalently, the target contributes its fixed zero gap, and the wrong-class
+upper/lower gaps U/V give upper/lower CE bounds through log-sum-exp. Both
+directions are proved, allowing detection of worsening as well as improving
+query losses. Parameter and feature contributions remain signed inside L.
+
+### JC4. Preserve difficult queries and retain the limitation
+
+Independently valid query loss ceilings average over any fixed subset.
+The native protocol freezes the lowest-margin decile of each old split
+before evaluating the new state, and retains old errors as another subset.
+It does not select difficult rows using the new outcome.
+
+A proved two-query binary counterexample uses old margins `(log 8,log 8)`
+and new margins `(log 256,log 2)`. Both new predictions remain strictly
+correct and the mean margin increases, but mean actual CE increases:
+the old loss product is `(9/8)^2=81/64`, whereas the new one is
+`(257/256)*(3/2)=771/512 > 81/64`. The second query's margin deteriorates.
+This formally rules out an average-margin argument for loss improvement.
+
+These are conditional local guarantees. The audit measures dx and numerical
+execution error after the update. Deriving a useful bound on feature movement
+from pre-update training quantities, and validating it on further seeds/tasks,
+remain separate obligations. No convergence or optimizer-discovery theorem
+is inferred. The new bounds use ambient normalized features and need no PCA
+basis, avoiding a dependence on how fitted subspace coordinates move.
+
+| Claim | Lean declarations in `GradientEvidence` |
+| --- | --- |
+| Exact finite step and joint interval | `score_step_identity`, `score_step_error_bound`, `score_step_interval` |
+| Comparison with separated norms | `joint_drift_abs_le`, `score_step_separate_bound`, `joint_upper_le_separate` |
+| Nonzero mixed-term witness | `joint_score_cancellation_witness` |
+| All-competitor bounds and margins | `gap_step_error_bound`, `new_gap_le_joint_upper`, `joint_lower_le_new_gap`, `all_competitor_margin`, `strict_winner_of_joint_step` |
+| Actual Adam and row-specific scales | `adam_increment_update`, `adam_increment_contrast`, `adam_gap_le_joint_upper`, `adam_margin_of_joint_condition` |
+| Exact probability-weighted CE change | `crossEntropy_relative_change`, `loss_change_le_relative_bound` |
+| Joint query and subset loss bounds | `loss_change_le_joint_step`, `loss_nonincrease_of_joint_step`, `crossEntropy_le_joint_step`, `crossEntropy_ge_joint_step`, `meanCrossEntropy_le_joint_step` |
+| Mean-margin counterexample | `mean_margin_loss_counterexample` |

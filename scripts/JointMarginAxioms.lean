@@ -1,0 +1,39 @@
+import Transformer
+
+/-! Audit the joint difficult-query margin and loss control, JC1–JC4. -/
+
+#print axioms Transformer.Grokking.GradientEvidence.score_step_identity
+#print axioms Transformer.Grokking.GradientEvidence.score_step_error_bound
+#print axioms Transformer.Grokking.GradientEvidence.score_step_interval
+#print axioms Transformer.Grokking.GradientEvidence.joint_drift_abs_le
+#print axioms Transformer.Grokking.GradientEvidence.score_step_separate_bound
+#print axioms Transformer.Grokking.GradientEvidence.joint_upper_le_separate
+#print axioms Transformer.Grokking.GradientEvidence.joint_score_cancellation_witness
+#print axioms Transformer.Grokking.GradientEvidence.readout_gap
+#print axioms Transformer.Grokking.GradientEvidence.classContrast_step
+#print axioms Transformer.Grokking.GradientEvidence.gap_step_error_bound
+#print axioms Transformer.Grokking.GradientEvidence.new_gap_le_joint_upper
+#print axioms Transformer.Grokking.GradientEvidence.joint_lower_le_new_gap
+#print axioms Transformer.Grokking.GradientEvidence.all_competitor_margin
+#print axioms Transformer.Grokking.GradientEvidence.strict_winner_of_joint_step
+#print axioms Transformer.Grokking.GradientEvidence.weightedExp_eq_ratio
+#print axioms Transformer.Grokking.GradientEvidence.weightedExp_pos
+#print axioms Transformer.Grokking.GradientEvidence.weightedExp_zero
+#print axioms Transformer.Grokking.GradientEvidence.weightedExp_sub_const
+#print axioms Transformer.Grokking.GradientEvidence.crossEntropy_change_weighted
+#print axioms Transformer.Grokking.GradientEvidence.crossEntropy_relative_change
+#print axioms Transformer.Grokking.GradientEvidence.weightedExp_mono
+#print axioms Transformer.Grokking.GradientEvidence.loss_change_le_relative_bound
+#print axioms Transformer.Grokking.GradientEvidence.loss_nonincrease_of_relative_bound
+#print axioms Transformer.Grokking.GradientEvidence.loss_change_le_joint_step
+#print axioms Transformer.Grokking.GradientEvidence.loss_nonincrease_of_joint_step
+#print axioms Transformer.Grokking.GradientEvidence.crossEntropy_le_joint_step
+#print axioms Transformer.Grokking.GradientEvidence.crossEntropy_ge_joint_step
+#print axioms Transformer.Grokking.GradientEvidence.meanCrossEntropy_le_joint_step
+#print axioms Transformer.Grokking.GradientEvidence.adam_increment_update
+#print axioms Transformer.Grokking.GradientEvidence.adam_increment_contrast
+#print axioms Transformer.Grokking.GradientEvidence.adam_readout_step
+#print axioms Transformer.Grokking.GradientEvidence.adam_gap_le_joint_upper
+#print axioms Transformer.Grokking.GradientEvidence.adam_margin_of_joint_condition
+#print axioms Transformer.Grokking.GradientEvidence.binary_log_odds_loss
+#print axioms Transformer.Grokking.GradientEvidence.mean_margin_loss_counterexample
