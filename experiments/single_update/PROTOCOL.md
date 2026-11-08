@@ -70,7 +70,7 @@ oracle on those rows (`5e-5*(1+max_abs(reference))`).
 
 Retain sum and cubic-orbit groups, requested ranks 16/32/64, and both splits.
 Fit centers and PCA bases only on observed training rows, using the same
-raw pre-final-RMS states and rank threshold as tasks #184/#185. Refit after
+normalized readout features and rank threshold as tasks #184/#185. Refit after
 the actual update. Record achieved ranks and preserve all groups.
 
 For class contrast w, centered feature displacement x-mu, let
@@ -81,8 +81,8 @@ movement and feature-basis movement. This identity retains all finite-step
 effects; a 5000-step checkpoint difference is not an optimizer step.
 
 The training-affine reconstruction is `s=<w,mu+(I-Q)(x-mu)>`.
-Carry the projection defect `e=<w,r>-J` and final RMS denominator d, so the
-real-valued reconstructed competitor gap is `(s+J+e)/d`. Compare it with
+Carry the projection defect `e=<w,r>-J`; features already include the final
+RMS denominator, so the reconstructed competitor gap is `s+J+e`. Compare it with
 the executed GPU gap and retain the measured execution allowance. For each
 query report actual margin, reconstructed margin, maximum absolute residual
 budget, and the sufficient condition that *every* reconstructed competitor
@@ -96,5 +96,10 @@ that has no access to the learned readout.
 FP64 algebra/energy and geometry identity tolerances are
 `1e-8*(1+largest relevant magnitude)`; reconstructed-vs-GPU gap tolerance is
 `5e-5*(1+largest gap magnitude)`. No positive certificate may misclassify.
+Source-inspection correction before any measurement: #184/#185 fit bases
+after final RMS, not before it. The initial protocol text said pre-RMS;
+the audit uses normalized features to preserve that comparison and checks
+their relation to the raw state separately.
+
 Existing actual-Adam and moving-interaction Lean results are the theoretical
 reference. Any further convergence theorem must be justified separately.
