@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`forward_alignment`](forward_alignment) | 40 states; 280 restored one-step probes | Hidden local loss decreases at all eight failed local endpoints while A-only full-training CE increases in all eight and validation CE in seven. Separate gradient direction, AdamW motion and finite-step effects; 1120 derivative checks pass. |
 | [`forward_training`](forward_training) | 32 complete 4000-update runs | Full local pairwise training fails at 2.23–10.50% validation accuracy versus 99.28–99.87% CE; all gradient/source replay checks pass. Retained timings have foreign GPU workloads and establish no efficiency gain. |
 | [`forward_forward`](forward_forward) | 24 source states; local readout probes | Directional goodness and a modified pairwise local loss: 19 Lean theorems and all GPU loss/gradient checks pass; the complete training test is in `forward_training`. |
 | [`single_update`](single_update) | 24 actual one-step probes | Exact-source attribution, retrospective joint bounds and forecasts frozen before updated-network evaluation. All 225816 feature balls pass; forecasts certify 90.38% of trained validation decisions but no loss-change directions, exposing conservative error propagation. |

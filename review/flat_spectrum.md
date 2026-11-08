@@ -6939,3 +6939,30 @@ heads or boundaries. Any full-gradient measurements used for diagnosis must
 remain separate from the information available to a proposed local trainer.
 The pilot found no efficiency gain, and simultaneous foreign GPU training
 also prevents a clean-device speed comparison from its retained timings.
+
+### LF6. Local gradient, optimizer displacement and finite step differ
+
+The [task #193 diagnostic](../experiments/forward_alignment/README.md)
+measures all three at 40 saved states. Complex directional pairings use
+the signed pullback to independent real coordinates. Validation and
+full-training gradients are charged diagnostic information, never free
+signals for a proposed local trainer.
+
+At all eight failed local endpoints, the hidden block A's current gradient
+aligns with terminal validation CE, but its actual AdamW displacement is
+an ascent direction in five. Positive finite-change remainders turn two
+other first-order descent predictions into actual increases. A lowers its
+own frozen local loss in all eight probes while raising full-training CE
+in all eight and validation CE in seven. B-only updates decrease full-training
+and validation CE in every local endpoint, while validation pair loss falls
+in five of eight. The vocabulary-E removal worsens complete
+validation CE in all eight, so the present probes do not support removing
+that term as the immediate repair.
+
+These numerical observations distinguish three obligations for a useful
+local method: task alignment of the available gradient, preservation of
+useful direction by the optimizer, and control of finite-step error. They
+do not prove a trajectory-level cause or a generalization guarantee. The
+next diagnostic should isolate A's direction and scale before changing
+objective and optimizer together. No new training outcome or speed claim
+follows from these backward-assisted measurements.

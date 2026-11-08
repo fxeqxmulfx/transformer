@@ -136,6 +136,11 @@ freeze a new comparison. Do not extend this failed pilot or infer that
 another loss name alone restores useful cross-block credit. The older
 90.38% result remains certificate coverage, not classifier accuracy.
 
+The follow-up [alignment study](../forward_alignment/README.md) now performs
+that diagnostic on all initial and endpoint states. It identifies hidden
+block direction and finite-step effects as the next target; it does not
+extend this training pilot.
+
 ## Reproduce
 
 The shared native build script pins original trainer source

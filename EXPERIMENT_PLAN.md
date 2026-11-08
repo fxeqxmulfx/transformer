@@ -97,6 +97,20 @@ gradient alignment from actual AdamW motion, inspect both tied-E sources,
 and compare infinitesimal predictions with finite loss changes. All
 diagnostic backward passes are counted; no new training trajectory is run.
 
+The [completed alignment study](experiments/forward_alignment/README.md)
+passes all 40 states, 1120 finite differences and 6720 coordinate pairings.
+At the eight failed local endpoints, A lowers its own local objective in
+all eight probes but increases full-training CE in all eight and validation
+CE in seven. Its current gradient has positive validation CE alignment in
+all eight, while the actual AdamW direction has negative alignment in five;
+finite-step residuals overturn two further descent predictions. B-only
+updates lower full-training and validation CE in all eight. Removing
+vocabulary E worsens the complete step's validation CE in all eight.
+Prioritize an A-only direction/step-size
+diagnostic before changing loss and optimizer together. This is a proposed
+next study, not an accuracy repair or a new training result; freeze it
+separately and keep diagnostic full gradients out of training information.
+
 For optimizer efficiency, separate cheaper arithmetic per update from reaching
 the same quality in less total time. Preserve exact baseline semantics, measure
 the optimizer's share of complete step time, and validate the candidate's
