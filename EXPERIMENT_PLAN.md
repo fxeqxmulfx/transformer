@@ -2,6 +2,12 @@
 
 ## Three efficiency targets (2026-11-08 user direction)
 
+**Later user direction (2026-11-08): skip no-gradient training.** Stop further
+Forward–Forward/local-learning candidate and credit-control experiments.
+Retain completed evidence and pending reviews; continue optimizer efficiency
+with standard full backpropagation. The proposed post-#195 credit comparison
+below is superseded by this direction and will not be run.
+
 The user requested all three targets below. They are planned as separate
 native comparisons; task #188's valid feature forecasts establish no speedup.
 Efficiency means end-to-end wall time and memory at matched quality, with
@@ -13,7 +19,7 @@ budget and seeds as controls. No Python or generated result commits.
 | Target | Board task | Required comparison |
 | --- | --- | --- |
 | Faster inference | #189 | Latency, throughput and memory at matched predictions/quality; fresh-input inference and repeated-query inference across parameter updates are separate workloads. |
-| Training without backpropagation | #190 | Forward–Forward local learning and forward-mode directional or finite-difference candidates versus the current training baseline, charging all local updates, negative examples and forward evaluations. |
+| Training without backpropagation | #190 | Further work skipped by later user direction; retain completed local-learning evidence and reviews. |
 | More efficient optimizer | #191 | Optimizer update cost, complete step cost, memory and wall time to matched quality versus the actual source AdamW. |
 
 For inference, count cache construction, storage, prediction bounds and
@@ -155,6 +161,12 @@ For optimizer efficiency, separate cheaper arithmetic per update from reaching
 the same quality in less total time. Preserve exact baseline semantics, measure
 the optimizer's share of complete step time, and validate the candidate's
 update equations before attributing any difference to optimization quality.
+
+Task #191 first freezes a [source AdamW cost profile](experiments/optimizer_efficiency/PROFILE_PROTOCOL.md):
+all 24 original states, fixed-gradient update-only throughput versus complete
+CE steps, synchronized wall and CUDA-event timing, actual memory and process
+ownership. Choose and freeze the candidate after this baseline measurement;
+do not infer speed from optimizer operation counts alone.
 
 Task #188 also leaves a theoretical target: tighter directional error transport
 through the block and readout. Such bounds may support the three comparisons,
