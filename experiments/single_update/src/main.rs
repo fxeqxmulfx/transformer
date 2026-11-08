@@ -14,6 +14,8 @@ mod measure;
 #[path = "../../flat_approx/fixtures/reference.rs"]
 pub mod oracle;
 mod probe;
+mod query_step;
+mod query_summary;
 #[path = "../../residual_dynamics/src/svd.rs"]
 pub mod svd;
 
@@ -50,6 +52,7 @@ fn main() -> Result<()> {
     let mut ledger = inputs::Ledger::default();
     let (original, protocol_hash) = inputs::protocol(&mut ledger, &root)?;
     let mut report = json!({"status":"running","protocol":include_str!("../PROTOCOL.md"),
+        "margin_protocol":include_str!("../MARGIN_PROTOCOL.md"),
         "source_sha256":inputs::source_hash(),"original_protocol":original,"cases":[],"elapsed_seconds":0.});
     let save = |report: &serde_json::Value| -> Result<()> {
         let mut bytes = serde_json::to_vec_pretty(report)?;

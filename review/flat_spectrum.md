@@ -6674,3 +6674,27 @@ basis, avoiding a dependence on how fitted subspace coordinates move.
 | Exact probability-weighted CE change | `crossEntropy_relative_change`, `loss_change_le_relative_bound` |
 | Joint query and subset loss bounds | `loss_change_le_joint_step`, `loss_nonincrease_of_joint_step`, `crossEntropy_le_joint_step`, `crossEntropy_ge_joint_step`, `meanCrossEntropy_le_joint_step` |
 | Mean-margin counterexample | `mean_margin_loss_counterexample` |
+
+### Native audit of JC1–JC4
+
+The [frozen #187 extension](../experiments/single_update/MARGIN_PROTOCOL.md)
+passes all 24 original probes and reproduces every #186 new-state hash.
+Across 225816 query updates and 21678336 competing-class pairs, all joint
+and separated gap, margin and CE intervals hold, with zero false certificates.
+Maximum scaled identity and weighted-CE errors are below 4.39e-15 and
+2.79e-15 respectively. The earlier source, derivative and geometry checks
+also remain green; original checkpoint inputs are unchanged.
+
+For the 16 trained-state validation probes, joint conditions certify the
+direction of CE change on 74677/75280 observations; 603 remain inconclusive.
+The fixed old-margin bottom deciles give 7489/7536, with 47 inconclusive.
+At both plain-product post-budget endpoints, even the fixed difficult set's
+mean margin rises while its mean CE increases (0.172718 → 0.174981 and
+0.167636 → 0.168661). Averaging the lower CE bounds certifies both increases.
+Thus an average-margin argument remains insufficient after restricting to
+difficult queries; JC3's individual probability-weighted control is material.
+
+The [full authored findings](../experiments/single_update/README.md#joint-margins-and-difficult-query-losses)
+retain every arm, seed and inconclusive case. The good coverage uses observed
+feature displacement and is conditional, not a pre-update prediction. A
+useful bound on that displacement from training quantities remains open.

@@ -19,6 +19,7 @@ pub fn run(case: &Case<'_>, saved: &Saved) -> Result<Value> {
     engine.restore(&saved.state)?;
     let validation = measure::validate(&engine, case.arm, &saved.state.parameters, case.data)?;
     let old = measure::snapshot(&engine, case.data, true)?;
+    let difficult = crate::query_summary::freeze_difficult(&old, case.data);
     let training = measure::training(case.data);
     let indices: Vec<_> = training.iter().map(|&(i, _)| i).collect();
     let labels: Vec<_> = training.iter().map(|&(_, y)| y).collect();
@@ -78,6 +79,9 @@ pub fn run(case: &Case<'_>, saved: &Saved) -> Result<Value> {
         case.step + 1,
     );
     let new_e: Vec<_> = next.parameters[..E].iter().map(|&v| v as f64).collect();
+    let query_control = crate::query_summary::audit(
+        &old, &new, &old_e, &new_e, &direction, case.data, &difficult,
+    )?;
     let old_groups = measure::groups(&old, case.data);
     let new_groups = measure::groups(&new, case.data);
     let mut results = Vec::new();
@@ -154,6 +158,6 @@ pub fn run(case: &Case<'_>, saved: &Saved) -> Result<Value> {
         "next_batch":{"start":offset,"size":batch,"rows_sha256":storage::hash(&storage::words(&case.plan.order[offset..end]))},
         "direction":direction.summary(),"old_new_rms_max_error":[old.rms_error,new.rms_error],
         "next_batch_readout_energy":crate::gradient::energy(&batch_readout),"next_batch_full_energy":crate::gradient::energy(&batch_full),
-        "geometry":results}),
+        "query_control":query_control,"geometry":results}),
     )
 }

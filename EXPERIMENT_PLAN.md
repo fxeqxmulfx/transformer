@@ -2,12 +2,20 @@
 
 ## Joint control of difficult-query margins (2026-11-08)
 
-Task #187 is active under the [frozen extension](experiments/single_update/MARGIN_PROTOCOL.md).
-It derives a signed parameter/feature update interval, an all-competitor
-margin condition and an actual cross-entropy bound, then checks them on the
-same 24 probes and fixed sets of old low-margin queries. Rounding and the
-mixed update term remain explicit. This is conditional local control;
-predicting feature motion from pre-update training quantities remains open.
+Task #187 completed the [frozen extension](experiments/single_update/MARGIN_PROTOCOL.md):
+35 proved Lean theorems and all 24 native probes pass, checking 225816 query
+updates and 21678336 competitor pairs with no false certificates. Signed
+parameter/feature contributions, mixed terms and rounding remain explicit;
+all resulting states match task #186. On trained validation states, the joint
+bounds certify 74677/75280 loss-change directions. The fixed old-margin
+bottom decile still has worsening mean CE at both plain-product endpoints,
+even though its mean margin increases; the loss bounds certify the regression.
+
+The [authored results](experiments/single_update/README.md#joint-margins-and-difficult-query-losses)
+retain all cases and inconclusive queries. This is conditional local control
+using observed feature displacement. Predicting that displacement from
+pre-update training quantities remains the next obligation; no convergence
+or statistical generalization guarantee follows from retrospective coverage.
 
 ## Actual single-update audit (2026-11-08)
 

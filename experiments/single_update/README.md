@@ -4,6 +4,7 @@ Does the saved-moment discrepancy come from the tied encoder, the next
 minibatch or momentum, and how does one actual update change the residual
 interaction and decision margins? Task #186 answers this under the
 [fixed protocol](PROTOCOL.md), continuing [task #185](../adaptive_interaction).
+Task #187 adds the [joint margin/loss extension](MARGIN_PROTOCOL.md) below.
 
 All 24 independent probes passed in 76.08 seconds on the RTX 3050 Laptop.
 Each restores one original checkpoint in memory and takes its next scheduled
@@ -81,7 +82,7 @@ initial states, these counts are 9/16 and 1/9. In five trained probes, mean
 validation margin increases while validation CE worsens. The radial seed-11
 step-5000 probe loses 20 correct validation decisions; errors are retained.
 
-The next theoretical target is a condition controlling the worst competitor
+This motivated a condition controlling the worst competitor
 margin and difficult-query losses under joint forcing and feature/basis
 movement. Separate norm bounds lose substantial cancellation. Neither
 monotone residual contraction nor an average-margin increase is established
@@ -109,9 +110,83 @@ that independently change the encoder, sampler or momentum.
 The existing Lean results
 [`moving_update_interaction`](../../src/Transformer/Grokking/GradientEvidence/MovingInteraction.lean)
 and [`buffered_contrast_interaction_le`](../../src/Transformer/Grokking/GradientEvidence/ContrastInteraction.lean)
-are the exact-real references. This audit splits their forcing/drift terms
-and retains FP32 rounding explicitly. It adds no new convergence theorem or
-`sorry`; Lean sources and generated `INDEX.md` need no change.
+are the exact-real references. The original #186 audit splits their forcing/drift
+terms and retains FP32 rounding explicitly; it changed no Lean statements.
+
+## Joint margins and difficult-query losses
+
+Task #187 proves 35 additional Lean theorems: the finite joint step, its
+mixed and rounding remainder, all-competitor margins, probability-weighted
+actual CE change, subset loss bounds, and the row-specific Adam connection.
+The [source derivation](../../review/flat_spectrum.md#joint-difficult-query-control)
+and [Lean entry point](../../src/Transformer/Grokking/GradientEvidence/AdaptiveMargin.lean)
+retain feature motion and execution error explicitly. A separate proved
+counterexample shows that mean margin and mean CE can both increase even
+when both predictions stay correct. There are no new `sorry` or extra axioms.
+
+The native extension freezes each split's 471 lowest old-margin queries
+before the next update, with canonical pair-index tie breaking. It checks
+every competing class, allowing the worst competitor to change. Bounds use
+ambient normalized features, without a fitted PCA basis. The signed terms
+`<p,x> + <w,dx>` stay together; their mixed term, parameter rounding and
+execution change are bounded separately. Log-sum-exp of the gap endpoints
+encloses actual per-query CE, equivalently retaining old softmax weights.
+
+All 24 probes pass in **83.75 seconds**. All 225816 query-update observations
+and 21678336 competing-class pairs satisfy the bounds. Maximum scaled
+identity and weighted-loss errors are 4.39e-15 and 2.79e-15; there are no gap
+enclosure violations or false certificates. All 24 new state hashes equal
+task #186's; all 73 original files, the source/PTX checks, 48 derivative
+checks and 9360 geometry checks are preserved.
+
+The table pools the 16 trained-state probes (steps 5000 and 10000), including
+eight post-budget steps. Repeated queries across updates are observations,
+not independent samples. Initial probes remain in the report.
+
+| Query set | Observations | Actually correct after step | Joint certified correct | Separate certified correct | Joint certified CE direction |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Whole training split | 75264 | 75218 | 75217 | 75020 | 74650 |
+| Whole validation split | 75280 | 74952 | 74951 | 74463 | 74677 |
+| Fixed validation bottom decile | 7536 | 7208 | 7207 | 6736 | 7489 |
+
+Thus 99.20% of trained validation loss-change directions are certified,
+leaving 603 inconclusive; the difficult subset has 47 inconclusive. Mean
+validation margin interval width is 0.001595 jointly versus 1.071854 with
+separate norms; for the fixed bottom decile it is 0.003102 versus 1.751311.
+The separated intervals certify no direction of change **by construction**:
+their symmetric allowances contain the old gaps, and hence the old margin
+and loss. Their classification coverage is still useful to compare.
+
+Every post-budget difficult-query loss outcome is shown below. These means
+use FP64 CE of executed GPU logits, within the declared tolerance of the
+source GPU aggregate. Each subset contains the same 471 queries before
+and after the step.
+
+| Arm | Seed | Old difficult-query CE | New difficult-query CE | Joint certified decrease / increase / inconclusive |
+| --- | ---: | ---: | ---: | ---: |
+| SwiGLU | 7 | 0.371318 | 0.358113 | 344 / 122 / 5 |
+| SwiGLU | 11 | 0.531816 | 0.585803 | 300 / 168 / 3 |
+| Diagonal | 7 | 0.102633 | 0.101534 | 224 / 247 / 0 |
+| Diagonal | 11 | 0.114006 | 0.115232 | 291 / 178 / 2 |
+| Radial product | 7 | 0.227908 | 0.236138 | 247 / 222 / 2 |
+| Radial product | 11 | 0.459947 | 0.375267 | 368 / 100 / 3 |
+| Plain product | 7 | 0.172718 | 0.174981 | 274 / 197 / 0 |
+| Plain product | 11 | 0.167636 | 0.168661 | 375 / 95 / 1 |
+
+For plain product, even this difficult subset's mean margin improves
+(4.86297 → 4.87942 and 5.31682 → 5.33546), while its mean CE worsens.
+The joint mean CE intervals, [0.174903, 0.175066] and
+[0.168640, 0.168684], certify both increases. Correct counts stay 455/471
+and 456/471; the worst competitor changes for 13 and 2 queries. Tracking
+only average margins, even within a difficult subset, would miss the loss
+regression. Individual probability-weighted conditions detect it.
+
+These are **conditional local bounds**, using observed feature displacement
+and execution error after the update. Tight retrospective coverage does not
+make them pre-update forecasts or statistical generalization guarantees.
+The next obligation is a useful training-derived bound on feature motion,
+followed by validation on further seeds/tasks. Complex multiplication and
+the original architecture ranking remain unchanged.
 
 ## Reproduction
 
@@ -138,10 +213,32 @@ cargo run --offline --release -- \
   /home/misha/rust_projects/grokking/experiments/rotate90_complex/runs/cubic-adamw \
   /tmp/single-update-report.json
 jq -f summary.jq /tmp/single-update-report.json > /tmp/single-update-summary.json
+jq -f margin-summary.jq /tmp/single-update-report.json > /tmp/margin-summary.json
 ```
 
-The ten native tests cover independent CE derivatives, noncommuting class
+The fifteen native tests cover independent CE derivatives, noncommuting class
 scales and cross terms, explicit rounding, moving bases/features, and margins
-that improve despite residual growth. GPU checks run for every measured
-case. Output overwrite is refused. Reports, logs, generated copies and
+that improve despite residual growth, plus joint cancellation, mixed terms,
+competitor switches, fixed difficult-query selection and the mean-margin/CE
+counterexample. GPU checks run for every measured case. The report retains
+all per-query intervals and the fixed subset indices; `margin-summary.jq`
+also produces the pooled counts above. With the retained original #186 report,
+compare all state hashes using:
+
+```sh
+jq -r '.cases | sort_by(.arm,.seed,.step)[] | [.arm,.seed,.step,.audit.new_state_sha256] | @tsv' \
+  report.json > /tmp/states-186.tsv
+jq -r '.cases | sort_by(.arm,.seed,.step)[] | [.arm,.seed,.step,.audit.new_state_sha256] | @tsv' \
+  /tmp/single-update-report.json > /tmp/states-187.tsv
+diff -u /tmp/states-186.tsv /tmp/states-187.tsv
+```
+
+Lean checks run from the repository root with `LAKE_ARTIFACT_CACHE=false`:
+`lake build`, `lake env lean scripts/Axioms.lean`, and
+`lake env lean scripts/JointMarginAxioms.lean`. Regenerate `INDEX.md` with
+`cargo run --offline --release --manifest-path scripts/native_index/Cargo.toml`.
+The full build and both axiom checks pass: 36 existing `sorry`, zero results
+resting on them, and no extra axioms. `INDEX.md` includes all 35 new theorems.
+
+Output overwrite is refused. Reports, logs, generated copies and
 compiled artifacts remain untracked; this README records authored conclusions.
