@@ -53,9 +53,9 @@ inference implementation. Task #192 freezes a [local-loss diagnostic](experiment
 directional goodness from corrected class distances, all-class pairwise
 softplus margins, and analytic local gradients. This avoids a separate
 encoder evaluation for every negative label. It tests the loss and the
-difference between detached readout updates and the actual tied network;
-task #190 still requires a complete training method and matched-quality
-timings. Task #189's frozen protocol remains queued.
+difference between detached readout updates and the actual tied network.
+The complete training comparison is task #190 below. Task #189's frozen
+protocol remains queued.
 
 The [loss reformulation](experiments/forward_forward/README.md) now has 19 Lean
 theorems and a native implementation. All 24 source cases pass: 225816 loss
@@ -63,10 +63,11 @@ checks and 21904152 logit-gradient checks, plus independent partial-readout
 gradients. One small E-only step lowers the computed frozen-feature and
 actual tied-network batch loss in all cases, but trained-state changes are
 tiny. This verifies the loss implementation, not useful accuracy gains or
-efficiency. Next specify local objectives for every block and a complete
-shared-parameter update before freezing task #190's training pilot.
+efficiency. Task #190 supplies local objectives for every block and a complete
+shared-parameter update.
 
-Task #190 now freezes the [complete native pilot](experiments/forward_training/PROTOCOL.md):
+Task #190 froze the [complete native pilot](experiments/forward_training/PROTOCOL.md)
+at `34da0951`, before outcomes:
 32 from-scratch runs, four original arms and two seeds, 4000 updates per run.
 CE backpropagation, pairwise backpropagation, full auxiliary-loss
 backpropagation and local pairwise credit are distinct controls. Fixed
@@ -76,6 +77,18 @@ update. The local variant does not propagate upper-block errors into earlier
 blocks. Costs, numerical checks, caps and matched-quality criteria are frozen
 before outcomes. Forward-mode/finite-difference training remains an untested
 alternative; finite differences in this pilot are correctness checks only.
+
+The [completed pilot](experiments/forward_training/README.md) retains all
+32 runs and reports a negative result. Local pairwise credit reaches only
+2.23–10.50% endpoint validation accuracy, versus 99.28–99.87% for CE; neither
+the local nor full-auxiliary method ever matches paired CE endpoint accuracy
+and loss together. Pair BP reaches that joint criterion in 2/8 cases, after
+the corresponding CE control. All 224 gradient checks and 328 saved-metric
+replays pass. Foreign GPU training workloads invalidate clean-device timing
+claims; the measured data are retained. Do not extend or tune this frozen
+pilot. Next diagnose local-update alignment with terminal credit, including
+the tied embedding, before defining another candidate. That diagnosis would
+use backpropagation as measured analysis, not hidden free training.
 
 For optimizer efficiency, separate cheaper arithmetic per update from reaching
 the same quality in less total time. Preserve exact baseline semantics, measure

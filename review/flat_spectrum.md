@@ -6917,3 +6917,25 @@ neither a faster optimizer nor a solution to the flat-spectrum obstruction.
 | Actual pairwise derivative and invariances | `softplus_derivative`, `pairLoss_directional`, `pairLoss_shift`, `pairLoss_goodness` |
 | Per-query strict correctness threshold | `pair_term_le`, `winner_of_pairLoss_lt` |
 | Local versus terminal derivatives | `local_linear_derivative`, `terminal_first_derivative`, `local_global_derivative_witness` |
+
+### LF5. Complete local training exposes the missing link
+
+The [frozen task #190 pilot](../experiments/forward_training/README.md)
+specifies local objectives for all blocks and sums both direct contributions
+to the tied E before one original AdamW update. Its controls separately
+change terminal loss, add fixed auxiliary heads and stop cross-block credit.
+All 224 directional checks pass, but local training ends at 2.23–10.50%
+validation accuracy across eight cases, compared with 99.28–99.87% for CE.
+Full auxiliary backpropagation is also worse than CE. This is empirical
+evidence against that particular objective/boundary choice, not a
+counterexample to the local derivative theorems or to all Forward–Forward
+methods. Complex multiplication is unchanged.
+
+A useful extension must connect a local parameter displacement to terminal
+task improvement, with all tied-parameter contributions included. Local loss
+descent alone supplies no such implication. The next diagnostic is their
+directional alignment under the actual optimizer, before selecting new local
+heads or boundaries. Any full-gradient measurements used for diagnosis must
+remain separate from the information available to a proposed local trainer.
+The pilot found no efficiency gain, and simultaneous foreign GPU training
+also prevents a clean-device speed comparison from its retained timings.

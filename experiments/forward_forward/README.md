@@ -4,6 +4,8 @@ Can positive/negative local learning use the direction learned by normalized
 complex blocks, while sharing one encoder evaluation across negative labels?
 This diagnostic implements and checks a changed local loss. It does not yet
 train the entire model with Forward–Forward or measure an efficiency gain.
+The follow-up [complete training pilot](../forward_training/README.md)
+adds explicit objectives for every block and compares four update rules.
 
 The [derivation](../../review/flat_spectrum.md#forwardforward-reformulation)
 and [frozen protocol](PROTOCOL.md) distinguish this variant from Hinton,
