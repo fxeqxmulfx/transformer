@@ -1,0 +1,25 @@
+import Transformer
+
+/-! Audit adaptive forcing and moving interaction control AI1–AI5. -/
+
+#print axioms Transformer.Grokking.GradientEvidence.bufferedAdamUpdate_factor
+#print axioms Transformer.Grokking.GradientEvidence.diagonalCommutator_eq_sum
+#print axioms Transformer.Grokking.GradientEvidence.diagonalCommutator_constant
+#print axioms Transformer.Grokking.GradientEvidence.adaptive_forcing_decomposition
+#print axioms Transformer.Grokking.GradientEvidence.projected_bufferedAdamUpdate
+#print axioms Transformer.Grokking.GradientEvidence.diagonal_mixing_witness
+#print axioms Transformer.Grokking.GradientEvidence.diagonal_energy_le
+#print axioms Transformer.Grokking.GradientEvidence.three_term_energy_le
+#print axioms Transformer.Grokking.GradientEvidence.scaled_readoutGradient_energy_le
+#print axioms Transformer.Grokking.GradientEvidence.adaptive_forcing_energy_le
+#print axioms Transformer.Grokking.GradientEvidence.interaction_abs_le
+#print axioms Transformer.Grokking.GradientEvidence.interaction_change
+#print axioms Transformer.Grokking.GradientEvidence.interaction_change_abs_le
+#print axioms Transformer.Grokking.GradientEvidence.interaction_bound_transport
+#print axioms Transformer.Grokking.GradientEvidence.interaction_cancellation_witness
+#print axioms Transformer.Grokking.GradientEvidence.moving_update_residual
+#print axioms Transformer.Grokking.GradientEvidence.moving_update_interaction
+#print axioms Transformer.Grokking.GradientEvidence.moving_update_interaction_le
+#print axioms Transformer.Grokking.GradientEvidence.moving_update_interaction_contracts
+#print axioms Transformer.Grokking.GradientEvidence.buffered_step_eq_directionStep
+#print axioms Transformer.Grokking.GradientEvidence.buffered_interaction_le

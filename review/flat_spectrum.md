@@ -6359,3 +6359,146 @@ invariance/decay argument unchanged to coordinatewise adaptive updates.
 | Derived decay and loss-controlled forcing | `decay_forcing_sq_le`, `readout_step_energy_le` |
 | Changing weights and basis | `moving_residual_identity` |
 | Actual adaptive counterexample | `axisReadoutGradient_initial`, `axisAdamStep_eq`, `adam_creates_readout_residual` |
+
+## Adaptive interaction control
+
+Task #185 extends RD1–RD5 to coordinate-adaptive forcing and moving residual
+interactions. This is a sufficient-control theory with explicit missing terms;
+it does not conclude that the optimizer makes those terms small.
+
+### AI1. Retain the actual buffered Adam direction
+
+The source is the local Rust/Kernite rotate90_complex implementation at source
+hash 14cff3b553d3afb1f9bf90bb6b50cfd7a879058ec2876f859a198e07a09a83da:
+`engine.rs::update`, `product.rs::moment`, `ops.rs::adamw`, and the buffer
+layout in `storage.rs::state_bytes/decode`. The checked cohort uses coordinate
+AdamW, betas 0.9/0.98, epsilon 1e-8, decay 1 and rate 0.001 after ten warmup
+updates. Embedding coordinates are independent in all four arms; the complex
+projection constraints do not change this embedding update.
+
+Let m_t,v_t denote the buffers *after* incorporating update t's gradient.
+In exact real arithmetic the source factors as
+
+```
+M_t = m_t/(1-beta1^t)
+D_t,k = 1/(sqrt(v_t,k)/sqrt(1-beta2^t)+epsilon)
+w_new = (1-eta*rho) w_old - eta D_t M_t.
+```
+
+Lean proves the factorization and projected update without identifying M_t
+with a current reference gradient. The source uses t>=1 and nonnegative
+second moments; the initial checkpoint has no historical bias-corrected
+direction. The native audit retains that case with an explicit unavailable
+status. It evaluates real-form equations in FP64 on saved FP32 buffers, not
+a bitwise replay of the FP32 CUDA kernel. In a trained checkpoint, the
+historical moments summarize minibatch gradients at earlier parameters.
+
+### AI2. Coordinate scaling does not preserve an arbitrary subspace
+
+For a residual map Q and diagonal scale D, define
+
+```
+[Q,D]g = Q(Dg) - D(Qg)
+([Q,D]g)_k = sum_l Q_kl (D_l-D_k) g_l.
+```
+
+Constant D commutes with every Q. For any reference gradient G and moment M,
+
+```
+QDM = DQG + [Q,D]G + QD(M-G).
+```
+
+With RD1's actual current full-training partial readout derivative G, the
+three terms isolate scaled projected CE forcing, diagonal mixing, and the
+combined discrepancy from the saved moment. The last term includes encoder,
+minibatch, temporal and momentum effects; the decomposition does not identify
+them separately. In particular M-G is not just a momentum error or the current
+encoder gradient. The historical direction is not a predicted next update.
+
+The RD5 example makes the mixing term concrete: Q is orthogonal projection
+perpendicular to (1,2), G=(-1/2,-1), D=(2/3,1/2). Then QG=0 but [Q,D]G has
+squared norm 1/180. Lean proves this directly. The native test also checks
+zero commutator under a constant diagonal scale.
+
+### AI3. Bound the part controlled by CE and keep the remainder
+
+For class-dependent D_c,k with D_c,k²<=dmax², finite sums give
+
+```
+||D Q G||_F² <= dmax² ||QG||_F²
+             <= dmax² 2 L_train mean_all_training ||Qh_i||².
+```
+
+This uses every training row, as RD2 requires. Coordinatewise
+(a+b+c)²<=3(a²+b²+c²) gives the sufficient adaptive-forcing bound
+
+```
+||QDM||_F² <= 3*(dmax² 2 L_train mean_all_training ||Qh_i||²
+                 + ||[Q,D]G||_F² + ||QD(M-G)||_F²).
+```
+
+No commutator or discrepancy is assumed zero. Large inverse scales can
+amplify the CE contribution, and cross terms can make the sum of individual
+energies very conservative. The native audit retains those cross terms,
+the direct three-term bound and the objective-based bound separately.
+
+### AI4. Control the signed interaction, not just separate energies
+
+Let J=<u,r>, where u=Qw and r=Qx; x is normalized query displacement
+relative to its training center. For arbitrary new vectors define
+du=u_new-u and dr=r_new-r. Bilinearity yields
+
+```
+J_new-J = <du,r> + <u,dr> + <du,dr>
+|J_new-J| <= ||du||||r|| + ||u||||dr|| + ||du||||dr||.
+```
+
+The mixed term is retained. An old bound |J|<=B transfers to the new state
+with this explicit drift allowance. This is a retrospective finite-change
+statement; it does not identify a 5000-step checkpoint interval with an update.
+Changing Q is already included in du and dr.
+
+A nonzero witness has u=r=(1,0), u_new=(0,2), r_new=(3,0). The interaction
+falls from 1 to 0 while the norm product rises from 1 to 6. Signed changes
+are -1, +2 and -2. This shows why tracking signs and cancellation can be
+more informative than requiring both residual norms to contract.
+
+For computed Q, <Qw,Qx> differs from the source residual <w,Qx> by a
+projection defect unless the required projection identity holds. The audit
+retains that defect. Neither interaction alone replaces ST2's certificate.
+
+### AI5. A sufficient condition for an actual moving adaptive update
+
+Write a=1-eta*rho, f=DM, w'=a w-eta f, u=Qw, r=Qx, u'=Q'w', r'=Q'x'.
+The readout residual satisfies
+
+```
+u' = a*u - eta*Qf + b,          b=(Q'-Q)w'
+<u',r'> = a<u,r> - eta<Qf,r> + <b,r> + <u',r'-r>.
+```
+
+Consequently,
+
+```
+|<u',r'>| <= |a| |<u,r>| + Gamma
+Gamma = |eta| ||Qf||||r|| + ||b||||r|| + ||u'||||r'-r||.
+```
+
+Lean derives this bound, instantiates it with the actual buffered Adam
+equations, and proves strict contraction when
+Gamma < (1-|a|)|<u,r>|. The hypothesis controls concrete forcing and drift
+terms, not the desired new interaction. A concrete example has Q=Q'=1,
+a=eta=1/2, w=4, f=1, x=x'=3: nonzero forcing and residuals satisfy it.
+AI3 supplies control for one part of Qf; it supplies no control over the
+other two parts or over feature/basis movement. The condition is therefore
+sufficient, not a claim of optimizer discovery or a consequence of CE alone.
+
+| Claim | Lean declaration in `GradientEvidence` |
+| --- | --- |
+| Source update and projection | `bufferedAdamUpdate_factor`, `projected_bufferedAdamUpdate` |
+| Mixing and three forcing terms | `diagonalCommutator_eq_sum`, `adaptive_forcing_decomposition`, `diagonal_mixing_witness` |
+| Loss-controlled contribution and full bound | `scaled_readoutGradient_energy_le`, `adaptive_forcing_energy_le` |
+| Exact interaction change and drift control | `interaction_change`, `interaction_change_abs_le`, `interaction_bound_transport` |
+| Cancellation witness | `interaction_cancellation_witness` |
+| Actual update with moving geometry | `moving_update_interaction`, `buffered_interaction_le` |
+| Sufficient strict contraction | `moving_update_interaction_contracts` |
