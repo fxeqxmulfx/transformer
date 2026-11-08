@@ -1,0 +1,24 @@
+import Transformer.Grokking.GradientEvidence.ForecastOutcomes
+
+#print axioms Transformer.Grokking.GradientEvidence.forecast_transport
+#print axioms Transformer.Grokking.GradientEvidence.linear_forecast
+#print axioms Transformer.Grokking.GradientEvidence.residual_forecast
+#print axioms Transformer.Grokking.GradientEvidence.sigmoid_quarter_lipschitz
+#print axioms Transformer.Grokking.GradientEvidence.sigmoid_forecast
+#print axioms Transformer.Grokking.GradientEvidence.product_forecast_identity
+#print axioms Transformer.Grokking.GradientEvidence.product_forecast_bound
+#print axioms Transformer.Grokking.GradientEvidence.product_forecast_mixed_witness
+#print axioms Transformer.Grokking.GradientEvidence.softNorm_pos
+#print axioms Transformer.Grokking.GradientEvidence.norm_le_softNorm
+#print axioms Transformer.Grokking.GradientEvidence.softNorm_error
+#print axioms Transformer.Grokking.GradientEvidence.softNorm_forecast
+#print axioms Transformer.Grokking.GradientEvidence.softNormalize_error
+#print axioms Transformer.Grokking.GradientEvidence.scaled_softNormalize_error
+#print axioms Transformer.Grokking.GradientEvidence.softNormalize_forecast
+#print axioms Transformer.Grokking.GradientEvidence.forecast_execution_ball
+#print axioms Transformer.Grokking.GradientEvidence.forecast_contrast_error
+#print axioms Transformer.Grokking.GradientEvidence.forecast_gap_interval
+#print axioms Transformer.Grokking.GradientEvidence.forecast_margin
+#print axioms Transformer.Grokking.GradientEvidence.forecast_loss_upper
+#print axioms Transformer.Grokking.GradientEvidence.forecast_loss_lower
+#print axioms Transformer.Grokking.GradientEvidence.forecast_mean_loss_upper

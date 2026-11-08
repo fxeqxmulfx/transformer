@@ -6698,3 +6698,104 @@ The [full authored findings](../experiments/single_update/README.md#joint-margin
 retain every arm, seed and inconclusive case. The good coverage uses observed
 feature displacement and is conditional, not a pre-update prediction. A
 useful bound on that displacement from training quantities remains open.
+
+## Feature forecasts
+
+Task #188 replaces JC's observed feature displacement with a forecast made
+from the old parameters and the proposed rounded Adam step. The source is
+the same native trainer (14cff3b5); the
+[frozen protocol](../experiments/single_update/FORECAST_PROTOCOL.md) specifies
+every propagation rule and numerical allowance before measuring outcomes.
+
+### FF1. Propagate the old tangent and a finite error ball
+
+At each node let a be the old value, v its old directional derivative along
+the proposed parameter step, and r a radius for the unknown true new value
+around a+v. The embedding gather is affine, so its radius starts at zero.
+Residual addition adds radii. For a linear layer with old matrix A and
+increment D, the predicted tangent is Av+Da and
+
+```
+(A+D)y - (Aa+Av+Da) = (A+D)(y-a-v) + Dv
+radius_out <= ||A+D|| * r + ||Dv||.
+```
+
+The mixed term Dv is known before evaluating the future network. Native
+code uses the Frobenius norm as a conservative operator bound. For bilinear
+products, expand around the two nominal centers, retaining the known product
+of tangents, both center/error products and the error/error product. Coordinate
+and complex block maximum norms bound those linear factors; the complex
+source keeps its 1/sqrt(2) multiplier. No product term is silently discarded.
+
+For a nonlinear map f, a proposed tangent u and an anchored sensitivity L at
+a+v give the finite bound
+
+```
+||f(y)-(f(a)+u)|| <= L*r + ||f(a+v)-f(a)-u||.
+```
+
+The nominal defect on the right is computable from a and v. Its value is
+used only in the scalar error budget; the next node receives f(a) and u,
+not f(a+v). Thus the center remains the old-network tangent. The certificate
+is valid for any u; derivative correctness is independently checked against
+central differences of the scalar source oracle.
+
+### FF2. Use anchored nonlinear sensitivities
+
+Define `softNorm(eps,x)=sqrt(||x||^2+eps)` and
+`softNormalize(eps,x)=x/softNorm(eps,x)`. Positive epsilon gives
+
+```
+|softNorm(eps,y)-softNorm(eps,x)| <= ||y-x||
+||softNormalize(eps,y)-softNormalize(eps,x)||
+    <= 2/softNorm(eps,x) * ||y-x||.
+```
+
+The first bound follows by factoring the difference of squared regularized
+lengths and using the reverse triangle inequality. For the second, split
+the vector difference and the reciprocal-denominator difference; the
+regularized denominator dominates the other vector's norm. Scaling by
+sqrt(width) and using eps=width*epsilon gives the source RMS coefficient
+2/s(x). Anchor x at the known nominal input, avoiding the global inverse
+sqrt(epsilon) factor. This works without an assumed small relative step.
+
+The radial complex gate uses the first bound with two real coordinates.
+The sigmoid has global derivative magnitude at most 1/4; its nominal defect
+therefore transports incoming error with coefficient 1/4. Real SwiGLU,
+complex diagonal, radial product and plain product retain their source
+equations and every normalization site.
+
+### FF3. Read out a forecast ball
+
+The proposed rounded readout W is known before future feature evaluation.
+If center z has certified feature radius r and each executed readout logit
+has an additional error at most delta, then the competitor gap lies within
+
+```
+<W_c-W_t,z> +/- (||W_c-W_t||*r + 2*delta).
+```
+
+Checking every upper gap controls worst-competitor margins even when that
+competitor changes. Log-sum-exp of lower/upper gaps encloses actual query
+CE; independently valid upper bounds average over fixed subsets. Errors and
+inconclusive conditions remain. These are actual-loss bounds, not an
+inference from increasing mean margins.
+
+The native forecast adds a fixed 1e-3 Euclidean feature allowance and 1e-3
+per-class readout-logit allowance. They are separately audited numerical
+assumptions, not proved CUDA error bounds. Forecasts are persisted before
+the candidate network is evaluated. The real graph and its tangent are
+checked against source computations; Lean proves the propagation lemmas
+and feature-to-outcome bridge, not a verified implementation of the Rust/CUDA
+graph. This is local control given a proposed step, not optimizer discovery,
+convergence or a statistical generalization theorem.
+
+| Claim | Lean declarations in `GradientEvidence` |
+| --- | --- |
+| Finite nominal-defect transport | `forecast_transport`, `linear_forecast`, `residual_forecast` |
+| Mixed product terms | `product_forecast_identity`, `product_forecast_bound`, `product_forecast_mixed_witness` |
+| Source sigmoid | `sigmoid_quarter_lipschitz`, `sigmoid_forecast` |
+| Radial and normalization sensitivity | `softNorm_error`, `softNorm_forecast`, `softNormalize_error`, `scaled_softNormalize_error`, `softNormalize_forecast` |
+| Explicit execution allowance | `forecast_execution_ball` |
+| All-competitor control | `forecast_contrast_error`, `forecast_gap_interval`, `forecast_margin` |
+| Actual query/subset loss | `forecast_loss_upper`, `forecast_loss_lower`, `forecast_mean_loss_upper` |
