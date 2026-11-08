@@ -6508,3 +6508,60 @@ sufficient, not a claim of optimizer discovery or a consequence of CE alone.
 | Actual update with moving geometry | `moving_update_interaction`, `buffered_interaction_le` |
 | Row-specific preconditioners in actual class contrasts | `buffered_contrast_eq_directionStep`, `buffered_contrast_interaction_le` |
 | Sufficient strict contraction | `moving_update_interaction_contracts` |
+
+## Actual single-update evidence
+
+Task #186 implements the [fixed native audit](../experiments/single_update/README.md)
+of AI1–AI5 on all 24 original checkpoints. Each next scheduled AdamW update
+replays bitwise against the pinned source trainer. All 48 independent scalar
+directional derivative checks and 9360 projected decompositions pass; the
+original 73 input files remain unchanged. Eight endpoint probes extend the
+sampler by one post-budget step and do not change the original ranking.
+
+At the old parameters let R be the full-training readout embedding gradient,
+F the full-training total embedding gradient and B the next-minibatch total
+gradient. M and D are taken from the new moment buffers, with bias correction.
+The measured decomposition is
+
+```
+M = R + (F-R) + (B-F) + (M-B)
+QDM = DQR + (QDR-DQR) + QD(F-R) + QD(B-F) + QD(M-B).
+```
+
+This distinguishes the tied encoder, sampling and moment-memory terms
+without treating them as independent causal interventions. It retains each
+class row's own D before subtraction. For the plain-product post-budget
+probes at rank-32 orbit bases, individual forcing energies sum to
+57923.68/4407.75, whereas actual energies are 3786.84/885.70. Cross terms
+contribute -54136.84/-3522.05. These sums run over 33 different fitted bases;
+they are not a single global model energy. A sum of separate norm bounds
+discards substantial cancellation.
+
+For actual FP32 movement write `w'=a*w-eta*f+rho`, retaining the measured
+rounding remainder rho. The audit evaluates AI5's interaction identity with
+that extra projected remainder, and further splits
+`r'-r = Q(x'-x)+(Q'-Q)x'`. Both x and x' are normalized, training-centered
+feature displacements. Feature and basis contributions can be much larger
+than individual optimizer terms, but their absolute magnitudes do not add.
+
+The margin diagnostic keeps the signed training-affine reconstruction
+`s=<w,mu+(I-Q)(x-mu)>`, interaction `J=<Qw,Q(x-mu)>`, projection defect
+`e=<w,Q(x-mu)>-J` and measured executed-logit discrepancy. Each executed
+competitor gap is reconstructed as `s+J+e+execution`. A sufficient condition
+uses an absolute residual/defect/execution allowance for every competitor.
+This is a retrospective measurement of the actual interaction, not a new
+training-only certificate or an improvement to ST's norm-bound coverage.
+
+Both plain-product endpoint probes increase mean validation margin, while
+validation CE rises and correctness stays 4689/4705 and 4690/4705. On
+1082/1163 queries margin improves despite a growing maximum residual budget.
+Across the cohort, 17/24 probes lower training CE and five of those increase
+rank-32 orbit validation mean absolute interaction; among trained states
+the counts are 9/16 and 1/9. Five trained probes improve mean validation
+margin while worsening validation CE.
+
+The remaining theoretical obligation is control of worst competitor margins
+and difficult-query losses under joint forcing and moving features/bases.
+Residual contraction and average-margin improvement alone do not supply it.
+This evidence motivates that extension; it introduces no additional Lean
+claim of convergence or discovery and leaves complex multiplication unchanged.

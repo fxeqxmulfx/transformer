@@ -2,12 +2,22 @@
 
 ## Actual single-update audit (2026-11-08)
 
-Task #186 is active under the [frozen protocol](experiments/single_update/PROTOCOL.md).
-It audits one actual source AdamW update from each of the 24 saved states,
-separating encoder, minibatch and moment-memory contributions and measuring
-signed residual drift relative to margins. Step-10000 probes are explicitly
-outside the original training budget. Inputs remain immutable; generated
-reports stay local. This is the immediate next obligation from task #185.
+Task #186 completed the [frozen audit](experiments/single_update/README.md):
+24 actual source AdamW updates all match ordinary `train_step` bitwise, with
+the original compiled CUDA hash and unchanged input files. All 48 directional
+gradient checks and 9360 projected decompositions pass. Encoder, minibatch
+and moment-memory contributions have substantial signed cancellation;
+feature/basis movement is explicit. Step-10000 probes remain outside the
+original training budget and do not revise the architecture ranking.
+
+At both plain-product endpoints, mean validation margin increases but
+validation CE worsens and accuracy is unchanged. On 1082/1163 queries, margin
+improves while the residual budget grows. Five of the 16 trained probes
+increase mean validation margin while worsening validation CE. Thus the
+next obligation is a condition on worst competitor margins and difficult
+queries under joint forcing and feature/basis movement, retaining cancellation.
+The report is retrospective; no new convergence theorem is claimed. Generated
+outputs remain local, and the existing Lean statements and INDEX.md are unchanged.
 
 ## Adaptive forcing and signed interaction control (2026-11-08)
 
