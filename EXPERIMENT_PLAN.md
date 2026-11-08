@@ -1,5 +1,30 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Adaptive forcing and signed interaction control (2026-11-08)
+
+Task #185 adds 23 proved theorems linking actual buffered Adam updates to
+explicit diagonal mixing, saved-moment discrepancy and moving interaction
+budgets. The [derivation](review/flat_spectrum.md#adaptive-interaction-control)
+retains distinct preconditioners for competitor and target class rows.
+Sufficient contraction is proved from explicit forcing/drift control, not
+assumed from CE descent. No new `sorry` is introduced.
+
+The [fixed native audit](experiments/adaptive_interaction/README.md) preserves
+all 24 states, 16 intervals, both groupings and ranks 16/32/64. All 6,240
+positive-step adaptive checks pass; initial states retain geometry and an
+explicit no-historical-direction status. Moment discrepancy is substantial,
+and the objective-based bound is millions of times above actual projected
+direction energy at the plain-product endpoints. There, rank-32 orbit
+validation mean absolute interaction is only 10.76%/10.42% of the norm-product
+bound. Nevertheless it increases in 6 of 12 CE-descent intervals across arms.
+
+The current cubic endpoint ranking remains diagonal > plain > radial on
+two-seed mean validation accuracy and CE. This is not a universal architecture
+ranking, and complex multiplication is unchanged. The next obligation is
+same-update control of the full-gradient/moment discrepancy and feature/basis
+drift, retaining signed contributions relative to the classification margin.
+Generated reports remain local; INDEX.md retains its committed exception.
+
 ## Residual learning dynamics (2026-11-08)
 
 Task #184 derives the actual fixed-feature readout CE gradient, a loss-controlled
