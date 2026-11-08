@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`forward_forward`](forward_forward) | 24 source states; local readout probes | Directional goodness and a modified pairwise local loss: 19 Lean theorems, all GPU loss/gradient checks pass; full Forward–Forward training and efficiency remain untested. |
 | [`single_update`](single_update) | 24 actual one-step probes | Exact-source attribution, retrospective joint bounds and forecasts frozen before updated-network evaluation. All 225816 feature balls pass; forecasts certify 90.38% of trained validation decisions but no loss-change directions, exposing conservative error propagation. |
 | [`adaptive_interaction`](adaptive_interaction) | 24 saved states, 16 intervals; no training | Separate adaptive mixing, saved-moment discrepancy and signed interaction drift; all 6240 adaptive checks pass, but current CE bounds are loose and validation interaction is not monotone. |
 | [`residual_dynamics`](residual_dynamics) | 24 saved states, 16 intervals; no training | CE controls projected readout-gradient forcing, while rank-32 orbit readout residuals grow in 11 of 12 CE-descent intervals; separate parameter and basis movement. |

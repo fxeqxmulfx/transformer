@@ -1,0 +1,21 @@
+import Transformer.Grokking.ForwardForward
+
+#print axioms Transformer.Grokking.ForwardForward.goodness_eq_inner
+#print axioms Transformer.Grokking.ForwardForward.goodness_difference
+#print axioms Transformer.Grokking.ForwardForward.goodness_order
+#print axioms Transformer.Grokking.ForwardForward.goodness_crossEntropy
+#print axioms Transformer.Grokking.ForwardForward.normalized_energy
+#print axioms Transformer.Grokking.ForwardForward.normalized_energy_zero_eps
+#print axioms Transformer.Grokking.ForwardForward.normalized_energy_derivative
+#print axioms Transformer.Grokking.ForwardForward.equal_energy_opposite_preferences
+#print axioms Transformer.Grokking.ForwardForward.softplus_derivative
+#print axioms Transformer.Grokking.ForwardForward.softplus_nonneg
+#print axioms Transformer.Grokking.ForwardForward.softplus_strictMono
+#print axioms Transformer.Grokking.ForwardForward.pairLoss_shift
+#print axioms Transformer.Grokking.ForwardForward.pairLoss_goodness
+#print axioms Transformer.Grokking.ForwardForward.pairLoss_directional
+#print axioms Transformer.Grokking.ForwardForward.pair_term_le
+#print axioms Transformer.Grokking.ForwardForward.winner_of_pairLoss_lt
+#print axioms Transformer.Grokking.ForwardForward.local_linear_derivative
+#print axioms Transformer.Grokking.ForwardForward.terminal_first_derivative
+#print axioms Transformer.Grokking.ForwardForward.local_global_derivative_witness

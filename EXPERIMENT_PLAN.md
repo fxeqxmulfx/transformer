@@ -57,6 +57,15 @@ difference between detached readout updates and the actual tied network;
 task #190 still requires a complete training method and matched-quality
 timings. Task #189's frozen protocol remains queued.
 
+The [loss reformulation](experiments/forward_forward/README.md) now has 19 Lean
+theorems and a native implementation. All 24 source cases pass: 225816 loss
+checks and 21904152 logit-gradient checks, plus independent partial-readout
+gradients. One small E-only step lowers the computed frozen-feature and
+actual tied-network batch loss in all cases, but trained-state changes are
+tiny. This verifies the loss implementation, not useful accuracy gains or
+efficiency. Next specify local objectives for every block and a complete
+shared-parameter update before freezing task #190's training pilot.
+
 For optimizer efficiency, separate cheaper arithmetic per update from reaching
 the same quality in less total time. Preserve exact baseline semantics, measure
 the optimizer's share of complete step time, and validate the candidate's

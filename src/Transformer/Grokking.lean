@@ -5,6 +5,7 @@ public import Transformer.Grokking.Perceptron
 public import Transformer.Grokking.EffectiveTheory
 public import Transformer.Grokking.AdamW
 public import Transformer.Grokking.GradientEvidence
+public import Transformer.Grokking.ForwardForward
 public import Transformer.Grokking.Operational
 public import Transformer.Grokking.Geometry
 public import Transformer.Grokking.DivisionOrbits

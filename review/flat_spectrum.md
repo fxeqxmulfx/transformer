@@ -6818,3 +6818,102 @@ show all arms and seeds. Future feature measurements are no longer needed
 for these bounds, but repeated scalar-ball propagation is too conservative
 for loss control. The next obligation is directional error transport through
 the actual block and readout, not an architecture change or a fitted allowance.
+
+## Forward–Forward reformulation
+
+User direction, 2026-11-08: reformulate Forward–Forward and modify its loss.
+The reference is Geoffrey Hinton, *The Forward-Forward Algorithm: Some
+Preliminary Investigations*, arXiv:2212.13345, §§2–3.3, read locally in
+`papers/arXiv-2212.13345/paper.txt`. The following is an explicitly changed
+candidate, not a claim made by that paper or a new convergence guarantee.
+The [fixed native diagnostic](../experiments/forward_forward/PROTOCOL.md)
+precedes any full training comparison.
+
+### LF1. Factor the label out of the encoder
+
+Compute a label-independent local feature `h=f(x)` once. For class vector
+`e_c`, define corrected distance goodness
+
+`G(h,e_c) = (||e_c||² - ||h-e_c||²)/2 = Re<h,e_c> - ||h||²/2`.
+
+The class-norm correction matters: uncorrected nearest-prototype distance
+would add a class-dependent bias and change the source classifier. The
+common feature-norm term cancels in every positive/negative difference:
+`G(h,e_y)-G(h,e_c) = Re<h,e_y-e_c>`. Thus the existing real dot-product
+readout, or the real part of a Hermitian product in complex coordinates,
+computes all goodness comparisons. Inference remains the same classifier.
+Complex multiplication inside the encoder is unchanged.
+
+Hinton's supervised label-conditioned encoder can require one encoder
+evaluation per candidate label (§3.3); this factorization uses one encoder
+evaluation and a class readout. It gives up label-conditioned feature
+extraction. It does not eliminate readout work or prove an overall speedup.
+Putting these goodness scores into a softmax recovers ordinary CE exactly;
+that relabeling alone would not change the learning algorithm.
+
+### LF2. Do not use normalized energy as the only goodness
+
+Hinton measures squared activities **before** normalization (§2). In the
+actual source model, a post-RMS squared norm is
+`W*q/(q+W*epsilon)`, where `q=||x||²`. It depends only on radius and saturates
+near W. At zero epsilon it is exactly W for every nonzero input. Its
+derivative with respect to q is `W²*epsilon/(q+W*epsilon)²`.
+Equal-energy features can have opposite label preferences. LF1 retains
+that directional information and avoids treating post-normalization
+magnitude as a rich classification signal. No change to RMS is required.
+
+### LF3. Change the local loss to paired directional margins
+
+For local scores `s_c=Re<h,e_c>`, let
+
+`L_pair = sum_{c != y} softplus(mu+s_c-s_y)/(C-1)`.
+
+The fixed candidate uses mu=1 and all C-1=96 negative labels. No label
+requires a second encoder evaluation. Unlike Hinton's separate positive
+and negative binary objectives, this loss directly compares each negative
+with its positive partner. Its logit derivatives are
+
+`q_c = sigmoid(mu+s_c-s_y)/(C-1)` for c != y,
+`q_y = -sum_{c != y} q_c`.
+
+The local linear-head derivatives are `dL/dh=sum_c q_c e_c` and
+`dL/de_c=q_c h`. Complex derivatives mean the corresponding real-coordinate
+derivatives, with the conjugation in the Hermitian product retained. At
+mu=0 and two classes this is CE. With multiple competing classes its
+gradient need not be a scalar multiple of the CE gradient. The distinct
+competitor weights are a real change to the objective.
+
+The **sum** of pair penalties below softplus(mu) guarantees positive margin
+against every competitor. The native **mean** therefore needs a threshold
+softplus(mu)/(C-1). A small average penalty or a 90% certificate coverage
+must not be presented as 100% model accuracy. This is a per-query labeled
+loss implication; it gives no held-out generalization guarantee.
+
+### LF4. Specify local credit, not just a different loss
+
+At a boundary, cache the incoming feature u and optimize the next block's
+local loss with u fixed. Local Jacobians, outer products and optimizer
+updates still require computation. No derivative from an upper block may
+be silently propagated into an earlier block and called Forward–Forward.
+For the two-layer scalar example `u=a*x`, `v=b*u`, the local first-layer
+loss softplus(-a) has derivative -1/2 at a=0, x=1. The terminal loss
+softplus(-2*a) has derivative -1 there. The two update rules are different.
+
+The source E is shared by the input embedding and output readout. The
+local readout derivative is only one contribution to this shared parameter;
+changing E also changes the next encoder evaluation. The native one-step
+probe therefore reports both frozen-feature and actual tied-network loss
+changes. It is not a complete local-learning trainer. Before task #190,
+specify losses/prototypes for every trainable block, detachment boundaries,
+and accumulation of all local contributions before one shared-parameter
+update. Count their storage and computation, and compare training from
+scratch at matched validation quality. A loss reformulation alone supplies
+neither a faster optimizer nor a solution to the flat-spectrum obstruction.
+
+| Claim | Lean declarations in `ForwardForward` |
+| --- | --- |
+| Corrected distance, class order and CE identity | `goodness_eq_inner`, `goodness_difference`, `goodness_order`, `goodness_crossEntropy` |
+| Normalized energy and its sensitivity | `normalized_energy`, `normalized_energy_zero_eps`, `normalized_energy_derivative`, `equal_energy_opposite_preferences` |
+| Actual pairwise derivative and invariances | `softplus_derivative`, `pairLoss_directional`, `pairLoss_shift`, `pairLoss_goodness` |
+| Per-query strict correctness threshold | `pair_term_le`, `winner_of_pairLoss_lt` |
+| Local versus terminal derivatives | `local_linear_derivative`, `terminal_first_derivative`, `local_global_derivative_witness` |

@@ -1,0 +1,4 @@
+/target/
+/report*.json
+/summary*.json
+/*.log
