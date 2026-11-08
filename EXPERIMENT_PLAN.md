@@ -48,6 +48,15 @@ The 90.38% figure from #188 is certificate coverage, not classifier accuracy.
 Require 100% final prediction agreement with full inference on audited inputs;
 report coverage separately from accuracy and speed.
 
+The user's next direction is to reformulate Forward–Forward before the
+inference implementation. Task #192 freezes a [local-loss diagnostic](experiments/forward_forward/PROTOCOL.md):
+directional goodness from corrected class distances, all-class pairwise
+softplus margins, and analytic local gradients. This avoids a separate
+encoder evaluation for every negative label. It tests the loss and the
+difference between detached readout updates and the actual tied network;
+task #190 still requires a complete training method and matched-quality
+timings. Task #189's frozen protocol remains queued.
+
 For optimizer efficiency, separate cheaper arithmetic per update from reaching
 the same quality in less total time. Preserve exact baseline semantics, measure
 the optimizer's share of complete step time, and validate the candidate's
