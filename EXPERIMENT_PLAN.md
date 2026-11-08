@@ -1,5 +1,14 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Joint control of difficult-query margins (2026-11-08)
+
+Task #187 is active under the [frozen extension](experiments/single_update/MARGIN_PROTOCOL.md).
+It derives a signed parameter/feature update interval, an all-competitor
+margin condition and an actual cross-entropy bound, then checks them on the
+same 24 probes and fixed sets of old low-margin queries. Rounding and the
+mixed update term remain explicit. This is conditional local control;
+predicting feature motion from pre-update training quantities remains open.
+
 ## Actual single-update audit (2026-11-08)
 
 Task #186 completed the [frozen audit](experiments/single_update/README.md):
