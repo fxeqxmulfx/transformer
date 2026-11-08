@@ -13,7 +13,7 @@ budget and seeds as controls. No Python or generated result commits.
 | Target | Board task | Required comparison |
 | --- | --- | --- |
 | Faster inference | #189 | Latency, throughput and memory at matched predictions/quality; fresh-input inference and repeated-query inference across parameter updates are separate workloads. |
-| Training without backpropagation | #190 | Forward-mode directional or finite-difference updates versus the current training baseline, including every forward evaluation and direction-construction cost. |
+| Training without backpropagation | #190 | Forward–Forward local learning and forward-mode directional or finite-difference candidates versus the current training baseline, charging all local updates, negative examples and forward evaluations. |
 | More efficient optimizer | #191 | Optimizer update cost, complete step cost, memory and wall time to matched quality versus the actual source AdamW. |
 
 For inference, count cache construction, storage, prediction bounds and
@@ -28,6 +28,25 @@ full gradient. Declare the number and source of directions, estimator variance
 and total function evaluations. Do not count directions or useful initialization
 obtained by earlier backpropagation as free. Separate learning from scratch
 from continuation at a trained checkpoint; retain all seeds and failures.
+
+Forward–Forward is a distinct candidate, following Hinton, arXiv:2212.13345,
+§§2–3.3 (read locally in `papers/arXiv-2212.13345/paper.txt`). Its local
+goodness objectives use positive and negative data. Measure negative-example
+construction, local derivatives/updates and activation storage; removal of
+end-to-end backpropagation alone is not a speed result. The supervised
+label-conditioned inference in §3.3 evaluates each candidate label, so count
+all 97 evaluations if that route is used here. A neutral-label learned readout
+is a separate candidate with its own training and accuracy costs. Declare any
+changes to the tied complex architecture before the pilot, including where
+goodness is measured relative to RMS normalization. Preserve independent
+seeds and compare total time to the baseline's accuracy, not just 90%.
+
+Task #189 starts with the [frozen inference protocol](experiments/inference_efficiency/PROTOCOL.md):
+exact cached weight transposes for fresh inputs, plus old-feature reuse with
+label-free certificates and exact fallback across one actual parameter update.
+The 90.38% figure from #188 is certificate coverage, not classifier accuracy.
+Require 100% final prediction agreement with full inference on audited inputs;
+report coverage separately from accuracy and speed.
 
 For optimizer efficiency, separate cheaper arithmetic per update from reaching
 the same quality in less total time. Preserve exact baseline semantics, measure
