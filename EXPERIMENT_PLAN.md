@@ -168,6 +168,14 @@ CE steps, synchronized wall and CUDA-event timing, actual memory and process
 ownership. Choose and freeze the candidate after this baseline measurement;
 do not infer speed from optimizer operation counts alone.
 
+The [source profile](experiments/optimizer_efficiency/README.md) passes all
+24 cases and retains 576 samples. Update-only/full-step wall ratios range
+from 2.47% to 5.52%, with another GPU training process present throughout.
+Complex moment storage duplicates tied coordinates: 2194432 bytes versus
+1146880 for independent moments. Next freeze compact moment storage and
+uniform-scalar precomputation, requiring identical updates and trajectories;
+do not treat these shared-device ratios as an exclusive-device speed result.
+
 Task #188 also leaves a theoretical target: tighter directional error transport
 through the block and readout. Such bounds may support the three comparisons,
 but a proof of a local bound alone is not evidence of runtime savings.
