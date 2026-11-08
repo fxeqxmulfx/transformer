@@ -1,5 +1,14 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Actual single-update audit (2026-11-08)
+
+Task #186 is active under the [frozen protocol](experiments/single_update/PROTOCOL.md).
+It audits one actual source AdamW update from each of the 24 saved states,
+separating encoder, minibatch and moment-memory contributions and measuring
+signed residual drift relative to margins. Step-10000 probes are explicitly
+outside the original training budget. Inputs remain immutable; generated
+reports stay local. This is the immediate next obligation from task #185.
+
 ## Adaptive forcing and signed interaction control (2026-11-08)
 
 Task #185 adds 23 proved theorems linking actual buffered Adam updates to
