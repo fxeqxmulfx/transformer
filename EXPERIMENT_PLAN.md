@@ -176,6 +176,13 @@ Complex moment storage duplicates tied coordinates: 2194432 bytes versus
 uniform-scalar precomputation, requiring identical updates and trajectories;
 do not treat these shared-device ratios as an exclusive-device speed result.
 
+Task #191 now freezes the [compact-moment candidate](experiments/optimizer_efficiency/PROTOCOL.md):
+store complex moments once per independent coordinate and precompute uniform
+FP32 AdamW scalars, preserving source update rounding. Require bitwise state
+equality at 24 saved-state cases and all paired workloads, then on 16 fresh
+CE/backpropagation trajectories (seeds 29/31, 4000 updates). Measure update,
+complete-step and matched-quality costs; retain interference and slowdowns.
+
 Task #188 also leaves a theoretical target: tighter directional error transport
 through the block and readout. Such bounds may support the three comparisons,
 but a proof of a local bound alone is not evidence of runtime savings.
