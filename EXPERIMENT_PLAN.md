@@ -131,6 +131,14 @@ fresh confirmation seeds and a fixed budget. The diagnostic borrows AdamW's
 radius, so it is not itself a cheaper optimizer. No accuracy repair or speed
 claim follows; keep all terminal gradients as charged analysis only.
 
+Task #195 freezes the [standalone normalized-A training comparison](experiments/forward_normalized/PROTOCOL.md):
+replace only A's optimizer with its current local-gradient direction and a
+fixed 1%-of-A-norm step with ten-update warmup, without A moments or decay.
+E/B and all objectives retain their original local rules. Compare against
+original local-pair and source CE from scratch on seeds 17/23, all four arms,
+4000 updates each (24 runs). No radius search or validation-directed updates;
+all accuracy, cost, numerical failures and caps remain in the evidence.
+
 For optimizer efficiency, separate cheaper arithmetic per update from reaching
 the same quality in less total time. Preserve exact baseline semantics, measure
 the optimizer's share of complete step time, and validate the candidate's
