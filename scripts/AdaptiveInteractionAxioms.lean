@@ -23,3 +23,5 @@ import Transformer
 #print axioms Transformer.Grokking.GradientEvidence.moving_update_interaction_contracts
 #print axioms Transformer.Grokking.GradientEvidence.buffered_step_eq_directionStep
 #print axioms Transformer.Grokking.GradientEvidence.buffered_interaction_le
+#print axioms Transformer.Grokking.GradientEvidence.buffered_contrast_eq_directionStep
+#print axioms Transformer.Grokking.GradientEvidence.buffered_contrast_interaction_le

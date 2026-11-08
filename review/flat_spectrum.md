@@ -6470,6 +6470,11 @@ retains that defect. Neither interaction alone replaces ST2's certificate.
 ### AI5. A sufficient condition for an actual moving adaptive update
 
 Write a=1-eta*rho, f=DM, w'=a w-eta f, u=Qw, r=Qx, u'=Q'w', r'=Q'x'.
+This buffered direction describes one readout row. For a class contrast
+w=E_c-E_target, use f=D_c M_c-D_target M_target: the two preconditioners
+need not coincide. Lean proves this actual contrast update and its moving
+interaction bound separately; it never replaces f by D*(M_c-M_target)
+without a shared-scale assumption.
 The readout residual satisfies
 
 ```
@@ -6501,4 +6506,5 @@ sufficient, not a claim of optimizer discovery or a consequence of CE alone.
 | Exact interaction change and drift control | `interaction_change`, `interaction_change_abs_le`, `interaction_bound_transport` |
 | Cancellation witness | `interaction_cancellation_witness` |
 | Actual update with moving geometry | `moving_update_interaction`, `buffered_interaction_le` |
+| Row-specific preconditioners in actual class contrasts | `buffered_contrast_eq_directionStep`, `buffered_contrast_interaction_le` |
 | Sufficient strict contraction | `moving_update_interaction_contracts` |
