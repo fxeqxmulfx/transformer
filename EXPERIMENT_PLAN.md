@@ -1,5 +1,43 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Three efficiency targets (2026-11-08 user direction)
+
+The user requested all three targets below. They are planned as separate
+native comparisons; task #188's valid feature forecasts establish no speedup.
+Efficiency means end-to-end wall time and memory at matched quality, with
+all computation charged to the candidate. Freeze each candidate and budget
+before measurement, start with an instrumented pilot, and use its evidence
+to justify any longer training run. Keep the current source, data, parameter
+budget and seeds as controls. No Python or generated result commits.
+
+| Target | Board task | Required comparison |
+| --- | --- | --- |
+| Faster inference | #189 | Latency, throughput and memory at matched predictions/quality; fresh-input inference and repeated-query inference across parameter updates are separate workloads. |
+| Training without backpropagation | #190 | Forward-mode directional or finite-difference updates versus the current training baseline, including every forward evaluation and direction-construction cost. |
+| More efficient optimizer | #191 | Optimizer update cost, complete step cost, memory and wall time to matched quality versus the actual source AdamW. |
+
+For inference, count cache construction, storage, prediction bounds and
+fallback evaluations. Any serving-time certificate must work without labels:
+it certifies agreement with an exact model evaluation, not unknown ground-truth
+correctness. The current tangent forecast performs extra dense products and
+is not already a faster substitute for a normal forward pass. Savings require
+measured reuse, structure, or an improved implementation.
+
+For forward-only training, a directional derivative is not generally the
+full gradient. Declare the number and source of directions, estimator variance
+and total function evaluations. Do not count directions or useful initialization
+obtained by earlier backpropagation as free. Separate learning from scratch
+from continuation at a trained checkpoint; retain all seeds and failures.
+
+For optimizer efficiency, separate cheaper arithmetic per update from reaching
+the same quality in less total time. Preserve exact baseline semantics, measure
+the optimizer's share of complete step time, and validate the candidate's
+update equations before attributing any difference to optimization quality.
+
+Task #188 also leaves a theoretical target: tighter directional error transport
+through the block and readout. Such bounds may support the three comparisons,
+but a proof of a local bound alone is not evidence of runtime savings.
+
 ## Feature forecasts before updated-network evaluation (2026-11-08)
 
 Task #188 completed the [frozen forecast protocol](experiments/single_update/FORECAST_PROTOCOL.md):
