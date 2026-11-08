@@ -1,5 +1,16 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Feature forecasts before updated-network evaluation (2026-11-08)
+
+Task #188 is active under the [frozen forecast protocol](experiments/single_update/FORECAST_PROTOCOL.md).
+Propagate the old-network tangent and a layerwise error radius using the
+proposed parameter step. Local nonlinear defects and anchored Lipschitz
+bounds replace observed future feature motion. Forecasts are frozen before
+the updated network is evaluated; all 24 probes and old difficult subsets
+remain. Fixed FP32 allowances are audited separately, without outcome-based
+adjustment. Derive the feature-to-margin/loss bridge and test whether the
+resulting radii are useful, retaining failures and inconclusive cases.
+
 ## Joint control of difficult-query margins (2026-11-08)
 
 Task #187 completed the [frozen extension](experiments/single_update/MARGIN_PROTOCOL.md):
