@@ -23,6 +23,19 @@ experiments in `experiments/`. `./run.py` runs every task.
 - Never stage `.discrtree/`, `discrtree.toml`, `.claude/skills/discrtree/`,
   `.kanban/`.
 
+## Generated files (2026-11-08 user override)
+
+- Do not commit reproducible generated outputs: reports, rendered summaries,
+  plots, logs, caches, or build artifacts. Keep them ignored and local.
+- **Exception: `INDEX.md` must still be generated and committed with every
+  `src/` change.** Never edit it by hand.
+- Commit the source, generators, configuration, required reproducibility inputs,
+  and documented commands needed to regenerate outputs. Keep authored findings
+  and interpretation in the experiment README.
+- Preserve generated evidence needed for review outside a temporary worktree
+  before removing it. This rule supersedes older instructions to commit other
+  generated files; it does not supersede the `INDEX.md` requirement.
+
 ## Local compute
 
 - An NVIDIA GPU is available: GeForce RTX 3050 Laptop GPU, 4 GiB VRAM,
