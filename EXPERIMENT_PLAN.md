@@ -151,37 +151,49 @@ retains all 24 completed runs. Candidate endpoint validation accuracy is
 validation CE is worse in all eight cases and accuracy in six. No local run
 matches paired CE quality. All numerical, state and source checks pass.
 The fixed 1% relative rule therefore does not turn the earlier one-step
-direction result into a training repair. Next freeze a control using the
-same A optimizer with full-gradient credit, keeping the auxiliary objective
-set fixed to separate optimizer/step policy from stopped credit. Do not
-attribute failure solely to the head or radius, tune this completed cohort,
-or claim a speedup; all ownership snapshots include the desktop.
+direction result into a training repair. The previously proposed control
+using the same A optimizer with full-gradient credit is now skipped by the
+later user direction above; no such cohort was run. Do not attribute failure
+solely to the head or radius, tune this completed cohort, or claim a speedup;
+all ownership snapshots include the desktop.
 
 For optimizer efficiency, separate cheaper arithmetic per update from reaching
 the same quality in less total time. Preserve exact baseline semantics, measure
 the optimizer's share of complete step time, and validate the candidate's
 update equations before attributing any difference to optimization quality.
 
-Task #191 first freezes a [source AdamW cost profile](experiments/optimizer_efficiency/PROFILE_PROTOCOL.md):
+Task #191 first froze a [source AdamW cost profile](experiments/optimizer_efficiency/PROFILE_PROTOCOL.md):
 all 24 original states, fixed-gradient update-only throughput versus complete
 CE steps, synchronized wall and CUDA-event timing, actual memory and process
-ownership. Choose and freeze the candidate after this baseline measurement;
-do not infer speed from optimizer operation counts alone.
+ownership. The candidate was chosen and frozen after this baseline measurement;
+no speed claim follows from optimizer operation counts alone.
 
 The [source profile](experiments/optimizer_efficiency/README.md) passes all
 24 cases and retains 576 samples. Update-only/full-step wall ratios range
 from 2.47% to 5.52%, with another GPU training process present throughout.
 Complex moment storage duplicates tied coordinates: 2194432 bytes versus
-1146880 for independent moments. Next freeze compact moment storage and
-uniform-scalar precomputation, requiring identical updates and trajectories;
-do not treat these shared-device ratios as an exclusive-device speed result.
+1146880 for independent moments. This motivated compact moment storage and
+uniform-scalar precomputation with identical updates and trajectories;
+the shared-device ratios are not an exclusive-device speed result.
 
-Task #191 now freezes the [compact-moment candidate](experiments/optimizer_efficiency/PROTOCOL.md):
+Task #191 froze the [compact-moment candidate](experiments/optimizer_efficiency/PROTOCOL.md):
 store complex moments once per independent coordinate and precompute uniform
 FP32 AdamW scalars, preserving source update rounding. Require bitwise state
 equality at 24 saved-state cases and all paired workloads, then on 16 fresh
 CE/backpropagation trajectories (seeds 29/31, 4000 updates). Measure update,
 complete-step and matched-quality costs; retain interference and slowdowns.
+
+The [completed comparison](experiments/optimizer_efficiency/README.md) passes
+all 24 saved states, 160 warmup updates, eight zero/tiny-gradient cases,
+576 paired benchmark workloads and 328 paired training observations.
+All 16 full-CE runs finish 4000 updates with identical paired states/metrics
+and endpoint validation accuracy 99.45–99.87%. Complex moment storage falls
+47.74% (1047552 bytes), or 3.68% of resident training buffer payload. This is
+a validated memory improvement. Shared-device matched-quality active ratios
+range 0.946–1.012, with four of eight below one; no reliable training speedup
+or convergence improvement is established. Keep full backpropagation and
+the measured storage change; larger runtime gains need a forward/backward
+or inference comparison, and speed claims need uncontaminated timing.
 
 Task #188 also leaves a theoretical target: tighter directional error transport
 through the block and readout. Such bounds may support the three comparisons,
