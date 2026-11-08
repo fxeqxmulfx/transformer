@@ -4,6 +4,9 @@ include!(concat!(env!("OUT_DIR"), "/modules.rs"));
 pub mod algebra;
 mod drift;
 mod forcing;
+mod forecast_jet;
+mod forecast_network;
+mod forecast_report;
 #[path = "../../residual_dynamics/src/geometry.rs"]
 pub mod geometry;
 #[path = "../../residual_dynamics/src/gradient.rs"]
@@ -49,10 +52,13 @@ fn main() -> Result<()> {
         "output must be outside original checkpoint root",
     )?;
     inputs::require(!output.exists(), "refusing to overwrite existing report")?;
+    let forecast_output = output.with_extension("features.bin");
+    let _forecast_file = fs::File::create_new(&forecast_output)?;
     let mut ledger = inputs::Ledger::default();
     let (original, protocol_hash) = inputs::protocol(&mut ledger, &root)?;
     let mut report = json!({"status":"running","protocol":include_str!("../PROTOCOL.md"),
         "margin_protocol":include_str!("../MARGIN_PROTOCOL.md"),
+        "forecast_protocol":include_str!("../FORECAST_PROTOCOL.md"),
         "source_sha256":inputs::source_hash(),"original_protocol":original,"cases":[],"elapsed_seconds":0.});
     let save = |report: &serde_json::Value| -> Result<()> {
         let mut bytes = serde_json::to_vec_pretty(report)?;
@@ -77,6 +83,7 @@ fn main() -> Result<()> {
                     data: &data,
                     plan: &plan,
                     protocol: &protocol_hash,
+                    forecast_output: &forecast_output,
                 };
                 let result =
                     std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| -> Result<_> {
@@ -128,6 +135,8 @@ fn main() -> Result<()> {
     }
     report["status"] = json!(if failed == 0 { "pass" } else { "fail" });
     report["failed"] = json!(failed);
+    report["forecast_file"] = json!({"name":forecast_output.file_name().unwrap().to_str(),
+        "sha256":inputs::hash(&fs::read(&forecast_output)?),"bytes":fs::metadata(&forecast_output)?.len()});
     save(&report)?;
     inputs::require(
         failed == 0,

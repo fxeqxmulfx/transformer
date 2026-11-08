@@ -13,7 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
-| [`single_update`](single_update) | 24 actual one-step probes | Exact-source gradient attribution and joint margin/loss bounds; 35 Lean theorems and 225816 query checks. Conditional bounds certify 99.20% of trained validation loss directions, including worsening difficult-query loss despite increasing mean margins. |
+| [`single_update`](single_update) | 24 actual one-step probes | Exact-source attribution, retrospective joint bounds and forecasts frozen before updated-network evaluation. All 225816 feature balls pass; forecasts certify 90.38% of trained validation decisions but no loss-change directions, exposing conservative error propagation. |
 | [`adaptive_interaction`](adaptive_interaction) | 24 saved states, 16 intervals; no training | Separate adaptive mixing, saved-moment discrepancy and signed interaction drift; all 6240 adaptive checks pass, but current CE bounds are loose and validation interaction is not monotone. |
 | [`residual_dynamics`](residual_dynamics) | 24 saved states, 16 intervals; no training | CE controls projected readout-gradient forcing, while rank-32 orbit readout residuals grow in 11 of 12 CE-descent intervals; separate parameter and basis movement. |
 | [`signed_transport`](signed_transport) | 24 saved states; no training | Signed reconstruction and directional residuals raise plain-product rank-32 probability coverage to 70.67%/72.50%; fixed ranks distinguish compressed bounds from full-readout re-expression. |

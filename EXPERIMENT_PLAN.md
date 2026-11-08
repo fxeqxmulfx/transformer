@@ -2,14 +2,20 @@
 
 ## Feature forecasts before updated-network evaluation (2026-11-08)
 
-Task #188 is active under the [frozen forecast protocol](experiments/single_update/FORECAST_PROTOCOL.md).
-Propagate the old-network tangent and a layerwise error radius using the
-proposed parameter step. Local nonlinear defects and anchored Lipschitz
-bounds replace observed future feature motion. Forecasts are frozen before
-the updated network is evaluated; all 24 probes and old difficult subsets
-remain. Fixed FP32 allowances are audited separately, without outcome-based
-adjustment. Derive the feature-to-margin/loss bridge and test whether the
-resulting radii are useful, retaining failures and inconclusive cases.
+Task #188 completed the [frozen forecast protocol](experiments/single_update/FORECAST_PROTOCOL.md):
+22 Lean theorems and all 24 native probes pass. The old-network tangent and
+layerwise radii are persisted before any candidate-network evaluation. All
+225816 feature balls and 21678336 competing-class bounds hold; fixed FP32
+allowances have zero violations, and resulting states still match task #186.
+
+Forecasts certify correctness on 68040/75280 trained validation observations
+(90.38%), but **no loss-change direction**. Mean validation margin interval
+width is 4.947498 versus the retrospective 0.001595. Plain-product endpoint
+mean radii exceed mean actual forecast errors by factors 109.10/196.37.
+The [authored results](experiments/single_update/README.md#feature-forecasts-before-the-updated-forward-pass)
+retain all cases and the loss of coverage. The next target is directional
+error propagation through the block/readout, avoiding repeated scalar-ball
+and Frobenius inflation. No architecture or numerical allowance was changed.
 
 ## Joint control of difficult-query margins (2026-11-08)
 

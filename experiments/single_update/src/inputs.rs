@@ -88,6 +88,7 @@ pub struct Case<'a> {
     pub data: &'a Data,
     pub plan: &'a Plan,
     pub protocol: &'a str,
+    pub forecast_output: &'a Path,
 }
 pub fn checkpoint(ledger: &mut Ledger, root: &Path, case: &Case<'_>) -> Result<Saved> {
     let path = root.join(format!(
@@ -179,12 +180,16 @@ pub fn source_hash() -> String {
             include_bytes!("probe.rs"),
             include_bytes!("query_step.rs"),
             include_bytes!("query_summary.rs"),
+            include_bytes!("forecast_jet.rs"),
+            include_bytes!("forecast_network.rs"),
+            include_bytes!("forecast_report.rs"),
             include_bytes!("instrumentation.rs"),
             include_bytes!("../build.rs"),
             include_bytes!("../Cargo.toml"),
             include_bytes!("../Cargo.lock"),
             include_bytes!("../PROTOCOL.md"),
             include_bytes!("../MARGIN_PROTOCOL.md"),
+            include_bytes!("../FORECAST_PROTOCOL.md"),
             include_bytes!("../../residual_dynamics/src/algebra.rs"),
             include_bytes!("../../residual_dynamics/src/geometry.rs"),
             include_bytes!("../../residual_dynamics/src/gradient.rs"),

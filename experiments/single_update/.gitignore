@@ -5,3 +5,7 @@
 /margin-report.json
 /margin-summary.json
 /margin-audit.log
+/forecast-report.json
+/forecast-summary.json
+/forecast-audit.log
+/*.features.bin

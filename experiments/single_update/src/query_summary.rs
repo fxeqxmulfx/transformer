@@ -109,7 +109,7 @@ pub fn freeze_difficult(old: &Snapshot, data: &Data) -> [Vec<usize>; 2] {
         order.into_iter().map(|(q, _)| q).collect()
     })
 }
-fn subset(indices: &[usize], rows: &[Row]) -> Result<Value> {
+pub fn subset(indices: &[usize], rows: &[Row]) -> Result<Value> {
     let mut methods: [Method; 2] = Default::default();
     let (mut margin, mut loss, mut correct) = ([0.; 2], [0.; 2], [0; 2]);
     let mut minimum = [f64::INFINITY; 2];
@@ -158,7 +158,7 @@ pub fn audit(
     d: &Direction,
     data: &Data,
     difficult: &[Vec<usize>; 2],
-) -> Result<Value> {
+) -> Result<(Value, Vec<Row>)> {
     let mut labels = vec![usize::MAX; 9409];
     for r in data
         .train
@@ -237,7 +237,7 @@ pub fn audit(
         "actual_execution_change"],"values":terms});
     result["row_fields"] = json!(query_step::ROW_FIELDS);
     result["rows_by_canonical_pair_index"] = json!(rows.iter().map(Row::json).collect::<Vec<_>>());
-    Ok(result)
+    Ok((result, rows))
 }
 
 #[cfg(test)]

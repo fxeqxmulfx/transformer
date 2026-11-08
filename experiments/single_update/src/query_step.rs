@@ -20,6 +20,7 @@ pub struct Interval {
     pub margin: [f64; 2],
     pub loss: [f64; 2],
 }
+#[derive(Clone)]
 pub struct Row {
     pub target: usize,
     pub worst: [usize; 2],
@@ -94,7 +95,7 @@ fn contrast_norms(e: &[f64], classes: usize, width: usize) -> Vec<f64> {
         })
         .collect()
 }
-fn interval(lo: &[f64], hi: &[f64], target: usize) -> Interval {
+pub fn interval(lo: &[f64], hi: &[f64], target: usize) -> Interval {
     let worst = |x: &[f64]| {
         x.iter()
             .enumerate()

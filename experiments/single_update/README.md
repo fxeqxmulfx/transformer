@@ -5,6 +5,8 @@ minibatch or momentum, and how does one actual update change the residual
 interaction and decision margins? Task #186 answers this under the
 [fixed protocol](PROTOCOL.md), continuing [task #185](../adaptive_interaction).
 Task #187 adds the [joint margin/loss extension](MARGIN_PROTOCOL.md) below.
+Task #188 adds [feature forecasts](FORECAST_PROTOCOL.md) frozen before
+evaluating the updated network.
 
 All 24 independent probes passed in 76.08 seconds on the RTX 3050 Laptop.
 Each restores one original checkpoint in memory and takes its next scheduled
@@ -188,6 +190,76 @@ The next obligation is a useful training-derived bound on feature motion,
 followed by validation on further seeds/tasks. Complex multiplication and
 the original architecture ranking remain unchanged.
 
+## Feature forecasts before the updated forward pass
+
+Task #188 adds 22 Lean theorems for finite forecast propagation, anchored
+normalization and sigmoid sensitivity, mixed product terms, and transport
+from a feature ball to actual margin and loss intervals. The
+[derivation](../../review/flat_spectrum.md#feature-forecasts) distinguishes
+these proofs from verification of the native implementation or CUDA arithmetic.
+
+The forecast uses the old network's value and directional derivative along
+the proposed rounded Adam step. It propagates a Euclidean remainder through
+every source layer. Linear layers retain their known mixed term; nonlinear
+layers use their defect at the known nominal input and an anchored Lipschitz
+bound. Nominal nonlinear values contribute to the radius only. They are
+never propagated as updated features. All centers and radii are persisted
+before any forward evaluation at the candidate parameters.
+
+All **24 probes pass in 138.62 seconds**, including 225816 feature balls and
+21678336 competing-class bounds. There are no allowance violations or false
+certificates. Every new-state hash still matches task #186, and all 73 inputs
+remain unchanged. All legacy derivative, geometry and joint interval checks
+pass. The independent scalar central-difference check of the old tangent
+has maximum scaled error 5.47e-9.
+
+The fixed 1e-3 Euclidean FP32 feature allowance is respected: maximum old/new
+discrepancies are 5.84e-5/6.32e-5. The fixed 1e-3 per-class readout allowance
+is also respected, with maximum discrepancy 9.07e-6. These are audited
+numerical assumptions, not formally proved CUDA error bounds. No allowance
+was fitted or increased after observing outcomes.
+
+**The forecasts preserve useful classification guarantees but do not certify
+any loss-change direction.** All 225816 query-update loss intervals remain
+inconclusive. For the 16 trained-state probes, including the eight post-budget
+steps, coverage is:
+
+| Query set | Observations | Actually correct after step | Forecast certified correct |
+| --- | ---: | ---: | ---: |
+| Whole training split | 75264 | 75218 | 69487 |
+| Whole validation split | 75280 | 74952 | 68040 |
+| Fixed validation bottom decile | 7536 | 7208 | 5555 |
+
+This is 90.38% of trained validation observations and 73.71% of difficult
+observations. Repeated queries are not independent samples. Mean validation
+margin interval width rises from #187's retrospective 0.001595 to the
+forecast's 4.947498; difficult-query width is 7.375966 versus 0.003102.
+The retrospective 99.20% loss-direction coverage cannot be carried over
+to the forecast's smaller information set.
+
+The radii are conservative. At the plain-product endpoints, the ratio of
+mean real-arithmetic radius to mean actual forecast error is 109.10 and
+196.37. Every endpoint is retained below; feature means use both full splits,
+while the last two columns count validation guarantees.
+
+| Arm | Seed | Mean feature error | Mean feature radius | Certified correct / 4705 | Difficult certified correct / 471 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| SwiGLU | 7 | 0.016101 | 1.904199 | 4094 | 237 |
+| SwiGLU | 11 | 0.014914 | 2.004154 | 3996 | 207 |
+| Diagonal | 7 | 0.005960 | 1.200560 | 4498 | 412 |
+| Diagonal | 11 | 0.004368 | 0.619716 | 4683 | 449 |
+| Radial product | 7 | 0.013180 | 1.741416 | 4358 | 271 |
+| Radial product | 11 | 0.012664 | 1.983926 | 3971 | 174 |
+| Plain product | 7 | 0.005255 | 0.573297 | 4664 | 432 |
+| Plain product | 11 | 0.000640 | 0.125657 | 4690 | 456 |
+
+This closes the dependence on measured future feature displacement for the
+stated local conditions. It does not yet explain or guarantee loss descent.
+The next target is to retain error directions through the block and readout,
+instead of repeatedly converting them into scalar balls and multiplying by
+Frobenius norms. This result gives no reason to change complex multiplication
+or revise the original architecture ranking.
+
 ## Reproduction
 
 Use Rust 1.99.1, CUDA and OpenBLAS. The manifest pins local Kernite at
@@ -214,9 +286,10 @@ cargo run --offline --release -- \
   /tmp/single-update-report.json
 jq -f summary.jq /tmp/single-update-report.json > /tmp/single-update-summary.json
 jq -f margin-summary.jq /tmp/single-update-report.json > /tmp/margin-summary.json
+jq -f forecast-summary.jq /tmp/single-update-report.json > /tmp/forecast-summary.json
 ```
 
-The fifteen native tests cover independent CE derivatives, noncommuting class
+The eighteen native tests cover independent CE derivatives, noncommuting class
 scales and cross terms, explicit rounding, moving bases/features, and margins
 that improve despite residual growth, plus joint cancellation, mixed terms,
 competitor switches, fixed difficult-query selection and the mean-margin/CE
@@ -239,6 +312,22 @@ Lean checks run from the repository root with `LAKE_ARTIFACT_CACHE=false`:
 `cargo run --offline --release --manifest-path scripts/native_index/Cargo.toml`.
 The full build and both axiom checks pass: 36 existing `sorry`, zero results
 resting on them, and no extra axioms. `INDEX.md` includes all 35 new theorems.
+
+For task #188 also run `LAKE_ARTIFACT_CACHE=false lake env lean scripts/ForecastAxioms.lean`:
+all 22 additional theorems use only standard axioms; `INDEX.md` totals 21686
+theorems, with the existing 36 `sorry` unchanged. The three new native tests
+check source-arm tangents against the independent scalar oracle and feature
+balls under nonzero steps, a cancelled product tangent with a nonzero mixed
+term, and normalization with a nonzero input error near zero.
+
+The executable also creates `/tmp/single-update-report.features.bin`; both
+output paths must be fresh. Each case records its offset, byte count and
+SHA256. A record begins with little-endian u64 row count and width, then
+canonical pair order `(97*a+b)`, with 128 little-endian f64 center coordinates
+and one real-arithmetic radius per row. The full binary's hash is in
+`forecast_file`. Preserve this binary alongside the JSON before removing a
+worktree. The JSON retains every query interval/error and all fixed subsets;
+`forecast-summary.jq` regenerates the tables' source statistics.
 
 Output overwrite is refused. Reports, logs, generated copies and
 compiled artifacts remain untracked; this README records authored conclusions.

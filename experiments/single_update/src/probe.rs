@@ -63,6 +63,8 @@ pub fn run(case: &Case<'_>, saved: &Saved) -> Result<Value> {
     engine.update(case.step + 1)?;
     let next = engine.state()?;
     let next_bytes = storage::state_bytes(case.step + 1, &next);
+    let forecast =
+        crate::forecast_report::prepare(case, &saved.state.parameters, &next.parameters)?;
     engine.restore(&saved.state)?;
     engine.train_step(offset, batch, case.step + 1)?;
     require(
@@ -79,9 +81,11 @@ pub fn run(case: &Case<'_>, saved: &Saved) -> Result<Value> {
         case.step + 1,
     );
     let new_e: Vec<_> = next.parameters[..E].iter().map(|&v| v as f64).collect();
-    let query_control = crate::query_summary::audit(
+    let (query_control, query_rows) = crate::query_summary::audit(
         &old, &new, &old_e, &new_e, &direction, case.data, &difficult,
     )?;
+    let feature_forecast =
+        forecast.audit(case, &old, &new, &next.parameters, &query_rows, &difficult)?;
     let old_groups = measure::groups(&old, case.data);
     let new_groups = measure::groups(&new, case.data);
     let mut results = Vec::new();
@@ -158,6 +162,6 @@ pub fn run(case: &Case<'_>, saved: &Saved) -> Result<Value> {
         "next_batch":{"start":offset,"size":batch,"rows_sha256":storage::hash(&storage::words(&case.plan.order[offset..end]))},
         "direction":direction.summary(),"old_new_rms_max_error":[old.rms_error,new.rms_error],
         "next_batch_readout_energy":crate::gradient::energy(&batch_readout),"next_batch_full_energy":crate::gradient::energy(&batch_full),
-        "query_control":query_control,"geometry":results}),
+        "query_control":query_control,"feature_forecast":feature_forecast,"geometry":results}),
     )
 }

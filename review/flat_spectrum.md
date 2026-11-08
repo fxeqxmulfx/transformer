@@ -6799,3 +6799,22 @@ convergence or a statistical generalization theorem.
 | Explicit execution allowance | `forecast_execution_ball` |
 | All-competitor control | `forecast_contrast_error`, `forecast_gap_interval`, `forecast_margin` |
 | Actual query/subset loss | `forecast_loss_upper`, `forecast_loss_lower`, `forecast_mean_loss_upper` |
+
+### Native audit of FF1–FF3
+
+All 24 frozen forecasts pass, with unchanged #186 state hashes and original
+inputs. All 225816 feature balls and 21678336 competitor bounds enclose the
+later outcomes. Fixed FP32 allowances have zero violations; independent
+scalar tangent checks have maximum scaled error 5.47e-9. The native report
+retains all per-query errors, radii, intervals and frozen feature centers.
+
+Forecast correctness coverage is 68040/75280 (90.38%) on trained validation
+observations, but no loss-change direction is certified anywhere in the
+24-case cohort. Mean validation margin interval width is 4.947498, versus
+0.001595 for JC's retrospective interval. Plain-product endpoint ratios of
+mean radius to mean actual forecast error are 109.10 and 196.37. The
+[authored findings](../experiments/single_update/README.md#feature-forecasts-before-the-updated-forward-pass)
+show all arms and seeds. Future feature measurements are no longer needed
+for these bounds, but repeated scalar-ball propagation is too conservative
+for loss control. The next obligation is directional error transport through
+the actual block and readout, not an architecture change or a fitted allowance.
