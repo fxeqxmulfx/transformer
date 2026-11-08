@@ -116,13 +116,14 @@ arm, seed or unsuccessful counterfactual is removed from the evidence.
 
 ## Next decision and limits
 
-Prioritize **A's direction and step size** in the next frozen diagnostic:
-compare its current local-gradient direction, its actual AdamW direction
-and smaller displacements at the same states. This separates the observed
-direction changes from finite-step overshoot before changing both loss and
-optimizer together. A future training comparison must obtain its decisions
-from permitted local information; these validation gradients cannot be a
-free line search or a training safeguard.
+The completed [A direction/scale follow-up](../forward_step/README.md)
+crosses two directions with five fixed scales at these same 40 states.
+At local endpoints, norm-matched current-gradient motion lowers training
+and validation CE in all eight cases at every scale. Shrinking AdamW recovers
+two finite-step overshoots but leaves five validation ascent cases. This
+motivates a separately frozen from-scratch training comparison. Its decisions
+must use permitted local information; these validation gradients cannot be
+a free line search or a training safeguard.
 
 The fixed hidden target also remains an open design issue: the initial
 minibatch has weak, mixed A alignment, and trained BP states do not generally

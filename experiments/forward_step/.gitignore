@@ -1,0 +1,5 @@
+/target/
+/runs
+/*.log
+/report*.json
+/summary*.json

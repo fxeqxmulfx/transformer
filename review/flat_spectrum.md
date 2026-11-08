@@ -6966,3 +6966,26 @@ do not prove a trajectory-level cause or a generalization guarantee. The
 next diagnostic should isolate A's direction and scale before changing
 objective and optimizer together. No new training outcome or speed claim
 follows from these backward-assisted measurements.
+
+### LF7. Smaller steps do not remove a direction defect
+
+The [task #194 follow-up](../experiments/forward_step/README.md) compares the
+actual A displacement with its norm-matched negative current local gradient
+at five fixed scales, retaining all 40 states and 400 probes. At the eight
+local endpoints, every gradient-direction probe reduces full-training and
+validation CE. AdamW improves validation CE in one case at full scale and
+three at scales 1/64 and 1/256: shrinking the step recovers the two overturned
+descent predictions but retains five ascent cases. This separates observed
+finite-step overshoot from an observed direction defect without assigning
+that defect solely to moment carryover, adaptive scaling or decay.
+
+All 400 probes reduce their local loss, yet the other state origins still
+have mixed terminal outcomes. Accuracy remains mixed even where CE falls.
+These are finite numerical observations, not a theorem about an entire
+training trajectory. They support testing a current-gradient A update from
+scratch while holding the local objective and other block rules fixed.
+Its step-size policy must be specified independently: borrowing AdamW's
+radius in this diagnostic establishes neither a standalone optimizer nor
+an efficiency advantage. Keep validation derivatives out of the proposed
+trainer and use a separately frozen confirmation cohort. No complex-product
+definition or formal theorem changes in this study.

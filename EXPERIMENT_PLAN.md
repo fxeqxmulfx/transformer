@@ -118,6 +118,19 @@ fixed and start from the saved state. Compare realized directions, local
 loss, terminal loss and finite-step remainders; do not select only favorable
 scales or extend training. Any later training repair needs its own protocol.
 
+The [completed direction/scale study](experiments/forward_step/README.md)
+passes all 400 probes and 320 directional checks. At local endpoints the
+current-gradient A direction lowers training/validation CE in all eight
+cases at every scale. Shrinking AdamW recovers two finite-step overshoots,
+but leaves five validation ascent cases even at 1/256. Every probe across
+all 40 states lowers its local objective; terminal outcomes at initialization
+and the other origins remain mixed. Accuracy changes are mixed too.
+Next freeze a from-scratch comparison with a standalone current-gradient A
+rule, a locally computable step-size policy, original-local and CE controls,
+fresh confirmation seeds and a fixed budget. The diagnostic borrows AdamW's
+radius, so it is not itself a cheaper optimizer. No accuracy repair or speed
+claim follows; keep all terminal gradients as charged analysis only.
+
 For optimizer efficiency, separate cheaper arithmetic per update from reaching
 the same quality in less total time. Preserve exact baseline semantics, measure
 the optimizer's share of complete step time, and validate the candidate's
