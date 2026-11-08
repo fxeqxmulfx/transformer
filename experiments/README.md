@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`residual_dynamics`](residual_dynamics) | 24 saved states, 16 intervals; no training | CE controls projected readout-gradient forcing, while rank-32 orbit readout residuals grow in 11 of 12 CE-descent intervals; separate parameter and basis movement. |
 | [`signed_transport`](signed_transport) | 24 saved states; no training | Signed reconstruction and directional residuals raise plain-product rank-32 probability coverage to 70.67%/72.50%; fixed ranks distinguish compressed bounds from full-readout re-expression. |
 | [`probability_transfer`](probability_transfer) | 24 saved states; no training | Training confidence and normalized query geometry give valid probability/loss bounds, but the above-half probability condition covers only 0.28%/0.91% at plain-product endpoints. |
 | [`loss_geometry`](loss_geometry) | 24 saved states; no training | CE controls probability scatter on the same rows; two training intervals lower CE while raw contrast scatter rises, and held-out scatter can exceed twice training CE. |

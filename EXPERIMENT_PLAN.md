@@ -1,5 +1,29 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Residual learning dynamics (2026-11-08)
+
+Task #184 derives the actual fixed-feature readout CE gradient, a loss-controlled
+projected-gradient energy bound, and a sufficient Euclidean descent/decay
+mechanism. The [Lean extension](review/flat_spectrum.md#residual-learning-dynamics)
+adds 23 proved theorems, including a changing-subspace identity and an actual
+Adam first-step counterexample: CE falls while a training-nullspace residual
+appears. No residual contraction is assumed, and no new `sorry` is introduced.
+
+The [fixed native diagnostic](experiments/residual_dynamics/README.md) retains all
+24 original states and 16 adjacent intervals, both groupings, and ranks 16/32/64.
+All 9,360 projected-gradient bounds pass. Among the 12 intervals with falling
+training CE, rank-32 orbit readout residual energy rises in 11 and the mean
+validation residual-norm product rises in 3. Changes in the basis can reverse
+the sign of a change measured with the old basis held fixed.
+
+The next obligation is to control the residual interaction under actual
+adaptive updates and changing features. Small partial readout gradients do
+not control current residuals or encoder drift. The sufficient fixed-feature
+Euclidean theorem does not directly describe these tied AdamW trajectories.
+Complex multiplication, training and the checkpoints are unchanged. Generated
+reports remain local under the new AGENTS rule; `INDEX.md` retains its explicit
+generated-and-committed exception.
+
 ## Signed directional transport (2026-11-08)
 
 Task #183 preserves signed training-score reconstruction and bounds only the
