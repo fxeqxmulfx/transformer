@@ -111,6 +111,13 @@ diagnostic before changing loss and optimizer together. This is a proposed
 next study, not an accuracy repair or a new training result; freeze it
 separately and keep diagnostic full gradients out of training information.
 
+Task #194 freezes the [A-only direction/scale diagnostic](experiments/forward_step/PROTOCOL.md):
+the same 40 states, actual AdamW versus a norm-matched negative local-gradient
+direction, and five fixed scales from 1 to 1/256. All 400 probes hold E/B
+fixed and start from the saved state. Compare realized directions, local
+loss, terminal loss and finite-step remainders; do not select only favorable
+scales or extend training. Any later training repair needs its own protocol.
+
 For optimizer efficiency, separate cheaper arithmetic per update from reaching
 the same quality in less total time. Preserve exact baseline semantics, measure
 the optimizer's share of complete step time, and validate the candidate's
