@@ -1,0 +1,27 @@
+import Transformer
+
+/-! Audit the derived residual learning dynamics RD1–RD5. -/
+
+#print axioms Transformer.Grokking.GradientEvidence.readout_ce_line_hasDerivAt
+#print axioms Transformer.Grokking.GradientEvidence.readoutCoordinate_score
+#print axioms Transformer.Grokking.GradientEvidence.readoutLoss_coordinate_hasDerivAt
+#print axioms Transformer.Grokking.GradientEvidence.readoutGradient_eq
+#print axioms Transformer.Grokking.GradientEvidence.matrixEnergy_nonneg
+#print axioms Transformer.Grokking.GradientEvidence.matrixApply_sub_smul
+#print axioms Transformer.Grokking.GradientEvidence.product_energy_le
+#print axioms Transformer.Grokking.GradientEvidence.mean_product_energy_le
+#print axioms Transformer.Grokking.GradientEvidence.projected_readoutGradient
+#print axioms Transformer.Grokking.GradientEvidence.projected_readoutGradient_energy_le
+#print axioms Transformer.Grokking.GradientEvidence.projected_readoutStep
+#print axioms Transformer.Grokking.GradientEvidence.projected_gradient_zero
+#print axioms Transformer.Grokking.GradientEvidence.projected_step_of_annihilation
+#print axioms Transformer.Grokking.GradientEvidence.projected_readoutRun
+#print axioms Transformer.Grokking.GradientEvidence.decay_forcing_sq_le
+#print axioms Transformer.Grokking.GradientEvidence.readout_step_energy_le
+#print axioms Transformer.Grokking.GradientEvidence.moving_residual_identity
+#print axioms Transformer.Grokking.GradientEvidence.axisReadoutGradient_initial
+#print axioms Transformer.Grokking.GradientEvidence.axisResidualEnergy_eq
+#print axioms Transformer.Grokking.GradientEvidence.axisAdamStep_eq
+#print axioms Transformer.Grokking.GradientEvidence.axis_gradient_step_stays_in_span
+#print axioms Transformer.Grokking.GradientEvidence.binary_true_strictAnti
+#print axioms Transformer.Grokking.GradientEvidence.adam_creates_readout_residual

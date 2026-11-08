@@ -6247,3 +6247,115 @@ arm; the formal source bridge is specific to the plain complex product.
 | Relative logit, probability and loss transfer | `FeatureCodes.relative_logit_le_signed`, `probability_ge_signed_bound`, `crossEntropy_le_signed_bound` |
 | Nonzero extrapolation witness | `FeatureCodes.signed_transport_nonzero_witness` |
 | Actual source with execution allowance | `ComplexProduct.executed_relative_le_signed`, `executed_probability_ge_signed`, `executed_crossEntropy_le_signed` |
+
+## Residual learning dynamics
+
+This project extension, task #184, asks what learning mechanism could reduce
+ST2's directional residuals. It derives a fixed-feature readout result and
+separately checks the limitations imposed by adaptive updates and moving
+features. Complex multiplication is unchanged.
+
+### RD1. Differentiate the actual readout objective
+
+For normalized training states T_i, labels y_i, readout rows E_c and
+L(E) = mean_i CE((<E_c,T_i>)_c,y_i), differentiate a scalar perturbation of
+each coordinate of E. The exact result is
+
+```
+G_c = mean_i (p_i,c - 1[c=y_i]) T_i.
+```
+
+Lean defines G using the actual derivative and proves this equality; it does
+not assume an update direction. This is the partial final-readout derivative
+with states frozen. When the embedding is tied to the encoder, backpropagation
+has another path. Neither the full tied gradient nor AdamW's update is G.
+The line-derivative proof follows the local finite-logit calculation in
+`Imbalance.hasDerivAt_crossEntropy_line` (arXiv:2402.19449v2, §3.2).
+
+### RD2. Bound gradient forcing using training CE
+
+For any fixed linear map Q, Cauchy–Schwarz and LG1's actual probability-error
+inequality give
+
+```
+||QG||_F² <= mean_i sum_c (p_i,c - 1[c=y_i])² * mean_i ||QT_i||²
+          <= 2 L(E) * mean_i ||QT_i||².
+```
+
+All training rows enter both means. Choosing Q from an answer group's
+centered PCA does not remove other groups from the feature factor. No
+orthogonality assumption on Q is needed for this inequality. A small loss
+controls gradient forcing relative to projected feature scale, not the
+current readout residual, an adaptive normalized direction, or future drift.
+
+### RD3. The sufficient Euclidean descent mechanism
+
+For fixed T, consider the explicitly defined Euclidean update with decay
+E+ = (1-eta*rho)E - eta*G. Linearity gives the exact projected update.
+If Q annihilates **every** training feature, QG=0, and induction yields
+QE_n=(1-eta*rho)^n QE_0. With 0<eta*rho<1 the residual decays;
+rho=0 gives invariance. The theorem allows arbitrary rates, so its identity
+does not assert contraction outside the stated rate range.
+
+For eta>=0, rho>0 and eta*rho<=1, the scalar square identity
+
+```
+(1-eta*rho)u² + (eta/rho)g² - ((1-eta*rho)u-eta*g)²
+  = (eta/rho)(1-eta*rho)(rho*u+g)² >= 0
+```
+
+and RD2 imply
+
+```
+||QE+||_F² <= (1-eta*rho)||QE||_F²
+             + (2eta/rho)L(E) mean_i ||QT_i||².
+```
+
+This is a derived decay-plus-forcing estimate. Small forcing relative to
+the current energy is a sufficient one-step contraction condition. It is
+not assumed to hold for the saved models. Concrete Lean examples use
+nonzero training features, nonzero initial residuals and positive rates.
+
+### RD4. Account for movement of the learned subspace
+
+For arbitrary old/new residual maps and vectors, linearity gives
+
+```
+Q1 w1 = Q0 w0 + Q0(w1-w0) + (Q1-Q0)w1.
+```
+
+The corresponding energy difference can be split exactly by inserting
+||Q0 w1||²: first change w with Q frozen, then change Q at the new w.
+The same identity applies to readout contrasts and normalized query
+displacements h-mu. The frozen native protocol retains both terms for all
+adjacent saved intervals. These are retrospective changes over 5000 steps,
+not an individual update or an identified causal effect of weight decay.
+
+### RD5. An actual adaptive step can create a nullspace residual
+
+One fixed feature is (1,2), with binary logits (u+2v,0), first-class target,
+and zero initial readout. Differentiating actual CE gives (-1/2,-1).
+Euclidean descent yields (eta/2,eta), which stays in the feature span.
+The existing bias-corrected Adam first-update formula, with betas 0.9/0.999,
+epsilon 1 and decay 0, instead gives (eta/3,eta/2). Its squared orthogonal
+residual is
+
+```
+(2u-v)²/5 = eta²/180 > 0  for eta>0.
+```
+
+The correct margin strictly increases, so CE strictly decreases. Lean proves
+the actual derivative, Adam formula, residual projection identity and strict
+loss decrease. Epsilon is positive and deliberately fixed to one for this
+counterexample; this is not the checkpoint training recipe or a replay of
+that trajectory. It refutes transferring the Euclidean feature-span
+invariance/decay argument unchanged to coordinatewise adaptive updates.
+
+| Claim | Lean declaration in `GradientEvidence` |
+| --- | --- |
+| Actual coordinate derivative | `readoutLoss_coordinate_hasDerivAt`, `readoutGradient_eq` |
+| Objective-controlled projected gradient | `projected_readoutGradient_energy_le` |
+| Annihilated directions and iterated decay | `projected_gradient_zero`, `projected_readoutRun` |
+| Derived decay and loss-controlled forcing | `decay_forcing_sq_le`, `readout_step_energy_le` |
+| Changing weights and basis | `moving_residual_identity` |
+| Actual adaptive counterexample | `axisReadoutGradient_initial`, `axisAdamStep_eq`, `adam_creates_readout_residual` |
