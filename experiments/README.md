@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`forward_normalized`](forward_normalized) | 24 fresh-seed 4000-update runs | Standalone current-gradient A steps at 1% of A's norm fail to repair local training: 2.23–11.63% validation accuracy versus 99.45–99.87% CE; validation CE is worse than original local-pair in all eight cases. |
 | [`forward_step`](forward_step) | 40 states; 400 fixed direction/scale probes | At all eight failed local endpoints, the norm-matched current A gradient lowers training/validation CE at every fixed scale; shrinking AdamW still leaves five validation ascent cases. Accuracy remains mixed; no training repair or efficiency claim. |
 | [`forward_alignment`](forward_alignment) | 40 states; 280 restored one-step probes | Hidden local loss decreases at all eight failed local endpoints while A-only full-training CE increases in all eight and validation CE in seven. Separate gradient direction, AdamW motion and finite-step effects; 1120 derivative checks pass. |
 | [`forward_training`](forward_training) | 32 complete 4000-update runs | Full local pairwise training fails at 2.23–10.50% validation accuracy versus 99.28–99.87% CE; all gradient/source replay checks pass. Retained timings have foreign GPU workloads and establish no efficiency gain. |

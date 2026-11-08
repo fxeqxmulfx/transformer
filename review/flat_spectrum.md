@@ -6989,3 +6989,25 @@ radius in this diagnostic establishes neither a standalone optimizer nor
 an efficiency advantage. Keep validation derivatives out of the proposed
 trainer and use a separately frozen confirmation cohort. No complex-product
 definition or formal theorem changes in this study.
+
+### LF8. A useful one-step direction need not yield useful local training
+
+The [task #195 comparison](../experiments/forward_normalized/README.md)
+replaces only A's optimizer with its normalized current local gradient,
+using a fixed 1%-of-A-norm radius and ten-update warmup. It leaves local
+objectives, E/B AdamW and the classifier unchanged. All 24 fresh-seed runs
+complete 4000 updates, yet the candidate reaches only 2.23–11.63% validation
+accuracy versus 99.45–99.87% CE. Its endpoint validation CE is worse than
+original local-pair in all eight cases; accuracy improves in two and falls
+in six. Numerical and source checks pass, so this is a negative learning
+result for the specified rule and budget, not a failed coordinate check.
+
+This does not contradict LF7's finite same-state observations: the radius
+and subsequent trajectory differ. Neither local descent nor favorable
+terminal alignment at selected states proves trajectory-wide alignment,
+finite-step control or generalization. A next empirical control should
+cross local/full credit with original/normalized A updates while keeping
+the auxiliary objective set fixed. This separates a possible step-policy
+failure from stopped credit without blaming the head or optimizer from
+this study alone. The result supplies no new theorem, accuracy repair,
+memory saving or clean-device speed advantage.

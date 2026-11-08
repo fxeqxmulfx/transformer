@@ -100,14 +100,15 @@ therefore remains an open issue even after changing optimizer direction.
 
 ## Next experiment and limits
 
-Freeze a separate from-scratch comparison of a current-gradient A update
-against the original local rule and CE backpropagation. Specify a step-size
-policy using available local information without computing AdamW merely to
-borrow its radius; keep the objectives and other block updates fixed to
-isolate this change. Fix seeds, budget, quality criteria and all costs before
-outcomes. Use fresh seeds for confirmation: these saved validation states
-have already informed the hypothesis. No validation gradient or observed
-loss change is available as a free training-time safeguard.
+The [standalone training follow-up](../forward_normalized/README.md) freezes
+a 1%-of-A-norm current-gradient rule, retaining the objectives and E/B updates,
+and compares 24 from-scratch runs on fresh seeds 17/23. It does not repair
+training: validation accuracy is 2.23–11.63%, with worse CE than original
+local-pair in all eight cases. This reinforces the limit of transferring
+the present same-state, AdamW-radius observation to a new training rule.
+The next control keeps the A optimizer while restoring full-gradient credit.
+No validation gradient or observed loss change is available as a free
+training-time safeguard.
 
 This study does not establish the cause of the entire failed trajectory,
 a better loss, a generalization guarantee, or a speed/memory advantage.

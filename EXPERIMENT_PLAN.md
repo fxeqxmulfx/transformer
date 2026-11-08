@@ -139,6 +139,18 @@ original local-pair and source CE from scratch on seeds 17/23, all four arms,
 4000 updates each (24 runs). No radius search or validation-directed updates;
 all accuracy, cost, numerical failures and caps remain in the evidence.
 
+The [completed normalized-A comparison](experiments/forward_normalized/README.md)
+retains all 24 completed runs. Candidate endpoint validation accuracy is
+2.23–11.63% versus 99.45–99.87% for CE; compared with original local-pair,
+validation CE is worse in all eight cases and accuracy in six. No local run
+matches paired CE quality. All numerical, state and source checks pass.
+The fixed 1% relative rule therefore does not turn the earlier one-step
+direction result into a training repair. Next freeze a control using the
+same A optimizer with full-gradient credit, keeping the auxiliary objective
+set fixed to separate optimizer/step policy from stopped credit. Do not
+attribute failure solely to the head or radius, tune this completed cohort,
+or claim a speedup; all ownership snapshots include the desktop.
+
 For optimizer efficiency, separate cheaper arithmetic per update from reaching
 the same quality in less total time. Preserve exact baseline semantics, measure
 the optimizer's share of complete step time, and validate the candidate's
