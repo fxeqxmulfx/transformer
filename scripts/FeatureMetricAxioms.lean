@@ -1,0 +1,23 @@
+import Transformer.Grokking.GradientEvidence.FeatureMetricControl
+
+#print axioms Transformer.Grokking.GradientEvidence.metric_feature_energy_nonneg
+#print axioms Transformer.Grokking.GradientEvidence.metric_mean_product_energy_le
+#print axioms Transformer.Grokking.GradientEvidence.metric_unused_pair_cocoercive
+#print axioms Transformer.Grokking.GradientEvidence.metric_centered_block_pairing
+#print axioms Transformer.Grokking.GradientEvidence.metric_unused_group_cocoercive
+#print axioms Transformer.Grokking.GradientEvidence.metric_feature_energy_le
+#print axioms Transformer.Grokking.GradientEvidence.metric_momentum_nonneg
+#print axioms Transformer.Grokking.GradientEvidence.metric_momentum_coercive_identity
+#print axioms Transformer.Grokking.GradientEvidence.metric_parameter_energy_le
+#print axioms Transformer.Grokking.GradientEvidence.metric_momentum_step_identity
+#print axioms Transformer.Grokking.GradientEvidence.metric_momentum_step_nonincrease
+#print axioms Transformer.Grokking.GradientEvidence.metric_scaled_cocoercivity
+#print axioms Transformer.Grokking.GradientEvidence.metric_momentum_perturbation
+#print axioms Transformer.Grokking.GradientEvidence.metric_momentum_sources
+#print axioms Transformer.Grokking.GradientEvidence.metric_full_step_identity
+#print axioms Transformer.Grokking.GradientEvidence.feature_scale_class_center
+#print axioms Transformer.Grokking.GradientEvidence.metric_unused_ce_nonincrease
+#print axioms Transformer.Grokking.GradientEvidence.metric_unused_ce_sequence
+#print axioms Transformer.Grokking.GradientEvidence.metric_uniform_step_condition
+#print axioms Transformer.Grokking.GradientEvidence.metric_unused_ce_uniform
+#print axioms Transformer.Grokking.GradientEvidence.feature_metric_adam_error

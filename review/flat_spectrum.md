@@ -8086,3 +8086,139 @@ executions and are not universal floating-point theorems. Results and
 complete reproduction commands belong in the experiment README. Neither
 these replays nor CL1–CL3 prove reliable discovery, full-model future
 gradient alignment, or a useful active-share floor over the entire hold.
+
+## Checkpoint-fixed feature metrics
+
+The scalar reference in CL2 treats every coordinate-scale difference as a
+perturbation. The following authored extension absorbs feature-dependent
+scaling that is shared across unused classes. It leaves class-dependent
+scaling and tied encoder updates explicit. The files are
+`GradientEvidence/FeatureMetricCE.lean`, `FeatureMetricMomentum.lean`, and
+`FeatureMetricControl.lean`; these do not assert a new manuscript theorem.
+
+### FM1. Weighted damping from actual partial CE
+
+Fix nonnegative feature weights r_k. Apply finite Cauchy–Schwarz to each
+coordinate of `mean_i A_i*T_ik`, multiply by r_k, and sum. This yields
+
+```
+sum_k r_k*(mean_i A_i*T_ik)^2 <=
+  (mean_i A_i^2)*(mean_i sum_k r_k*T_ik^2).
+```
+
+Use CL1's pair probability inequality with A_i=p_ic-p_id. For two classes
+that never appear as targets, the actual partial-gradient pair obeys
+
+```
+sum_k r_k*(G_ck-G_dk)^2 <= L_r*<E_c-E_d,G_c-G_d>,
+L_r = q*mean_i sum_k r_k*T_ik^2.
+```
+
+The radial product is the same unweighted nonnegative product as CG1.
+Multiply the centered pair-product identity at feature k by r_k, then sum
+over features. Applying the pair inequality to every unused pair gives
+`sum_(u,k) r_k*G_U(u,k)^2 <= L_r*<E_U,G_U>`. The class means are computed;
+the feature weights do not depend on the unused class index. This is why
+scaling and centering commute. No corresponding commutation is asserted
+for the actual row-dependent Adam diagonal. Empty batches use the existing
+zero-mean convention; the experiment uses nonempty batches and 64 distinct
+unused classes. As in CL1, repeated class indices are also permitted formally.
+
+Common clipping a>=0 replaces G_U by g=a*G_U and L_r by aL_r.
+If r_k<=R and mean feature energy is at most M, weighted mean feature energy
+is at most R*M. Hence q=1 and 0<=a<=1 give a coefficient at most R*M without
+observing a future probability or clipping scalar. This still requires the
+declared feature-energy bound. In particular, a future sequence needs it
+at each step; a single measured feature norm does not supply that premise.
+
+### FM2. A fixed metric absorbs feature scaling and arbitrary memory
+
+Require r_k>0. For centered unused readout w and arbitrary saved first
+moment m, use the actual main beta1=.9 and the scaled reference
+
+```
+m_R = .9*m+.1*g,        w_R = w-s*r*m_R,
+V_(r,s)(w,m) = sum_(u,k) ((w-9*s*r*m)^2/r+90*s^2*r*m^2).
+```
+
+Coordinatewise expansion and cancellation of positive r gives the identity
+
+```
+V_(r,s)(w_R,m_R)-V_(r,s)(w,m) =
+  -2*s*<w,g>+19*s^2*sum r*g^2-(171/10)*s^2*sum r*(m-g)^2.
+```
+
+Thus s>=0 and `19*s*L_r<=2`, with the clipped coefficient, prove
+nonincrease for every saved moment. No alignment, zero-memory or isotropic
+feature assumption is needed. The universal-probability corollary instead
+uses `19*s*R*M<=2` and the stated metric, feature and clipping bounds.
+Induction proves the fixed-r, fixed-s result over any finite prefix of the
+declared partial-CE recurrence. Features, targets and clipping may change,
+with unused-class and coefficient hypotheses made explicit at every step.
+
+The exact coercivity identity is
+
+```
+19*V_(r,s)(w,m)-10*sum w^2/r = 9*sum (w-19*s*r*m)^2/r.
+```
+
+Consequently, for 0<=R and every r_k<=R,
+`||w||^2 <= (19/10)*R*V_(r,s)(w,m)`. The largest-weight penalty cannot be
+omitted when comparing with ordinary geometric energy. Nonzero CE and
+memory examples accompany the conditional statements. A sequence example
+shows their premises are consistent, not that discovery occurs. The metric
+and scalar step cannot change silently when chaining this theorem.
+
+### FM3. Class-dependent and encoder remainders remain explicit
+
+Apply CL3's buffered AdamW identity with scalar reference step s*r_k at
+each full readout coordinate. For absolute time t+1, actual updated v and
+`D=1/(sqrt(v)/sqrt(1-.95^(t+1))+eps)`, retain
+
+```
+dm = .1*g_E+e_m,
+dw = -eta*rho*w +(s*r-eta*D/(1-.9^(t+1)))*m_new
+     -s*r*.1*g_E+(e_p-s*r*e_m).
+```
+
+Project the four full-coordinate position terms onto unused class
+contrasts. Feature scaling r commutes with that projection; D generally
+does not. The adaptive remainder is therefore exactly
+`s*r*P_U(m_new)-eta*P_U(D*m_new)/(1-.9^(t+1))`. It includes both differences
+between class rows and changes since the checkpoint metric was frozen.
+The encoder and execution sources retain their moment perturbations.
+
+For reference (w_R,m_R) and total perturbation (dw,dm), direct expansion gives
+
+```
+V_(r,s)(w_R+dw,m_R+dm)-V_(r,s)(w_R,m_R) =
+  sum [2*(w_R-9*s*r*m_R)*(dw-9*s*r*dm)/r+180*s^2*r*m_R*dm]
+  +V_(r,s)(dw,dm).
+```
+
+The multi-source theorem distributes only the signed linear term, keeping
+the quadratic energy of the total perturbation. The full-step theorem adds
+FM2's exact reference change. These are identities, not advance estimates
+on the signs or magnitudes of unknown encoder and adaptive remainders.
+
+### FM4. Checkpoint construction and scope of the comparison
+
+Task #207 fixes each metric from the old checkpoint before its separate
+verifier opens any #206 next-update evidence. For t>0, compute the old
+bias-corrected D_old; at the zero state take D_old=1/eps. Let alpha be its
+minimum over the complete readout and set
+`r_k=min_(unused c) D_old(c,k)/alpha`. The isotropic control has r=1 and
+uses the same checkpoint scalar `s=eta(t)*alpha/(1-.9^(t+1))`. Thus the
+comparison does not use the next second moment to choose its metric.
+
+The next minibatch's exact-real partial CE is independently computed in
+FP64 from the executed features. Its measured q supplies a diagnostic L_r;
+the separately reported conservative condition uses q=1, clip<=1 and the
+declared numerical feature cap. A stable reference caps s using the current
+L_r, so it is explicitly a diagnostic rather than a forecast. All four
+metric/step tracks retain every case, source, full increase and coefficient
+failure. Since different metrics define different potentials, changes in
+their numerical values are not effects of intervening on the optimizer.
+The exact-real Lean results and the finite numerical allowances remain
+separate. Full-model future control, discovery and prediction certificates
+are not consequences of these comparisons.
