@@ -8501,3 +8501,98 @@ The native continuation reuses FT2's outward-expanded scalar Gram calculation,
 including its checks against identity, rank-one and transposed matrices.
 This certifies no whole forward execution: the remaining activation/radius
 arithmetic and CUDA execution retain their separate numerical obligations.
+
+## Query-weighted feature covariance
+
+The complete recreated comparison in `experiments/probability_tube` validates
+both encoder forecasts but yields zero useful positive raw CE horizons. This
+continuation examines another loss of information: replacing every example's
+probability by the maximum, then replacing a feature operator by its trace.
+The mathematical reference remains actual partial CE with arbitrary saved
+momentum; full tied AdamW perturbations remain separate.
+
+### QG1. Retain individual probabilities and the feature operator
+
+For a batch of n examples, let T_i be its actual feature vectors, q_i>0 a
+ceiling on every unused-class probability for that example, and r_k>0 the
+fixed feature metric. Define the matrix with feature rows and example columns
+
+```
+W_ki = sqrt(r_k)*T_ik*sqrt(q_i),
+L_op = ||W||_op^2/n,
+L_trace = mean_i q_i*sum_k r_k*T_ik^2.
+```
+
+For arbitrary real a_i, apply W to a_i/sqrt(q_i). The probability weights
+cancel from the true mean, yielding
+
+```
+sum_k r_k*(mean_i a_i*T_ik)^2 <= L_op*mean_i (a_i^2/q_i).
+L_op <= L_trace <= Q*mean_i sum_k r_k*T_ik^2,   q_i <= Q.
+```
+
+The first inequality is the L2 operator bound; the second is the Frobenius
+bound, and the third is nonnegative weighted summation. Two orthogonal unit
+features with q_i=r_k=1 give L_op=1/2 and L_trace=1. A flat feature covariance
+can therefore improve this coefficient without assuming that training
+discovers such a covariance. The Lean convention also permits empty batches,
+for which means and coefficients are zero; the source uses nonempty batches.
+
+### QG2. Apply the operator to the actual CE derivative
+
+For two unused classes c,d, write a_i=p_ic-p_id. CL1 gives
+`a_i^2 <= q_i*(z_ic-z_id)*a_i`. Each q_i is positive because it bounds an
+actual finite-logit probability. Divide before summing, then use QG1 and
+CG1's exact unused-pair gradient identity:
+
+```
+sum_k r_k*(G_ck-G_dk)^2 <= L_op*<E_c-E_d,G_c-G_d>.
+```
+
+Sum the same coefficient over every unused pair and apply the computed
+centering identity. Thus the whole centered unused gradient satisfies
+`sum r*g_U^2 <= L_op*<E_U,g_U>`. Common clipping a>=0 changes the coefficient
+to a*L_op. FM2's exact momentum identity then uses `19*s*a*L_op <= 2` in the
+same fixed metric, with no alignment premise on saved memory. Changing the
+coefficient does not change the executed optimizer or remove its encoder,
+class-dependent scaling, decay and execution terms.
+
+### QG3. Transport the coefficient through full feature motion
+
+Use the same q_i and r_k in an old and a future table. Suppose r_k<=R,
+R>=0 and `||T'_i-T_i|| <= S_i`. The weighted matrix difference has squared
+Frobenius norm at most `R*sum_i q_i*S_i^2`. For any certified old operator
+cap B, the triangle inequality gives
+
+```
+L_op(T') <= (B + sqrt(R*sum_i q_i*S_i^2))^2/n.
+```
+
+FT2 supplies B from the complete row or column Gram, including correlations.
+In the smaller feature Gram, define `C_kl=sum_i q_i*T_ik*T_il`; its squared
+Frobenius energy is `sum_kl r_k*r_l*C_kl^2`. An upper bound U on that explicit
+energy gives `B=U^(1/4)`. A pointwise future feature-energy cap M also gives
+`L_op(T') <= R*M*mean_i q_i`; intersecting both bounds retains the trace
+control. These formulas use every probability and every feature radius.
+
+The feature radius must cover executed features, not just the ideal encoder.
+The previous ideal radius plus both endpoint execution errors supplies this
+radius. Likewise, a GPU probability ceiling and a readout dot error at most
+e give a real-CE ceiling via PM1 with an additional contrast allowance 2e.
+The new numerical comparison must retain this conversion explicitly. It must
+not infer a universal floating-point theorem from endpoint checks.
+
+### QG4. Known batches and the remaining full-model obligation
+
+The original source plan uses batches of 512, with a shorter final batch in
+each epoch. Apply each coefficient to its actual finite batch and take the
+maximum over the known batch sequence in the declared window. Varying batch
+sizes, changing features and changing clipping do not change the fixed-r,
+fixed-s momentum argument. Bounds and conditions must hold at every prefix;
+an endpoint diagnosis alone cannot supply them.
+
+The frozen native continuation must keep all 144 anchors, all 1800 horizons,
+both source probability forecasts and both metrics. A useful partial-CE
+condition still needs separate control of full adaptive/encoder perturbations
+before it becomes a training stability result. No new numerical gain is
+asserted by this derivation.

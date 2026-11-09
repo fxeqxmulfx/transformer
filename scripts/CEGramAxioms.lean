@@ -1,0 +1,29 @@
+import Transformer.Grokking.GradientEvidence.CEGram
+
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.coefficient_nonneg
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.matrix_action_sq
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.weighted_mean_energy_le
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.weighted_features_energy
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.coefficient_le_trace
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.trace_le_uniform
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.probability_pair_div
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.pair_cocoercive
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.group_cocoercive
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.group_cocoercive_of_upper
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.row_gram_entry
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.row_gram_energy
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.op_le_gram
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.op_le_gram_upper
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.coefficient_le_gram
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.difference_energy_le
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.difference_norm_le
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.coefficient_transport
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.coefficient_transport_gram
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.coefficient_trace_cap
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.coefficient_transport_min
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.unused_ce_nonincrease
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.unused_ce_prefix
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.probability_of_execution
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.executed_feature_motion
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.executed_feature_motion_sq
+#print axioms Transformer.Grokking.GradientEvidence.CEGram.executed_ce_nonincrease
