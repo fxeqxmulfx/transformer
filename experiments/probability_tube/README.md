@@ -99,6 +99,13 @@ adding every declared forecast checkpoint. It records separate hardware,
 source, executable and PTX provenance and all cumulative attempt clocks.
 No replacement baseline report or historical result has been manufactured.
 
+The separate [native forecast audit](audit/README.md) reads only anchor states
+and input identities during construction. It freezes per-input ceilings for
+all declared horizons before checking future checkpoints. It retains both
+fixed metrics, the invalid fixed-q comparison, numerical excesses and full
+potential changes. Its implementation is ready for the recreated cohorts;
+no training probability outcome has yet been measured by this audit.
+
 The pointer to `ae801acc` supplied the full trainer revision, but that commit
 contains only inference adapters that import it externally. The subsequent
 refresh of `grokking` supplied the actual trainer bytes. The successful source

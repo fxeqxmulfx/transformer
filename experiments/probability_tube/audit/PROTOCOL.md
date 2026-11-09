@@ -21,6 +21,9 @@ relative allowance 1e-6 and the per-coordinate execution guard
 `future_forcing`. Propagate this guard through every block, including repeated
 matrix entries. These are conditional numerical allowances, not proved CUDA
 rounding bounds. The verifier checks actual endpoint displacement against them.
+At each requested horizon use the componentwise maximum displacement caps
+over all intervening prefixes. Thus the constructed bound covers the whole
+window conditional on the declared execution allowances throughout it.
 
 For each input, bound every unused-versus-rival contrast using the largest
 old contrast norm over those pairs, largest summed row-motion radius and that
