@@ -7,7 +7,8 @@ Task #201 follows the user's suggestion to increase learning rate. The
 tests peaks .003 and .01 against task #200's .001, keeping every other
 recipe setting, all eight seeds, 10000 updates and all probes fixed. Each
 arm has its own fixed 1800-second cap and runs sequentially after #200.
-Native feature builds pass; candidate measurements are pending.
+Both native builds and 32 GPU preflight cases pass with exact FP32 agreement.
+The fixed higher-rate cohorts are in progress after #200 completed.
 
 ## Transfer the main model's AdamW/WSD (2026-11-09 user direction)
 
@@ -17,7 +18,14 @@ copies the current selected FP32 kernels and the 2% warmup / 20% cosine-decay
 schedule, with beta2=.95, decay=.1 and independent-coordinate clipping at 1.
 Its formula is scaled to the existing 10000-update budget. Compare all eight
 task #199 seeds and all fixed probes, retaining the baseline and every failure.
-This full-recipe transfer is in progress; it does not isolate WSD causally.
+The [completed full-recipe transfer](experiments/class_geometry_wsd/README.md)
+passes all 80000 updates and 248 probes, with zero false certificates. All
+eight endpoint accuracies exceed 99%, versus six previously, but rank-32
+coverage falls in six seeds and reaches 99% in none. Every paired late
+coverage minimum decreases. No effect is attributed to WSD alone; beta2,
+decay and clipping also changed. Six complete runs were reused unchanged
+after a JSON-ratio comparison blocked two seeds at initialization; the
+two missing runs and original attempt total 920.89 seconds within the cap.
 
 ## Pursue discovery and persistence (2026-11-09 user direction)
 

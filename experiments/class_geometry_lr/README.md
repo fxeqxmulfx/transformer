@@ -32,12 +32,12 @@ for arm in lr003 lr01; do
   "$CARGO_TARGET_DIR/release/rotate90-complex-kernite" preflight
   "$CARGO_TARGET_DIR/release/rotate90-complex-kernite" \
     /home/misha/rust_projects/grokking/experiments/rotate90_complex/runs/cubic-adamw \
-    experiments/class_geometry_wsd/runs/audit-01/report.json \
+    experiments/class_geometry_wsd/runs/audit-02/report.json \
     "experiments/class_geometry_lr/runs/$arm-01"
   "$CARGO_TARGET_DIR/release/verify" "experiments/class_geometry_lr/runs/$arm-01" \
-    experiments/class_geometry_wsd/runs/audit-01/report.json
+    experiments/class_geometry_wsd/runs/audit-02/report.json
   "$CARGO_TARGET_DIR/release/analyze" "experiments/class_geometry_lr/runs/$arm-01"
-  "$CARGO_TARGET_DIR/release/compare" experiments/class_geometry_wsd/runs/audit-01 \
+  "$CARGO_TARGET_DIR/release/compare" experiments/class_geometry_wsd/runs/audit-02 \
     "experiments/class_geometry_lr/runs/$arm-01"
 done
 ```
