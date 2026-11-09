@@ -1,0 +1,22 @@
+import Transformer.Grokking.FlatSpectrum.FeatureCodes.ObservableMargin
+import Transformer.Grokking.FlatSpectrum.FeatureCodes.UpdateAttribution
+
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.centeredReadout_contrast
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.observableEnergy_eq_gram
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.observableEnergy_nonneg
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.observable_contrast_sq_le
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.observable_contrast_abs_le
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.observableEnergy_eq_zero_iff_centered
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.linearScore_readoutMean
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.observableEnergy_eq_zero_iff_contrasts
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.common_readout_shift_preserves_contrast
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.invisible_error_preserves_contrast
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.observable_margin_lower
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.strict_winner_of_observable_error
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.nonzero_invisible_error_witness
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.observable_contrast_sharp_witness
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.linearScore_sum_readout
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.linearScore_sum_feature
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.forecast_component_identity
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.finite_update_component_identity
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.positive_component_negative_update_witness

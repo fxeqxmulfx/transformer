@@ -7060,6 +7060,144 @@ claim. The original flat-spectrum learning obstruction remains open.
 | Complete source adapters | `ComplexProduct.executed_gap_le_transport_forecast`, `executed_gap_le_transport_endpoint` |
 | Separate feature and arithmetic execution errors | `FeatureCodes.signed_transport_forecast_execution_upper`, `ComplexProduct.executed_gap_le_transport_forecast_with_feature_error` |
 
+## Observable spectral geometry
+
+Task #198 extends the geometry after the user's request to close both the
+compressed-certificate and learning-mechanism gaps. The extension concerns
+the directions that change class comparisons. It does not assert that the
+full hidden feature spectrum becomes flat. The
+[protocol](../experiments/readout_geometry/PROTOCOL.md), committed before
+candidate measurements, fixes both trajectories, all 26 probes, ranks,
+execution allowances and the actual AdamW attribution.
+
+### OG1. Remove common readout offsets
+
+For finitely many classes with readout rows `E_c`, define
+
+```
+mean(E) = (sum_c E_c) / number_of_classes
+C_c = E_c - mean(E).
+```
+
+Every pairwise score difference is unchanged:
+`<C_c,x>-<C_t,x>=<E_c,x>-<E_t,x>`. A common added readout row also cancels
+from every comparison. Linear scoring commutes with the class mean. Thus
+the classification geometry should not demand recovery of a shared logit
+offset. The finite Lean results also cover empty class sets, for which the
+contrast claims are vacuous and the sums are zero.
+
+### OG2. The observable Gram form
+
+For a feature error `e`, define
+
+```
+Q = sum_c C_c C_c^T
+observable_energy(E,e) = sum_c <C_c,e>^2 = e^T Q e.
+```
+
+The equality is an exact finite-sum identity. This nonnegative form may be
+singular: zero energy is equivalent to `<E_c,e>=<E_t,e>` for every pair
+of classes. Such errors can change every absolute score while preserving
+every margin. No inverse, positive smallest eigenvalue, or exact feature
+recovery is assumed. This is the natural readout-dependent extension of
+the earlier recovery geometry; it does not replace a missing optimizer
+argument with a definition.
+
+### OG3. A sharp finite margin budget
+
+For distinct classes, their two centered squared score errors are at most
+the total energy. The scalar inequality `(a-b)^2 <= 2(a^2+b^2)` gives
+
+```
+|<E_c,e>-<E_t,e>| <= sqrt(2*observable_energy(E,e)).
+margin_t,c(x+e) >= margin_t,c(x) - sqrt(2*observable_energy(E,e)).
+```
+
+The bound also holds when the classes coincide. If every old target margin
+exceeds this budget, the target remains the strict winner. These are
+conditional theorems: a prediction must obtain its error budget before
+observing the future error. The native experiment changes basis selection
+using known old training states and readouts; it retains the existing
+signed transport residual and orthogonality-defect bounds. It does not
+insert a measured future observable energy into a forecast.
+
+The readout-aware constructor first projects all centered readout rows into
+the available centered-training-state span, then takes the leading right
+singular vectors. It uses the training pseudoinverse only to construct
+coefficients; the actual reconstruction residual and basis defects remain
+in the certificate. Thus small training singular values, rank truncation
+and imperfect arithmetic cannot be silently treated as exact recovery.
+Rank 32 has the same budget as the hidden-variance baseline. The existing
+signed-transport theorem accepts either computed basis; optimality of a
+floating-point SVD is not a premise of correctness.
+
+### OG4. Nonzero and sharp witnesses
+
+Take two readout rows `(-1,3),(1,3)` and error `e=(0,7)`. Both scores shift
+by 21, although observable energy is zero and the hidden error is nonzero.
+Every margin is preserved. For rows `-1,1` in one dimension and `e=1`,
+the squared contrast error is 4 and observable energy is 2, attaining the
+factor two in OG3. Lean proves both witnesses and instantiates the strict
+winner theorem with a nonzero invisible error and positive old margins.
+
+### OG5. Attribute the actual adaptive update
+
+The fixed source has weight decay one. Write `g_R` for the full-training
+partial readout derivative, `g_F` for the full tied-embedding derivative,
+`g_B` for the actual minibatch derivative, and `m_hat` for the updated
+bias-corrected first moment. Keep each coordinate's actual diagonal
+preconditioner `D`. The known rounded embedding increment obeys
+
+```
+Delta E = -eta E - eta D g_R - eta D(g_F-g_R)
+          - eta D(g_B-g_F) - eta D(m_hat-g_B) + rounding.
+```
+
+The rounding term is defined by the difference between the executed FP32
+increment and this real-valued decomposition, and is explicitly reported.
+It includes any discrepancy in the reconstructed adaptive scaling. The
+seventh parameter component contains the actual projection-matrix changes.
+The instrumented update must match ordinary source `train_step` byte for
+byte. Full-training partial readout derivatives receive an independent
+analytic check, and the complete tied derivative receives source finite
+difference checks.
+
+Propagate each parameter component through the old source Jacobian. If
+`Delta w=sum_i dw_i` and `v=sum_i v_i`, finite algebra gives
+
+```
+Delta forecast_score
+  = sum_i (<dw_i,x> + <w,v_i>) + <Delta w,v>.
+new_score = old_score + Delta forecast_score + <w',x'-(x+v)>.
+```
+
+All signed terms, the mixed term and the nonlinear remainder are retained.
+Lean proves these identities for arbitrary finite decompositions, with
+explicit satisfying examples. It also gives a witness where one positive
+component coexists with a negative total update. In the native study the
+parameter, tangent and logit sums must close, and the independent verifier
+reconstructs the total predicted change from frozen features and independent
+old logits. Attribution fixes the old worst competitor; correctness bounds
+still cover every competitor.
+
+These are contributions to one actual update, not seven alternative trained
+trajectories or a proof of long-run causal necessity. Readout-only CE credit
+cannot stand in for adaptive tied-weight dynamics. The
+[findings](../experiments/readout_geometry/README.md) distinguish reduced
+certificate slack, measured update contributions and the remaining discovery
+and convergence question.
+
+| Claim | Lean declaration |
+| --- | --- |
+| Class-centering and common shifts | `FeatureCodes.centeredReadout_contrast`, `common_readout_shift_preserves_contrast` |
+| Observable quadratic form and nonnegativity | `FeatureCodes.observableEnergy_eq_gram`, `observableEnergy_nonneg` |
+| Exact invisible-error characterization | `FeatureCodes.observableEnergy_eq_zero_iff_centered`, `observableEnergy_eq_zero_iff_contrasts` |
+| Sharp contrast and finite margin bounds | `FeatureCodes.observable_contrast_sq_le`, `observable_contrast_abs_le`, `observable_margin_lower` |
+| Invisible errors and strict winners | `FeatureCodes.invisible_error_preserves_contrast`, `strict_winner_of_observable_error` |
+| Nonzero and sharp witnesses | `FeatureCodes.nonzero_invisible_error_witness`, `observable_contrast_sharp_witness` |
+| Signed component and remainder identities | `FeatureCodes.forecast_component_identity`, `finite_update_component_identity` |
+| Positive component, negative total | `FeatureCodes.positive_component_negative_update_witness` |
+
 ## Forward–Forward reformulation
 
 User direction, 2026-11-08: reformulate Forward–Forward and modify its loss.

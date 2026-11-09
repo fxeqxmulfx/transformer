@@ -10,6 +10,8 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.CubicTransport
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ProbabilityTransfer
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes.SignedProbability
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes.TransportForecastOutcomes
+public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ObservableMargin
+public import Transformer.Grokking.FlatSpectrum.FeatureCodes.UpdateAttribution
 
 /-!
 # Joint feature recovery and robust classification

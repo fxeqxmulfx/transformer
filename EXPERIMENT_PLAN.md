@@ -1,5 +1,29 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Extend flat spectrum to observable geometry (2026-11-09 user direction)
+
+Task #198 freezes the [readout-aware comparison and update attribution](experiments/readout_geometry/PROTOCOL.md)
+at `db7b55b3`. The [completed study](experiments/readout_geometry/README.md)
+extends the geometry to class-centered readout directions. Nineteen Lean
+theorems prove observable Gram/margin identities and signed update attribution.
+Both original trajectories and all 26 probes pass, preserving every #197
+hidden-baseline bound byte for byte, with zero false certificates.
+
+At equal rank 32, endpoint coverage rises from 96.22%/97.45% to
+99.21%/99.53%, removing 89.85% of the gap to direct forecasts. First majority
+coverage moves to step 500 for both seeds, before the first sampled 99%
+accuracy at 1500/1000. The endpoint gap remains 20/7 direct certificates;
+28 correct endpoint queries remain uncertified in total. Rank-128 results
+are not uniformly improved, and all later regressions remain recorded.
+
+The actual AdamW decomposition separates decay, readout/encoder credit,
+sampling, moment memory, rounding, projection motion and the mixed term.
+Parameter, tangent and logit identities close, but readout credit agrees with
+the total predicted validation-margin sign on only 44.12–77.24% of queries
+across probes. This supplies a precise local mechanism audit; long-run
+discovery and maintenance of the useful span remain unproved. Source
+training, model accuracy and the separate task #189 efficiency study are unchanged.
+
 ## Connect training geometry to update forecasts (2026-11-09 user direction)
 
 Task #197 freezes the [training-to-forecast bridge](experiments/transport_forecast/PROTOCOL.md)
