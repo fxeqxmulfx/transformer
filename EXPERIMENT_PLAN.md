@@ -16,11 +16,21 @@ not replace historical measurements.
 
 The formal probability bridge is complete: [17 new Lean theorems](experiments/probability_tube/README.md)
 propagate checkpoint ceilings through contrast motion and supply the CE
-coefficient. Full build, axioms and native bound checks pass. The recovered
-Kernite and `diff-gpt` sources match all optimizer pins, but the original
-Rotate90 trainer remains missing. The user explicitly retains its exact
-source as a recreation prerequisite. No new cohort or forecast horizon has
-been measured; full-model control and the overall goal remain open.
+coefficient. Full build, axioms and native bound checks pass. The original
+Rotate90 trainer at b70811e, pinned Kernite and all `diff-gpt` optimizer inputs
+are now recovered and pass their exact source checks. The user's exact-source
+prerequisite is satisfied. No new cohort or forecast horizon has been
+measured; full-model control and the overall goal remain open.
+
+The full-encoder continuation derives the feature-motion radius through all
+four RMSNorms, the moving real matrices, calibrated complex product and
+residual. Its 27 additional Lean results connect that graph to the existing
+tied source, propagate parameter caps to all-rival probability ceilings and
+give checkpoint-centered warm-Adam caps. Native checks cover every stage and
+parameter block. The user-supplied `ae801acc` named the trainer revision;
+the refreshed `grokking` history supplied its verified bytes. Next prepare
+the original native training reproduction. Synthetic validation is not a
+recreated checkpoint result.
 
 ## Checkpoint-fixed feature metric (2026-11-09 continuation)
 

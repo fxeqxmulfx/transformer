@@ -8317,3 +8317,141 @@ into one potential over time. The complete task still requires useful motion
 and forcing bounds, a geometry/margin bridge and a discovery argument. The
 new [experiment](../experiments/probability_tube/README.md) records source
 recovery and verification status separately from those open obligations.
+
+## Full encoder motion
+
+This continuation discharges PM3's separate feature-motion premise from
+checkpoint parameter caps. Its reference graph is the plain arm of the
+committed `experiments/flat_approx/fixtures/reference.rs` and `src/model.rs`
+at 62638521. The Lean namespace is `Transformer.Rotate90.FeatureMotion`.
+The original trainer's exact bytes and execution remain prerequisites for
+recreating the training evidence; a reference forward equation is insufficient
+to recover its initializer, sampler and full training process.
+The trainer has now been recovered at b70811e with its exact pinned digest;
+its matrix aliases, buffer layout, four normalizations and product kernel
+agree with the reference graph inspected here. New execution evidence is pending.
+
+### EM1. Moving inputs and linear layers
+
+Let each shared embedding row have displacement at most R_c. The fixed
+quarter-turn J is an isometry, so the input E[a]+J E[b] moves by at most
+R_a+R_b, also when a=b. A real linear layer with checkpoint matrix A,
+operator cap L>=||A||, matrix displacement ||A'-A||<=R and input displacement
+||x'-x||<=r satisfies
+
+```
+||A'x'-Ax|| <= (L+R)*r + R*||x||.
+```
+
+Expand the difference as `A*dx+dA*x+dA*dx`; the final product is essential.
+All terms on the right are checkpoint quantities or declared displacement
+caps. In contrast, a one-update forecast that computes ||A'|| from the known
+proposed parameters cannot be used unchanged for unknown future updates.
+
+`matrixMap_apply` identifies the continuous real map with ordinary dense
+matrix multiplication; `matrixMap_sub` identifies its displacement.
+`matrixMap_norm_le` supplies the explicit Frobenius cap via FT2. The native
+constructor uses these Frobenius caps, including every repeated entry of an
+expanded tied matrix. It does not substitute an estimated leading singular
+value. The expanded input width is 128, hidden width 682 and parameter-buffer
+length 274304. The existing `optimizer_efficiency/layout.rs` records signed
+matrix/first-moment aliases and unsigned second-moment aliases; counting
+expanded coordinates conservatively does not assert that they are independent
+trainable owners.
+
+### EM2. Every normalization retains its checkpoint denominator
+
+For real width d>0 and epsilon>0, put s(x)=sqrt(||x||^2+d*epsilon).
+The exact source RMS is `sqrt(d)*x/s(x)`, as `rms_eq_source` proves.
+Given an incoming displacement cap r, intersect three valid output caps:
+
+```
+2*sqrt(d)                                      (range diameter),
+2*sqrt(d)*r/s(x)                               (FF2),
+sqrt(d)*r/sqrt(s(x)*(s(x)-r))   when r<s(x)      (FT1).
+```
+
+When r>=s(x), omit the local secant candidate. No future denominator enters.
+The first bound follows from ||RMS(x)||<=sqrt(d); the final feature therefore
+has squared energy at most d at every parameter state. The same argument
+applies to the input, branch-input, branch-output and final normalizations.
+Near-zero inputs retain epsilon rather than assuming a nonzero raw norm.
+
+### EM3. Complex products retain both moving factors
+
+For the actual paired kernel
+`P(g,u)_j=((g_re*u_re-g_im*u_im),(g_re*u_im+g_im*u_re))/sqrt(2)`,
+the scalar modulus identity gives
+
+```
+||P(g,u)||^2 = sum_j |g_j|^2*|u_j|^2 / 2
+            <= ||g||^2*||u||^2 / 2.
+```
+
+Expanding the finite change into `P(dg,u)+P(g,du)+P(dg,du)` gives
+`(r_g*||u||+||g||*r_u+r_g*r_u)/sqrt(2)`. The last term is required even
+when both old factors vanish. The input and output linear maps may be
+arbitrary real maps; source complex-linear ties are a valid special case.
+Logical pairs replace the native hidden buffer's separated real/imaginary
+halves, without changing its Euclidean norm or calibrated product.
+
+### EM4. Compose the whole encoder and its tied readout
+
+Evaluate the checkpoint graph once. Transport `R_a+R_b` through the first
+two RMS bounds, then separately through the moving gate and value maps.
+Apply EM3, the moving output map and branch RMS. Add the first RMS radius
+for the residual, then apply the final RMS bound. `feature_motion` proves
+that the resulting explicit S bounds the final feature displacement. Its
+only motion premises are parameter caps. `feature_eq_source` and
+`logit_eq_source` prove equality with the previously defined expanded
+complex-linear source graph, including all normalizations and ties.
+
+For readout classes u,c, R_u+R_c bounds their contrast-row displacement.
+PM3 then gives
+
+```
+D_uc = (R_u+R_c)*||x|| + ||E_u-E_c||*S + (R_u+R_c)*S.
+```
+
+`probability_le_encoder_motion` feeds these bounds into PM1 for every rival.
+The old executed logits are the old exact scores plus their execution
+residuals. A separately bounded CHANGE of the execution contrast is added
+to D_uc. Dropping the old residual while calling a future residual a change
+would be incorrect; the native interface accepts both explicitly.
+`feature_energy_le` also supplies PM4's ordinary energy cap d, rather than
+assuming it of an unknown future feature. These results still control the
+partial-CE reference condition, not the signed full-update perturbations FM3.
+
+### EM5. Obtain full-block parameter caps from saved Adam moments
+
+For the selected main-model adapter's betas (0.9,0.95), retain checkpoint
+p,m,v for any complete coordinate block, with v>=0 and
+m_k^2<=r_k*v_k. FF4 gives an arbitrary-gradient future tube about q_n*p,
+where q_n is the known product of weight-decay factors. Recenter it at p:
+
+```
+||p_n-p|| <= |q_n-1|*||p|| + forcingRadius_n.
+forcingRadius_(h+1) = (1-eta_h*rho)*forcingRadius_h
+                   + eta_h*bias(start+h+1)*sqrt(sum_k futureCone(r_k,h+1)).
+futureCone(r,h) = (81/95)^h*r + (1-(81/95)^h)*(19/14).
+```
+
+`warm_adam_checkpoint_motion` proves this for every finite prefix and any
+future gradients, including absolute-time bias correction and arbitrary
+valid saved moments. Applying it separately to each embedding row and each
+full matrix yields the native parameter caps. The constructor never receives
+future parameters, moments, gradients or feature values. Bounds count the
+whole model, rather than the earlier readout-only subset. A zero variance
+with nonzero first moment is rejected. No observed future direction norm is
+smuggled into a hypothesis.
+
+These are exact-real optimizer bounds evaluated in FP64 by the native code.
+The floating-point optimizer recurrence, serialized source correspondence,
+outward rounding and execution-error allowances remain separate obligations.
+The tests use explicitly synthetic parameter vectors with the source ties;
+they do not invoke the original initializer or train a replacement baseline.
+They check each intermediate stage, original dimensions, near-zero inputs,
+all class contrasts and probabilities, and 24 arbitrary-gradient warm-Adam
+prefixes across every parameter block. Eight native tests pass, including
+the four earlier PM tests. This establishes implementation checks, not a
+useful horizon on any of the 144 frozen training checkpoints.

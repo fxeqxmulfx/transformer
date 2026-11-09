@@ -2,6 +2,9 @@
 //! These FP64 calculations have numerical tests, not a floating-point theorem.
 //! A caller must supply valid bounds over every possible future training input.
 
+pub mod adam;
+pub mod encoder;
+
 /// Sharp uniform-contrast ceiling; the log-odds implementation avoids overflow.
 /// Source: Geometry.probability_le_checkpoint_ceiling. Negative budgets are valid.
 pub fn ceiling(q: f64, contrast_budget: f64) -> f64 {

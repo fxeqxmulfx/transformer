@@ -1,5 +1,7 @@
 module
 
+public import Transformer.Rotate90.FeatureMotion
+
 public import Transformer.Rotate90.Division
 public import Transformer.Rotate90.Power
 public import Transformer.Rotate90.Training

@@ -1,0 +1,29 @@
+import Transformer.Rotate90.FeatureMotion
+
+#print axioms Transformer.Rotate90.FeatureMotion.linear_motion
+#print axioms Transformer.Rotate90.FeatureMotion.linear_motion_of_bound
+#print axioms Transformer.Rotate90.FeatureMotion.rms_eq_source
+#print axioms Transformer.Rotate90.FeatureMotion.rms_norm_le
+#print axioms Transformer.Rotate90.FeatureMotion.rms_motion
+#print axioms Transformer.Rotate90.FeatureMotion.rms_diameter
+#print axioms Transformer.Rotate90.FeatureMotion.rms_motion_radius
+#print axioms Transformer.Rotate90.FeatureMotion.rmsRadius_nonneg
+#print axioms Transformer.Rotate90.FeatureMotion.turn_norm
+#print axioms Transformer.Rotate90.FeatureMotion.input_motion
+#print axioms Transformer.Rotate90.FeatureMotion.product_difference
+#print axioms Transformer.Rotate90.FeatureMotion.product_norm_le
+#print axioms Transformer.Rotate90.FeatureMotion.product_motion
+#print axioms Transformer.Rotate90.FeatureMotion.feature_motion
+#print axioms Transformer.Rotate90.FeatureMotion.feature_norm_le
+#print axioms Transformer.Rotate90.FeatureMotion.feature_energy_le
+#print axioms Transformer.Rotate90.FeatureMotion.featureRadius_nonneg
+#print axioms Transformer.Rotate90.FeatureMotion.readout_motion
+#print axioms Transformer.Rotate90.FeatureMotion.executed_contrast_motion
+#print axioms Transformer.Rotate90.FeatureMotion.probability_le_encoder_motion
+#print axioms Transformer.Rotate90.FeatureMotion.warm_adam_checkpoint_motion
+#print axioms Transformer.Rotate90.FeatureMotion.warm_adam_projected_motion
+#print axioms Transformer.Rotate90.FeatureMotion.matrixMap_apply
+#print axioms Transformer.Rotate90.FeatureMotion.matrixMap_norm_le
+#print axioms Transformer.Rotate90.FeatureMotion.matrixMap_sub
+#print axioms Transformer.Rotate90.FeatureMotion.feature_eq_source
+#print axioms Transformer.Rotate90.FeatureMotion.logit_eq_source
