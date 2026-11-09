@@ -18,6 +18,32 @@ pub fn construct(
     classes: usize,
     family: Family,
 ) -> Geometry {
+    construct_with(
+        inputs,
+        states,
+        embedding,
+        training,
+        width,
+        classes,
+        family,
+        reconstruction::evaluate,
+    )
+}
+/// Preserve routes and opposite folds while varying only the declared basis.
+#[expect(
+    clippy::too_many_arguments,
+    reason = "Same immutable fold inputs plus a basis constructor"
+)]
+pub fn construct_with(
+    inputs: &[(usize, usize)],
+    states: &[f64],
+    embedding: &[f64],
+    training: &[(usize, usize)],
+    width: usize,
+    classes: usize,
+    family: Family,
+    mut evaluate: impl FnMut(reconstruction::Problem<'_>) -> (Vec<Vec<f64>>, Value),
+) -> Geometry {
     let n = inputs.len();
     assert_eq!(states.len(), n * width);
     assert_eq!(embedding.len(), classes * width);
@@ -99,7 +125,7 @@ pub fn construct(
                 selected.iter().all(|q| !references.contains(q)),
                 "self reference"
             );
-            let (bounds, stats) = reconstruction::evaluate(reconstruction::Problem {
+            let (bounds, stats) = evaluate(reconstruction::Problem {
                 family,
                 states,
                 embedding,

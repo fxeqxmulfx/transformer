@@ -23,6 +23,10 @@ path = "src/main.rs"
 name = "analyze"
 path = "../class_geometry/src/bin/analyze.rs"
 
+[[bin]]
+name = "active-answers"
+path = "../geometry_gap/active.rs"
+
 [dependencies]
 kernite-cuda = { path = "/home/misha/rust_projects/kgen/crates/cuda" }
 kernite-macros = { path = "/home/misha/rust_projects/kgen/crates/macros" }

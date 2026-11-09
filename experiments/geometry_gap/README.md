@@ -21,6 +21,7 @@ a CUDA-enabled execution context. Each training run needs a fresh output:
 ```sh
 export CARGO_TARGET_DIR="$PWD/.lake/geometry-gap-target"
 cargo test --offline --locked --release --manifest-path experiments/class_geometry_wsd/Cargo.toml --features settle
+cargo fmt --manifest-path experiments/class_geometry_wsd/Cargo.toml --check
 cargo clippy --offline --locked --release --manifest-path experiments/class_geometry_wsd/Cargo.toml --features settle --all-targets -- -D warnings
 cargo build --offline --locked --release --manifest-path experiments/class_geometry_wsd/Cargo.toml --features settle --bins
 "$CARGO_TARGET_DIR/release/rotate90-complex-kernite" preflight
@@ -36,3 +37,23 @@ cargo build --offline --locked --release --manifest-path experiments/class_geome
 "$CARGO_TARGET_DIR/release/compare" experiments/class_geometry_wsd/runs/audit-02 \
   experiments/geometry_gap/runs/settle-01
 ```
+
+Once the new cohort is complete, compare the two certificate bases on all
+744 saved states, then independently reread and verify the emitted bounds:
+
+```sh
+"$CARGO_TARGET_DIR/release/active-answers" experiments/geometry_gap/runs/active-01 \
+  experiments/class_geometry_wsd/runs/audit-02 \
+  experiments/class_geometry_lr/runs/lr01-01 \
+  experiments/geometry_gap/runs/settle-01
+"$CARGO_TARGET_DIR/release/active-answers" verify experiments/geometry_gap/runs/active-01
+```
+
+The original all-class margins must reproduce byte for byte before each
+active-basis measurement. Bounds and fitting metadata are saved before query
+outcomes are read for scoring. The second pass checks the emitted files
+against direct FP64 and recorded GPU margins, without calling the basis
+constructor. Its runtime is charged to the same 1800-second postprocessing
+cap. The signed-transport bound and OG3 in
+[`review/flat_spectrum.md`](../../review/flat_spectrum.md) already apply to
+an arbitrary computed basis with its residual and defect terms retained.

@@ -41,6 +41,17 @@ pub fn evaluate(p: Problem<'_>) -> (Vec<Vec<f64>>, Value) {
     evaluate_at(p, &RANKS)
 }
 fn evaluate_at(p: Problem<'_>, ranks: &[usize]) -> (Vec<Vec<f64>>, Value) {
+    let selected: Vec<_> = (0..p.classes).collect();
+    evaluate_selected(p, ranks, &selected)
+}
+/// Task #202 instantiates the same arbitrary-basis residual bound using a
+/// declared subset of readout rows to choose directions. Every class contrast
+/// remains in the bound, including classes outside this training-derived set.
+pub fn evaluate_selected(
+    p: Problem<'_>,
+    ranks: &[usize],
+    selected: &[usize],
+) -> (Vec<Vec<f64>>, Value) {
     let Problem {
         family,
         states,
@@ -51,6 +62,10 @@ fn evaluate_at(p: Problem<'_>, ranks: &[usize]) -> (Vec<Vec<f64>>, Value) {
         classes,
         label,
     } = p;
+    assert!(!selected.is_empty());
+    assert!(selected.iter().all(|&c| c < classes));
+    assert!(selected.windows(2).all(|w| w[0] < w[1]));
+    let ns = selected.len();
     let nt = references.len();
     let nq = queries.len();
     let training: Vec<_> = references
@@ -105,29 +120,28 @@ fn evaluate_at(p: Problem<'_>, ranks: &[usize]) -> (Vec<Vec<f64>>, Value) {
         .count();
     let total: f64 = spectrum.values.iter().map(|s| s * s).sum();
     let training_basis = &spectrum.right[..available * width];
-    let centered_embedding: Vec<_> = (0..classes)
-        .flat_map(|c| {
+    let centered_embedding: Vec<_> = selected
+        .iter()
+        .flat_map(|&c| {
             (0..width).map(move |k| {
                 embedding[c * width + k]
-                    - (0..classes).map(|v| embedding[v * width + k]).sum::<f64>() / classes as f64
+                    - selected
+                        .iter()
+                        .map(|&v| embedding[v * width + k])
+                        .sum::<f64>()
+                        / ns as f64
             })
         })
         .collect();
-    let observed = linear(
-        &centered_embedding,
-        classes,
-        width,
-        training_basis,
-        available,
-    );
+    let observed = linear(&centered_embedding, ns, width, training_basis, available);
     let projected = linear(
         &observed,
-        classes,
+        ns,
         available,
         &transpose(training_basis, available, width),
         width,
     );
-    let observable = basis_svd::thin(&projected, classes, width);
+    let observable = basis_svd::thin(&projected, ns, width);
     let observable_rank = observable
         .values
         .iter()
@@ -224,7 +238,7 @@ fn evaluate_at(p: Problem<'_>, ranks: &[usize]) -> (Vec<Vec<f64>>, Value) {
             .map(|v| v * v)
             .sum();
         let readout_total: f64 = centered_embedding.iter().map(|v| v * v).sum();
-        let readout_energy: f64 = linear(&centered_embedding, classes, width, basis, rank)
+        let readout_energy: f64 = linear(&centered_embedding, ns, width, basis, rank)
             .iter()
             .map(|v| v * v)
             .sum();
@@ -305,5 +319,31 @@ mod tests {
         };
         assert!(run(Family::Hidden) > 0.);
         assert!((run(Family::Readout) + 5.75).abs() < 1e-11);
+    }
+    #[test]
+    fn selected_rows_preserve_all_rivals_and_ignore_a_distracting_direction() {
+        // Active classes differ along x. A large inactive y row distracts the
+        // all-class rank-one basis, although its true score is below the target.
+        let states = [1., 0., -1., 0., 0., 1., 0., -1., 2., -0.01];
+        let embedding = [1., 0., -1., 0., 0., 20.];
+        let problem = |query| Problem {
+            family: Family::Readout,
+            states: &states,
+            embedding: &embedding,
+            references: &[0, 1, 2, 3],
+            queries: query,
+            width: 2,
+            classes: 3,
+            label: 0,
+        };
+        let (all, _) = evaluate_at(problem(&[4]), &[1]);
+        let (active, _) = evaluate_selected(problem(&[4]), &[1], &[0, 1]);
+        assert!(all[0][1] >= 0.);
+        assert!(active[0][1] < -3.999);
+        assert!(active[0][2] < -1.799);
+        // An inactive class really wins for query 2. Its positive upper bound
+        // must block certification even though both active contrasts tie.
+        let (rival, _) = evaluate_selected(problem(&[2]), &[1], &[0, 1]);
+        assert!(rival[0][2] >= 20. - 1e-10);
     }
 }
