@@ -19,10 +19,23 @@ propagate checkpoint ceilings through contrast motion and supply the CE
 coefficient. Full build, axioms and native bound checks pass. The original
 Rotate90 trainer at b70811e, pinned Kernite and all `diff-gpt` optimizer inputs
 are now recovered and pass their exact source checks. The user's exact-source
-prerequisite is satisfied. The reproduction runner is frozen at `96a9540b`
-and the first probability constructor/verifier at `1fb060b9`. Recreation is
-running with separate hardware provenance; no forecast horizon has yet been
-measured. Full-model control and the overall goal remain open.
+prerequisite is satisfied. The reproduction runner is frozen at `9b336cb1`,
+the first probability constructor/verifier at `26159c82`, and the matched
+pairwise/Gram audit at `d3893996`. All 24 recreated trajectories complete,
+retaining 240000 updates, 744 geometry probes and 1680 full checkpoints with
+separate hardware provenance. Both frozen forecast constructions retain all
+144 anchors and 1800 endpoints. Neither gives a positive raw CE stability
+horizon at any of the 120 moving anchors, in either fixed metric. Full-model
+control and the overall goal remain open.
+
+Both future-state audits and the complete matched comparison pass, with no
+missing cases or numerical failures. The original audit takes 462.71 seconds;
+the refined construction, verification and comparison take 637.62, each under
+its own 1800-second cap. The sharper per-query bounds never worsen the first
+forecast, while executed probabilities, potentials and next-step accounting
+match exactly. Actual old-probability ceilings are exceeded at 396 later
+moving endpoints. The recreated raw full potential still increases at 31/30
+next updates despite current-minibatch CE condition successes in 58/44 cases.
 
 The full-encoder continuation derives the feature-motion radius through all
 four RMSNorms, the moving real matrices, calibrated complex product and
@@ -38,7 +51,23 @@ tests. It uses old logical-pair amplitudes in the complex product and proved
 Gram caps for the same source matrices, intersecting the result with the
 original enclosure. It preserves the frozen first audit. No trained
 probability outcome is used to choose these formulas, and synthetic
-improvements do not establish useful real-training horizons.
+improvements do not establish useful real-training horizons. In the recreated
+comparison the sharper bound lowers 16 positive-horizon probability ceilings
+below one, all in late settling, but still fails the CE coefficient condition.
+At settling anchor 9500 its one-update maximum feature radius falls from
+22.627 to 2.400–3.645; its smallest isotropic coefficient is still 158.60
+against a required maximum of two. The next mathematical target is stronger
+control of actual future gradients or their directional effects, alongside
+less conservative CE aggregation. The observed prediction/geometry gap is
+retained: final mean validation accuracy is 99.57–99.63%, while mean rank-32
+certificate coverage is only 97.97–98.32%.
+
+Next derive a CE coefficient that retains per-query probability weights and
+the feature Gram operator instead of multiplying the worst query by a trace
+bound. Transport that coefficient using the already declared full feature
+motion, keeping the original comparison immutable. Freeze any new native
+comparison before evaluating it on the same full inventory. This is a target
+for proof and testing, not an observed gain or full-model stability claim.
 
 ## Checkpoint-fixed feature metric (2026-11-09 continuation)
 
