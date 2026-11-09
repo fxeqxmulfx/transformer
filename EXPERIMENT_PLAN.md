@@ -10,6 +10,15 @@ motion guarantee with explicit assumptions. Audit all three existing cohorts.
 Test active readouts centered at the unused-class mean, retaining all rivals,
 and report a separate envelope with its extra basis cost. Do not present a
 conditional maintenance theorem as proof of discovery or hide loose bounds.
+The [completed study](experiments/geometry_dynamics/README.md) adds 21 Lean
+theorems with standard axioms only. All 240000 readout updates and 744
+certificate states pass. The gradient-independent motion bound remains too
+loose: 56.58–56.98 versus 0.76–0.88 measured displacement in the low-rate hold.
+For early settling, the new single rank-32 basis falls slightly; rank 33
+raises mean coverage to 98.565%. A three-basis rank-33 envelope reaches
+98.626%, reducing correct-but-uncertified predictions from 403 to 357 with
+unchanged accuracy. All extra basis costs and failed sufficient conditions
+remain explicit. Discovery, feature alignment and global convergence remain open.
 
 ## Close the geometry gap (2026-11-09 user direction)
 
