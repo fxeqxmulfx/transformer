@@ -9,11 +9,17 @@ reduce .01 to .0001 during updates 1000–4000, hold to 8000, then cool to
 1e-8. Independently compare a basis fitted to observed answer classes on
 all saved states of the .001, .01 and new cohorts. Every rival class stays
 in the bound. Preserve all original numerical allowances, late probes,
-budgets and failed slots. The early-settling cohort completes all eight seeds
-and passes independent verification: minimum late rank-32 coverage improves
-to 97.92–98.55%, with every sampled late accuracy at least 99.51%. Mean final
-accuracy is 99.575%, versus 99.631% for the long .01 plateau. The separate
-744-state active-answer audit is in progress; no convergence claim follows.
+budgets and failed slots. Both comparisons are complete and independently
+verified: all eight training seeds and all 744 certificate states pass,
+with zero false certificates or bound violations. Together, early settling
+and the active-answer basis raise per-seed late rank-32 coverage minima to
+98.11–98.66%, with every sampled late accuracy at least 99.51%. Mean final
+coverage is 98.504%, versus 98.015% for the long .01 plateau; correct but
+uncertified endpoint predictions fall from 608 to 403. Mean final accuracy
+is 99.575%, versus 99.631%, and incorrect predictions rise from 139 to 160.
+All 32000 hold updates retain nonzero class-contrast motion. Postprocessing
+and its independent verification take 1499.62 seconds within the frozen cap.
+No endpoint reaches 99% coverage, and no convergence claim follows.
 
 ## Test higher WSD learning rates (2026-11-09 user direction)
 

@@ -9,13 +9,14 @@ bounding every rival class. All other training and numerical controls remain.
 | Intervention | Changed | Fixed comparison |
 | --- | --- | --- |
 | Early settling | .01 to .0001 during updates 1000–4000, then hold until 8000 and cool to 1e-8 | Same eight seeds, 10000 updates and all-class certificates against .001 and .01 |
-| Active-answer basis | Readout rows used to choose reconstruction directions | Same saved states, training folds, rank budgets and all 97 rival margins |
+| Active-answer basis | Readout rows used to choose reconstruction directions | Same saved states, training folds, rank budgets and all 97 classes |
 
-Earlier LR reduction improves sampled persistence in every paired seed.
-The training cohort is complete and independently verified; the separate
-active-answer certificate comparison is in progress. Generated evidence is
-ignored and preserved outside temporary worktrees. This experiment does
-not assert a global training or convergence theorem.
+Both comparisons are complete and independently verified. Together they
+raise mean final rank-32 coverage from 98.015% to 98.504% and the range of
+per-seed late coverage minima from 16.07–22.61% to 98.11–98.66%. Correct
+predictions left uncertified fall from 608 to 403; incorrect predictions
+rise from 139 to 160. Generated evidence is ignored and preserved outside
+temporary worktrees. The global training and convergence question remains open.
 
 ## Training findings
 
@@ -79,10 +80,66 @@ The schedule was measured from commit `1e9d64f4`, source fingerprint
 Its measured executable is preserved separately from later certificate-only
 source changes. The frozen protocol is `7d99841f`.
 
+## Certificate findings
+
+The active-answer basis improves final rank-32 coverage in all 24 paired
+endpoint states without changing the trained model or its predictions. Every rival
+class remains in the margin bound. The six comparisons below include all
+eight seeds and every declared late probe; percentages are coverage of the
+4705 validation queries per seed.
+
+| Training schedule | Basis | Mean final coverage | Range of per-seed late minima | Correct but uncertified at endpoints |
+| --- | --- | ---: | ---: | ---: |
+| .001 original WSD | All classes | 97.970% | 89.95–94.69% | 601 |
+| .001 original WSD | Active answers | 98.151% | 96.62–97.66% | 533 |
+| .01 original WSD | All classes | 98.015% | 16.07–22.61% | 608 |
+| .01 original WSD | Active answers | 98.430% | 40.77–54.73% | 452 |
+| .01 early settling | All classes | 98.324% | 97.92–98.55% | 471 |
+| .01 early settling | Active answers | 98.504% | 98.11–98.66% | 403 |
+
+The basis change alone improves the long .01 plateau, but its late minima
+remain 40.77–54.73%. Earlier LR reduction supplies the larger persistence
+improvement. Together, the changes remove 205 of 608 correct-but-uncertified
+endpoint predictions (33.7%), while mean accuracy falls by 0.056 percentage
+points. The combined endpoints contain 37077 certificates, 403 correct but
+uncertified predictions and 160 incorrect predictions out of 37640.
+
+The new basis is not uniformly tighter on individual queries. Across the
+eight endpoints, it gains/loses 83/15 certificates at .001, 191/35 at .01,
+and 95/27 with early settling. All eight seeds improve within each cohort,
+but every early-settling trajectory still has 1–4 sampled coverage decreases.
+No rank-32 endpoint reaches 99% coverage under either basis. One original .01 seed
+(seed 3) briefly reaches 99% with the active basis at step 9750; it does not
+retain that level. The native summary retains all 24 paired endpoints,
+rank-33/128 controls, threshold crossings and regression counts.
+
+All 744 state comparisons pass, including 28001184 byte-exact reproductions
+of original readout margins and 28001184 new margin bounds. A separate pass
+rereads the emitted files and checks all new bounds against independent
+FP64 and recorded GPU margins. It passes with zero false certificates;
+construction also reports zero bound violations. Construction and independent
+verification total 1499.62 seconds, within the frozen 1800-second cap.
+All numerical allowances are unchanged.
+
+At requested rank 32, achieved ranks range from 20 to 32 across all folds
+and states. The largest coefficient norm is 4932.35 and the largest
+orthogonality penalty is `6.76e-11`; both remain included in the bounds.
+The smallest retained training singular value is `9.71e-5`. This selected
+basis does not establish a full span of the class readouts, nor does its
+coverage establish a theorem of reliable discovery or maintenance.
+
+The certificate audit was measured from commit `210efa2a`, source fingerprint
+`d37558e4c28a3cde3e7a91902c8dadb15ce7383d2a3b144ec0795720f44075e2`.
+Its generated evidence is in `runs/active-01/`; the training evidence is in
+`runs/settle-01/`. Native tests pass for the producer (20), training verifier
+(3), certificate tools (7), and shared original producer/verifier (16/1).
+Formatting and Clippy with warnings denied pass.
+
 ## Reproduce
 
 From the repository root, reproduce the schedule arm with native tools and
-a CUDA-enabled execution context. Each training run needs a fresh output:
+a CUDA-enabled execution context. The commands use fresh `-02` outputs;
+the measured `-01` outputs remain preserved:
 
 ```sh
 export CARGO_TARGET_DIR="$PWD/.lake/geometry-gap-target"
@@ -94,25 +151,25 @@ cargo build --offline --locked --release --manifest-path experiments/class_geome
 "$CARGO_TARGET_DIR/release/rotate90-complex-kernite" \
   /home/misha/rust_projects/grokking/experiments/rotate90_complex/runs/cubic-adamw \
   experiments/class_geometry_lr/runs/lr01-01/report.json \
-  experiments/geometry_gap/runs/settle-01
-"$CARGO_TARGET_DIR/release/verify" experiments/geometry_gap/runs/settle-01 \
+  experiments/geometry_gap/runs/settle-02
+"$CARGO_TARGET_DIR/release/verify" experiments/geometry_gap/runs/settle-02 \
   experiments/class_geometry_lr/runs/lr01-01/report.json
-"$CARGO_TARGET_DIR/release/analyze" experiments/geometry_gap/runs/settle-01
+"$CARGO_TARGET_DIR/release/analyze" experiments/geometry_gap/runs/settle-02
 "$CARGO_TARGET_DIR/release/compare" experiments/class_geometry_lr/runs/lr01-01 \
-  experiments/geometry_gap/runs/settle-01
+  experiments/geometry_gap/runs/settle-02
 "$CARGO_TARGET_DIR/release/compare" experiments/class_geometry_wsd/runs/audit-02 \
-  experiments/geometry_gap/runs/settle-01
+  experiments/geometry_gap/runs/settle-02
 ```
 
 Once the new cohort is complete, compare the two certificate bases on all
 744 saved states, then independently reread and verify the emitted bounds:
 
 ```sh
-"$CARGO_TARGET_DIR/release/active-answers" experiments/geometry_gap/runs/active-01 \
+"$CARGO_TARGET_DIR/release/active-answers" experiments/geometry_gap/runs/active-02 \
   experiments/class_geometry_wsd/runs/audit-02 \
   experiments/class_geometry_lr/runs/lr01-01 \
-  experiments/geometry_gap/runs/settle-01
-"$CARGO_TARGET_DIR/release/active-answers" verify experiments/geometry_gap/runs/active-01
+  experiments/geometry_gap/runs/settle-02
+"$CARGO_TARGET_DIR/release/active-answers" verify experiments/geometry_gap/runs/active-02
 ```
 
 The original all-class margins must reproduce byte for byte before each
@@ -124,9 +181,13 @@ cap. The signed-transport bound and OG3 in
 [`review/flat_spectrum.md`](../../review/flat_spectrum.md) already apply to
 an arbitrary computed basis with its residual and defect terms retained.
 
-To reproduce the actual-motion diagnostic:
+To regenerate the complete paired summary and actual-motion diagnostic
+from the preserved measurements:
 
 ```sh
+jq -f experiments/geometry_gap/summary.jq \
+  experiments/geometry_gap/runs/active-01/report.json \
+  > experiments/geometry_gap/runs/active-01/summary.json
 jq -n -f experiments/geometry_gap/hold_updates.jq \
   experiments/geometry_gap/runs/settle-01/seed*/updates.jsonl
 ```
