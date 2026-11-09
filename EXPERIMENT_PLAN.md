@@ -1,5 +1,16 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Certify finite-window persistence (2026-11-09 continuation)
+
+Task #204 follows the user's continuation. Freeze the
+[observed-persistence protocol](experiments/geometry_persistence/PROTOCOL.md)
+before new measurements. Replace the loose uniform direction estimate by
+explicit realized forcing budgets with common decay handled exactly. Audit
+every hold update, then transport old certificates over 192 fixed finite
+parameter displacements, including the nonlinear feature remainder. Keep
+every control and failure. These are conditional maintenance results; they
+must not be described as discovery or prediction of unknown future updates.
+
 ## Bound optimizer motion and improve certificates (2026-11-09 user direction)
 
 Task #203 follows the user's request to pursue the main proof gap, improve
