@@ -11,6 +11,17 @@ encoder and execution perturbations. Preserve failed stability conditions
 and every actual potential increase. A partial-model theorem and finite
 replay diagnosis do not establish future full-model control or discovery.
 
+Completed: [24 Lean theorems and 144 verified native replays](experiments/ce_lyapunov/README.md)
+remove saved-memory alignment from the partial-CE potential bound. All
+120 moving partial references decrease, but the full raw potential rises
+in 31 cases, including 13 meeting the sufficient reference condition.
+The stable reference still has 36 full-model increases. All 32 sampled
+settling updates from anchor 4000 onward decrease under both potentials;
+these statewise diagnoses do not certify the full hold or reliable discovery.
+Coordinate-dependent scaling has a large positive mean credit on the long
+plateaus and a favorable mean credit after settling. Future signed control
+remains the missing full-model step; no query certificate is changed.
+
 ## Future forcing from current moments (2026-11-09 continuation)
 
 Task #205 addresses the user's remaining discovery/future-gradient gap.
