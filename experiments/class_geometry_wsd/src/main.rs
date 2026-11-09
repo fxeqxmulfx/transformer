@@ -27,7 +27,7 @@ mod pairing;
 #[path = "../../class_geometry/src/probe.rs"]
 mod probe;
 #[path = "../../class_geometry/src/reconstruction.rs"]
-mod reconstruction;
+pub mod reconstruction;
 mod schedule;
 #[path = "../../residual_dynamics/src/svd.rs"]
 pub mod svd;

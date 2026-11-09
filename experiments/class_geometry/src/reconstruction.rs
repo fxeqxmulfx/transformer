@@ -52,6 +52,26 @@ pub fn evaluate_selected(
     ranks: &[usize],
     selected: &[usize],
 ) -> (Vec<Vec<f64>>, Value) {
+    evaluate_centered(p, ranks, selected, selected)
+}
+/// Task #203 retains active contrasts and their separation from the unused
+/// group mean. At most one direction is added; all rival bounds are unchanged.
+pub fn evaluate_support(
+    p: Problem<'_>,
+    ranks: &[usize],
+    selected: &[usize],
+) -> (Vec<Vec<f64>>, Value) {
+    let unused: Vec<_> = (0..p.classes)
+        .filter(|c| selected.binary_search(c).is_err())
+        .collect();
+    evaluate_centered(p, ranks, selected, &unused)
+}
+fn evaluate_centered(
+    p: Problem<'_>,
+    ranks: &[usize],
+    selected: &[usize],
+    centering: &[usize],
+) -> (Vec<Vec<f64>>, Value) {
     let Problem {
         family,
         states,
@@ -63,6 +83,8 @@ pub fn evaluate_selected(
         label,
     } = p;
     assert!(!selected.is_empty());
+    assert!(!centering.is_empty());
+    assert!(centering.iter().all(|&c| c < classes));
     assert!(selected.iter().all(|&c| c < classes));
     assert!(selected.windows(2).all(|w| w[0] < w[1]));
     let ns = selected.len();
@@ -125,11 +147,11 @@ pub fn evaluate_selected(
         .flat_map(|&c| {
             (0..width).map(move |k| {
                 embedding[c * width + k]
-                    - selected
+                    - centering
                         .iter()
                         .map(|&v| embedding[v * width + k])
                         .sum::<f64>()
-                        / ns as f64
+                        / centering.len() as f64
             })
         })
         .collect();
@@ -345,5 +367,28 @@ mod tests {
         // must block certification even though both active contrasts tie.
         let (rival, _) = evaluate_selected(problem(&[2]), &[1], &[0, 1]);
         assert!(rival[0][2] >= 20. - 1e-10);
+    }
+    #[test]
+    fn unused_mean_adds_a_needed_direction_without_excluding_an_unused_winner() {
+        let states = [1., 0., -1., 0., 0., 1., 0., -1., 0.1, 1., 0., -1.];
+        let embedding = [1., 1., -1., 1., 0., -1.];
+        let problem = |query| Problem {
+            family: Family::Readout,
+            states: &states,
+            embedding: &embedding,
+            references: &[0, 1, 2, 3],
+            queries: query,
+            width: 2,
+            classes: 3,
+            label: 0,
+        };
+        let (active, a) = evaluate_selected(problem(&[4]), &[2], &[0, 1]);
+        let (support, s) = evaluate_support(problem(&[4]), &[2], &[0, 1]);
+        assert_eq!(a["ranks"][0]["achieved_rank"], 1);
+        assert_eq!(s["ranks"][0]["achieved_rank"], 2);
+        assert!(active[0][2] > 1.8);
+        assert!(support[0][1] < -0.19999 && support[0][2] < -2.09999);
+        let (wrong, _) = evaluate_support(problem(&[5]), &[2], &[0, 1]);
+        assert!(wrong[0][2] >= 2. - 1e-10);
     }
 }

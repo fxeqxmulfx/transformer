@@ -20,7 +20,7 @@ pub mod model;
 #[path = "../../flat_approx/fixtures/reference.rs"]
 pub mod oracle;
 mod probe;
-mod reconstruction;
+pub mod reconstruction;
 #[path = "../../residual_dynamics/src/svd.rs"]
 pub mod svd;
 use application::{Backend, Metrics};
