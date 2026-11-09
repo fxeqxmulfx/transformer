@@ -1,0 +1,16 @@
+import Transformer.Rotate90.FeatureMotion
+
+#print axioms Transformer.Rotate90.FeatureMotion.pair_energy_le_norm_sq
+#print axioms Transformer.Rotate90.FeatureMotion.product_norm_sq
+#print axioms Transformer.Rotate90.FeatureMotion.pairedProduct_comm
+#print axioms Transformer.Rotate90.FeatureMotion.product_norm_le_pair_right
+#print axioms Transformer.Rotate90.FeatureMotion.product_norm_le_pair_left
+#print axioms Transformer.Rotate90.FeatureMotion.product_motion_pair
+#print axioms Transformer.Rotate90.FeatureMotion.feature_motion_pair
+#print axioms Transformer.Rotate90.FeatureMotion.feature_motion_sharp
+#print axioms Transformer.Rotate90.FeatureMotion.sharpFeatureRadius_le
+#print axioms Transformer.Rotate90.FeatureMotion.executed_contrast_motion_sharp
+#print axioms Transformer.Rotate90.FeatureMotion.probability_le_sharp_encoder_motion
+#print axioms Transformer.Rotate90.FeatureMotion.matrixMap_column_gram
+#print axioms Transformer.Rotate90.FeatureMotion.matrixMap_row_gram
+#print axioms Transformer.Rotate90.FeatureMotion.matrixMap_gram_upper

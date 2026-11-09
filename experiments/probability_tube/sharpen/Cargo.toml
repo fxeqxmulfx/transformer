@@ -1,0 +1,22 @@
+[package]
+name = "probability-sharp"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[lib]
+path = "lib.rs"
+
+[[test]]
+name = "sharp"
+path = "tests.rs"
+
+[dependencies]
+probability-tube = { path = ".." }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+
+[profile.release]
+codegen-units = 1
+lto = "thin"

@@ -71,6 +71,13 @@ diameter in those tests. This is not a useful-horizon finding on trained
 checkpoints. CUDA update defects, execution allowances and all 144 training
 checkpoint slots still need to be checked against the recreated evidence.
 
+The independent [pairwise refinement](sharpen/README.md) adds 14 Lean
+theorems and a native library. It replaces full-vector product amplification
+by old pair amplitudes and permits proved Gram operator caps. The final
+radius retains the original bound as a comparison. Its four synthetic tests
+include original dimensions; no useful training horizon is inferred from
+them. The first frozen audit continues to use its original formula.
+
 ## Recreating the evidence
 
 The historical ignored run directories and the task #207 artifacts are absent

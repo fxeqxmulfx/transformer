@@ -8455,3 +8455,49 @@ all class contrasts and probabilities, and 24 arbitrary-gradient warm-Adam
 prefixes across every parameter block. Eight native tests pass, including
 the four earlier PM tests. This establishes implementation checks, not a
 useful horizon on any of the 144 frozen training checkpoints.
+
+## Pairwise encoder amplification
+
+### PA1. Use the pointwise structure of the complex product
+
+EM3's full-vector amplification is conservative when gate and value energy
+is distributed over many logical pairs. For the unchanged calibrated source
+product, the complex-modulus identity gives
+
+```
+||product(g,u)||² = (1/2) sum_j |g_j|² |u_j|².
+```
+
+If every old gate pair has amplitude at most G and every old value pair has
+amplitude at most U, the two linear terms in finite product motion obey
+
+```
+||product(g+dg,u+du)-product(g,u)||
+  <= (U*||dg|| + G*||du|| + ||dg||*||du||)/sqrt(2).
+```
+
+G and U depend only on the checkpoint activations. The mixed term cannot
+use a small old amplitude: both factors are unknown perturbations. Apply
+this bound inside EM4, keeping all RMS normalizations, moving matrices and
+residual terms. Intersect the resulting feature bound with EM4's original
+one. Every checkpoint operator cap still requires its own proof; the
+existing FT2 Gram bound is an available alternative to Frobenius caps.
+No estimated singular value is treated as a certified operator norm.
+
+This continuation is independent of the frozen `1fb060b9` training audit.
+It does not change that audit's formulas or numerical allowances. A sharper
+local formula alone is not a useful training horizon or a bound on the
+full-update potential; those remain separate experimental and mathematical
+obligations.
+
+### PA2. Use a proved Gram cap for the same moving maps
+
+For an old real matrix A, FT2 bounds its operator norm by
+`(sum_ij (Aᵀ*A)_ij²)^(1/4)`; the row Gram gives the same valid bound with
+the smaller matrix dimension when appropriate. The source wrapper
+`matrixMap` represents exactly that real matrix action. PA2 exposes this
+correspondence for both orientations and for an upper bound on Gram energy.
+The native continuation reuses FT2's outward-expanded scalar Gram calculation,
+including its checks against identity, rank-one and transposed matrices.
+This certifies no whole forward execution: the remaining activation/radius
+arithmetic and CUDA execution retain their separate numerical obligations.
