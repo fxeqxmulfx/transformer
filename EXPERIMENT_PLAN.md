@@ -1,5 +1,16 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Future forcing from current moments (2026-11-09 continuation)
+
+Task #205 addresses the user's remaining discovery/future-gradient gap.
+Freeze the [checkpoint-only protocol](experiments/future_forcing/PROTOCOL.md)
+before measuring it. Derive a warm-state cone for every future gradient
+history under the actual .9/.95 moments and known schedule; quantify its
+useful horizon and its limitations for directional alignment. Freeze each
+native forecast before reading any later trace. Include initialization,
+early learning and late cooldown; preserve all failures. Exact-real future
+control, FP32 guard checks and reliable discovery remain distinct claims.
+
 ## Certify finite-window persistence (2026-11-09 continuation)
 
 Task #204 follows the user's continuation. Freeze the
