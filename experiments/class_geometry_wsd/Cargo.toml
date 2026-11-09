@@ -43,6 +43,10 @@ path = "../geometry_persistence/main.rs"
 name = "future-forcing"
 path = "../future_forcing/main.rs"
 
+[[bin]]
+name = "ce-lyapunov"
+path = "../ce_lyapunov/main.rs"
+
 [dependencies]
 kernite-cuda = { path = "/home/misha/rust_projects/kgen/crates/cuda" }
 kernite-macros = { path = "/home/misha/rust_projects/kgen/crates/macros" }
