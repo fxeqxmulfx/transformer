@@ -7944,3 +7944,145 @@ and align the changing features with them. Long useful persistence also needs
 more than a magnitude bound when the prospective radius exhausts the active
 norm. The sign symmetry and the measured failures motivate controlling that
 directional interaction; they do not prove such control impossible.
+
+## Loss-specific momentum control
+
+This continuation strengthens CG1's sign of unused-class CE damping to a
+quantitative inequality, then absorbs arbitrary saved first moments in a
+quadratic potential. These are authored consequences of the actual partial
+CE derivative and the main model's beta1=.9 recurrence. They are not claims
+that the flat-spectrum manuscript proves full tied AdamW training dynamics.
+The corresponding files are `GradientEvidence/CECocoercivity.lean`,
+`MomentumPotential.lean`, and `CEMomentumControl.lean`.
+
+### CL1. Quantitative damping of the actual partial CE gradient
+
+For a finite class set, let p be softmax(z). The exponential tangent gives
+`exp(a)-exp(b) <= (a-b)*exp(a)`, with either ordering of a,b. Divide by the
+common positive softmax denominator. When p_c>=p_d, multiply the resulting
+inequality by p_c-p_d and use p_c<=q; when p_d>=p_c, swap the endpoints.
+CG1's sign `(z_c-z_d)*(p_c-p_d)>=0` justifies both cases. Thus
+
+```
+(p_c-p_d)^2 <= q*(z_c-z_d)*(p_c-p_d),   p_c<=q, p_d<=q.
+```
+
+For minibatch features T_i and readout rows E_c, logits are `<E_c,T_i>`.
+If neither class c nor d occurs as a target, their actual partial gradient
+difference is `G_c-G_d = mean_i ((p_ic-p_id)*T_i)`. Holding T fixed here
+specifies the derivative, not its behavior at later training steps.
+Finite Cauchy–Schwarz bounds the squared norm of this mean by the product of
+mean squared probability difference and mean feature energy. The displayed
+softmax bound and CG1's gradient identity then give
+
+```
+||G_c-G_d||^2 <= L*<E_c-E_d,G_c-G_d>,
+L = q*mean_i ||T_i||^2.
+```
+
+Sum over all pairs of unused classes and divide by twice their count. CG3's
+computed centering identity yields `||G_U||^2 <= L*<E_U,G_U>` for the whole
+within-unused contrast block. Its radial product is nonnegative by CG1.
+No fixed feature table, fixed minibatch, probability independence, or
+spectral-flatness assumption enters this pointwise statement. The Lean
+statements also permit repeated class indices (the same weighted finite
+pair identity) and empty batches (the existing zero-mean convention);
+the experiment uses 64 distinct unused classes and nonempty minibatches.
+For clipping a>=0, g=a*G_U has coefficient aL and nonnegative radial product.
+The probability ceiling q=1 is always valid. A tighter measured q only
+bounds the current minibatch unless a separate future bound is available.
+
+### CL2. Saved momentum is dissipative in a suitable potential
+
+Write w=E_U and let m be any saved within-unused first moment, including
+arbitrary encoder/minibatch history. For a scalar effective step s define
+
+```
+m_R = .9*m+.1*g,       w_R = w-s*m_R,
+V_s(w,m) = ||w-9*s*m||^2+90*s^2*||m||^2.
+V_s(w_R,m_R)-V_s(w,m) =
+  -2*s*<w,g>+19*s^2*||g||^2-(171/10)*s^2*||m-g||^2.
+```
+
+This is a polynomial identity with the main model's actual first-moment
+coefficient. If s>=0, `<w,g>>=0`, `||g||^2<=L*<w,g>` and `19*s*L<=2`,
+the first two terms sum to at most zero; the last is nonpositive for every
+m. No alignment or smallness premise on the saved moment is needed.
+The exact identity
+
+```
+19*V_s(w,m)-10*||w||^2 = 9*||w-19*s*m||^2
+```
+
+also gives `||w||^2 <= (19/10)*V_s(w,m)`. The potential bounds ordinary
+unused-class contrast energy, not just a transformed position coordinate.
+Induction yields nonincrease over every finite prefix of the declared
+fixed-s recurrence. The CE specialization allows features, targets and
+clipping to change at each step, provided the classes remain unused and
+the explicit probability/feature-energy step condition holds each time.
+The generic version instead takes a common L. Nonzero examples accompany
+the conditional statements; the CE example has distinct unused readout
+rows and nonzero saved memory. The sequence example demonstrates consistent
+premises; it is not a discovery example.
+
+This reference omits decay, coordinate-dependent scaling and the tied
+encoder's current gradient. It does not show that unused energy itself is
+monotone, that active contrast grows, or that prediction margins improve.
+Changing s also changes V_s; one-step results with different s cannot be
+chained without a bound on that change of potential.
+
+### CL3. Exact full-model perturbations
+
+Let g_R be clipped partial CE and g_E the clipped encoder contribution.
+On a full readout coordinate, retain the actual new second moment v and
+absolute-time index t+1. Write `b1=1-.9^(t+1)` and
+`D=1/(sqrt(v)/sqrt(1-.95^(t+1))+eps)`. Let e_m and e_p denote moment
+and parameter execution residuals relative to these exact-real expressions:
+
+```
+m_new = .9*m+.1*(g_R+g_E)+e_m,
+w_new = (1-eta*rho)*w-eta*D*m_new/b1+e_p.
+dm = m_new-m_R = .1*g_E+e_m,
+dw = w_new-w_R = -eta*rho*w
+     +(s-eta*D/b1)*m_new-s*.1*g_E+(e_p-s*e_m).
+```
+
+The scalar Lean identities use the existing buffered AdamW definitions,
+with beta1=.9, beta2=.95 and both bias corrections. They are valid without
+assuming the residuals small. Project the four position terms onto the
+unused contrast block; projection commutes with scalar multiplication and
+addition, but **not** with coordinate-dependent D. The native replay
+therefore computes the adaptive term as `s*P_U(m_new)-eta*P_U(D*m_new)/b1`,
+not by multiplying separately centered arrays. Encoder and execution terms
+also carry their respective moment perturbations; decay and adaptive
+scaling have zero moment perturbation in this decomposition.
+
+For any reference state (w_R,m_R) and total perturbation (dw,dm),
+
+```
+V_s(w_R+dw,m_R+dm)-V_s(w_R,m_R) =
+  2*<w_R-9*s*m_R,dw-9*s*dm>+180*s^2*<m_R,dm>+V_s(dw,dm).
+```
+
+The signed linear credits add over the four sources. The quadratic term
+uses their **total** perturbation, preserving all cross terms. Adding CL2's
+reference change gives the exact full-update potential identity. A concrete
+one-dimensional example has a decreasing reference and an increasing
+perturbed potential; it demonstrates that algebra alone does not sign the
+perturbation, not a failure of the actual CE or GPT trajectory. A prospective
+full-model certificate must bound these terms before the unknown update.
+
+### CL4. Scope of the numerical diagnosis
+
+The frozen `experiments/ce_lyapunov/PROTOCOL.md` uses the original next
+minibatch at 144 saved states, preserving the actual model and optimizer.
+An independent FP64 calculation supplies partial CE from executed features;
+GPU/CPU derivative disagreement joins the execution residual. The raw
+reference uses `s=eta*min(D)/b1` over the full readout. A separate stable
+reference caps s by `1/(19*L)` when L>0, without changing training. These
+statewise quantities use the actual next second moment and current q;
+they are diagnoses, not forecasts. The declared tolerances test finite
+executions and are not universal floating-point theorems. Results and
+complete reproduction commands belong in the experiment README. Neither
+these replays nor CL1–CL3 prove reliable discovery, full-model future
+gradient alignment, or a useful active-share floor over the entire hold.

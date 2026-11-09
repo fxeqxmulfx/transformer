@@ -1,0 +1,26 @@
+import Transformer.Grokking.GradientEvidence.CEMomentumControl
+
+#print axioms Transformer.Grokking.GradientEvidence.exp_difference_le_tangent
+#print axioms Transformer.Grokking.GradientEvidence.probability_difference_le_tangent
+#print axioms Transformer.Grokking.GradientEvidence.probability_pair_cocoercive
+#print axioms Transformer.Grokking.GradientEvidence.unused_pair_gradient_formula
+#print axioms Transformer.Grokking.GradientEvidence.unused_pair_cocoercive
+#print axioms Transformer.Grokking.GradientEvidence.centered_block_pairing
+#print axioms Transformer.Grokking.GradientEvidence.unused_group_cocoercive
+#print axioms Transformer.Grokking.GradientEvidence.momentum_potential_nonneg
+#print axioms Transformer.Grokking.GradientEvidence.momentum_potential_coercive_identity
+#print axioms Transformer.Grokking.GradientEvidence.parameter_energy_le_potential
+#print axioms Transformer.Grokking.GradientEvidence.momentum_potential_step_identity
+#print axioms Transformer.Grokking.GradientEvidence.momentum_potential_step_nonincrease
+#print axioms Transformer.Grokking.GradientEvidence.scaled_cocoercivity
+#print axioms Transformer.Grokking.GradientEvidence.momentum_potential_sequence
+#print axioms Transformer.Grokking.GradientEvidence.momentum_potential_perturbation
+#print axioms Transformer.Grokking.GradientEvidence.momentum_potential_sources
+#print axioms Transformer.Grokking.GradientEvidence.momentum_full_step_identity
+#print axioms Transformer.Grokking.GradientEvidence.unused_gradient_radial_nonneg
+#print axioms Transformer.Grokking.GradientEvidence.unused_gradient_energy_bound
+#print axioms Transformer.Grokking.GradientEvidence.unused_ce_momentum_nonincrease
+#print axioms Transformer.Grokking.GradientEvidence.unused_ce_momentum_sequence
+#print axioms Transformer.Grokking.GradientEvidence.main_moment_reference_error
+#print axioms Transformer.Grokking.GradientEvidence.main_adam_reference_error
+#print axioms Transformer.Grokking.GradientEvidence.momentum_perturbation_can_reverse
