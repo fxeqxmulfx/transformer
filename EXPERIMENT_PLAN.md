@@ -1,5 +1,19 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Prospective probability control (2026-11-09 active goal)
+
+The user asks to close the gap between flat-spectrum guarantees and actual
+training, and authorizes recreating the missing native training evidence.
+The [probability-motion protocol](experiments/probability_tube/PROTOCOL.md)
+fixes all three cohorts, eight seeds and 144 checkpoint slots before new
+measurements. Derive future unused-class probability ceilings from checkpoint
+logits and full parameter/feature motion, then feed those ceilings into the
+actual-CE step condition. Retain tied encoder motion, class-dependent AdamW,
+execution errors and every failed condition. A useful probability forecast
+is one necessary step; full-model persistence, alignment and discovery remain
+part of the active goal. Recreated evidence has separate provenance and does
+not replace historical measurements.
+
 ## Checkpoint-fixed feature metric (2026-11-09 continuation)
 
 Task #207 follows the user's continuation. Freeze the
