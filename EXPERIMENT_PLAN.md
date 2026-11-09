@@ -9,8 +9,14 @@ replication seeds. Separate 32 active-answer contrast directions, 63 unused
 class directions, and one between-group direction. Audit actual adaptive,
 tied-encoder and memory effects over every prefix, and test geometry at all
 31 declared probes per seed. No monotone or universal discovery claim is
-licensed by a local CE derivative. The study is in progress; retain all
-failures, reversals, capped slots and source hashes.
+licensed by a local CE derivative. The [completed study](experiments/class_geometry/README.md)
+passes all 80000 updates and 248 probes, with zero false certificates and
+20 new Lean theorems. Active-class energy share rises from about 33% to
+70–76%. Signed readout contributions build that share; encoder and memory
+contributions oppose them. All six replications retain at least 93.99%
+rank-32 coverage at every late probe, but none sustains 99% throughout that
+window. Concentration fluctuates and is insufficient for alignment or a
+correct prediction. Preserve these failures and the open global theorem.
 
 ## Extend flat spectrum to observable geometry (2026-11-09 user direction)
 

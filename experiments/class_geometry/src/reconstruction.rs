@@ -249,6 +249,39 @@ fn evaluate_at(p: Problem<'_>, ranks: &[usize]) -> (Vec<Vec<f64>>, Value) {
 mod tests {
     use super::*;
     #[test]
+    fn rank_thirty_three_retains_the_last_observable_direction() {
+        let width = 33;
+        let classes = 66;
+        let mut states = vec![0.; 67 * width];
+        let mut embedding = vec![0.; classes * width];
+        for k in 0..width {
+            states[2 * k * width + k] = 1.;
+            states[(2 * k + 1) * width + k] = -1.;
+            embedding[2 * k * width + k] = (k + 1) as f64;
+            embedding[(2 * k + 1) * width + k] = -((k + 1) as f64);
+        }
+        states[66 * width] = 10.;
+        let references: Vec<_> = (0..66).collect();
+        let (bounds, _) = evaluate(Problem {
+            family: Family::Readout,
+            states: &states,
+            embedding: &embedding,
+            references: &references,
+            queries: &[66],
+            width,
+            classes,
+            label: 0,
+        });
+        assert!(bounds[1][1] > 0.);
+        assert!(bounds[2].iter().skip(1).all(|&v| v < -9.999));
+        assert!(
+            bounds[2]
+                .iter()
+                .zip(&bounds[3])
+                .all(|(a, b)| (a - b).abs() < 1e-10)
+        );
+    }
+    #[test]
     fn readout_direction_can_be_low_variance_with_a_nonzero_residual() {
         let states = [
             10., 0., 0., -10., 0., 0., 0., 1., 0., 0., -1., 0., 0., 3., 0.25,

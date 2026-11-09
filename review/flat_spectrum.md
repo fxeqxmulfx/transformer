@@ -7198,6 +7198,189 @@ and convergence question.
 | Signed component and remainder identities | `FeatureCodes.forecast_component_identity`, `finite_update_component_identity` |
 | Positive component, negative total | `FeatureCodes.positive_component_negative_update_witness` |
 
+## Class-contrast discovery and persistence
+
+Task #199 follows the user's request to pursue the remaining learning
+question. The [fixed protocol](../experiments/class_geometry/PROTOCOL.md)
+replays two original trajectories and six replication seeds for all 10000
+updates. The [findings](../experiments/class_geometry/README.md) distinguish
+a proved supervised damping mechanism, exact attribution of realized
+trajectories, and the still missing convergence and alignment argument.
+These claims extend the local CE derivative and observable geometry above;
+they are authored derivations, not claims attributed to another manuscript.
+
+### CG1. A supervised dissipative direction
+
+Let `T_i` be the current features, `y_i` the current minibatch targets, and
+`z_ic=<E_c,T_i>`. The existing derivative theorem `readoutGradient_eq`
+identifies the actual partial derivative of mean cross-entropy:
+
+```
+g_R,c = mean_i ((p_ic - 1[c=y_i]) T_i),
+p_ic = exp(z_ic) / sum_v exp(z_iv).
+```
+
+For two classes `c,d` absent from the minibatch targets, their label terms
+vanish. Expanding the finite sums gives the exact identity
+
+```
+<E_c-E_d, g_R,c-g_R,d>
+  = mean_i ((z_ic-z_id)(p_ic-p_id)) >= 0.
+```
+
+The sign follows from monotonicity of the exponential and a positive
+softmax denominator. Features are fixed only for this partial derivative;
+the theorem can be applied anew after each feature or minibatch change.
+For any nonempty group U containing no targets, the pairwise identity
+
+```
+sum_u <E_u-mean_U(E), g_R,u-mean_U(g_R)>
+  = (1/(2*|U|)) sum_u,v <E_u-E_v, g_R,u-g_R,v> >= 0
+```
+
+turns pair damping into damping of the whole centered unused group. In
+particular, for nonnegative step scales `eta_t,alpha_t`, its cumulative
+isotropic radial contribution `sum_t -2*eta_t*alpha_t*<Q_U E_t,Q_U g_R,t>`
+is nonpositive for every finite prefix, even with changing features and
+minibatches. This is a theorem about one signed contribution. It does not
+identify the complete tied, adaptive optimizer with isotropic readout descent.
+
+### CG2. Keep the finite step
+
+For any finite vectors `w,g` and real `eta`,
+
+```
+||w-eta*g||^2 = ||w||^2 - 2*eta*<w,g> + eta^2*||g||^2.
+```
+
+Thus `eta>=0` and the current-state condition
+`eta*||g||^2 <= 2*<w,g>` imply nonincrease. A dissipative derivative alone
+does not imply contraction for every learning rate. Neither this condition
+nor isotropic dynamics is assumed for the complete source AdamW step.
+The native audit checks its separate CG1 contribution on every update and
+keeps the complete finite quadratic term in CG4. A nonzero two-coordinate
+witness satisfies the finite-step condition with positive learning rate.
+
+### CG3. Why 32 class directions appear
+
+Split the readout rows into nonempty groups A and U. With the overall mean
+`mu`, and their computed group means `mu_A,mu_U`, finite centering gives
+
+```
+||E-centered||_F^2
+ = sum_a ||E_a-mu_A||^2 + sum_u ||E_u-mu_U||^2
+   + |A|*||mu_A-mu||^2 + |U|*||mu_U-mu||^2.
+```
+
+The three terms are active within-group contrasts, unused within-group
+contrasts, and between-group energy. Cross terms vanish because each
+within-group centered sum is zero. The Lean scalar identity holds for any
+chosen `mu`; summing it over coordinates and choosing the overall mean
+gives this Frobenius identity.
+
+For `n+1` rows, centering also has an explicit reconstruction:
+
+```
+E_c-mean(E)
+ = sum_(i=1..n) (1[c=i]-1/(n+1)) (E_i-E_0).
+```
+
+Hence at most `n` generators are needed; linear independence is not assumed.
+In this experiment the training labels have 33 distinct answers and 64
+unused classes. Active contrasts therefore need at most 32 generators;
+the two group means add at most one more direction, since their weighted
+centered sum is zero. This dimensional fact holds at initialization too.
+Learned concentration in these directions is a separate assertion, and a
+rank-33 SVD need not select exactly the between-group direction.
+
+### CG4. Attribute the actual trajectory
+
+Here `g_R` is the partial derivative on the **actual minibatch** and `g_B`
+its full tied-embedding derivative. This differs deliberately from OG5's
+full-training/sampling split. With actual updated moment `m_hat`, actual
+coordinatewise preconditioner `D`, and `alpha=min_coordinate(D)>0`, write
+
+```
+Delta E = -eta E - eta alpha g_R - eta(D-alpha I)g_R
+          -eta D(g_B-g_R) -eta D(m_hat-g_B) + rounding.
+```
+
+The six terms are decay, isotropic readout, adaptive readout correction,
+tied-encoder credit, moment memory, and the measured FP32 remainder. The
+remainder is bounded and reported; no exact floating-point implementation
+theorem is claimed. Class centering is applied after each coordinatewise
+increment: `D` need not commute with the class projections.
+
+For any finite component family `d_i`, the real identity is
+
+```
+||x+sum_i d_i||^2-||x||^2
+  = sum_i 2<x,d_i> + ||sum_i d_i||^2.
+```
+
+The last square includes all cross-component products. If every realized
+step satisfies `x_(t+1)=x_t+sum_i d_(t,i)`, summing these contributions
+telescopes to `||x_n||^2-||x_0||^2` for every prefix n. Apply this separately
+to each fixed class projection. Lean proves both identities with a nonzero
+trajectory example; the experiment checks parameter closure, all projected
+energy identities, and every cumulative prefix without dropping terms.
+
+### CG5. Relative concentration and persistence
+
+Absolute active energy is insufficient to explain its share. Let `S` be
+active energy and `V` unused plus between-group energy. For nonzero old and
+new total energies, algebra gives
+
+```
+(S+ds)/(S+V+ds+dv) - S/(S+V)
+  = (V*ds-S*dv) / ((S+V)*(S+V+ds+dv)).
+```
+
+Substitute all CG4 radial terms and the total quadratic term into `ds,dv`.
+This yields an exact signed attribution of share change, which can be
+summed over every prefix. With positive denominators, `S*dv <= V*ds` is
+the explicit improvement condition. The native trajectory does not satisfy
+monotone improvement at every step; these conditions are not asserted to
+follow from training loss or the local dissipative sign.
+
+Common nonzero scaling preserves `S/(S+V)`. Pure weight decay scales both
+energies by the same square and cannot by itself select active contrasts.
+Its radial share numerator is zero. Mixed-step cross products still remain
+in the total quadratic term, so decay is not removed from the full optimizer.
+Signed attribution explains one realized trajectory, not the outcome of
+retraining after deleting an optimizer component.
+
+### CG6. Concentration still needs alignment
+
+There is a simple obstruction to identifying class concentration with
+successful prediction. In one feature dimension take active readout rows
+`+1,-1`, unused row `0`, and query feature `-1` with target the `+1` row.
+All centered energy is in the active contrast space, yet the other active
+class wins strictly. Lean proves the two energies equal 2 and the strict
+wrong-class comparison. Thus concentration needs a separate query alignment
+and positive-margin argument such as OG3 and signed transport.
+
+The fixed study finds a reproducible increase in active-class share and
+useful sampled late geometry, with signed opposition from tied-encoder and
+memory terms. It also retains fluctuations, persistent residual readout
+energy, and failures to sustain 99% coverage. The remaining theorem must
+control coupled feature learning, adaptive scales and moments strongly
+enough to obtain query alignment and margins over time. CG1–CG5 alone do
+not prove that theorem or universal optimizer discovery.
+
+| Claim | Lean declarations |
+| --- | --- |
+| Actual CE pair identity and sign | `GradientEvidence.unused_pair_gradient_identity`, `unused_pair_gradient_damping`, `logit_probability_difference_nonneg` |
+| Whole-group and cumulative damping | `GradientEvidence.unused_group_gradient_damping`, `cumulative_unused_readout_credit_nonpos` |
+| Finite isotropic identity and condition | `GradientEvidence.isotropic_pair_energy_identity`, `isotropic_pair_energy_nonincrease` |
+| Computed class means and energy split | `FeatureCodes.class_center_sum_zero`, `class_translation_energy`, `class_split_energy` |
+| Pairwise-to-centered product identities | `FeatureCodes.zero_sum_pair_product`, `centered_pair_product` |
+| Explicit centered-row generators | `FeatureCodes.centered_rows_from_anchor` |
+| Finite and cumulative component identity | `GradientEvidence.component_energy_identity`, `trajectory_component_energy_identity` |
+| Relative share identity and improvement | `GradientEvidence.class_share_change`, `class_share_component_identity`, `class_share_nondecrease` |
+| Common scaling preserves share | `GradientEvidence.common_scaling_preserves_class_share` |
+| Full concentration with a wrong prediction | `FeatureCodes.active_concentration_insufficient_witness` |
+
 ## Forward–Forward reformulation
 
 User direction, 2026-11-08: reformulate Forward–Forward and modify its loss.

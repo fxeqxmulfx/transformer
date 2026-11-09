@@ -24,7 +24,9 @@ use std::{
 fn normalized_features(output: &model::Forward) -> Vec<f64> {
     output
         .states
-        .chunks_exact(W)
+        .as_chunks::<W>()
+        .0
+        .iter()
         .zip(&output.denominators)
         .flat_map(|(row, d)| row.iter().map(move |v| v / d))
         .collect()

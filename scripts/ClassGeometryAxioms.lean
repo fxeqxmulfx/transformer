@@ -1,0 +1,22 @@
+import Transformer.Grokking.GradientEvidence.ClassTrajectory
+
+#print axioms Transformer.Grokking.GradientEvidence.logit_probability_difference_nonneg
+#print axioms Transformer.Grokking.GradientEvidence.unused_pair_gradient_identity
+#print axioms Transformer.Grokking.GradientEvidence.unused_pair_gradient_damping
+#print axioms Transformer.Grokking.GradientEvidence.isotropic_pair_energy_identity
+#print axioms Transformer.Grokking.GradientEvidence.isotropic_pair_energy_nonincrease
+#print axioms Transformer.Grokking.GradientEvidence.unused_group_gradient_damping
+#print axioms Transformer.Grokking.GradientEvidence.cumulative_unused_readout_credit_nonpos
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.class_center_sum_zero
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.class_translation_energy
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.class_split_energy
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.zero_sum_pair_product
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.centered_pair_product
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.centered_rows_from_anchor
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.active_concentration_insufficient_witness
+#print axioms Transformer.Grokking.GradientEvidence.component_energy_identity
+#print axioms Transformer.Grokking.GradientEvidence.trajectory_component_energy_identity
+#print axioms Transformer.Grokking.GradientEvidence.class_share_change
+#print axioms Transformer.Grokking.GradientEvidence.class_share_component_identity
+#print axioms Transformer.Grokking.GradientEvidence.class_share_nondecrease
+#print axioms Transformer.Grokking.GradientEvidence.common_scaling_preserves_class_share
