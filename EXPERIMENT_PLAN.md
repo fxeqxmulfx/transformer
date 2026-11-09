@@ -1,5 +1,16 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Tighten pre-update certificates (2026-11-09 user direction)
+
+Task #196 freezes the [forecast-tightening comparison](experiments/forecast_tightening/PROTOCOL.md)
+before outcomes. Diagnose layerwise inflation and compare Gram amplification,
+a local regularized-normalization secant bound, and signed class-contrast
+intervals before the final RMS against the original 24 task #188 forecasts.
+Prove the new bounds and audit all cases with unchanged numerical allowances
+and source updates. Retain full CE/backpropagation; no local-learning restart.
+Measure coverage and preparation cost separately. Task #189 remains the
+separate inference-efficiency study; no runtime gain follows from coverage.
+
 ## Three efficiency targets (2026-11-08 user direction)
 
 **Later user direction (2026-11-08): skip no-gradient training.** Stop further
