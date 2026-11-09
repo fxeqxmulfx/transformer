@@ -11,6 +11,14 @@ current versus prospective step conditions, every adverse full update,
 and the ordinary-energy penalty from metric conditioning. Full unknown
 future control and discovery must not be inferred from finite diagnoses.
 
+Completed: [21 Lean theorems and all 144 fixed comparisons](experiments/ce_metric/README.md)
+absorb class-shared feature scaling, but the diagnostic gain is small:
+full raw increases change from 31 to 30, and the ordinary-energy bound
+becomes looser. The prospective q=1 condition fails on all 120 moving cases
+in both metrics. All 32 later settling samples still decrease, without a
+full-hold guarantee. Future small-probability control, class-dependent
+adaptivity and tied encoder forcing remain unresolved; coverage is unchanged.
+
 ## Loss-specific momentum control (2026-11-09 continuation)
 
 Task #206 follows the user's continuation. Freeze the
