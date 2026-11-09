@@ -1,5 +1,16 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Checkpoint-fixed feature metric (2026-11-09 continuation)
+
+Task #207 follows the user's continuation. Freeze the
+[feature-metric protocol](experiments/ce_metric/PROTOCOL.md) before analysis.
+Absorb class-shared feature scaling in the actual-CE momentum theorem and
+freeze each metric from the saved state before reading the next update.
+Compare all 144 previous cases against an isotropic control, retaining
+current versus prospective step conditions, every adverse full update,
+and the ordinary-energy penalty from metric conditioning. Full unknown
+future control and discovery must not be inferred from finite diagnoses.
+
 ## Loss-specific momentum control (2026-11-09 continuation)
 
 Task #206 follows the user's continuation. Freeze the

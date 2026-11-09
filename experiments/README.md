@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`ce_metric`](ce_metric) | Planned: 144 checkpoint-fixed metric comparisons | Can a feature-weighted CE potential absorb adaptive scaling while retaining class-dependent and encoder terms explicitly? |
 | [`ce_lyapunov`](ce_lyapunov) | 24 Lean theorems, 144 verified next-minibatch replays | Actual partial CE absorbs arbitrary saved momentum under an explicit step condition. Full AdamW increases the raw potential in 31 cases; all 32 sampled settling updates from step 4000 onward decrease. Future full-model control and reliable discovery remain open. |
 | [`future_forcing`](future_forcing) | 144 checkpoint-only windows, 444000 verified future prefixes | Twenty-five Lean theorems remove future-forcing observations from the exact-real bound. Every settling seed retains more than 67.83% active share through the final 500 updates; the long hold remains uncertified, and current moments add only three steps to its 60% guarantee. Reliable discovery remains open. |
 | [`geometry_persistence`](geometry_persistence) | 24 complete traces, 96000 hold prefixes and 192 verified finite windows | Ten Lean theorems and realized forcing budgets certify more than 60% active-readout energy through every early-settling hold update. Rank-33 prediction coverage survives at 98.510% over 250 updates and 98.045% over 1000; a single 4000-update jump falls to 0.244%. Discovery remains open. |
