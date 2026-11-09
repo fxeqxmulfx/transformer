@@ -39,6 +39,10 @@ path = "../geometry_dynamics/motion.rs"
 name = "geometry-persistence"
 path = "../geometry_persistence/main.rs"
 
+[[bin]]
+name = "future-forcing"
+path = "../future_forcing/main.rs"
+
 [dependencies]
 kernite-cuda = { path = "/home/misha/rust_projects/kgen/crates/cuda" }
 kernite-macros = { path = "/home/misha/rust_projects/kgen/crates/macros" }
