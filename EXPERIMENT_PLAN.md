@@ -23,6 +23,15 @@ coverage gain, with 42 extra certificates from the directional intersection.
 The complete multi-track forecast costs 1.258 seconds per 9409-query state,
 so serving efficiency remains a separate implementation/measurement task.
 
+Task #189 now implements its original fresh-input cached-weight and repeated
+query reuse controls, plus the [premeasurement tightening extension](experiments/inference_efficiency/TIGHTENING_PROTOCOL.md).
+The fourth method applies Gram/local-RMS displacement bounds without tangent
+matrix products. All serving paths receive operand pairs only; compare
+complete host-result latency, setup, memory and exact fallback for the same
+24 states and fixed batches. Keep the original 900-second cap and retain
+all outcomes. The 99.27% ground-truth certificate coverage does not predict
+label-free reuse coverage or inference speed.
+
 ## Three efficiency targets (2026-11-08 user direction)
 
 **Later user direction (2026-11-08): skip no-gradient training.** Stop further
