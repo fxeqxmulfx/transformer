@@ -26,6 +26,17 @@ and schedule boundaries. Independent FP64 norm error is at most `1.50e-8`
 relative to max(1,norm), within the fixed `2e-6` allowance. Native tests and
 strict clippy pass. Complete training outcomes are pending.
 
+The first attempt completed seeds 7,11,1,3,5,13. Seeds 17 and 19 stopped
+before any update because their initialization comparison included derived
+JSON ratios parsed without exact floating-point roundtrip support. All three
+initial evidence files (`state.bin`, `margins.bin`, `queries.json`) are byte
+identical to #199 for both failures. The repair enables exact JSON float
+parsing and compares integer coverage counts, with a regression that still
+rejects changed counts. It reuses the six completed seed directories without
+modification and runs only the two missing seeds in `audit-02`. The combined
+clock includes all 687.506760975 seconds of `audit-01`, preserving the original
+1800-second cap. Both attempts and their separate source fingerprints remain.
+
 From the root, using native tools and a CUDA-enabled execution context:
 
 ```sh

@@ -23,6 +23,7 @@ mod optimizer;
 mod optimizer_kernels;
 #[path = "../../flat_approx/fixtures/reference.rs"]
 pub mod oracle;
+mod pairing;
 #[path = "../../class_geometry/src/probe.rs"]
 mod probe;
 #[path = "../../class_geometry/src/reconstruction.rs"]
@@ -69,6 +70,7 @@ fn source_hash() -> String {
             include_bytes!("../../class_geometry/src/groups.rs"),
             include_bytes!("../../class_geometry/src/reconstruction.rs"),
             include_bytes!("optimizer.rs"),
+            include_bytes!("pairing.rs"),
             include_bytes!("optimizer_kernels.rs"),
             include_bytes!("schedule.rs"),
             &schedule::PEAK.to_le_bytes(),
@@ -91,8 +93,8 @@ fn main() -> Result<()> {
         return Ok(());
     }
     require(
-        args.len() == 3,
-        "usage: rotate90-complex-kernite preflight | CHECKPOINT_ROOT PAIRED_REPORT NEW_OUTPUT_DIRECTORY",
+        args.len() == 3 || args.len() == 4,
+        "usage: rotate90-complex-kernite preflight | CHECKPOINT_ROOT PAIRED_REPORT NEW_OUTPUT_DIRECTORY [TASK200_FAILED_ATTEMPT]",
     )?;
     let root = Path::new(&args[0]).canonicalize()?;
     let output = Path::new(&args[2]);
@@ -101,6 +103,46 @@ fn main() -> Result<()> {
     let (original, protocol) = inputs::protocol(&mut ledger, &root)?;
     let reference = ledger.json(&Path::new(&args[1]).canonicalize()?)?;
     require(reference["status"] == "pass", "paired baseline failed")?;
+    let prior = if args.len() == 4 {
+        require(
+            schedule::PEAK == 0.001,
+            "repair belongs only to the original main-model cohort",
+        )?;
+        let root = Path::new(&args[3]).canonicalize()?;
+        let bytes = ledger.read(&root.join("report.json"))?;
+        require(
+            storage::hash(&bytes)
+                == "6102a576aa2fb85013016728cf5cb2b53b9e2d949272585d58ddd6bebb9f6de4",
+            "unexpected repair source",
+        )?;
+        let old: Value = serde_json::from_slice(&bytes)?;
+        for seed in [17u64, 19] {
+            let row = old["seeds"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .find(|s| s["seed"] == seed)
+                .unwrap();
+            require(
+                row["error"] == "paired initial geometry changed",
+                "repair source is not an initialization-only failure",
+            )?;
+            let baseline = Path::new(&args[1]).parent().unwrap();
+            for file in ["state.bin", "margins.bin", "queries.json"] {
+                require(
+                    ledger.read(&root.join(format!("seed{seed}/step-000000/{file}")))?
+                        == ledger.read(&baseline.join(format!("seed{seed}/step-000000/{file}")))?,
+                    "initialization repair is not byte-identical",
+                )?;
+            }
+        }
+        Some((root, old))
+    } else {
+        None
+    };
+    let previous_seconds = prior
+        .as_ref()
+        .map_or(0., |(_, r)| r["seconds"].as_f64().unwrap());
     let gpt = Path::new("/home/misha/python_projects/gpt/research/main_model");
     for (path, hash) in [
         (
@@ -129,13 +171,37 @@ fn main() -> Result<()> {
     algebra::threads();
     let started = Instant::now();
     let mut report = json!({"status":"running","source_sha256":source_hash(),"peak_lr":schedule::PEAK,"optimizer_ptx_sha256":storage::hash(optimizer_kernels::kernels::PTX.as_bytes()),"protocol":STUDY_PROTOCOL,"original_protocol":original,"geometry_steps":steps(),"seeds":SEEDS.map(|seed|json!({"seed":seed,"status":"pending"})),"replay_hashes":[]});
+    report["prior_attempt"] = prior.as_ref().map_or(Value::Null, |(root,r)|json!({"path":root,"source_sha256":r["source_sha256"],"seconds":previous_seconds,"reason":"JSON ratio comparison; failed initial states and bounds byte-identical"}));
+    report["measurement_sources"] = json!({});
+    if let Some((_, old)) = &prior {
+        report["replay_hashes"] = old["replay_hashes"].clone();
+    }
     storage::json_write(&output.join("report.json"), &report)?;
     for (si, seed) in SEEDS.into_iter().enumerate() {
-        if started.elapsed().as_secs_f64() >= 1800. {
+        if previous_seconds + started.elapsed().as_secs_f64() >= 1800. {
             report["seeds"][si]["status"] = json!("capped");
             continue;
         }
         let path = output.join(format!("seed{seed}"));
+        if let Some((old_root, old)) = &prior {
+            let row = &old["seeds"][si];
+            if row["status"] == "pass" {
+                require(
+                    row["seed"] == seed && row["completed"] == 10000,
+                    "incomplete reuse source",
+                )?;
+                require(
+                    ledger.json(&old_root.join(format!("seed{seed}/result.json")))? == *row,
+                    "reused seed summary changed",
+                )?;
+                std::os::unix::fs::symlink(old_root.join(format!("seed{seed}")), &path)?;
+                report["seeds"][si] = row.clone();
+                report["measurement_sources"][seed.to_string()] = old["source_sha256"].clone();
+                storage::json_write(&output.join("report.json"), &report)?;
+                continue;
+            }
+        }
+        report["measurement_sources"][seed.to_string()] = json!(source_hash());
         fs::create_dir(&path)?;
         let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             run_seed(
@@ -147,6 +213,7 @@ fn main() -> Result<()> {
                 &mut ledger,
                 &mut report,
                 started,
+                previous_seconds,
             )
         }));
         report["seeds"][si] = match result {
@@ -158,7 +225,7 @@ fn main() -> Result<()> {
         storage::json_write(&output.join("report.json"), &report)?;
     }
     report["inputs"] = ledger.verify()?;
-    report["seconds"] = json!(started.elapsed().as_secs_f64());
+    report["seconds"] = json!(previous_seconds + started.elapsed().as_secs_f64());
     let failed = report["seeds"]
         .as_array()
         .unwrap()
@@ -183,6 +250,7 @@ fn run_seed(
     ledger: &mut inputs::Ledger,
     report: &mut Value,
     started: Instant,
+    previous_seconds: f64,
 ) -> Result<Value> {
     let data = Data::new(seed);
     let plan = Plan::new(seed, 10000);
@@ -252,7 +320,7 @@ fn run_seed(
     let mut matches = 0;
     let mut baseline_matches = 0;
     for step in 0..=10000 {
-        if started.elapsed().as_secs_f64() >= 1800. {
+        if previous_seconds + started.elapsed().as_secs_f64() >= 1800. {
             break;
         }
         if step == 0 && !saved.is_empty() {
@@ -283,7 +351,10 @@ fn run_seed(
             if step == 0 {
                 require(
                     out["state_sha256"] == paired["geometry"][0]["state_sha256"]
-                        && out["coverage"] == paired["geometry"][0]["coverage"],
+                        && pairing::coverage_counts_equal(
+                            &out["coverage"],
+                            &paired["geometry"][0]["coverage"],
+                        ),
                     "paired initial geometry changed",
                 )?;
                 baseline_matches += 1;
@@ -301,7 +372,7 @@ fn run_seed(
             eprintln!(
                 "seed={seed} step={step} geometry={} elapsed={:.1}s",
                 geometry[i]["status"],
-                started.elapsed().as_secs_f64()
+                previous_seconds + started.elapsed().as_secs_f64()
             );
         }
         if step == 10000 {

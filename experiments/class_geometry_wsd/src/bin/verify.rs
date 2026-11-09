@@ -3,6 +3,8 @@
 pub mod algebra;
 #[path = "../../../flat_approx/src/model.rs"]
 pub mod model;
+#[path = "../pairing.rs"]
+mod pairing;
 #[path = "../schedule.rs"]
 mod schedule;
 use serde_json::{Value, json};
@@ -255,7 +257,7 @@ fn main() -> Result<()> {
                     let old = &paired["geometry"][0];
                     require(
                         probe["state_sha256"] == old["state_sha256"]
-                            && probe["coverage"] == old["coverage"],
+                            && pairing::coverage_counts_equal(&probe["coverage"], &old["coverage"]),
                         "paired initial probe changed",
                     )?;
                     baseline_checks += 1;
