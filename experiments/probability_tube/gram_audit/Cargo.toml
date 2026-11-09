@@ -1,0 +1,35 @@
+[package]
+name = "probability-gram-audit"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[workspace.metadata.kernite]
+name = "rotate90_complex"
+
+[features]
+lr003 = []
+lr01 = []
+settle = []
+
+[[bin]]
+name = "rotate90-complex-kernite"
+path = "src/main.rs"
+
+[dependencies]
+probability-tube = { path = ".." }
+probability-gram = { path = "../gram" }
+kernite-cuda = { path = "../../../.lake/reproduction/kgen/crates/cuda" }
+kernite-macros = { path = "../../../.lake/reproduction/kgen/crates/macros" }
+num-complex = "=0.4.6"
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+sha2 = "=0.11.1"
+
+[build-dependencies]
+sha2 = "=0.11.1"
+
+[profile.release]
+codegen-units = 1
+lto = "thin"
