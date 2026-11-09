@@ -1,5 +1,16 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Loss-specific momentum control (2026-11-09 continuation)
+
+Task #206 follows the user's continuation. Freeze the
+[CE momentum protocol](experiments/ce_lyapunov/PROTOCOL.md) before measuring
+new quantities. Derive quantitative unused-class CE damping and an exact
+main-beta momentum potential that absorbs saved memory. Replay all 144
+declared next minibatches to measure the full model's decay, adaptive,
+encoder and execution perturbations. Preserve failed stability conditions
+and every actual potential increase. A partial-model theorem and finite
+replay diagnosis do not establish future full-model control or discovery.
+
 ## Future forcing from current moments (2026-11-09 continuation)
 
 Task #205 addresses the user's remaining discovery/future-gradient gap.

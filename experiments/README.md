@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`ce_lyapunov`](ce_lyapunov) | Planned: 144 fixed next-minibatch replays | Can quantitative CE damping absorb momentum, and which full tied AdamW terms obstruct the resulting potential bound? |
 | [`future_forcing`](future_forcing) | 144 checkpoint-only windows, 444000 verified future prefixes | Twenty-five Lean theorems remove future-forcing observations from the exact-real bound. Every settling seed retains more than 67.83% active share through the final 500 updates; the long hold remains uncertified, and current moments add only three steps to its 60% guarantee. Reliable discovery remains open. |
 | [`geometry_persistence`](geometry_persistence) | 24 complete traces, 96000 hold prefixes and 192 verified finite windows | Ten Lean theorems and realized forcing budgets certify more than 60% active-readout energy through every early-settling hold update. Rank-33 prediction coverage survives at 98.510% over 250 updates and 98.045% over 1000; a single 4000-update jump falls to 0.244%. Discovery remains open. |
 | [`geometry_dynamics`](geometry_dynamics) | 240000 readout updates and 744 verified certificate states | Twenty-one Lean theorems bound exact AdamW motion, but the bound is too loose to prove the observed persistence. The new single rank-33 basis reaches 98.565% coverage; a three-basis rank-33 envelope reaches 98.626%, reducing correct-but-uncertified predictions from 403 to 357. Discovery remains open. |
