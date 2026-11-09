@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`forecast_tightening`](forecast_tightening) | Same 24 forecast states; no training search | Gram/RMS bounds and a signed final-readout interval raise trained-validation certificate coverage from 90.38% to 99.27%, with zero false certificates; all 18 new Lean theorems and native audits pass. Preparation still costs 1.26 seconds per full query table. |
 | [`optimizer_efficiency`](optimizer_efficiency) | 24 source states; 16 fresh CE runs | Compact complex AdamW moments save 47.74% of moment storage and match all 328 paired training observations bitwise; endpoint accuracy 99.45–99.87%. Shared-device timings establish no reliable training speedup. |
 | [`forward_normalized`](forward_normalized) | 24 fresh-seed 4000-update runs | Standalone current-gradient A steps at 1% of A's norm fail to repair local training: 2.23–11.63% validation accuracy versus 99.45–99.87% CE; validation CE is worse than original local-pair in all eight cases. |
 | [`forward_step`](forward_step) | 40 states; 400 fixed direction/scale probes | At all eight failed local endpoints, the norm-matched current A gradient lowers training/validation CE at every fixed scale; shrinking AdamW still leaves five validation ascent cases. Accuracy remains mixed; no training repair or efficiency claim. |

@@ -6819,6 +6819,137 @@ for these bounds, but repeated scalar-ball propagation is too conservative
 for loss control. The next obligation is directional error transport through
 the actual block and readout, not an architecture change or a fitted allowance.
 
+## Forecast tightening
+
+Task #196 keeps FF1–FF3's old values, directional tangents and explicit mixed
+terms. The question is whether sharper, computable error bounds can close the
+gap between 90.38% trained-validation certificate coverage and the 99.56%
+observed correctness of the same updates. These are different quantities:
+neither a certificate failure nor an inconclusive interval is a wrong answer.
+The [frozen protocol](../experiments/forecast_tightening/PROTOCOL.md) fixes the
+24 source states and all ablations before reading their candidate outcomes.
+
+### FT1. A regularized secant retains radial cancellation
+
+For a real inner-product space, let
+
+\[
+s_x=\sqrt{\|x\|^2+\varepsilon},\qquad
+F(x)=x/s_x,\qquad \varepsilon>0.
+\]
+
+Expanding the two squared distances gives the exact identity
+
+\[
+\|F(y)-F(x)\|^2(s_xs_y)^2
+ +(s_x-s_y)^2(s_xs_y+\varepsilon)
+ =\|y-x\|^2s_xs_y.
+\tag{FT1}
+\]
+
+Indeed, multiply the normalized difference by the positive product
+\(s_xs_y\), expand \(\|s_xy-s_yx\|^2\), and substitute
+\(\|x\|^2=s_x^2-\varepsilon\) and its counterpart for y. The second
+term is nonnegative, so the secant coefficient is at most
+\(1/\sqrt{s_xs_y}\). If a known ball gives \(\|y-x\|\le r<s_x\),
+the already proved regularized reverse triangle bound gives
+\(s_y\ge s_x-r>0\). Consequently,
+
+\[
+\|F(y)-F(x)\|\le {r\over\sqrt{s_x(s_x-r)}}.
+\]
+
+For source RMS at width n, set the regularization above to n times the
+source epsilon and multiply F by \(\sqrt n\). Use the smaller of this
+coefficient and FF2's \(2\sqrt n/s_x\). If \(r\ge s_x\), retain
+the old global bound; no unknown future denominator is substituted. At a
+forecast center \(x=a+v\), add the unchanged nominal nonlinear defect
+\(\|F(a+v)-(F(a)+u)\|\). Computing this defect does not make F(a+v)
+the next layer's feature: the center remains the old value plus tangent.
+The Lean witnesses include opposite nonzero vectors and a nonzero radius.
+
+### FT2. Gram energy bounds linear amplification
+
+For any finite real rectangular matrix M with its Euclidean operator norm,
+
+\[
+\|M\|_{\rm op}
+ \le \sqrt{\|M^\top M\|_F}
+ =\left(\sum_{ij}(M^\top M)_{ij}^2\right)^{1/4}.
+\tag{FT2}
+\]
+
+Rowwise Cauchy–Schwarz proves \(\|G\|_{\rm op}\le\|G\|_F\).
+The Euclidean C-star identity
+\(\|M^\top M\|_{\rm op}=\|M\|_{\rm op}^2\) then proves FT2.
+Applying the same argument to the transpose gives the row Gram version.
+The implementation chooses the smaller Gram dimension and takes the minimum
+with the independent Frobenius upper bound. There is no estimated singular
+vector, spectral flatness assumption or trained parameter change.
+
+For the updated matrix M=A+D, FF1's radius becomes
+
+\[
+B r+\|Dv\|,\qquad B\ge\|A+D\|_{\rm op}.
+\]
+
+The actual mixed vector Dv remains. Lean also proves the conditional
+statement that any U above the exact Gram squared Frobenius norm gives the
+bound \(U^{1/4}\). This exposes the numerical obligation. The Rust routine
+enlarges every FP64 product, sum and square root outward, including signed
+Gram dot products; the whole Rust/BLAS/CUDA program is not formally verified.
+Nonzero square and rectangular examples inhabit the Lean statements; native
+tests also cover identity, rank-one and transposed layouts.
+
+### FT3. Preserve signed contrasts across the final RMS
+
+Let \(\|y-x\|\le r\) describe the feature before the final normalization,
+and let w be one updated readout contrast. Cauchy–Schwarz gives
+\(a\le\langle w,y\rangle\le b\), where
+\(a=\langle w,x\rangle-\|w\|r\) and
+\(b=\langle w,x\rangle+\|w\|r\). Independently,
+
+\[
+0<l=\sqrt{\max(0,\|x\|-r)^2+\varepsilon}
+ \le s_y\le
+u=\sqrt{(\|x\|+r)^2+\varepsilon}.
+\]
+
+The signed quotient interval is
+
+\[
+\begin{split}
+L&=\begin{cases}a/u&a\ge0,\\a/l&a<0,\end{cases}\\
+U&=\begin{cases}b/l&b\ge0,\\b/u&b<0,\end{cases}\qquad
+L\le\langle w,F(y)\rangle\le U.
+\end{split}
+\tag{FT3}
+\]
+
+The sign cases follow by multiplying through positive denominators; using
+the same denominator endpoint for both signs would be wrong. Regularization
+keeps l positive even if the ball contains the origin. Source RMS contributes
+the factor \(\sqrt n\), or equivalently divides the denominator interval
+by \(\sqrt n\). The native experiment then adds the independently audited
+execution allowance \(\|w\|10^{-3}+2\cdot10^{-3}\).
+
+Intersect FT3 with the independent combined final-feature interval by taking
+the maximum lower endpoint and minimum upper endpoint. Both components are
+audited separately. A strictly negative upper competitor gap certifies that
+the target beats that competitor; applying the existing all-competitor
+margin and log-sum-exp bounds gives correctness and CE intervals. No observed
+future feature, score or error selects a radius, denominator or class direction.
+Strictness uses only the old score and frozen endpoints; future scores are
+used to check the resulting certificates.
+
+`ForecastSecant.lean`, `ForecastGram.lean` and `ForecastDirectional.lean`
+contain 18 proved theorems, each conditional theorem with an explicit
+satisfying example. `scripts/ForecastTighteningAxioms.lean` checks all of them.
+These extend the forecast bounds, not the convergence theory: they neither
+raise model accuracy nor establish an efficient forward-only training method.
+The [experiment findings](../experiments/forecast_tightening/README.md) retain
+all predeclared ablations, execution checks and preparation costs.
+
 ## Forward–Forward reformulation
 
 User direction, 2026-11-08: reformulate Forward–Forward and modify its loss.

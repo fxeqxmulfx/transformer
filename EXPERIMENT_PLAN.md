@@ -11,6 +11,18 @@ and source updates. Retain full CE/backpropagation; no local-learning restart.
 Measure coverage and preparation cost separately. Task #189 remains the
 separate inference-efficiency study; no runtime gain follows from coverage.
 
+The [closed comparison](experiments/forecast_tightening/README.md) passes all
+24 cases with unchanged source updates and numerical allowances. Eighteen
+new Lean theorems support Gram/RMS propagation and signed final readout.
+Trained-validation coverage rises from 68040/75280 (90.38%) to 74727/75280
+(99.27%), against 74952 actually correct; difficult-subset coverage rises
+from 73.71% to 93.17%. Zero false certificates or enclosure violations occur.
+The bound also certifies 10166 validation CE decreases and 2090 increases;
+63024 directions remain inconclusive. Combined Gram/RMS provides most of the
+coverage gain, with 42 extra certificates from the directional intersection.
+The complete multi-track forecast costs 1.258 seconds per 9409-query state,
+so serving efficiency remains a separate implementation/measurement task.
+
 ## Three efficiency targets (2026-11-08 user direction)
 
 **Later user direction (2026-11-08): skip no-gradient training.** Stop further

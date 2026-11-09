@@ -1,0 +1,20 @@
+import Transformer.Grokking.GradientEvidence.ForecastDirectional
+
+#print axioms Transformer.Grokking.GradientEvidence.softNormalize_secant_identity
+#print axioms Transformer.Grokking.GradientEvidence.softNormalize_secant_sq
+#print axioms Transformer.Grokking.GradientEvidence.softNormalize_local_error
+#print axioms Transformer.Grokking.GradientEvidence.scaled_softNormalize_local_error
+#print axioms Transformer.Grokking.GradientEvidence.softNormalize_local_forecast
+#print axioms Transformer.Grokking.GradientEvidence.forecast_matrix_action_sq
+#print axioms Transformer.Grokking.GradientEvidence.forecast_matrix_op_le
+#print axioms Transformer.Grokking.GradientEvidence.forecast_column_gram_op_le
+#print axioms Transformer.Grokking.GradientEvidence.forecast_row_gram_op_le
+#print axioms Transformer.Grokking.GradientEvidence.forecast_gram_upper
+#print axioms Transformer.Grokking.GradientEvidence.linear_forecast_of_bound
+#print axioms Transformer.Grokking.GradientEvidence.signed_quotient_interval
+#print axioms Transformer.Grokking.GradientEvidence.softNorm_ball_interval
+#print axioms Transformer.Grokking.GradientEvidence.softNorm_ball_lower_pos
+#print axioms Transformer.Grokking.GradientEvidence.directional_normalized_interval
+#print axioms Transformer.Grokking.GradientEvidence.scaled_interval_with_error
+#print axioms Transformer.Grokking.GradientEvidence.forecast_interval_intersection
+#print axioms Transformer.Grokking.GradientEvidence.directional_order
