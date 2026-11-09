@@ -71,6 +71,11 @@ fn main() -> Result<()> {
     )?;
     let root = Path::new(&args[0]);
     let report = read(&root.join("report.json"))?;
+    // Original task #200 metadata predates explicit peak recording.
+    require(
+        report["peak_lr"].as_f64().unwrap_or(0.001) == schedule::PEAK,
+        "verifier compiled for another learning-rate arm",
+    )?;
     let baseline = read(Path::new(&args[1]))?;
     require(
         report["status"] == "pass" && report["failed"] == 0,

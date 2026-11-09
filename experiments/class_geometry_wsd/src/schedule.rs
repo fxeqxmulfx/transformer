@@ -1,7 +1,14 @@
 //! GPT main-model schedule at 6bb9d03a, wsd_suite_native/src/schedule.rs.
-//! Only deviation: admit this experiment's fixed 10000-update budget.
+//! Admit the fixed 10000-update budget; task #201 changes only the frozen peak.
 use crate::Result;
+#[cfg(all(feature = "lr003", feature = "lr01"))]
+compile_error!("Choose only one frozen learning-rate arm");
+#[cfg(not(any(feature = "lr003", feature = "lr01")))]
 pub const PEAK: f64 = 0.001;
+#[cfg(feature = "lr003")]
+pub const PEAK: f64 = 0.003;
+#[cfg(all(feature = "lr01", not(feature = "lr003")))]
+pub const PEAK: f64 = 0.01;
 #[derive(Clone, Copy, Debug)]
 pub struct Schedule {
     pub budget: usize,
@@ -42,12 +49,12 @@ mod tests {
     fn main_schedule_keeps_zero_based_boundaries_and_fixed_floor() {
         let s = Schedule::new(10000).unwrap();
         assert_eq!(s.rate(0), 0.);
-        assert_eq!(s.rate(1), 0.000005);
+        assert_eq!(s.rate(1), (PEAK / 200.) as f32);
         assert!(s.rate(199) < s.rate(200));
-        assert_eq!(s.rate(200), 0.001);
-        assert_eq!(s.rate(7999), 0.001);
-        assert_eq!(s.rate(8000), 0.001);
-        assert!(s.rate(8001) < 0.001);
+        assert_eq!(s.rate(200), PEAK as f32);
+        assert_eq!(s.rate(7999), PEAK as f32);
+        assert_eq!(s.rate(8000), PEAK as f32);
+        assert!(s.rate(8001) < PEAK as f32);
         assert_eq!(s.rate(9999), 1e-8);
         assert_eq!(s.rate(10000), 1e-8);
         assert!(Schedule::new(9999).is_err());

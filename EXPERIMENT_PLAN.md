@@ -1,5 +1,14 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Test higher WSD learning rates (2026-11-09 user direction)
+
+Task #201 follows the user's suggestion to increase learning rate. The
+[protocol](experiments/class_geometry_lr/PROTOCOL.md), frozen at `637d3a1e`,
+tests peaks .003 and .01 against task #200's .001, keeping every other
+recipe setting, all eight seeds, 10000 updates and all probes fixed. Each
+arm has its own fixed 1800-second cap and runs sequentially after #200.
+Native feature builds pass; candidate measurements are pending.
+
 ## Transfer the main model's AdamW/WSD (2026-11-09 user direction)
 
 Task #200 uses the user's requested native optimizer from `python_projects/gpt`.

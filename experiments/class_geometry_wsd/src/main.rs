@@ -46,6 +46,10 @@ use std::{
     time::Instant,
 };
 const SEEDS: [u64; 8] = [7, 11, 1, 3, 5, 13, 17, 19];
+#[cfg(not(any(feature = "lr003", feature = "lr01")))]
+const STUDY_PROTOCOL: &str = include_str!("../PROTOCOL.md");
+#[cfg(any(feature = "lr003", feature = "lr01"))]
+const STUDY_PROTOCOL: &str = include_str!("../../class_geometry_lr/PROTOCOL.md");
 fn steps() -> Vec<usize> {
     [0, 100, 250, 500, 750, 1000, 1500, 2000, 3000, 4000]
         .into_iter()
@@ -67,10 +71,11 @@ fn source_hash() -> String {
             include_bytes!("optimizer.rs"),
             include_bytes!("optimizer_kernels.rs"),
             include_bytes!("schedule.rs"),
+            &schedule::PEAK.to_le_bytes(),
             include_bytes!("instrumentation.rs"),
             include_bytes!("../Cargo.toml"),
             include_bytes!("../Cargo.lock"),
-            include_bytes!("../PROTOCOL.md"),
+            STUDY_PROTOCOL.as_bytes(),
             include_bytes!("../../flat_approx/src/model.rs"),
             include_bytes!("../../signed_transport/src/svd.rs"),
             inputs::source_hash().as_bytes(),
@@ -87,7 +92,7 @@ fn main() -> Result<()> {
     }
     require(
         args.len() == 3,
-        "usage: rotate90-complex-kernite preflight | CHECKPOINT_ROOT TASK199_REPORT NEW_OUTPUT_DIRECTORY",
+        "usage: rotate90-complex-kernite preflight | CHECKPOINT_ROOT PAIRED_REPORT NEW_OUTPUT_DIRECTORY",
     )?;
     let root = Path::new(&args[0]).canonicalize()?;
     let output = Path::new(&args[2]);
@@ -95,7 +100,7 @@ fn main() -> Result<()> {
     let mut ledger = inputs::Ledger::default();
     let (original, protocol) = inputs::protocol(&mut ledger, &root)?;
     let reference = ledger.json(&Path::new(&args[1]).canonicalize()?)?;
-    require(reference["status"] == "pass", "task #199 reference failed")?;
+    require(reference["status"] == "pass", "paired baseline failed")?;
     let gpt = Path::new("/home/misha/python_projects/gpt/research/main_model");
     for (path, hash) in [
         (
@@ -123,7 +128,7 @@ fn main() -> Result<()> {
     fs::create_dir(output)?;
     algebra::threads();
     let started = Instant::now();
-    let mut report = json!({"status":"running","source_sha256":source_hash(),"optimizer_ptx_sha256":storage::hash(optimizer_kernels::kernels::PTX.as_bytes()),"protocol":include_str!("../PROTOCOL.md"),"original_protocol":original,"geometry_steps":steps(),"seeds":SEEDS.map(|seed|json!({"seed":seed,"status":"pending"})),"replay_hashes":[]});
+    let mut report = json!({"status":"running","source_sha256":source_hash(),"peak_lr":schedule::PEAK,"optimizer_ptx_sha256":storage::hash(optimizer_kernels::kernels::PTX.as_bytes()),"protocol":STUDY_PROTOCOL,"original_protocol":original,"geometry_steps":steps(),"seeds":SEEDS.map(|seed|json!({"seed":seed,"status":"pending"})),"replay_hashes":[]});
     storage::json_write(&output.join("report.json"), &report)?;
     for (si, seed) in SEEDS.into_iter().enumerate() {
         if started.elapsed().as_secs_f64() >= 1800. {

@@ -10,6 +10,10 @@ build = "build.rs"
 [workspace.metadata.kernite]
 name = "rotate90_complex"
 
+[features]
+lr003 = []
+lr01 = []
+
 [[bin]]
 name = "rotate90-complex-kernite"
 path = "src/main.rs"
