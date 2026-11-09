@@ -10,6 +10,14 @@ every hold update, then transport old certificates over 192 fixed finite
 parameter displacements, including the nonlinear feature remainder. Keep
 every control and failure. These are conditional maintenance results; they
 must not be described as discovery or prediction of unknown future updates.
+The [completed study](experiments/geometry_persistence/README.md) proves ten
+new Lean theorems and verifies all 192 windows and 96000 hold prefixes.
+Early settling now has an active-readout share lower bound of 61.76–65.88%
+through every moving hold update in all eight seeds. Transported rank-33
+validation coverage is 98.510% at 250 updates and 98.045% at 1000, but only
+0.244% for a single 4000-update displacement. The higher-rate controls remain
+mostly inconclusive. There are zero false certificates or bound violations;
+discovery and future-gradient alignment remain open.
 
 ## Bound optimizer motion and improve certificates (2026-11-09 user direction)
 
