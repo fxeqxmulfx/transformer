@@ -21,6 +21,14 @@ use std::{
     io::{BufWriter, Write},
     path::Path,
 };
+fn normalized_features(output: &model::Forward) -> Vec<f64> {
+    output
+        .states
+        .chunks_exact(W)
+        .zip(&output.denominators)
+        .flat_map(|(row, d)| row.iter().map(move |v| v / d))
+        .collect()
+}
 pub fn run(
     engine: &Engine,
     state: &State,
@@ -37,6 +45,7 @@ pub fn run(
         .flat_map(|a| (0..97).flat_map(move |b| [a, b, 0]))
         .collect();
     let actual = model::forward(model::Arm::Plain, &p, &rows);
+    let features = normalized_features(&actual);
     let inputs: Vec<_> = rows
         .as_chunks::<3>()
         .0
@@ -87,7 +96,7 @@ pub fn run(
         })
         .collect();
     for family in Family::ALL {
-        let g = groups::construct(&inputs, &actual.states, &p[..E], &training, W, 97, family);
+        let g = groups::construct(&inputs, &features, &p[..E], &training, W, 97, family);
         if labels.is_empty() {
             labels = g.labels.clone();
         } else {
@@ -159,7 +168,7 @@ pub fn run(
         require(t == true_labels[q], "training route has wrong candidate")?;
         feature_error = feature_error.max(
             (0..W)
-                .map(|k| (actual.states[q * W + k] - gpu.features[q * W + k]).powi(2))
+                .map(|k| (features[q * W + k] - gpu.features[q * W + k]).powi(2))
                 .sum::<f64>()
                 .sqrt(),
         );
@@ -209,4 +218,33 @@ pub fn run(
     Ok(
         json!({"step":step,"passed":violations==0&&false_certificates==0,"state_sha256":storage::hash(&state_bytes),"margins_sha256":bounds_hash,"metrics":gpu.metrics,"structural":structural,"coverage":coverage,"violations":violations,"false_certificates":false_certificates,"feature_error":feature_error,"logit_error":logit_error,"arm":Arm::Plain.name()}),
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn independent_adapter_uses_the_final_normalized_features() {
+        let p: Vec<_> = crate::domain::model::initialize(Arm::Plain, 7)
+            .iter()
+            .map(|&x| x as f64)
+            .collect();
+        let output = model::forward(model::Arm::Plain, &p, &[0, 0, 0, 1, 2, 0]);
+        let features = normalized_features(&output);
+        let logits = linear(&features, 2, W, &p[..E], 97);
+        assert!(
+            logits
+                .iter()
+                .zip(&output.logits)
+                .all(|(a, b)| (a - b).abs() < 1e-12)
+        );
+        assert!(
+            features
+                .iter()
+                .zip(&output.states)
+                .map(|(a, b)| (a - b).abs())
+                .fold(0., f64::max)
+                > 0.1
+        );
+    }
 }

@@ -216,7 +216,16 @@ fn run_seed(
         if step % 100 == 0 {
             let row = json!({"epoch":step as f64/10.,"step":step,"train":metric(engine.evaluate(false)?),"validation":metric(engine.evaluate(true)?)});
             if let Some(h) = &history {
-                require(row == h[step / 100], "source history changed")?;
+                for split in ["train", "validation"] {
+                    require(
+                        row[split]["correct"] == h[step / 100][split]["correct"]
+                            && (row[split]["loss"].as_f64().unwrap()
+                                - h[step / 100][split]["loss"].as_f64().unwrap())
+                            .abs()
+                                < 1e-12,
+                        "source history changed",
+                    )?;
+                }
             }
             metrics.push(row);
         }

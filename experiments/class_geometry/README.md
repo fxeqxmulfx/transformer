@@ -24,6 +24,15 @@ Native tests, strict clippy and formatting pass before the first run. Results,
 Lean derivations and independent verification will be recorded after the
 fixed cohort completes, including failed hypotheses and incomplete slots.
 
+The first startup attempt (`audit-01`) is retained. No update ran: checks
+caught a pre-final-RMS versus normalized-feature adapter error in seven seeds,
+and an overly strict JSON-number equality check in the eighth. The repair
+uses the evaluator's recorded final-RMS denominators and restores #198's
+exact-correct-count / `1e-12` loss comparison for serialized history.
+A native regression checks the normalized features against independent logits.
+Certificate allowances, seeds, ranks, optimizer, probe schedule and cap are
+unchanged. The corrected complete attempt uses `audit-02`.
+
 From the root, with CUDA available to the execution context:
 
 ```sh
@@ -35,7 +44,7 @@ cargo build --offline --locked --release --manifest-path experiments/class_geome
 "$CARGO_TARGET_DIR/release/rotate90-complex-kernite" \
   /home/misha/rust_projects/grokking/experiments/rotate90_complex/runs/cubic-adamw \
   experiments/readout_geometry/runs/audit-01/report.json \
-  experiments/class_geometry/runs/audit-01
+  experiments/class_geometry/runs/audit-02
 ```
 
 Use a fresh output directory. Generated evidence remains ignored and local;
