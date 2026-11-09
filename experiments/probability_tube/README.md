@@ -69,7 +69,7 @@ contrasts, probabilities, original dimensions and 24 arbitrary-gradient
 Adam prefixes. Small perturbations produce bounds below the final feature
 diameter in those tests. This is not a useful-horizon finding on trained
 checkpoints. CUDA update defects, execution allowances and all 144 training
-checkpoint slots still need the original source and recreated evidence.
+checkpoint slots still need to be checked against the recreated evidence.
 
 ## Recreating the evidence
 
@@ -93,7 +93,10 @@ optimizer, optimizer-kernel and schedule digests required by the old runner
 match exactly. The selected cohorts keep the original Rotate90 architecture
 and use the main-model AdamW/WSD adapter; the full attention architecture
 from `diff-gpt` is not substituted. The source prerequisite is now satisfied.
-The next step is a source-checked native reproduction runner on this hardware.
+The [source-checked native reproduction runner](reproduce/README.md) imports
+those exact sources and preserves the original probe/update checks while
+adding every declared forecast checkpoint. It records separate hardware,
+source, executable and PTX provenance and all cumulative attempt clocks.
 No replacement baseline report or historical result has been manufactured.
 
 The pointer to `ae801acc` supplied the full trainer revision, but that commit
