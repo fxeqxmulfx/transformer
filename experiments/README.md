@@ -13,7 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
-| [`class_geometry_lr`](class_geometry_lr) | Two higher peaks, each with the same eight seeds and 10000 updates | Fixed .003/.01 comparisons against the requested main-model .001 WSD recipe; only the peak changes, with all geometry probes and numerical checks retained. Outcomes pending. |
+| [`class_geometry_lr`](class_geometry_lr) | Requested .01 on eight fixed seeds; interrupted .003 evidence retained | Only the peak changes against the main-model .001 WSD recipe. The user prioritized immediate .01 training after four complete .003 runs; full .01 outcomes pending. |
 | [`class_geometry_wsd`](class_geometry_wsd) | Same eight paired trajectories and 10000-update budget | The exact selected main-model FP32 AdamW/WSD update passes all audits; 8/8 endpoints exceed 99% accuracy, but none reaches 99% rank-32 coverage, which falls in 6/8 pairs. Every late coverage minimum decreases. |
 | [`class_geometry`](class_geometry) | Two original and six replication trajectories; 10000 updates each | Twenty Lean theorems and 80000 update audits: active-class energy share grows from about 33% to 70–76%; all six replications keep at least 93.99% rank-32 coverage at late probes, but none sustains 99%. Coupled alignment and convergence remain unproved. |
 | [`readout_geometry`](readout_geometry) | Same two trajectories and 26 frozen probes; equal ranks | Class-visible geometry raises rank-32 endpoint coverage to 99.21%/99.53% and moves first majority coverage to step 500. Nineteen Lean theorems and exact AdamW attribution retain mixed terms; readout credit alone does not determine the actual update. |

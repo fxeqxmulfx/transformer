@@ -8,7 +8,11 @@ tests peaks .003 and .01 against task #200's .001, keeping every other
 recipe setting, all eight seeds, 10000 updates and all probes fixed. Each
 arm has its own fixed 1800-second cap and runs sequentially after #200.
 Both native builds and 32 GPU preflight cases pass with exact FP32 agreement.
-The fixed higher-rate cohorts are in progress after #200 completed.
+The user then explicitly prioritized immediate .01 training. Under the
+[recorded amendment](experiments/class_geometry_lr/USER_PRIORITY.md), .003
+stops with four complete seeds, one partial and three unrun; .01 proceeds
+on all eight seeds with its original budget and checks. Preserve the partial
+arm without treating its missing outcomes as complete measurements.
 
 ## Transfer the main model's AdamW/WSD (2026-11-09 user direction)
 

@@ -67,9 +67,10 @@ fn energies(e: &[f64], active: &[bool]) -> [f64; 3] {
 }
 fn main() -> Result<()> {
     let args: Vec<_> = std::env::args().skip(1).collect();
+    let partial = args.len() == 3 && args[2] == "--completed-only";
     require(
-        args.len() == 2,
-        "usage: verify OUTPUT_DIRECTORY TASK199_REPORT",
+        args.len() == 2 || partial,
+        "usage: verify OUTPUT_DIRECTORY PAIRED_REPORT [--completed-only]",
     )?;
     let root = Path::new(&args[0]);
     let report = read(&root.join("report.json"))?;
@@ -79,14 +80,27 @@ fn main() -> Result<()> {
         "verifier compiled for another learning-rate arm",
     )?;
     let baseline = read(Path::new(&args[1]))?;
-    require(
-        report["status"] == "pass" && report["failed"] == 0,
-        "cohort did not pass",
-    )?;
-    for (path, digest) in report["inputs"]["files"]
-        .as_object()
-        .ok_or("missing input ledger")?
-    {
+    if partial {
+        require(
+            report["status"] == "interrupted_by_user_priority"
+                && schedule::PEAK == 0.003
+                && report["interruption"]["complete_seeds"] == 4,
+            "partial mode is only for the declared user-interrupted cohort",
+        )?;
+        require(
+            hash(&fs::read(root.join("report-before-user-priority.json"))?)
+                == report["interruption"]["original_report_sha256"],
+            "original producer report changed",
+        )?;
+    } else {
+        require(
+            report["status"] == "pass" && report["failed"] == 0,
+            "cohort did not pass",
+        )?;
+    }
+    let input_ledger_available = report["inputs"]["files"].is_object();
+    require(input_ledger_available || partial, "missing input ledger")?;
+    for (path, digest) in report["inputs"]["files"].as_object().into_iter().flatten() {
         require(
             hash(&fs::read(path)?) == digest.as_str().unwrap(),
             "input hash changed",
@@ -108,6 +122,19 @@ fn main() -> Result<()> {
     let seeds = report["seeds"].as_array().ok_or("missing seeds")?;
     require(seeds.len() == 8, "missing declared seeds")?;
     for (row, &expected_seed) in seeds.iter().zip(&[7u64, 11, 1, 3, 5, 13, 17, 19]) {
+        if partial && [5, 13, 17, 19].contains(&expected_seed) {
+            require(
+                row["seed"] == expected_seed
+                    && row["status"]
+                        == if expected_seed == 5 {
+                            "interrupted_by_user_priority"
+                        } else {
+                            "unrun_after_user_priority"
+                        },
+                "unexpected partial-cohort inventory",
+            )?;
+            continue;
+        }
         require(
             row["seed"] == expected_seed && row["status"] == "pass" && row["completed"] == 10000,
             "incomplete seed",
@@ -323,10 +350,14 @@ fn main() -> Result<()> {
         }
         eprintln!("verified seed {expected_seed}");
     }
-    require(baseline_checks == 8, "missing paired initial comparisons")?;
+    let verified_seeds = if partial { 4 } else { 8 };
+    require(
+        baseline_checks == verified_seeds,
+        "missing paired initial comparisons",
+    )?;
     println!(
         "{}",
-        json!({"passed":true,"seeds":8,"updates":update_checks,"geometry_probes":geometry_checks,"margin_checks":query_checks,"paired_initial_matches":baseline_checks,"independent_model_sha256":hash(include_bytes!("../../../flat_approx/src/model.rs"))})
+        json!({"passed":true,"scope":if partial{"four completed seeds only; partial and unrun seeds excluded"}else{"complete cohort"},"input_ledger_finalized":input_ledger_available,"declared_seeds":8,"seeds":verified_seeds,"updates":update_checks,"geometry_probes":geometry_checks,"margin_checks":query_checks,"paired_initial_matches":baseline_checks,"independent_model_sha256":hash(include_bytes!("../../../flat_approx/src/model.rs"))})
     );
     Ok(())
 }
