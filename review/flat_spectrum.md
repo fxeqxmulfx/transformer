@@ -7714,3 +7714,110 @@ and `MainAdamCertificates`; `scripts/MainAdamAxioms.lean` lists all 21
 theorems for an explicit axiom audit. Each theorem with hypotheses has a
 nonzero admissible example. The [experiment README](../experiments/geometry_dynamics/README.md)
 records the full numerical comparison and the remaining limitations.
+
+## Observed finite-window persistence
+
+Task #204 follows the failure of AD3's uniform coordinate bound to certify
+the observed low-rate hold. The following refinement is conditional on
+realized forcing budgets. It does not predict unknown future gradients,
+prove their alignment, or explain discovery from random initialization.
+The [frozen study](../experiments/geometry_persistence/PROTOCOL.md) checks
+every hold update and separately transports predictions over finite windows.
+
+### DP1. Damped forcing tubes
+
+Let P be a fixed linear projection on the readout matrix, including an
+active-class contrast, unused-class contrast, or between-group projection
+from CG3. For an actual AdamW update with all rounding in e,
+
+```
+E+ = (1-eta*rho) E - eta*u + e,
+P E+ - (1-eta*rho) P E = -eta*P u + P e.
+```
+
+Thus the forcing norm is at most `eta*||P u|| + ||P e||` for nonnegative
+eta. The adaptive direction u includes the saved moments and the complete
+tied-parameter gradient. No partial CE term is substituted. Alternatively
+the realized residual `F_t = P E_(t+1) - a_t P E_t` can be measured directly;
+the native checker includes projection arithmetic defects in its radius.
+
+For any path x in a real normed space with nonnegative scales a_t and
+`||x_(t+1)-a_t*x_t|| <= b_t`, define
+
+```
+q_0 = 1,     q_(t+1) = a_t*q_t,
+R_0 = 0,     R_(t+1) = a_t*R_t + b_t.
+```
+
+Induction and the triangle inequality give
+
+```
+||x_n-q_n*x_0|| <= R_n,
+max(0,q_n*||x_0||-R_n) <= ||x_n|| <= q_n*||x_0||+R_n.
+```
+
+The inductive residual is the sum of the next forcing and a_t times the
+previous residual; this retains common decay exactly. Reindex a window at
+zero to obtain every prefix statement from an arbitrary anchor. This works
+with nonzero movement at every step. A uniform balance condition
+`b_t <= (1-a_t)*B` further implies `R_n <= (1-q_n)*B`. The algebraic statement
+holds for any real B and nonnegative a; the usual bounded-radius reading
+also requires B nonnegative and scales at most one. Establishing that balance
+for future adaptive forcing is an additional problem, not a consequence of
+small individual learning rates.
+
+The native audit can identify forcing from already executed training steps.
+Those are observed-path bounds, even though they use no query outcomes.
+This differs from AD1–AD3's gradient-independent guarantee available before
+the window. The stronger hypothesis buys a potentially much smaller radius.
+
+### DP2. Readout share certificates
+
+For actual nonnegative signal and competing energies S,V, lower and upper
+bounds `0<=L<=S`, `V<=U` give
+
+```
+L/(L+U) <= S/(S+V)
+```
+
+when both denominators are positive. Multiplying by the denominators reduces
+the claim to `L*V<=S*U`. Apply this to squared active norms and the sum of
+squared unused/between norms, using the lower and upper DP1 radii. CG3's
+orthogonal decomposition identifies the denominator with centered readout
+energy. When the lower active norm is exhausted the implementation emits
+zero; it does not count nonnegative energy as a useful persistence result.
+
+An energy-share guarantee does not establish query classification, a flat
+nonzero singular spectrum, or feature alignment. Those limitations persist
+even when the radius is small. The native study also checks prediction
+certificates with the whole nonlinear feature map included.
+
+### DP3. Transporting certificates across a finite displacement
+
+Let M be a saved margin lower bound for a training-derived target and let
+g_c denote the old rival-minus-target gap. Suppose the full future model's
+gap g'_c is enclosed above by U_c. If `U_c-g_c<=D` for every rival, then
+
+```
+M <= -g_c,   g'_c <= U_c  implies  M-D <= -g'_c.
+```
+
+Consequently `D<M` preserves the target prediction against every rival. The
+native D is the maximum of all 96 changes `U_c-g_c`, with no omitted unused
+class. The starting M comes from task #203's stored envelope; rank 128 is a
+separate control. A direct forecast without the old geometry slack is also
+reported separately. A claim of retained certification additionally requires
+the old bound to have been positive.
+
+The FT1–FT3 forecast equations apply to an arbitrary finite parameter delta,
+so the native study uses the difference between two checkpoints. It retains
+the old-feature tangent, mixed products, nonlinear remainder, and unchanged
+execution allowances. Endpoint parameters are known to the constructor;
+endpoint evaluation and labels are not used to construct its intervals.
+This certifies an endpoint after many updates. It says nothing about the
+intermediate query predictions, which are not recorded at every update.
+
+The modules `GradientEvidence.DampedPersistence` and
+`GradientEvidence.PersistenceCertificates` formalize DP1–DP3;
+`scripts/PersistenceAxioms.lean` audits their ten theorems. Native numerical
+checking remains separate from Lean's real-arithmetic proof.

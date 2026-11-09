@@ -1,0 +1,12 @@
+import Transformer.Grokking.GradientEvidence.PersistenceCertificates
+
+#print axioms Transformer.Grokking.GradientEvidence.dampedScale_nonneg
+#print axioms Transformer.Grokking.GradientEvidence.projected_adam_forcing
+#print axioms Transformer.Grokking.GradientEvidence.projected_adam_forcing_bound
+#print axioms Transformer.Grokking.GradientEvidence.damped_forcing_tube
+#print axioms Transformer.Grokking.GradientEvidence.damped_forcing_norm_bounds
+#print axioms Transformer.Grokking.GradientEvidence.forcingRadius_uniform
+#print axioms Transformer.Grokking.GradientEvidence.energy_share_floor
+#print axioms Transformer.Grokking.GradientEvidence.projected_norm_share_floor
+#print axioms Transformer.Grokking.GradientEvidence.finite_margin_transport
+#print axioms Transformer.Grokking.GradientEvidence.finite_window_prediction
