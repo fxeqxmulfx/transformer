@@ -7821,3 +7821,126 @@ The modules `GradientEvidence.DampedPersistence` and
 `GradientEvidence.PersistenceCertificates` formalize DP1–DP3;
 `scripts/PersistenceAxioms.lean` audits their ten theorems. Native numerical
 checking remains separate from Lean's real-arithmetic proof.
+
+## Future forcing from checkpoint moments
+
+Task #205 asks what can be guaranteed before later gradients or updates are
+read. DP1's tube is useful with observed forcing, but that observation is an
+input to its earlier experiment. The following exact-real bounds remove that
+input for main-model AdamW. They do not assert reliable discovery, favorable
+gradient alignment, or a flat nonzero singular spectrum.
+
+### FF1. A sharp scalar cone update
+
+At a checkpoint let `v>=0`, `r>=0`, and `m^2<=r*v`. For any next real gradient
+`g`, retain the copied main-model recurrences
+
+```
+m' = .9*m + .1*g,     v' = .95*v + .05*g^2.
+Q = 81/95,           C = 19/14.
+((Q*r+1/5)*v' - m'^2)*v
+  = Q*(r*v-m^2)*v' + (19*v-9*m*g)^2/1900.
+```
+
+When `v>0`, nonnegativity of the right side proves
+`m'^2<=(Q*r+1/5)*v'`. When `v=0`, the initial cone forces `m=0`, and the same
+inequality follows directly for all `g`, including zero. For `v>0` and
+`m!=0`, set `r=m^2/v` and `g=19*v/(9*m)`; the square vanishes and the next
+ratio attains `Q*r+1/5`. This sharpness concerns one scalar step over
+unrestricted real gradients. It does not claim that the tied model's CE
+gradient, or a globally clipped sequence, attains every worst-case step.
+There is a nonzero clipped-compatible example: `m=.1`, `v=.01`, `g=19/90<1`.
+
+Iteration yields the checkpoint cone
+
+```
+K_h(r) = C + (r-C)*Q^h,    m_h^2 <= K_h(r)*v_h.
+K_(h+1)(r) = Q*K_h(r)+1/5.
+K_h(r)-K_h(s) = (r-s)*Q^h.
+```
+
+These statements require no independence, fixed-feature, small-gradient,
+loss-decrease, or favorable-direction assumption. They permit arbitrary
+adaptation to the past. The ratio is zero when both buffers are zero; positive
+variance permits the exact checkpoint ratio. The formula is nonnegative for
+every nonnegative initial ratio. Its rapidly vanishing memory describes the
+worst-case magnitude envelope, not a theorem that the learned geometry itself
+forgets its initialization.
+
+### FF2. Actual resumed moments and absolute-time normalization
+
+`warmMoments` continues the same recurrences from saved buffers.
+`main_moments_resume` identifies this continuation with the original history,
+and `main_direction_resume` does the same for the normalized direction. For
+the h-th future update (`h>=1`) after absolute checkpoint time t, write
+
+```
+b(t,h) = sqrt(1-.95^(t+h))/(1-.9^(t+h)),
+u_h = (m_h/(1-.9^(t+h))) /
+      (sqrt(v_h)/sqrt(1-.95^(t+h)) + eps).
+```
+
+For `eps>0`, AD2 and FF1 give `|u_h|<=sqrt(K_h(r))*b(t,h)`, including zero
+variance. Epsilon remains in the actual update; dropping it only enlarges
+the upper bound. The Lean function uses zero-based update index `h`, hence
+its next buffer and bias exponent are `h+1` and `t+h+1`.
+
+Simultaneously reversing the initial first moment and every future gradient
+negates every first moment while preserving every second moment. Thus the
+same moment magnitudes and cone can support opposite directions. This
+symmetry limits what magnitude-only information implies; it is not a
+counterexample to high-probability discovery under the actual training loss.
+
+### FF3. Readout blocks and class centering
+
+For a coordinate block J of size d, with checkpoint ratios r_k,
+
+```
+sum_(k in J) K_h(r_k) = d*C + (sum_(k in J) r_k-d*C)*Q^h,
+||u_(J,h)||_2 <= b(t,h)*sqrt(sum_(k in J) K_h(r_k)).
+```
+
+This gives separate budgets for the whole readout and its observed-answer
+row block. CG3's mean-subtraction identity at center zero proves
+`sum_c (x_c-mean(x))^2 <= sum_c x_c^2`; summing across feature coordinates
+therefore bounds the active class-contrast projection by the active-row
+budget. The complementary centered projection has norm at most the whole
+readout norm by CG3's orthogonal decomposition. Neither step assumes that
+the actual gradient lies in the active subspace.
+
+### FF4. A checkpoint-only finite tube and its limits
+
+For the exact-real continuation `p_(h+1)=a_h*p_h-eta_h*u_(h+1)`, with
+`a_h=1-eta_h*rho>=0` and `eta_h>=0`, set `q_0=1`, `R_0=0` and
+
+```
+q_(h+1) = a_h*q_h,
+R_(h+1) = a_h*R_h + eta_h*B_(h+1),
+B_h = b(t,h)*sqrt(sum_k K_h(r_k)).
+```
+
+DP1 now gives `||p_h-q_h*p_0||<=R_h` with B computed entirely from the
+checkpoint and known schedule. `warm_adam_source` identifies each coordinate
+with the existing buffered AdamW definition, and `main_adam_resume` identifies
+the whole continuation with the original parameter history. `warm_adam_tube` has no premise
+bounding a future gradient or observed forcing. Its norm bounds compose with
+DP2 to bound active-energy share using the active-row and whole-readout
+radii; `warm_adam_projected_tube` gives the tube for any fixed contractive
+linear projection. A zero lower share is an exhausted certificate, not preserved useful
+geometry.
+
+The native forecast adds the protocol's predeclared numerical allowances:
+relative direction allowance 1e-6 and a per-coordinate rounding cap
+`8*eps32*(1+M_h+eta_h*Bmax_h*(1+1e-6))`. The coordinate cap M is itself
+propagated from the checkpoint, schedule, and these predicted bounds. It
+never substitutes observed future rounding into a forecast. These allowances
+are audited against every saved FP32 update; their universal IEEE/CUDA
+validity is not a Lean theorem. Exact-real proofs and finite numerical
+verification remain distinct.
+
+The missing discovery argument is still about the actual loss: why typical
+initialization and minibatch sequences create the relevant class contrasts
+and align the changing features with them. Long useful persistence also needs
+more than a magnitude bound when the prospective radius exhausts the active
+norm. The sign symmetry and the measured failures motivate controlling that
+directional interaction; they do not prove such control impossible.

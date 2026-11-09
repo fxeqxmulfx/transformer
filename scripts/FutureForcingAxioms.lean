@@ -1,0 +1,27 @@
+import Transformer.Grokking.GradientEvidence.FutureAdamTube
+
+#print axioms Transformer.Grokking.GradientEvidence.future_cone_slack
+#print axioms Transformer.Grokking.GradientEvidence.future_cone_step
+#print axioms Transformer.Grokking.GradientEvidence.future_ratio_attained
+#print axioms Transformer.Grokking.GradientEvidence.future_cone_recurrence
+#print axioms Transformer.Grokking.GradientEvidence.future_cone_nonneg
+#print axioms Transformer.Grokking.GradientEvidence.future_cone_memory
+#print axioms Transformer.Grokking.GradientEvidence.main_moments_resume
+#print axioms Transformer.Grokking.GradientEvidence.warm_second_nonneg
+#print axioms Transformer.Grokking.GradientEvidence.warm_moment_cone
+#print axioms Transformer.Grokking.GradientEvidence.warm_moments_sign_symmetry
+#print axioms Transformer.Grokking.GradientEvidence.checkpoint_ratio_cone
+#print axioms Transformer.Grokking.GradientEvidence.main_direction_resume
+#print axioms Transformer.Grokking.GradientEvidence.warm_direction_sign_symmetry
+#print axioms Transformer.Grokking.GradientEvidence.warm_direction_bound
+#print axioms Transformer.Grokking.GradientEvidence.sum_future_cone
+#print axioms Transformer.Grokking.GradientEvidence.future_bias_pos
+#print axioms Transformer.Grokking.GradientEvidence.warm_directions_energy
+#print axioms Transformer.Grokking.GradientEvidence.warm_directions_norm
+#print axioms Transformer.Grokking.GradientEvidence.class_center_energy_le
+#print axioms Transformer.Grokking.GradientEvidence.warm_adam_source
+#print axioms Transformer.Grokking.GradientEvidence.warm_adam_forcing_bound
+#print axioms Transformer.Grokking.GradientEvidence.main_adam_resume
+#print axioms Transformer.Grokking.GradientEvidence.warm_adam_tube
+#print axioms Transformer.Grokking.GradientEvidence.warm_adam_projected_tube
+#print axioms Transformer.Grokking.GradientEvidence.warm_adam_norm_bounds
