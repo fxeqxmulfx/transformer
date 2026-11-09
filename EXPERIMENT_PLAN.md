@@ -62,12 +62,15 @@ less conservative CE aggregation. The observed prediction/geometry gap is
 retained: final mean validation accuracy is 99.57–99.63%, while mean rank-32
 certificate coverage is only 97.97–98.32%.
 
-Next derive a CE coefficient that retains per-query probability weights and
-the feature Gram operator instead of multiplying the worst query by a trace
-bound. Transport that coefficient using the already declared full feature
-motion, keeping the original comparison immutable. Freeze any new native
-comparison before evaluating it on the same full inventory. This is a target
-for proof and testing, not an observed gain or full-model stability claim.
+The query-weighted continuation now proves 27 further Lean theorems retaining
+per-query probabilities and the full feature covariance, including finite
+motion, arbitrary saved momentum, changing batch sizes and explicit GPU-to-real
+CE execution allowances. Its [native library](experiments/probability_tube/gram)
+passes five independent synthetic tests, including both source batch sizes
+and a finite-difference check of actual CE. Freeze the new comparison before
+evaluating this coefficient on the same full inventory. The original studies
+remain immutable; no numerical gain or full-model stability is yet claimed
+for the new coefficient.
 
 ## Checkpoint-fixed feature metric (2026-11-09 continuation)
 

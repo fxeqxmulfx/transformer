@@ -1,0 +1,22 @@
+[package]
+name = "probability-gram"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[lib]
+path = "lib.rs"
+
+[[test]]
+name = "covariance"
+path = "tests.rs"
+
+[[example]]
+name = "synthetic_cost"
+path = "synthetic_cost.rs"
+
+[profile.release]
+codegen-units = 1
+lto = "thin"

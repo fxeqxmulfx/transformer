@@ -277,6 +277,28 @@ and `e1a3a4adab7f179aa5e45b552f8b4fefc9f00cc8c3cef05ab81ead0b702d9d68`.
 Logs and review evidence are preserved in `.kanban/artifacts/81/` and
 `.kanban/artifacts/83/`. No generated report is committed.
 
+## Query-weighted CE continuation
+
+The first two audits replace all query probabilities by their maximum and
+the feature operator by a trace. The next 27 Lean theorems retain the
+per-query ceilings in the weighted covariance. They prove actual partial-CE
+coercivity, finite feature-motion transport, arbitrary-momentum control over
+varying batches, and an explicit conversion from executed GPU probabilities
+to the real CE reference. This preserves the fixed metric and source batch
+sizes, including the 96-example tail of each epoch.
+
+The [native evaluator](gram/README.md) passes five independent tests, with
+full-width feature tables at both source batch sizes and a finite-difference
+check of the actual CE derivative under nonzero feature motion. The new
+coefficient has not yet been measured on the recreated runs. Its comparison
+must be frozen first and retain all original anchors, horizons and metrics.
+The previous zero-horizon findings remain unchanged.
+
+The new formal layer is committed at `fc7a3a3a`. Its full build passes 13369
+jobs, and `scripts/CEGramAxioms.lean` checks all 27 results. Global audits
+retain 36 existing `sorry`, zero dependencies on them and zero extra axioms.
+The native and Lean logs are preserved in `.kanban/artifacts/84/`.
+
 ## Checks
 
 The full Lean build passes 13362 jobs. The original probability bridge has
