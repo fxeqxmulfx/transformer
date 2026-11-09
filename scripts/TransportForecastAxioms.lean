@@ -1,0 +1,17 @@
+import Transformer.Rotate90.ComplexProduct.TransportForecast
+
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.linearScore_forecast_identity
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.linearScore_forecast_error_le
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.signed_transport_forecast_upper
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.signed_transport_forecast_execution_upper
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.signed_transport_endpoint_upper
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.endpoint_le_transportEndpointUpper
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.transport_forecast_nonzero_witness
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.executed_gap_le_transportForecast
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.margin_of_transportForecast
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.strict_winner_of_transportForecast
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.probability_ge_transportForecast
+#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.crossEntropy_le_transportForecast
+#print axioms Transformer.Rotate90.ComplexProduct.executed_gap_le_transport_forecast
+#print axioms Transformer.Rotate90.ComplexProduct.executed_gap_le_transport_endpoint
+#print axioms Transformer.Rotate90.ComplexProduct.executed_gap_le_transport_forecast_with_feature_error

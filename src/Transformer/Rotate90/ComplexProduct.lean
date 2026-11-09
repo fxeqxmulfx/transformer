@@ -6,6 +6,7 @@ public import Transformer.Rotate90.ComplexProduct.AnswerContrast
 public import Transformer.Rotate90.ComplexProduct.TrainingTransport
 public import Transformer.Rotate90.ComplexProduct.ProbabilityTransfer
 public import Transformer.Rotate90.ComplexProduct.SignedTransport
+public import Transformer.Rotate90.ComplexProduct.TransportForecast
 
 /-!
 # A flat-spectrum bridge to the complex-product Rotate90 source model

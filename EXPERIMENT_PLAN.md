@@ -1,5 +1,24 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Connect training geometry to update forecasts (2026-11-09 user direction)
+
+Task #197 freezes the [training-to-forecast bridge](experiments/transport_forecast/PROTOCOL.md)
+at `07c328f1`, then replays the two original plain-product trajectories at 26
+declared probe states. Fifteen new Lean theorems retain signed training
+reconstruction, readout/feature movement, mixed terms and forecast remainders,
+with margins, probability/CE consequences and actual-source adapters.
+
+The [completed audit](experiments/transport_forecast/README.md) has zero false
+certificates or enclosure violations; all six original checkpoint hashes and
+six original next-update hashes match. Rank-32 endpoint coverage is
+96.22%/97.45%. Its first majority coverage occurs at the same sampled step
+as the first 99% accuracy for each seed, and later coverage can regress while
+accuracy remains high. Thus the local conditional bridge is useful, but an
+early prediction of the learning transition and optimizer discovery remain
+unestablished. Full-rank reconstruction is a separate control. The task is
+`(a+b)^3 mod 97`, not a new result for the original `a^3+ab` obstruction.
+Task #189 remains the separate inference-efficiency study.
+
 ## Tighten pre-update certificates (2026-11-09 user direction)
 
 Task #196 freezes the [forecast-tightening comparison](experiments/forecast_tightening/PROTOCOL.md)

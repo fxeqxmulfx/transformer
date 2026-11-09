@@ -6950,6 +6950,116 @@ raise model accuracy nor establish an efficient forward-only training method.
 The [experiment findings](../experiments/forecast_tightening/README.md) retain
 all predeclared ablations, execution checks and preparation costs.
 
+## Training-to-forecast bridge
+
+Task #197 joins ST1–ST3's signed training reconstruction to FT1–FT3's
+pre-update forecasts. The [frozen protocol](../experiments/transport_forecast/PROTOCOL.md)
+uses the actual plain complex-product source on `(a+b)^3 mod 97`. This is
+the next conditional connection in this development, not a replacement for
+the failed componentwise spectral diagnostic or a solution of `a^3+ab`.
+
+### TF1. Retain training geometry across the proposed step
+
+Fix old normalized training states `T`, their center `mu`, old query state
+`x`, coefficients `a`, and a computed basis `B`. For the competitor-minus-target
+readout `w`, ST gives an old signed prediction `P=transportPrediction` and
+directional remainder `R=directionalResidualBound` with
+
+```
+<w,x> <= P + R.
+```
+
+Neither the basis nor the coefficients need be exactly orthogonal. The
+existing defect term stays in `R`. Keep this old geometry fixed across one
+actual parameter update. Let `w'` be the known rounded updated readout,
+`v` the old-network directional feature tangent, and suppose FT propagation
+supplies `||x'-(x+v)|| <= r`, with `r>=0`. Then the exact finite identity is
+
+```
+<w',x'> = <w,x> + Delta + <w',x'-(x+v)>
+Delta = <w'-w,x> + <w',v>.
+```
+
+The second term includes `<w'-w,v>`; it is not the first-order readout
+`<w,v>` alone. Cauchy–Schwarz gives the complete bridge
+
+```
+<w',x'> <= P + R + Delta + ||w'||*r.
+```
+
+The finite-coordinate Lean theorem takes the equivalent squared-ball premise.
+The native implementation uses FT1/FT2's combined radius and retains the
+fixed feature/logit execution allowances. A two-coordinate witness has
+training states `(1/2,0),(3/2,0)`, center `(1,0)`, query `(3,1/4)`, old
+readout `(-2,1)`, new readout `(-3,0)`, tangent `(1/4,0)`, and future state
+`(27/8,1/4)`. Both the old residual and forecast remainder are nonzero.
+Its future score is `-81/8`, below the bridge endpoint `-75/8`.
+
+### TF2. Transport the directional endpoint without hiding its slack
+
+If FT3 gives an independently valid future gap endpoint `U`, its signed
+drift allowance is `U-<w,x>`. The corresponding training bridge is
+
+```
+U_bridge = P + R + (U-<w,x>)
+         = U + (P+R-<w,x>).
+```
+
+Lean proves both the bound and `U<=U_bridge`. Training reconstruction adds
+nonnegative slack; this composition cannot improve the independent forecast's
+coverage. Its value is testing how much of that coverage can also carry a
+training-to-query explanation. Reporting `min(U,U_bridge)` as the bridge
+would erase that question. The diagnostic reports both separately.
+
+### TF3. Preserve every competitor and the actual loss
+
+Apply TF1 to every class contrast with the same actual future state. If
+executed scores differ from their exact linear readouts by at most `eta`,
+add `2*eta` to each endpoint. Negative upper endpoints for all wrong classes
+give a strict correct winner, and endpoints at most `-m` give margin `m`.
+The existing odds-envelope lemmas give probability floor
+`1/(1+sum exp(U_c))` and CE ceiling `log(1+sum exp(U_c))`, summing wrong
+classes. The worst competitor may change. These are per-query sufficient
+conditions; no average-margin argument or future error measurement enters
+their construction.
+
+### TF4. Actual source and temporal scope
+
+`ComplexProduct.executed_gap_le_transport_forecast` instantiates TF1/TF3
+with the old and new `readoutState`, the actual tied embeddings and all four
+source normalizations. The endpoint adapter instantiates TF2. Feature-ball
+and numerical-execution premises remain explicit, just as in FF and FT;
+this does not formally verify the full Rust/BLAS/CUDA program.
+
+The execution adapter also separates a squared feature discrepancy `delta^2`
+from per-logit arithmetic error `eta`. It derives the native contrast allowance
+`||w'||*delta+2*eta`, rather than silently treating the feature error as a
+per-logit error. The feature radius becomes `r+delta`; both nonnegativity and
+both error premises have explicit witnesses.
+
+The frozen native study replays both original seeds, preserving their full
+parameter/moment hashes at 0, 5000 and 10000, and inserts 26 declared probes
+through the trajectory. Training-only answer-orbit bases transfer observed
+labels via the proved cubic routes. Rank 32 is primary; rank 0 and rank 128
+are center and reconstruction-limit controls. Every class endpoint is
+persisted before the updated-network evaluation. Existing seeds and the
+previously examined validation split provide a temporal diagnostic, not an
+independent statistical generalization test. A correctness certificate cannot
+precede the correctness it certifies. The test asks whether useful coverage
+appears before the first sampled 99% accuracy, with no eventual-convergence
+claim. The original flat-spectrum learning obstruction remains open.
+
+| Claim | Lean declaration |
+| --- | --- |
+| Signed finite update with mixed term | `FeatureCodes.linearScore_forecast_identity` |
+| Euclidean remainder and training composition | `FeatureCodes.linearScore_forecast_error_le`, `signed_transport_forecast_upper` |
+| Directional endpoint and unavoidable old slack | `FeatureCodes.signed_transport_endpoint_upper`, `endpoint_le_transportEndpointUpper` |
+| Nonzero update/residual witness | `FeatureCodes.transport_forecast_nonzero_witness` |
+| Executed gap, margin and strict winner | `FeatureCodes.executed_gap_le_transportForecast`, `margin_of_transportForecast`, `strict_winner_of_transportForecast` |
+| Actual probability and CE | `FeatureCodes.probability_ge_transportForecast`, `crossEntropy_le_transportForecast` |
+| Complete source adapters | `ComplexProduct.executed_gap_le_transport_forecast`, `executed_gap_le_transport_endpoint` |
+| Separate feature and arithmetic execution errors | `FeatureCodes.signed_transport_forecast_execution_upper`, `ComplexProduct.executed_gap_le_transport_forecast_with_feature_error` |
+
 ## Forward–Forward reformulation
 
 User direction, 2026-11-08: reformulate Forward–Forward and modify its loss.
