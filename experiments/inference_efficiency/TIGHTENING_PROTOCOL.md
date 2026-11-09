@@ -1,5 +1,12 @@
 # Premeasurement extension after task #196
 
+The user identifies trainer commit
+`b70811e0e0e7ebdc4a8a2e48044c180332f7c40d` in the `grokking` repository.
+Its 15 build-pinned source/configuration files hash to
+`14cff3b553d3afb1f9bf90bb6b50cfd7a879058ec2876f859a198e07a09a83da`,
+exactly the existing source pin. This records the commit identity; no source,
+checkpoint, kernel, bound or measurement rule changes.
+
 2026-11-09, task #189. The original PROTOCOL.md remains the three-method
 control. No inference timing or reuse-coverage outcomes have been measured.
 The user's next direction after #196 is to reduce forecast cost and test
