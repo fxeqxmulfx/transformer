@@ -1,5 +1,16 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Close the geometry gap (2026-11-09 user direction)
+
+Task #202 follows the user's request to close the remaining gap. Freeze the
+[early-settling and active-answer protocol](experiments/geometry_gap/PROTOCOL.md)
+before new measurements. Keep the copied AdamW kernels and all eight seeds;
+reduce .01 to .0001 during updates 1000–4000, hold to 8000, then cool to
+1e-8. Independently compare a basis fitted to observed answer classes on
+all saved states of the .001, .01 and new cohorts. Every rival class stays
+in the bound. Preserve all original numerical allowances, late probes,
+budgets and failed slots. Outcomes are pending; no convergence claim follows.
+
 ## Test higher WSD learning rates (2026-11-09 user direction)
 
 Task #201 follows the user's suggestion to increase learning rate. The

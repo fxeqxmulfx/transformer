@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`geometry_gap`](geometry_gap) | Eight early-settling trajectories; all saved probes of three cohorts | Separately test earlier LR reduction and active-answer reconstruction against the remaining certificate and persistence gaps, retaining all rival classes and fixed numerical checks. Outcomes pending. |
 | [`class_geometry_lr`](class_geometry_lr) | Complete .01 on eight fixed seeds; interrupted .003 evidence retained | Only the peak changes against the main-model .001 WSD recipe. All eight final accuracies improve (mean 99.567% to 99.631%), but late rank-32 coverage minima fall from 89.95–94.69% to 16.07–22.61%. Coverage recovers during cooldown; all numerical audits pass. |
 | [`class_geometry_wsd`](class_geometry_wsd) | Same eight paired trajectories and 10000-update budget | The exact selected main-model FP32 AdamW/WSD update passes all audits; 8/8 endpoints exceed 99% accuracy, but none reaches 99% rank-32 coverage, which falls in 6/8 pairs. Every late coverage minimum decreases. |
 | [`class_geometry`](class_geometry) | Two original and six replication trajectories; 10000 updates each | Twenty Lean theorems and 80000 update audits: active-class energy share grows from about 33% to 70–76%; all six replications keep at least 93.99% rank-32 coverage at late probes, but none sustains 99%. Coupled alignment and convergence remain unproved. |
