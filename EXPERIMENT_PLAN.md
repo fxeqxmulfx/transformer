@@ -67,10 +67,14 @@ per-query probabilities and the full feature covariance, including finite
 motion, arbitrary saved momentum, changing batch sizes and explicit GPU-to-real
 CE execution allowances. Its [native library](experiments/probability_tube/gram)
 passes five independent synthetic tests, including both source batch sizes
-and a finite-difference check of actual CE. Freeze the new comparison before
-evaluating this coefficient on the same full inventory. The original studies
-remain immutable; no numerical gain or full-model stability is yet claimed
-for the new coefficient.
+and a finite-difference check of actual CE. The new
+[comparison protocol](experiments/probability_tube/gram_audit/PROTOCOL.md)
+fixes both source forecast families, three coefficients, the full inventory,
+inclusive future batches, execution conversions and a cumulative 7200-second
+budget. Implement and freeze its old-only constructor and separate verifier
+before evaluating recreated checkpoints. The original studies remain
+immutable; no numerical gain or full-model stability is yet claimed for the
+new coefficient.
 
 ## Checkpoint-fixed feature metric (2026-11-09 continuation)
 

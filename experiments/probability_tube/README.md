@@ -290,9 +290,12 @@ sizes, including the 96-example tail of each epoch.
 The [native evaluator](gram/README.md) passes five independent tests, with
 full-width feature tables at both source batch sizes and a finite-difference
 check of the actual CE derivative under nonzero feature motion. The new
-coefficient has not yet been measured on the recreated runs. Its comparison
-must be frozen first and retain all original anchors, horizons and metrics.
-The previous zero-horizon findings remain unchanged.
+coefficient has not yet been measured on the recreated runs. Its
+[comparison protocol](gram_audit/PROTOCOL.md) fixes both source forecast
+families, three coefficients, all anchors/horizons/metrics and an independent
+7200-second cumulative budget. The constructor and verifier must be complete,
+checked and frozen before measurements. The previous zero-horizon findings
+remain unchanged.
 
 The new formal layer is committed at `fc7a3a3a`. Its full build passes 13369
 jobs, and `scripts/CEGramAxioms.lean` checks all 27 results. Global audits
