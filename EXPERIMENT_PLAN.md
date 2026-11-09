@@ -11,6 +11,15 @@ native forecast before reading any later trace. Include initialization,
 early learning and late cooldown; preserve all failures. Exact-real future
 control, FP32 guard checks and reliable discovery remain distinct claims.
 
+Completed: [25 Lean theorems and the complete native audit](experiments/future_forcing/README.md)
+remove the future-forcing observation premise in exact arithmetic. All 144
+frozen windows and 444,000 future prefixes pass the declared numerical
+guards. At step 9500, every settling seed has a future active-share floor
+above 67.83% through all 500 remaining moving updates; the uniform control
+already clears 2/3 there. At step 4000, current moments add only three steps
+to the 60% guarantee, and the full 4000-step hold remains uncertified.
+Reliable discovery and long useful directional control are still unproved.
+
 ## Certify finite-window persistence (2026-11-09 continuation)
 
 Task #204 follows the user's continuation. Freeze the
