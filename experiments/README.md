@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`class_geometry_wsd`](class_geometry_wsd) | Same eight paired trajectories and 10000-update budget | Transfer the selected GPT main-model FP32 AdamW/WSD recipe, including independent-coordinate clipping, beta2=.95 and decay=.1; fixed comparison in progress. |
 | [`class_geometry`](class_geometry) | Two original and six replication trajectories; 10000 updates each | Twenty Lean theorems and 80000 update audits: active-class energy share grows from about 33% to 70–76%; all six replications keep at least 93.99% rank-32 coverage at late probes, but none sustains 99%. Coupled alignment and convergence remain unproved. |
 | [`readout_geometry`](readout_geometry) | Same two trajectories and 26 frozen probes; equal ranks | Class-visible geometry raises rank-32 endpoint coverage to 99.21%/99.53% and moves first majority coverage to step 500. Nineteen Lean theorems and exact AdamW attribution retain mixed terms; readout credit alone does not determine the actual update. |
 | [`transport_forecast`](transport_forecast) | Two original trajectories; 26 frozen probes | Fifteen Lean theorems connect signed training geometry to next-update certificates. Rank-32 endpoint coverage is 96.22%/97.45%, with zero false certificates; first majority coverage does not precede the first sampled 99% accuracy, and later regressions remain. |

@@ -1,5 +1,15 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Transfer the main model's AdamW/WSD (2026-11-09 user direction)
+
+Task #200 uses the user's requested native optimizer from `python_projects/gpt`.
+The [protocol](experiments/class_geometry_wsd/PROTOCOL.md), frozen at `443138ab`,
+copies the current selected FP32 kernels and the 2% warmup / 20% cosine-decay
+schedule, with beta2=.95, decay=.1 and independent-coordinate clipping at 1.
+Its formula is scaled to the existing 10000-update budget. Compare all eight
+task #199 seeds and all fixed probes, retaining the baseline and every failure.
+This full-recipe transfer is in progress; it does not isolate WSD causally.
+
 ## Pursue discovery and persistence (2026-11-09 user direction)
 
 Task #199 freezes the [class-geometry mechanism study](experiments/class_geometry/PROTOCOL.md)
