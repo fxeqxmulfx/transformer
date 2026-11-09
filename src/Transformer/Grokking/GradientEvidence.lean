@@ -15,6 +15,7 @@ public import Transformer.Grokking.GradientEvidence.PersistenceCertificates
 public import Transformer.Grokking.GradientEvidence.FutureAdamTube
 public import Transformer.Grokking.GradientEvidence.CEMomentumControl
 public import Transformer.Grokking.GradientEvidence.FeatureMetricControl
+public import Transformer.Grokking.GradientEvidence.ProspectiveCE
 
 /-! Actual-loss derivative checks and counterexamples for interpreting
 gradient agreement as evidence of rule learning during grokking. -/

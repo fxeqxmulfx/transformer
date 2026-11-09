@@ -10,6 +10,7 @@ public import Transformer.Grokking.Geometry.IntegerEncoding
 public import Transformer.Grokking.Geometry.IntegerCertificate
 public import Transformer.Grokking.Geometry.ProbabilityLoss
 public import Transformer.Grokking.Geometry.ProbabilityTransfer
+public import Transformer.Grokking.Geometry.ProbabilityMotion
 
 /-! Functional geometry of grokking measurements: actual finite-cell
 means, their energy decomposition and the limits of structural evidence. -/

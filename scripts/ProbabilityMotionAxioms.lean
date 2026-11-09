@@ -1,0 +1,19 @@
+import Transformer.Grokking.GradientEvidence.ProspectiveCE
+
+#print axioms Transformer.Grokking.Geometry.probability_le_of_lower_contrasts
+#print axioms Transformer.Grokking.Geometry.probability_le_motion_envelope
+#print axioms Transformer.Grokking.Geometry.probabilityCeiling_den_pos
+#print axioms Transformer.Grokking.Geometry.probabilityCeiling_mono
+#print axioms Transformer.Grokking.Geometry.probabilityCeiling_bounds
+#print axioms Transformer.Grokking.Geometry.probability_le_uniform_motion
+#print axioms Transformer.Grokking.Geometry.probability_le_checkpoint_ceiling
+#print axioms Transformer.Grokking.Geometry.contrast_motion_prefix
+#print axioms Transformer.Grokking.Geometry.probability_le_cumulative_motion
+#print axioms Transformer.Grokking.Geometry.probability_motion_sharp_witness
+#print axioms Transformer.Grokking.GradientEvidence.pair_budget_le_caps
+#print axioms Transformer.Grokking.GradientEvidence.interaction_change_le_caps
+#print axioms Transformer.Grokking.GradientEvidence.linear_score_contrast
+#print axioms Transformer.Grokking.GradientEvidence.executed_contrast_motion_le
+#print axioms Transformer.Grokking.GradientEvidence.probability_le_parameter_feature_motion
+#print axioms Transformer.Grokking.GradientEvidence.metric_probability_step_condition
+#print axioms Transformer.Grokking.GradientEvidence.metric_unused_ce_from_checkpoint

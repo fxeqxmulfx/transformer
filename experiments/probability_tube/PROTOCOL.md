@@ -15,7 +15,7 @@ p'_u <= 1 / (1 + sum_(c != u) exp(z_c-z_u-D_c)).
 ```
 
 A uniform D gives the sharp ceiling
-`p'_u <= p_u*exp(D)/(1-p_u+p_u*exp(D))`, and the simpler ceiling
+`p'_u <= p_u*exp(D)/(1-p_u+p_u*exp(D))`, and, for D>=0, the simpler ceiling
 `p'_u <= p_u*exp(D)`. Include the self term correctly and retain every
 competitor. Prove a finite-prefix form from cumulative contrast increments.
 Compose this ceiling with the existing actual partial-CE momentum result;

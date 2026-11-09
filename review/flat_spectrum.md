@@ -8222,3 +8222,98 @@ their numerical values are not effects of intervening on the optimizer.
 The exact-real Lean results and the finite numerical allowances remain
 separate. Full-model future control, discovery and prediction certificates
 are not consequences of these comparisons.
+
+## Prospective probability control
+
+This continuation addresses FM4's future-probability premise. These are
+authored consequences of the actual finite softmax and bilinear readout,
+not new claims of the original flat-spectrum manuscript. The files are
+`Geometry/ProbabilityMotion.lean`, `GradientEvidence/ProbabilityMotion.lean`
+and `GradientEvidence/ProspectiveCE.lean`.
+
+### PM1. Keep the class's own denominator term
+
+For actual old and future logits z,z', fix a class u. Suppose every rival
+satisfies `(z'_u-z'_c)-(z_u-z_c)<=D_c`. Rearranging and exponentiating gives
+`exp(z'_c-z'_u)>=exp(z_c-z_u-D_c)`. Therefore
+
+```
+p'_u = 1/(1+sum_(c!=u) exp(z'_c-z'_u))
+     <= 1/(1+sum_(c!=u) exp(z_c-z_u-D_c)).
+```
+
+No rival is discarded, and the self term is exactly one. When every D_c=D,
+the old odds sum is `(1-p_u)/p_u`. Substitution gives the sharp ceiling
+
+```
+F(p_u,D) = p_u*exp(D)/(1-p_u+p_u*exp(D)).
+```
+
+For `0<=p<=q<=1`, direct cross multiplication gives `F(p,D)<=F(q,D)`;
+the denominator is positive and `0<=F(q,D)<=1`, for either sign of D.
+For D>=0 this also implies the less precise exponential bound `p*exp(D)`.
+For negative D the self term matters: that simpler exponential bound need
+not hold. The binary witness z=(log 4,0), z'=(log 4,log 2) has old
+probability 1/5 and new probability 1/3 for the second class; F attains 1/3.
+
+### PM2. Accumulate motion before using the ceiling
+
+If each increment of `z_u-z_c` is at most D_t, telescoping gives total
+deterioration at most `sum_(t<n) D_t` at every finite horizon n. PM1 then
+bounds its future probability using only the initial probability ceiling
+and those declared budgets. Budgets may be signed; this identity does not
+assert that the actual probabilities or contrasts change monotonically.
+To cover an arbitrary future training minibatch, these bounds must hold
+for each input in the training population. The maximum probability on one
+observed minibatch is not a ceiling over that population.
+
+### PM3. Account for full readout and feature motion
+
+Write the old class contrast as w=E_u-E_c and the feature as x, including
+final normalization. At a later state they are w+dw and x+dx. The exact
+score change is `<dw,x>+<w,dx>+<dw,dx>`. If
+
+```
+||w||<=A, ||x||<=X, ||dw||<=R, ||dx||<=S,
+```
+
+Cauchy–Schwarz gives absolute change at most `R*X+A*S+R*S`. The Lean
+statements use the equivalent squared-energy premises and nonnegative
+caps. For executed logits, an explicit allowance on the change of the
+execution contrast adds e. Use that complete budget as D_c in PM1.
+
+The readout and feature changes can be coupled: independence is unnecessary,
+and the mixed term is retained. Class-dependent scaling is not assumed to
+commute with centering. The parameter and feature radii must come from a
+valid source-motion analysis; this theorem does not infer them from small
+loss, a measured future feature displacement or a single checkpoint norm.
+In particular, the feature radius must cover every moving encoder parameter
+and normalization. Existing warm-moment Adam tubes address parameter motion;
+their usefulness after propagation through the nonlinear model remains to
+be measured in the new experiment.
+
+### PM4. Supply the actual CE coefficient prospectively
+
+Suppose old logits on every possible training input give unused-class
+probabilities at most q. A uniform valid contrast-motion budget D gives
+the new ceiling F(q,D) by PM1. If the feature weights satisfy r_k<=R,
+the new mean ordinary feature energy is at most M, and clipping is in [0,1],
+the weighted partial-CE cocoercivity coefficient is at most `F(q,D)*R*M`.
+Hence
+
+```
+19*s*F(q,D)*R*M <= 2
+```
+
+implies the weighted reference potential's nonincrease at that future state,
+for arbitrary saved first moment. This composes PM1 with the actual
+partial-CE theorem FM2. The future probability is no longer a separate
+smallness assumption. The motion and feature-energy premises are explicit,
+and their prospective validity is still required.
+
+The reference conclusion does not control the signed full-step perturbations
+of FM3. Nor do statewise conditions with different s or r automatically chain
+into one potential over time. The complete task still requires useful motion
+and forcing bounds, a geometry/margin bridge and a discovery argument. The
+new [experiment](../experiments/probability_tube/README.md) records source
+recovery and verification status separately from those open obligations.

@@ -14,6 +14,14 @@ is one necessary step; full-model persistence, alignment and discovery remain
 part of the active goal. Recreated evidence has separate provenance and does
 not replace historical measurements.
 
+The formal probability bridge is complete: [17 new Lean theorems](experiments/probability_tube/README.md)
+propagate checkpoint ceilings through contrast motion and supply the CE
+coefficient. Full build, axioms and native bound checks pass. The recovered
+Kernite and `diff-gpt` sources match all optimizer pins, but the original
+Rotate90 trainer remains missing. The user explicitly retains its exact
+source as a recreation prerequisite. No new cohort or forecast horizon has
+been measured; full-model control and the overall goal remain open.
+
 ## Checkpoint-fixed feature metric (2026-11-09 continuation)
 
 Task #207 follows the user's continuation. Freeze the

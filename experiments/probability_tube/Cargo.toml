@@ -1,0 +1,14 @@
+[package]
+name = "probability-tube"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[lib]
+path = "bounds.rs"
+
+[[bin]]
+name = "check-rotate90-sources"
+path = "check_sources.rs"
