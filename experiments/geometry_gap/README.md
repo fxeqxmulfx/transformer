@@ -62,6 +62,12 @@ The largest norm discrepancy is `7.08e-8`; feature/logit discrepancies are
 at most `4.13e-5`/`2.22e-5`, within unchanged allowances. Maximum scaled
 energy/share closure errors are `6.41e-14`/`2.34e-14`.
 
+An additional trace diagnostic confirms nonzero class-contrast motion on
+all 32000 updates in the declared hold interval (updates 4001–8000 across
+eight seeds). The executed FP32 rate is `0.00009999999747378752` throughout.
+The improved sampled persistence therefore occurs while parameters continue
+to change at a nonzero learning rate.
+
 Final active energy share is 69.95–74.51%. Mean cumulative share credits
 (percentage points) are isotropic readout +44.85, adaptive readout +199.11,
 tied encoder -170.72, moment memory -32.58 and total quadratic -1.87;
@@ -117,6 +123,13 @@ constructor. Its runtime is charged to the same 1800-second postprocessing
 cap. The signed-transport bound and OG3 in
 [`review/flat_spectrum.md`](../../review/flat_spectrum.md) already apply to
 an arbitrary computed basis with its residual and defect terms retained.
+
+To reproduce the actual-motion diagnostic:
+
+```sh
+jq -n -f experiments/geometry_gap/hold_updates.jq \
+  experiments/geometry_gap/runs/settle-01/seed*/updates.jsonl
+```
 
 The native plot generator exports SVG and PNG. Lines connect the 31 sampled
 probes; shaded bands show the range across all eight seeds. The accuracy
