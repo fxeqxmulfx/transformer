@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`class_geometry`](class_geometry) | Two original and six replication trajectories; 10000 updates each | Fixed mechanism test of supervised class-contrast discovery, exact cumulative AdamW energy accounting, and late-window persistence; outcomes pending. |
 | [`readout_geometry`](readout_geometry) | Same two trajectories and 26 frozen probes; equal ranks | Class-visible geometry raises rank-32 endpoint coverage to 99.21%/99.53% and moves first majority coverage to step 500. Nineteen Lean theorems and exact AdamW attribution retain mixed terms; readout credit alone does not determine the actual update. |
 | [`transport_forecast`](transport_forecast) | Two original trajectories; 26 frozen probes | Fifteen Lean theorems connect signed training geometry to next-update certificates. Rank-32 endpoint coverage is 96.22%/97.45%, with zero false certificates; first majority coverage does not precede the first sampled 99% accuracy, and later regressions remain. |
 | [`forecast_tightening`](forecast_tightening) | Same 24 forecast states; no training search | Gram/RMS bounds and a signed final-readout interval raise trained-validation certificate coverage from 90.38% to 99.27%, with zero false certificates; all 18 new Lean theorems and native audits pass. Preparation still costs 1.26 seconds per full query table. |

@@ -1,5 +1,17 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Pursue discovery and persistence (2026-11-09 user direction)
+
+Task #199 freezes the [class-geometry mechanism study](experiments/class_geometry/PROTOCOL.md)
+at `9692d9a0`, following the user's explicit instruction to pursue the remaining
+learning question. Replay every update of both original seeds and six fixed
+replication seeds. Separate 32 active-answer contrast directions, 63 unused
+class directions, and one between-group direction. Audit actual adaptive,
+tied-encoder and memory effects over every prefix, and test geometry at all
+31 declared probes per seed. No monotone or universal discovery claim is
+licensed by a local CE derivative. The study is in progress; retain all
+failures, reversals, capped slots and source hashes.
+
 ## Extend flat spectrum to observable geometry (2026-11-09 user direction)
 
 Task #198 freezes the [readout-aware comparison and update attribution](experiments/readout_geometry/PROTOCOL.md)

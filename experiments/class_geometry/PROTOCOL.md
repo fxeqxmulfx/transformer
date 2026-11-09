@@ -69,6 +69,12 @@ Audit the unused-class partial CE damping sign, retaining any floating-point
 tolerance explicitly. Check instrumented versus ordinary source steps at
 every declared geometry probe with a next update inside the training budget.
 
+Implementation tolerances, fixed before the first run: scaled `1e-8` for
+finite/cumulative energy closure; `1e-10` absolute for parameter-component
+closure; damping tolerance `1e-8*(1+||Q E||*||Q g_R||)`. The reconstructed
+parameter rounding must be at most `8*f32_epsilon*(1+max|E|+max|eta D m_hat|)`.
+These are audited execution allowances, not a formal floating-point proof.
+
 Prove finite component and multi-step identities and useful sufficient
 dissipation/persistence conditions with nonzero witnesses. Check whether the
 measured source meets those conditions before making any discovery claim.
