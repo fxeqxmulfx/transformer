@@ -80,6 +80,10 @@ fn main() -> Result<()> {
         "verifier compiled for another learning-rate arm",
     )?;
     let baseline = read(Path::new(&args[1]))?;
+    require(
+        report["schedule_name"].as_str().unwrap_or("main_wsd") == schedule::NAME,
+        "verifier compiled for another schedule",
+    )?;
     if partial {
         require(
             report["status"] == "interrupted_by_user_priority"

@@ -13,6 +13,7 @@ name = "rotate90_complex"
 [features]
 lr003 = []
 lr01 = []
+settle = []
 
 [[bin]]
 name = "rotate90-complex-kernite"

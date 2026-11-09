@@ -214,7 +214,13 @@ pub fn preflight() -> Result<Value> {
         let g: Vec<_> = (0..p.len())
             .map(|i| scale * ((i as f64 * 0.17).sin() as f32))
             .collect();
-        for completed in [0, 1, 199, 200, 7999, 8000, 9000, 9999] {
+        #[cfg(not(feature = "settle"))]
+        let steps = &[0, 1, 199, 200, 7999, 8000, 9000, 9999];
+        #[cfg(feature = "settle")]
+        let steps = &[
+            0, 1, 199, 200, 999, 1000, 1001, 2500, 3999, 4000, 4001, 7999, 8000, 8001, 9000, 9999,
+        ];
+        for &completed in steps {
             let mut old = e.state()?;
             // Nonzero, unequal coordinate variances and tied memories.
             old.first = p.iter().map(|x| x * 0.03).collect();

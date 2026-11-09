@@ -47,10 +47,12 @@ use std::{
     time::Instant,
 };
 const SEEDS: [u64; 8] = [7, 11, 1, 3, 5, 13, 17, 19];
-#[cfg(not(any(feature = "lr003", feature = "lr01")))]
+#[cfg(not(any(feature = "lr003", feature = "lr01", feature = "settle")))]
 const STUDY_PROTOCOL: &str = include_str!("../PROTOCOL.md");
 #[cfg(any(feature = "lr003", feature = "lr01"))]
 const STUDY_PROTOCOL: &str = include_str!("../../class_geometry_lr/PROTOCOL.md");
+#[cfg(feature = "settle")]
+const STUDY_PROTOCOL: &str = include_str!("../../geometry_gap/PROTOCOL.md");
 fn steps() -> Vec<usize> {
     [0, 100, 250, 500, 750, 1000, 1500, 2000, 3000, 4000]
         .into_iter()
@@ -171,6 +173,7 @@ fn main() -> Result<()> {
     algebra::threads();
     let started = Instant::now();
     let mut report = json!({"status":"running","source_sha256":source_hash(),"peak_lr":schedule::PEAK,"optimizer_ptx_sha256":storage::hash(optimizer_kernels::kernels::PTX.as_bytes()),"protocol":STUDY_PROTOCOL,"original_protocol":original,"geometry_steps":steps(),"seeds":SEEDS.map(|seed|json!({"seed":seed,"status":"pending"})),"replay_hashes":[]});
+    report["schedule_name"] = json!(schedule::NAME);
     report["prior_attempt"] = prior.as_ref().map_or(Value::Null, |(root,r)|json!({"path":root,"source_sha256":r["source_sha256"],"seconds":previous_seconds,"reason":"JSON ratio comparison; failed initial states and bounds byte-identical"}));
     report["measurement_sources"] = json!({});
     if let Some((_, old)) = &prior {
