@@ -1,0 +1,23 @@
+import Transformer.Grokking.GradientEvidence.MainAdamCertificates
+
+#print axioms Transformer.Grokking.GradientEvidence.main_moment_slack_identity
+#print axioms Transformer.Grokking.GradientEvidence.main_moment_step_bound
+#print axioms Transformer.Grokking.GradientEvidence.main_moment_invariant
+#print axioms Transformer.Grokking.GradientEvidence.main_second_nonneg
+#print axioms Transformer.Grokking.GradientEvidence.main_moment_roundoff_bound
+#print axioms Transformer.Grokking.GradientEvidence.normalized_moment_bound
+#print axioms Transformer.Grokking.GradientEvidence.corrected_moment_bound
+#print axioms Transformer.Grokking.GradientEvidence.main_direction_bound
+#print axioms Transformer.Grokking.GradientEvidence.damped_step_box
+#print axioms Transformer.Grokking.GradientEvidence.damped_step_motion
+#print axioms Transformer.Grokking.GradientEvidence.damped_step_preserves_box
+#print axioms Transformer.Grokking.GradientEvidence.mainAdamPath_source
+#print axioms Transformer.Grokking.GradientEvidence.mainAdam_parameter_bound
+#print axioms Transformer.Grokking.GradientEvidence.mainAdam_motion_bound
+#print axioms Transformer.Grokking.GradientEvidence.linear_score_motion_budget
+#print axioms Transformer.Grokking.GradientEvidence.positive_contrast_persists
+#print axioms Transformer.Grokking.GradientEvidence.readout_contrast_motion
+#print axioms Transformer.Grokking.GradientEvidence.prediction_persists
+#print axioms Transformer.Grokking.GradientEvidence.certificate_envelope_valid
+#print axioms Transformer.Grokking.GradientEvidence.certificate_envelope_retains
+#print axioms Transformer.Grokking.GradientEvidence.certificate_envelope_sound

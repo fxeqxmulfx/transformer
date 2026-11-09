@@ -13,7 +13,16 @@ eight-seed cohorts. No new training or outcome-based selection is planned.
 | Certificate basis | Active rows centered at the unused-class mean | Same folds, all rivals and numerical allowances; ranks 32 and 33 separate |
 | Certificate envelope | Maximum of three valid lower bounds | Extra basis preparation explicitly charged |
 
-Work in progress. No discovery or convergence theorem is claimed.
+Twenty-one Lean theorems now prove the moment invariant, bounds on the
+bias-corrected adaptive direction, finite-window parameter motion, conditional
+prediction persistence and certificate-envelope soundness. The optimizer
+bound allows arbitrary gradient histories and changing features. Preserving
+a prediction still requires a positive starting margin and feature-motion
+control; discovery and global convergence remain unproved.
+
+The [derivation](../../review/flat_spectrum.md#main-model-adamw-motion)
+states every obligation. The full Lean build and axiom audit pass with no
+new `sorry` or extra axioms. The numerical audits are in progress.
 
 ## Reproduce the certificate audit
 
@@ -33,4 +42,24 @@ cargo build --offline --locked --release --manifest-path experiments/class_geome
   experiments/geometry_gap/runs/settle-01 \
   experiments/geometry_gap/runs/active-01
 "$CARGO_TARGET_DIR/release/geometry-dynamics" verify experiments/geometry_dynamics/runs/support-01
+```
+
+## Reproduce the update audit and proofs
+
+The update audit streams all 240000 saved embedding steps, checks each
+recorded forcing against the moment-derived bound plus the recorded rounding
+remainder, and preserves the source trace hashes. Its hold-window motion
+budget includes cumulative rounding. The bound on an arbitrary future
+FP32 execution is not formally established by these saved-state checks.
+
+```sh
+cargo build --offline --locked --release --manifest-path experiments/class_geometry_wsd/Cargo.toml --features settle --bin geometry-motion
+"$CARGO_TARGET_DIR/release/geometry-motion" experiments/geometry_dynamics/runs/motion-01.json \
+  experiments/class_geometry_wsd/runs/audit-02 \
+  experiments/class_geometry_lr/runs/lr01-01 \
+  experiments/geometry_gap/runs/settle-01
+LAKE_ARTIFACT_CACHE=false lake build
+LAKE_ARTIFACT_CACHE=false lake env lean scripts/MainAdamAxioms.lean
+LAKE_ARTIFACT_CACHE=false lake env lean scripts/Axioms.lean
+cargo run --offline --release --manifest-path scripts/native_index/Cargo.toml -- --check
 ```

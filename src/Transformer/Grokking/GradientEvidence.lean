@@ -10,6 +10,7 @@ public import Transformer.Grokking.GradientEvidence.MarginLossWitness
 public import Transformer.Grokking.GradientEvidence.ForecastOutcomes
 public import Transformer.Grokking.GradientEvidence.ForecastDirectional
 public import Transformer.Grokking.GradientEvidence.ClassTrajectory
+public import Transformer.Grokking.GradientEvidence.MainAdamCertificates
 
 /-! Actual-loss derivative checks and counterexamples for interpreting
 gradient agreement as evidence of rule learning during grokking. -/

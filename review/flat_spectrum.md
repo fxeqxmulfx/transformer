@@ -7573,3 +7573,144 @@ the auxiliary objective set fixed. This separates a possible step-policy
 failure from stopped credit without blaming the head or optimizer from
 this study alone. The result supplies no new theorem, accuracy repair,
 memory saving or clean-device speed advantage.
+
+## Main-model AdamW motion
+
+Task #203 pursues the remaining discovery/persistence question under the
+[fixed protocol](../experiments/geometry_dynamics/PROTOCOL.md). These are
+authored derivations for the main-model AdamW copied from GPT commit
+`6bb9d03a`, with beta1=.9, beta2=.95 and decay .1. Exact-real arithmetic and
+the numerical FP32 audit remain distinct. The gradient sequence below may
+come from the full coupled model, a minibatch, clipping, or any other rule.
+
+### AD1. A moment invariant independent of the gradient direction
+
+For one coordinate, write
+
+```
+m+ = (9/10)m + (1/10)g,
+v+ = (19/20)v + (1/20)g^2.
+```
+
+Expanding the actual recurrences gives the identity
+
+```
+(19/14)v+ - (m+)^2
+  = (19/20)((19/14)v - m^2) + (14m-9g)^2/1400.
+```
+
+Thus `m^2 <= (19/14)v` is preserved for every real gradient g. Zero
+initial moments satisfy it, so induction proves it at every time without
+assuming an improving loss, fixed features, isotropic scales, or a favorable
+gradient sign. In particular, v is nonnegative. This applies separately to
+each independent coordinate before restoring the complex parameter ties.
+
+If the actual buffer updates instead add errors `em,ev`, their excess obeys
+
+```
+(m+ + em)^2 - (19/14)(v+ + ev)
+ <= (19/20)(m^2-(19/14)v)
+    + 2|m+||em| + em^2 + (19/14)|ev|.
+```
+
+The square in the first identity is dropped only with its proved sign.
+The errors are explicit; this is not a proof that the FP32 recurrence
+satisfies the unperturbed cone. The native audit checks every saved moment
+state using the protocol's fixed numerical allowance.
+
+### AD2. Bias-corrected adaptive directions are bounded
+
+For a nonnegative variance, `m^2 <= K^2 v`, `K>=0`, positive bias factors
+`b1,b2`, and positive epsilon, elementary square-root algebra yields
+
+```
+| (m/b1) / (sqrt(v)/b2 + eps) | <= K*b2/b1.
+```
+
+This includes v=0. At zero-based update t, AD1 supplies the explicit bound
+
+```
+B_t = sqrt(19/14) * sqrt(1-(19/20)^(t+1)) / (1-(9/10)^(t+1)).
+```
+
+This is a bound on the actual buffered adaptive direction, including its
+two different bias corrections. It does not replace momentum by a current
+gradient. At late times B_t approaches `sqrt(19/14)`, about 1.165.
+
+### AD3. Finite-window motion with continuing updates
+
+For a coordinate update `p+ = (1-eta*rho)p - eta*u + e`, assume `eta>=0`
+and `eta*rho<=1`. If `|p|<=R` and `|u|<=B`, then
+
+```
+|p+| <= (1-eta*rho)R + eta*B + |e|.
+```
+
+If also `rho>=0`, displacement obeys
+
+```
+|p+-p| <= eta*(rho*|p|+B) + |e|.
+```
+
+The invariant box `|p|<=R` is preserved by exact steps when `B<=rho*R`.
+For a sharper finite interval starting at an arbitrary saved time s, set
+`R_0=|p_s|` and `R_(j+1)=(1-eta_(s+j)*rho)R_j+eta_(s+j)*B_(s+j)`.
+Induction and the triangle inequality give
+
+```
+|p_(s+n)-p_s| <= sum_(j<n) eta_(s+j)*(rho*R_j+B_(s+j)).
+```
+
+Lean proves the result for the actual exact-real main-model moment and
+parameter recurrences, with arbitrary gradients and any finite window.
+The recurrence is explicitly identified with `bufferedAdamUpdate`.
+It permits nonzero updates throughout the window. The native FP32 trace
+audit retains its recorded coordinate rounding remainder in both radius
+and displacement recurrences and checks all recorded readout updates.
+It does not prove a worst-case FP32 error bound for all future executions.
+
+### AD4. What motion control must still supply
+
+Let w be a target-minus-rival readout contrast and x a query feature.
+For coordinate bounds `|w'_k-w_k|<=r_k` and `|x'_k-x_k|<=s_k`,
+
+```
+|<w',x'>-<w,x>| <= sum_k (|w_k|s_k + |x_k|r_k + r_k*s_k).
+```
+
+The mixed term remains. A positive old margin lower bound larger than this
+budget guarantees a positive new contrast. Apply the statement to every
+rival; a contrast's readout budget is the sum of its two row budgets.
+This turns useful motion bounds into a maintenance guarantee, including
+feature movement explicitly. AD3 alone does not control the nonlinear
+feature map tightly enough, nor does it establish the starting margins.
+
+Consequently these theorems add gradient-independent control of exact
+AdamW step sizes, but do not prove discovery of the useful geometry.
+Small individual steps can accumulate a large displacement. A constant
+positive learning rate over arbitrarily many steps does not provide a
+small total budget. The study reports whether the explicit bound is useful
+on the declared hold interval; a loose bound is not counted as certification.
+
+### AD5. Valid certificate envelopes
+
+The new single basis uses the rows `E_a-mu_U` for training-observed labels a,
+where mu_U is the mean of unused rows. Each equals
+`(E_a-mu_A)+(mu_A-mu_U)`: the CG3 active contrasts plus the between-group
+direction. There are at most 33 generators here. Rank 32 still truncates;
+rank 33 is a distinct control. All rival classes and all residual terms
+remain in the arbitrary-basis signed-transport bound.
+
+If a,b,c are three valid lower bounds for the same margin M, then
+`max(a,max(b,c))<=M`. A positive constituent remains positive in this
+envelope, and a positive envelope guarantees `M>0`. Lean proves validity,
+retention and soundness. No query outcome is required to take the maximum.
+Preparing three bases has a separate cost: this is not one rank-32 basis
+or a speed claim. The independent artifact verifier checks the maximum
+and every emitted bound directly.
+
+The formal modules are `GradientEvidence.MainAdamMoments`, `MainAdamMotion`
+and `MainAdamCertificates`; `scripts/MainAdamAxioms.lean` lists all 21
+theorems for an explicit axiom audit. Each theorem with hypotheses has a
+nonzero admissible example. The [experiment README](../experiments/geometry_dynamics/README.md)
+records the full numerical comparison and the remaining limitations.
