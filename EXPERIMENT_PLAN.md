@@ -1,5 +1,16 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Bound optimizer motion and improve certificates (2026-11-09 user direction)
+
+Task #203 follows the user's request to pursue the main proof gap, improve
+certificates and examine persistence under continuing low-rate updates.
+Freeze the [optimizer-motion and certificate protocol](experiments/geometry_dynamics/PROTOCOL.md)
+before measurements. Derive the .9/.95 moment invariant and a finite-rate
+motion guarantee with explicit assumptions. Audit all three existing cohorts.
+Test active readouts centered at the unused-class mean, retaining all rivals,
+and report a separate envelope with its extra basis cost. Do not present a
+conditional maintenance theorem as proof of discovery or hide loose bounds.
+
 ## Close the geometry gap (2026-11-09 user direction)
 
 Task #202 follows the user's request to close the remaining gap. Freeze the

@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`geometry_dynamics`](geometry_dynamics) | Fixed audit of three complete eight-seed cohorts | Can an AdamW moment bound protect geometry during continued updates, and can the between-group direction tighten certificates? Protocol frozen before measurements; work in progress. |
 | [`geometry_gap`](geometry_gap) | Eight complete early-settling trajectories; 744 verified certificate states across three cohorts | Earlier LR reduction plus an active-answer basis lifts per-seed late rank-32 coverage minima to 98.11–98.66%. Mean final coverage is 98.504%; correct but uncertified predictions fall from 608 to 403, while incorrect predictions rise from 139 to 160. Zero false certificates; global convergence remains open. |
 | [`class_geometry_lr`](class_geometry_lr) | Complete .01 on eight fixed seeds; interrupted .003 evidence retained | Only the peak changes against the main-model .001 WSD recipe. All eight final accuracies improve (mean 99.567% to 99.631%), but late rank-32 coverage minima fall from 89.95–94.69% to 16.07–22.61%. Coverage recovers during cooldown; all numerical audits pass. |
 | [`class_geometry_wsd`](class_geometry_wsd) | Same eight paired trajectories and 10000-update budget | The exact selected main-model FP32 AdamW/WSD update passes all audits; 8/8 endpoints exceed 99% accuracy, but none reaches 99% rank-32 coverage, which falls in 6/8 pairs. Every late coverage minimum decreases. |
