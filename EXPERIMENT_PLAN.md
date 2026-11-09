@@ -10,9 +10,15 @@ arm has its own fixed 1800-second cap and runs sequentially after #200.
 Both native builds and 32 GPU preflight cases pass with exact FP32 agreement.
 The user then explicitly prioritized immediate .01 training. Under the
 [recorded amendment](experiments/class_geometry_lr/USER_PRIORITY.md), .003
-stops with four complete seeds, one partial and three unrun; .01 proceeds
-on all eight seeds with its original budget and checks. Preserve the partial
-arm without treating its missing outcomes as complete measurements.
+stops with four complete seeds, one partial and three unrun. The
+[completed .01 cohort](experiments/class_geometry_lr/README.md) passes all
+80000 updates, 248 probes and independent margin checks in 877.96 seconds.
+Mean final accuracy improves from 99.567% to 99.631%, with all eight pairs
+improving. Mean final rank-32 coverage barely changes (97.970% to 98.015%),
+while every late coverage minimum falls: 16.07–22.61% versus 89.95–94.69%.
+First 90% coverage now occurs during cooldown. The higher peak helps final
+accuracy but does not close the discovery/persistence gap. Preserve the
+partial .003 arm without treating its missing outcomes as measurements.
 
 ## Transfer the main model's AdamW/WSD (2026-11-09 user direction)
 
