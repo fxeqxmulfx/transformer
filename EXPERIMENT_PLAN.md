@@ -9,7 +9,11 @@ reduce .01 to .0001 during updates 1000–4000, hold to 8000, then cool to
 1e-8. Independently compare a basis fitted to observed answer classes on
 all saved states of the .001, .01 and new cohorts. Every rival class stays
 in the bound. Preserve all original numerical allowances, late probes,
-budgets and failed slots. Outcomes are pending; no convergence claim follows.
+budgets and failed slots. The early-settling cohort completes all eight seeds
+and passes independent verification: minimum late rank-32 coverage improves
+to 97.92–98.55%, with every sampled late accuracy at least 99.51%. Mean final
+accuracy is 99.575%, versus 99.631% for the long .01 plateau. The separate
+744-state active-answer audit is in progress; no convergence claim follows.
 
 ## Test higher WSD learning rates (2026-11-09 user direction)
 
