@@ -13,6 +13,13 @@ public import Transformer.Grokking.FlatSpectrum.Recall.SoftmaxRecall
 public import Transformer.Grokking.FlatSpectrum.Recall.SoftmaxScale
 public import Transformer.Grokking.FlatSpectrum.Recall.QueryFree
 public import Transformer.Grokking.FlatSpectrum.Recall.Subkernel
+public import Transformer.Grokking.FlatSpectrum.Recall.Parity
+public import Transformer.Grokking.FlatSpectrum.Recall.Monomials
+public import Transformer.Grokking.FlatSpectrum.Recall.Polynomial
+public import Transformer.Grokking.FlatSpectrum.Recall.PolynomialCount
+public import Transformer.Grokking.FlatSpectrum.Recall.Quadratic
+public import Transformer.Grokking.FlatSpectrum.Recall.TwoLayers
+public import Transformer.Grokking.FlatSpectrum.Recall.TwoLayersRecall
 
 /-!
 # Associative recall has a flat spectrum
@@ -52,4 +59,17 @@ builds from formulas, a linear readout read by its sign recalls at most `d + 1` 
 The width bound is not special to recall: on any queries and contexts that carry a flat kernel
 with squared singular value `c`, a readout of cut width `d` has squared error at least
 `c (min(|m|, |n|) − (d + 1))`, and `d` replaces `d + 1` for rows of sum zero (`Subkernel`).
+
+Readouts that are polynomial in the numbers that cross the cut are bounded by a second flat
+kernel (*Polynomial readouts and two layers* of the note). The parities of the bindings, a row
+for each of the `2^m` sets of keys, form a flat kernel of rank `2^m` (`Parity`). A readout of
+degree `Δ` in `D` crossing numbers has cut width at most `C(D + Δ, D)` (`Monomials`,
+`Polynomial`), and if it recalls `m` bindings exactly then the parity kernel is a product
+through the `C(D + Δ m, D)` monomials of degree `Δ m`, so `2^m ≤ C(D + Δ m, D)`: linear in `m`,
+`(4/3)^m ≤ (2Δ + 1)^{2D}`, and `m ≤ 5 D` at degree two; a hidden layer with the activation
+`t^p` has degree `p` (`PolynomialCount`). A product of two readouts of degree one is of degree
+two, with cut width at most `D + D²` (`Quadratic`). Two Coyote layers read at the query are of
+degree two in `2d` numbers of the context (`TwoLayers`): exact recall has `m ≤ 10 d`, dimension
+`m` suffices, and the error and the argmax are bounded at cut width `2d + 4d²`
+(`TwoLayersRecall`).
 -/

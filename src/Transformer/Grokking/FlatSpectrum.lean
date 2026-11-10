@@ -321,7 +321,11 @@ of recall, and one Coyote layer, the RetNet output and attention without softmax
 `d` recall at most `d` bindings, `d + 1` for attention with linear biases. Softmax attention
 escapes the cut: at projection dimension two it recalls every number of bindings to every
 accuracy, with scores that must grow as `½ log (m / ε)`; with scores that ignore the query its
-sign recalls at most `d + 1` bindings. The block languages `L_k` of the depth hierarchy of
+sign recalls at most `d + 1` bindings. A readout in which the query combines `D` crossing
+numbers by a polynomial of degree `Δ` recalls `m` bindings exactly only if
+`2^m ≤ C(D + Δ m, D)`, the capacity bound for the flat kernel of all parities of the bindings;
+so two Coyote layers of dimension `d` recall at most `10 d` bindings, and `m` at dimension
+`m`. The block languages `L_k` of the depth hierarchy of
 C-RASP (`BlockCut`): five numbers across every cut decide every `L_k` by a sign, the indicator
 of `L_k` holds a flat kernel of size `k / 2`, and no transformer of depth `k` recognizes
 `L_{k+1}`, so that hierarchy is in depth at bounded cut width. -/

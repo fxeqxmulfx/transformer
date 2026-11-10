@@ -1,0 +1,57 @@
+import Transformer
+
+/-! Audit *Polynomial readouts and two layers* of `review/flat_spectrum.md`, items PR1–PR5. -/
+
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.sum_prod_mul_prod
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.parityKernel_mul_conjTranspose
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.isFlat_parityKernel
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.rank_parityKernel
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.not_isMinOn_parityKernel
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.card_monomialExponents
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.eval_eq_sum_monomialExponents
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.choose_mul_pow_le
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.succ_pow_le_three_mul_pow
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.le_five_mul_of_pow_le
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.le_five_mul_of_le_choose
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.four_pow_le_of_le_choose
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.isPolyIn_query
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.isPolyIn_coord
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.IsPolyIn.mono
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.IsPolyIn.add
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.IsPolyIn.mul
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.IsPolyIn.sum
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.IsPolyIn.pow
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.IsPolyIn.comp_context
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.hasCutWidth_of_fintype
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.IsPolyIn.hasCutWidth
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.IsPolyIn.two_pow_le_choose_of_sign
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.HasPolyCut.two_pow_le_choose_of_recall
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.HasPolyCut.four_pow_le_of_recall
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.HasPolyCut.card_le_five_mul_of_recall
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.hasPolyCut_one_key
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.IsPolyIn.powerHead
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.isAffineIn_query
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.isAffineIn_coord
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.IsAffineIn.hasCutWidth
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.IsAffineIn.add
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.IsAffineIn.smul
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.IsAffineIn.sum
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.affine_mul_affine
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.IsAffineIn.mul
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.IsQuadIn.sum
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.IsQuadIn.hasCutWidth
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.IsAffineIn.isPolyIn
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.IsQuadIn.isPolyIn
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.prompt_of_ne_last
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.causalConvolution_prompt_zero_last
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.coyoteLayer_prompt_last
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.coyoteLayer_prompt_castSucc
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.coyoteLayer_prompt
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.coyoteLayer_coyoteLayer_prompt_last
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.isQuadIn_twoCoyoteLayers
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.hasCutWidth_twoCoyoteLayers
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.card_le_of_twoCoyoteLayers_recall
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.twoCoyoteLayers_recall_error
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.card_le_of_twoCoyoteLayers_argmax
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.coyoteLayer_id
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.exists_twoCoyoteLayers_recall

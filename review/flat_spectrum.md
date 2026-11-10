@@ -9409,10 +9409,12 @@ Not covered:
 
 - Depth. One layer reads the context at the query. The context tokens may be any function of
   the dictionary, so layers that act on the context alone are covered. A stack in which two
-  layers read the context at the query is not of the form of AR4, and no bound is proved for
-  it. Claim 1 of the paper, for two layers with MLPs, stays a measurement.
+  layers read the context at the query is not of the form of AR4. *Polynomial readouts and
+  two layers* below treats two gated convolutions with a linear readout: exact recall has
+  `m ≤ 10 d`. Claim 1 of the paper, for two layers with MLPs and a decoded answer, stays a
+  measurement.
 - Nonlinear readouts. An MLP after the layer is not a linear readout; AR4 and AR5 do not
-  bound it.
+  bound it. The same section bounds an MLP with a polynomial activation.
 - Softmax. Softmax divides the scores by a function of the query and the context together.
   That output is not of the form of AR4. *Softmax attention escapes the cut* below treats one
   layer of it: it recalls at projection dimension two and pays in the scale of its scores.
@@ -9738,3 +9740,138 @@ is `Transformer.CRASP.altPlus false k`, over the alphabet `Bool` with `false` fo
 | BL3 | `headA`, `prefixFeature`, `suffixCoeff`, `blockReadout`, `hasCutWidth_blockReadout`, `one_le_sq_sub`, `sub_mul_one_sub_nonpos`, `blockReadout_of_ne_nil`, `blockReadout_pos_iff_of_ne_nil`, `blockReadout_nil_pos_iff`, `blockReadout_pos_iff`, `exists_hasCutWidth_altPlus_sign` | The query is the suffix and the context is the prefix: `F v u`, with `HasCutWidth 5 F` on `List Bool × List Bool`. |
 | BL4 | `Recall.HasCutWidth.mul_le_sum_sq_of_isFlat`, `Recall.HasCutWidth.mul_le_sum_sq_of_isFlat_of_sum_eq_zero`, `Recall.HasCutWidth.card_le_of_isFlat`, `Recall.HasCutWidth.card_le_of_isFlat_of_sum_eq_zero`, `oddPrefix`, `evenSuffix`, `oddPrefix_append_mem_iff`, `div_two_sub_le_sum_sq_altPlus`, `div_two_le_of_altPlus` | `K` is a real matrix that is flat as a complex one. `⌊k/2⌋` is `k / 2` in `ℕ`, the pairs are indexed by `Fin (k / 2)`, and the indicator is `Set.indicator (altPlus false k) 1`. |
 | BL5 | `not_recognizes_and_hasCutWidth_five` | The transformers are `Transformer.CRASP.RTfr (Option Bool) p s d k`, for all `p`, `s`, `d`. |
+
+## Polynomial readouts and two layers (added)
+
+AR10 leaves two readouts open: "A stack in which two layers read the context at the query",
+the setting of Claim 1 of arXiv:2312.04927v1 (§4: "Gated-convolution models with two layers
+require model dimension to scale at least linearly in sequence length in order to solve
+associative recall"), and "An MLP after the layer". In both the query combines the numbers
+that cross the cut by a polynomial, not by a linear form. This section bounds such readouts.
+The bound is again a flat spectrum, that of the kernel of all parities of the bindings.
+
+### PR1. The parity kernel
+
+Take two values, read as `±1`. For a set `S` of keys and a dictionary `β`, the parity is
+`χ_S(β) = Π_{q∈S} ±1(β q)`. The parity kernel `P(S, β) = χ_S(β)` has a row for each of the
+`2^m` sets of keys and a column for each of the `2^m` dictionaries. Its rows are the
+characters of `(ℤ/2)^m`:
+
+```
+Σ_β χ_S(β) χ_T(β) = 2^m [S = T],        P Pᴴ = 2^m · 1.
+```
+
+So `P` is flat of rank `2^m`, and by Theorem A (R2) it is a minimum of M from no proper set
+of its entries. The recall kernel of AR1 for values `±1` is its `m` rows of the single keys.
+
+### PR2. Polynomial readouts
+
+`D` numbers `z(x)` cross from the context, and the readout is `F(q, x) = P_q(z(x))` with
+`P_q` a polynomial of total degree at most `Δ` whose coefficients depend on the query. Sums
+keep the degree and products add the degrees. Degree one is a readout of cut width `D` with
+features `z` (AR4). A polynomial of degree at most `Δ` is a combination of the `C(D + Δ, D)`
+monomials of degree at most `Δ`, so `F` has cut width at most `C(D + Δ, D)`, and AR4 and AR5
+hold with this width. At degree two, written
+`g(q) + Σ_i a_i(q) z_i + Σ_{i,j} A_{ij}(q) z_i z_j`, the cut width is at most `D + D²`. The
+product of two readouts of degree one is of degree two.
+
+### PR3. Exact recall: the count is linear
+
+Let `F` of degree at most `Δ` in `D` numbers return `±1` of the bound value for every query
+and every dictionary of `m` keys. For a set `S` of keys
+
+```
+χ_S(β) = Π_{q∈S} F(q, β) = (Π_{q∈S} P_q)(z(β)),
+```
+
+a polynomial of degree at most `Δ m` in `z(β)`. So every row of the parity kernel is a
+combination of the `C(D + Δ m, D)` monomials of degree at most `Δ m` at `z(β)`: the kernel is
+a product through that width. It is flat of rank `2^m` (PR1), and an exact factorization of a
+flat kernel has width at least its rank (R3):
+
+```
+2^m ≤ C(D + Δ m, D).
+```
+
+A readout `φ` that is not constant gives the same bound: restrict the dictionaries to two
+values with different `φ` and rescale. For `Δ = D = m = 1` it is an equality.
+
+The count is linear in `m`. One term of the binomial expansion is
+`C(D + N, D) t^N ≤ (t + 1)^{D + N}`. With `N = Δ m` and `t = 2Δ`, after squaring, and with
+`(t + 1)^t ≤ 3 t^t` from `(1 + 1/t)^t ≤ e`:
+
+```
+(4/3)^m ≤ (2Δ + 1)^{2D},        m ≤ 2 D log(2Δ + 1) / log(4/3).
+```
+
+At degree two, `t = 8` gives `128^m ≤ 9^D 81^m`, and `2^35 > 3^22` gives
+
+```
+m ≤ 5 D.
+```
+
+### PR4. An MLP with a polynomial activation
+
+A hidden layer `Σ_h u_h (Σ_j V_{hj} Y_j + b_h)^p` over readouts `Y_j` of degree one in `z` is
+a readout of degree `p`, for every number of hidden units. By PR3 its exact recall has
+`(4/3)^m ≤ (2p + 1)^{2D}`: the hidden width does not enter, and the degree enters by its
+logarithm. By PR2 its cut width is at most `C(D + p, D)`.
+
+### PR5. Two gated convolutions
+
+Stack two Coyote layers (AR6) on the prompt of `n` context tokens and the query token `e`,
+and read the second at the query, the position `N`. A layer is causal: before the query its
+output is
+that of the context alone, so the output of a layer on a prompt is a prompt. At the query a
+layer is
+
+```
+y_c = (Σ_k W_{kc} e_k + b₁) (B_c + h[0]_c e_c + b₂),      B_c = Σ_{k≥1} h[k]_c u_{N−k,c}.
+```
+
+So the first layer hands the query `e'`, affine in the `d` numbers `B` of the context. The
+second layer returns `(Σ_k W'_{kc} e'_k + b'₁)(G_c + h'[0]_c e'_c + b'₂)`, where `G` is its
+convolution of the outputs of the first layer before the query, `d` more numbers of the
+context. A linear readout of it is of degree two in the `2d` numbers `(B, G)`, with
+coefficients that depend on the query. So for `m` keys, for every encoding of the context
+and of the query:
+
+- exact recall of a `φ` that is not constant has `m ≤ 10 d` (PR3);
+- dimension `d = m` recalls `m` bindings, by the layer of AR6 and a second layer that
+  returns its input, so the least dimension of exact recall is between `m / 10` and `m`;
+- the cut width is at most `2d + 4d²` (PR2), so the squared error on recall is at least
+  `(m − 2d − 4d²) c^{m−1} Σ_v (φ(v) − μ)²` (AR4), and a right argmax has `m ≤ 2d + 4d²`
+  (AR5).
+
+The first item is Claim 1 for exact recall by two layers and a linear readout: the dimension
+is at least linear in the number of bindings.
+
+### PR6. Scope
+
+Proved: PR1 to PR5 as stated.
+
+Not covered:
+
+- A sign, an argmax or a squared error at dimension linear in `m`. For two layers these
+  bounds are `m ≤ 2d + 4d²`. PR3 multiplies the values of the readout, and the product is a
+  parity only for values that are exactly `±1`. A linear bound for the sign patterns of
+  polynomials is not formalized here.
+- Activations that are not polynomials, such as the MLPs of the paper, and an MLP between
+  the two layers.
+- More than two layers.
+- Whether `m ≤ 5 D` and `m ≤ 10 d` hold with a smaller constant. At degree one the constant
+  is 1 (AR4).
+
+### Lean
+
+`src/Transformer/Grokking/FlatSpectrum/Recall/`, modules `Parity`, `Monomials`, `Polynomial`,
+`PolynomialCount`, `Quadratic`, `TwoLayers` and `TwoLayersRecall`, namespace
+`Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| PR1 | `parityKernel`, `sum_prod_mul_prod`, `parityKernel_mul_conjTranspose`, `isFlat_parityKernel`, `rank_parityKernel`, `not_isMinOn_parityKernel` | The rows are `Finset κ` and the columns `κ → Bool`, with `true` read as `1`. The kernel is complex, as `IsFlat` asks. |
+| PR2 | `IsPolyIn`, `HasPolyCut`, `isPolyIn_query`, `isPolyIn_coord`, `IsPolyIn.mono`, `IsPolyIn.add`, `IsPolyIn.mul`, `IsPolyIn.sum`, `IsPolyIn.pow`, `IsPolyIn.comp_context`, `hasCutWidth_of_fintype`, `IsPolyIn.hasCutWidth`, `IsAffineIn`, `IsQuadIn`, `isAffineIn_query`, `isAffineIn_coord`, `IsAffineIn.hasCutWidth`, `IsAffineIn.add`, `IsAffineIn.smul`, `IsAffineIn.sum`, `affine_mul_affine`, `IsAffineIn.mul`, `IsQuadIn.sum`, `IsQuadIn.hasCutWidth`, `IsAffineIn.isPolyIn`, `IsQuadIn.isPolyIn` | `P_q` is an `MvPolynomial (Fin D) ℝ` with `totalDegree ≤ Δ`. `IsPolyIn z Δ F` fixes the numbers `z`; `HasPolyCut D Δ F` asks for some. `D + D²` is `D + D * D`: the products `z_i z_j` are indexed by ordered pairs. |
+| PR3 | `monomialExponents`, `card_monomialExponents`, `eval_eq_sum_monomialExponents`, `choose_mul_pow_le`, `succ_pow_le_three_mul_pow`, `le_five_mul_of_pow_le`, `le_five_mul_of_le_choose`, `four_pow_le_of_le_choose`, `IsPolyIn.two_pow_le_choose_of_sign`, `HasPolyCut.two_pow_le_choose_of_recall`, `HasPolyCut.four_pow_le_of_recall`, `HasPolyCut.card_le_five_mul_of_recall`, `hasPolyCut_one_key` | A monomial of degree at most `N` is a tuple of `D + 1` naturals with sum `N`, the last one the slack. `(4/3)^m ≤ (2Δ + 1)^{2D}` is `4 ^ m ≤ 3 ^ m * (2 * Δ + 1) ^ (2 * D)` in `ℕ`; its form with logarithms is not stated. |
+| PR4 | `IsPolyIn.powerHead` | `H` hidden units over `r` readouts `Y_j` of degree one. |
+| PR5 | `prompt_of_ne_last`, `causalConvolution_prompt_zero_last`, `coyoteLayer_prompt_last`, `coyoteLayer_prompt_castSucc`, `coyoteLayer_prompt`, `firstCross`, `secondCross`, `twoLayerCross`, `coyoteLayer_coyoteLayer_prompt_last`, `isQuadIn_twoCoyoteLayers`, `hasCutWidth_twoCoyoteLayers`, `card_le_of_twoCoyoteLayers_recall`, `twoCoyoteLayers_recall_error`, `card_le_of_twoCoyoteLayers_argmax`, `coyoteLayer_id`, `exists_twoCoyoteLayers_recall` | The two layers have the same dimension `d` and length `n + 1`, with the causal convolution. The `2d` numbers are `Fin (d + d) → ℝ`, and `2d + 4d²` is `d + d + (d + d) * (d + d)`. The layers that recall have `n = d = m`. |
