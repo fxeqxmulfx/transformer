@@ -9589,3 +9589,152 @@ without `sorry`.
 | SA2 | `queryProj`, `keyProj`, `selfProj`, `sum_queryProj_mul_keyProj`, `sum_queryProj_mul_keyProj_add_le`, `softmaxAttention_recall_error`, `softmaxAttention_self_recall_error`, `exists_softmaxAttention_recall`, `exists_softmaxAttention_recall_sign` | The keys are `Fin m` and the token `j` carries the key `j`. The existence statements take `B = Σ_v |φ(v)|` and `β = 4 B m / ε + 2`, from `e^{−x} ≤ 1/x`; they do not claim a logarithmic scale. The query's own token is `none : Option (Fin m)`. |
 | SA3 | `mul_sum_exp_le_sum_erase`, `mul_abs_sub_le_abs_sub_softmaxAttention`, `sum_sum_update`, `exists_forall_mul_abs_sub_le_softmaxAttention`, `mul_le_sum_softmaxAttention_sq`, `sub_one_mul_le_of_softmaxAttention_recall`, `softmaxAttention_oneHot_recall_error` | The average `a` of the other tokens is a quotient of sums over `univ.erase j₀`. Changing `π q` is `Function.update π q v`. The mean `μ` is any number with `Σ_v (φ v − μ) = 0`. The bound for accuracy `ε` is for values `Bool` read as `±1` and at least one key. |
 | SA4 | `card_le_of_normalized_sign`, `softmaxAttention_option`, `card_le_of_queryFreeAttention_sign` | The context is a dictionary with values in `Bool`; its tokens are any finite type, with scores `s π j` and values `v π j r` that are any functions of the dictionary. The query's own token is `none`, with the score `σ q` and the values `u q r`. |
+
+## The block languages across a cut (added)
+
+The depth hierarchy of arXiv:2506.16055v3 is witnessed by one family of languages (§2.4,
+Lemma `lem:piecewise_testable`): "For all `k ≥ 0`, define `L_k` to be the language of strings
+with alternating *blocks* of `a`'s and `b`'s, starting with `a`", `L_k = (a⁺b⁺)^{k/2}` for
+even `k` and `(a⁺b⁺)^{(k−1)/2} a⁺` for odd `k`. Theorem `thm:rtfr_depth_hierarchy` (§4): "A
+depth-`(k+1)` fixed-precision transformer can recognize `L_{k+1}`, but no depth-`k`
+fixed-precision transformer can", at every width and precision. A transformer accepts by a
+sign: "We say that `T` accepts `w` if `T(w) > 0`" (Appendix `app:transformers`).
+
+The recall section prices the width of a model by what crosses a cut between the context and
+the query. This section asks the same of `L_k`. Cut a word into a prefix `u` and a suffix
+`v`, and let a readout `F(v, u) = g(v) + Σ_{r<d} a_r(v) b_r(u)` of cut width `d` (AR4) tell
+whether `u v ∈ L_k`. The answer separates two resources. By a sign, five numbers suffice for
+every `k`. The indicator itself holds a flat kernel of size `⌊k/2⌋`, so its regression costs
+width. The hierarchy of the paper is in depth, at bounded cut width.
+
+### BL1. Blocks add across a cut
+
+`blocks w` is the number of maximal blocks of equal letters of `w`. For a suffix `v` that is
+not empty,
+
+```
+blocks(u v) + [last u = first v] = blocks u + blocks v :
+```
+
+the last block of `u` and the first block of `v` are one block of `u v` exactly when their
+letters agree. Write `ℓ(u) = [u ends with b]` and `f(v) = [v starts with b]`. Then
+`[last u = first v] = 1 − ℓ − f + 2 ℓ f`, so for a prefix that is not empty
+
+```
+blocks(u v) = blocks u + shift v + ℓ(u) · slope v,
+shift v = blocks v − 1 + f(v),      slope v = 1 − 2 f(v),
+```
+
+with `shift v = slope v = 0` for the empty suffix. The suffix acts on two numbers of the
+prefix: its number of blocks and its last letter.
+
+### BL2. `L_k` is a first letter and a number of blocks
+
+A word that is not empty is in `L_k` exactly when it starts with `a` and has `k` blocks.
+`L_0` holds the empty word alone.
+
+Proof. A word that starts with `s` is a run of `s` and then a word that does not start with
+`s`, and the run is one block. Induction on `k` along `L_{k+1}(s) = s⁺ L_k(¬s)`. ∎
+
+### BL3. Five numbers decide every `L_k` by a sign
+
+Let `A = [u starts with a]`, `P = blocks u`, `ℓ = ℓ(u)`, and for the suffix `G = shift v − k`,
+`H = slope v`. By BL1 and BL2, for a prefix that is not empty, `u v ∈ L_k` exactly when
+`A = 1` and the integer `ρ = P + G + ℓ H` is `0`, that is, exactly when
+
+```
+A (3/2 − ρ²) − 1 > 0.
+```
+
+As `ℓ² = ℓ`,
+
+```
+A (3/2 − ρ²) − 1 = −1 + (3/2 − G²) A − A P² − (H² + 2 G H) A ℓ − 2 G A P − 2 H A P ℓ.
+```
+
+The five numbers `A, A P², A ℓ, A P, A P ℓ` of the prefix cross the cut, and the suffix
+combines them linearly. For the empty prefix take the five numbers `1, 0, 3/4, 1/4, 1/8`. The
+readout is then `1/2 − (blocks v − k)²` on a suffix that starts with `a`, `G (1 − G) ≤ 0` with
+the integer `G = blocks v − k` on one that starts with `b`, and `1/2 − k² + k/2` on the empty
+suffix: positive exactly when `v ∈ L_k`. So
+
+- for every `k`, a readout of cut width 5 is positive exactly on the pairs `(u, v)` with
+  `u v ∈ L_k`, at every cut of every word.
+
+The count does not grow with `k`. With the empty suffix the readout tells whether the prefix
+`u` is in `L_k`, which is the answer that the next-token prediction problem of the paper
+(`def:prediction_task`) asks for at the last position of `u`.
+
+### BL4. A flat kernel inside a task prices the cut width
+
+AR4 is stated for recall. Its mechanism is general. Let `F` have cut width `d`, choose queries
+`q_i`, `i ∈ m`, and contexts `x_j`, `j ∈ n`, and let `K` be a real flat kernel on `m × n`
+with squared singular value `c > 0`. The table `F(q_i, x_j)` is a product through width
+`d + 1`, the term `g` being one more column. By R3,
+
+```
+Σ_{i,j} (K_ij − F(q_i, x_j))²  ≥  c (min(|m|, |n|) − (d + 1)),
+```
+
+and `d` replaces `d + 1` when the rows of `K` sum to zero, by the centering of AR4. A readout
+that equals `K` on the chosen pairs has `min(|m|, |n|) ≤ d + 1`, and `≤ d` for rows of sum
+zero. AR4 is the case of all keys, all dictionaries and the recall kernel of `φ − μ`.
+
+The indicator of `L_k` holds such a kernel. The prefix `u_i = (ab)^i a` has `2i + 1` blocks
+and ends with `a`. Let `v_j` be the alternating word that starts with `b` and has
+`k − (2j + 1)` blocks, for `2j + 1 < k`. No blocks join at the cut, so by BL1 and BL2
+
+```
+u_i v_j ∈ L_k    ⟺    i = j.
+```
+
+On these `⌊k/2⌋` prefixes and suffixes the indicator is the identity. Hence for a readout `F`
+of cut width `d`:
+
+- `Σ_{i,j<⌊k/2⌋} (1[u_i v_j ∈ L_k] − F(v_j, u_i))² ≥ ⌊k/2⌋ − (d + 1)`;
+- if `F(v, u) = 1[u v ∈ L_k]` for all `u` and `v`, then `d ≥ ⌊k/2⌋ − 1`.
+
+Regression of the indicator costs a width that grows with `k`. Its sign does not (BL3).
+
+### BL5. Depth is not cut width
+
+For every `k`: no transformer of depth `k`, of any width and precision, recognizes `L_{k+1}`
+(Theorem `thm:rtfr_depth_hierarchy`, `Transformer.CRASP.rtfr_depth_hierarchy`), and a readout
+of cut width 5 decides `L_{k+1}` by its sign at every cut (BL3).
+
+The five numbers are functions of the prefix: of its first letter, its last letter and its
+number of blocks. Cut width prices what crosses the cut. It does not price computing those
+functions. The hierarchy of the paper is the cost of computing the number of blocks by
+counting without positions, and a flat spectrum does not see it. This is the sentence of
+*Depth, width and precision* above, "A flat spectrum alone does not supply either
+conclusion", for the paper's own languages.
+
+### BL6. Scope
+
+Proved: BL1 to BL5 as stated.
+
+Not covered:
+
+- The exact cut width of the indicator of `L_k`. BL4 gives `d ≥ ⌊k/2⌋ − 1`. On the classes of
+  prefixes and suffixes the kernel of the indicator is bidiagonal, not flat; its rank and its
+  spectrum are not computed here.
+- A lower bound on the cut width of `L_k` by a sign. BL3 is an upper bound, 5.
+- Spectra. No task kernel of the paper is shown to be flat, and Theorem A is not applied to
+  its languages.
+- The cut is one. A transformer reads the prefix at every later position; nothing here bounds
+  a model by its width across several cuts at once.
+
+### Lean
+
+`src/Transformer/Grokking/FlatSpectrum/BlockCut/`, namespace
+`Transformer.Grokking.FlatSpectrum.BlockCut`, and
+`src/Transformer/Grokking/FlatSpectrum/Recall/Subkernel.lean`, proved without `sorry`. `L_k`
+is `Transformer.CRASP.altPlus false k`, over the alphabet `Bool` with `false` for `a`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| BL1 | `blocks`, `blocks_cons`, `blocks_pos`, `blocks_eq_zero`, `blocks_append`, `blocks_replicate_append`, `exists_replicate_append`, `lastB`, `shift`, `slope`, `cast_blocks_append` | `[last u = first v]` is `u.getLast? = v.head?`. The formula in numbers is over `ℝ`. |
+| BL2 | `head?_of_mem_altPlus`, `mem_altPlus_succ_iff`, `mem_altPlus_iff`, `blocks_altList`, `getLast?_altList_odd` | Stated for both first letters `s`; `mem_altPlus_succ_iff` is for `k + 1` and every word. |
+| BL3 | `headA`, `prefixFeature`, `suffixCoeff`, `blockReadout`, `hasCutWidth_blockReadout`, `one_le_sq_sub`, `sub_mul_one_sub_nonpos`, `blockReadout_of_ne_nil`, `blockReadout_pos_iff_of_ne_nil`, `blockReadout_nil_pos_iff`, `blockReadout_pos_iff`, `exists_hasCutWidth_altPlus_sign` | The query is the suffix and the context is the prefix: `F v u`, with `HasCutWidth 5 F` on `List Bool × List Bool`. |
+| BL4 | `Recall.HasCutWidth.mul_le_sum_sq_of_isFlat`, `Recall.HasCutWidth.mul_le_sum_sq_of_isFlat_of_sum_eq_zero`, `Recall.HasCutWidth.card_le_of_isFlat`, `Recall.HasCutWidth.card_le_of_isFlat_of_sum_eq_zero`, `oddPrefix`, `evenSuffix`, `oddPrefix_append_mem_iff`, `div_two_sub_le_sum_sq_altPlus`, `div_two_le_of_altPlus` | `K` is a real matrix that is flat as a complex one. `⌊k/2⌋` is `k / 2` in `ℕ`, the pairs are indexed by `Fin (k / 2)`, and the indicator is `Set.indicator (altPlus false k) 1`. |
+| BL5 | `not_recognizes_and_hasCutWidth_five` | The transformers are `Transformer.CRASP.RTfr (Option Bool) p s d k`, for all `p`, `s`, `d`. |

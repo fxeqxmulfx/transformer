@@ -12,6 +12,7 @@ public import Transformer.Grokking.FlatSpectrum.Recall.Softmax
 public import Transformer.Grokking.FlatSpectrum.Recall.SoftmaxRecall
 public import Transformer.Grokking.FlatSpectrum.Recall.SoftmaxScale
 public import Transformer.Grokking.FlatSpectrum.Recall.QueryFree
+public import Transformer.Grokking.FlatSpectrum.Recall.Subkernel
 
 /-!
 # Associative recall has a flat spectrum
@@ -47,4 +48,8 @@ leave a squared error of at least the fraction `((m − 1) / (e^{2B} + m − 1))
 of `φ` (`SoftmaxScale`). With scores that ignore the query, as in the transformers that paper
 builds from formulas, a linear readout read by its sign recalls at most `d + 1` bindings
 (`QueryFree`).
+
+The width bound is not special to recall: on any queries and contexts that carry a flat kernel
+with squared singular value `c`, a readout of cut width `d` has squared error at least
+`c (min(|m|, |n|) − (d + 1))`, and `d` replaces `d + 1` for rows of sum zero (`Subkernel`).
 -/

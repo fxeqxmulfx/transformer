@@ -118,6 +118,7 @@ public import Transformer.Grokking.FlatSpectrum.FlatKernel
 public import Transformer.Grokking.FlatSpectrum.FlatSupport
 public import Transformer.Grokking.FlatSpectrum.FlatCapacity
 public import Transformer.Grokking.FlatSpectrum.Recall
+public import Transformer.Grokking.FlatSpectrum.BlockCut
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -320,6 +321,9 @@ of recall, and one Coyote layer, the RetNet output and attention without softmax
 `d` recall at most `d` bindings, `d + 1` for attention with linear biases. Softmax attention
 escapes the cut: at projection dimension two it recalls every number of bindings to every
 accuracy, with scores that must grow as `½ log (m / ε)`; with scores that ignore the query its
-sign recalls at most `d + 1` bindings. -/
+sign recalls at most `d + 1` bindings. The block languages `L_k` of the depth hierarchy of
+C-RASP (`BlockCut`): five numbers across every cut decide every `L_k` by a sign, the indicator
+of `L_k` holds a flat kernel of size `k / 2`, and no transformer of depth `k` recognizes
+`L_{k+1}`, so that hierarchy is in depth at bounded cut width. -/
 
 @[expose] public section
