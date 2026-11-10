@@ -296,6 +296,8 @@ is positive semidefinite, and such a point has the least weight-decayed loss amo
 factorizations of every width, so its product minimizes the loss plus `λ ‖·‖_S1`. For the squared
 loss on `Ω`, as `λ → 0⁺` the limits of such fits are optimal fits, their products stay a fixed
 distance below `‖K‖_S1` when `K` does not have the least nuclear norm (Theorem A), and converge
-to `K` when it is the only matrix of least nuclear norm (Theorem E). -/
+to `K` when it is the only matrix of least nuclear norm (Theorem E). For the squared loss with
+an explicit step the run does converge, to such a point: the loss is a polynomial of the factors,
+so Łojasiewicz's theorem applies at a cluster point of the run. -/
 
 @[expose] public section

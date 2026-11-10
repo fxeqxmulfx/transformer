@@ -145,31 +145,31 @@ theorem decayRun_mask_empty (K : Matrix m n ℂ) (η lam : ℝ) (U₀ : Matrix m
 /-! The witness: the `1 × 1` kernel `1`, `λ = 1`, `κ = 1`, `ρ = 2`, `η = 1/10`, so that
 `2 η (λ² + (ρ/2 + κ)²) = 1 = λ`, from `U₀ = [1 0]`, `V₀ = [0 1]` with `‖U₀‖² + ‖V₀‖² = 2`. -/
 
-private lemma witness_ball : frobeniusSq (fromCols (1 : Matrix (Fin 1) (Fin 1) ℂ)
+lemma stepWitness_ball : frobeniusSq (fromCols (1 : Matrix (Fin 1) (Fin 1) ℂ)
     (0 : Matrix (Fin 1) (Fin 1) ℂ)) + frobeniusSq (fromCols (0 : Matrix (Fin 1) (Fin 1) ℂ)
       (1 : Matrix (Fin 1) (Fin 1) ℂ)) ≤ 2 := by
   rw [← frobeniusSq_stack, stack_fromCols_one]
   norm_num [frobeniusSq, Matrix.one_apply]
 
-private lemma witness_kernel : frobeniusSq (1 : Matrix (Fin 1) (Fin 1) ℂ) ≤ (1 : ℝ) ^ 2 := by
+lemma stepWitness_kernel : frobeniusSq (1 : Matrix (Fin 1) (Fin 1) ℂ) ≤ (1 : ℝ) ^ 2 := by
   simp [frobeniusSq]
 
-example := frobeniusSq_mask_sub_le (Ω := Set.univ) zero_le_one witness_kernel witness_ball
+example := frobeniusSq_mask_sub_le (Ω := Set.univ) zero_le_one stepWitness_kernel stepWitness_ball
 
 example := frobeniusSq_decayStep_le (Ω := Set.univ) (η := 1 / 10) (by norm_num) one_pos
-  zero_le_one witness_kernel (by norm_num) (by norm_num) witness_ball
+  zero_le_one stepWitness_kernel (by norm_num) (by norm_num) stepWitness_ball
 
 example := frobeniusSq_decayRun_le (Ω := Set.univ) (η := 1 / 10) (by norm_num) one_pos
-  zero_le_one witness_kernel (by norm_num) (by norm_num) witness_ball 3
+  zero_le_one stepWitness_kernel (by norm_num) (by norm_num) stepWitness_ball 3
 
 example := one_sub_smul_lift_posDef_of_ball (Ω := Set.univ) (η := 1 / 10) (by norm_num) one_pos
-  zero_le_one witness_kernel (by norm_num) witness_ball
+  zero_le_one stepWitness_kernel (by norm_num) stepWitness_ball
 
 /-- With no cell seen, the run from `U₀ = [1 0]`, `V₀ = [0 1]` is `(9/10)^t (U₀, V₀) → 0`. -/
 example : IsDecayedMin (fitLoss (∅ : Set (Fin 1 × Fin 1)) (1 : Matrix (Fin 1) (Fin 1) ℂ)) 1
     (0 : Matrix (Fin 1) (Fin 1 ⊕ Fin 1) ℂ) (0 : Matrix (Fin 1) (Fin 1 ⊕ Fin 1) ℂ) := by
   refine isDecayedMin_fitLoss_of_tendsto_decayRun (η := 1 / 10) (κ := 1) (ρ := 2) (by norm_num)
-    one_pos zero_le_one witness_kernel (by norm_num) (by norm_num) witness_ball
+    one_pos zero_le_one stepWitness_kernel (by norm_num) (by norm_num) stepWitness_ball
     (fun v => ⟨v, by rw [stack_fromCols_one, one_mulVec]⟩) ?_
   rw [funext (decayRun_mask_empty 1 (1 / 10) 1 _ _)]
   have hp := tendsto_pow_atTop_nhds_zero_of_abs_lt_one (r := 1 - 1 / 10 * (1 : ℝ))

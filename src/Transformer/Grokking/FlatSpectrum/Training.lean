@@ -15,6 +15,10 @@ public import Transformer.Grokking.FlatSpectrum.Training.SquaredLoss
 public import Transformer.Grokking.FlatSpectrum.Training.Vanishing
 public import Transformer.Grokking.FlatSpectrum.Training.Recovery
 public import Transformer.Grokking.FlatSpectrum.Training.StepSize
+public import Transformer.Grokking.FlatSpectrum.Training.FactorSpace
+public import Transformer.Grokking.FlatSpectrum.Training.FlatLoss
+public import Transformer.Grokking.FlatSpectrum.Training.Descent
+public import Transformer.Grokking.FlatSpectrum.Training.Convergent
 
 /-! Training the pure factorization with weight decay, `review/flat_spectrum.md`, Lemma 1's
 modeling step and *Training reaches the optimal fit* (added).
@@ -48,4 +52,15 @@ The `1 × 1` kernel `1` has the trained product `1 − λ`.
 For this loss the step condition is explicit (WD6): with `‖K‖ ≤ κ`, a start in the ball
 `‖U₀‖² + ‖V₀‖² ≤ ρ` with `κ² ≤ λ ρ` and a step with `2 η (λ² + (ρ/2 + κ)²) ≤ λ`, the run stays
 in the ball and every step matrix is positive definite, so a convergent run from full row rank
-ends at a factorization of least weight-decayed loss. -/
+ends at a factorization of least weight-decayed loss.
+
+Convergence itself is proved for the squared loss (WD8). Listing the entries of `W = [U; V]`
+turns the pairs of factors into the real inner product space `EuclideanSpace ℂ ((m ⊕ n) × k)`
+(`factors`, `flatten`), on which the weight-decayed loss is real-analytic (`analyticAt_flatLoss`)
+with gradient `M W` (`gradient_flatLoss`), so the run is gradient descent there
+(`factors_iterate_gradientStep`). A step with `η (λ + ρ/2 + κ + 2ρ) ≤ 1` lowers the loss by
+`(η/2) ‖M W‖²` (`decayedLoss_decayStep_add_le_of_ball`), and the ball is compact, so the run has
+a cluster point; Łojasiewicz's theorem and the convergence theorem of
+`Transformer.Landscape.SaddleAvoidance` make it the limit. So the run converges, to a
+factorization of least weight-decayed loss (`exists_tendsto_decayRun_isDecayedMin`), and such a
+factorization of width `m + n` exists for every `λ > 0` (`exists_isDecayedMin_fitLoss`). -/
