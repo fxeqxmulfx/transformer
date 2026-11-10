@@ -71,6 +71,9 @@ lemma frobeniusSq_first_order (X Y : Matrix m n ℂ) :
   rw [pairing_smul_left]
   linarith [frobeniusSq_nonneg (Y - X)]
 
+example := mul_pairing_le_sub_and_le (L := frobeniusSq) (G := fun X => (2 : ℝ) • X)
+  frobeniusSq_first_order (1 : Matrix (Fin 1) (Fin 1) ℂ) 1 1
+
 /-- **A field with the first-order inequality is the gradient** (`review/flat_spectrum.md`,
 item WD3): if `L X + ⟨G X, Y − X⟩ ≤ L Y` for all `X`, `Y` and `G` is continuous, then along a
 continuous curve `X + t H(t)` the function `L` has derivative `⟨G X, H(0)⟩` at `t = 0`. -/

@@ -21695,16 +21695,16 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`gainWitness_one`](src/Transformer/Grokking/FlatSpectrum/Training/Gain.lean#L138) | lemma | proved |
 | [`gainWitness_zero`](src/Transformer/Grokking/FlatSpectrum/Training/Gain.lean#L141) | lemma | proved |
 
-**[Transformer.Grokking.FlatSpectrum.Training.Gradient](src/Transformer/Grokking/FlatSpectrum/Training/Gradient.lean)** — 154 lines
+**[Transformer.Grokking.FlatSpectrum.Training.Gradient](src/Transformer/Grokking/FlatSpectrum/Training/Gradient.lean)** — 157 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`min_le_inv_mul_and_le_max`](src/Transformer/Grokking/FlatSpectrum/Training/Gradient.lean#L36) | lemma | proved |
 | [`mul_pairing_le_sub_and_le`](src/Transformer/Grokking/FlatSpectrum/Training/Gradient.lean#L55) | lemma | proved |
 | [`frobeniusSq_first_order`](src/Transformer/Grokking/FlatSpectrum/Training/Gradient.lean#L67) | lemma | proved |
-| [`hasDerivAt_comp_add_smul`](src/Transformer/Grokking/FlatSpectrum/Training/Gradient.lean#L77) | theorem | proved |
-| [`add_smul_mul_conjTranspose`](src/Transformer/Grokking/FlatSpectrum/Training/Gradient.lean#L109) | lemma | proved |
-| [`hasDerivAt_decayedLoss`](src/Transformer/Grokking/FlatSpectrum/Training/Gradient.lean#L119) | theorem | proved |
+| [`hasDerivAt_comp_add_smul`](src/Transformer/Grokking/FlatSpectrum/Training/Gradient.lean#L80) | theorem | proved |
+| [`add_smul_mul_conjTranspose`](src/Transformer/Grokking/FlatSpectrum/Training/Gradient.lean#L112) | lemma | proved |
+| [`hasDerivAt_decayedLoss`](src/Transformer/Grokking/FlatSpectrum/Training/Gradient.lean#L122) | theorem | proved |
 
 **[Transformer.Grokking.FlatSpectrum.Training.Growth](src/Transformer/Grokking/FlatSpectrum/Training/Growth.lean)** — 128 lines
 
