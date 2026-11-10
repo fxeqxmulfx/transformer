@@ -11221,6 +11221,20 @@ table and the predictions are written down before the runs as stage 7 of
 `research/diffgpt_flat_spectrum/PLAN.txt`. At the time of this section no such model is
 trained.
 
+A second table, added on 2026-11-10 before any run of stage 7. The code of NT5 has one turn of
+its first harmonic in 512 numbers. Its harmonics are no characters of `ℤ/p`: it holds the
+numbers and not the modulus. Let the turn be `2p` instead, so that the harmonic `m` of a number
+`d` is the phase `exp(i π m d / p)`. For even `m` this is a character of the residue of the
+step: a step and its other wrap, `d` and `d − p`, have one phase (CW1). For odd `m` the two
+have opposite phases; `m = 1` is the half angle of CH1, the frequency `π / p` at which NT2
+still gives the wrap as a half-plane. This table holds the modulus as well as the numbers.
+
+The second hypothesis: with the tied table decayed toward this table, the same model under the
+same recipes has fewer residue errors than with the decay toward zero, because the row of a
+token that training shows rarely is then near characters that the frequent tokens share; and
+it answers states with a token unseen at its position. With the rows permuted it does neither.
+It is written down with its predictions in the same stage 7, before the runs.
+
 ### NT7. Scope
 
 Proved: NT1 to NT4.
