@@ -325,7 +325,11 @@ sign recalls at most `d + 1` bindings. A readout in which the query combines `D`
 numbers by a polynomial of degree `Δ` recalls `m` bindings exactly only if
 `2^m ≤ C(D + Δ m, D)`, the capacity bound for the flat kernel of all parities of the bindings;
 so two Coyote layers of dimension `d` recall at most `10 d` bindings, and `m` at dimension
-`m`. The block languages `L_k` of the depth hierarchy of
+`m`. The bounds need not all `c^m` dictionaries: a family in which every two keys take every
+pair of values equally often has a flat kernel too, so the `p²` affine dictionaries over a
+field of `p` elements force width `p`; and a dictionary with a query is an input of the
+multi-query task of the paper, so the bounds hold for it. The block languages `L_k` of the
+depth hierarchy of
 C-RASP (`BlockCut`): five numbers across every cut decide every `L_k` by a sign, the indicator
 of `L_k` holds a flat kernel of size `k / 2`, and no transformer of depth `k` recognizes
 `L_{k+1}`, so that hierarchy is in depth at bounded cut width. -/

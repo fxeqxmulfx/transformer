@@ -20,6 +20,9 @@ public import Transformer.Grokking.FlatSpectrum.Recall.PolynomialCount
 public import Transformer.Grokking.FlatSpectrum.Recall.Quadratic
 public import Transformer.Grokking.FlatSpectrum.Recall.TwoLayers
 public import Transformer.Grokking.FlatSpectrum.Recall.TwoLayersRecall
+public import Transformer.Grokking.FlatSpectrum.Recall.Family
+public import Transformer.Grokking.FlatSpectrum.Recall.AffineFamily
+public import Transformer.Grokking.FlatSpectrum.Recall.MultiQuery
 
 /-!
 # Associative recall has a flat spectrum
@@ -72,4 +75,13 @@ two, with cut width at most `D + D²` (`Quadratic`). Two Coyote layers read at t
 degree two in `2d` numbers of the context (`TwoLayers`): exact recall has `m ≤ 10 d`, dimension
 `m` suffices, and the error and the argmax are bounded at cut width `2d + 4d²`
 (`TwoLayersRecall`).
+
+The bounds do not need every dictionary (*Families of dictionaries and the multi-query task*
+of the note). On a family in which every key takes every value equally often and every two
+keys take every pair of values equally often, the kernel `φ(D_i q)` is flat, so the regression
+bound and the exact bound hold on the family (`Family`). The `p²` affine dictionaries
+`q ↦ a q + b` over a field of `p` elements are such a family, and the constant dictionaries,
+which are not, are recalled at cut width one (`AffineFamily`). A dictionary and a query are an
+input of the multi-query task of the Zoology paper, with distinct keys and the answer `π q` at
+its last triple, so a model of that task is bounded as well (`MultiQuery`).
 -/

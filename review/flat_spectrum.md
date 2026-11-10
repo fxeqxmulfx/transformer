@@ -9419,9 +9419,12 @@ Not covered:
   That output is not of the form of AR4. *Softmax attention escapes the cut* below treats one
   layer of it: it recalls at projection dimension two and pays in the scale of its scores.
 - The family of contexts. The bounds range over every dictionary of the `m` keys. A model
-  that meets a smaller family of dictionaries is not constrained by them.
+  that meets a smaller family of dictionaries is not constrained by them. *Families of
+  dictionaries and the multi-query task* below gives the regression and the exact bound on
+  every pairwise uniform family, such as the `p²` affine dictionaries.
 - The multi-query task of the paper (`def: general-AR`), with repeated keys and queries
-  without a match: here every key is bound once and one query follows the context.
+  without a match: here every key is bound once and one query follows the context. The same
+  section shows that these inputs are inputs of that task, so the lower bounds transfer.
 - AR3 and AR9 say that the recall kernel is not a minimum of M and is not returned by
   training from a part of its table. They do not say what the minimum is or how far its
   decoded answers are from recall.
@@ -9875,3 +9878,101 @@ Not covered:
 | PR3 | `monomialExponents`, `card_monomialExponents`, `eval_eq_sum_monomialExponents`, `choose_mul_pow_le`, `succ_pow_le_three_mul_pow`, `le_five_mul_of_pow_le`, `le_five_mul_of_le_choose`, `four_pow_le_of_le_choose`, `IsPolyIn.two_pow_le_choose_of_sign`, `HasPolyCut.two_pow_le_choose_of_recall`, `HasPolyCut.four_pow_le_of_recall`, `HasPolyCut.card_le_five_mul_of_recall`, `hasPolyCut_one_key` | A monomial of degree at most `N` is a tuple of `D + 1` naturals with sum `N`, the last one the slack. `(4/3)^m ≤ (2Δ + 1)^{2D}` is `4 ^ m ≤ 3 ^ m * (2 * Δ + 1) ^ (2 * D)` in `ℕ`; its form with logarithms is not stated. |
 | PR4 | `IsPolyIn.powerHead` | `H` hidden units over `r` readouts `Y_j` of degree one. |
 | PR5 | `prompt_of_ne_last`, `causalConvolution_prompt_zero_last`, `coyoteLayer_prompt_last`, `coyoteLayer_prompt_castSucc`, `coyoteLayer_prompt`, `firstCross`, `secondCross`, `twoLayerCross`, `coyoteLayer_coyoteLayer_prompt_last`, `isQuadIn_twoCoyoteLayers`, `hasCutWidth_twoCoyoteLayers`, `card_le_of_twoCoyoteLayers_recall`, `twoCoyoteLayers_recall_error`, `card_le_of_twoCoyoteLayers_argmax`, `coyoteLayer_id`, `exists_twoCoyoteLayers_recall` | The two layers have the same dimension `d` and length `n + 1`, with the causal convolution. The `2d` numbers are `Fin (d + d) → ℝ`, and `2d + 4d²` is `d + d + (d + d) * (d + d)`. The layers that recall have `n = d = m`. |
+
+## Families of dictionaries and the multi-query task (added)
+
+AR4 to AR9 range over every dictionary of the `m` keys, `c^m` contexts. AR10 leaves open a
+model that meets fewer of them, and the multi-query task of arXiv:2312.04927v1. This section
+answers both for lower bounds. A family in which every two keys are independent is as hard
+as all dictionaries, and recall with one query is a special case of the multi-query task.
+
+### FD1. Pairwise uniform families
+
+A family `D_i`, `i ∈ ι`, of dictionaries is pairwise uniform of index `λ` when every key
+takes every value on `λ c` of them and every two different keys take every pair of values on
+`λ` of them: an orthogonal array of strength two. For such a family and all functions `f`,
+`g` of a value
+
+```
+Σ_i f(D_i q) = λ c Σ_v f(v),      Σ_i f(D_i q) g(D_i q') = λ (Σ_v f(v)) (Σ_v g(v))    (q ≠ q').
+```
+
+The four dictionaries of two keys with two values are such a family, with `λ = 1`.
+
+### FD2. The kernel of the family is flat
+
+For a centered readout the kernel `K(q, i) = φ(D_i q)`, with `m` rows and `|ι|` columns, has
+by FD1
+
+```
+K Kᴴ = λ c Σ_v φ(v)² · 1.
+```
+
+So `K` is flat. For `λ ≥ 1` and a `φ` without zeros it is, by Theorem A (R2), a minimum of M
+from no proper set of its entries.
+
+### FD3. Width on the family
+
+By BL4 for rows of sum zero, a readout `F` of cut width `d` has, with `μ` the mean of `φ`,
+
+```
+Σ_q Σ_i (φ(D_i q) − F(q, D_i))² ≥ λ c Σ_v (φ(v) − μ)² (min(m, |ι|) − d),
+```
+
+and for `λ ≥ 1` exact recall on the family of a `φ` that is not constant has
+`d ≥ min(m, |ι|)`.
+
+### FD4. The affine dictionaries
+
+Let the keys and the values be a field of `p` elements, and `D_{a,b}(q) = a q + b`. Through
+two points with different keys passes one line, so these `p²` dictionaries are pairwise
+uniform of index 1. A readout of cut width `d` misses recall on them by at least
+`p Σ_v (φ(v) − μ)² (p − d)`, over `p · p²` pairs: per pair the fraction `1 − d / p` of the
+variance of `φ`, as in AR4 on all `p^p` dictionaries. Exact recall on them has `d ≥ p`.
+
+Uniformity on pairs of keys is needed. The constant dictionaries are recalled at cut width
+one for every number of keys: one number crosses, the readout of the common value.
+
+### FD5. The multi-query task
+
+The general task of the paper (Appendix `sec: intro-general-ar`, Setup) reads triples
+`(k_i, v_i, q_i)` over a vocabulary of `c` tokens: "Our goal is then to check, for each
+`1 ≤ i ≤ N/3 − 1`, whether there exists `0 ≤ j < i` such that `q_i ≡ k_j`, and if so, output
+`v_j`." A dictionary `π` of `m < c` keys and a query `q` are an input of `m + 1` triples: the
+triple `j < m` is `(j, π j, j)` and the last one is `(m, m, q)`. Its keys are distinct. The
+first `m` triples depend on `π` alone and ask for keys that no earlier triple binds, the last
+triple depends on `q` alone, and the answer at the last triple is `π q`.
+
+So a model that answers the last query of every input with distinct keys recalls every
+dictionary, and AR4 applies to its answer at the last triple. If that answer has cut width
+`d` across the cut before the last triple, its squared error over these inputs is at least
+`(m − d) c^{m−1} Σ_v (φ(v) − μ)²`, and exact answers have `m ≤ d`. Repeated keys and more
+queries add inputs: a bound on these inputs is a bound on all.
+
+### FD6. Scope
+
+Proved: FD1 to FD5 as stated.
+
+Not covered:
+
+- A sign or an argmax on a family. AR5 uses every dictionary with two values; on a family the
+  signs of the kernel may have a smaller rank, and no bound is proved.
+- Families that are not pairwise uniform, apart from the two extremes of FD4. Which families
+  of `p²` dictionaries exist for keys and values of different numbers is the existence of
+  orthogonal arrays, not treated here.
+- Upper bounds for the multi-query task. FD5 transfers lower bounds only; a model must also
+  answer the queries at earlier positions and decline those without a match.
+
+### Lean
+
+`src/Transformer/Grokking/FlatSpectrum/Recall/`, modules `Family`, `AffineFamily` and
+`MultiQuery`, namespace `Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`.
+The task is that of `Transformer.Zoology` (`MQARInstance`, `PriorAnswer`, `UniqueKeys`).
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| FD1 | `IsPairwiseUniform`, `IsPairwiseUniform.sum_comp`, `IsPairwiseUniform.sum_comp_mul_comp`, `isPairwiseUniform_two` | The family is `D : ι → κ → ν` over a finite type `ι`, and the counts are cardinalities of filters. Both conditions are fields: the first follows from the second only for two or more keys. |
+| FD2 | `familyKernel`, `IsPairwiseUniform.sum_mul`, `isFlat_familyKernel`, `not_isMinOn_familyKernel`, `signValue` | The kernel is real, and it is flat as a complex matrix. "Centered" is `Σ_v φ v = 0`. |
+| FD3 | `HasCutWidth.mul_le_sum_sq_of_isPairwiseUniform`, `HasCutWidth.card_le_of_recall_of_isPairwiseUniform` | The readout is `F : κ → (κ → ν) → ℝ`, evaluated at `D i`. `min(m, |ι|)` is kept: `m ≤ |ι|` is not derived. |
+| FD4 | `affineDict`, `isPairwiseUniform_affineDict`, `HasCutWidth.mul_le_sum_sq_affineDict`, `HasCutWidth.card_le_of_recall_affineDict`, `exists_hasCutWidth_one_recall_const` | The field is any finite field `𝔽`, the family is indexed by `𝔽 × 𝔽`, and `p` is `Fintype.card 𝔽`. |
+| FD5 | `mqarOfDictionary`, `castLE_ne_mk`, `uniqueKeys_mqarOfDictionary`, `priorAnswer_mqarOfDictionary`, `not_priorAnswer_mqarOfDictionary`, `card_le_of_mqar`, `mqar_recall_error`, `hasCutWidth_firstValue` | Tokens are `Fin c`, the key `j` is `Fin.castLE` of `j : Fin m`, and the new key and value of the last triple are the token `m`. The model's answer at the last triple is any `G : MQARInstance (m + 1) c → ℝ`; "answers" is `G x = φ u` for the `u` with `PriorAnswer x (Fin.last m) u`, on inputs with `UniqueKeys`. |
