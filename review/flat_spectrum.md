@@ -11252,3 +11252,115 @@ Not covered:
 | NT2 | `sin_pos_iff_le`, `modStep_neg_iff_sin_pos` | For `n < 2 * p`, `0 < ω` and `ω * p ≤ π`. The second is the step after `x = (a + b) % p`, for `b < p` and any `a`. The half-plane of the phase is not a Lean statement. |
 | NT3 | `mainAdamPathToward`, `mainAdamPathToward_succ`, `mainAdamPathToward_eq`, `mainAdamPathToward_zero_value`, `mainAdamPathToward_zero`, `mainAdamPathToward_remainder`, `mainAdamStepToward`, `mainAdamRunToward`, `mainAdamRunToward_eq`, `mainAdamRunToward_of_zero` | The path is one coordinate with given gradients, as `mainAdamPath`; the run is all coordinates with a gradient field, as `mainAdamRun` of RR3, with a fixed value `c i` for every coordinate. `mainAdamRunToward_eq` gives the weights as `c i +` those of the run of `fun q => G fun j => c j + q j` from `p0 - c`, and the two moments as equal. The remainder is for the constant rate `1 / 1000`, `ρ = 10`, 5000 updates and zero gradients. |
 | NT4 | `seenLePairs`, `seenLtPairs`, `ScoreFit.le_of_mem_convexHull`, `ScoreFit.lt_of_mem_convexHull`, `scoreFit_linear_iff` | `φ : m → E` and `ψ : n → F` into real vector spaces, `u : E →ₗ[ℝ] ℝ`, `w : F →ₗ[ℝ] ℝ`; the hull is `convexHull ℝ` in `E × F` of the image of the seen cells of one answer. `scoreFit_linear_iff` is for scores `u₀ (φ i)` and `θ₀ - w₀ (ψ j)` and a cell in the hull of either answer. That the scores of CS1 are of this form, and the reading for the two layers, are not Lean statements. |
+
+## The encoder: steps and levels (added)
+
+Added on 2026-11-10 and proved in Lean. The task of CH8 is an additive recurrence modulo `p`
+seen through a difference encoding: the model reads the steps between the values and writes
+a step. CW, CS and NT are about what this asks of a model: a residue, a wrap, and tokens that
+are numbers. This section sets beside it a level encoding of the same task, in which the
+model reads the values and writes the value. A level is determined by its residue, and a step
+is not. The level task is the kernel of `a + b` of Proposition 2 and nothing else, and M
+recovers it under Theorem E. A level is read at `p` states, and a step `d` at `p − |d|`. On
+the task of CS6 the training cells of the level encoding satisfy Theorem E on all three
+splits.
+
+### EN1. A level is its residue; a step is not
+
+Let `a, b < p` be two values, `x = (a + b) % p` the next and `(b + x) % p` the one to write.
+With levels the model reads `b` and `x` and writes `y = (b + x) % p`. With the character `ψ`
+of Proposition 2,
+
+```
+ψ(y) = ψ(b + x) = addKernel_{b, x},
+```
+
+the kernel of `a + b`, and no other level `y' < p` has this phase, as `ψ` is injective on the
+residues. So the level task is one kernel of rank one with entries of modulus one.
+
+With steps the model writes `d₃ = modStep p b x`, and its residue is that of `b` (CW1). After
+a value `0 < b < p` the step is `b` from `x = 0` and `b − p` from `x = p − 1`: two steps with
+one residue. So the step task has, beside its kernel of rank one, the wrap of CW6, and the
+wrap is the comparison of CS1.
+
+### EN2. How many states read a token
+
+Among the `p²` pairs `(a, b)` of values below `p`:
+
+- the first step `b − a` is `d` at `p − |d|` pairs;
+- the second step `modStep p a b` is `d` at `p − |d|` pairs;
+- the two levels read, `b` and `a + b`, run over all pairs of levels once, so a level is the
+  first level read at `p` pairs and the second at `p` pairs.
+
+A step with `|d| = p − k` is read at `k` states, at each of the two positions: the steps near
+`±p` are rare tokens of any difference encoding, whatever the split. Every level is read
+equally often.
+
+### EN3. The task (numerical)
+
+These numbers are computed, not proved: `research/diffgpt_flat_spectrum/` of the `diff-gpt`
+repository, Rust on the CPU. No model is trained here. The states, the split and the value to
+write are those of CS6. The step tokens are those of the task. The level tokens are those of
+the same codec with the difference operator of order 0 in place of order 1: a level `x` is the
+token `256 + floor(511 x / 192)`, and the example of a state reads the tokens of `b` and `x`
+and writes that of `(b + x) % p`.
+
+| Of a split | Seed 11 | Seed 17 | Seed 23 |
+| --- | ---: | ---: | ---: |
+| Step tokens at the first and the second input | 194, 370 | 194, 370 | 194, 370 |
+| of them with at most 5 training cells at their position | 142 | 144 | 150 |
+| Held-out states with such a step token | 392 | 387 | 501 |
+| Held-out states with a step token unseen at its position | 12 | 31 | 85 |
+| Held-out states with the wrap open (CS6) | 1077 | 1043 | 1147 |
+| Held-out states with both step tokens in one class (CS6) | 4692 | 4670 | 4619 |
+| Level tokens at each input and as the target | 97 | 97 | 97 |
+| Least training cells of a level token at an input | 42 | 41 | 36 |
+| Classes of the training graph of the level tokens | 1 | 1 | 1 |
+| Held-out states with both level tokens in one class | 4704 | 4704 | 4704 |
+| The training cells hold a permutation of the 97 levels | yes | yes | yes |
+
+The codec of the task writes a step on a grid that alternates by half a token, so a step at
+the second input has two tokens (370 for 193 steps), which halves the cells of a token there.
+
+On every split the training cells of the level encoding connect the 97 rows with the 97
+columns and hold the graph of a permutation: the two hypotheses of Theorem E. So M recovers
+the kernel of the level task from the training cells, and by EN1 the level to write at every
+held-out state. With steps the kernel of the residue is determined inside a class, at 4692,
+4670, 4619 held-out states, and the wrap is a second question, open at more than a thousand.
+
+### EN4. The reading for a model
+
+This item is a reading and a hypothesis, not a theorem.
+
+By CS6 and RR7 the models with step tokens stay below 99% by wrap errors at the open cells
+and by residue errors at rare tokens. EN1 and EN2 say that both come with the encoding: a
+level has no wrap, and no level is rare. The hypothesis: the models of RR7 whose decay acts
+within the run, trained in the same way on the level tokens of EN3, reach 99% of the held-out
+states. The runs and the predictions are written down before the runs as stage 8 of
+`research/diffgpt_flat_spectrum/PLAN.txt`. At the time of this section no model is trained on
+level tokens.
+
+### EN5. Scope
+
+Proved: EN1 and EN2.
+
+Not covered:
+
+- That a trained network is M. Theorem E is about the minimum of the nuclear norm; EN4 is a
+  hypothesis about networks.
+- The token of a level and of a step. EN1 and EN2 are about the values; that the tokens of
+  EN3 are one for a level, and one or two for a step, is computed for the task.
+- Series that are not residues. For a series with a trend a difference encoding has a reason
+  that this task does not show; nothing here compares the two encodings there.
+- The split. EN2 counts states, not training cells; the counts of EN3 are for three splits by
+  cycles of the recurrence.
+
+### Lean
+
+`src/Transformer/Grokking/FlatSpectrum/`, module `StepLevel`, namespace
+`Transformer.Grokking.FlatSpectrum`; proved without `sorry`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| EN1 | `addKernel_natCast`, `stdAddChar_eq_addKernel_iff`, `modStep_zero_and_pred` | The levels are naturals cast to `ZMod p`, and `ψ` is `ZMod.stdAddChar`; the second is for `y < p` and any `b`, `x`. `modStep_zero_and_pred` is for `0 < b < p`; the residue of both steps is `intCast_modStep` of CW1. That M recovers the kernel is `forall_isMinOn_addKernel_iff_connected` of Theorem E, under its two hypotheses. |
+| EN2 | `card_filter_sub_eq`, `card_filter_modStep_eq`, `levelsRead`, `card_levelsRead_fst`, `card_levelsRead_snd` | The pairs are `Finset.range p ×ˢ Finset.range p`, and the count is `p - d.natAbs` in the naturals, zero for `\|d\| ≥ p`. `levelsRead p` is the equivalence `(a, b) ↦ (b, a + b)` of `ZMod p × ZMod p`; the two counts are the cardinalities of its fibers over a first and a second level. |

@@ -140,6 +140,7 @@ public import Transformer.Grokking.FlatSpectrum.ScoreShift
 public import Transformer.Grokking.FlatSpectrum.ScoreChain
 public import Transformer.Grokking.FlatSpectrum.StepNumbers
 public import Transformer.Grokking.FlatSpectrum.ScoreNumbers
+public import Transformer.Grokking.FlatSpectrum.StepLevel
 public import Transformer.Grokking.FlatSpectrum.Recall
 public import Transformer.Grokking.FlatSpectrum.BlockCut
 
@@ -400,6 +401,9 @@ itself. With the numbers of the tokens given (`StepNumbers`, `ScoreNumbers`): at
 `ω` the phase `exp (iω (b + x))` is `exp (2iω d₁) · exp (3iω d₂)` times one of two constants by
 the sign of `d₂`, and for `0 < ω`, `ω p ≤ π` the wrap is `0 < sin (ω (b + x + ½ − p))`; scores
 that are linear in vectors of numbers of the rows and columns and fit the seen cells answer as
-those cells do at every cell in the convex hull of the seen cells of one answer. -/
+those cells do at every cell in the convex hull of the seen cells of one answer. With levels
+in place of steps (`StepLevel`) the value to write is the entry of the kernel of `a + b` and is
+determined by it, while two steps share a residue; a step `d` is read at `p − |d|` of the `p²`
+states and a level at `p`. -/
 
 @[expose] public section
