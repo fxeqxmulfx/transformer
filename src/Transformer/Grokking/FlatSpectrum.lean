@@ -134,6 +134,8 @@ public import Transformer.Grokking.FlatSpectrum.StepHalfPlane
 public import Transformer.Grokking.FlatSpectrum.UnseenRow
 public import Transformer.Grokking.FlatSpectrum.StepChord
 public import Transformer.Grokking.FlatSpectrum.StepPhase
+public import Transformer.Grokking.FlatSpectrum.StepSign
+public import Transformer.Grokking.FlatSpectrum.StepPole
 public import Transformer.Grokking.FlatSpectrum.Recall
 public import Transformer.Grokking.FlatSpectrum.BlockCut
 
@@ -380,6 +382,10 @@ rows. The phase of order `2p` of the step, which tells `b` from `b − p`, needs
 the chord `S = exp (iπ (b + x) / p) + exp (−iπ / 2p)` is `2 cos φ · exp (i (φ − π / 2p))` with
 `φ = π (b + x + ½) / 2p`, and `cos φ` is positive exactly without a wrap. So
 `exp (iπ d₃ / p) = exp (iπ / 4p) · exp (−iπ d₂ / 2p) · S / ‖S‖`, and `S` is, up to a factor of
-modulus one, the sum of one phase of each of the two steps read. -/
+modulus one, the sum of one phase of each of the two steps read. The sign of the step is the
+real kernel of rank two `ℓ = Im (exp (iπ / 2p) · …)`, which is never zero, divided by `|ℓ|`
+(`StepSign`). Moving the base point of the chord by `2γ`, `|γ| < π / 4p`, turns every
+normalized chord by `exp (iγ)` and changes no branch (`StepPole`): one angle places the wrap of
+all cells. -/
 
 @[expose] public section

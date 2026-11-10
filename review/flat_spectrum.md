@@ -10499,24 +10499,127 @@ coordinates, in place of the whole width, the answers at the boundary of the wra
 by the cells away from it. The experiment is in `research/diffgpt_flat_spectrum/` of the
 `diff-gpt` repository.
 
-### CH6. Scope
+### CH6. The sign of the step is a real kernel of rank two, normalized
 
-Proved: CH1 to CH4.
+The half-plane value of CW7 is the real number
+
+```
+ℓ = Im( exp(iπ / 2p) · exp(2πi d₁ / p) · exp(3πi d₂ / p) ) = sin(π (n + ½) / p).
+```
+
+With `u = exp(iπ / 2p) exp(2πi d₁ / p)` and `v = exp(3πi d₂ / p)` it is
+`Re(u) Im(v) + Im(u) Re(v)`: a sum of two products of a real function of `d₁` and a real
+function of `d₂`. So `ℓ` is a real kernel of rank at most two in the two steps, one real
+channel of a bilinear map of them. It is never zero: positive without a wrap, negative with
+one. Hence
+
+```
+ℓ / |ℓ| = −1   if d₃ < 0,        ℓ / |ℓ| = 1   otherwise:
+```
+
+the sign of the step, the kernel of CW6, is `ℓ` with its modulus normalized.
+
+### CH7. One angle for all cells
+
+Move the base point of the chord of CH2 by an angle `2γ`:
+
+```
+S_γ = z + exp(−iπ / 2p) · exp(2iγ) = 2 cos(φ − γ) · exp(i (φ − π / 2p + γ)).
+```
+
+For `|γ| < π / 4p` the moved point is still between the phases of the sums `p − 1` and `p`.
+Then `cos(φ − γ)` has the sign of `cos φ` at every cell, and
+
+```
+S_γ / |S_γ| = exp(iγ) · S / |S|.
+```
+
+Every answer turns by the same angle and none changes its branch. In the readout of CH3 the
+wrap of all cells is placed by one angle, with a tolerance of `π / 2p` for the base point.
+Conversely, by the same formula, a base point outside this arc gives the wrong branch at the
+sum `p − 1` or at the sum `p`; so one seen cell of each kind confines the angle. This converse
+is not in Lean.
+
+In CW5 and CW6 an unseen cell of the boundary is decided on its own, and against the truth.
+Here no cell of the boundary decides alone. The price is that `z` has to be the character:
+`z = exp(2πi d₁ / p) exp(3πi d₂ / p)` at every cell, with the phases of the tokens at equal
+distances. A model whose features are free at each token has an angle of its own for each
+token, and then the argument gives nothing beyond CW6.
+
+### CH8. The trained model (numerical)
+
+These numbers are measured, not proved: `research/diffgpt_flat_spectrum/` of the `diff-gpt`
+repository, Rust and Kernite, FP32 on a GTX 1050. The task is that of CW9. The model is the
+historical real transformer of that repository: width 128, one layer, one head, a tied
+embedding and readout `E`, parameter-free normalizations `N` of the mean square, ScheduleFree
+AdamW with weight decay 1, 5000 updates of 512 examples. At the last position it holds
+
+```
+mid = N(E(t₂)) + N(W_o (v(t₁) ⊥ v(t₂))),    out = mid + N(FFN(N(mid))),    logits = E N(out);
+```
+
+the attention probabilities cancel in `N`. Seeds 11, 17, 23 reach 90% of the held-out states
+after 1300, 1500, 1150 updates and end at 94.98%, 93.24%, 92.35%, the numbers recorded for
+this model; all 4704 training states are answered right. A held-out answer is *wrap wrong*
+when it is off by exactly `p`, and *residue wrong* otherwise.
+
+| Held-out answers, of 4704 | Seed 11 | Seed 17 | Seed 23 |
+| --- | ---: | ---: | ---: |
+| Right | 4468 | 4386 | 4344 |
+| Wrap wrong | 133 | 119 | 165 |
+| of these, `\|b + x − p\| ≤ 3` | 115 | 100 | 119 |
+| Residue wrong | 103 | 199 | 195 |
+| of these, an input token with at most 5 training cells | 90 | 153 | 184 |
+| Right at an input token unseen in training | 0 of 12 | 0 of 31 | 0 of 85 |
+
+- The wrap errors lie at the boundary: of the held-out answers with `|b + x − p| ≤ 3` a third
+  is off by `p` (115 of 330, 100 of 320, 119 of 350). Both kinds of error are flat from 2000
+  updates on.
+- The residue errors lie at rare tokens. MASH-half writes a step by one of two tokens, chosen
+  by a carry of the step before, and the steps near `±p` occur in few states. By CW9, M loses
+  the residue only at an unseen token; the prediction that the trained model does the same
+  failed.
+- 99% is at most 47 errors. It needs both kinds removed, and on seed 23 also 38 of the 85
+  answers at an unseen token, where CW8 gives M none.
+
+The hypothesis of CH5 was tested by normalizing the mean square over each pair of coordinates
+`(2k, 2k + 1)`, in place of the whole width, at chosen normalizations of this model; nothing
+else changes. The variants were fixed before training.
+
+| Pairs at | Right, seeds 11, 17, 23 | Wrap wrong at `\|b + x − p\| ≤ 3` | Residue wrong |
+| --- | --- | --- | --- |
+| no site (historical) | 4468, 4386, 4344 | 115, 100, 119 | 103, 199, 195 |
+| the final normalization | 4404, 4406, 4306 | 118, 125, 145 | 157, 144, 207 |
+| the FFN input | 4155, 3341, 4132 | 83, 50, 102 | 447, 1299, 439 |
+| the embedding, the attention output and the FFN input | 3638, 3637, 3675 | 67, 71, 91 | 975, 968, 888 |
+| every site | 115, 144, 143 | 0, 0, 0 | 4589, 4560, 4560 |
+
+The hypothesis failed. With pairs at the final normalization the model keeps its accuracy and
+its wrap errors. With pairs before the bilinear block it loses the residue and falls below
+90%; with pairs at every site it does not fit the training set. A normalized sum of a feature
+of each token is a comparison in every channel (CH1), and the block after it no longer gets
+kernels of rank one. That the answer can be written with one normalized modulus (CH3, CH4,
+CH6) did not make this training find it.
+
+### CH9. Scope
+
+Proved: CH1 to CH4, CH6 and CH7 without its converse.
 
 Not covered:
 
 - That M or a trained model takes this readout. With `S / |S|` the fit is not a completion of
-  a table: the modulus of `S` is free at every cell, seen or not.
+  a table: the modulus of `S` is free at every cell, seen or not. CH8 is one model and one
+  recipe, in which it did not.
 - That the characters of `ℤ/2p` determine the step, and which of them are of odd order: stated
   in CH3, not in Lean.
-- The tokens. CH3 and CH4 are in the steps `d₁`, `d₂`. A MASH-half token of the second step
-  also holds a carry of the first.
-- CH5.
+- The tokens. CH3, CH4, CH6 and CH7 are in the steps `d₁`, `d₂`. A MASH-half token of the
+  second step also holds a carry of the first.
+- CH5, and the converse in CH7.
 
 ### Lean
 
-`src/Transformer/Grokking/FlatSpectrum/`, modules `StepChord` and `StepPhase`, namespace
-`Transformer.Grokking.FlatSpectrum`; proved without `sorry`.
+`src/Transformer/Grokking/FlatSpectrum/`, modules `StepChord`, `StepPhase`, `StepSign` and
+`StepPole`, namespace `Transformer.Grokking.FlatSpectrum`; proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -10524,3 +10627,5 @@ Not covered:
 | CH2 | `halfAngle`, `stepChord`, `stepChord_eq`, `cos_halfAngle_pos`, `cos_halfAngle_neg`, `stepChord_ne_zero`, `norm_stepChord` | `halfAngle p a b` is `φ` and `stepChord p a b` is `S`, for natural `a`, `b`; `d₁` is `(b : ℂ) - a` and `d₂` is `modStep p a b`. No wrap is `b + (a + b) % p < p`; a wrap is `p ≤ b + (a + b) % p` with `b < p`. The remark on the point between two phases is not a Lean statement. |
 | CH3 | `exp_modStep_eq_stepChord`, `addChar_mul_exp_modStep` | For `a, b < p`; `ψ` is any `AddChar (ZMod p) ℂ`. `S / \|S\|` is `stepChord p a b / (‖stepChord p a b‖ : ℂ)`. The two remarks on the characters of `ℤ/2p` are not Lean statements. |
 | CH4 | `stepPhaseSum`, `stepPhaseSum_eq`, `norm_stepPhaseSum`, `exp_modStep_eq_stepPhaseSum` | `stepPhaseSum p a b` is `T`. The first two statements hold for all natural `p`, `a`, `b`; the last asks for `a, b < p`. The reading for a residual connection is not a Lean statement. |
+| CH6 | `stepHalfPlane`, `stepHalfPlane_eq_add`, `stepHalfPlane_eq_sin`, `sin_pos_of_lt`, `stepHalfPlane_pos_iff`, `stepHalfPlane_ne_zero`, `stepHalfPlane_div_abs` | `stepHalfPlane p a b` is `ℓ`. The two products are those of real and imaginary parts of `exp(iπ / 2p) exp(2πi d₁ / p)` and `exp(3πi d₂ / p)`, for all natural `p`, `a`, `b`; the other statements ask for `a, b < p`. The sign is `if modStep p b ((a + b) % p) < 0 then -1 else 1`, the entry of `wrapKernel`. |
+| CH7 | `stepChordAt`, `stepChordAt_zero`, `halfAngle_eq_add`, `stepChordAt_eq`, `cos_halfAngle_sub_pos`, `cos_halfAngle_sub_neg`, `norm_stepChordAt`, `stepChordAt_div_norm` | `stepChordAt p a b γ` is `S_γ`. The bound is `\|γ\| < π / (2 * p) / 2`. The converse and the last paragraph of the item are not Lean statements. |
