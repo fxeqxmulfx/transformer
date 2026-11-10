@@ -10150,3 +10150,256 @@ and `Recall/Unseen`, namespace `Transformer.Grokking.FlatSpectrum.Recall`; prove
 | OC4 | `ray_nonneg`, `ray_outer_nonneg`, `exists_ray_lt`, `cellNorm`, `cellNorm_ray`, `norm_le_cellNorm`, `exists_forall_cellNorm_le`, `le_mul_of_forall_cellNorm_le`, `mul_sub_le_of_forall_cellNorm_le`, `exists_neg_mul_of_forall_cellNorm_le` | The bounds are `g ≤ θ * (2 * c - g)` and `θ * (c - g) ≤ g`, with `0 < θ` stated as well. `exists_ray_lt` asks for `r * (2 * c - g) < g * s` and returns some `r₁ > 0`. Existence asks only for `‖κ‖ ^ 2 ≤ 2 * c`. |
 | OC5 | `add_smul_single_apply_of_mem`, `eq_add_single_of_mem`, `nuclearNorm_eq_cellNorm`, `exists_isMinOn_compl_singleton`, `exists_neg_mul_of_isMinOn_compl_singleton`, `isContraction_swap`, `hadamard_fill_mem`, `isMinOn_hadamard_fill`, `conjTranspose_mem`, `isMinOn_conjTranspose`, `exists_isMinOn_compl_singleton_of_conjTranspose_mul`, `exists_neg_mul_of_isMinOn_compl_singleton_of_conjTranspose_mul`, `IsFlat.exists_isMinOn_cell`, `IsFlat.exists_neg_mul_of_isMinOn_cell`, `hadamard_conjTranspose`, `hadamard_conjTranspose_mul`, `restSq_hadamard_conjTranspose` | The seen cells are `({(i, j)}ᶜ : Set (m × n))`, as in the row of the one-hot kernels. A minimum is `IsMinOn nuclearNorm` on the matrices equal to `K` there, and that `X` is one of them is a separate hypothesis. `add_smul_single_apply_of_mem` and `eq_add_single_of_mem` are the lemmas of `RankOneFill`, now stated for rectangular matrices. For orthogonal columns `g'` is `restSq Kᴴ j i`. The statement for either shape asks for `g > 0` and `g' > 0` and keeps only `θ > 0`. The comparison with the Corollary is not a Lean statement. |
 | OC6 | `restSq_recallKernel_pos`, `restSq_recallKernel_of_norm_eq_one`, `scale_of_norm_eq_one`, `exists_isMinOn_recallKernel`, `exists_neg_mul_of_isMinOn_recallKernel`, `exists_neg_mul_of_isMinOn_recallKernel_of_norm_eq_one`, `sum_sign_eq_zero`, `norm_sign_eq_one`, `sign_ne_zero` | "Two keys or more" is `Nontrivial κ`. The readout is complex, and "modulus one" is `‖φ v‖ = 1` for every `v`. "Of the order `m / \|ν\|^m`" is the two bounds, not a separate statement. |
+
+## The wrap of a step is a comparison (added)
+
+Added on 2026-11-10 and proved in Lean. A difference encoding writes a recurrence
+`x ↦ (b + x) mod p` by its integer steps: from three consecutive values `a`, `b`,
+`x = (a + b) mod p` the model reads `d₁ = b − a` and `d₂ = x − b`, and it has to write
+`d₃ = y − x` for `y = (b + x) mod p`. This is the DiffGPT task *Fibonacci mod 97* with one
+feature; its decoded answer is right only for the exact integer `d₃`. This section says what M
+does with it.
+
+The step is a residue and a wrap. The residue has a kernel of rank one, which M recovers
+(Theorems D, E, G). The wrap is a comparison of the two addends. Its kernel is `1 + A` with
+`A` skew; M does not recover it from a table that misses a cell of its boundary, and with one
+such cell unseen it answers with the opposite sign. An input token that training never showed
+is a zero row of every minimum. Read through the phase of the sum that is not reduced, the
+same bit is a half-plane of a kernel of rank one.
+
+### CW1. A step is a residue and a wrap
+
+For `0 ≤ b, x < p` let `s(b, x) = ((b + x) mod p) − x` be the step from `x` when the value
+before it is `b`. Then
+
+```
+s(b, x) = b        if b + x < p,
+s(b, x) = b − p    if b + x ≥ p.
+```
+
+So `s(b, x) ≡ b (mod p)`, and `s(b, x) < 0` exactly when the sum wraps. Along `a`, `b`,
+`x = (a + b) mod p` the steps are `d₁ = b − a`, `d₂ = s(a, b)` and `d₃ = s(b, x)`, and
+
+```
+d₃ ≡ b ≡ d₁ + d₂   (mod p).
+```
+
+Hence `ψ(d₃) = ψ(d₁) ψ(d₂)` for every additive character `ψ` of `ℤ/p`: read through `ψ`, the
+step is a kernel `u vᵀ` of modulus one in the two steps before it, the kernel of Theorems D, E
+and G. The decoded integer needs one more bit, `[b + x ≥ p]`.
+
+### CW2. The comparison kernel loses its boundary
+
+The comparison kernel of `n` ordered values is `C_ij = 1` for `i ≤ j` and `C_ij = −1` for
+`j < i`. Its boundary is the diagonal and the cells `(i + 1, i)` below it: the pairs of
+neighbours, between which the sign changes.
+
+`C + Cᵀ = 2`, so `C = 1 + A` with `A` skew. In general let `K + K* = 2c` with `c > 0`.
+
+- `K` is invertible: `Re ⟨v, K v⟩ = c ‖v‖²`.
+- `K* = 2c − K` commutes with `K`. So `S = (K* K)^{-1/2}` commutes with `K`, and the polar
+  factor `W = K S` has `W + W* = (K + K*) S = 2c S`.
+- `S` is positive definite, so `Re W_ii = c S_ii > 0`.
+
+By Theorem A such a `K` is not a minimum of `‖X‖_S1` over `{X = K on Ω}` once `Ω` misses a
+diagonal cell. The identity is the case `A = 0`.
+
+For `C`, row `i + 1` is row `i` minus `2 e_i`. So `W_{i+1,i} = W_ii − 2 S_ii` and
+`Re W_{i+1,i} = −S_ii < 0`. By Theorem A, `C` is not a minimum once `Ω` misses a cell of its
+boundary.
+
+The spectrum of `C` is not flat. For `q^n = −1` the vector `v_j = q^j` has
+`C v = (2 / (1 − q)) v`, and `C` is normal, so its singular values are
+`1 / sin((2k + 1) π / 2n)`, `k = 0, …, n − 1`. The two largest are about `2n/π` and hold
+about `8/π² = 81%` of `‖C‖_S2² = n²`, and `‖C‖_S1 = (2n/π)(ln n + O(1))`. This paragraph is
+not in Lean.
+
+### CW3. A kink between two projections
+
+Let `P` and `Q` be orthogonal projections with `P K = K = K Q`, and let
+
+```
+‖P E Q‖_S1 ≤ ‖(1 − P) E (1 − Q)‖_S1.
+```
+
+Then `‖K‖_S1 ≤ ‖K + x E‖_S1` for every `x ∈ ℂ`.
+
+Proof. For contractions `Z`, `Z'` the matrix `Y = P Z Q + (1 − P) Z' (1 − Q)` is a
+contraction: `1 − Y* Y = Q (1 − Z* P Z) Q + (1 − Q)(1 − Z'* (1 − P) Z')(1 − Q)`, and
+`1 − Z* P Z = (1 − Z* Z) + ((1 − P) Z)* ((1 − P) Z)`. Take `Z` with `tr(Z* K) = ‖K‖_S1` and
+`Z'` with `tr(Z'* x (1 − P) E (1 − Q)) = |x| ‖(1 − P) E (1 − Q)‖_S1`. As
+`P (K + x E) Q = K + x P E Q` and `(1 − P)(K + x E)(1 − Q) = x (1 − P) E (1 − Q)`,
+
+```
+tr(Y* (K + x E)) = ‖K‖_S1 + x tr(Z* P E Q) + |x| ‖(1 − P) E (1 − Q)‖_S1,
+```
+
+and `|tr(Z* P E Q)| ≤ ‖P E Q‖_S1`. So the real part of the left side is at least `‖K‖_S1`,
+and it is at most `‖K + x E‖_S1`. ∎
+
+The norm need not be constant along `E`. The part of `E` outside both ranges costs
+`|x| ‖(1 − P) E (1 − Q)‖_S1`, and the part inside saves at most `|x| ‖P E Q‖_S1`: a kink
+at `x = 0`.
+
+### CW4. Merged levels
+
+Let rows `i ≠ i'` of `K` be equal and columns `j ≠ j'` be equal. Then `K` is a minimum of
+`‖X‖_S1` among the matrices equal to it off the cell `(i, j)`.
+
+Proof. `P = 1 − ½ (e_i − e_i')(e_i − e_i')ᵀ` is the projection onto the vectors with equal
+coordinates `i` and `i'`, and `Q` is the same for `j` and `j'`; `P K = K = K Q`. A projection
+`A` has `Σ_r |A_ri|² = A_ii`, so `‖A e_i e_jᵀ B‖_S1 = √(A_ii B_jj)` for projections `A`, `B`.
+As `P_ii = Q_jj = ½`, both `‖P e_i e_jᵀ Q‖_S1` and `‖(1 − P) e_i e_jᵀ (1 − Q)‖_S1` are `½`,
+and CW3 holds for `E = e_i e_jᵀ`, with equality in its hypothesis. ∎
+
+So when one value of a cell merges its row with another row and its column with another
+column, that value is a fill of M.
+
+### CW5. One unseen cell of the boundary
+
+Let `(i, i)` with `0 < i < n − 1` be the only unseen cell of `C`. With `−1` in it, row `i` is
+row `i + 1` and column `i` is column `i − 1`. By CW4 this matrix is a minimum of M. By CW2,
+`C` is not, and a minimum with the true `1` in the cell would be `C`. So no minimum holds the
+true value.
+
+Let `(i + 1, i)` be the only unseen cell. With `1` in it, rows `i` and `i + 1` are equal and
+columns `i` and `i + 1` are equal. So this matrix is a minimum of M, and no minimum holds the
+true `−1`.
+
+M answers a comparison of two neighbours it has not seen against the truth: it merges them.
+OC5 gives the fill `−θ κ` for a kernel with orthogonal rows; here the rows are not
+orthogonal, and the fill of CW4 is `−κ`.
+
+### CW6. The wrap in the coordinates of the addends
+
+Take the rows `b` and the columns `x`. The sign of the step, `−1` where `b + x` wraps and `1`
+where it does not, is `C_{b, p−1−x}`: `b + x < p` reads `b ≤ p − 1 − x`. Reversing the columns
+keeps the nuclear norm and carries minima to minima. The boundary of the wrap is the pairs
+with `b + x = p − 1`, the last sums that do not wrap, and with `b + x = p`, the first that
+do. So:
+
+- the sign of the step is not a minimum of M once `Ω` misses a pair of the boundary;
+- with one pair of the boundary unseen, no minimum holds the true sign there;
+- with the pair `(b, x)`, `b + x = p − 1`, `0 < b < p − 1`, unseen, the table with a wrap at
+  that pair is a minimum: M writes `b − p` for `b`;
+- with the pair `(b, x)`, `b + x = p`, unseen, the table without a wrap there is a minimum: M
+  writes `b` for `b − p`.
+
+### CW7. A half-plane of a phase of rank one
+
+The model reads the steps, not the addends. In the steps the sum that is not reduced is an
+integer form:
+
+```
+b + x = 2 d₁ + 3 d₂ + 2p [d₂ < 0],
+```
+
+from `d₂ = a − p [d₂ < 0]`, `b = a + d₁` and `x = b + d₂`. So the wrap compares `2 d₁` with
+`p − 3 d₂ − 2p [d₂ < 0]`, and
+
+```
+exp(iπ (b + x) / p) = exp(2πi d₁ / p) · exp(3πi d₂ / p):
+```
+
+the phase of order `2p` of the sum is a kernel of rank one and modulus one in the two steps.
+For `0 ≤ n < 2p`, `sin(π (n + ½) / p) < 0` exactly when `n ≥ p`. Hence
+
+```
+d₃ < 0    ⟺    Im( exp(iπ / 2p) · exp(2πi d₁ / p) · exp(3πi d₂ / p) ) < 0.
+```
+
+The bit has two readouts. As a sign it is a comparison, which M does not complete at the
+boundary (CW2, CW5, CW6). As the phase of the sum it is a kernel of rank one, which M
+recovers under the conditions of Theorem G, and the wrap is a fixed half-plane of the
+recovered value. The phase is not a function of the answer alone: `b + x = 2 (d₃ mod p) + d₂`.
+It is a function of the answer and of the last step read, so a training example shows it.
+
+### CW8. An unseen token
+
+For an orthogonal projection `P` of the rows,
+
+```
+‖P X‖_S1² + ‖(1 − P) X‖_S1² ≤ ‖X‖_S1².
+```
+
+Proof. For contractions `Z`, `Z'` and real `c`, `s` with `c² + s² ≤ 1` the matrix
+`Y = c P Z + s (1 − P) Z'` is a contraction:
+`1 − Y* Y = c² (1 − Z* P Z) + s² (1 − Z'* (1 − P) Z') + (1 − c² − s²)`. Pair `X` with `Y` for
+the `Z`, `Z'` that attain the norms of the two blocks:
+`c ‖P X‖_S1 + s ‖(1 − P) X‖_S1 ≤ ‖X‖_S1`. Take `(c, s)` proportional to the two norms. ∎
+
+So removing a block of rows that is not zero lowers the norm. If no cell of row `i` is in
+`Ω`, removing the row stays among the matrices equal to `K` on `Ω`. Hence every minimum of M
+has a zero row `i`, and by the adjoint (OC1) a zero column `j` when no cell of column `j` is
+in `Ω`.
+
+A token that does not occur in training at an input position is such a row or column of
+every kernel of the task. M answers `0` there, which decodes to no value: for M the share of
+held-out inputs with an unseen token is a floor of the error.
+
+### CW9. The tables of the task (numerical)
+
+These numbers are computed, not proved. The task is `p = 97` with one feature and MASH-half
+tokens: 9408 states in 48 cycles of 196, of which 24 cycles (4704 states) are held out, for
+the seeds 11, 17 and 23 of the split. The two input tokens index a table of `194 × 370`
+cells, one cell for a state. M is computed by ADMM from the 4704 seen cells and decoded at
+the 4704 held-out ones. The program is `research/diffgpt_flat_spectrum/` of the `diff-gpt`
+repository (Rust, CPU).
+
+| Kernel | Seed 11 | Seed 17 | Seed 23 |
+| --- | ---: | ---: | ---: |
+| Residue `ψ(d₃)`, decoded right | 99.745% | 99.298% | 98.278% |
+| Sign of `d₃`, right | 91.008% | 91.837% | 90.795% |
+| Held-out cells with an unseen input token | 12 | 31 | 85 |
+| of these, residue right | 0 | 1 | 4 |
+| Residue wrong, both tokens seen | 0 | 3 | 0 |
+| Sign right at `b + x ∈ {p − 1, p}` | 40 / 91 | 41 / 94 | 54 / 110 |
+| Sign right at `b + x ≤ p − 8` or `≥ p + 7` | 3889 / 4034 | 3938 / 4058 | 3853 / 4016 |
+
+- The residue is recovered where both tokens were seen, and lost at an unseen token (CW8):
+  0.26%, 0.66% and 1.81% of the held-out cells.
+- The sign of the step is at chance at the boundary and wrong in 9% of the held-out cells.
+- One unseen diagonal cell of `C`, the others seen: the fill is `−1.000000` for
+  `n = 2, 3, 4, 8, 16, 25, 97` (CW5). One unseen cell at the distance `1, 2, 3, 5, 8` above
+  the diagonal, `n = 97`: the fill is `0.240`, `0.535`, `0.666`, `0.787`, `0.861` of the
+  truth.
+- The singular values of `C` are those of CW2 to `5 · 10⁻¹³` for these `n`.
+
+### CW10. Scope
+
+Proved: CW1 to CW8 as stated, without the paragraph on the spectrum in CW2.
+
+Not covered:
+
+- The table of the tokens. CW2, CW5 and CW6 are for the full table of the two addends with
+  one cell unseen. The model reads steps, and in the coordinates of the steps a quarter of
+  the cells are states. The task hides half of the cycles. For it there are only the numbers
+  of CW9.
+- Uniqueness. CW5 and CW6 say that the flipped table is a minimum and that no minimum holds
+  the truth. That every minimum is the flipped table is not proved; in CW9 the computed fill
+  is `−1.000000`.
+- The corners. For the cells `(0, 0)` and `(n − 1, n − 1)` CW2 says that `C` is not a
+  minimum; CW4 does not apply, as one neighbour is missing.
+- Readouts of the answer other than its sign and its characters. A readout of the integer
+  step that is a function of the answer alone and has a kernel of rank one is not exhibited;
+  the phase of CW7 depends on the last step read as well.
+- Trained models. CW5, CW6 and CW8 are about the minimum of M, the object of the modeling step
+  of Lemma 1. What a fit trained at a fixed weight decay answers at the boundary of the wrap
+  is not derived.
+
+### Lean
+
+`src/Transformer/Grokking/FlatSpectrum/`, modules `StepWrap`, `PolarDiagonal`, `Compare`,
+`ProjectionKink`, `MergedLevels`, `CompareFill`, `WrapFill`, `StepHalfPlane` and `UnseenRow`,
+namespace `Transformer.Grokking.FlatSpectrum`; proved without `sorry`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| CW1 | `modStep`, `modStep_eq`, `modStep_neg_iff`, `intCast_modStep`, `modStep_modEq_add`, `addChar_modStep` | `modStep p b x : ℤ` for natural `b`, `x`; the two cases are `b - if p ≤ b + x then p else 0`. The congruences are stated for all natural `a`, `b`, `x`; the cases and the sign ask for `b, x < p`. `ψ` is any `AddChar (ZMod p) ℂ`. That the kernel is the one of Theorems D, E and G is not a Lean statement. |
+| CW2 | `gramInvSqrt`, `polarFactor_eq_mul_gramInvSqrt`, `gramInvSqrt_eq`, `conjTranspose_gramInvSqrt`, `gramInvSqrt_apply_self_pos`, `det_ne_zero_of_add_conjTranspose`, `polarFactor_add_conjTranspose`, `re_polarFactor_apply_self`, `not_isMinOn_of_add_conjTranspose`, `compareKernel`, `compareKernel_add_conjTranspose`, `compareKernel_succ_row`, `compareKernel_succ_col`, `not_isMinOn_compareKernel_diag`, `re_polarFactor_compareKernel_succ`, `not_isMinOn_compareKernel_succ` | `K + Kᴴ = ((2 * c : ℝ) : ℂ) • 1`. `S` is `gramInvSqrt K`, the functional calculus of `x ↦ (√x)⁻¹` at `Kᴴ * K`, and its diagonal is given as a positive real. `compareKernel n` is over `Fin n`; the neighbour is `i'` with `(i : ℕ) + 1 = i'`. The spectrum of `C` is not in Lean. |
+| CW3 | `one_sub_mul_one_sub`, `IsContraction.posSemidef_one_sub`, `IsContraction.proj_add_proj`, `trace_conjTranspose_proj_mul`, `nuclearNorm_le_add_smul_of_proj`, `isMinOn_compl_singleton_of_proj` | A projection is `Pᴴ = P` and `P * P = P`. The last statement is the case `E = e_i e_jᵀ` as a minimum among the matrices equal to `K` on `({(i, j)}ᶜ : Set (m × n))`. |
+| CW4 | `diffVec`, `mergeProj`, `star_diffVec`, `diffVec_dotProduct_self`, `conjTranspose_mergeProj`, `mergeProj_mul_mergeProj`, `mergeProj_apply_self`, `mergeProj_mul_of_row_eq`, `mul_mergeProj_of_col_eq`, `sum_norm_sq_col_of_proj`, `sum_norm_sq_row_of_proj`, `nuclearNorm_mul_single_mul_of_proj`, `isMinOn_of_row_eq_of_col_eq` | `mergeProj i i'` is `1 − ½ (e_i − e_i')(e_i − e_i')ᴴ`. The norm of `A e_i e_jᵀ B` is `√(A i i).re * √(B j j).re`. |
+| CW5 | `add_smul_single_one_apply`, `mem_add_smul_single_of_mem`, `isMinOn_compareKernel_flip_diag`, `isMinOn_compareKernel_flip_succ`, `ne_of_isMinOn_compareKernel_diag`, `ne_of_isMinOn_compareKernel_succ` | The flipped tables are `compareKernel n + (-2) • single i i 1` and `compareKernel n + 2 • single i₁ i 1`. "No minimum holds the true value" is `X i i ≠ 1` and `X i₁ i ≠ -1` for a minimum `X` equal to the kernel at the other cells, and holds at the corners as well. The comparison with OC5 is not a Lean statement. |
+| CW6 | `wrapKernel`, `wrapKernel_eq_submatrix`, `wrapKernel_submatrix`, `isMinOn_submatrix`, `not_isMinOn_wrapKernel`, `ne_of_isMinOn_wrapKernel`, `isMinOn_wrapKernel_flip`, `isMinOn_wrapKernel_flip_succ` | `wrapKernel p` is `-1` where `modStep p b x < 0` and `1` elsewhere, over `Fin p`. The boundary is `(b : ℕ) + x + 1 = p ∨ (b : ℕ) + x = p`. `isMinOn_submatrix` is for any two permutations of rows and columns. "M writes `b − p` for `b`" is the flipped sign, not a statement about `modStep`. |
+| CW7 | `add_eq_steps`, `modStep_neg_iff_steps`, `exp_sum_eq_mul`, `sin_neg_iff_le`, `modStep_neg_iff_im_neg` | `d₁` is `(b : ℤ) - a` and `d₂` is `modStep p a b`, for `a, b < p`; `[d₂ < 0]` is an `if`. The last paragraph of the item is not a Lean statement. |
+| CW8 | `IsContraction.smul_proj_add`, `nuclearNorm_proj_sq_add_sq_le`, `nuclearNorm_proj_lt`, `row_eq_zero_of_isMinOn`, `col_eq_zero_of_isMinOn` | "Removing a block lowers the norm" is `nuclearNorm (P * X) < nuclearNorm X` for `(1 - P) * X ≠ 0`. The row has `∀ j, (i, j) ∉ Ω`, and that `X` equals `K` on `Ω` is a separate hypothesis. The reading for tokens is not a Lean statement. |

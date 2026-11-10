@@ -123,6 +123,15 @@ public import Transformer.Grokking.FlatSpectrum.OneCellRay
 public import Transformer.Grokking.FlatSpectrum.OneCellPhase
 public import Transformer.Grokking.FlatSpectrum.OneCellMin
 public import Transformer.Grokking.FlatSpectrum.OneCellFlat
+public import Transformer.Grokking.FlatSpectrum.StepWrap
+public import Transformer.Grokking.FlatSpectrum.PolarDiagonal
+public import Transformer.Grokking.FlatSpectrum.Compare
+public import Transformer.Grokking.FlatSpectrum.ProjectionKink
+public import Transformer.Grokking.FlatSpectrum.MergedLevels
+public import Transformer.Grokking.FlatSpectrum.CompareFill
+public import Transformer.Grokking.FlatSpectrum.WrapFill
+public import Transformer.Grokking.FlatSpectrum.StepHalfPlane
+public import Transformer.Grokking.FlatSpectrum.UnseenRow
 public import Transformer.Grokking.FlatSpectrum.Recall
 public import Transformer.Grokking.FlatSpectrum.BlockCut
 
@@ -348,6 +357,22 @@ one: the opposite phase, at a modulus exponentially small in `m`. The block lang
 of the depth hierarchy of
 C-RASP (`BlockCut`): five numbers across every cut decide every `L_k` by a sign, the indicator
 of `L_k` holds a flat kernel of size `k / 2`, and no transformer of depth `k` recognizes
-`L_{k+1}`, so that hierarchy is in depth at bounded cut width. -/
+`L_{k+1}`, so that hierarchy is in depth at bounded cut width. The step of an additive
+recurrence modulo `p` in a difference encoding (`StepWrap`, `PolarDiagonal`, `Compare`,
+`ProjectionKink`, `MergedLevels`, `CompareFill`, `WrapFill`, `StepHalfPlane`, `UnseenRow`): the
+step `(b + x) % p − x` is the residue `b`, a kernel of rank one in the two steps before it,
+and a wrap. The sign of the step is the comparison kernel `C` (`1` for `i ≤ j`, `−1` below)
+with reversed columns, and `C + Cᴴ = 2`. A kernel `K` with `K + Kᴴ = 2c`, `c > 0`, has a polar
+factor with a positive diagonal, so by Theorem A it is not a minimum of M once a diagonal cell
+is unseen; for `C` the same holds for the cells just below the diagonal. A matrix with two
+equal rows `i`, `i'` and two equal columns `j`, `j'` is a minimum of M among the matrices equal
+to it off `(i, j)`, by a kink of the nuclear norm between two projections. So with one unseen
+cell at the boundary of `C`, or one unseen pair with `b + x = p − 1` or `b + x = p`, the table
+with that cell flipped is a minimum of M and no minimum holds the true sign. In the steps
+`d₁`, `d₂` the sum is `b + x = 2 d₁ + 3 d₂ + 2p [d₂ < 0]`, so
+`exp (iπ (b + x) / p) = exp (2πi d₁ / p) · exp (3πi d₂ / p)` has rank one and the wrap is the
+half-plane `Im (exp (iπ / 2p) · …) < 0` of it. A row or a column with no seen cell is zero in
+every minimum of M, as `‖P X‖_S1² + ‖(1 − P) X‖_S1² ≤ ‖X‖_S1²` for a projection `P` of the
+rows. -/
 
 @[expose] public section
