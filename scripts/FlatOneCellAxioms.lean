@@ -1,0 +1,54 @@
+import Transformer
+
+/-! Audit *One unseen cell* of `review/flat_spectrum.md`, items OC1–OC6. -/
+
+#print axioms Transformer.Grokking.FlatSpectrum.nuclearNorm_conjTranspose_le
+#print axioms Transformer.Grokking.FlatSpectrum.nuclearNorm_conjTranspose
+#print axioms Transformer.Grokking.FlatSpectrum.nuclearNorm_of_gram_eq_smul_one_add
+#print axioms Transformer.Grokking.FlatSpectrum.mul_conjTranspose_smul_single_apply
+#print axioms Transformer.Grokking.FlatSpectrum.smul_single_mul_conjTranspose_apply
+#print axioms Transformer.Grokking.FlatSpectrum.cellFrame_gram
+#print axioms Transformer.Grokking.FlatSpectrum.mul_conjTranspose_add_smul_single
+#print axioms Transformer.Grokking.FlatSpectrum.restSq_nonneg
+#print axioms Transformer.Grokking.FlatSpectrum.corner_eq
+#print axioms Transformer.Grokking.FlatSpectrum.nuclearNorm_add_smul_single
+#print axioms Transformer.Grokking.FlatSpectrum.norm_sq_add_restSq
+#print axioms Transformer.Grokking.FlatSpectrum.sum_norm_sq_le_of_mul_conjTranspose
+#print axioms Transformer.Grokking.FlatSpectrum.norm_sq_add_restSq_le
+#print axioms Transformer.Grokking.FlatSpectrum.hadamard_mul_conjTranspose
+#print axioms Transformer.Grokking.FlatSpectrum.restSq_hadamard
+#print axioms Transformer.Grokking.FlatSpectrum.ray_nonneg
+#print axioms Transformer.Grokking.FlatSpectrum.ray_outer_nonneg
+#print axioms Transformer.Grokking.FlatSpectrum.exists_ray_lt
+#print axioms Transformer.Grokking.FlatSpectrum.cellNorm_ray
+#print axioms Transformer.Grokking.FlatSpectrum.norm_le_cellNorm
+#print axioms Transformer.Grokking.FlatSpectrum.exists_forall_cellNorm_le
+#print axioms Transformer.Grokking.FlatSpectrum.le_mul_of_forall_cellNorm_le
+#print axioms Transformer.Grokking.FlatSpectrum.mul_sub_le_of_forall_cellNorm_le
+#print axioms Transformer.Grokking.FlatSpectrum.exists_neg_mul_of_forall_cellNorm_le
+#print axioms Transformer.Grokking.FlatSpectrum.add_smul_single_apply_of_mem
+#print axioms Transformer.Grokking.FlatSpectrum.eq_add_single_of_mem
+#print axioms Transformer.Grokking.FlatSpectrum.nuclearNorm_eq_cellNorm
+#print axioms Transformer.Grokking.FlatSpectrum.exists_isMinOn_compl_singleton
+#print axioms Transformer.Grokking.FlatSpectrum.exists_neg_mul_of_isMinOn_compl_singleton
+#print axioms Transformer.Grokking.FlatSpectrum.isContraction_swap
+#print axioms Transformer.Grokking.FlatSpectrum.hadamard_fill_mem
+#print axioms Transformer.Grokking.FlatSpectrum.isMinOn_hadamard_fill
+#print axioms Transformer.Grokking.FlatSpectrum.conjTranspose_mem
+#print axioms Transformer.Grokking.FlatSpectrum.isMinOn_conjTranspose
+#print axioms Transformer.Grokking.FlatSpectrum.exists_isMinOn_compl_singleton_of_conjTranspose_mul
+#print axioms Transformer.Grokking.FlatSpectrum.exists_neg_mul_of_isMinOn_compl_singleton_of_conjTranspose_mul
+#print axioms Transformer.Grokking.FlatSpectrum.IsFlat.exists_isMinOn_cell
+#print axioms Transformer.Grokking.FlatSpectrum.IsFlat.exists_neg_mul_of_isMinOn_cell
+#print axioms Transformer.Grokking.FlatSpectrum.hadamard_conjTranspose
+#print axioms Transformer.Grokking.FlatSpectrum.hadamard_conjTranspose_mul
+#print axioms Transformer.Grokking.FlatSpectrum.restSq_hadamard_conjTranspose
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.restSq_recallKernel_pos
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.restSq_recallKernel_of_norm_eq_one
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.scale_of_norm_eq_one
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.exists_isMinOn_recallKernel
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.exists_neg_mul_of_isMinOn_recallKernel
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.exists_neg_mul_of_isMinOn_recallKernel_of_norm_eq_one
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.sum_sign_eq_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.norm_sign_eq_one
+#print axioms Transformer.Grokking.FlatSpectrum.Recall.sign_ne_zero

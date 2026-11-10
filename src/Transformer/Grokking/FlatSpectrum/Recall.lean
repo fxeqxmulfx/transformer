@@ -23,6 +23,7 @@ public import Transformer.Grokking.FlatSpectrum.Recall.TwoLayersRecall
 public import Transformer.Grokking.FlatSpectrum.Recall.Family
 public import Transformer.Grokking.FlatSpectrum.Recall.AffineFamily
 public import Transformer.Grokking.FlatSpectrum.Recall.MultiQuery
+public import Transformer.Grokking.FlatSpectrum.Recall.Unseen
 
 /-!
 # Associative recall has a flat spectrum
@@ -84,4 +85,11 @@ bound and the exact bound hold on the family (`Family`). The `p²` affine dictio
 which are not, are recalled at cut width one (`AffineFamily`). A dictionary and a query are an
 input of the multi-query task of the Zoology paper, with distinct keys and the answer `π q` at
 its last triple, so a model of that task is bounded as well (`MultiQuery`).
+
+The first paragraph says that recall is not a minimum of M, and not what the minimum is. With
+one unseen pair `(q, π)` it is known (*One unseen cell* of the note). For two keys or more and a
+centered readout without zeros, a minimum of M from the other pairs exists, and every minimum
+answers the unseen pair with `−θ φ(π q)`, `g / (2c − g) ≤ θ ≤ g / (c − g)`, where
+`c = |ν|^{m−1} ∑_v |φ(v)|²` and `g = ∑_{p ≠ q} |φ(π p)|²`: the opposite phase. For a readout of
+modulus one, `(m − 1) / (2 |ν|^m − (m − 1)) ≤ θ ≤ (m − 1) / (|ν|^m − (m − 1))` (`Unseen`).
 -/

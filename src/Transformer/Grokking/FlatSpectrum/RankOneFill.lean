@@ -81,10 +81,9 @@ theorem nuclearNorm_vecMulVec_add_single {a b : n → ℂ} (ha : ∀ k, ‖a k�
 example := nuclearNorm_vecMulVec_add_single (a := fun _ : Fin 2 => 1) (b := fun _ => 1)
   (by simp) (by simp) le_rfl 0 0 1
 
-omit [Fintype n] in
 /-- A matrix agreeing with `K` off `(i, j)` is `K + (Y_ij − K_ij) e_ij`. -/
-lemma eq_add_single_of_mem {K Y : Matrix n n ℂ} {i j : n}
-    (hY : ∀ kl ∈ ({(i, j)}ᶜ : Set (n × n)), Y kl.1 kl.2 = K kl.1 kl.2) :
+lemma eq_add_single_of_mem {m n : Type*} [DecidableEq m] [DecidableEq n] {K Y : Matrix m n ℂ}
+    {i : m} {j : n} (hY : ∀ kl ∈ ({(i, j)}ᶜ : Set (m × n)), Y kl.1 kl.2 = K kl.1 kl.2) :
     Y = K + (Y i j - K i j) • single i j 1 := by
   ext k l
   by_cases h : k = i ∧ l = j
@@ -97,10 +96,10 @@ lemma eq_add_single_of_mem {K Y : Matrix n n ℂ} {i j : n}
 example := eq_add_single_of_mem (K := (1 : Matrix (Fin 2) (Fin 2) ℂ)) (Y := 1) (i := 0) (j := 0)
   (fun _ _ => rfl)
 
-omit [Fintype n] in
 /-- Changing the entry `(i, j)` keeps every other entry. -/
-lemma add_smul_single_apply_of_mem {K : Matrix n n ℂ} {i j : n} (t : ℂ) :
-    ∀ kl ∈ ({(i, j)}ᶜ : Set (n × n)), (K + t • single i j 1 : Matrix n n ℂ) kl.1 kl.2 =
+lemma add_smul_single_apply_of_mem {m n : Type*} [DecidableEq m] [DecidableEq n]
+    {K : Matrix m n ℂ} {i : m} {j : n} (t : ℂ) :
+    ∀ kl ∈ ({(i, j)}ᶜ : Set (m × n)), (K + t • single i j 1 : Matrix m n ℂ) kl.1 kl.2 =
       K kl.1 kl.2 := by
   intro kl hkl
   have hne : ¬(i = kl.1 ∧ j = kl.2) := fun ⟨h1, h2⟩ => hkl (by simp [h1, h2])

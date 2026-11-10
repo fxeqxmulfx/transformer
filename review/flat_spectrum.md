@@ -9427,7 +9427,9 @@ Not covered:
   section shows that these inputs are inputs of that task, so the lower bounds transfer.
 - AR3 and AR9 say that the recall kernel is not a minimum of M and is not returned by
   training from a part of its table. They do not say what the minimum is or how far its
-  decoded answers are from recall.
+  decoded answers are from recall. *One unseen cell* below gives the minimum when one pair is
+  unseen: it answers that pair with the opposite phase, at a modulus of the order `m / |ν|^m`
+  of the right one for a readout of modulus one.
 
 ### Lean
 
@@ -9976,3 +9978,175 @@ The task is that of `Transformer.Zoology` (`MQARInstance`, `PriorAnswer`, `Uniqu
 | FD3 | `HasCutWidth.mul_le_sum_sq_of_isPairwiseUniform`, `HasCutWidth.card_le_of_recall_of_isPairwiseUniform` | The readout is `F : κ → (κ → ν) → ℝ`, evaluated at `D i`. `min(m, |ι|)` is kept: `m ≤ |ι|` is not derived. |
 | FD4 | `affineDict`, `isPairwiseUniform_affineDict`, `HasCutWidth.mul_le_sum_sq_affineDict`, `HasCutWidth.card_le_of_recall_affineDict`, `exists_hasCutWidth_one_recall_const` | The field is any finite field `𝔽`, the family is indexed by `𝔽 × 𝔽`, and `p` is `Fintype.card 𝔽`. |
 | FD5 | `mqarOfDictionary`, `castLE_ne_mk`, `uniqueKeys_mqarOfDictionary`, `priorAnswer_mqarOfDictionary`, `not_priorAnswer_mqarOfDictionary`, `card_le_of_mqar`, `mqar_recall_error`, `hasCutWidth_firstValue` | Tokens are `Fin c`, the key `j` is `Fin.castLE` of `j : Fin m`, and the new key and value of the last triple are the token `m`. The model's answer at the last triple is any `G : MQARInstance (m + 1) c → ℝ`; "answers" is `G x = φ u` for the `u` with `PriorAnswer x (Fin.last m) u`, on inputs with `UniqueKeys`. |
+
+## One unseen cell (added)
+
+The last item of AR10 says: "AR3 and AR9 say that the recall kernel is not a minimum of M and
+is not returned by training from a part of its table. They do not say what the minimum is or
+how far its decoded answers are from recall." The Corollary of the note answers for a square
+kernel with `K* K = N I`, `N ≥ 2`, and one missing entry of modulus one: the fill is `−K_ij`
+(`isMinOn_flat_fill_iff`). The recall kernel is not square, and a readout need not have
+modulus one. This section finds the minimum of M when one cell of a kernel with orthogonal
+rows is unseen. It exists, and it fills the cell with `−θ K_ij` for a `θ > 0` bounded on both
+sides.
+
+### OC1. Two tools
+
+The nuclear norm of the adjoint is that of the matrix, `‖Xᴴ‖_S1 = ‖X‖_S1`: pair `X` with the
+adjoint of the contraction that attains `‖Xᴴ‖_S1`.
+
+Let `Xᴴ X = c 1 + U M Uᴴ` with `c ≥ 0`, where `U` has two orthogonal columns of squared
+lengths `d₀, d₁ > 0` and `M` is a `2 × 2` block. With `B = M + c diag(1/d₀, 1/d₁)` and `n`
+the number of columns of `X`,
+
+```
+‖X‖_S1 = √c (n − 2) + √(Re tr(B diag d) + 2 √(|det B| d₀ d₁)).
+```
+
+Proof: `P = U diag(1/d) Uᴴ` is the projection onto the span of `U`, and
+`Xᴴ X = c (1 − P) + U B Uᴴ` with `tr (1 − P) = n − 2`. This is the form of the block formula
+in the row *the centered indicator of 0* of the Lean status
+(`nuclearNorm_of_gram_eq_proj_add_diagonal`).
+
+### OC2. The Gram matrix of a changed cell
+
+Let `K Kᴴ = c 1`, `κ = K_ij`, and change the cell `(i, j)` by `t`: `X = K + t e_i e_jᵀ`. Write
+`k_j` for the column `j` of `K` and `u = k_j − κ e_i` for that column outside the row `i`, of
+squared length `g = Σ_{p ≠ i} |K_pj|²`. Then
+
+```
+X Xᴴ = c 1 + t e_i k_jᴴ + t̄ k_j e_iᴴ + |t|² e_i e_iᴴ
+     = c 1 + U [[t κ̄ + t̄ κ + |t|², t], [t̄, 0]] Uᴴ,        U = [e_i, u],
+```
+
+and `Uᴴ U = diag(1, g)`.
+
+### OC3. The norm
+
+For `g > 0`, OC1 for `Xᴴ` and OC2 give, with `τ = t κ̄ + t̄ κ + |t|² = |κ + t|² − |κ|²` and `m`
+the number of rows,
+
+```
+‖K + t e_i e_jᵀ‖_S1 = √c (m − 2) + √(2c + τ + 2 √|c (c + τ) − g |t|²|).
+```
+
+Here `B = [[τ + c, t], [t̄, c/g]]`, `tr(B diag(1, g)) = 2c + τ` and
+`g det B = c (c + τ) − g |t|²`.
+
+The column `j` of `K` has squared length at most `c`, as `K / √c` is a contraction:
+`|κ|² + g ≤ c`.
+
+### OC4. The value of the cell
+
+Write `x = κ + t` for the value of the cell, `s = |κ| > 0`, and
+
+```
+N(x) = √(2c + |x|² − s² + 2 √|c (c + |x|² − s²) − g |x − κ|²|),
+```
+
+so that the norm of OC3 is `√c (m − 2) + N(x)`. Let `g > 0` and `s² + g ≤ c`.
+
+`N` is continuous and `N(x) ≥ |x|`, so some `x` minimizes it. Every minimizing `x` is
+
+```
+x = −θ κ      with      g / (2c − g) ≤ θ ≤ g / (c − g).
+```
+
+Proof. On the ray `x = −(r/s) κ`, `r ≥ 0`, opposite to `κ`: `|x| = r`, `|x − κ| = r + s`, and
+the inner square root is of `Δ(r) = c (c + r² − s²) − g (r + s)²`. This is not negative:
+`(c − g) Δ(r) = c² (c − g − s²) + ((c − g) r − g s)²` and `c − g ≥ s² > 0`. So on the ray
+`N² = 2c − s² + r² + 2 √Δ(r)`.
+
+- Off the closed ray, `|x − κ| < |x| + s`, since `ℂ` is strictly convex. Then
+  `|c (c + |x|² − s²) − g |x − κ|²| > Δ(|x|)`, and the point of the ray with the modulus `|x|`
+  has a smaller `N`.
+- Near zero `N` decreases along the ray. With `w = √Δ(0)`, `0 < w ≤ c`,
+  `Δ(r) = w² + ((c − g) r − 2 g s) r`. Let `r₁ = g s / (w + c − g)` and `0 ≤ r < r₁`. Then
+  `√Δ(r) ≤ w`, `√Δ(r₁) ≤ w` and
+  `Δ(r) − Δ(r₁) = (r₁ − r)(2 g s − (c − g)(r + r₁)) > (r₁ − r)(r₁ + r) w`, so
+  `2 (√Δ(r) − √Δ(r₁)) > r₁² − r²`. As `w ≤ c`, `r₁ ≥ g s / (2c − g)`: a minimizing modulus is
+  at least `g s / (2c − g)`, and `x = 0` is not a minimum.
+- Beyond `ρ = g s / (c − g)` it increases: `Δ(r) = Δ(ρ) + (c − g)(r − ρ)²`, so for `r > ρ`
+  both `r²` and `Δ(r)` are larger than at `ρ`.
+
+### OC5. One unseen cell
+
+Let `K Kᴴ = c 1` with `c > 0`, and let `(i, j)` be the only unseen cell, with `κ = K_ij ≠ 0`
+and `g = Σ_{p ≠ i} |K_pj|² > 0`. A matrix equal to `K` at the other cells is
+`K + (x − κ) e_i e_jᵀ` for its value `x` at the cell. So by OC3 and OC4:
+
+- a minimum of M from the other cells exists;
+- every minimum `X` has `X_ij = −θ κ` with `g / (2c − g) ≤ θ ≤ g / (c − g)`: the unseen cell
+  is filled with the opposite phase.
+
+The upper bound is attained. For the Hadamard matrix `[[1, 1], [1, −1]]` and the cell
+`(0, 0)`: `c = 2`, `κ = 1`, `g = 1`. The fill `[[−1, 1], [1, −1]]` has norm `2`, and the swap
+`[[0, 1], [1, 0]]` is a contraction that pairs every fill to `2`, so this fill is the minimum
+and `θ = 1 = g / (c − g)`.
+
+For a square kernel with `K* K = N I` and `|K_ij| = 1`, the case of the Corollary, `c = N`
+and `g = N − 1`, and the Corollary has `θ = 1`: between the bounds `(N − 1) / (N + 1)` and
+`N − 1` of this item.
+
+By OC1 the adjoint carries the fills of `K` without `(i, j)` to the fills of `Kᴴ` without
+`(j, i)`, and minima to minima. So for orthogonal columns, `Kᴴ K = c 1`, the same two
+statements hold with `g' = Σ_{q ≠ j} |K_iq|²`, the rest of the row of the cell, in the place
+of `g`. For a flat kernel of either shape with `κ ≠ 0`, `g > 0` and `g' > 0`: a minimum
+exists, and every minimum fills the cell with `−θ κ`, `θ > 0`.
+
+### OC6. Recall with one unseen pair
+
+The recall kernel of a centered readout has `K Kᴴ = c 1` with `c = |ν|^{m−1} Σ_v |φ(v)|²`
+(AR2). For the pair `(q, π)` its cell is `φ(π q)`, and `g = Σ_{p ≠ q} |φ(π p)|²` is the sum of
+the squared readouts of the other keys of the dictionary: positive for a readout without
+zeros and two keys or more. So, with every pair but `(q, π)` seen:
+
+- a minimum of M exists;
+- every minimum answers the unseen pair with `−θ φ(π q)`, `g / (2c − g) ≤ θ ≤ g / (c − g)`.
+
+For a readout of modulus one, `g = m − 1` and `c = |ν|^m`:
+
+```
+(m − 1) / (2 |ν|^m − (m − 1)) ≤ θ ≤ (m − 1) / (|ν|^m − (m − 1)).
+```
+
+The answer at the unseen pair has the opposite phase, for a real readout the wrong sign, and
+its modulus is of the order `m / |ν|^m` of the right one. For two keys with values `±1`,
+`1/7 ≤ θ ≤ 1/3`.
+
+### OC7. Scope
+
+Proved: OC1 to OC6 as stated.
+
+Not covered:
+
+- More than one unseen cell. With `k` unseen cells the Gram matrix of OC2 changes on a block
+  of size up to `2k`, and no closed form is derived. AR3 still says that recall is not the
+  minimum. The numerical check of the note, "Many missing entries (ADMM): the mean
+  fill/truth ratio is −0.16, −0.78, −0.87 and −0.96 at 50, 90, 95 and 99% seen", is for the
+  square kernel of `x³ + x y` and is not a theorem.
+- The value of `θ`. On the ray it minimizes `r² + 2 √Δ(r)`. OC4 bounds it on both sides,
+  within the factor `2 + g / (c − g)`; neither bound is exact in general.
+- `g = 0`: a cell that is alone in its column, or alone in its row for orthogonal columns.
+  The Torch check row of the one-hot kernels treats a row whose seen entries are all zero.
+- A decoded answer. With more than two values the answer is decoded from several readouts;
+  OC6 is for one readout `φ`.
+- Trained models. OC5 and OC6 are about the minimum of M, the object of the modeling step
+  of Lemma 1. What a fit trained at a fixed weight decay (R4, AR9) answers at the unseen pair
+  is not derived.
+
+### Lean
+
+`src/Transformer/Grokking/FlatSpectrum/`, modules `OneCell`, `OneCellNorm`, `OneCellRay`,
+`OneCellPhase`, `OneCellMin` and `OneCellFlat`, namespace `Transformer.Grokking.FlatSpectrum`,
+and `Recall/Unseen`, namespace `Transformer.Grokking.FlatSpectrum.Recall`; proved without
+`sorry`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| OC1 | `nuclearNorm_conjTranspose_le`, `nuclearNorm_conjTranspose`, `nuclearNorm_of_gram_eq_smul_one_add` | `d : Fin 2 → ℝ` with `Uᴴ U = diagonal d`; the trace term is the real part of `tr ((M + c • diagonal d⁻¹) * diagonal d)`; `n` is `Fintype.card n` as a real number. |
+| OC2 | `mul_conjTranspose_smul_single_apply`, `smul_single_mul_conjTranspose_apply`, `cellFrame`, `restSq`, `cellFrame_gram`, `mul_conjTranspose_add_smul_single` | `e_i e_jᵀ` is `Matrix.single i j 1`. `restSq K i j` is `∑ p, if i = p then 0 else ‖K p j‖ ^ 2`, and `cellFrame K i j` has the columns `e_i` and `u`. |
+| OC3 | `restSq_nonneg`, `corner_eq`, `nuclearNorm_add_smul_single`, `norm_sq_add_restSq`, `sum_norm_sq_le_of_mul_conjTranspose`, `norm_sq_add_restSq_le`, `hadamard_mul_conjTranspose`, `restSq_hadamard` | `τ` is written `‖K i j + t‖ ^ 2 - ‖K i j‖ ^ 2`. `m − 2` is a subtraction of real numbers; `g > 0` gives two rows. The formula asks for `c ≥ 0`, the bound on the column for `c > 0`. |
+| OC4 | `ray_nonneg`, `ray_outer_nonneg`, `exists_ray_lt`, `cellNorm`, `cellNorm_ray`, `norm_le_cellNorm`, `exists_forall_cellNorm_le`, `le_mul_of_forall_cellNorm_le`, `mul_sub_le_of_forall_cellNorm_le`, `exists_neg_mul_of_forall_cellNorm_le` | The bounds are `g ≤ θ * (2 * c - g)` and `θ * (c - g) ≤ g`, with `0 < θ` stated as well. `exists_ray_lt` asks for `r * (2 * c - g) < g * s` and returns some `r₁ > 0`. Existence asks only for `‖κ‖ ^ 2 ≤ 2 * c`. |
+| OC5 | `add_smul_single_apply_of_mem`, `eq_add_single_of_mem`, `nuclearNorm_eq_cellNorm`, `exists_isMinOn_compl_singleton`, `exists_neg_mul_of_isMinOn_compl_singleton`, `isContraction_swap`, `hadamard_fill_mem`, `isMinOn_hadamard_fill`, `conjTranspose_mem`, `isMinOn_conjTranspose`, `exists_isMinOn_compl_singleton_of_conjTranspose_mul`, `exists_neg_mul_of_isMinOn_compl_singleton_of_conjTranspose_mul`, `IsFlat.exists_isMinOn_cell`, `IsFlat.exists_neg_mul_of_isMinOn_cell`, `hadamard_conjTranspose`, `hadamard_conjTranspose_mul`, `restSq_hadamard_conjTranspose` | The seen cells are `({(i, j)}ᶜ : Set (m × n))`, as in the row of the one-hot kernels. A minimum is `IsMinOn nuclearNorm` on the matrices equal to `K` there, and that `X` is one of them is a separate hypothesis. `add_smul_single_apply_of_mem` and `eq_add_single_of_mem` are the lemmas of `RankOneFill`, now stated for rectangular matrices. For orthogonal columns `g'` is `restSq Kᴴ j i`. The statement for either shape asks for `g > 0` and `g' > 0` and keeps only `θ > 0`. The comparison with the Corollary is not a Lean statement. |
+| OC6 | `restSq_recallKernel_pos`, `restSq_recallKernel_of_norm_eq_one`, `scale_of_norm_eq_one`, `exists_isMinOn_recallKernel`, `exists_neg_mul_of_isMinOn_recallKernel`, `exists_neg_mul_of_isMinOn_recallKernel_of_norm_eq_one`, `sum_sign_eq_zero`, `norm_sign_eq_one`, `sign_ne_zero` | "Two keys or more" is `Nontrivial κ`. The readout is complex, and "modulus one" is `‖φ v‖ = 1` for every `v`. "Of the order `m / \|ν\|^m`" is the two bounds, not a separate statement. |

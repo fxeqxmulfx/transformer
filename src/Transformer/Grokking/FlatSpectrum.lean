@@ -117,6 +117,12 @@ public import Transformer.Grokking.FlatSpectrum.Training
 public import Transformer.Grokking.FlatSpectrum.FlatKernel
 public import Transformer.Grokking.FlatSpectrum.FlatSupport
 public import Transformer.Grokking.FlatSpectrum.FlatCapacity
+public import Transformer.Grokking.FlatSpectrum.OneCell
+public import Transformer.Grokking.FlatSpectrum.OneCellNorm
+public import Transformer.Grokking.FlatSpectrum.OneCellRay
+public import Transformer.Grokking.FlatSpectrum.OneCellPhase
+public import Transformer.Grokking.FlatSpectrum.OneCellMin
+public import Transformer.Grokking.FlatSpectrum.OneCellFlat
 public import Transformer.Grokking.FlatSpectrum.Recall
 public import Transformer.Grokking.FlatSpectrum.BlockCut
 
@@ -313,7 +319,14 @@ rank and its effective rank are then `min(m, n)`, the largest an `m × n` matrix
 minimum of M from `Ω` exactly when every unseen cell is a zero of `K`, by Theorem A at full row
 or full column rank, so a flat kernel without zeros is a minimum from no proper `Ω`. Every `X`
 has `‖K − X‖_S2² ≥ c (min(m, n) − rank X)`, so a product through width `k` misses `K` by at least
-`c (min(m, n) − k)`: each unit of width buys the same share of `‖K‖_S2²`. Associative recall
+`c (min(m, n) − k)`: each unit of width buys the same share of `‖K‖_S2²`. One unseen cell
+(`OneCell`, `OneCellNorm`, `OneCellRay`, `OneCellPhase`, `OneCellMin`, `OneCellFlat`): changing
+the cell `κ` of a kernel with `K Kᴴ = c I` to `x` gives the nuclear norm
+`√c (m − 2) + √(2c + |x|² − |κ|² + 2 √|c (c + |x|² − |κ|²) − g |x − κ|²|)`, with `g` the squared
+length of the rest of the column. So with one unseen cell, not zero and with `g > 0`, a minimum
+of M exists and every minimum fills the cell with `−θ κ`, `g / (2c − g) ≤ θ ≤ g / (c − g)`:
+the opposite phase. The upper bound is attained by the Hadamard matrix of size two, and the
+adjoint gives the same for orthogonal columns. Associative recall
 (`Recall`, the task of the Zoology paper): the kernel `φ(π q)` of a query `q` and a dictionary
 `π` of `m` keys is flat for a centered readout, with effective rank `m`. So a readout through
 which `d` numbers cross from the context to the query misses at least the fraction `1 − d / m`
@@ -328,8 +341,11 @@ so two Coyote layers of dimension `d` recall at most `10 d` bindings, and `m` at
 `m`. The bounds need not all `c^m` dictionaries: a family in which every two keys take every
 pair of values equally often has a flat kernel too, so the `p²` affine dictionaries over a
 field of `p` elements force width `p`; and a dictionary with a query is an input of the
-multi-query task of the paper, so the bounds hold for it. The block languages `L_k` of the
-depth hierarchy of
+multi-query task of the paper, so the bounds hold for it. From all pairs but one, the minimum
+of M answers the unseen pair with `−θ φ(π q)`, where
+`(m − 1) / (2 |ν|^m − (m − 1)) ≤ θ ≤ (m − 1) / (|ν|^m − (m − 1))` for a readout of modulus
+one: the opposite phase, at a modulus exponentially small in `m`. The block languages `L_k`
+of the depth hierarchy of
 C-RASP (`BlockCut`): five numbers across every cut decide every `L_k` by a sign, the indicator
 of `L_k` holds a flat kernel of size `k / 2`, and no transformer of depth `k` recognizes
 `L_{k+1}`, so that hierarchy is in depth at bounded cut width. -/
