@@ -10403,3 +10403,124 @@ namespace `Transformer.Grokking.FlatSpectrum`; proved without `sorry`.
 | CW6 | `wrapKernel`, `wrapKernel_eq_submatrix`, `wrapKernel_submatrix`, `isMinOn_submatrix`, `not_isMinOn_wrapKernel`, `ne_of_isMinOn_wrapKernel`, `isMinOn_wrapKernel_flip`, `isMinOn_wrapKernel_flip_succ` | `wrapKernel p` is `-1` where `modStep p b x < 0` and `1` elsewhere, over `Fin p`. The boundary is `(b : ℕ) + x + 1 = p ∨ (b : ℕ) + x = p`. `isMinOn_submatrix` is for any two permutations of rows and columns. "M writes `b − p` for `b`" is the flipped sign, not a statement about `modStep`. |
 | CW7 | `add_eq_steps`, `modStep_neg_iff_steps`, `exp_sum_eq_mul`, `sin_neg_iff_le`, `modStep_neg_iff_im_neg` | `d₁` is `(b : ℤ) - a` and `d₂` is `modStep p a b`, for `a, b < p`; `[d₂ < 0]` is an `if`. The last paragraph of the item is not a Lean statement. |
 | CW8 | `IsContraction.smul_proj_add`, `nuclearNorm_proj_sq_add_sq_le`, `nuclearNorm_proj_lt`, `row_eq_zero_of_isMinOn`, `col_eq_zero_of_isMinOn` | "Removing a block lowers the norm" is `nuclearNorm (P * X) < nuclearNorm X` for `(1 - P) * X ≠ 0`. The row has `∀ j, (i, j) ∉ Ω`, and that `X` equals `K` on `Ω` is a separate hypothesis. The reading for tokens is not a Lean statement. |
+
+## The step is the phase of a sum of two phases (added)
+
+Added on 2026-11-10 and proved in Lean. The section before left the wrap of a step with two
+readouts: its sign, a comparison that M does not complete at the boundary (CW5, CW6), and a
+half-plane of the phase of the sum, a kernel of rank one (CW7). A half-plane is still a
+threshold on a smooth value. This section removes the threshold. The phase of order `2p` of
+the step is the phase of a sum of one phase of each of the two steps read, times a kernel of
+rank one; the comparison is the branch of a half angle, and a normalization of the modulus
+takes it.
+
+### CH1. The sum of two phases
+
+```
+exp(iα) + exp(iβ) = 2 cos((α − β) / 2) · exp(i (α + β) / 2).
+```
+
+So the sum of two phases, with its modulus normalized, is the product of the two half phases
+times the sign of `cos((α − β) / 2)`: a product, and a comparison of the two angles.
+
+### CH2. The chord of the sum
+
+Along `a`, `b`, `x = (a + b) mod p` let `n = b + x`, and let
+`z = exp(iπ n / p) = exp(2πi d₁ / p) · exp(3πi d₂ / p)` be the phase of the sum (CW7). The
+chord from `−exp(−iπ / 2p)` to `z` is
+
+```
+S = z + exp(−iπ / 2p) = 2 cos φ · exp(i (φ − π / 2p)),        φ = π (n + ½) / 2p,
+```
+
+by CH1 for `α = π n / p` and `β = −π / 2p`. As `0 ≤ n ≤ 2p − 2`, the angle `φ` lies in
+`(0, π)`, and `φ < π/2` exactly when `n < p`. So `cos φ > 0` without a wrap and `cos φ < 0`
+with one, `S ≠ 0`, and `|S| = 2 |cos φ|`. The phase of `S` halves the angle of `z` and turns
+by `π` at the wrap. The point `−exp(−iπ / 2p)` lies between the phases of the sums `p − 1`
+and `p`, where no sum has its phase.
+
+### CH3. The step is the phase of the chord
+
+```
+exp(iπ d₃ / p) = exp(iπ / 4p) · exp(−iπ d₂ / 2p) · S / |S|.
+```
+
+Proof. `d₃ = b − p [n ≥ p]` (CW1), so `exp(iπ d₃ / p)` is `exp(iπ b / p)` times the sign of
+`cos φ` (CH2). And `n = 2b + d₂`, so `φ − π / 2p = π b / p + π d₂ / 2p − π / 4p`. ∎
+
+The phase of order `2p` separates the integers `−p < d < p`: the steps `b` and `b − p` have
+opposite phases. With CW1, for a character `ψ` of `ℤ/p`,
+
+```
+ψ(d₃) · exp(iπ d₃ / p) = ψ(d₁) ψ(d₂) · exp(iπ / 4p) · exp(−iπ d₂ / 2p) · S / |S|.
+```
+
+The characters of `ℤ/2p` of even order are the characters of `ℤ/p`, the kernels of CW1; those
+of odd order are `ψ(d) exp(iπ d / p)`. So every character of `ℤ/2p` of the answer is a kernel
+of rank one and modulus one in the two steps read, times, for an odd order, the phase of `S`;
+and the characters of `ℤ/2p` determine the integer step.
+
+### CH4. A sum of one phase of each step
+
+```
+T = exp(iπ / 2p) · exp(3πi d₂ / p) + exp(−2πi d₁ / p) = exp(iπ / 2p) · exp(−2πi d₁ / p) · S.
+```
+
+So `|T| = |S|`, and
+
+```
+exp(iπ d₃ / p) = exp(−iπ / 4p) · exp(2πi d₁ / p) · exp(−iπ d₂ / 2p) · T / |T|.
+```
+
+`T` is the sum of a function of the last step read and a function of the step before it, both
+of modulus one: what a residual connection adds, when one channel holds a phase of each of the
+two tokens.
+
+### CH5. What a normalization of the modulus changes
+
+This item is a reading and a hypothesis, not a theorem.
+
+- `S` and `T` have rank at most two and are made of kernels of rank one and modulus one, the
+  kernels that M recovers. They are not of modulus one: `|S| = 2 |cos φ|`.
+- A readout linear in `S` holds the wrap as the half-plane of CW7:
+  `Im(exp(iπ / 2p) z) = sin(π (n + ½) / p)`, which is `sin(π / 2p)` at `n = p − 1` and
+  `−sin(π / 2p)` at `n = p`. For `p = 97` this is 1.6% of its range. A sharp answer from it
+  needs a threshold, and a threshold is fitted from the cells next to it: the comparison of
+  CW5 and CW6.
+- With the modulus normalized, `S / |S|` has opposite values on the two sides of the boundary.
+  The boundary is placed by `z`, which all cells fix, and not by the cells next to it.
+- A normalization of the mean square over the whole width divides every channel by one number
+  and keeps `S` up to a scale. The normalization that CH3 and CH4 use acts on one complex
+  channel, that is on one pair of real coordinates. It is a refinement: when every pair has
+  mean square one, the vector has.
+
+The hypothesis for a trained model: with the mean square normalized over each pair of
+coordinates, in place of the whole width, the answers at the boundary of the wrap are fixed
+by the cells away from it. The experiment is in `research/diffgpt_flat_spectrum/` of the
+`diff-gpt` repository.
+
+### CH6. Scope
+
+Proved: CH1 to CH4.
+
+Not covered:
+
+- That M or a trained model takes this readout. With `S / |S|` the fit is not a completion of
+  a table: the modulus of `S` is free at every cell, seen or not.
+- That the characters of `ℤ/2p` determine the step, and which of them are of odd order: stated
+  in CH3, not in Lean.
+- The tokens. CH3 and CH4 are in the steps `d₁`, `d₂`. A MASH-half token of the second step
+  also holds a carry of the first.
+- CH5.
+
+### Lean
+
+`src/Transformer/Grokking/FlatSpectrum/`, modules `StepChord` and `StepPhase`, namespace
+`Transformer.Grokking.FlatSpectrum`; proved without `sorry`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| CH1 | `exp_mul_I_add_exp_mul_I` | For real `α`, `β`. The reading for a normalized sum is not a Lean statement. |
+| CH2 | `halfAngle`, `stepChord`, `stepChord_eq`, `cos_halfAngle_pos`, `cos_halfAngle_neg`, `stepChord_ne_zero`, `norm_stepChord` | `halfAngle p a b` is `φ` and `stepChord p a b` is `S`, for natural `a`, `b`; `d₁` is `(b : ℂ) - a` and `d₂` is `modStep p a b`. No wrap is `b + (a + b) % p < p`; a wrap is `p ≤ b + (a + b) % p` with `b < p`. The remark on the point between two phases is not a Lean statement. |
+| CH3 | `exp_modStep_eq_stepChord`, `addChar_mul_exp_modStep` | For `a, b < p`; `ψ` is any `AddChar (ZMod p) ℂ`. `S / \|S\|` is `stepChord p a b / (‖stepChord p a b‖ : ℂ)`. The two remarks on the characters of `ℤ/2p` are not Lean statements. |
+| CH4 | `stepPhaseSum`, `stepPhaseSum_eq`, `norm_stepPhaseSum`, `exp_modStep_eq_stepPhaseSum` | `stepPhaseSum p a b` is `T`. The first two statements hold for all natural `p`, `a`, `b`; the last asks for `a, b < p`. The reading for a residual connection is not a Lean statement. |

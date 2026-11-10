@@ -132,6 +132,8 @@ public import Transformer.Grokking.FlatSpectrum.CompareFill
 public import Transformer.Grokking.FlatSpectrum.WrapFill
 public import Transformer.Grokking.FlatSpectrum.StepHalfPlane
 public import Transformer.Grokking.FlatSpectrum.UnseenRow
+public import Transformer.Grokking.FlatSpectrum.StepChord
+public import Transformer.Grokking.FlatSpectrum.StepPhase
 public import Transformer.Grokking.FlatSpectrum.Recall
 public import Transformer.Grokking.FlatSpectrum.BlockCut
 
@@ -373,6 +375,11 @@ with that cell flipped is a minimum of M and no minimum holds the true sign. In 
 `exp (iπ (b + x) / p) = exp (2πi d₁ / p) · exp (3πi d₂ / p)` has rank one and the wrap is the
 half-plane `Im (exp (iπ / 2p) · …) < 0` of it. A row or a column with no seen cell is zero in
 every minimum of M, as `‖P X‖_S1² + ‖(1 − P) X‖_S1² ≤ ‖X‖_S1²` for a projection `P` of the
-rows. -/
+rows. The phase of order `2p` of the step, which tells `b` from `b − p`, needs no threshold
+(`StepChord`, `StepPhase`): as `exp (iα) + exp (iβ) = 2 cos ((α − β) / 2) · exp (i (α + β) / 2)`,
+the chord `S = exp (iπ (b + x) / p) + exp (−iπ / 2p)` is `2 cos φ · exp (i (φ − π / 2p))` with
+`φ = π (b + x + ½) / 2p`, and `cos φ` is positive exactly without a wrap. So
+`exp (iπ d₃ / p) = exp (iπ / 4p) · exp (−iπ d₂ / 2p) · S / ‖S‖`, and `S` is, up to a factor of
+modulus one, the sum of one phase of each of the two steps read. -/
 
 @[expose] public section
