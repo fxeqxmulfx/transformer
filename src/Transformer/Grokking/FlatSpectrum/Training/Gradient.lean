@@ -83,7 +83,8 @@ theorem hasDerivAt_comp_add_smul {L : Matrix m n ℂ → ℝ} {G : Matrix m n �
     ((continuous_pairing continuous_const hH).tendsto 0).mono_left nhdsWithin_le_nhds
   have hhi : Tendsto (fun t : ℝ => pairing (G (X + t • H t)) (H t)) (𝓝[≠] 0)
       (𝓝 (pairing (G X) (H 0))) := by
-    have hc : Continuous fun t : ℝ => X + t • H t := continuous_const.fun_add (continuous_id.fun_smul hH)
+    have hc : Continuous fun t : ℝ => X + t • H t :=
+      continuous_const.fun_add (continuous_id.fun_smul hH)
     have h := ((continuous_pairing (hG.comp hc) hH).tendsto 0).mono_left
       (nhdsWithin_le_nhds (s := {0}ᶜ))
     simpa using h

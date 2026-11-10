@@ -11,6 +11,9 @@ public import Transformer.Grokking.FlatSpectrum.Training.Gradient
 public import Transformer.Grokking.FlatSpectrum.Training.Limit
 public import Transformer.Grokking.FlatSpectrum.Training.LinearRun
 public import Transformer.Grokking.FlatSpectrum.Training.Convergence
+public import Transformer.Grokking.FlatSpectrum.Training.SquaredLoss
+public import Transformer.Grokking.FlatSpectrum.Training.Vanishing
+public import Transformer.Grokking.FlatSpectrum.Training.Recovery
 
 /-! Training the pure factorization with weight decay, `review/flat_spectrum.md`, Lemma 1's
 modeling step and *Training reaches the optimal fit* (added).
@@ -29,4 +32,14 @@ geometrically (WD4). So a convergent run of gradient descent with weight decay, 
 factors of full row rank and with positive definite step matrices, ends at a factorization of
 least weight-decayed loss among those of every width: it cannot end at a saddle or at a local
 minimum that is not global (WD5). The linear loss `−Re X` of a `1 × 1` matrix gives a run that
-satisfies every hypothesis and converges to a nonzero limit. -/
+satisfies every hypothesis and converges to a nonzero limit.
+
+For the squared loss on the seen cells `Ω` of a kernel `K` (WD7), a factorization of least
+weight-decayed loss has nuclear norm at most that of every matrix equal to `K` on `Ω` and loss
+at most `λ` times that norm. So as `λ → 0⁺` the limits of such trained fits are the optimal fits
+of Lemma 1 (`IsOptimalFit`); if `K` does not have the least nuclear norm among the matrices
+equal to it on `Ω`, as for a square kernel with equal singular values and no zero entry on a
+proper `Ω` (Theorem A), the trained products stay a fixed distance below `‖K‖_S1` for every
+`λ > 0`; and if `K` is the only matrix of least nuclear norm, as for `u vᵀ` with `|u_i v_j| = 1`
+on connected cells containing a permutation (Theorem E), the trained products converge to `K`.
+The `1 × 1` kernel `1` has the trained product `1 − λ`. -/

@@ -145,7 +145,7 @@ proved without `sorry`. `ψ` is `ZMod.stdAddChar`, `K_φ` is `taskKernel f φ`, 
 | --- | --- | --- |
 | Setting | `nuclearNorm`, `frobeniusSq` (`‖·‖²_S2`), `effectiveRank`, `taskKernel` | |
 | Lemma 1 | `nuclearNorm_isLeast`, `nuclearNorm_le_of_eq_mul` | The minimum runs over every inner dimension. |
-| Lemma 1, "exact for a pure factorization" | `IsOptimalFit`, `isOptimalFit_iff`, `setOf_isOptimalFit_eq`, `forall_isMinOn_iff_iff_isOptimalFit`, `not_exists_isOptimalFit_of_singularValues_eq`, `isOptimalFit_vecMulVec_iff_connected` | Added. A fit of a set `S` of matrices is a factorization `U Vᴴ ∈ S` of any width `r`; it is optimal when its weight decay `½(‖U‖² + ‖V‖²)` is the least among the fits of every width. A fit is optimal exactly when its product minimizes `‖·‖_S1` on `S` and its weight decay equals that norm; the products of the optimal fits are exactly the minimizers of `‖·‖_S1` on `S`. So for `K ∈ S`, some fit is optimal and every optimal fit multiplies to `K` exactly when M recovers `K`, in D.2's form. Read through this, Theorem A for flat kernels and Theorem E hold for weight decay: no optimal fit multiplies to a flat `K` without zero entries on a proper `Ω`, and for `u vᵀ` with `|u_i v_j| = 1` some fit is optimal and all multiply to `u vᵀ` exactly when `Ω` is connected and contains a permutation. That training reaches an optimal fit is the modeling step; for the pure factorization it is proved for every convergent run in *Training reaches the optimal fit* (added). |
+| Lemma 1, "exact for a pure factorization" | `IsOptimalFit`, `isOptimalFit_iff`, `setOf_isOptimalFit_eq`, `forall_isMinOn_iff_iff_isOptimalFit`, `not_exists_isOptimalFit_of_singularValues_eq`, `isOptimalFit_vecMulVec_iff_connected` | Added. A fit of a set `S` of matrices is a factorization `U Vᴴ ∈ S` of any width `r`; it is optimal when its weight decay `½(‖U‖² + ‖V‖²)` is the least among the fits of every width. A fit is optimal exactly when its product minimizes `‖·‖_S1` on `S` and its weight decay equals that norm; the products of the optimal fits are exactly the minimizers of `‖·‖_S1` on `S`. So for `K ∈ S`, some fit is optimal and every optimal fit multiplies to `K` exactly when M recovers `K`, in D.2's form. Read through this, Theorem A for flat kernels and Theorem E hold for weight decay: no optimal fit multiplies to a flat `K` without zero entries on a proper `Ω`, and for `u vᵀ` with `|u_i v_j| = 1` some fit is optimal and all multiply to `u vᵀ` exactly when `Ω` is connected and contains a permutation. That training reaches an optimal fit is the modeling step; for the pure factorization it is proved for every convergent run, with Theorems A and E for the trained fits as λ → 0⁺, in *Training reaches the optimal fit* (added). |
 | Prop. 2, `a + b` | `addKernel_eq_vecMulVec`, `rank_addKernel`, `nuclearNorm_addKernel`, `effectiveRank_addKernel` | |
 | Prop. 2, `a³ + a b` | `cubicKernel_eq_diagonal_mul`, `stdAddChar_mul_conjTranspose`, `cubicKernel_mul_conjTranspose`, `singularValues_cubicKernel`, `nuclearNorm_cubicKernel`, `effectiveRank_cubicKernel` | |
 | Prop. 2, extremes | `card_le_nuclearNorm_le_of_unimodular`, `nuclearNorm_unimodular_extremes` | The bounds hold for every unimodular `N × N` matrix. |
@@ -305,8 +305,8 @@ All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved witho
 | Theorem C.4 | `exists_sum_norm_sq_eq_iff_natDegree_le_one` | |
 | Theorem C.5 | `norm_sq_sum_poly_add_mul_div_le` | When `‖g‖ ‖h‖ = 0` the left side is `0`. |
 
-Not formalized: the numerical maxima above; that training behaves like the factorization model
-(Lemma 1's modeling step); the note's readout-free conjecture about the least `r_eff`. Theorem C
+Not formalized: the numerical maxima above; that training of the real network behaves like the factorization model
+(Lemma 1's modeling step; for the pure factorization see *Training reaches the optimal fit*); the note's readout-free conjecture about the least `r_eff`. Theorem C
 bounds the largest centered mode, which is a different quantity.
 
 Scope:
@@ -1093,7 +1093,8 @@ Not formalized:
   proved (row *Two diagonals minus a cell*);
 - the failures on `2p` random cells;
 - the weighted and cross tables;
-- that training behaves like model M (Lemma 1's modeling step).
+- that training of the real network behaves like model M (Lemma 1's modeling step; for the
+  pure factorization see *Training reaches the optimal fit*).
 
 Scope:
 - The spectrum alone does not decide recovery; the pattern does. `ψ(a + b)` has the best
@@ -8733,6 +8734,71 @@ which WD6 reduces to a bound on η.
 `1 − η M` is positive definite when `η (|λ| + ‖G‖_S2) < 1`, since by WD1
 `⟨W, (1 − η M) W⟩ = ‖W‖² − η ⟨W, M W⟩ ≥ (1 − η (|λ| + ‖G‖_S2)) ‖W‖²`.
 
+### WD7. Vanishing weight decay: the optimal fits of M
+
+Take the squared loss on the seen cells, `L(X) = ½ ‖P_Ω(X − K)‖²` with
+`G(X) = P_Ω(X − K)`. It satisfies the first-order inequality, the two sides differing by
+`½ ‖P_Ω(Y − X)‖²`; `G` is continuous; and `L(X) = 0` exactly when `X = K` on Ω. Call a
+decayed minimum of this loss a trained fit. By WD5 a convergent run ends at one.
+
+Let `X'` be any matrix equal to `K` on Ω. WD2 at `Y = X'` gives, for λ ≥ 0,
+
+```
+L(U Vᴴ) + λ ‖U Vᴴ‖_S1 ≤ λ ‖X'‖_S1.
+```
+
+So for λ > 0 a trained fit has `‖U Vᴴ‖_S1 ≤ ‖X'‖_S1` and `L(U Vᴴ) ≤ λ ‖X'‖_S1`: no more
+nuclear norm than any exact fit, and a loss that vanishes with λ. As λ → 0⁺ this gives
+three statements.
+
+1. Limits are optimal fits. If trained fits `(U_j, V_j)` for `λ_j → 0⁺` converge to
+   `(U, V)`, then `U Vᴴ = K` on Ω, and `(U, V)` has the least weight decay among the exact
+   fits of every width: for an exact fit of weight decay `w'`, `λ_j w_j ≤ λ_j w'`. So the
+   limit is an optimal fit of the Lean status row *Lemma 1, "exact for a pure
+   factorization"*, and `U Vᴴ` is a minimizer of M.
+2. Theorem A for training. If `K` is not a minimizer of `‖·‖_S1` among the matrices equal
+   to it on Ω, take `X'` with `‖X'‖_S1 < ‖K‖_S1`. Every trained fit, for every λ > 0 and
+   every width, has `‖U Vᴴ‖_S1 ≤ ‖K‖_S1 − δ` with `δ = ‖K‖_S1 − ‖X'‖_S1`. By Theorem A
+   this holds for every square `K` with equal singular values and no zero entry, on every
+   proper Ω: training with weight decay does not return such a kernel, however small λ.
+3. Theorem E for training. If `K` is the only minimizer of M, the trained products
+   converge to `K` as λ → 0⁺; the factors need not converge. The products are bounded by
+   `‖K‖_S1` and their loss tends to `0`, so a limit point `X` equals `K` on Ω, and
+   `‖X‖_S1 ≤ ‖K‖_S1` because `‖X‖_S1 = Re tr(Zᴴ X)` for a contraction `Z` while
+   `Re tr(Zᴴ U_j V_jᴴ) ≤ ‖K‖_S1`. Hence `X = K`. By Theorem E this covers `u vᵀ` with
+   `|u_i v_j| = 1` when Ω is connected and contains a permutation.
+
+Example: for the `1 × 1` kernel `K = 1` seen on its cell and `0 ≤ s ≤ 1`, `U = V = 1 − s`
+is a trained fit for `λ = s (2 − s)`: `G = (1 − s)² − 1 = −λ` and
+`M = λ [[1, −1], [−1, 1]]`. The trained product is `1 − λ`. Weight decay shrinks the
+singular value by λ, and the product tends to `K`.
+
+### WD8. Scope
+
+Proved, for the pure factorization `X = U Vᴴ` trained by gradient descent with weight decay
+on a convex loss with continuous gradient:
+
+- the update is the gradient step of the weight-decayed loss (WD3);
+- a run from stacked factors of full row rank with admissible steps that converges ends at
+  a global minimum of the weight-decayed loss over the factorizations of every width, and
+  its product minimizes `L + λ ‖·‖_S1` (WD5);
+- for the squared loss on Ω these limits compare with every exact fit as M does, their
+  limits as λ → 0⁺ are optimal fits, flat kernels are not returned, and kernels that M
+  recovers are approached (WD7).
+
+Assumed or not covered:
+
+- Convergence of the run is a hypothesis of WD5. For an analytic objective a bounded run
+  with small steps converges by the Łojasiewicz inequality; this is not formalized.
+- Width: full row rank of `[U_0; V_0]` needs `k ≥ m + n`. For narrower factors the rank
+  constraint changes the problem and nothing is claimed.
+- Step size: WD6 asks `η (|λ| + ‖G_t‖_S2) < 1` along the run. A bound on η from the start
+  alone is not derived.
+- WD7 takes trained fits as given. They exist where a run converges; existence for each λ
+  is not proved separately.
+- The model and the optimizer: for the real network (norms, SiLU, attention) and for AdamW
+  the modeling step of Lemma 1 remains an assumption, as the note says.
+
 ### Lean
 
 `src/Transformer/Grokking/FlatSpectrum/Training/`, namespace
@@ -8746,3 +8812,4 @@ which WD6 reduces to a bound on η.
 | WD4 | `gain_identity`, `gain_step`, `gain_iterate`, `pairing_nonneg_of_bounded`, `exists_pos_forall_pairing_nonneg`, `exists_pos_lt_det_add_smul_ne_zero`, `posSemidef_of_tendsto` | Norms are `‖·‖_S2`. Full row rank is `Function.Surjective (W 0).mulVec`; bounded is `∀ t, ‖W_t‖² ≤ B`. |
 | WD5 | `lift_posSemidef_of_tendsto_decayRun`, `isDecayedMin_of_tendsto_decayRun`, `add_nuclearNorm_le_of_tendsto_decayRun`, `weightDecay_eq_nuclearNorm_of_tendsto_decayRun`, `decayRun_linear`, `tendsto_decayRun_linear` | Convergence is `Tendsto (decayRun G η λ U₀ V₀) atTop (𝓝 (U, V))`. The example is the run above, with the start `stack_fromCols_one`. |
 | WD6 | `one_sub_smul_lift_posDef` | |
+| WD7 | `mask`, `fitLoss`, `fitLoss_first_order`, `fitLoss_eq_zero_iff`, `continuous_mask_sub`, `IsDecayedMin.fitLoss_add_le`, `IsDecayedMin.nuclearNorm_le`, `IsDecayedMin.fitLoss_le`, `isOptimalFit_of_tendsto`, `exists_nuclearNorm_add_le_of_not_isMinOn`, `exists_nuclearNorm_add_le_of_singularValues_eq`, `tendsto_of_fitLoss_tendsto_zero`, `tendsto_mul_conjTranspose_of_forall_isMinOn`, `tendsto_mul_conjTranspose_vecMulVec_of_connected`, `isDecayedMin_one_sub`, `isDecayedMin_shrink` | "The only minimizer of M" is D.2's form, `∀ X ∈ S, (IsMinOn ‖·‖_S1 S X ↔ X = K)`. In 1 the factors have a fixed width `r`; in 2 the bound holds for every width; in 3 they have any fixed finite column type. Limits run over sequences `λ_j → 0⁺`. |

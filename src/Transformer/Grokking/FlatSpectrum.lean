@@ -293,6 +293,9 @@ decay on the factors of `U Vᴴ` is `W ← (1 − η M) W` for the stacked facto
 `M = [[λ, G], [Gᴴ, λ]]`, with `G` the gradient of a convex loss; a run from stacked factors of
 full row rank with positive definite step matrices that converges ends where `M W = 0` and `M`
 is positive semidefinite, and such a point has the least weight-decayed loss among the
-factorizations of every width, so its product minimizes the loss plus `λ ‖·‖_S1`. -/
+factorizations of every width, so its product minimizes the loss plus `λ ‖·‖_S1`. For the squared
+loss on `Ω`, as `λ → 0⁺` the limits of such fits are optimal fits, their products stay a fixed
+distance below `‖K‖_S1` when `K` does not have the least nuclear norm (Theorem A), and converge
+to `K` when it is the only matrix of least nuclear norm (Theorem E). -/
 
 @[expose] public section
