@@ -10858,3 +10858,179 @@ namespace `Transformer.Grokking.GradientEvidence`; and
 | RR2 | `one_sub_sum_le_prod`, `half_le_prod_main`, `half_le_prod_Ico_main`, `one_sub_pow_le_exp`, `historical_remainder` | The first is for a finite set of indices. The recipe of the selected main is `0 ≤ η s ≤ 1/1000` at every step with the decay `1/10`; the bounds hold over every set of at most 5000 steps, and over `Finset.Ico (s + 1) t` for `t ≤ 5000`. The numbers 4.4495 and 0.64 of its schedule are computed, not in Lean. The last statement is `mainAdamPath` with the constant rate `3/100` and the decay `1`: AdamW, not ScheduleFree AdamW. |
 | RR3 | `atScale`, `mainAdamStep_atScale`, `mainAdamRun_atScale`; `scaled`, `rate_scaled`, `IsScaled`, `isScaled_initial`, `query_scaled`, `step_isScaled`, `run_isScaled`, `run_scaled` | Homogeneity is asked at the one scale `c`: `G (fun j => c * w j) i = G w i / c` for all `w`, and for the oracle of ScheduleFree AdamW at every step. That a loss without a scale has such a gradient is not a Lean statement. ScheduleFree AdamW is `Transformer.ScheduleFree.AdamW.run`, the revised update of facebookresearch/schedule_free, and needs `0 ≤ lr`. `IsScaled c p s s'` relates two states; the maximal rates are compared after a nonnegative rate has entered. The last sentence of the item is not a Lean statement. |
 | RR4 | `historical`, `scaled_historical` | `historical` has ten warm-up steps, betas 0.9 and 0.98 and the default averaging powers 0 and 2. The first point thirty times smaller is the start of `run_scaled`. The comparison with the selected main is not a Lean statement. |
+
+## A comparison of two free scores (added)
+
+Added on 2026-11-10 and proved in Lean. CW5 and CW6 are about M: with one unseen cell at the
+boundary of the wrap, the table with that cell flipped is a minimum. This section asks what
+the training cells determine of the wrap for any learner that has one free score for each
+token, whatever it minimizes. A table of comparisons stays one when the scores of a set of
+tokens closed upwards are raised. So a held-out cell is determined exactly when a chain of
+training cells links its two tokens, and at the boundary a chain is the cell itself. On the
+task of CH8 the wrap of 22% to 24% of the held-out states is open, and the wrap errors of the
+trained models of RR7 are among these states.
+
+### CS1. A table of comparisons
+
+Let the rows `i` have real scores `f_i` and the columns `j` real scores `h_j`. The cell
+`(i, j)` *wraps* when `h_j ≤ f_i`. By CW7, `b + x = 2 d₁ + 3 d₂ + 2p [d₂ < 0]`, so the next
+step wraps exactly when
+
+```
+p − 3 d₂ − 2p [d₂ < 0] ≤ 2 d₁:
+```
+
+the wrap is a table of comparisons in the two steps read, with the score `2 d₁` of the first
+and `p − 3 d₂ − 2p [d₂ < 0]` of the second. A token determines its step, so it is a table of
+comparisons in the two input tokens, and the difference of the two scores is `b + x − p`.
+
+A learner *with free scores* knows that the answer is such a table and does not know the
+scores. A seen cell gives it one inequality, `h_j ≤ f_i` or `f_i < h_j`. Scores `f'`, `h'`
+*fit* the seen cells `Ω` when they compare at every cell of `Ω` as `f`, `h` do.
+
+### CS2. Raising a set closed upwards
+
+A set `A` of rows with a set `B` of columns is *closed upwards* along `Ω` when for every seen
+cell `(i, j)`: if `h_j ≤ f_i` and `j ∈ B` then `i ∈ A`, and if `f_i < h_j` and `i ∈ A` then
+`j ∈ B`. For such sets and `c ≥ 0` the scores
+
+```
+f'_i = f_i + c [i ∈ A],        h'_j = h_j + c [j ∈ B]
+```
+
+fit `Ω`.
+
+Proof. Take a seen cell. If its row and its column are both raised, or neither, the
+comparison is unchanged. If only the row is raised, the cell does not have `f_i < h_j`, as
+then `j ∈ B`; so `h_j ≤ f_i ≤ f_i + c`. If only the column is raised, the cell does not have
+`h_j ≤ f_i`, as then `i ∈ A`; so `f_i < h_j ≤ h_j + c`. ∎
+
+### CS3. An open cell
+
+Let `A`, `B` be closed upwards and `(i, j)` a cell. If `i ∉ A` and `j ∈ B`, the scores of CS2
+with `c > f_i − h_j` fit `Ω` and have `f'_i < h'_j`: no wrap. If `i ∈ A` and `j ∉ B`, those
+with `c ≥ h_j − f_i` fit `Ω` and have `h'_j ≤ f'_i`: a wrap. A cell at which fitting scores
+give both answers is *open*: the seen cells do not determine it for a learner with free
+scores.
+
+### CS4. Chains
+
+A *link* goes from a column `j` up to a row `i` when `(i, j)` is seen and `h_j ≤ f_i`, and
+from a row `i` up to a column `j` when `(i, j)` is seen and `f_i < h_j`. A *chain* is a
+sequence of links. Fitting scores do not decrease along a link, and they increase along a
+link into a column. So
+
+- a chain from the column `j` to the row `i` gives `h'_j ≤ f'_i` for all fitting scores;
+- a chain from the row `i` to the column `j` gives `f'_i < h'_j` for all fitting scores.
+
+The rows and the columns that the chains reach from one row or column are closed upwards.
+With CS3:
+
+```
+some fitting scores have f'_i < h'_j    ⟺    no chain goes from the column j to the row i,
+some fitting scores have h'_j ≤ f'_i    ⟺    no chain goes from the row i to the column j.
+```
+
+As `f`, `h` fit, no chain goes against the truth. So a cell is open exactly when no chain
+links its two tokens.
+
+### CS5. The boundary is open
+
+A chain of more than one link from the column `j` to the row `i` passes a link into a
+column: `h_j ≤ f_{i₁} < h_{j₂} ≤ … ≤ f_i`. So if `f_i = h_j`, the only chain from `j` to `i` is
+the cell `(i, j)`, seen. A chain of more than one link from the row `i` to the column `j` is
+`f_i < h_{j₁} ≤ f_{i₂} < … < h_j`, with the score of the column `j₁` strictly between `f_i`
+and `h_j`. So if no score of a column lies strictly between the two, as for integer scores
+with `f_i + 1 = h_j`, the only chain from `i` to `j` is the cell itself.
+
+Hence an unseen cell with `f_i = h_j` is open, and so is an unseen cell with integer scores
+and `f_i + 1 = h_j`. In the task these are the held-out states with `b + x = p` and with
+`b + x = p − 1`, the two layers of CW6. There the minimum of M answers against the truth; a
+learner with free scores has no reason for either answer.
+
+What decides these cells is the distances of the scores. In CH7 the scores are the phases
+`2π d₁ / p` and `3π d₂ / p` of two characters, and one angle places the wrap of all cells.
+
+### CS6. The task (numerical)
+
+These numbers are computed and measured, not proved: `research/diffgpt_flat_spectrum/` of the
+`diff-gpt` repository, Rust on the CPU for the chains, and the runs of CH8 and RR7. The task
+is that of CW9: 4704 training cells and 4704 held-out cells in a table of `194 × 370` tokens.
+The chains are computed by reachability. For every open cell the two fits of CS3 are built
+from the tokens that the chains reach and checked at all 4704 training cells.
+
+| Held-out cells, of 4704 | Seed 11 | Seed 17 | Seed 23 |
+| --- | ---: | ---: | ---: |
+| The wrap open | 1077 | 1043 | 1147 |
+| share | 22.90% | 22.17% | 24.38% |
+| open, of those with `b + x − p ∈ {−1, 0}` | 91 of 91 | 94 of 94 | 110 of 110 |
+| open, of those with `\|b + x − p\| ≤ 3` | 321 of 330 | 316 of 320 | 344 of 350 |
+| open, of those with `\|b + x − p\| ≥ 12` | 257 of 3648 | 252 of 3646 | 277 of 3614 |
+| The two tokens in one class of the training graph | 4692 | 4670 | 4619 |
+| An input token in no training example | 12 | 28 | 70 |
+| The target in no training example | 0 | 0 | 20 |
+
+A class is a connected class of the graph that joins a first token and a second token of a
+training cell; by Theorems E and G a kernel of rank one with entries of modulus one is
+determined inside a class and by nothing between two classes. The completion of M in CW9
+answers 4692, 4670, 4619 of the states with both tokens seen: the same counts. A token in no
+training example occurs in it neither as an input at any position nor as a target.
+
+The wrap errors of a run, and how many of them are at open cells:
+
+| Run | Seed 11 | Seed 17 | Seed 23 |
+| --- | --- | --- | --- |
+| Historical model, historical recipe | 126 of 133 | 118 of 119 | 164 of 165 |
+| Historical model, AdamW with `ρ = 1` | 188 of 203 | 162 of 166 | 149 of 153 |
+| Historical model, `ρ = 3` | 181 of 195 | 141 of 144 | 159 of 162 |
+| Historical model, `ρ = 10` | 118 of 121 | 129 of 129 | 137 of 137 |
+| Selected main, `ρ = 0.1` | 139 of 161 | 136 of 142 | 170 of 192 |
+| Selected main, `ρ = 1` | 151 of 155 | 187 of 187 | 233 of 243 |
+| Selected main, `ρ = 3` | 215 of 226 | 197 of 200 | 249 of 259 |
+| Selected main, `ρ = 10` | 165 of 169 | 182 of 183 | 224 of 228 |
+
+- In every run of the table but the selected main with `ρ = 0.1`, 93% to 100% of the wrap
+  errors are at open cells, and the 3627, 3661, 3557 cells with a determined wrap hold 0 to 15
+  wrap errors.
+- A run answers most open cells right: it has the wrap wrong at 11% to 22% of them, the
+  selected main with `ρ = 10` at 165, 182, 224 of the 1077, 1043, 1147.
+- 99% of the held-out states is at most 47 errors. The two layers of CS5 alone hold 91, 94,
+  110 states, and the wrap is open at more than a thousand.
+- On seed 23, 70 held-out states have an input token that no training example holds, and 20 a
+  target that none holds. A model with a free row for each token has seen nothing of such a
+  token, and the runs of the table answer none or one of the 70. That is more than the 47
+  errors of 99%, whatever the wrap.
+
+So the answer to why the runs stay below 99% is in the data and in the free features, not in
+the optimizer: the training cells determine the wrap at three quarters of the held-out
+states, the runs are right there, and what remains is decided by the distances of the scores,
+which a model with a free feature for each token does not have.
+
+### CS7. Scope
+
+Proved: CS1 to CS5.
+
+Not covered:
+
+- That a trained network is a learner with free scores. CS6 measures that its wrap errors lie
+  at the open cells; nothing here derives it.
+- A prior on the fitting scores. Open means that both answers fit, not that they are equally
+  likely; the runs have the wrap right at most open cells.
+- The residue. Tokens in one class determine it, and the runs still have residue errors at
+  tokens with few training cells (CH8, RR7). CS does not explain these.
+- Weights tied across positions. A token unseen at one position may be seen at another or as
+  a target, and the runs answer a few such states (RR7).
+- A model that is given the numbers of its tokens. None was built or run here.
+
+### Lean
+
+`src/Transformer/Grokking/FlatSpectrum/`, modules `ScoreShift` and `ScoreChain`, namespace
+`Transformer.Grokking.FlatSpectrum`; proved without `sorry`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| CS1 | `modStep_neg_iff_score_le`, `ScoreFit`, `scoreFit_self` | For `a, b < p`, with `d₁ = (b : ℤ) - a` and `d₂ = modStep p a b`; the two scores are integers. `ScoreFit Ω f h f' h'` is `h' j ≤ f' i ↔ h j ≤ f i` at every cell of `Ω`, for real scores on any types of rows and columns. That a token determines its step is not a Lean statement. |
+| CS2 | `ScoreUpClosed`, `scoreFit_indicator` | The raised scores are `f + A.indicator fun _ => c` and `h + B.indicator fun _ => c`. |
+| CS3 | `exists_scoreFit_lt`, `exists_scoreFit_le` | The constants are `\|f i - h j\| + 1` and `\|h j - f i\|`. "Open" is not a Lean definition; the two statements give the two fits. |
+| CS4 | `scoreChain`, `ScoreFit.le_of_chain`, `ScoreFit.lt_of_chain`, `scoreUpClosed_chain`, `exists_scoreFit_lt_iff`, `exists_scoreFit_le_iff` | A link is a relation on `m ⊕ n` and a chain is its `Relation.ReflTransGen`, which holds the empty chain. `ScoreFit.le_of_chain` is for the scores `Sum.elim f' h'` between any two tokens. The two equivalences hold for every `Ω`, `f`, `h`, `i`, `j`. |
+| CS5 | `mem_of_chain_of_eq`, `mem_of_chain_of_gap`, `exists_scoreFit_lt_of_eq`, `exists_scoreFit_le_of_add_one` | The second asks that no `h j'` lies strictly between `f i` and `h j`. The last is for integer scores `F`, `H` with `F i + 1 = H j`, cast to the reals. The reading for the states with `b + x = p` and `b + x = p − 1` is not a Lean statement. |

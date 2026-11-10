@@ -136,6 +136,8 @@ public import Transformer.Grokking.FlatSpectrum.StepChord
 public import Transformer.Grokking.FlatSpectrum.StepPhase
 public import Transformer.Grokking.FlatSpectrum.StepSign
 public import Transformer.Grokking.FlatSpectrum.StepPole
+public import Transformer.Grokking.FlatSpectrum.ScoreShift
+public import Transformer.Grokking.FlatSpectrum.ScoreChain
 public import Transformer.Grokking.FlatSpectrum.Recall
 public import Transformer.Grokking.FlatSpectrum.BlockCut
 
@@ -386,6 +388,12 @@ modulus one, the sum of one phase of each of the two steps read. The sign of the
 real kernel of rank two `ℓ = Im (exp (iπ / 2p) · …)`, which is never zero, divided by `|ℓ|`
 (`StepSign`). Moving the base point of the chord by `2γ`, `|γ| < π / 4p`, turns every
 normalized chord by `exp (iγ)` and changes no branch (`StepPole`): one angle places the wrap of
-all cells. -/
+all cells. With a free score for each token in place of the phases (`ScoreShift`,
+`ScoreChain`) the wrap is the comparison `p − 3 d₂ − 2p [d₂ < 0] ≤ 2 d₁`, and scores fit the
+seen cells when they compare there as these do. Raising the scores of rows and columns closed
+upwards along the seen cells keeps every seen comparison, so some fitting scores give the
+other answer at an unseen cell exactly when no chain of seen cells links its two tokens; at a
+cell with equal scores, and at a cell with integer scores one apart, a chain is the cell
+itself. -/
 
 @[expose] public section
