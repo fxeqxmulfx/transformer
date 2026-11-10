@@ -10355,10 +10355,18 @@ repository (Rust, CPU).
 | Residue wrong, both tokens seen | 0 | 3 | 0 |
 | Sign right at `b + x ∈ {p − 1, p}` | 40 / 91 | 41 / 94 | 54 / 110 |
 | Sign right at `b + x ≤ p − 8` or `≥ p + 7` | 3889 / 4034 | 3938 / 4058 | 3853 / 4016 |
+| Half-plane of the phase of CW7 right, both tokens seen | 4692 / 4692 | 4671 / 4673 | 4619 / 4619 |
+| Half-plane of the phase of CW7 right, an unseen token | 6 / 12 | 16 / 31 | 41 / 85 |
+| Residue and half-plane both right | 99.745% | 99.298% | 98.278% |
 
 - The residue is recovered where both tokens were seen, and lost at an unseen token (CW8):
   0.26%, 0.66% and 1.81% of the held-out cells.
 - The sign of the step is at chance at the boundary and wrong in 9% of the held-out cells.
+- The phase `exp(iπ (b + x) / p)` of CW7, completed by M as a second kernel of rank one in
+  place of the sign, gives the wrap by its half-plane at every held-out cell where the
+  residue is right. At an unseen token its row is zero and the half-plane is a coin. So M
+  with two kernels of rank one answers every held-out state with both tokens seen, but three
+  on seed 17; on seed 23 that is 98.278%, below 99%.
 - One unseen diagonal cell of `C`, the others seen: the fill is `−1.000000` for
   `n = 2, 3, 4, 8, 16, 25, 97` (CW5). One unseen cell at the distance `1, 2, 3, 5, 8` above
   the diagonal, `n = 97`: the fill is `0.240`, `0.535`, `0.666`, `0.787`, `0.861` of the
@@ -10747,8 +10755,8 @@ This item is a reading and a hypothesis, not a theorem.
 The hypothesis: the miss of the selected main on this task follows its recipe. The historical
 real model, trained by the AdamW of the selected main with its rates and its decay, misses
 90%; with the decay raised toward 30 at the same rates it reaches 90% again; and the selected
-main gains from a raised decay. The experiment is in `research/diffgpt_flat_spectrum/` of the
-`diff-gpt` repository.
+main gains from a raised decay. It was written down with its predictions before the runs;
+RR7 holds what they found.
 
 ### RR6. Scope
 
@@ -10770,7 +10778,72 @@ Not covered:
   updates, 0.14 after 100 and `8 · 10⁻⁶` after 5000, with changes of sign.
 - The two optimizers against each other. RR3 is within one optimizer. That AdamW at the
   product 0.03 trains as ScheduleFree AdamW at that product is not claimed.
-- RR5.
+- RR5, beyond the numbers of RR7: three seeds of one task.
+
+### RR7. The two models under both recipes (numerical)
+
+These numbers are measured, not proved: `research/diffgpt_flat_spectrum/` of the `diff-gpt`
+repository, Rust and Kernite, FP32 on a GTX 1050. Task, split and seeds are those of CH8; a
+run is 5000 updates of 512 examples, observed every 50 updates. The predictions of RR5 were
+fixed before the runs.
+
+The selected main computes its products in FP16 and TF32 on tensor cores, which this GPU does
+not have. It ran in an FP32 build of the same sources, checked against the FP64 reference of
+that model. Its recorded results on this task are 82.14%, 89.33%, 76.68% of the held-out
+states for the seeds 11, 17, 23 with axial positions and 81.97%, 88.84%, 77.38% with sequence
+positions; the FP32 build ends at 79.32%, 88.35%, 77.87% and 81.44%, 89.39%, 78.25%. The
+precision of the products is not the cause of the miss.
+
+In the historical real model the AdamW of the selected main replaces ScheduleFree AdamW, with
+its schedule, betas and clip, and with the weight decay `ρ` on every coordinate. In the
+selected main `ρ` is the decay of its complex matrices; its real coordinates keep 0.1 and its
+frequencies 0.
+
+| Model | Recipe | Right of 4704, seeds 11, 17, 23 | Share | First update at 90% | Training loss at the end |
+| --- | --- | --- | --- | --- | --- |
+| Historical | ScheduleFree AdamW, rate 0.03, decay 1 | 4468, 4386, 4344 | 94.98%, 93.24%, 92.35% | 1300, 1500, 1150 | 0.039, 0.035, 0.036 |
+| Historical | AdamW of the selected main, `ρ = 0.1` | 362, 464, 1419 | 7.70%, 9.86%, 30.17% | none | `1.3 · 10⁻⁶`, `1.3 · 10⁻⁶`, `1.1 · 10⁻⁶` |
+| Historical | the same, `ρ = 1` | 4168, 4315, 4235 | 88.61%, 91.73%, 90.03% | none, 3700, 4500 | `7.3 · 10⁻⁵`, `9.9 · 10⁻⁵`, `1.4 · 10⁻⁴` |
+| Historical | the same, `ρ = 3` | 4341, 4336, 4276 | 92.28%, 92.18%, 90.90% | 2000, 1700, 2100 | 0.0022, 0.0026, 0.0023 |
+| Historical | the same, `ρ = 10` | 4436, 4439, 4310 | 94.30%, 94.37%, 91.62% | 2400, 2400, 3150 | 0.552, 0.531, 0.497 |
+| Historical | the same, `ρ = 30` | 873, 846, 813 | 18.56%, 17.98%, 17.28% | none | 3.635, 3.639, 3.613 |
+| Selected main | its recipe, `ρ = 0.1` | 3731, 4156, 3663 | 79.32%, 88.35%, 77.87% | none | `1.5 · 10⁻⁷`, `1.0 · 10⁻⁷`, `1.5 · 10⁻⁷` |
+| Selected main | the same, `ρ = 1` | 4418, 4420, 4265 | 93.92%, 93.96%, 90.67% | 2600, 1850, 3400 | `7.0 · 10⁻⁵`, `7.2 · 10⁻⁵`, `1.0 · 10⁻⁴` |
+| Selected main | the same, `ρ = 3` | 4381, 4396, 4280 | 93.13%, 93.45%, 90.99% | 1800, 1350, 1750 | 0.0012, 0.0015, 0.0016 |
+| Selected main | the same, `ρ = 10` | 4478, 4459, 4356 | 95.20%, 94.79%, 92.60% | 1750, 1550, 2000 | 0.352, 0.362, 0.312 |
+| Selected main | the same, `ρ = 30` | 1350, 2439, 1224 | 28.70%, 51.85%, 26.02% | none | 3.379, 3.244, 3.365 |
+
+- The hypothesis of RR5 held on these runs. Under the recipe of the selected main the
+  historical model fits the training set and answers 7.70%, 9.86%, 30.17% of the held-out
+  states. With `ρ = 3` or `ρ = 10` it reaches 90% on every seed. The selected main reaches
+  90% on every seed with `ρ = 1`, 3 or 10, and with `ρ = 10` it ends above the historical
+  model under the historical recipe on every seed.
+- At every `ρ` from 0.1 to 10 the selected main ends above the historical model on every
+  seed: by 48 to 78 points at `ρ = 0.1`, by 0.4 to 1.0 at `ρ = 10`. The miss follows the
+  recipe, not the architecture.
+- `ρ = 30` fails in both models, with a training loss above 3. This was predicted before the
+  runs from AD3: the tied matrix `E` is read without a normalization, and a coordinate of
+  AdamW stays within `B / ρ`. RR4 does not apply to it (RR6).
+- The first observation with more than half of the held-out answers right, seeds 11, 17, 23:
+  in the historical model none at `ρ = 0.1`, then 2650, 2350, 1650 at `ρ = 1`, 1100, 1050,
+  900 at `ρ = 3` and 400, 500, 400 at `ρ = 10`; in the selected main 2250, 1600, 2250 at
+  `ρ = 0.1`, then 1200, 950, 1200, then 1050, 850, 1000, then 500, 550, 500. At `ρ = 3` the
+  training set is fitted in full only after it (at 1750, 1750, 1300 and 1400, 1300, 1300),
+  and at `ρ = 10` never (4649 to 4698 of 4704 at the end).
+- One second moment for the two parts of a complex coordinate, at `ρ = 0.1`: 81.70%, 88.82%,
+  84.08%, that is 2.38, 0.47 and 6.21 points above its control, and 90% on no seed.
+
+What remains. No run has 99% at any observation. The selected main with `ρ = 10` has 57, 62,
+120 residue errors, 46, 56, 106 of them at an input token with at most 5 training cells; 169,
+183, 228 wrap errors, 132, 135, 152 of them at `|b + x − p| ≤ 3`; and 0, 2, 14 right answers
+at the 12, 31, 85 states with an unseen token. The wrap errors do not fall with the decay: the
+historical model has 133, 119, 165 under its recipe and 121, 129, 137 at `ρ = 10`. Of the wrap
+errors of a run with `ρ` from 1 to 10, in either model, 57% to 74% lie at cells where the sign
+fill of M (CW9) is wrong. M is wrong there at 423, 384, 433 of the 4704 cells, and at 168 of
+330, 176 of 320, 167 of 350 of those with `|b + x − p| ≤ 3`.
+
+These are three seeds of one task in an FP32 build. Whether the other tasks of the selected
+main keep their results under a raised decay was not measured.
 
 ### Lean
 
