@@ -11046,7 +11046,9 @@ the frequency `π / p` the wrap is a half-plane of it. Scores that are linear in
 and fit the training cells answer rightly at every cell in the convex hull of the training
 cells of one answer; on the task of CS6 that is all the held-out states of one split and all
 but 19 and 75 of the other two. And a decay toward a fixed table leaves at that table what the
-gradients do not feed.
+gradients do not feed. NT8 has a model trained with such a table: it is better and earlier on
+every seed, the same rows at other tokens ruin it, and a token that training does not show is
+still not answered.
 
 ### NT1. The phase of the sum at any frequency
 
@@ -11217,9 +11219,8 @@ The hypothesis: the historical model of RR7, trained by the AdamW of the selecte
 `ρ = 3` and `ρ = 10` and with its tied table decayed toward this `Q`, has fewer wrap errors at
 the open cells of CS6 than with the decay toward zero, and answers states with a token unseen
 at its position. With the rows of `Q` permuted among the tokens it does neither. The runs, the
-table and the predictions are written down before the runs as stage 7 of
-`research/diffgpt_flat_spectrum/PLAN.txt`. At the time of this section no such model is
-trained.
+table and the predictions were written down before the runs as stage 7 of
+`research/diffgpt_flat_spectrum/PLAN.txt`; NT8 holds what they found.
 
 A second table, added on 2026-11-10 before any run of stage 7. The code of NT5 has one turn of
 its first harmonic in 512 numbers. Its harmonics are no characters of `ℤ/p`: it holds the
@@ -11233,7 +11234,7 @@ The second hypothesis: with the tied table decayed toward this table, the same m
 same recipes has fewer residue errors than with the decay toward zero, because the row of a
 token that training shows rarely is then near characters that the frequent tokens share; and
 it answers states with a token unseen at its position. With the rows permuted it does neither.
-It is written down with its predictions in the same stage 7, before the runs.
+It was written down with its predictions in the same stage 7, before the runs.
 
 ### NT7. Scope
 
@@ -11252,7 +11253,57 @@ Not covered:
 - The codec. That a token writes its number is computed for the task (NT5); it is not a Lean
   statement.
 - The clip of the gradient norm of the recipe, as in RR6: it is not in the run of NT3.
-- NT6, a hypothesis.
+- NT6, two hypotheses.
+
+### NT8. The models with a table of numbers (numerical)
+
+These numbers are measured, not proved: `research/diffgpt_flat_spectrum/` of the `diff-gpt`
+repository, Rust and Kernite, FP32 on a GTX 1050. The model is the historical model of RR7
+under the AdamW of the selected main with `ρ = 3` and `ρ = 10`. The update of NT3 is applied
+to its tied table and to nothing else; the initialization, the sampled examples and the budget
+are those of RR7. A row of `Q` is 0.224 for `ρ = 3`, or 0.116 for `ρ = 10`, times the code of
+the number of its token: 32 harmonics on the half-line of the sign. The predictions were fixed
+before the runs.
+
+| Table `Q` | `ρ = 3`: right of 4704, seeds 11, 17, 23 | Share | `ρ = 10`: right | Share |
+| --- | --- | --- | --- | --- |
+| Zero (RR7) | 4341, 4336, 4276 | 92.28%, 92.18%, 90.90% | 4436, 4439, 4310 | 94.30%, 94.37%, 91.62% |
+| The code of NT5, turn 512 | 4409, 4361, 4354 | 93.73%, 92.71%, 92.56% | 4546, 4533, 4411 | 96.64%, 96.36%, 93.77% |
+| The code with the turn `2p` | 4549, 4551, 4431 | 96.70%, 96.75%, 94.20% | 4469, 4565, 4351 | 95.00%, 97.05%, 92.50% |
+| The rows of the first at other tokens | 3445, 3745, 3395 | 73.24%, 79.61%, 72.17% | 680, 511, 641 | 14.46%, 10.86%, 13.63% |
+| The rows of the second at other tokens | 3247, 3317, 3038 | 69.03%, 70.51%, 64.58% | 1503, 2769, 1200 | 31.95%, 58.86%, 25.51% |
+
+The errors of the first three rows. A rare token is here an input token with 1 to 5 training
+cells at its position, and the last column counts the answered states among the 12, 31, 85
+with a token unseen at its position.
+
+| Table `Q` | Wrap errors at the open cells of CS6, `ρ = 3` | `ρ = 10` | Residue errors at rare tokens, `ρ = 3` | `ρ = 10` | Unseen tokens answered, `ρ = 3` and `ρ = 10` |
+| --- | --- | --- | --- | --- | --- |
+| Zero | 181, 141, 159 | 118, 129, 137 | 129, 151, 170 | 72, 71, 123 | 0, 0, 1 and 0, 0, 0 |
+| Turn 512 | 135, 129, 136 | 121, 111, 144 | 65, 74, 95 | 17, 22, 56 | 0, 1, 4 and 0, 3, 1 |
+| Turn `2p` | 97, 80, 95 | 72, 76, 81 | 24, 30, 61 | 68, 22, 82 | 0, 1, 5 and 1, 2, 2 |
+
+- The table acts as numbers. With its rows at their tokens the model ends above the decay
+  toward zero in every arm and on every seed, by 25 to 215 answers. With the same rows at
+  other tokens it ends 591 to 3928 answers below. It first has 90% at 500 to 950 updates, in
+  place of 1700 to 3150.
+- The first hypothesis of NT6 held in half. With the code of NT5 the wrap errors at the open
+  cells are fewer at `ρ = 3` on every seed, and at `ρ = 10` on one seed of three. The states
+  with a token unseen at its position are not answered: 0 to 4 of them.
+- The second held in half too. With the turn `2p` the residue errors at `ρ = 3` are 57, 73,
+  178 against 168, 224, 266, and those at rare tokens fall by 64% to 81%. At `ρ = 10` they
+  are fewer on one seed of three; on the other two, 108 of 163 and 108 of 272 are off by one,
+  the neighbouring step. The wrap errors at the open cells fall by 39% to 46% at both decays.
+  The states with an unseen token are not answered: 0 to 5 of them.
+- So the model does not compute from the code alone. A token with a few training cells gains
+  from the table and a token with none does not: the model needs what the gradients add to a
+  row. NT4 is about scores linear in the numbers, and these networks are not such learners.
+- No run reaches 99%; the most is 97.05%. The best arm, the turn `2p` with `ρ = 3`, ends at
+  96.70%, 96.75%, 94.20%, above every run of RR7, with 98, 80, 95 wrap errors.
+
+What this does not show: the selected main, whose table is complex and has another layout; a
+table on a grid of scale 2 (CC7) or with level tokens; and another amplitude, number of
+harmonics or decay of the table, which were fixed before the runs and not tuned.
 
 ### Lean
 
