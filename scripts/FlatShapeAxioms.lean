@@ -1,6 +1,6 @@
 import Transformer
 
-/-! Audit *Flat kernels of any shape* of `review/flat_spectrum.md`, items R1–R3. -/
+/-! Audit *Flat kernels of any shape* of `review/flat_spectrum.md`, items R1–R4. -/
 
 #print axioms Transformer.Grokking.FlatSpectrum.IsFlat.conjTranspose
 #print axioms Transformer.Grokking.FlatSpectrum.isFlat_one
@@ -29,3 +29,10 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.IsFlat.mul_sub_rank_le_frobeniusSq_sub
 #print axioms Transformer.Grokking.FlatSpectrum.IsFlat.mul_sub_card_le_frobeniusSq_sub
 #print axioms Transformer.Grokking.FlatSpectrum.IsFlat.card_le_of_eq_mul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun_nuclearNorm_add_le_of_not_isMinOn
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le_of_not_isMinOn
+#print axioms Transformer.Grokking.FlatSpectrum.IsFlat.not_exists_isOptimalFit
+#print axioms Transformer.Grokking.FlatSpectrum.IsFlat.exists_nuclearNorm_add_le
+#print axioms Transformer.Grokking.FlatSpectrum.IsFlat.exists_tendsto_decayRun_nuclearNorm_add_le
+#print axioms Transformer.Grokking.FlatSpectrum.IsFlat.exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le
+#print axioms Transformer.Grokking.FlatSpectrum.IsFlat.mul_sub_card_le_fitLoss_univ

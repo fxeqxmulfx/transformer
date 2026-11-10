@@ -29,6 +29,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.FullColumn
 public import Transformer.Grokking.FlatSpectrum.Training.Width
 public import Transformer.Grokking.FlatSpectrum.Training.AlmostEvery
 public import Transformer.Grokking.FlatSpectrum.Training.WidthOne
+public import Transformer.Grokking.FlatSpectrum.Training.AnyShape
 
 /-! Training the pure factorization with weight decay, `review/flat_spectrum.md`, Lemma 1's
 modeling step and *Training reaches the optimal fit* (added).
@@ -107,4 +108,12 @@ and a decayed minimum of width `min(m, n)` exists (`exists_isDecayedMin_of_card_
 run of width `p` converges a fixed distance below `‖K‖_S1`
 (`exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le`). Below the width `min(m, n)` the claim
 fails: for the squared loss on all cells of the `2 × 2` identity and `0 ≤ λ < 1` no
-factorization of width one is a decayed minimum (`not_isDecayedMin_width_one`). -/
+factorization of width one is a decayed minimum (`not_isDecayedMin_width_one`).
+
+Any shape (`AnyShape`, item R4 of *Flat kernels of any shape*): the statements above about a
+square kernel with equal singular values use only that `K` is not a minimum of M from `Ω`. They
+hold for a flat kernel of any shape, `Kᴴ K = c I` or `K Kᴴ = c I`, when some nonzero cell is
+unseen (`IsFlat.exists_nuclearNorm_add_le`, `IsFlat.exists_tendsto_decayRun_nuclearNorm_add_le`,
+`IsFlat.exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le`), and with every cell seen a
+factorization of width `k` keeps the squared loss `c (min(m, n) − k) / 2`
+(`IsFlat.mul_sub_card_le_fitLoss_univ`). -/

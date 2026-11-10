@@ -9047,7 +9047,9 @@ on a convex loss with continuous gradient:
   minimum (WD10);
 - for a square kernel with equal singular values and no zero entry on a proper Ω, every
   such run converges at least a fixed δ below `‖K‖_S1`, for every λ > 0 (WD8), and so does
-  almost every run of width `p` with a small step (WD10);
+  almost every run of width `p` with a small step (WD10); the same holds for a flat kernel
+  of any shape when some nonzero cell is unseen, at width `min(m, n)` (R4 of *Flat kernels
+  of any shape*);
 - for the squared loss on Ω these limits compare with every exact fit as M does, their
   limits as λ → 0⁺ are optimal fits, flat kernels are not returned, and kernels that M
   recovers are approached (WD7).
@@ -9096,7 +9098,7 @@ Proposition 2, Theorem A and the Corollary for a square kernel without zero entr
 cases fall outside: a kernel whose rows and columns are indexed by different sets, such as
 the recall kernel of the next section, and a flat kernel with zeros, such as the identity.
 This section defines flat for an `m × n` kernel and extends the statements that use
-flatness alone: the norms, Theorem A, and the cost of low rank.
+flatness alone: the norms, Theorem A, the cost of low rank, and what training returns.
 
 ### R1. The definition and the norms
 
@@ -9166,13 +9168,33 @@ fraction `1 − k / r₀` of `‖K‖_S2²`, and an exact factorization has `k �
 width buys at most the same share `1 / r₀`: no direction of a flat kernel is cheaper to fit
 than another.
 
+### R4. Training
+
+Theorem A enters *Training reaches the optimal fit* through one fact: `K` is not a minimum
+of M from Ω. Items WD7, WD8 and WD10 then say that the trained fits, the limits of the runs
+of WD8 and the limits of almost every run of width at least `min(m, n)` stay a fixed
+`δ > 0` below `‖K‖_S1`. They are stated there for a square kernel with equal singular values
+and no zero entry. The proofs use only that fact, so by R2 the statements hold for a flat
+kernel of any shape whenever some nonzero cell is unseen:
+
+- no optimal fit to the values of `K` on Ω multiplies to `K`;
+- some `δ > 0` has `‖U Vᴴ‖_S1 + δ ≤ ‖K‖_S1` for the trained fits of every weight decay
+  `λ > 0` and every width;
+- every run of WD8 from stacked factors of full row rank converges to factors with that
+  bound, and so does almost every run of width `k ≥ min(m, n)` with a small step (WD10).
+
+By R3, with every cell seen, a factorization `U Vᴴ` of width `k` keeps the squared loss
+`½ ‖U Vᴴ − K‖_S2² ≥ c (min(m, n) − k) / 2`.
+
 ### Lean
 
-`FlatKernel`, `FlatSupport` and `FlatCapacity` of `src/Transformer/Grokking/FlatSpectrum/`,
-namespace `Transformer.Grokking.FlatSpectrum`, proved without `sorry`.
+`FlatKernel`, `FlatSupport`, `FlatCapacity` and `Training/AnyShape` of
+`src/Transformer/Grokking/FlatSpectrum/`, namespace `Transformer.Grokking.FlatSpectrum`,
+proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
 | R1 | `IsFlat`, `IsFlat.conjTranspose`, `isFlat_of_singularValues_eq`, `singularValues_eq_of_conjTranspose_mul_self`, `IsFlat.gram_mul_gram`, `rank_eq_card_of_conjTranspose_mul_self`, `rank_eq_card_of_mul_conjTranspose_self`, `IsFlat.rank_eq`, `IsFlat.effectiveRank_eq`, `IsFlat.frobeniusSq_eq`, `IsFlat.nuclearNorm_eq`, `IsFlat.isContraction`; instances `isFlat_one`, `isFlat_cubicKernel`, `isFlat_row_ones` | `IsFlat K c` is the disjunction, with `c` real; the theorems take `c > 0` or `c ≠ 0` as a hypothesis. `singularValues` is indexed by the columns, so for `K Kᴴ = c I` with `m < n` it has `n − m` zeros; the norms are stated with `min (card m) (card n)`. |
 | R2 | `isMinOn_iff_of_full_row_rank`, `IsFlat.isMinOn_iff`, `IsFlat.not_isMinOn_of_ne_zero`, `IsFlat.not_isMinOn`, `IsFlat.not_forall_isMinOn_iff` | A minimum of M from Ω is `IsMinOn nuclearNorm S K` for the set `S` of the matrices equal to `K` on Ω, as in Theorem A. |
 | R3 | `nuclearNorm_sq_le_rank_mul_frobeniusSq`, `effectiveRank_le_rank`, `effectiveRank_le_min`, `IsFlat.pairing_le`, `IsFlat.mul_sub_rank_le_frobeniusSq_sub`, `IsFlat.mul_sub_card_le_frobeniusSq_sub`, `IsFlat.card_le_of_eq_mul` | `⟨K, X⟩` is `Training.pairing`. The width `k` is the cardinality of a finite column type. Whether a product through width `k` attains `c (r₀ − k)` is not formalized. |
+| R4 | `Training.exists_tendsto_decayRun_nuclearNorm_add_le_of_not_isMinOn`, `Training.exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le_of_not_isMinOn`, `IsFlat.not_exists_isOptimalFit`, `IsFlat.exists_nuclearNorm_add_le`, `IsFlat.exists_tendsto_decayRun_nuclearNorm_add_le`, `IsFlat.exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le`, `IsFlat.mul_sub_card_le_fitLoss_univ` | The two first theorems take "`K` is not a minimum of M from Ω" as their hypothesis, for any kernel. "Some nonzero cell is unseen" is `(i, j) ∉ Ω` with `K i j ≠ 0`. The width `k ≥ min(m, n)` is `card m ≤ card k ∨ card n ≤ card k`, and the constants of the runs are those of WD8 and WD10. The squared loss with every cell seen is `fitLoss Set.univ K (U * Vᴴ)`. |
