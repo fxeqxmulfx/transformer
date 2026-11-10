@@ -114,6 +114,9 @@ public import Transformer.Grokking.FlatSpectrum.SlowGrowth
 public import Transformer.Grokking.FlatSpectrum.TangentDimension
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes
 public import Transformer.Grokking.FlatSpectrum.Training
+public import Transformer.Grokking.FlatSpectrum.FlatKernel
+public import Transformer.Grokking.FlatSpectrum.FlatSupport
+public import Transformer.Grokking.FlatSpectrum.FlatCapacity
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -302,6 +305,12 @@ controlled in a ball, with an explicit step, the run does converge, to such a po
 the factors, is the worked case. For every convex real-analytic loss bounded below small steps
 converge as well, and at width at least `min(m, n)` the run from almost every start ends at such
 a point, since there a critical point is such a point or a strict saddle; at width one the
-`2 × 2` identity has no such point. -/
+`2 × 2` identity has no such point. Flat kernels of any shape (`FlatKernel`, `FlatSupport`,
+`FlatCapacity`): an `m × n` kernel is flat when `Kᴴ K = c I` or `K Kᴴ = c I` with `c > 0`. Its
+rank and its effective rank are then `min(m, n)`, the largest an `m × n` matrix can have. It is a
+minimum of M from `Ω` exactly when every unseen cell is a zero of `K`, by Theorem A at full row
+or full column rank, so a flat kernel without zeros is a minimum from no proper `Ω`. Every `X`
+has `‖K − X‖_S2² ≥ c (min(m, n) − rank X)`, so a product through width `k` misses `K` by at least
+`c (min(m, n) − k)`: each unit of width buys the same share of `‖K‖_S2²`. -/
 
 @[expose] public section

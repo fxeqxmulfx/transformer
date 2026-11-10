@@ -153,6 +153,7 @@ proved without `sorry`. `ψ` is `ZMod.stdAddChar`, `K_φ` is `taskKernel f φ`, 
 | Theorem A | `isMinOn_nuclearNorm_iff` | Invertible means `K.det ≠ 0`. |
 | Theorem A, `x³ + x y` | `polarFactor_cubicKernel`, `norm_polarFactor_cubicKernel`, `not_isMinOn_cubicKernel` | |
 | Theorem A, every flat kernel | `polarFactor_of_singularValues_eq`, `det_ne_zero_of_singularValues_eq`, `not_isMinOn_of_singularValues_eq`, `not_forall_isMinOn_iff_of_singularValues_eq` | Added: the source states it for `x³ + x y`. For every square `K` whose singular values are all equal and whose entries are all nonzero, and every proper `Ω`, `K` does not minimize `‖·‖_S1` among the matrices equal to it on `Ω`: some such matrix has a smaller nuclear norm. So M recovers `K` from no proper `Ω`, in D.2's form; `∑ σ_i² = ‖K‖_S2² > 0` makes the common value nonzero and `K` invertible. The example is `x³ + x y` at `p = 3` with `Ω = ∅`. |
+| Theorem A, flat kernels of any shape | `IsFlat`, `isMinOn_iff_of_full_row_rank`, `IsFlat.isMinOn_iff`, `IsFlat.not_isMinOn` | Added, *Flat kernels of any shape*: an `m × n` kernel with `Kᴴ K = c I` or `K Kᴴ = c I` is a minimum of M from `Ω` exactly when every unseen cell is a zero of `K`. |
 | Corollary, the fill | `nuclearNorm_flat_fill`, `nuclearNorm_flat_fill_real`, `isMinOn_flat_fill_iff` | Proved for every `K` with `K* K = N I`, `N ≥ 2` and `|K_ij| = 1`. The formula `√p[(p−2) + √(4 − 4s/p + s²/p)]` needs `s ≤ p`. `nuclearNorm_flat_fill` gives the value for every complex `s`. |
 | Corollary, decoding | `isMinOn_cubic_fill_iff`, `isMinOn_decode_cubic_fill_iff`, `not_isMinOn_decode_cubic_fill` | Nearest `ψ(c)` is exactly `c = f + (p ± 1)/2` for odd `p`. It is never `f` for `p ≥ 2`. |
 | Corollary, `a + b` | `isMinOn_add_fill_iff`, `isMinOn_decode_add_fill_iff` | |
@@ -9087,3 +9088,91 @@ Assumed or not covered:
 | WD8 | `factors`, `flatten`, `factors_flatten`, `flatten_factors`, `continuous_factors`, `continuous_flatten`, `norm_sq_eq_frobeniusSq_factors`, `real_inner_eq_pairing_factors`, `analyticAt_norm_sq`, `flatLoss`, `productVector`, `analyticAt_productVector`, `analyticAt_flatLoss`, `hasGradientAt_flatLoss`, `gradient_flatLoss`, `factors_gradientStep`, `norm_gradient_flatLoss_sq`, `decayedLoss_sub_le`, `pairing_one_sub_smul`, `frobeniusSq_step_mul_sub_le`, `decayedLoss_decayStep_add_le`, `decayedLoss_decayStep_add_le_of_ball`, `decayedLoss_decayRun_succ_add_le`, `norm_apply_le_sqrt_frobeniusSq`, `isCompact_setOf_frobeniusSq_add_le`, `factors_iterate_gradientStep`, `exists_tendsto_decayRun`, `exists_tendsto_decayRun_isDecayedMin`; squared loss: `fitLoss_eq_add`, `fitLoss_le_add`, `analyticAt_fitLoss`, `exists_tendsto_decayRun_fitLoss`, `exists_tendsto_decayRun_fitLoss_isDecayedMin`, `exists_isDecayedMin_fitLoss`, `exists_tendsto_decayRun_nuclearNorm_add_le` | The factor space is `EuclideanSpace ℂ ((m ⊕ n) × k)` with its real inner product. Real-analytic in the entries is `∀ y, AnalyticAt ℝ (fun y : EuclideanSpace ℂ (m × n) => L (of fun i j => y (i, j))) y`; the three bounds are stated at the matrices with `frobeniusSq X ≤ (ρ / 2) ^ 2`. Łojasiewicz's theorem and the convergence theorem are `exists_isLojasiewiczAt_of_analyticAt` and `tendsto_of_isLojasiewiczAt_of_le_sub` of `Transformer.Landscape.SaddleAvoidance`, used with `κ = 1/2`. In the existence corollary `κ = ‖K‖_S2² + 1`, `ρ = max (‖W_0‖²) (κ²/λ)` and η is the smaller of the two bounds. |
 | WD9 | `isCompact_setOf_flatLoss_le`, `exists_pos_forall_sublevel`, `exists_pos_tendsto_decayRun`, `exists_pos_tendsto_decayRun_isDecayedMin`, `exists_isDecayedMin`; example: `expLoss`, `expGrad`, `pairing_expGrad`, `expLoss_first_order`, `continuous_expGrad`, `analyticAt_expLoss`, `expLoss_nonneg`, `exists_pos_tendsto_decayRun_expLoss_isDecayedMin`, `exists_isDecayedMin_expLoss` | Bounded below is `∀ X, l₀ ≤ L X`. The level bounds the start, `decayedLoss L λ U₀ V₀ ≤ c`, and `η₀` depends on `L`, `G`, λ, `c` and the width. `exists_pos_forall_sublevel` is stated on the factor space, with the null set for Lebesgue measure `volume`; it needs no convexity and uses `exists_pos_measure_sublevel_tendsto_strictSaddle_eq_zero`, `exists_pos_tendsto_of_mapsTo` and `exists_isLojasiewiczAt_of_analyticOnNhd` of `Transformer.Landscape.SaddleAvoidance`. |
 | WD10 | `conjTranspose_mul_self_unit`, `pairing_mul_conjTranspose_unit`, `inner_fderiv_gradient_flatLoss`, `lift_mul_stack_eq_zero_of_gradient_eq_zero`, `surjective_mulVec_of_injective`, `frobeniusSq_conjTranspose_mul_of_surjective`, `lift_posSemidef_of_pairing_sq_le`, `lift_posSemidef_of_injective`, `IsDecayedMin.isLocalMin`, `gradient_eq_zero_and_not_isStrictSaddle_of_isLocalMin`, `isDecayedMin_of_not_isStrictSaddle`, `isDecayedMin_of_not_isStrictSaddle_of_card_le`, `isDecayedMin_of_isLocalMin`, `isDecayedMin_of_isLocalMin_of_card_le`, `exists_pos_ae_tendsto_not_isStrictSaddle`, `exists_pos_ae_tendsto_decayRun`, `exists_pos_ae_tendsto_decayRun_isDecayedMin`, `exists_isDecayedMin_of_card_le`, `exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le`; counterexample: `frobeniusSq_one_fin_two`, `le_decayedLoss_width_one`, `decayedLoss_sqrt_smul_one`, `not_isDecayedMin_width_one` | Dependent columns is `¬ Function.Injective (stack U V).mulVec`; width `k ≥ min(m, n)` is `Fintype.card m ≤ Fintype.card k ∨ Fintype.card n ≤ Fintype.card k`. A strict saddle is `IsStrictSaddle (flatLoss L λ) x` of `Transformer.Landscape.SaddleAvoidance`, where `not_isStrictSaddle_of_isLocalMin` is added. The Hessian identity is `⟪S Zᴴ, ∇²F(W) (S Zᴴ)⟫ = ‖Z‖² ⟨S, M S⟩` for one-column `Z`, `A`, `B` and `S = [A; B]`, read off the exact formula for the gradient along the line. `lift_posSemidef_of_injective` holds for any matrix `G` with `M [U; V] = 0`, not only `G (U Vᴴ)`. A local minimum is `IsLocalMin (fun p => decayedLoss L λ p.1 p.2) (U, V)` on the pairs of matrices of one width. Almost every is `∀ᵐ x` for `volume` on the factor space, with the run started at `factors x`; `η₀` is that of `exists_pos_forall_sublevel`. The lower bound for width one holds for every λ ≥ 0 and the value at width two for every λ ≤ 1. |
+
+## Flat kernels of any shape (added)
+
+The note calls a kernel flat when all its singular values are equal, and states
+Proposition 2, Theorem A and the Corollary for a square kernel without zero entries. Two
+cases fall outside: a kernel whose rows and columns are indexed by different sets, such as
+the recall kernel of the next section, and a flat kernel with zeros, such as the identity.
+This section defines flat for an `m × n` kernel and extends the statements that use
+flatness alone: the norms, Theorem A, and the cost of low rank.
+
+### R1. The definition and the norms
+
+An `m × n` kernel `K` is flat with squared singular value `c > 0` when
+
+```
+Kᴴ K = c I    (orthogonal columns of squared length c)
+or    K Kᴴ = c I    (orthogonal rows of squared length c).
+```
+
+Equal singular values `s` give `Kᴴ K = s² I`, and `Kᴴ K = c I` gives singular values `√c`,
+so for a square kernel this is the notion of the note with `c = s²`. In both cases
+`(Kᴴ K)² = c Kᴴ K`, so `K / √c` is a partial isometry, and a contraction. From
+`I = (Kᴴ / c) K` or `I = K (Kᴴ / c)` the rank is `min(m, n)`. Hence
+
+```
+rank K = min(m, n),    ‖K‖_S1 = min(m, n) √c,    ‖K‖_S2² = min(m, n) c,    r_eff K = min(m, n).
+```
+
+Every `m × n` matrix has `r_eff ≤ rank ≤ min(m, n)` (R3), so a flat kernel has the largest
+effective rank of its shape. For `p × p` entries of modulus one this is the upper bound
+`‖K‖_S1 ≤ p^{3/2}` of Proposition 2.
+
+### R2. Theorem A by the support
+
+Item 5 of *Rank above one*: `K = U diag(s) Vᴴ`, with orthonormal columns in `U` and `V` and
+`s > 0`, is a minimum of M from Ω exactly when some contraction `W` with `Uᴴ W = 0` and
+`W V = 0` makes `U Vᴴ + W` vanish off Ω. If `V` is square, `W V = 0` forces `W = 0`
+(item 5.4). If `U` is square, `Uᴴ W = 0` forces `W = 0` in the same way. So at full row
+rank, as at full column rank, `K` is a minimum of M exactly when `U Vᴴ` vanishes off Ω.
+
+A flat kernel has `U Vᴴ = K / √c`: take `U = K / √c`, `V = I` if `Kᴴ K = c I`, and `U = I`,
+`V = Kᴴ / √c` if `K Kᴴ = c I`. Therefore
+
+```
+a flat K is a minimum of M from Ω    ⟺    K_ij = 0 at every unseen cell (i, j).
+```
+
+The seen cells must contain the support of `K`.
+
+- A flat kernel is not a minimum of M when some nonzero cell is unseen.
+- A flat kernel without zero entries is a minimum of M from no proper Ω, and M recovers it
+  from none. For a square kernel this is the last paragraph of Theorem A.
+- The zeros of a flat kernel may stay unseen: the identity is a minimum of M from every Ω
+  that contains its diagonal. This says that `K` is a minimum. Whether it is the only one
+  is the recovery question of Theorems D to G and is not answered here.
+
+### R3. No cheap directions
+
+The nonzero singular values of an `m × n` matrix `X` number `rank X`, so by Cauchy–Schwarz
+
+```
+‖X‖_S1² ≤ rank X · ‖X‖_S2²,    hence    r_eff X ≤ rank X ≤ min(m, n).
+```
+
+Let `K` be flat with squared singular value `c`, and `r₀ = min(m, n)`. Since `K / √c` is a
+contraction, `⟨K, X⟩ ≤ √c ‖X‖_S1`, the dual pairing of Theorem A. With `‖K‖_S2² = c r₀`,
+
+```
+‖K − X‖_S2² = c r₀ − 2 ⟨K, X⟩ + ‖X‖_S2²
+            ≥ c r₀ − 2 √c √(rank X) ‖X‖_S2 + ‖X‖_S2²
+            ≥ c (r₀ − rank X).
+```
+
+So a product `A B` through width `k` misses a flat kernel by at least `c (r₀ − k)`, the
+fraction `1 − k / r₀` of `‖K‖_S2²`, and an exact factorization has `k ≥ r₀`. Each unit of
+width buys at most the same share `1 / r₀`: no direction of a flat kernel is cheaper to fit
+than another.
+
+### Lean
+
+`FlatKernel`, `FlatSupport` and `FlatCapacity` of `src/Transformer/Grokking/FlatSpectrum/`,
+namespace `Transformer.Grokking.FlatSpectrum`, proved without `sorry`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| R1 | `IsFlat`, `IsFlat.conjTranspose`, `isFlat_of_singularValues_eq`, `singularValues_eq_of_conjTranspose_mul_self`, `IsFlat.gram_mul_gram`, `rank_eq_card_of_conjTranspose_mul_self`, `rank_eq_card_of_mul_conjTranspose_self`, `IsFlat.rank_eq`, `IsFlat.effectiveRank_eq`, `IsFlat.frobeniusSq_eq`, `IsFlat.nuclearNorm_eq`, `IsFlat.isContraction`; instances `isFlat_one`, `isFlat_cubicKernel`, `isFlat_row_ones` | `IsFlat K c` is the disjunction, with `c` real; the theorems take `c > 0` or `c ≠ 0` as a hypothesis. `singularValues` is indexed by the columns, so for `K Kᴴ = c I` with `m < n` it has `n − m` zeros; the norms are stated with `min (card m) (card n)`. |
+| R2 | `isMinOn_iff_of_full_row_rank`, `IsFlat.isMinOn_iff`, `IsFlat.not_isMinOn_of_ne_zero`, `IsFlat.not_isMinOn`, `IsFlat.not_forall_isMinOn_iff` | A minimum of M from Ω is `IsMinOn nuclearNorm S K` for the set `S` of the matrices equal to `K` on Ω, as in Theorem A. |
+| R3 | `nuclearNorm_sq_le_rank_mul_frobeniusSq`, `effectiveRank_le_rank`, `effectiveRank_le_min`, `IsFlat.pairing_le`, `IsFlat.mul_sub_rank_le_frobeniusSq_sub`, `IsFlat.mul_sub_card_le_frobeniusSq_sub`, `IsFlat.card_le_of_eq_mul` | `⟨K, X⟩` is `Training.pairing`. The width `k` is the cardinality of a finite column type. Whether a product through width `k` attains `c (r₀ − k)` is not formalized. |
