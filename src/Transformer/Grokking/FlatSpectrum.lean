@@ -141,6 +141,8 @@ public import Transformer.Grokking.FlatSpectrum.ScoreChain
 public import Transformer.Grokking.FlatSpectrum.StepNumbers
 public import Transformer.Grokking.FlatSpectrum.ScoreNumbers
 public import Transformer.Grokking.FlatSpectrum.StepLevel
+public import Transformer.Grokking.FlatSpectrum.StepCarry
+public import Transformer.Grokking.FlatSpectrum.StepDomain
 public import Transformer.Grokking.FlatSpectrum.Recall
 public import Transformer.Grokking.FlatSpectrum.BlockCut
 
@@ -404,6 +406,10 @@ that are linear in vectors of numbers of the rows and columns and fit the seen c
 those cells do at every cell in the convex hull of the seen cells of one answer. With levels
 in place of steps (`StepLevel`) the value to write is the entry of the kernel of `a + b` and is
 determined by it, while two steps share a residue; a step `d` is read at `p − |d|` of the `p²`
-states and a level at `p`. -/
+states and a level at `p`. A codec that carries its rounding to the next row (`StepCarry`)
+writes a step with one of two tokens, by a bit of the steps before it, and with one token on a
+grid that holds the values. The step is the only integer of its residue that keeps the series
+in its domain `[0, p)` (`StepDomain`): the wrap is a function of the residue and of the level,
+which the decoder holds. -/
 
 @[expose] public section

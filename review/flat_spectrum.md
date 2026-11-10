@@ -11391,6 +11391,7 @@ is changed. The predictions were fixed before the runs.
 
 What this does not show: which part of the step encoding keeps the models of RR7 below 99%,
 the comparison of CS1, the steps that few states read (EN2), or the two tokens of a step.
+*The carry of the codec* and *The decoder holds the level* below separate them.
 
 ### Lean
 
@@ -11401,3 +11402,266 @@ the comparison of CS1, the steps that few states read (EN2), or the two tokens o
 | --- | --- | --- |
 | EN1 | `addKernel_natCast`, `stdAddChar_eq_addKernel_iff`, `modStep_zero_and_pred` | The levels are naturals cast to `ZMod p`, and `ψ` is `ZMod.stdAddChar`; the second is for `y < p` and any `b`, `x`. `modStep_zero_and_pred` is for `0 < b < p`; the residue of both steps is `intCast_modStep` of CW1. That M recovers the kernel is `forall_isMinOn_addKernel_iff_connected` of Theorem E, under its two hypotheses. |
 | EN2 | `card_filter_sub_eq`, `card_filter_modStep_eq`, `levelsRead`, `card_levelsRead_fst`, `card_levelsRead_snd` | The pairs are `Finset.range p ×ˢ Finset.range p`, and the count is `p - d.natAbs` in the naturals, zero for `\|d\| ≥ p`. `levelsRead p` is the equivalence `(a, b) ↦ (b, a + b)` of `ZMod p × ZMod p`; the two counts are the cardinalities of its fibers over a first and a second level. |
+
+## The carry of the codec (added)
+
+Added on 2026-11-10 and proved in Lean. EN3 counts 370 tokens at the second input of the task
+for 193 steps. This section says where the second token of a step comes from. A codec that
+writes steps on a grid, and keeps its reconstruction on the grid, carries its rounding error
+to the next row. Then the token of a step is one of two, and which of the two is a bit of the
+steps before it. On a grid that holds the values nothing is carried and a step is one token.
+The grid of the task has 2.66 tokens for a step; a grid of scale 2 is a change of one number
+of the codec, its domain. On the task it removes two thirds of the rare tokens and one third
+of the open wraps of CS6. What remains is the difference encoding itself, EN1 and EN2.
+
+### CC1. The tokens of a codec that carries
+
+Let `s > 0` be the scale of the grid, in tokens per unit of the series. The codec anchors the
+grid at the value before the window. After steps that sum to `n` the series is `n` above the
+anchor, and its level on the grid is `⌊s n + θ⌋`, where `θ ∈ [0, 1)` is the offset of the
+grid at that row. The token of the next step `d` is, up to a constant, the difference of two
+levels:
+
+```
+carriedStep s θ θ' n d = ⌊s (n + d) + θ'⌋ − ⌊s n + θ⌋.
+```
+
+So the reconstruction stays on the grid, within one level of the series at every row. A codec
+that rounded every step by itself would write one token for a step, and its errors would add
+up along the rows.
+
+The codec of the task shifts its grid by half a token at every other row: `θ = 1/2` at the
+anchor and at the even rows, `θ = 0` at the odd rows. Its three tokens at a state with the
+steps `d₁, d₂, d₃` are
+
+```
+τ₁ = 256 + carriedStep s (1/2) 0 0 d₁           = 256 + ⌊s d₁⌋,
+τ₂ = 255 + carriedStep s 0 (1/2) d₁ d₂,
+τ₃ = 256 + carriedStep s (1/2) 0 (d₁ + d₂) d₃,
+```
+
+with `s = 511 / 192`. This is read from the source of the codec and checked at all 9408 states
+of the task (CC4); it is not proved about the codec.
+
+### CC2. One step, two tokens, one bit
+
+For all real `s, θ, θ'` and integers `n, d`,
+
+```
+carriedStep s θ θ' n d = ⌊s d + θ' − θ⌋ + [1 ≤ fract(s n + θ) + fract(s d + θ' − θ)].
+```
+
+So a step has at most two tokens, `⌊s d + θ' − θ⌋` and the next, and the choice is one bit of
+`n`, the sum of the steps before it: whether the two fractional parts reach `1` together.
+The bit is not a function of the step, and it is not what the task asks for: the residue of
+the step to write is that of `d₁ + d₂` (CW1), and its wrap is a comparison of `2 d₁` with a
+function of `d₂` (CW7).
+
+### CC3. A grid that holds the values
+
+If `s n` and `s d` are integers, then for any offsets `θ, θ' ∈ [0, 1)`
+
+```
+carriedStep s θ θ' n d = s d.
+```
+
+So on a grid that holds the values of the series nothing is carried: a step is one token at
+its row, whatever came before. An integer scale is such a grid for every integer series.
+
+The scale of the task is not: with `s = 511 / 192` and the offsets `0` and `1/2` of the second
+token, the step `1` is written `3` after `n = 0` and `4` after `n = 3`.
+
+### CC4. The task (numerical)
+
+These numbers are computed, not proved: `research/diffgpt_flat_spectrum/` of the `diff-gpt`
+repository, Rust on the CPU. No model is trained here. They were not predicted in writing
+before they were computed. The states, the split and the value to write are those of CS6.
+
+On the grid of the task the three formulas of CC1 give the tokens of all 9408 states; at a tie
+of the grid, `s n` an integer under a floor or a half-integer under a round, the binary64
+arithmetic of the codec decides, and either neighbour is accepted. Of the 193 second steps 177
+have two tokens and 16 have one; the first step has one token, except `0`, which has two by
+such a tie.
+
+A domain with the bound 127.75 in place of 96 gives the same tokenizer the scale 2. Then a
+step `d` is the token `256 + 2 d` at the first input and at the target and `255 + 2 d` at the
+second input, at every state. With the tokenizer that has one grid at every row and the bound
+127.5 it is `256 + 2 d` at every position.
+
+| Of a split | Seed 11 | Seed 17 | Seed 23 |
+| --- | ---: | ---: | ---: |
+| **The grid of the task, 2.66 tokens for a step** | | | |
+| Tokens at the first input, at the second, as the target | 194, 370, 204 | 194, 370, 204 | 194, 370, 204 |
+| Input tokens with at most 5 training cells at their position | 142 | 144 | 150 |
+| Held-out states with such a token | 392 | 387 | 501 |
+| Held-out states with a token unseen at its position | 12 | 31 | 85 |
+| Held-out states with the wrap open (CS6) | 1077 | 1043 | 1147 |
+| Held-out states with both tokens in one class | 4692 | 4670 | 4619 |
+| **A grid of scale 2** | | | |
+| Tokens at the first input, at the second, as the target | 193, 193, 193 | 193, 193, 193 | 193, 193, 193 |
+| Input tokens with at most 5 training cells at their position | 44 | 48 | 56 |
+| Held-out states with such a token | 112 | 147 | 222 |
+| Held-out states with a token unseen at its position | 0 | 0 | 30 |
+| Held-out states with the wrap open (as in CS6) | 703 | 731 | 799 |
+| Held-out states with both tokens in one class | 4704 | 4703 | 4674 |
+
+The two tokenizers of scale 2 have the same counts; they differ in the tokens that the three
+positions share, 386 tokens in all against 193.
+
+So the carry of the task's grid costs about a hundred rare tokens, 240 to 280 held-out states
+that read one, and 312 to 374 open wraps. Without it the wrap is still open at 15% to 17% of
+the held-out states for a learner with a free score for each token, and 112 to 222 held-out
+states still read a token with at most 5 training cells: these are the steps near `±p` of EN2
+and the comparison of CS1, which come with any difference encoding of the task.
+
+### CC5. The reading for a model
+
+This item is a reading and a hypothesis, not a theorem.
+
+By RR7 the residue errors of the models are at tokens with few training cells, and by CC4 two
+thirds of those tokens are there by the carry. The hypothesis: the models of RR7 whose decay
+acts within the run, trained in the same way on the steps of a grid of scale 2, make fewer
+residue errors than on the grid of the task, on every seed. Under the registered decode they
+are not expected to reach 99%: the wrap is still open at 703, 731, 799 held-out states. With
+the decoder of *The decoder holds the level* it is another question (DL4). The runs and the
+predictions are written down before the runs as stage 10 of
+`research/diffgpt_flat_spectrum/PLAN.txt`. At the time of this section no model is trained on
+a grid of scale 2.
+
+### CC6. Scope
+
+Proved: CC2 and CC3.
+
+Not covered:
+
+- The codec. CC1 describes it, and the description is checked at the states of the task; the
+  binary64 arithmetic of the codec at a tie of the grid is not described.
+- That both tokens of a step occur. CC2 bounds the tokens of a step by two. That 177 of the
+  193 second steps of the task have two is computed (CC4); CC3 proves it for one step.
+- Series that are not on a grid. A scale `u / v` in lowest terms holds the multiples of `v`,
+  so a series of all integers is on the grid only for `v = 1`; real values are on no grid, and
+  some rounding is then carried by every codec of this kind. Nothing here says what the two
+  tokens of a step cost a model on such a series.
+- A model. CC4 counts tokens and cells; CC5 is a hypothesis about networks.
+
+### Lean
+
+`src/Transformer/Grokking/FlatSpectrum/`, module `StepCarry`, namespace
+`Transformer.Grokking.FlatSpectrum`; proved without `sorry`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| CC1 | `carriedStep` | The definition, for real `s`, `θ`, `θ'` and integers `n`, `d`. That the tokens of the codec are `256 + carriedStep s (1/2) 0 0 d₁`, `255 + carriedStep s 0 (1/2) d₁ d₂` and `256 + carriedStep s (1/2) 0 (d₁ + d₂) d₃` is not a Lean statement. |
+| CC2 | `floor_add_eq_ite`, `carriedStep_eq`, `carriedStep_eq_or` | The first is `⌊x + y⌋ = ⌊x⌋ + ⌊y⌋ + [1 ≤ fract x + fract y]` for real `x`, `y`. The bit is `if 1 ≤ Int.fract (s * n + θ) + Int.fract (s * d + θ' - θ) then 1 else 0`. |
+| CC3 | `carriedStep_of_int`, `carriedStep_intCast`, `carriedStep_two` | The first takes integers `j`, `k` with `s * n = j` and `s * d = k`, and `0 ≤ θ, θ' < 1`; the second is an integer scale `m` and gives `m * d`. The third is `s = 511 / 192`, `θ = 0`, `θ' = 1 / 2`, `d = 1`, with `n = 0` and `n = 3`. |
+
+## The decoder holds the level (added)
+
+Added on 2026-11-10 and proved in Lean. CW6 makes the wrap of the step to write a comparison,
+CS counts where the training cells leave it open, and RR7 finds most of the errors of the best
+run there. This section observes that the wrap is not the model's to learn. The decoder adds
+the step to the level before it, and it holds that level; the model reads steps and does not.
+Of the integers with the residue of the step, one keeps the series in its domain `[0, p)`, and
+it is the step. So a decoder that admits only values of the domain asks the model for the
+residue, and it makes no wrap error. On the task every wrap error of every run with step
+tokens decodes outside the domain.
+
+### DL1. The wrap is the domain
+
+Let `x` be the level before the row to write and `b` the value before it, so that the step to
+write is `modStep p b x` (CW1). For every integer `d`,
+
+```
+d = modStep p b x   ⟺   d ≡ b (mod p)  and  0 ≤ x + d < p.
+```
+
+So the step is the only integer of its residue that keeps the series in `[0, p)`. The others,
+`modStep p b x + k p` with `k ≠ 0`, lead outside: a wrong wrap is `k = ±1`. The wrap of CW6,
+`p ≤ b + x`, is thus a function of the residue `b` and of the level `x`. The model of a
+difference encoding does not read `x`. It reads the steps `d₁` and `d₂`, and in them the wrap
+is the comparison of CW7. The decoder holds `x`.
+
+### DL2. A decoder with a domain
+
+A decoder with the domain `[0, p)` admits a token when its value, the level plus the step
+that the token writes, is in the domain, and it answers with the best admitted token. By DL1:
+
+- An admitted answer whose step has the residue of the truth is the truth. This decoder makes
+  no wrap error, whatever the model.
+- What it asks of the model is the residue of the step. Every character of that residue is a
+  kernel of rank one in the two steps read, with entries of modulus one (CW1), and such a
+  kernel is determined by the training cells inside a class of their graph (Theorems E and G).
+
+The tokens, the model and its training are as before; what changes is how its scores are read.
+A level encoding has this for nothing, as a level cannot leave the domain (EN1). The domain is
+a declaration about the series, as its grid is. It is not read from the held-out states.
+
+### DL3. The task (numerical)
+
+These numbers are computed from the recorded answers of the runs of RR7 and of the earlier
+runs of the same study, `research/diffgpt_flat_spectrum/` of the `diff-gpt` repository; no
+model is run here. The domain is `[0, 96]`.
+
+- The 66 runs with step tokens have 8251 wrap errors at their ends. Every one decodes outside
+  the domain, and no right answer does.
+- Of the residue errors some decode outside the domain as well. So a run decoded with the
+  domain has at most its right answers, its wrap errors and these right:
+
+| Model and recipe (RR7) | Right, seeds 11, 17, 23 | Wrap errors | Residue errors | of them outside the domain | At most right with the domain |
+| --- | --- | --- | --- | --- | --- |
+| Historical, its recipe | 4468, 4386, 4344 | 133, 119, 165 | 103, 199, 195 | 26, 42, 61 | 4627, 4547, 4570 |
+| Historical, `ρ = 10` | 4436, 4439, 4310 | 121, 129, 137 | 147, 136, 257 | 24, 34, 91 | 4581, 4602, 4538 |
+| Selected main, `ρ = 10` | 4478, 4459, 4356 | 169, 183, 228 | 57, 62, 120 | 10, 20, 37 | 4657, 4662, 4621 |
+
+  For the selected main with `ρ = 10` that is at most 99.00%, 99.11%, 98.24% of the 4704
+  held-out states. How many of these answers a run has right with the domain is not computed
+  from the recorded answers: it needs the scores of the model.
+- The residue of the step is determined at the held-out states with both tokens in one class
+  of the training graph: 4692, 4670, 4619 on the grid of the task, that is 99.74%, 99.28%,
+  98.19%, and 4704, 4703, 4674 on a grid of scale 2 (CC4), that is 100%, 99.98%, 99.36%.
+
+### DL4. The reading for a model
+
+This item is a reading and two hypotheses, not a theorem.
+
+By RR7 the best run has 169, 183, 228 wrap errors and 57, 62, 120 residue errors, and 99% is
+at most 47 errors. By DL2 the wrap errors are not errors of a decoder with the domain. The
+residue errors are at tokens with few training cells, and by CC4 the carry of the grid makes
+two thirds of those tokens.
+
+The first hypothesis is about the recorded checkpoints, with no training. Decoded with the
+domain, a run of RR7 that generalizes has most of its wrap errors right, and its errors are
+then its residue errors.
+
+The second is about the encoder and the decoder together. On a grid of scale 2 and with the
+decoder of DL2, the models of RR7 whose decay acts within the run reach 99% of the held-out
+states.
+
+Both are written down with their predictions before the runs, as stages 9 and 10 of
+`research/diffgpt_flat_spectrum/PLAN.txt`. At the time of this section no checkpoint is decoded
+with the domain and no model is trained on a grid of scale 2.
+
+### DL5. Scope
+
+Proved: DL1.
+
+Not covered:
+
+- That the best admitted token of a model has the right residue. DL2 says what the decoder
+  cannot get wrong, not what a model gets right.
+- That a trained network is M. Theorems E and G are about the minimum of the nuclear norm.
+- The registered metric of the task, which decodes the best token with no domain. A decode
+  with the domain is another metric; RR7, CS6 and EN6 are about the registered one.
+- A series with no domain. If no bounds of the series are declared in advance there is
+  nothing to admit by, and for a series far from its bounds the domain admits every token.
+- The training. The model is still trained to write the exact token, wrap included. A loss
+  over the admitted tokens alone is not considered here.
+
+### Lean
+
+`src/Transformer/Grokking/FlatSpectrum/`, module `StepDomain`, namespace
+`Transformer.Grokking.FlatSpectrum`; proved without `sorry`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| DL1 | `eq_modStep_iff`, `modStep_add_mul_not_mem` | For `0 < p` and all naturals `b`, `x`; neither needs `b < p` or `x < p`. The residue is the cast of `d` to `ZMod p`, and the domain is `0 ≤ (x : ℤ) + d ∧ (x : ℤ) + d < p`. The second is for an integer `k ≠ 0`. |
