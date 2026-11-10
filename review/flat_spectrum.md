@@ -144,6 +144,7 @@ proved without `sorry`. `ψ` is `ZMod.stdAddChar`, `K_φ` is `taskKernel f φ`, 
 | Claim | Lean | Differences from the note |
 | --- | --- | --- |
 | Setting | `nuclearNorm`, `frobeniusSq` (`‖·‖²_S2`), `effectiveRank`, `taskKernel` | |
+| Setting, a task whose arguments have different types | `Recall.recallKernel` | Added, *Associative recall has a flat spectrum*: the kernel `φ(π q)` of a query `q` and a dictionary `π`, with `m` rows and `c^m` columns. |
 | Lemma 1 | `nuclearNorm_isLeast`, `nuclearNorm_le_of_eq_mul` | The minimum runs over every inner dimension. |
 | Lemma 1, "exact for a pure factorization" | `IsOptimalFit`, `isOptimalFit_iff`, `setOf_isOptimalFit_eq`, `forall_isMinOn_iff_iff_isOptimalFit`, `not_exists_isOptimalFit_of_singularValues_eq`, `isOptimalFit_vecMulVec_iff_connected` | Added. A fit of a set `S` of matrices is a factorization `U Vᴴ ∈ S` of any width `r`; it is optimal when its weight decay `½(‖U‖² + ‖V‖²)` is the least among the fits of every width. A fit is optimal exactly when its product minimizes `‖·‖_S1` on `S` and its weight decay equals that norm; the products of the optimal fits are exactly the minimizers of `‖·‖_S1` on `S`. So for `K ∈ S`, some fit is optimal and every optimal fit multiplies to `K` exactly when M recovers `K`, in D.2's form. Read through this, Theorem A for flat kernels and Theorem E hold for weight decay: no optimal fit multiplies to a flat `K` without zero entries on a proper `Ω`, and for `u vᵀ` with `|u_i v_j| = 1` some fit is optimal and all multiply to `u vᵀ` exactly when `Ω` is connected and contains a permutation. That training reaches an optimal fit is the modeling step; for the pure factorization it is proved for every convergent run, with Theorems A and E for the trained fits as λ → 0⁺, in *Training reaches the optimal fit* (added). |
 | Prop. 2, `a + b` | `addKernel_eq_vecMulVec`, `rank_addKernel`, `nuclearNorm_addKernel`, `effectiveRank_addKernel` | |
@@ -9198,3 +9199,245 @@ proved without `sorry`.
 | R2 | `isMinOn_iff_of_full_row_rank`, `IsFlat.isMinOn_iff`, `IsFlat.not_isMinOn_of_ne_zero`, `IsFlat.not_isMinOn`, `IsFlat.not_forall_isMinOn_iff` | A minimum of M from Ω is `IsMinOn nuclearNorm S K` for the set `S` of the matrices equal to `K` on Ω, as in Theorem A. |
 | R3 | `nuclearNorm_sq_le_rank_mul_frobeniusSq`, `effectiveRank_le_rank`, `effectiveRank_le_min`, `IsFlat.pairing_le`, `IsFlat.mul_sub_rank_le_frobeniusSq_sub`, `IsFlat.mul_sub_card_le_frobeniusSq_sub`, `IsFlat.card_le_of_eq_mul` | `⟨K, X⟩` is `Training.pairing`. The width `k` is the cardinality of a finite column type. Whether a product through width `k` attains `c (r₀ − k)` is not formalized. |
 | R4 | `Training.exists_tendsto_decayRun_nuclearNorm_add_le_of_not_isMinOn`, `Training.exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le_of_not_isMinOn`, `IsFlat.not_exists_isOptimalFit`, `IsFlat.exists_nuclearNorm_add_le`, `IsFlat.exists_tendsto_decayRun_nuclearNorm_add_le`, `IsFlat.exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le`, `IsFlat.mul_sub_card_le_fitLoss_univ` | The two first theorems take "`K` is not a minimum of M from Ω" as their hypothesis, for any kernel. "Some nonzero cell is unseen" is `(i, j) ∉ Ω` with `K i j ≠ 0`. The width `k ≥ min(m, n)` is `card m ≤ card k ∨ card n ≤ card k`, and the constants of the runs are those of WD8 and WD10. The squared loss with every cell seen is `fitLoss Set.univ K (U * Vᴴ)`. |
+
+## Associative recall has a flat spectrum (added)
+
+Arora et al., *Zoology: Measuring and Improving Recall in Efficient Language Models*,
+arXiv:2312.04927v1, explain the gap between attention and gated convolutions by one task,
+associative recall (Appendix `app:retnet-proof`): "The AR problem takes key-value pairs
+`{k_i, v_i}_{i=0}^{n−1}` along with a query `q` appended at the end as input and the goal is
+to output `v_i` if `q = k_i` for some `i ∈ [0, N − 1]`." Their Claim 1 (§4) is measured:
+"Gated-convolution models with two layers require model dimension to scale at least linearly
+in sequence length in order to solve associative recall, while attention models can solve it
+with near-constant dimensionality." Their Corollary `cor: space-ar` bounds the RetNet by
+counting bits.
+
+This section puts the task in the setting of this note. Recall is a task kernel. The kernel
+is flat, and flatness prices the width: a readout through which `d` numbers cross from the
+context to the query misses at least the fraction `1 − d / m` of recall with `m` bindings. One
+gated convolution, the RetNet output and attention without softmax are such readouts.
+
+### AR1. The kernel
+
+Keys `κ`, `m = |κ|`; values `ν`, `c = |ν|`. A context binds each key to a value: a
+dictionary `π : κ → ν`. The answer to the query `q` is `π(q)`. For a readout `φ : ν → ℂ` of
+the answer the recall kernel is
+
+```
+K(q, π) = φ(π(q)),      m rows,  c^m columns.
+```
+
+It is the task kernel `φ(f(a, b))` of the Setting for the operation `f(q, π) = π(q)`,
+evaluation, whose two arguments have different types. The readout is centered when
+`Σ_v φ(v) = 0`.
+
+### AR2. Flatness
+
+A dictionary is the value of one key and, independently, the values of the other keys. So
+for functions `f`, `g` of a value and keys `q' ≠ q`,
+
+```
+Σ_π f(π q) = c^{m−1} Σ_v f(v),      Σ_π f(π q) g(π q') = (Σ_v f(v)) · Σ_ρ g(ρ q'),
+```
+
+with `ρ` over the dictionaries of the keys other than `q`. For a centered readout the second
+sum vanishes with `f = φ`, `g = conj φ`, so the rows of `K` are orthogonal:
+
+```
+K Kᴴ = σ² I,      σ² = c^{m−1} Σ_v |φ(v)|².
+```
+
+The recall kernel of a centered readout that is not zero is flat (R1), with
+
+```
+rank K = m,      r_eff K = m.
+```
+
+Every key is a direction of the same weight. The table of `a + b` has effective rank one and
+that of `a³ + ab` has effective rank `p`, its number of rows; recall is at the same end as
+`a³ + ab`.
+
+### AR3. Theorem A: unseen pairs
+
+By R2, for a centered readout that is not zero,
+
+```
+K is a minimum of M from Ω    ⟺    φ(π q) = 0 at every unseen pair (q, π).
+```
+
+For a readout without zeros, such as `±1` on two values, the recall kernel is a minimum of M
+from no proper set of pairs.
+
+### AR4. Width: the regression bound
+
+A model reads the context and then the query. Its readout `F(q, x)` of the query `q` after
+the context `x` has cut width `d` when
+
+```
+F(q, x) = g(q) + Σ_{r<d} a_r(q) b_r(x).
+```
+
+Apart from a term of the query alone, `d` numbers `b_r(x)` are all that crosses from the
+context to the query, and the query combines them linearly. The functions `g`, `a_r`, `b_r`
+are arbitrary.
+
+Let `F` have cut width `d` on the dictionaries and let `φ` be real with mean `μ`. Then
+
+```
+Σ_{q, π} (φ(π q) − F(q, π))²  ≥  (m − d) c^{m−1} Σ_v (φ(v) − μ)².
+```
+
+There are `m c^m` pairs, so the mean squared error is at least `(1 − d / m) Var φ`.
+
+Proof. Subtract from each `b_r` its mean `β_r` over the dictionaries:
+`F(q, π) = γ(q) + X(q, π)` with `X(q, π) = Σ_r a_r(q) (b_r(π) − β_r)`. For each `q` the
+numbers `φ(π q) − μ − X(q, π)` sum to `0` over `π` (AR2), so removing the constant
+`γ(q) − μ` from them does not lower their sum of squares. What remains is `‖K − A B‖_S2²` for
+the recall kernel `K` of `φ − μ` and a product through width `d`, at least `(m − d) σ²` by
+R3. ∎
+
+For a readout `φ` that is not constant:
+
+- exact recall, `F(q, π) = φ(π q)` for all `q` and `π`, has `d ≥ m`;
+- one-hot keys attain it: `a_r(q) = [r = q]` and `b_r(π) = φ(π r)` have cut width `m`.
+
+So recall has cut width `d` exactly when `d ≥ m`.
+
+### AR5. Width: a sign or an argmax
+
+AR4 bounds a regression. A classifier is right when a sign or an argmax is right, with any
+margin. The count of keys survives.
+
+Two values. If `F` has cut width `d` and `F(q, π) > 0` exactly when `π(q)` is the second
+value, for every dictionary, then `d ≥ m`.
+
+Proof. If `m > d`, the vectors `a(q) ∈ ℝ^d` are dependent: `Σ_q λ_q a(q) = 0` with `λ ≠ 0`,
+so `Σ_q λ_q F(q, π) = Σ_q λ_q g(q)` for every `π`. For the dictionary with `π(q)` the second
+value exactly when `λ_q > 0`, every term `λ_q F(q, π)` is `≥ 0`. For the one with `π(q)` the
+second value exactly when `λ_q < 0`, every term is `≤ 0`. At a key with `λ_q ≠ 0` one of the
+two is strict. So `Σ_q λ_q g(q)` is both `≥ 0` and `≤ 0`, with one inequality strict. ∎
+
+Any number of values. If the largest of the logits `L_v(q, π)` is always that of the bound
+value and the difference `L_{v₁} − L_{v₀}` of two of them has cut width `d`, then `d ≥ m`: on
+the dictionaries with values in `{v₀, v₁}` that difference is the sign readout above.
+
+### AR6. One gated convolution
+
+The Coyote layer of the paper (§4, equation `eq: coyote-recursion`; printed as BaseConv) is
+
+```
+y = (u W + b₁) ⊙ (h ∗ u + b₂)
+```
+
+on a sequence `u` of tokens of dimension `d`, with a causal convolution in each of the `d`
+channels. Let the prompt be `n` context tokens and then the query token, and read the layer
+at the query. The first factor is a function of the query token. The convolution is additive
+in `u`, so the second factor is a function of the query token plus a function of the context
+tokens, one number for each channel. Hence every linear readout `Σ_c w_c y_c` at the query
+has cut width `d`, for every encoding of the dictionary in the context tokens and of the key
+in the query token and every `W`, `h`, `b₁`, `b₂`, `w`. The circular convolution that Appendix
+`sec:simplified-hyena-append` also allows sums the same terms at the last position, so that
+layer is the same at the query. By AR4 and AR5:
+
+- the squared error of the layer on recall is at least `(m − d) c^{m−1} Σ_v (φ(v) − μ)²`;
+- exact recall of a readout that is not constant has `d ≥ m`;
+- logits `Σ_c R_{cv} y_c` whose largest is always that of the bound value have `d ≥ m`;
+- a layer of dimension `m` recalls `m` bindings: one-hot keys, the value of the key `j` in
+  every channel of the token `j`, and the filter that shifts the token `c` to the query in
+  channel `c`. Its context lists the values in the order of the keys. For a context that
+  lists its bindings in another order the three bounds hold as they stand, and no layer that
+  attains them is constructed.
+
+The number of bindings that a context can hold grows linearly with its length. So for one
+layer read linearly the first half of Claim 1 is a theorem: the dimension is at least the
+number of bindings.
+
+### AR7. The RetNet output
+
+The RetNet of the paper (Appendix `app:retnet-proof`) keeps a `d × d` state
+`z^n = γ z^{n−1} + A[n,:]ᵀ V[n,:]` and outputs `Out[N,:] = C[N,:] z^N` at the query. Corollary
+`cor: space-ar` reads: "The RetNet model requires Ω(N)-bits to solve AR for d ≤ √N". Its proof
+counts the bits of the state; `exact_index_requires_bits` is the finite-state form, and a
+state of real numbers has no fixed number of bits.
+
+The state holds `d²` numbers, but the query reads it through the `d` numbers `C[N,:]`:
+
+```
+Σ_c w_c Out[N,c] = g(q) + Σ_r C_r(q) · γ Σ_c w_c z^{N−1}[r,c],
+```
+
+and `z^{N−1}` depends on the context alone. So every linear readout of the output has cut
+width `d`, at any precision, and the three bounds of AR6 hold with `d` the dimension of the
+state: recall of `m` bindings has `d ≥ m`. For `√N < d < N` the count of bits does not
+exclude recall of `N` bindings; this bound does.
+
+### AR8. Attention without softmax
+
+Proposition `prop: attention-ar` of the paper: "Attention (even without using soft-max)
+solves MQAR for `u` using O(c²) parameters", with one-hot tokens of dimension `3c` for a
+vocabulary of size `c` (Appendix Proposition `prop: app-attention`). Attention without
+softmax returns `Σ_j ⟨Q q, K x_j⟩ V x_j` at the query. The score of the token `j` is bilinear
+in the projections `Q q` and `K x_j` of dimension `d`, so every linear readout of the output
+has cut width `d`, when `Q q` depends on the query alone, and the three bounds of AR6 hold
+with `d` the dimension of the projections. For such a layer the dimension is at least the
+number of bound keys; the construction of the paper has dimension `3c`.
+
+The appendix adds linear biases to the scores (Algorithm `ALiBi-without-softmax`):
+`O = (Q Kᵀ + B) V` with a fixed matrix `B` of positions. The row of `B` at the query adds
+`Σ_j B_j V x_j`, a function of the context alone: one more number crosses, the cut width is
+`d + 1`, and the three bounds hold with `d + 1` in place of `d`. The unit is used: with the
+bias, two keys are recalled at dimension one. The second layer of the paper's construction
+has `B = 0`, and its first layer leaves the query token as it is, so that construction is of
+the first form.
+
+### AR9. Training
+
+The pure factorization `U Vᴴ` of *Training reaches the optimal fit*, with a row of `U` for
+each key and a row of `V` for each dictionary, is the bilinear model of recall. For a
+centered readout, by R4:
+
+- with every pair seen, width `k` keeps a squared loss of at least `σ² (m − k) / 2`;
+- for a readout without zeros and a proper set Ω of pairs, the trained fits of every weight
+  decay and every width stay a fixed `δ > 0` below `‖K‖_S1`, and almost every run of width
+  at least `m` with a small step converges to such a fit.
+
+### AR10. Scope
+
+Proved: AR1 to AR9 as stated, for every finite set of keys and of values.
+
+Not covered:
+
+- Depth. One layer reads the context at the query. The context tokens may be any function of
+  the dictionary, so layers that act on the context alone are covered. A stack in which two
+  layers read the context at the query is not of the form of AR4, and no bound is proved for
+  it. Claim 1 of the paper, for two layers with MLPs, stays a measurement.
+- Nonlinear readouts. An MLP after the layer is not a linear readout; AR4 and AR5 do not
+  bound it.
+- Softmax. Softmax divides the scores by a function of the query and the context together.
+  That output is not of the form of AR4, and nothing here bounds softmax attention from below
+  or from above. The second half of Claim 1 is not addressed.
+- The family of contexts. The bounds range over every dictionary of the `m` keys. A model
+  that meets a smaller family of dictionaries is not constrained by them.
+- The multi-query task of the paper (`def: general-AR`), with repeated keys and queries
+  without a match: here every key is bound once and one query follows the context.
+- AR3 and AR9 say that the recall kernel is not a minimum of M and is not returned by
+  training from a part of its table. They do not say what the minimum is or how far its
+  decoded answers are from recall.
+
+### Lean
+
+`src/Transformer/Grokking/FlatSpectrum/Recall/`, namespace
+`Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`. The models are those of
+`Transformer.Zoology` (`coyoteLayer`, `retNetRun`).
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| AR1 | `recallKernel`, `HasCutWidth` | The kernel is `Matrix κ (κ → ν) ℂ`; the keys and the values are finite types. `HasCutWidth d F` asks for `g`, `a`, `b` with values in `ℝ` and features indexed by `Fin d`. |
+| AR2 | `sum_apply`, `sum_apply_mul_apply`, `recallKernel_mul_conjTranspose`, `isFlat_recallKernel`, `scale_pos`, `rank_recallKernel`, `effectiveRank_recallKernel` | The two sums hold in every commutative semiring. "Not zero" is `φ v ≠ 0` for some `v`, which makes `σ² > 0`. |
+| AR3 | `isMinOn_recallKernel_iff`, `not_isMinOn_recallKernel` | "Without zeros" is `∀ v, φ v ≠ 0`. |
+| AR4 | `sum_sq_le_sum_sub_sq`, `exists_centering`, `HasCutWidth.mul_le_sum_sq`, `HasCutWidth.card_le_of_recall`, `hasCutWidth_recall`, `hasCutWidth_recall_iff` | The mean `μ` is any number with `Σ_v (φ v − μ) = 0`. "Not constant" is `φ v ≠ φ v'` for some `v`, `v'`. The bound is stated for the sum over all pairs, not divided by their number. |
+| AR5 | `HasCutWidth.comp_context`, `HasCutWidth.card_le_of_sign`, `card_le_of_argmax` | The two values are `Bool`, the second one `true`. A right argmax is `L v q π < L (π q) q π` for every `v ≠ π q`. |
+| AR6 | `prompt`, `prompt_eq_add`, `causalConvolution_add`, `coyoteLayerCyclic_last`, `hasCutWidth_coyoteLayer`, `coyoteLayer_recall_error`, `card_le_of_coyoteLayer_recall`, `card_le_of_coyoteLayer_argmax`, `exists_coyoteLayer_recall` | The prompt is `Fin.snoc` of the `n` context tokens and the query token; the layer is read at `Fin.last n`. The encodings `ctx` and `qry` are arbitrary functions. The bounds are stated for `coyoteLayer`, with the causal convolution; `coyoteLayerCyclic_last` rewrites the layer with the circular one into it. The layer that recalls has `n = d = m` and keys `Fin m`, and its context lists the values in the order of the keys. |
+| AR7 | `hasCutWidth_retNet`, `retNet_recall_error`, `card_le_of_retNet_recall`, `card_le_of_retNet_argmax` | The context is a list of projected pairs `(A[n,:], V[n,:])`, the query appends its own pair, and `out q` is `C[N,:]`. |
+| AR8 | `hasCutWidth_linearAttention`, `linearAttention_recall_error`, `card_le_of_linearAttention_recall`, `card_le_of_linearAttention_argmax`, `hasCutWidth_biasedAttention`, `biasedAttention_recall_error`, `card_le_of_biasedAttention_recall`, `card_le_of_biasedAttention_argmax` | `qf q` is `Q q`, `kf x j` is `K x_j`, `vf x j` a linear readout of `V x_j`, and `self q` the term of the query attending to itself. The projections are arbitrary functions of the query and of the context. `bias j` is the entry of `B` at the query and the context token `j`; it does not depend on the query. |
+| AR9 | `mul_sub_card_le_fitLoss_recallKernel`, `exists_nuclearNorm_add_le_recallKernel`, `exists_pos_ae_tendsto_decayRun_recallKernel` | The runs and the constants are those of WD10; the width is `card κ ≤ card k`. |

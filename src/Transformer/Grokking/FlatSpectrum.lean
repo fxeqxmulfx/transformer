@@ -117,6 +117,7 @@ public import Transformer.Grokking.FlatSpectrum.Training
 public import Transformer.Grokking.FlatSpectrum.FlatKernel
 public import Transformer.Grokking.FlatSpectrum.FlatSupport
 public import Transformer.Grokking.FlatSpectrum.FlatCapacity
+public import Transformer.Grokking.FlatSpectrum.Recall
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -311,6 +312,11 @@ rank and its effective rank are then `min(m, n)`, the largest an `m × n` matrix
 minimum of M from `Ω` exactly when every unseen cell is a zero of `K`, by Theorem A at full row
 or full column rank, so a flat kernel without zeros is a minimum from no proper `Ω`. Every `X`
 has `‖K − X‖_S2² ≥ c (min(m, n) − rank X)`, so a product through width `k` misses `K` by at least
-`c (min(m, n) − k)`: each unit of width buys the same share of `‖K‖_S2²`. -/
+`c (min(m, n) − k)`: each unit of width buys the same share of `‖K‖_S2²`. Associative recall
+(`Recall`, the task of the Zoology paper): the kernel `φ(π q)` of a query `q` and a dictionary
+`π` of `m` keys is flat for a centered readout, with effective rank `m`. So a readout through
+which `d` numbers cross from the context to the query misses at least the fraction `1 − d / m`
+of recall, and one Coyote layer, the RetNet output and attention without softmax of dimension
+`d` recall at most `d` bindings, `d + 1` for attention with linear biases. -/
 
 @[expose] public section
