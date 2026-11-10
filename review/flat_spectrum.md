@@ -11412,7 +11412,10 @@ to the next row. Then the token of a step is one of two, and which of the two is
 steps before it. On a grid that holds the values nothing is carried and a step is one token.
 The grid of the task has 2.66 tokens for a step; a grid of scale 2 is a change of one number
 of the codec, its domain. On the task it removes two thirds of the rare tokens and one third
-of the open wraps of CS6. What remains is the difference encoding itself, EN1 and EN2.
+of the open wraps of CS6. What remains is the difference encoding itself, EN1 and EN2. CC7 has
+the models trained on such a grid. With the tokenizer of the task two of three arms have fewer
+residue errors on every seed; the selected main under its own recipe passes 90%; no run
+reaches 99%.
 
 ### CC1. The tokens of a codec that carries
 
@@ -11524,9 +11527,8 @@ acts within the run, trained in the same way on the steps of a grid of scale 2, 
 residue errors than on the grid of the task, on every seed. Under the registered decode they
 are not expected to reach 99%: the wrap is still open at 703, 731, 799 held-out states. With
 the decoder of *The decoder holds the level* it is another question (DL4). The runs and the
-predictions are written down before the runs as stage 10 of
-`research/diffgpt_flat_spectrum/PLAN.txt`. At the time of this section no model is trained on
-a grid of scale 2.
+predictions were written down before the runs as stage 10 of
+`research/diffgpt_flat_spectrum/PLAN.txt`; CC7 holds what they found.
 
 ### CC6. Scope
 
@@ -11543,6 +11545,55 @@ Not covered:
   some rounding is then carried by every codec of this kind. Nothing here says what the two
   tokens of a step cost a model on such a series.
 - A model. CC4 counts tokens and cells; CC5 is a hypothesis about networks.
+
+### CC7. The models on a grid of scale 2 (numerical)
+
+These numbers are measured, not proved: `research/diffgpt_flat_spectrum/` of the `diff-gpt`
+repository, Rust and Kernite, FP32 on a GTX 1050. The models, recipes, initializations, sampled
+examples and budget are those of RR7; the tokens are the steps on the two grids of scale 2 of
+CC4, and nothing else is changed. The predictions were fixed before the runs. The decode is
+the registered one; DL6 has the same runs decoded with the domain.
+
+| Model | Recipe | Share on the grid of the task (RR7) | Scale 2, the tokenizer of the task | Scale 2, one grid at every row |
+| --- | --- | --- | --- | --- |
+| Historical | ScheduleFree AdamW, rate 0.03, decay 1 | 94.98%, 93.24%, 92.35% | 96.64%, 96.79%, 94.52% | 94.45%, 94.03%, 95.30% |
+| Historical | AdamW of the selected main, `ρ = 0.1` | 7.70%, 9.86%, 30.17% | 69.62%, 69.86%, 33.23% | 71.47%, 84.06%, 81.16% |
+| Historical | the same, `ρ = 10` | 94.30%, 94.37%, 91.62% | 92.73%, 86.84%, 92.05% | 81.68%, 79.32%, 82.48% |
+| Selected main | its recipe, `ρ = 0.1` | 79.32%, 88.35%, 77.87% | 90.67%, 91.92%, 93.24% | 95.79%, 96.15%, 93.54% |
+| Selected main | the same, `ρ = 10` | 95.20%, 94.79%, 92.60% | 97.07%, 96.49%, 95.09% | 94.90%, 96.43%, 95.47% |
+
+The wrap errors and, after "and", the residue errors of the same runs, seeds 11, 17, 23:
+
+| Model and recipe | Grid of the task | Scale 2, the tokenizer of the task | Scale 2, one grid at every row |
+| --- | --- | --- | --- |
+| Historical, its recipe | 133, 119, 165 and 103, 199, 195 | 138, 124, 185 and 20, 27, 73 | 142, 131, 159 and 119, 150, 62 |
+| Historical, `ρ = 10` | 121, 129, 137 and 147, 136, 257 | 74, 50, 87 and 268, 569, 287 | 24, 19, 34 and 838, 954, 790 |
+| Selected main, `ρ = 0.1` | 161, 142, 192 and 812, 406, 849 | 195, 178, 166 and 244, 202, 152 | 152, 141, 207 and 46, 40, 97 |
+| Selected main, `ρ = 10` | 169, 183, 228 and 57, 62, 120 | 126, 110, 162 and 12, 55, 69 | 84, 93, 156 and 156, 75, 57 |
+
+- The hypothesis of CC5 held with the tokenizer of the task for two of its three arms. The
+  historical recipe has 20, 27, 73 residue errors against 103, 199, 195, and the selected main
+  with `ρ = 10` has 12, 55, 69 against 57, 62, 120. Both end 1.7 to 3.6 points higher on every
+  seed.
+- It failed for the historical model under AdamW with `ρ = 10`, on both grids. That run no
+  longer fits its training set: 4596, 4495, 4614 and 4382, 4234, 4417 of its 4704 training
+  states are right at its end. And 67% to 93% of its residue errors are off by one, the token
+  of the neighbouring step; on the grid of the task that is 5% to 11%. With one grid at every
+  row the hypothesis failed in three more cells of six.
+- Not predicted: the selected main under its own recipe, `ρ = 0.1`, ends above 90% of the
+  held-out states on every seed on either grid of scale 2, with no change of the model or of
+  the recipe. It first has 90% at 3150 to 4250 updates with the tokenizer of the task and at
+  1850 to 2050 with one grid at every row. So 3.6 to 16.5 points of its miss in RR7 need the
+  grid of the task.
+- As CC5 expects, no run reaches 99%; the most is 97.07%. The wrap errors stay. The three best
+  arms are the historical recipe and the selected main with `ρ = 10`, both with the tokenizer
+  of the task, and the selected main with `ρ = 0.1` and one grid at every row. They have 110
+  to 207 wrap errors, against 119 to 228 on the grid of the task. On seeds 11 and 17 their
+  right answers and wrap errors together are 98.8% to 99.7% of the held-out states: the
+  residue is held there, and what is missing is the wrap.
+- On seed 23, 30 held-out states read a step that training does not show at its position
+  (CC4). The runs answer none of them, except one run that answers one.
+- Neither tokenizer of scale 2 is better in every arm.
 
 ### Lean
 
@@ -11564,7 +11615,8 @@ the step to the level before it, and it holds that level; the model reads steps 
 Of the integers with the residue of the step, one keeps the series in its domain `[0, p)`, and
 it is the step. So a decoder that admits only values of the domain asks the model for the
 residue, and it makes no wrap error. On the task every wrap error of every run with step
-tokens decodes outside the domain.
+tokens decodes outside the domain. Decoded with the domain, the runs have 63% of their wrap
+errors right, and none reaches 99% on the grid of the task (DL6).
 
 ### DL1. The wrap is the domain
 
@@ -11637,9 +11689,8 @@ The second is about the encoder and the decoder together. On a grid of scale 2 a
 decoder of DL2, the models of RR7 whose decay acts within the run reach 99% of the held-out
 states.
 
-Both are written down with their predictions before the runs, as stages 9 and 10 of
-`research/diffgpt_flat_spectrum/PLAN.txt`. At the time of this section no checkpoint is decoded
-with the domain and no model is trained on a grid of scale 2.
+Both were written down with their predictions before the runs, as stages 9 and 10 of
+`research/diffgpt_flat_spectrum/PLAN.txt`; DL6 holds what they found.
 
 ### DL5. Scope
 
@@ -11656,6 +11707,74 @@ Not covered:
   nothing to admit by, and for a series far from its bounds the domain admits every token.
 - The training. The model is still trained to write the exact token, wrap included. A loss
   over the admitted tokens alone is not considered here.
+
+### DL6. The runs decoded with the domain (numerical)
+
+These numbers are measured, not proved: `research/diffgpt_flat_spectrum/` of the `diff-gpt`
+repository, Rust and Kernite, FP32 on a GTX 1050. The first part trains no model. The final
+checkpoints of the 66 runs with step tokens, those of RR7 and the earlier ones, are loaded
+again, replay their recorded metrics exactly, and are decoded twice from the same scores: by
+the registered decode, and by the decoder of DL2 with the domain `[0, 96]`. The second part
+decodes the runs of CC7 in the same way. The predictions were fixed before the decodes and
+before the runs.
+
+| Model and recipe (RR7) | Right, registered decode | Wrap errors | of them right with the domain | Right with the domain | Share |
+| --- | --- | --- | --- | --- | --- |
+| Historical, its recipe | 4468, 4386, 4344 | 133, 119, 165 | 108, 98, 124 | 4586, 4488, 4484 | 97.49%, 95.41%, 95.32% |
+| Historical, `ρ = 3` | 4341, 4336, 4276 | 195, 144, 162 | 158, 111, 124 | 4504, 4454, 4412 | 95.75%, 94.69%, 93.79% |
+| Historical, `ρ = 10` | 4436, 4439, 4310 | 121, 129, 137 | 58, 63, 60 | 4498, 4506, 4386 | 95.62%, 95.79%, 93.24% |
+| Selected main, `ρ = 1` | 4418, 4420, 4265 | 155, 187, 243 | 123, 155, 192 | 4545, 4578, 4464 | 96.62%, 97.32%, 94.90% |
+| Selected main, `ρ = 3` | 4381, 4396, 4280 | 226, 200, 259 | 180, 172, 214 | 4569, 4571, 4500 | 97.13%, 97.17%, 95.66% |
+| Selected main, `ρ = 10` | 4478, 4459, 4356 | 169, 183, 228 | 107, 115, 151 | 4590, 4577, 4508 | 97.58%, 97.30%, 95.83% |
+
+- With the domain no answer of any run is off by `p`, and every right answer of the registered
+  decode stays right, as DL2 says. The runs with level tokens of EN6 are unchanged: none of
+  their answers is outside the domain.
+- The first hypothesis of DL4 held in part. Over the 66 runs the domain turns 5196 of the 8251
+  wrap errors right, 63%. The prediction made with it, three quarters in every run with 88%
+  right, failed in 23 of the 38 such runs. In the rows of the table it is 75% to 86% for all
+  but the two with `ρ = 10`, and 44% to 66% for those: the best arms of AdamW under the
+  registered decode.
+- A wrap error is of two kinds. Where the domain turns it right, the best score of a token of
+  the truth is 0.5 to 2.8 below the best score of a token of the other wrap, on average over
+  a run: a close call. Where it does not, it is 1.9 to 7.7 below, and the best admitted token
+  is not a token of the truth. Under `ρ = 10` its value is 3 to 7 from the value of the wrong
+  wrap in 58% to 83% of these errors, and 68% to 92% of them are at states with
+  `94 ≤ b + x ≤ 99`, beside the comparison of CW6. There the model is on the other side of
+  the comparison, and a token of the truth is not its second choice.
+- No run with step tokens on the grid of the task has 99% with the domain. The most is 4590
+  of 4704, 97.58%, below the range that was expected for it.
+- No decoder gives 99% to these runs. A decoder that keeps the residue of the best token, one
+  that is told the modulus for example, has at most the right answers and the wrap errors
+  right. The residue errors alone are more than the 47 that 99% allows in every one of the 66
+  runs; the least is 57.
+
+The runs of CC7 decoded with the domain, as shares of the 4704 held-out states:
+
+| Model and recipe | Grid of the task | Scale 2, the tokenizer of the task | Scale 2, one grid at every row |
+| --- | --- | --- | --- |
+| Historical, its recipe | 97.49%, 95.41%, 95.32% | 99.26%, 98.83%, 97.58% | 97.02%, 96.36%, 97.87% |
+| Historical, `ρ = 10` | 95.62%, 95.79%, 93.24% | 93.49%, 87.35%, 92.86% | 81.80%, 79.42%, 82.74% |
+| Selected main, `ρ = 0.1` | 82.36%, 91.05%, 80.46% | 94.03%, 94.83%, 95.88% | 98.75%, 98.79%, 96.94% |
+| Selected main, `ρ = 10` | 97.58%, 97.30%, 95.83% | 99.55%, 97.92%, 96.73% | 95.68%, 97.70%, 97.96% |
+
+- The second hypothesis of DL4 failed. Of the 18 runs of the three arms whose decay acts, two
+  have 99% with the domain: the historical recipe and the selected main with `ρ = 10`, both
+  with the tokenizer of the task on seed 11, at 99.26% and 99.55%. On seed 17 these two end at
+  98.83% and 97.92%, and on seed 23 no run has 99%.
+- The grid and the decoder are both parts of the miss. Together they take the historical
+  recipe from 94.98%, 93.24%, 92.35% to 99.26%, 98.83%, 97.58%, and the selected main with
+  `ρ = 10` from 95.20%, 94.79%, 92.60% to 99.55%, 97.92%, 96.73%.
+- Much of what stays wrong is at the steps that few states read (EN2). Take these two arms and
+  the selected main with `ρ = 0.1` and one grid at every row. Of the errors that they keep
+  with the domain, 43% to 86% are at states with a token of at most 5 training cells. On seed
+  23 the 30 states with a step unseen at its position are 28 to 30 of them.
+
+So a decoder with the domain repairs a model that hesitates between the two wraps, and not one
+that is on the wrong side of the comparison. On this task a difference encoding with a grid
+that holds the values and a decoder with the domain ends at 96.7% to 99.6% in these three
+arms. With the level encoding of EN6 the same arms end at 98.32% to 99.53% under the historical
+recipe and at 100% in the selected main.
 
 ### Lean
 
