@@ -101,6 +101,13 @@ lemma frobeniusSq_sub (A B : Matrix m n ℂ) :
   simp only [← pairing_self, pairing_sub_left, pairing_sub_right, pairing_comm B A]
   ring
 
+lemma frobeniusSq_add_le (A B : Matrix m n ℂ) :
+    frobeniusSq (A + B) ≤ 2 * frobeniusSq A + 2 * frobeniusSq B := by
+  have h1 := frobeniusSq_add A B
+  have h2 := frobeniusSq_sub A B
+  have h3 := frobeniusSq_nonneg (A - B)
+  linarith
+
 lemma frobeniusSq_smul (t : ℝ) (A : Matrix m n ℂ) :
     frobeniusSq (t • A) = t ^ 2 * frobeniusSq A := by
   simp only [← pairing_self, pairing_smul_left, pairing_smul_right]

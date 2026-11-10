@@ -8727,12 +8727,32 @@ A run that meets every hypothesis and has a nonzero limit: `m = n = 1`, `L(X) = 
 Three hypotheses remain. The run converges: for an analytic loss a bounded run with small
 steps does converge, by the Łojasiewicz inequality, but that is not formalized here. The
 start has full row rank, which needs width at least `m + n`. The steps are admissible,
-which WD6 reduces to a bound on η.
+which WD6 reduces to a bound on η, explicit for the squared loss.
 
 ### WD6. Admissible steps
 
 `1 − η M` is positive definite when `η (|λ| + ‖G‖_S2) < 1`, since by WD1
 `⟨W, (1 − η M) W⟩ = ‖W‖² − η ⟨W, M W⟩ ≥ (1 − η (|λ| + ‖G‖_S2)) ‖W‖²`.
+
+For the squared loss on Ω the bound on η is explicit. Let `‖K‖ ≤ κ` and λ > 0, let ρ
+satisfy `‖U_0‖² + ‖V_0‖² ≤ ρ` and `κ² ≤ λ ρ`, and put `γ = ρ/2 + κ`. In the ball
+`‖W‖² ≤ ρ`, `‖U Vᴴ‖ ≤ ‖W‖²/2 ≤ ρ/2`, so `‖G‖ ≤ ‖U Vᴴ − K‖ ≤ γ`. Suppose
+
+```
+2η (λ² + γ²) ≤ λ.
+```
+
+Then `η (λ + γ) < 1`, so every step in the ball is admissible. A step also keeps the ball.
+With `w = ‖W‖²`,
+
+```
+‖(1 − η M) W‖² = w − 2η ⟨W, M W⟩ + η² ‖M W‖² ≤ (1 − η λ) w + η κ² ≤ ρ,
+```
+
+because `⟨W, M W⟩ = λ w + 2 ⟨G, U Vᴴ⟩ ≥ λ w − κ²/2`, as
+`⟨G, X⟩ = ‖G‖² + ⟨G, K⟩ ≥ −‖K‖²/4` for `G = P_Ω(X − K)`, and `‖M W‖² ≤ 2 (λ² + γ²) w`.
+So a run from the ball stays in it with admissible steps, and for the squared loss WD5
+needs only full row rank, this η, and convergence.
 
 ### WD7. Vanishing weight decay: the optimal fits of M
 
@@ -8792,8 +8812,8 @@ Assumed or not covered:
   with small steps converges by the Łojasiewicz inequality; this is not formalized.
 - Width: full row rank of `[U_0; V_0]` needs `k ≥ m + n`. For narrower factors the rank
   constraint changes the problem and nothing is claimed.
-- Step size: WD6 asks `η (|λ| + ‖G_t‖_S2) < 1` along the run. A bound on η from the start
-  alone is not derived.
+- Step size: for the squared loss WD6 gives a bound on η from the start alone. For another
+  loss the condition `η (|λ| + ‖G_t‖_S2) < 1` along the run stays a hypothesis.
 - WD7 takes trained fits as given. They exist where a run converges; existence for each λ
   is not proved separately.
 - The model and the optimizer: for the real network (norms, SiLU, attention) and for AdamW
@@ -8811,5 +8831,5 @@ Assumed or not covered:
 | WD3 | `mul_pairing_le_sub_and_le`, `frobeniusSq_first_order`, `hasDerivAt_comp_add_smul`, `add_smul_mul_conjTranspose`, `hasDerivAt_decayedLoss` | The derivative is taken along every line `(U + tA, V + tB)`. |
 | WD4 | `gain_identity`, `gain_step`, `gain_iterate`, `pairing_nonneg_of_bounded`, `exists_pos_forall_pairing_nonneg`, `exists_pos_lt_det_add_smul_ne_zero`, `posSemidef_of_tendsto` | Norms are `‖·‖_S2`. Full row rank is `Function.Surjective (W 0).mulVec`; bounded is `∀ t, ‖W_t‖² ≤ B`. |
 | WD5 | `lift_posSemidef_of_tendsto_decayRun`, `isDecayedMin_of_tendsto_decayRun`, `add_nuclearNorm_le_of_tendsto_decayRun`, `weightDecay_eq_nuclearNorm_of_tendsto_decayRun`, `decayRun_linear`, `tendsto_decayRun_linear` | Convergence is `Tendsto (decayRun G η λ U₀ V₀) atTop (𝓝 (U, V))`. The example is the run above, with the start `stack_fromCols_one`. |
-| WD6 | `one_sub_smul_lift_posDef` | |
+| WD6 | `one_sub_smul_lift_posDef`, `frobeniusSq_mask_sub_le`, `neg_le_pairing_mask_sub`, `frobeniusSq_lift_mul_stack_le`, `frobeniusSq_decayStep_le`, `frobeniusSq_decayRun_le`, `one_sub_smul_lift_posDef_of_ball`, `isDecayedMin_fitLoss_of_tendsto_decayRun`, `decayRun_mask_empty` | `‖K‖ ≤ κ` is `frobeniusSq K ≤ κ ^ 2` with `κ ≥ 0`. The example run of the last theorem has no cell seen, where the run is `(1 − η λ)^t (U_0, V_0)`. |
 | WD7 | `mask`, `fitLoss`, `fitLoss_first_order`, `fitLoss_eq_zero_iff`, `continuous_mask_sub`, `IsDecayedMin.fitLoss_add_le`, `IsDecayedMin.nuclearNorm_le`, `IsDecayedMin.fitLoss_le`, `isOptimalFit_of_tendsto`, `exists_nuclearNorm_add_le_of_not_isMinOn`, `exists_nuclearNorm_add_le_of_singularValues_eq`, `tendsto_of_fitLoss_tendsto_zero`, `tendsto_mul_conjTranspose_of_forall_isMinOn`, `tendsto_mul_conjTranspose_vecMulVec_of_connected`, `isDecayedMin_one_sub`, `isDecayedMin_shrink` | "The only minimizer of M" is D.2's form, `∀ X ∈ S, (IsMinOn ‖·‖_S1 S X ↔ X = K)`. In 1 the factors have a fixed width `r`; in 2 the bound holds for every width; in 3 they have any fixed finite column type. Limits run over sequences `λ_j → 0⁺`. |

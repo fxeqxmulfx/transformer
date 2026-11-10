@@ -173,4 +173,23 @@ theorem one_sub_smul_lift_posDef {η lam g : ℝ} (hη : 0 ≤ η) (hg : 0 ≤ g
 example := one_sub_smul_lift_posDef (η := 1 / 4) (lam := 1) (g := 1) (by norm_num) zero_le_one
   (G := (-1 : Matrix (Fin 1) (Fin 1) ℂ)) (by simp [frobeniusSq]) (by norm_num)
 
+/-- `‖M W‖² ≤ 2 (λ² + g²) ‖W‖²` when `‖G‖_S2 ≤ g`. -/
+lemma frobeniusSq_lift_mul_stack_le {G : Matrix m n ℂ} {g : ℝ} (hG : frobeniusSq G ≤ g ^ 2)
+    (lam : ℝ) (U : Matrix m k ℂ) (V : Matrix n k ℂ) :
+    frobeniusSq (lift lam G * stack U V) ≤
+      2 * (lam ^ 2 + g ^ 2) * (frobeniusSq U + frobeniusSq V) := by
+  rw [lift_mul_stack, frobeniusSq_stack]
+  have hG' : frobeniusSq Gᴴ ≤ g ^ 2 := by rwa [frobeniusSq_conjTranspose]
+  have h1 := frobeniusSq_add_le (G * V) (lam • U)
+  have h2 := frobeniusSq_add_le (Gᴴ * U) (lam • V)
+  have h3 := (frobeniusSq_mul_le G V).trans
+    (mul_le_mul_of_nonneg_right hG (frobeniusSq_nonneg V))
+  have h4 := (frobeniusSq_mul_le Gᴴ U).trans
+    (mul_le_mul_of_nonneg_right hG' (frobeniusSq_nonneg U))
+  rw [frobeniusSq_smul] at h1 h2
+  linarith
+
+example := frobeniusSq_lift_mul_stack_le (G := (1 : Matrix (Fin 1) (Fin 1) ℂ)) (g := 1)
+  (by simp [frobeniusSq]) 1 (1 : Matrix (Fin 1) (Fin 1) ℂ) 1
+
 end Transformer.Grokking.FlatSpectrum.Training

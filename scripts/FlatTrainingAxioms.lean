@@ -41,3 +41,11 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_of_fitLoss_tendsto_zero
 #print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_mul_conjTranspose_of_forall_isMinOn
 #print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_mul_conjTranspose_vecMulVec_of_connected
+#print axioms Transformer.Grokking.FlatSpectrum.Training.frobeniusSq_mask_sub_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.neg_le_pairing_mask_sub
+#print axioms Transformer.Grokking.FlatSpectrum.Training.frobeniusSq_lift_mul_stack_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.frobeniusSq_decayStep_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.frobeniusSq_decayRun_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.one_sub_smul_lift_posDef_of_ball
+#print axioms Transformer.Grokking.FlatSpectrum.Training.isDecayedMin_fitLoss_of_tendsto_decayRun
+#print axioms Transformer.Grokking.FlatSpectrum.Training.decayRun_mask_empty

@@ -96,6 +96,18 @@ theorem fitLoss_first_order (Ω : Set (m × n)) (K X Y : Matrix m n ℂ) :
   have h0 := frobeniusSq_nonneg (mask Ω (X - K) - mask Ω (Y - K))
   linarith
 
+/-- `⟨P_Ω (X − K), X⟩ ≥ −¼ ‖K‖²`: the first-order term of the squared loss is bounded below. -/
+lemma neg_le_pairing_mask_sub (Ω : Set (m × n)) (K X : Matrix m n ℂ) :
+    -(frobeniusSq K / 4) ≤ pairing (mask Ω (X - K)) X := by
+  have h1 : pairing (mask Ω (X - K)) (X - K + K) =
+      frobeniusSq (mask Ω (X - K)) + pairing (mask Ω (X - K)) K := by
+    rw [pairing_add_right, pairing_mask_left, pairing_self]
+  rw [sub_add_cancel] at h1
+  have h2 := frobeniusSq_add (mask Ω (X - K)) ((1 / 2 : ℝ) • K)
+  rw [pairing_smul_right, frobeniusSq_smul] at h2
+  have h3 := frobeniusSq_nonneg (mask Ω (X - K) + (1 / 2 : ℝ) • K)
+  linarith
+
 /-- **The squared loss vanishes exactly at the fits** (`review/flat_spectrum.md`, item WD7):
 at the matrices equal to `K` on `Ω`. -/
 theorem fitLoss_eq_zero_iff {Ω : Set (m × n)} {K X : Matrix m n ℂ} :

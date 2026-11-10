@@ -14,6 +14,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.Convergence
 public import Transformer.Grokking.FlatSpectrum.Training.SquaredLoss
 public import Transformer.Grokking.FlatSpectrum.Training.Vanishing
 public import Transformer.Grokking.FlatSpectrum.Training.Recovery
+public import Transformer.Grokking.FlatSpectrum.Training.StepSize
 
 /-! Training the pure factorization with weight decay, `review/flat_spectrum.md`, Lemma 1's
 modeling step and *Training reaches the optimal fit* (added).
@@ -42,4 +43,9 @@ equal to it on `Ω`, as for a square kernel with equal singular values and no ze
 proper `Ω` (Theorem A), the trained products stay a fixed distance below `‖K‖_S1` for every
 `λ > 0`; and if `K` is the only matrix of least nuclear norm, as for `u vᵀ` with `|u_i v_j| = 1`
 on connected cells containing a permutation (Theorem E), the trained products converge to `K`.
-The `1 × 1` kernel `1` has the trained product `1 − λ`. -/
+The `1 × 1` kernel `1` has the trained product `1 − λ`.
+
+For this loss the step condition is explicit (WD6): with `‖K‖ ≤ κ`, a start in the ball
+`‖U₀‖² + ‖V₀‖² ≤ ρ` with `κ² ≤ λ ρ` and a step with `2 η (λ² + (ρ/2 + κ)²) ≤ λ`, the run stays
+in the ball and every step matrix is positive definite, so a convergent run from full row rank
+ends at a factorization of least weight-decayed loss. -/
