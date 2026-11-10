@@ -1,6 +1,7 @@
 module
 
 public import Transformer.ScheduleFree.AdamW.PaperComparison
+public import Transformer.ScheduleFree.AdamW.Rescale
 
 /-!
 # The authors' stability revision of Schedule-Free AdamW
@@ -14,5 +15,7 @@ running maximum rate, zero-total fallback, independent two-buffer/reference
 trajectories and their equivalence, evaluation recovery, denominator/variance/
 weight invariants, and exact comparisons with arXiv:2405.15682v4, §4.4,
 Algorithm 1. The revision changes decay, epsilon scaling and averaging weights.
+`Rescale` shows that on a loss without a scale a run depends on the rate and the decay
+through their product (`review/flat_spectrum.md`, *The rate of a recipe*, items RR3 and RR4).
 No general optimization convergence or floating-point stability theorem is claimed.
 -/

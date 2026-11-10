@@ -10584,7 +10584,10 @@ when it is off by exactly `p`, and *residue wrong* otherwise.
 
 The hypothesis of CH5 was tested by normalizing the mean square over each pair of coordinates
 `(2k, 2k + 1)`, in place of the whole width, at chosen normalizations of this model; nothing
-else changes. The variants were fixed before training.
+else changes. The variants were fixed before training, in two rounds: first the final
+normalization and the sites before the product block, and then the two places where the
+theory has modulus one, the feature of one token (the embedding) and the output of the
+product block (the FFN output; CH3, CH6).
 
 | Pairs at | Right, seeds 11, 17, 23 | Wrap wrong at `\|b + x − p\| ≤ 3` | Residue wrong |
 | --- | --- | --- | --- |
@@ -10593,13 +10596,23 @@ else changes. The variants were fixed before training.
 | the FFN input | 4155, 3341, 4132 | 83, 50, 102 | 447, 1299, 439 |
 | the embedding, the attention output and the FFN input | 3638, 3637, 3675 | 67, 71, 91 | 975, 968, 888 |
 | every site | 115, 144, 143 | 0, 0, 0 | 4589, 4560, 4560 |
+| the FFN output | 4417, 4418, 4292 | 114, 116, 141 | 151, 146, 236 |
+| the embedding | 4407, 4461, 4263 | 104, 115, 110 | 178, 106, 306 |
+| the embedding and the FFN output | 4291, 4385, 4224 | 87, 93, 114 | 309, 206, 330 |
+| the FFN output and the final normalization | 4225, 2761, 4101 | 106, 43, 100 | 344, 1889, 463 |
+| the embedding, the FFN output and the final normalization | 1844, 1545, 1995 | 27, 23, 36 | 2825, 3128, 2657 |
 
-The hypothesis failed. With pairs at the final normalization the model keeps its accuracy and
-its wrap errors. With pairs before the bilinear block it loses the residue and falls below
-90%; with pairs at every site it does not fit the training set. A normalized sum of a feature
-of each token is a comparison in every channel (CH1), and the block after it no longer gets
-kernels of rank one. That the answer can be written with one normalized modulus (CH3, CH4,
-CH6) did not make this training find it.
+The hypothesis failed. With pairs at the final normalization, at the embedding or at the FFN
+output alone the model stays above 90% on every seed, within two points of the historical
+one, and keeps its wrap errors; it reaches 90% later. With pairs before the bilinear block it
+loses the residue and falls below 90%, and so it does with two or three of the later sites
+together; with pairs at every site it does not fit the training set. No variant has fewer
+than half of the wrap errors at the boundary on every seed, and none has fewer residue errors
+over the three seeds. A normalized sum of a feature of each token is a comparison in every
+channel (CH1), and the block after it no longer gets kernels of rank one. That the answer can
+be written with one normalized modulus (CH3, CH4, CH6) did not make this training find it:
+the features of this model are free at every token, and then by CH7 one angle places
+nothing.
 
 ### CH9. Scope
 
@@ -10629,3 +10642,146 @@ Not covered:
 | CH4 | `stepPhaseSum`, `stepPhaseSum_eq`, `norm_stepPhaseSum`, `exp_modStep_eq_stepPhaseSum` | `stepPhaseSum p a b` is `T`. The first two statements hold for all natural `p`, `a`, `b`; the last asks for `a, b < p`. The reading for a residual connection is not a Lean statement. |
 | CH6 | `stepHalfPlane`, `stepHalfPlane_eq_add`, `stepHalfPlane_eq_sin`, `sin_pos_of_lt`, `stepHalfPlane_pos_iff`, `stepHalfPlane_ne_zero`, `stepHalfPlane_div_abs` | `stepHalfPlane p a b` is `ℓ`. The two products are those of real and imaginary parts of `exp(iπ / 2p) exp(2πi d₁ / p)` and `exp(3πi d₂ / p)`, for all natural `p`, `a`, `b`; the other statements ask for `a, b < p`. The sign is `if modStep p b ((a + b) % p) < 0 then -1 else 1`, the entry of `wrapKernel`. |
 | CH7 | `stepChordAt`, `stepChordAt_zero`, `halfAngle_eq_add`, `stepChordAt_eq`, `cos_halfAngle_sub_pos`, `cos_halfAngle_sub_neg`, `norm_stepChordAt`, `stepChordAt_div_norm` | `stepChordAt p a b γ` is `S_γ`. The bound is `\|γ\| < π / (2 * p) / 2`. The converse and the last paragraph of the item are not Lean statements. |
+
+## The rate of a recipe (added)
+
+Added on 2026-11-10 and proved in Lean. In WD1 a step of the decayed descent is
+`W ← (1 − η M) W`: what the gradient of the loss does not feed shrinks by `1 − η λ` a step,
+and that is how a run leaves the fits that are not the decayed minimum of WD2. This section
+counts these factors for two recipes of 5000 updates on the task of CH8. The historical real
+transformer of CH8 is trained by ScheduleFree AdamW with the rate 0.03 and the weight
+decay 1, and reaches 90% of the held-out states. The selected main of the `diff-gpt`
+repository is trained by AdamW with rates up to 0.001 and the weight decay 0.1, and does not.
+In the second recipe every update reaches the end of the run with a weight of at least one
+half, so its decay removes less than half of anything. On a loss without a scale a recipe
+depends on its rate and its decay through their product, and at the rate 0.001 the historical
+recipe is the weight decay 30.
+
+### RR1. What the decay does along a run
+
+The AdamW of the main model is the recurrence of AD3 for every coordinate,
+
+```
+p_{t+1} = (1 − η_t ρ) p_t − η_t u_t,
+```
+
+with `u_t` the bias-corrected direction of the two moments of AD1. Unrolled,
+
+```
+p_t = p_0 · ∏_{s<t} (1 − η_s ρ)  −  Σ_{s<t} η_s u_s · ∏_{s<r<t} (1 − η_r ρ):
+```
+
+the initial value and every update, each times the decay factors of the steps after it.
+
+If the gradient of the coordinate is zero at every update, both moments stay zero, `u_t = 0`,
+and `p_t = p_0 · ∏_{s<t} (1 − η_s ρ)`. In closed loop: let the gradient be a field `G` on the
+weights, taken at the current weights, with `G(w)_i = 0` at every `w`. Then the coordinate
+`i` of the run is this product, whatever the other coordinates do.
+
+### RR2. Two recipes
+
+For `0 ≤ a_s ≤ 1`, by induction, `1 − Σ a_s ≤ ∏ (1 − a_s)`. For `x ≤ 1`,
+`(1 − x)^n ≤ exp(−n x)`.
+
+- The selected main has rates in `[0, 0.001]`, the decay `ρ = 0.1` and 5000 updates. So
+  `Σ η_s ρ ≤ ½` over any of its updates, and every product of RR1 is between `½` and `1`:
+  the initial value and each update reach the end of the run with at least half of their
+  size, and at least half of a coordinate without gradient remains. Its schedule, 100
+  updates of warm-up, 3900 at the peak and 1000 of a cosine to `10⁻⁸`, has `Σ η_s = 4.4495`,
+  and the product over the run is 0.64.
+- A constant rate 0.03 with the decay 1, the two numbers of the historical recipe: after 5000
+  updates at most `exp(−150)` of a coordinate without gradient remains.
+
+So in the recipe of the selected main the weights at the end are the initial weights and the
+sum of the updates, up to these factors. What the run removes, it removes by gradients.
+
+### RR3. A recipe on a loss without a scale
+
+Let `c > 0`, and let the gradient field be homogeneous of degree `−1` at the scale `c`:
+
+```
+G(c w) = G(w) / c,
+```
+
+as the gradient of a loss with `L(c w) = L(w)` is. Then the AdamW of the main model with the
+rates `c η_t`, the decay `ρ / c` and the epsilon `ε / c`, started from `c p_0`, is the run
+with `η_t`, `ρ`, `ε` from `p_0` at the scale `c`: its weights are `c` times those, its first
+moments are those over `c`, its second moments those over `c²`.
+
+Proof. In one update the gradient is over `c`, so the moments are over `c` and `c²`. With `β`
+and `β'` the two bias corrections,
+
+```
+(c η / β) · (m / c) / (√(v / c²) / β' + ε / c) = c · (η / β) m / (√v / β' + ε),
+```
+
+and `c η · ρ / c = η ρ`. Induction on the updates. ∎
+
+The same holds for the revised ScheduleFree AdamW, the optimizer of the historical recipe,
+with the learning rate `c · lr`, the decay `decay / c` and the epsilon `ε / c` from `c` times
+the first point: the evaluation, base and query points of the run are `c` times those of the
+other run. Its second moments are over `c²`, its averaging total is times `c^ratePower`, and
+the averaging coefficients are the same; the first maximal rate is the sentinel `−1`, which
+does not scale and which no rate sees.
+
+So on a loss without a scale a recipe is the products `η ρ` and `η ε` and the ratio
+`p_0 / η`.
+
+### RR4. The historical recipe at the rate of the selected main
+
+Take `c = 1/30`. The historical recipe, with the rate 0.03, the decay 1 and the epsilon
+`10⁻⁸`, is the rate 0.001 with the decay 30 and the epsilon `3 · 10⁻⁷`, from a first point
+thirty times smaller. The selected main has the decay 0.1 at that rate. The product `η ρ` is
+0.03 in the historical recipe and `10⁻⁴` in that of the selected main, 300 times less.
+
+### RR5. The reading for the two models
+
+This item is a reading and a hypothesis, not a theorem.
+
+- The two models differ in architecture and in recipe at once. RR2 and RR4 say that the
+  recipes differ by more than their numbers show: the decay of the selected main does not
+  act within its run, and that of the historical recipe acts within tens of updates.
+- By WD2 to WD10 the weight decay is what selects the fit of M among the fits of the training
+  set. A run whose decay does not act ends at the fit that its gradients reach first.
+
+The hypothesis: the miss of the selected main on this task follows its recipe. The historical
+real model, trained by the AdamW of the selected main with its rates and its decay, misses
+90%; with the decay raised toward 30 at the same rates it reaches 90% again; and the selected
+main gains from a raised decay. The experiment is in `research/diffgpt_flat_spectrum/` of the
+`diff-gpt` repository.
+
+### RR6. Scope
+
+Proved: RR1 to RR4.
+
+Not covered:
+
+- That a model has a loss without a scale. In the model of CH8 a matrix followed by a
+  normalization `N` has none. The tied matrix `E` is also read without one, in
+  `logits = E N(out)`, and the gate of the FFN is not homogeneous. For the selected main
+  nothing is stated.
+- The clip of the gradient norm in the recipe of the selected main. It has a scale of its
+  own: with `G(c w) = G(w) / c` the norm of the gradient moves against a fixed threshold.
+- Which coordinates of a trained model receive no gradient. RR1 and RR2 are about the decay
+  term alone.
+- ScheduleFree AdamW in RR1 and RR2. Its decay is taken at the query point and its evaluation
+  point is an average of the base points, so a coordinate without gradient does not follow
+  the product. Computed for the historical recipe, not proved: 0.61 of it remains after 33
+  updates, 0.14 after 100 and `8 · 10⁻⁶` after 5000, with changes of sign.
+- The two optimizers against each other. RR3 is within one optimizer. That AdamW at the
+  product 0.03 trains as ScheduleFree AdamW at that product is not claimed.
+- RR5.
+
+### Lean
+
+`src/Transformer/Grokking/GradientEvidence/`, modules `RecipeDecay` and `RecipeRescale`,
+namespace `Transformer.Grokking.GradientEvidence`; and
+`src/Transformer/ScheduleFree/AdamW/Rescale.lean`, namespace
+`Transformer.ScheduleFree.AdamW`; proved without `sorry`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| RR1 | `mainAdamPath_eq_sum`, `mainMoments_zero`, `mainDirection_zero`, `mainAdamPath_zero`; in closed loop `mainAdamStep`, `mainAdamRun`, `mainAdamGradients`, `mainAdamRun_moments`, `mainAdamRun_fst`, `mainAdamRun_of_zero` | The path is `mainAdamPath` of AD3, with betas 0.9 and 0.95; the product after the update `s` is over `Finset.Ico (s + 1) t`. The statements hold for every real `ρ`, `ε` and every rates; with zero moments the direction is `0 / (0 + ε)`, which is `0` in Lean for `ε = 0` as well. `mainAdamRun` holds the weights and the two moments of all coordinates, and the gradient is taken at the weights. |
+| RR2 | `one_sub_sum_le_prod`, `half_le_prod_main`, `half_le_prod_Ico_main`, `one_sub_pow_le_exp`, `historical_remainder` | The first is for a finite set of indices. The recipe of the selected main is `0 ≤ η s ≤ 1/1000` at every step with the decay `1/10`; the bounds hold over every set of at most 5000 steps, and over `Finset.Ico (s + 1) t` for `t ≤ 5000`. The numbers 4.4495 and 0.64 of its schedule are computed, not in Lean. The last statement is `mainAdamPath` with the constant rate `3/100` and the decay `1`: AdamW, not ScheduleFree AdamW. |
+| RR3 | `atScale`, `mainAdamStep_atScale`, `mainAdamRun_atScale`; `scaled`, `rate_scaled`, `IsScaled`, `isScaled_initial`, `query_scaled`, `step_isScaled`, `run_isScaled`, `run_scaled` | Homogeneity is asked at the one scale `c`: `G (fun j => c * w j) i = G w i / c` for all `w`, and for the oracle of ScheduleFree AdamW at every step. That a loss without a scale has such a gradient is not a Lean statement. ScheduleFree AdamW is `Transformer.ScheduleFree.AdamW.run`, the revised update of facebookresearch/schedule_free, and needs `0 ≤ lr`. `IsScaled c p s s'` relates two states; the maximal rates are compared after a nonnegative rate has entered. The last sentence of the item is not a Lean statement. |
+| RR4 | `historical`, `scaled_historical` | `historical` has ten warm-up steps, betas 0.9 and 0.98 and the default averaging powers 0 and 2. The first point thirty times smaller is the start of `run_scaled`. The comparison with the selected main is not a Lean statement. |
