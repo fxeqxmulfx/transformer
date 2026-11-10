@@ -1,6 +1,6 @@
 import Transformer
 
-/-! Audit *Training reaches the optimal fit* of `review/flat_spectrum.md`, items WD1–WD9. -/
+/-! Audit *Training reaches the optimal fit* of `review/flat_spectrum.md`, items WD1–WD10. -/
 
 #print axioms Transformer.Grokking.FlatSpectrum.Training.stack_decayStep
 #print axioms Transformer.Grokking.FlatSpectrum.Training.stack_decayRun_succ
@@ -88,3 +88,24 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.analyticAt_expLoss
 #print axioms Transformer.Grokking.FlatSpectrum.Training.exists_pos_tendsto_decayRun_expLoss_isDecayedMin
 #print axioms Transformer.Grokking.FlatSpectrum.Training.exists_isDecayedMin_expLoss
+#print axioms Transformer.Grokking.FlatSpectrum.Training.inner_fderiv_gradient_flatLoss
+#print axioms Transformer.Grokking.FlatSpectrum.Training.lift_mul_stack_eq_zero_of_gradient_eq_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.surjective_mulVec_of_injective
+#print axioms Transformer.Grokking.FlatSpectrum.Training.frobeniusSq_conjTranspose_mul_of_surjective
+#print axioms Transformer.Grokking.FlatSpectrum.Training.lift_posSemidef_of_pairing_sq_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.lift_posSemidef_of_injective
+#print axioms Transformer.Grokking.FlatSpectrum.Training.IsDecayedMin.isLocalMin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.gradient_eq_zero_and_not_isStrictSaddle_of_isLocalMin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.isDecayedMin_of_not_isStrictSaddle
+#print axioms Transformer.Grokking.FlatSpectrum.Training.isDecayedMin_of_not_isStrictSaddle_of_card_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.isDecayedMin_of_isLocalMin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.isDecayedMin_of_isLocalMin_of_card_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_pos_ae_tendsto_not_isStrictSaddle
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_pos_ae_tendsto_decayRun
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_pos_ae_tendsto_decayRun_isDecayedMin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_isDecayedMin_of_card_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.le_decayedLoss_width_one
+#print axioms Transformer.Grokking.FlatSpectrum.Training.decayedLoss_sqrt_smul_one
+#print axioms Transformer.Grokking.FlatSpectrum.Training.not_isDecayedMin_width_one
+#print axioms Transformer.Landscape.SaddleAvoidance.not_isStrictSaddle_of_isLocalMin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le

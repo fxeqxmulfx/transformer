@@ -8611,7 +8611,8 @@ optimum is M. It leaves open that training reaches that optimum. This section pr
 the pure factorization in the following form: a run of gradient descent with weight decay
 that converges, converges to the optimum. The objective is not convex in the factors. It
 has saddles, the origin among them whenever the loss gradient there exceeds λ, so the claim
-is that a run started at full rank cannot end at one.
+is that a run started at full rank cannot end at one. Full rank needs width `m + n`; WD10
+lowers the width to `min(m, n)` for almost every start and shows that it cannot go lower.
 
 Notation: `⟨A, B⟩ = Re tr(Aᴴ B)` is the real inner product of complex matrices and
 `‖A‖² = ⟨A, A⟩ = ‖A‖_S2²`. The loss `L` is a real function of an `m × n` matrix together
@@ -8727,9 +8728,9 @@ A run that meets every hypothesis and has a nonzero limit: `m = n = 1`, `L(X) = 
 
 Three hypotheses remain. The run converges: WD8 proves this for a real-analytic loss
 controlled in a ball, by Łojasiewicz's theorem. The start has full row rank, which needs width
-at least `m + n`. The steps are admissible, which WD6 reduces to a bound on η. The second half
-of the proof uses none of them: the limit of a convergent run of any width and rank is
-stationary, `M∞ W = 0`.
+at least `m + n`; WD10 replaces it by width `min(m, n)` and almost every start. The steps are
+admissible, which WD6 reduces to a bound on η. The second half of the proof uses none of
+them: the limit of a convergent run of any width and rank is stationary, `M∞ W = 0`.
 
 ### WD6. Admissible steps
 
@@ -8930,7 +8931,8 @@ explicit steps when its constants are known.
 
 Corollary: decayed minima exist. Every such loss has, for every λ > 0, a decayed minimum of
 width `m + n`: start at `U_0 = [1 0]`, `V_0 = [0 1]`, take `c = F(U_0, V_0)` and a small
-step. So `L(X) + λ ‖X‖_S1` attains its minimum over all matrices.
+step. So `L(X) + λ ‖X‖_S1` attains its minimum over all matrices. WD10 lowers the width to
+`min(m, n)`.
 
 Example: the exponential loss `L(X) = Σ_ij exp(Re X_ij)` with `G(X)_ij = exp(Re X_ij)`. It
 is analytic and positive, and the first-order inequality is
@@ -8938,7 +8940,87 @@ is analytic and positive, and the first-order inequality is
 it. By the result, small steps converge for it, from full row rank to a decayed minimum, and
 decayed minima exist for every λ > 0.
 
-### WD10. Scope
+### WD10. Narrow factors: width min(m, n)
+
+Full row rank of the start needs width `k ≥ m + n`. For almost every start the width
+`k ≥ min(m, n)` suffices, and below it the claim fails.
+
+Let `L` be real-analytic in the entries and satisfy the first-order inequality with a
+continuous `G`. On the factor space of WD8 a strict saddle of `F` is a critical point at
+which the Hessian of `F` has a negative eigenvalue. Let `W = [U; V]` be a critical point,
+`M W = 0`.
+
+1. Dependent columns. Let `W z = 0` for a vector `z ≠ 0` of the width `k`: `U z = 0` and
+   `V z = 0`. For `a ∈ ℂ^m`, `b ∈ ℂ^n` put `S = [a; b]`, and let `M_t` be the matrix `M` at
+   `W + t S zᴴ`. The gradient of `F` there is `M_t (W + t S zᴴ)`, and
+   `⟨S zᴴ, M_t W⟩ = ⟨S, M_t W z⟩ = 0`, so
+
+   ```
+   ⟨S zᴴ, ∇F(W + t S zᴴ)⟩ = t ‖z‖² ⟨S, M_t S⟩    exactly, for every t.
+   ```
+
+   So the Hessian of `F` at `W` along `S zᴴ` is `‖z‖² ⟨S, M S⟩`: a negative direction of
+   `M` is a negative direction of the Hessian. A critical point with dependent columns is
+   therefore a strict saddle, or `M` is positive semidefinite and the point is a decayed
+   minimum (WD2).
+
+2. Independent columns at width `k ≥ min(m, n)`, with λ > 0. `M W = 0` reads
+   `G V = −λ U` and `Gᴴ U = −λ V`. So `U z = 0` gives `V z = 0`, and the columns of `U` are
+   independent, as are those of `V`. If `k ≥ m`, then `U` is square and invertible, and
+   `G Gᴴ U = −λ G V = λ² U` gives `G Gᴴ = λ²`: `‖Gᴴ a‖ = λ ‖a‖`. Then
+   `|⟨G, a bᴴ⟩| = |⟨Gᴴ a, b⟩| ≤ λ ‖a‖ ‖b‖`, and by WD1
+
+   ```
+   ⟨S, M S⟩ = λ (‖a‖² + ‖b‖²) + 2 ⟨G, a bᴴ⟩ ≥ λ (‖a‖ − ‖b‖)² ≥ 0.
+   ```
+
+   The case `k ≥ n` is the same with `V` and `Gᴴ G = λ²`. So such a point is a decayed
+   minimum, whatever its Hessian.
+
+Result 1: no spurious minimum. A critical point of `F` that is not a strict saddle is a
+decayed minimum when its columns are dependent, and, for λ > 0, at every width
+`k ≥ min(m, n)`. A local minimum of `F` among the pairs of its width is a critical point and
+not a strict saddle. So a local minimum with dependent columns, and at width
+`k ≥ min(m, n)` every local minimum, is a decayed minimum: it is least among the
+factorizations of every width.
+
+Result 2: almost every start. Let moreover `L` be bounded below and λ > 0, and fix a level
+`c`. By the third item of WD9, for every `0 < η < η_0` the starts in `{F ≤ c}` whose run
+converges to a strict saddle form a null set. So for almost every start in `{F ≤ c}` the
+run converges to a stationary point that
+
+- is a decayed minimum if its columns are dependent, whatever the width;
+- is a decayed minimum at every width `k ≥ min(m, n)`.
+
+"Almost every" is for the Lebesgue measure of the factor space. No rank condition on the
+start appears, and some exceptional set is needed: the start `W_0 = 0` stays at `0`, a
+strict saddle whenever `‖G(0)‖_op > λ`.
+
+Corollary: every such loss has, for every λ > 0, a decayed minimum of every width
+`k ≥ min(m, n)`, as the open set `{F < F(0) + 1}` is not null.
+
+Theorem A for runs of width `p`. Let `K` be a `p × p` kernel with equal singular values and
+no zero entry, and let Ω be proper. With the δ of WD7, statement 2, for every λ > 0, every
+level `c` and every width `k ≥ p`, small steps on the squared loss on Ω from almost every
+start in `{F ≤ c}` converge to factors with `‖U Vᴴ‖_S1 + δ ≤ ‖K‖_S1`. WD8 has this for
+every start of full row rank, at width `2p`.
+
+The width cannot be lowered. Let `K = 1` of size `2 × 2` with every cell seen and
+`0 ≤ λ < 1`. For factors `U`, `V` of width one put `q = ⟨U, V⟩`. Then
+`‖U Vᴴ‖² = ‖U‖² ‖V‖²`, `⟨U Vᴴ, 1⟩ = q` and `|q| ≤ ‖U‖ ‖V‖ ≤ ½ (‖U‖² + ‖V‖²)`, so
+
+```
+F(U, V) = ½ (‖U‖² ‖V‖² − 2 q + 2) + ½ λ (‖U‖² + ‖V‖²)
+        ≥ ½ |q|² − (1 − λ) |q| + 1 ≥ 1 − ½ (1 − λ)².
+```
+
+The factors `U = V = √(1 − λ) · 1` of width two have `F = λ² + 2 λ (1 − λ) = 2 λ − λ²`,
+which is smaller by `½ (1 − λ)²`. So no factorization of width one is a decayed minimum.
+The runs of width one converge all the same (WD9), to stationary points such as the partial
+fits `(1 − λ) P` of WD8, and none of these limits is a decayed minimum. At width two a
+decayed minimum exists and almost every run with a small step reaches one.
+
+### WD11. Scope
 
 Proved, for the pure factorization `X = U Vᴴ` trained by gradient descent with weight decay
 on a convex loss with continuous gradient:
@@ -8956,8 +9038,15 @@ on a convex loss with continuous gradient:
   converge from a sublevel set of the weight-decayed loss, for every width and rank, to a
   stationary point, and from stacked factors of full row rank to such a minimum; such a
   minimum of width `m + n` exists for every λ > 0 (WD9);
+- for such a loss a critical point of the weight-decayed loss that is not a strict saddle is
+  such a minimum when its columns are dependent, and for λ > 0 at every width
+  `k ≥ min(m, n)`; at these widths no local minimum is spurious, small steps from almost
+  every start of a sublevel set converge to such a minimum, and such a minimum of width
+  `min(m, n)` exists; for the `2 × 2` identity no factorization of width one is such a
+  minimum (WD10);
 - for a square kernel with equal singular values and no zero entry on a proper Ω, every
-  such run converges at least a fixed δ below `‖K‖_S1`, for every λ > 0 (WD8);
+  such run converges at least a fixed δ below `‖K‖_S1`, for every λ > 0 (WD8), and so does
+  almost every run of width `p` with a small step (WD10);
 - for the squared loss on Ω these limits compare with every exact fit as M does, their
   limits as λ → 0⁺ are optimal fits, flat kernels are not returned, and kernels that M
   recovers are approached (WD7).
@@ -8969,9 +9058,12 @@ Assumed or not covered:
   `η (|λ| + ‖G_t‖_S2) < 1` along the run.
 - Explicit steps: the constants of WD8 are verified here for the squared loss only. For
   another loss WD9 gives a step threshold that is not explicit.
-- Width: full row rank of `[U_0; V_0]` needs `k ≥ m + n`. A run of narrower factors still
-  converges to a stationary point (WD8); that this point is a decayed minimum is not
-  claimed.
+- Width: a statement for every start needs full row rank of `[U_0; V_0]`, so `k ≥ m + n`
+  (WD5). At the widths `min(m, n) ≤ k < m + n` the limit is a decayed minimum for almost
+  every start (WD10): the exceptional null set is not described, and the step is the
+  non-explicit one of WD9, not the explicit one of WD8. Below `min(m, n)` a decayed minimum
+  of that width need not exist (WD10); the run still converges to a stationary point, which
+  is not characterized further unless its columns are dependent.
 - In WD7 the limits as λ → 0⁺ are taken along sequences of trained fits that are assumed to
   converge (statement 1) or shown to (statement 3); that every such sequence has a
   convergent subsequence of factors is not proved.
@@ -8994,3 +9086,4 @@ Assumed or not covered:
 | WD7 | `mask`, `fitLoss`, `fitLoss_first_order`, `fitLoss_eq_zero_iff`, `continuous_mask_sub`, `IsDecayedMin.fitLoss_add_le`, `IsDecayedMin.nuclearNorm_le`, `IsDecayedMin.fitLoss_le`, `isOptimalFit_of_tendsto`, `exists_nuclearNorm_add_le_of_not_isMinOn`, `exists_nuclearNorm_add_le_of_singularValues_eq`, `tendsto_of_fitLoss_tendsto_zero`, `tendsto_mul_conjTranspose_of_forall_isMinOn`, `tendsto_mul_conjTranspose_vecMulVec_of_connected`, `isDecayedMin_one_sub`, `isDecayedMin_shrink` | "The only minimizer of M" is D.2's form, `∀ X ∈ S, (IsMinOn ‖·‖_S1 S X ↔ X = K)`. In 1 the factors have a fixed width `r`; in 2 the bound holds for every width; in 3 they have any fixed finite column type. Limits run over sequences `λ_j → 0⁺`. |
 | WD8 | `factors`, `flatten`, `factors_flatten`, `flatten_factors`, `continuous_factors`, `continuous_flatten`, `norm_sq_eq_frobeniusSq_factors`, `real_inner_eq_pairing_factors`, `analyticAt_norm_sq`, `flatLoss`, `productVector`, `analyticAt_productVector`, `analyticAt_flatLoss`, `hasGradientAt_flatLoss`, `gradient_flatLoss`, `factors_gradientStep`, `norm_gradient_flatLoss_sq`, `decayedLoss_sub_le`, `pairing_one_sub_smul`, `frobeniusSq_step_mul_sub_le`, `decayedLoss_decayStep_add_le`, `decayedLoss_decayStep_add_le_of_ball`, `decayedLoss_decayRun_succ_add_le`, `norm_apply_le_sqrt_frobeniusSq`, `isCompact_setOf_frobeniusSq_add_le`, `factors_iterate_gradientStep`, `exists_tendsto_decayRun`, `exists_tendsto_decayRun_isDecayedMin`; squared loss: `fitLoss_eq_add`, `fitLoss_le_add`, `analyticAt_fitLoss`, `exists_tendsto_decayRun_fitLoss`, `exists_tendsto_decayRun_fitLoss_isDecayedMin`, `exists_isDecayedMin_fitLoss`, `exists_tendsto_decayRun_nuclearNorm_add_le` | The factor space is `EuclideanSpace ℂ ((m ⊕ n) × k)` with its real inner product. Real-analytic in the entries is `∀ y, AnalyticAt ℝ (fun y : EuclideanSpace ℂ (m × n) => L (of fun i j => y (i, j))) y`; the three bounds are stated at the matrices with `frobeniusSq X ≤ (ρ / 2) ^ 2`. Łojasiewicz's theorem and the convergence theorem are `exists_isLojasiewiczAt_of_analyticAt` and `tendsto_of_isLojasiewiczAt_of_le_sub` of `Transformer.Landscape.SaddleAvoidance`, used with `κ = 1/2`. In the existence corollary `κ = ‖K‖_S2² + 1`, `ρ = max (‖W_0‖²) (κ²/λ)` and η is the smaller of the two bounds. |
 | WD9 | `isCompact_setOf_flatLoss_le`, `exists_pos_forall_sublevel`, `exists_pos_tendsto_decayRun`, `exists_pos_tendsto_decayRun_isDecayedMin`, `exists_isDecayedMin`; example: `expLoss`, `expGrad`, `pairing_expGrad`, `expLoss_first_order`, `continuous_expGrad`, `analyticAt_expLoss`, `expLoss_nonneg`, `exists_pos_tendsto_decayRun_expLoss_isDecayedMin`, `exists_isDecayedMin_expLoss` | Bounded below is `∀ X, l₀ ≤ L X`. The level bounds the start, `decayedLoss L λ U₀ V₀ ≤ c`, and `η₀` depends on `L`, `G`, λ, `c` and the width. `exists_pos_forall_sublevel` is stated on the factor space, with the null set for Lebesgue measure `volume`; it needs no convexity and uses `exists_pos_measure_sublevel_tendsto_strictSaddle_eq_zero`, `exists_pos_tendsto_of_mapsTo` and `exists_isLojasiewiczAt_of_analyticOnNhd` of `Transformer.Landscape.SaddleAvoidance`. |
+| WD10 | `conjTranspose_mul_self_unit`, `pairing_mul_conjTranspose_unit`, `inner_fderiv_gradient_flatLoss`, `lift_mul_stack_eq_zero_of_gradient_eq_zero`, `surjective_mulVec_of_injective`, `frobeniusSq_conjTranspose_mul_of_surjective`, `lift_posSemidef_of_pairing_sq_le`, `lift_posSemidef_of_injective`, `IsDecayedMin.isLocalMin`, `gradient_eq_zero_and_not_isStrictSaddle_of_isLocalMin`, `isDecayedMin_of_not_isStrictSaddle`, `isDecayedMin_of_not_isStrictSaddle_of_card_le`, `isDecayedMin_of_isLocalMin`, `isDecayedMin_of_isLocalMin_of_card_le`, `exists_pos_ae_tendsto_not_isStrictSaddle`, `exists_pos_ae_tendsto_decayRun`, `exists_pos_ae_tendsto_decayRun_isDecayedMin`, `exists_isDecayedMin_of_card_le`, `exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le`; counterexample: `frobeniusSq_one_fin_two`, `le_decayedLoss_width_one`, `decayedLoss_sqrt_smul_one`, `not_isDecayedMin_width_one` | Dependent columns is `¬ Function.Injective (stack U V).mulVec`; width `k ≥ min(m, n)` is `Fintype.card m ≤ Fintype.card k ∨ Fintype.card n ≤ Fintype.card k`. A strict saddle is `IsStrictSaddle (flatLoss L λ) x` of `Transformer.Landscape.SaddleAvoidance`, where `not_isStrictSaddle_of_isLocalMin` is added. The Hessian identity is `⟪S Zᴴ, ∇²F(W) (S Zᴴ)⟫ = ‖Z‖² ⟨S, M S⟩` for one-column `Z`, `A`, `B` and `S = [A; B]`, read off the exact formula for the gradient along the line. `lift_posSemidef_of_injective` holds for any matrix `G` with `M [U; V] = 0`, not only `G (U Vᴴ)`. A local minimum is `IsLocalMin (fun p => decayedLoss L λ p.1 p.2) (U, V)` on the pairs of matrices of one width. Almost every is `∀ᵐ x` for `volume` on the factor space, with the run started at `factors x`; `η₀` is that of `exists_pos_forall_sublevel`. The lower bound for width one holds for every λ ≥ 0 and the value at width two for every λ ≤ 1. |

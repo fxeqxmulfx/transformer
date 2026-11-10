@@ -299,6 +299,9 @@ distance below `‖K‖_S1` when `K` does not have the least nuclear norm (Theor
 to `K` when it is the only matrix of least nuclear norm (Theorem E). For a real-analytic loss
 controlled in a ball, with an explicit step, the run does converge, to such a point:
 Łojasiewicz's theorem applies at a cluster point of the run. The squared loss, a polynomial of
-the factors, is the worked case. -/
+the factors, is the worked case. For every convex real-analytic loss bounded below small steps
+converge as well, and at width at least `min(m, n)` the run from almost every start ends at such
+a point, since there a critical point is such a point or a strict saddle; at width one the
+`2 × 2` identity has no such point. -/
 
 @[expose] public section

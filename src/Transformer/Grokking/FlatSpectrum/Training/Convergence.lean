@@ -27,8 +27,9 @@ converges, to `(U, V)`, then
 
 So a run of the pure factorization cannot end at a saddle or at a local minimum that is not
 global: the modeling step holds for every convergent run. Convergence itself, full row rank
-(which needs width at least `|m| + |n|`) and the step condition are hypotheses. The example is
-the linear loss on a `1 × 1` matrix, whose run converges to a nonzero limit.
+(which needs width at least `|m| + |n|`) and the step condition are hypotheses;
+`Training.AlmostEvery` trades full row rank for almost every start at width `min(|m|, |n|)`.
+The example is the linear loss on a `1 × 1` matrix, whose run converges to a nonzero limit.
 -/
 
 @[expose] public section

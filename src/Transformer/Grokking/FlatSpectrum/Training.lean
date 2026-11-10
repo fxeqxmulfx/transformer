@@ -24,6 +24,11 @@ public import Transformer.Grokking.FlatSpectrum.Training.SquaredRun
 public import Transformer.Grokking.FlatSpectrum.Training.Sublevel
 public import Transformer.Grokking.FlatSpectrum.Training.SmallSteps
 public import Transformer.Grokking.FlatSpectrum.Training.ExpLoss
+public import Transformer.Grokking.FlatSpectrum.Training.Deficient
+public import Transformer.Grokking.FlatSpectrum.Training.FullColumn
+public import Transformer.Grokking.FlatSpectrum.Training.Width
+public import Transformer.Grokking.FlatSpectrum.Training.AlmostEvery
+public import Transformer.Grokking.FlatSpectrum.Training.WidthOne
 
 /-! Training the pure factorization with weight decay, `review/flat_spectrum.md`, Lemma 1's
 modeling step and *Training reaches the optimal fit* (added).
@@ -85,4 +90,21 @@ below which every run from the sublevel set converges to a stationary point
 (`exists_pos_tendsto_decayRun`), and from full row rank to a factorization of least
 weight-decayed loss (`exists_pos_tendsto_decayRun_isDecayedMin`). So such a factorization of
 width `m + n` exists for every such loss and every `λ > 0` (`exists_isDecayedMin`). The
-exponential loss `Σ exp (Re X_ij)` is an instance (`exists_isDecayedMin_expLoss`). -/
+exponential loss `Σ exp (Re X_ij)` is an instance (`exists_isDecayedMin_expLoss`).
+
+Full row rank needs width `m + n`; for almost every start the width `min(m, n)` suffices
+(WD10). If `[U; V] z = 0` for some `z ≠ 0`, the Hessian of the weight-decayed loss along
+`S zᴴ` is `‖z‖² ⟨S, M S⟩` (`inner_fderiv_gradient_flatLoss`), so a critical point with
+dependent columns that is not a strict saddle has `M` positive semidefinite
+(`isDecayedMin_of_not_isStrictSaddle`). At a stationary point with independent columns and
+width at least `min(m, n)`, `G Gᴴ = λ²` or `Gᴴ G = λ²`, and `M` is positive semidefinite again
+(`lift_posSemidef_of_injective`). So at these widths a critical point is a decayed minimum or
+a strict saddle (`isDecayedMin_of_not_isStrictSaddle_of_card_le`), no local minimum is
+spurious (`isDecayedMin_of_isLocalMin_of_card_le`), small steps from almost every start of a
+sublevel set converge to a decayed minimum (`exists_pos_ae_tendsto_decayRun_isDecayedMin`),
+and a decayed minimum of width `min(m, n)` exists (`exists_isDecayedMin_of_card_le`). For a
+`p × p` kernel with equal singular values and no zero entry on a proper `Ω`, almost every such
+run of width `p` converges a fixed distance below `‖K‖_S1`
+(`exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le`). Below the width `min(m, n)` the claim
+fails: for the squared loss on all cells of the `2 × 2` identity and `0 ≤ λ < 1` no
+factorization of width one is a decayed minimum (`not_isDecayedMin_width_one`). -/

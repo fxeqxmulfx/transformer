@@ -16,7 +16,9 @@ holds at it or it is a strict saddle exactly when the property holds there if
 the Hessian is positive semidefinite (`or_isStrictSaddle_iff`). This gives
 `hcrit` for global minimizers (`isMinOn_or_isStrictSaddle_of_inner_nonneg`)
 and local minimizers (`isLocalMin_or_isStrictSaddle_of_inner_nonneg`), and
-for both below a level `c` (the forms ending in `_of_lt`).
+for both below a level `c` (the forms ending in `_of_lt`). A local minimizer
+has no direction of negative curvature, so it is not a strict saddle
+(`not_isStrictSaddle_of_isLocalMin`).
 -/
 
 @[expose] public section
@@ -42,6 +44,20 @@ theorem IsStrictSaddle.exists_inner_neg {z : E} (hz : IsStrictSaddle f z) :
   exact mul_neg_of_neg_of_pos hμ (real_inner_self_pos.2 hv0)
 
 variable [FiniteDimensional ℝ E]
+
+/-- **A local minimizer is not a strict saddle**: a strict saddle has a
+direction of negative curvature (`IsStrictSaddle.exists_inner_neg`), and a
+local minimizer of a `C²` function has none (`inner_nonneg_of_isLocalMin`). -/
+theorem not_isStrictSaddle_of_isLocalMin (hf : ContDiff ℝ 2 f) {z : E}
+    (hmin : IsLocalMin f z) : ¬ IsStrictSaddle f z := fun hs => by
+  obtain ⟨h, hh⟩ := hs.exists_inner_neg
+  exact not_le.2 hh (inner_nonneg_of_isLocalMin (hf.differentiable (by norm_num))
+    ((contDiff_gradient hf).differentiable one_ne_zero z).hasFDerivAt hmin h)
+
+/-- The minimizer `0` of the parabola `x²` is not a strict saddle. -/
+example : ¬ IsStrictSaddle (fun x : ℝ => x ^ 2) 0 :=
+  not_isStrictSaddle_of_isLocalMin (by fun_prop)
+    (Filter.Eventually.of_forall fun x => by simpa using sq_nonneg x)
 
 /-- **The strict saddles of a `C²` function are its critical points with a
 direction of negative curvature**: `IsStrictSaddle.exists_inner_neg` one way,
