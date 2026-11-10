@@ -145,7 +145,7 @@ proved without `sorry`. `ψ` is `ZMod.stdAddChar`, `K_φ` is `taskKernel f φ`, 
 | --- | --- | --- |
 | Setting | `nuclearNorm`, `frobeniusSq` (`‖·‖²_S2`), `effectiveRank`, `taskKernel` | |
 | Lemma 1 | `nuclearNorm_isLeast`, `nuclearNorm_le_of_eq_mul` | The minimum runs over every inner dimension. |
-| Lemma 1, "exact for a pure factorization" | `IsOptimalFit`, `isOptimalFit_iff`, `setOf_isOptimalFit_eq`, `forall_isMinOn_iff_iff_isOptimalFit`, `not_exists_isOptimalFit_of_singularValues_eq`, `isOptimalFit_vecMulVec_iff_connected` | Added. A fit of a set `S` of matrices is a factorization `U Vᴴ ∈ S` of any width `r`; it is optimal when its weight decay `½(‖U‖² + ‖V‖²)` is the least among the fits of every width. A fit is optimal exactly when its product minimizes `‖·‖_S1` on `S` and its weight decay equals that norm; the products of the optimal fits are exactly the minimizers of `‖·‖_S1` on `S`. So for `K ∈ S`, some fit is optimal and every optimal fit multiplies to `K` exactly when M recovers `K`, in D.2's form. Read through this, Theorem A for flat kernels and Theorem E hold for weight decay: no optimal fit multiplies to a flat `K` without zero entries on a proper `Ω`, and for `u vᵀ` with `|u_i v_j| = 1` some fit is optimal and all multiply to `u vᵀ` exactly when `Ω` is connected and contains a permutation. That training reaches an optimal fit is the modeling step, not proved. |
+| Lemma 1, "exact for a pure factorization" | `IsOptimalFit`, `isOptimalFit_iff`, `setOf_isOptimalFit_eq`, `forall_isMinOn_iff_iff_isOptimalFit`, `not_exists_isOptimalFit_of_singularValues_eq`, `isOptimalFit_vecMulVec_iff_connected` | Added. A fit of a set `S` of matrices is a factorization `U Vᴴ ∈ S` of any width `r`; it is optimal when its weight decay `½(‖U‖² + ‖V‖²)` is the least among the fits of every width. A fit is optimal exactly when its product minimizes `‖·‖_S1` on `S` and its weight decay equals that norm; the products of the optimal fits are exactly the minimizers of `‖·‖_S1` on `S`. So for `K ∈ S`, some fit is optimal and every optimal fit multiplies to `K` exactly when M recovers `K`, in D.2's form. Read through this, Theorem A for flat kernels and Theorem E hold for weight decay: no optimal fit multiplies to a flat `K` without zero entries on a proper `Ω`, and for `u vᵀ` with `|u_i v_j| = 1` some fit is optimal and all multiply to `u vᵀ` exactly when `Ω` is connected and contains a permutation. That training reaches an optimal fit is the modeling step; for the pure factorization it is proved for every convergent run in *Training reaches the optimal fit* (added). |
 | Prop. 2, `a + b` | `addKernel_eq_vecMulVec`, `rank_addKernel`, `nuclearNorm_addKernel`, `effectiveRank_addKernel` | |
 | Prop. 2, `a³ + a b` | `cubicKernel_eq_diagonal_mul`, `stdAddChar_mul_conjTranspose`, `cubicKernel_mul_conjTranspose`, `singularValues_cubicKernel`, `nuclearNorm_cubicKernel`, `effectiveRank_cubicKernel` | |
 | Prop. 2, extremes | `card_le_nuclearNorm_le_of_unimodular`, `nuclearNorm_unimodular_extremes` | The bounds hold for every unimodular `N × N` matrix. |
@@ -193,9 +193,11 @@ Not formalized:
 - the results of the readout searches for `x³ + x y`: that the indicator of 0 is the best
   readout, the range `0.56p–0.67p` of the other one-hots, and the caveat's `0.48p` and
   `0.38–0.41p`;
-- Lemma 1's modeling step: that training with weight decay reaches an optimal fit; at an
-  optimal fit it is exactly minimum-nuclear-norm interpolation (row *Lemma 1, "exact for a pure
-  factorization"*);
+- Lemma 1's modeling step for the real network (norms, SiLU, AdamW), and that a run of the
+  pure factorization converges. At an optimal fit weight decay is exactly minimum-nuclear-norm
+  interpolation (row *Lemma 1, "exact for a pure factorization"*), and a convergent run of
+  gradient descent with weight decay on the pure factorization reaches the optimum (*Training
+  reaches the optimal fit*, added);
 - the readout-free version for `x³ + x y`, which the note calls a conjecture;
 - "How it fits together", which the note calls a heuristic.
 
@@ -8596,3 +8598,151 @@ both source probability forecasts and both metrics. A useful partial-CE
 condition still needs separate control of full adaptive/encoder perturbations
 before it becomes a training stability result. No new numerical gain is
 asserted by this derivation.
+
+## Training reaches the optimal fit (added)
+
+Lemma 1 ends with a modeling step: "Training with weight decay then behaves like
+minimum-nuclear-norm interpolation from Ω. This is the modeling step. It is exact for a
+pure factorization; for the real network it is an assumption." The Lean status row
+*Lemma 1, "exact for a pure factorization"* proves the static half: weight decay at its
+optimum is M. It leaves open that training reaches that optimum. This section proves it for
+the pure factorization in the following form: a run of gradient descent with weight decay
+that converges, converges to the optimum. The objective is not convex in the factors. It
+has saddles, the origin among them whenever the loss gradient there exceeds λ, so the claim
+is that a run started at full rank cannot end at one.
+
+Notation: `⟨A, B⟩ = Re tr(Aᴴ B)` is the real inner product of complex matrices and
+`‖A‖² = ⟨A, A⟩ = ‖A‖_S2²`. The loss `L` is a real function of an `m × n` matrix together
+with a field `G` that satisfies the first-order inequality
+
+```
+L(X) + ⟨G(X), Y − X⟩ ≤ L(Y)    for all X, Y.
+```
+
+This says that `L` is convex and `G` is its gradient (WD3). For the squared loss on Ω,
+`L(X) = ½ Σ_Ω |X_ij − K_ij|²` and `G(X) = P_Ω(X − K)`.
+
+### WD1. The model and its lifted form
+
+The model is `X = U Vᴴ` with `U` of size `m × k` and `V` of size `n × k`. Its weight-decayed
+loss and gradient descent with step η are
+
+```
+F(U, V) = L(U Vᴴ) + λ · ½(‖U‖² + ‖V‖²),
+U ← U − η (G V + λ U),    V ← V − η (Gᴴ U + λ V),    G = G(U Vᴴ).
+```
+
+Stack the factors, `W = [U; V]`, and put `M = [[λ, G], [Gᴴ, λ]]`, a Hermitian matrix of
+size `m + n`. Then `M W = [G V + λ U; Gᴴ U + λ V]`, so a step is `W ← (1 − η M) W`, and
+
+```
+⟨W, M W⟩ = λ (‖U‖² + ‖V‖²) + 2 ⟨G, U Vᴴ⟩.
+```
+
+Since `2 |⟨G, U Vᴴ⟩| ≤ ‖G‖_S2 (‖U‖² + ‖V‖²)`, `M` is positive semidefinite when
+`‖G‖_S2 ≤ λ`. The sharp condition has the operator norm of `G`; the examples need only this
+one.
+
+### WD2. A certificate for the global minimum
+
+If `M W = 0` and `M` is positive semidefinite at `(U, V)`, then `F(U, V) ≤ F(U', V')` for
+the factorizations of every width. Indeed `0 ≤ ⟨W', M W'⟩ = λ ‖W'‖² + 2 ⟨G, U' V'ᴴ⟩`, with
+equality at `W`, and the first-order inequality at `X = U Vᴴ`, `Y = U' V'ᴴ` gives
+
+```
+F(U', V') − F(U, V) ≥ ⟨G, Y − X⟩ + (λ/2)(‖W'‖² − ‖W‖²) = ½⟨W', M W'⟩ − ½⟨W, M W⟩ ≥ 0.
+```
+
+Call a factorization with the least `F` among those of every width a decayed minimum. By
+Lemma 1 it is the penalized form of M: for λ ≥ 0 its product minimizes `L(X) + λ ‖X‖_S1`
+over all matrices, for λ > 0 its weight decay `½(‖U‖² + ‖V‖²)` equals `‖U Vᴴ‖_S1`, and for
+λ > 0 these two properties characterize it.
+
+### WD3. The update is the gradient
+
+The other items use `G` only through the first-order inequality. If `G` is continuous, that
+inequality makes it the gradient of `L`: along a curve `X + t H(t)`, applying it at both
+ends,
+
+```
+t ⟨G(X), H(t)⟩ ≤ L(X + t H(t)) − L(X) ≤ t ⟨G(X + t H(t)), H(t)⟩,
+```
+
+and both bounds have slope `⟨G(X), H(0)⟩` at `t = 0`. The squared Frobenius norm satisfies
+the same inequality with `G(X) = 2X`. With
+`(U + tA)(V + tB)ᴴ = U Vᴴ + t (A Vᴴ + U Bᴴ + t A Bᴴ)` this gives
+
+```
+d/dt F(U + tA, V + tB) at t = 0  =  ⟨G V + λ U, A⟩ + ⟨Gᴴ U + λ V, B⟩.
+```
+
+So the update of WD1 is gradient descent on `F`, not a definition of it.
+
+### WD4. No negative direction survives at the limit
+
+Let `W_{t+1} = (1 − η M_t) W_t` with η > 0, every `1 − η M_t` positive definite,
+`M_t → M∞` Hermitian, `W_t` bounded and `W_0` of full row rank. Then `M∞` is positive
+semidefinite.
+
+Suppose `xᴴ M∞ x < 0`. The characteristic polynomial has finitely many roots, so some small
+`c > 0` makes `S = M∞ + c` invertible with `xᴴ S x < 0` still. Put `T = 1 − η M∞ = a − η S`
+with `a = 1 + ηc > 1`; `T` is positive semidefinite as a limit of the steps. Let
+`Q(Z) = −⟨Z, S Z⟩`. For one perturbed step `Z' = (T − η E) Z`, with `Y = S Z`,
+
+```
+Q(Z') = a² Q(Z) + a η ‖Y‖² + η ⟨Y, T Y⟩ + 2η ⟨T Y, E Z⟩ − η² ⟨E Z, S E Z⟩.
+```
+
+As `‖Z‖ ≤ ‖S⁻¹‖ ‖Y‖`, the last two terms are at least
+`−η ‖Y‖² (2 ‖T‖ ‖E‖ ‖S⁻¹‖ + η ‖S‖ ‖E‖² ‖S⁻¹‖²)`, so `Q(Z') ≥ a² Q(Z)` once `‖E‖ ≤ ε`,
+for an ε that depends on `S`, `a` and η only. Now `W_0` has a right inverse `R`, and
+`W_t R` is a product of the invertible steps, hence invertible. Take `t₁` with
+`‖M_t − M∞‖ ≤ ε` from `t₁` on and `z = R (W_{t₁} R)⁻¹ x`. The columns `Z_j = W_{t₁+j} z`
+start at `Z_0 = x`, solve `Z_{j+1} = (T − η (M_{t₁+j} − M∞)) Z_j` and are bounded, yet
+`Q(Z_j) ≥ a^{2j} Q(x)` grows without bound while `Q(Z_j) ≤ ‖S‖ ‖Z_j‖²`. Contradiction.
+
+Full row rank is what lets a column of the run point along `x`. It needs width
+`k ≥ m + n` and then holds for almost every start. Without it the claim fails: `W_0 = 0`
+stays at `0` whatever `M` is.
+
+### WD5. A convergent run ends at a global minimum
+
+Let `L` satisfy the first-order inequality with a continuous `G`, let η > 0, let
+`[U_0; V_0]` have full row rank, and let every step matrix `1 − η M_t` be positive definite.
+If the run of WD1 converges, `(U_t, V_t) → (U, V)`, then `(U, V)` is a decayed minimum:
+`F(U, V) ≤ F(U', V')` for the factorizations of every width. So for λ ≥ 0 the trained
+product `U Vᴴ` minimizes `L(X) + λ ‖X‖_S1` over all matrices, and for λ > 0 the trained
+weight decay equals `‖U Vᴴ‖_S1`.
+
+Proof: `M_t → M∞ = M(U, V)` since `G` is continuous, and a convergent run is bounded, so
+`M∞` is positive semidefinite by WD4. The limit of `W_{t+1} = (1 − η M_t) W_t` is
+`W = (1 − η M∞) W`, that is `M∞ W = 0`. WD2 applies.
+
+A run that meets every hypothesis and has a nonzero limit: `m = n = 1`, `L(X) = −Re X`,
+`G = −1`, λ = 1, η = 1/4, `U_0 = [1 0]`, `V_0 = [0 1]`. A step keeps `U + V` and halves
+`U − V`, so the run converges to `U = V = [½ ½]`, where `F = 0`. This is the minimum, as
+`F(u, v) = ½ |u − v|²` for vectors `u`, `v`.
+
+Three hypotheses remain. The run converges: for an analytic loss a bounded run with small
+steps does converge, by the Łojasiewicz inequality, but that is not formalized here. The
+start has full row rank, which needs width at least `m + n`. The steps are admissible,
+which WD6 reduces to a bound on η.
+
+### WD6. Admissible steps
+
+`1 − η M` is positive definite when `η (|λ| + ‖G‖_S2) < 1`, since by WD1
+`⟨W, (1 − η M) W⟩ = ‖W‖² − η ⟨W, M W⟩ ≥ (1 − η (|λ| + ‖G‖_S2)) ‖W‖²`.
+
+### Lean
+
+`src/Transformer/Grokking/FlatSpectrum/Training/`, namespace
+`Transformer.Grokking.FlatSpectrum.Training`, proved without `sorry`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| WD1 | `pairing`, `decayedLoss`, `decayStep`, `decayRun`, `stack`, `lift`, `lift_mul_stack`, `stack_decayStep`, `stack_decayRun_succ`, `pairing_stack_lift`, `two_mul_abs_pairing_mul_le`, `lift_posSemidef_of_frobeniusSq_le` | Scalars η, λ are real and act on complex matrices. |
+| WD2 | `IsDecayedMin`, `isDecayedMin_of_posSemidef`, `IsDecayedMin.add_nuclearNorm_le`, `IsDecayedMin.weightDecay_eq_nuclearNorm`, `isDecayedMin_iff`, `isDecayedMin_linear_one` | The competitors have every finite width `r`; the factorization itself may have any finite column type. |
+| WD3 | `mul_pairing_le_sub_and_le`, `frobeniusSq_first_order`, `hasDerivAt_comp_add_smul`, `add_smul_mul_conjTranspose`, `hasDerivAt_decayedLoss` | The derivative is taken along every line `(U + tA, V + tB)`. |
+| WD4 | `gain_identity`, `gain_step`, `gain_iterate`, `pairing_nonneg_of_bounded`, `exists_pos_forall_pairing_nonneg`, `exists_pos_lt_det_add_smul_ne_zero`, `posSemidef_of_tendsto` | Norms are `‖·‖_S2`. Full row rank is `Function.Surjective (W 0).mulVec`; bounded is `∀ t, ‖W_t‖² ≤ B`. |
+| WD5 | `lift_posSemidef_of_tendsto_decayRun`, `isDecayedMin_of_tendsto_decayRun`, `add_nuclearNorm_le_of_tendsto_decayRun`, `weightDecay_eq_nuclearNorm_of_tendsto_decayRun`, `decayRun_linear`, `tendsto_decayRun_linear` | Convergence is `Tendsto (decayRun G η λ U₀ V₀) atTop (𝓝 (U, V))`. The example is the run above, with the start `stack_fromCols_one`. |
+| WD6 | `one_sub_smul_lift_posDef` | |

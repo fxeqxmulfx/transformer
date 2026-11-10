@@ -34,7 +34,10 @@ Read through the last item, two theorems of M become theorems about weight decay
   contain a permutation (`isOptimalFit_vecMulVec_iff_connected`, from Theorem E,
   `forall_isMinOn_vecMulVec_iff_connected_of_entries`).
 
-That training reaches this optimum is the modeling step of the source, and is not proved.
+That training reaches this optimum is the modeling step of the source. For gradient descent with
+weight decay on the pure factorization it is proved for every convergent run in
+`Transformer.Grokking.FlatSpectrum.Training` (`isDecayedMin_of_tendsto_decayRun`); that the run
+converges, and the step for the real network, are not proved.
 -/
 
 @[expose] public section

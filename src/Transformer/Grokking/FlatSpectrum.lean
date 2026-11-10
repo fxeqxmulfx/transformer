@@ -113,6 +113,7 @@ public import Transformer.Grokking.FlatSpectrum.GrowthCertificate
 public import Transformer.Grokking.FlatSpectrum.SlowGrowth
 public import Transformer.Grokking.FlatSpectrum.TangentDimension
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes
+public import Transformer.Grokking.FlatSpectrum.Training
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -286,6 +287,12 @@ and no nonzero `U Aᴴ + B Vᴴ` vanishes on `Ω`. Linear growth makes `K` the o
 or `V` is square one missing cell rules it out. M recovers `!![2, 1; 1, 1]` from the three cells
 other than `(0, 1)`, where `‖K + h E₀₁‖_S1 = √(9 + h²)` for real `h ≤ 1` and no `c > 0` gives linear
 growth. If no nonzero `U Aᴴ + B Vᴴ` vanishes on `Ω`, then `|Ω| ≥ r (m + n − r)`, so linear growth
-needs that many cells, while M recovers `!![2, 1; 1, 1]`, of rank two, from three. -/
+needs that many cells, while M recovers `!![2, 1; 1, 1]`, of rank two, from three. Training
+(`Training`, Lemma 1's modeling step for the pure factorization): gradient descent with weight
+decay on the factors of `U Vᴴ` is `W ← (1 − η M) W` for the stacked factors `W = [U; V]` and
+`M = [[λ, G], [Gᴴ, λ]]`, with `G` the gradient of a convex loss; a run from stacked factors of
+full row rank with positive definite step matrices that converges ends where `M W = 0` and `M`
+is positive semidefinite, and such a point has the least weight-decayed loss among the
+factorizations of every width, so its product minimizes the loss plus `λ ‖·‖_S1`. -/
 
 @[expose] public section
