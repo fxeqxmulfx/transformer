@@ -161,4 +161,35 @@ theorem exists_isDecayedMin_fitLoss (Ω : Set (m × n)) (K : Matrix m n ℂ) (hl
 
 example := exists_isDecayedMin_fitLoss (Set.univ : Set (Fin 1 × Fin 1)) 1 one_pos
 
+/-- **Training does not return a flat kernel** (`review/flat_spectrum.md`, Theorem A with items
+WD7 and WD8): if the singular values of a square `K` are all equal, no entry of `K` vanishes and
+`Ω` is proper, then some `δ > 0` has: for every `λ > 0`, every run on the squared loss on `Ω`
+under the bounds of WD6 and WD8 from a start of full row rank converges, to factors with
+`‖U Vᴴ‖_S1 + δ ≤ ‖K‖_S1`. -/
+theorem exists_tendsto_decayRun_nuclearNorm_add_le {K : Matrix n n ℂ} {c : ℝ}
+    (h : ∀ i, singularValues K i = c) (hK : ∀ i j, K i j ≠ 0) {Ω : Set (n × n)}
+    (hΩ : Ω ≠ Set.univ) :
+    ∃ δ : ℝ, 0 < δ ∧ ∀ {η lam κ ρ : ℝ}, 0 < η → 0 < lam → 0 ≤ κ → frobeniusSq K ≤ κ ^ 2 →
+      κ ^ 2 ≤ lam * ρ → 2 * η * (lam ^ 2 + (ρ / 2 + κ) ^ 2) ≤ lam →
+      η * (lam + (ρ / 2 + κ) + 2 * ρ) ≤ 1 → ∀ {U₀ V₀ : Matrix n k ℂ},
+        frobeniusSq U₀ + frobeniusSq V₀ ≤ ρ → Function.Surjective (stack U₀ V₀).mulVec →
+        ∃ U V : Matrix n k ℂ,
+          Tendsto (decayRun (fun X => mask Ω (X - K)) η lam U₀ V₀) atTop (𝓝 (U, V)) ∧
+            nuclearNorm (U * Vᴴ) + δ ≤ nuclearNorm K := by
+  have hmin := not_isMinOn_of_singularValues_eq h hK hΩ
+  rw [isMinOn_iff] at hmin
+  push Not at hmin
+  obtain ⟨X', hX', hlt⟩ := hmin
+  refine ⟨nuclearNorm K - nuclearNorm X', sub_pos.mpr hlt, ?_⟩
+  intro η lam κ ρ hη hlam hκ0 hκ hρ hstep hdesc U₀ V₀ hw hfull
+  obtain ⟨U, V, hlim, hdm⟩ :=
+    exists_tendsto_decayRun_isDecayedMin hη hlam hκ0 hκ hρ hstep hdesc hw hfull
+  exact ⟨U, V, hlim, by linarith [hdm.nuclearNorm_le hlam hX']⟩
+
+/-- With no cell seen, runs on the `a³ + a b` kernel for `p = 3` converge strictly below it. -/
+example := exists_tendsto_decayRun_nuclearNorm_add_le (k := ZMod 3 ⊕ ZMod 3)
+  (singularValues_cubicKernel 3)
+  (fun a b => norm_ne_zero_iff.mp (by simp [cubicKernel, taskKernel]))
+  (Set.empty_ne_univ (α := ZMod 3 × ZMod 3))
+
 end Transformer.Grokking.FlatSpectrum.Training

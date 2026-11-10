@@ -68,3 +68,4 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.norm_gradient_flatLoss_sq
 #print axioms Transformer.Grokking.FlatSpectrum.Training.factors_iterate_gradientStep
 #print axioms Transformer.Grokking.FlatSpectrum.Training.exists_isDecayedMin_fitLoss
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun_nuclearNorm_add_le

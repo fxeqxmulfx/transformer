@@ -8759,7 +8759,8 @@ needs only full row rank, this η, and convergence.
 Take the squared loss on the seen cells, `L(X) = ½ ‖P_Ω(X − K)‖²` with
 `G(X) = P_Ω(X − K)`. It satisfies the first-order inequality, the two sides differing by
 `½ ‖P_Ω(Y − X)‖²`; `G` is continuous; and `L(X) = 0` exactly when `X = K` on Ω. Call a
-decayed minimum of this loss a trained fit. By WD5 a convergent run ends at one.
+decayed minimum of this loss a trained fit. By WD5 a convergent run ends at one, and by WD8
+the run converges.
 
 Let `X'` be any matrix equal to `K` on Ω. WD2 at `Y = X'` gives, for λ ≥ 0,
 
@@ -8857,6 +8858,12 @@ width `m + n` has full row rank, and the result applies with `κ = ‖K‖² + 1
 small η. So for every λ > 0 the squared loss on Ω has a decayed minimum of width `m + n`,
 and the statements of WD7 are about a nonempty class.
 
+Corollary: training does not return a flat kernel. Let `K` be square with equal singular
+values and no zero entry, and let Ω be proper. With the δ of WD7, statement 2, for every
+λ > 0 every run under the bounds above from a start of full row rank converges, to factors
+with `‖U Vᴴ‖_S1 ≤ ‖K‖_S1 − δ`. This is Theorem A for the run itself: nothing is assumed about
+its limit.
+
 The Łojasiewicz inequality cannot be replaced here by a nondegeneracy argument. For `K = 1`
 with every cell seen and λ < 1 the partial fits `(1 − λ) P`, `P` a projection of a fixed
 rank, form a connected family of critical points along which the gradient of the loss
@@ -8874,6 +8881,8 @@ on a convex loss with continuous gradient:
 - for the squared loss with an explicit step, a run from stacked factors of full row rank
   converges, and its limit is such a minimum; no convergence is assumed (WD8);
 - for every λ > 0 the squared loss on Ω has such a minimum of width `m + n` (WD8);
+- for a square kernel with equal singular values and no zero entry on a proper Ω, every
+  such run converges at least a fixed δ below `‖K‖_S1`, for every λ > 0 (WD8);
 - for the squared loss on Ω these limits compare with every exact fit as M does, their
   limits as λ → 0⁺ are optimal fits, flat kernels are not returned, and kernels that M
   recovers are approached (WD7).
@@ -8906,4 +8915,4 @@ Assumed or not covered:
 | WD5 | `lift_posSemidef_of_tendsto_decayRun`, `isDecayedMin_of_tendsto_decayRun`, `add_nuclearNorm_le_of_tendsto_decayRun`, `weightDecay_eq_nuclearNorm_of_tendsto_decayRun`, `decayRun_linear`, `tendsto_decayRun_linear` | Convergence is `Tendsto (decayRun G η λ U₀ V₀) atTop (𝓝 (U, V))`. The example is the run above, with the start `stack_fromCols_one`. |
 | WD6 | `one_sub_smul_lift_posDef`, `frobeniusSq_mask_sub_le`, `neg_le_pairing_mask_sub`, `frobeniusSq_lift_mul_stack_le`, `frobeniusSq_decayStep_le`, `frobeniusSq_decayRun_le`, `one_sub_smul_lift_posDef_of_ball`, `isDecayedMin_fitLoss_of_tendsto_decayRun`, `decayRun_mask_empty` | `‖K‖ ≤ κ` is `frobeniusSq K ≤ κ ^ 2` with `κ ≥ 0`. The example run of the last theorem has no cell seen, where the run is `(1 − η λ)^t (U_0, V_0)`. |
 | WD7 | `mask`, `fitLoss`, `fitLoss_first_order`, `fitLoss_eq_zero_iff`, `continuous_mask_sub`, `IsDecayedMin.fitLoss_add_le`, `IsDecayedMin.nuclearNorm_le`, `IsDecayedMin.fitLoss_le`, `isOptimalFit_of_tendsto`, `exists_nuclearNorm_add_le_of_not_isMinOn`, `exists_nuclearNorm_add_le_of_singularValues_eq`, `tendsto_of_fitLoss_tendsto_zero`, `tendsto_mul_conjTranspose_of_forall_isMinOn`, `tendsto_mul_conjTranspose_vecMulVec_of_connected`, `isDecayedMin_one_sub`, `isDecayedMin_shrink` | "The only minimizer of M" is D.2's form, `∀ X ∈ S, (IsMinOn ‖·‖_S1 S X ↔ X = K)`. In 1 the factors have a fixed width `r`; in 2 the bound holds for every width; in 3 they have any fixed finite column type. Limits run over sequences `λ_j → 0⁺`. |
-| WD8 | `factors`, `flatten`, `factors_flatten`, `flatten_factors`, `continuous_factors`, `continuous_flatten`, `norm_sq_eq_frobeniusSq_factors`, `real_inner_eq_pairing_factors`, `flatLoss`, `analyticAt_norm_sq`, `analyticAt_flatLoss`, `hasGradientAt_flatLoss`, `gradient_flatLoss`, `factors_gradientStep`, `norm_gradient_flatLoss_sq`, `fitLoss_eq_add`, `decayedLoss_fitLoss_sub`, `pairing_one_sub_smul`, `frobeniusSq_step_mul_sub_le`, `decayedLoss_decayStep_add_le`, `decayedLoss_decayStep_add_le_of_ball`, `decayedLoss_decayRun_succ_add_le`, `norm_apply_le_sqrt_frobeniusSq`, `isCompact_setOf_frobeniusSq_add_le`, `factors_iterate_gradientStep`, `exists_tendsto_decayRun_isDecayedMin`, `exists_isDecayedMin_fitLoss` | The factor space is `EuclideanSpace ℂ ((m ⊕ n) × k)` with its real inner product. Łojasiewicz's theorem and the convergence theorem are `exists_isLojasiewiczAt_of_analyticAt` and `tendsto_of_isLojasiewiczAt_of_le_sub` of `Transformer.Landscape.SaddleAvoidance`, used with `κ = 1/2`. In the corollary `κ = ‖K‖_S2² + 1`, `ρ = max (‖W_0‖²) (κ²/λ)` and η is the smaller of the two bounds. |
+| WD8 | `factors`, `flatten`, `factors_flatten`, `flatten_factors`, `continuous_factors`, `continuous_flatten`, `norm_sq_eq_frobeniusSq_factors`, `real_inner_eq_pairing_factors`, `flatLoss`, `analyticAt_norm_sq`, `analyticAt_flatLoss`, `hasGradientAt_flatLoss`, `gradient_flatLoss`, `factors_gradientStep`, `norm_gradient_flatLoss_sq`, `fitLoss_eq_add`, `decayedLoss_fitLoss_sub`, `pairing_one_sub_smul`, `frobeniusSq_step_mul_sub_le`, `decayedLoss_decayStep_add_le`, `decayedLoss_decayStep_add_le_of_ball`, `decayedLoss_decayRun_succ_add_le`, `norm_apply_le_sqrt_frobeniusSq`, `isCompact_setOf_frobeniusSq_add_le`, `factors_iterate_gradientStep`, `exists_tendsto_decayRun_isDecayedMin`, `exists_isDecayedMin_fitLoss`, `exists_tendsto_decayRun_nuclearNorm_add_le` | The factor space is `EuclideanSpace ℂ ((m ⊕ n) × k)` with its real inner product. Łojasiewicz's theorem and the convergence theorem are `exists_isLojasiewiczAt_of_analyticAt` and `tendsto_of_isLojasiewiczAt_of_le_sub` of `Transformer.Landscape.SaddleAvoidance`, used with `κ = 1/2`. In the corollary `κ = ‖K‖_S2² + 1`, `ρ = max (‖W_0‖²) (κ²/λ)` and η is the smaller of the two bounds. |

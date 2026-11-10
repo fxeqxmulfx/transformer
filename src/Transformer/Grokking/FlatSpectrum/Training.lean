@@ -63,4 +63,6 @@ with gradient `M W` (`gradient_flatLoss`), so the run is gradient descent there
 a cluster point; Łojasiewicz's theorem and the convergence theorem of
 `Transformer.Landscape.SaddleAvoidance` make it the limit. So the run converges, to a
 factorization of least weight-decayed loss (`exists_tendsto_decayRun_isDecayedMin`), and such a
-factorization of width `m + n` exists for every `λ > 0` (`exists_isDecayedMin_fitLoss`). -/
+factorization of width `m + n` exists for every `λ > 0` (`exists_isDecayedMin_fitLoss`). For a
+square kernel with equal singular values and no zero entry on a proper `Ω`, every such run
+converges a fixed distance below `‖K‖_S1` (`exists_tendsto_decayRun_nuclearNorm_add_le`). -/
