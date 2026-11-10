@@ -11263,7 +11263,8 @@ model reads the values and writes the value. A level is determined by its residu
 is not. The level task is the kernel of `a + b` of Proposition 2 and nothing else, and M
 recovers it under Theorem E. A level is read at `p` states, and a step `d` at `p − |d|`. On
 the task of CS6 the training cells of the level encoding satisfy Theorem E on all three
-splits.
+splits. Trained on level tokens, the models of RR7 reach 99% of the held-out states under
+every recipe, and five of six end at 99.96% or above (EN6).
 
 ### EN1. A level is its residue; a step is not
 
@@ -11337,9 +11338,8 @@ By CS6 and RR7 the models with step tokens stay below 99% by wrap errors at the 
 and by residue errors at rare tokens. EN1 and EN2 say that both come with the encoding: a
 level has no wrap, and no level is rare. The hypothesis: the models of RR7 whose decay acts
 within the run, trained in the same way on the level tokens of EN3, reach 99% of the held-out
-states. The runs and the predictions are written down before the runs as stage 8 of
-`research/diffgpt_flat_spectrum/PLAN.txt`. At the time of this section no model is trained on
-level tokens.
+states. It was written down with its predictions before the runs, as stage 8 of
+`research/diffgpt_flat_spectrum/PLAN.txt`; EN6 holds what they found.
 
 ### EN5. Scope
 
@@ -11355,6 +11355,42 @@ Not covered:
   that this task does not show; nothing here compares the two encodings there.
 - The split. EN2 counts states, not training cells; the counts of EN3 are for three splits by
   cycles of the recurrence.
+
+### EN6. The models on level tokens (numerical)
+
+These numbers are measured, not proved: `research/diffgpt_flat_spectrum/` of the `diff-gpt`
+repository, Rust and Kernite, FP32 on a GTX 1050. The models, recipes, initializations, sampled
+examples and budget are those of RR7; the tokens are the level tokens of EN3, and nothing else
+is changed. The predictions were fixed before the runs.
+
+| Model | Recipe | Right of 4704, seeds 11, 17, 23 | Share | First update at 90% | First at 99% | Share with steps (RR7) |
+| --- | --- | --- | --- | --- | --- | --- |
+| Historical | ScheduleFree AdamW, rate 0.03, decay 1 | 4666, 4682, 4625 | 99.19%, 99.53%, 98.32% | 350, 200, 400 | 850, 550, 500 | 94.98%, 93.24%, 92.35% |
+| Historical | AdamW of the selected main, `ρ = 0.1` | 4704, 4704, 4704 | 100%, 100%, 100% | 300, 300, 300 | 350, 350, 350 | 7.70%, 9.86%, 30.17% |
+| Historical | the same, `ρ = 3` | 4702, 4703, 4702 | 99.96%, 99.98%, 99.96% | 250, 250, 250 | 300, 300, 300 | 92.28%, 92.18%, 90.90% |
+| Historical | the same, `ρ = 10` | 4702, 4704, 4704 | 99.96%, 100%, 100% | 250, 200, 250 | 250, 250, 1100 | 94.30%, 94.37%, 91.62% |
+| Selected main | its recipe, `ρ = 0.1` | 4704, 4704, 4704 | 100%, 100%, 100% | 300, 300, 300 | 300, 350, 300 | 79.32%, 88.35%, 77.87% |
+| Selected main | the same, `ρ = 10` | 4704, 4704, 4704 | 100%, 100%, 100% | 350, 300, 250 | 500, 300, 300 | 95.20%, 94.79%, 92.60% |
+
+- The hypothesis of EN4 held for the three arms of AdamW whose decay acts: 99% on every seed,
+  and 99.96% or more at the end. It failed for the historical recipe on one seed. That recipe
+  has 99% on every seed, at 850, 550, 500 updates, and ends at 99.19%, 99.53%, 98.32% with
+  4683, 4689, 4677 of the 4704 training states right: it loses its training fit. By RR4 it
+  is the decay 30, at which the step runs of RR7 do not fit their training set.
+- A prediction made with the hypothesis failed: that the recipe would still matter. With
+  level tokens `ρ = 0.1` ends at 100% on every seed in both models. The selected main under
+  its own recipe has all 4704 held-out states right at every observation from its first 99%,
+  at 300 to 350 updates, to the end. So the miss of RR7 under `ρ = 0.1` needs the step tokens:
+  it is the encoding and the weak decay together.
+- No answer of any run, at any of its observations, is off by `p`: a level has no wrap.
+- In every run half of the held-out answers are right at 200 to 300 updates, and no run fits
+  its training set before that. With step tokens and `ρ = 0.1` the historical model fits its
+  training set at 700 to 2250 updates and has 362, 464, 1419 held-out answers right at 5000.
+- The runs are not monotone: after its first 99% a run falls as low as 4533 of 4704 (the
+  selected main with `ρ = 10`, seed 11) before it ends at 4704.
+
+What this does not show: which part of the step encoding keeps the models of RR7 below 99%,
+the comparison of CS1, the steps that few states read (EN2), or the two tokens of a step.
 
 ### Lean
 
