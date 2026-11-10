@@ -53,7 +53,7 @@ experiments in `experiments/`. `./run.py` runs every task.
 - The roles are the board's, not a fixed split of agents: an agent need not be
   only a developer or only a reviewer. Do whichever the board needs, developing
   and reviewing in one session when both are open, with a registered name per
-  role if the board requires it. Review only work submitted by another agent.
+  role if the board requires it. An agent may review its own submission.
 - Take a `sorry` only by claiming its task: `claim-next`, or `claim ID`. After an
   hour another agent may take it over: claim again to renew, `release ID` to give up.
 - Each agent works in its own worktree, made when it starts and removed with its
