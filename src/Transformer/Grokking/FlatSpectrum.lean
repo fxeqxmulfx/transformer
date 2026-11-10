@@ -317,6 +317,9 @@ has `‖K − X‖_S2² ≥ c (min(m, n) − rank X)`, so a product through widt
 `π` of `m` keys is flat for a centered readout, with effective rank `m`. So a readout through
 which `d` numbers cross from the context to the query misses at least the fraction `1 − d / m`
 of recall, and one Coyote layer, the RetNet output and attention without softmax of dimension
-`d` recall at most `d` bindings, `d + 1` for attention with linear biases. -/
+`d` recall at most `d` bindings, `d + 1` for attention with linear biases. Softmax attention
+escapes the cut: at projection dimension two it recalls every number of bindings to every
+accuracy, with scores that must grow as `½ log (m / ε)`; with scores that ignore the query its
+sign recalls at most `d + 1` bindings. -/
 
 @[expose] public section

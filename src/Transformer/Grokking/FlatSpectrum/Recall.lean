@@ -8,6 +8,10 @@ public import Transformer.Grokking.FlatSpectrum.Recall.Coyote
 public import Transformer.Grokking.FlatSpectrum.Recall.RetNet
 public import Transformer.Grokking.FlatSpectrum.Recall.Attention
 public import Transformer.Grokking.FlatSpectrum.Recall.Training
+public import Transformer.Grokking.FlatSpectrum.Recall.Softmax
+public import Transformer.Grokking.FlatSpectrum.Recall.SoftmaxRecall
+public import Transformer.Grokking.FlatSpectrum.Recall.SoftmaxScale
+public import Transformer.Grokking.FlatSpectrum.Recall.QueryFree
 
 /-!
 # Associative recall has a flat spectrum
@@ -33,4 +37,14 @@ width `d`, at any precision of its `d × d` state (`RetNet`); attention without 
 width the dimension of its projections, and one more with linear biases (`Attention`). The pure
 factorization of width `k < m` keeps a squared loss on the full table, and training on part of
 the table does not return `K` (`Training`).
+
+Softmax attention is not such a readout (*Softmax attention escapes the cut* of the note). The
+attention of Yang, Cadilhac and Chiang, *Knee-Deep in C-RASP: A Transformer Depth Hierarchy*,
+§2.1, averages the values with the weights `exp s_j` (`Softmax`). With scores that pair the
+query with the key it recalls every number of bindings to every accuracy at projection
+dimension two (`SoftmaxRecall`), and it pays in the scale of its scores: bounded by `B`, they
+leave a squared error of at least the fraction `((m − 1) / (e^{2B} + m − 1))²` of the variance
+of `φ` (`SoftmaxScale`). With scores that ignore the query, as in the transformers that paper
+builds from formulas, a linear readout read by its sign recalls at most `d + 1` bindings
+(`QueryFree`).
 -/

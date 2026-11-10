@@ -9414,8 +9414,8 @@ Not covered:
 - Nonlinear readouts. An MLP after the layer is not a linear readout; AR4 and AR5 do not
   bound it.
 - Softmax. Softmax divides the scores by a function of the query and the context together.
-  That output is not of the form of AR4, and nothing here bounds softmax attention from below
-  or from above. The second half of Claim 1 is not addressed.
+  That output is not of the form of AR4. *Softmax attention escapes the cut* below treats one
+  layer of it: it recalls at projection dimension two and pays in the scale of its scores.
 - The family of contexts. The bounds range over every dictionary of the `m` keys. A model
   that meets a smaller family of dictionaries is not constrained by them.
 - The multi-query task of the paper (`def: general-AR`), with repeated keys and queries
@@ -9441,3 +9441,151 @@ Not covered:
 | AR7 | `hasCutWidth_retNet`, `retNet_recall_error`, `card_le_of_retNet_recall`, `card_le_of_retNet_argmax` | The context is a list of projected pairs `(A[n,:], V[n,:])`, the query appends its own pair, and `out q` is `C[N,:]`. |
 | AR8 | `hasCutWidth_linearAttention`, `linearAttention_recall_error`, `card_le_of_linearAttention_recall`, `card_le_of_linearAttention_argmax`, `hasCutWidth_biasedAttention`, `biasedAttention_recall_error`, `card_le_of_biasedAttention_recall`, `card_le_of_biasedAttention_argmax` | `qf q` is `Q q`, `kf x j` is `K x_j`, `vf x j` a linear readout of `V x_j`, and `self q` the term of the query attending to itself. The projections are arbitrary functions of the query and of the context. `bias j` is the entry of `B` at the query and the context token `j`; it does not depend on the query. |
 | AR9 | `mul_sub_card_le_fitLoss_recallKernel`, `exists_nuclearNorm_add_le_recallKernel`, `exists_pos_ae_tendsto_decayRun_recallKernel` | The runs and the constants are those of WD10; the width is `card κ ≤ card k`. |
+
+## Softmax attention escapes the cut (added)
+
+The transformers of Yang, Cadilhac and Chiang, *Knee-Deep in C-RASP: A Transformer Depth
+Hierarchy*, arXiv:2506.16055v3, use softmax attention (§2.1):
+
+```
+sumdiv(a, b) = (Σ_j a_j) / (Σ_j b_j),      att(q, K, v) = sumdiv((exp q Kᵀ) ∘ v, exp q Kᵀ).
+```
+
+AR8 bounds attention without the exponential, and AR10 left softmax open. This section
+treats one layer of it on recall. Softmax attention is not a readout of bounded cut width: it
+recalls at projection dimension two. The price is the scale of its scores. Attention whose
+scores ignore the query, the kind that the paper builds from its formulas, stays within the
+cut.
+
+### SA1. A leading score
+
+Over `n` tokens with scores `s_j` and values `v_j`, `att = Σ_j e^{s_j} v_j / Σ_j e^{s_j}`.
+If `s_j + g ≤ s_{j₀}` for every `j ≠ j₀` and `|v_j| ≤ B` for every `j`, then
+
+```
+|att − v_{j₀}| ≤ 2 B (n − 1) e^{−g}.
+```
+
+Proof. `att − v_{j₀} = Σ_{j ≠ j₀} e^{s_j} (v_j − v_{j₀}) / Σ_j e^{s_j}`. Each term of the
+numerator is at most `e^{s_{j₀}} e^{−g} · 2B` in absolute value, and the denominator is at
+least `e^{s_{j₀}}`. ∎
+
+### SA2. Recall at dimension two
+
+Keys `0, …, m − 1`. The token `j` of the context carries the key `j` and the value `φ(π j)`.
+Project the query `q` to `β (q, 1)` and the key `j` to `(j, −j²/2)`, both of dimension two.
+The score is
+
+```
+s_j = β (q j − j²/2) = β (q² − (q − j)²) / 2,
+```
+
+largest at `j = q` and smaller by at least `β/2` elsewhere. By SA1, for `|φ| ≤ B`,
+
+```
+|att − φ(π q)| ≤ 2 B (m − 1) e^{−β/2}.
+```
+
+- For every `m` and every `ε > 0`, some projections of dimension two recall to accuracy `ε`.
+- For values `±1` the sign of the attention is the bound value, for every `m`.
+- Under the future mask of the paper the query attends to its own token too. Give that token
+  the key projection `(0, −1/2)`: its score is `−β/2`, and the error is at most
+  `2 B m e^{−β/2}`, whatever value that token carries.
+
+Without the exponential the same scores give a readout of cut width two, which recalls at
+most two bindings (AR8). So for one layer in exact arithmetic the second half of Claim 1 of
+the Zoology paper, "attention models can solve it with near-constant dimensionality", holds
+with constant dimension; its first half for one layer is AR6.
+
+### SA3. The price is the scale of the scores
+
+In SA2 the scale `β` grows with `m`. It must. Let the scores of `n` tokens be bounded,
+`|s_j| ≤ B`, and let `ρ = (n − 1) / (e^{2B} + n − 1)`. Each of the other weights is at least
+`e^{−B}` and the weight of a token `j₀` is at most `e^{B}`, so the other tokens hold at least
+the fraction `ρ` of the sum of the weights. With `a` the average of the other tokens under
+their weights,
+
+```
+att = w v_{j₀} + (1 − w) a,   1 − w ≥ ρ,      so      |v_{j₀} − att| ≥ ρ |v_{j₀} − a|.
+```
+
+On recall take a token `(k, π k)` for each key, with a score `s(q, k, π k)` that is any
+function of the query, of the key of the token and of its value, bounded by `B`, and with
+the value `φ(π k)`. Changing `π q` changes neither the weights nor the values of the other
+tokens. So `a` does not depend on `π q`, and the error at each value `v` of `π q` is at least
+`ρ |φ(v) − a|`. The sum of `(φ(v) − a)²` over `v` is smallest at the mean `μ` of `φ`. Summing
+over `v`, over the values of the other keys and over `q`, with `ρ = (m − 1) / (e^{2B} + m − 1)`:
+
+```
+Σ_{q, π} (φ(π q) − att)²  ≥  m c^{m−1} ρ² Σ_v (φ(v) − μ)².
+```
+
+The mean squared error is at least `ρ² Var φ`. For values `±1` recalled to accuracy `ε` at
+every pair, `ρ ≤ ε`:
+
+```
+(m − 1)(1 − ε) ≤ ε e^{2B},      B ≥ ½ log((m − 1)(1 − ε) / ε).
+```
+
+One-hot keys reach this scale. With the score `β/2` at the queried key and `−β/2` elsewhere,
+`B = β/2` and by SA1 the error is at most `2 (m − 1) e^{−β}` for values `±1`, so
+`e^{2B} = 2 (m − 1) / ε` suffices: the bound is sharp up to the factor `2 / (1 − ε)`. The
+scores of SA2 are of order `β m²`: dimension two is paid by a larger scale.
+
+The transformers of the paper round to fixed precision outside `sumdiv` (Appendix
+`app:transformers`, Equation `eq:att`): their weights are `round(exp s)`, which vanish below
+the last bit. That is how a layer of width 5 with `O(log c)` bits recalls there
+(`Transformer.CRASP.matcher_answers`). SA3 is for the exact exponential, whose weights never
+vanish.
+
+### SA4. Scores that ignore the query
+
+The transformer that Proposition `thm:TLCl_to_rtfr` of the paper builds from a formula of
+`TL[◁#]` uses uniform attention: no score depends on the query
+(`Transformer.CRASP.RTfr.queryFree_model`). At the query, such an attention over the context
+`x` and the query's own token is
+
+```
+att_r = (N_r(x) + α_r(q)) / (D(x) + δ(q)),      D(x) + δ(q) > 0,
+```
+
+with the sums `N_r(x) = Σ_j e^{s_j} v_{jr}` and `D(x) = Σ_j e^{s_j}` over the context. A
+readout `g(q) + Σ_{r<d} w_r(q) att_r` has the sign of
+
+```
+g(q) (D(x) + δ(q)) + Σ_r w_r(q) (N_r(x) + α_r(q)),
+```
+
+a readout of cut width `d + 1`: the `d` sums and the normalization cross the cut. By AR5,
+read by its sign it recalls at most `d + 1` bindings. So the exponential leaves the cut only
+through scores that pair the query with the key.
+
+`Transformer.CRASP.two_pow_le_of_queryFree` counts bits, for the rounded transformer and
+every readout. SA4 counts numbers, for exact arithmetic and a linear readout.
+
+### SA5. Scope
+
+Proved: SA1 to SA4 as stated.
+
+Not covered:
+
+- SA2 places a binding in one token. A context that lists the key and the value in separate
+  tokens needs a layer that brings them together first; no such stack is constructed here.
+- SA3 takes the value of a token to be the readout of its bound value, and its score to be a
+  function of the query and of that token. Scores that an earlier layer computes from several
+  tokens are not bounded.
+- SA4 is for a linear readout of one layer, read by its sign. A regression bound for it and a
+  nonlinear readout after it are not proved.
+
+### Lean
+
+`src/Transformer/Grokking/FlatSpectrum/Recall/`, modules `Softmax`, `SoftmaxRecall`,
+`SoftmaxScale` and `QueryFree`, namespace `Transformer.Grokking.FlatSpectrum.Recall`, proved
+without `sorry`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| SA1 | `softmaxAttention`, `abs_softmaxAttention_sub_le` | The tokens are any finite type; scores and values are real. |
+| SA2 | `queryProj`, `keyProj`, `selfProj`, `sum_queryProj_mul_keyProj`, `sum_queryProj_mul_keyProj_add_le`, `softmaxAttention_recall_error`, `softmaxAttention_self_recall_error`, `exists_softmaxAttention_recall`, `exists_softmaxAttention_recall_sign` | The keys are `Fin m` and the token `j` carries the key `j`. The existence statements take `B = Σ_v |φ(v)|` and `β = 4 B m / ε + 2`, from `e^{−x} ≤ 1/x`; they do not claim a logarithmic scale. The query's own token is `none : Option (Fin m)`. |
+| SA3 | `mul_sum_exp_le_sum_erase`, `mul_abs_sub_le_abs_sub_softmaxAttention`, `sum_sum_update`, `exists_forall_mul_abs_sub_le_softmaxAttention`, `mul_le_sum_softmaxAttention_sq`, `sub_one_mul_le_of_softmaxAttention_recall`, `softmaxAttention_oneHot_recall_error` | The average `a` of the other tokens is a quotient of sums over `univ.erase j₀`. Changing `π q` is `Function.update π q v`. The mean `μ` is any number with `Σ_v (φ v − μ) = 0`. The bound for accuracy `ε` is for values `Bool` read as `±1` and at least one key. |
+| SA4 | `card_le_of_normalized_sign`, `softmaxAttention_option`, `card_le_of_queryFreeAttention_sign` | The context is a dictionary with values in `Bool`; its tokens are any finite type, with scores `s π j` and values `v π j r` that are any functions of the dictionary. The query's own token is `none`, with the score `σ q` and the values `u q r`. |
