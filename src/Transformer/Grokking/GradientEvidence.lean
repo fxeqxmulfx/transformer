@@ -18,10 +18,12 @@ public import Transformer.Grokking.GradientEvidence.FeatureMetricControl
 public import Transformer.Grokking.GradientEvidence.ProspectiveCE
 public import Transformer.Grokking.GradientEvidence.CEGram
 public import Transformer.Grokking.GradientEvidence.RecipeRescale
+public import Transformer.Grokking.GradientEvidence.RecipeToward
 
 /-! Actual-loss derivative checks and counterexamples for interpreting
 gradient agreement as evidence of rule learning during grokking. `RecipeDecay` and
 `RecipeRescale` count what the decay of a recipe removes within its run, and rescale a recipe
-on a loss without a scale (`review/flat_spectrum.md`, *The rate of a recipe*). -/
+on a loss without a scale (`review/flat_spectrum.md`, *The rate of a recipe*). `RecipeToward`
+is the same AdamW with a decay toward a fixed table (*The numbers of the tokens*, NT3). -/
 
 @[expose] public section

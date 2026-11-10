@@ -138,6 +138,8 @@ public import Transformer.Grokking.FlatSpectrum.StepSign
 public import Transformer.Grokking.FlatSpectrum.StepPole
 public import Transformer.Grokking.FlatSpectrum.ScoreShift
 public import Transformer.Grokking.FlatSpectrum.ScoreChain
+public import Transformer.Grokking.FlatSpectrum.StepNumbers
+public import Transformer.Grokking.FlatSpectrum.ScoreNumbers
 public import Transformer.Grokking.FlatSpectrum.Recall
 public import Transformer.Grokking.FlatSpectrum.BlockCut
 
@@ -394,6 +396,10 @@ seen cells when they compare there as these do. Raising the scores of rows and c
 upwards along the seen cells keeps every seen comparison, so some fitting scores give the
 other answer at an unseen cell exactly when no chain of seen cells links its two tokens; at a
 cell with equal scores, and at a cell with integer scores one apart, a chain is the cell
-itself. -/
+itself. With the numbers of the tokens given (`StepNumbers`, `ScoreNumbers`): at every frequency
+`ω` the phase `exp (iω (b + x))` is `exp (2iω d₁) · exp (3iω d₂)` times one of two constants by
+the sign of `d₂`, and for `0 < ω`, `ω p ≤ π` the wrap is `0 < sin (ω (b + x + ½ − p))`; scores
+that are linear in vectors of numbers of the rows and columns and fit the seen cells answer as
+those cells do at every cell in the convex hull of the seen cells of one answer. -/
 
 @[expose] public section

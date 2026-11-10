@@ -11020,7 +11020,7 @@ Not covered:
   tokens with few training cells (CH8, RR7). CS does not explain these.
 - Weights tied across positions. A token unseen at one position may be seen at another or as
   a target, and the runs answer a few such states (RR7).
-- A model that is given the numbers of its tokens. None was built or run here.
+- A learner that is given the numbers of its tokens: *The numbers of the tokens* below.
 
 ### Lean
 
@@ -11034,3 +11034,221 @@ Not covered:
 | CS3 | `exists_scoreFit_lt`, `exists_scoreFit_le` | The constants are `\|f i - h j\| + 1` and `\|h j - f i\|`. "Open" is not a Lean definition; the two statements give the two fits. |
 | CS4 | `scoreChain`, `ScoreFit.le_of_chain`, `ScoreFit.lt_of_chain`, `scoreUpClosed_chain`, `exists_scoreFit_lt_iff`, `exists_scoreFit_le_iff` | A link is a relation on `m ⊕ n` and a chain is its `Relation.ReflTransGen`, which holds the empty chain. `ScoreFit.le_of_chain` is for the scores `Sum.elim f' h'` between any two tokens. The two equivalences hold for every `Ω`, `f`, `h`, `i`, `j`. |
 | CS5 | `mem_of_chain_of_eq`, `mem_of_chain_of_gap`, `exists_scoreFit_lt_of_eq`, `exists_scoreFit_le_of_add_one` | The second asks that no `h j'` lies strictly between `f i` and `h j`. The last is for integer scores `F`, `H` with `F i + 1 = H j`, cast to the reals. The reading for the states with `b + x = p` and `b + x = p − 1` is not a Lean statement. |
+
+## The numbers of the tokens (added)
+
+Added on 2026-11-10 and proved in Lean. In CS a learner has one free score for each token, and
+the training cells leave the wrap open at 22% to 24% of the held-out states. But a token of
+the task is not a free symbol. It writes a step, an integer: its *number*. And the wrap is a
+half-space of the numbers of the two tokens read. This section takes the numbers as given. At
+every frequency the phase of the sum is a product of one function of each number, and up to
+the frequency `π / p` the wrap is a half-plane of it. Scores that are linear in the numbers
+and fit the training cells answer rightly at every cell in the convex hull of the training
+cells of one answer; on the task of CS6 that is all the held-out states of one split and all
+but 19 and 75 of the other two. And a decay toward a fixed table leaves at that table what the
+gradients do not feed.
+
+### NT1. The phase of the sum at any frequency
+
+By CW7, `b + x = 2 d₁ + 3 d₂ + 2p [d₂ < 0]`. So for every real `ω`
+
+```
+exp(iω (b + x)) = exp(2iω d₁) · exp(3iω d₂) · c(d₂),
+c(d) = exp(2iω p) for d < 0,   c(d) = 1 otherwise.
+```
+
+In CH4 the frequency is `π / p`, where `c = 1`. At another frequency the second factor is
+the phase `exp(3iω d₂)` of the number `d₂` times one of two constants, by the sign of `d₂`.
+Let the *code* of a number `d` at a frequency `ν` be the pair
+`(exp(iν d) [d ≥ 0], exp(iν d) [d < 0])`: its phase on the half-line of its sign, and zero on
+the other. Then the phase of the sum is a product of a linear function of the code of `d₁` at
+`2ω`, with the coefficients `(1, 1)`, and a linear function of the code of `d₂` at `3ω`, with
+the coefficients `(1, exp(2iω p))`: it is bilinear in the codes of the two numbers, with the
+same coefficients for all tokens.
+
+### NT2. The wrap is a half-plane of it
+
+Let `0 < ω` with `ω p ≤ π`, and let `n < 2p` be a natural number. Then
+
+```
+0 < sin(ω (n + ½ − p))    ⟺    p ≤ n.
+```
+
+Proof. For `p ≤ n ≤ 2p − 1` the angle is in `[ω / 2, ω (p − ½)]`, inside `(0, π)`. For
+`n ≤ p − 1` it is in `[−ω (p − ½), −ω / 2]`, inside `(−π, 0)`. ∎
+
+With `n = b + x`: the next step wraps exactly when `0 < sin(ω (b + x + ½ − p))`, the
+half-plane `0 < Im(exp(−iω (p − ½)) z)` of the phase `z` of NT1. So at every frequency up to
+`π / p` the wrap is the sign of one bilinear form in the codes of the two numbers, the same
+form for all cells. At the two layers of CS5 the phase is at the distance `sin(ω / 2)` from
+the edge of the half-plane.
+
+### NT3. A decay toward a fixed table
+
+In RR1 a coordinate follows `p ← (1 − η ρ) p − η u`. Let `c` be a fixed value for it, and add
+`η ρ c` after every update:
+
+```
+p ← (1 − η ρ) p − η u + η ρ c = p − η ρ (p − c) − η u.
+```
+
+With the gradients given, `p − c` follows the recurrence of RR1 from `p₀ − c`. In closed
+loop, with a gradient field `G` on all coordinates and a table `c` of fixed values: the run is
+`c` plus the run, with the decay toward zero, of the field `q ↦ G(c + q)` from `p₀ − c`, and
+the moments of the two runs are equal. So it is the run of the model whose weights are
+`c + q`, with `q` decayed toward zero.
+
+A coordinate whose gradient is zero at every point is
+
+```
+p_t = c + (p₀ − c) · ∏_{s<t} (1 − η_s ρ).
+```
+
+At the constant rate 0.001 with the decay 10 it is within `e⁻⁵⁰ |p₀ − c|` of `c` after 5000
+updates. With a decay that acts within the run, as in RR7, what the gradients do not feed is
+left at its fixed value and not at zero: the row of a table for a token that training shows
+rarely is near its fixed row.
+
+### NT4. Scores linear in the numbers
+
+Give every row `i` a vector `φ_i` and every column `j` a vector `ψ_j` of real vector spaces:
+their *numbers*. A learner *with scores linear in the numbers* has `f'_i = u(φ_i)` and
+`h'_j = θ − w(ψ_j)`, with linear forms `u`, `w` and a real `θ`, all free. If its scores fit
+the seen cells `Ω`, then
+
+- at a cell whose pair `(φ_i, ψ_j)` is in the convex hull of the pairs of the seen cells with
+  `h ≤ f`, it has `h'_j ≤ f'_i`;
+- at a cell whose pair is in the convex hull of the pairs of the seen cells with `f < h`, it
+  has `f'_i < h'_j`.
+
+Proof. `h'_j ≤ f'_i` is `θ ≤ u(φ_i) + w(ψ_j)`, a half-space of the pair, and `f'_i < h'_j`
+is the open half-space of the other side. A half-space is convex, so one that holds the seen
+cells of an answer holds their convex hull. ∎
+
+When `f` and `h` are themselves linear in the numbers, they are among these fits. So the hull
+of the seen cells of one answer holds only cells of that answer, and every linear fit answers
+rightly there: such a cell is not open, with or without a chain between its two tokens. The
+scores of CS1 are linear in the numbers: `2 d₁` in the number `d₁` of the first token, and
+`p − 3 d₂ − 2p [d₂ < 0]` in the pair `(d₂, [d₂ < 0])` of the second.
+
+At the two layers of CS5: the states with `b + x = p` and one sign of `d₂` lie on one line of
+the plane of `(d₁, d₂)`, the edge of the wrap, and those with `b + x = p − 1` on the next
+parallel line, the edge of the other answer. A held-out state of such a line is in the hull
+exactly when two training states of the line have it between them.
+
+### NT5. The task (numerical)
+
+These numbers are computed, not proved: `research/diffgpt_flat_spectrum/` of the `diff-gpt`
+repository, Rust on the CPU. No model is trained here. They were not predicted in writing
+before they were computed. The task is that of CS6.
+
+**The number of a token.** In the codec of the task a token `τ` of the 512 writes the step
+`round((τ − 255.5) · 192 / 511)`. For the 9408 states of every split this is `d₁` at the first
+input, `d₂` at the second and the step to write at the target. A step is 2.66 tokens wide, and
+the tokens of one number share it.
+
+**The hull.** The indicator `[d₂ < 0]` is 0 or 1, so a state is in the hull of NT4 exactly
+when `(d₁, d₂)` is in the hull of the training states with its answer and its sign of `d₂`:
+four hulls of points of the plane, computed in integers. No state, seen or not, is in a hull
+of the other answer.
+
+| Held-out states in the hull of their answer | Seed 11 | Seed 17 | Seed 23 |
+| --- | ---: | ---: | ---: |
+| of all 4704 | 4685 | 4704 | 4629 |
+| of those with the wrap open in CS6 | 1058 of 1077 | 1043 of 1043 | 1098 of 1147 |
+| of those with `\|b + x − p\| ≤ 3` | 315 of 330 | 320 of 320 | 314 of 350 |
+| of those with an input token unseen at its position | 12 of 12 | 31 of 31 | 53 of 85 |
+
+So with scores linear in the numbers the training cells leave open at most 19, 0, 75 of the
+held-out states, against 1077, 1043, 1147 with free scores. A state outside the hulls may
+still be determined; that is not computed.
+
+**A learner that is not told the half-space.** Let the code of a number `d` hold its phases
+`exp(i m ω₀ d)` for `m = 1, …, 32` and `ω₀ = 2π / 512`, on the half-line of its sign: 128
+real coordinates, half of them zero. By NT1 and NT2 with `ω = ω₀`, the wrap is the sign of a
+bilinear form in the codes of the two tokens, through the harmonic 2 of the first and 3 of the
+second. The learner is the bilinear form of least Frobenius norm that is `+1` at the training
+cells with a wrap and `−1` at the others: a kernel regression with the product of the two Gram
+matrices, solved with a ridge of `10⁻⁶` of its mean diagonal. The sign of the form at the
+held-out states:
+
+| The wrap right | Seed 11 | Seed 17 | Seed 23 |
+| --- | ---: | ---: | ---: |
+| of all 4704 | 4664 (99.150%) | 4670 (99.277%) | 4642 (98.682%) |
+| of those with the wrap open in CS6 | 1039 of 1077 | 1009 of 1043 | 1085 of 1147 |
+| of those with `\|b + x − p\| ≤ 3` | 292 of 330 | 287 of 320 | 290 of 350 |
+| of those with an input token unseen at its position | 12 of 12 | 31 of 31 | 74 of 85 |
+
+Nine other codes and ridges, all that were computed. The highest frequency of the code is in
+turns per number.
+
+| Code | Highest frequency | Seed 11 | Seed 17 | Seed 23 |
+| --- | ---: | ---: | ---: | ---: |
+| 32 harmonics of one turn in 194 numbers | 1/6 | 4591 | 4615 | 4567 |
+| 64 harmonics of one turn in 512 | 1/8 | 4633 | 4650 | 4603 |
+| 32 harmonics of one turn in 256 | 1/8 | 4633 | 4650 | 4603 |
+| the code above with the ridge `10⁻⁹` | 1/16 | 4662 | 4668 | 4624 |
+| the code above with the ridge `10⁻³` | 1/16 | 4663 | 4678 | 4644 |
+| the code above without the half-lines | 1/16 | 4669 | 4667 | 4649 |
+| 16 harmonics of one turn in 512 | 1/32 | 4667 | 4683 | 4649 |
+| 32 harmonics of one turn in 1024 | 1/32 | 4666 | 4682 | 4649 |
+| 4 harmonics of one turn in 512 | 1/128 | 4670 | 4666 | 4657 |
+
+- The models of RR7 that generalize have the wrap wrong at 119 to 259 held-out states, and
+  the best run, the selected main with `ρ = 10`, at 169, 183, 228. This learner has it wrong
+  at 40, 34, 62, and at 21 to 137 over all the codes.
+- It has the wrap right at the states with a token unseen at its position: at all of them on
+  two splits and at 74 of 85 on the third. A model of RR7 answers 0 to 14 of these states, most
+  of the others with a wrong residue, which this learner does not answer.
+- Over the three splits the codes with the highest frequencies 1/6 and 1/8 answer least, and
+  those with 1/32 and 1/128 most.
+
+### NT6. The reading for a model
+
+This item is a reading and a hypothesis, not a theorem.
+
+The models of RR7 have one free row of the tied table `E` for each token, decayed toward
+zero. By NT3 a decay toward a fixed table `Q` leaves the row of a rare token near its row of
+`Q`, and the run is that of the model with the table `Q + Δ`, `Δ` decayed toward zero. Let the
+row of `Q` for a token hold the code of NT5 of its number. By NT1 and NT2 the wrap is then the
+sign of one bilinear form in the fixed parts of the two rows read.
+
+The hypothesis: the historical model of RR7, trained by the AdamW of the selected main with
+`ρ = 3` and `ρ = 10` and with its tied table decayed toward this `Q`, has fewer wrap errors at
+the open cells of CS6 than with the decay toward zero, and answers states with a token unseen
+at its position. With the rows of `Q` permuted among the tokens it does neither. The runs, the
+table and the predictions are written down before the runs as stage 7 of
+`research/diffgpt_flat_spectrum/PLAN.txt`. At the time of this section no such model is
+trained.
+
+### NT7. Scope
+
+Proved: NT1 to NT4.
+
+Not covered:
+
+- That a trained network with a table of codes is a learner with scores linear in the
+  numbers, or the learner of NT5. NT4 is about one family of fits; a network has others.
+- The cells outside the hulls. NT4 does not say that they are open; the count of NT5 is an
+  upper bound of the open cells.
+- The residue and the token to write. The residue of the step to write is that of
+  `d₁ + d₂`, a product of one character of each number at the frequency `2π / p`. Nothing here
+  is stated or computed for a learner of the residue with the numbers, and the learner of NT5
+  answers the wrap alone.
+- The codec. That a token writes its number is computed for the task (NT5); it is not a Lean
+  statement.
+- The clip of the gradient norm of the recipe, as in RR6: it is not in the run of NT3.
+- NT6, a hypothesis.
+
+### Lean
+
+`src/Transformer/Grokking/FlatSpectrum/`, modules `StepNumbers` and `ScoreNumbers`, namespace
+`Transformer.Grokking.FlatSpectrum`, and `src/Transformer/Grokking/GradientEvidence/`, module
+`RecipeToward`, namespace `Transformer.Grokking.GradientEvidence`; proved without `sorry`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| NT1 | `exp_sum_eq_mul_halfLine` | For `a, b < p` and a real `ω`, with `d₁ = (b : ℂ) - a` and `d₂ = modStep p a b`; the constant is an `if` on `modStep p a b < 0`. The code of a number and "bilinear in the codes" are not Lean definitions. |
+| NT2 | `sin_pos_iff_le`, `modStep_neg_iff_sin_pos` | For `n < 2 * p`, `0 < ω` and `ω * p ≤ π`. The second is the step after `x = (a + b) % p`, for `b < p` and any `a`. The half-plane of the phase is not a Lean statement. |
+| NT3 | `mainAdamPathToward`, `mainAdamPathToward_succ`, `mainAdamPathToward_eq`, `mainAdamPathToward_zero_value`, `mainAdamPathToward_zero`, `mainAdamPathToward_remainder`, `mainAdamStepToward`, `mainAdamRunToward`, `mainAdamRunToward_eq`, `mainAdamRunToward_of_zero` | The path is one coordinate with given gradients, as `mainAdamPath`; the run is all coordinates with a gradient field, as `mainAdamRun` of RR3, with a fixed value `c i` for every coordinate. `mainAdamRunToward_eq` gives the weights as `c i +` those of the run of `fun q => G fun j => c j + q j` from `p0 - c`, and the two moments as equal. The remainder is for the constant rate `1 / 1000`, `ρ = 10`, 5000 updates and zero gradients. |
+| NT4 | `seenLePairs`, `seenLtPairs`, `ScoreFit.le_of_mem_convexHull`, `ScoreFit.lt_of_mem_convexHull`, `scoreFit_linear_iff` | `φ : m → E` and `ψ : n → F` into real vector spaces, `u : E →ₗ[ℝ] ℝ`, `w : F →ₗ[ℝ] ℝ`; the hull is `convexHull ℝ` in `E × F` of the image of the seen cells of one answer. `scoreFit_linear_iff` is for scores `u₀ (φ i)` and `θ₀ - w₀ (ψ j)` and a cell in the hull of either answer. That the scores of CS1 are of this form, and the reading for the two layers, are not Lean statements. |
