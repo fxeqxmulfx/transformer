@@ -8900,7 +8900,45 @@ with every cell seen and λ < 1 the partial fits `(1 − λ) P`, `P` a projectio
 rank, form a connected family of critical points along which the gradient of the loss
 varies: the critical points are not isolated.
 
-### WD9. Scope
+### WD9. Small steps for every convex analytic loss
+
+WD8 asks for three constants in a ball. With no constant at all, small steps still
+converge.
+
+Let `L` be real-analytic in the entries and satisfy the first-order inequality with a
+continuous `G`, and let it be bounded below, `L ≥ ℓ_0`. Let λ > 0 and fix a level `c`. On
+the factor space of WD8 the sublevel set `{F ≤ c}` is compact, because `F(W) ≤ c` gives
+`λ ‖W‖²/2 ≤ c − ℓ_0`. For an analytic function with a compact sublevel set the theorems of
+`Transformer.Landscape.SaddleAvoidance` give a step `η_0 > 0` such that for every
+`0 < η < η_0`
+
+- gradient descent maps `{F ≤ c}` into itself: near a compact set the gradient and the
+  Hessian are bounded, so a small step moves a point a little and does not raise `F`;
+- every run from `{F ≤ c}` converges to a critical point in it: the run is that of a
+  function with a Lipschitz gradient that agrees with `F` near `{F ≤ c}`, and the
+  Łojasiewicz inequality holds at every point;
+- the starts in `{F ≤ c}` whose run converges to a strict saddle form a null set.
+
+`G` is bounded on the products `U Vᴴ` of the points of `{F ≤ c}`, so after lowering `η_0`
+every step matrix `1 − η M` there is positive definite (WD6).
+
+Result. For such a loss, λ > 0 and a level `c` there is `η_0 > 0` such that for every
+`0 < η < η_0` the run from every start with `F(U_0, V_0) ≤ c` converges, whatever its width
+and rank, to a stationary point; and from a start of full row rank it converges to a decayed
+minimum (WD5). The threshold `η_0` comes from compactness and is not explicit. WD8 gives
+explicit steps when its constants are known.
+
+Corollary: decayed minima exist. Every such loss has, for every λ > 0, a decayed minimum of
+width `m + n`: start at `U_0 = [1 0]`, `V_0 = [0 1]`, take `c = F(U_0, V_0)` and a small
+step. So `L(X) + λ ‖X‖_S1` attains its minimum over all matrices.
+
+Example: the exponential loss `L(X) = Σ_ij exp(Re X_ij)` with `G(X)_ij = exp(Re X_ij)`. It
+is analytic and positive, and the first-order inequality is
+`exp(x) + exp(x)(y − x) ≤ exp(y)` in every entry. The constants of WD8 are not computed for
+it. By the result, small steps converge for it, from full row rank to a decayed minimum, and
+decayed minima exist for every λ > 0.
+
+### WD10. Scope
 
 Proved, for the pure factorization `X = U Vᴴ` trained by gradient descent with weight decay
 on a convex loss with continuous gradient:
@@ -8914,6 +8952,10 @@ on a convex loss with continuous gradient:
   factors of full row rank its limit is such a minimum; no convergence is assumed (WD8);
 - the squared loss on Ω meets these bounds with explicit constants, and for every λ > 0 it
   has such a minimum of width `m + n` (WD8);
+- for every loss that is real-analytic in the entries and bounded below, small steps
+  converge from a sublevel set of the weight-decayed loss, for every width and rank, to a
+  stationary point, and from stacked factors of full row rank to such a minimum; such a
+  minimum of width `m + n` exists for every λ > 0 (WD9);
 - for a square kernel with equal singular values and no zero entry on a proper Ω, every
   such run converges at least a fixed δ below `‖K‖_S1`, for every λ > 0 (WD8);
 - for the squared loss on Ω these limits compare with every exact fit as M does, their
@@ -8922,10 +8964,11 @@ on a convex loss with continuous gradient:
 
 Assumed or not covered:
 
-- Losses outside WD8: for a loss that is not real-analytic, or without the two gradient
-  bounds and the quadratic model in a ball, convergence stays the hypothesis of WD5, and so
-  does the condition `η (|λ| + ‖G_t‖_S2) < 1` along the run. The bounds are verified here
-  for the squared loss only.
+- Losses outside WD8 and WD9: for a loss that is not real-analytic, or one that is not
+  bounded below, convergence stays the hypothesis of WD5, and so does the condition
+  `η (|λ| + ‖G_t‖_S2) < 1` along the run.
+- Explicit steps: the constants of WD8 are verified here for the squared loss only. For
+  another loss WD9 gives a step threshold that is not explicit.
 - Width: full row rank of `[U_0; V_0]` needs `k ≥ m + n`. A run of narrower factors still
   converges to a stationary point (WD8); that this point is a decayed minimum is not
   claimed.
@@ -8950,3 +8993,4 @@ Assumed or not covered:
 | WD6 | `one_sub_smul_lift_posDef`, `frobeniusSq_mul_conjTranspose_le`, `frobeniusSq_lift_mul_stack_le`, `frobeniusSq_decayStep_le`, `frobeniusSq_decayRun_le`, `one_sub_smul_lift_posDef_of_ball`, `isDecayedMin_of_tendsto_decayRun_of_ball`; squared loss: `frobeniusSq_mask_sub_le`, `neg_le_pairing_mask_sub`, `neg_le_pairing_mask_sub_of_le`, `isDecayedMin_fitLoss_of_tendsto_decayRun`, `decayRun_mask_empty` | The bounds are stated at the matrices with `frobeniusSq X ≤ (ρ / 2) ^ 2`; `‖G X‖ ≤ γ` is `frobeniusSq (G X) ≤ γ ^ 2` with `γ ≥ 0`, and `‖K‖ ≤ κ` is `frobeniusSq K ≤ κ ^ 2` with `κ ≥ 0`. The example run of the two last theorems has no cell seen, where the run is `(1 − η λ)^t (U_0, V_0)`. |
 | WD7 | `mask`, `fitLoss`, `fitLoss_first_order`, `fitLoss_eq_zero_iff`, `continuous_mask_sub`, `IsDecayedMin.fitLoss_add_le`, `IsDecayedMin.nuclearNorm_le`, `IsDecayedMin.fitLoss_le`, `isOptimalFit_of_tendsto`, `exists_nuclearNorm_add_le_of_not_isMinOn`, `exists_nuclearNorm_add_le_of_singularValues_eq`, `tendsto_of_fitLoss_tendsto_zero`, `tendsto_mul_conjTranspose_of_forall_isMinOn`, `tendsto_mul_conjTranspose_vecMulVec_of_connected`, `isDecayedMin_one_sub`, `isDecayedMin_shrink` | "The only minimizer of M" is D.2's form, `∀ X ∈ S, (IsMinOn ‖·‖_S1 S X ↔ X = K)`. In 1 the factors have a fixed width `r`; in 2 the bound holds for every width; in 3 they have any fixed finite column type. Limits run over sequences `λ_j → 0⁺`. |
 | WD8 | `factors`, `flatten`, `factors_flatten`, `flatten_factors`, `continuous_factors`, `continuous_flatten`, `norm_sq_eq_frobeniusSq_factors`, `real_inner_eq_pairing_factors`, `analyticAt_norm_sq`, `flatLoss`, `productVector`, `analyticAt_productVector`, `analyticAt_flatLoss`, `hasGradientAt_flatLoss`, `gradient_flatLoss`, `factors_gradientStep`, `norm_gradient_flatLoss_sq`, `decayedLoss_sub_le`, `pairing_one_sub_smul`, `frobeniusSq_step_mul_sub_le`, `decayedLoss_decayStep_add_le`, `decayedLoss_decayStep_add_le_of_ball`, `decayedLoss_decayRun_succ_add_le`, `norm_apply_le_sqrt_frobeniusSq`, `isCompact_setOf_frobeniusSq_add_le`, `factors_iterate_gradientStep`, `exists_tendsto_decayRun`, `exists_tendsto_decayRun_isDecayedMin`; squared loss: `fitLoss_eq_add`, `fitLoss_le_add`, `analyticAt_fitLoss`, `exists_tendsto_decayRun_fitLoss`, `exists_tendsto_decayRun_fitLoss_isDecayedMin`, `exists_isDecayedMin_fitLoss`, `exists_tendsto_decayRun_nuclearNorm_add_le` | The factor space is `EuclideanSpace ℂ ((m ⊕ n) × k)` with its real inner product. Real-analytic in the entries is `∀ y, AnalyticAt ℝ (fun y : EuclideanSpace ℂ (m × n) => L (of fun i j => y (i, j))) y`; the three bounds are stated at the matrices with `frobeniusSq X ≤ (ρ / 2) ^ 2`. Łojasiewicz's theorem and the convergence theorem are `exists_isLojasiewiczAt_of_analyticAt` and `tendsto_of_isLojasiewiczAt_of_le_sub` of `Transformer.Landscape.SaddleAvoidance`, used with `κ = 1/2`. In the existence corollary `κ = ‖K‖_S2² + 1`, `ρ = max (‖W_0‖²) (κ²/λ)` and η is the smaller of the two bounds. |
+| WD9 | `isCompact_setOf_flatLoss_le`, `exists_pos_forall_sublevel`, `exists_pos_tendsto_decayRun`, `exists_pos_tendsto_decayRun_isDecayedMin`, `exists_isDecayedMin`; example: `expLoss`, `expGrad`, `pairing_expGrad`, `expLoss_first_order`, `continuous_expGrad`, `analyticAt_expLoss`, `expLoss_nonneg`, `exists_pos_tendsto_decayRun_expLoss_isDecayedMin`, `exists_isDecayedMin_expLoss` | Bounded below is `∀ X, l₀ ≤ L X`. The level bounds the start, `decayedLoss L λ U₀ V₀ ≤ c`, and `η₀` depends on `L`, `G`, λ, `c` and the width. `exists_pos_forall_sublevel` is stated on the factor space, with the null set for Lebesgue measure `volume`; it needs no convexity and uses `exists_pos_measure_sublevel_tendsto_strictSaddle_eq_zero`, `exists_pos_tendsto_of_mapsTo` and `exists_isLojasiewiczAt_of_analyticOnNhd` of `Transformer.Landscape.SaddleAvoidance`. |

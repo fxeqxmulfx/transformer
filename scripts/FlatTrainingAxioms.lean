@@ -1,6 +1,6 @@
 import Transformer
 
-/-! Audit *Training reaches the optimal fit* of `review/flat_spectrum.md`, items WD1–WD8. -/
+/-! Audit *Training reaches the optimal fit* of `review/flat_spectrum.md`, items WD1–WD9. -/
 
 #print axioms Transformer.Grokking.FlatSpectrum.Training.stack_decayStep
 #print axioms Transformer.Grokking.FlatSpectrum.Training.stack_decayRun_succ
@@ -79,3 +79,12 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.factors_iterate_gradientStep
 #print axioms Transformer.Grokking.FlatSpectrum.Training.exists_isDecayedMin_fitLoss
 #print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun_nuclearNorm_add_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.isCompact_setOf_flatLoss_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_pos_forall_sublevel
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_pos_tendsto_decayRun
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_pos_tendsto_decayRun_isDecayedMin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_isDecayedMin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.expLoss_first_order
+#print axioms Transformer.Grokking.FlatSpectrum.Training.analyticAt_expLoss
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_pos_tendsto_decayRun_expLoss_isDecayedMin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_isDecayedMin_expLoss

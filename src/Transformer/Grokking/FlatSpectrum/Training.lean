@@ -21,6 +21,9 @@ public import Transformer.Grokking.FlatSpectrum.Training.FlatLoss
 public import Transformer.Grokking.FlatSpectrum.Training.Descent
 public import Transformer.Grokking.FlatSpectrum.Training.Convergent
 public import Transformer.Grokking.FlatSpectrum.Training.SquaredRun
+public import Transformer.Grokking.FlatSpectrum.Training.Sublevel
+public import Transformer.Grokking.FlatSpectrum.Training.SmallSteps
+public import Transformer.Grokking.FlatSpectrum.Training.ExpLoss
 
 /-! Training the pure factorization with weight decay, `review/flat_spectrum.md`, Lemma 1's
 modeling step and *Training reaches the optimal fit* (added).
@@ -72,4 +75,14 @@ and from a start of full row rank to a factorization of least weight-decayed los
 (`exists_tendsto_decayRun_fitLoss_isDecayedMin`), so such a factorization of width `m + n`
 exists for every `λ > 0` (`exists_isDecayedMin_fitLoss`). For a square kernel with equal
 singular values and no zero entry on a proper `Ω`, every such run converges a fixed distance
-below `‖K‖_S1` (`exists_tendsto_decayRun_nuclearNorm_add_le`). -/
+below `‖K‖_S1` (`exists_tendsto_decayRun_nuclearNorm_add_le`).
+
+Without those constants small steps still converge (WD9). For a loss that is real-analytic in
+the entries and bounded below, the sublevel sets of the weight-decayed loss are compact on the
+factor space (`isCompact_setOf_flatLoss_le`), and the sublevel theorems of
+`Transformer.Landscape.SaddleAvoidance` give a step threshold (`exists_pos_forall_sublevel`)
+below which every run from the sublevel set converges to a stationary point
+(`exists_pos_tendsto_decayRun`), and from full row rank to a factorization of least
+weight-decayed loss (`exists_pos_tendsto_decayRun_isDecayedMin`). So such a factorization of
+width `m + n` exists for every such loss and every `λ > 0` (`exists_isDecayedMin`). The
+exponential loss `Σ exp (Re X_ij)` is an instance (`exists_isDecayedMin_expLoss`). -/
