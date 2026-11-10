@@ -14,11 +14,13 @@ public import Transformer.Grokking.FlatSpectrum.Training.Convergence
 public import Transformer.Grokking.FlatSpectrum.Training.SquaredLoss
 public import Transformer.Grokking.FlatSpectrum.Training.Vanishing
 public import Transformer.Grokking.FlatSpectrum.Training.Recovery
-public import Transformer.Grokking.FlatSpectrum.Training.StepSize
 public import Transformer.Grokking.FlatSpectrum.Training.FactorSpace
+public import Transformer.Grokking.FlatSpectrum.Training.SquaredBounds
+public import Transformer.Grokking.FlatSpectrum.Training.StepSize
 public import Transformer.Grokking.FlatSpectrum.Training.FlatLoss
 public import Transformer.Grokking.FlatSpectrum.Training.Descent
 public import Transformer.Grokking.FlatSpectrum.Training.Convergent
+public import Transformer.Grokking.FlatSpectrum.Training.SquaredRun
 
 /-! Training the pure factorization with weight decay, `review/flat_spectrum.md`, Lemma 1's
 modeling step and *Training reaches the optimal fit* (added).
@@ -49,20 +51,25 @@ proper `Ω` (Theorem A), the trained products stay a fixed distance below `‖K�
 on connected cells containing a permutation (Theorem E), the trained products converge to `K`.
 The `1 × 1` kernel `1` has the trained product `1 − λ`.
 
-For this loss the step condition is explicit (WD6): with `‖K‖ ≤ κ`, a start in the ball
-`‖U₀‖² + ‖V₀‖² ≤ ρ` with `κ² ≤ λ ρ` and a step with `2 η (λ² + (ρ/2 + κ)²) ≤ λ`, the run stays
-in the ball and every step matrix is positive definite, so a convergent run from full row rank
-ends at a factorization of least weight-decayed loss.
+The step condition is explicit when the loss is controlled in a ball (WD6): if `‖G X‖ ≤ γ` and
+`⟨G X, X⟩ ≥ −b` for `‖X‖ ≤ ρ/2`, with `4 b ≤ λ ρ` and `2 η (λ² + γ²) ≤ λ`, a run from the ball
+`‖U₀‖² + ‖V₀‖² ≤ ρ` stays in it and every step matrix is positive definite, so a convergent run
+from full row rank ends at a factorization of least weight-decayed loss. The squared loss with
+`‖K‖ ≤ κ` has `γ = ρ/2 + κ` and `b = κ²/4`.
 
-Convergence itself is proved for the squared loss (WD8). Listing the entries of `W = [U; V]`
+Convergence itself is proved (WD8) for a loss that is real-analytic in the entries and lies
+below its quadratic model with a constant `s` in that ball. Listing the entries of `W = [U; V]`
 turns the pairs of factors into the real inner product space `EuclideanSpace ℂ ((m ⊕ n) × k)`
 (`factors`, `flatten`), on which the weight-decayed loss is real-analytic (`analyticAt_flatLoss`)
 with gradient `M W` (`gradient_flatLoss`), so the run is gradient descent there
-(`factors_iterate_gradientStep`). A step with `η (λ + ρ/2 + κ + 2ρ) ≤ 1` lowers the loss by
+(`factors_iterate_gradientStep`). A step with `η (λ + γ + 2 s ρ) ≤ 1` lowers the loss by
 `(η/2) ‖M W‖²` (`decayedLoss_decayStep_add_le_of_ball`), and the ball is compact, so the run has
 a cluster point; Łojasiewicz's theorem and the convergence theorem of
-`Transformer.Landscape.SaddleAvoidance` make it the limit. So the run converges, to a
-factorization of least weight-decayed loss (`exists_tendsto_decayRun_isDecayedMin`), and such a
-factorization of width `m + n` exists for every `λ > 0` (`exists_isDecayedMin_fitLoss`). For a
-square kernel with equal singular values and no zero entry on a proper `Ω`, every such run
-converges a fixed distance below `‖K‖_S1` (`exists_tendsto_decayRun_nuclearNorm_add_le`). -/
+`Transformer.Landscape.SaddleAvoidance` make it the limit. So the run converges from every
+start in the ball, of any width and rank, to a stationary point (`exists_tendsto_decayRun`),
+and from a start of full row rank to a factorization of least weight-decayed loss
+(`exists_tendsto_decayRun_isDecayedMin`). The squared loss has `s = 1`
+(`exists_tendsto_decayRun_fitLoss_isDecayedMin`), so such a factorization of width `m + n`
+exists for every `λ > 0` (`exists_isDecayedMin_fitLoss`). For a square kernel with equal
+singular values and no zero entry on a proper `Ω`, every such run converges a fixed distance
+below `‖K‖_S1` (`exists_tendsto_decayRun_nuclearNorm_add_le`). -/

@@ -16,8 +16,9 @@ The loss `L` is convex with a continuous gradient `G`. Run gradient descent with
 `[U₀; V₀]` have full row rank, with every step matrix `1 − η M_t` positive definite. If the run
 converges, to `(U, V)`, then
 
-* the limit is stationary and its lifted gradient is positive semidefinite
-  (`lift_posSemidef_of_tendsto_decayRun`, by `posSemidef_of_tendsto`);
+* the limit is stationary, for a start of any rank
+  (`lift_mul_stack_eq_zero_of_tendsto_decayRun`), and its lifted gradient is positive
+  semidefinite (`lift_posSemidef_of_tendsto_decayRun`, by `posSemidef_of_tendsto`);
 * `U Vᴴ` has the least weight-decayed loss among the factorizations of every width
   (`isDecayedMin_of_tendsto_decayRun`, by `isDecayedMin_of_posSemidef`);
 * `U Vᴴ` minimizes `L + λ ‖·‖_S1` over all matrices, and for `λ > 0` its weight decay equals
@@ -41,6 +42,24 @@ variable {m n k : Type*} [Fintype m] [Fintype n] [Fintype k] [DecidableEq m] [De
   {L : Matrix m n ℂ → ℝ} {G : Matrix m n ℂ → Matrix m n ℂ} {η lam : ℝ} {U₀ U : Matrix m k ℂ}
   {V₀ V : Matrix n k ℂ}
 
+/-- **The limit of a run is stationary** (`review/flat_spectrum.md`, item WD5): for a
+continuous gradient field `G` and a step `η > 0`, the limit `(U, V)` of a convergent run of any
+width has `M [U; V] = 0` for `M = [[λ, G], [Gᴴ, λ]]` at `G = G (U Vᴴ)`. -/
+theorem lift_mul_stack_eq_zero_of_tendsto_decayRun (hG : Continuous G) (hη : 0 < η)
+    (hlim : Tendsto (decayRun G η lam U₀ V₀) atTop (𝓝 (U, V))) :
+    lift lam (G (U * Vᴴ)) * stack U V = 0 := by
+  have hW : Tendsto (fun t => stack (decayRun G η lam U₀ V₀ t).1 (decayRun G η lam U₀ V₀ t).2)
+      atTop (𝓝 (stack U V)) := (continuous_stack.tendsto (U, V)).comp hlim
+  have hM : Tendsto (fun t => lift lam (G ((decayRun G η lam U₀ V₀ t).1 *
+      (decayRun G η lam U₀ V₀ t).2ᴴ))) atTop (𝓝 (lift lam (G (U * Vᴴ)))) :=
+    ((((continuous_lift lam).comp hG).comp continuous_mul_conjTranspose).tendsto (U, V)).comp hlim
+  have hc : Continuous fun A : Matrix (m ⊕ n) (m ⊕ n) ℂ => 1 - η • A :=
+    continuous_const.sub (continuous_id.const_smul η)
+  have h1 : stack U V = (1 - η • lift lam (G (U * Vᴴ))) * stack U V :=
+    eq_mul_of_tendsto_of_succ ((hc.tendsto _).comp hM) hW (stack_decayRun_succ G η lam U₀ V₀)
+  rw [Matrix.sub_mul, Matrix.one_mul, Matrix.smul_mul, eq_comm, sub_eq_self, smul_eq_zero] at h1
+  exact h1.resolve_left hη.ne'
+
 /-- **The limit of a run is stationary with a positive semidefinite lifted gradient**
 (`review/flat_spectrum.md`, item WD5): for a continuous gradient field `G`, a step `η > 0`, a
 start `[U₀; V₀]` of full row rank and positive definite step matrices, the limit `(U, V)` of a
@@ -57,14 +76,9 @@ theorem lift_posSemidef_of_tendsto_decayRun (hG : Continuous G) (hη : 0 < η)
       (decayRun G η lam U₀ V₀ t).2ᴴ))) atTop (𝓝 (lift lam (G (U * Vᴴ)))) :=
     ((((continuous_lift lam).comp hG).comp continuous_mul_conjTranspose).tendsto (U, V)).comp hlim
   obtain ⟨B, hB⟩ := exists_frobeniusSq_le_of_tendsto hW
-  refine ⟨posSemidef_of_tendsto (lift_isHermitian lam _) hM hη hstep
-    (stack_decayRun_succ G η lam U₀ V₀) hfull hB, ?_⟩
-  have hc : Continuous fun A : Matrix (m ⊕ n) (m ⊕ n) ℂ => 1 - η • A :=
-    continuous_const.sub (continuous_id.const_smul η)
-  have h1 : stack U V = (1 - η • lift lam (G (U * Vᴴ))) * stack U V :=
-    eq_mul_of_tendsto_of_succ ((hc.tendsto _).comp hM) hW (stack_decayRun_succ G η lam U₀ V₀)
-  rw [Matrix.sub_mul, Matrix.one_mul, Matrix.smul_mul, eq_comm, sub_eq_self, smul_eq_zero] at h1
-  exact h1.resolve_left hη.ne'
+  exact ⟨posSemidef_of_tendsto (lift_isHermitian lam _) hM hη hstep
+    (stack_decayRun_succ G η lam U₀ V₀) hfull hB,
+    lift_mul_stack_eq_zero_of_tendsto_decayRun hG hη hlim⟩
 
 /-- **Gradient descent with weight decay converges only to a global minimum**
 (`review/flat_spectrum.md`, item WD5; Lemma 1's modeling step for the pure factorization): for
@@ -122,6 +136,11 @@ private lemma witness_step :
     (1 - (1 / 4 : ℝ) • lift 1 (-1 : Matrix (Fin 1) (Fin 1) ℂ)).PosDef :=
   one_sub_smul_lift_posDef (g := 1) (by norm_num) zero_le_one (by simp [frobeniusSq])
     (by norm_num)
+
+/-- A run of width one, without full row rank: `U₀ = V₀ = 1`. -/
+example := lift_mul_stack_eq_zero_of_tendsto_decayRun
+  (G := fun _ => (-1 : Matrix (Fin 1) (Fin 1) ℂ)) continuous_const (η := 1 / 4) (by norm_num)
+  (tendsto_decayRun_linear (by norm_num) (by norm_num) (1 : Matrix (Fin 1) (Fin 1) ℂ) 1)
 
 example := lift_posSemidef_of_tendsto_decayRun (G := fun _ => (-1 : Matrix (Fin 1) (Fin 1) ℂ))
   continuous_const (by norm_num) witness_full (fun _ => witness_step)

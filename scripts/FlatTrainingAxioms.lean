@@ -1,6 +1,6 @@
 import Transformer
 
-/-! Audit *Training reaches the optimal fit* of `review/flat_spectrum.md`, items WD1–WD7. -/
+/-! Audit *Training reaches the optimal fit* of `review/flat_spectrum.md`, items WD1–WD8. -/
 
 #print axioms Transformer.Grokking.FlatSpectrum.Training.stack_decayStep
 #print axioms Transformer.Grokking.FlatSpectrum.Training.stack_decayRun_succ
@@ -24,6 +24,7 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.posSemidef_of_tendsto
 #print axioms Transformer.Grokking.FlatSpectrum.Training.decayRun_linear
 #print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_decayRun_linear
+#print axioms Transformer.Grokking.FlatSpectrum.Training.lift_mul_stack_eq_zero_of_tendsto_decayRun
 #print axioms Transformer.Grokking.FlatSpectrum.Training.lift_posSemidef_of_tendsto_decayRun
 #print axioms Transformer.Grokking.FlatSpectrum.Training.isDecayedMin_of_tendsto_decayRun
 #print axioms Transformer.Grokking.FlatSpectrum.Training.add_nuclearNorm_le_of_tendsto_decayRun
@@ -41,26 +42,35 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_of_fitLoss_tendsto_zero
 #print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_mul_conjTranspose_of_forall_isMinOn
 #print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_mul_conjTranspose_vecMulVec_of_connected
+#print axioms Transformer.Grokking.FlatSpectrum.Training.frobeniusSq_mul_conjTranspose_le
 #print axioms Transformer.Grokking.FlatSpectrum.Training.frobeniusSq_mask_sub_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.neg_le_pairing_mask_sub_of_le
 #print axioms Transformer.Grokking.FlatSpectrum.Training.neg_le_pairing_mask_sub
 #print axioms Transformer.Grokking.FlatSpectrum.Training.frobeniusSq_lift_mul_stack_le
 #print axioms Transformer.Grokking.FlatSpectrum.Training.frobeniusSq_decayStep_le
 #print axioms Transformer.Grokking.FlatSpectrum.Training.frobeniusSq_decayRun_le
 #print axioms Transformer.Grokking.FlatSpectrum.Training.one_sub_smul_lift_posDef_of_ball
+#print axioms Transformer.Grokking.FlatSpectrum.Training.isDecayedMin_of_tendsto_decayRun_of_ball
 #print axioms Transformer.Grokking.FlatSpectrum.Training.isDecayedMin_fitLoss_of_tendsto_decayRun
 #print axioms Transformer.Grokking.FlatSpectrum.Training.decayRun_mask_empty
 #print axioms Transformer.Grokking.FlatSpectrum.Training.fitLoss_eq_add
-#print axioms Transformer.Grokking.FlatSpectrum.Training.decayedLoss_fitLoss_sub
+#print axioms Transformer.Grokking.FlatSpectrum.Training.fitLoss_le_add
+#print axioms Transformer.Grokking.FlatSpectrum.Training.analyticAt_fitLoss
+#print axioms Transformer.Grokking.FlatSpectrum.Training.decayedLoss_sub_le
 #print axioms Transformer.Grokking.FlatSpectrum.Training.pairing_one_sub_smul
 #print axioms Transformer.Grokking.FlatSpectrum.Training.frobeniusSq_step_mul_sub_le
 #print axioms Transformer.Grokking.FlatSpectrum.Training.decayedLoss_decayStep_add_le
 #print axioms Transformer.Grokking.FlatSpectrum.Training.decayedLoss_decayStep_add_le_of_ball
 #print axioms Transformer.Grokking.FlatSpectrum.Training.decayedLoss_decayRun_succ_add_le
 #print axioms Transformer.Grokking.FlatSpectrum.Training.isCompact_setOf_frobeniusSq_add_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun
 #print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun_isDecayedMin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun_fitLoss
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun_fitLoss_isDecayedMin
 #print axioms Transformer.Grokking.FlatSpectrum.Training.norm_sq_eq_frobeniusSq_factors
 #print axioms Transformer.Grokking.FlatSpectrum.Training.real_inner_eq_pairing_factors
 #print axioms Transformer.Grokking.FlatSpectrum.Training.analyticAt_norm_sq
+#print axioms Transformer.Grokking.FlatSpectrum.Training.analyticAt_productVector
 #print axioms Transformer.Grokking.FlatSpectrum.Training.analyticAt_flatLoss
 #print axioms Transformer.Grokking.FlatSpectrum.Training.hasGradientAt_flatLoss
 #print axioms Transformer.Grokking.FlatSpectrum.Training.gradient_flatLoss

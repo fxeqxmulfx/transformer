@@ -36,9 +36,10 @@ Read through the last item, two theorems of M become theorems about weight decay
 
 That training reaches this optimum is the modeling step of the source. For gradient descent with
 weight decay on the pure factorization it is proved for every convergent run in
-`Transformer.Grokking.FlatSpectrum.Training` (`isDecayedMin_of_tendsto_decayRun`). For the
-squared loss the run converges, to such an optimum, by Łojasiewicz's theorem
-(`exists_tendsto_decayRun_isDecayedMin`); the step for the real network is not proved.
+`Transformer.Grokking.FlatSpectrum.Training` (`isDecayedMin_of_tendsto_decayRun`). For a
+real-analytic loss controlled in a ball, the squared loss among them, the run converges, to
+such an optimum, by Łojasiewicz's theorem (`exists_tendsto_decayRun_isDecayedMin`,
+`exists_tendsto_decayRun_fitLoss_isDecayedMin`); the step for the real network is not proved.
 -/
 
 @[expose] public section

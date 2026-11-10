@@ -8725,18 +8725,26 @@ A run that meets every hypothesis and has a nonzero limit: `m = n = 1`, `L(X) = 
 `U − V`, so the run converges to `U = V = [½ ½]`, where `F = 0`. This is the minimum, as
 `F(u, v) = ½ |u − v|²` for vectors `u`, `v`.
 
-Three hypotheses remain. The run converges: WD8 proves this for the squared loss, by
-Łojasiewicz's theorem. The start has full row rank, which needs width at least `m + n`. The
-steps are admissible, which WD6 reduces to a bound on η, explicit for the squared loss.
+Three hypotheses remain. The run converges: WD8 proves this for a real-analytic loss
+controlled in a ball, by Łojasiewicz's theorem. The start has full row rank, which needs width
+at least `m + n`. The steps are admissible, which WD6 reduces to a bound on η. The second half
+of the proof uses none of them: the limit of a convergent run of any width and rank is
+stationary, `M∞ W = 0`.
 
 ### WD6. Admissible steps
 
 `1 − η M` is positive definite when `η (|λ| + ‖G‖_S2) < 1`, since by WD1
 `⟨W, (1 − η M) W⟩ = ‖W‖² − η ⟨W, M W⟩ ≥ (1 − η (|λ| + ‖G‖_S2)) ‖W‖²`.
 
-For the squared loss on Ω the bound on η is explicit. Let `‖K‖ ≤ κ` and λ > 0, let ρ
-satisfy `‖U_0‖² + ‖V_0‖² ≤ ρ` and `κ² ≤ λ ρ`, and put `γ = ρ/2 + κ`. In the ball
-`‖W‖² ≤ ρ`, `‖U Vᴴ‖ ≤ ‖W‖²/2 ≤ ρ/2`, so `‖G‖ ≤ ‖U Vᴴ − K‖ ≤ γ`. Suppose
+The bound on η is explicit when the gradient is controlled in a ball. Let λ > 0, let ρ
+satisfy `‖U_0‖² + ‖V_0‖² ≤ ρ`, and suppose that at the matrices with `‖X‖ ≤ ρ/2`
+
+```
+‖G(X)‖ ≤ γ    and    ⟨G(X), X⟩ ≥ −b,    where 4b ≤ λ ρ.
+```
+
+In the ball `‖W‖² ≤ ρ`, `‖U Vᴴ‖ ≤ ‖W‖²/2 ≤ ρ/2`, so both bounds hold at `X = U Vᴴ`.
+Suppose
 
 ```
 2η (λ² + γ²) ≤ λ.
@@ -8746,13 +8754,16 @@ Then `η (λ + γ) < 1`, so every step in the ball is admissible. A step also ke
 With `w = ‖W‖²`,
 
 ```
-‖(1 − η M) W‖² = w − 2η ⟨W, M W⟩ + η² ‖M W‖² ≤ (1 − η λ) w + η κ² ≤ ρ,
+‖(1 − η M) W‖² = w − 2η ⟨W, M W⟩ + η² ‖M W‖² ≤ (1 − η λ) w + 4η b ≤ ρ,
 ```
 
-because `⟨W, M W⟩ = λ w + 2 ⟨G, U Vᴴ⟩ ≥ λ w − κ²/2`, as
-`⟨G, X⟩ = ‖G‖² + ⟨G, K⟩ ≥ −‖K‖²/4` for `G = P_Ω(X − K)`, and `‖M W‖² ≤ 2 (λ² + γ²) w`.
-So a run from the ball stays in it with admissible steps, and for the squared loss WD5
-needs only full row rank, this η, and convergence.
+because `⟨W, M W⟩ = λ w + 2 ⟨G, U Vᴴ⟩ ≥ λ w − 2b` and `‖M W‖² ≤ 2 (λ² + γ²) w`. So a run
+from the ball stays in it with admissible steps, and WD5 needs only full row rank, this η,
+and convergence.
+
+For the squared loss on Ω with `‖K‖ ≤ κ` the constants are `γ = ρ/2 + κ`, as
+`‖G‖ ≤ ‖X − K‖`, and `b = κ²/4`, as `⟨G, X⟩ = ‖G‖² + ⟨G, K⟩ ≥ −‖K‖²/4` for
+`G = P_Ω(X − K)`. The conditions read `κ² ≤ λ ρ` and `2η (λ² + (ρ/2 + κ)²) ≤ λ`.
 
 ### WD7. Vanishing weight decay: the optimal fits of M
 
@@ -8796,9 +8807,9 @@ singular value by λ, and the product tends to `K`.
 
 ### WD8. The run converges
 
-WD5 assumes that the run converges. For the squared loss this is a theorem: the objective is
-a polynomial, and the Łojasiewicz inequality turns a cluster point of a descent into its
-limit.
+WD5 assumes that the run converges. For a real-analytic loss controlled in a ball this is a
+theorem: the Łojasiewicz inequality turns a cluster point of a descent into its limit. The
+squared loss, a polynomial, is the first case.
 
 A function `F` on a real inner product space satisfies the Łojasiewicz inequality at `p`
 with exponent `0 ≤ a < 1` if for some `c > 0`
@@ -8818,40 +8829,60 @@ inequality and the concavity of `s ↦ s^(1−a)` bound each step by the drop of
 `(F(x_t) − F(p))^(1−a)`; these bounds telescope, so the run cannot leave a small ball
 around `p`.
 
-Three facts put the run of WD1 under these theorems.
+Three facts put the run of WD1 under these theorems. Let `L` be real-analytic as a function
+of the real and imaginary parts of the entries of its matrix.
 
 1. The factor space. List the entries of `W = [U; V]` as a vector `x` of `ℂ^((m+n)k)`, a
-   real inner product space with `‖x‖² = ‖U‖² + ‖V‖²` and `⟨x, y⟩ = ⟨U, U'⟩ + ⟨V, V'⟩`. On
-   it `F` is a polynomial in the real and imaginary parts of the coordinates, hence
-   analytic, and by WD3 its gradient is the vector that lists `D = M W`. So a gradient step
-   on this space is the step of WD1, and `‖∇F‖ = ‖M W‖`.
-2. Sufficient decrease. With `G = P_Ω(U Vᴴ − K)` frozen at the current point the loss is
-   quadratic in the product, so exactly
+   real inner product space with `‖x‖² = ‖U‖² + ‖V‖²` and `⟨x, y⟩ = ⟨U, U'⟩ + ⟨V, V'⟩`. The
+   entries of `U Vᴴ` and the weight decay are polynomials in the real and imaginary parts
+   of the coordinates, so `F` is analytic on it, and by WD3 its gradient is the vector that
+   lists `D = M W`. So a gradient step on this space is the step of WD1, and
+   `‖∇F‖ = ‖M W‖`.
+2. Sufficient decrease. Suppose that at the matrices with `‖X‖, ‖Y‖ ≤ ρ/2` the loss lies
+   below its quadratic model with a constant `s ≥ 0`:
 
    ```
-   F(W') − F(W) = ½ (⟨W', M W'⟩ − ⟨W, M W⟩) + ½ ‖P_Ω(U' V'ᴴ − U Vᴴ)‖².
+   L(Y) ≤ L(X) + ⟨G(X), Y − X⟩ + (s/2) ‖Y − X‖².
+   ```
+
+   With `G = G(U Vᴴ)` frozen at the current point and both `W`, `W'` in the ball of WD6,
+
+   ```
+   F(W') − F(W) ≤ ½ (⟨W', M W'⟩ − ⟨W, M W⟩) + (s/2) ‖U' V'ᴴ − U Vᴴ‖².
    ```
 
    For the step `W' = W − η D` the first term is `−η ‖D‖² + (η²/2) ⟨D, M D⟩` with
    `⟨D, M D⟩ ≤ (λ + ‖G‖) ‖D‖²`, and `U' V'ᴴ − U Vᴴ = −η (D_U V'ᴴ + U D_Vᴴ)` has squared
    norm at most `2 η² ρ ‖D‖²` when `‖U‖², ‖V'‖² ≤ ρ`. In the ball of WD6, where
-   `‖G‖ ≤ γ = ρ/2 + κ`, the condition `η (λ + γ + 2ρ) ≤ 1` gives
-   `F(W') + (η/2) ‖D‖² ≤ F(W)`.
+   `‖G‖ ≤ γ`, the condition `η (λ + γ + 2 s ρ) ≤ 1` gives `F(W') + (η/2) ‖D‖² ≤ F(W)`.
 3. A cluster point. The run stays in the ball `‖W‖² ≤ ρ` (WD6), and the ball is compact.
 
-Result. Take the squared loss on Ω with `‖K‖ ≤ κ`, λ > 0, a start of full row rank in the
-ball `‖W_0‖² ≤ ρ` with `κ² ≤ λ ρ`, and a step η > 0 with
+Result. Let `L` be real-analytic in the entries and satisfy the first-order inequality with
+a continuous `G`. Let λ > 0 and ρ be such that at the matrices with `‖X‖, ‖Y‖ ≤ ρ/2` the
+bounds `‖G(X)‖ ≤ γ` and `⟨G(X), X⟩ ≥ −b` of WD6 hold with `4b ≤ λ ρ`, and the quadratic
+model holds with `s`. Take a step η > 0 with
+
+```
+2η (λ² + γ²) ≤ λ    and    η (λ + γ + 2 s ρ) ≤ 1.
+```
+
+Then the run from every start in the ball `‖W_0‖² ≤ ρ` converges, whatever its width and
+rank, and its limit is stationary, `M W = 0`. From a start of full row rank the limit is a
+decayed minimum (WD5 with WD6). No hypothesis on convergence remains.
+
+The squared loss on Ω with `‖K‖ ≤ κ` has `γ = ρ/2 + κ`, `b = κ²/4` and `s = 1`: it exceeds
+its linear model by `½ ‖P_Ω(Y − X)‖² ≤ ½ ‖Y − X‖²`. So for it the conditions are
+`κ² ≤ λ ρ` and
 
 ```
 2η (λ² + γ²) ≤ λ    and    η (λ + γ + 2ρ) ≤ 1,    γ = ρ/2 + κ.
 ```
 
-Then the run converges, and its limit is a decayed minimum (WD5 with WD6). No hypothesis on
-convergence remains.
-
 Example: the `1 × 1` kernel `1` seen on its cell, λ = 1, η = 1/10, `U_0 = [1 0]`,
 `V_0 = [0 1]`. The bounds hold with κ = 1, ρ = 2: `2η (λ² + γ²) = 1` and
-`η (λ + γ + 2ρ) = 7/10`. So this run converges to a decayed minimum.
+`η (λ + γ + 2ρ) = 7/10`. So this run converges to a decayed minimum. The width-one start
+`U_0 = V_0 = 1` lies in the same ball and has no full row rank; its run converges to a
+stationary point.
 
 Corollary: trained fits exist. For every λ > 0 the start `U_0 = [1 0]`, `V_0 = [0 1]` of
 width `m + n` has full row rank, and the result applies with `κ = ‖K‖² + 1`, a large ρ and a
@@ -8878,9 +8909,11 @@ on a convex loss with continuous gradient:
 - a run from stacked factors of full row rank with admissible steps that converges ends at
   a global minimum of the weight-decayed loss over the factorizations of every width, and
   its product minimizes `L + λ ‖·‖_S1` (WD5);
-- for the squared loss with an explicit step, a run from stacked factors of full row rank
-  converges, and its limit is such a minimum; no convergence is assumed (WD8);
-- for every λ > 0 the squared loss on Ω has such a minimum of width `m + n` (WD8);
+- for a real-analytic loss with the bounds of WD6 and WD8 in a ball and an explicit step, a
+  run from the ball converges to a stationary point, for every width and rank; from stacked
+  factors of full row rank its limit is such a minimum; no convergence is assumed (WD8);
+- the squared loss on Ω meets these bounds with explicit constants, and for every λ > 0 it
+  has such a minimum of width `m + n` (WD8);
 - for a square kernel with equal singular values and no zero entry on a proper Ω, every
   such run converges at least a fixed δ below `‖K‖_S1`, for every λ > 0 (WD8);
 - for the squared loss on Ω these limits compare with every exact fit as M does, their
@@ -8889,12 +8922,13 @@ on a convex loss with continuous gradient:
 
 Assumed or not covered:
 
-- Convergence for other losses: WD5 takes it as a hypothesis. WD8 proves it for the squared
-  loss, whose objective is a polynomial.
-- Width: full row rank of `[U_0; V_0]` needs `k ≥ m + n`. For narrower factors the rank
-  constraint changes the problem and nothing is claimed.
-- Step size: for the squared loss WD6 and WD8 give bounds on η from the start alone. For
-  another loss the condition `η (|λ| + ‖G_t‖_S2) < 1` along the run stays a hypothesis.
+- Losses outside WD8: for a loss that is not real-analytic, or without the two gradient
+  bounds and the quadratic model in a ball, convergence stays the hypothesis of WD5, and so
+  does the condition `η (|λ| + ‖G_t‖_S2) < 1` along the run. The bounds are verified here
+  for the squared loss only.
+- Width: full row rank of `[U_0; V_0]` needs `k ≥ m + n`. A run of narrower factors still
+  converges to a stationary point (WD8); that this point is a decayed minimum is not
+  claimed.
 - In WD7 the limits as λ → 0⁺ are taken along sequences of trained fits that are assumed to
   converge (statement 1) or shown to (statement 3); that every such sequence has a
   convergent subsequence of factors is not proved.
@@ -8912,7 +8946,7 @@ Assumed or not covered:
 | WD2 | `IsDecayedMin`, `isDecayedMin_of_posSemidef`, `IsDecayedMin.add_nuclearNorm_le`, `IsDecayedMin.weightDecay_eq_nuclearNorm`, `isDecayedMin_iff`, `isDecayedMin_linear_one` | The competitors have every finite width `r`; the factorization itself may have any finite column type. |
 | WD3 | `mul_pairing_le_sub_and_le`, `frobeniusSq_first_order`, `hasDerivAt_comp_add_smul`, `add_smul_mul_conjTranspose`, `hasDerivAt_decayedLoss` | The derivative is taken along every line `(U + tA, V + tB)`. |
 | WD4 | `gain_identity`, `gain_step`, `gain_iterate`, `pairing_nonneg_of_bounded`, `exists_pos_forall_pairing_nonneg`, `exists_pos_lt_det_add_smul_ne_zero`, `posSemidef_of_tendsto` | Norms are `‖·‖_S2`. Full row rank is `Function.Surjective (W 0).mulVec`; bounded is `∀ t, ‖W_t‖² ≤ B`. |
-| WD5 | `lift_posSemidef_of_tendsto_decayRun`, `isDecayedMin_of_tendsto_decayRun`, `add_nuclearNorm_le_of_tendsto_decayRun`, `weightDecay_eq_nuclearNorm_of_tendsto_decayRun`, `decayRun_linear`, `tendsto_decayRun_linear` | Convergence is `Tendsto (decayRun G η λ U₀ V₀) atTop (𝓝 (U, V))`. The example is the run above, with the start `stack_fromCols_one`. |
-| WD6 | `one_sub_smul_lift_posDef`, `frobeniusSq_mask_sub_le`, `neg_le_pairing_mask_sub`, `frobeniusSq_lift_mul_stack_le`, `frobeniusSq_decayStep_le`, `frobeniusSq_decayRun_le`, `one_sub_smul_lift_posDef_of_ball`, `isDecayedMin_fitLoss_of_tendsto_decayRun`, `decayRun_mask_empty` | `‖K‖ ≤ κ` is `frobeniusSq K ≤ κ ^ 2` with `κ ≥ 0`. The example run of the last theorem has no cell seen, where the run is `(1 − η λ)^t (U_0, V_0)`. |
+| WD5 | `lift_mul_stack_eq_zero_of_tendsto_decayRun`, `lift_posSemidef_of_tendsto_decayRun`, `isDecayedMin_of_tendsto_decayRun`, `add_nuclearNorm_le_of_tendsto_decayRun`, `weightDecay_eq_nuclearNorm_of_tendsto_decayRun`, `decayRun_linear`, `tendsto_decayRun_linear` | Convergence is `Tendsto (decayRun G η λ U₀ V₀) atTop (𝓝 (U, V))`. The example is the run above, with the start `stack_fromCols_one`. |
+| WD6 | `one_sub_smul_lift_posDef`, `frobeniusSq_mul_conjTranspose_le`, `frobeniusSq_lift_mul_stack_le`, `frobeniusSq_decayStep_le`, `frobeniusSq_decayRun_le`, `one_sub_smul_lift_posDef_of_ball`, `isDecayedMin_of_tendsto_decayRun_of_ball`; squared loss: `frobeniusSq_mask_sub_le`, `neg_le_pairing_mask_sub`, `neg_le_pairing_mask_sub_of_le`, `isDecayedMin_fitLoss_of_tendsto_decayRun`, `decayRun_mask_empty` | The bounds are stated at the matrices with `frobeniusSq X ≤ (ρ / 2) ^ 2`; `‖G X‖ ≤ γ` is `frobeniusSq (G X) ≤ γ ^ 2` with `γ ≥ 0`, and `‖K‖ ≤ κ` is `frobeniusSq K ≤ κ ^ 2` with `κ ≥ 0`. The example run of the two last theorems has no cell seen, where the run is `(1 − η λ)^t (U_0, V_0)`. |
 | WD7 | `mask`, `fitLoss`, `fitLoss_first_order`, `fitLoss_eq_zero_iff`, `continuous_mask_sub`, `IsDecayedMin.fitLoss_add_le`, `IsDecayedMin.nuclearNorm_le`, `IsDecayedMin.fitLoss_le`, `isOptimalFit_of_tendsto`, `exists_nuclearNorm_add_le_of_not_isMinOn`, `exists_nuclearNorm_add_le_of_singularValues_eq`, `tendsto_of_fitLoss_tendsto_zero`, `tendsto_mul_conjTranspose_of_forall_isMinOn`, `tendsto_mul_conjTranspose_vecMulVec_of_connected`, `isDecayedMin_one_sub`, `isDecayedMin_shrink` | "The only minimizer of M" is D.2's form, `∀ X ∈ S, (IsMinOn ‖·‖_S1 S X ↔ X = K)`. In 1 the factors have a fixed width `r`; in 2 the bound holds for every width; in 3 they have any fixed finite column type. Limits run over sequences `λ_j → 0⁺`. |
-| WD8 | `factors`, `flatten`, `factors_flatten`, `flatten_factors`, `continuous_factors`, `continuous_flatten`, `norm_sq_eq_frobeniusSq_factors`, `real_inner_eq_pairing_factors`, `flatLoss`, `analyticAt_norm_sq`, `analyticAt_flatLoss`, `hasGradientAt_flatLoss`, `gradient_flatLoss`, `factors_gradientStep`, `norm_gradient_flatLoss_sq`, `fitLoss_eq_add`, `decayedLoss_fitLoss_sub`, `pairing_one_sub_smul`, `frobeniusSq_step_mul_sub_le`, `decayedLoss_decayStep_add_le`, `decayedLoss_decayStep_add_le_of_ball`, `decayedLoss_decayRun_succ_add_le`, `norm_apply_le_sqrt_frobeniusSq`, `isCompact_setOf_frobeniusSq_add_le`, `factors_iterate_gradientStep`, `exists_tendsto_decayRun_isDecayedMin`, `exists_isDecayedMin_fitLoss`, `exists_tendsto_decayRun_nuclearNorm_add_le` | The factor space is `EuclideanSpace ℂ ((m ⊕ n) × k)` with its real inner product. Łojasiewicz's theorem and the convergence theorem are `exists_isLojasiewiczAt_of_analyticAt` and `tendsto_of_isLojasiewiczAt_of_le_sub` of `Transformer.Landscape.SaddleAvoidance`, used with `κ = 1/2`. In the corollary `κ = ‖K‖_S2² + 1`, `ρ = max (‖W_0‖²) (κ²/λ)` and η is the smaller of the two bounds. |
+| WD8 | `factors`, `flatten`, `factors_flatten`, `flatten_factors`, `continuous_factors`, `continuous_flatten`, `norm_sq_eq_frobeniusSq_factors`, `real_inner_eq_pairing_factors`, `analyticAt_norm_sq`, `flatLoss`, `productVector`, `analyticAt_productVector`, `analyticAt_flatLoss`, `hasGradientAt_flatLoss`, `gradient_flatLoss`, `factors_gradientStep`, `norm_gradient_flatLoss_sq`, `decayedLoss_sub_le`, `pairing_one_sub_smul`, `frobeniusSq_step_mul_sub_le`, `decayedLoss_decayStep_add_le`, `decayedLoss_decayStep_add_le_of_ball`, `decayedLoss_decayRun_succ_add_le`, `norm_apply_le_sqrt_frobeniusSq`, `isCompact_setOf_frobeniusSq_add_le`, `factors_iterate_gradientStep`, `exists_tendsto_decayRun`, `exists_tendsto_decayRun_isDecayedMin`; squared loss: `fitLoss_eq_add`, `fitLoss_le_add`, `analyticAt_fitLoss`, `exists_tendsto_decayRun_fitLoss`, `exists_tendsto_decayRun_fitLoss_isDecayedMin`, `exists_isDecayedMin_fitLoss`, `exists_tendsto_decayRun_nuclearNorm_add_le` | The factor space is `EuclideanSpace ℂ ((m ⊕ n) × k)` with its real inner product. Real-analytic in the entries is `∀ y, AnalyticAt ℝ (fun y : EuclideanSpace ℂ (m × n) => L (of fun i j => y (i, j))) y`; the three bounds are stated at the matrices with `frobeniusSq X ≤ (ρ / 2) ^ 2`. Łojasiewicz's theorem and the convergence theorem are `exists_isLojasiewiczAt_of_analyticAt` and `tendsto_of_isLojasiewiczAt_of_le_sub` of `Transformer.Landscape.SaddleAvoidance`, used with `κ = 1/2`. In the existence corollary `κ = ‖K‖_S2² + 1`, `ρ = max (‖W_0‖²) (κ²/λ)` and η is the smaller of the two bounds. |

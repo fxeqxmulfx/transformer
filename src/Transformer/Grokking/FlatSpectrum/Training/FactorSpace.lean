@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Analysis.Analytic.Constructions
 public import Mathlib.Analysis.InnerProductSpace.PiL2
 public import Transformer.Grokking.FlatSpectrum.Training.Continuity
 
@@ -13,7 +14,8 @@ entries of `W = [U; V]`: `factors` reads the pair off a vector of
 `EuclideanSpace ℂ ((m ⊕ n) × k)` and `flatten` is its inverse. Both are continuous, `factors`
 is real-linear (`factors_add`, `factors_smul`), the squared norm is `‖U‖² + ‖V‖²`
 (`norm_sq_eq_frobeniusSq_factors`) and the real inner product is `⟨U, U'⟩ + ⟨V, V'⟩`
-(`real_inner_eq_pairing_factors`).
+(`real_inner_eq_pairing_factors`). The squared norm of an analytic complex function is
+analytic (`analyticAt_norm_sq`), which makes polynomial losses analytic on these spaces.
 -/
 
 @[expose] public section
@@ -75,5 +77,18 @@ lemma real_inner_eq_pairing_factors (x y : EuclideanSpace ℂ ((m ⊕ n) × k)) 
   rw [norm_sq_eq_frobeniusSq_factors, norm_sq_eq_frobeniusSq_factors,
     norm_sq_eq_frobeniusSq_factors, factors_add, frobeniusSq_add, frobeniusSq_add] at h
   linarith
+
+/-- The squared norm of a real-analytic complex function is real-analytic. -/
+lemma analyticAt_norm_sq {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {c : E → ℂ}
+    {x₀ : E} (h : AnalyticAt ℝ c x₀) : AnalyticAt ℝ (fun x => ‖c x‖ ^ 2) x₀ := by
+  have e : (fun x => ‖c x‖ ^ 2) = fun x => (c x).re ^ 2 + (c x).im ^ 2 := by
+    funext x
+    rw [Complex.sq_norm, Complex.normSq_apply]
+    ring
+  rw [e]
+  exact (((Complex.reCLM.analyticAt _).comp h).fun_pow 2).fun_add
+    (((Complex.imCLM.analyticAt _).comp h).fun_pow 2)
+
+example : AnalyticAt ℝ (fun z : ℂ => ‖z‖ ^ 2) 0 := analyticAt_norm_sq analyticAt_id
 
 end Transformer.Grokking.FlatSpectrum.Training
