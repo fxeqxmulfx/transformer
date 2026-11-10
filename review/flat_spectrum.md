@@ -11302,8 +11302,9 @@ These numbers are computed, not proved: `research/diffgpt_flat_spectrum/` of the
 repository, Rust on the CPU. No model is trained here. The states, the split and the value to
 write are those of CS6. The step tokens are those of the task. The level tokens are those of
 the same codec with the difference operator of order 0 in place of order 1: a level `x` is the
-token `256 + floor(511 x / 192)`, and the example of a state reads the tokens of `b` and `x`
-and writes that of `(b + x) % p`.
+token `256 + floor(s x)` with the scale `s` the binary64 number below `8 / 3`, so the levels
+`0, 1, 2, 3, …, 96` are the tokens `256, 258, 261, 263, …, 511`. The example of a state reads
+the tokens of `b` and `x` and writes that of `(b + x) % p`.
 
 | Of a split | Seed 11 | Seed 17 | Seed 23 |
 | --- | ---: | ---: | ---: |
