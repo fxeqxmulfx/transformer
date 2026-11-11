@@ -23255,7 +23255,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 ### `Transformer.Grokking.FlatSpectrum.Training.Scope`
 
-**[Transformer.Grokking.FlatSpectrum.Training.Scope.LinearDiverge](src/Transformer/Grokking/FlatSpectrum/Training/Scope/LinearDiverge.lean)** — 186 lines
+**[Transformer.Grokking.FlatSpectrum.Training.Scope.LinearDiverge](src/Transformer/Grokking/FlatSpectrum/Training/Scope/LinearDiverge.lean)** — 193 lines
 
 | declaration | kind | status |
 | --- | --- | --- |

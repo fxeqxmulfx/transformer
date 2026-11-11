@@ -162,6 +162,13 @@ local notation "M₁" => Matrix (Fin 1) (Fin 1) ℂ
 
 example : ∃ X : M₁, pairing (-1) X < -5 := exists_linear_lt _
 
+/-- The factors of the `1 × 1` run from `U₀ = V₀ = 1` with `λ = 1/2` and `η = 1/4` grow without
+bound. -/
+example := tendsto_frobeniusSq_decayRun_linear_atTop (η := 1 / 4) (lam := 1 / 2) (by norm_num)
+  (by norm_num) (U₀ := (1 : M₁)) (V₀ := 1) fun h => by
+    have h0 := congrFun (congrFun h 0) 0
+    norm_num at h0
+
 /-- The `1 × 1` loss `−Re X` with `λ = 1/2` and `η = 1/4`, from `U₀ = [1 0]`, `V₀ = [0 1]`:
 the run has no limit. -/
 example (W : Matrix (Fin 1) (Fin 1 ⊕ Fin 1) ℂ × Matrix (Fin 1) (Fin 1 ⊕ Fin 1) ℂ) :
