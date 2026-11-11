@@ -32,6 +32,10 @@ open Lean Elab Command
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Observation.logit_error_of_reconstruct
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Observation.every_optimizer_predicts_unseen
 
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.learnBatches_eq_learn
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.learnedBatches_eq_channel
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.later_batch_changes_key
+
 run_cmd do
   let env ← getEnv
   let standard := [``propext, ``Classical.choice, ``Quot.sound]

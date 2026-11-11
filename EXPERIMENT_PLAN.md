@@ -4268,3 +4268,13 @@ copied unchanged from diff-gpt `3555299`. The full-batch observation schedule
 and optimizer differ from the original transformer; no matched speed or
 promotion claim is made. No feature tuning or budget extensions after runs.
 All generated evidence remains local and ignored under the root's `runs/`.
+
+## Persistent forward-only minibatches on MQAR (2026-11-11)
+
+**Status: protocol frozen; Lean equivalence and native validation in progress.**
+The user requested checking minibatch support. CF6 retains every candidate's
+record across batches and compares the exact computed result with the original
+complete-data learner. `experiments/convex_channel_minibatch/README.md` fixes seven
+batch sizes across the same six MQAR task/seed combinations, prefix and late
+conflict checks, and paired CPU timing. The prior forward/FW experiment is
+unchanged. Only the same ordered examples are assumed by the Lean equivalence.

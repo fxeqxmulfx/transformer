@@ -13286,6 +13286,39 @@ LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.ConvexCha
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/ConvexChannelAxioms.lean
 ```
 
+### CF6. Persistent minibatches and exact boundary invariance
+
+Retain a partial record and an elimination marker for every `(query,key)`
+candidate. Each batch updates every candidate using CF1's `scan`. A snapshot
+selects the first surviving key in the fixed candidate order and supplies the
+same default on unseen values, without modifying any records. In particular,
+neither selecting a key nor predicting a default discards information needed
+by later batches.
+
+For any initial candidate state, scanning `xs ++ ys` equals scanning `xs` and
+then continuing on `ys`. Induction over batches proves exact state equality
+with scanning their concatenation. The executable minibatch learner therefore
+returns exactly the same key and decoder, or the same failure, as `learn` on
+the flattened observations. This holds for empty batches, unequal batch sizes,
+partial coverage and inconsistent labels. It requires the same ordered examples,
+candidate order and default; it does not assume realizability. Assembled channel
+tensors are equal too, so CF3's CE optimality and CF4's identification conclusions
+transfer when their hypotheses hold for the combined observations.
+
+A concrete Boolean example exposes premature selection: the first batch has
+dictionary `(false,false)` and label `true`; a snapshot selects key `false`.
+The next nonempty batch has dictionary `(false,true)` and label `false`.
+Key `false` is now contradictory. Key `true` survives and decodes negation,
+using the first batch's `false -> true` entry as well as the new entry.
+Keeping only the first snapshot would lose that alternative's earlier evidence.
+
+An array implementation needs `|Q||K||V|` optional categorical entries and
+`|Q||K|` elimination flags, independent of the number of examples. It visits
+all candidates, rather than CF5's early stopping between candidates. Its
+runtime and memory constants are measured separately in
+`experiments/convex_channel_minibatch`; batch-boundary invariance alone is
+not a claim that streaming is faster or that an arbitrary prefix generalizes.
+
 ## Observable features determine unseen predictions
 
 This extension supplies a sufficient identification condition in addition to
