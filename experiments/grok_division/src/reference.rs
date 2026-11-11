@@ -274,3 +274,33 @@ pub fn loss_and_gradient(dims: Dims, p: &[f64], batch: &[Example], sup: &[usize]
     }
     (total * scale, grad)
 }
+
+/// What a diagnosis reads of one example at one position, block by block. Only the
+/// `diagnose` binary uses it.
+#[allow(dead_code)]
+pub struct Probe {
+    /// For each block, which of its `dff` hidden units fire.
+    pub active: Vec<Vec<bool>>,
+    /// For each block, the attention weights of each head: `heads` rows of `pos + 1`.
+    pub attention: Vec<Vec<f64>>,
+    /// For each block, the floored standard deviations that its two normalizations divide by.
+    pub sigma: Vec<(f64, f64)>,
+}
+
+/// The probe of one example at the position `pos`.
+#[allow(dead_code)]
+pub fn probe(dims: Dims, p: &[f64], tokens: &[usize], pos: usize) -> Probe {
+    let (traces, _) = forward(dims, p, tokens);
+    let mut out = Probe { active: Vec::new(), attention: Vec::new(), sigma: Vec::new() };
+    for trace in traces.iter() {
+        out.active.push(trace.r[pos * dims.dff..(pos + 1) * dims.dff].iter().map(|&v| v > 0.0).collect());
+        let mut rows = Vec::new();
+        for h in 0..dims.heads {
+            let at = (pos * dims.heads + h) * dims.ctx;
+            rows.extend_from_slice(&trace.att[at..at + pos + 1]);
+        }
+        out.attention.push(rows);
+        out.sigma.push((trace.sigma1[pos], trace.sigma2[pos]));
+    }
+    out
+}

@@ -38,7 +38,13 @@ for seed in 0 1 2; do
   target/release/grok-division run adam $seed runs/adam-seed$seed --threads 8
 done
 target/release/grok-division report runs/*-seed*
+target/release/diagnose runs/adamw-seed1 1 10000 50000   # what checkpoints do at the answer
 ```
+
+`diagnose RUN SEED STEP...` reads checkpoints with the model in doubles: accuracy on 512
+training equations, the hidden units that fire, the entropy of the attention, what the
+normalizations divide by, and the norms of the parameter groups. It is a second binary and
+does not change the trainer or its source fingerprint.
 
 A run resumes from its last checkpoint when the command is repeated, on any number of
 threads, and is then bit for bit the run that was not stopped. `runs/` is ignored by git.
