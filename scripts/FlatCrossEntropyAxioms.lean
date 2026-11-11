@@ -135,3 +135,11 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.decayedLoss_const_mul
 #print axioms Transformer.Grokking.FlatSpectrum.Training.isDecayedMin_const_mul_iff
 #print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun_mean_ceLoss_isDecayedMin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.maxMargin_pos
+#print axioms Transformer.Grokking.FlatSpectrum.Training.inv_maxMargin_le_nuclearNorm
+#print axioms Transformer.Grokking.FlatSpectrum.Training.margin_eq_maxMargin_iff_inv_smul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.isLeast_nuclearNorm_of_one_le_margin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_nuclearNorm_div_margin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_inv_margin_smul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_inv_margin_smul_of_unique
+#print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_inv_margin_smul_codeProbe

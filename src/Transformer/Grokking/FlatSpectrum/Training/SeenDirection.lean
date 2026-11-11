@@ -1,6 +1,7 @@
 module
 
 public import Transformer.Grokking.FlatSpectrum.Training.MirroredUnique
+public import Transformer.Grokking.FlatSpectrum.Training.LeastNorm
 
 /-!
 # Cross-entropy training returns a flat kernel in direction exactly when every cell is seen
@@ -11,7 +12,8 @@ labels of the seen cells. As the weight decay vanishes:
 
 * with every cell seen, the trained fits converge in direction to `K`,
   `X_j / ‖X_j‖_S1 → K / ‖K‖_S1` (`tendsto_inv_smul_codeProbe`): by `MirroredUnique` the
-  normalized kernel is the only product of largest margin, and item XE10 applies;
+  normalized kernel is the only product of largest margin, and item XE10 applies; scaled to
+  margin one they converge to `K / g` (`tendsto_inv_margin_smul_codeProbe`);
 * if `K` has no zero entry, they converge in direction to `K` exactly when every cell is seen
   (`tendsto_inv_smul_codeProbe_iff`): an unseen cell excludes the limit by item XE9.
 
@@ -43,6 +45,26 @@ theorem tendsto_inv_smul_codeProbe (h : IsMirroredCode φ g) (hg0 : 0 < g) (hg2 
       (𝓝 ((nuclearNorm K)⁻¹ • K)) :=
   tendsto_inv_smul_of_unique (X₀ := K) ((margin_codeProbe_eq h hK).symm ▸ hg0) hpos hlam hmin
     fun _ h1 h2 => eq_inv_smul_of_margin_codeProbe_eq h hg0 hK hsurj hc hflat h1 hg2 h2
+
+/-- **With every cell seen, the trained fits scaled to margin one converge to `K / g`**
+(`review/flat_spectrum.md`, item XE11): for a code mirrored at a gap `0 < g < 2` and a flat
+`K` that shows the labels, `X_j / μ(X_j) → K / g` as `λ_j → 0⁺`. -/
+theorem tendsto_inv_margin_smul_codeProbe (h : IsMirroredCode φ g) (hg0 : 0 < g)
+    (hg2 : g < 2) (hK : ∀ s, K (cell s).1 (cell s).2 = φ (y s))
+    (hsurj : Function.Surjective cell) (hc : 0 < c₀) (hflat : IsFlat K c₀)
+    (hpos : ∀ j, 0 < lams j) (hlam : Tendsto lams atTop (𝓝 0))
+    (hmin : ∀ j, IsDecayedMin (ceLoss (codeProbe φ cell) y) (lams j) (Us j) (Vs j)) :
+    Tendsto (fun j => (margin (codeProbe φ cell) y (Us j * (Vs j)ᴴ))⁻¹ • (Us j * (Vs j)ᴴ))
+      atTop (𝓝 (g⁻¹ • K)) := by
+  have hμ := margin_codeProbe_eq (cell := cell) (y := y) h hK
+  have hB : 0 < nuclearNorm K :=
+    nuclearNorm_pos_of_margin_pos (A := codeProbe φ cell) (y := y) (hμ.symm ▸ hg0)
+  have e : g⁻¹ • K = (maxMargin (codeProbe φ cell) y)⁻¹ • (nuclearNorm K)⁻¹ • K := by
+    rw [maxMargin_codeProbe_eq h hg0 hK hsurj hc hflat, smul_smul, inv_div, div_eq_mul_inv,
+      mul_right_comm, mul_inv_cancel₀ hB.ne', one_mul]
+  rw [e]
+  exact tendsto_inv_margin_smul (X₀ := K) (hμ.symm ▸ hg0) hpos hlam hmin
+    (tendsto_inv_smul_codeProbe h hg0 hg2 hK hsurj hc hflat hpos hlam hmin)
 
 /-- **Cross-entropy training converges in direction to a flat kernel exactly when every cell
 is seen** (`review/flat_spectrum.md`, item XE11 with XE9): for a code mirrored at a gap
@@ -118,5 +140,20 @@ example : ∃ Us Vs : ℕ → Matrix (ZMod 3) (ZMod 3) ℂ,
     (fun j => by positivity) (Or.inl le_rfl)
   exact ⟨Us, Vs, (tendsto_inv_smul_cubicKernel_iff (by norm_num) id (fun j => by positivity)
     tendsto_one_div_add_atTop_nhds_zero_nat h).2 Function.surjective_id⟩
+
+/-- Scaled to margin one, the same trained fits converge to the kernel divided by the gap
+`1 − cos (2π/3)` of the code `ψ`. -/
+example : ∃ Us Vs : ℕ → Matrix (ZMod 3) (ZMod 3) ℂ,
+    Tendsto (fun j => (margin (codeProbe (ZMod.stdAddChar : ZMod 3 → ℂ) id)
+      (fun s => s.1 ^ 3 + s.1 * s.2) (Us j * (Vs j)ᴴ))⁻¹ • (Us j * (Vs j)ᴴ)) atTop
+      (𝓝 ((1 - Real.cos (2 * Real.pi / (3 : ℕ)))⁻¹ • cubicKernel 3)) := by
+  obtain ⟨Us, Vs, h⟩ := exists_seq_isDecayedMin_ceLoss (k := ZMod 3)
+    (codeProbe (ZMod.stdAddChar : ZMod 3 → ℂ) (id : ZMod 3 × ZMod 3 → ZMod 3 × ZMod 3))
+    (fun s => s.1 ^ 3 + s.1 * s.2) (lams := fun j => 1 / ((j : ℝ) + 1))
+    (fun j => by positivity) (Or.inl le_rfl)
+  exact ⟨Us, Vs, tendsto_inv_margin_smul_codeProbe (isMirroredCode_stdAddChar (by norm_num))
+    (one_sub_cos_two_pi_div_pos (by norm_num)) (one_sub_cos_two_pi_div_lt_two (by norm_num))
+    (fun _ => rfl) Function.surjective_id (by norm_num) (isFlat_cubicKernel 3)
+    (fun j => by positivity) tendsto_one_div_add_atTop_nhds_zero_nat h⟩
 
 end Transformer.Grokking.FlatSpectrum.Training

@@ -42,6 +42,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.AnswerCode
 public import Transformer.Grokking.FlatSpectrum.Training.SeenMargin
 public import Transformer.Grokking.FlatSpectrum.Training.UnitBall
 public import Transformer.Grokking.FlatSpectrum.Training.MarginDirection
+public import Transformer.Grokking.FlatSpectrum.Training.LeastNorm
 public import Transformer.Grokking.FlatSpectrum.Training.MirroredCode
 public import Transformer.Grokking.FlatSpectrum.Training.CharacterCode
 public import Transformer.Grokking.FlatSpectrum.Training.MirroredUnique
@@ -181,4 +182,7 @@ of an answer code belongs to the nearer codeword (`pairing_codeProbe_le_iff`), s
 with a positive margin is decoded to the labels (`norm_sub_lt_of_margin_pos`, XE8). The probes
 `e_ic` of a table of logits are `classProbe` (XE1). Training on `c L` is training on `L` with
 the step `c η` and the weight decay `λ / c` (`decayRun_smul`, `isDecayedMin_const_mul_iff`),
-which gives the mean of the losses (XE3). -/
+which gives the mean of the losses (XE3). In its second form the margin problem asks for the
+least nuclear norm at margin one, which is `1 / μ*` (`isLeast_nuclearNorm_of_one_le_margin`);
+scaled to margin one, the trained fits converge where their direction does
+(`tendsto_inv_margin_smul`, XE6), to `K / g` in the case of XE11. -/
