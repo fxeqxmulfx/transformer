@@ -53,6 +53,9 @@ public import Transformer.Grokking.FlatSpectrum.Training.NearestCodeword
 public import Transformer.Grokking.FlatSpectrum.Training.ClassProbes
 public import Transformer.Grokking.FlatSpectrum.Training.MeanLoss
 public import Transformer.Grokking.FlatSpectrum.Training.Subsequence
+public import Transformer.Grokking.FlatSpectrum.Training.NuclearMin
+public import Transformer.Grokking.FlatSpectrum.Training.NuclearMinLimit
+public import Transformer.Grokking.FlatSpectrum.Training.NuclearMinDirection
 
 /-! Training the pure factorization with weight decay, `review/flat_spectrum.md`, Lemma 1's
 modeling step and *Training reaches the optimal fit* (added).
@@ -185,4 +188,7 @@ the step `c η` and the weight decay `λ / c` (`decayRun_smul`, `isDecayedMin_co
 which gives the mean of the losses (XE3). In its second form the margin problem asks for the
 least nuclear norm at margin one, which is `1 / μ*` (`isLeast_nuclearNorm_of_one_le_margin`);
 scaled to margin one, the trained fits converge where their direction does
-(`tendsto_inv_margin_smul`, XE6), to `K / g` in the case of XE11. -/
+(`tendsto_inv_margin_smul`, XE6), to `K / g` in the case of XE11. The minimizers of
+`L + λ ‖·‖_S1` (`IsNuclearMin`) are the products of the trained fits of every width
+(`isNuclearMin_iff`), so XE5, XE6 and XE9–XE11 hold for them (`forall_seq_isNuclearMin`): the
+widths of the fits may change along a sequence. -/
