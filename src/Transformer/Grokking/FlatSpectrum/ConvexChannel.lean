@@ -10,6 +10,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Limits
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Oracle
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Observation
+public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Batch
 
 /-!
 # Convex channels with flat-spectrum capacity bounds

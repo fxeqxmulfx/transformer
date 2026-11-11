@@ -13550,3 +13550,29 @@ The three `ConvexChannel/Observation/` modules prove O1-O4 and provide
 satisfying examples for every conditional theorem. Principal declarations
 are `observed_logits_eq`, `logits_reconstruct`, `unseen_logits_of_min`,
 `logit_error_of_reconstruct` and `every_optimizer_predicts_unseen`.
+
+## Convex channel minibatch updates
+
+### CM1. Independent query steps preserve the domain
+
+For any feasible joint tensors `A,B` and query-dependent step sizes
+`0 <= eta(q) <= 1`, define
+
+```
+W(q,k,v,c) = (1-eta(q)) A(q,k,v,c) + eta(q) B(q,k,v,c).
+```
+
+Nonnegativity follows term by term. Summing over classes preserves each
+key's value-independent routing marginal. Summing over keys then gives
+`(1-eta(q))*1 + eta(q)*1 = 1`. Hence `W` is feasible even when different
+query blocks use different step sizes. Its logits undergo the same convex
+combination for that query. When `eta(q)=0`, every coefficient of that query
+is retained. This matters for a minibatch containing only some queries:
+the absent ones must not be reset to an arbitrary zero-gradient oracle.
+
+`ConvexChannel/Batch.lean` proves these facts as `feasible_mixRows`,
+`logits_mixRows` and `mixRows_zero`, with Boolean witnesses. Combined with
+CC8's feasible oracle vertices, they justify blockwise minibatch feasibility.
+CC2 already supplies convexity of ordinary CE on each finite batch. These
+statements do not assert stochastic optimization convergence or transfer of
+unseen labels. CF6 separately proves persistent forward-only batch equality.
