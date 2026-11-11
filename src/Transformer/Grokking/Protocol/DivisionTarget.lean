@@ -19,7 +19,8 @@ and "Adam optimizer with no weight decay"; openai/grok at 3d64b1d8;
 `experiments/grok_division/PROTOCOL.md`. The paper reports curves of finite runs and states no
 theorem. This file writes down the statement that an asymptotic reading of the figure would
 be, with every choice of the protocol fixed, and proves only what that statement means. It
-asserts nothing about its truth.
+asserts nothing about its truth; `Refutation` proves it false as long as nothing is asked of
+the split.
 
 The initial parameters are independent (`initMeasure`): the embedding standard normal, every
 linear map uniform on `[-1/√n, 1/√n]` for its `n` inputs (`uniformInit`), the gains `1` and

@@ -5,8 +5,9 @@ Figure 1 and the appendix *Additional experimental details*; openai/grok at `3d6
 protocol pinned in `experiments/grok_division/PROTOCOL.md`. Written 2026-11-11.
 
 The paper shows curves of finite runs. It states no theorem, and nothing below proves that any
-transformer generalizes. This note fixes what such a theorem would say, lists what the
-repository proves about neighbouring objects, and names the bridges that are missing.
+transformer generalizes. This note fixes what such a theorem would say, proves that it is
+false unless something is asked of the split, lists what the repository proves about
+neighbouring objects, and names the bridges that are missing.
 
 ## 1. The target
 
@@ -33,6 +34,7 @@ repository proves about neighbouring objects, and names the bridges that are mis
 | Initialization law; the law of a run is a probability law | `initLaw`, `initMeasure`, `isProbabilityMeasure_initLaw` |
 | The target for the division protocol, and what it means | `division_generalizes_iff`, `division_generalizes_source_iff` |
 | What is proved about its trajectory | `abs_trajectory_division_sub_le`, `abs_trajectory_division_le` |
+| The target is false without a condition on the split (section 2) | `not_division_generalizes`, `not_division_tendsToOneInProbability` |
 
 For division the arguments are fixed in `division_generalizes_iff`: the decoder of
 `paperSizes`, the logits after `=`, the source's loss on the answer and the closing token, the
@@ -52,7 +54,41 @@ the run: its only inputs are the protocol's.
 The infinite continuation is the protocol's own: one more shuffle of the training set for
 every further epoch, at the constant learning rate that the schedule has after warmup.
 
-## 2. What the repository proves, and about what
+## 2. The target is false without a condition on the split
+
+`Protocol/{Symmetry,AdamSymmetry,Uncovered,Exchange,Refutation,RefutationModes}.lean`.
+
+A uniformly random half of the equations can miss a residue. Call a split *uncovered* when no
+training equation has the residue 1 or 2 as numerator, denominator or quotient. At least 8734
+of the 9312 equations avoid both (`card_avoids_ge`), so uncovered splits exist and have
+positive probability (`exists_uncovered`, `uniformPerm_uncovered_pos`); the probability is
+roughly `2⁻⁵⁹⁴`, by a count outside Lean.
+
+On such a split the tokens of 1 and 2 are read by no training equation and are the target of
+none. Exchanging them, which permutes two rows of the embedding and two of the readout
+(`paramPerm`, `exchange`), commutes with every gradient of the run
+(`sourceGrad_comp_paramPerm`, `divisionGrad_comp_exchange`), hence with the whole Adam or AdamW
+run (`adamRun_comp`, `trajectory_exchange`), and preserves the initialization law
+(`measurePreserving_comp_exchange`). The equations `1 / 3 = 65` and `2 / 3 = 33` are held
+out, and because the decoder is causal the logits after `=` of the first at exchanged
+parameters are those of the second (`answerLogits_exchange`). They cannot both be answered
+(`not_both_predicted`): at every update the sample or its exchange has a wrong held-out answer
+(`mem_wrongAt_or`). Therefore:
+
+| Statement | Declaration |
+| --- | --- |
+| At every update, P(some held-out answer is wrong) ≥ ½ P(uncovered split) > 0 | `uniformPerm_uncovered_le` |
+| A condition on the split that makes the target true excludes every uncovered split | `not_mem_of_mem_uncovered` |
+| The almost sure target fails, for Adam and for AdamW at every weight decay | `not_division_generalizes` |
+| The held-out accuracy does not tend to 1 in probability either | `not_division_tendsToOneInProbability` |
+
+This does not say that grokking fails. It says that "for almost every run" is too much: a
+true theorem needs a condition on the split, or a probability below 1. The argument works for
+any two residues, so the condition must at least forbid that two residues are both absent
+from the training set. Whether "every residue occurs in training" suffices is open; so is
+every positive statement.
+
+## 3. What the repository proves, and about what
 
 | Where | Declarations | It is about | Why it is not the target |
 | --- | --- | --- | --- |
@@ -74,7 +110,7 @@ Two substitutions are therefore excluded, and no statement here makes them:
 - The flat-kernel obstruction to reconstruction is not a proof that held-out classification
   fails, and its absence would not be a proof that it succeeds.
 
-## 3. The bridges that are missing
+## 4. The bridges that are missing
 
 1. **Arithmetic.** The target is in exact reals; every run is in `f32`, where the softmax
    saturates (PROTOCOL.md, Amendment 1). No statement relates the two trajectories.
@@ -94,7 +130,8 @@ Two substitutions are therefore excluded, and no statement here makes them:
    logits that implies the right largest logit on every held-out equation.
 6. **Training reaches the structure** (#130): from the declared initialization law, with a
    stated probability.
-7. **Composition** (#131): 5 and 6 along one trajectory, for all later updates.
+7. **Composition** (#131): 5 and 6 along one trajectory, for all later updates, for a target
+   with a condition on the split; the unconditional one is refuted in section 2.
 
 Bridges 4 to 7 are open research problems. The measurements of `experiments/grok_division`
 are finite runs in `f32` and close none of them.
