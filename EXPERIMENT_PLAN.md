@@ -4271,10 +4271,18 @@ All generated evidence remains local and ignored under the root's `runs/`.
 
 ## Persistent forward-only minibatches on MQAR (2026-11-11)
 
-**Status: Lean equivalence landed at `e9b0260c`; native tests pass; frozen runs next.**
+**Status: Lean equivalence landed at `e9b0260c`; all 42 native comparisons and replay pass.**
 The user requested checking minibatch support. CF6 retains every candidate's
 record across batches and compares the exact computed result with the original
 complete-data learner. `experiments/convex_channel_minibatch/README.md` fixes seven
 batch sizes across the same six MQAR task/seed combinations, prefix and late
 conflict checks, and paired CPU timing. The prior forward/FW experiment is
 unchanged. Only the same ordered examples are assumed by the Lean equivalence.
+
+Every batch size learns the identical full-data model, with 100% accuracy on
+training, held-out and all 4096 dictionaries. All 2316 prefix snapshots agree
+with full-prefix fitting. Single-dictionary batches cost 8.9-13.3% more than
+the original forward fit; larger batches are close in speed. Persistent state
+uses 2064 bytes, independent of data count; the emitted model uses 288 bytes.
+All six native tests, formatting, clippy and source/data replay pass. Complete
+timing observations and model evidence remain local and ignored.
