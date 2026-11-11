@@ -51,6 +51,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.LargeDecay
 public import Transformer.Grokking.FlatSpectrum.Training.NearestCodeword
 public import Transformer.Grokking.FlatSpectrum.Training.ClassProbes
 public import Transformer.Grokking.FlatSpectrum.Training.MeanLoss
+public import Transformer.Grokking.FlatSpectrum.Training.Subsequence
 
 /-! Training the pure factorization with weight decay, `review/flat_spectrum.md`, Lemma 1's
 modeling step and *Training reaches the optimal fit* (added).
@@ -79,7 +80,8 @@ equal to it on `Ω`, as for a square kernel with equal singular values and no ze
 proper `Ω` (Theorem A), the trained products stay a fixed distance below `‖K‖_S1` for every
 `λ > 0`; and if `K` is the only matrix of least nuclear norm, as for `u vᵀ` with `|u_i v_j| = 1`
 on connected cells containing a permutation (Theorem E), the trained products converge to `K`.
-The `1 × 1` kernel `1` has the trained product `1 − λ`.
+Trained fits of one width always have a subsequence whose factors converge, to an optimal fit
+(`exists_subseq_tendsto_isOptimalFit`). The `1 × 1` kernel `1` has the trained product `1 − λ`.
 
 The step condition is explicit when the loss is controlled in a ball (WD6): if `‖G X‖ ≤ γ` and
 `⟨G X, X⟩ ≥ −b` for `‖X‖ ≤ ρ/2`, with `4 b ≤ λ ρ` and `2 η (λ² + γ²) ≤ λ`, a run from the ball

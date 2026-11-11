@@ -109,3 +109,7 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.not_isDecayedMin_width_one
 #print axioms Transformer.Landscape.SaddleAvoidance.not_isStrictSaddle_of_isLocalMin
 #print axioms Transformer.Grokking.FlatSpectrum.Training.exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_subseq_tendsto_of_frobeniusSq_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.IsDecayedMin.weightDecay_le_nuclearNorm
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_subseq_tendsto_isOptimalFit
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_isOptimalFit
