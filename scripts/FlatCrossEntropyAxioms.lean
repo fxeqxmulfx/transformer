@@ -1,6 +1,6 @@
 import Transformer
 
-/-! Audit *Training with cross-entropy* of `review/flat_spectrum.md`, items XE1–XE9. -/
+/-! Audit *Training with cross-entropy* of `review/flat_spectrum.md`, items XE1–XE10. -/
 
 #print axioms Transformer.Grokking.FlatSpectrum.Training.sum_probability_mul_le_log_weightedExp
 #print axioms Transformer.Grokking.FlatSpectrum.Training.crossEntropy_first_order
@@ -67,3 +67,15 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.not_tendsto_inv_nuclearNorm_smul
 #print axioms Transformer.Grokking.FlatSpectrum.Training.exists_pos_eventually_add_le_margin_div_of_codeProbe
 #print axioms Transformer.Grokking.FlatSpectrum.Training.not_tendsto_inv_nuclearNorm_smul_of_codeProbe
+#print axioms Transformer.Grokking.FlatSpectrum.Training.continuous_gap
+#print axioms Transformer.Grokking.FlatSpectrum.Training.nuclearNorm_le_of_tendsto
+#print axioms Transformer.Grokking.FlatSpectrum.Training.nuclearNorm_inv_smul_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.margin_inv_smul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_subseq_tendsto_inv_smul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.margin_eq_maxMargin_of_tendsto
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_margin_eq_maxMargin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.gap_signProbe
+#print axioms Transformer.Grokking.FlatSpectrum.Training.maxMargin_signProbe
+#print axioms Transformer.Grokking.FlatSpectrum.Training.margin_eq_maxMargin_of_tendsto_inv_smul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_inv_smul_of_unique
+#print axioms Transformer.Grokking.FlatSpectrum.Training.eq_one_of_margin_signProbe

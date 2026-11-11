@@ -11864,7 +11864,8 @@ loss. The squared loss has exact fits, and as λ → 0⁺ its trained fits becom
 of least nuclear norm (WD7). The cross-entropy of separable data has no minimum: as λ → 0⁺
 its trained fits grow without bound, and they have the largest margin for their nuclear norm
 (XE4–XE6). At every λ > 0 the unseen cells are still filled by M (XE7), so a flat kernel is
-not returned, at a fixed λ or in the limit (XE7–XE9).
+not returned, at a fixed λ or in the limit (XE7–XE9). The limit points of the direction of the
+trained fits are the products of largest margin (XE10).
 
 Notation as in that section: `⟨A, B⟩ = Re tr(Aᴴ B)`, `‖·‖ = ‖·‖_S2`, the model `X = U Vᴴ`
 with the run of WD1, and a decayed minimum is a factorization of least weight-decayed loss
@@ -12123,7 +12124,49 @@ labels `a³ + a b` on a nonempty proper set of cells is an instance, for every `
 This is statement 2 of WD7 for the cross-entropy. There the trained products stay δ below
 `‖K‖_S1`. Here their norm is unbounded, and they beat `K` by δ in margin for their norm.
 
-### XE10. Scope
+### XE10. The direction of the trained fits
+
+XE6 is about one number, the margin of a trained fit for its norm. The direction of a trained
+fit is the product `X_j / ‖X_j‖_S1`, a point of the unit ball `{‖X‖_S1 ≤ 1}`. Its margin is
+`μ(X_j) / ‖X_j‖_S1`, by homogeneity.
+
+1. `μ*` is attained. The unit ball is bounded, as `|X_ij| ≤ ‖X‖_S1`. The nuclear norm is
+   lower semicontinuous: for a limit `Z` of matrices with `‖Z_j‖_S1 ≤ b` take a contraction
+   `W` with `⟨W, Z⟩ = ‖Z‖_S1`, by the dual form of the norm; then `⟨W, Z_j⟩ ≤ ‖Z_j‖_S1 ≤ b`,
+   and in the limit `‖Z‖_S1 ≤ b`. The gaps are linear, so they are continuous. Now let
+   `Z_j → Z` with `‖Z_j‖_S1 ≤ 1` and `μ(Z_j) → μ*`. Then `‖Z‖_S1 ≤ 1`, and each gap of `Z` is
+   the limit of gaps `g(Z_j) ≥ μ(Z_j)`, so it is at least `μ*`: `μ(Z) = μ*`. Products of the
+   unit ball with `μ(Z_j) > μ* − 1/(j + 1)` have a convergent subsequence. So some product of
+   the unit ball has the margin `μ*`.
+2. The limit points. Let some product have a positive margin, let `λ_j → 0⁺`, and let
+   `X_j / ‖X_j‖_S1 → Z`. By XE6 the margins of these products of the unit ball tend to `μ*`,
+   so `‖Z‖_S1 ≤ 1` and `μ(Z) = μ*` by 1. Here `μ* > 0`, and `μ* = μ(Z) ≤ μ* ‖Z‖_S1` by
+   homogeneity. So
+
+   ```
+   ‖Z‖_S1 = 1    and    μ(Z) = μ*.
+   ```
+
+   A subsequence of trained fits is a sequence of trained fits, and their directions lie in
+   a compact set. So every subsequence of the directions has a limit point, and every limit
+   point is a product of nuclear norm one with the largest margin.
+3. Convergence. If one product `Z_0` of the unit ball has the margin `μ*`, then
+
+   ```
+   X_j / ‖X_j‖_S1 → Z_0:
+   ```
+
+   every subsequence has a further subsequence that converges, by 2 to `Z_0`.
+
+So the direction of the trained fits approaches the solutions of the margin problem of XE6,
+and it converges when the solution is unique. In the terms of this item, XE9 says that
+`K / ‖K‖_S1` is no solution when `K` is not a minimum of M from Ω.
+
+Example: the sample of XE3, a `1 × 1` product with the probes `+1` and `−1`. Its gap is
+`2 Re X`, so `μ* = 2`, and in the unit disk only `Z = 1` has `2 Re Z = 2`. The trained fits
+converge in direction to `1`.
+
+### XE11. Scope
 
 Proved, for the pure factorization `X = U Vᴴ` trained by gradient descent with weight decay
 on the cross-entropy of logits that are real-linear in the product:
@@ -12144,7 +12187,11 @@ on the cross-entropy of logits that are real-linear in the product:
   unseen cell; the run of XE3 converges to no such multiple (XE7);
 - for an injective unimodular answer code and such a flat kernel that shows the labels, the
   trained fits pass its margin for its norm by a fixed δ as λ → 0⁺, and they do not converge
-  in direction to it (XE8, XE9).
+  in direction to it (XE8, XE9);
+- the largest margin of the unit ball is attained; as λ → 0⁺ every limit point of the
+  direction `X_j / ‖X_j‖_S1` of the trained fits has nuclear norm one and the largest margin,
+  limit points exist, and the direction converges when one product of the unit ball has the
+  largest margin (XE10).
 
 Assumed or not covered:
 
@@ -12152,9 +12199,9 @@ Assumed or not covered:
   sublevel sets of WD9 are not compact. The run without weight decay and its implicit bias
   are not treated. The limit λ → 0⁺ of XE6 and XE9 runs over trained fits, not over one run
   with a decreasing λ.
-- The direction. XE6 gives the limit of the margin for the norm. That `X_j / ‖X_j‖_S1`
-  converges, or that its limit points have the largest margin, is not proved; XE9 excludes
-  one limit.
+- The direction when several products of the unit ball have the largest margin. XE10 gives
+  the limit points of `X_j / ‖X_j‖_S1`; that it converges is proved only when the product of
+  largest margin is unique.
 - The unseen cells. By XE7 they are filled by M from the seen values of the trained product.
   Those values are not the values of `K`, so the fill of the Corollary and its decoded
   accuracy do not transfer: which class an unseen cell decodes to under the cross-entropy is
@@ -12170,8 +12217,8 @@ Assumed or not covered:
 
 `src/Transformer/Grokking/FlatSpectrum/Training/`, modules `Logits`, `CrossEntropy`,
 `CrossEntropyBounds`, `CrossEntropyRun`, `Margin`, `MaxMargin`, `MaxMarginLimit`, `SeenCells`,
-`AnswerCode` and `SeenMargin`, namespace `Transformer.Grokking.FlatSpectrum.Training`, proved
-without `sorry`.
+`AnswerCode`, `SeenMargin`, `UnitBall` and `MarginDirection`, namespace
+`Transformer.Grokking.FlatSpectrum.Training`, proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -12180,7 +12227,8 @@ without `sorry`.
 | XE3 | `exists_tendsto_decayRun_ceLoss`, `exists_tendsto_decayRun_ceLoss_isDecayedMin`, `exists_pos_ae_tendsto_decayRun_ceLoss_isDecayedMin`, `exists_isDecayedMin_ceLoss`, `exists_seq_isDecayedMin_ceLoss`; example: `signProbe`, `frobeniusSq_signProbe_le`, `signWitness_radius` | Instances of `exists_tendsto_decayRun`, `exists_tendsto_decayRun_isDecayedMin`, `exists_pos_ae_tendsto_decayRun_isDecayedMin` and `exists_isDecayedMin_of_card_le`, with their forms of the hypotheses. `N` and `\|C\|` are `Fintype.card S` and `Fintype.card C`. |
 | XE4 | `gap`, `margin`, `gap_smul`, `margin_smul`, `margin_le_gap`, `nonempty_wrong`, `le_margin`, `exists_gap_eq_margin`, `frobeniusSq_le_nuclearNorm_sq`, `gap_le_mul_nuclearNorm`, `crossEntropy_le_of_le_gap`, `ceLoss_le_of_le_gap`, `ceLoss_le_mul_exp`, `log_le_ceLoss` | `margin` is the infimum over the pairs `(s, c)` with `c ≠ y s`; the statements that use it as a minimum take `[Nonempty S] [Nontrivial C]`. The upper bounds are stated for a number `μ` below every gap. |
 | XE5 | `IsDecayedMin.ceLoss_add_le`, `IsDecayedMin.ceLoss_le_smul`, `IsDecayedMin.log_le_mul_exp`, `IsDecayedMin.sub_log_le_gap`; example: `nuclearNorm_one_fin_one`, `exists_isDecayedMin_signProbe` | The margin of the competitor enters as a number `μ'` below its gaps, and the conclusion is stated for each gap. `κ` is written `card S * (card C − 1)`. |
-| XE6 | `nuclearNorm_pos_of_margin_pos`, `tendsto_nuclearNorm_atTop`, `eventually_lt_margin_div`, `maxMargin`, `margin_le_maxMargin`, `margin_div_le_maxMargin`, `tendsto_margin_div_nuclearNorm`; example: `exists_seq_isDecayedMin_signProbe` | The trained fits of a sequence have one finite column type. `maxMargin` is the supremum `sSup` of the margins on `{‖X‖_S1 ≤ 1}`; that it is attained is not formalized. `margin_div_le_maxMargin` holds at `X = 0` too, where Lean's quotient is `0`. "Some product has a positive margin" is the hypothesis `0 < margin A y X₀`. The form with the least norm at margin one and the two citations are not formalized. |
+| XE6 | `nuclearNorm_pos_of_margin_pos`, `tendsto_nuclearNorm_atTop`, `eventually_lt_margin_div`, `maxMargin`, `margin_le_maxMargin`, `margin_div_le_maxMargin`, `tendsto_margin_div_nuclearNorm`; example: `exists_seq_isDecayedMin_signProbe` | The trained fits of a sequence have one finite column type. `maxMargin` is the supremum `sSup` of the margins on `{‖X‖_S1 ≤ 1}`; that it is attained is `exists_margin_eq_maxMargin` (XE10). `margin_div_le_maxMargin` holds at `X = 0` too, where Lean's quotient is `0`. "Some product has a positive margin" is the hypothesis `0 < margin A y X₀`. The form with the least norm at margin one and the two citations are not formalized. |
 | XE7 | `fitLoss_eq_of_seen`, `pairing_eq_of_seen`, `ceLoss_eq_of_seen`, `IsDecayedMin.isMinOn_nuclearNorm`, `not_isMinOn_smul`, `IsDecayedMin.ne_smul_of_not_isMinOn`, `IsDecayedMin.ne_smul_of_isFlat`, `exists_tendsto_decayRun_ceLoss_ne_smul` | "Reads only Ω" is the hypothesis `∀ X Y, (∀ ij ∈ Ω, X ij.1 ij.2 = Y ij.1 ij.2) → L X = L Y`, and "the probes vanish off Ω" is `∀ s c i j, (i, j) ∉ Ω → A s c i j = 0`. A minimum of M from Ω is `IsMinOn nuclearNorm S K` as in R2. That the trained product is `0` for a large λ is not formalized. |
 | XE8 | `codeProbe`, `pairing_single`, `frobeniusSq_single`, `pairing_codeProbe`, `codeProbe_apply_of_notMem`, `frobeniusSq_codeProbe`, `gap_codeProbe`, `margin_codeProbe_pos`; examples: `signCode`, `norm_signCode`, `injective_signCode` | The cells are `cell : S → m × n` and the seen cells are `Set.range cell`; `φ(c) e_ij` is `Matrix.single i j (φ c)`. That the largest logit belongs to the nearest codeword is not formalized. |
 | XE9 | `gap_eq_of_seen`, `margin_eq_of_seen`, `exists_pos_eventually_add_le_margin_div`, `not_tendsto_inv_nuclearNorm_smul`, `exists_pos_eventually_add_le_margin_div_of_codeProbe`, `not_tendsto_inv_nuclearNorm_smul_of_codeProbe` | δ is chosen before the sequence, for one finite column type of the factors. The normalized product is `(nuclearNorm X_j)⁻¹ • X_j`. That the trained fits grow without bound is `tendsto_nuclearNorm_atTop` (XE6). The examples are the `1 × 2` kernel `(1, 1)` with the code `±1` on its first cell, and `cubicKernel 3` with `ψ` on the cell `(0, 0)`. |
+| XE10 | `continuous_gap`, `nuclearNorm_le_of_tendsto`, `nuclearNorm_inv_smul_le`, `margin_inv_smul`, `exists_subseq_tendsto_inv_smul`, `margin_eq_maxMargin_of_tendsto`, `exists_margin_eq_maxMargin`, `margin_eq_maxMargin_of_tendsto_inv_smul`, `tendsto_inv_smul_of_unique`; example: `gap_signProbe`, `maxMargin_signProbe`, `eq_one_of_margin_signProbe` | The direction is `(nuclearNorm X)⁻¹ • X`, which is `0` for `X = 0`. The compact set is `{X \| ∀ i j, ‖X i j‖ ≤ 1}` (`isCompact_setOf_norm_apply_le`), which contains the unit ball, and the dual form of the norm is `exists_isContraction_trace_eq`. Statement 2 is for a convergent sequence of directions; its subsequences are taken by `exists_subseq_tendsto_inv_smul`, which holds for every sequence of matrices. "One product has the margin `μ*`" is the hypothesis `∀ Z, nuclearNorm Z ≤ 1 → margin A y Z = maxMargin A y → Z = Z₀`. |
