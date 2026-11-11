@@ -75,6 +75,36 @@ theorem analyticAt_flatLoss
     (Finset.analyticAt_fun_sum _ fun i _ => Finset.analyticAt_fun_sum _ fun j _ =>
       analyticAt_norm_sq (hc (Sum.inr i, j))))))
 
+/-- The gradient of the weight-decayed loss on the factor space, from its derivative along
+every line of factors: no convexity is used (`review/flat_spectrum.md`, items WD3 and WD8). -/
+theorem hasGradientAt_flatLoss_of_hasDerivAt
+    (hL : ∀ y : EuclideanSpace ℂ (m × n),
+      AnalyticAt ℝ (fun y : EuclideanSpace ℂ (m × n) => L (of fun i j => y (i, j))) y)
+    (lam : ℝ) (x : EuclideanSpace ℂ ((m ⊕ n) × k)) {G₀ : Matrix m n ℂ}
+    (hder : ∀ (A : Matrix m k ℂ) (B : Matrix n k ℂ), HasDerivAt
+      (fun t : ℝ => decayedLoss L lam ((factors x).1 + t • A) ((factors x).2 + t • B))
+      (pairing (G₀ * (factors x).2 + lam • (factors x).1) A +
+        pairing (G₀ᴴ * (factors x).1 + lam • (factors x).2) B) 0) :
+    HasGradientAt (flatLoss L lam) (flatten (G₀ * (factors x).2 + lam • (factors x).1,
+      G₀ᴴ * (factors x).1 + lam • (factors x).2)) x := by
+  have hd := (analyticAt_flatLoss hL lam x).differentiableAt
+  rw [hasGradientAt_iff_hasFDerivAt]
+  have key : fderiv ℝ (flatLoss L lam) x = InnerProductSpace.toDual ℝ _ (flatten
+      (G₀ * (factors x).2 + lam • (factors x).1, G₀ᴴ * (factors x).1 + lam • (factors x).2)) := by
+    ext h
+    have h0 : HasDerivAt (fun t : ℝ => x + t • h) h 0 := by
+      simpa using ((hasDerivAt_id (0 : ℝ)).smul_const h).const_add x
+    have hline := hd.hasFDerivAt.comp_hasDerivAt_of_eq (0 : ℝ) h0 (by simp)
+    have e : (flatLoss L lam ∘ fun t : ℝ => x + t • h) = fun t : ℝ =>
+        decayedLoss L lam ((factors x).1 + t • (factors h).1)
+          ((factors x).2 + t • (factors h).2) := by
+      funext t
+      simp only [Function.comp_apply, flatLoss, factors_add, factors_smul]
+    rw [e] at hline
+    rw [hline.unique (hder (factors h).1 (factors h).2), InnerProductSpace.toDual_apply_apply,
+      real_inner_eq_pairing_factors, factors_flatten]
+  exact key ▸ hd.hasFDerivAt
+
 /-- **The gradient of the weight-decayed loss on the factor space**
 (`review/flat_spectrum.md`, items WD3 and WD8): for `L` real-analytic in the entries with the
 first-order inequality and a continuous `G`, it is the vector that lists
@@ -86,27 +116,9 @@ theorem hasGradientAt_flatLoss (hconv : ∀ X Y, L X + pairing (G X) (Y - X) ≤
     (lam : ℝ) (x : EuclideanSpace ℂ ((m ⊕ n) × k)) :
     HasGradientAt (flatLoss L lam) (flatten
       (G ((factors x).1 * (factors x).2ᴴ) * (factors x).2 + lam • (factors x).1,
-        (G ((factors x).1 * (factors x).2ᴴ))ᴴ * (factors x).1 + lam • (factors x).2)) x := by
-  have hd := (analyticAt_flatLoss hL lam x).differentiableAt
-  rw [hasGradientAt_iff_hasFDerivAt]
-  have key : fderiv ℝ (flatLoss L lam) x = InnerProductSpace.toDual ℝ _ (flatten
-      (G ((factors x).1 * (factors x).2ᴴ) * (factors x).2 + lam • (factors x).1,
-        (G ((factors x).1 * (factors x).2ᴴ))ᴴ * (factors x).1 + lam • (factors x).2)) := by
-    ext h
-    have h0 : HasDerivAt (fun t : ℝ => x + t • h) h 0 := by
-      simpa using ((hasDerivAt_id (0 : ℝ)).smul_const h).const_add x
-    have hline := hd.hasFDerivAt.comp_hasDerivAt_of_eq (0 : ℝ) h0 (by simp)
-    have hwd := hasDerivAt_decayedLoss hconv hG lam (factors x).1 (factors h).1 (factors x).2
-      (factors h).2
-    have e : (flatLoss L lam ∘ fun t : ℝ => x + t • h) = fun t : ℝ =>
-        decayedLoss L lam ((factors x).1 + t • (factors h).1)
-          ((factors x).2 + t • (factors h).2) := by
-      funext t
-      simp only [Function.comp_apply, flatLoss, factors_add, factors_smul]
-    rw [e] at hline
-    rw [hline.unique hwd, InnerProductSpace.toDual_apply_apply, real_inner_eq_pairing_factors,
-      factors_flatten]
-  exact key ▸ hd.hasFDerivAt
+        (G ((factors x).1 * (factors x).2ᴴ))ᴴ * (factors x).1 + lam • (factors x).2)) x :=
+  hasGradientAt_flatLoss_of_hasDerivAt hL lam x fun A B =>
+    hasDerivAt_decayedLoss hconv hG lam (factors x).1 A (factors x).2 B
 
 /-- The gradient of `flatLoss` as an equation (`review/flat_spectrum.md`, item WD8). -/
 theorem gradient_flatLoss (hconv : ∀ X Y, L X + pairing (G X) (Y - X) ≤ L Y)
@@ -150,6 +162,11 @@ example := analyticAt_flatLoss (k := Fin 1) (analyticAt_fitLoss (Set.univ : Set 
 example := hasGradientAt_flatLoss (k := Fin 1)
   (fitLoss_first_order (Set.univ : Set (Fin 1 × Fin 1)) 1) (continuous_mask_sub Set.univ 1)
   (analyticAt_fitLoss Set.univ 1) 1 0
+
+example := hasGradientAt_flatLoss_of_hasDerivAt (k := Fin 1)
+  (analyticAt_fitLoss (Set.univ : Set (Fin 1 × Fin 1)) 1) 1 0 fun A B =>
+    hasDerivAt_decayedLoss (fitLoss_first_order Set.univ 1) (continuous_mask_sub Set.univ 1) 1 _ A
+      _ B
 
 example := gradient_flatLoss (k := Fin 1)
   (fitLoss_first_order (Set.univ : Set (Fin 1 × Fin 1)) 1) (continuous_mask_sub Set.univ 1)

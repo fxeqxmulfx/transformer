@@ -115,18 +115,15 @@ lemma add_smul_mul_conjTranspose (U A : Matrix m k ℂ) (V B : Matrix n k ℂ) (
   simp only [Matrix.add_mul, Matrix.mul_add, Matrix.smul_mul, Matrix.mul_smul]
   module
 
-/-- **The update is the gradient step** (`review/flat_spectrum.md`, item WD3): for `L` with
-the first-order inequality and a continuous `G`, the weight-decayed loss of the factors moved
-along `(A, B)` has derivative `⟨G V + λ U, A⟩ + ⟨Gᴴ U + λ V, B⟩` at the start, `G = G (U Vᴴ)`.
-Its gradient is the pair that `decayStep` subtracts, times the step `η`. -/
-theorem hasDerivAt_decayedLoss {L : Matrix m n ℂ → ℝ} {G : Matrix m n ℂ → Matrix m n ℂ}
-    (hconv : ∀ X Y, L X + pairing (G X) (Y - X) ≤ L Y) (hG : Continuous G) (lam : ℝ)
-    (U A : Matrix m k ℂ) (V B : Matrix n k ℂ) :
+/-- The derivative of the weight-decayed loss along `(A, B)`, from the derivative of the loss
+along the curve of the products: a field `G₀` with the latter gives the pair
+`(G₀ V + λ U, G₀ᴴ U + λ V)` (`review/flat_spectrum.md`, item WD3). No convexity is used. -/
+theorem hasDerivAt_decayedLoss_of_hasDerivAt {L : Matrix m n ℂ → ℝ} {G₀ : Matrix m n ℂ}
+    (lam : ℝ) (U A : Matrix m k ℂ) (V B : Matrix n k ℂ)
+    (hloss : HasDerivAt (fun t : ℝ => L (U * Vᴴ + t • (A * Vᴴ + U * Bᴴ + t • (A * Bᴴ))))
+      (pairing G₀ (A * Vᴴ + U * Bᴴ + (0 : ℝ) • (A * Bᴴ))) 0) :
     HasDerivAt (fun t : ℝ => decayedLoss L lam (U + t • A) (V + t • B))
-      (pairing (G (U * Vᴴ) * V + lam • U) A + pairing ((G (U * Vᴴ))ᴴ * U + lam • V) B) 0 := by
-  have hH : Continuous fun t : ℝ => A * Vᴴ + U * Bᴴ + t • (A * Bᴴ) :=
-    continuous_const.fun_add (continuous_id.fun_smul continuous_const)
-  have hloss := hasDerivAt_comp_add_smul hconv hG (U * Vᴴ) hH
+      (pairing (G₀ * V + lam • U) A + pairing (G₀ᴴ * U + lam • V) B) 0 := by
   have h2 : Continuous fun X : Matrix m k ℂ => (2 : ℝ) • X := continuous_id.fun_const_smul 2
   have h2' : Continuous fun X : Matrix n k ℂ => (2 : ℝ) • X := continuous_id.fun_const_smul 2
   have hU := hasDerivAt_comp_add_smul frobeniusSq_first_order h2 U (H := fun _ => A)
@@ -138,20 +135,39 @@ theorem hasDerivAt_decayedLoss {L : Matrix m n ℂ → ℝ} {G : Matrix m n ℂ 
         lam * ((frobeniusSq (U + t • A) + frobeniusSq (V + t • B)) / 2) := by
     funext t
     rw [decayedLoss, add_smul_mul_conjTranspose]
-  have e1 : pairing (G (U * Vᴴ) * V) A = pairing (G (U * Vᴴ)) (A * Vᴴ) :=
-    pairing_mul_right _ _ _
-  have e2 : pairing ((G (U * Vᴴ))ᴴ * U) B = pairing (G (U * Vᴴ)) (U * Bᴴ) := by
-    rw [pairing_mul_left, conjTranspose_conjTranspose, pairing_comm (G (U * Vᴴ)),
-      pairing_mul_right, conjTranspose_conjTranspose]
+  have e1 : pairing (G₀ * V) A = pairing G₀ (A * Vᴴ) := pairing_mul_right _ _ _
+  have e2 : pairing (G₀ᴴ * U) B = pairing G₀ (U * Bᴴ) := by
+    rw [pairing_mul_left, conjTranspose_conjTranspose, pairing_comm G₀, pairing_mul_right,
+      conjTranspose_conjTranspose]
   rw [hfun]
   convert hloss.fun_add (((hU.fun_add hV).div_const 2).const_mul lam) using 1
   simp only [zero_smul, add_zero, pairing_add_right, pairing_add_left, pairing_smul_left, e1, e2]
   ring
+
+/-- **The update is the gradient step** (`review/flat_spectrum.md`, item WD3): for `L` with
+the first-order inequality and a continuous `G`, the weight-decayed loss of the factors moved
+along `(A, B)` has derivative `⟨G V + λ U, A⟩ + ⟨Gᴴ U + λ V, B⟩` at the start, `G = G (U Vᴴ)`.
+Its gradient is the pair that `decayStep` subtracts, times the step `η`. -/
+theorem hasDerivAt_decayedLoss {L : Matrix m n ℂ → ℝ} {G : Matrix m n ℂ → Matrix m n ℂ}
+    (hconv : ∀ X Y, L X + pairing (G X) (Y - X) ≤ L Y) (hG : Continuous G) (lam : ℝ)
+    (U A : Matrix m k ℂ) (V B : Matrix n k ℂ) :
+    HasDerivAt (fun t : ℝ => decayedLoss L lam (U + t • A) (V + t • B))
+      (pairing (G (U * Vᴴ) * V + lam • U) A + pairing ((G (U * Vᴴ))ᴴ * U + lam • V) B) 0 :=
+  hasDerivAt_decayedLoss_of_hasDerivAt lam U A V B (hasDerivAt_comp_add_smul hconv hG (U * Vᴴ)
+    (continuous_const.fun_add (continuous_id.fun_smul continuous_const)))
 
 /-- The linear loss `−Re X` of a `1 × 1` matrix: its weight-decayed loss is differentiable
 along every direction, with the gradient of `decayStep`. -/
 example := hasDerivAt_decayedLoss (L := fun X : Matrix (Fin 1) (Fin 1) ℂ => pairing (-1) X)
   (G := fun _ => -1) (fun X Y => by rw [pairing_sub_right]; exact (add_sub_cancel _ _).le)
   continuous_const 1 (1 : Matrix (Fin 1) (Fin 1) ℂ) 1 (1 : Matrix (Fin 1) (Fin 1) ℂ) 1
+
+/-- The same from the derivative of the loss along the curve of the products. -/
+example := hasDerivAt_decayedLoss_of_hasDerivAt
+  (L := fun X : Matrix (Fin 1) (Fin 1) ℂ => pairing (-1) X) (G₀ := -1) 1
+  (1 : Matrix (Fin 1) (Fin 1) ℂ) 1 (1 : Matrix (Fin 1) (Fin 1) ℂ) 1
+  (hasDerivAt_comp_add_smul (G := fun _ => -1)
+    (fun X Y => by rw [pairing_sub_right]; exact (add_sub_cancel _ _).le) continuous_const _
+    (continuous_const.fun_add (continuous_id.fun_smul continuous_const)))
 
 end Transformer.Grokking.FlatSpectrum.Training

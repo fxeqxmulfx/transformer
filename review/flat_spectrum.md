@@ -12552,6 +12552,11 @@ on the cross-entropy of logits that are real-linear in the product:
 - for λ > 0 and a loss that reads only the seen cells, a trained product is zero on every row
   and every column without a seen cell; with an answer code the held-out cross-entropy at
   such cells is that of chance, and the run of XE3 ends at such a product (XE12).
+- without convexity, for a loss that is real-analytic in the entries and bounded below with
+  a continuous gradient, small steps from a sublevel set converge to a stationary point; for
+  the logits `±(Re x)²` of a `1 × 1` product, a weight decay `0 < λ ≤ 1/4` and a step with
+  `ηλ ≤ ½`, every run from the ball `‖U_0‖² + ‖V_0‖² ≤ λ/4` converges to the zero
+  factorization, which is not a decayed minimum (XE14).
 
 Assumed or not covered:
 
@@ -12579,9 +12584,90 @@ Assumed or not covered:
   cell of a seen row and a seen column decodes to under the cross-entropy is not determined
   here.
 - Logits that are not linear in the product, such as a network between the product and the
-  logits, and losses other than the squared loss, the cross-entropy and those of WD9.
+  logits. Then the loss need not be convex. Small steps still converge to a stationary point
+  when the loss is real-analytic and bounded below, and runs from a set of starts with
+  interior points, among them starts of full row rank, can end at a factorization that is
+  not a decayed minimum: the logits `±(Re x)²` (XE14). Which readouts that are not linear
+  keep the conclusion of XE3 is not determined.
+- Losses other than the squared loss, the cross-entropy and those of WD9.
 - The model and the optimizer: for the real network and for AdamW the modeling step of
   Lemma 1 remains an assumption, as the note says.
+
+### XE14. Logits that are not linear in the product
+
+XE1–XE3 take logits that are real-linear in the product. Linearity enters twice. It makes the
+loss convex, and the first-order inequality makes the field `G` the gradient of the loss
+(WD3). And WD2 and WD5 use the inequality again: a stationary point with a positive
+semidefinite lifted gradient is a decayed minimum. The first use does not need convexity. The
+second does.
+
+1. Small steps converge. Let `L` be real-analytic in the entries and bounded below, and let a
+   continuous field `G` be its gradient: `d/dt L(X + t H) = ⟨G(X), H⟩` at `t = 0` for all `X`
+   and `H`. A real-analytic function is differentiable, so along a curve `X + t H(t)` with a
+   continuous `H` the derivative at `t = 0` is `⟨G(X), H(0)⟩`, the conclusion of WD3. So the
+   update of WD1 is the gradient step of the weight-decayed loss on the factor space, and WD9
+   applies with its proof: for λ > 0 and a level `c` there is `η_0 > 0` such that for
+   `0 < η < η_0` the run from every start with weight-decayed loss at most `c`, of any width
+   and rank, converges, and its limit is stationary, `M [U; V] = 0`. The cross-entropy of
+   logits that are real-analytic in the product is such a loss: it is nonnegative.
+2. The limit need not be a decayed minimum. Let two classes read a `1 × 1` product `x`
+   through the logits `±(Re x)²`, with the label of `+`. The loss and its gradient are
+
+   ```
+   L(X) = log(1 + e^{−2 r²}),    G(X) = −4 r w(r),    w(r) = e^{−2 r²} / (1 + e^{−2 r²}),    r = Re x.
+   ```
+
+   The loss is nonnegative and real-analytic, and `G` is continuous, so 1 applies. It is not
+   convex: `L(0) = log 2` is its largest value and `G(0) = 0`, so the first-order inequality
+   fails at `X = 0`.
+
+   Near the zero factorization the gradient is small. As `0 ≤ w ≤ ½`,
+
+   ```
+   ‖G(X)‖ ≤ 2 |r|,    ⟨G(X), X⟩ = −4 r² w(r) ≥ −2 r²,    |r| ≤ ‖U Vᴴ‖ ≤ ½ (‖U‖² + ‖V‖²).
+   ```
+
+   Write `ω = ‖U‖² + ‖V‖²`, so that `‖G‖ ≤ ω` and `⟨G, X⟩ ≥ −ω²/2`. A step of WD1 is
+   `W ← (1 − η M) W`, and with `⟨W, M W⟩ = λ ω + 2 ⟨G, X⟩` and `‖M W‖² ≤ 2 (λ² + ‖G‖²) ω`
+   (WD1, WD6),
+
+   ```
+   ω' = ω − 2η ⟨W, M W⟩ + η² ‖M W‖² ≤ ω (1 − 2ηλ + 2η ω + 2η² λ² + 2η² ω²).
+   ```
+
+   Let `ω ≤ λ/4` and `ηλ ≤ ½`. Then `2η ω ≤ ηλ/2`, `2η² λ² ≤ ηλ` and `2η² ω² ≤ ηλ/16`, so
+
+   ```
+   ω' ≤ (1 − ηλ/4) ω.
+   ```
+
+   So for `0 < η` every run from the ball `‖U_0‖² + ‖V_0‖² ≤ λ/4`, of any width and rank,
+   stays in it and converges to the zero factorization. In the ball
+   `η (λ + ‖G‖) ≤ (5/4) ηλ < 1`, so the step matrices are positive definite, as WD5 asks.
+
+   The zero factorization is not a decayed minimum when `λ ≤ 1/4`. Its weight-decayed loss
+   is `log 2 > 0.693`. The factorization `(3/2) · (4/3)` of the product `2`, of width one,
+   has
+
+   ```
+   log(1 + e^{−8}) + λ (9/4 + 16/9) / 2 ≤ 1/9 + 145/288 < 0.615,
+   ```
+
+   as `log(1 + u) ≤ u` and `e^8 ≥ 9`.
+
+So for `0 < λ ≤ 1/4` and `0 < η` with `ηλ ≤ ½`, every run from the ball converges, and its
+limit is not a decayed minimum. The ball has interior points, and it contains starts of full
+row rank: for λ = 1/4 the start `U_0 = [1/8 0]`, `V_0 = [1/8 1/8]` has
+`‖U_0‖² + ‖V_0‖² = 3/64 ≤ 1/16`, full row rank and the product `1/64`. So the conclusions of
+WD5 ("a convergent run from full row rank with admissible steps ends at a decayed minimum")
+and of WD10 ("small steps from almost every start converge to a decayed minimum") fail for
+this loss, which meets their hypotheses except convexity. With the linear logits `±Re x` in
+place of `±(Re x)²` this is the sample of XE3, whose run from a start of full row rank ends
+at a trained fit.
+
+What 2 uses is that these logits have no linear term at `0`: the gradient vanishes there, and
+the weight decay holds the factors at `0`, a local minimum of the weight-decayed loss that is
+not global. Which readouts that are not linear keep the conclusion of XE3 is not determined.
 
 ### Lean
 
@@ -12608,6 +12694,7 @@ Assumed or not covered:
 | XE10 | `continuous_gap`, `nuclearNorm_le_of_tendsto`, `nuclearNorm_inv_smul_le`, `margin_inv_smul`, `exists_subseq_tendsto_inv_smul`, `margin_eq_maxMargin_of_tendsto`, `exists_margin_eq_maxMargin`, `margin_eq_maxMargin_of_tendsto_inv_smul`, `tendsto_inv_smul_of_unique`, `tendsto_inv_margin_smul`, `tendsto_inv_margin_smul_of_unique`; trained products: `margin_eq_maxMargin_of_tendsto_inv_smul_of_isNuclearMin`, `tendsto_inv_smul_of_unique_of_isNuclearMin`, `tendsto_inv_margin_smul_of_isNuclearMin`; example: `gap_signProbe`, `maxMargin_signProbe`, `eq_one_of_margin_signProbe` | The direction is `(nuclearNorm X)⁻¹ • X`, which is `0` for `X = 0`. The compact set is `{X \| ∀ i j, ‖X i j‖ ≤ 1}` (`isCompact_setOf_norm_apply_le`), which contains the unit ball, and the dual form of the norm is `exists_isContraction_trace_eq`. Statement 2 is for a convergent sequence of directions; its subsequences are taken by `exists_subseq_tendsto_inv_smul`, which holds for every sequence of matrices. "One product has the margin `μ*`" is the hypothesis `∀ Z, nuclearNorm Z ≤ 1 → margin A y Z = maxMargin A y → Z = Z₀`. In statement 4 the scaled fit is `(margin A y X)⁻¹ • X`, which is `0` where the margin is `0`. |
 | XE11 | `IsMirroredCode`, `IsMirroredCode.injective`, `pairing_eq_sum_re`, `gap_codeProbe_add_gap`, `margin_codeProbe_le_mul_re`, `margin_codeProbe_eq`, `norm_apply_eq_one_of_surjective`, `margin_codeProbe_le_mul_re_apply`, `card_mul_margin_codeProbe_le`, `card_mul_card_eq_of_isFlat`, `margin_codeProbe_mul_nuclearNorm_le`, `maxMargin_codeProbe_eq`, `margin_inv_smul_codeProbe`, `eq_mul_of_re_conj_mul`, `mul_re_eq_margin_of_margin_eq`, `apply_cell_eq_of_margin_eq`, `eq_inv_smul_of_margin_codeProbe_eq`, `tendsto_inv_smul_codeProbe`, `tendsto_inv_margin_smul_codeProbe`, `tendsto_inv_smul_codeProbe_iff`; the code `ψ`: `cos_two_pi_mul_div_le`, `one_sub_cos_two_pi_div_pos`, `one_sub_cos_two_pi_div_lt_two`, `norm_stdAddChar_sub_sq`, `isMirroredCode_stdAddChar`, `tendsto_inv_smul_cubicKernel_iff`; trained products: `tendsto_inv_smul_codeProbe_iff_of_isNuclearMin`, `tendsto_inv_margin_smul_codeProbe_of_isNuclearMin`, `tendsto_inv_smul_cubicKernel_iff_of_isNuclearMin`; not mirrored: `quarterCode`, `norm_quarterCode`, `injective_quarterCode`, `not_isMirroredCode_quarterCode`, `gap_quarterCode`, `margin_quarterCode`, `quarterLimit`, `quarterLimit_apply`, `nuclearNorm_quarterLimit_le`, `margin_quarterLimit`, `margin_quarterCode_le`, `maxMargin_quarterCode`, `eq_quarterLimit_of_margin`, `tendsto_inv_smul_quarterCode`, `not_tendsto_inv_smul_quarterCode`; the code `±1`: `isNuclearMin_of_pairing`, `IsNuclearMin.of_le`, `inv_nuclearNorm_smul_smul`, `pairing_codeProbe_signCode`, `ceLoss_signCode_congr`, `margin_signCode_congr`, `probability_signCode_sub`, `pairing_ceGrad_smul_signCode`, `isNuclearMin_smul_signCode`, `isNuclearMin_smul_of_re_eq`, `tendsto_signDecay`, `nuclearNorm_eq_of_re_eq`, `nuclearNorm_pos_of_signCode`, `exists_ne_margin_eq_maxMargin_signCode`, `exists_seq_isNuclearMin_tendsto_signCode`, `exists_seq_isNuclearMin_not_tendsto_signCode`, `exists_seq_isDecayedMin_not_tendsto_signCode`; its pair: `signKernel`, `signLabel`, `signTwin`, `signKernel_apply`, `isFlat_signKernel`, `nuclearNorm_signKernel`, `signTwin_re`, `signTwin_ne`, `signTwin_eq_vecMulVec`, `frobeniusSq_signTwin`, `nuclearNorm_signTwin_le`, `exists_ne_margin_eq_maxMargin_signKernel`, `exists_seq_isDecayedMin_not_tendsto_signKernel`; the real parts: `log_one_add_exp_midpoint_lt`, `log_one_add_exp_midpoint_le`, `crossEntropy_signCode`, `ceLoss_signCode_eq`, `ceLoss_signCode_midpoint_lt`, `IsNuclearMin.re_apply_eq_of_signCode`; real factors: `HasRealEntries` with `.zero`, `.one`, `.add`, `.sub`, `.smul`, `.conjTranspose`, `.mul`, `.sum`, `.fromCols`, `.of_tendsto`, `.decayStep`, `hasRealEntries_decayRun`, `hasRealEntries_of_tendsto_decayRun`, `signScale`, `signDecay_signScale`, `signScale_nonneg`, `signScale_pos`, `isNuclearMin_signScale_smul`, `IsNuclearMin.re_eq_signScale_mul`, `IsNuclearMin.eq_signScale_smul`, `tendsto_inv_smul_signCode_of_real`, `one_le_sqrt_two`, `hasRealEntries_signKernel`, `hasRealEntries_ceGrad_signCode`, `exists_tendsto_decayRun_signCode_of_real`, `exists_isDecayedMin_signCode_real`, `tendsto_inv_smul_signCode_of_real_factors`, `exists_seq_isDecayedMin_real_tendsto_signCode`; example: `isMirroredCode_signCode` | `IsMirroredCode φ g` is the conjunction of `∀ c, ‖φ c‖ = 1`, `∀ t c, c ≠ t → 2 * g ≤ ‖φ t - φ c‖ ^ 2` and `∀ t, ∃ c c', c ≠ t ∧ c' ≠ t ∧ φ c + φ c' = ((2 * (1 - g) : ℝ) : ℂ) * φ t`. "Every cell is seen" is `Function.Surjective cell`, and "`K` has no zero entry" is `∀ i j, K i j ≠ 0`. The flat kernel is `IsFlat K c₀` with `0 < c₀`. `ψ` is `ZMod.stdAddChar` as a function on `ZMod p`, with the gap `1 - cos (2 * π / p)`. In `tendsto_inv_smul_cubicKernel_iff` the samples are a finite nonempty type with cells `cell : S → ZMod p × ZMod p` and the labels `(cell s).1 ^ 3 + (cell s).1 * (cell s).2`. Statement 4 is proved cell by cell in `apply_cell_eq_of_margin_eq`. The limit at margin one is `g⁻¹ • K`. The code `(1, i)` is `quarterCode` on `Bool`, with `true` for the codeword `1`; `(1 − i) / √2` is `quarterLimit`, the `1 × 1` matrix `(√2)⁻¹ • (1 − i)`; the kernel is the `1 × 1` matrix `1`, and the limit excluded is `(nuclearNorm 1)⁻¹ • 1`. For the code `±1`, "every cell is seen once" is `Function.Bijective cell`; `K'` is a matrix with `(K' i j).re = (K i j).re`, `nuclearNorm K' ≤ nuclearNorm K` and `K' ≠ K`; the second product of 6 is `(nuclearNorm K)⁻¹ • K'`; "does not converge" is `∀ Z, ¬ Tendsto … (𝓝 Z)`; the trained fits of 7 have the width of the columns; the certificate `isNuclearMin_of_pairing` is stated for every convex loss with its gradient; `G(t K) = −β K` is stated as the pairing with every `H`, a sum over the samples; the labels of `signKernel` are `signLabel`, `false` at the cell `(1, 0)`. "Real entries" is `HasRealEntries X`, `∀ i j, (X i j).im = 0`; `t(λ)` is `signScale c₀ lam`; statement 8 is stated at every sample `s`, for the cell `cell s`; `tendsto_inv_smul_signCode_of_real` is about trained products with real entries, so about fits of any widths, and `tendsto_inv_smul_signCode_of_real_factors` about fits of one column type; the run of 9 has the bounds of `exists_tendsto_decayRun_ceLoss_isDecayedMin` at `a = 1`, and the start of `exists_isDecayedMin_signCode_real` is `fromCols 1 0`, `fromCols 0 1`. The examples are the code `±1` with the `1 × 1` kernel `1`, and `cubicKernel 3` with all nine cells seen and the code `ψ`. |
 | XE12 | `IsDecayedMin.row_eq_zero`, `IsDecayedMin.col_eq_zero`, `IsDecayedMin.apply_eq_zero_of_codeProbe`, `IsDecayedMin.pairing_codeProbe_eq_zero`, `IsDecayedMin.ceLoss_heldOut_eq`, `exists_tendsto_decayRun_ceLoss_eq_zero` | The row has `∀ j, (i, j) ∉ Ω` as in CW8, whose `row_eq_zero_of_isMinOn` and `col_eq_zero_of_isMinOn` are applied to the minimum of XE7. For the answer code the seen cells are `Set.range cell`, and "no sample sees the row `i`" is `∀ s, (cell s).1 ≠ i`. The held-out samples are a finite type `S'` with cells `cell' : S' → m × n` and any labels `y'`. "The softmax is uniform" is the statement that every logit is zero. |
+| XE14 | `hasDerivAt_comp_add_smul_of_analytic`, `gradient_flatLoss_of_analytic`, `factors_iterate_gradientStep_of_analytic`, `exists_pos_tendsto_decayRun_of_analytic`; the logits `±(Re x)²`: `sqWeight`, `sqWeight_nonneg`, `sqWeight_le_half`, `sqLogitLoss`, `sqLogitGrad`, `sqLogitLoss_eq_crossEntropy`, `sqLogitLoss_nonneg`, `sqLogitLoss_zero`, `sqLogitGrad_zero`, `pairing_sqLogitGrad`, `hasDerivAt_sqLogitLoss`, `continuous_sqLogitGrad`, `analyticAt_sqLogitLoss`, `exists_pos_tendsto_decayRun_sqLogit`, `sqLogitLoss_lt_zero`, `not_first_order_sqLogit`, `frobeniusSq_sqLogitGrad_le`, `neg_le_pairing_sqLogitGrad`; the ball: `tendsto_zero_of_tendsto_frobeniusSq`, `re_sq_le_frobeniusSq`, `frobeniusSq_sqLogitGrad_mul_le`, `frobeniusSq_decayStep_sqLogit_le`, `frobeniusSq_decayRun_sqLogit_le`, `tendsto_decayRun_sqLogit_zero`, `one_sub_smul_lift_posDef_sqLogit`, `not_isDecayedMin_sqLogit_zero`, `exists_tendsto_decayRun_sqLogit_not_isDecayedMin`; in `Training`: `hasDerivAt_decayedLoss_of_hasDerivAt`, `hasGradientAt_flatLoss_of_hasDerivAt` | Modules `Scope/SmoothLoss`, `Scope/SquaredLogit`, `Scope/SquaredLogitBall` and `Scope/SquaredLogitRun`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. "`G` is the gradient of `L`" is the hypothesis `∀ X H, HasDerivAt (fun t : ℝ => L (X + t • H)) (pairing (G X) H) 0`; real-analytic and bounded below are the hypotheses of WD9, and the conclusion of statement 1 is that of `exists_pos_tendsto_decayRun`. The two lemmas in `Training` are the parts of `hasDerivAt_decayedLoss` and `hasGradientAt_flatLoss` that do not use convexity. The loss is `sqLogitLoss X = log (1 + exp (-(2 * (X 0 0).re ^ 2)))` on `Matrix (Fin 1) (Fin 1) ℂ`, equal to `crossEntropy (fun c : Bool => (signCode c).re * (X 0 0).re ^ 2) true`, and `sqLogitGrad X = (-(4 * r * sqWeight r)) • 1`. "Not convex" is `¬ ∀ X Y, L X + pairing (G X) (Y - X) ≤ L Y`. The factors are `Matrix (Fin 1) k ℂ` for a finite `k`; "converges to the zero factorization" is `Tendsto … (𝓝 (0, 0))`; "not a decayed minimum" is `¬ IsDecayedMin sqLogitLoss lam 0 0` for `lam ≤ 1/4`, at every `k`. That the ball has interior points and the comparison with WD10 are not formalized. The start of the examples is `!![1/8, 0]`, `!![1/8, 1/8]` with `lam = 1/4` and `η = 1`. |
 
 ## Convex answer-loss recall
 
