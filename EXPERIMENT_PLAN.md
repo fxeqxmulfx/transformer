@@ -4181,13 +4181,24 @@ or new final-test prediction is made, and production GPT stays unchanged.
 
 ## Convex answer-CE recall comparison (2026-11-11)
 
-**Status: native implementation and checks; fixed empirical protocol.**
+**Status: completed all 24 fixed-budget native runs; seven native checks pass.**
 The user requested a comparison of the newly proved convex matching model
 with a usual transformer on MQAR and `a / b mod p`, after the Lean proof
 `0fcc0d1b`. `experiments/convex_recall_compare/README.md` fixes three seeds,
 8-key/16-value MQAR, division mod 17/97, endpoints and reporting rules before
 training. It reuses the validated native Kernite transformer engine with
 longer attention scratch buffers. No Python is used.
+
+All three seeds of matching and the transformer finish at 100% MQAR test
+accuracy. Matching first shows 100% at step 5 and exact identity at step 10;
+the transformer first shows 100% at steps 1000/2000/1000. Division copy-only
+adaptations finish at mean test accuracy 9.07% (mod 17) and 1.62% (mod 97),
+versus 11.76% and 16.26% for the width-32 transformer at 20,000 updates.
+Independent convex answer tables fit every training pair but retain uniform
+held-out logits. The transformer has not solved division in this pilot;
+mod 17 is memorized and mod 97 remains poorly fit even on training data.
+No endpoint was extended or selected by test results. Generated evidence is
+preserved in the root experiment's ignored runs directory.
 
 This tests the narrower fixed-copy architecture proved in
 `Grokking.FlatSpectrum.ConvexRecall`. Its explicit copy adaptation and a

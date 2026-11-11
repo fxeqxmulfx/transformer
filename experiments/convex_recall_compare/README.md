@@ -2,8 +2,70 @@
 
 Does the convex answer-CE matching model proved at `0fcc0d1b` learn held-out
 MQAR dictionaries, and can its copying mechanism also learn `a / b mod p`?
-This is a native Rust/Kernite comparison. The protocol below was written
-before training. Results are pending.
+This is a native Rust/Kernite comparison. The protocol below was committed
+before training at `8564ccaf`. All 24 runs completed their fixed budgets.
+
+## Findings
+
+Both models solve this MQAR setting in all three seeds. The convex matcher
+first shows 100% test query and sequence accuracy at step 5, and exactly
+equals the identity matrix at step 10, in every seed. The transformer first
+shows 100% query accuracy at steps 1,000 / 2,000 / 1,000 for seeds 0 / 1 / 2.
+These are scheduled observations, not exact first-passage times. Both finish
+at 100% after 6,000 updates. The matching model uses 64 parameters versus
+26,368, with the substantial advantage of its supplied pairing/copying prior.
+
+Endpoint accuracies below are percentages, averaged over all three seeds;
+brackets give their range. CE is mean held-out ordinary cross-entropy.
+
+| Task | Method | Train accuracy | Test accuracy [range] | Test CE |
+| --- | --- | ---: | ---: | ---: |
+| MQAR | Proved convex matching | 100 | **100 [100, 100]** | 2.247202 |
+| MQAR | Transformer | 100 | **100 [100, 100]** | 0.000000119 |
+| Division mod 17 | Copy adaptation | 15.44 | 9.07 [6.62, 10.29] | 2.917312 |
+| Division mod 17 | Convex table control | 100 | 5.15 [2.94, 7.35] | 2.944439 |
+| Division mod 17 | Transformer | 100 | 11.76 [8.82, 14.71] | 4.487515 |
+| Division mod 97 | Copy adaptation | 2.60 | 1.62 [1.52, 1.76] | 4.590720 |
+| Division mod 97 | Convex table control | 100 | 1.13 [1.10, 1.16] | 4.595120 |
+| Division mod 97 | Transformer | 19.37 | 16.26 [7.56, 20.70] | 2.793301 |
+
+The matcher reaches its analytically known CE minimum; its larger raw CE
+than the transformer's reflects the fixed unit logit scale, not recall errors.
+For division, the copy adaptation cannot represent most outputs. The table
+control fits every training equation but leaves all held-out logits exactly
+uniform, as predicted by its zero held-out gradient. With the specified
+first-maximum tie rule it always predicts zero there; its accuracy is the
+held-out fraction of zero labels, not a sampled uniform-class accuracy.
+
+The transformer memorizes mod 17 without learning the whole division rule
+in this budget. On mod 97 it has not even fit the training split, and its
+held-out accuracy varies substantially by seed. It exceeds the copy-only
+whole-table ceiling, showing a capability the copying family lacks, but
+does not solve division here. These small-width, 20,000-update runs do not
+establish the transformer's eventual performance or a general grokking limit.
+No run was extended, replaced, or selected by held-out accuracy.
+
+The useful conclusion is that ordinary convex answer training suffices for
+this structured recall architecture. Its fixed value-copying prior does not
+supply a general arithmetic model. Adding an independent convex answer table
+supplies capacity to memorize arithmetic, without a mechanism that identifies
+unseen pairs. The Lean flat-spectrum result is consistent with all of these
+observations.
+
+The three seed streams ran concurrently, each transformer with four CPU
+workers. Mean recorded times are 0.78 s for matching and 27.81 s for the
+transformer on MQAR; 30.23 s and 37.94 s for the transformer on mod 17 and
+mod 97. They include preceding evaluations/checkpoint I/O within a run,
+but exclude initial evaluation and the current final evaluation. CPU
+contention, different precisions and different architectural work prevent
+interpreting these as controlled speedup measurements.
+
+The native report validates all **24 endpoints**, matched input/split hashes,
+finite losses, the copy-support ceilings, unchanged unseen table logits,
+and exact matching identity recovery. Every run records trainer source SHA256
+`cb81c4018e20260d58fad7f06fea0407606824b9de6a5411fdbb60a14d60e51d`.
+Raw metrics, metadata, resumable checkpoints and the generated summary remain
+in ignored `runs/`; only the source and authored interpretation are committed.
 
 ## Fixed protocol
 
@@ -99,6 +161,7 @@ for seed in 0 1 2; do
     done
   done
 done
+target/release/report runs > runs/summary.json
 ```
 
 Repeating a command resumes its checkpoint, including the minibatch RNG and
