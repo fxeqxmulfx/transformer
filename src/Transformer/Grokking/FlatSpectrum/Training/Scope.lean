@@ -3,9 +3,11 @@ module
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.LinearDiverge
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.MarginContinuity
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.NoDecayRun
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.PaddedRun
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.PhaseStep
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.PhasedDirection
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.PhasedRun
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.RankStart
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignSegment
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignSegmentCore
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignSet
@@ -13,6 +15,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.Scope.SmoothLoss
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SquaredLogit
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SquaredLogitBall
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SquaredLogitRun
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.StackRank
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.TwoByTwo
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.UnseenCell
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.UnseenCellLimit
@@ -69,4 +72,12 @@ dropped, or the part of the open statement that is proved.
   direction to the flat kernel when every cell is seen, for a mirrored code
   (`exists_tendsto_inv_smul_phaseProduct_codeProbe`), and they answer the unseen cell of the
   kernel of signs with the wrong class (`exists_eventually_phaseProduct_unseen_wrong`). The
-  lengths of the phases are not explicit, and the margin is not followed inside a phase. -/
+  lengths of the phases are not explicit, and the margin is not followed inside a phase.
+* The exceptional starts at a narrow width (WD11, WD14). A run does not raise the rank of its
+  stack (`rank_stack_decayRun_le`, `rank_mul_conjTranspose_le_of_tendsto`), so a start whose
+  stack has a rank below that of every trained product reaches no decayed minimum
+  (`not_isDecayedMin_of_rank_lt`). For the `2 × 2` identity these are the starts of rank at
+  most one, at every width, and under the bounds of WD8 their runs converge to stationary
+  points that are not decayed minima (`exists_tendsto_decayRun_one_not_isDecayedMin`). The
+  run from a start with zero columns is the narrower run (`decayRun_fromCols_zero`). Whether
+  the exceptional set of WD10 contains more is not determined. -/

@@ -1,7 +1,7 @@
 import Transformer
 
-/-! Audit the scope items of `review/flat_spectrum.md`: WD12 of *Training reaches the optimal
-fit*, XE14 to XE18 of *Training with cross-entropy*, the answers to the items
+/-! Audit the scope items of `review/flat_spectrum.md`: WD12 and WD14 of *Training reaches the
+optimal fit*, XE14 to XE18 of *Training with cross-entropy*, the answers to the items
 "Assumed or not covered" of WD11 and XE13
 (`Transformer.Grokking.FlatSpectrum.Training.Scope`). -/
 
@@ -96,3 +96,21 @@ fit*, XE14 to XE18 of *Training with cross-entropy*, the answers to the items
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_inv_smul_phaseProduct_codeProbe
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_inv_smul_phaseProduct_cubicKernel
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_eventually_phaseProduct_unseen_wrong
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.stack_decayRun_mulVec_eq_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.stack_mulVec_eq_zero_of_tendsto
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.rank_le_of_forall_mulVec_eq_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.rank_stack_decayRun_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.rank_mul_conjTranspose_le_of_tendsto
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.not_isDecayedMin_of_rank_lt
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.one_lt_rank_of_isNuclearMin_one
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.not_isDecayedMin_one_of_rank_le_one
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_one_not_isDecayedMin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.fromCols_zero_mul_conjTranspose
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_fromCols_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.decayStep_fromCols_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.decayRun_succ
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.decayRun_fromCols_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_decayRun_fromCols_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.decayedLoss_fromCols_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isDecayedMin_fromCols_zero_iff
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.rank_stack_fromCols_zero_le
