@@ -1,12 +1,59 @@
 //! Validate all 18 fixed endpoints and report mean/min/max, including failures.
-use convex_channels::{provenance::source_hash, task};
-use convex_recall_compare::data;
+use convex_channels::{channel::Channel, provenance::source_hash, task};
+use convex_recall_compare::{convex::ce_gradient, data};
 use serde_json::{Value, json};
 use std::{fs, path::Path};
 
 fn read(path: &Path) -> Value {
     serde_json::from_slice(&fs::read(path).unwrap_or_else(|e| panic!("{}: {e}", path.display())))
         .unwrap()
+}
+
+fn verify_saved_channel(saved: &Value, endpoint: &Value, expected: &task::Task) {
+    assert_eq!(saved["arrays"].as_array().unwrap().len(), 1);
+    let mut channel = Channel::new(task::KEYS, task::KEYS, task::VALUES, task::CLASSES);
+    channel.weights =
+        saved["arrays"][0].as_array().unwrap().iter().map(|x| x.as_f64().unwrap()).collect();
+    assert_eq!(channel.weights.len(), task::KEYS * task::KEYS * task::VALUES * task::CLASSES);
+    assert!(channel.weights.iter().all(|x| x.is_finite()));
+    assert!(
+        (channel.feasibility_error() - endpoint["channel"]["feasibility_error"].as_f64().unwrap())
+            .abs()
+            < 1e-12
+    );
+    assert!(
+        (task::rule_error(&channel, expected)
+            - endpoint["channel"]["rule_error"].as_f64().unwrap())
+        .abs()
+            < 1e-12
+    );
+    assert!(
+        (channel.gap(&expected.data.train.iter().collect::<Vec<_>>())
+            - endpoint["channel"]["fw_gap"].as_f64().unwrap())
+        .abs()
+            < 1e-12
+    );
+    assert_eq!(task::spectrum(expected, Some(&channel)), endpoint["spectrum"]);
+    for (split, samples) in [("train", &expected.data.train), ("test", &expected.data.test)] {
+        let (mut loss, mut correct, mut count) = (0.0, 0usize, 0usize);
+        for sample in samples {
+            let logits = channel.logits(sample);
+            for (i, &target) in sample.targets.iter().enumerate() {
+                let row = &logits[i * task::CLASSES..][..task::CLASSES];
+                loss += ce_gradient(row, target).0;
+                let mut prediction = 0;
+                for c in 1..row.len() {
+                    if row[c] > row[prediction] {
+                        prediction = c;
+                    }
+                }
+                correct += usize::from(prediction == target);
+                count += 1;
+            }
+        }
+        assert!((loss / count as f64 - endpoint[split]["ce"].as_f64().unwrap()).abs() < 1e-12);
+        assert_eq!(correct as f64 / count as f64, endpoint[split]["accuracy"].as_f64().unwrap());
+    }
 }
 
 fn main() {
@@ -67,6 +114,9 @@ fn main() {
                     saved["arrays"][0].as_array().unwrap().len(),
                     endpoint["parameters"].as_u64().unwrap() as usize
                 );
+                if method == "channel" {
+                    verify_saved_channel(&saved, &endpoint, &expected);
+                }
                 let first100 =
                     log.iter().find(|r| r["test"]["accuracy"] == 1.0).map(|r| r["step"].clone());
                 results.push(

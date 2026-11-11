@@ -4209,7 +4209,7 @@ satisfied. No answer dictionary is provided to the arithmetic forward pass.
 
 ## Convex generated channels and flat-spectrum bounds (2026-11-11)
 
-**Status: Lean construction landed at `dbb3a4cb`; native protocol fixed, runs pending.**
+**Status: Lean construction landed at `dbb3a4cb`; all 18 fixed native runs complete.**
 The user requested extending the convex model, then clarified to use flat spectrum
 as a bound rather than an arithmetic-specific architecture. The joint tensor
 learns routing and output classes from categorical bindings with ordinary CE.
@@ -4225,3 +4225,12 @@ data, optimizer budgets and reporting before training. A full finite spectral
 diagnostic checks the sharp rank/error bound. This does not reopen the unrelated
 compact joint-embedding drop-in requirement or claim generalization from flatness
 alone. No arithmetic feature map is introduced.
+
+Every channel and transformer run reaches 100% held-out accuracy on both tasks;
+fixed copying reaches 100% on ordinary MQAR and 0% on recoded outputs. The channel
+recovers the exact parameter witness after one full-batch update in every seed.
+The saved tensor has zero gap, constraint violation and full-domain spectral
+error on all 4096 dictionaries. Removing target rank directions gives exactly
+the proved `4096(4-d)` squared-error bound. Five native tests, all 18 endpoint
+checks and re-evaluation of saved channels pass. Confidence scales, batch sizes
+and update budgets differ, so no equal-budget speed comparison is claimed.

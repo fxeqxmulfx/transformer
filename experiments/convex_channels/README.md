@@ -99,12 +99,58 @@ configuration, every observation, final parameters and optimizer moments, and
 stdout for every seed. It has no resume mode; an interrupted run remains as
 incomplete evidence. Use a fresh directory for a separately documented rerun.
 The report requires all 18 completed endpoints and validates source fingerprints,
-regenerated data, spectral diagnostics and the recorded endpoint consistency.
+regenerated data, spectral diagnostics and the recorded endpoint consistency. It
+reconstructs every saved channel and re-evaluates its predictions, gradient gap,
+constraints, parameter witness and full-domain spectrum.
 Generated evidence stays ignored under `runs/`, linked to the root checkout
 while working in a temporary worktree.
 
 ## Findings
 
-Research runs have not yet been executed. The Lean construction and five native
-implementation checks pass; no empirical generalization result is inferred
-from those checks alone.
+All 18 frozen runs completed and passed report validation. No failed runs,
+restarts, changed endpoints or test-selected reruns occurred. Every model's
+training/test input hashes agree within its task and seed. All runs have source
+fingerprint `0a2d91eea63b1754ed0c0f2208f4d6d27de4580162c406aaebcba88b734e20fc`.
+
+| Model | Parameters | MQAR test accuracy, all seeds | Recoded MQAR test accuracy, all seeds |
+| --- | ---: | ---: | ---: |
+| Joint convex channel | 2560 | 100% | 100% |
+| Fixed-copy matcher | 16 | 100% | 0% |
+| Conventional transformer | 26112 | 100% | 100% |
+
+The channel first reaches 100% at update **one**, in all six runs. The stored
+tensor equals the entire realizable parameter witness exactly: maximum parameter
+error, constraint violation and full-data Frank-Wolfe gap are all zero. Replaying
+the saved weights reproduces these diagnostics. Its scalar output matches the
+flat target on **all 4096 dictionaries**, not only the 256 held-out examples:
+full-domain squared Frobenius error is zero. Ideal CE is 2.0781543864329897,
+consistent with the fixed unit-logit scale.
+
+This one-step behavior has a simple explanation for this dataset: at uniform
+initial logits, the CE gradient counts observed labels for each query/key/value.
+The queried key predicts all its labels consistently; separating examples
+contradict alternative keys. The exact finite oracle therefore selects the
+correct key and its learned output classes. The first step has `eta=1`, so it
+reaches that vertex. This explains these measured runs; the Lean learning theorem
+is about global optimizers and the checked data condition, and the Lean oracle
+theorem does not formalize this complete one-step numerical argument.
+
+On ordinary MQAR the fixed-copy matcher first shows 100% at update two for every
+seed. The transformer's first observed 100% is at updates 500/200/200 on ordinary
+MQAR and 500/1000/1000 on recoded MQAR. Endpoint training accuracy also equals the
+test accuracies in the table. Mean transformer test CE is `8.23e-8` and `6.15e-5`
+respectively; copying's mean recoded CE is 3.05377. Different confidence scales,
+batch sizes and update budgets prevent a direct speed or CE-quality claim.
+
+For every task and seed, the target Gram is `4096 I`. Measured errors at ranks
+0,1,2,3,4 are respectively 16384,12288,8192,4096,0, exactly the flat-spectrum bound.
+The channel retains ample categorical capacity and successfully learns generated
+outputs. The result relies on its shared query/key/value structure and observed
+coverage. It does **not** establish that arbitrary unseen labels are determined
+by flatness, or resolve the compact learned-embedding transformer replacement.
+
+Validation: five native tests, formatting, all 18 endpoint checks and saved-channel
+replays pass. Lean's full build and 62-declaration channel axiom audit pass; the
+repository retains its existing 36 unfinished statements, with zero results
+resting on them and zero extra axioms. Generated evidence is in the ignored root
+`experiments/convex_channels/runs/` and `.kanban/artifacts/144/` directories.
