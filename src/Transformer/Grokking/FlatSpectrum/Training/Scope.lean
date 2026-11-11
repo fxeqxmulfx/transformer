@@ -6,6 +6,9 @@ public import Transformer.Grokking.FlatSpectrum.Training.Scope.LinearDiverge
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.MarginContinuity
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.NegStart
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.NoDecayRun
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.OneByOne
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.OneByOneLimit
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.OneByOneRun
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.PaddedRun
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.PhaseStep
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.PhasedDirection
@@ -105,4 +108,14 @@ dropped, or the part of the open statement that is proved.
   than the starts of low rank: for the `2 × 2` identity the run from `V₀ = −U₀` keeps
   `V_t = −U_t` (`decayRun_neg`) and reaches no decayed minimum
   (`not_isDecayedMin_one_of_neg`), though the stack `[U₀; −U₀]` has the rank of `U₀`
-  (`rank_stack_neg`), which can be two. An exact description of that set is not given. -/
+  (`rank_stack_neg`), which can be two. An exact description of that set is not given.
+* The `1 × 1` identity (WD11, WD15). For the squared loss on the `1 × 1` identity,
+  `0 < λ < 1` and the bounds of WD8, at every width, the run from a start in the ball
+  converges, and its limit is a decayed minimum exactly when `U₀ + V₀ ≠ 0`
+  (`exists_tendsto_decayRun_one_isDecayedMin_iff`): a step keeps the sum of the factors
+  nonzero and does not decrease it near the origin (`frobeniusSq_add_decayStep_one`), and a
+  stationary point other than the origin is a decayed minimum
+  (`isDecayedMin_one_of_stationary`). For `λ ≥ 1` every run from the ball ends at a decayed
+  minimum (`exists_tendsto_decayRun_one_isDecayedMin_of_one_le`). So here the exceptional
+  starts are those of the subspace `U₀ + V₀ = 0` when `λ < 1` and there are none when `λ ≥ 1`,
+  the step is explicit, and width one is included. Larger kernels are open. -/

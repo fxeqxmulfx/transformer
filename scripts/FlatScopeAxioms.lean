@@ -1,8 +1,8 @@
 import Transformer
 
-/-! Audit the scope items of `review/flat_spectrum.md`: WD12 and WD14 of *Training reaches the
-optimal fit*, XE14 to XE19 of *Training with cross-entropy*, the answers to the items
-"Assumed or not covered" of WD11 and XE13
+/-! Audit the scope items of `review/flat_spectrum.md`: WD12, WD14 and WD15 of *Training
+reaches the optimal fit*, XE14 to XE19 of *Training with cross-entropy*, the answers to the
+items "Assumed or not covered" of WD11 and XE13
 (`Transformer.Grokking.FlatSpectrum.Training.Scope`). -/
 
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.linear_first_order
@@ -180,3 +180,21 @@ optimal fit*, XE14 to XE19 of *Training with cross-entropy*, the answers to the 
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isHermitian_mask_sub_one
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.not_isDecayedMin_one_of_neg
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_one_neg_not_isDecayedMin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_one_fin_one
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_complex_smul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.fin_one_mul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.decayStep_one_add
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.im_mul_conjTranspose_apply
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_I_smul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.re_mul_conjTranspose_apply
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.le_frobeniusSq_decayStep_one_add
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_add_decayStep_one
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_decayRun_one_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_add_decayRun_one_pos
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_pos_of_tendsto_decayRun_one
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.one_add_one_fin_one_ne_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isDecayedMin_one_of_stationary
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.not_isDecayedMin_one_fin_one_neg
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_one_isDecayedMin_iff
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isDecayedMin_one_of_stationary_of_one_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_one_isDecayedMin_of_one_le
