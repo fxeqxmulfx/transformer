@@ -13285,3 +13285,104 @@ the proposed soft multiplicative update for inconsistent data.
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/ConvexChannelAxioms.lean
 ```
+
+## Observable features determine unseen predictions
+
+This extension supplies a sufficient identification condition in addition to
+CC6's capacity bound. It neither removes the CC7 counterexample nor assumes
+that a flat spectrum determines unobserved labels. All channels and losses
+are the unfactorized model and ordinary cross-entropy of CC1-CC2.
+
+### O1. Training labels determine observed logits
+
+Let the finite training data be `(q_s,D_s,y_s)`. Assume a feasible reference
+channel `A` realizes these labels at unit logit scale:
+
+```
+z_A(q_s,D_s,c) = 1[c=y_s]                 for every observed s and class c.
+```
+
+There is no condition on unobserved answers in this hypothesis. Every
+feasible channel has nonnegative logits summing to one. Each example's CE
+is therefore bounded below by the CE of its target vector, and `A` attains
+all those bounds. Equality of total CE forces equality on every sample.
+For at least two classes, equality forces target mass one. Nonnegativity
+and unit mass then force all other coordinates to zero. Consequently every
+feasible global CE optimizer agrees with `A` on the complete observed
+logit vectors, not only on their argmax. This proves identification on the
+training observations; it does not assert that an optimization algorithm
+has reached that optimum.
+
+### O2. An input-only certificate determines an unseen prediction
+
+Define categorical features `x(D)_(k,v)=1[D(k)=v]`. For a proposed unseen
+input `(q,D)`, supply finite real coefficients `a_s` satisfying
+
+```
+a_s = 0 whenever q_s != q,
+x(D) = Σ_s a_s x(D_s).
+```
+
+This is an explicit finite system of linear equations involving only
+observed inputs and the proposed test input. Neither training answers,
+test answers nor trained parameters occur in the certificate. Coefficients
+may be negative. Direct expansion of the actual channel forward gives
+
+```
+z_W(q,D,c) = Σ_s a_s z_W(q_s,D_s,c)        for every channel W and class c.
+```
+
+Thus agreement on observed logits implies agreement on this unseen input.
+Together with O1, every feasible global optimizer has the same unseen
+logits as the feasible reference channel. Equivalently, the inferred vector
+is the explicit combination `Σ_s a_s 1[c=y_s]` of observed target vectors.
+To call its argmax a correct ground-truth answer requires that the target
+rule on the test input is represented by that reference channel. Training
+data cannot exclude an arbitrary ground-truth rule outside the model.
+
+The certificate is sufficient, not necessary. Nonnegativity and the shared
+routing constraints can identify additional predictions, as in CC5. Failure
+to find this certificate alone is not an impossibility theorem. A query with
+no observed samples has no nonzero categorical test vector in the indicated
+span, which is consistent with CC7's unseen-query ambiguity.
+
+### O3. Error amplification is measurable
+
+For any two channels, any class and any real error bound `ε`, suppose
+the absolute difference of the observed logits is at most `ε` per sample.
+The same input certificate and the triangle inequality give
+
+```
+|z_W(q,D,c) - z_A(q,D,c)| <= κ ε,       κ = Σ_s |a_s|.
+```
+
+This is a deterministic logit error bound. It is not a CE convergence rate
+or a statistical sampling guarantee. Large coefficients can amplify error;
+finding a small-norm reconstruction is therefore useful beyond merely
+checking that a reconstruction exists. If a reference answer has a logit
+margin greater than `2 κ ε`, this bound preserves its strict argmax (this
+last elementary margin consequence is explanatory, not a separate Lean
+theorem in this extension).
+
+### O4. A genuinely unobserved input
+
+Use two Boolean dictionary slots and a fixed query selecting the second.
+Observe inputs `00,01,10` with labels `false,true,false`. The all-true input
+`11` is absent. Coordinate by coordinate,
+
+```
+x(11) = -x(00) + x(01) + x(10).
+```
+
+The copying channel is a feasible witness for the observed labels. O1-O2
+therefore force every feasible global CE optimizer to predict `true` on
+`11`. This is a new input, not an added training example. The certificate's
+amplification factor is three. Lean proves the absence of `11` from the
+observations, the feature identity, realizability, the factor three and the
+conclusion for every feasible optimizer. This example uses shared input
+structure; flatness remains a separate rank/capacity bound.
+
+The three `ConvexChannel/Observation/` modules prove O1-O4 and provide
+satisfying examples for every conditional theorem. Principal declarations
+are `observed_logits_eq`, `logits_reconstruct`, `unseen_logits_of_min`,
+`logit_error_of_reconstruct` and `every_optimizer_predicts_unseen`.

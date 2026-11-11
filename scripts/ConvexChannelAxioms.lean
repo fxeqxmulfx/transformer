@@ -27,6 +27,10 @@ open Lean Elab Command
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.countedLearn_bound
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.bool_unseen_generated
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.bool_learned_flat
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Observation.unseen_logits_of_min
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Observation.unseen_logits_eq_targets
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Observation.logit_error_of_reconstruct
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Observation.every_optimizer_predicts_unseen
 
 run_cmd do
   let env ← getEnv
