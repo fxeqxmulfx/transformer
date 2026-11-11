@@ -1,0 +1,26 @@
+[package]
+name = "grok-division"
+description = "Division mod 97 of arXiv:2201.02177 under the author's Adam and AdamW protocols, trained natively"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+# The first namespace of the kernels' names, which is the directory's name otherwise.
+[workspace.metadata.kernite]
+name = "grok_division"
+
+[dependencies]
+# Kernite at a1b6bc2c956e1a5f35960e26b209e1b6c213096c; `grok-division check` reports the pin.
+kernite-cpu = { path = "/home/misha/rust_projects/kgen/crates/cpu" }
+kernite-macros = { path = "/home/misha/rust_projects/kgen/crates/macros" }
+sha2 = "=0.11.1"
+
+[profile.release]
+codegen-units = 1
+lto = "thin"
+debug = false
+
+[profile.test]
+opt-level = 2
