@@ -57,6 +57,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.NuclearMin
 public import Transformer.Grokking.FlatSpectrum.Training.NuclearMinLimit
 public import Transformer.Grokking.FlatSpectrum.Training.NuclearMinDirection
 public import Transformer.Grokking.FlatSpectrum.Training.NoDecay
+public import Transformer.Grokking.FlatSpectrum.Training.QuarterCode
 
 /-! Training the pure factorization with weight decay, `review/flat_spectrum.md`, Lemma 1's
 modeling step and *Training reaches the optimal fit* (added).
@@ -174,7 +175,9 @@ the labels (`ceLoss`, with the gradient `ceGrad`).
   (`tendsto_inv_smul_of_unique`). For a code mirrored at a gap `0 < g < 2` (`IsMirroredCode`;
   `ψ` for `p ≥ 3`) the trained fits converge in direction to a flat kernel that shows the
   labels exactly when every cell is seen (`tendsto_inv_smul_codeProbe_iff`,
-  `tendsto_inv_smul_cubicKernel_iff`), and scaled to margin one to `K / g`.
+  `tendsto_inv_smul_cubicKernel_iff`), and scaled to margin one to `K / g`. For the code
+  `(1, i)`, which is not mirrored, the direction on one seen cell converges to another
+  product (`not_tendsto_inv_smul_quarterCode`).
 
 The minimizers of `L + λ ‖·‖_S1` (`IsNuclearMin`) are the products of the trained fits of every
 width (`isNuclearMin_iff`), so XE5, XE6 and XE9–XE11 hold for them

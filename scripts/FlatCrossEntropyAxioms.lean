@@ -176,3 +176,16 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.not_isNuclearMin_ceLoss_zero
 #print axioms Transformer.Grokking.FlatSpectrum.Training.not_isDecayedMin_ceLoss_zero
 #print axioms Transformer.Grokking.FlatSpectrum.Training.not_isCompact_setOf_flatLoss_zero_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.norm_quarterCode
+#print axioms Transformer.Grokking.FlatSpectrum.Training.injective_quarterCode
+#print axioms Transformer.Grokking.FlatSpectrum.Training.not_isMirroredCode_quarterCode
+#print axioms Transformer.Grokking.FlatSpectrum.Training.gap_quarterCode
+#print axioms Transformer.Grokking.FlatSpectrum.Training.margin_quarterCode
+#print axioms Transformer.Grokking.FlatSpectrum.Training.quarterLimit_apply
+#print axioms Transformer.Grokking.FlatSpectrum.Training.nuclearNorm_quarterLimit_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.margin_quarterLimit
+#print axioms Transformer.Grokking.FlatSpectrum.Training.margin_quarterCode_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.maxMargin_quarterCode
+#print axioms Transformer.Grokking.FlatSpectrum.Training.eq_quarterLimit_of_margin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_inv_smul_quarterCode
+#print axioms Transformer.Grokking.FlatSpectrum.Training.not_tendsto_inv_smul_quarterCode
