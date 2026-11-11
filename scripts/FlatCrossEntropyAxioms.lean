@@ -117,3 +117,10 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.frobeniusSq_mask_zero_sub_le
 #print axioms Transformer.Grokking.FlatSpectrum.Training.isDecayedMin_zero_fitLoss
 #print axioms Transformer.Grokking.FlatSpectrum.Training.IsDecayedMin.mul_eq_zero_of_fitLoss
+#print axioms Transformer.Grokking.FlatSpectrum.Training.norm_sub_sq_of_norm_eq_one
+#print axioms Transformer.Grokking.FlatSpectrum.Training.re_conj_mul_le_iff
+#print axioms Transformer.Grokking.FlatSpectrum.Training.re_conj_mul_lt_iff
+#print axioms Transformer.Grokking.FlatSpectrum.Training.pairing_codeProbe_le_iff
+#print axioms Transformer.Grokking.FlatSpectrum.Training.gap_codeProbe_pos_iff
+#print axioms Transformer.Grokking.FlatSpectrum.Training.norm_sub_lt_of_margin_pos
+#print axioms Transformer.Grokking.FlatSpectrum.Training.eventually_norm_sub_lt
