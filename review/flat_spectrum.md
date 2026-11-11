@@ -13669,6 +13669,76 @@ identity and full-row-rank obstruction. `Training/Scope/BalanceObstruction.lean`
 proves B3 and checks the numerical matrix witness, its actual rank, flat target,
 stationarity, both losses and the resulting failure of `IsDecayedMin`.
 
+## Repairing minibatch and full-batch failures (added)
+
+### MF1. Exact singleton CE oracles can fail forever
+
+Take two Boolean inputs `D_b(false) = false`, `D_b(true) = b`, with answer
+`b`. For any current joint channel `W`, one sample's ordinary CE gradient is
+`G_b(k,v,c) = 1[v=D_b(k)] (softmax(logits_W(D_b))_c - 1[c=b])`.
+The Lean first-order inequality checks this tensor against ordinary CE.
+At the observed value, class `b` minimizes the residual. All other value
+rows have zero gradient, so every key has the same best singleton cost.
+The first-key tie rule is therefore an exact linear minimization oracle.
+
+After its initial step of size one, this rule places all routing mass on
+the constant slot. Every subsequent convex update with another first-key
+vertex leaves the separating slot at zero, regardless of label order and
+retained choices on unobserved rows. Both inputs receive the same logits.
+Any deterministic Boolean readout is exactly 50% accurate on the two inputs.
+Yet the feasible vertex routing to the second slot with decoder `id` assigns
+the correct class logit one and the other class zero on both inputs.
+
+`ConvexChannel/Minibatch/Gradient.lean` and `Failure.lean` prove this exact
+two-key/two-class instance. The native frozen regression uses three classes
+and the larger causal adapter and exhibits the same constant-key failure.
+No universal stochastic-convergence conclusion follows from an exact oracle
+for each noisy minibatch objective.
+
+### MF2. Retain sample gradients, not only decoder choices
+
+Store one gradient per observed training example and replace it on revisit.
+Replacing entry `g_i` by `g'_i` updates the aggregate by `g'_i-g_i`; repeated
+visits do not increase an example's weight. If all entries are refreshed at
+one model state, this is its full empirical gradient. With minibatches,
+entries may instead describe different earlier states.
+
+For MF1, even two arbitrary evaluation states `W_0,W_1` suffice: the
+separating vertex minimizes `G_false(W_0)+G_true(W_1)`. Every constant-answer
+vertex has strictly larger cost, because the probability assigned to the
+other class is strictly positive. Thus this memory removes the demonstrated
+singleton tie. `Minibatch/Memory.lean` proves this statement and the exact
+replacement identity. It does not prove general convergence with stale gradients.
+
+For a sparse implementation, subtract the class-independent softmax background
+from each sample gradient. On a nonempty value type, a tensor
+`B(k,v,c)=1[v=D(k)] beta` has linear cost exactly `beta` against every feasible
+joint channel. Therefore subtracting this baseline preserves oracle comparisons
+and FW gaps. The constant-cost identity is also checked in `Memory.lean`.
+
+### MF3. Shared joint parameters address a separate full-batch failure
+
+The earlier full-batch recall model fitted observed labels, but each query had
+an independent decoder. An unseen query/value pair could keep its default even
+when another query had learned that value. This is a structural identification
+problem, not a nonzero empirical optimization gap.
+
+Fix an input-only slot permutation `align(q)` and train one joint tensor `A`.
+Its expansion is `W(q,k,v,c)=A(align(q)(k),v,c)`. Equivalently it reads the
+aligned dictionary `D(align(q)^(-1)(j))`. The expansion preserves all feasibility
+constraints and is linear in `A`. Ordinary CE remains convex, including after
+multiplication of logits by any fixed scale. Equal aligned dictionaries have
+equal predictions under different queries. `ConvexChannel/Shared.lean` proves
+these statements. A positive fixed scale preserves a model's argmax ordering;
+learning the scale jointly is not covered by this convexity result.
+
+The intended causal alignment leaves lag slots fixed and relabels each
+token-indexed successor/presence block relative to the visible final query.
+All output classes and value decodings remain learned. This explicitly shares
+information across queries; flat spectrum alone does not imply that sharing
+is appropriate for an arbitrary task. B1–B3 remain capacity and scope checks,
+and do not supply optimization or missing-label identification by themselves.
+
 ## Forward-only channel learning
 
 This extension gives a finite categorical learner for the realizable
