@@ -639,3 +639,33 @@ fn run_on_disk_resumes_exactly() {
     assert!(run::run(&other, &stopped, None).is_err());
     std::fs::remove_dir_all(&dir).expect("the directory is removed");
 }
+
+/// The loss gradient is PyTorch's in single precision. Away from saturation it is the softmax
+/// less the indicator; at a margin of 30 the other classes' probabilities sum to `3 e^-30`,
+/// below half a unit in the last place of 1, so the loss and the target's entry are exactly 0
+/// while each other class keeps `e^-30` times the weight.
+#[test]
+fn loss_gradient_is_single_precision_softmax() {
+    let mut row = [1.0f32, 0.0, -2.0];
+    let loss = crate::model::loss_gradient(&mut row, 0, 0.5);
+    let total = 1.0 + (-1f64).exp() + (-3f64).exp();
+    assert!((loss - total.ln()).abs() < 1e-7);
+    let want = [0.5 * (1.0 / total - 1.0), 0.5 * (-1f64).exp() / total, 0.5 * (-3f64).exp() / total];
+    for c in 0..3 {
+        assert!((row[c] as f64 - want[c]).abs() < 1e-7, "class {c}: {} against {}", row[c], want[c]);
+    }
+    let mut row = [0.0f32, 30.0, 0.0, 0.0];
+    let loss = crate::model::loss_gradient(&mut row, 1, 0.25);
+    assert_eq!(loss, 0.0);
+    assert_eq!(row[1], 0.0);
+    for c in [0, 2, 3] {
+        let want = 0.25 * (-30f64).exp();
+        assert!(row[c] > 0.0 && (row[c] as f64 - want).abs() < 1e-6 * want, "class {c}: {} against {want}", row[c]);
+    }
+    // In doubles the target's entry would be minus the sum of the others: not zero.
+    assert!(3.0 * 0.25 * (-30f64).exp() > 0.0);
+    // A wrong prediction at the same margin: the loss is the margin and the target's entry minus the weight.
+    let mut row = [0.0f32, 30.0, 0.0, 0.0];
+    let loss = crate::model::loss_gradient(&mut row, 0, 0.25);
+    assert!((loss - 30.0).abs() < 1e-5 && (row[0] + 0.25).abs() < 1e-7 && (row[1] - 0.25).abs() < 1e-7);
+}

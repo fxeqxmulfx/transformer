@@ -103,9 +103,10 @@ bit for bit. Equal seeds give equal splits, initial parameters and batches in bo
 `f32` parameters, activations, gradients and moments, as in the code. A batch is cut into
 chunks of 32 equations in order; products are chains of fused multiply-adds in the order of
 Kernite's kernel; a chunk's gradient sums its rows in order and the batch's sums the chunks in
-order, so the result does not depend on the number of threads. Layer-normalization moments,
-the softmax of the logits and the cross-entropy are accumulated in doubles. The optimizer's
-scalars are computed in doubles and rounded to `f32`.
+order, so the result does not depend on the number of threads. Layer-normalization moments are
+accumulated in doubles. The loss and its gradient in the logits are PyTorch's in `f32`
+(Amendment 1). The optimizer's scalars are computed in doubles and rounded to `f32`.
+Evaluations report cross-entropies computed in doubles from the `f32` logits.
 
 ## Cohorts
 
@@ -114,6 +115,7 @@ scalars are computed in doubles and rounded to `f32`.
 | `adam` | Figure 1 and the appendix: "Adam optimizer with no weight decay", budget `10⁶` | 0 | 1 000 000 | 0, 1, 2 | 50 000 |
 | `adamw` | the appendix's default: "AdamW … weight decay 1", budget `10⁵` | 1 | 100 000 | 0, 1, 2 | 10 000 |
 | `adamw --answer-only` | sensitivity to D2; run after the two above if compute allows | 1 | 100 000 | 0, 1, 2 | 10 000 |
+| `adam`, loss in doubles | sensitivity to Amendment 1: the trainer of commit `b8ff967f`; if compute allows | 0 | 1 000 000 | 0, 1, 2 | 50 000 |
 
 The two main cohorts are separate protocols. `adamw` is not evidence about the trajectory of
 `adam`, and neither is the repository's earlier GPTMini or Rotate90 work, which trains other
@@ -153,7 +155,7 @@ finite is reported as failed, and no seed is replaced.
 
 ## Checks before training
 
-`cargo test --release` (30 tests) and `grok-division check`. No expected value comes from the
+`cargo test --release` (31 tests) and `grok-division check`. No expected value comes from the
 code it checks: the generator is held to published outputs of MT19937 and NumPy and to split
 fingerprints that NumPy itself produced earlier in this repository; the model in doubles to
 closed forms and to finite differences of its own forward pass; the `f32` model to the model
@@ -165,3 +167,26 @@ the schedule's values, and to closed forms at a constant and at a zero gradient.
 A run is a finite horizon on one machine in `f32`. Three seeds that reach perfect held-out
 accuracy do not prove that held-out accuracy tends to 1, for this optimizer or any other; a
 seed that fails within the budget does not prove that it never would.
+
+## Amendment 1 (2026-11-11): the loss gradient in single precision
+
+The trainer of the first launch (commit `b8ff967f`) computed the softmax of the logits and
+its gradient in doubles. Within 10⁴ updates the `adam` runs had a training cross-entropy near
+`10⁻⁹`. There PyTorch's `f32` arithmetic is not a rounding of the exact gradient:
+`log_softmax` is `x - max - ln(Σ exp(x - max))`, and its backward pass is
+`grad_output - exp(output) · Σ grad_output`. Once the other classes' probabilities sum to
+less than half a unit in the last place of 1, the sum rounds to 1, the loss to 0 and the
+target's entry of the gradient to exactly 0, while every other class keeps a positive entry.
+The source's runs have this; doubles hide it.
+
+The first launch was stopped before any terminal observation, at 14 000 updates (`adam`) and
+8 000 (`adamw`); its outputs are kept aside and belong to no cohort. The trainer now computes
+the loss and its gradient in the logits in `f32` by PyTorch's formulas (`loss_gradient` in
+`src/model.rs`, with a test of the collapsed regime), and both main cohorts start again from
+update 0 with it. Nothing else of the protocol changed.
+
+The arithmetic matters for what the runs are evidence of. The `f32` cohorts reproduce the
+source. A trajectory in exact real arithmetic has no collapse, so a cohort `adam`, loss in
+doubles, run by the trainer of `b8ff967f`, is recorded separately as the closer proxy of it;
+its activations, gradients elsewhere and optimizer state are still `f32`. The two are never
+pooled.

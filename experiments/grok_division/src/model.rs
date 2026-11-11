@@ -387,13 +387,7 @@ impl Model<'_> {
         w.grad[self.dims.emb()..self.dims.emb() + v * d].fill(0.0);
         let mut sums = vec![0f64; ns];
         for r in 0..srows {
-            let row = &mut w.logits[r * v..][..v];
-            let (ce, probabilities) = softmax(row, targets[r]);
-            sums[r % ns] += ce;
-            for c in 0..v {
-                row[c] = (probabilities[c] * scale as f64) as f32;
-            }
-            row[targets[r]] = ((probabilities[targets[r]] - 1.0) * scale as f64) as f32;
+            sums[r % ns] += loss_gradient(&mut w.logits[r * v..][..v], targets[r], scale);
         }
         w.t.resize(d * srows, 0.0);
         transpose(&mut w.t, &w.traces[1].out, srows, d);
@@ -417,7 +411,39 @@ impl Model<'_> {
     }
 }
 
-/// The cross-entropy of a row of logits against `target`, and the probabilities, in doubles.
+/// A row of logits becomes the gradient of `weight` times its cross-entropy against `target`,
+/// in `f32` as PyTorch's `F.cross_entropy` computes it; the cross-entropy is returned.
+///
+/// `log_softmax` is `x - max - ln(sum exp(x - max))`, the loss is `-log_softmax[target]`, and
+/// the backward pass of `log_softmax` is `grad_output - exp(output) * sum(grad_output)` with
+/// `grad_output = -weight` at the target and 0 elsewhere. Once the other classes' probabilities
+/// sum to less than half a unit in the last place of 1, the sum rounds to 1, the loss to 0, and
+/// the target's entry `-weight + exp(0) * weight` is exactly 0, while every other class keeps
+/// its entry `exp(x - max) * weight`: single precision's softmax collapse, which the source's
+/// runs have and which arithmetic in doubles would hide.
+pub fn loss_gradient(row: &mut [f32], target: usize, weight: f32) -> f64 {
+    let top = row.iter().cloned().fold(f32::NEG_INFINITY, f32::max);
+    let mut total = 0f32;
+    for &value in row.iter() {
+        total += (value - top).exp();
+    }
+    let log_total = total.ln();
+    let mut loss = 0f64;
+    for (c, value) in row.iter_mut().enumerate() {
+        let log_probability = (*value - top) - log_total;
+        let from_all = log_probability.exp() * weight;
+        if c == target {
+            loss = -(log_probability as f64);
+            *value = -weight + from_all;
+        } else {
+            *value = from_all;
+        }
+    }
+    loss
+}
+
+/// The cross-entropy of a row of logits against `target`, and the probabilities, in doubles:
+/// for the evaluations, which report it and take no gradient.
 pub fn softmax(row: &[f32], target: usize) -> (f64, Vec<f64>) {
     let top = row.iter().cloned().fold(f32::NEG_INFINITY, f32::max) as f64;
     let mut probabilities: Vec<f64> = row.iter().map(|&v| (v as f64 - top).exp()).collect();

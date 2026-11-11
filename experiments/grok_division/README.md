@@ -16,6 +16,7 @@ recorded steps, the terminal window and the outcome classes. It was frozen befor
 | `adam` | Adam | 0 | 1 000 000 | 0, 1, 2 | answer and closing `<\|eos\|>` (the code's loss) |
 | `adamw` | AdamW | 1 | 100 000 | 0, 1, 2 | answer and closing `<\|eos\|>` |
 | `adamw --answer-only` | AdamW | 1 | 100 000 | 0, 1, 2 | answer alone (the paper's wording) |
+| `adam`, loss in doubles | Adam | 0 | 1 000 000 | 0, 1, 2 | answer and closing `<\|eos\|>`; the trainer of commit `b8ff967f` |
 
 Equal seeds have equal splits, initial parameters and batches in every cohort. Seed 0 has the
 split of the author's code.
@@ -28,7 +29,7 @@ FMA). Kernite is expected at `/home/misha/rust_projects/kgen`, clean at
 
 ```sh
 cd experiments/grok_division
-cargo test --offline --release           # 30 tests
+cargo test --offline --release           # 31 tests
 cargo build --offline --release
 target/release/grok-division check       # pins, split fingerprints, f32 model against the model in doubles
 target/release/grok-division bench 8     # the time of an update
