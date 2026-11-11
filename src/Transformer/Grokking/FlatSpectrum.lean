@@ -145,6 +145,7 @@ public import Transformer.Grokking.FlatSpectrum.StepCarry
 public import Transformer.Grokking.FlatSpectrum.StepDomain
 public import Transformer.Grokking.FlatSpectrum.Recall
 public import Transformer.Grokking.FlatSpectrum.ConvexRecall
+public import Transformer.Grokking.FlatSpectrum.ConvexChannel
 public import Transformer.Grokking.FlatSpectrum.BlockCut
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex

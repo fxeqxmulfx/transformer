@@ -12861,3 +12861,161 @@ Reproduce with native Lean tooling:
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.ConvexRecall
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/ConvexRecallAxioms.lean
 ```
+
+## Convex channels and capacity
+
+The next extension learns generated outputs as well as routing. Flat spectrum
+is used as a necessary capacity bound. It is not an arithmetic feature map,
+an answer oracle, or a sufficient condition for generalization. The inputs
+remain categorical query identities and supplied key/value bindings. The
+earlier compact joint-embedding transformer replacement remains a separate,
+unresolved requirement.
+
+### CC1. A joint parameter domain
+
+For finite query, key, value and output sets `Q,K,V,C`, directly train
+`W(q,k,v,c)` subject to
+
+```
+W(q,k,v,c) ≥ 0,
+Σ_c W(q,k,v,c) = ρ(q,k), independent of v,
+Σ_k ρ(q,k) = 1.
+
+z_W(q,D,c) = Σ_k W(q,k,D(k),c),
+L(W) = Σ_s CE(z_W(q_s,D_s), y_s).
+```
+
+`ρ` is the output marginal of `W`, not a separately multiplied parameter.
+The implementation stores the joint tensor, with `|Q||K||V||C|` entries.
+The forward receives input bindings and a query, never the answer or the
+rule used to construct labels. The loss is ordinary log-sum-exp cross-entropy.
+Summing class logits gives one for every dictionary: the common routing
+mass lets each key use its own observed value. Logits lie in `[0,1]`, so the
+confidence limitation of CR1 remains: ideal CE is `log(e+|C|−1)−1`.
+
+### CC2. Joint convexity
+
+Nonnegativity and affine equalities make the entire feasible set convex.
+For fixed inputs, `z_W` is linear in every trained entry. XE1's logit
+convexity therefore makes ordinary answer CE jointly convex in routing and
+output generation. A product of separately learned routing and decoding
+matrices is neither needed nor used.
+
+### CC3. Copying is a strict subfamily
+
+Every stochastic matcher `A` from CR1 embeds as
+`W(q,k,v,c) = A(q,k) 1[c=v]`, with exactly the old forward logits. The enlarged
+family also contains, for every categorical rule `g : K×V → C`,
+
+```
+W_g(q,k,v,c) = 1[k=q] 1[c=g(q,v)],
+z_Wg(q,D,c) = 1[c=g(q,D(q))].
+```
+
+This constructs a parameter witness; `g` is not part of the model's input
+features or forward code. For two Boolean keys, `g(q,v)=not v` produces
+`true` on an all-false dictionary. No old copying matrix can do so.
+
+### CC4. General categorical two-input capacity
+
+With a single context slot, `W_f(q,(),v,c)=1[c=f(q,v)]` represents every
+finite two-input classification table. This is a representation theorem.
+It does not infer the labels of unobserved pairs. With several slots the
+family sums their contributions; it is not a universal model of arbitrary
+multi-slot interactions. New interactions would require additional input
+features and a fresh capacity/identification analysis.
+
+### CC5. What answer-only training can identify
+
+Assume `|C|≥2`, labels `y_s=g(q_s,D_s(q_s))`, and the following finite-data
+condition, called `SeparatesAtoms`:
+
+```
+∀ q,k,v,c, (k≠q or c≠g(q,v)) →
+  ∃ s, q_s=q and D_s(k)=v and y_s≠c.
+```
+
+Every incorrect routing/output atom must be active in some training input
+whose ordinary answer contradicts it. This condition refers to the actual
+data and target rule, not to learned parameters or training success. It
+requires value coverage beyond the simpler copy-only condition CR3.
+
+As in CR3, `W_g` attains the ideal CE sample by sample. Equal aggregate
+loss forces target mass one at each observed sample. Any active atom
+predicting another class has zero weight. Separation eliminates all
+incorrect atoms; unit mass forces the remaining entries of `W` to equal
+`W_g`. Therefore every global optimizer generates `g(q,D(q))` with a strict
+correct argmax on every test dictionary. The Lean witness uses all Boolean
+two-key dictionaries with negated answer labels and verifies separation.
+This theorem is conditional on reaching a global optimum; it is not a
+proof of convergence of the native optimization loop.
+
+### CC6. Use flat spectrum as the bound
+
+For a fixed class readout `φ:C→ℂ` and any supplied family `D_x`, the actual
+model output has the exact factorization
+
+```
+F_W(q,x) = Σ_c z_W(q,D_x,c) φ(c) = A_W B,
+A_W(q,(k,v)) = Σ_c W(q,k,v,c) φ(c),
+B((k,v),x) = 1[D_x(k)=v].
+```
+
+These are task-independent categorical binding features. For any flat
+target `T` of squared singular value `σ²>0` and rank `r=min(|Q|,|X|)`, R3 gives
+
+```
+‖T−F_W‖_F² ≥ σ² (r−|K||V|).
+```
+
+Exact representation requires `|K||V|≥r`. This is an upper feature count,
+not a claim that all those features are independent. A further factorization
+through width `d` has the stronger corresponding bound `σ²(r−d)`. The bound
+concerns scalar-output approximation, not CE or classification error; AR5
+is the separate sign/argmax result. It need not impose a positive error
+floor once capacity exceeds rank. The feasible one-slot Boolean AND table,
+read out as `false↦1,true↦−1`, is `[[1,1],[1,−1]]`: a full-rank flat kernel
+with `σ²=2`, realized at width two. No arithmetic features are supplied.
+
+### CC7. Flat capacity does not identify missing labels
+
+The two tables with rows `[[1,1],[1,−1]]` and `[[1,1],[−1,1]]` are both
+flat with `σ²=2`. Their categorical labels agree on the entire first query
+row and disagree on the second. Both feasible channel tensors globally
+minimize the same ordinary CE on observations from the first row. Thus even
+known flatness, full rank and sufficient capacity leave two incompatible
+held-out predictions. The Lean counterexample proves feasibility, both
+flatness equations, both global-optimality statements, observed agreement
+and held-out disagreement together. It does not rule out learning with
+additional structure or identifying examples such as CC5.
+
+### CC8. An exact training oracle
+
+For a gradient tensor `G`, choose `decode(q,k,v)` minimizing `G(q,k,v,c)` over
+classes. Choose `key(q)` minimizing `Σ_v min_c G(q,k,v,c)` over keys. The
+vertex
+
+```
+S(q,k,v,c) = 1[k=key(q)] 1[c=decode(q,k,v)]
+```
+
+globally minimizes `Σ_qkvc G(q,k,v,c) W(q,k,v,c)` on the feasible set. Indeed,
+each key's cost is at least its class-minimum sum times its routing mass;
+the routing masses are nonnegative and sum to one. This bound is attained
+by the selected vertex. The finite search costs `O(|Q||K||V||C|)` and does
+not fit a nonconvex inner model. Convex updates `(1−η)W+ηS`, `0≤η≤1`, remain
+feasible. These facts justify the native Frank-Wolfe step; no convergence
+rate for that implementation is asserted by the Lean result.
+
+### Lean
+
+The eight modules under `Grokking/FlatSpectrum/ConvexChannel/` prove CC1–CC8.
+Principal results are `convex_feasible`, `answerLoss_convex`,
+`generates_absent_value`, `eq_generator_of_answerLoss_le`, `trained_logits`,
+`flat_error_bound`, `flat_width_necessary`, `flat_capacity_does_not_identify`
+and `linear_oracle`. Every theorem with premises has a satisfying example.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.ConvexChannel
+LAKE_ARTIFACT_CACHE=false lake env lean scripts/ConvexChannelAxioms.lean
+```
