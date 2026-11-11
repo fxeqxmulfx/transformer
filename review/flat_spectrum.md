@@ -11867,7 +11867,8 @@ its trained fits grow without bound, and they have the largest margin for their 
 not returned, at a fixed λ or in the limit (XE7–XE9). The limit points of the direction of the
 trained fits are the products of largest margin (XE10). With every cell seen and the answer
 code of the note, the flat kernel is the only such product, so the trained fits converge in
-direction to the kernel exactly when every cell is seen (XE11).
+direction to the kernel exactly when every cell is seen (XE11). A row or a column that is
+never seen is zero in every trained product (XE12).
 
 Notation as in that section: `⟨A, B⟩ = Re tr(Aᴴ B)`, `‖·‖ = ‖·‖_S2`, the model `X = U Vᴴ`
 with the run of WD1, and a decayed minimum is a factorization of least weight-decayed loss
@@ -12240,7 +12241,38 @@ returns the kernel, up to its scale, from the whole table, and from no proper pa
 The bound `g < 2` leaves out the code `±1`. There `φ(c) = φ(c') = −φ(t)`, the two readings of
 4 are one, and 4 is not proved; 1–3 hold.
 
-### XE12. Scope
+### XE12. An unseen row or column
+
+By XE7 the product `X` of a trained fit is a minimum of M from Ω for its own values, for
+λ > 0 and a loss that reads only Ω. By CW8 a minimum of M from Ω is zero on every row without
+a cell of Ω, and on every such column: removing the row keeps the seen values and lowers the
+nuclear norm. So
+
+```
+X_ij = 0    at every cell (i, j) whose row has no cell in Ω, or whose column has none.
+```
+
+This fixes the unseen cells of such rows and columns, for every such loss and every λ > 0,
+whatever the seen values are. A token that never occurs in training is such a row or column
+(CW8).
+
+For the answer code of XE8 let no sample see the row `i`, or let none see the column `j`.
+Then every logit `Re(conj φ(c) X_ij)` at the cell `(i, j)` is zero: the classes tie and the
+softmax is uniform. For held-out samples `S'` at such cells, with any labels, the
+cross-entropy is that of chance,
+
+```
+L'(X) = |S'| log |C|.
+```
+
+Under the bounds of XE3, with probes that vanish off Ω, the run from a start of full row rank
+converges, and the product of its limit is zero on these rows and columns.
+
+Example: a `2 × 1` product, the code `±1`, and one sample at the cell `(0, 0)`. The row `1` is
+unseen. The trained product has `X_10 = 0`, and a held-out sample at `(1, 0)` has the loss
+`log 2`.
+
+### XE13. Scope
 
 Proved, for the pure factorization `X = U Vᴴ` trained by gradient descent with weight decay
 on the cross-entropy of logits that are real-linear in the product:
@@ -12270,7 +12302,10 @@ on the cross-entropy of logits that are real-linear in the product:
   seen, a flat kernel that shows the labels has the largest margin for its norm and is the
   only such product of the unit ball up to its scale, so the trained fits converge in
   direction to it; a flat kernel without zero entries is the limit of the direction exactly
-  when every cell is seen (XE11).
+  when every cell is seen (XE11);
+- for λ > 0 and a loss that reads only the seen cells, a trained product is zero on every row
+  and every column without a seen cell; with an answer code the held-out cross-entropy at
+  such cells is that of chance, and the run of XE3 ends at such a product (XE12).
 
 Assumed or not covered:
 
@@ -12285,8 +12320,10 @@ Assumed or not covered:
   is not proved.
 - The unseen cells. By XE7 they are filled by M from the seen values of the trained product.
   Those values are not the values of `K`, so the fill of the Corollary and its decoded
-  accuracy do not transfer: which class an unseen cell decodes to under the cross-entropy is
-  not determined here.
+  accuracy do not transfer. Two cases are settled: with every cell seen there is nothing to
+  fill (XE11), and a row or a column without a seen cell is zero (XE12). Which class an unseen
+  cell of a seen row and a seen column decodes to under the cross-entropy is not determined
+  here.
 - Logits that are not linear in the product, such as a network between the product and the
   logits, and losses other than the squared loss, the cross-entropy and those of WD9.
 - The mean of the losses of the samples in place of their sum: it is the sum with the weight
@@ -12299,8 +12336,8 @@ Assumed or not covered:
 `src/Transformer/Grokking/FlatSpectrum/Training/`, modules `Logits`, `CrossEntropy`,
 `CrossEntropyBounds`, `CrossEntropyRun`, `Margin`, `MaxMargin`, `MaxMarginLimit`, `SeenCells`,
 `AnswerCode`, `SeenMargin`, `UnitBall`, `MarginDirection`, `MirroredCode`, `CharacterCode`,
-`MirroredUnique` and `SeenDirection`, namespace `Transformer.Grokking.FlatSpectrum.Training`,
-proved without `sorry`.
+`MirroredUnique`, `SeenDirection` and `UnseenRows`, namespace
+`Transformer.Grokking.FlatSpectrum.Training`, proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -12315,3 +12352,4 @@ proved without `sorry`.
 | XE9 | `gap_eq_of_seen`, `margin_eq_of_seen`, `exists_pos_eventually_add_le_margin_div`, `not_tendsto_inv_nuclearNorm_smul`, `exists_pos_eventually_add_le_margin_div_of_codeProbe`, `not_tendsto_inv_nuclearNorm_smul_of_codeProbe` | δ is chosen before the sequence, for one finite column type of the factors. The normalized product is `(nuclearNorm X_j)⁻¹ • X_j`. That the trained fits grow without bound is `tendsto_nuclearNorm_atTop` (XE6). The examples are the `1 × 2` kernel `(1, 1)` with the code `±1` on its first cell, and `cubicKernel 3` with `ψ` on the cell `(0, 0)`. |
 | XE10 | `continuous_gap`, `nuclearNorm_le_of_tendsto`, `nuclearNorm_inv_smul_le`, `margin_inv_smul`, `exists_subseq_tendsto_inv_smul`, `margin_eq_maxMargin_of_tendsto`, `exists_margin_eq_maxMargin`, `margin_eq_maxMargin_of_tendsto_inv_smul`, `tendsto_inv_smul_of_unique`; example: `gap_signProbe`, `maxMargin_signProbe`, `eq_one_of_margin_signProbe` | The direction is `(nuclearNorm X)⁻¹ • X`, which is `0` for `X = 0`. The compact set is `{X \| ∀ i j, ‖X i j‖ ≤ 1}` (`isCompact_setOf_norm_apply_le`), which contains the unit ball, and the dual form of the norm is `exists_isContraction_trace_eq`. Statement 2 is for a convergent sequence of directions; its subsequences are taken by `exists_subseq_tendsto_inv_smul`, which holds for every sequence of matrices. "One product has the margin `μ*`" is the hypothesis `∀ Z, nuclearNorm Z ≤ 1 → margin A y Z = maxMargin A y → Z = Z₀`. |
 | XE11 | `IsMirroredCode`, `IsMirroredCode.injective`, `pairing_eq_sum_re`, `gap_codeProbe_add_gap`, `margin_codeProbe_le_mul_re`, `margin_codeProbe_eq`, `norm_apply_eq_one_of_surjective`, `margin_codeProbe_le_mul_re_apply`, `card_mul_margin_codeProbe_le`, `card_mul_card_eq_of_isFlat`, `margin_codeProbe_mul_nuclearNorm_le`, `maxMargin_codeProbe_eq`, `margin_inv_smul_codeProbe`, `eq_mul_of_re_conj_mul`, `mul_re_eq_margin_of_margin_eq`, `apply_cell_eq_of_margin_eq`, `eq_inv_smul_of_margin_codeProbe_eq`, `tendsto_inv_smul_codeProbe`, `tendsto_inv_smul_codeProbe_iff`; the code `ψ`: `cos_two_pi_mul_div_le`, `one_sub_cos_two_pi_div_pos`, `one_sub_cos_two_pi_div_lt_two`, `norm_stdAddChar_sub_sq`, `isMirroredCode_stdAddChar`, `tendsto_inv_smul_cubicKernel_iff`; example: `isMirroredCode_signCode` | `IsMirroredCode φ g` is the conjunction of `∀ c, ‖φ c‖ = 1`, `∀ t c, c ≠ t → 2 * g ≤ ‖φ t - φ c‖ ^ 2` and `∀ t, ∃ c c', c ≠ t ∧ c' ≠ t ∧ φ c + φ c' = ((2 * (1 - g) : ℝ) : ℂ) * φ t`. "Every cell is seen" is `Function.Surjective cell`, and "`K` has no zero entry" is `∀ i j, K i j ≠ 0`. The flat kernel is `IsFlat K c₀` with `0 < c₀`. `ψ` is `ZMod.stdAddChar` as a function on `ZMod p`, with the gap `1 - cos (2 * π / p)`. In `tendsto_inv_smul_cubicKernel_iff` the samples are a finite nonempty type with cells `cell : S → ZMod p × ZMod p` and the labels `(cell s).1 ^ 3 + (cell s).1 * (cell s).2`. Statement 4 is proved cell by cell in `apply_cell_eq_of_margin_eq`. The examples are the code `±1` with the `1 × 1` kernel `1`, and `cubicKernel 3` with all nine cells seen and the code `ψ`. |
+| XE12 | `IsDecayedMin.row_eq_zero`, `IsDecayedMin.col_eq_zero`, `IsDecayedMin.apply_eq_zero_of_codeProbe`, `IsDecayedMin.pairing_codeProbe_eq_zero`, `IsDecayedMin.ceLoss_heldOut_eq`, `exists_tendsto_decayRun_ceLoss_eq_zero` | The row has `∀ j, (i, j) ∉ Ω` as in CW8, whose `row_eq_zero_of_isMinOn` and `col_eq_zero_of_isMinOn` are applied to the minimum of XE7. For the answer code the seen cells are `Set.range cell`, and "no sample sees the row `i`" is `∀ s, (cell s).1 ≠ i`. The held-out samples are a finite type `S'` with cells `cell' : S' → m × n` and any labels `y'`. "The softmax is uniform" is the statement that every logit is zero. |

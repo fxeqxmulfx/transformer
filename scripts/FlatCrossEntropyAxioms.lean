@@ -1,6 +1,6 @@
 import Transformer
 
-/-! Audit *Training with cross-entropy* of `review/flat_spectrum.md`, items XE1–XE11. -/
+/-! Audit *Training with cross-entropy* of `review/flat_spectrum.md`, items XE1–XE12. -/
 
 #print axioms Transformer.Grokking.FlatSpectrum.Training.sum_probability_mul_le_log_weightedExp
 #print axioms Transformer.Grokking.FlatSpectrum.Training.crossEntropy_first_order
@@ -104,3 +104,9 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_inv_smul_codeProbe
 #print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_inv_smul_codeProbe_iff
 #print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_inv_smul_cubicKernel_iff
+#print axioms Transformer.Grokking.FlatSpectrum.Training.IsDecayedMin.row_eq_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.IsDecayedMin.col_eq_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.IsDecayedMin.apply_eq_zero_of_codeProbe
+#print axioms Transformer.Grokking.FlatSpectrum.Training.IsDecayedMin.pairing_codeProbe_eq_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.IsDecayedMin.ceLoss_heldOut_eq
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun_ceLoss_eq_zero
