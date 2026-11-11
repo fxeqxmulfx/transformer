@@ -19,6 +19,14 @@ open Lean Elab Command
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.flat_width_necessary
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.flat_capacity_does_not_identify
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.linear_oracle
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.allows_scan
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.learn_complete
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.learn_failure_iff
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.learned_isMinOn
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.learned_eq_generator
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.countedLearn_bound
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.bool_unseen_generated
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.bool_learned_flat
 
 run_cmd do
   let env ← getEnv

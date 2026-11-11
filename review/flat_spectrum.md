@@ -13019,3 +13019,133 @@ and `linear_oracle`. Every theorem with premises has a satisfying example.
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.ConvexChannel
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/ConvexChannelAxioms.lean
 ```
+
+## Forward-only channel learning
+
+This extension gives a finite categorical learner for the realizable
+generated-recall family of CC3 and CC5. It uses ordinary answer labels and
+constructs a global minimum of the same answer cross-entropy as CC1. No
+gradient, backward pass, contrastive surrogate or optimizer convergence
+assumption is needed. It does not solve arbitrary noisy or multi-key
+classification in the larger convex channel family.
+
+### CF1. Record answers and eliminate conflicting keys
+
+Group the training dictionaries and labels by query. For each query, try
+the candidate keys in a supplied finite order. For one candidate `k`, start
+with an empty partial table from values to classes, then scan its examples
+from left to right:
+
+1. Read the input value `v=D(k)` and the ordinary answer `y`.
+2. If `v` has not been seen, record `v -> y`.
+3. If its recorded answer is `y`, retain the table.
+4. Otherwise eliminate `k` permanently.
+
+Return the first surviving key and its recorded decoder. Complete unseen
+values with a fixed, supplied default class. If every candidate is
+eliminated, return `none`. The target key and rule are never algorithm
+inputs. `learn` scans the data once per attempted key; it does not require
+keeping every candidate's table live simultaneously.
+
+The Lean state is `Option (V -> Option C)`: the outer `none` is an
+eliminated candidate; the inner `none` is an unobserved value. `step`,
+`scan`, `trainKey` and `learn` are executable definitions. Functional
+updates are a mathematical table representation, not a claim of constant
+time memory access in the compiled Lean implementation.
+
+### CF2. Exact scan invariant and explicit failure
+
+Let a decoder extend a table when it agrees with every recorded entry.
+After each observation, the surviving decoders are exactly the previous
+ones that predict this answer from this candidate value:
+
+```
+Allows(step(state,v,y), f) <-> Allows(state,f) and f(v)=y.
+Allows(trainKey(k,samples), f) <-> every (D,y) in samples has f(D(k))=y.
+```
+
+Thus any realizable candidate survives; every returned decoder fits all
+observations. Two samples with the same candidate value and different
+labels eliminate that candidate. The learner returns `none` exactly when
+no supplied key has a decoder fitting every observation. This is failure
+of exact single-key realizability, not infeasibility of the convex domain
+or proof that its best approximate classifier is poor.
+
+### CF3. A constructed global ordinary-CE optimum
+
+Suppose every query's row is realizable by some enumerated key and decoder.
+The computed learner returns `(k_q,f_q)` and hence the feasible channel
+
+```
+W(q,k,v,c) = 1[k=k_q] 1[c=f_q(v)].
+```
+
+All training samples have unit target logits. CC5's sample lower bound
+then proves global minimality of ordinary answer CE over **all** feasible
+joint channels, including nondeterministic ones. The minimum CE retains
+the bounded-logit value `log(e+|C|-1)-1` per example, which is positive
+when there are at least two classes.
+This is finite completion of the specified learner, rather than an
+assumption that an iterative optimizer reached a minimum.
+
+`learnedChannel` uses an explicit fallback to make the mathematical tensor
+total. Its optimality theorem assumes realizability and proves a successful
+return on every row, so the fallback is unused. The executable `learn`
+continues to report failure explicitly. The finite CE sample family must
+be included in the rows actually supplied to the learner.
+
+### CF4. Conditions identifying held-out answers
+
+For the target `g(q,D(q))`, assume:
+
+* the correct key is enumerated and all supplied labels follow this rule;
+* every value at the correct key appears in the query's training row;
+* for every wrong candidate key, some two observations have the same value
+  at that key and different answer labels.
+
+One collision per wrong key eliminates it. Coverage at the true key then
+fixes its complete decoder. The learner therefore returns exactly
+`(q,g(q,·))`, and the assembled channel equals `generator g`. It answers
+every dictionary, including unobserved combinations, correctly. The
+theorem does not infer labels for uncovered true-key values.
+
+The Boolean witness trains negation from two of the four dictionaries
+per query: the first has `false` at the queried key and `true` elsewhere;
+the second has `true` at both keys. Their labels are `true` and `false`.
+Each wrong key is constant across these examples and therefore conflicts.
+The learned model produces `true` on the held-out all-false dictionary,
+although that value is absent from the input. Reading its actual outputs
+with `false -> 1, true -> -1` over all four dictionaries gives a flat
+rank-two kernel with squared singular value four (`bool_learned_flat`).
+Separate inconsistent data produce explicit failure. Flat spectrum supplies
+no extra identifying information to this procedure.
+
+### CF5. Counted work and scope of the efficiency claim
+
+`countedScan` increments a counter for every executed call to `step`.
+`countedLearn` accumulates these counters while running the actual key
+selection. Its returned result equals `learn`, and its count is at most
+
+```
+keys.length * samples.length
+```
+
+for each query row. If each key is listed once, this proves an abstract
+`O(|K| N)` bound on candidate observations over `N` total training examples.
+Each successful result can
+be represented by one key and a categorical decoder, with no dense
+`|Q||K||V||C|` floating-point parameter tensor. An array-backed port could
+perform constant-time record accesses and retain at most one candidate
+table per query during the sequential search. Those runtime and storage
+claims need a separate native implementation and measurements; the Lean
+counter does not model allocations, lookup cost or wall-clock time.
+
+The theorems under `ConvexChannel/Forward/` establish the invariant,
+success/failure characterization, exact CE optimality, identification,
+held-out Boolean witness and operation count. No claim is made here about
+the proposed soft multiplicative update for inconsistent data.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward
+LAKE_ARTIFACT_CACHE=false lake env lean scripts/ConvexChannelAxioms.lean
+```
