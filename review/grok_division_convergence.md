@@ -20,11 +20,25 @@ repository proves about neighbouring objects, and names the bridges that are mis
 | Pathwise: accuracy tends to 1 iff eventually every decision is right | `tendsto_accuracy_one_iff` |
 | Split and batches as functions of shuffles | `trainAt`, `heldout`, `batchSlots`, `nodup_batchSlots`, `length_batchSlots` |
 | The author's Adam and AdamW update and run | `Hyper`, `Hyper.source`, `Hyper.rateAt`, `adamStep`, `adamRun` |
+| The update is the code's, statement by statement | `sourceStep`, `adamStep_eq_sourceStep`, `adamStep_params_of_decay_eq_zero` |
 | Well-posedness and finite-history bounds | `adamDenominator_pos`, `one_sub_pow_pos`, `adamRun_second_nonneg`, `abs_adamRun_first_le`, `adamRun_second_le`, `abs_adamRun_step_le` |
+| Bounds that do not look at the gradients | `sq_adamRun_first_le` (`m² ≤ K v`), `abs_adamRun_step_le_rate`, `abs_adamRun_params_sub_le` (Adam: linear in `t`), `abs_adamRun_params_le` (AdamW: a fixed interval) |
 | Sample space and law of a run, infinitely many epochs | `Sample`, `law`, `uniformPerm`, `trajectory`, `heldoutAccuracy` |
 | Modes of convergence | `TendsToOneAlmostSurely`, `TendsToOneInProbability`, `TendsToOneInMean`, `TendsToOneAlmostSurely.inProbability`, `TendsToOneAlmostSurely.inMean` |
 | The target and its meaning | `Generalizes`, `generalizes_iff` |
 | It is neither empty nor automatic | `generalizes_indicator`, `not_generalizes_const` |
+| The decoder in exact reals, all parameter groups | `Sizes`, `Param`, `layerNorm`, `weight`, `attention`, `block`, `decodeTo`, `logits`, `sum_weight`, `logits_congr` |
+| Loss of a batch and the gradient of the backward pass | `Example`, `batchLoss`, `gate`, `decodeTo_gate`, `frozenLoss`, `frozenLoss_self`, `sourceGrad` |
+| The task, its tokens and its supervision | `paperSizes`, `Equation`, `equations`, `read`, `read_injective`, `inDivisionCell_operands`, `supervised`, `targetCount_supervised` |
+| Initialization law; the law of a run is a probability law | `initLaw`, `initMeasure`, `isProbabilityMeasure_initLaw` |
+| The target for the division protocol, and what it means | `division_generalizes_iff`, `division_generalizes_source_iff` |
+| What is proved about its trajectory | `abs_trajectory_division_sub_le`, `abs_trajectory_division_le` |
+
+For division the arguments are fixed in `division_generalizes_iff`: the decoder of
+`paperSizes`, the logits after `=`, the source's loss on the answer and the closing token, the
+backward pass `sourceGrad`, PyTorch's default initialization, 4656 of the 9312 equations, and
+batches of 512. That theorem is an equivalence; the repository states the target nowhere as a
+fact, an axiom or a `sorry`.
 
 `Generalizes ν logits label h lossGrad eqs hk b` says: for almost every sample (a shuffle of
 the equations, initial parameters of law `ν`, a shuffle of the training set for every epoch,
@@ -48,8 +62,8 @@ every further epoch, at the constant learning rate that the schedule has after w
 | `FlatSpectrum/Training/UnseenRows` | `IsDecayedMin.row_eq_zero`, `IsDecayedMin.col_eq_zero`, `IsDecayedMin.ceLoss_heldOut_eq` (#110) | A decayed minimum is zero on unseen rows and columns of the product | A property of that model's minima; the decoder has no such product |
 | `FlatSpectrum` | `isMinOn_nuclearNorm_iff`, `IsFlat.exists_neg_mul_of_isMinOn_cell`, `IsDecayedMin.ne_smul_of_isFlat` | A flat kernel is not recovered from a proper subset of its cells by the least nuclear norm | Failure to reconstruct a kernel matrix is not failure to classify: the target needs only the largest logit, and the decoder is not a least-nuclear-norm interpolant (#124 is open) |
 | `Grokking/Operational` | `FirstCrossing`, `FirstSustained`, `firstCrossing_le_firstSustained`, `finite_prefix_future_ambiguity`, `no_universal_finite_crossing_detector` | Predicates of an observed accuracy trace | They describe records of a run and prove that a finite prefix does not decide the future |
-| `Grokking/DivisionOrbits` | `InDivisionCell`, `equal_quotients_iff_common_scale`, `mem_full_cell_iff`, `modulus97_domain_card` | The algebra of the task: equal answers are common scalings | No model in it |
-| `Landscape/Neural` | `crossEntropy`, `crossEntropy_nonneg`, `analyticAt_crossEntropy`, `exists_compact_rotate90_adamw_container` | The loss of a row; analyticity and an AdamW box for the Rotate90 model (SiLU, RMS norm, tied readout) | Another architecture and schedule; the paper's decoder has ReLU and is not analytic |
+| `Grokking/DivisionOrbits` | `InDivisionCell`, `equal_quotients_iff_common_scale`, `mem_full_cell_iff`, `modulus97_domain_card` | The algebra of the task: equal answers are common scalings | No model in it; `inDivisionCell_operands` ties the tokenized equations to it |
+| `Landscape/Neural` | `crossEntropy`, `crossEntropy_nonneg`, `analyticAt_crossEntropy`, `exists_compact_rotate90_adamw_container` | The loss, reused here; analyticity and an AdamW box for the Rotate90 model (SiLU, RMS norm, tied readout) | Another architecture and schedule; the paper's decoder has ReLU and is not analytic |
 | `Grokking/AdamW`, `EffectiveTheory`, `CircuitEfficiency`, `Composition`, `Geometry` | for example `coupled_first_growth_iff`, `quarticCE_every_rate_can_overshoot` | Effective models and diagnostics of learned circuits | None is the decoder's trajectory |
 | board #78 (in progress, another agent) | not on `main` | Quotient-equivariant logits carry two training anchors to every equation | A sufficient structure for held-out correctness; no proof that training produces it |
 
@@ -66,13 +80,16 @@ Two substitutions are therefore excluded, and no statement here makes them:
    saturates (PROTOCOL.md, Amendment 1). No statement relates the two trajectories.
 2. **Measurability.** `TendsToOneAlmostSurely.inProbability` and `.inMean` need the accuracy to
    be measurable in the sample. This is not proved for the decoder.
-3. **Exceptional parameters.** The target takes the gradient oracle as an argument. The
-   source's backward pass has a rule at hidden inputs equal to 0; the decoder's oracle has to
-   be that rule (#127), and that the trajectory almost surely avoids such parameters is not
-   proved.
-4. **Any control of the trajectory.** Without decay the loss has no minimizer on fitted data
-   and the parameters need not stay bounded. The proved bounds are those of the moments and of
-   one step; no descent, boundedness or limit of the Adam trajectory is proved or assumed.
+3. **Exceptional parameters.** The source's backward pass has a rule at hidden inputs equal to
+   0, and `sourceGrad` is that rule: the derivative of the loss with the gates frozen at the
+   current parameters (`gate`, `frozenLoss_self`). Not formalized: that where no hidden input
+   is 0 this is the partial derivative of `batchLoss` (the gates are then locally constant),
+   and that the trajectory almost surely avoids the other parameters.
+4. **Any control of the predictions.** Without decay the loss has no minimizer on fitted data
+   and the parameters need not stay bounded. What is proved is how far a parameter can move:
+   at most `0.017 t` under Adam, and within `max(|θ₀|, 17)` of 0 under AdamW with weight decay 1.
+   No descent, no bound of the Adam run uniform in `t`, and no limit of the trajectory or of
+   its logits is proved or assumed.
 5. **Structure gives correct answers** (#129, after #78): a certificate on the decoder's own
    logits that implies the right largest logit on every held-out equation.
 6. **Training reaches the structure** (#130): from the declared initialization law, with a
