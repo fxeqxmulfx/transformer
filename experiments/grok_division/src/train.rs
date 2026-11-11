@@ -2,6 +2,7 @@
 //! threads that each take a share of the batch, and exhaustive evaluation.
 
 use crate::adam::{self, Hyper};
+use crate::arith;
 use crate::data::{ANSWER_POS, EOS_POS, Equation};
 use crate::layout::Dims;
 use crate::model::{Model, Transposed, Work, decide, softmax};
@@ -166,6 +167,7 @@ pub struct Trainer {
     works: Vec<Work>,
     sums: Vec<f64>,
     threads: usize,
+    flush: bool,
 }
 
 impl Trainer {
@@ -190,7 +192,16 @@ impl Trainer {
             works: Vec::new(),
             sums: Vec::new(),
             threads,
+            flush: false,
         }
+    }
+
+    /// Sets whether the calling thread and every thread of a step or of an evaluation flush
+    /// subnormal numbers to zero (`PROTOCOL.md`, Amendment 2). A trainer starts with gradual
+    /// underflow, the source's arithmetic.
+    pub fn set_flush(&mut self, on: bool) {
+        self.flush = on;
+        arith::flush_subnormals(on);
     }
 
     /// The forward and backward passes of the batch, chunk by chunk: each chunk's gradient is
@@ -213,10 +224,12 @@ impl Trainer {
         {
             groups[i % self.threads].push((part, work, sum));
         }
+        let flush = self.flush;
         std::thread::scope(|scope| {
             for group in groups {
                 let model = &model;
                 scope.spawn(move || {
+                    arith::flush_subnormals(flush);
                     for (part, work, sum) in group {
                         let (tokens, targets) = encode(part, model.sup, ctx);
                         model.forward(work, &tokens);
@@ -245,12 +258,13 @@ impl Trainer {
         self.step += 1;
         let parts: Vec<&[f32]> = self.works[..self.sums.len()].iter().map(|w| &w.grad[..]).collect();
         let size = self.p.len().div_ceil(self.threads);
-        let (hyper, step) = (self.hyper, self.step);
+        let (hyper, step, flush) = (self.hyper, self.step, self.flush);
         std::thread::scope(|scope| {
             let ranges = self.p.chunks_mut(size).zip(self.m.chunks_mut(size)).zip(self.v.chunks_mut(size));
             for (i, (((p, m), v), g)) in ranges.zip(self.grad.chunks_mut(size)).enumerate() {
                 let parts = &parts;
                 scope.spawn(move || {
+                    arith::flush_subnormals(flush);
                     reduce(g, parts, i * size);
                     adam::update(&hyper, step, p, m, v, g);
                 });
@@ -267,7 +281,7 @@ impl Trainer {
         if self.works.len() < self.threads {
             self.works.resize_with(self.threads, Work::default);
         }
-        let share = set.len().div_ceil(self.threads).max(1);
+        let (share, flush) = (set.len().div_ceil(self.threads).max(1), self.flush);
         let rows: Vec<Vec<(f64, f64, u8, f32, bool)>> = std::thread::scope(|scope| {
             let handles: Vec<_> = set
                 .chunks(share)
@@ -275,6 +289,7 @@ impl Trainer {
                 .map(|(mine, work)| {
                     let model = &model;
                     scope.spawn(move || {
+                        arith::flush_subnormals(flush);
                         let mut rows = Vec::with_capacity(mine.len());
                         for part in mine.chunks(128) {
                             let (tokens, targets) = encode(part, model.sup, ctx);

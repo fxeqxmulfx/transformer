@@ -606,6 +606,7 @@ fn run_on_disk_resumes_exactly() {
         sup: vec![4, 5],
         threads,
         checkpoint_every: 5,
+        flush_from: None,
     };
     let (straight, stopped) = (dir.join("straight"), dir.join("stopped"));
     run::run(&config(8), &straight, None).expect("the straight run");
@@ -668,4 +669,140 @@ fn loss_gradient_is_single_precision_softmax() {
     let mut row = [0.0f32, 30.0, 0.0, 0.0];
     let loss = crate::model::loss_gradient(&mut row, 0, 0.25);
     assert!((loss - 30.0).abs() < 1e-5 && (row[0] + 0.25).abs() < 1e-7 && (row[1] - 0.25).abs() < 1e-7);
+}
+
+use crate::arith;
+use std::hint::black_box;
+
+/// With the mode on, a subnormal result is zero and a subnormal operand counts as zero, while a
+/// stored value keeps its bits. The mode is the thread's own, and off it is gradual underflow.
+#[test]
+fn flushing_replaces_subnormals_by_zero() {
+    let tiny = f32::MIN_POSITIVE;
+    let subnormal = f32::from_bits(1 << 20);
+    let times = |x: f32, by: f32| black_box(x) * black_box(by);
+    assert!(!arith::flushes_subnormals());
+    assert!(times(tiny, 0.5) > 0.0 && times(times(tiny, 0.5), 4.0) == 2.0 * tiny, "gradual underflow");
+    assert_eq!(times(subnormal, 4.0).to_bits(), 1 << 22);
+    arith::flush_subnormals(true);
+    assert!(arith::flushes_subnormals());
+    assert_eq!(times(tiny, 0.5), 0.0, "a subnormal result");
+    assert_eq!(times(subnormal, 4.0), 0.0, "a subnormal operand");
+    assert_eq!(black_box(subnormal).to_bits(), 1 << 20, "a stored value");
+    assert_eq!(times(3.0, 0.25), 0.75, "ordinary numbers");
+    let other = std::thread::scope(|scope| {
+        let thread = scope.spawn(|| {
+            arith::flush_subnormals(false);
+            times(tiny, 0.5).to_bits()
+        });
+        thread.join().expect("a thread")
+    });
+    // Read by its bits: with the mode on a comparison counts a subnormal as zero too.
+    assert_eq!(other, 1 << 22, "a thread with the mode off");
+    assert_eq!(times(tiny, 0.5), 0.0, "this thread still flushes");
+    drop(arith::Restore);
+    assert!(!arith::flushes_subnormals() && times(tiny, 0.5) > 0.0);
+}
+
+/// The optimizer's update at moments below the least normal number: the update is at most
+/// `lr |m| / eps`, some `1e-34`, so parameters of ordinary size stay bit for bit in both modes.
+/// Gradual underflow keeps the moments; the flush zeroes them.
+#[test]
+fn subnormal_moments_move_no_parameter_in_either_mode() {
+    let hyper = Hyper::source(0.0);
+    let start = [0.3f32, -1.7e-3, 2.5, -1e-6];
+    let moment = f32::from_bits(1 << 21);
+    let updates = |flush: bool| {
+        arith::flush_subnormals(flush);
+        let (mut p, mut m, mut v) = (start, [moment, -moment, moment, moment], [moment; 4]);
+        let g = [0.0, 0.0, f32::from_bits(1 << 19), -f32::from_bits(3 << 18)];
+        for t in 50_000..50_003 {
+            adam::update(&hyper, t, &mut p, &mut m, &mut v, &g);
+        }
+        arith::flush_subnormals(false);
+        (p, m, v)
+    };
+    let (gradual, flushed) = (updates(false), updates(true));
+    assert!(gradual.0 == start && flushed.0 == start);
+    assert!(gradual.1.iter().all(|m| *m != 0.0 && m.abs() < f32::MIN_POSITIVE));
+    assert!(flushed.1 == [0.0; 4] && flushed.2 == [0.0; 4]);
+}
+
+/// At ordinary sizes the mode changes nothing: a trainer that flushes and one that does not
+/// make the same updates and the same evaluation, bit for bit.
+#[test]
+fn flushing_changes_no_ordinary_update() {
+    let (mut gradual, train) = small_trainer(3);
+    let (mut flushed, _) = small_trainer(3);
+    flushed.set_flush(true);
+    for step in 0..12 {
+        let batch = &train[step * 20..step * 20 + 64];
+        assert_eq!(gradual.update(batch).to_bits(), flushed.update(batch).to_bits());
+    }
+    let (a, b) = (gradual.evaluate(&train[..90]), flushed.evaluate(&train[..90]));
+    drop(arith::Restore);
+    assert!(gradual.p == flushed.p && gradual.m == flushed.m && gradual.v == flushed.v);
+    assert!(a.margins == b.margins && a.predictions == b.predictions && a.ce_answer == b.ce_answer);
+    assert!(gradual.m.iter().chain(&gradual.v).all(|x| *x == 0.0 || x.abs() >= f32::MIN_POSITIVE), "no subnormal");
+}
+
+/// A run that flushes after update 12 and adopts the checkpoint of update 10 of the run that
+/// never flushes leaves the files of the flushing run made from update 0, which is itself
+/// stopped and resumed past the switch. A parent of another configuration, or without a
+/// checkpoint that early, is refused.
+#[test]
+fn adopted_run_is_the_run_from_scratch() {
+    let dir = std::env::temp_dir().join(format!("grok-division-adopt-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    let config = |seed, flush_from| run::Config {
+        protocol: "adam".into(),
+        seed,
+        weight_decay: 0.0,
+        budget: 23,
+        sup: vec![4, 5],
+        threads: 8,
+        checkpoint_every: 5,
+        flush_from,
+    };
+    let (parent, adopted, scratch) = (dir.join("parent"), dir.join("adopted"), dir.join("scratch"));
+    run::run(&config(2, None), &parent, None).expect("the parent");
+    assert!(run::adopt(&config(2, None), &parent, &adopted).is_err(), "a run that never flushes adopts nothing");
+    assert!(run::adopt(&config(1, Some(12)), &parent, &adopted).is_err(), "another seed");
+    assert!(run::adopt(&config(2, Some(3)), &parent, &adopted).is_err(), "no checkpoint up to update 3");
+    assert!(!adopted.join("run.json").exists() && !adopted.join("checkpoint-0000010.bin").exists());
+    run::adopt(&config(2, Some(12)), &parent, &adopted).expect("the adoption");
+    let note = std::fs::read_to_string(adopted.join("adopted.json")).expect("the note");
+    assert!(
+        note.contains(&format!("\"parent_config\":\"{}\"", config(2, None).line())) && note.contains("\"step\":10")
+    );
+    run::run(&config(2, Some(12)), &adopted, None).expect("the adopted run");
+    run::adopt(&config(2, Some(12)), &parent, &adopted).expect("a run that has begun adopts nothing");
+    run::run(&config(2, Some(12)), &scratch, Some(17)).expect("the first part from scratch");
+    run::run(&config(2, Some(12)), &scratch, None).expect("the rest from scratch");
+    assert!(!arith::flushes_subnormals(), "the run leaves the thread with gradual underflow");
+    let timeless = |path: &std::path::Path| -> Vec<String> {
+        let text = std::fs::read_to_string(path.join("history.jsonl")).expect("a history");
+        text.lines().map(|l| l.split(",\"seconds\"").next().expect("a line").to_string()).collect()
+    };
+    assert_eq!(timeless(&adopted), timeless(&scratch));
+    assert_eq!(timeless(&adopted).len(), 4);
+    // No number of these 23 updates is subnormal, so the parent's records are the same too.
+    assert_eq!(timeless(&parent), timeless(&scratch));
+    for name in ["heldout_predictions.bin", "heldout_margins.bin", "run.json", "heldout.txt"] {
+        assert_eq!(
+            std::fs::read(adopted.join(name)).expect(name),
+            std::fs::read(scratch.join(name)).expect(name),
+            "{name}"
+        );
+    }
+    assert!(std::fs::read_to_string(adopted.join("run.json")).expect("run.json").contains(" flush_from=12\""));
+    for step in [10, 23] {
+        let bytes = |path: &std::path::Path| {
+            std::fs::read(path.join(format!("checkpoint-{step:07}.bin"))).expect("a checkpoint")
+        };
+        let (a, b) = (bytes(&adopted), bytes(&scratch));
+        // The configuration's hash, and past the seconds trained: parameters, moments, sampler.
+        assert!(a[8..40] == b[8..40] && a[56..a.len() - 32] == b[56..b.len() - 32], "update {step}");
+    }
+    std::fs::remove_dir_all(&dir).expect("the directory is removed");
 }

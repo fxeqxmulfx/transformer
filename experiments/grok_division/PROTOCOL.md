@@ -190,3 +190,87 @@ source. A trajectory in exact real arithmetic has no collapse, so a cohort `adam
 doubles, run by the trainer of `b8ff967f`, is recorded separately as the closer proxy of it;
 its activations, gradients elsewhere and optimizer state are still `f32`. The two are never
 pooled.
+
+## Amendment 2 (2026-11-11): the `adam` cohort flushes subnormals after update 100 000
+
+Declared after the `adamw` cohort had ended and while the `adam` runs were at updates
+112 000, 118 000 and 98 000 (seeds 0, 1, 2), before any observation of the flushed runs
+below other than the trial described here.
+
+**What happened.** Seed 0 of `adam` trained 1000 updates in 43 s between updates 40 000 and
+70 000, and in more than 300 s at update 100 000, on the same machine and threads. At that
+rate the remaining 890 000 updates take three days a seed. The cause is gradual underflow.
+Without weight decay the logits grow, and the probabilities of the 141 tokens that are never
+a target fall below the least normal `f32`, `1.18 · 10⁻³⁸`. Their logit gradients, the
+gradient of their readout rows and both Adam moments of those rows are then subnormal: none
+of the 455 424 entries of either moment is subnormal in the checkpoints of update 50 000
+(seeds 0, 1, 2), and 18 048 = 141 · 128 of each are in the checkpoints of update 100 000
+(seeds 0, 1). On x86-64 an operation on a subnormal number leaves the processor's fast path.
+
+**The change.** After update 100 000 every thread of a run sets the processor's
+flush-to-zero and denormals-are-zero modes (`src/arith.rs`): a result below the least normal
+number becomes zero, and such an operand counts as zero. It is the arithmetic of PyTorch's
+`torch.set_flush_denormal(True)`. Nothing else changes: the recipe, the seeds, the batches,
+the recorded steps and the outcome classes are those above. The flag is
+`--flush-from 100000`. It is part of the run's configuration line, so the checkpoints of such
+a run are not those of a run without it.
+
+Up to update 100 000 the run with the flag is the run without it, and it does not repeat
+those updates. `--adopt DIR` starts it from the last checkpoint at or before update 100 000
+of the run in `DIR`, after checking that run's configuration, split and checkpoint digest;
+it copies the history and the held-out records up to that checkpoint and writes
+`adopted.json` with the parent's configuration line and the checkpoint's SHA-256. A test
+shows on disk that an adopted run leaves the files of the run with the flag made from
+update 0.
+
+**It is another run, not the same run made faster.** Three trials of 1000 updates from the
+checkpoint of update 100 000 of seed 0, each in a scratch directory, compared their record
+of update 101 000 with the cohort's:
+
+| Executable | Subnormals | Seconds | Record of update 101 000 |
+| --- | --- | ---: | --- |
+| the cohort's (`2c65fc45`), resumed | gradual | 322 | the cohort's, to the last digit |
+| this amendment's (`955d5bf5`), `--flush-from 101000` | gradual | 322 | the cohort's, to the last digit |
+| this amendment's, `--flush-from 100000` | flushed | 31 | another: training accuracy 0.9998 against 1, least training margin −1.16 against 15.32, 4482 held-out errors against 4490 |
+
+So resumption is exact at this scale, the new executable computes what the old one did, and
+the flush alone moves the trajectory within 1000 updates.
+
+The reason was found at the first update after the checkpoint, where both modes start from
+the same parameters and the same hidden rows. The logit gradients differ only where they are
+subnormal, yet 31 entries of the gradient of the readout differ, 25 of them by more than
+`10⁻³⁰`, and the largest difference is one unit in the last place of an entry of size `10⁻⁷`.
+An entry of that gradient is a chain of fused multiply-adds over the rows of a chunk. In the
+collapsed regime of Amendment 1 the target's entry of the logit gradient,
+`-w + exp(·) w` with `w = 2⁻¹⁰`, is a small integer multiple of `2⁻³⁴`: −170 of them in the
+entry examined. Its product with a hidden value has few bits past
+the 24 of an `f32`, and it can be exactly halfway between two of them: there, 11 903 527.5
+units in the last place. With gradual underflow an earlier subnormal term has left a nonzero
+accumulator, `−6.0 · 10⁻⁴⁰`, which breaks the tie by its sign; with the flush the accumulator
+is zero and the tie goes to the even neighbour. Training this late is not stable under such a
+change: the runs have loss spikes (the least training margin of seed 0 is −13.95 at update
+100 000 and 15.32 at update 101 000), and one unit in the last place of a few gradient
+entries becomes another record within 1000 updates.
+
+Neither rounding is the exact one, and PyTorch's own order of summation is a third. The
+trials show that a seed's late trajectory under `adam` is a property of the last bit of the
+arithmetic, not of the recipe and the seed alone. Outcomes of single seeds are reported with
+that in mind.
+
+**The cohorts after this amendment.**
+
+| Label | Subnormals | Updates | Seeds |
+| --- | --- | ---: | --- |
+| `adam` | gradual underflow, the source's arithmetic | as far as computed; reported with the update each seed reached | 0, 1, 2 |
+| `adam --flush-from 100000` | gradual underflow to update 100 000, flushed after | 1 000 000 | 0, 1, 2 |
+
+The flushed cohort is the one that reaches the horizon of Figure 1, and the terminal window
+and the outcome classes are evaluated on it. It is reported under its own label, never as
+the `adam` cohort. Where both cohorts have records after update 100 000 they are set side by
+side, as a measure of how far the last bit moves the observables. The `adam` runs keep their
+outputs, and the executable `2c65fc45` continues them from their last checkpoint bit for bit.
+
+The trainer's source fingerprint is `955d5bf5…`. `cargo test --release` has 35 tests; the
+four new ones check the mode on a thread, that subnormal Adam moments move no parameter of
+ordinary size in either mode, that the mode changes nothing while no number is subnormal,
+and the adoption.

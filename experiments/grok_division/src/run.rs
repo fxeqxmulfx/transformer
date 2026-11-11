@@ -2,6 +2,7 @@
 //! predictions and margins of every evaluation, and checkpoints from which it resumes exactly.
 
 use crate::adam::Hyper;
+use crate::arith;
 use crate::data::{self, Equation};
 use crate::layout::Dims;
 use crate::mt::Mt;
@@ -13,8 +14,9 @@ use std::path::{Path, PathBuf};
 use std::time::Instant;
 
 /// The sources the executable was built from, for its fingerprint.
-const SOURCES: [(&str, &str); 9] = [
+const SOURCES: [(&str, &str); 10] = [
     ("adam.rs", include_str!("adam.rs")),
+    ("arith.rs", include_str!("arith.rs")),
     ("data.rs", include_str!("data.rs")),
     ("gemm.rs", include_str!("gemm.rs")),
     ("layout.rs", include_str!("layout.rs")),
@@ -54,25 +56,43 @@ pub struct Config {
     pub threads: usize,
     /// Updates between checkpoints.
     pub checkpoint_every: u64,
+    /// The update after which every thread of the run flushes subnormal numbers to zero
+    /// (`PROTOCOL.md`, Amendment 2); `None` keeps gradual underflow, the source's arithmetic.
+    pub flush_from: Option<u64>,
 }
 
 impl Config {
+    /// The line of the configuration with gradual underflow throughout, as the executable built
+    /// from the sources of fingerprint `sources` writes it.
+    fn unflushed_line(&self, sources: &str) -> String {
+        format!(
+            "protocol={} seed={} weight_decay={} budget={} sup={:?} checkpoint_every={} sources={sources}",
+            self.protocol, self.seed, self.weight_decay, self.budget, self.sup, self.checkpoint_every
+        )
+    }
+
     /// The configuration as one line of text, which `run.json` holds and the checkpoints hash.
     pub fn line(&self) -> String {
-        format!(
-            "protocol={} seed={} weight_decay={} budget={} sup={:?} checkpoint_every={} sources={}",
-            self.protocol,
-            self.seed,
-            self.weight_decay,
-            self.budget,
-            self.sup,
-            self.checkpoint_every,
-            source_fingerprint()
-        )
+        let flush = self.flush_from.map_or(String::new(), |from| format!(" flush_from={from}"));
+        self.unflushed_line(&source_fingerprint()) + &flush
     }
 
     fn hash(&self) -> [u8; 32] {
         Sha256::digest(self.line().as_bytes()).into()
+    }
+
+    /// What `run.json` holds for the configuration of line `line` on the split given.
+    fn frozen(line: &str, train: &[Equation], heldout: &[Equation]) -> String {
+        format!(
+            "{{\"config\":\"{line}\",\"train_fingerprint\":\"{}\",\"heldout_fingerprint\":\"{}\",\"train\":{},\
+             \"heldout\":{},\"batch\":{},\"parameters\":{}}}\n",
+            data::fingerprint(train),
+            data::fingerprint(heldout),
+            train.len(),
+            heldout.len(),
+            batch_size(train.len()),
+            Dims::PAPER.len()
+        )
     }
 }
 
@@ -176,12 +196,13 @@ fn checkpoint_path(out: &Path, step: u64) -> PathBuf {
     out.join(format!("checkpoint-{step:07}.bin"))
 }
 
-/// The step of the last checkpoint in `out`, if it has one.
-fn last_checkpoint(out: &Path) -> Option<u64> {
+/// The step of the last checkpoint in `out` at or before update `upto`, if it has one.
+fn last_checkpoint(out: &Path, upto: u64) -> Option<u64> {
     let entries = fs::read_dir(out).ok()?;
     entries
         .filter_map(|e| e.ok()?.file_name().into_string().ok())
         .filter_map(|name| name.strip_prefix("checkpoint-")?.strip_suffix(".bin")?.parse().ok())
+        .filter(|&step| step <= upto)
         .max()
 }
 
@@ -210,6 +231,60 @@ pub fn setup(config: &Config) -> (Vec<Equation>, Vec<Equation>) {
     data::split(config.seed, data::train_len(data::P * (data::P - 1), 50.0))
 }
 
+/// Starts the run of `config`, which flushes subnormals after update `n = config.flush_from`,
+/// in `out` from the last checkpoint at or before `n` of the run in `parent` (`PROTOCOL.md`,
+/// Amendment 2). The parent is the run of the same configuration with gradual underflow
+/// throughout, by this executable or one built from other sources; up to update `n` the two
+/// runs are the same run, so the parent's history and held-out records up to the checkpoint
+/// stand for them. The checkpoint is copied under this configuration's hash, and
+/// `adopted.json` records where it came from. A run that has begun adopts nothing.
+pub fn adopt(config: &Config, parent: &Path, out: &Path) -> Result<(), String> {
+    let from = config.flush_from.ok_or("only a run with --flush-from adopts a checkpoint")?;
+    if out.join("run.json").exists() {
+        return Ok(());
+    }
+    let step = last_checkpoint(parent, from).ok_or(format!("{parent:?} has no checkpoint up to update {from}"))?;
+    let read = |path: PathBuf| fs::read(&path).map_err(|e| format!("{path:?}: {e}"));
+    let text = |path: PathBuf| fs::read_to_string(&path).map_err(|e| format!("{path:?}: {e}"));
+    let (train, heldout) = setup(config);
+    let parent_json = text(parent.join("run.json"))?;
+    let sources = parent_json.split("sources=").nth(1).and_then(|rest| rest.get(..64)).unwrap_or("");
+    let parent_line = config.unflushed_line(sources);
+    if sources.len() != 64 || parent_json != Config::frozen(&parent_line, &train, &heldout) {
+        return Err(format!("{parent:?} is not the run of this configuration with gradual underflow:\n{parent_json}"));
+    }
+    let bytes = read(checkpoint_path(parent, step))?;
+    if bytes.len() < 96 || &bytes[..8] != b"GROKDIV1" {
+        return Err("the parent's file is not a checkpoint".into());
+    }
+    let (body, digest) = bytes.split_at(bytes.len() - 32);
+    if Sha256::digest(body).as_slice() != digest || body[8..40] != Sha256::digest(parent_line.as_bytes())[..] {
+        return Err("the parent's checkpoint is damaged or of another configuration".into());
+    }
+    let history = text(parent.join("history.jsonl"))?;
+    let kept: Vec<&str> = history.lines().filter(|l| field(l, "step").is_some_and(|s| s <= step as f64)).collect();
+    if kept.len() != (0..=step).filter(|&s| evaluated(s, config.budget)).count() {
+        return Err(format!("the parent's history lacks a record up to update {step}"));
+    }
+    fs::create_dir_all(out).map_err(|e| format!("{out:?}: {e}"))?;
+    write_atomically(&out.join("history.jsonl"), (kept.join("\n") + "\n").as_bytes())?;
+    for (name, record) in [("heldout_predictions.bin", heldout.len()), ("heldout_margins.bin", 4 * heldout.len())] {
+        let records = read(parent.join(name))?;
+        let prefix = records.get(..kept.len() * record).ok_or(format!("the parent's {name} is too short"))?;
+        write_atomically(&out.join(name), prefix)?;
+    }
+    let mut copy = body.to_vec();
+    copy[8..40].copy_from_slice(&config.hash());
+    let copy_digest = Sha256::digest(&copy);
+    copy.extend(copy_digest);
+    write_atomically(&checkpoint_path(out, step), &copy)?;
+    let record = format!(
+        "{{\"parent_config\":\"{parent_line}\",\"step\":{step},\"parent_checkpoint_sha256\":\"{}\"}}\n",
+        data::hex(&Sha256::digest(&bytes))
+    );
+    write_atomically(&out.join("adopted.json"), record.as_bytes())
+}
+
 /// Trains the run of `config` in `out` to its budget, from its last checkpoint if it has one.
 /// `stop_after` ends the process early, after that many updates of this call, for the tests of
 /// resumption.
@@ -217,17 +292,7 @@ pub fn run(config: &Config, out: &Path, stop_after: Option<u64>) -> Result<(), S
     fs::create_dir_all(out).map_err(|e| format!("{out:?}: {e}"))?;
     let (train, heldout) = setup(config);
     let (dims, hash) = (Dims::PAPER, config.hash());
-    let frozen = format!(
-        "{{\"config\":\"{}\",\"train_fingerprint\":\"{}\",\"heldout_fingerprint\":\"{}\",\"train\":{},\"heldout\":{},\
-         \"batch\":{},\"parameters\":{}}}\n",
-        config.line(),
-        data::fingerprint(&train),
-        data::fingerprint(&heldout),
-        train.len(),
-        heldout.len(),
-        batch_size(train.len()),
-        dims.len()
-    );
+    let frozen = Config::frozen(&config.line(), &train, &heldout);
     let run_json = out.join("run.json");
     match fs::read_to_string(&run_json) {
         Ok(old) if old != frozen => return Err(format!("{run_json:?} is of another run:\n{old}")),
@@ -245,7 +310,7 @@ pub fn run(config: &Config, out: &Path, stop_after: Option<u64>) -> Result<(), S
     let (history, predictions, margins) =
         (out.join("history.jsonl"), out.join("heldout_predictions.bin"), out.join("heldout_margins.bin"));
     let mut before = 0f64;
-    match last_checkpoint(out) {
+    match last_checkpoint(out, u64::MAX) {
         Some(step) => {
             let mut bytes = Vec::new();
             let path = checkpoint_path(out, step);
@@ -303,10 +368,19 @@ pub fn run(config: &Config, out: &Path, stop_after: Option<u64>) -> Result<(), S
     if trainer.step == 0 {
         record(&mut trainer, f64::NAN, 0.0)?;
     }
-    let mut made = 0u64;
+    let (mut made, mut flushing) = (0u64, None);
     while trainer.step < config.budget {
         if stop_after.is_some_and(|limit| made >= limit) {
             return Ok(());
+        }
+        // The record and the checkpoint of update `flush_from` are made before the switch.
+        if flushing.is_none() && config.flush_from.is_some_and(|from| trainer.step >= from) {
+            trainer.set_flush(true);
+            flushing = Some(arith::Restore);
+            if !arith::flushes_subnormals() {
+                return Err("the thread did not take the mode that flushes subnormals".into());
+            }
+            eprintln!("{out:?}: subnormals are flushed after update {}", trainer.step);
         }
         let batch: Vec<Equation> = sampler.next().iter().map(|&i| train[i as usize]).collect();
         let loss = trainer.update(&batch);

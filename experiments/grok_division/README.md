@@ -17,6 +17,7 @@ recorded steps, the terminal window and the outcome classes. It was frozen befor
 | `adamw` | AdamW | 1 | 100 000 | 0, 1, 2 | answer and closing `<\|eos\|>` |
 | `adamw --answer-only` | AdamW | 1 | 100 000 | 0, 1, 2 | answer alone (the paper's wording) |
 | `adam`, loss in doubles | Adam | 0 | 1 000 000 | 0, 1, 2 | answer and closing `<\|eos\|>`; the trainer of commit `b8ff967f` |
+| `adam --flush-from 100000` | Adam | 0 | 1 000 000 | 0, 1, 2 | answer and closing `<\|eos\|>`; subnormals flushed to zero after update 100 000 (Amendment 2) |
 
 Equal seeds have equal splits, initial parameters and batches in every cohort. Seed 0 has the
 split of the author's code.
@@ -29,13 +30,18 @@ FMA). Kernite is expected at `/home/misha/rust_projects/kgen`, clean at
 
 ```sh
 cd experiments/grok_division
-cargo test --offline --release           # 31 tests
+cargo test --offline --release           # 35 tests
 cargo build --offline --release
 target/release/grok-division check       # pins, split fingerprints, f32 model against the model in doubles
 target/release/grok-division bench 8     # the time of an update
 for seed in 0 1 2; do
   target/release/grok-division run adamw $seed runs/adamw-seed$seed --threads 8
   target/release/grok-division run adam $seed runs/adam-seed$seed --threads 8
+done
+# Amendment 2: the Adam runs go on from their update 100000 with subnormals flushed to zero
+for seed in 0 1 2; do
+  target/release/grok-division run adam $seed runs/adam-flush-seed$seed --threads 8 \
+    --flush-from 100000 --adopt runs/adam-seed$seed
 done
 target/release/grok-division report runs/*-seed*
 target/release/diagnose runs/adamw-seed1 1 10000 50000   # what checkpoints do at the answer

@@ -6,13 +6,19 @@
 //! grok-division check                          # the pins and the numerical preflight
 //! grok-division bench [threads]                # the time of an update
 //! grok-division run adam|adamw SEED DIR [--threads N] [--budget N] [--answer-only]
+//!                                       [--flush-from N [--adopt PARENT_DIR]]
 //! grok-division report DIR...                  # a line of JSON for each run
 //! ```
+//!
+//! `--flush-from N` flushes subnormal numbers to zero after update `N`; `--adopt` starts from
+//! the last checkpoint at or before `N` of the run of the same configuration without the flag
+//! (Amendment 2).
 
 // Loops over an index that reads several rows at once stay loops over the index.
 #![allow(clippy::needless_range_loop, clippy::chunks_exact_to_as_chunks, clippy::type_complexity)]
 
 mod adam;
+mod arith;
 mod data;
 mod gemm;
 mod layout;
@@ -55,7 +61,7 @@ fn main() -> ExitCode {
             args[1..].iter().try_for_each(|dir| run::report(Path::new(dir)).map(|line| println!("{line}")))
         }
         _ => Err("usage: grok-division check | bench [threads] | run adam|adamw SEED DIR [--threads N] [--budget N] \
-                  [--answer-only] | report DIR..."
+                  [--answer-only] [--flush-from N [--adopt PARENT_DIR]] | report DIR..."
             .to_string()),
     };
     match done {
@@ -79,18 +85,28 @@ fn launch(args: &[String]) -> Result<(), String> {
     };
     let seed: u32 = seed.parse().map_err(|_| format!("the seed {seed} is not a number"))?;
     let (mut threads, mut sup, mut stop_after) = (THREADS, vec![ANSWER_POS, EOS_POS], None);
+    let (mut flush_from, mut parent) = (None, None);
     let mut flags = flags.iter();
     while let Some(flag) = flags.next() {
+        if flag == "--adopt" {
+            parent = Some(flags.next().ok_or("--adopt takes the parent run's directory")?);
+            continue;
+        }
         let mut value = || flags.next().and_then(|v| v.parse::<u64>().ok()).ok_or(format!("{flag} takes a number"));
         match flag.as_str() {
             "--threads" => threads = value()? as usize,
             "--budget" => budget = value()?,
             "--stop-after" => stop_after = Some(value()?),
             "--answer-only" => sup = vec![ANSWER_POS],
+            "--flush-from" => flush_from = Some(value()?),
             other => return Err(format!("unknown flag {other}")),
         }
     }
-    let config = run::Config { protocol: protocol.clone(), seed, weight_decay, budget, sup, threads, checkpoint_every };
+    let protocol = protocol.clone();
+    let config = run::Config { protocol, seed, weight_decay, budget, sup, threads, checkpoint_every, flush_from };
+    if let Some(parent) = parent {
+        run::adopt(&config, Path::new(parent), Path::new(dir))?;
+    }
     run::run(&config, Path::new(dir), stop_after)
 }
 
