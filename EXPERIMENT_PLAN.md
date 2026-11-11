@@ -4178,3 +4178,20 @@ nonnegative training loss itself, including a successful control; they cannot
 be used as exact next-loss predictions or grounds for a larger-rate sweep.
 See [the diagnosis](review/schedule_free_directions.md). No research training
 or new final-test prediction is made, and production GPT stays unchanged.
+
+## Convex answer-CE recall comparison (2026-11-11)
+
+**Status: native implementation and checks; fixed empirical protocol.**
+The user requested a comparison of the newly proved convex matching model
+with a usual transformer on MQAR and `a / b mod p`, after the Lean proof
+`0fcc0d1b`. `experiments/convex_recall_compare/README.md` fixes three seeds,
+8-key/16-value MQAR, division mod 17/97, endpoints and reporting rules before
+training. It reuses the validated native Kernite transformer engine with
+longer attention scratch buffers. No Python is used.
+
+This tests the narrower fixed-copy architecture proved in
+`Grokking.FlatSpectrum.ConvexRecall`. Its explicit copy adaptation and a
+separate convex table control expose why bare arithmetic is different from
+supplied-dictionary recall. It does not resolve the earlier compact joint
+embedding/attention replacement requirement or claim that its hypotheses are
+satisfied. No answer dictionary is provided to the arithmetic forward pass.
