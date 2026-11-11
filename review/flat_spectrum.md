@@ -13576,3 +13576,111 @@ CC8's feasible oracle vertices, they justify blockwise minibatch feasibility.
 CC2 already supplies convexity of ordinary CE on each finite batch. These
 statements do not assert stochastic optimization convergence or transfer of
 unseen labels. CF6 separately proves persistent forward-only batch equality.
+
+## Inference-time learning
+
+### CI1. Retained state can learn from later observations
+
+After main training, retain `trainedState(history)`, the complete candidate
+records of CF6. When a correct answer becomes available, whether through
+feedback or an observable target in the incoming stream, pass that labeled
+example to the same `advance` operation. For arbitrary history and feedback,
+
+```
+advance(trainedState(history), feedback) = trainedState(history ++ feedback).
+finish(keys, advance(trainedState(history), feedback), default)
+  = learn(keys, history ++ feedback, default).
+```
+
+These are exact computed-state and model equalities, including failure.
+If one enumerated key and decoder realize both phases, the next snapshot
+succeeds and fits every old and new observation. The update receives the
+labeled data, not that target key or decoder. This is continued categorical
+learning without backpropagation; it is not a theorem that arbitrary unlabeled
+inputs reveal their correct answers. A task-specific observable-target adapter
+must justify the labels it supplies. The theorem guarantees fitting the combined
+observations; it asserts no general monotonicity of held-out accuracy. The finite
+example in CI4 demonstrates correction of a previously wrong prediction.
+
+### CI2. Self-labeling has a fixed prediction function
+
+Given the current successful snapshot `(k,f)`, label an arbitrary list of
+inputs by `(D,f(D(k)))` and really apply `advance` to all candidates. Every
+earlier candidate remains eliminated. The selected key survives: at a recorded
+value its prediction is the recorded label; at an unobserved value it inserts
+the same default that its decoder already returned. Its entire decoded function
+therefore stays equal to `f`. Thus the next snapshot is exactly `(k,f)`.
+
+`inferBatch` performs this unverified update; if no candidate survives, it
+retains the failed state. `inferBatches` refreshes the snapshot between batches.
+For every initial state and every finite list of arbitrary input batches,
+
+```
+finish(keys, inferBatches(keys, batches, state, default), default)
+  = finish(keys, state, default).
+```
+
+The result includes exact key and function equality, so all predictions and
+the corresponding deterministic channel remain unchanged. Refitting the original
+learner after appending its own hard predictions gives the same result too.
+This is a claim about this deterministic consistency learner with fixed keys,
+default and hypothesis family, not about all uses of self-supervision.
+
+The candidate **state** need not stay unchanged: unobserved cells can acquire
+default guesses, and alternatives can be eliminated. Those mutations can harm
+future learning even though the current predictions have not improved.
+
+### CI3. Fix unverified updates with a conservative agreement certificate
+
+`certify(keys,state,D)` returns an answer only when at least one candidate
+survives, every surviving enumerated candidate has already observed its value
+`D(k)`, and all those observed entries have the same class. It returns `none`
+on an unknown value or disagreement. It uses neither a completed decoder's
+default nor a confidence threshold. This sufficient certificate is deliberately
+conservative; no completeness claim is made.
+
+If the certificate returns `c`, every enumerated surviving key and decoder
+consistent with its observations predicts `c` on `D`. In particular, the answer
+is correct if the true key is enumerated and its decoder is still consistent.
+Those hypotheses matter: corrupted prior labels or a target outside the
+single-key family are not repaired by agreement among the remaining candidates.
+
+`guardedObserve` updates only on a certificate and otherwise abstains. For
+every enumerated candidate its post-update record is exactly its old record.
+If all keys are enumerated, the entire state is unchanged. Accepted entries
+were already known, so this guard prevents contamination but supplies no new
+training information. Keep new unverified guesses out of the trusted records;
+use independently observed answers to add information through CI1. Records
+already contaminated by guesses must be rebuilt from trusted observations.
+
+### CI4. Useful feedback, poisoned defaults and an ambiguity witness
+
+Take Boolean values/classes, enumerate key `false`, and train on dictionary
+`id` with label `false`. The value at that key is `false`; the true decoder
+may be `id`, but the default completion predicts `false` everywhere.
+
+* Revealing label `true` on the all-true dictionary changes the learned decoder
+  to `id`, correcting the previously wrong prediction at the new value.
+* Self-labeling that dictionary with the current prediction `false` first
+  leaves the prediction function unchanged, but records the guess. The same
+  genuine feedback then eliminates the only enumerated key and learning fails.
+* The certificate abstains at this unobserved value. Guarding that inference
+  observation preserves the record, and the genuine feedback still recovers `id`.
+
+Separate examples show acceptance of an observed answer and abstention when
+two surviving candidates have observed but conflicting answers on a new input.
+Finally, for **any** proposed Boolean answer at value `true`, there is a Boolean
+decoder fitting the same observed `false -> false` label that disagrees with
+that answer. Both possible rules belong to the single-key family. Thus no
+procedure using only the common observations can guarantee that unseen label
+without additional evidence or restrictions on the rule. This ambiguity
+statement does not rule out a valid task-specific self-supervised signal.
+
+The `ConvexChannel/Forward/Inference/` modules prove CI1-CI4. They formalize the
+existing categorical update and the new conservative guard; no neural teacher,
+noisy-label optimizer or Rust deployment of the guard is asserted here.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Inference
+LAKE_ARTIFACT_CACHE=false lake env lean scripts/ConvexChannelAxioms.lean
+```

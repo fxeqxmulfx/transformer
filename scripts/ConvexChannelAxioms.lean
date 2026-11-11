@@ -36,6 +36,13 @@ open Lean Elab Command
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.learnBatches_eq_learn
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.learnedBatches_eq_channel
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.later_batch_changes_key
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Inference.feedback_fits
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Inference.finish_inferBatches
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Inference.certify_sound
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Inference.guarded_unchanged
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Inference.bool_self_label_blocks_feedback
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Inference.bool_guard_preserves_feedback
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Inference.no_unlabeled_answer_guarantee
 
 run_cmd do
   let env ← getEnv

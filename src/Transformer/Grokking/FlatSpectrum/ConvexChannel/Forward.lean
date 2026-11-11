@@ -7,6 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Training
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Work
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Boolean
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Minibatch
+public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Inference
 
 /-!
 # A finite forward-only learner for realizable generated channels
@@ -20,4 +21,6 @@ An instrumented implementation proves the number of candidate observations
 is bounded by the product of the candidate and sample counts. No gradient,
 optimizer convergence assumption, or unproved spectral generalization is used.
 Persistent minibatches compute exactly the same result as one uninterrupted scan.
+Inference-time feedback and the limits of self-labeling are formalized separately
+under *Inference-time learning*, CI1-CI4.
 -/
