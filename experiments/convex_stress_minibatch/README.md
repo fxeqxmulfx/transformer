@@ -128,3 +128,27 @@ that minimizing each noisy linear objective solves the full CE problem.
 Gradient averaging, variance reduction or growing batches need a separate
 implementation and convergence check. The frozen stress cohort continues
 to measure the original minibatch rule; this diagnostic does not tune it.
+
+## Repairs indicated by the diagnostics
+
+1. Retain gradient information across minibatches, with a convergence argument
+   for the chosen estimator. The singleton counterexample rules out assuming
+   that the current exact-batch-oracle rule solves the full convex objective.
+2. Share joint coefficients across equivalent recall queries. With a fixed
+   alignment `k_q(j)` of input slots, constraints of the form
+   `W(q,k_q(j),v,c) = W(q',k_q'(j),v,c)` are linear. They can transfer observed
+   value decoding to a query that has not seen that value. Separately trained
+   routing and decoder factors would introduce products of learned parameters;
+   convex sharing must be specified on the joint tensor. The equivalence of
+   queries is an additional structural assumption, not a consequence of a
+   flat spectrum.
+3. Test a fixed positive logit multiplier with ordinary CE. The branch
+   witness separates representability from the unit-scale loss preference.
+   Multiplication by a fixed constant preserves affine logits and convex CE;
+   the diagnostic does not establish the outcome of training at that scale.
+
+The parity and run-count tasks still need separate representation checks.
+Their names alone do not establish that a feature extension is necessary.
+Flat spectrum remains a rank/error bound. Identification of unseen labels
+requires shared structure or a valid observation certificate, and successful
+optimization requires an appropriate algorithm even on a convex domain.
