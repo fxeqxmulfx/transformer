@@ -11894,7 +11894,9 @@ G(X) = Σ_s ( Σ_c p_{s,c}(X) A_{s,c} − A_{s,y_s} ),    p_{s,c} = exp z_{s,c} 
 Two cases. The probes `A_{s,c} = φ(c) e_ij` of a cell `(i, j)` and an answer code `φ` read
 `z_{s,c} = Re(conj φ(c) X_ij)`: the kernel of the note with its decoder (XE8). The probes
 `A_{s,c} = e_ic`, with one column for each class, read `z_{s,c} = Re X_ic`: the product is the
-table of the logits.
+table of the logits. These probes have norm one and vanish off the rows that the samples read.
+So XE3 holds for them with `a = 1`, and a row that no sample reads is zero in every trained
+table (XE12).
 
 This loss has what WD1–WD5, WD9 and WD10 ask of a loss.
 
@@ -12358,12 +12360,12 @@ Assumed or not covered:
 `src/Transformer/Grokking/FlatSpectrum/Training/`, modules `Logits`, `CrossEntropy`,
 `CrossEntropyBounds`, `CrossEntropyRun`, `Margin`, `MaxMargin`, `MaxMarginLimit`, `SeenCells`,
 `AnswerCode`, `SeenMargin`, `UnitBall`, `MarginDirection`, `MirroredCode`, `CharacterCode`,
-`MirroredUnique`, `SeenDirection`, `UnseenRows`, `LargeDecay` and `NearestCodeword`, namespace
-`Transformer.Grokking.FlatSpectrum.Training`, proved without `sorry`.
+`MirroredUnique`, `SeenDirection`, `UnseenRows`, `LargeDecay`, `NearestCodeword` and
+`ClassProbes`, namespace `Transformer.Grokking.FlatSpectrum.Training`, proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
-| XE1 | `ceLoss`, `ceGrad`, `pairing_sum_left`, `pairing_ceGrad`, `ceLoss_first_order`, `continuous_probability_pairing`, `continuous_ceGrad`, `ceLoss_nonneg`, `ceLoss_zero`, `analyticAt_pairing`, `analyticAt_ceLoss`; one sample: `sum_probability_mul_le_log_weightedExp`, `crossEntropy_first_order`, `crossEntropy_zero` | The samples and the classes are finite types `S`, `C`; the probes are `A : S → C → Matrix m n ℂ` and the labels `y : S → C`. `crossEntropy` is that of `Transformer.Landscape.Neural`, and `probability` and `weightedExp` are those of `Transformer.Grokking.Geometry` and `Transformer.Grokking.GradientEvidence`. Real-analytic in the entries is the hypothesis of WD8. The second case of probes is not a declaration; the first is `codeProbe` (XE8). |
+| XE1 | `ceLoss`, `ceGrad`, `pairing_sum_left`, `pairing_ceGrad`, `ceLoss_first_order`, `continuous_probability_pairing`, `continuous_ceGrad`, `ceLoss_nonneg`, `ceLoss_zero`, `analyticAt_pairing`, `analyticAt_ceLoss`; one sample: `sum_probability_mul_le_log_weightedExp`, `crossEntropy_first_order`, `crossEntropy_zero` | The samples and the classes are finite types `S`, `C`; the probes are `A : S → C → Matrix m n ℂ` and the labels `y : S → C`. `crossEntropy` is that of `Transformer.Landscape.Neural`, and `probability` and `weightedExp` are those of `Transformer.Grokking.Geometry` and `Transformer.Grokking.GradientEvidence`. Real-analytic in the entries is the hypothesis of WD8. The first case of probes is `codeProbe` (XE8). The second is `classProbe` (module `ClassProbes`), with `pairing_classProbe`, `frobeniusSq_classProbe`, `classProbe_apply_of_ne`, `gap_classProbe`, `IsDecayedMin.row_eq_zero_of_classProbe` and `exists_tendsto_decayRun_classProbe`: the samples read the rows `row : S → m`, the classes are the column type `n`, and `e_ic` is `Matrix.single i c 1`. |
 | XE2 | `abs_pairing_le_mul_sqrt`, `exists_forall_frobeniusSq_le`, `frobeniusSq_le_sq_of_le_mul_sqrt`, `pairing_ceGrad_le`, `frobeniusSq_ceGrad_le`, `neg_le_pairing_of_first_order`, `neg_le_pairing_ceGrad`, `ceLoss_le_add`; one sample: `sum_mul_exp_sub_le_of_mem_Icc`, `log_weightedExp_le`, `crossEntropy_le_add` | `‖A s c‖ ≤ a` is `frobeniusSq (A s c) ≤ a ^ 2` with `a ≥ 0`, and `‖G X‖ ≤ 2 a N` is `frobeniusSq (G X) ≤ (2 a N) ^ 2`. Hoeffding's lemma is Mathlib's `ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc`, applied to the weights `p` as a `PMF` on the classes; it is stated for values in `[a, b]` with the constant `(b − a)² / 8`. |
 | XE3 | `exists_tendsto_decayRun_ceLoss`, `exists_tendsto_decayRun_ceLoss_isDecayedMin`, `exists_pos_ae_tendsto_decayRun_ceLoss_isDecayedMin`, `exists_isDecayedMin_ceLoss`, `exists_seq_isDecayedMin_ceLoss`; example: `signProbe`, `frobeniusSq_signProbe_le`, `signWitness_radius` | Instances of `exists_tendsto_decayRun`, `exists_tendsto_decayRun_isDecayedMin`, `exists_pos_ae_tendsto_decayRun_isDecayedMin` and `exists_isDecayedMin_of_card_le`, with their forms of the hypotheses. `N` and `\|C\|` are `Fintype.card S` and `Fintype.card C`. |
 | XE4 | `gap`, `margin`, `gap_smul`, `margin_smul`, `margin_le_gap`, `nonempty_wrong`, `le_margin`, `exists_gap_eq_margin`, `frobeniusSq_le_nuclearNorm_sq`, `gap_le_mul_nuclearNorm`, `crossEntropy_le_of_le_gap`, `ceLoss_le_of_le_gap`, `ceLoss_le_mul_exp`, `log_le_ceLoss` | `margin` is the infimum over the pairs `(s, c)` with `c ≠ y s`; the statements that use it as a minimum take `[Nonempty S] [Nontrivial C]`. The upper bounds are stated for a number `μ` below every gap. |

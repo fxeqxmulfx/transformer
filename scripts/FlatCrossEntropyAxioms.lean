@@ -124,3 +124,9 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.gap_codeProbe_pos_iff
 #print axioms Transformer.Grokking.FlatSpectrum.Training.norm_sub_lt_of_margin_pos
 #print axioms Transformer.Grokking.FlatSpectrum.Training.eventually_norm_sub_lt
+#print axioms Transformer.Grokking.FlatSpectrum.Training.pairing_classProbe
+#print axioms Transformer.Grokking.FlatSpectrum.Training.frobeniusSq_classProbe
+#print axioms Transformer.Grokking.FlatSpectrum.Training.classProbe_apply_of_ne
+#print axioms Transformer.Grokking.FlatSpectrum.Training.gap_classProbe
+#print axioms Transformer.Grokking.FlatSpectrum.Training.IsDecayedMin.row_eq_zero_of_classProbe
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun_classProbe
