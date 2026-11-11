@@ -1,5 +1,24 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Convex stress repair after formal failure witnesses (2026-11-11)
+
+Task #160 follows the user's instruction to prove the failure first and repair
+full-batch failures too. The Lean statements in `ConvexChannel/Minibatch/` and
+`ConvexChannel/Shared.lean` are landed before native experiments: singleton
+oracle ties can preserve a constant route; gradient memory breaks the two-input
+witness; aligned query sharing and fixed-scale ordinary CE remain convex.
+These are algebraic guarantees, not general stochastic convergence or unseen
+label identification. The 204 completed and six user-stopped old minibatch
+cells remain separate and fully accounted for.
+
+The [native repair protocol](experiments/convex_stress_repair/protocol.json)
+prespecifies eight short/long tasks, three learning arms and two fixed scales,
+with seed zero: 48 diagnostic cells. Seven native checks pass, including a
+full-batch transfer witness and an ambiguous negative control. Freeze sources,
+retain all failures, replay every endpoint, and distinguish fresh training gaps
+from held-out errors. Pilot caps are 64 full-batch and 512 minibatch updates;
+this is not an original-budget benchmark or a fresh transformer comparison.
+
 ## Prospective probability control (2026-11-09 active goal)
 
 The user asks to close the gap between flat-spectrum guarantees and actual

@@ -1,0 +1,16 @@
+{
+  "version": "convex-stress-repair-v1",
+  "source_commit": "3555299",
+  "features": "All original causal slots, with a new constant slot; lag slots retain their values and each token-indexed successor/presence block is permuted relative to the visible query. One joint tensor is shared across queries. Values and output classes are not recoded.",
+  "optimizer": "Store one centered CE gradient per consumed supervised training prefix. Replace that record on revisits. Take one feasible FW step per original minibatch from the aggregate; integer vertex weights implement eta=2/(updates+1). Full-batch refreshes every prefix before each step. Measure fresh full-training CE and FW gap at endpoint; no general stale-gradient convergence claim.",
+  "forward_only": "Same persistent consistency learner on aligned shared inputs, one complete epoch, checked against a single complete-data batch. Explicit failure when no key is consistent.",
+  "arms": ["full_batch", "minibatch", "forward_only"],
+  "scales": [1, 10],
+  "full_updates": 64,
+  "minibatch_updates": 512,
+  "full_gap_tolerance": 1e-8,
+  "stop": "First observed primary exact accuracy >=99%, or configured update cap; full-batch also stops at a fresh empirical FW gap <=1e-8. Forward-only completes one epoch. All results, failures and diagnostic caps remain visible.",
+  "pilot_seed": 0,
+  "pilot_tasks": ["suite-boolean-and-shift", "gpt-probe-key-value-binding", "basis-recall-easy", "gpt-probe-branch-amplitudes", "arithmetic-div", "basis-parity16", "basis-depth-easy", "recurrence-fibonacci-k1-c2-lgt"],
+  "interpretation": "Prespecified repair diagnostic, not the original full-budget transformer benchmark. Original data fingerprints, minibatch sizes and exact metrics are preserved. The full 35-task suite remains available. No task identifiers or labels enter the forward features. Query equivalence is an additional inductive bias, not implied by spectral flatness. All outputs are generated locally and ignored."
+}
