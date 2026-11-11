@@ -1,5 +1,6 @@
 module
 
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.Balanced
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.LinearDiverge
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.MarginContinuity
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.NoDecayRun
@@ -79,5 +80,10 @@ dropped, or the part of the open statement that is proved.
   (`not_isDecayedMin_of_rank_lt`). For the `2 × 2` identity these are the starts of rank at
   most one, at every width, and under the bounds of WD8 their runs converge to stationary
   points that are not decayed minima (`exists_tendsto_decayRun_one_not_isDecayedMin`). The
-  run from a start with zero columns is the narrower run (`decayRun_fromCols_zero`). Whether
-  the exceptional set of WD10 contains more is not determined. -/
+  run from a start with zero columns is the narrower run (`decayRun_fromCols_zero`). A
+  stationary point with `λ ≠ 0` is balanced, `Uᴴ U = Vᴴ V`
+  (`conjTranspose_mul_self_eq_of_stationary`), its weight decay is the nuclear norm of its
+  product (`nuclearNorm_mul_conjTranspose_of_stationary`), and for `λ > 0` it is a decayed
+  minimum exactly when its product is a trained product
+  (`isDecayedMin_iff_isNuclearMin_of_stationary`). Whether the exceptional set of WD10
+  contains more is not determined. -/

@@ -114,3 +114,10 @@ optimal fit*, XE14 to XE18 of *Training with cross-entropy*, the answers to the 
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.decayedLoss_fromCols_zero
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isDecayedMin_fromCols_zero_iff
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.rank_stack_fromCols_zero_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.conjTranspose_mul_self_eq_of_stationary
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_eq_of_stationary
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.gram_mul_conjTranspose_of_stationary
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.nuclearNorm_mul_conjTranspose_of_stationary
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.rank_mul_conjTranspose_of_stationary
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isDecayedMin_iff_isNuclearMin_of_stationary
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isDecayedMin_iff_isNuclearMin_of_tendsto
