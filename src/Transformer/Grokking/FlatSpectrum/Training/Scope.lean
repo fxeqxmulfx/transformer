@@ -4,6 +4,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.Scope.Balanced
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.BalanceObstruction
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.LinearDiverge
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.MarginContinuity
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.NegStart
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.NoDecayRun
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.PaddedRun
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.PhaseStep
@@ -100,5 +101,8 @@ dropped, or the part of the open statement that is proved.
   (`conjTranspose_mul_self_eq_of_stationary`), its weight decay is the nuclear norm of its
   product (`nuclearNorm_mul_conjTranspose_of_stationary`), and for `λ > 0` it is a decayed
   minimum exactly when its product is a trained product
-  (`isDecayedMin_iff_isNuclearMin_of_stationary`). Whether the exceptional set of WD10
-  contains more is not determined. -/
+  (`isDecayedMin_iff_isNuclearMin_of_stationary`). The exceptional set of WD10 contains more
+  than the starts of low rank: for the `2 × 2` identity the run from `V₀ = −U₀` keeps
+  `V_t = −U_t` (`decayRun_neg`) and reaches no decayed minimum
+  (`not_isDecayedMin_one_of_neg`), though the stack `[U₀; −U₀]` has the rank of `U₀`
+  (`rank_stack_neg`), which can be two. An exact description of that set is not given. -/

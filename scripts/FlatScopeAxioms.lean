@@ -172,3 +172,11 @@ optimal fit*, XE14 to XE19 of *Training with cross-entropy*, the answers to the 
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_inv_smul_signProduct
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.log_two_le_ceLoss_signProduct
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_ceLoss_signProduct_iff
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.decayStep_neg
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.decayRun_neg
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.eq_neg_of_tendsto_decayRun_neg
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.rank_stack_neg
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.not_isNuclearMin_one_mul_neg
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isHermitian_mask_sub_one
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.not_isDecayedMin_one_of_neg
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_one_neg_not_isDecayedMin

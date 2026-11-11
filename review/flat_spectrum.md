@@ -9093,7 +9093,9 @@ on a convex loss with continuous gradient:
   WD8 their runs converge to stationary points that are not decayed minima; the run from a
   start with zero columns is the narrower run; a stationary point with λ ≠ 0 is balanced,
   `Uᴴ U = Vᴴ V`, its weight decay is the nuclear norm of its product, and for λ > 0 it is a
-  decayed minimum exactly when its product is a trained product (WD14).
+  decayed minimum exactly when its product is a trained product; for the `2 × 2` identity
+  the run from `V_0 = −U_0` reaches no decayed minimum, though its stack can have rank two
+  (WD14).
 
 Assumed or not covered:
 
@@ -9109,14 +9111,15 @@ Assumed or not covered:
   (WD5). At the widths `min(m, n) ≤ k < m + n` the limit is a decayed minimum for almost
   every start (WD10). The exceptional null set is described in part: it contains every start
   whose stack has a rank below that of every trained product, such as the starts of rank at
-  most one for the `2 × 2` identity (WD14); whether it contains more is not determined. The
-  step of that statement is the non-explicit one of WD9, not the explicit one of WD8. Below
-  `min(m, n)` a decayed minimum of that width need not exist (WD10); the run still converges
-  to a stationary point. Such a limit is balanced, `Uᴴ U = Vᴴ V`, its weight decay is the
-  nuclear norm of its product, and it is a decayed minimum exactly when its product is a
-  trained product; these limits are also limits of runs of every larger width, from starts
-  with zero columns (WD14). Which stationary products a narrow run reaches is not
-  determined.
+  most one for the `2 × 2` identity, and for that kernel also the starts `V_0 = −U_0`, whose
+  stacks have rank up to two, so the rank of the stack does not describe it (WD14); an exact
+  description is not given. The step of that statement is the non-explicit one of WD9, not
+  the explicit one of WD8. Below `min(m, n)` a decayed minimum of that width need not exist
+  (WD10); the run still converges to a stationary point. Such a limit is balanced,
+  `Uᴴ U = Vᴴ V`, its weight decay is the nuclear norm of its product, and it is a decayed
+  minimum exactly when its product is a trained product; these limits are also limits of
+  runs of every larger width, from starts with zero columns (WD14). Which stationary
+  products a narrow run reaches is not determined.
 - In WD7 the limits as λ → 0⁺ are taken along sequences. Statement 1 gives a convergent
   subsequence of the factors of trained fits of one width, and every such limit is an optimal
   fit; the factors themselves need not converge, and an optimal fit with a nonzero factor is
@@ -9287,21 +9290,44 @@ A step multiplies the stack `W = [U; V]` on the left: `W_{t+1} = (1 − η M_t) 
    stationary point is `L(X) + λ ‖X‖_S1` at its product `X`, so a stationary point, and a
    limit of a run, is a decayed minimum exactly when its product is a trained product.
 
+7. A start of full rank can be exceptional. Let the gradient field map Hermitian matrices to
+   Hermitian matrices, as that of the squared loss on all cells of the identity does.
+   A step from a pair `(U, −U)` gives a pair `(U', −U')`: the product `−U Uᴴ` is Hermitian,
+   so `G` is, and the updates of the two factors differ by the sign. So the run from
+   `V_0 = −U_0` has `V_t = −U_t` at every step, and a limit of it is a pair `(U, −U)`. The
+   stack `[U_0; −U_0]` has the rank of `U_0`.
+
+   For the `2 × 2` identity with every cell seen and `0 ≤ λ < 1` the product `−U Uᴴ` of such
+   a pair is not a trained product: `Re tr (−U Uᴴ) = −‖U‖² ≤ 0`, so
+
+   ```
+   ½ ‖−U Uᴴ − 1‖² + λ ‖U Uᴴ‖_S1 ≥ 1 > 2 λ − λ²,
+   ```
+
+   the value of `(1 − λ) · 1`. So the run from `V_0 = −U_0` does not converge to a decayed
+   minimum, at any width and with any step, and for λ > 0 under the bounds of WD8 it
+   converges to a stationary point that is not one. With `U_0 = 1` of width two the stack
+   `[1; −1]` has rank two, the rank of the trained products (5): the exceptional set of WD10
+   is larger than the set of 3, and the rank of the stack does not describe it.
+
 So at width two, which is `min(m, n)` and at which almost every run with a small step ends at
 a decayed minimum (WD10), the exceptional set contains every start whose stack has rank at
 most one: the start `0`, the starts with a zero column, whose runs are the runs of width one
 (4), and all starts `[U_0; V_0] = S wᴴ`. These starts satisfy polynomial equations, the
 vanishing of the `2 × 2` minors of the stack, so they form a null set; that is not
-formalized.
+formalized. The exceptional set also contains the starts `V_0 = −U_0` (7), a proper linear
+subspace of the starts, whose stacks have rank up to two.
 
 Example: with λ = ½, κ = 2, ρ = 8 and η = 1/200, the run of width two from
 `U_0 = V_0 = [[1, 0], [1, 0]]` converges to a stationary point that is not a decayed
-minimum, and it is the run of width one from `u_0 = v_0 = (1, 1)` with a zero column.
+minimum, and it is the run of width one from `u_0 = v_0 = (1, 1)` with a zero column. With
+the same numbers the run of width two from `U_0 = 1`, `V_0 = −1`, whose stack has rank two,
+converges to a stationary point that is not a decayed minimum.
 
-Not covered. Whether the exceptional set of WD10 is exactly the set of 3, that is whether a
-start whose stack has the rank of a trained product reaches a decayed minimum; an explicit
-step for the statement "almost every start" of WD10; the limits of the runs below
-`min(m, n)` beyond 4 and 6, that is which stationary products such a run reaches.
+Not covered. An exact description of the exceptional set of WD10: it contains the set of 3
+and the starts of 7, and the rank of the stack does not describe it; an explicit step for
+the statement "almost every start" of WD10; the limits of the runs below `min(m, n)` beyond
+4 and 6, that is which stationary products such a run reaches.
 
 ### Lean
 
@@ -9322,7 +9348,7 @@ step for the statement "almost every start" of WD10; the limits of the runs belo
 | WD10 | `conjTranspose_mul_self_unit`, `pairing_mul_conjTranspose_unit`, `inner_fderiv_gradient_flatLoss`, `lift_mul_stack_eq_zero_of_gradient_eq_zero`, `surjective_mulVec_of_injective`, `frobeniusSq_conjTranspose_mul_of_surjective`, `lift_posSemidef_of_pairing_sq_le`, `lift_posSemidef_of_injective`, `IsDecayedMin.isLocalMin`, `gradient_eq_zero_and_not_isStrictSaddle_of_isLocalMin`, `isDecayedMin_of_not_isStrictSaddle`, `isDecayedMin_of_not_isStrictSaddle_of_card_le`, `isDecayedMin_of_isLocalMin`, `isDecayedMin_of_isLocalMin_of_card_le`, `exists_pos_ae_tendsto_not_isStrictSaddle`, `exists_pos_ae_tendsto_decayRun`, `exists_pos_ae_tendsto_decayRun_isDecayedMin`, `exists_isDecayedMin_of_card_le`, `exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le`; counterexample: `frobeniusSq_one_fin_two`, `le_decayedLoss_width_one`, `decayedLoss_sqrt_smul_one`, `not_isDecayedMin_width_one` | Dependent columns is `¬ Function.Injective (stack U V).mulVec`; width `k ≥ min(m, n)` is `Fintype.card m ≤ Fintype.card k ∨ Fintype.card n ≤ Fintype.card k`. A strict saddle is `IsStrictSaddle (flatLoss L λ) x` of `Transformer.Landscape.SaddleAvoidance`, where `not_isStrictSaddle_of_isLocalMin` is added. The Hessian identity is `⟪S Zᴴ, ∇²F(W) (S Zᴴ)⟫ = ‖Z‖² ⟨S, M S⟩` for one-column `Z`, `A`, `B` and `S = [A; B]`, read off the exact formula for the gradient along the line. `lift_posSemidef_of_injective` holds for any matrix `G` with `M [U; V] = 0`, not only `G (U Vᴴ)`. A local minimum is `IsLocalMin (fun p => decayedLoss L λ p.1 p.2) (U, V)` on the pairs of matrices of one width. Almost every is `∀ᵐ x` for `volume` on the factor space, with the run started at `factors x`; `η₀` is that of `exists_pos_forall_sublevel`. The lower bound for width one holds for every λ ≥ 0 and the value at width two for every λ ≤ 1. |
 | WD12 | `linear_first_order`, `pairing_neg_one_smul_one`, `exists_linear_lt`, `analyticAt_linear`, `decayRun_linear_decay`, `decayRun_linear_add`, `tendsto_frobeniusSq_decayRun_linear_atTop`, `not_tendsto_decayRun_linear`, `decayedLoss_linear_smul`, `not_isDecayedMin_linear` | Module `Scope/LinearDiverge`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. The loss is `fun X => pairing (-1) X` on `Matrix m m ℂ` and its gradient is the constant `fun _ => -1`. "Not bounded below" is `∀ c, ∃ X, pairing (-1) X < c`, for a nonempty `m`. "The norm tends to infinity" is `Tendsto (fun t => frobeniusSq U_t + frobeniusSq V_t) atTop atTop`, and "no limit" is `¬ Tendsto … (𝓝 W)` for every pair `W`. Real-analytic is in the form of WD8. The start of the example is `fromCols 1 0`, `fromCols 0 1`; its full row rank and the positive definite step matrix are two further examples. |
 | WD13 | `tendsto_movingAverage`, `adamRun_succ_first`, `adamRun_succ_second`, `adamRun_succ_params`, `tendsto_adamRun_first`, `tendsto_adamRun_second`, `Hyper.Regular`, `Hyper.source_regular`, `decay_mul_eq_of_tendsto_adamRun`, `abs_decay_mul_lt_one_of_tendsto_adamRun`, `eq_zero_of_tendsto_adamRun`, `eq_zero_or_abs_eq_of_tendsto_adamRun`; witnesses: `adamRun_zero`, `scalarField`, `continuous_scalarField`, `hasDerivAt_scalarLoss`, `not_tendsto_adamRun_scalar`, `factorField`, `continuous_factorField`, `hasDerivAt_factorLoss_left`, `hasDerivAt_factorLoss_right`, `factorLoss`, `factorLoss_eq`, `five_halves_le_factorLoss`, `factorLoss_le_iff`, `not_tendsto_adamRun_factor` | Modules `src/Transformer/Grokking/Protocol/AdamLimit` and `AdamLimitWitness`, namespace `Transformer.Grokking.Protocol`, not the namespace of this section: the update is `adamStep` and the run `adamRun` of the protocol of the division experiment, with the constants `Hyper` (`Hyper.source wd` for the source's). "Every update sees one field" is the oracle `fun _ => g`; the parameters are a function `ι → ℝ` and convergence is in the product topology. The hypotheses on the constants are `Hyper.Regular h`, and the learning rate is `Hyper.rateAt`, constant after the warmup. `|θ| < 1 / wd` is stated as `|h.decay * θ i| < 1`. The factors are `θ false` and `θ true`; `factorField` is proved to be the gradient of `½ (u v − 3)²` coordinate by coordinate, and "a minimizer" is the hypothesis `∀ u v, factorLoss (θ false) (θ true) ≤ factorLoss u v`. The remark on ε → 0 and the citation are not formalized. |
-| WD14 | `stack_decayRun_mulVec_eq_zero`, `stack_mulVec_eq_zero_of_tendsto`, `rank_le_of_forall_mulVec_eq_zero`, `rank_stack_decayRun_le`, `rank_mul_conjTranspose_le_of_tendsto`, `not_isDecayedMin_of_rank_lt`; the `2 × 2` identity: `one_lt_rank_of_isNuclearMin_one`, `not_isDecayedMin_one_of_rank_le_one`, `exists_tendsto_decayRun_one_not_isDecayedMin`; padded pairs: `fromCols_zero_mul_conjTranspose`, `frobeniusSq_fromCols_zero`, `decayStep_fromCols_zero`, `decayRun_succ`, `decayRun_fromCols_zero`, `tendsto_decayRun_fromCols_zero`, `decayedLoss_fromCols_zero`, `isDecayedMin_fromCols_zero_iff`, `rank_stack_fromCols_zero_le`; stationary points: `conjTranspose_mul_self_eq_of_stationary`, `frobeniusSq_eq_of_stationary`, `gram_mul_conjTranspose_of_stationary`, `nuclearNorm_mul_conjTranspose_of_stationary`, `rank_mul_conjTranspose_of_stationary`, `isDecayedMin_iff_isNuclearMin_of_stationary`, `isDecayedMin_iff_isNuclearMin_of_tendsto` | Modules `Scope/StackRank`, `Scope/RankStart`, `Scope/PaddedRun` and `Scope/Balanced`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. `W z = 0` is `stack U V *ᵥ z = 0` and the rank is `Matrix.rank`; statements 1, 2 and 4 take any `G`, `η` and `λ`, and a limit is `Tendsto (decayRun G η lam U₀ V₀) atTop (𝓝 (U, V))`. Statement 2 for a limit is `(U * Vᴴ).rank ≤ (stack U₀ V₀).rank`. "Every trained product has a rank above" is `∀ X, IsNuclearMin L lam X → (stack U₀ V₀).rank < X.rank`; `r*` is not defined. `[u 0]` is `fromCols u 0` with the column type `k₁ ⊕ k₂`. For the identity the gradient field is `fun X => mask Set.univ (X - 1)`, "rank two" is `1 < X.rank`, the start has `(stack U₀ V₀).rank ≤ 1` at any finite column type, and the bounds of WD8 are those of `exists_tendsto_decayRun_fitLoss` with `2 ≤ κ ^ 2`. That the starts of rank at most one are the `S wᴴ`, satisfy the minor equations and form a null set is not formalized. The start of the example is `fromCols (of fun _ _ => 1) 0` for both factors. In statement 6 "stationary" is `lift lam G * stack U V = 0` for any matrix `G`; the Gram identity is stated as `(U * Vᴴ)ᴴ * (U * Vᴴ) = (V * Vᴴ)ᴴ * (V * Vᴴ)`, the trace is taken by `nuclearNorm_eq_trace_of_mul_self`, the ranks are the conjunction `(U * Vᴴ).rank = U.rank ∧ (U * Vᴴ).rank = V.rank`, and the statement for a limit takes a continuous `G` and `η > 0`. |
+| WD14 | `stack_decayRun_mulVec_eq_zero`, `stack_mulVec_eq_zero_of_tendsto`, `rank_le_of_forall_mulVec_eq_zero`, `rank_stack_decayRun_le`, `rank_mul_conjTranspose_le_of_tendsto`, `not_isDecayedMin_of_rank_lt`; the `2 × 2` identity: `one_lt_rank_of_isNuclearMin_one`, `not_isDecayedMin_one_of_rank_le_one`, `exists_tendsto_decayRun_one_not_isDecayedMin`; padded pairs: `fromCols_zero_mul_conjTranspose`, `frobeniusSq_fromCols_zero`, `decayStep_fromCols_zero`, `decayRun_succ`, `decayRun_fromCols_zero`, `tendsto_decayRun_fromCols_zero`, `decayedLoss_fromCols_zero`, `isDecayedMin_fromCols_zero_iff`, `rank_stack_fromCols_zero_le`; stationary points: `conjTranspose_mul_self_eq_of_stationary`, `frobeniusSq_eq_of_stationary`, `gram_mul_conjTranspose_of_stationary`, `nuclearNorm_mul_conjTranspose_of_stationary`, `rank_mul_conjTranspose_of_stationary`, `isDecayedMin_iff_isNuclearMin_of_stationary`, `isDecayedMin_iff_isNuclearMin_of_tendsto`; the starts `V₀ = −U₀`: `decayStep_neg`, `decayRun_neg`, `eq_neg_of_tendsto_decayRun_neg`, `rank_stack_neg`, `not_isNuclearMin_one_mul_neg`, `isHermitian_mask_sub_one`, `not_isDecayedMin_one_of_neg`, `exists_tendsto_decayRun_one_neg_not_isDecayedMin` | Modules `Scope/StackRank`, `Scope/RankStart`, `Scope/PaddedRun`, `Scope/Balanced` and `Scope/NegStart`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. `W z = 0` is `stack U V *ᵥ z = 0` and the rank is `Matrix.rank`; statements 1, 2 and 4 take any `G`, `η` and `λ`, and a limit is `Tendsto (decayRun G η lam U₀ V₀) atTop (𝓝 (U, V))`. Statement 2 for a limit is `(U * Vᴴ).rank ≤ (stack U₀ V₀).rank`. "Every trained product has a rank above" is `∀ X, IsNuclearMin L lam X → (stack U₀ V₀).rank < X.rank`; `r*` is not defined. `[u 0]` is `fromCols u 0` with the column type `k₁ ⊕ k₂`. For the identity the gradient field is `fun X => mask Set.univ (X - 1)`, "rank two" is `1 < X.rank`, the start has `(stack U₀ V₀).rank ≤ 1` at any finite column type, and the bounds of WD8 are those of `exists_tendsto_decayRun_fitLoss` with `2 ≤ κ ^ 2`. That the starts of rank at most one are the `S wᴴ`, satisfy the minor equations and form a null set is not formalized. The start of the example is `fromCols (of fun _ _ => 1) 0` for both factors. In statement 6 "stationary" is `lift lam G * stack U V = 0` for any matrix `G`; the Gram identity is stated as `(U * Vᴴ)ᴴ * (U * Vᴴ) = (V * Vᴴ)ᴴ * (V * Vᴴ)`, the trace is taken by `nuclearNorm_eq_trace_of_mul_self`, the ranks are the conjunction `(U * Vᴴ).rank = U.rank ∧ (U * Vᴴ).rank = V.rank`, and the statement for a limit takes a continuous `G` and `η > 0`. In statement 7 "maps Hermitian matrices to Hermitian matrices" is `∀ X, X.IsHermitian → (G X).IsHermitian`, the start is `(U₀, -U₀)` at any finite column type, the conclusions are `(decayRun G η lam U₀ (-U₀) t).2 = -(decayRun G η lam U₀ (-U₀) t).1` and `V = -U` at a limit, and `(stack U (-U)).rank = U.rank`; for the identity the product is `U * (-U)ᴴ`, the hypothesis on the ball is `2 * frobeniusSq U₀ ≤ ρ`, and the example is the start `(1, -1)` of width two, whose stack has rank `2`, with the numbers of the example of statement 5. |
 
 ## Flat kernels of any shape (added)
 
