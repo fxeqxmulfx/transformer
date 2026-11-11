@@ -104,3 +104,23 @@ cargo run --offline --release --manifest-path experiments/convex_stress_minibatc
 ## Cohort findings
 
 Pending completion of the frozen 210-cell minibatch cohort.
+
+## Why exact minibatch oracles need another convergence argument
+
+`tests/oracle_bias.rs` gives a concrete obstruction for the implemented
+stochastic rule. The two prefixes `[0,2]` and `[1,2]` have respective labels
+0 and 1. Lag one identifies both labels, and a single full-batch update
+fits them with zero FW gap. In a singleton batch, every candidate key can
+assign the same best class to its one observed value. All key costs tie,
+so the frozen tie rule chooses lag zero, whose value is always 2. Every
+chosen vertex therefore uses a constant feature. Their convex mixture
+also predicts the same answer for both inputs, so accuracy is exactly 50%.
+
+The native check retains this obstruction for 1000 updates, with full-data
+FW gap above 0.49 and CE more than 0.4 above the feasible optimum. This is
+an algorithmic limitation on fully representable observed data, separate
+from missing-label identification. Exact batch gradients do not imply
+that minimizing each noisy linear objective solves the full CE problem.
+Gradient averaging, variance reduction or growing batches need a separate
+implementation and convergence check. The frozen stress cohort continues
+to measure the original minibatch rule; this diagnostic does not tune it.
