@@ -4206,3 +4206,22 @@ separate convex table control expose why bare arithmetic is different from
 supplied-dictionary recall. It does not resolve the earlier compact joint
 embedding/attention replacement requirement or claim that its hypotheses are
 satisfied. No answer dictionary is provided to the arithmetic forward pass.
+
+## Convex generated channels and flat-spectrum bounds (2026-11-11)
+
+**Status: Lean construction landed at `dbb3a4cb`; native protocol fixed, runs pending.**
+The user requested extending the convex model, then clarified to use flat spectrum
+as a bound rather than an arithmetic-specific architecture. The joint tensor
+learns routing and output classes from categorical bindings with ordinary CE.
+Lean proves the whole feasible domain and loss convex, strict extension of
+copying, identification from separating answer examples, necessary rank/error
+bounds on actual outputs, a flat ambiguity counterexample and an exact finite
+linear oracle. The full build and axiom audits pass without new unfinished claims.
+
+The authorized native follow-up is `experiments/convex_channels`: three seeds of
+ordinary and recoded four-key MQAR, comparing the new channel, fixed copying and
+the existing conventional Kernite transformer. The README fixes all 18 endpoints,
+data, optimizer budgets and reporting before training. A full finite spectral
+diagnostic checks the sharp rank/error bound. This does not reopen the unrelated
+compact joint-embedding drop-in requirement or claim generalization from flatness
+alone. No arithmetic feature map is introduced.
