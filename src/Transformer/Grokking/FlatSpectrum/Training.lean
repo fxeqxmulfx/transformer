@@ -66,6 +66,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.SignUnique
 public import Transformer.Grokking.FlatSpectrum.Training.RealEntries
 public import Transformer.Grokking.FlatSpectrum.Training.SignReal
 public import Transformer.Grokking.FlatSpectrum.Training.SignRealRun
+public import Transformer.Grokking.FlatSpectrum.Training.Scope
 
 /-! Training the pure factorization with weight decay, `review/flat_spectrum.md`, Lemma 1's
 modeling step and *Training reaches the optimal fit* (added).
@@ -194,4 +195,5 @@ the labels (`ceLoss`, with the gradient `ceGrad`).
 
 The minimizers of `L + λ ‖·‖_S1` (`IsNuclearMin`) are the products of the trained fits of every
 width (`isNuclearMin_iff`), so XE5, XE6 and XE9–XE11 hold for them
-(`forall_seq_isNuclearMin`): the widths of the fits may change along a sequence. -/
+(`forall_seq_isNuclearMin`): the widths of the fits may change along a sequence. `Scope` has
+the counterexamples and the partial answers for the items that WD11 and XE13 leave open. -/

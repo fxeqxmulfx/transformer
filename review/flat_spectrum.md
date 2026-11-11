@@ -9073,12 +9073,18 @@ on a convex loss with continuous gradient:
   recovers are approached; the sign change of both factors keeps a trained fit and an
   optimal fit, so the factors of trained fits need not converge and an optimal fit with a
   nonzero factor is not unique (WD7).
+- for the linear loss `−Re tr X`, which is convex and real-analytic and not bounded below,
+  with a weight decay λ < 1: the run from every start with `U_0 + V_0 ≠ 0` has factors whose
+  norm tends to infinity, at every step size, so it has no limit, and no factorization is a
+  decayed minimum (WD12).
 
 Assumed or not covered:
 
-- Losses outside WD8 and WD9: for a loss that is not real-analytic, or one that is not
-  bounded below, convergence stays the hypothesis of WD5, and so does the condition
-  `η (|λ| + ‖G_t‖_S2) < 1` along the run.
+- Losses outside WD8 and WD9. For a loss that is not bounded below the run can diverge with
+  the other hypotheses of WD5 in force: the linear loss `−Re tr X` with λ < 1 (WD12). For a
+  loss that is bounded below and not real-analytic, convergence stays the hypothesis of WD5,
+  and so does the condition `η (|λ| + ‖G_t‖_S2) < 1` along the run: no proof and no
+  counterexample is given.
 - Explicit steps: the constants of WD8 are verified here for the squared loss, and in
   *Training with cross-entropy* (added) for the cross-entropy. For another loss WD9 gives a
   step threshold that is not explicit.
@@ -9094,6 +9100,47 @@ Assumed or not covered:
   not unique, by the sign change of WD7.
 - The model and the optimizer: for the real network (norms, SiLU, attention) and for AdamW
   the modeling step of Lemma 1 remains an assumption, as the note says.
+
+### WD12. Without a lower bound the run can diverge
+
+WD5 assumes that the run converges, and WD8 and WD9 prove it for losses that are bounded
+below. A loss that is not bounded below can have a run that diverges, with the two other
+hypotheses of WD5 in force.
+
+Take the linear loss `L(X) = −Re tr X` of a square matrix. It satisfies the first-order
+inequality with the constant gradient `G = −1`, with equality. It is real-analytic, and it is
+not bounded below: `L(s · 1) = −s m`. With a weight decay λ a step of WD1 is
+
+```
+U ← (1 − ηλ) U + η V,    V ← (1 − ηλ) V + η U,
+```
+
+so the sum and the difference of the factors are multiplied by constants:
+
+```
+U_t + V_t = (1 + η (1 − λ))^t (U_0 + V_0),    U_t − V_t = (1 − η (1 + λ))^t (U_0 − V_0).
+```
+
+Let `λ < 1` and `η > 0`. The first constant exceeds one. So from every start with
+`U_0 + V_0 ≠ 0`, of any width,
+
+```
+‖U_t‖² + ‖V_t‖² ≥ ½ ‖U_t + V_t‖² = ½ (1 + η (1 − λ))^{2t} ‖U_0 + V_0‖² → ∞,
+```
+
+and the run has no limit. The step size plays no role. The weight-decayed loss is not bounded
+below either: at `(s U, s U)` it is `−(1 − λ) s² ‖U‖²`. So no factorization of any width is a
+decayed minimum.
+
+Example: the `1 × 1` loss `−Re X` with `λ = 1/2` and `η = 1/4`, from `U_0 = [1 0]`,
+`V_0 = [0 1]`. The start has full row rank, and the step matrix `1 − η M`, the same at every
+step, has the eigenvalues `1 − η (λ ∓ 1) = 9/8` and `5/8`: it is positive definite. These are
+the two other hypotheses of WD5, and the run has no limit. At `λ = 1` the same run converges
+(the example of WD5); there the weight-decayed loss is bounded below.
+
+So convergence does not follow from the other hypotheses of WD5, even for a convex
+real-analytic loss with a constant gradient. What fails is the lower bound that WD9 asks for:
+with it the sublevel sets of the weight-decayed loss are compact.
 
 ### Lean
 
@@ -9112,6 +9159,7 @@ Assumed or not covered:
 | WD8 | `factors`, `flatten`, `factors_flatten`, `flatten_factors`, `continuous_factors`, `continuous_flatten`, `norm_sq_eq_frobeniusSq_factors`, `real_inner_eq_pairing_factors`, `analyticAt_norm_sq`, `flatLoss`, `productVector`, `analyticAt_productVector`, `analyticAt_flatLoss`, `hasGradientAt_flatLoss`, `gradient_flatLoss`, `factors_gradientStep`, `norm_gradient_flatLoss_sq`, `decayedLoss_sub_le`, `pairing_one_sub_smul`, `frobeniusSq_step_mul_sub_le`, `decayedLoss_decayStep_add_le`, `decayedLoss_decayStep_add_le_of_ball`, `decayedLoss_decayRun_succ_add_le`, `norm_apply_le_sqrt_frobeniusSq`, `isCompact_setOf_frobeniusSq_add_le`, `factors_iterate_gradientStep`, `exists_tendsto_decayRun`, `exists_tendsto_decayRun_isDecayedMin`; squared loss: `fitLoss_eq_add`, `fitLoss_le_add`, `analyticAt_fitLoss`, `exists_tendsto_decayRun_fitLoss`, `exists_tendsto_decayRun_fitLoss_isDecayedMin`, `exists_isDecayedMin_fitLoss`, `exists_tendsto_decayRun_nuclearNorm_add_le` | The factor space is `EuclideanSpace ℂ ((m ⊕ n) × k)` with its real inner product. Real-analytic in the entries is `∀ y, AnalyticAt ℝ (fun y : EuclideanSpace ℂ (m × n) => L (of fun i j => y (i, j))) y`; the three bounds are stated at the matrices with `frobeniusSq X ≤ (ρ / 2) ^ 2`. Łojasiewicz's theorem and the convergence theorem are `exists_isLojasiewiczAt_of_analyticAt` and `tendsto_of_isLojasiewiczAt_of_le_sub` of `Transformer.Landscape.SaddleAvoidance`, used with `κ = 1/2`. In the existence corollary `κ = ‖K‖_S2² + 1`, `ρ = max (‖W_0‖²) (κ²/λ)` and η is the smaller of the two bounds. |
 | WD9 | `isCompact_setOf_flatLoss_le`, `exists_pos_forall_sublevel`, `exists_pos_tendsto_decayRun`, `exists_pos_tendsto_decayRun_isDecayedMin`, `exists_isDecayedMin`; example: `expLoss`, `expGrad`, `pairing_expGrad`, `expLoss_first_order`, `continuous_expGrad`, `analyticAt_expLoss`, `expLoss_nonneg`, `exists_pos_tendsto_decayRun_expLoss_isDecayedMin`, `exists_isDecayedMin_expLoss` | Bounded below is `∀ X, l₀ ≤ L X`. The level bounds the start, `decayedLoss L λ U₀ V₀ ≤ c`, and `η₀` depends on `L`, `G`, λ, `c` and the width. `exists_pos_forall_sublevel` is stated on the factor space, with the null set for Lebesgue measure `volume`; it needs no convexity and uses `exists_pos_measure_sublevel_tendsto_strictSaddle_eq_zero`, `exists_pos_tendsto_of_mapsTo` and `exists_isLojasiewiczAt_of_analyticOnNhd` of `Transformer.Landscape.SaddleAvoidance`. |
 | WD10 | `conjTranspose_mul_self_unit`, `pairing_mul_conjTranspose_unit`, `inner_fderiv_gradient_flatLoss`, `lift_mul_stack_eq_zero_of_gradient_eq_zero`, `surjective_mulVec_of_injective`, `frobeniusSq_conjTranspose_mul_of_surjective`, `lift_posSemidef_of_pairing_sq_le`, `lift_posSemidef_of_injective`, `IsDecayedMin.isLocalMin`, `gradient_eq_zero_and_not_isStrictSaddle_of_isLocalMin`, `isDecayedMin_of_not_isStrictSaddle`, `isDecayedMin_of_not_isStrictSaddle_of_card_le`, `isDecayedMin_of_isLocalMin`, `isDecayedMin_of_isLocalMin_of_card_le`, `exists_pos_ae_tendsto_not_isStrictSaddle`, `exists_pos_ae_tendsto_decayRun`, `exists_pos_ae_tendsto_decayRun_isDecayedMin`, `exists_isDecayedMin_of_card_le`, `exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le`; counterexample: `frobeniusSq_one_fin_two`, `le_decayedLoss_width_one`, `decayedLoss_sqrt_smul_one`, `not_isDecayedMin_width_one` | Dependent columns is `¬ Function.Injective (stack U V).mulVec`; width `k ≥ min(m, n)` is `Fintype.card m ≤ Fintype.card k ∨ Fintype.card n ≤ Fintype.card k`. A strict saddle is `IsStrictSaddle (flatLoss L λ) x` of `Transformer.Landscape.SaddleAvoidance`, where `not_isStrictSaddle_of_isLocalMin` is added. The Hessian identity is `⟪S Zᴴ, ∇²F(W) (S Zᴴ)⟫ = ‖Z‖² ⟨S, M S⟩` for one-column `Z`, `A`, `B` and `S = [A; B]`, read off the exact formula for the gradient along the line. `lift_posSemidef_of_injective` holds for any matrix `G` with `M [U; V] = 0`, not only `G (U Vᴴ)`. A local minimum is `IsLocalMin (fun p => decayedLoss L λ p.1 p.2) (U, V)` on the pairs of matrices of one width. Almost every is `∀ᵐ x` for `volume` on the factor space, with the run started at `factors x`; `η₀` is that of `exists_pos_forall_sublevel`. The lower bound for width one holds for every λ ≥ 0 and the value at width two for every λ ≤ 1. |
+| WD12 | `linear_first_order`, `pairing_neg_one_smul_one`, `exists_linear_lt`, `analyticAt_linear`, `decayRun_linear_decay`, `decayRun_linear_add`, `tendsto_frobeniusSq_decayRun_linear_atTop`, `not_tendsto_decayRun_linear`, `decayedLoss_linear_smul`, `not_isDecayedMin_linear` | Module `Scope/LinearDiverge`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. The loss is `fun X => pairing (-1) X` on `Matrix m m ℂ` and its gradient is the constant `fun _ => -1`. "Not bounded below" is `∀ c, ∃ X, pairing (-1) X < c`, for a nonempty `m`. "The norm tends to infinity" is `Tendsto (fun t => frobeniusSq U_t + frobeniusSq V_t) atTop atTop`, and "no limit" is `¬ Tendsto … (𝓝 W)` for every pair `W`. Real-analytic is in the form of WD8. The start of the example is `fromCols 1 0`, `fromCols 0 1`; its full row rank and the positive definite step matrix are two further examples. |
 
 ## Flat kernels of any shape (added)
 
