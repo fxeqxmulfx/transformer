@@ -11959,6 +11959,25 @@ width `k ≥ min(m, n)` small steps from almost every start of a sublevel set co
 decayed minimum, and decayed minima of that width exist for every λ > 0. Call a decayed
 minimum of the cross-entropy a trained fit.
 
+The mean. The models of the note are trained on the mean `L / N` of the losses of the
+samples, whose gradient is `G / N`. For a real `c ≠ 0`, a step of WD1 on `c G` with the step η
+and the weight decay λ is a step on `G` with the step `c η` and the weight decay `λ / c`:
+
+```
+U − η (c G V + λ U) = U − c η (G V + (λ / c) U),
+```
+
+and likewise for `V`. The weight-decayed loss of `c L` at λ is `c` times that of `L` at
+`λ / c`, so for `c > 0` the decayed minima are the same. So training on the mean with `(η, λ)`
+is training on the sum with `(η / N, N λ)`, and every statement of this section holds for the
+mean with these values. The bounds above become those of one sample,
+
+```
+4 log |C| ≤ λ ρ,    2η (λ² + (2 a)²) ≤ λ    and    η (λ + 2 a + 2 a² ρ) ≤ 1:
+```
+
+for the mean they do not depend on the number of samples.
+
 Example: one sample of a `1 × 1` product with the probes `+1` and `−1` and the label of `+1`,
 so that `L(X) = log(1 + exp(−2 Re X))`. Here `a = 1`, `γ = 2`, `b = log 2` and `s = 1`. With
 λ = 1, ρ = 3 and η = 1/10: `4 log 2 ≤ 3`, `2η (λ² + γ²) = 1` and `η (λ + γ + 2 s ρ) = 9/10`.
@@ -12305,7 +12324,8 @@ on the cross-entropy of logits that are real-linear in the product:
 - for probes of norm at most `a` it has the constants of WD6 and WD8 at every matrix (XE2),
   and under two explicit bounds on the step the run from every start converges to a
   stationary point, and from stacked factors of full row rank to a decayed minimum; no
-  convergence is assumed (XE3);
+  convergence is assumed; training on the mean of the losses is training on their sum with
+  the step `η / N` and the weight decay `N λ`, under bounds without `N` (XE3);
 - for λ ≥ 0 the gaps of a trained fit are within `log(2κ)` of the margin that a competitor
   of unit nuclear norm has at the norm of the fit (XE5);
 - as λ → 0⁺ on samples that some product classifies, the nuclear norm of the trained fits
@@ -12350,8 +12370,6 @@ Assumed or not covered:
   here.
 - Logits that are not linear in the product, such as a network between the product and the
   logits, and losses other than the squared loss, the cross-entropy and those of WD9.
-- The mean of the losses of the samples in place of their sum: it is the sum with the weight
-  decay `N λ` and the step `η / N`. This rescaling is not formalized.
 - The model and the optimizer: for the real network and for AdamW the modeling step of
   Lemma 1 remains an assumption, as the note says.
 
@@ -12360,14 +12378,15 @@ Assumed or not covered:
 `src/Transformer/Grokking/FlatSpectrum/Training/`, modules `Logits`, `CrossEntropy`,
 `CrossEntropyBounds`, `CrossEntropyRun`, `Margin`, `MaxMargin`, `MaxMarginLimit`, `SeenCells`,
 `AnswerCode`, `SeenMargin`, `UnitBall`, `MarginDirection`, `MirroredCode`, `CharacterCode`,
-`MirroredUnique`, `SeenDirection`, `UnseenRows`, `LargeDecay`, `NearestCodeword` and
-`ClassProbes`, namespace `Transformer.Grokking.FlatSpectrum.Training`, proved without `sorry`.
+`MirroredUnique`, `SeenDirection`, `UnseenRows`, `LargeDecay`, `NearestCodeword`,
+`ClassProbes` and `MeanLoss`, namespace `Transformer.Grokking.FlatSpectrum.Training`, proved
+without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
 | XE1 | `ceLoss`, `ceGrad`, `pairing_sum_left`, `pairing_ceGrad`, `ceLoss_first_order`, `continuous_probability_pairing`, `continuous_ceGrad`, `ceLoss_nonneg`, `ceLoss_zero`, `analyticAt_pairing`, `analyticAt_ceLoss`; one sample: `sum_probability_mul_le_log_weightedExp`, `crossEntropy_first_order`, `crossEntropy_zero` | The samples and the classes are finite types `S`, `C`; the probes are `A : S → C → Matrix m n ℂ` and the labels `y : S → C`. `crossEntropy` is that of `Transformer.Landscape.Neural`, and `probability` and `weightedExp` are those of `Transformer.Grokking.Geometry` and `Transformer.Grokking.GradientEvidence`. Real-analytic in the entries is the hypothesis of WD8. The first case of probes is `codeProbe` (XE8). The second is `classProbe` (module `ClassProbes`), with `pairing_classProbe`, `frobeniusSq_classProbe`, `classProbe_apply_of_ne`, `gap_classProbe`, `IsDecayedMin.row_eq_zero_of_classProbe` and `exists_tendsto_decayRun_classProbe`: the samples read the rows `row : S → m`, the classes are the column type `n`, and `e_ic` is `Matrix.single i c 1`. |
 | XE2 | `abs_pairing_le_mul_sqrt`, `exists_forall_frobeniusSq_le`, `frobeniusSq_le_sq_of_le_mul_sqrt`, `pairing_ceGrad_le`, `frobeniusSq_ceGrad_le`, `neg_le_pairing_of_first_order`, `neg_le_pairing_ceGrad`, `ceLoss_le_add`; one sample: `sum_mul_exp_sub_le_of_mem_Icc`, `log_weightedExp_le`, `crossEntropy_le_add` | `‖A s c‖ ≤ a` is `frobeniusSq (A s c) ≤ a ^ 2` with `a ≥ 0`, and `‖G X‖ ≤ 2 a N` is `frobeniusSq (G X) ≤ (2 a N) ^ 2`. Hoeffding's lemma is Mathlib's `ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc`, applied to the weights `p` as a `PMF` on the classes; it is stated for values in `[a, b]` with the constant `(b − a)² / 8`. |
-| XE3 | `exists_tendsto_decayRun_ceLoss`, `exists_tendsto_decayRun_ceLoss_isDecayedMin`, `exists_pos_ae_tendsto_decayRun_ceLoss_isDecayedMin`, `exists_isDecayedMin_ceLoss`, `exists_seq_isDecayedMin_ceLoss`; example: `signProbe`, `frobeniusSq_signProbe_le`, `signWitness_radius` | Instances of `exists_tendsto_decayRun`, `exists_tendsto_decayRun_isDecayedMin`, `exists_pos_ae_tendsto_decayRun_isDecayedMin` and `exists_isDecayedMin_of_card_le`, with their forms of the hypotheses. `N` and `\|C\|` are `Fintype.card S` and `Fintype.card C`. |
+| XE3 | `exists_tendsto_decayRun_ceLoss`, `exists_tendsto_decayRun_ceLoss_isDecayedMin`, `exists_pos_ae_tendsto_decayRun_ceLoss_isDecayedMin`, `exists_isDecayedMin_ceLoss`, `exists_seq_isDecayedMin_ceLoss`; the mean: `decayStep_smul`, `decayRun_smul`, `decayedLoss_const_mul`, `isDecayedMin_const_mul_iff`, `exists_tendsto_decayRun_mean_ceLoss_isDecayedMin`; example: `signProbe`, `frobeniusSq_signProbe_le`, `signWitness_radius` | Instances of `exists_tendsto_decayRun`, `exists_tendsto_decayRun_isDecayedMin`, `exists_pos_ae_tendsto_decayRun_isDecayedMin` and `exists_isDecayedMin_of_card_le`, with their forms of the hypotheses. `N` and `\|C\|` are `Fintype.card S` and `Fintype.card C`. The mean is the loss `fun X => (card S)⁻¹ * ceLoss A y X` with the gradient `fun X => (card S)⁻¹ • ceGrad A y X`, for a nonempty `S`; of the statements of the section only the convergence of the run is restated for it, the others follow by `isDecayedMin_const_mul_iff` and `decayRun_smul`. |
 | XE4 | `gap`, `margin`, `gap_smul`, `margin_smul`, `margin_le_gap`, `nonempty_wrong`, `le_margin`, `exists_gap_eq_margin`, `frobeniusSq_le_nuclearNorm_sq`, `gap_le_mul_nuclearNorm`, `crossEntropy_le_of_le_gap`, `ceLoss_le_of_le_gap`, `ceLoss_le_mul_exp`, `log_le_ceLoss` | `margin` is the infimum over the pairs `(s, c)` with `c ≠ y s`; the statements that use it as a minimum take `[Nonempty S] [Nontrivial C]`. The upper bounds are stated for a number `μ` below every gap. |
 | XE5 | `IsDecayedMin.ceLoss_add_le`, `IsDecayedMin.ceLoss_le_smul`, `IsDecayedMin.log_le_mul_exp`, `IsDecayedMin.sub_log_le_gap`; example: `nuclearNorm_one_fin_one`, `exists_isDecayedMin_signProbe` | The margin of the competitor enters as a number `μ'` below its gaps, and the conclusion is stated for each gap. `κ` is written `card S * (card C − 1)`. |
 | XE6 | `nuclearNorm_pos_of_margin_pos`, `tendsto_nuclearNorm_atTop`, `eventually_lt_margin_div`, `maxMargin`, `margin_le_maxMargin`, `margin_div_le_maxMargin`, `tendsto_margin_div_nuclearNorm`; example: `exists_seq_isDecayedMin_signProbe` | The trained fits of a sequence have one finite column type. `maxMargin` is the supremum `sSup` of the margins on `{‖X‖_S1 ≤ 1}`; that it is attained is `exists_margin_eq_maxMargin` (XE10). `margin_div_le_maxMargin` holds at `X = 0` too, where Lean's quotient is `0`. "Some product has a positive margin" is the hypothesis `0 < margin A y X₀`. The form with the least norm at margin one and the two citations are not formalized. |

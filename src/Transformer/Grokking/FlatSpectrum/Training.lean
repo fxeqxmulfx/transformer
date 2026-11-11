@@ -50,6 +50,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.UnseenRows
 public import Transformer.Grokking.FlatSpectrum.Training.LargeDecay
 public import Transformer.Grokking.FlatSpectrum.Training.NearestCodeword
 public import Transformer.Grokking.FlatSpectrum.Training.ClassProbes
+public import Transformer.Grokking.FlatSpectrum.Training.MeanLoss
 
 /-! Training the pure factorization with weight decay, `review/flat_spectrum.md`, Lemma 1's
 modeling step and *Training reaches the optimal fit* (added).
@@ -176,4 +177,6 @@ chance (`IsDecayedMin.ceLoss_heldOut_eq`, XE12). For a weight decay above `‖G 
 (`IsDecayedMin.mul_eq_zero_of_lt`, `IsDecayedMin.mul_eq_zero_of_ceLoss`, XE7). The larger logit
 of an answer code belongs to the nearer codeword (`pairing_codeProbe_le_iff`), so a product
 with a positive margin is decoded to the labels (`norm_sub_lt_of_margin_pos`, XE8). The probes
-`e_ic` of a table of logits are `classProbe` (XE1). -/
+`e_ic` of a table of logits are `classProbe` (XE1). Training on `c L` is training on `L` with
+the step `c η` and the weight decay `λ / c` (`decayRun_smul`, `isDecayedMin_const_mul_iff`),
+which gives the mean of the losses (XE3). -/

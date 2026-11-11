@@ -130,3 +130,8 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.gap_classProbe
 #print axioms Transformer.Grokking.FlatSpectrum.Training.IsDecayedMin.row_eq_zero_of_classProbe
 #print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun_classProbe
+#print axioms Transformer.Grokking.FlatSpectrum.Training.decayStep_smul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.decayRun_smul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.decayedLoss_const_mul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.isDecayedMin_const_mul_iff
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun_mean_ceLoss_isDecayedMin
