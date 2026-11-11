@@ -6,7 +6,7 @@
   "seeds": [0, 1, 2],
   "arms": ["frank_wolfe", "forward_only"],
   "batch": "Original source number of examples per minibatch, including short epoch tails. Flatten supervised prefixes only within the selected example minibatch.",
-  "shuffle": "Source Random(seed+10000), shuffle example indices at each epoch. No data resampling or outcome-dependent settings.",
+  "shuffle": "Source Random(seed+10000), shuffle a fresh ordered range of example indices at each epoch. No data resampling or outcome-dependent settings.",
   "frank_wolfe": "One exact minibatch CE linear oracle per visited query. Direct joint-tensor convex update eta=2/(local_query_visits+1); absent queries retain all weights. Integer weighted vertex counts represent the joint tensor, not separately learned routing/decoder factors. Ordinary full-vocabulary CE with fixed unit logit scale.",
   "oracle_ties": "Smallest key and smallest observed-label class on observed value rows. Zero-gradient value rows retain that candidate key's previous oracle class, initialized at class zero. All computed candidate histories persist; unseen queries remain uniform.",
   "forward_only": "Persistent CF6 candidate records for every key, eliminate conflicts permanently, smallest surviving key and class-zero completion. Process one complete training epoch in original minibatches. Retain all candidates across boundaries, even when an early snapshot already passes. Compare final full tensor or explicit failure with v1 complete fitting. No gradient or FW updates.",

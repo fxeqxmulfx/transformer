@@ -223,6 +223,10 @@ fn run(arm: &str, name: &str, seed: u32, out: &Path) -> Result<()> {
     } else {
         let mut trainer = Stochastic::new(adapter(&task));
         let reason = 'training: loop {
+            // The frozen source shuffles a fresh ordered range each epoch.
+            for (i, index) in order.iter_mut().enumerate() {
+                *index = i;
+            }
             rng.shuffle(&mut order);
             for chunk in order.chunks(batch) {
                 let samples: Vec<_> = chunk.iter().flat_map(|&i| &encoded[i]).collect();
