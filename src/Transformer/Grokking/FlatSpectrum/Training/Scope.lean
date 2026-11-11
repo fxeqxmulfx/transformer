@@ -1,7 +1,11 @@
 module
 
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.LinearDiverge
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.MarginContinuity
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.NoDecayRun
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.PhaseStep
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.PhasedDirection
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.PhasedRun
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignSegment
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignSegmentCore
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignSet
@@ -55,4 +59,14 @@ dropped, or the part of the open statement that is proved.
   (`not_tendsto_decayRun_ceLoss_zero`), and it is outside every ball `‖U‖² + ‖V‖² ≤ ρ` with
   `η (2 a |S| + 2 |S| a² ρ) < 1` at infinitely many steps
   (`frequently_lt_frobeniusSq_decayRun_ceLoss_zero`). That its norm tends to infinity for one
-  fixed step, and the direction of its factors, are not proved. -/
+  fixed step, and the direction of its factors, are not proved.
+* One run with a decreasing weight decay (XE13, XE18). Let the weight decay pass through a
+  positive sequence `λ_j → 0`, phase `j` making `T j` steps with `λ_j` and the step of XE3 for
+  the ball of its start (`phaseRun`, `phaseStep`). From a start of full row rank there are
+  lengths `T j` for which, at the phase ends, the nuclear norm of the product tends to
+  infinity and its margin for the nuclear norm to the largest margin
+  (`exists_tendsto_margin_div_phaseProduct`). So the products at the phase ends converge in
+  direction to the flat kernel when every cell is seen, for a mirrored code
+  (`exists_tendsto_inv_smul_phaseProduct_codeProbe`), and they answer the unseen cell of the
+  kernel of signs with the wrong class (`exists_eventually_phaseProduct_unseen_wrong`). The
+  lengths of the phases are not explicit, and the margin is not followed inside a phase. -/

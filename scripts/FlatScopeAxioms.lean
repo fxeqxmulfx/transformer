@@ -1,7 +1,7 @@
 import Transformer
 
 /-! Audit the scope items of `review/flat_spectrum.md`: WD12 of *Training reaches the optimal
-fit*, XE14, XE15, XE16 and XE17 of *Training with cross-entropy*, the answers to the items
+fit*, XE14 to XE18 of *Training with cross-entropy*, the answers to the items
 "Assumed or not covered" of WD11 and XE13
 (`Transformer.Grokking.FlatSpectrum.Training.Scope`). -/
 
@@ -83,3 +83,16 @@ fit*, XE14, XE15, XE16 and XE17 of *Training with cross-entropy*, the answers to
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.decayRun_add
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.surjective_stack_decayRun
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frequently_lt_frobeniusSq_decayRun_ceLoss_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.abs_nuclearNorm_sub_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.continuous_nuclearNorm
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.continuous_margin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.continuousAt_margin_div_nuclearNorm
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_inv_smul_of_tendsto_margin_div
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.phaseStep_pos
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_phaseStep
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_seq_of_forall_exists
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_margin_div_phaseProduct
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_inv_smul_phaseProduct
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_inv_smul_phaseProduct_codeProbe
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_inv_smul_phaseProduct_cubicKernel
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_eventually_phaseProduct_unseen_wrong

@@ -12642,7 +12642,14 @@ on the cross-entropy of logits that are real-linear in the product:
 - without weight decay, on samples that some product classifies with a positive margin and
   from stacked factors of full row rank: the run has no limit when `2 a N η < 1`, and it is
   outside every ball `‖U‖² + ‖V‖² ≤ ρ` with `η (2 a N + 2 N a² ρ) < 1` at infinitely many
-  steps (XE17).
+  steps (XE17);
+- for every positive sequence of weight decays `λ_j → 0`, one run of gradient descent that
+  passes through them in phases, each with the step of XE3 for the ball of its start, has
+  for some lengths of the phases, at the phase ends, a nuclear norm that tends to infinity
+  and a margin for its norm that tends to the largest; its products then converge in
+  direction to the flat kernel when every cell is seen, for a mirrored code of gap
+  `0 < g < 2`, and they answer the unseen cell of the kernel of signs with the wrong class
+  (XE18).
 
 Assumed or not covered:
 
@@ -12653,7 +12660,9 @@ Assumed or not covered:
   proves that it has no limit and that it does not settle in a ball where its step is
   admissible. That its norm tends to infinity for one fixed step, that its loss tends to
   `0`, and its implicit bias, the direction of the factors, are not treated. The limit
-  λ → 0⁺ of XE6 and XE9 runs over trained fits, not over one run with a decreasing λ.
+  λ → 0⁺ of XE6 and XE9 runs over trained fits. One run whose weight decay decreases to `0`
+  reaches it at the ends of phases whose lengths are not explicit (XE18); a schedule written
+  before the run, the steps inside a phase and one fixed step are not treated.
 - The direction when several products of the unit ball have the largest margin. XE10 gives
   the limit points of `X_j / ‖X_j‖_S1`; that it converges is proved only when the product of
   largest margin is unique. XE11 proves that for a mirrored code of gap `0 < g < 2` with
@@ -12933,6 +12942,87 @@ problem in the parameters are theorems of Lyu and Li (2020) and of Ji and Telgar
 the pure factorization is homogeneous of degree two in its factors. They are not formalized
 here, and they are not about the largest margin for the nuclear norm of XE6.
 
+### XE18. One run with a decreasing weight decay
+
+The limits of XE6, XE9, XE10 and XE11 run over trained fits, one for each weight decay. By
+XE17 the run with λ = 0 has no limit. This item is about one run of gradient descent whose
+weight decay decreases to `0`. Let some product have a positive margin, let the probes have
+norm at most `a`, let `N` be the number of samples and `γ = 2 a N`, `b = N log |C|`,
+`s = N a²` the constants of XE2, and write `‖W‖² = ‖U‖² + ‖V‖²` for a pair of factors
+`W = (U, V)`. Let `λ_0, λ_1, …` be positive weight decays that tend to `0`; they need not
+decrease monotonically.
+
+The run in phases. It starts at `W_0`. Phase `j` makes `T_j` steps of gradient descent with
+the weight decay `λ_j`, from the factors `W_j` at which phase `j − 1` ended, with the step
+
+```
+η_j = min( λ_j / (2 (λ_j² + γ²)),  1 / (λ_j + γ + 2 s ρ_j) ),    ρ_j = ‖W_j‖² + 4 b / λ_j.
+```
+
+`X_j = U_j V_jᴴ` is the product at the start of phase `j`. The weight decays are given and
+the steps are determined by the run; only the lengths `T_j` are free.
+
+1. One phase. Let λ > 0 and let `W` be stacked factors of full row rank. The run from `W`
+   with the weight decay λ and the step `η(λ, W)` of the display converges to a trained fit
+   for λ, and it has full row rank at every step.
+
+   The ball of squared radius `ρ = ‖W‖² + 4 b / λ` contains `W` and has `4 b ≤ λ ρ`, and
+   `η(λ, W)` is the largest step that the two bounds of XE3 admit for it. So XE3 applies:
+   the run stays in the ball and converges, and its limit is a decayed minimum. Every step
+   multiplies the stack by the positive definite `1 − η M_t` (WD6), so the rank is kept.
+
+2. The run. From stacked factors `W_0` of full row rank there are lengths `T_j` with
+
+   ```
+   ‖X_j‖_S1 → ∞    and    μ(X_j) / ‖X_j‖_S1 → μ*.
+   ```
+
+   The lengths are chosen one after another. Phase `j` starts at factors of full row rank,
+   so by 1 its run converges to a trained fit for `λ_j`, with a product `X*_j`. The nuclear
+   norm is continuous, as `|‖X‖_S1 − ‖Y‖_S1| ≤ ‖X − Y‖_S1 ≤ √m ‖X − Y‖_S2` for `m` rows, and
+   the margin is the least of finitely many gaps, which are continuous; so the margin for
+   the nuclear norm is continuous at every nonzero matrix. The phase is stopped at a step
+   `T_j` where the nuclear norm of the product is within `1` of `‖X*_j‖_S1` and, if
+   `X*_j ≠ 0`, its margin for the nuclear norm is within `λ_j` of the value at `X*_j`. The
+   factors at that step have full row rank by 1. By XE6 `‖X*_j‖_S1 → ∞` and
+   `μ(X*_j) / ‖X*_j‖_S1 → μ*`, so `X*_j ≠ 0` from some phase on, and both limits pass to the
+   phase ends.
+
+3. The direction. If one product `Z_0` of the unit ball has the margin `μ*`, then for the
+   lengths of 2
+
+   ```
+   X_j / ‖X_j‖_S1 → Z_0.
+   ```
+
+   XE10 uses of the trained fits only the second limit of 2: for every sequence of matrices
+   with `μ(X_j) / ‖X_j‖_S1 → μ*`, a limit point of the direction is a product of the unit
+   ball with the margin `μ*`, and the directions lie in a compact set. Two cases:
+
+   - every cell seen, an answer code mirrored at a gap `0 < g < 2` and a flat kernel `K` that
+     shows the labels (XE11): `X_j / ‖X_j‖_S1 → K / ‖K‖_S1`. For the kernel `ψ(a³ + a b)` on
+     `ℤ/p`, `p ≥ 3`, with the code `ψ`, the run returns the kernel in direction;
+   - the kernel of signs `[[1, 1], [−1, 1]]` with the code `±1` and every cell seen but
+     `(1, 1)` (XE15): `X_j / ‖X_j‖_S1 → ½ [[1, 1], [−1, −1]]`, so at every late phase end the
+     unseen cell is decoded to the class of `−1`, where the kernel shows `+1`.
+
+So the limit λ → 0⁺ of XE6 is reached along one run: hold each weight decay until the run
+has settled near its trained fit, then lower it. The products at the phase ends grow without
+bound, so the run has no limit; what converges is the margin for the norm, and the direction
+where the product of largest margin is unique.
+
+Example: one sample of two classes with the probes `±1` of a `1 × 1` product (the sample of
+XE3), where `a = 1`, `N = 1`, `μ* = 2` and `1` is the only product of largest margin (XE10).
+From `U_0 = [1 0]`, `V_0 = [0 1]` with `λ_j = 1 / (j + 1)` there are lengths of the phases
+with `‖X_j‖_S1 → ∞`, `μ(X_j) / ‖X_j‖_S1 → 2` and `X_j / ‖X_j‖_S1 → 1`. The first phase has
+`ρ_0 = 2 + 4 log 2` and the step `η_0 = 1 / (7 + 8 log 2) ≈ 0.08`.
+
+Not covered. The lengths `T_j` are not explicit: each comes from the convergence of its
+phase, for which WD8 gives no rate, so this is not a schedule that can be written before the
+run. Inside a phase the margin is not followed. The steps shrink with the weight decay,
+`η_j ≤ λ_j / (8 s b)`; a run with one fixed step, or with a weight decay that changes at
+every step by a given rule, is not treated, and no schedule is shown to fail.
+
 ### Lean
 
 `src/Transformer/Grokking/FlatSpectrum/Training/`, modules `Logits`, `CrossEntropy`,
@@ -12962,6 +13052,7 @@ here, and they are not about the largest margin for the nuclear norm of XE6.
 | XE15 | `exists_unit_conj_mul`, `detCertificate`, `frobeniusSq_fin_two`, `isFlat_detCertificate`, `pairing_detCertificate`, `frobeniusSq_add_two_mul_norm_det_le`, `norm_mul_sub_le_norm_det`, `sq_sub_add_sq_add_le`, `eq_ofReal_of_norm_le_of_le_re`; the three cells: `threeCells`, `threeLabels`, `signFill`, `gap_threeCells`, `margin_threeCells_le`, `le_margin_threeCells`, `margin_threeCells_le_nuclearNorm`, `nuclearNorm_signFill_le`, `margin_signFill`, `maxMargin_threeCells`, `eq_signFill_of_margin`; the limit: `cubicKernel_two`, `tendsto_inv_smul_threeCells`, `eventually_re_unseen_neg`, `norm_sub_signCode_lt`, `eventually_unseen_wrong`; every small weight decay and the run: `exists_pos_forall_re_unseen_neg`, `exists_pos_forall_unseen_wrong`, `exists_pos_forall_tendsto_decayRun_unseen`, `exists_tendsto_decayRun_unseen_wrong` | Modules `Scope/TwoByTwo`, `Scope/UnseenCell`, `Scope/UnseenCellLimit` and `Scope/UnseenCellRun`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. The samples are `Fin 3` with the cells `threeCells = ![(0, 0), (0, 1), (1, 0)]` and the labels `threeLabels s = signLabel (threeCells s)`, those that `signKernel` shows; `cubicKernel_two` is `cubicKernel 2 = signKernel`. "Decoded to the class of `−1`" is `‖X 1 1 − signCode false‖ < ‖X 1 1 − signCode (signLabel (1, 1))‖`, where `signLabel (1, 1) = true`. The statements of 4 take a sequence of trained products `IsNuclearMin`; the threshold `λ₀` of 5 is obtained from them by contradiction and is not explicit. The bounds of XE3 in 6 are written with their numbers: `12 * log 2 ≤ λ ρ`, `2 η (λ² + 36) ≤ λ` and `η (λ + 6 + 6 ρ) ≤ 1`; the width is any finite type. The run that exists has the step `min (λ / (2 (λ² + 36))) (1 / (λ + 6 + 6 ρ))` for `λ = λ₀ / 2` and `ρ = 4 + 12 log 2 / λ`. The bound of 2 is proved as an inequality; the equality is not needed. |
 | XE16 | `isNuclearMin_signCode_iff`, `nuclearNorm_eq_signScale_mul_of_isNuclearMin`; the kernel of signs: `signRot`, `im_eq_of_det_bounds`, `exists_eq_add_smul_signRot`, `signCotwin`, `nuclearNorm_signCotwin_le`, `nuclearNorm_add_smul_signRot_le`, `isNuclearMin_signKernel_iff`; the run: `exists_tendsto_decayRun_signKernel` | Modules `Scope/SignSet`, `Scope/SignSegmentCore` and `Scope/SignSegment`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. `t(λ)` is `signScale c₀ lam`, and "`Re X = t(λ) K`" is `∀ i j, (X i j).re = signScale c₀ lam * (K i j).re`; the hypotheses are those of XE11 (`Function.Bijective cell`, `K` shows the labels, `IsFlat K c₀`). For the kernel of signs the cells are `id` on `Fin 2 × Fin 2` with the labels `signLabel`, `J` is `signRot`, `K − i J` is `signTwin` and `K + i J` is `signCotwin`; the number `s` of the segment is `a` in Lean, and the point is `signScale 2 lam • signKernel + ((a : ℂ) * Complex.I) • signRot`. `im_eq_of_det_bounds` is the real arithmetic of "⟹", in the imaginary parts and `N = ‖det X‖`. The bounds of XE3 are written with their numbers: `16 * log 2 ≤ λ ρ`, `2 η (λ² + 64) ≤ λ` and `η (λ + 8 + 8 ρ) ≤ 1`; the width is any finite type. |
 | XE17 | `not_tendsto_decayRun_ceLoss_zero`, `exists_lt_frobeniusSq_decayRun_ceLoss_zero`, `decayRun_add`, `surjective_stack_decayRun`, `frequently_lt_frobeniusSq_decayRun_ceLoss_zero`; every real λ (WD8): `exists_tendsto_decayRun_of_forall_le`, `exists_tendsto_decayRun_isDecayedMin_of_forall_le` | Module `Scope/NoDecayRun`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`; the statements for every λ are in `BoundedRun` and `Convergent`, namespace `Transformer.Grokking.FlatSpectrum.Training`. "No limit" is `¬ Tendsto (decayRun (ceGrad A y) η 0 U₀ V₀) atTop (𝓝 (U, V))` for every pair `(U, V)`. "Some product has a positive margin" is `0 < margin A y X₀`, with `[Nonempty S] [Nontrivial C]`; `N` is `Fintype.card S`, and the conditions are `η * (2 * a * card S) < 1` and `η * (2 * a * card S + 2 * (card S * a ^ 2) * ρ) < 1`. Statement 3 is `∃ t, ρ < …` and `∃ᶠ t in atTop, ρ < …`; `ρ*(η)` and the `lim sup` are not stated. The two citations are not formalized. |
+| XE18 | `abs_nuclearNorm_sub_le`, `continuous_nuclearNorm`, `continuous_margin`, `continuousAt_margin_div_nuclearNorm`, `tendsto_inv_smul_of_tendsto_margin_div`; one phase: `phaseStep`, `phaseStep_pos`, `exists_tendsto_decayRun_phaseStep`, `exists_seq_of_forall_exists`; the run: `phaseRun`, `phaseProduct`, `exists_tendsto_margin_div_phaseProduct`; the direction: `exists_tendsto_inv_smul_phaseProduct`, `exists_tendsto_inv_smul_phaseProduct_codeProbe`, `exists_tendsto_inv_smul_phaseProduct_cubicKernel`, `exists_eventually_phaseProduct_unseen_wrong` | Modules `Scope/MarginContinuity`, `Scope/PhaseStep`, `Scope/PhasedRun` and `Scope/PhasedDirection`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. `phaseStep S C a lam W` is `η(λ, W)` with `N` and `\|C\|` as `Fintype.card S` and `Fintype.card C`. `phaseRun A y a lam T U₀ V₀ j` is the pair `W_j`, defined by recursion on `j` with the step `phaseStep S C a (lam j) W_j`, and `phaseProduct A y a lam T U₀ V₀ j` is `X_j`. The weight decays are any `lam : ℕ → ℝ` with `∀ j, 0 < lam j` and `Tendsto lam atTop (𝓝 0)`, and "there are lengths" is `∃ T : ℕ → ℕ`. Statement 2 is the conjunction of `Tendsto (fun j => nuclearNorm (X_j)) atTop atTop` and the limit of `margin A y (X_j) / nuclearNorm (X_j)`, Lean's quotient, which is `0` where the product is `0`. The Lipschitz bound is `\|‖X‖_S1 − ‖Y‖_S1\| ≤ √(card m * frobeniusSq (X − Y))`. `tendsto_inv_smul_of_tendsto_margin_div` is the statement about every sequence of matrices; its hypothesis on `Z₀` is that of XE10. For the code probes `a = 1`. "Decoded to the class of `−1`" is written as in XE15, at the cell `(1, 1)` of `phaseProduct`. `exists_seq_of_forall_exists` is the dependent choice of the phases. The bound `η_j ≤ λ_j / (8 s b)`, the numbers of the example's first phase and "the run has no limit" are not stated; the examples are the sample of XE3, `cubicKernel 3` with all nine cells seen, and the three seen cells of the kernel of signs, along `λ_j = 1 / (j + 1)` from the start `fromCols 1 0`, `fromCols 0 1`. |
 
 ## Convex answer-loss recall
 
