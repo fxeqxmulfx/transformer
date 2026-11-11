@@ -12560,3 +12560,169 @@ Assumed or not covered:
 | XE10 | `continuous_gap`, `nuclearNorm_le_of_tendsto`, `nuclearNorm_inv_smul_le`, `margin_inv_smul`, `exists_subseq_tendsto_inv_smul`, `margin_eq_maxMargin_of_tendsto`, `exists_margin_eq_maxMargin`, `margin_eq_maxMargin_of_tendsto_inv_smul`, `tendsto_inv_smul_of_unique`, `tendsto_inv_margin_smul`, `tendsto_inv_margin_smul_of_unique`; trained products: `margin_eq_maxMargin_of_tendsto_inv_smul_of_isNuclearMin`, `tendsto_inv_smul_of_unique_of_isNuclearMin`, `tendsto_inv_margin_smul_of_isNuclearMin`; example: `gap_signProbe`, `maxMargin_signProbe`, `eq_one_of_margin_signProbe` | The direction is `(nuclearNorm X)⁻¹ • X`, which is `0` for `X = 0`. The compact set is `{X \| ∀ i j, ‖X i j‖ ≤ 1}` (`isCompact_setOf_norm_apply_le`), which contains the unit ball, and the dual form of the norm is `exists_isContraction_trace_eq`. Statement 2 is for a convergent sequence of directions; its subsequences are taken by `exists_subseq_tendsto_inv_smul`, which holds for every sequence of matrices. "One product has the margin `μ*`" is the hypothesis `∀ Z, nuclearNorm Z ≤ 1 → margin A y Z = maxMargin A y → Z = Z₀`. In statement 4 the scaled fit is `(margin A y X)⁻¹ • X`, which is `0` where the margin is `0`. |
 | XE11 | `IsMirroredCode`, `IsMirroredCode.injective`, `pairing_eq_sum_re`, `gap_codeProbe_add_gap`, `margin_codeProbe_le_mul_re`, `margin_codeProbe_eq`, `norm_apply_eq_one_of_surjective`, `margin_codeProbe_le_mul_re_apply`, `card_mul_margin_codeProbe_le`, `card_mul_card_eq_of_isFlat`, `margin_codeProbe_mul_nuclearNorm_le`, `maxMargin_codeProbe_eq`, `margin_inv_smul_codeProbe`, `eq_mul_of_re_conj_mul`, `mul_re_eq_margin_of_margin_eq`, `apply_cell_eq_of_margin_eq`, `eq_inv_smul_of_margin_codeProbe_eq`, `tendsto_inv_smul_codeProbe`, `tendsto_inv_margin_smul_codeProbe`, `tendsto_inv_smul_codeProbe_iff`; the code `ψ`: `cos_two_pi_mul_div_le`, `one_sub_cos_two_pi_div_pos`, `one_sub_cos_two_pi_div_lt_two`, `norm_stdAddChar_sub_sq`, `isMirroredCode_stdAddChar`, `tendsto_inv_smul_cubicKernel_iff`; trained products: `tendsto_inv_smul_codeProbe_iff_of_isNuclearMin`, `tendsto_inv_margin_smul_codeProbe_of_isNuclearMin`, `tendsto_inv_smul_cubicKernel_iff_of_isNuclearMin`; not mirrored: `quarterCode`, `norm_quarterCode`, `injective_quarterCode`, `not_isMirroredCode_quarterCode`, `gap_quarterCode`, `margin_quarterCode`, `quarterLimit`, `quarterLimit_apply`, `nuclearNorm_quarterLimit_le`, `margin_quarterLimit`, `margin_quarterCode_le`, `maxMargin_quarterCode`, `eq_quarterLimit_of_margin`, `tendsto_inv_smul_quarterCode`, `not_tendsto_inv_smul_quarterCode`; the code `±1`: `isNuclearMin_of_pairing`, `IsNuclearMin.of_le`, `inv_nuclearNorm_smul_smul`, `pairing_codeProbe_signCode`, `ceLoss_signCode_congr`, `margin_signCode_congr`, `probability_signCode_sub`, `pairing_ceGrad_smul_signCode`, `isNuclearMin_smul_signCode`, `isNuclearMin_smul_of_re_eq`, `tendsto_signDecay`, `nuclearNorm_eq_of_re_eq`, `nuclearNorm_pos_of_signCode`, `exists_ne_margin_eq_maxMargin_signCode`, `exists_seq_isNuclearMin_tendsto_signCode`, `exists_seq_isNuclearMin_not_tendsto_signCode`, `exists_seq_isDecayedMin_not_tendsto_signCode`; its pair: `signKernel`, `signLabel`, `signTwin`, `signKernel_apply`, `isFlat_signKernel`, `nuclearNorm_signKernel`, `signTwin_re`, `signTwin_ne`, `signTwin_eq_vecMulVec`, `frobeniusSq_signTwin`, `nuclearNorm_signTwin_le`, `exists_ne_margin_eq_maxMargin_signKernel`, `exists_seq_isDecayedMin_not_tendsto_signKernel`; the real parts: `log_one_add_exp_midpoint_lt`, `log_one_add_exp_midpoint_le`, `crossEntropy_signCode`, `ceLoss_signCode_eq`, `ceLoss_signCode_midpoint_lt`, `IsNuclearMin.re_apply_eq_of_signCode`; real factors: `HasRealEntries` with `.zero`, `.one`, `.add`, `.sub`, `.smul`, `.conjTranspose`, `.mul`, `.sum`, `.fromCols`, `.of_tendsto`, `.decayStep`, `hasRealEntries_decayRun`, `hasRealEntries_of_tendsto_decayRun`, `signScale`, `signDecay_signScale`, `signScale_nonneg`, `signScale_pos`, `isNuclearMin_signScale_smul`, `IsNuclearMin.re_eq_signScale_mul`, `IsNuclearMin.eq_signScale_smul`, `tendsto_inv_smul_signCode_of_real`, `one_le_sqrt_two`, `hasRealEntries_signKernel`, `hasRealEntries_ceGrad_signCode`, `exists_tendsto_decayRun_signCode_of_real`, `exists_isDecayedMin_signCode_real`, `tendsto_inv_smul_signCode_of_real_factors`, `exists_seq_isDecayedMin_real_tendsto_signCode`; example: `isMirroredCode_signCode` | `IsMirroredCode φ g` is the conjunction of `∀ c, ‖φ c‖ = 1`, `∀ t c, c ≠ t → 2 * g ≤ ‖φ t - φ c‖ ^ 2` and `∀ t, ∃ c c', c ≠ t ∧ c' ≠ t ∧ φ c + φ c' = ((2 * (1 - g) : ℝ) : ℂ) * φ t`. "Every cell is seen" is `Function.Surjective cell`, and "`K` has no zero entry" is `∀ i j, K i j ≠ 0`. The flat kernel is `IsFlat K c₀` with `0 < c₀`. `ψ` is `ZMod.stdAddChar` as a function on `ZMod p`, with the gap `1 - cos (2 * π / p)`. In `tendsto_inv_smul_cubicKernel_iff` the samples are a finite nonempty type with cells `cell : S → ZMod p × ZMod p` and the labels `(cell s).1 ^ 3 + (cell s).1 * (cell s).2`. Statement 4 is proved cell by cell in `apply_cell_eq_of_margin_eq`. The limit at margin one is `g⁻¹ • K`. The code `(1, i)` is `quarterCode` on `Bool`, with `true` for the codeword `1`; `(1 − i) / √2` is `quarterLimit`, the `1 × 1` matrix `(√2)⁻¹ • (1 − i)`; the kernel is the `1 × 1` matrix `1`, and the limit excluded is `(nuclearNorm 1)⁻¹ • 1`. For the code `±1`, "every cell is seen once" is `Function.Bijective cell`; `K'` is a matrix with `(K' i j).re = (K i j).re`, `nuclearNorm K' ≤ nuclearNorm K` and `K' ≠ K`; the second product of 6 is `(nuclearNorm K)⁻¹ • K'`; "does not converge" is `∀ Z, ¬ Tendsto … (𝓝 Z)`; the trained fits of 7 have the width of the columns; the certificate `isNuclearMin_of_pairing` is stated for every convex loss with its gradient; `G(t K) = −β K` is stated as the pairing with every `H`, a sum over the samples; the labels of `signKernel` are `signLabel`, `false` at the cell `(1, 0)`. "Real entries" is `HasRealEntries X`, `∀ i j, (X i j).im = 0`; `t(λ)` is `signScale c₀ lam`; statement 8 is stated at every sample `s`, for the cell `cell s`; `tendsto_inv_smul_signCode_of_real` is about trained products with real entries, so about fits of any widths, and `tendsto_inv_smul_signCode_of_real_factors` about fits of one column type; the run of 9 has the bounds of `exists_tendsto_decayRun_ceLoss_isDecayedMin` at `a = 1`, and the start of `exists_isDecayedMin_signCode_real` is `fromCols 1 0`, `fromCols 0 1`. The examples are the code `±1` with the `1 × 1` kernel `1`, and `cubicKernel 3` with all nine cells seen and the code `ψ`. |
 | XE12 | `IsDecayedMin.row_eq_zero`, `IsDecayedMin.col_eq_zero`, `IsDecayedMin.apply_eq_zero_of_codeProbe`, `IsDecayedMin.pairing_codeProbe_eq_zero`, `IsDecayedMin.ceLoss_heldOut_eq`, `exists_tendsto_decayRun_ceLoss_eq_zero` | The row has `∀ j, (i, j) ∉ Ω` as in CW8, whose `row_eq_zero_of_isMinOn` and `col_eq_zero_of_isMinOn` are applied to the minimum of XE7. For the answer code the seen cells are `Set.range cell`, and "no sample sees the row `i`" is `∀ s, (cell s).1 ≠ i`. The held-out samples are a finite type `S'` with cells `cell' : S' → m × n` and any labels `y'`. "The softmax is uniform" is the statement that every logit is zero. |
+
+## Convex answer-loss recall
+
+Added 2026-11-11. This construction separates the flat-spectrum obstruction
+from a blanket obstruction to convex learning. R2 and AR3 concern nuclear-norm
+completion of an answer table. They do not quantify over all convex models
+that receive the dictionary as input. The construction below uses ordinary
+answer cross-entropy, not an auxiliary key-matching or calibration loss.
+
+### CR1. Model and objective
+
+Let `κ` be a finite key set, `ν` a finite value set, and `S` the finite training
+sample set. The learned parameters are **all entries** of `A ∈ ℝ^(κ×κ)`,
+constrained by `A(q,k) ≥ 0` and `Σ_k A(q,k) = 1`. For an input query `q` and
+input dictionary `D : κ → ν`, the class logits are
+
+```
+z_A(q,D,c) = Σ_k A(q,k) 1[D(k) = c].
+L(A) = Σ_s (log Σ_c exp z_A(q_s,D_s,c) − z_A(q_s,D_s,D_s(q_s))).
+```
+
+The dictionary's values are input features; the label is its queried value.
+The forward pass never receives that label separately. Categorical value
+copying and the key identities are fixed. The matrix is learned directly,
+without a factorization, learned embedding, attention softmax, or nuclear-norm
+penalty. Its `m²` entries, for `m = |κ|`, share across all `|ν|^m` dictionaries;
+there is no learned parameter per dictionary. This is an explicit, restricted
+architecture, not a convex replacement for an arbitrary transformer.
+
+Every logit is nonnegative and at most one. At `A = I` the logits are the
+one-hot vector of `D(q)`. The constraints bound confidence: the best correct
+softmax probability is `e / (e + |ν| − 1)`. Perfect argmax accuracy is possible;
+zero cross-entropy is not claimed. Unlike unbounded separable logits in XE6,
+this compact feasible set admits a finite minimum without weight decay.
+
+### CR2. Joint convexity
+
+The row-simplex domain is convex. For every fixed input, the complete logit
+vector is linear in **all** entries of `A`. Ordinary softmax cross-entropy is
+convex in its logits, by the first-order inequality of XE1. Therefore `L` is
+jointly convex, even on the unrestricted matrix space. Its restriction to
+the stated convex domain is a convex optimization problem, including the
+usual cross-entropy loss.
+
+### CR3. What answer-only training identifies
+
+Assume `|ν| ≥ 2`. Say the input dataset **separates keys** when
+
+```
+∀ q k, k ≠ q → ∃ s, q_s = q and D_s(k) ≠ D_s(q).
+```
+
+This is a checkable condition on supplied inputs. It mentions no learned
+parameters, matching labels, test outputs, or successful training.
+
+For any nonnegative logits `z` with `z_t ≤ 1`, each competitor's relative
+logit `z_c − z_t` is at least that of the ideal one-hot vector `e_t`.
+Consequently `CE(e_t,t) ≤ CE(z,t)`. If `z_t < 1`, a competitor exists and the
+inequality is strict. Applying this to every sample gives `L(I) ≤ L(A)` for
+every feasible `A`. Thus `I` actually attains the minimum.
+
+If `L(A) ≤ L(I)`, every sample has the ideal loss and its target logit is one.
+Nonnegative row mass then vanishes on any key whose input value differs from
+the target. Separation supplies such a sample for every off-diagonal entry,
+so all off-diagonal entries vanish. Row sums force `A(q,q) = 1`, hence `A = I`.
+The optimum is unique, and every optimizer recalls **every** test dictionary,
+including those never supplied during training, with a strict correct argmax.
+
+### CR4. Small separating data and a negative control
+
+An injective code `code : κ → (ι → ν)` constructs separating input data:
+use dictionary `D_r(k) = code(k,r)` at each coordinate `r`, queried at every
+key. The code is only a way to construct data; it is not an additional input
+to the model. In the formal example, four keys are Boolean pairs, and the two
+coordinate dictionaries give eight training samples. The theorem applies to
+all sixteen Boolean dictionaries, not only those two. More generally binary
+codes allow `m b` samples when `m` keys have distinct `b`-bit codes.
+
+Without separation, convexity does not guarantee generalization. For two
+keys, let sample `s ∈ Bool` query key `s` in the constant dictionary `D_s = s`.
+Both labels occur. The matrix that swaps the two keys is feasible and attains
+the global minimum of the same ordinary answer CE. On the test dictionary
+`D = id`, it gives a strictly wrong argmax. This is a proved counterexample,
+not a failed optimization experiment.
+
+### CR5. Causal MQAR
+
+For the aligned pairs of Zoology §4 / Appendix, use
+
+```
+z_A(x,i,v) = Σ_{j<i} A(query_i,key_j) 1[value_j = v].
+```
+
+This is also linear in the complete parameter matrix. After CR3's training,
+`A = I`, and it equals the existing paired causal attention operator exactly.
+The repository's `paired_attention_solves_mqar` theorem therefore proves that
+it produces every prior-binding answer on every distinct-key stream, at
+any length. It returns the zero vector when no key matches, as specified by
+`expectedPairedAnswer`; no learned null-class decision is claimed. Training
+and stream values may use different alphabets because only key matching is
+learned. The theorem assumes the key/value pairing shift and token identities
+are already supplied. Repeated-key overwrite semantics and raw-token parsing
+are outside this result. The training theorem is for complete dictionary
+inputs; arbitrary partially observed MQAR training streams are not assumed
+to satisfy it.
+
+### CR6. Flat spectrum and the scope of the earlier obstruction
+
+For a fixed scalar readout `φ : ν → ℂ`, define the model's output table by
+`K_A(q,D) = Σ_c z_A(q,D,c) φ(c)`. CR3 implies `K_A(q,D) = φ(D(q))` at every
+optimizer. Thus AR2 applies: if `Σ_c φ(c) = 0`,
+
+```
+K_A K_Aᴴ = (|ν|^(|κ|−1) Σ_c |φ(c)|²) I.
+```
+
+For a nonzero readout it has rank `|κ|` and a positive flat singular scale.
+The model keeps the capacity needed to carry every key's binding, consistent
+with AR4's width lower bound. It does not force a low-rank context summary.
+For `φ = ±1` and two Boolean keys, the squared singular value is four.
+
+If every `φ(c)` is nonzero, AR3 still says this very same trained kernel is
+**not** a nuclear-norm minimum from any proper observation set. Both the
+positive convex-learning theorem and the negative nuclear-completion theorem
+are proved together. The nuclear-norm results have not been disproved; using
+them to exclude all convex dictionary-aware learners would exceed their
+hypotheses. The old calibration-based `Transformer.ConvexRecall` construction
+also did not establish ordinary answer-CE training. The present construction
+supplies that narrower missing result. It makes no claim to learn a general
+flat arithmetic task such as the cubic kernel from two bare numeric tokens.
+
+### CR7. What convergence is proved
+
+The feasible matrix set is closed and contained in the finite coordinate
+cube `[0,1]^(κ×κ)`, hence compact. `L` is continuous. Under CR3's separation
+condition, **every feasible sequence `A_n` with `L(A_n) → L(I)` satisfies
+`A_n → I`**: continuity makes each cluster point an optimizer, and uniqueness
+forces every cluster point to be `I`. Since the limiting logit gap is one and
+the input and class sets are finite, eventually **all** dictionary queries
+have a strict correct argmax, uniformly over test dictionaries.
+
+This is a theorem about minimizing sequences. It does not prove that a
+specific projected-gradient, mirror-descent, SGD, or AdamW implementation has
+convergent loss, nor give a convergence rate. That algorithmic obligation
+remains separate; no optimizer run or empirical result is reported here.
+
+### Lean
+
+The modules under `src/Transformer/Grokking/FlatSpectrum/ConvexRecall/` prove
+these statements with ordinary `Landscape.Neural.crossEntropy`:
+
+| Item | Principal declarations |
+| --- | --- |
+| CR1–CR2 | `IsStochastic`, `logits`, `answerLoss`, `convex_stochastic`, `answerLoss_convex` |
+| CR3 | `Separates`, `isMinOn_answerLoss_one`, `eq_one_of_answerLoss_le`, `trained_logits`, `trained_strict_argmax` |
+| CR4 | `separates_of_injective_code`, `twoBitCode_injective`, `wrong_global_minimum_without_separation` |
+| CR5 | `streamLogits_linear`, `trained_solves_mqar` |
+| CR6 | `trained_outputKernel`, `trained_isFlat`, `trained_rank`, `trained_not_nuclear_minimum` |
+| CR7 | `isCompact_stochastic`, `continuous_answerLoss`, `tendsto_one_of_loss_tendsto`, `eventually_all_strict_argmax` |
+
+Reproduce with native Lean tooling:
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.ConvexRecall
+LAKE_ARTIFACT_CACHE=false lake env lean scripts/ConvexRecallAxioms.lean
+```
