@@ -30,6 +30,16 @@ public import Transformer.Grokking.FlatSpectrum.Training.Width
 public import Transformer.Grokking.FlatSpectrum.Training.AlmostEvery
 public import Transformer.Grokking.FlatSpectrum.Training.WidthOne
 public import Transformer.Grokking.FlatSpectrum.Training.AnyShape
+public import Transformer.Grokking.FlatSpectrum.Training.Logits
+public import Transformer.Grokking.FlatSpectrum.Training.CrossEntropy
+public import Transformer.Grokking.FlatSpectrum.Training.CrossEntropyBounds
+public import Transformer.Grokking.FlatSpectrum.Training.CrossEntropyRun
+public import Transformer.Grokking.FlatSpectrum.Training.Margin
+public import Transformer.Grokking.FlatSpectrum.Training.MaxMargin
+public import Transformer.Grokking.FlatSpectrum.Training.MaxMarginLimit
+public import Transformer.Grokking.FlatSpectrum.Training.SeenCells
+public import Transformer.Grokking.FlatSpectrum.Training.AnswerCode
+public import Transformer.Grokking.FlatSpectrum.Training.SeenMargin
 
 /-! Training the pure factorization with weight decay, `review/flat_spectrum.md`, Lemma 1's
 modeling step and *Training reaches the optimal fit* (added).
@@ -116,4 +126,27 @@ hold for a flat kernel of any shape, `Kᴴ K = c I` or `K Kᴴ = c I`, when some
 unseen (`IsFlat.exists_nuclearNorm_add_le`, `IsFlat.exists_tendsto_decayRun_nuclearNorm_add_le`,
 `IsFlat.exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le`), and with every cell seen a
 factorization of width `k` keeps the squared loss `c (min(m, n) − k) / 2`
-(`IsFlat.mul_sub_card_le_fitLoss_univ`). -/
+(`IsFlat.mul_sub_card_le_fitLoss_univ`).
+
+Cross-entropy (*Training with cross-entropy*, items XE1–XE9). A sample `s` reads the product
+through probes, with the logit `⟨A s c, X⟩` for the class `c`, and the loss is the cross-entropy
+of the labels (`ceLoss`, with the gradient `ceGrad`). It satisfies the first-order inequality,
+is nonnegative and real-analytic in the entries (XE1), and for probes of norm at most `a` it has
+the constants `γ = 2 a |S|`, `b = |S| log |C|` and `s = |S| a²` of WD6 and WD8 at every matrix,
+the last by Hoeffding's lemma (XE2). So under explicit bounds on the step the run converges from
+every start, to a stationary point (`exists_tendsto_decayRun_ceLoss`) and from full row rank to
+a decayed minimum (`exists_tendsto_decayRun_ceLoss_isDecayedMin`), and WD9 and WD10 hold for it
+(XE3). The margin of a product, its least gap between the logit of a label and another logit,
+bounds the loss on both sides (XE4). A trained fit has no more loss than a competitor of unit
+nuclear norm scaled to its own norm, so its gaps are within `log (2 |S| (|C| − 1))` of the
+margin of the competitor times that norm (XE5). As `λ → 0⁺` on data that some product
+separates, the nuclear norm of the trained fits tends to infinity and their normalized margin
+to the largest margin of the unit ball of the nuclear norm
+(`tendsto_margin_div_nuclearNorm`, XE6). For a loss that reads only the seen cells `Ω`, the
+product of a trained fit is a minimum of M from `Ω` for its own values, so it is no nonzero
+multiple of a kernel that is not a minimum of M, and the run of XE3 converges to no such
+multiple (XE7). The probes `φ(c) e_ij` of an answer code give a kernel that shows the labels
+the gaps `|φ(y) − φ(c)|² / 2` (XE8). For a flat kernel with a nonzero unseen cell that shows
+the labels, the trained fits end with a normalized margin a fixed `δ` above that of the
+kernel, and `X_j / ‖X_j‖_S1` does not converge to `K / ‖K‖_S1`
+(`not_tendsto_inv_nuclearNorm_smul_of_codeProbe`, XE9). -/

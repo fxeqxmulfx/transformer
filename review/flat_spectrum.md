@@ -200,7 +200,8 @@ Not formalized:
   minimum-nuclear-norm interpolation (row *Lemma 1, "exact for a pure factorization"*), a
   convergent run of gradient descent with weight decay reaches the optimum, and on the
   squared loss the run does converge, by Łojasiewicz's theorem (*Training reaches the
-  optimal fit*, added);
+  optimal fit*, added). On the cross-entropy the run converges as well, and its limit fills
+  the unseen cells by M (*Training with cross-entropy*, added);
 - the readout-free version for `x³ + x y`, which the note calls a conjecture;
 - "How it fits together", which the note calls a heuristic.
 
@@ -9060,8 +9061,9 @@ Assumed or not covered:
 - Losses outside WD8 and WD9: for a loss that is not real-analytic, or one that is not
   bounded below, convergence stays the hypothesis of WD5, and so does the condition
   `η (|λ| + ‖G_t‖_S2) < 1` along the run.
-- Explicit steps: the constants of WD8 are verified here for the squared loss only. For
-  another loss WD9 gives a step threshold that is not explicit.
+- Explicit steps: the constants of WD8 are verified here for the squared loss, and in
+  *Training with cross-entropy* (added) for the cross-entropy. For another loss WD9 gives a
+  step threshold that is not explicit.
 - Width: a statement for every start needs full row rank of `[U_0; V_0]`, so `k ≥ m + n`
   (WD5). At the widths `min(m, n) ≤ k < m + n` the limit is a decayed minimum for almost
   every start (WD10): the exceptional null set is not described, and the step is the
@@ -11849,3 +11851,336 @@ recipe and at 100% in the selected main.
 | Item | Lean | Differences |
 | --- | --- | --- |
 | DL1 | `eq_modStep_iff`, `modStep_add_mul_not_mem` | For `0 < p` and all naturals `b`, `x`; neither needs `b < p` or `x < p`. The residue is the cast of `d` to `ZMod p`, and the domain is `0 ≤ (x : ℤ) + d ∧ (x : ℤ) + d < p`. The second is for an integer `k ≠ 0`. |
+
+## Training with cross-entropy (added)
+
+*Training reaches the optimal fit* proves that gradient descent with weight decay on the pure
+factorization converges, and to a global minimum, with an explicit step for the squared loss
+(WD8). The models of the note are trained with the cross-entropy. This section generalizes
+the proof. The cross-entropy of logits that are linear in the product meets every hypothesis
+of WD1–WD10, and it has the three constants of WD8 at every matrix, so its run converges
+under an explicit bound on the step (XE1–XE3). What the run converges to changes with the
+loss. The squared loss has exact fits, and as λ → 0⁺ its trained fits become the exact fits
+of least nuclear norm (WD7). The cross-entropy of separable data has no minimum: as λ → 0⁺
+its trained fits grow without bound, and they have the largest margin for their nuclear norm
+(XE4–XE6). At every λ > 0 the unseen cells are still filled by M (XE7), so a flat kernel is
+not returned, at a fixed λ or in the limit (XE7–XE9).
+
+Notation as in that section: `⟨A, B⟩ = Re tr(Aᴴ B)`, `‖·‖ = ‖·‖_S2`, the model `X = U Vᴴ`
+with the run of WD1, and a decayed minimum is a factorization of least weight-decayed loss
+among those of every width (WD2).
+
+### XE1. The loss
+
+There are samples `s ∈ S` with labels `y_s` in a set `C` of classes, both finite. A sample
+reads the product through probes, matrices `A_{s,c}` of the size of `X`, one for each class.
+Its logits are
+
+```
+z_{s,c}(X) = ⟨A_{s,c}, X⟩,
+```
+
+real-linear in `X`. The loss is the cross-entropy of the labels, and `G` is its gradient:
+
+```
+L(X) = Σ_s ( log Σ_c exp z_{s,c}(X) − z_{s,y_s}(X) ),
+G(X) = Σ_s ( Σ_c p_{s,c}(X) A_{s,c} − A_{s,y_s} ),    p_{s,c} = exp z_{s,c} / Σ_c' exp z_{s,c'}.
+```
+
+Two cases. The probes `A_{s,c} = φ(c) e_ij` of a cell `(i, j)` and an answer code `φ` read
+`z_{s,c} = Re(conj φ(c) X_ij)`: the kernel of the note with its decoder (XE8). The probes
+`A_{s,c} = e_ic`, with one column for each class, read `z_{s,c} = Re X_ic`: the product is the
+table of the logits.
+
+This loss has what WD1–WD5, WD9 and WD10 ask of a loss.
+
+- The first-order inequality. For one sample let `d = z' − z` be a change of its logits and
+  `p` the softmax of `z`. Then
+  `log Σ_c exp z'_c − log Σ_c exp z_c = log Σ_c p_c exp d_c ≥ Σ_c p_c d_c` by Jensen's
+  inequality, so the loss of the sample grows by at least `Σ_c p_c d_c − d_y`. With
+  `d_c = ⟨A_{s,c}, Y − X⟩`, the sum over the samples is `L(X) + ⟨G(X), Y − X⟩ ≤ L(Y)`.
+- `G` is continuous, and `L ≥ 0`, as `Σ_c exp z_c ≥ exp z_y`.
+- `L` is real-analytic in the entries: the logits are real-linear, and the sum under the
+  logarithm is positive.
+- `L(0) = |S| log |C|`.
+
+So for the cross-entropy the update of WD1 is the gradient step (WD3), and a convergent run
+from full row rank with admissible steps ends at a decayed minimum (WD5).
+
+### XE2. The three constants
+
+WD6 and WD8 control the run through three bounds on the loss in a ball. Let the probes have
+norm at most `a`, `‖A_{s,c}‖ ≤ a`, and write `N = |S|`. A logit moves by at most `a ‖H‖` when
+the product moves by `H`. The cross-entropy has the three bounds at every matrix:
+
+```
+‖G(X)‖ ≤ 2 a N,    ⟨G(X), X⟩ ≥ −N log |C|,
+L(Y) ≤ L(X) + ⟨G(X), Y − X⟩ + (N a² / 2) ‖Y − X‖².
+```
+
+- The gradient. `⟨G(X), H⟩ = Σ_s ( Σ_c p_{s,c} ⟨A_{s,c}, H⟩ − ⟨A_{s,y_s}, H⟩ )`: for each
+  sample a mean of logit increments minus one increment, at most `2 a ‖H‖`. So
+  `⟨G(X), H⟩ ≤ 2 a N ‖H‖`; take `H = G(X)`.
+- The first-order term. A convex loss with `L ≥ ℓ_0` has `⟨G(X), X⟩ ≥ −(L(0) − ℓ_0)`: this is
+  the first-order inequality from `X` to `0`. Here `ℓ_0 = 0` and `L(0) = N log |C|`.
+- The quadratic model. For one sample, with `d` and `p` as in XE1 and `d̄ = Σ_c p_c d_c`, the
+  loss exceeds its linear model by `log Σ_c p_c exp(d_c − d̄)`. If `|d_c| ≤ r` for every `c`,
+  Hoeffding's lemma for a variable with values in `[−r, r]` gives
+  `Σ_c p_c exp(d_c − d̄) ≤ exp((2r)² / 8)`, so the excess is at most `r² / 2`. Here
+  `r = a ‖Y − X‖`.
+
+So `γ = 2 a N`, `b = N log |C|` and `s = N a²`, with no radius. For the squared loss `γ` grows
+with the radius of the ball (WD6); the gradient of the cross-entropy is bounded on the whole
+space.
+
+### XE3. The run converges
+
+WD8 with these constants. Let λ > 0, let ρ satisfy `4 N log |C| ≤ λ ρ`, and take a step
+η > 0 with
+
+```
+2η (λ² + (2 a N)²) ≤ λ    and    η (λ + 2 a N + 2 N a² ρ) ≤ 1.
+```
+
+Then the run of gradient descent with weight decay on the cross-entropy, from every start
+with `‖U_0‖² + ‖V_0‖² ≤ ρ`, converges, whatever its width and rank, and its limit is
+stationary; from a start of full row rank the limit is a decayed minimum. Convergence is a
+conclusion, by Łojasiewicz's theorem as in WD8. Every start lies in such a ball: ρ may be as
+large as needed, at the price of a smaller step.
+
+WD9 and WD10 apply as they stand, the loss being real-analytic and bounded below: at a
+width `k ≥ min(m, n)` small steps from almost every start of a sublevel set converge to a
+decayed minimum, and decayed minima of that width exist for every λ > 0. Call a decayed
+minimum of the cross-entropy a trained fit.
+
+Example: one sample of a `1 × 1` product with the probes `+1` and `−1` and the label of `+1`,
+so that `L(X) = log(1 + exp(−2 Re X))`. Here `a = 1`, `γ = 2`, `b = log 2` and `s = 1`. With
+λ = 1, ρ = 3 and η = 1/10: `4 log 2 ≤ 3`, `2η (λ² + γ²) = 1` and `η (λ + γ + 2 s ρ) = 9/10`.
+From `U_0 = [1 0]`, `V_0 = [0 1]` the run converges to a trained fit. From `U_0 = V_0 = 1`,
+which has no full row rank, it converges to a stationary point.
+
+### XE4. Margins
+
+For a sample `s` and a class `c ≠ y_s` the gap is
+
+```
+g_{s,c}(X) = z_{s,y_s}(X) − z_{s,c}(X),
+```
+
+linear in `X`. The margin `μ(X)` is the least gap over the samples and their wrong classes;
+there are a sample and two classes. The product classifies every sample when `μ(X) > 0`. The
+margin is positively homogeneous, `μ(t X) = t μ(X)` for `t ≥ 0`, and every gap has
+`g_{s,c}(X) ≤ 2 a ‖X‖ ≤ 2 a ‖X‖_S1`.
+
+The loss of one sample is `log(1 + Σ_{c ≠ y} exp(−g_c))`, so the cross-entropy lies between
+two functions of the gaps:
+
+```
+log(1 + exp(−g_{s,c}(X))) ≤ L(X)                                 for every gap,
+L(X) ≤ N log(1 + (|C| − 1) exp(−μ)) ≤ N (|C| − 1) exp(−μ)      if every gap is at least μ.
+```
+
+### XE5. A trained fit against a competitor
+
+Let `(U, V)` be a trained fit for a weight decay λ ≥ 0, `X = U Vᴴ` and `B = ‖X‖_S1`. Let `X'`
+be a competitor with `‖X'‖_S1 ≤ 1` whose gaps are all at least `μ'`. WD2 at `Y = t X'`,
+`t ≥ 0`, gives
+
+```
+L(X) + λ B ≤ L(t X') + λ t,
+```
+
+and at `t = B` it gives `L(X) ≤ L(B X')`: a trained fit has no more loss than the competitor
+scaled to its own norm. With XE4 and `κ = N (|C| − 1)`, every gap `g` of `X` has
+
+```
+log(1 + exp(−g)) ≤ L(X) ≤ L(B X') ≤ κ exp(−B μ').
+```
+
+If `log(2κ) ≤ B μ'`, then `ε = κ exp(−B μ') ≤ 1/2`, and `1 + exp(−g) ≤ exp ε ≤ 1/(1 − ε)` gives
+`exp(−g) ≤ 2ε`. So
+
+```
+g ≥ B μ' − log(2κ)    for every gap g of X,    that is    μ(X) ≥ ‖X‖_S1 μ' − log(2κ).
+```
+
+The margin of a trained fit is within the constant `log(2κ)` of the margin that the
+competitor has at the same nuclear norm.
+
+### XE6. Vanishing weight decay: the largest margin
+
+Let `λ_j → 0⁺`, let `(U_j, V_j)` be trained fits for `λ_j`, `X_j = U_j V_jᴴ`, and suppose
+that some product has a positive margin. Scaled to `‖X'‖_S1 ≤ 1` it is a competitor with a
+margin `μ' > 0`.
+
+1. The norm grows: `‖X_j‖_S1 → ∞`. By XE5, `L(X_j) ≤ κ exp(−t μ') + λ_j t` for every `t ≥ 0`,
+   so `L(X_j) → 0`: choose `t` for the first term, then `j` for the second. But a product
+   with `‖X‖_S1 < b` has a gap at most `2 a b`, and so `L(X) ≥ log(1 + exp(−2 a b))` (XE4).
+   So `‖X_j‖_S1 ≥ b` in the end, for every `b`. The cross-entropy of separable data has no
+   minimum, and the trained fits leave every bounded set.
+2. The margin passes that of every competitor. If `‖X'‖_S1 ≤ 1` and `0 ≤ θ < μ(X')`, then
+   `θ < μ(X_j) / ‖X_j‖_S1` in the end: by XE5, `μ(X_j) / B_j ≥ μ(X') − log(2κ) / B_j` with
+   `B_j = ‖X_j‖_S1 → ∞`.
+3. The limit. Let `μ* = sup {μ(X) : ‖X‖_S1 ≤ 1}`, finite as `μ(X) ≤ 2 a ‖X‖_S1`. A nonzero
+   product has `μ(X) / ‖X‖_S1 ≤ μ*` by homogeneity. With 2,
+
+   ```
+   μ(X_j) / ‖X_j‖_S1 → μ*.
+   ```
+
+So with a vanishing weight decay the cross-entropy solves the margin problem of the nuclear
+norm: the largest margin at a given `‖X‖_S1`, which is the least `‖X‖_S1` at a given margin.
+For linear classifiers with an `ℓ_p` penalty this is the theorem of Rosset, Zhu and Hastie
+(2004), and for homogeneous networks with weight decay that of Wei, Lee, Liu and Ma (2019).
+Here the penalty on the factors is the nuclear norm of the product, by Lemma 1 and WD2. The
+squared loss has M in this limit, the exact fit of least nuclear norm (WD7). The
+cross-entropy replaces "equal to `K` on Ω" by "classify the samples with margin one".
+
+### XE7. The unseen cells are filled by M
+
+Say that a loss reads only the seen cells Ω when `L(X) = L(Y)` for all `X`, `Y` equal on Ω.
+The squared loss on Ω does. The cross-entropy does when its probes vanish off Ω, since then
+its logits read only Ω.
+
+Let `L` read only Ω, let λ > 0, and let `(U, V)` be a decayed minimum of `L`, `X = U Vᴴ`. For
+`Y` equal to `X` on Ω, WD2 gives `L(X) + λ ‖X‖_S1 ≤ L(Y) + λ ‖Y‖_S1 = L(X) + λ ‖Y‖_S1`, so
+
+```
+‖X‖_S1 ≤ ‖Y‖_S1    for every Y equal to X on Ω.
+```
+
+The product of a trained fit is a minimum of M from Ω for its own values. The loss decides
+the seen cells, and weight decay fills the unseen ones by M, whatever the loss.
+
+If `K` is not a minimum of M from Ω, neither is `t K` for a real `t ≠ 0`: a matrix `Y` equal
+to `K` on Ω with a smaller nuclear norm gives `t Y`. Therefore:
+
+- For λ > 0 no trained product is `t K` with `t ≠ 0`, at any width. By R2 this holds for a
+  flat `K` with a nonzero unseen cell. The multiple `t = 0` is not excluded: for a large λ
+  the trained product is `0`.
+- Under the bounds of XE3, with probes that vanish off Ω, the run from a start of full row
+  rank converges, and the product of its limit is no nonzero multiple of such a `K`. This is
+  Theorem A for the run under the cross-entropy; nothing is assumed about its limit.
+
+For the squared loss WD7 says more: the trained products stay a fixed δ below `‖K‖_S1`.
+Under the cross-entropy the norm of the trained products is unbounded as λ → 0⁺ (XE6), and
+the comparison is made at the scale of the product (XE9).
+
+### XE8. The answer code
+
+The kernel of the note shows the answer `c` of the task at each cell as `φ(c)` for an answer
+code `φ : C → ℂ`, with `φ = ψ` on `ℤ/p`, and it decodes a product by the nearest codeword.
+For a unimodular code `|x − φ(c)|² = |x|² + 1 − 2 Re(conj φ(c) x)`, so the codeword nearest
+to `x = X_ij` is that of the class with the largest
+
+```
+z_c = Re(conj φ(c) X_ij) = ⟨φ(c) e_ij, X⟩.
+```
+
+So let the sample `s` see the cell `(i_s, j_s)`, and take the probes
+`A_{s,c} = φ(c) e_{i_s j_s}`. They have the norm `|φ(c)| = 1`, so `a = 1` in XE2 and XE3, and
+they vanish off the seen cells `Ω = {(i_s, j_s)}`, so XE7 applies. The softmax of these
+logits is the decoder of the note made smooth.
+
+Let `K` show the labels on the seen cells, `K_{i_s j_s} = φ(y_s)`. Then
+
+```
+g_{s,c}(K) = 1 − Re(conj φ(c) φ(y_s)) = |φ(y_s) − φ(c)|² / 2.
+```
+
+With an injective code every gap is positive, so `μ(K) > 0`: the kernel classifies every
+sample, by half the squared distance of two codewords.
+
+### XE9. Vanishing weight decay does not return a flat kernel
+
+Let the probes vanish off Ω, so that the gaps and the margin read only Ω. Let `K` have a
+positive margin and not be a minimum of M from Ω: some `Y` equal to `K` on Ω has
+`‖Y‖_S1 < ‖K‖_S1`. Then `μ(Y) = μ(K)`, and `Y` has the larger margin for its norm:
+
+```
+μ(K) / ‖K‖_S1 < μ(K) / ‖Y‖_S1 = μ(Y) / ‖Y‖_S1.
+```
+
+Let δ be half the difference. By XE6, statement 2, with the competitor `Y / ‖Y‖_S1`, the
+trained fits of every sequence `λ_j → 0⁺` have
+
+```
+μ(X_j) / ‖X_j‖_S1 ≥ μ(K) / ‖K‖_S1 + δ    in the end.
+```
+
+δ depends on `K`, Ω and the probes, and not on the sequence. Consequently `X_j / ‖X_j‖_S1`
+does not converge to `K / ‖K‖_S1`. Some gap `g_{s,c}` of `K` is its margin. It is linear, so
+if the normalized products converged, `g_{s,c}(X_j) / ‖X_j‖_S1` would tend to
+`μ(K) / ‖K‖_S1`; but `g_{s,c}(X_j) ≥ μ(X_j)` keeps it δ above.
+
+By R2 and XE8 this holds for the kernels of the note. Let `K` be flat, let it show the labels
+on the seen cells with an injective unimodular code, and let a nonzero cell of `K` be unseen.
+Then, as the weight decay vanishes, the trained fits of the cross-entropy with the probes of
+XE8 grow without bound, classify the seen cells with a margin for their norm that ends δ
+above that of `K`, and do not converge in direction to `K`. The kernel `ψ(a³ + a b)` with the
+labels `a³ + a b` on a nonempty proper set of cells is an instance, for every `p ≥ 2`.
+
+This is statement 2 of WD7 for the cross-entropy. There the trained products stay δ below
+`‖K‖_S1`. Here their norm is unbounded, and they beat `K` by δ in margin for their norm.
+
+### XE10. Scope
+
+Proved, for the pure factorization `X = U Vᴴ` trained by gradient descent with weight decay
+on the cross-entropy of logits that are real-linear in the product:
+
+- the loss is convex with a continuous gradient, nonnegative and real-analytic in the
+  entries, so WD1–WD5, WD9 and WD10 apply to it (XE1);
+- for probes of norm at most `a` it has the constants of WD6 and WD8 at every matrix (XE2),
+  and under two explicit bounds on the step the run from every start converges to a
+  stationary point, and from stacked factors of full row rank to a decayed minimum; no
+  convergence is assumed (XE3);
+- for λ ≥ 0 the gaps of a trained fit are within `log(2κ)` of the margin that a competitor
+  of unit nuclear norm has at the norm of the fit (XE5);
+- as λ → 0⁺ on samples that some product classifies, the nuclear norm of the trained fits
+  tends to infinity and their margin for their norm tends to the largest margin of the unit
+  ball of the nuclear norm (XE6);
+- for λ > 0 and a loss that reads only the seen cells, a trained product is a minimum of M
+  from Ω for its own values, and it is no nonzero multiple of a flat kernel with a nonzero
+  unseen cell; the run of XE3 converges to no such multiple (XE7);
+- for an injective unimodular answer code and such a flat kernel that shows the labels, the
+  trained fits pass its margin for its norm by a fixed δ as λ → 0⁺, and they do not converge
+  in direction to it (XE8, XE9).
+
+Assumed or not covered:
+
+- No weight decay. For λ = 0 the cross-entropy of separable data has no minimum and the
+  sublevel sets of WD9 are not compact. The run without weight decay and its implicit bias
+  are not treated. The limit λ → 0⁺ of XE6 and XE9 runs over trained fits, not over one run
+  with a decreasing λ.
+- The direction. XE6 gives the limit of the margin for the norm. That `X_j / ‖X_j‖_S1`
+  converges, or that its limit points have the largest margin, is not proved; XE9 excludes
+  one limit.
+- The unseen cells. By XE7 they are filled by M from the seen values of the trained product.
+  Those values are not the values of `K`, so the fill of the Corollary and its decoded
+  accuracy do not transfer: which class an unseen cell decodes to under the cross-entropy is
+  not determined here.
+- Logits that are not linear in the product, such as a network between the product and the
+  logits, and losses other than the squared loss, the cross-entropy and those of WD9.
+- The mean of the losses of the samples in place of their sum: it is the sum with the weight
+  decay `N λ` and the step `η / N`. This rescaling is not formalized.
+- The model and the optimizer: for the real network and for AdamW the modeling step of
+  Lemma 1 remains an assumption, as the note says.
+
+### Lean
+
+`src/Transformer/Grokking/FlatSpectrum/Training/`, modules `Logits`, `CrossEntropy`,
+`CrossEntropyBounds`, `CrossEntropyRun`, `Margin`, `MaxMargin`, `MaxMarginLimit`, `SeenCells`,
+`AnswerCode` and `SeenMargin`, namespace `Transformer.Grokking.FlatSpectrum.Training`, proved
+without `sorry`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| XE1 | `ceLoss`, `ceGrad`, `pairing_sum_left`, `pairing_ceGrad`, `ceLoss_first_order`, `continuous_probability_pairing`, `continuous_ceGrad`, `ceLoss_nonneg`, `ceLoss_zero`, `analyticAt_pairing`, `analyticAt_ceLoss`; one sample: `sum_probability_mul_le_log_weightedExp`, `crossEntropy_first_order`, `crossEntropy_zero` | The samples and the classes are finite types `S`, `C`; the probes are `A : S → C → Matrix m n ℂ` and the labels `y : S → C`. `crossEntropy` is that of `Transformer.Landscape.Neural`, and `probability` and `weightedExp` are those of `Transformer.Grokking.Geometry` and `Transformer.Grokking.GradientEvidence`. Real-analytic in the entries is the hypothesis of WD8. The second case of probes is not a declaration; the first is `codeProbe` (XE8). |
+| XE2 | `abs_pairing_le_mul_sqrt`, `exists_forall_frobeniusSq_le`, `frobeniusSq_le_sq_of_le_mul_sqrt`, `pairing_ceGrad_le`, `frobeniusSq_ceGrad_le`, `neg_le_pairing_of_first_order`, `neg_le_pairing_ceGrad`, `ceLoss_le_add`; one sample: `sum_mul_exp_sub_le_of_mem_Icc`, `log_weightedExp_le`, `crossEntropy_le_add` | `‖A s c‖ ≤ a` is `frobeniusSq (A s c) ≤ a ^ 2` with `a ≥ 0`, and `‖G X‖ ≤ 2 a N` is `frobeniusSq (G X) ≤ (2 a N) ^ 2`. Hoeffding's lemma is Mathlib's `ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc`, applied to the weights `p` as a `PMF` on the classes; it is stated for values in `[a, b]` with the constant `(b − a)² / 8`. |
+| XE3 | `exists_tendsto_decayRun_ceLoss`, `exists_tendsto_decayRun_ceLoss_isDecayedMin`, `exists_pos_ae_tendsto_decayRun_ceLoss_isDecayedMin`, `exists_isDecayedMin_ceLoss`, `exists_seq_isDecayedMin_ceLoss`; example: `signProbe`, `frobeniusSq_signProbe_le`, `signWitness_radius` | Instances of `exists_tendsto_decayRun`, `exists_tendsto_decayRun_isDecayedMin`, `exists_pos_ae_tendsto_decayRun_isDecayedMin` and `exists_isDecayedMin_of_card_le`, with their forms of the hypotheses. `N` and `\|C\|` are `Fintype.card S` and `Fintype.card C`. |
+| XE4 | `gap`, `margin`, `gap_smul`, `margin_smul`, `margin_le_gap`, `nonempty_wrong`, `le_margin`, `exists_gap_eq_margin`, `frobeniusSq_le_nuclearNorm_sq`, `gap_le_mul_nuclearNorm`, `crossEntropy_le_of_le_gap`, `ceLoss_le_of_le_gap`, `ceLoss_le_mul_exp`, `log_le_ceLoss` | `margin` is the infimum over the pairs `(s, c)` with `c ≠ y s`; the statements that use it as a minimum take `[Nonempty S] [Nontrivial C]`. The upper bounds are stated for a number `μ` below every gap. |
+| XE5 | `IsDecayedMin.ceLoss_add_le`, `IsDecayedMin.ceLoss_le_smul`, `IsDecayedMin.log_le_mul_exp`, `IsDecayedMin.sub_log_le_gap`; example: `nuclearNorm_one_fin_one`, `exists_isDecayedMin_signProbe` | The margin of the competitor enters as a number `μ'` below its gaps, and the conclusion is stated for each gap. `κ` is written `card S * (card C − 1)`. |
+| XE6 | `nuclearNorm_pos_of_margin_pos`, `tendsto_nuclearNorm_atTop`, `eventually_lt_margin_div`, `maxMargin`, `margin_le_maxMargin`, `margin_div_le_maxMargin`, `tendsto_margin_div_nuclearNorm`; example: `exists_seq_isDecayedMin_signProbe` | The trained fits of a sequence have one finite column type. `maxMargin` is the supremum `sSup` of the margins on `{‖X‖_S1 ≤ 1}`; that it is attained is not formalized. `margin_div_le_maxMargin` holds at `X = 0` too, where Lean's quotient is `0`. "Some product has a positive margin" is the hypothesis `0 < margin A y X₀`. The form with the least norm at margin one and the two citations are not formalized. |
+| XE7 | `fitLoss_eq_of_seen`, `pairing_eq_of_seen`, `ceLoss_eq_of_seen`, `IsDecayedMin.isMinOn_nuclearNorm`, `not_isMinOn_smul`, `IsDecayedMin.ne_smul_of_not_isMinOn`, `IsDecayedMin.ne_smul_of_isFlat`, `exists_tendsto_decayRun_ceLoss_ne_smul` | "Reads only Ω" is the hypothesis `∀ X Y, (∀ ij ∈ Ω, X ij.1 ij.2 = Y ij.1 ij.2) → L X = L Y`, and "the probes vanish off Ω" is `∀ s c i j, (i, j) ∉ Ω → A s c i j = 0`. A minimum of M from Ω is `IsMinOn nuclearNorm S K` as in R2. That the trained product is `0` for a large λ is not formalized. |
+| XE8 | `codeProbe`, `pairing_single`, `frobeniusSq_single`, `pairing_codeProbe`, `codeProbe_apply_of_notMem`, `frobeniusSq_codeProbe`, `gap_codeProbe`, `margin_codeProbe_pos`; examples: `signCode`, `norm_signCode`, `injective_signCode` | The cells are `cell : S → m × n` and the seen cells are `Set.range cell`; `φ(c) e_ij` is `Matrix.single i j (φ c)`. That the largest logit belongs to the nearest codeword is not formalized. |
+| XE9 | `gap_eq_of_seen`, `margin_eq_of_seen`, `exists_pos_eventually_add_le_margin_div`, `not_tendsto_inv_nuclearNorm_smul`, `exists_pos_eventually_add_le_margin_div_of_codeProbe`, `not_tendsto_inv_nuclearNorm_smul_of_codeProbe` | δ is chosen before the sequence, for one finite column type of the factors. The normalized product is `(nuclearNorm X_j)⁻¹ • X_j`. That the trained fits grow without bound is `tendsto_nuclearNorm_atTop` (XE6). The examples are the `1 × 2` kernel `(1, 1)` with the code `±1` on its first cell, and `cubicKernel 3` with `ψ` on the cell `(0, 0)`. |
