@@ -169,3 +169,10 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_inv_margin_smul_codeProbe_of_isNuclearMin
 #print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_inv_smul_cubicKernel_iff_of_isNuclearMin
 #print axioms Transformer.Grokking.FlatSpectrum.Training.exists_isDecayedMin_signProbe_log_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.ceLoss_pos
+#print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_ceLoss_smul_atTop
+#print axioms Transformer.Grokking.FlatSpectrum.Training.isGLB_range_ceLoss
+#print axioms Transformer.Grokking.FlatSpectrum.Training.not_exists_forall_ceLoss_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.not_isNuclearMin_ceLoss_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.not_isDecayedMin_ceLoss_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.not_isCompact_setOf_flatLoss_zero_le

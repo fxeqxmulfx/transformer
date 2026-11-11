@@ -56,6 +56,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.Subsequence
 public import Transformer.Grokking.FlatSpectrum.Training.NuclearMin
 public import Transformer.Grokking.FlatSpectrum.Training.NuclearMinLimit
 public import Transformer.Grokking.FlatSpectrum.Training.NuclearMinDirection
+public import Transformer.Grokking.FlatSpectrum.Training.NoDecay
 
 /-! Training the pure factorization with weight decay, `review/flat_spectrum.md`, Lemma 1's
 modeling step and *Training reaches the optimal fit* (added).
@@ -146,49 +147,35 @@ factorization of width `k` keeps the squared loss `c (min(m, n) − k) / 2`
 (`IsFlat.mul_sub_card_le_fitLoss_univ`).
 
 Cross-entropy (*Training with cross-entropy*, items XE1–XE12). A sample `s` reads the product
-through probes, with the logit `⟨A s c, X⟩` for the class `c`, and the loss is the cross-entropy
-of the labels (`ceLoss`, with the gradient `ceGrad`). It satisfies the first-order inequality,
-is nonnegative and real-analytic in the entries (XE1), and for probes of norm at most `a` it has
-the constants `γ = 2 a |S|`, `b = |S| log |C|` and `s = |S| a²` of WD6 and WD8 at every matrix,
-the last by Hoeffding's lemma (XE2). So under explicit bounds on the step the run converges from
-every start, to a stationary point (`exists_tendsto_decayRun_ceLoss`) and from full row rank to
-a decayed minimum (`exists_tendsto_decayRun_ceLoss_isDecayedMin`), and WD9 and WD10 hold for it
-(XE3). The margin of a product, its least gap between the logit of a label and another logit,
-bounds the loss on both sides (XE4). A trained fit has no more loss than a competitor of unit
-nuclear norm scaled to its own norm, so its gaps are within `log (2 |S| (|C| − 1))` of the
-margin of the competitor times that norm (XE5). As `λ → 0⁺` on data that some product
-separates, the nuclear norm of the trained fits tends to infinity and their normalized margin
-to the largest margin of the unit ball of the nuclear norm
-(`tendsto_margin_div_nuclearNorm`, XE6). For a loss that reads only the seen cells `Ω`, the
-product of a trained fit is a minimum of M from `Ω` for its own values, so it is no nonzero
-multiple of a kernel that is not a minimum of M, and the run of XE3 converges to no such
-multiple (XE7). The probes `φ(c) e_ij` of an answer code give a kernel that shows the labels
-the gaps `|φ(y) − φ(c)|² / 2` (XE8). For a flat kernel with a nonzero unseen cell that shows
-the labels, the trained fits end with a normalized margin a fixed `δ` above that of the
-kernel, and `X_j / ‖X_j‖_S1` does not converge to `K / ‖K‖_S1`
-(`not_tendsto_inv_nuclearNorm_smul_of_codeProbe`, XE9). The unit ball of the nuclear norm is
-compact, so the largest margin is attained (`exists_margin_eq_maxMargin`), every limit point of
-`X_j / ‖X_j‖_S1` has nuclear norm one and the largest margin
-(`margin_eq_maxMargin_of_tendsto_inv_smul`), and the direction converges when one product of
-the unit ball has the largest margin (`tendsto_inv_smul_of_unique`, XE10). For an answer code
-mirrored at a gap `0 < g < 2` (`IsMirroredCode`; `ψ` for `p ≥ 3`, `isMirroredCode_stdAddChar`)
-with every cell seen, the normalized flat kernel is the only product of largest margin
-(`eq_inv_smul_of_margin_codeProbe_eq`), so the trained fits converge in direction to the
-kernel, and they do exactly when every cell is seen (`tendsto_inv_smul_codeProbe_iff`,
-`tendsto_inv_smul_cubicKernel_iff`, XE11). For `λ > 0` a trained product is zero on every row
-and every column without a seen cell (`IsDecayedMin.row_eq_zero`,
-`IsDecayedMin.col_eq_zero`), where the held-out cross-entropy of an answer code is that of
-chance (`IsDecayedMin.ceLoss_heldOut_eq`, XE12). For a weight decay above `‖G 0‖`, so above
-`2 a |S|` for the cross-entropy, every trained product is `0`
-(`IsDecayedMin.mul_eq_zero_of_lt`, `IsDecayedMin.mul_eq_zero_of_ceLoss`, XE7). The larger logit
-of an answer code belongs to the nearer codeword (`pairing_codeProbe_le_iff`), so a product
-with a positive margin is decoded to the labels (`norm_sub_lt_of_margin_pos`, XE8). The probes
-`e_ic` of a table of logits are `classProbe` (XE1). Training on `c L` is training on `L` with
-the step `c η` and the weight decay `λ / c` (`decayRun_smul`, `isDecayedMin_const_mul_iff`),
-which gives the mean of the losses (XE3). In its second form the margin problem asks for the
-least nuclear norm at margin one, which is `1 / μ*` (`isLeast_nuclearNorm_of_one_le_margin`);
-scaled to margin one, the trained fits converge where their direction does
-(`tendsto_inv_margin_smul`, XE6), to `K / g` in the case of XE11. The minimizers of
-`L + λ ‖·‖_S1` (`IsNuclearMin`) are the products of the trained fits of every width
-(`isNuclearMin_iff`), so XE5, XE6 and XE9–XE11 hold for them (`forall_seq_isNuclearMin`): the
-widths of the fits may change along a sequence. -/
+through probes, with the logit `⟨A s c, X⟩` of the class `c`; the loss is the cross-entropy of
+the labels (`ceLoss`, with the gradient `ceGrad`).
+
+* XE1–XE3. The loss is convex, nonnegative and real-analytic, and for probes of norm at most
+  `a` it has the constants `γ = 2 a |S|`, `b = |S| log |C|`, `s = |S| a²` of WD6 and WD8. Under
+  explicit bounds on the step the run converges from every start, from full row rank to a
+  decayed minimum (`exists_tendsto_decayRun_ceLoss_isDecayedMin`). The mean of the losses is a
+  rescaling (`decayRun_smul`), and `classProbe` gives a table of logits.
+* XE4–XE6. The margin bounds the loss on both sides. The gaps of a trained fit are within
+  `log (2 |S| (|C| − 1))` of the margin of a competitor at its norm. As `λ → 0⁺` on separable
+  samples the norm of the trained fits tends to infinity and their normalized margin to the
+  largest margin `μ*` of the unit ball (`tendsto_margin_div_nuclearNorm`); the least norm at
+  margin one is `1 / μ*` (`isLeast_nuclearNorm_of_one_le_margin`). At `λ = 0` such samples
+  have no minimum and no trained fit (`not_isDecayedMin_ceLoss_zero`).
+* XE7, XE12. For a loss that reads only the seen cells, a trained product is a minimum of M
+  for its own values, so no nonzero multiple of a kernel that M does not return; it is zero on
+  every row and column without a seen cell (`IsDecayedMin.row_eq_zero`), and `0` for a weight
+  decay above `‖G 0‖` (`IsDecayedMin.mul_eq_zero_of_lt`).
+* XE8, XE9. For the probes `φ(c) e_ij` of an answer code the larger logit belongs to the
+  nearer codeword (`pairing_codeProbe_le_iff`). The trained fits pass the margin of a flat
+  kernel with a nonzero unseen cell that shows the labels, and do not converge in direction to
+  it (`not_tendsto_inv_nuclearNorm_smul_of_codeProbe`).
+* XE10, XE11. The largest margin is attained (`exists_margin_eq_maxMargin`); every limit point
+  of `X_j / ‖X_j‖_S1` has it, and the direction converges when it is attained once
+  (`tendsto_inv_smul_of_unique`). For a code mirrored at a gap `0 < g < 2` (`IsMirroredCode`;
+  `ψ` for `p ≥ 3`) the trained fits converge in direction to a flat kernel that shows the
+  labels exactly when every cell is seen (`tendsto_inv_smul_codeProbe_iff`,
+  `tendsto_inv_smul_cubicKernel_iff`), and scaled to margin one to `K / g`.
+
+The minimizers of `L + λ ‖·‖_S1` (`IsNuclearMin`) are the products of the trained fits of every
+width (`isNuclearMin_iff`), so XE5, XE6 and XE9–XE11 hold for them
+(`forall_seq_isNuclearMin`): the widths of the fits may change along a sequence. -/
