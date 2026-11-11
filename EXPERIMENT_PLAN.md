@@ -4237,7 +4237,7 @@ and update budgets differ, so no equal-budget speed comparison is claimed.
 
 ## Forward-only versus iterative convex channels on MQAR (2026-11-11)
 
-**Status: authorized; protocol frozen before measurement.** The user requested
+**Status: all six comparisons complete; replay and native checks pass.** The user requested
 testing the learner proved at `a7c246fe` against the usual convex channel.
 `experiments/convex_channel_forward/README.md` fixes the same ordinary and
 recoded MQAR data for seeds 0,1,2, exact correctness checks, and repeated
@@ -4246,3 +4246,12 @@ the prior experiment already showed exact recovery there. The original
 1000-update endpoint checks consistency; it is not used to inflate a speedup.
 A losslessly compacted baseline separates lookup representation from training
 method. Native Rust only; no changes to the existing frozen experiment.
+
+Both methods learn exactly the same channel, with 100% accuracy on training,
+held-out and all 4096 dictionaries in every case; the 1000-update endpoint
+is unchanged. The direct learner fits in 17.21-17.85 us versus 468.89-473.57 us
+for one usual FW update (26.38-27.30x faster). Lookup inference is about 21x
+faster than the dense channel, but exact compaction gives the usual channel
+the same lookup speed and 288-byte payload. This distinguishes the measured
+training benefit from the representation benefit shared by both methods.
+All timing observations and saved models remain local and ignored.
