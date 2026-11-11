@@ -1,7 +1,7 @@
 import Transformer
 
 /-! Audit the scope items of `review/flat_spectrum.md`: WD12 of *Training reaches the optimal
-fit*, XE14 and XE15 of *Training with cross-entropy*, the answers to the items "Assumed or
+fit*, XE14, XE15 and XE16 of *Training with cross-entropy*, the answers to the items "Assumed or
 not covered" of WD11 and XE13 (`Transformer.Grokking.FlatSpectrum.Training.Scope`). -/
 
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.linear_first_order
@@ -69,3 +69,11 @@ not covered" of WD11 and XE13 (`Transformer.Grokking.FlatSpectrum.Training.Scope
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_pos_forall_unseen_wrong
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_pos_forall_tendsto_decayRun_unseen
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_unseen_wrong
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isNuclearMin_signCode_iff
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.nuclearNorm_eq_signScale_mul_of_isNuclearMin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.im_eq_of_det_bounds
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_eq_add_smul_signRot
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.nuclearNorm_signCotwin_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.nuclearNorm_add_smul_signRot_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isNuclearMin_signKernel_iff
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_signKernel

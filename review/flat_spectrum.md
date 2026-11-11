@@ -12562,7 +12562,12 @@ on the cross-entropy of logits that are real-linear in the product:
   is `1`, only `½ [[1, 1], [−1, −1]]` has it, and the trained products converge in direction
   to it; for every small weight decay the trained products, and the limits of the runs of
   XE3 from a start of full row rank, decode the unseen cell to the class of `−1`, where the
-  kernel shows the class of `+1` (XE15).
+  kernel shows the class of `+1` (XE15);
+- for the code `±1`, a flat kernel that shows the labels with every cell seen once and
+  `0 < λ ≤ √c`: a matrix is a trained product exactly when it has the real parts of `t(λ) K`
+  and at most its nuclear norm; for the kernel `[[1, 1], [−1, 1]]` the trained products are
+  the segment `t(λ) K + i s [[1, −1], [1, 1]]`, `|s| ≤ t(λ)`, and the run of XE3 from a start
+  of full row rank ends at a factorization of one of its points (XE16).
 
 Assumed or not covered:
 
@@ -12581,8 +12586,10 @@ Assumed or not covered:
   with every cell seen once two products have the largest margin, and some trained fits
   alternate between them (XE11). Trained fits with real factors converge in direction to the
   kernel, and the runs of XE3 from real factors end at its multiples (XE11). For factors
-  that are not real only the real parts of the trained product are determined: the
-  imaginary parts of the limit of a run from such a start are not determined here.
+  that are not real the trained products for one weight decay are those of XE16: their real
+  parts and their nuclear norm are determined, and for the kernel `[[1, 1], [−1, 1]]` the
+  limit of a run is a point of a segment. Which point a run from a start that is not real
+  reaches is not determined here.
 - The unseen cells. By XE7 they are filled by M from the seen values of the trained product.
   Those values are not the values of `K`, so the fill of the Corollary and its decoded
   accuracy do not transfer. Three cases are settled: with every cell seen there is nothing to
@@ -12751,6 +12758,51 @@ sign at one unseen cell; here it is found for the cross-entropy, at the largest 
 Not covered: the threshold `λ₀` in closed form; kernels larger than `2 × 2`, among them
 `ψ(a³ + a b)` for `p ≥ 3` with its code of `p` classes; several unseen cells.
 
+### XE16. The code ±1: all trained products for one weight decay
+
+For the code `±1` XE11 gives one trained product for each weight decay, `t(λ) K`, and the
+real parts of every other one. XE13 left open what the weight decay leaves free. Let a flat
+kernel `K` show the labels, with every cell seen once, and let `0 < λ ≤ √c`.
+
+1. The set. A matrix `X` is a trained product for `λ` if and only if
+
+   ```
+   Re X = t(λ) K    and    ‖X‖_S1 ≤ t(λ) ‖K‖_S1.
+   ```
+
+   The loss reads only the real parts (XE11), so a matrix with the real parts of `t(λ) K` has
+   its loss, and it minimizes `L + λ ‖·‖_S1` exactly when it has at most its nuclear norm.
+   Every trained product then has the nuclear norm `t(λ) ‖K‖_S1`.
+
+2. The kernel of signs. For `K = [[1, 1], [−1, 1]]`, where `c = 2`, let
+   `J = [[1, −1], [1, 1]]`. Then
+
+   ```
+   X is a trained product for λ    ⟺    X = t(λ) K + i s J  for a real s with |s| ≤ t(λ).
+   ```
+
+   The trained products are a segment. Its midpoint is `t(λ) K`. Its ends `t(λ) (K ∓ i J)`
+   have rank one, and `K − i J` is the second product of XE11.
+
+   "⟸": `K + i J` and `K − i J` have rank one and `‖·‖_S2² = 8`, so their nuclear norm is at
+   most `2 √2 = ‖K‖_S1`, and `t K + i s J` is a convex combination of `t (K + i J)` and
+   `t (K − i J)`.
+
+   "⟹": write `X = t K + i B` with a real `B`. The bound of XE15,
+   `‖X‖_S2² + 2 |det X| ≤ ‖X‖_S1² ≤ 8 t²`, with `‖X‖_S2² = 4 t² + ‖B‖²` and
+   `Re det X = 2 t² − det B`, gives `‖B‖² ≤ 2 det B`, so `B = [[a, −b], [b, a]]`. Then
+   `|det X| = Re det X = 2 t² − a² − b²`, so `Im det X = 2 t (a − b)` is zero. For `t > 0`
+   this is `b = a`, so `B = a J` and `0 ≤ Re det X = 2 t² − 2 a²`. For `t = 0` the
+   determinant `−a² − b² ≥ 0` gives `B = 0`.
+
+3. The run. For `0 < λ ≤ √2`, under the bounds of XE3 with the probe norm `1`, `N = 4` and
+   `|C| = 2`, the run from stacked factors of full row rank converges, and the product of its
+   limit is a point of the segment, `t(λ) K + i s J` with `|s| ≤ t(λ)`. So the limit of a run
+   is determined up to one real number. From real factors `s = 0` (XE11).
+
+Not covered: which point of the segment a run from factors that are not real reaches; the
+set of statement 1 in closed form for a flat kernel larger than `2 × 2`.
+
 ### Lean
 
 `src/Transformer/Grokking/FlatSpectrum/Training/`, modules `Logits`, `CrossEntropy`,
@@ -12778,6 +12830,7 @@ Not covered: the threshold `λ₀` in closed form; kernels larger than `2 × 2`,
 | XE12 | `IsDecayedMin.row_eq_zero`, `IsDecayedMin.col_eq_zero`, `IsDecayedMin.apply_eq_zero_of_codeProbe`, `IsDecayedMin.pairing_codeProbe_eq_zero`, `IsDecayedMin.ceLoss_heldOut_eq`, `exists_tendsto_decayRun_ceLoss_eq_zero` | The row has `∀ j, (i, j) ∉ Ω` as in CW8, whose `row_eq_zero_of_isMinOn` and `col_eq_zero_of_isMinOn` are applied to the minimum of XE7. For the answer code the seen cells are `Set.range cell`, and "no sample sees the row `i`" is `∀ s, (cell s).1 ≠ i`. The held-out samples are a finite type `S'` with cells `cell' : S' → m × n` and any labels `y'`. "The softmax is uniform" is the statement that every logit is zero. |
 | XE14 | `hasDerivAt_comp_add_smul_of_analytic`, `gradient_flatLoss_of_analytic`, `factors_iterate_gradientStep_of_analytic`, `exists_pos_tendsto_decayRun_of_analytic`; the logits `±(Re x)²`: `sqWeight`, `sqWeight_nonneg`, `sqWeight_le_half`, `sqLogitLoss`, `sqLogitGrad`, `sqLogitLoss_eq_crossEntropy`, `sqLogitLoss_nonneg`, `sqLogitLoss_zero`, `sqLogitGrad_zero`, `pairing_sqLogitGrad`, `hasDerivAt_sqLogitLoss`, `continuous_sqLogitGrad`, `analyticAt_sqLogitLoss`, `exists_pos_tendsto_decayRun_sqLogit`, `sqLogitLoss_lt_zero`, `not_first_order_sqLogit`, `frobeniusSq_sqLogitGrad_le`, `neg_le_pairing_sqLogitGrad`; the ball: `tendsto_zero_of_tendsto_frobeniusSq`, `re_sq_le_frobeniusSq`, `frobeniusSq_sqLogitGrad_mul_le`, `frobeniusSq_decayStep_sqLogit_le`, `frobeniusSq_decayRun_sqLogit_le`, `tendsto_decayRun_sqLogit_zero`, `one_sub_smul_lift_posDef_sqLogit`, `not_isDecayedMin_sqLogit_zero`, `exists_tendsto_decayRun_sqLogit_not_isDecayedMin`; in `Training`: `hasDerivAt_decayedLoss_of_hasDerivAt`, `hasGradientAt_flatLoss_of_hasDerivAt` | Modules `Scope/SmoothLoss`, `Scope/SquaredLogit`, `Scope/SquaredLogitBall` and `Scope/SquaredLogitRun`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. "`G` is the gradient of `L`" is the hypothesis `∀ X H, HasDerivAt (fun t : ℝ => L (X + t • H)) (pairing (G X) H) 0`; real-analytic and bounded below are the hypotheses of WD9, and the conclusion of statement 1 is that of `exists_pos_tendsto_decayRun`. The two lemmas in `Training` are the parts of `hasDerivAt_decayedLoss` and `hasGradientAt_flatLoss` that do not use convexity. The loss is `sqLogitLoss X = log (1 + exp (-(2 * (X 0 0).re ^ 2)))` on `Matrix (Fin 1) (Fin 1) ℂ`, equal to `crossEntropy (fun c : Bool => (signCode c).re * (X 0 0).re ^ 2) true`, and `sqLogitGrad X = (-(4 * r * sqWeight r)) • 1`. "Not convex" is `¬ ∀ X Y, L X + pairing (G X) (Y - X) ≤ L Y`. The factors are `Matrix (Fin 1) k ℂ` for a finite `k`; "converges to the zero factorization" is `Tendsto … (𝓝 (0, 0))`; "not a decayed minimum" is `¬ IsDecayedMin sqLogitLoss lam 0 0` for `lam ≤ 1/4`, at every `k`. That the ball has interior points and the comparison with WD10 are not formalized. The start of the examples is `!![1/8, 0]`, `!![1/8, 1/8]` with `lam = 1/4` and `η = 1`. |
 | XE15 | `exists_unit_conj_mul`, `detCertificate`, `frobeniusSq_fin_two`, `isFlat_detCertificate`, `pairing_detCertificate`, `frobeniusSq_add_two_mul_norm_det_le`, `norm_mul_sub_le_norm_det`, `sq_sub_add_sq_add_le`, `eq_ofReal_of_norm_le_of_le_re`; the three cells: `threeCells`, `threeLabels`, `signFill`, `gap_threeCells`, `margin_threeCells_le`, `le_margin_threeCells`, `margin_threeCells_le_nuclearNorm`, `nuclearNorm_signFill_le`, `margin_signFill`, `maxMargin_threeCells`, `eq_signFill_of_margin`; the limit: `cubicKernel_two`, `tendsto_inv_smul_threeCells`, `eventually_re_unseen_neg`, `norm_sub_signCode_lt`, `eventually_unseen_wrong`; every small weight decay and the run: `exists_pos_forall_re_unseen_neg`, `exists_pos_forall_unseen_wrong`, `exists_pos_forall_tendsto_decayRun_unseen`, `exists_tendsto_decayRun_unseen_wrong` | Modules `Scope/TwoByTwo`, `Scope/UnseenCell`, `Scope/UnseenCellLimit` and `Scope/UnseenCellRun`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. The samples are `Fin 3` with the cells `threeCells = ![(0, 0), (0, 1), (1, 0)]` and the labels `threeLabels s = signLabel (threeCells s)`, those that `signKernel` shows; `cubicKernel_two` is `cubicKernel 2 = signKernel`. "Decoded to the class of `−1`" is `‖X 1 1 − signCode false‖ < ‖X 1 1 − signCode (signLabel (1, 1))‖`, where `signLabel (1, 1) = true`. The statements of 4 take a sequence of trained products `IsNuclearMin`; the threshold `λ₀` of 5 is obtained from them by contradiction and is not explicit. The bounds of XE3 in 6 are written with their numbers: `12 * log 2 ≤ λ ρ`, `2 η (λ² + 36) ≤ λ` and `η (λ + 6 + 6 ρ) ≤ 1`; the width is any finite type. The run that exists has the step `min (λ / (2 (λ² + 36))) (1 / (λ + 6 + 6 ρ))` for `λ = λ₀ / 2` and `ρ = 4 + 12 log 2 / λ`. The bound of 2 is proved as an inequality; the equality is not needed. |
+| XE16 | `isNuclearMin_signCode_iff`, `nuclearNorm_eq_signScale_mul_of_isNuclearMin`; the kernel of signs: `signRot`, `im_eq_of_det_bounds`, `exists_eq_add_smul_signRot`, `signCotwin`, `nuclearNorm_signCotwin_le`, `nuclearNorm_add_smul_signRot_le`, `isNuclearMin_signKernel_iff`; the run: `exists_tendsto_decayRun_signKernel` | Modules `Scope/SignSet`, `Scope/SignSegmentCore` and `Scope/SignSegment`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. `t(λ)` is `signScale c₀ lam`, and "`Re X = t(λ) K`" is `∀ i j, (X i j).re = signScale c₀ lam * (K i j).re`; the hypotheses are those of XE11 (`Function.Bijective cell`, `K` shows the labels, `IsFlat K c₀`). For the kernel of signs the cells are `id` on `Fin 2 × Fin 2` with the labels `signLabel`, `J` is `signRot`, `K − i J` is `signTwin` and `K + i J` is `signCotwin`; the number `s` of the segment is `a` in Lean, and the point is `signScale 2 lam • signKernel + ((a : ℂ) * Complex.I) • signRot`. `im_eq_of_det_bounds` is the real arithmetic of "⟹", in the imaginary parts and `N = ‖det X‖`. The bounds of XE3 are written with their numbers: `16 * log 2 ≤ λ ρ`, `2 η (λ² + 64) ≤ λ` and `η (λ + 8 + 8 ρ) ≤ 1`; the width is any finite type. |
 
 ## Convex answer-loss recall
 

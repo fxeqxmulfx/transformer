@@ -1,6 +1,9 @@
 module
 
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.LinearDiverge
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignSegment
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignSegmentCore
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignSet
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SmoothLoss
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SquaredLogit
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SquaredLogitBall
@@ -39,4 +42,10 @@ dropped, or the part of the open statement that is proved.
   and so does the limit of the run of XE3 from a start of full row rank
   (`exists_pos_forall_tendsto_decayRun_unseen`, `exists_tendsto_decayRun_unseen_wrong`). The
   tool is the bound `‖Z‖_S2² + 2 |det Z| ≤ ‖Z‖_S1²` of a `2 × 2` matrix
-  (`frobeniusSq_add_two_mul_norm_det_le`). -/
+  (`frobeniusSq_add_two_mul_norm_det_le`).
+* What the weight decay leaves free for the code `±1` (XE13, XE16). With every cell seen once
+  and `0 < λ ≤ √c`, a matrix is a trained product exactly when it has the real parts of
+  `t(λ) K` and at most its nuclear norm (`isNuclearMin_signCode_iff`). For the kernel of
+  signs the trained products are the segment `t(λ) K + i a [[1, −1], [1, 1]]`, `|a| ≤ t(λ)`
+  (`isNuclearMin_signKernel_iff`), and the run of XE3 from a start of full row rank ends at a
+  factorization of one of its points (`exists_tendsto_decayRun_signKernel`). -/
