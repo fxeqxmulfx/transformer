@@ -17,6 +17,10 @@ shuffles examples each epoch. Both arms use the same fixed causal features,
 query token, class-zero defaults and full-vocabulary unit-scale CE as v1.
 All frozen dataset fingerprints are checked. Evaluation retains source
 own-output rollout, EOS, field alias pooling and all endpoint splits.
+As in v1, generative training splits additionally report own-output rollout;
+the original transformer runner uses teacher forcing alone there. The
+`teacher_forced` subreport supplies that training comparison. Primary
+held-out sequence metrics retain the original generation convention.
 
 For Frank-Wolfe, query visit `t` uses `eta=2/(t+1)`. An absent query keeps
 its tensor. Weighted integer counts of vertices represent the actual

@@ -86,6 +86,12 @@ sequences, autoregressive generation reading its own outputs until EOS or
 the fixed limit, recurrence residue-probability pooling, and auxiliary
 numeric error/coverage. CPU f64 arithmetic replaces CUDA f32. Every source
 split, including longer and shifted variants, is scored at the endpoint.
+For generative training splits this evaluator additionally runs own-output
+generation and retains the teacher-forced report under `teacher_forced`;
+the source runner uses teacher forcing alone on training splits. Training
+token accuracy and numeric error therefore require this distinction when
+comparing with the original transformer reports. Primary held-out metrics
+use the source's generation convention.
 Saved models are replayed to verify every metric. There is no held-out
 evaluation for an explicit forward fit failure because no model was returned.
 
