@@ -1,0 +1,17 @@
+{
+  "version": "convex-stress-minibatch-v1",
+  "source_repository": "/home/misha/python_projects/diff-gpt",
+  "source_commit": "3555299",
+  "data": "Exactly the 35 tasks and fingerprints in ../convex_stress/suite.json; unchanged fixed causal adapter and all source metrics.",
+  "seeds": [0, 1, 2],
+  "arms": ["frank_wolfe", "forward_only"],
+  "batch": "Original source number of examples per minibatch, including short epoch tails. Flatten supervised prefixes only within the selected example minibatch.",
+  "shuffle": "Source Random(seed+10000), shuffle example indices at each epoch. No data resampling or outcome-dependent settings.",
+  "frank_wolfe": "One exact minibatch CE linear oracle per visited query. Direct joint-tensor convex update eta=2/(local_query_visits+1); absent queries retain all weights. Integer weighted vertex counts represent the joint tensor, not separately learned routing/decoder factors. Ordinary full-vocabulary CE with fixed unit logit scale.",
+  "oracle_ties": "Smallest key and smallest observed-label class on observed value rows. Zero-gradient value rows retain that candidate key's previous oracle class, initialized at class zero. All computed candidate histories persist; unseen queries remain uniform.",
+  "forward_only": "Persistent CF6 candidate records for every key, eliminate conflicts permanently, smallest surviving key and class-zero completion. Process one complete training epoch in original minibatches. Retain all candidates across boundaries, even when an early snapshot already passes. Compare final full tensor or explicit failure with v1 complete fitting. No gradient or FW updates.",
+  "budget": "Frank-Wolfe uses the original max_updates and stops at the first observed primary >=99% exact or budget exhaustion. Forward-only completes one epoch: subsequent repetitions cannot change its consistency result.",
+  "observation": "Exhaustive original primary split every min(original observe, updates_per_epoch) updates and at endpoint. Record first 99% crossing for both arms. All original splits evaluated at endpoint.",
+  "verification": "Exact source/data fingerprints, feasibility, final full-training CE and FW gap for the stochastic arm, persistent/full-fit equality for the forward arm, all saved-model metrics replayed. No stochastic convergence claim.",
+  "interpretation": "Separate prospective minibatch cohort. Preserve the completed full-batch v1 cohort. No matched transformer timing claim, copied-answer tie rule, held-out labels in training, or task-specific arithmetic features. Branch representation/scale witness is a separate posthoc diagnostic, not a trained benchmark arm."
+}

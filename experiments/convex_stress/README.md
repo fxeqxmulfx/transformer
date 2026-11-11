@@ -216,8 +216,14 @@ not an impossibility theorem for recall: a representation that shares
 value decoding across equivalent queries could use other observations.
 Such sharing can be imposed by affine parameter constraints, preserving
 convexity, but it changes the model and must be tested in a separate run.
-The poor depth/parity/branch outcomes additionally motivate richer sequence
-features; adding parameters alone is not an identification argument.
+Depth/parity outcomes motivate investigating richer sequence features;
+adding parameters alone is not an identification argument. A later
+[branch representation diagnostic](../convex_stress_minibatch/README.md)
+corrects the original suggestion that branch amplitudes also require new
+features: a feasible classifier on the existing lags gets every answer
+right, but has higher unit-scale training CE than the learned v1 model.
+That task therefore also exposes a loss-scale issue. The diagnostic is a
+hand-constructed witness, not a trained benchmark result.
 
 The post-run structural check is reproducible, for example:
 

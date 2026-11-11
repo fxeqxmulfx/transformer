@@ -4295,3 +4295,21 @@ the original forward fit; larger batches are close in speed. Persistent state
 uses 2064 bytes, independent of data count; the emitted model uses 288 bytes.
 All six native tests, formatting, clippy and source/data replay pass. Complete
 timing observations and model evidence remain local and ignored.
+
+## Convex stress suite with original minibatches (2026-11-11)
+
+**Status: protocol and native implementation fixed; 210-cell cohort pending.**
+The user additionally requested minibatches. The separate
+`experiments/convex_stress_minibatch/protocol.json` uses all 35 original
+stress tasks, three seeds and both learners. Frank-Wolfe updates the joint
+tensor on every original minibatch, retaining unvisited queries. Forward-only
+keeps every candidate's state across boundaries and completes one epoch,
+then compares the entire tensor or explicit failure with complete fitting.
+CM1 proves feasibility of independent query steps; CF6 proves persistent
+batch equality. Neither claims stochastic convergence or unseen-label
+identification. Original maximum updates and observation cadence are kept;
+all endpoint source splits and explicit failures must replay. The earlier
+full-batch cohort stays frozen. A separate posthoc branch-amplitude witness
+shows that current lag features can classify that task perfectly, despite
+higher unit-scale CE than the v1 trained model; no benchmark arm uses these
+hand-written task-specific weights.
