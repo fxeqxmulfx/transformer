@@ -12741,7 +12741,12 @@ on the cross-entropy of logits that are real-linear in the product:
   and a margin for its norm that tends to the largest; its products then converge in
   direction to the flat kernel when every cell is seen, for a mirrored code of gap
   `0 < g < 2`, and they answer the unseen cell of the kernel of signs with the wrong class
-  (XE18).
+  (XE18);
+- on one sample of two classes with the probes `±1` of a `1 × 1` product the run without
+  weight decay is followed at every step `η > 0`: from every start with `U_0 + V_0 ≠ 0`, at
+  every width, the norm of the factors tends to infinity, the loss tends to `0`, the margin
+  for the nuclear norm tends to the largest margin and the direction of the product to the
+  product of largest margin; from the other starts the loss stays at least `log 2` (XE19).
 
 Assumed or not covered:
 
@@ -12751,7 +12756,8 @@ Assumed or not covered:
   `(U, 0)` for every `U`. These three facts are proved. Of the run without weight decay XE17
   proves that it has no limit and that it does not settle in a ball where its step is
   admissible. That its norm tends to infinity for one fixed step, that its loss tends to
-  `0`, and its implicit bias, the direction of the factors, are not treated. The limit
+  `0`, and its implicit bias, the direction of the factors, are proved for one sample of two
+  classes, at every step (XE19); for more than one sample they are not treated. The limit
   λ → 0⁺ of XE6 and XE9 runs over trained fits. One run whose weight decay decreases to `0`
   reaches it at the ends of phases whose lengths are not explicit (XE18); a schedule written
   before the run, the steps inside a phase and one fixed step are not treated.
@@ -13024,7 +13030,9 @@ from `U_0 = [1 0]`, `V_0 = [0 1]` has no limit, and `‖W_t‖² > 2` at infinit
 `(1/10) (2 + 2 · 2) < 1`. Here `ρ*(η) = 4`.
 
 Not covered. For one fixed step: that the norm of the factors tends to infinity, that the
-loss tends to `0`, and the direction of the factors, the implicit bias. Outside the ball of
+loss tends to `0`, and the direction of the factors, the implicit bias. XE19 proves the
+three for the sample of the example above, at every step; for more than one sample they are
+open. Outside the ball of
 squared radius `ρ*(η)` the quadratic model of XE2 no longer gives a decrease of the loss:
 its constant on the factor space grows with the norm of the factors, and the proof of a
 decrease there needs the smaller curvature of the cross-entropy where its loss is small.
@@ -13115,6 +13123,96 @@ run. Inside a phase the margin is not followed. The steps shrink with the weight
 `η_j ≤ λ_j / (8 s b)`; a run with one fixed step, or with a weight decay that changes at
 every step by a given rule, is not treated, and no schedule is shown to fail.
 
+### XE19. The run without weight decay on one sample
+
+XE17 leaves three questions about the run with λ = 0 and one fixed step: whether the norm of
+the factors tends to infinity, whether the loss tends to `0`, and the direction of the
+factors. This item answers them for the sample of XE3 and of the example of XE17: one sample
+of two classes with the probes `±1` of a `1 × 1` product, labelled with the class of the
+probe `1`. The factors `U` and `V` are rows of any width, the product is the number
+`x = U Vᴴ`, the logits are `±Re x`, the margin is `μ(x) = 2 Re x`, and `μ* = 2`, attained
+only at the product `1` (XE10).
+
+The gradient is a real number, `G(x) = −w(Re x)` with the weight
+
+```
+w(r) = 2 / (1 + e^{2r}),
+```
+
+twice the probability of the wrong class. It is positive, at most `2` and decreasing, and
+`w(0) = 1`. A step with λ = 0 is `U' = U + η w V`, `V' = V + η w U`, so the sum and the
+difference of the factors are multiplied by numbers:
+
+```
+U' + V' = (1 + η w) (U + V),        U' − V' = (1 − η w) (U − V).
+```
+
+Write `a = ‖U + V‖²` and `b = ‖U − V‖²`. Then `Re x = (a − b) / 4`,
+`‖U‖² + ‖V‖² = (a + b) / 2`, and
+
+```
+a' = (1 + η w)² a,        b' = (1 − η w)² b,        w = w((a − b) / 4).
+```
+
+Let η > 0 be any step, and let `U_0 + V_0 ≠ 0`, that is `a_0 > 0`.
+
+1. The norm tends to infinity: `a_t → ∞`, so `‖U_t‖² + ‖V_t‖² ≥ a_t / 2 → ∞`.
+
+   `a` does not decrease. If it stayed below a bound `l`, then `Re x_t ≤ a_t / 4 ≤ l / 4`
+   and `w_t ≥ w(l / 4) > 0`, so `a_{t+1} ≥ (1 + η w(l / 4))² a_t` at every step, and `a`
+   would grow geometrically.
+
+2. The loss tends to `0`: `a_t − b_t → ∞`, so `Re x_t → ∞`, the margin `2 Re x_t → ∞`, and
+   the cross-entropy, which is at most `e^{−μ(x_t)}` (XE4), tends to `0`.
+
+   The ratio `a / b` does not decrease, since `(1 − s)² ≤ (1 + s)²` for `s = η w ≥ 0`:
+   `a_{t₀} b_t ≤ a_t b_{t₀}` for `t ≥ t₀`. While `a_t ≤ b_t` the real part of the product is
+   not positive, so `1 ≤ w_t ≤ 2` and `s_t` lies in `[η, 2η]`, where
+
+   ```
+   (1 + s)² ≥ (1 + 4η / (1 + 4η²)) (1 − s)².
+   ```
+
+   So the ratio grows geometrically, and `a_{t₀} > b_{t₀}` at some step `t₀`. From then on
+   `a_t − b_t ≥ (1 − b_{t₀} / a_{t₀}) a_t`, which tends to infinity by 1.
+
+3. The margin and the direction. Once `Re x_t ≥ η / 2`, `η w_t ≤ 2` and `(1 − η w_t)² ≤ 1`:
+   from some step `T` on `b` does not grow, `b_t ≤ b_T`. So the margin for the weight norm
+
+   ```
+   μ(x_t) / (½ (‖U_t‖² + ‖V_t‖²)) = 2 (a_t − b_t) / (a_t + b_t) ≥ 2 − 4 b_T / a_t
+   ```
+
+   tends to `2`. Since `‖x‖_S1 ≤ ½ (‖U‖² + ‖V‖²)` (Lemma 1) and `μ(x) / ‖x‖_S1 ≤ μ* = 2`,
+
+   ```
+   μ(x_t) / ‖x_t‖_S1 → μ*,        x_t / ‖x_t‖_S1 → 1:
+   ```
+
+   the margin for the nuclear norm tends to the largest margin, the limit of XE6, and the
+   direction of the product to the product of largest margin (XE10). The weight norm
+   `½ (‖U_t‖² + ‖V_t‖²)` of the factors is asymptotically the nuclear norm of their product.
+
+4. The exceptional starts. If `U_0 + V_0 = 0`, then `U_t + V_t = 0` at every step, for every
+   real η: `Re x_t = −b_t / 4 ≤ 0`, and the loss is at least `log 2`, its value at the
+   product `0`. So for η > 0 the loss tends to `0` exactly from the starts with
+   `U_0 + V_0 ≠ 0`.
+
+No bound on the step is used, where statement 1 of XE17 needs `2 a N η < 1`, and the start
+need not have full row rank: at width one the condition is `u_0 + v_0 ≠ 0`. Here
+`−M_t = w_t [[0, 1], [1, 0]]`, and the exceptional starts are the stacks `[U_0; V_0]` that
+the eigenvector `(1, 1)` of its positive eigenvalue annihilates from the left.
+
+Example: with η = 1/10 from `U_0 = [1 0]`, `V_0 = [0 1]`, the example of XE17,
+`‖U_t‖² + ‖V_t‖² → ∞`, the loss tends to `0`, `μ(x_t) / ‖x_t‖_S1 → 2` and
+`x_t / ‖x_t‖_S1 → 1`. From `u_0 = 1`, `v_0 = −1` of width one the loss is at least `log 2`
+at every step.
+
+Not covered. More than one sample: the gradient is then not a multiple of one matrix, the
+sum and the difference of the factors do not decouple, and the three questions of XE17
+remain open. Rates: how fast the norm grows and the loss falls. One sample with probes `±A`
+for a matrix `A` that is not `1 × 1`.
+
 ### Lean
 
 `src/Transformer/Grokking/FlatSpectrum/Training/`, modules `Logits`, `CrossEntropy`,
@@ -13145,6 +13243,7 @@ every step by a given rule, is not treated, and no schedule is shown to fail.
 | XE16 | `isNuclearMin_signCode_iff`, `nuclearNorm_eq_signScale_mul_of_isNuclearMin`; the kernel of signs: `signRot`, `im_eq_of_det_bounds`, `exists_eq_add_smul_signRot`, `signCotwin`, `nuclearNorm_signCotwin_le`, `nuclearNorm_add_smul_signRot_le`, `isNuclearMin_signKernel_iff`; the run: `exists_tendsto_decayRun_signKernel` | Modules `Scope/SignSet`, `Scope/SignSegmentCore` and `Scope/SignSegment`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. `t(λ)` is `signScale c₀ lam`, and "`Re X = t(λ) K`" is `∀ i j, (X i j).re = signScale c₀ lam * (K i j).re`; the hypotheses are those of XE11 (`Function.Bijective cell`, `K` shows the labels, `IsFlat K c₀`). For the kernel of signs the cells are `id` on `Fin 2 × Fin 2` with the labels `signLabel`, `J` is `signRot`, `K − i J` is `signTwin` and `K + i J` is `signCotwin`; the number `s` of the segment is `a` in Lean, and the point is `signScale 2 lam • signKernel + ((a : ℂ) * Complex.I) • signRot`. `im_eq_of_det_bounds` is the real arithmetic of "⟹", in the imaginary parts and `N = ‖det X‖`. The bounds of XE3 are written with their numbers: `16 * log 2 ≤ λ ρ`, `2 η (λ² + 64) ≤ λ` and `η (λ + 8 + 8 ρ) ≤ 1`; the width is any finite type. |
 | XE17 | `not_tendsto_decayRun_ceLoss_zero`, `exists_lt_frobeniusSq_decayRun_ceLoss_zero`, `decayRun_add`, `surjective_stack_decayRun`, `frequently_lt_frobeniusSq_decayRun_ceLoss_zero`; every real λ (WD8): `exists_tendsto_decayRun_of_forall_le`, `exists_tendsto_decayRun_isDecayedMin_of_forall_le` | Module `Scope/NoDecayRun`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`; the statements for every λ are in `BoundedRun` and `Convergent`, namespace `Transformer.Grokking.FlatSpectrum.Training`. "No limit" is `¬ Tendsto (decayRun (ceGrad A y) η 0 U₀ V₀) atTop (𝓝 (U, V))` for every pair `(U, V)`. "Some product has a positive margin" is `0 < margin A y X₀`, with `[Nonempty S] [Nontrivial C]`; `N` is `Fintype.card S`, and the conditions are `η * (2 * a * card S) < 1` and `η * (2 * a * card S + 2 * (card S * a ^ 2) * ρ) < 1`. Statement 3 is `∃ t, ρ < …` and `∃ᶠ t in atTop, ρ < …`; `ρ*(η)` and the `lim sup` are not stated. The two citations are not formalized. |
 | XE18 | `abs_nuclearNorm_sub_le`, `continuous_nuclearNorm`, `continuous_margin`, `continuousAt_margin_div_nuclearNorm`, `tendsto_inv_smul_of_tendsto_margin_div`; one phase: `phaseStep`, `phaseStep_pos`, `exists_tendsto_decayRun_phaseStep`, `exists_seq_of_forall_exists`; the run: `phaseRun`, `phaseProduct`, `exists_tendsto_margin_div_phaseProduct`; the direction: `exists_tendsto_inv_smul_phaseProduct`, `exists_tendsto_inv_smul_phaseProduct_codeProbe`, `exists_tendsto_inv_smul_phaseProduct_cubicKernel`, `exists_eventually_phaseProduct_unseen_wrong` | Modules `Scope/MarginContinuity`, `Scope/PhaseStep`, `Scope/PhasedRun` and `Scope/PhasedDirection`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. `phaseStep S C a lam W` is `η(λ, W)` with `N` and `\|C\|` as `Fintype.card S` and `Fintype.card C`. `phaseRun A y a lam T U₀ V₀ j` is the pair `W_j`, defined by recursion on `j` with the step `phaseStep S C a (lam j) W_j`, and `phaseProduct A y a lam T U₀ V₀ j` is `X_j`. The weight decays are any `lam : ℕ → ℝ` with `∀ j, 0 < lam j` and `Tendsto lam atTop (𝓝 0)`, and "there are lengths" is `∃ T : ℕ → ℕ`. Statement 2 is the conjunction of `Tendsto (fun j => nuclearNorm (X_j)) atTop atTop` and the limit of `margin A y (X_j) / nuclearNorm (X_j)`, Lean's quotient, which is `0` where the product is `0`. The Lipschitz bound is `\|‖X‖_S1 − ‖Y‖_S1\| ≤ √(card m * frobeniusSq (X − Y))`. `tendsto_inv_smul_of_tendsto_margin_div` is the statement about every sequence of matrices; its hypothesis on `Z₀` is that of XE10. For the code probes `a = 1`. "Decoded to the class of `−1`" is written as in XE15, at the cell `(1, 1)` of `phaseProduct`. `exists_seq_of_forall_exists` is the dependent choice of the phases. The bound `η_j ≤ λ_j / (8 s b)`, the numbers of the example's first phase and "the run has no limit" are not stated; the examples are the sample of XE3, `cubicKernel 3` with all nine cells seen, and the three seen cells of the kernel of signs, along `λ_j = 1 / (j + 1)` from the start `fromCols 1 0`, `fromCols 0 1`. |
+| XE19 | `signWeight`, `signWeight_pos`, `signWeight_le_two`, `signWeight_anti`, `signWeight_zero`, `mul_signWeight_le_two`; the system: `IsSignSystem`, `IsSignSystem.snd_nonneg`, `IsSignSystem.fst_pos`, `IsSignSystem.fst_mono`, `IsSignSystem.tendsto_fst_atTop`, `IsSignSystem.mul_le_mul_of_le`, `IsSignSystem.exists_lt`, `IsSignSystem.tendsto_sub_atTop`, `IsSignSystem.exists_forall_snd_le`; the run: `ceGrad_signProbe`, `decayStep_signProbe`, `pairing_one_mul_conjTranspose`, `frobeniusSq_add_frobeniusSq`, `signProduct`, `decayRun_signProbe_add`, `decayRun_signProbe_sub`, `isSignSystem_decayRun_signProbe`, `margin_signProbe`, `margin_signProduct`, `tendsto_modes_decayRun_signProbe`, `tendsto_frobeniusSq_decayRun_signProbe_atTop`; the limits: `tendsto_margin_signProduct_atTop`, `tendsto_ceLoss_signProduct`, `tendsto_margin_div_frobeniusSq_signProduct`, `tendsto_margin_div_signProduct`, `tendsto_inv_smul_signProduct`, `log_two_le_ceLoss_signProduct`, `tendsto_ceLoss_signProduct_iff` | Modules `Scope/SignSystem`, `Scope/SignGap`, `Scope/SignRun` and `Scope/SignRunLimit`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. The sample is `signProbe` with the label `fun _ => true`; the factors are `U₀ V₀ : Matrix (Fin 1) k ℂ` for any finite `k`, the run is `decayRun (ceGrad signProbe fun _ => true) η 0 U₀ V₀`, and `signProduct η U₀ V₀ t` is `x_t` as a `1 × 1` matrix. `Re x` is `pairing 1 X`. `IsSignSystem η a b` states the two recursions for sequences `a b : ℕ → ℝ`; the run satisfies it with `a t = frobeniusSq (U_t + V_t)` and `b t = frobeniusSq (U_t − V_t)`. Statements 1 to 3 have the hypotheses `0 < η` and `U₀ + V₀ ≠ 0`; statement 4 is `log_two_le_ceLoss_signProduct` for every real `η` and the equivalence `tendsto_ceLoss_signProduct_iff` for `0 < η`. The quotient `margin / nuclearNorm` is Lean's, which is `0` where the product is `0`. The geometric growth of the ratio while `a ≤ b` is a private lemma. The remark on the eigenvector `(1, 1)` is not stated. The examples are the start `fromCols 1 0`, `fromCols 0 1` with `η = 1/10` and the starts `(1, −1)` and `(1, 1)` of width one; the witness of the system is `signWitness`, the first mode from `a_0 = 1`, `b = 0` with the step `1`. |
 
 ## Convex answer-loss recall
 

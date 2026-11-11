@@ -10,9 +10,13 @@ public import Transformer.Grokking.FlatSpectrum.Training.Scope.PhaseStep
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.PhasedDirection
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.PhasedRun
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.RankStart
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignGap
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignRun
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignRunLimit
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignSegment
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignSegmentCore
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignSet
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignSystem
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SmoothLoss
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SquaredLogit
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SquaredLogitBall
@@ -64,7 +68,17 @@ dropped, or the part of the open statement that is proved.
   (`not_tendsto_decayRun_ceLoss_zero`), and it is outside every ball `‖U‖² + ‖V‖² ≤ ρ` with
   `η (2 a |S| + 2 |S| a² ρ) < 1` at infinitely many steps
   (`frequently_lt_frobeniusSq_decayRun_ceLoss_zero`). That its norm tends to infinity for one
-  fixed step, and the direction of its factors, are not proved.
+  fixed step, and the direction of its factors, are proved for one sample only (XE19).
+* No weight decay on one sample (XE13, XE19). For the sample of XE3 and XE17, a `1 × 1`
+  product read with the code `±1`, a step multiplies `U + V` by `1 + η w` and `U − V` by
+  `1 − η w`, with the weight `w = 2 / (1 + exp (2 Re x))` of the gradient
+  (`decayRun_signProbe_add`, `decayRun_signProbe_sub`). So for every step `η > 0` and every
+  start with `U₀ + V₀ ≠ 0`, at every width, the norm of the factors tends to infinity
+  (`tendsto_frobeniusSq_decayRun_signProbe_atTop`), the cross-entropy tends to `0`
+  (`tendsto_ceLoss_signProduct`), the margin for the nuclear norm tends to the largest margin
+  (`tendsto_margin_div_signProduct`) and the direction of the product to the product of
+  largest margin (`tendsto_inv_smul_signProduct`). From a start with `U₀ + V₀ = 0` the loss
+  stays at least `log 2` (`log_two_le_ceLoss_signProduct`). More than one sample is open.
 * One run with a decreasing weight decay (XE13, XE18). Let the weight decay pass through a
   positive sequence `λ_j → 0`, phase `j` making `T j` steps with `λ_j` and the step of XE3 for
   the ball of its start (`phaseRun`, `phaseStep`). From a start of full row rank there are

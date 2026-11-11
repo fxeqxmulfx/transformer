@@ -1,7 +1,7 @@
 import Transformer
 
 /-! Audit the scope items of `review/flat_spectrum.md`: WD12 and WD14 of *Training reaches the
-optimal fit*, XE14 to XE18 of *Training with cross-entropy*, the answers to the items
+optimal fit*, XE14 to XE19 of *Training with cross-entropy*, the answers to the items
 "Assumed or not covered" of WD11 and XE13
 (`Transformer.Grokking.FlatSpectrum.Training.Scope`). -/
 
@@ -139,3 +139,36 @@ optimal fit*, XE14 to XE18 of *Training with cross-entropy*, the answers to the 
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.decayedLoss_balanceIdentity
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.not_isDecayedMin_balanceWitness
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_balanced_stationary_not_minimal
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.signWeight_pos
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.signWeight_le_two
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.signWeight_anti
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.signWeight_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.mul_signWeight_le_two
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.IsSignSystem.snd_nonneg
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.IsSignSystem.fst_pos
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.IsSignSystem.fst_mono
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.IsSignSystem.tendsto_fst_atTop
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.IsSignSystem.mul_le_mul_of_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isSignSystem_signWitness
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.IsSignSystem.exists_lt
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.IsSignSystem.tendsto_sub_atTop
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.IsSignSystem.exists_forall_snd_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.ceGrad_signProbe
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.decayStep_signProbe
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.pairing_one_mul_conjTranspose
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_add_frobeniusSq
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.decayRun_signProbe_add
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.decayRun_signProbe_sub
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isSignSystem_decayRun_signProbe
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.margin_signProbe
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.margin_signProduct
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_modes_decayRun_signProbe
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_frobeniusSq_decayRun_signProbe_atTop
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.fromCols_one_zero_add_ne_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_margin_signProduct_atTop
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_ceLoss_signProduct
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_margin_div_frobeniusSq_signProduct
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_margin_div_signProduct
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_inv_smul_signProduct
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.log_two_le_ceLoss_signProduct
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_ceLoss_signProduct_iff
