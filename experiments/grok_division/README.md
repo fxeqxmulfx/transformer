@@ -37,6 +37,8 @@ target/release/grok-division bench 8     # the time of an update
 for seed in 0 1 2; do
   target/release/grok-division run adamw $seed runs/adamw-seed$seed --threads 8
   target/release/grok-division run adam $seed runs/adam-seed$seed --threads 8
+  target/release/grok-division run adamw $seed runs/adamw-answer-seed$seed --threads 8 \
+    --answer-only
 done
 # Amendment 2: the Adam runs go on from their update 100000 with subnormals flushed to zero
 for seed in 0 1 2; do
@@ -57,4 +59,106 @@ threads, and is then bit for bit the run that was not stopped. `runs/` is ignore
 
 ## Findings
 
-The runs are in progress; this section is written when they end.
+State on 2026-11-11: the cohorts `adamw` and `adamw --answer-only` are complete. The `adam`
+runs were stopped at updates 114 000, 131 000 and 100 000 (seeds 0, 1, 2) and continue as
+`adam --flush-from 100000` (Amendment 2); that cohort is in progress, and its outcome is
+added here when it reaches update 1 000 000. The numbers are those of `report` and of
+`history.jsonl`. Accuracy is the answer's, on the 4656 training or the 4656 held-out
+equations; a guess among the 97 residues has 1.0%.
+
+### AdamW with weight decay 1, 10⁵ updates: perfect held-out accuracy is reached and lost
+
+| Cohort | Seed | Training ≥ 99%, first | Held-out ≥ 99%, first | Every held-out answer right: evaluations (first to last) | Held-out ≥ 99%, last | Held-out in the window: least / mean / largest | Final training / held-out |
+| --- | ---: | ---: | ---: | --- | ---: | --- | --- |
+| `adamw` | 0 | 1500 | 3100 | 57 (3300 to 40 000) | 59 000 | 0.102 / 0.134 / 0.150 | 0.134 / 0.102 |
+| `adamw` | 1 | 1100 | 3200 | 62 (3600 to 47 000) | 47 000 | 0.025 / 0.094 / 0.116 | 0.150 / 0.106 |
+| `adamw` | 2 | 3600 | 4300 | 37 (5300 to 30 000) | 44 000 | 0.068 / 0.221 / 0.338 | 0.330 / 0.265 |
+| `adamw --answer-only` | 0 | 1200 | 3800 | 41 (4400 to 26 000) | 26 000 | 0.243 / 0.412 / 0.444 | 0.578 / 0.431 |
+| `adamw --answer-only` | 1 | 1000 | 3100 | 78 (3700 to 61 000) | 80 000 | 0.263 / 0.482 / 0.624 | 0.672 / 0.624 |
+| `adamw --answer-only` | 2 | 3000 | 9200 | none (best 0.9981) | 99 000 | 0.505 / 0.891 / 0.997 | 0.983 / 0.947 |
+
+Each run has 194 evaluations; the window is the 11 of updates 90 000 to 100 000.
+
+- By the protocol's classes all six runs are *not generalized within the budget*: no seed has
+  99% in its whole window, and none has every held-out answer right from some step on.
+- By the paper's two measures every run generalizes. The first step with 99% validation
+  accuracy (the paper's Figure 1, center) is between 3100 and 9200, and the best validation
+  accuracy within the budget (its Figure 2, right) is 1 in five runs and 0.9981 in the sixth.
+  The paper's measures do not ask that the accuracy is kept, and here it is not.
+- What is lost is the fit, not the generalization alone: training accuracy falls with the
+  held-out accuracy, to between 0.13 and 0.98 at the last update. The loss is not one event.
+  Between its first and its last evaluation with at least 99%, each run already has
+  evaluations below 90%, 8 to 31 of them among 79 to 140, and it recovers from these. After
+  the last such evaluation the largest held-out accuracy of the six runs is 0.153, 0.120,
+  0.981, 0.460, 0.974 and 0.947.
+- Training on the answer alone (the paper's wording, deviation D2) does not remove the
+  instability. Its seeds lose less: the window's mean is 0.41, 0.48 and 0.89 against 0.13,
+  0.09 and 0.22.
+
+What the checkpoints of `adamw`, seed 1, show on 512 training equations (`diagnose`):
+
+| Update | Accuracy | Readout norm | Gains of block 0: mean of the first, of the second | Divisors of the normalizations of block 0, of block 1 | Attention entropy of block 1 (largest 1.609) |
+| ---: | ---: | ---: | --- | --- | ---: |
+| 10 000 | 1.000 | 20.3 | 0.009, 0.036 | 0.200 and 0.022, 0.021 and 0.019 | 1.066 |
+| 40 000 | 0.930 | 21.4 | 0.005, 0.016 | 0.190 and 0.017, 0.026 and 0.012 | 1.041 |
+| 50 000 | 0.152 | 43.9 | 0.001, 0.001 | 0.356 and 0.009, 0.017 and 0.015 | 1.609 |
+| 100 000 | 0.148 | 39.9 | 0.002, −0.001 | 0.430 and 0.009, 0.017 and 0.010 | 1.609 |
+
+The code has one parameter group, so weight decay 1 also acts on the gains of the
+normalizations and on the embedding. Already at update 10 000, with every answer right, the
+gains of the first block are near 0.01, and three of the four normalizations divide by a
+standard deviation near 0.02, six times the floor `sqrt(1e-5) = 0.003` that their epsilon
+sets. After the loss of accuracy the readout's norm has doubled, the second gain of the first
+block is 0.001, and the attention of the second block is uniform over the five positions it
+sees. This describes the state before and after; it does not prove what causes the loss.
+
+### Adam without weight decay: the first 10⁵ updates
+
+- Training accuracy first reaches 99% at updates 800, 700 and 900 (seeds 0, 1, 2): the
+  paper's "close to perfect at < 10³ optimization steps".
+- Held-out accuracy at update 100 000 is 0.031, 0.112 and 0.030, with training accuracy at
+  least 0.999: the paper's "very little evidence of any generalization until 10⁵ steps". It
+  rises slowly: 0.024, 0.044 and 0.024 at update 50 000.
+- Whether it reaches the level of Figure 1 "close to 10⁶ steps" is what the cohort
+  `adam --flush-from 100000` measures. At update 170 000 its held-out accuracy is 0.045,
+  0.270 and 0.045.
+
+### The arithmetic decides the late trajectory
+
+- Single precision changes the loss (Amendment 1). Once the probabilities of the other
+  classes sum to less than half a unit in the last place of 1, PyTorch's `f32` loss is 0 and
+  the target's entry of its gradient is exactly 0. The first launch computed the softmax in
+  doubles and was stopped at 14 000 updates (`adam`: training accuracy 1, held-out 0.017 to
+  0.018) and 8000 (`adamw`); it belongs to no cohort, and the cohort `adam`, loss in doubles,
+  was not run.
+- Subnormal numbers slow the `adam` runs sevenfold (Amendment 2): 1000 updates take 43 s
+  before update 70 000 and more than 300 s at update 100 000, when 18 048 entries of each
+  Adam moment are subnormal. Flushing them to zero restores 31 s.
+- The flush is not neutral. From the same checkpoint of update 100 000, the run with gradual
+  underflow and the run with the flush differ at the first update in 31 entries of the
+  gradient of the readout, by at most one unit in the last place, through a rounding tie,
+  and 1000 updates later in their record. Side by side, held-out errors of 4656:
+
+  | Update | Seed 0, gradual | Seed 0, flushed | Seed 1, gradual | Seed 1, flushed |
+  | ---: | ---: | ---: | ---: | ---: |
+  | 100 000 | 4510 | 4510 | 4134 | 4134 |
+  | 101 000 | 4490 | 4482 | 4173 | 4128 |
+  | 110 000 | 4494 | 4486 | 4098 | 4037 |
+  | 114 000 | 4518 | 4483 | 4060 | 3995 |
+  | 131 000 | | 4468 | 3915 | 3861 |
+
+  The two arithmetics give different runs of the same slow rise. A seed's late trajectory
+  under `adam` is a property of the last bit of the arithmetic, not of the recipe and the
+  seed alone.
+
+### What the runs do not show
+
+- The trainer was not compared with a PyTorch run. The author's code was read, never
+  executed, and the random streams are not PyTorch's. The loss of accuracy under AdamW may be
+  the recipe's or an error of this transcription; the tests hold the optimizer to its
+  recurrence written out in doubles and the model to finite differences, not to the source's
+  outputs.
+- Three seeds, one machine, `f32`, a finite horizon. Seeds 1 and 2 have splits that the
+  source never draws (deviation D1).
+- A first crossing of 99% is not convergence: under AdamW every run crosses it and none
+  keeps it. No run here supports a claim that held-out accuracy tends to 1.
