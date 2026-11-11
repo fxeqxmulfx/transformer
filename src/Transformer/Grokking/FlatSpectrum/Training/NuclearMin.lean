@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.Training.MaxMargin
+public import Transformer.Grokking.FlatSpectrum.Training.MaxMarginLimit
 
 /-!
 # Trained products: the minimizers of `L + λ ‖·‖_S1`, without their factors
@@ -154,26 +154,21 @@ lemma exists_seq_isNuclearMin_ceLoss (A : S → C → Matrix m n ℂ) (y : S →
 /-! The witness: the linear loss `−Re X` of a `1 × 1` matrix with `λ = 1`, whose trained fit
 `1 · 1` gives the trained product `1`, and the sample `signProbe` of item XE3. -/
 
-example := exists_mul_eq_weightDecay_eq (1 : Matrix (Fin 1) (Fin 1) ℂ)
-
 /-- The product of the trained fit `1 · 1` is a trained product, and so a product again. -/
 example := (isDecayedMin_linear_one.isNuclearMin zero_le_one).exists_isDecayedMin zero_le_one
 
 example {X : Matrix (Fin 1) (Fin 1) ℂ} := isNuclearMin_iff
   (L := fun X : Matrix (Fin 1) (Fin 1) ℂ => pairing (-1) X) (X := X) zero_le_one
 
-/-- A statement about every sequence of trained fits, passed to the trained products. -/
-example {X : ℕ → Matrix (Fin 1) (Fin 1) ℂ}
-    (hX : ∀ j, IsNuclearMin (ceLoss signProbe fun _ => true) 1 (X j)) :
-    ∀ j, ceLoss signProbe (fun _ => true) (X j) ≤
-      ceLoss signProbe (fun _ => true) (nuclearNorm (X j) • (1 : Matrix (Fin 1) (Fin 1) ℂ)) :=
-  forall_seq_isNuclearMin (lams := fun _ => 1) (fun _ => zero_le_one)
+/-- A statement about every sequence of trained fits, passed to trained products. -/
+example : ∃ X : ℕ → Matrix (Fin 1) (Fin 1) ℂ, ∀ j, ceLoss signProbe (fun _ => true) (X j) ≤
+    ceLoss signProbe (fun _ => true) (nuclearNorm (X j) • (1 : Matrix (Fin 1) (Fin 1) ℂ)) := by
+  obtain ⟨X, hX⟩ := exists_seq_isNuclearMin_ceLoss signProbe (fun _ => true)
+    (lams := fun j => 1 / ((j : ℝ) + 1)) fun j => by positivity
+  exact ⟨X, forall_seq_isNuclearMin (fun j => by positivity)
     (P := fun X => ∀ j, ceLoss signProbe (fun _ => true) (X j) ≤
       ceLoss signProbe (fun _ => true) (nuclearNorm (X j) • (1 : Matrix (Fin 1) (Fin 1) ℂ)))
-    (fun _ _ h j => (h j).ceLoss_le_smul zero_le_one nuclearNorm_one_fin_one.le) hX
-
-example := exists_seq_isNuclearMin_ceLoss signProbe (fun _ => true)
-  (lams := fun j => 1 / ((j : ℝ) + 1)) fun j => by positivity
+    (fun _ _ h j => (h j).ceLoss_le_smul (by positivity) nuclearNorm_one_fin_one.le) hX⟩
 
 /-- Item XE5 for a trained product of the witness, against the competitor `1`. -/
 example : ∃ X : Matrix (Fin 1) (Fin 1) ℂ,
@@ -189,11 +184,14 @@ example : ∃ X : Matrix (Fin 1) (Fin 1) ℂ,
     h.ceLoss_le_smul zero_le_one nuclearNorm_one_fin_one.le,
     h.log_le_mul_exp zero_le_one nuclearNorm_one_fin_one.le le_gap_signProbe_one (by simp)⟩
 
-/-- The margin bound, for the trained products whose norm has passed `log (2κ) / μ'`. -/
-example {X : Matrix (Fin 1) (Fin 1) ℂ} (h : IsNuclearMin (ceLoss signProbe fun _ => true) 1 X)
-    (hB : Real.log (2 * ((Fintype.card (Fin 1) : ℝ) * (Fintype.card Bool - 1))) ≤
-      nuclearNorm X * 2) :=
-  h.sub_log_le_gap zero_le_one nuclearNorm_one_fin_one.le le_gap_signProbe_one hB
-    (s := 0) (c := false) (by simp)
+/-- The margin bound at a trained product of the witness whose norm has passed
+`log (2κ) / μ'`: the product of the trained fit of `exists_isDecayedMin_signProbe_log_le`. -/
+example : ∃ (lam : ℝ) (X : Matrix (Fin 1) (Fin 1) ℂ), 0 < lam ∧
+    IsNuclearMin (ceLoss signProbe fun _ => true) lam X ∧ nuclearNorm X * 2
+      - Real.log (2 * ((Fintype.card (Fin 1) : ℝ) * (Fintype.card Bool - 1))) ≤
+        gap signProbe (fun _ => true) X 0 false := by
+  obtain ⟨lam, U, V, hlam, h, hB, -⟩ := exists_isDecayedMin_signProbe_log_le
+  exact ⟨lam, _, hlam, h.isNuclearMin hlam.le, (h.isNuclearMin hlam.le).sub_log_le_gap hlam.le
+    nuclearNorm_one_fin_one.le le_gap_signProbe_one hB (by simp)⟩
 
 end Transformer.Grokking.FlatSpectrum.Training

@@ -130,10 +130,12 @@ example : ∃ (U : Matrix (Fin 2) (Fin 1) ℂ) (V : Matrix (Fin 1) (Fin 1) ℂ),
     h.pairing_codeProbe_eq_zero (cell' := cell₂) (s' := 0) one_pos (Or.inl fun _ => by simp) true,
     h.ceLoss_heldOut_eq one_pos (fun _ => Or.inl fun _ => by simp) _⟩
 
-example {U : Matrix (Fin 2) (Fin 1) ℂ} {V : Matrix (Fin 1) (Fin 1) ℂ}
-    (h : IsDecayedMin (ceLoss (codeProbe signCode cell₁) fun _ => true) 1 U V) :
-    (U * Vᴴ) 1 0 = 0 :=
-  h.apply_eq_zero_of_codeProbe one_pos (Or.inl fun _ => by simp)
+example : ∃ (U : Matrix (Fin 2) (Fin 1) ℂ) (V : Matrix (Fin 1) (Fin 1) ℂ),
+    IsDecayedMin (ceLoss (codeProbe signCode cell₁) fun _ => true) 1 U V ∧
+      (U * Vᴴ) 1 0 = 0 := by
+  obtain ⟨U, V, h⟩ := exists_isDecayedMin_ceLoss (k := Fin 1) (codeProbe signCode cell₁)
+    (fun _ => true) one_pos (Or.inr le_rfl)
+  exact ⟨U, V, h, h.apply_eq_zero_of_codeProbe one_pos (Or.inl fun _ => by simp)⟩
 
 /-- With no cell seen, the product of the limit of the run on the probes `0` is zero: every
 column is unseen. -/

@@ -170,11 +170,13 @@ example := exists_tendsto_decayRun_ceLoss_ne_smul (y := fun _ : Fin 1 => true) (
   (isFlat_one.not_isMinOn_of_ne_zero one_pos (Ω := ∅) (i := 0) (j := 0) (by simp) (by simp))
 
 /-- The same from the kernel not being a minimum of M. -/
-example {U : Matrix (Fin 1) (Fin 1) ℂ} {V : Matrix (Fin 2) (Fin 1) ℂ}
-    (h : IsDecayedMin (ceLoss (0 : Fin 1 → Bool → Matrix (Fin 1) (Fin 2) ℂ) fun _ => true) 1
-      U V) := h.ne_smul_of_not_isMinOn (Ω := ∅)
-  (fun X Y hXY => ceLoss_eq_of_seen (fun _ _ _ _ _ => rfl) hXY) one_pos
-  (isFlat_row_ones.not_isMinOn_of_ne_zero two_pos (Ω := ∅) (i := 0) (j := 0) (by simp)
-    (by simp)) two_ne_zero
+example : ∃ (U : Matrix (Fin 1) (Fin 1) ℂ) (V : Matrix (Fin 2) (Fin 1) ℂ),
+    U * Vᴴ ≠ (2 : ℝ) • Matrix.of ![![(1 : ℂ), 1]] := by
+  obtain ⟨U, V, h⟩ := exists_isDecayedMin_ceLoss (k := Fin 1)
+    (0 : Fin 1 → Bool → Matrix (Fin 1) (Fin 2) ℂ) (fun _ => true) one_pos (Or.inl le_rfl)
+  exact ⟨U, V, h.ne_smul_of_not_isMinOn (Ω := ∅)
+    (fun X Y hXY => ceLoss_eq_of_seen (fun _ _ _ _ _ => rfl) hXY) one_pos
+    (isFlat_row_ones.not_isMinOn_of_ne_zero two_pos (Ω := ∅) (i := 0) (j := 0) (by simp)
+      (by simp)) two_ne_zero⟩
 
 end Transformer.Grokking.FlatSpectrum.Training

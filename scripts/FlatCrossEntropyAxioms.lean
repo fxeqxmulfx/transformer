@@ -168,3 +168,4 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_inv_smul_codeProbe_iff_of_isNuclearMin
 #print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_inv_margin_smul_codeProbe_of_isNuclearMin
 #print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_inv_smul_cubicKernel_iff_of_isNuclearMin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_isDecayedMin_signProbe_log_le

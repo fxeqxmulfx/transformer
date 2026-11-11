@@ -123,11 +123,13 @@ example : ∃ U V : Matrix (Fin 1) (Fin 1) ℂ,
     frobeniusSq_signProbe_le (by norm_num)
   exact ⟨0, 0, h, h.mul_eq_zero_of_ceLoss zero_le_one frobeniusSq_signProbe_le (by norm_num)⟩
 
-example {U V : Matrix (Fin 1) (Fin 1) ℂ}
-    (h : IsDecayedMin (ceLoss signProbe fun _ => true) 3 U V) : U * Vᴴ = 0 :=
-  h.mul_eq_zero_of_lt (γ := 2) (ceLoss_first_order signProbe fun _ => true) zero_le_two
-    ((frobeniusSq_ceGrad_le zero_le_one frobeniusSq_signProbe_le 0).trans (by norm_num))
-    (by norm_num)
+example : ∃ U V : Matrix (Fin 1) (Fin 1) ℂ,
+    IsDecayedMin (ceLoss signProbe fun _ => true) 3 U V ∧ U * Vᴴ = 0 := by
+  have h := isDecayedMin_zero_ceLoss (Fin 1) (y := fun _ => true) (lam := 3) zero_le_one
+    frobeniusSq_signProbe_le (by norm_num)
+  exact ⟨0, 0, h, h.mul_eq_zero_of_lt (γ := 2) (ceLoss_first_order signProbe fun _ => true)
+    zero_le_two ((frobeniusSq_ceGrad_le zero_le_one frobeniusSq_signProbe_le 0).trans
+      (by norm_num)) (by norm_num)⟩
 
 example := frobeniusSq_mask_zero_sub_le Set.univ (1 : Matrix (Fin 1) (Fin 1) ℂ)
 

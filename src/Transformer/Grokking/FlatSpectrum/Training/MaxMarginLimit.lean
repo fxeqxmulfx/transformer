@@ -162,23 +162,23 @@ lemma exists_seq_isDecayedMin_signProbe : ∃ Us Vs : ℕ → Matrix (Fin 1) (Fi
 example := nuclearNorm_pos_of_margin_pos
   (two_pos.trans_le (le_margin (A := signProbe) (y := fun _ => true) le_gap_signProbe_one))
 
-example : ∃ Us Vs : ℕ → Matrix (Fin 1) (Fin 1) ℂ,
-    Tendsto (fun j => nuclearNorm (Us j * (Vs j)ᴴ)) atTop atTop := by
-  obtain ⟨Us, Vs, h⟩ := exists_seq_isDecayedMin_signProbe
-  exact ⟨Us, Vs, tendsto_nuclearNorm_atTop nuclearNorm_one_fin_one.le two_pos
-    le_gap_signProbe_one (fun j => by positivity) tendsto_one_div_add_atTop_nhds_zero_nat h⟩
-
-/-- Some trained fit of the witness has the norm that `IsDecayedMin.sub_log_le_gap` asks. -/
-example : ∃ (lam : ℝ) (U V : Matrix (Fin 1) (Fin 1) ℂ), 0 < lam ∧
-    IsDecayedMin (ceLoss signProbe fun _ => true) lam U V ∧
+/-- Some trained fit of the witness has the norm that `IsDecayedMin.sub_log_le_gap` asks, and
+so the margin bound of item XE5. -/
+lemma exists_isDecayedMin_signProbe_log_le : ∃ (lam : ℝ) (U V : Matrix (Fin 1) (Fin 1) ℂ),
+    0 < lam ∧ IsDecayedMin (ceLoss signProbe fun _ => true) lam U V ∧
       Real.log (2 * ((Fintype.card (Fin 1) : ℝ) * (Fintype.card Bool - 1))) ≤
-        nuclearNorm (U * Vᴴ) * 2 := by
+        nuclearNorm (U * Vᴴ) * 2 ∧
+      nuclearNorm (U * Vᴴ) * 2
+          - Real.log (2 * ((Fintype.card (Fin 1) : ℝ) * (Fintype.card Bool - 1))) ≤
+        gap signProbe (fun _ => true) (U * Vᴴ) 0 false := by
   obtain ⟨Us, Vs, h⟩ := exists_seq_isDecayedMin_signProbe
   obtain ⟨j, hj⟩ := ((tendsto_nuclearNorm_atTop nuclearNorm_one_fin_one.le two_pos
     le_gap_signProbe_one (fun j => by positivity) tendsto_one_div_add_atTop_nhds_zero_nat
     h).eventually_ge_atTop (Real.log (2 * ((Fintype.card (Fin 1) : ℝ) *
       (Fintype.card Bool - 1))) / 2)).exists
-  exact ⟨_, Us j, Vs j, by positivity, h j, (div_le_iff₀ two_pos).mp hj⟩
+  have hB := (div_le_iff₀ two_pos).mp hj
+  exact ⟨_, Us j, Vs j, by positivity, h j, hB, (h j).sub_log_le_gap (by positivity)
+    nuclearNorm_one_fin_one.le le_gap_signProbe_one hB (by simp)⟩
 
 example : ∃ Us Vs : ℕ → Matrix (Fin 1) (Fin 1) ℂ, ∀ᶠ j in atTop, (1 : ℝ) <
     margin signProbe (fun _ => true) (Us j * (Vs j)ᴴ) / nuclearNorm (Us j * (Vs j)ᴴ) := by

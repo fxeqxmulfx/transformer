@@ -137,12 +137,8 @@ example : ∃ U V : Matrix (Fin 1) (Fin 1) ℂ,
   exact ⟨U, V, h.log_le_mul_exp zero_le_one nuclearNorm_one_fin_one.le le_gap_signProbe_one
     (by simp)⟩
 
-/-- The margin bound, for the trained fits whose norm has passed `log (2κ) / μ'`. -/
-example {U V : Matrix (Fin 1) (Fin 1) ℂ}
-    (h : IsDecayedMin (ceLoss signProbe fun _ => true) 1 U V)
-    (hB : Real.log (2 * ((Fintype.card (Fin 1) : ℝ) * (Fintype.card Bool - 1))) ≤
-      nuclearNorm (U * Vᴴ) * 2) :=
-  h.sub_log_le_gap zero_le_one nuclearNorm_one_fin_one.le le_gap_signProbe_one hB
-    (s := 0) (c := false) (by simp)
+/-! The margin bound `IsDecayedMin.sub_log_le_gap` asks a trained fit whose norm has passed
+`log (2κ) / μ'`. The witness has one for a small weight decay: the example is in
+`MaxMarginLimit`, after the norms of its trained fits are shown to grow. -/
 
 end Transformer.Grokking.FlatSpectrum.Training
