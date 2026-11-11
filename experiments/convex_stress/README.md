@@ -40,9 +40,13 @@ This is an explicit causal sequence adapter for the channel model, whose
 earlier MQAR experiment used already parsed dictionaries. The successor
 banks expose generic associations; they are part of the inductive bias and
 must be included when interpreting recall results. The adapter is fixed,
-so all logits remain linear in the trained joint coefficients. The actual
-categorical feature count is `keys * values`; the flat-spectrum theorem
-bounds representation through that count, not benchmark accuracy.
+so all logits remain linear in the trained joint coefficients. At a fixed
+query the categorical feature count is `keys * values`. CC6's rank bound
+applies to kernels whose dictionary columns are held fixed across query
+rows. The causal adapter uses the whole prefix; we do not assume that each
+task's conventional two-input matrix has that same factorization. No
+nontrivial spectral error floor is measured for this suite. Capacity bounds
+and identification of missing answers remain separate requirements.
 
 ## Optimization and evidence
 
@@ -116,5 +120,115 @@ pooling and numeric penalties.
 
 ## Findings
 
-Scientific runs have not yet started. Preflight regenerated and verified all
-35 frozen task datasets. No benchmark result is claimed by the unit tests.
+All **210 cells completed**, including 18 explicit forward fit failures.
+There were no process failures, restarts, extra seeds or extended budgets.
+All dataset fingerprints matched, and all 210 replay checks passed: saved
+models reproduce every split's metrics; explicit failures reproduce the
+same failed query rows and search counts. Measured source commit `7d7bd1e6`
+has embedded SHA-256
+`4452feddd3eeb5cc82464029b2f733c4fd7209bf8a79156fe907ed3d3c19796e`.
+Evidence is preserved in `runs/stress-v1/` and `.kanban/artifacts/147/`.
+
+| Learner | Short: primary exact sequences >=99% | Long: primary exact sequences >=99% |
+| --- | ---: | ---: |
+| Frank-Wolfe | 9 / 75 | 0 / 30 |
+| Forward-only | 9 / 75 | 0 / 30 |
+
+The three successful tasks are the two Boolean AND tasks and linear
+transport, each at 100% in all seeds after the first full data pass. Primary
+accuracies are identical across all three seeds for each task/arm. This
+agreement tests summation order, not different data or random initializations.
+The Boolean primary novel splits contain only seven and eight examples;
+their larger auxiliary splits remain in the saved endpoint reports.
+
+The full task accounting below gives primary exact-sequence percentages.
+Each entry applies to all three seeds. **No fit** means that the direct
+learner returned no model; it is a failed benchmark cell, not a measured
+zero-percent classifier. Arithmetic rows are retained because they belong
+to the requested frozen suite, not because arithmetic features were added.
+
+| Tier | Task | Frank-Wolfe, % | Forward-only, % |
+| --- | --- | ---: | ---: |
+| Short | suite-boolean-and-shift | 100 | 100 |
+| Short | suite-boolean-and-random | 100 | 100 |
+| Short | power-division-p97-k3 | 0.9450 | 0.9450 |
+| Short | arithmetic-cube-plus | 1.0840 | 1.0840 |
+| Short | power-division-p193-k5 | 0.4642 | 0.4642 |
+| Short | power-division-p193-k2 | 0.4642 | 0.4642 |
+| Short | power-division-p97-k2 | 0.9450 | 0.9450 |
+| Short | arithmetic-square-times | 2.0191 | 2.0191 |
+| Short | arithmetic-sub | 0.8927 | 0.8927 |
+| Short | arithmetic-mul | 2.0191 | 2.0191 |
+| Short | arithmetic-add | 0.9564 | 0.9564 |
+| Short | gpt-probe-key-value-binding | 86.1328 | 86.1328 |
+| Short | power-division-p193-k3 | 0.4642 | 0.4642 |
+| Short | division-p193 | 0.4642 | 0.4642 |
+| Short | basis-depth-easy | 42.9688 | No fit |
+| Short | arithmetic-square-sum | 1.9554 | 1.9554 |
+| Short | gpt-probe-branch-amplitudes | 0 | No fit |
+| Short | power-division-p97-k5 | 0.9450 | 0.9450 |
+| Short | arithmetic-half-sum | 0.9564 | 0.9564 |
+| Short | arithmetic-sum-square | 0.9564 | 0.9564 |
+| Short | basis-depth-hard | 20.3125 | No fit |
+| Short | arithmetic-affine-product | 2.3804 | 2.3804 |
+| Short | arithmetic-perm-add | 1.0202 | 1.0202 |
+| Short | gpt-probe-linear-transport | 100 | 100 |
+| Short | arithmetic-div | 0.9450 | 0.9450 |
+| Long | arithmetic-abs-diff-blind | 2.8905 | 2.8905 |
+| Long | arithmetic-abs-diff | 0.8927 | 0.8927 |
+| Long | arithmetic-sum-pow4 | 0.9564 | 0.9564 |
+| Long | basis-parity20 | 46.8310 | No fit |
+| Long | basis-parity16 | 54.1401 | No fit |
+| Long | arithmetic-sum-cube | 0.9564 | 0.9564 |
+| Long | basis-recall-easy | 50.0000 | 50.0000 |
+| Long | recurrence-fibonacci-k1-c2-lgt | 1.1267 | 1.1267 |
+| Long | associative-divisor-n2-l1-w0 | 53.8660 | 53.8660 |
+| Long | basis-parity24 | 50.0000 | No fit |
+
+There are 87 exactly realizable cells per learner: both reach 100% training
+accuracy and the global ordinary-CE lower bound there, but only nine pass
+the held-out threshold. The other 18 direct cells fail consistency: depth
+easy/hard, branch amplitudes, and parity16/20/24. Frank-Wolfe continues on
+these data. Depth-hard and parity16/20 stop at the documented numerical
+FW-gap tolerance after four/two passes; these are floating-point
+optimality diagnostics, not exact Lean certificates. Depth-easy, branch
+amplitudes and parity24 exhaust 16, 937 and 80 full passes respectively.
+Their seed-zero mean FW gaps are approximately `4.33e-4`, `8.92e-6`, and
+`1.65e-5`; they are not reported as converged. The maximum measured channel
+constraint violation across returned models is `1.12e-15`.
+
+Recall exposes a concrete sharing problem. Both arms fit their entire
+training sets. Key/value binding reaches 86.13% on 512 held-out queries;
+long recall reaches 91.82% token accuracy but only 50% complete sequences
+of eight answers. Its auxiliary test split reaches 47.27% exact sequences.
+The post-run `check_recall.jq` check verifies that every learned query routes
+to its own visible successor and that every stored token-value row copies
+the correct value. However, decoders are separate per query: only 888 of
+1024 possible query/value records occur in short recall, and 59871 of
+65536 occur in long recall. Unobserved records output the frozen default
+class zero. Thus correct routing and exact training fit leave a substantial
+gap on new query/value combinations. These counts explain why the earlier
+small, fully covered MQAR experiment did not predict this suite's outcome.
+
+The feature-coverage diagnostic also rules out the O2 span certificate on
+every held-out recall input. This is a sufficient-certificate limitation,
+not an impossibility theorem for recall: a representation that shares
+value decoding across equivalent queries could use other observations.
+Such sharing can be imposed by affine parameter constraints, preserving
+convexity, but it changes the model and must be tested in a separate run.
+The poor depth/parity/branch outcomes additionally motivate richer sequence
+features; adding parameters alone is not an identification argument.
+
+The post-run structural check is reproducible, for example:
+
+```sh
+jq -e -f experiments/convex_stress/check_recall.jq \
+  experiments/convex_stress/runs/stress-v1/frank_wolfe/basis-recall-easy/seed0/channel.json
+```
+
+Validation includes 11 native tests, formatting, clippy with warnings
+denied, every frozen dataset hash, all 210 saved-outcome replays, and all
+six recall structure checks. Runs used four native CPU workers on a shared
+56-thread Xeon E5-2680 v4 host with Rust 1.99.1. No transformer was retrained
+in this cohort, and its different optimizer/observation schedule precludes
+a matched training-time comparison.

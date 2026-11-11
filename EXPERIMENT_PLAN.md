@@ -4258,7 +4258,7 @@ All timing observations and saved models remain local and ignored.
 
 ## Convex channels on the GPT short/long stress suite (2026-11-11)
 
-**Status: native implementation and preflight validated; frozen runs next.**
+**Status: all 210 cells complete; saved-outcome replay passes.**
 The user requested the existing short/long suite and explicitly added the
 forward-only learner. `experiments/convex_stress/protocol.json` fixes both
 arms, all 35 tasks and seeds 0,1,2, the shared causal adapter, CE optimizer
@@ -4268,6 +4268,15 @@ copied unchanged from diff-gpt `3555299`. The full-batch observation schedule
 and optimizer differ from the original transformer; no matched speed or
 promotion claim is made. No feature tuning or budget extensions after runs.
 All generated evidence remains local and ignored under the root's `runs/`.
+
+Both learners pass 9/75 short and 0/30 long cells. The 87 realizable cells
+per arm fit training exactly, yet most fail the held-out threshold. The
+direct learner explicitly rejects 18 inconsistent cells; iterative training
+continues and retains every numerical stop or exhausted budget. Short recall
+is 86.13% accurate; long recall is 91.82% per token and 50% per sequence.
+Saved models confirm correct lookup routes but missing query/value decoder
+records. A separate minibatch comparison was requested after these runs;
+the full-batch cohort remains frozen.
 
 ## Persistent forward-only minibatches on MQAR (2026-11-11)
 
