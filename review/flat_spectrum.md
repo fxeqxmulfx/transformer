@@ -8889,6 +8889,14 @@ Then the run from every start in the ball `‖W_0‖² ≤ ρ` converges, whatev
 rank, and its limit is stationary, `M W = 0`. From a start of full row rank the limit is a
 decayed minimum (WD5 with WD6). No hypothesis on convergence remains.
 
+The sign of λ enters this proof once, through WD6 in fact 3. Facts 1 and 2 hold for every
+real λ. So for every real λ, with `‖G(X)‖ ≤ γ` and the quadratic model for
+`‖X‖, ‖Y‖ ≤ ρ/2` and a step `η (λ + γ + 2 s ρ) ≤ 1`: a run that stays in the ball
+`‖W_t‖² ≤ ρ` converges, and its limit is stationary. If moreover `η (|λ| + γ) < 1` and the
+start has full row rank, the limit is a decayed minimum for that λ (WD5, whose proof does
+not use the sign of λ either, with the step matrices of WD6). So where no decayed minimum
+exists, such a run leaves the ball. XE17 applies this at λ = 0.
+
 The squared loss on Ω with `‖K‖ ≤ κ` has `γ = ρ/2 + κ`, `b = κ²/4` and `s = 1`: it exceeds
 its linear model by `½ ‖P_Ω(Y − X)‖² ≤ ½ ‖Y − X‖²`. So for it the conditions are
 `κ² ≤ λ ρ` and
@@ -9156,7 +9164,7 @@ with it the sublevel sets of the weight-decayed loss are compact.
 | WD5 | `lift_mul_stack_eq_zero_of_tendsto_decayRun`, `lift_posSemidef_of_tendsto_decayRun`, `isDecayedMin_of_tendsto_decayRun`, `add_nuclearNorm_le_of_tendsto_decayRun`, `weightDecay_eq_nuclearNorm_of_tendsto_decayRun`, `decayRun_linear`, `tendsto_decayRun_linear` | Convergence is `Tendsto (decayRun G η λ U₀ V₀) atTop (𝓝 (U, V))`. The example is the run above, with the start `stack_fromCols_one`. |
 | WD6 | `one_sub_smul_lift_posDef`, `frobeniusSq_mul_conjTranspose_le`, `frobeniusSq_lift_mul_stack_le`, `frobeniusSq_decayStep_le`, `frobeniusSq_decayRun_le`, `one_sub_smul_lift_posDef_of_ball`, `isDecayedMin_of_tendsto_decayRun_of_ball`; squared loss: `frobeniusSq_mask_sub_le`, `neg_le_pairing_mask_sub`, `neg_le_pairing_mask_sub_of_le`, `isDecayedMin_fitLoss_of_tendsto_decayRun`, `decayRun_mask_empty` | The bounds are stated at the matrices with `frobeniusSq X ≤ (ρ / 2) ^ 2`; `‖G X‖ ≤ γ` is `frobeniusSq (G X) ≤ γ ^ 2` with `γ ≥ 0`, and `‖K‖ ≤ κ` is `frobeniusSq K ≤ κ ^ 2` with `κ ≥ 0`. The example run of the two last theorems has no cell seen, where the run is `(1 − η λ)^t (U_0, V_0)`. |
 | WD7 | `mask`, `fitLoss`, `fitLoss_first_order`, `fitLoss_eq_zero_iff`, `continuous_mask_sub`, `IsDecayedMin.fitLoss_add_le`, `IsDecayedMin.nuclearNorm_le`, `IsDecayedMin.fitLoss_le`, `isOptimalFit_of_tendsto`, `exists_nuclearNorm_add_le_of_not_isMinOn`, `exists_nuclearNorm_add_le_of_singularValues_eq`, `tendsto_of_fitLoss_tendsto_zero`, `tendsto_mul_conjTranspose_of_forall_isMinOn`, `tendsto_mul_conjTranspose_vecMulVec_of_connected`, `isDecayedMin_one_sub`, `isDecayedMin_shrink`; the subsequence of 1: `exists_subseq_tendsto_of_frobeniusSq_le`, `IsDecayedMin.weightDecay_le_nuclearNorm`, `exists_subseq_tendsto_isOptimalFit`, `exists_isOptimalFit`; the sign change: `frobeniusSq_neg`, `eq_zero_of_neg_eq`, `decayedLoss_neg`, `IsDecayedMin.neg`, `isOptimalFit_neg`, `exists_isOptimalFit_ne`, `not_tendsto_ite_even_neg`, `exists_seq_isDecayedMin_not_tendsto`, `isOptimalFit_one`, `exists_seq_isDecayedMin_one_not_tendsto` | "The only minimizer of M" is D.2's form, `∀ X ∈ S, (IsMinOn ‖·‖_S1 S X ↔ X = K)`. In 1 the factors have a fixed width `r`; in 2 the bound holds for every width; in 3 they have any fixed finite column type. Limits run over sequences `λ_j → 0⁺`. The subsequence is a strictly increasing `φ : ℕ → ℕ`, and the compact set is that of the factors with entries of modulus at most `√(2 ‖K‖_S1)`. "Every width `r ≥ min(m, n)`" is `Fintype.card m ≤ r ∨ Fintype.card n ≤ r`. The fits `((−1)^j U_j, (−1)^j V_j)` are `if Even j then Us j else -Us j` and the same for `Vs`; "do not converge" is `∀ W, ¬ Tendsto Us' atTop (𝓝 W)`, for the first factor; "not the only one" gives an optimal fit with `U' ≠ U`. `IsDecayedMin.neg` holds for every loss and every weight decay. |
-| WD8 | `factors`, `flatten`, `factors_flatten`, `flatten_factors`, `continuous_factors`, `continuous_flatten`, `norm_sq_eq_frobeniusSq_factors`, `real_inner_eq_pairing_factors`, `analyticAt_norm_sq`, `flatLoss`, `productVector`, `analyticAt_productVector`, `analyticAt_flatLoss`, `hasGradientAt_flatLoss`, `gradient_flatLoss`, `factors_gradientStep`, `norm_gradient_flatLoss_sq`, `decayedLoss_sub_le`, `pairing_one_sub_smul`, `frobeniusSq_step_mul_sub_le`, `decayedLoss_decayStep_add_le`, `decayedLoss_decayStep_add_le_of_ball`, `decayedLoss_decayRun_succ_add_le`, `norm_apply_le_sqrt_frobeniusSq`, `isCompact_setOf_frobeniusSq_add_le`, `factors_iterate_gradientStep`, `exists_tendsto_decayRun`, `exists_tendsto_decayRun_isDecayedMin`; squared loss: `fitLoss_eq_add`, `fitLoss_le_add`, `analyticAt_fitLoss`, `exists_tendsto_decayRun_fitLoss`, `exists_tendsto_decayRun_fitLoss_isDecayedMin`, `exists_isDecayedMin_fitLoss`, `exists_tendsto_decayRun_nuclearNorm_add_le` | The factor space is `EuclideanSpace ℂ ((m ⊕ n) × k)` with its real inner product. Real-analytic in the entries is `∀ y, AnalyticAt ℝ (fun y : EuclideanSpace ℂ (m × n) => L (of fun i j => y (i, j))) y`; the three bounds are stated at the matrices with `frobeniusSq X ≤ (ρ / 2) ^ 2`. Łojasiewicz's theorem and the convergence theorem are `exists_isLojasiewiczAt_of_analyticAt` and `tendsto_of_isLojasiewiczAt_of_le_sub` of `Transformer.Landscape.SaddleAvoidance`, used with `κ = 1/2`. In the existence corollary `κ = ‖K‖_S2² + 1`, `ρ = max (‖W_0‖²) (κ²/λ)` and η is the smaller of the two bounds. |
+| WD8 | `factors`, `flatten`, `factors_flatten`, `flatten_factors`, `continuous_factors`, `continuous_flatten`, `norm_sq_eq_frobeniusSq_factors`, `real_inner_eq_pairing_factors`, `analyticAt_norm_sq`, `flatLoss`, `productVector`, `analyticAt_productVector`, `analyticAt_flatLoss`, `hasGradientAt_flatLoss`, `gradient_flatLoss`, `factors_gradientStep`, `norm_gradient_flatLoss_sq`, `decayedLoss_sub_le`, `pairing_one_sub_smul`, `frobeniusSq_step_mul_sub_le`, `decayedLoss_decayStep_add_le`, `decayedLoss_decayStep_add_le_of_ball`, `decayedLoss_decayRun_succ_add_le`, `norm_apply_le_sqrt_frobeniusSq`, `isCompact_setOf_frobeniusSq_add_le`, `factors_iterate_gradientStep`, `exists_tendsto_decayRun`, `exists_tendsto_decayRun_isDecayedMin`; every real λ: `decayedLoss_decayRun_succ_add_le_of_forall_le`, `exists_tendsto_decayRun_of_forall_le`, `exists_tendsto_decayRun_isDecayedMin_of_forall_le`; squared loss: `fitLoss_eq_add`, `fitLoss_le_add`, `analyticAt_fitLoss`, `exists_tendsto_decayRun_fitLoss`, `exists_tendsto_decayRun_fitLoss_isDecayedMin`, `exists_isDecayedMin_fitLoss`, `exists_tendsto_decayRun_nuclearNorm_add_le` | The factor space is `EuclideanSpace ℂ ((m ⊕ n) × k)` with its real inner product. Real-analytic in the entries is `∀ y, AnalyticAt ℝ (fun y : EuclideanSpace ℂ (m × n) => L (of fun i j => y (i, j))) y`; the three bounds are stated at the matrices with `frobeniusSq X ≤ (ρ / 2) ^ 2`. Łojasiewicz's theorem and the convergence theorem are `exists_isLojasiewiczAt_of_analyticAt` and `tendsto_of_isLojasiewiczAt_of_le_sub` of `Transformer.Landscape.SaddleAvoidance`, used with `κ = 1/2`. The statements `…_of_forall_le` (modules `BoundedRun` and `Convergent`) have no hypothesis on `lam`; "the run stays in the ball" is `∀ t, frobeniusSq (decayRun G η lam U₀ V₀ t).1 + frobeniusSq (decayRun G η lam U₀ V₀ t).2 ≤ ρ`, and `exists_tendsto_decayRun` is their instance with the ball of WD6. In the existence corollary `κ = ‖K‖_S2² + 1`, `ρ = max (‖W_0‖²) (κ²/λ)` and η is the smaller of the two bounds. |
 | WD9 | `isCompact_setOf_flatLoss_le`, `exists_pos_forall_sublevel`, `exists_pos_tendsto_decayRun`, `exists_pos_tendsto_decayRun_isDecayedMin`, `exists_isDecayedMin`; example: `expLoss`, `expGrad`, `pairing_expGrad`, `expLoss_first_order`, `continuous_expGrad`, `analyticAt_expLoss`, `expLoss_nonneg`, `exists_pos_tendsto_decayRun_expLoss_isDecayedMin`, `exists_isDecayedMin_expLoss` | Bounded below is `∀ X, l₀ ≤ L X`. The level bounds the start, `decayedLoss L λ U₀ V₀ ≤ c`, and `η₀` depends on `L`, `G`, λ, `c` and the width. `exists_pos_forall_sublevel` is stated on the factor space, with the null set for Lebesgue measure `volume`; it needs no convexity and uses `exists_pos_measure_sublevel_tendsto_strictSaddle_eq_zero`, `exists_pos_tendsto_of_mapsTo` and `exists_isLojasiewiczAt_of_analyticOnNhd` of `Transformer.Landscape.SaddleAvoidance`. |
 | WD10 | `conjTranspose_mul_self_unit`, `pairing_mul_conjTranspose_unit`, `inner_fderiv_gradient_flatLoss`, `lift_mul_stack_eq_zero_of_gradient_eq_zero`, `surjective_mulVec_of_injective`, `frobeniusSq_conjTranspose_mul_of_surjective`, `lift_posSemidef_of_pairing_sq_le`, `lift_posSemidef_of_injective`, `IsDecayedMin.isLocalMin`, `gradient_eq_zero_and_not_isStrictSaddle_of_isLocalMin`, `isDecayedMin_of_not_isStrictSaddle`, `isDecayedMin_of_not_isStrictSaddle_of_card_le`, `isDecayedMin_of_isLocalMin`, `isDecayedMin_of_isLocalMin_of_card_le`, `exists_pos_ae_tendsto_not_isStrictSaddle`, `exists_pos_ae_tendsto_decayRun`, `exists_pos_ae_tendsto_decayRun_isDecayedMin`, `exists_isDecayedMin_of_card_le`, `exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le`; counterexample: `frobeniusSq_one_fin_two`, `le_decayedLoss_width_one`, `decayedLoss_sqrt_smul_one`, `not_isDecayedMin_width_one` | Dependent columns is `¬ Function.Injective (stack U V).mulVec`; width `k ≥ min(m, n)` is `Fintype.card m ≤ Fintype.card k ∨ Fintype.card n ≤ Fintype.card k`. A strict saddle is `IsStrictSaddle (flatLoss L λ) x` of `Transformer.Landscape.SaddleAvoidance`, where `not_isStrictSaddle_of_isLocalMin` is added. The Hessian identity is `⟪S Zᴴ, ∇²F(W) (S Zᴴ)⟫ = ‖Z‖² ⟨S, M S⟩` for one-column `Z`, `A`, `B` and `S = [A; B]`, read off the exact formula for the gradient along the line. `lift_posSemidef_of_injective` holds for any matrix `G` with `M [U; V] = 0`, not only `G (U Vᴴ)`. A local minimum is `IsLocalMin (fun p => decayedLoss L λ p.1 p.2) (U, V)` on the pairs of matrices of one width. Almost every is `∀ᵐ x` for `volume` on the factor space, with the run started at `factors x`; `η₀` is that of `exists_pos_forall_sublevel`. The lower bound for width one holds for every λ ≥ 0 and the value at width two for every λ ≤ 1. |
 | WD12 | `linear_first_order`, `pairing_neg_one_smul_one`, `exists_linear_lt`, `analyticAt_linear`, `decayRun_linear_decay`, `decayRun_linear_add`, `tendsto_frobeniusSq_decayRun_linear_atTop`, `not_tendsto_decayRun_linear`, `decayedLoss_linear_smul`, `not_isDecayedMin_linear` | Module `Scope/LinearDiverge`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. The loss is `fun X => pairing (-1) X` on `Matrix m m ℂ` and its gradient is the constant `fun _ => -1`. "Not bounded below" is `∀ c, ∃ X, pairing (-1) X < c`, for a nonempty `m`. "The norm tends to infinity" is `Tendsto (fun t => frobeniusSq U_t + frobeniusSq V_t) atTop atTop`, and "no limit" is `¬ Tendsto … (𝓝 W)` for every pair `W`. Real-analytic is in the form of WD8. The start of the example is `fromCols 1 0`, `fromCols 0 1`; its full row rank and the positive definite step matrix are two further examples. |
@@ -12567,16 +12575,22 @@ on the cross-entropy of logits that are real-linear in the product:
   `0 < λ ≤ √c`: a matrix is a trained product exactly when it has the real parts of `t(λ) K`
   and at most its nuclear norm; for the kernel `[[1, 1], [−1, 1]]` the trained products are
   the segment `t(λ) K + i s [[1, −1], [1, 1]]`, `|s| ≤ t(λ)`, and the run of XE3 from a start
-  of full row rank ends at a factorization of one of its points (XE16).
+  of full row rank ends at a factorization of one of its points (XE16);
+- without weight decay, on samples that some product classifies with a positive margin and
+  from stacked factors of full row rank: the run has no limit when `2 a N η < 1`, and it is
+  outside every ball `‖U‖² + ‖V‖² ≤ ρ` with `η (2 a N + 2 N a² ρ) < 1` at infinitely many
+  steps (XE17).
 
 Assumed or not covered:
 
 - No weight decay. For λ = 0 the cross-entropy of separable data has no minimum and no
   trained fit (XE6, statement 1), and the sublevel sets of WD9 are not compact: without weight
   decay a sublevel set on the factor space that contains a factorization of `0` contains
-  `(U, 0)` for every `U`. These three facts are proved. The run without weight decay and its
-  implicit bias are not treated. The limit λ → 0⁺ of XE6 and XE9 runs over trained fits, not
-  over one run with a decreasing λ.
+  `(U, 0)` for every `U`. These three facts are proved. Of the run without weight decay XE17
+  proves that it has no limit and that it does not settle in a ball where its step is
+  admissible. That its norm tends to infinity for one fixed step, that its loss tends to
+  `0`, and its implicit bias, the direction of the factors, are not treated. The limit
+  λ → 0⁺ of XE6 and XE9 runs over trained fits, not over one run with a decreasing λ.
 - The direction when several products of the unit ball have the largest margin. XE10 gives
   the limit points of `X_j / ‖X_j‖_S1`; that it converges is proved only when the product of
   largest margin is unique. XE11 proves that for a mirrored code of gap `0 < g < 2` with
@@ -12803,6 +12817,58 @@ kernel `K` show the labels, with every cell seen once, and let `0 < λ ≤ √c`
 Not covered: which point of the segment a run from factors that are not real reaches; the
 set of statement 1 in closed form for a flat kernel larger than `2 × 2`.
 
+### XE17. The run without weight decay
+
+By XE6, for λ = 0 the cross-entropy of samples that some product classifies with a positive
+margin has no minimum, and no factorization is a trained fit. This item is about the run of
+gradient descent on the factors with λ = 0, `W_{t+1} = (1 − η M_t) W_t` with
+`M_t = [[0, G_t], [G_tᴴ, 0]]`. Let some product have a positive margin, let the probes have
+norm at most `a`, let `N` be the number of samples, and let the start be stacked factors of
+full row rank.
+
+1. No limit. If `2 a N η < 1`, the run converges to no pair of factors.
+
+   By XE2 `‖G_t‖ ≤ 2 a N`, so the step matrices `1 − η M_t` are positive definite (WD6, where
+   the condition is `η (|λ| + ‖G‖) < 1`). The proof of WD5 does not use the sign of λ: a
+   limit of the run would be a decayed minimum for λ = 0, and there is none (XE6).
+
+2. A run that stays in a ball ends at a trained fit (WD8, for every real λ). With the
+   constants `γ = 2 a N` and `s = N a²` of XE2, which hold at every matrix: if
+   `η (2 a N + 2 N a² ρ) ≤ 1`, a run that stays in the ball `‖U‖² + ‖V‖² ≤ ρ` converges, and
+   under statement 1's condition its limit is a decayed minimum for λ = 0.
+
+3. Growth. If `η (2 a N + 2 N a² ρ) < 1`, then `‖U_t‖² + ‖V_t‖² > ρ` at some step, and at
+   infinitely many steps.
+
+   A run that stayed in the ball would end at a trained fit by statement 2, and there is
+   none. For infinitely many steps: every step multiplies the stack by the invertible
+   matrix `1 − η M_t`, so the run keeps full row rank, and its tail from any step is the run
+   from the factors of that step; the first part applies to it.
+
+   So for a step η the run does not settle in the ball of any squared radius
+
+   ```
+   ρ < ρ*(η) = (1/η − 2 a N) / (2 N a²),
+   ```
+
+   and `lim sup ‖W_t‖² ≥ ρ*(η)`, a bound that grows as `1/η` when the step shrinks.
+
+Example: one sample of two classes with the probes `±1` of a `1 × 1` product (the sample of
+XE3), where `a = 1`, `N = 1` and the product `1` has the margin `2`. With η = 1/10 the run
+from `U_0 = [1 0]`, `V_0 = [0 1]` has no limit, and `‖W_t‖² > 2` at infinitely many steps:
+`(1/10) (2 + 2 · 2) < 1`. Here `ρ*(η) = 4`.
+
+Not covered. For one fixed step: that the norm of the factors tends to infinity, that the
+loss tends to `0`, and the direction of the factors, the implicit bias. Outside the ball of
+squared radius `ρ*(η)` the quadratic model of XE2 no longer gives a decrease of the loss:
+its constant on the factor space grows with the norm of the factors, and the proof of a
+decrease there needs the smaller curvature of the cross-entropy where its loss is small.
+For the gradient flow of a homogeneous model from a point that classifies the samples, the
+growth of the norm and the convergence of the direction to a stationary point of the margin
+problem in the parameters are theorems of Lyu and Li (2020) and of Ji and Telgarsky (2020);
+the pure factorization is homogeneous of degree two in its factors. They are not formalized
+here, and they are not about the largest margin for the nuclear norm of XE6.
+
 ### Lean
 
 `src/Transformer/Grokking/FlatSpectrum/Training/`, modules `Logits`, `CrossEntropy`,
@@ -12831,6 +12897,7 @@ set of statement 1 in closed form for a flat kernel larger than `2 × 2`.
 | XE14 | `hasDerivAt_comp_add_smul_of_analytic`, `gradient_flatLoss_of_analytic`, `factors_iterate_gradientStep_of_analytic`, `exists_pos_tendsto_decayRun_of_analytic`; the logits `±(Re x)²`: `sqWeight`, `sqWeight_nonneg`, `sqWeight_le_half`, `sqLogitLoss`, `sqLogitGrad`, `sqLogitLoss_eq_crossEntropy`, `sqLogitLoss_nonneg`, `sqLogitLoss_zero`, `sqLogitGrad_zero`, `pairing_sqLogitGrad`, `hasDerivAt_sqLogitLoss`, `continuous_sqLogitGrad`, `analyticAt_sqLogitLoss`, `exists_pos_tendsto_decayRun_sqLogit`, `sqLogitLoss_lt_zero`, `not_first_order_sqLogit`, `frobeniusSq_sqLogitGrad_le`, `neg_le_pairing_sqLogitGrad`; the ball: `tendsto_zero_of_tendsto_frobeniusSq`, `re_sq_le_frobeniusSq`, `frobeniusSq_sqLogitGrad_mul_le`, `frobeniusSq_decayStep_sqLogit_le`, `frobeniusSq_decayRun_sqLogit_le`, `tendsto_decayRun_sqLogit_zero`, `one_sub_smul_lift_posDef_sqLogit`, `not_isDecayedMin_sqLogit_zero`, `exists_tendsto_decayRun_sqLogit_not_isDecayedMin`; in `Training`: `hasDerivAt_decayedLoss_of_hasDerivAt`, `hasGradientAt_flatLoss_of_hasDerivAt` | Modules `Scope/SmoothLoss`, `Scope/SquaredLogit`, `Scope/SquaredLogitBall` and `Scope/SquaredLogitRun`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. "`G` is the gradient of `L`" is the hypothesis `∀ X H, HasDerivAt (fun t : ℝ => L (X + t • H)) (pairing (G X) H) 0`; real-analytic and bounded below are the hypotheses of WD9, and the conclusion of statement 1 is that of `exists_pos_tendsto_decayRun`. The two lemmas in `Training` are the parts of `hasDerivAt_decayedLoss` and `hasGradientAt_flatLoss` that do not use convexity. The loss is `sqLogitLoss X = log (1 + exp (-(2 * (X 0 0).re ^ 2)))` on `Matrix (Fin 1) (Fin 1) ℂ`, equal to `crossEntropy (fun c : Bool => (signCode c).re * (X 0 0).re ^ 2) true`, and `sqLogitGrad X = (-(4 * r * sqWeight r)) • 1`. "Not convex" is `¬ ∀ X Y, L X + pairing (G X) (Y - X) ≤ L Y`. The factors are `Matrix (Fin 1) k ℂ` for a finite `k`; "converges to the zero factorization" is `Tendsto … (𝓝 (0, 0))`; "not a decayed minimum" is `¬ IsDecayedMin sqLogitLoss lam 0 0` for `lam ≤ 1/4`, at every `k`. That the ball has interior points and the comparison with WD10 are not formalized. The start of the examples is `!![1/8, 0]`, `!![1/8, 1/8]` with `lam = 1/4` and `η = 1`. |
 | XE15 | `exists_unit_conj_mul`, `detCertificate`, `frobeniusSq_fin_two`, `isFlat_detCertificate`, `pairing_detCertificate`, `frobeniusSq_add_two_mul_norm_det_le`, `norm_mul_sub_le_norm_det`, `sq_sub_add_sq_add_le`, `eq_ofReal_of_norm_le_of_le_re`; the three cells: `threeCells`, `threeLabels`, `signFill`, `gap_threeCells`, `margin_threeCells_le`, `le_margin_threeCells`, `margin_threeCells_le_nuclearNorm`, `nuclearNorm_signFill_le`, `margin_signFill`, `maxMargin_threeCells`, `eq_signFill_of_margin`; the limit: `cubicKernel_two`, `tendsto_inv_smul_threeCells`, `eventually_re_unseen_neg`, `norm_sub_signCode_lt`, `eventually_unseen_wrong`; every small weight decay and the run: `exists_pos_forall_re_unseen_neg`, `exists_pos_forall_unseen_wrong`, `exists_pos_forall_tendsto_decayRun_unseen`, `exists_tendsto_decayRun_unseen_wrong` | Modules `Scope/TwoByTwo`, `Scope/UnseenCell`, `Scope/UnseenCellLimit` and `Scope/UnseenCellRun`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. The samples are `Fin 3` with the cells `threeCells = ![(0, 0), (0, 1), (1, 0)]` and the labels `threeLabels s = signLabel (threeCells s)`, those that `signKernel` shows; `cubicKernel_two` is `cubicKernel 2 = signKernel`. "Decoded to the class of `−1`" is `‖X 1 1 − signCode false‖ < ‖X 1 1 − signCode (signLabel (1, 1))‖`, where `signLabel (1, 1) = true`. The statements of 4 take a sequence of trained products `IsNuclearMin`; the threshold `λ₀` of 5 is obtained from them by contradiction and is not explicit. The bounds of XE3 in 6 are written with their numbers: `12 * log 2 ≤ λ ρ`, `2 η (λ² + 36) ≤ λ` and `η (λ + 6 + 6 ρ) ≤ 1`; the width is any finite type. The run that exists has the step `min (λ / (2 (λ² + 36))) (1 / (λ + 6 + 6 ρ))` for `λ = λ₀ / 2` and `ρ = 4 + 12 log 2 / λ`. The bound of 2 is proved as an inequality; the equality is not needed. |
 | XE16 | `isNuclearMin_signCode_iff`, `nuclearNorm_eq_signScale_mul_of_isNuclearMin`; the kernel of signs: `signRot`, `im_eq_of_det_bounds`, `exists_eq_add_smul_signRot`, `signCotwin`, `nuclearNorm_signCotwin_le`, `nuclearNorm_add_smul_signRot_le`, `isNuclearMin_signKernel_iff`; the run: `exists_tendsto_decayRun_signKernel` | Modules `Scope/SignSet`, `Scope/SignSegmentCore` and `Scope/SignSegment`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. `t(λ)` is `signScale c₀ lam`, and "`Re X = t(λ) K`" is `∀ i j, (X i j).re = signScale c₀ lam * (K i j).re`; the hypotheses are those of XE11 (`Function.Bijective cell`, `K` shows the labels, `IsFlat K c₀`). For the kernel of signs the cells are `id` on `Fin 2 × Fin 2` with the labels `signLabel`, `J` is `signRot`, `K − i J` is `signTwin` and `K + i J` is `signCotwin`; the number `s` of the segment is `a` in Lean, and the point is `signScale 2 lam • signKernel + ((a : ℂ) * Complex.I) • signRot`. `im_eq_of_det_bounds` is the real arithmetic of "⟹", in the imaginary parts and `N = ‖det X‖`. The bounds of XE3 are written with their numbers: `16 * log 2 ≤ λ ρ`, `2 η (λ² + 64) ≤ λ` and `η (λ + 8 + 8 ρ) ≤ 1`; the width is any finite type. |
+| XE17 | `not_tendsto_decayRun_ceLoss_zero`, `exists_lt_frobeniusSq_decayRun_ceLoss_zero`, `decayRun_add`, `surjective_stack_decayRun`, `frequently_lt_frobeniusSq_decayRun_ceLoss_zero`; every real λ (WD8): `exists_tendsto_decayRun_of_forall_le`, `exists_tendsto_decayRun_isDecayedMin_of_forall_le` | Module `Scope/NoDecayRun`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`; the statements for every λ are in `BoundedRun` and `Convergent`, namespace `Transformer.Grokking.FlatSpectrum.Training`. "No limit" is `¬ Tendsto (decayRun (ceGrad A y) η 0 U₀ V₀) atTop (𝓝 (U, V))` for every pair `(U, V)`. "Some product has a positive margin" is `0 < margin A y X₀`, with `[Nonempty S] [Nontrivial C]`; `N` is `Fintype.card S`, and the conditions are `η * (2 * a * card S) < 1` and `η * (2 * a * card S + 2 * (card S * a ^ 2) * ρ) < 1`. Statement 3 is `∃ t, ρ < …` and `∃ᶠ t in atTop, ρ < …`; `ρ*(η)` and the `lim sup` are not stated. The two citations are not formalized. |
 
 ## Convex answer-loss recall
 

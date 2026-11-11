@@ -65,6 +65,9 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.isCompact_setOf_frobeniusSq_add_le
 #print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun
 #print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun_isDecayedMin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.decayedLoss_decayRun_succ_add_le_of_forall_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun_of_forall_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun_isDecayedMin_of_forall_le
 #print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun_fitLoss
 #print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun_fitLoss_isDecayedMin
 #print axioms Transformer.Grokking.FlatSpectrum.Training.norm_sq_eq_frobeniusSq_factors

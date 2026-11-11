@@ -1,8 +1,9 @@
 import Transformer
 
 /-! Audit the scope items of `review/flat_spectrum.md`: WD12 of *Training reaches the optimal
-fit*, XE14, XE15 and XE16 of *Training with cross-entropy*, the answers to the items "Assumed or
-not covered" of WD11 and XE13 (`Transformer.Grokking.FlatSpectrum.Training.Scope`). -/
+fit*, XE14, XE15, XE16 and XE17 of *Training with cross-entropy*, the answers to the items
+"Assumed or not covered" of WD11 and XE13
+(`Transformer.Grokking.FlatSpectrum.Training.Scope`). -/
 
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.linear_first_order
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.pairing_neg_one_smul_one
@@ -77,3 +78,8 @@ not covered" of WD11 and XE13 (`Transformer.Grokking.FlatSpectrum.Training.Scope
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.nuclearNorm_add_smul_signRot_le
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isNuclearMin_signKernel_iff
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_signKernel
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.not_tendsto_decayRun_ceLoss_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_lt_frobeniusSq_decayRun_ceLoss_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.decayRun_add
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.surjective_stack_decayRun
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frequently_lt_frobeniusSq_decayRun_ceLoss_zero

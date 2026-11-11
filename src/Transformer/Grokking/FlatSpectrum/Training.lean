@@ -19,6 +19,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.SquaredBounds
 public import Transformer.Grokking.FlatSpectrum.Training.StepSize
 public import Transformer.Grokking.FlatSpectrum.Training.FlatLoss
 public import Transformer.Grokking.FlatSpectrum.Training.Descent
+public import Transformer.Grokking.FlatSpectrum.Training.BoundedRun
 public import Transformer.Grokking.FlatSpectrum.Training.Convergent
 public import Transformer.Grokking.FlatSpectrum.Training.SquaredRun
 public import Transformer.Grokking.FlatSpectrum.Training.Sublevel
@@ -112,8 +113,8 @@ turns the pairs of factors into the real inner product space `EuclideanSpace ℂ
 with gradient `M W` (`gradient_flatLoss`), so the run is gradient descent there
 (`factors_iterate_gradientStep`). A step with `η (λ + γ + 2 s ρ) ≤ 1` lowers the loss by
 `(η/2) ‖M W‖²` (`decayedLoss_decayStep_add_le_of_ball`), and the ball is compact, so the run has
-a cluster point; Łojasiewicz's theorem and the convergence theorem of
-`Transformer.Landscape.SaddleAvoidance` make it the limit. So the run converges from every
+a cluster point; Łojasiewicz's theorem makes it the limit, for every real `λ` while the run
+stays in the ball (`exists_tendsto_decayRun_of_forall_le`). So the run converges from every
 start in the ball, of any width and rank, to a stationary point (`exists_tendsto_decayRun`),
 and from a start of full row rank to a factorization of least weight-decayed loss
 (`exists_tendsto_decayRun_isDecayedMin`). The squared loss has `s = 1`

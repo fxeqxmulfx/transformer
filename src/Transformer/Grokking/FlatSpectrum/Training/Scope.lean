@@ -1,6 +1,7 @@
 module
 
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.LinearDiverge
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.NoDecayRun
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignSegment
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignSegmentCore
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignSet
@@ -48,4 +49,10 @@ dropped, or the part of the open statement that is proved.
   `t(λ) K` and at most its nuclear norm (`isNuclearMin_signCode_iff`). For the kernel of
   signs the trained products are the segment `t(λ) K + i a [[1, −1], [1, 1]]`, `|a| ≤ t(λ)`
   (`isNuclearMin_signKernel_iff`), and the run of XE3 from a start of full row rank ends at a
-  factorization of one of its points (`exists_tendsto_decayRun_signKernel`). -/
+  factorization of one of its points (`exists_tendsto_decayRun_signKernel`).
+* No weight decay (XE13, XE17). On samples that some product classifies with a positive
+  margin, the run with `λ = 0` from a start of full row rank has no limit when `2 a |S| η < 1`
+  (`not_tendsto_decayRun_ceLoss_zero`), and it is outside every ball `‖U‖² + ‖V‖² ≤ ρ` with
+  `η (2 a |S| + 2 |S| a² ρ) < 1` at infinitely many steps
+  (`frequently_lt_frobeniusSq_decayRun_ceLoss_zero`). That its norm tends to infinity for one
+  fixed step, and the direction of its factors, are not proved. -/
