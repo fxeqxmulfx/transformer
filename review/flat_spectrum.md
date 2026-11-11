@@ -12402,7 +12402,7 @@ labels; its entries are `±1`.
    `U_0 = [1 0]`, `V_0 = [0 1]` these bounds can be met for every λ > 0, so trained fits with
    real factors exist at the width `|m| + |n|`.
 
-Such a pair is
+A pair `K`, `K'` as in 6 is
 
 ```
 K = [[1, 1], [−1, 1]],    K' = [[1 − i, 1 + i], [−(1 + i), 1 − i]] = (1, −i)ᵀ (1 − i, 1 + i).
