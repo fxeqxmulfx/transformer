@@ -152,3 +152,22 @@ Their names alone do not establish that a feature extension is necessary.
 Flat spectrum remains a rank/error bound. Identification of unseen labels
 requires shared structure or a valid observation certificate, and successful
 optimization requires an appropriate algorithm even on a convex domain.
+
+## What the balancedness update changes
+
+The Lean extension `BalancedFactorization.lean` proves the norm, nuclear-cost
+and rank identities from `Uᴴ U = Vᴴ V` alone. For a flat target of squared
+singular value `c`, achieving squared error at most `epsilon` requires actual
+factor rank at least `min(m,n) - epsilon/c`. The balanced stack has that same
+rank, so exact balanced initialization does not meet WD5's full-stack rank
+assumption when the second factor has a row. Other convergence results may
+still apply.
+
+`Training/Scope/BalanceObstruction.lean` proves that scalar balance is a
+nonconvex constraint and supplies a nonzero balanced stationary counterexample:
+for squared loss against `(3/2) I₂` and decay `1/2`, factors `diag(1,0)` have
+loss `7/4`, while the balanced same-width identity factors give `5/4`.
+This rules out inferring optimality from balancedness alone. It does not
+replace the experiments' ordinary CE. The current learner optimizes the
+joint tensor directly; rebalancing factors of the same represented matrix
+would leave its predictions unchanged and would not fix the batch-oracle bias.

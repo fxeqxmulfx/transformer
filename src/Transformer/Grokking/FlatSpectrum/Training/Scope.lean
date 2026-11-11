@@ -1,6 +1,7 @@
 module
 
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.Balanced
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.BalanceObstruction
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.LinearDiverge
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.MarginContinuity
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.NoDecayRun

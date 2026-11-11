@@ -4,6 +4,7 @@ public import Transformer.Grokking.FlatSpectrum.Defs
 public import Transformer.Grokking.FlatSpectrum.Basic
 public import Transformer.Grokking.FlatSpectrum.Factorization
 public import Transformer.Grokking.FlatSpectrum.Roots
+public import Transformer.Grokking.FlatSpectrum.BalancedFactorization
 public import Transformer.Grokking.FlatSpectrum.Kernels
 public import Transformer.Grokking.FlatSpectrum.Unimodular
 public import Transformer.Grokking.FlatSpectrum.Interpolation

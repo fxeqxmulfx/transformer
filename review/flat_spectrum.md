@@ -13470,6 +13470,80 @@ LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.ConvexCha
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/ConvexChannelAxioms.lean
 ```
 
+## Balancedness as a capacity certificate (added)
+
+This extension isolates what the balancedness update in WD14.6 supplies for
+the convex-model question. Let `U : C^(m × k)`, `V : C^(n × k)` and assume
+`Uᴴ U = Vᴴ V`. No loss, stationary point, optimizer or successful training is
+assumed in B1–B2. The statement concerns a factorization of a matrix; applying
+it to a model requires identifying the matrix that the model represents.
+
+### B1. Identities from balance alone
+
+The trace of the common Gram matrix gives `||U||_F² = ||V||_F²`. Also
+
+```
+(U Vᴴ)ᴴ (U Vᴴ) = (V Vᴴ)²,
+||U Vᴴ||_* = tr(V Vᴴ) = (||U||_F² + ||V||_F²)/2,
+rank(U Vᴴ) = rank U = rank V = rank [U; V].
+```
+
+The positive semidefinite matrix `V Vᴴ` is a root of the product's Gram
+matrix, which proves the nuclear-norm identity. The first three ranks follow
+from equality of Gram matrices; the stack has Gram matrix `2 Uᴴ U`, which
+has the rank of `U`.
+
+If `n > 0`, the stack rank is at most `m < m+n`. Thus an exactly balanced
+start cannot satisfy WD5's full-stack row-rank hypothesis. This only limits
+that sufficient theorem; it does not imply that all balanced starts fail or
+that discrete gradient steps preserve balance. The stationary points in
+WD14 satisfy the hypothesis by its separate stationarity argument.
+
+### B2. Use flatness as a bound on actual rank
+
+For `IsFlat K c`, `c > 0`, put `r₀ = min(m,n)`. R3 and B1 give
+
+```
+c (r₀ - rank U) ≤ ||K - U Vᴴ||_F².
+```
+
+The subtraction here is in the real numbers. Allocated width can exceed
+the actual rank: adding zero columns does not remove this obstruction.
+Equivalently, an error budget `||K-U Vᴴ||_F² ≤ ε` requires
+`rank U ≥ r₀ - ε/c`; this is a necessary capacity condition.
+The theorem does not identify unseen labels, certify optimization, or
+guarantee that a particular representation attains the lower bound.
+
+### B3. Balance is neither a convex constraint nor an optimum certificate
+
+Even for real scalars, the balanced set `{(u,v) : u² = v²}` is not convex:
+`(1,1)` and `(1,-1)` belong to it, but their midpoint `(1,0)` does not.
+
+For a nonzero stationary example with a convex loss, take
+`K = (3/2) I₂`, `L(X) = ||X-K||_F²/2`, `λ = 1/2` and
+`U = V = diag(1,0)`. The actual product gradient is
+`G = U Vᴴ-K = diag(-1/2,-3/2)`. Both factor gradients vanish:
+`G V + λ U = 0` and `Gᴴ U + λ V = 0`. The factors are balanced and
+have rank one. The target is flat with `c = 9/4`, so B2 gives an error
+lower bound of `9/4`. Nevertheless their decayed loss is `7/4`, strictly
+above the `5/4` attained by the balanced same-width competitor `U = V = I₂`.
+Thus even nonzero balanced stationarity does not certify optimality.
+This squared-loss witness refutes a loss-independent inference; it is not
+a cross-entropy experiment or a replacement for the existing ordinary CE.
+
+The existing convex-channel learner optimizes the joint coefficients directly.
+It has no separately trained `U,V` whose balancing would repair its predictions.
+An exact refactorization preserving the represented matrix also preserves
+every linear readout of that matrix. B1–B3 support checking effective capacity
+and the hypotheses of a factorized optimizer. The minibatch oracle bias,
+query-specific missing records and fixed logit scale discussed in the
+experiment README need their own remedies and proofs.
+
+Lean: `BalancedFactorization.lean` proves B1–B2, including the stack-rank
+identity and full-row-rank obstruction. `Training/Scope/BalanceObstruction.lean`
+proves B3 and checks the numerical matrix witness, its actual rank, flat target,
+stationarity, both losses and the resulting failure of `IsDecayedMin`.
+
 ## Forward-only channel learning
 
 This extension gives a finite categorical learner for the realizable
