@@ -1,0 +1,20 @@
+[package]
+name = "convex-channel-forward"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+convex-channels = { path = "../convex_channels" }
+convex-recall-compare = { path = "../convex_recall_compare" }
+serde_json = "=1.0.154"
+sha2 = "=0.11.1"
+
+[profile.release]
+codegen-units = 1
+lto = "thin"
+
+[profile.test]
+opt-level = 2
