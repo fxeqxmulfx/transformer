@@ -113,3 +113,13 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.IsDecayedMin.weightDecay_le_nuclearNorm
 #print axioms Transformer.Grokking.FlatSpectrum.Training.exists_subseq_tendsto_isOptimalFit
 #print axioms Transformer.Grokking.FlatSpectrum.Training.exists_isOptimalFit
+#print axioms Transformer.Grokking.FlatSpectrum.Training.frobeniusSq_neg
+#print axioms Transformer.Grokking.FlatSpectrum.Training.eq_zero_of_neg_eq
+#print axioms Transformer.Grokking.FlatSpectrum.Training.decayedLoss_neg
+#print axioms Transformer.Grokking.FlatSpectrum.Training.IsDecayedMin.neg
+#print axioms Transformer.Grokking.FlatSpectrum.Training.isOptimalFit_neg
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_isOptimalFit_ne
+#print axioms Transformer.Grokking.FlatSpectrum.Training.not_tendsto_ite_even_neg
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_seq_isDecayedMin_not_tendsto
+#print axioms Transformer.Grokking.FlatSpectrum.Training.isOptimalFit_one
+#print axioms Transformer.Grokking.FlatSpectrum.Training.exists_seq_isDecayedMin_one_not_tendsto

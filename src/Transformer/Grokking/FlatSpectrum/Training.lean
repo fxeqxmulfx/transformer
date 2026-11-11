@@ -53,6 +53,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.NearestCodeword
 public import Transformer.Grokking.FlatSpectrum.Training.ClassProbes
 public import Transformer.Grokking.FlatSpectrum.Training.MeanLoss
 public import Transformer.Grokking.FlatSpectrum.Training.Subsequence
+public import Transformer.Grokking.FlatSpectrum.Training.FactorSign
 public import Transformer.Grokking.FlatSpectrum.Training.NuclearMin
 public import Transformer.Grokking.FlatSpectrum.Training.NuclearMinLimit
 public import Transformer.Grokking.FlatSpectrum.Training.NuclearMinDirection
@@ -90,7 +91,8 @@ proper `Ω` (Theorem A), the trained products stay a fixed distance below `‖K�
 `λ > 0`; and if `K` is the only matrix of least nuclear norm, as for `u vᵀ` with `|u_i v_j| = 1`
 on connected cells containing a permutation (Theorem E), the trained products converge to `K`.
 Trained fits of one width always have a subsequence whose factors converge, to an optimal fit
-(`exists_subseq_tendsto_isOptimalFit`). The `1 × 1` kernel `1` has the trained product `1 − λ`.
+(`exists_subseq_tendsto_isOptimalFit`); the factors themselves need not converge
+(`exists_seq_isDecayedMin_not_tendsto`). The `1 × 1` kernel `1` has the trained product `1 − λ`.
 
 The step condition is explicit when the loss is controlled in a ball (WD6): if `‖G X‖ ≤ γ` and
 `⟨G X, X⟩ ≥ −b` for `‖X‖ ≤ ρ/2`, with `4 b ≤ λ ρ` and `2 η (λ² + γ²) ≤ λ`, a run from the ball
