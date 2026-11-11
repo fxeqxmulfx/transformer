@@ -11865,7 +11865,9 @@ of least nuclear norm (WD7). The cross-entropy of separable data has no minimum:
 its trained fits grow without bound, and they have the largest margin for their nuclear norm
 (XE4–XE6). At every λ > 0 the unseen cells are still filled by M (XE7), so a flat kernel is
 not returned, at a fixed λ or in the limit (XE7–XE9). The limit points of the direction of the
-trained fits are the products of largest margin (XE10).
+trained fits are the products of largest margin (XE10). With every cell seen and the answer
+code of the note, the flat kernel is the only such product, so the trained fits converge in
+direction to the kernel exactly when every cell is seen (XE11).
 
 Notation as in that section: `⟨A, B⟩ = Re tr(Aᴴ B)`, `‖·‖ = ‖·‖_S2`, the model `X = U Vᴴ`
 with the run of WD1, and a decayed minimum is a factorization of least weight-decayed loss
@@ -12166,7 +12168,79 @@ Example: the sample of XE3, a `1 × 1` product with the probes `+1` and `−1`. 
 `2 Re X`, so `μ* = 2`, and in the unit disk only `Z = 1` has `2 Re Z = 2`. The trained fits
 converge in direction to `1`.
 
-### XE11. Scope
+### XE11. Every cell seen: the flat kernel is the direction
+
+By XE9 the trained fits do not converge in direction to a flat kernel with a nonzero unseen
+cell. With every cell seen they do, for the answer codes of the note.
+
+Say that a unimodular code `φ` is mirrored at the gap `g` when, for every class `t`,
+
+```
+|φ(t) − φ(c)|² ≥ 2g  for every c ≠ t,    and    φ(c) + φ(c') = 2 (1 − g) φ(t)  for some c, c' ≠ t.
+```
+
+Call `c` and `c'` the neighbours of `t`. The code `ψ` of `ℤ/p`, `p ≥ 2`, is mirrored at
+`g = 1 − cos(2π/p)`, with the neighbours `t ± 1`: `|ψ(t) − ψ(c)|² = 2 − 2 cos(2π (t − c)/p)`
+is least at `c = t ± 1`, and `ψ(t + 1) + ψ(t − 1) = 2 cos(2π/p) ψ(t)`. Its gap is positive,
+and `g < 2` for `p ≥ 3`. For `p = 2` the code is `±1` and `g = 2`.
+
+Take the probes of XE8 for a code mirrored at `g`.
+
+1. The bound at a sample. Let the sample `s` have the label `t = y_s` and the cell `(i, j)`.
+   Its gaps against the neighbours of `t` add up to
+
+   ```
+   g_{s,c}(X) + g_{s,c'}(X) = 2 Re(conj φ(t) X_ij) − Re(conj (φ(c) + φ(c')) X_ij)
+                            = 2g Re(conj φ(t) X_ij),
+   ```
+
+   and the margin is at most each of them. So `μ(X) ≤ g Re(conj φ(y_s) X_ij)` at every sample.
+2. The kernel. Let `K` show the labels on the seen cells. Its gaps are
+   `|φ(y_s) − φ(c)|² / 2 ≥ g` (XE8), and 1 at `X = K` gives `μ(K) ≤ g`. So `μ(K) = g`.
+3. Every cell seen. Let every cell be seen, so that `K_ij = φ(y_s)` at every cell, and let `K`
+   be flat with the squared singular value `c`. The sum of 1 over the cells is
+
+   ```
+   |m| |n| μ(X) ≤ g Σ_ij Re(conj K_ij X_ij) = g ⟨K, X⟩ ≤ g √c ‖X‖_S1,
+   ```
+
+   the last step by R3. The entries of `K` are unimodular, so
+   `|m| |n| = ‖K‖² = min(|m|, |n|) c = √c ‖K‖_S1` by R1. Therefore
+
+   ```
+   μ(X) ‖K‖_S1 ≤ g ‖X‖_S1 = μ(K) ‖X‖_S1    for every X.
+   ```
+
+   No product has a larger margin for its norm than `K`: `μ* = g / ‖K‖_S1`, the margin of
+   `K / ‖K‖_S1`.
+4. The only one, if `0 < g < 2`. Let `‖Z‖_S1 ≤ 1` and `μ(Z) = μ*`. Then 3 holds with equality
+   for `Z`, so 1 holds with equality at every cell, and both gaps of 1 equal `μ(Z)`. For `K`
+   the two gaps are at least `g` and add up to `2g`, so both equal `g`. With `x = Z_ij`,
+   `a = K_ij` and a neighbour `b = φ(c)` of `a` this reads
+
+   ```
+   Re(conj b a) = 1 − g,    Re(conj a x) = 1 / ‖K‖_S1,    Re(conj b x) = (1 − g) / ‖K‖_S1.
+   ```
+
+   As `−1 < 1 − g < 1`, the unit numbers `a` and `b` are independent over ℝ, and the two
+   readings of `x` along them fix it: `x = a / ‖K‖_S1`. So `Z = K / ‖K‖_S1`.
+
+By XE10, statement 3, for a code mirrored at a gap `0 < g < 2`, every cell seen, and a flat
+`K` that shows the labels,
+
+```
+X_j / ‖X_j‖_S1 → K / ‖K‖_S1    as λ_j → 0⁺.
+```
+
+With XE9: if the flat `K` has no zero entry and shows the labels of the seen cells, the trained
+fits converge in direction to `K` exactly when every cell is seen. For the kernel
+`ψ(a³ + a b)` with the code `ψ` and `p ≥ 3`: under the cross-entropy a vanishing weight decay
+returns the kernel, up to its scale, from the whole table, and from no proper part of it.
+
+The bound `g < 2` leaves out the code `±1`. There `φ(c) = φ(c') = −φ(t)`, the two readings of
+4 are one, and 4 is not proved; 1–3 hold.
+
+### XE12. Scope
 
 Proved, for the pure factorization `X = U Vᴴ` trained by gradient descent with weight decay
 on the cross-entropy of logits that are real-linear in the product:
@@ -12191,7 +12265,12 @@ on the cross-entropy of logits that are real-linear in the product:
 - the largest margin of the unit ball is attained; as λ → 0⁺ every limit point of the
   direction `X_j / ‖X_j‖_S1` of the trained fits has nuclear norm one and the largest margin,
   limit points exist, and the direction converges when one product of the unit ball has the
-  largest margin (XE10).
+  largest margin (XE10);
+- for an answer code mirrored at a gap `0 < g < 2`, such as `ψ` for `p ≥ 3`, with every cell
+  seen, a flat kernel that shows the labels has the largest margin for its norm and is the
+  only such product of the unit ball up to its scale, so the trained fits converge in
+  direction to it; a flat kernel without zero entries is the limit of the direction exactly
+  when every cell is seen (XE11).
 
 Assumed or not covered:
 
@@ -12201,7 +12280,9 @@ Assumed or not covered:
   with a decreasing λ.
 - The direction when several products of the unit ball have the largest margin. XE10 gives
   the limit points of `X_j / ‖X_j‖_S1`; that it converges is proved only when the product of
-  largest margin is unique.
+  largest margin is unique. XE11 proves that for a mirrored code of gap `0 < g < 2` with
+  every cell seen; for the code `±1`, where `g = 2`, and for codes that are not mirrored it
+  is not proved.
 - The unseen cells. By XE7 they are filled by M from the seen values of the trained product.
   Those values are not the values of `K`, so the fill of the Corollary and its decoded
   accuracy do not transfer: which class an unseen cell decodes to under the cross-entropy is
@@ -12217,8 +12298,9 @@ Assumed or not covered:
 
 `src/Transformer/Grokking/FlatSpectrum/Training/`, modules `Logits`, `CrossEntropy`,
 `CrossEntropyBounds`, `CrossEntropyRun`, `Margin`, `MaxMargin`, `MaxMarginLimit`, `SeenCells`,
-`AnswerCode`, `SeenMargin`, `UnitBall` and `MarginDirection`, namespace
-`Transformer.Grokking.FlatSpectrum.Training`, proved without `sorry`.
+`AnswerCode`, `SeenMargin`, `UnitBall`, `MarginDirection`, `MirroredCode`, `CharacterCode`,
+`MirroredUnique` and `SeenDirection`, namespace `Transformer.Grokking.FlatSpectrum.Training`,
+proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -12232,3 +12314,4 @@ Assumed or not covered:
 | XE8 | `codeProbe`, `pairing_single`, `frobeniusSq_single`, `pairing_codeProbe`, `codeProbe_apply_of_notMem`, `frobeniusSq_codeProbe`, `gap_codeProbe`, `margin_codeProbe_pos`; examples: `signCode`, `norm_signCode`, `injective_signCode` | The cells are `cell : S → m × n` and the seen cells are `Set.range cell`; `φ(c) e_ij` is `Matrix.single i j (φ c)`. That the largest logit belongs to the nearest codeword is not formalized. |
 | XE9 | `gap_eq_of_seen`, `margin_eq_of_seen`, `exists_pos_eventually_add_le_margin_div`, `not_tendsto_inv_nuclearNorm_smul`, `exists_pos_eventually_add_le_margin_div_of_codeProbe`, `not_tendsto_inv_nuclearNorm_smul_of_codeProbe` | δ is chosen before the sequence, for one finite column type of the factors. The normalized product is `(nuclearNorm X_j)⁻¹ • X_j`. That the trained fits grow without bound is `tendsto_nuclearNorm_atTop` (XE6). The examples are the `1 × 2` kernel `(1, 1)` with the code `±1` on its first cell, and `cubicKernel 3` with `ψ` on the cell `(0, 0)`. |
 | XE10 | `continuous_gap`, `nuclearNorm_le_of_tendsto`, `nuclearNorm_inv_smul_le`, `margin_inv_smul`, `exists_subseq_tendsto_inv_smul`, `margin_eq_maxMargin_of_tendsto`, `exists_margin_eq_maxMargin`, `margin_eq_maxMargin_of_tendsto_inv_smul`, `tendsto_inv_smul_of_unique`; example: `gap_signProbe`, `maxMargin_signProbe`, `eq_one_of_margin_signProbe` | The direction is `(nuclearNorm X)⁻¹ • X`, which is `0` for `X = 0`. The compact set is `{X \| ∀ i j, ‖X i j‖ ≤ 1}` (`isCompact_setOf_norm_apply_le`), which contains the unit ball, and the dual form of the norm is `exists_isContraction_trace_eq`. Statement 2 is for a convergent sequence of directions; its subsequences are taken by `exists_subseq_tendsto_inv_smul`, which holds for every sequence of matrices. "One product has the margin `μ*`" is the hypothesis `∀ Z, nuclearNorm Z ≤ 1 → margin A y Z = maxMargin A y → Z = Z₀`. |
+| XE11 | `IsMirroredCode`, `IsMirroredCode.injective`, `pairing_eq_sum_re`, `gap_codeProbe_add_gap`, `margin_codeProbe_le_mul_re`, `margin_codeProbe_eq`, `norm_apply_eq_one_of_surjective`, `margin_codeProbe_le_mul_re_apply`, `card_mul_margin_codeProbe_le`, `card_mul_card_eq_of_isFlat`, `margin_codeProbe_mul_nuclearNorm_le`, `maxMargin_codeProbe_eq`, `margin_inv_smul_codeProbe`, `eq_mul_of_re_conj_mul`, `mul_re_eq_margin_of_margin_eq`, `apply_cell_eq_of_margin_eq`, `eq_inv_smul_of_margin_codeProbe_eq`, `tendsto_inv_smul_codeProbe`, `tendsto_inv_smul_codeProbe_iff`; the code `ψ`: `cos_two_pi_mul_div_le`, `one_sub_cos_two_pi_div_pos`, `one_sub_cos_two_pi_div_lt_two`, `norm_stdAddChar_sub_sq`, `isMirroredCode_stdAddChar`, `tendsto_inv_smul_cubicKernel_iff`; example: `isMirroredCode_signCode` | `IsMirroredCode φ g` is the conjunction of `∀ c, ‖φ c‖ = 1`, `∀ t c, c ≠ t → 2 * g ≤ ‖φ t - φ c‖ ^ 2` and `∀ t, ∃ c c', c ≠ t ∧ c' ≠ t ∧ φ c + φ c' = ((2 * (1 - g) : ℝ) : ℂ) * φ t`. "Every cell is seen" is `Function.Surjective cell`, and "`K` has no zero entry" is `∀ i j, K i j ≠ 0`. The flat kernel is `IsFlat K c₀` with `0 < c₀`. `ψ` is `ZMod.stdAddChar` as a function on `ZMod p`, with the gap `1 - cos (2 * π / p)`. In `tendsto_inv_smul_cubicKernel_iff` the samples are a finite nonempty type with cells `cell : S → ZMod p × ZMod p` and the labels `(cell s).1 ^ 3 + (cell s).1 * (cell s).2`. Statement 4 is proved cell by cell in `apply_cell_eq_of_margin_eq`. The examples are the code `±1` with the `1 × 1` kernel `1`, and `cubicKernel 3` with all nine cells seen and the code `ψ`. |

@@ -1,6 +1,6 @@
 import Transformer
 
-/-! Audit *Training with cross-entropy* of `review/flat_spectrum.md`, items XE1–XE10. -/
+/-! Audit *Training with cross-entropy* of `review/flat_spectrum.md`, items XE1–XE11. -/
 
 #print axioms Transformer.Grokking.FlatSpectrum.Training.sum_probability_mul_le_log_weightedExp
 #print axioms Transformer.Grokking.FlatSpectrum.Training.crossEntropy_first_order
@@ -79,3 +79,28 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.margin_eq_maxMargin_of_tendsto_inv_smul
 #print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_inv_smul_of_unique
 #print axioms Transformer.Grokking.FlatSpectrum.Training.eq_one_of_margin_signProbe
+#print axioms Transformer.Grokking.FlatSpectrum.Training.IsMirroredCode.injective
+#print axioms Transformer.Grokking.FlatSpectrum.Training.pairing_eq_sum_re
+#print axioms Transformer.Grokking.FlatSpectrum.Training.gap_codeProbe_add_gap
+#print axioms Transformer.Grokking.FlatSpectrum.Training.margin_codeProbe_le_mul_re
+#print axioms Transformer.Grokking.FlatSpectrum.Training.margin_codeProbe_eq
+#print axioms Transformer.Grokking.FlatSpectrum.Training.norm_apply_eq_one_of_surjective
+#print axioms Transformer.Grokking.FlatSpectrum.Training.margin_codeProbe_le_mul_re_apply
+#print axioms Transformer.Grokking.FlatSpectrum.Training.card_mul_margin_codeProbe_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.card_mul_card_eq_of_isFlat
+#print axioms Transformer.Grokking.FlatSpectrum.Training.margin_codeProbe_mul_nuclearNorm_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.isMirroredCode_signCode
+#print axioms Transformer.Grokking.FlatSpectrum.Training.cos_two_pi_mul_div_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.one_sub_cos_two_pi_div_pos
+#print axioms Transformer.Grokking.FlatSpectrum.Training.one_sub_cos_two_pi_div_lt_two
+#print axioms Transformer.Grokking.FlatSpectrum.Training.norm_stdAddChar_sub_sq
+#print axioms Transformer.Grokking.FlatSpectrum.Training.isMirroredCode_stdAddChar
+#print axioms Transformer.Grokking.FlatSpectrum.Training.eq_mul_of_re_conj_mul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.maxMargin_codeProbe_eq
+#print axioms Transformer.Grokking.FlatSpectrum.Training.margin_inv_smul_codeProbe
+#print axioms Transformer.Grokking.FlatSpectrum.Training.mul_re_eq_margin_of_margin_eq
+#print axioms Transformer.Grokking.FlatSpectrum.Training.apply_cell_eq_of_margin_eq
+#print axioms Transformer.Grokking.FlatSpectrum.Training.eq_inv_smul_of_margin_codeProbe_eq
+#print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_inv_smul_codeProbe
+#print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_inv_smul_codeProbe_iff
+#print axioms Transformer.Grokking.FlatSpectrum.Training.tendsto_inv_smul_cubicKernel_iff

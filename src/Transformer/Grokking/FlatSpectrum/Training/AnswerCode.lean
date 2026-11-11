@@ -61,6 +61,13 @@ lemma frobeniusSq_single (i : m) (j : n) (a : ℂ) :
       rw [Matrix.single_apply_of_ne (h := fun h => hi h.1.symm), norm_zero]
       norm_num
 
+omit [DecidableEq m] [DecidableEq n] in
+/-- `⟨K, X⟩ = Σ_ij Re (conj K_ij X_ij)`. -/
+lemma pairing_eq_sum_re (K X : Matrix m n ℂ) :
+    pairing K X = ∑ i, ∑ j, (conj (K i j) * X i j).re := by
+  rw [pairing, trace_conjTranspose_mul, Complex.re_sum]
+  exact Finset.sum_congr rfl fun i _ => Complex.re_sum _ _
+
 variable {φ : C → ℂ} {cell : S → m × n} {y : S → C} {K : Matrix m n ℂ}
 
 /-- The logit of the class `c` at the sample `s`: `Re (conj φ(c) · X_{cell s})`. -/

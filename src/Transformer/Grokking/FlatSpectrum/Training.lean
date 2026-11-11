@@ -42,6 +42,10 @@ public import Transformer.Grokking.FlatSpectrum.Training.AnswerCode
 public import Transformer.Grokking.FlatSpectrum.Training.SeenMargin
 public import Transformer.Grokking.FlatSpectrum.Training.UnitBall
 public import Transformer.Grokking.FlatSpectrum.Training.MarginDirection
+public import Transformer.Grokking.FlatSpectrum.Training.MirroredCode
+public import Transformer.Grokking.FlatSpectrum.Training.CharacterCode
+public import Transformer.Grokking.FlatSpectrum.Training.MirroredUnique
+public import Transformer.Grokking.FlatSpectrum.Training.SeenDirection
 
 /-! Training the pure factorization with weight decay, `review/flat_spectrum.md`, Lemma 1's
 modeling step and *Training reaches the optimal fit* (added).
@@ -130,7 +134,7 @@ unseen (`IsFlat.exists_nuclearNorm_add_le`, `IsFlat.exists_tendsto_decayRun_nucl
 factorization of width `k` keeps the squared loss `c (min(m, n) − k) / 2`
 (`IsFlat.mul_sub_card_le_fitLoss_univ`).
 
-Cross-entropy (*Training with cross-entropy*, items XE1–XE10). A sample `s` reads the product
+Cross-entropy (*Training with cross-entropy*, items XE1–XE11). A sample `s` reads the product
 through probes, with the logit `⟨A s c, X⟩` for the class `c`, and the loss is the cross-entropy
 of the labels (`ceLoss`, with the gradient `ceGrad`). It satisfies the first-order inequality,
 is nonnegative and real-analytic in the entries (XE1), and for probes of norm at most `a` it has
@@ -155,4 +159,9 @@ kernel, and `X_j / ‖X_j‖_S1` does not converge to `K / ‖K‖_S1`
 compact, so the largest margin is attained (`exists_margin_eq_maxMargin`), every limit point of
 `X_j / ‖X_j‖_S1` has nuclear norm one and the largest margin
 (`margin_eq_maxMargin_of_tendsto_inv_smul`), and the direction converges when one product of
-the unit ball has the largest margin (`tendsto_inv_smul_of_unique`, XE10). -/
+the unit ball has the largest margin (`tendsto_inv_smul_of_unique`, XE10). For an answer code
+mirrored at a gap `0 < g < 2` (`IsMirroredCode`; `ψ` for `p ≥ 3`, `isMirroredCode_stdAddChar`)
+with every cell seen, the normalized flat kernel is the only product of largest margin
+(`eq_inv_smul_of_margin_codeProbe_eq`), so the trained fits converge in direction to the
+kernel, and they do exactly when every cell is seen (`tendsto_inv_smul_codeProbe_iff`,
+`tendsto_inv_smul_cubicKernel_iff`, XE11). -/
