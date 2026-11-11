@@ -5,6 +5,10 @@ public import Transformer.Grokking.FlatSpectrum.Training.Scope.SmoothLoss
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SquaredLogit
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SquaredLogitBall
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SquaredLogitRun
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.TwoByTwo
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.UnseenCell
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.UnseenCellLimit
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.UnseenCellRun
 
 /-! The scope of the training theorems, `review/flat_spectrum.md`, the items "Assumed or not
 covered" of WD11 (*Training reaches the optimal fit*) and XE13 (*Training with
@@ -24,4 +28,15 @@ dropped, or the part of the open statement that is proved.
   decayed minimum: for the logits `±(Re x)²` of a `1 × 1` product (`sqLogitLoss`) every run
   from the ball `‖U₀‖² + ‖V₀‖² ≤ λ/4`, which has starts of full row rank, converges to the
   zero factorization, and that is not a decayed minimum
-  (`exists_tendsto_decayRun_sqLogit_not_isDecayedMin`). -/
+  (`exists_tendsto_decayRun_sqLogit_not_isDecayedMin`).
+* An unseen cell of a seen row and a seen column (XE13, XE15). For the kernel of signs
+  `[[1, 1], [−1, 1]]`, which is the kernel `ψ(a³ + a b)` for `p = 2`, with the code `±1` and
+  every cell seen but `(1, 1)`, one product of the unit ball of the nuclear norm has the
+  largest margin: `½ [[1, 1], [−1, −1]]`, of rank one (`maxMargin_threeCells`,
+  `eq_signFill_of_margin`). The trained products converge in direction to it
+  (`tendsto_inv_smul_threeCells`), so for every small weight decay they answer the unseen
+  cell with the class of `−1`, where the kernel shows `+1` (`exists_pos_forall_unseen_wrong`),
+  and so does the limit of the run of XE3 from a start of full row rank
+  (`exists_pos_forall_tendsto_decayRun_unseen`, `exists_tendsto_decayRun_unseen_wrong`). The
+  tool is the bound `‖Z‖_S2² + 2 |det Z| ≤ ‖Z‖_S1²` of a `2 × 2` matrix
+  (`frobeniusSq_add_two_mul_norm_det_le`). -/

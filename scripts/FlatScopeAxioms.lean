@@ -1,8 +1,8 @@
 import Transformer
 
 /-! Audit the scope items of `review/flat_spectrum.md`: WD12 of *Training reaches the optimal
-fit* and the answers to the items "Assumed or not covered" of WD11 and XE13
-(`Transformer.Grokking.FlatSpectrum.Training.Scope`). -/
+fit*, XE14 and XE15 of *Training with cross-entropy*, the answers to the items "Assumed or
+not covered" of WD11 and XE13 (`Transformer.Grokking.FlatSpectrum.Training.Scope`). -/
 
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.linear_first_order
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.pairing_neg_one_smul_one
@@ -44,3 +44,28 @@ fit* and the answers to the items "Assumed or not covered" of WD11 and XE13
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.one_sub_smul_lift_posDef_sqLogit
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.not_isDecayedMin_sqLogit_zero
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_sqLogit_not_isDecayedMin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_unit_conj_mul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_fin_two
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isFlat_detCertificate
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.pairing_detCertificate
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_add_two_mul_norm_det_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.norm_mul_sub_le_norm_det
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.sq_sub_add_sq_add_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.eq_ofReal_of_norm_le_of_le_re
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.gap_threeCells
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.margin_threeCells_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.le_margin_threeCells
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.margin_threeCells_le_nuclearNorm
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.nuclearNorm_signFill_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.margin_signFill
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.maxMargin_threeCells
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.eq_signFill_of_margin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.cubicKernel_two
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_inv_smul_threeCells
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.eventually_re_unseen_neg
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.norm_sub_signCode_lt
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.eventually_unseen_wrong
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_pos_forall_re_unseen_neg
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_pos_forall_unseen_wrong
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_pos_forall_tendsto_decayRun_unseen
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_unseen_wrong
