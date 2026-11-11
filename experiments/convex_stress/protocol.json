@@ -1,0 +1,20 @@
+{
+  "version": "convex-stress-v1",
+  "source_repository": "/home/misha/python_projects/diff-gpt",
+  "source_commit": "3555299",
+  "data": "Exact 35 frozen complex_geometry_suite tasks; native generators validate every manifest fingerprint.",
+  "seeds": [0, 1, 2],
+  "arms": ["frank_wolfe", "forward_only"],
+  "forward_only": "CF1-CF5 exact consistency search, smallest key first, class-zero completion; one complete search per query, at most K*N candidate observations. Explicit no_consistent_key outcome and no fallback model when any observed query fails. Empty queries return class zero, as in the source learner. No FW updates or backpropagation.",
+  "initialization": "Uniform feasible tensor; exact first Frank-Wolfe vertex by integer label counts, with smallest-index ties.",
+  "query": "Current visible token.",
+  "feature_banks": ["Relative lag tokens, padded to maximum declared split/rollout context", "Latest completed distance-one successor for each token", "Latest completed distance-two successor for each token", "Presence of each token"],
+  "training": "Full-batch Frank-Wolfe on the unfactorized nonnegative joint tensor; eta=2/(iteration+1); ordinary full-vocabulary cross-entropy at unit logit scale.",
+  "budget": "floor(original max_updates / ceil(train_examples / original batch)) complete training passes, at least one. No exceeding original example exposure; partial last epoch unused.",
+  "observation": "Exhaustive primary split after each complete full-batch pass; this is coarser than original intra-epoch observations on some tasks.",
+  "stopping": "First primary >=99% exact sequences; otherwise all query blocks certified realizable or numerical mean per-query FW gaps <=1e-12; otherwise fixed pass budget.",
+  "seed_effect": "Only fixed training summation order, shuffled once by source Random(seed+10000). No random initialization, data split or model selection.",
+  "unknown_values": "Class zero on unobserved categorical rows of trained query channels; uniform logits on entirely unobserved queries. No copied-value tie-breaking.",
+  "metrics": "Exact complete sequences, own-output greedy rollout through EOS/limit, source field alias pooling, all source splits at endpoint; CPU f64 instead of GPU f32.",
+  "interpretation": "Benchmark transfer with a documented causal adapter and convex optimizer; not a matched transformer training-time comparison or a rerun of the selected main-model cohort. No tuning on validation outcomes."
+}

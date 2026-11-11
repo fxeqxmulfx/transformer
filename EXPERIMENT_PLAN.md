@@ -4255,3 +4255,16 @@ faster than the dense channel, but exact compaction gives the usual channel
 the same lookup speed and 288-byte payload. This distinguishes the measured
 training benefit from the representation benefit shared by both methods.
 All timing observations and saved models remain local and ignored.
+
+## Convex channels on the GPT short/long stress suite (2026-11-11)
+
+**Status: native implementation and preflight validated; frozen runs next.**
+The user requested the existing short/long suite and explicitly added the
+forward-only learner. `experiments/convex_stress/protocol.json` fixes both
+arms, all 35 tasks and seeds 0,1,2, the shared causal adapter, CE optimizer
+budget, direct consistency search, complete-sequence metrics and explicit
+nonrealizability outcomes. Original data generators and fingerprints are
+copied unchanged from diff-gpt `3555299`. The full-batch observation schedule
+and optimizer differ from the original transformer; no matched speed or
+promotion claim is made. No feature tuning or budget extensions after runs.
+All generated evidence remains local and ignored under the root's `runs/`.
