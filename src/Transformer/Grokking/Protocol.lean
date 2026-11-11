@@ -7,6 +7,8 @@ public import Transformer.Grokking.Protocol.AdamSource
 public import Transformer.Grokking.Protocol.AdamBounds
 public import Transformer.Grokking.Protocol.AdamGrowth
 public import Transformer.Grokking.Protocol.AdamBox
+public import Transformer.Grokking.Protocol.AdamLimit
+public import Transformer.Grokking.Protocol.AdamLimitWitness
 public import Transformer.Grokking.Protocol.Target
 public import Transformer.Grokking.Protocol.Witness
 public import Transformer.Grokking.Protocol.Model
@@ -25,8 +27,10 @@ public import Transformer.Grokking.Protocol.RefutationModes
 overfitting on small algorithmic datasets*, and what "held-out accuracy tends to 1" means for
 it: the prediction with its tie rule, the competitor margin and the accuracy; the split and
 the batches as functions of a run's shuffles; the author's Adam and AdamW update with its
-schedule, statement by statement as in the code, the bounds of its moments, and how far it
-can move a parameter whatever the gradients; the law of a run and the three modes of
+schedule, statement by statement as in the code, the bounds of its moments, how far it can
+move a parameter whatever the gradients, and the equation `wd · θ = −g / (|g| + ε)` of a limit
+of a run on one gradient field, which the minimizers of a weight-decayed loss fail in two
+witnesses; the law of a run and the three modes of
 convergence; a model that generalizes beside one that does not; the decoder in exact reals
 with every parameter group, its loss, and the gradient of the source's backward pass with its
 rule at the kinks of the activation; division modulo 97 with its tokens, supervision and

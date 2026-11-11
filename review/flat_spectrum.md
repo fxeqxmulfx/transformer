@@ -201,7 +201,9 @@ Not formalized:
   convergent run of gradient descent with weight decay reaches the optimum, and on the
   squared loss the run does converge, by Łojasiewicz's theorem (*Training reaches the
   optimal fit*, added). On the cross-entropy the run converges as well, and its limit fills
-  the unseen cells by M (*Training with cross-entropy*, added);
+  the unseen cells by M (*Training with cross-entropy*, added). For AdamW the step fails on
+  the pure factorization: a limit of a full-batch run is not a minimizer of the
+  weight-decayed loss (item WD13 there);
 - the readout-free version for `x³ + x y`, which the note calls a conjecture;
 - "How it fits together", which the note calls a heuristic.
 
@@ -9106,8 +9108,11 @@ Assumed or not covered:
   subsequence of the factors of trained fits of one width, and every such limit is an optimal
   fit; the factors themselves need not converge, and an optimal fit with a nonzero factor is
   not unique, by the sign change of WD7.
-- The model and the optimizer: for the real network (norms, SiLU, attention) and for AdamW
-  the modeling step of Lemma 1 remains an assumption, as the note says.
+- The model and the optimizer: for the real network (norms, SiLU, attention) the modeling
+  step of Lemma 1 remains an assumption, as the note says. For AdamW it does not hold in the
+  form of WD5: a limit of a full-batch run satisfies `wd · θ = − g / (|g| + ε)` in every
+  coordinate, and for a `1 × 1` factorization no run converges to a minimizer of the
+  weight-decayed loss (WD13). What a run of AdamW does reach is not treated.
 
 ### WD12. Without a lower bound the run can diverge
 
@@ -9150,6 +9155,63 @@ So convergence does not follow from the other hypotheses of WD5, even for a conv
 real-analytic loss with a constant gradient. What fails is the lower bound that WD9 asks for:
 with it the sublevel sets of the weight-decayed loss are compact.
 
+### WD13. AdamW is not gradient descent with weight decay: where its runs can end
+
+WD1–WD12 are about gradient descent with weight decay. The models of the note are trained
+with AdamW. In the code of the paper's experiments
+(`experiments/grok_division/PROTOCOL.md`, *The optimizer*) update `t` of a parameter `p` at
+the gradient `g` and the learning rate `lr` is
+
+```
+p ← p (1 − lr · wd),    m ← β₁ m + (1 − β₁) g,    v ← β₂ v + (1 − β₂) g²,
+p ← p − lr / (1 − β₁ᵗ) · m / (√v / √(1 − β₂ᵗ) + ε).
+```
+
+Let every update see the gradient of one continuous field `g`, the full batch, with
+`0 ≤ β₁, β₂ < 1`, `ε > 0` and a learning rate that is a nonzero constant after its warmup.
+
+1. The limit. If the parameters of a run converge to θ, then in every coordinate
+
+   ```
+   wd · θ = − g(θ) / (|g(θ)| + ε).
+   ```
+
+   The gradients seen converge to `g(θ)`. A moving average of a convergent sequence converges
+   to its limit, so `m → g(θ)` and `v → g(θ)²`, and the bias corrections tend to `1`. So the
+   right side of the update has a limit, and it is θ:
+   `θ = (1 − lr · wd) θ − lr · g(θ) / (|g(θ)| + ε)`.
+
+2. Consequences. With `wd > 0` every coordinate of a limit has `|θ| < 1 / wd`. Without weight
+   decay a limit is a critical point, `g(θ) = 0`. A limit is stationary for the loss with the
+   penalty `(wd/2) ‖θ‖²`, that is `g(θ) + wd · θ = 0`, in a coordinate only if `g(θ) = 0` or
+   `|g(θ)| = 1 − ε` there.
+
+3. The pure factorization. Take real factors `u`, `v` of a `1 × 1` product, the squared loss
+   `½ (u v − 3)²` and λ = 1. The weight-decayed loss of WD2 is
+
+   ```
+   ½ (u v − 3)² + ½ (u² + v²) = 5/2 + ½ (u v − 2)² + ½ (u − v)²,
+   ```
+
+   so its minimizers are `u = v = ±√2`, with the product `2`. At them the gradient of the
+   loss is `∓√2` in both coordinates, and `√2` is neither `0` nor `1 − ε`. So with the
+   source's constants and weight decay `1` no run of AdamW converges to a minimizer of the
+   weight-decayed loss, from any start. The same holds for one parameter and the loss
+   `½ (p − 3)²`: the minimizer `3/2` of the penalized loss is not a limit.
+
+So the modeling step of Lemma 1, "training with weight decay then behaves like
+minimum-nuclear-norm interpolation", does not pass to AdamW through its limits. Statement 1
+takes the place of the stationarity `M W = 0` of WD3. Where `g(θ) ≠ 0` and as ε → 0 it reads
+`wd · θ = − sign g(θ)`: the coordinate is at the wall of the box `‖θ‖_∞ ≤ 1 / wd` to which
+the gradient pushes it, as in the first-order condition of minimizing the loss in that box
+(Xie and Li, 2024, *Implicit bias of AdamW: ℓ∞-norm constrained optimization*, study the
+convergence to such points; not formalized here).
+
+Not covered: that a run of AdamW converges; minibatches, where the field changes with the
+update; which of the points of statement 1 a run reaches, and what replaces M for it; the
+real network (normalizations, SiLU, attention), to which statement 1 applies as to every
+model with a continuous gradient, and for which nothing about M is proved.
+
 ### Lean
 
 `src/Transformer/Grokking/FlatSpectrum/Training/`, namespace
@@ -9168,6 +9230,7 @@ with it the sublevel sets of the weight-decayed loss are compact.
 | WD9 | `isCompact_setOf_flatLoss_le`, `exists_pos_forall_sublevel`, `exists_pos_tendsto_decayRun`, `exists_pos_tendsto_decayRun_isDecayedMin`, `exists_isDecayedMin`; example: `expLoss`, `expGrad`, `pairing_expGrad`, `expLoss_first_order`, `continuous_expGrad`, `analyticAt_expLoss`, `expLoss_nonneg`, `exists_pos_tendsto_decayRun_expLoss_isDecayedMin`, `exists_isDecayedMin_expLoss` | Bounded below is `∀ X, l₀ ≤ L X`. The level bounds the start, `decayedLoss L λ U₀ V₀ ≤ c`, and `η₀` depends on `L`, `G`, λ, `c` and the width. `exists_pos_forall_sublevel` is stated on the factor space, with the null set for Lebesgue measure `volume`; it needs no convexity and uses `exists_pos_measure_sublevel_tendsto_strictSaddle_eq_zero`, `exists_pos_tendsto_of_mapsTo` and `exists_isLojasiewiczAt_of_analyticOnNhd` of `Transformer.Landscape.SaddleAvoidance`. |
 | WD10 | `conjTranspose_mul_self_unit`, `pairing_mul_conjTranspose_unit`, `inner_fderiv_gradient_flatLoss`, `lift_mul_stack_eq_zero_of_gradient_eq_zero`, `surjective_mulVec_of_injective`, `frobeniusSq_conjTranspose_mul_of_surjective`, `lift_posSemidef_of_pairing_sq_le`, `lift_posSemidef_of_injective`, `IsDecayedMin.isLocalMin`, `gradient_eq_zero_and_not_isStrictSaddle_of_isLocalMin`, `isDecayedMin_of_not_isStrictSaddle`, `isDecayedMin_of_not_isStrictSaddle_of_card_le`, `isDecayedMin_of_isLocalMin`, `isDecayedMin_of_isLocalMin_of_card_le`, `exists_pos_ae_tendsto_not_isStrictSaddle`, `exists_pos_ae_tendsto_decayRun`, `exists_pos_ae_tendsto_decayRun_isDecayedMin`, `exists_isDecayedMin_of_card_le`, `exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le`; counterexample: `frobeniusSq_one_fin_two`, `le_decayedLoss_width_one`, `decayedLoss_sqrt_smul_one`, `not_isDecayedMin_width_one` | Dependent columns is `¬ Function.Injective (stack U V).mulVec`; width `k ≥ min(m, n)` is `Fintype.card m ≤ Fintype.card k ∨ Fintype.card n ≤ Fintype.card k`. A strict saddle is `IsStrictSaddle (flatLoss L λ) x` of `Transformer.Landscape.SaddleAvoidance`, where `not_isStrictSaddle_of_isLocalMin` is added. The Hessian identity is `⟪S Zᴴ, ∇²F(W) (S Zᴴ)⟫ = ‖Z‖² ⟨S, M S⟩` for one-column `Z`, `A`, `B` and `S = [A; B]`, read off the exact formula for the gradient along the line. `lift_posSemidef_of_injective` holds for any matrix `G` with `M [U; V] = 0`, not only `G (U Vᴴ)`. A local minimum is `IsLocalMin (fun p => decayedLoss L λ p.1 p.2) (U, V)` on the pairs of matrices of one width. Almost every is `∀ᵐ x` for `volume` on the factor space, with the run started at `factors x`; `η₀` is that of `exists_pos_forall_sublevel`. The lower bound for width one holds for every λ ≥ 0 and the value at width two for every λ ≤ 1. |
 | WD12 | `linear_first_order`, `pairing_neg_one_smul_one`, `exists_linear_lt`, `analyticAt_linear`, `decayRun_linear_decay`, `decayRun_linear_add`, `tendsto_frobeniusSq_decayRun_linear_atTop`, `not_tendsto_decayRun_linear`, `decayedLoss_linear_smul`, `not_isDecayedMin_linear` | Module `Scope/LinearDiverge`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. The loss is `fun X => pairing (-1) X` on `Matrix m m ℂ` and its gradient is the constant `fun _ => -1`. "Not bounded below" is `∀ c, ∃ X, pairing (-1) X < c`, for a nonempty `m`. "The norm tends to infinity" is `Tendsto (fun t => frobeniusSq U_t + frobeniusSq V_t) atTop atTop`, and "no limit" is `¬ Tendsto … (𝓝 W)` for every pair `W`. Real-analytic is in the form of WD8. The start of the example is `fromCols 1 0`, `fromCols 0 1`; its full row rank and the positive definite step matrix are two further examples. |
+| WD13 | `tendsto_movingAverage`, `adamRun_succ_first`, `adamRun_succ_second`, `adamRun_succ_params`, `tendsto_adamRun_first`, `tendsto_adamRun_second`, `Hyper.Regular`, `Hyper.source_regular`, `decay_mul_eq_of_tendsto_adamRun`, `abs_decay_mul_lt_one_of_tendsto_adamRun`, `eq_zero_of_tendsto_adamRun`, `eq_zero_or_abs_eq_of_tendsto_adamRun`; witnesses: `adamRun_zero`, `scalarField`, `continuous_scalarField`, `hasDerivAt_scalarLoss`, `not_tendsto_adamRun_scalar`, `factorField`, `continuous_factorField`, `hasDerivAt_factorLoss_left`, `hasDerivAt_factorLoss_right`, `factorLoss`, `factorLoss_eq`, `five_halves_le_factorLoss`, `factorLoss_le_iff`, `not_tendsto_adamRun_factor` | Modules `src/Transformer/Grokking/Protocol/AdamLimit` and `AdamLimitWitness`, namespace `Transformer.Grokking.Protocol`, not the namespace of this section: the update is `adamStep` and the run `adamRun` of the protocol of the division experiment, with the constants `Hyper` (`Hyper.source wd` for the source's). "Every update sees one field" is the oracle `fun _ => g`; the parameters are a function `ι → ℝ` and convergence is in the product topology. The hypotheses on the constants are `Hyper.Regular h`, and the learning rate is `Hyper.rateAt`, constant after the warmup. `|θ| < 1 / wd` is stated as `|h.decay * θ i| < 1`. The factors are `θ false` and `θ true`; `factorField` is proved to be the gradient of `½ (u v − 3)²` coordinate by coordinate, and "a minimizer" is the hypothesis `∀ u v, factorLoss (θ false) (θ true) ≤ factorLoss u v`. The remark on ε → 0 and the citation are not formalized. |
 
 ## Flat kernels of any shape (added)
 
@@ -12618,8 +12681,9 @@ Assumed or not covered:
   not a decayed minimum: the logits `±(Re x)²` (XE14). Which readouts that are not linear
   keep the conclusion of XE3 is not determined.
 - Losses other than the squared loss, the cross-entropy and those of WD9.
-- The model and the optimizer: for the real network and for AdamW the modeling step of
-  Lemma 1 remains an assumption, as the note says.
+- The model and the optimizer: for the real network the modeling step of Lemma 1 remains an
+  assumption, as the note says. For AdamW the limits of a run are not those of gradient
+  descent with weight decay (WD13).
 
 ### XE14. Logits that are not linear in the product
 
