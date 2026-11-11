@@ -7,6 +7,7 @@ public import Transformer.Grokking.AdamW
 public import Transformer.Grokking.GradientEvidence
 public import Transformer.Grokking.ForwardForward
 public import Transformer.Grokking.Operational
+public import Transformer.Grokking.Protocol
 public import Transformer.Grokking.Geometry
 public import Transformer.Grokking.DivisionOrbits
 public import Transformer.Grokking.Composition
