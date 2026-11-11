@@ -4234,3 +4234,15 @@ error on all 4096 dictionaries. Removing target rank directions gives exactly
 the proved `4096(4-d)` squared-error bound. Five native tests, all 18 endpoint
 checks and re-evaluation of saved channels pass. Confidence scales, batch sizes
 and update budgets differ, so no equal-budget speed comparison is claimed.
+
+## Forward-only versus iterative convex channels on MQAR (2026-11-11)
+
+**Status: authorized; protocol frozen before measurement.** The user requested
+testing the learner proved at `a7c246fe` against the usual convex channel.
+`experiments/convex_channel_forward/README.md` fixes the same ordinary and
+recoded MQAR data for seeds 0,1,2, exact correctness checks, and repeated
+single-CPU timings. The primary baseline is one Frank-Wolfe update because
+the prior experiment already showed exact recovery there. The original
+1000-update endpoint checks consistency; it is not used to inflate a speedup.
+A losslessly compacted baseline separates lookup representation from training
+method. Native Rust only; no changes to the existing frozen experiment.
