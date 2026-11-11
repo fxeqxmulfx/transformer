@@ -4271,7 +4271,7 @@ All generated evidence remains local and ignored under the root's `runs/`.
 
 ## Persistent forward-only minibatches on MQAR (2026-11-11)
 
-**Status: protocol frozen; Lean equivalence and native validation in progress.**
+**Status: Lean equivalence landed at `e9b0260c`; native tests pass; frozen runs next.**
 The user requested checking minibatch support. CF6 retains every candidate's
 record across batches and compares the exact computed result with the original
 complete-data learner. `experiments/convex_channel_minibatch/README.md` fixes seven

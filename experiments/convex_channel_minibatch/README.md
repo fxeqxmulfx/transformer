@@ -3,7 +3,7 @@
 Does retaining candidate records across minibatches compute exactly the same
 model as the complete-data learner, and how much does batch size affect cost?
 The source is `review/flat_spectrum.md`, CF6, formalized in
-`ConvexChannel.Forward.Minibatch`. Its exact equality theorem includes failure,
+`ConvexChannel.Forward.Minibatch` at `e9b0260c`. Its exact equality theorem includes failure,
 partial coverage, empty batches and defaults. It assumes the same ordered data.
 
 ## Frozen protocol
@@ -48,6 +48,21 @@ not turn the learner into a noisy-label optimizer. The reverse-order check is
 empirical, separate from the ordered-stream Lean theorem.
 
 ## Reproduce
+
+The native API allows predictions between updates without freezing a candidate:
+
+```rust
+let mut learner = Streaming::new(shape, 0);
+for batch in train.chunks(16) {
+    learner.update_batch(batch);
+}
+let model = learner.snapshot()?;
+```
+
+`Streaming` is in `convex_channel_minibatch::streaming`; `Shape` is the unchanged
+`convex_channel_forward::model::Shape`. A snapshot returns `Err(query)` if every
+candidate for that query has been eliminated. It may be called after any batch.
+The learner can continue updating afterward; snapshots do not change its records.
 
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build
