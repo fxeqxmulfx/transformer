@@ -4298,7 +4298,7 @@ timing observations and model evidence remain local and ignored.
 
 ## Convex stress suite with original minibatches (2026-11-11)
 
-**Status: protocol and native implementation fixed; 210-cell cohort pending.**
+**Status: 204 outcomes completed and replayed; six remaining runs stopped by user.**
 The user additionally requested minibatches. The separate
 `experiments/convex_stress_minibatch/protocol.json` uses all 35 original
 stress tasks, three seeds and both learners. Frank-Wolfe updates the joint
@@ -4313,3 +4313,12 @@ full-batch cohort stays frozen. A separate posthoc branch-amplitude witness
 shows that current lag features can classify that task perfectly, despite
 higher unit-scale CE than the v1 trained model; no benchmark arm uses these
 hand-written task-specific weights.
+
+The user stopped the remaining near-zero runs on 2026-11-11: three long-recall
+seeds at 0/512 exact sequences and three recurrence seeds at 53/4704. All 210
+planned cells remain in the partial comparison; interrupted cells have no
+endpoint score. All 105 forward outcomes exactly match complete-data fitting.
+Both arms pass 9/75 short cells; forward passes 0/30 long, and FW has 0/24
+completed long passes plus six interrupted cells. The original source fingerprint
+and full-budget protocol remain frozen. `report_stopped.sh` and `compare.jq`
+regenerate the ignored evidence without dropping interrupted cells.

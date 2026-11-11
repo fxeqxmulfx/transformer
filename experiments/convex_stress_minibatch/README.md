@@ -107,7 +107,50 @@ cargo run --offline --release --manifest-path experiments/convex_stress_minibatc
 
 ## Cohort findings
 
-Pending completion of the frozen 210-cell minibatch cohort.
+On 2026-11-11 the user requested stopping the remaining near-zero runs and
+repairing the model. The cohort retains all 210 planned cells: 204 completed
+outcomes and six explicitly interrupted Frank-Wolfe cells. All 204 completed
+saved models or explicit failures replay exactly. The six interrupted cells
+have metadata and partial traces, not endpoint models or endpoint metrics.
+This is not a completed 210-cell benchmark.
+
+| Arm and tier | Planned | Completed | Interrupted | Completed passes at 99% |
+| --- | ---: | ---: | ---: | ---: |
+| Forward-only short | 75 | 75 | 0 | 9 |
+| Forward-only long | 30 | 30 | 0 | 0 |
+| Frank-Wolfe short | 75 | 75 | 0 | 9 |
+| Frank-Wolfe long | 30 | 24 | 6 | 0 |
+
+Every forward outcome, complete tensor and primary metric matches the earlier
+full-batch fit. Its 18 explicit no-consistent-key outcomes remain included.
+Both learners pass both AND tasks and linear transport at all three seeds.
+The stochastic rule does not add a passing task among completed cells.
+
+Short key-value binding falls from the full-batch 86.13% to 2.93–3.32%, with
+fresh training FW gaps 0.7829–0.7838 despite 30,000 updates. Associative-divisor
+accuracy is 17.55–17.59%, with gap about 0.24875. Branch exact sequence accuracy
+remains 0%, although generated token accuracy is 79.53%; the full-training gap
+is 0.00634–0.00636. These are exact source metrics, not substitute token scores.
+
+At interruption, long recall remains at 0/512 exact sequences after respectively
+11,200, 11,100 and 10,550 updates. Recurrence remains at 53/4704 (1.13%) after
+91,600, 93,550 and 93,450 updates. These are the last observed primary scores,
+not final evaluations. The original budgets were not silently shortened in the
+frozen protocol; this later user stop is separately recorded in `interruption.json`.
+
+`compare.jq` verifies that completed and interrupted outcomes partition the
+original 210-cell population, checks exact forward equality, and keeps null
+endpoint scores for interrupted cells. Its negative control rejects a missing
+interruption record. Regenerate the ignored comparison with:
+
+```sh
+bash experiments/convex_stress_minibatch/report_stopped.sh
+```
+
+The comparison and all interrupted evidence remain in root `runs/minibatch-v1`.
+The frozen learner fingerprint remains
+`8bca8579d8f1c2113e7c863199485f32bc1e2004a72b4c5966b546115e5555c4`.
+The follow-up `../convex_stress_repair/` uses the new Lean MF1–MF3 results.
 
 ## Why exact minibatch oracles need another convergence argument
 
