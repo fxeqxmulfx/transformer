@@ -47,6 +47,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.CharacterCode
 public import Transformer.Grokking.FlatSpectrum.Training.MirroredUnique
 public import Transformer.Grokking.FlatSpectrum.Training.SeenDirection
 public import Transformer.Grokking.FlatSpectrum.Training.UnseenRows
+public import Transformer.Grokking.FlatSpectrum.Training.LargeDecay
 
 /-! Training the pure factorization with weight decay, `review/flat_spectrum.md`, Lemma 1's
 modeling step and *Training reaches the optimal fit* (added).
@@ -168,4 +169,6 @@ kernel, and they do exactly when every cell is seen (`tendsto_inv_smul_codeProbe
 `tendsto_inv_smul_cubicKernel_iff`, XE11). For `λ > 0` a trained product is zero on every row
 and every column without a seen cell (`IsDecayedMin.row_eq_zero`,
 `IsDecayedMin.col_eq_zero`), where the held-out cross-entropy of an answer code is that of
-chance (`IsDecayedMin.ceLoss_heldOut_eq`, XE12). -/
+chance (`IsDecayedMin.ceLoss_heldOut_eq`, XE12). For a weight decay above `‖G 0‖`, so above
+`2 a |S|` for the cross-entropy, every trained product is `0`
+(`IsDecayedMin.mul_eq_zero_of_lt`, `IsDecayedMin.mul_eq_zero_of_ceLoss`, XE7). -/

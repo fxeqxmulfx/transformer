@@ -110,3 +110,10 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.Training.IsDecayedMin.pairing_codeProbe_eq_zero
 #print axioms Transformer.Grokking.FlatSpectrum.Training.IsDecayedMin.ceLoss_heldOut_eq
 #print axioms Transformer.Grokking.FlatSpectrum.Training.exists_tendsto_decayRun_ceLoss_eq_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.isDecayedMin_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.IsDecayedMin.mul_eq_zero_of_lt
+#print axioms Transformer.Grokking.FlatSpectrum.Training.isDecayedMin_zero_ceLoss
+#print axioms Transformer.Grokking.FlatSpectrum.Training.IsDecayedMin.mul_eq_zero_of_ceLoss
+#print axioms Transformer.Grokking.FlatSpectrum.Training.frobeniusSq_mask_zero_sub_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.isDecayedMin_zero_fitLoss
+#print axioms Transformer.Grokking.FlatSpectrum.Training.IsDecayedMin.mul_eq_zero_of_fitLoss
