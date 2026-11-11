@@ -57,6 +57,12 @@ does not change the trainer or its source fingerprint.
 A run resumes from its last checkpoint when the command is repeated, on any number of
 threads, and is then bit for bit the run that was not stopped. `runs/` is ignored by git.
 
+Hardware and precision. The runs were made on two Xeon E5-2680 v4 (28 cores, 56 threads),
+several at a time on 4 to 16 threads each; a run of 10⁵ updates took 4750 to 6360 s. All
+training arithmetic is `f32` on the CPU, in the order that PROTOCOL.md fixes, with gradual
+underflow unless `--flush-from` is given. The machine's GPU, a GeForce GTX 1050 with 2 GiB,
+was not used.
+
 ## Findings
 
 State on 2026-11-11: the cohorts `adamw` and `adamw --answer-only` are complete. The `adam`
