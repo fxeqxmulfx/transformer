@@ -1,15 +1,18 @@
 # Transformer
 
-This project has two goals:
+This project has three goals:
 
 1. Prove end-to-end convergence to generalization for the training process
    studied in **Grokking: Generalization Beyond Overfitting on Small Algorithmic
    Datasets** (Power et al., [arXiv:2201.02177](https://arxiv.org/abs/2201.02177)).
 2. Build a **convex model that passes the GPT stress tests**, retaining their
    original inputs, splits, answer losses and evaluation criteria.
+3. Develop **forward-only training without backpropagation**, learning from
+   scratch with verified correctness, useful held-out accuracy and measured
+   training cost.
 
 Lean proofs live in [src/](src/Transformer.lean); native Rust/Kernite
-experiments live in [experiments/](experiments/README.md). Both goals remain
+experiments live in [experiments/](experiments/README.md). All three goals remain
 unfinished. The status below is as of **2026-11-12**.
 
 Readiness percentages are rough assessments of project progress, not proof
@@ -19,7 +22,7 @@ below; the remaining milestones are not equally difficult.
 ## Proved foundation: spectrum, recovery and classification
 
 [Flat spectrum](review/flat_spectrum.md) contains substantial proved foundations
-for both goals. Its results determine which recovery objectives can work,
+for all three goals. Its results determine which recovery objectives can work,
 which representations admit recovery, and what additional assumptions are
 needed. The next steps build on these results.
 
@@ -37,6 +40,7 @@ modulus `p`.
 | **Feature codes and margins** | A separating bank of recovered features gives correct classification with a positive margin; sufficiently small score errors preserve it. Multiplicative characters give rank-one features for division on nonzero residues. |
 | **Convex spectral bounds (SB1–SB3)** | Operator-norm upper bounds admit flat targets while preserving convexity. They provably recover one flat two-by-two example; a separate ambiguity example proves that the bound alone cannot guarantee unseen answers in general. |
 | **Pure-factorization training** | For convex analytic losses bounded below, gradient descent with a positive coupled quadratic penalty converges to a global minimum under the stated step-size, width and initialization hypotheses. WD13 proves why this result cannot be transferred to AdamW in general. |
+| **Forward-only channel learning (CF1–CF6)** | A finite categorical learner constructs a global ordinary-CE optimum under realizability and recovers unseen answers under explicit coverage and identification conditions. Persistent minibatches return exactly the same result for the same ordered observations. |
 
 These theorems address different parts of learning. Theorem A concerns exact
 kernel recovery; Theorems B and C bound specified correlations and operators.
@@ -189,6 +193,64 @@ check before a benchmark pass can be claimed.
 
 The [experiment plan](EXPERIMENT_PLAN.md) records the frozen cohorts and next
 steps. Each experiment README records its own protocol, results and limits.
+
+## Goal 3: forward-only training
+
+**Estimated readiness: 40%.** A restricted forward-only learner is proved and
+implemented, with successful recall and targeted stress experiments. A general
+method for GPT training and broad efficiency guarantees remain open.
+
+Learn from ordinary training examples using forward computations and explicit
+updates, without loss gradients or backpropagation during training. Preserve
+the original task metrics and count the cost of candidate search, certificates,
+projections and model evaluations. Goal 2 concerns the model and its benchmark
+quality; this goal adds requirements on the training method and its cost.
+
+### Ready
+
+- **An exact finite learner is proved.**
+  [Forward-only channel learning](src/Transformer/Grokking/FlatSpectrum/ConvexChannel/Forward.lean)
+  constructs a global ordinary answer-CE minimum for realizable single-key
+  channels. Coverage of the true key's values and conflicting observations at
+  every wrong key imply recovery on all inputs. Its candidate-observation
+  count is bounded by the number of keys times the number of samples.
+- **Persistent minibatches preserve the result.** CF6 proves equality with
+  complete-data fitting for the same ordered examples, including inconsistent
+  data and explicit failure. The
+  [native minibatch experiment](experiments/convex_channel_minibatch/README.md)
+  passes all 42 task/seed/batch-size comparisons and 2,316 prefix checks.
+- **A measured recall speedup exists.** The
+  [forward-only recall experiment](experiments/convex_channel_forward/README.md)
+  learns the same exact channel as the iterative baseline, with 100% accuracy
+  on all 4,096 dictionaries in each of six cases. Direct fitting is about
+  26–27 times faster than that implementation's first Frank-Wolfe update,
+  which already reaches the optimum. This is a measured benefit on that family.
+- **Forward-only stress learners run natively and replay.** The counts model
+  passes 9/35 primary tasks; spectral sharing passes all six selected arithmetic
+  tasks; certified recovery solves held-out absolute difference. These are
+  the separate cohorts reported under Goal 2, with their failures retained.
+
+### Not ready
+
+- **General GPT training from scratch.** The exact channel learner assumes a
+  realizable single-key rule. It does not handle arbitrary noisy labels,
+  interacting features or discovery of a transformer's internal representation.
+  A general forward-only replacement for backpropagation remains unestablished.
+- **A complete stress-suite pass.** No single forward-only protocol passes all
+  35 short/long tasks or the full 165-case catalog. Exact training fit alone
+  does not identify unseen answers.
+- **Convergence and numerical guarantees for the broader learners.** The
+  finite channel theorem does not prove convergence rates or bounds that turn
+  numerical errors into correct predictions for the spectral projection solvers.
+- **Efficiency at matched quality across tasks.** The recall timing result
+  does not establish a general speed or memory advantage over transformer
+  training. Comparisons must include all training work and separate fresh
+  learning from reuse of parameters or directions obtained by backpropagation.
+
+The next step is to extend the proved forward-only learner and certified
+updates to the remaining task structures, then compare complete training cost
+at matched held-out quality. The existing spectral and identification results
+supply conditions to check; flatness alone supplies no missing labels.
 
 ## Working in this repository
 
