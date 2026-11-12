@@ -322,7 +322,12 @@ equalities or a claim about the singular values of the whole network.
 The tensor contains a CD5 router with a linear decoder as the point
 `W[p,h,c] = w[p] D[h,c]`; the logits are proved equal for every input and
 every nonlinear block library. The factorization is not imposed during
-training. Jointly optimizing separate w and D would instead introduce a
+training. If w is nonnegative and sums to one, and each decoder class column
+has absolute sum at most R, `liftHead_budget` proves that the lifted tensor
+satisfies that same R budget. Independent layer routers satisfy this premise
+through `productWeights_mem`. This makes their budget inclusion explicit;
+it does not turn training of their factors into a convex problem.
+Jointly optimizing separate w and D would instead introduce a
 product and would not inherit this convexity theorem. There are exactly
 `|J|^depth |H|` feature coordinates per class, so native work must set explicit
 path, feature and memory limits before constructing the bank.

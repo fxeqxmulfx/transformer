@@ -117,6 +117,23 @@ theorem liftHead_logits (B : ℕ → J → E → E) (d : ℕ) (terminal : E → 
   simp [headLogits, headFeatures, liftHead, pathLogits, Fintype.sum_prod_type,
     Finset.mul_sum, mul_assoc]
 
+/-- A normalized nonnegative path router and a bounded shared decoder embed
+within the very same output budget (CD8). This includes independent routers
+through `productWeights_mem`; it does not assert convexity of their factors. -/
+theorem liftHead_budget {d : ℕ} {w : Path J d → ℝ} {D : H → C → ℝ} {R : ℝ}
+    (hw : w ∈ pathDomain d) (hD : D ∈ headBudget R) :
+    liftHead w D ∈ headBudget R := by
+  intro c
+  calc
+    (∑ k, |liftHead w D k c|) = ∑ p, w p * ∑ h, |D h c| := by
+      simp only [liftHead, Fintype.sum_prod_type, abs_mul, abs_of_nonneg (hw.1 _),
+        Finset.mul_sum]
+    _ ≤ ∑ p, w p * R := by
+      apply Finset.sum_le_sum
+      intro p hp
+      exact mul_le_mul_of_nonneg_left (hD c) (hw.1 p)
+    _ = R := by rw [← Finset.sum_mul, hw.2, one_mul]
+
 /-- Exact feature count makes the exponential depth cost explicit (CD8).
 The additional output coefficients multiply this by the class count. -/
 theorem head_feature_card (d : ℕ) :
@@ -133,6 +150,12 @@ example := headLogits_bound (K := Fin 2) (C := Bool) (fun k (x : ℝ) => if k = 
   (W := fun _ _ => 1 / 2) (R := 1) (M := 4)
   (by intro c; norm_num [Fin.sum_univ_two]) (by norm_num) 2
   (by intro k; fin_cases k <;> norm_num) true
+
+example : liftHead (pathVertex (choicePath (fun _ => true) 2))
+    (fun (_ : Fin 2) (_ : Bool) => (1 / 2 : ℝ)) ∈ headBudget 1 := by
+  apply liftHead_budget (pathVertex_mem _)
+  intro c
+  norm_num [Fin.sum_univ_two]
 
 example : headLogits (headFeatures (fun _ (_ : Unit) (x : ℝ) => x + x^2) 2
     (fun x (_ : Unit) => x)) (fun _ (_ : Bool) => 1) 1 true = 6 := by

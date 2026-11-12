@@ -24,6 +24,7 @@ open Lean Elab Command
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.headLoss_convex
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.headLogits_bound
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.liftHead_logits
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.liftHead_budget
 
 run_cmd do
   let env ← getEnv
