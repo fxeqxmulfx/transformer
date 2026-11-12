@@ -14832,3 +14832,45 @@ dataset. It motivates additional generic fixed spectral budgets under CM5
 and CM7. The new bounds remain convex upper bounds, with no learned product,
 rank equality, arithmetic rule or missing label in the domain. Inclusion of
 a target is necessary capacity, not a proof that CE training will recover it.
+
+### CM10. Feasible uniform completion and a sharing remedy
+
+Repairing CM9's capacity gap does not force missing labels. Observe all rows
+of columns zero and two of its table, leaving columns one and three unseen.
+Keep the observed one-hot probabilities and put uniform binary probabilities
+in the unseen columns. Its moment is H with the unseen columns zeroed. Its
+operator and nuclear norms are two and four, below the intermediate bounds
+`sqrt(8),2 sqrt(8)`. It fits every observed label and therefore globally minimizes
+ordinary CE on that feasible set, although an unseen target coordinate is
+only one half. `Schatten/Completion.lean` proves the norms, feasibility, exact
+fit and actual minimum together. This explains a failure that extra optimizer
+steps alone need not repair; it is not an assertion about a particular random
+stress split or a floating-point checkpoint.
+
+One repair is to supply correct shared coordinates. Fix a column representative
+map r, and impose `P(i,j)=P(i,r(j))`. These are linear equalities and form a convex
+set. At the observed CE lower bound, any row sharing an observed representative
+equals that observation's one-hot target. `Schatten/Sharing.lean` proves this
+conditional statement. For CM9's table, r maps columns zero/one to zero and
+two/three to two; every representative is observed, and the same empirical CE
+minimum now determines the entire table. The target satisfies every hypothesis.
+
+The representative map is fixed in this convex problem. Agreement on a few
+observations alone does not prove that two input values are interchangeable
+on unseen inputs. A future training-only grouping procedure must preserve all
+original observation multiplicities, test its proposed consistency, retain
+unshared controls, and evaluate missing answers separately. If it searches
+over fixed maps, the certificate concerns each conditional convex model or
+their direct prediction hull; it is not a convexity theorem for freely learned
+products of a map and a table, nor a guarantee that the selected sharing rule
+matches unknown ground truth.
+
+More generally, fix row and column group maps rho and kappa, learn Q on their
+grouped indices, and predict `P(i,j)=Q(rho(i),kappa(j))`. Impose the same convex
+spectral budgets on Q. `Schatten/Quotient.lean` proves that the lifted family
+is convex, remains probability-valued, and retains the exact-fit ordinary-CE
+minimum certificate. Its loss is still summed over every original observation;
+multiple observations mapped to one grouped cell retain their multiplicities.
+This is a fixed linear lookup of learned coordinates, not a learned product
+of a grouping matrix and Q. The conditional statement does not prove that an
+adaptive grouping search returns a correct map or an identifying completion.

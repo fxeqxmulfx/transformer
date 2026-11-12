@@ -10,6 +10,9 @@ open Lean Elab Command
 #print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.intermediate_excluded
 #print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.intermediate_admitted
 #print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.intermediate_excluded_hull
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.masked_optimal_but_uncertain
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.paired_recovery
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.quotient_fit_minimum
 
 run_cmd do
   let env ← getEnv
