@@ -1,0 +1,22 @@
+{
+  "version": "general-bank-comparison-v1",
+  "general_fingerprint": "b9727070279a161f6bb65ed90e8574a5452e02160901d8ec167ac75ae0247280",
+  "certified_fingerprint": "e4e21f0f3eca67d10b979bd4ed9085df0fa7bd615b7799cf72172647e5b662f3",
+  "hull_fingerprint": "64a2fbfec2c396cb89a7a4d248a4e105a37d0a740adb1f87f648d6d5f43580ca",
+  "tasks": ["arithmetic-perm-add", "arithmetic-add", "arithmetic-sub", "arithmetic-div", "arithmetic-mul", "arithmetic-sum-cube", "arithmetic-sum-pow4", "arithmetic-abs-diff", "arithmetic-abs-diff-blind"],
+  "arms": ["full_batch", "minibatch", "forward_only"],
+  "added_task": "arithmetic-abs-diff-blind",
+  "ideal_ce_tolerance": 1e-8,
+  "address_space_limit_bytes": 68719476736,
+  "general_binary": ".kanban/artifacts/209/cohort-v1/convex-stress-general-bank-v1",
+  "certified_binary": ".kanban/artifacts/201/cohort-v1/convex-stress-certified-v1",
+  "frozen_inputs": {
+    ".kanban/artifacts/209/cohort-v1/convex-stress-general-bank-v1": "d2b0618730a2f846d814347a8830c77d98a643df5f5d061e3e4d64c89616cea4",
+    ".kanban/artifacts/201/cohort-v1/convex-stress-certified-v1": "6472524203b3b61c47d170b641b8e62d6616d92b85f2acd95f0bebc27fa4e030",
+    "experiments/convex_stress_hull/recovery/run.sh": "d5d6c8a7bf4fcfdb50906dab79a1fce18781d5f13ee401d6eb787f1f68b24660",
+    "experiments/convex_stress_hull/recovery/inventory.jq": "c3b3d6f7301b9c47381355ee8e78ba0d14b2afbd95cb6e6e88ae214d7ffc1cdc",
+    "experiments/convex_stress_hull/recovery/protocol.json": "edde06d68327cc843c2fda9bbe788a7e46578ec21172331cf3a81797dbba6cbf"
+  },
+  "selection": "For each of the nine tasks and three modes, compare every completed general-bank decoder in declaration order, then the earlier selected model. On the eight shared tasks use the complete certified comparison, which recursively retains paired, decoded and earlier candidates. On the added blind task use the complete recovered full-suite hull selection. Choose the first candidate within 1e-8 of ideal CE, otherwise the smallest training CE. Retain every general refusal/process failure and every complete parent comparison. Do not choose using held-out metrics.",
+  "evidence": "Require unchanged complete general and certified summaries, native recursive certified integration with the complete paired and decoded parents, and all four recovered full-suite fits. Verify the recovery's retained/new artifact manifests and rerun its complete 105-choice native selection. No partial parent substitution. The new comparison covers 27 choices; it preserves the complete 105-choice hull baseline but does not yet integrate every depth follow-up across all35 or compare a fresh transformer. This is an adaptive integration following the general-bank cohort."
+}

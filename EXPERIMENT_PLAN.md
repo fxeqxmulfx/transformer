@@ -26,8 +26,8 @@ reaches CE 0.551444714 from 1.030216342 in full/mini and from 0.678028932 in
 forward, which evaluates no gradients. One solver optimizes one fixed decoder's
 convex subdomain; it does not optimize the full hull. Lean `aef9d966` also
 records a permanent poor-anchor stall and recovery with another observed anchor.
-Useful decoder banks, anchor discovery and an original-data protocol remain
-to be frozen. These fixtures do not update original-task scores.
+Task #209 supplies the declared bank, anchor discovery and original-data protocol.
+The solver fixtures alone do not update original-task scores.
 
 Task #209 adds bounded observed-anchor discovery in `convex_stress_general_bank`.
 The native search selects one complete independently checked whole-bank
@@ -45,10 +45,19 @@ state/update replay, larger fibers, complex raw spectra, spectral rejection,
 rehashed artifact tampering and process-failure accounting. Only checked
 endpoints may enter summaries; preserve partial files and every failed case.
 The protocol fixes 16 anchors, 16 sweeps, one billion producer comparisons,
-128/512/128 update caps and 12 endpoint repair rounds. No original result is
-claimed yet. Keep the full35 goal and all earlier failures; integrate only with
-complete audited predecessors, including the full-suite baseline for the long
-blind task.
+128/512/128 update caps and 12 endpoint repair rounds. Producer `eb65aa73` now
+finishes all 27 cases with no process/replay failure: six returned models and
+102 explicit decoder refusals. Absolute difference and its blind long variant
+each reach 100% on all 4,705 held-out pairs in full/mini/forward; the other seven
+tasks refute this bank in every mode. Successful cases certify all 9,409 cells
+at their first anchor. Full state replay and raw decoder/DFT/SVD/CE audits pass;
+peak RSS is 331,628 KiB. Their update-zero certificate fallback already gives
+ideal training CE. Each stops at update 19; the blind endpoint uses fallback
+weight zero, so no convergence benefit is claimed. A separate native comparison
+harness preserves all older candidates, tests CE-only choices and refuses
+partial parents. Actual integration remains pending the complete certified/
+decoded chain and recovered full-suite baseline. Keep #209 open, the full35
+goal, the transformer comparison and all earlier failures.
 
 ## Certified paired-decoder answers (2026-11-12)
 

@@ -3,9 +3,10 @@
 Lean `aef9d966` proves that one observed anchor can remain at a support fixed
 point forever while another identifies the same missing answer. This crate
 tries a finite, deterministic list of observed anchors before constructing a
-`convex_stress_general` solver. Twelve native fixture tests pass. The original-data
-harness and `protocol.json` now fix 27 task/mode cases and all 108 decoder slots;
-no original score is claimed before running and replaying them.
+`convex_stress_general` solver. Twelve native fixture tests pass. The frozen
+original-data cohort now completes all 27 task/mode cases and all 108 decoder
+slots. Absolute difference and its long blind variant pass in every mode;
+the other seven tasks refute this particular declared decoder family.
 
 The mathematical source is `review/flat_spectrum.md`, CM19. Soundness uses its
 theorem for any observed anchor and any finite budget. Choosing one certificate
@@ -121,6 +122,41 @@ The summary requires all 27 process slots. Only successfully replayed, audited
 endpoints have scores; failures remain explicit with no score. Scripts and the
 producer are frozen together before launch; a running script is never edited.
 
-All earlier candidates and failures remain. Integration awaits complete audited
-predecessors, including the full-suite baseline for the added long task. This is
+## Original results
+
+Producer `eb65aa73` finishes all 27 cases with zero process or replay failures.
+All six returned models pass complete update/state replay and independent raw
+coordinate, decoder, DFT/SVD, CE and original-split audits. The other 102 decoder
+slots are explicit refusals. Recomputing the sealed summary gives the same file
+hash, `bcc5e6d9bd17022f7ab45652272f596f654f398dc744010c3c57c83036f496a7`.
+
+| Original task | Selected decoder | Certified cells | Held-out exact sequences, full / mini / forward |
+| --- | --- | --- | --- |
+| Absolute difference | Width 1 | 9,409 / 9,409 | 4,705 / 4,705 in every mode |
+| Blind absolute difference, long tier | Width 2 | 9,409 / 9,409 | 4,705 / 4,705 in every mode |
+| Permuted addition, addition, subtraction, division, multiplication, sum-cube, sum-power-four | None | Whole-bank inconsistency | No endpoint score; all 21 case refusals retained |
+
+The two successful tasks use the first scheduled anchor; the original results
+therefore do not measure an advantage from trying multiple anchors. Discovery
+uses 153,335,629 producer decoder comparisons per ordinary case and 779,272,915
+per blind case, with the independent checker repeating the same number. This
+setup is charged in every mode. Peak RSS over preparation, fitting and replay is
+331,628 KiB (about 324 MiB), within the 64 GiB process cap.
+
+Every successful fit stops at its first positive observation, update 19, with
+CE excess about `-3.4e-13` from floating-point roundoff. Full/mini/forward gradient
+counts are 89,376 / 4,704 / 0 per successful task. The certificate and feasible
+fallback already attain ideal observed CE at update zero. Ordinary absolute
+difference retains iterate weight one; the blind case returns fallback weight
+zero in all modes after the checked repair. Thus these results demonstrate
+training-only identification under the declared family and a valid endpoint,
+not numerical convergence or a benefit from the 19 updates. The blind raw audit
+checks 192 nonconstant frequencies and genuinely complex moment entries.
+
+The seven refuted tasks show that this vocabulary-only bank is not a universal
+prior. Their refusals neither refute the broader decoder hull nor replace earlier
+models that fit those tasks. Every old candidate remains part of the comparison.
+The separate [`comparison/`](comparison/) harness implements CE-only integration,
+including the added long case and complete full-suite baseline; its metadata
+tests pass. Actual integration awaits complete audited predecessors. This is
 an adaptive follow-up; it does not complete the full35 goal or transformer comparison.
