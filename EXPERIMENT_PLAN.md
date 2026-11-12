@@ -2,6 +2,14 @@
 
 ## Convex stress repair after formal failure witnesses (2026-11-11)
 
+Continuation on 2026-11-12: the shared pilot repairs both recall tasks and, at
+scale 10, branch generation, but mandatory sharing regresses on Boolean AND.
+Lean MF4 now proves a sharing-capacity obstruction and an unrestricted oracle
+preference. The [adaptive protocol](experiments/convex_stress_adaptive/protocol.json)
+prespecifies all 35 tasks, three arms, two scales and seed zero (210 cells), with
+the same diagnostic caps. Six native checks pass. Retain the shared-only pilot;
+no general full-suite success is inferred from the regression witnesses.
+
 Task #160 follows the user's instruction to prove the failure first and repair
 full-batch failures too. The Lean statements in `ConvexChannel/Minibatch/` and
 `ConvexChannel/Shared.lean` are landed before native experiments: singleton

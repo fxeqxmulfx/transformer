@@ -1,0 +1,16 @@
+{
+  "version": "convex-stress-adaptive-v1",
+  "source_commit": "3555299",
+  "features": "All original causal slots, with a new constant slot; token-indexed blocks aligned relative to the visible query. Restore the full query-indexed joint tensor. Shared vertices are optional, not a restriction. Values and output classes are not recoded.",
+  "optimizer": "Store and replace each consumed prefix gradient. Compute both an unrestricted query-wise oracle and a globally shared candidate; prefer sharing only if its cost is no larger. Use integer joint vertex counts and eta=2/(updates+1). Full-batch refreshes all prefixes. Report fresh unrestricted full-training CE/gap and shared update count. No general stale-gradient convergence claim.",
+  "forward_only": "Retain both global and query-wise consistency records. Use global sharing when consistent, otherwise the unrestricted per-query solution. One epoch, checked against complete-data fitting. Explicit failure if any query has no consistent key.",
+  "arms": ["full_batch", "minibatch", "forward_only"],
+  "scales": [1, 10],
+  "full_updates": 64,
+  "minibatch_updates": 512,
+  "full_gap_tolerance": 1e-8,
+  "stop": "First observed primary exact accuracy >=99%, or configured update cap; full-batch also stops at a fresh empirical FW gap <=1e-8. Forward-only completes one epoch. All results, failures and diagnostic caps remain visible.",
+  "pilot_seed": 0,
+  "pilot_tasks": ["suite-boolean-and-shift", "gpt-probe-key-value-binding", "basis-recall-easy", "gpt-probe-branch-amplitudes", "arithmetic-div", "basis-parity16", "basis-depth-easy", "recurrence-fibonacci-k1-c2-lgt", "suite-boolean-and-random", "power-division-p97-k3", "arithmetic-cube-plus", "power-division-p193-k5", "power-division-p193-k2", "power-division-p97-k2", "arithmetic-square-times", "arithmetic-sub", "arithmetic-mul", "arithmetic-add", "power-division-p193-k3", "division-p193", "arithmetic-square-sum", "power-division-p97-k5", "arithmetic-half-sum", "arithmetic-sum-square", "basis-depth-hard", "arithmetic-affine-product", "arithmetic-perm-add", "gpt-probe-linear-transport", "arithmetic-abs-diff-blind", "arithmetic-abs-diff", "arithmetic-sum-pow4", "basis-parity20", "arithmetic-sum-cube", "associative-divisor-n2-l1-w0", "basis-parity24"],
+  "interpretation": "All 35 tasks, three arms, two scales, seed zero: 210 diagnostic cells frozen before the adaptive cohort. Original splits and exact metrics remain unchanged. Caps differ from the original full-budget benchmark. No new transformer run or task-specific arithmetic features. Keep all failures and optimization gaps; flat spectrum remains a capacity bound."
+}

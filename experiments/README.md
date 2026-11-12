@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_adaptive`](convex_stress_adaptive) | 210 prespecified cells | Restore the original query-specific capacity while preferring equally good shared oracle solutions. Six native checks pass after Lean proofs; all 35 stress tasks are planned in full-batch, minibatch and forward-only modes at two fixed CE scales. |
 | [`convex_stress_repair`](convex_stress_repair) | 48 prespecified pilot cells | After Lean proofs of singleton oracle failure and query sharing, test retained gradients and shared aligned inputs in full-batch, minibatch and forward-only modes. Seven native regression checks pass; stress outcomes are pending. |
 | [`convex_stress_minibatch`](convex_stress_minibatch) | 204 completed, 6 stopped by user | All 210 planned cells retained; 204 endpoint outcomes replay. Forward-only exactly matches full fitting; both arms pass 9/75 short cells, with no completed long pass. Near-zero remaining runs were stopped to repair the proved minibatch oracle failure. |
 | [`convex_stress`](convex_stress) | 210 complete cells, two learners and three seeds | Both joint-channel Frank-Wolfe and forward-only consistency learning pass 9/75 short and 0/30 long cells. Exact training fit does not resolve unseen query/value records: short recall is 86.13%, long recall 50% exact sequences. The direct learner reports 18 explicit fit failures. All saved outcomes replay. |
