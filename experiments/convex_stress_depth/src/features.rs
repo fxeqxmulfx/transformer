@@ -69,14 +69,16 @@ enum Block {
 
 #[derive(Clone)]
 struct State {
-    amplitudes: Vec<[C; 4]>,
+    // Ordered nonzero positions, including small roundoff residuals. We do not
+    // replace the complex state by an integer pointer or discard small entries.
+    amplitudes: Vec<(usize, [C; 4])>,
     history: Vec<usize>,
 }
 impl State {
     fn norm(&self) -> f64 {
         self.amplitudes
             .iter()
-            .flatten()
+            .flat_map(|(_, row)| row)
             .map(C::norm_sqr)
             .sum::<f64>()
             .sqrt()
@@ -85,14 +87,14 @@ impl State {
         let mut best = 0;
         let energy = |row: &[C; 4]| row.iter().map(C::norm_sqr).sum::<f64>();
         for i in 1..self.amplitudes.len() {
-            if energy(&self.amplitudes[i])
-                .total_cmp(&energy(&self.amplitudes[best]))
+            if energy(&self.amplitudes[i].1)
+                .total_cmp(&energy(&self.amplitudes[best].1))
                 .is_gt()
             {
                 best = i;
             }
         }
-        best
+        self.amplitudes[best].0
     }
     fn token(&self, prefix: &[i64], vocab: usize) -> usize {
         prefix.get(self.position()).map_or(vocab, |t| *t as usize)
@@ -102,8 +104,10 @@ impl State {
             .iter()
             .rposition(|t| mask.contains(*t as usize))
             .unwrap_or(prefix.len());
-        let mut amplitudes = vec![[C::default(); 4]; prefix.len() + 1];
-        amplitudes[position][0] = C::new(1., 0.);
+        let amplitudes = vec![(
+            position,
+            [C::new(1., 0.), C::default(), C::default(), C::default()],
+        )];
         Self {
             amplitudes,
             history: vec![prefix.get(position).map_or(vocab, |t| *t as usize)],
@@ -144,20 +148,40 @@ impl State {
             }
         };
         let divisor = self.norm().max(1.);
-        let mut capped = self.amplitudes.clone();
-        for value in capped.iter_mut().flatten() {
-            *value /= divisor;
+        let selected = self
+            .amplitudes
+            .iter()
+            .find(|(i, _)| *i == current)
+            .unwrap()
+            .1
+            .map(|z| z / divisor);
+        let mut positions: Vec<_> = self.amplitudes.iter().map(|(i, _)| *i).collect();
+        if !positions.contains(&target) {
+            positions.push(target);
+            positions.sort_unstable();
         }
-        let mut moved = vec![[C::default(); 4]; capped.len()];
-        moved[target] = capped[current];
-        let mut amplitudes = Vec::with_capacity(capped.len());
+        let mut amplitudes = Vec::with_capacity(positions.len());
         let mut branch_norm_squared = 0.;
-        for (i, old) in self.amplitudes.iter().enumerate() {
-            let delta = std::array::from_fn(|stream| moved[i][stream] - capped[i][stream]);
+        for i in positions {
+            let old = self
+                .amplitudes
+                .iter()
+                .find(|(p, _)| *p == i)
+                .map_or([C::default(); 4], |(_, r)| *r);
+            let delta = std::array::from_fn(|stream| {
+                (if i == target {
+                    selected[stream]
+                } else {
+                    C::default()
+                }) - old[stream] / divisor
+            });
             let branch = transport.apply(layer, delta);
             branch_norm_squared += branch.iter().map(C::norm_sqr).sum::<f64>();
-            let skip = transport.apply(layer, *old);
-            amplitudes.push(std::array::from_fn(|stream| skip[stream] + branch[stream]));
+            let skip = transport.apply(layer, old);
+            let row = std::array::from_fn(|stream| skip[stream] + branch[stream]);
+            if row.iter().any(|z| *z != C::default()) {
+                amplitudes.push((i, row));
+            }
         }
         let mut result = Self {
             amplitudes,
@@ -175,6 +199,13 @@ impl State {
     }
 }
 
+#[derive(Clone, Copy, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
+pub enum Execution {
+    #[default]
+    Composed,
+    Additive,
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Bank {
     pub vocab: usize,
@@ -182,6 +213,8 @@ pub struct Bank {
     pub history_slots: usize,
     pub masks: Vec<Mask>,
     pub transport: Transport,
+    #[serde(default)]
+    pub execution: Execution,
 }
 
 impl Bank {
@@ -222,6 +255,7 @@ impl Bank {
             history_slots,
             masks,
             transport,
+            execution: Execution::Composed,
         };
         bank.validate()?;
         Ok(bank)
@@ -244,7 +278,13 @@ impl Bank {
         Ok(())
     }
     pub fn paths(&self) -> usize {
-        self.masks.len() * (1 << self.depth)
+        self.masks.len() * self.paths_per_view()
+    }
+    pub fn paths_per_view(&self) -> usize {
+        match self.execution {
+            Execution::Composed => 1 << self.depth,
+            Execution::Additive => (2 * self.depth).max(1),
+        }
     }
     pub fn stride(&self) -> usize {
         self.vocab + 1 + self.history_slots
@@ -265,11 +305,11 @@ impl Bank {
         let mut features = Vec::with_capacity(2 * self.paths());
         for (mask_index, mask) in self.masks.iter().enumerate() {
             let mut states = vec![State::initial(prefix, mask, self.vocab)];
-            for layer in 0..self.depth {
-                let mut next = Vec::with_capacity(2 * states.len());
-                for state in states {
+            if self.execution == Execution::Additive && self.depth > 0 {
+                let initial = states.pop().unwrap();
+                for layer in 0..self.depth {
                     for block in [Block::PreviousDistinct, Block::CompletedSuccessor] {
-                        next.push(state.step(
+                        states.push(initial.step(
                             prefix,
                             mask,
                             self.vocab,
@@ -279,10 +319,26 @@ impl Bank {
                         )?);
                     }
                 }
-                states = next;
+            } else {
+                for layer in 0..self.depth {
+                    let mut next = Vec::with_capacity(2 * states.len());
+                    for state in states {
+                        for block in [Block::PreviousDistinct, Block::CompletedSuccessor] {
+                            next.push(state.step(
+                                prefix,
+                                mask,
+                                self.vocab,
+                                block,
+                                self.transport,
+                                layer,
+                            )?);
+                        }
+                    }
+                    states = next;
+                }
             }
             for (path, state) in states.into_iter().enumerate() {
-                let index = mask_index * (1 << self.depth) + path;
+                let index = mask_index * self.paths_per_view() + path;
                 let mut hash = 0xcbf29ce484222325u64;
                 for token in &state.history {
                     for byte in (*token as u64).to_le_bytes() {
@@ -327,8 +383,65 @@ impl Bank {
 }
 
 #[cfg(test)]
+mod dense_reference;
+
+#[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn sparse_complex_states_reproduce_the_frozen_dense_feature_ids() -> Result<()> {
+        let mut rng = convex_stress_hull::random::Random::new(17);
+        for depth in 0..=4 {
+            for transport in [Transport::Residual, Transport::Fourier] {
+                let bank = Bank {
+                    vocab: 12,
+                    depth,
+                    history_slots: 4096,
+                    masks: vec![Mask::All, Mask::Pair(3, 7)],
+                    transport,
+                    execution: Execution::Composed,
+                };
+                for length in [1, 2, 8, 32, 128] {
+                    let prefix: Vec<_> = (0..length).map(|_| rng.below(12) as i64).collect();
+                    assert_eq!(
+                        bank.encode(&prefix)?,
+                        dense_reference::encode(&bank, &prefix)?
+                    );
+                }
+            }
+        }
+        Ok(())
+    }
+    #[test]
+    fn additive_branches_always_read_the_original_state() -> Result<()> {
+        let mut bank = Bank {
+            vocab: 12,
+            depth: 1,
+            history_slots: 4096,
+            masks: vec![Mask::All, Mask::Pair(3, 7)],
+            transport: Transport::Fourier,
+            execution: Execution::Composed,
+        };
+        let prefix = [9, 7, 7, 8, 3, 3, 8, 7];
+        let shallow = bank.encode(&prefix)?;
+        bank.execution = Execution::Additive;
+        assert_eq!(shallow, bank.encode(&prefix)?);
+        bank.depth = 4;
+        let additive = bank.encode(&prefix)?;
+        for (slot, pair) in additive.as_chunks::<2>().0.iter().enumerate() {
+            let mask = slot / 8;
+            let block = slot % 2;
+            assert_eq!(
+                pair[0] % bank.stride(),
+                shallow[mask * 4 + block * 2] % bank.stride()
+            );
+            assert_eq!(
+                pair[1] % bank.stride(),
+                shallow[mask * 4 + block * 2 + 1] % bank.stride()
+            );
+        }
+        Ok(())
+    }
     #[test]
     fn fixed_fourier_transport_preserves_arbitrary_complex_norms() {
         for layer in 0..8 {
@@ -389,6 +502,7 @@ mod tests {
                 history_slots: 4096,
                 masks: vec![Mask::All, Mask::Pair(3, 7)],
                 transport: Transport::Residual,
+                execution: Execution::Composed,
             };
             let prefix = [9, 7, 7, 8, 3, 3, 8, 7];
             let plain = bank.encode(&prefix)?;
@@ -408,6 +522,7 @@ mod tests {
             history_slots: 4096,
             masks: vec![Mask::All],
             transport: Transport::Fourier,
+            execution: Execution::Composed,
         };
         assert!(bank.allocation_bytes(usize::MAX).is_err());
         assert!(bank.encode(&vec![1; MAX_PREFIX + 1]).is_err());

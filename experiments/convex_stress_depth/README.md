@@ -9,8 +9,9 @@ would introduce a product and are not covered by that joint-convexity claim.
 
 This directory contains the path bank, a learned output tensor, an allocation
 preflight and training-only optimizer checks. No held-out stress accuracy is
-claimed. Independent-routing/additive baselines and the complete comparison
-protocol remain to be implemented and frozen before scoring held-out splits.
+claimed. Independent-routing and additive components are implemented; the
+complete comparison runner and protocol must be frozen before scoring held-out
+splits. The earlier training-only results below remain tied to their producer.
 The interrupted earlier 35-task cohort remains unchanged.
 
 | Component | Fixed construction | Information used |
@@ -28,6 +29,16 @@ moves the selected content, and transports its displacement. Its norm is at
 most two. The full block computes the transported skip plus that bounded
 displacement; the numerical implementation checks its norm on every step.
 No block reads a target, task identity or arithmetic operator.
+
+The current evaluator stores only nonzero complex position rows, retaining even
+small roundoff residuals. It still executes the complex skip and branch update;
+it does not replace the hidden state with a symbolic pointer. A frozen dense
+evaluator from `a440f6a0` checks exact feature-ID agreement across both
+transports, depths 0–4 and prefix lengths 1–128. This bounds temporary state
+storage by the path's visited positions instead of allocating a dense prefix
+matrix at each branch. The norm check applies to the complex position code;
+the history is auxiliary metadata and its one-hot terminal features are directly
+bounded by one.
 
 The identity/Fourier pair is a coordinate-invariance control. Both the skip
 and the branch displacement are transported, and position readout uses energy;
@@ -57,12 +68,32 @@ cargo build --offline --release --manifest-path experiments/convex_stress_depth/
 bash experiments/convex_stress_hull/limited.sh 8 experiments/convex_stress_depth/target/release/convex-stress-depth prepare
 ```
 
-Thirteen native checks cover the complex path invariants, early allocation
+Twenty native checks cover the complex path invariants, early allocation
 rejection, independence from labels/task names, CE finite differences, exact
 L1 projection, example minibatches with repetitions and tails, empirical
 forward frequencies, an exhaustive linear-oracle comparison, and checkpoint
-roundtrip/corruption handling. These are implementation checks, not benchmark
+roundtrip/corruption handling. They also check sparse/dense feature equivalence,
+additive independence from intermediate states, the independent factor gradients,
+budget-preserving embedding, vertex initialization and factor serialization.
+These are implementation checks, not benchmark
 outcomes or a learning convergence proof.
+
+The independent baseline uses one Bernoulli probability for each block layer
+and a shared learned decoder over input-view/terminal-feature coordinates.
+Its full-path weight is the product of layer probabilities. CD5's
+`productWeights_mem` and CD8's `liftHead_budget` at `6f71b458` embed it in the
+same radius-R combined tensor domain. Optimizing the factors is nonconvex.
+It can start from the exact same single-path forward proposal as the joint head.
+An update projects the decoder's CE step, then computes the routing gradient
+at that decoder and uses at most eight forward backtracking checks, starting
+at step 0.1. Every backward pass and forward check must be charged to its run.
+
+The additive baseline evaluates every layer's two blocks on the original state
+and learns one combined bounded readout. Its depth-one features equal the
+composed depth-one features. Further layers repeat those shallow feature
+functions in this energy-invariant library; they do not acquire interactions
+between successive states. This is a deliberate capacity control, with its
+larger stored parameter count reported rather than interpreted as extra depth.
 
 The initial allocation preflight at `ba53e536` completed in 2.26 seconds
 at 244.5 MiB peak RSS under the 8 GiB process limit. Depth-4 MQAR would require

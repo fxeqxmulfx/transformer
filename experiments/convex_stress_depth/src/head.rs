@@ -118,26 +118,31 @@ impl Head {
         }
     }
     pub fn project(&mut self) {
-        let v = self.bank.vocab;
-        let mut scratch = Vec::with_capacity(self.bank.dimension());
-        for c in 0..v {
-            scratch.clear();
-            scratch.extend(self.coefficients.iter().skip(c).step_by(v).map(|x| x.abs()));
-            if scratch.iter().sum::<f64>() <= self.radius {
-                continue;
+        project_columns(&mut self.coefficients, self.bank.vocab, self.radius);
+    }
+}
+
+/// Euclidean projection onto the product of per-class L1 balls. Shared by the
+/// combined tensor and the independent baseline's single terminal decoder.
+pub fn project_columns(coefficients: &mut [f64], v: usize, radius: f64) {
+    let mut scratch = Vec::with_capacity(coefficients.len() / v);
+    for c in 0..v {
+        scratch.clear();
+        scratch.extend(coefficients.iter().skip(c).step_by(v).map(|x| x.abs()));
+        if scratch.iter().sum::<f64>() <= radius {
+            continue;
+        }
+        scratch.sort_unstable_by(|a, b| b.total_cmp(a));
+        let (mut sum, mut threshold) = (0., 0.);
+        for (j, &x) in scratch.iter().enumerate() {
+            sum += x;
+            let next = (sum - radius) / (j + 1) as f64;
+            if x > next {
+                threshold = next;
             }
-            scratch.sort_unstable_by(|a, b| b.total_cmp(a));
-            let (mut sum, mut threshold) = (0., 0.);
-            for (j, &x) in scratch.iter().enumerate() {
-                sum += x;
-                let next = (sum - self.radius) / (j + 1) as f64;
-                if x > next {
-                    threshold = next;
-                }
-            }
-            for x in self.coefficients.iter_mut().skip(c).step_by(v) {
-                *x = x.signum() * (x.abs() - threshold).max(0.);
-            }
+        }
+        for x in coefficients.iter_mut().skip(c).step_by(v) {
+            *x = x.signum() * (x.abs() - threshold).max(0.);
         }
     }
 }

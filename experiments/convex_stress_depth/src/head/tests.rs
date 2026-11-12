@@ -8,6 +8,7 @@ fn bank() -> Bank {
         history_slots: 8,
         masks: vec![Mask::All],
         transport: Transport::Fourier,
+        execution: crate::features::Execution::Composed,
     }
 }
 fn example(tokens: Vec<i64>, targets: Vec<i64>) -> data::Example {
@@ -175,6 +176,7 @@ fn oversized_banks_are_rejected_before_any_coefficients_or_cache_allocate() {
             Mask::Pair(3, 4),
         ],
         transport: Transport::Fourier,
+        execution: crate::features::Execution::Composed,
     };
     assert!(Head::zero(large.clone(), 100.).is_err());
     assert!(Cache::build(&large, &[example(vec![1], vec![0])]).is_err());

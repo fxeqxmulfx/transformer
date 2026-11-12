@@ -23,6 +23,7 @@ pub fn fingerprint() -> String {
         include_bytes!("main.rs"),
         include_bytes!("features.rs"),
         include_bytes!("head.rs"),
+        include_bytes!("independent.rs"),
         include_bytes!("checkpoint.rs"),
         include_bytes!("training.rs"),
         include_bytes!("../Cargo.toml"),
