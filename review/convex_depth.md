@@ -339,6 +339,36 @@ A nonzero example executes two nonlinear blocks `1 -> 2 -> 6` and reads their
 composed feature; another witnesses a nonzero feasible head and its logit bound.
 There are no new measured depth results in this theory extension.
 
+## CD9. Keep shallower features when extending a path library
+
+A bank containing only final states at exactly depth d need not contain its
+shallower predecessors. Fixed blocks can overwrite useful information, and
+CD8's convexity alone does not create an identity path or recover a discarded
+feature. Keep the feature vectors of every complete path of lengths zero
+through d, then append the new paths at length d+1.
+
+`PrefixFeatures.lean` proves that zero extension of the old coefficient tensor
+preserves every logit, every original observed CE term and the same per-class
+absolute-sum budget R. It also proves inclusion of the old attainable CE values
+in the enlarged family's attainable values. CD8 supplies convex ordinary CE
+on the enlarged head. If both old and new terminal features are bounded by M,
+their concatenation remains bounded by M, retaining the logit bound R*M.
+
+For J fixed block choices and H terminal coordinates, the exact feature count
+per class becomes `sum_(k=0..d) |J|^k |H|`. Each feature is evaluated on its own
+complete nonlinear path, including intermediate states. Retaining these
+coordinates preserves capacity without imposing learned products between
+routers and decoders, but the count still grows exponentially. Native work
+must account for both output tensors and feature caches before allocation.
+
+This is a nested-capacity theorem, not an assertion that deeper paths always
+improve held-out accuracy, that a numerical optimizer reaches the optimum, or
+that flatness identifies missing labels. A nonzero example extends a two-feature
+head over nonlinear paths at unchanged radius, and an explicit binary-library
+example checks the geometric count. The currently frozen final-depth cohort
+is unchanged; retention is a prospective follow-up, not a reinterpretation of
+its deeper-path failures.
+
 ## Validation and next empirical question
 
 The new namespace contains no unfinished proofs. Each theorem with numerical
