@@ -92,5 +92,52 @@ Outputs, logs and binaries remain ignored under root `runs/` and
 
 ## Findings
 
-The prespecified repair pilot has not yet completed. A full stress-suite pass
-has not been established.
+All 48 prespecified cells complete and replay at source `12e18759`, fingerprint
+`e526fccffc2087e55488e0919f0442b630026ff765e046a5e8f08ef2432cb320`.
+There are 36 saved models and 12 explicit forward-only failures; no execution
+or replay failures. Primary exact accuracy, as percentages:
+
+| Task | Full, scale 1 / 10 | Minibatch, scale 1 / 10 | Forward, either scale |
+| --- | --- | --- | --- |
+| Boolean AND shift | 0 / 100 | 0 / 100 | No consistent key |
+| Short key/value recall | 100 / 100 | 100 / 100 | 100 |
+| Long recall | 100 / 100 | 100 / 100 | 100 |
+| Branch generation | 0 / 100 | 0 / 100 | No consistent key |
+| Division | 0.95 / 1.76 | 0.95 / 1.35 | No consistent key |
+| Parity 16 | 55.41 / 54.14 | 50.96 / 53.50 | No consistent key |
+| Depth easy | 18.55 / 20.70 | 18.55 / 19.34 | No consistent key |
+| Fibonacci recurrence | 0 / 0 | 0 / 0 | No consistent key |
+
+The full-batch recall repair takes one update on both tasks, compared with
+86.13% short and 50% long exact accuracy in the original full-batch cohort.
+Minibatches reach 100% at the first observation, update 64 for short and 50 for
+long recall; only consumed prefixes contribute to training. Both forward fits
+also reach 100% after a full epoch. All three modes have 100% training accuracy
+on these recall tasks. At scale 10, branch generation reaches 100% training and
+held-out exact sequences in six full-batch or 32 minibatch updates. Its fresh
+FW gaps are still 1.2614 / 1.0874: this is a prediction pass, not convergence.
+
+The Boolean AND primary split contains seven examples with one answer class.
+Its scale-10 early endpoint passes that split while training exact accuracy is
+only 50.78%. This is **not** a complete Boolean-rule repair. At scale 1, full
+batch has a fresh gap of about `2.6e-15` and still scores zero on that primary
+split. Mandatory sharing has removed useful query-specific capacity; merely
+running its full-batch optimizer longer does not fix this endpoint. MF4 proves
+the broader sharing obstruction and the unrestricted oracle alternative, tested
+separately in [`convex_stress_adaptive`](../convex_stress_adaptive).
+
+There are 16 primary-threshold passes out of 48 cells, including the two narrow
+Boolean primary passes just described. The complete stress-suite pass remains
+unachieved. Division, parity, counting and recurrence require further structure
+or optimization work; a small empirical gap alone does not identify their
+held-out answers. Caps and one seed limit all comparisons.
+
+Regenerate the full inventory, preserving failures, with:
+
+```sh
+bash experiments/convex_stress_repair/report.sh experiments/convex_stress_repair/runs/pilot-v1
+```
+
+The reporter checks the protocol's exact Cartesian product, source fingerprint,
+endpoint identity and replay status. A missing planned cell is rejected; a
+pending endpoint is retained explicitly and cannot count as a pass.

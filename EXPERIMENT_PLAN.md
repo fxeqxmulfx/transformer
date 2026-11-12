@@ -27,6 +27,13 @@ retain all failures, replay every endpoint, and distinguish fresh training gaps
 from held-out errors. Pilot caps are 64 full-batch and 512 minibatch updates;
 this is not an original-budget benchmark or a fresh transformer comparison.
 
+Completed shared-only pilot: all 48 cells replay, including 12 explicit
+forward-only failures. All three modes reach 100% short and long recall; at
+scale 10 both CE modes also reach 100% branch sequences. Sixteen cells pass the
+original primary threshold, but two are Boolean primary-only passes with
+50.78% training accuracy, retained as regressions. Other task families remain
+unsolved. The adaptive all-task continuation addresses the capacity regression.
+
 ## Prospective probability control (2026-11-09 active goal)
 
 The user asks to close the gap between flat-spectrum guarantees and actual
