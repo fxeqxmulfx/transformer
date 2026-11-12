@@ -1,0 +1,10 @@
+{
+  "version": "convex-calibrated-memory-recovery-v1",
+  "producer_fingerprint": "4ea11876cca79238c9bf48a31f86989fb1d32a4ff2d238e60838b8695125315d",
+  "memory_gib": 56,
+  "workers": 1,
+  "hard_cell_seconds": 600,
+  "reason": "User specified a total memory budget near 64 GB after both long-recall attempts hit the initial 8 GiB process limit. Use one process with 56 GiB address space, leaving room for other jobs.",
+  "scope": "Retry only the two recorded allocation failures, using the identical frozen producer, data, readouts, seed, update cap and training-time checks. Preserve the failed attempts and their costs. The producer embeds the original protocol; this external resource override is authoritative for these retries.",
+  "cells": ["scaled--basis-recall-easy", "calibrated--basis-recall-easy"]
+}

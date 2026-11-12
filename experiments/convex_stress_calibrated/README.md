@@ -79,7 +79,42 @@ exhaustive comparison is a small fixture, not an interval proof on the suite.
 
 ## Findings
 
-The protocol and implementation are frozen before the cohort. Full-suite
-measurements will be recorded here once all 70 cells have terminal records.
+The first cohort at `db65b613` has all 70 terminal records: 68 returned models
+replay successfully, and both long-recall arms abort at the initial 8 GiB
+address-space cap. They reach about 8,378,000 KiB peak RSS. Counting resource
+failures as failures, scaled logits pass 5/25 short and 4/10 long tasks;
+calibrated logits pass 4/25 short and 4/10 long. The corresponding all-split
+counts are 4/25 and 4/10 for scaled, 3/25 and 4/10 for calibrated.
+
+The calibrated arm gains no primary pass and loses branch generation: 0%
+versus the control's 100%, after 64 updates in both. Twenty-three tasks per arm
+nevertheless fit training perfectly and fail the primary metric with a numerical
+zero FW gap. Addition is a particularly clear example: 100% training and 0%
+held-out accuracy in both arms. These endpoints fail to identify unseen labels;
+extending their optimization alone does not supply a recovery guarantee.
+
+Both depth tasks hit the time budget with positive gaps. On depth-easy the
+scaled/calibrated endpoints score 56.05%/19.73%; on depth-hard 3.52%/7.42%.
+They complete 12/15 and 12/14 updates, respectively. These equal-time diagnostic
+limits are not equal update counts, and do not establish optimal classification
+accuracy. The sole calibrated regression on a previously passed task motivates
+a separately frozen, training-only probability mixture in `convex_stress_mixture`.
+
+After these resource failures, the user specified a total memory budget near
+64 GB. `recovery.json` authorizes serial retries of the two failed cells with
+a 56 GiB process cap, leaving room for other jobs. The binary and every learning
+setting are unchanged. Its embedded protocol retains the original cap; the
+external `resource_override.json` records the actual retry limit. Preserve the
+first failures and their times. `assemble_parents.sh` creates a transparent view
+of the 68 original endpoints and two recovered endpoints only if both retries
+and replays succeed; its provenance records all 72 attempts and failed costs.
+
+```sh
+bash experiments/convex_stress_calibrated/recover_memory.sh FROZEN_BINARY ORIGINAL FRESH_RECOVERY
+bash experiments/convex_stress_calibrated/assemble_parents.sh FROZEN_BINARY ORIGINAL RECOVERY FRESH_PARENT_VIEW
+jq -f experiments/convex_stress_calibrated/analyze.jq PARENT_VIEW/summary.json
+```
+
 Generated models, traces and summaries remain ignored under `runs/` and board
-artifact #199; none is a committed result.
+artifact #199. The authored findings above refer to the first cohort; retry
+outcomes are reported separately after completion.
