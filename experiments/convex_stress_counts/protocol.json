@@ -1,0 +1,20 @@
+{
+  "version": "convex-stress-counts-v1",
+  "source_commit": "3555299",
+  "features": "Preserve every completion-v1 causal slot; append raw prefix occurrence counts for every token, aligned relative to the visible query. Zero count uses PAD; positive counts use a disjoint categorical value range. Output classes and original token values are unchanged. No task identifier, label, parity answer, or arithmetic rule is a feature.",
+  "optimizer": "Unchanged completion-v1: retained consumed-prefix CE gradients, unrestricted oracle with optional shared candidate, zero-gradient missing-row completion, exact integer feasible vertex mixtures and fresh full-data CE/gap. No stale-gradient convergence claim.",
+  "forward_only": "Unchanged consistency search on the expanded key/value alphabet. Prefer globally consistent sharing; otherwise fit each query. One epoch with exact complete-data equivalence, or explicit no-consistent-key failure.",
+  "arms": ["full_batch", "minibatch", "forward_only"],
+  "scales": [1, 10],
+  "full_updates": 64,
+  "minibatch_updates": 512,
+  "full_gap_tolerance": 1E-8,
+  "stop": "First observed original primary exact accuracy >=99%, or configured update cap; full batch also stops at fresh empirical gap <=1e-8. Forward-only completes one epoch. Every endpoint, explicit failure and capped run remains visible.",
+  "pilot_seed": 0,
+  "pilot_tasks": [
+    "basis-parity16", "basis-parity20", "basis-parity24",
+    "basis-depth-easy", "basis-depth-hard",
+    "suite-boolean-and-shift", "gpt-probe-key-value-binding", "arithmetic-div"
+  ],
+  "interpretation": "48 prospective cells after adaptive/completion failures: three parity representation tests, two order-sensitive depth controls, Boolean and short-recall regressions, and ordinary division. Same source data, metrics, scales, diagnostic caps and observation cadence. Chosen after the earlier results. This is not a new all-35-task result, matched timing test, or transformer comparison. Count features do not guarantee unseen-count identification or length extrapolation."
+}
