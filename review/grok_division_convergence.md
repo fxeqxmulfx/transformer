@@ -32,6 +32,7 @@ than trained, and names the bridges that are missing.
 | It is neither empty nor automatic | `generalizes_indicator`, `not_generalizes_const` |
 | The decoder in exact reals, all parameter groups | `Sizes`, `Param`, `layerNorm`, `weight`, `attention`, `block`, `decodeTo`, `logits`, `sum_weight`, `logits_congr` |
 | Loss of a batch and the gradient of the backward pass | `Example`, `batchLoss`, `gate`, `decodeTo_gate`, `frozenLoss`, `frozenLoss_self`, `sourceGrad` |
+| That gradient is a derivative: of the loss with frozen gates at every parameter, and of the loss where no hidden input is 0 | `differentiable_frozenLoss`, `hasDerivAt_frozenLoss_sourceGrad`, `OffKinks`, `eventually_gate_update_eq`, `hasDerivAt_batchLoss_sourceGrad`, `offKinks_one` |
 | Means over the targets of a batch; the readout's gradient in closed form and its pairing with the readout | `targetMean`, `batchLoss_eq_targetMean`, `sourceGrad_out`, `sum_out_mul_sourceGrad` |
 | The logits are bounded by the readout and the second normalizations | `abs_layerNorm_le`, `abs_decodeTo_le`, `abs_logits_le` |
 | The block outputs and the logits are continuous in the parameters | `continuous_decodeTo`, `continuous_logits`, `continuous_logits_relu` |
@@ -154,9 +155,16 @@ Two substitutions are therefore excluded, and no statement here makes them:
    be measurable in the sample. This is not proved for the decoder.
 3. **Exceptional parameters.** The source's backward pass has a rule at hidden inputs equal to
    0, and `sourceGrad` is that rule: the derivative of the loss with the gates frozen at the
-   current parameters (`gate`, `frozenLoss_self`). Not formalized: that where no hidden input
-   is 0 this is the partial derivative of `batchLoss` (the gates are then locally constant),
-   and that the trajectory almost surely avoids the other parameters.
+   current parameters (`gate`, `frozenLoss_self`). Proved on 2026-11-12
+   (`Protocol/{Differentiability,OffKinks}.lean`): the loss with frozen gates is
+   differentiable along every coordinate, so `sourceGrad` is its derivative at every parameter
+   and not the default value of `deriv` (`hasDerivAt_frozenLoss_sourceGrad`); and where no
+   hidden unit of the batch has the input 0 the gates are locally constant along a coordinate
+   and `sourceGrad` is the partial derivative of `batchLoss`
+   (`hasDerivAt_batchLoss_sourceGrad`). The decoder with every parameter 1 is such a point
+   and the decoder with every parameter 0 is not (`offKinks_one`). Not formalized: that the
+   trajectory almost surely avoids the other parameters, and what the rule does to a run that
+   meets them.
 4. **Any control of the predictions.** Without decay the loss has no minimizer on fitted data
    and the parameters need not stay bounded. What is proved is how far a parameter can move:
    at most `0.017 t` under Adam, and within `max(|θ₀|, 17)` of 0 under AdamW with weight decay 1.
