@@ -104,3 +104,32 @@ bash experiments/convex_stress_depth/run_train_checks.sh FRESH_DIRECTORY gpt-pro
 
 No validation or test metric is computed by this command. The larger depth
 comparison and fresh matched transformer baseline remain outstanding.
+
+The first check is complete at producer `a440f6a0`, source fingerprint
+`21355e87dcc3e1b77e4524e075d4591c9a967a2b3afb478c2348add827147cbf`.
+It used all 2,048 original short-binding training examples at depth one.
+All three modes selected the same forward initializer with training CE
+`3.7373833906779454e-9`; refinement left that reported CE unchanged.
+
+| Mode | Gradient updates / prefixes | Peak training RSS | Total training wall time |
+| --- | ---: | ---: | ---: |
+| Full batch | 1 / 2,048 | 101,512 KiB | 0.68 s |
+| Minibatch | 1 / 32 | 101,552 KiB | 0.66 s |
+| Forward only | 0 / 0 | 101,544 KiB | 0.62 s |
+
+Each row additionally pays for the shared initializer's 2,048 examples and
+prefixes. Times include data, feature construction, initialization, refinement,
+the final diagnostic and checkpoint writing; separate replay took 0.46–0.49 s.
+All three binary models replayed with CE difference `3.46e-16` or less and
+passed the class-budget check. Their largest class absolute sum is about 24,
+below the radius 3,200. The full-gradient linear-oracle gaps remain about
+`2.00e-5`; no tighter gradient-gap result is claimed from the small CE itself.
+No held-out accuracy was measured, and the one-step gradient refinements did
+not discover the good initializer.
+
+The real depth-4 MQAR allocation guard also rejected its 4,714,141,320-byte
+buffer request before constructing the cache or head, using 244,012 KiB peak
+RSS for data verification. A deliberately corrupted saved CE was rejected on
+replay. Models and resource logs live in
+`runs/training-check-v1-binding-d1/`, linked to the root checkout; the frozen
+producer, checks and negative controls are retained in board artifact #175.

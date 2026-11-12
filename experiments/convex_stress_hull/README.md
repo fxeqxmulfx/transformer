@@ -158,6 +158,11 @@ checkpoint (160,000 observed prefixes) under its 8 GiB limit in 78.86 seconds,
 with peak RSS 245,352 KiB (240 MiB). Its mean CE matches the producer exactly;
 the independent FW gap differs by 8.14e-14. All nine native tests, formatting
 and clippy pass, and rebuilding the producer gives the exact frozen binary.
-Remaining audit/recovery evidence must retain every incomplete or failed cell.
+All 24 remaining saved-model audits then passed serially under that cap. The
+largest RSS among them was 464,616 KiB, for a recurrence moment audit. Together
+with the 212 previous audits, this covers all 236 complete saved models. The
+four interrupted fits remain stopped, and the three failed fits and 72
+ineligible records remain in the inventory. Audit completion does not supply
+their missing endpoints or complete the 315-cell experiment.
 The previous three-task success and count-only result of 10/35 remain separate;
 combining their best reported scores does not establish a whole-suite pass.

@@ -67,8 +67,10 @@ long MQAR and short binding are its initial
 diagnostics. Check buffers against 2 GiB and run under an 8 GiB process cap.
 The implemented Fourier/identity pair transports both skip and branch updates;
 it is an expected coordinate-invariance control, not a claim that changing only
-the skip improves accuracy. The first diagnostic checks the short binding task
-at depth one, serially, before any broader cohort. All modes count their common
+the skip improves accuracy. The first diagnostic passed on short binding at
+depth one in all three modes, with training and replay below 100 MiB peak RSS.
+The 2 GiB guard also rejected depth-4 MQAR before cache/head allocation.
+All modes count their common
 training-label initializer; full/mini also perform projected CE refinement.
 Complete the independent/additive baselines and freeze the full comparison
 before evaluating the original held-out splits.
@@ -86,11 +88,13 @@ the same layer marginals erases. The additive fixed-feature baseline remains
 as a comparison; a strict residual/mHC CE counterexample explains why raw
 independently trained block parameters do not inherit convexity.
 
-This is theory only. The library and decoder are fixed while cross-depth
-joint weights train. Full nonlinear path execution is retained, but dense
+CD5-CD7 fix the library and decoder while cross-depth joint weights train;
+CD8 allows a combined learned output tensor with a convex coefficient budget.
+Full nonlinear path execution is retained, but dense
 coordinates cost `|J|^depth`; this is not convex training of arbitrary raw
-transformer weights. No native model or new stress cohort is claimed, and
-no earlier full-suite outcome is changed. Experiments must compare joint
+transformer weights. The native training-only check above supplies no new
+held-out stress result, and no earlier full-suite outcome is changed.
+Experiments must compare joint
 routing, independent routing, and plain residual versus Fourier connections
 under explicit library, data and compute budgets, retaining the original
 short/long tasks and held-out metrics.
