@@ -1,139 +1,158 @@
-# transformer
+# Transformer
 
-Lean in `src/` formalizes the manuscripts in `papers/`; the lab in
-[`python/`](python/README.md) trains the experiments in
-[`experiments/`](experiments/README.md). `./run.py` runs every task;
-`./run.py -h` lists them.
+This project has two goals:
 
-## Requirements
+1. Prove end-to-end convergence to generalization for the training process
+   studied in **Grokking: Generalization Beyond Overfitting on Small Algorithmic
+   Datasets** (Power et al., [arXiv:2201.02177](https://arxiv.org/abs/2201.02177)).
+2. Build a **convex model that passes the GPT stress tests**, retaining their
+   original inputs, splits, answer losses and evaluation criteria.
 
-- [uv](https://docs.astral.sh/uv/). It installs Python 3.14 and the locked
-  packages, among them torch 2.14.1 built for CUDA 12.6, which also runs
-  without a GPU.
-- A C++ compiler (g++). TorchInductor compiles the kernels of a CPU run
-  with it.
-- A GPU, only for runs that replay CUDA graphs.
-- For the Lean tree, elan. It installs the toolchain that `lean-toolchain`
-  names.
+Lean proofs live in [src/](src/Transformer.lean); native Rust/Kernite
+experiments live in [experiments/](experiments/README.md). Both goals remain
+unfinished. The status below is as of **2026-11-12**.
 
-Before committing, `./run.py verify` builds Lean, audits axioms, regenerates
-the index, checks forbidden constructs and reference source hashes, and runs
-the Python tests. Strict
-lint is optional following the user's instruction: `./run.py lint` runs
-`lake --wfail lint --builtin-lint --linters=linter.all --code-quality` manually.
-`./run.py kernel` is an optional kernel replay; the 39 existing unfinished
-statements are retained and are not claimed to pass that checker.
+Readiness percentages are rough assessments of project progress, not proof
+coverage or benchmark pass rates.
 
-The checkout contains the experiment sources and historical regression
-references it needs. It does not require neighboring repositories, the
-original author's local paths, or old Git objects to run tests. Mathlib and
-the locked Python packages remain normal dependencies. `./run.py references`
-checks the local reference snapshots without Git or network access.
+## Goal 1: end-to-end grokking convergence
 
-The PyTorch optimizers are also available as the independent
-[`lean-optim` package](optimizers/README.md), installable from `optimizers/`
-or its wheel with PyTorch as the only runtime dependency. The lab consumes
-that package through a local dependency inside this checkout.
-`./run.py package` builds and tests a standalone wheel; `./run.py optimizer-parity`
-kernel-checks the Lean recurrence checkpoints. The
-[correspondence audit](optimizers/src/lean_optim/LEAN_CORRESPONDENCE.md)
-records the formulas, initialization, numerical extensions and theorem limits.
+**Estimated readiness: 30%.** The protocol and conditional correctness results
+are in place; the central positive convergence argument remains open.
 
-## The minimal run
+The first target is division modulo 97 from the grokking paper: train on half
+of the equation table and prove that held-out accuracy reaches and stays at
+100%, under explicit assumptions on the split, initialization and optimizer.
+The theorem must connect the actual training trajectory to these predictions.
 
-```sh
-./run.py setup                                          # install the locked environment
-./run.py run experiments/basis easy-small-depth-seed0   # train one run of the benchmark
-./run.py report experiments/basis easy-small-depth-seed0
-```
+### Ready
 
-The run trains the two-layer model of width 64 on one core until it passes
-E_2, in about 20 s. The first time, compiling its kernels adds 40 to 80 s;
-TorchInductor then keeps them in its cache on disk. The run writes into
-`experiments/basis/runs/easy-small-depth-seed0/`. `report` prints what the
-run recorded as JSON, and its `stop` says whether it passed or reached its
-budget.
+- **The training protocol is formalized.** The exact-real decoder, tokenization,
+  supervised loss, Adam/AdamW updates, initialization law and shuffled batches
+  are defined in [Grokking/Protocol](src/Transformer/Grokking/Protocol.lean).
+  The trajectory and accuracy are measurable; finite accuracy tending to one
+  is equivalent to eventually answering every held-out equation correctly.
+- **Representation and conditional correctness are proved.** Constructed
+  parameters of the paper's decoder solve all 9,312 division equations.
+  Margin and quotient-symmetry certificates imply held-out correctness when
+  their premises hold. These parameters are constructed; training is not
+  proved to reach them.
+- **The limits of the original target are proved.** Unconditional almost-sure
+  convergence over random half-table splits is false. Requiring every residue
+  to appear as a training answer is still insufficient. Split symmetries give
+  explicit obstructions and upper bounds on the probability of eventual
+  perfect generalization.
+- **Supporting theory and experiments exist.** The
+  [flat-spectrum development](review/flat_spectrum.md) proves kernel-recovery
+  criteria and convergence results for pure matrix factorization under its
+  stated optimizer assumptions. The native
+  [division experiment](experiments/grok_division/README.md) records finite
+  training runs, checkpoint checks and later losses of accuracy.
 
-## The benchmark
+### Not ready
 
-A run of the basis is labeled `<mode>-<model>-<task>-seed<seed>`. The mode
-names the tasks and the model names the network: `easy-large-recall-seed0`
-is the large model on the easy recall. Both models are GPTMini with four
-heads: `small` has width 64 and two layers, `large` width 128 and six. The
-two modes:
+- **A positive end-to-end theorem.** We have no proof that this training process
+  eventually generalizes permanently, or even a positive lower bound on the
+  probability of that event. A valid split condition or a quantitative success
+  guarantee still has to be established.
+- **Discovery and persistence under the actual optimizer.** We have not proved
+  that Adam/AdamW discovers the required representation and preserves correct
+  held-out decisions through later updates. A correct representation, an ideal
+  completion optimum or one successful checkpoint does not supply this step.
+- **The complete execution bridge.** The exact-real training trajectory is
+  not connected to the full floating-point run. Long-run behavior at ReLU
+  kinks and the corresponding numerical guarantees remain open.
 
-| Task | easy | hard |
+The [convergence review](review/grok_division_convergence.md) gives the precise
+target, proved refutations, missing steps and audit commands. The paper reports
+an empirical phenomenon; this project is seeking a theorem explaining it.
+
+## Goal 2: a convex model for the GPT stress tests
+
+**Estimated readiness: 40%.** Convex theory, native learners and benchmark
+replay exist; complete-suite performance and a compact general learner remain open.
+
+The [GPT stress-test catalog](stress_tests_for_gpt.md) describes **165 cases**:
+arithmetic, sequence algorithms, recall, recurrences, forecasting, numeric
+probes, image classification and language modeling. Their original targets
+differ. Random-label and random-language cases retain their role as negative
+controls. The current experimental milestone is the **35-task short/long
+subset**: 25 short and 10 long tasks, judged by their original held-out metrics.
+
+### Ready
+
+- **Convex models with ordinary answer cross-entropy are proved.**
+  [Flat spectrum](review/flat_spectrum.md) develops categorical routing and
+  generated-output channels, coupled complex moments with spectral bounds,
+  and recovery under explicit structure and observation conditions. It also
+  proves examples where a global training optimum gives a wrong unseen answer.
+- **A common causal probability interface is formalized.** The
+  [full-catalog theory](review/convex_causal.md) supports calibrated ordinary
+  CE, stochastic outputs, bounded-context interactions and free generation
+  with EOS. A finite candidate learner has proved recovery when the true rule
+  belongs to its fixed bank and the observed inputs distinguish the candidates.
+  The [depth extension](review/convex_depth.md) retains nonlinear interactions
+  by learning joint weights over complete paths through fixed block libraries.
+- **Native training and replay are implemented.** Full-batch, persistent
+  minibatch and forward-only learners reconstruct the 35 original datasets
+  and replay saved predictions. The
+  [certified paired-decoder implementation](experiments/convex_stress_certified/README.md)
+  checks training-derived certificates and preserves their answer constraints
+  during updates; its current evidence is from fixtures.
+
+These are separate empirical results:
+
+| Evidence | Result | Scope |
 | --- | --- | --- |
-| depth | E_2, judged at the trained lengths, 32 to 64 | E_4, judged at length 128 |
-| recall | 8 keys, each bound once | 16 writes to 8 keys, each key queried for its latest value |
-| parity | 1 to 16 bits | the same |
+| [Causal counts](experiments/convex_stress_counts/README.md) | 10/35 primary passes for full-batch and minibatch at scale 10; 9/35 for forward-only | Complete 210-cell inventory and replay; stricter all-split counts are lower |
+| [Spectral sharing](experiments/convex_stress_sharing/README.md) | All six selected tasks pass in all three modes: 18/18 choices | Targeted arithmetic follow-up, selected by training CE |
+| [Calibrated causal readout](experiments/convex_stress_calibrated/README.md) | 8/35 primary passes, versus 9/35 for the scaled control | First cohort; memory failures counted as failures |
 
-The easy mode is set for the small model and the hard mode for the large
-one. At bd63e50, from seeds 0, 1 and 2:
+### Not ready
 
-| | small | large |
-| --- | --- | --- |
-| easy | passes every task from every seed | passes depth and parity; recall from seed 2 alone |
-| hard | fails depth and recall from every seed, as intended; passes parity | passes every task from every seed |
+- **A complete benchmark pass.** No single completed convex-model protocol
+  passes all 35 tasks, and the full 165-case catalog has not been implemented
+  and evaluated by a common native convex learner. Combining the best scores
+  from separate pilots is not a whole-suite result. The
+  [combined spectral/causal cohort](experiments/convex_stress_hull/README.md)
+  retains interrupted fits and has no complete suite result.
+- **A compact representation that can be learned across the catalog.** The
+  universal prefix construction has exponential size. Fixed path and candidate
+  banks require selection and coverage assumptions; convexity of their joint
+  coordinates does not make arbitrary transformer weights jointly convex.
+- **General unseen-answer identification.** Low training CE and spectral
+  feasibility alone do not determine missing labels. The new coding and
+  paired-decoder certificates need their structural assumptions and coverage
+  verified for the original tasks; fixture success is not stress-test success.
+- **Practical convergence and numerical guarantees.** The exact-real results
+  do not establish convergence rates for every native solver or turn a small
+  numerical CE gap into a recovery certificate. Memory-bounded execution,
+  replay of every outcome and the remaining matched transformer comparisons
+  are part of the unfinished benchmark work.
 
-The smallest complete version takes one mode on one model from one seed.
-Its three runs train side by side in about four minutes:
+The [experiment plan](EXPERIMENT_PLAN.md) records the frozen cohorts and next
+steps. Each experiment README records its own protocol, results and limits.
 
-```sh
-./run.py run experiments/basis easy-small-{depth,recall,parity}-seed0
-```
+The catalog is copied unchanged from
+`/home/misha/python_projects/diff-gpt/stress_tests_for_gpt.md` at source commit
+`5a37c515639f23037d191b0659a5a0853984328d`.
+Its SHA-256 is
+`d358edc9f3c9104f4a19f4ccbbd35f8547a745cf47cf611b23bbf7f032ca143f`.
+Relative source links inside that snapshot refer to the DiffGPT checkout.
 
-All 15 runs of the small model, both modes from three seeds, train side by
-side on 15 cores in about nine minutes:
+## Working in this repository
 
-```sh
-./run.py run experiments/basis easy-small-{depth,recall,parity}-seed{0,1,2} \
-                                hard-small-{depth,recall}-seed{0,1,2}
-```
-
-These runs screen an idea before the large model takes it. In the easy
-mode, where the small model passes everything, a failure counts against an
-idea. In the hard mode, where it fails depth and recall, a pass counts for
-it. The recipes were set for GPTMini, so before dropping an idea, try a
-rate or two around its recipe. Compare seed by seed: on the small model a
-seed moved a pass by up to twice the updates, and on the large model's hard
-depth by seven times (800 against 5,800).
-
-A model of its own takes the benchmark in an experiment file whose runs are
-`basis(model, mode, seed)`. Labeled as here, the same commands train it.
-
-The whole benchmark has 30 runs: each mode on both models, from seeds 0, 1
-and 2. A hard parity run is its easy one, so the hard mode lists only depth
-and recall:
-
-```sh
-./run.py run experiments/basis easy-{small,large}-{depth,recall,parity}-seed{0,1,2} \
-                                hard-{small,large}-{depth,recall}-seed{0,1,2}
-```
-
-Each run trains on the physical cores it asks for: four for the large
-model's recall, two for its depth and parity, one for every task of the
-small model. On 28 cores the 30 runs took 19 min 52 s. Without labels, `run`
-trains all 180 runs of `experiments/basis`, including the 150 GPU runs that
-set the recipes. `./run.py check experiments/basis` lists every label.
-[`experiments/basis/README.md`](experiments/basis/README.md) says what the
-benchmark asks and what it found.
-
-## Repeating a recorded result
-
-A result holds at the commit that recorded it. An experiment's README names
-that commit; for the basis, it is the table under Found. Each run also
-records its commit and the hashes of the lab's sources in
-`runs/<label>/experiment.json`. To repeat a result, check its commit out in
-a fresh clone, where `runs/` is empty, and train the same labels:
+Use the Lean toolchain pinned in [lean-toolchain](lean-toolchain) and native
+Rust/Kernite tooling. Existing Python code is historical reference material;
+new work and verification do not use Python.
 
 ```sh
-git checkout bd63e50   # the CPU benchmark of the basis
-./make.py run experiments/basis <labels>
+LAKE_ARTIFACT_CACHE=false lake build
+LAKE_ARTIFACT_CACHE=false lake env lean scripts/Axioms.lean
 ```
 
-That historical revision predates the `run.py` rename.
-
-A run repeats its own losses on the same machine, with the same build of
-torch and the same number of threads. A different number of threads rounds
-differently.
+[INDEX.md](INDEX.md) locates declarations and records unfinished proofs.
+Regenerate it with the [native index generator](scripts/native_index/README.md)
+whenever `src/` changes. Experiment READMEs supply their native test and
+reproduction commands. Generated runs, reports, plots and logs remain local
+and ignored; source, protocols and authored findings are committed.
