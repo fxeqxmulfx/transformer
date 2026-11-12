@@ -14121,6 +14121,46 @@ The native completion uses the pooled oracle's decoder for the same aligned
 key, only for values absent from that query's retained observations. It does
 not replace observed choices, alter oracle costs or read held-out answers.
 
+## Causal features and convex capacity
+
+### CFt1. Add features without discarding the old model
+
+For any additional input-only slots `L`, embed a channel on `K` into one on
+`K + L` by setting the new slots' joint weights to zero. Nonnegativity and
+value-independent routing mass remain true; the total routing mass stays one.
+On every input, the new slots contribute zero, so the old logits and ordinary
+CE are exactly preserved. The enlarged domain remains convex and the logits
+remain linear in every learned coordinate, for any fixed feature extractor.
+Consequently the optimal empirical loss cannot increase. This is a capacity
+claim; a particular optimizer or tie rule can still generalize differently.
+
+### CFt2. Query-specific coordinates do not remove additive obstructions
+
+Fix one query and expose two independent Boolean slots. Even an unconstrained
+query-specific channel obeys the rectangle identity of MF4 on that query.
+Therefore it cannot strictly classify XOR on all four inputs. Adding more
+iterations or increasing a fixed positive logit scale cannot remove that
+identity. This small counterexample is not claimed to be a proof about every
+feature of the native stress adapter; the latter has additional causal slots.
+
+### CFt3. Counts add interactions without learned-factor products
+
+Append the occurrence count of each token in the visible prefix. The extractor
+receives only that prefix and the vocabulary, with no labels, arithmetic
+operation or task identifier. A count is between zero and the context bound,
+so it is a finite categorical value in a bounded-context experiment. The
+usual joint tensor can select that slot and learn any output rule of its count.
+In particular, the count of `true` represents two-bit XOR with a unit margin,
+strictly extending the separated-slot model of CFt2. Parity appears only in
+the mathematical parameter witness; the executable learns its decoder from
+ordinary labels and does not compute a parity answer in its feature map.
+
+`ConvexChannel/Counts.lean` proves the embedding, exact predictions and loss,
+convex CE, fixed-query obstruction, context bound and count-rule witness.
+The generic finite categorical flat-spectrum bound CC6 still applies to the
+enlarged feature alphabet. Counts do not identify labels at unseen counts,
+and do not assert sufficiency for order-sensitive tasks or modular division.
+
 ## Forward-only channel learning
 
 This extension gives a finite categorical learner for the realizable
