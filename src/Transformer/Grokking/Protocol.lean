@@ -59,6 +59,12 @@ public import Transformer.Grokking.Protocol.RunMeasurable
 public import Transformer.Grokking.Protocol.AccuracyMeasurable
 public import Transformer.Grokking.Protocol.DivisionMeasurable
 public import Transformer.Grokking.Protocol.MeanAccuracy
+public import Transformer.Grokking.Protocol.RenameSymmetry
+public import Transformer.Grokking.Protocol.CarriedSplit
+public import Transformer.Grokking.Protocol.TwistedSplits
+public import Transformer.Grokking.Protocol.TwinSplit
+public import Transformer.Grokking.Protocol.TwinWitness
+public import Transformer.Grokking.Protocol.LabelNotSufficient
 
 /-! The protocol behind the division curves of Power et al., *Grokking: generalization beyond
 overfitting on small algorithmic datasets*, and what "held-out accuracy tends to 1" means for
@@ -107,10 +113,15 @@ gradient of the backward pass is measurable in the parameters, so every paramete
 the held-out accuracy and the event of a wrong held-out answer are measurable in the sample,
 the almost sure target of a model with measurable logits and gradients gives the other two,
 and for division the mean held-out accuracy stays below `1` by a positive constant at every
-update, so the target fails in mean as well. The target is a predicate of the model, its
-labels and its gradient oracle: no convergence of any transformer is proved here, and no
-trained decoder is proved to have that structure, for an enclosure of its logits is a
-hypothesis here. The map of what is proved elsewhere and what is missing is
-`review/grok_division_convergence.md`. -/
+update, so the target fails in mean as well; and that the condition on the split is not
+enough: a renaming of the tokens that carries the training examples of a split to those of
+another, with the list of equations reordered, is a symmetry of the run, and a split that
+labels every residue while its training equations show the residues `2` and `95` in
+`2 / 1 = 2` and `95 / 1 = 95` only is carried so by the exchange of the two tokens, which
+turns the held-out `2 / 3` into `95 / 3`, so the target is false on the splits that label
+every residue, in all three modes. The target is a predicate of the model, its labels and its
+gradient oracle: no convergence of any transformer is proved here, and no trained decoder is
+proved to have that structure, for an enclosure of its logits is a hypothesis here. The map
+of what is proved elsewhere and what is missing is `review/grok_division_convergence.md`. -/
 
 @[expose] public section

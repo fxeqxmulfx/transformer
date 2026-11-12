@@ -3,8 +3,8 @@
 Board tasks #126–#132 and #137. Sources: `papers/arXiv-2201.02177v1/main.tex` (Power et al.),
 Figure 1 and the appendix *Additional experimental details*; openai/grok at `3d64b1d8`; the
 protocol pinned in `experiments/grok_division/PROTOCOL.md`. Written 2026-11-11; sections 5
-and 6, the second half of section 2, the enclosures of bridge 5, the measurability of bridge 2
-and the mean accuracy of section 2 added 2026-11-12.
+and 6, the second half of section 2, the enclosures of bridge 5, the measurability of bridge 2,
+the mean accuracy and the third part of section 2 added 2026-11-12.
 
 The paper shows curves of finite runs. It states no theorem, and nothing below proves that
 training makes any transformer generalize. This note fixes what such a theorem would say,
@@ -45,6 +45,7 @@ than trained, and names the bridges that are missing.
 | What is proved about its trajectory | `abs_trajectory_division_sub_le`, `abs_trajectory_division_le`, `division_eventually_margin_lt`, `ae_abs_logits_divisionRun_le`, `ae_floor_le_batchLoss_divisionRun`, `ae_margin_divisionRun_le` (section 5) |
 | The target is false without a condition on the split, in all three modes (section 2) | `not_division_generalizes`, `not_division_tendsToOneInProbability`, `not_division_tendsToOneInMean` |
 | The target is false under every condition that admits a split with a residue that is the answer of no training equation (section 2) | `outPerm`, `sourceGrad_comp_outPerm`, `unlabelled`, `trajectory_relabel`, `uniformPerm_unlabelled_le`, `labelled`, `not_ae_eventually_of_not_mem_labelled`, `not_ae_eventually_anchored_occurring` |
+| The target is false on the splits that label every residue too: a renaming of the tokens that carries a split to a split and moves a held-out answer (section 2) | `sourceGrad_comp_paramPerm_rename`, `Carries`, `trajectory_carried`, `measurePreserving_carrySample`, `Twisted`, `uniformPerm_le_of_twisted`, `not_ae_eventually_of_twisted`, `twin`, `twisted_twin`, `exists_twin_labelled`, `not_ae_eventually_labelled` |
 
 For division the arguments are fixed in `division_generalizes_iff`: the decoder of
 `paperSizes`, the logits after `=`, the source's loss on the answer and the closing token, the
@@ -124,8 +125,45 @@ same way from both starts and its logits of the two tokens are exchanged
 A given residue is unlabelled with the probability `∏_{j<96} (4656 − j)/(9312 − j)`, about
 `7.7 · 10⁻³⁰` by a count outside Lean, against roughly `2⁻⁵⁹⁴` for an uncovered split. Whether
 "every residue occurs in training" suffices has the answer no: a residue has to occur as an
-answer. Whether the target holds on the labelled splits is open; so is every positive
-statement.
+answer. The target is false on the labelled splits as well (next part); every positive
+statement is open.
+
+**To be labelled is not enough.**
+`Protocol/{RenameSymmetry,CarriedSplit,TwistedSplits,TwinSplit,TwinWitness,LabelNotSufficient}.lean`.
+The two arguments above rename tokens that no training example reads, or none has as a target,
+so that every training example is left alone. A renaming can also move the training examples
+among themselves. The decoder with permuted parameters reads an example as the decoder reads
+the renamed example, so the gradient at the permuted parameters is the permuted gradient of
+the renamed batch, whatever the batch (`sourceGrad_comp_paramPerm_rename`). If a renaming of
+the tokens and a reordering of the list of equations carry a split to a split (`Carries`: slot
+by slot, the example of the reordered split, renamed, is the example of the split), then the
+run of the reordered split from the permuted initial parameters is the permuted run, with the
+same shuffles of the epochs (`trajectory_carried`), and the map of samples preserves the law of
+a run (`measurePreserving_carrySample`). If moreover two held-out equations are identified by
+the renaming up to the position of `=`, while their answers differ and are not moved
+(`Twisted`), the run and the carried run are not both right (`mem_wrongAt_or_carry`).
+
+On a labelled split the token of every residue is read and is a target, so such a renaming has
+to move training examples. It can. The equations `2 / 1 = 2` and `95 / 1 = 95` are the same
+row of tokens up to the exchange of the tokens of 2 and 95, targets included. A *twin split*
+trains on equations that show neither residue and, at most, on those two. It can train on
+`r / 1 = r` for every residue `r`, and then it is labelled (`exists_twin_labelled`). It holds
+out `2 / 3 = 33` and `95 / 3 = 64`, which the exchange identifies up to `=`: the run cannot
+tell which of the two tokens is 2.
+
+| Statement | Declaration |
+| --- | --- |
+| For a set of splits with a symmetry that moves a held-out answer, at every update P(some held-out answer is wrong, given that the split is in the set) ≥ ½; under a condition that contains such a set, not empty, the target fails almost surely and in probability. The uncovered splits are such a set | `uniformPerm_le_of_twisted`, `not_ae_eventually_of_twisted`, `not_tendsto_law_of_twisted`, `twisted_uncovered` |
+| The labelled twin splits are such a set, and they have positive probability | `twisted_twin`, `uniformPerm_twin_labelled_le`, `uniformPerm_twin_labelled_pos` |
+| The target is false on the labelled splits, and under every condition that the labelled twin splits meet, almost surely, in probability and in mean | `not_ae_eventually_labelled`, `not_ae_eventually_of_twin_subset`, `not_tendsto_law_of_twin_subset`, `not_tendsto_setIntegral_of_twin_subset` |
+
+A split is a labelled twin split with a probability of roughly `2⁻⁵⁹²`, by a count outside
+Lean: 566 equations show the residue 2 or 95, and such a split trains on two of them only. So
+the condition `labelled` is necessary and not sufficient, and what is open is sharper: no
+condition on the split is known under which the target holds, and one that makes it true
+excludes every set of splits with such a symmetry. The twin splits are one family; no
+description of the splits without such a symmetry is attempted here. A target that holds with
+a probability below 1 need not exclude them.
 
 ## 3. What the repository proves, and about what
 
@@ -238,7 +276,11 @@ Two substitutions are therefore excluded, and no statement here makes them:
 7. **Composition** (#131): 5 and 6 along one trajectory, for all later updates, for a target
    with a condition on the split; the unconditional one is refuted in section 2, and so is
    the target under every condition that admits a split that is not labelled
-   (`not_ae_eventually_of_not_mem_labelled`).
+   (`not_ae_eventually_of_not_mem_labelled`), and the target on the labelled splits
+   (`not_ae_eventually_labelled`). A condition that makes the target true excludes every set
+   of splits with a symmetry that moves a held-out answer (`not_ae_eventually_of_twisted`);
+   none is known that does and is not empty. A target with a probability below 1 does not
+   need one.
 
 Bridge 2 is closed and bridge 5 is proved as a sufficient condition. Bridge 1 and the second
 half of bridge 3 are open. Bridges 4, 6 and 7 are open research problems. The measurements of
@@ -275,7 +317,7 @@ of the present state finds this:
   held-out accuracy 1 and that built parameters have it (bridge 5); what two rows that enclose
   the logits decide (bridge 5); that the target is false in the same three modes
   under every condition on the split that admits a split with a residue that is the answer of
-  no training equation (section 2); that the gradient of the backward pass is a derivative,
+  no training equation, and on the splits that label every residue (section 2); that the gradient of the backward pass is a derivative,
   and the gradient of the loss where no hidden input is 0 (bridge 3); and the exclusions of
   section 5. None of these says that a trained decoder generalizes.
 - **Finite-horizon, native.** Nine runs in `f32` (three settings, seeds 0 to 2) and their 117

@@ -19,7 +19,9 @@ accuracy at most `1 - 1/9312`, and on the splits that are not labelled one occur
 conditional probability of at least one half at every update. So over the runs whose split is
 in a set `S`, the accuracy integrates to at most the probability of `S` less `1/18624` of the
 probability of the splits of `S` that are not labelled (`setIntegral_divisionAccuracy_le`),
-at every update, under Adam and under AdamW at every weight decay. With `S` all the splits:
+at every update, under Adam and under AdamW at every weight decay; the same holds for every
+set of splits on which a held-out answer is wrong half the time
+(`setIntegral_divisionAccuracy_le_of_half`). With `S` all the splits:
 the mean held-out accuracy is at most `1` less a positive constant at every update
 (`integral_divisionAccuracy_le`), so it does not tend to `1`
 (`not_division_tendsToOneInMean`): the third mode fails as the other two do. And given a
@@ -44,13 +46,16 @@ lemma divisionAccuracy_le_of_mem_wrongAt (decay : ℝ) (t : ℕ)
     abs_sub_comm, abs_of_nonneg (sub_nonneg.2 h1)] at h
   linarith
 
-/-- **Over the runs whose split is in `S` the held-out accuracy integrates to at most the
-probability of `S` less `1/18624` of that of the splits of `S` that are not labelled**, at
-every update. -/
-theorem setIntegral_divisionAccuracy_le (decay : ℝ) (t : ℕ)
-    (S : Set (Equiv.Perm (Fin (97 * 96)))) :
+/-- **A set of splits on which a held-out answer is wrong half the time lowers the mean
+accuracy of every condition that contains it**: over the runs whose split is in `S` the
+held-out accuracy integrates to at most the probability of `S` less `1/18624` of that of the
+set. -/
+theorem setIntegral_divisionAccuracy_le_of_half (decay : ℝ) (t : ℕ)
+    {A S : Set (Equiv.Perm (Fin (97 * 96)))} (hAS : A ⊆ S)
+    (hA : uniformPerm (97 * 96) A ≤
+      2 * law (97 * 96) 4656 (initMeasure paperSizes) (splitIn A ∩ wrongAt decay t)) :
     ∫ ω in splitIn S, divisionAccuracy decay t ω ∂law (97 * 96) 4656 (initMeasure paperSizes) ≤
-      (uniformPerm (97 * 96)).real S - (uniformPerm (97 * 96)).real (S \ labelled) / 18624 := by
+      (uniformPerm (97 * 96)).real S - (uniformPerm (97 * 96)).real A / 18624 := by
   set μ := law (97 * 96) 4656 (initMeasure paperSizes) with hμ
   have hW := measurableSet_wrongAt decay t
   have hg : Integrable (fun ω => 1 - (wrongAt decay t).indicator (fun _ => (1 / 9312 : ℝ)) ω)
@@ -69,18 +74,25 @@ theorem setIntegral_divisionAccuracy_le (decay : ℝ) (t : ℕ)
     measureReal_restrict_apply_univ, measureReal_restrict_apply hW] at h1
   have hu : μ.real (splitIn S) = (uniformPerm (97 * 96)).real S := by
     rw [measureReal_def, measureReal_def, hμ, law, Measure.prod_prod, measure_univ, mul_one]
-  have h2 := uniformPerm_le_of_subset_compl_labelled decay t (S := S \ labelled)
-    fun π hπ => hπ.2
-  have h3 : (uniformPerm (97 * 96)).real (S \ labelled) ≤
-      2 * μ.real (wrongAt decay t ∩ splitIn S) := by
-    have hsub : splitIn (S \ labelled) ∩ wrongAt decay t ⊆ wrongAt decay t ∩ splitIn S :=
-      fun ω hω => ⟨hω.2, hω.1.1.1, hω.1.2⟩
-    have h4 : uniformPerm (97 * 96) (S \ labelled) ≤ 2 * μ (wrongAt decay t ∩ splitIn S) :=
-      h2.trans (mul_le_mul_right (measure_mono hsub) 2)
+  have h3 : (uniformPerm (97 * 96)).real A ≤ 2 * μ.real (wrongAt decay t ∩ splitIn S) := by
+    have hsub : splitIn A ∩ wrongAt decay t ⊆ wrongAt decay t ∩ splitIn S :=
+      fun ω hω => ⟨hω.2, hAS hω.1.1, hω.1.2⟩
+    have h4 : uniformPerm (97 * 96) A ≤ 2 * μ (wrongAt decay t ∩ splitIn S) :=
+      hA.trans (mul_le_mul_right (measure_mono hsub) 2)
     have h5 := ENNReal.toReal_mono (by finiteness) h4
     rwa [ENNReal.toReal_mul, ENNReal.toReal_ofNat] at h5
   rw [hu] at h1
   linarith
+
+/-- **Over the runs whose split is in `S` the held-out accuracy integrates to at most the
+probability of `S` less `1/18624` of that of the splits of `S` that are not labelled**, at
+every update. -/
+theorem setIntegral_divisionAccuracy_le (decay : ℝ) (t : ℕ)
+    (S : Set (Equiv.Perm (Fin (97 * 96)))) :
+    ∫ ω in splitIn S, divisionAccuracy decay t ω ∂law (97 * 96) 4656 (initMeasure paperSizes) ≤
+      (uniformPerm (97 * 96)).real S - (uniformPerm (97 * 96)).real (S \ labelled) / 18624 :=
+  setIntegral_divisionAccuracy_le_of_half decay t Set.sdiff_subset
+    (uniformPerm_le_of_subset_compl_labelled decay t fun _ hπ => hπ.2)
 
 /-- **The mean held-out accuracy is at most `1` less a positive constant, at every update**:
 `1/18624` of the probability that the split is not labelled. -/
@@ -105,18 +117,32 @@ theorem not_division_tendsToOneInMean (decay : ℝ) :
   have hpos := uniformPerm_real_pos_of_mem (S := labelledᶜ) one_notMem_labelled
   linarith [div_pos hpos (by norm_num : (0 : ℝ) < 18624)]
 
+/-- **Under a condition on the split that contains a set, not empty, on which a held-out
+answer is wrong half the time at every update, the mean accuracy given the condition does not
+tend to `1`**: the integral of the accuracy over the runs that meet the condition does not
+tend to the probability of the condition. -/
+theorem not_tendsto_setIntegral_of_half (decay : ℝ) {A S : Set (Equiv.Perm (Fin (97 * 96)))}
+    (hAS : A ⊆ S) {π : Equiv.Perm (Fin (97 * 96))} (hπ : π ∈ A)
+    (hA : ∀ t : ℕ, uniformPerm (97 * 96) A ≤
+      2 * law (97 * 96) 4656 (initMeasure paperSizes) (splitIn A ∩ wrongAt decay t)) :
+    ¬ Tendsto (fun t => ∫ ω in splitIn S, divisionAccuracy decay t ω
+      ∂law (97 * 96) 4656 (initMeasure paperSizes)) atTop
+        (𝓝 ((uniformPerm (97 * 96)).real S)) := fun h => by
+  have hle := le_of_tendsto' h fun t =>
+    setIntegral_divisionAccuracy_le_of_half decay t hAS (hA t)
+  have hpos := uniformPerm_real_pos_of_mem hπ
+  linarith [div_pos hpos (by norm_num : (0 : ℝ) < 18624)]
+
 /-- **Under a condition on the split that admits a split that is not labelled the mean
-accuracy given the condition does not tend to `1`**: the integral of the accuracy over the
-runs that meet the condition does not tend to the probability of the condition. -/
+accuracy given the condition does not tend to `1`.** -/
 theorem not_tendsto_setIntegral_divisionAccuracy (decay : ℝ)
     {S : Set (Equiv.Perm (Fin (97 * 96)))} {π : Equiv.Perm (Fin (97 * 96))} (hπS : π ∈ S)
     (hπ : π ∉ labelled) :
     ¬ Tendsto (fun t => ∫ ω in splitIn S, divisionAccuracy decay t ω
       ∂law (97 * 96) 4656 (initMeasure paperSizes)) atTop
-        (𝓝 ((uniformPerm (97 * 96)).real S)) := fun h => by
-  have hle := le_of_tendsto' h fun t => setIntegral_divisionAccuracy_le decay t S
-  have hpos := uniformPerm_real_pos_of_mem (S := S \ labelled) ⟨hπS, hπ⟩
-  linarith [div_pos hpos (by norm_num : (0 : ℝ) < 18624)]
+        (𝓝 ((uniformPerm (97 * 96)).real S)) :=
+  not_tendsto_setIntegral_of_half decay (Set.singleton_subset_iff.2 hπS) (Set.mem_singleton π)
+    fun t => uniformPerm_singleton_le decay t hπ
 
 /-! The witnesses: the sample `zeroSample`, whose run stays at zero, where every logit is `0`
 and the first token is predicted, which is no residue; and the condition `anchored`, which the
