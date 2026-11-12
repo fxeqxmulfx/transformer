@@ -11,6 +11,16 @@ and forward-only arms. Native checks precede stress training. Keep all failures
 and numerical defects, and replay outputs and diagnostic state. This pilot
 does not replace the 35-task objective or claim a matched transformer result.
 
+All 18 coupled-moment cells now replay and pass independent saved-table audits.
+With R=sqrt(V), division and multiplication reach 100% held-out accuracy in
+full batch and forward-only, and 99.9785%/99.9575% with minibatches. The latter
+miss one/two answers despite exact observed fitting and tiny endpoint residuals.
+All six successful cells attain the numerical observed-CE certificate. Addition
+and the loose-radius controls fail; retain these results and the original caps.
+This repairs two failures, not the entire 35-task objective. Next extensions
+must preserve these results while addressing the incompatible addition bound
+and the remaining task families without task-specific answer rules.
+
 ## Convex stress repair after formal failure witnesses (2026-11-11)
 
 Continuation on 2026-11-12: the shared pilot repairs both recall tasks and, at

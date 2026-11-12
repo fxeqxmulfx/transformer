@@ -100,5 +100,85 @@ from the earlier native spectral pilot and operates on column-major matrices.
 
 ## Findings
 
-Stress results are pending. Small-case correctness and the Lean certificates
-alone are not evidence of passing the three stress controls or all 35 tasks.
+All 18 planned cells completed and replayed; all 18 independent saved-table
+audits pass. The producer was frozen at `2de90819`, after the Lean proof
+`14fd2932`, with source fingerprint
+`086218be9319a99a37b2e6549eff30f74fd7f1641ce72e1c803f222dbd71ca68`.
+Six cells pass the original 99% primary threshold: division and multiplication
+with the tight radius in each of the three modes.
+
+Held-out exact accuracy, in percent:
+
+| Task | Radius | Full batch | Minibatch | Forward only |
+| --- | --- | ---: | ---: | ---: |
+| Division | sqrt(V) | 100 | 99.9785 | 100 |
+| Multiplication | sqrt(V) | 100 | 99.9575 | 100 |
+| Addition | sqrt(V) | 0 | 0 | 0 |
+| Division | V | 0.9450 | 0.9450 | 0.9450 |
+| Multiplication | V | 2.0191 | 2.0191 | 2.0191 |
+| Addition | V | 0 | 0.9564 | 0 |
+
+Full batch and forward-only reach 100% on division/multiplication at the first
+scheduled observation, update 19, and stop there on the training certificate.
+The minibatch arms first cross 99% at update 38 and attain the training
+certificate at update 57 (three epochs). They retain one wrong answer among
+4656 division examples and two among 4705 multiplication examples. These are
+not rounded to perfect accuracy. Full batch took approximately 6.9/6.8 seconds,
+minibatches 18.2/17.9 seconds and forward-only 6.6/6.4 seconds in the concurrent
+pilot. Update counts and exposure differ between modes; this is not a matched
+transformer timing comparison.
+
+The successful tight-bound cells have exactly one-hot observed coordinates,
+computed moment norms strictly below sqrt(97), and mixture alpha one. Their
+mean train CE is 3.592270155512, the one-hot minimum for these bounded logits;
+it is not expected to be near zero. Reported ideal-loss excess near -3.5e-13
+is summation roundoff. The independent audit uses plain exponentials and
+direct Fourier sums instead of the training loss, transform or adapter.
+It confirms minimum held-out logit margins of 0.17987/0.16574 for full batch
+and 0.18528/0.17181 for forward-only. These correct predictions are well clear
+of numerical ties. The audit's class probabilities are the latent P coordinates,
+not softmax probabilities of the logits.
+
+The observed one-hot fit and feasible output provide the numerical version of
+CM2's loss certificate even while the internal splitting point is still moving:
+full-batch and forward-only splitting residuals are about 1.2 at their stops.
+Minibatch residuals are about 3.2e-14, yet its three unseen errors remain.
+Thus the result does not establish unique completion or universal unseen-label
+recovery. The scalar CE excess is a bound on objective suboptimality conditional
+on actual feasibility, not a bound on classification error.
+
+The addition failure remains. With the tight bound its true phase matrices
+have operator norm 97 rather than sqrt(97), as established by the previous
+pilot's post-run audit. Full batch and minibatches reach 100% training accuracy
+but retain ideal-CE excess 0.771389 and 0% held-out accuracy; their endpoint
+residuals are 3.39e-5 and 4.69e-14. Forward-only cannot attain its requested
+one-hot fit, has residual 38.47, and needs alpha 0.20297 for a feasible output.
+All three reach their caps. The loose-radius exact fits also fail on addition.
+This is a regression from the earlier single-phase tight-bound control's
+8.82% full-batch accuracy, though neither passes the task.
+
+Coupling repairs the earlier full-batch division/multiplication failures
+(1.85%/1.91% to 100%/100%) on these frozen splits. Flatness-inspired bounds
+still need the appropriate geometry and radius. No fresh all-35 run or matched
+transformer comparison was made; the best completed all-task model remains
+the count channel at 10/35. Earlier short/long results remain separate.
+
+Generated evidence lives in `runs/pilot-v1/summary.json`,
+`runs/pilot-v1/independent-audits.jsonl` and the per-cell files. Frozen binaries,
+native checks, Lean/index audits and corruption controls are preserved locally
+in `.kanban/artifacts/163/`. Reproduce the independent audits with:
+
+```sh
+producer_fp=$(cat experiments/convex_stress_moments/runs/pilot-v1/source_fingerprint.txt)
+for result in experiments/convex_stress_moments/runs/pilot-v1/*/result.json; do
+  OPENBLAS_NUM_THREADS=1 experiments/convex_stress_moments/target/release/audit_saved "${result%/result.json}" "$producer_fp"
+done > experiments/convex_stress_moments/runs/pilot-v1/independent-audits.jsonl
+```
+
+The auditor recomputes every arithmetic split metric directly from raw saved
+coordinates and constructs every nonzero Fourier moment with sine/cosine sums.
+Its SVD routine is shared with the producer, so this is independent transform
+and prediction verification, not an interval proof of spectral norms. Increasing
+reported train CE by 0.01 is rejected by both replay and the independent auditor.
+Changing the saved splitting point after updating its hash is rejected by
+state replay. Removing one result is rejected by the cohort summarizer.
