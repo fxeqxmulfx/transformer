@@ -53,6 +53,7 @@ bash experiments/convex_stress_counts/run_pilot.sh experiments/convex_stress_cou
 bash experiments/convex_stress_repair/report.sh experiments/convex_stress_counts/runs/pilot-v1 experiments/convex_stress_counts/protocol.json
 jq --slurpfile adaptive experiments/convex_stress_adaptive/runs/pilot-v1/summary.json \
   --slurpfile completion experiments/convex_stress_completion/runs/pilot-v1/summary.json \
+  --slurpfile association experiments/convex_stress_completion/runs/associative-v1/summary.json \
   -f experiments/convex_stress_counts/compare.jq \
   experiments/convex_stress_counts/runs/pilot-v1/summary.json
 ```
@@ -63,3 +64,28 @@ otherwise, validating frozen source and data identities. Generated evidence
 and frozen binaries stay ignored under root `runs/` and `.kanban/artifacts/161/`.
 No Python is executed. Stress outcomes will be recorded after this fixed cohort
 closes; the small native witness is not a stress result.
+
+## Complete-suite follow-up
+
+After all 18 parity cells replayed at 100% primary accuracy, while the pilot's
+depth controls were still running, `followup.json` fixed **all 27 remaining
+tasks**: 162 further cells with the unchanged binary, source fingerprint
+`b06514ec0c08f583d74fe431b3e3a97ea898366c849c2c71f0f3742ae03de210`.
+The two disjoint cohorts cover every original task. This extension was chosen
+after the parity results, not prespecified with the first 48 cells. It neither
+replaces failed cells nor changes training, scales, caps, data or metrics.
+The combined report checks the exact original 210-cell inventory. The paired
+baseline includes the separate six-cell associative completion follow-up, so
+its known improvement is not incorrectly attributed to counts.
+
+```sh
+bash experiments/convex_stress_counts/run_followup.sh experiments/convex_stress_counts/runs/remaining-v1 8
+bash experiments/convex_stress_repair/report.sh experiments/convex_stress_counts/runs/remaining-v1 \
+  experiments/convex_stress_counts/protocol.json experiments/convex_stress_counts/followup.json
+jq -s --slurpfile suite experiments/convex_stress/suite.json \
+  -f experiments/convex_stress_counts/combine.jq \
+  experiments/convex_stress_counts/runs/pilot-v1/summary.json \
+  experiments/convex_stress_counts/runs/remaining-v1/summary.json
+# Save that generated combined JSON locally, then run compare.jq as above,
+# adding --argjson expected 210 and supplying the combined report as its input.
+```

@@ -1,0 +1,45 @@
+{
+  "version": "counts-remaining-suite-v1",
+  "pilot_tasks": [
+    "suite-boolean-and-random",
+    "power-division-p97-k3",
+    "arithmetic-cube-plus",
+    "power-division-p193-k5",
+    "power-division-p193-k2",
+    "power-division-p97-k2",
+    "arithmetic-square-times",
+    "arithmetic-sub",
+    "arithmetic-mul",
+    "arithmetic-add",
+    "power-division-p193-k3",
+    "division-p193",
+    "arithmetic-square-sum",
+    "gpt-probe-branch-amplitudes",
+    "power-division-p97-k5",
+    "arithmetic-half-sum",
+    "arithmetic-sum-square",
+    "arithmetic-affine-product",
+    "arithmetic-perm-add",
+    "gpt-probe-linear-transport",
+    "arithmetic-abs-diff-blind",
+    "arithmetic-abs-diff",
+    "arithmetic-sum-pow4",
+    "arithmetic-sum-cube",
+    "basis-recall-easy",
+    "recurrence-fibonacci-k1-c2-lgt",
+    "associative-divisor-n2-l1-w0"
+  ],
+  "arms": [
+    "full_batch",
+    "minibatch",
+    "forward_only"
+  ],
+  "scales": [
+    1,
+    10
+  ],
+  "pilot_seed": 0,
+  "expected_fingerprint": "b06514ec0c08f583d74fe431b3e3a97ea898366c849c2c71f0f3742ae03de210",
+  "selection_reason": "All 27 remaining original tasks. Added after all 18 parity cells of the initial pilot replayed at 100% primary accuracy, while its depth controls were still running. Covers the complete original 35-task inventory in two disjoint cohorts; no failed pilot cell is replaced.",
+  "training_protocol": "Unchanged counts-v1 binary and embedded protocol. Only the planned task inventory expands; original data, scales, caps, batch sizes and metrics remain fixed."
+}
