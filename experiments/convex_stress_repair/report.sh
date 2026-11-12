@@ -3,6 +3,7 @@
 set -euo pipefail
 repair_cohort=${1:?supply a cohort directory}
 repair_protocol=${2:-"$(dirname -- "${BASH_SOURCE[0]}")/protocol.json"}
+repair_plan=${3:-"$repair_protocol"}
 repair_rows=$(mktemp "$repair_cohort/report-rows.XXXXXX")
 trap 'rm -f -- "$repair_rows"' EXIT
 while IFS=$'\t' read -r arm task seed scale; do
@@ -17,9 +18,9 @@ while IFS=$'\t' read -r arm task seed scale; do
         --slurpfile result "$result_file" --argjson run_exit "$run_exit" --argjson replay_exit "$replay_exit" \
         '{arm:$arm,task:$task,seed:$seed,scale:$scale,run_exit:$run_exit,replay_exit:$replay_exit,result:($result[0]//null)}' >> "$repair_rows"
 done < "$repair_cohort/jobs.tsv"
-jq -s --slurpfile protocol "$repair_protocol" --arg fingerprint "$(cat "$repair_cohort/source_fingerprint.txt")" '
+jq -s --slurpfile protocol "$repair_protocol" --slurpfile plan "$repair_plan" --arg fingerprint "$(cat "$repair_cohort/source_fingerprint.txt")" '
   def identity: [.arm,.task,.seed,.scale];
-  ([$protocol[0] | .pilot_tasks[] as $task | .arms[] as $arm | .scales[] as $scale |
+  ([$plan[0] | .pilot_tasks[] as $task | .arms[] as $arm | .scales[] as $scale |
     [$arm,$task,.pilot_seed,$scale]]|sort) as $expected |
   if (map(identity)|sort) != $expected then error("planned inventory differs from protocol") else . end |
   if (map(identity)|unique|length) != length then error("duplicate planned cells") else . end |

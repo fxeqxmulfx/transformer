@@ -1,0 +1,10 @@
+{
+  "version": "completion-associative-followup-v1",
+  "pilot_tasks": ["associative-divisor-n2-l1-w0"],
+  "arms": ["full_batch", "minibatch", "forward_only"],
+  "scales": [1, 10],
+  "pilot_seed": 0,
+  "expected_fingerprint": "c896fdbd0a2a3026942e49100f2c315dfc78defb452ad31ebc3aac2fd27b0c54",
+  "selection_reason": "Adaptive-v1 passes this task in full batch, forward-only and scale-10 minibatches, but scale-1 minibatches stop at 53.86598% after the cap with 100% training accuracy. Test whether the already-frozen missing-row completion removes this remaining failure. Selected after the adaptive results; separate from the original 24-cell cohort.",
+  "training_protocol": "Use the unchanged completion-v1 binary and its embedded protocol.json; this file changes only the planned task inventory. No held-out labels enter fitting."
+}
