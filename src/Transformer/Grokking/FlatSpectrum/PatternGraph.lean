@@ -55,9 +55,12 @@ def patternGraph (Ω : Set (m × n)) : SimpleGraph (m ⊕ n) :=
     ¬ (patternGraph Ω).Adj (.inr j) (.inr j') := by
   simp [patternGraph]
 
-/-- On a connected pattern, `r_i + s_j = 0` on `Ω` forces `r_i + s_j = 0` everywhere. -/
-lemma rigid_of_preconnected {Ω : Set (m × n)} (hΩ : (patternGraph Ω).Preconnected)
-    (r : m → ℂ) (s : n → ℂ) (h : ∀ ij ∈ Ω, r ij.1 + s ij.2 = 0) (i : m) (j : n) :
+/-- On a connected pattern, `r_i + s_j = 0` on `Ω` forces `r_i + s_j = 0` everywhere, for
+potentials in any additive group: the complex ones of the source and the residues of a class
+coding alike. -/
+lemma rigid_of_preconnected {G : Type*} [AddGroup G] {Ω : Set (m × n)}
+    (hΩ : (patternGraph Ω).Preconnected)
+    (r : m → G) (s : n → G) (h : ∀ ij ∈ Ω, r ij.1 + s ij.2 = 0) (i : m) (j : n) :
     r i + s j = 0 := by
   have hφ (x y : m ⊕ n) (hxy : (patternGraph Ω).Adj x y) :
       Sum.elim r (fun j => -s j) x = Sum.elim r (fun j => -s j) y := by
@@ -75,7 +78,7 @@ lemma rigid_of_preconnected {Ω : Set (m × n)} (hΩ : (patternGraph Ω).Preconn
   rw [Sum.elim_inl, Sum.elim_inr] at this
   rw [this, neg_add_cancel]
 
-example := rigid_of_preconnected (Ω := (Set.univ : Set (Fin 1 × Fin 1)))
+example := rigid_of_preconnected (G := ℂ) (Ω := (Set.univ : Set (Fin 1 × Fin 1)))
   (fun x y => by
     rcases x with i | j <;> rcases y with i' | j'
     · rw [Subsingleton.elim i i']

@@ -15172,3 +15172,204 @@ CE-optimal completions, including connected matching coverage.
 convex CE and the global fitting certificate across all decoder choices.
 It also proves the two ambiguous endpoints remain global CE minima over this
 larger hull: convexifying the class does not supply the missing identification.
+
+### CM17. The class coding is found from the training rectangles
+
+*Source-note extension for board task #196, 2026-11-12. The number CM16 is
+reserved for task #195.*
+
+CM14 builds a feasible CE minimizer from a class coding and CM13 identifies it,
+but both stop before two steps: "Discovery of a coding remains a discrete
+proposal step", and the conclusion "does not prove that unobserved true labels
+follow the learned phase equations". This item proves both steps for one
+family of tables and one explicit learner. It is not about a trained network.
+
+**Setting.** A square table `y : n × n -> C` over a finite class vocabulary.
+The structural hypothesis, the only assumption about unobserved cells, is
+
+```
+y(i,j) = e^{-1}(r(i) + s(j))
+```
+
+for some bijection `e : C <-> Z/p`, `p` prime, and phases `r, s : n -> Z/p`.
+The learner is given none of `e`, `r`, `s`. It is given training samples
+`(i_t, j_t, y_t)` with `y_t = y(i_t, j_t)`, possibly repeated. Rows, columns
+and classes are names: no arithmetic on them enters, only arithmetic on the
+values of a candidate coding.
+
+**The linear system.** Four samples at the corners of a rectangle, with the
+labels `a, b` in one row and `c, d` in another row at the same two columns,
+give one homogeneous equation for an unknown coding `z : C -> Z/p`:
+
+```
+z(a) + z(d) - z(b) - z(c) = 0.
+```
+
+The solutions form a subspace that contains the constants and `e`. Pin one
+class, `z(c0) = 0`. The pinned solutions contain `e - e(c0)`, which is not
+zero, so the native rejection `no_nonconstant_phase_code` cannot occur for
+such a table. The test of the learner is
+
+```
+the pinned solution space has dimension one,
+```
+
+which by rank–nullity is `rank + 1 = p` for the matrix of the pinned system:
+the acceptance test of `coding.rs`. The rectangles through one shared column
+of two rows give all rectangles of those rows; the native system keeps only
+those, and that it therefore has the same solutions is not formalized. The
+solution space depends only on the set of observed (cell, label) pairs: not
+on the order of the samples, their repetitions or their grouping into
+batches.
+
+**What the test gives.** Assume the structural hypothesis and the test. For
+every nonzero pinned solution `z`, whichever the elimination returns:
+
+1. `z = α (e - e(c0))` with `α != 0`. The coding is recovered up to the affine
+   gauge `e -> α e + β`, which does not change the table.
+2. `z` is a bijection of the classes. This is derived, not assumed: the native
+   bijection check cannot fail here.
+3. `z` has row and column phases on the whole table, hence on the observed
+   cells: the native cycle check cannot fail here either.
+
+The test holds exactly when every solution of the rectangle system is
+`α e + β`, and it does not depend on the pinned class.
+
+**An observable sufficient coverage.** Take two rows and `p - 1` columns
+observed in both, with distinct labels in the first row and one column where
+the two rows differ. Then the test holds. Write `w = z ∘ e^{-1}` and let
+`δ != 0` be the difference of the phases of the two rows. The rectangles of
+the two rows say that `w(u + δ) - w(u)` is one constant `κ` at the `p - 1`
+phases `u` of the shared columns. The sum of `w(u + δ) - w(u)` over all `u`
+vanishes and `p κ = 0`, so the increment is `κ` at the last phase too. A
+function on `Z/p` with a constant increment over a nonzero step is affine,
+since the step generates the group. (With only `p - 2` shared labels and no
+other rectangle, two increments remain free under one relation; this remark
+is not formalized.)
+
+**The completion is the table.** Let the bipartite graph of the observed
+cells be connected, and let the test hold. Take any bijection `w : C <-> Z/p`
+and potentials `ρ, σ` that fit the training samples,
+`w(y_t) = ρ(i_t) + σ(j_t)`; a nonzero pinned solution with potentials found
+by a search of the graph is one. Then
+
+```
+w^{-1}(ρ(i) + σ(j)) = y(i,j)        on every cell, observed or not.
+```
+
+Indeed `w - w(c0)` is a nonzero pinned solution, so `w = α e + β`. The
+potentials `ρ, σ` and the gauged phases `α r + β, α s` then have equal sums
+on the observed cells, and on a connected graph equal sums everywhere (the
+rigidity of the Setting, for potentials in `Z/p`). So under the two
+observable conditions the table is the only training-compatible phase
+completion in the sense of CM14.
+
+**The certificate.** What the native code returns can be checked without
+trusting how it was computed: a bijection `w`; potentials `ρ, σ` with
+`w(y_t) = ρ(i_t) + σ(j_t)` at every sample; connectivity of the observed
+graph; and `rank + 1 = p` for the pinned system. All four are finite checks
+on the training set and the returned objects. They are sound: under the
+structural hypothesis they give `w^{-1}(ρ(i) + σ(j)) = y(i,j)` on every cell,
+which is the statement above. They are complete for the elimination: under
+the hypothesis and the rank test every nonzero pinned solution passes the
+bijection check and has such potentials (points 2 and 3).
+
+**The learner.** `discover(cells, labels, c0)` is a function of the training
+set and the pinned class alone. In the order of the native checks it answers
+`no_code` (the pinned solutions have dimension zero), `ambiguous` (above one),
+`nonbijective` (no pinned solution is a bijection), `inconsistent` (no
+bijective coding has potentials on the samples), `disconnected`, or else
+`accept` with a training-compatible phase completion. For a table of the
+family:
+
+- under the test and connectivity it returns `y`, on all cells, and it
+  accepts in no other case;
+- it is never wrong: it returns `y`, or answers `ambiguous` or
+  `disconnected`. The other three refusals certify that the labels belong to
+  no table of the family;
+- its answer depends only on the set of observed (cell, label) pairs.
+
+Without the structural hypothesis an accepted table is still a
+training-compatible phase completion, and nothing more is claimed for it.
+
+**The bridge to CE.** Use the coding `w` found above as the code bank of CM14:
+probability rows `P`, operator norm and nuclear norm of every moment at most
+`N`, ordinary log-sum-exp CE over the full vocabulary on the training samples.
+Under the test and connectivity the one-hot table that the learner builds
+from `w, ρ, σ` is the one-hot table of `y`, it is feasible, and it minimizes
+CE: the minimizer is constructed in closed form, not searched. If the
+observed cells also contain a perfect matching, CM13 applies to `w` with its
+matching hypothesis as stated and its code separation `φ* φ = p I` proved in
+CM14, and the program has exactly one minimizer, `pointMass(y)`. A minimizer
+therefore gives probability one to `y(i,j)` at every cell. The same holds
+with `w` replaced by any nonzero pinned solution and the bijection proved for
+it in point 2.
+
+These are statements about exact minimizers over the reals. A table whose CE
+is within the native `1e-8` of the ideal value is not covered: no stability
+bound is proved here. No cold or minibatch run of the native solver is
+claimed to reach the minimizer.
+
+**Witness.** `p = 5`, classes named `0..4`, and the hidden coding exchanges
+the names `0` and `1`; `r(i) = i`, `s(j) = j`. The table is
+
+```
+1 0 2 3 4
+0 2 3 4 1
+2 3 4 1 0
+3 4 1 0 2
+4 1 0 2 3
+```
+
+Observed: rows 0 and 1 at columns 0–3, the cells `(2,2)`, `(3,3)`, `(4,4)`
+and `(4,0)`: twelve cells; thirteen are held out, and all five classes occur
+on them. Read as numbers, the class names violate the rectangle of rows 0, 1
+and columns 0, 1 (`1 + 2 != 0 + 0`), so the given order of the names is not a
+coding. Rows 0 and 1 share four columns with the distinct labels `1, 0, 2, 3`
+and differ in the first, so the test holds; the graph is connected and the
+diagonal is observed. The learner returns the whole table, and the CE program
+of the gauge `2 (e - 1)` has the one-hot table as its only minimizer.
+
+**A training set that must be refused.** Observe the row 0 and the column 0
+of the table of `i + j` for `p = 5`: nine cells, a connected graph. The
+identity coding and the coding above both have potentials that fit them, and
+their tables differ at the unobserved cell `(2,2)`: `4` against `3`. No
+learner can return both; this one answers `ambiguous`, as it does whenever
+two different tables of the family share a connected training set.
+Connected coverage alone does not fix the coding, and the rank test is not an
+artifact of the method. In the other direction, the witness without its
+cells `(4,4)` and `(4,0)` still passes the rank test, but its row 4 is not
+observed, and the learner answers `disconnected`.
+
+**What remains open.**
+
+- The structural hypothesis is about the unknown truth and cannot be tested
+  on the training set. The answer of the learner does not depend on the
+  unobserved labels, so for a table outside the family an accepted completion
+  need not be the table. Many-to-one decoders (CM15), composite `p`,
+  vocabularies of another size and the question which tasks of the stress
+  suite belong to the family are not treated.
+- When a split passes the rank test is not analyzed beyond the two-row
+  coverage: there is no probability statement over random splits.
+- The native elimination, its anchoring and its graph search are not
+  formalized. The Lean statements are about what they compute: the kernel of
+  the pinned system and Mathlib's rank of its matrix. Their cost is not
+  analyzed.
+- Numerical solutions: the exact-real minimizer against the native tolerance,
+  floating-point SVDs, and convergence of any iterative solver.
+- Uniqueness is within the fixed-code program of the discovered coding, not
+  over the CM12 hull of all output renamings.
+- Discovery by training a network is untouched. This learner is an explicit
+  algebraic procedure; that AdamW on a transformer (#193) or a paired latent
+  decoder (#195) finds such a coding is a separate, open claim. Discovery from
+  a stream without keeping the observed rectangles is not claimed either.
+
+`CoupledMoments/CodingDiscovery/Basic.lean` defines the rectangle system.
+`TwoRows.lean` proves the sufficient coverage. `Gauge.lean` proves points 1–3
+and the equivalent forms of the test, and `Rank.lean` its form `rank + 1 = p`.
+`Completion.lean` proves that every training-compatible phase completion is
+the table; it uses the rigidity lemma of `PatternGraph.lean`, generalized in
+place to potentials in any additive group. `Learner.lean` defines `discover`
+and proves the statements about its answers. `CrossEntropy.lean` proves the
+bridge, and `Witness.lean` the examples above. `Invariance.lean` proves that
+the system depends only on the set of observations.
