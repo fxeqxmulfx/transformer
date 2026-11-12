@@ -339,6 +339,17 @@ A nonzero example executes two nonlinear blocks `1 -> 2 -> 6` and reads their
 composed feature; another witnesses a nonzero feasible head and its logit bound.
 There are no new measured depth results in this theory extension.
 
+CD8 also calibrates the finite-margin initializer using ordinary CE directly:
+logits a at the observed class and zero at the other V-1 classes have loss
+`log(1 + (V-1) exp(-a))`. `fixed_margin_ce` proves this exact value for every
+finite label type and real margin, with an explicit nonempty binary example.
+At the native floor a=24, even pure proposals with 548 classes have CE about
+`2.065e-8`; a fixed `1e-8` initializer threshold cannot recognize them.
+A prospective first-channel rule may therefore use this vocabulary-dependent
+reference value plus a declared tolerance. This calibrates proposal selection;
+it does not bound the minimum of the larger head family or certify an unseen
+answer. Any numerical policy must be frozen before its own experiment.
+
 ## CD9. Keep shallower features when extending a path library
 
 A bank containing only final states at exactly depth d need not contain its

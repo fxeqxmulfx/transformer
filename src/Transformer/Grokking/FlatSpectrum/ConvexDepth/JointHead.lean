@@ -161,4 +161,28 @@ example : headLogits (headFeatures (fun _ (_ : Unit) (x : ℝ) => x + x^2) 2
     (fun x (_ : Unit) => x)) (fun _ (_ : Bool) => 1) 1 true = 6 := by
   norm_num [headLogits, headFeatures, pathRun, path_card]
 
+omit [Fintype K] in
+/-- The actual ordinary CE of a pure initializer with finite logit margin a
+depends on the vocabulary size (CD8, initializer calibration). This is its CE
+value, not a lower bound on all budgeted heads or a missing-label certificate. -/
+theorem fixed_margin_ce [Fintype C] [DecidableEq C] (t : C) (a : ℝ) :
+    crossEntropy (fun c => if c = t then a else 0) t =
+      Real.log (1 + ((Fintype.card C : ℝ) - 1) * Real.exp (-a)) := by
+  rw [ConvexRecall.crossEntropy_relative]
+  congr 1
+  calc
+    _ = ∑ c : C, (Real.exp (-a) + if c = t then 1 - Real.exp (-a) else 0) := by
+      apply Finset.sum_congr rfl
+      intro c hc
+      by_cases h : c = t <;> simp [h]
+    _ = (Fintype.card C : ℝ) * Real.exp (-a) + (1 - Real.exp (-a)) := by
+      rw [Finset.sum_add_distrib, Fintype.sum_ite_eq']
+      simp
+    _ = _ := by ring
+
+example : crossEntropy (fun c : Bool => if c = true then (24 : ℝ) else 0) true =
+    Real.log (1 + Real.exp (-24)) := by
+  rw [fixed_margin_ce]
+  norm_num
+
 end Transformer.Grokking.FlatSpectrum.ConvexDepth
