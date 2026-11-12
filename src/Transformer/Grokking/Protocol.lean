@@ -37,6 +37,14 @@ public import Transformer.Grokking.Protocol.SolverScale
 public import Transformer.Grokking.Protocol.OrbitAnchors
 public import Transformer.Grokking.Protocol.HeldOutCertificate
 public import Transformer.Grokking.Protocol.Enclosure
+public import Transformer.Grokking.Protocol.ReadoutBound
+public import Transformer.Grokking.Protocol.TargetMean
+public import Transformer.Grokking.Protocol.ReadoutGradient
+public import Transformer.Grokking.Protocol.ReadoutPairing
+public import Transformer.Grokking.Protocol.AdamStationary
+public import Transformer.Grokking.Protocol.ReadoutStationary
+public import Transformer.Grokking.Protocol.ReadoutWitness
+public import Transformer.Grokking.Protocol.DecayedLogits
 
 /-! The protocol behind the division curves of Power et al., *Grokking: generalization beyond
 overfitting on small algorithmic datasets*, and what "held-out accuracy tends to 1" means for
@@ -65,7 +73,12 @@ condition as a certificate of the held-out accuracy from training answers, with 
 each held-out equation or one for each orbit, the splits that give an anchor to each orbit,
 and parameters that fit every training answer of a split and miss a held-out one; and what two
 rows that enclose the logits, as a program that rounds outward computes them, decide about the
-real ones: the answers, the accuracy and the premise of that certificate. The target is a
+real ones: the answers, the accuracy and the premise of that certificate; and two ways of
+proving a convergence that the runs themselves exclude: by the gradient of the readout in
+closed form and its pairing with the readout, a run of Adam without weight decay whose
+parameters converge does not keep its batches fitted with a margin, and by the box of AdamW,
+for almost every run with weight decay 1 the logits stay bounded, the loss of a batch stays
+above a positive floor and no margin grows without bound. The target is a
 predicate of the model, its labels and its gradient oracle: no convergence of any transformer
 is proved here, and no trained decoder is proved to have that structure, for an enclosure of
 its logits is a hypothesis here. The map of what is proved elsewhere and what is missing is

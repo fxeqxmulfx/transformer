@@ -2,7 +2,8 @@
 
 Board tasks #126–#132 and #137. Sources: `papers/arXiv-2201.02177v1/main.tex` (Power et al.),
 Figure 1 and the appendix *Additional experimental details*; openai/grok at `3d64b1d8`; the
-protocol pinned in `experiments/grok_division/PROTOCOL.md`. Written 2026-11-11.
+protocol pinned in `experiments/grok_division/PROTOCOL.md`. Written 2026-11-11; sections 5
+and 6 and the enclosures of bridge 5 added 2026-11-12.
 
 The paper shows curves of finite runs. It states no theorem, and nothing below proves that
 training makes any transformer generalize. This note fixes what such a theorem would say,
@@ -31,10 +32,12 @@ than trained, and names the bridges that are missing.
 | It is neither empty nor automatic | `generalizes_indicator`, `not_generalizes_const` |
 | The decoder in exact reals, all parameter groups | `Sizes`, `Param`, `layerNorm`, `weight`, `attention`, `block`, `decodeTo`, `logits`, `sum_weight`, `logits_congr` |
 | Loss of a batch and the gradient of the backward pass | `Example`, `batchLoss`, `gate`, `decodeTo_gate`, `frozenLoss`, `frozenLoss_self`, `sourceGrad` |
+| Means over the targets of a batch; the readout's gradient in closed form and its pairing with the readout | `targetMean`, `batchLoss_eq_targetMean`, `sourceGrad_out`, `sum_out_mul_sourceGrad` |
+| The logits are bounded by the readout and the second normalizations | `abs_layerNorm_le`, `abs_decodeTo_le`, `abs_logits_le` |
 | The task, its tokens and its supervision | `paperSizes`, `Equation`, `equations`, `read`, `read_injective`, `inDivisionCell_operands`, `supervised`, `targetCount_supervised` |
 | Initialization law; the law of a run is a probability law | `initLaw`, `initMeasure`, `isProbabilityMeasure_initLaw` |
 | The target for the division protocol, and what it means | `division_generalizes_iff`, `division_generalizes_source_iff` |
-| What is proved about its trajectory | `abs_trajectory_division_sub_le`, `abs_trajectory_division_le` |
+| What is proved about its trajectory | `abs_trajectory_division_sub_le`, `abs_trajectory_division_le`, `division_eventually_margin_lt`, `ae_abs_logits_divisionRun_le`, `ae_floor_le_batchLoss_divisionRun`, `ae_margin_divisionRun_le` (section 5) |
 | The target is false without a condition on the split (section 2) | `not_division_generalizes`, `not_division_tendsToOneInProbability` |
 
 For division the arguments are fixed in `division_generalizes_iff`: the decoder of
@@ -129,8 +132,15 @@ Two substitutions are therefore excluded, and no statement here makes them:
 4. **Any control of the predictions.** Without decay the loss has no minimizer on fitted data
    and the parameters need not stay bounded. What is proved is how far a parameter can move:
    at most `0.017 t` under Adam, and within `max(|θ₀|, 17)` of 0 under AdamW with weight decay 1.
-   No descent, no bound of the Adam run uniform in `t`, and no limit of the trajectory or of
-   its logits is proved or assumed.
+   Two consequences are proved for the runs of the protocol themselves, with their batches,
+   both moments and the gradient of the backward pass (section 5): a trajectory of Adam
+   without weight decay whose parameters converge does not keep its batches fitted with a
+   margin (`division_eventually_margin_lt`), and for almost every run of AdamW the logits
+   stay bounded, so the loss of a batch stays above a positive floor and no margin grows
+   without bound (`ae_abs_logits_divisionRun_le`, `ae_floor_le_batchLoss_divisionRun`,
+   `ae_margin_divisionRun_le`). No descent, no bound of the Adam run uniform in `t`, no limit
+   of a trajectory or of its logits, and no control of a held-out prediction is proved or
+   assumed.
 5. **Structure gives correct answers** (#129): proved, as a sufficient condition.
    `heldout_accuracy_eq_one_of_training_anchors` gives held-out accuracy 1 when every held-out
    equation has a training anchor whose margin is above twice the error of the equation's
@@ -169,3 +179,42 @@ Two substitutions are therefore excluded, and no statement here makes them:
 
 Bridges 4, 6 and 7 are open research problems. The measurements of
 `experiments/grok_division` are finite runs in `f32` and close none of them.
+
+## 5. Ways to bridge 6: what the runs exclude and what stays open
+
+`Protocol/{ReadoutBound,TargetMean,ReadoutGradient,ReadoutPairing,AdamStationary,ReadoutStationary,ReadoutWitness,DecayedLogits}.lean`.
+
+Bridge 6 (#130) asks that training reaches the structure of bridge 5 and keeps it. Each row
+is a way a proof could go and what is known of it. A row that is closed is closed for that way
+only: nothing here is evidence that the target with a condition on the split is true or false,
+and #130 stays open.
+
+| Way | Status | Declarations or evidence |
+| --- | --- | --- |
+| Adam without weight decay: the parameters converge, and the limit is analysed | Closed where the run fits its batches with a margin. If every parameter of a trajectory converges, then for every `μ > 0`, from some update on, every batch has an equation whose answer or closing token leads by less than `μ` at the parameters the batch is seen at. A readout coordinate that converges sees gradients that tend to 0, whatever the batches and without continuity of the gradient; the readout paired with its gradient is the mean of the expected logit less the logit of the target, which a margin keeps below a negative number while the logits are bounded. Not excluded: a trajectory that converges while some target of its batches stays tied or wrong | `tendsto_adamRun_grad_zero`, `sourceGrad_out`, `sum_out_mul_sourceGrad`, `sum_out_mul_sourceGrad_le_of_margin`, `eventually_exists_margin_lt`, `division_eventually_margin_lt`; the witness of the hypotheses is the run from zero, `divisionRun_zeroSample` |
+| AdamW: the training loss tends to 0, or the margins grow without bound | Closed for almost every run. With weight decay 1 the readout and the second normalizations stay within 17 of zero, so every logit stays within `logitBox`, which is below 455 600; the loss of every batch with a target stays above `log(1 + e^(−2·logitBox))`, which is positive, and no answer leads by more than `2·logitBox`, at every update. The bound is far from what a run shows; what it gives is uniformity in the update | `abs_logits_le`, `ae_initMeasure_abs_le_one`, `ae_abs_logits_divisionRun_le`, `ae_floor_le_batchLoss_divisionRun`, `ae_margin_divisionRun_le`, `logitBox_lt`, `floor_pos` |
+| Transfer from the minima of a weight-decayed factorization | Excluded in section 3: another model and another optimizer, no minimum without decay, and a limit of AdamW is not a minimizer of the weight-decayed loss | `not_exists_forall_ceLoss_le`, `not_tendsto_adamRun_factor` |
+| A checkpoint with the certificate, then invariance of the certificate along the run | No support. On enclosures of the real-valued logits the certificate holds at five retained checkpoints of two AdamW runs and is lost again in both; no Adam checkpoint has it. Those trajectories are in `f32`; nothing is known of the exact-real one | bridge 5; `experiments/grok_division/README.md` |
+| Adam without weight decay: the parameters diverge and their direction converges to a margin maximizer | Open, not attempted. The decoder is not written as a positively homogeneous function of its parameters (the normalization adds `10⁻⁵` to the variance, the positions are added to the embedding); no homogeneity is proved here, and an argument for homogeneous networks would need it. The first row proves non-convergence only: it does not prove that any parameter is unbounded | none |
+| AdamW: a stationary regime inside the box, described in law | Open, not attempted. It needs the measurability of bridge 2 first | none |
+
+## 6. What can be claimed today (#131, #132)
+
+There is no end-to-end theorem, so #131 is open and #132 has no final claim to audit. An audit
+of the present state finds this:
+
+- **Exact-real, proved in Lean with the three standard axioms.** What the target says
+  (`division_generalizes_iff`); that the almost sure target and the target in probability are
+  false without a condition on the split (section 2); that a structure of the logits gives
+  held-out accuracy 1 and that built parameters have it (bridge 5); what two rows that enclose
+  the logits decide (bridge 5); and the two exclusions of section 5. None of these says that
+  a trained decoder generalizes.
+- **Finite-horizon, native.** Nine runs in `f32` (three settings, seeds 0 to 2) and their 117
+  retained checkpoints. At a checkpoint the parameters are reals exactly, and the logits of
+  the exact-real decoder there are enclosed by a computation outside Lean; this decides the
+  answers of that decoder at those parameters and nothing after the last checkpoint. The
+  `f32` trajectory is not related to the exact-real trajectory by any statement (bridge 1), so
+  no theorem of section 5 is a statement about an executed run, and no run is an instance of
+  the target.
+- **Not addressed.** Every other curve and claim of the paper; the time at which accuracy
+  rises; whether the certificate is kept. The trainer was not compared with a PyTorch run.
