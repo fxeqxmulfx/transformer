@@ -30,7 +30,7 @@ FMA). Kernite is expected at `/home/misha/rust_projects/kgen`, clean at
 
 ```sh
 cd experiments/grok_division
-cargo test --offline --release           # 38 tests: 36 of the trainer, 2 of `numerator`
+cargo test --offline --release           # 41 tests: trainer 36, `numerator` 2, `quotient` 3
 cargo build --offline --release
 target/release/grok-division check       # pins, split fingerprints, f32 model against the model in doubles
 target/release/grok-division bench 8     # the time of an update
@@ -49,6 +49,7 @@ target/release/grok-division report runs/*-seed*
 target/release/diagnose runs/adamw-seed1 1 10000 50000   # what checkpoints do at the answer
 target/release/numerator runs/*-seed*    # the held-out equations with numerator zero
 target/release/numerator --list runs/adamw-seed1   # its evaluations with one of them wrong
+target/release/quotient runs/adamw-seed0 # how far its checkpoints are from quotient-equivariance
 ```
 
 `diagnose RUN SEED STEP...` reads checkpoints with the model in doubles: accuracy on 512
@@ -61,6 +62,12 @@ counts the wrong answers among the equations `0 / y = 0`; with `--list` it print
 evaluations that have one of them wrong. It is a third binary, shares only the constants of
 the data with the trainer, and refuses a run where its count over all held-out equations
 differs from the trainer's at any evaluation.
+
+`quotient RUN [STEP...]` computes the logits at `=` of all 9312 equations at checkpoints of a
+run, with the model in doubles, and measures how far they are from moving with a scaling of
+the numerator and the denominator; the section on it below says what it prints. It is a
+fourth binary and reads checkpoints through `src/checkpoint.rs`, as `diagnose` does; neither
+file is among the trainer's sources.
 
 One test of the trainer was added after the runs: `hidden_units_at_zero_pass_no_gradient`
 holds both models to the source's derivative 0 of the ReLU at 0, where the loss has a kink.
@@ -106,9 +113,9 @@ The machine's GPU, a GeForce GTX 1050 with 2 GiB, was not used.
 State on 2026-11-12: the cohorts `adamw`, `adamw --answer-only` and
 `adam --flush-from 100000` are complete. The `adam` runs were stopped at updates 114 000,
 131 000 and 100 000 (seeds 0, 1, 2) and were continued as `adam --flush-from 100000`
-(Amendment 2) to update 1 000 000. The numbers are those of `report`, of `numerator` and of
-`history.jsonl`. Accuracy is the answer's, on the 4656 training or the 4656 held-out equations;
-a guess among the 97 residues has 1.0%.
+(Amendment 2) to update 1 000 000. The numbers are those of `report`, of `numerator`, of
+`quotient` and of `history.jsonl`. Accuracy is the answer's, on the 4656 training or the 4656
+held-out equations; a guess among the 97 residues has 1.0%.
 
 ### AdamW with weight decay 1, 10⁵ updates: perfect held-out accuracy is reached and lost
 
@@ -245,6 +252,53 @@ of these equations right.
   the last tenth of the run. In its window they are 265 of its 1676 wrong answers, 16%, and
   1.2% of its held-out equations, and 2 of the 9 wrong answers of its last update are of this
   kind. In the windows of seeds 0 and 2 they are 29 of 353 997 and 29 of 124 913.
+
+### The decoders that answer every equation are not quotient-equivariant
+
+Exploratory: measured on the retained checkpoints after the runs, and no part of the protocol.
+
+Scaling the numerator by `s` and the denominator by `t`, both nonzero, sends `a / b = c` to
+`(s a) / (t b) = (s / t) c`. If the logits at `=` moved with the equation, the residue `r` to
+`(s / t) r` and the other 142 tokens staying, two right training answers would give all the
+rest: the equations with a nonzero numerator are one orbit of the scalings and those with
+numerator zero the other. `quotient` measures the distance to that. It relabels every row of
+logits to the first equation of its orbit and takes a training equation as the anchor. The
+anchor's structural error `ε` is the least number such that every relabelled row of the orbit
+is within `ε` of the anchor's in every token, one constant added to each row; every margin of
+the orbit is then at least the anchor's less `2 ε`. The anchor reported is the best of the
+orbit's training equations, and the model is the one in doubles at the checkpoint's parameters.
+
+Of the 117 checkpoints of the nine complete runs, nine answer all 9312 equations, all of them
+under AdamW. Their orbit of nonzero numerators, 9216 equations:
+
+| Cohort | Seed | Update | Least margin | Anchor's margin | `ε` | Anchor's margin less `2 ε` | Median error of a row | Rows within half the anchor's margin |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `adamw` | 0 | 30 000 | 3.50 | 5.02 | 4.12 | −3.23 | 3.24 | 914 |
+| `adamw` | 0 | 40 000 | 3.56 | 5.39 | 5.57 | −5.75 | 4.03 | 1002 |
+| `adamw` | 2 | 20 000 | 1.03 | 5.20 | 4.85 | −4.50 | 2.98 | 2226 |
+| `adamw` | 2 | 30 000 | 0.37 | 5.27 | 5.08 | −4.90 | 3.32 | 1027 |
+| `adamw --answer-only` | 0 | 10 000 | 1.94 | 6.30 | 4.23 | −2.15 | 2.07 | 8880 |
+| `adamw --answer-only` | 1 | 20 000 | 3.19 | 5.86 | 4.07 | −2.28 | 2.35 | 7976 |
+| `adamw --answer-only` | 1 | 40 000 | 0.57 | 5.86 | 5.53 | −5.19 | 3.06 | 3778 |
+| `adamw --answer-only` | 1 | 50 000 | 2.51 | 6.42 | 4.86 | −3.29 | 2.99 | 5985 |
+| `adamw --answer-only` | 1 | 60 000 | 1.44 | 5.52 | 4.86 | −4.19 | 2.73 | 4854 |
+
+- No checkpoint is certified on this orbit: the anchor's margin less `2 ε` is negative at all
+  117, and −2.15 at the most. At the nine checkpoints of the table `ε` is 4.07 to 5.57, as
+  large as the margins. The error is among the residues: over the 97 residue tokens alone it
+  is the same number, and no other token comes within 5.0 of the largest residue logit there.
+- It is not one stray equation. The median error of a row is 2.07 to 4.03, and the best
+  anchor has 914 to 8880 of the 9216 rows within half its margin. The cohort trained on the
+  answer alone is the closer to the symmetry: 3778 to 8880 rows, against 914 to 2226.
+- On the orbit of numerator zero the symmetry asks for equal logits on the 96 nonzero
+  residues. One of the nine checkpoints is certified there (`adamw`, seed 0, update 30 000:
+  a margin of 7.15 less twice 3.12); the others have 5.23 to 9.11 less twice 4.79 to 10.80.
+- So these decoders answer every equation, with a least margin of 0.37 to 3.56, and their
+  logits are not a function of the quotient to the precision that lets two training answers
+  certify the others. A certificate of held-out answers from quotient-equivariant logits and
+  two anchors does not apply to any checkpoint here.
+- The model in doubles gives the decisions that the runs recorded in `f32`: all 4656 held-out
+  predictions at 110 of the 117 checkpoints, and 4655 at the other seven.
 
 ### The arithmetic decides the late trajectory
 
