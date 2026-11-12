@@ -1,5 +1,29 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Constant-amplitude extraction from a Fourier subspace (2026-11-12)
+
+Task #210 extends the theory before changing the frozen many-to-one constructor.
+CM20 isolates every cross-mode coefficient product when ordered frequency
+differences are separated. A nonzero vector of constant amplitude in that exact
+subspace has one Fourier mode; centering removes the constant mode and a prime
+modulus makes its phases distinct. Total amplitude deviation also bounds the
+cross-mode products. The three-mode modulo-13 witness is inhabited and
+nonconstant; a two-state collision counterexample prevents dropping separation.
+
+The unit-amplitude coefficient set itself is proved nonconvex. Do not impose
+it directly on the convex model. Before native work, investigate a positive
+semidefinite, trace-one matrix lift with affine amplitude readings and a linear
+selection objective. Prove or refute whether its feasible extreme points select
+single directions under the same separation condition. No rank-one constraint
+may be hidden in that convex domain. Right phases must then stay tied to the
+same left direction, with ordinary-CE decoder fitting and the previous spectral
+audits. A later native prototype must remain separate from frozen producers,
+use bounded subspace sizes and work caps, and retain every attempted candidate
+under the 64 GiB limit. No original-data follow-up is frozen by this proof step.
+The proof neither recovers the subspace from masked observations nor proves
+projection convergence, true-decoder identification or an original-task pass.
+Keep the full35 goal and the unchanged live comparisons.
+
 ## General decoder propagation (2026-11-12)
 
 CM19 at `0807609b` extends the Lean result to arbitrary fixed decoder fibers,

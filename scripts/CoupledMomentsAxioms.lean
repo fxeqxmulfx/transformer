@@ -163,6 +163,37 @@ open Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagation
 
 end DecodedPropagation
 
+section FourierExtraction
+open Transformer.Grokking.FlatSpectrum.CoupledMoments.FourierExtraction
+
+#print axioms wave_power
+#print axioms powerCoefficient_eq
+#print axioms powerCoefficient_const
+#print axioms Separated.difference_ne_zero
+#print axioms Separated.coefficient
+#print axioms flat_pair_zero
+#print axioms wave_of_support
+#print axioms flat_extract
+#print axioms centered_extract
+#print axioms centered_injective
+#print axioms permuted_extract
+#print axioms support_flat
+#print axioms amplitude_not_convex
+#print axioms powerCoefficient_sub
+#print axioms pair_le_deviation
+#print axioms approximate_pair
+#print axioms triple_separated
+#print axioms pure_flat
+#print axioms pure_centered
+#print axioms pure_injective
+#print axioms pure_nonconstant
+#print axioms mixed_not_flat
+#print axioms collision_not_separated
+#print axioms collision_flat
+#print axioms collision_two_modes
+
+end FourierExtraction
+
 run_cmd do
   let env ← getEnv
   let standard := [``propext, ``Classical.choice, ``Quot.sound]

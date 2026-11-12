@@ -11,11 +11,12 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.RelabelingObstruc
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedRecovery
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagation
+public import Transformer.Grokking.FlatSpectrum.CoupledMoments.FourierExtraction
 
 /-!
 # Shared class distributions and complex spectral bounds
 
-Source: `review/flat_spectrum.md`, CM1–CM19. Multiple fixed complex code readings share the
+Source: `review/flat_spectrum.md`, CM1–CM20. Multiple fixed complex code readings share the
 same learned class probabilities. The domain and ordinary CE are convex, Fourier coordinates
 preserve the full distribution, and a feasible exact observed fit certifies a CE minimum.
 No universal identification of unseen labels follows; SB3 remains a counterexample.
@@ -27,6 +28,9 @@ does not.
 CM19 (`DecodedPropagation`): finite support pruning handles arbitrary fixed decoder fibers
 and finite decoder banks. Singleton unions certify labels and give convex spectral
 restrictions without losing the realizable CE optimum; latent states may remain ambiguous.
+CM20 (`FourierExtraction`): constant amplitude selects a single mode in an exact
+Fourier subspace with separated differences; amplitude error bounds cross-mode products.
+This is a conditional extraction result, not discovery of the subspace from partial data.
 -/
 
 @[expose] public section

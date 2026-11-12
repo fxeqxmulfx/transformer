@@ -15954,3 +15954,118 @@ preferred branch were used. `DecodedPropagation/Anchor.lean` proves the
 finite computations, the fixed point for all budgets and identification.
 This example motivates trying more than one observed anchor; it does not
 prove completeness of an anchor policy or change the declared-family assumption.
+
+### CM20. Extracting a Fourier direction by constant amplitude
+
+The categorical latent-decoder constructor of CM15 proposes phase orders from
+a singular vector of a centered label sketch. A repeated singular value leaves
+a choice of directions inside its singular subspace. This section studies a
+separate mathematical question: when does constant amplitude inside an exact
+Fourier subspace identify a single character? Recovery of that subspace from
+the incomplete observed table remains a separate, unproved step.
+
+Let `q > 0`, let `I` be a finite index set and let `k : I -> ZMod q` list
+frequencies. Write `chi(t) = exp(2 pi i t/q)` and
+
+```
+f(x) = sum_i a_i chi(x k_i).
+```
+
+Require **separated differences**: for every `i != j` and every `u,v`,
+
+```
+k_j - k_i = k_v - k_u  implies  i = u and j = v.
+```
+
+The comparison includes diagonal pairs `u=v`, so this condition also excludes
+zero off-diagonal differences. It is a property of the whole proposed exact
+subspace, not just the coefficients that happen to be nonzero. It is sufficient;
+no necessity or coverage theorem for observed singular subspaces is claimed.
+
+**Extract one direction.** If at least one `a_i` is nonzero and `|f(x)|^2`
+is the same real number at every `x`, then exactly one coefficient is nonzero.
+Consequently `f(x) = a_i chi(x k_i)` for that index (`flat_extract`). The
+modulus need not be prime. A permutation `r : X <-> ZMod q` of the categorical
+rows changes neither the hypothesis nor the conclusion: constant amplitude of
+`f(r(x))` identifies a single permuted character (`permuted_extract`). The
+permutation is a structural hypothesis and is not supplied to the procedure.
+
+If additionally `sum_x f(x) = 0`, then the extracted `k_i` is nonzero
+(`centered_extract`). For a prime modulus that character, multiplied by its
+nonzero coefficient, takes distinct values at all `q` states
+(`centered_injective`). These facts explain the roles of centering and the
+prime-modulus restriction when a native proposal needs a phase permutation.
+
+**Proof from the actual amplitude.** Expand
+
+```
+|f(x)|^2 = sum_i sum_j conj(a_i) a_j chi(x (k_j-k_i)).
+```
+
+Orthogonality of the primitive character gives the unnormalized coefficient
+
+```
+sum_x conj(chi(x t)) |f(x)|^2
+  = q sum_{i,j : k_j-k_i=t} conj(a_i) a_j.
+```
+
+The left side is computed from the squared amplitude, without presupposing
+sparse coefficients. If the amplitude is constant, it vanishes for every
+`t != 0`. Separation isolates the product `q conj(a_i) a_j` at the difference
+of every distinct pair. Since `q != 0`, all these products are zero. Choosing
+one nonzero coefficient forces all the others to vanish. Conversely, a vector
+supported at one mode has constant squared amplitude `|a_i|^2` (`support_flat`).
+Centering rules out the constant character; injectivity in the prime case
+follows from injectivity of the primitive character and multiplication by a
+nonzero residue. These are proved in `FourierExtraction/Basic.lean` and
+`Extraction.lean`, using the existing character orthogonality theorem.
+
+**A quantitative bound in the same exact subspace.** For any real `rho` and
+distinct `i,j`, separation also gives
+
+```
+q |a_i| |a_j| <= sum_x abs(|f(x)|^2 - rho).
+```
+
+Subtracting `rho` does not change a nonconstant Fourier coefficient. Apply
+the triangle inequality to that coefficient and use `|chi|=1`. In particular,
+if every squared-amplitude error is at most `epsilon`, then
+`|a_i| |a_j| <= epsilon` (`pair_le_deviation`, `approximate_pair`). This bounds
+remaining cross-mode products. It does not include subspace estimation error,
+a floating-point error enclosure or convergence of an extraction iteration.
+
+**Nonempty example and a limit.** For `q=13`, frequencies `1,3,9` have six
+distinct nonzero ordered differences (`triple_separated`, checked by `decide`).
+Coefficients `(1,0,0)` give a centered, unit-amplitude, nonconstant vector that
+distinguishes all thirteen states. Coefficients `(1,1,0)` cannot have constant
+amplitude (`mixed_not_flat`). Thus the condition admits a three-dimensional
+subspace and excludes a genuine mixture within it.
+
+For `q=2`, take frequencies `0,1` and coefficients `(1+i)/2, (1-i)/2`.
+Both coefficients are nonzero, but the vector takes values `1,i`, of unit
+amplitude. The two off-diagonal differences coincide. `collision_flat` and
+`collision_two_modes` prove the counterexample, so the separation assumption
+cannot simply be dropped. `Witness.lean` instantiates every conditional result.
+
+**Convexity limit.** The coefficient set defined by unit amplitude is not
+convex (`amplitude_not_convex`). For any listed frequency, its positive and
+negative pure coefficient vectors both have unit amplitude. Their midpoint
+is zero, which has zero amplitude. Therefore the new criterion cannot be
+imposed directly as a convex constraint on the coefficient vector. Alternating
+amplitude and subspace projections would be an auxiliary nonconvex proposal,
+with no convergence theorem here. A convex formulation needs a separate lift
+and proof before it is used to change the model.
+
+**Remaining gap.** A future extraction proposal must keep right phases tied to
+the same left direction through the original sketch. Existing observed-label
+decoder fitting can score resulting phase orders by ordinary CE, with no
+arithmetic meaning supplied for input tokens. This section supplies the
+conditional direction-identification result, not that complete learner.
+
+The extraction theorem does not identify the true decoder, prove the target's
+membership in a chosen family, prove that a masked sketch's leading subspace
+contains the needed character, or identify unseen labels from amplitude alone.
+A native experiment must retain every attempted subspace and failed proposal,
+its actual work and memory use, and every earlier candidate. Any returned latent
+table still needs the CM15 spectral/CE audit; new original-data scores require
+a separately frozen protocol and replay. The current frozen cohorts are unchanged.
