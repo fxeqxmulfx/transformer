@@ -101,9 +101,55 @@ agreement with held-out ground truth still requires a correct group map.
 
 ## Findings
 
-The Lean ambiguity and conditional sharing repair are proved. Native tests
-cover overlap and label-renaming behavior, a transitive-agreement conflict,
-finite-difference weighted gradients, minibatch aggregate memory, exact identity
-controls, forward batch invariance, and a withheld toy answer recovered in all
-three modes with saved-state replay. Stress-task outcomes are pending. This
-pilot does not establish an all-35 pass or a fresh matched transformer comparison.
+All 36 candidates completed and replayed. All 36 independent raw-table audits,
+36 coverage analyses, 18 exact old-control comparisons and the replay of all
+18 training-only choices pass. All six native tests pass, covering overlap and
+label renaming, transitive conflicts, finite-difference weighted gradients,
+minibatch aggregate memory, exact identity controls, forward batch invariance
+and withheld toy recovery in all three modes with saved-state replay.
+The frozen producer is `ddf9aa4a`, fingerprint
+`3475ea397f514d1ab0932ebdbf2d671848ce556ec97a5014e5ba1e221007dd7b`.
+Evidence remains local in `runs/pilot-v1` and root `.kanban/artifacts/169`.
+The later coverage auditor leaves the producer binary byte-identical.
+
+All 18 selected task/mode outcomes pass the original 99% criterion, improving
+from three to six of these six tasks in each mode. These are percentages on
+the original validation split, selected using training CE alone.
+
+| Task | Full batch | Minibatch | Forward only |
+| --- | ---: | ---: | ---: |
+| Power division, p=97, k=2 | 100 | 99.9570 | 100 |
+| Power division, p=97, k=3 | 99.7423 | 99.6778 | 99.8067 |
+| Square-times | 100 | 100 | 100 |
+| Addition | 100 | 100 | 100 |
+| Division | 100 | 99.9785 | 100 |
+| Multiplication | 100 | 99.9575 | 100 |
+
+Addition selects `rank_one`; every other task selects `full_rank`. The three
+square-times selections hit their respective caps with training-CE excess
+`9.36e-4`, `1.43e-4` and `1.75e-3`. They pass accuracy but have no ideal-loss
+certificate. The other 15 choices meet the frozen `1e-8` ideal-CE tolerance.
+No checkpoint or budget is substituted using held-out accuracy. All alternate
+candidates remain available, including their failed fits; the alternate
+forward rank-one k=3 model also passes accuracy while missing the CE bound.
+
+The grouping proposal finds 49-by-49 coordinates for k=2, 33-by-33 for k=3,
+and 97-by-49 for square-times. All three controls retain identity maps, and
+all 18 of their old endpoint probability tables match exactly, including the
+opposite geometries. Original observations retain their multiplicities.
+
+The coverage audit finds no observed-group label conflict on any held-out
+example. For k=2, 550 of 4,656 validation examples belong to wholly unobserved
+groups: full-batch and forward recover all 550, minibatch 548. For k=3, only
+18 belong to unobserved groups; the corresponding correct counts are 6, 3
+and 9. Its high total accuracy mostly comes from correct sharing, with every
+remaining error confined to those unobserved groups. Square-times has 2,387
+of 4,705 examples in unobserved groups, all recovered by all three modes.
+Thus the audit distinguishes copying a learned shared answer from additional
+completion, rather than attributing every correct answer to the spectral bound.
+
+The Lean ambiguity, conditional sharing repair and observed-group certificate
+are proved without new unfinished statements. They do not prove correct
+group discovery, unique missing-answer recovery or finite-step convergence.
+This adaptive six-task pilot does not establish an all-35 pass or a fresh
+matched transformer comparison; the original full-suite cohort is separate.

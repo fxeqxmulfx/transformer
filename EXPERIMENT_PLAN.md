@@ -12,6 +12,12 @@ jointly convex or guaranteed correct. Freeze 36 candidates in all three modes,
 keep the unshared failure baselines, and require all 18 original success-task
 endpoint controls to match exactly. Preserve the earlier cohorts unchanged.
 
+Completed: all 36 candidate replays, independent audits and coverage analyses
+pass, all 18 original controls match exactly, and all 18 training-only choices
+pass the original 99% metric. Square-times hits its caps without ideal CE;
+the remaining k=3 errors lie in wholly unobserved groups. These six-task results
+do not establish full-suite recovery. Keep the original all-35 cohort separate.
+
 ## Intermediate spectral capacity (2026-11-12)
 
 Lean CM9 at `efaf0d93` proves an actual rank-two binary probability moment is
