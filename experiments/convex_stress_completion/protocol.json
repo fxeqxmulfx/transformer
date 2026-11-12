@@ -1,0 +1,28 @@
+{
+  "version": "convex-stress-completion-v1",
+  "source_commit": "3555299",
+  "features": "All original causal slots, with a new constant slot; token-indexed blocks aligned relative to the visible query. Restore the full query-indexed joint tensor. Shared vertices are optional, not a restriction. Values and output classes are not recoded.",
+  "optimizer": "Store and replace each consumed prefix gradient. Compute both an unrestricted query-wise oracle and a globally shared candidate; prefer sharing only if its cost is no larger. Use integer joint vertex counts and eta=2/(updates+1). Full-batch refreshes all prefixes. Report fresh unrestricted full-training CE/gap and shared update count. No general stale-gradient convergence claim. Before adding an unrestricted vertex, fill only missing selected-key values from the pooled oracle for that same key. Preserve observed rows and the oracle cost.",
+  "forward_only": "Retain both global and query-wise consistency records. Use global sharing when consistent, otherwise the unrestricted per-query solution. One epoch, checked against complete-data fitting. Explicit failure if any query has no consistent key.",
+  "arms": [
+    "full_batch",
+    "minibatch",
+    "forward_only"
+  ],
+  "scales": [
+    1,
+    10
+  ],
+  "full_updates": 64,
+  "minibatch_updates": 512,
+  "full_gap_tolerance": 1E-8,
+  "stop": "First observed primary exact accuracy >=99%, or configured update cap; full-batch also stops at a fresh empirical FW gap <=1e-8. Forward-only completes one epoch. All results, failures and diagnostic caps remain visible.",
+  "pilot_seed": 0,
+  "pilot_tasks": [
+    "suite-boolean-and-shift",
+    "gpt-probe-key-value-binding",
+    "basis-recall-easy",
+    "arithmetic-div"
+  ],
+  "interpretation": "24 targeted cells after the adaptive pilot: four tasks, three arms, two scales, seed zero. Same diagnostic caps and frozen original data. Only missing-row completion changes the CE trainer; forward-only is unchanged. No full-suite or arbitrary-label guarantee."
+}

@@ -10,6 +10,13 @@ prespecifies all 35 tasks, three arms, two scales and seed zero (210 cells), wit
 the same diagnostic caps. Six native checks pass. Retain the shared-only pilot;
 no general full-suite success is inferred from the regression witnesses.
 
+MF5 further proves that pooled completion of unobserved rows preserves the
+exact oracle cost. The [completion follow-up](experiments/convex_stress_completion/protocol.json)
+fixes four tasks and all three arms at both scales (24 cells). Eight native
+checks pass, including a missing-pair repair when a global shared fit is
+impossible. Keep the adaptive cohort and its binary unchanged; this is a
+separate targeted test, not a full-suite claim.
+
 Task #160 follows the user's instruction to prove the failure first and repair
 full-batch failures too. The Lean statements in `ConvexChannel/Minibatch/` and
 `ConvexChannel/Shared.lean` are landed before native experiments: singleton

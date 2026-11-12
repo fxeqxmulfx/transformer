@@ -1,0 +1,17 @@
+[package]
+name = "convex-stress-completion"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+
+[dependencies]
+convex-stress-repair = { path = "../convex_stress_repair" }
+convex-stress-minibatch = { path = "../convex_stress_minibatch" }
+convex-stress-adaptive = { path = "../convex_stress_adaptive" }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+
+[profile.release]
+lto = "thin"
+
