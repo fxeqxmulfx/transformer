@@ -4,6 +4,8 @@ public import Transformer.Grokking.FlatSpectrum.Training.Scope.Balanced
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.BalanceObstruction
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.IdentityLimit
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.IdentityMin
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.IdentityOrigin
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.IdentityOriginRun
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.IdentityStationary
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.LinearDiverge
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.MarginContinuity
@@ -134,5 +136,8 @@ dropped, or the part of the open statement that is proved.
   bounds of WD8 every run converges to a pair `(U, U)` of this kind
   (`exists_tendsto_decayRun_identity`), to the origin when `λ ≥ 1`
   (`tendsto_decayRun_identity_zero`) and from `V₀ = −U₀` (`tendsto_decayRun_identity_neg`).
-  Which projection a run reaches, and the exceptional starts of a kernel larger than
-  `1 × 1`, are open. -/
+  For `0 < λ < 1` the limit is the origin exactly when `U₀ + V₀ = 0`
+  (`tendsto_decayRun_identity_zero_iff`): a step keeps the sum of the factors nonzero and
+  does not decrease it near the origin (`frobeniusSq_add_decayStep_identity`). Which
+  projection of a rank from `1` to `n − 1` a run reaches, and so the exceptional starts of a
+  kernel larger than `1 × 1`, are open. -/

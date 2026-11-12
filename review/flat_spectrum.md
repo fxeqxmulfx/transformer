@@ -9103,8 +9103,9 @@ on a convex loss with continuous gradient:
   equal and `U Uᴴ U = (1 − λ) U`, so the run of WD8 converges, at every width, to a pair
   `(U, U)` whose product is `1 − λ` times an orthogonal projection; for `0 ≤ λ ≤ 1` the only
   trained product is `(1 − λ) · 1`, a stationary point is a decayed minimum exactly when it
-  has that product, and for λ < 1 no factorization of a width below `n` is one; for λ ≥ 1,
-  and from `V_0 = −U_0`, the run converges to the origin (WD16).
+  has that product, and for λ < 1 no factorization of a width below `n` is one; for λ ≥ 1
+  the run converges to the origin, and for `0 < λ < 1` it does so exactly from the starts
+  with `U_0 + V_0 = 0` (WD16).
 
 Assumed or not covered:
 
@@ -9416,13 +9417,15 @@ minimum.
 Not covered. Kernels larger than `1 × 1`. There 4 fails: a stationary point other than the
 origin need not be a decayed minimum (WD14, statements 5 and 7), so it does not suffice that
 the run avoids the origin, and the exceptional starts are not described. WD16 gives the
-stationary points and the form of the limits for the identity of any size.
+stationary points, the form of the limits and the starts attracted to the origin for the
+identity of any size.
 
 ### WD16. The identity of any size: stationary points, the trained product, the limits
 
 WD10 and WD14 treat the `2 × 2` identity and WD15 the `1 × 1` identity. For the identity of
 any size the stationary points, the trained product and the form of the limit of every run
-are explicit; the exceptional starts are not.
+are explicit, and so are the starts whose run ends at the origin; the other exceptional
+starts are not.
 
 Let `K = 1` of size `n × n` with every cell seen, the squared loss, and factors `U`, `V` of
 any width `k`. The gradient at the product `X = U Vᴴ` is `G = X − 1`.
@@ -9471,29 +9474,57 @@ any width `k`. The gradient at the product `X = U Vᴴ` is `G = X − 1`.
    it is a pair `(U, U)` with `U Uᴴ U = (1 − λ) U`, and for λ ≤ 1 it is a decayed minimum
    exactly when `U Uᴴ = (1 − λ) · 1` (4).
 
+6. The origin. Put `P = U + V` and `Q = U − V`. A step gives
+
+   ```
+   P' = (1 + η (1 − λ)) P − η (U Vᴴ V + V Uᴴ U),
+   4 (U Vᴴ V + V Uᴴ U) = P (Pᴴ P + Qᴴ Q) − Q (Pᴴ Q + Qᴴ P).
+   ```
+
+   In `4 ⟨P, U Vᴴ V + V Uᴴ U⟩` the two terms with `P` on the left are `‖Pᴴ P‖² ≤ ‖P‖⁴` and
+   `⟨Qᴴ Q, Pᴴ P⟩ ≤ ‖P‖² ‖Q‖²`, and the two with `Q` on the left are subtracted and sum to
+   `⟨Pᴴ Q, Qᴴ P⟩ + ‖Qᴴ P‖² ≥ 0`. So `4 ⟨P, U Vᴴ V + V Uᴴ U⟩ ≤ ‖P‖² (‖P‖² + ‖Q‖²)`, and with
+   `a = 1 + η (1 − λ) ≥ 0`, `η ≥ 0` and `‖P‖² + ‖Q‖² = 2 (‖U‖² + ‖V‖²)`
+
+   ```
+   ‖P'‖² ≥ a (a − η (‖U‖² + ‖V‖²)) ‖P‖².
+   ```
+
+   In the ball of WD8 the factor is at least `η²`: the sum of the factors stays nonzero.
+   Where `‖U‖² + ‖V‖² ≤ 1 − λ` the factor is at least `1`: near the origin the sum does not
+   decrease. So, as in WD15, for `0 < λ < 1` a run of WD8 from `U_0 + V_0 ≠ 0` does not
+   converge to the origin.
+
 Theorem. Let λ > 0 and the bounds of WD8 hold with `‖1‖² ≤ κ²`. At every width the run from
 a start in the ball converges to a pair `(U, U)` with `U Uᴴ U = (1 − λ) U`: the product of
 the limit is `1 − λ` times an orthogonal projection, of a rank at most `rank [U_0; V_0]`
 (WD14, statement 2). For λ < 1 the limit is a decayed minimum exactly when that projection
 is the identity, and at a width `k < n` it is not one. For λ ≥ 1 the limit is the origin, a
 decayed minimum. The run from `V_0 = −U_0` (WD14, statement 7) converges to the origin, for
-every λ > 0: its limit is a pair `(U, −U)` and a pair `(U, U)`.
+every λ > 0: its limit is a pair `(U, −U)` and a pair `(U, U)`. For `0 < λ < 1` these are the
+only such runs: the limit is the origin if and only if `U_0 + V_0 = 0` (6).
 
 So for the identity the question of WD14, which stationary products a narrow run reaches,
-has the answer: `1 − λ` times an orthogonal projection of rank at most `k`.
+has the answer: `1 − λ` times an orthogonal projection of rank at most `k`. At width one,
+for `0 < λ < 1`, the rank is one exactly from the starts with `u_0 + v_0 ≠ 0`. The starts
+attracted to the origin form the subspace `U_0 + V_0 = 0`, at every size and width: for the
+`1 × 1` identity this is the exceptional set of WD15.
 
 Example: λ = 3/4, so `1 − λ = 1/4`, and `n = 2`. The pair `U = V = ½ · 1` is a decayed
 minimum. The pair `U = V = ½ · diag(1, 0)` is stationary, its product `¼ · diag(1, 0)` is
 not `¼ · 1`, and it is not a decayed minimum. With κ = 2, ρ = 8 and η = 1/200: for λ = ½ the
 run of width one from `u_0 = v_0 = (1, 1)` converges to a pair `(u, u)` with
-`u uᴴ u = ½ u`, which is not a decayed minimum; for λ = 1 it converges to the origin; and
-for λ = ½ the run of width two from `U_0 = 1`, `V_0 = −1` converges to the origin.
+`u uᴴ u = ½ u` and `u ≠ 0`, which is not a decayed minimum; for λ = 1 it converges to the
+origin; and for λ = ½ the run of width two from `U_0 = 1`, `V_0 = −1` converges to the
+origin.
 
-Not covered. Which projection the limit of a run is, in particular its rank: by WD10 the
-rank is `n` for almost every start at a width `k ≥ n` and a small step, and the starts
-named here with that property are those of full row rank at `k ≥ 2 n` (WD8) and those of
-the `1 × 1` identity (WD15). The exceptional starts of the identity of a size above one.
-Kernels other than the identity: there a stationary point need not have equal factors.
+Not covered. Which projection the limit of a run is. For λ < 1 its rank is zero exactly from
+the starts with `U_0 + V_0 = 0` (6). By WD10 it is `n` for almost every start at a width
+`k ≥ n` and a small step, and the starts named here with that property are those of full row
+rank at `k ≥ 2 n` (WD8) and those with `U_0 + V_0 ≠ 0` of the `1 × 1` identity (WD15). The
+starts whose limit has a rank from `1` to `n − 1` are not described for `n ≥ 2`, so the
+exceptional starts of the identity of a size above one are not either. Kernels other than
+the identity: there a stationary point need not have equal factors.
 
 ### Lean
 
@@ -9516,7 +9547,7 @@ Kernels other than the identity: there a stationary point need not have equal fa
 | WD13 | `tendsto_movingAverage`, `adamRun_succ_first`, `adamRun_succ_second`, `adamRun_succ_params`, `tendsto_adamRun_first`, `tendsto_adamRun_second`, `Hyper.Regular`, `Hyper.source_regular`, `decay_mul_eq_of_tendsto_adamRun`, `abs_decay_mul_lt_one_of_tendsto_adamRun`, `eq_zero_of_tendsto_adamRun`, `eq_zero_or_abs_eq_of_tendsto_adamRun`; witnesses: `adamRun_zero`, `scalarField`, `continuous_scalarField`, `hasDerivAt_scalarLoss`, `not_tendsto_adamRun_scalar`, `factorField`, `continuous_factorField`, `hasDerivAt_factorLoss_left`, `hasDerivAt_factorLoss_right`, `factorLoss`, `factorLoss_eq`, `five_halves_le_factorLoss`, `factorLoss_le_iff`, `not_tendsto_adamRun_factor` | Modules `src/Transformer/Grokking/Protocol/AdamLimit` and `AdamLimitWitness`, namespace `Transformer.Grokking.Protocol`, not the namespace of this section: the update is `adamStep` and the run `adamRun` of the protocol of the division experiment, with the constants `Hyper` (`Hyper.source wd` for the source's). "Every update sees one field" is the oracle `fun _ => g`; the parameters are a function `ι → ℝ` and convergence is in the product topology. The hypotheses on the constants are `Hyper.Regular h`, and the learning rate is `Hyper.rateAt`, constant after the warmup. `|θ| < 1 / wd` is stated as `|h.decay * θ i| < 1`. The factors are `θ false` and `θ true`; `factorField` is proved to be the gradient of `½ (u v − 3)²` coordinate by coordinate, and "a minimizer" is the hypothesis `∀ u v, factorLoss (θ false) (θ true) ≤ factorLoss u v`. The remark on ε → 0 and the citation are not formalized. |
 | WD14 | `stack_decayRun_mulVec_eq_zero`, `stack_mulVec_eq_zero_of_tendsto`, `rank_le_of_forall_mulVec_eq_zero`, `rank_stack_decayRun_le`, `rank_mul_conjTranspose_le_of_tendsto`, `not_isDecayedMin_of_rank_lt`; the `2 × 2` identity: `one_lt_rank_of_isNuclearMin_one`, `not_isDecayedMin_one_of_rank_le_one`, `exists_tendsto_decayRun_one_not_isDecayedMin`; padded pairs: `fromCols_zero_mul_conjTranspose`, `frobeniusSq_fromCols_zero`, `decayStep_fromCols_zero`, `decayRun_succ`, `decayRun_fromCols_zero`, `tendsto_decayRun_fromCols_zero`, `decayedLoss_fromCols_zero`, `isDecayedMin_fromCols_zero_iff`, `rank_stack_fromCols_zero_le`; stationary points: `conjTranspose_mul_self_eq_of_stationary`, `frobeniusSq_eq_of_stationary`, `gram_mul_conjTranspose_of_stationary`, `nuclearNorm_mul_conjTranspose_of_stationary`, `rank_mul_conjTranspose_of_stationary`, `isDecayedMin_iff_isNuclearMin_of_stationary`, `isDecayedMin_iff_isNuclearMin_of_tendsto`; the starts `V₀ = −U₀`: `decayStep_neg`, `decayRun_neg`, `eq_neg_of_tendsto_decayRun_neg`, `rank_stack_neg`, `not_isNuclearMin_one_mul_neg`, `isHermitian_mask_sub_one`, `not_isDecayedMin_one_of_neg`, `exists_tendsto_decayRun_one_neg_not_isDecayedMin` | Modules `Scope/StackRank`, `Scope/RankStart`, `Scope/PaddedRun`, `Scope/Balanced` and `Scope/NegStart`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. `W z = 0` is `stack U V *ᵥ z = 0` and the rank is `Matrix.rank`; statements 1, 2 and 4 take any `G`, `η` and `λ`, and a limit is `Tendsto (decayRun G η lam U₀ V₀) atTop (𝓝 (U, V))`. Statement 2 for a limit is `(U * Vᴴ).rank ≤ (stack U₀ V₀).rank`. "Every trained product has a rank above" is `∀ X, IsNuclearMin L lam X → (stack U₀ V₀).rank < X.rank`; `r*` is not defined. `[u 0]` is `fromCols u 0` with the column type `k₁ ⊕ k₂`. For the identity the gradient field is `fun X => mask Set.univ (X - 1)`, "rank two" is `1 < X.rank`, the start has `(stack U₀ V₀).rank ≤ 1` at any finite column type, and the bounds of WD8 are those of `exists_tendsto_decayRun_fitLoss` with `2 ≤ κ ^ 2`. That the starts of rank at most one are the `S wᴴ`, satisfy the minor equations and form a null set is not formalized. The start of the example is `fromCols (of fun _ _ => 1) 0` for both factors. In statement 6 "stationary" is `lift lam G * stack U V = 0` for any matrix `G`; the Gram identity is stated as `(U * Vᴴ)ᴴ * (U * Vᴴ) = (V * Vᴴ)ᴴ * (V * Vᴴ)`, the trace is taken by `nuclearNorm_eq_trace_of_mul_self`, the ranks are the conjunction `(U * Vᴴ).rank = U.rank ∧ (U * Vᴴ).rank = V.rank`, and the statement for a limit takes a continuous `G` and `η > 0`. In statement 7 "maps Hermitian matrices to Hermitian matrices" is `∀ X, X.IsHermitian → (G X).IsHermitian`, the start is `(U₀, -U₀)` at any finite column type, the conclusions are `(decayRun G η lam U₀ (-U₀) t).2 = -(decayRun G η lam U₀ (-U₀) t).1` and `V = -U` at a limit, and `(stack U (-U)).rank = U.rank`; for the identity the product is `U * (-U)ᴴ`, the hypothesis on the ball is `2 * frobeniusSq U₀ ≤ ρ`, and the example is the start `(1, -1)` of width two, whose stack has rank `2`, with the numbers of the example of statement 5. |
 | WD15 | `frobeniusSq_one_fin_one`, `frobeniusSq_complex_smul`, `fin_one_mul`, `decayStep_one_add`, `im_mul_conjTranspose_apply`, `frobeniusSq_I_smul`, `re_mul_conjTranspose_apply`, `le_frobeniusSq_decayStep_one_add`, `frobeniusSq_add_decayStep_one`; the run: `frobeniusSq_decayRun_one_le`, `frobeniusSq_add_decayRun_one_pos`, `frobeniusSq_pos_of_tendsto_decayRun_one`, `one_add_one_fin_one_ne_zero`; the limit: `isDecayedMin_one_of_stationary`, `not_isDecayedMin_one_fin_one_neg`, `exists_tendsto_decayRun_one_isDecayedMin_iff`, `isDecayedMin_one_of_stationary_of_one_le`, `exists_tendsto_decayRun_one_isDecayedMin_of_one_le` | Modules `Scope/OneByOne`, `Scope/OneByOneRun` and `Scope/OneByOneLimit`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. The factors are `Matrix (Fin 1) k ℂ` for any finite `k`, the gradient field is `fun X => mask Set.univ (X - 1)` and the loss is `fitLoss Set.univ 1`. `Re x` and `Im x` are `((U * Vᴴ) 0 0).re` and `.im`, `⟨P, i Q⟩` is `pairing (U + V) (Complex.I • (U - V))`, and the squared norms are `frobeniusSq`. The inequality of statement 1 has `Re x` written as `(frobeniusSq (U + V) - frobeniusSq (U - V)) / 4`: its hypothesis is `0 ≤ a`, its conclusion `a * (a − η q) * p ≤ ‖P'‖²` with `a − η q` written as `1 - η * (lam - 1 + (p + 3 * q) / 4)`; the equality for `‖P'‖²` is inside its proof. Statement 2 is one lemma, the conjunction of `η ^ 2 * ‖P‖² ≤ ‖P'‖²` and the implication from `‖U‖² + ‖V‖² ≤ 2 * (1 - lam) / 3`; it takes `0 < η`, `0 ≤ κ`, the second bound of WD8 and the ball. "The bounds of WD8 with `κ ≥ 1`" are the hypotheses of `exists_tendsto_decayRun_fitLoss` with `0 ≤ κ` and `1 ≤ κ ^ 2`. Statement 3 is `0 < frobeniusSq U + frobeniusSq V` for a limit `(U, V)` of the run. In statements 4 and 6 "stationary" is `lift lam (mask Set.univ (U * Vᴴ - 1)) * stack U V = 0`, and "other than the origin" is `0 < frobeniusSq U + frobeniusSq V`. The theorem for `0 < λ < 1` is `∃ U V, Tendsto (decayRun _ η lam U₀ V₀) atTop (𝓝 (U, V)) ∧ (IsDecayedMin (fitLoss Set.univ 1) lam U V ↔ U₀ + V₀ ≠ 0)`, and for `1 ≤ λ` the same with `IsDecayedMin` alone. That every start lies in a ball of WD8 is not formalized. The examples are those of the item, of width one; the witness of statement 4 is the limit of the run from `(1, 1)`, and that of statement 6 is the origin with λ = 1. |
-| WD16 | `mask_univ`, `eq_add_of_stationary_identity`, `eq_and_mul_of_stationary_identity`, `stationary_identity_of_mul`, `stationary_identity_iff`, `pairing_mul_conjTranspose_one`, `frobeniusSq_mul_conjTranspose_of_mul`, `mul_self_of_stationary_identity`, `eq_zero_of_stationary_identity`, `smul_one_mul_conjTranspose`, `half_smul_one_mul`, `halfDiag`, `halfDiag_mul`; the minima: `lift_smul_one_posSemidef`, `eq_smul_one_of_isNuclearMin_identity`, `mul_conjTranspose_eq_of_isDecayedMin_identity`, `mul_conjTranspose_ne_smul_one`, `not_isDecayedMin_identity_of_card_lt`, `isDecayedMin_identity_iff_of_stationary`, `isNuclearMin_identity_iff`, `isDecayedMin_identity_zero`, `halfDiag_mul_conjTranspose_ne`; the runs: `eq_and_mul_of_tendsto_decayRun_identity`, `isDecayedMin_identity_iff_of_tendsto`, `exists_tendsto_decayRun_identity`, `tendsto_decayRun_identity_zero`, `tendsto_decayRun_identity_neg` | Modules `Scope/IdentityStationary`, `Scope/IdentityMin` and `Scope/IdentityLimit`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. The identity is `(1 : Matrix m m ℂ)` for any finite `m`, the factors are `Matrix m k ℂ` for any finite `k`, the gradient field is `fun X => mask Set.univ (X - 1)` and the loss is `fitLoss Set.univ 1`. "Stationary" is `lift lam (mask Set.univ (U * Vᴴ - 1)) * stack U V = 0`. Statement 2 is `(U * Vᴴ).PosSemidef ∧ (U * Vᴴ) * (U * Vᴴ) = (1 - lam) • (U * Vᴴ)`; "orthogonal projection" is not defined, and that the product has the rank of `U` is `rank_mul_conjTranspose_of_stationary` of WD14. The trained product is `IsNuclearMin (fitLoss Set.univ 1) lam X ↔ X = (1 - lam) • 1`; the displayed inequality is inside the proof of `eq_smul_one_of_isNuclearMin_identity`, with `frobeniusSq 1` in place of `n`. "A width `k < n`" is `Fintype.card k < Fintype.card m`, and the statement holds for every pair `U V : Matrix m k ℂ`. `[[λ, c], [c, λ]]` is `lift lam (c • 1)` with `c : ℝ`; its form is inside the proof. In statement 5 a limit is `Tendsto (decayRun _ η lam U₀ V₀) atTop (𝓝 (U, V))` with `0 < η`, and no bound on the step is assumed. In the theorem the bounds of WD8 are the hypotheses of `exists_tendsto_decayRun_fitLoss` with `frobeniusSq (1 : Matrix m m ℂ) ≤ κ ^ 2`; the conclusion is `∃ U, Tendsto _ atTop (𝓝 (U, U)) ∧ U * Uᴴ * U = (1 - lam) • U`, for `1 ≤ λ` it is `Tendsto _ atTop (𝓝 (0, 0))`, and for the start `(U₀, -U₀)` the hypothesis on the ball is `2 * frobeniusSq U₀ ≤ ρ`. The rank bound of the theorem is `rank_mul_conjTranspose_le_of_tendsto` of WD14 and is not restated; that the limit at a width `k < n` is not a decayed minimum is `not_isDecayedMin_identity_of_card_lt`. `halfDiag` is `(1 / 2 : ℝ) • Matrix.diagonal ![1, 0]`. The examples are those of the item. |
+| WD16 | `mask_univ`, `eq_add_of_stationary_identity`, `eq_and_mul_of_stationary_identity`, `stationary_identity_of_mul`, `stationary_identity_iff`, `pairing_mul_conjTranspose_one`, `frobeniusSq_mul_conjTranspose_of_mul`, `mul_self_of_stationary_identity`, `eq_zero_of_stationary_identity`, `smul_one_mul_conjTranspose`, `half_smul_one_mul`, `halfDiag`, `halfDiag_mul`; the minima: `lift_smul_one_posSemidef`, `eq_smul_one_of_isNuclearMin_identity`, `mul_conjTranspose_eq_of_isDecayedMin_identity`, `mul_conjTranspose_ne_smul_one`, `not_isDecayedMin_identity_of_card_lt`, `isDecayedMin_identity_iff_of_stationary`, `isNuclearMin_identity_iff`, `isDecayedMin_identity_zero`, `halfDiag_mul_conjTranspose_ne`; the runs: `eq_and_mul_of_tendsto_decayRun_identity`, `isDecayedMin_identity_iff_of_tendsto`, `exists_tendsto_decayRun_identity`, `tendsto_decayRun_identity_zero`, `tendsto_decayRun_identity_neg`; the origin: `decayStep_identity_add`, `four_smul_cubic`, `four_mul_pairing_add_cubic_le`, `le_frobeniusSq_decayStep_identity_add`, `frobeniusSq_add_decayStep_identity`, `frobeniusSq_decayRun_identity_le`, `frobeniusSq_add_decayRun_identity_pos`, `frobeniusSq_pos_of_tendsto_decayRun_identity`, `tendsto_decayRun_identity_zero_iff`, `exists_tendsto_decayRun_identity_eq_zero_iff`, `ones_add_ones_ne_zero`, `frobeniusSq_ones_add_le` | Modules `Scope/IdentityStationary`, `Scope/IdentityMin`, `Scope/IdentityLimit`, `Scope/IdentityOrigin` and `Scope/IdentityOriginRun`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. The identity is `(1 : Matrix m m ℂ)` for any finite `m`, the factors are `Matrix m k ℂ` for any finite `k`, the gradient field is `fun X => mask Set.univ (X - 1)` and the loss is `fitLoss Set.univ 1`. "Stationary" is `lift lam (mask Set.univ (U * Vᴴ - 1)) * stack U V = 0`. Statement 2 is `(U * Vᴴ).PosSemidef ∧ (U * Vᴴ) * (U * Vᴴ) = (1 - lam) • (U * Vᴴ)`; "orthogonal projection" is not defined, and that the product has the rank of `U` is `rank_mul_conjTranspose_of_stationary` of WD14. The trained product is `IsNuclearMin (fitLoss Set.univ 1) lam X ↔ X = (1 - lam) • 1`; the displayed inequality is inside the proof of `eq_smul_one_of_isNuclearMin_identity`, with `frobeniusSq 1` in place of `n`. "A width `k < n`" is `Fintype.card k < Fintype.card m`, and the statement holds for every pair `U V : Matrix m k ℂ`. `[[λ, c], [c, λ]]` is `lift lam (c • 1)` with `c : ℝ`; its form is inside the proof. In statement 5 a limit is `Tendsto (decayRun _ η lam U₀ V₀) atTop (𝓝 (U, V))` with `0 < η`, and no bound on the step is assumed. In the theorem the bounds of WD8 are the hypotheses of `exists_tendsto_decayRun_fitLoss` with `frobeniusSq (1 : Matrix m m ℂ) ≤ κ ^ 2`; the conclusion is `∃ U, Tendsto _ atTop (𝓝 (U, U)) ∧ U * Uᴴ * U = (1 - lam) • U`, for `1 ≤ λ` it is `Tendsto _ atTop (𝓝 (0, 0))`, and for the start `(U₀, -U₀)` the hypothesis on the ball is `2 * frobeniusSq U₀ ≤ ρ`. The rank bound of the theorem is `rank_mul_conjTranspose_le_of_tendsto` of WD14 and is not restated; that the limit at a width `k < n` is not a decayed minimum is `not_isDecayedMin_identity_of_card_lt`. In statement 6 the inequality is `a * (a - η * (frobeniusSq U + frobeniusSq V)) * frobeniusSq (U + V) ≤ frobeniusSq P'` with `a` written out as `1 + η * (1 - lam)`, under `0 ≤ η` and `0 ≤ a`; the statement in the ball is one lemma, the conjunction of `η ^ 2 * ‖P‖² ≤ ‖P'‖²` and the implication from `‖U‖² + ‖V‖² ≤ 1 - lam`, under `0 < η`, `0 ≤ κ`, the second bound of WD8 and the ball. "Does not converge to the origin" is `0 < frobeniusSq U + frobeniusSq V` for a limit `(U, V)`. The equivalence of the theorem is `Tendsto _ atTop (𝓝 (0, 0)) ↔ U₀ + V₀ = 0` and, with the limit, `∃ U, Tendsto _ atTop (𝓝 (U, U)) ∧ U * Uᴴ * U = (1 - lam) • U ∧ (U = 0 ↔ U₀ + V₀ = 0)`; that the product of a nonzero limit of width one has rank one is not stated. `halfDiag` is `(1 / 2 : ℝ) • Matrix.diagonal ![1, 0]`. The examples are those of the item. |
 
 ## Flat kernels of any shape (added)
 

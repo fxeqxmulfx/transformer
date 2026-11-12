@@ -224,3 +224,15 @@ items "Assumed or not covered" of WD11 and XE13
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_identity
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_decayRun_identity_zero
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_decayRun_identity_neg
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.decayStep_identity_add
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.four_smul_cubic
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.four_mul_pairing_add_cubic_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.le_frobeniusSq_decayStep_identity_add
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_add_decayStep_identity
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_decayRun_identity_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_add_decayRun_identity_pos
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_pos_of_tendsto_decayRun_identity
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_decayRun_identity_zero_iff
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_identity_eq_zero_iff
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.ones_add_ones_ne_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_ones_add_le
