@@ -226,6 +226,30 @@ retaining them, but does not prove that no head in the depth-four class could
 solve the task. The unchanged training-only depth choice remains prospective
 until the full cohort and its replays close.
 
+## Frozen cohort: completed easy-depth subset
+
+All 72 `basis-depth-easy` cases from the same frozen producer `032762e5`
+have completed and have matching saved-result replay digests. Each entry below
+ranges over the three training modes and both transports. These are candidate
+outcomes; the full 288-cell inventory and 72 training-only choices remain open.
+
+| Depth | Joint head: original primary accuracy | Independent factors | Additive control |
+| --- | ---: | ---: | ---: |
+| 0 | 18.55–44.34% | 18.55–44.34% | 18.55–44.34% |
+| 1 | 18.55–53.71% | 18.55–44.34% | 18.55–53.71% |
+| 2 | 100% | 100% | 18.55–53.71% |
+| 4 | 100% | 100% | 18.55–53.71% |
+
+All 24 composed depth-two/four candidates also achieve 100% on every original
+nontraining split, including length 128. Their training CE is
+`1.3212972929315844e-9`. No depth-zero/one or additive candidate reaches the
+99% pass threshold. The shared training-only initializer already supplies these
+successful endpoints; the result does not establish that gradient refinement
+discovered the representation. The independent factor control succeeds too,
+so this subset establishes a benefit from composed depth in this library,
+without establishing an advantage from convex joint optimization or Fourier
+transport. It does not resolve the hard-depth, MQAR or full-35 result.
+
 ## Retained paths and bounded-memory training components
 
 Lean CD9 at `9136a122` proves that retaining every shallower feature embeds its
