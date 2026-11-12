@@ -14772,3 +14772,31 @@ unseen answers uniquely; all previous ambiguity qualifications still apply.
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/SchattenMomentsAxioms.lean
 ```
+
+### CM8. Causal and spectral predictions in one convex class
+
+The pair-moment pilot does not by itself cover the sequence tasks. To preserve
+the causal count model while admitting shared complex moments, express each
+expert as a probability-valued function on the same visible input domain.
+Take the convex hull of the fixed expert families in these direct prediction
+coordinates. Every original expert remains feasible, every row remains a
+probability vector, and ordinary empirical CE remains convex. This is not a
+bilinear parameterization by free expert weights and free expert parameters.
+
+All experts for a given dataset use the same fixed scale s >= 0. Their logits
+are s times the probability coordinates. The one-hot logits have the common
+per-observation lower bound `log(exp(s) + V - 1) - s`. The relative-logit
+comparison proving CM2 also proves this scaled bound. An expert that fits all
+observed one-hot labels therefore globally minimizes ordinary CE over the
+whole prediction hull; for any other feasible competitor, its objective
+excess is at most the measured ideal-loss excess. `ScaledLoss.lean` and
+`PredictionHull.lean` prove these statements with nonempty examples at s=10.
+
+The empirical objective sums ordinary teacher-forced CE over observed prefixes.
+Own-output generation and residue pooling remain evaluation rules, not the
+training objective. Input-only eligibility or fixed scale choices do not
+train extra parameters. Selecting the first training-certified candidate is
+again certificate search: without an ideal fit it need not optimize the hull
+interior. Even a certified optimum need not identify missing answers. New
+experts, unsupported input shapes, failed fits and compute for every candidate
+must all be reported in the full stress suite.
