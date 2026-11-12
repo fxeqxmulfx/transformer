@@ -30,7 +30,7 @@ FMA). Kernite is expected at `/home/misha/rust_projects/kgen`, clean at
 
 ```sh
 cd experiments/grok_division
-cargo test --offline --release           # 35 tests
+cargo test --offline --release           # 37 tests: 35 of the trainer, 2 of `numerator`
 cargo build --offline --release
 target/release/grok-division check       # pins, split fingerprints, f32 model against the model in doubles
 target/release/grok-division bench 8     # the time of an update
@@ -47,12 +47,20 @@ for seed in 0 1 2; do
 done
 target/release/grok-division report runs/*-seed*
 target/release/diagnose runs/adamw-seed1 1 10000 50000   # what checkpoints do at the answer
+target/release/numerator runs/*-seed*    # the held-out equations with numerator zero
+target/release/numerator --list runs/adamw-seed1   # its evaluations with one of them wrong
 ```
 
 `diagnose RUN SEED STEP...` reads checkpoints with the model in doubles: accuracy on 512
 training equations, the hidden units that fire, the entropy of the attention, what the
 normalizations divide by, and the norms of the parameter groups. It is a second binary and
 does not change the trainer or its source fingerprint.
+
+`numerator RUN...` reads the held-out predictions that a run recorded at every evaluation and
+counts the wrong answers among the equations `0 / y = 0`; with `--list` it prints the
+evaluations that have one of them wrong. It is a third binary, shares only the constants of
+the data with the trainer, and refuses a run where its count over all held-out equations
+differs from the trainer's at any evaluation.
 
 A run resumes from its last checkpoint when the command is repeated, on any number of
 threads, and is then bit for bit the run that was not stopped. `runs/` is ignored by git.
@@ -69,9 +77,9 @@ The machine's GPU, a GeForce GTX 1050 with 2 GiB, was not used.
 State on 2026-11-12: the cohorts `adamw`, `adamw --answer-only` and
 `adam --flush-from 100000` are complete. The `adam` runs were stopped at updates 114 000,
 131 000 and 100 000 (seeds 0, 1, 2) and were continued as `adam --flush-from 100000`
-(Amendment 2) to update 1 000 000. The numbers are those of `report` and of `history.jsonl`.
-Accuracy is the answer's, on the 4656 training or the 4656 held-out equations; a guess among
-the 97 residues has 1.0%.
+(Amendment 2) to update 1 000 000. The numbers are those of `report`, of `numerator` and of
+`history.jsonl`. Accuracy is the answer's, on the 4656 training or the 4656 held-out equations;
+a guess among the 97 residues has 1.0%.
 
 ### AdamW with weight decay 1, 10⁵ updates: perfect held-out accuracy is reached and lost
 
@@ -171,6 +179,43 @@ Each run has 1094 evaluations; the window is the 101 of updates 900 000 to 1 000
   training accuracy is 1 in the three runs.
 - After update 100 000 the cohort does not have the source's arithmetic (next section). With
   gradual underflow the runs exist to updates 114 000, 131 000 and 100 000 only.
+
+### The held-out equations with numerator zero
+
+Of the 96 equations `0 / y = 0`, 51, 54 and 53 are held out (seeds 0, 1, 2). The table has
+the nine runs that reached their budget; "later" is after the first evaluation with every one
+of these equations right.
+
+| Cohort | Seed | All right first at | All right from | Evaluations with all right | Later with one wrong: all, with the training set fitted | Window: all right, most wrong | Last update: wrong of them, of all |
+| --- | ---: | ---: | ---: | ---: | --- | --- | --- |
+| `adamw` | 0 | 50 | 25 000 | 186 of 194 | 5, 0 | 11 of 11, 0 | 0, 4179 |
+| `adamw` | 1 | 200 | 99 000 | 182 of 194 | 7, 0 | 9 of 11, 54 | 0, 4162 |
+| `adamw` | 2 | 100 | 90 000 | 181 of 194 | 9, 0 | 11 of 11, 0 | 0, 3420 |
+| `adamw --answer-only` | 0 | 50 | 38 000 | 189 of 194 | 2, 0 | 11 of 11, 0 | 0, 2651 |
+| `adamw --answer-only` | 1 | 100 | 63 000 | 187 of 194 | 3, 0 | 11 of 11, 0 | 0, 1750 |
+| `adamw --answer-only` | 2 | 100 | 63 000 | 187 of 194 | 3, 0 | 11 of 11, 0 | 0, 248 |
+| `adam --flush-from 100000` | 0 | 50 | 998 000 | 877 of 1094 | 214, 190 | 77 of 101, 2 | 0, 3439 |
+| `adam --flush-from 100000` | 1 | 200 | never | 787 of 1094 | 302, 285 | 13 of 101, 7 | 2, 9 |
+| `adam --flush-from 100000` | 2 | 100 | 961 000 | 985 of 1094 | 105, 87 | 81 of 101, 3 | 0, 864 |
+
+- These equations are answered first. Every one is right at update 50 to 200, where 67 to 96
+  of the 4656 held-out answers are right and they are more than half of those.
+- Under AdamW they are wrong only where training equations are. The later evaluations with
+  one of them wrong are 5, 7 and 9 for `adamw` and 2, 3 and 3 for `adamw --answer-only`. Each
+  has training equations wrong, with training accuracy at most 0.953, and they are few of the
+  95 to 130 later evaluations that have. At the last update none of them is wrong in the six
+  runs, while 248 to 4179 of all held-out answers are. One window has such evaluations:
+  `adamw`, seed 1, at updates 91 000 (all 54 wrong, training accuracy 0.040) and 98 000 (23
+  wrong, 0.070).
+- Under Adam they are wrong with the training set fitted: 190, 285 and 87 later evaluations
+  have every training equation right and one of them wrong, at most 3, 7 and 3 of them at
+  once. No seed keeps them to the end of the budget: in the window all are right at 77, 13
+  and 81 of the 101 evaluations.
+- Seed 1 of Adam, the seed with 99% held-out accuracy, has them wrong more often as it
+  generalizes: at 10, 10, 6, 2, 16, 31, 64, 68 and 88 of the 100 evaluations of the second to
+  the last tenth of the run. In its window they are 265 of its 1676 wrong answers, 16%, and
+  1.2% of its held-out equations, and 2 of the 9 wrong answers of its last update are of this
+  kind. In the windows of seeds 0 and 2 they are 29 of 353 997 and 29 of 124 913.
 
 ### The arithmetic decides the late trajectory
 
