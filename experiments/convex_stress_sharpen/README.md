@@ -65,7 +65,45 @@ and altered endpoint selection must be rejected by the saved-table audit.
 
 ## Findings
 
-The protocol and source are prepared before this follow-up runs. No measured
-sharpening outcome is claimed yet. Earlier pilot metrics and the ongoing
-35-task hull cohort remain separate evidence. A fresh matched transformer
-comparison has not been run.
+All 36 frozen-parent checks completed under producer `6cb8612f`, fingerprint
+`6941b4f1220bf2aaadf4803b1a9bc71193436effcdf938441652b48f1e34906e`.
+Exactly three proposals were accepted: square-times with the full-rank budget
+in each original training mode. The proposed table reaches the existing
+numerical ideal-CE tolerance without changing any active prediction.
+
+| Parent training mode | Original mean CE excess | Selected excess | Original and selected primary accuracy |
+| --- | ---: | ---: | ---: |
+| Full batch | 0.0009361298 | 2.31e-12 | 100% |
+| Minibatch | 0.0001425854 | 2.31e-12 | 100% |
+| Forward only | 0.0017483808 | 2.31e-12 | 100% |
+
+All three have mixture coefficient `0.9999999999979994`, maximum operator norm
+9.848857801776 and maximum nuclear norm 482.594032287043, below their original
+budgets 9.848857801796 and 482.594032288009. The unchanged six-task selection
+still passes all 18 original 99% tests, and now all 18 selected endpoints have
+the numerical ideal-CE certificate. Addition chooses the rank-one budget;
+the other five tasks choose full-rank. This removes the square-times CE
+disadvantage against an ideal-CE memorizer; it does not yet measure selection
+in an expanded whole-suite hull.
+
+All other 33 selected tables retain exactly their parent coordinates: 15 were
+already ideal, 12 proposals did not improve training CE, and six parents had
+an observed decoding error. Keeping already-ideal parents matters: decoding
+an imperfect unseen completion can force a smaller feasible mixture and worsen
+observed CE. Every proposal, including these rejected ones, remains saved.
+The small missing-answer errors of the k2/k3 pilot remain unchanged.
+
+All 36 producer replays, 72 independent raw-table audits, 36 parent comparisons
+and the 18-choice replay pass. The auditor rejects corrupted CE and an altered
+endpoint choice. All three native correctness checks, formatting and clippy
+pass. Lean audits report no extra axioms or reliance on unfinished proofs in
+this namespace; the repository retains its 36 pre-existing unfinished claims.
+
+Recorded postprocessing totals 44.45 seconds summed across 36 endpoints,
+0.84–1.74 seconds each, including parent loading, group reconstruction, norms
+and split diagnostics. This excludes saved-file writing, replay and independent
+audit, and is not parallel wall time or training time. No additional gradient
+was evaluated. Generated evidence remains under root-linked `runs/pilot-v1`
+and the local board artifacts for #172. Earlier pilot metrics and the ongoing
+35-task hull cohort remain separate; a fresh matched transformer comparison
+has not been run.

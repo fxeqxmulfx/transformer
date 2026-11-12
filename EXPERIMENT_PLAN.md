@@ -10,8 +10,13 @@ original training CE and preserve already-ideal coordinates exactly. Every
 active argmax and every split correctness count must remain unchanged.
 Keep all 36 proposals and 18 budget choices; independently audit raw tables,
 the CE bound and parent comparisons. No training restarts or new gradients.
-Results are pending. This addresses the square-times CE gap before hull
-selection; it cannot repair wrong unseen answers. The user additionally
+All 36 checks and replays, 72 raw-table audits, 36 parent comparisons and
+18-choice replay pass. Exactly the three square-times full-rank endpoints
+improve, from CE excess 0.00093613/0.00014259/0.00174838 in full/mini/forward
+to 2.31e-12, with every prediction unchanged. The other 33 retain exact parent
+coordinates. All 18 choices still pass and now attain the numerical ideal-CE
+tolerance. This addresses the square-times CE gap before hull selection;
+it cannot repair wrong unseen answers. The user additionally
 requested depth: a separate follow-up must compare complete nonlinear paths
 and independent routing under CD5-CD7 after this endpoint check.
 
