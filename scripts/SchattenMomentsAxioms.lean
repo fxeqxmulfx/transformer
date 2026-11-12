@@ -22,6 +22,21 @@ open Lean Elab Command
 #print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.phaseCandidate_budget
 #print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.phaseCandidate_minimum
 #print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.phaseCandidate_unique
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.rows_decode
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.decodedFeasible_convex
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.decoded_loss_convex
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.decoded_fit_minimum
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.decodedPhase_minimum
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.corner_no_injective_phase
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.corner_direct_excluded
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.corner_decoded_admitted
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.corner_decoded_ambiguity
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.corner_decoded_graph_coverage
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.decoderHull_convex
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.decoderHull_rows
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.decoderHull_fit_minimum
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.decodedPhase_hull_minimum
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.corner_decoderHull_ambiguity
 
 run_cmd do
   let env ← getEnv

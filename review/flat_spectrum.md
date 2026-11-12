@@ -15097,3 +15097,78 @@ split metrics, costs of coding and potential discovery, and any subsequent
 gradient updates must still be independently audited. The theorem is an
 exact-real construction; it does not certify floating-point SVDs or unseen-label
 accuracy, and does not change the frozen CM12 or depth cohorts.
+
+### CM15. Decode spectrally bounded latent states into the original vocabulary
+
+The bijection in CM14 excludes some deterministic tables, independently of
+the optimizer. If three corners of a rectangle have label `a` and the fourth
+has a different label `b`, no injective additive class code can represent it:
+the first column forces the two row phases equal, while the second column
+would then force the two distinct labels equal. This is a categorical capacity
+obstruction, without any interpretation of the input indices as numbers.
+
+Let `L` be a finite latent vocabulary, `C` the original output vocabulary and
+`d : L -> C` a fixed decoder, possibly many-to-one. Learn the full latent
+probability table `P(i,j,l)` under the existing fixed complex operator/nuclear
+bounds, and expose the original-vocabulary probabilities
+
+```
+Q(i,j,c) = sum_{l : d(l)=c} P(i,j,l).
+```
+
+This map is real-linear and preserves probability rows. Its image of the
+latent budget domain is convex, and ordinary original-vocabulary CE is convex
+in every latent coordinate. A feasible latent table whose decoded rows fit
+the observed labels attains the same one-hot CE lower bound for vocabulary
+`C`, even if some original output classes have no latent preimage. CE remains
+log-sum-exp over every original class, with logits `Q`; it is not a likelihood
+over a reduced observed-class set. The identity decoder gives back the old
+model. The decoder and code bank are fixed when taking this convexity claim;
+choosing them from data remains a proposal step, not a jointly convex search
+or a certified global oracle over all decoders.
+
+The whole prediction class can include those choices convexly: take the convex
+hull, in original probability coordinates `Q`, of the decoded feasible sets
+over all `d : L -> C`. Every point is still a probability table and ordinary
+CE is convex on this hull. Any feasible decoded candidate that reaches the
+observed one-hot CE bound is also a global CE minimum over the entire decoder
+hull. Thus successful proposal search can have a global prediction-space CE
+certificate even though its discrete search is not itself convex. This does
+not supply a polynomial-time oracle, guarantee finding such a candidate, or
+identify unseen labels. No independent learned decoder/latent factors are
+multiplied in the prediction-coordinate optimization claim.
+
+In particular, CM14's latent phase table with any `d : Z/q -> C` is feasible
+at radius and nuclear budget `N`. Observed equations
+`d(r(i_t)+s(j_t))=y_t` suffice for decoded global CE optimality. The spectral
+bounds constrain the latent moments; they must not be presented as unchanged
+bounds on the decoded output moments.
+
+This strictly increases the available deterministic phase constructions.
+Take two row and column phases `0,1` in `Z/3`, and decode `0,1` as `true` and
+`2` as `false`. The decoded table has three `true` corners and a `false`
+fourth corner. Its latent moments satisfy the original `N=2` rank-one budgets.
+The direct binary sign moment cannot satisfy nuclear budget two, by CM6.
+
+The stronger capacity has an explicit identification limit. With the same
+decoder, latent code and budgets, constant zero phases also fit those three
+observed `true` labels perfectly but predict `true` at the fourth corner.
+Both decoded tables are global ordinary-CE minima. Hence CM13/CM14's recovery
+conclusion cannot simply be transferred from observed latent labels to
+observed decoded labels. This three-edge observation graph is connected and
+has the off-diagonal perfect matching, so graph coverage is not the missing
+hypothesis. A successful native proposal still needs original
+held-out evaluation; a uniqueness claim requires additional identification
+evidence. No native accuracy result or efficient decoder-discovery guarantee
+is asserted by this extension.
+
+`CoupledMoments/Schatten/Decoded.lean` proves real-linearity, probability-row
+preservation, the pulled-back moment identity, convexity, identity-decoder
+equivalence and the actual CE fitting certificate.
+`CoupledMoments/Schatten/DecodedPhase.lean` proves the latent phase construction,
+the direct-code obstruction, the admitted counterexample and its two distinct
+CE-optimal completions, including connected matching coverage.
+`CoupledMoments/Schatten/DecodedHull.lean` proves probability preservation,
+convex CE and the global fitting certificate across all decoder choices.
+It also proves the two ambiguous endpoints remain global CE minima over this
+larger hull: convexifying the class does not supply the missing identification.

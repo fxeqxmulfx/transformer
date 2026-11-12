@@ -1,5 +1,20 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Fixed decoding of bounded latent complex states (2026-11-12)
+
+CM15 in `review/flat_spectrum.md` extends the model before native work. A fixed
+many-to-one categorical decoder maps latent probability tables into the full
+original output vocabulary, preserving probability rows and convex ordinary
+CE. The hull over all fixed decoders is also convex; any feasible exact decoded
+fit globally minimizes CE over that common prediction class. A concrete table
+excluded by the direct binary rank-one budget is admitted by three latent
+states. Two decoded global minima still disagree on its unseen corner despite
+connected matching coverage. Native proposals must therefore retain numerical
+latent-budget checks, original held-out metrics and the unchanged predecessors;
+capacity and ideal observed CE alone are not recovery certificates. Decoder
+proposal search has no efficient global-oracle claim. No new native result or
+all-35 pass is asserted by the proof extension.
+
 ## Bounded conventional transformer comparator (2026-11-12)
 
 The fresh comparison now has a native backend in `convex_stress_transformer`.
