@@ -146,7 +146,13 @@ Two substitutions are therefore excluded, and no statement here makes them:
    the other four answer every equation without it, so it is not necessary. The rounding of
    that forward pass against the real-valued decoder is not bounded.
 6. **Training reaches the structure** (#130): from the declared initialization law, with a
-   stated probability.
+   stated probability. Open, and the measured runs give no support for the half that asks the
+   structure to be kept. The premise of 5 is met at five retained checkpoints of two AdamW runs
+   and lost again in both: `adamw`, seed 0, has it at updates 30 000 and 40 000 and 2635 wrong
+   held-out answers at 50 000; `adamw --answer-only`, seed 1, has it at 20 000, 50 000 and
+   60 000 and 4154 wrong at 70 000. No checkpoint of the Adam runs has it. Whether the loss of
+   accuracy under AdamW is the recipe's or this transcription's is not known: the trainer was
+   not compared with a PyTorch run.
 7. **Composition** (#131): 5 and 6 along one trajectory, for all later updates, for a target
    with a condition on the split; the unconditional one is refuted in section 2.
 
