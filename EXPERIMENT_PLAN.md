@@ -15,6 +15,14 @@ capacity and ideal observed CE alone are not recovery certificates. Decoder
 proposal search has no efficient global-oracle claim. No new native result or
 all-35 pass is asserted by the proof extension.
 
+The native `convex_stress_decode` prototype now proposes latent phases from
+centered categorical complex sketches and alternating assignments, followed by
+an observed-count decoder. Six fixture checks pass, including missing output
+classes, class renaming, raw latent spectral audits and explicit search failures.
+Every attempted sketch and its work counts are retained. Original-data runs,
+continuous full/mini optimization and comparison with frozen predecessors
+remain separate work; the toy recovery test is not a stress-suite result.
+
 ## Bounded conventional transformer comparator (2026-11-12)
 
 The fresh comparison now has a native backend in `convex_stress_transformer`.
