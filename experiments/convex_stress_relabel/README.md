@@ -158,3 +158,39 @@ Freeze the committed auditor binary with its SHA-256, producer commit and
 `fingerprint` output before running it. Keep generated per-cell records, summary,
 resource measurements and process exit status in the preserved ignored runs and
 board-artifact directories.
+
+## Constructing the compatible optimum
+
+Lean CM14 at `ae9a35ed` constructs a feasible ordinary-CE minimizer from a full
+categorical class bijection and training-compatible phase potentials. It proves
+the renamed complete Fourier Gram identity, unit-phase moment factorization,
+radius-N/nuclear-budget-N feasibility and exact observed CE optimality. With
+connected matching coverage, the nonconstant nuclear bounds identify this
+constructed optimum. Unseen true labels can still violate its phase structure.
+The tighter `full_rank` operator radius is outside this construction's guarantee.
+
+The separate `phase_start` library implements this candidate. Its input is only
+the vocabulary size, original training pair observations and a fixed class
+coding. It checks graph connectivity, an observed perfect matching and all phase
+equations before allocating a probability table. A failed condition produces an
+explicit rejection with no replacement model. The admitted table uses the
+existing `rank_one` budgets and unchanged inference in original class order.
+It constructs no CE gradient and performs no optimizer updates. Coding discovery
+and its additional training-observation pass must both be counted by a runner.
+
+Four native fixture checks verify the withheld categorical answer and minimum
+CE, all nonconstant spectra using direct Fourier sums and LAPACK SVD, saved-model
+roundtrip, equivariance to independent input/output renamings, explicit graph and
+memory rejections, and unchanged predictions when only an unseen true answer is
+changed. The phase equations provide a model assumption, not an identification
+theorem for arbitrary targets. These checks do not evaluate original stress
+tasks or subsequent full-batch/minibatch refinement. The frozen 96-cell producer
+and queued audit remain unchanged; a prospective original-data comparison and
+independent endpoint audits are still required before reporting a warm-start
+stress result.
+
+```sh
+cargo fmt --manifest-path experiments/convex_stress_relabel/phase_start/Cargo.toml --check
+CARGO_BUILD_JOBS=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 cargo test --offline --release --manifest-path experiments/convex_stress_relabel/phase_start/Cargo.toml -- --test-threads=1
+CARGO_BUILD_JOBS=1 cargo clippy --offline --manifest-path experiments/convex_stress_relabel/phase_start/Cargo.toml --all-targets -- -D warnings
+```
