@@ -13928,6 +13928,28 @@ the resulting optimizer discovers every rule or identifies arbitrary unseen
 labels. A forward-only learner may similarly use a shared consistent solution
 when one exists and otherwise retain the query-specific consistency family.
 
+### MF5. Complete unseen rows without changing the oracle cost
+
+The unrestricted fallback can still keep a default on an unobserved query/value
+row even when other queries have learned that value. If `G(q,k,v,c)=0` for every
+class on such a row, replace its decoder choice by a pooled choice. This leaves
+the linear cost of every routing vertex unchanged, so an exact oracle remains
+exact. The completed vertex and its convex updates remain feasible in the
+original domain. No product of separately trained factors is introduced.
+
+For any finite retained residual sum
+`G(q,k,v,c)=sum_s 1[q_s=q and D_s(k)=v] r_s(c)`, a row absent from every consumed
+sample is zero, regardless of the states at which residuals were evaluated.
+`ConvexChannel/Completion.lean` proves this support fact, cost invariance and
+oracle preservation. The missing-row mask must be derived from consumed
+training inputs. It must not mark an observed row just because its current
+gradient happens to be small. The shared decoder's correctness on an unseen
+row is additional structure; this theorem supplies no arbitrary-label guarantee.
+
+The native completion uses the pooled oracle's decoder for the same aligned
+key, only for values absent from that query's retained observations. It does
+not replace observed choices, alter oracle costs or read held-out answers.
+
 ## Forward-only channel learning
 
 This extension gives a finite categorical learner for the realizable

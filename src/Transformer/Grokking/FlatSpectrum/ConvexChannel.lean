@@ -14,6 +14,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Batch
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Minibatch
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Shared
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Adaptive
+public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Completion
 
 /-!
 # Convex channels with flat-spectrum capacity bounds
