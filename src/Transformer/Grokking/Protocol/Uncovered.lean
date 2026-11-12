@@ -17,7 +17,9 @@ them as its numerator, its denominator or its quotient (`Avoids`). A residue is 
 of `96` equations, the denominator of `97` and the numerator of `96`, so all but `289`
 equations for each residue of a set avoid the set (`card_filter_avoid_ge`). So at least
 `8734` of the `9312` equations avoid both hidden residues (`card_avoids_ge`), more than the
-`4656` of a training set. Hence some shuffle is uncovered (`exists_uncovered`), and the
+`4656` of a training set. A shuffle can put `k` marked items in the first `k` slots, among
+them every item of a given set of at most `k` marked ones (`exists_perm_castLE_of_subset`,
+`exists_perm_forall_castLE`). Hence some shuffle is uncovered (`exists_uncovered`), and the
 uncovered shuffles have positive probability (`uniformPerm_uncovered_pos`). It is tiny,
 roughly `2⁻⁵⁹⁴` by a count that is not formalized here; what matters is that it is not `0`.
 -/
@@ -43,17 +45,33 @@ instance : DecidablePred Avoids := fun x => by
 def uncovered : Set (Equiv.Perm (Fin (97 * 96))) :=
   {π | ∀ i : Fin 4656, Avoids (trainAt equations (by norm_num : 4656 ≤ 97 * 96) π i)}
 
+/-- A shuffle can put `k` marked items in the first `k` slots, among them every item of a
+given set of at most `k` marked items. -/
+lemma exists_perm_castLE_of_subset {N k : ℕ} (hk : k ≤ N) (g : Fin N → Prop) [DecidablePred g]
+    (F : Finset (Fin N)) (hF : ∀ j ∈ F, g j) (hFk : F.card ≤ k)
+    (hg : k ≤ (Finset.univ.filter g).card) :
+    ∃ π : Equiv.Perm (Fin N), (∀ i : Fin k, g (π (Fin.castLE hk i))) ∧
+      ∀ j ∈ F, ∃ i : Fin k, π (Fin.castLE hk i) = j := by
+  have hsub : F ⊆ Finset.univ.filter g := fun j hj =>
+    Finset.mem_filter.2 ⟨Finset.mem_univ j, hF j hj⟩
+  obtain ⟨Q, hFQ, hQ, hcard⟩ := Finset.exists_subsuperset_card_eq hsub hFk hg
+  let e : {j : Fin N // (j : ℕ) < k} ≃ {j : Fin N // j ∈ Q} :=
+    (Fin.castLEquiv hk).symm.trans (Q.equivFinOfCardEq hcard).symm
+  refine ⟨e.extendSubtype, fun i => ?_, fun j hj => ?_⟩
+  · have hi : ((Fin.castLE hk i : Fin N) : ℕ) < k := i.isLt
+    rw [Equiv.extendSubtype_apply_of_mem e _ hi]
+    exact (Finset.mem_filter.1 (hQ (e ⟨_, hi⟩).2)).2
+  · obtain ⟨s, hs⟩ := e.surjective ⟨j, hFQ hj⟩
+    refine ⟨⟨((s : Fin N) : ℕ), s.2⟩, ?_⟩
+    have hcast : Fin.castLE hk ⟨((s : Fin N) : ℕ), s.2⟩ = (s : Fin N) := Fin.ext rfl
+    rw [hcast, Equiv.extendSubtype_apply_of_mem e _ s.2, Subtype.coe_eta, hs]
+
 /-- A shuffle can put any `k` of at least `k` marked items in the first `k` slots. -/
 lemma exists_perm_forall_castLE {N k : ℕ} (hk : k ≤ N) (g : Fin N → Prop) [DecidablePred g]
     (hg : k ≤ (Finset.univ.filter g).card) :
-    ∃ π : Equiv.Perm (Fin N), ∀ i : Fin k, g (π (Fin.castLE hk i)) := by
-  obtain ⟨Q, hQ, hcard⟩ := Finset.exists_subset_card_eq hg
-  let e : {j : Fin N // (j : ℕ) < k} ≃ {j : Fin N // j ∈ Q} :=
-    (Fin.castLEquiv hk).symm.trans (Q.equivFinOfCardEq hcard).symm
-  refine ⟨e.extendSubtype, fun i => ?_⟩
-  have hi : ((Fin.castLE hk i : Fin N) : ℕ) < k := i.isLt
-  rw [Equiv.extendSubtype_apply_of_mem e _ hi]
-  exact (Finset.mem_filter.1 (hQ (e ⟨_, hi⟩).2)).2
+    ∃ π : Equiv.Perm (Fin N), ∀ i : Fin k, g (π (Fin.castLE hk i)) :=
+  (exists_perm_castLE_of_subset hk g ∅ (fun _ h => absurd h (Finset.notMem_empty _))
+    (by simp) hg).imp fun _ h => h.1
 
 /-- The quotient is fixed by the numerator and the denominator. -/
 lemma quotient_eq_of_numerator_eq {x y : Equation} (ha : numerator x = numerator y)
@@ -155,9 +173,15 @@ theorem uniformPerm_uncovered_pos : 0 < uniformPerm (97 * 96) uncovered := by
   exact uniformPerm_pos_of_mem hπ
 
 /-! The witnesses: `6 / 4 = 50` avoids the hidden residues and `1 / 3 = 65` does not; three
+slots of four, of which the items `0`, `2` and `3` are marked and `2` is asked for; three
 items of which two are marked, and two slots. -/
 
 example : Avoids (50, 3) ∧ ¬ Avoids (65, 2) := by decide
+
+example : ∃ π : Equiv.Perm (Fin 4), (∀ i : Fin 3, π (Fin.castLE (by norm_num) i) ≠ 1) ∧
+    ∀ j ∈ ({2} : Finset (Fin 4)), ∃ i : Fin 3, π (Fin.castLE (by norm_num) i) = j :=
+  exists_perm_castLE_of_subset (by norm_num) (fun j => j ≠ 1) {2} (by decide) (by decide)
+    (by decide)
 
 example := exists_perm_forall_castLE (by norm_num : 2 ≤ 3) (fun j : Fin 3 => j ≠ 1) (by decide)
 
