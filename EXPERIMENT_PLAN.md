@@ -2,6 +2,16 @@
 
 ## Convex matrix extraction from a supplied subspace (2026-11-12)
 
+The first task #212 native step is `convex_stress_density`: a bounded PSD
+trace-one/affine ADMM extractor with two linear objectives, full stage traces,
+independent raw matrix/dual audits and saved-input replay. Exact complex
+rotated/permuted fixtures pass, including a real-score tie that stays mixed
+until the imaginary stage. A centered, re-orthonormalized noisy fixture has
+inconsistent affine equalities and is explicitly refused. This is evidence
+for the exact-subspace gap, not a masked-label recovery result. Connect the
+extractor to declared training-only sketches without changing frozen parents;
+retain failures and require a separate protocol before any original-data run.
+
 Task #211 / CM21 proves the PSD trace-one lift suggested by CM20. Constant
 diagonal readings force a diagonal hidden Fourier density when frequency
 differences are separated. The complete feasible set is the convex hull of
