@@ -330,3 +330,15 @@ CE calibration and complete inventories for both protocols. A corruption test
 also moves an example boundary while keeping all flattened rows unchanged;
 the new replay rejects it, protecting minibatch semantics that a full-data CE
 check would miss. There are no retained-path stress results yet.
+
+The frozen retained producer is `9da1c677`, with source fingerprint
+`5f95365da8434756d09b79ad485aba32e4cd2addcfec7a76f9571a8e5ab92e33`.
+Its inventory preflight admits all 48 cases, forecasts at most 2,002,781,192
+explicit buffer bytes per case and 67,138,185,792 total disk bytes. The preflight
+took 2.39 seconds at 253,256 KiB peak RSS; those are preprocessing measurements,
+not training peaks. The launch-gate negative check exited before creating a
+training directory when the original cohort still had an unfinished replay.
+The frozen follow-up is queued behind that specific live cohort process and
+will require its successful exit plus the complete-summary check. The binaries,
+launcher, preflight and check evidence stay outside the worktree in
+`.kanban/artifacts/175/retained-cohort-v1/`.
