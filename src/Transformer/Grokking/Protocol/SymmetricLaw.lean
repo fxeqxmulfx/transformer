@@ -13,7 +13,9 @@ The refutations of the target share one step. A map of samples preserves the law
 keeps the split in a set `A` of splits; and of every sample with a split in `A`, the sample or
 its image is in a set `W` of samples. Then the samples of `W` with a split in `A` have at
 least half the probability of `A` (`uniformPerm_le_two_mul_of_or`): they and their preimage,
-which has no more probability, cover the samples with a split in `A`. `W` need not be
+which has no more probability, cover the samples with a split in `A`. And a set of splits on
+each of which that holds has the same bound (`uniformPerm_le_two_mul_of_singleton`): the splits
+are finitely many, and the samples with a given split are an event. `W` need not be
 measurable.
 -/
 
@@ -62,8 +64,45 @@ theorem uniformPerm_le_two_mul_law_of_or {ν : Measure (ι → ℝ)} [IsProbabil
   (uniformPerm_le_two_mul_of_or hR hRA hW).trans
     (mul_le_mul_right (measure_mono Set.inter_subset_right) 2)
 
-/-! The witness: two shuffles of two equations, the split `1`, the identity as the symmetry and
-every sample in `W`. -/
+/-- **A halving that holds on each split of a set holds on the set**: the splits are finitely
+many, and the samples with a given split are an event. -/
+theorem uniformPerm_le_two_mul_of_singleton {ν : Measure (ι → ℝ)} [IsProbabilityMeasure ν]
+    {S : Set (Equiv.Perm (Fin N))} {W : Set (Sample N k ι)}
+    (h : ∀ π ∈ S, uniformPerm N {π} ≤ 2 * law N k ν (({π} ×ˢ Set.univ) ∩ W)) :
+    uniformPerm N S ≤ 2 * law N k ν ((S ×ˢ Set.univ) ∩ W) := by
+  classical
+  set μ := (law N k ν).restrict W with hμ
+  have hmeas : ∀ A : Set (Equiv.Perm (Fin N)), MeasurableSet
+      (A ×ˢ (Set.univ : Set ((ι → ℝ) × (ℕ → Equiv.Perm (Fin k))))) := fun A =>
+    (MeasurableSpace.measurableSet_top).prod MeasurableSet.univ
+  have hμA : ∀ A : Set (Equiv.Perm (Fin N)), μ (A ×ˢ Set.univ) =
+      law N k ν ((A ×ˢ Set.univ) ∩ W) := fun A => by
+    rw [hμ, Measure.restrict_apply (hmeas A)]
+  set F := S.toFinite.toFinset with hFdef
+  have hmem : ∀ π, π ∈ F ↔ π ∈ S := fun π => Set.Finite.mem_toFinset _
+  have hS1 : S = ⋃ π ∈ F, ({π} : Set (Equiv.Perm (Fin N))) := by
+    ext π
+    simp [hmem]
+  have hS2 : (S ×ˢ (Set.univ : Set ((ι → ℝ) × (ℕ → Equiv.Perm (Fin k))))) =
+      ⋃ π ∈ F, ({π} : Set (Equiv.Perm (Fin N))) ×ˢ Set.univ := by
+    ext ω
+    simp [hmem]
+  have hsum1 : uniformPerm N S = ∑ π ∈ F, uniformPerm N {π} := by
+    conv_lhs => rw [hS1]
+    exact measure_biUnion_finset (fun a _ b _ hab => Set.disjoint_singleton.2 hab)
+      fun _ _ => MeasurableSpace.measurableSet_top
+  have hsum2 : μ (S ×ˢ Set.univ) =
+      ∑ π ∈ F, μ (({π} : Set (Equiv.Perm (Fin N))) ×ˢ Set.univ) := by
+    conv_lhs => rw [hS2]
+    refine measure_biUnion_finset (fun a _ b _ hab => ?_) fun π _ => hmeas {π}
+    exact Set.disjoint_left.2 fun ω ha hb => hab (ha.1.symm.trans hb.1)
+  rw [← hμA, hsum1, hsum2, Finset.mul_sum]
+  refine Finset.sum_le_sum fun π hπ => ?_
+  rw [hμA]
+  exact h π ((hmem π).1 hπ)
+
+/-! The witnesses: two shuffles of two equations, the identity as the symmetry and every sample
+in `W`; the split `1`, and every split by the sum over the splits. -/
 
 example : uniformPerm 2 {1} ≤
     2 * law 2 1 (Measure.dirac (0 : Unit → ℝ)) (({1} ×ˢ Set.univ) ∩ Set.univ) :=
@@ -72,5 +111,10 @@ example : uniformPerm 2 {1} ≤
 example : uniformPerm 2 {1} ≤ 2 * law 2 1 (Measure.dirac (0 : Unit → ℝ)) Set.univ :=
   uniformPerm_le_two_mul_law_of_or (MeasurePreserving.id _) (fun _ h => h)
     fun _ _ => Or.inl trivial
+
+example : uniformPerm 2 Set.univ ≤
+    2 * law 2 1 (Measure.dirac (0 : Unit → ℝ)) ((Set.univ ×ˢ Set.univ) ∩ Set.univ) :=
+  uniformPerm_le_two_mul_of_singleton fun π _ => uniformPerm_le_two_mul_of_or
+    (A := {π}) (MeasurePreserving.id _) (fun _ h => h) fun _ _ => Or.inl trivial
 
 end Transformer.Grokking.Protocol

@@ -4,7 +4,7 @@ Board tasks #126–#132 and #137. Sources: `papers/arXiv-2201.02177v1/main.tex` 
 Figure 1 and the appendix *Additional experimental details*; openai/grok at `3d64b1d8`; the
 protocol pinned in `experiments/grok_division/PROTOCOL.md`. Written 2026-11-11; sections 5
 and 6, the second half of section 2, the enclosures of bridge 5, the measurability of bridge 2,
-the mean accuracy and the third part of section 2 added 2026-11-12.
+the mean accuracy and the third and fourth parts of section 2 added 2026-11-12.
 
 The paper shows curves of finite runs. It states no theorem, and nothing below proves that
 training makes any transformer generalize. This note fixes what such a theorem would say,
@@ -46,6 +46,7 @@ than trained, and names the bridges that are missing.
 | The target is false without a condition on the split, in all three modes (section 2) | `not_division_generalizes`, `not_division_tendsToOneInProbability`, `not_division_tendsToOneInMean` |
 | The target is false under every condition that admits a split with a residue that is the answer of no training equation (section 2) | `outPerm`, `sourceGrad_comp_outPerm`, `unlabelled`, `trajectory_relabel`, `uniformPerm_unlabelled_le`, `labelled`, `not_ae_eventually_of_not_mem_labelled`, `not_ae_eventually_anchored_occurring` |
 | The target is false on the splits that label every residue too: a renaming of the tokens that carries a split to a split and moves a held-out answer (section 2) | `sourceGrad_comp_paramPerm_rename`, `Carries`, `trajectory_carried`, `measurePreserving_carrySample`, `Twisted`, `uniformPerm_le_of_twisted`, `not_ae_eventually_of_twisted`, `twin`, `twisted_twin`, `exists_twin_labelled`, `not_ae_eventually_labelled` |
+| The runs that eventually answer every held-out equation form an event, and its probability is at most 1 less half the probability that the split is not labelled (section 2) | `eventuallyRight`, `measurableSet_eventuallyRight`, `division_generalizes_iff_law_eq_one`, `uniformPerm_le_not_eventuallyRight`, `law_eventuallyRight_le`, `law_eventuallyRight_le_of_twisted`, `not_le_law_eventuallyRight` |
 
 For division the arguments are fixed in `division_generalizes_iff`: the decoder of
 `paperSizes`, the logits after `=`, the source's loss on the answer and the closing token, the
@@ -165,6 +166,29 @@ excludes every set of splits with such a symmetry. The twin splits are one famil
 description of the splits without such a symmetry is attempted here. A target that holds with
 a probability below 1 need not exclude them.
 
+**The probability of the event of the target.** `Protocol/{SymmetricLaw,EventualSuccess}.lean`.
+The runs that from some update on answer every held-out equation form an event, and the target
+says that it has probability 1 (`measurableSet_eventuallyRight`,
+`division_generalizes_iff_law_eq_one`). The symmetries bound that probability. Every refutation
+above has one step in common: a map of samples that preserves the law of a run and keeps the
+split in a set of splits, with the sample or its image in a set `W`, gives `W` at least half
+the probability of the set (`uniformPerm_le_two_mul_of_or`). Here `W` is the set of the runs
+that have a wrong held-out answer at infinitely many updates: if at every update a run or its
+image has a wrong held-out answer, one of the two is in `W` (`not_eventuallyRight_or`).
+
+| Statement | Declaration |
+| --- | --- |
+| Given that the split is in a set of splits that are not labelled, P(at infinitely many updates some held-out answer is wrong) ≥ ½; the same given a set of splits with a symmetry that moves a held-out answer | `uniformPerm_le_not_eventuallyRight`, `uniformPerm_le_not_eventuallyRight_of_twisted` |
+| P(every held-out equation is eventually answered) ≤ 1 − ½ P(the split is not labelled), under Adam and under AdamW at every weight decay; so ≤ 1 − ½ P(the split leaves `r` unlabelled) for each residue `r`; and ≤ 1 − ½ P(`A`) for a set `A` of splits with such a symmetry | `law_eventuallyRight_le`, `law_eventuallyRight_le_unlabelled`, `law_eventuallyRight_le_of_twisted` |
+| "With probability at least 1 − δ every held-out equation is eventually answered" is false for every δ below ½ P(the split is not labelled) | `not_le_law_eventuallyRight` |
+
+A split is not labelled with a probability of about `7.5 · 10⁻²⁸`, by a count outside Lean: 97
+residues, each unlabelled with the probability above, and two at once with one of about
+`2 · 10⁻⁵⁹`. So a true statement about this protocol with no condition on the split has a
+tolerance, and the tolerance is at least half that probability, about `3.7 · 10⁻²⁸` by the
+same count. No lower bound of the probability of the event is proved: it is not shown to be
+positive.
+
 ## 3. What the repository proves, and about what
 
 | Where | Declarations | It is about | Why it is not the target |
@@ -280,7 +304,8 @@ Two substitutions are therefore excluded, and no statement here makes them:
    (`not_ae_eventually_labelled`). A condition that makes the target true excludes every set
    of splits with a symmetry that moves a held-out answer (`not_ae_eventually_of_twisted`);
    none is known that does and is not empty. A target with a probability below 1 does not
-   need one.
+   need one; its tolerance is at least half the probability that the split is not labelled
+   (`not_le_law_eventuallyRight`).
 
 Bridge 2 is closed and bridge 5 is proved as a sufficient condition. Bridge 1 and the second
 half of bridge 3 are open. Bridges 4, 6 and 7 are open research problems. The measurements of
@@ -317,7 +342,10 @@ of the present state finds this:
   held-out accuracy 1 and that built parameters have it (bridge 5); what two rows that enclose
   the logits decide (bridge 5); that the target is false in the same three modes
   under every condition on the split that admits a split with a residue that is the answer of
-  no training equation, and on the splits that label every residue (section 2); that the gradient of the backward pass is a derivative,
+  no training equation, and on the splits that label every residue (section 2); that the
+  runs that eventually answer every held-out equation form an event whose probability is at
+  most 1 less half the probability that the split is not labelled (section 2); that the
+  gradient of the backward pass is a derivative,
   and the gradient of the loss where no hidden input is 0 (bridge 3); and the exclusions of
   section 5. None of these says that a trained decoder generalizes.
 - **Finite-horizon, native.** Nine runs in `f32` (three settings, seeds 0 to 2) and their 117

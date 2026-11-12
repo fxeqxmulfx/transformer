@@ -374,3 +374,14 @@ import Transformer
 #print axioms Transformer.Grokking.Protocol.not_ae_eventually_labelled
 #print axioms Transformer.Grokking.Protocol.uniformPerm_le_two_mul_of_or
 #print axioms Transformer.Grokking.Protocol.uniformPerm_le_two_mul_law_of_or
+#print axioms Transformer.Grokking.Protocol.uniformPerm_le_two_mul_of_singleton
+#print axioms Transformer.Grokking.Protocol.measurableSet_eventuallyRight
+#print axioms Transformer.Grokking.Protocol.division_generalizes_iff_law_eq_one
+#print axioms Transformer.Grokking.Protocol.not_eventuallyRight_or
+#print axioms Transformer.Grokking.Protocol.law_eventuallyRight_le_of_half
+#print axioms Transformer.Grokking.Protocol.uniformPerm_le_not_eventuallyRight
+#print axioms Transformer.Grokking.Protocol.uniformPerm_le_not_eventuallyRight_of_twisted
+#print axioms Transformer.Grokking.Protocol.law_eventuallyRight_le
+#print axioms Transformer.Grokking.Protocol.law_eventuallyRight_le_unlabelled
+#print axioms Transformer.Grokking.Protocol.law_eventuallyRight_le_of_twisted
+#print axioms Transformer.Grokking.Protocol.not_le_law_eventuallyRight

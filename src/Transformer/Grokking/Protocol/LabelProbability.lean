@@ -14,9 +14,10 @@ split that is not labelled. The relabelling does not move the split, so its argu
 made on the samples of one split: on a split that is not labelled, at every update, the
 samples with a wrong held-out answer have at least half the probability of the split
 (`uniformPerm_singleton_le`). The splits are finitely many, so the same holds for every set
-of splits that are not labelled (`uniformPerm_le_of_subset_compl_labelled`): given that the
-split is not labelled, a held-out answer is wrong with a conditional probability of at least
-one half at every update, for Adam and for AdamW at every weight decay.
+of splits that are not labelled (`uniformPerm_le_of_subset_compl_labelled`, by the sum over
+the splits of `SymmetricLaw`): given that the split is not labelled, a held-out answer is
+wrong with a conditional probability of at least one half at every update, for Adam and for
+AdamW at every weight decay.
 
 So under a condition on the split that admits a split that is not labelled, the probability
 that the condition holds and a held-out answer is wrong does not tend to zero
@@ -50,34 +51,8 @@ wrong with a conditional probability of at least one half, at every update.** -/
 theorem uniformPerm_le_of_subset_compl_labelled (decay : ℝ) (t : ℕ)
     {S : Set (Equiv.Perm (Fin (97 * 96)))} (hS : S ⊆ labelledᶜ) :
     uniformPerm (97 * 96) S ≤
-      2 * law (97 * 96) 4656 (initMeasure paperSizes) (splitIn S ∩ wrongAt decay t) := by
-  classical
-  set ν := (law (97 * 96) 4656 (initMeasure paperSizes)).restrict (wrongAt decay t) with hν
-  have hmeas : ∀ A : Set (Equiv.Perm (Fin (97 * 96))), MeasurableSet (splitIn A) := fun A =>
-    (MeasurableSpace.measurableSet_top).prod MeasurableSet.univ
-  have hνA : ∀ A : Set (Equiv.Perm (Fin (97 * 96))), ν (splitIn A) =
-      law (97 * 96) 4656 (initMeasure paperSizes) (splitIn A ∩ wrongAt decay t) := fun A => by
-    rw [hν, Measure.restrict_apply (hmeas A)]
-  set F := S.toFinite.toFinset with hFdef
-  have hmem : ∀ π, π ∈ F ↔ π ∈ S := fun π => Set.Finite.mem_toFinset _
-  have hS1 : S = ⋃ π ∈ F, ({π} : Set (Equiv.Perm (Fin (97 * 96)))) := by
-    ext π
-    simp [hmem]
-  have hS2 : splitIn S = ⋃ π ∈ F, splitIn {π} := by
-    ext ω
-    simp [splitIn, hmem]
-  have hsum1 : uniformPerm (97 * 96) S = ∑ π ∈ F, uniformPerm (97 * 96) {π} := by
-    conv_lhs => rw [hS1]
-    exact measure_biUnion_finset (fun a _ b _ hab => Set.disjoint_singleton.2 hab)
-      fun _ _ => MeasurableSpace.measurableSet_top
-  have hsum2 : ν (splitIn S) = ∑ π ∈ F, ν (splitIn {π}) := by
-    conv_lhs => rw [hS2]
-    refine measure_biUnion_finset (fun a _ b _ hab => ?_) fun π _ => hmeas {π}
-    exact Set.disjoint_left.2 fun ω ha hb => hab (ha.1.symm.trans hb.1)
-  rw [← hνA, hsum1, hsum2, Finset.mul_sum]
-  refine Finset.sum_le_sum fun π hπ => ?_
-  rw [hνA]
-  exact uniformPerm_singleton_le decay t (hS ((hmem π).1 hπ))
+      2 * law (97 * 96) 4656 (initMeasure paperSizes) (splitIn S ∩ wrongAt decay t) :=
+  uniformPerm_le_two_mul_of_singleton fun _ hπ => uniformPerm_singleton_le decay t (hS hπ)
 
 /-- **Under a condition on the split that admits a split that is not labelled the target
 fails in probability**: the probability that the condition holds and a held-out answer is
