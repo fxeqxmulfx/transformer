@@ -101,7 +101,7 @@ every positive statement.
 | `Grokking/DivisionOrbits` | `InDivisionCell`, `equal_quotients_iff_common_scale`, `mem_full_cell_iff`, `modulus97_domain_card` | The algebra of the task: equal answers are common scalings | No model in it; `inDivisionCell_operands` ties the tokenized equations to it |
 | `Landscape/Neural` | `crossEntropy`, `crossEntropy_nonneg`, `analyticAt_crossEntropy`, `exists_compact_rotate90_adamw_container` | The loss, reused here; analyticity and an AdamW box for the Rotate90 model (SiLU, RMS norm, tied readout) | Another architecture and schedule; the paper's decoder has ReLU and is not analytic |
 | `Grokking/AdamW`, `EffectiveTheory`, `CircuitEfficiency`, `Composition`, `Geometry` | for example `coupled_first_growth_iff`, `quarticCE_every_rate_can_overshoot` | Effective models and diagnostics of learned circuits | None is the decoder's trajectory |
-| board #78 (in progress, another agent) | not on `main` | Quotient-equivariant logits carry two training anchors to every equation | A sufficient structure for held-out correctness; no proof that training produces it |
+| `Grokking/Protocol` (`MarginTransfer`, `QuotientTransfer`, `QuotientWitness`) | `margin_sub_le_of_abs_sub_le`, `predict_eq_residueToken_of_anchor`, `predict_eq_residueToken_of_two_anchors`, `predict_bentLogits`, `predict_answerLogits_zero_ne` | Logits that move with the scalings of numerator and denominator up to an error carry two answers with margins above twice the error, one for each orbit of the scalings, to all 9312 equations, over all 239 tokens; the decoder with every parameter zero has the symmetry and answers nothing | A sufficient structure for held-out correctness. No proof that training produces it, and no trained decoder is shown to have it: at each of the 117 checkpoints measured in `experiments/grok_division`, in doubles, twice the error exceeds the margin of every training anchor on the equations with a nonzero numerator (board #78 keeps a certificate of a trained model open) |
 
 Two substitutions are therefore excluded, and no statement here makes them:
 
@@ -127,7 +127,10 @@ Two substitutions are therefore excluded, and no statement here makes them:
    No descent, no bound of the Adam run uniform in `t`, and no limit of the trajectory or of
    its logits is proved or assumed.
 5. **Structure gives correct answers** (#129, after #78): a certificate on the decoder's own
-   logits that implies the right largest logit on every held-out equation.
+   logits that implies the right largest logit on every held-out equation. The implication is
+   proved for any logits (`predict_eq_residueToken_of_two_anchors`, hence for `answerLogits θ`).
+   Missing is a decoder that satisfies it with its training answers: the witnesses are logits
+   that are not a decoder's, and the trained checkpoints fail the hypothesis.
 6. **Training reaches the structure** (#130): from the declared initialization law, with a
    stated probability.
 7. **Composition** (#131): 5 and 6 along one trajectory, for all later updates, for a target

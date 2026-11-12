@@ -22,6 +22,9 @@ public import Transformer.Grokking.Protocol.Uncovered
 public import Transformer.Grokking.Protocol.Exchange
 public import Transformer.Grokking.Protocol.Refutation
 public import Transformer.Grokking.Protocol.RefutationModes
+public import Transformer.Grokking.Protocol.MarginTransfer
+public import Transformer.Grokking.Protocol.QuotientTransfer
+public import Transformer.Grokking.Protocol.QuotientWitness
 
 /-! The protocol behind the division curves of Power et al., *Grokking: generalization beyond
 overfitting on small algorithmic datasets*, and what "held-out accuracy tends to 1" means for
@@ -34,12 +37,17 @@ witnesses; the law of a run and the three modes of
 convergence; a model that generalizes beside one that does not; the decoder in exact reals
 with every parameter group, its loss, and the gradient of the source's backward pass with its
 rule at the kinks of the activation; division modulo 97 with its tokens, supervision and
-initialization law; the target for that protocol as an equivalence; and the proof that this
+initialization law; the target for that protocol as an equivalence; the proof that this
 target is false without a condition on the split: a uniformly random half of the equations
 misses two residues with positive probability, exchanging their tokens is then a symmetry of
-the whole run, and the run and its exchange cannot both answer the held-out equations. The
-target is a predicate of the model, its labels and its gradient oracle: no convergence of any
-transformer is proved here. The map of what is proved elsewhere and what is missing is
-`review/grok_division_convergence.md`. -/
+the whole run, and the run and its exchange cannot both answer the held-out equations; and a
+sufficient condition for every answer: a row of logits within `ε` of a relabelled row keeps
+its margin less `2 ε`, so two equations answered with margins above `2 ε`, one with a nonzero
+quotient and one with the quotient zero, give all 9312 answers when the logits move with the
+scalings of numerator and denominator up to `ε`, with a witness of positive error and the
+decoder with every parameter zero, which has the symmetry and no answer. The target is a
+predicate of the model, its labels and its gradient oracle: no convergence of any transformer
+is proved here, and no trained decoder is shown to have that structure. The map of what is
+proved elsewhere and what is missing is `review/grok_division_convergence.md`. -/
 
 @[expose] public section

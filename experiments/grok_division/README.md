@@ -267,6 +267,9 @@ anchor's structural error `ε` is the least number such that every relabelled ro
 is within `ε` of the anchor's in every token, one constant added to each row; every margin of
 the orbit is then at least the anchor's less `2 ε`. The anchor reported is the best of the
 orbit's training equations, and the model is the one in doubles at the checkpoint's parameters.
+The bound, and that a positive value on both orbits gives every answer, are proved in Lean for
+any logits: `margin_sub_le_of_abs_sub_le` and `predict_eq_residueToken_of_two_anchors`
+(`src/Transformer/Grokking/Protocol/MarginTransfer.lean`, `QuotientTransfer.lean`).
 
 Of the 117 checkpoints of the nine complete runs, nine answer all 9312 equations, all of them
 under AdamW. Their orbit of nonzero numerators, 9216 equations:
