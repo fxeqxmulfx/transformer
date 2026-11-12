@@ -23,9 +23,9 @@ paper's figures, and the disagreement is listed.
 - The vocabulary has 239 tokens (`ArithmeticTokenizer.get_tokens`): `<|eos|>` (0), `=` (1),
   the 20 operator names in sorted order (`/` is 10), the residues `0..96` (22 to 118), the 120
   elements of S5. An equation is the seven tokens `<|eos|> a / b = c <|eos|>`; the model reads
-  the first six and is trained on the next token (`ArithmeticIterator.__next__`). The 142
-  tokens that division never shows still have embedding rows and readout columns, and the
-  softmax runs over all 239.
+  the first six and is trained on the next token (`ArithmeticIterator.__next__`). The 139
+  tokens that division never shows, 19 operator names and the elements of S5, still have
+  embedding rows and readout columns, and the softmax runs over all 239.
 
 ## The split
 
