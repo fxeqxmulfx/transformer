@@ -1,12 +1,19 @@
 # Division mod 97: does held-out accuracy tend to 1? Target and gaps
 
-Board tasks #126–#132 and #137. Sources: `papers/arXiv-2201.02177v1/main.tex` (Power et al.),
-Figure 1 and the appendix *Additional experimental details*; openai/grok at `3d64b1d8`; the
-protocol pinned in `experiments/grok_division/PROTOCOL.md`. Written 2026-11-11; sections 5
-and 6, the second half of section 2, the enclosures of bridge 5, the measurability of bridge 2,
-the mean accuracy, the third and fourth parts of section 2 and the probabilities that a split
-leaves a residue unlabelled, is labelled and is anchored, with the bounds they give, added
-2026-11-12.
+Board tasks #126–#132, #137 and #189. Sources: `papers/arXiv-2201.02177v1/main.tex` (Power
+et al.), Figure 1 and the appendix *Additional experimental details*; openai/grok at
+`3d64b1d8`; the protocol pinned in `experiments/grok_division/PROTOCOL.md`. Written
+2026-11-11; sections 5 and 6, the second half of section 2, the enclosures of bridge 5, the
+measurability of bridge 2, the mean accuracy, the third and fourth parts of section 2 and the
+probabilities that a split leaves a residue unlabelled, is labelled and is anchored, with the
+bounds they give, added 2026-11-12.
+
+On 2026-11-12, at the user's decision, tasks #130 to #132 were re-scoped. They asked for a
+proof that training reaches and keeps a generalizing regime (#130), for the end-to-end theorem
+composed from it (#131) and for an audit of that theorem (#132). No such proof exists. The
+three tasks now certify what is proved instead: the declared target is false, and the
+probability of its event is bounded from above (section 6). The positive claim is the open
+task #189.
 
 The paper shows curves of finite runs. It states no theorem, and nothing below proves that
 training makes any transformer generalize. This note fixes what such a theorem would say,
@@ -317,16 +324,17 @@ Two substitutions are therefore excluded, and no statement here makes them:
    at the least; `heldout_accuracy_eq_one_of_enclosed_anchors` turns that test, for any two
    rows that enclose the logits, into held-out accuracy 1. That the printed ends enclose the
    logits rests on that file and the processor's arithmetic; Lean takes it as a hypothesis.
-6. **Training reaches the structure** (#130): from the declared initialization law, with a
-   stated probability. Open, and the measured runs give no support for the half that asks the
-   structure to be kept. The premise of 5 is met at five retained checkpoints of two AdamW runs
+6. **Training reaches the structure** (#189; it was #130 until that task was re-scoped): from
+   the declared initialization law, with a stated probability. Open, and the measured runs
+   give no support for the half that asks the structure to be kept. The premise of 5 is met at five retained checkpoints of two AdamW runs
    and lost again in both: `adamw`, seed 0, has it at updates 30 000 and 40 000 and 2635 wrong
    held-out answers at 50 000; `adamw --answer-only`, seed 1, has it at 20 000, 50 000 and
    60 000 and 4154 wrong at 70 000. No checkpoint of the Adam runs has it. Whether the loss of
    accuracy under AdamW is the recipe's or this transcription's is not known: the trainer was
    not compared with a PyTorch run.
-7. **Composition** (#131): 5 and 6 along one trajectory, for all later updates, for a target
-   with a condition on the split; the unconditional one is refuted in section 2, and so is
+7. **Composition** (#189; it was #131): 5 and 6 along one trajectory, for all later updates,
+   for a target with a condition on the split; the unconditional one is refuted in section 2,
+   and so is
    the target under every condition that admits a split that is not labelled
    (`not_ae_eventually_of_not_mem_labelled`), and the target on the labelled splits
    (`not_ae_eventually_labelled`). A condition that makes the target true excludes every set
@@ -336,18 +344,20 @@ Two substitutions are therefore excluded, and no statement here makes them:
    (`not_le_law_eventuallyRight`), hence at least `3.73 · 10⁻²⁸`
    (`not_le_law_eventuallyRight_explicit`).
 
-Bridge 2 is closed and bridge 5 is proved as a sufficient condition. Bridge 1 and the second
-half of bridge 3 are open. Bridges 4, 6 and 7 are open research problems. The measurements of
-`experiments/grok_division` are finite runs in `f32` and close none of them.
+Bridge 2 is closed and bridge 5 is proved as a sufficient condition. Bridge 1 (#182) and the
+second half of bridge 3 (#181) are open. Bridges 4, 6 and 7 are open research problems
+(#189). The measurements of `experiments/grok_division` are finite runs in `f32` and close
+none of them.
 
 ## 5. Ways to bridge 6: what the runs exclude and what stays open
 
 `Protocol/{ReadoutBound,TargetMean,ReadoutGradient,ReadoutPairing,AdamStationary,ReadoutStationary,ReadoutWitness,DecayedLogits,Continuity,LimitNotFitted}.lean`.
 
-Bridge 6 (#130) asks that training reaches the structure of bridge 5 and keeps it. Each row
+Bridge 6 (#189) asks that training reaches the structure of bridge 5 and keeps it. Each row
 is a way a proof could go and what is known of it. A row that is closed is closed for that way
 only: nothing here is evidence that the target with a condition on the split is true or false,
-and #130 stays open.
+and #189 stays open. This table is the record of the ways that #130 certifies since its
+re-scoping; it proves no attraction and no invariance.
 
 | Way | Status | Declarations or evidence |
 | --- | --- | --- |
@@ -355,43 +365,156 @@ and #130 stays open.
 | AdamW: the training loss tends to 0, or the margins grow without bound | Closed for almost every run. With weight decay 1 the readout and the second normalizations stay within 17 of zero, so every logit stays within `logitBox`, which is below 455 600; the loss of every batch with a target stays above `log(1 + e^(−2·logitBox))`, which is positive, and no answer leads by more than `2·logitBox`, at every update. The bound is far from what a run shows; what it gives is uniformity in the update | `abs_logits_le`, `ae_initMeasure_abs_le_one`, `ae_abs_logits_divisionRun_le`, `ae_floor_le_batchLoss_divisionRun`, `ae_margin_divisionRun_le`, `logitBox_lt`, `floor_pos` |
 | Transfer from the minima of a weight-decayed factorization | Excluded in section 3: another model and another optimizer, no minimum without decay, and a limit of AdamW is not a minimizer of the weight-decayed loss | `not_exists_forall_ceLoss_le`, `not_tendsto_adamRun_factor` |
 | A checkpoint with the certificate, then invariance of the certificate along the run | No support. On enclosures of the real-valued logits the certificate holds at five retained checkpoints of two AdamW runs and is lost again in both; no Adam checkpoint has it. Those trajectories are in `f32`; nothing is known of the exact-real one | bridge 5; `experiments/grok_division/README.md` |
+| A set of starts of positive probability from which the run answers every held-out equation at all later updates: a lower bound of the probability of the event of the target | Open; no such set is known, and that probability is not shown to be positive. What is proved bounds a run for finitely many updates only: in `t` updates of Adam a parameter moves by at most `0.017 t`. Such a set is not the basin of a limit that fits the training set with a margin, because a convergent trajectory of Adam has no such limit (first row). The measured runs suggest none: under AdamW five of six have evaluations with every held-out answer right and none of the six keeps 99% through its last window; under Adam no evaluation of three runs has every held-out answer right within `10⁶` updates | `abs_adamRun_params_sub_le`, `abs_trajectory_division_sub_le`; `experiments/grok_division/README.md` |
 | Adam without weight decay: the parameters diverge and their direction converges to a margin maximizer | Open, not attempted. The decoder is not written as a positively homogeneous function of its parameters (the normalization adds `10⁻⁵` to the variance, the positions are added to the embedding); no homogeneity is proved here, and an argument for homogeneous networks would need it. The first row proves non-convergence only: it does not prove that any parameter is unbounded | none |
 | AdamW: a stationary regime inside the box, described in law | Open, not attempted. The measurability it would start from is proved (bridge 2): every parameter after every update is a measurable function of the sample, so the law of the parameters after an update is defined. Nothing is proved about that law | `measurable_divisionRun` |
 
-## 6. What can be claimed today (#131, #132)
+## 6. The supported claim and its audit (#130, #131, #132)
 
-There is no end-to-end theorem, so #131 is open and #132 has no final claim to audit. An audit
-of the present state finds this:
+There is no theorem that held-out accuracy tends to 1, for any split and with any probability.
+Tasks #130 to #132 asked for one, composed end to end, and for its audit. On 2026-11-12, at
+the user's decision, they were re-scoped to the statement that is proved, which this section
+states and audits. The positive claim is task #189 and is open.
 
-- **Exact-real, proved in Lean with the three standard axioms.** What the target says
+**The claim.** For the protocol of section 1 in exact reals, under Adam and under AdamW at
+every weight decay (the theorems take the weight decay as an arbitrary real number):
+
+1. The declared target, that for almost every run the held-out accuracy tends to 1, is false.
+   It is false in probability and in mean too (`not_division_generalizes`,
+   `not_division_tendsToOneInProbability`, `not_division_tendsToOneInMean`).
+2. It is false in the same three modes under every condition on the split that admits a split
+   that is not labelled (`not_ae_eventually_of_not_mem_labelled`,
+   `not_tendsto_law_inter_wrongAt`, `not_tendsto_setIntegral_divisionAccuracy`), and under
+   every condition that all the labelled twin splits meet, of which "the split is labelled"
+   is one (`not_ae_eventually_labelled`, `not_ae_eventually_of_twin_subset`,
+   `not_tendsto_law_of_twin_subset`, `not_tendsto_setIntegral_of_twin_subset`). Almost surely
+   it is false under every condition that contains a set of splits, not empty, with a symmetry
+   that moves a held-out answer (`not_ae_eventually_of_twisted`).
+3. The runs that from some update on answer every held-out equation form an event
+   (`measurableSet_eventuallyRight`), and the target says that its probability is 1
+   (`division_generalizes_iff_law_eq_one`). Its probability is at most `1 − 746/10³⁰/2`, that
+   is `1 − 3.73 · 10⁻²⁸` (`law_eventuallyRight_le_explicit`). So "with probability at least
+   `1 − δ` every held-out equation is eventually answered" is false for every `δ` below
+   `3.73 · 10⁻²⁸` (`not_le_law_eventuallyRight_explicit`).
+
+This is not a convergence theorem, and it is not evidence against generalization. The bound
+of item 3 differs from 1 by `3.73 · 10⁻²⁸`: it says that the target cannot hold for almost
+every run, not that a run is unlikely to generalize. No lower bound of the probability of the
+event is proved, and it is not shown to be positive. No theorem here says that a trained
+decoder answers a held-out equation at any update.
+
+**Data, model, optimizer, randomness, mode.** The 9312 equations `a / b = c` modulo 97 with
+`b ≠ 0`, as rows of tokens (`equations`, `read`). The decoder of `paperSizes` with every
+parameter group, in exact reals (`logits`). The loss of the source on the answer and the
+closing token, and the gradient of its backward pass (`divisionGrad`). The author's update
+with both moments, the warmup and the decoupled decay (`adamStep`; `adamStep_eq_sourceStep`
+identifies it with the statements of the code). Batches cut in order from a new shuffle of
+the training set in every epoch, nine of 512 and a tenth of 48, for infinitely many epochs.
+The law of a run is
+`law (97 * 96) 4656 (initMeasure paperSizes)`: a uniformly random shuffle of the equations,
+of which the first 4656 are the training set, PyTorch's default initialization, and the
+shuffles of the epochs, all independent. Items 1 and 2 are stated almost surely, in
+probability and in mean; item 3 is the probability, under that law, of a pathwise event about
+decisions.
+
+**The premises.** `scripts/GrokConvergenceClaim.lean` prints the 41 statements cited in this
+section with their hypotheses. Those of the claim:
+
+| Statement | Arguments and hypotheses | Closed example |
+| --- | --- | --- |
+| `measurableSet_eventuallyRight`, `division_generalizes_iff_law_eq_one`, `not_division_generalizes`, `not_division_tendsToOneInProbability`, `not_division_tendsToOneInMean`, `not_ae_eventually_labelled`, `law_eventuallyRight_le_explicit` | the weight decay | no hypothesis to meet |
+| `not_ae_eventually_of_not_mem_labelled`, `not_tendsto_law_inter_wrongAt`, `not_tendsto_setIntegral_divisionAccuracy` | the weight decay; a set of splits and a split in it that is not labelled | the condition `anchored` and the split that trains on the first 4656 equations of the list (`one_mem_anchored`, `one_notMem_labelled`): `LabelWitness`, `LabelProbability`, `MeanAccuracy` |
+| `not_ae_eventually_of_twisted` | the weight decay; a set of splits with a symmetry that moves a held-out answer (`Twisted`), a condition that contains it, a split in it | the uncovered splits (`twisted_uncovered`, `exists_uncovered`): `TwistedSplits` |
+| `not_ae_eventually_of_twin_subset`, `not_tendsto_law_of_twin_subset`, `not_tendsto_setIntegral_of_twin_subset` | the weight decay; a condition that all the labelled twin splits meet | the conditions `anchored` and `labelled`: `LabelNotSufficient` |
+| `not_le_law_eventuallyRight_explicit` | the weight decay; a tolerance below `746/10³⁰/2` | the tolerance `300/10³⁰`: `ExplicitTolerance` |
+
+No premise speaks of the future of a run: none assumes that an optimizer converges, that a
+loss is minimized or falls, that predictions are eventually right, that a margin holds, or
+that a tail of a run is given. None is a measured quantity, and no finite run is used. The
+hypotheses concern the split and the tolerance only.
+
+The theorems of section 5 are of another kind and are not part of the claim.
+`division_eventually_margin_lt` and `exists_margin_le_zero_of_tendsto_division` assume that
+the parameters converge, because what they exclude is a proof that passes through such a
+limit; the run from zero meets that hypothesis (`divisionRun_zeroSample`; examples in
+`ReadoutWitness` and `LimitNotFitted`). No positive statement is derived from them.
+
+**What the claim rests on.** For each of the 15 statements of the claim the script prints the
+modules of this library that its statement and its proof reach; it reads them from the
+kernel's environment, as `#print axioms` does. Together they rest on 48 modules: 45 of the 74
+of `Grokking/Protocol`, then `Grokking/DivisionOrbits/{Basic,FiniteCells}` and
+`Landscape/Neural/Loss`, which holds the cross-entropy.
+
+| Part | Modules of `Grokking/Protocol` |
+| --- | --- |
+| The model, the update, the sampler, the target | `Model`, `Causal`, `Gradient`, `Adam`, `Sampler`, `Decision`, `Target`, `Division`, `DivisionTarget` |
+| The symmetries and the refutations | `Symmetry`, `AdamSymmetry`, `SymmetricLaw`, `Uncovered`, `Exchange`, `Refutation`, `RefutationModes`, `ReadoutSymmetry`, `Unlabelled`, `LabelCoverage`, `LabelWitness`, `LabelProbability`, `OrbitAnchors`, `RenameSymmetry`, `CarriedSplit`, `TwistedSplits`, `TwinSplit`, `TwinWitness`, `LabelNotSufficient` |
+| Measurability and the mean | `Continuity`, `Differentiability`, `TargetMean`, `GradientMeasurable`, `RunMeasurable`, `AccuracyMeasurable`, `DivisionMeasurable`, `ReadoutStationary`, `MeanAccuracy` |
+| The event and its bound | `EventualSuccess`, `ExplicitTolerance` |
+| The count of the splits | `SplitSlots`, `SplitCount`, `SplitProbability`, `LabelBound`, `Bonferroni`, `LabelEnclosure` |
+
+The other 29 modules of `Grokking/Protocol` are not reached, and no module of `FlatSpectrum`
+is:
+
+- No result about the weight-decayed factorization, its minima, their directions or flat
+  kernels enters the claim.
+- The certificate and the built parameters of bridge 5 do not enter (`MarginTransfer`,
+  `QuotientTransfer`, `QuotientWitness`, `DiscreteLog`, `NormScale`, the seven `Solver`
+  modules, `HeldOutCertificate`, `Enclosure`): the claim assumes no structure of the logits.
+- The ways of section 5 do not enter (`AdamStationary`, `ReadoutBound`, `ReadoutGradient`,
+  `ReadoutPairing`, `ReadoutWitness`, `DecayedLogits`, `LimitNotFitted`, `AdamLimit`,
+  `AdamLimitWitness`). Three modules named in that section are reached, and the script prints
+  what of them: of `ReadoutStationary` the definition `divisionRun` and nothing else, of
+  `TargetMean` one lemma on the derivative of a sum over a list, and of `Continuity` that the
+  decoder is continuous in its parameters. The last two serve measurability.
+- The bounds on the update (`AdamBounds`, `AdamBox`, `AdamGrowth`), `AdamSource`, `OffKinks`
+  and `Witness` do not enter. The refutation holds for the update `adamStep` as it is
+  defined; that this update is the code's is a separate theorem, `adamStep_eq_sourceStep`.
+
+**Axioms and unfinished statements.** Each of the 41 statements depends on `propext`,
+`Classical.choice` and `Quot.sound` only. For the whole library `scripts/Axioms.lean` reports
+36 `sorry`, no declaration that rests on one and no other axiom; no file of
+`Grokking/Protocol` has a `sorry`. The constants of the bound are checked by the kernel: that
+`4656 ⋯ 4561 / (9312 ⋯ 9217)` is between `7695/10³³` and `7696/10³³` is a comparison of
+natural numbers closed by `decide` (`descFactorial_ratio_bounds`), and the rest is arithmetic
+in the extended nonnegative reals.
+
+**Exact-real and native.**
+
+- **Exact-real, proved in Lean.** The claim, and around it: what the target says
   (`division_generalizes_iff`); that every parameter of a run, the held-out accuracy and the
-  event of a wrong held-out answer are measurable in the sample, so that the three modes can
-  be compared (bridge 2); that the target is false almost surely, in probability and in mean
-  without a condition on the split (section 2); that a structure of the logits gives
-  held-out accuracy 1 and that built parameters have it (bridge 5); what two rows that enclose
-  the logits decide (bridge 5); the probability that a split gives every held-out equation a
-  training equation in its orbit (bridge 5); that the target is false in the same three modes
-  under every condition on the split that admits a split with a residue that is the answer of
-  no training equation, and on the splits that label every residue (section 2); that the
-  runs that eventually answer every held-out equation form an event whose probability is at
-  most 1 less half the probability that the split is not labelled, and so at most
-  1 − 7.46 · 10⁻²⁸/2 (section 2); that a split leaves a given residue unlabelled with the
-  probability ∏_{j<96} (4656 − j)/(9312 − j), between 7.695 · 10⁻³⁰ and 7.696 · 10⁻³⁰, and
-  fails to label every residue with a probability between 7.46 · 10⁻²⁸ and 7.47 · 10⁻²⁸
-  (section 2); that the gradient of
-  the backward pass is a derivative,
-  and the gradient of the loss where no hidden input is 0 (bridge 3); and the exclusions of
-  section 5. None of these says that a trained decoder generalizes.
+  event of a wrong held-out answer are measurable in the sample (bridge 2); a structure of
+  the logits that gives held-out accuracy 1, which built parameters have, and what two rows
+  that enclose the logits decide (bridge 5); the probabilities that a split leaves a residue
+  unlabelled, is labelled and is anchored (section 2, bridge 5); that the gradient of the
+  backward pass is a derivative, and the gradient of the loss where no hidden input is 0
+  (bridge 3); and the exclusions of section 5. None of these says that a trained decoder
+  generalizes.
 - **Finite-horizon, native.** Nine runs in `f32` (three settings, seeds 0 to 2) and their 117
   retained checkpoints. At a checkpoint the parameters are reals exactly, and the logits of
   the exact-real decoder there are enclosed by a computation outside Lean; this decides the
   answers of that decoder at those parameters and nothing after the last checkpoint. The
-  `f32` trajectory is not related to the exact-real trajectory by any statement (bridge 1), so
-  no theorem of section 5 is a statement about an executed run, and no run is an instance of
-  the target. The three splits of the runs label every residue
-  (`run_splits_label_every_residue` in `experiments/grok_division/src/tests.rs`): they meet
-  the necessary condition of section 2, which a uniformly random split fails with a
-  probability of about `7.5 · 10⁻²⁸`. Nothing positive follows for them: the condition is not
-  sufficient.
+  `f32` trajectory is not related to the exact-real trajectory by any statement (bridge 1,
+  #182), so no theorem of this note is a statement about an executed run, and no run is an
+  instance of the target or of its refutation. The three splits of the runs label every
+  residue (`run_splits_label_every_residue` in `experiments/grok_division/src/tests.rs`):
+  they meet the necessary condition of section 2, which a uniformly random split fails with
+  a probability of about `7.5 · 10⁻²⁸`. Nothing positive follows for them: the condition is
+  not sufficient.
+- **The failed cases, kept.** Under AdamW five of the six runs have evaluations with every
+  held-out answer right and the sixth has 0.9981 at best; none of the six keeps 99% through
+  its last window. Under Adam no evaluation of the three runs has every held-out answer right
+  within `10⁶` updates; the best has 4 wrong answers of 4656. The certificate of bridge 5
+  holds at five checkpoints of two AdamW runs and is lost again in both. Whether the loss of
+  accuracy under AdamW is the recipe's or this transcription's is not known: the trainer was
+  not compared with a PyTorch run.
 - **Not addressed.** Every other curve and claim of the paper; the time at which accuracy
-  rises; whether the certificate is kept. The trainer was not compared with a PyTorch run.
+  rises; whether the certificate is kept.
+
+**Open.** #189: a positive statement, under a condition on the split or with a stated
+probability. It is an open research problem, and nothing here is evidence for it or against
+it. #182: a relation between the `f32` trajectory and the exact-real one (bridge 1). #181:
+whether the exact-real run avoids the parameters at which a hidden input is 0 (bridge 3); the
+claim does not wait for it, because it is about the update with the source's rule at such
+parameters. #187: the probabilities of an uncovered split and of a labelled twin split,
+roughly `2⁻⁵⁹⁴` and `2⁻⁵⁹²`, are counts outside Lean; the claim does not use them.
