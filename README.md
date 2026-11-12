@@ -1,11 +1,12 @@
 # Transformer
 
-This project has three goals:
+This project has four goals:
 
+0. Prove end-to-end convergence to generalization for the simple
+   **Rotate90 `complex-product-plain` model**.
 1. Prove end-to-end convergence to generalization for the training process
    studied in **Grokking: Generalization Beyond Overfitting on Small Algorithmic
-   Datasets** (Power et al., [arXiv:2201.02177](https://arxiv.org/abs/2201.02177))
-   and for the simpler **Rotate90 `complex-product-plain` model**.
+   Datasets** (Power et al., [arXiv:2201.02177](https://arxiv.org/abs/2201.02177)).
 2. Build a **convex model that passes the GPT stress tests**, retaining their
    original inputs, splits, answer losses and evaluation criteria.
 3. Develop **forward-only training without backpropagation**, learning from
@@ -13,7 +14,7 @@ This project has three goals:
    training cost.
 
 Lean proofs live in [src/](src/Transformer.lean); native Rust/Kernite
-experiments live in [experiments/](experiments/README.md). All three goals remain
+experiments live in [experiments/](experiments/README.md). All four goals remain
 unfinished. The status below is as of **2026-11-12**.
 
 Readiness percentages are rough assessments of project progress, not proof
@@ -23,7 +24,7 @@ below; the remaining milestones are not equally difficult.
 ## Proved foundation: spectrum, recovery and classification
 
 [Flat spectrum](review/flat_spectrum.md) contains substantial proved foundations
-for all three goals. Its results determine which recovery objectives can work,
+for all four goals. Its results determine which recovery objectives can work,
 which representations admit recovery, and what additional assumptions are
 needed. The next steps build on these results.
 
@@ -49,6 +50,27 @@ They do not establish a general impossibility of classification, convex
 learning or transformer convergence. The positive recovery and margin results
 already provide endpoints to which a training theorem can connect.
 
+## Goal 0: end-to-end convergence of complex-product-plain
+
+Prove end-to-end convergence of **Rotate90 `complex-product-plain`**
+(`Arm::Plain`). This single-block model combines
+shared embeddings with a fixed quarter-turn, a plain complex product, RMS
+normalization and a tied readout. Its
+[compact Rust forward pass](experiments/flat_approx/fixtures/reference.rs) and
+[formal model](src/Transformer/Rotate90/ComplexProduct.lean) identify the model
+to study. The goal is to prove that its actual AdamW training eventually
+attains and retains correct held-out predictions, under explicit assumptions
+on the task, split, initialization and optimizer. This convergence claim
+remains open.
+
+The [frozen cubic checkpoint evaluations](experiments/flat_approx/README.md)
+record 99.66% and 99.68% held-out accuracy for seeds 7 and 11 on
+`(a+b)^3 mod 97` at the saved final checkpoints. Conditional correctness
+theorems connect feature and score bounds to correct decisions. The remaining
+work is to prove that the actual AdamW updates establish and preserve the
+required conditions, and to connect the exact-real analysis to floating-point
+execution. Finite checkpoint accuracy does not establish this convergence.
+
 ## Goal 1: end-to-end grokking convergence
 
 **Estimated readiness: 30%.** Spectral recovery, the protocol and conditional
@@ -59,17 +81,6 @@ The first target is division modulo 97 from the grokking paper: train on half
 of the equation table and prove that held-out accuracy reaches and stays at
 100%, under explicit assumptions on the split, initialization and optimizer.
 The theorem must connect the actual training trajectory to these predictions.
-
-An additional concrete target is **end-to-end convergence of Rotate90
-`complex-product-plain`** (`Arm::Plain`). This single-block model combines
-shared embeddings with a fixed quarter-turn, a plain complex product, RMS
-normalization and a tied readout. Its
-[compact Rust forward pass](experiments/flat_approx/fixtures/reference.rs) and
-[formal model](src/Transformer/Rotate90/ComplexProduct.lean) identify the model
-to study. The goal is to prove that its actual AdamW training eventually
-attains and retains correct held-out predictions, under explicit assumptions
-on the task, split, initialization and optimizer. This convergence claim
-remains open.
 
 ### Ready
 
@@ -95,14 +106,11 @@ remains open.
   separately covers zero numerators as part of all 9,312 equations.
 - **Finite training evidence is available.** The native
   [division experiment](experiments/grok_division/README.md) records training
-  runs, checkpoint checks and later losses of accuracy. For
-  `complex-product-plain`, [frozen cubic checkpoint evaluations](experiments/flat_approx/README.md)
-  record 99.66% and 99.68% held-out accuracy for seeds 7 and 11 on
-  `(a+b)^3 mod 97` at the saved final checkpoints.
+  runs, checkpoint checks and later losses of accuracy.
 
 ### Not ready
 
-- **A positive end-to-end theorem.** We have no proof that either training process
+- **A positive end-to-end theorem.** We have no proof that this training process
   eventually generalizes permanently, or even a positive lower bound on the
   probability of that event. A valid split condition or a quantitative success
   guarantee still has to be established.
