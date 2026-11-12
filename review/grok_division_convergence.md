@@ -3,7 +3,7 @@
 Board tasks #126–#132 and #137. Sources: `papers/arXiv-2201.02177v1/main.tex` (Power et al.),
 Figure 1 and the appendix *Additional experimental details*; openai/grok at `3d64b1d8`; the
 protocol pinned in `experiments/grok_division/PROTOCOL.md`. Written 2026-11-11; sections 5
-and 6 and the enclosures of bridge 5 added 2026-11-12.
+and 6, the second half of section 2 and the enclosures of bridge 5 added 2026-11-12.
 
 The paper shows curves of finite runs. It states no theorem, and nothing below proves that
 training makes any transformer generalize. This note fixes what such a theorem would say,
@@ -39,6 +39,7 @@ than trained, and names the bridges that are missing.
 | The target for the division protocol, and what it means | `division_generalizes_iff`, `division_generalizes_source_iff` |
 | What is proved about its trajectory | `abs_trajectory_division_sub_le`, `abs_trajectory_division_le`, `division_eventually_margin_lt`, `ae_abs_logits_divisionRun_le`, `ae_floor_le_batchLoss_divisionRun`, `ae_margin_divisionRun_le` (section 5) |
 | The target is false without a condition on the split (section 2) | `not_division_generalizes`, `not_division_tendsToOneInProbability` |
+| The target is false under every condition that admits a split with a residue that is the answer of no training equation (section 2) | `outPerm`, `sourceGrad_comp_outPerm`, `unlabelled`, `trajectory_relabel`, `uniformPerm_unlabelled_le`, `labelled`, `not_ae_eventually_of_not_mem_labelled`, `not_ae_eventually_anchored_occurring` |
 
 For division the arguments are fixed in `division_generalizes_iff`: the decoder of
 `paperSizes`, the logits after `=`, the source's loss on the answer and the closing token, the
@@ -87,10 +88,36 @@ parameters are those of the second (`answerLogits_exchange`). They cannot both b
 | The held-out accuracy does not tend to 1 in probability either | `not_division_tendsToOneInProbability` |
 
 This does not say that grokking fails. It says that "for almost every run" is too much: a
-true theorem needs a condition on the split, or a probability below 1. The argument works for
-any two residues, so the condition must at least forbid that two residues are both absent
-from the training set. Whether "every residue occurs in training" suffices is open; so is
-every positive statement.
+true theorem needs a condition on the split, or a probability below 1.
+
+**A smaller defect of the split is enough.**
+`Protocol/{ReadoutSymmetry,Unlabelled,LabelCoverage,LabelWitness}.lean`. Call a split
+*labelled* when every residue is the quotient of a training equation. If the residue `r` is
+not, all 96 equations with the answer `r` are held out, and the token of `r` is the target of
+no training example, like the 141 tokens that are no residue and not `<|eos|>`; it may still
+be read, as a numerator or a denominator. The readout is not tied to the embedding.
+Exchanging the readout rows of the token of `r` and of a token that division never shows
+(`relabel`), and nothing else, commutes with every gradient of the run, because the
+cross-entropy does not see a renaming of two classes neither of which is the target
+(`sourceGrad_comp_outPerm`, `divisionGrad_comp_relabel`); so it commutes with the Adam or
+AdamW run (`trajectory_relabel`) and preserves the law of a sample
+(`measurePreserving_relabelSample`). The run reads the held-out equation `r / 1 = r` in the
+same way from both starts and its logits of the two tokens are exchanged
+(`answerLogits_relabel`), so it is not answered from both (`not_both_predicted_relabel`).
+
+| Statement | Declaration |
+| --- | --- |
+| At every update, P(some held-out answer is wrong) ≥ ½ P(the split leaves `r` unlabelled) > 0, for each residue `r` | `uniformPerm_unlabelled_le`, `uniformPerm_unlabelled_pos` |
+| The target is false under every condition on the split that admits a split that is not labelled; so a condition under which it holds admits labelled splits only | `not_ae_eventually_of_not_mem_labelled` |
+| To be labelled is neither sure nor impossible | `uniformPerm_compl_labelled_pos`, `uniformPerm_labelled_pos` |
+| A labelled split is anchored (bridge 5); an uncovered split is not labelled | `labelled_subset_anchored`, `uncovered_subset_unlabelled` |
+| The split that trains on the first 4656 equations of the list is anchored and shows every residue in training, and it leaves the residue 96 unlabelled; so the target is false under the condition "anchored, and every residue occurs in training" | `one_mem_anchored`, `one_mem_occurring`, `one_mem_unlabelled`, `not_ae_eventually_anchored_occurring` |
+
+A given residue is unlabelled with the probability `∏_{j<96} (4656 − j)/(9312 − j)`, about
+`7.7 · 10⁻³⁰` by a count outside Lean, against roughly `2⁻⁵⁹⁴` for an uncovered split. Whether
+"every residue occurs in training" suffices has the answer no: a residue has to occur as an
+answer. Whether the target holds on the labelled splits is open; so is every positive
+statement.
 
 ## 3. What the repository proves, and about what
 
@@ -175,7 +202,9 @@ Two substitutions are therefore excluded, and no statement here makes them:
    accuracy under AdamW is the recipe's or this transcription's is not known: the trainer was
    not compared with a PyTorch run.
 7. **Composition** (#131): 5 and 6 along one trajectory, for all later updates, for a target
-   with a condition on the split; the unconditional one is refuted in section 2.
+   with a condition on the split; the unconditional one is refuted in section 2, and so is
+   the target under every condition that admits a split that is not labelled
+   (`not_ae_eventually_of_not_mem_labelled`).
 
 Bridges 4, 6 and 7 are open research problems. The measurements of
 `experiments/grok_division` are finite runs in `f32` and close none of them.
@@ -207,7 +236,9 @@ of the present state finds this:
   (`division_generalizes_iff`); that the almost sure target and the target in probability are
   false without a condition on the split (section 2); that a structure of the logits gives
   held-out accuracy 1 and that built parameters have it (bridge 5); what two rows that enclose
-  the logits decide (bridge 5); and the two exclusions of section 5. None of these says that
+  the logits decide (bridge 5); that the target is false under every condition on the split
+  that admits a split with a residue that is the answer of no training equation (section 2);
+  and the two exclusions of section 5. None of these says that
   a trained decoder generalizes.
 - **Finite-horizon, native.** Nine runs in `f32` (three settings, seeds 0 to 2) and their 117
   retained checkpoints. At a checkpoint the parameters are reals exactly, and the logits of

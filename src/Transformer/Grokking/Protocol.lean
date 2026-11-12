@@ -45,6 +45,10 @@ public import Transformer.Grokking.Protocol.AdamStationary
 public import Transformer.Grokking.Protocol.ReadoutStationary
 public import Transformer.Grokking.Protocol.ReadoutWitness
 public import Transformer.Grokking.Protocol.DecayedLogits
+public import Transformer.Grokking.Protocol.ReadoutSymmetry
+public import Transformer.Grokking.Protocol.Unlabelled
+public import Transformer.Grokking.Protocol.LabelCoverage
+public import Transformer.Grokking.Protocol.LabelWitness
 
 /-! The protocol behind the division curves of Power et al., *Grokking: generalization beyond
 overfitting on small algorithmic datasets*, and what "held-out accuracy tends to 1" means for
@@ -78,7 +82,12 @@ proving a convergence that the runs themselves exclude: by the gradient of the r
 closed form and its pairing with the readout, a run of Adam without weight decay whose
 parameters converge does not keep its batches fitted with a margin, and by the box of AdamW,
 for almost every run with weight decay 1 the logits stay bounded, the loss of a batch stays
-above a positive floor and no margin grows without bound. The target is a
+above a positive floor and no margin grows without bound; and a condition on the split that
+every true form of the target needs: a residue that is the answer of no training equation has
+a token that is no training target, exchanging its readout row with that of a token that
+division never shows is then a symmetry of the run, and so the target is false under every
+condition that admits a split with such a residue, the condition that the split has an anchor
+for each orbit and shows every residue among them. The target is a
 predicate of the model, its labels and its gradient oracle: no convergence of any transformer
 is proved here, and no trained decoder is proved to have that structure, for an enclosure of
 its logits is a hypothesis here. The map of what is proved elsewhere and what is missing is
