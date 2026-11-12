@@ -24,6 +24,8 @@ from unconstrained minimization.
 | `check` | Exact integer checks of the rectangle, independent closure of Lean `Pinned`, and agreement at every reached training observation |
 | `discover` | Bounded categorical proposals, sign choices and phase propagation, followed by the independent checker; selection by covered-cell count alone |
 | `Verified::anchor` | A symmetric phase table at radius and nuclear budget `N`, with the certified decoded rows; it need not fit unreached training observations |
+| `Solver` | The certified equalities in every row projection, with full-batch CE, persistent minibatch gradients, or derivative-free observed-fiber projections |
+| `EndpointBuilder` | A checked spectral endpoint on the segment from the phase anchor to the projected iterate, preserving every certified row |
 
 The input side, latent orbit count and full output vocabulary remain separate.
 The decoder must assign distinct class names to different latent orbits;
@@ -48,7 +50,7 @@ a completeness or running-time theorem for native propagation.
 
 ## Findings
 
-Ten native tests pass. They reproduce the folded held-out witness, the paired
+Fifteen native tests pass. They reproduce the folded held-out witness, the paired
 three-cell ambiguity, and CM18's wrong global minimum. The latter satisfies
 the original numerical spectral budgets and has the same observed CE as the
 correct anchor, while assigning `2/3` of decoded mass to the wrong unseen label.
@@ -63,12 +65,28 @@ compatible phase completion for all 243 gauge-normalized three-state,
 three-by-three phase assignments and each of their nine single-cell holdouts.
 Malformed dimensions are refused before arithmetic or allocation can overflow.
 
+All three modes exclude the wrong global minimum throughout the fixture updates.
+On a partial certificate covering nine of sixteen cells, they also learn an
+uncovered training cell that the phase anchor initially gets wrong. Endpoint
+repair retains the certified rows, and an independent direct complex Fourier
+sum checks the actual returned table's bounds. Complete solver states roundtrip
+and replay identically in every mode; malformed batches and mismatched instance
+states are refused without changing the solver.
+
+The parent solver's uniform mixture can erase certified rows. The new endpoint
+uses a checked phase anchor and at most 40 bisection rounds, auditing each returned
+candidate after interpolation. A positive iterate weight is not guaranteed.
+Certified rows are preserved exactly in this unique-orbit decoder. With partial
+coverage, the anchor can disagree with uncovered training observations, so a
+forward-only endpoint need not retain those additional observed-fiber constraints
+at finite precision or finite iterations. Its measured training defect and CE
+must be reported; they are not assumed to vanish. Forward-only performs no
+gradient evaluations. Full/mini use the unchanged full-vocabulary CE, and mini
+uses a persistent gradient table rather than an unbiased stochastic gradient.
+
 No original-task proposal, training, held-out evaluation or stress success is
-reported by these fixture checks. Solver integration and the frozen original
-follow-up remain work under board task #201. In particular the parent solver's
-uniform feasibility mixture is not a valid repair here: it can erase the
-certified equalities. A feasible endpoint must preserve them as well as the
-spectral constraints. The frozen parent source and running cohorts are unchanged.
+reported by these fixture checks. The frozen original follow-up remains work
+under board task #201. The frozen parent source and running cohorts are unchanged.
 
 ## Reproduction and resources
 

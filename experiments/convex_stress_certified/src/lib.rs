@@ -11,6 +11,8 @@ use serde::{Deserialize, Serialize};
 
 pub mod certificate;
 pub mod discovery;
+pub mod endpoint;
+pub mod solver;
 pub mod training;
 
 pub use certificate::{Certificate, Verified, check};
@@ -56,5 +58,7 @@ pub struct Observation {
     pub label: usize,
 }
 
+#[cfg(test)]
+mod solver_tests;
 #[cfg(test)]
 mod tests;
