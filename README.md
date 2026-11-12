@@ -13,12 +13,42 @@ experiments live in [experiments/](experiments/README.md). Both goals remain
 unfinished. The status below is as of **2026-11-12**.
 
 Readiness percentages are rough assessments of project progress, not proof
-coverage or benchmark pass rates.
+coverage or benchmark pass rates. They include the proved spectral foundation
+below; the remaining milestones are not equally difficult.
+
+## Proved foundation: spectrum, recovery and classification
+
+[Flat spectrum](review/flat_spectrum.md) contains substantial proved foundations
+for both goals. Its results determine which recovery objectives can work,
+which representations admit recovery, and what additional assumptions are
+needed. The next steps build on these results.
+
+The spectrum belongs to a task kernel `K(a,b) = phi(f(a,b))`, so the output
+readout `phi` matters. The same task can have a flat kernel in one readout and
+a rank-one kernel in another. The arithmetic statements below use a prime
+modulus `p`.
+
+| Result already proved | What it supplies |
+| --- | --- |
+| **Theorem A and the flat-kernel extension** | A flat kernel with no zero entries cannot be recovered by minimum-nuclear-norm interpolation from any proper subset of its entries. This rules out that recovery objective for that kernel. |
+| **Theorem B** | For `f(a,b) = a^3 + ab` under uniform inputs, every unit-norm function of the answer has only `O(p^(-1/2))` correlation with the specified nonconstant additive characters of the intermediate `ab`. This bounds a particular learning signal. |
+| **Theorem C** | For `f(a,b) = P(a) + ab`, bounds on the centered operator norm hold for every output readout, with degree-dependent bounds for nonlinear `P`. This extends the analysis beyond a single chosen character. |
+| **Theorem E** | A square unit-modulus rank-one kernel is uniquely recovered by minimum-nuclear-norm interpolation exactly when the observation graph is connected and contains a perfect matching. This is a positive recovery criterion. |
+| **Feature codes and margins** | A separating bank of recovered features gives correct classification with a positive margin; sufficiently small score errors preserve it. Multiplicative characters give rank-one features for division on nonzero residues. |
+| **Convex spectral bounds (SB1–SB3)** | Operator-norm upper bounds admit flat targets while preserving convexity. They provably recover one flat two-by-two example; a separate ambiguity example proves that the bound alone cannot guarantee unseen answers in general. |
+| **Pure-factorization training** | For convex analytic losses bounded below, gradient descent with a positive coupled quadratic penalty converges to a global minimum under the stated step-size, width and initialization hypotheses. WD13 proves why this result cannot be transferred to AdamW in general. |
+
+These theorems address different parts of learning. Theorem A concerns exact
+kernel recovery; Theorems B and C bound specified correlations and operators.
+They do not establish a general impossibility of classification, convex
+learning or transformer convergence. The positive recovery and margin results
+already provide endpoints to which a training theorem can connect.
 
 ## Goal 1: end-to-end grokking convergence
 
-**Estimated readiness: 30%.** The protocol and conditional correctness results
-are in place; the central positive convergence argument remains open.
+**Estimated readiness: 30%.** Spectral recovery, the protocol and conditional
+correctness results are in place; the central positive convergence argument
+for the actual training process remains open.
 
 The first target is division modulo 97 from the grokking paper: train on half
 of the equation table and prove that held-out accuracy reaches and stays at
@@ -42,12 +72,14 @@ The theorem must connect the actual training trajectory to these predictions.
   to appear as a training answer is still insufficient. Split symmetries give
   explicit obstructions and upper bounds on the probability of eventual
   perfect generalization.
-- **Supporting theory and experiments exist.** The
-  [flat-spectrum development](review/flat_spectrum.md) proves kernel-recovery
-  criteria and convergence results for pure matrix factorization under its
-  stated optimizer assumptions. The native
-  [division experiment](experiments/grok_division/README.md) records finite
-  training runs, checkpoint checks and later losses of accuracy.
+- **A concrete spectral route for division is proved.** Theorem E recovers
+  its multiplicative-character features on nonzero residues under the graph
+  conditions above. The feature-code results turn recovery of a separating
+  bank into correct answers with a margin. The actual-decoder construction
+  separately covers zero numerators as part of all 9,312 equations.
+- **Finite training evidence is available.** The native
+  [division experiment](experiments/grok_division/README.md) records training
+  runs, checkpoint checks and later losses of accuracy.
 
 ### Not ready
 
@@ -62,6 +94,13 @@ The theorem must connect the actual training trajectory to these predictions.
 - **The complete execution bridge.** The exact-real training trajectory is
   not connected to the full floating-point run. Long-run behavior at ReLU
   kinks and the corresponding numerical guarantees remain open.
+
+The next proof step is to connect the actual updates to sufficient learned
+score structure, using the existing division features and correctness
+certificates, and then prove that structure persists. Correct score ordering
+can suffice; recovering every entry of a chosen kernel is a stronger demand.
+The pure-factorization convergence theorem does not supply this Adam/AdamW
+argument.
 
 The [convergence review](review/grok_division_convergence.md) gives the precise
 target, proved refutations, missing steps and audit commands. The paper reports
@@ -86,6 +125,14 @@ subset**: 25 short and 10 long tasks, judged by their original held-out metrics.
   generated-output channels, coupled complex moments with spectral bounds,
   and recovery under explicit structure and observation conditions. It also
   proves examples where a global training optimum gives a wrong unseen answer.
+- **The spectral recovery theorems are already reused.** CM13 directly applies
+  Theorem E: when the true table has the specified separating rank-one code
+  bank, a connected observation graph with a perfect matching and nuclear
+  budgets identify the complete probability table at ideal observed CE. The
+  [Lean proof](src/Transformer/Grokking/FlatSpectrum/CoupledMoments/Schatten/GraphRecovery.lean)
+  explicitly invokes the existing recovery theorem. CM18 adds conditional
+  certificates for decoded answers; their linear answer constraints preserve
+  convexity even when the spectral relaxation alone admits a wrong optimum.
 - **A common causal probability interface is formalized.** The
   [full-catalog theory](review/convex_causal.md) supports calibrated ordinary
   CE, stochastic outputs, bounded-context interactions and free generation
@@ -132,11 +179,19 @@ These are separate empirical results:
   replay of every outcome and the remaining matched transformer comparisons
   are part of the unfinished benchmark work.
 
+The next model step is to apply these existing recovery results to the
+original tasks: establish their structural assumptions, audit observation
+coverage, and use the resulting certificates in the learner. Flat targets
+need constraints that admit their spectral shape. Claiming universal recovery
+by minimum-nuclear-norm interpolation would contradict Theorem A. Capacity,
+identification of unseen answers and solver convergence each need their own
+check before a benchmark pass can be claimed.
+
 The [experiment plan](EXPERIMENT_PLAN.md) records the frozen cohorts and next
 steps. Each experiment README records its own protocol, results and limits.
 
-The catalog is copied unchanged from
-`/home/misha/python_projects/diff-gpt/stress_tests_for_gpt.md` at source commit
+The catalog is copied unchanged from `stress_tests_for_gpt.md` in the
+`diff-gpt` repository at source commit
 `5a37c515639f23037d191b0659a5a0853984328d`.
 Its SHA-256 is
 `d358edc9f3c9104f4a19f4ccbbd35f8547a745cf47cf611b23bbf7f032ca143f`.
