@@ -1,5 +1,16 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Coupled complex moments (2026-11-12)
+
+The single-phase spectral pilot fitted observed division/multiplication phases
+with full-batch residuals near 3e-13 yet failed on unseen labels. CM1–CM4 now
+proves convexity, consistent shared class codes, an observed CE lower bound and
+uniform-mixture feasibility. The [coupled-moments protocol](experiments/convex_stress_moments/protocol.json)
+fixes 18 cells: three original pair tasks, two radii and full-batch, minibatch
+and forward-only arms. Native checks precede stress training. Keep all failures
+and numerical defects, and replay outputs and diagnostic state. This pilot
+does not replace the 35-task objective or claim a matched transformer result.
+
 ## Convex stress repair after formal failure witnesses (2026-11-11)
 
 Continuation on 2026-11-12: the shared pilot repairs both recall tasks and, at

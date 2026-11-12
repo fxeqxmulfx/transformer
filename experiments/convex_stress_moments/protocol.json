@@ -1,0 +1,18 @@
+{
+  "version": "coupled-moments-v1",
+  "tasks": ["arithmetic-div", "arithmetic-mul", "arithmetic-add"],
+  "arms": ["full_batch", "minibatch", "forward_only"],
+  "radii": ["sqrt", "vocab"],
+  "seed": 0,
+  "full_updates": 512,
+  "minibatch_updates": 2048,
+  "forward_updates": 512,
+  "logit_scale": 1,
+  "ideal_ce_tolerance": 1e-8,
+  "frequency_workers": 8,
+  "model": "One probability vector for each pair of last-two-token IDs. Every nonzero Fourier class moment M_f[i,j]=sum_c P[i,j,c]*exp(2*pi*i*f*c/V) has operator norm <= R. Logits are P at scale one, with ordinary full-vocabulary CE. No task operator, inverse, target rule or task name enters the model. Previous context is ignored in this pair-table pilot.",
+  "solver": "Full: x=P_simplex(z), y=P_moment_ball(2x-z-gradient_sum_CE(x)), z+=y-x; step 1. Mini: same split, refreshing only the original shuffled minibatch's per-observation gradients in a retained aggregate. This is incremental aggregated gradient, not unbiased SGD; all tails included. Forward: A additionally fixes observed vectors to one-hot labels, x=P_A(z), y=P_moment_ball(2x-z), z+=y-x, without analytic derivatives or backprop; observations are ingested once and their retained one-hot constraints are reused. Forward feasibility of an exact fit certifies a global minimum of the same CE. No finite-step convergence theorem is asserted.",
+  "projection": "Simplex sorting and all-frequency complex SVD clipping under a positive-sign FFT; negative frequencies are conjugates, DC unconstrained. Save and evaluate the simplex shadow after a common mixture with uniform mass, alpha=min(1,R*(1-2e-12)/max_f ||M_f||op), using alpha=1 below the safety bound. Report alpha, every moment norm and actual CE excess. Residuals are splitting defects, not dual gaps.",
+  "evaluation": "Frozen original inputs, split hashes, complete-split metrics and cadence (19 or the shorter original epoch). Include update zero and endpoint. Stop only at the cap or at a scheduled positive-update observation where feasible mean train CE minus log(exp(1)+V-1)+1 is <=1e-8. Never stop on held-out accuracy. Retain first >=99% crossing, every failure, fitting defects, presented examples and saved-state replay.",
+  "interpretation": "18 prospective cells on three earlier pair failures, not all 35 tasks or a matched transformer comparison. Radii are fixed before stress training without inspecting held-out labels. Lean CM1-CM4 proves convexity, shared-code consistency, complete Fourier information, CE lower-bound/exact-fit certificates and uniform-mixture algebra; not unseen modular recovery. Native CPU FFTW3 and LAPACK/OpenBLAS use one BLAS thread and eight independent frequency workers. A synthetic projection timing preceded the choice of diagnostic caps."
+}
