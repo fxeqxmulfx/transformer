@@ -25,6 +25,15 @@ scale-1 minibatch associative failure improves from 53.866% at update 512 to
 reduces the observed update count for short scale-10 and long scale-1 recall.
 Ordinary division remains at 0.9450%; the full-suite objective remains open.
 
+The adaptive all-task cohort is now complete: all 210 outcomes replay,
+including 12 explicit forward-only failures. At scales 1 / 10, full batch passes
+6 / 7 of 35 primary tasks, minibatches 5 / 7, and forward-only 6 / 6. No old
+primary pass is lost; Boolean OOD failures remain. The independent uncentered
+saved-model auditor agrees with the reported gaps within `3.5e-13` on three
+failed full-batch endpoints and the completed associative minibatch endpoint.
+Best observed all-task performance is 7/35; no full pass or universal recovery
+of missing labels has been established. All frozen cohorts remain distinct.
+
 Task #160 follows the user's instruction to prove the failure first and repair
 full-batch failures too. The Lean statements in `ConvexChannel/Minibatch/` and
 `ConvexChannel/Shared.lean` are landed before native experiments: singleton

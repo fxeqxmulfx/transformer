@@ -70,5 +70,80 @@ Generated evidence and frozen binaries remain ignored in root `runs/` and
 
 ## Findings
 
-The adaptive stress cohort has not yet completed. A full stress-suite pass is
-not established. The earlier shared-only pilot remains separate and unchanged.
+All 210 planned cells complete and replay at source `f7108742`, fingerprint
+`5a35847751311093af3259b7070362d60304cafedfb0241e9fbf2b82c311c3c2`.
+There are 198 saved models, 12 explicit forward-only fit failures, and no
+execution or replay errors. Primary passes mean at least 99% exact accuracy on
+the original primary split; all-split passes additionally require that threshold
+on every reported nonempty split, including training and OOD splits.
+
+| Mode | Primary passes, scale 1 / 10 | All-split passes, scale 1 / 10 |
+| --- | --- | --- |
+| Full batch | 6/35 / 7/35 | 5/35 / 6/35 |
+| Minibatch | 5/35 / 7/35 | 3/35 / 5/35 |
+| Forward only | 6/35 / 6/35 | 5/35 / 5/35 |
+
+The old full-budget convex baselines passed 3/35 tasks per arm and seed. Both
+scales of full batch and forward-only now pass the two AND tasks, both recall
+tasks, linear transport and associative-divisor retrieval. Scale-10 full batch
+and minibatches additionally pass branch generation. Scale-1 minibatches miss
+associative retrieval, scoring 53.866% despite 100% training accuracy; the
+separate [completion follow-up](../convex_stress_completion) repairs this case.
+No old primary pass is lost. The budgets and fixed scales differ, so these are
+paired accuracy diagnostics, not matched training-cost comparisons.
+
+Full-batch short recall improves from 86.13% to 100%; long recall from 50% to
+100%; associative retrieval from 53.87% to 100%. Each reaches the primary
+threshold after one update at either scale. At scale 10, branch generation
+reaches 100% training and primary exact sequences at full-batch update 11 or
+minibatch update 32, with fresh gaps still 0.8883 / 0.9335. These prediction
+passes are not claims of empirical convergence. All recorded endpoints and
+gaps, including failures, are retained in `runs/pilot-v1/summary.json`.
+
+Ordinary division remains at 0.9450% held-out accuracy, and Fibonacci recurrence
+at 1.1267%, despite 100% training accuracy and near-zero full-batch gaps at both
+scales. Missing labels remain unidentified. Parity-16 at scale 1 has 55.995%
+training and 54.14% primary accuracy with a near-zero empirical gap: the bounded
+CE model/objective itself needs revision. Scale-10 parity and depth cases retain
+nonzero gaps at the cap, so these runs do not establish their best attainable
+accuracy. The final scale-10 depth-hard run scores 17.19% with gap 0.1530.
+
+Restoring capacity fixes the shared-only Boolean training regression: training
+and the primary split are now both 100%. Position-shift OOD failures remain.
+For example, full-batch AND-shift scores 52/64 (81.25%) on `test/position_shift`.
+The saved query-18 vertex selects aligned key 71, the completed successor of
+the zero token. Early-zero training data make that slot consistent; a late zero
+can instead be followed by the delimiter, an unobserved decoder value. This is
+a remaining ambiguity between rules that agree on training, not a full Boolean
+rule guarantee. The ten earlier forward controls in the completion cohorts are
+kept separate from these 70 forward cells.
+
+The best tested all-task configuration therefore passes **7/35 primary tasks**,
+not the full suite. Further representation and identification work is required.
+Flat spectrum and balancedness remain capacity statements. The latest WD16
+classification concerns squared loss on a fully observed identity; it does not
+identify the missing CE labels in these stress tasks.
+
+## Independent saved-model CE audit
+
+`src/bin/audit_saved.rs` reconstructs ordinary uncentered full-vocabulary
+gradients and an exhaustive query/key/value/class oracle directly from saved
+predictions and frozen training data. It does not reuse the optimizer's sparse
+background subtraction, stored gradients or oracle. On the scale-1 full-batch
+division, parity-16 and recurrence endpoints, and the completed associative
+minibatch endpoint, its gap differs from the reported value by less than
+`3.5e-13`, and its CE by less than `3.6e-15`. The three failed full-batch cases
+have numerical gaps within `4.5e-13` of zero. This is independent f64 validation,
+not an interval-arithmetic proof about the executable.
+
+```sh
+jq --slurpfile full experiments/convex_stress/runs/stress-v1/summary.json \
+  --slurpfile mini experiments/convex_stress_minibatch/runs/minibatch-v1/partial_comparison.json \
+  -f experiments/convex_stress_adaptive/compare.jq \
+  experiments/convex_stress_adaptive/runs/pilot-v1/summary.json
+cargo run --offline --release --bin audit_saved --manifest-path experiments/convex_stress_adaptive/Cargo.toml -- \
+  experiments/convex_stress_adaptive/runs/pilot-v1/scale1/full_batch/arithmetic-div/seed0 \
+  experiments/convex_stress_adaptive/runs/pilot-v1/scale1/full_batch/basis-parity16/seed0 \
+  experiments/convex_stress_adaptive/runs/pilot-v1/scale1/full_batch/recurrence-fibonacci-k1-c2-lgt/seed0 \
+  experiments/convex_stress_completion/runs/associative-v1/scale1/minibatch/associative-divisor-n2-l1-w0/seed0
+```
