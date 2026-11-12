@@ -361,6 +361,50 @@ fn fast_model_matches_reference_at_the_papers_sizes() {
     fast_against_reference(Dims::PAPER, 5, 2, 5e-5);
 }
 
+/// The activation at its kink, where the source's ReLU has derivative 0. With the first map of
+/// every feed-forward network zero, every hidden value is exactly 0. The loss has a kink there:
+/// its slope in an entry of that map, taken from one side, is not zero. Both models give exactly
+/// zero for the gradient in that map, as PyTorch does, and not the slope of either side.
+#[test]
+fn hidden_units_at_zero_pass_no_gradient() {
+    let (dims, sup) = (SMALL, vec![4, 5]);
+    let maps: Vec<std::ops::Range<usize>> =
+        (0..dims.layers).map(|l| dims.block(l).w1..dims.block(l).w1 + dims.d * dims.dff).collect();
+    let mut p32: Vec<f32> = random_params(dims, 41, 0.3).iter().map(|&v| v as f32).collect();
+    for map in &maps {
+        p32[map.clone()].fill(0.0);
+    }
+    let p64: Vec<f64> = p32.iter().map(|&v| v as f64).collect();
+    let batch = random_batch(dims, 43, 4);
+    let (value, want) = reference::loss_and_gradient(dims, &p64, &batch, &sup);
+    let h = 1e-6;
+    let slope = |i: usize, h: f64| {
+        let mut moved = p64.clone();
+        moved[i] += h;
+        (reference::loss(dims, &moved, &batch, &sup) - value) / h
+    };
+    for map in &maps {
+        let steepest = map.clone().map(|i| slope(i, h).abs().max(slope(i, -h).abs())).fold(0f64, f64::max);
+        assert!(steepest > 1e-4, "the loss has no kink in the map at {}: slope {steepest}", map.start);
+    }
+    let pe = dims.positions();
+    let mut wt = crate::model::Transposed::new(dims);
+    wt.update(dims, &p32);
+    let model = crate::model::Model { dims, p: &p32, pe: &pe, wt: &wt, sup: &sup };
+    let mut work = crate::model::Work::default();
+    let tokens: Vec<usize> = batch.iter().flat_map(|e| e.tokens.clone()).collect();
+    let targets: Vec<usize> = batch.iter().flat_map(|e| sup.iter().map(|&s| e.targets[s])).collect();
+    model.forward(&mut work, &tokens);
+    model.backward(&mut work, &tokens, &targets, 1.0 / (batch.len() * sup.len()) as f32);
+    for map in &maps {
+        assert!(want[map.clone()].iter().all(|g| *g == 0.0), "the reference passes a gradient at 0");
+        assert!(work.grad[map.clone()].iter().all(|g| *g == 0.0), "the fast model passes a gradient at 0");
+    }
+    // The other tensors have their gradients, in both models.
+    let norm = |g: &mut dyn Iterator<Item = f64>| g.map(|g| g * g).sum::<f64>().sqrt();
+    assert!(norm(&mut want.iter().copied()) > 1e-3 && norm(&mut work.grad.iter().map(|&g| g as f64)) > 1e-3);
+}
+
 #[test]
 fn schedule_is_the_sources() {
     let h = Hyper::source(1.0);

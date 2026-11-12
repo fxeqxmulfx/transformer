@@ -30,7 +30,7 @@ FMA). Kernite is expected at `/home/misha/rust_projects/kgen`, clean at
 
 ```sh
 cd experiments/grok_division
-cargo test --offline --release           # 37 tests: 35 of the trainer, 2 of `numerator`
+cargo test --offline --release           # 38 tests: 36 of the trainer, 2 of `numerator`
 cargo build --offline --release
 target/release/grok-division check       # pins, split fingerprints, f32 model against the model in doubles
 target/release/grok-division bench 8     # the time of an update
@@ -61,6 +61,10 @@ counts the wrong answers among the equations `0 / y = 0`; with `--list` it print
 evaluations that have one of them wrong. It is a third binary, shares only the constants of
 the data with the trainer, and refuses a run where its count over all held-out equations
 differs from the trainer's at any evaluation.
+
+One test of the trainer was added after the runs: `hidden_units_at_zero_pass_no_gradient`
+holds both models to the source's derivative 0 of the ReLU at 0, where the loss has a kink.
+It is in `src/tests.rs`, which the trainer's source fingerprint does not cover.
 
 A run resumes from its last checkpoint when the command is repeated, on any number of
 threads, and is then bit for bit the run that was not stopped. `runs/` is ignored by git.
