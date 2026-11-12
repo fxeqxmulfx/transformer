@@ -7,6 +7,9 @@ open Lean Elab Command
 #print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.budget_blend
 #print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.rankOne_missing_of_loss_le
 #print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.hull_fit_minimum
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.intermediate_excluded
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.intermediate_admitted
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.intermediate_excluded_hull
 
 run_cmd do
   let env ← getEnv

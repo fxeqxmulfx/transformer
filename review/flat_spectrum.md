@@ -14800,3 +14800,35 @@ again certificate search: without an ideal fit it need not optimize the hull
 interior. Even a certified optimum need not identify missing answers. New
 experts, unsupported input shapes, failed fits and compute for every candidate
 must all be reported in the full stress suite.
+
+### CM9. The two endpoint budgets leave a capacity gap
+
+CM5 explicitly did not assert that every target belongs to one of its two
+example shapes. A four-by-four binary moment makes the gap concrete:
+
+```
+H = [[1,1,1,1], [1,1,1,1], [1,1,-1,-1], [1,1,-1,-1]].
+```
+
+This is the fixed sign-code moment of a one-hot probability table. Its Gram
+matrix satisfies `(H*H)^2 = 8 H*H`, its Frobenius energy is 16, and its rank
+is two. Hence its operator norm is `sqrt(8)` and its nuclear norm is
+`2 sqrt(8)`. The size-four full-rank budget `(R,B)=(2,8)` excludes it by
+operator norm; the rank-one budget `(4,4)` excludes it by nuclear norm.
+The fixed intermediate budget `(sqrt(8),2 sqrt(8))` admits the same table.
+
+Mixing the two old spectral families does not repair this example. One-hot
+tables are extreme points of the product of simplexes, so the convex hull of
+a probability-valued family contains such a table only if that family already
+contained it. `Schatten/Vertices.lean` proves this general fact, and the witness
+is therefore excluded by CM7's two-endpoint spectral hull too. This does not
+exclude the larger CM8 hull when it contains an unrestricted lookup expert.
+
+`Schatten/Intermediate.lean` proves the actual norms and both exclusions,
+using a general operator-norm consequence of the Gram-square identity.
+The witness has a binary output vocabulary and four possible values of each
+input; it is a representation counterexample, not a result on a named stress
+dataset. It motivates additional generic fixed spectral budgets under CM5
+and CM7. The new bounds remain convex upper bounds, with no learned product,
+rank equality, arithmetic rule or missing label in the domain. Inclusion of
+a target is necessary capacity, not a proof that CE training will recover it.
