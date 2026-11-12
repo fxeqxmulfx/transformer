@@ -75,6 +75,8 @@ fn main() -> Result<()> {
         Ok(())
     } else if args.len() == 2 && args[0] == "prepare-cohort" {
         convex_stress_depth::cohort::prepare(std::path::Path::new(&args[1]))
+    } else if args.len() == 2 && args[0] == "prepare-retained-cohort" {
+        convex_stress_depth::cohort::prepare_retained(std::path::Path::new(&args[1]))
     } else if args.len() == 3 && args[0] == "run-cell" {
         convex_stress_depth::cohort::run_cell(std::path::Path::new(&args[1]), &args[2])
     } else if args.len() == 3 && args[0] == "replay-cell" {

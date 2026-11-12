@@ -90,6 +90,16 @@ CE/gradients exactly; retained-path stress training needs its own frozen
 protocol, including any training-only preference for the first shallow channel
 that attains the CE threshold. No retention result is claimed yet.
 
+`retained_protocol.json` now fixes that 48-case follow-up. Both initializer
+policies remain in the report; maximum depth comes only from the allocation
+preflight (four for binding/depth, two for MQAR). Lean `fixed_margin_ce` at
+`79f779ba` calibrates the first-channel cutoff to the pure margin-24 CE plus
+`1e-8`, since a 548-class pure proposal itself exceeds `1e-8`. Optimizer stopping
+and caps remain unchanged. The launcher requires the frozen 288-case cohort to
+close before starting, enforces serial capped execution and disk reserves,
+and preserves every streamed cache for exact original-prefix/boundary replay.
+Thirty-one native checks pass; no retained stress outcome is claimed.
+
 The user requested a theory extension to depth, residuals and the newer mHC
 in the local DiffGPT repository, and authorized a new connection. The
 [theory note](review/convex_depth.md) specifies ordinary residual connections

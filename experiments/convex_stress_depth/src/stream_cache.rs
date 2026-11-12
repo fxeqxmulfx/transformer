@@ -185,6 +185,51 @@ impl StreamCache {
     pub fn width(&self) -> usize {
         self.features.len()
     }
+    pub fn prefixes(&self, examples: &[usize]) -> Result<usize> {
+        examples.iter().try_fold(0, |n, &e| {
+            if e >= self.example_offsets.len() - 1 {
+                Err("invalid streamed example index".into())
+            } else {
+                Ok(n + self.example_offsets[e + 1] - self.example_offsets[e])
+            }
+        })
+    }
+    /// Compare every cached label and coordinate with the original input prefix,
+    /// in original example order. This checks serialization and multiplicities.
+    pub fn verify_original(&mut self, examples: &[data::Example]) -> Result<usize> {
+        if examples.len() + 1 != self.example_offsets.len()
+            || examples.iter().enumerate().any(|(i, e)| {
+                e.tokens.len() != e.targets.len()
+                    || e.targets.iter().filter(|y| **y >= 0).count()
+                        != self.example_offsets[i + 1] - self.example_offsets[i]
+            })
+        {
+            return Err("streamed original example count mismatch".into());
+        }
+        let bank = self.bank.clone();
+        let mut expected = examples.iter().flat_map(|e| {
+            e.targets
+                .iter()
+                .enumerate()
+                .filter(|(_, y)| **y >= 0)
+                .map(move |(p, y)| (&e.tokens[..=p], *y as usize))
+        });
+        let n = self.visit(&self.full_order(), |features, label| {
+            let (prefix, y) = expected.next().ok_or("extra cached observation")?;
+            let original = bank.encode(prefix)?;
+            if label != y
+                || features.len() != original.len()
+                || features.iter().zip(original).any(|(a, b)| *a as usize != b)
+            {
+                return Err("streamed observation differs from original input or label".into());
+            }
+            Ok(())
+        })?;
+        if expected.next().is_some() {
+            return Err("missing cached observation".into());
+        }
+        Ok(n)
+    }
     pub fn visit(
         &mut self,
         examples: &[usize],

@@ -112,6 +112,12 @@ fn streamed_rows_ce_gradients_and_updates_equal_dense_with_repeats_and_tails() -
     let dense = Cache::build(&bank, &rows)?;
     let path = dir.0.join("features.bin");
     let mut stream = StreamCache::build(&path, &bank, &rows)?;
+    assert_eq!(stream.verify_original(&rows)?, dense.labels.len());
+    let mut wrong = rows.clone();
+    wrong[0].targets[0] = 1;
+    assert!(stream.verify_original(&wrong).is_err());
+    wrong[0].tokens.clear();
+    assert!(stream.verify_original(&wrong).is_err());
     assert!(StreamCache::build(&path, &bank, &rows).is_err());
     let mut model = Head::zero(bank, 20.)?;
     for (i, w) in model.coefficients.iter_mut().enumerate() {
@@ -223,6 +229,14 @@ fn streamed_reader_rejects_corrupt_records_boundaries_and_lengths() -> Result<()
     broken[header_end + 8..header_end + 16].fill(0);
     fs::write(&path, &broken)?;
     assert!(StreamCache::open(&path).is_err());
+    // Keep the flattened rows unchanged but move a valid example boundary.
+    // An all-row CE check alone would miss this minibatch semantics error.
+    broken = original.clone();
+    broken[header_end + 24..header_end + 32].copy_from_slice(&4u64.to_le_bytes());
+    fs::write(&path, &broken)?;
+    let mut shifted = StreamCache::open(&path)?;
+    assert_eq!(shifted.visit(&shifted.full_order(), |_, _| Ok(()))?, 7);
+    assert!(shifted.verify_original(&examples()).is_err());
     for offset in [start, start + 4, start + 8] {
         broken = original.clone();
         broken[offset..offset + 4].copy_from_slice(&u32::MAX.to_le_bytes());

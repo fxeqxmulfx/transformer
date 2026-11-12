@@ -85,6 +85,8 @@ pub fn replay_cell(root: &Path, id: &str) -> Result<Value> {
         || metadata["training_prefixes"] != n
         || metadata["explicit_buffer_bytes"] != allocation
         || metadata["radius"] != 32. * task.vocab as f64
+        || metadata["initializer_ce_threshold"]
+            != serde_json::to_value(case.initializer_threshold(task.vocab))?
     {
         return Err("original data or fixed bank does not replay".into());
     }
@@ -113,6 +115,9 @@ pub fn replay_cell(root: &Path, id: &str) -> Result<Value> {
     if result["status"] != "complete" || result["producer_commit"] != manifest["producer_commit"] {
         return Err("incomplete model result".into());
     }
+    if result["initializer_ce_threshold"] != metadata["initializer_ce_threshold"] {
+        return Err("saved initializer threshold differs from the frozen choice rule".into());
+    }
     let hash = checkpoint::digest(BufReader::new(File::open(directory.join("model.bin"))?))?;
     if result["model_sha256"] != hash {
         return Err("cohort model hash mismatch".into());
@@ -128,6 +133,20 @@ pub fn replay_cell(root: &Path, id: &str) -> Result<Value> {
     let norm = model.validate()?;
     if (norm - meta::number(&result, "max_class_l1")?).abs() > 1e-8 {
         return Err("saved class norm does not replay".into());
+    }
+    let mut cache_audit = Value::Null;
+    if case.retained_initializer.is_some() {
+        let path = directory.join("features.bin");
+        let hash = checkpoint::digest(BufReader::new(File::open(&path)?))?;
+        let bytes = fs::metadata(&path)?.len();
+        if result["feature_cache"]["sha256"] != hash || result["feature_cache"]["bytes"] != bytes {
+            return Err("retained feature cache hash or size mismatch".into());
+        }
+        let mut cache = stream_cache::StreamCache::open(&path)?;
+        if *cache.bank() != bank || cache.verify_original(&task.splits["train"])? != n {
+            return Err("retained feature cache does not match original observations".into());
+        }
+        cache_audit = json!({"sha256":hash,"bytes":bytes,"original_prefixes_verified":n});
     }
     let metrics = convex_stress_hull::all_metrics(&model, &task)?;
     if metrics != result["metrics"]
@@ -150,7 +169,7 @@ pub fn replay_cell(root: &Path, id: &str) -> Result<Value> {
     let updates = result["gradient_updates"]
         .as_u64()
         .ok_or("missing update count")?;
-    let protocol: Value = serde_json::from_str(PROTOCOL)?;
+    let protocol = &manifest["protocol"];
     let cap = if case.mode == "full_batch" {
         protocol["full_batch_updates"].as_u64().unwrap()
     } else {
@@ -194,7 +213,7 @@ pub fn replay_cell(root: &Path, id: &str) -> Result<Value> {
     }
     Ok(
         json!({"status":"replay_pass","source_fingerprint":fingerprint(),"case":case,"model_sha256":hash,"result_sha256":result_hash,
-        "train_ce":ce,"max_class_l1":norm,"raw_tensor_audit":raw,"original_metrics_equal":true}),
+        "train_ce":ce,"max_class_l1":norm,"raw_tensor_audit":raw,"feature_cache_audit":cache_audit,"original_metrics_equal":true}),
     )
 }
 
@@ -232,7 +251,10 @@ pub fn choose_depth(records: &[(Case, Value)]) -> Result<&(Case, Value)> {
 }
 
 pub fn summarize(root: &Path) -> Result<Value> {
-    inventory(root)?;
+    let manifest = inventory(root)?;
+    let retained = manifest["protocol"] == serde_json::from_str::<Value>(RETAINED_PROTOCOL)?;
+    let expected_cells = if retained { 48 } else { 288 };
+    let expected_groups = if retained { 48 } else { 72 };
     let mut groups: BTreeMap<String, Vec<(Case, Value)>> = BTreeMap::new();
     let mut complete = 0;
     let mut ineligible = 0;
@@ -240,7 +262,7 @@ pub fn summarize(root: &Path) -> Result<Value> {
     let mut all_splits = 0;
     let mut seconds = 0.;
     let mut represented = BTreeSet::new();
-    for case in cases()? {
+    for case in cases_for(&manifest["protocol"])? {
         let id = case.id();
         let result = read_json(root.join(&id).join("result.json"))?;
         let replay = read_json(root.join(format!("{id}.replay.json")))?;
@@ -271,32 +293,39 @@ pub fn summarize(root: &Path) -> Result<Value> {
             case.architecture.clone(),
             format!("{:?}", case.transport),
             case.mode.clone(),
+            case.retained_initializer.map(|p| p.label()),
         ));
         groups
             .entry(format!(
-                "{}--{}--{}--{:?}",
-                case.task, case.mode, case.architecture, case.transport
+                "{}--{}--{}--{:?}--{}",
+                case.task,
+                case.mode,
+                case.architecture,
+                case.transport,
+                case.retained_initializer.map_or("original", |p| p.label())
             ))
             .or_default()
             .push((case, result));
     }
-    if represented.len() != 72 || complete + ineligible != 288 {
+    if represented.len() != expected_groups || complete + ineligible != expected_cells {
         return Err("incomplete comparison scope".into());
     }
     let mut choices = vec![];
     for (key, records) in groups {
-        if records.len() != 4 {
+        if records.len() != if retained { 1 } else { 4 } {
             return Err("missing candidate depth".into());
         }
         let (case, result) = choose_depth(&records)?;
         let row = meta::selected(&case.task)?;
         choices.push(json!({"group":key,"selected_id":case.id(),"depth":case.depth,"task":case.task,"mode":case.mode,
             "architecture":case.architecture,"transport":case.transport,"train_ce":result["train_ce"],"primary_split":result["primary_split"],
+            "retained_initializer":case.retained_initializer,
             "primary_pass":result["primary_pass"],"all_splits_pass":result["all_splits_pass"],"metrics":result["metrics"],
             "historical_transformer_seed1":row["historical_seed1"],"comparison_is_fresh_matched_transformer_run":false}));
     }
     Ok(
-        json!({"source_fingerprint":fingerprint(),"cells":288,"complete":complete,"memory_ineligible":ineligible,
+        json!({"source_fingerprint":fingerprint(),"cells":expected_cells,"complete":complete,"memory_ineligible":ineligible,
+        "retained_followup":retained,"choice_between_retained_initializers":false,
         "candidate_primary_passes":primary,"candidate_all_splits_passes":all_splits,"summed_candidate_seconds":seconds,
         "selected_primary_passes":choices.iter().filter(|c|c["primary_pass"]==true).count(),
         "selected_all_splits_passes":choices.iter().filter(|c|c["all_splits_pass"]==true).count(),"choices":choices}),
@@ -306,6 +335,48 @@ pub fn summarize(root: &Path) -> Result<Value> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::head::Cache;
+    #[test]
+    fn pure_proposal_reference_matches_ordinary_ce_at_each_vocabulary_size() {
+        for v in [2, 36, 100, 548, 1024] {
+            let mut logits = vec![0.; v];
+            logits[v - 1] = 24.;
+            let actual = head::cross_entropy(&logits, v - 1);
+            assert!((actual - pure_proposal_ce(v)).abs() < 2e-13);
+            assert!(actual < pure_proposal_ce(v) + 1e-8);
+        }
+        assert!(pure_proposal_ce(548) > 1e-8);
+    }
+    #[test]
+    fn retained_inventory_keeps_both_policies_all_modes_and_resource_chosen_depths() -> Result<()> {
+        let protocol: Value = serde_json::from_str(RETAINED_PROTOCOL)?;
+        let cases = cases_for(&protocol)?;
+        assert_eq!(cases.len(), 48);
+        assert_eq!(
+            cases.iter().map(Case::id).collect::<BTreeSet<_>>().len(),
+            48
+        );
+        for task in protocol["tasks"].as_array().unwrap() {
+            let name = task.as_str().unwrap();
+            let selected: Vec<_> = cases.iter().filter(|c| c.task == name).collect();
+            assert_eq!(selected.len(), 12);
+            assert!(selected.iter().all(|c| c.architecture == "joint"
+                && c.depth == if name == "basis-recall-easy" { 2 } else { 4 }));
+            for policy in [RetainedChoice::MinimumCe, RetainedChoice::FirstSmallCe] {
+                assert_eq!(
+                    selected
+                        .iter()
+                        .filter(|c| c.retained_initializer == Some(policy))
+                        .count(),
+                    6
+                );
+            }
+        }
+        let mut changed = protocol;
+        changed["training_ce_stop"] = json!(0.1);
+        assert!(cases_for(&changed).is_err());
+        Ok(())
+    }
     #[test]
     fn raw_saved_tensor_audit_matches_the_full_empirical_oracle() -> Result<()> {
         let bank = Bank {
@@ -344,7 +415,7 @@ mod tests {
     #[test]
     fn depth_selection_ignores_all_heldout_outcomes_and_preserves_the_frozen_order() -> Result<()> {
         let mut records:Vec<_>=[4,0,2,1].into_iter().map(|depth| {
-            (Case{task:"test".into(),depth,architecture:"joint".into(),transport:Transport::Fourier,mode:"full_batch".into()},
+            (Case{task:"test".into(),depth,architecture:"joint".into(),transport:Transport::Fourier,mode:"full_batch".into(),retained_initializer:None},
                 json!({"status":"complete","train_ce":if depth>=2 {1e-9}else{0.1},"primary_pass":depth==4}))
         }).collect();
         assert_eq!(choose_depth(&records)?.0.depth, 2);

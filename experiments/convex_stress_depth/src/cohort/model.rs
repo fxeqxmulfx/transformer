@@ -1,7 +1,8 @@
+use super::cache::Observations;
 use crate::{
     Result, checkpoint,
     features::Bank,
-    head::{Cache, Head},
+    head::Head,
     independent::{self, Independent},
     metrics::Predictor,
 };
@@ -46,25 +47,33 @@ impl Model {
             Self::Factor(m) => m.validate(),
         }
     }
-    pub fn objective(&self, cache: &Cache, order: &[usize]) -> Result<f64> {
+    pub fn objective(&self, cache: &mut Observations, order: &[usize]) -> Result<f64> {
         Ok(match self {
-            Self::Tensor(m) => crate::head::objective(m, cache, order, None)?.0,
-            Self::Factor(m) => independent::objective(m, cache, order, None, None)?.0,
+            Self::Tensor(m) => cache.objective(m, order, None)?.0,
+            Self::Factor(m) => match cache {
+                Observations::Dense(c) => independent::objective(m, c, order, None, None)?.0,
+                Observations::Stream(_) => {
+                    return Err("independent factors need the original bank".into());
+                }
+            },
         })
     }
     pub fn update(
         &mut self,
-        cache: &Cache,
+        cache: &mut Observations,
         batch: &[usize],
         scratch: &mut [f64],
     ) -> Result<(usize, usize)> {
         match self {
             Self::Tensor(m) => {
-                let (_, n) = crate::head::objective(m, cache, batch, Some(scratch))?;
-                crate::head::gradient_step(m, scratch, 1. / cache.width as f64)?;
+                let (_, n) = cache.objective(m, batch, Some(scratch))?;
+                crate::head::gradient_step(m, scratch, 1. / cache.width() as f64)?;
                 Ok((n, 0))
             }
-            Self::Factor(m) => independent::step(m, cache, batch, scratch),
+            Self::Factor(m) => match cache {
+                Observations::Dense(c) => independent::step(m, c, batch, scratch),
+                Observations::Stream(_) => Err("independent factors need the original bank".into()),
+            },
         }
     }
     pub fn gradient_passes(&self) -> usize {

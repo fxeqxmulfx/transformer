@@ -281,3 +281,52 @@ at depth four needs 1,464,658,120 bytes. MQAR at cumulative depth two needs
 These forecasts do not establish peak training memory or a learning result.
 The frozen preflight binary, exact source fingerprint, JSON and resource log
 are retained locally in `.kanban/artifacts/175/retention-components/`.
+
+## Retained-path follow-up protocol
+
+`retained_protocol.json` fixes 48 joint-head cases: the same four original tasks,
+both transports, all three training modes and both initialization policies.
+Each case contains all shorter paths, up to depth four for binding and the two
+depth tasks, or depth two for MQAR. These maximum depths come from the preceding
+allocation preflight, before any retained-head stress training. Both initializer
+policies are reported; the experiment does not choose between them using a
+held-out score. The frozen final-only joint, independent and additive candidates
+remain the earlier comparison, and this follow-up is explicitly adaptive to it.
+
+The first-channel policy uses `log(1+(vocab-1)*exp(-24)) + 1e-8`. Lean
+`fixed_margin_ce` at `79f779ba` proves the reference CE of a pure margin-24
+proposal. For MQAR's 548 classes, that value is already about `2.065e-8`;
+an unadjusted `1e-8` rule would reject even pure proposals. This correction
+calibrates initializer selection only. Full/mini keep the original stopping
+threshold `1e-8`, update caps, example batches and learning rate, so a pure
+MQAR proposal can still exhaust its refinement cap. The reference value is
+not an optimum lower bound for the larger head family.
+
+The same training loop now handles dense and streamed observations. Independent
+factors remain restricted to the original composed bank. Replay verifies the
+cache hash, byte count, each feature and label against its original prefix, and
+each example boundary before replaying all original metrics. Full/mini retain
+the independent raw-coefficient CE/linear-oracle audit; forward-only computes
+no derivative. All 48 models, caches, costs and failures are retained. A complete
+summary requires all 48 sealed replays and reports both policies separately.
+
+The launcher first calls the frozen original executable's complete-summary
+check. It refuses to start before all 288 original outcomes and replays close,
+then runs serially with the 8 GiB address-space cap. Forecasts conservatively
+charge one example index per supervised prefix. Disk estimates include every
+cache and model, must remain within 96 GiB, and preserve at least 16 GiB free
+space. Each cell checks that reserve again. Existing destinations are rejected.
+
+```sh
+export DEPTH_PRODUCER_COMMIT=$(git rev-parse HEAD)
+# The reference binary must be built from the frozen 032762e5 producer.
+export DEPTH_REFERENCE_BINARY=/path/to/frozen/convex-stress-depth-cohort-v1
+bash experiments/convex_stress_depth/run_retained.sh FRESH_RETAINED_COHORT_DIRECTORY
+```
+
+Thirty-one native checks pass before this follow-up is frozen, including exact
+dense/streamed updates through the shared training loop, vocabulary-dependent
+CE calibration and complete inventories for both protocols. A corruption test
+also moves an example boundary while keeping all flattened rows unchanged;
+the new replay rejects it, protecting minibatch semantics that a full-data CE
+check would miss. There are no retained-path stress results yet.
