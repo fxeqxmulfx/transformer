@@ -247,3 +247,7 @@ items "Assumed or not covered" of WD11 and XE13
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_shearFactor
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_identity_self
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_identity_self_isDecayedMin
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.rank_stack_self_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_mul_eq_one_of_tendsto_decayRun_self
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.range_mul_conjTranspose_of_tendsto_decayRun_identity_self
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isDecayedMin_iff_of_tendsto_decayRun_identity_self
