@@ -7,11 +7,13 @@ family and coverage conditions, and proves that the unchanged spectral CE
 relaxation can still have a wrong global minimum at a certified cell. Task #201
 implements the proved linear restriction in a separate `convex_stress_certified`
 crate. Its exact integer checker, bounded proposals and constrained full-batch,
-minibatch and forward-only solver pass fifteen native fixture checks, including
+minibatch and forward-only solver pass twenty native fixture checks, including
 all compatible three-state phase completions, partial coverage, exact state
 replay and raw spectral audits of endpoints that preserve certified equalities.
-No original task has been evaluated by this extension. Freeze the original-data
-protocol and producer before running the follow-up.
+The protocol now fixes the eight original pair tasks and all three modes, the
+4096/16384 discovery caps and 12-round endpoint repair; full replay and raw audits
+are tested on fixtures. No original task has been evaluated by this extension.
+Freeze the committed producer before running the follow-up.
 Do not alter the frozen #195 source or live cohorts. Retain previous candidates
 and all refusals; this follow-up does not replace the all-35 short/long goal.
 The user's new memory limit is 64 GiB per run, with pre-allocation buffer

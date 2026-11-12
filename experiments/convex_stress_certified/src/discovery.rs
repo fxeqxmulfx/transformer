@@ -36,11 +36,28 @@ pub enum SearchStop {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
+pub enum AttemptOutcome {
+    PropagationRefused,
+    CheckerRefused,
+    Accepted { covered_cells: usize },
+}
+
+/// Every tried phase proposal, including refusals. The deterministic search can
+/// reconstruct its phase vectors from this training-only anchor and difference.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize)]
+pub struct Attempt {
+    pub anchor: [usize; 4],
+    pub delta: usize,
+    pub outcome: AttemptOutcome,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 pub struct Discovery {
     pub verified: Option<Verified>,
     pub costs: SearchCosts,
     /// Exhaustion or a limit does not assert that no latent completion exists.
     pub stop: SearchStop,
+    pub attempts: Vec<Attempt>,
 }
 
 /// At most two candidates from one label, checked against every reached neighbor.
@@ -144,6 +161,7 @@ pub fn discover(training: &Training, limits: Limits) -> Result<Discovery> {
         verified: None,
         costs: SearchCosts::default(),
         stop: SearchStop::SearchExhausted,
+        attempts: vec![],
     };
     for top in 0..n {
         for bot in top + 1..n {
@@ -190,16 +208,26 @@ pub fn discover(training: &Training, limits: Limits) -> Result<Discovery> {
                             return Ok(out);
                         }
                         out.costs.candidates += 1;
+                        let index = out.attempts.len();
+                        out.attempts.push(Attempt {
+                            anchor: [top, bot, left, right],
+                            delta,
+                            outcome: AttemptOutcome::PropagationRefused,
+                        });
                         let Some(c) =
                             propose(training, [top, bot, left, right], delta, &mut out.costs)
                         else {
                             continue;
                         };
                         out.costs.checked_certificates += 1;
+                        out.attempts[index].outcome = AttemptOutcome::CheckerRefused;
                         let Ok(verified) = check(training, &c) else {
                             continue;
                         };
                         let coverage = verified.covered_cells();
+                        out.attempts[index].outcome = AttemptOutcome::Accepted {
+                            covered_cells: coverage,
+                        };
                         if out
                             .verified
                             .as_ref()

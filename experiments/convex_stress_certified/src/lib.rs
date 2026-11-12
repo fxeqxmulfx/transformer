@@ -10,6 +10,7 @@ pub use convex_stress_paired::{Decoder, Mode, Model, Result, Sample, Shape};
 use serde::{Deserialize, Serialize};
 
 pub mod certificate;
+pub mod cohort;
 pub mod discovery;
 pub mod endpoint;
 pub mod solver;
@@ -23,7 +24,8 @@ pub use training::Training;
 pub const RUN_MEMORY_BYTES: u64 = 64 * 1024 * 1024 * 1024;
 
 /// The parent solver's conservative allowance, plus eight latent halves, four
-/// decoded tables, certificate/search buffers and 64 MiB of additional overhead.
+/// decoded tables, certificate/search buffers, the maximum proposal trace with
+/// geometric vector-growth allowance, and 64 MiB of additional overhead.
 /// The size validation precedes every dense allocation in this crate.
 pub fn memory_bound(shape: Shape) -> Result<u64> {
     // Check raw dimensions before the parent's products: serialized sizes are
@@ -40,6 +42,7 @@ pub fn memory_bound(shape: Shape) -> Result<u64> {
         + 8 * 8 * cells * shape.orbits as u64
         + 4 * 8 * cells * shape.vocab as u64
         + 128 * cells
+        + 2 * 4_000_000 * std::mem::size_of::<discovery::Attempt>() as u64
         + 64 * 1024 * 1024)
 }
 

@@ -63,6 +63,7 @@ name = "convex-stress-certified"
 version = "0.1.0"
 dependencies = [
  "convex-stress-paired",
+ "convex-stress-relabel",
  "serde",
  "serde_json",
 ]

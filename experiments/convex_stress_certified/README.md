@@ -41,16 +41,20 @@ the entire table also checks every observed label. Reported answers are
 conditional on the target family even when all observations fit.
 
 The default proposal budgets are 4096 examined shared-column rectangles and
-16384 row-difference candidates. All work counters and the stopping reason
-are returned. It retains the largest verified region found, stops early on
+16384 row-difference candidates. Every attempted anchor/difference and its refusal
+or acceptance status is retained, together with work counters and the stopping
+reason. It retains the largest verified region found, stops early on
 complete coverage, and reports exhausted or bounded search explicitly. A
 search failure does not establish inconsistency or ambiguity. This is not
 an executable extraction of the classical Lean `recover` specification, nor
 a completeness or running-time theorem for native propagation.
+The certificate search is discrete preprocessing. The resulting constrained
+prediction domain is convex; no convex optimization formulation of this search
+is claimed.
 
 ## Findings
 
-Fifteen native tests pass. They reproduce the folded held-out witness, the paired
+Twenty native tests pass. They reproduce the folded held-out witness, the paired
 three-cell ambiguity, and CM18's wrong global minimum. The latter satisfies
 the original numerical spectral budgets and has the same observed CE as the
 correct anchor, while assigning `2/3` of decoded mass to the wrong unseen label.
@@ -88,6 +92,31 @@ No original-task proposal, training, held-out evaluation or stress success is
 reported by these fixture checks. The frozen original follow-up remains work
 under board task #201. The frozen parent source and running cohorts are unchanged.
 
+## Frozen original follow-up
+
+`protocol.json` fixes the same eight original pair tasks and three training modes
+as CM16, with 128 full-batch, 512 minibatch and 128 forward-only update caps. The
+source constructors, splits, batches, shuffle seed and full output vocabulary
+are reused. Proposal budgets are the defaults above and snapshot repair uses
+12 bisection rounds. Positive-update stopping uses only training CE excess.
+Held-out metrics are computed after the endpoint is fixed. A refused search
+produces an explicit result with no model; partial certificates are retained.
+
+The five cohort tests use only small fixtures. They exercise all three modes,
+the original minibatch tail rule, refusals, full update replay and raw numerical
+audits, and reject altered certificates, models, gradient states, traces and
+metrics even when their file hashes are updated. Selection tests deliberately
+choose a worse held-out result when its training CE wins. No original data is
+built or evaluated by these cohort tests.
+
+The replay repeats every training-only proposal and every update from the seeded
+initial state, compares the saved state and endpoint, then independently audits
+the saved coordinates with the CM16 raw auditor. Setup, snapshots and the fresh
+full-gradient diagnostic have separate work ledgers. Integration requires the
+complete frozen paired comparison and its decoded predecessor, retains them
+whole, and compares candidates using training CE alone. The all-35 short/long
+goal and the existing transformer comparison remain separate obligations.
+
 ## Reproduction and resources
 
 New runs follow the user's 2026-11-12 limit of **64 GiB**, enforced as
@@ -105,6 +134,24 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
 cargo clippy --offline --locked --manifest-path experiments/convex_stress_certified/Cargo.toml \
   --all-targets -- -D warnings
 bash -n experiments/convex_stress_certified/limited.sh
+bash -n experiments/convex_stress_certified/run_cohort.sh
+```
+
+After committing and freezing the producer binary and its SHA-256, run a fresh
+ignored destination. The launcher applies the cap to discovery, training, replay
+and summary. It preserves started cells and refuses to resume or overwrite them.
+
+```sh
+cargo build --release --offline --locked --manifest-path experiments/convex_stress_certified/Cargo.toml
+CERTIFIED_PRODUCER_COMMIT=$(git rev-parse HEAD) \
+CERTIFIED_BINARY=/absolute/path/to/frozen/convex-stress-certified-v1 \
+  bash experiments/convex_stress_certified/run_cohort.sh \
+  experiments/convex_stress_certified/runs/cohort-v1
+# Once the complete unchanged parent evidence exists:
+/absolute/path/to/frozen/convex-stress-certified-v1 integrate \
+  experiments/convex_stress_certified/runs/cohort-v1 \
+  experiments/convex_stress_paired/runs/cohort-v1 \
+  experiments/convex_stress_decode/runs/cohort-v1
 ```
 
 Spectral checks are floating-point SVD checks, not interval certificates.
