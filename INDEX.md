@@ -25926,7 +25926,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`margin_answerLogits_zero`](src/Transformer/Grokking/Protocol/QuotientWitness.lean#L109) | lemma | proved |
 | [`predict_answerLogits_zero_ne`](src/Transformer/Grokking/Protocol/QuotientWitness.lean#L118) | theorem | proved |
 
-**[Transformer.Grokking.Protocol.ReadoutBound](src/Transformer/Grokking/Protocol/ReadoutBound.lean)** — 110 lines
+**[Transformer.Grokking.Protocol.ReadoutBound](src/Transformer/Grokking/Protocol/ReadoutBound.lean)** — 114 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -25935,7 +25935,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`abs_decodeTo_le`](src/Transformer/Grokking/Protocol/ReadoutBound.lean#L67) | theorem | proved |
 | [`abs_logits_le`](src/Transformer/Grokking/Protocol/ReadoutBound.lean#L83) | theorem | proved |
 
-**[Transformer.Grokking.Protocol.ReadoutGradient](src/Transformer/Grokking/Protocol/ReadoutGradient.lean)** — 160 lines
+**[Transformer.Grokking.Protocol.ReadoutGradient](src/Transformer/Grokking/Protocol/ReadoutGradient.lean)** — 172 lines
 
 | declaration | kind | status |
 | --- | --- | --- |

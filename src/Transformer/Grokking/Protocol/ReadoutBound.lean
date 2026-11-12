@@ -97,11 +97,15 @@ theorem abs_logits_le (hS : 0 < S.blocks) {θ : Param S → ℝ} {W G B : ℝ}
   rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
 
 /-! The witnesses: a vector of two entries normalized with the gain `3` and the bias `1/2`,
-and the decoder of the paper's sizes with every parameter `1`, whose logits after `=` are at
-most `128 (√128 + 1)`, which is less than `1577`. -/
+and the decoder of the paper's sizes with every parameter `1`, whose last block returns at most
+`√128 + 1` and whose logits after `=` are at most `128 (√128 + 1)`, which is less than `1577`. -/
 
 example : |layerNorm ![3, 3] ![1 / 2, 1 / 2] ![7, -2] 0| ≤ √(2 : ℕ) * 3 + 1 / 2 := by
   simpa using abs_layerNorm_le ![3, 3] ![1 / 2, 1 / 2] ![7, -2] 0
+
+example (tokens : Fin 6 → Fin 239) (t : Fin 6) (i : Fin 128) :
+    |decodeTo (fun _ => 1) (relu paperSizes) tokens 2 t i| ≤ √(128 : ℕ) * 1 + 1 :=
+  abs_decodeTo_le (S := paperSizes) (by decide) (by simp) (by simp) _ tokens t i
 
 example (x : Equation) (c : Fin 239) :
     |answerLogits (fun _ => 1) x c| ≤ (128 : ℕ) * (1 * (√(128 : ℕ) * 1 + 1)) :=

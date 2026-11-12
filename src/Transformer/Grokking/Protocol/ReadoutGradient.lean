@@ -157,4 +157,16 @@ theorem abs_sourceGrad_out_le_of_norm (hS : 0 < S.blocks) (B : List (Example S))
         ((abs_nonneg _).trans (hM l i))
     exact abs_sourceGrad_out_le B θ c i h0 fun e _ pc _ => abs_decodeTo_le hS hG hM _ _ _ i
 
+/-! The witnesses: the supervision of `3 / 5 = 20` at the parameters that are all `1`, where
+every feature is at most `√128 + 1`. -/
+
+example (c : Fin 239) (i : Fin 128) :
+    |sourceGrad [supervised (20, 4)] (fun _ => 1) (.out c i)| ≤ √(128 : ℕ) * 1 + 1 :=
+  abs_sourceGrad_out_le (S := paperSizes) _ _ c i (by positivity) fun e _ pc _ =>
+    abs_decodeTo_le (S := paperSizes) (by decide) (by simp) (by simp) _ _ _ i
+
+example (c : Fin 239) (i : Fin 128) :
+    |sourceGrad [supervised (20, 4)] (fun _ => 1) (.out c i)| ≤ √(128 : ℕ) * 1 + 1 :=
+  abs_sourceGrad_out_le_of_norm (S := paperSizes) (by decide) _ (by simp) (by simp) c i
+
 end Transformer.Grokking.Protocol
