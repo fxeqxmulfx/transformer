@@ -9,6 +9,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery.C
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery.Learner
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery.CrossEntropy
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery.Witness
+public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery.NativeChecks
 
 /-!
 # The class coding of a categorical table is found from its training rectangles
@@ -22,9 +23,9 @@ the observed cells is connected as well, every training-compatible phase complet
 table on all cells, and the learner `discover` returns it. On a table of this kind the learner
 is never wrong: it returns the table or refuses, and a training set shared by two such tables
 is refused. With a perfect matching among the observed cells, the convex cross-entropy program
-of the coding found has one minimizer, the one-hot table. That the table has such a coding is
-assumed; that a trained network finds it, or that a numerical solver reaches the minimizer, is
-not claimed.
+of the coding found has one minimizer, the one-hot table. `NativeChecks` compares the learner
+with the native code. That the table has such a coding is assumed; that a trained network
+finds it, or that a numerical solver reaches the minimizer, is not claimed.
 -/
 
 @[expose] public section

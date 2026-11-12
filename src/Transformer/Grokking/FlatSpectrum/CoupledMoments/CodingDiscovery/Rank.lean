@@ -19,9 +19,9 @@ classes (`rank_add_finrank_pinnedCodes`): the pinned codings have dimension one 
 `rank + 1 = p` (`finrank_pinnedCodes_eq_one_iff_rank`).
 
 The matrix has more rows than the native system, which keeps the rectangles through the first
-shared column of each pair of rows; these give the others (`rectangle_of_anchored`), so the row
-space is the same. That the native elimination computes the rank of its rows is the usual
-correctness of an echelon form and is not formalized.
+shared column of each pair of rows. The kept rectangles have the same solutions as all of them
+(`mem_rectangleCodes_iff_anchored` in `NativeChecks`). That the native elimination computes the
+rank of its rows is the usual correctness of an echelon form and is not formalized.
 -/
 
 @[expose] public section

@@ -8,8 +8,8 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery.B
 Source: `review/flat_spectrum.md`, CM17, *The linear system*: "The solution space depends only
 on the set of observed (cell, label) pairs: not on the order of the samples, their repetitions
 or their grouping into batches." Native reference:
-`experiments/convex_stress_relabel/src/coding.rs` at 414431c7, whose elimination reads the
-observations in the order given.
+`experiments/convex_stress_relabel/src/coding.rs` at 414431c7, `discover`, which stores the
+labels by cell before the elimination and refuses a repeated cell.
 
 More observations allow fewer codings (`rectangleCodes_anti`), so two training sets with the
 same observed cells and labels allow the same ones (`rectangleCodes_congr`,

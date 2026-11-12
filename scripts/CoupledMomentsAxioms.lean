@@ -41,6 +41,9 @@ open Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery
 #print axioms discover_eq_ambiguous_of_two_tables
 #print axioms cross_ambiguous
 #print axioms ten_disconnected
+#print axioms mem_rectangleCodes_iff_anchored
+#print axioms finrank_pinnedCodes_ne_one_of_unobserved
+#print axioms discover_eq_ambiguous_of_unobserved
 
 end CodingDiscovery
 

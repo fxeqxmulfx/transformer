@@ -9,7 +9,7 @@ Source: `review/flat_spectrum.md`, CM17, *The learner*. Native reference:
 `experiments/convex_stress_relabel/src/coding.rs` at 414431c7, `discover`, with its rejections
 `no_nonconstant_phase_code`, `ambiguous_phase_code`, `nonbijective_phase_code` and
 `inconsistent_observed_cycle`, and `experiments/convex_stress_relabel/phase_start`, with
-`Disconnected`.
+`Disconnected`. `NativeChecks` compares the other native refusals with the learner.
 
 `discover p cell labels c₀` is a function of the training cells, the training labels and the
 pinned class, and of nothing else: the coding of the table, its phases and the labels of the

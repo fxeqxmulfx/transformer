@@ -8,9 +8,9 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery.G
 Source: `review/flat_spectrum.md`, CM17, *The completion is the table*. CM13 and CM14 stop
 before it: "Observed phase consistency alone does not prove that unknown ground truth satisfies
 it" and "It does not prove that unobserved true labels follow the learned phase equations".
-Native reference: the phase constructor `experiments/convex_stress_relabel/phase_start` at
-414431c7, which builds the table `w⁻¹ (ρ i + σ j)` from a coding `w` and phase potentials
-`ρ`, `σ` found on the observed cells.
+Native reference at 414431c7: `propose` of `experiments/convex_stress_relabel/phase_start`,
+which with `analyze` of `graph_audit` builds the table `w⁻¹ (ρ i + σ j)` from a coding `w` and
+phase potentials `ρ`, `σ` found on the observed cells.
 
 A table is a training-compatible phase completion (`Completes`) if a bijection of the classes
 onto `ZMod p` and phases fit every training sample and produce it. This is a property of the

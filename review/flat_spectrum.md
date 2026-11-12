@@ -15216,11 +15216,11 @@ the pinned solution space has dimension one,
 
 which by rank–nullity is `rank + 1 = p` for the matrix of the pinned system:
 the acceptance test of `coding.rs`. The rectangles through one shared column
-of two rows give all rectangles of those rows; the native system keeps only
-those, and that it therefore has the same solutions is not formalized. The
-solution space depends only on the set of observed (cell, label) pairs: not
-on the order of the samples, their repetitions or their grouping into
-batches.
+of two rows give all rectangles of those rows. The native system keeps, for
+two rows `row < other`, only those through their first shared column; it has
+the same solutions when a cell has one label. The solution space depends only
+on the set of observed (cell, label) pairs: not on the order of the samples,
+their repetitions or their grouping into batches.
 
 **What the test gives.** Assume the structural hypothesis and the test. For
 every nonzero pinned solution `z`, whichever the elimination returns:
@@ -15292,6 +15292,28 @@ family:
 Without the structural hypothesis an accepted table is still a
 training-compatible phase completion, and nothing more is claimed for it.
 
+**The native checks.** The learner is stated by what the native checks
+compute, and it is not the native code. The differences:
+
+- The native elimination keeps the rectangles through the first shared column
+  of two rows `row < other`. For every rule that gives two such rows with a
+  shared column a column that both show, the kept rectangles have the same
+  solutions as all rectangles, when a cell has one label.
+- A repeated cell is an error of the native code. The answer of the learner
+  does not depend on repetitions.
+- The native code refuses a training set that does not show every class
+  (`unobserved_output_classes`) before the elimination. The learner has no
+  such answer: for `p != 2` such a training set of a table of the family
+  fails the rank test, and the answer is `ambiguous`. (For `p = 2` a training
+  set that shows one class passes the rank test; with a connected graph its
+  table is constant. This remark is not formalized.)
+- The native constructor refuses a training set without a perfect matching
+  (`NoPerfectMatching`): it admits the case in which CM13 gives one
+  minimizer. The learner needs no matching to return the table; the matching
+  enters only the uniqueness of the CE minimizer below.
+- The native code refuses a composite vocabulary; the modulus of the learner
+  is prime.
+
 **The bridge to CE.** Use the coding `w` found above as the code bank of CM14:
 probability rows `P`, operator norm and nuclear norm of every moment at most
 `N`, ordinary log-sum-exp CE over the full vocabulary on the training samples.
@@ -15351,10 +15373,10 @@ observed, and the learner answers `disconnected`.
   suite belong to the family are not treated.
 - When a split passes the rank test is not analyzed beyond the two-row
   coverage: there is no probability statement over random splits.
-- The native elimination, its anchoring and its graph search are not
-  formalized. The Lean statements are about what they compute: the kernel of
-  the pinned system and Mathlib's rank of its matrix. Their cost is not
-  analyzed.
+- The native elimination and its graph searches are not formalized; of its
+  anchoring only that the kept rectangles have the same solutions. The Lean
+  statements are about what they compute: the kernel of the pinned system and
+  Mathlib's rank of its matrix. Their cost is not analyzed.
 - Numerical solutions: the exact-real minimizer against the native tolerance,
   floating-point SVDs, and convergence of any iterative solver.
 - Uniqueness is within the fixed-code program of the discovered coding, not
@@ -15372,4 +15394,5 @@ the table; it uses the rigidity lemma of `PatternGraph.lean`, generalized in
 place to potentials in any additive group. `Learner.lean` defines `discover`
 and proves the statements about its answers. `CrossEntropy.lean` proves the
 bridge, and `Witness.lean` the examples above. `Invariance.lean` proves that
-the system depends only on the set of observations.
+the system depends only on the set of observations. `NativeChecks.lean`
+proves the first and the third item of *The native checks*.
