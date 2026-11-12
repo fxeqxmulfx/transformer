@@ -4,6 +4,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Basic
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Blend
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Loss
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Consistency
+public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten
 
 /-!
 # Shared class distributions and complex spectral bounds

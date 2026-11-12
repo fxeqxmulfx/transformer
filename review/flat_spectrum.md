@@ -14706,3 +14706,69 @@ of floating-point norm estimates or of optimizer convergence.
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.CoupledMoments
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/CoupledMomentsAxioms.lean
 ```
+
+### CM5. Convex bounds on largest and total singular values
+
+The shared-moment pilot still fails on addition. Proposition 2 gives a reason
+to distinguish spectral shapes: the addition phase matrix is rank one with
+nuclear norm V, whereas a full flat square matrix has V singular values of
+size sqrt(V). A bound on the largest singular value alone can exclude the
+former or leave its structure unrestricted. Add the convex upper bounds
+`nuclearNorm(M_f(P)) <= B_f` alongside `||M_f(P)||op <= R_f`.
+
+`CoupledMoments/Schatten/Basic.lean` proves convexity of this intersection,
+uniform feasibility for centered codes and nonnegative budgets, and the same
+global CE-minimum certificate for a feasible exact observed fit. The common
+mixture of CM4 scales both norms, so one positive coefficient enforcing both
+budgets gives a feasible output without changing strict class comparisons.
+The budgets are fixed model parameters; no product of learned factors, rank
+equality or task-specific arithmetic operation is introduced.
+
+For prospective tests, two generic square-matrix shapes are `(R,B) =
+(sqrt(V), V sqrt(V))` and `(V,V)`. The former adds only a redundant nuclear
+budget to the previous operator ball, since each of the V singular values is
+at most R. `Schatten/NormComparison.lean` and `budget_at_card_iff` prove this
+redundancy. The latter allows a large leading singular value while restricting
+their sum. These are alternative constraints, not a claim that every target
+belongs to either shape. The nuclear-norm failures in XE15/SB2 remain valid;
+a sum bound alone is not a universal replacement for the operator bound.
+
+### CM6. A rank-one missing-entry recovery certificate from actual CE
+
+For `X(z) = [[1,1],[1,z]]`, the established 2x2 formula gives
+`nuclearNorm(X(z))^2 = 3 + |z|^2 + 2 |z-1|`. Since
+`|z-1| >= 1-Re(z)`, a nuclear budget of two implies
+`(Re(z)-1)^2 + Im(z)^2 <= 0`, hence z=1. Conversely X(1) has nuclear norm
+two. `Schatten/Recovery.lean` proves this equivalence and the corresponding
+recovery of the missing binary probability coordinate from three observed
+one-hot labels. There is no rank constraint hidden in the feasible set.
+
+`Schatten/Optimality.lean` removes correct observed labels as an assumption:
+each ordinary CE term is at least its one-hot value, so a summed loss no larger
+than the ideal sum forces equality term by term. With another class present,
+the strict CE inequality of CR3 forces each observed target mass to one. For
+the three observed cells `(0,0), (0,1), (1,0)`, the nuclear budget then gives
+the unseen target mass at `(1,1)`. The all-true table satisfies every hypothesis.
+This is a concrete repair, not a theorem for arbitrary observation patterns
+or convergence of the native iterative solver.
+
+### CM7. One convex class for several fixed spectral budgets
+
+Let D_k be the feasible probability tables for each member of a fixed family
+of `(R_k,B_k)` budgets. Use `convexHull(union_k D_k)` as the model domain in
+the direct probability coordinates. The hull is convex, all its rows remain
+probabilities, and the ordinary empirical CE remains convex. This definition
+does not train a bilinear product of free mixture weights and free tables.
+
+`Schatten/Hull.lean` proves these properties and a useful optimization
+certificate: any feasible exact observed fit from any D_k is a global CE
+minimum over the entire hull. Thus a procedure can train candidates with
+different budgets and certify a solution using training observations alone.
+If none reaches the ideal lower bound, choosing the best candidate does not
+prove that the full hull problem has been solved. Nor does an exact fit select
+unseen answers uniquely; all previous ambiguity qualifications still apply.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten
+LAKE_ARTIFACT_CACHE=false lake env lean scripts/SchattenMomentsAxioms.lean
+```
