@@ -1,7 +1,6 @@
 module
 
 public import Transformer.Grokking.Protocol.CarriedSplit
-public import Transformer.Grokking.Protocol.DivisionMeasurable
 
 /-!
 # A set of splits with a symmetry that moves a held-out answer
@@ -102,26 +101,9 @@ theorem mem_wrongAt_or_carry (decay : ℝ) (t : ℕ) (h : Twisted τ ρ A x y)
 probability of at least one half, at every update.** -/
 theorem uniformPerm_le_of_twisted (decay : ℝ) (t : ℕ) (h : Twisted τ ρ A x y) :
     uniformPerm (97 * 96) A ≤
-      2 * law (97 * 96) 4656 (initMeasure paperSizes) (splitIn A ∩ wrongAt decay t) := by
-  set μ := law (97 * 96) 4656 (initMeasure paperSizes) with hμ
-  have hF : μ (splitIn A) = uniformPerm (97 * 96) A := by
-    rw [hμ, law, Measure.prod_prod, measure_univ, mul_one]
-  have hE : MeasurableSet (splitIn A ∩ wrongAt decay t) :=
-    ((MeasurableSpace.measurableSet_top).prod MeasurableSet.univ).inter
-      (measurableSet_wrongAt decay t)
-  have hpre : μ (carrySample τ ρ ⁻¹' (splitIn A ∩ wrongAt decay t)) =
-      μ (splitIn A ∩ wrongAt decay t) :=
-    (measurePreserving_carrySample τ ρ).measure_preimage hE.nullMeasurableSet
-  calc uniformPerm (97 * 96) A = μ (splitIn A) := hF.symm
-    _ ≤ μ ((splitIn A ∩ wrongAt decay t) ∪
-          carrySample τ ρ ⁻¹' (splitIn A ∩ wrongAt decay t)) :=
-        measure_mono fun ω hω => by
-          rcases mem_wrongAt_or_carry decay t h hω.1 with hw | hw
-          · exact Or.inl ⟨hω, hw⟩
-          · exact Or.inr ⟨⟨h.closed _ hω.1, Set.mem_univ _⟩, hw⟩
-    _ ≤ μ (splitIn A ∩ wrongAt decay t) +
-          μ (carrySample τ ρ ⁻¹' (splitIn A ∩ wrongAt decay t)) := measure_union_le _ _
-    _ = 2 * μ (splitIn A ∩ wrongAt decay t) := by rw [hpre, two_mul]
+      2 * law (97 * 96) 4656 (initMeasure paperSizes) (splitIn A ∩ wrongAt decay t) :=
+  uniformPerm_le_two_mul_of_or (measurePreserving_carrySample τ ρ) (fun _ hω => h.closed _ hω)
+    fun _ hω => mem_wrongAt_or_carry decay t h hω
 
 /-- **Under a condition on the split that contains such a set, not empty, the target is
 false**: it is not so that for almost every sample that meets the condition every held-out

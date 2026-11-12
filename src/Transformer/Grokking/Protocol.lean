@@ -20,6 +20,7 @@ public import Transformer.Grokking.Protocol.Symmetry
 public import Transformer.Grokking.Protocol.AdamSymmetry
 public import Transformer.Grokking.Protocol.Uncovered
 public import Transformer.Grokking.Protocol.Exchange
+public import Transformer.Grokking.Protocol.SymmetricLaw
 public import Transformer.Grokking.Protocol.Refutation
 public import Transformer.Grokking.Protocol.RefutationModes
 public import Transformer.Grokking.Protocol.MarginTransfer

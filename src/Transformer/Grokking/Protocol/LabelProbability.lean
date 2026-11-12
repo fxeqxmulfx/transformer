@@ -42,26 +42,8 @@ theorem uniformPerm_singleton_le (decay : ℝ) (t : ℕ) {π : Equiv.Perm (Fin (
     uniformPerm (97 * 96) {π} ≤
       2 * law (97 * 96) 4656 (initMeasure paperSizes) (splitIn {π} ∩ wrongAt decay t) := by
   obtain ⟨r, hr⟩ := not_mem_labelled_iff.1 hπ
-  set μ := law (97 * 96) 4656 (initMeasure paperSizes) with hμ
-  set E := splitIn {π} ∩ wrongAt decay t with hE
-  have hF : μ (splitIn {π}) = uniformPerm (97 * 96) {π} := by
-    rw [hμ, law, Measure.prod_prod, measure_univ, mul_one]
-  have hpre : μ (relabelSample r ⁻¹' E) ≤ μ E :=
-    calc μ (relabelSample r ⁻¹' E)
-        ≤ μ (relabelSample r ⁻¹' toMeasurable μ E) :=
-          measure_mono (Set.preimage_mono (subset_toMeasurable _ _))
-      _ = μ (toMeasurable μ E) := (measurePreserving_relabelSample r).measure_preimage
-            (measurableSet_toMeasurable _ _).nullMeasurableSet
-      _ = μ E := measure_toMeasurable _
-  calc uniformPerm (97 * 96) {π} = μ (splitIn {π}) := hF.symm
-    _ ≤ μ (E ∪ relabelSample r ⁻¹' E) := measure_mono fun ω hω => by
-        have hω1 : ω.1 = π := hω.1
-        rcases mem_wrongAt_or_relabel decay t (ω := ω) (hω1 ▸ hr) with h | h
-        · exact Or.inl ⟨hω, h⟩
-        · exact Or.inr ⟨⟨hω.1, Set.mem_univ _⟩, h⟩
-    _ ≤ μ E + μ (relabelSample r ⁻¹' E) := measure_union_le _ _
-    _ ≤ μ E + μ E := add_le_add le_rfl hpre
-    _ = 2 * μ E := (two_mul _).symm
+  exact uniformPerm_le_two_mul_of_or (measurePreserving_relabelSample r) (fun _ hω => hω)
+    fun ω hω => mem_wrongAt_or_relabel decay t (by rwa [Set.mem_singleton_iff.1 hω])
 
 /-- **Given that the split is in a set of splits that are not labelled, a held-out answer is
 wrong with a conditional probability of at least one half, at every update.** -/

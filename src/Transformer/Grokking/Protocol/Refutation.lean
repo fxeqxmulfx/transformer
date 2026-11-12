@@ -2,6 +2,7 @@ module
 
 public import Transformer.Grokking.Protocol.Causal
 public import Transformer.Grokking.Protocol.Exchange
+public import Transformer.Grokking.Protocol.SymmetricLaw
 
 /-!
 # The target for division is false without a condition on the split
@@ -21,7 +22,8 @@ answered `33` at some parameters, the logit of `33` is the largest there, so `1 
 answered `65` at the exchanged ones (`not_both_predicted`). Hence, at every update, a sample
 with an uncovered split or its exchange has a wrong held-out answer (`mem_wrongAt_or`).
 
-The exchange preserves the law of a run. Therefore:
+The exchange preserves the law of a run and does not move the split, so the halving step
+`uniformPerm_le_two_mul_law_of_or` of `SymmetricLaw` applies. Therefore:
 
 * at every update the samples with a wrong held-out answer have at least half the probability
   of the uncovered splits (`uniformPerm_uncovered_le`), which is positive;
@@ -102,24 +104,9 @@ theorem mem_wrongAt_or (decay : ℝ) (t : ℕ) {ω : Sample (97 * 96) 4656 (Para
 probability of the uncovered splits.** -/
 theorem uniformPerm_uncovered_le (decay : ℝ) (t : ℕ) :
     uniformPerm (97 * 96) uncovered ≤
-      2 * law (97 * 96) 4656 (initMeasure paperSizes) (wrongAt decay t) := by
-  set μ := law (97 * 96) 4656 (initMeasure paperSizes) with hμ
-  have hF : μ (uncovered ×ˢ Set.univ) = uniformPerm (97 * 96) uncovered := by
-    rw [hμ, law, Measure.prod_prod, measure_univ, mul_one]
-  have hpre : μ (exchangeSample ⁻¹' wrongAt decay t) ≤ μ (wrongAt decay t) :=
-    calc μ (exchangeSample ⁻¹' wrongAt decay t)
-        ≤ μ (exchangeSample ⁻¹' toMeasurable μ (wrongAt decay t)) :=
-          measure_mono (Set.preimage_mono (subset_toMeasurable _ _))
-      _ = μ (toMeasurable μ (wrongAt decay t)) :=
-          measurePreserving_exchangeSample.measure_preimage
-            (measurableSet_toMeasurable _ _).nullMeasurableSet
-      _ = μ (wrongAt decay t) := measure_toMeasurable _
-  calc uniformPerm (97 * 96) uncovered = μ (uncovered ×ˢ Set.univ) := hF.symm
-    _ ≤ μ (wrongAt decay t ∪ exchangeSample ⁻¹' wrongAt decay t) :=
-        measure_mono fun ω hω => mem_wrongAt_or decay t hω.1
-    _ ≤ μ (wrongAt decay t) + μ (exchangeSample ⁻¹' wrongAt decay t) := measure_union_le _ _
-    _ ≤ μ (wrongAt decay t) + μ (wrongAt decay t) := add_le_add le_rfl hpre
-    _ = 2 * μ (wrongAt decay t) := (two_mul _).symm
+      2 * law (97 * 96) 4656 (initMeasure paperSizes) (wrongAt decay t) :=
+  uniformPerm_le_two_mul_law_of_or measurePreserving_exchangeSample (fun _ hω => hω)
+    fun _ hω => mem_wrongAt_or decay t hω
 
 /-- **A condition on the split that makes the target true excludes every uncovered split.** If
 for almost every sample whose split is in `S` every held-out equation is eventually answered,

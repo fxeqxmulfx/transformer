@@ -372,3 +372,5 @@ import Transformer
 #print axioms Transformer.Grokking.Protocol.not_tendsto_law_of_twin_subset
 #print axioms Transformer.Grokking.Protocol.not_tendsto_setIntegral_of_twin_subset
 #print axioms Transformer.Grokking.Protocol.not_ae_eventually_labelled
+#print axioms Transformer.Grokking.Protocol.uniformPerm_le_two_mul_of_or
+#print axioms Transformer.Grokking.Protocol.uniformPerm_le_two_mul_law_of_or
