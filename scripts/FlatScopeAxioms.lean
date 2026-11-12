@@ -236,3 +236,14 @@ items "Assumed or not covered" of WD11 and XE13
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_identity_eq_zero_iff
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.ones_add_ones_ne_zero
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_ones_add_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.decayStep_identity_self
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.decayRun_identity_self
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.mul_symStep
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.commute_symStep
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.commute_iterate_symStep
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.mul_iterate_symStep
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_mul_le_of_idempotent
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.shearFactor_mul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_shearFactor
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_identity_self
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_identity_self_isDecayedMin

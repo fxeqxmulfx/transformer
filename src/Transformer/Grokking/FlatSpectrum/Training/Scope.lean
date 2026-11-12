@@ -7,6 +7,8 @@ public import Transformer.Grokking.FlatSpectrum.Training.Scope.IdentityMin
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.IdentityOrigin
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.IdentityOriginRun
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.IdentityStationary
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.IdentitySymmetric
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.IdentitySymmetricLimit
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.LinearDiverge
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.MarginContinuity
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.NegStart
@@ -138,6 +140,9 @@ dropped, or the part of the open statement that is proved.
   (`tendsto_decayRun_identity_zero`) and from `V₀ = −U₀` (`tendsto_decayRun_identity_neg`).
   For `0 < λ < 1` the limit is the origin exactly when `U₀ + V₀ = 0`
   (`tendsto_decayRun_identity_zero_iff`): a step keeps the sum of the factors nonzero and
-  does not decrease it near the origin (`frobeniusSq_add_decayStep_identity`). Which
-  projection of a rank from `1` to `n − 1` a run reaches, and so the exceptional starts of a
-  kernel larger than `1 × 1`, are open. -/
+  does not decrease it near the origin (`frobeniusSq_add_decayStep_identity`). From a start
+  `V₀ = U₀` the product `X` of the limit has `X U₀ = (1 − λ) U₀`
+  (`exists_tendsto_decayRun_identity_self`), so the limit is a decayed minimum when `U₀` has
+  a right inverse (`exists_tendsto_decayRun_identity_self_isDecayedMin`). Which projection a
+  run from another start reaches, and so the exceptional starts of a kernel larger than
+  `1 × 1`, are open. -/
