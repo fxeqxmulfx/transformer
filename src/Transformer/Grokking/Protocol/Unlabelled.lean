@@ -30,7 +30,8 @@ sample (`measurePreserving_comp_of_initLaw`, `measurePreserving_relabelSample`).
 At most 96 equations have a given quotient (`card_quotient_eq_le`), fewer than the 4656 held
 out, so some split leaves `r` unlabelled (`exists_unlabelled`) and such splits have positive
 probability (`uniformPerm_unlabelled_pos`); for one residue it is
-`∏_{j<96} (4656 − j)/(9312 − j)`, about `7.7 · 10⁻³⁰`, by a count that is not formalized.
+`∏_{j<96} (4656 − j)/(9312 − j)`, about `7.7 · 10⁻³⁰` (`uniformPerm_unlabelled_eq` and
+`uniformPerm_unlabelled_mem_Icc` of `LabelBound`).
 `LabelCoverage` draws the consequence for the held-out answers.
 -/
 

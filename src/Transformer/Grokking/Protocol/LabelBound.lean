@@ -1,10 +1,10 @@
 module
 
 public import Transformer.Grokking.Protocol.LabelWitness
-public import Transformer.Grokking.Protocol.SplitCount
+public import Transformer.Grokking.Protocol.SplitProbability
 
 /-!
-# A split labels every residue with a probability of at least `1 - 97 / 2 ^ 96`
+# How probable it is that a split labels every residue
 
 Source: arXiv:2201.02177v1 (Power et al.), appendix *Additional experimental details*: half
 of the equations, chosen at random, are the training set;
@@ -12,17 +12,19 @@ of the equations, chosen at random, are the training set;
 section 2.
 
 `LabelCoverage` shows that a true form of the target admits labelled splits only, and that to
-be labelled is not sure. Here is how unsure. The split trains on half of the equations, so
-`SplitCount` applies. A residue `r` is the answer of 96 equations (`withAnswer`,
-`le_card_withAnswer`), and a split leaves `r` unlabelled when it keeps them all out of
-training (`unlabelled_eq`): that has a probability of at most `2⁻⁹⁶`
-(`uniformPerm_unlabelled_le_inv`). There are 97 residues, so a split is not labelled with a
-probability of at most `97 / 2 ^ 96` (`uniformPerm_compl_labelled_le`), which is about
+be labelled is not sure. Here is how unsure. A residue `r` is the answer of 96 equations
+(`withAnswer`, `card_withAnswer`), and a split leaves `r` unlabelled when it keeps them all
+out of its 4656 training slots (`unlabelled_eq`). By the count of `SplitProbability` that has
+the probability `4656 · 4655 ⋯ 4561 / (9312 · 9311 ⋯ 9217)` (`uniformPerm_unlabelled_eq`),
+which is between `7 · 10⁻³⁰` and `8 · 10⁻³⁰` (`uniformPerm_unlabelled_mem_Icc`) and at most
+`2⁻⁹⁶` (`uniformPerm_unlabelled_le_inv`). There are 97 residues, so a split is not labelled
+with a probability of at least `7 · 10⁻³⁰` and at most `97 / 2 ^ 96`
+(`le_uniformPerm_compl_labelled`, `uniformPerm_compl_labelled_le`), which is about
 `1.2 · 10⁻²⁷`; and it is labelled, hence anchored, with a probability of at least
 `1 - 97 / 2 ^ 96` (`le_uniformPerm_labelled`, `le_uniformPerm_anchored`).
 
-These are bounds. The probability that a split is not labelled is about `7.5 · 10⁻²⁸` by a
-count that is not formalized here.
+The probability that a split is not labelled is about `7.5 · 10⁻²⁸` by a count that is not
+formalized here: the bounds above enclose it and do not give it.
 -/
 
 @[expose] public section
@@ -35,8 +37,9 @@ open MeasureTheory
 def withAnswer (r : Fin 97) : Finset (Fin (97 * 96)) :=
   Finset.univ.filter fun j => (equations j).1 = r
 
-/-- A residue is the answer of at least 96 equations: one for each denominator. -/
-lemma le_card_withAnswer (r : Fin 97) : 96 ≤ (withAnswer r).card := by
+/-- A residue is the answer of exactly 96 equations: one for each denominator. -/
+lemma card_withAnswer (r : Fin 97) : (withAnswer r).card = 96 := by
+  refine le_antisymm (card_quotient_eq_le r) ?_
   have h := Finset.card_le_card_of_injOn (s := (Finset.univ : Finset (Fin 96)))
     (t := withAnswer r) (fun d => finProdFinEquiv (r, d))
     (fun d _ => Finset.mem_coe.2 (Finset.mem_filter.2 ⟨Finset.mem_univ _, by simp [equations]⟩))
@@ -64,12 +67,37 @@ lemma unlabelled_eq (r : Fin 97) :
     simp only [Fin.val_castLE] at hk
     omega
 
+/-- **The probability that a split leaves a given residue unlabelled**:
+`4656 · 4655 ⋯ 4561 / (9312 · 9311 ⋯ 9217)`. -/
+theorem uniformPerm_unlabelled_eq (r : Fin 97) :
+    uniformPerm (97 * 96) (unlabelled r) =
+      (Nat.descFactorial 4656 96 : ENNReal) / (Nat.descFactorial 9312 96 : ENNReal) := by
+  rw [unlabelled_eq, uniformPerm_keptOut_eq, card_withAnswer]
+
+/-- That ratio is between `7 · 10⁻³⁰` and `8 · 10⁻³⁰`. -/
+lemma descFactorial_ratio_bounds :
+    7 * Nat.descFactorial 9312 96 ≤ Nat.descFactorial 4656 96 * 10 ^ 30 ∧
+      Nat.descFactorial 4656 96 * 10 ^ 30 ≤ 8 * Nat.descFactorial 9312 96 := by
+  decide
+
+/-- **A split leaves a given residue unlabelled with a probability between `7 · 10⁻³⁰` and
+`8 · 10⁻³⁰`.** -/
+theorem uniformPerm_unlabelled_mem_Icc (r : Fin 97) :
+    uniformPerm (97 * 96) (unlabelled r) ∈ Set.Icc (7 / 10 ^ 30 : ENNReal) (8 / 10 ^ 30) := by
+  have hd : Nat.descFactorial 9312 96 ≠ 0 := (Nat.descFactorial_pos.2 (by norm_num)).ne'
+  rw [uniformPerm_unlabelled_eq]
+  constructor
+  · exact_mod_cast natCast_div_le_div (a := 7) (b := 10 ^ 30) (by positivity) hd
+      descFactorial_ratio_bounds.1
+  · exact_mod_cast natCast_div_le_div (c := 8) (d := 10 ^ 30) hd (by positivity)
+      descFactorial_ratio_bounds.2
+
 /-- **A split leaves a given residue unlabelled with a probability of at most `2⁻⁹⁶`.** -/
 theorem uniformPerm_unlabelled_le_inv (r : Fin 97) :
     uniformPerm (97 * 96) (unlabelled r) ≤ (2 ^ 96)⁻¹ := by
   rw [unlabelled_eq]
   exact (uniformPerm_keptOut_le 4656 (by norm_num) (withAnswer r)).trans
-    (ENNReal.inv_le_inv.2 (pow_le_pow_right₀ one_le_two (le_card_withAnswer r)))
+    (ENNReal.inv_le_inv.2 (pow_le_pow_right₀ one_le_two (card_withAnswer r).ge))
 
 /-- **A split is not labelled with a probability of at most `97 / 2 ^ 96`.** -/
 theorem uniformPerm_compl_labelled_le : uniformPerm (97 * 96) labelledᶜ ≤ 97 / 2 ^ 96 := by
@@ -81,6 +109,11 @@ theorem uniformPerm_compl_labelled_le : uniformPerm (97 * 96) labelledᶜ ≤ 97
     _ ≤ ∑ _r : Fin 97, (2 ^ 96 : ENNReal)⁻¹ :=
         Finset.sum_le_sum fun r _ => uniformPerm_unlabelled_le_inv r
     _ = 97 / 2 ^ 96 := by simp [div_eq_mul_inv]
+
+/-- **A split is not labelled with a probability of at least `7 · 10⁻³⁰`.** -/
+theorem le_uniformPerm_compl_labelled : 7 / 10 ^ 30 ≤ uniformPerm (97 * 96) labelledᶜ :=
+  (uniformPerm_unlabelled_mem_Icc 0).1.trans
+    (measure_mono fun _ hπ => not_mem_labelled_iff.2 ⟨0, hπ⟩)
 
 /-- **A split is labelled with a probability of at least `1 - 97 / 2 ^ 96`.** -/
 theorem le_uniformPerm_labelled : 1 - 97 / 2 ^ 96 ≤ uniformPerm (97 * 96) labelled := by
