@@ -153,6 +153,13 @@ open Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagation
 #print axioms live_endpoint
 #print axioms certified_rows_blend
 #print axioms wide_partial_endpoint
+#print axioms triangle_fits
+#print axioms triangle_first
+#print axioms triangle_fixed
+#print axioms triangle_stalls
+#print axioms triangle_poor_answer
+#print axioms triangle_good_answer
+#print axioms triangle_identified
 
 end DecodedPropagation
 

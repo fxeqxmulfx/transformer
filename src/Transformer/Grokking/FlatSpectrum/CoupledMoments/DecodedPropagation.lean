@@ -7,6 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagatio
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagation.Witness
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagation.Refusal
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagation.Endpoint
+public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagation.Anchor
 
 /-!
 # Finite propagation for arbitrary fixed latent decoders

@@ -15936,3 +15936,21 @@ visible in native candidate selection and reported CE.
 
 `CoupledMoments/DecodedPropagation/Endpoint.lean` proves the endpoint facts
 and the partial-coverage witness before the general native solver is added.
+
+**Anchor coverage can change at a fixed point.** On three rows and columns,
+use `d : ZMod 3 -> Bool`, with `d(0)=false`, `d(1)=d(2)=true`. Observe every
+cell except `(0,0)`, with false on the observed diagonal and true elsewhere.
+The phases `r=(0,1,2)`, `s=(0,2,1)` fit these observations. Anchoring at
+`(1,1)` has only the phase-zero branch. After one sweep its row and column
+domains are both `({1,2},{0},{1,2})`. These domains are a fixed point of the
+support operator, and the missing cell's output union remains `{false,true}`
+for every positive sweep budget. Increasing that budget does not help.
+
+Anchoring instead at the observed `(0,1)` branches on both phases 1 and 2.
+After three sweeps the union at `(0,0)` is `{false}`. Preservation therefore
+proves that every compatible completion has that label: the first anchor's
+nonsingleton was an overestimate, not actual ambiguity. No extra labels or
+preferred branch were used. `DecodedPropagation/Anchor.lean` proves the
+finite computations, the fixed point for all budgets and identification.
+This example motivates trying more than one observed anchor; it does not
+prove completeness of an anchor policy or change the declared-family assumption.
