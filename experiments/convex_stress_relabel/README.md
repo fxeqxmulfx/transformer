@@ -109,3 +109,52 @@ The runner and auditor are ready; the 96-cell stress execution remains pending
 until the original and retained depth cohorts complete. No original-task score
 or complete-hull optimization claim is reported for this extension yet. The old
 failed models and frozen depth cohorts remain the reference evidence.
+
+## Conditional recovery audit
+
+Lean CM13 at `dade2361` proves a sufficient condition for exact completion. The
+observed bipartite graph must be connected and contain a perfect matching; every
+coded target moment on the complete table must factor into unit row and column
+phases. Under a complete code bank, nuclear budgets at most the input dimension,
+valid probability rows and exactly ideal observed CE then force the entire target
+table. This strengthens identification under explicit structure; it does not
+infer the structure of unseen labels from training consistency.
+
+The independent `graph_audit` Rust crate interprets each saved CM12 endpoint
+after the frozen 96-cell cohort finishes. It checks connectivity, constructs and
+verifies an observed perfect matching, and checks all observed phase relations
+with exact integer arithmetic. For a connected consistent graph it constructs
+the unique compatible phase completion using training labels only. It then
+compares that completion with saved predictions and original split labels.
+Full-table agreement with available ground truth is reported only when every
+cell is covered, all labels agree and no duplicate cell has conflicting labels.
+
+The graph conditions, declared budget, numerical CE excess, numerical norm checks
+and empirical target-structure check remain separate fields. Floating-point
+endpoints are not exact-real Lean certificates. The auditor changes no training,
+coding, stopping, prediction or selection. Its five native checks cover missing
+cells, output renaming, matching augmentation, disconnected and inconsistent
+graphs, and a completion that fits training and the saved model while disagreeing
+with an unseen true label. They also check rejection of incomplete or changed
+producer summaries, missing cells and output overwrites. No stress-audit result
+is available before its parent cohort completes.
+
+Build and run serially with the same 8 GiB process cap. The separate manifest and
+source fingerprint preserve the frozen CM12 producer fingerprint. The auditor
+requires all 96 parent outcomes and validates every saved result/model digest and
+raw-audit replay seal. It bounds model JSON size before loading it, caps vocabulary
+at 193, processes one model at a time, and refuses an existing output directory.
+An interrupted audit leaves partial records without a completion summary.
+
+```sh
+cargo fmt --manifest-path experiments/convex_stress_relabel/graph_audit/Cargo.toml --check
+cargo clippy --offline --manifest-path experiments/convex_stress_relabel/graph_audit/Cargo.toml --all-targets -- -D warnings
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 cargo test --offline --release --manifest-path experiments/convex_stress_relabel/graph_audit/Cargo.toml -- --test-threads=1
+cargo build --offline --release --manifest-path experiments/convex_stress_relabel/graph_audit/Cargo.toml
+bash experiments/convex_stress_hull/limited.sh 8 experiments/convex_stress_relabel/graph_audit/target/release/convex-relabel-graph-audit audit-all experiments/convex_stress_relabel/runs/cohort-v1 experiments/convex_stress_relabel/runs/graph-audit-v1
+```
+
+Freeze the committed auditor binary with its SHA-256, producer commit and
+`fingerprint` output before running it. Keep generated per-cell records, summary,
+resource measurements and process exit status in the preserved ignored runs and
+board-artifact directories.
