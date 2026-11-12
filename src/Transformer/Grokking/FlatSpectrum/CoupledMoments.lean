@@ -12,11 +12,12 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedRecovery
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagation
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.FourierExtraction
+public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityExtraction
 
 /-!
 # Shared class distributions and complex spectral bounds
 
-Source: `review/flat_spectrum.md`, CM1–CM20. Multiple fixed complex code readings share the
+Source: `review/flat_spectrum.md`, CM1–CM21. Multiple fixed complex code readings share the
 same learned class probabilities. The domain and ordinary CE are convex, Fourier coordinates
 preserve the full distribution, and a feasible exact observed fit certifies a CE minimum.
 No universal identification of unseen labels follows; SB3 remains a counterexample.
@@ -31,6 +32,9 @@ restrictions without losing the realizable CE optimum; latent states may remain 
 CM20 (`FourierExtraction`): constant amplitude selects a single mode in an exact
 Fourier subspace with separated differences; amplitude error bounds cross-mode products.
 This is a conditional extraction result, not discovery of the subspace from partial data.
+CM21 (`DensityExtraction`): a convex PSD matrix lift admits all pure-mode mixtures;
+two observable linear objectives select a single mode in an exact rotated subspace.
+The exact-subspace assumption remains explicit and is not a missing-label recovery claim.
 -/
 
 @[expose] public section

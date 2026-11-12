@@ -194,6 +194,59 @@ open Transformer.Grokking.FlatSpectrum.CoupledMoments.FourierExtraction
 
 end FourierExtraction
 
+section DensityExtraction
+open Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityExtraction
+
+#print axioms reading_mix
+#print axioms density_convex
+#print axioms feasible_convex
+#print axioms reading_eq
+#print axioms reading_diagonal
+#print axioms diagonal_density
+#print axioms diagonal_decomposition
+#print axioms fourier_diagonal
+#print axioms diagonal_coefficient
+#print axioms flat_off_diagonal
+#print axioms diagonal_feasible
+#print axioms feasible_iff_diagonal
+#print axioms projector_feasible
+#print axioms feasible_hull
+#print axioms projector_reading
+#print axioms diagonal_reading
+#print axioms density_conjugate
+#print axioms reading_change
+#print axioms undo_conjugate
+#print axioms feasible_change
+#print axioms rotated_projector_feasible
+#print axioms rotated_hull
+#print axioms exists_lex_vertex
+#print axioms weighted_bound
+#print axioms weighted_support
+#print axioms lex_weights_pure
+#print axioms score_injective
+#print axioms exists_fourier_max
+#print axioms fourier_max_pure
+#print axioms lex_change
+#print axioms exists_rotated_max
+#print axioms rotated_max_pure
+#print axioms extracted_column_injective
+#print axioms centered_mul
+#print axioms centered_nonzero
+#print axioms supplied_extraction
+#print axioms mixed_weights
+#print axioms mixed_feasible
+#print axioms mixed_not_pure
+#print axioms rotation_left
+#print axioms rotation_right
+#print axioms rotated_centered
+#print axioms witness_extraction
+#print axioms vector_reading
+#print axioms collision_feasible
+#print axioms collision_cross_term
+#print axioms collision_not_diagonal
+
+end DensityExtraction
+
 run_cmd do
   let env ← getEnv
   let standard := [``propext, ``Classical.choice, ``Quot.sound]

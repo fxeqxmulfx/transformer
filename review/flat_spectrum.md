@@ -16069,3 +16069,143 @@ A native experiment must retain every attempted subspace and failed proposal,
 its actual work and memory use, and every earlier candidate. Any returned latent
 table still needs the CM15 spectral/CE audit; new original-data scores require
 a separately frozen protocol and replay. The current frozen cohorts are unchanged.
+
+### CM21. Convex density extraction in a supplied Fourier subspace
+
+CM20's unit-amplitude constraint on vectors is nonconvex. A matrix lift avoids
+that obstruction without imposing rank one. This section proves the exact
+geometry and a finite policy of two linear objectives. It assumes a supplied
+exact subspace; it does not recover that subspace from missing labels.
+
+Let `q > 0`, let `I` be finite, let `r : X <-> ZMod q` be an unknown row
+permutation and let `k : I -> ZMod q` have CM20's separated ordered differences.
+Use unnormalized Fourier features
+
+```
+F[x,i] = chi(r(x) k_i).
+```
+
+The supplied feature matrix is `B = F Q`, where `Q` is unitary:
+`Q* Q = Q Q* = Id`. Here `*` denotes conjugate transpose. The permutation,
+frequencies and unitary are structural witnesses in the theorem, not inputs
+to the optimization policy. The chosen normalization gives pure kernel
+diagonal one. For a numerically supplied orthonormal basis `U`, the equivalent
+scaling is `B = sqrt(q) U`; the exact equality to `F Q` is still a hypothesis,
+not a conclusion about an estimated singular subspace.
+
+**Convex matrix domain.** The coefficient variable `M` is Hermitian positive
+semidefinite with `trace(M)=1`. Its observable kernel is `K = B M B*`.
+Require the affine equalities `K[x,x]=1` for all rows. `Density`, `reading`
+and `Feasible` use these actual matrix operations. `density_convex` and
+`feasible_convex` prove convexity directly; `reading_mix` proves linearity
+of every kernel reading. There is no rank constraint and no presumed vector
+factorization in the domain.
+
+In hidden Fourier coordinates `H = Q M Q*`, unitary conjugation preserves
+positivity and trace, and the observable kernel equals `F H F*`
+(`density_conjugate`, `reading_change`, `feasible_change`). Its diagonal is
+
+```
+K[x,x] = sum_i sum_j H[i,j] chi(r(x) (k_i-k_j)).
+```
+
+The orientation is `k_i-k_j`, because this is `F H F*`; CM20's squared-vector
+formula used conjugated coefficients in the opposite order. Character
+orthogonality gives
+
+```
+sum_z conj(chi(z t)) (F H F*)[r^-1(z),r^-1(z)]
+  = q sum_{i,j : k_i-k_j=t} H[i,j].
+```
+
+If the diagonal is constant, its nonzero Fourier coefficients vanish.
+Separation isolates `q H[i,j]` for each `i != j`; hence `H[i,j]=0`
+(`fourier_diagonal`, `diagonal_coefficient`, `flat_off_diagonal`). This argument
+applies to an arbitrary matrix; positivity and rank are not used to obtain
+the vanishing cross terms.
+
+Positivity then makes the remaining diagonal entries real and nonnegative;
+trace one makes their sum one. Conversely, every such diagonal matrix has
+constant readings. Thus `feasible_iff_diagonal` characterizes all feasible
+matrices by real probability weights. `feasible_hull` and `rotated_hull`
+identify the complete convex sets:
+
+```
+{H feasible in F} = convexHull {E_i : i in I},
+{M feasible in B} = convexHull {Q* E_i Q : i in I},
+```
+
+where `E_i` is the projector onto coordinate `i`. These are equalities of
+sets, not an assumption that an optimizer is an extreme point. In particular,
+all mixtures remain feasible.
+
+**Two observable linear objectives.** Choose any two distinct categorical
+rows `a,b`. First maximize `Re K[a,b]` on the feasible domain. Then maximize
+`Im K[a,b]` on the first optimum face. Both objectives are real linear and
+the second domain adds one affine equality to a convex set. `LexMaximum`
+states exactly this two-stage specification, with comparisons against every
+feasible matrix. It does not presume that any numerical iteration satisfies it.
+This finite policy avoids assuming an unknown mode-dependent separating
+objective or proving a particular rotated-angle tie-break formula.
+
+At a pure mode, the complex score is
+
+```
+s_i = chi((r(a)-r(b)) k_i).
+```
+
+For prime `q`, distinct rows and separated frequencies give distinct scores
+(`score_injective`). For any finite nonempty index set there is an index with
+maximum real score and, among the tied indices, maximum imaginary score
+(`exists_lex_vertex`). Its pure projector attains both objectives
+(`exists_fourier_max`, `exists_rotated_max`), so existence is derived.
+
+For any feasible mixture, equality to the maximal real average forces every
+positive-weight component onto the first optimum face. Equality in the second
+average forces those components to have the same imaginary score as well
+(`weighted_bound`, `weighted_support`). Distinct complex scores therefore
+leave only one nonzero weight, equal to one (`lex_weights_pure`). Consequently
+every exact two-stage optimizer is a pure mode projector, including in the
+supplied rotated basis (`fourier_max_pure`, `lex_change`, `rotated_max_pure`).
+No rank-one optimizer or correct unseen answer is supplied as a hypothesis.
+
+**Observable centering.** If every column of `B` sums to zero, multiplying
+by `Q*` preserves those zero sums. Orthogonality then rules out `k_i=0` for
+every column (`centered_mul`, `centered_nonzero`). A kernel column from an
+extracted pure mode is `chi((r(x)-r(c)) k_i)` for its anchor row `c`. With
+prime `q` and `k_i != 0` these values distinguish all rows
+(`extracted_column_injective`). `supplied_extraction` combines existence and
+injectivity using observable centering and the explicit exact-subspace
+assumption. It identifies a relative phase representation, not a decoder.
+
+**Examples and boundary.** The separated frequencies `1,3,9` modulo 13 admit
+the mixed density `diag(1/2,1/2,0)`, which is none of the pure projectors
+(`mixed_feasible`, `mixed_not_pure`). The rational unitary rotation with block
+`[[3/5,-4/5],[4/5,3/5]]` mixes two hidden modes and fixes the third. Its supplied
+columns are centered; `witness_extraction` proves an optimizer with an
+injective phase column for this genuinely rotated three-mode input.
+
+For the colliding frequencies `0,1` modulo two, lift CM20's vector
+`a=((1+i)/2,(1-i)/2)` to `H=a a*`. `vector_reading` verifies its diagonal
+readings equal the actual squared amplitude. `collision_feasible` proves
+positivity, trace one and both constant readings. Its off-diagonal entry is
+nonzero (`collision_cross_term`), so it is not a diagonal probability mixture
+(`collision_not_diagonal`). Separation cannot simply be removed from the
+characterization. Closed examples instantiate every conditional theorem.
+
+**Remaining work before a new experiment.** This proves an exact convex
+extraction problem, not a method for recovering its input subspace from a
+masked sketch. The separated-difference condition is sufficient and may fail
+for a larger chosen spectral subspace. Estimated subspaces, floating-point
+feasibility, finite iteration budgets and approximate lexicographic optima
+need separate analysis or explicit refusal/tolerance accounting. The proof
+does not justify treating an approximate mixed solution as an exact mode.
+
+A bounded Rust/Kernite follow-up must record the chosen subspace, centering,
+normalization, PSD/trace/diagonal residuals, both objective stages and every
+failed attempt. Right-side phases must be read through the same original
+sketch, not extracted independently. Any phase/decoder proposal still needs
+ordinary-CE scoring, the existing latent-table spectral audits and replay.
+Retain the earlier candidates, the full35 short/long scope, all three update
+modes, the conventional-transformer comparison and the 64 GiB process cap.
+The current frozen producers and scores are unchanged by this proof.

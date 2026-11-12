@@ -1,5 +1,32 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Convex matrix extraction from a supplied subspace (2026-11-12)
+
+Task #211 / CM21 proves the PSD trace-one lift suggested by CM20. Constant
+diagonal readings force a diagonal hidden Fourier density when frequency
+differences are separated. The complete feasible set is the convex hull of
+pure mode projectors, including after an unknown unitary basis rotation.
+Mixed matrices stay feasible; there is no rank constraint. Two observable
+linear objectives, real then imaginary reading of two distinct rows, have a
+pure optimizer and force every optimizer to be pure at a prime modulus.
+Observable column centering removes the constant mode, giving an injective
+relative-phase column. The rationally rotated three-mode modulo-13 example
+inhabits the full extraction theorem. The modulo-2 collision has a feasible
+off-diagonal density and prevents dropping separation.
+
+The exact-subspace assumption remains the main gap. This is not recovery
+from masked labels or a numerical convergence theorem. Before original-data
+runs, build a separate bounded Rust/Kernite density extractor and audit its
+matrix, both objective stages, residuals and failed attempts. Use exact
+rotated-subspace fixtures first, then declared perturbations and categorical
+masked sketches without true latent coordinates. Keep noisy-subspace success
+empirical unless separately proved. Right-side phases must use the same
+original sketch; every proposed latent table still requires ordinary CE and
+the existing spectral/replay checks. Retain all earlier candidates, every
+failure, full35 short/long scope, full/mini/forward modes, the transformer
+comparison and the 64 GiB process cap. No new numerical producer or original
+score is introduced by this proof commit; current frozen jobs continue.
+
 ## Constant-amplitude extraction from a Fourier subspace (2026-11-12)
 
 Task #210 extends the theory before changing the frozen many-to-one constructor.
