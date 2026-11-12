@@ -1,0 +1,20 @@
+{
+  "version": "convex-calibrated-v1",
+  "suite": "../convex_stress/suite.json",
+  "tasks": "All 35 original tasks: 25 short and 10 long; no omissions or deduplication",
+  "readouts": ["scaled", "calibrated"],
+  "scale": 10.0,
+  "epsilon": 0.01,
+  "seed": 0,
+  "mode": "full_batch",
+  "max_updates": 64,
+  "training_seconds": 120,
+  "hard_cell_seconds": 600,
+  "memory_gib": 8,
+  "gap_tolerance": 1e-8,
+  "ideal_ce_tolerance": 1e-8,
+  "stopping": "Fresh full-training ideal CE excess or FW gap, 64 updates, or 120 seconds including data construction and encoding checked between whole updates. Evaluation and replay are separate. Each process has a 600 second wall cap and 8 GiB address-space cap. Every failure is retained.",
+  "selection": "No held-out selection, stopping, candidate choice or tuning. Evaluate every split only after the endpoint is fixed. Report both arms independently.",
+  "features": "Unchanged query-aligned count features and joint coefficients from counts 281fb852. Context capacity reads declared input and rollout lengths only. No task identifier or answer rule enters the predictor.",
+  "scope": "Controlled loss ablation after historical failures; not a new task family, multiple seeds, spectral-table comparison or matched transformer timing. Short/long are the original suite membership tiers, not new training budgets."
+}

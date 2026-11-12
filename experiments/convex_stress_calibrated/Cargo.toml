@@ -1,0 +1,16 @@
+[package]
+name = "convex-stress-calibrated"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+convex-stress-counts = { path = "../convex_stress_counts" }
+convex-stress-repair = { path = "../convex_stress_repair" }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+
+[profile.release]
+lto = "thin"

@@ -1,5 +1,19 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Calibrated convex causal readout (2026-11-12)
+
+The user authorized a fresh short/long test after the Lean-only model work.
+CCa1–CCa2 at `281fb852` supplies the calibrated log-probability CE proof before
+native work. Task #199 freezes both scaled and calibrated readouts on the
+unchanged compact count-channel domain: 70 original full-batch cells, seed zero,
+64 updates, training-only CE/gap stops and a 120 second between-update budget.
+Each process has an 8 GiB memory cap and a 600 second hard wall limit. Evaluate
+the original splits only after freezing the endpoint; retain every failure and
+replay every returned model. Keep the other agents' spectral/depth campaigns
+unchanged. This independent loss ablation does not wait for or select among
+their endpoints, and is not a full claim of the universal feature construction
+or its conditional unseen-answer identification hypotheses.
+
 ## Fixed decoding of bounded latent complex states (2026-11-12)
 
 CM15 in `review/flat_spectrum.md` extends the model before native work. A fixed
