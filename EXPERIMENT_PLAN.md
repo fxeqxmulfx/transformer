@@ -16,9 +16,18 @@ Fourteen native tests include 11,840 small observation/budget cases against all
 compatible completions, separate dense replay, a five-state witness with no
 singleton fibers, tamper rejection and explicit resource refusals. New work
 must preserve all decoder branches in a certificate, the 64 GiB cap, every
-previous candidate and refusal, and the full35 short/long goal. General-fiber
-solver integration and an original-data bank/protocol remain to be frozen;
-these fixtures do not update original-task scores.
+previous candidate and refusal, and the full35 short/long goal.
+
+Task #208 integrates the general-fiber solver in `convex_stress_general` after
+the Lean endpoint proof at `7d299b04`. Twelve native checks cover all three
+modes, partial-coverage learning, independent DFT/SVD audits, exact saved-state
+replay, repetitions, renaming and full-bank refusals. A three-by-three fixture
+reaches CE 0.551444714 from 1.030216342 in full/mini and from 0.678028932 in
+forward, which evaluates no gradients. One solver optimizes one fixed decoder's
+convex subdomain; it does not optimize the full hull. Lean `aef9d966` also
+records a permanent poor-anchor stall and recovery with another observed anchor.
+Useful decoder banks, anchor discovery and an original-data protocol remain
+to be frozen. These fixtures do not update original-task scores.
 
 ## Certified paired-decoder answers (2026-11-12)
 
