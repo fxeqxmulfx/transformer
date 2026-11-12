@@ -14,23 +14,24 @@ is `uniformPerm` of `Transformer.Grokking.Protocol.Target`.
 The scalings of the operands have two orbits: the 9216 equations with a nonzero quotient and
 the 96 with the quotient zero. The certificate of `HeldOutCertificate` takes the anchor of a
 held-out equation in the orbit of that equation. A split that trains on an equation of each
-orbit is `covered`.
+orbit is `anchored`. This is not the complement of `uncovered` of `Uncovered`, which asks that no
+training equation shows the residue `1` or `2`: the two names are about different things.
 
-* The split that trains on the first 4656 equations of the list is covered
-  (`one_mem_covered`), so a uniformly random split is covered with positive probability
-  (`uniformPerm_covered_pos`).
+* The split that trains on the first 4656 equations of the list is anchored
+  (`one_mem_anchored`), so a uniformly random split is anchored with positive probability
+  (`uniformPerm_anchored_pos`).
 * At most 96 equations have the quotient zero (`card_quotient_zero_le`), fewer than the 4656
-  that are held out: some split holds all of them out (`exists_not_mem_covered`), and a
-  uniformly random split is not covered with positive probability
-  (`uniformPerm_compl_covered_pos`).
+  that are held out: some split holds all of them out (`exists_not_mem_anchored`), and a
+  uniformly random split is not anchored with positive probability
+  (`uniformPerm_compl_anchored_pos`).
 
-So the coverage is a condition on the split that is neither sure nor impossible. Its
+So to be anchored is a condition on the split that is neither sure nor impossible. Its
 probability is not computed here.
 
 The condition is the exact one for the anchors: every equation is a training equation or is
-held out (`mem_heldout_or_exists_trainEq`), and a split is covered if and only if every
+held out (`mem_heldout_or_exists_trainEq`), and a split is anchored if and only if every
 held-out equation has a training equation whose quotient a unit carries to its own
-(`mem_covered_iff`).
+(`mem_anchored_iff`).
 -/
 
 @[expose] public section
@@ -41,19 +42,19 @@ namespace Transformer.Grokking.Protocol
 abbrev trainEq (π : Equiv.Perm (Fin (97 * 96))) (i : Fin 4656) : Equation :=
   trainAt equations (by norm_num : 4656 ≤ 97 * 96) π i
 
-/-- **The splits that cover both orbits**: among the training equations there is one with a
-nonzero quotient and one with the quotient zero. -/
-def covered : Set (Equiv.Perm (Fin (97 * 96))) :=
+/-- **The anchored splits**: among the training equations there is one with a nonzero quotient
+and one with the quotient zero, an anchor for each orbit of the scalings. -/
+def anchored : Set (Equiv.Perm (Fin (97 * 96))) :=
   {π | (∃ i, quotient (trainEq π i) ≠ 0) ∧ ∃ i, quotient (trainEq π i) = 0}
 
-/-- The split that trains on the first 4656 equations of the list covers both orbits:
+/-- The split that trains on the first 4656 equations of the list is anchored:
 `0 / 1 = 0` is in its slot `0` and `1 / 1 = 1` in its slot `96`. -/
-theorem one_mem_covered : (1 : Equiv.Perm (Fin (97 * 96))) ∈ covered :=
+theorem one_mem_anchored : (1 : Equiv.Perm (Fin (97 * 96))) ∈ anchored :=
   ⟨⟨⟨96, by norm_num⟩, by decide⟩, ⟨⟨0, by norm_num⟩, by decide⟩⟩
 
-/-- **A uniformly random split covers both orbits with positive probability.** -/
-theorem uniformPerm_covered_pos : 0 < uniformPerm (97 * 96) covered :=
-  uniformPerm_pos_of_mem one_mem_covered
+/-- **A uniformly random split is anchored with positive probability.** -/
+theorem uniformPerm_anchored_pos : 0 < uniformPerm (97 * 96) anchored :=
+  uniformPerm_pos_of_mem one_mem_anchored
 
 /-- At most 96 equations have the quotient zero. -/
 lemma card_quotient_zero_le :
@@ -69,7 +70,7 @@ lemma card_quotient_zero_le :
 
 /-- **Some split holds out every equation with numerator zero**: its training equations all
 have a nonzero quotient. -/
-theorem exists_not_mem_covered : ∃ π : Equiv.Perm (Fin (97 * 96)), π ∉ covered := by
+theorem exists_not_mem_anchored : ∃ π : Equiv.Perm (Fin (97 * 96)), π ∉ anchored := by
   have hcard : 4656 ≤
       (Finset.univ.filter fun j : Fin (97 * 96) => ¬quotient (equations j) = 0).card := by
     have h := Finset.card_filter_add_card_filter_not (s := (Finset.univ : Finset (Fin (97 * 96))))
@@ -81,9 +82,9 @@ theorem exists_not_mem_covered : ∃ π : Equiv.Perm (Fin (97 * 96)), π ∉ cov
     (fun j => ¬quotient (equations j) = 0) hcard
   exact ⟨π, fun h => h.2.elim fun i hi => hπ i hi⟩
 
-/-- **A uniformly random split fails to cover both orbits with positive probability.** -/
-theorem uniformPerm_compl_covered_pos : 0 < uniformPerm (97 * 96) coveredᶜ := by
-  obtain ⟨π, hπ⟩ := exists_not_mem_covered
+/-- **A uniformly random split is not anchored with positive probability.** -/
+theorem uniformPerm_compl_anchored_pos : 0 < uniformPerm (97 * 96) anchoredᶜ := by
+  obtain ⟨π, hπ⟩ := exists_not_mem_anchored
   exact uniformPerm_pos_of_mem (Set.mem_compl hπ)
 
 /-- Every equation is a training equation of the split or is held out. -/
@@ -98,10 +99,10 @@ lemma mem_heldout_or_exists_trainEq (π : Equiv.Perm (Fin (97 * 96))) (x : Equat
         π.symm j₀ := Fin.ext rfl
     rw [trainEq, trainAt, hcast, Equiv.apply_symm_apply]
 
-/-- **The covered splits are those that give every held-out equation an anchor in its orbit**:
+/-- **The anchored splits are those that give every held-out equation an anchor in its orbit**:
 a training equation whose quotient a unit carries to the quotient of the equation. -/
-theorem mem_covered_iff (π : Equiv.Perm (Fin (97 * 96))) :
-    π ∈ covered ↔ ∀ x ∈ heldout equations 4656 π, ∃ (i : Fin 4656) (c : (ZMod 97)ˣ),
+theorem mem_anchored_iff (π : Equiv.Perm (Fin (97 * 96))) :
+    π ∈ anchored ↔ ∀ x ∈ heldout equations 4656 π, ∃ (i : Fin 4656) (c : (ZMod 97)ˣ),
       (c : ZMod 97) * quotient (trainEq π i) = quotient x := by
   constructor
   · rintro ⟨⟨i₁, h₁⟩, i₀, h₀⟩ x -
@@ -125,6 +126,6 @@ that split, whose held-out equations all have a training equation in their orbit
 
 example : trainEq 1 ⟨96, by norm_num⟩ = (1, 0) := by decide
 
-example := (mem_covered_iff 1).1 one_mem_covered
+example := (mem_anchored_iff 1).1 one_mem_anchored
 
 end Transformer.Grokking.Protocol

@@ -25372,20 +25372,6 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`tinySizes`](src/Transformer/Grokking/Protocol/Causal.lean#L72) | abbrev |  |
 | [`eq_zero_of_le_zero`](src/Transformer/Grokking/Protocol/Causal.lean#L74) | lemma | proved |
 
-**[Transformer.Grokking.Protocol.Coverage](src/Transformer/Grokking/Protocol/Coverage.lean)** — 130 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`trainEq`](src/Transformer/Grokking/Protocol/Coverage.lean#L41) | abbrev |  |
-| [`covered`](src/Transformer/Grokking/Protocol/Coverage.lean#L46) | def |  |
-| [`one_mem_covered`](src/Transformer/Grokking/Protocol/Coverage.lean#L51) | theorem | proved |
-| [`uniformPerm_covered_pos`](src/Transformer/Grokking/Protocol/Coverage.lean#L55) | theorem | proved |
-| [`card_quotient_zero_le`](src/Transformer/Grokking/Protocol/Coverage.lean#L59) | lemma | proved |
-| [`exists_not_mem_covered`](src/Transformer/Grokking/Protocol/Coverage.lean#L72) | theorem | proved |
-| [`uniformPerm_compl_covered_pos`](src/Transformer/Grokking/Protocol/Coverage.lean#L85) | theorem | proved |
-| [`mem_heldout_or_exists_trainEq`](src/Transformer/Grokking/Protocol/Coverage.lean#L90) | lemma | proved |
-| [`mem_covered_iff`](src/Transformer/Grokking/Protocol/Coverage.lean#L103) | theorem | proved |
-
 **[Transformer.Grokking.Protocol.Decision](src/Transformer/Grokking/Protocol/Decision.lean)** — 195 lines
 
 | declaration | kind | status |
@@ -25566,6 +25552,20 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sum_ind`](src/Transformer/Grokking/Protocol/NormScale.lean#L115) | lemma | proved |
 | [`sum_three`](src/Transformer/Grokking/Protocol/NormScale.lean#L120) | lemma | proved |
 | [`sum_sq_three`](src/Transformer/Grokking/Protocol/NormScale.lean#L127) | lemma | proved |
+
+**[Transformer.Grokking.Protocol.OrbitAnchors](src/Transformer/Grokking/Protocol/OrbitAnchors.lean)** — 131 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`trainEq`](src/Transformer/Grokking/Protocol/OrbitAnchors.lean#L42) | abbrev |  |
+| [`anchored`](src/Transformer/Grokking/Protocol/OrbitAnchors.lean#L47) | def |  |
+| [`one_mem_anchored`](src/Transformer/Grokking/Protocol/OrbitAnchors.lean#L52) | theorem | proved |
+| [`uniformPerm_anchored_pos`](src/Transformer/Grokking/Protocol/OrbitAnchors.lean#L56) | theorem | proved |
+| [`card_quotient_zero_le`](src/Transformer/Grokking/Protocol/OrbitAnchors.lean#L60) | lemma | proved |
+| [`exists_not_mem_anchored`](src/Transformer/Grokking/Protocol/OrbitAnchors.lean#L73) | theorem | proved |
+| [`uniformPerm_compl_anchored_pos`](src/Transformer/Grokking/Protocol/OrbitAnchors.lean#L86) | theorem | proved |
+| [`mem_heldout_or_exists_trainEq`](src/Transformer/Grokking/Protocol/OrbitAnchors.lean#L91) | lemma | proved |
+| [`mem_anchored_iff`](src/Transformer/Grokking/Protocol/OrbitAnchors.lean#L104) | theorem | proved |
 
 **[Transformer.Grokking.Protocol.QuotientTransfer](src/Transformer/Grokking/Protocol/QuotientTransfer.lean)** — 172 lines
 

@@ -3,7 +3,7 @@ module
 public import Transformer.Grokking.Protocol.SolverScale
 public import Transformer.Grokking.Protocol.QuotientWitness
 public import Transformer.Grokking.Protocol.Refutation
-public import Transformer.Grokking.Protocol.Coverage
+public import Transformer.Grokking.Protocol.OrbitAnchors
 
 /-!
 # Held-out answers of the decoder from training answers and the structure of its logits
@@ -24,7 +24,7 @@ nothing: the decoder with every parameter zero has it exactly and answers no equ
 (`predict_answerLogits_zero_ne`).
 
 * With one anchor for each orbit and one error for each, this is
-  `heldout_accuracy_eq_one_of_anchors`; the split is then `covered`.
+  `heldout_accuracy_eq_one_of_anchors`; the split is then `anchored` (`OrbitAnchors`).
 * The premises are consistent on the decoder: `solver` satisfies them on the split that
   trains on the first 4656 equations, with a positive error (`heldout_accuracy_solver`).
 * The margins of the training answers do not suffice: there are parameters and a split with

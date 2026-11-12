@@ -34,7 +34,7 @@ public import Transformer.Grokking.Protocol.SolverGap
 public import Transformer.Grokking.Protocol.SolverForward
 public import Transformer.Grokking.Protocol.SolverLogits
 public import Transformer.Grokking.Protocol.SolverScale
-public import Transformer.Grokking.Protocol.Coverage
+public import Transformer.Grokking.Protocol.OrbitAnchors
 public import Transformer.Grokking.Protocol.HeldOutCertificate
 
 /-! The protocol behind the division curves of Power et al., *Grokking: generalization beyond
