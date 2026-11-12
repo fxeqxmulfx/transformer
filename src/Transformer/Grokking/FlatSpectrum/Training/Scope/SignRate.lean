@@ -160,6 +160,16 @@ theorem exists_log_le_frobeniusSq_decayRun_signProbe (hη : 0 < η) (h0 : U₀ +
   have h3 := frobeniusSq_nonneg ((R η 0 U₀ V₀ t).1 + (R η 0 U₀ V₀ t).2)
   linarith
 
+/-! The witnesses: the system of the run from `U₀ = V₀ = 1` with the step `1/10`, where
+`a_0 − b_0 = 4`; the system `signWitness`; and the start `U₀ = [1 0]`, `V₀ = [0 1]` of the
+example of XE17. -/
+
+example := (isSignSystem_decayRun_signProbe (1 / 10) (1 : Matrix (Fin 1) (Fin 1) ℂ)
+  1).exp_add_le_exp_succ (t := 0) (by norm_num) (frobeniusSq_nonneg _) (frobeniusSq_nonneg _)
+  (by simp [decayRun, frobeniusSq]; norm_num)
+
+example := isSignSystem_signWitness.exists_exp_ge one_pos one_pos le_rfl
+
 example := exists_ceLoss_signProduct_le (η := 1 / 10) (by norm_num)
   fromCols_one_zero_add_ne_zero
 

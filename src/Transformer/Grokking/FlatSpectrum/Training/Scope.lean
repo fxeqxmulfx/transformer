@@ -23,6 +23,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.Scope.PhasedDirection
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.PhasedRun
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.RankStart
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SeparateCells
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.SeparateCellsRate
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SeparateCellsRows
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SeparateCellsRun
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignGap
@@ -103,8 +104,9 @@ dropped, or the part of the open statement that is proved.
   step `η > 0` the norm of the factors tends to infinity when `u + v ≠ 0` for some sample
   (`tendsto_frobeniusSq_decayRun_signCode_atTop`), and the cross-entropy tends to `0`, with a
   margin that tends to infinity, exactly when `u + v ≠ 0` for every sample
-  (`tendsto_ceLoss_decayRun_signCode_iff`, `tendsto_margin_decayRun_signCode_atTop`). The
-  direction of the product, and samples that share a row or a column, are open.
+  (`tendsto_ceLoss_decayRun_signCode_iff`, `tendsto_margin_decayRun_signCode_atTop`); the
+  loss then falls at least like `1 / t` (`exists_ceLoss_decayRun_signCode_le`). The direction
+  of the product, and samples that share a row or a column, are open.
 * One run with a decreasing weight decay (XE13, XE18). Let the weight decay pass through a
   positive sequence `λ_j → 0`, phase `j` making `T j` steps with `λ_j` and the step of XE3 for
   the ball of its start (`phaseRun`, `phaseStep`). From a start of full row rank there are
