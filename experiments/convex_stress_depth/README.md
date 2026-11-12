@@ -270,3 +270,14 @@ bash experiments/convex_stress_hull/limited.sh 8 \
 
 This command computes only allocation estimates on the four original datasets;
 it constructs no training cache or head and scores no held-out metrics.
+
+The preflight at producer `3dac93c3` completed in 2.28 seconds with 252,996 KiB
+peak RSS. At cumulative depth four, each depth task needs 524,510,920 bytes of
+explicit buffers with streaming, versus 2,189,341,824 / 2,191,138,112 bytes with
+the in-memory cache. Its cache file is bounded by about 1.64 GB. Short binding
+at depth four needs 1,464,658,120 bytes. MQAR at cumulative depth two needs
+1,998,235,656 bytes and fits the 2 GiB explicit limit; depth four still needs
+8,846,677,704 bytes and is rejected because of the dense output head itself.
+These forecasts do not establish peak training memory or a learning result.
+The frozen preflight binary, exact source fingerprint, JSON and resource log
+are retained locally in `.kanban/artifacts/175/retention-components/`.
