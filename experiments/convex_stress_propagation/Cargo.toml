@@ -1,0 +1,16 @@
+[package]
+name = "convex-stress-propagation"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+serde = { version = "=1.0.229", features = ["derive"] }
+
+[dev-dependencies]
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+
+[profile.test]
+opt-level = 2

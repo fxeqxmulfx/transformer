@@ -1,5 +1,25 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## General decoder propagation (2026-11-12)
+
+CM19 at `0807609b` extends the Lean result to arbitrary fixed decoder fibers,
+even cyclic groups and finite decoder banks. Every compatible assignment
+survives finite support pruning in a normalized anchor branch; singleton unions
+over every branch and bank member certify answers. The resulting linear
+equalities preserve convexity and the realizable ordinary-CE optimum. A
+three-state fiber supplies a concrete unseen answer with an ambiguous latent
+state. No unknown-decoder discovery, coverage rate or optimizer convergence is
+proved.
+
+Task #207 implements this finite component in `convex_stress_propagation`.
+Fourteen native tests include 11,840 small observation/budget cases against all
+compatible completions, separate dense replay, a five-state witness with no
+singleton fibers, tamper rejection and explicit resource refusals. New work
+must preserve all decoder branches in a certificate, the 64 GiB cap, every
+previous candidate and refusal, and the full35 short/long goal. General-fiber
+solver integration and an original-data bank/protocol remain to be frozen;
+these fixtures do not update original-task scores.
+
 ## Certified paired-decoder answers (2026-11-12)
 
 CM18 at `5c0fe9bc` proves training-only identification under the paired-phase
