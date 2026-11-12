@@ -120,11 +120,6 @@ theorem ae_initMeasure_abs_le_one : ∀ᵐ θ ∂initMeasure paperSizes,
   · simp only [eventually_all]
     exact fun l i => hev (.bias2 l i) (by simp [initLaw])
 
-/-- What holds for almost every initialization holds for almost every sample. -/
-lemma ae_law_init {ι : Type*} {N k : ℕ} {ν : Measure (ι → ℝ)} [SFinite ν]
-    {P : (ι → ℝ) → Prop} (h : ∀ᵐ θ ∂ν, P θ) : ∀ᵐ ω ∂law N k ν, P ω.2.1 :=
-  (Measure.quasiMeasurePreserving_fst.comp Measure.quasiMeasurePreserving_snd).ae h
-
 /-- **Division under AdamW: for almost every sample the logits are bounded along the whole
 run**, for all tokens read, all activations and every update. -/
 theorem ae_abs_logits_divisionRun_le : ∀ᵐ ω ∂law (97 * 96) 4656 (initMeasure paperSizes),

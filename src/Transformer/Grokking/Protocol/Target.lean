@@ -19,7 +19,9 @@ would have to state, and proves none.
 A run is fixed by a sample (`Sample`): a shuffle of the `N` equations, the initial parameters,
 and a shuffle of the `k` training equations for each epoch. Its law (`law`) is the product of
 the uniform law on shuffles, an initialization law `ν`, and the uniform law for every epoch,
-all independent. The sample fixes the trajectory (`trajectory`): the author's Adam run whose
+all independent, so what holds for almost every initialization, or for almost every sequence
+of the epochs' shuffles, holds for almost every sample (`ae_law_init`, `ae_law_shuffles`).
+The sample fixes the trajectory (`trajectory`): the author's Adam run whose
 update `t` sees the gradient `lossGrad` of the loss of batch `t` of `batchSlots`. The held-out
 accuracy after `t` updates (`heldoutAccuracy`) is that of `accuracy` on the held-out equations.
 
@@ -103,6 +105,19 @@ noncomputable def law (N k : ℕ) (ν : Measure (ι → ℝ)) : Measure (Sample 
 instance (ν : Measure (ι → ℝ)) [IsProbabilityMeasure ν] : IsProbabilityMeasure (law N k ν) := by
   unfold law
   infer_instance
+
+/-- What holds for almost every initialization holds for almost every sample. -/
+lemma ae_law_init {ν : Measure (ι → ℝ)} [SFinite ν] {P : (ι → ℝ) → Prop}
+    (h : ∀ᵐ θ ∂ν, P θ) : ∀ᵐ ω ∂law N k ν, P ω.2.1 :=
+  (Measure.quasiMeasurePreserving_fst.comp Measure.quasiMeasurePreserving_snd).ae h
+
+/-- What holds for almost every sequence of the epochs' shuffles holds for almost every
+sample. -/
+lemma ae_law_shuffles {ν : Measure (ι → ℝ)} [SFinite ν]
+    {P : (ℕ → Equiv.Perm (Fin k)) → Prop}
+    (h : ∀ᵐ σ ∂Measure.infinitePi fun _ : ℕ => uniformPerm k, P σ) :
+    ∀ᵐ ω ∂law N k ν, P ω.2.2 :=
+  (Measure.quasiMeasurePreserving_snd.comp Measure.quasiMeasurePreserving_snd).ae h
 
 variable [Fintype C] [LinearOrder C] [Nonempty C] [DecidableEq X]
 

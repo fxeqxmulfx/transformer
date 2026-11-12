@@ -1,12 +1,14 @@
 # Division mod 97: does held-out accuracy tend to 1? Target and gaps
 
-Board tasks #126–#132, #137 and #189. Sources: `papers/arXiv-2201.02177v1/main.tex` (Power
-et al.), Figure 1 and the appendix *Additional experimental details*; openai/grok at
-`3d64b1d8`; the protocol pinned in `experiments/grok_division/PROTOCOL.md`. Written
-2026-11-11; sections 5 and 6, the second half of section 2, the enclosures of bridge 5, the
-measurability of bridge 2, the mean accuracy, the third and fourth parts of section 2 and the
-probabilities that a split leaves a residue unlabelled, is labelled and is anchored, with the
-bounds they give, added 2026-11-12.
+Board tasks #126–#132, #137, #189, #193 and #194. Sources:
+`papers/arXiv-2201.02177v1/main.tex` (Power et al.), Figure 1 and the appendix *Additional
+experimental details*; openai/grok at `3d64b1d8`; the protocol pinned in
+`experiments/grok_division/PROTOCOL.md`. Written 2026-11-11; sections 5 and 6, the second half
+of section 2, the enclosures of bridge 5, the measurability of bridge 2, the mean accuracy,
+the third and fourth parts of section 2 and the probabilities that a split leaves a residue
+unlabelled, is labelled and is anchored, with the bounds they give, added 2026-11-12. The row
+of section 5 on a limit of the parameters under weight decay (#194) was added the same day,
+while #193 was attempted; #193 is open.
 
 On 2026-11-12, at the user's decision, tasks #130 to #132 were re-scoped. They asked for a
 proof that training reaches and keeps a generalizing regime (#130), for the end-to-end theorem
@@ -346,12 +348,14 @@ Two substitutions are therefore excluded, and no statement here makes them:
 
 Bridge 2 is closed and bridge 5 is proved as a sufficient condition. Bridge 1 (#182) and the
 second half of bridge 3 (#181) are open. Bridges 4, 6 and 7 are open research problems
-(#189). The measurements of `experiments/grok_division` are finite runs in `f32` and close
-none of them.
+(#189; for AdamW with a positive weight decay, #193). The measurements of
+`experiments/grok_division` are finite runs in `f32` and close none of them.
 
 ## 5. Ways to bridge 6: what the runs exclude and what stays open
 
-`Protocol/{ReadoutBound,TargetMean,ReadoutGradient,ReadoutPairing,AdamStationary,ReadoutStationary,ReadoutWitness,DecayedLogits,Continuity,LimitNotFitted}.lean`.
+`Protocol/{ReadoutBound,TargetMean,ReadoutGradient,ReadoutPairing,AdamStationary,ReadoutStationary,ReadoutWitness,DecayedLogits,Continuity,LimitNotFitted}.lean`;
+for the row on a limit of the parameters under weight decay,
+`Protocol/{AdamIdle,UnreadToken,AbsentBatches,DecayedEmbedding,DecayedLimit}.lean`.
 
 Bridge 6 (#189) asks that training reaches the structure of bridge 5 and keeps it. Each row
 is a way a proof could go and what is known of it. A row that is closed is closed for that way
@@ -363,6 +367,7 @@ re-scoping; it proves no attraction and no invariance.
 | --- | --- | --- |
 | Adam without weight decay: the parameters converge, and the limit is analysed | Closed where the run fits its batches with a margin. If every parameter of a trajectory converges, then for every `μ > 0`, from some update on, every batch has an equation whose answer or closing token leads by less than `μ` at the parameters the batch is seen at. A readout coordinate that converges sees gradients that tend to 0, whatever the batches and without continuity of the gradient; the readout paired with its gradient is the mean of the expected logit less the logit of the target, which a margin keeps below a negative number while the logits are bounded. At the limit itself, because the logits are continuous in the parameters, some training equation has an answer or a closing token with a margin of at most 0: a limit of the parameters does not fit the training set with a margin. Not excluded: a trajectory that converges to parameters at which some training target is tied or wrong | `tendsto_adamRun_grad_zero`, `sourceGrad_out`, `sum_out_mul_sourceGrad`, `sum_out_mul_sourceGrad_le_of_margin`, `eventually_exists_margin_lt`, `division_eventually_margin_lt`, `continuous_logits_relu`, `exists_margin_le_zero_of_tendsto_division`; the witness of the hypotheses is the run from zero, `divisionRun_zeroSample` |
 | AdamW: the training loss tends to 0, or the margins grow without bound | Closed for almost every run. With weight decay 1 the readout and the second normalizations stay within 17 of zero, so every logit stays within `logitBox`, which is below 455 600; the loss of every batch with a target stays above `log(1 + e^(−2·logitBox))`, which is positive, and no answer leads by more than `2·logitBox`, at every update. The bound is far from what a run shows; what it gives is uniformity in the update | `abs_logits_le`, `ae_initMeasure_abs_le_one`, `ae_abs_logits_divisionRun_le`, `ae_floor_le_batchLoss_divisionRun`, `ae_margin_divisionRun_le`, `logitBox_lt`, `floor_pos` |
+| AdamW with any positive weight decay: the parameters converge, and the limit is analysed (#194, found while #193 was attempted) | Closed where the run keeps its held-out answers ahead by a margin, for almost every sample and whatever the law of the initial parameters. A batch in which no equation shows a residue, as numerator, denominator or quotient, returns the gradient 0 in the embedding of its token. An update that sees the gradient 0 in a coordinate multiplies its first moment by `β₁` and its second by `β₂`, so what the update subtracts shrinks by the factor `β₁/√β₂`, up to the bias corrections; the factor is below 1 because `β₁² = 0.81 < 0.98 = β₂`. Along a coordinate that converges to `a` what the update subtracts converges to `−wd·a`. And almost surely the first batch of infinitely many epochs shows no given residue: at least 4367 of the 4656 training equations do not show it, more than the 512 of a batch. So every coordinate of the embedding of a residue that converges converges to 0; the limit of the parameters, if there is one, gives every equation the same logits; and along a run whose parameters converge there is a residue `r` such that for every `μ > 0`, from some update on, no equation with another answer than `r` has its answer ahead by `μ`, some held-out equation among them. This is a necessary condition and no more. Not excluded: a run that converges while every held-out answer is right from some update on, with margins that tend to 0, the answers being tied at the limit. Not known: whether a run from the source's initialization converges with positive probability; if none does, the statement says nothing of those runs | `eq_zero_of_tendsto_adamRun_of_frequently_idle`, `sourceGrad_emb_eq_zero`, `ae_frequently_batch_not_shows`, `ae_emb_eq_zero_of_tendsto_divisionRun`, `ae_logits_limit_eq`, `ae_exists_eventually_margin_lt`, `ae_eventually_exists_heldout_margin_lt`; the witness of the hypotheses is the law whose initial parameters are zero, `ae_divisionRun_dirac_zero` |
 | Transfer from the minima of a weight-decayed factorization | Excluded in section 3: another model and another optimizer, no minimum without decay, and a limit of AdamW is not a minimizer of the weight-decayed loss | `not_exists_forall_ceLoss_le`, `not_tendsto_adamRun_factor` |
 | A checkpoint with the certificate, then invariance of the certificate along the run | No support. On enclosures of the real-valued logits the certificate holds at five retained checkpoints of two AdamW runs and is lost again in both; no Adam checkpoint has it. Those trajectories are in `f32`; nothing is known of the exact-real one | bridge 5; `experiments/grok_division/README.md` |
 | A set of starts of positive probability from which the run answers every held-out equation at all later updates: a lower bound of the probability of the event of the target | Open; no such set is known, and that probability is not shown to be positive. What is proved bounds a run for finitely many updates only: in `t` updates of Adam a parameter moves by at most `0.017 t`. Such a set is not the basin of a limit that fits the training set with a margin, because a convergent trajectory of Adam has no such limit (first row). The measured runs suggest none: under AdamW five of six have evaluations with every held-out answer right and none of the six keeps 99% through its last window; under Adam no evaluation of three runs has every held-out answer right within `10⁶` updates | `abs_adamRun_params_sub_le`, `abs_trajectory_division_sub_le`; `experiments/grok_division/README.md` |
@@ -441,7 +446,7 @@ limit; the run from zero meets that hypothesis (`divisionRun_zeroSample`; exampl
 
 **What the claim rests on.** For each of the 15 statements of the claim the script prints the
 modules of this library that its statement and its proof reach; it reads them from the
-kernel's environment, as `#print axioms` does. Together they rest on 48 modules: 45 of the 74
+kernel's environment, as `#print axioms` does. Together they rest on 48 modules: 45 of the 79
 of `Grokking/Protocol`, then `Grokking/DivisionOrbits/{Basic,FiniteCells}` and
 `Landscape/Neural/Loss`, which holds the cross-entropy.
 
@@ -453,7 +458,7 @@ of `Grokking/Protocol`, then `Grokking/DivisionOrbits/{Basic,FiniteCells}` and
 | The event and its bound | `EventualSuccess`, `ExplicitTolerance` |
 | The count of the splits | `SplitSlots`, `SplitCount`, `SplitProbability`, `LabelBound`, `Bonferroni`, `LabelEnclosure` |
 
-The other 29 modules of `Grokking/Protocol` are not reached, and no module of `FlatSpectrum`
+The other 34 modules of `Grokking/Protocol` are not reached, and no module of `FlatSpectrum`
 is:
 
 - No result about the weight-decayed factorization, its minima, their directions or flat
@@ -463,10 +468,12 @@ is:
   modules, `HeldOutCertificate`, `Enclosure`): the claim assumes no structure of the logits.
 - The ways of section 5 do not enter (`AdamStationary`, `ReadoutBound`, `ReadoutGradient`,
   `ReadoutPairing`, `ReadoutWitness`, `DecayedLogits`, `LimitNotFitted`, `AdamLimit`,
-  `AdamLimitWitness`). Three modules named in that section are reached, and the script prints
-  what of them: of `ReadoutStationary` the definition `divisionRun` and nothing else, of
-  `TargetMean` one lemma on the derivative of a sum over a list, and of `Continuity` that the
-  decoder is continuous in its parameters. The last two serve measurability.
+  `AdamLimitWitness`, and the five of the limit under weight decay: `AdamIdle`, `UnreadToken`,
+  `AbsentBatches`, `DecayedEmbedding`, `DecayedLimit`). Three modules named in that section
+  are reached, and the script prints what of them: of `ReadoutStationary` the definition
+  `divisionRun` and nothing else, of `TargetMean` one lemma on the derivative of a sum over a
+  list, and of `Continuity` that the decoder is continuous in its parameters. The last two
+  serve measurability.
 - The bounds on the update (`AdamBounds`, `AdamBox`, `AdamGrowth`), `AdamSource`, `OffKinks`
   and `Witness` do not enter. The refutation holds for the update `adamStep` as it is
   defined; that this update is the code's is a separate theorem, `adamStep_eq_sourceStep`.
@@ -513,7 +520,13 @@ in the extended nonnegative reals.
 
 **Open.** #189: a positive statement, under a condition on the split or with a stated
 probability. It is an open research problem, and nothing here is evidence for it or against
-it. #182: a relation between the `f32` trajectory and the exact-real one (bridge 1). #181:
+it. #193: the same for AdamW with a positive weight decay alone. It was attempted on
+2026-11-12 and no proof was found: no set of starts, no invariant region and no stationary
+regime with correct held-out answers is known, and of the six measured runs with weight
+decay 1 none keeps 99% of its held-out answers through its last window. What the attempt gave
+is a necessary condition, the row of section 5 on a limit of the parameters under weight
+decay (#194); by its own tests #193 stays open on that. #182: a relation between the `f32`
+trajectory and the exact-real one (bridge 1). #181:
 whether the exact-real run avoids the parameters at which a hidden input is 0 (bridge 3); the
 claim does not wait for it, because it is about the update with the source's rule at such
 parameters. #187: the probabilities of an uncovered split and of a labelled twin split,

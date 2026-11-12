@@ -74,6 +74,11 @@ public import Transformer.Grokking.Protocol.LabelBound
 public import Transformer.Grokking.Protocol.Bonferroni
 public import Transformer.Grokking.Protocol.LabelEnclosure
 public import Transformer.Grokking.Protocol.ExplicitTolerance
+public import Transformer.Grokking.Protocol.AdamIdle
+public import Transformer.Grokking.Protocol.UnreadToken
+public import Transformer.Grokking.Protocol.AbsentBatches
+public import Transformer.Grokking.Protocol.DecayedEmbedding
+public import Transformer.Grokking.Protocol.DecayedLimit
 
 /-! The protocol behind the division curves of Power et al., *Grokking: generalization beyond
 overfitting on small algorithmic datasets*, and what "held-out accuracy tends to 1" means for
@@ -137,9 +142,17 @@ answer of no training equation with the probability `4656 ⋯ 4561 / (9312 ⋯ 9
 `7.7 · 10⁻³⁰`, a split fails to label every residue with a probability between
 `7.46 · 10⁻²⁸` and `7.47 · 10⁻²⁸`, by the union bound and Bonferroni's inequality, and a run
 eventually answers every held-out equation with a probability of at most
-`1 - 7.46 · 10⁻²⁸ / 2`. The target is a predicate of the model, its labels and its
-gradient oracle: no convergence of any transformer is proved here, and no trained decoder is
-proved to have that structure, for an enclosure of its logits is a hypothesis here. The map
-of what is proved elsewhere and what is missing is `review/grok_division_convergence.md`. -/
+`1 - 7.46 · 10⁻²⁸ / 2`; and a limit of the parameters as a way to a convergence with weight
+decay: a coordinate that converges under a weight decay that is not zero and sees the
+gradient zero at infinitely many updates converges to zero, the backward pass returns zero in
+the embedding of a token that the batch does not read, and almost surely every residue is
+missing from infinitely many batches, so for almost every run with a positive weight decay the
+limit of the parameters, if there is one, gives every equation the same logits, and along a
+run that converges only the answers of one residue can keep a margin, which leaves open a run
+that converges with margins that tend to zero. The target is a predicate of the model, its
+labels and its gradient oracle: no convergence of any transformer is proved here, and no
+trained decoder is proved to have that structure, for an enclosure of its logits is a
+hypothesis here. The map of what is proved elsewhere and what is missing is
+`review/grok_division_convergence.md`. -/
 
 @[expose] public section

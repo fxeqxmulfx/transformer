@@ -14,9 +14,10 @@ The hypotheses of `ReadoutStationary` are those of a run whose readout converges
 known to converge: with every parameter zero, a decoder with a block has the logits `0` along
 every coordinate line (`logits_update_zero`), so the backward pass returns `0`
 (`sourceGrad_zero`) and the run stays at zero, with or without weight decay
-(`batchRun_zero`, `divisionRun_zeroSample`). It is the witness of `eventually_exists_margin_lt`
-and of `division_eventually_margin_lt`; its margins are `0`. No other run is proved to
-converge here, and by those theorems one that keeps its batches fitted with a margin does not.
+(`batchRun_zero`, `divisionRun_eq_zero`, `divisionRun_zeroSample`). It is the witness of
+`eventually_exists_margin_lt` and of `division_eventually_margin_lt`; its margins are `0`. No
+other run is proved to converge here, and by those theorems one that keeps its batches fitted
+with a margin does not.
 
 The hypotheses of `sum_out_mul_sourceGrad_le_of_margin` are those of a fitted batch. The built
 parameters `solver` fit the answer of every equation with a margin of at least `1/900` and
@@ -77,12 +78,21 @@ theorem batchRun_zero (hS : 0 < S.blocks) (h : Hyper) (batch : ℕ → List (Exa
 /-- The sample with the identity shuffles and every initial parameter zero. -/
 def zeroSample : Sample (97 * 96) 4656 (Param paperSizes) := (1, 0, fun _ => 1)
 
+/-- **The division run of a sample whose initial parameters are zero stays at zero**, for every
+weight decay and whatever its shuffles. -/
+theorem divisionRun_eq_zero (decay : ℝ) {ω : Sample (97 * 96) 4656 (Param paperSizes)}
+    (h0 : ω.2.1 = 0) (t : ℕ) : divisionRun decay ω t = 0 := by
+  change batchRun (Hyper.source decay) (fun s => (divisionBatch ω s).map supervised) ω.2.1 t = 0
+  rw [h0]
+  exact batchRun_zero (by decide) _ _ t
+
 /-- The division run of the sample `zeroSample` stays at zero, for every weight decay. -/
 theorem divisionRun_zeroSample (decay : ℝ) (t : ℕ) : divisionRun decay zeroSample t = 0 :=
-  batchRun_zero (S := paperSizes) (by decide) (Hyper.source decay)
-    (fun s => (divisionBatch zeroSample s).map supervised) t
+  divisionRun_eq_zero decay rfl t
 
 /-! The witnesses. -/
+
+example (t : ℕ) : divisionRun 1 zeroSample t = 0 := divisionRun_eq_zero 1 rfl t
 
 example : sourceGrad [twoTargets] 0 = 0 := sourceGrad_zero (by decide) _
 
