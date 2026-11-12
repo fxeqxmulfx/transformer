@@ -14982,3 +14982,62 @@ parametrization of a trainable permutation. A native follow-up may propose
 codings from training observations and compare their actual CE, but finite
 proposal search alone does not certify the entire new domain. No conclusion
 about missing labels follows without further structure and coverage.
+
+### CM13. Graph coverage and coded structure identify the complete CE optimum
+
+CM6 establishes recovery of a single missing entry in a two-by-two example.
+The existing Theorem E gives a general route from the same convex nuclear
+budget to recovery on an entire square input table. Let the input dimension be
+N and let the observed cells form a bipartite graph between its rows and columns.
+Assume that graph is connected and its observed cells contain a perfect matching.
+
+For unit-modulus vectors a and b, Theorem E says that `K = a bᵀ` is the unique
+minimum-nuclear-norm interpolant of its observed entries, and `||K||_* = N`.
+Consequently any interpolating X with `||X||_* <= N` equals K: K's minimality
+places its norm below every other interpolant, while the budget places X's
+norm below K's. Thus X is also a minimizer, and uniqueness applies. The learner
+needs only the convex upper bound, not a rank equality or trained factors.
+
+Now let `phi : F × C -> complex` be a complete code bank with
+`phi* phi = rho I`, `rho != 0`. Suppose a full label table y has the explicit
+coded structure
+
+```
+phi(f, y(i,j)) = a_f(i) b_f(j),
+|a_f(i)| = |b_f(j)| = 1.
+```
+
+Learn probability rows P under the bounds `||M_f(P)||_* <= N`. If their actual
+ordinary observed CE attains the one-hot lower bound, CM6 forces every observed
+target probability to one. Each moment therefore interpolates its observed
+entries of `a_f b_fᵀ`. The graph argument recovers every entry of every moment.
+CM3's injectivity of the complete code bank then gives
+
+```
+P = pointMass(y)
+```
+
+on **all** input cells, including unobserved ones. Repeated observations remain
+in CE; the graph uses their set of cells. The constant Fourier mode requires
+no new constraint: probability rows already make it the all-ones matrix,
+whose nuclear norm is N. The native nonconstant-mode budget therefore supplies
+the relevant bounds. CM12's coordinate covariance permits applying the result
+in a fixed renamed output coding and returning the probabilities to their
+original class order.
+
+`CoupledMoments/Schatten/GraphRecovery.lean` proves the budget-to-uniqueness step,
+the automatic constant-mode bound and the complete probability-table theorem.
+Its inhabited two-class example observes three cells of a nonconstant table,
+has a connected graph and an observed perfect matching, and leaves `(1,0)`
+unobserved. Both classes occur among its observed targets.
+
+The target's coded separability is a structural hypothesis about the complete
+table. Observed phase consistency alone does not prove that unknown ground
+truth satisfies it. A training-only graph/coding audit can instead construct a
+compatible separable completion, check connectivity and a matching, and compare
+saved predictions with that model completion. Agreement between the completion
+and held-out ground truth remains an empirical check, never an input to the
+proposal. Nor does this exact theorem turn a floating-point CE tolerance into
+exact equality: quantitative stability and finite-step solver convergence are
+separate claims. Connectivity by itself, without the matching and coded
+structure, does not provide this guarantee.
