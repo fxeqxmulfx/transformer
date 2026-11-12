@@ -29,6 +29,19 @@ records a permanent poor-anchor stall and recovery with another observed anchor.
 Useful decoder banks, anchor discovery and an original-data protocol remain
 to be frozen. These fixtures do not update original-task scores.
 
+Task #209 adds bounded observed-anchor discovery in `convex_stress_general_bank`.
+The native search selects one complete independently checked whole-bank
+certificate, keeps all attempts/refusals and budgets total producer comparisons;
+it does not merge incompatible fallback constraints. Five checks cover the
+Lean permanent-stall example, larger fibers in a four-member declared bank,
+genuine cross-decoder disagreement, replay and resource/input refusals.
+The vocabulary-only bank contains four coarsenings of a cyclic fold. It is an
+explicit prior, not unrestricted decoder learning. Before original discovery,
+freeze the complete harness/protocol, source and binary with all eight prior
+pair tasks plus the long blind task, all three modes, original metrics and
+batches, CE-only stops/selection and the 64 GiB cap. Keep the full35 goal and
+all earlier failures; no original-data outcome is implied by these fixtures.
+
 ## Certified paired-decoder answers (2026-11-12)
 
 CM18 at `5c0fe9bc` proves training-only identification under the paired-phase
