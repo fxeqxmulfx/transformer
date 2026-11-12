@@ -69,6 +69,31 @@ It is in `src/tests.rs`, which the trainer's source fingerprint does not cover.
 A run resumes from its last checkpoint when the command is repeated, on any number of
 threads, and is then bit for bit the run that was not stopped. `runs/` is ignored by git.
 
+A run resumes only under an executable of the source fingerprint in its `run.json`. The
+cohorts `adamw`, `adamw --answer-only` and `adam` were made by the trainer of commit
+`f6217024` (fingerprint `2c65fc45…`), and `adam --flush-from 100000` by that of `2861df33`
+(`955d5bf5…`), which is the present one; Amendment 2 compares the two executables.
+
+The retained checkpoints give the recorded runs again. On 2026-11-12 each of the nine
+complete runs was replayed for 1000 updates from its last checkpoint but one (updates 90 000
+and 950 000), in a copy, on 4 threads, by the executable of its fingerprint. In every one the
+record of the next evaluation, its held-out predictions and its margins are the cohort's byte
+for byte, the seconds apart; among them is the record of update 91 000 of `adamw`, seed 1,
+where training accuracy is 0.04.
+
+```sh
+mkdir replay
+cp runs/adamw-seed1/{run.json,heldout.txt,history.jsonl,heldout_*.bin} replay/
+cp runs/adamw-seed1/checkpoint-0090000.bin replay/
+target/release/grok-division run adamw 1 replay --threads 4 --stop-after 1000
+record() { grep '"step":91000,' $1/history.jsonl | sed 's/,"seconds":[^}]*//'; }
+diff <(record replay) <(record runs/adamw-seed1)        # line 185 of the history
+cmp <(tail -c 4656 replay/heldout_predictions.bin) \
+  <(dd if=runs/adamw-seed1/heldout_predictions.bin bs=4656 skip=184 count=1 status=none)
+cmp <(tail -c 18624 replay/heldout_margins.bin) \
+  <(dd if=runs/adamw-seed1/heldout_margins.bin bs=18624 skip=184 count=1 status=none)
+```
+
 Hardware and precision. The runs were made on two Xeon E5-2680 v4 (28 cores, 56 threads),
 several at a time on 4 to 16 threads each; a run of 10⁵ updates took 4750 to 6360 s, and the
 9 · 10⁵ flushed updates of an `adam` run 20 040 to 20 140 s, the three runs at a time, on 8
