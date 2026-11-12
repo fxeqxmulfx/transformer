@@ -1,0 +1,23 @@
+{
+  "version": "class-relabel-v1",
+  "proof_commit": "0c89afcc1f0d6781865bedd778c3452f9cb15884",
+  "tasks": ["arithmetic-perm-add", "arithmetic-add", "arithmetic-sub", "arithmetic-div", "arithmetic-mul", "arithmetic-sum-cube", "arithmetic-sum-pow4", "arithmetic-abs-diff"],
+  "arms": ["full_batch", "minibatch", "forward_only"],
+  "codings": ["cycle", "identity"],
+  "budgets": ["rank_one", "full_rank"],
+  "seed": 0,
+  "full_updates": 128,
+  "minibatch_updates": 512,
+  "forward_updates": 128,
+  "logit_scale": 1,
+  "ideal_ce_tolerance": 1e-8,
+  "frequency_workers": 8,
+  "maximum_vocab": 193,
+  "explicit_memory_limit_bytes": 2147483648,
+  "address_space_limit_gib": 8,
+  "parallel_numerical_jobs": 1,
+  "proposal": "Only original training pair cells and categorical labels enter the search. For prime vocabulary V, every pair of rows uses its first common observed column as anchor and each subsequent common column as a rectangle constraint z[a]+z[d]-z[b]-z[c]=0 in the V-element field. Fix z[0]=0. Stream elimination and require nullity one, a bijection over every original class, and consistency of all observed bipartite-graph edges. Reject missing classes, composite vocabularies, ambiguous/nonbijective codes or inconsistent cycles. Row/column phase potentials are verification scratch and are discarded. Inference uses a trained probability table plus a saved class permutation, with no arithmetic answer features. This is discrete proposal search, not a certified global oracle over the convex relabeling hull.",
+  "solver": "Use the unchanged CM5/CM9 coupled probability-table solver in the proposed output coding, preserving every nonconstant Fourier operator and nuclear bound in that coding. Return logits in original class order. Full and mini use ordinary cross-entropy; mini retains the original incremental aggregated gradients, shuffle, batch size and tails. Forward only fixes observed one-hot rows and uses no training derivatives. All modes pay for the same coding discovery. Uniform initialization, original budgets and scheduled positive-update stopping are unchanged.",
+  "selection": "Keep all 96 planned cells including rejected cycle proposals. For each task/mode, candidates are ordered cycle/rank_one, cycle/full_rank, identity/rank_one, identity/full_rank. Select the first feasible completed candidate within 1e-8 of ideal original training CE; otherwise minimum training CE. Record every original split and failure. No held-out label enters coding, stopping, selection or bounds. The eight-task follow-up is adaptive to earlier failures and does not establish a full35 pass or a fresh matched transformer comparison.",
+  "resource_policy": "Run training and saved-model replays serially under the 8 GiB process cap. Check a 32*8*V^3+64MiB explicit-buffer forecast against 2 GiB before dense allocation; V<=193. No automatic restart, parallel auditor, or overwrite of an existing cohort. Existing original and retained depth cohorts finish before this follow-up starts. Generated models, logs and reports stay ignored and local."
+}
