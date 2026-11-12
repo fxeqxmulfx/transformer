@@ -1,0 +1,10 @@
+{
+  "version": "counts-completion-recurrence-control-v1",
+  "pilot_tasks": ["recurrence-fibonacci-k1-c2-lgt"],
+  "arms": ["full_batch", "minibatch", "forward_only"],
+  "scales": [1, 10],
+  "pilot_seed": 0,
+  "expected_fingerprint": "c896fdbd0a2a3026942e49100f2c315dfc78defb452ad31ebc3aac2fd27b0c54",
+  "selection_reason": "Posthoc diagnostic after counts-v1 gives zero recurrence validation accuracy in CE modes, versus adaptive-v1's 1.1267%. Completion-v1 had not been tested on recurrence. Isolate whether the inherited missing-row completion already produces this regression before attributing it to the new counts.",
+  "training_protocol": "Use the unchanged completion-v1 binary and embedded protocol; original data, scales, caps, seeds and batch sizes. This six-cell control is separate from all 210 counts-v1 cells."
+}
