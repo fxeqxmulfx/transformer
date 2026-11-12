@@ -1,5 +1,20 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Largest and total singular-value budgets (2026-11-12)
+
+CM5–CM7 extends the coupled complex-moment class with convex operator and
+nuclear bounds. Lean comes first: redundancy of the full-rank control, a
+rank-one missing-answer theorem from ordinary CE, and a common convex-hull
+certificate are proved. The [Schatten pilot](experiments/convex_stress_schatten/protocol.json)
+fixes 18 cells on the original addition/division/multiplication splits with
+both generic budgets and all three modes. Nine subsequent budget choices use
+only training CE; if neither candidate reaches the ideal loss, report that
+the full hull problem is not certified solved. Retain both candidates and all
+failures. Eight native checks precede training. Preserve the previous six
+successful full-rank outcomes and compare their saved coordinates directly.
+This extension does not yet replace the 35-task objective or its transformer
+comparison.
+
 ## Coupled complex moments (2026-11-12)
 
 The single-phase spectral pilot fitted observed division/multiplication phases

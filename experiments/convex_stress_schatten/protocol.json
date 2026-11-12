@@ -1,0 +1,19 @@
+{
+  "version": "schatten-moments-v1",
+  "tasks": ["arithmetic-add", "arithmetic-div", "arithmetic-mul"],
+  "arms": ["full_batch", "minibatch", "forward_only"],
+  "budgets": ["rank_one", "full_rank"],
+  "seed": 0,
+  "full_updates": 128,
+  "minibatch_updates": 512,
+  "forward_updates": 128,
+  "logit_scale": 1,
+  "ideal_ce_tolerance": 1e-8,
+  "frequency_workers": 8,
+  "model": "Shared per-pair probability vectors P; all nonzero fixed Fourier class moments have operator norm <=R and nuclear norm <=B. rank_one uses R=B=V; full_rank uses R=sqrt(V), B=V*sqrt(V). Both are convex; their convex hull is the common model class. Logits=P, usual full-vocabulary CE. Features are only the last two token IDs and fixed Fourier codes of vocabulary IDs; no task name, arithmetic operation, inverse or target rule enters the model.",
+  "solver": "Preserve coupled-moments-v1: full sum-CE three-operator splitting with step 1; mini refreshes original shuffled batches and tails in retained per-observation gradient memory, not unbiased SGD; forward ingests labels as retained one-hot constraints and solves feasibility without derivatives. Only the moment projection changes to singular-value clipping plus a sum budget. No finite-step convergence theorem.",
+  "projection": "Positive-sign FFT; conjugate paired modes; simplex sorting; each moment SVD singular vector is projected onto 0<=s<=R and sum(s)<=B. Solve the nonnegative shift by 64 bisections when clipping alone exceeds B. Evaluate/save the simplex shadow mixed with uniform mass, alpha=min(1,(1-2e-12)/max_f(max(opnorm/R,nuclear/B))), with alpha=1 below the safety bound. Retain actual norms, alpha, CE excess and residuals.",
+  "evaluation": "Unchanged frozen original data, split hashes, complete-split metrics and cadence; update zero and endpoint included. Stop only at cap or scheduled positive update with feasible mean train CE within 1e-8 of ideal one-hot CE. Never stop on held-out accuracy. First 99% crossing, all failures and caps retained; saved table/state replay and independent direct-DFT/plain-CE audits.",
+  "hull_selection": "After all cells finish, recompute each candidate's CE only on training observations. In the fixed budget order select the first candidate with ideal-CE excess <=1e-8; if none, choose minimum training CE (first in order on a tie) and explicitly report no ideal-CE certificate. Only after selection evaluate held-out metrics. This is certificate search within the convex hull, not a generic solver of its interior when candidates fail. Store both candidates and all their computation, plus the selected existing checkpoint; no held-out-based radius choice.",
+  "interpretation": "18 prospective cells and nine training-only hull choices. Aim to repair addition and preserve division/multiplication. The new diagnostic caps differ from the previous pilot, but positive full_rank controls should stop at the same certificate. Lean CM5-CM7 precedes training. This remains a pair-adapter pilot, not all 35 tasks or a matched transformer benchmark. All outputs stay local and ignored."
+}
