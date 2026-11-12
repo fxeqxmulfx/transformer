@@ -15759,3 +15759,145 @@ acceptance from labels, and `Learner.lean` the statements about `recover`.
 `Domain.lean` proves the description of the domain at the budgets `N`.
 `ZeroMass.lean` and `Obstruction.lean` prove point 2, and `Witness.lean` the
 witness and the refusals.
+
+### CM19. Finite support propagation for general decoder fibers
+
+CM18's opposite-pair restriction is sufficient for its rigidity theorem, not
+necessary for every identifiable decoded answer. Here the fixed categorical
+decoder `d : ZMod q -> C` is arbitrary and `q > 0` may be even. The unknown
+target is still assumed to have the form
+
+```
+y(i,j) = d(r(i) + s(j)).
+```
+
+Only the training cells and their labels are supplied to the procedure. The
+phases are not supplied. A finite bank `d_k` is also allowed: the structural
+assumption is that the target uses some member of that declared bank, with
+unknown index. Finding a fitted member is not evidence that this assumption
+holds for the unseen labels. Flat spectral bounds alone still do not imply it.
+
+**A finite computation.** Choose one observed anchor `(a,b)` with label `c`.
+For every `z` with `d(z) = c`, start a branch of row and column phase domains:
+
+```
+R_a = {0},  S_b = {z}; all other domains are ZMod q.
+```
+
+One simultaneous sweep uses the previous domains on both sides. Retain
+`u` in `R_i` exactly when, for every observed incident cell `(i,j)` with
+label `c_ij`, there is `v` in `S_j` with `d(u+v) = c_ij`. Retain `v` in
+`S_j` by the corresponding condition at every observed row. Repeated
+observations are checked separately. There is no constraint for an
+unobserved cell and no access to its answer.
+
+Run a specified natural number of sweeps, including possibly zero. Reject
+a branch if any of its variable domains is empty. At query `(i,j)` its
+output set is `{d(u+v) : u in R_i, v in S_j}`; rejected branches contribute
+the empty set. Take the union over **every** anchor phase. For a bank take
+the further union over **every** decoder. These operations are finite and
+computable in Lean. No fixed-point or efficient implementation theorem is
+needed for the stated finite-budget result.
+
+**Preservation and identification.** Every assignment fitting all observed
+labels survives in one of these branches at every budget. To prove this,
+normalize it to
+
+```
+r'(i) = r(i) - r(a),   s'(j) = r(a) + s(j).
+```
+
+All sums are unchanged. Its branch has `z = r(a)+s(b)`, which occurs in
+the anchor fiber. At each observed cell the assignment's own neighboring
+phase supplies the required support, so a simultaneous sweep preserves
+every one of its coordinates. Induction gives preservation for any finite
+number of sweeps. In particular its domains never become empty, and its
+decoded answer occurs in the final output union.
+
+Consequently:
+
+- A singleton union `{c}` certifies label `c` for every compatible phase
+  assignment and, in the bank version, every compatible bank member.
+- An empty union at any query refutes existence of a fitting assignment
+  in the declared family. Pruning need not detect every inconsistency.
+- If two actual fitting assignments give different query answers, the
+  union is never a singleton at any budget. The same holds when the two
+  assignments use different decoder choices.
+- A nonsingleton union alone does **not** prove actual ambiguity: the
+  Cartesian products may contain combinations with no global completion.
+
+The distinction between decoded and latent identification is essential.
+Neither a singleton row domain nor a singleton column domain is required
+to certify a label. Pruning is conservative; completeness and coverage on
+a particular split are separate questions.
+
+**The convex spectral program.** Let `D` be the spectral decoder hull of
+CM15 with Fourier codes on `ZMod q` and both spectral budgets equal to
+`N`, the number of rows/columns. Its definition already includes all fixed
+decoders; it is convex and has probability-vector rows. Restrict it to
+
+```
+D_cert = {Q in D : Q(i,j) = oneHot(c)
+                  whenever the bank's output union at (i,j) is {c}}.
+```
+
+The labels on the right are computed from training data by the procedure
+above. These are linear equalities, so `D_cert` is convex. Use the same
+ordinary full-vocabulary log-sum-exp cross-entropy as CM2: the learned
+probability coordinates serve as bounded logits. The loss is convex on
+the restricted domain; it has not been changed into a latent regression
+loss or `-log Q(i,j)(c)`.
+
+If any bank member and phases fit the observations, their decoded one-hot
+table belongs to `D_cert`. This follows from CM15's feasible phase witness
+and the preservation theorem above. That table already minimizes the
+training CE over all of `D`, so it also minimizes it over `D_cert`.
+Conversely every minimizer over `D_cert` is a minimizer over `D`: compare
+it with this retained witness. Every feasible table in `D_cert` has the
+target's rows at certified cells whenever the target belongs to the bank.
+
+The equalities are imposed. The result proves their correctness under the
+explicit target-family assumption and that they cost no training CE. It
+does not say that minimizing the original spectral relaxation discovers
+them, that a preferred fitted decoder is true, or that every decoder in
+the larger hull belongs to the declared identification bank.
+
+**Witness outside CM18.** Take `q = 4` and `d(3) = true`, with
+`d(0) = d(1) = d(2) = false`. Observe only
+
+```
+true   true
+false  .
+```
+
+Anchor at the false observation `(1,0)`. There are three branches,
+`z = 0,1,2`. In each, the first sweep gives `r(0) = 3-z`; the second
+gives `s(1) = z`. The missing decoded answer is false in all branches.
+All three latent states really remain possible there: the assignments
+`r = (3-z,0)`, `s = (z,z)` fit for each `z`. The concrete finite computation
+is checked by Lean's kernel using `decide`, and `wide_recovery` proves
+agreement of every completion. The decoder is not a `PairedDecoder`:
+`0` and `1` collide but are not opposite. Adding `z -> d(z+1)` as a second
+bank member preserves the certified answer while allowing a different
+latent explanation.
+
+For refusal, replace the three observations by false. The assignments
+`r=(0,0), s=(0,0)` and `r=(0,1), s=(0,2)` fit, but the missing answers
+are false and true. No number of sweeps certifies a singleton. A bank
+containing the original decoder and `z -> (z=1 or z=3)` also has two
+compatible members with different answers. Finally, two opposite labels
+on the same cell yield an empty union after one sweep, both for the fixed
+decoder and for the witness bank.
+
+**Scope.** This extends fixed known decoders to arbitrary fibers, permits
+even cyclic groups, gives a computable finite procedure, and quantifies
+over a declared finite bank. It does not learn an unrestricted decoder,
+prove the target-family assumption from observed data, prove completeness
+or a coverage rate, or give numerical error or optimizer convergence
+bounds. No original stress-task pass is implied by the finite witness.
+
+`CoupledMoments/DecodedPropagation/Defs.lean` defines the computation;
+`Basic.lean` proves preservation, shrinking domains and normalization;
+`Identification.lean` proves singleton identification and the refusals;
+`CrossEntropy.lean` proves the convex restriction and optimality;
+`Witness.lean` and `Refusal.lean` check the explicit examples.

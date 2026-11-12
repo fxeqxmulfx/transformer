@@ -104,6 +104,51 @@ open Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedRecovery
 
 end DecodedRecovery
 
+section DecodedPropagation
+open Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagation
+
+#print axioms step_preserves
+#print axioms step_subset
+#print axioms run_preserves
+#print axioms run_subset
+#print axioms live_of_contains
+#print axioms normalize_sum
+#print axioms normalize_fits
+#print axioms initial_contains
+#print axioms mem_outputs
+#print axioms mem_answers
+#print axioms identifies
+#print axioms empty_refutes
+#print axioms not_singleton_of_disagree
+#print axioms mem_bankAnswers
+#print axioms bank_identifies
+#print axioms empty_bank_refutes
+#print axioms bank_not_singleton_of_disagree
+#print axioms certifiedFeasible_convex
+#print axioms certified_loss_convex
+#print axioms certified_witness
+#print axioms certified_optimum
+#print axioms certified_restriction
+#print axioms wide_fits
+#print axioms wide_fiber
+#print axioms wide_not_paired
+#print axioms wide_answer
+#print axioms wide_recovery
+#print axioms wide_latent_undetermined
+#print axioms wide_bank_fits
+#print axioms wide_shifted_fits
+#print axioms wide_bank_answer
+#print axioms ambiguity_fit_false
+#print axioms ambiguity_fit_true
+#print axioms wide_ambiguity_refused
+#print axioms bank_ambiguity_fit_false
+#print axioms bank_ambiguity_fit_true
+#print axioms bank_ambiguity_refused
+#print axioms conflict_empty
+#print axioms conflict_bank_empty
+
+end DecodedPropagation
+
 run_cmd do
   let env ← getEnv
   let standard := [``propext, ``Classical.choice, ``Quot.sound]
