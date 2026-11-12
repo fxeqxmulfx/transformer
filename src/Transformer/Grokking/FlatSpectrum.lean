@@ -2,6 +2,7 @@ module
 
 public import Transformer.Grokking.FlatSpectrum.Defs
 public import Transformer.Grokking.FlatSpectrum.SpectralBall
+public import Transformer.Grokking.FlatSpectrum.CoupledMoments
 public import Transformer.Grokking.FlatSpectrum.Basic
 public import Transformer.Grokking.FlatSpectrum.Factorization
 public import Transformer.Grokking.FlatSpectrum.Roots

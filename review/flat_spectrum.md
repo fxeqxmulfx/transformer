@@ -14640,3 +14640,69 @@ Additional assumptions must eliminate observationally indistinguishable
 targets; changing batch size or solving the same empirical objective more
 accurately cannot supply such information. This example is not a theorem
 that the particular modular stress instances are unrecoverable.
+
+## Coupling complex class moments
+
+### CM1. One distribution, many spectral bounds
+
+The SB1 pilot could fit observed phase labels and still leave weak, incorrectly
+oriented unseen phases. Replace the independent complex entry at each input
+cell by a shared class distribution `P_ijc >= 0`, `sum_c P_ijc = 1`. For fixed
+complex class codes define `M_f(P)_ij = sum_c P_ijc phi_fc` and impose
+`||M_f(P)||op <= R_f`. These are convex upper bounds on linear images, so their
+intersection with the probability simplexes is convex. Unit codes imply the
+old entry-disk bounds automatically. For centered codes and nonnegative radii,
+uniform class probabilities give a feasible starting point.
+
+`CoupledMoments/Basic.lean` proves these statements. This changes the hypothesis
+class, rather than asserting that extra optimization resolves SB3's ambiguity.
+The radii must still be specified independently of missing labels.
+
+### CM2. Ordinary cross-entropy and an attainable lower bound
+
+Use `P_ijc` as the logits at scale one. The loss is ordinary full-vocabulary
+cross-entropy, `log(sum_c exp(P_ijc)) - P_ijy`, not the negative logarithm of a
+probability coordinate. It is jointly convex. Among probability-vector logits,
+the one-hot vector for the correct label minimizes each observed CE term, with
+value `log(exp(1) + V - 1) - 1`. Consequently any feasible table matching all
+observed one-hot labels is a global minimum of the same empirical objective.
+This can certify a forward-only feasibility method without evaluating gradients.
+
+`CoupledMoments/Loss.lean` proves convexity, the ideal-loss lower bound, the
+minimum certificate with explicit feasibility, and the bound
+`loss(P) - loss(Q) <= loss(P) - idealLoss` for every feasible competitor Q.
+The numeric excess is useful even if a particular iterative solver has no
+proved finite-step rate. None of these claims predicts an unobserved label.
+
+### CM3. Full Fourier readings retain labels and exclude inconsistent moments
+
+Choose `phi_fc = exp(2 pi i f c / V)`. The complete Fourier matrix has Gram
+matrix `V I`; multiplying by its adjoint recovers all class coordinates. For
+probability tables the zero mode is already one, so the nonzero modes suffice.
+These fixed codes use only the vocabulary identifiers, never a task operator.
+The probability parametrization is thus equivalent to coupled complex Fourier
+coordinates, not a set of freely trainable independent complex matrices.
+
+The coupling is a strict restriction. With four equally spaced classes, a
+distribution whose first moment equals +1 has all its mass on class zero and
+therefore second moment +1. Independent unit disks would also permit the
+inconsistent pair (+1,-1). `CoupledMoments/Consistency.lean` proves injectivity,
+the Fourier specialization, and this explicit counterexample. A stronger
+constraint alone is not a proof of recovery on random half-observed tables.
+
+### CM4. A feasible output from a common mixture
+
+For centered codes, mix a probability table with uniform mass:
+`P' = alpha P + (1-alpha) U`. If `0 <= alpha <= 1`, it remains a probability
+table and `M_f(P') = alpha M_f(P)`. Thus choosing one alpha satisfying
+`alpha ||M_f(P)||op <= R_f` for every f makes the result feasible. If alpha is
+positive, all strict class comparisons are unchanged, including ties under a
+fixed argmax rule. `CoupledMoments/Blend.lean` proves the scaling, feasibility
+and comparison statements. An SVD-based implementation must still report its
+numerical error and the actual mixture coefficient; this is not a verification
+of floating-point norm estimates or of optimizer convergence.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.CoupledMoments
+LAKE_ARTIFACT_CACHE=false lake env lean scripts/CoupledMomentsAxioms.lean
+```
