@@ -1,0 +1,17 @@
+{
+  "version": "intermediate-budgets-v1",
+  "tasks": ["power-division-p97-k2", "power-division-p97-k3", "arithmetic-square-times", "arithmetic-add", "arithmetic-div", "arithmetic-mul"],
+  "arms": ["full_batch", "minibatch", "forward_only"],
+  "budgets": ["rank_one", "full_rank", "shape_2", "shape_3"],
+  "seed": 0,
+  "full_updates": 128,
+  "minibatch_updates": 512,
+  "forward_updates": 128,
+  "logit_scale": 1,
+  "ideal_ce_tolerance": 1e-8,
+  "frequency_workers": 8,
+  "model": "Unchanged shared probability table P with every nonzero fixed Fourier class moment bounded in operator and nuclear norms. Old endpoint budgets are retained. shape_k uses R=min(V,sqrt(k V)) and B=V sqrt(ceil(V/k)), k=2,3. These are fixed upper bounds determined by V and the candidate only; no learned rank, task operator, label-dependent budget, arithmetic feature, or factor product. The common domain is the convex hull of these four probability-table families.",
+  "solver": "Import the Schatten solver, gradients, projections, full-vocabulary ordinary CE, saved state, Fourier code and data unchanged from deef98cb. Full uses the full sum-CE gradient; minibatches refresh retained per-observation gradients with original batches, tails and shuffle, not unbiased SGD; forward retains one-hot observations and solves feasibility without training derivatives. No finite-step convergence theorem.",
+  "evaluation": "Original frozen input, split hashes, complete-split metrics and cadence; stop only at the scheduled positive update satisfying ideal training CE within 1e-8 or the cap. First 99% held-out crossing is recorded but never stops training. Save and replay all 72 candidates, including failures. All 18 choices use training CE only: first ideal certificate in frozen order, else minimum CE without a certificate. Keep all candidate costs, then evaluate all splits.",
+  "interpretation": "Lean CM9 first proves an actual intermediate-rank moment is excluded by both endpoint budgets and by their spectral convex hull. Additional fixed budgets preserve CM5/CM7 convexity and CE certificates. This follow-up was designed after endpoint failures were observed in the independently frozen all35 v1 cohort; it is not a prospective claim for those previously seen tasks. The first three tasks are failure diagnostics, the last three retain old success controls. No budget or checkpoint is selected using held-out accuracy. The original all35 run stays unchanged; this pilot does not establish all35 success or a matched transformer comparison. Inclusion alone is not missing-label recovery. All generated outputs stay ignored and local."
+}

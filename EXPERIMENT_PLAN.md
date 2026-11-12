@@ -1,5 +1,17 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Intermediate spectral capacity (2026-11-12)
+
+Lean CM9 at `efaf0d93` proves an actual rank-two binary probability moment is
+excluded by both endpoint budgets and their spectral convex hull, and admitted
+by a fixed intermediate budget. The [budget follow-up](experiments/convex_stress_budgets/protocol.json)
+adds two generic vocabulary-only bounds, retaining the imported solver and
+ordinary CE. Freeze 72 candidates on three observed failure diagnostics and
+three original success controls, in all three modes. Keep every outcome and
+compare all 18 old endpoint-budget controls exactly. This is an adaptive
+follow-up to the independently frozen all-35 run; do not alter that cohort,
+its candidate ordering, budgets or limits. Admission alone is not recovery.
+
 ## Common convex predictions on all stress tasks (2026-11-12)
 
 Lean CM8 at `d7e1e6aa` proves fixed-scale ordinary CE convexity, common
