@@ -294,10 +294,38 @@ pub fn forward_initialize(model: &mut Head, cache: &Cache, counts: &mut [f64]) -
             counts[k as usize * v + cache.labels[i]] += 1.;
         }
     }
+    initialize_counts(model, cache.labels.len(), counts, ForwardChoice::MinimumCe)
+}
+
+#[derive(Clone, Copy)]
+pub enum ForwardChoice {
+    MinimumCe,
+    /// Prefer the first channel reaching this training-only threshold, in the
+    /// bank's fixed order. Cumulative banks order channels by increasing depth.
+    FirstBelow(f64),
+}
+
+/// Fit exactly the same empirical proposals from pre-accumulated counts. The
+/// streamed learner calls this after visiting every original training prefix.
+/// FirstBelow changes the choice rule, not the CE objective or feasible domain.
+pub fn initialize_counts(
+    model: &mut Head,
+    observations: usize,
+    counts: &[f64],
+    choice: ForwardChoice,
+) -> Result<usize> {
+    if observations == 0
+        || counts.len() != model.coefficients.len()
+        || counts.iter().any(|x| !x.is_finite() || *x < 0.)
+        || matches!(choice, ForwardChoice::FirstBelow(t) if !t.is_finite() || t < 0.)
+    {
+        return Err("invalid empirical initialization counts or choice".into());
+    }
+    let v = model.bank.vocab;
     let stride = model.bank.stride();
     let mut best = (f64::INFINITY, 0usize, 1.);
     let mut scores = vec![0.; v];
-    for channel in 0..cache.width {
+    for channel in 0..2 * model.bank.paths() {
         let path = channel / 2;
         let (begin, end) = if channel % 2 == 0 {
             (0, v + 1)
@@ -331,7 +359,11 @@ pub fn forward_initialize(model: &mut Head, cache: &Cache, counts: &mut [f64]) -
                 loss += count * (top - z);
             }
         }
-        loss /= cache.labels.len() as f64;
+        loss /= observations as f64;
+        if matches!(choice, ForwardChoice::FirstBelow(t) if loss <= t) {
+            best = (loss, channel, scale);
+            break;
+        }
         if loss < best.0 {
             best = (loss, channel, scale);
         }

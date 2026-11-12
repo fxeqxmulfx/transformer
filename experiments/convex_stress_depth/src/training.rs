@@ -26,6 +26,8 @@ pub fn fingerprint() -> String {
         include_bytes!("independent.rs"),
         include_bytes!("checkpoint.rs"),
         include_bytes!("training.rs"),
+        include_bytes!("stream_cache.rs"),
+        include_bytes!("stream_cache/objective.rs"),
         include_bytes!("../Cargo.toml"),
         include_bytes!("../Cargo.lock"),
         include_bytes!("../run_train_checks.sh"),

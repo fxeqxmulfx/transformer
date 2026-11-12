@@ -8,4 +8,5 @@ pub mod cohort;
 pub mod features;
 pub mod head;
 pub mod independent;
+pub mod stream_cache;
 pub mod training;

@@ -204,9 +204,12 @@ pub enum Execution {
     #[default]
     Composed,
     Additive,
+    /// CD9 at 9136a122: retain all complete paths of lengths zero through depth.
+    /// Coordinates are ordered by depth, then view, then complete path.
+    Cumulative,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Bank {
     pub vocab: usize,
     pub depth: usize,
@@ -284,6 +287,7 @@ impl Bank {
         match self.execution {
             Execution::Composed => 1 << self.depth,
             Execution::Additive => (2 * self.depth).max(1),
+            Execution::Cumulative => (1 << (self.depth + 1)) - 1,
         }
     }
     pub fn stride(&self) -> usize {
@@ -301,6 +305,18 @@ impl Bank {
             || prefix.iter().any(|t| *t < 0 || *t as usize >= self.vocab)
         {
             return Err("invalid causal prefix".into());
+        }
+        if self.execution == Execution::Cumulative {
+            let mut retained = Vec::with_capacity(2 * self.paths());
+            let mut offset = 0;
+            let mut bank = self.clone();
+            bank.execution = Execution::Composed;
+            for depth in 0..=self.depth {
+                bank.depth = depth;
+                retained.extend(bank.encode(prefix)?.into_iter().map(|k| offset + k));
+                offset += bank.dimension();
+            }
+            return Ok(retained);
         }
         let mut features = Vec::with_capacity(2 * self.paths());
         for (mask_index, mask) in self.masks.iter().enumerate() {

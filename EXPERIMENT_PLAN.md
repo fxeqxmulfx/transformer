@@ -79,6 +79,17 @@ Run and replay the entire inventory before its 72 training-only depth choices;
 retain rejected allocations and failed performance. No cohort result is claimed
 at the freeze stage, and a fresh matched transformer baseline remains separate.
 
+The frozen producer `032762e5` has now completed and replayed all 72 binding
+candidates. Depth one passes all modes and controls; final-only depth two
+joint/independent heads fit training CE near zero but score 98.63%, and depth
+four is worse. Keep the complete cohort running unchanged. Lean CD9 at
+`9136a122` proves same-budget retention of all shorter path features. A separate
+cumulative bank and streamed feature cache implement that capacity extension
+under the existing memory limits. Native checks compare dense and streamed
+CE/gradients exactly; retained-path stress training needs its own frozen
+protocol, including any training-only preference for the first shallow channel
+that attains the CE threshold. No retention result is claimed yet.
+
 The user requested a theory extension to depth, residuals and the newer mHC
 in the local DiffGPT repository, and authorized a new connection. The
 [theory note](review/convex_depth.md) specifies ordinary residual connections

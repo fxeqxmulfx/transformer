@@ -12,7 +12,7 @@ const TASKS: [&str; 4] = [
     "gpt-probe-key-value-binding",
 ];
 
-fn prepare() -> Result<Value> {
+fn prepare(retention: bool) -> Result<Value> {
     let suite: Value = serde_json::from_str(SUITE)?;
     let mut output = vec![];
     for name in TASKS {
@@ -30,7 +30,19 @@ fn prepare() -> Result<Value> {
             .sum::<usize>();
         let mut candidates = vec![];
         for depth in [0, 1, 2, 4] {
-            let bank = Bank::discover(task.vocab, depth, 4096, Transport::Fourier, train)?;
+            let mut bank = Bank::discover(task.vocab, depth, 4096, Transport::Fourier, train)?;
+            if retention {
+                bank.execution = convex_stress_depth::features::Execution::Cumulative;
+                let plan = convex_stress_depth::stream_cache::allocation(
+                    &bank,
+                    observations,
+                    train.len(),
+                )?;
+                candidates.push(json!({"depth":depth,"paths":bank.paths(),"features":bank.dimension(),
+                    "parameters":bank.dimension()*bank.vocab,"masks":bank.masks,
+                    "dense_cache_buffer_bytes":bank.allocation_bytes(observations)?,"streamed":plan}));
+                continue;
+            }
             let bytes = bank.allocation_bytes(observations)?;
             candidates.push(
                 json!({"depth":depth,"paths":bank.paths(),"features":bank.dimension(),
@@ -43,13 +55,17 @@ fn prepare() -> Result<Value> {
     }
     Ok(
         json!({"status":"allocation_preflight_only","learned_head_or_stress_metrics":false,
+        "retained_prefixes":retention,"source_fingerprint":convex_stress_depth::training::fingerprint(),
         "explicit_buffer_budget_bytes":2*1024*1024*1024usize,"planned_process_limit_gib":8,"tasks":output}),
     )
 }
 fn main() -> Result<()> {
     let args: Vec<_> = std::env::args().skip(1).collect();
-    if args == ["prepare"] {
-        println!("{}", serde_json::to_string_pretty(&prepare()?)?);
+    if args == ["prepare"] || args == ["prepare-retention"] {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&prepare(args[0] == "prepare-retention")?)?
+        );
         Ok(())
     } else if args == ["fingerprint"] {
         println!("{}", convex_stress_depth::training::fingerprint());

@@ -110,7 +110,8 @@ export DEPTH_PRODUCER_COMMIT=$(git rev-parse HEAD)
 bash experiments/convex_stress_depth/run_cohort.sh FRESH_COHORT_DIRECTORY
 ```
 
-No depth-cohort results are claimed at this protocol-freeze stage.
+The protocol above was frozen before the first held-out score. Partial results
+below remain tied to that frozen producer.
 
 The independent baseline uses one Bernoulli probability for each block layer
 and a shared learned decoder over input-view/terminal-feature coordinates.
@@ -168,7 +169,7 @@ bash experiments/convex_stress_depth/run_train_checks.sh FRESH_DIRECTORY gpt-pro
 ```
 
 No validation or test metric is computed by this command. The larger depth
-comparison and fresh matched transformer baseline remain outstanding.
+comparison is running; a fresh matched transformer baseline remains outstanding.
 
 The first check is complete at producer `a440f6a0`, source fingerprint
 `21355e87dcc3e1b77e4524e075d4591c9a967a2b3afb478c2348add827147cbf`.
@@ -198,3 +199,74 @@ RSS for data verification. A deliberately corrupted saved CE was rejected on
 replay. Models and resource logs live in
 `runs/training-check-v1-binding-d1/`, linked to the root checkout; the frozen
 producer, checks and negative controls are retained in board artifact #175.
+
+## Frozen cohort: completed short-binding subset
+
+Producer `032762e59acc5876c55f197e127afb4ee411ebc9`, source fingerprint
+`d6931b95c2b1d4971c02b718772fd08105c554d2d0bb66b99aedbf1b07b3e56f`,
+has completed and replayed all 72 short-binding cells. Each table entry ranges
+over full-batch, minibatch and forward-only with both transports. The other
+three tasks and the complete 72-choice summary are still pending; these are
+candidate accuracies, not selected cohort outcomes.
+
+| Depth | Joint head: original primary accuracy | Independent factors | Additive control |
+| --- | ---: | ---: | ---: |
+| 0 | 3.52–8.20% | 3.52–8.20% | 3.52–8.20% |
+| 1 | 100% | 100% | 100% |
+| 2 | 98.63% | 98.63% | 100% |
+| 4 | 46.29–50.00% | 46.29–48.05% | 100% |
+
+Every 100% entry also passes every original nontraining split. The joint and
+independent depth-two candidates still have training CE `3.7374e-9`, so their
+98.63% held-out accuracy demonstrates that a small training loss does not
+identify missing answers. Depth-four joint CE is 0.1390–0.1449 and independent
+CE is 0.1447–0.1451. This final-depth-only library has no guaranteed identity
+path; more steps can discard useful shallower features. The result motivates
+retaining them, but does not prove that no head in the depth-four class could
+solve the task. The unchanged training-only depth choice remains prospective
+until the full cohort and its replays close.
+
+## Retained paths and bounded-memory training components
+
+Lean CD9 at `9136a122` proves that retaining every shallower feature embeds its
+head at exactly the same coefficient budget, logits and ordinary CE. The
+prospective cumulative bank implements this order: increasing depth, then
+input view, then complete path. It keeps the same 4096 history slots, including
+their collisions. Its path count per view is `2^(depth+1)-1`; the coefficient
+count still grows exponentially. This is a capacity extension, not a guarantee
+about a numerical optimizer or an unseen answer.
+
+`stream_cache` writes each original supervised prefix and label once, then
+reads fixed-width records with a 64 KiB buffer. It preserves repetitions,
+ignored-target positions, whole-example minibatches, shuffles and short tails.
+Memory checks include the head, a gradient/count scratch tensor, projection
+scratch, I/O and example indexes before allocating a cache. The explicit
+2 GiB memory cap and 8 GiB process cap remain. A separate 16 GiB cache-file
+cap bounds disk use per case; caches belong to their run directory, and their
+construction, I/O and hashes must be charged and reported by a future runner.
+Existing cache files are never overwritten or silently resumed.
+
+The streamed objective uses the same ordinary CE and projected head update.
+Forward-only evaluation forms no loss derivatives. Its empirical initializer
+supports the existing minimum-CE rule and a prospective fixed first-channel
+rule: choose the earliest channel reaching a declared training-CE threshold,
+otherwise minimum CE. For cumulative banks the order prioritizes shallower
+features. A follow-up must freeze that rule before its own training; neither
+rule uses held-out scores. The running 288-cell comparison continues to use its
+original final-depth bank, initializer and frozen executable.
+
+Twenty-eight native checks now pass. The five additions verify exact retained
+features and nonzero logits, bit-identical dense/streamed CE, gradients and
+updates across repeated/shuffled batches and tails, identical empirical
+initialization under the old rule, threshold ordering, and rejection of
+corrupt records, boundaries, lengths and excessive allocations. These are
+component tests; no retained-path stress outcome is claimed.
+
+```sh
+cargo build --offline --release --manifest-path experiments/convex_stress_depth/Cargo.toml
+bash experiments/convex_stress_hull/limited.sh 8 \
+  experiments/convex_stress_depth/target/release/convex-stress-depth prepare-retention
+```
+
+This command computes only allocation estimates on the four original datasets;
+it constructs no training cache or head and scores no held-out metrics.
