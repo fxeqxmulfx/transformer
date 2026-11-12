@@ -6,6 +6,7 @@ open Lean Elab Command
 #print axioms Transformer.Grokking.FlatSpectrum.SpectralBall.ceLoss_convex
 #print axioms Transformer.Grokking.FlatSpectrum.SpectralBall.missing_eq_one
 #print axioms Transformer.Grokking.FlatSpectrum.SpectralBall.eq_signKernel_of_loss_le
+#print axioms Transformer.Grokking.FlatSpectrum.SpectralBall.ambiguous_flat_minima
 
 run_cmd do
   let env ← getEnv

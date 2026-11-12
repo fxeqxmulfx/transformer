@@ -14612,3 +14612,31 @@ looser radii, arbitrary labels, long contexts, or a specific finite-step
 optimizer. Those require separate evidence. Numerical projections and
 finite-difference updates are floating-point algorithms, not Lean-certified
 solutions of the constrained optimization problem.
+
+### SB3. A tight bound can still leave multiple optimal unseen answers
+
+Let
+
+```
+H = [ 1  1  1  1 ]      H' = [ -1  1 -1  1 ]
+    [ 1 -1  1 -1 ]           [ -1 -1 -1 -1 ]
+    [ 1  1 -1 -1 ]           [  1  1 -1 -1 ]
+    [ 1 -1 -1  1 ]           [  1 -1 -1  1 ].
+```
+
+Both satisfy `HᴴH = 4I`; H' exchanges and negates the first two rows.
+Observe every cell except rows `{0,1}` crossed with columns `{0,2}`.
+The twelve observations are distinct, cover every row and column, and
+have identical labels under H and H'. Each table belongs to the same
+tight domain `|X_ij| ≤ 1`, `||X||op ≤ 2`. Each also minimizes every
+observed ordinary binary CE term over the unit disks. Thus both are
+global CE minima over that convex domain, yet their unseen `(0,0)`
+labels are opposite. `SpectralBall/Ambiguity.lean` proves these claims,
+including the observation coverage and both Gram identities.
+
+This refutes a universal extension of SB2 even at 75% observation,
+with genuinely flat targets and all rows and columns represented.
+Additional assumptions must eliminate observationally indistinguishable
+targets; changing batch size or solving the same empirical objective more
+accurately cannot supply such information. This example is not a theorem
+that the particular modular stress instances are unrecoverable.
