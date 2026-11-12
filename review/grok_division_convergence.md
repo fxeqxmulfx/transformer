@@ -3,7 +3,8 @@
 Board tasks #126–#132 and #137. Sources: `papers/arXiv-2201.02177v1/main.tex` (Power et al.),
 Figure 1 and the appendix *Additional experimental details*; openai/grok at `3d64b1d8`; the
 protocol pinned in `experiments/grok_division/PROTOCOL.md`. Written 2026-11-11; sections 5
-and 6, the second half of section 2 and the enclosures of bridge 5 added 2026-11-12.
+and 6, the second half of section 2, the enclosures of bridge 5, the measurability of bridge 2
+and the mean accuracy of section 2 added 2026-11-12.
 
 The paper shows curves of finite runs. It states no theorem, and nothing below proves that
 training makes any transformer generalize. This note fixes what such a theorem would say,
@@ -36,11 +37,13 @@ than trained, and names the bridges that are missing.
 | Means over the targets of a batch; the readout's gradient in closed form and its pairing with the readout | `targetMean`, `batchLoss_eq_targetMean`, `sourceGrad_out`, `sum_out_mul_sourceGrad` |
 | The logits are bounded by the readout and the second normalizations | `abs_layerNorm_le`, `abs_decodeTo_le`, `abs_logits_le` |
 | The block outputs and the logits are continuous in the parameters | `continuous_decodeTo`, `continuous_logits`, `continuous_logits_relu` |
+| The gradient of the backward pass is measurable in the parameters; every parameter of a run, the held-out accuracy and the event of a wrong held-out answer are measurable in the sample | `measurable_sourceGrad`, `measurable_adamRun`, `measurable_trajectory`, `measurable_heldoutAccuracy`, `measurable_divisionRun`, `measurable_divisionAccuracy`, `measurableSet_wrongAt` |
+| For a model with measurable logits and gradients the almost sure target gives the other two modes | `Generalizes.inProbability`, `Generalizes.inMean` |
 | The task, its tokens and its supervision | `paperSizes`, `Equation`, `equations`, `read`, `read_injective`, `inDivisionCell_operands`, `supervised`, `targetCount_supervised` |
 | Initialization law; the law of a run is a probability law | `initLaw`, `initMeasure`, `isProbabilityMeasure_initLaw` |
 | The target for the division protocol, and what it means | `division_generalizes_iff`, `division_generalizes_source_iff` |
 | What is proved about its trajectory | `abs_trajectory_division_sub_le`, `abs_trajectory_division_le`, `division_eventually_margin_lt`, `ae_abs_logits_divisionRun_le`, `ae_floor_le_batchLoss_divisionRun`, `ae_margin_divisionRun_le` (section 5) |
-| The target is false without a condition on the split (section 2) | `not_division_generalizes`, `not_division_tendsToOneInProbability` |
+| The target is false without a condition on the split, in all three modes (section 2) | `not_division_generalizes`, `not_division_tendsToOneInProbability`, `not_division_tendsToOneInMean` |
 | The target is false under every condition that admits a split with a residue that is the answer of no training equation (section 2) | `outPerm`, `sourceGrad_comp_outPerm`, `unlabelled`, `trajectory_relabel`, `uniformPerm_unlabelled_le`, `labelled`, `not_ae_eventually_of_not_mem_labelled`, `not_ae_eventually_anchored_occurring` |
 
 For division the arguments are fixed in `division_generalizes_iff`: the decoder of
@@ -93,7 +96,7 @@ This does not say that grokking fails. It says that "for almost every run" is to
 true theorem needs a condition on the split, or a probability below 1.
 
 **A smaller defect of the split is enough.**
-`Protocol/{ReadoutSymmetry,Unlabelled,LabelCoverage,LabelWitness,LabelProbability}.lean`.
+`Protocol/{ReadoutSymmetry,Unlabelled,LabelCoverage,LabelWitness,LabelProbability,MeanAccuracy}.lean`.
 Call a split
 *labelled* when every residue is the quotient of a training equation. If the residue `r` is
 not, all 96 equations with the answer `r` are held out, and the token of `r` is the target of
@@ -113,6 +116,7 @@ same way from both starts and its logits of the two tokens are exchanged
 | At every update, P(some held-out answer is wrong) ≥ ½ P(the split leaves `r` unlabelled) > 0, for each residue `r` | `uniformPerm_unlabelled_le`, `uniformPerm_unlabelled_pos` |
 | The target is false under every condition on the split that admits a split that is not labelled; so a condition under which it holds admits labelled splits only | `not_ae_eventually_of_not_mem_labelled` |
 | Given that the split is not labelled, at every update P(some held-out answer is wrong) ≥ ½, for one such split and for every set of them; so under a condition that admits one the target fails in probability too | `uniformPerm_singleton_le`, `uniformPerm_le_of_subset_compl_labelled`, `not_tendsto_law_inter_wrongAt` |
+| Over the runs whose split is in a set `S`, at every update the held-out accuracy integrates to at most P(`S`) − P(`S` and not labelled)/18624. So the mean held-out accuracy is at most 1 − P(not labelled)/18624 at every update and does not tend to 1, and under a condition that admits a split that is not labelled the mean given the condition does not tend to 1: the target fails in mean too | `setIntegral_divisionAccuracy_le`, `integral_divisionAccuracy_le`, `not_division_tendsToOneInMean`, `not_tendsto_setIntegral_divisionAccuracy` |
 | To be labelled is neither sure nor impossible | `uniformPerm_compl_labelled_pos`, `uniformPerm_labelled_pos` |
 | A labelled split is anchored (bridge 5); an uncovered split is not labelled | `labelled_subset_anchored`, `uncovered_subset_unlabelled` |
 | The split that trains on the first 4656 equations of the list is anchored and shows every residue in training, and it leaves the residue 96 unlabelled; so the target is false under the condition "anchored, and every residue occurs in training" | `one_mem_anchored`, `one_mem_occurring`, `one_mem_unlabelled`, `not_ae_eventually_anchored_occurring` |
@@ -153,8 +157,25 @@ Two substitutions are therefore excluded, and no statement here makes them:
    bounded is one forward pass: at the parameters of a checkpoint, which are reals exactly, the
    logits of the decoder in exact reals are enclosed (bridge 5), so its answers there are
    known. The parameters are still those of an `f32` trajectory.
-2. **Measurability.** `TendsToOneAlmostSurely.inProbability` and `.inMean` need the accuracy to
-   be measurable in the sample. This is not proved for the decoder.
+2. **Measurability.** Proved on 2026-11-12
+   (`Protocol/{GradientMeasurable,RunMeasurable,AccuracyMeasurable,DivisionMeasurable}.lean`).
+   `TendsToOneAlmostSurely.inProbability` and `.inMean` need the accuracy to be measurable in
+   the sample. No continuity of the gradient of the backward pass in the parameters is used:
+   its gates are indicators of the signs of the hidden inputs. It is measurable
+   (`measurable_sourceGrad`): the gates of a row of tokens take finitely many patterns, the
+   pattern is a measurable function of the parameters, and for a fixed pattern the loss is
+   continuous in the parameters and a coordinate together, so its derivative in the
+   coordinate is measurable in the parameters. The update of the optimizer is made of sums,
+   products, quotients and square roots, and the batch of an update is a function of two
+   shuffles, so every parameter of a run after every update is a measurable function of the
+   sample (`measurable_adamRun`, `measurable_trajectory`, `measurable_divisionRun`), under
+   Adam and under AdamW, with both moments and the batches of the sampler. So are the
+   held-out accuracy of the answer and of the closing token (`measurable_divisionAccuracy`,
+   `measurable_closingAccuracy`), and the samples with a wrong held-out answer form an event
+   (`measurableSet_wrongAt`). For every model with measurable logits and gradients the almost
+   sure target gives the target in probability and in mean (`Generalizes.inProbability`,
+   `Generalizes.inMean`). What this leaves: the law of the parameters after an update is
+   defined, and nothing is proved about it beyond the bounds of bridge 4.
 3. **Exceptional parameters.** The source's backward pass has a rule at hidden inputs equal to
    0, and `sourceGrad` is that rule: the derivative of the loss with the gates frozen at the
    current parameters (`gate`, `frozenLoss_self`). Proved on 2026-11-12
@@ -219,7 +240,8 @@ Two substitutions are therefore excluded, and no statement here makes them:
    the target under every condition that admits a split that is not labelled
    (`not_ae_eventually_of_not_mem_labelled`).
 
-Bridges 4, 6 and 7 are open research problems. The measurements of
+Bridge 2 is closed and bridge 5 is proved as a sufficient condition. Bridge 1 and the second
+half of bridge 3 are open. Bridges 4, 6 and 7 are open research problems. The measurements of
 `experiments/grok_division` are finite runs in `f32` and close none of them.
 
 ## 5. Ways to bridge 6: what the runs exclude and what stays open
@@ -238,7 +260,7 @@ and #130 stays open.
 | Transfer from the minima of a weight-decayed factorization | Excluded in section 3: another model and another optimizer, no minimum without decay, and a limit of AdamW is not a minimizer of the weight-decayed loss | `not_exists_forall_ceLoss_le`, `not_tendsto_adamRun_factor` |
 | A checkpoint with the certificate, then invariance of the certificate along the run | No support. On enclosures of the real-valued logits the certificate holds at five retained checkpoints of two AdamW runs and is lost again in both; no Adam checkpoint has it. Those trajectories are in `f32`; nothing is known of the exact-real one | bridge 5; `experiments/grok_division/README.md` |
 | Adam without weight decay: the parameters diverge and their direction converges to a margin maximizer | Open, not attempted. The decoder is not written as a positively homogeneous function of its parameters (the normalization adds `10⁻⁵` to the variance, the positions are added to the embedding); no homogeneity is proved here, and an argument for homogeneous networks would need it. The first row proves non-convergence only: it does not prove that any parameter is unbounded | none |
-| AdamW: a stationary regime inside the box, described in law | Open, not attempted. It needs the measurability of bridge 2 first | none |
+| AdamW: a stationary regime inside the box, described in law | Open, not attempted. The measurability it would start from is proved (bridge 2): every parameter after every update is a measurable function of the sample, so the law of the parameters after an update is defined. Nothing is proved about that law | `measurable_divisionRun` |
 
 ## 6. What can be claimed today (#131, #132)
 
@@ -246,10 +268,12 @@ There is no end-to-end theorem, so #131 is open and #132 has no final claim to a
 of the present state finds this:
 
 - **Exact-real, proved in Lean with the three standard axioms.** What the target says
-  (`division_generalizes_iff`); that the almost sure target and the target in probability are
-  false without a condition on the split (section 2); that a structure of the logits gives
+  (`division_generalizes_iff`); that every parameter of a run, the held-out accuracy and the
+  event of a wrong held-out answer are measurable in the sample, so that the three modes can
+  be compared (bridge 2); that the target is false almost surely, in probability and in mean
+  without a condition on the split (section 2); that a structure of the logits gives
   held-out accuracy 1 and that built parameters have it (bridge 5); what two rows that enclose
-  the logits decide (bridge 5); that the target is false, almost surely and in probability,
+  the logits decide (bridge 5); that the target is false in the same three modes
   under every condition on the split that admits a split with a residue that is the answer of
   no training equation (section 2); that the gradient of the backward pass is a derivative,
   and the gradient of the loss where no hidden input is 0 (bridge 3); and the exclusions of

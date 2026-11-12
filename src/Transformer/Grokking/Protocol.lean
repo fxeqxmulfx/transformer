@@ -54,6 +54,11 @@ public import Transformer.Grokking.Protocol.Continuity
 public import Transformer.Grokking.Protocol.LimitNotFitted
 public import Transformer.Grokking.Protocol.Differentiability
 public import Transformer.Grokking.Protocol.OffKinks
+public import Transformer.Grokking.Protocol.GradientMeasurable
+public import Transformer.Grokking.Protocol.RunMeasurable
+public import Transformer.Grokking.Protocol.AccuracyMeasurable
+public import Transformer.Grokking.Protocol.DivisionMeasurable
+public import Transformer.Grokking.Protocol.MeanAccuracy
 
 /-! The protocol behind the division curves of Power et al., *Grokking: generalization beyond
 overfitting on small algorithmic datasets*, and what "held-out accuracy tends to 1" means for
@@ -97,10 +102,15 @@ token that division never shows is then a symmetry of the run, and so the target
 under every condition that admits a split with such a residue, the condition that the split
 has an anchor for each orbit and shows every residue among them, almost surely and in
 probability: given such a split a held-out answer is wrong with a conditional probability of
-at least one half at every update. The target is a predicate of the model, its labels and its
-gradient oracle: no convergence of any transformer
-is proved here, and no trained decoder is proved to have that structure, for an enclosure of
-its logits is a hypothesis here. The map of what is proved elsewhere and what is missing is
+at least one half at every update; and the measurability that the two weaker modes need: the
+gradient of the backward pass is measurable in the parameters, so every parameter of a run,
+the held-out accuracy and the event of a wrong held-out answer are measurable in the sample,
+the almost sure target of a model with measurable logits and gradients gives the other two,
+and for division the mean held-out accuracy stays below `1` by a positive constant at every
+update, so the target fails in mean as well. The target is a predicate of the model, its
+labels and its gradient oracle: no convergence of any transformer is proved here, and no
+trained decoder is proved to have that structure, for an enclosure of its logits is a
+hypothesis here. The map of what is proved elsewhere and what is missing is
 `review/grok_division_convergence.md`. -/
 
 @[expose] public section
