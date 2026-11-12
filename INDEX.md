@@ -26377,20 +26377,20 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`hasDerivAt_targetMean`](src/Transformer/Grokking/Protocol/TargetMean.lean#L121) | theorem | proved |
 | [`twoTargets`](src/Transformer/Grokking/Protocol/TargetMean.lean#L133) | def |  |
 
-**[Transformer.Grokking.Protocol.Uncovered](src/Transformer/Grokking/Protocol/Uncovered.lean)** — 154 lines
+**[Transformer.Grokking.Protocol.Uncovered](src/Transformer/Grokking/Protocol/Uncovered.lean)** — 168 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`hidden`](src/Transformer/Grokking/Protocol/Uncovered.lean#L31) | def |  |
-| [`Avoids`](src/Transformer/Grokking/Protocol/Uncovered.lean#L34) | def |  |
-| [`uncovered`](src/Transformer/Grokking/Protocol/Uncovered.lean#L42) | def |  |
-| [`exists_perm_forall_castLE`](src/Transformer/Grokking/Protocol/Uncovered.lean#L46) | lemma | proved |
-| [`quotient_eq_of_numerator_eq`](src/Transformer/Grokking/Protocol/Uncovered.lean#L58) | lemma | proved |
-| [`card_hidden_product`](src/Transformer/Grokking/Protocol/Uncovered.lean#L68) | lemma | proved |
-| [`card_avoids_ge`](src/Transformer/Grokking/Protocol/Uncovered.lean#L73) | theorem | proved |
-| [`exists_uncovered`](src/Transformer/Grokking/Protocol/Uncovered.lean#L121) | theorem | proved |
-| [`uniformPerm_pos_of_mem`](src/Transformer/Grokking/Protocol/Uncovered.lean#L126) | lemma | proved |
-| [`uniformPerm_uncovered_pos`](src/Transformer/Grokking/Protocol/Uncovered.lean#L139) | theorem | proved |
+| [`hidden`](src/Transformer/Grokking/Protocol/Uncovered.lean#L32) | def |  |
+| [`Avoids`](src/Transformer/Grokking/Protocol/Uncovered.lean#L35) | def |  |
+| [`uncovered`](src/Transformer/Grokking/Protocol/Uncovered.lean#L43) | def |  |
+| [`exists_perm_forall_castLE`](src/Transformer/Grokking/Protocol/Uncovered.lean#L47) | lemma | proved |
+| [`quotient_eq_of_numerator_eq`](src/Transformer/Grokking/Protocol/Uncovered.lean#L59) | lemma | proved |
+| [`card_filter_avoid_ge`](src/Transformer/Grokking/Protocol/Uncovered.lean#L71) | theorem | proved |
+| [`card_avoids_ge`](src/Transformer/Grokking/Protocol/Uncovered.lean#L123) | theorem | proved |
+| [`exists_uncovered`](src/Transformer/Grokking/Protocol/Uncovered.lean#L135) | theorem | proved |
+| [`uniformPerm_pos_of_mem`](src/Transformer/Grokking/Protocol/Uncovered.lean#L140) | lemma | proved |
+| [`uniformPerm_uncovered_pos`](src/Transformer/Grokking/Protocol/Uncovered.lean#L153) | theorem | proved |
 
 **[Transformer.Grokking.Protocol.Unlabelled](src/Transformer/Grokking/Protocol/Unlabelled.lean)** — 194 lines
 

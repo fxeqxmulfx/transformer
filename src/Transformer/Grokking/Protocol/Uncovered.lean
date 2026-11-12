@@ -13,12 +13,13 @@ is `uniformPerm` of `Transformer.Grokking.Protocol.Target`.
 
 A uniformly random half of the equations can miss a residue altogether. Here the residues `1`
 and `2` (`hidden`) are missed: a split is `uncovered` when no training equation has one of
-them as its numerator, its denominator or its quotient (`Avoids`). At most `2 · 96` equations
-have a hidden quotient, `2 · 97` a hidden denominator and `2 · 96` a hidden numerator, so at
-least `8734` of the `9312` equations avoid both (`card_avoids_ge`), more than the `4656` of a
-training set. Hence some shuffle is uncovered (`exists_uncovered`), and the uncovered shuffles
-have positive probability (`uniformPerm_uncovered_pos`). It is tiny, roughly `2⁻⁵⁹⁴` by a count
-that is not formalized here; what matters is that it is not `0`.
+them as its numerator, its denominator or its quotient (`Avoids`). A residue is the quotient
+of `96` equations, the denominator of `97` and the numerator of `96`, so all but `289`
+equations for each residue of a set avoid the set (`card_filter_avoid_ge`). So at least
+`8734` of the `9312` equations avoid both hidden residues (`card_avoids_ge`), more than the
+`4656` of a training set. Hence some shuffle is uncovered (`exists_uncovered`), and the
+uncovered shuffles have positive probability (`uniformPerm_uncovered_pos`). It is tiny,
+roughly `2⁻⁵⁹⁴` by a count that is not formalized here; what matters is that it is not `0`.
 -/
 
 @[expose] public section
@@ -65,22 +66,22 @@ lemma quotient_eq_of_numerator_eq {x y : Equation} (ha : numerator x = numerator
   rw [Nat.mod_eq_of_lt y.1.isLt, Nat.mod_eq_of_lt x.1.isLt] at h
   exact Fin.ext h.symm
 
-lemma card_hidden_product (n : ℕ) : (hidden ×ˢ (Finset.univ : Finset (Fin n))).card = 2 * n := by
-  rw [Finset.card_product, Finset.card_univ, Fintype.card_fin]
-  rfl
-
-/-- **At least `8734` equations avoid the hidden residues.** -/
-theorem card_avoids_ge :
-    8734 ≤ (Finset.univ.filter fun j : Fin (97 * 96) => Avoids (equations j)).card := by
+/-- **All but `289` equations for each residue of a set avoid the set**: a residue is the
+quotient of `96` equations, the denominator of `97` and the numerator of `96`. -/
+theorem card_filter_avoid_ge (H : Finset (Fin 97)) :
+    97 * 96 ≤ (Finset.univ.filter fun j : Fin (97 * 96) => numerator (equations j) ∉ H ∧
+      denominator (equations j) ∉ H ∧ (equations j).1 ∉ H).card + 289 * H.card := by
   have hinj := equations_bijective.injective
-  have h1 : (Finset.univ.filter fun j : Fin (97 * 96) => (equations j).1 ∈ hidden).card ≤
-      2 * 96 := by
-    rw [← card_hidden_product 96]
+  have hprod : ∀ n : ℕ, (H ×ˢ (Finset.univ : Finset (Fin n))).card = H.card * n := fun n => by
+    rw [Finset.card_product, Finset.card_univ, Fintype.card_fin]
+  have h1 : (Finset.univ.filter fun j : Fin (97 * 96) => (equations j).1 ∈ H).card ≤
+      H.card * 96 := by
+    rw [← hprod 96]
     refine Finset.card_le_card_of_injOn equations (fun j hj => ?_) hinj.injOn
     exact Finset.mem_product.2 ⟨(Finset.mem_filter.1 hj).2, Finset.mem_univ _⟩
   have h2 : (Finset.univ.filter fun j : Fin (97 * 96) =>
-      denominator (equations j) ∈ hidden).card ≤ 2 * 97 := by
-    rw [← card_hidden_product 97]
+      denominator (equations j) ∈ H).card ≤ H.card * 97 := by
+    rw [← hprod 97]
     refine Finset.card_le_card_of_injOn (fun j => (denominator (equations j), (equations j).1))
       (fun j hj => Finset.mem_product.2 ⟨(Finset.mem_filter.1 hj).2, Finset.mem_univ _⟩)
       fun i _ j _ hij => ?_
@@ -89,24 +90,25 @@ theorem card_avoids_ge :
     simp only [denominator] at this
     exact hinj (Prod.ext hquo (Fin.ext (by omega)))
   have h3 : (Finset.univ.filter fun j : Fin (97 * 96) =>
-      numerator (equations j) ∈ hidden).card ≤ 2 * 96 := by
-    rw [← card_hidden_product 96]
+      numerator (equations j) ∈ H).card ≤ H.card * 96 := by
+    rw [← hprod 96]
     refine Finset.card_le_card_of_injOn (fun j => (numerator (equations j), (equations j).2))
       (fun j hj => Finset.mem_product.2 ⟨(Finset.mem_filter.1 hj).2, Finset.mem_univ _⟩)
       fun i _ j _ hij => ?_
     obtain ⟨hnum, hden⟩ := Prod.mk.inj hij
     exact hinj (Prod.ext (quotient_eq_of_numerator_eq hnum hden) hden)
   have hcover : (Finset.univ : Finset (Fin (97 * 96))) ⊆
-      (Finset.univ.filter fun j => Avoids (equations j)) ∪
-        (Finset.univ.filter fun j => (equations j).1 ∈ hidden) ∪
-        (Finset.univ.filter fun j => denominator (equations j) ∈ hidden) ∪
-        (Finset.univ.filter fun j => numerator (equations j) ∈ hidden) := fun j _ => by
-    by_cases h3 : numerator (equations j) ∈ hidden
+      (Finset.univ.filter fun j => numerator (equations j) ∉ H ∧
+        denominator (equations j) ∉ H ∧ (equations j).1 ∉ H) ∪
+        (Finset.univ.filter fun j => (equations j).1 ∈ H) ∪
+        (Finset.univ.filter fun j => denominator (equations j) ∈ H) ∪
+        (Finset.univ.filter fun j => numerator (equations j) ∈ H) := fun j _ => by
+    by_cases h3 : numerator (equations j) ∈ H
     · exact Finset.mem_union_right _ (Finset.mem_filter.2 ⟨Finset.mem_univ _, h3⟩)
-    by_cases h2 : denominator (equations j) ∈ hidden
+    by_cases h2 : denominator (equations j) ∈ H
     · exact Finset.mem_union_left _ (Finset.mem_union_right _
         (Finset.mem_filter.2 ⟨Finset.mem_univ _, h2⟩))
-    by_cases h1 : (equations j).1 ∈ hidden
+    by_cases h1 : (equations j).1 ∈ H
     · exact Finset.mem_union_left _ (Finset.mem_union_left _ (Finset.mem_union_right _
         (Finset.mem_filter.2 ⟨Finset.mem_univ _, h1⟩)))
     · exact Finset.mem_union_left _ (Finset.mem_union_left _ (Finset.mem_union_left _
@@ -115,6 +117,18 @@ theorem card_avoids_ge :
     ((Finset.card_union_le _ _).trans (Nat.add_le_add_right
       ((Finset.card_union_le _ _).trans (Nat.add_le_add_right (Finset.card_union_le _ _) _)) _))
   rw [Finset.card_univ, Fintype.card_fin] at hle
+  omega
+
+/-- **At least `8734` equations avoid the hidden residues.** -/
+theorem card_avoids_ge :
+    8734 ≤ (Finset.univ.filter fun j : Fin (97 * 96) => Avoids (equations j)).card := by
+  have h := card_filter_avoid_ge hidden
+  have hsub : (Finset.univ.filter fun j : Fin (97 * 96) => numerator (equations j) ∉ hidden ∧
+      denominator (equations j) ∉ hidden ∧ (equations j).1 ∉ hidden) ⊆
+      Finset.univ.filter fun j => Avoids (equations j) := fun j hj =>
+    Finset.mem_filter.2 ⟨Finset.mem_univ j, (Finset.mem_filter.1 hj).2⟩
+  have hle := Finset.card_le_card hsub
+  have hc : hidden.card = 2 := rfl
   omega
 
 /-- **Some shuffle is uncovered.** -/

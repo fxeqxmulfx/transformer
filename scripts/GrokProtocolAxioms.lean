@@ -65,6 +65,7 @@ import Transformer
 #print axioms Transformer.Grokking.Protocol.adamRun_comp
 #print axioms Transformer.Grokking.Protocol.exists_perm_forall_castLE
 #print axioms Transformer.Grokking.Protocol.quotient_eq_of_numerator_eq
+#print axioms Transformer.Grokking.Protocol.card_filter_avoid_ge
 #print axioms Transformer.Grokking.Protocol.card_avoids_ge
 #print axioms Transformer.Grokking.Protocol.exists_uncovered
 #print axioms Transformer.Grokking.Protocol.uniformPerm_uncovered_pos
