@@ -130,7 +130,7 @@ theorem exists_fit_training_wrong_heldout :
   · exact not_both_predicted solver ⟨predict_answerLogits_solver hiddenTwo, h1⟩
 
 /-! The witnesses: the solver on the split of the first 4656 equations, where every held-out
-equation has the anchor `1 / 1 = 1` or `0 / 1 = 0`; and `5 / 4 = 50`, which shows no hidden
+equation has the anchor `1 / 1 = 1` or `0 / 1 = 0`; and `6 / 4 = 50`, which shows no hidden
 residue. -/
 
 example : accuracy (answerLogits solver) (fun x => residueToken x.1)

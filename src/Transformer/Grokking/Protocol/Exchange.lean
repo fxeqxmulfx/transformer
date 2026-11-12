@@ -118,7 +118,7 @@ theorem measurePreserving_exchangeSample :
       (law (97 * 96) 4656 (initMeasure paperSizes)) :=
   (MeasurePreserving.id _).prod (measurePreserving_comp_exchange.prod (MeasurePreserving.id _))
 
-/-! The witnesses: the residue `3` is not hidden, and `5 / 4 = 50` avoids the hidden ones. -/
+/-! The witnesses: the residue `3` is not hidden, and `6 / 4 = 50` avoids the hidden ones. -/
 
 example : hiddenSwap (residueToken 3) = residueToken 3 := hiddenSwap_residueToken (by decide)
 

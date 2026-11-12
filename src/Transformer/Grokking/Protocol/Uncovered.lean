@@ -154,7 +154,7 @@ theorem uniformPerm_uncovered_pos : 0 < uniformPerm (97 * 96) uncovered := by
   obtain ⟨π, hπ⟩ := exists_uncovered
   exact uniformPerm_pos_of_mem hπ
 
-/-! The witnesses: `5 / 4 = 50` avoids the hidden residues and `1 / 3 = 65` does not; three
+/-! The witnesses: `6 / 4 = 50` avoids the hidden residues and `1 / 3 = 65` does not; three
 items of which two are marked, and two slots. -/
 
 example : Avoids (50, 3) ∧ ¬ Avoids (65, 2) := by decide
