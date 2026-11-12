@@ -12,6 +12,30 @@ compare all 18 old endpoint-budget controls exactly. This is an adaptive
 follow-up to the independently frozen all-35 run; do not alter that cohort,
 its candidate ordering, budgets or limits. Admission alone is not recovery.
 
+## Flat-spectrum connections with convex depth (2026-11-12)
+
+The user requested a theory extension to depth, residuals and the newer mHC
+in the local DiffGPT repository, and authorized a new connection. The
+[theory note](review/convex_depth.md) specifies ordinary residual connections
+and fixed phase-conjugated Fourier connections with nonlinear branches that
+read the evolving hidden state. Train a joint tensor over complete paths
+through a finite block library. Lean proves ordinary-CE convexity in that
+tensor, exact embedding of deterministic residual stacks, additive bounds
+for bounded branches, and unit Fourier transport singular values. A two-block
+parity witness retains a feature interaction that independent routing with
+the same layer marginals erases. The additive fixed-feature baseline remains
+as a comparison; a strict residual/mHC CE counterexample explains why raw
+independently trained block parameters do not inherit convexity.
+
+This is theory only. The library and decoder are fixed while cross-depth
+joint weights train. Full nonlinear path execution is retained, but dense
+coordinates cost `|J|^depth`; this is not convex training of arbitrary raw
+transformer weights. No native model or new stress cohort is claimed, and
+no earlier full-suite outcome is changed. Experiments must compare joint
+routing, independent routing, and plain residual versus Fourier connections
+under explicit library, data and compute budgets, retaining the original
+short/long tasks and held-out metrics.
+
 ## Common convex predictions on all stress tasks (2026-11-12)
 
 Lean CM8 at `d7e1e6aa` proves fixed-scale ordinary CE convexity, common
