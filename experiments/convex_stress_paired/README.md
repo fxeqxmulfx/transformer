@@ -12,8 +12,12 @@ row and column phases meets the operator and nuclear budgets `N`
 (`pairedPhase_budget`) and, when it fits the observations, minimizes ordinary
 CE over the whole domain (`pairedPhase_minimum`). The same file proves that two
 such minima can disagree at an unseen cell under connected matching coverage
-(`paired_unseen_ambiguity`). Nothing proved says that an unseen answer is
-recovered, and nothing proved says that the iterations below converge.
+(`paired_unseen_ambiguity`). Lean CM18 (`5c0fe9bc`) proves that a certificate
+checked on training samples alone fixes the decoded answer of every completion
+at the cells it reaches (`accepted_decoding`), and that this program can still
+have a global CE minimum with a wrong answer at such a cell
+(`budget_wrong_minimum`). Nothing proved says which minimum the iterations
+below approach, or that they converge.
 
 ## Domain and decoder
 
@@ -64,9 +68,9 @@ saved.
 [`protocol.json`](protocol.json) freezes 24 cells: the three arms on the eight
 unchanged datasets of the preceding follow-ups (permuted addition, addition,
 subtraction, division, multiplication, sum-cube, sum-power-four and absolute
-difference; modulus 97, 4704 training pairs each). They are positive controls
-and known failures of earlier candidates. The model receives categorical pairs
-and labels, never the task name.
+difference; modulus 97, 4704 training pairs each, 4656 for division). They
+are positive controls and known failures of earlier candidates. The model
+receives categorical pairs and labels, never the task name.
 
 Before any buffer is allocated the three sizes are validated and an explicit
 bound on the numerical buffers (273 MB for these tasks) is checked against
@@ -136,6 +140,113 @@ PAIRED_MODE=full PAIRED_UPDATES=57 OPENBLAS_NUM_THREADS=1 cargo test --locked \
   --manifest-path experiments/convex_stress_paired/Cargo.toml -- --ignored --nocapture synthetic
 ```
 
-No update had been computed on the original data at this freeze. No
-original-task score, comparison with earlier candidates, transformer comparison
-or full-suite pass is claimed here.
+No update had been computed on the original data at this freeze.
+
+## Original data
+
+The frozen cohort ran once, on 2026-11-12, serially, from the binary built at
+`a56cf4f0` (source fingerprint `40aa7b2c…7a4439`). The 24 producer processes
+and the 24 replay processes all ended with exit status 0. Every cell was
+replayed and passed the raw audit: largest decoding defect 0, largest
+imaginary part of a moment `6.5e-16`. The audit recomputed the operator and
+nuclear norms of all 192 nonconstant frequencies of every saved table, accepted
+them against the budgets 97 at relative tolerance `1e-9`, and found them within
+`1e-7` of the producers' records, whose largest nuclear norm is
+`96.9999999998` and largest operator norm 79.2. Each task has two splits,
+4704 training and 4705 validation pairs (4656 and 4656 for division); the
+accuracies are sequence accuracies in percent. `CE excess` is the mean
+training CE above the lower bound. `Mixture` is the weight of the iterate in
+the saved table, to four digits; below one, the iterate exceeded a budget and
+the rest of the weight is the uniform table.
+
+| Task | Arm | Stop | Updates | CE excess | Train | Validation | Mixture | Seconds |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `arithmetic-perm-add` | `full_batch` | cap | 128 | 0.692541 | 100 | 0.64 | 0.9996 | 176 |
+| `arithmetic-perm-add` | `minibatch` | cap | 512 | 0.692437 | 100 | 0.64 | 1 | 684 |
+| `arithmetic-perm-add` | `forward_only` | cap | 128 | 0.745167 | 100 | 1.13 | 0.2401 | 168 |
+| `arithmetic-add` | `full_batch` | cap | 128 | 0.208610 | 96.92 | 95.26 | 0.9807 | 147 |
+| `arithmetic-add` | `minibatch` | cap | 512 | 0.201054 | 96.92 | 95.26 | 0.9927 | 580 |
+| `arithmetic-add` | `forward_only` | cap | 128 | 0.644249 | 100 | 96.54 | 0.3424 | 153 |
+| `arithmetic-sub` | `full_batch` | cap | 128 | 0.206311 | 96.28 | 94.79 | 0.9806 | 156 |
+| `arithmetic-sub` | `minibatch` | cap | 512 | 0.198649 | 96.17 | 94.79 | 0.9927 | 588 |
+| `arithmetic-sub` | `forward_only` | cap | 128 | 0.641786 | 100 | 96.11 | 0.3449 | 156 |
+| `arithmetic-div` | `full_batch` | cap | 128 | 0.687460 | 100 | 1.03 | 0.9987 | 167 |
+| `arithmetic-div` | `minibatch` | cap | 512 | 0.687096 | 100 | 1.01 | 1 | 651 |
+| `arithmetic-div` | `forward_only` | cap | 128 | 0.746273 | 100 | 1.12 | 0.2390 | 159 |
+| `arithmetic-mul` | `full_batch` | cap | 128 | 0.689254 | 100 | 0.83 | 0.9986 | 164 |
+| `arithmetic-mul` | `minibatch` | cap | 512 | 0.688868 | 100 | 0.83 | 1 | 650 |
+| `arithmetic-mul` | `forward_only` | cap | 128 | 0.748372 | 100 | 0.79 | 0.2369 | 168 |
+| `arithmetic-sum-cube` | `full_batch` | cap | 128 | 0.692780 | 100 | 0.55 | 0.9995 | 173 |
+| `arithmetic-sum-cube` | `minibatch` | cap | 512 | 0.692647 | 100 | 0.55 | 1 | 690 |
+| `arithmetic-sum-cube` | `forward_only` | cap | 128 | 0.766034 | 100 | 0.32 | 0.2189 | 170 |
+| `arithmetic-sum-pow4` | `full_batch` | cap | 128 | 0.683539 | 100 | 24.34 | 0.9992 | 176 |
+| `arithmetic-sum-pow4` | `minibatch` | cap | 512 | 0.683320 | 100 | 24.42 | 1 | 710 |
+| `arithmetic-sum-pow4` | `forward_only` | cap | 128 | 0.758950 | 100 | 32.71 | 0.2261 | 190 |
+| `arithmetic-abs-diff` | `full_batch` | cap | 128 | 2.07e-5 | 100 | 100 | 1 | 151 |
+| `arithmetic-abs-diff` | `minibatch` | cap | 512 | 1.63e-8 | 100 | 100 | 1 | 597 |
+| `arithmetic-abs-diff` | `forward_only` | CE bound | 38 | 4.7e-11 | 100 | 100 | 1 | 45 |
+
+Three cells pass the 99% rule, the three arms of `arithmetic-abs-diff`; one
+cell meets the stopping rule; 23 stop at their caps.
+
+**The positive control.** With the given class order, `|a - b|` is a table of
+the fold decoder: the row phases `a` and the column phases `-b` in `Z/193`
+decode to it. The model is given no phase. The uniform start is right on 94
+of the 4705 withheld pairs; at the first observation after it, update 19, all
+three arms are right on all 4705, and stay so. The forward-only arm reaches
+the CE lower bound and stops at update 38. The minibatch arm ends at its cap
+`1.6e-8` above the bound, just over the tolerance, and the full-batch arm
+`2.1e-5` above it: correct on every pair, and not converged in CE within the
+caps. The structure is supplied by the decoder and the class order, not found
+by the optimization: this is a control of the solver on a table that its
+domain contains.
+
+**Addition and subtraction are fitted in part.** Validation accuracy is 94.8
+to 96.5%, below the 99% rule. The CE arms do not fit the training set (96 to
+97%) and stay about 0.2 above the bound; the forward-only arm fits the
+training labels by its largest class, and its saved table carries only a
+third of the iterate. Every validation error has its answer near the wrap of
+the modulus: for addition the classes 0 to 11 and 85 to 96 in the two CE arms
+and 0 to 7 and 89 to 96 in the forward-only arm; for subtraction 0 to 14 and
+78 to 96, and 0 to 6 and 88 to 96. All other classes are right on every
+withheld pair.
+
+Addition modulo 97 is not a phase table of this decoder. Shift the phases to
+`r(0) = s(0) = 0`; the cells with `a = 0` or `b = 0` give `r(a) = ±a` and
+`s(b) = ±b`; the cell `(1, 1)` and a reflection give the sign `+` at 1; the
+cells `(a, 1)` and `(1, b)` then give it up to 95; and the cell `(50, 50)`
+has the state 100, which decodes to 93, not to 3. (This remark is not
+formalized.) Whether another table of the domain fits addition exactly is not
+known.
+
+**The other five tasks.** `arithmetic-sum-pow4`, which has 25 answers,
+reaches 24 to 33% on validation, against 4.6% for its most frequent answer;
+what it gets right was not analyzed. Permuted addition, division,
+multiplication and sum-cube stay at 0.3 to 1.1%, each below the share of its
+most frequent answer, while the largest class is right on every training
+pair. The CE arms keep 0.68 to 0.69 above the bound on all five. These are
+failures of this candidate, kept as such.
+
+**Costs.** The producer processes took 7681 s of wall clock in total and the
+replays 137 s; an update took 1.1 to 1.5 s on one thread. Peak resident
+memory was 88 MiB under the 8 GiB address-space cap. Another serial cohort
+queue ran on the same machine throughout, so the seconds are indicative only.
+The whole cohort, replays included, took 2 h 10 min.
+
+**What is not shown.** The 100% on the control is a measurement of saved
+tables. Whether the coverage conditions of CM18 hold for that split was not
+checked here, and no saved table was compared with a certificate; CM18 itself
+shows that a CE minimum of this program need not have the certified answer.
+No solver convergence, no stability at the tolerance and no interval
+certificate of the spectra is claimed. One seed and one split per task.
+
+**Integration was not obtained.** `integrate` requires the decoded-phase
+cohort `experiments/convex_stress_decode/runs/cohort-v1` complete and
+unchanged. That cohort had not started when this one finished: it is queued
+behind earlier cohorts of the same serial machine. `summary.json` records
+`integrated_with_older_candidates: false`. No ordering against an earlier
+candidate is claimed, and no earlier candidate is dropped or replaced by these
+numbers. The command above remains to be run once that cohort is complete.
+
+These are eight of the 35 tasks of the suite. No full-suite result and no
+comparison with a transformer is claimed.
