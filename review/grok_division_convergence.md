@@ -34,6 +34,7 @@ than trained, and names the bridges that are missing.
 | Loss of a batch and the gradient of the backward pass | `Example`, `batchLoss`, `gate`, `decodeTo_gate`, `frozenLoss`, `frozenLoss_self`, `sourceGrad` |
 | Means over the targets of a batch; the readout's gradient in closed form and its pairing with the readout | `targetMean`, `batchLoss_eq_targetMean`, `sourceGrad_out`, `sum_out_mul_sourceGrad` |
 | The logits are bounded by the readout and the second normalizations | `abs_layerNorm_le`, `abs_decodeTo_le`, `abs_logits_le` |
+| The block outputs and the logits are continuous in the parameters | `continuous_decodeTo`, `continuous_logits`, `continuous_logits_relu` |
 | The task, its tokens and its supervision | `paperSizes`, `Equation`, `equations`, `read`, `read_injective`, `inDivisionCell_operands`, `supervised`, `targetCount_supervised` |
 | Initialization law; the law of a run is a probability law | `initLaw`, `initMeasure`, `isProbabilityMeasure_initLaw` |
 | The target for the division protocol, and what it means | `division_generalizes_iff`, `division_generalizes_source_iff` |
@@ -162,7 +163,9 @@ Two substitutions are therefore excluded, and no statement here makes them:
    Two consequences are proved for the runs of the protocol themselves, with their batches,
    both moments and the gradient of the backward pass (section 5): a trajectory of Adam
    without weight decay whose parameters converge does not keep its batches fitted with a
-   margin (`division_eventually_margin_lt`), and for almost every run of AdamW the logits
+   margin, and its limit does not fit the training set with one
+   (`division_eventually_margin_lt`, `exists_margin_le_zero_of_tendsto_division`), and for
+   almost every run of AdamW the logits
    stay bounded, so the loss of a batch stays above a positive floor and no margin grows
    without bound (`ae_abs_logits_divisionRun_le`, `ae_floor_le_batchLoss_divisionRun`,
    `ae_margin_divisionRun_le`). No descent, no bound of the Adam run uniform in `t`, no limit
@@ -211,7 +214,7 @@ Bridges 4, 6 and 7 are open research problems. The measurements of
 
 ## 5. Ways to bridge 6: what the runs exclude and what stays open
 
-`Protocol/{ReadoutBound,TargetMean,ReadoutGradient,ReadoutPairing,AdamStationary,ReadoutStationary,ReadoutWitness,DecayedLogits}.lean`.
+`Protocol/{ReadoutBound,TargetMean,ReadoutGradient,ReadoutPairing,AdamStationary,ReadoutStationary,ReadoutWitness,DecayedLogits,Continuity,LimitNotFitted}.lean`.
 
 Bridge 6 (#130) asks that training reaches the structure of bridge 5 and keeps it. Each row
 is a way a proof could go and what is known of it. A row that is closed is closed for that way
@@ -220,7 +223,7 @@ and #130 stays open.
 
 | Way | Status | Declarations or evidence |
 | --- | --- | --- |
-| Adam without weight decay: the parameters converge, and the limit is analysed | Closed where the run fits its batches with a margin. If every parameter of a trajectory converges, then for every `μ > 0`, from some update on, every batch has an equation whose answer or closing token leads by less than `μ` at the parameters the batch is seen at. A readout coordinate that converges sees gradients that tend to 0, whatever the batches and without continuity of the gradient; the readout paired with its gradient is the mean of the expected logit less the logit of the target, which a margin keeps below a negative number while the logits are bounded. Not excluded: a trajectory that converges while some target of its batches stays tied or wrong | `tendsto_adamRun_grad_zero`, `sourceGrad_out`, `sum_out_mul_sourceGrad`, `sum_out_mul_sourceGrad_le_of_margin`, `eventually_exists_margin_lt`, `division_eventually_margin_lt`; the witness of the hypotheses is the run from zero, `divisionRun_zeroSample` |
+| Adam without weight decay: the parameters converge, and the limit is analysed | Closed where the run fits its batches with a margin. If every parameter of a trajectory converges, then for every `μ > 0`, from some update on, every batch has an equation whose answer or closing token leads by less than `μ` at the parameters the batch is seen at. A readout coordinate that converges sees gradients that tend to 0, whatever the batches and without continuity of the gradient; the readout paired with its gradient is the mean of the expected logit less the logit of the target, which a margin keeps below a negative number while the logits are bounded. At the limit itself, because the logits are continuous in the parameters, some training equation has an answer or a closing token with a margin of at most 0: a limit of the parameters does not fit the training set with a margin. Not excluded: a trajectory that converges to parameters at which some training target is tied or wrong | `tendsto_adamRun_grad_zero`, `sourceGrad_out`, `sum_out_mul_sourceGrad`, `sum_out_mul_sourceGrad_le_of_margin`, `eventually_exists_margin_lt`, `division_eventually_margin_lt`, `continuous_logits_relu`, `exists_margin_le_zero_of_tendsto_division`; the witness of the hypotheses is the run from zero, `divisionRun_zeroSample` |
 | AdamW: the training loss tends to 0, or the margins grow without bound | Closed for almost every run. With weight decay 1 the readout and the second normalizations stay within 17 of zero, so every logit stays within `logitBox`, which is below 455 600; the loss of every batch with a target stays above `log(1 + e^(−2·logitBox))`, which is positive, and no answer leads by more than `2·logitBox`, at every update. The bound is far from what a run shows; what it gives is uniformity in the update | `abs_logits_le`, `ae_initMeasure_abs_le_one`, `ae_abs_logits_divisionRun_le`, `ae_floor_le_batchLoss_divisionRun`, `ae_margin_divisionRun_le`, `logitBox_lt`, `floor_pos` |
 | Transfer from the minima of a weight-decayed factorization | Excluded in section 3: another model and another optimizer, no minimum without decay, and a limit of AdamW is not a minimizer of the weight-decayed loss | `not_exists_forall_ceLoss_le`, `not_tendsto_adamRun_factor` |
 | A checkpoint with the certificate, then invariance of the certificate along the run | No support. On enclosures of the real-valued logits the certificate holds at five retained checkpoints of two AdamW runs and is lost again in both; no Adam checkpoint has it. Those trajectories are in `f32`; nothing is known of the exact-real one | bridge 5; `experiments/grok_division/README.md` |

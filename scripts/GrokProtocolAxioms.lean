@@ -261,3 +261,16 @@ import Transformer
 #print axioms Transformer.Grokking.Protocol.not_ae_eventually_anchored_occurring
 #print axioms Transformer.Grokking.Protocol.denominatorFirst_mem_labelled
 #print axioms Transformer.Grokking.Protocol.uniformPerm_labelled_pos
+#print axioms Transformer.Grokking.Protocol.continuous_layerNorm
+#print axioms Transformer.Grokking.Protocol.continuous_score
+#print axioms Transformer.Grokking.Protocol.continuous_weight
+#print axioms Transformer.Grokking.Protocol.continuous_attention
+#print axioms Transformer.Grokking.Protocol.continuous_attended
+#print axioms Transformer.Grokking.Protocol.continuous_preactivation
+#print axioms Transformer.Grokking.Protocol.continuous_block
+#print axioms Transformer.Grokking.Protocol.continuous_decodeTo
+#print axioms Transformer.Grokking.Protocol.continuous_logits
+#print axioms Transformer.Grokking.Protocol.continuous_relu
+#print axioms Transformer.Grokking.Protocol.continuous_logits_relu
+#print axioms Transformer.Grokking.Protocol.eventually_le_margin
+#print axioms Transformer.Grokking.Protocol.exists_margin_le_zero_of_tendsto_division

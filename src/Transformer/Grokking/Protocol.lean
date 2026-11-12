@@ -49,6 +49,8 @@ public import Transformer.Grokking.Protocol.ReadoutSymmetry
 public import Transformer.Grokking.Protocol.Unlabelled
 public import Transformer.Grokking.Protocol.LabelCoverage
 public import Transformer.Grokking.Protocol.LabelWitness
+public import Transformer.Grokking.Protocol.Continuity
+public import Transformer.Grokking.Protocol.LimitNotFitted
 
 /-! The protocol behind the division curves of Power et al., *Grokking: generalization beyond
 overfitting on small algorithmic datasets*, and what "held-out accuracy tends to 1" means for
@@ -80,15 +82,16 @@ rows that enclose the logits, as a program that rounds outward computes them, de
 real ones: the answers, the accuracy and the premise of that certificate; and two ways of
 proving a convergence that the runs themselves exclude: by the gradient of the readout in
 closed form and its pairing with the readout, a run of Adam without weight decay whose
-parameters converge does not keep its batches fitted with a margin, and by the box of AdamW,
-for almost every run with weight decay 1 the logits stay bounded, the loss of a batch stays
-above a positive floor and no margin grows without bound; and a condition on the split that
-every true form of the target needs: a residue that is the answer of no training equation has
-a token that is no training target, exchanging its readout row with that of a token that
-division never shows is then a symmetry of the run, and so the target is false under every
-condition that admits a split with such a residue, the condition that the split has an anchor
-for each orbit and shows every residue among them. The target is a
-predicate of the model, its labels and its gradient oracle: no convergence of any transformer
+parameters converge does not keep its batches fitted with a margin, and its limit, the decoder
+being continuous in its parameters, does not fit the training set with a margin; and by the
+box of AdamW, for almost every run with weight decay 1 the logits stay bounded, the loss of a
+batch stays above a positive floor and no margin grows without bound; and a condition on the
+split that every true form of the target needs: a residue that is the answer of no training
+equation has a token that is no training target, exchanging its readout row with that of a
+token that division never shows is then a symmetry of the run, and so the target is false
+under every condition that admits a split with such a residue, the condition that the split
+has an anchor for each orbit and shows every residue among them. The target is a predicate of
+the model, its labels and its gradient oracle: no convergence of any transformer
 is proved here, and no trained decoder is proved to have that structure, for an enclosure of
 its logits is a hypothesis here. The map of what is proved elsewhere and what is missing is
 `review/grok_division_convergence.md`. -/
