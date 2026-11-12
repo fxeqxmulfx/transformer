@@ -351,10 +351,11 @@ The nine checkpoints that answer every equation:
   nonzero numerator have one, and those with numerator zero all have one at 47 of the 51.
 - Under Adam without weight decay the condition describes nothing. Seed 1 ends with 9 wrong
   held-out answers of 4656, and at its last checkpoint 1844 of its 4602 held-out equations
-  with a nonzero numerator have an anchor; the least value is −135.8, the training margins
-  are 17.4 to 254.9, and the median error of a row against the best anchor is 141.8. Seeds 0
-  and 2 never have more than 1 and 19 such equations, and no checkpoint of the three runs has
-  an anchor for every held-out equation with numerator zero.
+  with a nonzero numerator have an anchor; the least value is −135.8, the margins of its
+  training equations with a nonzero numerator are 17.4 to 254.9, and the median error of a
+  row of that orbit against the best single anchor is 141.8. Seeds 0 and 2 never have more
+  than 1 and 19 such equations, and no checkpoint of the three runs has an anchor for every
+  held-out equation with numerator zero.
 - Both tests are repeated without rounding. `certified_exact` and `nearest_exact` read every
   score as the rational that the bits of the double say and compare the anchor's margin with
   the range of the differences in integers. They agree with the doubles at all 117
