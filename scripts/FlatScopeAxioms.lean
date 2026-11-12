@@ -1,6 +1,6 @@
 import Transformer
 
-/-! Audit the scope items of `review/flat_spectrum.md`: WD12, WD14 and WD15 of *Training
+/-! Audit the scope items of `review/flat_spectrum.md`: WD12 and WD14 to WD16 of *Training
 reaches the optimal fit*, XE14 to XE19 of *Training with cross-entropy*, the answers to the
 items "Assumed or not covered" of WD11 and XE13
 (`Transformer.Grokking.FlatSpectrum.Training.Scope`). -/
@@ -198,3 +198,29 @@ items "Assumed or not covered" of WD11 and XE13
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_one_isDecayedMin_iff
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isDecayedMin_one_of_stationary_of_one_le
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_one_isDecayedMin_of_one_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.mask_univ
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.eq_add_of_stationary_identity
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.eq_and_mul_of_stationary_identity
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.stationary_identity_of_mul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.stationary_identity_iff
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.pairing_mul_conjTranspose_one
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_mul_conjTranspose_of_mul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.mul_self_of_stationary_identity
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.eq_zero_of_stationary_identity
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.smul_one_mul_conjTranspose
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.half_smul_one_mul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.halfDiag_mul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.lift_smul_one_posSemidef
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.eq_smul_one_of_isNuclearMin_identity
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.mul_conjTranspose_eq_of_isDecayedMin_identity
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.mul_conjTranspose_ne_smul_one
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.not_isDecayedMin_identity_of_card_lt
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isDecayedMin_identity_iff_of_stationary
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isNuclearMin_identity_iff
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isDecayedMin_identity_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.halfDiag_mul_conjTranspose_ne
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.eq_and_mul_of_tendsto_decayRun_identity
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isDecayedMin_identity_iff_of_tendsto
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_tendsto_decayRun_identity
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_decayRun_identity_zero
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_decayRun_identity_neg

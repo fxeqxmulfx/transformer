@@ -2,6 +2,9 @@ module
 
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.Balanced
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.BalanceObstruction
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.IdentityLimit
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.IdentityMin
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.IdentityStationary
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.LinearDiverge
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.MarginContinuity
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.NegStart
@@ -118,4 +121,18 @@ dropped, or the part of the open statement that is proved.
   (`isDecayedMin_one_of_stationary`). For `λ ≥ 1` every run from the ball ends at a decayed
   minimum (`exists_tendsto_decayRun_one_isDecayedMin_of_one_le`). So here the exceptional
   starts are those of the subspace `U₀ + V₀ = 0` when `λ < 1` and there are none when `λ ≥ 1`,
-  the step is explicit, and width one is included. Larger kernels are open. -/
+  the step is explicit, and width one is included.
+* The identity of any size (WD11, WD16). For the squared loss on all cells of the identity
+  and `λ > 0`, a pair is stationary exactly when its factors are equal and
+  `U Uᴴ U = (1 − λ) U` (`stationary_identity_iff`), so the product `X` of a stationary point
+  is positive semidefinite with `X² = (1 − λ) X` (`mul_self_of_stationary_identity`): `1 − λ`
+  times an orthogonal projection. For
+  `0 ≤ λ ≤ 1` the only trained product is `(1 − λ) · 1` (`isNuclearMin_identity_iff`), a
+  stationary point is a decayed minimum exactly when it has that product
+  (`isDecayedMin_identity_iff_of_stationary`), and for `λ < 1` no factorization of a width
+  below the size of the identity is one (`not_isDecayedMin_identity_of_card_lt`). Under the
+  bounds of WD8 every run converges to a pair `(U, U)` of this kind
+  (`exists_tendsto_decayRun_identity`), to the origin when `λ ≥ 1`
+  (`tendsto_decayRun_identity_zero`) and from `V₀ = −U₀` (`tendsto_decayRun_identity_neg`).
+  Which projection a run reaches, and the exceptional starts of a kernel larger than
+  `1 × 1`, are open. -/
