@@ -21,6 +21,46 @@ open scoped BigOperators
 
 variable {Q K L V C : Type*} [Fintype K] [Fintype L] [Fintype C]
 
+/-- Reuse old rows through a fixed map of value alphabets. In particular,
+new unused values can read any fixed old row without changing routing mass. -/
+def valuePullback {V' : Type*} (W : Channel Q K V C) (f : V' → V) : Channel Q K V' C :=
+  fun q k v c => W q k (f v) c
+
+/-- Enlarging a finite value alphabet preserves feasibility through a fixed
+retraction (CFt1); no new learned factors or normalization are introduced. -/
+theorem feasible_valuePullback {V' : Type*} {W : Channel Q K V C}
+    (hW : Feasible W) (f : V' → V) : Feasible (valuePullback W f) := by
+  refine ⟨?_, ?_, ?_⟩
+  · intro q k v c
+    exact hW.1 q k (f v) c
+  · intro q k v w
+    exact hW.2.1 q k (f v) (f w)
+  · intro q v
+    exact hW.2.2 q (f v)
+
+omit [Fintype C] in
+/-- The value-alphabet map commutes with actual channel predictions (CFt1). -/
+theorem logits_valuePullback {V' : Type*} (W : Channel Q K V C) (f : V' → V)
+    (q : Q) (D : K → V') :
+    logits (valuePullback W f) q D = logits W q (fun k => f (D k)) := by
+  funext c
+  unfold logits valuePullback
+  apply Finset.sum_congr rfl
+  intro k _
+  rfl
+
+omit [Fintype C] in
+/-- If the new alphabet retains every old value, its retraction preserves
+every old prediction exactly. Together with `appendKeys`, this also covers
+the native count alphabet, which enlarges both keys and values (CFt1). -/
+theorem logits_valuePullback_of_leftInverse {V' : Type*} (W : Channel Q K V C)
+    (f : V' → V) (g : V → V') (h : Function.LeftInverse f g) (q : Q) (D : K → V) :
+    logits (valuePullback W f) q (fun k => g (D k)) = logits W q D := by
+  rw [logits_valuePullback]
+  apply congrArg (logits W q)
+  funext k
+  exact h (D k)
+
 /-- Append keys with zero routing mass; all old coordinates remain intact. -/
 def appendKeys (W : Channel Q K V C) : Channel Q (K ⊕ L) V C :=
   fun q k v c => Sum.elim (fun j => W q j v c) (fun _ => 0) k
@@ -125,5 +165,13 @@ example := feasible_countChannel (K := Bool)
   (fun (_ : Unit) n => decide (n % 2 = 1))
 
 example := countData_le (fun _ : Bool => 0) true [false, true] 2 (by decide)
+
+example := feasible_valuePullback
+  (feasible_vertex (fun _ : Unit => false) (fun _ _ => (id : Bool → Bool)))
+  (Sum.elim id (fun _ : Unit => false))
+
+example := logits_valuePullback_of_leftInverse
+  (vertex (fun _ : Unit => false) (fun _ _ => (id : Bool → Bool)))
+  (Sum.elim id (fun _ : Unit => false)) Sum.inl (by intro v; rfl) () id
 
 end Transformer.Grokking.FlatSpectrum.ConvexChannel

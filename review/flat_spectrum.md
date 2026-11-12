@@ -14135,6 +14135,10 @@ not replace observed choices, alter oracle costs or read held-out answers.
 For any additional input-only slots `L`, embed a channel on `K` into one on
 `K + L` by setting the new slots' joint weights to zero. Nonnegativity and
 value-independent routing mass remain true; the total routing mass stays one.
+If the value alphabet also grows, first pull back the old rows through a fixed
+retraction: old values retain their rows, and each new unused value reads any
+fixed old row. Feasibility and predictions on the embedded old inputs are
+preserved. The key extension then applies on this common enlarged alphabet.
 On every input, the new slots contribute zero, so the old logits and ordinary
 CE are exactly preserved. The enlarged domain remains convex and the logits
 remain linear in every learned coordinate, for any fixed feature extractor.
