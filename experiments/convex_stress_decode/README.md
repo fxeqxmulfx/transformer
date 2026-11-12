@@ -48,13 +48,56 @@ No continuous full-batch or minibatch optimizer is implemented here yet.
 | Memory guard | Conservative established dense-buffer bound, at most 2 GiB; actual compact storage is quadratic |
 | Cost records | Validation/class/sketch/template/verification observations, label comparisons, assignment sweeps, power iterations and all matrix-vector products, including failed ones |
 
-The library guard bounds its own numerical buffers. Original-data execution
-must additionally use an 8 GiB process cap, run serially, freeze a protocol and
-independently replay saved predictions before reporting stress results.
+The library guard bounds its own numerical buffers. The original-data launcher
+additionally enforces an 8 GiB process cap, serial execution, single-thread BLAS
+and a 16 GiB disk reserve. Its bounded JSON reader and one-frequency-at-a-time
+audit avoid materializing a bank of dense Fourier matrices.
+
+## Frozen original-data follow-up
+
+[`protocol.json`](protocol.json) freezes eight cases on the same unchanged
+datasets as the preceding class-coding/phase cohorts: permuted addition,
+addition, subtraction, division, multiplication, sum-cube, sum-power-four and
+absolute difference. They include positive controls and known failures. The
+model receives categorical training pairs and labels, not the task name or an
+arithmetic operation. This constructor does not call the earlier bijective
+class-code discovery, which rejects unobserved output classes.
+
+All cases use the previously tested 16 random code trials, 64 power steps,
+24 assignment refinement rounds and seed 73. Save the best covered endpoint
+even if it fails to fit; save an explicit rejection if none exists. Save every
+trial and its cost, full original metrics, and both compact probability tables.
+An independent process rebuilds the proposal from training labels, checks its
+exact coordinates and trace, reconstructs each latent Fourier matrix directly
+from saved labels, and recomputes original CE and split metrics. A summary
+requires all eight sealed results, with no omitted failures.
+
+Prepare only after the complete, unchanged 16-case phase cohort and its
+cold/graph parents. For each of its 24 task/mode selections, compare `[new
+decoded candidate, previous selected candidate]` by original training CE:
+first candidate within `1e-8` of the common ideal, otherwise the minimum.
+Preserve the previous selection and every earlier candidate in the report.
+The new endpoint is constructed once and referenced in each full-batch,
+minibatch and forward-only comparison, with its full standalone cost. These
+references are not three gradient training runs. An ideal training fit may
+still cause an accuracy regression; all original held-out metrics remain in
+the comparison, with the unchanged 99% sequence-accuracy success rule.
+
+```sh
+cargo build --release --locked --manifest-path experiments/convex_stress_decode/Cargo.toml
+DECODE_PRODUCER_COMMIT=$(git rev-parse HEAD) bash experiments/convex_stress_decode/run_cohort.sh \
+  experiments/convex_stress_decode/runs/cohort-v1 \
+  experiments/convex_stress_relabel/runs/phase-v1
+```
+
+The run destination must be fresh. Preserve incomplete attempts instead of
+silently restarting them. Generated evidence remains ignored in the root
+checkout's linked runs directory. No original-data score has been observed at
+this protocol freeze.
 
 ## Findings and checks
 
-Six native tests pass. A shuffled eleven-state fixture with a many-to-one
+Ten native tests pass. A shuffled eleven-state fixture with a many-to-one
 decoder is recovered, including its withheld cells. Four of its eleven output
 classes never occur, but all eleven remain in CE. Renaming output classes
 preserves the proposal trace and appropriately renames every saved prediction.
@@ -69,6 +112,11 @@ latent moments satisfy their budget. This distinguishes an extended feasible
 class from an invalid claim that decoding preserves every original moment
 bound.
 
+End-to-end runner checks independently replay successful, imperfect and absent
+proposals. Altered saved coordinates, cost ledgers or metrics are rejected even
+when their digests are recomputed. A missing parent keeps preparation stopped,
+and oversized saved input is rejected before reading it into memory.
+
 ```sh
 cargo fmt --manifest-path experiments/convex_stress_decode/Cargo.toml --check
 OPENBLAS_NUM_THREADS=1 cargo test --locked --manifest-path experiments/convex_stress_decode/Cargo.toml -- --test-threads=1
@@ -76,5 +124,5 @@ cargo clippy --locked --manifest-path experiments/convex_stress_decode/Cargo.tom
 ```
 
 No original stress run, full/mini/forward comparison, transformer comparison
-or full-suite pass is claimed by this prototype. The previously frozen cohorts
+or full-suite pass is claimed by these checks. The previously frozen cohorts
 continue unchanged.

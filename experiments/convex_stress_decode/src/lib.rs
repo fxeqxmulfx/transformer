@@ -5,6 +5,7 @@
 pub use convex_stress_relabel::{C, Result, Sample, linalg, loss, metrics, random};
 use serde::{Deserialize, Serialize};
 pub mod assignment;
+pub mod cohort;
 pub mod search;
 
 pub fn memory_bound(n: usize, q: usize, vocab: usize) -> Result<u64> {

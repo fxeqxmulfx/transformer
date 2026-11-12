@@ -87,7 +87,7 @@ fn assignment_cost_matches_exhaustive_permutations() {
     }
 }
 
-fn fixture() -> (Model, Vec<Sample>) {
+pub(crate) fn fixture() -> (Model, Vec<Sample>) {
     let n = 11;
     let (mut rows, mut columns) = ((0..n).collect::<Vec<_>>(), (0..n).collect::<Vec<_>>());
     let mut rng = Random::new(381);

@@ -23,6 +23,15 @@ Every attempted sketch and its work counts are retained. Original-data runs,
 continuous full/mini optimization and comparison with frozen predecessors
 remain separate work; the toy recovery test is not a stress-suite result.
 
+`convex_stress_decode/protocol.json` now freezes eight original-data constructors
+with the tested 16/64/24 trial/power/refinement limits. Preserve all imperfect
+and rejected proposals and every internal trial. Ten native checks pass,
+including saved-table/trace/metric replay and tamper detection. Gate execution
+on the complete unchanged phase cohort and its cold/graph parents. Compare each
+new endpoint once with all three previous training modes, selecting by original
+CE alone and retaining the previous candidates and costs. This is not three new
+gradient runs or a full35 result. Keep the serial queue and memory caps.
+
 ## Bounded conventional transformer comparator (2026-11-12)
 
 The fresh comparison now has a native backend in `convex_stress_transformer`.

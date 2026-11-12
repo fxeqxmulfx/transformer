@@ -1,0 +1,22 @@
+{
+  "version": "decoded-phase-proposal-v1",
+  "proof_commit": "b73b3e3fbbe42bfb547e167b8d691482e5378fe3",
+  "prototype_commit": "5c3786fa",
+  "parent_fingerprint": "db7bc1bb09265f4cdbf4ea817e78e12a7b35a4e6ee167d0686b88eed6a03510a",
+  "tasks": ["arithmetic-perm-add", "arithmetic-add", "arithmetic-sub", "arithmetic-div", "arithmetic-mul", "arithmetic-sum-cube", "arithmetic-sum-pow4", "arithmetic-abs-diff"],
+  "method": "decode_construct",
+  "options": {"code_trials": 16, "power_steps": 64, "refinement_steps": 24, "seed": 73},
+  "updates": 0,
+  "training_gradient_evaluations": 0,
+  "logit_scale": 1,
+  "ideal_ce_tolerance": 1e-8,
+  "maximum_dimension": 193,
+  "frequency_workers": 1,
+  "explicit_memory_limit_bytes": 2147483648,
+  "address_space_limit_gib": 8,
+  "parallel_numerical_jobs": 1,
+  "construction": "Use the unchanged original categorical pair data and full original vocabulary. Do not invoke the earlier bijective output-code discovery. Search for N latent states with the exact prototype algorithm and options tested before this freeze: centered random complex class sketches, singular-vector angle order, row/column minimum-cost assignments and empirical many-to-one decoder. Proposals read training labels only. Retain every failed sketch, best covered candidate, error count and actual work count; lack of an exact fit remains a result. No arithmetic answer function of input-token values is supplied. Inference reads the saved decoded output table. Spectral operator/nuclear budgets are N on latent Fourier moments, not on decoded output moments.",
+  "comparison": "Evaluate eight construction endpoints once, then compare each with the already selected CM14/cold endpoint in each of its full_batch, minibatch and forward_only modes. The previous summary retains every earlier candidate. Prefer the new candidate if it is first within 1e-8 of the common full-vocabulary training-CE lower bound; otherwise use the minimum training CE in [new, previous selected] order. Retain the previous selection and both candidates with all costs even if accuracy regresses. No held-out metric chooses a candidate. The same construction is referenced in all three comparisons and is not relabeled as three gradient-trained runs. Use the unchanged original 99% sequence-accuracy rule, both primary and all held-out splits. This adaptive eight-task follow-up is not a full35 result or a fresh transformer comparison.",
+  "provenance": "Require the complete 16-cell phase cohort with 24 choices, including its unchanged complete cold/graph parents, before preparation. Save parent summary and digest. Reconstruct each proposal and every trial from original training data during replay, compare exact saved tables, and independently reconstruct each Fourier matrix from stored latent coordinates before LAPACK SVD. Recompute full-vocabulary CE and every original split metric. Verify every replay seal and model/proposal/result digest before summary selection. These floating-point spectral checks are not interval or exact-real certificates.",
+  "resource_policy": "Construction and replay are strictly serial under an 8 GiB address-space cap with single-thread BLAS. Validate dimensions and observation counts before numerical buffers, keep the conservative 2 GiB buffer forecast and 16 GiB disk reserve. Stream JSON writes and bound JSON reads. Never overwrite an existing cohort, silently resume an interrupted cell, or drop an unsuccessful planned cell. Wait for the preceding queued phase cohort to finish successfully. Preserve generated evidence in ignored root runs."
+}

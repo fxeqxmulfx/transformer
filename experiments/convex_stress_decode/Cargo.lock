@@ -30,6 +30,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "be95d4a884358a21a199689323c29e9256b4a1b315e22f183d155422041d3a9a"
 
 [[package]]
+name = "convex-phase-start"
+version = "0.1.0"
+dependencies = [
+ "convex-relabel-graph-audit",
+ "convex-stress-relabel",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "convex-relabel-graph-audit"
+version = "0.1.0"
+dependencies = [
+ "convex-stress-budgets",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "convex-stress-budgets"
 version = "0.1.0"
 dependencies = [
@@ -43,6 +62,7 @@ dependencies = [
 name = "convex-stress-decode"
 version = "0.1.0"
 dependencies = [
+ "convex-phase-start",
  "convex-stress-relabel",
  "serde",
  "serde_json",
