@@ -79,6 +79,13 @@ public import Transformer.Grokking.Protocol.UnreadToken
 public import Transformer.Grokking.Protocol.AbsentBatches
 public import Transformer.Grokking.Protocol.DecayedEmbedding
 public import Transformer.Grokking.Protocol.DecayedLimit
+public import Transformer.Grokking.Protocol.CompleteState
+public import Transformer.Grokking.Protocol.InvariantRegion
+public import Transformer.Grokking.Protocol.ShuffleHistory
+public import Transformer.Grokking.Protocol.HistoryFiltration
+public import Transformer.Grokking.Protocol.StayRight
+public import Transformer.Grokking.Protocol.EventualStay
+public import Transformer.Grokking.Protocol.DivisionStay
 
 /-! The protocol behind the division curves of Power et al., *Grokking: generalization beyond
 overfitting on small algorithmic datasets*, and what "held-out accuracy tends to 1" means for
@@ -149,7 +156,17 @@ the embedding of a token that the batch does not read, and almost surely every r
 missing from infinitely many batches, so for almost every run with a positive weight decay the
 limit of the parameters, if there is one, gives every equation the same logits, and along a
 run that converges only the answers of one residue can keep a margin, which leaves open a run
-that converges with margins that tend to zero. The target is a predicate of the model, its
+that converges with margins that tend to zero; and an all-correct region of the complete
+state of the optimizer as a way to that convergence: at the end of an epoch the split, the
+parameters, both moments and the count of updates fix the law of what follows, the later
+shuffles being fresh; the states that every sequence of shuffles keeps right are the largest
+region that is invariant and right, reaching it gives eventual correctness, and one wrong
+continuation excludes a state from it; the probability of staying right from a state is `1`
+exactly there; for almost every run that is eventually right that probability, at the state
+of the run at the end of epoch `e`, tends to `1`, by the zero-one law of Lévy; so a run is
+eventually right with positive probability exactly if with positive probability it reaches a
+state from which it stays right with positive probability, or with a probability above any
+`δ < 1`, and whether it does is not decided. The target is a predicate of the model, its
 labels and its gradient oracle: no convergence of any transformer is proved here, and no
 trained decoder is proved to have that structure, for an enclosure of its logits is a
 hypothesis here. The map of what is proved elsewhere and what is missing is
