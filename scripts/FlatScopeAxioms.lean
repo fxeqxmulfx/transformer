@@ -1,7 +1,7 @@
 import Transformer
 
 /-! Audit the scope items of `review/flat_spectrum.md`: WD12 and WD14 to WD16 of *Training
-reaches the optimal fit*, XE14 to XE19 of *Training with cross-entropy*, the answers to the
+reaches the optimal fit*, XE14 to XE20 of *Training with cross-entropy*, the answers to the
 items "Assumed or not covered" of WD11 and XE13
 (`Transformer.Grokking.FlatSpectrum.Training.Scope`). -/
 
@@ -251,3 +251,24 @@ items "Assumed or not covered" of WD11 and XE13
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_mul_eq_one_of_tendsto_decayRun_self
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.range_mul_conjTranspose_of_tendsto_decayRun_identity_self
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.isDecayedMin_iff_of_tendsto_decayRun_identity_self
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.classSign_mul_self
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.ceGrad_term_signCode
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.ceGrad_signCode
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.ceGrad_signCode_mul_apply
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.conjTranspose_ceGrad_signCode_mul_apply
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.injective_diagCell_fst
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.injective_diagCell_snd
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.pairing_one_rowOf
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.rowOf_decayStep_signCode
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.rowOf_decayRun_signCode
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.frobeniusSq_rowOf_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.rowOf_add_ne_zero_iff
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.pairing_neg_left
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.crossEntropy_signCode_mul
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.ceLoss_decayRun_signCode
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_frobeniusSq_decayRun_signCode_atTop
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.log_two_le_ceLoss_decayRun_signCode
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_ceLoss_decayRun_signCode_iff
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_margin_decayRun_signCode_atTop
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.diagCell_one_add_zero_ne
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.diagCell_one_add_neg_one_eq

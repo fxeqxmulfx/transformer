@@ -13009,7 +13009,12 @@ on the cross-entropy of logits that are real-linear in the product:
   weight decay is followed at every step `η > 0`: from every start with `U_0 + V_0 ≠ 0`, at
   every width, the norm of the factors tends to infinity, the loss tends to `0`, the margin
   for the nuclear norm tends to the largest margin and the direction of the product to the
-  product of largest margin; from the other starts the loss stays at least `log 2` (XE19).
+  product of largest margin; from the other starts the loss stays at least `log 2` (XE19);
+- on samples of two classes with the code `±1` at cells no two of which share a row or a
+  column, the rows of each sample follow the run of XE19: for every step η > 0, at every
+  width, the norm of the factors tends to infinity when the rows of some sample do not
+  cancel, and the loss tends to `0`, with a margin that tends to infinity, exactly when the
+  rows of no sample cancel (XE20).
 
 Assumed or not covered:
 
@@ -13020,10 +13025,12 @@ Assumed or not covered:
   proves that it has no limit and that it does not settle in a ball where its step is
   admissible. That its norm tends to infinity for one fixed step, that its loss tends to
   `0`, and its implicit bias, the direction of the factors, are proved for one sample of two
-  classes, at every step (XE19); for more than one sample they are not treated. The limit
-  λ → 0⁺ of XE6 and XE9 runs over trained fits. One run whose weight decay decreases to `0`
-  reaches it at the ends of phases whose lengths are not explicit (XE18); a schedule written
-  before the run, the steps inside a phase and one fixed step are not treated.
+  classes, at every step (XE19). For more than one sample the first two are proved when no
+  two samples share a row or a column (XE20); the direction, and samples that share a row or
+  a column, are not treated. The limit λ → 0⁺ of XE6 and XE9 runs over trained fits. One run
+  whose weight decay decreases to `0` reaches it at the ends of phases whose lengths are not
+  explicit (XE18); a schedule written before the run, the steps inside a phase and one fixed
+  step are not treated.
 - The direction when several products of the unit ball have the largest margin. XE10 gives
   the limit points of `X_j / ‖X_j‖_S1`; that it converges is proved only when the product of
   largest margin is unique. XE11 proves that for a mirrored code of gap `0 < g < 2` with
@@ -13294,9 +13301,10 @@ from `U_0 = [1 0]`, `V_0 = [0 1]` has no limit, and `‖W_t‖² > 2` at infinit
 
 Not covered. For one fixed step: that the norm of the factors tends to infinity, that the
 loss tends to `0`, and the direction of the factors, the implicit bias. XE19 proves the
-three for the sample of the example above, at every step; for more than one sample they are
-open. Outside the ball of
-squared radius `ρ*(η)` the quadratic model of XE2 no longer gives a decrease of the loss:
+three for the sample of the example above, at every step, and XE20 the first two for samples
+no two of which share a row or a column; for other sets of samples they are open. Outside
+the ball of squared radius `ρ*(η)` the quadratic model of XE2 no longer gives a decrease of
+the loss:
 its constant on the factor space grows with the norm of the factors, and the proof of a
 decrease there needs the smaller curvature of the cross-entropy where its loss is small.
 For the gradient flow of a homogeneous model from a point that classifies the samples, the
@@ -13473,8 +13481,79 @@ at every step.
 
 Not covered. More than one sample: the gradient is then not a multiple of one matrix, the
 sum and the difference of the factors do not decouple, and the three questions of XE17
-remain open. Rates: how fast the norm grows and the loss falls. One sample with probes `±A`
-for a matrix `A` that is not `1 × 1`.
+remain open, except for samples no two of which share a row or a column (XE20). Rates: how
+fast the norm grows and the loss falls. One sample with probes `±A` for a matrix `A` that is
+not `1 × 1`.
+
+### XE20. The run without weight decay on samples in distinct rows and columns
+
+XE19 follows the run with λ = 0 on one sample. This item follows it on several samples, no
+two of which share a row or a column: there the samples do not interact, and each of them
+is a copy of the sample of XE19.
+
+Let the samples `s` of two classes lie at the cells `(i_s, j_s)` of an `m × n` product, read
+with the code `±1` (XE8) and labelled `y_s = ±1`: the logits of the sample `s` are
+`± Re X_{i_s j_s}`. Let no two samples lie in one row, and no two in one column. The factors
+have any width.
+
+The term of the sample `s` in the gradient is `−y_s w(y_s Re X_{i_s j_s}) E_{i_s j_s}`, with
+the weight `w` of XE19 and the matrix unit `E_ij`, so
+
+```
+G(X) = − Σ_s y_s w_s E_{i_s j_s},        w_s = w(y_s Re X_{i_s j_s}).
+```
+
+The rows `i_s` are distinct, so the row `i_s` of `G V` is `−y_s w_s` times the row `j_s` of
+`V`. The columns `j_s` are distinct, so the row `j_s` of `Gᴴ U` is `−y_s w_s` times the row
+`i_s` of `U`. Write `u_s` for the row `i_s` of `U` and `v_s` for `y_s` times the row `j_s` of
+`V`.
+
+1. The rows of a sample follow the sign sample. `Re (u_s v_sᴴ) = y_s Re X_{i_s j_s}`, and a
+   step with λ = 0 gives, by `y_s² = 1`,
+
+   ```
+   u_s' = u_s + η w_s v_s,        v_s' = v_s + η w_s u_s,        w_s = w(Re (u_s v_sᴴ)):
+   ```
+
+   the step of XE19 on the pair `(u_s, v_s)`. So along the run the pair `(u_s, v_s)` is the
+   run of XE19 from its start, whatever the other rows are. The loss of the sample `s` is
+   the loss of the sign sample at the product `u_s v_sᴴ`, so the loss along the run is the
+   sum of the losses of these runs.
+
+2. The norm tends to infinity. Let η > 0 be any step. If `u_s + v_s ≠ 0` at the start for
+   some sample `s`, then `‖u_s‖² + ‖v_s‖² → ∞` (XE19, statement 1), and
+   `‖U‖² + ‖V‖² ≥ ‖u_s‖² + ‖v_s‖²`.
+
+3. The loss tends to `0` exactly when no pair cancels. If `u_s + v_s ≠ 0` at the start for
+   every sample, every term of the loss tends to `0` and every gap `2 Re (u_s v_sᴴ)` tends
+   to infinity (XE19, statement 2): the loss tends to `0`, and the margin, the least gap,
+   tends to infinity. If `u_s + v_s = 0` at the start for one sample, its term is at least
+   `log 2` at every step, for every real η (XE19, statement 4), and so is the loss.
+
+Theorem. Let samples of two classes with the code `±1` lie at cells no two of which share a
+row or a column, and let η > 0 be any step. At every width, the run without weight decay
+has `‖U_t‖² + ‖V_t‖² → ∞` from a start with `U_0[i_s] + y_s V_0[j_s] ≠ 0` for some sample.
+Its cross-entropy tends to `0` if and only if `U_0[i_s] + y_s V_0[j_s] ≠ 0` for every sample,
+and then its margin tends to infinity; otherwise the loss is at least `log 2` at every step.
+
+So for these samples two of the three questions of XE17 are answered for one fixed step,
+with the exceptional starts, and no bound on the step is used. For the `n` samples at the
+diagonal cells of an `n × n` product, all labelled `+`, the condition is that no row of
+`U_0 + V_0` vanishes.
+
+Example: the two samples at the diagonal cells of a `2 × 2` product, with η = 1/10. With the
+labels `(+, −)`, from `U_0 = 1`, `V_0 = 0` the norm of the factors tends to infinity, the
+loss tends to `0` and the margin tends to infinity. With the labels `(+, +)`, from `U_0 = 1`,
+`V_0 = −1` the loss is at least `log 2` at every step.
+
+Not covered. The direction of the product and the margin for the nuclear norm. The modes
+`‖u_s + v_s‖²` of the samples tend to infinity one by one, and the direction of the product
+depends on their ratios, that is on the rates, which XE19 does not give. If the ratios tend
+to `1`, as the growth `≈ 2 log t` of one mode suggests, the product of the samples at the
+diagonal cells, divided by its nuclear norm, tends to `1/n` times the Gram matrix of the
+normalized rows of `U_0 + V_0`, a product of largest margin; this is not proved. Samples
+that share a row or a column: there the rows of different samples interact, and the three
+questions remain open. Codes of more than two classes.
 
 ### Lean
 
@@ -13507,6 +13586,7 @@ for a matrix `A` that is not `1 × 1`.
 | XE17 | `not_tendsto_decayRun_ceLoss_zero`, `exists_lt_frobeniusSq_decayRun_ceLoss_zero`, `decayRun_add`, `surjective_stack_decayRun`, `frequently_lt_frobeniusSq_decayRun_ceLoss_zero`; every real λ (WD8): `exists_tendsto_decayRun_of_forall_le`, `exists_tendsto_decayRun_isDecayedMin_of_forall_le` | Module `Scope/NoDecayRun`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`; the statements for every λ are in `BoundedRun` and `Convergent`, namespace `Transformer.Grokking.FlatSpectrum.Training`. "No limit" is `¬ Tendsto (decayRun (ceGrad A y) η 0 U₀ V₀) atTop (𝓝 (U, V))` for every pair `(U, V)`. "Some product has a positive margin" is `0 < margin A y X₀`, with `[Nonempty S] [Nontrivial C]`; `N` is `Fintype.card S`, and the conditions are `η * (2 * a * card S) < 1` and `η * (2 * a * card S + 2 * (card S * a ^ 2) * ρ) < 1`. Statement 3 is `∃ t, ρ < …` and `∃ᶠ t in atTop, ρ < …`; `ρ*(η)` and the `lim sup` are not stated. The two citations are not formalized. |
 | XE18 | `abs_nuclearNorm_sub_le`, `continuous_nuclearNorm`, `continuous_margin`, `continuousAt_margin_div_nuclearNorm`, `tendsto_inv_smul_of_tendsto_margin_div`; one phase: `phaseStep`, `phaseStep_pos`, `exists_tendsto_decayRun_phaseStep`, `exists_seq_of_forall_exists`; the run: `phaseRun`, `phaseProduct`, `exists_tendsto_margin_div_phaseProduct`; the direction: `exists_tendsto_inv_smul_phaseProduct`, `exists_tendsto_inv_smul_phaseProduct_codeProbe`, `exists_tendsto_inv_smul_phaseProduct_cubicKernel`, `exists_eventually_phaseProduct_unseen_wrong` | Modules `Scope/MarginContinuity`, `Scope/PhaseStep`, `Scope/PhasedRun` and `Scope/PhasedDirection`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. `phaseStep S C a lam W` is `η(λ, W)` with `N` and `\|C\|` as `Fintype.card S` and `Fintype.card C`. `phaseRun A y a lam T U₀ V₀ j` is the pair `W_j`, defined by recursion on `j` with the step `phaseStep S C a (lam j) W_j`, and `phaseProduct A y a lam T U₀ V₀ j` is `X_j`. The weight decays are any `lam : ℕ → ℝ` with `∀ j, 0 < lam j` and `Tendsto lam atTop (𝓝 0)`, and "there are lengths" is `∃ T : ℕ → ℕ`. Statement 2 is the conjunction of `Tendsto (fun j => nuclearNorm (X_j)) atTop atTop` and the limit of `margin A y (X_j) / nuclearNorm (X_j)`, Lean's quotient, which is `0` where the product is `0`. The Lipschitz bound is `\|‖X‖_S1 − ‖Y‖_S1\| ≤ √(card m * frobeniusSq (X − Y))`. `tendsto_inv_smul_of_tendsto_margin_div` is the statement about every sequence of matrices; its hypothesis on `Z₀` is that of XE10. For the code probes `a = 1`. "Decoded to the class of `−1`" is written as in XE15, at the cell `(1, 1)` of `phaseProduct`. `exists_seq_of_forall_exists` is the dependent choice of the phases. The bound `η_j ≤ λ_j / (8 s b)`, the numbers of the example's first phase and "the run has no limit" are not stated; the examples are the sample of XE3, `cubicKernel 3` with all nine cells seen, and the three seen cells of the kernel of signs, along `λ_j = 1 / (j + 1)` from the start `fromCols 1 0`, `fromCols 0 1`. |
 | XE19 | `signWeight`, `signWeight_pos`, `signWeight_le_two`, `signWeight_anti`, `signWeight_zero`, `mul_signWeight_le_two`; the system: `IsSignSystem`, `IsSignSystem.snd_nonneg`, `IsSignSystem.fst_pos`, `IsSignSystem.fst_mono`, `IsSignSystem.tendsto_fst_atTop`, `IsSignSystem.mul_le_mul_of_le`, `IsSignSystem.exists_lt`, `IsSignSystem.tendsto_sub_atTop`, `IsSignSystem.exists_forall_snd_le`; the run: `ceGrad_signProbe`, `decayStep_signProbe`, `pairing_one_mul_conjTranspose`, `frobeniusSq_add_frobeniusSq`, `signProduct`, `decayRun_signProbe_add`, `decayRun_signProbe_sub`, `isSignSystem_decayRun_signProbe`, `margin_signProbe`, `margin_signProduct`, `tendsto_modes_decayRun_signProbe`, `tendsto_frobeniusSq_decayRun_signProbe_atTop`; the limits: `tendsto_margin_signProduct_atTop`, `tendsto_ceLoss_signProduct`, `tendsto_margin_div_frobeniusSq_signProduct`, `tendsto_margin_div_signProduct`, `tendsto_inv_smul_signProduct`, `log_two_le_ceLoss_signProduct`, `tendsto_ceLoss_signProduct_iff` | Modules `Scope/SignSystem`, `Scope/SignGap`, `Scope/SignRun` and `Scope/SignRunLimit`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. The sample is `signProbe` with the label `fun _ => true`; the factors are `U₀ V₀ : Matrix (Fin 1) k ℂ` for any finite `k`, the run is `decayRun (ceGrad signProbe fun _ => true) η 0 U₀ V₀`, and `signProduct η U₀ V₀ t` is `x_t` as a `1 × 1` matrix. `Re x` is `pairing 1 X`. `IsSignSystem η a b` states the two recursions for sequences `a b : ℕ → ℝ`; the run satisfies it with `a t = frobeniusSq (U_t + V_t)` and `b t = frobeniusSq (U_t − V_t)`. Statements 1 to 3 have the hypotheses `0 < η` and `U₀ + V₀ ≠ 0`; statement 4 is `log_two_le_ceLoss_signProduct` for every real `η` and the equivalence `tendsto_ceLoss_signProduct_iff` for `0 < η`. The quotient `margin / nuclearNorm` is Lean's, which is `0` where the product is `0`. The geometric growth of the ratio while `a ≤ b` is a private lemma. The remark on the eigenvector `(1, 1)` is not stated. The examples are the start `fromCols 1 0`, `fromCols 0 1` with `η = 1/10` and the starts `(1, −1)` and `(1, 1)` of width one; the witness of the system is `signWitness`, the first mode from `a_0 = 1`, `b = 0` with the step `1`. |
+| XE20 | `classSign`, `classSign_mul_self`, `ceGrad_term_signCode`, `ceGrad_signCode`, `ceGrad_signCode_mul_apply`, `conjTranspose_ceGrad_signCode_mul_apply`, `diagCell`, `injective_diagCell_fst`, `injective_diagCell_snd`; the rows: `rowOf`, `pairing_one_rowOf`, `rowOf_decayStep_signCode`, `rowOf_decayRun_signCode`, `frobeniusSq_rowOf_le`, `rowOf_add_ne_zero_iff`, `pairing_neg_left`, `crossEntropy_signCode_mul`, `ceLoss_decayRun_signCode`; the run: `tendsto_frobeniusSq_decayRun_signCode_atTop`, `log_two_le_ceLoss_decayRun_signCode`, `tendsto_ceLoss_decayRun_signCode_iff`, `tendsto_margin_decayRun_signCode_atTop`, `diagCell_one_add_zero_ne`, `diagCell_one_add_neg_one_eq` | Modules `Scope/SeparateCells`, `Scope/SeparateCellsRows` and `Scope/SeparateCellsRun`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. The samples are `codeProbe signCode cell` with `cell : S → m × n` and the labels `y : S → Bool`; `y_s = ±1` is `classSign (y s)`. "No two samples in one row" is `Function.Injective fun s => (cell s).1`, and the same with `.2` for the columns. `E_ij` is `Matrix.single i j 1`; the gradient is `ceGrad_signCode`, and the two statements on its rows are stated for the entries of `G X * V` and of `(G X)ᴴ * U`. The row `i` of a factor is `rowOf i U`, a matrix with one row: `u_s` is `rowOf (cell s).1 U` and `v_s` is `classSign (y s) • rowOf (cell s).2 V`. Statement 1 is `decayStep` and `decayRun` of the sign sample of XE19 at these rows, equal to the rows of the step and of the run; the loss of a sample is `crossEntropy_signCode_mul`, an equality with `ceLoss signProbe`, and the sum is `ceLoss_decayRun_signCode`, with `signProduct` of XE19. "`u_s + v_s ≠ 0` at the start" is `∃ b, U₀ (cell s).1 b + classSign (y s) • V₀ (cell s).2 b ≠ 0`, and its negation is `∀ b, _ = 0`. The run is `decayRun (ceGrad (codeProbe signCode cell) y) η 0 U₀ V₀`; the loss and the margin are those of the product of its two factors. The statement on the margin assumes `Nonempty S`. The remark on the diagonal cells and the text of "Not covered" on the direction are not stated. `diagCell s` is `(s, s)` for `s : Fin 2`. The examples are those of the item. |
 
 ## Convex answer-loss recall
 
