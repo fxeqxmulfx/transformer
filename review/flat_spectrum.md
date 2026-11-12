@@ -14569,3 +14569,46 @@ noisy-label optimizer or Rust deployment of the guard is asserted here.
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Inference
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/ConvexChannelAxioms.lean
 ```
+
+## Convex spectral upper bounds
+
+### SB1. Direct complex coordinates with ordinary cross-entropy
+
+Use the matrix entries `X ∈ ℂ^(m×n)` as the learned coordinates, with
+`|X_ij| ≤ 1` and `||X||op ≤ R`. Both constraints are convex over the reals.
+Fixed probes give logits `Re tr(A_scᴴ X)`, so ordinary empirical
+cross-entropy is jointly convex as well. The spectral condition is an
+upper bound, not equality of singular values, orthogonality, or a product
+of trained factors. For code probes the logits are
+`Re(conj(phi(c)) X[cell(s)])`. A flat unit-modulus target of squared
+singular value `c` meets the spectral bound `R = sqrt(c)`.
+
+`SpectralBall/Basic.lean` proves domain convexity, zero feasibility,
+convexity of the usual probe CE, and the squared vector-energy bound from
+the actual L2 operator norm. The size of a useful radius is additional
+information; flatness does not select the missing labels by itself.
+
+### SB2. Repair of the XE15 unseen-sign counterexample
+
+For XE15's `K = [[1,1],[-1,1]]`, use `R = sqrt(2)` and observe only
+`(0,0), (0,1), (1,0)`, with their binary labels. The target is feasible.
+An entry in the unit disk has signed real part at most one, so the target
+minimizes each observed ordinary binary CE term. Strict convexity in
+the observed real parts, together with the disks, forces every global
+CE minimum to equal the three observed complex entries of K.
+
+The spectral bound says `2I - XᴴX` is positive semidefinite. Its `(0,0)`
+entry vanishes because the first column is `(1,-1)`. A zero diagonal
+entry in a positive-semidefinite matrix forces its column to vanish;
+the off-diagonal equation is `1 - X_11 = 0`. Thus every constrained CE
+minimum is K, including the unobserved `+1`. `SpectralBall/Recovery.lean`
+proves this from the norm constraint and an empirical-loss inequality,
+with K as a satisfying example. No assumption of correct unseen
+predictions is used. This changes the model constraint; XE15's negative
+claim about nuclear-norm training remains valid.
+
+This witness is not a theorem for random half-observed modular tables,
+looser radii, arbitrary labels, long contexts, or a specific finite-step
+optimizer. Those require separate evidence. Numerical projections and
+finite-difference updates are floating-point algorithms, not Lean-certified
+solutions of the constrained optimization problem.
