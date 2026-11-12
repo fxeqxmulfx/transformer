@@ -98,7 +98,8 @@ subset**: 25 short and 10 long tasks, judged by their original held-out metrics.
   and replay saved predictions. The
   [certified paired-decoder implementation](experiments/convex_stress_certified/README.md)
   checks training-derived certificates and preserves their answer constraints
-  during updates; its current evidence is from fixtures.
+  during updates; all three modes now recover every held-out absolute-difference
+  answer, while seven other tested tasks remain uncertified.
 
 These are separate empirical results:
 
@@ -107,6 +108,7 @@ These are separate empirical results:
 | [Causal counts](experiments/convex_stress_counts/README.md) | 10/35 primary passes for full-batch and minibatch at scale 10; 9/35 for forward-only | Complete 210-cell inventory and replay; stricter all-split counts are lower |
 | [Spectral sharing](experiments/convex_stress_sharing/README.md) | All six selected tasks pass in all three modes: 18/18 choices | Targeted arithmetic follow-up, selected by training CE |
 | [Calibrated causal readout](experiments/convex_stress_calibrated/README.md) | 8/35 primary passes, versus 9/35 for the scaled control | First cohort; memory failures counted as failures |
+| [Certified paired decoder](experiments/convex_stress_certified/README.md) | 100% held-out absolute difference in all three modes; seven other tasks uncertified | All 24 outcomes replay; three returned models pass raw audits; integration with earlier candidates pending |
 
 ### Not ready
 

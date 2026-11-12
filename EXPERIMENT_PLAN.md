@@ -12,8 +12,13 @@ all compatible three-state phase completions, partial coverage, exact state
 replay and raw spectral audits of endpoints that preserve certified equalities.
 The protocol now fixes the eight original pair tasks and all three modes, the
 4096/16384 discovery caps and 12-round endpoint repair; full replay and raw audits
-are tested on fixtures. No original task has been evaluated by this extension.
-Freeze the committed producer before running the follow-up.
+are tested on fixtures. Producer `d7164082` now completes all 24 original cases:
+absolute difference reaches 100% on all 4,705 held-out pairs in every mode;
+the other seven tasks are uncertified in every mode at the frozen search cap.
+Every result replays; the three models pass raw coordinate and spectral audits.
+Peak process RSS is 134,556 KiB. The certificate identifies the successful answers
+before optimization. Integration stays pending the complete unchanged paired and
+decoded parents; keep #201 open and do not infer a full-suite pass.
 Do not alter the frozen #195 source or live cohorts. Retain previous candidates
 and all refusals; this follow-up does not replace the all-35 short/long goal.
 The user's new memory limit is 64 GiB per run, with pre-allocation buffer

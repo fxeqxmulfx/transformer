@@ -88,9 +88,50 @@ must be reported; they are not assumed to vanish. Forward-only performs no
 gradient evaluations. Full/mini use the unchanged full-vocabulary CE, and mini
 uses a persistent gradient table rather than an unbiased stochastic gradient.
 
-No original-task proposal, training, held-out evaluation or stress success is
-reported by these fixture checks. The frozen original follow-up remains work
-under board task #201. The frozen parent source and running cohorts are unchanged.
+These fixtures are separate from the original-data results below. The frozen
+parent source and running cohorts are unchanged.
+
+## Original results, 2026-11-12
+
+The committed producer `d7164082` completed all 24 planned cases in
+`runs/cohort-v1`, under source fingerprint
+`e4e21f0f3eca67d10b979bd4ed9085df0fa7bd615b7799cf72172647e5b662f3`.
+All 24 discovery results replay. The three returned models also reproduce every
+update and pass the independent audit of all 192 nonconstant Fourier frequencies,
+decoded probabilities, ordinary CE and original split metrics.
+
+| Original task | Full-batch | Minibatch | Forward-only |
+| --- | --- | --- | --- |
+| Absolute difference | 100% held-out | 100% held-out | 100% held-out |
+| Permuted addition, addition, subtraction, division, multiplication, sum-cube, sum-fourth-power | Uncertified | Uncertified | Uncertified |
+
+Absolute difference has 4,704 training and 4,705 validation pairs. One proposed
+certificate, with 5,082 phase tests, covers all 9,409 table cells. Every mode
+answers all validation pairs correctly and attains the ordinary-CE lower bound
+up to rounding. Its update-zero endpoint already does so: identification comes
+from the training-only certificate, not from discovering these answers during
+optimization. The frozen positive-update stop is first checked at update 19.
+Full-batch evaluates 89,376 training gradients, minibatch 4,704 and forward-only
+zero. Returned iterate weights are one; the largest observed one-hot defect is
+`1.12e-16`.
+
+Every other task reaches the 4,096-rectangle search cap without an accepted
+certificate, in all three modes. These 21 outcomes are retained with every
+attempt and its refusal status. They have no new prediction candidate and are
+not counted as passes. Bounded refusal does not prove the target unrepresentable
+or unidentifiable. This extension therefore passes **one of eight tasks in each
+mode**, or three of 24 task/mode cases, and supplies no new division result.
+
+The largest measured process RSS, including all training and replay processes,
+is 134,556 KiB (about 131 MiB), below the enforced 64 GiB address-space cap.
+The conservative explicit-buffer bound is 876,832,336 bytes. Frozen producer
+hashes and a repeated summary check agree. Generated evidence remains local in
+`runs/cohort-v1` and `.kanban/artifacts/201/cohort-v1`.
+
+Training-only integration with earlier candidates remains pending the complete
+frozen paired and decoded-parent evidence; those runs are still in progress.
+Task #201 stays open for that comparison. This result is neither a complete
+35-task short/long pass nor a new transformer comparison.
 
 ## Frozen original follow-up
 
