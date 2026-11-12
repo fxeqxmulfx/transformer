@@ -9,6 +9,7 @@ publish = false
 [dependencies]
 convex-recall-compare = { path = "../convex_recall_compare" }
 convex-stress-minibatch = { path = "../convex_stress_minibatch" }
+convex-stress-decode = { path = "../convex_stress_decode" }
 serde = { version = "=1.0.229", features = ["derive"] }
 serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
 sha2 = "=0.11.1"

@@ -4,6 +4,7 @@
 pub use convex_recall_compare::{adam, gemm, layout, mt};
 pub use convex_stress_minibatch::{Result, data, hash, metrics};
 pub mod checkpoint;
+pub mod cohort;
 pub mod engine;
 pub mod memory;
 pub mod model;

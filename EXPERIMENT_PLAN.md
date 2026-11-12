@@ -54,6 +54,19 @@ whole-file tensor copies while preserving Adam moments and sampling RNG.
 No original-data training is started by these checks; freeze the remaining
 training, observation, stopping and explicit-resume protocol before a cohort.
 
+`convex_stress_transformer/protocol.json` now freezes all 35 original tasks at
+seed 1, retaining their original 20k/30k/100k update caps and minibatch sizes.
+Observe every 250 updates; stop at the first positive-update original primary
+validation score of 99%, otherwise the original cap. Evaluate all original
+splits at that endpoint. Preserve the comparator's documented AdamW/sampling
+conventions and every checkpoint pair. Twelve native checks pass, including
+every-observation prediction replay and an exact final-update reconstruction;
+the latter is not a complete independent training rerun. All 35 additional
+replay-buffer forecasts pass, at most 387,244,032 bytes; data-only preflight
+peaks at 250,656 KiB RSS. Gate the serial cohort on the decoded cohort finishing
+and preserve partial attempts without automatic resume. No original training,
+transformer result or full35 convex success is asserted at the freeze.
+
 ## Prediction-preserving spectral sharpening (2026-11-12)
 
 Lean CM11 landed at `b3c2e8ae` before the native follow-up. The

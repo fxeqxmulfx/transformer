@@ -1,0 +1,23 @@
+{
+  "version": "original-transformer-comparator-v1",
+  "model_backend_commit": "8eaf3a24415661759a2cb75801856133eff8bd49",
+  "checkpoint_commit": "2e9e8f6432a89bda1a0a8d8d5eb5afe72b11dec8",
+  "queue_parent_fingerprint": "eb2f1aeff0d59cda1c2a3abf8350ae899ee87871e73cb5e25473705711daec99",
+  "kernite_commit": "a1b6bc2c956e1a5f35960e26b209e1b6c213096c",
+  "inventory": "Every one of the unchanged 35 tasks in convex_stress/suite.json, in its original order, seed 1. No task is omitted or downgraded to a toy generator.",
+  "seeds": [1],
+  "method": "conventional_transformer_minibatch",
+  "update_cap": "Each task's original case.max_updates: 20000, 30000 or 100000. No smaller diagnostic cap.",
+  "observation_every_updates": 250,
+  "primary_target": 0.99,
+  "maximum_microbatch": 32,
+  "explicit_memory_limit_bytes": 2147483648,
+  "address_space_limit_gib": 8,
+  "parallel_numerical_jobs": 1,
+  "disk_reserve_bytes": 17179869184,
+  "model": "Use the validated conventional causal softmax backend, original width/head/layer metadata and complete original vocabulary, with fixed sinusoidal positions and ordinary token-weighted cross-entropy. The maximum context comes from visible input/generation lengths. No arithmetic answer features or new convexity claim. Parameters and optimizer arithmetic are f32; reference checks and metric accumulation are f64.",
+  "optimization": "AdamW with the original task's learning_rate, warmup and weight_decay and the validated comparator's beta1=0.9, beta2=0.98, eps=1e-8, no gradient clipping. Preserve its t-1 warmup, including the zero first learning rate. Sample the original batch size uniformly with replacement using an independent MT19937 stream seeded by 2000003*(seed+1), wrapping u32. Stream chunks of at most 32 and normalize across the complete batch's supervised targets before one AdamW update. This is the conventional native comparator, not an exact reproduction of the historical DiffGPT architecture, optimizer or sampling trajectory.",
+  "observation_and_stopping": "Record the initial primary metric without stopping on it. At every 250 completed updates and at the original cap, save an immutable checkpoint and evaluate the original designated validation split. Stop at its first observed sequence accuracy >=0.99 or the original cap. Do not use any test split for stopping. At the selected endpoint, evaluate every original split with unchanged greedy rollout, EOS, masks and residue pooling. Report both primary and all-held-out 99% outcomes. The observed stopping update is quantized to this fixed schedule and is not interchangeable with a historical time-to-threshold value.",
+  "checkpoint_and_replay": "Before every observation update save its previous-step state and sampling RNG, then save the post-update state, work counts and complete training update log. Preserve all checkpoints, even failures and earlier observations. The checksum binds raw f32 tensor bits and metadata to a frozen case/source/data hash. A separate replay process checks every observation's checkpoint and original primary metrics, initial weights/moments/RNG, stopping rule and all final metrics. Recreate the final optimizer update from its previous-step checkpoint and compare every parameter/moment bit, sampled RNG and work counts. This is every-observation prediction replay plus a final-update consistency check, not a complete independent rerun of all gradient updates. No silent restart or automatic resume; an interrupted run retains its partial evidence and requires an explicitly recorded continuation.",
+  "resources_and_scope": "Prepare only after the preceding decoded cohort and its unchanged parent summaries are complete. Training and replay are serial under an 8 GiB address-space cap; forecast the extra saved-model state needed by replay before allocation. Check a 16 GiB disk reserve before each checkpoint. Store tensors as streamed f32 files, bound metadata reads and keep single-thread native kernels/BLAS. The comparator is trained once per task, not relabeled as full-batch or forward-only training. Future comparison may reference that same endpoint for each convex mode while retaining all costs. Its own 35-task summary is not a certificate that the convex model passes all 35 tasks. CPU wall times are not directly comparable to historical GPU times. Generated outputs remain ignored and root-linked."
+}
