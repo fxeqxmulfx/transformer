@@ -102,8 +102,8 @@ every positive statement.
 | `Grokking/DivisionOrbits` | `InDivisionCell`, `equal_quotients_iff_common_scale`, `mem_full_cell_iff`, `modulus97_domain_card` | The algebra of the task: equal answers are common scalings | No model in it; `inDivisionCell_operands` ties the tokenized equations to it |
 | `Landscape/Neural` | `crossEntropy`, `crossEntropy_nonneg`, `analyticAt_crossEntropy`, `exists_compact_rotate90_adamw_container` | The loss, reused here; analyticity and an AdamW box for the Rotate90 model (SiLU, RMS norm, tied readout) | Another architecture and schedule; the paper's decoder has ReLU and is not analytic |
 | `Grokking/AdamW`, `EffectiveTheory`, `CircuitEfficiency`, `Composition`, `Geometry` | for example `coupled_first_growth_iff`, `quarticCE_every_rate_can_overshoot` | Effective models and diagnostics of learned circuits | None is the decoder's trajectory |
-| `Grokking/Protocol` (`MarginTransfer`, `QuotientTransfer`, `QuotientWitness`) | `margin_sub_le_of_abs_sub_le`, `predict_eq_residueToken_of_anchor`, `predict_eq_residueToken_of_two_anchors`, `predict_bentLogits`, `predict_answerLogits_zero_ne` | Logits that move with the scalings of numerator and denominator up to an error carry two answers with margins above twice the error, one for each orbit of the scalings, to all 9312 equations, over all 239 tokens; the decoder with every parameter zero has the symmetry and answers nothing | A sufficient structure for held-out correctness. No proof that training produces it, and no trained decoder is shown to have it: at each of the 117 checkpoints measured in `experiments/grok_division`, in doubles, twice the error exceeds the margin of every training anchor on the equations with a nonzero numerator (board #78 keeps a certificate of a trained model open) |
-| `Grokking/Protocol` (`DiscreteLog`, `NormScale`, `SolverParams` to `SolverScale`, `HeldOutCertificate`) | `solver`, `answerLogits_solver`, `exists_param_forall_predict`, `solver_certified`, `heldout_accuracy_eq_one_of_anchors`, `heldout_accuracy_solver`, `uniformPerm_covered_pos`, `uniformPerm_compl_covered_pos`, `exists_fit_training_wrong_heldout` | The decoder itself, in exact reals: built parameters whose logits are a positive multiple of the mark of the answer, so that all 9312 equations are answered; the certificate of held-out accuracy 1 from two training answers on `answerLogits θ`, which those parameters satisfy with the error `1/52200`; the splits with an anchor in each orbit; and parameters that fit all 4656 training answers of a split and miss a held-out one | The parameters are built, not reached by the optimizer: this shows that the answers and the structure are in the range of the architecture, and that training accuracy does not force them. Nothing here says that a run arrives at them |
+| `Grokking/Protocol` (`MarginTransfer`, `QuotientTransfer`, `QuotientWitness`) | `margin_sub_le_of_abs_sub_le`, `predict_eq_residueToken_of_anchor`, `predict_eq_residueToken_of_two_anchors`, `predict_bentLogits`, `predict_answerLogits_zero_ne` | Logits that move with the scalings of numerator and denominator up to an error carry two answers with margins above twice the error, one for each orbit of the scalings, to all 9312 equations, over all 239 tokens; the decoder with every parameter zero has the symmetry and answers nothing | A sufficient structure for held-out correctness. No proof that training produces it. With one anchor for an orbit no trained decoder has it: at each of the 117 checkpoints measured in `experiments/grok_division`, in doubles and again in exact arithmetic on those scores, twice the error exceeds the margin of every training anchor on the equations with a nonzero numerator |
+| `Grokking/Protocol` (`DiscreteLog`, `NormScale`, `SolverParams` to `SolverScale`, `Coverage`, `HeldOutCertificate`) | `solver`, `answerLogits_solver`, `exists_param_forall_predict`, `solver_certified`, `heldout_accuracy_eq_one_of_training_anchors`, `heldout_accuracy_eq_one_of_anchors`, `heldout_accuracy_solver`, `mem_covered_iff`, `uniformPerm_covered_pos`, `uniformPerm_compl_covered_pos`, `exists_fit_training_wrong_heldout` | The decoder itself, in exact reals: built parameters whose logits are a positive multiple of the mark of the answer, so that all 9312 equations are answered; the certificate of held-out accuracy 1 on `answerLogits θ` from training answers, with an anchor for each held-out equation or one for each orbit, which those parameters satisfy with the error `1/52200`; the splits with an anchor in each orbit, which are exactly those that give every held-out equation a training equation in its orbit; and parameters that fit all 4656 training answers of a split and miss a held-out one | The parameters are built, not reached by the optimizer: this shows that the answers and the structure are in the range of the architecture, and that training accuracy does not force them. Nothing here says that a run arrives at them. At five checkpoints of `experiments/grok_division` the computed scores meet the premise with an anchor for each held-out equation; the rounding of that forward pass is not bounded, so this is a measurement and not an instance of the theorem |
 
 Two substitutions are therefore excluded, and no statement here makes them:
 
@@ -129,14 +129,22 @@ Two substitutions are therefore excluded, and no statement here makes them:
    No descent, no bound of the Adam run uniform in `t`, and no limit of the trajectory or of
    its logits is proved or assumed.
 5. **Structure gives correct answers** (#129): proved, as a sufficient condition.
-   `heldout_accuracy_eq_one_of_anchors` gives held-out accuracy 1 from two training answers,
-   their margins and the error of the decoder's logits against the scalings; `solver`
-   satisfies it (`heldout_accuracy_solver`); a uniformly random split gives an anchor to each
-   orbit with positive probability and fails to with positive probability; and fitting every
-   training answer does not suffice (`exists_fit_training_wrong_heldout`). What this leaves:
-   the condition is not known to be necessary, and no trained parameters are shown to meet
-   it. At the checkpoints measured in `experiments/grok_division` they do not, with a training
-   equation as the anchor of the nonzero numerators.
+   `heldout_accuracy_eq_one_of_training_anchors` gives held-out accuracy 1 when every held-out
+   equation has a training anchor whose margin is above twice the error of the equation's
+   relabelled logits against the anchor's; with one anchor for each orbit it is
+   `heldout_accuracy_eq_one_of_anchors`. `solver` satisfies it (`heldout_accuracy_solver`); a
+   split gives every held-out equation a training equation in its orbit exactly when it trains
+   on an equation of each orbit (`mem_covered_iff`), which a uniformly random split does with
+   positive probability and fails to do with positive probability (the failure, all 96
+   equations with numerator zero held out, has probability `∏_{j<96} (4656 − j)/(9312 − j)`,
+   about `7.7 · 10⁻³⁰`, by a count outside Lean); and fitting every training answer does not
+   suffice (`exists_fit_training_wrong_heldout`). What this leaves: no trained parameters are
+   proved to meet the condition. Measured in `experiments/grok_division` on the scores of the
+   model in doubles, compared in exact arithmetic: with one anchor for the orbit of nonzero
+   numerators no checkpoint of 117 meets it; with an anchor for each held-out equation five of
+   the nine checkpoints that answer every equation do, with 0.31 to spare at the least, and
+   the other four answer every equation without it, so it is not necessary. The rounding of
+   that forward pass against the real-valued decoder is not bounded.
 6. **Training reaches the structure** (#130): from the declared initialization law, with a
    stated probability.
 7. **Composition** (#131): 5 and 6 along one trajectory, for all later updates, for a target

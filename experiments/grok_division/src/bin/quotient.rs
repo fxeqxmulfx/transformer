@@ -30,6 +30,20 @@
 //! (`rows_certified` of `rows`), and `raw_spread`, the largest difference between two relabelled
 //! rows in one token with no constant added.
 //!
+//! `certified_exact` repeats the test of the anchor without rounding: the scores of the model
+//! are doubles, each is the rational that its bits say, and the margin is compared with the
+//! range of the differences in exact arithmetic. It is `null` if a number leaves the 127 bits of
+//! the exact type.
+//!
+//! One anchor for a whole orbit asks more than the answers need. For each equation of the orbit
+//! that is not a training equation (`heldout` of them), `nearest_certified` counts those with
+//! some training anchor whose margin exceeds twice the error of the equation's row against it;
+//! on the orbit of numerator zero any one of the 96 relabellings of the equation serves.
+//! `nearest_exact` counts those whose best pair passes the test in exact arithmetic, and
+//! `nearest_min` is the least over the equations of the best margin less twice the error. If
+//! every held-out equation of both orbits is counted, every held-out answer follows from
+//! training answers and the measured errors.
+//!
 //! The same is printed for the rows of the 97 residues alone (`residues_nonzero`,
 //! `residues_zero`), where a margin is over the residues, beside `other_gap`: the least over the
 //! equations of the largest logit of a residue less the largest of another token. Where that is
@@ -139,17 +153,20 @@ fn orbits(first: usize, equations: &[Equation], logits: &[Vec<f64>], training: &
     [nonzero, zero]
 }
 
-/// For each row of `rows`, the least `ε` such that the row is within `ε` of `anchor` in every
-/// token after one constant is added to the row: half the range of their differences.
+/// The least `ε` such that `row` is within `ε` of `anchor` in every token after one constant is
+/// added to the row: half the range of their differences.
+fn error(row: &[f64], anchor: &[f64]) -> f64 {
+    let (mut least, mut largest) = (f64::INFINITY, f64::NEG_INFINITY);
+    for (a, b) in row.iter().zip(anchor) {
+        least = least.min(a - b);
+        largest = largest.max(a - b);
+    }
+    (largest - least) / 2.0
+}
+
+/// The errors of the rows of `rows` against `anchor`.
 fn errors<'a>(anchor: &'a [f64], rows: &'a [f64]) -> impl Iterator<Item = f64> + 'a {
-    rows.chunks_exact(anchor.len()).map(move |row| {
-        let (mut least, mut largest) = (f64::INFINITY, f64::NEG_INFINITY);
-        for (a, b) in row.iter().zip(anchor) {
-            least = least.min(a - b);
-            largest = largest.max(a - b);
-        }
-        (largest - least) / 2.0
-    })
+    rows.chunks_exact(anchor.len()).map(move |row| error(row, anchor))
 }
 
 /// The structural error of an anchor: the largest of the errors of the rows.
@@ -184,12 +201,134 @@ fn best_anchor(orbit: &Orbit, vocab: usize, threads: usize) -> Option<(usize, Eq
     found.into_iter().reduce(|best, a| if certified(&a) > certified(&best) { a } else { best })
 }
 
+/// A binary score as the rational `mantissa * 2^exponent`, with the mantissa odd or zero.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct Dyadic {
+    mantissa: i128,
+    exponent: i32,
+}
+
+impl Dyadic {
+    fn new(mantissa: i128, exponent: i32) -> Dyadic {
+        if mantissa == 0 {
+            return Dyadic { mantissa: 0, exponent: 0 };
+        }
+        let twos = mantissa.trailing_zeros();
+        Dyadic { mantissa: mantissa >> twos, exponent: exponent + twos as i32 }
+    }
+
+    /// The value of a finite double, read from its bits.
+    fn of(value: f64) -> Option<Dyadic> {
+        if !value.is_finite() {
+            return None;
+        }
+        let bits = value.to_bits();
+        let (biased, fraction) = (((bits >> 52) & 0x7ff) as i32, (bits & ((1 << 52) - 1)) as i128);
+        let magnitude =
+            if biased == 0 { Dyadic::new(fraction, -1074) } else { Dyadic::new(fraction | 1 << 52, biased - 1075) };
+        Some(if bits >> 63 == 0 { magnitude } else { Dyadic { mantissa: -magnitude.mantissa, ..magnitude } })
+    }
+
+    /// The two mantissas over a common exponent, and that exponent: the smaller of the two, or
+    /// that of the one that is not zero. Nothing if a mantissa leaves 127 bits.
+    fn aligned(self, other: Dyadic) -> Option<(i128, i128, i32)> {
+        let exponent = match (self.mantissa, other.mantissa) {
+            (0, _) => other.exponent,
+            (_, 0) => self.exponent,
+            _ => self.exponent.min(other.exponent),
+        };
+        let lift = |d: Dyadic| match (d.mantissa, d.exponent - exponent) {
+            (0, _) => Some(0),
+            (_, shift) if shift >= 126 => None,
+            (mantissa, shift) => mantissa.checked_mul(1i128 << shift),
+        };
+        Some((lift(self)?, lift(other)?, exponent))
+    }
+
+    fn sub(self, other: Dyadic) -> Option<Dyadic> {
+        let (a, b, exponent) = self.aligned(other)?;
+        Some(Dyadic::new(a.checked_sub(b)?, exponent))
+    }
+
+    fn cmp(self, other: Dyadic) -> Option<std::cmp::Ordering> {
+        let (a, b, _) = self.aligned(other)?;
+        Some(a.cmp(&b))
+    }
+
+    fn max(self, other: Dyadic) -> Option<Dyadic> {
+        Some(if self.cmp(other)?.is_lt() { other } else { self })
+    }
+
+    fn min(self, other: Dyadic) -> Option<Dyadic> {
+        Some(if self.cmp(other)?.is_gt() { other } else { self })
+    }
+}
+
+/// Whether the margin of `answer` in `anchor` exceeds twice the structural error of `anchor`
+/// over `rows`, with the scores taken as the rationals they are: for every row, the range of
+/// its differences from the anchor is less than the margin. Nothing is rounded; `None` if a
+/// score is not finite or a number leaves the 127 bits of the exact type.
+fn certified_exactly(anchor: &[f64], rows: &[f64], answer: usize) -> Option<bool> {
+    let exact: Vec<Dyadic> = anchor.iter().map(|v| Dyadic::of(*v)).collect::<Option<_>>()?;
+    let mut others = exact.iter().enumerate().filter(|(token, _)| *token != answer).map(|(_, v)| *v);
+    let first = others.next()?;
+    let competitor = others.try_fold(first, Dyadic::max)?;
+    let margin = exact[answer].sub(competitor)?;
+    for row in rows.chunks_exact(anchor.len()) {
+        let mut differences = row.iter().zip(&exact).map(|(a, b)| Dyadic::of(*a)?.sub(*b));
+        let first = differences.next()??;
+        let (mut least, mut largest) = (first, first);
+        for difference in differences {
+            let difference = difference?;
+            (least, largest) = (least.min(difference)?, largest.max(difference)?);
+        }
+        if !largest.sub(least)?.cmp(margin)?.is_lt() {
+            return Some(false);
+        }
+    }
+    Some(true)
+}
+
+/// For each equation of the orbit that is not a training equation: the training anchor and the
+/// relabelling of the equation with the largest margin of the anchor less twice the error of
+/// the equation's row against the anchor's, as (row of the equation, row of the anchor, value).
+/// An equation has `per` relabelled rows, of which any one serves.
+fn nearest(orbit: &Orbit, vocab: usize, per: usize, threads: usize) -> Vec<(usize, usize, f64)> {
+    let heldout: Vec<usize> = (0..orbit.equations.len()).filter(|k| !orbit.equations[*k].2).collect();
+    let row = |index: usize| &orbit.rows[index * vocab..(index + 1) * vocab];
+    let chunk = heldout.len().div_ceil(threads).max(1);
+    let mut found = Vec::new();
+    std::thread::scope(|scope| {
+        let workers: Vec<_> = heldout
+            .chunks(chunk)
+            .map(|part| {
+                scope.spawn(move || {
+                    let best = |k: &usize| {
+                        let pairs =
+                            (k * per..(k + 1) * per).flat_map(|own| orbit.anchors.iter().map(move |a| (own, *a)));
+                        let valued = pairs.map(|(own, (anchor, equation))| {
+                            (own, anchor, orbit.equations[equation].1 - 2.0 * error(row(own), row(anchor)))
+                        });
+                        valued.reduce(|best, pair| if pair.2 > best.2 { pair } else { best })
+                    };
+                    part.iter().filter_map(best).collect::<Vec<_>>()
+                })
+            })
+            .collect();
+        for worker in workers {
+            found.extend(worker.join().expect("a worker of the nearest anchors"));
+        }
+    });
+    found
+}
+
 fn num(value: f64) -> String {
     if value.is_finite() { format!("{value:.6}") } else { "null".to_string() }
 }
 
-/// The fields of an orbit, as the head of the file lists them.
-fn orbit_fields(orbit: &Orbit, vocab: usize, threads: usize) -> String {
+/// The fields of an orbit, as the head of the file lists them. With `per`, the relabelled rows
+/// of an equation, also the fields of the nearest anchors.
+fn orbit_fields(orbit: &Orbit, vocab: usize, per: Option<usize>, threads: usize) -> String {
     let least = |margins: &mut dyn Iterator<Item = f64>| margins.fold(f64::INFINITY, f64::min);
     let training = || orbit.equations.iter().filter(|e| e.2).map(|e| e.1);
     let spread = (0..vocab)
@@ -202,14 +341,16 @@ fn orbit_fields(orbit: &Orbit, vocab: usize, threads: usize) -> String {
         Some((row, equation, margin, error)) => {
             let mut all: Vec<f64> = errors(&orbit.rows[row * vocab..(row + 1) * vocab], &orbit.rows).collect();
             all.sort_by(f64::total_cmp);
+            let exact = certified_exactly(&orbit.rows[row * vocab..(row + 1) * vocab], &orbit.rows, orbit.answer);
             format!(
                 "\"anchor\":[{},{}],\"anchor_margin\":{},\"structural_error\":{},\"certified_margin\":{},\
-                 \"error_median\":{},\"rows\":{},\"rows_certified\":{}",
+                 \"certified_exact\":{},\"error_median\":{},\"rows\":{},\"rows_certified\":{}",
                 equation.num,
                 equation.den,
                 num(margin),
                 num(error),
                 num(margin - 2.0 * error),
+                exact.map_or("null".to_string(), |certified| certified.to_string()),
                 num(all[all.len() / 2]),
                 all.len(),
                 all.iter().filter(|e| margin - 2.0 * **e > 0.0).count()
@@ -217,9 +358,23 @@ fn orbit_fields(orbit: &Orbit, vocab: usize, threads: usize) -> String {
         }
         None => "\"anchor\":null".into(),
     };
+    let nearest = per.map_or(String::new(), |per| {
+        let pairs = nearest(orbit, vocab, per, threads);
+        let row = |index: usize| &orbit.rows[index * vocab..(index + 1) * vocab];
+        let exact = |(own, anchor, _): &&(usize, usize, f64)| {
+            certified_exactly(row(*anchor), row(*own), orbit.answer) == Some(true)
+        };
+        format!(
+            ",\"heldout\":{},\"nearest_certified\":{},\"nearest_exact\":{},\"nearest_min\":{}",
+            orbit.equations.iter().filter(|e| !e.2).count(),
+            pairs.iter().filter(|pair| pair.2 > 0.0).count(),
+            pairs.iter().filter(exact).count(),
+            num(least(&mut pairs.iter().map(|pair| pair.2)))
+        )
+    });
     format!(
         "{{\"equations\":{},\"training\":{},\"margin_min\":{},\"margin_min_training\":{},\
-         \"margin_max_training\":{},{anchor},\"raw_spread\":{}}}",
+         \"margin_max_training\":{},{anchor},\"raw_spread\":{}{nearest}}}",
         orbit.equations.len(),
         training().count(),
         num(least(&mut orbit.equations.iter().map(|e| e.1))),
@@ -304,11 +459,11 @@ fn run() -> Result<(), String> {
             wrong(true),
             wrong(false),
             agree.map_or("null".to_string(), |n| n.to_string()),
-            orbit_fields(&nonzero, dims.vocab, threads),
-            orbit_fields(&zero, dims.vocab, threads),
+            orbit_fields(&nonzero, dims.vocab, Some(1), threads),
+            orbit_fields(&zero, dims.vocab, Some(P - 1), threads),
             num(other_gap),
-            orbit_fields(&residues_nonzero, P, threads),
-            orbit_fields(&residues_zero, P, threads)
+            orbit_fields(&residues_nonzero, P, None, threads),
+            orbit_fields(&residues_zero, P, None, threads)
         );
     }
     Ok(())
@@ -383,5 +538,95 @@ mod tests {
         let least = nonzero.equations.iter().map(|e| e.1).fold(f64::INFINITY, f64::min);
         assert!(least >= margin - 2.0 * error - 1e-12 && least < margin);
         assert!(best_anchor(&zero, VOCAB, 2).expect("anchors").3 < 1e-12);
+    }
+
+    /// A double is the rational that its bits say: `0.1` is `3602879701896397 / 2^55`, and ten
+    /// times that exceeds `1` by `2^-54`, which is computed here in integers.
+    #[test]
+    fn binary_scores_are_read_as_exact_rationals() {
+        assert_eq!(Dyadic::of(0.1), Some(Dyadic { mantissa: 3602879701896397, exponent: -55 }));
+        assert_eq!(10 * 3602879701896397_i128 - (1_i128 << 55), 2);
+        let excess = Dyadic::new(10 * 3602879701896397, -55).sub(Dyadic::of(1.0).unwrap());
+        assert_eq!(excess, Some(Dyadic { mantissa: 1, exponent: -54 }));
+        assert_eq!(Dyadic::of(-7.25), Some(Dyadic { mantissa: -29, exponent: -2 }));
+        assert_eq!(Dyadic::of(-0.0), Some(Dyadic { mantissa: 0, exponent: 0 }));
+        assert_eq!(Dyadic::of(f64::from_bits(1)), Some(Dyadic { mantissa: 1, exponent: -1074 }));
+        assert_eq!((Dyadic::of(f64::NAN), Dyadic::of(f64::INFINITY)), (None, None));
+        // The doubles 0.1 and 0.2 sum to the double 0.3 and 2^-55, in integers over 2^55; the
+        // sum in doubles is rounded to the next double, 2^-54 above.
+        assert_eq!(Dyadic::of(0.3), Some(Dyadic { mantissa: 5404319552844595, exponent: -54 }));
+        assert_eq!(3602879701896397_i128 + 2 * 3602879701896397 - 2 * 5404319552844595, 1);
+        let (tenth, fifth, sum) = (Dyadic::of(0.1).unwrap(), Dyadic::of(0.2).unwrap(), Dyadic::of(0.3).unwrap());
+        let left = tenth.sub(Dyadic { mantissa: -fifth.mantissa, ..fifth }).unwrap();
+        assert_eq!(left.sub(sum), Some(Dyadic { mantissa: 1, exponent: -55 }));
+        assert_eq!(left.cmp(sum), Some(std::cmp::Ordering::Greater));
+        assert_eq!(Dyadic::of(0.1 + 0.2 - 0.3), Some(Dyadic { mantissa: 1, exponent: -54 }));
+        // A zero aligns with anything; two numbers 200 binary orders apart do not fit.
+        assert_eq!(Dyadic::of(0.0).unwrap().sub(Dyadic::of(1e-300).unwrap()), Dyadic::of(-1e-300));
+        assert_eq!(Dyadic::of(1e30).unwrap().sub(Dyadic::of(1e-30).unwrap()), None);
+    }
+
+    /// On scores that are eighths the exact test is a calculation in integers, and the doubles
+    /// agree with it. Where a difference of two scores is rounded, the doubles lose the
+    /// certificate that the exact test keeps.
+    #[test]
+    fn exact_certificate_agrees_with_integers_and_not_with_rounded_doubles() {
+        let eighths = |values: &[i64]| values.iter().map(|v| *v as f64 / 8.0).collect::<Vec<f64>>();
+        let anchor = [3_i64, 40, -16, 7];
+        let range = |row: &[i64; 4]| {
+            let differences = || row.iter().zip(&anchor).map(|(a, b)| a - b);
+            differences().max().unwrap() - differences().min().unwrap()
+        };
+        // In eighths: the margin of the answer 1 is 40 - 7 = 33.
+        let margin_eighths =
+            anchor[1] - anchor.iter().enumerate().filter(|(t, _)| *t != 1).map(|(_, v)| *v).max().unwrap();
+        assert_eq!(margin_eighths, 33);
+        for (last, certified) in [([0_i64, 52, -30, 9], true), ([0, 59, -30, 9], false), ([0, 60, -30, 9], false)] {
+            let rows = [[11_i64, 48, -8, 15], last];
+            // The first row is the anchor moved by a constant: its range is 0.
+            assert_eq!(range(&rows[0]), 0);
+            assert_eq!(range(&last) < margin_eighths, certified, "range {}", range(&last));
+            let scores: Vec<f64> = rows.iter().flat_map(|row| eighths(row)).collect();
+            assert_eq!(certified_exactly(&eighths(&anchor), &scores, 1), Some(certified));
+            let doubles = margin(&eighths(&anchor), 1) - 2.0 * structural_error(&eighths(&anchor), &scores);
+            assert_eq!(doubles, (margin_eighths - range(&last)) as f64 / 8.0);
+        }
+        // 3 + 10^16 is not a double: the range 10^16 + 3 is rounded to the margin 10^16 + 4.
+        let (anchor, row) = ([1e16 + 4.0, 0.0, -1e16], [1e16 + 4.0, 0.0, 3.0]);
+        assert_eq!(10_i128.pow(16) + 3 < 10_i128.pow(16) + 4, true);
+        assert_eq!(certified_exactly(&anchor, &row, 0), Some(true));
+        assert_eq!(margin(&anchor, 0) - 2.0 * structural_error(&anchor, &row), 0.0);
+        assert_eq!(certified_exactly(&[1.0, f64::NAN], &[0.0, 0.0], 0), None);
+    }
+
+    /// Every held-out equation of an equivariant table has an anchor at no distance; one whose
+    /// row is bent by more than the margin has none, and it alone is not certified.
+    #[test]
+    fn heldout_equations_find_their_nearest_anchors() {
+        let equations = data::equations();
+        let training: Vec<bool> = (0..equations.len()).map(|i| i % 40 == 0).collect();
+        let shape = |ratio: usize| ((ratio * ratio) % 7) as f64 / 7.0;
+        let bent = table(shape, 2.0, |e, class| match (e.num, e.den, class) {
+            (4, 1, 9) => 0.75,
+            (10, 2, 9) => 9.0,
+            (0, 3, 2) => 9.0,
+            _ => 0.0,
+        });
+        let [nonzero, zero] = orbits(NUM0, &equations, &bent, &training);
+        for (orbit, per, broken) in [(&nonzero, 1, 1), (&zero, P - 1, 1)] {
+            let pairs = nearest(orbit, VOCAB, per, 3);
+            let heldout = orbit.equations.iter().filter(|e| !e.2).count();
+            assert_eq!(pairs.len(), heldout);
+            assert_eq!(pairs.iter().filter(|pair| pair.2 > 0.0).count(), heldout - broken);
+            let row = |index: usize| &orbit.rows[index * VOCAB..(index + 1) * VOCAB];
+            for (own, anchor, value) in &pairs {
+                let exact = certified_exactly(row(*anchor), row(*own), orbit.answer);
+                assert_eq!(exact, Some(*value > 0.0), "row {own} against {anchor}: {value}");
+            }
+        }
+        // The equation bent by 0.75 keeps the margin of its anchor less twice 0.375.
+        let values: Vec<f64> = nearest(&nonzero, VOCAB, 1, 2).iter().map(|pair| pair.2).collect();
+        let largest = values.iter().cloned().fold(f64::NEG_INFINITY, f64::max);
+        assert!(values.iter().any(|value| (value - (largest - 0.75)).abs() < 1e-12));
     }
 }

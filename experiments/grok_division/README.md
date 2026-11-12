@@ -30,7 +30,7 @@ FMA). Kernite is expected at `/home/misha/rust_projects/kgen`, clean at
 
 ```sh
 cd experiments/grok_division
-cargo test --offline --release           # 41 tests: trainer 36, `numerator` 2, `quotient` 3
+cargo test --offline --release           # 44 tests: trainer 36, `numerator` 2, `quotient` 6
 cargo build --offline --release
 target/release/grok-division check       # pins, split fingerprints, f32 model against the model in doubles
 target/release/grok-division bench 8     # the time of an update
@@ -65,7 +65,7 @@ differs from the trainer's at any evaluation.
 
 `quotient RUN [STEP...]` computes the logits at `=` of all 9312 equations at checkpoints of a
 run, with the model in doubles, and measures how far they are from moving with a scaling of
-the numerator and the denominator; the section on it below says what it prints. It is a
+the numerator and the denominator; the two sections on it below say what it prints. It is a
 fourth binary and reads checkpoints through `src/checkpoint.rs`, as `diagnose` does; neither
 file is among the trainer's sources.
 
@@ -303,9 +303,69 @@ under AdamW. Their orbit of nonzero numerators, 9216 equations:
 - So these decoders answer every equation, with a least margin of 0.37 to 3.56, and their
   logits are not a function of the quotient to the precision that lets two training answers
   certify the others. A certificate of held-out answers from quotient-equivariant logits and
-  two anchors does not apply to any checkpoint here.
+  two anchors does not apply to any checkpoint here; the next section gives every held-out
+  equation its own anchor.
 - The model in doubles gives the decisions that the runs recorded in `f32`: all 4656 held-out
   predictions at 110 of the 117 checkpoints, and 4655 at the other seven.
+
+### A training anchor for each held-out equation certifies five of the nine
+
+Exploratory: measured on the retained checkpoints on 2026-11-12, after the measurement above
+and because of it, and no part of the protocol.
+
+One anchor for a whole orbit asks more than the answers need. In
+`heldout_accuracy_eq_one_of_training_anchors`
+(`src/Transformer/Grokking/Protocol/HeldOutCertificate.lean`) every held-out equation has its
+own training anchor and its own error: if the equation's relabelled row is within `ε` of the
+anchor's, one constant added, and the anchor's margin is above `2 ε`, the equation is answered,
+and the held-out accuracy is 1 once every held-out equation has such an anchor. For each
+held-out equation `quotient` tries every training equation of its orbit as the anchor, on the
+orbit of numerator zero with each of the 96 relabellings of the equation, and keeps the largest
+margin less `2 ε`. `nearest_certified` counts the held-out equations where that is positive, of
+`heldout`, and `nearest_min` is its least value. The splits of the seeds 0, 1 and 2 train on
+4611, 4614 and 4613 equations with a nonzero numerator and on 45, 42 and 43 with numerator
+zero, so every held-out equation has anchors to try.
+
+The nine checkpoints that answer every equation:
+
+| Cohort | Seed | Update | Held out, nonzero numerator | With an anchor | Least margin less `2 ε` | Held out, numerator zero | With an anchor | Least margin less `2 ε` |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `adamw` | 0 | 30 000 | 4605 | 4605 | 3.30 | 51 | 51 | 6.42 |
+| `adamw` | 0 | 40 000 | 4605 | 4605 | 3.14 | 51 | 51 | 4.17 |
+| `adamw` | 2 | 20 000 | 4603 | 4600 | −0.30 | 53 | 53 | 4.55 |
+| `adamw` | 2 | 30 000 | 4603 | 4589 | −0.75 | 53 | 53 | 4.84 |
+| `adamw --answer-only` | 0 | 10 000 | 4605 | 4604 | −0.38 | 51 | 51 | 4.24 |
+| `adamw --answer-only` | 1 | 20 000 | 4602 | 4602 | 1.71 | 54 | 54 | 4.31 |
+| `adamw --answer-only` | 1 | 40 000 | 4602 | 4548 | −1.91 | 54 | 54 | 1.75 |
+| `adamw --answer-only` | 1 | 50 000 | 4602 | 4602 | 1.61 | 54 | 54 | 2.98 |
+| `adamw --answer-only` | 1 | 60 000 | 4602 | 4602 | 0.31 | 54 | 54 | 4.67 |
+
+- At five of the nine every held-out equation has an anchor. There all 4656 held-out answers
+  follow from training answers and distances between rows of scores, with 0.31 to 3.30 to
+  spare. This is the premise of the theorem, measured on the scores that the model in doubles
+  computes.
+- At the other four, 1, 3, 14 and 54 held-out equations with a nonzero numerator have no
+  anchor and are answered all the same. The condition is sufficient and not necessary.
+- None of the other 108 checkpoints has an anchor for every held-out equation, as none can:
+  each has a wrong held-out answer. Under AdamW, 1 to 4572 of their held-out equations with a
+  nonzero numerator have one, and those with numerator zero all have one at 47 of the 51.
+- Under Adam without weight decay the condition describes nothing. Seed 1 ends with 9 wrong
+  held-out answers of 4656, and at its last checkpoint 1844 of its 4602 held-out equations
+  with a nonzero numerator have an anchor; the least value is −135.8, the training margins
+  are 17.4 to 254.9, and the median error of a row against the best anchor is 141.8. Seeds 0
+  and 2 never have more than 1 and 19 such equations, and no checkpoint of the three runs has
+  an anchor for every held-out equation with numerator zero.
+- Both tests are repeated without rounding. `certified_exact` and `nearest_exact` read every
+  score as the rational that the bits of the double say and compare the anchor's margin with
+  the range of the differences in integers. They agree with the doubles at all 117
+  checkpoints: `certified_exact` is true where the anchor's margin less `2 ε` is positive,
+  at no checkpoint on the orbit of nonzero numerators and at 10 on that of numerator zero,
+  and `nearest_exact` equals `nearest_certified` everywhere.
+- What is exact is the comparison of the computed scores. The forward pass that computes them
+  rounds, and its distance from the real-valued logits of the Lean decoder at the same
+  parameters is not bounded here. At the five checkpoints the premise of
+  `heldout_accuracy_eq_one_of_training_anchors` is therefore measured, with 0.31 to spare at
+  the least, and not proved.
 
 ### The arithmetic decides the late trajectory
 
