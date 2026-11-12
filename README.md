@@ -190,13 +190,6 @@ check before a benchmark pass can be claimed.
 The [experiment plan](EXPERIMENT_PLAN.md) records the frozen cohorts and next
 steps. Each experiment README records its own protocol, results and limits.
 
-The catalog is copied unchanged from `stress_tests_for_gpt.md` in the
-`diff-gpt` repository at source commit
-`5a37c515639f23037d191b0659a5a0853984328d`.
-Its SHA-256 is
-`d358edc9f3c9104f4a19f4ccbbd35f8547a745cf47cf611b23bbf7f032ca143f`.
-Relative source links inside that snapshot refer to the DiffGPT checkout.
-
 ## Working in this repository
 
 Use the Lean toolchain pinned in [lean-toolchain](lean-toolchain) and native
