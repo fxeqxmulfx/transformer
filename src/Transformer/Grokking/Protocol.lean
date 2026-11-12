@@ -71,6 +71,8 @@ public import Transformer.Grokking.Protocol.SplitSlots
 public import Transformer.Grokking.Protocol.SplitCount
 public import Transformer.Grokking.Protocol.SplitProbability
 public import Transformer.Grokking.Protocol.LabelBound
+public import Transformer.Grokking.Protocol.Bonferroni
+public import Transformer.Grokking.Protocol.LabelEnclosure
 public import Transformer.Grokking.Protocol.ExplicitTolerance
 
 /-! The protocol behind the division curves of Power et al., *Grokking: generalization beyond
@@ -131,10 +133,11 @@ update on answer every held-out equation: it is measurable, the target says that
 probability `1`, and it has at most `1` less half the probability that the split is not
 labelled, so the target with a smaller tolerance is false too; and how sure that condition
 is: the shuffles that keep given equations out of training are counted, so a residue is the
-answer of no training equation with the probability `4656 ⋯ 4561 / (9312 ⋯ 9217)`, between
-`7 · 10⁻³⁰` and `8 · 10⁻³⁰`, a split labels every residue with a probability of at least
-`1 - 97 / 2 ^ 96`, and a run eventually answers every held-out equation with a probability of
-at most `1 - 7 · 10⁻³⁰ / 2`. The target is a predicate of the model, its labels and its
+answer of no training equation with the probability `4656 ⋯ 4561 / (9312 ⋯ 9217)`, about
+`7.7 · 10⁻³⁰`, a split fails to label every residue with a probability between
+`7.46 · 10⁻²⁸` and `7.47 · 10⁻²⁸`, by the union bound and Bonferroni's inequality, and a run
+eventually answers every held-out equation with a probability of at most
+`1 - 7.46 · 10⁻²⁸ / 2`. The target is a predicate of the model, its labels and its
 gradient oracle: no convergence of any transformer is proved here, and no trained decoder is
 proved to have that structure, for an enclosure of its logits is a hypothesis here. The map
 of what is proved elsewhere and what is missing is `review/grok_division_convergence.md`. -/

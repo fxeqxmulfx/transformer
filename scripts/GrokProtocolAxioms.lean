@@ -403,9 +403,6 @@ import Transformer
 #print axioms Transformer.Grokking.Protocol.uniformPerm_keptOut_le
 #print axioms Transformer.Grokking.Protocol.card_withAnswer
 #print axioms Transformer.Grokking.Protocol.unlabelled_eq
-#print axioms Transformer.Grokking.Protocol.uniformPerm_unlabelled_le_inv
-#print axioms Transformer.Grokking.Protocol.uniformPerm_compl_labelled_le
-#print axioms Transformer.Grokking.Protocol.le_uniformPerm_labelled
 #print axioms Transformer.Grokking.Protocol.compl_anchored_eq
 #print axioms Transformer.Grokking.Protocol.uniformPerm_compl_anchored_eq
 #print axioms Transformer.Grokking.Protocol.uniformPerm_anchored_eq
@@ -413,6 +410,12 @@ import Transformer
 #print axioms Transformer.Grokking.Protocol.uniformPerm_unlabelled_eq
 #print axioms Transformer.Grokking.Protocol.descFactorial_ratio_bounds
 #print axioms Transformer.Grokking.Protocol.uniformPerm_unlabelled_mem_Icc
-#print axioms Transformer.Grokking.Protocol.le_uniformPerm_compl_labelled
+#print axioms Transformer.Grokking.Protocol.two_mul_sum_measure_le
+#print axioms Transformer.Grokking.Protocol.two_mul_sum_uniformPerm_le
+#print axioms Transformer.Grokking.Protocol.uniformPerm_unlabelled_inter_le
+#print axioms Transformer.Grokking.Protocol.le_of_two_mul_le_add
+#print axioms Transformer.Grokking.Protocol.biUnion_unlabelled
+#print axioms Transformer.Grokking.Protocol.uniformPerm_compl_labelled_mem_Icc
+#print axioms Transformer.Grokking.Protocol.uniformPerm_labelled_mem_Icc
 #print axioms Transformer.Grokking.Protocol.law_eventuallyRight_le_explicit
 #print axioms Transformer.Grokking.Protocol.not_le_law_eventuallyRight_explicit
