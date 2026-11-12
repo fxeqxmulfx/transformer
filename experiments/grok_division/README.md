@@ -58,19 +58,20 @@ A run resumes from its last checkpoint when the command is repeated, on any numb
 threads, and is then bit for bit the run that was not stopped. `runs/` is ignored by git.
 
 Hardware and precision. The runs were made on two Xeon E5-2680 v4 (28 cores, 56 threads),
-several at a time on 4 to 16 threads each; a run of 10⁵ updates took 4750 to 6360 s. All
-training arithmetic is `f32` on the CPU, in the order that PROTOCOL.md fixes, with gradual
-underflow unless `--flush-from` is given. The machine's GPU, a GeForce GTX 1050 with 2 GiB,
-was not used.
+several at a time on 4 to 16 threads each; a run of 10⁵ updates took 4750 to 6360 s, and the
+9 · 10⁵ flushed updates of an `adam` run 20 040 to 20 140 s, the three runs at a time, on 8
+threads to update 150 000 and on 16 after it. All training arithmetic is `f32` on the CPU,
+in the order that PROTOCOL.md fixes, with gradual underflow unless `--flush-from` is given.
+The machine's GPU, a GeForce GTX 1050 with 2 GiB, was not used.
 
 ## Findings
 
-State on 2026-11-11: the cohorts `adamw` and `adamw --answer-only` are complete. The `adam`
-runs were stopped at updates 114 000, 131 000 and 100 000 (seeds 0, 1, 2) and continue as
-`adam --flush-from 100000` (Amendment 2); that cohort is in progress, and its outcome is
-added here when it reaches update 1 000 000. The numbers are those of `report` and of
-`history.jsonl`. Accuracy is the answer's, on the 4656 training or the 4656 held-out
-equations; a guess among the 97 residues has 1.0%.
+State on 2026-11-12: the cohorts `adamw`, `adamw --answer-only` and
+`adam --flush-from 100000` are complete. The `adam` runs were stopped at updates 114 000,
+131 000 and 100 000 (seeds 0, 1, 2) and were continued as `adam --flush-from 100000`
+(Amendment 2) to update 1 000 000. The numbers are those of `report` and of `history.jsonl`.
+Accuracy is the answer's, on the 4656 training or the 4656 held-out equations; a guess among
+the 97 residues has 1.0%.
 
 ### AdamW with weight decay 1, 10⁵ updates: perfect held-out accuracy is reached and lost
 
@@ -126,8 +127,50 @@ sees. This describes the state before and after; it does not prove what causes t
   least 0.999: the paper's "very little evidence of any generalization until 10⁵ steps". It
   rises slowly: 0.024, 0.044 and 0.024 at update 50 000.
 - Whether it reaches the level of Figure 1 "close to 10⁶ steps" is what the cohort
-  `adam --flush-from 100000` measures. At update 170 000 its held-out accuracy is 0.045,
-  0.270 and 0.045.
+  `adam --flush-from 100000` measures, in the next section.
+
+### Adam without weight decay, 10⁶ updates: one seed of three reaches 99%
+
+The cohort `adam --flush-from 100000`: the `adam` runs from their update 100 000, with
+subnormals flushed to zero (Amendment 2). Held-out accuracy:
+
+| Update | Seed 0 | Seed 1 | Seed 2 |
+| ---: | ---: | ---: | ---: |
+| 100 000 | 0.031 | 0.112 | 0.030 |
+| 200 000 | 0.045 | 0.387 | 0.056 |
+| 300 000 | 0.064 | 0.657 | 0.090 |
+| 400 000 | 0.093 | 0.866 | 0.164 |
+| 500 000 | 0.117 | 0.944 | 0.235 |
+| 600 000 | 0.152 | 0.985 | 0.339 |
+| 700 000 | 0.159 | 0.993 | 0.436 |
+| 800 000 | 0.199 | 0.992 | 0.566 |
+| 900 000 | 0.240 | 0.994 | 0.671 |
+| 1 000 000 | 0.261 | 0.998 | 0.814 |
+
+| Seed | Held-out ≥ 99%, first | Held-out ≥ 99% from | Every held-out answer right | Held-out in the window: least / mean / largest | Most wrong answers in the window | Final training / held-out | Outcome |
+| ---: | ---: | ---: | --- | --- | ---: | --- | --- |
+| 0 | never | never | never (best 0.272) | 0.224 / 0.247 / 0.272 | 3612 | 1.000 / 0.261 | not generalized within the budget |
+| 1 | 623 000 | 785 000 | never (best 0.9991) | 0.9918 / 0.9964 / 0.9991 | 38 | 1.000 / 0.998 | at least 99% |
+| 2 | never | never | never (best 0.814) | 0.659 / 0.734 / 0.814 | 1589 | 1.000 / 0.814 | not generalized within the budget |
+
+Each run has 1094 evaluations; the window is the 101 of updates 900 000 to 1 000 000.
+
+- By the protocol's classes seed 1 is *at least 99%*, and seeds 0 and 2 are *not generalized
+  within the budget*. No seed is *exact*: no evaluation of any seed has every held-out answer
+  right, and the best one, of seed 1 at update 966 000, has 4 wrong answers of 4656.
+- Seed 1 is the course of the paper's Figure 1 (left): little held-out accuracy at 10⁵
+  updates, 0.112, and more than 99% before 10⁶. It first has 99% at update 623 000 and keeps
+  it from update 785 000; between the two, 46 of its 162 evaluations are below 99%, the least
+  0.980.
+- Seeds 0 and 2 rise through the whole budget and end at 0.261 and 0.814; seed 2 has its best
+  value at the last update. Whether they reach 99% later is not measured.
+- Training accuracy does not stay at 1. After update 100 000 it is below 1 at 78, 62 and 112
+  of the 901 evaluations (seeds 0, 1, 2), the least 0.9963, 0.9942 and 0.9936, and in the
+  window the training cross-entropy of the answer is as large as 0.005, 0.075 and 0.009.
+  These are the loss spikes of Amendment 2. Unlike under AdamW the fit comes back: the final
+  training accuracy is 1 in the three runs.
+- After update 100 000 the cohort does not have the source's arithmetic (next section). With
+  gradual underflow the runs exist to updates 114 000, 131 000 and 100 000 only.
 
 ### The arithmetic decides the late trajectory
 
@@ -167,4 +210,6 @@ sees. This describes the state before and after; it does not prove what causes t
 - Three seeds, one machine, `f32`, a finite horizon. Seeds 1 and 2 have splits that the
   source never draws (deviation D1).
 - A first crossing of 99% is not convergence: under AdamW every run crosses it and none
-  keeps it. No run here supports a claim that held-out accuracy tends to 1.
+  keeps it. Under Adam one seed of three keeps 99% for its last 215 000 updates, and it never
+  has every held-out answer right. No run here supports a claim that held-out accuracy tends
+  to 1.
