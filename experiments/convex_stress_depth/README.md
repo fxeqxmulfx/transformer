@@ -250,6 +250,33 @@ so this subset establishes a benefit from composed depth in this library,
 without establishing an advantage from convex joint optimization or Fourier
 transport. It does not resolve the hard-depth, MQAR or full-35 result.
 
+## Frozen cohort: first hard-depth successes
+
+The full-batch, minibatch and forward-only joint/residual depth-four endpoints
+for `basis-depth-hard` have completed, and all three saved-result digests match
+their successful independent replay records. Each reaches **100% on every
+original split**, including the primary `validation/length-128/novel` split.
+Their training CE is `1.3212972929315849e-9`. These are three completed candidate
+endpoints from producer `032762e5`, not a completed hard-task or whole-cohort
+aggregate. The other depth-four controls and the final training-only choices
+remain in the unchanged running inventory.
+
+All 36 depth-one/two hard-task candidates have also completed. Across all
+three modes and both transports, none reaches the original 99% threshold:
+
+| Depth | Joint head: original primary accuracy | Independent factors | Additive control |
+| --- | ---: | ---: | ---: |
+| 1 | 20.31% | 20.31% | 20.31% |
+| 2 | 8.59–42.58% | 24.22–42.58% | 20.31% |
+
+This supplies an initial depth-four success where the shallower candidates
+failed. The common training-label initializer already produces the successful
+model, so no gradient-discovery advantage follows. The final comparison must
+still include the independent/additive and Fourier controls, MQAR, retained
+features, the other original tasks and the fresh conventional transformer.
+Generated evidence is preserved in `.kanban/artifacts/175/hard-early-v1/` and
+the original `runs/cohort-v1/` paths; no training budget or stopping rule changed.
+
 ## Retained paths and bounded-memory training components
 
 Lean CD9 at `9136a122` proves that retaining every shallower feature embeds its
