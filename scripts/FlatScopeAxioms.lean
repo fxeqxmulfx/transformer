@@ -272,3 +272,7 @@ items "Assumed or not covered" of WD11 and XE13
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.tendsto_margin_decayRun_signCode_atTop
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.diagCell_one_add_zero_ne
 #print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.diagCell_one_add_neg_one_eq
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.IsSignSystem.exp_add_le_exp_succ
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.IsSignSystem.exists_exp_ge
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_ceLoss_signProduct_le
+#print axioms Transformer.Grokking.FlatSpectrum.Training.Scope.exists_log_le_frobeniusSq_decayRun_signProbe

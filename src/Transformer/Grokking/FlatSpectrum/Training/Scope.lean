@@ -26,6 +26,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.Scope.SeparateCells
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SeparateCellsRows
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SeparateCellsRun
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignGap
+public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignRate
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignRun
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignRunLimit
 public import Transformer.Grokking.FlatSpectrum.Training.Scope.SignSegment
@@ -93,8 +94,9 @@ dropped, or the part of the open statement that is proved.
   (`tendsto_frobeniusSq_decayRun_signProbe_atTop`), the cross-entropy tends to `0`
   (`tendsto_ceLoss_signProduct`), the margin for the nuclear norm tends to the largest margin
   (`tendsto_margin_div_signProduct`) and the direction of the product to the product of
-  largest margin (`tendsto_inv_smul_signProduct`). From a start with `U₀ + V₀ = 0` the loss
-  stays at least `log 2` (`log_two_le_ceLoss_signProduct`).
+  largest margin (`tendsto_inv_smul_signProduct`). From some step `T` on the loss is at most
+  `1 / (1 + η ‖U_T + V_T‖² (t − T))` (`exists_ceLoss_signProduct_le`). From a start with
+  `U₀ + V₀ = 0` the loss stays at least `log 2` (`log_two_le_ceLoss_signProduct`).
 * No weight decay on samples in distinct rows and columns (XE13, XE20). For samples of the
   code `±1` at cells no two of which share a row or a column, the rows `u = U_i`, `v = y V_j`
   of a sample follow the run on the sign sample (`rowOf_decayRun_signCode`). So for every
