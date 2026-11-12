@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_transformer`](convex_stress_transformer) | Six native checks and all 35 data/resource checks pass | Conventional causal transformer with original one/two/six-layer dimensions and streamed whole-batch gradients. Largest model forecast is 342 MiB; data reconstruction peaks at 244 MiB RSS. No fresh training or stress accuracy yet. |
 | [`convex_stress_relabel`](convex_stress_relabel) | Lean extension and eight native checks pass; serial runner ready | Propose class codings from observed categorical rectangles, retain the full CE vocabulary and apply the existing spectral solver. The 96-cell protocol and independent raw audit are ready; execution is gated on both depth cohorts completing. No original-task score is claimed. |
 | [`convex_stress_depth`](convex_stress_depth) | 288-cell depth protocol frozen; three earlier training-only checks pass | Compare joint/independent/additive paths, residual/Fourier transport and full/mini/forward modes on original depth/recall splits with capped memory. Native baselines and replay are ready; no cohort outcome is claimed before running it. |
 | [`convex_stress_sharpen`](convex_stress_sharpen) | All 36 checks and 72 raw-table audits pass | Square-times CE gaps close in full/mini/forward with unchanged predictions; all 18 chosen endpoints now have numerical ideal-CE certificates and retain their accuracy passes. The other 33 endpoints copy their parents exactly; no training restart. |

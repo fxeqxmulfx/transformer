@@ -1,0 +1,19 @@
+[package]
+name = "convex-stress-transformer"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+convex-recall-compare = { path = "../convex_recall_compare" }
+convex-stress-minibatch = { path = "../convex_stress_minibatch" }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+
+[profile.release]
+lto = "thin"
+
+[profile.test]
+opt-level = 2

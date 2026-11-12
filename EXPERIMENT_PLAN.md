@@ -1,5 +1,19 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Bounded conventional transformer comparator (2026-11-12)
+
+The fresh comparison now has a native backend in `convex_stress_transformer`.
+Extend the existing validated causal softmax engine to the original one/two/six
+layers, original variable masks and streamed token-weighted CE gradients.
+Six checks pass against the independent f64 reference and the unchanged
+two-layer implementation. All 35 original datasets reconstruct with checked
+hashes; the largest conservative model buffer bound is 342 MiB and data
+reconstruction peaks at 244 MiB RSS under an 8 GiB process cap. No original
+training or prediction has been performed by this preflight. Freeze a separate
+training/observation/replay protocol before using this backend for comparison;
+record the inherited AdamW warmup difference from the historical stress setup.
+Keep the running convex cohorts and their serial queue unchanged.
+
 ## Prediction-preserving spectral sharpening (2026-11-12)
 
 Lean CM11 landed at `b3c2e8ae` before the native follow-up. The
