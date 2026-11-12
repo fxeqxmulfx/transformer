@@ -68,9 +68,11 @@ not interval proofs or guarantees of unique completion.
 
 ## Reproduce and inspect
 
-Use Rust, system FFTW3 and OpenBLAS/LAPACK. The launcher runs six independent
-experiment processes by default, with eight spectral workers and one BLAS
-thread each. Generated evidence stays local under ignored `runs/`; the worktree
+Use Rust, system FFTW3 and OpenBLAS/LAPACK. After the memory incident below,
+the launcher defaults to one experiment process and accepts at most two,
+with eight spectral workers and one BLAS thread each. Every native run has
+a hard 16 GiB address-space limit (reduce with `HULL_MEMORY_GIB`) and no core
+dump. Generated evidence stays local under ignored `runs/`; the worktree
 links that directory to the root checkout. No Python or additional agents run.
 
 ```sh
@@ -81,7 +83,7 @@ cargo fmt --manifest-path experiments/convex_stress_hull/Cargo.toml --check
 cargo clippy --offline --manifest-path experiments/convex_stress_hull/Cargo.toml --all-targets -- -D warnings
 cargo build --offline --release --manifest-path experiments/convex_stress_hull/Cargo.toml
 OPENBLAS_NUM_THREADS=1 experiments/convex_stress_hull/target/release/convex-stress-hull prepare
-bash experiments/convex_stress_hull/run_suite.sh experiments/convex_stress_hull/runs/suite-v1 6
+bash experiments/convex_stress_hull/run_suite.sh experiments/convex_stress_hull/runs/FRESH_COHORT 1
 ```
 
 Six native checks cover label-independent eligibility, the scaled CE bound,
@@ -97,8 +99,9 @@ but does not independently recompute every count-model gradient/oracle gap.
 Two additional saved-model auditors perform those numerical cross-checks:
 
 ```sh
-OPENBLAS_NUM_THREADS=1 experiments/convex_stress_hull/target/release/audit_moments CANDIDATE_DIRECTORY PRODUCER_FINGERPRINT
-OPENBLAS_NUM_THREADS=1 experiments/convex_stress_hull/target/release/audit_counts CANDIDATE_DIRECTORY PRODUCER_FINGERPRINT
+OPENBLAS_NUM_THREADS=1 bash experiments/convex_stress_hull/limited.sh 8 experiments/convex_stress_hull/target/release/audit_moments CANDIDATE_DIRECTORY PRODUCER_FINGERPRINT
+OPENBLAS_NUM_THREADS=1 bash experiments/convex_stress_hull/limited.sh 8 experiments/convex_stress_hull/target/release/audit_counts CANDIDATE_DIRECTORY PRODUCER_FINGERPRINT
+bash experiments/convex_stress_hull/audit_suite.sh COHORT FRESH_AUDIT_DIRECTORY
 ```
 
 The moment auditor reads raw probability coordinates and independently computes
@@ -113,6 +116,14 @@ fresh full-data FW gaps for both full-batch and minibatch endpoints, and checks
 CE and feasibility for forward-only endpoints. An additional native test checks
 residue-pooling alias multiplicities and base shifts. Corrupted recorded CE and
 FW-gap controls must be rejected by the corresponding auditors.
+
+The count auditor keeps one query's residuals and only sixteen keys' dense
+gradient rows at once. It still exhausts all output classes, values and keys,
+including padding, in the same row addition order. Two native checks compare
+different block sizes with the former dense reference and reject invalid
+records. This changes audit storage, not model capacity, training or the
+frozen producer fingerprint. `audit_suite.sh` serializes all completed-cell
+audits, imposes an 8 GiB address-space cap, and records peak RSS and exit status.
 
 `summary.json` requires the exact 315-record inventory; `selected.json`
 reports all 105 choices, primary passes and passes on every nonempty split.
@@ -131,6 +142,22 @@ Preparation verifies all 35 original datasets. The input-only check admits
 105 count fits and 72 explicit ineligible records. These are input-layout
 counts, not performance results.
 
-Performance is pending the frozen full-suite run. The previous three-task success and the
-count-only result of 10/35 remain separate; combining their best reported
-scores is not evidence that the common trained procedure passes the suite.
+The first suite produced 311 of 315 records before a host OOM on 2026-11-12
+at 07:30:05 UTC. The kernel recorded two dense count auditors using about
+94 GiB combined; it killed one at 50,920,032 KiB anonymous RSS. Their unbounded
+all-query gradient storage caused the incident. Four training jobs subsequently
+ended with SIGTERM without endpoint models: minibatch long MQAR counts,
+minibatch recurrence with both budgets, and forward-only recurrence full-rank.
+Their original traces and a separate interruption manifest are preserved locally
+under board artifact #177. No resumable solver state exists for those four jobs.
+The 311 completed records are unchanged; no complete 105-choice result or whole
+suite pass is claimed from this interrupted cohort.
+
+The replacement blocked auditor completed the saved full-batch long-MQAR
+checkpoint (160,000 observed prefixes) under its 8 GiB limit in 78.86 seconds,
+with peak RSS 245,352 KiB (240 MiB). Its mean CE matches the producer exactly;
+the independent FW gap differs by 8.14e-14. All nine native tests, formatting
+and clippy pass, and rebuilding the producer gives the exact frozen binary.
+Remaining audit/recovery evidence must retain every incomplete or failed cell.
+The previous three-task success and count-only result of 10/35 remain separate;
+combining their best reported scores does not establish a whole-suite pass.

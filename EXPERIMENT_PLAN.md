@@ -82,6 +82,16 @@ short/long tasks and held-out metrics.
 
 ## Common convex predictions on all stress tasks (2026-11-12)
 
+The first cohort has 311/315 endpoint records. On 2026-11-12 at 07:30:05 UTC,
+two unbounded dense count auditors exhausted host memory; four training jobs
+later ended with SIGTERM and no resumable state. Preserve their partial traces
+and the completed outputs. The auditor now processes one query and sixteen
+feature keys at a time, retaining the independent full-vocabulary oracle.
+The large saved full-batch MQAR audit passes at 240 MiB peak RSS with unchanged
+CE and a gap difference of 8.14e-14. Future audits run serially with an 8 GiB
+address-space cap; training defaults to one worker with a 16 GiB cap. No whole
+suite completion is claimed until the missing outcome and audit scope is resolved.
+
 Lean CM8 at `d7e1e6aa` proves fixed-scale ordinary CE convexity, common
 probability feasibility and observed-fit/excess certificates for a prediction
 hull containing causal and spectral families. The [full-suite protocol](experiments/convex_stress_hull/protocol.json)
