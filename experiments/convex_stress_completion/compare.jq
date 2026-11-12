@@ -1,7 +1,8 @@
 # jq --slurpfile adaptive ADAPTIVE_SUMMARY -f compare.jq COMPLETION_SUMMARY
 def key: [.arm,.task,.seed,.scale]|tojson;
 def require($p;$message): if $p then . else error($message) end;
-require(.planned==24 and (.cells|length)==24; "expected 24 completion cells") |
+($ARGS.named.expected//24) as $expected |
+require(.planned==$expected and (.cells|length)==$expected; "unexpected completion inventory") |
 require(.source_fingerprint=="c896fdbd0a2a3026942e49100f2c315dfc78defb452ad31ebc3aac2fd27b0c54";
   "wrong completion source") |
 require($adaptive[0].source_fingerprint=="5a35847751311093af3259b7070362d60304cafedfb0241e9fbf2b82c311c3c2";
@@ -24,6 +25,6 @@ require($adaptive[0].source_fingerprint=="5a35847751311093af3259b7070362d60304ca
    fresh_gap:.result.training.mean_fw_gap,adaptive_fresh_gap:$before.result.training.mean_fw_gap,
    adaptive_status:$before.status}] as $cells |
 {source_fingerprint:$summary.source_fingerprint,
- interpretation:"Same frozen splits and fixed caps; only unseen selected-key completion changes CE training. Forward-only models and metrics are exact controls. A four-task follow-up, not a full-suite comparison.",
+ interpretation:"Same frozen splits and fixed caps; only unseen selected-key completion changes CE training. Forward-only models and metrics are exact controls. Targeted follow-up cohorts, not a full-suite comparison.",
  cells:$cells,totals:($cells|group_by([.arm,.scale])|map({arm:.[0].arm,scale:.[0].scale,
    planned:length,passed:map(select(.passed))|length,forward_equal:map(select(.forward_equal==true))|length}))}

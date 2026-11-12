@@ -17,6 +17,14 @@ checks pass, including a missing-pair repair when a global shared fit is
 impossible. Keep the adaptive cohort and its binary unchanged; this is a
 separate targeted test, not a full-suite claim.
 
+Completion results: all 24 prespecified cells replay, with 18 primary passes
+and six ordinary-division failures. A separately frozen, adaptively selected
+six-cell associative follow-up uses the same binary and all six pass. The
+scale-1 minibatch associative failure improves from 53.866% at update 512 to
+100% at update 19. All ten forward controls match exactly. Completion also
+reduces the observed update count for short scale-10 and long scale-1 recall.
+Ordinary division remains at 0.9450%; the full-suite objective remains open.
+
 Task #160 follows the user's instruction to prove the failure first and repair
 full-batch failures too. The Lean statements in `ConvexChannel/Minibatch/` and
 `ConvexChannel/Shared.lean` are landed before native experiments: singleton
