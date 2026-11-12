@@ -4,7 +4,8 @@ This project has three goals:
 
 1. Prove end-to-end convergence to generalization for the training process
    studied in **Grokking: Generalization Beyond Overfitting on Small Algorithmic
-   Datasets** (Power et al., [arXiv:2201.02177](https://arxiv.org/abs/2201.02177)).
+   Datasets** (Power et al., [arXiv:2201.02177](https://arxiv.org/abs/2201.02177))
+   and for the simpler **Rotate90 `complex-product-plain` model**.
 2. Build a **convex model that passes the GPT stress tests**, retaining their
    original inputs, splits, answer losses and evaluation criteria.
 3. Develop **forward-only training without backpropagation**, learning from
@@ -59,6 +60,17 @@ of the equation table and prove that held-out accuracy reaches and stays at
 100%, under explicit assumptions on the split, initialization and optimizer.
 The theorem must connect the actual training trajectory to these predictions.
 
+An additional concrete target is **end-to-end convergence of Rotate90
+`complex-product-plain`** (`Arm::Plain`). This single-block model combines
+shared embeddings with a fixed quarter-turn, a plain complex product, RMS
+normalization and a tied readout. Its
+[compact Rust forward pass](experiments/flat_approx/fixtures/reference.rs) and
+[formal model](src/Transformer/Rotate90/ComplexProduct.lean) identify the model
+to study. The goal is to prove that its actual AdamW training eventually
+attains and retains correct held-out predictions, under explicit assumptions
+on the task, split, initialization and optimizer. This convergence claim
+remains open.
+
 ### Ready
 
 - **The training protocol is formalized.** The exact-real decoder, tokenization,
@@ -83,11 +95,14 @@ The theorem must connect the actual training trajectory to these predictions.
   separately covers zero numerators as part of all 9,312 equations.
 - **Finite training evidence is available.** The native
   [division experiment](experiments/grok_division/README.md) records training
-  runs, checkpoint checks and later losses of accuracy.
+  runs, checkpoint checks and later losses of accuracy. For
+  `complex-product-plain`, [frozen cubic checkpoint evaluations](experiments/flat_approx/README.md)
+  record 99.66% and 99.68% held-out accuracy for seeds 7 and 11 on
+  `(a+b)^3 mod 97` at the saved final checkpoints.
 
 ### Not ready
 
-- **A positive end-to-end theorem.** We have no proof that this training process
+- **A positive end-to-end theorem.** We have no proof that either training process
   eventually generalizes permanently, or even a positive lower bound on the
   probability of that event. A valid split condition or a quantitative success
   guarantee still has to be established.
