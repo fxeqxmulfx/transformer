@@ -237,6 +237,8 @@ The whole cohort, replays included, took 2 h 10 min.
 tables. Whether the coverage conditions of CM18 hold for that split was not
 checked here, and no saved table was compared with a certificate; CM18 itself
 shows that a CE minimum of this program need not have the certified answer.
+The follow-up [`convex_stress_certified`](../convex_stress_certified) searches
+for such certificates on the same eight tasks and reports its own results.
 No solver convergence, no stability at the tolerance and no interval
 certificate of the spectra is claimed. One seed and one split per task.
 
@@ -247,6 +249,9 @@ behind earlier cohorts of the same serial machine. `summary.json` records
 `integrated_with_older_candidates: false`. No ordering against an earlier
 candidate is claimed, and no earlier candidate is dropped or replaced by these
 numbers. The command above remains to be run once that cohort is complete.
+The `integrate` step of `convex_stress_certified` calls it on the same two
+roots and refuses a changed `summary.json` of this cohort (sha256
+`11ebba65…ad11068`), so the comparison is recomputed there as well.
 
 These are eight of the 35 tasks of the suite. No full-suite result and no
 comparison with a transformer is claimed.
