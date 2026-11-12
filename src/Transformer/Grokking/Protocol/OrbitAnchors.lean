@@ -26,7 +26,7 @@ training equation shows the residue `1` or `2`: the two names are about differen
   (`uniformPerm_compl_anchored_pos`).
 
 So to be anchored is a condition on the split that is neither sure nor impossible. Its
-probability is not computed here.
+probability is computed in `LabelBound` (`uniformPerm_anchored_eq`).
 
 The condition is the exact one for the anchors: every equation is a training equation or is
 held out (`mem_heldout_or_exists_trainEq`), and a split is anchored if and only if every

@@ -406,7 +406,10 @@ import Transformer
 #print axioms Transformer.Grokking.Protocol.uniformPerm_unlabelled_le_inv
 #print axioms Transformer.Grokking.Protocol.uniformPerm_compl_labelled_le
 #print axioms Transformer.Grokking.Protocol.le_uniformPerm_labelled
-#print axioms Transformer.Grokking.Protocol.le_uniformPerm_anchored
+#print axioms Transformer.Grokking.Protocol.compl_anchored_eq
+#print axioms Transformer.Grokking.Protocol.uniformPerm_compl_anchored_eq
+#print axioms Transformer.Grokking.Protocol.uniformPerm_anchored_eq
+#print axioms Transformer.Grokking.Protocol.uniformPerm_anchored_mem_Icc
 #print axioms Transformer.Grokking.Protocol.uniformPerm_unlabelled_eq
 #print axioms Transformer.Grokking.Protocol.descFactorial_ratio_bounds
 #print axioms Transformer.Grokking.Protocol.uniformPerm_unlabelled_mem_Icc

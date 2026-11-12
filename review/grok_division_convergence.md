@@ -48,7 +48,8 @@ than trained, and names the bridges that are missing.
 | The target is false under every condition that admits a split with a residue that is the answer of no training equation (section 2) | `outPerm`, `sourceGrad_comp_outPerm`, `unlabelled`, `trajectory_relabel`, `uniformPerm_unlabelled_le`, `labelled`, `not_ae_eventually_of_not_mem_labelled`, `not_ae_eventually_anchored_occurring` |
 | The target is false on the splits that label every residue too: a renaming of the tokens that carries a split to a split and moves a held-out answer (section 2) | `sourceGrad_comp_paramPerm_rename`, `Carries`, `trajectory_carried`, `measurePreserving_carrySample`, `Twisted`, `uniformPerm_le_of_twisted`, `not_ae_eventually_of_twisted`, `twin`, `twisted_twin`, `exists_twin_labelled`, `not_ae_eventually_labelled` |
 | The runs that eventually answer every held-out equation form an event, and its probability is at most 1 less half the probability that the split is not labelled, hence at most 1 − 7 · 10⁻³⁰/2 (section 2) | `eventuallyRight`, `measurableSet_eventuallyRight`, `division_generalizes_iff_law_eq_one`, `uniformPerm_le_not_eventuallyRight`, `law_eventuallyRight_le`, `law_eventuallyRight_le_of_twisted`, `not_le_law_eventuallyRight`, `law_eventuallyRight_le_explicit`, `not_le_law_eventuallyRight_explicit` |
-| A split leaves a given residue unlabelled with the probability 4656 ⋯ 4561/(9312 ⋯ 9217), between 7 · 10⁻³⁰ and 8 · 10⁻³⁰; it labels every residue with a probability of at least 1 − 97/2⁹⁶ and fails to with one of at least 7 · 10⁻³⁰ (section 2) | `keptOut`, `card_keptOut_insert_mul`, `card_keptOut_mul_descFactorial`, `uniformPerm_keptOut_eq`, `uniformPerm_keptOut_le`, `uniformPerm_unlabelled_eq`, `uniformPerm_unlabelled_mem_Icc`, `uniformPerm_unlabelled_le_inv`, `uniformPerm_compl_labelled_le`, `le_uniformPerm_compl_labelled`, `le_uniformPerm_labelled`, `le_uniformPerm_anchored` |
+| A split leaves a given residue unlabelled with the probability 4656 ⋯ 4561/(9312 ⋯ 9217), between 7 · 10⁻³⁰ and 8 · 10⁻³⁰; it labels every residue with a probability of at least 1 − 97/2⁹⁶ and fails to with one of at least 7 · 10⁻³⁰ (section 2) | `keptOut`, `card_keptOut_insert_mul`, `card_keptOut_mul_descFactorial`, `uniformPerm_keptOut_eq`, `uniformPerm_keptOut_le`, `uniformPerm_unlabelled_eq`, `uniformPerm_unlabelled_mem_Icc`, `uniformPerm_unlabelled_le_inv`, `uniformPerm_compl_labelled_le`, `le_uniformPerm_compl_labelled`, `le_uniformPerm_labelled` |
+| A split is anchored with the probability 1 − 4656 ⋯ 4561/(9312 ⋯ 9217), between 1 − 8 · 10⁻³⁰ and 1 − 7 · 10⁻³⁰: it fails to be exactly when it leaves the residue 0 unlabelled (bridge 5) | `compl_anchored_eq`, `uniformPerm_compl_anchored_eq`, `uniformPerm_anchored_eq`, `uniformPerm_anchored_mem_Icc` |
 
 For division the arguments are fixed in `division_generalizes_iff`: the decoder of
 `paperSizes`, the logits after `=`, the source's loss on the answer and the closing token, the
@@ -123,8 +124,9 @@ same way from both starts and its logits of the two tokens are exchanged
 | Over the runs whose split is in a set `S`, at every update the held-out accuracy integrates to at most P(`S`) − P(`S` and not labelled)/18624. So the mean held-out accuracy is at most 1 − P(not labelled)/18624 at every update and does not tend to 1, and under a condition that admits a split that is not labelled the mean given the condition does not tend to 1: the target fails in mean too | `setIntegral_divisionAccuracy_le`, `integral_divisionAccuracy_le`, `not_division_tendsToOneInMean`, `not_tendsto_setIntegral_divisionAccuracy` |
 | To be labelled is neither sure nor impossible | `uniformPerm_compl_labelled_pos`, `uniformPerm_labelled_pos` |
 | A split leaves a given residue unlabelled with the probability ∏_{j<96} (4656 − j)/(9312 − j), which is between 7 · 10⁻³⁰ and 8 · 10⁻³⁰ and at most 2⁻⁹⁶ | `uniformPerm_unlabelled_eq`, `uniformPerm_unlabelled_mem_Icc`, `uniformPerm_unlabelled_le_inv` |
-| A split is not labelled with a probability of at least 7 · 10⁻³⁰ and at most 97/2⁹⁶; so it is labelled, hence anchored, with a probability of at least 1 − 97/2⁹⁶ | `le_uniformPerm_compl_labelled`, `uniformPerm_compl_labelled_le`, `le_uniformPerm_labelled`, `le_uniformPerm_anchored` |
+| A split is not labelled with a probability of at least 7 · 10⁻³⁰ and at most 97/2⁹⁶; so it is labelled with a probability of at least 1 − 97/2⁹⁶ | `le_uniformPerm_compl_labelled`, `uniformPerm_compl_labelled_le`, `le_uniformPerm_labelled` |
 | A labelled split is anchored (bridge 5); an uncovered split is not labelled | `labelled_subset_anchored`, `uncovered_subset_unlabelled` |
+| A split is not anchored exactly when it leaves the residue 0 unlabelled; so it is anchored with the probability 1 − ∏_{j<96} (4656 − j)/(9312 − j), between 1 − 8 · 10⁻³⁰ and 1 − 7 · 10⁻³⁰ | `compl_anchored_eq`, `uniformPerm_anchored_eq`, `uniformPerm_anchored_mem_Icc` |
 | The split that trains on the first 4656 equations of the list is anchored and shows every residue in training, and it leaves the residue 96 unlabelled; so the target is false under the condition "anchored, and every residue occurs in training" | `one_mem_anchored`, `one_mem_occurring`, `one_mem_unlabelled`, `not_ae_eventually_anchored_occurring` |
 
 The count is proved (`Protocol/{SplitSlots,SplitCount,SplitProbability,LabelBound}.lean`). A
@@ -290,11 +292,11 @@ Two substitutions are therefore excluded, and no statement here makes them:
    `heldout_accuracy_eq_one_of_anchors`. `solver` satisfies it (`heldout_accuracy_solver`); a
    split gives every held-out equation a training equation in its orbit exactly when it trains
    on an equation of each orbit (`mem_anchored_iff`), which a uniformly random split does with
-   positive probability and fails to do with positive probability (a split is anchored with a
-   probability of at least `1 − 97 / 2⁹⁶`, `le_uniformPerm_anchored`; the failure is that all
-   96 equations with numerator zero are held out, an event of probability
-   `∏_{j<96} (4656 − j)/(9312 − j)`, about `7.7 · 10⁻³⁰`, by `uniformPerm_unlabelled_eq` at the
-   residue 0, but that the failure is this event is an argument outside Lean); and fitting every
+   positive probability and fails to do with positive probability (the failure is that all 96
+   equations with numerator zero are held out, `compl_anchored_eq`, since the 4656 training
+   equations cannot all be among those 96; so a split is anchored with the probability
+   `1 − ∏_{j<96} (4656 − j)/(9312 − j)`, `uniformPerm_anchored_eq`, between `1 − 8 · 10⁻³⁰` and
+   `1 − 7 · 10⁻³⁰`, `uniformPerm_anchored_mem_Icc`); and fitting every
    training answer does not suffice (`exists_fit_training_wrong_heldout`). What this leaves:
    no trained parameters are proved to meet the condition. Measured in `experiments/grok_division` on the scores of the
    model in doubles, compared in exact arithmetic: with one anchor for the orbit of nonzero
@@ -362,7 +364,8 @@ of the present state finds this:
   be compared (bridge 2); that the target is false almost surely, in probability and in mean
   without a condition on the split (section 2); that a structure of the logits gives
   held-out accuracy 1 and that built parameters have it (bridge 5); what two rows that enclose
-  the logits decide (bridge 5); that the target is false in the same three modes
+  the logits decide (bridge 5); the probability that a split gives every held-out equation a
+  training equation in its orbit (bridge 5); that the target is false in the same three modes
   under every condition on the split that admits a split with a residue that is the answer of
   no training equation, and on the splits that label every residue (section 2); that the
   runs that eventually answer every held-out equation form an event whose probability is at
