@@ -1,0 +1,21 @@
+{
+  "version": "prediction-hull-v1",
+  "suite": "all_35_original_tasks",
+  "arms": ["full_batch", "minibatch", "forward_only"],
+  "candidates": ["rank_one", "full_rank", "counts"],
+  "seed": 0,
+  "spectral_full_updates": 128,
+  "spectral_minibatch_updates": 512,
+  "spectral_forward_updates": 128,
+  "counts_full_updates": 64,
+  "counts_minibatch_updates": 512,
+  "frequency_workers": 8,
+  "ideal_ce_tolerance": 1e-8,
+  "full_gap_tolerance": 1e-9,
+  "eligibility": "A spectral candidate requires training examples with exactly two visible tokens, one final supervised target, and unique input pairs; vocabulary 2..256. Use no task name, answer rule or held-out labels. Ineligible candidates are explicit records. The causal count model retains the existing adapter for every task.",
+  "scale": "All candidates on a dataset use unit logits when its pair layout is eligible, otherwise scale 10. This is a fixed decision before training, not a learned multiplier. The spectral and count learner implementations are imported unchanged.",
+  "training": "Same original data, split hashes, batches, seed zero and tails. Spectral full/mini/forward caps and rules match schatten-moments-v1. Counts full/mini caps match counts-v1, but stopping uses only observed ideal CE, full-batch fresh FW gap, or cap; never held-out accuracy. Forward counts processes one epoch and explicitly fails if no consistent key exists. Minibatches retain per-sample gradient memory; they are not unbiased SGD.",
+  "selection": "Recompute actual teacher-forced training CE from each saved feasible candidate. In the fixed candidate order choose the first within 1e-8 of the shared ideal CE. Otherwise choose minimum training CE and report no ideal certificate. If no model exists, report no_model. Only then evaluate the selected predictions. Keep every candidate, unsupported record, failed fit and cost. Exact fits certify the convex prediction hull by Lean CM8; unsuccessful candidate search does not solve its interior.",
+  "evaluation": "Preserve original full-split metrics, own-output generation, EOS and residue pooling; these are evaluation conventions, not training objectives. Counts full batch observes every update; other iterative arms use original observation cadence capped by batches per epoch, plus initial/final states. Record first primary 99% crossing without using it to stop. Report primary and every nonempty split, all 315 candidate records and 105 selected task/mode outcomes.",
+  "scope": "This prospective full-suite integration follows the successful three-task pilot. It does not claim all tasks will pass, universal missing-label recovery, a finite-step convergence theorem, or a fresh matched transformer timing comparison. Original transformer seed-one historical measurements remain separately labelled. No target-specific arithmetic features are introduced. All generated outputs remain ignored."
+}

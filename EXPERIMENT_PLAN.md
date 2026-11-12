@@ -1,5 +1,18 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Common convex predictions on all stress tasks (2026-11-12)
+
+Lean CM8 at `d7e1e6aa` proves fixed-scale ordinary CE convexity, common
+probability feasibility and observed-fit/excess certificates for a prediction
+hull containing causal and spectral families. The [full-suite protocol](experiments/convex_stress_hull/protocol.json)
+fixes all 35 original tasks, three modes and three candidate slots: 315
+records and 105 training-only choices. Keep every unsupported pair layout and
+failed forward fit; remove held-out stopping from the count wrapper. Retain
+the original solvers and diagnostic caps, check all data hashes and replay
+every endpoint. Six integration tests pass before stress training. A fresh
+full-suite result, including all failures, is required before claiming gains
+over the earlier 10/35 count model or aggregating the three-task pilot's gains.
+
 ## Largest and total singular-value budgets (2026-11-12)
 
 CM5–CM7 extends the coupled complex-moment class with convex operator and
