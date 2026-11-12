@@ -15,6 +15,16 @@ successful full-rank outcomes and compare their saved coordinates directly.
 This extension does not yet replace the 35-task objective or its transformer
 comparison.
 
+Completed: all 18 cells replay and pass independent direct-DFT/plain-CE audits.
+Training-only selection passes all nine task/mode choices. Addition improves
+to 100% in every mode with the rank-one budget; full-rank division/multiplication
+retain 100% in full batch and forward-only, and 99.9785%/99.9575% in minibatches.
+All six original positive controls match every saved coordinate exactly. All
+nine opposite-budget failures remain at 0% at their caps. The selected models
+meet the numerical ideal-CE tolerance, but the remaining minibatch errors and
+the untouched sequence-task failures prevent a full-suite or unique-completion
+claim. Keep the frozen pilot separate from any broader extension.
+
 ## Coupled complex moments (2026-11-12)
 
 The single-phase spectral pilot fitted observed division/multiplication phases

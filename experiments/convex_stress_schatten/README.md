@@ -106,6 +106,77 @@ done > experiments/convex_stress_schatten/runs/pilot-v1/independent-audits.jsonl
 
 ## Findings
 
-Pending the frozen pilot. This pair adapter does not yet provide a fresh
-35-task run or matched transformer comparison. The best completed all-task
-model remains the count channel at 10/35; those results are separate.
+The producer was frozen at `deef98cb`, after the Lean proof `9d98a603`, with
+source fingerprint
+`913357a9c11a6f700148dd73bb60d23e8e3f00e601bfb6b24aea5825c62ce742`.
+All 18 planned cells completed, replayed and passed independent raw-coordinate
+audits. All nine training-only hull choices select the successful budget below
+and pass selection replay. All six full-rank division/multiplication outputs
+match every saved probability coordinate of the earlier pilot exactly.
+The rank-one budget repairs addition in every mode, while the original
+full-rank budget preserves the division/multiplication successes.
+
+Held-out exact accuracy, in percent, for the successful budgets:
+
+| Task | Budget | Full batch | Minibatch | Forward only |
+| --- | --- | ---: | ---: | ---: |
+| Addition | rank_one | 100 | 100 | 100 |
+| Division | full_rank | 100 | 99.9785 | 100 |
+| Multiplication | full_rank | 100 | 99.9575 | 100 |
+
+All nine successful runs meet the training-only ideal-CE tolerance and exceed
+the original 99% primary threshold. The minibatch division/multiplication
+errors remain one out of 4656 and two out of 4705; these are not perfect
+completions. All additions first reach 100% at update 19. Their training-loss
+stops occur at updates 114 / 57 / 19 for full batch / minibatch / forward-only,
+with ideal-CE excesses `8.87e-9 / 8.03e-10 / 2.03e-10`. The numerical norm and
+loss tests are tolerance-based, not exact formal certificates. Addition's
+full-operator residuals are `1.29e-6 / 7.00e-7 / 2.43e-7`.
+
+All nine opposite-budget controls score **0%** held-out accuracy and hit their
+caps: full-rank addition and rank-one division/multiplication. Their endpoint
+ideal-CE excesses are between 0.771389 and 0.819061. These failures are retained,
+not replaced by selected results. The training selector separates the budgets
+without reading their held-out scores. Selection runs both candidates: total
+updates are 242 for full-batch addition, 147 for full-batch division or
+multiplication, 569 for each minibatch choice, and 147 for each forward-only
+choice. The successful candidate's runtime alone is not the selection cost.
+
+Independent direct Fourier sums confirm both spectral bounds, and plain CE
+recomputations confirm all reported metrics. Addition's minimum held-out
+logit margin is above 0.9999992 in all modes, well clear of numerical ties.
+Its latent target-coordinate mean is above 0.99999998; these coordinates are
+the logits P, not their softmax probabilities. The existing full-batch and
+forward-only division/multiplication margins stay above 0.1657. Minibatch
+errors have negative margins down to -0.02372 and -0.04294, so they are not
+rounding ties that can be discarded.
+
+The prior addition controls scored zero with the operator-only bounds. The
+repair changes the convex spectral geometry, not the output labels, Fourier
+codes or cross-entropy. Division/multiplication still use the same feasible
+set as before, by the redundant-budget theorem. Full batch and forward-only
+stop at update 19; minibatches stop at 57, as in the previous pilot. An exact
+observed fit can still leave multiple feasible unseen answers; the retained
+minibatch errors prevent a claim of universal or unique completion.
+
+This pair adapter does not yet provide a fresh 35-task run or matched
+transformer comparison. The best completed all-task model remains the count
+channel at 10/35; those results are separate. The sources of the new gain are
+coupled class moments and spectral constraints suited to different shapes.
+There is no demonstrated repair here for arbitrary unseen labels or the
+remaining sequence-task failures.
+
+Generated summaries, choices, audits, models and traces live in
+`runs/pilot-v1/`. Frozen binaries, hashes, Lean/native logs and corruption
+controls are preserved outside the temporary worktree in
+`.kanban/artifacts/164/`. The auditor rejects modified reported CE and nuclear
+norms; replay rejects a changed splitting state even after rehashing it, a
+changed hull selection, and a missing planned result. Reproduce the complete
+saved-output verification without training:
+
+```sh
+bash experiments/convex_stress_schatten/audit_cohort.sh \
+  experiments/convex_stress_schatten/runs/pilot-v1 \
+  experiments/convex_stress_moments/runs/pilot-v1 \
+  experiments/convex_stress_schatten/runs/pilot-v1-controls
+```
