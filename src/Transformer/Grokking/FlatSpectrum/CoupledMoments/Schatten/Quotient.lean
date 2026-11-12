@@ -1,6 +1,7 @@
 module
 
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.Intermediate
+public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.Sharing
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.PredictionHull
 
 /-!
@@ -72,6 +73,23 @@ theorem quotient_fit_minimum (row : m → u) (column : n → v) (φ : F → C �
   rw [loss_eq_ideal_of_fit (P := pullback row column Q) cell labels hfit]
   exact idealLoss_le cell labels (quotientFamily_rows row column φ R B hP)
 
+omit [Fintype u] [Fintype v] [DecidableEq v] in
+/-- At the actual CE lower bound, a fixed grouped predictor gives an observed
+label to every input in that observed group (CM10). This identifies a prediction;
+correctness against an unknown target additionally requires a correct group map. -/
+theorem quotient_observed_group [Nontrivial C] (row : m → u) (column : n → v)
+    (cell : O → m × n) (labels : O → C) {Q : Table u v C} (hQ : Rows Q)
+    (hL : loss cell labels (pullback row column Q) ≤ idealLoss labels)
+    {o : O} {i : m} {j : n}
+    (hgroup : (row i, column j) = (row (cell o).1, column (cell o).2)) :
+    pullback row column Q i j = ConvexRecall.targetLogits (labels o) := by
+  have hP : Rows (pullback row column Q) :=
+    lookup_rows (fun i j => (row i, column j)) hQ
+  have ht := target_mass_of_loss_le cell labels hP hL o
+  have he := ConvexChannel.Observation.simplex_eq_target (labels o)
+    (hP.1 (cell o).1 (cell o).2) (hP.2 (cell o).1 (cell o).2) ht
+  exact (congrArg (fun p : u × v => Q p.1 p.2) hgroup).trans he
+
 private def groupIndex (b : Bool) : Fin 4 := if b then 2 else 0
 
 example := quotientFamily_rows groupIndex groupIndex _ _ _
@@ -85,5 +103,19 @@ example := quotient_fit_minimum groupIndex groupIndex _ _ _
     funext c
     cases a <;> cases b <;>
       simp [groupIndex, intermediateTable, pointMass, intermediateLabel, ConvexRecall.targetLogits])
+
+example : pullback groupIndex (fun (_ : Bool) => (2 : Fin 4)) intermediateTable true true =
+    ConvexRecall.targetLogits false := by
+  have hL : loss (fun i : Bool => (i, false)) (! ·)
+      (pullback groupIndex (fun (_ : Bool) => (2 : Fin 4)) intermediateTable) ≤
+      idealLoss (! · : Bool → Bool) := by
+    apply (loss_eq_ideal_of_fit _ _ ?_).le
+    intro i
+    funext c
+    cases i <;> simp [pullback, groupIndex, intermediateTable, pointMass,
+      intermediateLabel, ConvexRecall.targetLogits]
+  exact quotient_observed_group groupIndex (fun (_ : Bool) => (2 : Fin 4))
+    (fun i : Bool => (i, false)) (! ·) (rows_pointMass intermediateLabel)
+    hL (o := true) rfl
 
 end Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten

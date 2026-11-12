@@ -78,6 +78,7 @@ cargo build --offline --release --manifest-path experiments/convex_stress_sharin
 experiments/convex_stress_sharing/target/release/convex-stress-sharing prepare
 bash experiments/convex_stress_sharing/run_pilot.sh experiments/convex_stress_sharing/runs/pilot-v1 2
 OPENBLAS_NUM_THREADS=1 experiments/convex_stress_sharing/target/release/audit_saved CANDIDATE_DIRECTORY PRODUCER_FINGERPRINT
+experiments/convex_stress_sharing/target/release/audit_saved coverage CANDIDATE_DIRECTORY PRODUCER_FINGERPRINT
 experiments/convex_stress_sharing/target/release/audit_saved compare OLD_SCHATTEN_DIRECTORY NEW_DIRECTORY PRODUCER_FINGERPRINT
 ```
 
@@ -89,6 +90,14 @@ CE, predictions and direct Fourier sums. Data construction and LAPACK SVD are
 shared; the norm checks are numerical rather than interval certificates.
 The auditor's comparison requires exact coordinates against each of the 18
 original control endpoints, including failed geometries, with identity maps.
+
+The coverage command separates predictions on training-covered groups from
+wholly unobserved groups. It checks whether each held-out label agrees with an
+observed label in its group and counts correct predictions in both subsets.
+This is post-training attribution; no held-out label feeds back into the map
+or fit. It does not repeat the spectral audit. Lean `quotient_observed_group`
+proves that exact observed CE determines the prediction on a covered group;
+agreement with held-out ground truth still requires a correct group map.
 
 ## Findings
 

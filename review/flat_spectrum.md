@@ -14874,3 +14874,13 @@ multiple observations mapped to one grouped cell retain their multiplicities.
 This is a fixed linear lookup of learned coordinates, not a learned product
 of a grouping matrix and Q. The conditional statement does not prove that an
 adaptive grouping search returns a correct map or an identifying completion.
+
+For a fixed row/column map, `quotient_observed_group` also derives the complete
+one-hot prediction on every input sharing its grouped coordinates with an
+observed example, directly from attaining the original CE lower bound. The
+inhabited example observes only one of two original columns and recovers the
+other through their fixed shared coordinate. A missing-answer audit can thus
+separate groups already covered by training from wholly unobserved groups
+requiring further completion. Correctness of the copied label on held-out
+ground truth is a separate check of the proposed map; the theorem does not
+infer it from observed agreement alone.

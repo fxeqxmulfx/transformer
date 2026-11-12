@@ -64,7 +64,7 @@ fn close(a: &Value, b: &Value, path: &str) -> Result<()> {
     Ok(())
 }
 
-fn audit(out: &Path, expected: &str) -> Result<()> {
+fn audit(out: &Path, expected: &str, include_spectrum: bool) -> Result<()> {
     let report: Value = serde_json::from_slice(&fs::read(out.join("result.json"))?)?;
     let bytes = fs::read(out.join("model.json"))?;
     let protocol: Value = serde_json::from_str(include_str!("../../protocol.json"))?;
@@ -174,6 +174,7 @@ fn audit(out: &Path, expected: &str) -> Result<()> {
     }
     let mut diagnostics = serde_json::Map::new();
     for (split, examples) in &task.splits {
+        let (mut covered, mut covered_correct, mut conflicts, mut uncovered_correct) = (0, 0, 0, 0);
         let (mut total_ce, mut correct, mut transitions, mut transition_correct) = (0., 0, 0, 0);
         let (mut minimum_margin, mut margin_sum, mut true_probability, mut fit) =
             (f64::INFINITY, 0., 0., 0_f64);
@@ -205,6 +206,13 @@ fn audit(out: &Path, expected: &str) -> Result<()> {
                 }
             }
             let hit = usize::from(winner == y);
+            if let Some(observed_label) = seen[offset / n] {
+                covered += 1;
+                covered_correct += hit;
+                conflicts += usize::from(observed_label != y);
+            } else {
+                uncovered_correct += hit;
+            }
             correct += hit;
             counts[y] += 1;
             hits[y] += hit;
@@ -254,8 +262,21 @@ fn audit(out: &Path, expected: &str) -> Result<()> {
             )?;
         }
         diagnostics.insert(split.clone(),json!({"correct":correct,"examples":count,"accuracy":accuracy,
+            "covered_examples":covered,"covered_correct":covered_correct,"covered_ground_truth_conflicts":conflicts,
+            "uncovered_examples":count-covered,"uncovered_correct":uncovered_correct,
             "ce":total_ce/count as f64,"minimum_label_margin":minimum_margin,"mean_label_margin":margin_sum/count as f64,
             "mean_label_coordinate":true_probability/count as f64,"one_hot_defect":fit}));
+    }
+    if !include_spectrum {
+        // Post-training attribution only. No held-out label enters the producer.
+        println!(
+            "{}",
+            json!({"coverage_analysis":true,"spectrum_rechecked":false,
+            "task":name,"arm":report["arm"],"budget":report["budget_name"],"source_fingerprint":expected,
+            "observed_unique_groups":seen.iter().filter(|label|label.is_some()).count(),
+            "group_grid_cells":maps.row_count*maps.column_count,"diagnostics":diagnostics})
+        );
+        return Ok(());
     }
     let codes: Vec<_> = (0..n * n)
         .map(|i| {
@@ -353,8 +374,9 @@ fn main() -> Result<()> {
         .collect::<Vec<_>>()
         .as_slice()
     {
-        [out, expected] => audit(Path::new(out), expected),
+        [out, expected] => audit(Path::new(out), expected, true),
+        ["coverage", out, expected] => audit(Path::new(out), expected, false),
         ["compare", old, new, expected] => compare(Path::new(old), Path::new(new), expected),
-        _ => Err("usage: audit_saved OUTPUT_DIRECTORY EXPECTED_PRODUCER_FINGERPRINT".into()),
+        _ => Err("usage: audit_saved [coverage] OUTPUT_DIRECTORY EXPECTED_PRODUCER_FINGERPRINT | compare OLD NEW FINGERPRINT".into()),
     }
 }
