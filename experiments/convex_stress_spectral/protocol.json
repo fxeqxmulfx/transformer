@@ -1,0 +1,19 @@
+{
+  "version": "spectral-ball-v1",
+  "tasks": ["arithmetic-div", "arithmetic-mul", "arithmetic-add"],
+  "arms": ["full_batch", "minibatch", "forward_only"],
+  "radii": ["sqrt", "twice_sqrt", "vocab"],
+  "seed": 0,
+  "full_updates": 128,
+  "minibatch_updates": 512,
+  "forward_updates": 128,
+  "logit_scale": 1,
+  "projection_iterations": 256,
+  "projection_tolerance": 1e-9,
+  "forward_difference_step": 1e-5,
+  "model": "Direct complex matrix indexed by the last two input tokens; all other prefix content is ignored in this pair-model pilot. Class codes exp(2*pi*i*c/vocab) depend only on vocabulary IDs. Unit entry disks and operator norm <= R. No task name, arithmetic operator, inverse or target rule enters features. Ordinary full-vocabulary cross-entropy.",
+  "solver": "Full batch: projected gradients of the summed empirical CE, step 1. Mini: shuffled original batches with short tails, summed batch gradient and step 1/sqrt(1+update/updates_per_epoch). Forward-only: four scalar CE evaluations per sample produce central finite differences in real and imaginary coordinates, followed by the same projection and step 1; no analytic derivative or backprop. This is a different forward-only algorithm from the earlier exact consistency learner.",
+  "projection": "Frobenius Dykstra between complex unit disks and SVD singular-value clipping. Stop on max-entry iterate change and disk violation <= tolerance, or cap. Recompute final norms and radially shrink by max(1, max_entry, opnorm/R) to ensure feasibility within floating-point error; report every cap and shrink. No claim of exact projection or certified optimization gap.",
+  "evaluation": "Frozen source split hashes and metric implementation; original evaluation cadence, with endpoints additionally measured. Fixed update budgets, no stopping on held-out accuracy. Report every outcome, training CE, projected-gradient residual, feasibility, saved-model replay and first >=99% observation.",
+  "interpretation": "27-cell prospective pilot on three previously failed pair tasks. Not an all-35 result or a matched transformer comparison. SpectralBall Lean proves convexity and the binary 2x2 recovery case only; it does not prove modular generalization or finite-step convergence. Three radii are fixed without inspecting missing labels. CPU complex LAPACK SVD and BLAS, one thread per process."
+}
