@@ -1,0 +1,19 @@
+{
+  "version": "fixed-sharing-v1",
+  "tasks": ["power-division-p97-k2", "power-division-p97-k3", "arithmetic-square-times", "arithmetic-add", "arithmetic-div", "arithmetic-mul"],
+  "arms": ["full_batch", "minibatch", "forward_only"],
+  "budgets": ["rank_one", "full_rank"],
+  "minimum_overlap": 4,
+  "seed": 0,
+  "full_updates": 128,
+  "minibatch_updates": 512,
+  "forward_updates": 128,
+  "logit_scale": 1,
+  "ideal_ce_tolerance": 1e-8,
+  "frequency_workers": 8,
+  "grouping": "Use only original training labels and token identities. Propose pairs of row or column values agreeing on at least four shared observed counterparts. Sort by decreasing overlap, then axis and token IDs. Greedily merge only if every original training observation remains consistent under both current group maps. Compact groups by increasing representative IDs. All observations, including mapped duplicates, remain in the original empirical CE. Fixed maps are saved and deterministically replayed; no held-out labels, task operators or target spectra enter this procedure.",
+  "model": "For fixed training-proposed maps, predict by linear lookup of a probability table Q on compact row/column groups. Bound every nonconstant Fourier class moment of Q in operator and nuclear norms. Padded inactive coordinates remain uniform. For r row and c column groups, rank_one has R=B=sqrt(r*c); full_rank retains R=sqrt(V), B=min(r,c)*R, where V is the original output vocabulary. These fixed upper bounds use group and vocabulary dimensions only, not the spectrum of any target. CM10 proves convexity of each conditional prediction family and its direct prediction hull, not joint convexity of discrete map search and table training. No missing-label recovery guarantee for an inferred map.",
+  "solver": "Reuse the original CE, simplex, Fourier and singular-value projection code. Full-batch uses the sum of gradients of every original observation. Minibatch retains per-original-observation gradient memory and the summed gradient for each grouped cell, with the original shuffle, batches and tails; this is incremental aggregated gradient, not unbiased SGD. Both use step size 1/max mapped cell multiplicity. Forward-only fixes consistent observed grouped coordinates and uses no training derivatives. No finite-step convergence theorem.",
+  "evaluation": "All 36 candidates and 18 training-only choices are retained. Original split hashes, full-split metrics, cadence and caps are unchanged. Stop only at scheduled positive updates with training ideal-CE excess <=1e-8 or at the cap. First held-out 99% crossing is diagnostic only. Select the first ideal candidate in the fixed budget order, otherwise minimum training CE without a global certificate. Count group-search time and preserve original observation exposures. Compare all 18 addition/division/multiplication endpoint controls with the frozen original Schatten records, requiring exact coordinates when groups are identity. Retain the frozen unshared intermediate-budget pilot as the failure baseline.",
+  "interpretation": "Lean failure and conditional repair precede this pilot at 78a6743d. This follow-up was designed after seeing the previous full-batch and other-arm failures; it is not a prospective assessment on unseen task families. Training-only equality evidence is a heuristic for input sharing, not proof of true unseen equivalence. Report wrong geometry, incorrect groups, failed fits and failed unseen answers. This six-task diagnostic does not establish a full35 pass or a fresh matched transformer comparison. No Python or extra agents; all generated outputs remain ignored and local."
+}

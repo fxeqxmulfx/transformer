@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_sharing`](convex_stress_sharing) | Frozen 36-candidate follow-up | Lean proves exact observed CE can leave unseen answers uncertain, and correct fixed sharing repairs a witness. Training-only groups retain original CE multiplicities in all three modes; conditional convexity and native correctness checks precede pending stress results. |
 | [`convex_stress_budgets`](convex_stress_budgets) | Frozen 72-candidate follow-up | Lean proves a rank-two moment is excluded even by the convex hull of the old endpoint budgets. Two fixed intermediate bounds retain CE/solver and all three modes, with three original success controls. Three native checks pass; results pending. |
 | [`convex_stress_hull`](convex_stress_hull) | Frozen prospective complete-suite protocol | Common convex predictions from causal counts and complex spectral budgets; 315 candidate records and 105 training-only choices across all 35 tasks and three modes. Shared-scale CE certificates proved first in Lean; six native integration checks pass. Results pending. |
 | [`convex_stress_schatten`](convex_stress_schatten) | All 18 cells audited; all nine training-only choices pass | Convex nuclear budgets repair addition to 100% in every mode. Division/multiplication retain 100% full/forward and 99.9785%/99.9575% mini; all six old positive tables match exactly. Nine wrong-budget failures remain at 0%. Lean proves rank-one CE recovery and a common convex-hull certificate; no new all-35 claim. |

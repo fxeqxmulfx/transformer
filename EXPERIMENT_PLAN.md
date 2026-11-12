@@ -1,5 +1,17 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Missing-answer ambiguity and fixed sharing (2026-11-12)
+
+Lean CM10 at `78a6743d` proves a spectrally feasible, globally CE-optimal
+completion can remain uncertain on unseen answers. Correct fixed sharing
+repairs the witness. The [sharing pilot](experiments/convex_stress_sharing/protocol.json)
+proposes input groups using only training-label overlap, rejects conflicting
+merges, and retains every original observation's weight. Conditional grouped
+prediction families remain convex; the discrete map search is not claimed
+jointly convex or guaranteed correct. Freeze 36 candidates in all three modes,
+keep the unshared failure baselines, and require all 18 original success-task
+endpoint controls to match exactly. Preserve the earlier cohorts unchanged.
+
 ## Intermediate spectral capacity (2026-11-12)
 
 Lean CM9 at `efaf0d93` proves an actual rank-two binary probability moment is
