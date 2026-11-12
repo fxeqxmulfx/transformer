@@ -4,7 +4,8 @@ Board tasks #126–#132 and #137. Sources: `papers/arXiv-2201.02177v1/main.tex` 
 Figure 1 and the appendix *Additional experimental details*; openai/grok at `3d64b1d8`; the
 protocol pinned in `experiments/grok_division/PROTOCOL.md`. Written 2026-11-11; sections 5
 and 6, the second half of section 2, the enclosures of bridge 5, the measurability of bridge 2,
-the mean accuracy and the third and fourth parts of section 2 added 2026-11-12.
+the mean accuracy, the third and fourth parts of section 2 and the bound on the probability
+that a split is not labelled added 2026-11-12.
 
 The paper shows curves of finite runs. It states no theorem, and nothing below proves that
 training makes any transformer generalize. This note fixes what such a theorem would say,
@@ -47,6 +48,7 @@ than trained, and names the bridges that are missing.
 | The target is false under every condition that admits a split with a residue that is the answer of no training equation (section 2) | `outPerm`, `sourceGrad_comp_outPerm`, `unlabelled`, `trajectory_relabel`, `uniformPerm_unlabelled_le`, `labelled`, `not_ae_eventually_of_not_mem_labelled`, `not_ae_eventually_anchored_occurring` |
 | The target is false on the splits that label every residue too: a renaming of the tokens that carries a split to a split and moves a held-out answer (section 2) | `sourceGrad_comp_paramPerm_rename`, `Carries`, `trajectory_carried`, `measurePreserving_carrySample`, `Twisted`, `uniformPerm_le_of_twisted`, `not_ae_eventually_of_twisted`, `twin`, `twisted_twin`, `exists_twin_labelled`, `not_ae_eventually_labelled` |
 | The runs that eventually answer every held-out equation form an event, and its probability is at most 1 less half the probability that the split is not labelled (section 2) | `eventuallyRight`, `measurableSet_eventuallyRight`, `division_generalizes_iff_law_eq_one`, `uniformPerm_le_not_eventuallyRight`, `law_eventuallyRight_le`, `law_eventuallyRight_le_of_twisted`, `not_le_law_eventuallyRight` |
+| A split labels every residue with a probability of at least 1 − 97/2⁹⁶ (section 2) | `keptOut`, `two_mul_card_keptOut_insert_le`, `card_keptOut_mul_le`, `uniformPerm_keptOut_le`, `uniformPerm_unlabelled_le_inv`, `uniformPerm_compl_labelled_le`, `le_uniformPerm_labelled`, `le_uniformPerm_anchored` |
 
 For division the arguments are fixed in `division_generalizes_iff`: the decoder of
 `paperSizes`, the logits after `=`, the source's loss on the answer and the closing token, the
@@ -120,11 +122,18 @@ same way from both starts and its logits of the two tokens are exchanged
 | Given that the split is not labelled, at every update P(some held-out answer is wrong) ≥ ½, for one such split and for every set of them; so under a condition that admits one the target fails in probability too | `uniformPerm_singleton_le`, `uniformPerm_le_of_subset_compl_labelled`, `not_tendsto_law_inter_wrongAt` |
 | Over the runs whose split is in a set `S`, at every update the held-out accuracy integrates to at most P(`S`) − P(`S` and not labelled)/18624. So the mean held-out accuracy is at most 1 − P(not labelled)/18624 at every update and does not tend to 1, and under a condition that admits a split that is not labelled the mean given the condition does not tend to 1: the target fails in mean too | `setIntegral_divisionAccuracy_le`, `integral_divisionAccuracy_le`, `not_division_tendsToOneInMean`, `not_tendsto_setIntegral_divisionAccuracy` |
 | To be labelled is neither sure nor impossible | `uniformPerm_compl_labelled_pos`, `uniformPerm_labelled_pos` |
+| A split leaves a given residue unlabelled with a probability of at most 2⁻⁹⁶ and is not labelled with one of at most 97/2⁹⁶; so it is labelled, hence anchored, with a probability of at least 1 − 97/2⁹⁶ | `uniformPerm_unlabelled_le_inv`, `uniformPerm_compl_labelled_le`, `le_uniformPerm_labelled`, `le_uniformPerm_anchored` |
 | A labelled split is anchored (bridge 5); an uncovered split is not labelled | `labelled_subset_anchored`, `uncovered_subset_unlabelled` |
 | The split that trains on the first 4656 equations of the list is anchored and shows every residue in training, and it leaves the residue 96 unlabelled; so the target is false under the condition "anchored, and every residue occurs in training" | `one_mem_anchored`, `one_mem_occurring`, `one_mem_unlabelled`, `not_ae_eventually_anchored_occurring` |
 
 A given residue is unlabelled with the probability `∏_{j<96} (4656 − j)/(9312 − j)`, about
-`7.7 · 10⁻³⁰` by a count outside Lean, against roughly `2⁻⁵⁹⁴` for an uncovered split. Whether
+`7.7 · 10⁻³⁰` by a count outside Lean, against roughly `2⁻⁵⁹⁴` for an uncovered split. What is
+proved is a bound (`Protocol/{SplitCount,LabelBound}.lean`): a training set of at least half
+the equations keeps `q` given equations out with a probability of at most `2 ^ (−q)`, one
+equation at a time by an injection (`two_mul_card_keptOut_insert_le`,
+`uniformPerm_keptOut_le`); so a given residue is unlabelled with a probability of at most
+`2⁻⁹⁶`, about `1.3 · 10⁻²⁹`, and a split is not labelled with one of at most `97 / 2⁹⁶`, about
+`1.2 · 10⁻²⁷`. Whether
 "every residue occurs in training" suffices has the answer no: a residue has to occur as an
 answer. The target is false on the labelled splits as well (next part); every positive
 statement is open.
@@ -184,10 +193,11 @@ image has a wrong held-out answer, one of the two is in `W` (`not_eventuallyRigh
 
 A split is not labelled with a probability of about `7.5 · 10⁻²⁸`, by a count outside Lean: 97
 residues, each unlabelled with the probability above, and two at once with one of about
-`2 · 10⁻⁵⁹`. So a true statement about this protocol with no condition on the split has a
-tolerance, and the tolerance is at least half that probability, about `3.7 · 10⁻²⁸` by the
-same count. No lower bound of the probability of the event is proved: it is not shown to be
-positive.
+`2 · 10⁻⁵⁹`; the bound `97 / 2⁹⁶` is proved (`uniformPerm_compl_labelled_le`). So a true
+statement about this protocol with no condition on the split has a tolerance, and the
+tolerance is at least half the probability that a split is not labelled, about
+`3.7 · 10⁻²⁸` by the same count. No lower bound of the probability of the event is proved: it
+is not shown to be positive.
 
 ## 3. What the repository proves, and about what
 
@@ -273,9 +283,10 @@ Two substitutions are therefore excluded, and no statement here makes them:
    on an equation of each orbit (`mem_anchored_iff`), which a uniformly random split does with
    positive probability and fails to do with positive probability (the failure, all 96
    equations with numerator zero held out, has probability `∏_{j<96} (4656 − j)/(9312 − j)`,
-   about `7.7 · 10⁻³⁰`, by a count outside Lean); and fitting every training answer does not
-   suffice (`exists_fit_training_wrong_heldout`). What this leaves: no trained parameters are
-   proved to meet the condition. Measured in `experiments/grok_division` on the scores of the
+   about `7.7 · 10⁻³⁰`, by a count outside Lean; that a split is anchored with a probability
+   of at least `1 − 97 / 2⁹⁶` is proved, `le_uniformPerm_anchored`); and fitting every
+   training answer does not suffice (`exists_fit_training_wrong_heldout`). What this leaves:
+   no trained parameters are proved to meet the condition. Measured in `experiments/grok_division` on the scores of the
    model in doubles, compared in exact arithmetic: with one anchor for the orbit of nonzero
    numerators no checkpoint of 117 meets it; with an anchor for each held-out equation five of
    the nine checkpoints that answer every equation do, with 0.31 to spare at the least, and
@@ -344,8 +355,9 @@ of the present state finds this:
   under every condition on the split that admits a split with a residue that is the answer of
   no training equation, and on the splits that label every residue (section 2); that the
   runs that eventually answer every held-out equation form an event whose probability is at
-  most 1 less half the probability that the split is not labelled (section 2); that the
-  gradient of the backward pass is a derivative,
+  most 1 less half the probability that the split is not labelled (section 2); that a split
+  is labelled with a probability of at least 1 − 97/2⁹⁶ (section 2); that the gradient of
+  the backward pass is a derivative,
   and the gradient of the loss where no hidden input is 0 (bridge 3); and the exclusions of
   section 5. None of these says that a trained decoder generalizes.
 - **Finite-horizon, native.** Nine runs in `f32` (three settings, seeds 0 to 2) and their 117

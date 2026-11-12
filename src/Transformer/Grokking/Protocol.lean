@@ -67,6 +67,8 @@ public import Transformer.Grokking.Protocol.TwinSplit
 public import Transformer.Grokking.Protocol.TwinWitness
 public import Transformer.Grokking.Protocol.LabelNotSufficient
 public import Transformer.Grokking.Protocol.EventualSuccess
+public import Transformer.Grokking.Protocol.SplitCount
+public import Transformer.Grokking.Protocol.LabelBound
 
 /-! The protocol behind the division curves of Power et al., *Grokking: generalization beyond
 overfitting on small algorithmic datasets*, and what "held-out accuracy tends to 1" means for
@@ -124,10 +126,12 @@ turns the held-out `2 / 3` into `95 / 3`, so the target is false on the splits t
 every residue, in all three modes; and the event of the target, the runs that from some
 update on answer every held-out equation: it is measurable, the target says that it has
 probability `1`, and it has at most `1` less half the probability that the split is not
-labelled, so the target with a smaller tolerance is false too. The target is a predicate of
-the model, its labels and its gradient oracle: no convergence of any transformer is proved
-here, and no trained decoder is proved to have that structure, for an enclosure of its logits
-is a hypothesis here. The map of what is proved elsewhere and what is missing is
-`review/grok_division_convergence.md`. -/
+labelled, so the target with a smaller tolerance is false too; and how sure that condition
+is: a training set of half the equations keeps `q` given equations out with a probability of
+at most `2 ^ (-q)`, so a split labels every residue with a probability of at least
+`1 - 97 / 2 ^ 96`. The target is a predicate of the model, its labels and its gradient
+oracle: no convergence of any transformer is proved here, and no trained decoder is proved to
+have that structure, for an enclosure of its logits is a hypothesis here. The map of what is
+proved elsewhere and what is missing is `review/grok_division_convergence.md`. -/
 
 @[expose] public section

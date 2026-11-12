@@ -385,3 +385,17 @@ import Transformer
 #print axioms Transformer.Grokking.Protocol.law_eventuallyRight_le_unlabelled
 #print axioms Transformer.Grokking.Protocol.law_eventuallyRight_le_of_twisted
 #print axioms Transformer.Grokking.Protocol.not_le_law_eventuallyRight
+#print axioms Transformer.Grokking.Protocol.flipItem_symm_self
+#print axioms Transformer.Grokking.Protocol.flipItem_symm_of_ne
+#print axioms Transformer.Grokking.Protocol.mem_keptOut
+#print axioms Transformer.Grokking.Protocol.two_mul_card_keptOut_insert_le
+#print axioms Transformer.Grokking.Protocol.card_keptOut_mul_le
+#print axioms Transformer.Grokking.Protocol.uniformPerm_coe
+#print axioms Transformer.Grokking.Protocol.uniformPerm_add_compl
+#print axioms Transformer.Grokking.Protocol.uniformPerm_keptOut_le
+#print axioms Transformer.Grokking.Protocol.le_card_withAnswer
+#print axioms Transformer.Grokking.Protocol.unlabelled_eq
+#print axioms Transformer.Grokking.Protocol.uniformPerm_unlabelled_le_inv
+#print axioms Transformer.Grokking.Protocol.uniformPerm_compl_labelled_le
+#print axioms Transformer.Grokking.Protocol.le_uniformPerm_labelled
+#print axioms Transformer.Grokking.Protocol.le_uniformPerm_anchored
