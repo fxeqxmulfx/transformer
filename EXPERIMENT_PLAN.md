@@ -72,8 +72,12 @@ depth one in all three modes, with training and replay below 100 MiB peak RSS.
 The 2 GiB guard also rejected depth-4 MQAR before cache/head allocation.
 All modes count their common
 training-label initializer; full/mini also perform projected CE refinement.
-Complete the independent/additive baselines and freeze the full comparison
-before evaluating the original held-out splits.
+Independent routing, additive controls and their checked budget embeddings are
+implemented. `convex_stress_depth/protocol.json` freezes 288 original-data cells
+over four depths, three architectures, two transports and three training modes.
+Run and replay the entire inventory before its 72 training-only depth choices;
+retain rejected allocations and failed performance. No cohort result is claimed
+at the freeze stage, and a fresh matched transformer baseline remains separate.
 
 The user requested a theory extension to depth, residuals and the newer mHC
 in the local DiffGPT repository, and authorized a new connection. The

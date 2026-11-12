@@ -9,9 +9,10 @@ would introduce a product and are not covered by that joint-convexity claim.
 
 This directory contains the path bank, a learned output tensor, an allocation
 preflight and training-only optimizer checks. No held-out stress accuracy is
-claimed. Independent-routing and additive components are implemented; the
-complete comparison runner and protocol must be frozen before scoring held-out
-splits. The earlier training-only results below remain tied to their producer.
+claimed from the implementation checks. Independent-routing and additive
+baselines and the comparison runner are implemented. `protocol.json` freezes
+the full comparison before its first held-out score. The earlier training-only
+results below remain tied to their producer.
 The interrupted earlier 35-task cohort remains unchanged.
 
 | Component | Fixed construction | Information used |
@@ -68,7 +69,7 @@ cargo build --offline --release --manifest-path experiments/convex_stress_depth/
 bash experiments/convex_stress_hull/limited.sh 8 experiments/convex_stress_depth/target/release/convex-stress-depth prepare
 ```
 
-Twenty native checks cover the complex path invariants, early allocation
+Twenty-three native checks cover the complex path invariants, early allocation
 rejection, independence from labels/task names, CE finite differences, exact
 L1 projection, example minibatches with repetitions and tails, empirical
 forward frequencies, an exhaustive linear-oracle comparison, and checkpoint
@@ -77,6 +78,39 @@ additive independence from intermediate states, the independent factor gradients
 budget-preserving embedding, vertex initialization and factor serialization.
 These are implementation checks, not benchmark
 outcomes or a learning convergence proof.
+
+The full depth cohort contains 288 cells: four original tasks, depths 0/1/2/4,
+joint/independent/additive architectures, residual/Fourier transports and
+full-batch/minibatch/forward-only modes. Both the original selected split and
+every original nontraining split are scored, using their unchanged sequence
+metrics and 99% pass threshold. The dense initializer's temporary coexistence
+with an independent decoder is included in its allocation estimate. Oversized
+cells produce explicit ineligible records and are independently rechecked.
+
+For each task/mode/architecture/transport, choose the first depth in ascending
+order whose training CE is at most `1e-8`, otherwise choose the smallest training
+CE with shallower ties. Held-out metrics never enter that decision. This is a
+numerical small-loss criterion against the nonnegative CE lower bound, not an
+assertion of exact minimization. Forward-only creates no loss gradients, even
+in replay. Full/mini tensor checkpoints additionally receive an independent
+full-data derivative and exhaustive L1-oracle check from saved coefficients;
+the factor baseline makes no global gap claim. All original metrics are replayed
+and each replay seals the exact result file hash before the cohort summary.
+
+The serial cohort launcher requires a fresh destination. It never overwrites
+or silently restarts an interrupted cell. Source, protocol, data and model
+fingerprints accompany every result. Training, score construction, checkpoint
+writing and separate replay resource logs are retained. The final summary
+requires every one of the 288 records and replays; it makes 72 training-only
+depth choices. Historical transformer seed-one measurements remain labelled
+as historical and do not replace a fresh matched baseline.
+
+```sh
+export DEPTH_PRODUCER_COMMIT=$(git rev-parse HEAD)
+bash experiments/convex_stress_depth/run_cohort.sh FRESH_COHORT_DIRECTORY
+```
+
+No depth-cohort results are claimed at this protocol-freeze stage.
 
 The independent baseline uses one Bernoulli probability for each block layer
 and a shared learned decoder over input-view/terminal-feature coordinates.
