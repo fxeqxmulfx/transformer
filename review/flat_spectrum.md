@@ -14884,3 +14884,38 @@ separate groups already covered by training from wholly unobserved groups
 requiring further completion. Correctness of the copied label on held-out
 ground truth is a separate check of the proposed map; the theorem does not
 infer it from observed agreement alone.
+
+### CM11. Certify a sharper feasible endpoint without changing decoded answers
+
+Accurate argmax answers can coexist with a small observed CE gap at a numerical
+iteration cap. In a larger prediction hull, a memorizing candidate attaining
+ideal training CE would then win a training-loss-only comparison. One generic
+endpoint check is to take the model's own decoded labels, make their active
+grouped coordinates one-hot, and keep inactive padding uniform. This reads no
+held-out labels. Decoding itself is not a convex map, and its resulting table
+need not satisfy the spectral bounds.
+
+Let H be this decoded table and choose a common `0 < alpha <= 1`. With centered
+class codes, CM4 and CM5 give `M_f(blend(alpha,H)) = alpha M_f(H)`. Checking
+`alpha ||M_f(H)||op <= R_f` and `alpha ||M_f(H)||_* <= B_f` for every f therefore
+certifies the same convex feasible domain. Every active decoded class remains
+strictly above the alternatives. The operator and nuclear norms must be checked
+after decoding; the old soft table's norms do not suffice.
+
+If the decoded labels agree with every original observed label, H attains ideal
+observed CE. Convexity of the actual ordinary CE then gives, against any
+probability-valued competitor Q,
+
+```
+L(blend(alpha,H)) - L(Q) <= (1-alpha) (L(uniform) - L_ideal).
+```
+
+The observation index still includes all original repetitions. `Schatten/Sharpen.lean`
+proves probability feasibility, strict decoded comparisons and this certificate,
+with a nonzero complex-code example. It does not prove a floating-point norm
+computation, that sharpening improves CE, or any missing-label correctness.
+The native follow-up must keep the original endpoint when its training CE is
+already ideal or the checked candidate does not improve it, record the new
+norms and mixture, and verify that all decoded predictions are unchanged.
+This checks another point in the same convex family; it does not change the
+family, the ordinary loss, or the frozen earlier training runs.
