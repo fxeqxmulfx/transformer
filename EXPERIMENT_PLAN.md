@@ -1,5 +1,20 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Prediction-preserving spectral sharpening (2026-11-12)
+
+Lean CM11 landed at `b3c2e8ae` before the native follow-up. The
+`convex_stress_sharpen` pilot reads all 36 frozen sharing endpoints, decodes their
+own active predictions, restores the original spectral bounds with a common
+uniform mixture and checks both norms again. Select a proposal only from
+original training CE and preserve already-ideal coordinates exactly. Every
+active argmax and every split correctness count must remain unchanged.
+Keep all 36 proposals and 18 budget choices; independently audit raw tables,
+the CE bound and parent comparisons. No training restarts or new gradients.
+Results are pending. This addresses the square-times CE gap before hull
+selection; it cannot repair wrong unseen answers. The user additionally
+requested depth: a separate follow-up must compare complete nonlinear paths
+and independent routing under CD5-CD7 after this endpoint check.
+
 ## Missing-answer ambiguity and fixed sharing (2026-11-12)
 
 Lean CM10 at `78a6743d` proves a spectrally feasible, globally CE-optimal

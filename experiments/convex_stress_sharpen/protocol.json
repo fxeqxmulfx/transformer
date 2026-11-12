@@ -1,0 +1,15 @@
+{
+  "version": "decoded-spectral-endpoints-v1",
+  "tasks": ["power-division-p97-k2", "power-division-p97-k3", "arithmetic-square-times", "arithmetic-add", "arithmetic-div", "arithmetic-mul"],
+  "arms": ["full_batch", "minibatch", "forward_only"],
+  "budgets": ["rank_one", "full_rank"],
+  "parent_source_fingerprint": "3475ea397f514d1ab0932ebdbf2d671848ce556ec97a5014e5ba1e221007dd7b",
+  "minimum_overlap": 4,
+  "frequency_workers": 8,
+  "ideal_ce_tolerance": 1e-8,
+  "improvement_tolerance": 1e-12,
+  "transformation": "Read the frozen grouped endpoint, retain its maps and both spectral budgets. On every active grouped cell take the existing lowest-index argmax and replace its probabilities by a one-hot row; keep inactive padding uniform. Recompute every nonconstant Fourier moment and use the existing common uniform-mixture feasibility repair. Check both norms again and verify every active decoded prediction is unchanged. This is a candidate point in the same convex family, not a convexity claim for the rounding operation.",
+  "selection": "Use all original training observations, preserving grouped multiplicities. Keep an original already within 1e-8 of ideal CE. Otherwise accept the feasible proposal only if every original training argmax is correct and its mean ordinary CE improves by more than 1e-12; retain both original and proposal. No held-out label enters this decision. Across the two budgets, retain the existing first-ideal-else-minimum-training-CE rule. Save all 36 proposals, 36 chosen endpoints and 18 budget choices; retain failure and non-improvement cases.",
+  "evaluation": "No training restart or additional gradient evaluation. Preserve all parent costs separately and record postprocessing time and training CE evaluations. Recompute all original split metrics only after endpoint choice. Require every raw active argmax and all split correctness counts to remain unchanged relative to the parent. Reproduce proposals and selection from parent hashes; independently audit selected and proposed raw probability tables, CE and direct Fourier norms. Already-ideal parent coordinates must be copied exactly.",
+  "scope": "Lean CM11 proves feasibility from post-decoding scaled norm checks, strict decoded margins and an ordinary-CE excess bound from the common mixture. The native norms are floating-point checks, not interval proofs. This adaptive follow-up addresses a training-loss selection issue found after the six-task sharing pilot: accurate capped endpoints can lose to a memorizing candidate with ideal training CE. Sharpening cannot correct a wrong decoded missing answer, and does not establish full35 recovery or a matched transformer comparison. Earlier cohorts remain unchanged; outputs stay ignored; no Python or subagents."
+}
