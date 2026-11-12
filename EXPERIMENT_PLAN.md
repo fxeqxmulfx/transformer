@@ -24,6 +24,12 @@ compare all 18 old endpoint-budget controls exactly. This is an adaptive
 follow-up to the independently frozen all-35 run; do not alter that cohort,
 its candidate ordering, budgets or limits. Admission alone is not recovery.
 
+Completed: all 72 candidates and 18 choices replay and all 72 independent
+audits pass; all 18 old endpoint controls match exactly. Neither new budget
+passes any of its 18 tests. Exact training CE still accompanies failures on
+missing answers. Keep these negative results and proceed with the separately
+frozen sharing follow-up; do not select a budget using held-out accuracy.
+
 ## Flat-spectrum connections with convex depth (2026-11-12)
 
 The user requested a theory extension to depth, residuals and the newer mHC
