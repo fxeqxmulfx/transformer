@@ -64,6 +64,46 @@ open Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten
 
 end Paired
 
+section DecodedRecovery
+open Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedRecovery
+
+#print axioms pairedDecoder_fold
+#print axioms step_unique
+#print axioms anchor_rigid
+#print axioms pinned_rigid
+#print axioms accepted_decoding
+#print axioms fits_agree
+#print axioms Anchor.accepts
+#print axioms Reached.pinned
+#print axioms covers_of_labels
+#print axioms decoding_of_labels
+#print axioms recover_sound
+#print axioms recover_accept
+#print axioms recover_of_labels
+#print axioms recover_uncertified
+#print axioms recover_unsupported
+#print axioms recover_inconsistent
+#print axioms phaseHull_subset_decoded
+#print axioms phaseHull_subset_paired
+#print axioms hull_defect_le
+#print axioms hull_fit_decoding
+#print axioms hull_minimizer_decoding
+#print axioms certified_minimum
+#print axioms certifiedFeasible_convex
+#print axioms certified_restriction
+#print axioms budget_iff_nuclear
+#print axioms wrong_nuclear
+#print axioms budget_wrong_minimum
+#print axioms wrong_not_in_hull
+#print axioms held_recovery
+#print axioms held_cross_entropy
+#print axioms threeCells_no_certificate
+#print axioms paired_ambiguity_refused
+#print axioms corner_unsupported
+#print axioms conflict_inconsistent
+
+end DecodedRecovery
+
 run_cmd do
   let env ← getEnv
   let standard := [``propext, ``Classical.choice, ``Quot.sound]

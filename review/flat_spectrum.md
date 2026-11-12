@@ -15488,3 +15488,274 @@ and proves the statements about its answers. `CrossEntropy.lean` proves the
 bridge, and `Witness.lean` the examples above. `Invariance.lean` proves that
 the system depends only on the set of observations. `NativeChecks.lean`
 proves the first and the third item of *The native checks*.
+
+### CM18. Unseen decoded answers behind a decoder that merges opposite states
+
+*Source-note extension for board task #197, 2026-11-12. The number CM16 and
+the `Paired*.lean` modules belong to task #195.*
+
+CM15 and CM16 each end with two CE minima that disagree at an unseen cell, and
+CM16 says: "Recovery needs the identification conditions of a separate
+argument; capacity and an observed fit do not give it." This item gives such
+conditions for one class of fixed many-to-one decoders, as a certificate that
+is checked on training samples alone, and says what they give and do not give
+for the convex CE program. CM17 does not apply: its coding is a bijection.
+
+**Setting.** A square table `y : n × n -> C`. The structural hypothesis, the
+only assumption about unobserved cells, is
+
+```
+y(i,j) = d(r(i) + s(j))
+```
+
+for a fixed known decoder `d : Z/q -> C` and unknown phases
+`r, s : n -> Z/q`. The decoder class is
+
+```
+q odd,        d(z) = d(w)  exactly when  w = z or w = -z.
+```
+
+The folding decoder of CM16 is in it for every `k`, and so is the two-class
+decoder of `Z/3` of the CM16 limit. Input side, latent states and classes are
+three separate numbers, and every fiber but the one of zero has two states.
+The learner is given `d` and training samples `(i_t, j_t, y_t)` with
+`y_t = y(i_t, j_t)`, and none of `r`, `s`. A sample says only that
+`r(i_t) + s(j_t)` is one of two opposite states: one unknown sign per cell.
+
+Two changes of the phases leave every decoded label unchanged: the shift
+`(r + g, s - g)` and the reflection `(-r, -s)`. Latent states are therefore
+never identified, and are not the target. The target is the decoded label of
+an unobserved cell.
+
+**Signs.** Three facts about `Z/q`, `q` odd, carry the argument.
+
+1. Two rows with phase difference `δ` share two columns, where the first row
+   has the latent states `u1` and `u2`. In another completion with difference
+   `δ'`, the first column leaves `δ' ∈ {δ, -δ, 2 u1 + δ, -(2 u1 + δ)}` and the
+   second the same with `u2`. If `u1 != u2` and `u1 + u2 + δ != 0`, the false
+   candidates of the two columns are disjoint, and `δ' = δ` or `δ' = -δ`.
+2. If `δ != 0`, that sign is the sign of every column shared by the two rows:
+   `δ' = ε δ` forces the state `ε u` in the first row.
+3. A further row is fixed by two of its cells in columns of different phases
+   `a != b`: a state `x'` with `x' + a = ±(x + a)` and `x' + b = ±(x + b)` is
+   `x`, because the reflected candidates `-x - 2a` and `-x - 2b` differ.
+
+All three use `2x = 0 => x = 0`. On four states the third fails:
+`x = 1, a = 0, b = 2, x' = 3`.
+
+**The certificate.** Proposed phases `ρ, σ : n -> Z/q`, and a rectangle: two
+rows `top`, `bot` and two columns `left`, `right`. From the rectangle the
+certificate *reaches* rows and columns:
+
+- the rows `top` and `bot`;
+- every column with training cells in both;
+- a row with two training cells in reached columns `j, j'` with
+  `σ(j) != σ(j')`;
+- a column with two training cells in reached rows `i, i'` with
+  `ρ(i) != ρ(i')`.
+
+It is *accepted* when
+
+```
+d(ρ(i_t) + σ(j_t)) = y_t    at every sample of a reached row and reached column,
+the four cells of the rectangle are training cells,
+ρ(top) != ρ(bot),   σ(left) != σ(right),
+ρ(top) + ρ(bot) + σ(left) + σ(right) != 0.
+```
+
+Nothing is asked of `ρ, σ` at other samples. Every condition is a finite
+statement about the certificate, the decoder and the training samples; a
+derivation of "reached" is a finite list of the steps above.
+
+**Soundness.** Let the certificate be accepted, and let `r, s` be any phases
+that fit all training samples. Then there are a sign `ε` and a shift `g` with
+
+```
+r(i) = ε ρ(i) + g  on reached rows,      s(j) = ε σ(j) - g  on reached columns,
+```
+
+so that
+
+```
+d(r(i) + s(j)) = d(ρ(i) + σ(j))    for every reached row i and reached column j,
+```
+
+whether the cell is observed or not. With `r, s` the phases of the target this
+is its label. The proof is the three facts: the rectangle gives the difference
+of its rows up to a sign (1), that sign fixes the columns observed in both
+rows (2), and every further step is (3). Nothing is assumed about unobserved
+labels, about the sign or latent state of any cell, about injectivity, or
+about an optimizer. The statement is per cell: it says nothing about a row or
+a column that the certificate does not reach.
+
+**Acceptance from labels.** The conditions on `ρ, σ` follow from conditions on
+training labels, for any phases that fit the samples:
+
+- the columns `left`, `right` carry the label pairs `(a, b)` and `(c, e)` in
+  the rows `top`, `bot`, with `(a, b) != (c, e)` and `(a, b) != (e, c)`; the
+  first gives different column phases, the second the sum condition, because
+  a vanishing sum exchanges the two pairs;
+- some column has different training labels in `top` and `bot`, which gives
+  different row phases.
+
+In the same way, two columns have different phases as soon as some row has
+different training labels in them, and two rows likewise. Replacing
+"different phases" by these witnesses gives a reach relation on training
+cells and labels alone. For a realizable table, the phases of the table with
+such a rectangle form an accepted certificate, and every cell that the labels
+reach is covered. So any two completions of the training samples have the
+same label there. These conditions are sufficient; they are not claimed
+necessary.
+
+**Why the examples of CM15 and CM16 are excluded.** Their samples are three
+cells of a two by two table: a connected graph with a perfect matching, and
+no rectangle of training cells. No certificate is accepted on them, for any
+decoder and any labels. Identification here is carried by a four-cycle with
+label conditions, not by connectivity. The corner decoder `z != 2` of CM15 is
+not even, so it is outside the class.
+
+**The procedure.** `recover(d, cells, labels, i, j)` answers `unsupported`
+(the decoder is outside the class), `inconsistent` (no phases fit the
+samples), `uncertified` (no accepted certificate reaches the row `i` and the
+column `j`), or `accept` with the label proposed by such a certificate.
+
+- An accepted label is the label of every completion of the samples at
+  `(i, j)`; for a realizable table it is the table's.
+- For a realizable table the label conditions above give `accept`.
+- Where two completions of the samples disagree, the answer is `uncertified`.
+
+`recover` is a specification by search over phases and certificates. It is
+not executable and no running time is proved. A certificate can be found by
+propagation (this paragraph is not formalized): choose the rectangle, set the
+phase of `top` to zero by a shift, read the two candidate states of each
+column of `top` from its label, intersect the four candidates of the row
+difference from two columns, choose its sign by a reflection, and continue
+with one fiber look-up per training cell. Because acceptance asks for the
+labels only on reached rows and columns, this needs no search over the
+unreached part. The answer `inconsistent` does: deciding whether any phases
+fit all samples is given here only by exhaustive search.
+
+**In the convex programs.** The declared program is ordinary CE over the
+whole vocabulary of `decode d P`, with `P` in the spectral domain of CM15 at
+the budgets `N`; CM16 adds the equalities of an even latent table. For unit
+codes and probability rows the operator bounds hold by themselves (entries of
+modulus at most one), and the constant moment has nuclear norm `N` (CM13): at
+the budgets `N` the domain is the probability tables whose nonconstant
+moments have nuclear norm at most `N`.
+
+1. *A minimizer with the target's answers.* For any phases that fit the
+   training samples, the decoded table lies in the paired domain, minimizes
+   the training CE over the whole CM15 domain, and has the one-hot row of the
+   target's label at every covered cell.
+2. *The relaxation has a wrong minimum.* `q = 3`, `d(z) = (z != 0)`, `N = 3`,
+   `y(i,j) = (i != j)` with `r(i) = i`, `s(j) = -j`, and every cell observed
+   but `(0,0)`. The certificate with the rows `1, 2` and the columns `0, 1`
+   is accepted; it reaches the row `0` through the columns `1, 2` and the
+   column `0`, and proposes `false` at `(0,0)`. Take the even latent table of
+   the target and replace its row at `(0,0)` by the uniform one. Both
+   nonconstant moments become the real matrix
+
+   ```
+     0   -1/2  -1/2
+   -1/2    1   -1/2      =  3/4 v1 v1^T + 1/3 v2 v2^T - 1/12 v3 v3^T,
+   -1/2  -1/2    1
+   ```
+
+   with `v1 = (0,1,-1)`, `v2 = (1,-1,-1)`, `v3 = (2,1,1)`, of nuclear norm at
+   most `3/2 + 1 + 1/2 = 3`. The table is in both domains and fits the eight
+   samples, so its decoded table is a global CE minimum, with probability
+   `2/3` for the wrong label at a certified cell. Minimizing CE over the
+   spectral relaxation does not identify even a certified answer.
+3. *The hull of decoded phase tables.* Let `H` be the convex hull of the
+   tables `d(r(i) + s(j))` over all phases. It depends on `d` and `N` only
+   and lies in both relaxations. For an accepted certificate, a covered cell
+   `(i, j)` with proposed label `c`, and every `Q` in `H`,
+
+   ```
+   1 - Q(i,j)(c)  <=  sum over samples t of  (1 - Q(i_t,j_t)(y_t)).
+   ```
+
+   Both sides are affine in `Q`. At a vertex that fits the samples the left
+   side is zero by soundness; at a vertex that does not, the right side is at
+   least one. Hence every table of `H` with the ideal training CE, and for a
+   realizable table every minimizer of CE over `H`, has the one-hot row of
+   the target at every covered cell. Latent probabilities are not identified
+   and do not occur in the statement. The wrong table of point 2 is outside
+   `H`. No way to project onto `H` or to optimize over it is given.
+4. *The certified restriction.* Add to the spectral program the linear
+   equalities that fix every covered row to the one-hot row of its proposed
+   label. The labels come from the certificate, hence from training samples
+   alone. The restricted domain is convex and contains the table of point 1;
+   every minimizer over it minimizes CE over the unrestricted domain as well,
+   and has the target's rows at the covered cells. The equalities are
+   imposed: at the covered cells the answer is the certificate's, by
+   construction. What is proved is that it is the target's, and that the
+   restriction costs nothing in training CE.
+
+These are statements about exact minimizers over the reals. The changed
+families are `H` (point 3) and the restricted domain (point 4); for the
+unchanged relaxation only point 1 and the obstruction of point 2 hold.
+
+**Witness.** The folded table of CM16, `N = 3`, `q = 5`, three classes, with
+the cell `(2,1)` withheld:
+
+```
+0 1 2
+1 0 1
+2 . 0
+```
+
+The rows `0, 1` and the columns `0, 2` carry the pairs `(0,1)` and `(2,1)`,
+neither equal nor exchanged, and the column `0` separates the two rows. The
+column `1` is observed in both rows. The row `2` has training cells in the
+columns `0` and `2`, where the row `0` has the different labels `0` and `2`.
+So the labels reach `(2,1)`, and every completion of the eight samples has
+the label `1` there; the reflected and shifted phases `(1 - i, j - 1)` are
+one, with the latent state `4` in place of `1`. The training cells `(1,0)`
+and `(0,1)` have the latent states `1` and `4` and the same label, so the
+decoder's collisions are in use. `recover` answers `accept 1`. The folded
+table is a feasible CE minimizer, and every minimizer over `H` and over the
+restricted domain has the one-hot row of `1` at `(2,1)`.
+
+**Refusals.** On the samples of the CM16 limit `recover` answers
+`uncertified` at `(1,1)`, where its two completions disagree, and no accepted
+certificate covers that cell. With the corner decoder of CM15 it answers
+`unsupported`. One cell with two labels is `inconsistent`.
+
+**For task #195.** The interface is: a certificate `(ρ, σ, top, bot, left,
+right)`, its checker (`Accepts`, with the reach relation `Pinned`), and the
+soundness statement for every completion (`accepted_decoding`). In the convex
+program it enters as the restriction of point 4 (`certified_restriction`); a
+solver that fixes the covered rows stays inside the program of CM15 and CM16.
+The characterization of the domain at the budgets `N` by the nonconstant
+nuclear norms alone (`budget_iff_nuclear`) is the condition that the native
+audit of `experiments/convex_stress_paired` checks numerically.
+
+**What remains open.**
+
+- The structural hypothesis is about the unknown truth and cannot be tested
+  on the training set. For a table outside the family an accepted label need
+  not be the table's.
+- The decoder class: a fixed known decoder of an odd cyclic group whose
+  fibers are exactly the opposite pairs. Larger fibers, an even `q`, other
+  groups, an unknown decoder and the decoder hull of CM15 are not treated.
+- Coverage: the label conditions are sufficient ones. There is no statement
+  about random splits, and which tasks of the stress suite belong to the
+  family or meet the conditions is not examined.
+- The procedure is a specification. The propagation and its cost, and any
+  efficient test of consistency, are not formalized.
+- The minimizers of the spectral relaxation itself are not identified (point
+  2). Which minimizer an iterative solver approaches, and whether a wrong
+  minimum occurs at the original sizes, is not examined. Optimization over
+  `H` is not addressed.
+- Exact reals throughout: no tolerance, no stability bound, no convergence of
+  the full-batch, minibatch or forward-only iterations.
+
+`CoupledMoments/DecodedRecovery/Signs.lean` proves the three facts.
+`Certificate.lean` defines the certificate and proves the rigidity of the
+rectangle; `Rigidity.lean` proves soundness. `Coverage.lean` proves
+acceptance from labels, and `Learner.lean` the statements about `recover`.
+`PhaseHull.lean` proves point 3, `CrossEntropy.lean` points 1 and 4.
+`Domain.lean` proves the description of the domain at the budgets `N`.
+`ZeroMass.lean` and `Obstruction.lean` prove point 2, and `Witness.lean` the
+witness and the refusals.
