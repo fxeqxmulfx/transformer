@@ -46,6 +46,14 @@ training/observation/replay protocol before using this backend for comparison;
 record the inherited AdamW warmup difference from the historical stress setup.
 Keep the running convex cohorts and their serial queue unchanged.
 
+The comparator now also has immutable streamed f32 checkpoints, with bounded
+metadata/payload reads and a case/source/data binding. Nine native checks pass:
+the three added checks cover bit-exact continuation of full/mini fixtures at
+one/two/six layers and rejection of damaged or invalid state. This avoids
+whole-file tensor copies while preserving Adam moments and sampling RNG.
+No original-data training is started by these checks; freeze the remaining
+training, observation, stopping and explicit-resume protocol before a cohort.
+
 ## Prediction-preserving spectral sharpening (2026-11-12)
 
 Lean CM11 landed at `b3c2e8ae` before the native follow-up. The

@@ -56,13 +56,39 @@ checks. The original generators and metrics are imported from
 `convex_stress_minibatch`; their frozen data hashes are checked during rebuild.
 No held-out labels choose the architecture, masks or resource limits.
 
+## Streamed checkpoint state
+
+`checkpoint::save_new` preserves f32 parameter bits, both Adam moments, the
+complete MT sampling RNG, dimensions, optimizer constants and progress counts.
+Its caller supplies a SHA-256 binding for the frozen case, source and data
+specification. The binary format streams tensors directly with a small bounded
+header and checksum, avoiding a complete checkpoint byte buffer or copies of
+all three tensors. It does not use the earlier f64 checkpoint representation.
+
+The destination is immutable: a synced partial file is published by a hard link
+that cannot replace an existing checkpoint. Interrupted partial files remain
+for explicit inspection. Loading checks the metadata and exact payload size
+before allocating model vectors, rejects nonfinite parameters or invalid
+moments, and verifies the checksum. The caller should drop its previous model
+before loading a replacement and compare the returned digest with its run
+record. This library does not automatically resume an interrupted experiment.
+
+Full-batch and sampled-minibatch fixture trajectories continue bit for bit
+after saving/restoring at update five, for one, two and six layers. Restored
+logits also agree with the independent f64 reference. Corrupted tensor bytes,
+truncation, oversized metadata/payloads, mismatched provenance bindings and
+invalid optimizer/progress state are rejected. Existing checkpoint files are
+preserved. This supplies state recovery for the future runner; original-data
+training and its observation/stopping protocol remain pending.
+
 ## Evidence
 
-Six native tests pass: one/two/six-layer logits and gradients against the
+Nine native tests pass. Six check one/two/six-layer logits and gradients against the
 independent f64 reference; exact two-layer compatibility; streamed whole-batch
 gradients and Adam state; causal and loss-mask isolation; invalid-input and
 preallocation rejection; and the unchanged original metrics against reference
-predictions, including generative and residue-decoded examples. Clippy passes
+predictions, including generative and residue-decoded examples. Three check the
+checkpoint continuation, integrity and invalid-state cases above. Clippy passes
 with warnings denied.
 
 All 35 original tasks reconstruct with their original hashes and target

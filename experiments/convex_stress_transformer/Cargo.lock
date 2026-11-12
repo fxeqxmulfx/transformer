@@ -50,6 +50,7 @@ dependencies = [
  "convex-stress-minibatch",
  "serde",
  "serde_json",
+ "sha2",
 ]
 
 [[package]]
