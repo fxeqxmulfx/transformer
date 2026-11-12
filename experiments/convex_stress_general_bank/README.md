@@ -3,8 +3,9 @@
 Lean `aef9d966` proves that one observed anchor can remain at a support fixed
 point forever while another identifies the same missing answer. This crate
 tries a finite, deterministic list of observed anchors before constructing a
-`convex_stress_general` solver. Five native fixture tests pass. The original-data
-cohort harness and protocol are not yet frozen, and no original score is claimed.
+`convex_stress_general` solver. Twelve native fixture tests pass. The original-data
+harness and `protocol.json` now fix 27 task/mode cases and all 108 decoder slots;
+no original score is claimed before running and replaying them.
 
 The mathematical source is `review/flat_spectrum.md`, CM19. Soundness uses its
 theorem for any observed anchor and any finite budget. Choosing one certificate
@@ -67,8 +68,59 @@ prlimit --as=68719476736:68719476736 -- cargo clippy --offline --all-targets --m
 ```
 
 Source fixtures are the reproducibility inputs; generated evidence stays local
-in `.kanban/artifacts/209`. The next protocol must include all eight prior pair
-tasks and the long blind absolute-difference case, all three modes, original
-splits/batches, training-only CE stops and candidate selection, and raw-coordinate
-spectral/CE replay. All earlier candidates and failures remain. This is an
-adaptive follow-up; it does not complete the full35 goal or transformer comparison.
+in `.kanban/artifacts/209` and the root's `runs/` directory.
+
+## Frozen original-data follow-up
+
+`protocol.json` includes the eight prior pair tasks and the long blind
+absolute-difference case, all three modes, unchanged source splits and the
+original minibatch order, sizes and tails. It declares the same four-member
+vocabulary-only bank for every case. The search permits 16 anchors, 16 sweeps
+each and one billion producer decoder comparisons in total; independent
+checking is charged separately. No original data enters the fixture tests.
+
+| Setting | Fixed value |
+| --- | --- |
+| Full / mini / forward update caps | 128 / 512 / 128 |
+| Observation cadence | Original task cadence, capped at batches per epoch |
+| CE stop | Positive scheduled update with ideal-CE excess at most `1e-8` |
+| Feasible endpoint repair | At most 12 checked bisections |
+| Candidate choice | First within CE tolerance, otherwise smallest training CE |
+| Pass threshold | 99% exact sequences on the primary and every held-out split |
+| Memory | Explicit preflight and 64 GiB address-space cap |
+
+Discovery reads all training observations before numerical minibatch updates.
+This preprocessing is repeated and charged once per task/mode case, then shared
+among its four candidates. Every decoder receives a recorded refusal or a full
+numerical fit. The runner finishes all candidate endpoints and chooses by CE
+before evaluating any held-out split. It retains nonselected models too.
+There is no online-learning or equal-compute comparison claim.
+
+Replay reconstructs discovery, every update, the complete state, endpoint,
+training trace, counters and CE-only stop/choice. A separate auditor recomputes
+decoder sums, every nonconstant complex DFT matrix, SVD norms and ordinary CE
+directly from saved latent coordinates. It accepts a genuinely complex phase
+endpoint and rejects a probability table with correct certified labels that
+violates the nuclear budget. Additional tests cover rehashed artifact tampering,
+larger-fiber candidate selection, all-bank inconsistency, minibatch tails and
+complete accounting of explicit process failures. Shared generators and LAPACK
+remain explicit; numerical tolerance is not an interval certificate.
+
+After committing and freezing the producer, build and launch from the repository
+root, with `GENERAL_BANK_PRODUCER_COMMIT` set to that full commit hash:
+
+```sh
+prlimit --as=68719476736:68719476736 -- cargo build --offline --release --manifest-path experiments/convex_stress_general_bank/Cargo.toml
+bash experiments/convex_stress_general_bank/run_cohort.sh experiments/convex_stress_general_bank/runs/cohort-v1
+```
+
+`GENERAL_BANK_BINARY` can name the frozen copied producer. The launcher requires
+a fresh destination and a 16 GiB disk reserve, records training/replay exit codes,
+keeps partial files on failure, and continues every remaining planned case.
+The summary requires all 27 process slots. Only successfully replayed, audited
+endpoints have scores; failures remain explicit with no score. Scripts and the
+producer are frozen together before launch; a running script is never edited.
+
+All earlier candidates and failures remain. Integration awaits complete audited
+predecessors, including the full-suite baseline for the added long task. This is
+an adaptive follow-up; it does not complete the full35 goal or transformer comparison.

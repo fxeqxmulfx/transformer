@@ -4,6 +4,7 @@
 pub use convex_stress_general::{self as general, RUN_MEMORY_BYTES, Result, propagation};
 use serde::{Deserialize, Serialize};
 
+pub mod cohort;
 pub mod search;
 
 /// A declared vocabulary-only family of four coarsenings of the cyclic fold.

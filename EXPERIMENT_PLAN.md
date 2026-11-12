@@ -37,10 +37,18 @@ Lean permanent-stall example, larger fibers in a four-member declared bank,
 genuine cross-decoder disagreement, replay and resource/input refusals.
 The vocabulary-only bank contains four coarsenings of a cyclic fold. It is an
 explicit prior, not unrestricted decoder learning. Before original discovery,
-freeze the complete harness/protocol, source and binary with all eight prior
-pair tasks plus the long blind task, all three modes, original metrics and
-batches, CE-only stops/selection and the 64 GiB cap. Keep the full35 goal and
-all earlier failures; no original-data outcome is implied by these fixtures.
+freeze the complete harness/protocol, source and binary. The harness now fixes
+all eight prior pair tasks plus the long blind task, all three modes, original
+metrics and batches, CE-only stops/selection and the 64 GiB cap. Its 27 cases
+retain all 108 decoder slots. Twelve native checks pass, including complete
+state/update replay, larger fibers, complex raw spectra, spectral rejection,
+rehashed artifact tampering and process-failure accounting. Only checked
+endpoints may enter summaries; preserve partial files and every failed case.
+The protocol fixes 16 anchors, 16 sweeps, one billion producer comparisons,
+128/512/128 update caps and 12 endpoint repair rounds. No original result is
+claimed yet. Keep the full35 goal and all earlier failures; integrate only with
+complete audited predecessors, including the full-suite baseline for the long
+blind task.
 
 ## Certified paired-decoder answers (2026-11-12)
 
