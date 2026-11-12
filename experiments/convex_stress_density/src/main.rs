@@ -1,4 +1,4 @@
-use convex_stress_density::{Result, artifact};
+use convex_stress_density::{Result, artifact, search};
 use std::{
     fs::{self, OpenOptions},
     io::Write,
@@ -13,8 +13,35 @@ fn read<T: serde::de::DeserializeOwned>(path: &str, limit: u64) -> Result<T> {
 }
 fn main() -> Result<()> {
     let args: Vec<_> = std::env::args().skip(1).collect();
-    if args.len() != 3 || !matches!(args[0].as_str(), "extract" | "replay") {
-        return Err("usage: convex-stress-density extract|replay INPUT.json ARTIFACT.json".into());
+    if args.len() != 3
+        || !matches!(
+            args[0].as_str(),
+            "extract" | "replay" | "propose" | "replay-proposal"
+        )
+    {
+        return Err("usage: convex-stress-density extract|replay|propose|replay-proposal INPUT.json ARTIFACT.json".into());
+    }
+    if args[0] == "propose" || args[0] == "replay-proposal" {
+        let input: search::Input = read(&args[1], 4 * 1024 * 1024)?;
+        if args[0] == "replay-proposal" {
+            let saved = read(&args[2], 256 * 1024 * 1024)?;
+            search::replay(&input, &saved)?;
+            println!("categorical proposal, phase endpoint and raw audits replayed");
+        } else {
+            if Path::new(&args[2]).exists() {
+                return Err("proposal destination already exists".into());
+            }
+            let out = search::propose(input)?;
+            write_new(&args[2], &out, 256 * 1024 * 1024)?;
+            println!(
+                "attempts={} selected={:?} iterations={} charged={}",
+                out.attempts.len(),
+                out.selected,
+                out.cost.admm_iterations,
+                out.cost.iteration_budget_used
+            );
+        }
+        return Ok(());
     }
     let input: artifact::Input = read(&args[1], 4 * 1024 * 1024)?;
     if args[0] == "replay" {
@@ -26,17 +53,7 @@ fn main() -> Result<()> {
             return Err("artifact destination already exists".into());
         }
         let out = artifact::run(input)?;
-        let bytes = serde_json::to_vec_pretty(&out)?;
-        if bytes.len() > 64 * 1024 * 1024 {
-            return Err("output exceeds artifact byte budget".into());
-        }
-        let mut file = OpenOptions::new()
-            .write(true)
-            .create_new(true)
-            .open(&args[2])?;
-        file.write_all(&bytes)?;
-        file.write_all(b"\n")?;
-        file.sync_all()?;
+        write_new(&args[2], &out, 64 * 1024 * 1024)?;
         println!(
             "accepted={} reason={} stages={} iterations={}",
             out.extraction.accepted,
@@ -49,5 +66,17 @@ fn main() -> Result<()> {
                 .sum::<usize>()
         );
     }
+    Ok(())
+}
+
+fn write_new(path: &str, value: &impl serde::Serialize, limit: usize) -> Result<()> {
+    let bytes = serde_json::to_vec_pretty(value)?;
+    if bytes.len() > limit {
+        return Err("output exceeds artifact byte budget".into());
+    }
+    let mut file = OpenOptions::new().write(true).create_new(true).open(path)?;
+    file.write_all(&bytes)?;
+    file.write_all(b"\n")?;
+    file.sync_all()?;
     Ok(())
 }

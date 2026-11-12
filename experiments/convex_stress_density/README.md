@@ -38,8 +38,10 @@ These floating-point diagnostics are **not** interval or Lean certificates.
 | Centered, re-orthonormalized noisy subspace | Distinguish normalization from the exact-subspace hypothesis | The affine equalities are inconsistent; the extractor explicitly refuses. |
 | Capped/invalid input and modified artifacts | Check budgets, replay and refusal paths | Failures remain explicit; changing the matrix, dual, input, trace or audit is rejected. |
 
-Eight native tests cover these cases and the complex eigensolver/coordinate
-conventions. The standalone `fixtures-v1` run accepts the rotated case after
+Twelve native tests cover these cases, the complex eigensolver/coordinate
+conventions and the categorical proposal/comparison path. Eight cover the
+core extractor and four cover the proposal path. The standalone `fixtures-v1`
+run accepts the rotated case after
 46 and 41 iterations; its final diagonal error is `4.11e-9`. The real-tie
 case takes 3 and 3 iterations with diagonal error `1.11e-15`. Both artifacts
 replay and pass the raw audit. Peak RSS for this fixture run is 7,116 KiB;
@@ -55,8 +57,38 @@ entire native process with the user's 64 GiB limit. Single-thread BLAS keeps
 the run deterministic. Generated artifacts stay in the ignored root-linked
 `runs/` directory. The frozen earlier producers and all35 short/long,
 full/minibatch/forward-only and conventional-transformer comparisons remain
-unchanged. Training-only sketch proposals and original-data protocols are
-separate follow-up work.
+unchanged. No original-data protocol for this new constructor is frozen.
+
+`search.rs` now constructs complex label sketches from observed cells in
+first-occurrence class order, centers rows and columns, and proposes small
+leading subspaces. Extraction sees only each feature matrix and rows 0 and 1.
+The right phase vector is computed through the **same original sketch's
+adjoint**, then conjugated. Clock ordering proposes latent permutations;
+empirical categorical decoding refuses uncovered latent states. This discrete
+postprocessing is a conditional candidate constructor, not a global convex
+decoder-search oracle. There are no arithmetic input features or CE gradients.
+Every candidate requires ordinary CE and the existing raw latent DFT/SVD
+audit. All attempted subspaces, extraction traces, failures and model-audit
+budget refusals remain in the report. A global iteration budget counts actual
+work on completed calls and charges the entire reserved allowance on an error.
+
+The categorical fixture uses an arbitrarily permuted 11-state table and an
+arbitrary decoder that merges several latent states. With all 121 cells
+observed, the new path returns the complete table correctly, using 364 total
+ADMM iterations and four model audits. With the eight
+cells at multiples of 17 removed, all six new subspace proposals are refused.
+Their affine-consistency residuals range from `0.0166` to `1.15`, far above
+the declared `1e-8` tolerance. Peak RSS for both categorical fixtures is
+8,096 KiB under the 64 GiB process limit; both saved proposals replay.
+The previous CM15 constructor still recovers the fixture; `comparison.rs`
+retains it, every other supplied prior decoded vertex, and all new attempts,
+then selects using observed CE alone. This comparison is limited to the
+supplied decoded vertices; it does not replace the pending full35 comparison
+with the other model families. Categorical output renaming, exact proposal
+replay, full attempt/budget accounting and modified-artifact rejection pass.
+The masked failure is evidence that exact amplitude constraints are too
+brittle for estimated subspaces. Prove an explicit convex tolerance domain
+and its quantitative limitations before adding a relaxed native variant.
 
 From this directory, using native tools only:
 
@@ -68,9 +100,16 @@ prlimit --as=68719476736:68719476736 -- cargo clippy --locked --offline --all-ta
 prlimit --as=68719476736:68719476736 -- cargo build --release --locked --offline --bins --examples
 prlimit --as=68719476736:68719476736 -- target/release/examples/fixtures runs/fixtures-v1
 prlimit --as=68719476736:68719476736 -- target/release/convex-stress-density replay runs/fixtures-v1/rotated.input.json runs/fixtures-v1/rotated.artifact.json
+prlimit --as=68719476736:68719476736 -- target/release/examples/sketches runs/sketches-v1
+prlimit --as=68719476736:68719476736 -- target/release/convex-stress-density replay-proposal runs/sketches-v1/masked.input.json runs/sketches-v1/masked.proposal.json
 ```
 
 `extract INPUT.json NEW_ARTIFACT.json` also accepts externally supplied feature
 inputs and refuses an existing destination. Replay compares the artifact with
 the separately supplied original input. `examples/fixtures.rs` documents the
 input schema and generates reproducible exact-geometry inputs only.
+`propose INPUT.json NEW_PROPOSAL.json` constructs the categorical proposal;
+`examples/sketches.rs` specifies its input schema and the declared fixture
+budgets (two sketches, ranks 1/2/3, 256 iterations per stage, 2,048 total
+iterations and four model audits). Original-data discovery must use a
+separately frozen protocol, source, binary, input fingerprints and replay.
