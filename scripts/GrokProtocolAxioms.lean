@@ -163,7 +163,11 @@ import Transformer
 #print axioms Transformer.Grokking.Protocol.one_mem_covered
 #print axioms Transformer.Grokking.Protocol.uniformPerm_covered_pos
 #print axioms Transformer.Grokking.Protocol.exists_not_mem_covered
+#print axioms Transformer.Grokking.Protocol.card_quotient_zero_le
 #print axioms Transformer.Grokking.Protocol.uniformPerm_compl_covered_pos
+#print axioms Transformer.Grokking.Protocol.mem_heldout_or_exists_trainEq
+#print axioms Transformer.Grokking.Protocol.mem_covered_iff
+#print axioms Transformer.Grokking.Protocol.heldout_accuracy_eq_one_of_training_anchors
 #print axioms Transformer.Grokking.Protocol.heldout_accuracy_eq_one_of_anchors
 #print axioms Transformer.Grokking.Protocol.heldout_accuracy_solver
 #print axioms Transformer.Grokking.Protocol.answerLogits_exchange_of_avoids

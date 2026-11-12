@@ -34,6 +34,7 @@ public import Transformer.Grokking.Protocol.SolverGap
 public import Transformer.Grokking.Protocol.SolverForward
 public import Transformer.Grokking.Protocol.SolverLogits
 public import Transformer.Grokking.Protocol.SolverScale
+public import Transformer.Grokking.Protocol.Coverage
 public import Transformer.Grokking.Protocol.HeldOutCertificate
 
 /-! The protocol behind the division curves of Power et al., *Grokking: generalization beyond
@@ -59,11 +60,11 @@ decoder with every parameter zero, which has the symmetry and no answer; paramet
 decoder, built and not trained, that answer all 9312 equations and satisfy that condition
 with a positive error: two attention heads subtract the logarithms to the base 5 of the
 numerator and the denominator, and the hidden units look the quotient up; and the same
-condition as a certificate of the held-out accuracy from two training answers, with the
-splits that give an anchor to each orbit, and parameters that fit every training answer of a
-split and miss a held-out one. The target is a predicate of the model, its labels and its
-gradient oracle: no convergence of any transformer is proved here, and no trained decoder is
-shown to have that structure. The map of what is proved elsewhere and what is missing is
-`review/grok_division_convergence.md`. -/
+condition as a certificate of the held-out accuracy from training answers, with an anchor for
+each held-out equation or one for each orbit, the splits that give an anchor to each orbit,
+and parameters that fit every training answer of a split and miss a held-out one. The target
+is a predicate of the model, its labels and its gradient oracle: no convergence of any
+transformer is proved here, and no trained decoder is proved to have that structure. The map
+of what is proved elsewhere and what is missing is `review/grok_division_convergence.md`. -/
 
 @[expose] public section
