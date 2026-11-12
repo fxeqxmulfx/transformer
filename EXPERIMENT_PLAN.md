@@ -58,6 +58,17 @@ frozen sharing follow-up; do not select a budget using held-out accuracy.
 
 ## Flat-spectrum connections with convex depth (2026-11-12)
 
+CD8 at `32a9b668` additionally proves convex ordinary CE for a learned combined
+path/feature/class tensor with per-class absolute-sum budgets. The native
+`convex_stress_depth` follow-up currently implements fixed causal path blocks
+and an allocation-only preflight; no head is trained and no stress accuracy is
+claimed. Original easy/hard depth, long MQAR and short binding are its initial
+diagnostics. Check buffers against 2 GiB and run under an 8 GiB process cap.
+The implemented Fourier/identity pair transports both skip and branch updates;
+it is an expected coordinate-invariance control, not a claim that changing only
+the skip improves accuracy. Complete the head solvers and freeze their full,
+mini and forward-only comparison before evaluating the original held-out splits.
+
 The user requested a theory extension to depth, residuals and the newer mHC
 in the local DiffGPT repository, and authorized a new connection. The
 [theory note](review/convex_depth.md) specifies ordinary residual connections
