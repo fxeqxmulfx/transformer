@@ -14,7 +14,9 @@ product. Thus the extension fixes the additive baseline's missing interaction
 capacity, at the cost of changing the training coordinates: a dense tensor
 has `|J|^depth` entries. It does **not** make arbitrary continuous layer weights
 jointly convex. No stress results, optimizer convergence or native runtime
-are claimed. CD5–CD7 give the interaction extension; CD1–CD4 record the
+are claimed. CD8 additionally learns one combined output tensor over those
+complete path features under convex coefficient budgets, avoiding a product
+of separately trained routing and decoder weights. CD5–CD7 give the interaction extension; CD1–CD4 record the
 baseline, the transport construction, and the obstruction that motivates it.
 
 The reference for the user's “new mHC” is the local repository
@@ -296,6 +298,41 @@ The tensor is a feasible learned coordinate point and can be optimized with
 the convex objective of CD5. Its existence and margin do not prove that a
 particular optimizer finds it, that it is the unique optimum, or that parity
 generalization follows from an incomplete training split.
+
+## CD8. Learn the combined output tensor without learning products
+
+CD5 fixes the terminal decoder, which can be restrictive for a new output
+alphabet. For each complete path p, compute its actual final hidden state and
+a fixed finite terminal feature vector phi_p(x). It may include real and
+imaginary coordinates of the complex state. Train the combined coefficients
+W[p,h,c] directly and predict ordinary class logits
+
+```
+z_c(x) = sum_(p,h) W[p,h,c] phi_p,h(x).
+```
+
+For each class impose `sum_(p,h) abs(W[p,h,c]) <= R`. `JointHead.lean` proves
+that this domain and the actual ordinary CE objective are jointly convex.
+It also proves `abs(z_c(x)) <= R M` when every terminal feature is bounded by
+M. A fixed spectral transport can supply the path-state bound through CD6;
+the terminal feature bound still needs to hold for the chosen extractor.
+These coefficient budgets are sufficient upper bounds, not flat-spectrum
+equalities or a claim about the singular values of the whole network.
+
+The tensor contains a CD5 router with a linear decoder as the point
+`W[p,h,c] = w[p] D[h,c]`; the logits are proved equal for every input and
+every nonlinear block library. The factorization is not imposed during
+training. Jointly optimizing separate w and D would instead introduce a
+product and would not inherit this convexity theorem. There are exactly
+`|J|^depth |H|` feature coordinates per class, so native work must set explicit
+path, feature and memory limits before constructing the bank.
+
+The library and terminal features remain fixed. This extends learned output
+capacity without claiming convex optimization of arbitrary raw hidden weights,
+an efficient representation of every deep network, or missing-label recovery.
+A nonzero example executes two nonlinear blocks `1 -> 2 -> 6` and reads their
+composed feature; another witnesses a nonzero feasible head and its logit bound.
+There are no new measured depth results in this theory extension.
 
 ## Validation and next empirical question
 
