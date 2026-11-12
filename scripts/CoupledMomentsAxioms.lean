@@ -7,6 +7,10 @@ open Lean Elab Command
 #print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.nonzero_fourier_moments_injective
 #print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.independent_readings_not_joint
 #print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.feasible_blend
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.relabelHull_invariant
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.crossEntropy_relabel
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.swappedWitness_not_feasible
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.relabelHull_strict_witness
 
 run_cmd do
   let env ← getEnv

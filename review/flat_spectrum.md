@@ -14919,3 +14919,66 @@ already ideal or the checked candidate does not improve it, record the new
 norms and mixture, and verify that all decoded predictions are unchanged.
 This checks another point in the same convex family; it does not change the
 family, the ordinary loss, or the frozen earlier training runs.
+
+### CM12. Remove dependence on the arbitrary order of output class names
+
+Output relabeling has a different effect from permuting input rows or columns.
+For a class permutation sigma define `(T_sigma P)(i,j,c) = P(i,j,sigma⁻¹(c))`.
+This real-linear map preserves all probability rows and satisfies
+
+```
+CE(scale * T_sigma P(i,j), sigma(y)) = CE(scale * P(i,j), y),
+M_phi(T_sigma P) = M_(phi composed with sigma)(P).
+```
+
+The first equality preserves the complete vocabulary and softmax denominator.
+It also preserves the original empirical CE sum, including repeated observations.
+The second equality changes the class code; it need not be a unitary change of
+input coordinates. Consequently a spectral bound in a fixed class coding is
+not generally invariant under renaming the target labels.
+
+Here is an exact one-code counterexample. Take four class phases
+`phi = [1, i, -1, -i]` and the point-mass label table
+
+```
+0 0 0 0
+0 1 2 3
+0 2 0 2
+0 3 2 1
+```
+
+Its complex moment is twice the normalized four-point Fourier matrix, with Gram
+matrix `4 I` and operator norm 2. Swap class names 1 and 2. The new moment applied
+to `[1,1,1,1]` is `[4,0,2+2i,0]`; squared input energy is 4 and squared output
+energy is 24. An operator bound of 2 would require output energy at most 16.
+Both tables remain full class distributions, and their correspondingly renamed
+target CE values agree exactly. This example uses **one** centered unit code.
+It does not claim feasibility of the first table under every nonconstant
+four-class character, nor establish the cause of the prime-vocabulary native
+failures. Those are separate empirical and domain-specific questions.
+
+For any original family A define the following domain in direct prediction
+coordinates:
+
+```
+A_sym = convexHull (union over every class permutation sigma of T_sigma(A)).
+```
+
+This domain is convex, contains A, and is invariant under every output relabeling.
+If every member of A has probability rows, every member of A_sym does too.
+Fixed-scale ordinary CE is convex on A_sym. The existing CM8 ideal-loss and
+excess-loss certificates therefore apply with these renamed families as the
+generators. The concrete excluded table above belongs to A_sym, proving that
+this enlargement can be strict. `CoupledMoments/Relabeling.lean` proves the
+general identities and convex-family properties;
+`CoupledMoments/RelabelingObstruction.lean` proves the exact counterexample.
+
+Each generator retains the original spectral bounds in its corresponding class
+coding. A mixture of generators **need not satisfy those same bounds in one
+fixed coding**. This is an enlargement of the feasible family, not an invariance
+theorem for the old fixed-code ball. The theorem also supplies neither an
+efficient oracle over the factorially many codings nor a jointly convex
+parametrization of a trainable permutation. A native follow-up may propose
+codings from training observations and compare their actual CE, but finite
+proposal search alone does not certify the entire new domain. No conclusion
+about missing labels follows without further structure and coverage.
