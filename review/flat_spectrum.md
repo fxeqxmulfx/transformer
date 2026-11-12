@@ -15901,3 +15901,38 @@ bounds. No original stress-task pass is implied by the finite witness.
 `Identification.lean` proves singleton identification and the refusals;
 `CrossEntropy.lean` proves the convex restriction and optimality;
 `Witness.lean` and `Refusal.lean` check the explicit examples.
+
+**Endpoint construction for a solver.** A surviving branch also gives a
+feasible fallback without solving for a complete training fit. Choose any
+one state from each of its nonempty final row and column domains. At every
+query its decoded sum occurs in that branch's Cartesian output set, hence
+in the bank union. Therefore it agrees with every certified singleton,
+whether or not these chosen phases fit the training samples. Its one-hot
+latent phase table is spectrally feasible at the budgets `N` by CM14, and
+its decoded table lies in both its fixed-decoder domain and `D_cert`.
+Every live branch supplies such a point (`branch_endpoint`, `live_endpoint`).
+
+This is a fallback, not necessarily a CE minimum. In the four-state witness
+at budget zero, anchoring at the false observation with state zero and
+choosing all phases zero keeps the certified anchor but predicts false at
+the two observed true cells. The choice `r=(3,0), s=(0,0)` in that same
+unpruned branch does fit them. These two feasible decoded tables differ
+at an observed, uncertified cell, while agreeing at every certified cell.
+
+If two output tables have the certified rows, every affine mixture
+`(1-t) P + t Q` keeps those rows (`certified_rows_blend`). With `0 <= t <= 1`
+the simplex and spectral constraints are also preserved when both tables
+are feasible, by their existing convexity theorems. When a proposed iterate
+is spectrally infeasible, this does not prove a positive mixing weight
+feasible: a numerical endpoint routine must check its returned coordinates
+and may fall back to weight zero. No floating-point error theorem follows.
+
+A solver using one selected decoder optimizes only its fixed-decoder convex
+domain. Its answer constraints must still be computed from the **whole**
+declared bank. The bank-level optimality theorem above does not identify a
+selected fitted decoder as the true one or prove that its smaller domain
+attains the optimum over the full bank hull. This distinction must remain
+visible in native candidate selection and reported CE.
+
+`CoupledMoments/DecodedPropagation/Endpoint.lean` proves the endpoint facts
+and the partial-coverage witness before the general native solver is added.

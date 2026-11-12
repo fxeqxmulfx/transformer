@@ -146,6 +146,13 @@ open Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagation
 #print axioms bank_ambiguity_refused
 #print axioms conflict_empty
 #print axioms conflict_bank_empty
+#print axioms live_has_selection
+#print axioms branch_mem_answers
+#print axioms phase_endpoint
+#print axioms branch_endpoint
+#print axioms live_endpoint
+#print axioms certified_rows_blend
+#print axioms wide_partial_endpoint
 
 end DecodedPropagation
 
