@@ -15173,6 +15173,98 @@ convex CE and the global fitting certificate across all decoder choices.
 It also proves the two ambiguous endpoints remain global CE minima over this
 larger hull: convexifying the class does not supply the missing identification.
 
+### CM16. Equal probabilities on opposite latent states
+
+*Source-note extension for board task #195, 2026-11-12. The Lean modules were
+drafted by the task's first claimant and completed by its second.*
+
+CM15 leaves the decoder arbitrary. One fixed class of decoders needs no search
+over latent signs. Let the latent vocabulary be `Z/q` and let the decoder be
+even,
+
+```
+d(-z) = d(z).
+```
+
+**Reflection.** `(rho P)(i,j,z) = P(i,j,-z)` is real-linear and permutes the
+coordinates of every probability row. On the Fourier bank of CM14 it exchanges
+frequencies,
+
+```
+M_f(rho P) = M_{-f}(P),
+```
+
+so operator and nuclear budgets that are the same for every frequency survive
+it. The average `pi P = (P + rho P) / 2` then satisfies the same budgets by
+convexity, has equal probabilities on opposite states,
+
+```
+P(i,j,z) = P(i,j,-z),
+```
+
+and decodes to the same table: `decode d (pi P) = decode d P`.
+
+**The paired domain.** Add these linear equalities to the latent domain of
+CM15 and decode. The set of predictions is convex, and ordinary CE over the
+original vocabulary is convex on it. For an even decoder the equalities remove
+no prediction: the paired domain is exactly the decoded domain of CM15 with
+the same constant budgets. The symmetry is a restriction of the latent
+coordinates, not of the predictions.
+
+**A symmetric phase witness.** For phases `r, s : n -> Z/q` put half of the
+probability at `r(i) + s(j)` and half at its negative (all of it if the two
+coincide). This table is `pi` of CM14's one-hot table. It is feasible at
+radius `N` and nuclear budget `N`: it is the average of two feasible tables,
+and no rank-one factorization of its own moments is used. It decodes to the
+deterministic table `d(r(i) + s(j))`. If
+that table shows the observed labels, it is a global ordinary-CE minimum over
+the paired domain, and over the whole decoder hull of CM15. One latent state
+per observed label is not chosen anywhere.
+
+**A decoder from the vocabulary alone.** For `k + 1` classes take `q = 2k + 1`
+and fold opposite states,
+
+```
+d(z) = min(z, q - z)        in {0, ..., k}.
+```
+
+It is even, every class has a preimage, and the fiber of the class `c` is
+`{c, -c}`. Input side `N`, latent states `q` and output classes `k + 1` are
+three separate numbers. Example: `N = 3`, `q = 5`, three classes, row phases
+`i` and column phases `-j` give the table
+
+```
+0 1 2
+1 0 1
+2 1 0
+```
+
+The permutation-phase constructor of `experiments/convex_stress_decode` takes
+as many latent states as the input side and a permutation of them along the
+columns. Every row of such a table has the same number of cells of each
+class, for every decoder, and convex mixtures keep these equal row masses.
+The table above has one cell of class 2 in its first row and none in its
+second: it lies outside the hull of those constructions with three states,
+and inside the paired domain with five.
+
+**The limit.** The symmetry does not identify unseen labels. Decode `Z/3` by
+`z != 0`, and observe `false, true, true` at the cells `(0,0), (0,1), (1,0)`.
+The phases `i + j` and `i - j` both fit. Their tables are feasible in the same
+paired domain and both are global CE minima, with `true` against `false` at
+the unobserved cell `(1,1)`. The observed graph is connected and contains a
+perfect matching. Recovery needs the identification conditions of a separate
+argument; capacity and an observed fit do not give it.
+
+Not claimed: that an iterative solver reaches such a minimum, any numerical
+tolerance, any accuracy on original data, or a way to find the decoder.
+
+`CoupledMoments/Schatten/Paired.lean` proves the reflection identities, the
+convexity of the paired domain and its equality with the decoded domain.
+`PairedPhase.lean` proves the witness and the CE certificates.
+`PairedCoding.lean` proves the properties of the folding decoder and the
+three-class example. `PairedLimits.lean` proves the equal-row-mass
+obstruction and the ambiguity.
+
 ### CM17. The class coding is found from the training rectangles
 
 *Source-note extension for board task #196, 2026-11-12. The number CM16 is

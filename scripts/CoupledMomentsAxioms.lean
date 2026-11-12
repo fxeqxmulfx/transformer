@@ -47,6 +47,23 @@ open Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery
 
 end CodingDiscovery
 
+section Paired
+open Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten
+
+#print axioms budget_pairLatent
+#print axioms pairedFeasible_convex
+#print axioms pairedFeasible_iff
+#print axioms pairedPhase_budget
+#print axioms paired_fit_minimum
+#print axioms pairedPhase_minimum
+#print axioms pairedPhase_hull_minimum
+#print axioms foldDecoder_fiber
+#print axioms folded_paired_minimum
+#print axioms folded_new_capacity
+#print axioms paired_unseen_ambiguity
+
+end Paired
+
 run_cmd do
   let env ← getEnv
   let standard := [``propext, ``Classical.choice, ``Quot.sound]
