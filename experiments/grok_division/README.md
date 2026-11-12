@@ -30,7 +30,7 @@ FMA). Kernite is expected at `/home/misha/rust_projects/kgen`, clean at
 
 ```sh
 cd experiments/grok_division
-cargo test --offline --release           # 56 tests: trainer 36, `numerator` 2, `quotient` 18
+cargo test --offline --release           # 57 tests: trainer 37, `numerator` 2, `quotient` 18
 cargo build --offline --release
 target/release/grok-division check       # pins, split fingerprints, f32 model against the model in doubles
 target/release/grok-division bench 8     # the time of an update
@@ -75,9 +75,12 @@ two doubles that each logit of the decoder in exact reals lies between, and repe
 and the test of the certificate on those ends; the third section on it says how. That file is
 not among the trainer's sources either; 10 of the 18 tests of `quotient` are that file's.
 
-One test of the trainer was added after the runs: `hidden_units_at_zero_pass_no_gradient`
+Two tests of the trainer were added after the runs. `hidden_units_at_zero_pass_no_gradient`
 holds both models to the source's derivative 0 of the ReLU at 0, where the loss has a kink.
-It is in `src/tests.rs`, which the trainer's source fingerprint does not cover.
+`run_splits_label_every_residue` checks that in each of the three splits every residue is the
+answer of a training equation: where a split fails that, the held-out accuracy of a run does
+not tend to 1 (`review/grok_division_convergence.md`, section 2). Both are in `src/tests.rs`,
+which the trainer's source fingerprint does not cover.
 
 A run resumes from its last checkpoint when the command is repeated, on any number of
 threads, and is then bit for bit the run that was not stopped. `runs/` is ignored by git.

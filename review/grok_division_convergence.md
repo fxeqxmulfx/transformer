@@ -388,6 +388,10 @@ of the present state finds this:
   answers of that decoder at those parameters and nothing after the last checkpoint. The
   `f32` trajectory is not related to the exact-real trajectory by any statement (bridge 1), so
   no theorem of section 5 is a statement about an executed run, and no run is an instance of
-  the target.
+  the target. The three splits of the runs label every residue
+  (`run_splits_label_every_residue` in `experiments/grok_division/src/tests.rs`): they meet
+  the necessary condition of section 2, which a uniformly random split fails with a
+  probability of about `7.5 · 10⁻²⁸`. Nothing positive follows for them: the condition is not
+  sufficient.
 - **Not addressed.** Every other curve and claim of the paper; the time at which accuracy
   rises; whether the certificate is kept. The trainer was not compared with a PyTorch run.

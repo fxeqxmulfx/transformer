@@ -108,6 +108,23 @@ fn split_matches_numpy_fingerprints() {
 }
 
 #[test]
+fn run_splits_label_every_residue() {
+    // The condition `labelled` of `src/Transformer/Grokking/Protocol/LabelCoverage.lean`: every residue is
+    // the answer of a training equation. Where a split fails it, the held-out accuracy of a run does not
+    // tend to 1, and a uniformly random split fails it with a probability between 7.46e-28 and 7.47e-28
+    // (`review/grok_division_convergence.md`, section 2). The three splits that the runs train on meet it.
+    for seed in 0..3 {
+        let (train, heldout) = data::split(seed, 4656);
+        assert_eq!((train.len(), heldout.len()), (4656, 4656));
+        let mut answers = [0usize; 97];
+        for eq in &train {
+            answers[eq.quo as usize] += 1;
+        }
+        assert!(answers.iter().all(|&count| count > 0), "seed {seed}: a residue is the answer of no training equation");
+    }
+}
+
+#[test]
 fn positions_are_the_sinusoids() {
     let pe = Dims::PAPER.positions();
     assert_eq!(pe[0], 0.0);
