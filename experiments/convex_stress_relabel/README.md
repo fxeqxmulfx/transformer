@@ -51,9 +51,11 @@ unseen-family assessment, an all-35 result or a fresh matched transformer test.
 Use Rust with FFTW3 and OpenBLAS/LAPACK. Generated outputs stay ignored and local.
 The experiment protocol requires serial numerical jobs and an 8 GiB address-space
 limit. A vocabulary cap of 193 and a conservative explicit-buffer estimate of
-`32 * 8 * V^3 + 64 MiB` stay below 2 GiB. The complete launcher must check this
-before dense allocation. No stress job may start alongside the original or
-retained depth cohort.
+`32 * 8 * V^3 + 64 MiB` stay below 2 GiB. The runner checks this before dense
+allocation. The launcher verifies complete, sealed summaries from both frozen
+depth binaries before creating a new cohort. It stops on an incomplete parent,
+failed replay or exhausted 16 GiB disk reserve. It neither restarts failed jobs
+nor overwrites existing outputs.
 
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.CoupledMoments
@@ -61,18 +63,49 @@ LAKE_ARTIFACT_CACHE=false lake env lean scripts/CoupledMomentsAxioms.lean
 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 cargo test --offline --release --manifest-path experiments/convex_stress_relabel/Cargo.toml -- --test-threads=1
 cargo fmt --manifest-path experiments/convex_stress_relabel/Cargo.toml --check
 cargo clippy --offline --manifest-path experiments/convex_stress_relabel/Cargo.toml --all-targets -- -D warnings
+cargo build --offline --release --manifest-path experiments/convex_stress_relabel/Cargo.toml
+bash -n experiments/convex_stress_relabel/run_cohort.sh
 ```
+
+Freeze the committed release binary and launcher outside the worktree, recording
+their SHA-256 hashes, the producer commit and `fingerprint` output. Set
+`RELABEL_PRODUCER_COMMIT` and `RELABEL_BINARY` to these saved inputs, and set
+`DEPTH_REFERENCE_BINARY` and `DEPTH_RETAINED_BINARY` to the frozen binaries from
+`032762e5` and `9da1c677`. Then run:
+
+```sh
+bash experiments/convex_stress_relabel/run_cohort.sh experiments/convex_stress_relabel/runs/cohort-v1
+```
+
+The default parent directories are the depth experiment's `runs/cohort-v1` and
+`runs/retained-v1`. Override them with `DEPTH_REFERENCE_ROOT` and
+`DEPTH_RETAINED_ROOT` when relocating preserved evidence. Every cell has a fresh
+directory, original-data fingerprints, recomputable coding, saved probability
+table, splitting state and SHA-256 digests. Replays regenerate the proposal,
+check the saved endpoint against its state, verify exposure counts and stopping,
+and compare every original split. The independent raw auditor recomputes CE and
+argmax in original class order and forms each Fourier matrix by direct sums,
+one frequency at a time. It shares the data generator and LAPACK SVD with the
+producer; numerical norm checks are not interval certificates. The summary
+requires all 96 results and matching replay seals before making its 24 choices.
 
 ## Findings and current status
 
-The proposal and prediction library passes six native checks. They cover a
+The complete runner and prediction library pass eight native checks. They cover a
 withheld five-class categorical fixture in all three modes, exact saved-state
 replay, output-renaming covariance of the proposed code, full-vocabulary CE and
 gradient covariance, forward batch independence, malformed maps/observations,
-proposal rejection and memory preflight. All three modes predict the withheld
+proposal rejection and memory preflight. End-to-end fixture runs also exercise
+the independent raw auditor, refusal to overwrite, detection of a renamed
+saved map with an updated file digest, rejected proposals without models, and
+refusal to summarize incomplete evidence. All three modes predict the withheld
 fixture correctly. This is a small correctness test, not a stress-suite result.
 
-The stress runner, independent saved-model audit and 96-cell execution are still
-pending. No original-task score or complete-hull optimization claim is reported
-for this extension yet. The old failed models and frozen depth cohorts remain
-the reference evidence.
+The launch gate was exercised while the original depth cohort was incomplete.
+Its frozen summarizer returned a missing-outcome error, and the launcher exited
+before creating the new cohort directory. The test did not start training.
+
+The runner and auditor are ready; the 96-cell stress execution remains pending
+until the original and retained depth cohorts complete. No original-task score
+or complete-hull optimization claim is reported for this extension yet. The old
+failed models and frozen depth cohorts remain the reference evidence.

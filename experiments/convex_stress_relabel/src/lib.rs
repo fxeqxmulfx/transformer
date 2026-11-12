@@ -2,11 +2,12 @@
 //! Lean 0c89afcc proves CE covariance and the invariant direct-prediction hull.
 //! Discrete coding proposals are conditional candidates, not a global oracle.
 pub use convex_stress_budgets::{
-    Model as Table, Result, Sample, budgets, check_layout, choose_by_train, data, gradient, hash,
-    ideal_loss, loss, metrics, projection, random, samples,
+    C, Model as Table, Result, Sample, budgets, check_layout, choose_by_train, data, gradient,
+    hash, ideal_loss, linalg, loss, metrics, projection, random, samples,
     solver::{Mode, Solver},
 };
 pub mod coding;
+pub mod cohort;
 pub use coding::{Coding, Discovery};
 use serde::{Deserialize, Serialize};
 
