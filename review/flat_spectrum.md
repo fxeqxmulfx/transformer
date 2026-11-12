@@ -15041,3 +15041,59 @@ proposal. Nor does this exact theorem turn a floating-point CE tolerance into
 exact equality: quantitative stability and finite-step solver convergence are
 separate claims. Connectivity by itself, without the matching and coded
 structure, does not provide this guarantee.
+
+### CM14. A training-compatible phase completion is a feasible CE minimizer
+
+CM13 identifies an ideal endpoint but does not construct one. A discovered
+categorical coding supplies a direct candidate in the same convex family.
+Let `e : C <-> Z/q` be a bijection of the full class vocabulary, with `q > 0`,
+and let `r(i)` and `s(j)` be row and column phase potentials. These potentials
+are learned from the observed equations
+
+```
+e(y_t) = r(i_t) + s(j_t) mod q.
+```
+
+Input symbols enter as categorical row and column indices; no numerical value
+or arithmetic operation on an input symbol appears in this construction.
+Define the model completion and its full complex code bank by
+
+```
+z(i,j) = e^{-1}(r(i) + s(j)),
+phi(f,c) = exp(2 pi i f e(c) / q).
+```
+
+The one-hot table `P_z` has probability rows. Every coded moment factors as
+`a_f b_f^T`, with `a_f(i) = exp(2 pi i f r(i)/q)` and the analogous `b_f(j)`.
+Both factors have unit-modulus entries, so its operator norm is at most the
+input dimension N and its nuclear norm equals N. Thus `P_z` is feasible for the
+existing radius-N, nuclear-budget-N family. The separate `full_rank` control
+uses the smaller radius `sqrt(N)` and is not covered by this construction. The
+observed phase equations make its actual ordinary CE equal the one-hot lower
+bound. It is therefore a global CE minimizer in that fixed-code convex family,
+without requiring an iterative optimizer to discover this endpoint.
+
+The complete code bank satisfies `phi* phi = q I`, including after a categorical
+renaming. If the observation graph is connected and contains a perfect matching,
+CM13 further identifies this candidate as the only ideal probability table under
+the nuclear budget. This conclusion concerns the compatible model completion.
+It does not prove that unobserved true labels follow the learned phase equations.
+Discovery of a coding remains a discrete proposal step, outside the fixed-code
+convexity claim. A finite list of such candidates is not a global oracle over
+the CM12 hull of all output permutations.
+
+`CoupledMoments/Schatten/PhaseCandidate.lean` proves the renamed Fourier Gram
+identity, the explicit moment factorization, feasibility and global CE
+optimality. It specializes CM13 to show uniqueness with only the nonconstant
+nuclear bounds supplied as hypotheses; probability rows provide the constant
+mode. Its nonconstant two-class construction has an inhabited three-observation
+CE-optimality example, and the uniqueness theorem has an inhabited complete-graph
+example.
+
+A native warm initialization may use this candidate only after checking the
+training equations and class bijection, and must retain explicit rejection and
+the unchanged cold-initialization controls. Numerical feasibility, original
+split metrics, costs of coding and potential discovery, and any subsequent
+gradient updates must still be independently audited. The theorem is an
+exact-real construction; it does not certify floating-point SVDs or unseen-label
+accuracy, and does not change the frozen CM12 or depth cohorts.

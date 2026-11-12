@@ -10,11 +10,12 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.Completi
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.Quotient
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.Sharpen
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.GraphRecovery
+public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.PhaseCandidate
 
 /-!
 # Shared complex moments with singular-value budgets
 
-Source: `review/flat_spectrum.md`, CM5–CM7, CM9–CM11 and CM13. Convex bounds on the largest singular value
+Source: `review/flat_spectrum.md`, CM5–CM7, CM9–CM11 and CM13–CM14. Convex bounds on the largest singular value
 and their sum accommodate different spectral shapes. A concrete rank-one recovery proof
 starts with ordinary empirical CE and does not assume correct missing labels or a trained
 factorization. The two endpoint budgets miss an explicit intermediate-rank moment.
@@ -25,6 +26,8 @@ with an ordinary-CE excess bound from their common uniform mixing coefficient.
 Connected observation graphs with perfect matchings identify the complete table
 at ideal CE when a separating code bank has the stated unit-phase rank-one structure.
 Recovery outside these hypotheses and numerical solver convergence are not asserted.
+A training-compatible categorical phase coding constructs a feasible CE minimizer;
+connected matching coverage makes it unique in the fixed-code nuclear budget family.
 -/
 
 @[expose] public section

@@ -18,6 +18,10 @@ open Lean Elab Command
 #print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.graph_nuclear_budget_recovers
 #print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.constant_moment_nuclear
 #print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.graph_probability_recovery
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.phaseCode_gram
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.phaseCandidate_budget
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.phaseCandidate_minimum
+#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.phaseCandidate_unique
 
 run_cmd do
   let env ← getEnv
