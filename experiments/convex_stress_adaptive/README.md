@@ -120,9 +120,12 @@ kept separate from these 70 forward cells.
 
 The best tested all-task configuration therefore passes **7/35 primary tasks**,
 not the full suite. Further representation and identification work is required.
-Flat spectrum and balancedness remain capacity statements. The latest WD16
-classification concerns squared loss on a fully observed identity; it does not
-identify the missing CE labels in these stress tasks.
+For these joint-channel experiments, flat spectrum and balance provide capacity
+checks. The latest WD16 result also guarantees an optimum from equal full-row-rank
+factors for squared loss on a fully observed identity, under its step and ball
+bounds and `0 < lambda < 1`. That is a positive result for that balanced start.
+These channels train joint coordinates directly; the identity theorem does not
+identify their missing CE labels or apply unchanged to this different loss.
 
 ## Independent saved-model CE audit
 
