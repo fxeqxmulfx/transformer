@@ -36,6 +36,7 @@ public import Transformer.Grokking.Protocol.SolverLogits
 public import Transformer.Grokking.Protocol.SolverScale
 public import Transformer.Grokking.Protocol.OrbitAnchors
 public import Transformer.Grokking.Protocol.HeldOutCertificate
+public import Transformer.Grokking.Protocol.Enclosure
 
 /-! The protocol behind the division curves of Power et al., *Grokking: generalization beyond
 overfitting on small algorithmic datasets*, and what "held-out accuracy tends to 1" means for
@@ -62,9 +63,12 @@ with a positive error: two attention heads subtract the logarithms to the base 5
 numerator and the denominator, and the hidden units look the quotient up; and the same
 condition as a certificate of the held-out accuracy from training answers, with an anchor for
 each held-out equation or one for each orbit, the splits that give an anchor to each orbit,
-and parameters that fit every training answer of a split and miss a held-out one. The target
-is a predicate of the model, its labels and its gradient oracle: no convergence of any
-transformer is proved here, and no trained decoder is proved to have that structure. The map
-of what is proved elsewhere and what is missing is `review/grok_division_convergence.md`. -/
+and parameters that fit every training answer of a split and miss a held-out one; and what two
+rows that enclose the logits, as a program that rounds outward computes them, decide about the
+real ones: the answers, the accuracy and the premise of that certificate. The target is a
+predicate of the model, its labels and its gradient oracle: no convergence of any transformer
+is proved here, and no trained decoder is proved to have that structure, for an enclosure of
+its logits is a hypothesis here. The map of what is proved elsewhere and what is missing is
+`review/grok_division_convergence.md`. -/
 
 @[expose] public section

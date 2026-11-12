@@ -103,7 +103,7 @@ every positive statement.
 | `Landscape/Neural` | `crossEntropy`, `crossEntropy_nonneg`, `analyticAt_crossEntropy`, `exists_compact_rotate90_adamw_container` | The loss, reused here; analyticity and an AdamW box for the Rotate90 model (SiLU, RMS norm, tied readout) | Another architecture and schedule; the paper's decoder has ReLU and is not analytic |
 | `Grokking/AdamW`, `EffectiveTheory`, `CircuitEfficiency`, `Composition`, `Geometry` | for example `coupled_first_growth_iff`, `quarticCE_every_rate_can_overshoot` | Effective models and diagnostics of learned circuits | None is the decoder's trajectory |
 | `Grokking/Protocol` (`MarginTransfer`, `QuotientTransfer`, `QuotientWitness`) | `margin_sub_le_of_abs_sub_le`, `predict_eq_residueToken_of_anchor`, `predict_eq_residueToken_of_two_anchors`, `predict_bentLogits`, `predict_answerLogits_zero_ne` | Logits that move with the scalings of numerator and denominator up to an error carry two answers with margins above twice the error, one for each orbit of the scalings, to all 9312 equations, over all 239 tokens; the decoder with every parameter zero has the symmetry and answers nothing | A sufficient structure for held-out correctness. No proof that training produces it. With one anchor for an orbit no trained decoder has it: at each of the 117 checkpoints measured in `experiments/grok_division`, in doubles and again in exact arithmetic on those scores, twice the error exceeds the margin of every training anchor on the equations with a nonzero numerator |
-| `Grokking/Protocol` (`DiscreteLog`, `NormScale`, `SolverParams` to `SolverScale`, `OrbitAnchors`, `HeldOutCertificate`) | `solver`, `answerLogits_solver`, `exists_param_forall_predict`, `solver_certified`, `heldout_accuracy_eq_one_of_training_anchors`, `heldout_accuracy_eq_one_of_anchors`, `heldout_accuracy_solver`, `mem_anchored_iff`, `uniformPerm_anchored_pos`, `uniformPerm_compl_anchored_pos`, `exists_fit_training_wrong_heldout` | The decoder itself, in exact reals: built parameters whose logits are a positive multiple of the mark of the answer, so that all 9312 equations are answered; the certificate of held-out accuracy 1 on `answerLogits θ` from training answers, with an anchor for each held-out equation or one for each orbit, which those parameters satisfy with the error `1/52200`; the splits with an anchor in each orbit, which are exactly those that give every held-out equation a training equation in its orbit; and parameters that fit all 4656 training answers of a split and miss a held-out one | The parameters are built, not reached by the optimizer: this shows that the answers and the structure are in the range of the architecture, and that training accuracy does not force them. Nothing here says that a run arrives at them. At five checkpoints of `experiments/grok_division` the computed scores meet the premise with an anchor for each held-out equation; the rounding of that forward pass is not bounded, so this is a measurement and not an instance of the theorem |
+| `Grokking/Protocol` (`DiscreteLog`, `NormScale`, `SolverParams` to `SolverScale`, `OrbitAnchors`, `HeldOutCertificate`, `Enclosure`) | `solver`, `answerLogits_solver`, `exists_param_forall_predict`, `solver_certified`, `heldout_accuracy_eq_one_of_training_anchors`, `heldout_accuracy_eq_one_of_anchors`, `heldout_accuracy_solver`, `mem_anchored_iff`, `uniformPerm_anchored_pos`, `uniformPerm_compl_anchored_pos`, `exists_fit_training_wrong_heldout`, `predict_eq_of_enclosure`, `accuracy_eq_one_of_decided`, `enclosure_gives_certificate`, `heldout_accuracy_eq_one_of_enclosed_anchors` | The decoder itself, in exact reals: built parameters whose logits are a positive multiple of the mark of the answer, so that all 9312 equations are answered; the certificate of held-out accuracy 1 on `answerLogits θ` from training answers, with an anchor for each held-out equation or one for each orbit, which those parameters satisfy with the error `1/52200`; the splits with an anchor in each orbit, which are exactly those that give every held-out equation a training equation in its orbit; parameters that fit all 4656 training answers of a split and miss a held-out one; and what two rows that enclose the logits decide about them: the answers, the accuracy, and the premise of the certificate from a test on the ends | The parameters are built, not reached by the optimizer: this shows that the answers and the structure are in the range of the architecture, and that training accuracy does not force them. Nothing here says that a run arrives at them. At five checkpoints of `experiments/grok_division` every held-out equation passes that test on enclosures of the real-valued logits, which a program computes with every operation rounded outward. Lean proves what the ends give and takes the enclosure as a hypothesis: this is an instance of the theorem up to that computation, and not a Lean theorem about a checkpoint |
 
 Two substitutions are therefore excluded, and no statement here makes them:
 
@@ -115,7 +115,10 @@ Two substitutions are therefore excluded, and no statement here makes them:
 ## 4. The bridges that are missing
 
 1. **Arithmetic.** The target is in exact reals; every run is in `f32`, where the softmax
-   saturates (PROTOCOL.md, Amendment 1). No statement relates the two trajectories.
+   saturates (PROTOCOL.md, Amendment 1). No statement relates the two trajectories. What is
+   bounded is one forward pass: at the parameters of a checkpoint, which are reals exactly, the
+   logits of the decoder in exact reals are enclosed (bridge 5), so its answers there are
+   known. The parameters are still those of an `f32` trajectory.
 2. **Measurability.** `TendsToOneAlmostSurely.inProbability` and `.inMean` need the accuracy to
    be measurable in the sample. This is not proved for the decoder.
 3. **Exceptional parameters.** The source's backward pass has a rule at hidden inputs equal to
@@ -144,7 +147,15 @@ Two substitutions are therefore excluded, and no statement here makes them:
    numerators no checkpoint of 117 meets it; with an anchor for each held-out equation five of
    the nine checkpoints that answer every equation do, with 0.31 to spare at the least, and
    the other four answer every equation without it, so it is not necessary. The rounding of
-   that forward pass against the real-valued decoder is not bounded.
+   that forward pass is bounded by a computation outside Lean. `quotient --enclose` computes,
+   for every logit of the decoder in exact reals at a checkpoint's parameters, two doubles that
+   it lies between, with every operation rounded outward
+   (`experiments/grok_division/src/enclosure.rs`). On those ends every answer is decided at all
+   117 checkpoints, with the counts of the model in doubles, and at the same five checkpoints
+   every held-out equation passes the test of `enclosure_gives_certificate`, with 0.31 to spare
+   at the least; `heldout_accuracy_eq_one_of_enclosed_anchors` turns that test, for any two
+   rows that enclose the logits, into held-out accuracy 1. That the printed ends enclose the
+   logits rests on that file and the processor's arithmetic; Lean takes it as a hypothesis.
 6. **Training reaches the structure** (#130): from the declared initialization law, with a
    stated probability. Open, and the measured runs give no support for the half that asks the
    structure to be kept. The premise of 5 is met at five retained checkpoints of two AdamW runs

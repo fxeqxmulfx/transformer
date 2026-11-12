@@ -172,3 +172,11 @@ import Transformer
 #print axioms Transformer.Grokking.Protocol.heldout_accuracy_solver
 #print axioms Transformer.Grokking.Protocol.answerLogits_exchange_of_avoids
 #print axioms Transformer.Grokking.Protocol.exists_fit_training_wrong_heldout
+#print axioms Transformer.Grokking.Protocol.predict_eq_of_enclosure
+#print axioms Transformer.Grokking.Protocol.predict_ne_of_enclosure
+#print axioms Transformer.Grokking.Protocol.accuracy_eq_one_of_decided
+#print axioms Transformer.Grokking.Protocol.le_margin_of_enclosure
+#print axioms Transformer.Grokking.Protocol.abs_sub_le_of_enclosure
+#print axioms Transformer.Grokking.Protocol.enclosure_gives_certificate
+#print axioms Transformer.Grokking.Protocol.heldout_accuracy_eq_one_of_enclosed_anchors
+#print axioms Transformer.Grokking.Protocol.solver_enclosure_test

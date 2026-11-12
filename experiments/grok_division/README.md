@@ -30,7 +30,7 @@ FMA). Kernite is expected at `/home/misha/rust_projects/kgen`, clean at
 
 ```sh
 cd experiments/grok_division
-cargo test --offline --release           # 44 tests: trainer 36, `numerator` 2, `quotient` 6
+cargo test --offline --release           # 56 tests: trainer 36, `numerator` 2, `quotient` 18
 cargo build --offline --release
 target/release/grok-division check       # pins, split fingerprints, f32 model against the model in doubles
 target/release/grok-division bench 8     # the time of an update
@@ -50,6 +50,9 @@ target/release/diagnose runs/adamw-seed1 1 10000 50000   # what checkpoints do a
 target/release/numerator runs/*-seed*    # the held-out equations with numerator zero
 target/release/numerator --list runs/adamw-seed1   # its evaluations with one of them wrong
 target/release/quotient runs/adamw-seed0 # how far its checkpoints are from quotient-equivariance
+for run in runs/adamw-seed? runs/adamw-answer-seed? runs/adam-flush-seed?; do
+  target/release/quotient --enclose $run # the same, and enclosures of the real-valued logits
+done
 ```
 
 `diagnose RUN SEED STEP...` reads checkpoints with the model in doubles: accuracy on 512
@@ -67,7 +70,10 @@ differs from the trainer's at any evaluation.
 run, with the model in doubles, and measures how far they are from moving with a scaling of
 the numerator and the denominator; the two sections on it below say what it prints. It is a
 fourth binary and reads checkpoints through `src/checkpoint.rs`, as `diagnose` does; neither
-file is among the trainer's sources.
+file is among the trainer's sources. With `--enclose` it also computes, by `src/enclosure.rs`,
+two doubles that each logit of the decoder in exact reals lies between, and repeats its counts
+and the test of the certificate on those ends; the third section on it says how. That file is
+not among the trainer's sources either; 10 of the 18 tests of `quotient` are that file's.
 
 One test of the trainer was added after the runs: `hidden_units_at_zero_pass_no_gradient`
 holds both models to the source's derivative 0 of the ReLU at 0, where the loss has a kink.
@@ -362,11 +368,93 @@ The nine checkpoints that answer every equation:
   checkpoints: `certified_exact` is true where the anchor's margin less `2 ε` is positive,
   at no checkpoint on the orbit of nonzero numerators and at 10 on that of numerator zero,
   and `nearest_exact` equals `nearest_certified` everywhere.
-- What is exact is the comparison of the computed scores. The forward pass that computes them
-  rounds, and its distance from the real-valued logits of the Lean decoder at the same
-  parameters is not bounded here. At the five checkpoints the premise of
-  `heldout_accuracy_eq_one_of_training_anchors` is therefore measured, with 0.31 to spare at
-  the least, and not proved.
+- What is exact in this section is the comparison of the computed scores. The forward pass
+  that computes them rounds. The next section encloses the real-valued logits of the Lean
+  decoder at the same parameters and repeats the test on the ends of the enclosures.
+
+### Enclosures bound the rounding of the forward pass
+
+Exploratory: computed on the retained checkpoints on 2026-11-12, after the two measurements
+above and because their scores are those of a forward pass that rounds; no part of the
+protocol.
+
+The model in doubles is not the decoder of the Lean development. It rounds every operation, it
+takes the sinusoids of the positions rounded to `f32`, as the source does, and the floor of its
+variance is the double `1e-5`. The decoder of `src/Transformer/Grokking/Protocol/Model.lean`
+is a function of real parameters, with the sinusoids of the reals and the floor `1/10⁵`. A
+checkpoint's parameters are `f32` numbers and so are reals exactly. For each of the 239 logits
+at `=` of that decoder on each of the 9312 equations, `quotient --enclose` computes two doubles
+that the logit lies between (`src/enclosure.rs`):
+
+- The pass is computed on intervals of doubles. A sum, a difference, a product, a quotient and
+  a square root of doubles are rounded to a nearest double, so the real result is within half a
+  gap of the computed one, and each end is then moved outward to the next double. The
+  exponential, the sine and the cosine are sums of their series with a bound of the remainder
+  added, and `10000^(i/128)` is a power of a repeated square root of 10.
+- Such an interval is as wide as the rounding of a double times what the layers can make of an
+  error. A row that is wider than `10⁻³`, or that does not decide its answer, is computed again
+  in an arithmetic of about a hundred bits: a double and an interval for what the double drops,
+  where the error of a sum or of a product of two doubles is a double that is computed exactly.
+  The two enclosures of such a row hold the same logits, so they must have a real in common in
+  every token, or the tool stops.
+- An operation stops the tool rather than return what is not a set of reals, and a pass begins
+  by checking that its thread rounds to nearest and does not flush subnormal numbers to zero.
+
+That the two doubles enclose the logit is an argument about `src/enclosure.rs` and the
+processor's arithmetic, and Lean does not check it. The tests hold the pass to the Lean
+development: at the parameters `solver` it returns, in both arithmetics, a number from `1/900`
+to `1/870` at the answer and 0 at the other 238 tokens, which is what `answerLogits_solver` and
+`solverScale_mem` prove; and on random parameters the two arithmetics have a real in common in
+every logit.
+
+What the ends decide is proved in Lean, for any logits and any two rows that enclose them
+(`src/Transformer/Grokking/Protocol/Enclosure.lean`). An answer whose lower end is above every
+other upper end is the prediction (`predict_eq_of_enclosure`), and one whose upper end is below
+another lower end is not (`predict_ne_of_enclosure`); answers all decided so give the accuracy
+1 (`accuracy_eq_one_of_decided`). For the certificate, the lower end of the anchor's answer
+less the largest other upper end is a lower bound of its margin, the differences of the two
+rows lie between the least lower end less upper end and the largest upper end less lower end,
+and if the bound exceeds the distance of those two numbers the premise of
+`heldout_accuracy_eq_one_of_training_anchors` holds for the real logits
+(`enclosure_gives_certificate`, `heldout_accuracy_eq_one_of_enclosed_anchors`). `quotient`
+makes that test with the anchor that the section above chose, every step rounded against the
+claim.
+All 117 checkpoints, with the tool built from this revision. A width is the largest distance
+between the two doubles of a logit at a checkpoint:
+
+| Cohort | Checkpoints | Width in doubles alone | Held-out answers that doubles alone leave open | Rows computed again | Width of the result | Answers left open |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `adamw` | 30 | 6.5·10⁻⁸ to 5.5·10⁻⁵ | 0 | 0 | 6.5·10⁻⁸ to 5.5·10⁻⁵ | 0 |
+| `adamw --answer-only` | 30 | 5.6·10⁻⁷ to 7.1·10⁻⁵ | 0 | 0 | 5.6·10⁻⁷ to 7.1·10⁻⁵ | 0 |
+| `adam --flush-from 100000` | 57 | 1.2 to 93 | 709, at most 79 at one checkpoint | 9312 at each | 1.4·10⁻¹² to 5.5·10⁻¹² | 0 |
+
+- Every answer of the decoder in exact reals is decided at all 117 checkpoints, and the
+  numbers of wrong training and wrong held-out answers are those of the model in doubles at
+  each of them. The counts of the sections above are therefore counts of the Lean decoder at
+  the checkpoints' parameters, as far as `src/enclosure.rs` is right.
+- At the nine checkpoints that answer every equation, the ends alone give the decoder in
+  exact reals the held-out accuracy 1 (`accuracy_eq_one_of_decided`), with least margins of
+  at least 0.36.
+- The test of the certificate on the ends passes for every held-out equation at the same five
+  checkpoints, with 0.312726 to spare at the least (`adamw --answer-only`, seed 1, update
+  60 000; 0.312742 on the scores in doubles). At each of the 117 checkpoints the number of
+  held-out equations that pass it is `nearest_certified`, in both orbits. So at those five
+  the held-out answers of the real-valued decoder follow from its training answers and the
+  structure of its logits (`heldout_accuracy_eq_one_of_enclosed_anchors`), and at the other
+  four they do not follow that way, as on the scores in doubles.
+- The model in doubles is close: over the 117 checkpoints the least lower bound of a margin
+  is within 4.2·10⁻⁵ of the least margin in doubles, and the least excess within 1.3·10⁻⁴.
+- Without weight decay intervals of doubles do not suffice. They are 1.2 to 93 wide and leave
+  709 held-out answers open, 79 of them at seed 0, update 900 000; every row is computed
+  again, to 5.5·10⁻¹² at the widest, and none stays open. The width of an interval is a bound
+  and not an error: there too the least margin in doubles is within 4.2·10⁻⁵ of its bound.
+- With `--enclose=0` at `adamw --answer-only`, seed 1, update 60 000, every row is computed in
+  both arithmetics. All 9312 · 239 pairs of enclosures have a real in common, the wider
+  arithmetic is 3.6·10⁻¹⁵ wide, and the least excesses are 0.312741 and 4.673801.
+- This bounds the rounding of one forward pass at given parameters. The parameters are those
+  that the trainer reached in `f32`; nothing here relates that trajectory to the one that the
+  Lean optimizer would make in exact reals, and nothing is said of an update after the last
+  checkpoint.
 
 ### The arithmetic decides the late trajectory
 

@@ -49,6 +49,26 @@
 //! equations of the largest logit of a residue less the largest of another token. Where that is
 //! positive the decision is a residue, and the margins over the residues decide it.
 //!
+//! With `--enclose` before the run, the line also has `enclosed`: what holds for the decoder in
+//! exact reals of `Protocol/Model.lean` at the checkpoint's parameters, which the model in
+//! doubles only approximates. `enclosure.rs` computes, for every logit, two doubles that the
+//! real logit lies between: in intervals of doubles, and again in its wider arithmetic for the
+//! `refined` rows, those whose intervals are wider than `REFINE`, or than the width given as
+//! `--enclose=WIDTH`, or do not decide the answer. The two enclosures of a refined row hold the
+//! same logits, so they have a real in common in every token, or the tool stops; with
+//! `--enclose=0` every row is computed twice and compared so. `doubles` has the largest width
+//! and the number of answers not decided of the intervals of doubles alone, before a row was
+//! refined. `width` is the largest distance between the two doubles. `training` and
+//! `heldout` count the equations whose answer is the largest logit for certain, those where it
+//! is not for certain, and those that the enclosure does not decide; `margin_lower_min` is the
+//! least lower bound of a margin. For each orbit, `certified` counts the held-out equations
+//! whose nearest anchor passes the test on the ends of the intervals: the anchor's margin is at
+//! least the lower end of its answer less the largest upper end of another token, the
+//! differences of the two rows lie between the least lower end less upper end and the largest
+//! upper end less lower end, and the first exceeds the distance of the last two. `slack_min` is
+//! the least excess. `enclosure_gives_certificate` of `Protocol/Enclosure.lean` proves that
+//! this test gives the premise of the certificate for the real logits.
+//!
 //! It shares the data, the layout and the reference model in doubles with the trainer and
 //! nothing of the trainer's fast path.
 
@@ -57,8 +77,14 @@
 
 #[path = "../checkpoint.rs"]
 mod checkpoint;
+// The tests of `enclosure.rs` put a thread into the trainer's flushing arithmetic.
+#[cfg(test)]
+#[path = "../arith.rs"]
+mod arith;
 #[path = "../data.rs"]
 mod data;
+#[path = "../enclosure.rs"]
+mod enclosure;
 #[path = "../layout.rs"]
 mod layout;
 #[path = "../mt.rs"]
@@ -70,6 +96,7 @@ use std::path::Path;
 use std::process::ExitCode;
 
 use data::{ANSWER_POS, Equation, NUM0, P};
+use enclosure::{Enclosure, Iv, Wide};
 use layout::Dims;
 
 fn main() -> ExitCode {
@@ -384,6 +411,177 @@ fn orbit_fields(orbit: &Orbit, vocab: usize, per: Option<usize>, threads: usize)
     )
 }
 
+/// A row whose enclosure in intervals of doubles is wider than this is enclosed again in the
+/// wider arithmetic. Both enclose the logits; this only chooses the cheaper one where it is
+/// narrow, which it is at the checkpoints trained with weight decay.
+const REFINE: f64 = 1e-3;
+
+/// The width from which a row is refined, by the first argument: `REFINE` for `--enclose`, the
+/// width of `--enclose=WIDTH`, and none for an argument that is not the flag.
+fn refine_width(flag: &str) -> Result<Option<f64>, String> {
+    match flag.strip_prefix("--enclose") {
+        None => Ok(None),
+        Some("") => Ok(Some(REFINE)),
+        Some(rest) => match rest.strip_prefix('=').and_then(|width| width.parse::<f64>().ok()) {
+            Some(width) if width >= 0.0 => Ok(Some(width)),
+            _ => Err(format!("{flag} is not --enclose or --enclose=WIDTH with a width from 0")),
+        },
+    }
+}
+
+/// What the intervals of doubles gave before any row was refined: the largest width of one, the
+/// rows whose answer they do not decide, and the rows computed again in the wider arithmetic.
+#[derive(Clone, Copy, Default)]
+struct Coarse {
+    width: f64,
+    undecided: usize,
+    refined: usize,
+}
+
+/// Enclosures of the logits of the answer of every equation, by the pass of `enclosure.rs`, with
+/// the rows whose intervals of doubles are wider than `refine` or do not decide the answer
+/// computed again in the wider arithmetic.
+fn enclosed_logits(
+    dims: Dims,
+    p: &[f64],
+    equations: &[Equation],
+    refine: f64,
+    threads: usize,
+) -> (Vec<Vec<Iv>>, Coarse) {
+    let pe = enclosure::positions::<Iv>(dims, ANSWER_POS + 1);
+    let wide_pe = enclosure::positions::<Wide>(dims, ANSWER_POS + 1);
+    let mut rows = vec![Vec::new(); equations.len()];
+    let chunk = equations.len().div_ceil(threads);
+    let coarse = std::thread::scope(|scope| {
+        let workers: Vec<_> = equations
+            .chunks(chunk)
+            .zip(rows.chunks_mut(chunk))
+            .map(|(part, out)| {
+                let (pe, wide_pe) = (&pe, &wide_pe);
+                scope.spawn(move || {
+                    let mut coarse = Coarse::default();
+                    for (equation, row) in part.iter().zip(out) {
+                        let tokens = equation.tokens();
+                        *row = enclosure::logits_at(dims, p, pe, &tokens[..dims.ctx], ANSWER_POS);
+                        let width = row.iter().map(|v| v.hi - v.lo).fold(0.0, f64::max);
+                        let open = decided(row, NUM0 + equation.quo as usize).is_none();
+                        coarse.width = coarse.width.max(width);
+                        coarse.undecided += usize::from(open);
+                        if width > refine || open {
+                            let wide = enclosure::logits_at(dims, p, wide_pe, &tokens[..dims.ctx], ANSWER_POS);
+                            let wide: Vec<Iv> = wide.iter().map(|v| v.iv()).collect();
+                            // Both enclose the logits, so each pair has a real in common.
+                            let met = wide.iter().zip(row.iter()).all(|(a, b)| a.lo <= b.hi && b.lo <= a.hi);
+                            assert!(met, "the two enclosures of the row of {equation:?} have no real in common");
+                            *row = wide;
+                            coarse.refined += 1;
+                        }
+                    }
+                    coarse
+                })
+            })
+            .collect();
+        workers.into_iter().map(|worker| worker.join().expect("a worker of the enclosures")).fold(
+            Coarse::default(),
+            |all, part| Coarse {
+                width: all.width.max(part.width),
+                undecided: all.undecided + part.undecided,
+                refined: all.refined + part.refined,
+            },
+        )
+    });
+    (rows, coarse)
+}
+
+/// What an enclosure decides of the answer of a row: `Some(true)` if the lower end of its logit
+/// is above the upper end of every other, so that it is the prediction; `Some(false)` if the
+/// lower end of another logit is above its upper end, so that it is not; nothing otherwise.
+fn decided(row: &[Iv], answer: usize) -> Option<bool> {
+    let others = || row.iter().enumerate().filter(|(token, _)| *token != answer).map(|(_, v)| *v);
+    if others().all(|v| v.hi < row[answer].lo) {
+        Some(true)
+    } else if others().any(|v| v.lo > row[answer].hi) {
+        Some(false)
+    } else {
+        None
+    }
+}
+
+/// A lower bound of the margin of `answer` in a row, from the ends of its enclosure: the lower
+/// end of the answer less the largest upper end of another token, rounded down.
+fn sure_margin(lower: &[f64], upper: &[f64], answer: usize) -> f64 {
+    let rivals = upper.iter().enumerate().filter(|(token, _)| *token != answer).map(|(_, v)| *v);
+    (lower[answer] - rivals.fold(f64::NEG_INFINITY, f64::max)).next_down()
+}
+
+/// The test of `enclosure_gives_certificate` on the ends of the enclosures of a row and of an
+/// anchor's row: a lower bound `m` of the anchor's margin, a number `least` below every
+/// difference of the two rows and a number `largest` above every one, and `m` less
+/// `largest - least`, every step rounded against the claim. A positive value is the premise of
+/// the certificate for the real rows.
+fn sure_slack(own: (&[f64], &[f64]), anchor: (&[f64], &[f64]), answer: usize) -> f64 {
+    let (mut least, mut largest) = (f64::INFINITY, f64::NEG_INFINITY);
+    for token in 0..own.0.len() {
+        least = least.min((own.0[token] - anchor.1[token]).next_down());
+        largest = largest.max((own.1[token] - anchor.0[token]).next_up());
+    }
+    (sure_margin(anchor.0, anchor.1, answer) - (largest - least).next_up()).next_down()
+}
+
+/// The field `enclosed` of the head of the file.
+fn enclosed_fields(
+    dims: Dims,
+    p: &[f64],
+    equations: &[Equation],
+    training: &[bool],
+    refine: f64,
+    threads: usize,
+) -> String {
+    let (rows, coarse) = enclosed_logits(dims, p, equations, refine, threads);
+    let ends = |end: fn(&Iv) -> f64| rows.iter().map(|row| row.iter().map(end).collect()).collect::<Vec<Vec<f64>>>();
+    let (lower, upper, middle) = (ends(|v| v.lo), ends(|v| v.hi), ends(|v| 0.5 * (v.lo + v.hi)));
+    let answer = |k: usize| NUM0 + equations[k].quo as usize;
+    let counts = |train: bool| {
+        let of = |verdict: Option<bool>| {
+            let same = |k: &usize| training[*k] == train && decided(&rows[*k], answer(*k)) == verdict;
+            (0..equations.len()).filter(same).count()
+        };
+        format!("[{},{},{}]", of(Some(true)), of(Some(false)), of(None))
+    };
+    let margins = (0..equations.len()).map(|k| sure_margin(&lower[k], &upper[k], answer(k)));
+    let width = rows.iter().flatten().map(|v| v.hi - v.lo).fold(0.0, f64::max);
+    let [middle_nonzero, middle_zero] = orbits(NUM0, equations, &middle, training);
+    let [lower_nonzero, lower_zero] = orbits(NUM0, equations, &lower, training);
+    let [upper_nonzero, upper_zero] = orbits(NUM0, equations, &upper, training);
+    let orbit = |middle: &Orbit, lower: &Orbit, upper: &Orbit, per: usize| {
+        let row = |orbit: &Orbit, index: usize| orbit.rows[index * dims.vocab..(index + 1) * dims.vocab].to_vec();
+        let ends = |index: usize| (row(lower, index), row(upper, index));
+        let slack = |(own, anchor, _): &(usize, usize, f64)| {
+            let (own, anchor) = (ends(*own), ends(*anchor));
+            sure_slack((&own.0, &own.1), (&anchor.0, &anchor.1), middle.answer)
+        };
+        let slacks: Vec<f64> = nearest(middle, dims.vocab, per, threads).iter().map(slack).collect();
+        format!(
+            "{{\"heldout\":{},\"certified\":{},\"slack_min\":{}}}",
+            slacks.len(),
+            slacks.iter().filter(|s| **s > 0.0).count(),
+            num(slacks.iter().cloned().fold(f64::INFINITY, f64::min))
+        )
+    };
+    format!(
+        "{{\"width\":{width:e},\"refined\":{},\"doubles\":{{\"width\":{:e},\"undecided\":{}}},\"training\":{},\
+         \"heldout\":{},\"margin_lower_min\":{},\"nonzero\":{},\"zero\":{}}}",
+        coarse.refined,
+        coarse.width,
+        coarse.undecided,
+        counts(true),
+        counts(false),
+        num(margins.fold(f64::INFINITY, f64::min)),
+        orbit(&middle_nonzero, &lower_nonzero, &upper_nonzero, 1),
+        orbit(&middle_zero, &lower_zero, &upper_zero, P - 1)
+    )
+}
+
 /// The held-out equations of a run, in the order of its records.
 fn heldout(run: &Path) -> Result<Vec<Equation>, String> {
     let text = std::fs::read_to_string(run.join("heldout.txt")).map_err(|e| format!("heldout.txt: {e}"))?;
@@ -419,9 +617,16 @@ fn checkpoints(run: &Path) -> Result<Vec<u64>, String> {
 }
 
 fn run() -> Result<(), String> {
-    let args: Vec<String> = std::env::args().skip(1).collect();
+    let mut args: Vec<String> = std::env::args().skip(1).collect();
+    let refine = match args.first() {
+        Some(flag) => refine_width(flag)?,
+        None => None,
+    };
+    if refine.is_some() {
+        args.remove(0);
+    }
     let Some(dir) = args.first().map(Path::new) else {
-        return Err("usage: quotient RUN_DIR [STEP...]".into());
+        return Err("usage: quotient [--enclose[=WIDTH]] RUN_DIR [STEP...]".into());
     };
     let steps: Vec<u64> = match &args[1..] {
         [] => checkpoints(dir)?,
@@ -452,9 +657,15 @@ fn run() -> Result<(), String> {
         let residues: Vec<Vec<f64>> = logits.iter().map(|row| row[NUM0..NUM0 + P].to_vec()).collect();
         let [nonzero, zero] = orbits(NUM0, &equations, &logits, &training);
         let [residues_nonzero, residues_zero] = orbits(0, &equations, &residues, &training);
+        let enclosed = match refine {
+            Some(width) => {
+                format!(",\"enclosed\":{}", enclosed_fields(dims, &p, &equations, &training, width, threads))
+            }
+            None => String::new(),
+        };
         println!(
             "{{\"run\":\"{}\",\"step\":{step},\"errors_training\":{},\"errors_heldout\":{},\"recorded_agree\":{},\
-             \"nonzero\":{},\"zero\":{},\"other_gap\":{},\"residues_nonzero\":{},\"residues_zero\":{}}}",
+             \"nonzero\":{},\"zero\":{},\"other_gap\":{},\"residues_nonzero\":{},\"residues_zero\":{}{enclosed}}}",
             dir.display(),
             wrong(true),
             wrong(false),
@@ -628,5 +839,67 @@ mod tests {
         let values: Vec<f64> = nearest(&nonzero, VOCAB, 1, 2).iter().map(|pair| pair.2).collect();
         let largest = values.iter().cloned().fold(f64::NEG_INFINITY, f64::max);
         assert!(values.iter().any(|value| (value - (largest - 0.75)).abs() < 1e-12));
+    }
+
+    #[test]
+    fn the_first_argument_gives_the_width_to_refine_from() {
+        assert_eq!(refine_width("runs/adamw-seed0"), Ok(None));
+        assert_eq!(refine_width("--enclose"), Ok(Some(REFINE)));
+        assert_eq!(refine_width("--enclose=0"), Ok(Some(0.0)));
+        assert_eq!(refine_width("--enclose=2.5e-4"), Ok(Some(2.5e-4)));
+        for refused in ["--enclose=-1", "--enclose=NaN", "--enclose=x", "--enclosed", "--enclose="] {
+            assert!(refine_width(refused).is_err(), "{refused}");
+        }
+    }
+
+    /// The ends of enclosures decide an answer that is above the others for certain or below
+    /// one for certain and nothing else, bound a margin from below, and pass the test of the
+    /// certificate only where the exact comparison of every row inside them does.
+    #[test]
+    fn ends_of_enclosures_decide_answers_and_bound_the_slack() {
+        let iv = |lo: f64, hi: f64| Iv { lo, hi };
+        assert_eq!(decided(&[iv(0.0, 1.0), iv(1.5, 2.0), iv(-1.0, 1.25)], 1), Some(true));
+        assert_eq!(decided(&[iv(0.0, 1.0), iv(1.5, 2.0), iv(2.5, 3.0)], 1), Some(false));
+        assert_eq!(decided(&[iv(0.0, 1.0), iv(1.5, 2.0), iv(-1.0, 1.75)], 1), None);
+        // Ends that touch decide nothing: the first of two equal logits is the prediction.
+        assert_eq!(decided(&[iv(0.0, 1.5), iv(1.5, 2.0)], 1), None);
+        // The margin of the token 1 is at least 1.5 - 1.25, and the bound is rounded down.
+        let bound = sure_margin(&[0.0, 1.5, -1.0], &[1.0, 2.0, 1.25], 1);
+        assert!(bound < 0.25 && bound > 0.25 - 1e-15);
+        // An anchor (0, 2, 0) with the margin 2, and a row within 1/4 of it after the constant
+        // 5: the differences are from 4.75 to 5.25, so the margin exceeds their range by 1.5.
+        let anchor = [0.0, 2.0, 0.0];
+        let slack = sure_slack((&[4.75, 6.75, 4.75], &[5.25, 7.25, 5.25]), (&anchor, &anchor), 1);
+        assert!(slack < 1.5 && slack > 1.5 - 1e-14);
+        // A row bent by 3, more than the margin, does not pass.
+        let bent = [4.0, 9.0, 4.0];
+        assert!(sure_slack((&bent, &bent), (&anchor, &anchor), 1) < 0.0);
+        // An anchor known within 1/2 has a margin of at least 1 and differences 1 wider.
+        let slack = sure_slack((&[4.75, 6.75, 4.75], &[5.25, 7.25, 5.25]), (&[-0.5, 1.5, -0.5], &[0.5, 2.5, 0.5]), 1);
+        assert!(slack < -0.5 && slack > -0.5 - 1e-14);
+        // On the table of the test above, with enclosures of no width, the test passes exactly
+        // where the comparison in exact rationals does.
+        let equations = data::equations();
+        let training: Vec<bool> = (0..equations.len()).map(|i| i % 40 == 0).collect();
+        let shape = |ratio: usize| ((ratio * ratio) % 7) as f64 / 7.0;
+        let table = table(shape, 2.0, |e, class| match (e.num, e.den, class) {
+            (4, 1, 9) => 0.75,
+            (10, 2, 9) => 9.0,
+            (0, 3, 2) => 9.0,
+            _ => 0.0,
+        });
+        let [nonzero, zero] = orbits(NUM0, &equations, &table, &training);
+        for (orbit, per) in [(&nonzero, 1), (&zero, P - 1)] {
+            let row = |index: usize| &orbit.rows[index * VOCAB..(index + 1) * VOCAB];
+            let pairs = nearest(orbit, VOCAB, per, 3);
+            let passed = |pair: &&(usize, usize, f64)| {
+                sure_slack((row(pair.0), row(pair.0)), (row(pair.1), row(pair.1)), orbit.answer) > 0.0
+            };
+            for pair in &pairs {
+                let exact = certified_exactly(row(pair.1), row(pair.0), orbit.answer);
+                assert_eq!(exact, Some(passed(&pair)), "row {} against {}", pair.0, pair.1);
+            }
+            assert_eq!(pairs.iter().filter(passed).count(), pairs.len() - 1);
+        }
     }
 }
