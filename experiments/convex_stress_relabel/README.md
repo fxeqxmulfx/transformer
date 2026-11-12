@@ -178,7 +178,7 @@ existing `rank_one` budgets and unchanged inference in original class order.
 It constructs no CE gradient and performs no optimizer updates. Coding discovery
 and its additional training-observation pass must both be counted by a runner.
 
-Four native fixture checks verify the withheld categorical answer and minimum
+The four constructor fixture checks verify the withheld categorical answer and minimum
 CE, all nonconstant spectra using direct Fourier sums and LAPACK SVD, saved-model
 roundtrip, equivariance to independent input/output renamings, explicit graph and
 memory rejections, and unchanged predictions when only an unseen true answer is
@@ -187,10 +187,58 @@ theorem for arbitrary targets. These checks do not evaluate original stress
 tasks or subsequent full-batch/minibatch refinement. The frozen 96-cell producer
 and queued audit remain unchanged; a prospective original-data comparison and
 independent endpoint audits are still required before reporting a warm-start
-stress result.
+stress result. The separate runner below now implements that evaluation; its
+original-data execution is pending.
 
 ```sh
 cargo fmt --manifest-path experiments/convex_stress_relabel/phase_start/Cargo.toml --check
 CARGO_BUILD_JOBS=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 cargo test --offline --release --manifest-path experiments/convex_stress_relabel/phase_start/Cargo.toml -- --test-threads=1
 CARGO_BUILD_JOBS=1 cargo clippy --offline --manifest-path experiments/convex_stress_relabel/phase_start/Cargo.toml --all-targets -- -D warnings
+```
+
+`phase_start/protocol.json` freezes 16 constructor cases: the same eight pair
+tasks, cycle/identity coding, and the original `rank_one` budgets. Every failed
+coding or graph condition remains an explicit rejection. Each admitted endpoint
+is evaluated once on all original splits. It is a direct construction with zero
+gradient evaluations and zero optimizer updates, and uses the same logit scale
+one and full-vocabulary ordinary CE as the cold candidates.
+
+The comparison then references these saved endpoints against each of the three
+old training modes, producing 24 choices. Order the available candidates as
+constructed cycle, constructed identity, then the four original cold candidates
+in their frozen order. Choose the first candidate within `1e-8` of the common
+training-CE lower bound, otherwise minimum training CE. Held-out results never
+enter this choice. A constructor endpoint referenced by several comparisons has
+one actual execution, with its complete standalone cost reported for each use;
+it is not reported as three new gradient-training runs. The old full-rank
+controls remain in these comparisons at their unchanged bounds.
+
+The runner requires the completed 96-cell cold cohort and 96-cell graph audit
+before creating its directory. It records both summary digests, reconstructs
+the coding and exact proposed table in replay, and invokes the existing raw
+coordinate CE/Fourier auditor after dropping construction scratch. Summary
+creation revalidates the complete cold cohort, every phase result/model digest
+and replay seal, and both unchanged parent summaries. It retains the 8 GiB
+process limit, 2 GiB buffer forecast, serial execution and disk reserve.
+
+Six native checks now pass. The added fixture exercises fresh-output creation,
+model save and independent raw replay, refusal to overwrite, phase rejection,
+and detection of changed coordinates even with an updated digest, altered
+gradient counts and altered spectral diagnostics. The gate test verifies the
+frozen dependencies and refuses incomplete parents before creating output.
+These are correctness checks; no original-data constructor score is reported.
+The launch gate was also exercised against the still-pending cold cohort under
+the 8 GiB process cap. It returned a missing-parent error before creating the
+new directory or starting construction.
+
+```sh
+CARGO_BUILD_JOBS=1 cargo build --offline --release --manifest-path experiments/convex_stress_relabel/phase_start/Cargo.toml
+bash -n experiments/convex_stress_relabel/phase_start/run_cohort.sh
+# Freeze the committed binary and launcher, their SHA-256 hashes and fingerprint.
+export PHASE_PRODUCER_COMMIT=$(git rev-parse HEAD)
+# PHASE_BINARY can point to that preserved binary outside the worktree.
+bash experiments/convex_stress_relabel/phase_start/run_cohort.sh \
+  experiments/convex_stress_relabel/runs/phase-v1 \
+  experiments/convex_stress_relabel/runs/cohort-v1 \
+  experiments/convex_stress_relabel/runs/graph-audit-v1
 ```

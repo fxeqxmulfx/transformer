@@ -5,6 +5,7 @@
 use convex_relabel_graph_audit::graph::{self, Pair, Structure};
 use convex_stress_relabel::{Coding, Model, Result, Sample, Table, memory_bound};
 use serde::{Deserialize, Serialize};
+pub mod cohort;
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Rejection {

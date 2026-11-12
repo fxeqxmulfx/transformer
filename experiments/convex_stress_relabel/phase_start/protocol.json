@@ -1,0 +1,23 @@
+{
+  "version": "phase-candidate-v1",
+  "proof_commit": "ae9a35edae054ef2ffc690f51cdd23d855edc13e",
+  "cold_fingerprint": "260d22864ac06e44f945791ac766340a96254b917dffca5a713ea396ddc5a6ba",
+  "graph_auditor_fingerprint": "26290bf60e2790a7dcc4faa7a693bc1a3f075458721521f47939d2beca7da14c",
+  "tasks": ["arithmetic-perm-add", "arithmetic-add", "arithmetic-sub", "arithmetic-div", "arithmetic-mul", "arithmetic-sum-cube", "arithmetic-sum-pow4", "arithmetic-abs-diff"],
+  "codings": ["cycle", "identity"],
+  "method": "phase_construct",
+  "budget": "rank_one",
+  "updates": 0,
+  "training_gradient_evaluations": 0,
+  "logit_scale": 1,
+  "ideal_ce_tolerance": 1e-8,
+  "frequency_workers": 1,
+  "maximum_vocab": 193,
+  "explicit_memory_limit_bytes": 2147483648,
+  "address_space_limit_gib": 8,
+  "parallel_numerical_jobs": 1,
+  "construction": "Use the unchanged original data and class-coding discovery. Both coding controls pay for discovery. For an available full-vocabulary coding, construct the CM14 table only if training phase equations are consistent and the observed bipartite graph is connected and contains a perfect matching. Preserve every rejection with no model or fallback substitution. Use the original rank_one radius and nuclear budget, both N; full_rank has a different operator radius and is not a construction arm. Return the existing lookup-table predictor in original class order. No arithmetic function of input token values, CE derivative, optimizer update, sharpening, or held-out decision is used.",
+  "comparison": "Evaluate 16 phase candidates once, then compare them with each of the three frozen cold training modes without relabeling the construction as gradient training. For each task/mode order candidates as phase/cycle, phase/identity, then the four old cold candidates in cycle/rank_one, cycle/full_rank, identity/rank_one, identity/full_rank order. Keep rejected candidates in both inventories. Choose the first completed candidate within 1e-8 of the common original training-CE lower bound, otherwise the minimum training CE. All use logit scale one and the original full vocabulary. Repeated phase candidates in the 24 comparisons reference the same saved endpoint and report their full standalone construction cost. This follow-up is adaptive to previous failures, not a full35 result, a new unseen-family assessment, or a fresh transformer comparison.",
+  "provenance": "Require the complete sealed 96-cell cold cohort and the completed 96-cell graph audit before creating this cohort. Record their summary digests and fixed producer fingerprints. Replay each phase endpoint by rebuilding its coding and training-only completion, comparing exact saved coordinates, then invoking the existing independent raw-coordinate CE/Fourier auditor. Final comparison revalidates the cold cohort and every phase replay seal. Floating-point spectral checks are numerical, not interval or exact-real certificates.",
+  "resource_policy": "Training/construction and replay are serial under an 8 GiB address-space cap. Bound vocabulary and observation count before dense allocations; retain the 2 GiB explicit-buffer forecast. Stream JSON writes, cap saved model JSON reads, process Fourier matrices one at a time, and retain a 16 GiB disk reserve. Never overwrite an existing cohort or restart an interrupted cell automatically. Start only after the prior queued graph audit terminates successfully. Generated outputs remain ignored and preserved in the root runs directory."
+}
