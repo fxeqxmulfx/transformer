@@ -13817,6 +13817,27 @@ information across queries; flat spectrum alone does not imply that sharing
 is appropriate for an arbitrary task. B1–B3 remain capacity and scope checks,
 and do not supply optimization or missing-label identification by themselves.
 
+### MF4. Prefer sharing without discarding query-specific capacity
+
+Mandatory sharing is a restriction, not a general repair. For two Boolean input
+slots `D(a,b)=(a,b)`, every shared additive logit satisfies the rectangle identity
+`z(0,0)+z(1,1)=z(0,1)+z(1,0)`. Applying it to the difference between two class
+logits rules out strict XOR classification on all four inputs, even without
+feasibility constraints. The full query-indexed domain, with visible query `a`,
+represents XOR by selecting the second slot and learning `decode(a,b)=a xor b`.
+This is a capacity witness, not an arithmetic feature in the stress model.
+
+Retain the original convex domain and compute its exact query-wise linear
+oracle `V`. An aligned shared feasible candidate `S` can replace it whenever
+`<G,S> <= <G,V>`. Since `V` minimizes the linear objective on the full domain,
+the replacement is also a minimizer. Convex combinations with either candidate
+remain feasible, and the ordinary CE forward map stays linear in all joint
+coordinates. `ConvexChannel/Adaptive.lean` proves the XOR obstruction, the
+unrestricted witness, and this oracle preference. It does not guarantee that
+the resulting optimizer discovers every rule or identifies arbitrary unseen
+labels. A forward-only learner may similarly use a shared consistent solution
+when one exists and otherwise retain the query-specific consistency family.
+
 ## Forward-only channel learning
 
 This extension gives a finite categorical learner for the realizable
