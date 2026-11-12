@@ -269,7 +269,11 @@ the orbit is then at least the anchor's less `2 ε`. The anchor reported is the 
 orbit's training equations, and the model is the one in doubles at the checkpoint's parameters.
 The bound, and that a positive value on both orbits gives every answer, are proved in Lean for
 any logits: `margin_sub_le_of_abs_sub_le` and `predict_eq_residueToken_of_two_anchors`
-(`src/Transformer/Grokking/Protocol/MarginTransfer.lean`, `QuotientTransfer.lean`).
+(`src/Transformer/Grokking/Protocol/MarginTransfer.lean`, `QuotientTransfer.lean`). The
+architecture can meet the certificate: `solver` (`SolverParams.lean`) is a point of the
+parameter space of this decoder, built and not trained, whose logits are certified with the
+error `1/52200` against margins of at least `1/900` (`solver_certified`). What is measured
+below is therefore a property of the trained parameters.
 
 Of the 117 checkpoints of the nine complete runs, nine answer all 9312 equations, all of them
 under AdamW. Their orbit of nonzero numerators, 9216 equations:

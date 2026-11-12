@@ -25,6 +25,16 @@ public import Transformer.Grokking.Protocol.RefutationModes
 public import Transformer.Grokking.Protocol.MarginTransfer
 public import Transformer.Grokking.Protocol.QuotientTransfer
 public import Transformer.Grokking.Protocol.QuotientWitness
+public import Transformer.Grokking.Protocol.DiscreteLog
+public import Transformer.Grokking.Protocol.NormScale
+public import Transformer.Grokking.Protocol.SolverParams
+public import Transformer.Grokking.Protocol.SolverLookup
+public import Transformer.Grokking.Protocol.SolverAttention
+public import Transformer.Grokking.Protocol.SolverGap
+public import Transformer.Grokking.Protocol.SolverForward
+public import Transformer.Grokking.Protocol.SolverLogits
+public import Transformer.Grokking.Protocol.SolverScale
+public import Transformer.Grokking.Protocol.HeldOutCertificate
 
 /-! The protocol behind the division curves of Power et al., *Grokking: generalization beyond
 overfitting on small algorithmic datasets*, and what "held-out accuracy tends to 1" means for
@@ -45,9 +55,15 @@ sufficient condition for every answer: a row of logits within `ε` of a relabell
 its margin less `2 ε`, so two equations answered with margins above `2 ε`, one with a nonzero
 quotient and one with the quotient zero, give all 9312 answers when the logits move with the
 scalings of numerator and denominator up to `ε`, with a witness of positive error and the
-decoder with every parameter zero, which has the symmetry and no answer. The target is a
-predicate of the model, its labels and its gradient oracle: no convergence of any transformer
-is proved here, and no trained decoder is shown to have that structure. The map of what is
-proved elsewhere and what is missing is `review/grok_division_convergence.md`. -/
+decoder with every parameter zero, which has the symmetry and no answer; parameters of the
+decoder, built and not trained, that answer all 9312 equations and satisfy that condition
+with a positive error: two attention heads subtract the logarithms to the base 5 of the
+numerator and the denominator, and the hidden units look the quotient up; and the same
+condition as a certificate of the held-out accuracy from two training answers, with the
+splits that give an anchor to each orbit, and parameters that fit every training answer of a
+split and miss a held-out one. The target is a predicate of the model, its labels and its
+gradient oracle: no convergence of any transformer is proved here, and no trained decoder is
+shown to have that structure. The map of what is proved elsewhere and what is missing is
+`review/grok_division_convergence.md`. -/
 
 @[expose] public section

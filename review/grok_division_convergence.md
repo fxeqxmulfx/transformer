@@ -4,10 +4,11 @@ Board tasks #126–#132 and #137. Sources: `papers/arXiv-2201.02177v1/main.tex` 
 Figure 1 and the appendix *Additional experimental details*; openai/grok at `3d64b1d8`; the
 protocol pinned in `experiments/grok_division/PROTOCOL.md`. Written 2026-11-11.
 
-The paper shows curves of finite runs. It states no theorem, and nothing below proves that any
-transformer generalizes. This note fixes what such a theorem would say, proves that it is
-false unless something is asked of the split, lists what the repository proves about
-neighbouring objects, and names the bridges that are missing.
+The paper shows curves of finite runs. It states no theorem, and nothing below proves that
+training makes any transformer generalize. This note fixes what such a theorem would say,
+proves that it is false unless something is asked of the split, lists what the repository
+proves about neighbouring objects and about parameters of the decoder that are built rather
+than trained, and names the bridges that are missing.
 
 ## 1. The target
 
@@ -102,6 +103,7 @@ every positive statement.
 | `Landscape/Neural` | `crossEntropy`, `crossEntropy_nonneg`, `analyticAt_crossEntropy`, `exists_compact_rotate90_adamw_container` | The loss, reused here; analyticity and an AdamW box for the Rotate90 model (SiLU, RMS norm, tied readout) | Another architecture and schedule; the paper's decoder has ReLU and is not analytic |
 | `Grokking/AdamW`, `EffectiveTheory`, `CircuitEfficiency`, `Composition`, `Geometry` | for example `coupled_first_growth_iff`, `quarticCE_every_rate_can_overshoot` | Effective models and diagnostics of learned circuits | None is the decoder's trajectory |
 | `Grokking/Protocol` (`MarginTransfer`, `QuotientTransfer`, `QuotientWitness`) | `margin_sub_le_of_abs_sub_le`, `predict_eq_residueToken_of_anchor`, `predict_eq_residueToken_of_two_anchors`, `predict_bentLogits`, `predict_answerLogits_zero_ne` | Logits that move with the scalings of numerator and denominator up to an error carry two answers with margins above twice the error, one for each orbit of the scalings, to all 9312 equations, over all 239 tokens; the decoder with every parameter zero has the symmetry and answers nothing | A sufficient structure for held-out correctness. No proof that training produces it, and no trained decoder is shown to have it: at each of the 117 checkpoints measured in `experiments/grok_division`, in doubles, twice the error exceeds the margin of every training anchor on the equations with a nonzero numerator (board #78 keeps a certificate of a trained model open) |
+| `Grokking/Protocol` (`DiscreteLog`, `NormScale`, `SolverParams` to `SolverScale`, `HeldOutCertificate`) | `solver`, `answerLogits_solver`, `exists_param_forall_predict`, `solver_certified`, `heldout_accuracy_eq_one_of_anchors`, `heldout_accuracy_solver`, `uniformPerm_covered_pos`, `uniformPerm_compl_covered_pos`, `exists_fit_training_wrong_heldout` | The decoder itself, in exact reals: built parameters whose logits are a positive multiple of the mark of the answer, so that all 9312 equations are answered; the certificate of held-out accuracy 1 from two training answers on `answerLogits θ`, which those parameters satisfy with the error `1/52200`; the splits with an anchor in each orbit; and parameters that fit all 4656 training answers of a split and miss a held-out one | The parameters are built, not reached by the optimizer: this shows that the answers and the structure are in the range of the architecture, and that training accuracy does not force them. Nothing here says that a run arrives at them |
 
 Two substitutions are therefore excluded, and no statement here makes them:
 
@@ -126,15 +128,19 @@ Two substitutions are therefore excluded, and no statement here makes them:
    at most `0.017 t` under Adam, and within `max(|θ₀|, 17)` of 0 under AdamW with weight decay 1.
    No descent, no bound of the Adam run uniform in `t`, and no limit of the trajectory or of
    its logits is proved or assumed.
-5. **Structure gives correct answers** (#129, after #78): a certificate on the decoder's own
-   logits that implies the right largest logit on every held-out equation. The implication is
-   proved for any logits (`predict_eq_residueToken_of_two_anchors`, hence for `answerLogits θ`).
-   Missing is a decoder that satisfies it with its training answers: the witnesses are logits
-   that are not a decoder's, and the trained checkpoints fail the hypothesis.
+5. **Structure gives correct answers** (#129): proved, as a sufficient condition.
+   `heldout_accuracy_eq_one_of_anchors` gives held-out accuracy 1 from two training answers,
+   their margins and the error of the decoder's logits against the scalings; `solver`
+   satisfies it (`heldout_accuracy_solver`); a uniformly random split gives an anchor to each
+   orbit with positive probability and fails to with positive probability; and fitting every
+   training answer does not suffice (`exists_fit_training_wrong_heldout`). What this leaves:
+   the condition is not known to be necessary, and no trained parameters are shown to meet
+   it. At the checkpoints measured in `experiments/grok_division` they do not, with a training
+   equation as the anchor of the nonzero numerators.
 6. **Training reaches the structure** (#130): from the declared initialization law, with a
    stated probability.
 7. **Composition** (#131): 5 and 6 along one trajectory, for all later updates, for a target
    with a condition on the split; the unconditional one is refuted in section 2.
 
-Bridges 4 to 7 are open research problems. The measurements of `experiments/grok_division`
-are finite runs in `f32` and close none of them.
+Bridges 4, 6 and 7 are open research problems. The measurements of
+`experiments/grok_division` are finite runs in `f32` and close none of them.
