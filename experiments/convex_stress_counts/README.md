@@ -89,3 +89,21 @@ jq -s --slurpfile suite experiments/convex_stress/suite.json \
 # Save that generated combined JSON locally, then run compare.jq as above,
 # adding --argjson expected 210 and supplying the combined report as its input.
 ```
+
+## Independent CE check on saved models
+
+The saved-model auditor is ported from `f3e27323` to the larger value alphabet.
+It computes uncentered full-vocabulary gradients and exhaustively minimizes
+the linear cost over each query/key/value/class, using no retained gradients
+or optimizer oracle. On parity-16 full batch at scale 1 and parity-24 minibatches
+at scale 10, independent gaps agree within `3.2e-13` and CE within `6.4e-17`.
+The first gap is numerically zero; the second remains `0.0044565` despite
+100% primary accuracy. This is an f64 cross-check, not an interval certificate.
+A tampered saved gap is rejected. The cohort combiner also rejects a missing
+planned cell. Adding this auditor leaves the frozen training binary identical.
+
+```sh
+cargo run --offline --release --bin audit_saved --manifest-path experiments/convex_stress_counts/Cargo.toml -- \
+  experiments/convex_stress_counts/runs/pilot-v1/scale1/full_batch/basis-parity16/seed0 \
+  experiments/convex_stress_counts/runs/pilot-v1/scale10/minibatch/basis-parity24/seed0
+```
