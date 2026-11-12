@@ -94,6 +94,26 @@ equivalence. The reported count FW gap is computed by the imported optimizer;
 the basic replay checks its recorded stopping criterion and recomputes CE,
 but does not independently recompute every count-model gradient/oracle gap.
 
+Two additional saved-model auditors perform those numerical cross-checks:
+
+```sh
+OPENBLAS_NUM_THREADS=1 experiments/convex_stress_hull/target/release/audit_moments CANDIDATE_DIRECTORY PRODUCER_FINGERPRINT
+OPENBLAS_NUM_THREADS=1 experiments/convex_stress_hull/target/release/audit_counts CANDIDATE_DIRECTORY PRODUCER_FINGERPRINT
+```
+
+The moment auditor reads raw probability coordinates and independently computes
+predictions, ordinary CE and direct Fourier sums, without the producer's FFT,
+loss, projection or prediction functions. It checks both spectral budgets and
+all split metrics, including native-label and residue-pooled scores separately.
+The LAPACK SVD is shared, so its norm checks are not interval certificates.
+The count auditor shares the fixed causal adapter and forward map, but computes
+uncentered full-vocabulary derivatives and an exhaustive linear oracle without
+the optimizer's centered gradients, gradient memory or oracle. It compares
+fresh full-data FW gaps for both full-batch and minibatch endpoints, and checks
+CE and feasibility for forward-only endpoints. An additional native test checks
+residue-pooling alias multiplicities and base shifts. Corrupted recorded CE and
+FW-gap controls must be rejected by the corresponding auditors.
+
 `summary.json` requires the exact 315-record inventory; `selected.json`
 reports all 105 choices, primary passes and passes on every nonempty split.
 `replay-selection` recomputes the training decisions and evaluations.
