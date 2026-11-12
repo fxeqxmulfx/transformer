@@ -297,7 +297,8 @@ impl Bank {
         }
         Ok(features)
     }
-    /// Explicit coefficient, gradient and u32 feature-cache buffers. This is
+    /// Explicit coefficient, gradient, projection scratch, feature-cache and
+    /// observation/index buffers. This is
     /// an allocation estimate; a separate OS limit must cover total process RSS.
     pub fn allocation_bytes(&self, observations: usize) -> Result<usize> {
         self.validate()?;
@@ -305,9 +306,20 @@ impl Bank {
             .checked_mul(self.vocab)
             .and_then(|n| n.checked_mul(16))
             .and_then(|n| {
+                self.dimension()
+                    .checked_mul(8)
+                    .and_then(|m| n.checked_add(m))
+            })
+            .and_then(|n| {
+                self.vocab
+                    .checked_mul(64)
+                    .and_then(|m| n.checked_add(m + 8))
+            })
+            .and_then(|n| {
                 observations
                     .checked_mul(self.paths())
                     .and_then(|m| m.checked_mul(8))
+                    .and_then(|m| observations.checked_mul(32).and_then(|o| m.checked_add(o)))
                     .and_then(|m| n.checked_add(m))
             })
             .ok_or_else(|| "path-bank allocation overflow".into())

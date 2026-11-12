@@ -57,6 +57,7 @@ dependencies = [
  "convex-stress-hull",
  "serde",
  "serde_json",
+ "sha2",
 ]
 
 [[package]]

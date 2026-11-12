@@ -1,0 +1,21 @@
+{
+  "stage": "training_only_memory_and_optimizer_check",
+  "heldout_scoring": false,
+  "tasks": ["basis-depth-easy", "basis-depth-hard", "basis-recall-easy", "gpt-probe-key-value-binding"],
+  "depths": [0, 1, 2, 4],
+  "modes": ["full_batch", "minibatch", "forward_only"],
+  "transport": "Fourier",
+  "history_slots": 4096,
+  "radius_times_vocab": 32,
+  "initializer_log_frequency_floor": -24,
+  "common_training_label_initializer": true,
+  "full_batch_updates": 16,
+  "minibatch_updates": 256,
+  "minibatch_examples": "original task batch size, shuffled with seed 1, keep tail",
+  "gradient_learning_rate": "1 / active feature count",
+  "minimum_gradient_updates": 1,
+  "training_ce_stop": 1e-8,
+  "explicit_buffer_limit_gib": 2,
+  "process_address_space_limit_gib": 8,
+  "concurrent_jobs": 1
+}

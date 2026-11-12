@@ -10,6 +10,7 @@ publish = false
 convex-stress-hull = { path = "../convex_stress_hull" }
 serde = { version = "=1.0.229", features = ["derive"] }
 serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+sha2 = "=0.11.1"
 
 [profile.release]
 lto = "thin"

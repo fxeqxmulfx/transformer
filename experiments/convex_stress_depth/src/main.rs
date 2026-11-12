@@ -1,4 +1,4 @@
-//! Allocation-only preflight. No head fitting or held-out scoring is performed.
+//! Allocation preflight and training-only optimizer checks. No held-out scoring.
 use convex_stress_depth::{
     Result, data,
     features::{Bank, Transport},
@@ -51,7 +51,25 @@ fn main() -> Result<()> {
     if args == ["prepare"] {
         println!("{}", serde_json::to_string_pretty(&prepare()?)?);
         Ok(())
+    } else if args == ["fingerprint"] {
+        println!("{}", convex_stress_depth::training::fingerprint());
+        Ok(())
+    } else if args.len() == 5 && args[0] == "train-check" {
+        convex_stress_depth::training::run(
+            &args[1],
+            args[2].parse()?,
+            &args[3],
+            std::path::Path::new(&args[4]),
+        )
+    } else if args.len() == 2 && args[0] == "replay-train" {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&convex_stress_depth::training::replay(
+                std::path::Path::new(&args[1])
+            )?)?
+        );
+        Ok(())
     } else {
-        Err("usage: convex-stress-depth prepare".into())
+        Err("usage: convex-stress-depth prepare | train-check TASK DEPTH MODE FRESH_DIRECTORY | replay-train DIRECTORY".into())
     }
 }

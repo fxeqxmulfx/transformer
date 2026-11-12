@@ -60,14 +60,18 @@ frozen sharing follow-up; do not select a budget using held-out accuracy.
 
 CD8 at `32a9b668` additionally proves convex ordinary CE for a learned combined
 path/feature/class tensor with per-class absolute-sum budgets. The native
-`convex_stress_depth` follow-up currently implements fixed causal path blocks
-and an allocation-only preflight; no head is trained and no stress accuracy is
-claimed. Original easy/hard depth, long MQAR and short binding are its initial
+`convex_stress_depth` follow-up implements fixed causal path blocks, a bounded
+combined head, an allocation preflight and training-only full/mini/forward
+checks. No held-out stress accuracy is claimed. Original easy/hard depth,
+long MQAR and short binding are its initial
 diagnostics. Check buffers against 2 GiB and run under an 8 GiB process cap.
 The implemented Fourier/identity pair transports both skip and branch updates;
 it is an expected coordinate-invariance control, not a claim that changing only
-the skip improves accuracy. Complete the head solvers and freeze their full,
-mini and forward-only comparison before evaluating the original held-out splits.
+the skip improves accuracy. The first diagnostic checks the short binding task
+at depth one, serially, before any broader cohort. All modes count their common
+training-label initializer; full/mini also perform projected CE refinement.
+Complete the independent/additive baselines and freeze the full comparison
+before evaluating the original held-out splits.
 
 The user requested a theory extension to depth, residuals and the newer mHC
 in the local DiffGPT repository, and authorized a new connection. The

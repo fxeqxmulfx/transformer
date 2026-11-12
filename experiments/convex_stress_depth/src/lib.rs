@@ -3,4 +3,7 @@
 //! convex. Numerical feature construction and optimization require native checks.
 pub use convex_stress_hull::spectral::C;
 pub use convex_stress_hull::{Result, data, hash, metrics};
+pub mod checkpoint;
 pub mod features;
+pub mod head;
+pub mod training;

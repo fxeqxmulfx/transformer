@@ -7,10 +7,10 @@ allows a learned combined path/feature/class tensor under per-class absolute-sum
 budgets. The blocks remain fixed. Separate learned routing and decoder factors
 would introduce a product and are not covered by that joint-convexity claim.
 
-This directory currently contains the path component and an allocation
-preflight. No output head has been trained and no stress accuracy is claimed.
-The next stage must implement and freeze the full/mini/forward-only head
-comparison and independent-routing/additive baselines before scoring them.
+This directory contains the path bank, a learned output tensor, an allocation
+preflight and training-only optimizer checks. No held-out stress accuracy is
+claimed. Independent-routing/additive baselines and the complete comparison
+protocol remain to be implemented and frozen before scoring held-out splits.
 The interrupted earlier 35-task cohort remains unchanged.
 
 | Component | Fixed construction | Information used |
@@ -41,7 +41,8 @@ There are at most seven views and `2^depth` paths per view. Depth is capped at
 four, prefixes at 1024 tokens, vocabulary at 1024, and history slots at 4096.
 The preflight uses the original frozen easy/hard depth, long MQAR and short
 binding datasets, checks their hashes through the existing native constructor,
-and estimates coefficient, gradient and u32 feature-cache allocations for
+and estimates coefficient, gradient, projection scratch, feature-cache and
+observation-index allocations for
 depths 0, 1, 2 and 4. Explicit buffers above 2 GiB must be rejected before
 allocation. An 8 GiB OS address-space limit must also cover data, libraries,
 temporary buffers and serialization. Hash collisions remain part of the model.
@@ -56,15 +57,50 @@ cargo build --offline --release --manifest-path experiments/convex_stress_depth/
 bash experiments/convex_stress_hull/limited.sh 8 experiments/convex_stress_depth/target/release/convex-stress-depth prepare
 ```
 
-Six component checks cover complex norm preservation, genuinely composed
-history, causal completed successors, matched-coordinate invariance, early
-resource-limit rejection and independence from labels/task names. These are
-implementation checks, not benchmark outcomes or a learning convergence proof.
+Thirteen native checks cover the complex path invariants, early allocation
+rejection, independence from labels/task names, CE finite differences, exact
+L1 projection, example minibatches with repetitions and tails, empirical
+forward frequencies, an exhaustive linear-oracle comparison, and checkpoint
+roundtrip/corruption handling. These are implementation checks, not benchmark
+outcomes or a learning convergence proof.
 
-The allocation preflight on the original four datasets completed in 2.26 seconds
+The initial allocation preflight at `ba53e536` completed in 2.26 seconds
 at 244.5 MiB peak RSS under the 8 GiB process limit. Depth-4 MQAR would require
-4,704,824,320 bytes for the explicit buffers and is rejected by the 2 GiB budget;
+4,714,141,320 bytes with the expanded scratch/index accounting and is rejected
+by the 2 GiB budget;
 its depths 0, 1 and 2 fit. All four depth choices fit for the two depth tasks
 and short binding. These are allocation estimates, not measured training peaks.
 The preflight, resource log and component-check logs are retained outside the
 worktree in `.kanban/artifacts/175/`.
+
+`train_check.json` fixes a training-only diagnostic with radius `32 * vocab`,
+depths 0/1/2/4, and the original data hashes and supervision multiplicities.
+Every mode first builds the same training-label frequency proposals, with
+log frequencies floored at -24, then selects a feasible proposal by original
+training CE. Full-batch and minibatch refine that initializer by projected CE
+gradient steps; forward-only constructs no loss gradient. These are not
+comparisons of optimizers starting from zero. The initializer's complete data
+and time costs are recorded for all three modes.
+
+Full-batch has at most 16 updates and minibatch at most 256, using the original
+example batch size, seed-1 shuffle and final short batch. At least one gradient
+update precedes the `1e-8` training-CE stopping check. The learning rate is the
+reciprocal of the active-feature count. Full gradients produce a numerical
+linear-oracle gap; forward-only leaves that field null. This diagnostic does
+not claim a proved finite-iteration convergence rate.
+
+The serial launcher enforces an 8 GiB address-space cap on both training and
+replay. Checkpoints stream coefficients as binary floats without a large JSON
+copy. Each result records the compiled source fingerprint, producer commit,
+data fingerprints, model hash, costs and gradient/example/prefix counts.
+Replay reloads the saved model, reconstructs training-only feature discovery,
+recomputes original training CE and checks the class budgets.
+
+```sh
+export DEPTH_PRODUCER_COMMIT=$(git rev-parse HEAD)
+# The parent of FRESH_DIRECTORY must exist; existing runs are never overwritten.
+bash experiments/convex_stress_depth/run_train_checks.sh FRESH_DIRECTORY gpt-probe-key-value-binding 1
+```
+
+No validation or test metric is computed by this command. The larger depth
+comparison and fresh matched transformer baseline remain outstanding.
