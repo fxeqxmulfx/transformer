@@ -1,0 +1,36 @@
+{
+  "version": "hull-interruption-recovery-v1",
+  "parent": "experiments/convex_stress_hull/runs/suite-v1",
+  "producer_commit": "ff368fd54ec67f7358457a229375ddc26384ad06",
+  "source_fingerprint": "64a2fbfec2c396cb89a7a4d248a4e105a37d0a740adb1f87f648d6d5f43580ca",
+  "producer": ".kanban/artifacts/166/convex-stress-hull-v1",
+  "counts_auditor": ".kanban/artifacts/177/audit-counts-v2",
+  "moments_auditor": ".kanban/artifacts/166/audit-moments-v1",
+  "completed_manifest": ".kanban/artifacts/177/completed-results-before-recovery.sha256",
+  "interruption_manifest": ".kanban/artifacts/177/interruption-manifest.json",
+  "missing": [
+    "forward_only--recurrence-fibonacci-k1-c2-lgt--full_rank",
+    "minibatch--basis-recall-easy--counts",
+    "minibatch--recurrence-fibonacci-k1-c2-lgt--full_rank",
+    "minibatch--recurrence-fibonacci-k1-c2-lgt--rank_one"
+  ],
+  "address_space_limit_bytes": 68719476736,
+  "concurrent_numerical_processes": 1,
+  "blas_threads": 1,
+  "disk_reserve_bytes": 17179869184,
+  "native_libraries": {
+    "/lib/x86_64-linux-gnu/libfftw3.so.3": "de77e73eb77a10462e27cb851c0a68e9064d0b6d72b90f6be3edcf64b6d2bdc7",
+    "/lib/x86_64-linux-gnu/libopenblas.so.0": "be2e7d119279836105e0361be92c78dbcd8a6e7357e74339bdbb32a5195ee35e"
+  },
+  "frozen_inputs": {
+    ".kanban/artifacts/166/convex-stress-hull-v1": "478848d22a554cb80ed9b69ae8ce253cfa1d11349fa6187e3c9d67299d5474a7",
+    ".kanban/artifacts/177/audit-counts-v2": "2ebb0e893406a24dca0a6eb4738fd79c86a4c22ef10cb57292107b8320369323",
+    ".kanban/artifacts/166/audit-moments-v1": "f599c8340f270c8b976006830b14388a43e6d9ab264f36fae8f93ad7c8ff7d6b",
+    ".kanban/artifacts/177/completed-results-before-recovery.sha256": "d31b29d78e8a0a4413e47fae02a4d4fd2e9c33395486b1c3b793046b3510fe0c",
+    ".kanban/artifacts/177/interruption-manifest.json": "46d535d93b35e47190607337ba7c7fe5077ab9c3842edd1c39ab97809cb0731f",
+    "experiments/convex_stress_hull/runs/suite-v1/prepared.json": "d4801616a8241d325ab33262db84f33602fc8c6207c84546996cecc3b9d0efc4",
+    "experiments/convex_stress_hull/runs/suite-v1/planned.tsv": "d99091d015690dea27848f5e700c73180cf8675570f3c8c1fa03fe75d8dc997f",
+    "experiments/convex_stress_hull/runs/suite-v1/protocol.json": "b591ba08e0a41609852d33fc7e6451a23c2a4b02948d367ba72c7309443415bf"
+  },
+  "policy": "Retry exactly the four missing endpoints, from the unchanged initialization. Preserve the original interrupted directories and 311 completed results. No completed failure or low-accuracy endpoint is rerun. Keep the original producer, all solver parameters, caps, batches, seeds, stopping and evaluation. The memory cap is the user's new 64 GiB limit; this is a separate recovery cohort, not an uninterrupted original run or solver resume. Run training, replay, independent audits and selection serially. Record every exit and resource usage; a failed attempt prevents a complete comparison but does not erase or skip the other attempts. A separate verified view links the 311 original endpoints and four new endpoints for the unchanged 315-slot/105-choice selector. A full-suite pass is claimed only if the original metrics establish it."
+}

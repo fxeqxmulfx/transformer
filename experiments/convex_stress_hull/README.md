@@ -166,3 +166,11 @@ ineligible records remain in the inventory. Audit completion does not supply
 their missing endpoints or complete the 315-cell experiment.
 The previous three-task success and count-only result of 10/35 remain separate;
 combining their best reported scores does not establish a whole-suite pass.
+
+The separate [four-cell recovery](recovery/README.md), task #204, now freezes
+fresh attempts for exactly those missing endpoints using the unchanged producer.
+It preserves all 311 original outcomes and interrupted traces, verifies their
+hashes and audits, and uses the user's new 64 GiB process limit. A separate view
+will supply all 315 slots to the original 105-choice selector after the four new
+attempts replay and pass independent audits. No recovered result or whole-suite
+completion is claimed by this preparation.
