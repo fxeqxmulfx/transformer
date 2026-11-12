@@ -49,6 +49,7 @@ public import Transformer.Grokking.Protocol.ReadoutSymmetry
 public import Transformer.Grokking.Protocol.Unlabelled
 public import Transformer.Grokking.Protocol.LabelCoverage
 public import Transformer.Grokking.Protocol.LabelWitness
+public import Transformer.Grokking.Protocol.LabelProbability
 public import Transformer.Grokking.Protocol.Continuity
 public import Transformer.Grokking.Protocol.LimitNotFitted
 public import Transformer.Grokking.Protocol.Differentiability
@@ -94,8 +95,10 @@ split that every true form of the target needs: a residue that is the answer of 
 equation has a token that is no training target, exchanging its readout row with that of a
 token that division never shows is then a symmetry of the run, and so the target is false
 under every condition that admits a split with such a residue, the condition that the split
-has an anchor for each orbit and shows every residue among them. The target is a predicate of
-the model, its labels and its gradient oracle: no convergence of any transformer
+has an anchor for each orbit and shows every residue among them, almost surely and in
+probability: given such a split a held-out answer is wrong with a conditional probability of
+at least one half at every update. The target is a predicate of the model, its labels and its
+gradient oracle: no convergence of any transformer
 is proved here, and no trained decoder is proved to have that structure, for an enclosure of
 its logits is a hypothesis here. The map of what is proved elsewhere and what is missing is
 `review/grok_division_convergence.md`. -/

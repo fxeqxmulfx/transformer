@@ -93,7 +93,8 @@ This does not say that grokking fails. It says that "for almost every run" is to
 true theorem needs a condition on the split, or a probability below 1.
 
 **A smaller defect of the split is enough.**
-`Protocol/{ReadoutSymmetry,Unlabelled,LabelCoverage,LabelWitness}.lean`. Call a split
+`Protocol/{ReadoutSymmetry,Unlabelled,LabelCoverage,LabelWitness,LabelProbability}.lean`.
+Call a split
 *labelled* when every residue is the quotient of a training equation. If the residue `r` is
 not, all 96 equations with the answer `r` are held out, and the token of `r` is the target of
 no training example, like the 141 tokens that are no residue and not `<|eos|>`; it may still
@@ -111,6 +112,7 @@ same way from both starts and its logits of the two tokens are exchanged
 | --- | --- |
 | At every update, P(some held-out answer is wrong) ≥ ½ P(the split leaves `r` unlabelled) > 0, for each residue `r` | `uniformPerm_unlabelled_le`, `uniformPerm_unlabelled_pos` |
 | The target is false under every condition on the split that admits a split that is not labelled; so a condition under which it holds admits labelled splits only | `not_ae_eventually_of_not_mem_labelled` |
+| Given that the split is not labelled, at every update P(some held-out answer is wrong) ≥ ½, for one such split and for every set of them; so under a condition that admits one the target fails in probability too | `uniformPerm_singleton_le`, `uniformPerm_le_of_subset_compl_labelled`, `not_tendsto_law_inter_wrongAt` |
 | To be labelled is neither sure nor impossible | `uniformPerm_compl_labelled_pos`, `uniformPerm_labelled_pos` |
 | A labelled split is anchored (bridge 5); an uncovered split is not labelled | `labelled_subset_anchored`, `uncovered_subset_unlabelled` |
 | The split that trains on the first 4656 equations of the list is anchored and shows every residue in training, and it leaves the residue 96 unlabelled; so the target is false under the condition "anchored, and every residue occurs in training" | `one_mem_anchored`, `one_mem_occurring`, `one_mem_unlabelled`, `not_ae_eventually_anchored_occurring` |
@@ -247,10 +249,11 @@ of the present state finds this:
   (`division_generalizes_iff`); that the almost sure target and the target in probability are
   false without a condition on the split (section 2); that a structure of the logits gives
   held-out accuracy 1 and that built parameters have it (bridge 5); what two rows that enclose
-  the logits decide (bridge 5); that the target is false under every condition on the split
-  that admits a split with a residue that is the answer of no training equation (section 2);
-  and the two exclusions of section 5. None of these says that
-  a trained decoder generalizes.
+  the logits decide (bridge 5); that the target is false, almost surely and in probability,
+  under every condition on the split that admits a split with a residue that is the answer of
+  no training equation (section 2); that the gradient of the backward pass is a derivative,
+  and the gradient of the loss where no hidden input is 0 (bridge 3); and the exclusions of
+  section 5. None of these says that a trained decoder generalizes.
 - **Finite-horizon, native.** Nine runs in `f32` (three settings, seeds 0 to 2) and their 117
   retained checkpoints. At a checkpoint the parameters are reals exactly, and the logits of
   the exact-real decoder there are enclosed by a computation outside Lean; this decides the

@@ -293,3 +293,6 @@ import Transformer
 #print axioms Transformer.Grokking.Protocol.sum_layerNorm_const
 #print axioms Transformer.Grokking.Protocol.preactivation_one
 #print axioms Transformer.Grokking.Protocol.offKinks_one
+#print axioms Transformer.Grokking.Protocol.uniformPerm_singleton_le
+#print axioms Transformer.Grokking.Protocol.uniformPerm_le_of_subset_compl_labelled
+#print axioms Transformer.Grokking.Protocol.not_tendsto_law_inter_wrongAt
