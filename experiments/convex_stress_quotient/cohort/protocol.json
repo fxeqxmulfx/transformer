@@ -1,0 +1,11 @@
+{
+  "version": "quotient-catalogue-component-v1",
+  "component_commit": "3c11a69b7fe452bea9276e4f6de9ebdabe153384",
+  "proofs": ["CM30 e02b7c49", "CD8 JointHead", "CM25 latent Fourier bounds"],
+  "catalogue": "Every prime from2 through257, in increasing order, independent of target names",
+  "memory_limit_bytes": 68719476736,
+  "artifact_limit_bytes": 8589934592,
+  "execution": "One complete binding report at a time; preserve every returned error and refusal; release it before the next prime. Configuration and all55 stages are required for replay.",
+  "selection": "Separate full,mini,forward minima of actual original raw-label training CE. Increasing prime order, replace only for a decrease greater than1e-12. No held-out target, readout or certificate tie-breaker.",
+  "scope": "Component only. Original full35 parent adapter and reviewed task226 are still required before an original cohort freeze. No raw-label identification or target-readout compatibility inferred. Replay checks measured outputs and work, not elapsed wall-clock truth."
+}

@@ -21,6 +21,10 @@ gradient/projection replay and original raw-row certificates. Hidden aliases
 are handled at the code level without claiming unique raw answers. This uses
 the already proved CM30 and CD8 statements; original task evaluation remains
 gated on task226 and a separate prospective freeze.
+The first task231 component now streams all55 prime stages with five further
+checks, retaining every success, refusal, error and work record. Its complete
+original parent-comparison adapter remains unfinished; no new original score
+follows from the catalogue fixtures.
 
 ## Recovered comparison queues (2026-11-13)
 
