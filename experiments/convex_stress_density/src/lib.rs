@@ -4,12 +4,16 @@
 pub use convex_stress_decode::{C, Model, Result, Sample, random};
 pub mod affine;
 pub mod artifact;
+pub mod assignment_certificate;
 pub mod audit;
 pub mod comparison;
 pub mod interval;
 pub mod interval_audit;
 pub mod interval_search;
 pub mod matrix;
+pub mod refinement;
+pub mod refinement_audit;
+pub mod refinement_search;
 pub mod search;
 pub mod solver;
 
@@ -26,6 +30,8 @@ pub fn memory_bound(n: usize, rank: usize) -> Result<u64> {
 mod interval_search_tests;
 #[cfg(test)]
 mod interval_tests;
+#[cfg(test)]
+mod refinement_tests;
 #[cfg(test)]
 mod search_tests;
 #[cfg(test)]

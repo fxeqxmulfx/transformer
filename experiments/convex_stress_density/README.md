@@ -38,10 +38,12 @@ These floating-point diagnostics are **not** interval or Lean certificates.
 | Centered, re-orthonormalized noisy subspace | Distinguish normalization from the exact-subspace hypothesis | The affine equalities are inconsistent; the extractor explicitly refuses. |
 | Capped/invalid input and modified artifacts | Check budgets, replay and refusal paths | Failures remain explicit; changing the matrix, dual, input, trace or audit is rejected. |
 
-Twenty-one native tests cover these cases, the complex eigensolver/coordinate
+Twenty-six native tests cover these cases, the complex eigensolver/coordinate
 conventions, categorical proposal/comparison and interval paths. Eight cover
 the exact extractor, four cover the exact proposal path, six cover the interval
-solver and three cover interval proposals and retained comparisons. The standalone `fixtures-v1`
+solver, three cover interval proposals and retained comparisons, and five
+cover certified refinement, replay, categorical renaming and budget limits.
+The standalone `fixtures-v1`
 run accepts the rotated case after
 46 and 41 iterations; its final diagonal error is `4.11e-9`. The real-tie
 case takes 3 and 3 iterations with diagonal error `1.11e-15`. Both artifacts
@@ -167,8 +169,57 @@ still replay. Peak RSS for both revised fixtures with verification is
 This fixes a numerical-domain obstruction and budget starvation, but does
 not identify the correct phases from masked labels. The accepted bad candidate
 passes the latent flat-spectrum audit, illustrating the remaining limitation.
-Observed-label agreement must guide phase/decoder recovery more directly;
-the current earlier candidate is retained while that is investigated.
+Observed-label agreement guides the phase/decoder recovery below.
+
+## Certified observed-label refinement
+
+CM23, proved in Lean first at `0bb5496f`, identifies actual unit-logit CE
+excess with observed mismatch count. Feasible assignment dual potentials,
+tight on the returned permutation, certify the minimum of each axis update.
+Decoder count maxima cannot increase CE. Every new decoded phase table remains
+in the same convex spectral prediction hull, including imperfect fits. This
+certifies local updates; the discrete proposal search is not a global convex
+optimization oracle and supplies no universal unseen-label guarantee.
+
+`assignment_certificate.rs` returns integer row and column potentials.
+An independent checker uses `i128` to verify every inequality, tight edge and
+objective, including malformed extreme saved potentials without overflow.
+`refinement.rs` alternates decoder, row, decoder, column and decoder steps,
+keeping old decoder entries on count ties. It stops on exact observed fit,
+repeated state or the declared round cap. Every state and assignment dual is
+saved. Uncovered latent states are recorded and are not selectable endpoints.
+`refinement_audit.rs` separately reconstructs actual labels, checks error
+descent and coverage, rebuilds assignment costs, verifies decoder maxima,
+and audits the selected endpoint's raw latent DFT/SVD and full-vocabulary CE.
+
+`refinement_search.rs` retains the full exact/interval comparison, including
+all failures and supplied earlier candidates. Defaults are 24 rounds per seed,
+16 seeds and 256 assignments overall. Errors charge their full reserved
+allowance; every skipped slot gets an explicit reason. Earlier CE ties retain
+the earlier model. Integer construction work and independent audit work are
+recorded separately; full replay repeats the work. No CE gradients are used.
+
+The masked eleven-state fixture improves from **53/113 observed errors to
+zero**, after two assignments and three decoder refits. Independent evaluation
+of its 121 known fixture labels finds zero errors, including all eight withheld
+cells. Construction uses 2,486 assignment-label comparisons and 242 assignment
+relaxations; the independent checker scans 27,346 observation/assignment pairs
+and verifies 242 dual inequalities. CE becomes `1.5430404724093327`, the ideal
+unit-logit value for its full eleven-class vocabulary. The unrefined bad
+candidate and every exact/interval failure remain in the report.
+
+Without a prior model, the refined masked candidate is selected. With the
+earlier correct decoder supplied, that decoder remains selected on the CE tie.
+The complete fixture retains its existing exact success, requiring no new
+assignments. All four comparisons in `refined-sketches-v1` replay from the
+original interval inputs and saved parents. Peak RSS, including verification,
+is 69,896 KiB under the 64 GiB cap. This is a fixture recovery result, not a new
+original-task benchmark result or a full35/transformer comparison.
+
+The five refinement checks include all 512 binary three-by-three assignment
+matrices against exhaustive permutation minima; count/dual/state/work/input
+tampering; output renaming; uncovered states; seed and assignment caps; and
+full retained-parent replay. Frozen earlier cohorts are unchanged.
 
 From this directory, using native tools only:
 
@@ -186,6 +237,8 @@ prlimit --as=68719476736:68719476736 -- target/release/examples/intervals runs/i
 prlimit --as=68719476736:68719476736 -- target/release/convex-stress-density replay-interval runs/interval-fixtures-v1/perturbed_interval.input.json runs/interval-fixtures-v1/perturbed_interval.artifact.json
 prlimit --as=68719476736:68719476736 -- target/release/examples/interval_sketches runs/sketches-v1 runs/interval-sketches-v2
 prlimit --as=68719476736:68719476736 -- target/release/convex-stress-density replay-interval-proposal runs/interval-sketches-v2/masked.input.json runs/interval-sketches-v2/masked.proposal.json
+prlimit --as=68719476736:68719476736 -- target/release/examples/refined_sketches run runs/interval-sketches-v2 runs/refined-sketches-v1
+prlimit --as=68719476736:68719476736 -- target/release/examples/refined_sketches replay runs/interval-sketches-v2 runs/refined-sketches-v1
 ```
 
 `extract INPUT.json NEW_ARTIFACT.json` also accepts externally supplied feature

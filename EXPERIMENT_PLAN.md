@@ -5,10 +5,14 @@
 Task #215 / CM23 proves the exact one-hot ordinary-CE/error identity, an
 independently checkable assignment dual certificate, decoder count descent
 and feasible row/column/decoder updates in the existing spectral decoder hull.
-Native refinement follows these proofs. It must retain the inaccurate interval
-candidate and all earlier candidates, expose assignment certificates, preserve
-observed-CE ties, replay full states and record costs under the 64 GiB cap.
-These local guarantees do not establish successful discovery or unseen answers.
+Native refinement now reduces the masked fixture from 53/113 observed errors
+to zero with two certified assignments and three decoder refits; all eight
+withheld fixture cells are correct. It retains the inaccurate interval candidate
+and every earlier candidate, exposes integer dual certificates and full states,
+and preserves the earlier correct model on CE ties. All 26 native checks pass;
+all four retained comparisons replay. Peak RSS is 69,896 KiB under the 64 GiB
+cap. Freeze a separate original-data protocol next; the fixture result does
+not establish full-suite success or general unseen-label recovery.
 
 ## Convex density tolerances (2026-11-13)
 
