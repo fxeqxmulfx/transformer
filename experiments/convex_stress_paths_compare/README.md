@@ -85,17 +85,25 @@ The frozen producer `ad272c62c44dfb9ca184b379bc6f017efd473e7c` completed
 preparation and integration replay under `runs/original-v1`. Both initializer
 arms have the same counts:
 
-| Mode | Every held-out split passes | Primary split passes | No model |
+| Mode | Declared benchmark successes | Every held-out split passes | No model |
 | --- | ---: | ---: | ---: |
-| Full batch | 33/35 | 34/35 | 0 |
-| Minibatch | 33/35 | 34/35 | 0 |
-| Forward only | 32/35 | 33/35 | 1 |
-| Conventional transformer | 32/35 | 33/35 | 0 |
+| Full batch | 34/35 | 33/35 | 0 |
+| Minibatch | 34/35 | 33/35 | 0 |
+| Forward only | 33/35 | 32/35 | 1 |
+| Conventional transformer | 33/35 | 32/35 | 0 |
+
+Per the user's2026-11-13 instruction, success follows each original test's
+declared criterion: the primary99% metric for these35 selected tasks.
+Additional split failures remain diagnostics, without revoking a declared
+success. Frozen artifacts still contain both count fields and their original
+stricter `full35_pass` flag; no result or model was rewritten. The conventional
+baseline is retained and is separate from DiffGPT's current research main.
 
 Each arm selects twelve retained Residual heads: depth4 on binding and both
 depth tasks, and depth2 on MQAR, across all three modes. Shifted Boolean AND
-still fails its out-of-distribution split, and the Fibonacci recurrence task
-still fails. Forward-only also lacks a branch-amplitudes model. The transformer
+succeeds on its primary split but fails its out-of-distribution diagnostic.
+The Fibonacci recurrence task still fails. Forward-only also lacks a
+branch-amplitudes model. The transformer
 row is the independently reviewed task191 cohort, referenced once across modes.
 These are observed-CE choices among retained models with their original costs;
 they do not establish matched compute or a new training algorithm.

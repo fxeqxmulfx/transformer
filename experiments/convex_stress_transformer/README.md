@@ -164,14 +164,16 @@ The existing convex cohorts and their serial queue remain unchanged.
 Frozen producer `414431c71806aa632807af697b63cd0b8b97c1f9` completed all 35
 seed-1 cases and saved endpoint replays. The summary verifies every observed
 checkpoint hash, all original metrics and the exact final optimizer update.
-There are 33 primary-split passes and 32 all-held-out-split passes; two models
-reach their original update caps. Every unsuccessful endpoint remains included.
+There are33 declared benchmark successes, using the original primary-split
+criterion as requested by the user on2026-11-13. The stricter all-held-out
+diagnostic has32 passes. Two models reach their original update caps. Every
+unsuccessful endpoint and additional diagnostic miss remains included.
 
-| Unsuccessful all-split case | Updates | Limiting split | Exact sequence accuracy |
-| --- | ---: | --- | ---: |
-| Easy depth | 250 | Test length 128 | 97.0703% |
-| Sum fourth power | 100,000 | Validation | 92.4336% |
-| Long MQAR | 20,000 | Every held-out split | 0% |
+| Case | Declared success | Updates | Diagnostic or failing split | Exact sequence accuracy |
+| --- | --- | ---: | --- | ---: |
+| Easy depth | Yes | 250 | Test length128 diagnostic | 97.0703% |
+| Sum fourth power | No | 100,000 | Validation | 92.4336% |
+| Long MQAR | No | 20,000 | Every held-out split | 0% |
 
 Easy depth already passes its original primary validation split at 250 updates,
 so the frozen stopping rule selects that endpoint. The other two failures

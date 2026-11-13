@@ -2,18 +2,29 @@
 
 ## Current full comparison status (2026-11-13)
 
-The reviewed comparison passes 33/35 tasks in full-batch and minibatch modes,
-and 32/35 forward-only, on every original held-out split. Both initializer
-policies have these counts and retain all 105 task/mode choices. Task226's
+Use each stress task's declared success criterion, per the user's 2026-11-13
+instruction. For these selected35 tasks this is the original primary 99%
+metric. Additional held-out probes remain diagnostics and do not revoke a
+declared success. The comparison covers the selected25 short and10 long tasks,
+not every case in `python_projects/diff-gpt/stress_tests_for_gpt.md`'s165-case
+historical catalog. Keep the existing conventional transformer baseline;
+an additional current-DiffGPT comparison is deferred in task240.
+
+The reviewed comparison succeeds on34/35 tasks in full-batch and minibatch
+modes, and33/35 forward-only. Both initializer policies have these counts and
+retain all105 task/mode choices. The stricter all-held-out diagnostic counts
+remain33/33/32; frozen reports and their historical flags are unchanged. Task226's
 independent replay rehashes 6786 artifacts and reproduces the complete report
 byte-for-byte. It compares saved endpoints using observed CE, with all earlier
 failures and costs retained; it is not a new joint optimizer or matched-compute
 comparison. Tasks175,191,225,226 and227 are approved.
 
-The conventional transformer passes 32/35 tasks; its independent review
-reproduces all 35 endpoints and the complete summary. Shifted Boolean AND and
-Fibonacci recurrence still fail in the new comparison, and forward-only also
-lacks a branch-amplitudes model. The goal of passing all 35 tasks remains open.
+The conventional transformer succeeds on33/35 tasks; its independent review
+reproduces all35 endpoints and the complete summary. Its all-held-out diagnostic
+count remains32/35. Fibonacci recurrence still fails in the convex comparison,
+and forward-only also lacks a branch-amplitudes model. Shifted Boolean AND is
+a declared success with a retained out-of-distribution diagnostic failure.
+The goal of succeeding on all35 tasks remains open.
 
 Tasks229–231 implement colliding-code discovery, bounded complex latent states,
 ordinary full-vocabulary CE and the complete original adapter. Independent
