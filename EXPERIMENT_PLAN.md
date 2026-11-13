@@ -299,6 +299,19 @@ also pins the unchanged CM34 numeric dependency. Original execution requires
 review and a separate freeze; full35 comparison and unknown-target hypotheses
 remain separate from these fixture checks.
 
+Task259's original CM35 training cohort has now closed under frozen producer
+`21e86e7c`: all23 cases and1265 stages complete with initial independent replay
+and zero process failures. There are19 complete grouped bases,12 observed-group
+incompatibility refusals,7 admitted raw expansions,1242 cardinality refusals and
+4 all-observation equation refusals. All seven admitted stages supply full,
+mini and forward endpoints with zero observed raw errors, including a new
+two-direction Fibonacci model. Its unknown-axis and unmatched-active masks
+remain explicit. Discovery/head construction totals74.235849478seconds and
+131 gradient batches; peak run/replay RSS372048KiB under64GiB. Fresh review and
+the full parent/transformer comparison remain separate; training fit changes
+no benchmark count. Only authored findings are committed; generated evidence
+remains in the root's ignored `cohort/runs/training-v1/` directory.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine
