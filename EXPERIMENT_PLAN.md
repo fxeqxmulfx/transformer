@@ -85,6 +85,15 @@ invalid inputs. It uses independent i128 row replay and retains every refusal.
 Categorical/model binding, explicit strip-model scope and a separate original
 selection freeze remain next. No new original score is claimed by this core.
 
+The categorical certificate now binds the actual observed matrix, all original
+code equations and shifted joint vector without missing-axis pins. Five further
+checks certify masked domains2–16 and the exact six-state Lean witness, preserve
+class renaming, and reject missing-axis ambiguity, collisions, omitted-equation
+conflicts and changed certificates. A realizable noncyclic joint-module example
+remains an explicit limitation. All ten native checks pass. Saved parent-model
+and raw-audit binding, strip-model scope and the separately frozen comparison
+are still required before any new original evaluation.
+
 ## Complete categorical fiber constraints (2026-11-13)
 
 Task #220 / CM26 starts from actual same-label observation groups. Lean proves

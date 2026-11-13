@@ -30,6 +30,25 @@ systems through modulus257, every work cap, invalid inputs, JSON round trips,
 row/state mutations and changed control-work counters. These are synthetic
 checks; no original task has been evaluated by this producer.
 
+The categorical layer now binds the certificate to actual observed cell/label
+identities and a proposed code. It checks class-code injectivity and every
+original equation before shifting the two gauges. It constructs the exact
+matrix from up to4096 observed equations, the two shift pins and one actual
+unit class anchor. It never inserts pins for missing axes. The independent
+checker rebuilds the partition, signed shifts and every coefficient separately
+before replaying the ring certificate. A full replay also binds all decisions
+and work. Acceptance means uniqueness within the declared bijective cyclic
+model; it does not assert that arbitrary ground truth has that structure.
+
+Five additional tests certify masked domains2–16 with repeated phases and
+unknown shifted codes, reproduce the exact six-state Lean witness, and check
+categorical renaming. A missing-axis example has two different predictions
+with identical observed fit; both are refused. Other checks retain collisions,
+conflicts beyond the elimination equation cap, budget stops, original-matrix
+and endpoint mutations, and a realizable model with a noncyclic joint module.
+The last refusal is a limitation of this sufficient certificate, not a proof
+that decoded recovery is impossible. All ten native tests pass.
+
 Matrices have at most1024 variables and8192 rows. The declared default permits
 two billion scalar updates, two million row operations, twenty million pivot
 tests and combination tests, and one million inverse tests. Storage forecasting
@@ -44,8 +63,7 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
 cargo clippy --locked --all-targets -- -D warnings
 ```
 
-Next: bind this certificate to the actual categorical observation matrix and
-model, independently check the class code and all original observations, and
+Next: bind it to the saved parent models and their raw spectral/CE audits, and
 declare a training-only selection rule before a separate original freeze. A
 strip view needs its constant-strip structural assumption stated explicitly;
 an interior certificate alone does not identify arbitrary strip answers.
