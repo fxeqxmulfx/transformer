@@ -99,6 +99,20 @@ success. Frozen artifacts still contain both count fields and their original
 stricter `full35_pass` flag; no result or model was rewritten. The conventional
 baseline is retained and is separate from DiffGPT's current research main.
 
+The existing DiffGPT research-main experiment records35/35 successes on each
+of seeds0,1,2, totaling75short+30long=105/105. Its selected arm is
+`phase-score-lerope`; the committed `research/main_model/model.json` records
+zero audit failures and identifies `runs/main-model-phase-score-01`.
+The suite in `python_projects/diff-gpt/research/complex_geometry_suite/suite.json`
+is byte-identical to our `convex_stress/suite.json`, SHA256
+`6d2735e987026959c3cde995fbe866281e4f0b2308cc71be4b9d2edd13840436`.
+Its rule is the first exhaustive primary held-out observation at99% exact
+sequences. This prior result is a separate comparison reference; our native
+conventional baseline remains33/35 at seed1. The DiffGPT generated run/audit
+directories are absent in the current checkout, so the prior record was checked
+against its committed manifest, README and runner, without a fresh numerical
+replay or adding missing checkpoints to this sealed integration.
+
 Each arm selects twelve retained Residual heads: depth4 on binding and both
 depth tasks, and depth2 on MQAR, across all three modes. Shifted Boolean AND
 succeeds on its primary split but fails its out-of-distribution diagnostic.

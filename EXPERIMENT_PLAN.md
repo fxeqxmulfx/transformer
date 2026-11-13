@@ -7,8 +7,16 @@ instruction. For these selected35 tasks this is the original primary 99%
 metric. Additional held-out probes remain diagnostics and do not revoke a
 declared success. The comparison covers the selected25 short and10 long tasks,
 not every case in `python_projects/diff-gpt/stress_tests_for_gpt.md`'s165-case
-historical catalog. Keep the existing conventional transformer baseline;
-an additional current-DiffGPT comparison is deferred in task240.
+historical catalog. Keep the existing conventional transformer baseline.
+DiffGPT's existing selected research-main record reports35/35 for each seed
+0/1/2:75short and30long successes,105/105 total. Its
+`research/complex_geometry_suite/suite.json` is byte-identical to ours
+(SHA256`6d2735e987026959c3cde995fbe866281e4f0b2308cc71be4b9d2edd13840436`).
+The committed `research/main_model/model.json` and README identify the selected
+`phase-score-lerope` arm and record zero audit failures. Generated run/audit
+artifacts are absent from that checkout, so this is an existing recorded result,
+not a fresh replay or a new integrated endpoint. No replacement baseline run
+is needed to establish what the prior experiment reports.
 
 The reviewed comparison succeeds on34/35 tasks in full-batch and minibatch
 modes, and33/35 forward-only. Both initializer policies have these counts and
