@@ -16702,3 +16702,69 @@ does not establish efficient global search, completeness of a capped branch
 bank, true unseen labels or any new original-task score. Freeze the tested
 native producer before original discovery and preserve all prior candidates,
 full35/modes/transformer scope and the64GiB process limit.
+
+### CM28. Identify the joint observed module before resolving CE ties
+
+*Source-note extension for board task #223, 2026-11-13; Lean before changing selection.*
+
+The frozen task222 cohort retains its earlier-first rule for equal training
+CE. A newly constructed completion can fit the same observed labels and tie
+an earlier completion that gives different unseen answers. Ordinary CE cannot
+distinguish these tables from those observations. The following condition
+identifies a completion within a specified categorical cyclic model; it does
+not identify every member of the larger convex spectral hull.
+
+For a modulus q, consider a vector with coordinates indexed by row names,
+column names and class names. Let K be the actual module over ZMod q defined
+by every observed equation r(i)+s(j)=t(label), together with r(i0)=0 and
+t(c0)=0. These two pins fix shift gauges. Every row and column remains a
+variable: an arbitrary zero assignment for an unobserved axis is not an
+observed equation and must not enter an identification certificate. No numeric
+meaning of input names or class names is assumed.
+
+The observable condition is that K is cyclic: some vector g in K generates
+all of K by scalar multiplication. Unlike field dimension one, this condition
+is meaningful for composite q. If x in K has a coordinate x(v)=1, then x
+itself generates K. Indeed write x=a*g and y=b*g. The equality a*g(v)=1
+gives y=(b*g(v))*x by commutative ring arithmetic. This does not divide by an
+arbitrary nonzero residue. An actual g with g(v)=1 and a trivial kernel after
+adding the coordinate constraint x(v)=0 is a sufficient certificate of
+cyclicity. The added constraint is for checking the kernel, not an assumption
+that a proposed ground-truth code has that normalization.
+
+Suppose the unknown target has a bijective class code e:C≃ZMod q and arbitrary
+row and column phases r,s. Their values may repeat. Shift its fitted vector to
+(r-r(i0), s+r(i0)-e(c0), e-e(c0)); it belongs to K. Bijectivity of e supplies
+a class coordinate equal to one. Every other bijective phase completion of
+the observed samples therefore has a gauged joint vector that is a scalar
+multiple of this target vector. Adding its row and column equations and using
+its class equation proves equality of decoded labels at every cell. No true
+code, phase, unseen label or optimizer is supplied to the learner.
+
+The specified observed-only learner first checks cyclicity of K, then returns
+a compatible phase completion if one exists, otherwise refusal. Under unknown
+structural realizability and the observable condition it returns the entire
+table. Acceptance under this same structural model cannot return a wrong
+table. The specification uses classical choice, as CM17 does; it is not an
+assertion that a capped native search always finds a certificate or completion.
+A genuine missing nonanchor row supports an independent vector with one at
+that row and zero elsewhere. The target's bijective code makes this incompatible
+with cyclicity, so the learner refuses rather than justifying an arbitrary pin.
+
+The closed witness has seven categorical rows and columns, six latent states,
+and a class code exchanging zero and one. Its distinct input names zero and
+six have the same phase. Seventeen observed equations generate exactly the
+one cyclic joint module; explicit elimination proves the condition. The learner
+recovers all49 cells, including32 held-out cells and two distinct held-out
+answers. A second, realizable witness shows all six classes in one row but
+leaves other rows unobserved; it is correctly refused.
+
+This theorem changes the admissible categorical completion program, not CE.
+Discrete code or structural-certificate discovery is not jointly convex. The
+old larger hull and its equal-CE ambiguity remain. A subsequent native selection
+rule must declare the structural certificate and candidate priority before its
+own run, independently check the original equations without missing-axis pins,
+retain the frozen task222 parent and failures, and never choose from held-out
+scores. Exact elimination, modular component uniqueness and their bridge to
+this condition need separate checked certificates before that rule is used.
+No new original benchmark score follows from the proof alone.
