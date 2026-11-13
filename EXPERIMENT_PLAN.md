@@ -29,6 +29,13 @@ caps; verify original equations, code injectivity and actual spectral/CE
 bounds; then freeze separately before original discovery. All prior candidates,
 full35/modes/transformer scope and the64GiB limit remain required.
 
+The native integer core now passes five checks, with97 exhaustive scalar lift
+systems and over2000 CRT residue pairs. Independent i128 audits check the i64
+producer's original equations, exact residual identities, all field operations,
+actual representatives and Bezout witnesses. Nonunique digit spaces, failed
+lifts and caps remain explicit. The categorical class-code learner is next;
+there is no new original-task score.
+
 ## Complete categorical fiber constraints (2026-11-13)
 
 Task #220 / CM26 starts from actual same-label observation groups. Lean proves
