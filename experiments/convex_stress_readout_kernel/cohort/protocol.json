@@ -1,0 +1,27 @@
+{
+  "version": "declared-readout-kernel-training-v1",
+  "required_done_tasks": [257, 258],
+  "core_commit": "4bd038160dc870089d2ba3e94c6605f78554aae1",
+  "proof_commit": "ff6313e1ba387ffe7ecbd11ded1eb9fd3dc92ce4",
+  "tasks": [
+    "power-division-p97-k3", "arithmetic-cube-plus", "power-division-p193-k5",
+    "power-division-p193-k2", "power-division-p97-k2", "arithmetic-square-times",
+    "arithmetic-sub", "arithmetic-mul", "arithmetic-add", "power-division-p193-k3",
+    "division-p193", "arithmetic-square-sum", "power-division-p97-k5",
+    "arithmetic-half-sum", "arithmetic-sum-square", "arithmetic-affine-product",
+    "arithmetic-perm-add", "arithmetic-div", "arithmetic-abs-diff-blind",
+    "arithmetic-abs-diff", "arithmetic-sum-pow4", "arithmetic-sum-cube",
+    "recurrence-fibonacci-k1-c2-lgt"
+  ],
+  "primes": "All55 supported primes from2through257 in increasing order. Unequal answer/prime cardinality retains an explicit pre-elimination refusal; no held-out choice.",
+  "readout": "Explicit new construction metadata from the original output metric: field readout q(c)=(c-floor(vocabulary/2)) mod97 for every raw output class, otherwise identity. This maps output names only, never input names or proposed answers. Store all q entries and answer count; preserve original raw CE labels.",
+  "discovery": "Validate full declared partition, surjectivity and prime/answer cardinality. Group every original observation; only row-first/class-first shift gauges. Complete GROUPED basis with default8190 equation cap,1024variables,8directions,500Mscalar updates,2Mrow operations. Refuse observed group-code collisions. Independently expand to raw class vectors; never claim the raw system has this complete basis.",
+  "training": "After all-observation discovery and initialization: one full CE update, one original minibatch epoch with its actual tail, zero CE derivatives in forward mode. Rate1; original raw labels and full vocabulary.",
+  "memory_limit_bytes": 68719476736,
+  "minimum_disk_reserve_bytes": 17179869184,
+  "artifact_limit_bytes": 8589934592,
+  "disk_refusals": "Check16GiB reserve before each prime stage and each case. A case refused before starting retains exit125 and zero new construction; a stage failure retains all partial files. Every remaining planned case still receives a process outcome.",
+  "limits": "Reviewed257 core and unchanged CM34 numeric dependency. Actual vector range, explicit unknown/unmatched masks, margin24 defaults,64N column budgets,32B audit/per-mode work forecasts and56GiB buffer forecast. Stream one prime stage at a time; no ambient vector grid.",
+  "evaluation": "Training-only with explicit declared readout metadata. No held-out scoring, parent selector, unknown-target compatibility proof or benchmark success claim. Keep23planned outcomes and all35suite metadata. Later full105-choice comparison requires reviewed parents and preserves transformer/depth, every original primary success criterion, diagnostics and costs.",
+  "replay": "Bind source/executable/protocol/data/declared-partition/order/batches; independently replay every grouped observation and complete basis, raw-code expansion, actual complex models, original raw CE gradients, trajectories and masks. Keep every refusal and process/partial outcome. Construction and discovery costs are separate, each charged once across later parent arms."
+}

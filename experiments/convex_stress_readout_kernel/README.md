@@ -71,6 +71,8 @@ LAKE_ARTIFACT_CACHE=false prlimit --as=68719476736:68719476736 -- lake env lean 
 ```
 
 These are finite component witnesses, not an original stress-suite result.
-The original-data adapter, frozen construction cohort and complete comparison
-are subsequent tasks. The running CM34 cohort and its comparison protocol stay
-unchanged. No new benchmark score or full-pass claim follows from this library.
+The separate [original-data adapter](cohort/README.md) now has ten native checks
+for explicit readout metadata, all 55 stages, original CE and complete failures.
+Its frozen construction cohort and complete comparison remain subsequent tasks.
+The running CM34 cohort and its comparison protocol stay unchanged. No new
+benchmark score or full-pass claim follows from this library or adapter.

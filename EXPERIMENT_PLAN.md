@@ -288,6 +288,17 @@ readout metadata explicitly, leaves unknown-target premises conditional and
 does not change frozen252/253. An original-data adapter and later complete
 comparison are required before claiming any new benchmark pass.
 
+Task258 now binds the reviewed CM35 component to all23 original pair tasks and
+all55 primes. The adapter explicitly records the original metric's complete
+output partition as new construction information; its raw CE labels and
+minibatches stay unchanged. Ten native checks cover genuine grouped bases,
+raw expansions and actual complex replay, field-readout aliases, complete
+cardinality/refusal/failure accounting, rehashed mutations and a disk-reserve
+transition that continues after recording a refused case. Its source fingerprint
+also pins the unchanged CM34 numeric dependency. Original execution requires
+review and a separate freeze; full35 comparison and unknown-target hypotheses
+remain separate from these fixture checks.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine
