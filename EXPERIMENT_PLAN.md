@@ -75,6 +75,16 @@ inside the stated categorical model, not across every exact fit in the larger
 convex hull. Checked native elimination/component certificates and a separate
 structural selection freeze remain next; do not overwrite task222's CE ties.
 
+CM28 now has16 further theorems at9cd95708: replayed actual row operations
+certify the original anchored matrix, imply joint cyclicity and normalized
+vector uniqueness, and give kernel uniqueness through modular digits and CRT.
+The first native certificate core in `convex_stress_identified` exhaustively
+checks2274 small matrices against their finite kernels, plus the exact Lean
+nonunit-pivot example, larger domains, work caps, state/control mutations and
+invalid inputs. It uses independent i128 row replay and retains every refusal.
+Categorical/model binding, explicit strip-model scope and a separate original
+selection freeze remain next. No new original score is claimed by this core.
+
 ## Complete categorical fiber constraints (2026-11-13)
 
 Task #220 / CM26 starts from actual same-label observation groups. Lean proves
