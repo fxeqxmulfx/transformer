@@ -68,7 +68,16 @@ the same frozen producer/executable, replays the actual state before training-CE
 selection, and charges construction once across both complete parent arms.
 Every failure and partial resource record remains. The numerical core, feature
 order, raw labels, mode policies and caps are unchanged from `78731eb0`.
-No original causal construction or held-out evaluation has run at this commit.
+Task236 is reviewed and task237's original training stage is complete at frozen
+producer `b516af90`: all35 process outcomes and independent replays,19 usable
+endpoints on nine tasks (full3,mini7,forward9), zero observed-token errors.
+It retains23 two-token shape refusals, two depth input-storage refusals, one
+recall feature-cache refusal and eight iterative work-cap outcomes. Constructor
+time is5.358890285 seconds; peak process RSS is364424KiB under64GiB. Fibonacci
+is a two-token exclusion and still needs a separate repair. No held-out metric
+or parent selection has run; the reviewed complete comparison counts remain
+unchanged. The same frozen executable must import this immutable stage after
+the original parent approvals.
 
 ## Recovered comparison queues (2026-11-13)
 

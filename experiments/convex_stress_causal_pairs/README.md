@@ -12,8 +12,8 @@ all observations but disagree on an unseen input. Candidate priority is a
 structural prior; consistency and flatness alone do not justify it.
 
 The native component implements categorical search, actual complex features
-and full-batch, minibatch and forward-only readouts. No original task is
-evaluated here; the [complete comparison adapter](cohort/README.md) passes
+and full-batch, minibatch and forward-only readouts. The original training
+stage is recorded by the [complete comparison adapter](cohort/README.md), which passes
 15 synthetic checks, including training-only staging and later replayed import.
 Comparison awaits completion/review of its quotient parent.
 Ordinary raw labels remain unchanged. An observation contains a
@@ -120,3 +120,10 @@ gates remain required. A separately reviewed original cohort will retain
 task232, both initializer arms, all 35 tasks,
 the transformer and every earlier cost and failure. No original pass is inferred
 from these fixtures. Generated evidence remains ignored and local.
+
+Task237's frozen original stage at `b516af90` has now completed all 35 cases
+and independent model replay. It retains 19 usable endpoints across nine
+tasks, all with zero training errors, along with 26 whole-task refusals and
+eight iterative work-cap refusals. Peak process RSS was about 356 MiB under
+64 GiB. This is training-only evidence: original held-out evaluation and parent
+selection remain pending, and the complete comparison scores are unchanged.

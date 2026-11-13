@@ -4,9 +4,10 @@ This native adapter tests the CFt4/CD8 causal-pair component against the
 complete reviewed quotient comparison. It preserves both initializer arms,
 all 105 task/mode choices per arm, all 35 conventional transformer endpoints,
 336 depth outcomes, earlier failures and every inherited cost. It has passed
-15 synthetic adapter tests; no original causal-pair benchmark has run yet.
-Task232 must finish and pass independent review before comparison and held-out
-evaluation. Task236 adds training-only staging while that parent is running.
+15 synthetic adapter tests. The original 35-task training stage is complete;
+comparison and held-out evaluation remain pending. Task232 must finish and pass
+independent review before those steps. Reviewed task236 permits training-only
+staging while that parent is running.
 
 | Stage | Fixed behavior |
 | --- | --- |
@@ -125,3 +126,55 @@ run. Staging never bypasses the original parent gates. Generated outputs stay
 local and ignored. An independent review must replay every completed case
 again, retain failures, regenerate the applicable summary byte-for-byte, and
 run native and Lean checks at the submitted commit before any pass claim.
+
+## Original training stage (2026-11-13)
+
+Task237 froze producer `b516af90296f7f26aaeb8d6af2d9ad32e0e12c2b` before all
+35 original constructions, using the unchanged feature/model/mode protocol.
+The executable is retained at the root's ignored
+`.kanban/artifacts/237/freeze-v1/causal-pairs-staging-v1`; its source fingerprint
+is `f3a1ca48ff6e8a0e91db4cf7443187886381e74a74e72c08005b331d6c4d8b54` and
+SHA256 is `fbb6ee1566a7191ff293ae2f8c9e052a1f8e1ec434c438a55338ac42e435abc5`.
+All 35 cases and their actual-state replay completed without process failures.
+Independent replay again reproduces every seal and the complete stage summary
+byte-for-byte. The earlier prospective-v1 and quotient binaries are unchanged.
+
+There are 19 usable endpoints: three full-batch, seven minibatch and nine
+forward-only. Each has zero observed-token errors and ordinary training CE
+between `2.53e-9` and `9.63e-9`. These numbers measure fitting the observed
+prefixes, not correctness on a new prefix.
+
+| Original task | Full-batch | Minibatch | Forward-only |
+| --- | --- | --- | --- |
+| Shifted Boolean AND | Model | Model | Model |
+| Random-position Boolean AND | Model | Model | Model |
+| Key-value binding | Model | Work cap | Model |
+| Branch amplitudes | Work cap | Model | Model |
+| Linear transport | Work cap | Model | Model |
+| Parity16 | Work cap | Model | Model |
+| Parity20 | Work cap | Model | Model |
+| Parity24 | Work cap | Model | Model |
+| Associative divisor | Work cap | Work cap | Model |
+
+The remaining 26 tasks are retained explicitly: 23 have training prefixes of
+length two and therefore keep the parent under the frozen eligibility rule;
+the two depth tasks exceed the observed-prefix storage cap; recall exceeds
+the feature-cache cap. Eight iterative mode outcomes exceed the declared
+two-billion-operation training forecast. These are model refusals, distinct
+from process failures. Fibonacci is among the two-token exclusions, so this
+stage cannot supply its missing repair.
+
+Construction totals 5.358890285 seconds and 1840 derivative batches. Preparation,
+all cases, first replay and summary took approximately 51 seconds; maximum
+measured process RSS was 364424 KiB (about 356 MiB). Every process used the
+64 GiB address-space limit. Review time/resources are retained separately.
+The complete results are under `runs/training-v1`; the summary SHA256 is
+`4e717b8233c3161b780e13f4f184a58090711492e01062c1a790ebb1a46caa69`.
+
+The stage has `parent_comparison=false` and `heldout_evaluation=false`. Both
+complete 105-choice parent arms, all original metrics and the transformer
+remain requirements for the eventual comparison. The reviewed benchmark
+counts remain 33/35 full-batch, 33/35 minibatch and 32/35 forward-only; these
+training endpoints do not change those counts. Reproduce the stage with the
+frozen producer and commands above, and regenerate its report using
+`causal-pairs-staging-v1 summarize-training ABSOLUTE_TRAINING_ROOT`.
