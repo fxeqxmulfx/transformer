@@ -89,9 +89,12 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
 cargo clippy --locked --all-targets -- -D warnings
 ```
 
-Next: connect the adapter to the complete original cohort, freeze a separate
-producer, and evaluate the already declared rule. No original certification
-or changed original selection has been run by this adapter yet.
+The [original cohort harness](cohort) adds six checks and binds the complete
+task222 parent, all23 original pair inputs, saved proposal artifacts and all105
+mode choices. It seals the same declared rule before fresh original metrics
+and replays every old constructor and new certificate. All21 native checks
+pass. Next: freeze the separate producer and evaluate it. No original
+certification or changed original selection has been run by this adapter yet.
 The complete task222 parent and its equal-CE failures must remain immutable.
 All35 tasks, full batch, minibatch, forward-only, retained depth and the
 conventional transformer comparison remain in scope.

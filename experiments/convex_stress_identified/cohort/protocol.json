@@ -1,0 +1,74 @@
+{
+  "version": "identified-original-v1",
+  "proof_commits": [
+    "4fee3d09",
+    "9cd95708",
+    "6a8fb49e"
+  ],
+  "core_commits": [
+    "c68648ae",
+    "a9f6b278",
+    "c1a6720e"
+  ],
+  "shared_fingerprint": "260d22864ac06e44f945791ac766340a96254b917dffca5a713ea396ddc5a6ba",
+  "tasks": [
+    "power-division-p97-k3",
+    "arithmetic-cube-plus",
+    "power-division-p193-k5",
+    "power-division-p193-k2",
+    "power-division-p97-k2",
+    "arithmetic-square-times",
+    "arithmetic-sub",
+    "arithmetic-mul",
+    "arithmetic-add",
+    "power-division-p193-k3",
+    "division-p193",
+    "arithmetic-square-sum",
+    "power-division-p97-k5",
+    "arithmetic-half-sum",
+    "arithmetic-sum-square",
+    "arithmetic-affine-product",
+    "arithmetic-perm-add",
+    "arithmetic-div",
+    "arithmetic-abs-diff-blind",
+    "arithmetic-abs-diff",
+    "arithmetic-sum-pow4",
+    "arithmetic-sum-cube",
+    "recurrence-fibonacci-k1-c2-lgt"
+  ],
+  "reference_modes": [
+    "full_batch",
+    "minibatch",
+    "forward_only"
+  ],
+  "coding": {
+    "observation_equations": 4096,
+    "scalar_updates_per_stage": 500000000,
+    "total_scalar_updates": 2000000000,
+    "row_operations_per_stage": 2000000,
+    "stages": 8
+  },
+  "minimum_strip_support": 8,
+  "max_views": 4,
+  "certificate": {
+    "retained_equations": 4096,
+    "ring": {
+      "scalar_updates": 2000000000,
+      "row_operations": 2000000,
+      "pivot_tests": 20000000,
+      "combination_tests": 20000000,
+      "inverse_tests": 1000000
+    }
+  },
+  "memory_limit_bytes": 68719476736,
+  "buffer_preflight_bytes": 60129542144,
+  "artifact_file_limit_bytes": 2147483648,
+  "minimum_disk_reserve_bytes": 17179869184,
+  "parent_summary_sha256": "5d3aa99d91efdab222fc3bd5c1c8ea68f16c8f632808b22f84c62213f4355139",
+  "parent_producer_commit": "f661532eb606bf450309033d5276773ea45b6037",
+  "parent_source_fingerprint": "8f2dc75151dd0246eb5609b872af6361db0c047e65ce8adfd2806cea39cda2e6",
+  "construction": "Use the same complete saved proposal bank for all23 original eligible pair tables, including recurrence. Independently audit every modular/strip state, raw spectrum and ordinary CE. Check actual class-code bijection and all observed equations. Refuse missing/padded axes; shift the actual gauges and certify the anchored joint kernel using recorded ring row operations. Retain every view, candidate and refusal. No token-name arithmetic or held-out target enters certification.",
+  "selection": "Start with each complete earlier mode choice, then saved modular candidates. Prefer an ordinary observed CE improvement greater than1e-12. Within a1e-12 CE tie, prefer a verified fixed-view identification certificate; otherwise keep earlier order. Recognize an earlier choice with the same certified model hash. Seal references before fresh held-out metrics. The fixed bijective cyclic interior and constant-strip structure are explicit inductive assumptions, not unconditional truth over the larger hull. One certification per task, three mode references, zero CE gradients; original candidate construction cost remains in the complete parent.",
+  "replay": "Regenerate all original data/fingerprints. Preserve every byte of the complete task222 parent and the original earlier-first CE failures. Bind each saved proposal to the immutable parent digest, replay all old modular/strip state and all new ring/categorical certificates, then recompute raw audits and unchanged original split metrics. Require all23 terminal outcomes and all105 choices. Refusals and failed processes keep prior choices. No global convexity claim for discrete discovery or certification.",
+  "resources": "Native Rust and shell only; freeze source,binary,protocol and parent before original preparation. Serial64GiB/oneBLAS/16GiBdiskreserve; preserve failed cells and continue. Depth and fresh transformer remain required."
+}

@@ -90,9 +90,17 @@ code equations and shifted joint vector without missing-axis pins. Five further
 checks certify masked domains2–16 and the exact six-state Lean witness, preserve
 class renaming, and reject missing-axis ambiguity, collisions, omitted-equation
 conflicts and changed certificates. A realizable noncyclic joint-module example
-remains an explicit limitation. All ten native checks pass. Saved parent-model
-and raw-audit binding, strip-model scope and the separately frozen comparison
-are still required before any new original evaluation.
+remains an explicit limitation. All ten native checks pass. Four additional
+Lean theorems at6a8fb49e state the fixed-view/constant-strip scope, bringing CM28
+to37 new checked theorems. The c1a6720e adapter binds actual parent models,
+phase/code points, every full proposed prediction and raw spectral/CE audits;
+its five tests retain missing-axis refusals and verify held-out score changes
+cannot affect selection. The declared rule prefers smaller ordinary CE, then
+a verified fixed-view certificate within a1e-12 tie, then earlier order.
+The separate original harness adds six tests, pins the entire completed task222
+comparison and preserves all23 eligible tasks and all105 mode choices. All21
+native checks pass. Commit/freeze this producer before original certification;
+do not overwrite task222 or use held-out scores to change the declared rule.
 
 ## Complete categorical fiber constraints (2026-11-13)
 
