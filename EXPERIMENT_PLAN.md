@@ -203,6 +203,20 @@ obstacle after removing the prefix omission. Task249 tracks the Lean-first
 extension to complete multidimensional coefficient kernels; no benchmark
 success or unknown-label identification follows from this diagnostic.
 
+Task249 / CM34 removes the mathematical one-direction restriction. The
+complete kernel of the original observed equations, with only two shift
+gauges, gives vector codes across every basis direction. Matches and class
+aliases are basis independent. A checked match identifies an unknown target
+code under explicit additive realizability; decoded correctness additionally
+requires the original readout to be constant on that unknown code's fibers.
+Concrete two-dimensional and noninjective witnesses retain refusals and raw
+alias ambiguity. The finite actual code range has at most the active input
+product's cardinality and instantiates the existing bounded complex head,
+convex ordinary CE, full/minibatch preservation and conditional unseen pooled
+decoding. Code discovery remains separate from convex head training. Native
+complete-basis construction and its storage/work checks are still required;
+no frozen numerical source, protocol or benchmark result changes here.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine

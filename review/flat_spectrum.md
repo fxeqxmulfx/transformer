@@ -17272,3 +17272,101 @@ training schedule, labels, evaluator or process already running.
 Lean: `ConvexDepth/RowCE`, `BatchCE`, `ObservedCE` and `RefinedCE`. Examples include
 nonzero complex-head directional derivatives, different full/minibatch
 normalizations, alternating minibatches, large rates, and unobserved inputs.
+
+## CM34. Retain the complete observed coefficient kernel
+
+Task248 includes every4704 Fibonacci observation but leaves three coefficient
+directions at modulus97. Requiring a unique direction is therefore stronger
+than merely requiring an observed fit. Keep the complete compatible space
+instead of discarding it because its dimension exceeds one. This extension
+proves what its vector codes certify; it does not assert that every query has
+a matching observed class or that an arbitrary chosen direction identifies it.
+
+Let `I,J,C` be the independently compacted observed row, column and class
+dictionaries. Let `cell:S->I*J` and `labels:S->C` contain the actual observed
+equations. Coordinates are `I+(J+C)`, with a proposed query row acting by
+`Q(i,j,c)(w)=w_row(i)+w_col(j)-w_class(c)`. Its explicit matrix coefficients
+are exactly `+1,+1,-1` at those three different roles. Define `M` to be the
+kernel of every observed `Q`, with only the two gauges
+`w_row(i0)=0` and `w_class(c0)=0`. No missing axis or unknown answer is pinned.
+
+Every fitting vector has a representative in `M`. Subtract `w_row(i0)` from
+all row coordinates, add `w_row(i0)-w_class(c0)` to all column coordinates,
+and subtract `w_class(c0)` from all class coordinates. Every query action is
+unchanged, the gauges hold, and class-code equalities are unchanged. The
+original observed matrix and these two harmless shifts, rather than a solver's
+claimed answer or selected nullity, define the mathematical compatible space.
+
+For a complete basis `b:K->M`, define vector codes by reading every direction:
+
+```
+r_b(i)[k] = b(k)_row(i),
+s_b(j)[k] = b(k)_col(j),
+e_b(c)[k] = b(k)_class(c),
+z_b(i,j) = r_b(i) + s_b(j).
+```
+
+Then `z_b(i,j)=e_b(c)` if and only if `Q(i,j,c)` vanishes on every vector
+in `M`. The forward implication uses linearity and the fact that the actual
+basis spans `M`; the reverse implication evaluates at each basis element.
+Consequently this matching relation is independent of which complete basis
+represents `M`. The same argument applies to equality of two class codes.
+Every original observation matches its recorded class vector. These statements
+do not require a one-dimensional kernel, a nonconstant selected coordinate,
+class-code injectivity, or a choice of a particular free variable.
+
+To identify an unknown answer, retain CM30's structural premises. A map
+`name:C->A` gives the original raw class name; an unknown code `e:A->R` and
+axis functions `r:I->R,s:J->R` satisfy `e(y(i,j))=r(i)+s(j)` for the unknown
+target, and the target agrees with every recorded raw label `name(labels(t))`.
+Normalize the compatible vector `(r,s,e o name)` into `M`. A checked vector
+match therefore gives `e(y(i,j))=e(name(c))`. For an unchanged declared readout
+`q:A->D` constant on the fibers of this unknown `e`, the decoded answers agree.
+The code and structural target are used in the soundness proof, not supplied
+to the matching procedure. No assumption that every unseen raw alias appeared
+in the observed class dictionary is needed. Without readout compatibility,
+raw-label equality is still unjustified.
+
+A finite ordered bank of observed class names can implement this check by
+searching for exact equality of the full vectors. A successful result carries
+the checked equality; a refusal is retained. Equality on one direction alone
+is insufficient. A concrete two-dimensional diagonal-observation kernel has
+class vectors `(0,0),(1,1)` and off-diagonal query vectors `(1,0),(0,1)`.
+One coordinate can equate a query with the wrong class while the complete
+vector check refuses it. Changing to another complete basis preserves these
+decisions. Thus completeness of the basis is a real requirement, and does
+not imply completeness of query coverage.
+
+A separate binary-field grid observes raw labels0,1,1,2 at the four distinct
+Boolean input pairs. Its equations force the complete vectors of classes0and2
+to agree, while a nonzero compatible coefficient vector separates class1.
+This alias has a deterministic raw target and a nonconstant additive code;
+no raw label is absent from its observation bank. The earlier CM30 alias
+witness also certifies the genuinely unobserved(2,2) query but retains two
+possible raw answers. Complete-kernel matching does not remove that ambiguity.
+
+For a finite active input domain, use the actual range of `z_b` as the latent
+state type. Its cardinality is at most `|I|*|J|`, rather than necessarily
+materializing every vector in `R^K`. This finite state map instantiates the
+existing categorical/Fourier complex-head construction and CM31--CM33's
+observed-input refinement, convex ordinary CE, bounded updates and default
+retention. The refined head budget is `64*(|observed|+|range(z_b)|)`. A matching
+class can supply a declared default; correctness of that default still uses
+the structural premises above. Unknown axes outside the compact dictionaries
+and unmatched states need explicit refusal/default policies in a native model.
+The state-count and coefficient-budget bounds do not bound the storage of
+the basis vectors or the sum of squared Fourier-fiber sizes. Those costs
+still need explicit native forecasts and independent execution checks.
+
+The native producer must compute and independently verify a complete basis
+of the actual coefficient system, with explicit rank, work and storage caps.
+This proof is not a finite-precision execution theorem or an original stress
+test result. It changes no frozen232/237/243/244/248 protocol or recorded score.
+
+Lean: `CoupledMoments/KernelCodes/{Defs,Basic,Diagonal,Identification,Witness,
+Compact,ComplexHead}`. The complete kernel is defined by original equations;
+the basis parameter is a standard spanning `Module.Basis` of that submodule.
+Examples instantiate every theorem with hypotheses. The complex-head witness
+uses a matched unseen query, noninjective unknown code, full-vocabulary pooled
+readout and an actual finite ordinary-CE update trace. Setting trace length0
+retains the same forward-only construction, with no gradient assumption.
