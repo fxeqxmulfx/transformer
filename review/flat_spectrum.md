@@ -16406,3 +16406,84 @@ declared caps, independent integer assignment and raw latent/CE audits,
 original-input replay and the 64 GiB cap. All 35 tasks, short/long variants,
 three modes and the conventional transformer comparison remain required;
 this source note asserts no new benchmark accuracy.
+
+### CM24. Observable row balancing, missing axes and a capacity boundary
+
+*Source-note extension for board task #218, 2026-11-13; Lean before native repair.*
+
+The original nine-task CM23 cohort passes only three tasks. Its 54 exact
+attempts refuse and all 162 interval attempts reach their caps. The latter
+does not prove infeasibility. Feature row energies vary substantially; column
+orthogonality does not give the required unit kernel diagonal. Division also
+has one entirely unobserved row, which the earlier phase clock rejects.
+
+For a supplied complex feature matrix `B` with `d>0` columns, measure
+
+```
+e_x = sum_i |B[x,i]|^2,
+N(B)[x,i] = sqrt(d/e_x) B[x,i],
+M_0 = diag(1/d,...,1/d).
+```
+
+If a row is nonzero, its energy is positive and the normalized row has energy
+exactly `d` (`energy_pos`, `normalized_energy`). The matrix `M_0` is PSD with
+trace one (`uniform_density`). Direct matrix multiplication gives
+`K_B(M_0)[x,x]=e_x/d` (`uniform_reading`), so `M_0` is feasible for `N(B)`
+whenever every row is nonzero (`normalized_feasible`). Consequently the exact
+domain and every nonnegative CM22 tolerance domain are nonempty and convex
+(`normalized_domain`). These proofs use observed feature entries only; no
+unknown reference subspace, Fourier frequencies or correct phase is supplied.
+
+A zero feature row gives kernel diagonal zero for every coefficient matrix,
+so it cannot satisfy the original unit-diagonal constraint
+(`zero_row_obstruction`). The explicit total construction `completeBalance`
+replaces such a row by all ones and normalizes the other rows.
+`completed_energy` and `completed_feasible` prove its measured energy and
+feasible uniform density. Replacing a row changes the feature domain. It is
+a declared convention, not a certificate about the old domain or an inferred
+hidden row. A native policy may refuse a zero row with observed entries and
+apply completion only when the corresponding input axis is unobserved.
+
+Row normalization is nonlinear preprocessing. For fixed resulting features,
+the density domain remains convex. It need not preserve column orthogonality,
+centering, proximity to the true Fourier subspace, purity, objective gaps or
+correct phase ordering. In particular, a mixed feasible `M_0` is not a
+recovered hidden mode. CM21's pure extraction theorem still needs its exact
+subspace and centering hypotheses; CM22's stability result still needs its
+feature-error and objective-gap hypotheses. The general interval solver can
+use these features, with raw matrix audits and every capped attempt retained.
+
+For a sampled input axis `a : S -> n`, define `completeAxis a r f` to equal
+`r` on the observed image of `a` and a declared fallback `f` elsewhere.
+`completeAxis_observed` proves exact agreement on every observation. More
+generally, if row and column phases agree at all sampled coordinates,
+`phase_completion` proves equality of their actual ordinary full-vocabulary
+CE and membership of the new decoded table in the same CM15 convex hull.
+The latent operator and nuclear budgets remain radius `|n|` through CM14/23.
+`completed_phase_loss` applies this to the explicit fallback construction.
+This permits arbitrary missing-axis completion; it does not identify its
+answers. Native permutation completion must separately check its returned
+permutation and retain missing-axis metadata. All conditional statements have
+closed witnesses, including unequal row energies and a wholly missing axis.
+
+There is also a capacity obstruction in the narrower native permutation
+family. In any additive group, if `s` is surjective and
+`d(r(i_0)+s(j))=c` for every column, then `d(r(i)+s(j))=c` for every cell.
+For a target latent argument, surjectivity supplies a column with phase
+`-r(i_0)+target`; the constant row therefore covers every decoder argument.
+`constant_row_forces_constant` and `no_constant_row` prove this obstruction
+with inhabited examples. The same statement applies to columns after swapping
+the axes in an abelian group. Thus a full table with a constant row and other
+nonconstant rows cannot be represented by this surjective-axis family.
+This is a representation limitation, independent of optimizer depth or budget.
+It is not inferred from a partially observed constant-looking row. CM15's
+larger hull allows arbitrary phase assignments and latent domains, so this
+does not refute the hull. A generic categorical extension of the native
+proposal family needs separate construction and checks.
+
+Next native work must retain every prior candidate and failure, distinguish
+normalization and fallback choices from convex optimization, replay original
+inputs and all states/work, and independently audit raw spectra and CE. Freeze
+tested source before another original-data run. Keep the 64 GiB process cap,
+all35 short/long tasks, full/mini/forward modes and the transformer comparison.
+This section establishes no new original-task score.

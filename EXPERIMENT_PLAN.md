@@ -1,5 +1,21 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Observable feature balancing (2026-11-13)
+
+Task #218 / CM24 proves a feasible uniform PSD trace-one density after
+normalizing each actual nonzero feature row to squared norm equal to its
+column count. Explicit zero-row completion also gives a feasible domain;
+it changes those features and identifies no hidden phases. Completing only
+unobserved phase-axis entries preserves ordinary observed CE and the same
+decoded spectral hull. A separate Lean obstruction shows that a surjective
+phase axis and a constant opposite row force the entire decoded table to be
+constant. The native permutation proposal family therefore has a capacity
+limit beyond its numerical feature problem. Implement bounded balanced and
+missing-axis proposals first, preserving all prior candidates/failures, then
+address the capacity restriction with a generic categorical construction.
+Freeze tested source before original data. Full35/modes/transformer success
+remains open; task216's original result stays3/9, not the toy fixture result.
+
 ## Observed-label refinement (2026-11-13)
 
 Task #215 / CM23 proves the exact one-hot ordinary-CE/error identity, an

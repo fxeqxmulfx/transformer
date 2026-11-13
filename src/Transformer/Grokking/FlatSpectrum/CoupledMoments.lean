@@ -15,11 +15,12 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.FourierExtraction
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityExtraction
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityBounds
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ObservedRefinement
+public import Transformer.Grokking.FlatSpectrum.CoupledMoments.BalancedFeatures
 
 /-!
 # Shared class distributions and complex spectral bounds
 
-Source: `review/flat_spectrum.md`, CM1–CM23. Multiple fixed complex code readings share the
+Source: `review/flat_spectrum.md`, CM1–CM24. Multiple fixed complex code readings share the
 same learned class probabilities. The domain and ordinary CE are convex, Fourier coordinates
 preserve the full distribution, and a feasible exact observed fit certifies a CE minimum.
 No universal identification of unseen labels follows; SB3 remains a counterexample.
@@ -43,6 +44,9 @@ missing-label identification are still separate requirements.
 CM23 (`ObservedRefinement`): verified assignment duals and decoder counts certify
 local observed-CE descent while preserving the decoded spectral hull. Discovery
 and unseen-label correctness still require separate evidence.
+CM24 (`BalancedFeatures`): measured row normalization admits an explicit uniform
+density; completing unobserved phase axes preserves observed CE and spectral
+budgets. Feasibility does not establish phase recovery or unseen labels.
 -/
 
 @[expose] public section
