@@ -60,3 +60,32 @@ bash experiments/convex_stress_density/integration/finish.sh \
   experiments/convex_stress_density/runs/full35-integration-v1 \
   experiments/convex_stress_density/runs/full35-integration-v2
 ```
+
+## Completed integration
+
+Source78fb450c completes all105 choices with summary digest
+`a2a3c4af874defb15b0f27af1b5115079b08738ec4b2efacefd7f0b79ac0096a`.
+All full-suite recovery endpoints replayed before comparison. All four frozen
+constructor summaries recheck identically; no family process failed. Both the
+original schema refusal and the successful fresh completion remain local.
+
+| Mode | Primary passes | Every-split passes | No model |
+| --- | ---: | ---: | ---: |
+| Full batch | 27/35 | 26/35 | 0 |
+| Minibatch | 27/35 | 26/35 | 0 |
+| Forward only | 26/35 | 25/35 | 3 |
+
+All nine pair tasks shared by the recent families pass in all three modes.
+The two new fiber models replace failing sum-cube and fourth-power choices;
+earlier models retain the other seven task passes. The full-batch all-split
+failures are shifted Boolean AND, power-division p97/k3, p193/k2, p97/k2 and
+p193/k3, square-times, both depth cases, and the recurrence task. The pending
+composite cohort targets all23 original eligible pair tables under one categorical
+policy; the completed depth follow-up still needs full-suite integration.
+The conventional-transformer cohort is still running.
+
+The36 actual constructors are charged once, totaling2537.661 seconds including
+their parent reconstruction. Their108 mode references are not gradient runs.
+Every earlier candidate, refusal, failure, source/input binding and original
+split remains in the complete parents. This is verified partial progress
+toward the full35 goal; `full35_pass` remains false.

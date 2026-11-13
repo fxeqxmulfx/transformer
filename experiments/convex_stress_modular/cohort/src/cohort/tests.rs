@@ -72,7 +72,7 @@ fn inv(x: &Inputs) -> Value {
 
 #[test]
 fn unchanged_policy_covers_all_original_pair_tasks_without_discovery() -> Result<()> {
-    assert_eq!(tasks()?.len(), 22);
+    assert_eq!(tasks()?.len(), 23);
     assert_eq!(modes()?.len(), 3);
     assert_eq!(
         serde_json::from_value::<coding::Policy>(protocol()?["coding"].clone())?,
@@ -189,8 +189,8 @@ fn every_failed_constructor_retains_all105_choices_and_original_mode_counts() ->
         parent.clone(),
     )?;
     assert_eq!(summary["choices"], parent["choices"]);
-    assert_eq!(summary["process_failures"], 22);
-    assert_eq!(summary["constructor_accounting"]["mode_references"], 66);
+    assert_eq!(summary["process_failures"], 23);
+    assert_eq!(summary["constructor_accounting"]["mode_references"], 69);
     assert!(
         summary["by_mode"]
             .as_array()
@@ -252,7 +252,7 @@ fn successful_summary_checks_artifacts_and_changes_only_three_of105_choices() ->
         fs::write(root.join(format!("{task}.log")), "fixture outcome\n")?;
     }
     let summary = summary::summarize_with(&root, &inv, parent.clone())?;
-    assert_eq!(summary["process_failures"], 21);
+    assert_eq!(summary["process_failures"], 22);
     assert_eq!(summary["choices_compared"], 105);
     assert!(
         summary["by_mode"]

@@ -18,7 +18,7 @@ pub use summary::summarize;
 mod tests;
 const PROTOCOL: &str = include_str!("../../protocol.json");
 const SUITE: &str = include_str!("../../../../convex_stress/suite.json");
-const LIMIT: u64 = 512 * 1024 * 1024;
+const LIMIT: u64 = 2 * 1024 * 1024 * 1024;
 fn protocol() -> Result<Value> {
     Ok(serde_json::from_str(PROTOCOL)?)
 }
@@ -30,7 +30,7 @@ fn modes() -> Result<Vec<String>> {
 }
 fn bytes(path: &Path) -> Result<Vec<u8>> {
     if fs::metadata(path)?.len() > LIMIT {
-        return Err("modular cohort artifact exceeds512MiB".into());
+        return Err("modular cohort artifact exceeds2GiB".into());
     }
     Ok(fs::read(path)?)
 }
@@ -40,7 +40,7 @@ fn read<T: serde::de::DeserializeOwned>(path: &Path) -> Result<T> {
 fn write<T: serde::Serialize>(path: &Path, value: &T) -> Result<()> {
     let raw = serde_json::to_vec(value)?;
     if raw.len() as u64 > LIMIT {
-        return Err("modular artifact serialization exceeds512MiB".into());
+        return Err("modular artifact serialization exceeds2GiB".into());
     }
     OpenOptions::new()
         .write(true)
@@ -80,9 +80,11 @@ fn assemble(task: data::Task, name: &str, data_fingerprints: Value) -> Result<In
             .ok_or("missing strip support")? as usize,
         max_views: p["max_views"].as_u64().ok_or("missing strip view cap")? as usize,
     };
-    let bound = input.validate()?;
-    if bound > 48 * 1024 * 1024 * 1024 {
-        return Err("modular aggregate bound exceeds48GiB".into());
+    // Include the copied complete parent, parser/serialization buffers and
+    // full-result construction in addition to the search's own forecast.
+    let bound = input.validate()? + 8 * 1024 * 1024 * 1024;
+    if bound > 56 * 1024 * 1024 * 1024 {
+        return Err("modular cohort aggregate bound exceeds56GiB".into());
     }
     let record = json!({"task":name,"vocab":task.vocab,"selection":task.selection,"data_fingerprints":data_fingerprints,
         "training_input_sha256":hash(&serde_json::to_vec(&input)?),"buffer_preflight_bytes":bound});

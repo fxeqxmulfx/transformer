@@ -19,9 +19,12 @@ general comparison and all density/balanced/tagged/fiber candidates. It retains
 every parent and all35 choices by mode, uses earlier-first observed-CE ties,
 checks the original split/vocabulary/scale bindings and charges each forward
 construction once. Synthetic metadata tests cover failures, absent models,
-held-out invariance and21 mutations. Commit this harness before running its
-adaptive comparison; depth, composite discovery and the fresh transformer
-remain explicit follow-ups.
+held-out invariance, both raw-audit vocabulary schemas and22 mutations. The
+completed78fb450c integration now passes26/35 all-split cases in full/mini and
+25/35 forward-only; primary counts are27/35,27/35,26/35. All nine recently
+extended pair tasks pass. The other failures, three absent forward models and
+the initial schema gate remain recorded. Depth, composite discovery and the
+fresh transformer remain explicit follow-ups.
 
 ## Composite categorical codes (2026-11-13)
 
@@ -51,10 +54,10 @@ and ordinary CE. A missing-axis example explicitly fits observations while
 misidentifying unseen answers. The complete suite has twelve checks. The
 categorical strip wrapper adds three checks for composite interiors, unequal
 axis padding, class renaming, caps and changed state. All fifteen native checks
-pass. The parent harness now adds five checks, covers all22 original pair-table
-tasks and preserves the complete105-choice parent. Its unset parent digest
-deliberately prevents preparation until task217's running integration finishes.
-Pinning and the separate original producer freeze remain next; there is no new
+pass. The parent harness now adds five checks, covers all23 original eligible pair-table
+tasks and preserves the complete105-choice parent. The protocol now pins
+task217's checked78fb450c comparison, digest a2a3c4af874defb15b0f27af1b5115079b08738ec4b2efacefd7f0b79ac0096a.
+The separate original producer freeze remains next; there is no new modular
 original-task score.
 
 ## Complete categorical fiber constraints (2026-11-13)

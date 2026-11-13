@@ -32,7 +32,8 @@
     "arithmetic-abs-diff-blind",
     "arithmetic-abs-diff",
     "arithmetic-sum-pow4",
-    "arithmetic-sum-cube"
+    "arithmetic-sum-cube",
+    "recurrence-fibonacci-k1-c2-lgt"
   ],
   "reference_modes": [
     "full_batch",
@@ -49,12 +50,12 @@
   "minimum_strip_support": 8,
   "max_views": 4,
   "memory_limit_bytes": 68719476736,
-  "buffer_preflight_bytes": 51539607552,
-  "artifact_file_limit_bytes": 536870912,
+  "buffer_preflight_bytes": 60129542144,
+  "artifact_file_limit_bytes": 2147483648,
   "minimum_disk_reserve_bytes": 17179869184,
-  "parent_summary_sha256": null,
-  "parent_integration_commit": "53de1d75f4bb03fa354e748cf001cd8248a2f01e",
-  "construction": "All22 original pair tables use the same observed cell/class policy. Guess cyclic domain from observed class count, solve normalized prime components, require unique residual digits, recombine checked CRT, check every original equation and class injectivity, then raw all-frequency DFT/SVD and ordinary CE. Retain every strip, repeat, cap, refused or duplicate branch. No token-name arithmetic rule or held-out input enters the constructor.",
+  "parent_summary_sha256": "a2a3c4af874defb15b0f27af1b5115079b08738ec4b2efacefd7f0b79ac0096a",
+  "parent_integration_commit": "78fb450c84761117ecaff3c4b4f041c5173cb055",
+  "construction": "All23 original eligible pair tables, including recurrence, use the same observed cell/class policy. Guess cyclic domain from observed class count, solve normalized prime components, require unique residual digits, recombine checked CRT, check every original equation and class injectivity, then raw all-frequency DFT/SVD and ordinary CE. Retain every strip, repeat, cap, refused or duplicate branch. No token-name arithmetic rule or held-out input enters the constructor.",
   "selection": "Keep each complete earlier mode choice first, then all new candidates. Replace only when ordinary observed CE decreases by more than1e-12. Seal references before fresh held-out metrics. One construction per task, three mode references, zero CE gradients.",
   "replay": "Rebuild original data and exact fingerprints, preserve whole verified full105 parent and every earlier candidate/failure. Replay full modular/strip state and every integer certificate and work count. Audit raw spectra/CE and all unchanged split metrics. Summary must retain all105 task/mode choices and failures. Composite discovery does not prove identification or global convex search.",
   "resources": "Native Rust and shell only; freeze source,binary,protocol and parent before original preparation. Serial64GiB/oneBLAS/16GiBdiskreserve; preserve failed cells and continue. Depth and fresh transformer remain required."
