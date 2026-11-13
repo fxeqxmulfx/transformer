@@ -14,6 +14,15 @@ still fail. All original failed gates remain. The unchanged35-task transformer
 cohort is running serially; final full35/depth/fiber integration and transformer
 comparison remain open.
 
+Task #217 now has a native full105 integration harness for the completed
+general comparison and all density/balanced/tagged/fiber candidates. It retains
+every parent and all35 choices by mode, uses earlier-first observed-CE ties,
+checks the original split/vocabulary/scale bindings and charges each forward
+construction once. Synthetic metadata tests cover failures, absent models,
+held-out invariance and21 mutations. Commit this harness before running its
+adaptive comparison; depth, composite discovery and the fresh transformer
+remain explicit follow-ups.
+
 ## Composite categorical codes (2026-11-13)
 
 Task #222 / CM27 extends the theory beyond prime latent domains before native

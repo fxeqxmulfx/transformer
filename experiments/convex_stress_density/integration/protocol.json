@@ -1,0 +1,71 @@
+{
+  "version": "full35-density-integration-v1",
+  "tasks": [
+    "arithmetic-perm-add",
+    "arithmetic-add",
+    "arithmetic-sub",
+    "arithmetic-div",
+    "arithmetic-mul",
+    "arithmetic-sum-cube",
+    "arithmetic-sum-pow4",
+    "arithmetic-abs-diff",
+    "arithmetic-abs-diff-blind"
+  ],
+  "modes": [
+    "full_batch",
+    "minibatch",
+    "forward_only"
+  ],
+  "families": [
+    {
+      "name": "density",
+      "cohort": "experiments/convex_stress_density/runs/original-v1",
+      "binary": ".kanban/artifacts/216/original-v1/convex-density-cohort-v1",
+      "binary_sha256": "b804e357ec6553861de0a2e754494fe8e1db92124ef33607a853c3ceb0115257",
+      "summary_sha256": "b19e294991bb6cfe7f1fb5120dc48d10ac66d0cb16197cee3acfa699dcb07739",
+      "source_fingerprint": "b624c37ce670f33a2c65566ffd7c039f8c147b044bced4ae9684a9f4eb9e39b4",
+      "producer_commit": "3311e13ce3d38123fc231f3d111f3cc7ee3fddc0"
+    },
+    {
+      "name": "balanced",
+      "cohort": "experiments/convex_stress_density/runs/balanced-original-v1",
+      "binary": ".kanban/artifacts/218/balanced-original-v1/convex-density-balanced-v1",
+      "binary_sha256": "2abc076ca8e03b98c973181b61a57108f050893b8dc5aacedf4f97c3ec0da698",
+      "summary_sha256": "5250f76d0d89882064b7f9a4eadc7e377850973cd49d6c7a1e35b001ddc09dd2",
+      "source_fingerprint": "3b5db804ed686523499453a4e5c6a8681fb0ed0acdbb2d44c8d2af0f01ec9a16",
+      "producer_commit": "4510ee7d6dc722fb9724833995cabc38386e0223"
+    },
+    {
+      "name": "tagged",
+      "cohort": "experiments/convex_stress_tagged/runs/original-v1",
+      "binary": ".kanban/artifacts/219/original-v1/convex-tagged-v1",
+      "binary_sha256": "de79361c37a12707d18a981d3c674f916d9aba0cca9dd92fbc1a55536f4c6d06",
+      "summary_sha256": "3e48902e6e54a3607937b82c0074ed3e27575d944496cc9a0ff7f9f196991cb0",
+      "source_fingerprint": "c1c751d0be2b35a457f07a75451134148cb01e1ee2402beca1b9a3bbfdb3108b",
+      "producer_commit": "69c83182ed99abfe1719b8247bdf42e7030999ce"
+    },
+    {
+      "name": "fibers",
+      "cohort": "experiments/convex_stress_fibers/runs/original-v1",
+      "binary": ".kanban/artifacts/220/original-v1/convex-fibers-v1",
+      "binary_sha256": "ff19a7a111482184bdb8353b529221b8519e4448c5800be679d2914119d6aaa9",
+      "summary_sha256": "d6b12e04b9bb7c08de7d8cba81619ee3534dc7f692d51aa0229819f0050d5777",
+      "source_fingerprint": "660de1fd395b9d82583f16c37fa132b32f59eb5beb0ea7a146a4b4fa1b6ebd81",
+      "producer_commit": "0e0c2d66cb88ba3bf4d982810505d43237ba8eba"
+    }
+  ],
+  "ce_tie_tolerance": 1E-12,
+  "general": "experiments/convex_stress_general_bank/runs/comparison-canonical-v2",
+  "general_summary_sha256": "1c267e4926b007db829e761330442e79c8b3b0064d5bc9a3905379d55f43a8fd",
+  "general_harness": ".kanban/artifacts/209/comparison-v1/harness",
+  "general_inputs": [
+    "experiments/convex_stress_general_bank/runs/cohort-v1",
+    "experiments/convex_stress_certified/runs/cohort-canonical-v1",
+    "experiments/convex_stress_paired/runs/cohort-canonical-v1",
+    "experiments/convex_stress_decode/runs/cohort-canonical-v1",
+    "experiments/convex_stress_hull/runs/recovery-v1"
+  ],
+  "selection": "Earlier general/full-suite selection first, then every candidate in density/balanced/tagged/fibers order. Replace only for observed CE improvement greater than1e-12. Keep every original105 choice and every parent outcome. No held-out selection.",
+  "accounting": "Each of36 already executed family constructors charged once.108 mode references are not gradient training runs. Full35 scope, but depth/modular follow-ups and the running conventional transformer remain pending.",
+  "memory_limit_bytes": 68719476736
+}
