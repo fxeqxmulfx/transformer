@@ -38,9 +38,10 @@ These floating-point diagnostics are **not** interval or Lean certificates.
 | Centered, re-orthonormalized noisy subspace | Distinguish normalization from the exact-subspace hypothesis | The affine equalities are inconsistent; the extractor explicitly refuses. |
 | Capped/invalid input and modified artifacts | Check budgets, replay and refusal paths | Failures remain explicit; changing the matrix, dual, input, trace or audit is rejected. |
 
-Twelve native tests cover these cases, the complex eigensolver/coordinate
-conventions and the categorical proposal/comparison path. Eight cover the
-core extractor and four cover the proposal path. The standalone `fixtures-v1`
+Eighteen native tests cover these cases, the complex eigensolver/coordinate
+conventions, categorical proposal/comparison and interval paths. Eight cover
+the exact extractor, four cover the proposal path and six cover the interval
+solver. The standalone `fixtures-v1`
 run accepts the rotated case after
 46 and 41 iterations; its final diagonal error is `4.11e-9`. The real-tie
 case takes 3 and 3 iterations with diagonal error `1.11e-15`. Both artifacts
@@ -97,8 +98,43 @@ the mass outside the best mode is at most
 `(eta+2kappa+d^2(epsilon+kappa))/gamma`.
 These are conditional bounds, not a certificate that observed labels provide
 the reference subspace or its error. Approximate real-score ties remain
-uncovered. The native interval variant is the next step; this crate still
-implements the original exact-equality extractor.
+uncovered. The exact extractor remains available alongside the new interval
+solver; categorical proposals still use the exact extractor.
+
+`interval.rs` implements the CM22 domain with a separate `model_tolerance`.
+A bounded primal-dual proximal update couples the normalized diagonal-reading
+operator with PSD trace-one projection. Its dual update uses the conjugate
+of the interval indicator; the primal update uses the full adjoint operator.
+The step sizes use the explicit Frobenius bound on that operator. Acceptance
+checks raw interval violations, the objective gap and both scaled iterate
+steps. The numerical dual upper bound is
+`lambda_max(C-A* y)+support_box(y)`, independently rebuilt by polarization in
+`interval_audit.rs`. Input, matrix, multipliers, extrapolated state, every
+scalar iterate diagnostic and the raw audit are replayed. No convergence or
+interval-arithmetic certificate is claimed.
+
+This variant maximizes one real objective. Its accepted kernel column is an
+empirical candidate and may be mixed; purity is recorded rather than imposed
+as a nonconvex constraint. At a real-score tie the tests retain a half/half
+mixture. A rank-one feature fixture scaled by `11/10` has diagonal error
+`0.21`: the zero-tolerance run refuses, while a declared `0.21` interval
+accepts with unchanged numerical thresholds. The interval core permits
+unnormalized inputs, as CM22's perturbation bound does; it does not infer
+centering, normalization or structural feature error. A separate centered,
+re-orthonormalized noisy three-mode test is refused by the exact extractor and
+accepted with a declared `0.1` interval; the raw interval violation is below
+`1e-8`. A complex rotated and row-permuted exact three-mode test also recovers
+an actual character within `1e-6`. These are controlled feature fixtures.
+Connecting these outcomes to categorical sketches and testing the masked
+label fixture is next.
+
+The standalone `interval-fixtures-v1` run accepts the exact case in 63
+iterations and the mixed real-tie case in 167. The scaled feature fixture is
+refused at its 64-iteration cap with zero model tolerance, and accepts in one
+iteration with model tolerance `0.21`. All four artifacts pass raw audits and
+replay; peak RSS is 6,748 KiB. Small negative apparent dual gaps are recorded
+alongside the primal interval violations, and acceptance uses the absolute
+gap. They are not presented as exact feasible optimality certificates.
 
 From this directory, using native tools only:
 
@@ -112,6 +148,8 @@ prlimit --as=68719476736:68719476736 -- target/release/examples/fixtures runs/fi
 prlimit --as=68719476736:68719476736 -- target/release/convex-stress-density replay runs/fixtures-v1/rotated.input.json runs/fixtures-v1/rotated.artifact.json
 prlimit --as=68719476736:68719476736 -- target/release/examples/sketches runs/sketches-v1
 prlimit --as=68719476736:68719476736 -- target/release/convex-stress-density replay-proposal runs/sketches-v1/masked.input.json runs/sketches-v1/masked.proposal.json
+prlimit --as=68719476736:68719476736 -- target/release/examples/intervals runs/interval-fixtures-v1
+prlimit --as=68719476736:68719476736 -- target/release/convex-stress-density replay-interval runs/interval-fixtures-v1/perturbed_interval.input.json runs/interval-fixtures-v1/perturbed_interval.artifact.json
 ```
 
 `extract INPUT.json NEW_ARTIFACT.json` also accepts externally supplied feature
@@ -123,3 +161,6 @@ input schema and generates reproducible exact-geometry inputs only.
 budgets (two sketches, ranks 1/2/3, 256 iterations per stage, 2,048 total
 iterations and four model audits). Original-data discovery must use a
 separately frozen protocol, source, binary, input fingerprints and replay.
+`interval INPUT.json NEW_ARTIFACT.json` and `replay-interval` provide the
+corresponding interval interface, with the same no-overwrite and file-size
+bounds. `examples/intervals.rs` specifies its input schema.

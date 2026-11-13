@@ -1,4 +1,4 @@
-use convex_stress_density::{Result, artifact, search};
+use convex_stress_density::{Result, artifact, interval, interval_audit, search};
 use std::{
     fs::{self, OpenOptions},
     io::Write,
@@ -16,10 +16,31 @@ fn main() -> Result<()> {
     if args.len() != 3
         || !matches!(
             args[0].as_str(),
-            "extract" | "replay" | "propose" | "replay-proposal"
+            "extract" | "replay" | "propose" | "replay-proposal" | "interval" | "replay-interval"
         )
     {
-        return Err("usage: convex-stress-density extract|replay|propose|replay-proposal INPUT.json ARTIFACT.json".into());
+        return Err("usage: convex-stress-density extract|replay|propose|replay-proposal|interval|replay-interval INPUT.json ARTIFACT.json".into());
+    }
+    if args[0] == "interval" || args[0] == "replay-interval" {
+        let input: interval::Input = read(&args[1], 4 * 1024 * 1024)?;
+        if args[0] == "replay-interval" {
+            let saved = read(&args[2], 64 * 1024 * 1024)?;
+            interval_audit::replay(&input, &saved)?;
+            println!("interval density state and raw support-box bound replayed");
+        } else {
+            if Path::new(&args[2]).exists() {
+                return Err("interval destination already exists".into());
+            }
+            let out = interval_audit::run(input)?;
+            write_new(&args[2], &out, 64 * 1024 * 1024)?;
+            println!(
+                "accepted={} iterations={} purity_error={}",
+                out.outcome.accepted,
+                out.outcome.trace.len(),
+                out.outcome.purity_error
+            );
+        }
+        return Ok(());
     }
     if args[0] == "propose" || args[0] == "replay-proposal" {
         let input: search::Input = read(&args[1], 4 * 1024 * 1024)?;

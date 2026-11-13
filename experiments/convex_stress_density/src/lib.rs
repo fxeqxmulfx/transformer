@@ -6,6 +6,8 @@ pub mod affine;
 pub mod artifact;
 pub mod audit;
 pub mod comparison;
+pub mod interval;
+pub mod interval_audit;
 pub mod matrix;
 pub mod search;
 pub mod solver;
@@ -19,6 +21,8 @@ pub fn memory_bound(n: usize, rank: usize) -> Result<u64> {
     Ok(256 * (n as u64 + 1).pow(2) + 64 * 1024 * 1024)
 }
 
+#[cfg(test)]
+mod interval_tests;
 #[cfg(test)]
 mod search_tests;
 #[cfg(test)]

@@ -7,7 +7,7 @@ use crate::{
 };
 use serde_json::{Value, json};
 
-fn operator(b: &[C], n: usize, r: usize, x: usize, y: usize, imag: bool) -> Vec<C> {
+pub(crate) fn operator(b: &[C], n: usize, r: usize, x: usize, y: usize, imag: bool) -> Vec<C> {
     let value = |m: &[C]| {
         let z = matrix::reading(b, n, r, m, x, y);
         if imag { z.im } else { z.re }

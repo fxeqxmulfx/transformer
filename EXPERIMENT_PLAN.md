@@ -6,10 +6,14 @@ Task #213 / CM22 proves a convex interval tolerance for density diagonals,
 explicit hidden off-diagonal and feature-perturbation bounds, and concentration
 under a declared real-objective gap. A mixed approximate optimizer attains the
 bound in a closed example. The feature-error hypothesis remains structural;
-missing labels do not supply it. Implement an independently audited bounded
-interval solver next, retaining the exact solver and all earlier proposals;
-do not silently increase numerical convergence tolerances. Approximate real
-ties and unseen-label identification remain separate limitations.
+missing labels do not supply it. Task #214 now has a bounded Rust interval
+core with a separate model tolerance, raw support-box dual audits and complete
+replay. Its six checks retain mixed real ties and distinguish genuine feature
+perturbation from numerical convergence tolerances. A centered, normalized
+noisy subspace refused by exact constraints is admitted at model tolerance
+`0.1`. Connect it to categorical
+sketch proposals next, retaining the exact solver and all earlier candidates.
+Approximate real ties and unseen-label identification remain limitations.
 
 ## Convex matrix extraction from a supplied subspace (2026-11-12)
 
