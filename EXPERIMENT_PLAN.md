@@ -11,7 +11,12 @@ A common fiber mass is an explicit additional hypothesis. Observed counts
 alone do not justify it. A future native finite-field proposal must retain
 every guessed multiplicity, equation, nullspace choice and cap, independently
 check actual endpoints and preserve all earlier candidates. Freeze it only
-after its own tests; no new original result follows from this theory.
+after its own tests; no new original result follows from this theory. The
+bounded native finite-system core now passes four checks, including exact
+solution-set agreement with all793 binary/ternary two-variable systems.
+Independent full-row replay verifies the retained invertible operations,
+original equations, affine basis and explicit work/nullity caps. Categorical
+proposal construction remains the next step.
 
 ## Categorical constant strips (2026-11-13)
 
