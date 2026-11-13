@@ -79,6 +79,18 @@ or parent selection has run; the reviewed complete comparison counts remain
 unchanged. The same frozen executable must import this immutable stage after
 the original parent approvals.
 
+Task238 / CM31 proves the next repair before native implementation. A head
+that gives two differently labeled observations the same logits has pairwise
+mean CE at least log2. Refining the fixed state by observed-input identity
+removes that collision while retaining the learned quotient on unseen inputs.
+The actual complex Fourier head has exact ordinary CE, an explicit enlarged
+budget, convex coefficient training and correct compatible pooled decoding.
+Affine constraints can retain the declared default logits at every feasible
+iterate. A four-class witness fits every observed raw label but remains wrong
+on an unseen alias for one of two indistinguishable targets. Code discovery,
+unseen quotient identification, efficient storage and actual constrained
+updates remain separate obligations; no benchmark score changes from this proof.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine

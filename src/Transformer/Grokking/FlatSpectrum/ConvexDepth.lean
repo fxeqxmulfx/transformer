@@ -7,6 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.Interaction
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.JointHead
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.PrefixFeatures
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.FourierCode
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.QuotientWitness
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -24,6 +25,10 @@ same budget, while making the geometric storage cost explicit.
 CFt5 in `review/flat_spectrum.md` binds actual complex categorical features to
 this convex head, proves the conjugate initializer's exact logits and budget,
 and supplies flat Fourier query blocks for arbitrary nonzero state counts.
+CM31 refines observed inputs to fit raw aliases of a learned quotient, proves
+the actual complex-head loss and budget, and gives convex affine constraints
+that retain declared defaults at unseen inputs. Its four-class witness keeps
+the distinction between decoded correctness and unidentified raw aliases.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/

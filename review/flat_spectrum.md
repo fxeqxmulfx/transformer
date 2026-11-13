@@ -17007,3 +17007,103 @@ noninjective code or a native model repair. A future producer must find its
 candidate code from training, check the original row identities, preserve
 ordinary CE and all raw labels, and demonstrate compatibility with the
 unchanged task's readout. No new benchmark pass follows from CM30 alone.
+
+### CM31. Fit raw labels without discarding a learned quotient
+
+There is a separate training-fit obstruction in a head that depends only on
+a colliding latent code. If two observed inputs share their logit vector `v`
+but have distinct raw labels `c` and `d`, ordinary full-vocabulary CE obeys
+
+```
+CE(v,c) + CE(v,d) >= 2 log 2.
+```
+
+Indeed, the softmax denominator is at least `exp(v_c)+exp(v_d)`, whose square
+is at least `4 exp(v_c+v_d)`. Taking logs proves the bound. The bound is sharp
+for two classes with equal logits. The actual empirical sum retains that
+floor, since all other CE terms are nonnegative; its mean retains the floor
+divided by the number of samples. A deterministic decoder of the shared code
+also cannot get both raw labels right. These statements require neither a
+budget nor an optimizer. The quotient model's `Model.logits` at `49105730`
+has exactly this shared-state restriction. Correct decoded answers from CM30
+do not remove the raw-label CE obstruction.
+
+Let `O` be the finite set of distinct observed inputs, `Z` a nonempty finite
+latent set, `z:X->Z` a fixed learned latent map, `y:O->C` the consistent recorded
+raw labels, and `r:Z->C` a declared
+representative decoder. Refine the categorical state to
+
+```
+s(x) = inl(x)   if x is observed,
+       inr(z(x)) otherwise,
+I = O + Z,     |I| = |O| + |Z|.
+```
+
+The feature extractor reads the observed input identities and `z`, without
+any raw label or held-out target argument. Assign label `y(x)` to `inl(x)`
+and `r(t)` to `inr(t)`. Distinct observed inputs now have distinct states,
+and observed states cannot collide with defaults. Forgetting the observation
+identity recovers `z(x)` exactly, so any old latent logit map has a pullback to
+this state set. That representability statement does not promise the same
+coefficient budget: the additional states have an explicit cost.
+
+For a declared readout `q:C->D` and fixed code readout `g:Z->D`, assume
+
+```
+q(y(x)) = g(z(x)) for observed x,
+q(r(t)) = g(t)    for every latent state t.
+```
+
+The constructed prediction fits every observed raw label and has decoded
+answer `g(z(x))` at every input. To conclude correctness at an unseen input
+still requires a separately identified answer `g(z(x))=q(target(x))`, for
+example from an applicable CM30 certificate and its structural premises.
+Unseen inputs with the same latent code still share a raw prediction. The
+refinement does not discover `z`, prove representative compatibility from
+low CE, or identify an arbitrary unseen alias.
+
+Reindex the actual normalized `|I|`-state Fourier matrix by the categorical
+state names. Both Gram matrices remain the identity, and every singular value
+is one. With the assigned raw-label margin table `T`, the actual complex head
+`H=U* T` has logits `Re(U H)=T`, using both real and imaginary coordinates.
+Thus at every observed input its ordinary CE is exactly
+`log(1+(|C|-1) exp(-a))`, with the assigned raw class uniquely preferred for
+`a>0`. CFt5 gives squared energy `|I| a^2` and real/imaginary L1 column budget
+`2|a||I|`; margin24 fits radius `64|I|`. Every feasible learned head's logits
+are bounded by its column budget. The actual CE objective remains convex in
+all coefficients for this fixed extractor. Flatness bounds this fixed basis,
+not the target table or a learned head's spectrum.
+
+The native vocabulary cap1024 gives `|C| < exp(24)` without a decimal
+approximation. Consequently each assigned-class CE is strictly below log2.
+For any other readout group, its unnormalized softmax mass is at most `|C|`;
+the assigned class's group has mass at least `exp(24)`. Its pooled readout is
+therefore strictly preferred, including when the groups have unequal sizes.
+The common positive softmax normalizer does not change that ordering.
+
+Ordinary training CE alone leaves default-state logits unconstrained. An
+optional stronger domain intersects the convex column budget with affine
+equalities fixing every `inr(t)` row's logits to the declared margin24 table.
+This domain remains convex, contains the constructed initializer, and retains
+convex ordinary CE. Every feasible updated head then preserves those actual
+unseen logits and the compatible pooled answer. This is conditional on update
+feasibility; no native projection algorithm or convergence result is proved.
+It does not assert that unconstrained CE updates preserve the defaults.
+
+The finite witness has eight Boolean input triples, four observations and
+four held-out inputs. All four raw classes `Bool x Bool` occur among the
+observations; their first bit is the latent code. Two targets agree on every
+observation and on the quotient everywhere, but disagree on held-out alias
+bits. The unrefined head has a two-example log2 mean-loss floor. The actual
+six-state refined Fourier head fits all four observed classes below that
+pairwise floor, lies in the per-class budget384 and gives both targets'
+correct pooled answer on all inputs. Its raw prediction at a specified
+held-out input is strictly wrong for one target. This is a boundary witness,
+not a benchmark result or an unconditional discovery theorem.
+
+Lean: `ConvexDepth/QuotientCollision`, `QuotientRefinement`, `QuotientHead`,
+`QuotientReadout`, `QuotientDomain` and `QuotientWitness`. The construction
+enlarges capacity to `|O|+|Z|` states and has a dense Fourier realization;
+practical storage/work limits, actual constrained updates and original-task
+evaluation require a separate frozen native implementation. Neither this
+extension nor its examples change the original labels, loss or task metrics.
