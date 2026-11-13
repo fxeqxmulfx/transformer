@@ -8,10 +8,11 @@ pass. [`protocol.json`](protocol.json) freezes every original task with its
 original update cap and original success metrics. The original queue stopped
 at its decoded-parent gate because relative and absolute summary paths differed.
 Task221 recovered that parent with identical models and scores and restarted
-the unchanged frozen transformer producer`414431c7` on all35 tasks. Training
-and endpoint replays are running serially under the original8GiB cap, below
-the user's64GiB limit. The original failed gate remains preserved; no completed
-35-task score is claimed yet. This comparator makes no new convexity claim.
+the unchanged frozen transformer producer`414431c7` on all35 tasks. All training,
+endpoint replays and complete checkpoint-hash checks are now finished under the
+original8GiB cap, below the user's64GiB limit. It passes33/35 primary splits and
+32/35 across every held-out split. The original failed gate remains preserved.
+This comparator makes no new convexity claim.
 
 ## Model and bounded execution
 
@@ -157,6 +158,44 @@ forecast; it still performs no original-data model initialization or scoring.
 Generated reports and resources remain in ignored `runs/preflight-v1/`;
 the frozen binary and test logs are preserved in `.kanban/artifacts/191/backend-v1/`.
 The existing convex cohorts and their serial queue remain unchanged.
+
+## Completed original comparison
+
+Frozen producer `414431c71806aa632807af697b63cd0b8b97c1f9` completed all 35
+seed-1 cases and saved endpoint replays. The summary verifies every observed
+checkpoint hash, all original metrics and the exact final optimizer update.
+There are 33 primary-split passes and 32 all-held-out-split passes; two models
+reach their original update caps. Every unsuccessful endpoint remains included.
+
+| Unsuccessful all-split case | Updates | Limiting split | Exact sequence accuracy |
+| --- | ---: | --- | ---: |
+| Easy depth | 250 | Test length 128 | 97.0703% |
+| Sum fourth power | 100,000 | Validation | 92.4336% |
+| Long MQAR | 20,000 | Every held-out split | 0% |
+
+Easy depth already passes its original primary validation split at 250 updates,
+so the frozen stopping rule selects that endpoint. The other two failures
+exhaust their original caps. The recurrence task passes its primary split at
+86,000 updates with 99.0434% sequence accuracy; shifted Boolean AND passes at
+250 updates. Both pass every held-out split.
+
+The cohort performs 617,750 optimizer updates. Summed run time including data,
+evaluation and checkpoint work is 15,173.915 seconds, of which 9,813.293 seconds
+are optimizer time. Replay is additional. Peak prepare/run/replay RSS is
+269,964 KiB (about 264 MiB). These CPU measurements are not a matched-compute
+comparison with the convex families or the historical GPU reference. All 12
+native tests, formatting and clippy pass again at `2bab4b89`; the pinned Kernite
+checkout remains clean at `a1b6bc2c956e1a5f35960e26b209e1b6c213096c`.
+
+Complete generated evidence stays in `runs/cohort-v1` and the root's
+`.kanban/artifacts/191/` and `.kanban/artifacts/221/transformer/`. The complete
+summary SHA256 is
+`70f26e21fa756fd54416f8ac14116d63aa67950439a6d4048236dae904080057`.
+The source fingerprint is
+`08007a3dbbfcb4d30e1e1fcfb0ad35942b6feaa34862ea3e458643783c70dd28`.
+The reviewed retained-path model passes all 48 of its depth/binding/MQAR cases,
+but integration with the new 23-task decoded-consequence cohort is still
+pending. Neither result alone establishes a full35 convex-model pass.
 
 ## Reproduce
 

@@ -596,6 +596,20 @@ peaks at 250,656 KiB RSS. Gate the serial cohort on the decoded cohort finishing
 and preserve partial attempts without automatic resume. No original training,
 transformer result or full35 convex success is asserted at the freeze.
 
+The frozen `414431c7` transformer cohort is now complete: all35 original
+seed-1 tasks and endpoint replays pass provenance, original-metric and exact
+final-update checks. The complete summary verifies every observed checkpoint
+hash. It has33 primary passes and32 all-held-out passes. Easy depth stops at
+250 updates after primary success but scores97.0703% on length128; sum fourth
+power ends at100,000 updates with92.4336% validation; long MQAR ends at20,000
+with0% exact held-out sequences. The recurrence and shifted-AND tasks pass.
+All617,750 updates and failures remain. Summed run time is15,173.915s excluding
+replay; peak RSS269,964KiB. All12 native tests/fmt/clippy pass again. Summary
+SHA25670f26e21fa756fd54416f8ac14116d63aa67950439a6d4048236dae904080057.
+This CPU comparator retains its own documented sampling/optimizer conventions;
+no matched-compute speed claim is made. Full105 integration with task225 and
+reviewed task175 remains task226; full convex recovery is still unfinished.
+
 ## Prediction-preserving spectral sharpening (2026-11-12)
 
 Lean CM11 landed at `b3c2e8ae` before the native follow-up. The
