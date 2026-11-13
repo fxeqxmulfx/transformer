@@ -15,7 +15,9 @@ parent checks and independent full105 hull replay, and checks the fresh summary
 against its pinned predecessor. Each frozen constructor binary then rechecks
 all nine result/replay bindings and regenerates its complete summary. Identity
 sets, original data fingerprints, vocabulary, scale, raw CE, split coverage,
-pass flags and mode references are checked before comparison. Altered or missing
+pass flags and mode references are checked before comparison. Sequence parents
+can derive novel subsets from frozen raw data; their exact independently
+replayed metric inventory defines the preserved split set. Altered or missing
 parents fail; separate output preserves failed gates and subprocess resources.
 
 The 36 completed constructions are each charged once, including their measured

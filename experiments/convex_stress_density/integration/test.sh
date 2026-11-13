@@ -43,6 +43,12 @@ jq '(.general.choices[]|.status)="no_model"|(.general.choices[]|.selected)=null
 run_fixture "$out/no-model.json" > "$out/no-model-result.json"
 jq -e '(.choices|length)==105 and all(.choices[];.status=="no_model" and .selected==null)
     and all(.by_mode[];.no_model==35 and .primary_passes==0 and .all_split_passes==0)' "$out/no-model-result.json" > /dev/null
+# Novel subsets can be derived from a sequence parent's raw data fingerprint.
+# Preserve its exact replayed metric inventory, including these derived splits.
+jq '.suite.tasks[0].name as $task|.suite.tasks[0].selection="validation/novel"
+    |(.general.parents.full_suite_hull.choices[]|select(.task==$task)|.metrics["validation/novel"])={loss:4.2,sequence_accuracy:0.5}' "$out/fixture.json" > "$out/novel.json"
+run_fixture "$out/novel.json" > "$out/novel-result.json"
+jq -e '.choices_compared==105 and (.choices[0].selected.metrics["validation/novel"].sequence_accuracy==0.5)' "$out/novel-result.json" > /dev/null
 mutations=(
   'del(.general.parents.full_suite_hull.choices[0])'
   '.general.parents.full_suite_hull.choices += [.general.parents.full_suite_hull.choices[0]]'
@@ -77,4 +83,4 @@ cp "$source_dir/run.sh" "$out/gate/run.sh"
 jq '.general="missing-complete-parent"' "$source_dir/protocol.json" > "$out/gate/protocol.json"
 if bash "$out/gate/run.sh" compare "$out/should-not-exist" > "$out/gate.log" 2>&1; then exit 1; fi
 test ! -e "$out/should-not-exist"
-printf '%s\n' 'Full105 retention, all35/modes, earlier-first CE, held-out invariance, constructor accounting, all-failure/no-model retention,21 mutations and missing-parent gate pass.'
+printf '%s\n' 'Full105 retention, derived novel splits, all35/modes, earlier-first CE, held-out invariance, constructor accounting, all-failure/no-model retention,21 mutations and missing-parent gate pass.'

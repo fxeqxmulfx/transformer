@@ -9,10 +9,10 @@ def choice($rows; $task; $mode; $key):
   | require(length == 1; "missing or duplicate mode choice") | .[0];
 def select_ce($rows; $tol): reduce $rows[] as $c (null;
   if . == null or $c.train_ce + $tol < .train_ce then $c else . end);
-def valid_candidate($c; $meta; $selection):
+def valid_candidate($c; $expected_splits; $selection):
   require(($c.train_ce | number) and ($c.metrics | type == "object")
     and ($c.primary_pass | type == "boolean") and ($c.all_splits_pass | type == "boolean")
-    and ($c.metrics | keys) == ($meta.data_fingerprints | keys)
+    and ($c.metrics | keys) == $expected_splits
     and ($c.metrics.train.loss - $c.train_ce | fabs) < 1e-9
     and all($c.metrics[]; (.sequence_accuracy | number) and .sequence_accuracy >= 0 and .sequence_accuracy <= 1)
     and $c.primary_pass == ($c.metrics[$selection].sequence_accuracy >= 0.99)
@@ -57,7 +57,7 @@ $general[0] as $g | $families[0] as $fs | $protocol[0] as $p
                 and ($evaluation.status == "complete" or $evaluation.status == "proposal_ineligible")
                 and ($evaluation.status == "complete") == (($evaluation.candidates|length)>0);
                 "family data, scale, candidate identities or construction cost changed")
-            | reduce $evaluation.candidates[] as $c (.; valid_candidate($c; $meta; $spec.selection)
+            | reduce $evaluation.candidates[] as $c (.; valid_candidate($c; ($meta.data_fingerprints|keys); $spec.selection)
                 | require(($c.id | type == "string") and ($c.model_sha256 | type == "string")
                     and $c.audit.vocabulary == $meta.vocab
                     and ($c.audit.train_ce - $c.train_ce | fabs) < 1e-10;
@@ -82,7 +82,10 @@ $general[0] as $g | $families[0] as $fs | $protocol[0] as $p
             else $r.result.evaluation.candidates[] + {family:$f.name,vocab:$meta.vocab,
               constructor_reference:true,gradient_training_run:false} end
           else empty end)] as $candidates
-    | reduce $candidates[] as $c (.; valid_candidate($c; $meta; $spec.selection)
+    # Sequence parents can derive novel subsets from frozen raw data. Their
+    # independently replayed metric inventory supplies the exact split set.
+    | (if $updated then ($meta.data_fingerprints|keys) else (($old.metrics // {})|keys) end) as $expected_splits
+    | reduce $candidates[] as $c (.; valid_candidate($c; $expected_splits; $spec.selection)
         | if $updated then
             require($c.vocab == $meta.vocab and $meta.scale == 1
                 and $c.train_ce + 1e-8 >= ((1 + ($meta.vocab-1)*((-1)|exp))|log);
