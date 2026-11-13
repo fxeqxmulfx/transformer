@@ -221,6 +221,13 @@ matrices against exhaustive permutation minima; count/dual/state/work/input
 tampering; output renaming; uncovered states; seed and assignment caps; and
 full retained-parent replay. Frozen earlier cohorts are unchanged.
 
+The separate [`cohort`](cohort) harness freezes this measured policy on nine
+original pair tasks, including division and the blind long case. It retains
+the earlier CM15 proposal and all new attempts, seals observed-only selection
+before metrics, and independently replays every scored outcome under 64 GiB.
+Its four synthetic harness tests precede original-data construction; no new
+original-task accuracy is claimed at this protocol freeze.
+
 From this directory, using native tools only:
 
 ```sh

@@ -11,8 +11,12 @@ withheld fixture cells are correct. It retains the inaccurate interval candidate
 and every earlier candidate, exposes integer dual certificates and full states,
 and preserves the earlier correct model on CE ties. All 26 native checks pass;
 all four retained comparisons replay. Peak RSS is 69,896 KiB under the 64 GiB
-cap. Freeze a separate original-data protocol next; the fixture result does
-not establish full-suite success or general unseen-label recovery.
+cap. Task #216 now freezes the same policy for the nine original pair tasks
+in `experiments/convex_stress_density/cohort`, retaining the earlier CM15
+proposal and every exact/interval/refinement failure. It seals training-only
+selection before split metrics and provides independent full replay under a
+64 GiB cap. No original-data result has been read at this freeze; the fixture
+result does not establish full-suite success or general unseen-label recovery.
 
 ## Convex density tolerances (2026-11-13)
 

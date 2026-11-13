@@ -1,0 +1,28 @@
+{
+  "version": "density-refinement-original-v1",
+  "proof_commits": ["1885957b", "a4388412", "0bb5496f"],
+  "constructor_commit": "d97e1221",
+  "shared_fingerprint": "260d22864ac06e44f945791ac766340a96254b917dffca5a713ea396ddc5a6ba",
+  "tasks": ["arithmetic-perm-add", "arithmetic-add", "arithmetic-sub", "arithmetic-div", "arithmetic-mul", "arithmetic-sum-cube", "arithmetic-sum-pow4", "arithmetic-abs-diff", "arithmetic-abs-diff-blind"],
+  "reference_modes": ["full_batch", "minibatch", "forward_only"],
+  "exact": {"code_trials":2,"ranks":[1,2,3],"seed":73,"extraction":{"iterations":256,"rho":1.0,"feasibility_tolerance":1e-8,"gap_tolerance":1e-8,"rank_cutoff":1e-11,"purity_tolerance":1e-6},"total_iterations":2048,"model_audits":4},
+  "interval": {"variants":[
+    {"model_tolerance":0.03,"iterations":4096,"feasibility_tolerance":1e-8,"gap_tolerance":1e-8,"step_tolerance":1e-8},
+    {"model_tolerance":0.1,"iterations":4096,"feasibility_tolerance":1e-8,"gap_tolerance":1e-8,"step_tolerance":1e-8},
+    {"model_tolerance":0.3,"iterations":4096,"feasibility_tolerance":1e-8,"gap_tolerance":1e-8,"step_tolerance":1e-8}
+  ],"total_iterations":73728,"model_audits":8},
+  "refinement": {"rounds":24,"seeds":16,"assignments":256},
+  "earlier_decode": {"code_trials":16,"power_steps":64,"refinement_steps":24,"seed":73},
+  "memory_limit_bytes": 68719476736,
+  "buffer_preflight_bytes": 25769803776,
+  "artifact_file_limit_bytes": 536870912,
+  "parallel_numerical_jobs": 1,
+  "blas_threads": 1,
+  "minimum_disk_reserve_bytes": 17179869184,
+  "domain": "CM15 convex prediction hull of decoded latent tables, with latent Fourier operator/nuclear bounds N and original-vocabulary ordinary CE at unit logit scale. Discrete proposals and refinement are heuristic search in this hull. CM21-23 certify conditional geometry and local assignment/decoder steps, not subspace discovery, global search success or missing labels.",
+  "construction": "Use only original training cell/label observations. Rebuild the unchanged earlier CM15 proposal, then the exact and interval policies measured on fixtures, then certified local refinement. No task name or arithmetic answer rule enters these constructors. Retain every exact/interval/refinement slot, cap and refusal, and the full earlier proposal including failures and costs. The policy is identical for all tasks and is frozen before original discovery.",
+  "selection": "Finish every candidate before held-out metrics. Preserve prior, exact, interval and refined candidates; minimum observed CE with earlier-first ties within 1e-12. Write the selected reference and artifact digests before evaluating every admitted candidate on every original split. Original success threshold is 99 percent sequence accuracy on the primary split and separately every held-out split; report all failures and absent candidates.",
+  "replay": "Rebuild original datasets and check every frozen fingerprint. Recompute the earlier proposal and complete exact/interval/refinement reports, integer assignment duals, decoder counts and chosen candidate. Independently evaluate saved candidate tables with all-frequency raw DFT/SVD and ordinary CE and repeat every original split metric. Seals bind input, prior proposal, full report, selection and result; recomputed digests alone do not bypass replay.",
+  "comparison": "Charge this forward construction once per task. Its candidate may later be referenced in full_batch, minibatch and forward_only comparisons; those references are not three optimizer runs. Integration waits for complete verified parents and preserves all original105 choices, all35 short/long tasks, every earlier failure and the conventional transformer comparison. Standalone output is not a full35 result.",
+  "resources": "Native Rust and shell only; freeze committed source, complete source fingerprint and producer binary before prepare. Serial cases with one BLAS thread, a 64 GiB address-space cap and 16 GiB disk reserve. No overwrite or resume of started cells. Preserve partial artifacts and record process failures while continuing remaining planned tasks. Generated artifacts remain ignored in root runs."
+}
