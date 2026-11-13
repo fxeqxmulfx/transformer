@@ -1,5 +1,19 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Recovered comparison queues (2026-11-13)
+
+Task #221 preserves a completed parent-chain failure caused solely by nine
+relative/absolute phase model-path strings. Committed native recovery stages
+canonical views of the same actual phase, paired and certified artifacts;
+every other summary field remains exact. All eight decoded cases then replay
+with byte-identical models/proposals and unchanged scores under the frozen
+producer. The complete decoded comparison keeps15/24 passes. The general-bank
+integration now passes21/27 choices,7/9 per mode, with the entire105-choice
+hull selection independently replayed and retained. Sum-cube and sum-power-four
+still fail. All original failed gates remain. The unchanged35-task transformer
+cohort is running serially; final full35/depth/fiber integration and transformer
+comparison remain open.
+
 ## Composite categorical codes (2026-11-13)
 
 Task #222 / CM27 extends the theory beyond prime latent domains before native

@@ -158,5 +158,20 @@ prior. Their refusals neither refute the broader decoder hull nor replace earlie
 models that fit those tasks. Every old candidate remains part of the comparison.
 The separate [`comparison/`](comparison/) harness implements CE-only integration,
 including the added long case and complete full-suite baseline; its metadata
-tests pass. Actual integration awaits complete audited predecessors. This is
-an adaptive follow-up; it does not complete the full35 goal or transformer comparison.
+tests pass. Integration now completes against all verified predecessors after
+task221 repaired relative/absolute summary-path mismatches in separate canonical
+views. The original failed queues and summaries remain intact; numerical
+producers, models, scores, candidate order and CE rules are unchanged.
+
+The complete comparison passes 21/27 selections: 7/9 in each of full batch,
+minibatch and forward-only. General-bank candidates win all six absolute-
+difference and blind absolute-difference slots at100%; earlier candidates keep
+permuted addition, addition and subtraction at100%, division at100%/99.9785%/
+100%, and multiplication at100%/99.9575%/100%. Sum-cube and sum-power-four still
+fail in every mode; their lower-CE earlier choices remain selected. The full
+105-choice hull baseline was independently replayed and retained; this update
+covers27 choices and does not yet integrate every depth/fiber follow-up across
+all35 tasks. The conventional transformer cohort is now running separately.
+The summary hash is`1c267e4926b007db829e761330442e79c8b3b0064d5bc9a3905379d55f43a8fd`;
+rooted evidence is`runs/comparison-canonical-v2` and`.kanban/artifacts/221`.
+This is an adaptive integration, not a new unseen-data experiment or full35 pass.

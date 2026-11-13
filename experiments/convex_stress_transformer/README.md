@@ -5,10 +5,13 @@ the original short and long tasks without repeating the memory failure?
 
 The native backend, checkpoint/runner tests and all 35 data/resource checks
 pass. [`protocol.json`](protocol.json) freezes every original task with its
-original update cap and original success metrics. Execution is gated on the
-preceding decoded cohort. **No fresh original-data training or stress accuracy
-is reported at this freeze.** This conventional comparator makes no new
-convexity claim.
+original update cap and original success metrics. The original queue stopped
+at its decoded-parent gate because relative and absolute summary paths differed.
+Task221 recovered that parent with identical models and scores and restarted
+the unchanged frozen transformer producer`414431c7` on all35 tasks. Training
+and endpoint replays are running serially under the original8GiB cap, below
+the user's64GiB limit. The original failed gate remains preserved; no completed
+35-task score is claimed yet. This comparator makes no new convexity claim.
 
 ## Model and bounded execution
 

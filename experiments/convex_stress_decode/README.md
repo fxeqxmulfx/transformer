@@ -79,6 +79,18 @@ and binary, followed by the unchanged transformer and full-suite comparisons.
 The canonical view and all downstream numerical processes are capped at or
 below the user's 64 GiB. This path repair is not an accuracy improvement.
 
+The recovery at`5e1ff865` is complete. All eight cases reconstructed and replayed
+with byte-identical proposals and models. Every non-timing/non-parent field in
+their results is unchanged; seven returned endpoints and one refused proposal
+remain. The sealed comparison has15/24 primary and all-split passes, three
+exact-fit proposals, and peak replay/run RSS12844KiB. Its summary SHA256 is
+`f72a3398f92d196ccbdf840d5efafd34128a2fcb67891f3d3103adc5f7d78b4c`.
+The same path-view helper, using each producer's `summarize` command, also
+repairs paired and certified parents without retraining. This unblocks the
+27-choice general-bank integration and the original35-task transformer queue.
+Rooted evidence is`runs/cohort-canonical-v1` and`.kanban/artifacts/221`; the
+first failed run and both failed comparison gates remain preserved.
+
 [`protocol.json`](protocol.json) freezes eight cases on the same unchanged
 datasets as the preceding class-coding/phase cohorts: permuted addition,
 addition, subtraction, division, multiplication, sum-cube, sum-power-four and

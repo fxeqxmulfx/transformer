@@ -42,19 +42,32 @@ copy of this directory kept outside a temporary worktree:
 ```sh
 bash experiments/convex_stress_general_bank/comparison/run.sh preflight \
   experiments/convex_stress_general_bank/runs/cohort-v1 \
-  experiments/convex_stress_certified/runs/cohort-v1 \
-  experiments/convex_stress_paired/runs/cohort-v1 \
-  experiments/convex_stress_decode/runs/cohort-v1 \
+  experiments/convex_stress_certified/runs/cohort-canonical-v1 \
+  experiments/convex_stress_paired/runs/cohort-canonical-v1 \
+  experiments/convex_stress_decode/runs/cohort-canonical-v1 \
   experiments/convex_stress_hull/runs/recovery-v1
 bash experiments/convex_stress_general_bank/comparison/run.sh compare \
   experiments/convex_stress_general_bank/runs/cohort-v1 \
-  experiments/convex_stress_certified/runs/cohort-v1 \
-  experiments/convex_stress_paired/runs/cohort-v1 \
-  experiments/convex_stress_decode/runs/cohort-v1 \
+  experiments/convex_stress_certified/runs/cohort-canonical-v1 \
+  experiments/convex_stress_paired/runs/cohort-canonical-v1 \
+  experiments/convex_stress_decode/runs/cohort-canonical-v1 \
   experiments/convex_stress_hull/runs/recovery-v1 \
-  experiments/convex_stress_general_bank/runs/comparison-v1
+  experiments/convex_stress_general_bank/runs/comparison-canonical-v2
 ```
 
 Generated evidence remains ignored. The separate protocol is an adaptive
 integration of the already frozen cohort, not a new unseen-data experiment.
-Integration is still pending the unchanged live parent queues.
+The original parent gate failed because generated model paths changed spelling
+between relative and absolute roots. Task221's committed
+[`recover_paths.sh`](../../convex_stress_decode/recover_paths.sh) builds separate
+canonical views for phase, paired and certified summaries with their original
+frozen binaries. Every non-path field is identical, and changed paths must
+resolve to the same original artifacts. A fresh decoded eight-case run uses
+the unchanged frozen producer and reproduces every old proposal/model/score.
+
+The canonical comparison now completes all evidence gates and passes21/27:
+7/9 in each mode. Six general-bank selections improve the absolute-difference
+tasks; earlier candidates preserve five other task passes, while sum-cube and
+sum-power-four remain failures. The entire105-choice hull selection replays
+before the27-choice update. No full35 or completed transformer result is claimed.
+Evidence, subprocess resources and all earlier failed attempts remain local.
