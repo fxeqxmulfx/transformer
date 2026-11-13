@@ -141,6 +141,24 @@ completed in 190.89 seconds with peak RSS 3,310,156 KiB (about 3.16 GiB). All
 proposals use zero CE gradient steps; their construction/audit work is retained.
 These results add no original-suite pass until the separate original freeze.
 
+The fixed-view wrapper now binds each full model to its interior code, original
+categorical maps and actual query certificates. Its explicit class-name map
+allows a constant-strip label absent from the interior. Every full prediction
+records either an observed row consequence, an uncertified interior query, or
+the assumed strip constant. It uses CM29's per-query soundness theorem, so unused
+padding need not be certified when all mapped queries are certified. The entire
+claim remains conditional on the declared target family.
+
+Five new tests cover full raw spectral/CE replay, output labels outside the
+interior, missing axes and padding, duplicate full tables, skipped/refused views,
+selection and 15 mutations. A missing-row fixture deliberately fits the view
+while disagreeing with an alternative unseen target; the report explicitly
+refuses unconditional identification. Each view has a separate dense report and
+a 60 GiB forecast, leaving 4 GiB for its cohort wrapper under the 64 GiB process
+limit. A cohort must write and release one report before constructing another.
+These synthetic checks bring the native suite to 41; original evaluation still
+requires the separately frozen harness.
+
 ```sh
 cd experiments/convex_stress_consequences
 cargo fmt --check

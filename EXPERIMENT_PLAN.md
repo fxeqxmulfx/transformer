@@ -201,6 +201,17 @@ the other 28 tests, fmt/clippy and all Lean audits pass. There are no CE gradien
 steps in these forward proposals. Fixed-view native binding and the separate
 original cohort freeze remain required; all previous scores/parents stay fixed.
 
+The native fixed-view wrapper now applies CM29 per-query soundness to the actual
+full table, with a separate output class map and explicit strip assumption.
+Every mapped answer retains its interior query certificate; unmapped answers
+retain their assumed constant. Unused padding does not require a certificate.
+Five more tests (41 total) check raw spectra/CE, missing axes, outside strip
+labels, duplicate tables, caps/refusals and mutated evidence. A deliberately
+ambiguous unseen row demonstrates why this is not unconditional identification.
+One dense report per view permits serial disk-backed cohort processing under
+the 60 GiB view forecast and 64 GiB process limit. The separate original harness
+and freeze remain next; no previous score or parent changes.
+
 ## Complete categorical fiber constraints (2026-11-13)
 
 Task #220 / CM26 starts from actual same-label observation groups. Lean proves

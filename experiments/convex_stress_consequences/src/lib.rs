@@ -9,3 +9,4 @@ pub mod decoded;
 pub mod learner;
 pub mod lifts;
 pub mod row_program;
+pub mod view;
