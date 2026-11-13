@@ -222,9 +222,14 @@ on ties; all process failures retain their prior rows. The tested source/binary/
 protocol must be archived before original preparation. No new score yet.
 
 Producer `70cf9ab5` is now committed and archived with the binary, protocol,
-source fingerprint and complete task223 parent hash. Its original23 construction
-and replay queue is running serially under64GiB, with one dense view retained
-in memory at a time. No incomplete cohort is counted as a new full35 score.
+source fingerprint and complete task223 parent hash. All23 original constructions
+and replays completed under64GiB with zero process failures. Seventeen cases
+admit certified100%-accurate models; square-times adds one all-split pass in each
+mode. The complete105 comparison is31/35 full,31/35 mini,30/35 forward, preserving
+all previous parents and costs. Constructor time is788.9996s with zero CE
+gradients; peak model run/replay RSS4.68GiB and complete-summary RSS13.45GiB.
+Summary SHA256 is89a14738d36461e42db2faa2e9611b331ea6ea1fad01da5f16cd2dc34e2a0b63.
+Independent review is next; depth and transformer integration remains required.
 
 The independent task175 depth review is complete at `d1c4f860`: all31 native
 checks and Lean audits pass, and all288 original plus48 retained outcomes and

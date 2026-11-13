@@ -168,6 +168,29 @@ priority; all held-out metrics follow a sealed artifact/model selection. Failed
 processes retain prior choices and partial evidence. Original evaluation starts
 only after the tested producer, binary, protocol and fingerprints are archived.
 
+Producer `70cf9ab5` completed all 23 original cases and every constructor replay
+under the frozen 64 GiB limit. There were no process failures. Seventeen cases
+admit a certified model with 100% exact sequence accuracy on every original
+held-out split; the other six retain their previous choices. Square-times is
+the new all-split pass in all three modes. The complete previous comparison
+remains embedded, including every earlier failure and cost.
+
+| Mode | Primary passes | Every-split passes | Previous every-split passes |
+| --- | ---: | ---: | ---: |
+| Full batch | 32/35 | 31/35 | 30/35 |
+| Minibatch | 32/35 | 31/35 | 30/35 |
+| Forward only | 31/35 | 30/35 | 29/35 |
+
+The 23 constructors used 788.9996 seconds in total, charged once across their
+69 mode references, and zero CE gradients. Replays are additional work. Peak
+construction/replay RSS was 4,904,124 KiB (4.68 GiB); assembling the complete
+parent-preserving summary peaked at 14,098,040 KiB (13.45 GiB). The summary is
+retained in `runs/original-v1/summary.json`, SHA256
+`89a14738d36461e42db2faa2e9611b331ea6ea1fad01da5f16cd2dc34e2a0b63`.
+The independent review is next. Both retained depth policies and the complete
+35-task conventional transformer must still enter the integrated comparison;
+these results do not establish a full pass or unconditional identification.
+
 ```sh
 cd experiments/convex_stress_consequences
 cargo fmt --check
