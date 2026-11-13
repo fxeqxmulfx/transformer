@@ -146,3 +146,10 @@ executables and protocols remain unchanged. The original adapter and any
 training or held-out cohort require separately reviewed prospective protocols.
 The retained benchmark counts remain 34/35 full, 34/35 mini and 33/35 forward;
 DiffGPT's recorded 35/35 on each of three seeds is a separate reference.
+
+The task251 adapter in `cohort/` now binds all23 original pair tasks and all55
+primes while retaining the35-task suite metadata. Seven fixture checks exercise
+complete original-kernel/model replay, input and scope binding, corrupted
+numerical states after rehashing, explicit refusals and process failures.
+Its original training run still requires its own reviewed prospective freeze;
+no held-out evaluator or parent selector is part of the adapter.

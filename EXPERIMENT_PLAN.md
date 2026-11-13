@@ -243,6 +243,16 @@ the task246 comparison still requires the reviewed parent chain. Task251
 tracks a separate prospective original-data adapter for the new complete-kernel
 component; it cannot reuse the older one-direction discovery as its full basis.
 
+The task251 native adapter now binds that complete-kernel core to all23 original
+pair tasks and all55 supported primes with the original observation order and
+minibatches. Seven fixture checks cover multidimensional/aliased codes, all
+actual complex states and numerical replay, input/scope mutations, corrupted
+bases/parameters after rehashing, all-equation refusals and complete process
+failure records. Its summary retains all35-task metadata and separates new
+discovery from head costs. No original run starts until implementation review
+and a separate source/binary/request/protocol freeze; held-out comparison and
+both105-choice parent arms remain a later gated task.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine
