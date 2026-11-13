@@ -23,10 +23,10 @@ equations and checks the free-coordinate basis. A separate deterministic replay
 binds all states, stopping decisions and work. These are integer certificates
 for the supplied equations, not certificates that guessed fibers are complete.
 
-The proposed next construction is fixed before any original-data discovery:
+The implemented categorical construction is fixed before original discovery:
 
 1. Use only categorical training cell/label pairs. Group equal labels within
-   each row and column. Guess a small bank of group sizes between2 and8, keeping
+   each row and column. Guess a small bank of group sizes between 2 and 8, keeping
    each guess and every group chosen under a deterministic constraint cap.
 2. For a prime latent domain of size equal to the input category count, use
    unknown coordinates `r[0..n)`, `s[0..n)` and one proposed common mass `mu`.
@@ -48,7 +48,22 @@ The proposed next construction is fixed before any original-data discovery:
 6. Reconstruct the actual latent and output tables and audit every Fourier
    frequency, SVD budget and ordinary full-vocabulary CE. Keep all earlier
    task219 candidates and earlier-first CE ties. Freeze a separately tested
-   producer before evaluating unchanged original splits.
+   producer before evaluating unchanged original splits. The parent-preserving
+   original harness is the next step; no original fiber run has started.
+
+The common policy tries at most four distinct observed sizes, largest first;
+retains at most 4096 equations per size; permits nullity at most three; and
+enumerates at most 65536 coefficient tuples per system, in fixed base-prime
+order. It admits at most 16 distinct full output tables. All budget stops,
+duplicate tables and concrete collision/conflict/fiber witnesses are saved.
+Every size-k group is checked against each candidate's actual full decoder
+fiber, including groups beyond the equation cap. A separate checker applies
+full row operations, checks all original endpoint equations, reconstructs
+latent coverage from original observations, checks pairwise phase injectivity
+and the exact complete-fiber images, then reruns all raw spectral/CE audits.
+Deterministic replay binds every omitted work counter and stopping decision.
+The aggregate storage forecast includes the retained report, checker, replay
+and serialization buffers and must fit within 16 GiB; the process cap is 64 GiB.
 
 Nullspaces may contain more freedom than shifts and rescaling. No uniqueness
 or unseen-answer claim follows from a nonzero solution, a permutation, or
@@ -56,11 +71,16 @@ training fit alone. Capped enumeration must not be called a proof that the
 model class is impossible. Any later identification certificate needs to
 account for every feasible decoder completion, including uncovered states.
 
-Planned fixtures use permuted phase coordinates, renamed output categories
-and explicitly declared balanced fibers. They include incomplete fibers,
-inconsistent guesses, ambiguous solutions, missing axes and tampering. They
-are separate from the original nine tasks. Full35 short/long, full batch,
-minibatch, forward-only and conventional transformer scope remains open.
+Ten native checks now pass. The six categorical checks recover every withheld
+cell of permuted seven-state triple-fiber and thirteen-state pair/four-fiber
+fixtures, including nonzero learned common masses and unused vocabulary labels.
+Output renaming preserves the learned phases. A three-state fixture admits
+two fully covered, exact training fits that disagree on unseen cells; the
+audit explicitly reports no identification. Incomplete fibers and uncovered
+latent states are refused; guessed equations, inputs, states, models, audits,
+budgets and work tampering cannot pass their checks/replay. These fixtures are
+separate from the original nine tasks. Full35 short/long, full batch, minibatch,
+forward-only and conventional transformer scope remains open.
 
 The linear-algebra core restricts primes to2..257, variables to1024 and rows
 to8192. Its policy caps scalar updates, row operations and nullity separately.

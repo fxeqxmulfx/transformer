@@ -3,3 +3,5 @@
 //! fiber completeness or hidden answers. Every final model needs raw audits.
 pub use convex_stress_tagged::{Model, Result, Sample};
 pub mod finite_system;
+pub mod groups;
+pub mod search;

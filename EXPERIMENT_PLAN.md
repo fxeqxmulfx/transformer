@@ -15,8 +15,13 @@ after its own tests; no new original result follows from this theory. The
 bounded native finite-system core now passes four checks, including exact
 solution-set agreement with all793 binary/ternary two-variable systems.
 Independent full-row replay verifies the retained invertible operations,
-original equations, affine basis and explicit work/nullity caps. Categorical
-proposal construction remains the next step.
+original equations, affine basis and explicit work/nullity caps. Six additional
+categorical checks now pass: observed-only equations and bounded affine
+enumeration recover masked pair/triple/four-fiber fixtures with permuted input
+phases and renamed output classes. Independent actual-fiber/coverage/injectivity
+and raw spectral/CE checks reject invalid candidates. A separate exact-fit
+fixture retains two different unseen completions, with no identification claim.
+The parent-preserving original harness and separate freeze remain next.
 
 ## Categorical constant strips (2026-11-13)
 
