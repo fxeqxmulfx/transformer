@@ -16827,3 +16827,45 @@ must therefore say that its certificate proves uniqueness within the declared
 view; it must not turn an interior certificate into an unconditional statement
 about unknown ground truth or the union of all proposed views. Unsupported
 padding or missing axes remain refusals under the present certificate policy.
+
+### CM29. Identify decoded answers through actual row consequences
+
+*Source-note extension for board task #224, 2026-11-13; Lean before implementation.*
+
+CM28's cyclic joint module is sufficient, not necessary. Identification of a
+decoded answer only requires the corresponding query equation to follow from
+the observations. It need not identify every coordinate of an unknown class
+code. Keep an explicit structural family: an unknown injective class map e
+into a commutative ring and phases r,s represent the target by
+e(y(i,j))=r(i)+s(j). Injectivity is required; a general many-to-one latent
+decoder is not covered by this representation.
+
+Let Q(i,j,c) be the coefficient row with one at row i, one at column j and
+minus one at class c. The original matrix has precisely Q(i,j,label) for each
+observed cell. It has no gauge pins, missing-axis pins, rank requirement or
+unknown-label rows. A certificate for candidate c is an actual finite row
+program and a row position whose replay equals Q(i,j,c) coefficient by
+coefficient. Every original fit remains a zero of the replayed matrix, so
+r(i)+s(j)=e(c). Structural realizability and injectivity give y(i,j)=c.
+
+A finite observed-only certifier tests these coefficient identities and
+returns the first passing candidate, or refusal. Every returned answer is
+sound within the stated model, regardless of the other candidates or the
+joint module's dimension. If a finite bank contains a passing certificate
+for every query, the entire returned table is correct. The candidate bank
+contains only labels, row instructions and row positions; it does not store
+correctness assumptions or receive the unknown code or target table.
+
+The strict witness uses a four-state composite domain, four row/column names,
+repeated row phases and all four observed classes. Fifteen cells are observed;
+the lower-right answer is missing. Two row additions recover that query from
+three actual observed rows. The gauged observed joint module is noncyclic:
+besides its actual fitted vector with class-one coordinate one, it contains
+a nonzero vector whose class-one coordinate is zero. Nevertheless every cell
+has a checked finite row consequence. This is decoded identification without
+unique normalized code coordinates, not an inference from flatness alone.
+
+This extension leaves the frozen CM28 experiment unchanged. A future native
+row-consequence producer must separately retain and check its original matrix,
+bounded row programs and query identities, and freeze its own rule before an
+original evaluation. No new benchmark pass follows from these theorems.

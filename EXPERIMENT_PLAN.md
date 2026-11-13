@@ -102,6 +102,20 @@ comparison and preserves all23 eligible tasks and all105 mode choices. All21
 native checks pass. Commit/freeze this producer before original certification;
 do not overwrite task222 or use held-out scores to change the declared rule.
 
+Task #224 / CM29 extends the theory independently of the frozen task223 run.
+Fourteen Lean theorems now certify decoded answers from actual observed row
+consequences, without cyclicity or unique normalized class codes. The finite
+certifier tests every replayed coefficient and returns a passing proposed
+class or refusal. Unknown injective-code additive realizability stays explicit;
+neither the code nor unknown target is an input to the certifier. A four-state
+composite witness has all classes observed and a genuinely held-out cell.
+Two row additions identify that answer, and every cell is recovered, while
+the actual gauged joint module is provably noncyclic. This removes an overly
+strong sufficient-condition restriction; it does not certify arbitrary decoder
+fibers or make the bounded code search complete. Native row-consequence checking
+and bounded discovery through nonunique code spaces remain future work with
+their own original freeze. All existing original runs and model boundaries stay.
+
 ## Complete categorical fiber constraints (2026-11-13)
 
 Task #220 / CM26 starts from actual same-label observation groups. Lean proves

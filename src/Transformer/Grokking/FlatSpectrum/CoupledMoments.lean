@@ -20,11 +20,12 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.TaggedPhases
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.BalancedFibers
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ModularCoding
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CompositeDiscovery
+public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedConsequences
 
 /-!
 # Shared class distributions and complex spectral bounds
 
-Source: `review/flat_spectrum.md`, CM1–CM28. Multiple fixed complex code readings share the
+Source: `review/flat_spectrum.md`, CM1–CM29. Multiple fixed complex code readings share the
 same learned class probabilities. The domain and ordinary CE are convex, Fourier coordinates
 preserve the full distribution, and a feasible exact observed fit certifies a CE minimum.
 No universal identification of unseen labels follows; SB3 remains a counterexample.
@@ -63,6 +64,9 @@ Counterexamples retain failed lifts and noncoprime product obstructions.
 CM28 (`CompositeDiscovery`): a cyclic joint observed module identifies a table
 with unknown bijective class coding over composite domains. Repeated phases
 are allowed; genuinely missing axes cannot be silently pinned for this check.
+CM29 (`DecodedConsequences`): actual observed row programs identify decoded
+answers without unique code coordinates or cyclicity. A finite certifier and
+a noncyclic composite witness retain unknown injective-code realizability.
 -/
 
 @[expose] public section
