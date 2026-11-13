@@ -120,6 +120,18 @@ retains the unseen defaults and any separately identified compatible decoded
 answer. Native derivative checks, numerical feasibility and capped original
 evaluation remain required; no new benchmark success follows from the proof.
 
+Task241 implements CM31/CM32 in `convex_stress_refined_quotient`. Fourteen native
+checks pass: actual block Fourier coefficients, observed raw-alias fitting,
+unchanged default logits, feasible clipping, independent complex derivatives,
+finite differences, unequal weighted batches, full trajectory/JSON replay,
+Gram/SVD, altered states and pre-allocation/work-cap refusals. Fixed discovery
+precedes convex full-vocabulary CE. The prospective policy is one full update,
+one original minibatch epoch or zero forward gradients, each after initializing
+from every observation; it does not reuse the old16/256 schedule. The new
+32-billion scalar-work allowance and64GiB memory limit are explicit. Original
+construction and comparison require a separately reviewed adapter and freeze;
+the232/237 artifacts and all existing benchmark counts remain unchanged.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine
