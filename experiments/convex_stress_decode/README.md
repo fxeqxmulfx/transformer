@@ -55,6 +55,30 @@ audit avoid materializing a bank of dense Fourier matrices.
 
 ## Frozen original-data follow-up
 
+The original eight constructions and their replays finished, but summary
+verification stopped the downstream queues: preparation rebuilt the phase
+parent with a relative path, while later verification used its saved absolute
+root. Exactly nine `model_path` strings differed; all scores, choices, hashes,
+costs and other fields were equal. Original failure records and artifacts stay
+unchanged. `recover_paths.sh` stages a separate canonical phase view whose
+symlinked artifacts resolve to the same original files, regenerates its summary
+with the frozen binary, checks every other field exactly, and verifies a second
+summary byte for byte. It rejects equal-byte files at a different actual path.
+The recovery uses no new numerical producer or model policy.
+
+```sh
+bash experiments/convex_stress_decode/recover_paths_test.sh
+bash experiments/convex_stress_decode/recover_paths.sh view \
+  /absolute/original/phase /absolute/fresh/phase-view /absolute/frozen/phase-binary
+```
+
+The frozen decoded launcher must then receive absolute paths for both its fresh
+output and canonical parent. Preserve the first failed decoded run; a fresh
+eight-case construction/replay may proceed with its unchanged source, protocol
+and binary, followed by the unchanged transformer and full-suite comparisons.
+The canonical view and all downstream numerical processes are capped at or
+below the user's 64 GiB. This path repair is not an accuracy improvement.
+
 [`protocol.json`](protocol.json) freezes eight cases on the same unchanged
 datasets as the preceding class-coding/phase cohorts: permuted addition,
 addition, subtraction, division, multiplication, sum-cube, sum-power-four and
