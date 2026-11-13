@@ -14172,6 +14172,44 @@ The generic finite categorical flat-spectrum bound CC6 still applies to the
 enlarged feature alphabet. Counts do not identify labels at unseen counts,
 and do not assert sufficiency for order-sensitive tasks or modular division.
 
+### CFt4. Pair visible features; keep selection assumptions explicit
+
+Given a categorical dictionary `D : K -> V`, expose the ordered pairs
+`(D(k), D(l))` as fixed features indexed by `K x K`. This map reads input
+values only, with no target rule or output labels. Any decoder of two slots
+then has a feasible single-key vertex on the paired alphabet. Its actual
+logits are the decoded one-hot answer. The full channel tensor still has
+convex feasibility and ordinary full-vocabulary CE; paired feature discovery
+or candidate selection is not asserted jointly convex. CFt1 permits retaining
+the original features alongside the extra pairs, and the generic finite
+categorical CC6 capacity bound applies to the enlarged alphabet.
+
+The CF1 learner can scan paired dictionaries with the original raw labels.
+If an enumerated pair explains the observations, the actual scan succeeds.
+For its selected pair, an observed matching pair value transfers its observed
+answer to a new dictionary, conditional on the labels following that pair's
+rule. A good pair somewhere in the catalogue does not establish coverage or
+correctness of whichever other pair the scan selects. The four Boolean-pair
+examples, with the pair itself as their four class names, eliminate every
+individual-key decoder while the paired scan succeeds. The rule occurs only
+in the specification and witness weights, never in the feature extractor.
+
+The existing token-presence feature is unchanged by permutations of the
+visible prefix. Any channel using only these features has the same logits
+under that permutation when its query is fixed. This invariance can motivate
+a candidate-order prior for position-invariant tasks, but observed consistency
+alone does not justify that prior. Two constant dictionaries with labels
+`false` and `true` fit both individual Boolean keys. Trying one key first or
+the other first produces different predictions on the unseen dictionary whose
+two slots differ. Both learners fit all observed labels and cover both input
+values of their chosen key. Distinguishing the intended target still requires
+structure or separating observations, as in CF4.
+
+`ConvexChannel/CausalPairs.lean` proves these claims and nonempty examples.
+It supplies a representation and selection boundary for a future generic
+causal-feature repair; it does not establish an original stress-task pass,
+a practical search cost, or extrapolation to unseen pair values.
+
 ## Forward-only channel learning
 
 This extension gives a finite categorical learner for the realizable

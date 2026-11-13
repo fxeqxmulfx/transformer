@@ -36,6 +36,15 @@ A pooled-metric fixture passes every decoded split while failing the held-out
 raw token. Original launch still requires independent task231 review and a
 separate frozen cohort after task226; no new original score follows yet.
 
+CFt4 now supplies the next causal-feature proof boundary: ordered pairs of
+visible categorical slots retain convex channel CE and admit a forward decoder
+when no individual slot suffices. Nine Lean theorems also prove presence-feature
+permutation invariance and exhibit two consistent candidate orders disagreeing
+on an unseen input. Coverage and the intended invariant target remain explicit
+assumptions. A future generic pair/invariance-priority implementation still
+needs its own native tests and prospective original evaluation; the frozen
+quotient protocol is unchanged.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine
