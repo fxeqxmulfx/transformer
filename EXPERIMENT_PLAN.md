@@ -253,6 +253,16 @@ discovery from head costs. No original run starts until implementation review
 and a separate source/binary/request/protocol freeze; held-out comparison and
 both105-choice parent arms remain a later gated task.
 
+Task253 implements that separate comparison in `convex_stress_kernel_compare`.
+It imports all complete-kernel stages and the future reviewed refined parent,
+checks actual bases, complex heads and original data, and seals parent-first
+raw-CE selections before any held-out metric. Eight native fixtures retain
+both105-choice arms, all35 tasks, depth/transformer and every earlier cost.
+Unknown axes, unmatched active codes and unobserved exact inputs remain distinct.
+Primary99percent success is unchanged by auxiliary diagnostic failures.
+Original comparison waits for reviewed252 training and246 parent evidence;
+fixtures establish no new benchmark score or unknown-target identification.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine

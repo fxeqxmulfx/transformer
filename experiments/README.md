@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_kernel_compare`](convex_stress_kernel_compare) | Eight native comparison checks; original execution pending | Imports complete CM34 bases and complex heads into both full105-choice parent arms. Preserves original primary success, pooling, all35 tasks, transformer/depth and costs; no new benchmark score. |
 | [`convex_stress_kernel`](convex_stress_kernel) | CM34 core20 checks; original adapter7 checks | Complete observed kernels feed bounded complex CE heads on actual vector states. The adapter retains all55 prime stages, full/mini/forward, original data and all35-task metadata; original execution and held-out comparison remain separate. |
 | [`convex_stress_quotient_coverage`](convex_stress_quotient_coverage) | All55 stages replayed; no admitted code | Including all4704 observed equations reduces Fibonacci's modulus97 nullity from five to three, but the one-direction rule still refuses it. Peak89MiB under64GiB; no new CE gradients, held-out evaluation or benchmark score. |
 | [`convex_stress_refined_compare`](convex_stress_refined_compare) | Seven native comparison checks; original execution pending | Imports immutable CM31/CM32 states into both complete 105-choice arms. Preserves the declared primary success rule, original pooling, all 35 tasks, transformer/depth, refusals and costs. No new benchmark score. |

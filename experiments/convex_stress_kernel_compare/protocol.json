@@ -1,0 +1,62 @@
+{
+  "version": "complete-kernel-comparison-v1",
+  "required_done_tasks": [
+    232,
+    234,
+    237,
+    243,
+    244,
+    245,
+    246,
+    250,
+    251,
+    252,
+    253
+  ],
+  "planned": [
+    "power-division-p97-k3",
+    "arithmetic-cube-plus",
+    "power-division-p193-k5",
+    "power-division-p193-k2",
+    "power-division-p97-k2",
+    "arithmetic-square-times",
+    "arithmetic-sub",
+    "arithmetic-mul",
+    "arithmetic-add",
+    "power-division-p193-k3",
+    "division-p193",
+    "arithmetic-square-sum",
+    "power-division-p97-k5",
+    "arithmetic-half-sum",
+    "arithmetic-sum-square",
+    "arithmetic-affine-product",
+    "arithmetic-perm-add",
+    "arithmetic-div",
+    "arithmetic-abs-diff-blind",
+    "arithmetic-abs-diff",
+    "arithmetic-sum-pow4",
+    "arithmetic-sum-cube",
+    "recurrence-fibonacci-k1-c2-lgt"
+  ],
+  "memory_limit_bytes": 68719476736,
+  "minimum_disk_reserve_bytes": 17179869184,
+  "metric_scalar_work_cap": 32000000000,
+  "parent": {
+    "source_fingerprint": "8c5407c70cf6047f4504198a702e59c83c4e4fca8f059b53f2db05a8a21ef8c9",
+    "binary_sha256": "303e590e65235b345867a575b8052422dd97cfd11f15ad612f2cf7f31fa1145b",
+    "producer_commit": "a00467028b30dec33e570e6659b6e61c2dd3b4dd"
+  },
+  "staging": {
+    "source_fingerprint": "5c748aeb6697d76ceafbc8ef99aee03eb24ee9933ec22c0fdebfc729a6bf2954",
+    "binary_sha256": "f23d149db1aa331a3c7921e4c2a8183871942ed69b3986bec643de86b2836268",
+    "producer_commit": "166bebc3d1d1d206b1169e8c33b02bde60549afd"
+  },
+  "causal_stage_summary_sha256": "4e717b8233c3161b780e13f4f184a58090711492e01062c1a790ebb1a46caa69",
+  "causal_stage_inventory_sha256": "deca9673630ab94435fd72d101b0040e8c6e65ec74929b58288ca904086e7f2c",
+  "import": "Reviewed complete refined comparison and separately reviewed complete-kernel training. Every original kernel/model artifact, refusal and cost retained; no retraining or new discovery. Verify actual complete bases, complex states and original data before offers.",
+  "selection": "Both complete105-choice parent arms, parent first then increasing prime. Replace only for raw-label training CE decrease greater than1e-12. Candidate readout compatibility only; no held-out or certificate tie-breaker. Seal references before metrics.",
+  "evaluation": "Unchanged original complete-split metrics and probability pooling. full35_pass means declared primary success; auxiliary splits are diagnostics. All35 tasks/modes and conventional transformer/depth remain. Metric failure retains parent choices and all partial evidence.",
+  "replay": "Independent actual complex/head and ordinary-CE checks, full source/state hashes and exact original metrics/masks. Frozen foreign summaries reproduce reviewed bytes at prepare/final summary. Failed cases and every construction cost remain charged once; no matched-compute or unseen-target identification claim.",
+  "refined_stage_summary_sha256": "e52725e3bd4ce92c9e5841892530e1d2729b07f43f47f3056c1c026cead934ef",
+  "refined_stage_inventory_sha256": "113d440c9d1ad17af420a047349c3c2d3ef4ead0ad3a8cd39dfd9f114e5512b5"
+}
