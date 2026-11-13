@@ -144,6 +144,20 @@ the source catalogue closing, a separate original freeze may construct it;
 comparison still requires the reviewed original parents. No benchmark count
 changes from adapter fixtures or training-only availability.
 
+Task244 implements the separate refined comparison with seven native checks.
+It imports the complete reviewed causal parent and the separately reviewed243
+training stage, verifies actual complex states before raw-CE offers, and seals
+both105-choice selections before metrics. The complete35-task fixture retains
+unequal probability groups, unknown raw aliases, real mode refusals, process
+failures, masks, all prior costs,336 depth outcomes and35 transformer endpoints.
+Primary success controls `full35_pass`; auxiliary splits remain diagnostics.
+The new32B per-endpoint metric forecast and64GiB process limit are prospective.
+Original evaluation still requires the closed reviewed232/243 evidence and
+task245's full causal comparison using the preserved237 stage. No fixture
+result changes the reviewed benchmark counts or DiffGPT's recorded105/105.
+Task246 tracks the separate original evaluation after243,244 and245 approval,
+including every original process outcome and the complete independent replay.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine
