@@ -276,6 +276,18 @@ explicitly take the declared readout partition as construction side information;
 it cannot silently alter the frozen252/253 protocols or claim to learn an
 unknown decoder. Native implementation and original evaluation remain separate.
 
+Task257 implements the CM35 proposal in `convex_stress_readout_kernel`.
+Fifteen native checks retain the genuine grouped complete-basis certificate
+separately from the expanded raw-label vectors. The original bounded complex
+head, all raw CE labels, one full update, one minibatch epoch with its shorter
+tail and zero-gradient forward mode remain unchanged. The strict unseen-corner
+witness now matches its declared answer group while preserving raw ambiguity;
+label/group/input transports, rehashed mutations, incompatible observed groups
+and all resource/cardinality refusals are checked. This introduces declared
+readout metadata explicitly, leaves unknown-target premises conditional and
+does not change frozen252/253. An original-data adapter and later complete
+comparison are required before claiming any new benchmark pass.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine
