@@ -1,5 +1,16 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Convex density tolerances (2026-11-13)
+
+Task #213 / CM22 proves a convex interval tolerance for density diagonals,
+explicit hidden off-diagonal and feature-perturbation bounds, and concentration
+under a declared real-objective gap. A mixed approximate optimizer attains the
+bound in a closed example. The feature-error hypothesis remains structural;
+missing labels do not supply it. Implement an independently audited bounded
+interval solver next, retaining the exact solver and all earlier proposals;
+do not silently increase numerical convergence tolerances. Approximate real
+ties and unseen-label identification remain separate limitations.
+
 ## Convex matrix extraction from a supplied subspace (2026-11-12)
 
 The first task #212 native step is `convex_stress_density`: a bounded PSD
@@ -16,8 +27,8 @@ all six subspace proposals when eight cells are removed. It ties right phases
 to the same original sketch, audits latent spectra and ordinary CE, preserves
 the successful earlier CM15 candidate and selects it by observed CE. Twelve
 native checks include renaming, replay, tampering and full work accounting.
-This measured masked-subspace failure calls for a Lean-first quantitative
-convex amplitude/subspace-error bound before any tolerance relaxation.
+This measured masked-subspace failure motivated the Lean-first quantitative
+CM22 bounds above. A relaxed native variant remains to be implemented.
 
 Task #211 / CM21 proves the PSD trace-one lift suggested by CM20. Constant
 diagonal readings force a diagonal hidden Fourier density when frequency

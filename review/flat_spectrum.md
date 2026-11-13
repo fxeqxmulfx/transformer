@@ -16209,3 +16209,137 @@ ordinary-CE scoring, the existing latent-table spectral audits and replay.
 Retain the earlier candidates, the full35 short/long scope, all three update
 modes, the conventional-transformer comparison and the 64 GiB process cap.
 The current frozen producers and scores are unchanged by this proof.
+
+### CM22. Convex density tolerances and conditional stability
+
+CM21 specifies exact diagonal equalities in an exact supplied Fourier
+subspace. The bounded native prototype exposes their sensitivity: its
+centered, re-orthonormalized noisy fixture is inconsistent, and all six
+estimated subspaces in the 113-observation categorical fixture refuse the
+exact affine constraints. Declare a model tolerance separately from numerical
+convergence tolerances, and analyze the resulting domain.
+
+**Convex domain.** Write `K_B(M)=B M B*`. For finite coefficient and row sets,
+
+```
+D_epsilon(B) = {M PSD : trace(M)=1,
+                       |K_B(M)[x,x]-1| <= epsilon for every x}.
+```
+
+`Relaxed` uses the norm of the actual complex reading; `relaxed_convex`
+proves convexity without a rank constraint. PSD makes diagonal readings real
+(`reading_diagonal_real`), so this domain is precisely the real interval
+constraint `1-epsilon <= Re K_B(M)[x,x] <= 1+epsilon` (`relaxed_interval`).
+Exact feasibility implies membership for every nonnegative tolerance
+(`exact_relaxed`), and zero tolerance recovers CM21 (`relaxed_zero`).
+
+For every density, the diagonal real parts are nonnegative and sum to one
+(`density_weights`), so each is at most one (`density_diagonal_le_one`).
+The two-by-two PSD principal minors then give `|M_ij| <= 1`
+(`density_entry_le_one`). These are derived properties of the actual matrix,
+not additional purity assumptions.
+
+**Exact-subspace error.** Let `F[x,i]=chi(r(x) k_i)`, where `q>0`,
+`r : X <-> ZMod q`, and the ordered frequency differences are separated.
+Subtracting the constant target from CM21's Fourier identity gives
+
+```
+q M_ij = sum_z conj(chi(z (k_i-k_j))) (K_F(M)[r^-1(z),r^-1(z)]-1), i != j.
+```
+
+`error_coefficient` proves this identity. The triangle inequality and
+cancellation of `q` give `|M_ij| <= epsilon` from uniform diagonal error
+`epsilon` (`off_diagonal_le`); PSD is unnecessary for this implication.
+With `d=card(I)`, removing these off-diagonal entries changes each kernel
+reading by at most `d^2 epsilon` (`diagonal_reading_error`). The dimension
+factor is conservative and explicit. For a density, the diagonal reading is
+a probability average of mode scores, so its real objective differs from
+that average by at most the same bound (`relaxed_score_error`).
+
+**Feature perturbation.** Suppose a structural reference `C` satisfies
+
+```
+|B[x,i]-C[x,i]| <= delta,  |C[x,i]| <= R,  delta,R >= 0.
+kappa = d^2 delta (2R+delta).
+```
+
+`product_error` bounds each feature-product change by `delta(2R+delta)`.
+Summation using the derived density-entry bound proves
+`|K_B(M)[x,y]-K_C(M)[x,y]| <= kappa` (`reading_perturbation`). It follows that
+
+```
+M in D_epsilon(B)  =>  M in D_(epsilon+kappa)(C),
+M exactly feasible in C and kappa <= epsilon  =>  M in D_epsilon(B).
+```
+
+These are `relaxed_transfer` and `reference_admitted`. The latter admits
+every exact-reference competitor, not a presumed correct mode. Normalization
+is not needed for these implications and does not establish their feature
+error hypothesis.
+
+**Objective accuracy and mixed mass.** Suppose `M` is a density and
+
+```
+Re K_B(N)[a,b] <= Re K_B(M)[a,b] + eta  for every N in D_epsilon(B).
+```
+
+When `kappa <= epsilon`, every exact-reference feasible `N` consequently
+satisfies `Re K_C(N)[a,b] <= Re K_C(M)[a,b] + eta + 2 kappa`
+(`objective_transfer`). This is a conditional optimizer specification;
+no numerical iteration is asserted to attain it.
+
+For probability weights `w`, real scores `v`, and a distinguished index `i`,
+the gap condition `gamma <= v_i-v_j` for every `j != i` gives
+`gamma(1-w_i) <= v_i-sum_j w_j v_j` (`weighted_gap`). No weight is assumed
+zero. Combining this with the actual diagonal error gives
+`gamma(1-Re M_ii) <= eta+d^2 epsilon` in the exact basis
+(`score_concentration`).
+
+For the estimated-basis statement, let `C=F Q`, with both unitary identities
+for `Q`, set `H=Q M Q*`, and suppose `M in D_epsilon(B)`. Put
+`s_i=chi((r(a)-r(b)) k_i)`. Under frequency separation, the feature bounds
+above, `kappa <= epsilon`, the optimizer comparison and
+`gamma <= Re s_i-Re s_j` for every `j != i`, `rotated_concentration` proves
+
+```
+gamma (1-Re H_ii) <= eta + 2 kappa + d^2 (epsilon+kappa).
+```
+
+For positive `gamma`, division bounds the mass outside the best mode.
+The unknown permutation, frequencies and unitary are structural witnesses,
+not inputs to the observable optimization problem. No recovered mode,
+rank-one optimizer, true decoder or unseen answer is assumed. Small gaps or
+large errors can make the estimate uninformative. A zero real gap gives no
+selection guarantee; CM21's exact imaginary tie-break theorem is not extended
+here to approximate second-stage constraints.
+
+**Closed witnesses.** The separated modulo-13 mixture `diag(1/2,1/2,0)`
+remains feasible at zero error and is no pure projector (`mixed_relaxed`,
+`zero_error_not_pure`). Thus small amplitude error alone cannot prove purity.
+Frequencies `0,1` modulo four have separated differences and real scores
+`1,0` at rows one and zero (`two_separated`, `character_four_one`, `two_gap`).
+Their mixture with weights `3/4,1/4` is exactly feasible and within `1/4` of
+every feasible real objective (`two_weights`, `two_feasible`, `two_near`).
+A closed example attains the combined bound with positive score gap one.
+
+The supplied matrix `(11/10)F` has actual nonzero entry error `1/10`
+(`perturbed_error`). Its conservative bound `kappa=21/25` admits every pure
+reference projector (`perturbed_admitted`). This is a perturbation witness,
+not a claim about normalized estimated subspaces. Closed examples inhabit
+every conditional theorem, including the collision density's entry bound.
+
+**Native follow-up and limits.** A bounded interval solver may use this
+convex domain with a model tolerance distinct from numerical residual
+thresholds. Check actual PSD, trace, interval violations and objective bounds;
+retain every capped/refused attempt and independently replay matrix and dual
+states. Justify the interval update explicitly; coordinate clipping is not
+specified as a projector onto the matrix domain here. Floating-point
+diagnostics remain numerical evidence.
+
+This section does not infer `delta` from missing labels, certify a masked
+sketch's subspace, identify an unknown many-to-one decoder, prove approximate
+phase sorting correct, or determine unseen labels. Native tolerance choices
+need declared training-only policies and empirical evaluation. Preserve exact
+and earlier candidates, all35 short/long tasks, full-batch, minibatch and
+forward-only modes, the transformer comparison and the 64 GiB limit. New
+original-data runs still require a separately frozen protocol.

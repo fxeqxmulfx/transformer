@@ -247,6 +247,42 @@ open Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityExtraction
 
 end DensityExtraction
 
+section DensityBounds
+open Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityBounds
+
+#print axioms reading_diagonal_real
+#print axioms relaxed_interval
+#print axioms relaxed_convex
+#print axioms exact_relaxed
+#print axioms relaxed_zero
+#print axioms density_weights
+#print axioms density_diagonal_le_one
+#print axioms density_entry_le_one
+#print axioms error_coefficient
+#print axioms off_diagonal_le
+#print axioms diagonal_reading_error
+#print axioms product_error
+#print axioms reading_perturbation
+#print axioms relaxed_transfer
+#print axioms reference_admitted
+#print axioms objective_transfer
+#print axioms weighted_gap
+#print axioms relaxed_score_error
+#print axioms score_concentration
+#print axioms rotated_concentration
+#print axioms mixed_relaxed
+#print axioms zero_error_not_pure
+#print axioms two_separated
+#print axioms character_four_one
+#print axioms two_gap
+#print axioms perturbed_error
+#print axioms perturbed_admitted
+#print axioms two_weights
+#print axioms two_feasible
+#print axioms two_near
+
+end DensityBounds
+
 run_cmd do
   let env ← getEnv
   let standard := [``propext, ``Classical.choice, ``Quot.sound]

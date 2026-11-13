@@ -87,8 +87,18 @@ supplied decoded vertices; it does not replace the pending full35 comparison
 with the other model families. Categorical output renaming, exact proposal
 replay, full attempt/budget accounting and modified-artifact rejection pass.
 The masked failure is evidence that exact amplitude constraints are too
-brittle for estimated subspaces. Prove an explicit convex tolerance domain
-and its quantitative limitations before adding a relaxed native variant.
+brittle for estimated subspaces. Lean CM22 (`DensityBounds`) now proves the
+convex interval domain and quantitative limits: if feature entries differ by
+at most `delta` from a reference bounded by `R`, every density reading changes
+by at most `kappa=d^2 delta (2R+delta)`. For a unitary-rotated Fourier reference
+with separated differences, a relaxed feasible density, model tolerance
+`epsilon>=kappa`, objective error `eta` and a positive real-score gap `gamma`,
+the mass outside the best mode is at most
+`(eta+2kappa+d^2(epsilon+kappa))/gamma`.
+These are conditional bounds, not a certificate that observed labels provide
+the reference subspace or its error. Approximate real-score ties remain
+uncovered. The native interval variant is the next step; this crate still
+implements the original exact-equality extractor.
 
 From this directory, using native tools only:
 
