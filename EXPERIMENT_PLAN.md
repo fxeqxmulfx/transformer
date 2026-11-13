@@ -179,6 +179,14 @@ mode policies. CM30 already permits arbitrary observed row sets; it supplies
 no claim that this larger system has a unique useful direction. The pilot
 preserves every refusal and independently replays the catalogue, without a
 held-out evaluator or parent selector. Original232/237/243/244 runs stay fixed.
+The pilot is now complete: all55 stages replay, zero codes are admitted and
+no CE gradients execute. At modulus97, full observed coverage reduces nullity
+from five to three. Thirty-nine stages retain nullity refusals;16 retain the
+existing2B head-work preflight refusal. Construction costs182.576 seconds;
+run/replay peak RSS is91160KiB. The one-direction restriction remains a real
+obstacle after removing the prefix omission. Task249 tracks the Lean-first
+extension to complete multidimensional coefficient kernels; no benchmark
+success or unknown-label identification follows from this diagnostic.
 
 ## Recovered comparison queues (2026-11-13)
 

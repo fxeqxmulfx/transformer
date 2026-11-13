@@ -45,7 +45,20 @@ bash experiments/convex_stress_quotient_coverage/run.sh \
   "$(git rev-parse HEAD)"
 ```
 
-The separate pilot has not run yet. It cannot change the original232 outcome
-or the reviewed35-task comparison. A successful discovery would still require
-the refined head, complete original evaluation and independent review before
-any new benchmark success is claimed.
+The pilot completed at prospective commit `87b945cc`, and all55 stages replayed
+with the same frozen executable. Including all4704 observations reduces the
+modulus97 nullity from five to three. It still admits no code:39 stages refuse
+the one-direction limit, and16 retain the existing2B head-training forecast
+refusal before discovery. No complex head or CE gradient is produced.
+
+Construction takes182.576 seconds; the complete run/replay wall times are
+182.66/197.04 seconds. Peak process RSS is91160KiB, within64GiB. The unchanged
+configuration fields and all frozen hashes pass after replay. These are costs
+of this unsuccessful pilot, additional to every retained original cost.
+
+Complete observed-symbol coverage is therefore insufficient to satisfy the
+one-direction discovery rule. Task249 will first prove how to retain a complete
+multidimensional coefficient kernel. No choice of one surviving direction or
+unseen answer follows from this diagnostic. The original232 outcome and the
+reviewed35-task comparison remain unchanged. A later accepted construction
+still needs complete original evaluation and independent review.
