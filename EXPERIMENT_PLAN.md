@@ -158,6 +158,17 @@ result changes the reviewed benchmark counts or DiffGPT's recorded105/105.
 Task246 tracks the separate original evaluation after243,244 and245 approval,
 including every original process outcome and the complete independent replay.
 
+Task247 / CM33 derives the full-vocabulary ordinary-CE direction through the
+actual complex head and its normalized batches of distinct observed inputs.
+For feasible rows, any nonnegative projected step raises or retains the
+target score, lowers or retains every rival, and cannot increase actual CE.
+Every finite full/minibatch trace preserves the margin24 observed winners,
+the64N coefficient budget and fixed unseen defaults. Concrete nonzero
+derivatives distinguish full-batch and minibatch normalization. This exact
+arithmetic preservation result supplies neither unseen-label identification
+nor a convergence or floating-point execution theorem. Frozen232/237/243/244
+implementations, active runs and benchmark pass counts remain unchanged.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine

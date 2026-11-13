@@ -9,6 +9,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.PrefixFeatures
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.FourierCode
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.QuotientWitness
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RefinedBox
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RefinedCE
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -33,6 +34,9 @@ the distinction between decoded correctness and unidentified raw aliases.
 CM32 realizes the same states with latent-fiber Fourier blocks and proves
 feasibility of clipped table updates, including exact retention of defaults.
 The arbitrary-table coefficient bound covers every resulting iterate.
+CM33 derives ordinary CE through the actual complex head and proves that
+projected nonnegative full/minibatch steps preserve observed margins and
+cannot increase observed row CE while retaining the same budget and defaults.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/

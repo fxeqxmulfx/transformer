@@ -17185,3 +17185,90 @@ replay and the original success metrics before reporting numerical progress.
 Lean: `ConvexDepth/BoxHead`, `BoxUpdate`, `FiberFourier` and `RefinedBox`.
 Flatness bounds the fixed categorical basis and the transported head's
 capacity; it is not a label oracle or a property imposed on the target table.
+
+## CM33. Ordinary-CE updates preserve the refined observed labels
+
+CM32 allows arbitrary proposed table updates. Such a proposal need not preserve
+an observed raw winner. For the actual ordinary-CE derivative, observed-input
+separation yields a stronger result: every nonnegative projected step preserves
+all previously correct observed raw predictions and cannot increase any observed
+row's CE. This is a property of the refined head, not of a colliding latent head
+or a general model with coupled observed logits.
+
+Let `O` be the finite set of distinct observed inputs, `y:O->C` their consistent
+raw labels, and `Z` the finite set of latent defaults. Fix the actual unitary
+complex feature matrix `U` on `I=O+Z`, for example CM32's block Fourier matrix.
+With all original classes retained, define
+
+```
+p_c(z) = exp(z_c) / sum_j exp(z_j),
+g_c(z,y) = p_c(z) - 1[c=y],
+CE(z,y) = log(sum_c exp(z_c)) - z_y.
+```
+
+Differentiating the finite exponential partition along `z+a*v` gives the actual
+directional derivative `sum_c g_c(z,y)*v_c`. For a selected minibatch `B` of
+distinct observed inputs, the actual head `H(T)=U^* complex(T)` has batch loss
+
+```
+L_B(T) = (1/|B|) sum_(o in B) CE(Re(U H(T))[inl(o),:], y(o)).
+```
+
+Unitarity identifies its derivative in every full table direction `V` with
+`sum_(s,c) G_B(T)[s,c]*V[s,c]`, where
+
+```
+G_B(T)[inl(o),c] = g_c(T[inl(o),:],y(o))/|B|  if o in B,
+                  0                          otherwise,
+G_B(T)[inr(z),c] = 0.
+```
+
+Thus this is the ordinary full-vocabulary CE derivative in real-table
+coordinates, through the actual real and imaginary head coefficients. It is
+not a derivative hypothesis or a masked-label surrogate. `B=O` gives full-batch
+averaging; arbitrary subsets give minibatches, including the final smaller batch
+with its actual cardinality.
+No held-out input or target is used. The empty-batch boundary has zero gradient
+and an identity step on feasible tables; native forward mode executes zero steps.
+
+For any nonnegative rate `eta`, subtract `eta*G_B(T)` and use CM32's box clipping
+with fixed defaults. At a selected observed row, the target derivative is
+nonpositive because `p_y<=1`; every rival derivative is nonnegative because
+`p_c>=0`. Before projection the target score therefore increases or stays fixed
+and every rival decreases or stays fixed. Scalar clipping is monotone and fixes
+each old feasible coordinate, so both inequalities survive projection. An
+unselected row is unchanged. No upper step-size bound is required for this
+separable-row preservation result.
+
+Every target margin is consequently nondecreasing. To compare the actual losses,
+use the exact relative-gap identity from JC3: the CE change is the logarithm of
+the old-softmax-weighted exponential of the rival-gap changes. These changes are
+all nonpositive, so the exponential average is at most one and CE cannot rise.
+This conclusion holds for every observed row, including rows outside the current
+minibatch. It is stronger than a statement only about the selected batch loss.
+
+Define a finite trace by executing these derived gradients and projections from
+a feasible initial table. Induction on the actual update recursion proves that
+every iterate stays feasible, retains every initial observed margin, and has
+nonincreasing observed row CE at each consecutive step. All default rows remain
+fixed. The schedule and nonnegative rates may vary at every step; convergence,
+fair sampling, or eventual visitation are not assumptions or conclusions.
+
+For the native margin24 initializer, every actual complex forward pass therefore
+retains an observed raw margin of at least24. Its observed CE stays below the
+initial CE and hence below log2 when the original vocabulary has at most1024
+classes. Every finite iterate satisfies the same64N real/imaginary L1 column
+budget, `N=|O|+|Z|`, and keeps each unobserved input's declared default logits.
+These defaults are not certified answers without the separate quotient-target
+identification premise from CM31/CM32. Initializing from all observations is still
+an explicit construction cost; these theorems do not turn it into online learning.
+
+The claims are over exact real/complex arithmetic. Native finite-precision
+transforms and gradient pullbacks still require their saved-state, derivative,
+margin, default and budget audits. The proof supplies neither a floating-point
+execution theorem nor a new benchmark success. It changes no frozen model,
+training schedule, labels, evaluator or process already running.
+
+Lean: `ConvexDepth/RowCE`, `BatchCE`, `ObservedCE` and `RefinedCE`. Examples include
+nonzero complex-head directional derivatives, different full/minibatch
+normalizations, alternating minibatches, large rates, and unobserved inputs.
