@@ -93,8 +93,44 @@ The [original cohort harness](cohort) adds six checks and binds the complete
 task222 parent, all23 original pair inputs, saved proposal artifacts and all105
 mode choices. It seals the same declared rule before fresh original metrics
 and replays every old constructor and new certificate. All21 native checks
-pass. Next: freeze the separate producer and evaluate it. No original
-certification or changed original selection has been run by this adapter yet.
-The complete task222 parent and its equal-CE failures must remain immutable.
+pass. Producer `a2ae1a35` now completed all23 original cases and full replays
+with zero process failures. Sixteen saved candidates receive the actual
+fixed-view certificate; their unchanged predictions score100% on every
+original training and held-out split. Seven cases have no admitted modular
+candidate and retain the complete earlier result.
+
+| Comparison mode | Earlier all-split passes | Certified-selection all-split passes | Primary passes |
+| --- | ---: | ---: | ---: |
+| Full batch | 26/35 | 30/35 | 31/35 |
+| Minibatch | 30/35 | 30/35 | 31/35 |
+| Forward only | 25/35 | 29/35 | 30/35 |
+
+The four changed cases are power division atp97 andp193 withk2 andk3. Their
+saved candidate models already passed in task222, but full/forward comparison
+kept earlier wrong completions on equal ordinary CE. The declared training-only
+certificate priority selects the passing model in those eight mode references.
+Minibatch already selected them and retains its result. This is an observed
+selection repair, conditional on the stated model family, with no changed
+candidate predictions and no held-out score used to choose a model.
+
+All105 choices and the complete immutable task222 parent remain. The five
+remaining all-split failures shared by full/mini are Boolean AND shift,
+square-times, both basis-depth tasks and recurrence. Forward also retains the
+branch-amplitudes failure. The retained depth results await fresh review and
+integration; the conventional transformer is still running its original cohort.
+Full pass has not been achieved.
+
+Certification plus its independent checks took553.734 seconds, charged once
+per task with69 mode references and zero new CE gradients. Original proposal
+construction costs remain attached in the complete parent. The largest recorded
+prepare/run/replay RSS was4,256,420KiB, about4.06GiB, under the64GiB limit.
+The source fingerprint is
+`92e20503f66ea08cfa9a5791374e1fb8eba1e52b422fecad34e79251612038fa`;
+the complete summary digest is
+`5c13439e55af498340977c6b27c2492ccc840d4bfb9940568e7ad73fe4cf311d`.
+Generated artifacts stay in root `runs/original-v1`; the frozen binary,
+protocol, manifest and extracted work/findings stay in root
+`.kanban/artifacts/223/original-v1`. Fresh board review is next.
+
 All35 tasks, full batch, minibatch, forward-only, retained depth and the
 conventional transformer comparison remain in scope.

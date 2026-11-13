@@ -8,7 +8,9 @@ to producer `f661532eb606bf450309033d5276773ea45b6037`, source fingerprint
 `5d3aa99d91efdab222fc3bd5c1c8ea68f16c8f632808b22f84c62213f4355139`.
 Preparation copies that summary byte for byte, verifies its complete original
 replays and proposal hashes, and regenerates all original input fingerprints.
-No original task has been certified by this producer yet.
+Producer `a2ae1a35` has now completed all23 original cases and full replays
+with zero process failures. Sixteen fixed-view certificates are accepted;
+seven no-candidate cases keep the earlier choices.
 
 CM28 and Lean commits `4fee3d09`, `9cd95708`, `6a8fb49e` precede native code.
 The constructor receives only saved observed data, code proposals and fixed
@@ -43,7 +45,14 @@ cohort tests cover the exact original protocol and data-source fingerprint,
 CE-tied fixed-view selection, complete old/new replay, rehashed certificate
 tampering, altered original inputs, all23 failures preserving all105 choices,
 a successful three-mode replacement, byte limits and immutable-parent checks.
-These tests do not establish any new original benchmark pass.
+The separate original comparison now has30/35 full,30/35 mini and29/35 forward
+all-split passes, with primary counts31,31,30. Four power-division CE ties
+change full/forward selections; all saved candidate predictions stay unchanged.
+All105 choices and all prior evidence remain. Certification/checking cost
+553.734s once, with69 mode references and zero new CE gradients. Recorded
+peak prepare/run/replay RSS is4,256,420KiB. The complete summary digest is
+`5c13439e55af498340977c6b27c2492ccc840d4bfb9940568e7ad73fe4cf311d`.
+See the [experiment README](..) for the remaining failures and interpretation.
 
 Freeze the committed source fingerprint, binary, protocol and launcher before
 original preparation. Native Rust/shell processes are serial with one BLAS

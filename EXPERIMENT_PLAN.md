@@ -99,8 +99,16 @@ cannot affect selection. The declared rule prefers smaller ordinary CE, then
 a verified fixed-view certificate within a1e-12 tie, then earlier order.
 The separate original harness adds six tests, pins the entire completed task222
 comparison and preserves all23 eligible tasks and all105 mode choices. All21
-native checks pass. Commit/freeze this producer before original certification;
-do not overwrite task222 or use held-out scores to change the declared rule.
+native checks pass. Frozen producer a2ae1a35 now completed all23 original cases
+and full replays with zero process failures. Sixteen fixed-view certificates
+preserve100% original split metrics. The declared CE/certificate rule repairs
+four power-division ties in full/forward, giving30/35 full,30/35 mini,29/35
+forward all-split passes across all105 choices. Task222 remains immutable.
+Certification/checking takes553.734s once,69 mode references,zero new CE
+gradients; recorded peak prepare/run/replay RSS4,256,420KiB. Summary digest
+5c13439e55af498340977c6b27c2492ccc840d4bfb9940568e7ad73fe4cf311d.
+Fresh review, retained depth integration and the fresh transformer are pending.
+Full pass has not been achieved; no held-out scores changed the frozen rule.
 
 Task #224 / CM29 extends the theory independently of the frozen task223 run.
 Fourteen Lean theorems now certify decoded answers from actual observed row
