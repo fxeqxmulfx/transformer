@@ -22,11 +22,12 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ModularCoding
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CompositeDiscovery
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedConsequences
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.KernelCodes
+public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ReadoutKernel
 
 /-!
 # Shared class distributions and complex spectral bounds
 
-Source: `review/flat_spectrum.md`, CM1–CM34. Multiple fixed complex code readings share the
+Source: `review/flat_spectrum.md`, CM1–CM35. Multiple fixed complex code readings share the
 same learned class probabilities. The domain and ordinary CE are convex, Fourier coordinates
 preserve the full distribution, and a feasible exact observed fit certifies a CE minimum.
 No universal identification of unseen labels follows; SB3 remains a counterexample.
@@ -73,6 +74,8 @@ compatible decoded answers with noninjective unknown codes; raw aliases can diff
 CM34 (`KernelCodes`): a complete observed-kernel basis retains every direction.
 Matches and aliases are basis independent, with explicit target/readout premises.
 Its finite actual range supports bounded complex CE; some queries still refuse.
+CM35 (`ReadoutKernel`): equal finite code/answer cardinalities derive readout-fiber
+constraints, retaining compatible-target premises and raw alias ambiguity.
 -/
 
 @[expose] public section

@@ -17370,3 +17370,122 @@ Examples instantiate every theorem with hypotheses. The complex-head witness
 uses a matched unseen query, noninjective unknown code, full-vocabulary pooled
 readout and an actual finite ordinary-CE update trace. Setting trace length0
 retains the same forward-only construction, with no gradient assumption.
+
+## CM35. Derive readout-fiber constraints from compatible finite code cardinality
+
+CM34 retains every direction of the original raw-class equations. Some of
+those directions can violate the same unknown-code compatibility assumption
+used by its soundness theorem. A known, fixed answer readout and finite
+cardinality can turn that compatibility assumption into additional linear
+class equalities. This extension does not infer a new readout from data or
+replace the original raw-label cross-entropy.
+
+Let `A` be the raw vocabulary, `D` a finite declared answer alphabet, and `R`
+a finite code alphabet. The declared readout `q:A->D` is surjective. The
+unknown code `e:A->R` obeys CM34's existing compatibility premise
+
+```
+e(a)=e(a')  implies  q(a)=q(a').
+```
+
+If `|D|=|R|`, there exists a bijection `phi:D≃R` such that
+
+```
+e(a) = phi(q(a))   for every raw class a.
+```
+
+This factorization is a conclusion. To prove it, choose a section `s` of the
+surjective `q`. Compatibility makes `d -> e(s(d))` injective. Equal finite
+cardinalities make this map surjective too, so every `e(a)` equals some
+`e(s(d))`. Compatibility then forces `d=q(a)`. In particular,
+`e(a)=e(a')` if and only if `q(a)=q(a')`. Raw aliases may differ, but their
+unknown code coordinates cannot differ under these premises. No finiteness
+of `A`, additive structure, observed coverage or target value is needed for
+this cardinality argument.
+
+Now let `R` also be a commutative ring. Retain CM34's explicit unknown target
+family: raw target `y`, arbitrary categorical phases `r,s`,
+`e(y(i,j))=r(i)+s(j)`, and exact agreement with every original observed raw
+label. Applying the factorization gives
+
+```
+phi(q(y(i,j))) = r(i)+s(j).
+```
+
+Construct the original observed coefficient matrix with the recorded labels
+mapped through the declared `q`, retaining every equation and exactly the two
+harmless shift gauges. Keep a complete basis of its kernel. A full vector
+match to answer `d` makes `phi(q(y(i,j)))=phi(d)` by CM34, hence `q(y(i,j))=d`.
+The same argument supports independently compacted class names: their known
+map into `D` must reproduce `q` of each original recorded raw label. This is
+an explicit data-binding equality, not an assumption about an unseen answer.
+The unknown `e`, `phi` and `y` enter only the soundness proof, never the kernel
+constructor or class search. Missing matches still refuse.
+
+This changes construction side information. CM34's frozen native protocols
+use the declared readout only for eligibility and evaluation; a future CM35
+proposal must explicitly accept the fixed readout partition when building its
+observed equations. The partition is a generic map of output classes, not an
+arithmetic function of the input names or an answer formula. Its surjectivity
+and the code/answer cardinality equality must be checked. No claim is made
+that an unknown many-to-one decoder can be discovered this way, or that the
+unknown target really has a compatible additive code. Those remain structural
+premises; low observed CE and a flat basis do not establish them.
+
+**Strict additional coverage.** Use Boolean row and column names. Observe
+three corners with raw labels `(0,false)`, `(1,false)` and `(1,true)`, in that
+order at `(false,false)`, `(true,false)` and `(false,true)`. Let the declared
+readout be the first coordinate in `ZMod 2`. The raw-class system, with its
+two gauges, admits coefficients
+
+```
+r(false)=s(false)=e(class0)=0,
+r(true)=x, s(true)=z, e(class1)=x, e(class2)=z.
+```
+
+Both `x` and `z` may vary independently, so the missing corner's vector
+matches none of the three raw-class vectors in a complete basis. The actual
+ordered class search refuses. After declared readout grouping, the two
+last labels have the same class coordinate; the grouped equations force the
+missing corner to code zero in every kernel direction. The query was not
+observed. Both raw completions `(0,false)` and `(0,true)` at that corner fit
+all observations and the compatible additive binary code. The pooled answer
+is identified; the raw alias is not.
+
+**Why the hypotheses matter.** With three code states and two answers, let
+the unknown raw code be the identity on `ZMod 3`, and let the readout return
+true only on state one. It is surjective and compatible, but states zero and
+two have equal readout and different codes. Grouping them would add a false
+code equation. Equal nominal cardinalities also do not suffice when the
+readout leaves an answer unused: a constant Boolean readout is compatible
+with the identity Boolean code, whose aliases have different codes. Finally,
+a surjective identity Boolean readout and a constant Boolean code have equal
+alphabet sizes but fail compatibility and cannot admit the stated bijective
+factorization. The Lean counterexamples retain these distinct failures.
+
+**Original raw CE and the actual complex head.** Use the finite actual range
+of the grouped complete vector code as CM34's latent state. Choose a raw
+representative of each declared answer before updates, and keep the separate
+observed-input rows with their original raw labels. CM31--CM34 then give the
+same actual Fourier coefficients, convex ordinary full-vocabulary CE, finite
+observed-label preservation and `64*(|observed|+|range|)` coefficient budget.
+No grouped-label loss is substituted. For an accepted unseen query, its raw
+representative has the identified declared answer. The existing fixed-default
+update theorem and pooled margin24 bound preserve that answer under any
+finite full-batch or minibatch schedule. The zero-step instance is forward
+only. An unsupported state or unknown axis still needs an explicit native
+fallback; no correctness claim follows there.
+
+The concrete head examples use all three distinct original raw observations,
+show exact observation/head binding, and instantiate full updates, unequal
+minibatches, zero updates, the coefficient budget and ordinary raw CE. The
+unseen raw alias remains different from the chosen representative even when
+its pooled answer is correct. All statements concern exact real/complex
+arithmetic. Native quotient construction, raw-code expansion, finite-precision
+state replay, resource forecasts and complete original comparisons require a
+separately frozen implementation. The running232/252 cohorts and frozen237,
+243,244 and253 evidence are unchanged.
+
+Lean: `CoupledMoments/ReadoutKernel/{Factorization,Identification,Witness,
+Limits,ComplexHead}`. Every theorem with hypotheses has a satisfying example;
+there is no assumed factorization or new axiom.

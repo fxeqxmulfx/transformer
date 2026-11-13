@@ -263,6 +263,19 @@ Primary99percent success is unchanged by auxiliary diagnostic failures.
 Original comparison waits for reviewed252 training and246 parent evidence;
 fixtures establish no new benchmark score or unknown-target identification.
 
+Task256 / CM35 derives additional constraints from the existing unknown-code
+readout compatibility premise. When the finite code and surjective declared
+answer alphabets have equal cardinality, the unknown code factors through that
+readout via a bijection. Complete kernels of the grouped original observations
+can therefore certify answers refused by the ungrouped kernel. A strict
+unseen-corner witness preserves distinct raw aliases; cardinality, unused-answer
+and incompatibility counterexamples delimit the claim. The actual bounded
+complex head retains original raw-label CE, full/minibatch and forward examples,
+and a concrete wrong-raw/correct-pooled prediction. A new native proposal would
+explicitly take the declared readout partition as construction side information;
+it cannot silently alter the frozen252/253 protocols or claim to learn an
+unknown decoder. Native implementation and original evaluation remain separate.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine
