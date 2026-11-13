@@ -221,6 +221,18 @@ artifact by size and SHA256. Existing certified parent choices retain priority
 on ties; all process failures retain their prior rows. The tested source/binary/
 protocol must be archived before original preparation. No new score yet.
 
+Producer `70cf9ab5` is now committed and archived with the binary, protocol,
+source fingerprint and complete task223 parent hash. Its original23 construction
+and replay queue is running serially under64GiB, with one dense view retained
+in memory at a time. No incomplete cohort is counted as a new full35 score.
+
+The independent task175 depth review is complete at `d1c4f860`: all31 native
+checks and Lean audits pass, and all288 original plus48 retained outcomes and
+both summaries replay byte-identically. Task175 is approved. Task226 records
+the remaining full105 integration after task225, preserving both retained
+initializer policies, all prior costs/failures and the pending conventional
+transformer comparison. The depth successes are not yet added to the score.
+
 ## Complete categorical fiber constraints (2026-11-13)
 
 Task #220 / CM26 starts from actual same-label observation groups. Lean proves

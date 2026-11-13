@@ -445,3 +445,12 @@ Evidence is under `runs/cohort-v1`, `runs/retained-v1` and
 The next family comparison must keep all288 original slots and both retained
 initializer policies. The full35/mode comparison and conventional transformer
 run remain separate dependencies; these48 outcomes must not replace them.
+
+Fresh review is complete at `d1c4f860`: all 31 native tests, formatting/clippy,
+Lean build and axiom checks passed. It reran all 288 original and 48 retained
+outcomes under their frozen 8 GiB limits. Every replay and both complete
+summaries match byte for byte. Task175 is approved; the review evidence is
+`.kanban/artifacts/175/review-complete`. Task226 tracks integration with the
+separately frozen decoded-consequence comparison, retaining both initializer
+policies and every prior failure/cost. These reviewed depth results have not
+yet changed the published full35 scores.
