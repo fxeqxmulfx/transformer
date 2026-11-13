@@ -1,0 +1,7 @@
+/home/misha/lean_projects/transformer/.claude/worktrees/convex-balance-repair/experiments/convex_stress_modular/cohort/target/debug/deps/convex_stress_schatten-b78aba3bd9a77386.d: /home/misha/lean_projects/transformer/.claude/worktrees/convex-balance-repair/experiments/convex_stress_schatten/src/lib.rs /home/misha/lean_projects/transformer/.claude/worktrees/convex-balance-repair/experiments/convex_stress_schatten/src/projection.rs /home/misha/lean_projects/transformer/.claude/worktrees/convex-balance-repair/experiments/convex_stress_schatten/src/solver.rs
+
+/home/misha/lean_projects/transformer/.claude/worktrees/convex-balance-repair/experiments/convex_stress_modular/cohort/target/debug/deps/libconvex_stress_schatten-b78aba3bd9a77386.rmeta: /home/misha/lean_projects/transformer/.claude/worktrees/convex-balance-repair/experiments/convex_stress_schatten/src/lib.rs /home/misha/lean_projects/transformer/.claude/worktrees/convex-balance-repair/experiments/convex_stress_schatten/src/projection.rs /home/misha/lean_projects/transformer/.claude/worktrees/convex-balance-repair/experiments/convex_stress_schatten/src/solver.rs
+
+/home/misha/lean_projects/transformer/.claude/worktrees/convex-balance-repair/experiments/convex_stress_schatten/src/lib.rs:
+/home/misha/lean_projects/transformer/.claude/worktrees/convex-balance-repair/experiments/convex_stress_schatten/src/projection.rs:
+/home/misha/lean_projects/transformer/.claude/worktrees/convex-balance-repair/experiments/convex_stress_schatten/src/solver.rs:

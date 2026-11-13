@@ -1,0 +1,12 @@
+/home/misha/lean_projects/transformer/.claude/worktrees/convex-balance-repair/experiments/convex_stress_modular/cohort/target/debug/deps/serde-34357e773e63ec3c.d: /home/misha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/lib.rs /home/misha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/integer128.rs /home/misha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/mod.rs /home/misha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/de.rs /home/misha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/ser.rs /home/misha/lean_projects/transformer/.claude/worktrees/convex-balance-repair/experiments/convex_stress_modular/cohort/target/debug/build/serde-ba8426c877a92a17/out/private.rs
+
+/home/misha/lean_projects/transformer/.claude/worktrees/convex-balance-repair/experiments/convex_stress_modular/cohort/target/debug/deps/libserde-34357e773e63ec3c.rmeta: /home/misha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/lib.rs /home/misha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/integer128.rs /home/misha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/mod.rs /home/misha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/de.rs /home/misha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/ser.rs /home/misha/lean_projects/transformer/.claude/worktrees/convex-balance-repair/experiments/convex_stress_modular/cohort/target/debug/build/serde-ba8426c877a92a17/out/private.rs
+
+/home/misha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/lib.rs:
+/home/misha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/integer128.rs:
+/home/misha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/mod.rs:
+/home/misha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/de.rs:
+/home/misha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.229/src/private/ser.rs:
+/home/misha/lean_projects/transformer/.claude/worktrees/convex-balance-repair/experiments/convex_stress_modular/cohort/target/debug/build/serde-ba8426c877a92a17/out/private.rs:
+
+# env-dep:OUT_DIR=/home/misha/lean_projects/transformer/.claude/worktrees/convex-balance-repair/experiments/convex_stress_modular/cohort/target/debug/build/serde-ba8426c877a92a17/out

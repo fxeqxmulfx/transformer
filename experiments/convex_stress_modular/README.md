@@ -69,8 +69,11 @@ latent domain, with independent full-table map and raw spectral/CE checks.
 Three wrapper checks cover composite interiors of sizes 6/8/12, strips,
 padding, class renaming, view/stage caps, small interiors and nine mutations.
 All fifteen tests pass. The wrapper forecast must fit within 48 GiB. The
-parent-preserving original harness and its separate producer freeze remain
-next; no original follow-up has started for this learner.
+parent-preserving [original harness](cohort) now passes five further checks and
+covers all22 original pair tables, retaining the full105-choice parent. Its
+parent digest is deliberately unset until the running integration finishes;
+preparation refuses an unset parent. Pinning and a separate producer freeze
+remain next; no original follow-up has started for this learner.
 
 The core restricts integer matrices to 1024 variables and 8192 rows, coefficients
 of absolute value at most 1024, right sides at most 2^30, and total modulus at

@@ -1,0 +1,51 @@
+//! Bind production code, every used native dependency and the original data stack.
+use super::*;
+pub fn fingerprint() -> String {
+    let upstream = convex_stress_decode::cohort::fingerprint();
+    let mut all = vec![];
+    for source in [
+        include_bytes!("../main.rs").as_slice(),
+        include_bytes!("mod.rs"),
+        include_bytes!("parent.rs"),
+        include_bytes!("run.rs"),
+        include_bytes!("summary.rs"),
+        include_bytes!("fingerprint.rs"),
+        include_bytes!("../../Cargo.toml"),
+        include_bytes!("../../Cargo.lock"),
+        include_bytes!("../../run_cohort.sh"),
+        include_bytes!("../../../Cargo.toml"),
+        include_bytes!("../../../Cargo.lock"),
+        include_bytes!("../../../src/lib.rs"),
+        include_bytes!("../../../src/lift.rs"),
+        include_bytes!("../../../src/recombine.rs"),
+        include_bytes!("../../../src/coding/mod.rs"),
+        include_bytes!("../../../src/coding/plan.rs"),
+        include_bytes!("../../../src/coding/base.rs"),
+        include_bytes!("../../../src/coding/component.rs"),
+        include_bytes!("../../../src/coding/component_audit.rs"),
+        include_bytes!("../../../src/coding/run.rs"),
+        include_bytes!("../../../src/coding/audit.rs"),
+        include_bytes!("../../../src/coding/endpoint.rs"),
+        include_bytes!("../../../src/search/mod.rs"),
+        include_bytes!("../../../src/search/run.rs"),
+        include_bytes!("../../../src/search/audit.rs"),
+        include_bytes!("../../../../convex_stress_fibers/Cargo.toml"),
+        include_bytes!("../../../../convex_stress_fibers/Cargo.lock"),
+        include_bytes!("../../../../convex_stress_fibers/src/lib.rs"),
+        include_bytes!("../../../../convex_stress_fibers/src/finite_system/mod.rs"),
+        include_bytes!("../../../../convex_stress_fibers/src/finite_system/solve.rs"),
+        include_bytes!("../../../../convex_stress_fibers/src/finite_system/audit.rs"),
+        include_bytes!("../../../../convex_stress_tagged/Cargo.toml"),
+        include_bytes!("../../../../convex_stress_tagged/Cargo.lock"),
+        include_bytes!("../../../../convex_stress_tagged/src/lib.rs"),
+        include_bytes!("../../../../convex_stress_tagged/src/model.rs"),
+        include_bytes!("../../../../convex_stress_tagged/src/views.rs"),
+        SUITE.as_bytes(),
+        PROTOCOL.as_bytes(),
+        upstream.as_bytes(),
+    ] {
+        all.extend_from_slice(&(source.len() as u64).to_le_bytes());
+        all.extend_from_slice(source);
+    }
+    hash(&all)
+}

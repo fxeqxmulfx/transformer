@@ -1,0 +1,61 @@
+{
+  "version": "modular-original-v1",
+  "proof_commits": [
+    "98b12abc",
+    "d8efeb36"
+  ],
+  "core_commits": [
+    "cef6fe5a",
+    "a14b416c",
+    "de1bd64b"
+  ],
+  "shared_fingerprint": "260d22864ac06e44f945791ac766340a96254b917dffca5a713ea396ddc5a6ba",
+  "tasks": [
+    "power-division-p97-k3",
+    "arithmetic-cube-plus",
+    "power-division-p193-k5",
+    "power-division-p193-k2",
+    "power-division-p97-k2",
+    "arithmetic-square-times",
+    "arithmetic-sub",
+    "arithmetic-mul",
+    "arithmetic-add",
+    "power-division-p193-k3",
+    "division-p193",
+    "arithmetic-square-sum",
+    "power-division-p97-k5",
+    "arithmetic-half-sum",
+    "arithmetic-sum-square",
+    "arithmetic-affine-product",
+    "arithmetic-perm-add",
+    "arithmetic-div",
+    "arithmetic-abs-diff-blind",
+    "arithmetic-abs-diff",
+    "arithmetic-sum-pow4",
+    "arithmetic-sum-cube"
+  ],
+  "reference_modes": [
+    "full_batch",
+    "minibatch",
+    "forward_only"
+  ],
+  "coding": {
+    "observation_equations": 4096,
+    "scalar_updates_per_stage": 500000000,
+    "total_scalar_updates": 2000000000,
+    "row_operations_per_stage": 2000000,
+    "stages": 8
+  },
+  "minimum_strip_support": 8,
+  "max_views": 4,
+  "memory_limit_bytes": 68719476736,
+  "buffer_preflight_bytes": 51539607552,
+  "artifact_file_limit_bytes": 536870912,
+  "minimum_disk_reserve_bytes": 17179869184,
+  "parent_summary_sha256": null,
+  "parent_integration_commit": "53de1d75f4bb03fa354e748cf001cd8248a2f01e",
+  "construction": "All22 original pair tables use the same observed cell/class policy. Guess cyclic domain from observed class count, solve normalized prime components, require unique residual digits, recombine checked CRT, check every original equation and class injectivity, then raw all-frequency DFT/SVD and ordinary CE. Retain every strip, repeat, cap, refused or duplicate branch. No token-name arithmetic rule or held-out input enters the constructor.",
+  "selection": "Keep each complete earlier mode choice first, then all new candidates. Replace only when ordinary observed CE decreases by more than1e-12. Seal references before fresh held-out metrics. One construction per task, three mode references, zero CE gradients.",
+  "replay": "Rebuild original data and exact fingerprints, preserve whole verified full105 parent and every earlier candidate/failure. Replay full modular/strip state and every integer certificate and work count. Audit raw spectra/CE and all unchanged split metrics. Summary must retain all105 task/mode choices and failures. Composite discovery does not prove identification or global convex search.",
+  "resources": "Native Rust and shell only; freeze source,binary,protocol and parent before original preparation. Serial64GiB/oneBLAS/16GiBdiskreserve; preserve failed cells and continue. Depth and fresh transformer remain required."
+}

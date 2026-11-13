@@ -51,8 +51,11 @@ and ordinary CE. A missing-axis example explicitly fits observations while
 misidentifying unseen answers. The complete suite has twelve checks. The
 categorical strip wrapper adds three checks for composite interiors, unequal
 axis padding, class renaming, caps and changed state. All fifteen native checks
-pass. The parent harness and separate original freeze remain next; there is no
-new original-task score.
+pass. The parent harness now adds five checks, covers all22 original pair-table
+tasks and preserves the complete105-choice parent. Its unset parent digest
+deliberately prevents preparation until task217's running integration finishes.
+Pinning and the separate original producer freeze remain next; there is no new
+original-task score.
 
 ## Complete categorical fiber constraints (2026-11-13)
 
