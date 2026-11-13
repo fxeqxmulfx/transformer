@@ -384,6 +384,21 @@ still regresses on a supported unseen alias while preserving an unsupported
 input. Native binding and full35 evaluation remain necessary; frozen original
 protocols, selectors and benchmark counts do not change from this proof.
 
+Task265 implements CM38 as a separate bounded complex fallback component.
+It binds actual observed query/value support, candidate tensors and a saved
+causal or count predecessor. The count parent is an explicit sparse complex
+embedding of its fixed integer joint coefficients, with zero imaginary part;
+its indicator features are bounded, without a unitary-code claim. Both stored
+heads, logical coordinates, column radii and buffers are charged. Eight native
+checks cover bit-identical count forwarding, supported/unsupported routes,
+full/mini/zero modes, actual finite-difference CE derivatives with a shorter
+tail, forged states and a supported unseen regression. The prospective protocol
+retains the earlier head selection and tests a separately declared structural
+fallback transformation on the complete35-task comparison. Because observed
+CE is identical, this cannot be described as a strict-CE improvement. A reviewed
+adapter and original complete evidence remain necessary; no benchmark count
+or frozen245/246/252/255/261 source or selection rule changes here.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine
