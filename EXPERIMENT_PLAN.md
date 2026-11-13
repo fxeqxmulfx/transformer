@@ -411,6 +411,17 @@ has not yet been evaluated on the original suite.
 
 ## Recovered comparison queues (2026-11-13)
 
+Task246 has completed all35 original refined-comparison cases and their first
+independent replays without process failures. Its18 available prime97 endpoints
+all pass original primary and auxiliary metrics, but none improves the selected
+parent's raw CE by the declared tolerance. Both105-choice initializer policies
+remain identical to245:34/35 full,34/35 mini and33/35 forward. Fibonacci remains
+unsuccessful in all modes and associative divisor remains the second forward
+failure. Construction185.750755602s and120 gradient batches are retained once;
+peak process RSS2361828KiB stays below64GiB. The separate authored findings and
+read-only report preserve the frozen adapter; fresh findings-commit review
+must finish before255 imports this complete parent.
+
 Task #221 preserves a completed parent-chain failure caused solely by nine
 relative/absolute phase model-path strings. Committed native recovery stages
 canonical views of the same actual phase, paired and certified artifacts;
