@@ -3,6 +3,9 @@
 pub use convex_stress_decode::{C, Result, Sample, linalg, loss, metrics, random};
 pub mod model;
 pub mod refinement;
+pub mod search;
+pub mod sketch;
+pub mod views;
 pub use model::Model;
 #[cfg(test)]
 mod tests;

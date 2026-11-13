@@ -34,7 +34,7 @@ Full deterministic replay additionally binds input, state order, stopping
 reason, all states and costs. Equal phases and empty observed axes are allowed;
 an empty axis preserves its earlier phase on ties.
 
-Eight tests pass, including all 512 binary three-by-three target tables. A
+Fourteen tests pass, including all 512 binary three-by-three target tables. A
 masked four-category fixture with three latent states is repaired to the full
 correct table through repeated phase assignments. The Lean three-category
 constant-strip witness is checked, including the strip intersection and all
@@ -43,17 +43,39 @@ uncovered latent states are refused, and two fully covered exact observed fits
 satisfy the spectral bounds but disagree on an unseen input row. Input, state,
 minimum-certificate and work-ledger tampering is rejected.
 
-This is a tested construction/refinement core. Generic bounded flag and phase
-discovery, its original-data harness and a separately frozen original follow-up
-remain to be implemented in task 219. The balanced parent still passes3/9.
+Generic discovery now proposes constant strips only when an observed row or
+column has at least eight examples, all of one class. It explicitly flags
+unobserved axes in those proposals, pads unequal interior axis sizes with
+unobserved categories, and retains the original vocabulary. These guesses
+remain hypotheses about unseen entries. Every proposed interior and the
+unchanged full table receive centered random categorical label sketches.
+Power iterations propose complex phases; angular quantization allows repeated
+phases. The latent-domain bank consists of the input-category count and the
+number of observed output classes, with out-of-range sizes explicitly refused.
+Neither the task name nor a numeric relationship between input tokens is used.
+
+The default policy is four views, eight sketches per view,64 power steps,
+32 seeds,24 refinement rounds and1024 total axis updates. Iteration is by
+trial, then view and latent domain, to share early work across proposed views.
+All power states, codes, matrices, partitions, missing axes, coordinate states,
+integer certificates, measured spectra, refusals and budget stops are retained.
+The aggregate report/replay forecast is checked against8GiB before search.
+
+A separate masked four-category fixture now recovers both constant strips
+and its three-state interior from observations alone; all withheld outputs
+are correct. Its support threshold is explicitly lowered to three for this
+small test. Output-class renaming preserves discovery. A zero sketch and
+uncovered states remain refused; partial constant evidence has no uniqueness
+claim. Original-data evaluation still requires its own tested harness and
+producer freeze in task219. The balanced parent still passes3/9.
 All35 short/long tasks, full batch, minibatch, forward-only and the conventional
 transformer comparison remain required; fixture success is no original score.
 
 The declared dimensions are `2 <= n <= 257`, `2 <= q <= 771` and
 `2 <= vocabulary <= 1024`; base refinement restricts `q <= 257`, at most128
 rounds and256 axis updates. Fourier audits stream one matrix at a time. The
-conservative single-model/refinement buffer bound stays below1GiB. A future
-multi-candidate search must separately bound its aggregate storage and work.
+conservative single-model/refinement buffer bound stays below1GiB; aggregate
+search storage and work use the separate bounds above.
 All numerical runs use the user's64GiB process cap:
 
 ```sh

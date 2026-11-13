@@ -17,8 +17,13 @@ input/latent cardinalities differ. The native construction/refinement core now
 passes eight tests, including exhaustive checks of all512 binary3x3 target
 tables, a masked recovery and fully covered but ambiguous unseen rows. Raw
 all-frequency SVD/CE and integer minima are checked; full input/state/work replay
-is required. Implement bounded generic flag/phase discovery and its harness
-before freezing another original-data follow-up. No new original score yet.
+is required. Bounded generic flag/phase discovery now passes six further checks:
+observed categorical constant strips, angular phase quantization, repeated
+phases and empirical decoders recover a separate masked fixture without its
+latent coordinates. Every power/refinement state, partition, missing axis and
+cap is retained. Implement and test the original harness, preserving all
+balanced parents and earlier-first CE ties, before freezing another original
+follow-up. No new original score yet.
 
 ## Observable feature balancing (2026-11-13)
 
