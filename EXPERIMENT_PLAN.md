@@ -1,5 +1,19 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Current full comparison status (2026-11-13)
+
+The latest independently reviewed full105 comparison is31/35 full-batch,
+31/35 minibatch and30/35 forward-only on every original held-out split.
+Task225 adds the square-times pass with no regressions; all23 constructor
+replays and its complete parent-preserving summary reproduce byte-for-byte.
+The original conventional transformer completed32/35 all-split passes; its
+independent review is still running. Task175's48 retained depth heads all
+pass and are reviewed. Task227's native integration checks are approved;
+task226 waits for the transformer review before comparing both initializer
+arms and all35 tasks. CM30's10 Lean theorems are proved and reviewed; they
+extend code/quotient certification without claiming unique raw labels or an
+additional benchmark pass. The complete35-task goal remains open.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine
@@ -229,7 +243,9 @@ mode. The complete105 comparison is31/35 full,31/35 mini,30/35 forward, preservi
 all previous parents and costs. Constructor time is788.9996s with zero CE
 gradients; peak model run/replay RSS4.68GiB and complete-summary RSS13.45GiB.
 Summary SHA256 is89a14738d36461e42db2faa2e9611b331ea6ea1fad01da5f16cd2dc34e2a0b63.
-Independent review is next; depth and transformer integration remains required.
+Independent review at e32f4489 passes all49 native checks, all23 original
+constructor replays and a byte-identical complete105 summary; task225 is
+approved. Depth and transformer integration remains required.
 
 The independent task175 depth review is complete at `d1c4f860`: all31 native
 checks and Lean audits pass, and all288 original plus48 retained outcomes and

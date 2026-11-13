@@ -187,8 +187,10 @@ construction/replay RSS was 4,904,124 KiB (4.68 GiB); assembling the complete
 parent-preserving summary peaked at 14,098,040 KiB (13.45 GiB). The summary is
 retained in `runs/original-v1/summary.json`, SHA256
 `89a14738d36461e42db2faa2e9611b331ea6ea1fad01da5f16cd2dc34e2a0b63`.
-The independent review is next. Both retained depth policies and the complete
-35-task conventional transformer must still enter the integrated comparison;
+The independent review at `e32f4489` passed all49 native checks, the Lean audits,
+all23 fresh constructor replays and a byte-identical complete105 summary.
+Task225 is approved. Both retained depth policies and the complete35-task
+conventional transformer must still enter the integrated comparison;
 these results do not establish a full pass or unconditional identification.
 
 ```sh
