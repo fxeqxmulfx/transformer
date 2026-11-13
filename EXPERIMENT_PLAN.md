@@ -445,15 +445,16 @@ CE and a gap difference of 8.14e-14. Future audits run serially with an 8 GiB
 address-space cap; training defaults to one worker with a 16 GiB cap. No whole
 suite completion is claimed until the missing outcome and audit scope is resolved.
 
-Task #204 now freezes a separate recovery of exactly the four missing endpoints
-with the unchanged producer, initialization, batches, update caps and stopping.
-The original 311 outcomes and interrupted traces remain immutable. Verify their
-model/state hashes, replays and independent audits before the new attempts;
-run serially under the user's revised 64 GiB cap. After all four endpoints replay
-and pass raw audits, use a separate linked view for the unchanged 315-slot,
-105-choice selection and replay. Keep failed attempts and all original candidate
-failures. Inventory completion is not a full pass, and does not replace the
-separate depth, decoder and transformer cohorts.
+Task #204 completes the separate recovery of all four missing endpoints with
+the unchanged producer, batches, caps and stopping under 64 GiB. All four replay
+and pass independent audits; the original 311 outcomes and partial traces stay
+immutable. The complete 315-slot, 105-choice baseline now passes selection and
+replay. Every-split passes are 21/35 for full-batch and minibatch, 20/35 forward-only.
+The recovered minibatch recurrence rank-one candidate reaches 99.766% validation,
+but the unchanged training-CE selector chooses the count model with 0% validation.
+Peak fresh-training RSS is 15.2 GiB. Retain all 240 models, three fit failures and 72
+ineligible slots. This exposes a selection failure and remains below the full35
+goal; it does not replace the separate depth, decoder or transformer cohorts.
 
 Lean CM8 at `d7e1e6aa` proves fixed-scale ordinary CE convexity, common
 probability feasibility and observed-fit/excess certificates for a prediction

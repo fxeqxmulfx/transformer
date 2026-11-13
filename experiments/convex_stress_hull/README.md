@@ -167,10 +167,14 @@ their missing endpoints or complete the 315-cell experiment.
 The previous three-task success and count-only result of 10/35 remain separate;
 combining their best reported scores does not establish a whole-suite pass.
 
-The separate [four-cell recovery](recovery/README.md), task #204, now freezes
-fresh attempts for exactly those missing endpoints using the unchanged producer.
-It preserves all 311 original outcomes and interrupted traces, verifies their
-hashes and audits, and uses the user's new 64 GiB process limit. A separate view
-will supply all 315 slots to the original 105-choice selector after the four new
-attempts replay and pass independent audits. No recovered result or whole-suite
-completion is claimed by this preparation.
+The separate [four-cell recovery](recovery/README.md), task #204, now completes
+and independently audits exactly those missing endpoints using the unchanged
+producer under the 64 GiB cap. It preserves all 311 original records and partial
+traces. The complete 315-slot, 105-choice selector and replay pass: full-batch
+and minibatch each pass 21/35 on every split, forward-only 20/35. The inventory
+retains 240 returned models, three fit failures and 72 ineligible cases. Minibatch
+Basis recall reaches 100% on every split. The recovered recurrence rank-one
+candidate reaches 99.766% validation, but the unchanged CE selector picks counts
+with lower training CE and 0% validation. Peak fresh-training RSS is 15.2 GiB.
+This complete baseline still fails the full35 goal and awaits the separate
+depth, decoder and conventional-transformer integrations.

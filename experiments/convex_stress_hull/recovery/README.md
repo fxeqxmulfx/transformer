@@ -1,5 +1,48 @@
 # Recover the four interrupted full-suite fits
 
+The frozen recovery now completes and independently audits all four fresh
+attempts. Its separate comparison contains all 315 planned slots and all 105
+training-CE choices, with no replacement of the original 311 records or their
+interrupted traces. The unchanged selector and its replay both finish normally.
+Inventory completion does not produce a full benchmark pass. Passes use the
+original 99% exact-sequence threshold:
+
+| Mode | Primary split passes | Every split passes | No selected model |
+| --- | ---: | ---: | ---: |
+| Full batch | 22/35 | 21/35 | 0 |
+| Minibatch | 22/35 | 21/35 | 0 |
+| Forward only | 21/35 | 20/35 | 3 |
+
+The final inventory retains 240 returned models, three fit failures and 72
+ineligible slots. These are the original 236 audited models plus the four
+separately audited recoveries. All cases, including failures, remain available
+to the later depth/decoder/transformer comparisons; this is the unchanged
+baseline rather than a completed integration of those follow-ups.
+
+| Fresh attempt | Updates | Training CE | CE excess | Validation sequence accuracy |
+| --- | ---: | ---: | ---: | ---: |
+| Forward recurrence, full rank | 128 | 5.109154052 | 0.557286995 | 3.6352% |
+| Minibatch Basis recall, counts | 512 | 0.024742101 | 0.000211685 | 100% |
+| Minibatch recurrence, full rank | 512 | 4.916851861 | 0.364984804 | 0.0850% |
+| Minibatch recurrence, rank one | 512 | 4.617273734 | 0.065406676 | 99.7662% |
+
+Basis recall also reaches 100% on its test and novel-input splits. The recurrence
+rank-one fit reaches 100% training classification but retains positive CE
+excess. The fixed training-CE selector therefore chooses the earlier count
+candidate for that task: its training CE is 4.551972796 and its validation
+sequence accuracy is zero. This exposes a selection failure as well as the
+other model failures; the better validation score was not used to change the
+choice or extend the frozen runs.
+
+Fresh training takes 733, 14,770, 2,868 and 2,751 seconds respectively. Peak
+training RSS is 15,914,720 KiB, about 15.2 GiB, under the 64 GiB process cap.
+Producer and audit binaries, native library hashes, all four endpoint/state
+digests, replay seals and the complete comparison hashes remain rooted in
+`runs/recovery-v1` and `.kanban/artifacts/204`. The harness was frozen at
+`a79c64b7` before these fresh attempts. The metadata guards still accept the
+valid 311-cell fixture and reject all ten mutations plus both unsafe
+preparation requests.
+
 Can the unchanged full-suite protocol be completed after the host OOM without
 discarding its earlier evidence? This follow-up belongs to board task #204.
 Lean CM5–CM8 already covers the original model domains and prediction hull;
@@ -78,4 +121,4 @@ bash .kanban/artifacts/204/harness/run.sh verify \
 has been created. It refuses an existing view. `verify ROOT` checks the retained
 and new evidence hashes and repeats the original selection without overwriting
 the frozen comparison. Generated evidence remains ignored under the root runs
-and `.kanban/artifacts/204/`; authored findings will be recorded here.
+and `.kanban/artifacts/204/`; the findings above describe that retained evidence.
