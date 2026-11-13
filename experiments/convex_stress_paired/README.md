@@ -94,12 +94,14 @@ sums before a shared LAPACK SVD, and recomputes the full-vocabulary CE and every
 split metric. The spectral checks are floating-point, not interval certificates.
 
 The standalone summary selects nothing and drops nothing. Integration with the
-earlier candidates is a separate step that requires the complete, unchanged
-decoded-phase cohort, whose summary retains every earlier candidate:
+earlier candidates is a separate step that requires the complete decoded-phase
+cohort, whose summary retains every earlier candidate. Use the reviewed
+canonical path views from task221 and the unchanged frozen paired binary:
 
 ```sh
-experiments/convex_stress_paired/target/release/convex-stress-paired integrate \
-  experiments/convex_stress_paired/runs/cohort-v1 experiments/convex_stress_decode/runs/cohort-v1
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
+  prlimit --as=68719476736:68719476736 -- /absolute/frozen/paired-binary integrate \
+  /absolute/canonical/paired-root /absolute/canonical/decoded-root
 ```
 
 For each of its 24 task and mode selections it orders `[paired candidate,
@@ -242,16 +244,26 @@ for such certificates on the same eight tasks and reports its own results.
 No solver convergence, no stability at the tolerance and no interval
 certificate of the spectra is claimed. One seed and one split per task.
 
-**Integration was not obtained.** `integrate` requires the decoded-phase
-cohort `experiments/convex_stress_decode/runs/cohort-v1` complete and
-unchanged. That cohort had not started when this one finished: it is queued
-behind earlier cohorts of the same serial machine. `summary.json` records
-`integrated_with_older_candidates: false`. No ordering against an earlier
-candidate is claimed, and no earlier candidate is dropped or replaced by these
-numbers. The command above remains to be run once that cohort is complete.
-The `integrate` step of `convex_stress_certified` calls it on the same two
-roots and refuses a changed `summary.json` of this cohort (sha256
-`11ebba65…ad11068`), so the comparison is recomputed there as well.
+**Integration is complete after path recovery.** Task221 repaired the
+relative/absolute path mismatch using separate canonical views, preserving
+the original failed decoded gate and all original models, metrics and costs.
+Task192 then passed fresh review of all eight recovered decoded outcomes.
+The unchanged frozen paired `integrate` command now compares all 24 choices
+against that complete parent. It selects the paired model for absolute
+difference in all three modes and keeps the earlier selected model for the
+other 21 choices. Primary and all-split passes increase from 15/24 to 18/24,
+or 6/8 in each mode, with no passing-parent regression. Every earlier choice
+is retained verbatim as the baseline, and every new candidate remains present.
+
+The standalone original `summary.json` is unchanged (sha256
+`11ebba6556622b6ea14c75ecc18a839cd65baeb4eb1a209ddedb5acb4ad11068`). Its
+`integrated_with_older_candidates: false` describes that standalone report;
+the separate integration report records the completed comparison. Evidence
+is in `.kanban/artifacts/195/completion-v1`, with canonical parents at
+`runs/cohort-canonical-v1` and the decoded experiment's directory of the same
+name. The certified/general-bank comparison already retains this same
+integration. This closes task195's outstanding integration gate without new
+training or changes to the original cohort.
 
 These are eight of the 35 tasks of the suite. No full-suite result and no
 comparison with a transformer is claimed.
