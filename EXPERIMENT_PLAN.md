@@ -324,6 +324,19 @@ disk-refusal continuation. Original execution requires reviewed255,259 and260.
 New builds and run artifacts use the mounted `storage` filesystem under
 `/run/media/misha/storage/transformer-runs`, with the64GiB RAM cap unchanged.
 
+Task262 / CM36 proves the next selection boundary before changing a native
+policy. Pulling grouped coefficients back through the recorded-name readout
+preserves every original equation and both gauges. Every original full-kernel
+match therefore transfers to the grouped system, and mapped-bank search cannot
+lose an accepted query. This algebraic coverage statement needs no unseen
+target premise; target correctness and native admission still do. Separately,
+the actual refined complex heads retain equal observed logits and ordinary CE
+through common full, mini and zero-update schedules even with different latent
+spaces/defaults. A bounded three-corner witness has tied training loss and
+opposite unseen pooled predictions. Frozen260 retains its parent-first tie
+rule; any structural priority must be a separately frozen, fully compared
+proposal. No native benchmark count follows from these exact-real proofs.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine

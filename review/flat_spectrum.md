@@ -17489,3 +17489,68 @@ separately frozen implementation. The running232/252 cohorts and frozen237,
 Lean: `CoupledMoments/ReadoutKernel/{Factorization,Identification,Witness,
 Limits,ComplexHead}`. Every theorem with hypotheses has a satisfying example;
 there is no assumed factorization or new axiom.
+
+## CM36. Coverage inclusion and the training-loss tie
+
+CM35's declared-readout grouping supplies a structural ordering of two
+complete observed systems. This ordering is separate from empirical CE.
+Let the original recorded class names be `C`, the declared answers be `D`,
+and let `q : C -> D` be the recorded-name readout. Keep the same observed
+cells and row-first gauge, and use corresponding class gauges `c0` and
+`q(c0)`. A grouped coefficient vector `(r,s,e)` pulls back to the raw vector
+`(r,s,e o q)`. Every grouped observed equation and both gauges then become
+exactly an original observed equation or gauge. This linear pullback uses no
+unseen target, surjectivity or cardinality premise.
+
+If a query matches raw class `c` in a complete basis of the original kernel,
+its signed action vanishes on every original-kernel vector. Apply that fact
+to each pulled-back grouped vector. The query therefore matches `q(c)` in
+any complete grouped basis. Searching the mapped bank cannot refuse a query
+accepted by the original bank. This is inclusion of algebraic match coverage;
+it is independent of the particular complete bases. The strict three-corner
+example of CM35 shows that the inclusion can be proper. Native construction
+caps or observed-group incompatibility checks can still refuse a candidate:
+coverage inclusion does not assert that every proposed native model exists.
+
+This algebraic ordering alone does not identify the unknown target. Correct
+answers on the enlarged domain still require CM35's additive realizability,
+observed fit, globally compatible unknown code, surjective declared readout
+and equal code/answer cardinality. It does not justify replacing arbitrary
+earlier models with unrelated representations, nor treating a fixed fallback
+as a certified match.
+
+The actual complex observed-input refinement exposes a distinct limitation
+of training-loss selection. CM33's normalized ordinary-CE step updates an
+observed row only from that row, its raw label, its batch membership and the
+actual batch size. Two tables with the same initial observed rows therefore
+retain identical observed rows through every common finite schedule, even
+when their latent types, defaults and Fourier blocks differ. Unitarity turns
+this table identity into equality of the actual real/imaginary forward logits.
+Starting both heads at their recorded raw margin24 tables yields identical
+observed logits and full-vocabulary empirical CE. This includes full batches,
+unequal minibatches and zero updates. It does not assert bitwise equality of
+native floating-point results; the native comparison uses a declared tolerance.
+
+In the three-corner example, give the ungrouped search the explicit fallback
+class1 when it refuses the missing corner. Give the grouped search the
+representative of its accepted answer0. Both actual bounded complex heads use
+the same three original raw observations and have equal empirical CE at every
+common finite schedule. Nevertheless their fixed unseen defaults prefer
+different declared answers. The grouped answer agrees with both compatible
+raw completions, while the ungrouped fallback is wrong. This is an exact-real
+model-class witness with a stated fallback, not a claim about the native
+first-class fallback on every task. The existing64N coefficient bounds apply
+to both actual heads, with their respective finite state counts.
+
+Consequently an earlier-first CE tie rule may retain a less informative
+completion. Coverage inclusion can motivate an explicitly declared structural
+prior in a future protocol; it does not change the frozen parent-first260
+comparison or certify a new benchmark score. The ongoing252/245 runs and all
+frozen sources remain unchanged. A prospective native tie policy must retain
+the original comparison, verify its own certificate/data bindings and report
+all35 primary outcomes, standalone candidates and every regression.
+
+Lean: `CoupledMoments/ReadoutKernel/{Coverage,LossTies,TieWitness}`. The proofs
+use the actual observed kernels, matrix heads and normalized CE updates;
+unknown-target premises remain explicit and no new axiom or unproved input is
+introduced.
