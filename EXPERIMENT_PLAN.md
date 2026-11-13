@@ -15,8 +15,12 @@ cap. Task #216 now freezes the same policy for the nine original pair tasks
 in `experiments/convex_stress_density/cohort`, retaining the earlier CM15
 proposal and every exact/interval/refinement failure. It seals training-only
 selection before split metrics and provides independent full replay under a
-64 GiB cap. No original-data result has been read at this freeze; the fixture
-result does not establish full-suite success or general unseen-label recovery.
+64 GiB cap. The frozen original run now completes and replays all nine tasks:
+3/9 pass all splits, with no improvement over the earlier decoded proposal.
+All 54 exact attempts refuse, all 162 interval attempts hit their caps, and
+division's earlier constructor refuses a missing input axis. Peak RSS is
+47,000 KiB. Retain all failures and the full35/modes/transformer scope; investigate
+feature balancing and uncovered axes next, with Lean before model changes.
 
 ## Convex density tolerances (2026-11-13)
 

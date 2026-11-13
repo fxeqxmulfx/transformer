@@ -29,14 +29,61 @@ replay seals for scored outcomes. Failed tasks retain all three mode references.
 This is one forward construction per task. Its three mode references are
 explicitly not three gradient training runs. Integration with the original 105
 choices, all 35 short/long tasks and the conventional transformer waits for
-complete verified parent evidence. No original result has been read at this
-protocol freeze. CM23 proves local descent, not successful global discovery or
-general unseen-label identification.
+complete verified parent evidence. The protocol was committed before original
+discovery. CM23 proves local descent, not successful global discovery or general
+unseen-label identification.
 
 Four native harness tests use synthetic inputs, including success, total
 proposal refusal, altered states with recomputed digests, invalid inventory,
 oversized files, overwrite refusal and all-failed summary coverage. They do not
 run original-data discovery. The parent library has 26 passing native checks.
+
+## Frozen original-v1 findings
+
+Producer `3311e13ce3d38123fc231f3d111f3cc7ee3fddc0`, source fingerprint
+`b624c37ce670f33a2c65566ffd7c039f8c147b044bced4ae9684a9f4eb9e39b4`, and binary
+`b804e357ec6553861de0a2e754494fe8e1db92124ef33607a853c3ceb0115257` produced
+all nine terminal outcomes. Every task replays, including division's explicit
+ineligible outcome; no process or replay failure occurred. The summary digest is
+`b19e294991bb6cfe7f1fb5120dc48d10ac66d0cb16197cee3acfa699dcb07739`.
+
+| Original task | Selected observed errors | Primary sequence accuracy | Outcome |
+| --- | ---: | ---: | --- |
+| Permuted addition | 0 / 4,704 | 100% | All splits pass |
+| Addition | 0 / 4,704 | 100% | All splits pass |
+| Subtraction | 0 / 4,704 | 100% | All splits pass |
+| Division | No eligible model | — | Refusal retained |
+| Multiplication | 1,198 / 4,704 | 72.60% | Below threshold |
+| Sum-cube | 2,523 / 4,704 | 42.91% | Below threshold |
+| Sum-power-four | 3,758 / 4,704 | 7.40% | Below threshold |
+| Absolute difference | 4,061 / 4,704 | 3.78% | Below threshold |
+| Blind absolute difference | 2,500 / 4,704 | 41.34% | Below threshold |
+
+The result is **3/9 primary and all-split passes, with no improvement over the
+earlier decoded proposal**. All eight selected models are `prior-0`; their
+refined copies tie. The complete reports retain 54 exact slots, 162 interval
+slots and 224 refinement slots. Every exact attempt refuses before an update;
+every interval attempt reaches its 4,096-iteration cap, totaling 663,552
+iterations. Eight seeds reach the refiner; twelve additional assignment solves
+produce no improvement. All sixteen admitted vertices receive raw latent/CE
+audits and original metrics. Capped iterates do not certify mathematical
+infeasibility of the interval domain.
+
+Division's sixteen earlier trials fail at the power/phase-clock step. Its
+training observations cover all 97 columns but only 96 rows, exposing a missing
+axis that the current full-phase clock refuses. Across the other tasks the
+estimated feature rows also have large interval violations; fixing a small
+masked fixture did not establish a usable feature model at this observation
+scale. The next model work must address feature balancing and uncovered axes
+while retaining these negative outcomes. Successful numerical admission would
+still need observed-label refinement and separate held-out evaluation.
+
+Peak RSS over construction and replay is 47,000 KiB (about 46 MiB), under the
+64 GiB cap. Each construction takes about 1.6–7.9 seconds with one BLAS thread.
+All 27 mode references remain, explicitly as references to the nine forward
+constructions. The all35 comparison and conventional transformer result remain
+pending; the better existing decoder-bank results are not replaced by this
+standalone cohort.
 
 From the repository root:
 

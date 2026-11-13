@@ -225,8 +225,11 @@ The separate [`cohort`](cohort) harness freezes this measured policy on nine
 original pair tasks, including division and the blind long case. It retains
 the earlier CM15 proposal and all new attempts, seals observed-only selection
 before metrics, and independently replays every scored outcome under 64 GiB.
-Its four synthetic harness tests precede original-data construction; no new
-original-task accuracy is claimed at this protocol freeze.
+Its four synthetic harness tests preceded original discovery. All nine original
+tasks now replay: 3/9 pass all splits, with no improvement over the earlier
+decoder. All 54 exact and 162 interval attempts remain failed/capped, and
+division has no eligible candidate. Peak RSS is 47,000 KiB. The cohort README
+records every outcome; full35 and transformer integration remain pending.
 
 From this directory, using native tools only:
 
