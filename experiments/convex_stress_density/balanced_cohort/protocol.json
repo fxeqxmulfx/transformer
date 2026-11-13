@@ -1,0 +1,128 @@
+{
+  "version": "density-balanced-original-v1",
+  "proof_commits": [
+    "1885957b",
+    "a4388412",
+    "0bb5496f",
+    "75ca9276"
+  ],
+  "shared_fingerprint": "260d22864ac06e44f945791ac766340a96254b917dffca5a713ea396ddc5a6ba",
+  "tasks": [
+    "arithmetic-perm-add",
+    "arithmetic-add",
+    "arithmetic-sub",
+    "arithmetic-div",
+    "arithmetic-mul",
+    "arithmetic-sum-cube",
+    "arithmetic-sum-pow4",
+    "arithmetic-abs-diff",
+    "arithmetic-abs-diff-blind"
+  ],
+  "reference_modes": [
+    "full_batch",
+    "minibatch",
+    "forward_only"
+  ],
+  "exact": {
+    "code_trials": 2,
+    "ranks": [
+      1,
+      2,
+      3
+    ],
+    "seed": 73,
+    "extraction": {
+      "iterations": 256,
+      "rho": 1.0,
+      "feasibility_tolerance": 1E-8,
+      "gap_tolerance": 1E-8,
+      "rank_cutoff": 1E-11,
+      "purity_tolerance": 0.000001
+    },
+    "total_iterations": 2048,
+    "model_audits": 4
+  },
+  "interval": {
+    "variants": [
+      {
+        "model_tolerance": 0.03,
+        "iterations": 4096,
+        "feasibility_tolerance": 1E-8,
+        "gap_tolerance": 1E-8,
+        "step_tolerance": 1E-8
+      },
+      {
+        "model_tolerance": 0.1,
+        "iterations": 4096,
+        "feasibility_tolerance": 1E-8,
+        "gap_tolerance": 1E-8,
+        "step_tolerance": 1E-8
+      },
+      {
+        "model_tolerance": 0.3,
+        "iterations": 4096,
+        "feasibility_tolerance": 1E-8,
+        "gap_tolerance": 1E-8,
+        "step_tolerance": 1E-8
+      }
+    ],
+    "total_iterations": 73728,
+    "model_audits": 8
+  },
+  "refinement": {
+    "rounds": 24,
+    "seeds": 16,
+    "assignments": 256
+  },
+  "earlier_decode": {
+    "code_trials": 16,
+    "power_steps": 64,
+    "refinement_steps": 24,
+    "seed": 73
+  },
+  "memory_limit_bytes": 68719476736,
+  "buffer_preflight_bytes": 34359738368,
+  "artifact_file_limit_bytes": 536870912,
+  "parallel_numerical_jobs": 1,
+  "blas_threads": 1,
+  "minimum_disk_reserve_bytes": 17179869184,
+  "domain": "CM15 convex prediction hull of decoded latent tables, with latent Fourier operator/nuclear bounds N and original-vocabulary ordinary CE at unit logit scale. Discrete proposals and refinement are heuristic search in this hull. CM21-23 certify conditional geometry and local assignment/decoder steps, not subspace discovery, global search success or missing labels. CM24 guarantees a uniform feasible density after actual row balancing, not subspace discovery or objective purity. The native permutation family retains its proved constant-row capacity limitation.",
+  "construction": "Use only original training cell/label observations. Rebuild the unchanged earlier CM15 proposal, then the exact and interval policies measured on fixtures, then certified local refinement. No task name or arithmetic answer rule enters these constructors. Retain every exact/interval/refinement slot, cap and refusal, and the full earlier proposal including failures and costs. The policy is identical for all tasks and is frozen before original discovery. Then retain the complete CM23 report and balance each of its six subspace feature matrices. Refuse near-zero observed feature rows; complete near-zero unobserved rows with ones. Audit the uniform PSD trace-one density. Use its kernel column as an empirical seed and solve the three declared interval variants. Use the first two observed row indices as anchors. Order only observed phase coordinates and fill missing ranks in index order. Apply the same certified CM23 refinement with separate caps. Right phases always use the same observed-label sketch. No re-centering or re-orthogonalization after row balancing.",
+  "selection": "Finish every candidate before held-out metrics. Preserve prior, exact, interval and refined candidates; minimum observed CE with earlier-first ties within 1e-12. Write the selected reference and artifact digests before evaluating every admitted candidate on every original split. Original success threshold is 99 percent sequence accuracy on the primary split and separately every held-out split; report all failures and absent candidates. All CM23 candidates precede balanced candidates on CE ties. Each balanced seed precedes its refinement.",
+  "replay": "Rebuild original datasets and check every frozen fingerprint. Recompute the earlier proposal and complete exact/interval/refinement reports, integer assignment duals, decoder counts and chosen candidate. Independently evaluate saved candidate tables with all-frequency raw DFT/SVD and ordinary CE and repeat every original split metric. Seals bind input, prior proposal, full report, selection and result; recomputed digests alone do not bypass replay. Also recompute measured row energies, scaling, missing-axis masks and completed permutations, uniform-density raw readings, every new interval state and all refinement certificates/work.",
+  "comparison": "Charge this forward construction once per task. Its candidate may later be referenced in full_batch, minibatch and forward_only comparisons; those references are not three optimizer runs. Integration waits for complete verified parents and preserves all original105 choices, all35 short/long tasks, every earlier failure and the conventional transformer comparison. Standalone output is not a full35 result.",
+  "resources": "Native Rust and shell only; freeze committed source, complete source fingerprint and producer binary before prepare. Serial cases with one BLAS thread, a 64 GiB address-space cap and 16 GiB disk reserve. No overwrite or resume of started cells. Preserve partial artifacts and record process failures while continuing remaining planned tasks. Generated artifacts remain ignored in root runs.",
+  "earlier_original_producer": "3311e13c",
+  "balanced": {
+    "variants": [
+      {
+        "model_tolerance": 0,
+        "iterations": 4096,
+        "feasibility_tolerance": 1E-8,
+        "gap_tolerance": 1E-8,
+        "step_tolerance": 1E-8
+      },
+      {
+        "model_tolerance": 0.1,
+        "iterations": 4096,
+        "feasibility_tolerance": 1E-8,
+        "gap_tolerance": 1E-8,
+        "step_tolerance": 1E-8
+      },
+      {
+        "model_tolerance": 0.3,
+        "iterations": 4096,
+        "feasibility_tolerance": 1E-8,
+        "gap_tolerance": 1E-8,
+        "step_tolerance": 1E-8
+      }
+    ],
+    "total_iterations": 73728,
+    "model_audits": 24,
+    "refinement": {
+      "rounds": 24,
+      "seeds": 16,
+      "assignments": 256
+    }
+  }
+}

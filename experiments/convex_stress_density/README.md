@@ -1,5 +1,41 @@
 # Convex density extraction from categorical subspaces
 
+## Observable row balancing and missing axes
+
+CM24 / Lean `75ca9276` proves that radial normalization of actual nonzero
+feature rows admits the explicit uniform PSD trace-one density. Arbitrary
+completion outside observed phase axes preserves ordinary observed CE and
+the same latent spectral budgets. A separate theorem exposes the native
+permutation family's constant-row capacity limitation. These statements do
+not recover a hidden subspace or identify missing labels.
+
+`feature_balance.rs` records measured energies, scales, missing rows and the
+uniform matrix, independently auditing actual matrix readings and its spectrum.
+It refuses near-zero observed rows and explicitly fills unobserved ones with
+ones. The partial phase clock orders observed coordinates and assigns unused
+ranks to missing entries. All original features, masks and returned permutations
+are retained. Balancing does not preserve column centering or orthogonality;
+the general interval core accepts these features without assuming either.
+
+`balanced_search` preserves the complete CM21–23 report, including every
+failed attempt and supplied earlier candidate. It proposes the uniform density
+without an objective-optimality claim, adds declared interval variants, then
+uses the independently certified CM23 refinements. Full input/state/work replay
+and raw latent DFT/SVD/CE audits check new candidates. Five additional native
+tests cover genuine unequal/zero feature rows, missing-axis phase collisions,
+refused and capped slots, old CE ties, label renaming, tampering and replay.
+
+On the existing 113-observation masked fixture, the balanced rank-one uniform
+candidate already fits every observed and withheld cell; higher-rank candidates
+can still be wrong. The retained earlier correct model wins the CE tie. Under
+the smaller test policy, nine new seeds use 22 certified assignments and
+7,458 interval iterations. This is fixture evidence. The original-data policy
+and complete native replay harness are separately specified in
+[`balanced_cohort`](balanced_cohort/README.md); the previous original3/9 result
+remains until the frozen follow-up has run. All35/modes/transformer scope remains.
+
+## Earlier extraction and refinement
+
 Can the convex lift proved in CM21 separate Fourier modes when a supplied
 singular subspace is an unknown rotation of the true mode basis?
 

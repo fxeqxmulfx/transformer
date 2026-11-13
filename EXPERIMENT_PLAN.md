@@ -10,10 +10,14 @@ unobserved phase-axis entries preserves ordinary observed CE and the same
 decoded spectral hull. A separate Lean obstruction shows that a surjective
 phase axis and a constant opposite row force the entire decoded table to be
 constant. The native permutation proposal family therefore has a capacity
-limit beyond its numerical feature problem. Implement bounded balanced and
-missing-axis proposals first, preserving all prior candidates/failures, then
-address the capacity restriction with a generic categorical construction.
-Freeze tested source before original data. Full35/modes/transformer success
+limit beyond its numerical feature problem. The bounded Rust balanced and
+missing-axis proposals now retain all prior candidates/failures, raw matrix
+and latent audits, and certified refinement states. Five additional native
+tests pass; the masked fixture has a correct rank-one uniform candidate while
+other candidates remain wrong. The separate balanced-cohort harness fixes the
+unchanged original tasks before new discovery. Address the capacity restriction
+next in task219 with a generic categorical construction. Freeze tested source
+before original data. Full35/modes/transformer success
 remains open; task216's original result stays3/9, not the toy fixture result.
 
 ## Observed-label refinement (2026-11-13)
