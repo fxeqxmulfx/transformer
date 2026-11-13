@@ -38,10 +38,10 @@ These floating-point diagnostics are **not** interval or Lean certificates.
 | Centered, re-orthonormalized noisy subspace | Distinguish normalization from the exact-subspace hypothesis | The affine equalities are inconsistent; the extractor explicitly refuses. |
 | Capped/invalid input and modified artifacts | Check budgets, replay and refusal paths | Failures remain explicit; changing the matrix, dual, input, trace or audit is rejected. |
 
-Eighteen native tests cover these cases, the complex eigensolver/coordinate
+Twenty-one native tests cover these cases, the complex eigensolver/coordinate
 conventions, categorical proposal/comparison and interval paths. Eight cover
-the exact extractor, four cover the proposal path and six cover the interval
-solver. The standalone `fixtures-v1`
+the exact extractor, four cover the exact proposal path, six cover the interval
+solver and three cover interval proposals and retained comparisons. The standalone `fixtures-v1`
 run accepts the rotated case after
 46 and 41 iterations; its final diagonal error is `4.11e-9`. The real-tie
 case takes 3 and 3 iterations with diagonal error `1.11e-15`. Both artifacts
@@ -99,7 +99,7 @@ the mass outside the best mode is at most
 These are conditional bounds, not a certificate that observed labels provide
 the reference subspace or its error. Approximate real-score ties remain
 uncovered. The exact extractor remains available alongside the new interval
-solver; categorical proposals still use the exact extractor.
+solver; the interval proposal report includes the entire exact search.
 
 `interval.rs` implements the CM22 domain with a separate `model_tolerance`.
 A bounded primal-dual proximal update couples the normalized diagonal-reading
@@ -125,8 +125,6 @@ re-orthonormalized noisy three-mode test is refused by the exact extractor and
 accepted with a declared `0.1` interval; the raw interval violation is below
 `1e-8`. A complex rotated and row-permuted exact three-mode test also recovers
 an actual character within `1e-6`. These are controlled feature fixtures.
-Connecting these outcomes to categorical sketches and testing the masked
-label fixture is next.
 
 The standalone `interval-fixtures-v1` run accepts the exact case in 63
 iterations and the mixed real-tie case in 167. The scaled feature fixture is
@@ -135,6 +133,42 @@ iteration with model tolerance `0.21`. All four artifacts pass raw audits and
 replay; peak RSS is 6,748 KiB. Small negative apparent dual gaps are recorded
 alongside the primal interval violations, and acceptance uses the absolute
 gap. They are not presented as exact feasible optimality certificates.
+
+`interval_search.rs` applies declared tolerances `0.03,0.1,0.3` to each exact
+search subspace, retaining all earlier exact proposals and all new attempts.
+It reconstructs the identical original categorical sketch for right-side
+phases, uses the same empirical decoder and raw latent DFT/SVD/CE audits,
+and scores candidates by observed CE. The default caps are 4,096 iterations
+per attempt, 73,728 additional iterations globally and eight model audits.
+Construction work is recorded separately for exact and interval proposals;
+verification repeats that work and is included in the measured process time.
+All supplied earlier decoded models remain in `compare`, with earlier-first
+CE ties and full replay. These comparisons still cover supplied decoded
+vertices, not the full35 collection of other model families.
+
+On the masked fixture, the first 65,536-iteration global budget spent its
+allowance before the final two slots; all 18 slots and their refusals remain
+in `interval-sketches-v1`. A separate diagnostic restricted tolerance to
+`0.3`, with 16,384 iterations per slot and a 98,304 global cap. It found a
+later candidate in 1,189 iterations. Its kernel density was mixed, with
+purity error `0.379`, and its decoded answers had 53/113 observed errors and
+6/8 hidden errors. The errors on hidden cells are evaluated after selection;
+only observed feasibility diagnostics motivated the additional solver work.
+
+The revised 73,728 global budget covers all 18 masked-fixture slots, using
+70,821 iterations. It returns that same poor candidate, with observed CE
+`2.012067`; the earlier correct decoder has CE `1.543040` and stays selected.
+The complete fixture retains its exact successful candidate, using 19,529
+additional interval iterations. `interval-sketches-v2` preserves both complete
+reports, raw audits and comparisons; the earlier reports and longer diagnostic
+still replay. Peak RSS for both revised fixtures with verification is
+51,812 KiB under the 64 GiB cap. No benchmark improvement is established.
+
+This fixes a numerical-domain obstruction and budget starvation, but does
+not identify the correct phases from masked labels. The accepted bad candidate
+passes the latent flat-spectrum audit, illustrating the remaining limitation.
+Observed-label agreement must guide phase/decoder recovery more directly;
+the current earlier candidate is retained while that is investigated.
 
 From this directory, using native tools only:
 
@@ -150,6 +184,8 @@ prlimit --as=68719476736:68719476736 -- target/release/examples/sketches runs/sk
 prlimit --as=68719476736:68719476736 -- target/release/convex-stress-density replay-proposal runs/sketches-v1/masked.input.json runs/sketches-v1/masked.proposal.json
 prlimit --as=68719476736:68719476736 -- target/release/examples/intervals runs/interval-fixtures-v1
 prlimit --as=68719476736:68719476736 -- target/release/convex-stress-density replay-interval runs/interval-fixtures-v1/perturbed_interval.input.json runs/interval-fixtures-v1/perturbed_interval.artifact.json
+prlimit --as=68719476736:68719476736 -- target/release/examples/interval_sketches runs/sketches-v1 runs/interval-sketches-v2
+prlimit --as=68719476736:68719476736 -- target/release/convex-stress-density replay-interval-proposal runs/interval-sketches-v2/masked.input.json runs/interval-sketches-v2/masked.proposal.json
 ```
 
 `extract INPUT.json NEW_ARTIFACT.json` also accepts externally supplied feature
@@ -164,3 +200,13 @@ separately frozen protocol, source, binary, input fingerprints and replay.
 `interval INPUT.json NEW_ARTIFACT.json` and `replay-interval` provide the
 corresponding interval interface, with the same no-overwrite and file-size
 bounds. `examples/intervals.rs` specifies its input schema.
+`propose-interval` and `replay-interval-proposal` use the input schema saved by
+`examples/interval_sketches.rs`. Reproduce the earlier budget and the longer
+diagnostic without changing code, using fresh destinations:
+
+```sh
+jq '.policy.total_iterations=65536' runs/interval-sketches-v2/masked.input.json > runs/masked-budget65536.input.json
+prlimit --as=68719476736:68719476736 -- target/release/convex-stress-density propose-interval runs/masked-budget65536.input.json runs/masked-budget65536.proposal.json
+jq '.policy.variants=[.policy.variants[2] | .iterations=16384] | .policy.total_iterations=98304' runs/interval-sketches-v2/masked.input.json > runs/masked-longer.input.json
+prlimit --as=68719476736:68719476736 -- target/release/convex-stress-density propose-interval runs/masked-longer.input.json runs/masked-longer.proposal.json
+```

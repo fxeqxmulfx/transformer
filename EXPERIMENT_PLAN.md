@@ -11,8 +11,14 @@ core with a separate model tolerance, raw support-box dual audits and complete
 replay. Its six checks retain mixed real ties and distinguish genuine feature
 perturbation from numerical convergence tolerances. A centered, normalized
 noisy subspace refused by exact constraints is admitted at model tolerance
-`0.1`. Connect it to categorical
-sketch proposals next, retaining the exact solver and all earlier candidates.
+`0.1`. Its categorical bridge retains all exact and interval proposals and
+earlier decoded candidates. The masked fixture's initial 65,536-iteration cap
+skipped two slots; a 73,728 cap covers all 18, admits one candidate, but that
+candidate has 53/113 observed errors and 6/8 hidden errors. The earlier correct
+decoder stays selected by observed CE. All 21 native checks and full raw/state
+replay pass; neither numerical convergence nor the latent flat-spectrum audit
+identifies the missing answers. Investigate observed-label-guided phase and
+decoder recovery next, preserving the failed proposals and original scope.
 Approximate real ties and unseen-label identification remain limitations.
 
 ## Convex matrix extraction from a supplied subspace (2026-11-12)
@@ -32,7 +38,7 @@ to the same original sketch, audits latent spectra and ordinary CE, preserves
 the successful earlier CM15 candidate and selects it by observed CE. Twelve
 native checks include renaming, replay, tampering and full work accounting.
 This measured masked-subspace failure motivated the Lean-first quantitative
-CM22 bounds above. A relaxed native variant remains to be implemented.
+CM22 bounds and the measured interval follow-up above.
 
 Task #211 / CM21 proves the PSD trace-one lift suggested by CM20. Constant
 diagonal readings force a diagonal hidden Fourier density when frequency

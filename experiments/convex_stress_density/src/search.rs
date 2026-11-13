@@ -108,7 +108,7 @@ pub fn validate(input: &Input) -> Result<Vec<Sample>> {
     Ok(samples)
 }
 
-fn sketch(
+pub(crate) fn sketch(
     n: usize,
     vocab: usize,
     samples: &[Sample],
@@ -149,7 +149,7 @@ fn left_gram(s: &[C], n: usize) -> Vec<C> {
     }
     out
 }
-fn clock(x: &[C]) -> Option<Vec<usize>> {
+pub(crate) fn clock(x: &[C]) -> Option<Vec<usize>> {
     if x.iter()
         .any(|z| !z.re.is_finite() || !z.im.is_finite() || z.norm() < 1e-12)
     {
@@ -168,7 +168,7 @@ fn clock(x: &[C]) -> Option<Vec<usize>> {
     Some(ranks)
 }
 
-fn decoder(
+pub(crate) fn decoder(
     n: usize,
     vocab: usize,
     samples: &[Sample],

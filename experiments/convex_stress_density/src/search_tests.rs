@@ -6,7 +6,7 @@ use crate::{
     solver::Options,
 };
 
-fn fixture(masked: bool) -> (Model, Input) {
+pub(crate) fn fixture(masked: bool) -> (Model, Input) {
     let n = 11;
     let (mut rows, mut columns) = ((0..n).collect::<Vec<_>>(), (0..n).collect::<Vec<_>>());
     let mut rng = Random::new(381);

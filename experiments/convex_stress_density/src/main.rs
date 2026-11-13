@@ -1,4 +1,4 @@
-use convex_stress_density::{Result, artifact, interval, interval_audit, search};
+use convex_stress_density::{Result, artifact, interval, interval_audit, interval_search, search};
 use std::{
     fs::{self, OpenOptions},
     io::Write,
@@ -16,10 +16,38 @@ fn main() -> Result<()> {
     if args.len() != 3
         || !matches!(
             args[0].as_str(),
-            "extract" | "replay" | "propose" | "replay-proposal" | "interval" | "replay-interval"
+            "extract"
+                | "replay"
+                | "propose"
+                | "replay-proposal"
+                | "interval"
+                | "replay-interval"
+                | "propose-interval"
+                | "replay-interval-proposal"
         )
     {
-        return Err("usage: convex-stress-density extract|replay|propose|replay-proposal|interval|replay-interval INPUT.json ARTIFACT.json".into());
+        return Err("usage: convex-stress-density extract|replay|propose|replay-proposal|interval|replay-interval|propose-interval|replay-interval-proposal INPUT.json ARTIFACT.json".into());
+    }
+    if args[0] == "propose-interval" || args[0] == "replay-interval-proposal" {
+        let input: interval_search::Input = read(&args[1], 4 * 1024 * 1024)?;
+        if args[0] == "replay-interval-proposal" {
+            let saved = read(&args[2], 256 * 1024 * 1024)?;
+            interval_search::replay(&input, &saved)?;
+            println!("exact and interval proposals, endpoints and raw audits replayed");
+        } else {
+            if Path::new(&args[2]).exists() {
+                return Err("interval proposal destination already exists".into());
+            }
+            let out = interval_search::propose(input)?;
+            write_new(&args[2], &out, 256 * 1024 * 1024)?;
+            println!(
+                "attempts={} selected={:?} iterations={}",
+                out.attempts.len(),
+                out.selected,
+                out.cost.iterations_charged
+            );
+        }
+        return Ok(());
     }
     if args[0] == "interval" || args[0] == "replay-interval" {
         let input: interval::Input = read(&args[1], 4 * 1024 * 1024)?;
