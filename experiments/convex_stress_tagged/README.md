@@ -66,8 +66,11 @@ and its three-state interior from observations alone; all withheld outputs
 are correct. Its support threshold is explicitly lowered to three for this
 small test. Output-class renaming preserves discovery. A zero sketch and
 uncovered states remain refused; partial constant evidence has no uniqueness
-claim. Original-data evaluation still requires its own tested harness and
-producer freeze in task219. The balanced parent still passes3/9.
+claim. The separate [`cohort`](cohort/README.md) harness now passes four checks:
+unchanged protocols/data, complete fixture replay, earlier-candidate CE ties,
+rehashing of altered parent/new ledgers, refused inputs and all nine process
+failures with27 retained mode references. Its tested producer must be frozen
+before original discovery. The balanced parent still passes3/9.
 All35 short/long tasks, full batch, minibatch, forward-only and the conventional
 transformer comparison remain required; fixture success is no original score.
 

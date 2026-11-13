@@ -1,0 +1,57 @@
+//! Bind every production dependency, the frozen data stack and the launch recipe.
+use super::*;
+pub fn fingerprint() -> String {
+    let parent = convex_stress_decode::cohort::fingerprint();
+    let mut bytes = vec![];
+    for source in [
+        include_bytes!("../main.rs").as_slice(),
+        include_bytes!("mod.rs"),
+        include_bytes!("fingerprint.rs"),
+        include_bytes!("run.rs"),
+        include_bytes!("summary.rs"),
+        include_bytes!("../../Cargo.toml"),
+        include_bytes!("../../Cargo.lock"),
+        include_bytes!("../../run_cohort.sh"),
+        include_bytes!("../../../Cargo.toml"),
+        include_bytes!("../../../Cargo.lock"),
+        include_bytes!("../../../src/lib.rs"),
+        include_bytes!("../../../src/model.rs"),
+        include_bytes!("../../../src/views.rs"),
+        include_bytes!("../../../src/sketch.rs"),
+        include_bytes!("../../../src/refinement/mod.rs"),
+        include_bytes!("../../../src/refinement/run.rs"),
+        include_bytes!("../../../src/refinement/audit.rs"),
+        include_bytes!("../../../src/refinement/certificate.rs"),
+        include_bytes!("../../../src/search/mod.rs"),
+        include_bytes!("../../../src/search/run.rs"),
+        include_bytes!("../../../../convex_stress_density/Cargo.toml"),
+        include_bytes!("../../../../convex_stress_density/Cargo.lock"),
+        include_bytes!("../../../../convex_stress_density/src/lib.rs"),
+        include_bytes!("../../../../convex_stress_density/src/main.rs"),
+        include_bytes!("../../../../convex_stress_density/src/affine.rs"),
+        include_bytes!("../../../../convex_stress_density/src/artifact.rs"),
+        include_bytes!("../../../../convex_stress_density/src/audit.rs"),
+        include_bytes!("../../../../convex_stress_density/src/comparison.rs"),
+        include_bytes!("../../../../convex_stress_density/src/interval.rs"),
+        include_bytes!("../../../../convex_stress_density/src/interval_audit.rs"),
+        include_bytes!("../../../../convex_stress_density/src/interval_search.rs"),
+        include_bytes!("../../../../convex_stress_density/src/matrix.rs"),
+        include_bytes!("../../../../convex_stress_density/src/search.rs"),
+        include_bytes!("../../../../convex_stress_density/src/solver.rs"),
+        include_bytes!("../../../../convex_stress_density/src/assignment_certificate.rs"),
+        include_bytes!("../../../../convex_stress_density/src/refinement.rs"),
+        include_bytes!("../../../../convex_stress_density/src/refinement_audit.rs"),
+        include_bytes!("../../../../convex_stress_density/src/refinement_search.rs"),
+        include_bytes!("../../../../convex_stress_density/src/feature_balance.rs"),
+        include_bytes!("../../../../convex_stress_density/src/balanced_search/mod.rs"),
+        include_bytes!("../../../../convex_stress_density/src/balanced_search/retained.rs"),
+        include_bytes!("../../../../convex_stress_density/src/balanced_search/run.rs"),
+        SUITE.as_bytes(),
+        PROTOCOL.as_bytes(),
+        parent.as_bytes(),
+    ] {
+        bytes.extend_from_slice(&(source.len() as u64).to_le_bytes());
+        bytes.extend_from_slice(source);
+    }
+    hash(&bytes)
+}
