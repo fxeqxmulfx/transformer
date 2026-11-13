@@ -41,8 +41,12 @@ actual complex Fourier features and a convex full-vocabulary CE head in all
 three modes. Independent complex derivatives, finite differences, trajectory
 and refusal replay, unseen masks and the candidate-order obstruction retain
 the Lean boundary. A full-batch cap preserves available mini/forward models.
-The complete original adapter remains in progress. The running quotient
-protocol remains unchanged.
+The complete original adapter now passes eight synthetic tests, preserving
+both parent arms, all35 tasks, transformer/depth outcomes, process failures,
+actual greedy rollout and unknown-prefix masks. Original execution awaits
+task232's completed independent review and task234's approval; no fixture
+result is counted as a benchmark pass. The running quotient protocol remains
+unchanged.
 
 ## Recovered comparison queues (2026-11-13)
 

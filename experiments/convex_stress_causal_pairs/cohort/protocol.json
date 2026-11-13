@@ -1,0 +1,16 @@
+{
+  "version":"causal-pairs-original-v1",
+  "parent_source_fingerprint":"ca455d9c61b84c12e6cf86a5dcc4a3899195b5a5bada44b9a5f7e3e8a6d7abd1",
+  "parent_producer_commit":"49105730c6b86570119c36531df1457d7e353933",
+  "required_done_tasks":[232,233,234],
+  "memory_limit_bytes":68719476736,
+  "minimum_disk_reserve_bytes":17179869184,
+  "discovery":{"feature_cells":32000000,"visits":200000000,"attempts":250000,"states_per_query":512},
+  "training":[{"mode":"Full","updates":16,"batch":64,"learning_rate":1.0},{"mode":"Mini","updates":256,"batch":64,"learning_rate":0.1},{"mode":"Forward","updates":0,"batch":64,"learning_rate":1.0}],
+  "eligibility":"Construct a causal-context proposal only when at least one original supervised training prefix has length greater than two. Inspect only visible training-prefix lengths, without task identifiers, labels or held-out data. Retain all other tasks through both complete parent arms, with an explicit shape refusal. All eligible raw labels remain unchanged.",
+  "features":"Presence, count, length, lag, and latest completed successor at offsets one and two. Presence-first singles, then lag pairs by maximum lag, then all remaining unordered pairs. Fixed before originals. No task names or arithmetic answer features in discovery.",
+  "head":"Actual normalized complex Fourier code on each selected observed categorical dictionary plus one unknown state. Real and imaginary coefficients enter original-vocabulary logits. Per-class real-coordinate L1 radius is64 times total states. Ordinary full-vocabulary CE; numerical flatness is a capacity/basis audit, not identification of unseen answers.",
+  "selection":"Keep both complete parent initializer policies, all35 tasks and all105 choices per arm. Parent precedes the new mode-matched endpoint; replace only when observed raw CE improves by more than1e-12. No held-out metric, coverage or certificate tie-breaker. Seal references before evaluation.",
+  "evaluation":"Use unchanged original complete-split metrics and greedy rollout. Retain every constructed endpoint, mode refusal, unknown-prefix mask and cost. A process/evaluation failure preserves all parent choices and partial evidence. Limit each actual endpoint's metric forecast to2B scalar operations after selection; no dropping failed tasks from counts.",
+  "replay":"Regenerate original data, all discovery traces, actual complex states, every CE step and original metric. Retain and hash the complete reviewed quotient parent and its artifacts; re-run its frozen summary at preparation and final summary. Preserve all prior costs and failures, both initializers,336 depth outcomes and35 transformer endpoints. This is a conditional fixed-feature model and observed-CE selector, not a jointly convex discovery claim or matched-compute comparison."
+}

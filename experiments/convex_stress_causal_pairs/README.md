@@ -13,7 +13,8 @@ structural prior; consistency and flatness alone do not justify it.
 
 The native component implements categorical search, actual complex features
 and full-batch, minibatch and forward-only readouts. No original task is
-evaluated here; the complete comparison adapter remains in progress.
+evaluated here; the [complete comparison adapter](cohort/README.md) passes
+eight synthetic checks and awaits completion/review of its quotient parent.
 Ordinary raw labels remain unchanged. An observation contains a
 visible token prefix and its supervised label; its final token is the query.
 There is no task identifier or target formula in the extractor or request.
@@ -69,7 +70,7 @@ and per-mode training have explicit work forecasts; an audit or training
 forecast above two billion scalar operations is retained as a refusal. These
 are declared estimates, not measured FLOP counts. Complete replay/serialization
 buffers are forecast before discovery, with a 56 GiB upper gate inside the
-64 GiB process limit. The source adapter will retain measured time and RSS.
+64 GiB process limit. The source adapter retains measured time and RSS.
 
 Fifteen native tests pass. The four-class Boolean-pair fixture eliminates every
 individual feature and learns a lag pair. The position-shift fixture selects
@@ -97,7 +98,8 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
 cargo clippy --locked --all-targets -- -D warnings
 ```
 
-Task234 still requires the complete parent-preserving evaluation adapter.
+The complete parent-preserving evaluation adapter is implemented. Task234
+remains open until its parent gate and independent review are satisfied.
 A separately reviewed and
 frozen original cohort will retain task232, both initializer arms, all 35 tasks,
 the transformer and every earlier cost and failure. No original pass is inferred
