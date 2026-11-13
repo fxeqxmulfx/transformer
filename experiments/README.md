@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_kernel`](convex_stress_kernel) | CM34 implementation; 20 native checks | Retains the complete observed kernel, verifies its basis independently, and trains bounded complex heads on actual vector states in full/mini/forward modes. Explicit alias, unknown-axis and resource refusals remain; no original benchmark score yet. |
 | [`convex_stress_quotient_coverage`](convex_stress_quotient_coverage) | All55 stages replayed; no admitted code | Including all4704 observed equations reduces Fibonacci's modulus97 nullity from five to three, but the one-direction rule still refuses it. Peak89MiB under64GiB; no new CE gradients, held-out evaluation or benchmark score. |
 | [`convex_stress_refined_compare`](convex_stress_refined_compare) | Seven native comparison checks; original execution pending | Imports immutable CM31/CM32 states into both complete 105-choice arms. Preserves the declared primary success rule, original pooling, all 35 tasks, transformer/depth, refusals and costs. No new benchmark score. |
 | [`convex_stress_refined_quotient`](convex_stress_refined_quotient) | Reviewed CM31/CM32 core; 14 component and seven adapter checks | Fixed block Fourier heads fit observed raw aliases and preserve latent defaults in full/mini/forward modes. A separate training stage binds every saved55-prime source outcome, original data, actual states, refusals and costs. Original follow-up remains separate; no new benchmark score. |

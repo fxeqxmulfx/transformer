@@ -217,6 +217,20 @@ decoding. Code discovery remains separate from convex head training. Native
 complete-basis construction and its storage/work checks are still required;
 no frozen numerical source, protocol or benchmark result changes here.
 
+Task250 implements CM34 in the separate `convex_stress_kernel` component.
+It retains all original equations and every kernel direction, independently
+checks original-system replay and basis completeness, and uses only the actual
+active-pair vector range for the bounded complex head. Unknown axes and
+unmatched states retain explicit masks. Twenty native tests cover multidimensional
+and sheared kernels, false scalar matches, raw aliases, actual complex forward
+and CE derivatives, all three modes, mutations and resource refusals. Full and
+mini updates preserve fixed defaults; forward computes no CE gradients.
+The prospective head forecast reserves replay and serialization buffers below
+56GiB with a hard64GiB process limit. The current original protocols and
+benchmark counts remain unchanged. Review this component before a separately
+frozen original adapter/cohort; runtime code matches still do not establish
+the unknown-target or readout hypotheses of CM34.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine
