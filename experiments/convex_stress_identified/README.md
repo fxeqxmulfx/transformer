@@ -63,10 +63,35 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
 cargo clippy --locked --all-targets -- -D warnings
 ```
 
-Next: bind it to the saved parent models and their raw spectral/CE audits, and
-declare a training-only selection rule before a separate original freeze. A
-strip view needs its constant-strip structural assumption stated explicitly;
-an interior certificate alone does not identify arbitrary strip answers.
+The adapter in `cohort/` now checks the complete saved modular report, including
+every admitted/refused view and all raw spectral/CE audits. Each certificate is
+bound to the actual observed class order, phase/code point, model hash, and every
+proposed full-table prediction. Lean `6a8fb49e` proves the fixed-view scope: a
+strip view also requires its constant-strip structural assumption. An interior
+certificate alone does not identify arbitrary strip answers. Unequal padding
+and missing axes are not given additional identification pins.
+
+The declared training-only rule compares ordinary CE first. Within a1e-12 tie,
+it prefers a verified fixed-view certificate, then preserves earlier order.
+This is an explicit structural inductive assumption for selecting a model,
+not an unconditional truth guarantee over the larger prediction hull. An
+earlier selected model with the same certified model hash keeps its priority.
+Five adapter tests cover repeated-phase constant strips, earlier missing-axis
+pins, CE ties and improvements, changed held-out scores, empty banks, budget
+refusals, and mutations of the actual model, matrix, scope and parent evidence.
+All five pass; these are additional to the ten core tests.
+
+```sh
+cd experiments/convex_stress_identified/cohort
+cargo fmt --check
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
+  prlimit --as=68719476736:68719476736 -- cargo test --locked
+cargo clippy --locked --all-targets -- -D warnings
+```
+
+Next: connect the adapter to the complete original cohort, freeze a separate
+producer, and evaluate the already declared rule. No original certification
+or changed original selection has been run by this adapter yet.
 The complete task222 parent and its equal-CE failures must remain immutable.
 All35 tasks, full batch, minibatch, forward-only, retained depth and the
 conventional transformer comparison remain in scope.
