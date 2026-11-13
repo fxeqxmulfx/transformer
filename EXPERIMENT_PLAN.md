@@ -337,6 +337,16 @@ opposite unseen pooled predictions. Frozen260 retains its parent-first tie
 rule; any structural priority must be a separately frozen, fully compared
 proposal. No native benchmark count follows from these exact-real proofs.
 
+Task263 / CM37 removes the matching-gauge restriction from that coverage
+result. The current native first-observation order already aligns the anchors;
+the stronger result also covers independently normalized certificates.
+Normalizing the actual pulled-back coefficient vector preserves every query
+action and satisfies the raw anchors, regardless of the grouped anchors.
+Complete matches and mapped-bank acceptances still transfer; with unchanged
+labels and bank order, both gauge choices return exactly the same class or
+refusal. Concrete examples change both anchors. No native selection rule,
+unknown-target premise, original run or benchmark count changes.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine

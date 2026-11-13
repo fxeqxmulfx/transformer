@@ -17554,3 +17554,43 @@ Lean: `CoupledMoments/ReadoutKernel/{Coverage,LossTies,TieWitness}`. The proofs
 use the actual observed kernels, matrix heads and normalized CE updates;
 unknown-target premises remain explicit and no new axiom or unproved input is
 introduced.
+
+## CM37. Independent gauge anchors preserve complete-kernel coverage
+
+CM36 initially compares corresponding raw and grouped gauges. The current
+native implementation keeps each dictionary in first-observation order, and
+grouping preserves that observation order. Its two anchors therefore already
+correspond. Independent valid certificates could instead choose different row
+or class anchors. The stronger coverage result below removes this convention;
+it is not a correction of an observed native gauge mismatch.
+
+Use CM34's existing normalization on the pulled-back coefficient vector. For
+any fitting raw vector `(r,s,e)`, raw anchors `i0,c0` give
+`r'(i)=r(i)-r(i0)`, `s'(j)=s(j)+r(i0)-e(c0)` and
+`e'(c)=e(c)-e(c0)`. Every signed query action `r(i)+s(j)-e(c)` is unchanged.
+Consequently all original observed equations survive, while the two raw
+anchor coefficients become zero. No unseen coordinate is fixed.
+
+Start with a grouped fitting vector having any row anchor and any grouped
+class anchor. Pull it back through the declared readout and normalize it to
+the raw anchors. This produces an element of the actual raw observed kernel,
+with the original grouped query action unchanged. A full raw-basis match
+vanishes on that normalized vector, so it also vanishes on every grouped
+fitting vector. Thus CM36's raw-to-grouped match and mapped-bank acceptance
+inclusions hold for independently chosen anchors.
+
+With the identity readout, applying the argument in both directions gives
+exact query-match equivalence between any two gauge choices and complete
+bases. Induction on the unchanged ordered class bank then proves equality
+of the actual search result, including refusal. Changing the bank's order
+is outside this claim. Concrete three-corner examples change both anchors,
+retain an observed match and preserve the raw missing-corner refusal.
+
+This removes a coordinate convention from the structural coverage result;
+it supplies no unknown-target identification or benchmark success. Native
+basis completeness, observed data, declared readout and actual model bindings
+still require their numerical checks. CM35's target-family premises are
+unchanged, as are the frozen parent-first comparison and all original runs.
+
+Lean: `CoupledMoments/ReadoutKernel/Gauges`, using CM34's actual normalization
+and CM36's explicit linear coefficient pullback.
