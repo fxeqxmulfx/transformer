@@ -1,8 +1,9 @@
 # Serial catalogue preparation
 
 This native component runs the complete fixed55-prime catalogue, one binding
-report at a time. It is the first part of task231. The original full35 parent
-comparison adapter is not implemented yet; no original cohort is evaluated.
+report at a time. It is the first part of task231. The training-score selector
+now retains both complete original parent arms; artifact/data/metric wiring
+for the original adapter remains unfinished. No original cohort is evaluated.
 
 Each stage retains its original request, discovery outcome, actual complex
 model, all three CE endpoints, audits and original-row certificates. Returned
@@ -27,6 +28,15 @@ and all53 refusals. Separate tests cover all55 returned policy errors,
 elimination caps, changed states after rehashing, removed stages, altered work,
 source/configuration changes, oversized files, and earlier CE ties regardless
 of certificates or held-out metadata.
+
+Three further tests exercise the parent selector, for eight tests in total.
+Each of the two initializer policies keeps its own105 choices across35 tasks
+and three modes. New offers use increasing prime order and replace that arm's
+parent only on a training-CE decrease greater than1e-12. The selector preserves
+missing models, checks336 retained/original depth slots and35 transformer
+endpoints, and rejects missing, duplicate, unknown or invalid score records.
+Held-out fields and certificate flags cannot affect its choices. These are
+synthetic parent tests; they do not validate original artifact bytes or metrics.
 
 ```sh
 cd experiments/convex_stress_quotient/cohort

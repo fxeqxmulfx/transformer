@@ -124,7 +124,9 @@ parent comparison and a separate source/binary/protocol freeze preserving
 all35 tasks, full/mini/forward and the conventional transformer.
 
 The separately tested `cohort/` component now streams all55 stages to saved
-reports and replays them independently. Its five tests retain two successful
+reports and replays them independently. Five catalogue tests retain two successful
 quotients in one fixture and choose by observed CE, along with every refusal,
 returned error and work counter. This prepares execution but does not yet
-implement the complete original parent-comparison adapter; see its README.
+implement the complete original parent-comparison adapter; three further tests
+now check its training-score selector for both105-choice policy arms. Original
+artifact/data/metric wiring remains required; see the component README.

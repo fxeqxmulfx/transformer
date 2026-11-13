@@ -193,6 +193,11 @@ summary SHA256 is
 `70f26e21fa756fd54416f8ac14116d63aa67950439a6d4048236dae904080057`.
 The source fingerprint is
 `08007a3dbbfcb4d30e1e1fcfb0ad35942b6feaa34862ea3e458643783c70dd28`.
+The independent review at`14918990074bc88967631549d4ebe45ba5f4e00b`
+repeats all35 endpoint replays and the complete summary byte-for-byte, along
+with all12 native checks and the global Lean checks. Task191 is approved;
+`.kanban/artifacts/191/review-complete/process.exit` is zero. This replays all
+observed metrics and exact final updates, not the entire training trajectory.
 The reviewed retained-path model passes all 48 of its depth/binding/MQAR cases,
 but integration with the new 23-task decoded-consequence cohort is still
 pending. Neither result alone establishes a full35 convex-model pass.

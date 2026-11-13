@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::{fs, path::Path};
 pub mod artifacts;
+pub mod comparison;
 mod execute;
 mod ledger;
 #[cfg(test)]

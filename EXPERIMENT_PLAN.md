@@ -7,9 +7,10 @@ The latest independently reviewed full105 comparison is31/35 full-batch,
 Task225 adds the square-times pass with no regressions; all23 constructor
 replays and its complete parent-preserving summary reproduce byte-for-byte.
 The original conventional transformer completed32/35 all-split passes; its
-independent review is still running. Task175's48 retained depth heads all
+independent review now reproduces all35 endpoints and its complete summary
+byte-for-byte and is approved. Task175's48 retained depth heads all
 pass and are reviewed. Task227's native integration checks are approved;
-task226 waits for the transformer review before comparing both initializer
+task226's frozen original integration is running with both initializer
 arms and all35 tasks. CM30's10 Lean theorems are proved and reviewed; they
 extend code/quotient certification without claiming unique raw labels or an
 additional benchmark pass. The complete35-task goal remains open.
@@ -22,9 +23,10 @@ are handled at the code level without claiming unique raw answers. This uses
 the already proved CM30 and CD8 statements; original task evaluation remains
 gated on task226 and a separate prospective freeze.
 The first task231 component now streams all55 prime stages with five further
-checks, retaining every success, refusal, error and work record. Its complete
-original parent-comparison adapter remains unfinished; no new original score
-follows from the catalogue fixtures.
+checks, retaining every success, refusal, error and work record. Three further
+checks now cover the observed-CE selector for both complete105-choice arms.
+Original artifact/data/metric wiring remains unfinished; no new original score
+follows from these eight catalogue/selection fixtures.
 
 ## Recovered comparison queues (2026-11-13)
 
