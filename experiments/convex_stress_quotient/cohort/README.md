@@ -4,7 +4,9 @@ This native component runs the complete fixed55-prime catalogue, one binding
 report at a time. Task231 also connects original data and metrics to a complete
 reviewed parent, retaining both initializer arms and all35 tasks. Sixteen native
 fixture tests pass and the independent review is approved at `49105730`.
-Task232's frozen original cohort has started; no new benchmark result is claimed.
+Task232's frozen original cohort has completed all23 cases and their initial
+independent replays. The complete35-task success counts are unchanged; the
+fresh submitted-commit review is the remaining approval gate.
 
 Each stage retains its original request, discovery outcome, actual complex
 model, all three CE endpoints, audits and original-row certificates. Returned
@@ -114,3 +116,50 @@ The CLI also exposes `prepare-original`, `run-original-case`,
 `replay-original-case` and `summarize-original`. Successful synthetic code tests
 do not establish raw-label or original benchmark passes. Generated evidence
 stays ignored under the root experiment's runs and board artifact directories.
+
+## Complete original outcome
+
+Producer `49105730` completed1265 stages across all23 cases, with no process
+failure. All55 original reports and every actual endpoint, CE trajectory,
+certificate and metric replayed for each case. The final report retains both
+105-choice initializer arms, all35 conventional transformer endpoints and
+all336 earlier depth outcomes and costs. Its SHA256 is
+`ddac2993d6b9e00552daf43519d5ff83c8810632bc9ae0d49dca97659bff9657`.
+
+| Training mode | Declared primary successes, either arm | All-split diagnostic successes |
+| --- | ---: | ---: |
+| Full batch | 34/35 | 33/35 |
+| Minibatch | 34/35 | 33/35 |
+| Forward only | 33/35 | 32/35 |
+
+Primary99% is the success criterion. Auxiliary failures do not revoke it;
+the frozen `full35_pass` field retains its historical all-split meaning.
+Fibonacci still fails in every mode, and forward-only still lacks the
+branch-amplitudes endpoint. The conventional transformer remains33/35 primary
+and32/35 all-split. DiffGPT's separately recorded selected main model remains
+35/35 on each of seeds0/1/2; it is not a newly replayed endpoint here.
+
+The catalogue accepts337 codes. Six have compatible readouts and contribute
+18 eligible mode endpoints, all selected in both initializer arms: addition,
+subtraction, half-sum, permuted addition, square-sum and cube-plus. All18 were
+already successful in the parent and remain100% on their primary splits.
+Comparing every numeric accuracy and loss field against the selected parent
+records finds no accuracy decrease or loss increase. The other87 choices per
+arm remain exactly their parent records. All331 incompatible accepted codes
+and their actual metrics remain in the evidence.
+
+The other stages retain653 no-nonconstant-direction refusals,39 nullity
+refusals and236 returned2B head-work forecast refusals. These are stage outcomes,
+not hidden process failures. Fibonacci accepts no code. Its modulus97
+4096-equation prefix leaves five free coordinates; task248's separate complete
+observation pilot reduces that to three and still refuses it. That follow-up
+does not alter this original cohort or its selected models.
+
+Construction costs8919.143533953 seconds and91664 actual gradient batches,
+charged once across both arms. Every initial case replay adds its recorded
+time. Peak case run/replay RSS is441528KiB; the complete summary peaks at
+1291828KiB and takes855.85 seconds to rehash and reconcile the retained evidence.
+All processes use the64GiB limit. The separate complete review reruns all55
+stages of every case and rebuilds this exact summary before approval. These
+results establish no convergence, unseen-label identification or matched-compute
+advantage over the retained transformer.

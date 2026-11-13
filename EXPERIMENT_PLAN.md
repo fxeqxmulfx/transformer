@@ -44,11 +44,20 @@ convex fixed-feature CE. They do not identify arbitrary unseen raw labels.
 Every one of the 55 prime stages is retained. Only codes compatible with the
 original declared metric readout enter the observed-CE selector; that filter
 never changes features, labels or CE. A synthetic pooled-metric fixture passes
-every decoded split while failing its unseen raw token. Task232 has now started
-the separately frozen original run at producer `49105730`: 23 pair tasks,
-both complete parent arms, all 35 transformer endpoints and a 64 GiB process
-cap. Preparation verifies original data and parent artifacts before any new
-construction. No original quotient score is claimed yet.
+every decoded split while failing its unseen raw token. Task232 has completed
+the separately frozen original run at producer `49105730`:23 pair tasks and
+1265 stages, all independently replayed, with no process failure. Both complete
+parent arms still pass34/35 full and mini and33/35 forward on the declared
+primary metric. Eighteen new endpoints per arm replace already-successful
+parents, with no accuracy decrease or loss increase. All35 transformer
+endpoints,336 depth outcomes and prior costs remain. Of337 accepted codes,
+six supply compatible offers;653 stages have no nonconstant direction,39
+retain nullity refusals and236 retain2B head-work forecast refusals.
+Construction costs8919.143533953 seconds and91664 actual gradient batches;
+the complete summary peaks at1291828KiB under64GiB. Its immutable SHA256 is
+`ddac2993d6b9e00552daf43519d5ff83c8810632bc9ae0d49dca97659bff9657`.
+Fresh review at the submitted commit will rerun every original stage and
+rebuild that complete summary before approval. Fibonacci still admits no code.
 
 Reviewed task233 adds CFt4 with nine Lean theorems. Paired visible features
 admit a forward decoder when no individual slot suffices, while the channel's
@@ -143,6 +152,12 @@ stage has no held-out evaluator or parent selector. After its own review and
 the source catalogue closing, a separate original freeze may construct it;
 comparison still requires the reviewed original parents. No benchmark count
 changes from adapter fixtures or training-only availability.
+
+Task243's frozen original queue has now started after all232 source outcomes
+and the complete summary closed successfully. It imports the immutable
+discoveries, preserves every source refusal and constructs no new code.
+Its original training, replay and review remain in progress; no held-out
+evaluation or new comparison score is implied by starting this stage.
 
 Task244 implements the separate refined comparison with seven native checks.
 It imports the complete reviewed causal parent and the separately reviewed243

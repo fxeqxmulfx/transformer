@@ -10,8 +10,11 @@ This native component proposes noninjective codes and binds them to a bounded
 complex latent model with an ordinary cross-entropy readout. The complete state catalogue
 is every prime from2 through257, fixed independently of the data. One `Request`
 runs one catalogue stage; callers must retain each outcome and release its
-large field report before proceeding. The original cohort has started after
-independent component and adapter review; no new benchmark score is claimed.
+large field report before proceeding. The original cohort has completed all23
+cases and initial independent replays. Its complete comparison remains34/35
+full-batch,34/35 minibatch and33/35 forward-only on the declared primary metric;
+the fresh complete review is pending. See the cohort README for every outcome
+and cost.
 
 | Step | Rule |
 | --- | --- |
@@ -123,7 +126,8 @@ Stages must still be released between primes. Task232's original evaluation
 now uses task226's reviewed complete parent comparison and a separate
 source/binary/protocol freeze preserving all35 tasks, full/mini/forward and
 the conventional transformer. Original model construction follows the full
-data and parent verification; no completed quotient score is claimed yet.
+data and parent verification. The completed cohort retains every prior success
+without a new task pass; see the complete counts and limitations above.
 
 The separately tested `cohort/` component now streams all55 stages to saved
 reports and replays them independently. Five catalogue tests retain two successful
@@ -132,5 +136,6 @@ returned error and work counter. Three selector tests preserve both105-choice
 parent arms; eight additional original-adapter fixtures bind full parent evidence,
 actual states, unchanged raw CE and complete original metrics. Compatible decoded
 answers can pass while unseen raw-token answers fail. The adapter and complete
-parent are independently reviewed, and the frozen original cohort has started.
-No original quotient score follows yet. See the component README for scope.
+parent are independently reviewed. The frozen original cohort is complete,
+and its fresh review will replay every original stage and the full summary.
+See the cohort README for the complete outcome and approval boundary.
