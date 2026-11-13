@@ -33,8 +33,15 @@ The native integer core now passes five checks, with97 exhaustive scalar lift
 systems and over2000 CRT residue pairs. Independent i128 audits check the i64
 producer's original equations, exact residual identities, all field operations,
 actual representatives and Bezout witnesses. Nonunique digit spaces, failed
-lifts and caps remain explicit. The categorical class-code learner is next;
-there is no new original-task score.
+lifts and caps remain explicit. Seven further native checks now exercise the
+observed-only categorical learner: masked domains 2 through16, repeated phases,
+class renaming, unused vocabulary, every original equation, caps and certificate
+tampering. It requires one-dimensional normalized component kernels and unique
+digit lifts, checks CRT and class injectivity, then audits actual raw spectra
+and ordinary CE. A missing-axis example explicitly fits observations while
+misidentifying unseen answers. The complete suite has twelve checks. The
+parent/strip wrapper and separate original freeze remain next; there is no new
+original-task score.
 
 ## Complete categorical fiber constraints (2026-11-13)
 

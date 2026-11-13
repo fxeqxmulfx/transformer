@@ -29,20 +29,45 @@ against exhaustive product-domain search. They include CM27's nonzero matrix
 example, a nonunique digit space, its failed base lift, each solver cap, invalid
 representatives/domains, JSON round trips and tampering with residuals, matrices,
 chosen points, Bezout witnesses and work. No original task was used in these
-checks, and no categorical code learner or original score is implemented yet.
+checks.
 
-The next layer will use observed relations `r[i]+s[j]=t[label]`, with unknown
-class codes and repeated input phases allowed. It may propose the latent domain
-from observed class count, solve normalized component systems, lift residuals,
-recombine components, and test actual code injectivity and every observation.
-Every guess and rejected/capped branch must be retained. Generic categorical
-strip views and every older family remain available; no numeric answer rule on
-the names of input or output tokens is supplied.
+The `coding` layer now proposes a cyclic domain from observed class count and
+uses observed relations `r[i]+s[j]=t[label]`, with unknown class codes and
+repeated input phases allowed. Classes are ordered by first occurrence; their
+token numbers carry no arithmetic meaning. It retains up to the first 4096
+equations, pins one observed row and the first class to zero, and factors the
+proposed domain. Each prime component must have exactly one kernel direction
+after these pins. Its first nonzero class coordinate is normalized to one by
+an explicitly checked unit. Each prime-power digit must then have a unique
+solution in this normalization. Larger kernels and failed lifts are explicit
+refusals of this proposal policy, not proofs of global impossibility.
+
+Checked CRT combines the complete components. The resulting class codes must
+be distinct, and every original observation is checked, including those beyond
+the equation cap. A complete decoder and actual phase table receive all-frequency
+raw DFT/SVD and ordinary full-vocabulary CE audits. No CE gradients are used in
+this constructor. Missing axes are listed and explicitly assigned phase zero;
+this arbitrary choice does not identify their unseen answers. All component
+matrices, anchors, residuals, operations, endpoint and refusal witnesses, caps
+and work counters remain in the report and deterministic replay.
+
+Seven additional tests recover masked categorical tables for every domain size
+2 through 16, including prime powers, CRT components and repeated phases. They
+check renamed classes with unused vocabulary, a missing-axis example that fits
+all observations but gets unseen answers wrong, all stage/work caps, noncyclic
+kernel refusal, actual class collisions, omitted-equation conflicts, invalid
+inputs and fourteen certificate mutations. The complete suite has twelve tests.
+These are synthetic checks, not an original benchmark score. The next wrapper
+will retain generic categorical strip views and every older family before its
+separate producer freeze; no original follow-up has started for this learner.
 
 The core restricts integer matrices to 1024 variables and 8192 rows, coefficients
 of absolute value at most 1024, right sides at most 2^30, and total modulus at
 most 257. The lift forecast covers report, checker, replay and serialization
-and must fit within 8 GiB. Numerical processes use the user's 64 GiB cap:
+and must fit within 8 GiB. Coding has a separate 16 GiB forecast, eight total
+stages by default, at most 500 million scalar updates per stage and two billion
+across stages; every stage has a two-million-row-operation cap. Numerical
+processes use the user's 64 GiB cap:
 
 ```sh
 cd experiments/convex_stress_modular

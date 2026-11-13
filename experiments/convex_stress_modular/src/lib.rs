@@ -1,7 +1,9 @@
 //! CM27 / Lean98b12abc: exact residual lifting and Bezout recombination.
 //! Integer checks certify supplied congruences, not categorical discovery or
-//! true unseen labels. Native class-code discovery is a separate next layer.
+//! true unseen labels. The coding module proposes observed-only class codes;
+//! its capped discrete search is separate from convex prediction-space CE.
 pub use convex_stress_fibers::{Model, Result, Sample, finite_system};
+pub mod coding;
 pub mod lift;
 pub mod recombine;
 use serde::{Deserialize, Serialize};
