@@ -17107,3 +17107,81 @@ enlarges capacity to `|O|+|Z|` states and has a dense Fourier realization;
 practical storage/work limits, actual constrained updates and original-task
 evaluation require a separate frozen native implementation. Neither this
 extension nor its examples change the original labels, loss or task metrics.
+
+## CM32. Bounded block updates for the refined quotient head
+
+CM31 proves raw interpolation and a convex domain that retains latent-default
+logits, but leaves native update feasibility and storage open. The following
+construction closes those exact-real obligations. It does not identify a
+missing target or establish optimizer convergence.
+
+Let `I` be a finite state set, `C` the original class vocabulary, and `U` any
+fixed unitary complex matrix on `I`. For an arbitrary real table `T:I x C -> R`,
+set `H(T)=U* complex(T)`. The actual real/imaginary head computes
+`Re(U H(T))=T`. Its update transport is linear:
+`H(aT+bV)=aH(T)+bH(V)`, including `H(T-eta G)=H(T)-eta H(G)`.
+This is an identity for arbitrary directions, not a theorem that a particular
+native implementation computes the CE derivative correctly.
+
+Unitary inversion preserves each individual class column's squared energy:
+
+```
+sum_k (Re H[k,c])^2 + (Im H[k,c])^2 = sum_s T[s,c]^2.
+```
+
+If `|T[s,c]| <= A` and `A >= 0`, Cauchy--Schwarz over the `2N` real
+coordinates, `N=|I|`, bounds the squared real/imaginary L1 column by
+`2 N^2 A^2`. Thus its L1 column is at most `2 A N`. Unlike a bound using the
+whole Frobenius norm across classes, this carries no vocabulary factor.
+The native box `[-32,32]` therefore fits the declared `64N` coefficient
+budget for every table in the box, not only for a one-hot initializer.
+
+For `I=O+Z`, keep the same observed-identity refinement and latent map as
+CM31. Given arbitrary proposed logits, clip each observed-state entry with
+`clip_A(t)=max(-A,min(A,t))`; assign each default `inr(z)` its fixed row `d_z`.
+Every result lies in the box if the default rows do. Feasible tables with
+these defaults are fixed points of this operation. The domain consisting of
+the box and the affine default equalities is convex. Ordinary full-vocabulary
+CE of `H(T)` is convex in feasible table coordinates, with all original labels
+unchanged. The clipping operation is part of the optimizer's constrained
+update, not a trainable activation whose composition is asserted convex on
+unconstrained proposal coordinates. Neither nearest-point optimality nor a
+convergence rate is needed or proved by the feasibility argument.
+
+To avoid a dense global Fourier matrix, assign each refined state to its old
+latent code: `b(inl(x))=z(x)` and `b(inr(t))=t`. Every fiber is nonempty
+because it contains its default. On each finite fiber, construct its own
+categorical Fourier basis. Their direct sum, reindexed back to the original
+state names, is exactly unitary; all singular values are one, and entries
+between different fibers are zero. This reindexing contains no labels.
+
+Writing `n_z=|b^-1(z)|`, the exact number of stored within-block phases is
+`sum_z n_z^2`, while the state count remains `sum_z n_z=|O|+|Z|`. The phase
+count is at most `N^2`; if every `n_z <= B`, it is at most `B N`. These are
+conditional storage bounds, not an assertion that learned fibers are always
+balanced or that any chosen hardware limit is automatically met. Two fibers
+of size two provide a concrete eight-phase versus sixteen-phase example.
+
+Use native default rows with24 at the declared representative class and zero
+elsewhere. These rows lie in the32-box. For every proposal, the block head
+satisfies the64N budget and retains exactly those logits at every unseen
+input. If each representative has the declared quotient code and the vocabulary
+has at most1024 classes, the compatible pooled readout remains strictly
+preferred. If that code separately identifies the target quotient, the unseen
+decoded answer remains correct at every projected step. The target occurs
+only in this last theorem's identifying premise; it is not an input to the
+extractor, constructor or update. Unseen raw aliases remain unidentified.
+
+Initializing observed rows with24 at their recorded raw class and zero
+elsewhere is unaffected by clipping. Each observed example has ordinary CE
+strictly below log2 under the same vocabulary cap. Concrete examples include
+unobserved inputs, negative/non-one-hot trained tables, and arbitrary proposed
+entries1000 outside the feasible box. No claim is made that a later arbitrary
+proposal retains observed classification; only its feasibility and defaults
+are guaranteed. A native implementation still needs actual forward/gradient
+checks, floating-point tolerance audits, resource preflights, saved-state
+replay and the original success metrics before reporting numerical progress.
+
+Lean: `ConvexDepth/BoxHead`, `BoxUpdate`, `FiberFourier` and `RefinedBox`.
+Flatness bounds the fixed categorical basis and the transported head's
+capacity; it is not a label oracle or a property imposed on the target table.

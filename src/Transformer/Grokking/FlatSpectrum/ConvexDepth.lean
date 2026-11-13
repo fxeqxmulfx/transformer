@@ -8,6 +8,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.JointHead
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.PrefixFeatures
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.FourierCode
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.QuotientWitness
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RefinedBox
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -29,6 +30,9 @@ CM31 refines observed inputs to fit raw aliases of a learned quotient, proves
 the actual complex-head loss and budget, and gives convex affine constraints
 that retain declared defaults at unseen inputs. Its four-class witness keeps
 the distinction between decoded correctness and unidentified raw aliases.
+CM32 realizes the same states with latent-fiber Fourier blocks and proves
+feasibility of clipped table updates, including exact retention of defaults.
+The arbitrary-table coefficient bound covers every resulting iterate.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/

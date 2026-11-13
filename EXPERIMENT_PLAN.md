@@ -110,6 +110,16 @@ on an unseen alias for one of two indistinguishable targets. Code discovery,
 unseen quotient identification, efficient storage and actual constrained
 updates remain separate obligations; no benchmark score changes from this proof.
 
+Task239 / CM32 closes the exact-real update and storage gaps. Every bounded
+real logit table transports to an actual complex head within64 times the
+refined state count. Clipped observed proposals and fixed default rows form
+a feasible update in a convex table domain with ordinary CE. Latent-fiber
+Fourier blocks remain unitary and need the sum of squared fiber sizes in
+phase storage; a maximum fiber sizeB gives a boundB*N. Every projected update
+retains the unseen defaults and any separately identified compatible decoded
+answer. Native derivative checks, numerical feasibility and capped original
+evaluation remain required; no new benchmark success follows from the proof.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine
