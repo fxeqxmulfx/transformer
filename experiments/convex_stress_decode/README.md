@@ -91,6 +91,14 @@ repairs paired and certified parents without retraining. This unblocks the
 Rooted evidence is`runs/cohort-canonical-v1` and`.kanban/artifacts/221`; the
 first failed run and both failed comparison gates remain preserved.
 
+The complete eight-task comparison has five passes in each of its full-batch,
+minibatch and forward-only parent-selection arms. These are 24 comparisons
+with seven newly constructed endpoints and one explicit refusal; the new
+constructor itself uses no CE gradient. The canonical recovery closes the
+original-data obligation of task192 and supplies the decoded parent for
+task195's paired integration. The unchanged first run still records exit1;
+successful recovery is separate evidence, not an overwritten exit status.
+
 [`protocol.json`](protocol.json) freezes eight cases on the same unchanged
 datasets as the preceding class-coding/phase cohorts: permuted addition,
 addition, subtraction, division, multiplication, sum-cube, sum-power-four and
@@ -122,8 +130,8 @@ the comparison, with the unchanged 99% sequence-accuracy success rule.
 ```sh
 cargo build --release --locked --manifest-path experiments/convex_stress_decode/Cargo.toml
 DECODE_PRODUCER_COMMIT=$(git rev-parse HEAD) bash experiments/convex_stress_decode/run_cohort.sh \
-  experiments/convex_stress_decode/runs/cohort-v1 \
-  experiments/convex_stress_relabel/runs/phase-v1
+  /absolute/fresh/decoded-run \
+  /absolute/canonical/phase-parent
 ```
 
 The run destination must be fresh. Preserve incomplete attempts instead of
@@ -159,6 +167,12 @@ OPENBLAS_NUM_THREADS=1 cargo test --locked --manifest-path experiments/convex_st
 cargo clippy --locked --manifest-path experiments/convex_stress_decode/Cargo.toml --all-targets -- -D warnings
 ```
 
-No original stress run, full/mini/forward comparison, transformer comparison
-or full-suite pass is claimed by these checks. The previously frozen cohorts
-continue unchanged.
+The fixture checks establish implementation behavior. The separate original
+cohort above supplies the eight-task, 24-choice evidence. For a fresh review,
+use the frozen binary's `replay-cell ROOT CELL` for every entry of `cells.txt`,
+compare each returned seal with `ROOT/CELL.replay.json`, then regenerate
+`summarize ROOT` and require byte identity with `ROOT/summary.json`. Use the
+absolute canonical root, one process at a time, with
+`prlimit --as=68719476736:68719476736 --` and single-thread BLAS. This follow-up
+does not establish a full-suite pass or a transformer comparison; the complete
+35-task comparison is reported separately in `EXPERIMENT_PLAN.md`.
