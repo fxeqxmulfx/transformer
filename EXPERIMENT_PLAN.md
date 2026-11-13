@@ -107,7 +107,9 @@ forward all-split passes across all105 choices. Task222 remains immutable.
 Certification/checking takes553.734s once,69 mode references,zero new CE
 gradients; recorded peak prepare/run/replay RSS4,256,420KiB. Summary digest
 5c13439e55af498340977c6b27c2492ccc840d4bfb9940568e7ad73fe4cf311d.
-Fresh review, retained depth integration and the fresh transformer are pending.
+Fresh review passed all 23 case replays, all 21 native tests and the complete
+byte-identical summary at 0cddb722; task223 is done. Retained depth integration
+and the fresh transformer are pending.
 Full pass has not been achieved; no held-out scores changed the frozen rule.
 
 Task #224 / CM29 extends the theory independently of the frozen task223 run.
@@ -140,6 +142,17 @@ all original next-modulus equations with i128. Four additional tests cover
 1,456 direct exhaustive comparisons, failed lifts, actual branch order, caps
 and mutations. All nine native checks pass. Complete component/CRT branching,
 decoded query certification and original model integration are still pending.
+
+The native component tree now retains bounded nonunique branches across every
+prime-power level. It rotates among normalized base codes and explores each
+root in depth, preventing shallow branching from exhausting all 16 default
+stages before a valid high-power endpoint appears. Independent replay verifies
+actual normalization, original equations, class multiplicity filters, queue
+order, every refusal/cap and exact work. Five more tests (14 total) cover
+noncyclic witnesses through modulus 64, identical decoding from distinct codes,
+missing-row ambiguity, all caps and malformed reports. The component forecast
+must fit 32 GiB inside the 64 GiB process limit. CRT branching and actual CM29
+query certificates remain required; these fixtures change no original score.
 
 ## Complete categorical fiber constraints (2026-11-13)
 
