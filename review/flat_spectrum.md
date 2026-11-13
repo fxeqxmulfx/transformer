@@ -16884,3 +16884,40 @@ target-family hypothesis, as in CM28; an interior row program does not infer
 unknown strip labels. The four-state noncyclic witness extends to a fifth
 categorical input name and a fifth output label absent from the interior.
 It gives both that strip answer and the genuinely held-out interior answer.
+
+### CM30. Noninjective class codes identify quotient answers
+
+CM29 uses an injective class code to turn an observed row consequence into a
+unique raw answer. The coefficient argument itself needs no injectivity. For
+an unknown code `e : C -> R` and an unknown additive representation
+`e(y(i,j)) = r(i) + s(j)` fitting every observed raw label, an actual row program
+producing the query row for a proposed label `c` proves
+`e(y(i,j)) = e(c)`. The certifier still consumes only the observed matrix and
+its finite candidate bank. Neither the unknown code nor the target table is
+an input to its coefficient check.
+
+If the task has a declared readout `q : C -> D` constant on the fibers of `e`,
+that equality gives `q(y(i,j)) = q(c)`. Finite checked coverage of all queries
+therefore recovers all quotient answers through `Option.map q`. This extends
+the same observed-only certifier to colliding class codes. Compatibility of
+the original readout with the unknown code is an explicit structural premise,
+not a learned fact inferred from low CE or flatness. The original raw-label
+cross-entropy and the original benchmark metric remain unchanged.
+
+The finite witness has three row names, three column names, four raw classes
+`ZMod 2 x Bool`, and eight observations. All four raw classes occur. The
+unknown code discards the Boolean alias bit; both axes have phases `(0,1,0)`.
+Every cell except `(2,2)` is observed. Two target tables agree on all eight raw
+labels and have the same code representation, but differ in the alias bit of
+the unseen answer. Adding the observed `(0,2)` row to `(2,0)` and subtracting
+`(0,0)` produces the actual query row for representative `(0,false)` at `(2,2)`.
+The finite bank certifies every quotient answer for both targets. Its emitted
+raw representative is wrong for one target. This is a counterexample to raw
+label identification even with every raw class observed and complete query
+certificate coverage, once injectivity is removed.
+
+This extension proves a correctness boundary, not discovery of a useful
+noninjective code or a native model repair. A future producer must find its
+candidate code from training, check the original row identities, preserve
+ordinary CE and all raw labels, and demonstrate compatibility with the
+unchanged task's readout. No new benchmark pass follows from CM30 alone.

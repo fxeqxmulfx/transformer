@@ -246,6 +246,15 @@ actual model/cache/checkpoint hashes and numerical replay gates are required.
 This is a saved-endpoint comparison with zero new training or prediction
 evaluation. Task226 may evaluate the originals only after175/191/225/227 close.
 
+Task228 / CM30 extends the observed-row proof to noninjective class codes.
+Actual row replay identifies the target code; a declared readout constant on
+code fibers therefore has a certified quotient answer. The same finite bank
+recovers every quotient answer under checked coverage. A nonconstant3-by3
+witness observes all four raw names and certifies its held-out quotient while
+two fitting targets disagree on the raw answer. Ordinary raw-label CE and
+original metrics remain unchanged. This is a theory boundary for a future
+native alias-aware producer, not an additional benchmark pass.
+
 ## Complete categorical fiber constraints (2026-11-13)
 
 Task #220 / CM26 starts from actual same-label observation groups. Lean proves
