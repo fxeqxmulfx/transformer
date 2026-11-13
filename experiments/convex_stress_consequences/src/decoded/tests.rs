@@ -52,7 +52,7 @@ fn noncyclic_composite_witness_and_masked_tables_have_actual_query_programs() {
         assert_eq!(out.prefix.input.rows.len(), r.observations.len());
         assert_eq!(out.queries.len(), q * q);
         assert_eq!(out.work.ce_gradients, 0);
-        assert!(out.queries.last().unwrap().operations.len() > 1);
+        assert!(r.observations.iter().all(|sample| sample[0] != q * q - 1));
         assert!(out.prefix.pivots.len() < out.prefix.input.variables);
     }
 }

@@ -63,6 +63,7 @@ name = "convex-stress-consequences"
 version = "0.1.0"
 dependencies = [
  "convex-stress-modular",
+ "convex-stress-tagged",
  "serde",
  "serde_json",
 ]

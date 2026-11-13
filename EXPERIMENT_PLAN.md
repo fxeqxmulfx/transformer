@@ -187,6 +187,20 @@ unknown target must have the declared view/strip structure; no interior
 certificate infers it. This matches the native tagged decoder's output types
 before the new model integration.
 
+The native learner now joins observed code discovery, actual complex phase
+models, raw spectral/ordinary-CE audits and decoded certificates. It rechecks
+all original observations after bounded-prefix discovery, retains conflicts,
+duplicates/caps and numerical refusals, and binds every certified query to
+the actual model table. Selection is observed CE, certificate on a 1e-12 tie,
+then earlier order. Eight added tests bring the total to 36. Half-observed
+96- and 192-state fixtures recover and certify all 9,216 and 36,864 cells,
+respectively, under unchanged default budgets. Unit-column cleanup cuts the
+96-state query arithmetic from 349.84 million to 15.58 million products.
+The eight learner checks/replays take 190.89s with peak RSS 3,310,156 KiB;
+the other 28 tests, fmt/clippy and all Lean audits pass. There are no CE gradient
+steps in these forward proposals. Fixed-view native binding and the separate
+original cohort freeze remain required; all previous scores/parents stay fixed.
+
 ## Complete categorical fiber constraints (2026-11-13)
 
 Task #220 / CM26 starts from actual same-label observation groups. Lean proves

@@ -1,6 +1,7 @@
 //! CM28 RowReduction and CM29 decoded_of_program (Lean af4a6d14).
 //! Build an actual echelon row program over ZMod q. Divisor pivots are allowed:
 //! integer quotients cancel divisible entries without inverting a nonunit.
+//! Unit columns are cleared in every row to shorten subsequent query programs.
 //! No complete row-module basis or identification theorem is claimed here.
 use crate::Result;
 use serde::{Deserialize, Serialize};

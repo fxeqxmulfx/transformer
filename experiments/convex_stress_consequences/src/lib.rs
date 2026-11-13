@@ -6,5 +6,6 @@ pub mod affine;
 pub mod component;
 pub mod composite;
 pub mod decoded;
+pub mod learner;
 pub mod lifts;
 pub mod row_program;

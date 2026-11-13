@@ -31,8 +31,8 @@ systems against direct exhaustive representatives, genuinely nonunique digits,
 failed lifts, bounded prefixes and altered branches. All nine tests pass.
 The component tree now normalizes every emitted prime-field code at its first
 nonzero class coordinate, then explores all emitted digit lifts within explicit
-budgets. The default permits 16 elimination stages, 512 retained states and two
-billion scalar updates. Roots receive turns in order; within each root, the
+budgets. Each component permits 16 elimination stages, 512 retained states and
+two billion scalar updates by default. Roots receive turns in order; within each root, the
 first surviving digit branch is explored in depth before its siblings. This
 avoids spending the entire budget across shallow branches that fail at later
 powers. Every invalid multiplicity, duplicate, failed lift and capped state
@@ -96,9 +96,8 @@ answers, unused class names, altered row programs and every work cap are
 refused or explicitly incomplete. These checks compare exact coefficients,
 not floating-point residual thresholds.
 
-These are synthetic checks only. Original model/raw-spectrum binding and
-fixed-view integration remain required before any separately frozen original
-cohort. No new original pass is claimed here.
+These are synthetic checks only. Fixed-view integration remains required
+before any separately frozen original cohort. No new original pass is claimed here.
 
 The CM29 view extension now supplies four additional Lean theorems for that
 integration. Interior classes map to a separate output type, so the declared
@@ -106,10 +105,46 @@ strip label can be outside the interior class set. The witness has five output
 labels and a genuinely held-out interior query. This makes the target-family
 scope match the tagged native decoder; strip structure remains an assumption.
 
+The learner now binds the complete pipeline to actual models. It builds its
+discovery equations from an observed prefix and two shift gauges, retaining
+missing axes as free variables. Every completed code is checked against all
+original observations, including those omitted from that prefix. The actual
+phase coordinates, decoder, latent table and full prediction table are bound
+before raw Fourier/SVD and ordinary-CE audits. The certificate receives exactly
+that model's proposed outputs. Duplicate predictions, conflicts and model caps
+remain explicit. Numerical refusals retain their error and an unknown partial
+frequency extent bounded by the model's frequency count. Floating audits remain
+numerical evidence rather than exact-real certificates.
+
+The default permits two raw model audits. Selection uses observed CE, then a
+verified decoded certificate within a 1e-12 tie, then original order. Eight
+new tests bring the total to 36, covering renamed classes, unused vocabulary,
+missing-axis ambiguity, omitted-observation conflicts, all caps and altered
+models/spectra/certificates. Held-out metadata cannot change selection.
+
+The two larger synthetic fixtures each reveal half of a repeated-row table in
+a fixed shuffled order; the learner receives only the categorical observations.
+Both recover and certify the entire table under the same default budgets.
+
+| States | Observed cells | Certified cells | Completed code tuples | Distinct admitted models |
+| ---: | ---: | ---: | ---: | ---: |
+| 96 | 4,608 | 9,216 | 12 | 1 |
+| 192 | 18,432 | 36,864 | 6 | 1 |
+
+Clearing unit pivot columns in all rows shortens the query programs while
+leaving nonunit pivots subject to exact divisibility. At 96 states, query
+reduction plus certificate products fell from 349,842,240 to 15,577,344; prefix
+work rose from 75,618,144 to 80,731,584. At 192 states, the two query budgets
+use 94,694,400 and 73,460,736 products, each below its 500-million cap. The eight
+learner tests, including independent checks, full replay and JSON round trips,
+completed in 190.89 seconds with peak RSS 3,310,156 KiB (about 3.16 GiB). All
+proposals use zero CE gradient steps; their construction/audit work is retained.
+These results add no original-suite pass until the separate original freeze.
+
 ```sh
 cd experiments/convex_stress_consequences
 cargo fmt --check
 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
-  prlimit --as=68719476736:68719476736 -- cargo test --locked
+  prlimit --as=68719476736:68719476736 -- cargo test --locked -- --test-threads=1
 cargo clippy --locked --all-targets -- -D warnings
 ```

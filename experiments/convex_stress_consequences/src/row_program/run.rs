@@ -167,7 +167,13 @@ pub fn run(input: Problem) -> Result<Outcome> {
         if factor != 1 && !apply(&mut out, Op::Scale { i: row, factor }) {
             return Ok(out);
         }
-        for target in row + 1..out.matrix.len() {
+        // A unit pivot can be cleared above as well as below, leaving short
+        // query representations. For nonunits, keep the earlier rows intact:
+        // arbitrary division there could lose necessary torsion combinations.
+        for target in 0..out.matrix.len() {
+            if target == row || (target < row && divisor != 1) {
+                continue;
+            }
             let x = out.matrix[target][col];
             if !x.is_multiple_of(divisor) {
                 return Err("column ideal did not divide an actual remaining entry".into());

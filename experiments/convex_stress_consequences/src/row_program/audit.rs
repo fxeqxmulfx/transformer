@@ -93,6 +93,7 @@ pub fn check(input: &Problem, out: &Outcome) -> Result<()> {
             || matrix[row][col] != d
             || matrix[row][..col].iter().any(|&x| x != 0)
             || matrix[row + 1..].iter().any(|r| r[col] != 0)
+            || (d == 1 && matrix[..row].iter().any(|r| r[col] != 0))
         {
             return Err("claimed divisor pivot differs from actual echelon coefficients".into());
         }
