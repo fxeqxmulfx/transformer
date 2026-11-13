@@ -164,6 +164,19 @@ joint collisions and all caps/mutations. The default permits 64 tuples and
 500 million CRT/endpoint row products; the retained-bank forecast must fit
 48 GiB. CM29 query certification and original model integration remain pending.
 
+The native CM29 certifier now constructs a shared actual row program from the
+retained observations and a checked suffix for every proposed decoded query.
+Independent i128 replay verifies the original matrix and exact query
+coefficients; full replay additionally binds search decisions and work. The
+constructor supports divisor pivots using unit normalization and actual
+integer divisibility, with explicit refusals rather than a completeness claim.
+Nine new tests bring the suite to 28: all 2,274 small matrix spans, the noncyclic
+Lean witness, masked domains through 32, all 432 binary realizable query cases,
+missing-axis/wrong-label refusals, program mutations and caps. The certificate
+forecast must fit 16 GiB. Unknown injective-code realizability over the declared
+observed class set remains required. Original model/raw-spectrum and fixed-view
+binding are next; the original score and all frozen parents remain unchanged.
+
 ## Complete categorical fiber constraints (2026-11-13)
 
 Task #220 / CM26 starts from actual same-label observation groups. Lean proves

@@ -69,9 +69,36 @@ missing row, the bank retains 12 different tables fitting all observations,
 including every possible class at one missing query. Other tests cover point
 and product caps, absent component candidates and 16 report mutations.
 
-These are synthetic checks only. Original decoded query certificates and
-model/raw-spectrum integration remain required before any separately frozen
-original cohort. No new original pass is claimed here.
+CM29 query certificates are now implemented. A shared bounded row program
+starts with exactly the retained observed cell/class equations. Each proposed
+answer gets a suffix that changes one row to its actual query coefficients.
+The independent checker reconstructs the observations, replays the prefix in
+i128, and verifies every coefficient of each suffix result. The constructor
+uses checked unit normalizations and divisible integer quotients for nonunit
+pivots. Refusal is retained when this bounded reduction finds no program;
+it does not prove that a certificate is impossible. Full replay also binds
+all pivot-search decisions and control-work counters.
+
+The default retains 4,096 observed equations and attempts the entire table,
+with separate 500-million-product reduction and certificate budgets and two
+million suffix operations. Prefix elimination has its own explicit limits.
+The complete certificate/report/check forecast must fit 16 GiB. The declared
+target family uses the observed class set with an unknown injective code and
+additive phases in the selected residue ring. Neither the true code nor unknown
+answers enter certification. The output remains conditional on this family.
+
+Nine further tests bring the total to 28. All 2,274 two-by-two matrices modulo
+2 through 6 preserve their actual row spans, including nonunit pivots and
+exposed unit combinations. The Lean noncyclic witness and masked tables
+through modulus 32 have complete decoded certificates. All 432 binary
+realizable observation/query checks are sound. Missing axes, wrong proposed
+answers, unused class names, altered row programs and every work cap are
+refused or explicitly incomplete. These checks compare exact coefficients,
+not floating-point residual thresholds.
+
+These are synthetic checks only. Original model/raw-spectrum binding and
+fixed-view integration remain required before any separately frozen original
+cohort. No new original pass is claimed here.
 
 ```sh
 cd experiments/convex_stress_consequences

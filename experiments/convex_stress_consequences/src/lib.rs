@@ -5,4 +5,6 @@ pub use convex_stress_modular::{Result, finite_system};
 pub mod affine;
 pub mod component;
 pub mod composite;
+pub mod decoded;
 pub mod lifts;
+pub mod row_program;
