@@ -14210,6 +14210,54 @@ It supplies a representation and selection boundary for a future generic
 causal-feature repair; it does not establish an original stress-task pass,
 a practical search cost, or extrapolation to unseen pair values.
 
+### CFt5. Bind the complex initializer to the convex head
+
+Fix a finite categorical state set I, a finite raw class vocabulary C and a
+unitary code matrix U whose rows are state features. For a recorded state
+assignment y : I -> C and a real margin a, let T[s,c] be a when c=y(s), and
+zero otherwise. Construct H = U* T by the conjugate transform. Its actual
+real logits are Re(sum_k U[s,k] H[k,c]); splitting H into real and imaginary
+coordinates and using features (Re U, -Im U) gives exactly the CD8 head.
+Both components affect predictions. U H = T follows from U U* = I, so the
+initializer reproduces its declared state margins and has ordinary CE
+log(1+(|C|-1) exp(-a)) at every assigned state. If a is positive, its declared
+class has strictly larger logit than every other class.
+
+Unitary multiplication also gives ||H||_F^2 = ||T||_F^2 = |I| a^2. For each
+class, Cauchy--Schwarz on its 2|I| real coordinates bounds the squared L1
+norm by 2|I|^2 a^2. In particular, every column has L1 norm at most
+2|a||I|. The native initializer with margin24 therefore lies in the CD8
+head domain of radius64|I|. This is a sufficient budget bound, not an
+assertion that the initialized or trained head has a flat spectrum.
+Every unitary-code entry has modulus at most one, so both real feature
+coordinates have absolute value at most one. A CD8 head with column budget R
+therefore has absolute logits bounded by R after any feasible update.
+
+For every nonzero N, take U = F_N/sqrt(N), with F_N the existing character
+Fourier matrix. The proved identities F_N F_N* = F_N* F_N = N I give
+unitarity and singular values exactly one. Each N-state code has entry
+modulus 1/sqrt(N), nuclear norm N and squared Frobenius norm N. A finite
+block diagonal is unitary even when the query blocks have different sizes.
+Taking I as the disjoint union of their categorical states gives the native radius
+64 times the total number of states, with the same exact logit/CE formulas.
+The generic theorem uses any unitary code; no arithmetic target is used.
+
+The assignments y are the learned observed dictionary entries plus the
+explicit unknown-state default. This construction certifies what the head
+computes from those assignments. It does not prove that an arbitrary new
+prefix uses the correct selected feature, that an unknown default is true,
+or that discovering the feature map is jointly convex. CFt4's counterexample
+continues to apply. Numerical floating-point audits of saved native states
+remain separate from these exact-real identities.
+
+Lean: `ConvexDepth/ComplexHead.lean` formalizes the actual coordinates,
+inversion, CE and logit bound; `ComplexHeadBudget.lean` proves the energy and
+L1 budget; `FourierCode.lean` supplies arbitrary nonzero Fourier dimensions
+and unequal query blocks. These statements correspond to
+`experiments/convex_stress_causal_pairs/src/model.rs` and
+`model/initialize.rs` at `7ce28651`. The integer categorical state is merely
+the recorded dictionary position, not the numerical meaning of an input.
+
 ## Forward-only channel learning
 
 This extension gives a finite categorical learner for the realizable

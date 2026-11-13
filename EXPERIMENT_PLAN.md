@@ -48,6 +48,15 @@ task232's completed independent review and task234's approval; no fixture
 result is counted as a benchmark pass. The running quotient protocol remains
 unchanged.
 
+Task235 extends Lean with CFt5's 28 theorems binding the actual complex head
+to CD8. Conjugate initialization gives exact recorded-state logits and
+ordinary CE; its real/imaginary L1 column budget fits the native margin24
+and radius64-times-total-states choices. Arbitrary nonzero Fourier blocks,
+including unequal query sizes, have unit singular values, and the fixed
+code bounds every feasible head's logits. The unobserved-label and feature
+selection limitations remain explicit. This proof extension does not alter
+the frozen numerical protocols or advance the benchmark pass counts.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine

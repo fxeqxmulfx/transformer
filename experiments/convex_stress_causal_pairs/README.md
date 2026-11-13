@@ -54,6 +54,16 @@ forward initializer applies the conjugate Fourier transform to observed-state
 logits of 24 at each recorded raw label, and zero at other classes. It uses no
 CE derivative. An independent inversion check reads every saved state.
 
+Lean CFt5 now supplies the exact bridge in `ConvexDepth/ComplexHead.lean`,
+`ComplexHeadBudget.lean` and `FourierCode.lean`: both actual complex
+coordinates represent the full real head domain, conjugate initialization
+reproduces the assigned logits and ordinary CE, and every initialized class
+column fits the chosen radius. It proves the flat normalized Fourier basis
+for any nonzero state count, including unequal query blocks. These 28
+theorems also bound the logits of every feasible learned head. They certify
+the recorded assignments and explicit default; they do not identify unseen
+labels or prove that feature discovery is jointly convex.
+
 Full-batch training performs 16 projected CE steps at learning rate 1;
 minibatch performs 256 cyclic steps of 64 observations at rate 0.1. Forward
 keeps the initializer unchanged. Each iterative step retains pre/post batch
