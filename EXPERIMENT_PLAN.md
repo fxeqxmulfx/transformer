@@ -1,5 +1,19 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Categorical constant strips (2026-11-13)
+
+Task #219 / CM25 uses a latent domain three times larger to mark constant
+categorical input rows/columns. Their intersection remains constant while the
+unflagged interior retains its arbitrary base phase decoder. Lean proves the
+actual modular construction, membership in the enlarged convex prediction
+hull, unchanged radius-N latent bounds, embedding of prior phase vertices,
+ordinary-CE optimality from checked observed fit, and transfer of actual
+interior error descent to full observed CE. A closed nonconstant witness
+escapes CM24's surjective-axis capacity obstruction. Native discovery must
+still propose and verify flags from training data; a constant-looking partial
+row does not identify its unseen labels. Implement and audit a bounded generic
+categorical extension before freezing another original-data follow-up.
+
 ## Observable feature balancing (2026-11-13)
 
 Task #218 / CM24 proves a feasible uniform PSD trace-one density after

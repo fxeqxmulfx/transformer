@@ -16487,3 +16487,76 @@ inputs and all states/work, and independently audit raw spectra and CE. Freeze
 tested source before another original-data run. Keep the 64 GiB process cap,
 all35 short/long tasks, full/mini/forward modes and the transformer comparison.
 This section establishes no new original-task score.
+
+### CM25. Categorical constant strips in an enlarged latent domain
+
+*Source-note extension for board task #219, 2026-11-13; Lean before native extension.*
+
+CM24's obstruction concerns surjective phase assignments. A generic categorical
+extension can represent constant input strips together with a nonconstant
+interior without changing the ordinary output-vocabulary loss or imposing a
+nonconvex constraint on the prediction hull. Let a proposed base table be
+`d(r(i)+s(j))` with phases in `ZMod q`, `q>0`. Choose categorical row and column
+flags and a proposed constant output `c`. These are proposed model components,
+not true unseen answers supplied to a learner.
+
+Enlarge the latent cyclic domain to `ZMod (3q)`. With `tag(false)=0` and
+`tag(true)=1`, set
+
+```
+lift(flag,z) = 3 val(z) + tag(flag) mod 3q,
+D(z) = d(val(z)/3 mod q) if val(z) mod 3 = 0, and c otherwise.
+```
+
+`lift_sum_val` computes the actual modular sum, including wraparound.
+`tag_zero_iff` proves that its residue modulo three is zero exactly when
+neither axis is flagged. One flag gives residue one; two give residue two,
+so the intersection of the constant strips stays constant. For two unflagged
+axes, modular division reduces to their original sum in `ZMod q`.
+`decode_lift` consequently proves
+
+```
+D(lift(rowFlag(i),r(i)) + lift(columnFlag(j),s(j)))
+  = c                            if either axis is flagged,
+  = d(r(i)+s(j))                 otherwise.
+```
+
+This construction uses arithmetic on internal categorical phase coordinates,
+not arithmetic features or an answer rule on the original input names. It
+applies to an arbitrary output type, decoder and phase assignments. No flag
+discovery, injective decoder, prime modulus or known group coding is assumed.
+
+`tagged_member` places the actual output table in the CM15 decoder hull for
+the declared larger latent domain. CM14 gives the same radius `N=|n|` operator
+and nuclear bounds on every actual latent Fourier moment. The larger prediction
+hull and ordinary CE remain convex by the existing CM15 results. Every earlier
+decoded phase vertex embeds with both flags false (`old_vertex_member`);
+this statement does not assert inclusion of every fractional latent table
+from the older hull. Retaining an existing native candidate does not require
+its input phases to be surjective in the larger domain.
+
+`tagged_fit_minimum` proves that actual agreement on observed labels certifies
+a global ordinary-CE minimum over the declared enlarged hull. It assumes the
+checked observed agreement, not successful search or unseen-label correctness.
+`tagged_loss` splits the exact unit-logit CE excess into errors on flagged
+observations and errors in the interior. `tagged_descent` then transfers an
+actual interior error decrease to full observed-CE descent with the strips
+fixed. A cropped native learner must keep the original vocabulary, preserve
+that observation partition and independently check the reassembled table.
+
+The three-category closed witness has a constant first row and column, yet
+different interior outputs at `(1,1)` and `(1,2)` (`witness_pattern`). The
+intersection also has the constant output. This escapes the CM24 capacity
+obstruction without asserting recovery of an unknown structure. Closed
+examples inhabit every conditional theorem, including strict interior error
+improvement and exact-fit optimality.
+
+A native follow-up may propose flags from observed categorical agreement,
+but a constant-looking partial row need not be constant at unseen entries.
+Retain ambiguous, inconsistent and capped proposals. Keep every older candidate
+and CE tie, record the enlarged latent domain and its resource bound, reconstruct
+the full input/output/latent tables and audit every Fourier frequency. Native
+discovery policies and the 64 GiB process cap must be frozen before original
+data, preserving all35 short/long tasks, full/mini/forward modes and the
+conventional-transformer comparison. No new benchmark score follows from this
+capacity construction.
