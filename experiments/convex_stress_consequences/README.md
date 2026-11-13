@@ -50,9 +50,28 @@ fixture deliberately retains multiple incompatible completions: the component
 tree does not claim to identify that row. Tests also cover all caps, prime-field
 normalization and duplicates, altered branches and malformed parent indices.
 
-These are synthetic checks only. CRT branching, original decoded query
-certificates and model/raw-spectrum integration remain required before any
-separately frozen original cohort. No new original pass is claimed here.
+The composite layer now forms a declared mixed-radix prefix of those emitted
+component banks. It retains each actual component-state tuple, every CM27
+Bezout witness, the recombined representative, original equations, class-code
+collisions and work. Its default permits 64 tuples and 500 million CRT/final
+original-row products, in addition to the component budgets. All retained
+programs and replay copies must fit a 48 GiB forecast. The checker uses separate
+i128 CRT/original-row arithmetic and independently derives tuple indices,
+prefix length and collision outcomes. Coverage refers only to the emitted
+component banks; an empty or capped component does not establish that no code
+exists in the larger family.
+
+Five more tests bring the native total to 19. Fixtures through modulus 40
+combine nonunique prime-power codes across two or three coprime components,
+with identical correct full-table decoding. A negative fixture has balanced
+component marginals but a colliding joint class code and is refused. With a
+missing row, the bank retains 12 different tables fitting all observations,
+including every possible class at one missing query. Other tests cover point
+and product caps, absent component candidates and 16 report mutations.
+
+These are synthetic checks only. Original decoded query certificates and
+model/raw-spectrum integration remain required before any separately frozen
+original cohort. No new original pass is claimed here.
 
 ```sh
 cd experiments/convex_stress_consequences

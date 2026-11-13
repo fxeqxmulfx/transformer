@@ -154,6 +154,16 @@ missing-row ambiguity, all caps and malformed reports. The component forecast
 must fit 32 GiB inside the 64 GiB process limit. CRT branching and actual CM29
 query certificates remain required; these fixtures change no original score.
 
+CRT now combines a bounded mixed-radix prefix of emitted component banks with
+actual checked Bezout witnesses and final original equations. Every tuple,
+collision and cap is retained; balanced component marginals alone cannot admit
+a colliding joint code. Independent i128 replay verifies the original systems,
+component residues and declared prefix/work. Five added tests (19 total)
+cover nonunique codes across multiple prime factors, missing-row ambiguity,
+joint collisions and all caps/mutations. The default permits 64 tuples and
+500 million CRT/endpoint row products; the retained-bank forecast must fit
+48 GiB. CM29 query certification and original model integration remain pending.
+
 ## Complete categorical fiber constraints (2026-11-13)
 
 Task #220 / CM26 starts from actual same-label observation groups. Lean proves
