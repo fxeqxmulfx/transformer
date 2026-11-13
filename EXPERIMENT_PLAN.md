@@ -11,8 +11,14 @@ ordinary-CE optimality from checked observed fit, and transfer of actual
 interior error descent to full observed CE. A closed nonconstant witness
 escapes CM24's surjective-axis capacity obstruction. Native discovery must
 still propose and verify flags from training data; a constant-looking partial
-row does not identify its unseen labels. Implement and audit a bounded generic
-categorical extension before freezing another original-data follow-up.
+row does not identify its unseen labels. Lean `84cacc46` also proves ordinary-CE
+descent for independently chosen phases when input categories share phases and
+input/latent cardinalities differ. The native construction/refinement core now
+passes eight tests, including exhaustive checks of all512 binary3x3 target
+tables, a masked recovery and fully covered but ambiguous unseen rows. Raw
+all-frequency SVD/CE and integer minima are checked; full input/state/work replay
+is required. Implement bounded generic flag/phase discovery and its harness
+before freezing another original-data follow-up. No new original score yet.
 
 ## Observable feature balancing (2026-11-13)
 
