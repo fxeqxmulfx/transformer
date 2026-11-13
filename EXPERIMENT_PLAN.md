@@ -238,6 +238,14 @@ the remaining full105 integration after task225, preserving both retained
 initializer policies, all prior costs/failures and the pending conventional
 transformer comparison. The depth successes are not yet added to the score.
 
+Task227 prepares `convex_stress_paths_compare` with synthetic evidence only.
+Its eight native checks preserve105 prior choices, all336 depth outcomes and35
+transformer endpoints, including failures/refusals. Two separate initializer
+arms choose only by observed CE and earlier order; complete parent snapshots,
+actual model/cache/checkpoint hashes and numerical replay gates are required.
+This is a saved-endpoint comparison with zero new training or prediction
+evaluation. Task226 may evaluate the originals only after175/191/225/227 close.
+
 ## Complete categorical fiber constraints (2026-11-13)
 
 Task #220 / CM26 starts from actual same-label observation groups. Lean proves

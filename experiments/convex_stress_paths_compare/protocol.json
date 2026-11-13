@@ -1,0 +1,26 @@
+{
+  "version": "reviewed-paths-comparison-v1",
+  "modes": ["full_batch", "minibatch", "forward_only"],
+  "initializers": ["minimum_ce", "first_small_ce"],
+  "transports": ["Residual", "Fourier"],
+  "retained_tasks": {
+    "gpt-probe-key-value-binding": 4,
+    "basis-depth-easy": 4,
+    "basis-depth-hard": 4,
+    "basis-recall-easy": 2
+  },
+  "sources": {
+    "consequences": {"producer_commit": "70cf9ab58ad0add79a3871e098e768db0641962f", "source_fingerprint": "b4a615e9b4ab95981205fe4900147f0f1e8c90969562f9add32d95033ccd8144"},
+    "depth_original": {"producer_commit": "032762e59acc5876c55f197e127afb4ee411ebc9", "source_fingerprint": "d6931b95c2b1d4971c02b718772fd08105c554d2d0bb66b99aedbf1b07b3e56f"},
+    "depth_retained": {"producer_commit": "9da1c6776857ab1f0b3f3d8be89f8aa920d1627f", "source_fingerprint": "5f95365da8434756d09b79ad485aba32e4cd2addcfec7a76f9571a8e5ab92e33"},
+    "transformer": {"producer_commit": "414431c71806aa632807af697b63cd0b8b97c1f9", "source_fingerprint": "08007a3dbbfcb4d30e1e1fcfb0ad35942b6feaa34862ea3e458643783c70dd28"}
+  },
+  "required_done_tasks": [175, 191, 225, 227],
+  "memory_limit_bytes": 68719476736,
+  "artifact_file_limit_bytes": 17179869184,
+  "json_file_limit_bytes": 8589934592,
+  "selection": "For each initializer arm and each original task/mode, compare the unchanged task225 endpoint first, then retained Residual and Fourier endpoints from the same initializer and mode. Replace only when ordinary training CE improves by more than1e-12. Keep both initializer arms. Never choose between them. Held-out metrics and certificates do not enter this additional endpoint selection.",
+  "comparison": "This is a comparison of already reviewed saved endpoints, not a new jointly optimized convex model. Preserve exact complete summaries and inventories, all288 original depth outcomes including refusals, all48 retained outcomes, all105 prior choices and all35 transformer endpoints. Charge each parent once and keep every original timing/update/cap record. No matched-compute or speed claim.",
+  "replay": "Require completed independent numerical review summaries and bind every current result/replay/model artifact to them. Verify depth model/cache hashes and transformer observation checkpoints. Rebuild the CE-only reference selection and report byte-for-byte. Metrics are those of the pinned numerical replays; integration does not repeat optimizer trajectories or claim fresh prediction recomputation.",
+  "theory": "CM5-CD9 fixed-feature convex heads and CM29 conditional decoded consequences remain unchanged. Discrete discovery, nonlinear fixed path evaluation and selection across separately trained families are distinct from convex optimization in a fixed prediction space. No unconditional identification or full-suite success theorem is inferred."
+}
