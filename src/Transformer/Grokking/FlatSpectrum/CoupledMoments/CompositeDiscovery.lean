@@ -2,6 +2,7 @@ module
 
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CompositeDiscovery.Obstructions
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CompositeDiscovery.Certificate
+public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CompositeDiscovery.Views
 
 /-!
 # Observed identification over composite cyclic domains
@@ -13,6 +14,8 @@ thirty-two held-out cells; a missing-row counterexample forces refusal.
 This restricts the categorical model, not the entire convex spectral hull.
 Actual row-program replay certifies the joint condition; checked kernel
 uniqueness propagates through prime-power digits and Bezout recombination.
+Fixed categorical views transport this result under their explicit constant-strip
+model hypothesis; an interior certificate alone does not infer strip structure.
 -/
 
 @[expose] public section

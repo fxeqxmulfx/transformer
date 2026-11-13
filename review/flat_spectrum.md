@@ -16808,3 +16808,22 @@ modular equations. A native producer must still implement and independently
 check the certificate, retain refusals and caps, and freeze its changed
 selection policy before original evaluation. Passing a floating-point spectral
 audit does not replace this integer certificate or prove structural truth.
+
+**Scope of categorical strip views.** A fixed view consists of categorical row
+and column maps into an interior, with a distinguished `none` value for strips
+and a declared constant class there. The full model table uses its interior
+when both maps have a value, and the constant otherwise. Applying the observed
+interior learner and then this fixed map recovers an unknown full target
+represented by that same view, provided its interior is realizable and its
+actual joint module is cyclic. The maps may repeat interior names. A closed
+example transports the six-state witness and gives both a strip answer and a
+genuinely held-out nonconstant interior answer.
+
+The constant-strip part is an explicit structural hypothesis about this full
+target family, not a conclusion from the interior equations. Observed constant
+support does not prove arbitrary unobserved strip answers constant. Different
+proposed views carry different structural model assumptions. A native report
+must therefore say that its certificate proves uniqueness within the declared
+view; it must not turn an interior certificate into an unconditional statement
+about unknown ground truth or the union of all proposed views. Unsupported
+padding or missing axes remain refusals under the present certificate policy.
