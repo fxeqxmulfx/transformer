@@ -212,6 +212,15 @@ One dense report per view permits serial disk-backed cohort processing under
 the 60 GiB view forecast and 64 GiB process limit. The separate original harness
 and freeze remain next; no previous score or parent changes.
 
+The separate task225 original harness now has eight passing native tests (49
+with the core). It pins the complete task223 summary, preserves all23 eligible
+pair inputs and all105 choices, serializes one dense view at a time, and seals
+observed-CE/certificate selection before original held-out metrics. Full replay
+checks all native programs, raw models and metrics; summaries bind every dense
+artifact by size and SHA256. Existing certified parent choices retain priority
+on ties; all process failures retain their prior rows. The tested source/binary/
+protocol must be archived before original preparation. No new score yet.
+
 ## Complete categorical fiber constraints (2026-11-13)
 
 Task #220 / CM26 starts from actual same-label observation groups. Lean proves

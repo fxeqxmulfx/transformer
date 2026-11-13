@@ -1,0 +1,92 @@
+{
+  "version": "consequences-original-v1",
+  "proof_commits": [
+    "af4a6d14",
+    "6eb80433"
+  ],
+  "core_commits": [
+    "661663b6",
+    "d91a54ab"
+  ],
+  "shared_fingerprint": "260d22864ac06e44f945791ac766340a96254b917dffca5a713ea396ddc5a6ba",
+  "tasks": [
+    "power-division-p97-k3",
+    "arithmetic-cube-plus",
+    "power-division-p193-k5",
+    "power-division-p193-k2",
+    "power-division-p97-k2",
+    "arithmetic-square-times",
+    "arithmetic-sub",
+    "arithmetic-mul",
+    "arithmetic-add",
+    "power-division-p193-k3",
+    "division-p193",
+    "arithmetic-square-sum",
+    "power-division-p97-k5",
+    "arithmetic-half-sum",
+    "arithmetic-sum-square",
+    "arithmetic-affine-product",
+    "arithmetic-perm-add",
+    "arithmetic-div",
+    "arithmetic-abs-diff-blind",
+    "arithmetic-abs-diff",
+    "arithmetic-sum-pow4",
+    "arithmetic-sum-cube",
+    "recurrence-fibonacci-k1-c2-lgt"
+  ],
+  "reference_modes": [
+    "full_batch",
+    "minibatch",
+    "forward_only"
+  ],
+  "minimum_strip_support": 8,
+  "max_views": 4,
+  "memory_limit_bytes": 68719476736,
+  "buffer_preflight_bytes": 64424509440,
+  "artifact_file_limit_bytes": 8589934592,
+  "minimum_disk_reserve_bytes": 17179869184,
+  "parent_summary_sha256": "5c13439e55af498340977c6b27c2492ccc840d4bfb9940568e7ad73fe4cf311d",
+  "parent_producer_commit": "a2ae1a3529b5aa60b33dd590f1706458b757c125",
+  "parent_source_fingerprint": "92e20503f66ea08cfa9a5791374e1fb8eba1e52b422fecad34e79251612038fa",
+  "construction": "Enumerate bounded nonunique categorical code components and CRT products from training observations. Retain all branches, collisions, conflicts, caps and refusals. Bind actual phase models to raw complex Fourier spectra and ordinary CE, then certify each proposed decoded answer with actual observed-only row programs. Apply separately declared categorical views; unknown strips remain assumptions. No arithmetic answer rules or held-out targets enter discovery.",
+  "selection": "Start with each complete task223 mode choice. Compare new proposals by ordinary observed CE; within a 1e-12 tie prefer a verified conditional fixed-view certificate, otherwise retain earlier order. Preserve an earlier certificate and recognize exactly matching certified model hashes. Keep every duplicate and its scope. Seal references and artifact hashes before fresh held-out evaluation. One forward construction per task shared by three mode references; zero CE gradients. Discrete discovery is not jointly convex.",
+  "replay": "Regenerate original data and verify the complete task223 parent byte hash. Serialize and release one dense view report at a time; independently check every actual coefficient, code, model and raw audit, then fully replay the constructor. Recompute all original metrics and all105 choices. Preserve the whole parent, every refusal, failed process and prior cost. Summaries refer to retained dense reports by exact SHA256 and size.",
+  "resources": "Native Rust and shell; freeze tested source, binary, protocol and parent before original preparation. One dense view at a time, serial 64GiB process limit, one BLAS thread, 16GiB disk reserve. Retained depth and fresh transformer remain required.",
+  "learner": {
+    "equations": 4096,
+    "models": 2,
+    "component": {
+      "stages": 16,
+      "states": 512,
+      "total_scalar_updates": 2000000000,
+      "elimination": {
+        "scalar_updates": 500000000,
+        "row_operations": 2000000,
+        "nullity": 8
+      },
+      "enumeration": {
+        "points": 256,
+        "coordinate_products": 500000000,
+        "original_products": 500000000
+      }
+    },
+    "composite": {
+      "points": 64,
+      "original_products": 500000000
+    },
+    "prefix": {
+      "scalar_updates": 2000000000,
+      "row_operations": 2000000,
+      "pivot_tests": 20000000,
+      "combination_tests": 20000000,
+      "normalization_tests": 1000000
+    },
+    "decoded": {
+      "equations": 4096,
+      "queries": 66049,
+      "reduction_products": 500000000,
+      "certificate_products": 500000000,
+      "certificate_operations": 2000000
+    }
+  }
+}

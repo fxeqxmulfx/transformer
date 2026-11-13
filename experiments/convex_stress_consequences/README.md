@@ -159,6 +159,15 @@ limit. A cohort must write and release one report before constructing another.
 These synthetic checks bring the native suite to 41; original evaluation still
 requires the separately frozen harness.
 
+The [original cohort harness](cohort/README.md) now adds eight native checks,
+bringing core plus harness coverage to 49. It pins the complete task223 parent,
+retains all 23 pair tasks and all 105 full/mini/forward choices, and writes each
+dense view report separately before releasing it. Selection preserves older
+certificates and uses observed CE and the declared conditional certificate
+priority; all held-out metrics follow a sealed artifact/model selection. Failed
+processes retain prior choices and partial evidence. Original evaluation starts
+only after the tested producer, binary, protocol and fingerprints are archived.
+
 ```sh
 cd experiments/convex_stress_consequences
 cargo fmt --check
