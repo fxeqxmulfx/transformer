@@ -116,6 +116,16 @@ fibers or make the bounded code search complete. Native row-consequence checking
 and bounded discovery through nonunique code spaces remain future work with
 their own original freeze. All existing original runs and model boundaries stay.
 
+Task #225 begins with bounded native enumeration of actual checked affine
+spaces in `convex_stress_consequences`. The producer retains all emitted
+parameter tuples, points, exact work and cap/cardinality outcomes. Independent
+i128 replay checks every point against every original equation. Five tests
+pass, including all793 two-variable affine systems modulo2 and3, nonzero
+particular solutions, several free directions, every cap, state mutations and
+a257-to-the-eighth space whose bounded prefix is not claimed complete.
+Composite branch propagation and CM29 decoded query certificates are still
+needed before any separately frozen original experiment. Task223 stays frozen.
+
 ## Complete categorical fiber constraints (2026-11-13)
 
 Task #220 / CM26 starts from actual same-label observation groups. Lean proves
