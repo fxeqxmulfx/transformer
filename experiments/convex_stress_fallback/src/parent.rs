@@ -45,6 +45,15 @@ impl Parent {
             Self::Counts(m) => (m.features.base.vocab, m.features.base.context),
         }
     }
+    /// The causal library's context fixes its feature catalogue, while its
+    /// actual location function accepts prefixes through4096. Count features
+    /// retain a finite value alphabet tied to their saved context instead.
+    pub fn prediction_limit(&self) -> usize {
+        match self {
+            Self::Causal(_) => 4096,
+            Self::Counts(m) => m.features.base.context,
+        }
+    }
     pub fn bounds(&self) -> Result<Bounds> {
         match self {
             Self::Causal(m) => causal_bounds(m),
@@ -61,8 +70,8 @@ impl Parent {
         }
     }
     pub fn logits(&self, prefix: &[i64]) -> Result<Vec<f64>> {
-        let (v, context) = self.shape();
-        check_prefix(prefix, v, context)?;
+        let (v, _) = self.shape();
+        check_prefix(prefix, v, self.prediction_limit())?;
         match self {
             Self::Causal(m) => {
                 Ok(m.logits_tokens(&prefix.iter().map(|&x| x as usize).collect::<Vec<_>>()))

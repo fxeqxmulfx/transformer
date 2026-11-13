@@ -4,7 +4,7 @@ Can a complex candidate keep the saved predecessor's answers outside its
 observed support without changing its ordinary training cross-entropy? CM38,
 proved and reviewed at `16e34b2f`, gives that identity on an affine domain with
 the parent frozen. This native component implements the actual route and its
-resource accounting. It has eight numerical checks; no original held-out
+resource accounting. It has ten numerical checks; no original held-out
 comparison has run through it, so the existing benchmark counts are unchanged.
 
 The complete causal comparison motivating the change gains forward branch
@@ -27,6 +27,16 @@ retain order, repeated records, raw labels, vocabulary and context. The route
 uses the candidate inside this support and the predecessor elsewhere. It never
 checks the target to decide which head predicts. Both heads remain stored;
 only one contributes on an individual prediction.
+
+Training context fixes the causal feature library; its original forward
+function accepts prefixes through length 4,096. The wrapper retains that
+domain with a causal parent, even when the parent's training library is shorter.
+A count parent retains its own saved context bound, because that fixes its
+count-value alphabet. The common prediction domain therefore follows the
+parent's actual limit, rather than the candidate's training length. Protocol
+v2 corrects v1's overly restrictive wrapper check before any original fallback
+comparison. Tests cover supported and unsupported prefixes of lengths 6, 65
+and 4,096, including exact old-parent outputs and genuine boundary refusals.
 
 The count embedding ports `AdaptiveModel::raw_logits` from
 `convex_stress_counts` at `9496a606`. Each shared key/value row and each local

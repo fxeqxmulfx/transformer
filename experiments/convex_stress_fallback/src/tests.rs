@@ -1,6 +1,7 @@
 use super::*;
 use metrics::Predictor;
 use serde_json::{Value, json};
+mod long;
 mod modes;
 
 fn request() -> causal::Request {

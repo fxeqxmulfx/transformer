@@ -108,8 +108,8 @@ impl Model {
                 return Err("candidate value support differs from original observations".into());
             }
         }
-        let (v, context) = parent.shape();
-        if v != input.vocabulary || context < input.context {
+        let (v, _) = parent.shape();
+        if v != input.vocabulary || parent.prediction_limit() < input.context {
             return Err("saved parent does not cover the declared input domain".into());
         }
         let a = parent::causal_bounds(&candidate)?;
@@ -159,8 +159,11 @@ impl Model {
     pub fn bounds(&self) -> &Bounds {
         &self.bounds
     }
+    pub fn prediction_limit(&self) -> usize {
+        self.parent.prediction_limit()
+    }
     pub fn known(&self, prefix: &[i64]) -> Result<bool> {
-        check_prefix(prefix, self.candidate.vocabulary, self.candidate.context)?;
+        check_prefix(prefix, self.candidate.vocabulary, self.prediction_limit())?;
         Ok(self
             .candidate
             .known(&prefix.iter().map(|&x| x as usize).collect::<Vec<_>>()))

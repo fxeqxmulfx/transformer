@@ -399,6 +399,16 @@ CE is identical, this cannot be described as a strict-CE improvement. A reviewed
 adapter and original complete evidence remain necessary; no benchmark count
 or frozen245/246/252/255/261 source or selection rule changes here.
 
+Task268 corrects the wrapper's long-prefix boundary before original integration.
+The candidate's stored context defines its fixed feature library, while the
+original causal forward accepts lengths through4096. A causal parent retains
+that limit even with a shorter training library; a count parent retains its
+saved count-value domain. The wrapper now uses the common prediction limit,
+with actual supported/unsupported tests at6,65 and4096 tokens. Ten native checks
+retain all prior CE, parameter, memory and mode guarantees. Protocolv1 evidence
+stays preserved; v2 changes no original benchmark result because the fallback
+has not yet been evaluated on the original suite.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine
