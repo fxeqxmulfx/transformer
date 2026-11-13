@@ -1,5 +1,20 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Composite categorical codes (2026-11-13)
+
+Task #222 / CM27 extends the theory beyond prime latent domains before native
+discovery. Thirteen Lean theorems give the actual divided-residual identity,
+an exact digit-lifting equivalence, checked Bezout recombination and unit gauge
+normalization of observed class codes. Closed examples use composite moduli;
+counterexamples show that a base modular solution may have no lift and that
+noncoprime component agreement need not extend to the product modulus. These
+claims certify algebraic steps, not solvability, unique discovery or unseen
+labels. A future observed-only native code learner must retain all component
+systems, normalization choices, lifts, recombination witnesses, failures and
+caps; verify original equations, code injectivity and actual spectral/CE
+bounds; then freeze separately before original discovery. All prior candidates,
+full35/modes/transformer scope and the64GiB limit remain required.
+
 ## Complete categorical fiber constraints (2026-11-13)
 
 Task #220 / CM26 starts from actual same-label observation groups. Lean proves

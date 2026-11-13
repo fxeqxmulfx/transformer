@@ -16650,3 +16650,55 @@ must declare finite-field, multiplicity, anchor, nullspace and enumeration
 budgets before its own original follow-up, retain the complete task219 parent,
 freeze tested source, and preserve all35/modes/transformer scope and64GiB cap.
 No new measured benchmark result is claimed by these equations.
+
+### CM27. Composite categorical codes require checked modular lifts
+
+*Source-note extension for board task #222, 2026-11-13; Lean before native discovery.*
+
+Unknown categorical class codes can be proposed from observed relations
+`r(i)+s(j)=t(label)` in a cyclic latent domain. Neither input names nor output
+names carry arithmetic meaning. The domain may be composite, and repeated
+input phases are allowed. A one-dimensional field kernel does not by itself
+justify a solution modulo a prime power or identify any unseen label.
+
+For a finite integer matrix `A`, write `A*x` for its actual row sums and
+`Fits(m,A,b,x)` for `m | b(i)-(A*x)(i)` at every row. Suppose `x` fits modulo
+nonzero `m`. Define the actual integer residual
+`e(i)=(b(i)-(A*x)(i))/m`. For any integer digit vector `y`,
+
+```
+b - A*(x+m*y) = m*(e-A*y),
+Fits(m*p,A,b,x+m*y) iff Fits(p,A,e,y).
+```
+
+These statements hold without assuming a field. They justify a checked digit
+lift when the residual system is solved; they do not say the residual system
+is solvable. The one-variable equation `2*x=0` admits `x=1` modulo2 but no
+lift `1+2*y` modulo4. Inconsistency or an unsearched branch must remain explicit.
+
+To recombine components, use actual integers `u,v` satisfying `u*m+v*n=1`.
+The vector `z=v*n*x+u*m*y` retains `x` modulo `m` and `y` modulo `n`. If the
+two vectors solve the same integer system modulo their respective moduli,
+then `z` solves it modulo `m*n`. The Bezout witness is checked; arbitrary
+noncoprime moduli do not justify multiplying the modulus. Agreement modulo
+each component implies agreement modulo the product under this same witness.
+
+There is also a gauge freedom valid in composite cyclic domains. For a unit
+`u` with checked inverse `v`, choose categorical anchor phases `a,b` and set
+`r'=u*(r-a)`, `s'=u*(s+a-b)`, and `t'=u*(t-b)`. Every actual observed relation
+is preserved. An injective class code stays injective, and the transformed
+decoder `d'(z)=d(v*z+b)` preserves every decoded prediction. No primality,
+numeric meaning of category identifiers or supplied true decoder is needed for
+these identities. Native discovery must still learn and check a code; an
+unproved assertion that a kernel is only a unit orbit is not a certificate.
+
+The proposed native extension may guess a cyclic domain from observed class
+count, solve and normalize component systems, lift checked residuals, combine
+checked residues and test class-code injectivity and every original equation.
+Every component, normalization choice, residual, matrix, operation, failed
+branch, coverage condition and cap must remain in its report. Actual phase
+tables still require CM25's raw latent spectral and ordinary-CE checks. This
+does not establish efficient global search, completeness of a capped branch
+bank, true unseen labels or any new original-task score. Freeze the tested
+native producer before original discovery and preserve all prior candidates,
+full35/modes/transformer scope and the64GiB process limit.
