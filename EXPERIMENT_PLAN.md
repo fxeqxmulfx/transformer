@@ -307,10 +307,22 @@ incompatibility refusals,7 admitted raw expansions,1242 cardinality refusals and
 mini and forward endpoints with zero observed raw errors, including a new
 two-direction Fibonacci model. Its unknown-axis and unmatched-active masks
 remain explicit. Discovery/head construction totals74.235849478seconds and
-131 gradient batches; peak run/replay RSS372048KiB under64GiB. Fresh review and
-the full parent/transformer comparison remain separate; training fit changes
+131 gradient batches; peak run/replay RSS372048KiB under64GiB. Fresh review has
+reproduced every original case and the exact complete summary at6419ecd2.
+The full parent/transformer comparison remains separate; training fit changes
 no benchmark count. Only authored findings are committed; generated evidence
 remains in the root's ignored `cohort/runs/training-v1/` directory.
+
+Task260 adds the prospective CM35 comparison adapter. It binds the entire
+declared output partition, genuine grouped basis, separate raw expansion and
+original raw-CE state before offers. Both105-choice arms, all35 tasks and all
+transformer/depth/parent evidence remain. Observed-CE selection is unchanged;
+standalone candidate metrics and selected regressions are reported separately.
+Ten native fixtures cover actual pooled-correct/raw-wrong heads, primary
+success despite auxiliary failure, independently rehashed mutations and
+disk-refusal continuation. Original execution requires reviewed255,259 and260.
+New builds and run artifacts use the mounted `storage` filesystem under
+`/run/media/misha/storage/transformer-runs`, with the64GiB RAM cap unchanged.
 
 ## Recovered comparison queues (2026-11-13)
 

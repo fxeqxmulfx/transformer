@@ -1,0 +1,82 @@
+{
+  "version": "declared-readout-kernel-comparison-v1",
+  "required_done_tasks": [
+    232,
+    234,
+    237,
+    243,
+    244,
+    245,
+    246,
+    250,
+    251,
+    252,
+    253,
+    255,
+    256,
+    257,
+    258,
+    259,
+    260
+  ],
+  "planned": [
+    "power-division-p97-k3",
+    "arithmetic-cube-plus",
+    "power-division-p193-k5",
+    "power-division-p193-k2",
+    "power-division-p97-k2",
+    "arithmetic-square-times",
+    "arithmetic-sub",
+    "arithmetic-mul",
+    "arithmetic-add",
+    "power-division-p193-k3",
+    "division-p193",
+    "arithmetic-square-sum",
+    "power-division-p97-k5",
+    "arithmetic-half-sum",
+    "arithmetic-sum-square",
+    "arithmetic-affine-product",
+    "arithmetic-perm-add",
+    "arithmetic-div",
+    "arithmetic-abs-diff-blind",
+    "arithmetic-abs-diff",
+    "arithmetic-sum-pow4",
+    "arithmetic-sum-cube",
+    "recurrence-fibonacci-k1-c2-lgt"
+  ],
+  "memory_limit_bytes": 68719476736,
+  "minimum_disk_reserve_bytes": 17179869184,
+  "metric_scalar_work_cap": 32000000000,
+  "parent": {
+    "source_fingerprint": "06df40a70bc3c52b2ca4abacba3ad3100a4003688f525b2164f7b136714c7d8d",
+    "binary_sha256": "7476d0ee117484de115d3b8dddac515fc32c316a85ef34ea09312e5452506c26",
+    "producer_commit": "d51aa4229b6178210aff831ebcffa2361164a950"
+  },
+  "staging": {
+    "source_fingerprint": "6af7080d925c81800c843efa4ef16fe924468136eb7c4ae11186492929070172",
+    "binary_sha256": "abb22d6e853be31442dd18d2cd8d5efc91c6874623f7620aef5c780bda3fa480",
+    "producer_commit": "21e86e7c0054ce16397998726b715155be1cbebd"
+  },
+  "causal_stage_summary_sha256": "4e717b8233c3161b780e13f4f184a58090711492e01062c1a790ebb1a46caa69",
+  "causal_stage_inventory_sha256": "deca9673630ab94435fd72d101b0040e8c6e65ec74929b58288ca904086e7f2c",
+  "import": "Reviewed complete CM34 comparison and separately reviewed CM35 training259. Every genuine grouped basis, full declared partition, separately expanded raw code, actual complex state, refusal and cost retained. No retraining or new discovery.",
+  "selection": "Both complete105-choice parent arms, parent first then increasing prime. Replace only for original raw-label training CE decrease greater than1e-12. Declared output partition was used in construction; no held-out ranking or certificate tie-breaker. Seal references before metrics.",
+  "evaluation": "Unchanged original complete-split metrics and probability pooling. full35_pass means declared primary success; auxiliary splits are diagnostics. All35 tasks/modes and conventional transformer/depth remain. Metric failure retains parent choices and all partial evidence.",
+  "replay": "Independent actual complex/head and ordinary-CE checks, full source/state hashes and exact original metrics/masks. Frozen foreign summaries reproduce reviewed bytes at prepare/final summary. Failed cases and every construction cost remain charged once; no matched-compute or unseen-target identification claim.",
+  "refined_stage_summary_sha256": "e52725e3bd4ce92c9e5841892530e1d2729b07f43f47f3056c1c026cead934ef",
+  "refined_stage_inventory_sha256": "113d440c9d1ad17af420a047349c3c2d3ef4ead0ad3a8cd39dfd9f114e5512b5",
+  "kernel_stage": {
+    "source_fingerprint": "5c748aeb6697d76ceafbc8ef99aee03eb24ee9933ec22c0fdebfc729a6bf2954",
+    "binary_sha256": "f23d149db1aa331a3c7921e4c2a8183871942ed69b3986bec643de86b2836268",
+    "producer_commit": "166bebc3d1d1d206b1169e8c33b02bde60549afd"
+  },
+  "readout_stage_summary_sha256": "08eefbe7758513273f0353161af2027eeefc5fe15d244a2cad08ffcb7e8cd7e4",
+  "readout_stage_inventory_sha256": "c7e9190abed5ffbebe9102b1153fe2089c78256f3cacb872441ac9bfa95fa8d5",
+  "construction_side_information": {
+    "declared_readout_used_in_discovery": true,
+    "original_raw_ce_unchanged": true,
+    "unknown_decoder_learned": false,
+    "unknown_target_compatibility_proved": false
+  },
+  "historical_diffgpt": "Recorded phase-score-lerope105/105 across seeds0,1,2; not replayed here. This comparison retains the original conventional transformer seed1 and does not add DiffGPT endpoints."
+}
