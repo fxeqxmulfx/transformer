@@ -9,6 +9,9 @@ def choice($rows; $task; $mode; $key):
   | require(length == 1; "missing or duplicate mode choice") | .[0];
 def select_ce($rows; $tol): reduce $rows[] as $c (null;
   if . == null or $c.train_ce + $tol < .train_ce then $c else . end);
+def audit_vocabulary($audit; $vocab):
+  [$audit.vocabulary, $audit.original_vocabulary] | map(select(. != null))
+  | length > 0 and all(. == $vocab);
 def valid_candidate($c; $expected_splits; $selection):
   require(($c.train_ce | number) and ($c.metrics | type == "object")
     and ($c.primary_pass | type == "boolean") and ($c.all_splits_pass | type == "boolean")
@@ -59,7 +62,7 @@ $general[0] as $g | $families[0] as $fs | $protocol[0] as $p
                 "family data, scale, candidate identities or construction cost changed")
             | reduce $evaluation.candidates[] as $c (.; valid_candidate($c; ($meta.data_fingerprints|keys); $spec.selection)
                 | require(($c.id | type == "string") and ($c.model_sha256 | type == "string")
-                    and $c.audit.vocabulary == $meta.vocab
+                    and audit_vocabulary($c.audit; $meta.vocab)
                     and ($c.audit.train_ce - $c.train_ce | fabs) < 1e-10;
                     "candidate raw CE binding differs"))
             | select_ce($evaluation.candidates; $p.ce_tie_tolerance) as $selected

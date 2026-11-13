@@ -49,6 +49,12 @@ jq '.suite.tasks[0].name as $task|.suite.tasks[0].selection="validation/novel"
     |(.general.parents.full_suite_hull.choices[]|select(.task==$task)|.metrics["validation/novel"])={loss:4.2,sequence_accuracy:0.5}' "$out/fixture.json" > "$out/novel.json"
 run_fixture "$out/novel.json" > "$out/novel-result.json"
 jq -e '.choices_compared==105 and (.choices[0].selected.metrics["validation/novel"].sequence_accuracy==0.5)' "$out/novel-result.json" > /dev/null
+# Original density audits call this field original_vocabulary; newer phase
+# audits call it vocabulary. Both certify the same unchanged CE denominator.
+jq '(.families[0:2][] .summary.records[].result.evaluation.candidates[].audit)|=(.original_vocabulary=.vocabulary|del(.vocabulary))
+    |(.families[0:2][] .summary.mode_references[].selected.audit)|=(.original_vocabulary=.vocabulary|del(.vocabulary))' "$out/fixture.json" > "$out/legacy.json"
+run_fixture "$out/legacy.json" > "$out/legacy-result.json"
+jq -e '.choices_compared==105' "$out/legacy-result.json" > /dev/null
 mutations=(
   'del(.general.parents.full_suite_hull.choices[0])'
   '.general.parents.full_suite_hull.choices += [.general.parents.full_suite_hull.choices[0]]'
@@ -71,6 +77,7 @@ mutations=(
   'del(.families[0].summary.records[0].result.evaluation.candidates[0].metrics.validation)'
   '.general.choices[0].selected=null'
   '.families[0].summary.records[0].result.evaluation.status="proposal_ineligible"'
+  '.families[0].summary.records[0].result.evaluation.candidates[0].audit.original_vocabulary=98'
 )
 for index in "${!mutations[@]}"; do
   jq "${mutations[$index]}" "$out/fixture.json" > "$out/mutation.json"
@@ -83,4 +90,10 @@ cp "$source_dir/run.sh" "$out/gate/run.sh"
 jq '.general="missing-complete-parent"' "$source_dir/protocol.json" > "$out/gate/protocol.json"
 if bash "$out/gate/run.sh" compare "$out/should-not-exist" > "$out/gate.log" 2>&1; then exit 1; fi
 test ! -e "$out/should-not-exist"
-printf '%s\n' 'Full105 retention, derived novel splits, all35/modes, earlier-first CE, held-out invariance, constructor accounting, all-failure/no-model retention,21 mutations and missing-parent gate pass.'
+cp "$source_dir/finish.sh" "$out/gate/finish.sh"
+mkdir "$out/incomplete-gates"
+cp "$out/gate/protocol.json" "$out/incomplete-gates/protocol.json"
+printf '1\n' > "$out/incomplete-gates/general-gates.exit"
+if bash "$out/gate/finish.sh" "$out/incomplete-gates" "$out/unfinished-output" > "$out/finish-gate.log" 2>&1; then exit 1; fi
+test ! -e "$out/unfinished-output"
+printf '%s\n' 'Full105 retention, derived novel splits, both audit vocabularies, all35/modes, earlier-first CE, held-out invariance, constructor accounting, all-failure/no-model retention,22 mutations and missing-parent gate pass.'

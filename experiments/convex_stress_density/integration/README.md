@@ -15,7 +15,9 @@ parent checks and independent full105 hull replay, and checks the fresh summary
 against its pinned predecessor. Each frozen constructor binary then rechecks
 all nine result/replay bindings and regenerates its complete summary. Identity
 sets, original data fingerprints, vocabulary, scale, raw CE, split coverage,
-pass flags and mode references are checked before comparison. Sequence parents
+pass flags and mode references are checked before comparison. The two native
+audit schema names `original_vocabulary` and `vocabulary` must both match the
+actual CE denominator whenever present. Sequence parents
 can derive novel subsets from frozen raw data; their exact independently
 replayed metric inventory defines the preserved split set. Altered or missing
 parents fail; separate output preserves failed gates and subprocess resources.
@@ -29,7 +31,7 @@ every held-out split. No original integrated score is claimed before execution.
 
 The native metadata tests use synthetic scores and no original examples. They
 check all105 retention, CE ties/improvements, held-out invariance, complete
-failure/no-model cases, construction accounting,21 malformed input mutations
+failure/no-model cases, construction accounting,22 malformed input mutations
 and the missing-parent gate. Run from the repository/worktree root:
 
 ```sh
@@ -45,3 +47,16 @@ Commit the tested source and copy it to a rooted ignored artifact directory
 before execution. This is an adaptive integration of completed frozen runs,
 not a fresh unseen-data discovery experiment. Each subprocess runs under64GiB;
 generated evidence stays ignored and outside temporary worktrees.
+
+The first integration completed every native gate, then refused the older audit
+field name. Those gates and the original failure remain intact. `finish.sh`
+can complete a corrected metadata comparison into a fresh directory: it checks
+every successful gate exit, unchanged source/input/result manifests and the
+complete recovered endpoint manifests, then reruns all four native family
+summaries before applying the corrected reader. It accepts no partial gate.
+
+```sh
+bash experiments/convex_stress_density/integration/finish.sh \
+  experiments/convex_stress_density/runs/full35-integration-v1 \
+  experiments/convex_stress_density/runs/full35-integration-v2
+```
