@@ -1,5 +1,15 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Observed-label refinement (2026-11-13)
+
+Task #215 / CM23 proves the exact one-hot ordinary-CE/error identity, an
+independently checkable assignment dual certificate, decoder count descent
+and feasible row/column/decoder updates in the existing spectral decoder hull.
+Native refinement follows these proofs. It must retain the inaccurate interval
+candidate and all earlier candidates, expose assignment certificates, preserve
+observed-CE ties, replay full states and record costs under the 64 GiB cap.
+These local guarantees do not establish successful discovery or unseen answers.
+
 ## Convex density tolerances (2026-11-13)
 
 Task #213 / CM22 proves a convex interval tolerance for density diagonals,

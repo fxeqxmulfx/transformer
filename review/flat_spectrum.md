@@ -16343,3 +16343,66 @@ need declared training-only policies and empirical evaluation. Preserve exact
 and earlier candidates, all35 short/long tasks, full-batch, minibatch and
 forward-only modes, the transformer comparison and the 64 GiB limit. New
 original-data runs still require a separately frozen protocol.
+
+### CM23. Observed-CE refinement of decoded spectral candidates
+
+*Source-note extension for board task #215, 2026-11-13; Lean before native refinement.*
+
+CM22 removes one exact-subspace obstruction, but the accepted masked-sketch
+candidate still has 53 errors on 113 observed labels. Its latent moments meet
+their numerical bounds. Keep the exact search, interval search and earlier
+candidates; refine their proposed phase assignments using observed labels.
+
+For a deterministic predicted class `p` in the full vocabulary `C`, ordinary
+unit-logit cross-entropy satisfies
+
+```
+sum_c exp(1[c=p]) = exp(1) + |C| - 1,
+CE(onehot(p), y) = CE(onehot(y), y) + 1[p != y].
+```
+
+Thus summed observed CE is `idealLoss + errors`; averaged CE excess is the
+error fraction. Unobserved output classes remain in the denominator. This
+identity concerns deterministic unit-scale logits, not general soft predictions
+or variable scales. `ObservedRefinement/Basic.lean` proves the exact denominator,
+row identity, table identity, loss-comparison equivalence and observation grouping.
+
+Fix a decoder and column phases. For row `i` and candidate row phase `j`, let
+`A_ij` count actual observed mismatches if that row receives `j`. A permutation
+`pi` minimizes assignment cost if real potentials `u_i,v_j` satisfy
+
+```
+u_i + v_j <= A_ij             for every i,j,
+u_i + v_(pi(i)) = A_i,pi(i)   for every i.
+```
+
+Every permutation costs at least `sum_i u_i + sum_j v_j`, and `pi` attains that
+bound. `Assignment.lean` proves the certificate and connects its grouped matrix
+to actual observed prediction error, including repeated observations and unused
+axis values. A closed two-row witness strictly improves the old assignment.
+The native solver must expose integer dual potentials for an independent checker
+to test every inequality and selected equality; an assignment alone is insufficient.
+
+For fixed phases, let `N_lc` count observed label `c` at latent state `l`.
+Choosing a count maximizer for each state cannot increase observed error:
+`sum_l N_l,d(l) + errors = number of observations`. Empty states contribute zero
+for any decoder choice, providing no evidence for their missing labels.
+`Decoded.lean` proves this identity and decoder descent, and combines the
+assignment certificate with actual CE descent for both row and column updates.
+
+Every resulting table is `onehot(d(r(i)+s(j)))`. CM14 supplies the same radius-N
+operator and nuclear upper bounds for its latent moments; CM15 admits its
+decoded table into the common convex decoder hull, even if it does not fit.
+`phase_member`, `row_step`, `column_step` and `decoder_step` make feasibility and
+observed CE descent explicit. Closed examples inhabit all conditional results.
+Neither a recovered mode nor the true decoder is assumed; budgets are unchanged.
+
+This certifies local steps, not globally successful discovery. Discrete
+row/column/decoder search is not a jointly convex parametrization; the prediction
+hull is convex. Ties can cycle and a capped search can stall. CM15's two exact
+observed minima still disagree at an unseen cell. Retain earlier candidates on CE
+ties, every seed and failure, full states and work ledgers. Native work needs
+declared caps, independent integer assignment and raw latent/CE audits,
+original-input replay and the 64 GiB cap. All 35 tasks, short/long variants,
+three modes and the conventional transformer comparison remain required;
+this source note asserts no new benchmark accuracy.
