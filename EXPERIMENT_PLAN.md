@@ -1,5 +1,18 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
+## Complete categorical fiber constraints (2026-11-13)
+
+Task #220 / CM26 starts from actual same-label observation groups. Lean proves
+that injective shifted phases and a matching actual decoder-fiber cardinality
+make such a group complete, then derives its row/column phase-sum equation.
+Seven theorems include a counterexample to dropping completeness; closed
+witnesses include nonconstant axes and a nonconstant many-to-one decoder.
+A common fiber mass is an explicit additional hypothesis. Observed counts
+alone do not justify it. A future native finite-field proposal must retain
+every guessed multiplicity, equation, nullspace choice and cap, independently
+check actual endpoints and preserve all earlier candidates. Freeze it only
+after its own tests; no new original result follows from this theory.
+
 ## Categorical constant strips (2026-11-13)
 
 Task #219 / CM25 uses a latent domain three times larger to mark constant

@@ -17,11 +17,12 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityBounds
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ObservedRefinement
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.BalancedFeatures
 public import Transformer.Grokking.FlatSpectrum.CoupledMoments.TaggedPhases
+public import Transformer.Grokking.FlatSpectrum.CoupledMoments.BalancedFibers
 
 /-!
 # Shared class distributions and complex spectral bounds
 
-Source: `review/flat_spectrum.md`, CM1–CM25. Multiple fixed complex code readings share the
+Source: `review/flat_spectrum.md`, CM1–CM26. Multiple fixed complex code readings share the
 same learned class probabilities. The domain and ordinary CE are convex, Fourier coordinates
 preserve the full distribution, and a feasible exact observed fit certifies a CE minimum.
 No universal identification of unseen labels follows; SB3 remains a counterexample.
@@ -51,6 +52,9 @@ budgets. Feasibility does not establish phase recovery or unseen labels.
 CM25 (`TaggedPhases`): a larger latent domain permits constant categorical input
 strips alongside nonconstant interiors and preserves prior phase vertices.
 Observable agreement certifies CE optimality, not discovery of unseen labels.
+CM26 (`BalancedFibers`): injective phase coordinates and complete same-label
+groups give exact additive fiber-sum equations. Completeness and common fiber
+mass remain explicit hypotheses; observed multiplicities do not certify them.
 -/
 
 @[expose] public section

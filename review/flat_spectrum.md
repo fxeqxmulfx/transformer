@@ -16575,3 +16575,78 @@ discovery policies and the 64 GiB process cap must be frozen before original
 data, preserving all35 short/long tasks, full/mini/forward modes and the
 conventional-transformer comparison. No new benchmark score follows from this
 capacity construction.
+
+### CM26. Complete categorical fibers give phase-sum constraints
+
+*Source-note extension for board task #220, 2026-11-13; Lean before native discovery.*
+
+An empirical same-label group contains more information than independent scalar
+sketches, but its observed size alone does not establish a complete decoder
+fiber. Let `G` be a finite additive commutative group, `d:G -> C` an arbitrary
+categorical decoder, `r:I -> G` an injective input-phase map, and `b:G` a fixed
+opposite-axis phase. Define the actual full fiber
+
+```
+fiber(d,c) = {z in G : d(z)=c}.
+```
+
+Suppose a finite observed group `F` satisfies `d(r(i)+b)=c` for every `i` in
+`F`. Its shifted phase image lies in this fiber (`observed_subset`). Translation
+preserves injectivity (`shift_injective`). If the cardinality of `F` also equals
+the cardinality of the actual full fiber, the image has the same size as its
+containing fiber and therefore equals it (`complete_image`). No latent phase,
+full fiber size or completeness is inferred merely from an observed count.
+
+Summing the actual distinct latent phases now yields (`fiber_sum`)
+
+```
+sum_(i in F) r(i) + |F| • b = sum_(z in fiber(d,c)) z.
+```
+
+Consequently a complete size-`k` observed group in column `j`, whose actual
+decoder fiber has mass `mu`, satisfies (`row_equation`)
+
+```
+sum_(i in F) r(i) + k • s(j) = mu.
+```
+
+With injective column phases, the corresponding complete group in row `i`
+satisfies (`column_equation`)
+
+```
+k • r(i) + sum_(j in F) s(j) = mu.
+```
+
+The two orientations constrain the same phase coordinates. A common mass
+across several labels is legitimate only when their actual full fibers all
+have that mass. This optional balanced-fiber structure is an additional
+categorical model hypothesis, not a consequence of a flat spectrum. The
+decoder itself may merge many latent states; it is not supplied with numeric
+semantics of the original token names. Closed examples include nonzero shifts,
+a many-to-one fiber, and a nonconstant decoder on five latent states with a
+four-element fiber of mass zero. `incomplete_fiber_counterexample` exhibits
+an observed singleton in a three-element fiber whose shifted phase sum is
+different, so dropping completeness would make the equation false.
+
+For a proposed prime cyclic latent domain, these equations are linear over its
+finite field. A native learner may guess multiplicities from observed groups,
+assemble both orientations, solve a bounded affine system and enumerate a
+bounded part of its nullspace. It must retain those guesses as guesses: an
+incomplete group, a wrong domain or a nonbalanced decoder can invalidate the
+intended structural interpretation. Zero or other nonidentifying solutions
+may satisfy the linear equations. Further nullspace freedom need not consist
+only of harmless phase shifts and rescaling. Every proposed endpoint therefore
+needs independent checks of its original equations, phase injectivity, empirical
+decoder coverage, actual observed fit and spectral budgets; passing these does
+not by itself prove true unseen labels. No universal identification or efficient
+global search theorem is asserted.
+
+This is another categorical proposal mechanism inside the existing decoded
+spectral hull. Any final phase table still uses CM23's unconditional phase
+membership and actual ordinary-CE/error identity. Complete-group assumptions
+explain when this initialization is structurally justified; they do not change
+CE, prove a wrong guessed system sound, or replace the raw checks. Native work
+must declare finite-field, multiplicity, anchor, nullspace and enumeration
+budgets before its own original follow-up, retain the complete task219 parent,
+freeze tested source, and preserve all35/modes/transformer scope and64GiB cap.
+No new measured benchmark result is claimed by these equations.
