@@ -49,10 +49,50 @@ FIBERS_PRODUCER_COMMIT=<committed-producer> FIBERS_BINARY=<frozen-binary> \
   experiments/convex_stress_fibers/runs/original-v1
 ```
 
-Commit and freeze the tested producer, complete source fingerprint, binary,
-protocol and launcher before preparing original data. The parent summary hash
-is bound in the protocol. All original parent reports must compare exactly to
-their retained copies. No original fiber score exists yet. The 27 mode records
+The tested producer, complete source fingerprint, binary, protocol and launcher
+were frozen before preparing original data. The parent summary hash is bound
+in the protocol. All original parent reports compare exactly to their retained
+copies. The 27 mode records
 refer to nine forward constructions; they are not three optimizer runs. All35
 short/long tasks, full/mini/forward comparisons, stronger earlier families and
 the conventional transformer remain required for final integration.
+
+## Frozen original-v1 findings
+
+Producer `0e0c2d66cb88ba3bf4d982810505d43237ba8eba`, source fingerprint
+`660de1fd395b9d82583f16c37fa132b32f59eb5beb0ea7a146a4b4fa1b6ebd81`, and binary
+`ff19a7a111482184bdb8353b529221b8519e4448c5800be679d2914119d6aaa9` completed
+all nine cases and their full replays without process failures. Every input,
+earlier proposal and complete tagged parent is unchanged. The summary digest is
+`d6b12e04b9bb7c08de7d8cba81619ee3534dc7f692d51aa0229819f0050d5777`.
+
+| Task | Selected candidate | Observed errors | Primary accuracy |
+| --- | --- | ---: | ---: |
+| Permuted addition | Earlier proposal | 0 / 4704 | 100% |
+| Addition | Earlier proposal | 0 / 4704 | 100% |
+| Subtraction | Earlier proposal | 0 / 4704 | 100% |
+| Division | Earlier tagged candidate | 1793 / 4656 | 55.67% |
+| Multiplication | Earlier proposal | 1198 / 4704 | 72.60% |
+| Sum-cube | New fiber candidate | 0 / 4704 | 100% |
+| Sum-power-four | New fiber candidate | 0 / 4704 | 100% |
+| Absolute difference | Earlier proposal | 4061 / 4704 | 3.78% |
+| Blind absolute difference | Earlier tagged candidate | 1671 / 4704 | 61.40% |
+
+The result improves from 3/9 to **5/9 primary and all-split passes**. Sum-cube
+and sum-power-four each contribute one new model, selected by observed CE
+before held-out evaluation. Their ordinary unit-logit CE is
+3.5922701555123604. Both recover all 4705 held-out cells, completing their
+9409-cell tables. No arithmetic interpretation of the class names enters
+the constructor. Sum-cube's size-three system has one free coordinate and
+enumerates all 97 coefficients; fourth-power's size-four system has two free
+coordinates and enumerates all 9409 pairs. Other guessed sizes and failed
+systems remain in their reports.
+
+Across nine cases, the new fiber stages perform 49,952,939 scalar updates,
+725,770 row operations and 9507 coefficient trials; two admitted models receive
+194 raw frequency audits. They perform zero CE gradient evaluations. Total
+construction time, including rebuilding every older parent, is 903.440 seconds;
+peak measured process RSS across construction and replay is 175,388 KiB
+(171.3 MiB), under the 64 GiB cap. Existing stronger division, multiplication
+and absolute-difference families remain required in the full comparison. This
+standalone cohort is not a full35 result or three separate optimizer runs.

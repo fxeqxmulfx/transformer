@@ -68,8 +68,15 @@ and raw spectral/CE checks reject invalid candidates. A separate exact-fit
 fixture retains two different unseen completions, with no identification claim.
 The parent-preserving original harness now passes four checks, retaining every
 tagged-family candidate and earlier-first CE tie, with all27 mode references
-and rehashed tampering checks across balanced/tagged/fiber reports. Commit and
-freeze this tested producer before the unchanged nine-case original follow-up.
+and rehashed tampering checks across balanced/tagged/fiber reports. Frozen
+producer0e0c2d66 now completes and replays all nine original cases without
+failures, retaining byte-identical inputs and complete tagged parents. The
+new fiber models recover sum-cube and fourth-power completely, improving this
+family from3/9 to5/9 all-split passes. They add two models,9507 coefficient
+trials and194 raw-frequency audits; all CE gradients remain zero. Complete
+construction including older parents takes903.440s, with171.3MiB peak process
+RSS. The full105 comparison must retain stronger earlier families; this is
+not yet a full35 result.
 
 ## Categorical constant strips (2026-11-13)
 
