@@ -1,6 +1,6 @@
 use super::*;
 
-fn fixture() -> (Input, Vec<[usize; 2]>) {
+pub(crate) fn fixture() -> (Input, Vec<[usize; 2]>) {
     let (n, q) = (17, 7);
     let mut targets = vec![];
     let mut observations = vec![];

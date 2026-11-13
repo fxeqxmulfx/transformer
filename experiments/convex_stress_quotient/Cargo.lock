@@ -59,6 +59,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "convex-stress-consequences"
+version = "0.1.0"
+dependencies = [
+ "convex-stress-modular",
+ "convex-stress-tagged",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "convex-stress-decode"
 version = "0.1.0"
 dependencies = [
@@ -96,6 +106,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "convex-stress-modular"
+version = "0.1.0"
+dependencies = [
+ "convex-stress-fibers",
+ "convex-stress-tagged",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "convex-stress-moments"
 version = "0.1.0"
 dependencies = [
@@ -109,7 +129,9 @@ dependencies = [
 name = "convex-stress-quotient"
 version = "0.1.0"
 dependencies = [
+ "convex-stress-consequences",
  "convex-stress-fibers",
+ "convex-stress-tagged",
  "serde",
  "serde_json",
 ]

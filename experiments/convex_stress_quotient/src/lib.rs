@@ -1,16 +1,25 @@
 //! CM30 / Lean e02b7c49: colliding class codes are legitimate latent proposals.
-//! The finite-field engine ports the exact core used by CM27. Discovery pins
-//! only two harmless shifts and compacts observed categorical names; it never
-//! supplies an arithmetic answer rule or certifies raw-label identification.
+//! The finite-field engine ports the exact core used by CM27. CM25 bounds the
+//! actual complex latent matrices; CD8 trains a convex ordinary-CE head on fixed
+//! features. Original row programs certify codes under CM30's assumptions.
+//! Discovery is discrete, with two shift gauges and observed categorical names;
+//! it supplies no arithmetic answer rule or raw-label identification claim.
+pub use convex_stress_consequences::row_program;
 pub use convex_stress_fibers::{Result, finite_system};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::BTreeSet;
 mod audit;
+pub mod binding;
+pub mod certificate;
+pub mod model;
+#[cfg(test)]
+mod model_tests;
 mod plan;
 mod run;
 #[cfg(test)]
 mod tests;
+pub mod training;
 pub use audit::check;
 pub use run::run;
 

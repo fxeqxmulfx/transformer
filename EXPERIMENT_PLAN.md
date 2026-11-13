@@ -14,6 +14,14 @@ arms and all35 tasks. CM30's10 Lean theorems are proved and reviewed; they
 extend code/quotient certification without claiming unique raw labels or an
 additional benchmark pass. The complete35-task goal remains open.
 
+Tasks229–230 now implement colliding-code discovery and its actual complex
+latent/readout binding. Eighteen native checks cover raw Fourier/SVD bounds,
+ordinary full-vocabulary CE, full-batch/minibatch/forward states, independent
+gradient/projection replay and original raw-row certificates. Hidden aliases
+are handled at the code level without claiming unique raw answers. This uses
+the already proved CM30 and CD8 statements; original task evaluation remains
+gated on task226 and a separate prospective freeze.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine
