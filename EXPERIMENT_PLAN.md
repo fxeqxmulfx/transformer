@@ -21,7 +21,10 @@ enumeration recover masked pair/triple/four-fiber fixtures with permuted input
 phases and renamed output classes. Independent actual-fiber/coverage/injectivity
 and raw spectral/CE checks reject invalid candidates. A separate exact-fit
 fixture retains two different unseen completions, with no identification claim.
-The parent-preserving original harness and separate freeze remain next.
+The parent-preserving original harness now passes four checks, retaining every
+tagged-family candidate and earlier-first CE tie, with all27 mode references
+and rehashed tampering checks across balanced/tagged/fiber reports. Commit and
+freeze this tested producer before the unchanged nine-case original follow-up.
 
 ## Categorical constant strips (2026-11-13)
 

@@ -49,7 +49,9 @@ The implemented categorical construction is fixed before original discovery:
    frequency, SVD budget and ordinary full-vocabulary CE. Keep all earlier
    task219 candidates and earlier-first CE ties. Freeze a separately tested
    producer before evaluating unchanged original splits. The parent-preserving
-   original harness is the next step; no original fiber run has started.
+   [original harness](cohort/README.md) now passes four additional checks,
+   including earlier CE ties and rehashed tampering across all parent/new
+   ledgers. Freeze its tested producer next; no original fiber run has started.
 
 The common policy tries at most four distinct observed sizes, largest first;
 retains at most 4096 equations per size; permits nullity at most three; and
