@@ -3,8 +3,48 @@
 This adapter binds the reviewed CM31/CM32 component at `c55fe210` to the original
 pair-task training data. It constructs and independently replays refined heads
 without scoring a held-out split or selecting against a previous model. Original
-execution is a separate frozen follow-up after task242 review. No new benchmark
-success follows from the adapter's synthetic tests.
+execution was frozen after task242 review and is now complete. No new benchmark
+success follows from the adapter's synthetic tests or training-only results.
+
+## Complete original training results
+
+Task243 retains every original stage: all23 cases run and independently replay,
+with1265 stage records and zero process failures. Six stages admit full, mini
+and forward modes, all at modulus97: arithmetic-cube-plus, arithmetic-sub,
+arithmetic-add, arithmetic-square-sum, arithmetic-half-sum and
+arithmetic-perm-add. Each of their18 endpoints has zero observed raw errors and
+CE approximately3.62e-9. All three modes start from the already fitting refined
+initializer; these losses do not demonstrate optimizer convergence.
+
+| Outcome | Stages | Interpretation |
+| --- | ---: | --- |
+| Actual full/mini/forward states available | 6 | Original observations fit; no held-out evaluation |
+| Fourier shape cap | 331 | Explicit constructor refusal retained |
+| Source admitted no latent code | 692 | Original discovery refusal retained |
+| Source stage returned an error | 236 | Original failed stage retained |
+
+Fibonacci has no admitted source code and gains no endpoint. Construction costs
+185.750755602 recorded seconds and120 CE gradient batches (six full steps and
+six19-batch mini epochs); forward uses zero gradients. These constructor totals
+exclude inherited source discovery and the separately measured preparation,
+replay and summary work. The latter takes10m46.84s for the original summary;
+run/replay peak RSS is272068KiB. All processes use the64GiB cap. Original
+summary and inventory files remain under `cohort/runs/training-v1` in the root.
+
+The frozen producer is `4f210282986efaa7ce2a9d2c491588ba35a2255f`, source
+fingerprint `f044d46f75bbf84e6f0b10addcac5ba28cb3987bdb604d4f6310ae12f7ccdf76`
+and executable digest
+`badc5dc48abd5036a5889374dc921067d7b5398025560c79e242faff00fa73eb`.
+The original summary digest is
+`e52725e3bd4ce92c9e5841892530e1d2729b07f43f47f3056c1c026cead934ef`,
+and inventory digest is
+`113d440c9d1ad17af420a047349c3c2d3ef4ead0ad3a8cd39dfd9f114e5512b5`.
+The request, protocol, frozen executable and hashes remain in
+`.kanban/artifacts/243/freeze-v1`. Rebuild the summary with that executable's
+`summarize` command and compare it byte for byte; `replay-case` reconstructs
+the actual numerical states for an individual case. These are training
+availability counts, not additions to the35-task success total. The complete
+comparison still requires the reviewed parent chain.
 
 ## Frozen inputs and complete scope
 

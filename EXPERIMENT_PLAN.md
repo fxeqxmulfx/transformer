@@ -231,6 +231,18 @@ benchmark counts remain unchanged. Review this component before a separately
 frozen original adapter/cohort; runtime code matches still do not establish
 the unknown-target or readout hypotheses of CM34.
 
+Task243's frozen original refined training has now closed: all23 cases and1265
+stages complete and independently replay, with zero process failures. Six
+modulus97 stages provide full/mini/forward endpoints, each with zero observed
+raw errors and CE about3.62e-9. The ledger retains331 Fourier shape refusals,
+692 stages with no source code and236 source-stage errors. Fibonacci remains
+unavailable. Construction costs185.750755602 seconds and120 gradient batches;
+peak run/replay RSS is272068KiB under64GiB. No new discovery, held-out metric
+or parent selection occurs. The existing34/34/33 primary counts are unchanged;
+the task246 comparison still requires the reviewed parent chain. Task251
+tracks a separate prospective original-data adapter for the new complete-kernel
+component; it cannot reuse the older one-direction discovery as its full basis.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine

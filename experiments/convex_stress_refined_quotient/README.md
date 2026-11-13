@@ -4,7 +4,8 @@ Can a fixed complex head fit observed raw aliases while preserving the learned
 quotient's default answers? CM31 and CM32 in `review/flat_spectrum.md`, proved
 at `fbbe4617` and `b52ba949`, establish the representation, convex domain and
 feasible updates before this native implementation. Fourteen native checks pass.
-No original benchmark has run through this component yet.
+The original training-only follow-up now completes all 23 pair cases; held-out
+comparison remains separate.
 
 ## Model and proof boundary
 
@@ -120,6 +121,21 @@ The native index generator's `--check` verifies the committed index. This
 component introduces no Lean statement or additional unproved premise.
 
 ## Original comparison follow-up
+
+Task243 completed all 1265 frozen stages (23 tasks times55 primes) and their
+independent case replays with zero process failures. Six modulus97 stages admit
+all three modes: cube-plus, subtraction, addition, square-sum, half-sum and
+permuted addition. Their 18 endpoints have zero raw training errors and CE near
+3.62e-9. The initializer already fits the observations; this is a consistency
+and preservation result, not a convergence or held-out success result.
+
+The complete ledger retains331 Fourier shape refusals,692 source stages without
+a code and236 source-stage errors. Fibonacci remains unavailable. Construction
+takes185.750755602 recorded seconds and120 gradient batches; forward adds none.
+Peak measured run/replay RSS is272068KiB, below the64GiB process cap. Discovery
+is reused, so its earlier cost remains charged in the source records. The
+training-only summary evaluates no held-out split and selects no parent model.
+See `cohort/README.md` for frozen hashes and reproduction.
 
 Land and independently review this component before any original-data run.
 A separate adapter and protocol must bind previously saved categorical
