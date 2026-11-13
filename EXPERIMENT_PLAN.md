@@ -36,10 +36,13 @@ admit a forward decoder when no individual slot suffices, while the channel's
 ordinary CE stays convex. Presence-feature invariance and a candidate-order
 counterexample make the required selection assumptions explicit. Task234 will
 implement and test this generic causal repair before a separate original
-evaluation. Its first native component passes five discovery tests, with all
-generic causal features, lazy pair enumeration, original-label checks, caps and
-retained candidate traces. The complex head and full comparison adapter remain
-in progress. The running quotient protocol remains unchanged.
+evaluation. Its native component passes 15 tests: generic causal discovery,
+actual complex Fourier features and a convex full-vocabulary CE head in all
+three modes. Independent complex derivatives, finite differences, trajectory
+and refusal replay, unseen masks and the candidate-order obstruction retain
+the Lean boundary. A full-batch cap preserves available mini/forward models.
+The complete original adapter remains in progress. The running quotient
+protocol remains unchanged.
 
 ## Recovered comparison queues (2026-11-13)
 

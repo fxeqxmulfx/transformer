@@ -1,5 +1,5 @@
 use crate::*;
-fn pair_request() -> Request {
+pub(crate) fn pair_request() -> Request {
     Request {
         input: Input {
             vocabulary: 7,

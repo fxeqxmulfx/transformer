@@ -2,10 +2,13 @@
 //! Discovery is discrete. Subsequent fixed-feature complex readout CE is convex.
 pub use convex_stress_tagged::{C, Result, linalg, metrics};
 use serde::{Deserialize, Serialize};
+pub mod binding;
 pub mod discovery;
 pub mod features;
+pub mod model;
 #[cfg(test)]
 mod tests;
+pub mod training;
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
