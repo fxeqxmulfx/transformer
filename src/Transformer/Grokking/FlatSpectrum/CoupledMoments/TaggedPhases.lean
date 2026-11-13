@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.CoupledMoments.TaggedPhases.Feasibility
+public import Transformer.Grokking.FlatSpectrum.CoupledMoments.TaggedPhases.Refinement
 
 /-!
 # Categorical constant strips in a larger convex spectral decoder hull

@@ -16551,6 +16551,21 @@ obstruction without asserting recovery of an unknown structure. Closed
 examples inhabit every conditional theorem, including strict interior error
 improvement and exact-fit optimality.
 
+The native input and latent cardinalities must also be allowed to differ,
+and several input categories may share a phase. `Refinement.lean` therefore
+defines the actual mismatch cost for assigning each possible latent phase
+to an input category. `grouped_errors` equates the sum of those grouped costs
+with the original observation error, including duplicates and unused inputs.
+`choice_descent` transfers nonincreasing per-input costs to actual observed
+error descent. `choice_minimum` certifies the globally best update of one
+axis when every possible choice in each cost row is checked. Unlike CM23's
+permutation assignment, this update does not require different inputs to
+receive distinct phases. `free_row_step` and `free_column_step` combine it
+with ordinary CE descent and membership in the existing phase hull. Closed
+witnesses assign two input categories the same phase in a three-state latent
+domain. Finite independent minimization is a coordinate update, not a joint
+global phase/decoder search theorem; empty observations provide no unseen label.
+
 A native follow-up may propose flags from observed categorical agreement,
 but a constant-looking partial row need not be constant at unseen entries.
 Retain ambiguous, inconsistent and capped proposals. Keep every older candidate
