@@ -360,6 +360,17 @@ labels and bank order, both gauge choices return exactly the same class or
 refusal. Concrete examples change both anchors. No native selection rule,
 unknown-target premise, original run or benchmark count changes.
 
+Task264 / CM38 supplies the Lean-first fallback repair. Fixed support routes
+actual candidate logits inside support and saved parent logits outside it.
+Both complex coefficient blocks and their storage are charged, and flat
+component codes supply the retained feature/logit bound. The affine domain
+freezing the parent and ordinary normalized CE remain convex. Covered original
+batches have exactly the candidate's objective and derivatives, with their
+raw labels and original multiplicity. An actual bounded Fourier-head witness
+still regresses on a supported unseen alias while preserving an unsupported
+input. Native binding and full35 evaluation remain necessary; frozen original
+protocols, selectors and benchmark counts do not change from this proof.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine

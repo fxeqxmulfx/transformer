@@ -10,6 +10,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.FourierCode
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.QuotientWitness
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RefinedBox
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RefinedCE
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.Fallback
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -37,6 +38,10 @@ The arbitrary-table coefficient bound covers every resulting iterate.
 CM33 derives ordinary CE through the actual complex head and proves that
 projected nonnegative full/minibatch steps preserve observed margins and
 cannot increase observed row CE while retaining the same budget and defaults.
+CM38 freezes a parent head outside a candidate's fixed support, deriving actual
+complex logits, charged budgets, convex ordinary CE and equality of covered
+batch derivatives. A supported unseen alias can still regress despite flat
+component codes; support is not an unknown-target correctness certificate.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/

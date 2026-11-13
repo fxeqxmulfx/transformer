@@ -17594,3 +17594,77 @@ unchanged, as are the frozen parent-first comparison and all original runs.
 
 Lean: `CoupledMoments/ReadoutKernel/Gauges`, using CM34's actual normalization
 and CM36's explicit linear coefficient pullback.
+
+## CM38. Keep a frozen parent outside candidate support
+
+The complete causal comparison in task245 replaces a successful forward-only
+associative-divisor parent with a lower-training-CE model whose primary accuracy
+is53.86598%. Its report retains2,148 unknown validation prediction calls. That
+count is not by itself an attribution of each error. It motivates a separately
+declared fallback model; it does not authorize changing the frozen outcome.
+
+Let `g(x)` be a fixed Boolean support predicate obtained from the candidate's
+observed structure. Let `phi(k,x)` and `psi(l,x)` be the candidate and parent
+features, with coefficient blocks `W` and `P`. Define the combined features on
+the disjoint coordinate union by `(phi(x),0)` when `g(x)` is true and by
+`(0,psi(x))` otherwise. Store the actual combined coefficients `(W,P)`. Expanding
+the finite dot product gives exactly the candidate logits on supported inputs
+and the parent logits elsewhere. No answer or held-out score enters this gate.
+
+For complex component matrices, realification gives the same identity for
+the real parts of the actual complex matrix products, with both real and
+imaginary coefficients free. Every combined real tensor has such a pair of
+complex blocks. Both stored blocks are charged: per-class absolute-sum budgets
+`Rc,Rp` give combined budget `Rc+Rp`, and the number of real coefficient slots
+is `2*(nc+np)*|C|`. A sparse prediction call does not eliminate stored parameters.
+
+If the component codes are unitary, their realified coordinates have absolute
+value at most one. Routing only zeroes inactive coordinates, so the same
+bound holds for the combined features. Every feasible combined logit is
+therefore bounded by the charged coefficient radius. This uses flat component
+spectra as a capacity bound; the routed matrix over inputs need not be unitary.
+The corresponding nonnegative common feature bound also applies to components
+whose bounds are established separately.
+
+Intersect the combined absolute-sum budget with affine coordinate equations
+fixing the entire parent block to its saved value. This domain is convex and
+contains the combined point whenever both original heads meet their charged
+budgets. Ordinary full-vocabulary CE remains convex on this domain because
+the complete coefficient tensor still enters the logits linearly. Every
+feasible finite sequence preserves the parent's exact logits wherever `g`
+is false. Candidate updates, discovery of support, and feasibility of a native
+numeric trace remain separate checks; no convergence theorem is asserted.
+
+For an original batch of record IDs, average CE by that batch's cardinality.
+Distinct IDs retain repeated input/label observations. If every record in the
+batch has `g=true`, the combined batch objective is exactly the candidate's
+objective as a function of every candidate coefficient. Its Frechet derivative
+therefore agrees, and any actual derivative-existence proof transfers. The
+statement retains the full original raw label vocabulary and the actual
+normalizer, including unequal final minibatches. An empty batch has zero
+objective by the zero-inverse convention; it supplies no learning claim.
+Forward-only prediction uses the same initial combined point with no updates.
+
+Support is not a correctness certificate. A concrete three-input witness
+observes only input0 with raw label false. The candidate maps inputs0 and1 to
+state0 and input2 to state1. Its observed-state support test therefore accepts
+the unseen input1 but rejects input2. The parent keeps three distinct states.
+Both actual coefficient blocks use the proved four-state flat Fourier matrix,
+margin24, and state labels false at0 and true elsewhere; their combined point
+fits budget512. They have equal ordinary CE on the observed input. Nevertheless,
+for the explicit target false/true/true, the supported unseen input1 changes
+from the parent's correct prediction to the candidate's strictly wrong one.
+The unsupported input2 retains the exact parent logits. This is a bounded
+model-class counterexample, not a claim to learn the parent from one record.
+
+Consequently the fallback supplies exact preservation only on the unsupported
+region. Native saved-state loading, observed-support binding, combined resource
+accounting, and complete original metrics must still be checked. Any supported
+regression remains visible. The245 comparison,252/255 complete-kernel protocol,
+260/261 grouped comparison and their CE selectors remain frozen. A native
+fallback or structural tie prior requires a separate prospective model and
+complete35-task comparison before any improved benchmark count is claimed.
+
+Lean: `ConvexDepth/Fallback/{Basic,Domain,Batch,Witness}`, composed with CD8,
+CFt5 and their actual complex-head and ordinary-CE definitions. The fixed route
+and feature library are not jointly optimized as raw transformer parameters.
