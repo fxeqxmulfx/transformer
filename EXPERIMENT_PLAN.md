@@ -10,8 +10,11 @@ The original conventional transformer completed32/35 all-split passes; its
 independent review now reproduces all35 endpoints and its complete summary
 byte-for-byte and is approved. Task175's48 retained depth heads all
 pass and are reviewed. Task227's native integration checks are approved;
-task226's frozen original integration is running with both initializer
-arms and all35 tasks. CM30's10 Lean theorems are proved and reviewed; they
+task226's frozen original integration and replay now pass, with both initializer
+arms reaching33/35 full and mini,32/35 forward. All6786 artifact bindings and
+the complete summary reproduce; a separate task226 review is pending. Shifted
+AND and recurrence remain, plus forward-only branch amplitudes. CM30's10 Lean
+theorems are proved and reviewed; they
 extend code/quotient certification without claiming unique raw labels or an
 additional benchmark pass. The complete35-task goal remains open.
 

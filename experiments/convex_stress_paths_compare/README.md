@@ -77,5 +77,33 @@ paths refer to the retained independent checks under `.kanban/artifacts`.
 Generated requests, manifests, reports and logs remain local; source and the
 generator are committed. Hashing streams64KiB blocks, JSON files are bounded to
 8GiB, individual binary/cache artifacts to16GiB, and both comparison processes
-run under the user's64GiB address-space limit. No original comparison results
-are claimed by these fixture checks.
+run under the user's64GiB address-space limit.
+
+## Original integration (2026-11-13)
+
+The frozen producer `ad272c62c44dfb9ca184b379bc6f017efd473e7c` completed
+preparation and integration replay under `runs/original-v1`. Both initializer
+arms have the same counts:
+
+| Mode | Every held-out split passes | Primary split passes | No model |
+| --- | ---: | ---: | ---: |
+| Full batch | 33/35 | 34/35 | 0 |
+| Minibatch | 33/35 | 34/35 | 0 |
+| Forward only | 32/35 | 33/35 | 1 |
+| Conventional transformer | 32/35 | 33/35 | 0 |
+
+Each arm selects twelve retained Residual heads: depth4 on binding and both
+depth tasks, and depth2 on MQAR, across all three modes. Shifted Boolean AND
+still fails its out-of-distribution split, and the Fibonacci recurrence task
+still fails. Forward-only also lacks a branch-amplitudes model. The transformer
+row is the independently reviewed task191 cohort, referenced once across modes.
+These are observed-CE choices among retained models with their original costs;
+they do not establish matched compute or a new training algorithm.
+
+Integration replay verifies all6786 retained artifacts, both105-choice arms,
+all336 depth outcomes and all35 transformer endpoints. Its summary hash is
+`23922c1c5c1c731a6af565b881543416907498f0bec94129bf2bc99c2bfdb956`.
+Preparation took10m32s and replay20m44s, with peak resident memory6.9GiB.
+The replay rechecks artifact bindings and selection using the independently
+reviewed numerical endpoints; it does not retrain or reevaluate predictions.
+Task226's separate review is required before this result becomes a new parent.
