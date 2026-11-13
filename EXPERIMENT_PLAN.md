@@ -271,6 +271,16 @@ two fitting targets disagree on the raw answer. Ordinary raw-label CE and
 original metrics remain unchanged. This is a theory boundary for a future
 native alias-aware producer, not an additional benchmark pass.
 
+Task229 starts that native component in `convex_stress_quotient`. Its fixed
+prime catalogue is independent of data; each stage compacts observed categorical
+names, solves original observed equations with two shift gauges and retains
+colliding class codes. Independent signed128-bit checks replay every original
+equation and preserve caps, ambiguity and conflicts; unused axes stay unknown.
+Five synthetic checks pass, including a seven-state/14-raw-label hidden-alias
+table, categorical renaming and seven altered reports. Actual complex model,
+bounded ordinary-CE readout, CM30 query certificates and a separate original
+freeze remain necessary before any new benchmark result.
+
 ## Complete categorical fiber constraints (2026-11-13)
 
 Task #220 / CM26 starts from actual same-label observation groups. Lean proves
