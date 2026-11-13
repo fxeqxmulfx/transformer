@@ -7,13 +7,13 @@ allows a learned combined path/feature/class tensor under per-class absolute-sum
 budgets. The blocks remain fixed. Separate learned routing and decoder factors
 would introduce a product and are not covered by that joint-convexity claim.
 
-This directory contains the path bank, a learned output tensor, an allocation
-preflight and training-only optimizer checks. No held-out stress accuracy is
-claimed from the implementation checks. Independent-routing and additive
-baselines and the comparison runner are implemented. `protocol.json` freezes
-the full comparison before its first held-out score. The earlier training-only
-results below remain tied to their producer.
-The interrupted earlier 35-task cohort remains unchanged.
+The original288-cell comparison and its separate48-case retained-path follow-up
+are complete, with every saved outcome replayed. The original cohort retains
+270 trained outcomes and18 memory refusals; training-only depth selection passes
+60/72 comparisons. All48 retained-path cases score100% sequence accuracy on
+every original held-out split, including long MQAR and both depth tasks.
+These four-task results do not establish the full35 or transformer comparison.
+The earlier training-only results below remain tied to their producer.
 
 | Component | Fixed construction | Information used |
 | --- | --- | --- |
@@ -380,7 +380,7 @@ dense/streamed updates through the shared training loop, vocabulary-dependent
 CE calibration and complete inventories for both protocols. A corruption test
 also moves an example boundary while keeping all flattened rows unchanged;
 the new replay rejects it, protecting minibatch semantics that a full-data CE
-check would miss. There are no retained-path stress results yet.
+check would miss. The completed retained-path results are reported below.
 
 The frozen retained producer is `9da1c677`, with source fingerprint
 `5f95365da8434756d09b79ad485aba32e4cd2addcfec7a76f9571a8e5ab92e33`.
@@ -393,3 +393,55 @@ The frozen follow-up is queued behind that specific live cohort process and
 will require its successful exit plus the complete-summary check. The binaries,
 launcher, preflight and check evidence stay outside the worktree in
 `.kanban/artifacts/175/retained-cohort-v1/`.
+
+## Completed original and retained comparisons
+
+The original frozen producer `032762e5` closes all288 slots:270 complete
+models and18 explicit memory refusals. Ninety individual candidates pass every
+held-out split. Among the72 depth choices made from training CE, the joint
+and independent families each pass24/24, while the additive family passes12/24.
+Its failures are the easy and hard depth tasks. Both recall and binding pass
+all18 selected architecture/transport/mode combinations each. All unsuccessful
+deeper candidates and rejected allocations remain in the original report.
+
+The separately frozen retained producer `9da1c677` completes all48 cases with
+no memory refusals or process failures. Each row below includes residual and
+Fourier transport, full batch/minibatch/forward-only, and both declared
+initializers. No held-out choice between the two initializers is made.
+
+| Original task | Maximum retained depth | Passing cases | Every held-out sequence accuracy | Final training CE |
+| --- | ---: | ---: | ---: | ---: |
+| Easy depth | 4 | 12/12 | 100% | 1.3213e-9 |
+| Hard depth | 4 | 12/12 | 100% | 1.3213e-9 |
+| Long MQAR (`basis-recall-easy`) | 2 | 12/12 | 100% | 2.0650e-8 |
+| Short key/value binding | 4 | 12/12 | 100% | 3.7374e-9 |
+
+Both initializers choose the same successful channel for each task. The
+forward-only endpoints already achieve these scores, using training labels to
+choose and fit their initial output head. Full/mini perform one update on
+binding and both depth tasks with unchanged CE. For MQAR, its margin-24 CE is
+above the original1e-8 optimizer threshold: full batch uses its16-update cap
+and minibatch its256-update cap. Their largest CE change is1.78e-16, and all
+held-out predictions remain perfect. Thus this result supports retaining
+useful complete paths and the supervised initializer; it supplies no accuracy
+advantage from gradient refinement or Fourier transport.
+
+Every retained cache is checked against its original prefixes, labels and
+example boundaries. Endpoint replay also recomputes every original split and,
+for full/mini, raw full-vocabulary CE and the L1 linear-oracle gap from saved
+coefficients. Forward-only records contain zero backward work. The retained
+cohort's summed per-candidate time is15882.135 seconds, including feature
+construction, initialization, refinement, scoring and serialization, excluding
+replay. The96 run/replay resource records total31364.5 wall seconds. Peak RSS
+is2085956 KiB (1.99 GiB), within the frozen8GiB process limit and the user's64GiB
+limit. Every streamed cache and model remains rooted and ignored.
+
+Evidence is under `runs/cohort-v1`, `runs/retained-v1` and
+`.kanban/artifacts/175/` in the main checkout. Complete summary SHA256 values:
+
+- Original: `df7700cad71a136b3ef4dcddcd575a7b4ece36e626b1537de4bce6b9ed399e46`.
+- Retained: `443037c778a43ee2dcdb330abbeaf0c7fca01e3d092046681ca0f5bedf429066`.
+
+The next family comparison must keep all288 original slots and both retained
+initializer policies. The full35/mode comparison and conventional transformer
+run remain separate dependencies; these48 outcomes must not replace them.

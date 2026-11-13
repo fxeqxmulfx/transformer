@@ -422,7 +422,17 @@ preflight (four for binding/depth, two for MQAR). Lean `fixed_margin_ce` at
 and caps remain unchanged. The launcher requires the frozen 288-case cohort to
 close before starting, enforces serial capped execution and disk reserves,
 and preserves every streamed cache for exact original-prefix/boundary replay.
-Thirty-one native checks pass; no retained stress outcome is claimed.
+The original288 slots are now complete and replayed:270 models,18 memory
+refusals and60/72 passing training-only depth choices. Joint and independent
+families each pass24/24; additive passes12/24 and fails the two depth tasks.
+The retained producer `9da1c677` completes all48 cases with100% sequence
+accuracy on every original held-out split, in both transports, both initializers
+and all three modes. Forward-only already achieves the same predictions.
+Full/mini use one update on binding/depth; MQAR reaches16/256 update caps because
+its margin-24 CE exceeds1e-8, with at most1.78e-16 CE change. Peak RSS1.99GiB
+stays within the frozen8GiB and user64GiB limits. Preserve all original failures
+and both retained policies when integrating; this is four-task evidence, not
+the full35 or transformer result.
 
 The user requested a theory extension to depth, residuals and the newer mHC
 in the local DiffGPT repository, and authorized a new connection. The
