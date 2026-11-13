@@ -16869,3 +16869,18 @@ This extension leaves the frozen CM28 experiment unchanged. A future native
 row-consequence producer must separately retain and check its original matrix,
 bounded row programs and query identities, and freeze its own rule before an
 original evaluation. No new benchmark pass follows from these theorems.
+
+**Fixed categorical views for decoded consequences.** Apply the finite query
+certifier to the interior of a declared view. A fixed class-name map sends
+interior labels to the full output vocabulary; the strip constant may be outside
+its image. If both full input names map to interior names, map that interior
+query's certified label to its output name, or refuse; otherwise return the
+view's declared constant. Under an unknown injective-code
+interior target fitting the observations, every returned label agrees with the
+full target represented by that same view. Observable certificate coverage at
+all interior queries gives recovery at every full query. No cyclicity or unique
+normalized code is needed. The constant-strip structure remains an explicit
+target-family hypothesis, as in CM28; an interior row program does not infer
+unknown strip labels. The four-state noncyclic witness extends to a fifth
+categorical input name and a fifth output label absent from the interior.
+It gives both that strip answer and the genuinely held-out interior answer.

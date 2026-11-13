@@ -100,6 +100,12 @@ These are synthetic checks only. Original model/raw-spectrum binding and
 fixed-view integration remain required before any separately frozen original
 cohort. No new original pass is claimed here.
 
+The CM29 view extension now supplies four additional Lean theorems for that
+integration. Interior classes map to a separate output type, so the declared
+strip label can be outside the interior class set. The witness has five output
+labels and a genuinely held-out interior query. This makes the target-family
+scope match the tagged native decoder; strip structure remains an assumption.
+
 ```sh
 cd experiments/convex_stress_consequences
 cargo fmt --check

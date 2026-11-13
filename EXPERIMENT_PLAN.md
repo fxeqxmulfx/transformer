@@ -177,6 +177,16 @@ forecast must fit 16 GiB. Unknown injective-code realizability over the declared
 observed class set remains required. Original model/raw-spectrum and fixed-view
 binding are next; the original score and all frozen parents remain unchanged.
 
+Four further CM29 Lean theorems now transport decoded certificates through a
+fixed categorical view. An explicit class-name map sends interior classes to
+the full output type, allowing a strip constant absent from the interior.
+Soundness holds for every returned query; finite interior certificate coverage
+gives full-view recovery. The noncyclic witness has a fifth strip input name
+and a fifth output label, plus the certified held-out interior answer. The
+unknown target must have the declared view/strip structure; no interior
+certificate infers it. This matches the native tagged decoder's output types
+before the new model integration.
+
 ## Complete categorical fiber constraints (2026-11-13)
 
 Task #220 / CM26 starts from actual same-label observation groups. Lean proves
