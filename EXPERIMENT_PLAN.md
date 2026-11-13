@@ -34,6 +34,19 @@ and forward-only also lacks a branch-amplitudes model. Shifted Boolean AND is
 a declared success with a retained out-of-distribution diagnostic failure.
 The goal of succeeding on all35 tasks remains open.
 
+Task245's complete causal import and initial independent replay have now closed
+with zero process failures. Both policies still pass34/34/33 primary tasks,
+and their all-split counts improve to34/34/33. Each selects17 new endpoints:
+forward branch amplitudes gains a100% model, while forward associative divisor
+regresses from100% to53.86598% despite near-zero raw training CE. Two failing
+key-value candidates remain unselected. The full transformer/depth chain and
+all refusals/costs remain. Fresh submitted-commit review is pending; see the
+[authored comparison](experiments/convex_stress_causal_pairs/cohort/original/README.md).
+Its complete summary SHA256 is
+`fa07679de40f3662f2ae6177a40f0f8fa67b8504dfa9a83b74a8b8b4884c2c14`.
+This completed result changes which forward task fails without increasing the
+aggregate count; no full-pass claim follows from the successful new endpoint.
+
 Tasks229–231 implement colliding-code discovery, bounded complex latent states,
 ordinary full-vocabulary CE and the complete original adapter. Independent
 review passes 18 model tests and 16 adapter tests, including all training modes,
