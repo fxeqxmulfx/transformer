@@ -39,9 +39,13 @@ fn main() {
         "Cargo.lock",
         "protocol.json",
         "run_catalogue.sh",
+        "original_protocol.json",
+        "run_original.sh",
+        "freeze_original.sh",
     ] {
         files.push(here.join(file));
     }
+    files.push(experiments.join("convex_stress/suite.json"));
     files.sort();
     let mut output = String::from("pub const SOURCES: &[(&str, &[u8])] = &[\n");
     for file in files {

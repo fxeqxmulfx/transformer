@@ -10,9 +10,12 @@ pub fn hash(bytes: &[u8]) -> String {
         .collect()
 }
 pub fn digest(path: &Path) -> Result<String> {
+    digest_limit(path, LIMIT)
+}
+pub(crate) fn digest_limit(path: &Path, limit: u64) -> Result<String> {
     let mut file = fs::File::open(path)?;
-    if file.metadata()?.len() > LIMIT {
-        return Err("artifact exceeds8GiB".into());
+    if limit > 16 * 1024 * 1024 * 1024 || file.metadata()?.len() > limit {
+        return Err("artifact exceeds its file limit".into());
     }
     let mut hash = Sha256::new();
     let (mut buffer, mut total) = ([0; 65536], 0u64);
@@ -22,8 +25,8 @@ pub fn digest(path: &Path) -> Result<String> {
             break;
         }
         total += n as u64;
-        if total > LIMIT {
-            return Err("artifact grew past8GiB".into());
+        if total > limit {
+            return Err("artifact grew past its file limit".into());
         }
         hash.update(&buffer[..n]);
     }

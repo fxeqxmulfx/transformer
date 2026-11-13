@@ -28,8 +28,13 @@ gated on task226 and a separate prospective freeze.
 The first task231 component now streams all55 prime stages with five further
 checks, retaining every success, refusal, error and work record. Three further
 checks now cover the observed-CE selector for both complete105-choice arms.
-Original artifact/data/metric wiring remains unfinished; no new original score
-follows from these eight catalogue/selection fixtures.
+Eight additional fixtures now complete original artifact/data/metric wiring,
+for sixteen adapter checks. All55 stages and actual endpoints are retained;
+only candidates compatible with the original declared metric readout enter
+the observed-CE selector. That eligibility map never changes features or CE.
+A pooled-metric fixture passes every decoded split while failing the held-out
+raw token. Original launch still requires independent task231 review and a
+separate frozen cohort after task226; no new original score follows yet.
 
 ## Recovered comparison queues (2026-11-13)
 

@@ -1,0 +1,18 @@
+{
+  "version":"quotient-original-v1",
+  "parent_source_fingerprint":"b3bebfce1751412813747e5cd6a4fad8c56cccbd12dd9b658eb5e4f2db8a4ff1",
+  "parent_producer_commit":"ad272c62c44dfb9ca184b379bc6f017efd473e7c",
+  "required_done_tasks":[226,230,231],
+  "tasks":["power-division-p97-k3","arithmetic-cube-plus","power-division-p193-k5","power-division-p193-k2","power-division-p97-k2","arithmetic-square-times","arithmetic-sub","arithmetic-mul","arithmetic-add","power-division-p193-k3","division-p193","arithmetic-square-sum","power-division-p97-k5","arithmetic-half-sum","arithmetic-sum-square","arithmetic-affine-product","arithmetic-perm-add","arithmetic-div","arithmetic-abs-diff-blind","arithmetic-abs-diff","arithmetic-sum-pow4","arithmetic-sum-cube","recurrence-fibonacci-k1-c2-lgt"],
+  "memory_limit_bytes":68719476736,
+  "minimum_disk_reserve_bytes":17179869184,
+  "catalogue":"Every prime from2 through257, in increasing order. No task-name-dependent state selection or arithmetic answer features.",
+  "discovery":{"equations":4096,"elimination":{"scalar_updates":500000000,"row_operations":2000000,"nullity":1}},
+  "training":[{"mode":"Full","updates":16,"batch":64,"learning_rate":1.0},{"mode":"Mini","updates":256,"batch":64,"learning_rate":0.1},{"mode":"Forward","updates":0,"batch":64,"learning_rate":1.0}],
+  "prefix":{"scalar_updates":2000000000,"row_operations":2000000,"pivot_tests":20000000,"combination_tests":20000000,"normalization_tests":1000000},
+  "certificate":{"equations":4096,"queries":66049,"reduction_products":500000000,"certificate_products":500000000,"certificate_operations":2000000},
+  "eligibility":"Preserve all constructed endpoints. Offer a code only when the original declared metric readout is constant on its observed raw-class fibers. Identity readout for ordinary raw labels; residue pooling uses exactly the original metric's token groups, whose fibers are independent of the example's base. This checks candidate compatibility only, not the unknown target's representation. Readout never enters phase construction, features, CE or gradients.",
+  "selection":"For each of the two complete parent initializer arms and each task/mode, retain the parent first; eligible new offers follow increasing prime order. Replace only for ordinary raw-label training CE improvement greater than1e-12. No held-out metrics or certificate tie-breakers. Seal all references before evaluation.",
+  "evaluation":"Use unchanged complete-split metrics, including original recurrence probability pooling. Keep every constructed candidate, even readout-incompatible candidates; only their offer eligibility differs. Raw full-vocabulary CE and both complete105-choice arms remain. Failed/capped cases retain their full prior choices and partial evidence.",
+  "replay":"Verify all55 stage reports and actual complex/head states independently, replay every CE step and original-row certificate, regenerate original data and all new metrics. Final summary binds the complete reviewed parent, all stage bytes and process outcomes. Parent artifacts are fully hashed at preparation and final summary; per-case checks bind the pinned parent snapshot and review without rehashing86GiB each time. Preserve all35 transformer endpoints and all earlier costs once. Numerical audits are not exact-real certificates or a jointly convex discovery proof."
+}

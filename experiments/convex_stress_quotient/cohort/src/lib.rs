@@ -9,6 +9,7 @@ pub mod artifacts;
 pub mod comparison;
 mod execute;
 mod ledger;
+pub mod original;
 #[cfg(test)]
 mod tests;
 mod sources {

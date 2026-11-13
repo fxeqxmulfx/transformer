@@ -30,7 +30,7 @@ pub fn run(config: Configuration, root: &Path, producer: &str) -> Result<()> {
     out.selected_stages = ledger::select(&out.stages)?;
     write(&root.join("ledger.json"), &out)
 }
-pub fn replay(root: &Path) -> Result<Value> {
+pub(crate) fn retained(root: &Path) -> Result<(Configuration, Ledger)> {
     let config: Configuration = read(&root.join("configuration.json"))?;
     let saved: Ledger = read(&root.join("ledger.json"))?;
     let producer = saved.metadata["producer_commit"]
@@ -49,6 +49,10 @@ pub fn replay(root: &Path) -> Result<Value> {
             "original configuration, source/binary, stage coverage or timings changed".into(),
         );
     }
+    Ok((config, saved))
+}
+pub fn replay(root: &Path) -> Result<Value> {
+    let (config, saved) = retained(root)?;
     let mut stages = vec![];
     for (index, prime) in component::catalogue().into_iter().enumerate() {
         let file = format!("stage-{index:02}-p{prime}.json");

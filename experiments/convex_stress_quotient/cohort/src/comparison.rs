@@ -14,7 +14,7 @@ pub struct Offer {
     pub stage_sha256: String,
 }
 impl Offer {
-    fn mode(&self) -> &'static str {
+    pub fn mode(&self) -> &'static str {
         match self.mode {
             training::Mode::Full => MODES[0],
             training::Mode::Mini => MODES[1],
