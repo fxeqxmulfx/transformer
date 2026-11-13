@@ -16765,6 +16765,46 @@ old larger hull and its equal-CE ambiguity remain. A subsequent native selection
 rule must declare the structural certificate and candidate priority before its
 own run, independently check the original equations without missing-axis pins,
 retain the frozen task222 parent and failures, and never choose from held-out
-scores. Exact elimination, modular component uniqueness and their bridge to
-this condition need separate checked certificates before that rule is used.
-No new original benchmark score follows from the proof alone.
+scores. No new original benchmark score follows from the proof alone.
+
+**The actual matrix certificate.** Encode each observation as a row with one
+at its row coordinate, one at its column coordinate and minus one at its
+class coordinate. Append the two shift-gauge coordinate rows and one class
+anchor row. A replayable certificate is a finite list of actual row swaps,
+scalings and additions, together with a location for each coordinate row in
+the final matrix. Every instruction preserves zero evaluations of the original
+homogeneous equations, over any commutative ring. If replay produces all the
+coordinate rows, an original kernel vector must therefore be zero. No
+reported solver rank or solution count substitutes for these checked entries.
+
+This connects directly to K: a vector in the original joint module whose
+anchor coordinate is zero satisfies precisely the constructed matrix. If a
+checked joint vector g has anchor coordinate one, the replay proves K cyclic.
+It also proves uniqueness of any two compatible joint vectors sharing that
+anchor value, by applying the certificate to their difference. Missing-axis
+pins are absent from the matrix construction. A concrete six-instruction
+certificate for a three-cell binary table identifies its genuinely held-out
+fourth answer through the learner. A separate nonzero matrix over ZMod 6
+starts with nonunit leading entries two and three; row addition exposes the
+unit five, and the full four-instruction replay gives identity. No inverse
+of two or three is assumed.
+
+**Normalized component and digit uniqueness.** For an integer matrix A let
+ZeroKernel(m,A) mean that every vector solving A*x=0 modulo m has all its
+coordinates divisible by m. If m is nonzero and both ZeroKernel(m,A) and
+ZeroKernel(p,A) hold, then ZeroKernel(m*p,A) holds. Given an actual solution,
+the first condition writes x=m*y. CM27's exact residual identity gives A*y=0
+modulo p, and the second condition proves each coordinate of y divisible by p.
+Induction gives uniqueness at every power of a nonzero base. This proves
+uniqueness only; the failed-lift example in CM27 still rules out an existence
+claim. Independently, checked Bezout component agreement yields product
+agreement. Taking the difference of two solutions proves their congruence at
+every coordinate of the actual anchored system. Nontrivial triangular-matrix
+witnesses instantiate prime-power and CRT uniqueness with distinct integer
+representatives of the same solution.
+
+These are exact Lean statements about replayed coefficients and original
+modular equations. A native producer must still implement and independently
+check the certificate, retain refusals and caps, and freeze its changed
+selection policy before original evaluation. Passing a floating-point spectral
+audit does not replace this integer certificate or prove structural truth.
