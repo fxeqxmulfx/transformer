@@ -266,6 +266,19 @@ discovery from head costs. No original run starts until implementation review
 and a separate source/binary/request/protocol freeze; held-out comparison and
 both105-choice parent arms remain a later gated task.
 
+Task252's original complete-kernel training is now closed: all23 cases and1265
+stages complete and pass their initial independent numerical replay. Of1045
+complete kernels,653 have dimension0,337 dimension1 and55 dimension3;220 stages
+retain all-equation-cap refusals. Fourier shape caps refuse988 initializations,
+memory/audit forecasts refuse2, and six minibatch schedules exceed their work
+cap. The55full/49mini/55forward endpoints all fit the observed raw labels with
+zero errors. Six tasks admit prime97; Fibonacci admits49 full/forward primes
+and43 mini primes. Discovery costs792.728345770s and head work1992.023800371s
+with599 gradient batches; peak run/replay/summary RSS is550028KiB. No held-out
+metric, parent selection or benchmark count changes. Authored findings and the
+read-only report generator live in `convex_stress_kernel/cohort/original/`;
+the frozen component/adapter sources and complete training evidence stay intact.
+
 Task253 implements that separate comparison in `convex_stress_kernel_compare`.
 It imports all complete-kernel stages and the future reviewed refined parent,
 checks actual bases, complex heads and original data, and seals parent-first
