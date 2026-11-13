@@ -1,0 +1,42 @@
+{
+  "version": "refined-quotient-training-v1",
+  "required_done_tasks": [
+    241,
+    242
+  ],
+  "tasks": [
+    "power-division-p97-k3",
+    "arithmetic-cube-plus",
+    "power-division-p193-k5",
+    "power-division-p193-k2",
+    "power-division-p97-k2",
+    "arithmetic-square-times",
+    "arithmetic-sub",
+    "arithmetic-mul",
+    "arithmetic-add",
+    "power-division-p193-k3",
+    "division-p193",
+    "arithmetic-square-sum",
+    "power-division-p97-k5",
+    "arithmetic-half-sum",
+    "arithmetic-sum-square",
+    "arithmetic-affine-product",
+    "arithmetic-perm-add",
+    "arithmetic-div",
+    "arithmetic-abs-diff-blind",
+    "arithmetic-abs-diff",
+    "arithmetic-sum-pow4",
+    "arithmetic-sum-cube",
+    "recurrence-fibonacci-k1-c2-lgt"
+  ],
+  "source_fingerprint": "ca455d9c61b84c12e6cf86a5dcc4a3899195b5a5bada44b9a5f7e3e8a6d7abd1",
+  "source_producer": "49105730c6b86570119c36531df1457d7e353933",
+  "source_binary_sha256": "debb2a6b62aab7159d905e653fe1a3854b6e785c7ad5c0241fd96319c4a714a0",
+  "memory_limit_bytes": 68719476736,
+  "minimum_disk_reserve_bytes": 17179869184,
+  "training": "All observations initialize every mode. One full CE update, one original minibatch epoch including the tail, or zero forward CE gradients. Rate1; unchanged raw vocabulary and labels.",
+  "limits": "Reviewed CM32 core caps, including separate32B audit and per-mode training forecasts. Preserve all caps/refusals.",
+  "source": "Every immutable55-prime catalogue stage in order. Only fully completed independently replayed source cases are eligible; failed source cases retain all evidence and have no new candidates. No discovery rerun or readout/held-out filter.",
+  "evaluation": "Training-only: no held-out scoring, no parent selector, no success claim. Preserve all23 source case outcomes and full35 metadata. Later comparison requires reviewed232 and relevant parent approvals; retain both105-choice arms, transformer/depth and causal237 evidence, all costs and original primary success criteria.",
+  "replay": "Bind original data, input order/batches, all source stages and costs, actual complex models, every constrained update and saved hashes. Replay with the identical frozen executable; retain process failures and partial resource evidence."
+}

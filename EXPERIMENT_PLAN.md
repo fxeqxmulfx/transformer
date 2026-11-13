@@ -132,6 +132,18 @@ from every observation; it does not reuse the old16/256 schedule. The new
 construction and comparison require a separately reviewed adapter and freeze;
 the232/237 artifacts and all existing benchmark counts remain unchanged.
 
+Task241 is reviewed at `c55fe210`. Task242 adds a separate training-only adapter
+over the immutable232 discoveries, with seven native adapter checks. It verifies
+the frozen producer/source/binary, complete55-stage ledgers and original input
+and minibatch order before refinement, retaining every source refusal and cost.
+Actual states and CE trajectories replay independently, including mutations with
+recomputed file/ledger hashes. Every23-task process outcome and35-task metadata
+remain; partial process failures keep their files and resource records. This
+stage has no held-out evaluator or parent selector. After its own review and
+the source catalogue closing, a separate original freeze may construct it;
+comparison still requires the reviewed original parents. No benchmark count
+changes from adapter fixtures or training-only availability.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine
