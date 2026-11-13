@@ -57,9 +57,20 @@ check renamed classes with unused vocabulary, a missing-axis example that fits
 all observations but gets unseen answers wrong, all stage/work caps, noncyclic
 kernel refusal, actual class collisions, omitted-equation conflicts, invalid
 inputs and fourteen certificate mutations. The complete suite has twelve tests.
-These are synthetic checks, not an original benchmark score. The next wrapper
-will retain generic categorical strip views and every older family before its
-separate producer freeze; no original follow-up has started for this learner.
+These are synthetic checks, not an original benchmark score.
+
+The `search` wrapper now retains the existing CM25 categorical strip views
+around this code learner. It proposes the unchanged full table first, followed
+by supported constant-strip views in observed class order. Its default protocol
+can attempt at most four views; every additional, empty, failed or duplicate
+view remains recorded. Interior axes may repeat and are padded when their
+counts differ. Admitted interiors lift to full tables in the existing tagged
+latent domain, with independent full-table map and raw spectral/CE checks.
+Three wrapper checks cover composite interiors of sizes 6/8/12, strips,
+padding, class renaming, view/stage caps, small interiors and nine mutations.
+All fifteen tests pass. The wrapper forecast must fit within 48 GiB. The
+parent-preserving original harness and its separate producer freeze remain
+next; no original follow-up has started for this learner.
 
 The core restricts integer matrices to 1024 variables and 8192 rows, coefficients
 of absolute value at most 1024, right sides at most 2^30, and total modulus at

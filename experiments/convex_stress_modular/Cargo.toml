@@ -8,6 +8,7 @@ publish = false
 
 [dependencies]
 convex-stress-fibers = { path = "../convex_stress_fibers" }
+convex-stress-tagged = { path = "../convex_stress_tagged" }
 serde = { version = "=1.0.229", features = ["derive"] }
 serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
 

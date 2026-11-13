@@ -40,8 +40,10 @@ tampering. It requires one-dimensional normalized component kernels and unique
 digit lifts, checks CRT and class injectivity, then audits actual raw spectra
 and ordinary CE. A missing-axis example explicitly fits observations while
 misidentifying unseen answers. The complete suite has twelve checks. The
-parent/strip wrapper and separate original freeze remain next; there is no new
-original-task score.
+categorical strip wrapper adds three checks for composite interiors, unequal
+axis padding, class renaming, caps and changed state. All fifteen native checks
+pass. The parent harness and separate original freeze remain next; there is no
+new original-task score.
 
 ## Complete categorical fiber constraints (2026-11-13)
 

@@ -6,6 +6,7 @@ pub use convex_stress_fibers::{Model, Result, Sample, finite_system};
 pub mod coding;
 pub mod lift;
 pub mod recombine;
+pub mod search;
 use serde::{Deserialize, Serialize};
 #[cfg(test)]
 mod tests;
