@@ -2,48 +2,41 @@
 
 ## Current full comparison status (2026-11-13)
 
-The latest independently reviewed full105 comparison is31/35 full-batch,
-31/35 minibatch and30/35 forward-only on every original held-out split.
-Task225 adds the square-times pass with no regressions; all23 constructor
-replays and its complete parent-preserving summary reproduce byte-for-byte.
-The original conventional transformer completed32/35 all-split passes; its
-independent review now reproduces all35 endpoints and its complete summary
-byte-for-byte and is approved. Task175's48 retained depth heads all
-pass and are reviewed. Task227's native integration checks are approved;
-task226's frozen original integration and replay now pass, with both initializer
-arms reaching33/35 full and mini,32/35 forward. All6786 artifact bindings and
-the complete summary reproduce; a separate task226 review is pending. Shifted
-AND and recurrence remain, plus forward-only branch amplitudes. CM30's10 Lean
-theorems are proved and reviewed; they
-extend code/quotient certification without claiming unique raw labels or an
-additional benchmark pass. The complete35-task goal remains open.
+The reviewed comparison passes 33/35 tasks in full-batch and minibatch modes,
+and 32/35 forward-only, on every original held-out split. Both initializer
+policies have these counts and retain all 105 task/mode choices. Task226's
+independent replay rehashes 6786 artifacts and reproduces the complete report
+byte-for-byte. It compares saved endpoints using observed CE, with all earlier
+failures and costs retained; it is not a new joint optimizer or matched-compute
+comparison. Tasks175,191,225,226 and227 are approved.
 
-Tasks229–230 now implement colliding-code discovery and its actual complex
-latent/readout binding. Eighteen native checks cover raw Fourier/SVD bounds,
-ordinary full-vocabulary CE, full-batch/minibatch/forward states, independent
-gradient/projection replay and original raw-row certificates. Hidden aliases
-are handled at the code level without claiming unique raw answers. This uses
-the already proved CM30 and CD8 statements; original task evaluation remains
-gated on task226 and a separate prospective freeze.
-The first task231 component now streams all55 prime stages with five further
-checks, retaining every success, refusal, error and work record. Three further
-checks now cover the observed-CE selector for both complete105-choice arms.
-Eight additional fixtures now complete original artifact/data/metric wiring,
-for sixteen adapter checks. All55 stages and actual endpoints are retained;
-only candidates compatible with the original declared metric readout enter
-the observed-CE selector. That eligibility map never changes features or CE.
-A pooled-metric fixture passes every decoded split while failing the held-out
-raw token. Original launch still requires independent task231 review and a
-separate frozen cohort after task226; no new original score follows yet.
+The conventional transformer passes 32/35 tasks; its independent review
+reproduces all 35 endpoints and the complete summary. Shifted Boolean AND and
+Fibonacci recurrence still fail in the new comparison, and forward-only also
+lacks a branch-amplitudes model. The goal of passing all 35 tasks remains open.
 
-CFt4 now supplies the next causal-feature proof boundary: ordered pairs of
-visible categorical slots retain convex channel CE and admit a forward decoder
-when no individual slot suffices. Nine Lean theorems also prove presence-feature
-permutation invariance and exhibit two consistent candidate orders disagreeing
-on an unseen input. Coverage and the intended invariant target remain explicit
-assumptions. A future generic pair/invariance-priority implementation still
-needs its own native tests and prospective original evaluation; the frozen
-quotient protocol is unchanged.
+Tasks229–231 implement colliding-code discovery, bounded complex latent states,
+ordinary full-vocabulary CE and the complete original adapter. Independent
+review passes 18 model tests and 16 adapter tests, including all training modes,
+actual saved states, original-row certificates, mutations and full parent scope.
+The proved CM30 and CD8 statements support conditional code certification and
+convex fixed-feature CE. They do not identify arbitrary unseen raw labels.
+
+Every one of the 55 prime stages is retained. Only codes compatible with the
+original declared metric readout enter the observed-CE selector; that filter
+never changes features, labels or CE. A synthetic pooled-metric fixture passes
+every decoded split while failing its unseen raw token. Task232 has now started
+the separately frozen original run at producer `49105730`: 23 pair tasks,
+both complete parent arms, all 35 transformer endpoints and a 64 GiB process
+cap. Preparation verifies original data and parent artifacts before any new
+construction. No original quotient score is claimed yet.
+
+Reviewed task233 adds CFt4 with nine Lean theorems. Paired visible features
+admit a forward decoder when no individual slot suffices, while the channel's
+ordinary CE stays convex. Presence-feature invariance and a candidate-order
+counterexample make the required selection assumptions explicit. Task234 will
+implement and test this generic causal repair before a separate original
+evaluation. The running quotient protocol remains unchanged.
 
 ## Recovered comparison queues (2026-11-13)
 

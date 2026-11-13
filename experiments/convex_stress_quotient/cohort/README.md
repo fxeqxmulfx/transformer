@@ -3,7 +3,8 @@
 This native component runs the complete fixed55-prime catalogue, one binding
 report at a time. Task231 also connects original data and metrics to a complete
 reviewed parent, retaining both initializer arms and all35 tasks. Sixteen native
-fixture tests pass. No original quotient cohort has been evaluated yet.
+fixture tests pass and the independent review is approved at `49105730`.
+Task232's frozen original cohort has started; no new benchmark result is claimed.
 
 Each stage retains its original request, discovery outcome, actual complex
 model, all three CE endpoints, audits and original-row certificates. Returned

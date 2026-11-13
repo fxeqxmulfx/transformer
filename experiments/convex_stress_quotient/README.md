@@ -10,7 +10,8 @@ This native component proposes noninjective codes and binds them to a bounded
 complex latent model with an ordinary cross-entropy readout. The complete state catalogue
 is every prime from2 through257, fixed independently of the data. One `Request`
 runs one catalogue stage; callers must retain each outcome and release its
-large field report before proceeding. No original suite has been evaluated.
+large field report before proceeding. The original cohort has started after
+independent component and adapter review; no new benchmark score is claimed.
 
 | Step | Rule |
 | --- | --- |
@@ -118,10 +119,11 @@ The complete binding preflights all three stored endpoints and certificates
 below56GiB, inside the64GiB process cap. Training separately caps a conservative
 scalar-work forecast at2 billion per mode. A single raw-SVD matrix is resident
 at a time; no input-by-input-by-latent-by-vocabulary tensor is allocated.
-Stages must still be released between primes. No original task has been run
-with this component. Original evaluation waits for task226's reviewed complete
-parent comparison and a separate source/binary/protocol freeze preserving
-all35 tasks, full/mini/forward and the conventional transformer.
+Stages must still be released between primes. Task232's original evaluation
+now uses task226's reviewed complete parent comparison and a separate
+source/binary/protocol freeze preserving all35 tasks, full/mini/forward and
+the conventional transformer. Original model construction follows the full
+data and parent verification; no completed quotient score is claimed yet.
 
 The separately tested `cohort/` component now streams all55 stages to saved
 reports and replays them independently. Five catalogue tests retain two successful
@@ -129,6 +131,6 @@ quotients in one fixture and choose by observed CE, along with every refusal,
 returned error and work counter. Three selector tests preserve both105-choice
 parent arms; eight additional original-adapter fixtures bind full parent evidence,
 actual states, unchanged raw CE and complete original metrics. Compatible decoded
-answers can pass while unseen raw-token answers fail. The adapter is ready for
-separate review and a prospective original freeze after task226; no original
-quotient score follows yet. See the component README for eligibility and scope.
+answers can pass while unseen raw-token answers fail. The adapter and complete
+parent are independently reviewed, and the frozen original cohort has started.
+No original quotient score follows yet. See the component README for scope.

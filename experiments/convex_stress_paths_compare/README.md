@@ -106,4 +106,7 @@ all336 depth outcomes and all35 transformer endpoints. Its summary hash is
 Preparation took10m32s and replay20m44s, with peak resident memory6.9GiB.
 The replay rechecks artifact bindings and selection using the independently
 reviewed numerical endpoints; it does not retrain or reevaluate predictions.
-Task226's separate review is required before this result becomes a new parent.
+Task226's independent review at `ab296a68` is approved. It reran all eight
+native tests and Lean checks, then independently repeated the complete frozen
+replay in20m54s. The replay JSON is byte-identical, with the same summary hash
+and peak resident memory6.9GiB. The reviewed result is now task232's parent.
