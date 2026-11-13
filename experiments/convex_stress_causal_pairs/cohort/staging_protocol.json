@@ -1,0 +1,10 @@
+{
+  "version":"causal-pairs-training-stage-v1",
+  "required_done_tasks":[233,235,236],
+  "memory_limit_bytes":68719476736,
+  "minimum_disk_reserve_bytes":17179869184,
+  "scope":"All35 original tasks, fixed input-shape refusals and all full/minibatch/forward outcomes. Reuse the original causal model protocol without changing features, labels, discovery, gradients or budgets.",
+  "construction":"Use only the original visible supervised training prefixes and raw labels. No parent comparison and no held-out metric. Retain actual complex models, train CE, every refusal, process failure, partial artifact and cost.",
+  "replay":"Rebuild original configurations and independently replay every completed discovery, initializer, CE trajectory, audit and work counter. Bind binary, source, protocol, suite and input hashes. Preserve measured resource files and errors.",
+  "import":"Require the original reviewed quotient parent and comparison gates before importing. Recheck the sealed stage, original data and actual model before training-CE selection; seal references before any held-out metric. Charge staged construction once across both initializer arms, including costs of outcomes that cannot be imported. No provisional parent or unseen-identification claim."
+}

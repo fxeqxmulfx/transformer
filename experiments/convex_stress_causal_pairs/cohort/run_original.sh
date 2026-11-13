@@ -4,7 +4,10 @@ set -euo pipefail
 for task in 232 233 234; do agent-kanban show "$task" | sed -n '1p' | rg -q "^#$task [^ ]+ done "; done
 binary=${CAUSAL_PAIRS_BINARY:-experiments/convex_stress_causal_pairs/cohort/target/release/convex-stress-causal-pairs-cohort}
 request=$1
-destination=$2
+if jq -e '.staging != null' "$request" >/dev/null; then
+  agent-kanban show 236 | sed -n '1p' | rg -q '^#236 [^ ]+ done '
+fi
+destination=$(realpath -m "$2")
 test ! -e "$destination"
 export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1
 ulimit -c 0

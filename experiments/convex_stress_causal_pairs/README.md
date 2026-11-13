@@ -14,7 +14,8 @@ structural prior; consistency and flatness alone do not justify it.
 The native component implements categorical search, actual complex features
 and full-batch, minibatch and forward-only readouts. No original task is
 evaluated here; the [complete comparison adapter](cohort/README.md) passes
-eight synthetic checks and awaits completion/review of its quotient parent.
+15 synthetic checks, including training-only staging and later replayed import.
+Comparison awaits completion/review of its quotient parent.
 Ordinary raw labels remain unchanged. An observation contains a
 visible token prefix and its supervised label; its final token is the query.
 There is no task identifier or target formula in the extractor or request.
@@ -110,7 +111,12 @@ cargo clippy --locked --all-targets -- -D warnings
 
 The complete parent-preserving evaluation adapter is implemented. Task234
 remains open until its parent gate and independent review are satisfied.
-A separately reviewed and
-frozen original cohort will retain task232, both initializer arms, all 35 tasks,
+Task236 separates original training construction from comparison: its reviewed,
+frozen stage can build the unchanged proposals while task232 runs, without a
+parent selector or held-out metric. Later import requires the same frozen
+producer and binary, independently replays actual complex states and CE, and
+retains every staged cost, refusal and process failure. The original comparison
+gates remain required. A separately reviewed original cohort will retain
+task232, both initializer arms, all 35 tasks,
 the transformer and every earlier cost and failure. No original pass is inferred
 from these fixtures. Generated evidence remains ignored and local.

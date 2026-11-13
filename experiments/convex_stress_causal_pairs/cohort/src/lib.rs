@@ -16,6 +16,7 @@ mod inputs;
 mod inventory;
 mod outcomes;
 mod parent;
+pub mod staging;
 mod summary;
 #[cfg(test)]
 mod tests;
@@ -36,6 +37,8 @@ pub struct Request {
     pub producer_commit: String,
     pub suite_sha256: String,
     pub parent: Parent,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub staging: Option<staging::Reference>,
 }
 pub fn fingerprint() -> String {
     let mut bytes = vec![];

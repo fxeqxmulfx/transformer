@@ -4,8 +4,9 @@ This native adapter tests the CFt4/CD8 causal-pair component against the
 complete reviewed quotient comparison. It preserves both initializer arms,
 all 105 task/mode choices per arm, all 35 conventional transformer endpoints,
 336 depth outcomes, earlier failures and every inherited cost. It has passed
-eight synthetic adapter tests; no original causal-pair benchmark has run yet.
-Task232 must finish and pass independent review before the original run.
+15 synthetic adapter tests; no original causal-pair benchmark has run yet.
+Task232 must finish and pass independent review before comparison and held-out
+evaluation. Task236 adds training-only staging while that parent is running.
 
 | Stage | Fixed behavior |
 | --- | --- |
@@ -42,6 +43,27 @@ regenerates original inputs, independently checks discovery and CE steps,
 then recomputes original metrics and every coverage mask from saved complex
 heads. The complete report retains successful and failed process resources.
 
+The staging commands construct the same fixed proposals from observed prefixes
+and raw training labels. The numerical constructor takes only that configuration
+and its input refusal, with no parent or held-out argument. The stage binds the
+original suite, all 35 input records, configuration, committed producer, executable
+and source fingerprint. It retains every actual complex state, training CE,
+full/mini/forward outcome, refusal, failed replay and partial process artifact.
+It produces no parent selection or held-out metric. Split fingerprints in its
+inventory bind the eventual comparison data; they are not training features.
+
+An eventual comparison can import a sealed stage only with the same frozen
+producer and executable, the original reviewed quotient parent and the existing
+comparison approvals. Import independently replays the actual staged model before
+training-CE selection; held-out evaluation still follows the selection seal.
+Staged construction time and derivative work are charged once across both arms,
+including successfully staged models whose later import or metric evaluation
+fails. Partial failed-stage costs remain in measured resources. For imported
+cases, `total_seconds` adds the original construction time to the current import
+and evaluation time; resource files measure each process separately. The nested
+stage ledger preserves construction counts, while the comparison ledger counts
+completed import/evaluation cases. No parent outcome or earlier cost is dropped.
+
 The synthetic generation fixture needs a pair of features, emits the raw
 label followed by EOS, and passes all its unchanged metrics in all three
 modes. A new uncovered prefix retains 100% training accuracy but falls to
@@ -50,6 +72,11 @@ Other checks retain all 35 cases when 33 processes fail, preserve a missing
 forward parent, reject changed states/metrics/masks/costs/review pins, and
 verify that held-out answers and task names cannot change discovery inputs
 or the training-CE selector. These are fixtures, not original benchmark scores.
+Seven staging checks also remove the comparison parent entirely, compare fresh
+and staged models/choices/metrics/masks, and reject altered numerical states even
+after all local hashes are recomputed. Input, binary, source, protocol, timing,
+resource and partial-artifact mutations fail their respective bindings. Failed
+imports preserve both complete parent arms and all staged costs.
 
 From this directory:
 
@@ -62,19 +89,39 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
   prlimit --as=68719476736:68719476736 -- \
   cargo test --locked -p convex-stress-causal-pairs -- --test-threads=1
 cargo clippy --locked --all-targets -- -D warnings
-bash -n run_original.sh freeze_original.sh
-cargo build --locked --release
+bash -n run_original.sh freeze_original.sh run_training.sh freeze_training.sh
+prlimit --as=68719476736:68719476736 -- cargo build --locked --release
 ```
 
-After tasks232–234 are approved, freeze a committed producer and its release
-binary under the root's ignored `.kanban/artifacts/`, retaining source,
-binary and protocol hashes before any original construction. From the
-repository root, `bash experiments/convex_stress_causal_pairs/cohort/freeze_original.sh
-REPOSITORY_ROOT PRODUCER_COMMIT NEW_REQUEST` writes a request pinned to the
-reviewed quotient parent. Set `CAUSAL_PAIRS_BINARY` to that frozen executable
-and run `bash experiments/convex_stress_causal_pairs/cohort/run_original.sh
-NEW_REQUEST FRESH_RUN_ROOT`. The launcher requires all three board approvals
-and runs all 35 cases and their replay serially. Generated outputs stay local
-and ignored. An independent review must replay every completed case again,
-retain failures, regenerate `summarize-original ROOT` byte-for-byte, and run
-the native and Lean checks at the submitted commit before any pass claim.
+Freeze a committed producer and its release binary under the root's ignored
+`.kanban/artifacts/`, retaining source, binary and both protocol hashes before
+any original construction. Preserve the earlier prospective-v1 binary. Set
+`CAUSAL_PAIRS_BINARY` to the new frozen executable for every command below.
+Use absolute run roots, and create their parent directory first. Both launchers
+retain a 16 GiB disk reserve and the 64 GiB address-space cap.
+
+After tasks233,235,236 are approved, from the repository root:
+
+```sh
+bash experiments/convex_stress_causal_pairs/cohort/freeze_training.sh \
+  REPOSITORY_ROOT PRODUCER_COMMIT NEW_TRAINING_REQUEST
+bash experiments/convex_stress_causal_pairs/cohort/run_training.sh \
+  NEW_TRAINING_REQUEST FRESH_TRAINING_ROOT
+```
+
+This runs all 35 original constructions and their independent replay serially,
+then seals `summarize-training ROOT`. Keep this complete directory unchanged.
+After tasks232–234 are approved, import it with the same producer and executable:
+
+```sh
+bash experiments/convex_stress_causal_pairs/cohort/freeze_original.sh \
+  REPOSITORY_ROOT PRODUCER_COMMIT NEW_REQUEST SEALED_TRAINING_ROOT
+bash experiments/convex_stress_causal_pairs/cohort/run_original.sh \
+  NEW_REQUEST FRESH_RUN_ROOT
+```
+
+Omitting `SEALED_TRAINING_ROOT` retains fresh construction in the comparison
+run. Staging never bypasses the original parent gates. Generated outputs stay
+local and ignored. An independent review must replay every completed case
+again, retain failures, regenerate the applicable summary byte-for-byte, and
+run native and Lean checks at the submitted commit before any pass claim.

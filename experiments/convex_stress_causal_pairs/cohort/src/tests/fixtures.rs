@@ -150,6 +150,7 @@ impl Fixture {
                     summary: review.join("summary.json"),
                 },
             },
+            staging: None,
         };
         Ok(Self {
             run: temp.join("run"),

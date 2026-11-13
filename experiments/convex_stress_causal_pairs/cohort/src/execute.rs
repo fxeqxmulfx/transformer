@@ -1,10 +1,32 @@
 use super::*;
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub(crate) struct Attempt {
     pub input_refusal: Option<String>,
     pub report: Option<binding::Report>,
     pub error: Option<String>,
     pub construction_seconds: f64,
+}
+/// The unchanged numerical constructor has no parent or held-out argument.
+pub(crate) fn construct(
+    configuration: &Option<binding::Request>,
+    refusal: &Option<String>,
+) -> Attempt {
+    let started = std::time::Instant::now();
+    let mut attempt = Attempt {
+        input_refusal: refusal.clone(),
+        report: None,
+        error: None,
+        construction_seconds: 0.,
+    };
+    if let Some(config) = configuration {
+        match binding::run(config.clone()) {
+            Ok(report) => attempt.report = Some(report),
+            Err(error) => attempt.error = Some(error.to_string()),
+        }
+    }
+    attempt.construction_seconds = started.elapsed().as_secs_f64();
+    attempt
 }
 pub(crate) fn metadata(inv: &Value, input: &Value) -> Value {
     json!({"source_fingerprint":fingerprint(),"binary_sha256":inv["binary_sha256"],
@@ -37,20 +59,11 @@ pub(crate) fn run_with(
     write(&dir.join("metadata.json"), &meta)?;
     write(&dir.join("configuration.json"), &x.configuration)?;
     let started = std::time::Instant::now();
-    let mut attempt = Attempt {
-        input_refusal: x.refusal.clone(),
-        report: None,
-        error: None,
-        construction_seconds: 0.,
-    };
-    if let Some(config) = &x.configuration {
-        match binding::run(config.clone()) {
-            Ok(report) => attempt.report = Some(report),
-            Err(error) => attempt.error = Some(error.to_string()),
-        }
-    }
-    attempt.construction_seconds = started.elapsed().as_secs_f64();
+    let staged = staging::imported(&dir, task, inv, &x)?;
+    let reused = staged.is_some();
+    let attempt = staged.unwrap_or_else(|| construct(&x.configuration, &x.refusal));
     write(&dir.join("attempt.json"), &attempt)?;
+    staging::retained_import(&dir, task, inv)?;
     let offers = outcomes::offers(task, &attempt, &digest(&dir.join("attempt.json"))?)?;
     write(&dir.join("offers.json"), &offers)?;
     let selected = comparison::select(
@@ -67,10 +80,11 @@ pub(crate) fn run_with(
         &json!({"metadata":meta,"selection":seal,
         "selection_sha256":digest(&dir.join("selection.json"))?,"evaluation":evaluation,
         "construction_seconds":attempt.construction_seconds,"eligible_offers":offers.len(),
-        "total_seconds":started.elapsed().as_secs_f64(),"unseen_identification":false}),
+        "total_seconds":started.elapsed().as_secs_f64() + if reused {attempt.construction_seconds} else {0.},
+        "construction_reused":reused,"unseen_identification":false}),
     )
 }
-fn check_attempt(x: &inputs::Inputs, attempt: &Attempt) -> Result<()> {
+pub(crate) fn check_attempt(x: &inputs::Inputs, attempt: &Attempt) -> Result<()> {
     if attempt.input_refusal != x.refusal
         || !attempt.construction_seconds.is_finite()
         || attempt.construction_seconds < 0.
@@ -123,6 +137,7 @@ pub(crate) fn retained(root: &Path, task: &str, inv: &Value, parent: &Value) -> 
     let attempt: Attempt = read(&dir.join("attempt.json"))?;
     let config: Option<binding::Request> = read(&dir.join("configuration.json"))?;
     let result: Value = read(&dir.join("result.json"))?;
+    let reused = staging::retained_import(&dir, task, inv)?;
     let input = inv["inputs"]
         .as_array()
         .ok_or("missing inputs")?
@@ -151,6 +166,7 @@ pub(crate) fn retained(root: &Path, task: &str, inv: &Value, parent: &Value) -> 
         || result["selection"] != seal(&dir, &selected)?
         || result["selection_sha256"] != digest(&dir.join("selection.json"))?
         || result["construction_seconds"] != attempt.construction_seconds
+        || result["construction_reused"] != reused
         || result["total_seconds"]
             .as_f64()
             .is_none_or(|v| !v.is_finite() || v < attempt.construction_seconds)

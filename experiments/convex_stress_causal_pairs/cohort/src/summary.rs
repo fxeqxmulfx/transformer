@@ -92,15 +92,28 @@ pub(crate) fn summarize_with(root: &Path, inv: &Value, parent: Value) -> Result<
     }
     let selected = comparison::select(&parent, &offers, &all)?;
     let arms = render(&parent, &selected, &evaluated)?;
+    // Every staged construction is charged once, even if its later import or
+    // evaluation fails. Original process evidence still measures import work.
+    let staged = &inv["staging"]["summary"];
+    if !inv["staging"].is_null() {
+        seconds = staged["constructor_accounting"]["complete_constructor_seconds"]
+            .as_f64()
+            .ok_or("missing staged constructor time")?;
+        gradients = staged["constructor_accounting"]["complete_gradient_batches"]
+            .as_u64()
+            .ok_or("missing staged derivative work")? as usize;
+    }
     Ok(
         json!({"source_fingerprint":fingerprint(),"producer_commit":inv["producer_commit"],"protocol":protocol()?,
         "parent_sha256":inv["request"]["parent"]["summary_sha256"],"complete_parent":parent,
         "parent_snapshots":inv["parent_snapshots"],"parent_artifacts":inv["parent_artifacts"],
+        "staged_construction":inv["staging"],
         "records":records,"tasks":all.len(),"process_failures":failures,"selection":selected,"arms":arms,
         "choose_between_initializers":false,"choices_per_arm":105,"all35_transformer_endpoints_retained":true,
         "unconditional_identification":false,"constructor_accounting":{"planned_cases":all.len(),
             "completed_cases":all.len()-failures,"complete_constructor_seconds":seconds,"complete_gradient_batches":gradients,
             "partial_costs_in_retained_resources":failures>0,"charged_once_across_both_arms":true,
+            "construction_source":if inv["staging"].is_null(){"inline"}else{"sealed_training_stage"},
             "all_prior_costs_retained_in_complete_parent":true}}),
     )
 }

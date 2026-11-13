@@ -41,7 +41,7 @@ actual complex Fourier features and a convex full-vocabulary CE head in all
 three modes. Independent complex derivatives, finite differences, trajectory
 and refusal replay, unseen masks and the candidate-order obstruction retain
 the Lean boundary. A full-batch cap preserves available mini/forward models.
-The complete original adapter now passes eight synthetic tests, preserving
+The complete original adapter now passes 15 synthetic tests, preserving
 both parent arms, all35 tasks, transformer/depth outcomes, process failures,
 actual greedy rollout and unknown-prefix masks. Original execution awaits
 task232's completed independent review and task234's approval; no fixture
@@ -56,6 +56,19 @@ including unequal query sizes, have unit singular values, and the fixed
 code bounds every feasible head's logits. The unobserved-label and feature
 selection limitations remain explicit. This proof extension does not alter
 the frozen numerical protocols or advance the benchmark pass counts.
+
+Task236 separates fixed causal construction from the eventual comparison.
+After implementation review, a separately frozen training-only stage can build
+all 35 unchanged proposals and independently replay every completed actual model,
+without a parent selector or held-out metric. Seven additional adapter tests
+check fresh/staged equivalence, parent independence, rehashed numerical mutations,
+all scope/provenance bindings, failed imports and retained costs. Import still
+requires the original reviewed quotient parent and comparison approvals, uses
+the same frozen producer/executable, replays the actual state before training-CE
+selection, and charges construction once across both complete parent arms.
+Every failure and partial resource record remains. The numerical core, feature
+order, raw labels, mode policies and caps are unchanged from `78731eb0`.
+No original causal construction or held-out evaluation has run at this commit.
 
 ## Recovered comparison queues (2026-11-13)
 

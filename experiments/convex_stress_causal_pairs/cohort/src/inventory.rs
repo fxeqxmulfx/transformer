@@ -1,5 +1,5 @@
 use super::*;
-fn records(suite: &Value, inputs: &[Value]) -> Result<()> {
+pub(crate) fn records(suite: &Value, inputs: &[Value]) -> Result<()> {
     let all = tasks(suite)?;
     if inputs.len() != all.len()
         || all
@@ -48,6 +48,11 @@ pub(crate) fn prepare_with(
     }
     let mut artifacts = vec![];
     parent::tree(&request.parent.root, &mut artifacts)?;
+    let staging = request
+        .staging
+        .as_ref()
+        .map(|pin| staging::attach(pin, suite, &inputs, &request.producer_commit))
+        .transpose()?;
     fs::create_dir(root)?;
     let snapshots = parent::snapshot(&request.parent, &root.join("parent"))?;
     write(&root.join("request.json"), &request)?;
@@ -57,7 +62,7 @@ pub(crate) fn prepare_with(
         "binary_sha256":digest(&std::env::current_exe()?)?,"producer_commit":request.producer_commit,
         "request_sha256":digest(&root.join("request.json"))?,"request":request,"protocol":protocol()?,
         "suite_value_sha256":hash(&serde_json::to_vec(suite)?),"tasks":tasks(suite)?,"inputs":inputs,
-        "parent_snapshots":snapshots,"parent_artifacts":artifacts}),
+        "parent_snapshots":snapshots,"parent_artifacts":artifacts,"staging":staging}),
     )
 }
 pub(crate) fn inventory(root: &Path, deep: bool) -> Result<(Value, Value)> {
@@ -86,6 +91,18 @@ pub(crate) fn inventory_with(root: &Path, suite: &Value, deep: bool) -> Result<(
         suite,
         inv["inputs"].as_array().ok_or("missing input inventory")?,
     )?;
+    match &request.staging {
+        Some(pin) => {
+            staging::check_attachment(pin, &inv["staging"], suite, deep)?;
+            if inv["staging"]["inventory"]["inputs"] != inv["inputs"]
+                || inv["staging"]["inventory"]["producer_commit"] != request.producer_commit
+            {
+                return Err("comparison and staging inputs or producer differ".into());
+            }
+        }
+        None if !inv["staging"].is_null() => return Err("unexpected staging attachment".into()),
+        None => {}
+    }
     let parent = parent::load(&request.parent, suite, deep)?;
     parent::check_snapshot(&root.join("parent"), &inv["parent_snapshots"])?;
     if read::<Value>(&root.join("parent/summary.json"))? != parent {

@@ -31,6 +31,9 @@ fn main() {
         "protocol.json",
         "run_original.sh",
         "freeze_original.sh",
+        "staging_protocol.json",
+        "run_training.sh",
+        "freeze_training.sh",
     ] {
         files.push(here.join(file));
     }

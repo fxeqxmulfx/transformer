@@ -2,6 +2,7 @@
 use super::*;
 mod boundaries;
 mod fixtures;
+mod staged;
 mod validation;
 use fixtures::*;
 #[test]
