@@ -31,8 +31,13 @@ can still be wrong. The retained earlier correct model wins the CE tie. Under
 the smaller test policy, nine new seeds use 22 certified assignments and
 7,458 interval iterations. This is fixture evidence. The original-data policy
 and complete native replay harness are separately specified in
-[`balanced_cohort`](balanced_cohort/README.md); the previous original3/9 result
-remains until the frozen follow-up has run. All35/modes/transformer scope remains.
+[`balanced_cohort`](balanced_cohort/README.md). The frozen original follow-up
+has now completed and replayed all nine tasks: **3/9 still pass**, with no
+process failures. Division now has a candidate at 38.810% validation accuracy;
+blind absolute difference improves to 50.223%. Neither passes. All parent
+inputs, candidates and failures are preserved. There are 144 audited new seeds,
+124 refinements and 2180 certified assignments; peak RSS is 85.7 MiB under the
+64 GiB cap. Full35/modes/transformer scope remains open.
 
 ## Earlier extraction and refinement
 

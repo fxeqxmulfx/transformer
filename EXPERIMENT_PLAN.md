@@ -28,11 +28,14 @@ limit beyond its numerical feature problem. The bounded Rust balanced and
 missing-axis proposals now retain all prior candidates/failures, raw matrix
 and latent audits, and certified refinement states. Five additional native
 tests pass; the masked fixture has a correct rank-one uniform candidate while
-other candidates remain wrong. The separate balanced-cohort harness fixes the
-unchanged original tasks before new discovery. Address the capacity restriction
-next in task219 with a generic categorical construction. Freeze tested source
-before original data. Full35/modes/transformer success
-remains open; task216's original result stays3/9, not the toy fixture result.
+other candidates remain wrong. The frozen producer `4510ee7d` has now completed
+and replayed the unchanged nine original tasks: still3/9, zero process failures.
+Division gains a candidate at38.810% validation accuracy and blind absolute
+difference improves to50.223%; neither passes. All parent reports are unchanged.
+The new search uses316542 interval iterations,144 audited seeds and2180
+certified assignments; peak RSS85.7MiB. Address the capacity restriction next
+in task219 with a generic categorical construction. Freeze tested source before
+new original discovery. Full35/modes/transformer success remains open.
 
 ## Observed-label refinement (2026-11-13)
 
