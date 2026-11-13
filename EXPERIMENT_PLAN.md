@@ -126,6 +126,13 @@ a257-to-the-eighth space whose bounded prefix is not claimed complete.
 Composite branch propagation and CM29 decoded query certificates are still
 needed before any separately frozen original experiment. Task223 stays frozen.
 
+The native digit layer now lifts every emitted affine digit through CM27's
+exact residual identity, including nonunique banks, and independently checks
+all original next-modulus equations with i128. Four additional tests cover
+1,456 direct exhaustive comparisons, failed lifts, actual branch order, caps
+and mutations. All nine native checks pass. Complete component/CRT branching,
+decoded query certification and original model integration are still pending.
+
 ## Complete categorical fiber constraints (2026-11-13)
 
 Task #220 / CM26 starts from actual same-label observation groups. Lean proves

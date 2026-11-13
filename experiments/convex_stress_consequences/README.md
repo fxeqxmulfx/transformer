@@ -23,9 +23,14 @@ including the257-to-the-eighth synthetic case, without allocating that space.
 Five tests cover all793 two-variable affine systems modulo2 and3 against
 exhaustive original solutions, nonzero particulars and ordered multidimensional
 parameters, every cap, changed matrices/tuples/points/work, and larger domains.
-All five tests, formatting and clippy pass. These are synthetic checks only.
-General composite branching, original decoded
-query certificates and model/raw-spectrum integration remain required before
+The digit-lift layer now propagates every enumerated digit point through the
+exact CM27 residual identity, preserving its order and original residuals.
+An independent i128 audit verifies the base, reduced field problem, each
+actual next-modulus point and exact work. Four further tests check1,456 small
+systems against direct exhaustive representatives, genuinely nonunique digits,
+failed lifts, bounded prefixes and altered branches. All nine tests pass.
+These are synthetic checks only. Complete multi-stage composite branching,
+original decoded query certificates and model/raw-spectrum integration remain required before
 any separately frozen original cohort. No new original pass is claimed here.
 
 ```sh
