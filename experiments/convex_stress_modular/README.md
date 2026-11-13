@@ -72,8 +72,41 @@ All fifteen tests pass. The wrapper forecast must fit within 48 GiB. The
 parent-preserving [original harness](cohort) now passes five further checks and
 covers all23 original eligible pair tables, including recurrence, retaining the full105-choice parent. Its
 parent digest now pins the complete checked integration:26/35 full/mini and25/35
-forward all-split passes. Preparation refuses a changed parent. A separate
-producer freeze remains next; no original follow-up has started for this learner.
+forward all-split passes. Preparation refuses a changed parent.
+
+The original follow-up froze producer `f661532e` before preparation. All 23
+cases completed and replayed, with zero process failures. Sixteen produced a
+new candidate, each with 100% accuracy on every original split. Seven refused:
+square-times, sum-square, both absolute-difference cases, sum-cube, sum-power-four
+and recurrence. Earlier families retain their existing passes for five of these.
+Square-times exposes a larger component kernel; recurrence remains outside the
+accepted proposal policy. These refusals do not prove the tasks impossible.
+
+The complete comparison preserves all 105 choices and the frozen CE tie rule:
+
+| Mode | Parent all-split passes | New all-split passes | New primary passes |
+| --- | ---: | ---: | ---: |
+| Full batch | 26/35 | 26/35 | 27/35 |
+| Minibatch | 26/35 | 30/35 | 31/35 |
+| Forward only | 25/35 | 25/35 | 26/35 |
+
+The four added minibatch passes are power-division p97/k2, p97/k3, p193/k2
+and p193/k3. Their new candidates also pass in the other modes, but tie the
+earlier exact observed fit; the declared rule retains the earlier failing
+completion. No held-out score changes that selection. New construction costs
+574.527 seconds, charged once with 69 mode references and zero CE gradients.
+The largest recorded run/replay RSS is 2,501,016 KiB, about 2.39 GiB, under the
+64 GiB limit. Complete parents, rejected views and all original results remain
+in ignored `runs/original-v1`; the summary digest is
+`5d3aa99d91efdab222fc3bd5c1c8ea68f16c8f632808b22f84c62213f4355139`.
+
+CM28 / Lean `4fee3d09` now identifies an unknown bijective-code table when
+the full observed joint module is cyclic, including composite domains and
+repeated phases. It also proves that arbitrary pins for missing rows cannot
+justify identification. Native certificates and a separately frozen structural
+selection rule are task223; the original run above remains unchanged. Full
+35-task success, retained depth integration and the fresh transformer comparison
+remain unfinished.
 
 The core restricts integer matrices to 1024 variables and 8192 rows, coefficients
 of absolute value at most 1024, right sides at most 2^30, and total modulus at

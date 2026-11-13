@@ -38,8 +38,20 @@ Five harness checks use synthetic inputs only: default policy/data fingerprint;
 masked composite strips with complete state replay and earlier-parent CE ties;
 rehash-resistant state/input/parent tampering; all23 process failures preserving
 all105 choices; and a successful result changing only three choices with artifact
-and byte-limit checks. The native core/wrapper has15 additional tests. No new
-original dataset has been prepared for this producer.
+and byte-limit checks. The native core/wrapper has15 additional tests.
+
+Producer `f661532e` completed all 23 original cases and full replays with zero
+process failures. Sixteen new candidates pass every split at 100%; seven
+cases retain explicit refusals and their earlier choices. All 105 comparison
+choices remain. All-split counts are 26/35 full batch, 30/35 minibatch and
+25/35 forward only; primary counts are 27, 31 and 26. Four power-division
+cases gain minibatch passes. Full/forward keep the earlier failed models on
+equal training CE, even though the new candidates pass. This is a selection
+limitation, preserved as observed rather than repaired using held-out scores.
+Construction took 574.527 seconds, once per case, with 69 mode references and
+zero CE gradients. Peak recorded run/replay RSS was 2,501,016 KiB. The complete
+summary has digest `5d3aa99d91efdab222fc3bd5c1c8ea68f16c8f632808b22f84c62213f4355139`;
+the full interpretation is in the [experiment README](..).
 
 The protocol pins task217's complete comparison at integration source78fb450c,
 summary `a2a3c4af874defb15b0f27af1b5115079b08738ec4b2efacefd7f0b79ac0096a`.

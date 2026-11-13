@@ -57,8 +57,23 @@ axis padding, class renaming, caps and changed state. All fifteen native checks
 pass. The parent harness now adds five checks, covers all23 original eligible pair-table
 tasks and preserves the complete105-choice parent. The protocol now pins
 task217's checked78fb450c comparison, digest a2a3c4af874defb15b0f27af1b5115079b08738ec4b2efacefd7f0b79ac0096a.
-The separate original producer freeze remains next; there is no new modular
-original-task score.
+Producer f661532e now completed and replayed all23 cases with zero process
+failures. Sixteen new candidates have100% accuracy on every original split;
+seven retain explicit refusals. Full105 selection passes26/35 full,30/35 mini
+and25/35 forward. Four power-division cases improve minibatch, while earlier
+equal-CE failed completions remain selected in full/forward. All parents and
+failures remain; construction cost574.527s is charged once, with69 references
+and zero CE gradients. Peak recorded run/replay RSS is2,501,016KiB, under64GiB.
+See the modular README for the immutable summary digest and full findings.
+
+Task #223 / CM28 now has17 checked Lean theorems at4fee3d09. A cyclic full
+joint observed module identifies a table with an unknown bijective class code
+over a composite domain, permitting repeated axes. Seventeen observations
+recover a49-cell six-state witness with32 held-out cells. A missing row leaves
+an independent kernel direction and forces refusal. This is identification
+inside the stated categorical model, not across every exact fit in the larger
+convex hull. Checked native elimination/component certificates and a separate
+structural selection freeze remain next; do not overwrite task222's CE ties.
 
 ## Complete categorical fiber constraints (2026-11-13)
 
