@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_quotient_coverage`](convex_stress_quotient_coverage) | Prospective configuration-only pilot | Tests whether including all observed equations removes Fibonacci's nullity refusal. Same reviewed native executable, all55 primes and ordinary-CE policies; no held-out evaluation or new benchmark score. |
 | [`convex_stress_refined_compare`](convex_stress_refined_compare) | Seven native comparison checks; original execution pending | Imports immutable CM31/CM32 states into both complete 105-choice arms. Preserves the declared primary success rule, original pooling, all 35 tasks, transformer/depth, refusals and costs. No new benchmark score. |
 | [`convex_stress_refined_quotient`](convex_stress_refined_quotient) | Reviewed CM31/CM32 core; 14 component and seven adapter checks | Fixed block Fourier heads fit observed raw aliases and preserve latent defaults in full/mini/forward modes. A separate training stage binds every saved55-prime source outcome, original data, actual states, refusals and costs. Original follow-up remains separate; no new benchmark score. |
 | [`convex_stress_causal_pairs`](convex_stress_causal_pairs) | Reviewed CFt4/CFt5 and staging; 15 component and 15 adapter checks | All35 original training outcomes retained;19 usable complex endpoints on nine tasks, all fitting observed labels. Peak356MiB under64GiB; every refusal and cost remains. Held-out comparison awaits the reviewed quotient parent; benchmark scores are unchanged. |

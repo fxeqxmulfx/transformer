@@ -1,0 +1,15 @@
+{
+  "version": "quotient-observed-coverage-v1",
+  "source_case": "recurrence-fibonacci-k1-c2-lgt",
+  "source_configuration_sha256": "a7f71a24879cbd1b7b84a695972408a752ef87dcbffd8f6a51c47613070d5f85",
+  "source_fingerprint": "ca455d9c61b84c12e6cf86a5dcc4a3899195b5a5bada44b9a5f7e3e8a6d7abd1",
+  "binary_sha256": "debb2a6b62aab7159d905e653fe1a3854b6e785c7ad5c0241fd96319c4a714a0",
+  "binary_producer_commit": "49105730c6b86570119c36531df1457d7e353933",
+  "old_equation_limit": 4096,
+  "new_equation_limit": 8190,
+  "memory_limit_bytes": 68719476736,
+  "minimum_disk_reserve_kib": 16777216,
+  "change": "Only input.policy.equations changes. Preserve every original observation and order, raw labels, all55 primes, nullity1, work limits, certificate limit, initialization and full/mini/forward policies.",
+  "proof_scope": "CM30 code_of_program and choose_quotient_sound accept arbitrary observed row sets under their explicit target-realizability and readout-compatibility hypotheses. The existing component accepts at most8190 observations plus two gauges. More equations need not produce a unique direction or identify unseen answers.",
+  "evaluation": "Training-only catalogue and actual-state replay; no held-out evaluator, parent selector or benchmark success claim. Keep all original232/237/243/244 evidence and failures."
+}

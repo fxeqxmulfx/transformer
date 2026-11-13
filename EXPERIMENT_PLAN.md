@@ -169,6 +169,17 @@ arithmetic preservation result supplies neither unseen-label identification
 nor a convergence or floating-point execution theorem. Frozen232/237/243/244
 implementations, active runs and benchmark pass counts remain unchanged.
 
+Task248 isolates an observed-equation coverage limitation before changing the
+model family. The frozen Fibonacci catalogue admits no code: its modulus97
+system has five free directions, and the4096-row discovery prefix omits raw
+class33 from the4704 training observations. A separately frozen training-only
+pilot raises only the supported equation allowance to8190. It reuses the
+reviewed executable, all55 primes, work/nullity limits, original raw CE and
+mode policies. CM30 already permits arbitrary observed row sets; it supplies
+no claim that this larger system has a unique useful direction. The pilot
+preserves every refusal and independently replays the catalogue, without a
+held-out evaluator or parent selector. Original232/237/243/244 runs stay fixed.
+
 ## Recovered comparison queues (2026-11-13)
 
 Task #221 preserves a completed parent-chain failure caused solely by nine
