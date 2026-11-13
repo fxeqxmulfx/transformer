@@ -41,8 +41,14 @@ phases and empirical decoders recover a separate masked fixture without its
 latent coordinates. Every power/refinement state, partition, missing axis and
 cap is retained. The original harness now passes four checks, preserving all
 balanced parents and earlier-first CE ties and rejecting rehashed modifications
-to both old and new ledgers. Freeze this tested producer before preparing the
-same original nine tasks. No new original score yet.
+to both old and new ledgers. Frozen producer`69c83182` now completes and replays
+all nine original tasks: still3/9, zero process failures. Division reaches
+55.670% and blind absolute difference61.403%; both still fail. Sum-cube's lower
+observed CE selects a candidate with worse validation (41.318% versus42.912%).
+All parent artifacts and observed-only choices remain intact. The search uses
+112 seeds and1962 certified axis steps, with every refinement ending at a
+repeated state; peak RSS150.2MiB and zero CE gradients. CM26's complete-fiber
+constraints are the next repair. Full35/modes/transformer integration stays open.
 
 ## Observable feature balancing (2026-11-13)
 

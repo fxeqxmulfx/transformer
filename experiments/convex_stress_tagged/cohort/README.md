@@ -48,10 +48,14 @@ TAGGED_BINARY=<frozen-binary> \
   experiments/convex_stress_tagged/runs/original-v1
 ```
 
-Freeze the tested committed source, complete source fingerprint, binary hash,
-protocol and launcher before preparing original data. The core's masked
-recovery is fixture evidence; no original result is established by this harness
-definition or the CM25 proof. The preceding balanced follow-up passes3/9.
+The tested source, complete source fingerprint, binary hash, protocol and
+launcher were frozen at`69c83182` before original preparation. All nine cases
+and complete original-input/state/metric replays finished with zero process
+failures. The result is still3/9; the detailed table and interpretation are in
+the [experiment README](../README.md). The complete summary SHA256 is
+`3e48902e6e54a3607937b82c0074ed3e27575d944496cc9a0ff7f9f196991cb0`.
+Evidence is rooted in`experiments/convex_stress_tagged/runs/original-v1` and
+`.kanban/artifacts/219/original-v1`; all generated files remain ignored.
 
 Four harness checks pass before the original freeze. They verify the exact
 policy and frozen shared-data fingerprint, a complete fixture with raw metric

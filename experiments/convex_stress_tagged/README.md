@@ -69,10 +69,39 @@ uncovered states remain refused; partial constant evidence has no uniqueness
 claim. The separate [`cohort`](cohort/README.md) harness now passes four checks:
 unchanged protocols/data, complete fixture replay, earlier-candidate CE ties,
 rehashing of altered parent/new ledgers, refused inputs and all nine process
-failures with27 retained mode references. Its tested producer must be frozen
-before original discovery. The balanced parent still passes3/9.
+failures with27 retained mode references. The frozen original producer
+`69c83182` now completes and replays all nine unchanged tasks, with zero process
+failures and still3/9 primary and all-split passes.
+
+| Original task | Observed-CE selection | Observed errors | Validation accuracy |
+| --- | --- | ---: | ---: |
+| Permuted addition | earlier prior-0 | 0/4704 | 100% |
+| Addition | earlier prior-0 | 0/4704 | 100% |
+| Subtraction | earlier prior-0 | 0/4704 | 100% |
+| Division | tagged-3 | 1793/4656 | 55.670% |
+| Multiplication | earlier prior-0 | 1198/4704 | 72.604% |
+| Sum-cube | tagged-12 | 2372/4704 | 41.318% |
+| Sum-power-four | earlier prior-0 | 3758/4704 | 7.396% |
+| Absolute difference | earlier prior-0 | 4061/4704 | 3.783% |
+| Blind absolute difference | tagged-14 | 1671/4704 | 61.403% |
+
+Division and blind absolute difference improve from38.810% and50.223%, but
+remain failures. Sum-cube improves observed CE while validation falls from
+42.912% to41.318%; the frozen observed-only choice is preserved. All earlier
+inputs, proposals and balanced parent reports remain unchanged. Stronger
+earlier full-rank division/multiplication and certified absolute-difference
+families remain required in the overall comparison.
+
+The search uses11 views,88 sketches,112 seeds and1962 certified axis steps.
+All112 refinements stop at a repeated state. Their5017 coordinate states,
+799051200 axis-observation comparisons and every failed candidate remain in
+the reports. There are zero CE gradients. Construction including all parents
+takes864.535 seconds summed over the nine cases; peak run/replay RSS is153796
+KiB (150.2MiB). These are nine forward constructions referenced by27 mode
+records, not independent full-batch/minibatch/forward optimization runs.
 All35 short/long tasks, full batch, minibatch, forward-only and the conventional
-transformer comparison remain required; fixture success is no original score.
+transformer comparison remain required. The next Lean-first repair is CM26's
+complete-fiber constraint proposal, with its structural hypotheses explicit.
 
 The declared dimensions are `2 <= n <= 257`, `2 <= q <= 771` and
 `2 <= vocabulary <= 1024`; base refinement restricts `q <= 257`, at most128
