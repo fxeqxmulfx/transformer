@@ -6446,3 +6446,15 @@ Finish independent review, then freeze further catalog cohorts separately.
 Original35 Fibonacci remains approximately98%; tasks317/319 remain pending,
 and126 additional cases have not been evaluated. No combined39-task pass is
 claimed from this component result.
+
+Task324 is approved at `3fde00b5`: independent native/Lean checks and every
+mode replay pass, with all23 JSON artifacts exact and all four cases100% on
+every split. Task325 prepares the next two original cases, `suite-dyck-2` and
+`suite-dyck-3`, in Rust with unchanged seed1 lengths12–16 and32/64 probes,
+128/32/64 pools, masks and clean/novel selection. Preserve historical GPT rows
+and the complete task324 baseline; data preparation supplies no model result.
+Task326 will audit CM53's generic contract and add bounded input-only nested
+summaries with all token roles inferred by enumeration, retaining every
+compatible learned decoder, all failures and the existing four passes. Keep
+the per-task99% raw/exact goals and original95% flags separate. Original35
+Fibonacci and tasks317/319 remain pending.

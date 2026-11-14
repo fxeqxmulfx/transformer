@@ -1,0 +1,21 @@
+{
+  "name":"typed-prefix-data-v1",
+  "catalog_commit":"07a39ac2f3f533c356be86a5db0bca50d6f01903",
+  "source_commit":"5a37c515639f23037d191b0659a5a0853984328d",
+  "historical_model_commit":"01f18f86787511279fe52fe41883495fce0e3105",
+  "history_sha256":"f31ed0f58f27cc4cf0603b9759c882611cda31e2db8a9fff622a806307d0acaf",
+  "baseline324_sha256":"1607addda8c8eafa98c7999b5b8e7e16c3a1dd1396b8cb8fd6c0b889907c8a97",
+  "definitions":{
+    "suite-dyck-2":{"task":"dyck2","neutral_fraction":0.25,"max_neutral_gap":null,"max_balance":8,"bracket_types":2,"length":16,"min_length":12,"longer_lengths":[32,64]},
+    "suite-dyck-3":{"task":"dyck2","neutral_fraction":0.25,"max_neutral_gap":null,"max_balance":8,"bracket_types":3,"length":16,"min_length":12,"longer_lengths":[32,64]}
+  },
+  "sizes":{"train":128,"validation":32,"test":64},
+  "data_seed":1,
+  "generator_version":2,
+  "selection":"original novel validation when nonempty; retain clean training and all short/long splits",
+  "scoring":"all supervised supplied-input prefixes; BOS ignored; no free-generation substitution",
+  "goals":{"raw_token":0.99,"exact_sequence":0.99,"original_exact":0.95},
+  "process_limit_bytes":68719476736,
+  "historical_case_fingerprints_available":false,
+  "new_model_evaluations":0
+}
