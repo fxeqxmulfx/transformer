@@ -6335,3 +6335,14 @@ history identities must match the catalog;130 cases are additional, with no
 new-model measurements inferred from historical passes. Task320 will port the
 first four original data families and run full/mini/forward with native tooling
 under64GiB, preserving longer probes and all bounded misses.
+
+Task318 is approved at `07a39ac2`: fresh native inventory generation reproduces
+all165 cases byte-for-byte, all39 frozen reference inputs match and native/Lean
+checks pass. Task320's initial Rust adapter now generates MQAR, two-hop lookup,
+Dyck prefixes and alternating blocks, retaining clean/novel and longer splits.
+Four native tests pass, including ten existing35 golden split hashes and
+independent target/mask checks. The new cases' individual historical hashes
+and checkpoints are unavailable, so source-derived fingerprints are explicitly
+distinguished from historical artifact reproduction. No new model is scored
+by data preparation. Training-only construction and frozen all-mode comparison
+remain, with99% raw-token and99% exact-sequence goals reported per task.
