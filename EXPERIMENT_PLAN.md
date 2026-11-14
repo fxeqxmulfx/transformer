@@ -6067,3 +6067,15 @@ counts improve by one but observed rawCE ties preserve the earlier selected
 parent. The sole forward associative-divisor failure remains53.866%. These
 older branch results stay distinct from later all-mode35/35 context models.
 Exact-commit complete replay/summary review precedes the task267 barrier.
+
+Task300 implements CM47 after its Lean review: the fixed block-local CM46
+reference and a half-scale copy precede the existing91context maps. Five
+source-excluded count gates use radius0.5 and retain half of every actual raw
+margin over every eligible finite input/class. Every accepted capped segment
+is verified with complete complex products and the exact metric argmax;
+final stored inference rows reproduce the certificate hash. Full64steps,
+mini8original-order epochs and forward0gradients retain original head
+derivatives and budgets. Ten native fixtures pass; mini/forward noisy-fixture
+diagnostic CE falls0.325069508to0.302528484 with no raw prediction changes.
+Exact-commit component review precedes separate original evaluation, which
+must retain296raw and298CE references and test pooled field metrics too.
