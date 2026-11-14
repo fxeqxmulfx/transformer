@@ -582,6 +582,17 @@ impossible for a shared mixture on the same bank. This is a capacity result;
 training-only diagnostics and actual held-out gains still require a separate
 native implementation and complete comparison after proof review.
 
+Task 294 is approved at `c60816fa`: 33 new theorems, full Lean build, unchanged
+36 sorry/zero extra axioms, generated INDEX and exact-commit source review.
+Task 295 implements fixed latent-block gates and radius-one-half anchoring
+to the reviewed CM45 model in Rust. Its original-record diagnostic keeps the
+full vocabulary and original minibatch tails. Local initialization uses only
+forward CE; iterative modes add local conditional gradients, leaving absent
+gates unchanged. Actual predictions retain the unchanged complete complex
+head. The synthetic fixture lowers CE but loses one raw prediction in mini
+and forward, so the separate complete original comparison must retain both
+metrics and every regression after component review.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per
