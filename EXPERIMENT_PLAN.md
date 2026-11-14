@@ -411,6 +411,16 @@ has not yet been evaluated on the original suite.
 
 ## Recovered comparison queues (2026-11-13)
 
+Task 282 formalizes CM42 before the next native model change, following the
+user's priority of improving raw-label accuracy and ordinary cross-entropy.
+Fixed stochastic context weights interpolate actual complex source features
+with the unchanged coefficient budget. Exact observed rows preserve all
+original CE batches and derivatives; local raw-label information remains an
+explicit premise. The two-alias witness also preserves the nonidentifiability
+counterexample. Native context metrics, any training-only neighborhood
+selection, and held-out evaluation require a separate prospective protocol.
+The reviewed task281 model and the older queued comparisons stay frozen.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per

@@ -17881,3 +17881,86 @@ support/availability/route diagnostics, charge both heads, and verify long
 prefixes without evaluating a parent outside its domain. The frozen CM38
 component, comparisons255/261/267, and the initial shared comparison277 remain
 unchanged. A corrected complete comparison remains a separate experiment.
+
+## CM42. Interpolate fixed context features to distinguish raw aliases
+
+The reviewed task281 comparison passes all 35 original primary success
+criteria in each training mode and initializer policy at seed1. This does not
+mean its raw-label probabilities are accurate. In the recurrence task the
+selected endpoint has 4701/4704 correct field answers, but only 3120/4704
+correct raw labels and validation CE about 8.0816. Its matched unseen state
+always uses the first observed raw label in the latent block. Different
+signed differences can share that block. Observed state refinement fits both
+aliases without providing a rule to choose between them on unseen inputs.
+
+Let `I` be a finite collection of actual source states, `phi(k,i)` their fixed
+realified complex features and `W(k,c)` the complete trained output tensor.
+Choose a fixed context map `w(x,i) >= 0` with `sum_i w(x,i)=1`. It may be built
+from observed inputs and a declared input metric and latent partition, but
+must remain fixed throughout CE optimization and must not inspect an unseen
+target. Define
+
+```
+phi_w(k,x) = sum_i w(x,i) phi(k,i)
+z_W(x,c)  = sum_k W(k,c) phi_w(k,x).
+```
+
+Expanding the actual finite products gives
+`z_W(x,c) = sum_i w(x,i) z_W_source(i,c)`. This is a linear feature
+transformation with the same complete coefficient tensor. It is not a
+product of two learned factors. If every source coordinate has absolute
+value at most `M`, each interpolated coordinate does too. The original
+per-class absolute-sum head budget `R` therefore bounds each actual logit by
+`R*M`. Unitary complex source codes give `M=1` for the real/imaginary
+coordinates. The context matrix itself need not be unitary. Flatness is
+used only for this bound; it does not choose a neighborhood or an answer.
+
+The usual raw-label CE remains convex in every head coefficient on the
+original convex budget. Jensen gives the separate query inequality
+
+```
+CE(z_W(x), y) <= sum_i w(x,i) CE(z_W_source(i), y).
+```
+
+Every term on the right uses the query's raw target `y`. It cannot be replaced
+by the neighbor's own observed label when that label differs. Low CE at all
+positively weighted source states for this same `y` transfers to the query.
+Likewise, a common source margin against a competitor transfers. These are
+explicit local raw-label assumptions, not conclusions from spectral flatness
+or low observed training loss. With the original conjugate initializer of
+margin `a`, the actual logit is exactly `a` times the total context weight
+assigned to source states bearing that raw label. A strict raw-label weight
+advantage gives a strict prediction margin when `a>0`.
+
+On each original observed input, require a Dirac row at its actual source
+state. The complete ordinary CE objective then equals the original one for
+every coefficient tensor. This applies to any finite batch of original
+record IDs, so repeated examples and short final minibatches retain their
+original multiplicities and denominators. Frechet derivatives agree, and
+derivative existence transfers wherever established for the source objective.
+No extra optimizer step is needed: the same change of query features applies
+to full-batch, minibatch and zero-update forward-only endpoints. Observed
+loss equality alone provides no training-only preference between different
+interpolation maps; any neighborhood selection needs a separately declared
+rule, such as a training-only leave-one-out diagnostic.
+
+A concrete witness has two observed source states with raw labels 0 and 2
+in a four-class vocabulary. The declared readout is reduction modulo2, so
+these raw labels share an answer. Contexts0 and3 are observed. A fixed
+neighborhood map sends contexts0,1 to the first source and2,3 to the second.
+A normalized two-state complex Fourier code and its actual conjugate head
+produce raw margin4 for label0 at unseen context1 and for label2 at unseen
+context2. Their ordinary CE is `log(1+3*exp(-4))`. Another possible target
+agrees at both observations and every declared readout but exchanges the
+two unseen aliases. Thus the decoder can exploit locality when it holds;
+the same construction does not establish that locality from the observations.
+
+Lean: `ConvexDepth/ContextInterpolation/{Basic,Loss,Batch,Witness}`. A future
+native proposal must bind the fixed context metric and weights, retain exact
+observed rows, evaluate actual complex products, charge all stored coefficients
+and interpolation costs, and report raw accuracy and ordinary CE alongside
+the original success criterion. An ordinal input metric is extra declared
+structure and is not invariant under arbitrary token permutations. Missing
+latent matches and unsupported axes still require explicit fallback. No
+unseen-label guarantee or new numerical improvement is asserted here; the
+reviewed task281 endpoints and the running older comparisons remain frozen.

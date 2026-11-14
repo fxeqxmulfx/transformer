@@ -13,6 +13,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RefinedCE
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.Fallback
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.CoverageExtension
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.PartialFallback
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextInterpolation
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -51,6 +52,10 @@ CM41 treats a saved predecessor with a restricted input domain: zero-extended
 parent features are used only where the parent is available and the candidate
 refuses. The candidate remains elsewhere, with the same convex CE and charged
 budgets and exact supported-batch objective and derivative identities.
+CM42 uses fixed stochastic context weights to interpolate actual complex
+source features. It preserves observed batches, convex raw-label CE and the
+coefficient bound, while local raw-label information remains an explicit
+premise distinct from flatness and decoded correctness.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/
