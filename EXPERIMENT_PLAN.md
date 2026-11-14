@@ -602,6 +602,17 @@ success thresholds, raw CE/accuracy, unchanged baselines and inherited costs
 remain. The original execution and independent complete reproduction follow
 the committed adapter and frozen protocol before any original CM46 gain claim.
 
+Task296 producer `1b42f411` completes all35 cases and35replays with zero
+numerical process failures. Both policies retain35/35primary/auxiliary successes
+in every mode. Full raw errors fall109to101; mini103to100; forward stays100.
+Validation CE regresses in all modes to0.17261/0.17511/0.17728, despite lower
+source-excluded diagnostics; the earlier CM45 mixture remains better on CE.
+Observed loss and field accuracy stay unchanged. The six components record288
+gradient batches,182updates and7887local-row updates; forward has zero gradients.
+Peak replay RSS is3.10GiB under64GiB. Authored findings retain every tradeoff,
+all baseline/cost evidence and the interrupted pre-evaluation launcher. Complete
+independent reproduction and exact-commit review follow before approval.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per
