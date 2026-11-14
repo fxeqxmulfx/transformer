@@ -18,6 +18,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextScale
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.DecoderConfidence
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextMixture
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.GatedContext
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.MarginGuard
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -77,6 +78,11 @@ Their actual products keep the source bound and convex ordinary CE in all
 local coefficients, with explicit slopes and original-batch identities.
 A nonzero Fourier example separates local from shared-mixture capacity;
 the fixed gates still do not certify any unseen raw target.
+CM47 adds fixed raw-margin halfspaces to the actual CM46 coefficient domain.
+It preserves convex ordinary CE, admits a maximizing reference and retains
+the first maximizing class under positive margin retention. Confidence may
+change, but a wrong reference label remains wrong; zero retention can flip
+a deterministic decision through a tie.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/

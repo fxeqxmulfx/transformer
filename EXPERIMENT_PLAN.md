@@ -6048,3 +6048,12 @@ remain in full, including their better raw counts and worse CE. Work is288
 gradient batches,176updates and797local-row updates; forward has zero gradients.
 Peak replay RSS is3.02GiB under64GiB. Authored findings retain these tradeoffs;
 independent complete reproduction at the findings commit precedes approval.
+
+Task298 is approved at `06c19178`: independent complete preparation,35cases,
+35replays and all116JSON artifacts/report match exactly. Task299 formalizes
+convex raw-margin constraints around a fixed reference before a new native
+model. Positive retention preserves strict comparisons and first-index argmax,
+while a maximizing reference remains feasible and ordinary CE stays convex.
+Nonzero Fourier witnesses retain wrong labels and expose the zero-retention
+tie failure. This stabilizes predictions; it does not prove unknown correctness
+or a numerical CE gain. A separate native implementation/comparison follows.

@@ -18275,3 +18275,77 @@ in its simplex. It must retain original records and mode metadata, including
 zero derivative calls for forward-only, and charge all added state and work.
 All 35 original cases, both policies, unchanged baselines, raw CE and every
 regression remain required. No numerical improvement from CM46 is claimed.
+
+## CM47. Convex raw-margin constraints around a fixed reference
+
+The complete five-gate comparison lowers ordinary held-out CE while losing
+some raw-label decisions in minibatch and forward-only modes. Convex CE does
+not itself preserve argmax decisions. The following constraint addresses
+stability relative to a fixed reference. It does not identify the correct
+unseen target or imply an improvement in held-out CE.
+
+Fix reference scores `z_ref(x,c)`, a chosen raw label `l(x)` maximizing those
+scores, and a retention fraction `k` in `(0,1]`. For every input in the declared
+query domain and every raw competitor class, require
+
+```
+z_a(x,l(x)) - z_a(x,c) >= k * (z_ref(x,l(x)) - z_ref(x,c)).
+```
+
+These are closed affine halfspaces in the actual score vector. For CM46, fix
+the bank, complete head, gate map, anchor and radius. Its actual logits are
+affine in all local simplex coefficients. Intersecting those simplexes with
+the inverse images of the halfspaces therefore gives a convex coefficient
+domain, and ordinary full-vocabulary CE remains convex on it. The constraints
+do not change the loss or remove any raw class. The reference coefficient
+tensor itself is feasible whenever it is in the original simplexes: its
+selected margins are nonnegative and `k<=1`. Convexity of the domain holds for
+any fixed real `k`; feasibility uses `k<=1`, weak comparison preservation uses
+`k>=0`, and strict comparison preservation uses `k>0`.
+
+A separately fixed diagnostic bank can define the ordinary CE objective while
+the constraints continue to use actual inference logits. CM46 proves convexity
+for that fixed objective bank, and restriction to the same convex domain
+preserves it. This covers source-excluded diagnostic rows without confusing
+them with the actual constrained prediction rows. No claim of a leave-one-out
+refit or unknown-target correctness follows from that diagnostic.
+
+Every nonnegative reference margin stays nonnegative, and every strictly
+positive reference margin stays strictly positive when `k>0`. Define the
+first maximizer as a class whose score is at least every class score and is
+strictly above the score of every lower-index class. This criterion permits
+higher-index ties. The two comparison results preserve this criterion, and
+two classes satisfying it must coincide. Thus the deterministic first-argmax
+prediction is identical to the reference prediction on every constrained
+query. Correct-record counts consequently agree for arbitrary target labels
+and any finite batch of original record IDs, including repeated inputs and
+short tails. This is prediction stability, not target correctness: a wrong
+reference prediction remains wrong.
+
+Use CM46's nonzero four-state Fourier source, complete head, two context maps,
+one-hot gates and radius one half. Its reference local rows give logits
+`(15,9)` and `(9,15)` on raw labels `(0,2)` at the two unseen queries. Move each
+local row halfway toward the uniform anchor. The actual unseen logits become
+`(13.5,10.5)` and `(10.5,13.5)`; observed rows remain margin24. All raw-class
+halfspaces hold at retention one half, and the raw decisions are unchanged.
+If the unseen target at query2 is class2, the retained decision is still the
+wrong class0. Its wrong-target CE is three above its predicted-label CE. The
+candidate stays within the same feature/head bounds and retains the original
+repeated-record batch and tail derivative identities by CM46.
+
+At retention zero, uniform local rows instead give tied unseen logits
+`(12,12)`. Every weak margin constraint still holds, but the first maximizer
+at query3 changes from raw class2 to raw class0. Strictly positive retention
+is therefore necessary for this deterministic stability statement. The
+nonzero actual complex product matters: this is not a zero-head example.
+
+Lean: `ConvexDepth/MarginGuard/{Basic,Stability,Witness,Capacity}`. Every
+conditional theorem has a concrete inhabited Fourier instance. A native
+extension must fix the reference and fraction before evaluation, compute
+constraints from its actual complete raw logits without unknown target
+labels, retain deterministic tie behavior and charge every construction and
+constraint check. A frozen bounded context map can be an additional fixed
+bank element under CM45/CM46; it is not a jointly learned factor. Numerical
+optimization, finite-precision constraint enforcement and raw/CE tradeoffs
+require a separate frozen native experiment. No numerical improvement is
+claimed from CM47 alone.
