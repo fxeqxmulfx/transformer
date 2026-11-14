@@ -472,6 +472,15 @@ unseen rows are scaled; observed and other unchanged rows stay exact. Complete
 source tensors and budgets remain, with no extra optimizer updates. All original
 held-out metrics require a separately frozen comparison; no new result is assumed.
 
+Task287 freezes the separate original comparison of reviewed286 confidence
+calibration against reviewed284. It imports every stored selected CM42 context
+head, validates the original record IDs and actual complete coefficient tensors,
+and seals training-only scale selection before fresh metrics. Both105-choice
+policies retain all35 tasks and all35 conventional plus336 depth endpoints.
+Other choices remain explicitly inherited. Every changed head must reproduce
+its model bytes and complete metrics; original success, raw accuracy and CE
+are reported together, with all costs and regressions retained under64GiB.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per
