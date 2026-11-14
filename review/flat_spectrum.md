@@ -18523,3 +18523,93 @@ is32. Original Dirac rows still preserve repeated-record objectives and
 tail derivatives. Pool closure and target convexity remain explicit; the
 stronger geometric search does not establish either assumption or guarantee
 that every remaining unknown answer is identifiable.
+
+## CM51. Signed context features with bounded amplification
+
+The complete CM50 comparison covers 91 additional Fibonacci validation inputs
+in every mode but changes no raw prediction. All of those inputs were already
+correct. This motivates testing a different fixed feature map, rather than
+inferring further accuracy from increased geometric coverage. No new numerical
+gain is asserted by the following extension.
+
+Let `a(x,i)` be arbitrary fixed real weights on the original source states,
+including negative weights. Define their observable absolute mass and scale by
+
+```
+L(x) = sum_i abs(a(x,i))
+k(x) = max(1, L(x))
+w(x,i) = a(x,i) / k(x).
+```
+
+Use CM42's actual feature construction `phi_w(j,x)=sum_i w(x,i)*phi(j,i)`
+and the same complete real/imaginary head `W`. Direct finite expansion gives
+
+```
+z_W(x,c) = sum_i a(x,i)*z_W_source(i,c) / k(x).
+```
+
+The absolute mass of `w` is `L/k <= 1`. If each source coordinate has absolute
+value at most `M>=0`, the unnormalized coordinate is bounded by `L*M` and the
+normalized coordinate by `M`. Thus the original absolute-sum head budget `R`
+still gives `abs(z_W(x,c))<=R*M`. A unitary complex source supplies `M=1`.
+The zero row is included because `k>=1`; the query matrix need not be unitary.
+Flatness remains a source-coordinate bound, not a missing-label condition.
+
+CM42's actual-product, complete-head convex-CE and observed-batch identities
+do not require positive weights. They therefore apply to these signed maps.
+Its positive-weight Jensen and same-label source-margin theorems are not used.
+If an original observed row is Dirac, its absolute mass and normalizer are one,
+so normalization retains that row exactly. Every original finite batch objective
+and complete-head derivative remains unchanged, including repeated record IDs
+and a short final minibatch. This includes the state before any forward-only
+updates. The map is fixed while the complete head is optimized; a jointly
+learned map/head product is outside this convexity claim.
+
+To obtain a correctness condition, separately supply reference source scores
+`g(i,c)` and reference query scores `q(c)`. Suppose the actual source scores
+differ from `g` by at most `epsilon`, and the reference has query residual
+
+```
+abs(sum_i a(x,i)*g(i,c) - q(c)) <= delta
+```
+
+for each relevant raw class. The triangle inequality and the actual product
+then give
+
+```
+abs(z_W(x,c) - q(c)/k(x)) <= (L(x)*epsilon + delta)/k(x).
+```
+
+If `q(y)>q(c)+2*(L*epsilon+delta)`, the actual complete head strictly prefers
+raw class `y` to `c`. The source errors and reference residual are explicit
+premises. Observed class fit alone does not bound a reference query residual;
+choosing observable signed weights does not establish the target reference.
+Normalization controls magnitude but does not supply that missing information.
+
+For a nonzero complex witness, observe points `(0,0),(0,1),(1,0),(2,0)` with
+raw labels `(0,2,0,0)` in a four-class vocabulary. The unseen query `(1,1)` is
+the signed affine combination with weights `(-1,1,1,0)`, of total mass one and
+absolute mass three. The declared reference has scores `4*(1-v)` for class0,
+`4*v` for class2 and zero for the other classes at coordinates `(u,v)`.
+It agrees with the complete conjugate Fourier margin-four head at every
+source, and its query residual is zero. The normalized signed features give
+actual query score `4/3` for class2 and zero for every other class, with ordinary
+CE `log(1+3*exp(-4/3))`. The same complete coefficient budget is32.
+
+Two target tables agree on every observed raw label but give class2 and class0,
+respectively, at the fifth query. Both raw answers have the same reduction
+modulo2 readout. Thus neither the observed data nor the declared readout
+establishes the reference at the query. The witness instantiates the conditional
+margin theorem; it does not infer arbitrary missing answers from a signed map.
+Its five original record IDs repeat the first source and end in a one-record
+tail, preserving the actual observed objective and full-head derivatives.
+
+Lean: `ConvexDepth/SignedContext/{Basic,Witness}`. A native proposal may derive
+signed weights from a fixed input kernel or descriptor reconstruction. It must
+declare that additional input structure, freeze any training-only selection
+before scoring, normalize the actual source-feature weights, retain every
+complete complex product, and charge construction, inversion, storage and all
+diagnostic work. A source-excluded diagnostic is separate from original training
+CE and is not a refit of latent discovery. No target residual certificate or
+numerical gain is supplied by this proof. A separately frozen original comparison
+must retain every task, both policies, all modes, earlier references and costs.

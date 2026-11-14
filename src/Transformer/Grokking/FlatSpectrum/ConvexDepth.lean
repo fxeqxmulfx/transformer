@@ -21,6 +21,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.GatedContext
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.MarginGuard
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RawRegions
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ConvexExclusion
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SignedContext
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -94,6 +95,10 @@ observed class hulls. With a separate candidate-pool or correct decoder-fiber
 premise, this identifies some exterior queries. Positive source mixtures
 retain complete-head margins, ordinary CE and bounds; counterexamples retain
 the limits of pool closure and ambiguous gaps.
+CM51 permits fixed signed contexts, with absolute-mass normalization preserving
+the source bound and complete-head convex CE. Query error and strict margins
+require separate reference-score residual bounds; an explicit alternative
+target agrees on observations and decoded answers while disagreeing raw.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/

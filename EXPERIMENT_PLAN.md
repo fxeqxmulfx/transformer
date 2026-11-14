@@ -6280,3 +6280,13 @@ Every observed metric object is unchanged. Actual peakRSS5.83GiB stays below
 the64GiB limit. All references, including task298's lower-CE tradeoff, remain.
 Authored findings record the unchanged accuracy; exact findings-commit fresh
 prepare,35cases,35replays and complete JSON/report reproduction follow.
+
+Task315 follows the unchanged raw accuracy with a different feature proposal.
+CM51 bounds fixed signed source combinations by their absolute mass and
+normalizes them to retain the original complex-source feature and head bounds.
+Observed Dirac rows preserve original CE and complete-head derivatives in all
+modes. Query score error and strict raw margins require an explicit reference
+reconstruction residual; flatness and observed fit do not establish it. A
+nonzero Fourier witness and two compatible disagreeing targets retain that
+distinction. Native signed-kernel construction and a frozen original comparison
+remain separate work; no new raw-label gain is claimed from the proof.
