@@ -6097,3 +6097,11 @@ package with an inspectable16Twork limit; the memory and cost formulas stay
 unchanged. Both frozen forward prior/supplement trajectories reproduce exactly
 apart from the protocol digest. Review precedes a separately frozen full rerun;
 the failed v1 sources,binary,model,logs and all35attempts remain preserved.
+
+Task301's separate margin_budget_compare rerun binds component26af04ec.
+It preserves the failed-v1 manifest as a third independent history input,
+reconstructing all35oldprocess statuses and the partial forward model before
+new preparation. Every old file is checked; missing replay after refusal is
+explicit. The16Tcomponent cap changes no model trajectory or memory limit.
+The new source,binary andrequest will be frozen separately before original
+metrics, with no reinterpretation of the failed v1 as a completed comparison.
