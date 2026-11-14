@@ -419,6 +419,15 @@ training derivatives. Original histories and all 35 benchmark results require
 a separate comparison adapter after the reviewed training cohort. Existing
 frozen comparisons and their selectors remain unchanged.
 
+Task 274 completed all 23 original CM40 training cases and all 1265 prime stages
+on the storage disk. Five tasks have endpoints in every mode, with zero observed
+raw-label errors; fourteen restricted bases refuse incompatible answer groups.
+The Fibonacci construction has dimension one and zero unmatched active pairs,
+while its unknown-axis count stays unchanged. This is training and support
+evidence, with no held-out success count. Authored findings and native report
+commands live in `experiments/convex_stress_shared_roles/cohort/original`; fresh
+review replays every completed original case from the frozen runner.
+
 Task 273 prepares the separate CM40 original training cohort after the reviewed
 272 component. It retains the same 23 cases, all 55 primes and all 35 suite
 metadata. Original record IDs, order and repetitions are saved separately from
