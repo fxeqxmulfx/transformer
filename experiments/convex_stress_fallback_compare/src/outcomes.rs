@@ -1,6 +1,7 @@
 //! Original categorical metrics with actual per-call routes and exact-input
 //! coverage. These diagnostics are produced after structural selection seals.
 use super::*;
+pub(crate) const METRIC_WORK_LIMIT: u64 = 32_000_000_000;
 struct Tracked<'a> {
     model: &'a fallback::Model,
     observed: &'a BTreeSet<Vec<i64>>,
@@ -106,8 +107,8 @@ pub(crate) fn forecast(task: &data::Task, model: &fallback::Model) -> Result<u64
         .checked_mul(per_call)
         .and_then(|n| n.checked_add(64 * tokens))
         .ok_or("metric forecast overflow")?;
-    if work > 2_000_000_000 {
-        return Err("both-head original metrics exceed2B scalar-work forecast".into());
+    if work > METRIC_WORK_LIMIT {
+        return Err("both-head original metrics exceed32B scalar-work forecast".into());
     }
     Ok(work)
 }

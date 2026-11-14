@@ -6,6 +6,7 @@ use fixtures::{Fixture, input, overwrite};
 #[test]
 fn frozen_sources_and_prospective_protocol_match() -> Result<()> {
     let p = protocol()?;
+    assert_eq!(p["metric_scalar_work_limit"], outcomes::METRIC_WORK_LIMIT);
     assert_eq!(
         p["parent"]["source_fingerprint"],
         convex_stress_readout_compare::fingerprint()
@@ -20,6 +21,29 @@ fn frozen_sources_and_prospective_protocol_match() -> Result<()> {
     ))?;
     assert_eq!(p["discovery"], original["discovery"]);
     assert_eq!(p["training"], original["training"]);
+    Ok(())
+}
+
+#[test]
+fn combined_metric_forecast_uses_the_uniform_allowance_and_keeps_its_cap() -> Result<()> {
+    let mut x = input("forecast-fixture")?;
+    let request = &x.configuration.as_ref().unwrap().discovery;
+    let candidate =
+        component::model::initialize(&component::discovery::run(request.clone())?)?.model;
+    let parent = fallback::Parent::from_checkpoint(json!({"kind":"Counts","model":{
+        "features":{"base":{"vocab":7,"context":4096}},"scale":10.,"total":0,
+        "shared":{"total":0,"keys":{},"active":[]},"local":{}}}))?;
+    let model = fallback::Model::new(candidate, parent, &request.input)?;
+    let sample = x.task.splits["validation"][0].clone();
+    x.task
+        .splits
+        .insert("validation".into(), vec![sample.clone(); 3000]);
+    let work = outcomes::forecast(&x.task, &model)?;
+    assert!(work > 2_000_000_000 && work <= outcomes::METRIC_WORK_LIMIT);
+    x.task
+        .splits
+        .insert("validation".into(), vec![sample; 40_000]);
+    assert!(outcomes::forecast(&x.task, &model).is_err());
     Ok(())
 }
 #[test]

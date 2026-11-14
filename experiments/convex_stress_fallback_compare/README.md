@@ -46,7 +46,16 @@ prediction order. These expose supported unseen aliases as well as unsupported
 inputs. CM38 proves preservation outside support; it does not prove that all
 supported unseen answers are correct.
 
-The numerical checks exercise actual imported histories and heads, both full
+Protocol v2 uses a uniform 32-billion scalar-operation forecast per endpoint,
+matching the refined-comparison allowance. The v1 allowance of 2 billion came
+from the bare causal model. Before any original fallback metric, the saved
+245 shapes and call counts showed that charging the Count parent as well would
+exceed that inherited limit. This prospective resource revision changes no
+head, training, selection or memory limit. The v1 source, binary and review
+remain preserved. A numerical fixture checks acceptance above the old allowance
+and refusal above the new limit without executing those expensive metrics.
+
+The nine numerical checks exercise actual imported histories and heads, both full
 initializer policies, all 35 synthetic task slots, long prefixes, unchanged
 raw CE, primary success despite auxiliary failure, checkpoint and rehashed
 parameter/support/input corruption, process failures, missing predecessors,

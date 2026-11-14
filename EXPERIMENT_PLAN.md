@@ -424,6 +424,14 @@ exact-input masks remain. Task267 waits for reviewed261 and266, then freezes
 source, executable, request and protocol before any original fallback metric.
 No benchmark pass or raw-CE selector change follows from these native fixtures.
 
+Task266 review also exposed a resource-policy mismatch before original metrics:
+the combined candidate/Count-parent forecast can exceed the inherited2B bare
+causal allowance on already saved inputs. Protocolv2 declares a uniform32B
+evaluation allowance, matching the refined comparison, with unchanged64GiB RAM,
+models and selection. A ninth test covers both forecast boundaries. The passed
+v1 checks and frozen source/binary remain preserved; original267 uses the fresh
+reviewed revision after all parent gates close.
+
 Task246 has completed all35 original refined-comparison cases and their first
 independent replays without process failures. Its18 available prime97 endpoints
 all pass original primary and auxiliary metrics, but none improves the selected

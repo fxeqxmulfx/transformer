@@ -1,9 +1,11 @@
 {
-  "version": "fixed-support-complete-comparison-v1",
+  "version": "fixed-support-complete-comparison-v2",
   "proof_commit": "16e34b2fa661b98ef1dc15992922f8a31646bced",
   "core_commit": "027237cdddde7f8b4019501b26d52f0f270b1001",
   "memory_limit_bytes": 68719476736,
   "minimum_disk_reserve_bytes": 17179869184,
+  "metric_scalar_work_limit": 32000000000,
+  "resource_revision": "Before original fallback evaluation, replace the inherited2B bare-causal metric allowance with a uniform32B combined-head allowance, matching the refined-comparison scale. A read-only forecast from existing saved shapes and call counts already exceeds2B when both actual heads are charged. Preserve v1 evidence, every refusal and the64GiB process limit; no model, training or selection change.",
   "discovery": {
     "feature_cells": 32000000,
     "visits": 200000000,
@@ -32,7 +34,7 @@
   ],
   "selection": "Retain the complete reviewed261 parent arms and their observed-CE choices. In two separate transformed initializer arms, wrap each selected causal head with its exact saved predecessor when importable and when every original supervised prefix has identical raw logits and CE. Seal structural transformations before metrics. Refusals or failed processes retain the original selected model. Never choose from held-out performance.",
   "scope": "All35 original tasks, two105-choice initializer policies, full/minibatch/forward,35 transformer endpoints and336 depth outcomes. Existing discovery and all ancestor construction costs are retained once. No new optimizer or discovery.",
-  "evaluation": "Original full-split metrics and pooling/greedy rollout. Retain supported, unsupported and exact-observed-input masks in prediction-call order. Forecast both heads under2B scalar work per endpoint. Every refusal/failure remains; primary99percent success is decisive, auxiliary metrics are diagnostics.",
+  "evaluation": "Original full-split metrics and pooling/greedy rollout. Retain supported, unsupported and exact-observed-input masks in prediction-call order. Forecast both heads under32B scalar work per endpoint. Every refusal/failure remains; primary99percent success is decisive, auxiliary metrics are diagnostics.",
   "limitation": "CM38 preserves the frozen predecessor outside observed support. It does not identify supported unseen answers or guarantee held-out nonregression; original strict-CE selection remains unchanged in the baseline arms.",
   "parent": {
     "producer_commit": "d341fdf86aefcce7aa71ce978821aed4af9ab74a",
