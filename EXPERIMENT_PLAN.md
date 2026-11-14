@@ -6079,3 +6079,12 @@ derivatives and budgets. Ten native fixtures pass; mini/forward noisy-fixture
 diagnostic CE falls0.325069508to0.302528484 with no raw prediction changes.
 Exact-commit component review precedes separate original evaluation, which
 must retain296raw and298CE references and test pooled field metrics too.
+
+Task300 passed exact-commit review at70fb09bb. Task301 prepares the separate
+original35-task comparison against296, retaining298as a complete secondary
+reference. All endpoints are sealed sequentially to disk, released, then
+reconstructed individually for scoring after the complete seal. This keeps
+large temporary guard caches within the64GiB address limit. Replay reserves
+allthree construction passes in its conservative work forecast. Original
+primary success, raw accuracy and CE remain separate, with every inherited
+baseline and cost retained. No new original numerical result is claimed yet.
