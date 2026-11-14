@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_nested_programs`](convex_stress_nested_programs) | Generic nested summaries; full/mini/forward | CM53 extension to two typed-bracket cases with four unchanged controls, training-learned roles/decoders, independent stack replay and separate 99% raw/exact goals. Freeze before original scoring. |
 | [`convex_stress_shared_programs`](convex_stress_shared_programs) | CM52 shared copy programs; full/mini/forward | MQAR and two-hop lookup reach100% raw/exact on every short/long split in all modes; original and fresh repeat match23 artifacts. Dyck/blocks retain six no-program refusals. Original35 comparisons remain separate. |
 | [`convex_stress_latent_programs`](convex_stress_latent_programs) | CM53 training-learned prefix decoders and complete complex heads | All four additional cases reach100% raw/exact on every short/long split in full/mini/forward. Dyck/blocks are repaired; retrieval states/results stay exact. Original and fresh runs reproduce23 artifacts; original35 remains separate. |
 | [`convex_stress_typed_data`](convex_stress_typed_data) | Next original two- and three-type bracket cases | Native data-only port with source-derived fingerprints, independent target/mask checks and preserved historical GPT rows. No model result yet; task326 adds generic nested-state programs. |

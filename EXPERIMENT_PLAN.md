@@ -6458,3 +6458,14 @@ summaries with all token roles inferred by enumeration, retaining every
 compatible learned decoder, all failures and the existing four passes. Keep
 the per-task99% raw/exact goals and original95% flags separate. Original35
 Fibonacci and tasks317/319 remain pending.
+
+Task325 is approved at `47ab2f50`; the two new datasets and historical baselines
+are frozen. Task326 audits CM53's existing generic input-program contract first
+and implements exhaustive partial directed matchings of observed input symbols
+with up to three nested role pairs. Raw decoders are learned from training only.
+The unchanged task324 binder has training-only priority, preserving its four
+passes. Complete complex heads and affine joint masses retain ordinary CE,
+full16/mini4x32/forward0 and all bounded failures. Freeze this new six-case
+producer before scoring, keep all 18 outcomes and every short/long split, and
+require exact independent replay. No original accuracy is inferred from the
+proof or synthetic checks; original35 and tasks317/319 remain separate.

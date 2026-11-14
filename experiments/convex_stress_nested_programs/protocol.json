@@ -1,0 +1,25 @@
+{
+  "name": "shared-nested-programs-v1",
+  "lean_contract": "CM53 at 8c7b8933aaf53d85a0688a1bee848878a6285617",
+  "parent_source": "3badaa300f6e8ec0e7e960fe910fa9de2f78f4b5",
+  "data_source": "47ab2f502350fd64766718f56316e1245c67e7e3",
+  "baseline_report_sha256": "897ff08174af605ca2fb4c5b10bd347314d1b7a82d96b54919173c870f5b60cc",
+  "cases": ["suite-mqar", "suite-lookup", "suite-dyck", "suite-blocks", "suite-dyck-2", "suite-dyck-3"],
+  "selection": "Run the entire unchanged parent binder first. Select the new bank only if the parent has no usable initialization, based exclusively on training inputs and labels. Never route per query, mode, task name or held-out result.",
+  "program_bank": "Collect sorted unique observed INPUT symbols before label filtering. Enumerate every partial directed matching with one through three disjoint pairs, both orientations, and all choices of unused symbols. Reject alphabets outside 2..9. No designated token roles or target decoder.",
+  "program_states": "Stack of expected pop symbols; persistent mismatch/underflow flag. Empty=0, nonempty=1, invalid=2; all other input symbols ignored. Maximum prefix 4096. Record peak stack depth and independent adjacent-cancellation replay.",
+  "states": 32,
+  "decoder": "Fit first observed raw label per state, keep every compatible partial dictionary, preserve original conflict row IDs, mark unseen states None and complete them numerically with raw label zero. Report all ambiguities and missing states; score every numerical prediction.",
+  "head": "Unchanged complete realified complex Fourier head from task324: all 32 states and all raw classes, margin24, radius2048. Uniform initial masses; affine joint tensor slice of fixed training-learned decoder templates. No independent learned factor products or claim of optimizing the entire joint domain.",
+  "training": [
+    {"mode":"Full", "iterations":16, "batch":32, "learning_rate":1.0},
+    {"mode":"Mini", "iterations":4, "batch":32, "learning_rate":0.1},
+    {"mode":"Forward", "iterations":0, "batch":32, "learning_rate":1.0}
+  ],
+  "loss": "Ordinary full-vocabulary cross-entropy. Parent training/check implementation reused verbatim; record actual gradients, products, examples, short tails and projected updates. Forward has zero gradient/cache/projection work.",
+  "limits": {"candidates":16384,"retained":128,"scalar_work":16000000000,"buffers_bytes":60129542144,"process_address_space_bytes":68719476736},
+  "search_forecast": "candidate_count * sum(8*prefix_length^2 + 32*prefix_length); includes producer and independent cancellation comparisons/moves. Allocate only after the inherited input and buffer checks.",
+  "score_forecast": "16*K*S*S*C + targets*(24*K*S*C + K*(128*max_length+32*max_length^2) + 128*C), all original splits together",
+  "scoring": "Freeze source, binary, data, protocol and baselines, then seal all six training states before any held-out scoring. Preserve all 18 mode outcomes, original95 success flags, separate raw99/exact99 goals, predictions, unknown labels, unknown input symbols, ambiguous dictionaries, and work refusals.",
+  "scope": "Two new typed-bracket cases and four unchanged controls. Original35 evaluations and unresolved Fibonacci results remain separate. Target realizability and native refinement are not formally certified. No empirical query-spectrum flatness assertion."
+}
