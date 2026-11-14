@@ -6290,3 +6290,32 @@ reconstruction residual; flatness and observed fit do not establish it. A
 nonzero Fourier witness and two compatible disagreeing targets retain that
 distinction. Native signed-kernel construction and a frozen original comparison
 remain separate work; no new raw-label gain is claimed from the proof.
+
+Task315 is approved at `803958cc`: 22 new Lean theorems establish bounded
+signed source combinations and conditional raw margins, with the existing
+36 sorry and no extra axioms unchanged. Task316 implements a fixed bank of
+ordinal input kernels over the exact reviewed task314 complex heads. Original
+source-excluded records select a convex mixture with ordinary raw CE; full,
+minibatch and forward modes retain their actual source histories and charge
+new diagnostic work separately. Eight native tests pass, including independent
+kernel solves, signed complex products, full/tail gradients and replay.
+Training-only inspection and exact component review precede any separate
+original all35 comparison. No new held-out accuracy result is claimed.
+
+Task316's six original-source training-only inspections now complete. Every
+mode improves its source-excluded diagnostic CE with no fit refusals. Peak
+RSS is 3.37 GiB; the largest buffer forecast is 10.55 GiB and work forecast
+237.01 billion units. Full/minibatch charge 64/80 new diagnostic gradient
+batches per role; forward uses zero. The minibatch prior retains its initial
+vertex while accounting for all attempted updates. These diagnostics do not
+establish a new raw-label result. Exact component review comes next.
+
+The user's 2026-11-14 extension adds the full `stress_tests_for_gpt.md` catalog:
+165 historical cases, including 130 outside the current 35-task suite. The new
+goal is at least 99% held-out accuracy per task. Retain raw-token accuracy,
+exact-sequence accuracy, ordinary CE and each original declared success flag
+as distinct fields. Fibonacci's current approximately 98% raw accuracy remains
+below this new goal despite its original success flag. Expand first to MQAR,
+two-hop lookup and other sequence tasks, preserving original splits, longer
+probes, controls, budgets, baselines and full/mini/forward modes. Use Rust/Kernite
+only, retain the 64 GiB memory cap, and derive no answer rule from task names.
