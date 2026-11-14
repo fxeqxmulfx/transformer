@@ -450,7 +450,19 @@ transformer and336 depth endpoints and prior costs remain. Canonical training
 CE chooses five neighbors for both heads, independently of trained parameters;
 no extra optimizer updates occur. Peak original RSS is1,662,128KiB under64GiB.
 Authored findings live in`convex_stress_context_compare/original`; exact-commit
-review and a fresh end-to-end reproduction follow before task completion.
+review at `d173da9f` and a fresh end-to-end reproduction pass, including identical
+model tensors, selections, metrics, summaries, reports and329 original hashes.
+Task284 is approved.
+
+Task285 proves CM43 before any confidence experiment: a frozen per-input scale
+in[0,1] preserves the actual feature/logit bound and positive scaling preserves
+raw-class ordering. Ordinary CE remains convex in the complete coefficient
+tensor. Scalar CE convexity at fixed logits is a separate statement; no joint
+convexity in scale and tensor or monotone CE improvement is claimed. Scale one
+on every original observed record preserves exact batch objectives and full
+derivatives, including repetitions, minibatch tails and forward-only states.
+Any native context/scale bank and training-only selector require a separate
+prospective protocol; pooled task metrics must still be measured afresh.
 
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.

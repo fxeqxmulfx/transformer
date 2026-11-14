@@ -17964,3 +17964,63 @@ structure and is not invariant under arbitrary token permutations. Missing
 latent matches and unsupported axes still require explicit fallback. No
 unseen-label guarantee or new numerical improvement is asserted here; the
 reviewed task281 endpoints and the running older comparisons remain frozen.
+
+## CM43. Freeze confidence scales before ordinary complex-head CE training
+
+The reviewed CM42 comparison improves Fibonacci raw-label accuracy from
+3120/4704 to4574/4704 and ordinary validation CE from about8.0816 to0.2800
+in full-batch, minibatch and forward-only modes. Primary field accuracy stays
+4701/4704 and all35 tasks pass. The remaining130 raw errors motivate examining
+confidence as well as local alias selection. No new numerical gain is assumed.
+
+For any fixed features `phi(k,x)`, freeze an input-dependent scale `t(x)` and
+use `phi_t(k,x)=t(x)*phi(k,x)` with the same complete coefficient tensor `W`.
+Expanding its actual finite dot product gives
+`z_t(x,c)=t(x)*z(x,c)`. If `0 <= t(x) <= 1` and every original coordinate is
+bounded in absolute value by a nonnegative `M`, the new coordinate has the
+same bound. The original per-class absolute-sum coefficient budget `R` still
+bounds the logits by `R*M`. Applied after CM42's stochastic context map, flat
+unitary complex source features therefore retain the bound of one. Neither
+context interpolation nor scaling makes the query matrix unitary.
+
+At a strictly positive scale, every strict and non-strict raw-logit comparison
+is equivalent to the original comparison. Thus raw argmax predictions and
+ties are preserved for a fixed context map and tie rule. This does not preserve
+comparisons between pooled probabilities for a many-to-one task readout.
+Selecting a different context map can also change raw predictions. Both
+metrics must be measured in any new comparison.
+
+With `t` fixed, ordinary full-vocabulary CE averaged over any finite batch of
+original record IDs remains convex in all coefficients on the same budget.
+Separately, for a fixed complete logit vector `z`, `CE(t*z,y)` is convex in
+the scalar `t`. Jensen yields
+
+```
+CE(t*z,y) <= t*CE(z,y) + (1-t)*CE(0,y),  0 <= t <= 1.
+```
+
+This inequality is not monotonicity: shrinking can increase a correct
+prediction's CE. No joint convexity in trainable `t` and `W` is asserted.
+Any proposed scale and context selection is frozen from original training
+inputs and labels, independently of the trained coefficients and held-out
+targets. For the actual conjugate complex initializer with margin `a`,
+CM42's weighted-label identity becomes `t(x)*a*labelMass(w,labels,x,c)`.
+This permits a declared canonical training diagnostic without a new optimizer
+step or a table of unseen targets. It is not a generalization certificate.
+
+Require `t(x)=1` on each original observed input. The complete normalized
+batch objective then equals the original objective for every coefficient
+tensor. Its Frechet derivative agrees, and any actual derivative-existence
+proof transfers. Combining this premise with CM42's observed Dirac rows
+recovers the original source-state objective. Full batches, repeated record
+IDs and unequal minibatch tails retain their original multiplicities and
+denominators. The same identities apply before any updates in forward-only
+mode. Concrete examples use four-state complex Fourier features, a nonzero
+head, repeated observations, and an unseen scale of one half.
+
+Lean: `ConvexDepth/ContextScale/{Basic,Batch}`. A native experiment must freeze
+the scale/context bank and training-only selection before reading held-out
+metrics, evaluate actual scaled complex products, bind all source tensors
+and original records, preserve observed logits exactly, retain the full head
+budget, and report all original success criteria alongside raw accuracy and
+ordinary CE. CM42's reviewed source, model artifacts and results remain frozen.

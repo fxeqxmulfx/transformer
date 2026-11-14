@@ -14,6 +14,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.Fallback
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.CoverageExtension
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.PartialFallback
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextInterpolation
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextScale
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -56,6 +57,10 @@ CM42 uses fixed stochastic context weights to interpolate actual complex
 source features. It preserves observed batches, convex raw-label CE and the
 coefficient bound, while local raw-label information remains an explicit
 premise distinct from flatness and decoded correctness.
+CM43 permits fixed confidence shrinking on context features. It preserves
+the feature bound and raw rankings, and leaves original batch objectives and
+derivatives intact when observed scales equal one. Convexity in a fixed
+head's scalar confidence is separate from convexity in a scaled fixed-feature head.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/
