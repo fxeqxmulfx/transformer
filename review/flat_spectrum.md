@@ -18024,3 +18024,82 @@ metrics, evaluate actual scaled complex products, bind all source tensors
 and original records, preserve observed logits exactly, retain the full head
 budget, and report all original success criteria alongside raw accuracy and
 ordinary CE. CM42's reviewed source, model artifacts and results remain frozen.
+
+## CM44. Realize declared decoder confidence with a complete bounded complex head
+
+The reviewed CM43 comparison retains all 35 primary and auxiliary successes
+in full-batch, minibatch and forward-only modes at seed 1. Fibonacci raw
+accuracy is 4574/4704 and ordinary validation CE is about 0.16604. A separate
+confidence problem remains in the inherited categorical phase heads: several
+arithmetic tasks have perfect raw accuracy but CE around 3.59 or 4.27. Their
+native predictor puts logit 1 on the declared raw label and zero elsewhere.
+For 97 or 193 classes these are exactly the expected correct-margin losses.
+Increasing confidence must be represented by an actual charged head, rather
+than an unaccounted probability adjustment or a changed success criterion.
+
+Let `state : X -> I` be a fixed declared input-state map, `decoder : I -> C`
+the frozen raw-label decoder, and `U` a unitary complex matrix on the finite
+source-state type `I`. Neither map needs to be injective. Pull back the actual
+realified complex features along `state`. Every coordinate still has absolute
+value at most one, even when query states repeat. A complete real/imaginary
+coefficient tensor with per-class absolute-sum budget `R` therefore gives
+actual logits bounded by `R`. The matrix over original query inputs need not
+be unitary. Flatness is used for the bound, not for identifying any raw target.
+
+Use CFt5's actual conjugate initializer with declared state labels `decoder`
+and margin `a`. Unitary inversion gives, for every input and raw class,
+
+```
+sum_k W_a(k,c) phi(k,x) = if c = decoder(state(x)) then a else 0.
+```
+
+Both real and imaginary coefficients are stored and charged. CFt5 bounds
+their per-class absolute sum by `2*abs(a)*card(I)`. In particular, every
+`0 <= a <= 24` fits the common native head budget `64*card(I)`, including
+both margin 1 and margin 24. This is an explicit output-head budget, separate
+from an inherited latent-moment spectral bound. A positive margin gives the
+declared raw label a strict advantage over every other class. It does not
+establish that the declared label is the unknown target. Original pooled
+task probabilities still require numerical evaluation after changing confidence.
+
+Write `L_C(a) = log(1+(card(C)-1)*exp(-a))`. For every raw target `y`, ordinary
+full-vocabulary CE of the actual head is exactly
+
+```
+L_C(a) + if decoder(state(x)) = y then 0 else a.
+```
+
+For a nonempty finite batch of original record IDs, its normalized CE is
+therefore `L_C(a) + a*errorRate`, where the error rate uses each record's
+actual raw target. Repeated inputs retain their separate record IDs and
+multiplicities, and each minibatch tail retains its own denominator. A batch
+that exactly matches the declared decoder has error rate zero. For a nonempty
+vocabulary, increasing `a` cannot increase `L_C(a)`; wrong labels still incur
+the separate linear penalty. Thus greater confidence is beneficial on a
+correct batch without being an unconditional held-out improvement guarantee.
+
+With the state map and complex code fixed, ordinary normalized CE remains
+convex in the entire real/imaginary coefficient tensor on the same budget.
+This does not assert joint convexity in learned discrete state assignments
+and a decoder. Any confidence selection must use original training data and
+be fixed before held-out scoring. The equality also applies to a zero-update
+forward-only initializer and to the initial state of ordinary full/minibatch
+CE training. Unlike CM43's observed scale-one transformation, raising the
+declared margin intentionally changes observed probabilities and CE.
+
+A nonzero four-state complex Fourier witness has a many-to-one Boolean
+decoder and six inputs mapped to two source states. Three original record IDs
+repeat input 0 twice and use input 4 once. Against a constant-false target,
+only the final record is wrong: the full-batch CE at margin 24 is
+`log(1+exp(-24))+8`, whereas its one-record final minibatch has
+`log(1+exp(-24))+24`. Targets matching the declared decoder instead give the
+correct-margin loss on the same repeated inputs. These examples make the
+normalization and wrong-label penalty explicit.
+
+Lean: `ConvexDepth/DecoderConfidence/{Basic,Batch}`. A native implementation
+must bind the declared source maps and decoder to the saved training result,
+materialize and validate the complete conjugate coefficient tensor, charge
+its budget and work, and evaluate actual complex products. An original-data
+comparison must preserve every task, initializer policy, training mode and
+baseline, report raw CE alongside the original task score, and retain any
+regressions. The reviewed CM42/CM43 experiments remain frozen.

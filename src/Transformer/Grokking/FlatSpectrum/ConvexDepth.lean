@@ -15,6 +15,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.CoverageExtension
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.PartialFallback
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextInterpolation
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextScale
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.DecoderConfidence
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -61,6 +62,10 @@ CM43 permits fixed confidence shrinking on context features. It preserves
 the feature bound and raw rankings, and leaves original batch objectives and
 derivatives intact when observed scales equal one. Convexity in a fixed
 head's scalar confidence is separate from convexity in a scaled fixed-feature head.
+CM44 realizes a fixed input-state map and many-to-one declared raw decoder
+with a complete bounded complex tensor. Its exact batch CE separates the
+correct-margin loss from margin times empirical raw error; no unknown target
+is inferred by increasing confidence.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/

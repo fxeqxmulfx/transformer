@@ -491,6 +491,16 @@ The retained transformer has95.1318% raw accuracy and CE0.23454365 on this
 endpoint. Authored findings live in`convex_stress_context_scale_compare/original`;
 the exact-commit fresh reproduction and review follow before completion.
 
+Task287 is now approved at `c5ba15c6`: a fresh all35-case reproduction and
+every numerical replay match model, metric, summary and report bytes, and
+all329 original artifact hashes verify. Task288 extends Lean first for the
+remaining high-CE declared categorical heads. CM44 realizes their fixed state
+map and raw decoder with an actual conjugate complex tensor and a common
+64-times-state-count budget for margins through24. Its exact ordinary batch
+CE separates the correct-margin loss from margin times raw error, retaining
+repeated record IDs and short minibatch tails. Native confidence changes and
+original held-out evaluation remain separate prospective work.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per
