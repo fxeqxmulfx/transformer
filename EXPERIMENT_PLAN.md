@@ -431,6 +431,15 @@ Actual complex feature products retain all head coefficients, original observed
 rows and raw-CE derivatives. Native fixtures and mutation checks precede any
 original-data evaluation; the 35/35 benchmark result is unchanged at this stage.
 
+Task 284 prepares a separate prospective original comparison of the reviewed
+context component. All35 tasks, both105-choice policies and all35 conventional
+plus336 depth outcomes remain. Only stored selected raw/shared-extension pair
+heads are transformed; task281 has three such Fibonacci endpoints. Selection
+uses the reviewed canonical training-only rule before metrics. Actual tensors,
+original data fingerprints, raw CE and accuracy must replay independently;
+all unchanged choices remain explicitly inherited. Source and executable are
+frozen before execution, with a64GiB process limit and storage-backed outputs.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per

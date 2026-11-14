@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "component_commit": "c62022c5c95672b1503c9c92e6cff3ff429f59af",
+  "parent_producer": "3a4434fa67d2d24d8d6d1b88abfffdd024c9a051",
+  "parent_source_fingerprint": "63cbf0c5c3ae9ea63b58707d7f073e04e926df521631f9d2388af16981dab6d0",
+  "parent_review_commit": "2144ad467a82569346448b18a8a71a3ef439522c",
+  "parent_summary_sha256": "10565c46d2ce592c7c7eda3cea1b683018115440e9602c0947ee87f37b2fbb1b",
+  "parent_inventory_sha256": "7a540150674e7ddf9f21e0e1b1c327f90b6a6c6b1fad967dd9ef6db341b7c633",
+  "parent_completed_manifest_sha256": "e6c2953a87105437850062b2e001d647058b21dc8dfaed120f40b2b976625162",
+  "task_scope": "all35 original seed1 tasks and105 choices per initializer policy",
+  "eligible_models": "every stored selected complete-kernel or shared-extension pair head in the reviewed parent",
+  "other_models": "inherit unchanged reviewed choice and metrics explicitly",
+  "context_policy": "reviewed CM42 component; canonical training-only selection before original metrics",
+  "extended_route": "prior where prior is known or supplement refuses, supplement only on newly covered cells",
+  "success": "unchanged original primary sequence_accuracy >= 0.99",
+  "new_optimizer_updates": 0,
+  "heldout_selection": false,
+  "prediction_limit": 4096,
+  "address_limit_bytes": 68719476736
+}
