@@ -18194,3 +18194,84 @@ preserve full/minibatch/forward metadata, and freeze every learned mixture befor
 held-out evaluation. All 35 original cases, both policies, unchanged baselines
 and any regressions remain required. No numerical improvement from CM45 is
 claimed before that separate experiment.
+
+## CM46. Fixed gates and anchored local convex context mixtures
+
+The reviewed CM45 comparison retains 35/35 original successes in each mode
+and both policies. Its shared context mixture reduces the remaining Fibonacci
+raw errors from 130 to 109 full-batch, 103 minibatch and 100 forward-only.
+Full-batch CE is lowest at 0.14011; forward-only raw accuracy is highest at
+4604/4704. A shared mixture still applies the same relative context preferences
+to every input. The following extension adds local capacity without claiming
+that local optimization will improve unseen answers.
+
+Fix the actual bank `phi_j`, complete head `W`, an anchor mixture `b` in the
+simplex, a radius `r` in `[0,1]`, and nonnegative input gates `q_g(x)` with
+`sum_g q_g(x)=1`. Learn a simplex row `a_g` for each group. Gates may overlap;
+the gate map is fixed, and is not a simultaneously trained factor. Define
+
+```
+v_j(a,x) = (1-r)*b_j + r*sum_g q_g(x)*a_gj
+phi_a(k,x) = sum_j v_j(a,x)*phi_j(k,x)
+z_a(x,c) = sum_k W(k,c)*phi_a(k,x).
+```
+
+The product of local simplexes is convex. Each `v(a,x)` is in the simplex,
+and the actual logits equal
+`(1-r)*z_b(x,c) + r*sum_g q_g(x)*z_(a_g)(x,c)`. They are affine in all local
+coefficients jointly, with `b,r,q,phi,W` fixed. Thus ordinary full-vocabulary
+raw CE is convex in those coefficients. No joint convexity in the head and
+local mixture, or in learned gates and local rows, is claimed.
+
+The bound `abs(phi_j(k,x)) <= M` survives every anchored gated mixture.
+Every original real and imaginary coefficient remains charged to the same
+head budget `R`, so `abs(z_a(x,c)) <= R*M`. CM42 stochastic contexts and CM43
+fixed scales in `[0,1]` over a unitary complex source give `M=1`. Flatness
+supplies this bound; the repeated or mixed query rows need not be unitary.
+
+Let `g_j(v,x,y)` be CM45's full-softmax slope at the effective weights `v`.
+The local slope is `r*q_g(x)*g_j(v(a,x),x,y)`. Its pairing with `a'-a` is
+exactly CM45's slope pairing with `v(a',x)-v(a,x)`, since the anchor cancels.
+This proves the ordinary first-order supporting inequality in every local
+coefficient. Averaging over the actual finite set of original record IDs
+gives the corresponding batch inequality and convexity, preserving repeated
+inputs and each short tail's own denominator.
+
+For nonnegative radius and gates, the actual change satisfies
+
+```
+abs(z_a'(x,c)-z_a(x,c)) <=
+  r*R*M*sum_g q_g(x)*sum_j abs(a'_gj-a_gj).
+```
+
+XE2 bounds CE by its explicit local linear model plus one half the square
+of this right-hand side. Gate normalization and `r<=1` are unnecessary for
+this change estimate, whereas they are needed for the unchanged feature
+bound. If every bank preserves an original observed feature row, the three
+mass-one identities alone preserve that row for any radius. Every original
+batch loss and its complete-head Frechet derivative are then unchanged.
+This observed objective cannot identify useful local rows. A training-only
+source-excluded diagnostic is a separate rule, not a refit of latent discovery
+and not a guarantee about missing labels.
+
+An actual nonzero four-state Fourier witness reuses CM45's two maps. Both
+maps preserve inputs 0 and 1, and each map uses the same source state at
+unseen inputs 2 and 3. Therefore every shared mixture gives identical logits
+at those two inputs, making opposite strict raw margins impossible. Fixed
+one-hot input gates put inputs 2 and 3 in different groups. With the uniform
+anchor, radius one half, and local rows `(3/4,1/4)` and `(1/4,3/4)`, the actual
+raw logits on labels `(0,2)` are `(15,9)` at input 2 and `(9,15)` at input 3.
+Both strict margins and the corresponding wrong-target CE differences are
+six. Labels 0 and 2 still share the same modulo-two readout. The model keeps
+the original repeated-record fitted CE `log(1+3*exp(-24))`; a constant-zero
+target adds eight on the three-record batch and 24 on its one-record tail.
+The input partition is additional model structure. This capacity witness
+does not identify the correct unseen label or show that a diagnostic learns it.
+
+Lean: `ConvexDepth/GatedContext/{Basic,Bounds,Loss,Batch,Witness,Capacity}`.
+A native implementation must fix and bind gates, anchor, radius, bank and
+complete source head before local optimization. Every local row must stay
+in its simplex. It must retain original records and mode metadata, including
+zero derivative calls for forward-only, and charge all added state and work.
+All 35 original cases, both policies, unchanged baselines, raw CE and every
+regression remain required. No numerical improvement from CM46 is claimed.

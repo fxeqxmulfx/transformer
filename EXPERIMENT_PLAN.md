@@ -571,6 +571,17 @@ Peak observed replay RSS is1.99GiB under64GiB. Authored findings are in
 `convex_stress_context_mixture_compare/original`; complete independent
 reproduction and exact-commit review follow before approval.
 
+Task 293 is approved at `f0a19727`: a separate complete run reproduces all
+115 JSON artifacts and the compact report exactly. Task 294 extends Lean
+first with CM46 fixed gates and anchored local context mixtures. The local
+simplex rows retain the same source/head bound, with affine actual logits,
+convex ordinary CE and explicit local slope and change bounds. Original
+record and head-derivative identities remain exact. A nonzero Fourier example
+shows two opposite unseen raw margins available to local mixtures but
+impossible for a shared mixture on the same bank. This is a capacity result;
+training-only diagnostics and actual held-out gains still require a separate
+native implementation and complete comparison after proof review.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per

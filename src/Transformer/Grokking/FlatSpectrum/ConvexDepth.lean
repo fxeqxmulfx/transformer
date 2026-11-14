@@ -17,6 +17,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextInterpolation
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextScale
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.DecoderConfidence
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextMixture
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.GatedContext
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -71,6 +72,11 @@ CM45 learns simplex mixtures of fixed context maps with the complete head
 frozen. Actual products retain the feature and coefficient bounds, with convex
 ordinary diagnostic CE and explicit first-order and quadratic controls. When
 all maps preserve observed rows, the original CE cannot select a mixture.
+CM46 uses fixed input gates and an anchor to learn local simplex mixtures.
+Their actual products keep the source bound and convex ordinary CE in all
+local coefficients, with explicit slopes and original-batch identities.
+A nonzero Fourier example separates local from shared-mixture capacity;
+the fixed gates still do not certify any unseen raw target.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/
