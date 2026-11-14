@@ -411,6 +411,14 @@ has not yet been evaluated on the original suite.
 
 ## Recovered comparison queues (2026-11-13)
 
+Task 275 applies the proved CM39 conservative gate to the actual CM40 shared-role
+certificate. Both heads and certificates remain checked and charged; explicit
+original IDs retain order and repeated-record CE weights. The supplement acts
+only on newly supported inputs, preserving prior logits and all original
+training derivatives. Original histories and all 35 benchmark results require
+a separate comparison adapter after the reviewed training cohort. Existing
+frozen comparisons and their selectors remain unchanged.
+
 Task 273 prepares the separate CM40 original training cohort after the reviewed
 272 component. It retains the same 23 cases, all 55 primes and all 35 suite
 metadata. Original record IDs, order and repetitions are saved separately from

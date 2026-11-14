@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_shared_roles/extension`](convex_stress_shared_roles/extension) | CM39/40 conservative component; original comparison pending | Extends a checked raw head only on newly supported inputs using the actual shared-role certificate. Preserves prior logits, raw CE and original records; charges both models and replays no new optimization. |
 | [`convex_stress_shared_roles/cohort`](convex_stress_shared_roles/cohort) | Training adapter for 23 original cases and all 55 primes; execution pending | Retains original IDs, repeats, raw CE and batches while constructing the complete shared-role kernel. Full source/data/state replay and all refusals are retained; no held-out metric or new success count. |
 | [`convex_stress_shared_roles`](convex_stress_shared_roles) | CM40 and nine native component checks; original cohort pending | The complete grouped kernel includes gauge-invariant shared-role rows. Actual complex heads retain raw CE, original record IDs and multiplicity, full/mini/forward replay, resource limits and refusal masks. No original benchmark result. |
 | [`convex_stress_role_sharing`](convex_stress_role_sharing) | CM40 and a training-only native diagnostic | Actual gauge-invariant shared-role equations can extend complete-kernel coverage under an explicit target-family assumption. One of 97 observed-separating directions survives the training diagnostic; native model and benchmark evidence remain pending. |

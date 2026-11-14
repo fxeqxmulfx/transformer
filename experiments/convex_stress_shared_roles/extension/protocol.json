@@ -1,0 +1,26 @@
+{
+  "version": "shared-role-extension-v1",
+  "scope": "native_component_only_no_original_evaluation",
+  "proofs": {
+    "gate": "CM39, ConvexDepth/CoverageExtension/Basic.lean, 2ca6d2cf25ae451f2beea407cb84d1300ef3abc9",
+    "shared_roles": "CM40, CoupledMoments/SharedRoles/Identification.lean, ec5f839dd7584fc07765373132d255286f53f052"
+  },
+  "parents": {
+    "gate_component": "08e4108bd14e66a422a4c78aa7129bed46453bba",
+    "shared_role_component": "5d4eee848cacceba911f048ade2d014e2b71cf42"
+  },
+  "gate": "Use the prior on every prior-supported input and every joint refusal. Use the shared-role head only on newly supported inputs. No metric or raw-label oracle enters routing.",
+  "binding": "Require identical dimensions, original distinct equations and prime. Check the raw complete kernel and the actual augmented CM40 certificate separately, both saved codes, feasible complex tensors, original record identities/order/multiplicity, dictionaries and complete support inclusion. External trusted hashes bind serialized models; saved metadata cannot authorize its own edits.",
+  "ce": "Full raw-vocabulary CE on original records. No model update. Every batch of distinct original record positions retains its actual weights, prior logits and prior complex derivative; supplemental derivative is zero. Saved source optimization histories require independent replay by an importing adapter.",
+  "process_address_space_cap_bytes": 68719476736,
+  "combined_buffer_cap_bytes": 60129542144,
+  "combined_head_audit_work_cap": 32000000000,
+  "gradient_work_cap": 32000000000,
+  "max_prefix_tokens": 4096,
+  "max_original_records": 66049,
+  "accounting": "Both heads, Fourier phases, coefficient/table storage, summed radii, both actual certificate forecasts and original records remain charged. Inference, verification and serialization costs must be measured separately from construction and optimization.",
+  "prospective_original_comparison": "After the original shared-role training cohort is independently approved, extend only a selected complete raw-kernel head using its available same-prime, same-mode shared-role endpoint, with positive added coverage. Preserve all previous arms and observed raw-CE choices, both 105-choice arms, all 35 primary results, baselines, failure records and total costs. Seal structural choices before held-out metrics; replay both original histories. No original metrics are produced by this component.",
+  "raw_label_identification": false,
+  "target_readout_compatibility_proved": false,
+  "shared_role_target_proved": false
+}
