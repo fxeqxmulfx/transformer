@@ -6157,3 +6157,14 @@ remains retained in full. Original training CE and field accuracy are unchanged;
 new gradients and optimizer updates are zero. Peak RSS is 3.4943 GiB.
 The complete 334-file manifest preserves every reference and failed attempt.
 Exact findings-commit independent reproduction is required before approval.
+
+Task 305 is approved at `5dd63c6e`: independent fresh preparation, all 35 cases
+and replays reproduce all 117 JSON artifacts and the report byte-for-byte.
+The full-suite primary raw totals are 279856/279952 full, 279855/279952 mini,
+and 279857/279952 forward. The remaining errors are Fibonacci 96/95/95 and
+two inherited minibatch sum-square errors.
+
+Task 306 audits these totals and reconstructs the actual Fibonacci predictions
+without changing the model. It classifies coverage and observed class geometry
+to decide the next Lean question. Observed line structure alone cannot justify
+unknown-label extrapolation; no new prediction rule is part of this audit.

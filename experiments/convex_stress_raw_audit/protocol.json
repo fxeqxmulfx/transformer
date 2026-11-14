@@ -1,0 +1,12 @@
+{
+  "review_commit": "5dd63c6e3d8993048ffd7ec10395614d867c3a0c",
+  "source_fingerprint": "aae77450f5dc67f2a92cc0b97ddad8b00c35e77aedb24af97aeca00f3092c9c1",
+  "summary_sha256": "285f2d748866b833c25a4dc23785468718d7fe899949872287dca29ec990ee71",
+  "inventory_sha256": "5dbf85022d80822f03a80ed164313be4fd965e5a2fd8dbc144d79ac8f516fd25",
+  "manifest_sha256": "b28d298a8cfacf8e801082be1ae2c2eec4204b4b926b520930af59ad0325c01d",
+  "process_limit_bytes": 68719476736,
+  "prediction_work_limit_per_endpoint": 128000000000,
+  "scope": "all 35 primary raw totals; reconstruct every fresh raw-region endpoint and classify its errors",
+  "new_model_or_predictions_selected": false,
+  "geometry": "true-label geometry is a post-evaluation diagnostic; collinearity does not establish unseen labels"
+}
