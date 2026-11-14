@@ -6406,3 +6406,19 @@ Full/mini compute all derivatives but make zero effective weight changes on the
 compatible face; the gain is shared representation and the explicit copy prior.
 Finish independent review before the next generic prefix-summary/decoder repair.
 This result does not re-evaluate the original35 or the remaining126 new cases.
+
+Task322 is approved at `f868e07f`. Task323 extends Lean first with CM53:
+fixed input programs produce latent states, and training observations learn
+possibly many-to-one raw decoders. The executable learner retains every
+consistent program and accepts only covered, unanimous dictionary outputs.
+Joint program masses and decoder coefficients form one convex affine domain;
+the actual complete complex head has convex ordinary full-vocabulary CE and
+a charged coordinate count and column budget. Explicit target realizability
+implies correct accepted raw predictions. A Fourier witness predicts a new
+input and exhibits opposite feasible completions at an uncovered latent state.
+The learner cannot identify a raw class absent from training without a copy
+prior or another identifying assumption. No native prefix accuracy is inferred.
+All55 new theorems pass a warning-free13932-job full build and standard axiom
+audit; generated INDEX has4835 modules/25347 theorems, with the global
+36sorry/0rests/0extra unchanged. Review323 before task324 implements and freezes
+the generic prefix repair. Preserve both retrieval passes and tasks317/319.

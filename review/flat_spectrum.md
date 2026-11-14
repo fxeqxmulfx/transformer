@@ -18687,3 +18687,98 @@ products, and charge its search, storage and scoring work. Shared copying is
 a proposed additional prior for retrieval tasks, not a proof that generic
 prefix summaries solve Dyck/blocks or that numerical prediction reaches99%.
 The failed sequence baseline and all original35 comparisons remain frozen.
+
+## CM53. Learn shared latent decoders without bilinear factors
+
+The reviewed shared-copy experiment at `c44632bb`, with findings `f868e07f`,
+reaches100% raw-token and exact-sequence accuracy on MQAR and two-hop lookup
+in all three modes and every short/long split. Dyck and alternating blocks
+retain all six no-compatible-copy-program refusals. Their raw labels need not
+be symbols that appear in an input. CM44 already realizes a declared many-to-one
+decoder with a complete complex head, but does not learn it. CM52 fixes the
+identity decoder. CM15's convex decoder hull and CM17–CM18's structured table
+identification do not supply the following generic latent-program learner.
+
+Fix input-only programs `p_j : X -> S`, a candidate order, observed pairs
+`(x_i,y_i)`, and a unitary code `U` on the finite latent state type `S`.
+The raw vocabulary `C` is separate from `S`. For each program, look up the first
+observed raw label at a queried latent state. Retain every program for which
+this dictionary matches all original labels. This is equivalent to requiring
+equal observed raw labels whenever that program gives equal latent states.
+No target decoder, target program index, task identity or held-out label enters
+the executable filter. Its learned decoder may be many-to-one.
+
+At a new input, require a nonempty retained bank and a known, unanimous raw
+dictionary output from every retained program. Unknown state coverage or any
+disagreement returns `none`. If the unknown target has the form `d(p_j(x))`
+for some enumerated program and some unknown raw decoder, and observations are
+correct, that program survives. Every accepted prediction is then the raw
+target. This is conditional on structural realizability, not on flatness.
+The returned label must occur among the training labels. Thus this learner
+can identify new inputs with covered latent states; it does not invent a new
+raw class without CM52's copy prior or another identifying assumption.
+
+Learning independent program weights and decoder factors would multiply
+learned quantities. Instead use one joint coefficient tensor `gamma[j,s,c]`
+and shared masses `w[j]`, with
+
+```
+w >= 0,       sum_j w[j] = 1,
+gamma >= 0,   sum_c gamma[j,s,c] = w[j] for every j,s,
+w[j] = 0 for programs outside the declared order,
+gamma[j,p_j(x_i),c] = w[j] * 1[c=y_i] for every original sample and raw class.
+```
+
+These are affine equalities and nonnegative coordinate inequalities, so the
+whole domain is convex. Two conflicting labels at one latent state force that
+program's entire mass to zero. Conversely, every retained candidate supplies a
+feasible vertex: use its learned labels on observed states and an explicit
+arbitrary default on other states. Selecting the first retained candidate is
+an executable initialization; target realizability proves that selection exists,
+rather than supplying the selected index to the learner. Convex mixtures of
+consistent declared decoders are also feasible points. The joint domain is not
+restricted to independently parameterized factors or deterministic completions.
+
+For each program block set `T_j[s,c] = margin * gamma[j,s,c]` and use the actual
+complete complex head `H_j = U* T_j`. The input features are the full code row
+`U[p_j(x),:]` in every block. Expanding both real and imaginary coordinates gives
+
+```
+z_q(x,c) = margin * sum_j gamma[j,p_j(x),c].
+```
+
+This is linear in all joint coefficients. The ordinary full-vocabulary
+log-sum-exp cross-entropy is convex on the joint domain. Since every entry of
+`gamma[j,s,:]` lies between0 and `w[j]`, CM32's arbitrary-table bound gives each
+block column budget `2*abs(margin)*w[j]*card(S)`. Summing the actual complete
+columns yields `2*abs(margin)*card(S)`. Every source feature coordinate remains
+bounded by1. The number of stored coordinates still grows with the number of
+programs, latent states and raw classes: the complete realified head has
+`2*card(J)*card(S)*card(C)` coordinates, all charged in native work.
+The empirical query-feature matrix may repeat states and need not be flat.
+
+Every feasible joint tensor has the declared finite-margin logits on the
+observations. At an accepted query, nonzero program masses belong to retained
+programs; their observed dictionary entries force the same full raw logit vector
+for every feasible joint tensor, including arbitrary unknown-state completions.
+It places `margin` on the accepted class and0 on every other raw class. Combining
+this with realizability identifies the target, yields a strict winner for
+positive margin and ordinary CE `log(1+(card(C)-1)*exp(-margin))`. Further CE
+optimization on these exactly fitted observations cannot select among the
+remaining unobserved rows. No optimizer convergence rate or new native prefix
+accuracy is asserted here.
+
+The witness uses two coordinate programs on pairs of four-state symbols and
+a two-class raw vocabulary. Three observations eliminate the first-coordinate
+program and learn labels for latent states0,1,2, with0 and1 sharing a raw label.
+A new input using state2 receives the observed raw label and its full Fourier
+margin. State3 is uncovered: the executable learner refuses, while two feasible
+completions produce opposite actual complex margins on that same query. Both
+use the same unitary source code and fit every observation. A numerical default
+alone therefore cannot be promoted to an identification certificate.
+
+Lean: `ConvexDepth/LatentPrograms`. Native implementation must retain the
+training-only boundary, full actual complex products, all raw classes, explicit
+defaults and ambiguity, proper minibatch normalization, forward-only accounting,
+and bounded search/storage/scoring. It must preserve the reviewed retrieval
+passes and failed baselines while measuring any prefix-summary improvement.

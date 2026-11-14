@@ -23,6 +23,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RawRegions
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ConvexExclusion
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SignedContext
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedPrograms
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -105,6 +106,12 @@ fixed input programs. Training-only elimination and input-only consensus
 identify accepted unseen raw symbols under bank realizability. Compatible
 simplex mixtures retain convex ordinary CE and the actual identified logits;
 nonseparating observations still admit opposite predictions with the same code.
+CM53 learns raw dictionaries over fixed latent input programs. Joint decoder
+coefficients and shared program masses form an affine convex domain, with no
+independent learned factors multiplied together. Executable initialization is
+feasible, and known unanimous latent-state outputs identify actual bounded
+complex logits under unknown-program realizability. A many-to-one witness
+identifies a new input while opposite feasible defaults expose an unknown state.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/
