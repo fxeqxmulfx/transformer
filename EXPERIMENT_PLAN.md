@@ -6134,3 +6134,16 @@ All full/minibatch/forward metadata and repeated/tail records are retained;
 the new fixed context construction adds no gradient or optimizer update.
 Component fixtures and exact review precede a separate frozen all 35 comparison,
 which must retain tasks 296, 298 and 301 results and every earlier failure/baseline.
+
+Task 304 is reviewed at `0fee1a9d`: all 11 native tests, exact binary/source
+checks, full Lean, INDEX and axiom checks pass. Training-only geometry inspection
+covers 3,878 prior and 3,932 supplement unseen inputs without overlapping
+observed class hulls. This is coverage, not held-out correctness.
+
+Task 305 freezes the separate original comparison. The source remains task296;
+the complete task301 guarded CE result and its nested task298 tradeoff are
+retained, alongside every earlier failure and all conventional/depth baselines.
+All 35 tasks and both 105-choice policies remain in scope. Geometry is fixed
+before scoring, with confidence one and zero new optimization in every mode.
+Raw accuracy and ordinary CE are compared to both source and guarded references;
+regressions cannot be hidden by choosing a weaker reference after evaluation.
