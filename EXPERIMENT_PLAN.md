@@ -6057,3 +6057,13 @@ while a maximizing reference remains feasible and ordinary CE stays convex.
 Nonzero Fourier witnesses retain wrong labels and expose the zero-retention
 tie failure. This stabilizes predictions; it does not prove unknown correctness
 or a numerical CE gain. A separate native implementation/comparison follows.
+
+Task261's frozen CM35 readout comparison completes all35 original cases and
+35replays with zero failures. Both policies retain35/35full,35/35mini and
+34/35forward primary/auxiliary successes, with zero replacements. All21
+available readout endpoints pass; they cover7tasks in each mode, with3774
+refused outcomes and all1265stages retained. Fibonacci's standalone field/raw
+counts improve by one but observed rawCE ties preserve the earlier selected
+parent. The sole forward associative-divisor failure remains53.866%. These
+older branch results stay distinct from later all-mode35/35 context models.
+Exact-commit complete replay/summary review precedes the task267 barrier.
