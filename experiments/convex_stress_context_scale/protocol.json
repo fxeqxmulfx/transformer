@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "proof": "CM43 at 2dcaa38a550a2fdfeb4e8b163dd61b140329b54d",
+  "context_component": "CM42 at c62022c5c95672b1503c9c92e6cff3ff429f59af",
+  "scales": [1.0, 0.75, 0.5, 0.375, 0.25, 0.125],
+  "selection": "minimum canonical original-record mean raw CE; improvement greater than 1e-10, bank-order ties",
+  "context": "retain the reviewed CM42 selected neighborhood and every original context row",
+  "diagnostic": "same CM42 canonical margin24 raw-label votes and original record multiplicity, excluding the queried observed input state",
+  "independence": "uses original training inputs and labels only, never trained coefficients or held-out targets",
+  "caveat": "latent discovery and context selection use all training data; no leave-one-out discovery refit or held-out accuracy guarantee",
+  "applicability": "only the reviewed context rows that interpolate an unobserved ambiguous matched input",
+  "unmodified_rows": "observed inputs, unique-label blocks, unmatched cells and unknown axes retain exact original logits",
+  "implementation": "multiply actual complex context features by the fixed positive scale before the unchanged full coefficient dot product",
+  "training": "original ordinary CE and exact original batches; zero extra optimizer updates",
+  "raw_ranking": "positive scale preserves exact-real raw ranking for a fixed context map; floating-point and pooled metrics measured afresh",
+  "address_limit_bytes": 68719476736,
+  "buffer_forecast_limit_bytes": 60129542144,
+  "scalar_work_limit": 32000000000
+}

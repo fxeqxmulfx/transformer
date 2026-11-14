@@ -464,6 +464,14 @@ derivatives, including repetitions, minibatch tails and forward-only states.
 Any native context/scale bank and training-only selector require a separate
 prospective protocol; pooled task metrics must still be measured afresh.
 
+Task286 implements the reviewed CM43 theorem in a separate native component,
+`convex_stress_context_scale`. It retains the reviewed CM42 neighborhoods and
+selects a positive confidence scale from1/0.75/0.5/0.375/0.25/0.125 using the
+same canonical training-only raw-label diagnostic. Only previously interpolated
+unseen rows are scaled; observed and other unchanged rows stay exact. Complete
+source tensors and budgets remain, with no extra optimizer updates. All original
+held-out metrics require a separately frozen comparison; no new result is assumed.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per
