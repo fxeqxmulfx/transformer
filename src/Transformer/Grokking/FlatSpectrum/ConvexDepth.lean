@@ -19,6 +19,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.DecoderConfidence
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextMixture
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.GatedContext
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.MarginGuard
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RawRegions
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -83,6 +84,10 @@ It preserves convex ordinary CE, admits a maximizing reference and retains
 the first maximizing class under positive margin retention. Confidence may
 change, but a wrong reference label remains wrong; zero retention can flip
 a deterministic decision through a tie.
+CM48 adds an explicit convex raw-class region hypothesis and observable
+same-label input-hull certificates. They identify covered missing raw labels
+and transfer actual complex-head margins and ordinary CE. The original feature
+and coefficient bounds remain; uncovered queries can still be ambiguous.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/

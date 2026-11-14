@@ -18349,3 +18349,78 @@ bank element under CM45/CM46; it is not a jointly learned factor. Numerical
 optimization, finite-precision constraint enforcement and raw/CE tradeoffs
 require a separate frozen native experiment. No numerical improvement is
 claimed from CM47 alone.
+
+## CM48. Identify covered raw labels using convex input regions
+
+CM47 preserves a fixed reference's raw decisions, including its mistakes.
+A repair that changes a missing raw answer needs additional identifying
+structure. The following extension uses input geometry. It is independent
+of spectral flatness and does not assert that arbitrary benchmark labels
+satisfy its structural hypothesis.
+
+Fix observed input points `p_i` in a real vector space and their raw labels
+`y_i`. These can be the observations inside one already fixed latent block.
+Let the unknown target be `f`, with `f(p_i)=y_i`. Assume each raw-class region
+`{x | f(x)=c}` is convex. This is a realizability assumption about the target
+on the input space, not a condition established by observed fit. In a blockwise
+application it requires an appropriate convex-region extension within each
+block's chosen input embedding; it is not asserted globally across blocks.
+
+For each raw class, form the observable set `P_c={p_i | y_i=c}`. If a query
+`x` lies in `convexHull(P_c)`, then `f(x)=c`: the target's convex class region
+contains `P_c` and therefore its hull. Thus every convex-region target fitting
+the observations agrees at that query. If hulls bearing two labels overlap,
+the labels must be equal; overlap of differently labelled hulls refutes the
+realizability assumption. Coverage and hull overlap concern observed geometry
+only. Neither proves the realizability hypothesis on unknown labels.
+
+A finite certificate consists of `w_i>=0`, `sum_i w_i=1`,
+`sum_i w_i*p_i=x`, and `w_i!=0 => y_i=c`. These conditions use observed
+coordinates and labels and imply the hull membership. The same weights can
+construct CM42's actual feature row `phi_w(k,x)=sum_i w_i*phi(k,i)`. With
+the complete head frozen, its actual logits are the weighted source logits.
+If each positively weighted observed source has raw margin at least `m`
+against a competitor, the query has that margin against the same competitor
+for its now identified target. If each source's ordinary CE against its own
+observed label is at most `epsilon`, the query's ordinary full-vocabulary CE
+is at most `epsilon`. Unlike CM42's unrestricted neighborhood transfer, the
+query target here follows from geometry and convex-region realizability.
+
+Every source coordinate bound `abs(phi(k,i))<=M` survives these stochastic
+weights, and the complete coefficient budget `R` still gives
+`abs(z(x,c))<=R*M`. A unitary complex source supplies `M=1`; the interpolated
+query rows need not themselves be unitary. The weights are fixed while the
+complete real/imaginary head is trained, so ordinary CE stays convex in that
+head. Dirac rows at observed inputs preserve every original batch objective
+and full-head derivative, including repeated records and a short tail.
+There is no jointly learned interpolation/head product or extra loss.
+
+The nonzero witness uses observed coordinates `(-3,-1,1,3)` with raw labels
+`(0,0,2,2)`, four-class vocabulary, the actual normalized four-state Fourier
+code and its complete conjugate margin-four head. The unseen inputs `-2`
+and `2` each average two same-label source points. They receive different
+raw answers with exact margin four and ordinary CE `log(1+3*exp(-4))`, although
+both raw answers share the modulo-two readout. Observed rows remain Dirac.
+The complete head has budget 32, and the same source feature bound applies
+to all six inputs. A five-record example repeats the first observation and
+checks both the full observed objective and a one-record tail derivative.
+
+Coverage is essential to this argument. The two threshold targets which
+return class0 at `x<=0` and at `x<=1/2`, respectively, and class2 otherwise,
+both have convex raw-class regions and fit all four observations. They
+disagree at `x=1/4`, which is in none of the observed class hulls. Every fixed
+prediction there is wrong for at least one compatible target, while every
+observed ordinary CE objective is identical for the two targets. This is an
+explicit ambiguity example; it does not claim that every uncovered query
+in every dataset is ambiguous.
+
+Lean: `ConvexDepth/RawRegions/{Basic,Head,Witness}`. A native proposal must
+construct and verify hull certificates from training observations only, bind
+them to the exact source block and input coordinates, preserve original
+observed rows, and use an explicit fallback when there is no unique covered
+class. It must distinguish a conditional geometric certificate from an
+unconditional correctness claim, retain ordinary raw CE and all original
+records/modes, and charge hull construction and complete complex products.
+Numerical inclusion tolerances cannot silently become exact certificates.
+A separately frozen complete original comparison remains required; CM48
+alone claims no benchmark improvement or discovery of convex target regions.
