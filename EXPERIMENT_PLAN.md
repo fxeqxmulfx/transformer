@@ -6264,3 +6264,19 @@ Task313's18 native tests,format,clippy,release executable,fullLean13917jobs,
 nativeINDEX andaxiom audit pass with36sorry/0rests/0extra unchanged. The
 compiled parent fingerprint and every task310 artifact reproduce. Exact
 landed-commit review is the remaining gate before original task314 scoring.
+
+Task267 is now approved at `1cdc7128`: its independent complete review repeats
+all35 saved-state replays and the recursive summary byte-for-byte, with fresh
+native/Lean/INDEX/axiom and frozen-hash checks. This closes the historical CM38
+branch without changing any later raw-label comparison.
+
+Task313 is approved at `9373e853`. The frozen task314 original evaluation now
+completes all35 cases and all35 replays. Both policies retain35/35 primary and
+auxiliary successes in every mode, but the stronger hull search fixes no new
+raw answer. All91 newly covered validation queries were already correct.
+Fibonacci remains95/94/94 errors with slightly lowerCE
+0.164271/0.167656/0.171369; all35 raw errors remain95/96/94 over279952 targets.
+Every observed metric object is unchanged. Actual peakRSS5.83GiB stays below
+the64GiB limit. All references, including task298's lower-CE tradeoff, remain.
+Authored findings record the unchanged accuracy; exact findings-commit fresh
+prepare,35cases,35replays and complete JSON/report reproduction follow.
