@@ -6432,3 +6432,17 @@ preserves its existing models. Freeze the checked source and binary before
 all four training stages, then score/replay every short/long split and all12
 outcomes. Keep raw99/exact99/original95/CE separate; no new original accuracy
 is inferred from the proof or synthetic component tests.
+
+Task324 producer `3badaa30` now passes all four additional cases at100% raw
+and exact accuracy in every mode and every original short/long split. Dyck
+scores834/834 test tokens and64/64 sequences; blocks716/716 and64/64. Both have
+CE1.32130e-9. MQAR/lookup complete copy states and results match task322 exactly.
+All12 outcomes are usable with no unknown/ambiguous scored state, process
+failure or OOM. Original and fresh review runs reproduce23 artifacts exactly
+(report `1607addd…07c8a97`). Peak original RSS is171276KiB. Full/mini compute
+real derivatives; the only mass changes are roundoff and observed CE stays
+constant. The gain comes from the new shared summaries and learned decoders.
+Finish independent review, then freeze further catalog cohorts separately.
+Original35 Fibonacci remains approximately98%; tasks317/319 remain pending,
+and126 additional cases have not been evaluated. No combined39-task pass is
+claimed from this component result.

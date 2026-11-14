@@ -101,3 +101,60 @@ the task322 producer `c44632bb`. All deviations are described above: latent
 state dimensions, learned decoder blocks, the affine joint slice, family priority,
 dictionary coverage and charged work. No new cohort accuracy is claimed until
 the committed producer comparison and exact review complete.
+
+## Frozen four-case findings
+
+Producer `3badaa300f6e8ec0e7e960fe910fa9de2f78f4b5` was committed and frozen
+before all four training stages and any original scoring. Original and fresh
+review runs reproduce all23 JSON artifacts byte-for-byte, including discovery,
+complete trained states, every supervised prediction, replays and the report.
+The report SHA256 is
+`1607addda8c8eafa98c7999b5b8e7e16c3a1dd1396b8cb8fd6c0b889907c8a97`.
+
+| Case | Previous shared-copy model | New full / mini / forward primary test | Longer tests |
+| --- | --- | --- | --- |
+| MQAR |100% raw/exact | Each128/128 tokens,64/64 sequences; CE6.15347e-9 |48/96:100% raw/exact |
+| Two-hop lookup |100% raw/exact | Each128/128 tokens,64/64 sequences; CE3.73738e-9 |48/96:100% raw/exact |
+| Dyck prefixes | Three no-compatible-copy refusals | Each834/834 tokens,64/64 sequences; CE1.32130e-9 |32/64:100% raw/exact |
+| Three alternating blocks | Three no-compatible-copy refusals | Each716/716 tokens,64/64 sequences; CE1.32130e-9 |32/64:100% raw/exact |
+
+All training, clean, validation, novel and longer splits also reach100% in every
+mode. Each mode has4/4 original95%, primary both99%, test both99% and all-held-out
+both99% successes. All12 outcomes are usable, with no process failure or OOM.
+No scored prefix has an unknown dictionary state, disagreement or roundoff-
+sensitive argmax. Independent full logits differ by at most3.91e-14.
+Retrieval inputs, complete copy models and all result fields exactly equal
+task322; this is an extension that preserves those measurements.
+
+The latent search checks11340 candidates per prefix case. Dyck retains one
+signed summary, with roles7/8 selected by the observed labels and five covered
+states. Blocks retains12 run summaries: both orientations of roles9/10 and all
+caps3–8. Their dictionaries cover9–19 states each. All roles and caps came from
+the fixed enumeration; none was supplied as task metadata to the model.
+The actual realified heads store2304 and27648 coordinates. Numerical column
+budgets are376.112 and447.440, below the fixed2048 bound.
+
+Dyck full performs16 batches/25984 gradient examples; mini performs204
+batches/6496 examples, with24-record tails. Blocks full performs16/22720 and
+mini180/5680, with12-record tails. All derivatives and full products run.
+Dyck masses never change. Blocks records one full and180 mini bitwise updates,
+but final deviations from initialization are at most4.31e-16 and1.95e-16;
+training CE is unchanged. Forward performs zero gradients/projections/cache
+products. The improvement comes from the shared summary and learned decoder,
+not a measured optimization gain on the compatible face.
+
+The largest training forecast is6,778,027,008 work units (blocks full), and
+largest all-split score forecast is6,262,785,024 (blocks per mode). The largest
+binding buffer forecast across both families is2,032,189,824 bytes, about1.89GiB.
+Original peak RSS is171,276KiB, about167.3MiB, including complete prediction
+replay. The slowest training process takes2.76s; the slowest replay takes9.14s.
+Fresh repeats and validation are separately timed extra work under the64GiB cap.
+
+Evidence lives at
+`/run/media/misha/storage/transformer-runs/latent-programs/{original-v1,fresh-review-v1}`.
+The416-input source freeze, binary, mandatory task322 baseline and checks are
+under `.../freezes/latent-prefix-v1`. Independent final review reruns native and
+Lean checks plus every original replay at the submitted findings commit.
+This remains a seed1 four-case component result. It does not re-evaluate the
+original35, fix Fibonacci's approximately98%, establish a combined39-task pass,
+or score the remaining126 additional cases. Those comparisons remain separate.
