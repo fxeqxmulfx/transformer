@@ -6168,3 +6168,12 @@ Task 306 audits these totals and reconstructs the actual Fibonacci predictions
 without changing the model. It classifies coverage and observed class geometry
 to decide the next Lean question. Observed line structure alone cannot justify
 unknown-label extrapolation; no new prediction rule is part of this audit.
+
+Task 306 frozen audit `5a59a971` completed twice with byte-identical reports.
+All 3878 covered Fibonacci validation queries are correct: five fixes and zero
+regressions in each mode. Remaining errors split into 91/90/90 uncovered and
+five without observed class support. Eight uncovered true classes are sampled
+on a line but their error query lies off that line, so blanket affine extension
+is not justified. The next proof proposal is convex exclusion with an explicit
+closed candidate pool or a correct decoder fiber, followed by a separate native
+comparison. Audit peak RSS was 3.31 GiB; the model remains unchanged.

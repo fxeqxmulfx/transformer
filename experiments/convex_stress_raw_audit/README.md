@@ -63,3 +63,62 @@ The request points to `/run/media/misha/storage/transformer-runs/raw-regions-com
 absolute paths for the latter two. The source, executable and request are frozen
 before the diagnostic report is generated. Authored interpretation will be
 recorded here after the audit; no new model result is claimed.
+
+## Frozen audit findings
+
+Producer `5a59a9715a0ac26d2988e8e4359f94e1308b33ff` reconstructed every fresh
+endpoint and every complete original metric object. The original audit and
+its independent rerun completed successfully and produced byte-identical
+reports. Exact findings-commit review remains pending. The audit confirms all
+previous primary raw totals, including the two inherited minibatch sum-square
+errors; it does not reconstruct that older endpoint's individual examples.
+
+The geometry change makes exactly five raw prediction changes per Fibonacci
+mode: five fixes and zero regressions. All 3,878 validation queries using the
+new region context are correct. All 4,704 observed training records remain
+correct, with unchanged original metrics.
+
+| Validation route and context | Queries | Full errors | Mini errors | Forward errors |
+| --- | --- | --- | --- | --- |
+| Prior, covered region | 3878 | 0 | 0 | 0 |
+| Prior, uncovered region | 620 | 91 | 90 | 90 |
+| Prior, inactive block | 200 | 1 | 1 | 1 |
+| Prior, unsupported input | 3 | 3 | 3 | 3 |
+| Supplement, inactive block | 3 | 1 | 1 | 1 |
+| Total | 4704 | 96 | 95 | 95 |
+
+The true class is absent from the routed block's observations in five errors
+per mode: the three unsupported inputs and the two inactive-block errors.
+Among uncovered errors, one true class has a single observed point. Eight
+queries lie outside the affine span of their collinear true-class observations;
+37 lie on that line beyond the observed class hull. The remaining 45 full-batch
+or 44 mini/forward errors have a two-dimensional true-class point set.
+
+These observations reject a blanket inference from collinearity to affine
+class support: eight known error queries already lie off their true class's
+observed line. For the 37 on-line queries, the extended line intersects another
+observed class hull. Extending all lines without domain and class consistency
+checks is unsupported. A two-dimensional affine span is the entire coordinate
+plane and cannot itself distinguish raw classes.
+
+The next Lean question is convex exclusion. If assigning a candidate label to
+an uncovered query makes its augmented class hull contain an observed point
+of another label, convex target regions rule out that candidate. Identifying
+one remaining label also requires an explicit closed candidate pool (or a
+correct many-to-one decoder fiber). Neither that closure nor target convexity
+follows from spectral flatness. The five missing-support errors remain a
+separate issue. This is a proof proposal, not an evaluated prediction rule.
+
+The audit charges 59,614,507,008 additional prediction-work units per endpoint,
+plus the reported inherited reconstruction bounds. It took 70.18 seconds and
+70.08 seconds for the two passes. Peak RSS was 3,474,992 KiB, about 3.31 GiB.
+No model or confidence changed and no new training trajectory was introduced.
+
+Evidence is local under `/run/media/misha/storage/transformer-runs/raw-audit/original-v1`;
+the frozen source, executable and request are in `freezes/raw-audit-v1` under
+the same storage root. The report SHA-256 is
+`b544ba1a2d9d424e7559eb7c6bc65418a002ce47ebbc3ec13038db82e6bbd927`.
+The completed manifest `.kanban/artifacts/306/completed.sha256` has SHA-256
+`3f2758aed5010ff40a9d19a973e003d12dad1310a7418b0ec962a586828e817d`.
+Generated reports, timings and logs remain ignored; authored interpretation
+and reproduction commands are committed here.
