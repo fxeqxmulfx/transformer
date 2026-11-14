@@ -411,6 +411,15 @@ has not yet been evaluated on the original suite.
 
 ## Recovered comparison queues (2026-11-13)
 
+Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
+35/35 minibatch and 34/35 forward-only primary successes in both policies.
+All 35 cases replayed with zero process failures. Only three choices per
+policy change, all Fibonacci at prime97, reaching 99.8724% primary field
+accuracy. Its native-token accuracy is 66.2840% and validation CE rises to
+8.0918; forward associative divisor remains at 53.866%. The full159 evaluated
+endpoints,111 eligible offers,3636 refused mode outcomes and all constructor
+costs remain. Fresh exact-commit review is required before queued task 261.
+
 Task 281 completes the original seed-1 comparison with 35/35 primary and
 auxiliary successes in full batch, minibatch and forward only, for both
 initializer policies. All 35 cases replayed with zero process failures.
