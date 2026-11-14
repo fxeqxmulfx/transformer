@@ -411,6 +411,17 @@ has not yet been evaluated on the original suite.
 
 ## Recovered comparison queues (2026-11-13)
 
+Task 281 completes the original seed-1 comparison with 35/35 primary and
+auxiliary successes in full batch, minibatch and forward only, for both
+initializer policies. All 35 cases replayed with zero process failures.
+Each policy has 19 changed choices and four newly successful task/mode choices;
+35 distinct fresh endpoints and the inherited reviewed metrics remain explicit.
+Fibonacci reaches 99.936% and forward associative divisor 100%. Fibonacci raw
+validation CE rises to 8.0816, a retained diagnostic regression. Actual calls
+never reach an unavailable parent: the seven old failures were preflight/domain
+validation failures. Available-parent fallback handles 2,148 associative-divisor
+calls per policy. The findings commit requires fresh exact-commit review.
+
 Task 277 completed its original attempt: 28/35 primary passes in each mode and
 both initializer policies, with seven saved-parent domain process failures.
 The successful fresh states include Fibonacci at 99.936% in all modes and
