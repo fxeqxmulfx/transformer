@@ -411,6 +411,20 @@ has not yet been evaluated on the original suite.
 
 ## Recovered comparison queues (2026-11-13)
 
+Task 271 / CM40 adds actual shared-role equations to the complete observed
+kernel. Aligned categorical identities have one free row-minus-column offset,
+which preserves both original gauges. Full-basis matches identify codes and
+declared many-to-one answers under explicit global additive, shared-role and
+readout premises. Actual matrix witnesses show strict extra coverage over
+the field of three elements, remaining raw aliases, an independent-role
+counterexample to inferring the new premise, and refusal in characteristic
+two. A reproducible training-only diagnostic on task 259's saved prime-97
+grouped code finds 97 observed-separating projective directions, of which
+exactly one has a common offset across all 191 aligned input tokens. No
+held-out query is evaluated. Native restricted-kernel construction, model
+binding and a complete original comparison are separate later steps. The
+existing frozen comparisons and task 270 component remain unchanged.
+
 Task269 / CM39 proves a prospective conservative coverage extension. A
 supplemental complex head acts only where the prior refuses and the supplement
 accepts. Every other input retains exact prior logits, even if the two heads

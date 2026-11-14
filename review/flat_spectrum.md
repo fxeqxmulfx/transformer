@@ -17727,3 +17727,103 @@ complex realification and raw-CE definitions. A native policy would still need
 both saved heads, independently bound support tests, complete cost accounting
 and a prospective comparison. The original255/261 strict-CE selectors,267
 fallback protocol and all frozen sources and runs remain unchanged.
+
+## CM40. A shared categorical encoder restricts the complete observed kernel
+
+CM34 retains all coefficient directions consistent with the original observed
+equations and two shift gauges. CM35 derives additional equalities between
+class codes from an explicitly declared compatible readout. Even after that
+grouping, separating every observed class need not determine an unseen answer.
+A further architectural assumption can restrict the input roles themselves.
+It must remain an explicit premise about the unknown target family.
+
+Let `align : T -> I x J` list pairs of row and column names representing the
+same categorical input identity, with anchor `t0`. The names in `I` and `J`
+remain independent dictionaries. For a coefficient vector `w=(r,s,e)`, add
+the actual homogeneous linear equations
+
+```
+(r(align(t).row) - s(align(t).column))
+  - (r(align(t0).row) - s(align(t0).column)) = 0    for every t.
+```
+
+Each row has four signed coordinate coefficients; coinciding coordinates
+cancel. The resulting submodule `roleKernel` intersects the original
+`observedKernel` to give `sharedKernel`. Neither its matrix nor its membership
+predicate contains an unobserved query answer. If the two positions use one
+categorical encoder `h` plus independent offsets, `r(i)=h(token(i))+a` and
+`s(j)=h(token(j))+b`, aligned token identities give these equations. Their
+common row-minus-column offset is `a-b`, which is not fixed to zero.
+
+CM34 normalization sends `r` to `r-r(i0)`, `s` to `s+r(i0)-e(c0)`, and `e`
+to `e-e(c0)`. Each aligned difference changes by the same quantity
+`-2*r(i0)+e(c0)`. Thus every four-coordinate role action is unchanged, and
+role-kernel membership is equivalent before and after normalization. An
+original fitting vector satisfying the role equations normalizes into the
+actual intersection, without losing either original gauge invariance.
+
+For any complete basis of this intersection, the existing full-vector
+query/class match is equivalent to vanishing query action on every member
+of the intersection. Every original observed match remains. Every match in
+the unrestricted complete kernel also remains, because the intersection is
+a subspace of that kernel; new matches are possible. This coverage statement
+does not say that distinct observed class codes remain separated.
+
+Suppose an unknown raw target `y` has global additive realization
+`e(y(i,j))=r(i)+s(j)`, fits the original observed labels, and its input codes
+satisfy the stated shared-role equations. Normalize its packed coefficient
+vector. A complete restricted-basis match to an observed class then proves
+equality with that class's unknown target code. A compatible many-to-one
+readout transfers this equality to the declared answer, while raw aliases
+can remain ambiguous. CM35's surjective readout and equal finite code/answer
+cardinalities also derive the required answer-code equivalence for independently
+compacted grouped class names. The unchanged finite observed-class search is
+sound conditional on returning a match. A missing match remains refusal.
+
+The coverage improvement has a concrete matrix witness. Take two Boolean
+input dictionaries, observe only `(false,false)` and `(true,true)`, and give
+both the same observed class. In the independent-role kernel, the vector
+`r=(0,1), s=(0,-1), e=0` satisfies both observed equations and both gauges but
+has nonzero action at `(false,true)`. Hence the complete old code refuses
+that cross query over the field of three elements. With aligned-role sharing,
+write the two diagonal actions as `q00,q11` and the role action as `d`. Then
+
+```
+2 * (r(false) + s(true) - e) = q11 - d + q00.
+```
+
+The right side vanishes in the actual intersection. In a commutative ring
+without zero divisors and with `2 != 0`, the cross action therefore vanishes.
+The complete shared code matches the same observed class, so the original
+search changes from refusal to acceptance at a genuinely unobserved input.
+Over the field of two elements, the opposite vector itself satisfies role
+sharing and still has nonzero cross action. The restricted code correctly
+refuses there. Generic conditional soundness did not need the nonzero-two
+premise; this particular coverage result does.
+
+For a concrete many-to-one realization over the field of three elements,
+take raw labels `(code,alias)` and read out the code. Two shared-role targets
+have code zero everywhere and agree on the observed diagonal raw labels,
+but choose different aliases on the cross cells. The derived decoded answer
+is zero in both worlds; the raw answer is unidentified. An independent-role
+target using the opposite vector also fits the same observations but has
+a different decoded cross answer. Its actual role action is nonzero. This
+shows why observed fit cannot justify applying the new family to every task.
+
+A training-only diagnostic on the reviewed task 259 prime-97 grouped code
+has complete dimension two. Enumerating all 98 projective directions leaves
+97 that separate its 97 observed groups. Requiring one common offset across
+all 191 identical token IDs in the two role dictionaries leaves just direction
+`[1,36]`, with offset 62 in that saved basis. This motivates constructing a
+restricted-kernel candidate. It neither checks an unseen label nor establishes
+the unknown target's global shared-role premise. The input pin, generator and
+reproduction command are in `experiments/convex_stress_role_sharing/README.md`.
+
+Lean: `CoupledMoments/SharedRoles/{Basic,Identification,Witness,AliasWitness}`.
+These results concern the actual linear coefficient
+kernel. A future native candidate must construct and audit its complete basis,
+check class separation/readout compatibility and resource bounds, then bind
+the resulting fixed complex feature library and ordinary cross-entropy traces.
+Flatness continues to bound that feature model; it supplies no unseen labels.
+The fixed-feature convexity results are unchanged. The existing 255, 261 and
+267 comparisons and the frozen CM39 component remain separate and unchanged.
