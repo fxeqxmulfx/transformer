@@ -6319,3 +6319,19 @@ below this new goal despite its original success flag. Expand first to MQAR,
 two-hop lookup and other sequence tasks, preserving original splits, longer
 probes, controls, budgets, baselines and full/mini/forward modes. Use Rust/Kernite
 only, retain the 64 GiB memory cap, and derive no answer rule from task names.
+
+Task316 is approved at `99a42652`: all native and Lean checks pass, the589-file
+source freeze matches and all six training-only diagnostic records reproduce
+byte-for-byte. Tasks317/319 will integrate and independently evaluate the signed
+model on the original35 suite, preserving the new per-task99% goals separately
+from the original success flags.
+
+Task318 implements the native165-case reconciliation and freezes the additional
+cohort: MQAR, two-hop lookup, Dyck prefixes and three alternating blocks. The
+user clarified99% accuracy: a sequence case must meet99% raw-token and99% exact
+sequence accuracy, with both fields and ordinary CE retained. Original95%
+thresholds and non-accuracy targets remain separate. All165 original plan and
+history identities must match the catalog;130 cases are additional, with no
+new-model measurements inferred from historical passes. Task320 will port the
+first four original data families and run full/mini/forward with native tooling
+under64GiB, preserving longer probes and all bounded misses.

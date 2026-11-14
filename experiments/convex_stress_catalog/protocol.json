@@ -1,0 +1,39 @@
+{
+  "name": "gpt-stress-165-accuracy99-v1",
+  "source_commit": "5a37c515639f23037d191b0659a5a0853984328d",
+  "historical_model_commit": "01f18f86787511279fe52fe41883495fce0e3105",
+  "input_sha256": {
+    "catalog": "d358edc9f3c9104f4a19f4ccbbd35f8547a745cf47cf611b23bbf7f032ca143f",
+    "plan": "d404cd3eb84345b3cea2b38d009402705d2ccfa7fbe45e11221d812b6c0a23e7",
+    "existing35": "6d2735e987026959c3cde995fbe866281e4f0b2308cc71be4b9d2edd13840436",
+    "history": "f31ed0f58f27cc4cf0603b9759c882611cda31e2db8a9fff622a806307d0acaf"
+  },
+  "cases": 165,
+  "existing_cases": 35,
+  "additional_cases": 130,
+  "data_seed": 1,
+  "modes": ["full", "mini", "forward"],
+  "raw_token_accuracy_target": 0.99,
+  "exact_sequence_accuracy_target": 0.99,
+  "original_success_flags": "retain each source metric and target independently; neither a historical pass nor original success certifies the new99% goal",
+  "accuracy_rule": "per-task held-out raw token and exact-sequence99% attainment are separate; require both for sequence-case99% success; no pooled average substitutes for either",
+  "non_accuracy_cases": "retain declared numeric-error, skill or CE targets alongside token and sequence accuracy where defined; do not convert those targets to99% accuracy",
+  "loss": "ordinary full-vocabulary raw cross-entropy",
+  "first_cohort": ["suite-mqar", "suite-lookup", "suite-dyck", "suite-blocks"],
+  "first_cohort_selection": "original validation/novel inputs when nonempty, retaining original validation and every test/probe",
+  "first_cohort_definitions": {
+    "suite-mqar": {"task":"mqar","symbols":64,"pairs":4,"queries":2,"query_gap":0,"alpha":0.1,"overwrites":0,"length":24,"min_length":24,"longer_lengths":[48,96]},
+    "suite-lookup": {"task":"lookup","symbols":64,"pairs":4,"queries":2,"query_gap":0,"hops":2,"length":24,"min_length":24,"longer_lengths":[48,96]},
+    "suite-dyck": {"task":"dyck","neutral_fraction":0.25,"max_neutral_gap":null,"max_balance":8,"length":16,"min_length":12,"longer_lengths":[32,64]},
+    "suite-blocks": {"task":"blocks","blocks":3,"neutral_fraction":0.25,"max_neutral_gap":null,"length":16,"min_length":8,"longer_lengths":[32,64]}
+  },
+  "first_cohort_sizes": {"train":128,"train_clean":128,"validation":32,"test":64,"each_longer_validation":32,"each_longer_test":64},
+  "first_cohort_study": {"noise":0.0,"disjoint":false,"tolerance":0.02,"retain_novel_splits":true},
+  "controls": ["arithmetic-random","random-lm-control","associative-random-n2-l1-w0","power-division-p17-k0","power-division-p97-k0","power-division-p193-k0","series-weather-shuffled-time","series-etth1-shuffled-time","series-m4_hourly-shuffled-time"],
+  "historical_skips": "retain the nine original user-requested skip statuses; none belongs to the first cohort",
+  "baseline_policy": "retain the existing35 conventional and recorded DiffGPT baselines; the165 historical GPT snapshot is a separate reference",
+  "model_scope": "task names and answer formulas may specify data generators and scorers, never the learned model or prediction selection",
+  "memory_limit_bytes": 68719476736,
+  "storage": "/run/media/misha/storage/transformer-runs",
+  "new_model_results": "unmeasured; this inventory launches no training and scores no new model"
+}
