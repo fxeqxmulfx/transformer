@@ -6380,3 +6380,15 @@ All26 new theorems compile without warnings in a13924-job full build. Their
 axiom audit is standard; the global count remains36sorry/0rests/0extra, and
 generated INDEX has4827 modules and25292 theorems. Independent review must
 finish before task322 implements and evaluates a native shared-program repair.
+
+Task321 is approved at `62b675fc`. Task322 implements the native CM52 proposal:
+fixed bounded causal copy walks, training-only elimination, a complete complex
+vocabulary copy head and an ordinary-CE convex mixture. Full16 and mini4 epochs
+with32-prefix short-tail batches charge actual derivatives; forward uses zero.
+Consensus and unobserved-label coverage are diagnostics, not an assertion of
+unknown-target realizability. Ten native checks pass; the adapter preserves
+all four original sequence datasets, all12 outcomes, historical GPT rows and the
+failed task320 baseline. Seal all training states before held-out scoring and
+independently replay every prediction, metric and refusal. Original35 results
+and pending signed-kernel tasks317/319 remain unchanged. No new cohort accuracy
+is claimed until the committed source/binary/protocol comparison completes.

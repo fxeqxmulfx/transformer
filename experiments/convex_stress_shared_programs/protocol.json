@@ -1,0 +1,27 @@
+{
+  "name":"shared-causal-copy-v1",
+  "lean_commit":"62b675fc789469d6457dd7d0f41d68c7ee80abea",
+  "data_producer":"a3283cd7",
+  "baseline_report_sha256":"65620f0757ae3c57ece3d23e3ed6fb464e05484f9b055dc335e9694f09f7ff7b",
+  "catalog":"same four cases and every original split as convex_stress_sequences",
+  "programs":"relative lags, then hops1..4, offsets1..4, markerNone or every vocabulary symbol, first then latest completed match; start at last visible token",
+  "walk_scope":"completed positions strictly before the final query; missing lookup returns raw class0 and sets a diagnostic flag",
+  "selection":"retain every program exactly agreeing with all original supervised training prefixes; no task identity or held-out selection",
+  "copy_prior":"one canonical identity decoder across the entire raw vocabulary, including unobserved output classes; this is additional structure beyond flatness",
+  "initialization":"uniform weights over retained programs; normalized complex DFT and complete conjugate head at margin24",
+  "loss":"ordinary full-vocabulary raw cross-entropy; head fixed; all retained mixture coefficients form the learned simplex",
+  "training":[
+    {"mode":"Full","iterations":16,"batch":32,"learning_rate":1.0},
+    {"mode":"Mini","iterations":4,"batch":32,"learning_rate":0.1},
+    {"mode":"Forward","iterations":0,"batch":32,"learning_rate":1.0}
+  ],
+  "iterations":"Full means complete-data steps; Mini means epochs in original prefix order with genuine short tails; Forward means zero gradients",
+  "consensus":"report unanimity separately; no empirical target-realizability certificate is asserted",
+  "evaluation":"all four training states sealed before any scoring; every original split and longer probe; save every supervised prediction and ordinary CE; compare independent causal interpreter and full complex class-major products",
+  "evaluation_work":"16*V^3 + targets*(16*V^2 + 16*K*V + 64*max_length*K + 128*V), capped at2B for all splits of each endpoint; replay costs are additional",
+  "roundoff":"independent logit difference at most1e-8; require identical argmax for margins above1e-7; report every smaller-margin prediction as roundoff-sensitive",
+  "limits":{"programs":16384,"retained":1024,"search_positions":2000000000,"scalar_work":2000000000,"process_bytes":68719476736,"buffer_bytes":60129542144},
+  "goals":{"original_exact":0.95,"raw_token":0.99,"exact_sequence":0.99},
+  "baselines":"retain task320 four-case failed baseline and historical GPT references verbatim; original35 ensemble and transformer comparisons unchanged",
+  "scope":"a generic copy-program proposal; no prefix-summary decoder, arithmetic answer function or original35 repair is claimed"
+}
