@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "proof": "CM44 at a8f0020acf63bcd6e48449356818e1ab4f913f8e",
+  "source": "externally pinned, validated categorical phase model; fixed learned state maps and raw decoder",
+  "margins": [1.0, 2.0, 4.0, 8.0, 16.0, 24.0],
+  "selection": "minimum original-record mean ordinary raw CE; improvement greater than 1e-10; bank-order ties",
+  "selection_inputs": "original training records only, with distinct IDs and retained repeated inputs",
+  "selection_identity": "log1p((vocabulary-1)*exp(-margin)) + margin*original_raw_error_rate",
+  "features": "normalized positive-phase full discrete Fourier code on source latent states",
+  "coefficients": "complete conjugate decoder initializer, all real and imaginary coefficients stored and charged",
+  "prediction": "cached actual full complex products, recomputed and checked when loading; no answer formula",
+  "head_radius": "64 times the source latent-state count, per-class sum of absolute real and imaginary coefficients",
+  "source_spectral_budget": "retained separately; latent-moment bounds do not replace the complete output-head budget",
+  "gradients": "ordinary CE on original record positions, complete real and imaginary derivatives, each tail uses its own denominator",
+  "modes": ["full", "mini", "forward"],
+  "training": "confidence initialization only; zero added optimizer updates and zero added gradient batches in every mode; inherited source training metadata explicit",
+  "scope": "no new raw-label identification, pooled task metrics must be measured afresh, no held-out confidence guarantee",
+  "prediction_limit": 4096,
+  "maximum_records": 66049,
+  "address_limit_bytes": 68719476736,
+  "buffer_forecast_limit_bytes": 60129542144,
+  "scalar_work_limit": 32000000000
+}

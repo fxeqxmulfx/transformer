@@ -501,6 +501,14 @@ CE separates the correct-margin loss from margin times raw error, retaining
 repeated record IDs and short minibatch tails. Native confidence changes and
 original held-out evaluation remain separate prospective work.
 
+CM44 task 288 is approved at `a8f0020a`, including a repeated full build,
+axiom audit and generated INDEX check. Task 289 implements the actual complete
+complex confidence head for frozen categorical decoders. It selects a positive
+margin using only original training records, preserves their multiplicities
+and minibatch tails, and explicitly adds zero optimizer updates in every mode.
+Original-data metrics will follow only after the native component and its
+prospective comparison protocol are reviewed and committed.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per
