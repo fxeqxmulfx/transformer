@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "component_commit": "9ddda0f89f29330c06424dd43a027ac9a06a1f8a",
+  "parent_producer": "123dfc9cf1ed2e8806701186a85b6d84992beded",
+  "parent_source_fingerprint": "dd3cd653cd9df1f08759017119cd425bd8d6cd3e4fed4ece6d2baa6269f58c57",
+  "parent_review_commit": "c5ba15c64337cd3b5078856b40bc6c2be5c21f70",
+  "parent_summary_sha256": "2de0d1d7959d8dba5dddff30a8035fbdc0bd5f2e2f14be8073971454954dd4e5",
+  "parent_inventory_sha256": "a40b905b2aa1adc93edea52dc8cd0e453b39be950cbeafd389dd6ab5a95dea70",
+  "parent_completed_manifest_sha256": "83b365c72abdf64bed15f9b0a22fc38f5d12939bb0be177e3c7c81839fcbef3a",
+  "task_scope": "all 35 original seed-1 tasks and 105 choices per initializer policy",
+  "eligible_families": ["identified_modular", "decoded_consequences", "fibers"],
+  "source_identity": "exact typed saved phase model SHA-256 from the reviewed selected endpoint; container and extracted source bytes pinned before metrics",
+  "other_models": "explicitly inherit every unchanged reviewed choice and metrics; no task dropped",
+  "confidence_policy": "reviewed CM44 actual complex head and training-only ordinary CE margin bank",
+  "modes": ["full_batch", "minibatch", "forward_only"],
+  "success": "unchanged original primary sequence_accuracy >= 0.99 with original task pooling",
+  "new_optimizer_updates": 0,
+  "heldout_selection": false,
+  "selection": "transform every eligible saved chosen head; no replacement based on held-out gain",
+  "source_prediction_audit": "fresh original source metrics must match every reviewed selected metric before reporting the new head",
+  "prediction_limit": 4096,
+  "address_limit_bytes": 68719476736
+}

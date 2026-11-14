@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_decoder_compare`](convex_stress_decoder_compare) | Prospective original CM44 comparison | All 35 cases and both policies; actual complex confidence heads for selected phase decoders, fresh raw CE and original-source replay, with every unchanged representation and baseline retained. |
 | [`convex_stress_decoder_head`](convex_stress_decoder_head) | CM44 native component; original evaluation separate | Training-only confidence selection for saved categorical decoders through a complete bounded complex head; ordinary raw CE, original record multiplicity and complete gradients. |
 | [`convex_stress_context_scale_compare`](convex_stress_context_scale_compare/original) | All 35 original cases, fresh reproduction and exact-commit review pass | Fibonacci CE falls from 0.280 to 0.166 with raw accuracy 97.24% unchanged. Full, mini and forward modes and both policies retain 35/35 primary and auxiliary successes, with every baseline and inherited choice. |
 | [`convex_stress_context_scale`](convex_stress_context_scale) | Reviewed CM43 native component; original evaluation separate | Training-only confidence scaling of the reviewed context features, with unchanged observed logits, batches and coefficient budget. |

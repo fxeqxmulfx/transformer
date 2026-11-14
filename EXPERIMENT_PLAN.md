@@ -509,6 +509,15 @@ and minibatch tails, and explicitly adds zero optimizer updates in every mode.
 Original-data metrics will follow only after the native component and its
 prospective comparison protocol are reviewed and committed.
 
+Task 289 is approved at `9ddda0f8`: six native tests, complete complex
+coefficient gradients, source/mutation checks and repeated repository checks
+pass. Task 290 compares its confidence heads with the reviewed task 287 parent
+on all 35 original cases. Eligibility uses the saved identified, consequence
+or fiber model representation. Exact source tensors and original source metrics
+must reproduce their reviewed hashes and results. All other representations,
+both policies, all modes and every baseline remain explicit; no held-out gain
+determines which transformed heads are reported.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per
