@@ -6392,3 +6392,17 @@ failed task320 baseline. Seal all training states before held-out scoring and
 independently replay every prediction, metric and refusal. Original35 results
 and pending signed-kernel tasks317/319 remain unchanged. No new cohort accuracy
 is claimed until the committed source/binary/protocol comparison completes.
+
+Task322 producer `c44632bb` now repairs both retrieval cases. MQAR and two-hop
+lookup reach100% raw-token and exact-sequence accuracy in full, mini and forward
+on every original short/long split, including lengths48/96. Each primary test is
+128/128 tokens and64/64 sequences; CE is approximately6.15e-9 and3.74e-9. Unseen
+test labels are correctly copied (MQAR1/1, lookup10/10), with unanimous programs
+and no missing edges. Dyck/blocks retain six no-compatible-program refusals;
+all12 outcomes remain. Every mode has2/4 both99% successes on all held-out splits.
+The complete original and fresh review reproduce23 artifacts byte-for-byte
+(report `550e9d86…01eb791`), with zero process failures/OOM and peak31,444KiB RSS.
+Full/mini compute all derivatives but make zero effective weight changes on the
+compatible face; the gain is shared representation and the explicit copy prior.
+Finish independent review before the next generic prefix-summary/decoder repair.
+This result does not re-evaluate the original35 or the remaining126 new cases.

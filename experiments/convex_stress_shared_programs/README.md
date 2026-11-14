@@ -48,9 +48,9 @@ full-vocabulary finite-difference gradients at competing mixtures, weighted
 minibatch/tail equivalence, exact trajectory replay, and mutation/cap failures.
 Three adapter checks additionally cover the training-only boundary, longer inputs,
 per-prediction metrics, ambiguity/default accounting and all-mode refusals.
-Original cohort scores are pending at this source freeze; a toy witness is not a
-new stress-test result. Copy-only programs need not fit Dyck or blocks labels
-absent from their input; a generic prefix-summary decoder is separate work.
+The original cohort findings below follow the committed producer freeze.
+Copy-only programs do not fit Dyck or blocks labels absent from their input;
+a generic prefix-summary decoder is separate work.
 
 The unchanged `convex_stress_sequences` adapter supplies all original train,
 clean/novel validation, test and longer splits of MQAR, two-hop lookup, Dyck and
@@ -92,3 +92,59 @@ training and scoring each have explicit2B work guards; buffers have a56GiB guard
 Forecasts are conservative scalar-work units, not measured FLOPs; repeated
 checks and replays incur additional work and are included in process timing.
 Generated evidence stays local outside this worktree and is not committed.
+
+## Frozen four-case findings
+
+Producer `c44632bb992989b743a2c9c62b6578df1e725d02` was frozen before all four
+training stages and any held-out scoring. Original and fresh review runs reproduce
+all23 JSON artifacts byte-for-byte, including complete states, every supervised
+prediction, replay records and the report. The report SHA256 is
+`550e9d86ce9175a1c1a9fb3ecea03ad281ae1fb4e627e5565f0cd125901eb791`.
+
+| Case | Task320 baseline | New full / mini / forward test | Longer probes |
+| --- | --- | --- | --- |
+| MQAR | Full/forward1/128 raw,0/64 exact; mini work refusal | Each128/128 raw,64/64 exact; CE6.15347062193905e-9 | Lengths48/96: each128/128 raw,64/64 exact |
+| Two-hop lookup | All modes hit the candidate cap | Each128/128 raw,64/64 exact; CE3.737383735824551e-9 | Lengths48/96: each128/128 raw,64/64 exact |
+| Dyck | No consistent candidate | All three modes: no training-compatible copy program | No usable model; retained refusal |
+| Three alternating blocks | No consistent candidate | All three modes: no training-compatible copy program | No usable model; retained refusal |
+
+Both retrieval cases also achieve100% on every training, clean, validation and
+novel split. Each mode therefore has2/4 original95% successes,2/4 primary and test
+both99% successes, and2/4 cases meeting both99% on **all** held-out splits. All12
+outcomes are retained: six usable endpoints and six explicit refusals. No
+process fails or runs out of memory. This does not constitute a newly evaluated
+combined37/39 suite or a result on the remaining126 additional cases.
+
+Training keeps two programs per retrieval case. MQAR retains first/latest
+one-hop, offset1 walks without a marker after5304 attempts. Lookup retains
+first/latest two-hop, offset2 walks with predecessor symbol2 after3256 attempts;
+symbol2 was enumerated with every other vocabulary marker, not supplied as a
+task role. Every scored retrieval prefix has unanimous output, no missing edge
+and no roundoff-sensitive prediction. Independent full complex logits agree
+exactly on these rows. All training-unseen test labels are correct: MQAR1/1 on
+the primary test and6/6,2/2 on longer tests; lookup10/10 and9/9,3/3 respectively.
+Dyck/blocks each exhaust their1200-program bank at the first supervised prefix.
+The failure is model scope, not a memory or optimizer limit.
+
+Each full endpoint performs16 gradient batches and4096 gradient examples;
+mini performs32 batches and1024 examples (four complete epochs). All gradients,
+complete head products and projections are actually evaluated. Every endpoint
+has zero effective weight changes, as expected on the compatible face. Forward
+has zero gradient batches, gradient examples, projections and derivative-cache
+products. The repair is therefore the shared representation/copy prior, not a
+claimed benefit from optimization on already fitted observations.
+
+The largest training forecast is1,560,505,344 scalar-work units (MQAR full),
+and the largest all-split scoring forecast is670,721,024 (MQAR per mode).
+The largest binding buffer forecast is2,032,189,824 bytes, about1.89GiB.
+Observed original peak RSS is31,444KiB, about30.7MiB; the slowest process is
+MQAR training at1.61 seconds. These timings include process-level checks and
+serialization; replay and the fresh repeat are separately timed extra work.
+
+Evidence is outside the temporary worktree at
+`/run/media/misha/storage/transformer-runs/shared-copy/{original-v1,fresh-review-v1}`.
+The394-input source freeze, release executable, required baseline and checks are
+under `.../freezes/shared-copy-v1`. Independent final review reruns the ten native
+tests, full Lean checks and every frozen case replay before task322 is approved.
+The next representation work must cover noncopy prefix labels with a generic
+state summary and a learned shared decoder, preserving these retrieval passes.
