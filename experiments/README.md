@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_crossing_exclusion`](convex_stress_crossing_exclusion) | Exact two-sided hull certificates | CM50 extends observed-point exclusion with rational hull crossings. Retains every parent row, complete head and observed-record derivative. Candidate closure and target convexity remain explicit assumptions; original evaluation is separate. |
 | [`convex_stress_gated_context`](convex_stress_gated_context) | CM46 native component; original comparison separate | Fixed latent-block gates and an anchor permit local convex context mixtures with unchanged complex coefficients. Full/mini optimize ordinary diagnostic CE; forward uses no gradients. Fixtures retain a CE/raw-label tradeoff. |
 | [`convex_stress_count_gates`](convex_stress_count_gates) | Five shared fixed gates; original evaluation separate | Reuses CM46 with source-excluded class-count profiles, unchanged CM45 anchor/head and ordinary CE. Shares local coefficients across source blocks; keeps original records, modes and raw-label tradeoffs. |
 | [`convex_stress_margin_guard`](convex_stress_margin_guard) | CM47 component; original evaluation follows review | Fixes the stronger CM46 raw reference and constrains all actual raw margins. Ordinary CE uses full/mini/forward modes; noisy fixtures improve confidence with unchanged raw predictions. |

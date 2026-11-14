@@ -6233,3 +6233,20 @@ crossing example missed by that sufficient test. The actual complete Fourier
 head, ordinary raw CE, bounds and observed-record derivatives stay connected.
 Tasks312–314 will implement, integrate and separately evaluate the stronger
 search; no additional benchmark gain follows from the proof alone.
+
+Task311 is approved at `2b17dc86`, with 24 new Lean theorems and unchanged
+36sorry/0rests/0extra-axiom counts. Task312 implements those two-sided rational
+certificates in a separate Rust component over the exact reviewed CM49 parent.
+It searches remaining eligible inputs, retains all earlier rows and verifies
+both mixture supports, masses, tagged query role and exact coordinates.
+Complete source/head products, ordinary CE and original repeated-record
+derivatives are preserved. Native and training-only resource checks precede
+exact review; tasks313–314 will integrate and measure the complete original
+suite separately. No new benchmark gain is claimed from the fixture.
+
+Task312's 13 native tests and full Lean/INDEX/axiom checks pass. Training-only
+construction on all six task310 sources identifies 6350 additional prior
+inputs and 6540 supplement inputs in every mode; 7762/7999 remain ambiguous
+and no candidate pool is inconsistent. Peak RSS is 2.94GiB, the maximum buffer
+forecast 9.11GiB and work forecast178.76B, within unchanged caps. Exact review
+and source/executable freezing precede task313; held-out metrics are unopened.
