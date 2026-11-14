@@ -1,0 +1,29 @@
+[package]
+name = "convex-stress-shared-compare"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+convex-stress-shared-role-extension = { path = "../convex_stress_shared_roles/extension" }
+convex-stress-shared-roles-cohort = { path = "../convex_stress_shared_roles/cohort" }
+convex-stress-kernel-compare = { path = "../convex_stress_kernel_compare" }
+convex-stress-kernel-cohort = { path = "../convex_stress_kernel/cohort" }
+convex-stress-refined-compare = { path = "../convex_stress_refined_compare" }
+convex-stress-fallback = { path = "../convex_stress_fallback" }
+convex-stress-causal-pairs-cohort = { path = "../convex_stress_causal_pairs/cohort" }
+convex-stress-quotient-cohort = { path = "../convex_stress_quotient/cohort" }
+convex-stress-relabel = { path = "../convex_stress_relabel" }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+
+[dev-dependencies]
+convex-stress-counts = { path = "../convex_stress_counts" }
+
+[profile.test]
+opt-level = 2
+
+[profile.release]
+lto = "thin"

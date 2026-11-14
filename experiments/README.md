@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_shared_compare`](convex_stress_shared_compare) | Complete 35-task adapter; original evaluation pending | Reviewed raw-CE selection, same-field shared-role coverage and exact predecessor fallback. Scores every changed model afresh and labels inherited reviewed metrics explicitly, preserving both 105-choice arms and all baselines. |
 | [`convex_stress_shared_roles/extension`](convex_stress_shared_roles/extension) | CM39/40 conservative component; original comparison pending | Extends a checked raw head only on newly supported inputs using the actual shared-role certificate. Preserves prior logits, raw CE and original records; charges both models and replays no new optimization. |
 | [`convex_stress_shared_roles/cohort`](convex_stress_shared_roles/cohort) | All 23 original training cases and 1265 stages completed | Five tasks have full/mini/forward endpoints with zero observed errors. Shared-role Fibonacci construction has no unmatched active pairs. [Findings](convex_stress_shared_roles/cohort/original) retain every refusal and cost; held-out evaluation remains pending. |
 | [`convex_stress_shared_roles`](convex_stress_shared_roles) | CM40 and nine native component checks; original cohort pending | The complete grouped kernel includes gauge-invariant shared-role rows. Actual complex heads retain raw CE, original record IDs and multiplicity, full/mini/forward replay, resource limits and refusal masks. No original benchmark result. |

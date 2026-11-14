@@ -1,0 +1,108 @@
+{
+  "version": "shared-compare-v1",
+  "required_done_tasks": [
+    237,
+    246,
+    252,
+    274,
+    275,
+    276
+  ],
+  "parents": {
+    "parent": {
+      "source_fingerprint": "8c5407c70cf6047f4504198a702e59c83c4e4fca8f059b53f2db05a8a21ef8c9",
+      "binary_sha256": "303e590e65235b345867a575b8052422dd97cfd11f15ad612f2cf7f31fa1145b",
+      "producer_commit": "a00467028b30dec33e570e6659b6e61c2dd3b4dd",
+      "summary_sha256": "dce5ed27d3f9f2738a14a798077c53db2bb0fb04a0e116b50e3e47df365b63b3",
+      "inventory_sha256": "fb3371f91ad32361a7b0df849897b743ce81b756ebff715ec41ff2e38283d576",
+      "reviewed_commit": "39aca833ef10f955738a87681999699b3444087e"
+    },
+    "raw": {
+      "source_fingerprint": "5c748aeb6697d76ceafbc8ef99aee03eb24ee9933ec22c0fdebfc729a6bf2954",
+      "binary_sha256": "f23d149db1aa331a3c7921e4c2a8183871942ed69b3986bec643de86b2836268",
+      "producer_commit": "166bebc3d1d1d206b1169e8c33b02bde60549afd",
+      "summary_sha256": "08224d2041a51b3189782bc08384976b115077a04505532324144480e66107f1",
+      "inventory_sha256": "46c66e5b88c40c4a2b5bf968f2f8cdb8f56abfa2a418f8f9661acaa0a40f463a",
+      "reviewed_commit": "9496a6061b6765e55ac250240ab9bd5f9cc547dd"
+    },
+    "causal": {
+      "producer_commit": "b516af90296f7f26aaeb8d6af2d9ad32e0e12c2b",
+      "source_fingerprint": "f3a1ca48ff6e8a0e91db4cf7443187886381e74a74e72c08005b331d6c4d8b54",
+      "binary_sha256": "fbb6ee1566a7191ff293ae2f8c9e052a1f8e1ec434c438a55338ac42e435abc5",
+      "summary_sha256": "4e717b8233c3161b780e13f4f184a58090711492e01062c1a790ebb1a46caa69",
+      "inventory_sha256": "deca9673630ab94435fd72d101b0040e8c6e65ec74929b58288ca904086e7f2c",
+      "reviewed_commit": "1c041449498b1f512ec64b13030378ee6ba989fd"
+    },
+    "shared": {
+      "producer_commit": "5c2931adeb62071721b6a426d27554e9551c7ae9",
+      "source_fingerprint": "f7fc185f4a9f11eb7228aaeae1dc72e867f31c9818363e470ded1671d8e4b96a",
+      "binary_sha256": "31922d4360f7bb4b31eeb8b45bb680e465fd5e4218bfe7164cb97d9182fd2a00",
+      "summary_sha256": "41f8a9b8f7ddbb68352cead575061a5e85b0dd5871c869c8dfa786b55a03e71e",
+      "inventory_sha256": "ea017408af3409b009dd87c258700568665b90dab172e4d2c3a58809ba9e82f8",
+      "reviewed_commit": "8ca7f0cb162a6e207fae3a2049fd6c6fc4c17096"
+    }
+  },
+  "planned": [
+    "power-division-p97-k3",
+    "arithmetic-cube-plus",
+    "power-division-p193-k5",
+    "power-division-p193-k2",
+    "power-division-p97-k2",
+    "arithmetic-square-times",
+    "arithmetic-sub",
+    "arithmetic-mul",
+    "arithmetic-add",
+    "power-division-p193-k3",
+    "division-p193",
+    "arithmetic-square-sum",
+    "power-division-p97-k5",
+    "arithmetic-half-sum",
+    "arithmetic-sum-square",
+    "arithmetic-affine-product",
+    "arithmetic-perm-add",
+    "arithmetic-div",
+    "arithmetic-abs-diff-blind",
+    "arithmetic-abs-diff",
+    "arithmetic-sum-pow4",
+    "arithmetic-sum-cube",
+    "recurrence-fibonacci-k1-c2-lgt"
+  ],
+  "discovery": {
+    "feature_cells": 32000000,
+    "visits": 200000000,
+    "attempts": 250000,
+    "states_per_query": 512
+  },
+  "training": [
+    {
+      "mode": "Full",
+      "updates": 16,
+      "batch": 64,
+      "learning_rate": 1.0
+    },
+    {
+      "mode": "Mini",
+      "updates": 256,
+      "batch": 64,
+      "learning_rate": 0.1
+    },
+    {
+      "mode": "Forward",
+      "updates": 0,
+      "batch": 64,
+      "learning_rate": 1.0
+    }
+  ],
+  "selection": "Unchanged CM34 parent-first raw CE, then ascending prime, strict improvement exceeding 1e-12. Original readout compatibility only; no held-out inputs. Both 105-choice arms remain independent.",
+  "transformation": "Only selected raw complete-kernel heads may receive their same-prime/same-mode CM40 supplement, and only if coverage strictly increases. Keep the prior on its support and joint refusal. Selected causal heads receive the fixed CM38 exact-predecessor fallback. Every unavailable/refused transformation remains explicit. No new optimizer steps.",
+  "evidence": "Use exact approved immutable parent receipts and summaries. Revalidate all imported file bindings; replay actual selected raw/shared/causal histories. Unchanged metrics are explicitly inherited reviewed evidence, not fresh reruns. Evaluate every changed model afresh on all original splits. Keep all 35 primary outcomes, transformer and 336 depth outcomes and all constructor costs once.",
+  "success": "Original primary success at 99 percent; auxiliary splits remain diagnostics. Seed 1 comparison is separate from the historical DiffGPT seeds 0/1/2 reference.",
+  "memory_limit_bytes": 68719476736,
+  "combined_buffer_cap_bytes": 60129542144,
+  "metric_work_limit": 32000000000,
+  "minimum_disk_reserve_bytes": 17179869184,
+  "artifact_limit_bytes": 8589934592,
+  "unknown_target_compatibility_proved": false,
+  "shared_role_target_proved": false,
+  "raw_label_identification": false
+}

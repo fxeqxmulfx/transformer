@@ -411,6 +411,16 @@ has not yet been evaluated on the original suite.
 
 ## Recovered comparison queues (2026-11-13)
 
+Task 276 builds a separate full comparison from reviewed 246, 252, 237 and 274
+evidence. It keeps the unchanged raw-CE selector, applies the reviewed CM39/40
+coverage gate to selected raw kernels and the CM38 predecessor fallback to
+selected causal heads. Choices and actual tensors are sealed before scoring.
+Changed models receive fresh original metrics; unchanged models retain explicit
+approved-parent provenance. Both 105-choice arms, all 35 primary results and
+transformer/depth baselines remain, with constructors charged once and failed
+cases retained. The frozen 255/261/267 queues are unchanged. Original execution
+requires a reviewed adapter and a separate complete findings/replay task.
+
 Task 275 applies the proved CM39 conservative gate to the actual CM40 shared-role
 certificate. Both heads and certificates remain checked and charged; explicit
 original IDs retain order and repeated-record CE weights. The supplement acts
