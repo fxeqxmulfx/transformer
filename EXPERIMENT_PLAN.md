@@ -518,6 +518,16 @@ must reproduce their reviewed hashes and results. All other representations,
 both policies, all modes and every baseline remain explicit; no held-out gain
 determines which transformed heads are reported.
 
+Task 290 producer `d5ec25b6` completes all 35 original cases and 35 replays.
+The 35 transformed heads span 13 tasks: 13 full-batch, nine minibatch and 13
+forward-only endpoints. Their raw accuracy remains 100%, while CE falls from
+3.59227016 or 4.27155381 to below 8e-9. Every primary and auxiliary success
+remains 35/35 in both policies and all modes. Source import peaks at 8.10 GiB
+under the 64 GiB cap. All prior choices and baselines remain; Fibonacci retains
+97.2364% raw accuracy and CE 0.16604, leaving its 130 raw errors unresolved.
+Authored findings are in `convex_stress_decoder_compare/original`. The separate
+complete reproduction and exact-commit review follow before task completion.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per
