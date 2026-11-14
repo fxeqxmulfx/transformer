@@ -6250,3 +6250,17 @@ inputs and 6540 supplement inputs in every mode; 7762/7999 remain ambiguous
 and no candidate pool is inconsistent. Peak RSS is 2.94GiB, the maximum buffer
 forecast 9.11GiB and work forecast178.76B, within unchanged caps. Exact review
 and source/executable freezing precede task313; held-out metrics are unopened.
+
+Task312 is approved at `a6be8048`: exact review reproduces the executable,
+all550 frozen source files and all six training-only coverage reports. Task313
+integrates that component into a separate complete comparison against reviewed
+task310, retaining task305 and task301 comparisons and every older reference,
+failure and cost. Its prospective4T case allowance covers the3.125T forecast
+from training-only construction, reconstruction and full metric/audit work;
+the64GiB process and56GiB buffer limits remain. Exact adapter review precedes
+task314's frozen all35 original evaluation and independent fresh reproduction.
+
+Task313's18 native tests,format,clippy,release executable,fullLean13917jobs,
+nativeINDEX andaxiom audit pass with36sorry/0rests/0extra unchanged. The
+compiled parent fingerprint and every task310 artifact reproduce. Exact
+landed-commit review is the remaining gate before original task314 scoring.

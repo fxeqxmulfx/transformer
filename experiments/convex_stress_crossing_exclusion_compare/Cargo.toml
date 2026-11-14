@@ -1,0 +1,24 @@
+[package]
+name = "convex-stress-crossing-exclusion-compare"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+convex-stress-crossing-exclusion = { path = "../convex_stress_crossing_exclusion" }
+convex-stress-raw-exclusion-compare = { path = "../convex_stress_raw_exclusion_compare" }
+convex-stress-relabel = { path = "../convex_stress_relabel" }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+sha2 = "=0.11.1"
+
+[dev-dependencies]
+convex-stress-shared-roles = { path = "../convex_stress_shared_roles" }
+
+[profile.test]
+opt-level = 2
+
+[profile.release]
+lto = "thin"
