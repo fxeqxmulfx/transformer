@@ -411,6 +411,15 @@ has not yet been evaluated on the original suite.
 
 ## Recovered comparison queues (2026-11-13)
 
+Task 273 prepares the separate CM40 original training cohort after the reviewed
+272 component. It retains the same 23 cases, all 55 primes and all 35 suite
+metadata. Original record IDs, order and repetitions are saved separately from
+the distinct algebraic equations, with full raw CE and the original batch size.
+Replay checks the complete augmented matrix, raw expansion, complex states,
+every update and all recorded refusals. Original execution needs the reviewed
+adapter and a separate findings/replay task. It does not evaluate held-out
+labels or change the frozen comparison selectors and baseline counts.
+
 Task 272 ports the reviewed CM40 restriction into a separate native component.
 Its certificate contains the actual augmented observed matrix, all role rows
 and both gauges, with independently checked complete basis and grouped-code

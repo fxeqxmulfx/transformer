@@ -1,0 +1,28 @@
+{
+  "version": "shared-roles-training-v1",
+  "required_done_tasks": [271, 272, 273],
+  "core_commit": "5d4eee848cacceba911f048ade2d014e2b71cf42",
+  "proof_commit": "ec5f839dd7584fc07765373132d255286f53f052",
+  "tasks": [
+    "power-division-p97-k3", "arithmetic-cube-plus", "power-division-p193-k5",
+    "power-division-p193-k2", "power-division-p97-k2", "arithmetic-square-times",
+    "arithmetic-sub", "arithmetic-mul", "arithmetic-add", "power-division-p193-k3",
+    "division-p193", "arithmetic-square-sum", "power-division-p97-k5",
+    "arithmetic-half-sum", "arithmetic-sum-square", "arithmetic-affine-product",
+    "arithmetic-perm-add", "arithmetic-div", "arithmetic-abs-diff-blind",
+    "arithmetic-abs-diff", "arithmetic-sum-pow4", "arithmetic-sum-cube",
+    "recurrence-fibonacci-k1-c2-lgt"
+  ],
+  "primes": "All 55 supported primes from 2 through 257 in increasing order. Unequal answer/prime cardinality retains an explicit pre-elimination refusal; no held-out choice.",
+  "readout": "Explicit new construction metadata from the original output metric: field readout q(c)=(c-floor(vocabulary/2)) mod97 for every raw output class, otherwise identity. This maps output names only, never input names or proposed answers. Store all q entries and answer count; preserve original raw CE labels.",
+  "discovery": "Validate the full declared partition, surjectivity and prime/answer cardinality. Retain every distinct original grouped equation, row-first/class-first gauges and all identical-token shared-role difference rows with a free common offset. Audit a complete basis of this actual augmented matrix. Default 8190 non-gauge equation cap, 1024 variables, 8 directions, 500M scalar updates, 2M row operations. Refuse incomplete kernels and observed group-code collisions. Expand to original raw class names; do not claim an unrestricted CM35 complete basis.",
+  "records": "Retain original training indices as unique IDs, order, raw labels and all repeated records. Coalesce only identical equations for the matrix. Reject conflicting raw labels for one categorical pair or unsupported layouts; never drop a record to fit a cap. Save records.json and bind its complete content and hashes. Last token is row and penultimate token is column.",
+  "training": "After all-equation discovery and initialization: one full CE update over every original record, one epoch in the saved original order at the original batch size including the actual final tail, zero CE derivatives in forward mode. Rate 1; original raw labels and full vocabulary, with repeated-record normalization.",
+  "memory_limit_bytes": 68719476736,
+  "minimum_disk_reserve_bytes": 17179869184,
+  "artifact_limit_bytes": 8589934592,
+  "disk_refusals": "Check 16 GiB reserve before each prime stage and each case. A case refused before starting retains exit 125 and zero new construction; a stage failure retains all partial files. Every remaining planned case still receives a process outcome.",
+  "limits": "Reviewed task 272 component and unchanged CM34 numeric dependency. Actual vector range, unknown/unmatched masks, margin 24 defaults, 64N column budgets and 32B audit/per-mode work forecasts. Combined head, complete matrix certificate and original-record/history buffers must fit 56 GiB. Stream one prime stage at a time; no ambient vector grid.",
+  "evaluation": "Training-only with explicit declared readout metadata. No held-out scoring, parent selector, unknown-target compatibility proof or benchmark success claim. Keep 23 planned outcomes and all 35 suite metadata. Later full 105-choice comparison requires reviewed parents and preserves transformer/depth, every original primary success criterion, diagnostics and costs.",
+  "replay": "Bind source/executable/protocol/data/declared-partition/original-record IDs/order/multiplicity/batches; independently replay the actual augmented matrix, complete basis, raw-code expansion, actual complex models, raw CE gradients, trajectories and masks. Keep every refusal and process/partial outcome. Shared-role target realizability and readout compatibility remain unproved premises. Construction and discovery costs are separate, each charged once across later parent arms."
+}
