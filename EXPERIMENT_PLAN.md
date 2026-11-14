@@ -6105,3 +6105,15 @@ new preparation. Every old file is checked; missing replay after refusal is
 explicit. The16Tcomponent cap changes no model trajectory or memory limit.
 The new source,binary andrequest will be frozen separately before original
 metrics, with no reinterpretation of the failed v1 as a completed comparison.
+
+Task301 v2 finishes all 35 original cases and 35 replays with exit0 at frozen
+producer `e971b722`. Both policies retain 35/35 primary and auxiliary successes
+in every mode. Fibonacci raw errors stay 101/100/100 while CE improves from
+0.172615/0.175106/0.177280 to 0.170831/0.173737/0.176289. The complete task298
+reference retains its lower CE and higher raw errors. All-query actual margin
+checks preserve every reference raw decision; they cannot repair its remaining
+mistakes. Work is 288 gradient batches, 164 updates and 770 local-row updates,
+with zero new gradients in forward-only. Peak RSS is 8.01 GiB under 64 GiB.
+The 334-file completed manifest retains the complete v1 work-cap refusal.
+Exact-commit review must independently reproduce all 117 JSON artifacts and
+the report before approval; no original numerical source is changed.
