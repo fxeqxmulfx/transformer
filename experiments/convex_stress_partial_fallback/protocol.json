@@ -1,0 +1,18 @@
+{
+  "version": "partial-fallback-v1",
+  "scope": "native_component_only_no_original_evaluation",
+  "lean_commit": "baf7c2e4590ab2ff0c2bb1c34c3886567c28f8cb",
+  "source": "review/flat_spectrum.md CM41; ConvexDepth/PartialFallback/{Basic,Batch}",
+  "original_component_commit": "027237cdddde7f8b4019501b26d52f0f270b1001",
+  "routing_policy": "candidate_if_supported_or_parent_unavailable_v1",
+  "prediction_limit": 4096,
+  "parent_domain": "Derived only from the checked saved Parent representation. Counts retain their finite saved context; Causal retains its original 4096-prefix domain.",
+  "new_optimizer_updates": 0,
+  "ordinary_raw_ce": true,
+  "original_record_ids_order_and_multiplicity": true,
+  "unseen_correctness_certified": false,
+  "memory_limit_bytes": 68719476736,
+  "combined_buffer_cap_bytes": 60129542144,
+  "original_record_limit": 200000,
+  "original_token_limit": 20000000
+}

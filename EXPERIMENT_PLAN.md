@@ -411,6 +411,14 @@ has not yet been evaluated on the original suite.
 
 ## Recovered comparison queues (2026-11-13)
 
+Task 279 implements the reviewed CM41 route around the original checked saved
+heads. It preserves the candidate through length 4096 when a count predecessor
+is unavailable, without expanding that parent's finite feature alphabet.
+Support, availability and actual routing are distinct diagnostics. Both heads,
+original record multiplicity and batch derivatives retain their old bindings
+and bounds. Task 280 will integrate the reviewed component into a separate
+complete comparison; the frozen task 277 failures remain unchanged.
+
 Task 278 extends the Lean fallback theory to saved parents with restricted
 input domains after three early task 277 cases refused original long inputs.
 The fixed gate keeps the candidate on supported inputs and outside the parent's
