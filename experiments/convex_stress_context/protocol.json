@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "proof": "CM42 at 81f4e46e",
+  "metric": "squared Euclidean distance between the two original categorical token IDs",
+  "metric_assumption": "ordinal input structure; not invariant under arbitrary token renaming",
+  "neighbors": [0, 1, 3, 5, 9],
+  "zero_neighbors": "retain original model",
+  "weights": "uniform over min(k, available) nearest distinct observed input states in the same matched latent block",
+  "distance_ties": "ascending original cell ID",
+  "applicability": "unobserved matched input in a block with at least two distinct observed raw labels",
+  "selection": "minimum original-record mean canonical raw CE, strict improvement greater than 1e-10, bank order breaks ties",
+  "canonical_margin": 24,
+  "selection_diagnostic": "exclude the queried observed input state from the neighbor bank; preserve original record multiplicity",
+  "selection_caveat": "latent discovery is frozen from the complete training data; this is not refitting discovery in each leave-one-state-out split",
+  "selection_inputs": "training inputs and raw labels only; independent of trained source coefficients and all held-out targets",
+  "observed_rows": "retain exact source features",
+  "unique_label_unmatched_and_unknown_axes": "retain exact original logits",
+  "training": "same complete complex coefficient tensor, original full-vocabulary CE and original batches; no additional optimizer updates",
+  "prediction_limit": 4096,
+  "address_limit_bytes": 68719476736,
+  "buffer_forecast_limit_bytes": 60129542144,
+  "scalar_work_limit": 32000000000
+}

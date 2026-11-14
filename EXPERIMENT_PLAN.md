@@ -421,6 +421,16 @@ counterexample. Native context metrics, any training-only neighborhood
 selection, and held-out evaluation require a separate prospective protocol.
 The reviewed task281 model and the older queued comparisons stay frozen.
 
+Task 283 implements the reviewed CM42 fixed context map in
+`experiments/convex_stress_context`. A declared ordinal input metric and a
+canonical margin24 training-only diagnostic choose among the original default
+and 1/3/5/9 nearest observed states. The query state is excluded during the
+diagnostic; original record multiplicities remain. Selection is independent
+of trained coefficients, so full/mini/forward modes share the same fixed map.
+Actual complex feature products retain all head coefficients, original observed
+rows and raw-CE derivatives. Native fixtures and mutation checks precede any
+original-data evaluation; the 35/35 benchmark result is unchanged at this stage.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per

@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_context`](convex_stress_context) | CM42 native component; original evaluation separate | Fixed training-only context interpolation distinguishes raw aliases in actual complex heads. Retains original coefficients, observed CE, repeated records and minibatch derivatives; locality remains an additional assumption. |
 | [`convex_stress_domain_compare`](convex_stress_domain_compare/original) | Original 35/35 full, mini and forward, both policies | Complete seed-1 primary and auxiliary success, zero process failures, with fresh changed-model metrics and reviewed inherited outcomes. Retains the Fibonacci validation-CE regression and distinguishes the preflight fix from actual fallback coverage. |
 | [`convex_stress_partial_fallback`](convex_stress_partial_fallback) | CM41 native component; corrected comparison pending | Keeps the causal candidate outside a saved predecessor's input domain. Preserves actual complex heads, raw CE, original records and charged budgets, with separate support, availability and route diagnostics. |
 | [`convex_stress_shared_compare`](convex_stress_shared_compare/original) | Original 28/35 in every mode and policy; seven process failures | Fibonacci reaches 99.936% in all modes and forward associative divisor reaches 100%. Seven saved-parent domain failures remain in the denominator; the corrected comparison is separate. |
