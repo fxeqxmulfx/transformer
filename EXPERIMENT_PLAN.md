@@ -6147,3 +6147,13 @@ All 35 tasks and both 105-choice policies remain in scope. Geometry is fixed
 before scoring, with confidence one and zero new optimization in every mode.
 Raw accuracy and ordinary CE are compared to both source and guarded references;
 regressions cannot be hidden by choosing a weaker reference after evaluation.
+
+Task 305 original evaluation completed at frozen producer `64efc9f8`: all 35
+cases and replays pass, with 35/35 primary and auxiliary successes in every
+mode for both policies. Fibonacci raw errors improve from 101/100/100 to
+96/95/95; CE improves against both task296 and task301 to
+0.165498/0.168674/0.171923. Task298 still has lower CE with more raw errors and
+remains retained in full. Original training CE and field accuracy are unchanged;
+new gradients and optimizer updates are zero. Peak RSS is 3.4943 GiB.
+The complete 334-file manifest preserves every reference and failed attempt.
+Exact findings-commit independent reproduction is required before approval.
