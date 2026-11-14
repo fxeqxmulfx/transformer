@@ -411,6 +411,18 @@ has not yet been evaluated on the original suite.
 
 ## Recovered comparison queues (2026-11-13)
 
+Task 272 ports the reviewed CM40 restriction into a separate native component.
+Its certificate contains the actual augmented observed matrix, all role rows
+and both gauges, with independently checked complete basis and grouped-code
+separation. Actual Fourier heads retain raw CE; separately bound original IDs
+preserve repetitions and short minibatch tails. Nine checks include exhaustive
+small systems, nonzero common offsets, basis/gauge changes, raw aliases, the
+characteristic-two limit, actual complex gradients and mode replay, long
+prefixes, certificate mutations and resource refusals. The combined head,
+certificate and record forecasts must fit 56 GiB under a 64 GiB process cap.
+These are component results; original training and complete comparison still
+require separate frozen adapters. Existing 255/261/267/270 evidence is unchanged.
+
 Task 271 / CM40 adds actual shared-role equations to the complete observed
 kernel. Aligned categorical identities have one free row-minus-column offset,
 which preserves both original gauges. Full-basis matches identify codes and

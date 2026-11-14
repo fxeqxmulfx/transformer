@@ -1,0 +1,19 @@
+[package]
+name = "convex-stress-shared-roles"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+convex-stress-kernel = { path = "../convex_stress_kernel" }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+sha2 = "=0.11.1"
+
+[profile.test]
+opt-level = 2
+
+[profile.release]
+lto = "thin"

@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "scope": "native_component_only_no_original_evaluation",
+  "lean_commit": "ec5f839dd7584fc07765373132d255286f53f052",
+  "family": "complete_observed_grouped_kernel_intersect_shared_role_equations",
+  "categorical_alignment": "all_identical_token_ids_in_separately_compacted_observed_role_dictionaries",
+  "common_offset": "free_not_zero_pinned",
+  "matrix": {
+    "observations": "all_distinct_original_cell_label_equations_grouped_by_declared_full_vocabulary_readout",
+    "gauges": "first_row_zero_and_first_observed_group_code_zero",
+    "role_rows": "each_aligned_row_minus_column_difference_minus_first_aligned_difference_including_zero_anchor_row",
+    "equation_cap": "configured_cap_at_most_8190_counts_observed_and_role_rows_plus_two_gauges",
+    "prime_cap": 257,
+    "coefficient_cap": 1024,
+    "nullity_cap": 8,
+    "partial_certificate_policy": "refuse",
+    "missing_alignment_policy": "refuse",
+    "observed_group_code_collision_policy": "refuse"
+  },
+  "original_records": "caller_supplied_unique_record_ids_with_original_order_and_multiplicity_covering_exactly_all_equations",
+  "original_record_cap": 66049,
+  "loss": "ordinary_full_raw_vocabulary_cross_entropy_per_actual_record",
+  "modes": {
+    "full": "one_projected_update_on_all_original_records",
+    "mini": "one_epoch_in_original_order_at_declared_original_batch_size_including_actual_short_tail",
+    "forward": "same_feasible_complex_initializer_zero_updates_zero_ce_gradients"
+  },
+  "head": "complete_vector_range_fourier_blocks_independent_real_and_imaginary_coordinates_raw_observed_states_and_first_matching_class_defaults",
+  "initial_raw_margin": 24,
+  "table_interval": [-32, 32],
+  "column_l1_budget": "64_times_actual_state_count",
+  "max_prefix_tokens": 4096,
+  "input_pair_order": {"row": "last_token", "column": "penultimate_token"},
+  "unmatched_active_and_unknown_axis_policy": "explicit_distinct_support_masks_with_saved_fallback_logits",
+  "combined_buffer_cap_bytes": 60129542144,
+  "process_address_space_cap_bytes": 68719476736,
+  "head_audit_and_training_scalar_forecast_cap": 32000000000,
+  "target_shared_role_realizability": "assumed_not_proved_by_observed_fit",
+  "target_readout_compatibility": "assumed_not_proved_by_native_certificate",
+  "raw_label_identification": false,
+  "original_follow_up": "requires_reviewed_component_frozen_training_cohort_and_separate_complete_35_task_adapter",
+  "existing_comparisons_255_261_267_and_component_270": "unchanged"
+}
