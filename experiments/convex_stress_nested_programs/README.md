@@ -109,3 +109,64 @@ Keep generated models, metrics, logs and source freezes on storage outside the
 temporary worktree. This six-case component comparison leaves the original35
 suite separate: Fibonacci remains near 98%, with tasks317/319 pending. It does
 not establish a combined 41-task pass or evaluate the other 124 new cases.
+
+## Frozen six-case findings
+
+Producer `cd850e221abe3ff95d252567200cfc3dc1257446` was frozen before all six
+training stages and all original scoring. The original run and a fresh complete
+repeat reproduce all 33 JSON artifacts byte-for-byte, including complete states,
+predictions, retained baselines, replay records and summary. Report SHA256:
+`9fcfd6aee0dbcba71c4a9dd51bf78ac631ef64f7225a291d9b9620ed529996f9`.
+
+| Case | Historical GPT test raw / exact | New full / mini / forward test | New length 32 / 64 tests |
+| --- | --- | --- | --- |
+| Two bracket types | 787/842 tokens; 42/64 sequences | Each 842/842 tokens; 64/64 sequences; CE 1.39680e-9 | Each 1984/1984 and 4032/4032 tokens; 64/64 sequences |
+| Three bracket types | 782/850 tokens; 38/64 sequences | Each 850/850 tokens; 64/64 sequences; CE 1.47230e-9 | Each 1984/1984 and 4032/4032 tokens; 64/64 sequences |
+
+Both new cases reach 100% raw and exact accuracy on all 11 original splits in
+all three modes. Their historical GPT rows retain `budget_exhausted` and their
+original metrics; those historical measurements are not a fresh matched-budget
+comparison. The four controls also remain 100% on all 11 splits in all modes.
+Their complete parent states, training inputs, dataset metadata and result
+fields exactly match task324. All 18 outcomes are usable: every mode has 6/6
+original successes and 6/6 raw99/exact99 successes on primary, test and every
+held-out split. There are no process failures, OOMs, missing dictionary states,
+ambiguous predictions, unseen input symbols or roundoff-sensitive argmaxes.
+
+The new searches enumerate 330 and 4256 candidates. Each retains one program,
+with two and three directed pairs respectively. Training identifies the raw
+decoder 0→12, 1→13, 2→14; the other 29 source states remain explicitly unknown.
+The complete complex heads still store 2432 and 2560 real coordinates, including
+all raw classes. Their numerical column norm is 357.247, below 2048. Independent
+products agree exactly on these scored prefixes; source inversion error is at
+most 2.76e-14. No exact-real or target-realizability certificate is inferred.
+
+Training contains 1704 and 1684 supervised prefixes. Full mode performs 16
+gradient batches with 27264 and 26944 examples. Mini performs 216 and 212
+batches with 6816 and 6736 examples, retaining short tails of 8 and 20 each
+epoch. Full and mini execute actual derivatives and products, but the single
+surviving mass stays one and training CE does not change. Forward computes
+loss and predictions with zero gradient, projection or derivative-cache work.
+The gain comes from the supplied nested-program family and its training-learned
+roles/decoder; it is not an observed improvement from CE optimization.
+
+The retained programs see peak training depths 8 and 6. Original longer probes
+reach depths 9 and 11 respectively, while remaining perfect. This extends beyond
+the observed training depths under the same structural prior; it does not show
+generalization to arbitrary missing raw labels or unrepresented rules.
+
+The largest new search forecast is 6,556,691,456 work units, largest new full
+training forecast 811,295,232, and largest new all-split evaluation forecast
+2,998,085,632 per mode. New binding buffers are at most 2,017,470,464 bytes.
+Unchanged controls retain their prior forecasts. Original peak RSS across all
+processes is 401100 KiB (391.7 MiB); the slowest training stage takes 2.90 seconds
+and slowest replay 12.43 seconds. Every process stays under the 64 GiB limit;
+checks and repeats are additional work recorded separately.
+
+Evidence is preserved in
+`/run/media/misha/storage/transformer-runs/nested-programs/{original-v1,fresh-review-v1}`.
+The 448-input source freeze, binary, task325 baseline and precommit checks live
+under `.../freezes/nested-prefix-v1`. Independent final review reruns native and
+Lean checks at the findings commit and replays every frozen original case.
+This remains a seed-1 six-case result. Original35 Fibonacci remains near 98%,
+tasks317/319 remain pending, and 124 additional catalog cases remain unscored.

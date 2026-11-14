@@ -6469,3 +6469,17 @@ full16/mini4x32/forward0 and all bounded failures. Freeze this new six-case
 producer before scoring, keep all 18 outcomes and every short/long split, and
 require exact independent replay. No original accuracy is inferred from the
 proof or synthetic checks; original35 and tasks317/319 remain separate.
+
+Task326 producer `cd850e22` now reaches 100% raw and exact accuracy on both typed
+bracket cases, in full/mini/forward and all 11 short/long splits. Original tests
+score 842/842 and 850/850 tokens, each 64/64 sequences; CE is 1.39680e-9 and
+1.47230e-9. All four controls also remain perfect, with complete parent states
+and results exactly equal to task324. All 18 outcomes succeed without omitted
+failures, missing states or OOM. The original and fresh runs reproduce all 33
+JSON artifacts exactly (report `9fcfd6ae…29996f9`). Peak RSS is 391.7 MiB.
+Each new case identifies one nested-role program and learns its three raw
+labels; full/mini compute derivatives but do not change that single mass.
+Depths extend from training maxima 8/6 to held-out 9/11. This is a structural
+representation gain, not an observed CE optimization gain. Complete independent
+review before further integration. Original35 Fibonacci remains near 98%,
+tasks317/319 remain pending, and 124 additional catalog cases remain unscored.
