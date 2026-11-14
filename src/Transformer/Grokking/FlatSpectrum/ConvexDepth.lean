@@ -12,6 +12,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RefinedBox
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RefinedCE
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.Fallback
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.CoverageExtension
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.PartialFallback
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -46,6 +47,10 @@ component codes; support is not an unknown-target correctness certificate.
 CM39 conservatively extends coverage: a supplemental complex head acts only
 where the prior refuses and the supplement accepts. All other prior logits
 and original covered-batch CE derivatives are preserved exactly.
+CM41 treats a saved predecessor with a restricted input domain: zero-extended
+parent features are used only where the parent is available and the candidate
+refuses. The candidate remains elsewhere, with the same convex CE and charged
+budgets and exact supported-batch objective and derivative identities.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/

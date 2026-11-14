@@ -411,6 +411,15 @@ has not yet been evaluated on the original suite.
 
 ## Recovered comparison queues (2026-11-13)
 
+Task 278 extends the Lean fallback theory to saved parents with restricted
+input domains after three early task 277 cases refused original long inputs.
+The fixed gate keeps the candidate on supported inputs and outside the parent's
+domain, using the parent only on unsupported inputs where it is available.
+Actual zero-extended parent coordinates retain both budgets, convex ordinary
+CE and supported original-batch objective and derivative identities. The
+frozen run and its failures remain unchanged; native implementation and a new
+complete comparison follow only after the proof is reviewed.
+
 Task 276 builds a separate full comparison from reviewed 246, 252, 237 and 274
 evidence. It keeps the unchanged raw-CE selector, applies the reviewed CM39/40
 coverage gate to selected raw kernels and the CM38 predecessor fallback to

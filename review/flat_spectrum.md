@@ -17827,3 +17827,57 @@ the resulting fixed complex feature library and ordinary cross-entropy traces.
 Flatness continues to bound that feature model; it supplies no unseen labels.
 The fixed-feature convexity results are unchanged. The existing 255, 261 and
 267 comparisons and the frozen CM39 component remain separate and unchanged.
+
+## CM41. Keep the candidate outside a saved predecessor's input domain
+
+Two Boolean cases in the first task277 shared-role comparison fail before
+scoring because the chosen count predecessor has a shorter input domain than
+an original evaluation split. CM38 assumes total parent features. A saved
+finite count alphabet is a genuinely partial parent; zero extension alone
+would select zero logits on an unsupported input outside that alphabet. The
+failed frozen run remains evidence. A corrected model needs a different,
+prospectively declared route, with no change to original labels or metrics.
+
+Let `d : X -> Bool` be the saved parent's fixed input-domain predicate, and
+let its actual features have type `psi : L -> {x | d(x)=true} -> R`. Extend
+these coordinates by zero outside that subtype. Keep the candidate predicate
+`g` separate from domain availability. The combined candidate gate is
+`g(x) OR NOT d(x)`. Apply CM38's actual disjoint-coordinate construction to
+this gate, the total candidate features, and the zero-extended parent. The
+finite dot product has three explicit cases: candidate logits on supported
+inputs, parent logits on unsupported inputs in the parent's domain, and
+candidate logits on inputs outside the parent's domain. No unavailable parent
+coordinate is evaluated, and availability does not assert candidate support.
+
+The actual stored coefficient blocks still have joint absolute-sum budget
+`Rc+Rp`. Zero extension preserves any nonnegative coordinate bound established
+only on the parent's own domain. The routed coordinates inherit a common
+bound `M`, and the combined logits are bounded by `(Rc+Rp)*M`. In particular,
+unitary complex component codes give the same bound of one for their realified
+coordinates, even when the parent's state map exists only on its accepted
+inputs. This uses flat component spectra for a bound; it does not claim that
+the routed input matrix is unitary.
+
+The ordinary raw-label CE averaged over a finite batch of original record IDs
+is convex on the affine domain freezing the parent coefficients. If every
+record is candidate-supported, the actual normalized batch objective equals
+the candidate's objective for every candidate coefficient tensor. Its Frechet
+derivative agrees, and a candidate derivative-existence proof transfers.
+Distinct record IDs retain repeated observations; the full batch and unequal
+minibatch tails retain their own denominators. The new routing rule adds no
+optimizer step and applies to the same zero-update forward-only state.
+
+A finite nonzero witness distinguishes the policies. Take inputs `0,1,2,3`,
+candidate support `x<2`, and parent domain `x<3`. With two coordinates, candidate
+features `phi(k,x)=k+x+1`, partial parent features `psi(k,x)=2*k+x+1`, candidate
+coefficients one and parent coefficients two, the new routed logit at input3
+is9. Routing only by candidate support into the zero extension gives0 instead.
+The conditional budget and coordinate bounds have concrete satisfying examples.
+No part of this witness or the routing theorem identifies an unseen label.
+
+Lean: `ConvexDepth/PartialFallback/{Basic,Batch}`. A native implementation must
+bind the domain to the actual saved parent representation, retain separate
+support/availability/route diagnostics, charge both heads, and verify long
+prefixes without evaluating a parent outside its domain. The frozen CM38
+component, comparisons255/261/267, and the initial shared comparison277 remain
+unchanged. A corrected complete comparison remains a separate experiment.
