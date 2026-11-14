@@ -421,6 +421,19 @@ changes only the newly covered one. It asserts no unknown-target correctness
 or benchmark gain. Native binding and a separately declared full comparison
 remain necessary; frozen255/261 selectors and267 fallback are unchanged.
 
+Task270 implements that gate for actual CM34 raw and CM35 grouped complex
+heads over the same original observations and field. The separate component
+checks complete codes, observed dictionaries, numerical complex audits, both
+stored budgets and bound record multiplicity. It preserves prior logits on
+prior support and joint refusal, and supplies the unchanged raw-CE derivative
+in prior coordinates. Six native checks include a strict new prediction,
+full/mini/forward states, nonzero finite differences with repeated records,
+short minibatch tails, long prefixes, mutations and resource refusals. Its
+prospective transformed arm requires a same-prime/same-mode grouped endpoint,
+positive added coverage and unchanged training CE; a separate reviewed adapter
+and complete original evaluation after267 are still required. No original
+selector, frozen evidence or benchmark count changes from these fixtures.
+
 Task266 supplies the complete CM38 adapter after the268 long-domain correction.
 It preserves both task261 initializer arms, then declares separate transformed
 arms using each selected causal head's exact immutable predecessor. Actual

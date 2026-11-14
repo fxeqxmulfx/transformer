@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_coverage_extension`](convex_stress_coverage_extension) | CM39 and six native component checks; complete adapter pending | A saved grouped complex head acts only on newly covered inputs. Prior logits, raw CE and record multiplicity remain; both heads and actual support codes are charged and checked. No original benchmark result. |
 | [`convex_stress_fallback_compare`](convex_stress_fallback_compare) | Nine native comparison checks; original execution pending | Preserves both complete original initializer arms and separately wraps importable selected causal heads with their exact saved predecessors. Actual histories, raw CE, long domains, route masks, refusals and all costs remain bound. |
 | [`convex_stress_fallback`](convex_stress_fallback) | CM38 and ten native checks; original comparison pending | Actual complex routing preserves a saved causal or count parent outside observed support, with both heads charged and the original long-prefix domain retained. Full/mini/forward CE bindings and supported-unseen failures remain explicit; no new benchmark score. |
 | [`convex_stress_readout_compare`](convex_stress_readout_compare) | Ten native comparison checks; original evaluation pending | Imports genuine grouped bases, raw expansions and full output partitions. Keeps observed-CE selection, all35 tasks/transformer/depth and costs; separately reports standalone candidates and selected regressions. |
