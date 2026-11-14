@@ -623,6 +623,15 @@ fixed. Ten native tests cover boundaries,exclusion/repeats,renaming,shared actua
 complex blocks and original modes/gradients. A separate full original comparison
 must retain CM46's negative CE result and all baselines after component review.
 
+Task297 is approved at `5e89c616`. Task298 freezes a complete native comparison
+of its five shared gates against reviewed CM45. Its separate pinned task296
+reference retains every previous choice, raw metric, CE regression and local
+cost, without participating in selection. The source bank/head/anchor and all
+35 tasks, original modes/batches, success rules and transformer/depth baselines
+remain. Full original evaluation and independent reproduction follow the
+adapter commit and executable freeze. The earlier original results motivated
+this model change, so they are not independent architecture-selection holdouts.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per
