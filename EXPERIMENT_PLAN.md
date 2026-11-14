@@ -6213,3 +6213,12 @@ falls from11.07216 to0.00531025. The176 unchanged,32 wrapped and2 refused import
 outcomes remain;30 wrappers refuse their prediction domain and retain earlier
 results. PeakRSS4.883GiB, no new gradients or discovery. This is a separate
 historical branch, not a new raw-exclusion result. Exact findings review remains.
+
+Task309 is approved at ee4b6a44. Its frozen task310 original comparison and
+all35 replays now pass. Both policies retain35/35 primary and auxiliary
+successes in every mode. Fibonacci improves one raw answer per mode, with
+95/94/94 remaining errors andCE0.164323/0.167717/0.171430. The169 new validation
+contexts are all correct; only one prediction changes per mode. All35 primary
+raw errors are95/96/94, including two inherited minibatch sum-square errors.
+Full observed metric objects remain exact. All previous references and costs
+are retained; peakRSS4.43GiB. Full findings-commit independent review is next.
