@@ -6088,3 +6088,12 @@ large temporary guard caches within the64GiB address limit. Replay reserves
 allthree construction passes in its conservative work forecast. Original
 primary success, raw accuracy and CE remain separate, with every inherited
 baseline and cost retained. No new original numerical result is claimed yet.
+
+Task301 v1 attempted all35 cases:34runs and34replays pass; Fibonacci stops
+after sealing forward because full/mini work forecasts are9.0-11.4T, above
+the8T cap. PeakRSS is6.53GiB, with no out-of-memory event and no new original
+held-out scores. Task302 ports the frozen numerical model into a separate
+package with an inspectable16Twork limit; the memory and cost formulas stay
+unchanged. Both frozen forward prior/supplement trajectories reproduce exactly
+apart from the protocol digest. Review precedes a separately frozen full rerun;
+the failed v1 sources,binary,model,logs and all35attempts remain preserved.
