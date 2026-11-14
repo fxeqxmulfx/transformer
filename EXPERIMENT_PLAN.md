@@ -6191,3 +6191,16 @@ closure explicitly unproved. Exact rational conflicts rule out alternatives;
 only one survivor enables a new positive same-label feature mixture. Every
 other parent row, original record and full-head derivative is preserved.
 Component checks and exact review precede a frozen complete original comparison.
+
+Task 308 is approved at `9455f516`: 12 native tests and full Lean/INDEX/axiom
+checks pass. Training-only inspection identifies 11904 additional prior inputs
+and 12311 supplement inputs in every mode, with no inconsistent candidate pool.
+This is conditional coverage, not held-out accuracy. Peak inspection RSS was
+2.32 GiB under the 64 GiB process cap; all original states remain unchanged.
+
+Task 309 integrates the reviewed CM49 component into a separate complete
+comparison against task305, retaining all earlier references and baselines.
+It seals full actual states before scoring, preserves original observed metric
+objects exactly, and audits every fresh raw prediction change. Both 105-choice
+policies and all 35 raw denominators remain. Task310 will execute and independently
+replay the frozen original comparison only after adapter review.
