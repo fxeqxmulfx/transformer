@@ -1,0 +1,27 @@
+{
+  "name":"shared-latent-prefix-v1",
+  "lean_commit":"8c7b8933aaf53d85a0688a1bee848878a6285617",
+  "copy_producer":"c44632bb992989b743a2c9c62b6578df1e725d02",
+  "baseline_report_sha256":"550e9d86ce9175a1c1a9fb3ecea03ad281ae1fb4e627e5565f0cd125901eb791",
+  "catalog":"unchanged four cases and all original short/long splits from convex_stress_sequences",
+  "priority":"run unchanged CM52 copy binder first; only when its entire initialization refuses, run CM53; no per-query or held-out family selection",
+  "programs":"every ordered unequal vocabulary-symbol pair: sign of signed total and whether any prefix total is negative; then first selected role and saturated run count for caps1..8; all other tokens ignored",
+  "selection":"retain all programs whose state dictionaries fit all original supervised training prefixes; record original conflicting rows; unseen states remain None",
+  "states":32,
+  "decoder_default":0,
+  "initialization":"uniform retained masses; training-learned decoder templates completed with raw0; full normalized32-state DFT and conjugate heads at margin24",
+  "convex_domain":"affine slice of CM53 joint mass/decoder tensors with dictionary templates fixed before CE updates; no independently learned factor products; full joint-domain optimization is not claimed",
+  "loss":"ordinary full-vocabulary cross-entropy through every complete real/imaginary block product",
+  "training":[
+    {"mode":"Full","iterations":16,"batch":32,"learning_rate":1.0},
+    {"mode":"Mini","iterations":4,"batch":32,"learning_rate":0.1},
+    {"mode":"Forward","iterations":0,"batch":32,"learning_rate":1.0}
+  ],
+  "consensus":"every retained dictionary known and unanimous; unknown defaults and disagreements are reported for every scored prefix, never hidden by abstention",
+  "evaluation":"seal all four stages before any held-out score; retain every supervised prefix, all12 outcomes and all earlier baselines; independently interpret programs and full complex products; exact original replay",
+  "roundoff":"logit difference <=1e-8; matching argmax when margin>1e-7; record smaller margins",
+  "limits":{"programs":16384,"retained":128,"latent_scalar_work":16000000000,"process_bytes":68719476736,"buffer_bytes":60129542144},
+  "copy_limits":"unchanged reviewed task322 limits; the higher16B forecast applies only to the new latent component",
+  "goals":{"original_exact":0.95,"raw_token":0.99,"exact_sequence":0.99},
+  "scope":"first four additional cases only; original35 and pending317/319 unchanged; remaining126 require separately frozen protocols"
+}

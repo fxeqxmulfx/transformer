@@ -6422,3 +6422,13 @@ All55 new theorems pass a warning-free13932-job full build and standard axiom
 audit; generated INDEX has4835 modules/25347 theorems, with the global
 36sorry/0rests/0extra unchanged. Review323 before task324 implements and freezes
 the generic prefix repair. Preserve both retrieval passes and tasks317/319.
+
+Task323 is approved at `8c7b8933`: all55 new declarations and the full Lean
+validation pass in the independent root review. Task324 now implements the
+native CM53 affine slice with fixed generic signed-prefix/run summaries and
+training-learned partial decoders. All vocabulary roles and caps are enumerated;
+unknown rows and conflicts stay explicit. Training-only CM52 copy priority
+preserves its existing models. Freeze the checked source and binary before
+all four training stages, then score/replay every short/long split and all12
+outcomes. Keep raw99/exact99/original95/CE separate; no new original accuracy
+is inferred from the proof or synthetic component tests.
