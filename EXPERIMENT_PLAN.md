@@ -560,6 +560,17 @@ mixture is sealed before metrics, old metrics are reproduced, and all new
 gradients/updates are counted. Complete original execution and independent
 reproduction follow the committed adapter/protocol.
 
+Task293 producer `714d6d69` completes all35 original cases and replays with
+zero failures. Both policies retain35/35 primary/auxiliary successes in every
+mode. Fibonacci raw errors fall130 to109 full,103 mini and100 forward; CE falls
+0.16604 to0.14011,0.14196 and0.14904 respectively. Field accuracy stays4701/4704
+and observed CE stays9.62659e-9. Full has the lowest CE; forward has the best raw
+count, with no new gradients. The six prior/supplement components execute288
+gradient batches and172 nonzero updates in total; all work and baselines remain.
+Peak observed replay RSS is1.99GiB under64GiB. Authored findings are in
+`convex_stress_context_mixture_compare/original`; complete independent
+reproduction and exact-commit review follow before approval.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per
