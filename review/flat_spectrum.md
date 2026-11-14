@@ -17668,3 +17668,62 @@ complete35-task comparison before any improved benchmark count is claimed.
 Lean: `ConvexDepth/Fallback/{Basic,Domain,Batch,Witness}`, composed with CD8,
 CFt5 and their actual complex-head and ordinary-CE definitions. The fixed route
 and feature library are not jointly optimized as raw transformer parameters.
+
+## CM39. Extend coverage while preserving every other prior prediction
+
+CM38 preserves the prior only where the candidate refuses. Its counterexample
+shows why accepting every candidate-supported replacement can overwrite a
+previously correct answer. A separately declared conservative extension uses
+two fixed support predicates: `s(x)` for the prior and `t(x)` for a supplemental
+decoder. Neither predicate contains a target label or depends on trained head
+coefficients. Set `keepPrior(x) = s(x) or not t(x)`.
+
+Instantiate CM38 with the prior as its free first block and the supplemental
+head as its frozen second block. Thus the actual disjoint-union features are
+`(phi(x),0)` when `keepPrior` is true and `(0,psi(x))` otherwise. The finite
+complex dot product preserves the exact prior logits whenever the prior has
+support, including overlap with a disagreeing supplement. It also preserves
+the prior wherever both decoders refuse. Only inputs with `s=false,t=true`
+use the supplemental logits. Conversely, any actual logit change implies
+both of these conditions; newly covered inputs may still have identical
+logits by coincidence. No inclusion relation between the supports is needed.
+
+The construction retains CM38's independent real and imaginary parameters,
+both stored coefficient blocks, their summed column budgets and their exact
+coordinate count. Freezing the supplemental block gives the same affine
+convex domain. Flat component matrices provide the same bounded realified
+features and feasible-logit bound; the routed input matrix need not be flat.
+For any original batch whose records have prior support, the normalized
+ordinary raw-vocabulary CE equals the prior's objective for every free prior
+coefficient. The Fréchet derivatives therefore agree as well. Repeated inputs
+remain separate record IDs, and the actual batch size is unchanged, including
+shorter final minibatches. This allows reuse of an already validated prior
+trace; it does not prove native optimization, convergence, or trace feasibility.
+The identities also apply at the saved zero-update forward point.
+
+A concrete witness uses the proved four-state Fourier code for both heads,
+margin24 and combined coefficient budget512. The observed inputs are0 and1,
+with respective labels false and true. The prior aliases unseen input2 to
+observed input0, but maps unseen inputs3 and4 to unobserved states. The
+supplement aliases inputs2 and3 to observed input1 and maps input4 to an
+unobserved state. Their support tests are exactly membership in each map's
+observed-state image. The supplemental logits strictly disagree with the
+prior on all three unseen inputs. The extension preserves input2 because the
+prior supports it, changes input3 because only the supplement supports it,
+and preserves input4 because both refuse. Full and unequal minibatch examples
+retain three original records, including a repeated input0, and their actual CE.
+
+This is preservation of the prior outside the newly covered region, not
+identification of targets inside it. Even a supported prior may be wrong,
+and a newly accepted answer may be wrong. CM35's explicit target-family
+assumptions, or other independently justified identification assumptions,
+are still required for correctness. The theorem therefore does not promise
+nondecreasing total benchmark accuracy. CM36/37 can establish coverage
+inclusion for the related complete-kernel decoders, but cannot turn this
+preservation identity into a target certificate by themselves.
+
+Lean: `ConvexDepth/CoverageExtension/{Basic,Witness}`, using the actual CM38
+complex realification and raw-CE definitions. A native policy would still need
+both saved heads, independently bound support tests, complete cost accounting
+and a prospective comparison. The original255/261 strict-CE selectors,267
+fallback protocol and all frozen sources and runs remain unchanged.

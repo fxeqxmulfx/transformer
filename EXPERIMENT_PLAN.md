@@ -411,6 +411,16 @@ has not yet been evaluated on the original suite.
 
 ## Recovered comparison queues (2026-11-13)
 
+Task269 / CM39 proves a prospective conservative coverage extension. A
+supplemental complex head acts only where the prior refuses and the supplement
+accepts. Every other input retains exact prior logits, even if the two heads
+disagree. Prior-covered original batches retain their normalized raw CE and
+Fréchet derivatives; both coefficient blocks remain charged in the CM38
+convex domain. A flat Fourier witness disagrees on three unseen inputs but
+changes only the newly covered one. It asserts no unknown-target correctness
+or benchmark gain. Native binding and a separately declared full comparison
+remain necessary; frozen255/261 selectors and267 fallback are unchanged.
+
 Task266 supplies the complete CM38 adapter after the268 long-domain correction.
 It preserves both task261 initializer arms, then declares separate transformed
 arms using each selected causal head's exact immutable predecessor. Actual
