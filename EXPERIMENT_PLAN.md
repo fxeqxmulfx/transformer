@@ -540,6 +540,16 @@ Nonzero Fourier witnesses retain observed fit while choosing opposite unseen
 raw aliases. Native mixture optimization and original evaluation follow only
 after the proof and its review.
 
+Task 291 is approved at `2f0dc9ba` after the full build, axiom/source audit,
+native generated INDEX and exact-commit review. Task 292 implements the fixed
+91-map context bank in Rust. Ordinary source-excluded diagnostic CE uses every
+original raw record and the full vocabulary denominator. Full/minibatch modes
+optimize only simplex weights, with explicit repeated/tail batches; forward
+selects a vertex with no derivatives. Actual inference uses the unchanged
+complete complex source tensor. Allocation/work forecasts and reconstruction
+bind all added state. The original 35-task comparison follows component review;
+no CM45 original-data improvement is claimed by the component fixtures.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per

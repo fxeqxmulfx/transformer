@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_context_mixture`](convex_stress_context_mixture) | CM45 native component; original evaluation separate | Convex mixtures of fixed context maps learn from ordinary training-only raw CE in full/minibatch modes, with forward-only vertex selection. Actual complex heads preserve original observed rows, coefficient budgets and baselines. |
 | [`convex_stress_decoder_compare`](convex_stress_decoder_compare/original) | All 35 original cases and all replays pass | CE falls from 3.59 or 4.27 to below 8e-9 on 35 saved heads across 13 tasks, with 100% raw accuracy unchanged. Both policies retain 35/35 primary and auxiliary successes in every mode; all other representations and baselines remain. |
 | [`convex_stress_decoder_head`](convex_stress_decoder_head) | CM44 native component; original evaluation separate | Training-only confidence selection for saved categorical decoders through a complete bounded complex head; ordinary raw CE, original record multiplicity and complete gradients. |
 | [`convex_stress_context_scale_compare`](convex_stress_context_scale_compare/original) | All 35 original cases, fresh reproduction and exact-commit review pass | Fibonacci CE falls from 0.280 to 0.166 with raw accuracy 97.24% unchanged. Full, mini and forward modes and both policies retain 35/35 primary and auxiliary successes, with every baseline and inherited choice. |
