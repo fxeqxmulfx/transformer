@@ -6039,3 +6039,12 @@ Both arms pass 9/75 short cells; forward passes 0/30 long, and FW has 0/24
 completed long passes plus six interrupted cells. The original source fingerprint
 and full-budget protocol remain frozen. `report_stopped.sh` and `compare.jq`
 regenerate the ignored evidence without dropping interrupted cells.
+
+Task298 producer `448f034d` finishes all35 original cases and35replays with
+zero process failures. Both policies retain35/35primary/auxiliary success in
+all modes. Five-gate Fibonacci CE improves to0.13366full/0.13222mini/0.13013forward,
+but raw errors change109to105,103to107,and100to105. Prior block-local results
+remain in full, including their better raw counts and worse CE. Work is288
+gradient batches,176updates and797local-row updates; forward has zero gradients.
+Peak replay RSS is3.02GiB under64GiB. Authored findings retain these tradeoffs;
+independent complete reproduction at the findings commit precedes approval.
