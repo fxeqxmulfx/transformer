@@ -1,0 +1,22 @@
+{
+  "name": "observed-raw-region-context-v1",
+  "proof_commit": "71d96c937a7ae78cc1a914e847340ed5eef35bf1",
+  "parent_component_commit": "a8deaa63b197ae8079842dea5173ce94eb373ec3",
+  "coordinates": "the two original ordinal input token IDs within each frozen source block",
+  "construction": "checked integer convex hulls of observed points for each raw class",
+  "overlap": "any intersection of different-class hulls refuses the entire block",
+  "coverage": "unique same-label convex combination with at most three observed states",
+  "certificate": "exact rational nonnegative masses, unit total and input-coordinate identity",
+  "eligibility": "matched unseen input in an ambiguous block with disjoint class hulls",
+  "fallback": "exact complete CM46 parent on observed, unsupported, refused or uncovered inputs",
+  "confidence_scale": 1.0,
+  "head": "all unchanged actual complex coefficients; mix source features before the complete product",
+  "loss": "ordinary full-vocabulary raw cross-entropy",
+  "new_gradient_batches": 0,
+  "new_optimizer_updates": 0,
+  "modes": "retain original full/minibatch/forward training and all original records and tails",
+  "buffer_limit_bytes": 60129542144,
+  "process_limit_bytes": 68719476736,
+  "scalar_work_limit": 128000000000,
+  "scope": "geometry identifies labels only under convex raw-class realizability; flatness supplies bounds"
+}

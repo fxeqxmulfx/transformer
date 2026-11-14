@@ -6117,3 +6117,20 @@ with zero new gradients in forward-only. Peak RSS is 8.01 GiB under 64 GiB.
 The 334-file completed manifest retains the complete v1 work-cap refusal.
 Exact-commit review must independently reproduce all 117 JSON artifacts and
 the report before approval; no original numerical source is changed.
+
+Task 303 is approved at `71d96c93`. CM48 adds 25 Lean theorems: convex raw-class
+regions and observable same-label input-hull certificates identify covered
+missing labels and transfer actual complex-head margins and ordinary CE.
+Nonzero Fourier witnesses preserve observed rows and bounds; two compatible
+targets still disagree at an uncovered query. Convex target regions remain an
+extra assumption, not a consequence of flatness or observed fit. The native
+INDEX has 4812 modules and 25187 theorems, with 36 sorry and no extra axioms.
+
+Task 304 implements this geometry over the reviewed CM46 source. Integer hull
+membership and rational coordinate certificates replace only uniquely covered
+unseen contexts; intersecting class hulls, missing coverage and unknown axes
+keep the parent. Complete complex products and original head derivatives remain.
+All full/minibatch/forward metadata and repeated/tail records are retained;
+the new fixed context construction adds no gradient or optimizer update.
+Component fixtures and exact review precede a separate frozen all 35 comparison,
+which must retain tasks 296, 298 and 301 results and every earlier failure/baseline.
