@@ -6369,3 +6369,14 @@ case passes95% or99%. The next repair needs shared query-relative input
 programs and generic prefix summaries, with the copy prior and unseen-label
 assumptions proved explicitly before implementation. Preserve this baseline,
 the previous original35 ensemble and tasks317/319's signed-kernel work.
+
+Task320 is approved at `688f5592`. Task321 extends Lean first with CM52: a
+shared canonical copy head over fixed input programs, actual full complex
+products, convex ordinary-CE mixtures and executable training-only filtering.
+Consensus determines accepted unseen symbols only under explicit bank
+realizability. A four-state witness predicts a class absent from training
+labels; a nonseparating observation leaves two flat-code predictions ambiguous.
+All26 new theorems compile without warnings in a13924-job full build. Their
+axiom audit is standard; the global count remains36sorry/0rests/0extra, and
+generated INDEX has4827 modules and25292 theorems. Independent review must
+finish before task322 implements and evaluates a native shared-program repair.

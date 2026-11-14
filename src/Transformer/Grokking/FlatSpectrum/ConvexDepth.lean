@@ -22,6 +22,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.MarginGuard
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RawRegions
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ConvexExclusion
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SignedContext
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedPrograms
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -99,6 +100,11 @@ CM51 permits fixed signed contexts, with absolute-mass normalization preserving
 the source bound and complete-head convex CE. Query error and strict margins
 require separate reference-score residual bounds; an explicit alternative
 target agrees on observations and decoded answers while disagreeing raw.
+CM52 ties a complete complex head to an explicit shared copy decoder over
+fixed input programs. Training-only elimination and input-only consensus
+identify accepted unseen raw symbols under bank realizability. Compatible
+simplex mixtures retain convex ordinary CE and the actual identified logits;
+nonseparating observations still admit opposite predictions with the same code.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/

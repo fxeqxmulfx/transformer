@@ -18613,3 +18613,77 @@ diagnostic work. A source-excluded diagnostic is separate from original training
 CE and is not a refit of latent discovery. No target residual certificate or
 numerical gain is supplied by this proof. A separately frozen original comparison
 must retain every task, both policies, all modes, earlier references and costs.
+
+## CM52. Shared input programs and an explicit copy decoder
+
+The additional sequence comparison at `7a2e2ba4`, reviewed at `688f5592`,
+exposes a representation problem. Its causal-pair component fits all256 MQAR
+training targets but gets only1/128 test targets correct. Of54 test queries
+with a recorded selected-feature state,53 are wrong. Lookup reaches its
+candidate cap; Dyck and blocks have no consistent candidate. This motivates
+query-relative and shared input features. Flatness alone cannot choose them.
+
+Fix a finite bank of input-only programs `p_j : X -> C`, a candidate order,
+and a unitary vocabulary code `U`. A program returns a symbol in the original
+output vocabulary. Use the complete real/imaginary conjugate head
+`H = U* T`, where `T[s,c] = margin * 1[c=s]`. The identity assignment across
+all vocabulary states is an explicit copy prior, including states whose raw
+classes were never observed as labels. It is not inferred from unitarity.
+The program features are the complete row `U[p_j(x), :]`; they do not read
+an output label or a task-specific answer function at prediction time.
+
+Learn a simplex mixture `a` of these fixed feature maps while keeping `H`
+fixed. Expanding the actual complex products gives
+
+```
+z_a(x,c) = sum_j a_j * margin * 1[c = p_j(x)].
+```
+
+CM45 proves convex ordinary full-vocabulary CE in all mixture coefficients.
+The code bounds each mixed real feature coordinate by1, and CFt5 charges the
+entire head to column budget `2*abs(margin)*|C|`. Neither feature construction
+nor the shared head is an independently learned factor. If an input renaming
+commutes with every program and a vocabulary permutation, the actual mixed
+logits commute with that permutation for every mixture. This follows from
+the complete product identity; no permutation property of the Fourier entries
+themselves is assumed.
+
+The executable learner filters the candidate order by all observed
+input/label pairs. `retained` keeps exactly the training-compatible programs.
+At a query, `consensus` returns their common symbol when the retained list is
+nonempty and unanimous; otherwise it returns `none`. `predict` composes these
+two procedures. They receive no unknown target-program index and no held-out
+label. Theorems state the additional structural premise explicitly: the true
+target is some enumerated program on all inputs, and observed labels are
+correct. That program survives, so every accepted consensus is the true raw
+answer. This does not assert acceptance on every query or realizability for
+every stress task. A missing answer cannot be recovered outside the declared
+program family merely because the code is flat.
+
+Observed inconsistencies impose zero-weight constraints on the corresponding
+programs. These linear constraints intersect the simplex in a convex face.
+Any retained program supplies a feasible forward vertex. Every feasible
+mixture has exactly the prescribed finite-margin logits on the observations;
+ordinary training CE therefore cannot distinguish surviving programs. At an
+accepted query, every compatible mixture has the same exact target logits,
+and ordinary CE is `log(1+(|C|-1)*exp(-margin))`. Positive margin gives the
+agreed class a strict advantage. The transfer uses the copy prior, program
+realizability and checked consensus; none of these is supplied by the spectral
+bound. No convergence rate, optimizer success or native accuracy is claimed.
+
+The executable witness supplies two programs on pairs of four-class symbols:
+copy the first coordinate or copy the last. The sole observation `(0,1)->1`
+eliminates the first program. At `(0,3)`, the resulting compatible vertex and
+complete four-state Fourier head place margin24 on raw class3, although3
+never occurred as a training label. Its exact CE is `log(1+3*exp(-24))`.
+With observation `(0,0)->0` instead, both programs survive and disagree at
+the same query. The learner returns `none`; their two feasible vertices give
+opposite actual complex margins using the same flat code and shared head.
+
+Lean: `ConvexDepth/SharedPrograms/{Basic,Learner,Transfer}`. A native repair
+must specify a generic causal program library, test its training consistency,
+retain any failed or ambiguous search, compute the actual complete complex
+products, and charge its search, storage and scoring work. Shared copying is
+a proposed additional prior for retrieval tasks, not a proof that generic
+prefix summaries solve Dyck/blocks or that numerical prediction reaches99%.
+The failed sequence baseline and all original35 comparisons remain frozen.
