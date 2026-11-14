@@ -8,6 +8,7 @@ publish = false
 
 [dependencies]
 convex-stress-calibrated = { path = "../convex_stress_calibrated" }
+convex-stress-causal-pairs = { path = "../convex_stress_causal_pairs" }
 serde = { version = "=1.0.229", features = ["derive"] }
 serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
 sha2 = "=0.11.1"

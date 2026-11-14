@@ -6346,3 +6346,14 @@ and checkpoints are unavailable, so source-derived fingerprints are explicitly
 distinguished from historical artifact reproduction. No new model is scored
 by data preparation. Training-only construction and frozen all-mode comparison
 remain, with99% raw-token and99% exact-sequence goals reported per task.
+
+The data adapter is landed at `a3283cd7`. The next task320 change binds the
+unchanged CFt4/CFt5 causal-pair component with full16, cyclic-mini256 and
+forward0 updates as a baseline for these four additional cases. Eight native
+tests verify training-only construction, all-mode full complex predictions,
+independent replay, refusal retention and separate raw/exact goals. Freeze the
+committed source, release executable and protocol before all four training
+stages, then score and replay every short/long split. The165 historical GPT
+snapshot and original35 selected-model/transformer reports remain separate;
+this component is not the full original35 ensemble. No new score is claimed
+until that frozen comparison completes.

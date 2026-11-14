@@ -1,0 +1,30 @@
+{
+  "name": "additional-sequences-causal-pairs-v1",
+  "scope": "Measure the existing CFt4/CFt5 component on four new cases before extending it; this is not the full original35 selected ensemble",
+  "data_producer_commit": "a3283cd7",
+  "component_base_commit": "07a39ac2f3f533c356be86a5db0bca50d6f01903",
+  "lean": ["CFt4", "CFt5", "CD8"],
+  "context": "maximum training example length, without held-out inputs",
+  "discovery": {"feature_cells":32000000,"visits":200000000,"attempts":250000,"states_per_query":512},
+  "training": [
+    {"mode":"Full","updates":16,"batch":64,"learning_rate":1.0},
+    {"mode":"Mini","updates":256,"batch":64,"learning_rate":0.1},
+    {"mode":"Forward","updates":0,"batch":64,"learning_rate":1.0}
+  ],
+  "minibatch_order": "Original supervised-prefix order; cyclic wrap batches, not epoch-tail batches",
+  "selection": "No held-out candidate selection or early stopping; retain every endpoint and refusal",
+  "initialization": "Complete complex Fourier head, margin24, explicit unknown-state class0; absent query has zero logits",
+  "loss": "ordinary full-vocabulary raw cross-entropy",
+  "original_success": {"metric":"sequence_accuracy","threshold":0.95,"split":"original primary validation"},
+  "new_success": {"raw_token_accuracy":0.99,"exact_sequence_accuracy":0.99,"rule":"both per case and split; primary, test and all held-out probes reported separately"},
+  "training_only_seal": "Write and fsync complete states and SHA256 before any held-out model scoring",
+  "evaluation_work_cap": 2000000000,
+  "memory_limit_bytes": 68719476736,
+  "retained_existing35": {
+    "producer_commit":"9373e8539d09444b371b47088f5fd65072a21054",
+    "review_commit":"b69d8ea02388a6e412b15e31d26811d2dc886d6b",
+    "report_sha256":"c94dc00aefa2086865705578baefddab9e24fe8d4661f63edf761a2f538321f3",
+    "policy":"Unchanged, including conventional transformer, recorded DiffGPT three seeds and every earlier outcome; not rerun by this adapter"
+  },
+  "historical_comparison": "Retain the frozen165 GPT snapshot as a separate reference; historical four-case checkpoints and split fingerprints unavailable"
+}
