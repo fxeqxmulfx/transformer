@@ -1,0 +1,19 @@
+[package]
+name = "convex-stress-raw-exclusion"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+convex-stress-raw-regions = { path = "../convex_stress_raw_regions" }
+convex-stress-shared-roles = { path = "../convex_stress_shared_roles" }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+
+[profile.test]
+opt-level = 2
+
+[profile.release]
+lto = "thin"

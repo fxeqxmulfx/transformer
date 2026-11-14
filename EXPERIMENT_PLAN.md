@@ -6177,3 +6177,17 @@ on a line but their error query lies off that line, so blanket affine extension
 is not justified. The next proof proposal is convex exclusion with an explicit
 closed candidate pool or a correct decoder fiber, followed by a separate native
 comparison. Audit peak RSS was 3.31 GiB; the model remains unchanged.
+
+Task 307 is approved at `26ec2faa`. CM49 proves observable candidate exclusion,
+conditional identification beyond observed hull coverage, actual complete-head
+margin/CE transfer and bounded positive feature mixtures. Its 33 Lean theorems
+include nonzero Fourier exterior examples, a missing-class counterexample and
+an ambiguous gap with a closed pool. Candidate closure and target convexity
+remain explicit hypotheses; the proof does not change benchmark accuracy.
+
+Task 308 implements this exclusion rule in a separate native component. Its
+candidate pool contains every raw label observed in the routed block, with
+closure explicitly unproved. Exact rational conflicts rule out alternatives;
+only one survivor enables a new positive same-label feature mixture. Every
+other parent row, original record and full-head derivative is preserved.
+Component checks and exact review precede a frozen complete original comparison.
