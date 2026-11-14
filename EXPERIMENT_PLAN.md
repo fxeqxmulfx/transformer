@@ -593,6 +593,15 @@ head. The synthetic fixture lowers CE but loses one raw prediction in mini
 and forward, so the separate complete original comparison must retain both
 metrics and every regression after component review.
 
+Task 295 is approved at `a8deaa63`, with eight native tests and exact-commit
+checks. Task 296's prospective adapter pins the complete task293 parent and
+every current CM45 model byte. Eligibility uses only representation and hash;
+original modes, references, records and minibatches must match. Every local
+mixture is sealed before held-out scoring. All 35 tasks, both policies, original
+success thresholds, raw CE/accuracy, unchanged baselines and inherited costs
+remain. The original execution and independent complete reproduction follow
+the committed adapter and frozen protocol before any original CM46 gain claim.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per
