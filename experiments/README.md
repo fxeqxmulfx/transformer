@@ -13,7 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
-| [`convex_stress_context_scale_compare`](convex_stress_context_scale_compare) | Prospective original confidence comparison | Frozen reviewed CM42 tensors and training-only scales; all35 tasks, both policies and complete baselines retained. |
+| [`convex_stress_context_scale_compare`](convex_stress_context_scale_compare/original) | All35 original cases and replays complete; exact-commit review pending | Fibonacci CE falls0.280 to0.166 with raw accuracy97.24% unchanged. Full/mini/forward and both policies retain35/35 primary/auxiliary successes, with every baseline and inherited choice. |
 | [`convex_stress_context_scale`](convex_stress_context_scale) | Reviewed CM43 native component; original evaluation separate | Training-only confidence scaling of the reviewed context features, with unchanged observed logits, batches and coefficient budget. |
 | [`convex_stress_context_compare`](convex_stress_context_compare/original) | All35 original cases, fresh reproduction and exact-commit review pass | Fibonacci raw accuracy improves66.33% to97.24% and CE8.08 to0.280 in full/mini/forward. Both policies retain35/35 primary/auxiliary success; unchanged choices and all baselines remain explicit. |
 | [`convex_stress_context`](convex_stress_context) | CM42 native component; original evaluation separate | Fixed training-only context interpolation distinguishes raw aliases in actual complex heads. Retains original coefficients, observed CE, repeated records and minibatch derivatives; locality remains an additional assumption. |

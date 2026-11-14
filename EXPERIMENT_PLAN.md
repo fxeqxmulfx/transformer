@@ -481,6 +481,16 @@ Other choices remain explicitly inherited. Every changed head must reproduce
 its model bytes and complete metrics; original success, raw accuracy and CE
 are reported together, with all costs and regressions retained under64GiB.
 
+The task287 original run completes all35 cases and numerical replays with
+zero process failures. Training-only selection chooses scale0.5 in every
+prior/supplement head. Fibonacci validation CE improves0.27997472 to0.16604154;
+raw accuracy97.2364% and primary field accuracy99.9362% are unchanged in all
+three modes. Both policies retain35/35 primary and auxiliary success, with
+3fresh/102inherited choices each. Peak RSS780,884KiB remains below64GiB.
+The retained transformer has95.1318% raw accuracy and CE0.23454365 on this
+endpoint. Authored findings live in`convex_stress_context_scale_compare/original`;
+the exact-commit fresh reproduction and review follow before completion.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per
