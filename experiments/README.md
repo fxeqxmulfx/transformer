@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_signed_compare`](convex_stress_signed_compare) | Complete original35 signed-kernel integration | Preserve both policies, every baseline and original success flag; audit raw fixes/regressions and per-task raw99/exact99 in all modes. Task317 checks and freezes the adapter before task319 scores original cases. |
 | [`convex_stress_nested_programs`](convex_stress_nested_programs) | Generic nested summaries; full/mini/forward | Both typed-bracket cases and all four controls reach 100% raw/exact on every short/long split in all modes. A fresh run reproduces all 33 artifacts; complete control states/results stay exact. Original35 remains separate. |
 | [`convex_stress_shared_programs`](convex_stress_shared_programs) | CM52 shared copy programs; full/mini/forward | MQAR and two-hop lookup reach100% raw/exact on every short/long split in all modes; original and fresh repeat match23 artifacts. Dyck/blocks retain six no-program refusals. Original35 comparisons remain separate. |
 | [`convex_stress_latent_programs`](convex_stress_latent_programs) | CM53 training-learned prefix decoders and complete complex heads | All four additional cases reach100% raw/exact on every short/long split in full/mini/forward. Dyck/blocks are repaired; retrieval states/results stay exact. Original and fresh runs reproduce23 artifacts; original35 remains separate. |

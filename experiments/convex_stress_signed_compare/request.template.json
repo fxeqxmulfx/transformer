@@ -1,0 +1,15 @@
+{
+  "producer_commit": "FROZEN_PRODUCER_COMMIT",
+  "parent_root": "/run/media/misha/storage/transformer-runs/crossing-exclusion-compare/original-v1",
+  "completed_manifest": "/home/misha/lean_projects/transformer/.kanban/artifacts/314/completed.sha256",
+  "parent_review_exit": "/home/misha/lean_projects/transformer/.kanban/artifacts/314/review/process.exit",
+  "parent_review_commit": "/home/misha/lean_projects/transformer/.kanban/artifacts/314/review/reviewed.commit",
+  "component_review_exit": "/home/misha/lean_projects/transformer/.kanban/artifacts/316/review/process.exit",
+  "component_review_commit": "/home/misha/lean_projects/transformer/.kanban/artifacts/316/review/reviewed.commit",
+  "local_reference_root": "/run/media/misha/storage/transformer-runs/margin-budget-compare/original-v2",
+  "local_reference_manifest": "/home/misha/lean_projects/transformer/.kanban/artifacts/301/completed-v2.sha256",
+  "local_reference_review_exit": "/home/misha/lean_projects/transformer/.kanban/artifacts/301/review-v2/process.exit",
+  "local_reference_review_commit": "/home/misha/lean_projects/transformer/.kanban/artifacts/301/review-v2/reviewed.commit",
+  "previous_attempt_root": "/run/media/misha/storage/transformer-runs/margin-guard-compare/original-v1",
+  "previous_attempt_manifest": "/home/misha/lean_projects/transformer/.kanban/artifacts/301/failed-v1.sha256"
+}

@@ -6483,3 +6483,15 @@ Depths extend from training maxima 8/6 to held-out 9/11. This is a structural
 representation gain, not an observed CE optimization gain. Complete independent
 review before further integration. Original35 Fibonacci remains near 98%,
 tasks317/319 remain pending, and 124 additional catalog cases remain unscored.
+
+Task326 is approved at `50d3e258`, with six cases at 100% on every split/mode,
+33 exact artifacts and preserved controls/baselines. Task317 now integrates the
+already reviewed CM51 signed-kernel component316 into the complete original35
+comparison. Reread and recheck the existing signed bound first; keep its query
+reference and residual assumptions explicit. Preserve all original success flags,
+both policies, complete histories, raw changes and every older CE tradeoff.
+Report native raw and native exact-sequence 99% separately from field readout.
+The six training-only inspections imply a 4.213T complete-case forecast, so fix
+a prospective 5T allowance while retaining 56 GiB buffers and 64 GiB processes.
+Review and freeze the adapter before task319 scores any original signed model.
+No new Fibonacci accuracy is inferred from the proof, forecast or synthetic tests.

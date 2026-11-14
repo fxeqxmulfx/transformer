@@ -1,0 +1,24 @@
+[package]
+name = "convex-stress-signed-compare"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+convex-stress-signed-kernel = { path = "../convex_stress_signed_kernel" }
+convex-stress-crossing-exclusion-compare = { path = "../convex_stress_crossing_exclusion_compare" }
+convex-stress-relabel = { path = "../convex_stress_relabel" }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+sha2 = "=0.11.1"
+
+[dev-dependencies]
+convex-stress-shared-roles = { path = "../convex_stress_shared_roles" }
+
+[profile.test]
+opt-level = 2
+
+[profile.release]
+lto = "thin"
