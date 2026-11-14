@@ -613,6 +613,16 @@ Peak replay RSS is3.10GiB under64GiB. Authored findings retain every tradeoff,
 all baseline/cost evidence and the interrupted pre-evaluation launcher. Complete
 independent reproduction and exact-commit review follow before approval.
 
+Task296 is approved at `96aee0fc`: fresh complete preparation,35cases and
+35replays reproduce115JSON artifacts and the report exactly. Task297 tests
+stronger coefficient sharing under the existing generic CM46 proof. Five
+fixed class-count profiles replace separate source-block gates; count profiles
+exclude the query's unique observed source state and ignore raw-label numeric
+names. The CM45 anchor,91-map bank,radius0.5,head and ordinary CE optimizer stay
+fixed. Ten native tests cover boundaries,exclusion/repeats,renaming,shared actual
+complex blocks and original modes/gradients. A separate full original comparison
+must retain CM46's negative CE result and all baselines after component review.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per
