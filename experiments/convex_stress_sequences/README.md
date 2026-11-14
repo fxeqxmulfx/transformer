@@ -5,8 +5,10 @@ MQAR, two-hop lookup, Dyck prefixes and alternating blocks. The user's target
 is at least 99% held-out raw-token and exact-sequence accuracy per task. Retain
 each original 95% success flag, ordinary cross-entropy and longer probes as
 separate measurements. The native data adapter was committed at `a3283cd7`.
-This next change connects the unchanged CFt4/CFt5 causal-pair component as a
-baseline for the expansion; no new model result is claimed before its frozen run.
+The comparison at `7a2e2ba4` connects the unchanged CFt4/CFt5 causal-pair
+component as a baseline for the expansion. Its four-case run and a fresh
+independent run now reproduce all23 JSON artifacts byte-for-byte. None of
+these four additional cases reaches its original success or the new99% goal.
 
 The four definitions and split sizes are fixed by
 `../convex_stress_catalog/protocol.json`. The original reference sources are
@@ -90,6 +92,44 @@ their conventional/DiffGPT baselines remain frozen. The separate historical165
 GPT snapshot is retained verbatim: its two-layer width64 model used batches
 of32 examples and a different optimization budget. These are not matched
 compute comparisons or replays of those unavailable historical checkpoints.
+
+The frozen seed1 comparison retains all12 case/mode outcomes: two scored
+MQAR endpoints and ten bounded refusals, with zero process failures.
+
+| Case | Full | Mini | Forward |
+| --- | --- | --- | --- |
+| MQAR | Test raw1/128; exact0/64; CE23.8125000063 | Existing2B training-work cap | Test raw1/128; exact0/64; CE23.8125000062 |
+| Two-hop lookup | Candidate trace cap | Candidate trace cap | Candidate trace cap |
+| Dyck prefixes | No consistent candidate | No consistent candidate | No consistent candidate |
+| Alternating blocks | No consistent candidate | No consistent candidate | No consistent candidate |
+
+MQAR full and forward fit all256 training targets, with CE about6.15e-9.
+Their primary validation is0/64 tokens and0/32 exact sequences. Length48 test
+is0/128 tokens; length96 test is1/128, both0/64 exact sequences. The ordinary
+test has54 known feature states:53 are wrong. All74 unknown-state targets are
+also wrong. This directly separates spurious selected features from missing
+state coverage; filling only unseen states would leave53 errors. Full training
+performs16 gradient batches and4096 gradient examples. Forward has zero
+gradient batches, derivative terms and coefficient updates. The minibatch
+forecast refusal is not an out-of-memory event.
+
+Lookup exhausts250000 candidate attempts after514056 observation visits.
+For Dyck and blocks, all13041 single/pair candidates fail on the first query
+group. These observations motivate shared query-relative retrieval programs
+and richer generic prefix summaries, not merely a larger search budget. Any
+copy decoder is an explicit structural prior beyond flatness. Extend the
+Lean account before claiming that it determines unseen raw labels; retain
+this failed baseline while testing any repair.
+
+The original run's largest measured RSS is53388KiB (about52.1MiB), well below
+64GiB; its model binding forecasts about24.8GiB including worst-case copies.
+Artifacts live on the storage disk in `stress-sequences/original-v1` and
+`stress-sequences/fresh-review-v1`. The source/executable freeze is
+`freezes/stress-sequences-v1` (373 tracked inputs, including Cargo's actual
+compiled dependency paths). Both complete reports have SHA256
+`65620f0757ae3c57ece3d23e3ed6fb464e05484f9b055dc335e9694f09f7ff7b`.
+These measurements add four evaluated cases;126 of the130 additional catalog
+cases remain unmeasured by this model. Original35 results are unchanged.
 
 ```sh
 export CARGO_TARGET_DIR=/run/media/misha/storage/transformer-runs/build/shared-roles

@@ -6357,3 +6357,15 @@ stages, then score and replay every short/long split. The165 historical GPT
 snapshot and original35 selected-model/transformer reports remain separate;
 this component is not the full original35 ensemble. No new score is claimed
 until that frozen comparison completes.
+
+Task320's frozen producer `7a2e2ba4` and a fresh complete run now reproduce
+all23 JSON artifacts byte-for-byte (report `65620f07…9f7ff7b`). Of12 outcomes,
+MQAR full/forward score1/128 test tokens and0/64 exact sequences despite
+256/256 training tokens; mini hits the existing2B work cap. Lookup exhausts
+250000 discovery attempts, while Dyck/blocks have no consistent candidate in
+the bounded single/pair feature library. All10 refusals and all longer probes
+are retained, with no process failure or OOM (peak53388KiB RSS). No additional
+case passes95% or99%. The next repair needs shared query-relative input
+programs and generic prefix summaries, with the copy prior and unseen-label
+assumptions proved explicitly before implementation. Preserve this baseline,
+the previous original35 ensemble and tasks317/319's signed-kernel work.
