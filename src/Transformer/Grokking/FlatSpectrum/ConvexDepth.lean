@@ -20,6 +20,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextMixture
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.GatedContext
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.MarginGuard
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RawRegions
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ConvexExclusion
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -88,6 +89,11 @@ CM48 adds an explicit convex raw-class region hypothesis and observable
 same-label input-hull certificates. They identify covered missing raw labels
 and transfer actual complex-head margins and ordinary CE. The original feature
 and coefficient bounds remain; uncovered queries can still be ambiguous.
+CM49 excludes candidate raw labels using conflicts between augmented and
+observed class hulls. With a separate candidate-pool or correct decoder-fiber
+premise, this identifies some exterior queries. Positive source mixtures
+retain complete-head margins, ordinary CE and bounds; counterexamples retain
+the limits of pool closure and ambiguous gaps.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/

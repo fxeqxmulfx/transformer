@@ -18424,3 +18424,54 @@ records/modes, and charge hull construction and complete complex products.
 Numerical inclusion tolerances cannot silently become exact certificates.
 A separately frozen complete original comparison remains required; CM48
 alone claims no benchmark improvement or discovery of convex target regions.
+
+## CM49. Identify uncovered labels by convex exclusion
+
+CM48 identifies labels inside observed same-class hulls. Outside those hulls,
+additional observations can still rule out candidate labels. Fix the same
+observed points and raw labels, an unknown target fitting them, and convex
+regions for every raw class. For a query `x` and candidate `c`, suppose that
+`convexHull(P_c ∪ {x})` intersects `convexHull(P_d)` for some `d != c`.
+If `target(x)=c`, the entire first hull lies in class `c`; the second lies in
+class `d`. Their intersection is a contradiction. Thus this observable
+geometric certificate excludes `c` without supplying the missing answer.
+An observed point of class `d` inside the augmented candidate hull suffices.
+
+Now fix an admissible candidate pool containing the unknown query label. If
+such certificates exclude every candidate except `a`, the query label is `a`.
+A correct many-to-one decoder fiber is one possible pool. Using only locally
+observed labels requires a separate closed-world assumption. Neither decoder
+correctness nor pool closure follows from flatness or observed fit. Without
+a pool restriction, a previously unobserved raw class can remain possible.
+
+For observations `(-3,-1,1,3)` with labels `(0,0,2,2)`, take the pool `{0,2}`.
+The query `-4` lies outside every observed class hull. Assigning it class2
+would make the segment from `-4` to the observed class2 point `1` contain the
+observed class0 point `-3`: weights `(4/5,1/5)` certify this. Hence its label is
+class0. The symmetric certificate identifies class2 at `4`. Both conclusions
+hold for every compatible convex-region target with the stated candidate pool.
+
+The pool premise matters. A compatible target can introduce class1 on the
+half-line `x < -7/2`, retain class0 on `[-7/2,0]` and class2 on `(0,infinity)`.
+All class regions are convex and all observations unchanged, but its label at
+`-4` differs. Conversely, even with the closed pool, the CM48 targets cutting
+at `0` and `1/2` disagree at `1/4`. Candidate closure alone does not identify
+every uncovered point; the exclusion certificates do substantive work.
+
+After identification, use a fixed nonnegative unit-mass mixture of observed
+source features bearing the surviving label. These prediction weights need
+not reproduce the query input coordinate: input geometry has already supplied
+a separate identifying certificate. The actual complete head then transfers
+source margins and ordinary full-vocabulary CE by CM42. The same flat-source
+coordinate bound and complete head budget apply. This does not use signed
+affine interpolation weights or assume that observed collinearity determines
+unknown class regions. Dirac rows at observed inputs preserve the original
+objective and complete-head derivatives, including repeated records and tails.
+
+A native extension must verify the candidate pool, augmented-hull certificates,
+source identities, query role and fallback decisions from the frozen inputs;
+where pool membership is a structural assumption rather than a proved fact,
+that distinction must remain explicit. It must preserve observed rows, charge
+all candidate tests and actual complex products, and use ordinary CE. A
+separate frozen comparison must retain all earlier results, including failures.
+No new benchmark accuracy follows from CM49 alone.
