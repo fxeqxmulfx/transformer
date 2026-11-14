@@ -95,6 +95,10 @@ fn native_source_fingerprint_matches_reviewed_parent_and_fixed_protocol() -> Res
     assert_eq!(p["case_scalar_work_limit"], CASE_WORK_CAP);
     assert_eq!(p["case_buffer_limit_bytes"], CASE_BUFFER_LIMIT);
     assert_eq!(p["per_component_scalar_work_limit"], head::WORK_LIMIT);
+    assert_eq!(
+        p["old_and_new_metric_scalar_work_limit_per_endpoint"],
+        METRIC_WORK_CAP
+    );
     Ok(())
 }
 

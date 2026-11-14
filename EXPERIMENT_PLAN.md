@@ -6495,3 +6495,16 @@ The six training-only inspections imply a 4.213T complete-case forecast, so fix
 a prospective 5T allowance while retaining 56 GiB buffers and 64 GiB processes.
 Review and freeze the adapter before task319 scores any original signed model.
 No new Fibonacci accuracy is inferred from the proof, forecast or synthetic tests.
+
+Task317 is approved at `1bbbe27f`. Task319's first complete attempt preserves
+34 successful unchanged runs/replays and one Fibonacci refusal. Before any new
+model seal or held-out score, the real raw/field/audit forecast requires
+101,001,277,440 units per endpoint, exceeding the reserved64B. The prior
+prospective command had checked the reservation without verifying that input
+layout. Correct it to share the runtime call counter and check all56,448 calls
+per endpoint from the frozen generator. Reserve128B per endpoint prospectively;
+4,323,846,694,320 actual forecast and4,404,842,862,000 reserved units still fit
+the original5T case allowance. Preserve all324 failed-attempt artifacts and its
+complete35-case record in new reports. Freeze and independently check this cost
+repair before rerunning; kernels, model selection, head coefficients and the
+64GiB memory limit do not change. No new signed accuracy is available yet.

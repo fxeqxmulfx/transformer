@@ -42,6 +42,7 @@ const PROTOCOL: &str = include_str!("../protocol.json");
 const SUITE: &str = include_str!("../../convex_stress/suite.json");
 const CASE_WORK_CAP: u64 = 5_000_000_000_000;
 const CASE_BUFFER_LIMIT: u64 = 56 * 1024 * 1024 * 1024;
+const METRIC_WORK_CAP: u64 = 128_000_000_000;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -59,6 +60,8 @@ pub struct Request {
     pub local_reference_review_commit: PathBuf,
     pub previous_attempt_root: PathBuf,
     pub previous_attempt_manifest: PathBuf,
+    pub signed_attempt_root: PathBuf,
+    pub signed_attempt_manifest: PathBuf,
 }
 
 pub fn fingerprint() -> String {

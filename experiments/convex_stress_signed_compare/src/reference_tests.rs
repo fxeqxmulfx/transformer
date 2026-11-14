@@ -112,6 +112,8 @@ fn reference_requires_review_manifest_and_every_artifact_to_match() -> Result<()
     fs::write(dir.join("review.exit"), "0\n")?;
     fs::write(dir.join("review.commit"), "reviewed\n")?;
     let request = Request {
+        signed_attempt_root: PathBuf::new(),
+        signed_attempt_manifest: PathBuf::new(),
         producer_commit: "a".repeat(40),
         parent_root: PathBuf::new(),
         completed_manifest: PathBuf::new(),

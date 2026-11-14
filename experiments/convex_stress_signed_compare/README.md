@@ -65,21 +65,25 @@ accuracy never replaces the per-task requirement.
 
 The prospective bounds use the six already reviewed training-only inspections,
 SHA256 `46f05261a1f87ac80b0dcf20021d1314975a9a4dae052c985b8c702b77bfcd8a`.
-Their total construction forecast is 1,340,280,954,000 units per pass. Reserving
-three complete passes plus three 64B metric/audit caps requires 4,212,842,862,000
-units, exceeding the old 4T allowance. The new **5T case allowance is fixed
-before original scoring**. Component limits remain 256B, metric/audit limits
-64B per endpoint, buffers 56 GiB, and process address space 64 GiB. The largest
+Their total construction forecast is 1,340,280,954,000 units per pass. The frozen
+original input layout requires 56,448 metric/audit calls per endpoint: raw and
+field metrics for both models, plus both independent raw audit products. At
+1,789,280 units per call this is 101,001,277,440 units per endpoint. Three complete
+construction passes and all metrics total 4,323,846,694,320 units. Reserving
+128B per endpoint gives 4,404,842,862,000 units, within the **5T case allowance
+fixed before original scoring**. Component limits remain 256B, buffers 56 GiB,
+and process address space 64 GiB. The largest
 paired endpoint buffer forecast is 22,586,405,888 bytes (about 21.04 GiB).
 At least 16 GiB free storage is required. These are conservative work forecasts,
 not measured FLOPs or proofs about the allocator. Repeated construction,
 diagnostic optimization, original records and all metric/audit calls are charged.
 
-All 21 synthetic adapter checks pass, using actual full/minibatch/forward source histories,
+All 22 adapter checks pass, using actual full/minibatch/forward source histories,
 45 repeated records and a five-record tail. They exercise changed signed rows,
 negative weights, complete complex metrics, held-out independence, disk sealing,
 source/state mutations, both policies, historical regressions, native count
-semantics and prospective limits. The separately reviewed component supplies
+semantics and prospective limits. The added regression check verifies the
+complete original field layout without predicting any new answer. The separately reviewed component supplies
 the independent kernel solves, gradients and normalization checks. No original
 signed-model accuracy is inferred from synthetic checks or the Lean bound.
 
@@ -105,12 +109,28 @@ task301 guarded reference directory, manifest and review files; and its earlier
 failed-attempt directory/manifest. All identities are pinned by `protocol.json`.
 The frozen source closure and executable must precede any original signed-model
 score. Generated results stay on storage outside the temporary worktree.
-The template records the current local evidence locations; replace its producer
+The template also pins the failed first signed attempt and its complete manifest.
+It records the current local evidence locations; replace its producer
 field from the freeze as shown above. The native forecast reproduces the exact
-4,212,842,862,000-unit and 22,586,405,888-byte bounds without scoring any new model.
+4,404,842,862,000-unit reservation and 22,586,405,888-byte bound without scoring
+any new model. It uses the reviewed inspection plus original generator input
+layout; no held-out label or score selects a model or changes its parameters.
 The full 13932-job Lean build, global 36sorry/0rests/0extra audit, native INDEX,
 formatting, clippy, release and forbidden-source checks pass. No Lean source or
 generated INDEX content changes in this adapter.
 Task317 requires adapter review first; task319 then evaluates all 35 cases and
 replays them. The current Fibonacci result remains approximately 98% raw until
 those original measurements establish otherwise.
+
+The initial task319 run at `1bbbe27f` attempted all35 cases. Its 34 unchanged
+cases ran and replayed successfully. Fibonacci refused the old 64B metric
+allowance before saving a new model or scoring a held-out answer, so a complete
+success summary was refused. The failure exposes an incomplete prospective
+check: it reserved a cap without verifying the actual raw/field/audit call count.
+The corrected forecast above shares the runtime counting function and checks
+each endpoint before scoring. The 49 kernels, selection, coefficients, data,
+5T case cap and memory cap are unchanged. All324 files of the failed attempt
+remain pinned and its complete35-case failure record is carried into new reports.
+The failing process peaked at3,210,804 KiB RSS; it was not an OOM. An earlier
+driver invocation failed because the shell file lacked an executable bit; that
+log is preserved and both documented shell entry points are now executable.

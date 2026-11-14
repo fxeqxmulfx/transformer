@@ -7,7 +7,7 @@ then error("incomplete exclusion comparison") else . end |
  prior_mixture_costs,prior_gated_costs,prior_region_costs,prior_region_reference,changes,
  prior_exclusion_costs,prior_exclusion_reference,changes_vs_exclusion_reference,
  prior_crossing_costs,prior_crossing_reference,changes_vs_crossing_reference,
- prior_local_reference,previous_refused_attempt,changes_vs_guarded_reference,changes_vs_region_reference,
+ prior_local_reference,previous_refused_attempt,signed_refused_attempt,changes_vs_guarded_reference,changes_vs_region_reference,
  conventional_transformer_endpoints:(.baselines.transformer_endpoints|length),
  depth_outcomes:(.baselines.depth_outcomes|length),
  arms:[.arms[]|{initializer,by_mode,full35_pass,all_split_diagnostic_pass}],

@@ -31,6 +31,30 @@ fn examples(examples: &[data::Example], vocab: usize) -> Result<()> {
     Ok(())
 }
 
+/// Both parent/new metric paths score raw tokens and, when present, field
+/// readout. The independent raw transition audit makes two further calls.
+/// Only input layout and field presence determine this count, not answers.
+pub(crate) fn metric_calls(task: &data::Task) -> Result<u64> {
+    let mut calls = 0u64;
+    for split in task.splits.values() {
+        examples(split, task.vocab)?;
+        for example in split {
+            calls = calls
+                .checked_add(4 + 2 * u64::from(example.field.is_some()))
+                .ok_or("metric call overflow")?;
+        }
+    }
+    Ok(calls)
+}
+
+pub(crate) fn metric_work(calls: u64, per_call: u64) -> Result<u64> {
+    let work = calls.checked_mul(per_call).ok_or("metric-work overflow")?;
+    if work > METRIC_WORK_CAP {
+        return Err(format!("metric forecast {work} exceeds {METRIC_WORK_CAP} work units").into());
+    }
+    Ok(work)
+}
+
 impl Model {
     pub(crate) fn construct(
         value: Value,
@@ -130,15 +154,6 @@ impl Model {
             "new_gradient_batches":self.models().map(|m|m.work().gradient_batches).sum::<usize>()})
     }
     pub(crate) fn forecast(&self, task: &data::Task) -> Result<u64> {
-        let mut calls = 0;
-        for split in task.splits.values() {
-            examples(split, task.vocab)?;
-            calls += 2 * split
-                .iter()
-                .map(|e| 1 + u64::from(e.field.is_some()))
-                .sum::<u64>();
-            calls += 2 * split.len() as u64;
-        }
         // Both complete metric paths plus two additional complete products for
         // each raw-transition audit. Every route uses at most this forecast.
         let per_call = self
@@ -146,11 +161,7 @@ impl Model {
             .map(|m| m.bounds().prediction_scalar_work_per_query)
             .max()
             .ok_or("empty context")?;
-        let work = calls.checked_mul(per_call).ok_or("metric-work overflow")?;
-        if work > 64_000_000_000 {
-            return Err("context metric forecast exceeds64B work units".into());
-        }
-        Ok(work)
+        metric_work(metric_calls(task)?, per_call)
     }
     pub(crate) fn audit(&self, split: &[data::Example]) -> Result<Value> {
         examples(split, self.prior.source().vocabulary)?;

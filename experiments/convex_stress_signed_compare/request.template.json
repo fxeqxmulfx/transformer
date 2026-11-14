@@ -11,5 +11,7 @@
   "local_reference_review_exit": "/home/misha/lean_projects/transformer/.kanban/artifacts/301/review-v2/process.exit",
   "local_reference_review_commit": "/home/misha/lean_projects/transformer/.kanban/artifacts/301/review-v2/reviewed.commit",
   "previous_attempt_root": "/run/media/misha/storage/transformer-runs/margin-guard-compare/original-v1",
-  "previous_attempt_manifest": "/home/misha/lean_projects/transformer/.kanban/artifacts/301/failed-v1.sha256"
+  "previous_attempt_manifest": "/home/misha/lean_projects/transformer/.kanban/artifacts/301/failed-v1.sha256",
+  "signed_attempt_root": "/run/media/misha/storage/transformer-runs/signed-compare/original-v1",
+  "signed_attempt_manifest": "/home/misha/lean_projects/transformer/.kanban/artifacts/319/failed-v1.sha256"
 }

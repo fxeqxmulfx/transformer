@@ -8,22 +8,44 @@ fn exit_code(path: &Path, files: &BTreeMap<String, String>) -> Result<i32> {
 }
 
 pub(crate) fn prepare(request: &Request, protocol: &Value) -> Result<Value> {
-    let root = &request.previous_attempt_root;
+    inspect(
+        &request.previous_attempt_root,
+        &request.previous_attempt_manifest,
+        protocol,
+        "previous_attempt",
+        1,
+    )
+}
+
+pub(crate) fn prepare_signed(request: &Request, protocol: &Value) -> Result<Value> {
+    inspect(
+        &request.signed_attempt_root,
+        &request.signed_attempt_manifest,
+        protocol,
+        "signed_attempt",
+        0,
+    )
+}
+
+fn inspect(
+    root: &Path,
+    manifest: &Path,
+    protocol: &Value,
+    prefix: &str,
+    models: usize,
+) -> Result<Value> {
     if !root.is_absolute() {
         return Err("absolute previous-attempt root required".into());
     }
-    let files = parent::read_manifest(
-        &request.previous_attempt_manifest,
-        &protocol["previous_attempt_manifest_sha256"],
-    )?;
+    let files = parent::read_manifest(manifest, &protocol[format!("{prefix}_manifest_sha256")])?;
     for path in files.keys() {
         parent::pinned(Path::new(path), &files)?;
     }
     let inventory = root.join("inventory.json");
     parent::pinned(&inventory, &files)?;
     let inv: Value = read(&inventory)?;
-    if inv["request"]["producer_commit"] != protocol["previous_attempt_producer"]
-        || inv["source_fingerprint"] != protocol["previous_attempt_source_fingerprint"]
+    if inv["request"]["producer_commit"] != protocol[format!("{prefix}_producer")]
+        || inv["source_fingerprint"] != protocol[format!("{prefix}_source_fingerprint")]
     {
         return Err("previous attempt source identity differs".into());
     }
@@ -83,7 +105,7 @@ pub(crate) fn prepare(request: &Request, protocol: &Value) -> Result<Value> {
     let summary_exit = exit_code(&root.join("summary.exit"), &files)?;
     if successful_runs != 34
         || successful_replays != 34
-        || stored_models.len() != 1
+        || stored_models.len() != models
         || summary_exit == 0
     {
         return Err("previous refused-attempt accounting differs".into());
@@ -92,9 +114,9 @@ pub(crate) fn prepare(request: &Request, protocol: &Value) -> Result<Value> {
         json!({"status":"failed_work_forecast_before_complete_selection","tasks":35,
         "successful_runs":successful_runs,"successful_replays":successful_replays,
         "summary_exit":summary_exit,"new_heldout_metrics_available":false,
-        "producer_commit":protocol["previous_attempt_producer"],
-        "source_fingerprint":protocol["previous_attempt_source_fingerprint"],
-        "manifest":request.previous_attempt_manifest,"manifest_sha256":protocol["previous_attempt_manifest_sha256"],
+        "producer_commit":protocol[format!("{prefix}_producer")],
+        "source_fingerprint":protocol[format!("{prefix}_source_fingerprint")],
+        "manifest":manifest,"manifest_sha256":protocol[format!("{prefix}_manifest_sha256")],
         "records":records,"stored_models":stored_models}),
     )
 }

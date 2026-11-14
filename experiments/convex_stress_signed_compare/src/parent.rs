@@ -54,6 +54,7 @@ pub(crate) fn inventory(root: &Path) -> Result<Value> {
         || seal["parent_snapshot_sha256"] != digest(&root.join("parent-snapshot.json"))?
         || seal["local_reference_sha256"] != digest(&root.join("local-reference.json"))?
         || seal["previous_attempt_sha256"] != digest(&root.join("previous-attempt.json"))?
+        || seal["signed_attempt_sha256"] != digest(&root.join("signed-attempt.json"))?
     {
         return Err("prepared snapshot or inventory changed".into());
     }
@@ -112,6 +113,7 @@ pub fn prepare(root: &Path, request: Request) -> Result<()> {
     let files = manifest(&request)?;
     let local_reference = reference::prepare(&request, &p)?;
     let previous_attempt = attempt::prepare(&request, &p)?;
+    let signed_attempt = attempt::prepare_signed(&request, &p)?;
     let suite: Value = serde_json::from_str(SUITE)?;
     let tasks: Vec<String> = suite["tasks"]
         .as_array()
@@ -190,6 +192,7 @@ pub fn prepare(root: &Path, request: Request) -> Result<()> {
     write(&root.join("parent-snapshot.json"), &snapshot)?;
     write(&root.join("local-reference.json"), &local_reference)?;
     write(&root.join("previous-attempt.json"), &previous_attempt)?;
+    write(&root.join("signed-attempt.json"), &signed_attempt)?;
     write(
         &root.join("inventory.json"),
         &json!({"request":request,"protocol":p,
@@ -202,6 +205,7 @@ pub fn prepare(root: &Path, request: Request) -> Result<()> {
         "inventory_sha256":digest(&root.join("inventory.json"))?,
         "parent_snapshot_sha256":digest(&root.join("parent-snapshot.json"))?,
         "local_reference_sha256":digest(&root.join("local-reference.json"))?,
-        "previous_attempt_sha256":digest(&root.join("previous-attempt.json"))?}),
+        "previous_attempt_sha256":digest(&root.join("previous-attempt.json"))?,
+        "signed_attempt_sha256":digest(&root.join("signed-attempt.json"))?}),
     )
 }

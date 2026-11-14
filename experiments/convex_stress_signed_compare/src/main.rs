@@ -9,7 +9,7 @@ fn main() -> convex_stress_signed_kernel::Result<()> {
         ["run-case",root,task] => runner::run_case(Path::new(root),task)?,
         ["replay-case",root,task] => println!("{}",serde_json::to_string(&runner::replay_case(Path::new(root),task)?)?),
         ["summarize",root] => println!("{}",serde_json::to_string(&runner::summarize(Path::new(root))?)?),
-        _ => return Err("usage: fingerprint | prepare ROOT REQUEST | run-case ROOT TASK | replay-case ROOT TASK | summarize ROOT".into()),
+        _ => return Err("usage: fingerprint | forecast INSPECTION | prepare ROOT REQUEST | run-case ROOT TASK | replay-case ROOT TASK | summarize ROOT".into()),
     }
     Ok(())
 }

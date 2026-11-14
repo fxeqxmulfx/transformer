@@ -216,6 +216,7 @@ pub fn summarize(root: &Path) -> Result<Value> {
     summary["changes_vs_guarded_reference"] = json!(reference_differences(&summary, &reference)?);
     summary["prior_local_reference"] = reference;
     summary["previous_refused_attempt"] = read(&root.join("previous-attempt.json"))?;
+    summary["signed_refused_attempt"] = read(&root.join("signed-attempt.json"))?;
     summary["inventory_sha256"] = json!(digest(&root.join("inventory.json"))?);
     summary["producer_commit"] = inv["request"]["producer_commit"].clone();
     Ok(summary)

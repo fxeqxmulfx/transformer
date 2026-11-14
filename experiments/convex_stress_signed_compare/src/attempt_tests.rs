@@ -59,6 +59,8 @@ fn refused_attempt_keeps_all_jobs_the_partial_model_and_missing_replay_reason() 
         .join("");
     fs::write(&manifest, text)?;
     let request = Request {
+        signed_attempt_root: root.clone(),
+        signed_attempt_manifest: manifest.clone(),
         producer_commit: String::new(),
         parent_root: PathBuf::new(),
         completed_manifest: PathBuf::new(),
@@ -94,6 +96,29 @@ fn refused_attempt_keeps_all_jobs_the_partial_model_and_missing_replay_reason() 
     let mut bad = p;
     bad["previous_attempt_source_fingerprint"] = json!("other");
     assert!(attempt::prepare(&request, &bad).is_err());
+    // The signed refusal occurred before any model seal. It must still retain
+    // all35 attempts and the missing replay, without inventing a checkpoint.
+    let saved = root.join(tasks[0].as_str().unwrap()).join("model-0.json");
+    fs::remove_file(&saved)?;
+    paths.retain(|p| p != &saved);
+    fs::write(
+        &manifest,
+        paths
+            .iter()
+            .map(|p| Ok(format!("{}  {}\n", digest(p)?, p.display())))
+            .collect::<Result<Vec<_>>>()?
+            .join(""),
+    )?;
+    let signed_protocol = json!({"signed_attempt_manifest_sha256":digest(&manifest)?,
+        "signed_attempt_producer":"old","signed_attempt_source_fingerprint":"source"});
+    let signed = attempt::prepare_signed(&request, &signed_protocol)?;
+    assert_eq!(signed["successful_runs"], 34);
+    assert_eq!(signed["successful_replays"], 34);
+    assert_eq!(signed["stored_models"], json!([]));
+    assert_eq!(signed["records"].as_array().unwrap().len(), 35);
+    assert_eq!(signed["new_heldout_metrics_available"], false);
+    fs::write(&paths[0], "0\n")?;
+    assert!(attempt::prepare_signed(&request, &signed_protocol).is_err());
     fs::remove_dir_all(root)?;
     Ok(())
 }
