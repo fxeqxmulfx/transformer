@@ -27,8 +27,13 @@ read -r -a dependencies < "$binary.d"
 for dependency in "${dependencies[@]:1}"; do
     included=$(realpath -e "$dependency")
     if [[ "$included" == "$work/"* ]]; then
-        git ls-files --error-unmatch "${included#"$work/"}" > /dev/null
-        printf '%s\n' "${included#"$work/"}" >> "$freeze/source-paths.unsorted"
+        if [[ -d "$included" ]]; then
+            # Build scripts can declare a source directory as a dependency.
+            git ls-files -- "${included#"$work/"}" >> "$freeze/source-paths.unsorted"
+        else
+            git ls-files --error-unmatch "${included#"$work/"}" > /dev/null
+            printf '%s\n' "${included#"$work/"}" >> "$freeze/source-paths.unsorted"
+        fi
     fi
 done
 sort -u "$freeze/source-paths.unsorted" > "$freeze/source-paths.txt"
