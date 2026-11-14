@@ -411,6 +411,19 @@ has not yet been evaluated on the original suite.
 
 ## Recovered comparison queues (2026-11-13)
 
+Task266 supplies the complete CM38 adapter after the268 long-domain correction.
+It preserves both task261 initializer arms, then declares separate transformed
+arms using each selected causal head's exact immutable predecessor. Actual
+causal histories, original record order/multiplicity and raw CE are replayed;
+every supported input keeps exact candidate logits. Native tests retain all35
+tasks/105choices, both policies, primary success despite auxiliary failure,
+long prefixes, original Counts bytes, absolute/relative checkpoint bindings,
+corruption, refused imports and failed processes. Both heads and the retained
+history receive memory forecasts; all original costs and per-call support and
+exact-input masks remain. Task267 waits for reviewed261 and266, then freezes
+source, executable, request and protocol before any original fallback metric.
+No benchmark pass or raw-CE selector change follows from these native fixtures.
+
 Task246 has completed all35 original refined-comparison cases and their first
 independent replays without process failures. Its18 available prime97 endpoints
 all pass original primary and auxiliary metrics, but none improves the selected

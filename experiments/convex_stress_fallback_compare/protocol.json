@@ -1,0 +1,49 @@
+{
+  "version": "fixed-support-complete-comparison-v1",
+  "proof_commit": "16e34b2fa661b98ef1dc15992922f8a31646bced",
+  "core_commit": "027237cdddde7f8b4019501b26d52f0f270b1001",
+  "memory_limit_bytes": 68719476736,
+  "minimum_disk_reserve_bytes": 17179869184,
+  "discovery": {
+    "feature_cells": 32000000,
+    "visits": 200000000,
+    "attempts": 250000,
+    "states_per_query": 512
+  },
+  "training": [
+    {
+      "mode": "Full",
+      "updates": 16,
+      "batch": 64,
+      "learning_rate": 1.0
+    },
+    {
+      "mode": "Mini",
+      "updates": 256,
+      "batch": 64,
+      "learning_rate": 0.1
+    },
+    {
+      "mode": "Forward",
+      "updates": 0,
+      "batch": 64,
+      "learning_rate": 1.0
+    }
+  ],
+  "selection": "Retain the complete reviewed261 parent arms and their observed-CE choices. In two separate transformed initializer arms, wrap each selected causal head with its exact saved predecessor when importable and when every original supervised prefix has identical raw logits and CE. Seal structural transformations before metrics. Refusals or failed processes retain the original selected model. Never choose from held-out performance.",
+  "scope": "All35 original tasks, two105-choice initializer policies, full/minibatch/forward,35 transformer endpoints and336 depth outcomes. Existing discovery and all ancestor construction costs are retained once. No new optimizer or discovery.",
+  "evaluation": "Original full-split metrics and pooling/greedy rollout. Retain supported, unsupported and exact-observed-input masks in prediction-call order. Forecast both heads under2B scalar work per endpoint. Every refusal/failure remains; primary99percent success is decisive, auxiliary metrics are diagnostics.",
+  "limitation": "CM38 preserves the frozen predecessor outside observed support. It does not identify supported unseen answers or guarantee held-out nonregression; original strict-CE selection remains unchanged in the baseline arms.",
+  "parent": {
+    "producer_commit": "d341fdf86aefcce7aa71ce978821aed4af9ab74a",
+    "source_fingerprint": "291dac2098e16960708d8bfd0b8ddd48687cc9bc3b94f6df307477e3272b5266",
+    "binary_sha256": "6a626903f6f269d0fd23a3acb4d02befb226e191e5f0e5216825b64c8db8e0ac"
+  },
+  "staging": {
+    "producer_commit": "b516af90296f7f26aaeb8d6af2d9ad32e0e12c2b",
+    "source_fingerprint": "f3a1ca48ff6e8a0e91db4cf7443187886381e74a74e72c08005b331d6c4d8b54",
+    "binary_sha256": "fbb6ee1566a7191ff293ae2f8c9e052a1f8e1ec434c438a55338ac42e435abc5",
+    "summary_sha256": "4e717b8233c3161b780e13f4f184a58090711492e01062c1a790ebb1a46caa69",
+    "inventory_sha256": "deca9673630ab94435fd72d101b0040e8c6e65ec74929b58288ca904086e7f2c"
+  }
+}
