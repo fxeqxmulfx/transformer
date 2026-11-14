@@ -411,6 +411,15 @@ has not yet been evaluated on the original suite.
 
 ## Recovered comparison queues (2026-11-13)
 
+Task 280 reuses the reviewed 276 comparison source with the reviewed CM41
+partial-parent wrapper. The original selector and same-field shared-role gate
+remain fixed; only causal parent availability changes the route. Actual masks
+separate support, parent availability and the source used. A complete runner
+fixture reproduces the old short-parent refusal, checks long prediction and
+saved-state replay, and keeps construction independent of held-out labels.
+All original sources, both initializer arms and baseline scope remain. A new
+original run follows review; task 277 retains its original domain failures.
+
 Task 279 implements the reviewed CM41 route around the original checked saved
 heads. It preserves the candidate through length 4096 when a count predecessor
 is unavailable, without expanding that parent's finite feature alphabet.

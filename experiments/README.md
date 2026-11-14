@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_domain_compare`](convex_stress_domain_compare) | Corrected complete adapter; original evaluation pending | Reuses the shared-role comparison with proved partial-parent routing. Preserves all 35 tasks, both policies and baseline scope, with fresh changed-model metrics and separate availability/route masks. |
 | [`convex_stress_partial_fallback`](convex_stress_partial_fallback) | CM41 native component; corrected comparison pending | Keeps the causal candidate outside a saved predecessor's input domain. Preserves actual complex heads, raw CE, original records and charged budgets, with separate support, availability and route diagnostics. |
 | [`convex_stress_shared_compare`](convex_stress_shared_compare) | Complete 35-task adapter; original evaluation pending | Reviewed raw-CE selection, same-field shared-role coverage and exact predecessor fallback. Scores every changed model afresh and labels inherited reviewed metrics explicitly, preserving both 105-choice arms and all baselines. |
 | [`convex_stress_shared_roles/extension`](convex_stress_shared_roles/extension) | CM39/40 conservative component; original comparison pending | Extends a checked raw head only on newly supported inputs using the actual shared-role certificate. Preserves prior logits, raw CE and original records; charges both models and replays no new optimization. |
