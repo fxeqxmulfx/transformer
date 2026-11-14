@@ -6508,3 +6508,27 @@ the original5T case allowance. Preserve all324 failed-attempt artifacts and its
 complete35-case record in new reports. Freeze and independently check this cost
 repair before rerunning; kernels, model selection, head coefficients and the
 64GiB memory limit do not change. No new signed accuracy is available yet.
+
+The corrected producer `9c7370a5` is independently reviewed and frozen before
+task319's `original-v2`. All35 runs and35 replays complete with exact saved-state
+and metric reconstruction. Both policies retain35/35 original success flags in
+all modes; raw99/native exact99 are34/35 in each mode and across all held-out
+splits. Fibonacci remains the sole miss: full4608/4704 (97.959184%, CE0.115829730),
+mini and forward4611/4704 (98.022959%, CE0.101307444). Full fixes2/regresses3;
+mini and forward fix14/regress13. Lower CE does not establish the99% target.
+Original observed CE and every earlier baseline/tradeoff remain exact. The
+34 unchanged cases explicitly inherit314 metrics; only three Fibonacci states
+are freshly changed. Peak RSS6.69GiB; complete work forecast4.324T below5T.
+Report SHA2567632e96c882483211d31a2fc882990ffbe0d3fd77144424b353dc1bed2b18ebc.
+Final independent review must reproduce all118 JSON artifacts and the report.
+
+Tasks329–330 will audit the fixed-feature Lean results and test a freshly trained
+bounded complete complex head on generic shared input features, using ordinary
+CE for the actual observed prediction logits. Keep target assumptions explicit,
+forward initialization work visible and the entire signed result as a reference.
+In parallel with the ongoing evaluation workflow, only planning has been done
+for tasks327–328: native ports of the six original copy/reverse/sort repeat/unique
+cases, then a Lean-first causal-program extension with real EOS generation,
+longer probes and the six existing100% sequence cases as frozen controls.
+No new catalog case is scored by this planning. Original35 and the separate
+six-case component remain distinct;124 additional cases remain unscored.

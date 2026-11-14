@@ -118,9 +118,8 @@ layout; no held-out label or score selects a model or changes its parameters.
 The full 13932-job Lean build, global 36sorry/0rests/0extra audit, native INDEX,
 formatting, clippy, release and forbidden-source checks pass. No Lean source or
 generated INDEX content changes in this adapter.
-Task317 requires adapter review first; task319 then evaluates all 35 cases and
-replays them. The current Fibonacci result remains approximately 98% raw until
-those original measurements establish otherwise.
+Task317's adapter review precedes task319's original evaluation. The initial
+allowance correction and subsequent measurements are recorded below.
 
 The initial task319 run at `1bbbe27f` attempted all35 cases. Its 34 unchanged
 cases ran and replayed successfully. Fibonacci refused the old 64B metric
@@ -134,3 +133,78 @@ remain pinned and its complete35-case failure record is carried into new reports
 The failing process peaked at3,210,804 KiB RSS; it was not an OOM. An earlier
 driver invocation failed because the shell file lacked an executable bit; that
 log is preserved and both documented shell entry points are now executable.
+
+## Frozen original findings
+
+Producer `9c7370a593c078a994b06a12449d00b940d26fd0` was independently reviewed
+and frozen in `signed-compare-v3` before the corrected `original-v2` run.
+All35 cases and all35 saved-state replays finish successfully. The three fresh
+Fibonacci endpoints reconstruct their complete states, original metrics and new
+metrics exactly on replay. The other34 cases retain their reviewed314 states
+and metrics, explicitly marked as inherited; they are not newly trained models.
+
+| Fibonacci mode | Parent raw correct /4704 | New raw correct /4704 | New raw and native exact | Parent CE → new CE |
+| --- | --- | --- | --- | --- |
+| Full batch | 4609 | 4608 | 97.959184% | 0.164271130 → 0.115829730 |
+| Minibatch | 4610 | 4611 | 98.022959% | 0.167655642 → 0.101307444 |
+| Forward only | 4610 | 4611 | 98.022959% | 0.171368873 → 0.101307444 |
+
+Both initializer policies keep35/35 original success flags in every mode and
+on every original diagnostic split. Their per-task raw99 and native exact99
+counts are34/35 in every mode, also34/35 when requiring every held-out split.
+Fibonacci is the only miss. Its original decoded field accuracy is99.936224%
+in all modes and remains a success; that readout is separate from the raw goal.
+The new model therefore does **not** meet the user's99% per-task target.
+
+The independent raw transition audit finds2 fixes and3 regressions in full
+batch, and14 fixes and13 regressions in each of mini and forward. Every mode
+uses signed features on360 validation inputs. Those inputs contain91 of the
+96 full-batch errors and88 of the93 mini/forward errors; five errors remain
+on unchanged routes. The substantial CE decrease has barely improved raw
+decisions and worsens the full-batch count by one. The complete original
+training metrics remain exactly unchanged, including CE9.626594307035853e-9.
+No new target-realizability, query-residual or unconditional correctness
+certificate is inferred from the lower CE.
+
+Across all279952 original primary targets, full batch scores279856, mini279857
+and forward279859 correctly, in both policies. These pooled accuracies near
+99.966% do not replace the per-task miss. Mini retains two earlier sum-square
+errors in addition to its93 Fibonacci errors. Every older raw/CE tradeoff,
+the35 conventional transformer endpoints,336 depth outcomes, stronger guarded
+reference, task298 lower-CE/higher-error result, and both prior refused attempts
+remain in the report. The separate recorded DiffGPT reference is unchanged;
+this is not a new matched-budget transformer experiment.
+
+The new diagnostics execute128 full-batch gradient batches with10 effective
+updates across the two roles,160 minibatch batches with160 nonzero trial
+updates, and zero forward gradients/updates. Retained minibatch weights still
+come from the best whole-training diagnostic epoch, including the initial
+vertex when later epochs do not improve it. All original gradient histories
+are retained separately. Head coefficients and the49-map bank are unchanged.
+
+The actual complete-case forecast equals4,323,846,694,320 work units, below the
+5T cap. Paired endpoint buffers are bounded at22,586,405,888 bytes. The original
+run plus replay takes14m46.79s; Fibonacci construction/scoring takes4m24.46s and
+its replay6m37.53s. Peak RSS is7,019,032 KiB (6.69 GiB), with no OOM. Rebuilds,
+failed preparation, source checks and independent repeats are additional work.
+All22 native checks and the full Lean/global axiom/INDEX audits pass.
+
+The generated report has SHA256
+`7632e96c882483211d31a2fc882990ffbe0d3fd77144424b353dc1bed2b18ebc`.
+The331-artifact original manifest is
+`9d483213ca4b6bff59cc1c96583bce10b98a3241938a35db0135c3e1de10f54f`;
+118 JSON files cover the complete prepared inputs, states, outcomes and summary.
+Evidence lives at `/run/media/misha/storage/transformer-runs/signed-compare/`
+and the1077-input freeze under `.../freezes/signed-compare-v3`.
+Final review requires a fresh full run and exact comparison of all118 JSON
+files and the report. Native and Lean checks must also pass at the findings
+commit before task319 is approved.
+
+The next raw-label repair, tasks329–330, will test a fresh bounded complex head
+on shared input features, with ordinary CE applied to the actual observed
+prediction logits. It must audit the existing Lean contract first and preserve
+this result as a baseline. Tasks327–328 separately add the six original
+copy/reverse/sort cases with repeated/unique symbols and true EOS generation.
+The six reviewed retrieval/prefix cases remain100% in all modes/splits; no
+combined41-task model or score is established, and124 additional catalog cases
+remain unscored.
