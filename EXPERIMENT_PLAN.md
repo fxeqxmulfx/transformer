@@ -6204,3 +6204,12 @@ It seals full actual states before scoring, preserves original observed metric
 objects exactly, and audits every fresh raw prediction change. Both 105-choice
 policies and all 35 raw denominators remain. Task310 will execute and independently
 replay the frozen original comparison only after adapter review.
+
+Task267's earlier CM38 fallback branch has now completed all35 original cases,
+all35 numerical replays and its recursive complete summary. Both policies
+reach35/35 primary and auxiliary successes in all three modes: forward-only
+associative divisor improves from2508/4656 to4656/4656, while validation CE
+falls from11.07216 to0.00531025. The176 unchanged,32 wrapped and2 refused import
+outcomes remain;30 wrappers refuse their prediction domain and retain earlier
+results. PeakRSS4.883GiB, no new gradients or discovery. This is a separate
+historical branch, not a new raw-exclusion result. Exact findings review remains.
