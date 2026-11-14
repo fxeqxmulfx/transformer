@@ -440,6 +440,18 @@ original data fingerprints, raw CE and accuracy must replay independently;
 all unchanged choices remain explicitly inherited. Source and executable are
 frozen before execution, with a64GiB process limit and storage-backed outputs.
 
+The original task284 run completes and replays all35 cases without process
+failure. Fibonacci raw accuracy improves from66.3265% to97.2364% in all three
+modes, while ordinary validation CE falls from8.08163266 to0.27997472.
+Primary field accuracy stays99.9362%, and both policies retain35/35 primary
+and auxiliary success in every mode. Three distinct changed heads supply six
+policy choices;102 choices per policy remain explicitly inherited. All35
+transformer and336 depth endpoints and prior costs remain. Canonical training
+CE chooses five neighbors for both heads, independently of trained parameters;
+no extra optimizer updates occur. Peak original RSS is1,662,128KiB under64GiB.
+Authored findings live in`convex_stress_context_compare/original`; exact-commit
+review and a fresh end-to-end reproduction follow before task completion.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per
