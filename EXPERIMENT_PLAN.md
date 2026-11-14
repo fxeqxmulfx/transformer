@@ -550,6 +550,16 @@ complete complex source tensor. Allocation/work forecasts and reconstruction
 bind all added state. The original 35-task comparison follows component review;
 no CM45 original-data improvement is claimed by the component fixtures.
 
+Task 292 is approved at `14b8ad6e`. Its synthetic fixture exposes a CE/raw-label
+tradeoff, so task 293 reports both quantities separately from original success.
+The prospective comparison pins task290's complete choices and task287's actual
+context model bytes. Eligibility is by current representation/reference/hash,
+not task name or held-out scores. It retains all35 tasks, both policies, all
+baselines and prior costs. Original records and batch sizes are checked; every
+mixture is sealed before metrics, old metrics are reproduced, and all new
+gradients/updates are counted. Complete original execution and independent
+reproduction follow the committed adapter/protocol.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per
