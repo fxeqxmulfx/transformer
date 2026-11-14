@@ -16,6 +16,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.PartialFallback
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextInterpolation
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextScale
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.DecoderConfidence
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextMixture
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -66,6 +67,10 @@ CM44 realizes a fixed input-state map and many-to-one declared raw decoder
 with a complete bounded complex tensor. Its exact batch CE separates the
 correct-margin loss from margin times empirical raw error; no unknown target
 is inferred by increasing confidence.
+CM45 learns simplex mixtures of fixed context maps with the complete head
+frozen. Actual products retain the feature and coefficient bounds, with convex
+ordinary diagnostic CE and explicit first-order and quadratic controls. When
+all maps preserve observed rows, the original CE cannot select a mixture.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/

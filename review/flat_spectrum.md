@@ -18103,3 +18103,94 @@ its budget and work, and evaluate actual complex products. An original-data
 comparison must preserve every task, initializer policy, training mode and
 baseline, report raw CE alongside the original task score, and retain any
 regressions. The reviewed CM42/CM43 experiments remain frozen.
+
+## CM45. Learn a convex mixture of fixed context maps with the head frozen
+
+The reviewed CM44 comparison preserves all 35 original primary and auxiliary
+successes in every mode and both policies. Its stronger complex confidence
+heads reduce CE on 13 tasks whose raw labels were already correct. Fibonacci
+still has 130 incorrect raw predictions among 4704 validation records, despite
+4701 correct field answers. A positive confidence change alone cannot alter
+these raw rankings. A different context rule is required to change the raw choice.
+
+Fix a finite bank of actual feature maps `phi_j(k,x)` and the complete complex
+head tensor `W(k,c)`. Each bank element may use a different training-only
+neighborhood, metric, distance weight or fixed confidence scale. For mixture
+coefficients `a_j >= 0` with `sum_j a_j = 1`, define the actual mixed feature
+and logit by
+
+```
+phi_a(k,x) = sum_j a_j phi_j(k,x)
+z_a(x,c)   = sum_k W(k,c) phi_a(k,x).
+```
+
+Expanding the finite sums gives `z_a(x,c) = sum_j a_j z_j(x,c)`, where every
+`z_j` uses the same complete real/imaginary tensor. A uniform coordinate bound
+`abs(phi_j(k,x)) <= M` is retained by the mixture. The original per-class
+absolute-sum coefficient budget `R` therefore bounds the actual mixed logits
+by `R*M`. In particular, CM42 stochastic context maps over a unitary source
+code, followed by CM43 fixed scales in `[0,1]`, retain the bound `M=1`. Repeated
+source states and nonunitary query matrices are allowed. The spectrum supplies
+this bound; it does not choose the bank or identify a missing target.
+
+The simplex is convex. With `W` and the bank fixed, the actual logits are
+linear in all mixture coefficients, so ordinary full-vocabulary raw CE is
+convex in the mixture. Jensen compares the mixed CE with the weighted CE of
+the bank logits, all evaluated against the same query target. Let `p_a(x,c)`
+be the ordinary softmax of the mixed actual logits and define
+
+```
+g_j(a,x,y) = sum_c p_a(x,c) z_j(x,c) - z_j(x,y).
+```
+
+The exact first-order inequality is
+
+```
+CE(z_a(x),y) + sum_j (b_j-a_j) g_j(a,x,y) <= CE(z_b(x),y).
+```
+
+It follows from XE1 and the actual finite-product identity, with every class
+in the denominator. On a finite batch of original record IDs, the mean CE is
+convex and the mean slopes give the corresponding first-order inequality.
+Repeated inputs retain separate IDs and weights; a short final minibatch uses
+its own cardinality. These statements apply to a fixed training-only
+diagnostic feature bank as well as to a prediction bank.
+
+The same complete-head bound controls a mixture change:
+`abs(z_b(x,c)-z_a(x,c)) <= R*M*sum_j abs(b_j-a_j)`. Applying XE2 gives an
+upper quadratic model with the same explicit linear term and remainder
+`(R*M*sum_j abs(b_j-a_j))^2/2`. Thus the spectral feature bound also controls
+how far ordinary CE can exceed its linear model; no task-specific answer
+formula or uncharged output scaling is used in this estimate.
+
+If every bank element equals the original source feature row on each observed
+input, every mass-one mixture has exactly the original observed CE for every
+complete tensor. The original complete-head Frechet derivatives also agree.
+Consequently, the unchanged observed objective cannot select between mixtures.
+A diagnostic such as excluding the query's own observed source state must be
+declared separately and use only original training records. This is not a
+leave-one-out refit of latent discovery, and it supplies no unseen-correctness
+certificate. Convexity in mixture weights with the head frozen is separate
+from convexity in the head with a mixture frozen; simultaneous multiplication
+of two learned factors is not asserted to be convex.
+
+A nonzero four-state complex Fourier witness uses two raw labels, 0 and 2,
+which share a declared readout. Both bank maps preserve observed inputs 0 and
+1. At an unseen input, one map uses source state 0 and the other uses state 1.
+Mixture weights three quarters and one quarter yield raw logits 18 and 6 at
+margin 24; exchanging the weights reverses these logits. The raw-label margin
+and the difference between their two target losses are 12. Both mixtures keep
+the same original repeated-record CE and one-record tail CE. Matching original
+targets have loss `log(1+3*exp(-24))`. Against a constant-zero target, only the
+last record is wrong: the full batch adds 8 to that loss, whereas its one-record
+tail adds 24. Observed fit and the feature bound therefore do not choose which
+unseen raw label is correct.
+
+Lean: `ConvexDepth/ContextMixture/{Basic,Loss,Batch,Witness}`. A native extension
+must bind the fixed bank, original records and complete source tensor, account
+for all mixture construction and optimization work, and evaluate actual complex
+products. It must distinguish ordinary observed CE from the training diagnostic,
+preserve full/minibatch/forward metadata, and freeze every learned mixture before
+held-out evaluation. All 35 original cases, both policies, unchanged baselines
+and any regressions remain required. No numerical improvement from CM45 is
+claimed before that separate experiment.

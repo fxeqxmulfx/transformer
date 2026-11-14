@@ -528,6 +528,18 @@ under the 64 GiB cap. All prior choices and baselines remain; Fibonacci retains
 Authored findings are in `convex_stress_decoder_compare/original`. The separate
 complete reproduction and exact-commit review follow before task completion.
 
+Task 290 is approved at `347f29e1`: a separate complete preparation, all 35
+cases and all replays reproduce every JSON artifact and compact report.
+Task 291 extends Lean first for the remaining raw-label errors. CM45 mixes
+fixed context feature maps on a simplex with the complete head frozen. It
+retains the complex feature/head bound and gives convex ordinary diagnostic
+CE, explicit mean slopes and a quadratic upper model. Exact observed rows
+preserve original repeated and tail batches, so that unchanged objective cannot
+choose the mixture. The training-only diagnostic is a separate declared rule.
+Nonzero Fourier witnesses retain observed fit while choosing opposite unseen
+raw aliases. Native mixture optimization and original evaluation follow only
+after the proof and its review.
+
 Task 255 completes the original raw-kernel comparison with 35/35 full-batch,
 35/35 minibatch and 34/35 forward-only primary successes in both policies.
 All 35 cases replayed with zero process failures. Only three choices per
