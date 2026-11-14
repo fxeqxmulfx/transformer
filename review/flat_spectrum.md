@@ -18475,3 +18475,51 @@ that distinction must remain explicit. It must preserve observed rows, charge
 all candidate tests and actual complex products, and use ordinary CE. A
 separate frozen comparison must retain all earlier results, including failures.
 No new benchmark accuracy follows from CM49 alone.
+
+## CM50. Finite certificates for crossings between observed hulls
+
+CM49's general exclusion theorem allows any intersection of the augmented
+candidate hull with a differently labelled observed hull. Its first native
+implementation uses the sufficient case in which the intersection contains
+an original observed point of the other class. This can miss edge crossings.
+A stronger exact certificate needs two positive finite mixtures, not a new
+assumption about the unknown target or its spectrum.
+
+Let the observed points be `p_i` with labels `y_i`, the query be `x`, and the
+candidate and conflicting labels be `c` and `d`, with `d != c`. Take observed
+weights `v_i >= 0` of total mass one supported only on label `d`. Take a query
+weight `a > 0` and observed weights `w_i >= 0`, supported only on label `c`,
+with `a + sum_i w_i = 1`. If the exact input-coordinate identity
+
+`sum_i v_i*p_i = a*x + sum_i w_i*p_i`
+
+holds, both sides give the same point in the two hulls. Thus CM49 excludes
+`c`. These are coordinate weights used to prove an intersection. They remain
+separate from the positive source-feature weights used for prediction after
+a unique surviving label has been identified. Native implementations must
+verify both masses, both label supports, source identities, the query role
+and the exact common coordinate; floating-point proximity is insufficient.
+
+For a planar witness, use four observations `(-1,-1), (-1,1), (1,-1), (1,1)`
+with raw labels `(0,0,2,2)`, and the pool `{0,2}`. The query `(-2,0)` lies
+outside every observed class hull. Hypothetically giving it label2 makes
+its augmented hull cross the observed label0 segment. The common point
+`(-1,-1/3)` is `2/3*(-1,-1) + 1/3*(-1,1)` and also
+`2/3*(-2,0) + 1/3*(1,-1)`. Neither observed label0 point lies inside the
+augmented label2 triangle: the triangle at horizontal coordinate `-1` has
+vertical range `[-1/3,1/3]`. Consequently the earlier observed-point test
+misses this valid exclusion. The symmetric query `(2,0)` excludes label0
+by the same construction on the other side.
+
+The nonconstant target returning0 when the first coordinate is nonpositive
+and2 otherwise fits every observation and has convex class regions. The
+exclusions identify the two exterior queries for every compatible convex
+raw target with the stated pool, not merely for this particular target.
+The actual normalized four-state Fourier code and complete margin-four
+head can use the same positive feature mixtures as CM48/CM49: average the
+two observed sources of the identified class. Their full-vocabulary CE is
+`log(1+3*exp(-4))`, source coordinate bound is one and complete-head budget
+is32. Original Dirac rows still preserve repeated-record objectives and
+tail derivatives. Pool closure and target convexity remain explicit; the
+stronger geometric search does not establish either assumption or guarantee
+that every remaining unknown answer is identifiable.

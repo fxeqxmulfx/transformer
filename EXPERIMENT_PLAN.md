@@ -6222,3 +6222,14 @@ contexts are all correct; only one prediction changes per mode. All35 primary
 raw errors are95/96/94, including two inherited minibatch sum-square errors.
 Full observed metric objects remain exact. All previous references and costs
 are retained; peakRSS4.43GiB. Full findings-commit independent review is next.
+
+Task310 is approved at df79e005: the independent fresh run reproduces all117
+JSON artifacts and the complete report exactly. Its one raw fix per mode and
+all35 declared successes are now verified. The next identified implementation
+gap is geometric: CM49's general theorem permits intersections between hulls,
+but its first native search only checks opposite-label observed points.
+Task311 formalizes CM50 finite two-sided barycentric certificates and a planar
+crossing example missed by that sufficient test. The actual complete Fourier
+head, ordinary raw CE, bounds and observed-record derivatives stay connected.
+Tasks312–314 will implement, integrate and separately evaluate the stronger
+search; no additional benchmark gain follows from the proof alone.
