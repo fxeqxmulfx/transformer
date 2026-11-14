@@ -411,6 +411,14 @@ has not yet been evaluated on the original suite.
 
 ## Recovered comparison queues (2026-11-13)
 
+Task 277 completed its original attempt: 28/35 primary passes in each mode and
+both initializer policies, with seven saved-parent domain process failures.
+The successful fresh states include Fibonacci at 99.936% in all modes and
+forward-only associative divisor at 100%. All completed cases replayed; the
+findings commit requires fresh review. Failed cases keep their missing scores,
+logs and partial artifacts. Task 280's proved route correction is a separate
+prospective comparison, with no substituted parent successes in task 277.
+
 Task 280 reuses the reviewed 276 comparison source with the reviewed CM41
 partial-parent wrapper. The original selector and same-field shared-role gate
 remain fixed; only causal parent availability changes the route. Actual masks
