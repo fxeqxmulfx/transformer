@@ -6624,6 +6624,10 @@ not below the parent's observed CE9.63e-9. No heldout score has been computed.
 All nine native/directLean checks pass. Inspection takes2m25.80s/3.60GiB;
 26 JSON artifacts have summary SHA256
 e3bcf2ac9a27e41c7af37c199db10e65e46654861e9fe11fe662bc8856f62729.
-Review and reproduce329 before330's all35 comparison. The primary has291
-empty training blocks;330 must prospectively audit a fixed coverage gate to
-retain the earlier predictor there, while reporting actual new training logits.
+Independent review at7d5029ee reproduces all26 JSON artifacts and all native/
+directLean checks. The repeat takes2m26.74s/3.60GiB, exit0;329 is approved.
+Task330 now audits CM38's existing fixed coverage gate with shared non-Dirac
+observed rows, repeated record IDs, a real tail batch and nonzero unsupported
+parent logits. The primary's291 empty training blocks retain the earlier
+predictor; all new training logits and CE changes remain reported. No new
+theorem is required, and no new original35 heldout result is inferred.

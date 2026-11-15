@@ -162,5 +162,8 @@ peak at3,770,556KiB RSS (3.60GiB), and exit0 under64GiB. The summary SHA256 is
 initializers, CE histories and summaries. Evidence lives under
 `/run/media/misha/storage/transformer-runs/shared-head/inspection-v1`.
 All nine native checks and direct Lean/axiom/INDEX/forbidden checks pass.
-Independent review and a fresh six-inspection repeat remain pending; new
-original35 accuracy remains entirely task330's work.
+Independent review at `7d5029eed8b67b1596874e95c2060c354dcfdcfd` repeats every
+native and direct Lean check and reproduces all26 JSON artifacts exactly.
+The fresh six-inspection run takes2m26.74s and3,771,004KiB peak RSS, exit0.
+Task329 is approved; evidence is retained under `freezes/shared-head-v1/findings-review`.
+New original35 accuracy remains entirely task330's work.
