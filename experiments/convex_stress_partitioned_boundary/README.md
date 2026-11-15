@@ -64,7 +64,39 @@ one-inspection-plus-replay forecast is10,382,354,111,104 scalar units and
 13,422,565,376 buffer bytes, before the separate parent-parse allowance.
 The12T arithmetic cap includes all attempted splits; explicit buffers stay
 below56GiB and processes below64GiB. Serialization, hashes and disk I/O are
-measured separately. There is no production accuracy result yet.
+measured separately.
+
+Production at `2d5ac6ce` and the independent review both finish all six
+inspections. All56 JSON artifacts match exactly. Every mode and role classifies
+all4704 original training records correctly. Every selection chooses the same
+depth1 tree, Grid frame, Diagonals descriptors, ridge1e-6, direction1, gain512
+and common offset8. This uses two leaves and34 stored parameters per role.
+
+| Mode | Primary training CE | Supplement training CE | Effective updates per role |
+| --- | ---: | ---: | ---: |
+| Forward | 0.006883672052 | 0.006333256670 | 0 |
+| Full | 0.006839029108 | 0.006277233057 | 128 |
+| Mini | 0.006796859848 | 0.006224551209 | 304 |
+
+The selected conditional folds reach4686/4704 (99.6173%) for the primary role
+and4676/4704 (99.4048%) for the supplement. These figures use the inherited
+whole-training route and do not measure original heldout accuracy. All full
+and mini epoch losses decrease; the final mini batch contains five records.
+All254348 primary and257064 supplement split attempts are retained, with no
+split refusals. Independent expanded products differ by at most3.980e-13;
+compact and full-vector CE differ by at most2.351e-14.
+
+The original run takes17m56.65s and the independent repeat17m55.24s; peak RSS
+is3771404/3771324KiB (3.60GiB), under the64GiB process limit. Seven native
+checks, formatting, Clippy, release build, full Lean, both applicable Lean
+audits, global axioms and the native INDEX check pass at the producer commit.
+The existing36 unfinished Lean statements remain explicit. Summary SHA256 is
+`6ed37b4db95ea78087b9317628b49c9345657a37fd9866bc8b729d61dcbca041`;
+the56-artifact manifest is
+`bae8eded33ae9c8541bf3b04769f3f5c01f539b52b09d340c284368d2367397b`.
+Complete source, failed affine evidence, original/repeat outputs and review
+logs are preserved under the `partitioned-boundary-v1` storage freeze.
+Task336 will compare the fixed reviewed component on the original35 cases.
 
 ```sh
 export CARGO_TARGET_DIR=/run/media/misha/storage/transformer-runs/build/shared-roles

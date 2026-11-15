@@ -6873,3 +6873,15 @@ full vectors. The prospective12T work cap includes all split searches and
 replays; buffers remain56GiB and processes64GiB. Freeze sources and run six
 training-only inspections plus an independent repeat, retaining all failed335
 data/state/score artifacts. Original heldout comparison336 remains separate.
+
+Task335 is reviewed at partitioned producer2d5ac6ce. All56 JSON artifacts
+match the independent repeat. All six mode/role fits classify4704/4704 training
+records; the selected conditional folds reach4686/4704 and4676/4704. Both roles
+choose a two-leaf boundary map with34 parameters. Full128 and mini304 effective
+updates reduce CE; forward0. Original/repeat17m56.65s/17m55.24s, peak3.60GiB,
+all native/Lean checks pass. Complete failed affine evidence remains retained.
+These are conditional training diagnostics, not original heldout scores.
+Task336 is claimed to freeze and evaluate this reviewed component on all35
+original cases, retaining319/330/332, both105-choice policies and all baselines.
+Its forecast must account for sequential fitting/replay lifetimes and complete
+partition-search work under the unchanged64GiB process limit.
