@@ -6,7 +6,7 @@ extension preserves all six reviewed retrieval/prefix models and adds a fixed
 input-only bank of positional and order-statistic programs. The corrected run
 reaches100% raw and exact accuracy on all12 cases in every mode and split,
 including all six new copy/reverse/sort cases. Every saved-state replay passes.
-An independent fresh repeat is pending. The complete first attempt, including
+An independent fresh repeat reproduces every JSON artifact. The first attempt, including
 two scoring-work refusals, remains a reference in the report.
 
 | Cases | Status before this experiment | Change |
@@ -115,7 +115,7 @@ predictions are measured, v2 raises only this cap to160B. It seals forecasts
 before scoring, checks all12 state hashes against v1, and requires every
 previously evaluated endpoint to match completely. The full v1 report is a
 hash-bound input and its cases, refusals and summary remain in the new report.
-The v2 evaluation is complete; its independent repeat is pending.
+The v2 evaluation and its independent repeat are complete.
 
 Producer `b3723b828321ee3d42d3e3a2ef12e624f4d3e7a8` is frozen with505 source
 inputs in `generative-programs-v2`. All12 states are byte-identical to v1.
@@ -153,8 +153,16 @@ replays and summaries. Generated evidence lives under
 All historical GPT failures, the full v1 attempt and earlier failed-model
 references remain. This covers12 additional catalog cases, with118 remaining.
 Original35 still has34/35 per-task raw99; these separate cohorts do not establish
-a combined47-case model. Review the landed findings and reproduce all76 JSON
-artifacts before approving task328.
+a combined47-case model.
+
+Independent review at `5c2f2817ae4d7b4a6c2dfe28e810bd651a0dabb1` reruns all11
+native checks and direct Lean/axiom/INDEX/forbidden checks. A fresh immutable
+driver run reconstructs every state, score and replay from frozen inputs;
+all76 JSON artifacts and the complete report match byte-for-byte. It takes
+17m46.56s, peaks at3,205,376KiB RSS (3.06GiB), and exits0 under64GiB. Task328
+is approved. Review logs, manifests and the board record are preserved under
+`freezes/generative-programs-v2/findings-review`. Original35's remaining raw99
+miss is unchanged; task329's separate fresh-head component addresses it next.
 
 ```sh
 export CARGO_TARGET_DIR=/run/media/misha/storage/transformer-runs/build/generative-programs

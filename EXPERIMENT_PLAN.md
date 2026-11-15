@@ -6606,3 +6606,10 @@ takes17m58.44s, peaks at3.06GiB, and preserves76 JSON artifacts. Report SHA256
 c84f3f86b049c476809d13cf96f7b7ab46bab6b44a0c92c7dbed9eb5f7db11cc.
 Land authored findings and independently reproduce the complete result before
 approving328. The original35 raw99 count remains34/35;118 catalog cases remain.
+
+Task328 is approved at `5c2f2817`: independent native/directLean checks and a
+fresh complete run reproduce all76 JSON artifacts, including every state,
+metric, refusal reference and report. All36 native jobs exit0; the repeat
+takes17m46.56s and3.06GiB peak RSS under64GiB. Evidence is preserved under the
+v2 freeze's `findings-review`; the completed328 worktree is removed. Original35
+remains34/35 raw99 while the separate329 head undergoes training-only inspection.
