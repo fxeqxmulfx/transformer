@@ -1,0 +1,123 @@
+use crate::*;
+use std::collections::{BTreeMap, BTreeSet};
+#[test]
+fn indexed_pairs_match_independent_exhaustive_evaluation_with_tail_bits() {
+    let mut rows = vec![];
+    for n in 1..=2u32 {
+        for mut code in 0..3usize.pow(n) {
+            let mut word = vec![1];
+            for _ in 0..n {
+                word.push([9, 10, 23][code % 3]);
+                code /= 3;
+            }
+            let a = word.iter().filter(|&&x| x == 9).count();
+            let b = word.iter().filter(|&&x| x == 10).count();
+            rows.push(Observation {
+                id: rows.len(),
+                tokens: word,
+                label: if a < b { 19 } else { 7 },
+            });
+        }
+    }
+    let pool = pool::Pool::new(&rows).unwrap();
+    let base = bank::Bank::initial(&pool, 8).unwrap();
+    let expanded = bank::Bank::expanded(&pool, &base, 32768).unwrap();
+    assert!(expanded.refusal.is_none() && expanded.bank.rows.len() >= 73);
+    let mut left = bank::Bank::new();
+    let mut right = bank::Bank::new();
+    for (i, c) in expanded.bank.rows.iter().take(73).enumerate() {
+        right
+            .add(&pool, &c.bits, c.nodes, 73, || c.formula.clone())
+            .unwrap();
+        if i < 17 {
+            left.add(&pool, &c.bits, c.nodes, 17, || c.formula.clone())
+                .unwrap();
+        }
+    }
+    assert_eq!(right.rows.len(), 73);
+    let observed: BTreeMap<_, _> = pool
+        .row_nodes
+        .iter()
+        .zip(&rows)
+        .map(|(&i, r)| (i, r.label == 19))
+        .collect();
+    let extras: Vec<_> = (0..3)
+        .map(|s| pool.counts(&pool.signature(&grammar::literal(s)).unwrap()))
+        .collect();
+    for extra in [None, Some(0)] {
+        for offset in [-2, 2] {
+            for negated in [false, true] {
+                for gate in [None, Some(4)] {
+                    let c = transitions::Config {
+                        extra,
+                        offset,
+                        negated,
+                        gate,
+                        flipped: false,
+                    };
+                    let mut expected = BTreeSet::new();
+                    let mut count = 0u64;
+                    for a in &left.rows {
+                        for b in &right.rows {
+                            let f =
+                                grammar::make(&a.formula, &b.formula, extra, offset, negated, gate);
+                            let p = Program::Prefix(f.clone());
+                            if rows.iter().all(|r| {
+                                p.interpret(&r.tokens)
+                                    == Some(prior::program::Atom::Role(usize::from(r.label == 19)))
+                            }) {
+                                count += 1;
+                                expected.insert((f.nodes(), f));
+                            }
+                        }
+                    }
+                    let mut meter = latent::Meter {
+                        work: 0,
+                        limit: 40_000_000_000_000,
+                    };
+                    let (actual, stats) = pairs::run(
+                        &pool,
+                        &observed,
+                        (&left, &right),
+                        &c,
+                        &extras,
+                        32,
+                        &mut meter,
+                    )
+                    .unwrap();
+                    assert!(!stats.work_exhausted);
+                    assert_eq!(stats.matching_pairs, count);
+                    assert_eq!(
+                        actual,
+                        expected
+                            .into_iter()
+                            .take(32)
+                            .map(|(_, f)| f)
+                            .collect::<Vec<_>>()
+                    );
+                    assert_eq!(stats.possible_pairs, 17 * 73);
+                }
+            }
+        }
+    }
+    let c = transitions::Config {
+        extra: None,
+        offset: 0,
+        negated: false,
+        gate: None,
+        flipped: false,
+    };
+    let mut meter = latent::Meter { work: 0, limit: 0 };
+    let (actual, stats) = pairs::run(
+        &pool,
+        &observed,
+        (&left, &right),
+        &c,
+        &extras,
+        32,
+        &mut meter,
+    )
+    .unwrap();
+    assert!(actual.is_empty() && stats.work_exhausted);
+    assert_eq!(meter.work, 0);
+}

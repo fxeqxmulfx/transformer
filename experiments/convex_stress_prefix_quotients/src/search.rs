@@ -17,7 +17,7 @@ impl Default for Policy {
             depth: 3,
             max_classes: 32768,
             retained: 32,
-            latent_classes: 32768,
+            latent_classes: 262144,
         }
     }
 }
@@ -63,7 +63,7 @@ pub fn run(rows: &[Observation], vocabulary: usize, policy: Policy) -> Result<Se
     if !(1..=3).contains(&policy.depth)
         || !(8..=32768).contains(&policy.max_classes)
         || !(1..=64).contains(&policy.retained)
-        || !(8..=32768).contains(&policy.latent_classes)
+        || !(8..=262144).contains(&policy.latent_classes)
     {
         return Err("quotient search policy refused".into());
     }
@@ -164,7 +164,9 @@ pub fn run(rows: &[Observation], vocabulary: usize, policy: Policy) -> Result<Se
         }
     }
     if policy.depth == 3 && out.programs.is_empty() && out.refusal.is_none() {
-        let deep_bytes = bytes + 2 * policy.latent_classes as u128 * (n * 8 + 65536);
+        let deep_bytes = bytes
+            + 2 * policy.latent_classes as u128 * (n * 8 + 65536)
+            + pairs::buffer_bound(&pool, policy.latent_classes);
         if out.scalar_forecast > 40_000_000_000_000 || deep_bytes > prior::joint::MAX_BYTES {
             out.refusal = Some("transition search memory/work forecast refused".into());
         } else {

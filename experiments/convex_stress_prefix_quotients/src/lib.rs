@@ -9,6 +9,9 @@ pub mod bank;
 pub mod deep;
 pub mod grammar;
 pub mod latent;
+#[cfg(test)]
+mod pair_tests;
+pub mod pairs;
 pub mod pool;
 pub mod root;
 pub mod search;

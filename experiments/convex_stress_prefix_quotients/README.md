@@ -28,6 +28,16 @@ branch. The first uncapped fitting branch in declared order is retained, with
 at most32 final syntaxes, ordered by node count and AST. Every search cap and
 work counter remains explicit. Node counts are cached; this changes no program.
 
+CM59's exact right-count lower/upper bounds (`b498ac0e`) additionally support
+a bitset index over the right child bank. Every applicable observed constraint
+is intersected, with negative thresholds and padded bits checked. This replaces
+the quadratic explicit pair loop; reports separate possible pairs, threshold
+lookups, word intersections and matching pairs. The latent cap is now262144,
+with both banks and the complete count index admitted before allocation. The
+process cap stays64GiB, the buffer cap56GiB and total search work cap40T. This
+optimization is checked against exhaustive independent interpretation, including
+a73-candidate bank that exercises nonzero padded bits.
+
 | Development run | Training-only finding | Limits and observed resources |
 | --- | --- | --- |
 | v1 | Depth1 finds16 programs; depth2 finds4 after retaining1926 first-layer classes; depth3 has no depth2 fit | Depth2:1.40s,7764KiB RSS; no heldout measurement |

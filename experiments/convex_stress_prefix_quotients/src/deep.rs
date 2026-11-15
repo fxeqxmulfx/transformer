@@ -20,6 +20,7 @@ pub struct Attempt {
     pub root_row_comparisons: u64,
     pub fitting_syntaxes: u64,
     pub work_exhausted: bool,
+    pub index: Option<pairs::Stats>,
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Search {
@@ -86,6 +87,7 @@ pub fn run(
             root_row_comparisons: 0,
             fitting_syntaxes: 0,
             work_exhausted: false,
+            index: None,
         };
         if attempt.left.work_exhausted {
             out.attempts.push(attempt);
@@ -110,53 +112,19 @@ pub fn run(
             out.attempts.push(attempt);
             continue;
         }
-        let c = &branch.config;
-        let mut perfect: Vec<Formula> = vec![];
-        'pairs: for a in &left.rows {
-            for b in &right.rows {
-                if meter.charge(observed.len() as u64 * 32 + 32768).is_err() {
-                    attempt.work_exhausted = true;
-                    break 'pairs;
-                }
-                attempt.root_pairs += 1;
-                let size = grammar::size(a.nodes, b.nodes, c.extra, c.offset, c.negated, c.gate);
-                if size > 127 {
-                    continue;
-                }
-                let mut fits = true;
-                for (&i, &target) in &observed {
-                    attempt.root_row_comparisons += 1;
-                    let value = c.comparison(
-                        a.counts[i],
-                        b.counts[i],
-                        c.extra.map_or(0, |s| symbol_counts[s][i]),
-                    ) && c.passes(pool.nodes[i].symbol);
-                    if value != (target ^ c.flipped) {
-                        fits = false;
-                        break;
-                    }
-                }
-                if fits {
-                    attempt.fitting_syntaxes += 1;
-                    let f =
-                        grammar::make(&a.formula, &b.formula, c.extra, c.offset, c.negated, c.gate);
-                    let key = (size, &f);
-                    if perfect.len() == retained
-                        && key >= (perfect.last().unwrap().nodes(), perfect.last().unwrap())
-                    {
-                        continue;
-                    }
-                    if perfect.contains(&f) {
-                        continue;
-                    }
-                    let index = perfect.partition_point(|x| (x.nodes(), x) < key);
-                    perfect.insert(index, f);
-                    if perfect.len() > retained {
-                        perfect.pop();
-                    }
-                }
-            }
-        }
+        let (perfect, index) = pairs::run(
+            pool,
+            &observed,
+            (&left, &right),
+            &branch.config,
+            &symbol_counts,
+            retained,
+            &mut meter,
+        )?;
+        attempt.root_pairs = index.matching_pairs;
+        attempt.fitting_syntaxes = index.matching_pairs;
+        attempt.work_exhausted = index.work_exhausted;
+        attempt.index = Some(index);
         let exhausted = attempt.work_exhausted;
         out.attempts.push(attempt);
         if exhausted {
