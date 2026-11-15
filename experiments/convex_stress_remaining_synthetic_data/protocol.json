@@ -1,0 +1,214 @@
+{
+  "name": "remaining-synthetic-data-v1",
+  "source_commit": "5a37c515639f23037d191b0659a5a0853984328d",
+  "source_repository": "python_projects/diff-gpt (catalog and historical protocol)",
+  "domain_reference_commit": "0953b6a3bb62e55a03835e822ca21296cf104ec2",
+  "domain_reference_repository": "lean_projects/transformer",
+  "history_sha256": "f31ed0f58f27cc4cf0603b9759c882611cda31e2db8a9fff622a806307d0acaf",
+  "baseline339_producer": "34ea5801d748f487c6c83b930b43047fc3b577eb",
+  "baseline339_sha256": "4501ba0f11e8e90da1f548b3f71fc619823ce2062e3f2039b0d57ce3be7d5e0d",
+  "original35_sha256": "c9b3c559069fa1e9a4cd68a5cf3ee93123008bcd54753cf3a2485e2c6ad9cef2",
+  "definitions": {
+    "suite-count": {
+      "task": "count",
+      "symbols": 64,
+      "number_limit": 128,
+      "length": 16,
+      "min_length": 8,
+      "longer_lengths": [
+        32,
+        64
+      ]
+    },
+    "suite-addition-forward-plain-standard": {
+      "task": "addition",
+      "addition_order": "forward",
+      "index_hints": false,
+      "carry_sampling": "standard",
+      "carry_length": null,
+      "length": 4,
+      "min_length": 2,
+      "longer_lengths": [
+        8,
+        16
+      ]
+    },
+    "suite-addition-forward-plain-balanced": {
+      "task": "addition",
+      "addition_order": "forward",
+      "index_hints": false,
+      "carry_sampling": "balanced",
+      "carry_length": null,
+      "length": 4,
+      "min_length": 2,
+      "longer_lengths": [
+        8,
+        16
+      ]
+    },
+    "suite-addition-forward-hints-standard": {
+      "task": "addition",
+      "addition_order": "forward",
+      "index_hints": true,
+      "carry_sampling": "standard",
+      "carry_length": null,
+      "length": 4,
+      "min_length": 2,
+      "longer_lengths": [
+        8,
+        16
+      ],
+      "symbols": 64,
+      "number_limit": 128
+    },
+    "suite-addition-forward-hints-balanced": {
+      "task": "addition",
+      "addition_order": "forward",
+      "index_hints": true,
+      "carry_sampling": "balanced",
+      "carry_length": null,
+      "length": 4,
+      "min_length": 2,
+      "longer_lengths": [
+        8,
+        16
+      ],
+      "symbols": 64,
+      "number_limit": 128
+    },
+    "suite-addition-reverse-plain-standard": {
+      "task": "addition",
+      "addition_order": "reverse",
+      "index_hints": false,
+      "carry_sampling": "standard",
+      "carry_length": null,
+      "length": 4,
+      "min_length": 2,
+      "longer_lengths": [
+        8,
+        16
+      ]
+    },
+    "suite-addition-reverse-plain-balanced": {
+      "task": "addition",
+      "addition_order": "reverse",
+      "index_hints": false,
+      "carry_sampling": "balanced",
+      "carry_length": null,
+      "length": 4,
+      "min_length": 2,
+      "longer_lengths": [
+        8,
+        16
+      ]
+    },
+    "suite-addition-reverse-hints-standard": {
+      "task": "addition",
+      "addition_order": "reverse",
+      "index_hints": true,
+      "carry_sampling": "standard",
+      "carry_length": null,
+      "length": 4,
+      "min_length": 2,
+      "longer_lengths": [
+        8,
+        16
+      ],
+      "symbols": 64,
+      "number_limit": 128
+    },
+    "suite-addition-reverse-hints-balanced": {
+      "task": "addition",
+      "addition_order": "reverse",
+      "index_hints": true,
+      "carry_sampling": "balanced",
+      "carry_length": null,
+      "length": 4,
+      "min_length": 2,
+      "longer_lengths": [
+        8,
+        16
+      ],
+      "symbols": 64,
+      "number_limit": 128
+    },
+    "suite-crasp-depth-1": {
+      "task": "crasp",
+      "formula_depth": 1,
+      "formula_seed": 0,
+      "length": 16,
+      "min_length": 8,
+      "longer_lengths": [
+        32,
+        64
+      ]
+    },
+    "suite-crasp-depth-2": {
+      "task": "crasp",
+      "formula_depth": 2,
+      "formula_seed": 0,
+      "length": 16,
+      "min_length": 8,
+      "longer_lengths": [
+        32,
+        64
+      ]
+    },
+    "suite-crasp-depth-3": {
+      "task": "crasp",
+      "formula_depth": 3,
+      "formula_seed": 0,
+      "length": 16,
+      "min_length": 8,
+      "longer_lengths": [
+        32,
+        64
+      ]
+    },
+    "random-lm-control": {
+      "task": "random_lm",
+      "symbols": 4,
+      "number_limit": 64,
+      "length": 8,
+      "min_length": null,
+      "longer_lengths": [
+        16,
+        32
+      ]
+    }
+  },
+  "sizes": {
+    "train": 128,
+    "validation": 32,
+    "test": 64
+  },
+  "random_sizes": {
+    "train": 8,
+    "validation": 64,
+    "test": 128
+  },
+  "addition_plain_reserved_symbols": 64,
+  "data_seed": 1,
+  "generator_version": 2,
+  "study": {
+    "noise": 0,
+    "disjoint": false,
+    "tolerance": 0.02
+  },
+  "original_success": {
+    "metric": "sequence_accuracy",
+    "threshold": 0.95
+  },
+  "goals": {
+    "raw_token": 0.99,
+    "exact_sequence": 0.99
+  },
+  "limits": {
+    "process_address_space_bytes": 68719476736,
+    "buffer_ceiling_bytes": 60129542144,
+    "addition_digits": 32,
+    "word_length": 4096,
+    "positions_per_split": 2000000
+  },
+  "new_model_evaluations": 0
+}

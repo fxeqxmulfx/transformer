@@ -6967,3 +6967,12 @@ histories. Thus23 additional cases pass all-heldout99, and58/165 catalog cases
 are measured;107 remain unmeasured. Task340 prepares the remaining13 synthetic
 datasets: Count, eight Addition variants, three C-RASP depths and the explicit
 random-label control. Data preparation alone must add no model-success claim.
+
+Task340 now has a native data/scoring port for all13 remaining synthetic
+cases. Seven independent checks pass, including digit-wise carry arithmetic,
+all original masks/limits, format-equivalent RNG streams, inclusive C-RASP
+prefix counts checked by a separate postorder recount, and random-control
+novelty by full sampled sequence. All63 historical test example/target/change
+denominators match. Freeze and independently repeat the full inventory before
+model work; preserve whole339 and the separate original35 reference. No new
+model is measured, so58/165 remains the evaluated scope and107 are unmeasured.

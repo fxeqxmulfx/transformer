@@ -1,0 +1,20 @@
+[package]
+name = "convex-stress-remaining-synthetic-data"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+convex-stress-generative-data = { path = "../convex_stress_generative_data" }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+sha2 = "=0.11.1"
+
+[profile.release]
+lto = "thin"
+
+[profile.test]
+opt-level = 2
+
