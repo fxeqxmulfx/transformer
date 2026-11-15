@@ -29,6 +29,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ClassGeometry
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.CoordinatePrograms
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SelectedAnchors
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -139,6 +140,9 @@ CM60 preserves complete-head ordinary CE and its derivatives under exact
 multiplicity grouping, using each batch's own counts and actual denominator.
 It retains convexity on the joint domain and exposes unweighted deduplication
 as a changed objective; contradictory noisy anchors remain a separate problem.
+CM61 separates selected exact anchors from all observed CE records. Identical
+features with conflicting anchors force zero masses; a concrete selection
+restores a nonempty convex domain while retaining noisy labels in ordinary CE.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/

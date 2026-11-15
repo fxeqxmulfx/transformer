@@ -19207,3 +19207,57 @@ they do not assert bitwise equality of differently ordered floating-point sums,
 native memory bounds, or an empirical success on the new Basis cases. A native
 implementation still needs independent objective/gradient checks, complete
 record accounting, genuine batch tails, and a frozen repeated evaluation.
+
+## CM61. Selected exact anchors with all noisy observations in CE
+
+CM60 preserves an objective; it does not make the fully anchored CM57 domain
+feasible under label noise. For a fixed program's complete feature vector h,
+suppose both exact equations `center(theta,h) = gamma*a` and
+`center(theta,h) = gamma*b` are imposed with a != b. Subtracting gives
+`gamma*(a-b)=0`, hence gamma=0. If every program has such an identical-feature
+conflict, all masses vanish. A strictly positive total-mass constraint then
+makes the fully anchored domain empty, independently of the optimizer or the
+spectral bound. Raising a memory cap or taking more optimization steps cannot
+repair this mathematical infeasibility.
+
+Exact center equations are additional identifying assumptions, not part of
+the definition of ordinary cross-entropy. Fix a set K of original anchor
+indices before the convex stage and impose only those equations. Retain the
+CM57 identity-copy prior, perspective charge for every program, nonnegative
+masses, positive total mass, and global complete-coefficient budget. This is
+CM57's domain with the anchor index restricted to the subtype K. It is convex.
+If K is reduced, the domain enlarges; every fully anchored feasible point is
+still feasible after selection. The selector itself is outside this convexity
+statement and must not consult heldout labels or unknown clean training labels.
+
+The empirical loss is separately indexed by the complete original batch B:
+`(1/|B|) * sum_(i in B) CE(actual_head(input_i), observed_label_i)`.
+It does not replace B with K. All noisy labels remain observations with their
+original multiplicities, and the actual ordinary full/minibatch CE remains
+convex on the selected-anchor domain. The theorem permits a different anchor
+index type and CE record type, making the distinction explicit. CM60 grouping
+can be applied to those complete CE records independently of the fixed anchor
+selection. No pseudo-clean label or filtered CE objective is introduced.
+
+A concrete witness has one program, two identical content features `[1,0,0,0,0]`
+with different observed coordinates zero and one, and a third copy feature
+`[0,0,0,0,1]` with observed coordinate one. The fully anchored positive-mass
+domain is empty. Keeping only the third equation admits parameters
+`[1/2,0,0,0,1,1]`, with mass one and complete charge eight within local and
+global budgets16. The content center is one half and the copy center is one.
+The example's convex CE still contains all three records and both raw labels.
+It is therefore a nonempty relaxation with genuine noisy observations, not
+an empty-domain convexity witness or a claim to fit both labels exactly.
+
+Removing an anchor also removes any identification supported only by that
+equation. This result proves neither recovery of unknown clean labels nor
+99% heldout accuracy, a noise model, convergence of the numerical optimizer,
+or realizability of a newly discovered program. Those remain separate
+statistical, semantic and empirical obligations. A native implementation must
+record the selected anchors, preserve all original CE records, audit the full
+complex head and budgets, and freeze before heldout evaluation. The original
+fully anchored baseline remains a distinct comparison.
+
+Formalization: `ConvexDepth/SelectedAnchors/Basic.lean`, nine theorems with
+satisfying conditional examples and explicit feasible/infeasible witnesses.
+`scripts/SelectedAnchorAxioms.lean` audits all nine directly.

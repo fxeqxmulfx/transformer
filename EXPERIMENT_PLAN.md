@@ -7156,3 +7156,13 @@ The127-record schedule retains its105-record tail. Conflicting noisy labels
 stay separate and incompatible exact anchors are refused. These are numerical
 implementation checks, not new catalog measurements. Complete Basis feature
 construction, noisy-domain treatment and the frozen eight-case repeat remain.
+
+CM61 now separates exact identifying anchors from the complete observed CE
+pool. Conflicting identical-feature anchors force zero masses and can make
+the fully anchored positive-mass domain empty. A fixed selected-anchor domain
+retains all CM57 budgets and convex full/minibatch CE on every observed label.
+Its concrete noisy witness is feasible after selection and infeasible with
+all anchors. Nine new Lean theorems pass the full13955-job build and direct
+standard-axiom audit; global36 sorry,0 rests and0 extra axioms remain. Native
+INDEX reports4858 modules25484 theorems,0 vacuous and0 placeholder. This is
+a constraint repair, not a clean-label or heldout-accuracy guarantee.
