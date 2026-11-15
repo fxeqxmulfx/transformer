@@ -19491,3 +19491,75 @@ real/imaginary halves. The complete column bound specializes to
 `8 * R * card(B)`. Zero source entries can be skipped as exact products of zero;
 this does not remove any learned coefficient from storage or its column charge.
 The nonconstant many-to-one witness inhabits this block-source domain as well.
+
+## CM65. Exact elimination of observed decoder rows and its induced geometry
+
+The complete CM64 implementation stores every joint raw-class row, including
+rows already fixed by observed anchors. This duplicates a program's shared mass
+at each observed state. The large constant controls retain all 4,767 compatible
+input programs, so the complete tensor is expensive even though many of its
+entries are constrained. A larger fixed input family needs a representation
+that avoids these redundant coordinates without fixing unknown answers.
+
+For each program, let `L_j(s)` be CM53's actual partial dictionary, obtained
+only from the original training observations. Define `Unknown_j` as the states
+where this lookup is `none`, and `Known_j` as its complement. The reduced
+coordinates consist of all shared masses `w[j]` and all raw-class entries
+`u[j,s,c]` for `s in Unknown_j`. Their constraints are explicit:
+
+```
+w >= 0,    delta <= sum_j w[j] <= R,
+w[j] = 0 for programs outside the complete observed-compatible filter,
+u >= 0,    sum_c u[j,s,c] = w[j] for every unknown state s.
+```
+
+Reconstruct the original tensor by setting an observed row to
+`w[j] * 1[c = L_j(s)]`, and using `u[j,s,c]` at every unknown state. This map is
+linear in the actual learned coordinates. Conversely, restriction keeps all
+masses and every unknown row. Restriction after reconstruction is the identity
+on the entire reduced coordinate space. Reconstruction after restriction is
+the identity on every feasible original CM64 tensor, including coefficients
+never read at a training input. The two explicit feasible domains therefore
+correspond bijectively. Inconsistent candidates have zero mass by CM64; the
+proof does not truncate the compatible family or choose a decoder completion.
+
+The reduced domain is convex. The reconstructed complete complex head is
+exactly the previous head, including all real and imaginary coefficients and
+all raw classes. Thus every full or minibatch CE value is unchanged, with the
+same original record IDs, multiplicities and short-tail denominator. Ordinary
+CE remains convex in the reduced coordinates. The complete column bound is
+still `2 * R * card(S)`; no coefficient is exempt merely because it is generated
+from a mass instead of stored independently.
+
+Exact feasible-set equivalence does not preserve unweighted Euclidean geometry.
+For two reduced points `a,b`, the original squared coordinate distance is
+
+```
+sum_j (1 + card(Known_j)) * (a.w[j] - b.w[j])^2
+  + sum_j sum_(s in Unknown_j) sum_c (a.u[j,s,c] - b.u[j,s,c])^2.
+```
+
+Each distinct observed state contributes one affine copy of the mass. This is
+a state count, not the record multiplicity used in empirical CE. Omitting these
+weights changes distances and does not justify claiming the same projected
+gradient trajectory. The identity describes distances between reconstructed
+points; equivalence of a numerical projection from an arbitrary off-domain
+gradient proposal still needs its own derivation and numerical validation.
+
+The nonconstant CM53/64 witness has three observed states in its active program
+and a fourth, genuinely unknown state. Both opposite raw completions remain
+feasible in the reduced domain and give opposite strict complete complex
+margins on the unseen query. Between confidence two and four with a fixed
+completion, full squared distance is 20 while unweighted reduced distance is 8.
+Examples instantiate every conditional theorem, including duplicate records,
+a singleton batch tail, and a source/head with nonzero imaginary coordinates.
+
+Formalization: `ConvexDepth/ObservedRows/{Basic,Domain,Geometry,Head,Witness}.lean`;
+24 theorems are audited directly by `scripts/ObservedRowAxioms.lean`. These are
+exact-real coordinate and geometry results. They establish neither new target
+realizability nor a Rust storage bound, floating-point equivalence, optimizer
+convergence, or additional heldout accuracy. A native follow-up must preserve
+every unknown entry, evaluate and charge the actual complete complex head,
+declare its projection geometry, account for expanded storage and work, and
+freeze a new producer before its own complete independent comparison. The
+already frozen CM64 cohort remains unchanged.

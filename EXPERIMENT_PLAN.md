@@ -7533,3 +7533,17 @@ original primary successes, with RandomLM still a fit refusal. No new catalog
 case or regression is credited: coverage stays77/165. Original/repeat finish
 in1:14:11/1:13:54 under64GiB; peak3.86/1.54GiB. Task351's complete bounded
 comparison is now frozen atca6a4977 and running; its results remain pending.
+
+### 2026-11-15: task352 exact observed-row reduction before a wider family
+
+CM65 proves a bijective affine coordinate reduction of the full CM64 domain:
+known decoder rows are reconstructed from their shared masses, while every
+unknown raw-class row remains a variable. All complete complex coefficients,
+ordinary full/minibatch CE and the spectral capacity bound are preserved.
+The exact induced Euclidean metric weights each mass by one plus its number of
+observed states; an unweighted reduced optimizer must not be presented as the
+same trajectory. The nonconstant witness retains opposite unseen answers and
+has full/reduced squared distances 20/8. This proof supplies a basis for testing
+a larger fixed input family within the RAM limit. It supplies no new catalog
+pass. Keep the frozen task351 producer and its independent repeat unchanged;
+any native compressed representation needs its own checks and future freeze.
