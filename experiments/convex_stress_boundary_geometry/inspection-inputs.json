@@ -1,0 +1,22 @@
+{
+  "baseline_review":"b99c845b32545de78da7a9056a90476040b7513b",
+  "baseline_producer":"9c7370a593c078a994b06a12449d00b940d26fd0",
+  "baseline_report_sha256":"7632e96c882483211d31a2fc882990ffbe0d3fd77144424b353dc1bed2b18ebc",
+  "baseline_complete_summary_sha256":"fd8f7ff32e9cdded9ef70c4c9526a472c5c85fa88cb765991142752b25a5b879",
+  "shared_head_review":"7d5029eed8b67b1596874e95c2060c354dcfdcfd",
+  "shared_head_inspection_summary_sha256":"e3bcf2ac9a27e41c7af37c199db10e65e46654861e9fe11fe662bc8856f62729",
+  "comparison_review":"ec89d684dab72693c9a77fbe55dd7b20c1772e78",
+  "comparison_summary_sha256":"774b6beabafe008a5cf41904d89faadda9bd20c313b735db0bb54fd8c501f9c6",
+  "previous_geometry_summary_sha256":"06590309ffca1513dbf99bc2d7e1a9610142863f15afaf8016f2c4fb9a87141b",
+  "shared_geometry_summary_sha256":"826b4fa770a13daa1a584c7cec15c2be3c6e3ec9a75646a59b5e1d44be74cb5c",
+  "raw_comparison_summary_sha256":"d0f83b52b2fa0c50fd745e38bb4d20bf8553f757bf04eb31f367e186c2830c02",
+  "shared_geometry_producer":"b19b3bc9d5f3281b85c0817983f6466faeee855c",
+  "raw_comparison_producer":"312ff793359f28d1c14540c7e1b1eb159b5193ee",
+  "scope":"Training-only inspection of both roles of every selected319 head; no heldout evaluation or model selection on task names.",
+  "roles":["prior","supplement"],
+  "models":[
+    {"file":"model-0.json","mode":"Forward","sha256":"9e2ef7264b574ad423b1752fa9526908ca661ead031a2997237ec647025a8f38"},
+    {"file":"model-1.json","mode":"Full","sha256":"231164daa1eed37fb914d72b37a52a15ebce9b9c32b8520a3ef3f6d38ec6917e"},
+    {"file":"model-2.json","mode":"Mini","sha256":"f10310121c105a7cec5e56385f88c5afccc056cf44d24e811ba041755fb3dc3b"}
+  ]
+}

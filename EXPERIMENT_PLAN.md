@@ -6815,3 +6815,12 @@ orientations and training-only conditional folds. It will replace independent
 block offsets by a global affine descriptor map. Retain331/332, including
 their original heldout CE regression. Task336 remains the separate original35
 comparison; task335 may not use its query labels to choose a model.
+
+Task335 native source now passes five checks. Its fixed map uses axis/diagonal
+block extrema inside full-grid/nonmodal-box frames, global uncentered ridge
+moments or shared interval-boundary regression, and three conditional
+cell-exclusion folds. The3072 configurations retain1152 fold states and9216
+gain/common evaluations. Complete complex budgets charge at most25 stored
+parameters per role; full/mini/forward retain original records and final
+iterates. Commit/freeze before six original training-only inspections and
+independent repetition. No new original heldout result follows from these checks.
