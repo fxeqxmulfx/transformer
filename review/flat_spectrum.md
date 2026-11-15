@@ -19129,7 +19129,15 @@ comparison iff `b <= a-e-k`. Both integer equivalences are formalized,
 including negative thresholds. Intersecting those count constraints narrows
 candidate pairs without adding training assumptions or dropping matching pairs.
 
-Formalization: `ObservedPrefixes/Transitions.lean` proves12 theorems, including
+For a retained left bank with per-prefix count range [lo,hi], a true comparison
+requires `right >= lo-extra-offset+1`, and a false one requires
+`right <= hi-extra-offset`. Conversely a retained right range requires
+`left <= hi+extra+offset-1` for true and `left >= lo+extra+offset` for false.
+These necessary bounds are proved with explicit count-range hypotheses. They
+preserve candidates that can pair with a member of that retained anchor bank;
+they do not establish that a truncated anchor contains the target program.
+
+Formalization: `ObservedPrefixes/Transitions.lean` proves16 theorems, including
 the append identities connecting the step to actual prefix counts, threshold
 constraints, and the concrete ambiguity with an extra count. Each conditional
 theorem has a satisfying example. `scripts/ObservedPrefixAxioms.lean` includes

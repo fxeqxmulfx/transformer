@@ -127,6 +127,35 @@ theorem comparison_right_upper (a b e k : ℤ) :
     ¬ a < b + e + k ↔ b ≤ a - e - k := by
   omega
 
+/-- A lower bound on a retained left count gives a necessary right bound
+for any matching pair; no unseen-realizability claim is made (CM59). -/
+theorem retained_left_lower {a lo b e k : ℤ} (ha : lo ≤ a) (ht : a < b + e + k) :
+    lo - e - k + 1 ≤ b := by omega
+
+/-- The complementary necessary right bound uses a retained left maximum (CM59). -/
+theorem retained_left_upper {a hi b e k : ℤ} (ha : a ≤ hi) (ht : ¬ a < b + e + k) :
+    b ≤ hi - e - k := by omega
+
+/-- A retained right maximum bounds every matching left count (CM59). -/
+theorem retained_right_upper {a b hi e k : ℤ} (hb : b ≤ hi) (ht : a < b + e + k) :
+    a ≤ hi + e + k - 1 := by omega
+
+/-- A retained right minimum bounds a false comparison's left count (CM59). -/
+theorem retained_right_lower {a b lo e k : ℤ} (hb : lo ≤ b) (ht : ¬ a < b + e + k) :
+    lo + e + k ≤ a := by omega
+
+example : (0 : ℤ) - 0 - 0 + 1 ≤ 3 :=
+  retained_left_lower (a := 2) (by norm_num) (by norm_num)
+
+example : (1 : ℤ) ≤ 4 - 0 - 0 :=
+  retained_left_upper (a := 2) (by norm_num) (by norm_num)
+
+example : (2 : ℤ) ≤ 4 + 0 + 0 - 1 :=
+  retained_right_upper (b := 3) (by norm_num) (by norm_num)
+
+example : (0 : ℤ) + 0 + 0 ≤ 2 :=
+  retained_right_lower (b := 1) (by norm_num) (by norm_num)
+
 example : true = true ∧ false = false ∧ false = false ∧
     (0 : ℤ) = 1 - 1 ∧ unitStep 0 true false false = 1 :=
   upward_crossing (by norm_num) (by norm_num [unitStep])

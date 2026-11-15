@@ -29,3 +29,7 @@ import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.extra_downward_ambiguity
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.comparison_right_lower
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.comparison_right_upper
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.retained_left_lower
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.retained_left_upper
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.retained_right_upper
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.retained_right_lower
