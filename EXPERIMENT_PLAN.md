@@ -6824,3 +6824,20 @@ gain/common evaluations. Complete complex budgets charge at most25 stored
 parameters per role; full/mini/forward retain original records and final
 iterates. Commit/freeze before six original training-only inspections and
 independent repetition. No new original heldout result follows from these checks.
+
+Task334 is now reviewed at producer2612b05f. Original25m21.56s and independent
+repeat25m12.05s both finish; all100 JSON artifacts are exactly equal and the12
+earlier control states/data/results remain exact. All16 additional cases pass
+original success and raw/exact99 in every mode and short/long split; all four
+new parity cases reach100%. Peak RAM7.53GiB. The learned finite programs fix
+singleton convex slices, so full/mini compute true gradients but make zero
+effective updates. Ten missing-state scoring events per mode in one hinted
+case use an explicit copy prior, with duplicate novel subsets retained.
+These empirical successes do not identify arbitrary unseen labels. Evidence
+and review are preserved in the immutable prefix-programs-v1 freeze. There
+remain114 additional cases unmeasured; original35 raw99 remains34/35.
+
+Task335 producerc09c06bd is frozen with669 source inputs. Original and independent
+six-inspection drivers are running from immutable copies, with step0.1 chosen
+prospectively for the stronger shared-gradient coupling. Task336 remains blocked
+on the component review and has not scored any new original heldout query.

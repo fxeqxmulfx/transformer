@@ -74,8 +74,8 @@ bash "$FREEZE/source/experiments/convex_stress_prefix_programs/run.sh" "$FREEZE/
 before production. Keep drivers immutable while running. Use fresh storage
 outputs; preserve complete artifact manifests and compare every JSON result.
 Direct full Lean, global axioms, native INDEX and forbidden checks remain
-required. Generated reports and logs remain ignored and local. New stress-test
-results are pending; the12 reviewed passes do not yet become16.
+required. Generated reports and logs remain ignored and local. The completed
+review below adds four measured passes to the12 controls.
 
 Eight native checks pass before production. Besides count-three generalization
 and categorical decoder renaming, they cover both interpreters over every
@@ -89,3 +89,64 @@ and285,400,670,208 respectively. These are dimension checks, not accuracy result
 Each public command verifies the immutable complete inventory once; every
 loaded state retains its own seal, input and forecast checks. This avoids
 rehashing both large baseline files once per already sealed case in that command.
+
+## Reviewed results
+
+Producer `2612b05fe0df1fb4612ea09e2eacc61e278d97c7` was frozen before original
+training/scoring. Both the original run and an independent rebuild/repeat
+complete all16 cases and all48 mode endpoints without refusals. All100 saved
+JSON artifacts match exactly, including complete states, forecasts, scores,
+replays, inventory and retained reports. The12 prior controls preserve their
+exact training states, data and result objects; all earlier refusals remain.
+
+All16 cases now have100% raw-token and exact-sequence accuracy on every tested
+split in full, minibatch and forward modes. Both original success flags and
+the99% goals pass. The four additions have these test counts, identical in
+all modes; each test split has64/64 exact sequences including EOS:
+
+| Added case | Short correct/targets | Length32 | Length64 | Maximum ordinary CE over splits |
+| --- | ---: | ---: | ---: | ---: |
+| Final parity | 128/128 | 128/128 | 128/128 | 3.7374e-9 |
+| Running parity | 892/892 | 2176/2176 | 4224/4224 | 3.7374e-9 |
+| Running parity with hints | 1656/1656 | 4224/4224 | 8320/8320 | 8.6074e-9 |
+| One-symbol events with hints | 850/850 | 2142/2142 | 4198/4198 | 8.6074e-9 |
+
+Each new case tries4704 declared programs. The four compatible banks contain
+16,8,8,32 programs respectively. Training selects the first compatible program:
+the learned delimiter/counter are18/22, with a learned modulus2; the output
+schedule and adjacent-hint copy placement differ by the learned input format.
+The raw output labels and EOS are learned categorical dictionary entries.
+The actual head uses one selected program with51,200 real coefficients for
+unhinted data or117,248 for hinted data. Independent generated-query complex
+products agree exactly; complete numerical inversion errors stay below1.64e-13.
+
+All full endpoints evaluate16 gradient batches; mini endpoints evaluate
+32/224/412/228 batches on256/1768/3280/1816 original supervised prefixes,
+retaining tails. Forward evaluates no gradients. Effective parameter updates
+are zero in every mode because discovery already fixes the singleton affine
+slice. The new result supports the learned finite representation and decoder;
+it is not evidence of gradient-based representation learning.
+
+In the one-symbol/hints case,10 scored missing-dictionary events per mode use
+the explicit raw-copy prior, including repeated records in novel subsets.
+Four occur on the length64 test split; all are correct. These outputs have no
+CM53 accepted-label certificate. No target realizability premise was certified
+from these measurements. Complete old and new unknown-state diagnostics remain
+visible instead of turning empirical copy success into an identification proof.
+
+Original elapsed time is25m21.56s and repeat25m12.05s. Peak resident memory is
+7,891,420 and7,890,612KiB, about7.53GiB, under the64GiB process caps. The report
+charges construction, all modes and repeated independent products separately;
+the largest new per-case stage/score/replay bound is6,059,887,071,232 scalar
+units. That conservative forecast is not measured hardware operations.
+Native eight-test, fmt/clippy/release, full Lean, direct prefix audit, global
+36sorry/0rests/0extra and native INDEX checks pass at the producer commit.
+
+Evidence is under storage `prefix-programs/original-v1`, `review-v1`, and
+`freezes/prefix-programs-v1/findings-review`. Both complete reports hash to
+`9b7c782e20a5a966c542dd023bfefa3fbf9aefb3f7e771e49b2e07aac92998c3`.
+Relative artifact manifests and exact board review are preserved with the
+freeze. Task334 is approved. This establishes16 additional cases with114 still
+unmeasured; the separate original35 suite remains34/35 raw99. It does not
+establish a single unified model passing51 cases or a matched-budget comparison
+with the preserved historical GPT results.

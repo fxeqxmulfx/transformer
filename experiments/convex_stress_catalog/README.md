@@ -29,6 +29,16 @@ The signed-kernel component at `99a42652` improves training-only diagnostics,
 but has no new held-out accuracy result yet. Its separate original35 comparison
 and this expansion are distinct experiments.
 
+The later reviewed task334 measures16 of the130 additional cases: six prefix
+cases, six copy/reverse/sort cases, and four parity/scratchpad variants. All16
+reach100% raw and exact sequence accuracy on every tested short/long split in
+full, minibatch and forward modes. Its independent100-artifact repeat is exact;
+the12 earlier controls and every prior refusal are retained. There are114
+additional cases still unmeasured. See
+[`convex_stress_prefix_programs`](../convex_stress_prefix_programs/README.md)
+for the frozen source, metrics, costs and explicit unseen-copy-prior limitation.
+This is a separate expanded cohort, not a unified51-case model evaluation.
+
 | First additional case | Original data | Longer probes | Original / new accuracy targets |
 | --- | --- | --- | --- |
 | MQAR | Four writes, two queries, 64 keys and 64 values; length 24 | 48 and 96 | 95% exact / 99% raw and exact |
