@@ -6520,7 +6520,10 @@ Original observed CE and every earlier baseline/tradeoff remain exact. The
 34 unchanged cases explicitly inherit314 metrics; only three Fibonacci states
 are freshly changed. Peak RSS6.69GiB; complete work forecast4.324T below5T.
 Report SHA2567632e96c882483211d31a2fc882990ffbe0d3fd77144424b353dc1bed2b18ebc.
-Final independent review must reproduce all118 JSON artifacts and the report.
+Independent review at `b99c845b` now reproduces all118 JSON artifacts and the
+report exactly, with22 native checks and every direct Lean/global axiom/INDEX
+check passing. The fresh repeat takes14m50.38s and peaks at6.70GiB RSS under
+64GiB. Task319 is approved as a reproducible result; Fibonacci still misses99%.
 
 Tasks329–330 will audit the fixed-feature Lean results and test a freshly trained
 bounded complete complex head on generic shared input features, using ordinary

@@ -196,9 +196,12 @@ The331-artifact original manifest is
 118 JSON files cover the complete prepared inputs, states, outcomes and summary.
 Evidence lives at `/run/media/misha/storage/transformer-runs/signed-compare/`
 and the1077-input freeze under `.../freezes/signed-compare-v3`.
-Final review requires a fresh full run and exact comparison of all118 JSON
-files and the report. Native and Lean checks must also pass at the findings
-commit before task319 is approved.
+Independent review at `b99c845b` reproduced all118 JSON files and the complete
+report byte-for-byte. All22 native checks and the direct Lean/global axiom/INDEX
+checks passed. The fresh full run took14m50.38s, peaked at7,023,100KiB RSS
+(6.70GiB), and exited0 under64GiB. Task319 is approved; the reviewed result
+still misses the per-task99% target on Fibonacci. Review logs and the board
+record are preserved under the freeze's `findings-review` directory.
 
 The next raw-label repair, tasks329–330, will test a fresh bounded complex head
 on shared input features, with ordinary CE applied to the actual observed
