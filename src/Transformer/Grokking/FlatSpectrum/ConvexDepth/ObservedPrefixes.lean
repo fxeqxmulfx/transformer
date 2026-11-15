@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Transitions
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming
 
 /-!
 # Observed-prefix signatures for nested-count discovery

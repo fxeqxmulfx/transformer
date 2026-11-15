@@ -19261,3 +19261,62 @@ fully anchored baseline remains a distinct comparison.
 Formalization: `ConvexDepth/SelectedAnchors/Basic.lean`, nine theorems with
 satisfying conditional examples and explicit feasible/infeasible witnesses.
 `scripts/SelectedAnchorAxioms.lean` audits all nine directly.
+
+## CM62. Stream one side of the observed count-program join
+
+The complete344 comparison leaves depth3 unfitted. Its training-only evidence
+shows13 admissible root configurations: three complete retained-bank joins
+have no fit, while ten configurations truncate at least one latent bank at
+262144 distinct observed signatures. Several have one complete bank and one
+truncated bank. A storage cap on both banks is therefore stronger than needed:
+index one fixed anchor bank and stream each query from the other side, without
+retaining the whole query bank. No target AST or heldout answer is needed.
+
+For a known root comparison, let a,b,e be the actual inclusive left, right and
+extra counts at an observed prefix and k its integer offset. The comparison
+a < b+e+k is equivalent to a <= b+e+k-1 and to b >= a-e-k+1. Its negation is
+equivalent to a >= b+e+k and to b <= a-e-k. These are exact integer thresholds,
+including negative offsets, for either choice of indexed bank. Intersecting
+them over every known observed prefix is equivalent to the original count
+comparison fit. Inactive gates and missing labels still give no hidden
+comparison truth. Original raw-label checks remain necessary after assembly.
+Every inclusive count lies between zero and its prefix length. Clamping an
+index threshold to [0,length+1] preserves the exact set of admissible counts;
+the two endpoints are the all-count and empty-count sentinels.
+
+Fix an anchor set A and a finite family of query chunks B_s. Existence of a
+fitting pair in A times the union of all B_s is equivalent to existence in one
+of the individual joins A times B_s; the same holds when left and right are
+interchanged. Chunks may overlap. An implementation can process one query at
+a time, discard it after checking all retained anchors, and stop on a verified
+fit. A work-limit stop must remain explicit. This removes the query retention
+cap; it does not establish completeness of a truncated anchor, the enumeration
+of all grammar terms, or generalization to an unseen word.
+
+Caching a previously tested query requires equality of its entire observed
+prefix signature, on a prefix-closed pool containing every constrained word.
+CM58 then gives equality of all counts read by the join, so the set of fitting
+retained partners is unchanged. However, an AST-size cap adds another condition.
+If cached child costs are no larger than the arriving costs, any arriving pair
+that fits under the combined child-plus-wrapper cap has a cached equivalent
+that also fits. Native costs must equal the actual AST node counts. A cheaper
+arrival must be checked again. A bounded cache can evict entries and repeat
+work later; eviction must never discard an untested candidate.
+
+Two nonconstant observed labels demonstrate the distinction. On words [true]
+and [true,false], compare the elapsed count to the count of a true final symbol
+plus one. The constant-true left child fits both observations; a retained bank
+containing only the constant-false child does not. Thus a capped bank can miss
+an actual fit. On the same words, double negation of the true-symbol predicate
+is equivalent to that predicate. The native trees have three and one nodes.
+With a three-node constant-true anchor and a five-node count/offset wrapper,
+only the cheaper query fits a nine-node cap. An expensive cached equivalent
+cannot justify skipping this later fit.
+
+Formalization: `ObservedPrefixes/Streaming/{Basic,Cache}.lean`, with direct
+audit `scripts/StreamingSearchAxioms.lean`. The fit predicate uses actual
+inclusive counts and all supplied observed comparison values. The size result
+requires checked child costs; it is not a formal Rust heap bound. Native
+indexing still needs padded-bit checks, exhaustive small-bank comparisons in
+both orientations, cache/size counterexamples, explicit work/storage admission,
+independent input interpreters, and a newly frozen complete heldout repeat.

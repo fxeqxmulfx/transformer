@@ -7223,3 +7223,16 @@ catalog cohorts, not a shared all-task checkpoint. The supplied grammar and
 discrete selection remain outside the joint convex CE claim. Task347 retains
 the depth3 truncated-bank failure; no convergence or unseen-target guarantee
 is inferred from these eight empirical successes.
+
+Task347 starts with CM62's streamed count-program join. The344 evidence has
+three complete incompatible joins and ten branches with at least one capped
+bank. A fixed anchor index can process the other bank one candidate at a time,
+preserving the actual observed-count fit while avoiding a query-retention cap.
+Seventeen Lean theorems prove both exact index orientations, sentinel clipping,
+chunked existence, complete-signature cache equivalence and reuse of refusals
+only for no-larger cached syntax. Concrete nonconstant witnesses show both
+truncated-bank failure and why a cheaper equivalent arrival must be retested.
+The13958-job build and direct standard-axiom audit pass; global36 sorry,
+0 rests and0 extra axioms remain. Native INDEX reports4861 modules25501
+theorems,0 vacuous and0 placeholder. Native streaming search and its frozen
+heldout repeat remain pending; verified catalog coverage stays77/165.
