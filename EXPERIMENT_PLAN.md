@@ -6769,3 +6769,25 @@ checks and directLean/audits/INDEX pass. Preserve the regression: no99% claim.
 Tasks335/336 queue a bounded input-geometry hypothesis and a separate frozen
 all35 comparison;335 is available to claim. Task334 continues the four parity
 model evaluations with the reviewed12 controls.
+
+Task334 first audits a generic count-state program and a learned categorical
+decoder in `scripts/PrefixCountingGenerationAxioms.lean`. Four observations
+eliminate the wrong count symbol, identify a new covered input through the
+actual complex Fourier head, and leave a removed state's query unidentified.
+CM53 supplies initialization, complete coefficient bounds and convex ordinary
+CE; CM54 supplies conditional own-prefix generation including EOS. The direct
+audit passes without new source theorems or axioms.
+
+The prospective native bank learns delimiters and frequent count symbols from
+minimal observed prefixes, enumerates stride/offset, moduli2..8, final/running/
+selected emissions and adjacent-token copying, and learns raw labels only from
+training dictionaries. Retain every conflict and compatible dictionary; choose
+the first compatible program in the fixed order, as CM53's vertex initializer.
+This is a singleton affine training slice after discrete discovery. All48 mode
+endpoints remain required, with unchanged328 controls. The new complex code has
+256 states, reserving raw copy states below240, count states240..247, and two
+structural states whose raw outputs are learned. No target oracle or task name
+enters a model. Unknown copies use an explicit prior; other unknown states have
+no identification certificate. Forecast complete work before fitting/scoring;
+the prospective new evaluation cap is512B scalar units per case/mode, with
+56GiB buffers and64GiB process limits. No new heldout result yet.
