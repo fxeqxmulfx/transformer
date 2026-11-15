@@ -6802,3 +6802,16 @@ the new audit, global36sorry/0rests/0extra, native INDEX, fmt/clippy/release and
 shell checks pass. Freeze committed source and run all16 states before any
 score, then independently repeat. Original35 remains34/35 raw99; no new parity
 model pass is claimed from these implementation checks.
+
+Task335 starts with `scripts/BoundarySharingAxioms.lean`, before any native fit.
+The audit instantiates CM55 with global complex coefficients and boundary
+parameters tied through signed input-only block descriptors. It charges all
+expanded coefficients and a nonzero categorical offset, and combines CM51
+normalization with full/mini ordinary-CE convexity. The finite four-state
+witness is not a proof of floating-point refinement or unseen-label accuracy.
+The proposed native constructor will compare generic route extrema inside the
+whole grid and the nonmodal-route bounding rectangle, using categorical class
+orientations and training-only conditional folds. It will replace independent
+block offsets by a global affine descriptor map. Retain331/332, including
+their original heldout CE regression. Task336 remains the separate original35
+comparison; task335 may not use its query labels to choose a model.
