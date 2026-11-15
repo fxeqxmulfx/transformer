@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_weighted_observations`](convex_stress_weighted_observations) | Exact CM60 grouping for complete joint CE | Lean first; native original-weight CE and gradients, genuine minibatch tails, deterministic replay, and200003-record check beyond the old cap. Noisy anchor conflicts stay explicit. No new stress-test scores. |
 | [`convex_stress_basis_data`](convex_stress_basis_data) | Remaining Basis recall, languages and noisy parity | All eight cases/45 splits preserve5806712 training targets; four complete artifacts and executable repeat exactly. Seven native checks pass, including original fingerprints and fixed103/512 label flips. No model measurements or new accuracy credit. |
 | [`convex_stress_prefix_quotients`](convex_stress_prefix_quotients) | Reviewed deeper count search with joint CE | Depth2 recovered;11/13 cases reach100% raw/exact on all193 measured splits in every mode. All201 artifacts repeat exactly; depth3/RandomLM refusals and full history retained. Coverage69/165, peak7.63GiB. |
 | [`convex_stress_boundary_geometry`](convex_stress_boundary_geometry) | Training-only shared boundary offsets | Reproduced failure: all28 JSON artifacts match, but primary conditional accuracy4512/4704 trails331. Full/mini reduce CE without fixing representation. Complete results remain intact; no original heldout score. |

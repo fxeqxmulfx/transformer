@@ -7145,3 +7145,14 @@ Full build13953 jobs and the direct standard-axiom audit pass; the global audit
 retains36 existing sorry,0 rests and0 extra axioms. Native INDEX reports4856
 modules,25475 theorems,0 vacuous and0 placeholder. Native weighted training
 and the eight-case model comparison are still pending; no accuracy is added.
+
+The CM60 native library now retains each original ID and evaluates complete
+feature/observed-label fibers with their actual batch multiplicities. Six
+checks compare all three modes with the retained ungrouped trainer, including
+every joint gradient and independent complex-product finite differences.
+A200003-record stream keeps all IDs and crosses the old200000 cap; two full
+updates represent400006 gradient records through six weighted group visits.
+The127-record schedule retains its105-record tail. Conflicting noisy labels
+stay separate and incompatible exact anchors are refused. These are numerical
+implementation checks, not new catalog measurements. Complete Basis feature
+construction, noisy-domain treatment and the frozen eight-case repeat remain.
