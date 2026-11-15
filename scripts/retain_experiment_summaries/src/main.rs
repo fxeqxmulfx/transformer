@@ -222,9 +222,10 @@ impl Archive {
                 self.summaries += 1;
                 return Ok(());
             }
-            let value = streaming::read(BufReader::new(fs::File::open(path)?))?;
-            let retained = json!({"format":"compact_experiment_summary_v1","source_sha256":sha,
-                "raw_replay_evidence_will_be_removed":true,"summary":value});
+            let finding = streaming::finding(BufReader::new(fs::File::open(path)?))?;
+            let retained = json!({"format":"compact_experiment_summary_v2","source_sha256":sha,
+                "raw_replay_evidence_will_be_removed":true,"summary":finding["summary"],
+                "incomplete_report":finding["incomplete_report"],"parse_error":finding["parse_error"]});
             let bytes = serde_json::to_vec(&retained)?;
             self.summary_cache.insert(sha.clone(), digest(&bytes));
             self.put(path, "compact_summary", &bytes, sha, size, mode)?;

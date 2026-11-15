@@ -107,9 +107,34 @@ pub fn read(reader: impl std::io::Read) -> serde_json::Result<Value> {
     deserializer.end()?;
     Ok(result)
 }
+pub fn finding(reader: impl std::io::Read) -> serde_json::Result<Value> {
+    match read(reader) {
+        Ok(summary) => Ok(json!({"summary":summary,"incomplete_report":false,"parse_error":null})),
+        Err(error) if !error.is_io() => {
+            Ok(json!({"summary":null,"incomplete_report":true,"parse_error":error.to_string()}))
+        }
+        Err(error) => Err(error),
+    }
+}
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn incomplete_reports_are_explicitly_unscored_and_io_errors_still_stop() {
+        for bytes in [&b""[..], &b"{\"accuracy\":1."[..]] {
+            let kept = finding(bytes).unwrap();
+            assert_eq!(kept["incomplete_report"], true);
+            assert!(kept["summary"].is_null());
+            assert!(kept["parse_error"].is_string());
+        }
+        struct Broken;
+        impl std::io::Read for Broken {
+            fn read(&mut self, _: &mut [u8]) -> std::io::Result<usize> {
+                Err(std::io::Error::other("read failure"))
+            }
+        }
+        assert!(finding(Broken).is_err());
+    }
     #[test]
     fn streaming_matches_independent_tree_compaction_with_large_nested_payloads() {
         let source = json!({"records":(0..600).map(|i|json!({"case":i,"targets":2000,"metrics":{"correct":1999,"loss":0.003},

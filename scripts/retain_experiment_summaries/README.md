@@ -21,8 +21,10 @@ The `summaries/` tree mirrors original paths for readable access to compact
 results and historical provenance. `objects/` stores deduplicated contents;
 source files can be reconstructed using the index. `archive-summary.json` gives
 the completed archive counts and index hash. A successful exit is required
-before cleanup; any unreadable input, parse failure, oversized source file or
-hash conflict stops retention. Symlinks are recorded without following them.
+before cleanup; any unreadable input, oversized source file or hash conflict
+stops retention. Empty or malformed historical JSON reports retain their exact
+hash and parse error with `incomplete_report: true` and no invented score.
+Symlinks are recorded without following them.
 Compiler/dependency caches are excluded.
 
 Historical verification records describe checks that completed before cleanup.
@@ -38,6 +40,7 @@ cargo build --offline --locked --release --manifest-path scripts/retain_experime
 prlimit --as=110000000000:110000000000 -- "$CARGO_TARGET_DIR/release/retain-experiment-summaries" ABSOLUTE_ROOT_LIST FRESH_ARCHIVE
 ```
 
-Three controls check retention of exact counts and failed outcomes, explicit
+Four controls check retention of exact counts and failed outcomes, explicit
 large-array omissions, and agreement between the streaming visitor and an
-independent complete-tree compactor, including malformed trailing input.
+independent complete-tree compactor. Incomplete JSON is explicitly unscored,
+while actual filesystem read failures still stop retention.
