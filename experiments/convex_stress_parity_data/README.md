@@ -62,3 +62,17 @@ Compare complete inventory bytes and preserve evidence outside the worktree.
 Direct `lake build`, `lake env lean -j 2 scripts/Axioms.lean`, native INDEX
 `--check` and forbidden-source scans remain required. This data port changes
 no Lean theorem. Generated inventories, logs and binaries remain local.
+
+Producer `9d9216b0` is reviewed. Its freeze contains427 checked source inputs.
+The original and independent inventory have identical complete bytes, SHA256
+`8b5508d9037bf28268572c2dff4a5fe46052ff9b686754701aee935ff35c57ac`.
+All44 splits retain prompts, masks, answers, limits and fingerprints; the entire
+reviewed328 report is embedded. Both inventories exit0 under64GiB. Original and
+repeat take1m19.10s and1m17.67s, with peak RSS3,201,640 and3,201,560KiB
+(3.05GiB). Six native checks, fmt/clippy/release, pinned source checks, direct
+Lean build/global audit and native INDEX all pass at the producer commit.
+The global audit remains36 sorry,0 dependent rests and0 extra axioms.
+
+Evidence is preserved in `parity-data/` and `freezes/parity-data-v1/` under the
+storage runs root. Task333 is approved;334 may now evaluate a model on the four
+cases. Data agreement alone does not add any model pass or establish99%.

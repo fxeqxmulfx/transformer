@@ -6748,3 +6748,11 @@ previous passes. No new model score is produced;118 additional cases remain
 unmeasured. Commit and freeze before producing and independently repeating the
 complete inventory. Task334 must handle229 hinted classes explicitly rather
 than silently using328's126-class limit.
+
+Task333 producer9d9216b0 is approved. Both frozen/native inventories reproduce
+the full four-case data and12-case baseline byte-for-byte (SHA8b5508d9), with
+44 splits and matching historical short/long counts. Original/repeat use
+1m19.10s/1m17.67s and3.05GiB peak under64GiB. All six native checks, source pins,
+directLean/global audit and native INDEX pass. Task334 is now unblocked; this
+data result still adds zero model evaluations and leaves118 additional cases
+unmeasured.
