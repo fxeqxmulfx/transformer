@@ -64,3 +64,32 @@ input prefixes. It consumes no target labels and produces no accuracy measure.
 No heldout numerical-correction result is claimed here. A complete producer must
 be committed and frozen before the new13-case, six-endpoint comparison, then
 independently rebuilt and repeated. The77/165 verified coverage remains unchanged.
+
+## Frozen input-only diagnosis, 2026-11-15
+
+Component commit `d1b10e2e` was frozen before diagnosis; binary SHA256 is
+`8d15b1b08237a70022eb002b1b83308c94425d6c1a7560c0c7143ef7d59d8c27`.
+For each failed depth3 endpoint (Coordinates Forward and Mini), take the final
+successfully logged input prefix and all36 possible one-token continuations.
+Only the saved model and these37 token prefixes enter each diagnosis. No target
+labels enter it, and no accuracy is measured. This includes invalid-grammar
+continuations and does not estimate the fallback rate on benchmark queries.
+
+| Saved endpoint | Old inconsistent queries | Maximum residual on those queries | Exact raw winner |
+| --- | ---: | ---: | ---: |
+| Forward | 3 | 4.547473508864641e-13 | 16, uniquely |
+| Mini | 2 | 1.1368683772161603e-12 | 15, uniquely |
+
+The old real and complex products chose15/16 in opposite orders. Independent
+exact contractions agree on a unique maximum in all five cases: these particular
+failures are floating-point ordering errors, not genuine mathematical ties.
+All74 queries complete. Each37-query diagnosis takes about4.1 seconds and4.5MiB
+peak RSS under64GiB. The separate frozen-source rebuild passes all nine tests and
+Clippy and reproduces all query results exactly. Its executable differs when
+built from the different checkout path, so the artifact comparison excludes only
+the explicitly recorded executable hash; both hashes remain in the evidence.
+
+Evidence is retained outside the worktree in
+`/run/media/misha/storage/transformer-runs/certified-head/diagnostic-v1/` and
+`.kanban/artifacts/349/`. These numerical checks do not remedy the separate
+depth3 generalization failure or add catalog coverage.
