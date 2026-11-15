@@ -1,5 +1,6 @@
 import Transformer.Grokking.FlatSpectrum.ConvexDepth.Fallback.Batch
 import Transformer.Grokking.FlatSpectrum.ConvexDepth.ComplexHead
+import Transformer.Grokking.FlatSpectrum.ConvexDepth.ParameterSharing
 
 open Transformer.Grokking.FlatSpectrum.ConvexDepth
 open scoped BigOperators
@@ -11,6 +12,11 @@ open scoped BigOperators
 #print axioms headLogits_bound
 #print axioms complexFeatures_bound
 #print axioms Fallback.batch_loss_eq
+#print axioms ParameterSharing.weightedDomain_convex
+#print axioms ParameterSharing.parameterMap_budget
+#print axioms ParameterSharing.logits_bound
+#print axioms ParameterSharing.loss_convex
+#print axioms ParameterSharing.batchLoss_convex
 
 namespace SharedGeometryAudit
 

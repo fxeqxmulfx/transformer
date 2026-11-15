@@ -6671,3 +6671,11 @@ Summary774b6bea is unchanged. The repeat takes9m20.70s/6.05GiB and exits0;
 this validates the regression finding, not attainment of99%. Task331's explicit
 affine-sharing audit passes with eight standard-axiom declarations and no
 new theorem or `sorry`; native training-only work is next.
+
+Task331 extends the exact preimage audit with CM55's sufficient weighted
+parameter budget. Every occurrence in the complete raw-class tensor and the
+nonzero fixed offset is charged. Lean proves convexity, the expansion budget,
+the actual logit bound and ordinary full/minibatch CE convexity; a nonzero
+example attains the bound. This permits a weighted parameter projection in
+native training without treating compact storage as the expanded head norm.
+Geometry/decoder discovery remains training-only and outside the convex claim.

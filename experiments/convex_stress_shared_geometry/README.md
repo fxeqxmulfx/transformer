@@ -20,11 +20,15 @@ blocks and both raw classes, with a nonzero fixed coefficient offset. An
 explicit nonzero parameter point satisfies the expanded budget. The actual
 Fourier features and expanded budget give the same logit bound as CD8.
 
-Existing theorems suffice for this contract. No new `src/` declaration or
-`sorry` is introduced. An affine parameterization is not permission to bound
-only the compact vector and ignore its expanded coefficients. Native work
-must either enforce the exact pulled-back domain or prove a sufficient
-parameter-budget bound, then check every actual coefficient/logit. Numerical
+Existing theorems suffice for that exact preimage contract. CM55 now adds a
+sufficient weighted parameter domain suitable for native projection. For
+`H[k,c] = B[k,c] + sum_p A[p,k,c] * theta[p]`, each weight bounds the complete
+column mass `sum_k abs(A[p,k,c])` for every raw class. If the fixed offset
+has radius `T` and `sum_p w[p]*abs(theta[p]) <= R`, the actual complete head
+has radius `T+R`. The new Lean module proves this bound, domain convexity,
+the actual logit bound and ordinary full/minibatch CE convexity. A nonzero
+two-parameter example attains the charged radius. No `sorry` is introduced.
+Native work must check every actual coefficient/logit. Numerical
 projection, gradients and state replay remain separate implementation checks.
 Both the feature library and the raw-class decoder/orientation map are fixed
 during ordinary CE optimization. Discovering those maps is not jointly
@@ -43,8 +47,8 @@ All old/new candidate states, refusals, tails, work and CE increases remain.
 Declare complete constructor/fold/gradient/projection/prediction and storage
 costs before fitting, under64GiB, and verify exact saved-state reconstruction.
 
-The reviewed329 source is sufficient for the mathematical audit. Task330's
-independent repeat can finish while this audit proceeds. Task332 depends on
+The reviewed329 source supplies the mathematical audit. Task330's
+independent repeat has passed. Task332 depends on
 both330 and331: it must freeze a separate all35 comparison and retain the
 stronger319 result and330 regression before reporting any new99% attainment.
 At this stage there is no native implementation or new accuracy measurement.

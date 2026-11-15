@@ -18831,3 +18831,56 @@ input-only program bank, learn token roles/decoders exclusively from training,
 score actual generated prefixes, retain all failures and previous controls,
 and measure per-task99% on every original short/long split. This proof alone
 does not establish any additional stress-test pass.
+
+## CM55. Charge the complete head under affine parameter sharing
+
+The task330 comparison does not improve Fibonacci raw accuracy. Sharing
+decision geometry across latent blocks is a prospective modeling hypothesis.
+CD8 already gives convex ordinary CE after a fixed affine parameter map, on
+the preimage of the complete head budget. That exact domain need not have a
+cheap projection. A sufficient weighted parameter domain must account for
+every coefficient created by expansion, rather than count stored parameters.
+
+Let finite indices `p`, `k` and `c` describe compact parameters, all complete
+realified head coordinates (including imaginary slots), and raw classes.
+Fix an arbitrary signed expansion `A[p,k,c]` and offset `B[k,c]`, and define
+
+```
+H(theta)[k,c] = B[k,c] + sum_p A[p,k,c] * theta[p].
+sum_k abs(A[p,k,c]) <= w[p]                         for every p,c,
+sum_k abs(B[k,c]) <= T                             for every c,
+D(w,R) = {theta | sum_p w[p] * abs(theta[p]) <= R}.
+```
+
+For nonnegative weights the domain is convex by the absolute-value triangle
+inequality. Expanding the actual complete column, applying the triangle
+inequality, interchanging the two finite sums, and using the expansion costs
+gives `sum_k abs(H(theta)[k,c]) <= T+R` for every `theta` in that domain.
+No positivity of the coefficients or parameters is needed. The bound is
+sufficient: cancellation may make the exact affine preimage larger. Zero
+costs are allowed only when the stated expansion bound holds; no uncharged
+nonzero coefficient is thereby permitted.
+
+For any fixed features with `abs(phi[k,x]) <= M`, `M >= 0`, the actual logits
+satisfy `abs(z(theta,x,c)) <= (T+R)*M`. Flat complex codes provide bounded
+features; repeated empirical rows need not themselves have a flat spectrum.
+Ordinary full-vocabulary log-sum-exp CE is convex in `theta` on `D(w,R)`:
+compose CD8's complete-head result with the actual affine map, then restrict
+to the proved sufficient domain. For any finite batch of original record IDs,
+the same holds after division by its actual cardinality. Repeated inputs remain
+distinct observations, and a short final batch uses its own size. Lean also
+covers the empty batch through the existing zero-sum convention.
+
+The witness has two shared parameters, two head coordinates and two classes.
+Both parameters occur in every coordinate and class, with costs1 and2.
+The fixed offset has radius1/2; the point `(1,1/2)` uses parameter budget2
+and attains complete radius5/2 in both classes. Nonconstant bounded features,
+three records including a repeated input, and a one-record final batch
+instantiate all conclusions. This rules out a merely zero or identity example.
+
+Lean: `ConvexDepth/ParameterSharing/{Basic,Witness}.lean`, audited by
+`scripts/SharedGeometryAxioms.lean`. This result does not prove a numerical
+projection implementation, optimizer convergence, discovery of the fixed
+feature/decoder maps, or correctness of any unobserved raw label. Native work
+must audit the real expansion, gradients, projection and complete cost bounds;
+it must retain training-only selection and measure heldout accuracy separately.

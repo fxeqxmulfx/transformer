@@ -24,6 +24,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ConvexExclusion
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SignedContext
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedPrograms
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ParameterSharing
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -112,6 +113,10 @@ independent learned factors multiplied together. Executable initialization is
 feasible, and known unanimous latent-state outputs identify actual bounded
 complex logits under unknown-program realizability. A many-to-one witness
 identifies a new input while opposite feasible defaults expose an unknown state.
+CM55 charges every expanded coefficient of a fixed affine shared-parameter map.
+Its sufficient weighted absolute budget is convex, includes the fixed offset,
+and transfers the existing actual-logit bound and ordinary full/minibatch CE.
+It does not identify a geometry, decoder or unknown target from flatness.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/
