@@ -89,6 +89,9 @@ pub fn run(input: Input, policy: Policy) -> Result<Outcome> {
     let bounds = limits::forecast(&input, &policy)?;
     let input_sha256 = digest(&input)?;
     let (mut model, initialization) = fit::run(&input)?;
+    if initialization.candidates.len() + 1 != bounds.candidate_fits {
+        return Err("constructor count differs from forecast".into());
+    }
     let initial_model_sha256 = digest(&model)?;
     let rows = Encoder::new(model.bank).records(&input);
     let all: Vec<_> = (0..rows.len()).collect();

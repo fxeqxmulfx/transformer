@@ -71,11 +71,15 @@ complete class multiplicity. The complete radius is1048576, larger than329's
 claim. An independent evaluator expands all raw classes and complex products.
 
 The analytic constructor solves group-centered class-code covariance equations
-with three declared ridges and16 categorical orientations. This is a regularized
-moment initializer, not a CE gradient update. Four fixed gains are tested.
+with three declared ridges and16 categorical orientations. V2 retains each
+moment intercept and also tests an interval midpoint when the projected training
+classes strictly separate. On overlap it keeps the moment intercept. V2 also
+tests16 fixed shared linear directions, with interval midpoints and balanced
+class-centroid midpoints on overlap; ridge0 explicitly denotes this constructor.
+These are analytic initializers, not CE gradient updates. Four fixed gains are tested.
 Three input-hash folds retain repeated records together and exclude each held
 cell from the head constructor. The minimum pooled ordinary fold CE selects
-one of576 configurations;432 fold fits and1728 gain scores are saved, along
+one of1344 configurations;1008 fold fits and4032 gain scores are saved, along
 with refusals, coefficient states, hashes, expanded norms and independent
 product residuals. A final all-training refit precedes ordinary CE training.
 The inherited route already used all original training observations, so these
@@ -90,6 +94,10 @@ its KKT conditions with an independent solution, gradients with finite
 differences, unequal batch sums with the full objective, arbitrary complete
 complex products, categorical permutations, excluded-label independence,
 new linear/nonlinear synthetic queries and complete serialized-state replay.
+An additional calibration check verifies correct separation, unchanged
+overlap behavior and independence from excluded labels. The driver compares
+every retained v1 state, decoder, numerical score, gap-independent product
+audit and local control exactly using `retained_candidates.jq`.
 
 The prospective forecast includes every fold/constructor/gain, three old local
 heads, complete implied tensors, all original records, gradients, projections,
@@ -98,6 +106,29 @@ kernel units or56GiB explicit buffers; every process has a64GiB address-space
 limit. Parent parsing is separately charged before fitting. Generated source
 freezes, complete states, reports and resource logs remain on storage and are
 not committed. No original heldout measurement is part of this component.
+
+The first frozen producer `0a55b83f` completed all six original training-only
+inspections and exact internal replays. Its summary is `06590309ffca1513dbf99bc2d7e1a9610142863f15afaf8016f2c4fb9a87141b`
+under `shared-geometry/inspection-v1`, with sources/binary under
+`freezes/shared-geometry-v1`. It took5m03.71s and3.60GiB peak RSS under64GiB.
+All modes selected Hinges16, ridge0.01, direction1 and gain128. Primary
+conditional folds score4534/4704 (local329 control4606/4704); the supplemental
+head scores4526/4704. These folds include unavailable decoder labels and are
+conditional on the inherited route, as described above.
+
+| V1 mode | Primary training hits/4704 | Primary final CE | Supplemental hits/4704 | Supplemental final CE |
+| --- | ---: | ---: | ---: | ---: |
+| Forward | 4618 | 0.04338673458 | 4620 | 0.04530137585 |
+| Full | 4624 | 0.04207754423 | 4620 | 0.04366581517 |
+| Mini | 4623 | 0.04293233185 | 4621 | 0.04458912826 |
+
+The v1 moment constructor therefore underfits observed labels despite the
+correct affine convexity contract. CE training reduces its own loss slightly;
+it does not resolve the representation error. V2 adds generic calibration and
+shared directions before any original heldout evaluation, preserving v1's
+complete run and all original moment candidates. This is a new hypothesis to
+test, with no claim of99% heldout accuracy. Its prospective work allowance
+includes the expanded search and all calibration record passes.
 
 ```sh
 export LAKE_ARTIFACT_CACHE=false LEAN_NUM_THREADS=2

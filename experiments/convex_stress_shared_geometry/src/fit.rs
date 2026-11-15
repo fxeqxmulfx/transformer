@@ -15,6 +15,10 @@ pub struct State {
     pub bank: Bank,
     pub ridge: f64,
     pub direction: usize,
+    /// Ridge0 denotes a declared fixed direction, without a covariance solve.
+    pub calibrated: bool,
+    pub interval_gaps: Vec<Option<f64>>,
+    pub spatial: Vec<f64>,
     pub decoder: Vec<Vec<usize>>,
     pub theta: Vec<f64>,
 }
@@ -45,6 +49,7 @@ pub struct Moments {
     groups: Vec<Group>,
     cov: Vec<f64>,
     count: usize,
+    observations: Vec<(usize, usize, Vec<f64>)>,
 }
 impl Moments {
     pub fn new(input: &Input, bank: Bank, indices: &[usize]) -> Result<Self> {
@@ -136,6 +141,17 @@ impl Moments {
             groups,
             cov,
             count,
+            observations: indices
+                .iter()
+                .map(|&i| {
+                    let r = &input.records[i];
+                    (
+                        input.route[r.cell],
+                        r.label,
+                        features::raw(bank, input.n, r.cell),
+                    )
+                })
+                .collect(),
         })
     }
     pub fn factor(&self, ridge: f64) -> Result<Vec<f64>> {
@@ -223,9 +239,76 @@ impl Moments {
             bank: self.bank,
             ridge,
             direction,
+            calibrated: false,
+            interval_gaps: vec![None; self.groups.len()],
+            spatial: a,
             decoder,
             theta,
         })
+    }
+    pub fn direct(&self, direction: usize) -> Result<State> {
+        let dir = *DIRECTIONS.get(direction).ok_or("invalid fixed direction")?;
+        let mut a = vec![0.; self.bank.dimension()];
+        a[1] = dir[0];
+        a[2] = dir[1];
+        let mut theta = features::conjugate(self.bank, &a);
+        let mut decoder = vec![];
+        for g in &self.groups {
+            let mut labels = g.labels.clone();
+            let q: Vec<_> = g
+                .class_point
+                .iter()
+                .map(|x| x[0] * dir[0] + x[1] * dir[1])
+                .collect();
+            if labels.len() == 2 && q[1] < q[0] {
+                labels.swap(0, 1);
+            }
+            theta.push(if labels.len() == 2 {
+                -(q[0] + q[1]) / 2.
+            } else {
+                0.
+            });
+            decoder.push(labels);
+        }
+        Ok(State {
+            bank: self.bank,
+            ridge: 0.,
+            direction,
+            calibrated: false,
+            interval_gaps: vec![None; self.groups.len()],
+            spatial: a,
+            decoder,
+            theta,
+        })
+    }
+    /// Use the midpoint only when the projected training intervals separate.
+    /// Overlap retains the moment intercept (or a balanced class-centroid
+    /// intercept for fixed directions). No absent input/label enters this fit.
+    pub fn calibrate(&self, mut state: State) -> State {
+        let mut lower = vec![f64::NEG_INFINITY; self.groups.len()];
+        let mut upper = vec![f64::INFINITY; self.groups.len()];
+        for (b, label, x) in &self.observations {
+            if state.decoder[*b].len() != 2 {
+                continue;
+            }
+            let q = state.spatial.iter().zip(x).map(|(a, x)| a * x).sum::<f64>();
+            if *label == state.decoder[*b][0] {
+                lower[*b] = lower[*b].max(q);
+            } else {
+                upper[*b] = upper[*b].min(q);
+            }
+        }
+        for (b, labels) in state.decoder.iter().enumerate() {
+            if labels.len() == 2 {
+                let gap = upper[b] - lower[b];
+                state.interval_gaps[b] = Some(gap);
+                if gap > 0. {
+                    state.theta[2 * self.bank.states() + b] = -(lower[b] + upper[b]) / 2.;
+                }
+            }
+        }
+        state.calibrated = true;
+        state
     }
 }
 #[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
@@ -263,6 +346,7 @@ pub struct Candidate {
     pub bank: Bank,
     pub ridge: f64,
     pub direction: usize,
+    pub calibrated: bool,
     pub state: Option<State>,
     pub refusal: Option<String>,
     pub gains: Vec<GainScore>,
@@ -298,7 +382,7 @@ pub fn run(input: &Input) -> Result<(Model, Report)> {
     if folds.iter().any(Vec::is_empty) {
         return Err("three nonempty input-exclusion folds required".into());
     }
-    let count = features::BANKS.len() * RIDGES.len() * DIRECTIONS.len() * GAINS.len();
+    let count = features::BANKS.len() * (2 * RIDGES.len() + 1) * DIRECTIONS.len() * GAINS.len();
     let mut pooled: Vec<Option<Score>> = vec![Some(Score::default()); count];
     for (f, held) in folds.iter().enumerate() {
         let train: Vec<_> = (0..input.records.len())
@@ -327,61 +411,81 @@ pub fn run(input: &Input) -> Result<(Model, Report)> {
         for bank in features::BANKS {
             let rows = Encoder::new(bank).records(input);
             let moments = Moments::new(input, bank, &train);
-            for ridge in RIDGES {
+            for ridge in RIDGES.into_iter().chain([0.]) {
                 let factor = match &moments {
+                    Ok(_) if ridge == 0. => Ok(vec![]),
                     Ok(m) => m.factor(ridge),
                     Err(e) => Err(e.to_string().into()),
                 };
                 for direction in 0..DIRECTIONS.len() {
-                    let fit = match (&moments, &factor) {
-                        (Ok(m), Ok(l)) => m.solve(ridge, direction, l),
-                        (_, Err(e)) => Err(e.to_string().into()),
-                        (Err(e), _) => Err(e.to_string().into()),
-                    };
-                    let mut candidate = Candidate {
-                        fold: f,
-                        bank,
-                        ridge,
-                        direction,
-                        state: None,
-                        refusal: None,
-                        gains: vec![],
-                    };
-                    match fit {
-                        Ok(state) => {
-                            for gain in GAINS {
-                                let model = state.model(input, gain)?;
-                                let score = score(&model, &rows, held);
-                                if let Some(p) = &mut pooled[at] {
-                                    p.ce_sum += score.ce_sum;
-                                    p.correct += score.correct;
-                                    p.records += score.records;
+                    for calibrated in [false, true] {
+                        if ridge == 0. && !calibrated {
+                            continue;
+                        }
+                        let fit = match (&moments, &factor) {
+                            (Ok(m), Ok(l)) => {
+                                let state = if ridge == 0. {
+                                    m.direct(direction)
+                                } else {
+                                    m.solve(ridge, direction, l)
+                                };
+                                state.map(|state| {
+                                    if calibrated {
+                                        m.calibrate(state)
+                                    } else {
+                                        state
+                                    }
+                                })
+                            }
+                            (_, Err(e)) => Err(e.to_string().into()),
+                            (Err(e), _) => Err(e.to_string().into()),
+                        };
+                        let mut candidate = Candidate {
+                            fold: f,
+                            bank,
+                            ridge,
+                            direction,
+                            calibrated,
+                            state: None,
+                            refusal: None,
+                            gains: vec![],
+                        };
+                        match fit {
+                            Ok(state) => {
+                                for gain in GAINS {
+                                    let model = state.model(input, gain)?;
+                                    let score = score(&model, &rows, held);
+                                    if let Some(p) = &mut pooled[at] {
+                                        p.ce_sum += score.ce_sum;
+                                        p.correct += score.correct;
+                                        p.records += score.records;
+                                    }
+                                    let (weights, _) = model.weights();
+                                    candidate.gains.push(GainScore {
+                                        gain,
+                                        score,
+                                        model_sha256: digest(&model)?,
+                                        weighted_mass: projection::mass(&model.theta, &weights),
+                                        complete_mass: model.expanded_mass(),
+                                        product_residual: training::audit(
+                                            &model,
+                                            input.records[held[0]].cell,
+                                        )?,
+                                    });
+                                    at += 1;
                                 }
-                                let (weights, _) = model.weights();
-                                candidate.gains.push(GainScore {
-                                    gain,
-                                    score,
-                                    model_sha256: digest(&model)?,
-                                    weighted_mass: projection::mass(&model.theta, &weights),
-                                    complete_mass: model.expanded_mass(),
-                                    product_residual: training::audit(
-                                        &model,
-                                        input.records[held[0]].cell,
-                                    )?,
-                                });
-                                at += 1;
+                                candidate.state = Some(state);
                             }
-                            candidate.state = Some(state);
-                        }
-                        Err(e) => {
-                            candidate.refusal = Some(e.to_string());
-                            for _ in GAINS {
-                                pooled[at] = None;
-                                at += 1;
+                            Err(e) => {
+                                candidate.refusal = Some(e.to_string());
+                                for _ in GAINS {
+                                    pooled[at] = None;
+                                    at += 1;
+                                }
                             }
                         }
+                        candidates.push(candidate);
                     }
-                    candidates.push(candidate);
                 }
             }
         }
@@ -397,11 +501,20 @@ pub fn run(input: &Input) -> Result<(Model, Report)> {
     let candidate = &candidates[selected / GAINS.len()];
     let all: Vec<_> = (0..input.records.len()).collect();
     let moments = Moments::new(input, candidate.bank, &all)?;
-    let refit = moments.solve(
-        candidate.ridge,
-        candidate.direction,
-        &moments.factor(candidate.ridge)?,
-    )?;
+    let refit = if candidate.ridge == 0. {
+        moments.direct(candidate.direction)?
+    } else {
+        moments.solve(
+            candidate.ridge,
+            candidate.direction,
+            &moments.factor(candidate.ridge)?,
+        )?
+    };
+    let refit = if candidate.calibrated {
+        moments.calibrate(refit)
+    } else {
+        refit
+    };
     let model = refit.model(input, gain)?;
     Ok((
         model,

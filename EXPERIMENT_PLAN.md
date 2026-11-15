@@ -6693,3 +6693,14 @@ including actual full products, gradients, unequal batches, projection KKT,
 label permutations, excluded-label independence and complete replay. Freeze
 the source and full resource forecast before the six original training-role
 inspections. No new original heldout measurement or99% claim is made here.
+
+Task331 producer0a55b83f's six training-only inspections and complete internal
+replays pass in5m03.71s/3.60GiB. Summary06590309 retains the failure to fit
+80–86 primary training labels; full/mini CE reduces0.0433867 to0.0420775/
+0.0429323. Primary conditional fold hits4534/4704 trail the local329 control's
+4606/4704. No original heldout record has been scored. V2 preserves all v1
+moment candidates and adds training-only projected interval calibration plus
+16 fixed shared linear directions, with all overlaps and fallback intercepts
+reported. The new1344 configurations,1008 fold states and4032 gain scores
+must pass updated resource/replay checks and original training inspection before
+task332. CM55 still covers the unchanged affine head and complete budget.

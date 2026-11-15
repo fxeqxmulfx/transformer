@@ -21,6 +21,7 @@ require_hash baseline_report_sha256 "$storage/signed-compare/report-v2.json"
 require_hash baseline_complete_summary_sha256 "$storage/signed-compare/original-v2/summary.json"
 require_hash shared_head_inspection_summary_sha256 "$storage/shared-head/inspection-v1/summary.json"
 require_hash comparison_summary_sha256 "$storage/shared-head-compare/original-v2/summary.json"
+require_hash previous_geometry_summary_sha256 "$storage/shared-geometry/inspection-v1/summary.json"
 status=0
 while IFS=$'\t' read -r file mode hash; do
     for role in prior supplement; do
@@ -31,6 +32,15 @@ while IFS=$'\t' read -r file mode hash; do
             > "$root/$name.log" 2>&1
         result=$?
         set -e
+        if [[ "$result" -eq 0 ]]; then
+            set +e
+            prlimit --as=68719476736:68719476736 -- jq -e \
+                --slurpfile old "$storage/shared-geometry/inspection-v1/$name/outcome.json" \
+                -f "$script_dir/retained_candidates.jq" "$root/$name/outcome.json" \
+                > "$root/$name/retained-v1.json" 2>> "$root/$name.log"
+            result=$?
+            set -e
+        fi
         printf '%s\n' "$result" > "$root/$name.exit"
         if [[ "$result" -ne 0 ]]; then status=1; fi
     done

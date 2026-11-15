@@ -251,8 +251,8 @@ fn full_mini_forward_tails_and_entire_saved_state_replay() -> Result<()> {
             assert_eq!(result.steps.last().unwrap().record_ids.len(), 1);
         }
         assert_eq!(result.initialization.ce_gradients, 0);
-        assert_eq!(result.initialization.candidates.len(), 432);
-        assert_eq!(result.initialization.pooled_scores.len(), 576);
+        assert_eq!(result.initialization.candidates.len(), 1008);
+        assert_eq!(result.initialization.pooled_scores.len(), 1344);
         let saved: training::Outcome = serde_json::from_slice(&serde_json::to_vec(&result)?)?;
         assert_eq!(saved, result);
         training::replay(&input, &saved)?;
@@ -266,8 +266,8 @@ fn full_mini_forward_tails_and_entire_saved_state_replay() -> Result<()> {
 fn resource_forecast_and_unsupported_decoder_refusal() -> Result<()> {
     let input = fixture();
     let a = limits::forecast(&input, &Policy::forward())?;
-    assert_eq!(a.candidate_scored_records, 576 * input.records.len());
-    assert_eq!(a.candidate_scores, 1728);
+    assert_eq!(a.candidate_scored_records, 1344 * input.records.len());
+    assert_eq!(a.candidate_scores, 4032);
     assert_eq!(
         a.implied_complete_coefficients,
         input.blocks * 257 * input.vocabulary
@@ -281,5 +281,48 @@ fn resource_forecast_and_unsupported_decoder_refusal() -> Result<()> {
     unsupported.records[0].label = 4;
     let all: Vec<_> = (0..unsupported.records.len()).collect();
     assert!(fit::Moments::new(&unsupported, Bank::Quadratic, &all).is_err());
+    Ok(())
+}
+
+#[test]
+fn interval_calibration_respects_separation_and_retains_overlap() -> Result<()> {
+    let input = fixture();
+    let all: Vec<_> = (0..input.records.len()).collect();
+    let moments = fit::Moments::new(&input, Bank::Quadratic, &all)?;
+    let mean = moments.direct(1)?;
+    let calibrated = moments.calibrate(mean.clone());
+    assert!(
+        calibrated
+            .interval_gaps
+            .iter()
+            .all(|g| g.is_some_and(|g| g > 0.))
+    );
+    let rows = Encoder::new(Bank::Quadratic).records(&input);
+    let before = fit::score(&mean.model(&input, 32.)?, &rows, &all);
+    let after = fit::score(&calibrated.model(&input, 32.)?, &rows, &all);
+    assert_eq!(after.correct, input.records.len());
+    assert!(after.correct > before.correct);
+    let overlap = moments.direct(0)?;
+    let kept = moments.calibrate(overlap.clone());
+    assert!(
+        kept.interval_gaps
+            .iter()
+            .all(|g| g.is_some_and(|g| g <= 0.))
+    );
+    assert_eq!(kept.theta, overlap.theta);
+    let train: Vec<_> = all
+        .into_iter()
+        .filter(|&i| fit::fold(input.records[i].cell) != 0)
+        .collect();
+    let original = fit::Moments::new(&input, Bank::Quadratic, &train)?;
+    let state = original.calibrate(original.direct(1)?);
+    let mut changed = input.clone();
+    for r in &mut changed.records {
+        if fit::fold(r.cell) == 0 {
+            r.label = (r.label + 4) % 9;
+        }
+    }
+    let changed = fit::Moments::new(&changed, Bank::Quadratic, &train)?;
+    assert_eq!(state, changed.calibrate(changed.direct(1)?));
     Ok(())
 }

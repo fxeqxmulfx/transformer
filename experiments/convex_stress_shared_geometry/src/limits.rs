@@ -26,8 +26,8 @@ pub fn forecast(input: &Input, policy: &Policy) -> Result<Bounds> {
     let (m, d) = (128u128, 68u128);
     let q = 2 * m + b;
     let expanded = b * (1 + 2 * m) * v;
-    let candidates = 3 * 3 * 16 * 4;
-    let fits = 3 * 3 * 3 * 16 + 1;
+    let candidates = 3 * (2 * 3 + 1) * 16 * 4;
+    let fits = 3 * 3 * (2 * 3 + 1) * 16 + 1;
     let batches = match policy.mode {
         Mode::Full => policy.iterations,
         Mode::Mini => policy.iterations * input.records.len().div_ceil(policy.batch),
@@ -38,6 +38,7 @@ pub fn forecast(input: &Input, policy: &Policy) -> Result<Bounds> {
     }
     let local = convex_stress_shared_head::limits::forecast(input, &Policy::forward())?;
     let construction = 4 * 3 * (64 * n * d * d + 32 * d * d * d + 64 * 16 * b * d)
+        + 64 * fits * n * d
         + 64 * candidates * n * (m + v)
         + 256 * (3 * candidates + 1) * (n + b + q + input.route.len() as u128)
         + 3 * local.total_kernel_work as u128;
