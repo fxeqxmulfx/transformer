@@ -1,12 +1,14 @@
 //! Same joint CM57 projected CE update as the ungrouped trainer at819d4547,
 //! using CM60 exact batch weights. Forward performs projection but zero
-//! gradient updates. Observed anchors remain exact, including noisy conflicts.
+//! gradient updates. CM61 at822bb5e8 permits an explicit anchor selection;
+//! every original observed label and multiplicity still enters ordinary CE.
 use crate::{
     corpus::{Batch, Corpus},
+    domain::{Anchors, Domain, HeadSpec},
     objective, *,
 };
 use joint::{
-    constraints::{Domain, Projection},
+    constraints::Projection,
     head::Head,
     training::{Mode, Policy},
 };
@@ -90,6 +92,7 @@ pub struct Work {
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Outcome {
+    pub specification: HeadSpec,
     pub corpus_sha256: String,
     pub original_records: usize,
     pub distinct_groups: usize,
@@ -112,15 +115,32 @@ pub fn train(
     minimum_mass: f64,
     policy: Policy,
 ) -> Result<Outcome> {
+    fit(
+        corpus,
+        &HeadSpec {
+            coordinates,
+            budgets,
+            radius,
+            minimum_mass,
+            anchors: Anchors::All,
+        },
+        policy,
+    )
+}
+
+/// Fix the anchor selection before the joint CE stage. It changes only the
+/// domain; all original observed records remain in every complete epoch.
+pub fn fit(corpus: &Corpus, specification: &HeadSpec, policy: Policy) -> Result<Outcome> {
     let forecast = forecast(corpus, &policy)?;
-    if coordinates.len() != corpus.limits().vocabulary || budgets.len() != corpus.limits().programs
+    if specification.coordinates.len() != corpus.limits().vocabulary
+        || specification.budgets.len() != corpus.limits().programs
     {
         return Err("training head dimensions differ from the original corpus".into());
     }
     // CM60 constraints_iff justifies removing repeated identical anchors.
     // Label is part of the grouping key: conflicts cannot be hidden here.
-    let domain = Domain::new(corpus.groups(), &coordinates, budgets, radius, minimum_mass)?;
-    let mut initial = vec![[0.; 6]; domain.budgets.len()];
+    let domain = Domain::new(corpus, specification)?;
+    let mut initial = vec![[0.; 6]; specification.budgets.len()];
     let initial_mass = policy.initial_total_mass / initial.len() as f64;
     for theta in &mut initial {
         theta[5] = initial_mass;
@@ -130,7 +150,10 @@ pub fn train(
         policy.projection_cycles,
         policy.projection_tolerance,
     )?;
-    let mut head = Head::new(coordinates, initial_projection.theta.clone())?;
+    let mut head = Head::new(
+        specification.coordinates.clone(),
+        initial_projection.theta.clone(),
+    )?;
     let n = corpus.limits().records;
     let whole = corpus.batch(0..n)?;
     let initial_ce = objective::score(corpus, &head, &whole)?;
@@ -188,6 +211,7 @@ pub fn train(
         return Err("weighted work differs from original record accounting".into());
     }
     Ok(Outcome {
+        specification: specification.clone(),
         corpus_sha256: corpus.fingerprint()?,
         original_records: n,
         distinct_groups: corpus.groups().len(),
@@ -208,14 +232,7 @@ pub fn replay(saved: &Outcome, corpus: &Corpus) -> Result<()> {
     if corpus.fingerprint()? != saved.corpus_sha256 {
         return Err("original grouped corpus binding changed".into());
     }
-    let rebuilt = train(
-        corpus,
-        saved.head.coordinates.clone(),
-        saved.domain.budgets.clone(),
-        saved.domain.radius,
-        saved.domain.minimum_mass,
-        saved.policy.clone(),
-    )?;
+    let rebuilt = fit(corpus, &saved.specification, saved.policy.clone())?;
     if *saved != rebuilt {
         return Err("weighted training differs from deterministic replay".into());
     }

@@ -14,7 +14,7 @@ while evaluating repeated complete feature/observed-label pairs once per batch.
 | Minibatch | Consecutive original ranges are counted separately; a short tail uses its actual size |
 | Forward | Same joint constraint projection, zero gradient updates |
 | Convex stage | Existing complete complex coefficients, ordinary full-vocabulary CE, joint scaled decoders and program masses, copy constraints and charged budgets |
-| Noisy labels | Conflicting labels remain separate groups; incompatible exact anchors remain a visible refusal |
+| Noisy labels | Conflicting labels remain separate CE groups; fully anchored incompatibility remains a visible refusal; an explicit selection can change exact equations alone |
 
 `corpus::Corpus::build` consumes an iterator of original records, so the
 caller need not allocate every repeated feature vector at once. IDs must be
@@ -26,11 +26,21 @@ Training traces retain original batch ranges and their exact group counts;
 the bound corpus recovers every original ID without copying IDs every epoch.
 
 CM60's active-constraint equivalence justifies passing one representative per
-group to the existing CM57 domain constructor. This does not alter its exact
-anchor requirement. A single distinct group is currently refused by that
-constructor. In particular, this library does not yet supply a noise-tolerant
-domain or prove that supplied features identify unknown answers. Discrete
-program discovery stays outside the convex claim.
+group to the existing CM57 domain constructor. `Anchors::All` retains its exact
+anchor requirement and its visible noise-conflict refusal. CM61, committed as
+822bb5e8 before its native implementation, separately permits `Anchors::Groups`:
+a fixed explicit selection of exact equations, while every original noisy
+observation remains in CE. A selection can be empty; its domain then contains
+the copy prior and budgets without artificial training rows. Selected feature
+coverage uses only those retained equations and the copy prior. Removing
+identifying anchors does not certify unknown content or clean labels.
+
+The weighted trainer still requires at least two distinct original groups,
+matching its inherited policy validation; this restriction is independent of
+how many groups are selected as exact anchors. Discrete program discovery
+and anchor selection stay outside the convex-stage claim. Neither selector
+may consult heldout labels or unknown clean training labels. The complete
+selected specification, corpus binding, constraints and trace are replayed.
 
 Prediction and the derivative's softmax use every complete stored real/imaginary
 coefficient and every raw class. The derivative applies the CM57 affine product
@@ -43,7 +53,7 @@ record processing. They cap a pool at two million original records, groups at
 forecast data generation, feature discovery, scoring and retained artifacts.
 The process still runs under the user's64GiB address-space limit.
 
-Six native checks compare grouped and independently retained ungrouped CE,
+Nine native checks compare grouped and independently retained ungrouped CE,
 every joint derivative, all three training modes and complete complex-product
 finite differences. They also check unequal frequencies, actual short tails,
 corrupt counts/IDs/labels, deterministic replay and contradictory noisy anchors.
@@ -52,7 +62,13 @@ groups have counts66668/66668/66667, and a127-record schedule ends with105
 records. Its two full updates represent400006 gradient records while evaluating
 six weighted groups. These are implementation checks, not new stress-test scores.
 Floating-point summation order can differ; numerical comparisons use explicit
-tolerances, while replay of this implementation is exact.
+tolerances, while replay of this implementation is exact. The selected-anchor
+checks reproduce CM61's feasible noisy witness while retaining both conflicting
+content labels in the loss, all three modes and their complete record counts.
+Full/minibatch CE decreases on that witness. Independent projection variational
+checks pass. Selecting every clean group reproduces the original projection,
+head, optimizer trace and work counts exactly in all three modes. All nine
+checks and clippy with warnings denied pass; no stress-test score is inferred.
 
 ```sh
 cargo fmt --manifest-path experiments/convex_stress_weighted_observations/Cargo.toml --check
@@ -65,7 +81,7 @@ CARGO_TARGET_DIR=/run/media/misha/storage/transformer-runs/build/weighted-observ
   --manifest-path experiments/convex_stress_weighted_observations/Cargo.toml -- -D warnings
 ```
 
-Task346 still needs complete Basis feature construction, treatment of noisy
-constraints, and a committed/frozen eight-case producer with an independent
+Task346 still needs complete Basis feature construction, an explicit noisy
+anchor policy, and a committed/frozen eight-case producer with an independent
 repeat before any new accuracy can be counted. The existing69/165 result and
 all prior baselines remain unchanged.

@@ -7166,3 +7166,13 @@ all anchors. Nine new Lean theorems pass the full13955-job build and direct
 standard-axiom audit; global36 sorry,0 rests and0 extra axioms remain. Native
 INDEX reports4858 modules25484 theorems,0 vacuous and0 placeholder. This is
 a constraint repair, not a clean-label or heldout-accuracy guarantee.
+
+Native CM61 now accepts a fixed explicit anchor-group selection while retaining
+every original observed label in CE. The all-anchor path still uses the old
+domain. Empty selections retain only the copy prior and budgets, with no fake
+training rows. Nine numerical checks and clippy pass: noisy-witness feasibility,
+complete record/gradient accounting, CE decrease in full/minibatch modes,
+independent projection variational checks, and exact equality of projections,
+heads and traces when every clean group is selected. The original200003-record
+and complete-gradient checks still pass. Basis feature discovery, its explicit
+anchor policy and the frozen complete eight-case repeat remain pending.

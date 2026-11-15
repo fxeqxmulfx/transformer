@@ -5,7 +5,10 @@
 pub use convex_stress_coordinate_programs as joint;
 pub use joint::{Features, Parameters, Result};
 pub mod corpus;
+pub mod domain;
 pub mod objective;
+#[cfg(test)]
+mod selected_tests;
 #[cfg(test)]
 mod tests;
 pub mod training;
