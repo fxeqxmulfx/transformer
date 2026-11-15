@@ -1,0 +1,79 @@
+{
+  "name": "certified-complete-head-v1",
+  "lean_first_commit": "18308305da09d78ca893e8926b652ff44051bc0f",
+  "native_core_commit": "d1b10e2ece5546269ea4d273250221f210808602",
+  "data_inventory_sha256": "a89e22f8896c693306c7eb19cdfa7ce9b960488285478e3cced4fb76d461d9b6",
+  "original35_summary_sha256": "c9b3c559069fa1e9a4cd68a5cf3ee93123008bcd54753cf3a2485e2c6ad9cef2",
+  "baseline339_report_sha256": "4501ba0f11e8e90da1f548b3f71fc619823ce2062e3f2039b0d57ce3be7d5e0d",
+  "priors": "Fixed decimal/index/alphabet syntax, injective ordinal class coordinates and raw identity copy. No selected target AST, formula seed, generator RNG, heldout answer or task identity enters program discovery or execution.",
+  "selector": "302 fixed numeric programs and unchanged CM58 shallow search, then CM62 streaming count joins after CM59 constraints. Prefer a complete anchor; otherwise report truncated-anchor conditionality. First fitting branch and first fitting query; at most32 matching anchor programs sorted by actual root size and AST. Discrete discovery is outside convex CE.",
+  "categorical_control": "Same retained program bank, frozen training atom-label dictionary, class0 for unsupported entries; complete vocabulary logits and supplied identity-copy prior.",
+  "fit": {
+    "search": {
+      "quotient": {
+        "depth": 3,
+        "max_classes": 32768,
+        "latent_classes": 262144,
+        "retained": 32
+      },
+      "cache_entries": 65536
+    },
+    "max_programs": 64,
+    "radius_per_program": 1073741824.0,
+    "minimum_mass": 1.0,
+    "policies": [
+      {
+        "mode": "Forward",
+        "epochs": 0,
+        "batch": 127,
+        "learning_rate": 10000000000.0,
+        "initial_total_mass": 131072.0,
+        "projection_cycles": 20000,
+        "projection_tolerance": 1E-10
+      },
+      {
+        "mode": "Full",
+        "epochs": 64,
+        "batch": 127,
+        "learning_rate": 10000000000.0,
+        "initial_total_mass": 131072.0,
+        "projection_cycles": 20000,
+        "projection_tolerance": 1E-10
+      },
+      {
+        "mode": "Mini",
+        "epochs": 8,
+        "batch": 127,
+        "learning_rate": 10000000000.0,
+        "initial_total_mass": 131072.0,
+        "projection_cycles": 20000,
+        "projection_tolerance": 1E-10
+      }
+    ]
+  },
+  "initial_mass_scaling": "Multiply each policy's initial_total_mass by the number of retained programs before fitting; endpoints store the resulting total.",
+  "original_success": {
+    "metric": "sequence_accuracy",
+    "threshold": 0.95
+  },
+  "goals": {
+    "raw_accuracy": 0.99,
+    "sequence_accuracy": 0.99
+  },
+  "process_address_space_bytes": 68719476736,
+  "buffer_ceiling_bytes": 60129542144,
+  "complete_case_scalar_work_limit": 600000000000000,
+  "controls": "Repeat the same13 cases and6 endpoints with unchanged training, preserving complete344/346/347 reports and every inherited reference. Freeze before scoring and seal all cases first. Report raw99 and exact99 separately.",
+  "baseline343_report_sha256": "d7714f2d2d261b9680aa4818b9877501a6c2586b09f5762d4c6c402687b4139d",
+  "baseline344_report_sha256": "65bf8c53f330d76f254503cfcdc2b7d1b1de3c018bc44cc74a7e430559ce86fb",
+  "baseline346_report_sha256": "5fd5a0fd16f2d37a359c9bf70276b41866fd867ff2352be1ca0d8e8331cac34e",
+  "baseline346_manifest_sha256": "33260f0eac6489b845c8f0d89b220841a3b6b2ffbeba0fffcf4855584cba1b55",
+  "baseline346_verified_sha256": "e4e6e87675b415624f3486a2308fcba939b94a3fe0482ac85de8f67546042b7e",
+  "history_sha256": "f31ed0f58f27cc4cf0603b9759c882611cda31e2db8a9fff622a806307d0acaf",
+  "data345_sha256": "8c02d2dcfdd2743145c3e1f8d63e5a517c8c29ac13b97426ee7c220383e37fce",
+  "baseline347_report_sha256": "0fdac5c2dc7c712320b294ace4ff9af4ed71e60a7c15e65afcadd0ef5cd6b7ed",
+  "baseline347_manifest_sha256": "91cad12f4c0501ba950f4c1e1b7751d6a114363c5bca78cced5c08cbd5dffd3b",
+  "baseline347_verified_sha256": null,
+  "verification_status": "Await independent347 completion before freezing this producer",
+  "numerical_evaluation": "CM63 complete saved tensor: separated outward enclosures or independent exact rational real/complex contraction; first exact maximizing class, common-shift ordinary CE; refuse lost strict binary64 gaps."
+}

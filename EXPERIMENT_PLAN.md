@@ -7329,3 +7329,25 @@ label or task identity enters inference. The frozen347 producer remains intact;
 its independent13-case repeat is running. No new accuracy credit:77/165 remains
 the independently verified cohort union. Next: freeze the component, diagnose
 numerical failures without target labels, then freeze/repeat the full comparison.
+
+### 2026-11-15: task349 full numerical comparison implementation
+
+The certified component atd1b10e2e resolves five old real/complex winner
+inconsistencies on74 explicit input-only diagnostic queries. All query outputs
+independently repeat from the frozen source; no target labels or accuracy are
+consumed. Findings are recorded atc3903117.
+
+`convex_stress_certified_compare` now implements the complete13-case, six-endpoint
+comparison with unchanged347 discovery/training, verified against original state
+hashes. It separates all-heldout raw99 from exact99 and recomputes numerical
+certificates and original-row scores from raw outputs. Twelve native tests,
+strict Clippy, and release builds pass. A data/shape-only preflight admits all13
+cases; maximum planned buffer48136330224 bytes stays below56GiB and the process
+cap remains64GiB. Exact fallback has an explicit4096-successful-query budget per
+endpoint plus one accounted refusal query. Ordinary CE and existing modes remain.
+
+The independent347 repeat is still running; its verification hash is explicitly
+pending, and the freeze script rejects this incomplete protocol. After that
+actual verification exists, pin it, rerun checks, commit and freeze the final
+producer, then execute the original comparison and an independent rebuild/repeat.
+No new349 heldout score or catalog credit is claimed; verified coverage stays77/165.
