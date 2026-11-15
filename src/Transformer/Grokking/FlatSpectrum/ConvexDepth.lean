@@ -28,6 +28,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ParameterSharing
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ClassGeometry
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.CoordinatePrograms
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -134,6 +135,10 @@ nested-count subprograms by equal truth signatures. This preserves observed
 counts and decoded training fits; unseen words remain uncertified.
 CM59 uses observed threshold crossings to constrain candidate inner predicates;
 an extra count weakens downward identification to a necessary disjunction.
+CM60 preserves complete-head ordinary CE and its derivatives under exact
+multiplicity grouping, using each batch's own counts and actual denominator.
+It retains convexity on the joint domain and exposes unweighted deduplication
+as a changed objective; contradictory noisy anchors remain a separate problem.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/

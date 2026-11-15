@@ -19142,3 +19142,68 @@ the append identities connecting the step to actual prefix counts, threshold
 constraints, and the concrete ambiguity with an extra count. Each conditional
 theorem has a satisfying example. `scripts/ObservedPrefixAxioms.lean` includes
 the direct standard-axiom audit. The joint CM57 CE head is unchanged.
+
+## CM60. Original multiplicities in complete-head cross-entropy
+
+The complete Basis pools prepared by task345 have 5,806,712 supervised training
+positions. Exact grouping can reduce storage and repeated computation when
+many of those observations have the same complete features and observed raw
+label. It must preserve the original empirical distribution. A set of distinct
+observations averaged without weights generally changes the objective.
+
+Let B be a finite set of original record IDs, q map IDs to a finite group
+type K, and n_B(k) count the IDs in B with q(i)=k. Then
+
+`sum_(i in B) v(q(i)) = sum_k n_B(k) * v(k)`.
+
+The identity holds in any additive commutative monoid, with natural scalar
+multiplication; it therefore also holds for continuous linear derivative maps.
+The group counts sum to |B|. A group has positive count exactly when some
+actual record of B maps to it. Consequently, requiring a predicate on all
+original records is equivalent to requiring it on every active group. This
+permits deduplicating identical constraints, with no dropped active group.
+
+Normalize both objective sums by the original |B|, using the CM38 zero-inverse
+convention for an empty batch. If every original row value equals its group's
+value, the grouped and original means are equal. If each active group function
+has derivative D_k at the current parameter, the grouped mean has derivative
+`(1/|B|) * sum_k n_B(k) * D_k`. This includes derivative existence, rather than
+only equality between the library's totalized derivative expressions.
+
+For the actual full-vocabulary head, require equality of every feature
+coordinate and equality of the observed raw label between a record and its
+representative. The ordinary CE, `log(sum_c exp(logit_c)) - logit_y`, then
+agrees at every complete coefficient tensor. All raw classes remain in the
+softmax sum. The original finite CE is differentiable at every tensor: logits
+are affine and the softmax sum is positive. Equality of functions transfers
+its actual Fréchet derivative, and any supplied derivative witness, to the
+grouped objective. The grouping is fixed independently of the learned tensor;
+matching only current logits is insufficient for this theorem.
+
+Composing this identity with CM57's affine complete head preserves convex
+ordinary CE on its existing joint domain. All program masses and decoder
+coordinates remain joint variables. The perspective budgets, copy and class
+priors, positive total mass and identifying anchors are unchanged. In
+particular, grouping does not make inconsistent noisy anchors feasible, nor
+does it replace noisy observed labels by unknown clean labels. A noise-tolerant
+domain needs its own justification. No new unseen-identification conclusion
+follows from grouping, feature equality, or spectral flatness.
+
+Each minibatch uses its own n_B and its actual |B|, including a short final
+batch. Global group counts cannot replace batch counts in a minibatch update.
+Three distinct record IDs grouped as two false and one true, with values zero
+and one, have original mean 1/3; unweighted unique-group averaging gives 1/2.
+The one-record tail containing the true group has mean one. A second concrete
+witness groups distinct raw inputs zero and two by the complete features
+`[1, input mod 2]`, with input one in the other group. It retains nonconstant
+features, two raw labels, and every coefficient of the two-class CE. The CM57
+convexity example also supplies a previously proved feasible point, so an empty
+domain is not the only witness.
+
+Formalization: `ConvexDepth/WeightedObservations/{Basic,Head}.lean`; all16
+theorems are included in `scripts/WeightedObservationAxioms.lean`. Conditional
+theorems have satisfying examples. These are exact real-arithmetic results;
+they do not assert bitwise equality of differently ordered floating-point sums,
+native memory bounds, or an empirical success on the new Basis cases. A native
+implementation still needs independent objective/gradient checks, complete
+record accounting, genuine batch tails, and a frozen repeated evaluation.

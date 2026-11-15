@@ -7134,3 +7134,14 @@ model; data preparation345 adds no accuracy credit. These are seed1 results
 in three modes. Task346 handles complete large pools and noisy constraints;
 task347 retains the depth3 truncation gap. No end-to-end convexity of discrete
 program discovery or unknown-target identification from flatness is claimed.
+
+Task346 begins with CM60: exact multiplicity grouping preserves the complete
+ordinary CE and its actual derivatives, using every original record and each
+minibatch's own counts and denominator. Sixteen Lean theorems include active
+constraint equivalence, a nonconstant full-head witness, the 1/3 versus 1/2
+unweighted-deduplication counterexample and a one-record tail. The joint CM57
+domain remains convex; noisy anchors remain a separate feasibility problem.
+Full build13953 jobs and the direct standard-axiom audit pass; the global audit
+retains36 existing sorry,0 rests and0 extra axioms. Native INDEX reports4856
+modules,25475 theorems,0 vacuous and0 placeholder. Native weighted training
+and the eight-case model comparison are still pending; no accuracy is added.

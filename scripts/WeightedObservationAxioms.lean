@@ -1,0 +1,18 @@
+import Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations
+
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations.sum_by_multiplicity
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations.multiplicities_sum
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations.multiplicity_pos_iff
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations.groupedMean_eq
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations.groupedMean_eq_of_records
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations.constraints_iff
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations.groupedMean_hasFDerivAt
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations.toy_multiplicities
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations.unweighted_changes_mean
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations.tail_mean
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations.batchHeadLoss_eq
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations.batch_differentiable
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations.batch_fderiv_eq
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations.batch_hasFDerivAt
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations.coordinate_batch_convex
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations.toy_features
