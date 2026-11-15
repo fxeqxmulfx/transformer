@@ -102,3 +102,12 @@ unmatched blocks and tests the required fallback. A test-only ownership error
 was also fixed before the passing build. No original model or score was used
 to choose either correction. Release tests, strict clippy, full Lean build,
 seven standard-axiom declarations, global audit, INDEX and forbidden checks pass.
+
+The v1 producer55d0cd4b freezes1256 inputs. Its original preparation verifies
+all331319 artifacts, then refuses before fitting/scoring because the protocol
+confuses the rendered report's7632e96c hash with the complete summary's
+fd8f7ff3 hash. The same complete-summary hash occurs in the independently
+reproduced319 run and its reviewed manifest. Version2 corrects this input pin
+only; the model, selection, forecasts and scoring are unchanged. All four
+failed preparation/driver logs and resource records remain hash-bound in the
+protocol and final report. This refusal supplies no new accuracy measurement.

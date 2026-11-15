@@ -185,6 +185,7 @@ pub fn summarize(root: &Path) -> Result<Value> {
     summary["producer_commit"] = inv["request"]["producer_commit"].clone();
     summary["inventory_sha256"] = json!(digest(&root.join("inventory.json"))?);
     summary["parent_summary_sha256"] = inv["protocol"]["parent_summary_sha256"].clone();
+    summary["prior_refused_preparation"] = inv["protocol"]["previous_refused_preparation"].clone();
     summary["historical_diff_gpt"] = json!({"file":"diff-gpt-history.json","sha256":digest(&root.join("diff-gpt-history.json"))?,
         "source":"5a37c515639f23037d191b0659a5a0853984328d","seeds":[0,1,2],"historical_full35_success":true,"fresh_matched_budget_comparison":false});
     Ok(summary)

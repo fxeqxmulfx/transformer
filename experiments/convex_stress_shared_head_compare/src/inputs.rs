@@ -48,6 +48,19 @@ pub fn prepare(root: &Path, request: Request) -> Result<()> {
         return Err("fresh root and producer commit required".into());
     }
     let p = protocol()?;
+    for artifact in p["previous_refused_preparation"]["artifacts"]
+        .as_array()
+        .ok_or("missing prior refusal")?
+    {
+        if digest(Path::new(
+            artifact["file"]
+                .as_str()
+                .ok_or("missing refusal artifact")?,
+        ))? != artifact["sha256"]
+        {
+            return Err("prior refused preparation evidence changed".into());
+        }
+    }
     if digest(&request.parent_manifest)? != p["parent_manifest_sha256"] {
         return Err("complete319 manifest changed".into());
     }

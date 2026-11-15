@@ -1,8 +1,9 @@
 {
-  "version":1,
+  "version":2,
   "parent_producer":"9c7370a593c078a994b06a12449d00b940d26fd0",
   "parent_review":"b99c845b32545de78da7a9056a90476040b7513b",
-  "parent_summary_sha256":"7632e96c882483211d31a2fc882990ffbe0d3fd77144424b353dc1bed2b18ebc",
+  "parent_summary_sha256":"fd8f7ff32e9cdded9ef70c4c9526a472c5c85fa88cb765991142752b25a5b879",
+  "parent_rendered_report_sha256":"7632e96c882483211d31a2fc882990ffbe0d3fd77144424b353dc1bed2b18ebc",
   "parent_manifest_sha256":"9d483213ca4b6bff59cc1c96583bce10b98a3241938a35db0135c3e1de10f54f",
   "parent_source_fingerprint":"b0ada4c4aa7bdc055389e999993a0d610d5ba03e8850ab4106669797de2284ce",
   "component_producer":"57a2d61af6be14584d24f921c0c633228d5a5d76",
@@ -27,6 +28,17 @@
   "new_training_passes_reserved":3,
   "cost_scope":"before fitting and scoring: original layouts, all optimizer batches/records, old reconstruction, new training/replay, both full metric paths, paired raw-logit audit and independent inverse-Fourier audit; serialization/hashes tracked by files and process resources",
   "storage":"all three endpoints sealed on disk before any scores; one complete old/new endpoint live at a time",
+  "previous_refused_preparation":{
+    "producer":"55d0cd4b8de54dbb66d7e2b84ec0994f075a389e",
+    "reason":"The rendered319 report hash was incorrectly used for the complete summary. All331 manifest entries verified; the summary pin refused before any model fitting or heldout scoring.",
+    "models_created":0,"original_scores":0,"task_denominator":35,
+    "artifacts":[
+      {"file":"/run/media/misha/storage/transformer-runs/shared-head-compare/original-v1.prepare.log","sha256":"16b7a5ed4578b753798c2934691ce634dfc744c9f786eb8c828e67c2a430aebf"},
+      {"file":"/run/media/misha/storage/transformer-runs/shared-head-compare/original-v1.prepare.resources","sha256":"7d0aa70e3b8e062d70e1c8fc29f3190ed8c84278b631e14840ceb29bcdff1568"},
+      {"file":"/run/media/misha/storage/transformer-runs/shared-head-compare/original-v1.driver.log","sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      {"file":"/run/media/misha/storage/transformer-runs/shared-head-compare/original-v1.driver.resources","sha256":"bf916fb968dc449cc738b777898058623d56237d18f7ec3c48779e8f26993392"}
+    ]
+  },
   "outcomes":{
     "Forward-prior":"a00f106d2bb576e8822354ac1cf4ecdf3fe3cbd0ca9264f5615c283a94ee80c0",
     "Forward-supplement":"10f642599a2c99fcb2b4df457d48c8654d0565c0fd0c8ab231395fb991575ca2",
