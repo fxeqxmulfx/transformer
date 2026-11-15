@@ -6920,3 +6920,29 @@ Task338 is claimed for an explicit class-coordinate identifying prior, with
 training-only two-anchor fitting and affine complete-head CE. Flatness alone
 still cannot identify arbitrary unseen class names. Seven new model evaluations
 remain outstanding;114 additional catalog cases remain unmeasured.
+
+Tasks336 and338 are now reviewed. Frozen336 producer3186b9c3 and findings
+23cdec93 establish35/35 original tasks at raw99/exact99 in every mode, every
+reported heldout split and both105-choice policies. Fibonacci is4695/4704
+(99.8087%) in all modes; the other34 cases explicitly retain319 results.
+All165 JSON/JSONL artifacts repeat exactly. Aggregate primary raw accuracy is
+99.996785% forward/full and99.996071% mini. Complete work is65.581T, measured
+peak RAM about7GiB under64GiB. All transformer/history baselines remain retained.
+
+CM56 atb5f1c9d7 proves an additional identifying prior, not an implication of
+flatness: supplied injective class coordinates, an unknown affine decoder of
+a fixed scalar feature, and two distinct observed feature anchors. It derives
+the actual complete complex head's strict unseen-class winner, charged budget
+and convex ordinary full/minibatch CE. The nonconstant witness has two feasible
+margins and exposes ambiguity without the prior. Full/global/INDEX checks pass
+with36 existing sorry,0 rests and0 extra axioms; no native convergence theorem.
+
+Task339 implements the frequency-model extension after this proof. First add
+the complete CM56 decoder with observed-anchor fitting, a positive learned
+margin, actual all-class products and full/minibatch/forward CE. Then add an
+input-only finite group/order/aggregate program bank, training-only decoder
+selection, declared coordinate/copy priors and a categorical-only control.
+Freeze the complete runner before any heldout measurement and independently
+repeat all seven337 cases while preserving all16 reviewed334 controls and the
+separate35 original results. No new frequency model result is available yet;
+114 additional catalog cases remain unmeasured.
