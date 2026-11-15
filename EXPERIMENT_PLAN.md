@@ -6976,3 +6976,12 @@ novelty by full sampled sequence. All63 historical test example/target/change
 denominators match. Freeze and independently repeat the full inventory before
 model work; preserve whole339 and the separate original35 reference. No new
 model is measured, so58/165 remains the evaluated scope and107 are unmeasured.
+
+Task340's frozen producer28dc5c94 now completes both inventories, with an
+independently rebuilt byte-identical binary. The full inventories match SHA256
+a89e22f8896c693306c7eb19cdfa7ce9b960488285478e3cced4fb76d461d9b6;
+original35 copies match too. Native readback rehashes the complete nested339
+report, regenerates all13 case metadata records and checks every full historical
+record. All215 splits are retained, including forced carry probes and random
+payload novelty. Original/repeat24.87s/24.68s, peak7.60GiB under64GiB. This
+completes data preparation only:58 cases measured,107 still unmeasured.

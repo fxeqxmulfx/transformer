@@ -40,8 +40,25 @@ Seven native tests pass. The development history check matches all63 historical
 test splits' example, target and transition denominators across all13 cases.
 Historical raw tensor fingerprints are unavailable, so these are source-derived
 datasets with reproducible native fingerprints, not a claim that historical
-tensor artifacts were recovered. Frozen original/repeat inventory runs are
-still pending; no new model result follows from these data checks.
+tensor artifacts were recovered.
+
+Frozen producer `28dc5c946d360c9dfd8fc9593413a15280908c1d` preserves436 source
+inputs. Its original and fresh independently rebuilt runs both exit0; their
+complete inventories match SHA256
+`a89e22f8896c693306c7eb19cdfa7ce9b960488285478e3cced4fb76d461d9b6`.
+The original35 copies are also byte-identical. Runs take24.87s/24.68s and peak
+at7,972,012/7,971,908KiB RSS, about7.60GiB. These inventories cover215 splits
+across12 deterministic cases and the explicit random-label control. Data
+preparation adds zero model evaluations;58/165 remains the measured scope.
+
+The separate native `audit-retained` command reads each inventory back,
+rehashes the entire canonical nested339 report and the original35 copy, checks
+producer/binary/protocol bindings, and regenerates all13 case metadata records.
+It also compares every complete copied historical record to the pinned source.
+Both readbacks pass and match. Adding this read-only audit leaves the original
+production binary byte-identical. Evidence is retained on storage under
+`remaining-synthetic-data/{original-v1,review-v1}` and
+`freezes/remaining-synthetic-data-v1`; generated inventories are not committed.
 
 Source references are the task318 frozen catalog/plan and synthetic generator
 files, authenticated by `reference-sources.sha256`. The catalog commit
@@ -98,4 +115,9 @@ for run in original-v1 review-v1; do
 done
 cmp "$store/remaining-synthetic-data/original-v1/inventory.json" "$store/remaining-synthetic-data/review-v1/inventory.json"
 cmp "$store/remaining-synthetic-data/original-v1/original35.json" "$store/remaining-synthetic-data/review-v1/original35.json"
+for run in original-v1 review-v1; do
+  prlimit --as=68719476736:68719476736 -- "$CARGO_TARGET_DIR/release/audit-retained" \
+    "$store/remaining-synthetic-data/$run" "$freeze/convex-stress-remaining-synthetic-data" \
+    "$(cat "$freeze/producer.commit")" "$history"
+done
 ```
