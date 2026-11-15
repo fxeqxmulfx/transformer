@@ -7559,3 +7559,19 @@ Rust representation and independently validate dense/reduced projections and
 complete complex products before any wider-family data run. Numerical KKT
 checks are not a Lean floating-point refinement. The frozen task351 comparison
 and its queued independent repeat remain unchanged.
+
+### 2026-11-15: task353 reduced native component
+
+The Rust component stores every unknown decoder coefficient and reconstructs
+anchored rows exactly. Its sparse block-Fourier head omits only exact zero
+columns; all logical coefficients remain available and included in the audit.
+CM66 weighted projection retains selected proposal sums and complete unknown
+simplex rows. Twelve controls compare full coefficients, logits, derivatives,
+arbitrary projections, three actual training modes and checkpoint integrity
+with the dense implementation and exercise both-disk stops. Buffer admission
+is 96 GB within the 110 GB process limit. Guarded checkpoint writes check both
+disks before creation, during writing and at completion, reserving the supplied
+remaining cohort forecast and its repeat; the outer runner applies the process cap.
+Keep the current task351 freeze intact. Extend the fixed input-only family and
+freeze a new full comparison only after this component's independent review;
+these synthetic controls add no stress-task coverage.
