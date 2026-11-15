@@ -6718,3 +6718,11 @@ exactly. Task332 is claimed for the separately frozen all35 comparison; no new
 original heldout accuracy has been measured. Tasks333/334 queue a native port
 and generic latent-program extension for four additional parity scratchpads,
 preserving the12 reviewed additional passes and original short/long probes.
+
+Task332 first audits CM38 after fixed affine sharing in
+`scripts/SharedGeometryFallbackAxioms.lean`. The combined parent-frozen domain,
+ordinary normalized CE, equality as a function of shared parameters and the
+covered-batch derivatives pass, retaining non-Dirac rows, repeated IDs, short
+tails and nonzero fallback logits. CM55 supplies the separate sufficient
+expansion budget. The native all35 adapter is under construction and must keep
+both complete319 and330 references, with fresh metrics for every new state.
