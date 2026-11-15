@@ -50,8 +50,22 @@ reconstruction after saved labels and their reported hashes are changed.
 The complete driver rebuilds all48 datasets independently and preserves all
 six refusals. Verification reconstructs the source data again, not merely
 two equal manifests. Dataset files are under1MiB; the conservative1GiB buffer
-allowance and64GiB address-space cap apply. Repeated generation and verification
-are still pending; current verified model coverage remains77/165 on seed1.
+allowance and64GiB address-space cap apply.
+
+Producer `cf05378c053a7a376c164579f54682d966b3aaae` is now frozen and fully
+reproduced. A fresh offline target passes all five tests and clippy and builds
+the identical executable, SHA256
+`88ba4f5e02b18627884ebbb8e01dcedd53843c39055f8f2fb92a5c3eb88c9ad1`.
+All52 artifacts match byte for byte:48 datasets, three complete source inputs
+and the full54-case inventory. Verification independently reconstructs every
+source row again. The relative manifest SHA256 is
+`30be56ecda6b77edaea1958f91e5e15197c348be551d9b673633a2e55d5492bc`.
+Original/repeat take4.43/5.03 seconds with9748/10480KiB peak RSS; the final
+source recount takes1.73 seconds and10736KiB. All exit0 with no swaps.
+Evidence remains under `/run/media/misha/storage/transformer-runs/arithmetic-data/`
+and `freezes/arithmetic-data-v1` on that disk. This proves data reproduction,
+with26 additional cases ready for model tests and six explicit refusals.
+Verified model coverage remains77/165 on seed1.
 
 Recreate the three whole reference inputs with native Git tooling:
 

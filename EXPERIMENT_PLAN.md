@@ -7291,3 +7291,12 @@ Five native checks cover masks, integer/constant semantics, source mutations,
 disjoint splits and rehashed raw-label tampering. The complete frozen data
 generation and independent repeat are next. This adds no model accuracy credit
 and does not change the full producer1371ae4f or verified77/165 coverage.
+
+Task348's data producer cf05378c now completes original, fresh rebuild/repeat
+and independent source recount. All52 artifacts and the executable are exact;
+48 datasets reproduce96 original split fingerprints, while all six unavailable
+oracles retain explicit refusals. The old22 controls match independently, and
+26 additions are ready for future model tests. Five tests, fmt and clippy pass.
+Original/repeat take4.43/5.03 seconds; peak memory stays below11MiB. The manifest
+is30be56ecda6b77edaea1958f91e5e15197c348be551d9b673633a2e55d5492bc.
+These are data results only; the77/165 verified model count is unchanged.
