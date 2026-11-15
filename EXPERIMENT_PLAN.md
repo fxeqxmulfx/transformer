@@ -7490,3 +7490,15 @@ Retained code and authored experiment READMEs remain in the repository; the
 native `scripts/retain_experiment_summaries` tool archives additional source
 snapshots and compact findings without deleting anything itself. Do not present
 historical verification records as a fresh raw-artifact audit after cleanup.
+
+Cleanup completed for all217 checked inactive output directories on both
+filesystems, after preserving and independently hashing102896 source-file
+entries,11145 compact result summaries and12510 provenance records. Earlier
+inactive build caches were also removed. Original35 per-task accuracy and the
+complete77-case report/verification match their pre-cleanup values. The archive
+index, deletion receipts and readable summaries live in
+`/run/media/misha/storage/transformer-runs/retained-summaries/2026-11-15/`.
+Active349, its frozen source/executable, current348 data and351 pair-probe inputs
+remain available. Continue351 from these inputs and retained historical
+summaries; old raw-artifact paths in prior protocols need reproduction before
+they can support a fresh replay. The verified catalog count remains77/165.

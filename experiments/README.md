@@ -3,6 +3,16 @@
 New experiments and diagnostics use Rust/Kernite under the 2026-11-07 user
 override in `AGENTS.md`. The Python commands below describe the historical lab.
 
+On 2026-11-15, the user requested keeping code and summaries while deleting old
+generated experiment outputs. Inactive runs and build caches have been removed.
+Source and authored findings remain here; additional frozen source versions,
+numerical summaries and historical verification records are indexed in
+`/run/media/misha/storage/transformer-runs/retained-summaries/2026-11-15/README.md`.
+The original 35-task accuracy summaries and complete 77-case catalog report
+match their pre-cleanup values. Older claims below that raw artifacts are
+retained describe the historical review state; fresh raw replay now requires
+regenerating those runs. Active comparisons and required test fixtures remain.
+
 A folder per experiment, and its `README.md` says what the runs ask, how
 they differ, and what their archived runs found. A folder with an
 `experiment.py` is written in the language of the
