@@ -98,3 +98,20 @@ Lean validation uses `LAKE_ARTIFACT_CACHE=false lake build`, direct global axiom
 audit, native INDEX check and forbidden-source checks. No Lean statement changes
 are needed for this data/scoring port. Generated inventories, copied baselines,
 logs and binaries stay on storage outside the temporary worktree.
+
+Producer `d7f078ad` was frozen before either production inventory. The freeze
+contains 411 checked source inputs, the protocol and the executable. Original
+and fresh repeat produce the same complete inventory, SHA256
+`2778983591a49bcde79dbcd9952b4999fa0afb914b9e37f4826834116a146e6f`.
+The embedded six-case326 baseline is structurally identical to the entire
+reviewed report. All six historical target counts match; all 66 splits retain
+their masks, prompts, EOS limits and fingerprints. No new model was evaluated.
+
+The original takes 18.77 seconds and the repeat 19.10 seconds. Peak RSS is
+654,520 KiB (639.2 MiB), with exit0 under the 64 GiB process cap. Seven native
+tests, fmt, clippy, release build and the direct Lean/global axiom/INDEX checks
+pass. The inventory and logs are under `.../generative-data/` and
+`.../freezes/generative-data-v1`; the final review repeats all checks and the
+complete inventory from the landed findings commit before task328 starts.
+The 99% goal is still unmeasured on these six cases; catalog coverage remains
+six additional cases scored, with 124 awaiting new-model evaluation.

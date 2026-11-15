@@ -6546,3 +6546,12 @@ and100 raw classes. All six native test-target counts match the historical
 Seven source-conformance/scoring tests pass. Commit and freeze before production
 inventory generation, then independently reproduce all bytes under64GiB.
 No learned model or additional catalog accuracy is measured in this data step.
+
+Task327 producer `d7f078ad` is frozen with411 source inputs before inventory
+generation. Original and fresh repeat match the complete inventory exactly,
+SHA2562778983591a49bcde79dbcd9952b4999fa0afb914b9e37f4826834116a146e6f.
+All six historical denominator checks and66 split identities are retained;
+the complete326 reference is structurally exact. Both runs exit0 at a peak
+639.2MiB RSS under64GiB. Seven native and all direct Lean/axiom/INDEX checks
+pass. Review the landed findings and repeat the inventory before328's model
+work. This is data/scoring preparation, with zero new model evaluations.
