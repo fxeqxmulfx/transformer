@@ -121,3 +121,53 @@ fn indexed_pairs_match_independent_exhaustive_evaluation_with_tail_bits() {
     assert!(actual.is_empty() && stats.work_exhausted);
     assert_eq!(meter.work, 0);
 }
+
+#[test]
+fn truncated_child_banks_can_supply_fully_checked_training_fits() {
+    let target = grammar::make(
+        &grammar::literal(0),
+        &grammar::literal(1),
+        None,
+        0,
+        false,
+        None,
+    );
+    let mut rows = vec![];
+    for mut code in 0..27usize {
+        let word: Vec<_> = (0..3)
+            .map(|_| {
+                let s = [9, 10, 23][code % 3];
+                code /= 3;
+                s
+            })
+            .collect();
+        let truth = target.evaluate(&word).unwrap();
+        for (i, b) in truth.into_iter().enumerate() {
+            rows.push(Observation {
+                id: rows.len(),
+                tokens: [vec![1], word[..=i].to_vec()].concat(),
+                label: if b { 19 } else { 7 },
+            });
+        }
+    }
+    let pool = pool::Pool::new(&rows).unwrap();
+    let children = bank::Bank::initial(&pool, 8).unwrap();
+    let report = deep::run(&pool, &rows, &children, 8, 32, 0).unwrap();
+    assert!(!report.programs.is_empty(), "{:?}", report.refused);
+    assert!(
+        report
+            .attempts
+            .iter()
+            .any(|a| a.left.capped || a.right.as_ref().is_some_and(|r| r.capped))
+    );
+    for p in report.programs {
+        let mut decoder = BTreeMap::new();
+        for r in &rows {
+            let atom = p.interpret(&r.tokens).unwrap();
+            assert_eq!(Some(atom), p.run(&r.tokens));
+            if let Some(old) = decoder.insert(atom, r.label) {
+                assert_eq!(old, r.label);
+            }
+        }
+    }
+}

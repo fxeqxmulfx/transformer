@@ -1,5 +1,6 @@
 //! Exhaustive child-root constraints until an explicit signature/work cap.
-//! A capped bank is reported and that branch is refused, never called complete.
+//! A capped bank is reported as truncated. Retained programs can still be
+//! checked against every original label; no search completeness is claimed.
 use crate::{
     bank::Bank,
     pool::{Pool, bit},

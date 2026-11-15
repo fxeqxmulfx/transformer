@@ -23,8 +23,10 @@ check and a separately implemented interpreter check.
 For depth3, candidate root configurations yield necessary child constraints
 from adjacent observed labels. Unknown parent labels and inactive gates reveal
 no comparison truth. Inferred child bits constrain only that search branch;
-they do not create additional CE observations. Capped latent banks refuse their
-branch. The first uncapped fitting branch in declared order is retained, with
+they do not create additional CE observations. Capped latent banks retain their
+explicit truncation flag while their stored candidates are tested. A checked
+training fit does not require an exhaustive search. The first fitting branch
+in declared order is retained, with
 at most32 final syntaxes, ordered by node count and AST. Every search cap and
 work counter remains explicit. Node counts are cached; this changes no program.
 
@@ -43,11 +45,15 @@ a73-candidate bank that exercises nonzero padded bits.
 | v1 | Depth1 finds16 programs; depth2 finds4 after retaining1926 first-layer classes; depth3 has no depth2 fit | Depth2:1.40s,7764KiB RSS; no heldout measurement |
 | v2 | All13 possible depth3 root branches hit a latent-bank cap before final pair comparison |8192 classes;7.45s,32808KiB RSS |
 | v3 | Three root configurations complete their pair comparisons without a fit; ten other configurations still hit a cap |32768 classes;3:06.41,199556KiB RSS;316946809 pairs in the largest complete branch |
+| v4 | The same three branches are ruled out by the exact index; ten others still truncate before pair checks |262144 classes;1:01.15,1265588KiB RSS; the317-million-pair branch uses1487214 word intersections |
 
 Development artifacts are local under
-`/run/media/misha/storage/transformer-runs/prefix-quotients/training-dev-v{1,2,3}`.
+`/run/media/misha/storage/transformer-runs/prefix-quotients/training-dev-v{1,2,3,4}`.
 V2/v3 include exact development source snapshots and binary hashes. Later
 source changes preserve failure/work-cap counters and cache AST node counts.
+V4 binds the committed33b8ded9 producer. Its cap-only refusals motivated testing
+retained candidates even from truncated banks; the new fixture verifies that
+such a program still passes every original label and both interpreters.
 These runs do not change the reviewed68/165 raw/exact99 coverage. All thirteen
 cases, categorical controls, original35 and entire343 history still need a
 complete frozen independently repeated producer before a new score is claimed.

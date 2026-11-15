@@ -1,5 +1,5 @@
 //! CM59 branch-conditioned depth-three discovery. Stop at the first fitting
-//! branch in declared order; capped branches remain explicit search refusals.
+//! branch in declared order; truncated child banks remain explicit in the report.
 use crate::{
     bank::Bank,
     latent::{Meter, Stats},
@@ -94,13 +94,12 @@ pub fn run(
             out.refused = Some("transition search work cap exhausted".into());
             break;
         }
-        if attempt.left.capped || left.rows.is_empty() {
+        if left.rows.is_empty() {
             out.attempts.push(attempt);
             continue;
         }
         let (right, right_stats) =
             latent::synthesize(pool, children, &branch.right, cap, &mut meter)?;
-        let capped = right_stats.capped;
         let exhausted = right_stats.work_exhausted;
         attempt.right = Some(right_stats);
         if exhausted {
@@ -108,7 +107,7 @@ pub fn run(
             out.refused = Some("transition search work cap exhausted".into());
             break;
         }
-        if capped || right.rows.is_empty() {
+        if right.rows.is_empty() {
             out.attempts.push(attempt);
             continue;
         }
@@ -139,9 +138,8 @@ pub fn run(
     }
     out.charged_scalar_bound = meter.work;
     if out.programs.is_empty() && out.refused.is_none() {
-        out.refused = Some(
-            "no compatible root from complete uncapped latent branches within64 attempts".into(),
-        );
+        out.refused =
+            Some("no compatible root among retained latent programs within64 attempts".into());
     }
     Ok(out)
 }
