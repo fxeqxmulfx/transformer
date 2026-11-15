@@ -6679,3 +6679,17 @@ the actual logit bound and ordinary full/minibatch CE convexity; a nonzero
 example attains the bound. This permits a weighted parameter projection in
 native training without treating compact storage as the expanded head norm.
 Geometry/decoder discovery remains training-only and outside the convex claim.
+
+Task331's Rust component now shares complete complex coefficients across
+binary latent blocks, retaining separate intercepts and categorical decoders.
+The declared quadratic/hinge library,16 directions, three covariance ridges
+and four gains use three original-training exclusion folds. The inherited
+route was learned on all original training, so this is explicitly a conditional
+head diagnostic. All432 fold states and1728 candidate scores, three329 local
+controls, final refit and ordinary full/mini updates are retained; forward
+uses zero CE gradients. The complete radius1048576 is charged through CM55,
+not presented as a matched capacity with329's65536. Seven native checks pass,
+including actual full products, gradients, unequal batches, projection KKT,
+label permutations, excluded-label independence and complete replay. Freeze
+the source and full resource forecast before the six original training-role
+inspections. No new original heldout measurement or99% claim is made here.
