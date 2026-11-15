@@ -4,6 +4,11 @@ Task344 asks whether training-only discovery can recover the count programs
 missed by task343's128-child beam. The ordinary cross-entropy stage remains the
 joint CM57 complex head. Discrete grammar search is outside its convex claim.
 
+The frozen complete repeat now recovers depth2: all11 fitted cases reach100%
+raw and exact-sequence accuracy on every original split in all three modes.
+Depth3 and RandomLM remain explicit fit refusals. Reviewed catalog coverage
+increases by one to69/165; this is data seed1 in three modes, not three seeds.
+
 CM58 (`df52cffd`) first proves finite prefix-closure storage and preservation of
 observed nested counts under equal complete prefix signatures. CM59 (`8c458234`)
 then proves necessary child bits at actual count-threshold transitions. Both
@@ -54,9 +59,9 @@ source changes preserve failure/work-cap counters and cache AST node counts.
 V4 binds the committed33b8ded9 producer. Its cap-only refusals motivated testing
 retained candidates even from truncated banks; the new fixture verifies that
 such a program still passes every original label and both interpreters.
-These runs do not change the reviewed68/165 raw/exact99 coverage. All thirteen
-cases, categorical controls, original35 and entire343 history still need a
-complete frozen independently repeated producer before a new score is claimed.
+These training-only runs did not change the then-reviewed68/165 raw/exact99
+coverage. All thirteen cases, categorical controls, original35 and entire343
+history subsequently entered the frozen independently repeated comparison below.
 
 Reproduce native validation without Python:
 
@@ -86,6 +91,13 @@ can exclude impossible partner counts before they fill a new signature bank.
 The replaced bank is freed first, preserving the two-bank memory preflight.
 The retained anchor can itself truncate, so this remains conditional search.
 The exact pair index processes more restrictive count bounds first.
+
+V6 (`b388f4ff`) tests these conditional bounds on all13 depth3 root branches.
+It still finds no training fit, taking4:34.30 and1837928KiB RSS. Some count
+bounds empty an impossible bank, but the larger branches still truncate at
+262144 classes. Its22535466822832-unit charged work remains explicit. Neither
+conditional pruning nor exhaustive comparison of retained pairs establishes
+that a truncated bank contains the unknown target. Task347 retains this gap.
 
 The expanded native suite has12 checks. It compares actual matching pairs as
 well as rejections against the independent interpreter: the earlier fixture's
@@ -122,3 +134,44 @@ Independently rebuild the same commit with a fresh `CARGO_TARGET_DIR`, require
 byte-identical executable hashes, then invoke `run.sh REBUILT_BINARY FRESH_ROOT
 repeat ORIGINAL_ROOT`. Compare every JSON/JSONL artifact, not just final scores.
 Use `analyze.jq` on per-case metrics for compact raw/exact/CE summaries.
+
+Producer `b388f4ff7534f65119f3dc3dc706904accf9d12f` is frozen with5372 source
+paths. Its independent fresh-target rebuild passes all12 native checks and
+clippy with warnings denied, and has identical executable SHA256
+`aebd3f62284c0d7c6e08c25362dfe6b1f280120cd717d48a9ec9b932f0c6614f`.
+All201 original/repeat JSON and JSONL artifacts match. Manifest SHA256 is
+`eed7c94d65644bae0de432455b3fcb3dd7f2c383bd8d7c0008e018c8785b9dec`;
+complete report SHA256 is
+`65bf8c53f330d76f254503cfcdc2b7d1b1de3c018bc44cc74a7e430559ce86fb`.
+Both read-only audits rehash132 complete raw files, recompute decisions from
+integer counts, and authenticate whole343/340/339 plus original35 histories.
+
+| Coordinate mode | Correct test labels | Exact test sequences | Weighted test CE |
+| --- | ---: | ---: | ---: |
+| Forward |70420/70420|3648/3648|0.2991924427|
+| Full |70420/70420|3648/3648|0.0027374829|
+| Mini |70420/70420|3648/3648|0.0021887531|
+
+All193 measured splits reach100% raw/exact for each mode and the categorical
+control. All896 unseen-label test occurrences remain covered by the supplied
+identity-copy prior. Full/mini perform704/776 effective parameter updates;
+forward performs zero gradient updates. Maximum independent complete-product
+residual is8.731149137e-11; maximum coordinate projection violation is
+7.407691059e-16. These are numerical audit tolerances, not Lean refinements.
+
+Depth2 specifically gets704/704 labels and64/64 sequences on its ordinary test;
+the length32/64 tests add1984/4032 correct labels and64 exact sequences each.
+Its coordinate CE is0.0417864362 forward,0.0000931584 full and0.0000685924 mini.
+The minibatch uses127 records with a genuine43-record tail. The categorical
+control matches100% accuracy, so the coordinate decoder has no accuracy
+advantage on this case. The broader observed-signature search supplies the gain.
+
+Both complete runs retain all13 attempts, including null measurements for
+depth3 and RandomLM; neither refusal receives success credit. The random
+control still has contradictory identical training prefixes. The eleven cases
+repeat the343 cohort, so coverage is58+11=69, not68+11. Original35 and all
+historical transformer results remain unchanged inherited references. Full
+runs take23:51.60/24:05.96 and peak at7.63GiB under the64GiB process limit.
+Artifacts and development failures remain local under
+`/run/media/misha/storage/transformer-runs/prefix-quotients/` and
+`freezes/prefix-quotient-programs-v1/` in the same storage root.

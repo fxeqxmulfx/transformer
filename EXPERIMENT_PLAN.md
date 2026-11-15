@@ -7119,3 +7119,18 @@ and manifestaa3276ad bind the evidence; both seven-check native suites pass.
 Preparation/repeat take27.59/26.67s and peak below0.89GiB. No model is evaluated,
 so this adds no accuracy credit. Task346 can develop exact weighted or streamed
 CE handling from these complete pools while344 finishes its model review.
+
+Task344 now completes the independent13-case comparison. The eleven fitted
+cases reach100% raw/exact on all193 measured splits in forward/full/minibatch
+and categorical controls. Depth2 improves from refusal to704/704 ordinary-test
+labels plus all6016 long-test labels; depth3 and RandomLM remain explicit
+refusals. Aggregate coordinate test CE is0.2991924427/0.0027374829/0.0021887531.
+All201 artifacts match, manifesteed7c94d65644bae0de432455b3fcb3dd7f2c383bd8d7c0008e018c8785b9dec;
+report65bf8c53f330d76f254503cfcdc2b7d1b1de3c018bc44cc74a7e430559ce86fb.
+Readback audits verify132 complete raw files per run and all prior histories.
+The complete runs take23:51.60/24:05.96, peak7.63GiB, and remain under64GiB.
+Verified scope is now69/165, with96 cases still unmeasured by the extended
+model; data preparation345 adds no accuracy credit. These are seed1 results
+in three modes. Task346 handles complete large pools and noisy constraints;
+task347 retains the depth3 truncation gap. No end-to-end convexity of discrete
+program discovery or unknown-target identification from flatness is claimed.
