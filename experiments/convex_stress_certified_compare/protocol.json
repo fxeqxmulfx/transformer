@@ -73,7 +73,7 @@
   "data345_sha256": "8c02d2dcfdd2743145c3e1f8d63e5a517c8c29ac13b97426ee7c220383e37fce",
   "baseline347_report_sha256": "0fdac5c2dc7c712320b294ace4ff9af4ed71e60a7c15e65afcadd0ef5cd6b7ed",
   "baseline347_manifest_sha256": "91cad12f4c0501ba950f4c1e1b7751d6a114363c5bca78cced5c08cbd5dffd3b",
-  "baseline347_verified_sha256": null,
-  "verification_status": "Await independent347 completion before freezing this producer",
+  "baseline347_verified_sha256": "4f40b9f20d216f5d1564ff76683733adfd5e3c08d681b0f44b116c82b95ff002",
+  "verification_status": "All218 baseline347 artifacts independently rehashed and reproduced; fixed before this producer freeze",
   "numerical_evaluation": "CM63 complete saved tensor: separated outward enclosures or independent exact rational real/complex contraction; first exact maximizing class, common-shift ordinary CE; refuse lost strict binary64 gaps."
 }

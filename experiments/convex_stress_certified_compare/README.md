@@ -38,10 +38,12 @@ nonconstant big-integer limb cost. Data generation, complete search, training,
 raw serialization, certificate recomputation, replay and hashing contribute to
 measured time/RSS. No fixed CPU-time bound is inferred from these counts.
 
-Status: native implementation checks are passing. The349 producer cannot be
-frozen for measurement until the independent347 verification completes and its
-actual hash replaces the explicit pending value in `protocol.json`. No349 heldout
-accuracy or additional catalog pass is claimed.
+The baseline347 verification now independently reproduces all218 artifacts.
+Its actual SHA256, `4f40b9f20d216f5d1564ff76683733adfd5e3c08d681b0f44b116c82b95ff002`,
+is pinned in `protocol.json` before this producer is frozen. All12 native checks,
+strict Clippy and the release build pass. The full comparison and independent
+repeat follow this freeze; no349 heldout accuracy or additional catalog pass is
+claimed until they complete.
 
 ```sh
 export CARGO_TARGET_DIR=/run/media/misha/storage/transformer-runs/build/certified-compare-v1

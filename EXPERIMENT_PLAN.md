@@ -7382,3 +7382,9 @@ controls cross raw99 but fail exact99. The random case retains its training-fit
 refusal. Catalog coverage remains77/165 with no new case or regression.
 Original/repeat wall times are1:04:13 and1:04:37; peak RSS stays below4GiB.
 Task349 can now bind this actual verification before its own producer freeze.
+
+Task349's final protocol pins that actual347 verification hash. Native checks
+are rerun before committing and freezing this complete producer. The subsequent
+13-case/6-endpoint original and independently rebuilt repeat must preserve all
+original training hashes and report raw99 separately from exact99. No corrected
+accuracy result is assumed from the successful input-only numerical diagnosis.
