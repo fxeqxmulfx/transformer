@@ -102,11 +102,17 @@ pub fn run(
         return Ok((vec![], stats));
     }
     let mut thresholds = vec![0usize; index.len()];
+    let mut strengths = vec![0usize; index.len()];
+    let mut order: Vec<_> = (0..index.len()).collect();
     let mut candidates = vec![0u64; words];
     let mut active = Vec::with_capacity(words);
     let mut perfect: Vec<Formula> = vec![];
     for a in &left.rows {
-        charge!(index.len() as u64 * 64 + words as u64 * 32 + 1024);
+        charge!(
+            index.len() as u64 * (u64::from(index.len().ilog2()) + 2) * 64
+                + words as u64 * 32
+                + 1024
+        );
         stats.left_queries += 1;
         let (mut best, mut smallest) = (0, usize::MAX);
         for (i, row) in index.iter().enumerate() {
@@ -119,6 +125,7 @@ pub fn run(
             } else {
                 right.rows.len() - count
             };
+            strengths[i] = count;
             if count < smallest {
                 best = i;
                 smallest = count;
@@ -130,6 +137,7 @@ pub fn run(
         if smallest == 0 {
             continue;
         }
+        order.sort_unstable_by_key(|&i| (strengths[i], i));
         let row = &index[best];
         let start = thresholds[best] * words;
         for (j, candidate) in candidates.iter_mut().enumerate() {
@@ -145,7 +153,8 @@ pub fn run(
                 .filter(|(_, b)| **b != 0)
                 .map(|(j, _)| j),
         );
-        for (i, row) in index.iter().enumerate() {
+        for &i in &order {
+            let row = &index[i];
             if i == best {
                 continue;
             }

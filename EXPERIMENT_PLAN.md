@@ -7085,3 +7085,15 @@ a depth2 fit. These are no new heldout scores. Before using observed label
 transitions to narrow deeper latent programs, CM59 proves exact count-append
 identities and necessary threshold-crossing child bits in Lean. It explicitly
 retains ambiguity for downward transitions with an extra count increment.
+
+Task344's native search and complete13-case comparison now follow CM58/CM59.
+The proof extension totals32 theorems, with4853 modules/25459 theorems and the
+same36 existing sorry, zero extra axioms/vacuous/placeholders. Depth2 training
+fit is recovered; the first five depth3 development attempts retain their
+explicit failures and caps. Conditional opposite-bank count bounds and an
+exact indexed pair search now precede the unchanged joint CE head. Twelve
+native checks pass, including independent positive and negative pair cases,
+count-filter equivalence, true mask/tail semantics, refusals and saved seals.
+The full driver retains all343 history and original35, forecasts every original
+short/long/probe/carry split within64GiB, and must be committed/frozen before
+any new heldout score. Reviewed coverage remains68/165 until that repeat.

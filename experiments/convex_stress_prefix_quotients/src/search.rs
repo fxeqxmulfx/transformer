@@ -51,12 +51,38 @@ pub struct Search {
 }
 fn admit(out: &mut Search, work: u128, bytes: u128) -> Result<()> {
     let total = u128::from(out.scalar_forecast) + work;
-    if total > 200_000_000_000_000 || bytes > prior::joint::MAX_BYTES {
+    if total > 40_000_000_000_000 || bytes > prior::joint::MAX_BYTES {
         return Err("quotient search forecast refused".into());
     }
     out.scalar_forecast = total as u64;
     out.buffer_forecast = out.buffer_forecast.max(bytes as u64);
     Ok(())
+}
+/// Input-only storage preflight for the complete search; no grammar fitting.
+pub fn preflight(rows: &[Observation], vocabulary: usize, policy: &Policy) -> Result<(u64, u64)> {
+    prior::observations::validate(rows, vocabulary)?;
+    let upper: usize = rows.iter().map(|r| r.tokens.len()).sum();
+    let initial = 1024u128.pow(3) + upper as u128 * 512;
+    if initial > prior::joint::MAX_BYTES {
+        return Err("prefix closure storage refused".into());
+    }
+    if rows
+        .iter()
+        .any(|r| prior::prefix::payload(&r.tokens).is_none())
+    {
+        return Ok((upper as u64 * 256, initial as u64));
+    }
+    let pool = Pool::new(rows)?;
+    let n = pool.nodes.len() as u128;
+    let mut bytes = initial + 2 * policy.max_classes as u128 * (n * 8 + 65536);
+    if policy.depth == 3 {
+        bytes += 2 * policy.latent_classes as u128 * (n * 8 + 65536)
+            + pairs::buffer_bound(&pool, policy.latent_classes);
+    }
+    if bytes > prior::joint::MAX_BYTES {
+        return Err("complete search buffer forecast refused".into());
+    }
+    Ok((40_000_000_000_000, bytes as u64))
 }
 pub fn run(rows: &[Observation], vocabulary: usize, policy: Policy) -> Result<Search> {
     prior::observations::validate(rows, vocabulary)?;

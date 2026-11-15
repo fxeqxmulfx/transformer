@@ -77,3 +77,48 @@ against exhaustive grammar evaluation, check depth3 transition witnesses,
 prefix closure, duplicate observations, independent count evaluation, raw-label
 contradictions, signature caps and work-cap evidence. Scalar forecasts are
 conservative admission bounds; actual pair/row/signature counters are separate.
+
+V5 (`d48d16d8`) tested retained programs even when banks truncated. All13 root
+branches still had no training fit; it took3:58.55 and1840840KiB RSS. No heldout
+measurement occurred. CM59 now also proves necessary partner-count ranges
+(`91765567`): a retained opposite bank supplies per-prefix minima/maxima, which
+can exclude impossible partner counts before they fill a new signature bank.
+The replaced bank is freed first, preserving the two-bank memory preflight.
+The retained anchor can itself truncate, so this remains conditional search.
+The exact pair index processes more restrictive count bounds first.
+
+The expanded native suite has12 checks. It compares actual matching pairs as
+well as rejections against the independent interpreter: the earlier fixture's
+expected atom type was corrected from structural Role to numeric Quantity,
+and an explicit nonempty-match assertion prevents a vacuous check. It also
+compares a bounded latent bank to independent filtering of the complete bank.
+
+The complete driver retains the entire task343 report (including340,339 and
+all earlier histories), plus the exact original35 comparison. The thirteen
+cases are repeated, not added a second time to catalog coverage. All six
+endpoints are sealed for every case before any score; scoring and replay both
+reconstruct discovery and the complete CE trajectories. Largest preflight:
+263010390589440 scalar-work units and47143066608 bytes, below600T/56GiB;
+the64GiB process limit remains mandatory. Data/serialization costs are measured
+separately, as in343. Shared prediction/evaluation/CE code is unchanged.
+
+Build, freeze and compare using fresh paths after committing the full producer:
+
+```sh
+CARGO_TARGET_DIR=/run/media/misha/storage/transformer-runs/build/prefix-quotients \
+  prlimit --as=68719476736:68719476736 -- cargo build --release --bins --offline --locked \
+  --manifest-path experiments/convex_stress_prefix_quotients/Cargo.toml
+bash experiments/convex_stress_prefix_quotients/freeze.sh \
+  /run/media/misha/storage/transformer-runs/freezes/prefix-quotient-programs-v1 \
+  /run/media/misha/storage/transformer-runs/build/prefix-quotients/release/convex-stress-prefix-quotients
+bash experiments/convex_stress_prefix_quotients/run.sh \
+  /run/media/misha/storage/transformer-runs/freezes/prefix-quotient-programs-v1/convex-stress-prefix-quotients \
+  /run/media/misha/storage/transformer-runs/prefix-quotients/original-v1 original "$(git rev-parse HEAD)" \
+  /run/media/misha/storage/transformer-runs/synthetic-programs/original-v1/report.json \
+  /run/media/misha/storage/transformer-runs/synthetic-programs/original-v1/original35.json
+```
+
+Independently rebuild the same commit with a fresh `CARGO_TARGET_DIR`, require
+byte-identical executable hashes, then invoke `run.sh REBUILT_BINARY FRESH_ROOT
+repeat ORIGINAL_ROOT`. Compare every JSON/JSONL artifact, not just final scores.
+Use `analyze.jq` on per-case metrics for compact raw/exact/CE summaries.

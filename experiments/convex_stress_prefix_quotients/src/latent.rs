@@ -17,6 +17,7 @@ pub struct Stats {
     pub classes: usize,
     pub capped: bool,
     pub work_exhausted: bool,
+    pub count_bound_rejections: u64,
 }
 pub struct Meter {
     pub work: u64,
@@ -38,8 +39,26 @@ pub fn synthesize(
     cap: usize,
     meter: &mut Meter,
 ) -> Result<(Bank, Stats)> {
+    synthesize_bounded(pool, children, wanted, cap, meter, None)
+}
+pub fn synthesize_bounded(
+    pool: &Pool,
+    children: &Bank,
+    wanted: &Partial,
+    cap: usize,
+    meter: &mut Meter,
+    bounds: Option<&count_bounds::Ranges>,
+) -> Result<(Bank, Stats)> {
     let mut out = Bank::new();
     let mut stats = Stats::default();
+    if let Some(b) = bounds {
+        if b.low.len() != pool.nodes.len() || b.high.len() != pool.nodes.len() {
+            return Err("count-range shape differs".into());
+        }
+        if b.impossible() {
+            return Ok((out, stats));
+        }
+    }
     macro_rules! charge {
         ($n:expr) => {
             if meter.charge($n).is_err() {
@@ -50,8 +69,15 @@ pub fn synthesize(
         };
     }
     for child in &children.rows {
-        charge!(wanted.len() as u64 * 16 + 8192);
+        charge!(wanted.len() as u64 * 16 + pool.nodes.len() as u64 * 32 + 8192);
         if wanted.iter().all(|&(i, b)| bit(&child.bits, i) == b)
+            && bounds.is_none_or(|b| {
+                child
+                    .counts
+                    .iter()
+                    .enumerate()
+                    .all(|(i, &v)| b.allows(i, v))
+            })
             && let Err(error) = out.add(pool, &child.bits, child.nodes, cap, || {
                 child.formula.clone()
             })
@@ -88,6 +114,7 @@ pub fn synthesize(
         })
         .collect();
     let mut signature = vec![0u64; pool.nodes.len().div_ceil(64)];
+    let mut signature_counts = vec![0i16; pool.nodes.len()];
     for a in &children.rows {
         for b in &children.rows {
             charge!(8192);
@@ -121,16 +148,30 @@ pub fn synthesize(
                             charge!(pool.nodes.len() as u64 * 64 + 32768);
                             stats.matching_syntaxes += 1;
                             signature.fill(0);
+                            let mut allowed = true;
                             for i in 0..pool.nodes.len() {
+                                stats.signature_positions += 1;
                                 let v = i32::from(a.counts[i])
                                     < i32::from(b.counts[i])
                                         + extra.map_or(0, |s| i32::from(counts[s][i]))
                                         + offset;
-                                if (v ^ negated) && gate.is_none_or(|g| bit(&literal_bits[g], i)) {
+                                let value =
+                                    (v ^ negated) && gate.is_none_or(|g| bit(&literal_bits[g], i));
+                                if value {
                                     signature[i / 64] |= 1 << (i % 64);
                                 }
+                                signature_counts[i] =
+                                    pool.nodes[i].parent.map_or(0, |p| signature_counts[p])
+                                        + i16::from(value);
+                                if bounds.is_some_and(|b| !b.allows(i, signature_counts[i])) {
+                                    allowed = false;
+                                    stats.count_bound_rejections += 1;
+                                    break;
+                                }
                             }
-                            stats.signature_positions += pool.nodes.len() as u64;
+                            if !allowed {
+                                continue;
+                            }
                             if let Err(error) = out.add(pool, &signature, size, cap, || {
                                 grammar::make(&a.formula, &b.formula, extra, offset, negated, *gate)
                             }) {

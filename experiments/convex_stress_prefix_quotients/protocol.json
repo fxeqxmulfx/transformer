@@ -1,0 +1,65 @@
+{
+  "name": "prefix-quotient-programs-v1",
+  "lean_first_commit": "9176556743d0c82d4242d83d9de447710d67a20a",
+  "native_core_commit": "aee826aaa79c4ef253b5c46cb6ac4c09bee3a3fd",
+  "data_inventory_sha256": "a89e22f8896c693306c7eb19cdfa7ce9b960488285478e3cced4fb76d461d9b6",
+  "original35_summary_sha256": "c9b3c559069fa1e9a4cd68a5cf3ee93123008bcd54753cf3a2485e2c6ad9cef2",
+  "baseline339_report_sha256": "4501ba0f11e8e90da1f548b3f71fc619823ce2062e3f2039b0d57ce3be7d5e0d",
+  "priors": "Fixed decimal/index/alphabet syntax, injective ordinal class coordinates and raw identity copy. No selected target AST, formula seed, generator RNG, heldout answer or task identity enters program discovery or execution.",
+  "selector": "302 fixed numeric programs plus CM58 prefix-signature discovery and CM59 transition-conditioned depth3 search. Retain at most32 checked prefix programs, including programs from explicitly truncated child banks. First fitting depth/root branch in declared order; discovery is discrete outside joint convex CE.",
+  "categorical_control": "Same retained program bank, frozen training atom-label dictionary, class0 for unsupported entries; complete vocabulary logits and supplied identity-copy prior.",
+  "fit": {
+    "search": {
+      "depth": 3,
+      "max_classes": 32768,
+      "latent_classes": 262144,
+      "retained": 32
+    },
+    "max_programs": 64,
+    "radius_per_program": 1073741824.0,
+    "minimum_mass": 1.0,
+    "policies": [
+      {
+        "mode": "Forward",
+        "epochs": 0,
+        "batch": 127,
+        "learning_rate": 10000000000.0,
+        "initial_total_mass": 131072.0,
+        "projection_cycles": 20000,
+        "projection_tolerance": 1E-10
+      },
+      {
+        "mode": "Full",
+        "epochs": 64,
+        "batch": 127,
+        "learning_rate": 10000000000.0,
+        "initial_total_mass": 131072.0,
+        "projection_cycles": 20000,
+        "projection_tolerance": 1E-10
+      },
+      {
+        "mode": "Mini",
+        "epochs": 8,
+        "batch": 127,
+        "learning_rate": 10000000000.0,
+        "initial_total_mass": 131072.0,
+        "projection_cycles": 20000,
+        "projection_tolerance": 1E-10
+      }
+    ]
+  },
+  "initial_mass_scaling": "Multiply each policy's initial_total_mass by the number of retained programs before fitting; endpoints store the resulting total.",
+  "original_success": {
+    "metric": "sequence_accuracy",
+    "threshold": 0.95
+  },
+  "goals": {
+    "raw_accuracy": 0.99,
+    "sequence_accuracy": 0.99
+  },
+  "process_address_space_bytes": 68719476736,
+  "buffer_ceiling_bytes": 60129542144,
+  "complete_case_scalar_work_limit": 600000000000000,
+  "controls": "Preserve the entire343 report, including all earlier36-case histories and the separate original35 comparison. Re-evaluate all13 same cases without double counting them. Independent-label and every search/fit refusal remain explicit.",
+  "baseline343_report_sha256": "d7714f2d2d261b9680aa4818b9877501a6c2586b09f5762d4c6c402687b4139d"
+}

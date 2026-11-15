@@ -18,3 +18,11 @@ pub mod search;
 #[cfg(test)]
 mod tests;
 pub mod transitions;
+pub use prior::{
+    adapter, artifacts, dataset, discovery, evaluation, from_data, joint, model, observations,
+    prefix, program,
+};
+pub mod fit;
+pub mod runner;
+pub const PROTOCOL: &str = include_str!("../protocol.json");
+pub mod count_bounds;
