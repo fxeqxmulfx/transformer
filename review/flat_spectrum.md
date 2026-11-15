@@ -19563,3 +19563,58 @@ every unknown entry, evaluate and charge the actual complete complex head,
 declare its projection geometry, account for expanded storage and work, and
 freeze a new producer before its own complete independent comparison. The
 already frozen CM64 cohort remains unchanged.
+
+## CM66. Off-domain projection proposals after exact row elimination
+
+CM65 preserves distances between reconstructed feasible tensors. A projected
+gradient step also needs to project a proposal that can violate the anchors,
+nonnegativity, and the shared row sums. Merely restricting such a proposal is
+incorrect: its known-label coordinates contribute to the best shared mass.
+
+Fix the same observed dictionary and an arbitrary full proposal `v`. For each
+program write
+
+```
+k_j = 1 + card(Known_j),
+l_j = v.w[j] + sum_(s in Known_j) v.gamma[j,s,L_j(s)],
+t.w[j] = l_j / k_j,
+t.u[j,s,c] = v.gamma[j,s,c] for s in Unknown_j.
+```
+
+Every `k_j` is strictly positive. The exact original squared projection
+objective at any reconstructed reduced point `r` is
+
+```
+distance_squared(expand(r), v)
+  = sum_j k_j * (r.w[j] - t.w[j])^2
+      + sum_j sum_(s in Unknown_j) sum_c (r.u[j,s,c] - t.u[j,s,c])^2
+      + K(v),
+
+K(v) = sum_j (v.w[j]^2
+         + sum_(s in Known_j) sum_c v.gamma[j,s,c]^2 - l_j^2 / k_j).
+```
+
+The constant retains every off-label proposal square. It is independent of
+the point being optimized, so it cancels from pairwise comparisons. Together
+with CM65's exact domain correspondence, this proves equivalence of the full
+and weighted reduced minimizers, with feasible membership explicitly included
+on both sides. No assumption that the proposal is itself feasible, or that it
+arose from a particular derivative, is needed. This equivalence does not by
+itself assert that a numerical solver returns a minimizer or that two floating
+implementations have bit-identical trajectories.
+
+The nonconstant dictionary example has mass weights two and four. A concrete
+proposal with masses -1 and 2, nonzero off-label coordinates and a nonuniform
+unknown row yields reduced centers -3/2 and 5/4. The unknown class entries five
+and four are copied without alteration. The original objective at a feasible
+confidence-four model is exactly 123. Thus the example covers an actual
+off-domain proposal, unequal anchor counts and genuinely free unknown rows.
+
+Formalization: `ObservedRows/{Projection,ProjectionWitness}.lean`, eleven
+theorems with direct audit `scripts/ObservedProjectionAxioms.lean`. The native
+follow-up must retain all unknown entries, compute the selected proposal sums,
+validate its weighted simplex/mass solver independently, and distinguish a
+finite-precision KKT residual from this exact-real minimizer theorem. The
+complex head, ordinary empirical CE and fixed input-family requirements of
+CM64/65 are unchanged; these projection identities add no heldout label or
+benchmark success.

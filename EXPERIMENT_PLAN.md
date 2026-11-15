@@ -7547,3 +7547,15 @@ has full/reduced squared distances 20/8. This proof supplies a basis for testing
 a larger fixed input family within the RAM limit. It supplies no new catalog
 pass. Keep the frozen task351 producer and its independent repeat unchanged;
 any native compressed representation needs its own checks and future freeze.
+
+### 2026-11-15: task353 exact reduced projection before native storage changes
+
+CM66 extends the observed-row reduction to arbitrary full gradient proposals.
+Completing all squares gives weighted reduced centers and a point-independent
+remainder containing every eliminated off-label square. Exact minimizers
+correspond on the full and reduced domains. The nonconstant example has unequal
+weights, a negative proposal mass and nonuniform unknown entries. Implement the
+Rust representation and independently validate dense/reduced projections and
+complete complex products before any wider-family data run. Numerical KKT
+checks are not a Lean floating-point refinement. The frozen task351 comparison
+and its queued independent repeat remain unchanged.

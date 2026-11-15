@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedRows.Witness
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedRows.ProjectionWitness
 
 /-!
 # Exact elimination of observed latent decoder rows
