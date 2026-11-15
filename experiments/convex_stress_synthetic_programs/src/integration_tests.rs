@@ -68,6 +68,9 @@ fn full_bank_matches_separate_interpreter_on_valid_and_refused_inputs() {
     for n in 1..=6 {
         for x in words(n) {
             assert_eq!(nested.run(&x), nested.interpret(&x));
+            let with_bos: Vec<_> = std::iter::once(1).chain(x.iter().copied()).collect();
+            assert_eq!(nested.run(&with_bos), nested.run(&x));
+            assert_eq!(nested.interpret(&with_bos), nested.interpret(&x));
         }
     }
 }
@@ -240,13 +243,29 @@ fn bounded_prefix_search_preserves_multiple_fitting_syntaxes_and_raw_label_trans
         .collect();
     let transported = search::run(&swapped, 36, p.clone())?;
     assert_eq!(found, transported);
+    let with_bos: Vec<_> = rows
+        .iter()
+        .map(|r| Observation {
+            tokens: std::iter::once(1).chain(r.tokens.iter().copied()).collect(),
+            ..r.clone()
+        })
+        .collect();
+    let bos_search = search::run(&with_bos, 36, p.clone())?;
+    assert_eq!(found.programs, bos_search.programs);
+    assert_eq!(found.stages, bos_search.stages);
+    let bos_discovery = discovery::run(
+        &with_bos,
+        observations::coordinates(36)?,
+        bos_search.programs,
+    )?;
+    assert_eq!(bos_discovery.compatible, d.compatible);
     let cap = search::Policy {
         max_candidates: 1,
         ..p
     };
     assert!(search::run(&rows, 36, cap).is_err());
     let mut skipped = rows.clone();
-    skipped[0].tokens[0] = 1;
+    skipped[0].tokens[0] = 18;
     assert!(
         search::run(&skipped, 36, search::Policy::default())?
             .programs

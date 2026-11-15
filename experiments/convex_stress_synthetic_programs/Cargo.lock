@@ -222,6 +222,7 @@ dependencies = [
  "convex-stress-remaining-synthetic-data",
  "serde",
  "serde_json",
+ "sha2",
 ]
 
 [[package]]

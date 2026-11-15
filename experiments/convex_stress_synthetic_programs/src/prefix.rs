@@ -3,6 +3,16 @@
 use crate::*;
 use serde::{Deserialize, Serialize};
 
+/// Optional supplied BOS syntax is outside the counted symbol word.
+pub fn payload(tokens: &[usize]) -> Option<&[usize]> {
+    let word = if tokens.first() == Some(&1) {
+        &tokens[1..]
+    } else {
+        tokens
+    };
+    (!word.is_empty() && word.iter().all(|t| [9, 10, 23].contains(t))).then_some(word)
+}
+
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub enum Term {
     Constant(i32),

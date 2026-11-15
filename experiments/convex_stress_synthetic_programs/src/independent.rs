@@ -116,7 +116,12 @@ impl Program {
             return None;
         }
         if let Self::Prefix(f) = self {
-            return prefix(f, tokens);
+            let word = if tokens[0] == 1 { &tokens[1..] } else { tokens };
+            return if word.is_empty() {
+                None
+            } else {
+                prefix(f, word)
+            };
         }
         if tokens[0] != 1 {
             return None;

@@ -116,7 +116,7 @@ impl Program {
         }
         if let Self::Prefix(f) = self {
             return f
-                .evaluate(tokens)
+                .evaluate(crate::prefix::payload(tokens)?)
                 .ok()?
                 .last()
                 .map(|&b| Atom::Quantity(i64::from(b)));

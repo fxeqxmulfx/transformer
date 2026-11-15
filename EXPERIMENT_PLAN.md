@@ -7035,3 +7035,15 @@ products and all modes including the true minibatch tail. The complete driver
 and protocol must be committed and frozen before heldout measurement. These
 implementation checks add no benchmark result:58/165 remains the verified
 scope,107 cases remain unmeasured, and the independent-label control may fail.
+
+Task343's complete Rust driver now separates training-only discovery from
+original prefix/own-output evaluation. It binds pinned340/339/original35
+references, forecasts the complete search/train/reconstruct/score workload,
+seals all13 cases and six endpoints before heldout scoring, and streams every
+complete raw-class vector with independent interpreter/product checks. Ten
+native checks cover the runner and inherited modes. Training-only development
+fixed BOS exclusion from counted words and tested a128-entry prefix beam.
+Depth1 C-RASP fits; depth2/3 discovery still refuses, and RandomLM remains an
+explicit negative control. The upcoming frozen benchmark must retain those
+failures and distinguish measured cases from successes. Do not change the
+verified58/165 scope until frozen original and independent repeat evidence exists.

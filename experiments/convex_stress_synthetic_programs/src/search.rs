@@ -187,7 +187,7 @@ pub fn run(rows: &[Observation], vocabulary: usize, policy: Policy) -> Result<Se
     };
     if rows
         .iter()
-        .any(|r| r.tokens.iter().any(|t| ![9, 10, 23].contains(t)))
+        .any(|r| crate::prefix::payload(&r.tokens).is_none())
     {
         out.skipped = Some("input prefixes do not use the supplied three-symbol alphabet".into());
         return Ok(out);
@@ -228,7 +228,14 @@ pub fn run(rows: &[Observation], vocabulary: usize, policy: Policy) -> Result<Se
             .iter()
             .map(|f| {
                 rows.iter()
-                    .map(|r| Ok(f.evaluate(&r.tokens)?.iter().filter(|&&x| x).count() as i32))
+                    .map(|r| {
+                        Ok(f.evaluate(
+                            crate::prefix::payload(&r.tokens).ok_or("invalid counted word")?,
+                        )?
+                        .iter()
+                        .filter(|&&x| x)
+                        .count() as i32)
+                    })
                     .collect::<Result<_>>()
             })
             .collect::<Result<_>>()?;
@@ -329,8 +336,12 @@ pub fn run(rows: &[Observation], vocabulary: usize, policy: Policy) -> Result<Se
             .iter()
             .map(|f| {
                 bits(
-                    rows.iter()
-                        .map(|r| *f.evaluate(&r.tokens).unwrap().last().unwrap()),
+                    rows.iter().map(|r| {
+                        *f.evaluate(crate::prefix::payload(&r.tokens).unwrap())
+                            .unwrap()
+                            .last()
+                            .unwrap()
+                    }),
                     rows.len(),
                 )
             })
