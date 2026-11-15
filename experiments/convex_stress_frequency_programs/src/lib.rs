@@ -6,7 +6,12 @@ pub use convex_stress_prefix_programs as parent;
 pub use parent::{C, Input, Observation, Result, argmax, ce, data, hash, metrics};
 use serde::{Deserialize, Serialize};
 pub mod coordinates;
+pub mod discovery;
+#[cfg(test)]
+mod discovery_tests;
 pub mod head;
+pub mod model;
+pub mod program;
 #[cfg(test)]
 mod tests;
 pub mod training;
