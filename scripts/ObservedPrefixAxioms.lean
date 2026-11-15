@@ -16,3 +16,14 @@ import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.toy_unseen_counts
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.incomplete_pool_counterexample
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.final_word_pool_not_closed
+
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.unitStep_bounds
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.upward_crossing
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.downward_crossing
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.downward_with_extra
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.extra_excludes_upward
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.prefixCount_append
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.countDifference_append
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.countDifference_upward
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.countDifference_downward
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.extra_downward_ambiguity

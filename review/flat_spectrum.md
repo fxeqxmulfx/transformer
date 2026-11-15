@@ -19086,3 +19086,46 @@ theorem permits an arbitrary fixed Boolean-to-raw-label decoder, including
 many-to-one decoders. Concrete witnesses use both observed truth values and
 two distinct raw labels. Neither the symbolic proof nor its examples are new
 heldout benchmark measurements.
+
+## CM59. Necessary latent predicates at observed count transitions
+
+The first CM58 native search retains all first-layer observed signatures and
+finds four depth2 programs consistent with the original training pool. No
+heldout measurement follows from that result. The depth3 training pool still
+has no fitting root at count depth two. A complementary constraint comes from
+changes of the observed root truth along adjacent input prefixes.
+
+For Boolean predicates p,q,r on symbol words, put
+
+`D(w) = C[p](w) - C[q](w) - C[r](w)`.
+
+The optional extra count is r; when absent it is constantly false. Appending
+one symbol a gives exactly
+
+`D(w ++ [a]) = D(w) + 1[p(w ++ [a])] - 1[q(w ++ [a])] - 1[r(w ++ [a])]`.
+
+This uses actual inclusive counts, not assumed arbitrary latent coordinates.
+The integer increment is between -2 and 1, at any internal predicate depth.
+For a proposed integer threshold k, crossing from D(w)<k to D(w++[a])>=k
+forces the three new bits to be true,false,false. It also forces D(w)=k-1
+and D(w++[a])=k. Crossing downward with r(w++[a])=false forces p=false,
+q=true and the boundary values k,k-1. With r=true, a downward crossing only
+forces p=false OR q=true: (false,false), (true,true), and (false,true) can
+all cross down. An r=true increment can never cross upward.
+
+These implications are necessary conditions for a candidate root expression.
+A search may condition on its offset, optional extra symbol, negation, gate
+and raw-label orientation, then constrain child programs at observed adjacent
+prefixes where the root comparison value is known. A gate-false label does
+not reveal its hidden comparison value. Missing parent labels do not reveal
+a transition. The empty prefix's count difference is exactly zero. Inferred
+child bits are branch-specific search constraints, not extra measured labels
+for the CE objective. Every final candidate still needs the original complete
+training-label and independent-interpreter checks. No completeness, search
+convergence, or unseen answer identification follows from these implications.
+
+Formalization: `ObservedPrefixes/Transitions.lean` proves10 theorems, including
+the append identities connecting the step to actual prefix counts, threshold
+constraints, and the concrete ambiguity with an extra count. Each conditional
+theorem has a satisfying example. `scripts/ObservedPrefixAxioms.lean` includes
+the direct standard-axiom audit. The joint CM57 CE head is unchanged.

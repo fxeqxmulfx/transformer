@@ -7078,3 +7078,10 @@ build. The global audit retains36 existing sorry, zero dependent results and
 zero extra axioms; native INDEX reports4852 modules and25443 theorems, with
 zero vacuous or placeholder declarations. Keep the frozen343 producer and its68/165 coverage unchanged;
 new algorithmic progress requires a new frozen independent benchmark repeat.
+
+Training-only CM58 development retains1926 first-layer signature classes for
+C-RASP2 and finds four compatible programs in1.40s/7.6MiB; depth3 still refuses
+a depth2 fit. These are no new heldout scores. Before using observed label
+transitions to narrow deeper latent programs, CM59 proves exact count-append
+identities and necessary threshold-crossing child bits in Lean. It explicitly
+retains ambiguity for downward transitions with an extra count increment.

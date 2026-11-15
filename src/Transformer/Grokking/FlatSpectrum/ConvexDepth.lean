@@ -132,6 +132,8 @@ two feasible completions retain ambiguity in an uncovered structural role.
 CM58 closes finite observed words under nonempty prefixes before replacing
 nested-count subprograms by equal truth signatures. This preserves observed
 counts and decoded training fits; unseen words remain uncertified.
+CM59 uses observed threshold crossings to constrain candidate inner predicates;
+an extra count weakens downward identification to a necessary disjunction.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/
