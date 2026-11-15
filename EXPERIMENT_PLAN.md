@@ -6791,3 +6791,14 @@ enters a model. Unknown copies use an explicit prior; other unknown states have
 no identification certificate. Forecast complete work before fitting/scoring;
 the prospective new evaluation cap is512B scalar units per case/mode, with
 56GiB buffers and64GiB process limits. No new heldout result yet.
+
+The task334 native implementation now passes eight checks, including a full
+generic count-three binding and longer own-output generation in all modes,
+categorical decoder renaming, independent interpreters/products, real mini
+tails, source/refusal preservation and prospective original dimensions.
+The largest new full-batch forecast is66.4904B scalar units, so the new training
+cap is96B before production; search remains64B and evaluation512B. Full Lean,
+the new audit, global36sorry/0rests/0extra, native INDEX, fmt/clippy/release and
+shell checks pass. Freeze committed source and run all16 states before any
+score, then independently repeat. Original35 remains34/35 raw99; no new parity
+model pass is claimed from these implementation checks.

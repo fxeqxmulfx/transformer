@@ -1,0 +1,20 @@
+{
+  "name":"shared-prefix-count-programs-v1",
+  "lean_contract":"CM53/CM54 plus scripts/PrefixCountingGenerationAxioms.lean",
+  "parent_source":"b3723b828321ee3d42d3e3a2ef12e624f4d3e7a8",
+  "parent_review":"5c2f2817ae4d7b4a6c2dfe28e810bd651a0dabb1",
+  "data_source":"9d9216b0a4970fe1c7a9231b102976cbff23ef32",
+  "baseline_report_sha256":"8b5508d9037bf28268572c2dff4a5fe46052ff9b686754701aee935ff35c57ac",
+  "previous_attempt_producer":"b3723b828321ee3d42d3e3a2ef12e624f4d3e7a8",
+  "previous_attempt_sha256":"c84f3f86b049c476809d13cf96f7b7ab46bab6b44a0c92c7dbed9eb5f7db11cc",
+  "cases":["suite-mqar","suite-lookup","suite-dyck","suite-blocks","suite-dyck-2","suite-dyck-3","suite-copy-repeat","suite-copy-unique","suite-reverse-repeat","suite-reverse-unique","suite-sort-repeat","suite-sort-unique","suite-parity-none","suite-parity-running","suite-parity-running-hints","suite-parity-ones-hints"],
+  "selection":"Run unchanged328 binder first; only its lack of usable initialization permits this bank. Infer delimiters from last symbols of minimal observed prefixes and counters appearing at least once per such prefix on average. Keep all candidates/conflicts/compatible dictionaries; select first compatible in the fixed enumeration order. No task name or heldout labels.",
+  "program_bank":"Count a learned symbol modulo2..8 before a learned first/last delimiter; skip0..3; stride/offset(1,0),(2,0),(2,1); final-only, every selected position or only counted-symbol events. Running modes start at count0. Optionally interleave the preceding or following raw input token. Raw output dictionaries and exhaustion label are learned.",
+  "states":256,
+  "decoder":"Raw copy states0..239; count residues240..247; exhausted254; missing255. First observed raw label per state, categorical many-to-one. Unknown dictionaries remain None; explicit identity-copy completion only if state<raw vocabulary, otherwise raw0. Model uses first compatible program, without assuming broader-bank agreement or target realizability.",
+  "head":"Complete realified256-state unitary Fourier code and all raw classes, margin24, radius16384. One selected template and its singleton simplex affine CE slice; this is not optimization over a full discovered-bank joint domain. All candidates remain in discovery evidence, but are not claimed as active head blocks.",
+  "training":[{"mode":"Full","iterations":16,"batch":32,"learning_rate":1.0},{"mode":"Mini","iterations":4,"batch":32,"learning_rate":0.1},{"mode":"Forward","iterations":0,"batch":32,"learning_rate":1.0}],
+  "limits":{"vocabulary":240,"prefix":4096,"candidates":16384,"retained":256,"delimiters":16,"counters":8,"search_scalar_work":64000000000,"training_scalar_work":96000000000,"evaluation_scalar_work":512000000000,"buffers_bytes":60129542144,"process_address_space_bytes":68719476736},
+  "scoring":"Seal all16 states before scoring. Use own-output greedy generation/EOS, separate teacher-forced ordinary CE, independent complete products and independent program interpreter. Keep all48 mode endpoints, every short/32/64 split, original95 and raw99/exact99, refusals and complete328 states/results.",
+  "scope":"Four additional cases and twelve repeated controls. Original35 comparison remains separate. Feature discovery and native target realizability are not certified; flatness only bounds complete coefficients. Unknown-state acceptance does not follow from numerical completion."
+}

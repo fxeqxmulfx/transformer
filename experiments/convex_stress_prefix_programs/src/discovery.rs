@@ -1,0 +1,144 @@
+//! CM53 dictionary fitting. Every compatible program survives. Retain the
+//! first two conflicting original record IDs; unobserved rows stay None.
+use crate::{program::Program, *};
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Learned {
+    pub program: Program,
+    pub decoder: Vec<Option<usize>>,
+    pub source_rows: Vec<Option<usize>>,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Attempt {
+    pub program: Program,
+    pub observations: usize,
+    pub positions: u64,
+    pub buffer_symbols: usize,
+    pub conflict: Option<(usize, usize, usize, usize, usize)>,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Report {
+    pub input: Input,
+    pub roles: program::Roles,
+    pub attempts: Vec<Attempt>,
+    pub retained: Vec<Learned>,
+    pub positions: u64,
+    pub search_forecast: u64,
+    pub buffer_forecast: u64,
+    pub error: Option<String>,
+}
+pub fn run(input: Input) -> Result<Report> {
+    let inherited = sequences::complex::Request {
+        input: input.clone(),
+        policy: Default::default(),
+    }
+    .validate()?;
+    let roles = program::infer(&input)?;
+    let programs = program::catalogue(&roles)?;
+    // Both linear count interpreters, vector construction and decoder checks.
+    let tokens: u64 = input
+        .observations
+        .iter()
+        .map(|s| 64 * s.tokens.len() as u64 + 256)
+        .sum();
+    let forecast = roles.scalar_work_forecast + programs.len() as u64 * tokens;
+    if forecast > WORK_LIMIT {
+        return Err("latent search exceeds64B scalar-work forecast".into());
+    }
+    let bytes = inherited
+        + 1024 * programs.len() as u64
+        + 128 * input.observations.len() as u64 * 256
+        + 1024 * 256 * STATES as u64 * input.vocabulary as u64;
+    if bytes > 56 * 1024 * 1024 * 1024 {
+        return Err("latent binding exceeds56GiB buffer forecast".into());
+    }
+    let mut out = Report {
+        input,
+        roles,
+        attempts: vec![],
+        retained: vec![],
+        positions: 0,
+        search_forecast: forecast,
+        buffer_forecast: bytes,
+        error: None,
+    };
+    for program in programs {
+        let mut learned = Learned {
+            program: program.clone(),
+            decoder: vec![None; STATES],
+            source_rows: vec![None; STATES],
+        };
+        let mut attempt = Attempt {
+            program: program.clone(),
+            observations: 0,
+            positions: 0,
+            buffer_symbols: 0,
+            conflict: None,
+        };
+        for (i, row) in out.input.observations.iter().enumerate() {
+            let v = program.run(&row.tokens);
+            attempt.observations += 1;
+            attempt.positions += v.positions;
+            attempt.buffer_symbols = attempt.buffer_symbols.max(v.buffer_symbols);
+            if let Some(label) = learned.decoder[v.state] {
+                if label != row.label {
+                    attempt.conflict = Some((
+                        learned.source_rows[v.state].unwrap(),
+                        i,
+                        v.state,
+                        label,
+                        row.label,
+                    ));
+                    break;
+                }
+            } else {
+                learned.decoder[v.state] = Some(row.label);
+                learned.source_rows[v.state] = Some(i);
+            }
+        }
+        out.positions += attempt.positions;
+        if attempt.conflict.is_none() {
+            out.retained.push(learned);
+        }
+        out.attempts.push(attempt);
+        if out.retained.len() > 256 {
+            out.error = Some("retained latent program cap256".into());
+            break;
+        }
+    }
+    if out.retained.is_empty() {
+        out.error = Some("no training-compatible latent summary".into());
+    }
+    Ok(out)
+}
+pub fn check(input: &Input, out: &Report) -> Result<()> {
+    if out.input != *input || run(input.clone())? != *out {
+        return Err("latent input/filter/dictionary/work replay differs".into());
+    }
+    for attempt in &out.attempts {
+        if let Some((first, second, state, a, b)) = attempt.conflict
+            && (first >= second
+                || a == b
+                || input.observations[first].label != a
+                || input.observations[second].label != b
+                || [first, second]
+                    .iter()
+                    .any(|&i| attempt.program.interpret(&input.observations[i].tokens).0 != state))
+        {
+            return Err("independent latent conflict witness differs".into());
+        }
+    }
+    for learned in &out.retained {
+        for (i, row) in input.observations.iter().enumerate() {
+            let (state, peak) = learned.program.interpret(&row.tokens);
+            let actual = learned.program.run(&row.tokens);
+            if state != actual.state
+                || peak != actual.buffer_symbols
+                || learned.decoder[state] != Some(row.label)
+                || learned.source_rows[state].is_none_or(|s| s > i)
+            {
+                return Err("independent learned dictionary differs".into());
+            }
+        }
+    }
+    Ok(())
+}
