@@ -7351,3 +7351,21 @@ pending, and the freeze script rejects this incomplete protocol. After that
 actual verification exists, pin it, rerun checks, commit and freeze the final
 producer, then execute the original comparison and an independent rebuild/repeat.
 No new349 heldout score or catalog credit is claimed; verified coverage stays77/165.
+
+### 2026-11-15: task350 training-only search continuation
+
+The current depth3 bank contains12 fitting programs of56--64 AST nodes. Its
+first-fit stopping rule is independent of the numerical evaluator; continuing
+search is a separate candidate-discovery experiment. Before implementation, the
+unchanged CM62 streaming/count-fit and negative-cache Lean modules were rebuilt
+and their standard-axiom audit rerun. No new pruning/equivalence or unseen-target
+identification theorem is claimed.
+
+`convex_stress_search_continuation` continues successful query streams, retains
+up to32 distinct completed fits by actual syntax size/order, and preserves them
+when the40T search budget is exhausted. Final two-interpreter checks are reserved
+inside the budget; all truncated anchors and stopped streams remain explicit.
+Four native controls pass, including a real interrupted stream retaining its
+completed fit, later simpler syntax, negative-cache retests and fatal-error
+classification. Freeze and independently repeat the training-only1370-record
+probe next. This changes no frozen347/349 producer and adds no accuracy credit.

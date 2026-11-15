@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_search_continuation`](convex_stress_search_continuation) | Training-only count search | Continue beyond the first fitting query, retaining smaller completed ASTs inside the original40T budget and preserving fits on interruption. Reuses CM62 constraints; no heldout scores or catalog credit. |
 | [`convex_stress_certified_compare`](convex_stress_certified_compare) | Same13 cases, six endpoints after CM63 | Complete training states must reproduce347; certified numerical evaluation and raw recounts distinguish raw99 from exact99. Native implementation passes; full measurement awaits the independent347 verification. |
 | [`convex_stress_certified_head`](convex_stress_certified_head) | CM63 numerical evaluation | Lean first:18 scoring and ambiguity results. Independent full real/complex products resolve five old inconsistent winners in74 input-only queries; all diagnostic outputs independently repeat. No target labels or accuracy measurement;77/165 verified coverage unchanged. |
 | [`convex_stress_arithmetic_data`](convex_stress_arithmetic_data) | All54 arithmetic catalog cases | All52 artifacts and executable independently reproduce. Historical train/validation fingerprints match48 cases, including26 additions; six missing fixed random-table/set helpers remain explicit refusals. Five native checks, peak11MiB; no new model score. |
