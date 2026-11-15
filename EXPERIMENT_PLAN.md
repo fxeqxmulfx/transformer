@@ -7258,3 +7258,14 @@ composed buffer forecast is47561448432 bytes under56GiB, with the64GiB process
 cap unchanged. A schema-specific JSON bound admits the complete independent
 pair at about96.7GiB disk without removing raw evidence. The first committed
 training-only streaming probe is still running; no new heldout credit is taken.
+
+The ee289380 training-only probe now recovers12 complete observed fits for
+depth3. Every1370 original label is checked with both program interpreters.
+The successful12th branch retains a capped262144-class left anchor and streams
+the opposite grammar past its old cap; this is a fit, not exhaustive coverage.
+All17223763 indexed queries and8722818 cache hits are recorded;858393 cheaper
+equivalents are correctly retested. Work37393912927376 remains below40T.
+The committed snapshot and full JSON/log/resource evidence persist on storage.
+Runtime16:59.56, peak1596700KiB (1.52GiB), no swaps. Heldout generalization and
+the six CE endpoints are not yet measured; frozen full-cohort verification is
+next, with cumulative accuracy credit still77/165.

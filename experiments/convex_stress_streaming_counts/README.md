@@ -56,10 +56,22 @@ files, Lean sources and audits, protocol source, binary and compiler hashes.
 Run its saved `discover` with `/usr/bin/time -v` and the address-space cap,
 keeping JSON, logs and resources outside the worktree on the storage disk.
 
-The training-only probe is running from committed `ee289380` and the snapshot
+The training-only probe completed from committed `ee289380` and the snapshot
 `/run/media/misha/storage/transformer-runs/freezes/streaming-counts-training-v1`.
 Its results are kept under `streaming-counts/training-v1` on the same disk.
-The complete frozen 13-case heldout comparison remains pending. Verified
+It finds 12 programs that fit every one of the 1370 original observed labels,
+with agreement between the primary and independent interpreters. The fit is
+on branch 12 after 17223763 indexed queries over 883 closed prefixes. The first
+11 joins exhaust without a fit; the successful branch streams past the old
+right-bank cap while retaining a capped 262144-class left anchor. Its success
+is a checked training fit, not an exhaustive search or a generalization proof.
+
+The cache skips 8722818 previously tested queries but correctly retests 858393
+cheaper equivalent arrivals. Charged work is 37393912927376, below the unchanged
+40T cap. Wall time is 16:59.56 and peak RSS is 1596700KiB (about 1.52GiB), under
+the 64GiB process cap. No target AST, formula seed or heldout answer was used.
+These 12 programs have not yet been scored on heldout data or credited as a
+new catalog success. The frozen 13-case heldout comparison is next. Verified
 catalog coverage stays 77/165, the separately reproduced cohort union on seed 1.
 This implementation alone adds no accuracy credit.
 
