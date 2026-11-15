@@ -6726,3 +6726,15 @@ covered-batch derivatives pass, retaining non-Dirac rows, repeated IDs, short
 tails and nonzero fallback logits. CM55 supplies the separate sufficient
 expansion budget. The native all35 adapter is under construction and must keep
 both complete319 and330 references, with fresh metrics for every new state.
+
+The task332 Rust adapter preserves all35 cases and both105-choice policies,
+all conventional/depth/history references, and complete319/330 snapshots.
+Fresh331 training must match the reviewed six full outcomes exactly, then all
+three endpoint states are sealed before scoring. Full raw audits join retained
+330 vectors by original record and verify319 logits/targets/roles exactly.
+Seven integration checks pass, including both references and corrupt-record
+refusals. Each run/replay invocation forecasts the entire search, actual shared
+head, original records, projections and calls, with10T case work,56GiB explicit
+buffers and64GiB processes. Summary parsing is a separate bounded phase.
+Freeze the source/protocol, run all35 and independently repeat before reporting
+any new heldout99% attainment; current original results remain34/35 raw99.

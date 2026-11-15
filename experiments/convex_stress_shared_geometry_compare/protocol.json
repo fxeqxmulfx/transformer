@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "parent_producer": "9c7370a593c078a994b06a12449d00b940d26fd0",
+  "parent_review": "b99c845b32545de78da7a9056a90476040b7513b",
+  "parent_summary_sha256": "fd8f7ff32e9cdded9ef70c4c9526a472c5c85fa88cb765991142752b25a5b879",
+  "parent_rendered_report_sha256": "7632e96c882483211d31a2fc882990ffbe0d3fd77144424b353dc1bed2b18ebc",
+  "parent_manifest_sha256": "9d483213ca4b6bff59cc1c96583bce10b98a3241938a35db0135c3e1de10f54f",
+  "parent_source_fingerprint": "b0ada4c4aa7bdc055389e999993a0d610d5ba03e8850ab4106669797de2284ce",
+  "component_producer": "b19b3bc9d5f3281b85c0817983f6466faeee855c",
+  "component_review": "b19b3bc9d5f3281b85c0817983f6466faeee855c",
+  "component_summary_sha256": "826b4fa770a13daa1a584c7cec15c2be3c6e3ec9a75646a59b5e1d44be74cb5c",
+  "diff_gpt_history_sha256": "f31ed0f58f27cc4cf0603b9759c882611cda31e2db8a9fff622a806307d0acaf",
+  "lean_audit": "4e8f8171; CM55 f0f2d385",
+  "eligible_prefix": "signed-kernel:crossing-exclusion:raw-exclusion:raw-regions:gated-context:context-mixture:context-scale:context:",
+  "eligibility": "every already selected representation with this prefix, both105-choice policies; no task-name, heldout metric or new training-loss selection",
+  "coverage": "per role, a source block has at least one original training record; fixed before fitting; all original record IDs and repeats retained",
+  "routing": "Keep original prior/supplement support route. Use the complete331 affine shared head on training-covered blocks and the actual complete319 head otherwise.",
+  "training": "Unchanged reviewed331 v2 constructor including all1344 conditional fold configurations, original records, final refit and ordinary CE; full128, mini8 epochs of127 with actual tail, forward0 CE gradients. Keep the final iterate.",
+  "convexity": "Fixed affine parameter map into every raw-class complex coefficient; CM55 weighted sufficient domain, complete per-role radius1048576 including fixed offsets. Original covered objectives and parameter derivatives agree through the fixed gate. Geometry and categorical decoder discovery are training-only and outside the convexity claim.",
+  "scope": "all35 original seed1 tasks, both105-choice policies,35 conventional endpoints,336 depth outcomes, all previous references/failures and separate historical DiffGPT seeds0/1/2",
+  "success": "preserve original primary and all-split flags; report per-task raw99/exact99/all-heldout99 separately from pooled totals",
+  "heldout_selection": false,
+  "unconditional_identification": false,
+  "address_limit_bytes": 68719476736,
+  "buffer_limit_bytes": 60129542144,
+  "case_kernel_work_limit": 10000000000000,
+  "old_construction_passes_reserved": 2,
+  "new_training_passes_reserved": 3,
+  "cost_scope": "Per run or replay invocation, reserve all original layouts, constructors and candidate folds, shared parameter gradients/projections, old reconstruction, every metric/field call, full old/new raw audit and independent complete expansion. Repeat invocations have separate process/resource logs. Hashing/serialization and retained330 artifact reads are additionally measured.",
+  "storage": "all three endpoints sealed on disk before any scores; one complete old/new endpoint live at a time",
+  "previous_refused_preparation": {
+    "producer": "55d0cd4b8de54dbb66d7e2b84ec0994f075a389e",
+    "reason": "The rendered319 report hash was incorrectly used for the complete summary. All331 manifest entries verified; the summary pin refused before any model fitting or heldout scoring.",
+    "models_created": 0,
+    "original_scores": 0,
+    "task_denominator": 35,
+    "artifacts": [
+      {
+        "file": "/run/media/misha/storage/transformer-runs/shared-head-compare/original-v1.prepare.log",
+        "sha256": "16b7a5ed4578b753798c2934691ce634dfc744c9f786eb8c828e67c2a430aebf"
+      },
+      {
+        "file": "/run/media/misha/storage/transformer-runs/shared-head-compare/original-v1.prepare.resources",
+        "sha256": "7d0aa70e3b8e062d70e1c8fc29f3190ed8c84278b631e14840ceb29bcdff1568"
+      },
+      {
+        "file": "/run/media/misha/storage/transformer-runs/shared-head-compare/original-v1.driver.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "file": "/run/media/misha/storage/transformer-runs/shared-head-compare/original-v1.driver.resources",
+        "sha256": "bf916fb968dc449cc738b777898058623d56237d18f7ec3c48779e8f26993392"
+      }
+    ]
+  },
+  "outcomes": {
+    "Forward-prior": "2a0f0e653e8e0db6e57842756e6579dfdccad7f3ff8ea1cd1872305e22acf7c8",
+    "Forward-supplement": "f85c7cc247a1db8921cdbe25a5e779258b105ed234d54f6aec92a9b46e469958",
+    "Full-prior": "c4471827e4f5fe5bdcb1be1e400ef356962a57f71777f989e29d7dca45098b8d",
+    "Full-supplement": "79028dffd135abe5ed1cbd8903c5a331d8d5d0db45c3e6b5215a903923e99ceb",
+    "Mini-prior": "1a46eb8507b247893442ad6771cdd63e165c7364b760a368fdc45e30b381bdfa",
+    "Mini-supplement": "fab42a373dbfbfa1d11c34fc2d542904b45207d15f9a32b8889ac4027ab66775"
+  },
+  "comparison330": {
+    "producer": "3653b58eedd7169377f60682e4ec017f10cc887e",
+    "review": "ec89d684dab72693c9a77fbe55dd7b20c1772e78",
+    "summary_sha256": "774b6beabafe008a5cf41904d89faadda9bd20c313b735db0bb54fd8c501f9c6",
+    "manifest_sha256": "9bcdc58f0c44e8e67ce4bbdd00232de75c1251c59a1b9b76c006072f5020080c",
+    "artifacts": 156
+  }
+}
