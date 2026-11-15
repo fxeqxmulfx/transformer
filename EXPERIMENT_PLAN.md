@@ -7478,3 +7478,15 @@ new runs, accounting for original outputs and the independent repeat. Stop if
 either filesystem cannot accommodate the required work. Do not delete existing
 evidence to make a run fit. Native temporary buffers and concurrent run reserves
 must still be included in admission.
+
+### 2026-11-15: user-authorized cleanup of old experiments
+
+The user explicitly requests removal of old experiments' generated outputs,
+keeping code and summaries. This supersedes the earlier blanket retention of
+old raw artifacts. Prepare and verify compact numerical summaries, historical
+verification records and source snapshots before deleting inactive outputs.
+Keep running comparisons and their actual dependencies until they finish.
+Retained code and authored experiment READMEs remain in the repository; the
+native `scripts/retain_experiment_summaries` tool archives additional source
+snapshots and compact findings without deleting anything itself. Do not present
+historical verification records as a fresh raw-artifact audit after cleanup.
