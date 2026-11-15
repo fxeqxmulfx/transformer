@@ -7236,3 +7236,14 @@ The13958-job build and direct standard-axiom audit pass; global36 sorry,
 0 rests and0 extra axioms remain. Native INDEX reports4861 modules25501
 theorems,0 vacuous and0 placeholder. Native streaming search and its frozen
 heldout repeat remain pending; verified catalog coverage stays77/165.
+
+CM62 now has a separate native streaming implementation. Both exact index
+orientations agree with independent exhaustive interpretation, including a
+73-anchor padded bitset, negative offsets, negation and both label orientations.
+Six checks also cover inactive gates, complete small-grammar signatures and
+least syntax costs, a fit past truncation, work/storage admission, unchanged
+shallow results, and the actual127-node size/cache counterexample. The bounded
+cache retests cheaper equivalents and repeats evicted work. A complete anchor
+is preferred; truncated anchors remain explicitly conditional. No heldout data
+has entered this repair. The training-only depth3 probe and the complete frozen
+13-case repeat remain pending; catalog coverage is unchanged at77/165.

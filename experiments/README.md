@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_streaming_counts`](convex_stress_streaming_counts) | CM62 streamed depth3 count discovery | Lean-first join and size-aware cache; native search removes the query-bank retention cap. Training probe and frozen13-case repeat pending; verified coverage stays77/165. |
 | [`convex_stress_basis_programs`](convex_stress_basis_programs) | Complete Basis pools with weighted joint CE | Eight new cases reach100% raw/exact on every heldout split in all modes/controls. All71 artifacts independently repeat, retaining5806712 training targets and103 corrupted labels. Peak393MiB; cumulative coverage77/165 on seed1. |
 | [`convex_stress_weighted_observations`](convex_stress_weighted_observations) | CM60 multiplicities and CM61 selected anchors |25 Lean theorems precede native changes; ten checks pass for complete CE, every joint derivative, tails,200003 records, noisy-anchor relaxation and recorded initialization. All-anchor baseline preserved; no new stress-test scores. |
 | [`convex_stress_basis_data`](convex_stress_basis_data) | Remaining Basis recall, languages and noisy parity | All eight cases/45 splits preserve5806712 training targets; four complete artifacts and executable repeat exactly. Seven native checks pass, including original fingerprints and fixed103/512 label flips. No model measurements or new accuracy credit. |
