@@ -6738,3 +6738,13 @@ head, original records, projections and calls, with10T case work,56GiB explicit
 buffers and64GiB processes. Summary parsing is a separate bounded phase.
 Freeze the source/protocol, run all35 and independently repeat before reporting
 any new heldout99% attainment; current original results remain34/35 raw99.
+
+Task333 ports the four original parity scratchpads to Rust. Six checks preserve
+format-independent bit draws, the separate128-bit hint stream, paired ordering,
+initial EVEN, sparse original indices, shifted EOS supervision and own-output
+generation. All historical short/32/64 token and transition denominators match.
+The prospective inventory retains the entire reviewed328 report and all12
+previous passes. No new model score is produced;118 additional cases remain
+unmeasured. Commit and freeze before producing and independently repeating the
+complete inventory. Task334 must handle229 hinted classes explicitly rather
+than silently using328's126-class limit.

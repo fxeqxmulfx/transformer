@@ -1,0 +1,28 @@
+{
+  "name":"parity-scratchpad-data-v1",
+  "catalog_commit":"07a39ac2f3f533c356be86a5db0bca50d6f01903",
+  "source_commit":"5a37c515639f23037d191b0659a5a0853984328d",
+  "historical_model_commit":"01f18f86787511279fe52fe41883495fce0e3105",
+  "history_sha256":"f31ed0f58f27cc4cf0603b9759c882611cda31e2db8a9fff622a806307d0acaf",
+  "baseline328_producer":"b3723b828321ee3d42d3e3a2ef12e624f4d3e7a8",
+  "baseline328_review":"5c2f2817ae4d7b4a6c2dfe28e810bd651a0dabb1",
+  "baseline328_sha256":"c84f3f86b049c476809d13cf96f7b7ab46bab6b44a0c92c7dbed9eb5f7db11cc",
+  "definitions":{
+    "suite-parity-none":{"task":"parity","scratchpad":"none","index_hints":false,"symbols":64,"number_limit":128,"length":16,"min_length":8,"longer_lengths":[32,64]},
+    "suite-parity-running":{"task":"parity","scratchpad":"running","index_hints":false,"symbols":64,"number_limit":128,"length":16,"min_length":8,"longer_lengths":[32,64]},
+    "suite-parity-running-hints":{"task":"parity","scratchpad":"running","index_hints":true,"symbols":64,"number_limit":128,"length":16,"min_length":8,"longer_lengths":[32,64]},
+    "suite-parity-ones-hints":{"task":"parity","scratchpad":"ones","index_hints":true,"symbols":64,"number_limit":128,"length":16,"min_length":8,"longer_lengths":[32,64]}
+  },
+  "sizes":{"train":128,"validation":32,"test":64},
+  "data_seed":1,
+  "generator_version":2,
+  "study":{"noise":0.0,"disjoint":false,"tolerance":0.02},
+  "rng":"Omit all four format controls from problem identity. Draw one common length, two independent 128-bit hint seeds and bit words, then the random pair reversal. Hint seeds use little-endian limbs and their own MT19937 streams even for unhinted samples.",
+  "selection":"novel validation when nonempty; novelty uses complete raw prompt; retain clean training and every short/32/64 split",
+  "training":"original shifted teacher forcing including EOS; initial EVEN for scratchpads; ones emits only after one bits; hints retain their original input indices",
+  "scoring":"reuse reviewed327 own-output causal generation and EOS/limit scoring, with separate teacher-forced CE",
+  "goals":{"raw_token":0.99,"exact_sequence":0.99,"original_exact":0.95},
+  "limits":{"symbols":1024,"bits":1024,"number_limit":4096,"examples_per_split":20000,"positions_per_split":2000000,"process_address_space_bytes":68719476736},
+  "historical_case_fingerprints_available":false,
+  "new_model_evaluations":0
+}
