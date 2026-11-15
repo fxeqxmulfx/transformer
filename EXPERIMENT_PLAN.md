@@ -6654,3 +6654,20 @@ complete head therefore does not solve the unseen-boundary problem. Preserve
 this failed improvement; finish independent review, then test training-only
 geometry sharing across blocks after a Lean audit of its linear parameter map.
 The original run takes9m21.72s/6.05GiB under64GiB; complete summary774b6bea.
+
+Task331 starts with a Lean audit of fixed affine sharing across complete
+complex heads. CD8/CFt5/CM38 and `ConvexOn.comp_affineMap` cover actual ordinary
+CE on the expanded-budget preimage. The explicit example shares parameters
+across two complex blocks and both classes, includes a nonzero fixed offset,
+checks a feasible nonzero point and retains repeated IDs and short batches.
+No new theorem or `sorry` is needed. Native construction must use training-only
+geometry and categorical decoders, account for every expanded coefficient,
+and validate actual gradients/projection/replay before task332's all35 run.
+The latter depends on both330 and331 and must retain319 and330 as references.
+
+Task330 is approved at ec89d684 after all native/Lean checks and an independent
+full run/replay reproduce all156 JSON/JSONL artifacts and the diagnostic.
+Summary774b6bea is unchanged. The repeat takes9m20.70s/6.05GiB and exits0;
+this validates the regression finding, not attainment of99%. Task331's explicit
+affine-sharing audit passes with eight standard-axiom declarations and no
+new theorem or `sorry`; native training-only work is next.

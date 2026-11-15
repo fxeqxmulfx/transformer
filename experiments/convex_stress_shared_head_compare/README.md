@@ -154,5 +154,9 @@ RSS (6.05GiB), and exits0. Its150 JSON and6 JSONL artifacts live under
 `/run/media/misha/storage/transformer-runs/shared-head-compare/original-v2`.
 The complete summary SHA256 is
 `774b6beabafe008a5cf41904d89faadda9bd20c313b735db0bb54fd8c501f9c6`.
-Independent fresh repetition and review remain pending. This experiment does
-not attain the user's99% target and is retained as a failed improvement.
+Independent review at `ec89d684dab72693c9a77fbe55dd7b20c1772e78` repeats all
+native and Lean checks and reproduces all156 JSON/JSONL artifacts byte for byte.
+The rebuilt binary also equals the frozen executable. The fresh run plus
+replay takes9m20.70s, peaks at6,339,236KiB RSS and exits0; the error diagnostic
+also reproduces exactly. Task330 is approved as a comparison. This experiment
+does not attain the user's99% target and remains a failed improvement.
