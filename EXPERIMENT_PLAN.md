@@ -6535,3 +6535,14 @@ cases, then a Lean-first causal-program extension with real EOS generation,
 longer probes and the six existing100% sequence cases as frozen controls.
 No new catalog case is scored by this planning. Original35 and the separate
 six-case component remain distinct;124 additional cases remain unscored.
+
+Task327 now ports the six original copy/reverse/sort repeat/unique cases in
+native Rust after319's exact independent repeat. Preserve the326 six-case report
+and all historical GPT endpoints. These tasks require actual greedy generation
+from raw prompts through EOS, with shifted teacher-forced targets and CE kept
+separate. Seed1 has128/32/64 pools, lengths8–16 and32/64 probes, clean/novel splits
+and100 raw classes. All six native test-target counts match the historical
+772/842/842/842/828/860 counts; longer tests each contain2112 and4160 targets.
+Seven source-conformance/scoring tests pass. Commit and freeze before production
+inventory generation, then independently reproduce all bytes under64GiB.
+No learned model or additional catalog accuracy is measured in this data step.

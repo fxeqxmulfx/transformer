@@ -1,0 +1,29 @@
+{
+  "name":"generative-rewrite-data-v1",
+  "catalog_commit":"07a39ac2f3f533c356be86a5db0bca50d6f01903",
+  "source_commit":"5a37c515639f23037d191b0659a5a0853984328d",
+  "historical_model_commit":"01f18f86787511279fe52fe41883495fce0e3105",
+  "history_sha256":"f31ed0f58f27cc4cf0603b9759c882611cda31e2db8a9fff622a806307d0acaf",
+  "baseline326_producer":"cd850e221abe3ff95d252567200cfc3dc1257446",
+  "baseline326_review":"50d3e2587c26ebe8c8cb3cec1f0c545dc4d81727",
+  "baseline326_sha256":"9fcfd6aee0dbcba71c4a9dd51bf78ac631ef64f7225a291d9b9620ed529996f9",
+  "definitions":{
+    "suite-copy-repeat":{"task":"copy","symbols":64,"unique":false,"length":16,"min_length":8,"longer_lengths":[32,64]},
+    "suite-copy-unique":{"task":"copy","symbols":64,"unique":true,"length":16,"min_length":8,"longer_lengths":[32,64]},
+    "suite-reverse-repeat":{"task":"reverse","symbols":64,"unique":false,"length":16,"min_length":8,"longer_lengths":[32,64]},
+    "suite-reverse-unique":{"task":"reverse","symbols":64,"unique":true,"length":16,"min_length":8,"longer_lengths":[32,64]},
+    "suite-sort-repeat":{"task":"sort","symbols":64,"unique":false,"length":16,"min_length":8,"longer_lengths":[32,64]},
+    "suite-sort-unique":{"task":"sort","symbols":64,"unique":true,"length":16,"min_length":8,"longer_lengths":[32,64]}
+  },
+  "sizes":{"train":128,"validation":32,"test":64},
+  "data_seed":1,
+  "generator_version":2,
+  "study":{"noise":0.0,"disjoint":false,"tolerance":0.02},
+  "selection":"novel validation when nonempty; novelty uses raw prompt; retain clean training and every short/long split",
+  "training":"prompt followed by all but final answer token; targets shifted one position, including EOS; ordinary full-vocabulary teacher-forced CE",
+  "scoring":"greedy generation reads its own preceding predictions; stop at EOS or original prompt-derived limit; compare every generated answer token including EOS and exact whole answer; keep teacher-forced metrics separate",
+  "goals":{"raw_token":0.99,"exact_sequence":0.99,"original_exact":0.95},
+  "process_limit_bytes":68719476736,
+  "historical_case_fingerprints_available":false,
+  "new_model_evaluations":0
+}
