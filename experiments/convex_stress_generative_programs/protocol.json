@@ -1,0 +1,21 @@
+{
+  "name":"shared-generative-programs-v1",
+  "lean_contract":"CM53 and CM54 at4c95deeb85821010f283ce31495181c700f71922",
+  "parent_source":"cd850e221abe3ff95d252567200cfc3dc1257446",
+  "parent_review":"50d3e2587c26ebe8c8cb3cec1f0c545dc4d81727",
+  "data_source":"d7f078ad78cccea96de588dcdf8e2906fb170930",
+  "data_review":"552b97380c95c09e2a5cdf1d1837eaa04c87e0f1",
+  "baseline_report_sha256":"2778983591a49bcde79dbcd9952b4999fa0afb914b9e37f4826834116a146e6f",
+  "cases":["suite-mqar","suite-lookup","suite-dyck","suite-blocks","suite-dyck-2","suite-dyck-3","suite-copy-repeat","suite-copy-unique","suite-reverse-repeat","suite-reverse-unique","suite-sort-repeat","suite-sort-unique"],
+  "selection":"Run the complete unchanged326 binder first. Only lack of its usable initialization enables the new bank, based on training observations only. No query, task-name, mode or heldout routing.",
+  "program_bank":"Every observed input symbol as delimiter; first/last occurrence; skip0..3 initial tokens; original/reverse index or ascending/descending ordinal rank with multiplicities. The number of tokens after the delimiter chooses the rank. No labels or answers enter program execution; ordering is an explicit ordinal bias.",
+  "states":128,
+  "decoder":"Raw input token states0..125, exhausted state126, missing state127. First observed raw label per state; preserve every compatible program and conflict witness. Unseen dictionaries stay None. Numerical completion uses explicit identity-copy prior when state<raw vocabulary, otherwise raw0; this is not an identification certificate. EOS has no assigned raw value: its decoder entry is learned from training.",
+  "head":"Complete realified128-state unitary Fourier code and all raw classes, margin24, radius8192. Uniform compatible-program masses, then ordinary CE on the affine joint tensor slice of fixed learned decoder templates. No jointly multiplied learned factors or full-domain optimization claim.",
+  "training":[{"mode":"Full","iterations":16,"batch":32,"learning_rate":1.0},{"mode":"Mini","iterations":4,"batch":32,"learning_rate":0.1},{"mode":"Forward","iterations":0,"batch":32,"learning_rate":1.0}],
+  "loss":"Ordinary full-vocabulary CE on actual complex products. Reviewed training/projection/checker source reused, including real short tails and zero-forward gradients/updates. State dimension128 is charged throughout.",
+  "limits":{"vocabulary":126,"prefix":4096,"candidates":16384,"retained":128,"scalar_work":64000000000,"evaluation_scalar_work":128000000000,"buffers_bytes":60129542144,"process_address_space_bytes":68719476736},
+  "search_forecast":"candidate_count*sum(8*prefix_length^2+32*prefix_length), including independent rank-counting interpretation; parent search and repeated reconstructions retained separately.",
+  "scoring":"Seal all12 states before scoring. New tasks use actual greedy own-prefix generation through EOS/limit and independent complete complex products; separate teacher-forced ordinary CE and counts. Keep all36 mode outcomes, every short/long split, raw99/exact99/original95 criteria and all prior baselines.",
+  "scope":"Six new generative cases and six exact prior controls. Original35 remains separate. Target realizability and native refinement are not certified; source flatness only supplies bounds. All work, unknown states and refusals stay visible."
+}

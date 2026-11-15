@@ -7,3 +7,4 @@ import Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.generationPoint_mem
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.ce_convex
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.head_budget
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.ofDecoders_mem

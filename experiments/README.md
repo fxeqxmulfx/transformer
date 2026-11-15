@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_generative_programs`](convex_stress_generative_programs) | Twelve original sequence cases; full/mini/forward | CM54-backed position/order programs with learned raw decoders and actual EOS generation. Preserve six exact controls; six new copy/reverse/sort cases await frozen evaluation. |
 | [`convex_stress_signed_compare`](convex_stress_signed_compare) | Complete original35 signed-kernel comparison | Both policies retain35/35 original success flags and34/35 per-task raw99/exact99 in all modes. Fibonacci raw97.959–98.023% despite lower CE; all35 saved-state replays pass under64GiB. Independent review reproduces all118 JSON files and the full report exactly. |
 | [`convex_stress_generative_data`](convex_stress_generative_data) | Six original generative sequence datasets | Native copy/reverse/sort repeat/unique pools, shifted supervision and real EOS generation scoring; preserve the six-case326 baseline and historical GPT failures. No new model score. |
 | [`convex_stress_nested_programs`](convex_stress_nested_programs) | Generic nested summaries; full/mini/forward | Both typed-bracket cases and all four controls reach 100% raw/exact on every short/long split in all modes. A fresh run reproduces all 33 artifacts; complete control states/results stay exact. Original35 remains separate. |

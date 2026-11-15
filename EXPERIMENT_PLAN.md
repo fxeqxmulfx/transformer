@@ -6565,3 +6565,14 @@ supplies a feasible bounded tensor; target realizability, truthful observations
 and path coverage remain explicit. A nonconstant unseen-prefix witness emits
 one token then EOS. Audit and land this Lean extension before native model work.
 No new original35 or generative-case accuracy is claimed by the proof.
+
+CM54 landed at `4c95deeb` after full Lean13933 jobs, standard-axiom checks and
+native INDEX regeneration (4836 modules,25352 theorems,36 existing sorry).
+The initial full check hit thread creation during concurrent search indexing;
+sequential checks with `LEAN_NUM_THREADS=2` pass under64GiB. Task328 now has
+a native fixed positional/rank bank, learned delimiter/decoder/EOS roles,
+128-state complete complex products and true generated-prefix auditing.
+Unknown states retain explicit diagnostics even with a declared identity-copy
+numerical completion. Nine synthetic checks pass. Freeze and seal all12 states
+before any original scoring; retain36 outcomes and exact326 control states.
+Original35 raw99 remains34/35, and no new catalog pass is claimed yet.
