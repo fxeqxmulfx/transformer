@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.Witness
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.Generation
 
 /-!
 # Learned shared latent decoders and convex complete complex heads
@@ -12,4 +12,6 @@ charged column budget and convex ordinary full-vocabulary CE. Accepted
 consensus identifies all feasible tensors' raw logits under an explicit
 unknown-program realizability premise. A many-to-one Fourier witness covers
 new inputs; unknown states admit opposite feasible heads and remain ambiguous.
+CM54 transfers accepted-query identification through actual own-prefix
+generation and EOS, conditional on acceptance along the target trajectory.
 -/

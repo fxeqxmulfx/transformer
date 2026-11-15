@@ -18782,3 +18782,52 @@ training-only boundary, full actual complex products, all raw classes, explicit
 defaults and ambiguity, proper minibatch normalization, forward-only accounting,
 and bounded search/storage/scoring. It must preserve the reviewed retrieval
 passes and failed baselines while measuring any prefix-summary improvement.
+
+## CM54. Accepted latent queries transfer through actual generation
+
+The reviewed task327 Rust data adapter preserves the original copy/reverse/sort
+repeat/unique cases, including their EOS targets and length32/64 probes. It
+measures no new model accuracy. CM53 identifies an accepted query's actual
+complete complex logits. CCa7 proves generation after globally identifying a
+causal rule, but CM53 can refuse other inputs. Its query contract therefore
+needs a trajectory-specific bridge before a native generative extension.
+
+For a next-token rule `g`, an EOS class, a fuel bound and an initial history,
+`queryPrefixes` lists the prefixes actually queried along that rule's rollout.
+It includes the prefix whose next output is EOS and stops there; at zero fuel
+it is empty. Equality `f(xs)=g(xs)` only on this finite list implies identical
+complete generations, including EOS and termination. Induction follows the
+actual emitted token into the next history. No agreement is required at an
+off-trajectory prefix, and no reference answer is fed back to the model.
+
+Now instantiate the prediction rule with a maximum over all raw classes of
+CM53's complete complex logits. Positive margin and executable acceptance
+force this maximum to be the accepted raw class for every feasible joint
+tensor. Under the existing unknown-program/unknown-decoder realizability
+premise and truthful observations, that class equals the target's next token.
+If every prefix on the target's finite trajectory is accepted, the complex
+model and target therefore generate exactly the same full sequence. Unknown
+states and disagreeing retained programs still prevent acceptance; the theorem
+does not assume that the original random training pools provide this coverage.
+
+The end-to-end statement also constructs the tensor from the training-only
+initializer. Feasibility and the complete column budget
+`2 * abs(margin) * card(S)` are conclusions. CM53's convex joint domain,
+ordinary full-vocabulary CE, bounded features and accepted-query CE formula
+remain unchanged. The result adds no optimizer convergence guarantee, native
+refinement certificate or unconditional unseen-label identification. Flatness
+continues to supply bounds, not coverage or a choice of target.
+
+The inhabited witness learns two latent parity states from the empty prefix
+and a one-token prefix. Starting at the unobserved prefix `[true,true]`, its
+actual complex head emits `false`, then reads `[true,true,false]` and emits
+EOS=`true`. Both queried histories are absent from training; their latent
+states have observed decoder entries. This checks nonconstant generation,
+feedback and termination without replacing them by teacher-forced scoring.
+
+Lean: `ConvexDepth/LatentPrograms/Generation.lean`, audited directly by
+`scripts/LatentGenerationAxioms.lean`. Task328 must still freeze its native
+input-only program bank, learn token roles/decoders exclusively from training,
+score actual generated prefixes, retain all failures and previous controls,
+and measure per-task99% on every original short/long split. This proof alone
+does not establish any additional stress-test pass.

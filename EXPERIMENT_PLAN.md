@@ -6555,3 +6555,13 @@ the complete326 reference is structurally exact. Both runs exit0 at a peak
 639.2MiB RSS under64GiB. Seven native and all direct Lean/axiom/INDEX checks
 pass. Review the landed findings and repeat the inventory before328's model
 work. This is data/scoring preparation, with zero new model evaluations.
+
+Task327 is approved at `552b9738`: independent native/directLean checks and a
+third inventory reproduce all bytes, retaining the full326 baseline. Task328
+starts with CM54's missing trajectory bridge. `LatentPrograms/Generation`
+proves actual complex argmax agreement and complete own-prefix/EOS generation
+from accepted queries on the target's finite path. The training-only initializer
+supplies a feasible bounded tensor; target realizability, truthful observations
+and path coverage remain explicit. A nonconstant unseen-prefix witness emits
+one token then EOS. Audit and land this Lean extension before native model work.
+No new original35 or generative-case accuracy is claimed by the proof.
