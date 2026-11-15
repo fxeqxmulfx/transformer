@@ -1,0 +1,32 @@
+{
+  "name": "remaining-basis-data-v1",
+  "source_commit": "5a37c515639f23037d191b0659a5a0853984328d",
+  "catalog_commit": "07a39ac2f3f533c356be86a5db0bca50d6f01903",
+  "history_sha256": "f31ed0f58f27cc4cf0603b9759c882611cda31e2db8a9fff622a806307d0acaf",
+  "basis_reference_commit": "07a39ac2f3f533c356be86a5db0bca50d6f01903",
+  "baseline344_producer": "b388f4ff7534f65119f3dc3dc706904accf9d12f",
+  "baseline344_sha256": "65bf8c53f330d76f254503cfcdc2b7d1b1de3c018bc44cc74a7e430559ce86fb",
+  "original35_sha256": "c9b3c559069fa1e9a4cd68a5cf3ee93123008bcd54753cf3a2485e2c6ad9cef2",
+  "definitions": {
+    "basis-recall-hard": {"task":"mqar","symbols":256,"pairs":16,"queries":8,"query_gap":0,"alpha":0.1,"overwrites":8,"length":64,"min_length":48},
+    "language-l1": {"task":"blocks","neutral_fraction":0.0,"max_neutral_gap":null,"blocks":1,"length":64,"min_length":32},
+    "language-l2": {"task":"blocks","neutral_fraction":0.0,"max_neutral_gap":null,"blocks":2,"length":64,"min_length":32},
+    "language-l3": {"task":"blocks","neutral_fraction":0.0,"max_neutral_gap":null,"blocks":3,"length":64,"min_length":32},
+    "language-l4": {"task":"blocks","neutral_fraction":0.0,"max_neutral_gap":null,"blocks":4,"length":64,"min_length":32},
+    "language-l5": {"task":"blocks","neutral_fraction":0.0,"max_neutral_gap":null,"blocks":5,"length":64,"min_length":32},
+    "language-l6": {"task":"blocks","neutral_fraction":0.0,"max_neutral_gap":null,"blocks":6,"length":64,"min_length":32},
+    "basis-parity-noise20": {"task":"parity","scratchpad":"none","index_hints":false,"length":16,"min_length":1}
+  },
+  "sizes":{"train":20000,"validation":512,"test":512},
+  "noise_sizes":{"train":512,"validation":128,"test":256},
+  "noise":{"rate":0.2,"seed":2,"disjoint":true},
+  "language_probes":[128],
+  "data_seed":1,
+  "generator_version":2,
+  "selection":"Language cases select validation/length-128, or its novel subset when nonempty. Other cases select validation, or its novel subset. Preserve source splits and masks.",
+  "scoring":"Prefix cases score every supervised input position. Noisy parity heldout uses own-output generation through EOS/limit; teacher-forced CE is separate. Clean training labels are diagnostics only.",
+  "goals":{"original_exact":0.99,"raw_token":0.99,"exact_sequence":0.99},
+  "limits":{"examples_per_split":20000,"positions_per_split":2000000,"max_length":4096,"process_address_space_bytes":68719476736},
+  "historical_case_fingerprints_available":false,
+  "new_model_evaluations":0
+}

@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_basis_data`](convex_stress_basis_data) | Remaining Basis recall, languages and noisy parity | Native full-size data port for eight original cases, with independent oracles, disjoint noise, original selection and retained history. No model measurements or new accuracy credit. |
 | [`convex_stress_prefix_quotients`](convex_stress_prefix_quotients) | Training-only depth2 fit recovered; deeper search caps retained | Do CM58 observed-prefix quotients and CM59 transition constraints preserve useful count programs beyond the old beam? No new heldout score yet. |
 | [`convex_stress_boundary_geometry`](convex_stress_boundary_geometry) | Training-only shared boundary offsets | Reproduced failure: all28 JSON artifacts match, but primary conditional accuracy4512/4704 trails331. Full/mini reduce CE without fixing representation. Complete results remain intact; no original heldout score. |
 | [`convex_stress_partitioned_boundary`](convex_stress_partitioned_boundary) | Shared boundaries with up to four input regions | All56 artifacts independently reproduced. Every mode/role fits4704/4704 training records; conditional folds reach99.617/99.405%. Full/mini reduce CE, forward0 updates. All failed335 evidence retained; original35 heldout scoring remains336. |

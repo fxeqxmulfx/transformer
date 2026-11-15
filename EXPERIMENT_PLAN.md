@@ -7097,3 +7097,16 @@ count-filter equivalence, true mask/tail semantics, refusals and saved seals.
 The full driver retains all343 history and original35, forecasts every original
 short/long/probe/carry split within64GiB, and must be committed/frozen before
 any new heldout score. Reviewed coverage remains68/165 until that repeat.
+
+Task345 independently prepares the remaining eight Basis cases while344's
+frozen repeat runs. The Rust-only port preserves the full20000/512/512 recall
+and language pools,128-length language selection, and512/128/256 disjoint noisy
+parity pools with fixed noise seed2. Basis parity retains its default68 raw
+classes. Independent oracles check all generated labels; seven native checks
+include six immutable original35 fingerprints and the hard-recall historical
+512/4096/4082 example/target/transition counts. Pending historical language and
+noise runs have no invented measurements. The complete344 history and original35
+comparison will remain exact separate artifacts. This is data preparation,
+not added accuracy. Task346 must first justify bounded processing of all
+observations in Lean and handle noisy-label constraints explicitly. Task347
+retains the unresolved depth3 search beyond truncated latent banks.
