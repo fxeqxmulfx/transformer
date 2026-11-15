@@ -120,7 +120,15 @@ impl Scanner {
             {
                 "sorry"
             } else if matches!(kind, "theorem" | "lemma") {
-                if signature.trim_end().ends_with("True") {
+                // Match the proposition token, not a predicate name such as
+                // lastTrue or a differently qualified declaration N.True.
+                if matches!(
+                    signature
+                        .trim_end()
+                        .rsplit(|c: char| !(c.is_alphanumeric() || "_'.".contains(c)))
+                        .next(),
+                    Some("True" | "_root_.True")
+                ) {
                     "vacuous"
                 } else {
                     "proved"
@@ -169,5 +177,23 @@ mod tests {
             ["sorry", "placeholder", "vacuous"]
         );
         assert_eq!(ds[0].line, 1);
+    }
+
+    #[test]
+    fn proposition_true_is_not_an_identifier_suffix() {
+        let text = "theorem plain : True := by trivial\n\
+                    theorem quantified : ∀ n : Nat, True := by trivial\n\
+                    theorem rooted : _root_.True := by trivial\n\
+                    theorem predicate : ObservedEq pool doubleNegated lastTrue := by assumption\n\
+                    theorem unicode : ObservedEq pool f αTrue := by assumption\n\
+                    theorem qualified : N.True := by assumption\n\
+                    theorem apostrophe : f a'True := by assumption\n";
+        let (ds, _) = Scanner::new().scan("fixture", text, &mut Incomplete::new());
+        assert_eq!(
+            ds.iter().map(|d| d.status).collect::<Vec<_>>(),
+            [
+                "vacuous", "vacuous", "vacuous", "proved", "proved", "proved", "proved"
+            ]
+        );
     }
 }

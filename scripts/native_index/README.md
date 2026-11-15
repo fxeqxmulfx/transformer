@@ -18,3 +18,9 @@ Validation: `cargo test --offline --manifest-path scripts/native_index/Cargo.tom
 `cargo clippy --offline --manifest-path scripts/native_index/Cargo.toml -- -D warnings`.
 The first generated index was compared with the committed index: only its
 generator attribution changed.
+
+The concluding-`True` check now recognizes the final proposition token rather
+than an identifier suffix. Regression fixtures retain detection of `True`,
+quantified `True` and `_root_.True`, without misclassifying `lastTrue`, Unicode
+identifier suffixes or a separately qualified `N.True`. This corrects the CM62
+`double_negated_observed` index entry; its Lean statement and proof are unchanged.
