@@ -23,6 +23,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_bounded_compare`](convex_stress_bounded_compare) | Complete54-case CM64 comparison | All three policies, complete binary64 tensors, training seal, raw CE/count replay and both-disk admission. Ten native controls pass; original/repeat forecast60.5GB plus reserves. Full heldout measurements remain pending. |
 | [`convex_stress_pair_latents`](convex_stress_pair_latents) | Fixed4,767-member pair-state bank | All99 artifacts independently repeat.41/48 pools encode: all22 old controls and19 additions; seven empty-support refusals retain every witness. All4,767 candidates remain for constant controls. Peak691MiB; no heldout score. |
 | [`convex_stress_bounded_latent`](convex_stress_bounded_latent) | Full joint CM64 decoder core | Complete complex heads, bounded shared masses, actual full/minibatch CE and audited joint projections. Eleven native controls preserve unknown-state ambiguity. Candidate discovery and48-case scoring remain pending; no new catalog credit. |
 | [`convex_stress_search_continuation`](convex_stress_search_continuation) | Training-only count search | Original and independent reports exactly match:32 retained fits, but minimum size stays56 nodes at the40T cap. Both interpreters agree on all1370 labels. No heldout scores or catalog credit. |

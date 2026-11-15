@@ -7502,3 +7502,18 @@ Active349, its frozen source/executable, current348 data and351 pair-probe input
 remain available. Continue351 from these inputs and retained historical
 summaries; old raw-artifact paths in prior protocols need reproduction before
 they can support a fresh replay. The verified catalog count remains77/165.
+
+### 2026-11-15: task351 complete bounded comparison runner
+
+The native runner preserves the complete CM64 joint tensors in bit-exact
+binary64 storage and binds all54 original cases, including six unavailable
+sources and seven observed empty-support cases. All training outcomes are
+sealed before any original heldout scoring. Full, mini and forward policies
+remain the frozen pair-family policies; raw readback recomputes all logits,
+original target counts and ordinary CE. Ten native controls cover actual
+updates, tails, wrong labels, the99% boundary, rehashed tampering, refused-model
+credit, incomplete seals and both-disk stops. Historical77/35-case numerical
+summaries and transformer references survive the authorized cleanup with
+explicit provenance. The original/repeat output forecast is60,494,708,126 bytes
+plus reserves; freeze this tested producer, execute every case and independently
+repeat before accepting any additional accuracy or catalog coverage.
