@@ -1,0 +1,12 @@
+{
+  "baseline_review":"b99c845b32545de78da7a9056a90476040b7513b",
+  "baseline_producer":"9c7370a593c078a994b06a12449d00b940d26fd0",
+  "baseline_report_sha256":"7632e96c882483211d31a2fc882990ffbe0d3fd77144424b353dc1bed2b18ebc",
+  "scope":"Training-only inspection of both roles of every selected319 head; no heldout evaluation or model selection on task names.",
+  "roles":["prior","supplement"],
+  "models":[
+    {"file":"model-0.json","mode":"Forward","sha256":"9e2ef7264b574ad423b1752fa9526908ca661ead031a2997237ec647025a8f38"},
+    {"file":"model-1.json","mode":"Full","sha256":"231164daa1eed37fb914d72b37a52a15ebce9b9c32b8520a3ef3f6d38ec6917e"},
+    {"file":"model-2.json","mode":"Mini","sha256":"f10310121c105a7cec5e56385f88c5afccc056cf44d24e811ba041755fb3dc3b"}
+  ]
+}
