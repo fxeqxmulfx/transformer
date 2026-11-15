@@ -7008,3 +7008,19 @@ audits the native joint head, gradients and projection; task343 then measures
 the remaining 13 synthetic cases through a committed frozen driver and an
 independent repeat. The independent-label control remains an explicit negative
 control, and unknown-program realizability remains a separate assumption.
+
+Task342 now implements the CM57 core in native Rust. All six coordinates per
+program are updated through ordinary CE and a bounded Dykstra projection onto
+observed anchors, the declared copy prior, perspective cones, a positive total
+mass and the complete weighted budget. Prediction evaluates all expanded
+complex coefficients; independent complex multiplication and finite differences
+check the product and every gradient coordinate. Original anchors are checked
+separately from the numerical row basis, and projection reports normalized
+feasibility/change residuals or returns an explicit failure at its cycle cap.
+Meaningful mode-replay, tail-batch, variational-projection, missing-direction
+and contradictory-label controls accompany the core. All eight native checks,
+formatting, clippy with warnings denied and release build pass. Full Lean,
+direct CM57/global audits, native INDEX and forbidden scans also pass, retaining
+36 existing sorry and 0 rests/extra axioms. Task343 will freeze the full
+data/program driver before heldout measurements. No catalog measurement is
+added here.
