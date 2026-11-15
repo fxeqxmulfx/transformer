@@ -1,0 +1,22 @@
+{
+  "name": "frequency-coordinate-programs-v1",
+  "lean_first_commit": "b5f1c9d70eb3db33861e28cae6d1512f84c0fedf",
+  "data_inventory_sha256": "21d0c176efdfe08b8bc04bdf83b62c91987e542d2e799160905dbea05d32c5ae",
+  "original35_summary_sha256": "c9b3c559069fa1e9a4cd68a5cf3ee93123008bcd54753cf3a2485e2c6ad9cef2",
+  "control334_report_sha256": "9b7c782e20a5a966c542dd023bfefa3fbf9aefb3f7e771e49b2e07aac92998c3",
+  "coordinate_prior": "Supplied e(c)=(c-100)/128 for every raw vocabulary class; ordinal number-token metadata is additional identifying information. Transport coordinates with any categorical relabeling.",
+  "copy_prior": "Explicit raw identity copy from input tokens in both arms.",
+  "quantity_feature_scale": 128,
+  "selector": "First training-compatible program in the fixed6240-configuration bank per inferred delimiter; independent selectors for coordinate and categorical quantity decoders.",
+  "original_success": {"metric":"sequence_accuracy","threshold":0.95},
+  "final_answer": "Mode final-token accuracy is a separate diagnostic, never substituted for exact success or raw99.",
+  "policies": [
+    {"mode":"Forward","iterations":0,"batch":127,"learning_rate":10000000000.0,"initial_margin":131072.0,"minimum_margin":1.0,"radius":8388608.0},
+    {"mode":"Full","iterations":64,"batch":127,"learning_rate":10000000000.0,"initial_margin":131072.0,"minimum_margin":1.0,"radius":8388608.0},
+    {"mode":"Mini","iterations":8,"batch":127,"learning_rate":10000000000.0,"initial_margin":131072.0,"minimum_margin":1.0,"radius":8388608.0}
+  ],
+  "process_address_space_bytes": 68719476736,
+  "buffer_ceiling_bytes": 60129542144,
+  "complete_case_scalar_work_limit": 600000000000000,
+  "controls": "All16 reviewed334 cases remain exact inherited controls; the original35 comparison is separately retained with its complete summary. New model evaluations cover only the seven337 cases."
+}

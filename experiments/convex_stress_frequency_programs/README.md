@@ -56,16 +56,37 @@ raw0 default on unknown quantities. It shares the complete scoring head and
 copy prior, but does not extrapolate the quantity decoder. Unknown/defaulted
 events remain flagged. A synthetic unseen-quantity test separates the two
 arms in all three training modes, while all observed records remain correct.
-Nine native checks pass, including complete candidate-search serialization and
-replay. These are implementation checks, not new benchmark measurements.
+Thirteen native checks pass, including complete candidate-search serialization,
+all six saved training states, independent raw scoring, own-output generation,
+memory refusals before fitting, seal mutations and failure denominators.
+These are implementation checks, not new benchmark measurements.
 
-Before production, the generic program bank, training-only selection, declared
-coordinate/copy priors and categorical-decoder control must be frozen. The
-frequency runner must seal all modes before any heldout scoring, preserve all
-original masks and final-answer rules, use own-output generation through EOS,
-retain failures and compare a fresh complete repeat. Inherited controls and
-the original35 results must remain explicit. Component checks alone do not
-establish any new stress-test pass.
+The runner seals all seven cases and six endpoints per case before heldout
+scoring. It regenerates and checks the reviewed data, preserves every original
+mask, and generates from its own outputs through EOS or the original limit.
+Every teacher-forced and generated prefix retains the complete raw logit vector
+and independent complex-product residual. Unseen labels, unknown decoder
+queries, exact sequence accuracy, raw accuracy and ordinary teacher-forced CE
+are reported separately. The catalog's original success threshold for these
+tasks is 95% exact sequences; Mode's final-token accuracy is diagnostic only.
+The user's 99% raw and exact targets are additional reported criteria.
+
+The fixed protocol supplies `e(c)=(c-100)/128` for all raw classes. It uses margin
+131072 initially, coefficient radius8388608, and a shared learning rate1e10:
+forward-only makes zero updates, full batch takes64 steps, and minibatch makes
+eight epochs with batch127 and a true short tail. These values are frozen before
+production. Selection sees training records only; the heldout shapes enter
+resource forecasts, never fitting or candidate ranking. The complete case
+forecast charges three search/training reconstructions and both full scoring
+passes for all six endpoints, with a600 trillion scalar-work ceiling and56GiB
+buffer ceiling. Full raw vectors stream to disk; their subsequent hashing
+allocation is included in the buffer bound. All phases have a64GiB address cap.
+
+The complete16-case334 report is retained as inherited control evidence, and
+the reviewed35-case336 summary is copied separately. These are not retrained
+by this experiment. Refusals stay in the seven-case denominator. Neither the
+conditional Lean theorem nor a training-compatible selected program certifies
+the unknown target's realizability; every report keeps that distinction explicit.
 
 ```sh
 export CARGO_TARGET_DIR=/run/media/misha/storage/transformer-runs/build/frequency-programs
@@ -84,3 +105,25 @@ finite-difference CE derivatives, saved-state mutations and forecast refusals.
 Generated evidence belongs on storage, not in Git. The process cap is64GiB;
 component forecasts reserve56GiB at most and must be composed with the runner's
 data, selection, history, evaluation and replay costs before any full run.
+
+After committing the producer and passing these checks, freeze and run with
+fresh destination directories. The shell driver records every phase's exit and
+resource usage, continues to retain failures, and summarizes only complete
+replays. Do not edit a running frozen binary or driver.
+
+```sh
+store=/run/media/misha/storage/transformer-runs
+freeze="$store/freezes/frequency-programs-v1"
+binary="$CARGO_TARGET_DIR/release/convex-stress-frequency-programs"
+experiments/convex_stress_frequency_programs/freeze.sh "$freeze" "$binary"
+mkdir -p "$store/frequency-programs"
+"$freeze/source/experiments/convex_stress_frequency_programs/run.sh" \
+  "$freeze/convex-stress-frequency-programs" "$store/frequency-programs/original-v1" \
+  original "$(cat "$freeze/producer.commit")" \
+  "$store/frequency-data/original-v1.json" "$store/partitioned-compare/original-v1/summary.json"
+# Rebuild independently from the committed source, check binary equality,
+# then invoke the frozen driver. Repeat copies only pinned input references.
+"$freeze/source/experiments/convex_stress_frequency_programs/run.sh" \
+  "$freeze/convex-stress-frequency-programs" "$store/frequency-programs/review-v1" \
+  repeat "$store/frequency-programs/original-v1"
+```

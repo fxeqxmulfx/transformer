@@ -76,8 +76,11 @@ impl Decoder {
     }
 }
 
-pub fn run(input: Input, coordinates: Vec<f64>) -> Result<Report> {
-    coordinates::validate_coordinates(&coordinates)?;
+fn prepared(
+    input: &Input,
+    coordinates: &[f64],
+) -> Result<(program::Roles, Vec<Program>, u64, u64)> {
+    coordinates::validate_coordinates(coordinates)?;
     if coordinates.len() != input.vocabulary
         || input.context > 4096
         || input
@@ -87,7 +90,7 @@ pub fn run(input: Input, coordinates: Vec<f64>) -> Result<Report> {
     {
         return Err("training labels, context or supplied geometry mismatch".into());
     }
-    let roles = program::infer(&input)?;
+    let roles = program::infer(input)?;
     let bank = program::catalogue(&roles)?;
     let n = input.observations.len() as u128;
     let v = input.vocabulary as u128;
@@ -120,6 +123,17 @@ pub fn run(input: Input, coordinates: Vec<f64>) -> Result<Report> {
     if work > 128_000_000_000_000 || bytes > 56 * 1024 * 1024 * 1024 {
         return Err("aggregate search work or memory forecast refused".into());
     }
+    Ok((roles, bank, work as u64, bytes as u64))
+}
+
+pub fn forecast(input: &Input, coordinates: &[f64]) -> Result<(u64, u64)> {
+    let (_, _, work, bytes) = prepared(input, coordinates)?;
+    Ok((work, bytes))
+}
+
+pub fn run(input: Input, coordinates: Vec<f64>) -> Result<Report> {
+    let (roles, bank, work, bytes) = prepared(&input, &coordinates)?;
+    let v = input.vocabulary as u128;
     let mut out = Report {
         input,
         coordinates,
@@ -129,8 +143,8 @@ pub fn run(input: Input, coordinates: Vec<f64>) -> Result<Report> {
         categorical_selection: None,
         geometry_selection: None,
         scalar_work: 0,
-        search_forecast: work as u64,
-        buffer_forecast: bytes as u64,
+        search_forecast: work,
+        buffer_forecast: bytes,
     };
     for program in bank {
         let mut decoder = Decoder {
