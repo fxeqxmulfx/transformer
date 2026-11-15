@@ -6589,3 +6589,11 @@ predictions, raise the scoring cap to160B, freeze the revision and require all12
 state hashes and all previously measured endpoints to match exactly. Preserve
 the complete initial report, run the immutable driver, then independently repeat
 every case under64GiB. No model or training change and no new original35 result.
+
+While task328's immutable rerun executes, task329 audits the fresh shared-feature
+head. CM42's batch convexity and CM51's normalized feature bounds apply without
+observed Dirac rows; CD8 charges the complete learned coefficient tensor. The
+old observed-CE identities do not apply and will not be claimed. A prospective
+fixed ordinal/quadratic8-state basis will share features on observed and unseen
+inputs, with a new ordinary-CE head and explicit training-only initialization.
+Check the non-Dirac Lean witnesses and axiom audit before native implementation.
