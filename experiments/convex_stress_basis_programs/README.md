@@ -123,4 +123,71 @@ prlimit --as=68719476736:68719476736 -- "$basis_binary" verify-pair "$basis_orig
 
 All destination directories and the verification file must be fresh. Source,
 protocol and required inputs are committed; generated states/raw traces/logs
-stay local on the storage disk. The first complete heldout comparison is pending.
+stay local on the storage disk. After a run, `jq -f
+experiments/convex_stress_basis_programs/analyze.jq ROOT/report.json` regenerates
+the count/CE/work summary. This read-only analysis is separate from the frozen
+producer and never changes a model or a score.
+
+Producer `c8cc576d496d50a55d797484767be88667d29b81` is now frozen with5401
+source paths and executable SHA256
+`60718a304e13f7d0c1a99e7c420eb5ddd00ff6c8fe0daf30e805192f5362fc75`.
+A fresh-target rebuild passes all six experiment checks and clippy, reproduces
+the executable exactly, and separately passes all ten weighted-core checks.
+Both complete runs fit all48 endpoints. Each mode/prior combination scores100%
+raw/exact across all36 original heldout splits. All45 splits, including the corrupted
+training pool and clean-training diagnostic, remain separately recorded.
+All71 original/repeat artifacts now match byte for byte, including complete
+raw traces, trained states and the full earlier histories. Report SHA256 is
+`5fd5a0fd16f2d37a359c9bf70276b41866fd867ff2352be1ca0d8e8331cac34e`;
+manifest SHA256 is
+`33260f0eac6489b845c8f0d89b220841a3b6b2ffbeba0fffcf4855584cba1b55`.
+The frozen verifier rehashes both complete manifests and records eight new
+all-mode/all-heldout99 cases. Cumulative verified catalog coverage rises from
+69 to77 of165, with88 unmeasured or not passing. These are separate catalog
+cohorts on data seed1, not three seeds or one shared all-task checkpoint.
+The fixed grammar and observed decoder priors remain explicit; no end-to-end
+convexity of program discovery or unknown-label identification is established.
+
+| Coordinate mode | Correct ordinary/long-test labels | Exact test sequences | Weighted test CE |
+| --- | ---: | ---: | ---: |
+| Forward |538734/538734|6912/6912|0.0040970567|
+| Full |538734/538734|6912/6912|0.0006544111|
+| Mini |538734/538734|6912/6912|0.0003199512|
+
+These14 test splits comprise one ordinary test for each case and six language
+length128 tests. All36 heldout splits, including validation/novel subsets,
+contain1473826 scored label occurrences and17408 sequence occurrences per
+endpoint; overlapping subsets are not extra independent samples. Categorical
+controls also reach100%; their weighted test CEs are0.0061045288,
+0.0016402709 and0.0004459564. There is no coordinate accuracy advantage on
+this cohort. The table's small average CE is dominated by the six languages,
+whose finite-precision CE already saturates at initialization.
+
+Hard recall gets4096/4096 ordinary-test labels and512/512 sequences correct.
+Coordinate test CE is0.4995287420 forward,0.0467284254 full and0.0027377025
+mini. Noisy parity gets512/512 clean test labels and256/256 free generations
+correct, with teacher-forced test CE0.3147538907/0.3147536869/0.3147558221.
+Its original noisy training pool remains921/1024 raw targets (89.94140625%)
+and409/512 exact sequences (79.8828125%), while the separate clean-training
+diagnostic is100%. The103 corrupted observations still enter every epoch;
+neither their errors nor their CE are erased. Both old all-anchor attempts are
+refused. Content coverage is correctly uncertified after relaxing those anchors.
+
+For each prior, full mode executes512 gradient batches representing371629568
+original observations; mini executes45528 batches representing46453696.
+Forward executes zero. Only128/full and1272/mini coordinate steps change the
+stored parameters: the languages are already saturated. Categorical update
+counts include roundoff and are not evidence of meaningful additional learning.
+The raw readback checks43707804 original query positions across all48 endpoints,
+including34840272 training references and8869170 complete product queries.
+The largest independent complex-product residual is4.656612873e-10; the
+largest normalized projection violation is1.354009937e-16. These numerical
+tolerances are not formal Lean-to-Rust refinement guarantees.
+
+Original preparation/training/scoring/summary take19.10s/1:42.69/10:28.39/3:01.29.
+Original peak RSS is377824KiB (368.97MiB); the complete repeat takes15:09.48
+and peaks at402460KiB (393.03MiB). The largest conservative
+buffer forecast is23.047GiB. The64GiB process cap remains enforced; the
+original/repeat disk admission bound is146.731GiB. Full generated evidence
+stays under `/run/media/misha/storage/transformer-runs/basis-programs/` and
+`freezes/basis-weighted-programs-v1/` in the same storage root.

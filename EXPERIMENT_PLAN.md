@@ -7198,3 +7198,28 @@ of meaningful parameter learning. The protocol freezes all eight cases before
 heldout scoring; every case is trained/sealed before the first heldout query.
 Complete independently rebuilt comparison remains pending. Coverage is still
 69/165, with no accuracy credit from development probes or the new implementation.
+
+Task346's frozen producerc8cc576d now completes the eight-case comparison.
+All48 endpoints fit every original training record; all modes and categorical
+controls reach100% raw/exact on the36 original heldout splits. Across14 ordinary
+and long tests, each mode gets538734/538734 labels and6912/6912 sequences.
+Coordinate weighted test CE is0.0040970567/0.0006544111/0.0003199512; the
+language majority already saturates at initialization. Hard-recall CE improves
+from0.4995287420 to0.0467284254/full and0.0027377025/mini. Noisy parity has
+100% clean heldout accuracy while retaining89.94140625% raw accuracy on its
+original corrupted training labels; all103 corruptions remain in every epoch.
+
+All71 artifacts, including raw vectors, complete training traces and unchanged
+earlier histories, independently repeat byte for byte. Report SHA256:
+5fd5a0fd16f2d37a359c9bf70276b41866fd867ff2352be1ca0d8e8331cac34e.
+Manifest SHA256:33260f0eac6489b845c8f0d89b220841a3b6b2ffbeba0fffcf4855584cba1b55.
+Fresh builds pass six experiment and ten weighted-core checks. The formal
+review repeats the13955-job build, all25 new standard-axiom checks and the
+global36 sorry/0 rests/0 extra-axiom audit. Original stage times total15:31.47;
+the repeat takes15:09.48 and peaks at393.03MiB RSS under64GiB. The final paired
+verifier rehashes both complete manifests. Cumulative coverage is77/165 on
+data seed1, with88 still unmeasured or not passing. This is a union of separate
+catalog cohorts, not a shared all-task checkpoint. The supplied grammar and
+discrete selection remain outside the joint convex CE claim. Task347 retains
+the depth3 truncated-bank failure; no convergence or unseen-target guarantee
+is inferred from these eight empirical successes.
