@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "parent_producer": "9c7370a593c078a994b06a12449d00b940d26fd0",
+  "parent_review": "b99c845b32545de78da7a9056a90476040b7513b",
+  "parent_summary_sha256": "fd8f7ff32e9cdded9ef70c4c9526a472c5c85fa88cb765991142752b25a5b879",
+  "parent_rendered_report_sha256": "7632e96c882483211d31a2fc882990ffbe0d3fd77144424b353dc1bed2b18ebc",
+  "parent_manifest_sha256": "9d483213ca4b6bff59cc1c96583bce10b98a3241938a35db0135c3e1de10f54f",
+  "parent_source_fingerprint": "b0ada4c4aa7bdc055389e999993a0d610d5ba03e8850ab4106669797de2284ce",
+  "component_producer": "2d5ac6ce36a28c815ce9d119d79598bab25a1bf7",
+  "component_review": "1d9798192d4dd8a69a35256bc983cb06b47e2184",
+  "component_summary_sha256": "6ed37b4db95ea78087b9317628b49c9345657a37fd9866bc8b729d61dcbca041",
+  "diff_gpt_history_sha256": "f31ed0f58f27cc4cf0603b9759c882611cda31e2db8a9fff622a806307d0acaf",
+  "lean_audit": "4e25eef2; partition47ba037f; CM55 f0f2d385",
+  "eligible_prefix": "signed-kernel:crossing-exclusion:raw-exclusion:raw-regions:gated-context:context-mixture:context-scale:context:",
+  "eligibility": "every already selected representation with this prefix, both105-choice policies; no task-name, heldout metric or new training-loss selection",
+  "coverage": "per role, a source block has at least one original training record; fixed before fitting; all original record IDs and repeats retained",
+  "routing": "Keep original prior/supplement support route. Use the complete reviewed335 partitioned affine head on training-covered blocks and the actual complete319 head otherwise.",
+  "training": "Unchanged reviewed335 partitioned constructor:6144 conditional configurations,2304 fold states,18432 scores, original records, final refit and ordinary CE. Full128; mini8 epochs of127 with short tail; both step0.1; forward0 gradients. Keep final iterates.",
+  "convexity": "Fixed affine parameter map into every raw-class complex coefficient; CM55 weighted sufficient domain, complete per-role radius1048576 including fixed offsets. Original covered objectives and parameter derivatives agree through the fixed gate. Geometry and categorical decoder discovery are training-only and outside the convexity claim.",
+  "scope": "all35 original seed1 tasks, both105-choice policies,35 conventional endpoints,336 depth outcomes, all previous references/failures and separate historical DiffGPT seeds0/1/2",
+  "success": "preserve original primary and all-split flags; report per-task raw99/exact99/all-heldout99 separately from pooled totals",
+  "heldout_selection": false,
+  "unconditional_identification": false,
+  "address_limit_bytes": 68719476736,
+  "buffer_limit_bytes": 60129542144,
+  "case_kernel_work_limit": 80000000000000,
+  "old_construction_passes_reserved": 2,
+  "new_training_passes_reserved": 3,
+  "cost_scope": "Per run or replay, reserve all original layouts/constructors, all6144 partition configurations and every split trial, shared gradients/projections, complete old reconstruction and every full-vocabulary metric/field/raw audit/independent expansion. New training passes3, old construction2. All35 cases stay in the denominator. Both330/332 raw rechecks are charged; JSON/hash/I/O measured separately.",
+  "storage": "All three endpoints sealed before scoring. Sequential roles and one complete endpoint live at a time. Separate preparation, fitting/roundtrip, reconstruction/scoring and summary peak allowances; parse sizes bound to immutable files.",
+  "previous_refused_preparation": {
+    "producer": "55d0cd4b8de54dbb66d7e2b84ec0994f075a389e",
+    "reason": "The rendered319 report hash was incorrectly used for the complete summary. All331 manifest entries verified; the summary pin refused before any model fitting or heldout scoring.",
+    "models_created": 0,
+    "original_scores": 0,
+    "task_denominator": 35,
+    "artifacts": [
+      {
+        "file": "/run/media/misha/storage/transformer-runs/shared-head-compare/original-v1.prepare.log",
+        "sha256": "16b7a5ed4578b753798c2934691ce634dfc744c9f786eb8c828e67c2a430aebf"
+      },
+      {
+        "file": "/run/media/misha/storage/transformer-runs/shared-head-compare/original-v1.prepare.resources",
+        "sha256": "7d0aa70e3b8e062d70e1c8fc29f3190ed8c84278b631e14840ceb29bcdff1568"
+      },
+      {
+        "file": "/run/media/misha/storage/transformer-runs/shared-head-compare/original-v1.driver.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "file": "/run/media/misha/storage/transformer-runs/shared-head-compare/original-v1.driver.resources",
+        "sha256": "bf916fb968dc449cc738b777898058623d56237d18f7ec3c48779e8f26993392"
+      }
+    ]
+  },
+  "outcomes": {
+    "Forward-prior": "c35091be294ac054105cac8c6e1a1f45a8e02c81513ef70d218ddadae619094c",
+    "Forward-supplement": "e3143ad2e6c1961107e981832fa7b744308aa817037392036fd6eaea2fec2639",
+    "Full-prior": "32844d0b8a98faebd6d5bc2872d7d89e2d6f9f0a1442333192f880aacffd31e0",
+    "Full-supplement": "5d16111dae3d38cd28335a8e14cbd31fe159a6186e3ab98ae480bad4a86c0ccc",
+    "Mini-prior": "5f080152608f79d9ff94d2db2b0a9af75289b480c7a0e3b95b53b5d54928a2a3",
+    "Mini-supplement": "a2125160fe7fd97443dd9c4dd5c267f2224c13bfb5279e84f6ecb26d8dbf75ca"
+  },
+  "comparison330": {
+    "producer": "3653b58eedd7169377f60682e4ec017f10cc887e",
+    "review": "ec89d684dab72693c9a77fbe55dd7b20c1772e78",
+    "summary_sha256": "774b6beabafe008a5cf41904d89faadda9bd20c313b735db0bb54fd8c501f9c6",
+    "manifest_sha256": "9bcdc58f0c44e8e67ce4bbdd00232de75c1251c59a1b9b76c006072f5020080c",
+    "artifacts": 156
+  },
+  "comparison332": {
+    "producer": "312ff793359f28d1c14540c7e1b1eb159b5193ee",
+    "review": "ba97b2dc0db8c271abe4b38d605656e9a1643f89",
+    "summary_sha256": "d0f83b52b2fa0c50fd745e38bb4d20bf8553f757bf04eb31f367e186c2830c02",
+    "manifest_sha256": "0b0495287ee1fd45630394d7b1fa2c59de3e0b9aea73d9c72197a6cbbae9ea73",
+    "artifacts": 163
+  },
+  "outcome_bytes": {
+    "Forward-prior": 192981001,
+    "Forward-supplement": 88380601,
+    "Full-prior": 195877841,
+    "Full-supplement": 91277420,
+    "Mini-prior": 193220829,
+    "Mini-supplement": 88620469
+  },
+  "component_reference": {
+    "summary_sha256": "6ed37b4db95ea78087b9317628b49c9345657a37fd9866bc8b729d61dcbca041",
+    "manifest_sha256": "bae8eded33ae9c8541bf3b04769f3f5c01f539b52b09d340c284368d2367397b",
+    "artifacts": 56
+  }
+}

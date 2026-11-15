@@ -6885,3 +6885,13 @@ Task336 is claimed to freeze and evaluate this reviewed component on all35
 original cases, retaining319/330/332, both105-choice policies and all baselines.
 Its forecast must account for sequential fitting/replay lifetimes and complete
 partition-search work under the unchanged64GiB process limit.
+
+Task336 Lean-first audit4e25eef2 passes before native fitting:52 shared
+coordinates, fixed coverage and complete fallback preserve original CE and
+batch derivatives. The new partitioned comparison retains319/330/332 and all
+baselines. It authenticates the complete reviewed335 outcomes and seals all
+three endpoints before scores. Prospective80T/case includes every partition
+search and replay. Sequential phase memory accounting replaces simultaneous
+three-constructor buffers; immutable outcome byte sizes and all old resident
+models remain charged under56GiB buffers/64GiB process caps. Test and freeze
+the adapter before production; no new original heldout result is claimed yet.
