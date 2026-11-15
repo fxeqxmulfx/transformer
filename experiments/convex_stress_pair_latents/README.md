@@ -72,3 +72,25 @@ The later complete comparison must freeze and seal all training states before
 heldout scoring and independently repeat the full saved coefficients, raw
 predictions and ordinary CE. A training fit or a successful probe adds no
 catalog accuracy credit.
+
+The frozen `e12200b2` probe and an independent source rebuild now reproduce all
+99 training/result/metadata artifacts exactly. Manifest SHA256 is
+`be74842434db9570fd47264b1f68f1e7c83d10ffd3e01001d41f9b7402d5a11c`.
+All48 datasets are attempted:41 encode successfully, comprising all22 old
+arithmetic controls and19 additions (16 nonconstant cases and three power-zero
+controls). Nonconstant survivors number1--30; each constant control retains
+all4,767 candidates. Both interpreters agree on every retained training state.
+
+Seven additional cases have no compatible candidate: cubic-mixed, floor-product,
+mixed, parity-cubic-blind, parity-cubic, quadratic-linear and quadratic. Their
+4,767 collision witnesses are preserved. The core's current empty-shape error
+is the resulting encoding refusal, not an out-of-memory event. No candidate
+family change is inferred from heldout labels: this probe reads zero heldout
+pools, performs zero training updates and measures zero accuracies.
+
+Original/repeat times are34.68/35.53 seconds and peak RSS is691/690MiB. The
+largest complete-model forecast is24,863,859,328 bytes; the probe itself only
+allocates encoded observations and domain labels. Both independent test and
+Clippy runs pass. Checkout-dependent binary bytes differ, with both hashes
+retained, while all99 behavioral artifacts match. Full model scoring remains
+pending and verified coverage remains77/165.

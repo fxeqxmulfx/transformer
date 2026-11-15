@@ -7458,3 +7458,23 @@ actual forward/full/minibatch training. Freeze this source and independently
 repeat a training-only48-pool probe before the separate complete model runner.
 The structural family is distinct from the proved flat-spectrum capacity bound;
 neither native compatibility nor Lean CM64 supplies unseen target realizability.
+
+The frozen `e12200b2` pair probe independently reproduces all99 artifacts.
+All48 original training pools are attempted;41 encode, including all22 old
+controls and19 additions (16 nonconstant and three constant). Seven additional
+cases have empty support, with every collision witness retained. All constant
+controls keep4,767 candidates. The largest full-model buffer forecast is
+24,863,859,328 bytes; the training-only probe peaks at691MiB. It reads zero
+heldout pools and adds no model accuracy or catalog pass. Complete trained-state
+sealing and independently repeated original heldout scoring remain next.
+
+### 2026-11-15: updated user resource limits
+
+The user raises the RAM limit to110GB: subsequent experiment processes may use
+at most110,000,000,000 bytes. Existing frozen producers retain their stricter
+64GiB caps. The user explicitly identifies this as RAM, not a disk quota.
+Check both the workspace filesystem and the storage filesystem before admitting
+new runs, accounting for original outputs and the independent repeat. Stop if
+either filesystem cannot accommodate the required work. Do not delete existing
+evidence to make a run fit. Native temporary buffers and concurrent run reserves
+must still be included in admission.
