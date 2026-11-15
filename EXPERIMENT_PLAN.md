@@ -6946,3 +6946,24 @@ Freeze the complete runner before any heldout measurement and independently
 repeat all seven337 cases while preserving all16 reviewed334 controls and the
 separate35 original results. No new frequency model result is available yet;
 114 additional catalog cases remain unmeasured.
+
+Task339 is measured and independently reproduced at producer34ea5801. All
+seven frequency cases achieve100% raw and exact accuracy on all11 splits in
+forward-only, full-batch and minibatch modes. Every mode gets32,696/32,696 test
+tokens,1,344/1,344 test sequences and7,410/7,410 unseen-label occurrences correct.
+Weighted test CE is0.00619416 forward,0.000703828 full and0.000452416 mini.
+The explicit class-coordinate prior completes the learned quantity decoder;
+flatness alone does not identify it. The categorical control reaches7/7 primary
+successes but1/7 all-heldout; both arms select the same programs on this cohort.
+Discrete program selection remains outside the convex CE stage.
+
+Both complete drivers exit0 and all123 JSON/JSONL artifacts match, manifest
+f8fa1558162949f0677e494bf8eba7f36f509dfe9413631146d4c9be1fd744f6.
+All13 native checks, full Lean/global axioms, INDEX and forbidden scans pass;
+36 existing sorry remain, with0 rests and0 extra axioms. The original/repeat
+take9:35.63/9:25.60 and peak about8.2GiB under64GiB. The whole16-case control
+report and separate35-task comparison remain unchanged, including transformer
+histories. Thus23 additional cases pass all-heldout99, and58/165 catalog cases
+are measured;107 remain unmeasured. Task340 prepares the remaining13 synthetic
+datasets: Count, eight Addition variants, three C-RASP depths and the explicit
+random-label control. Data preparation alone must add no model-success claim.
