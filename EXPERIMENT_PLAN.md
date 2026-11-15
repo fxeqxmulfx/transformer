@@ -6641,3 +6641,16 @@ CE. The prospective complete-case forecast is7,730,302,869,792 kernel units;
 all constructors, role training/replay, field calls and independent audits are
 included before scoring, with a10T cap,56GiB explicit buffers and64GiB processes.
 Freeze and run this reviewed adapter before reporting new99% attainment.
+
+Task330 producer3653b58e corrects a summary/report checksum mixup before any
+fitting or scoring, retaining the refused preparation. The full original run
+and all35 replays pass with150 JSON and6 complete raw-logit JSONL artifacts.
+Both policies retain35/35 original flags, but raw99/exact99 remain34/35.
+Fibonacci full/mini produce4607/4704 raw hits (97.9379%), forward4608/4704
+(97.9592%); validation CE is0.1511245/0.1511673/0.1511809, worse than319.
+All4704 inputs use training-covered blocks. Of forward's96 errors,91 have a
+true label already present in the routed training block. Freshly training the
+complete head therefore does not solve the unseen-boundary problem. Preserve
+this failed improvement; finish independent review, then test training-only
+geometry sharing across blocks after a Lean audit of its linear parameter map.
+The original run takes9m21.72s/6.05GiB under64GiB; complete summary774b6bea.
