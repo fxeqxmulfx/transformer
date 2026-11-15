@@ -6756,3 +6756,16 @@ the full four-case data and12-case baseline byte-for-byte (SHA8b5508d9), with
 directLean/global audit and native INDEX pass. Task334 is now unblocked; this
 data result still adds zero model evaluations and leaves118 additional cases
 unmeasured.
+
+Task332 producer312ff793 completes all35 original cases and their replays;
+an independent fresh run reproduces all163 JSON/JSONL artifacts (summary
+d0f83b52). Both105-choice policies/all modes retain35/35 original success flags
+but34/35 raw99/native exact99/all-heldout99. Fibonacci forward/full/mini produce
+4612/4610/4605 of4704 correct (98.044/98.002/97.895%), with CE around0.263,
+worse than319 and330. All training labels fit. Complete head7,180,800 real
+coordinates and518 new shared parameters are charged; forward has zero CE
+updates. Each full driver takes22m23s with6.49GiB peak under64GiB. Seven native
+checks and directLean/audits/INDEX pass. Preserve the regression: no99% claim.
+Tasks335/336 queue a bounded input-geometry hypothesis and a separate frozen
+all35 comparison;335 is available to claim. Task334 continues the four parity
+model evaluations with the reviewed12 controls.
