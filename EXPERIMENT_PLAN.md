@@ -6613,3 +6613,17 @@ metric, refusal reference and report. All36 native jobs exit0; the repeat
 takes17m46.56s and3.06GiB peak RSS under64GiB. Evidence is preserved under the
 v2 freeze's `findings-review`; the completed328 worktree is removed. Original35
 remains34/35 raw99 while the separate329 head undergoes training-only inspection.
+
+Task329's Lean audit `5570b115` covers the fresh complete head without Dirac
+observed rows. Native producer `57a2d61a` is frozen with624 source inputs.
+All six original training-role inspections and exact state replays exit0;
+full/mini perform128/304 effective CE updates per role, and forward performs
+zero gradients/updates. Primary CE changes0.001336682346→0.001310457498 in
+full and→0.001330829691 in mini. These are improvements within the new model,
+not below the parent's observed CE9.63e-9. No heldout score has been computed.
+All nine native/directLean checks pass. Inspection takes2m25.80s/3.60GiB;
+26 JSON artifacts have summary SHA256
+e3bcf2ac9a27e41c7af37c199db10e65e46654861e9fe11fe662bc8856f62729.
+Review and reproduce329 before330's all35 comparison. The primary has291
+empty training blocks;330 must prospectively audit a fixed coverage gate to
+retain the earlier predictor there, while reporting actual new training logits.

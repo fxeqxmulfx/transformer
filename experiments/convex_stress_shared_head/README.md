@@ -5,7 +5,8 @@ when the same shared features are used on observed and unseen inputs? Reviewed
 task319 leaves Fibonacci at97.9592% full-batch and98.0230% minibatch/forward raw
 accuracy. Its observed CE is exactly unchanged: the old feature maps preserve
 every observed source row. The new component will replace those features and
-refit the complete head. There are no new model results yet.
+refit the complete head. All six training-only inspections and saved-state
+replays now pass. No new original held-out accuracy has been measured.
 
 The Lean audit precedes native implementation. CM42's
 `ContextInterpolation.batchLoss_convex` quantifies over arbitrary fixed real
@@ -94,7 +95,7 @@ The prospective limit is1T, retaining the same formula and all coefficients.
 A ninth check uses these dimensions and mutates label values to verify that
 admission depends on shape; no new model is built or evaluated by that check.
 
-Task329 next freezes the checked component before training-only inspections of
+Task329 freezes the checked component before training-only inspections of
 both roles of all three selected319 heads. `inspection-inputs.json` pins every
 complete parent artifact; no historical metric is passed to initialization or
 training. Task330
@@ -123,3 +124,43 @@ Generated evidence remains on storage under64GiB. Run the same frozen inspector
 in a second fresh directory and compare every JSON artifact. Native inputs,
 source, executable and all refusals remain visible; no99% result is inferred
 from training-only inspection.
+
+Producer `57a2d61af6be14584d24f921c0c633228d5a5d76` is frozen with624 source
+inputs in `freezes/shared-head-v1`. All six inspections of the complete hashed
+319 parents finish and reconstruct their saved outcomes exactly. Each role
+uses4704 original records and all256 raw classes. The primary source has389
+blocks (93 separated pairs,5 single-class,291 empty); the supplement has97
+blocks (94 separated pairs,3 single-class). No original block needs quadratic
+moments in this inspection. Empty blocks have explicit zero logits in this
+component; training supplies no labels for them. Task330 must freeze a
+training-coverage gate and audit its contract before retaining the older
+predictor on those inputs. This is an integration requirement, not a new
+unseen-label guarantee.
+
+| Mode / role | Initial observed CE | Final observed CE | Effective CE updates |
+| --- | --- | --- | --- |
+| Full / primary | 0.001336682346 | 0.001310457498 | 128 |
+| Full / supplement | 0.001344088754 | 0.001317863843 | 128 |
+| Mini / primary | 0.001336682346 | 0.001330829691 | 304 |
+| Mini / supplement | 0.001344088754 | 0.001338236089 | 304 |
+| Forward / primary | 0.001336682346 | 0.001336682346 | 0 |
+| Forward / supplement | 0.001344088754 | 0.001344088754 | 0 |
+
+Each mini epoch retains37 batches of127 and a final batch of5. Each full
+head differentiates602112 record visits; each mini head differentiates37632.
+Forward computes no CE gradients. Initialization/search and coefficient
+materialization remain separately charged. These losses belong to the fresh
+shared-feature heads. They are higher than319's old observed CE9.63e-9, whose
+Dirac rows were retained exactly. Lower CE within the new model is therefore
+not a claim of lower observed loss than the earlier model, or better held-out
+CE/raw accuracy. Every original result remains an immutable reference.
+
+The six inspections plus complete saved-state reconstruction take2m25.80s,
+peak at3,770,556KiB RSS (3.60GiB), and exit0 under64GiB. The summary SHA256 is
+`e3bcf2ac9a27e41c7af37c199db10e65e46654861e9fe11fe662bc8856f62729`;
+26 JSON artifacts retain the exact inputs, forecasts, complete coefficients,
+initializers, CE histories and summaries. Evidence lives under
+`/run/media/misha/storage/transformer-runs/shared-head/inspection-v1`.
+All nine native checks and direct Lean/axiom/INDEX/forbidden checks pass.
+Independent review and a fresh six-inspection repeat remain pending; new
+original35 accuracy remains entirely task330's work.
