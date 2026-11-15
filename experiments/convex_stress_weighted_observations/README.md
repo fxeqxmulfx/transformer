@@ -42,6 +42,14 @@ and anchor selection stay outside the convex-stage claim. Neither selector
 may consult heldout labels or unknown clean training labels. The complete
 selected specification, corpus binding, constraints and trace are replayed.
 
+`fit_from` accepts a declared finite joint starting tensor, projects it onto
+the same domain and records it for replay. Its nonnegative masses must sum
+to the policy's declared initial mass. This permits initialization from observed
+training statistics without converting those estimates into extra exact
+anchors. Forward still performs zero gradient updates. The caller must bind
+how the initializer was computed and may not use unknown clean or heldout labels.
+The original `fit`/`train` entry points retain their mass-only initialization.
+
 Prediction and the derivative's softmax use every complete stored real/imaginary
 coefficient and every raw class. The derivative applies the CM57 affine product
 identity; no sampled classes or approximate logits are substituted. Actual
@@ -53,7 +61,7 @@ record processing. They cap a pool at two million original records, groups at
 forecast data generation, feature discovery, scoring and retained artifacts.
 The process still runs under the user's64GiB address-space limit.
 
-Nine native checks compare grouped and independently retained ungrouped CE,
+Ten native checks compare grouped and independently retained ungrouped CE,
 every joint derivative, all three training modes and complete complex-product
 finite differences. They also check unequal frequencies, actual short tails,
 corrupt counts/IDs/labels, deterministic replay and contradictory noisy anchors.
@@ -67,7 +75,9 @@ checks reproduce CM61's feasible noisy witness while retaining both conflicting
 content labels in the loss, all three modes and their complete record counts.
 Full/minibatch CE decreases on that witness. Independent projection variational
 checks pass. Selecting every clean group reproduces the original projection,
-head, optimizer trace and work counts exactly in all three modes. All nine
+head, optimizer trace and work counts exactly in all three modes. A recorded
+finite joint initializer is also projected and replayed without extra anchors.
+All ten
 checks and clippy with warnings denied pass; no stress-test score is inferred.
 
 ```sh

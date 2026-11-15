@@ -99,6 +99,7 @@ pub struct Outcome {
     pub policy: Policy,
     pub forecast: Forecast,
     pub domain: Domain,
+    pub initial_proposal: Vec<Parameters>,
     pub initial_projection: Projection,
     pub initial_ce: f64,
     pub final_ce: f64,
@@ -131,6 +132,26 @@ pub fn train(
 /// Fix the anchor selection before the joint CE stage. It changes only the
 /// domain; all original observed records remain in every complete epoch.
 pub fn fit(corpus: &Corpus, specification: &HeadSpec, policy: Policy) -> Result<Outcome> {
+    if specification.budgets.is_empty() {
+        return Err("empty initialization program bank".into());
+    }
+    let mut initial = vec![[0.; 6]; specification.budgets.len()];
+    let initial_mass = policy.initial_total_mass / initial.len() as f64;
+    for theta in &mut initial {
+        theta[5] = initial_mass;
+    }
+    fit_from(corpus, specification, policy, initial)
+}
+
+/// CM57/CM61 projection accepts any declared finite joint starting point.
+/// A caller may compute it from observed training statistics; it is recorded
+/// and replayed, and supplies no additional clean-label or identifying anchor.
+pub fn fit_from(
+    corpus: &Corpus,
+    specification: &HeadSpec,
+    policy: Policy,
+    initial: Vec<Parameters>,
+) -> Result<Outcome> {
     let forecast = forecast(corpus, &policy)?;
     if specification.coordinates.len() != corpus.limits().vocabulary
         || specification.budgets.len() != corpus.limits().programs
@@ -140,10 +161,16 @@ pub fn fit(corpus: &Corpus, specification: &HeadSpec, policy: Policy) -> Result<
     // CM60 constraints_iff justifies removing repeated identical anchors.
     // Label is part of the grouping key: conflicts cannot be hidden here.
     let domain = Domain::new(corpus, specification)?;
-    let mut initial = vec![[0.; 6]; specification.budgets.len()];
-    let initial_mass = policy.initial_total_mass / initial.len() as f64;
-    for theta in &mut initial {
-        theta[5] = initial_mass;
+    if initial.len() != specification.budgets.len()
+        || initial
+            .iter()
+            .flatten()
+            .any(|x| !x.is_finite() || x.abs() > 1e12)
+        || initial.iter().any(|t| t[5] < 0.)
+        || (initial.iter().map(|t| t[5]).sum::<f64>() - policy.initial_total_mass).abs()
+            > 1e-10 * policy.initial_total_mass.max(1.)
+    {
+        return Err("joint initialization differs from its declared mass or finite shape".into());
     }
     let initial_projection = domain.project(
         &initial,
@@ -218,6 +245,7 @@ pub fn fit(corpus: &Corpus, specification: &HeadSpec, policy: Policy) -> Result<
         policy,
         forecast,
         domain,
+        initial_proposal: initial,
         initial_projection,
         initial_ce,
         final_ce,
@@ -232,7 +260,12 @@ pub fn replay(saved: &Outcome, corpus: &Corpus) -> Result<()> {
     if corpus.fingerprint()? != saved.corpus_sha256 {
         return Err("original grouped corpus binding changed".into());
     }
-    let rebuilt = fit(corpus, &saved.specification, saved.policy.clone())?;
+    let rebuilt = fit_from(
+        corpus,
+        &saved.specification,
+        saved.policy.clone(),
+        saved.initial_proposal.clone(),
+    )?;
     if *saved != rebuilt {
         return Err("weighted training differs from deterministic replay".into());
     }

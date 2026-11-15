@@ -7176,3 +7176,10 @@ independent projection variational checks, and exact equality of projections,
 heads and traces when every clean group is selected. The original200003-record
 and complete-gradient checks still pass. Basis feature discovery, its explicit
 anchor policy and the frozen complete eight-case repeat remain pending.
+
+The weighted trainer additionally accepts a declared finite joint starting
+tensor and projects it onto the same CM57/CM61 domain. Its masses must match
+the policy; the entire proposal is saved and replayed. This allows observed
+training statistics to initialize a noisy decoder without adding pseudo-clean
+anchors or changing ordinary CE. All ten native checks and clippy pass; the
+original mass-only entry points retain their previous behavior.

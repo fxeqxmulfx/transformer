@@ -180,3 +180,39 @@ fn selecting_all_clean_groups_reproduces_the_original_domain_projection() -> Res
     }
     Ok(())
 }
+
+#[test]
+fn a_declared_joint_initialization_is_projected_and_replayed_without_extra_anchors() -> Result<()> {
+    let c = corpus()?;
+    let mut specification = spec(Anchors::Groups(vec![2]));
+    specification.radius = 128.;
+    let initial = vec![[2., 0., 0., 0., 4., 4.]];
+    for mode in [Mode::Forward, Mode::Full, Mode::Mini] {
+        let out = training::fit_from(&c, &specification, policy(mode), initial.clone())?;
+        assert_eq!(out.initial_proposal, initial);
+        assert_eq!(out.domain.constraints().anchors[0].len(), 2);
+        assert!(out.domain.violation(&out.initial_projection.theta) < 1e-10);
+        assert_eq!(out.work.gradient_records, 3 * policy(mode).epochs);
+        training::replay(&out, &c)?;
+        if mode == Mode::Forward {
+            for (a, b) in initial
+                .iter()
+                .flatten()
+                .zip(out.head.theta.iter().flatten())
+            {
+                assert!((a - b).abs() < 1e-10);
+            }
+            assert_eq!(out.work.effective_updates, 0);
+        }
+        let mut bad = out;
+        bad.initial_proposal[0][0] += 0.5;
+        assert!(training::replay(&bad, &c).is_err());
+    }
+    let mut wrong = initial;
+    wrong[0][5] = 3.;
+    assert!(training::fit_from(&c, &specification, policy(Mode::Full), wrong).is_err());
+    assert!(
+        training::fit_from(&c, &specification, policy(Mode::Full), vec![[f64::NAN; 6]]).is_err()
+    );
+    Ok(())
+}
