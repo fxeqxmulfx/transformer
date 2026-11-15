@@ -130,6 +130,47 @@ complete run and all original moment candidates. This is a new hypothesis to
 test, with no claim of99% heldout accuracy. Its prospective work allowance
 includes the expanded search and all calibration record passes.
 
+Producer `b19b3bc9` freezes651 inputs under `freezes/shared-geometry-v2`.
+All six original training inspections and exact internal replays exit0 under
+`shared-geometry/inspection-v2`; summary
+`826b4fa770a13daa1a584c7cec15c2be3c6e3ec9a75646a59b5e1d44be74cb5c`.
+The run takes8m51.92s with3770788KiB (3.60GiB) peak RSS under64GiB. Every
+v1 constructor parameter, decoder, score, product audit and local control
+matches exactly in all six `retained-v1.json` checks.
+
+All six selections choose the quadratic bank, the fixed direction `[0,1]`
+(ridge0), interval calibration and gain128. Training intervals separate in
+all93 primary and94 supplemental binary blocks. Every mode gets4704/4704
+training labels correct in each role. Primary and supplemental conditional
+folds both score4623/4704 (98.2781%). Primary's local329 control scores4606/4704;
+the new conditional score is an improvement, but remains below99%.
+Six primary fold targets lack a decoder label (including one in an empty
+block);75 of the81 errors have a label present in the fold decoder. These
+are training-fold diagnostics, not the original heldout pool.
+
+| V2 mode | Primary final CE | Supplemental final CE | Effective updates per role |
+| --- | ---: | ---: | ---: |
+| Forward | 0.01354427549 | 0.01386963798 | 0 |
+| Full | 0.01348541478 | 0.01381566995 | 128 |
+| Mini | 0.01352660142 | 0.01385678559 | 304 |
+
+Every real minibatch tail has5 original records. The maximum discrepancy
+between compact logits and independently expanded complete complex products
+is1.1369e-13. The model stores405/113 parameters in the primary/supplemental
+roles; its actual expanded tensors have1692928/422144 real coefficients.
+The prospective bank allowance still charges up to25593088/6381824 expanded
+coefficients,1009 constructors including refit,4032 candidate gain scores and
+6322176 conditional scoring records per role. Original heldout scores remain
+unmeasured until task332.
+
+Task331 is approved at producer `b19b3bc9`. The independent `review-v2` run
+reproduces all32 JSON artifacts exactly, including the complete candidate
+states, final heads, histories, retained-v1 checks and summary826b4fa7. It
+takes8m47.46s with3770496KiB peak RSS and exits0. All eight native checks,
+fmt/clippy/release, full Lean build, direct axiom audits, generated INDEX and
+forbidden checks pass; the rebuilt binary equals the frozen one. Review
+evidence and board history are preserved under the v2 freeze's `findings-review`.
+
 ```sh
 export LAKE_ARTIFACT_CACHE=false LEAN_NUM_THREADS=2
 prlimit --as=68719476736:68719476736 -- lake build

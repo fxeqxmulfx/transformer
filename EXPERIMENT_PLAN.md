@@ -6704,3 +6704,17 @@ moment candidates and adds training-only projected interval calibration plus
 reported. The new1344 configurations,1008 fold states and4032 gain scores
 must pass updated resource/replay checks and original training inspection before
 task332. CM55 still covers the unchanged affine head and complete budget.
+
+Task331 v2 producerb19b3bc9 is approved: all six original training inspections,
+exact internal replays and an independent repeat reproduce all32 artifacts
+(summary826b4fa7). Both roles/all modes fit4704/4704 training labels; conditional
+folds4623/4704 improve on local329's4606/4704 but remain below99%. Every mode
+selects fixed direction[0,1] with calibrated intercepts, quadratic features
+and gain128; all93/94 binary blocks separate. Full/mini reduce ordinary CE
+slightly with128/304 effective updates per role; forward uses zero gradients.
+Original/repeat times8m51.92s/8m47.46s and3.60GiB peak remain under64GiB. All
+eight native/directLean checks pass and every v1 candidate/control is retained
+exactly. Task332 is claimed for the separately frozen all35 comparison; no new
+original heldout accuracy has been measured. Tasks333/334 queue a native port
+and generic latent-program extension for four additional parity scratchpads,
+preserving the12 reviewed additional passes and original short/long probes.
