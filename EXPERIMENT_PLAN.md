@@ -7447,3 +7447,14 @@ ambiguity evaluation and two indistinguishable observed heads with opposite
 unseen answers. This supplies no projection refinement or target-realizability
 certificate. The fixed generic candidate family and complete48-case original
 cohort remain pending; verified catalog coverage stays77/165.
+
+The native pair-family component fixes4,767 input-only programs before original
+labels: bounded Laurent monomials/two-term sums and ordinary integer primitives.
+All compatible candidates remain; every zero block has a two-record collision
+witness checked by a second interpreter. Complete retained-state encoding is
+independently checked too. Five component controls pass, including all-survivor
+retention, forged-subset refusal, label renaming, noninjective decoding and
+actual forward/full/minibatch training. Freeze this source and independently
+repeat a training-only48-pool probe before the separate complete model runner.
+The structural family is distinct from the proved flat-spectrum capacity bound;
+neither native compatibility nor Lean CM64 supplies unseen target realizability.

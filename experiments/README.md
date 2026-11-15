@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_pair_latents`](convex_stress_pair_latents) | Fixed4,767-member pair-state bank | Exact CM64 elimination retains all compatible candidates, with independent collision and complete retained-state checks. Five controls pass before freezing an all48-case training-only probe; no heldout score yet. |
 | [`convex_stress_bounded_latent`](convex_stress_bounded_latent) | Full joint CM64 decoder core | Complete complex heads, bounded shared masses, actual full/minibatch CE and audited joint projections. Eleven native controls preserve unknown-state ambiguity. Candidate discovery and48-case scoring remain pending; no new catalog credit. |
 | [`convex_stress_search_continuation`](convex_stress_search_continuation) | Training-only count search | Original and independent reports exactly match:32 retained fits, but minimum size stays56 nodes at the40T cap. Both interpreters agree on all1370 labels. No heldout scores or catalog credit. |
 | [`convex_stress_certified_compare`](convex_stress_certified_compare) | Same13 cases, six endpoints after CM63 | Complete training states must reproduce347; certified numerical evaluation and raw recounts distinguish raw99 from exact99. The final protocol pins the218-artifact independent347 verification before freezing; no new score yet. |

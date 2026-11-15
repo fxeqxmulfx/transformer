@@ -1,0 +1,27 @@
+{
+  "name": "pair-laurent3-two-terms-integer14-v1",
+  "data348_inventory_sha256": "13957c45cf3e58a17bb9e9b1106e6b739155b05ad09f5a34ea24a337626f4064",
+  "data348_verification_sha256": "58340eda892c8017035698b8263e76e100991c7f0b94af0cddda4fa842256ca5",
+  "fixed_family": {
+    "monomial_exponents": [-3, -2, -1, 0, 1, 2, 3],
+    "coordinates": 2,
+    "monomials": 49,
+    "two_term_pairs": "Every lexicographic pair of distinct exponent vectors; first coefficient1; second coefficient in[-2,-1,1,2]",
+    "two_term_sums": 4704,
+    "integer_primitives": ["min", "max", "distance", "quotient_ab", "quotient_ba", "remainder_ab", "remainder_ba", "and", "or", "xor", "equal", "less", "greater", "gcd"],
+    "total": 4767,
+    "field_inverse_at_zero": 0,
+    "zero_exponent_at_zero": 1,
+    "integer_division_by_zero": 0,
+    "integer_remainder_by_zero": "numerator",
+    "states": "Every result reduced modulo the input vocabulary, padded to a multiple of4"
+  },
+  "selection": "Retain every observationally consistent fixed candidate; preserve a collision witness for every eliminated zero block. No top-k, syntax ranking or learned decoder supplied as a feature.",
+  "model_input": "Vocabulary and ordered original training rows[a,b,label] only; no task name, target formula, oracle, generator seed or heldout labels.",
+  "flat_spectrum_role": "CM64 capacity bound on the complete complex head; no target-realizability or unseen-label identification guarantee from flatness.",
+  "training": {"minimum_mass": 1, "maximum_mass": 32, "initial_mass": 8, "learning_rate": 1000000, "full_epochs": 4, "mini_epochs": 1, "mini_batch_size": 127, "forward_updates": 0},
+  "operation_cap": 40000000000000,
+  "buffer_cap_bytes": 51539607552,
+  "process_cap_bytes": 68719476736,
+  "scope": "Fixed input-only bank and training-only probe; heldout comparison requires a separately sealed runner."
+}
