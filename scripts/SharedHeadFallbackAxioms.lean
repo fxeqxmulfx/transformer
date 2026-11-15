@@ -22,8 +22,9 @@ noncomputable def candidate : Fin 4 × Bool → Fin 3 → ℝ :=
 def known (x : Fin 3) : Bool := x != 2
 def inputs (s : Fin 3) : Fin 3 := if s = 2 then 1 else 0
 def labels (s : Fin 3) : Fin 4 := if s = 2 then 1 else 0
-noncomputable def previous (_ : Fin 1) (_ : Fin 3) : ℝ := 4
-noncomputable def parent (_ : Fin 1) (c : Fin 4) : ℝ := if c = 0 then 3 else -3
+noncomputable def previous (k : Fin 1) (x : Fin 3) : ℝ := 2 + k.val + x.val
+noncomputable def parent (k : Fin 1) (c : Fin 4) : ℝ :=
+  if c = 0 then 3 + k.val else -3 - k.val
 
 -- Three original record IDs include a repeated input and a shorter tail.
 example (W : Fin 4 × Bool → Fin 4 → ℝ) :

@@ -6631,3 +6631,13 @@ observed rows, repeated record IDs, a real tail batch and nonzero unsupported
 parent logits. The primary's291 empty training blocks retain the earlier
 predictor; all new training logits and CE changes remain reported. No new
 theorem is required, and no new original35 heldout result is inferred.
+
+Task330's native adapter binds the entire331-artifact319 run, all six reviewed329
+outcomes and the separate historical DiffGPT result. Seven checks exercise both
+roles in full/mini/forward, real unsupported fallback, complete raw-logit replay,
+call accounting and105-choice regression preservation. Full metrics and paired
+old/new raw logits are always computed for changed states, including observed
+CE. The prospective complete-case forecast is7,730,302,869,792 kernel units;
+all constructors, role training/replay, field calls and independent audits are
+included before scoring, with a10T cap,56GiB explicit buffers and64GiB processes.
+Freeze and run this reviewed adapter before reporting new99% attainment.
