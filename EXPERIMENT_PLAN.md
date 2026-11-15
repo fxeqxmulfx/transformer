@@ -7575,3 +7575,18 @@ remaining cohort forecast and its repeat; the outer runner applies the process c
 Keep the current task351 freeze intact. Extend the fixed input-only family and
 freeze a new full comparison only after this component's independent review;
 these synthetic controls add no stress-task coverage.
+
+### 2026-11-15: task354 fixed-family inclusion before a wider native bank
+
+CM67 embeds every old complete joint tensor into a disjoint union of fixed
+input programs. All new coordinates are zero at that embedded point, while
+the enlarged convex domain keeps them free. The actual mass, every complex
+logit and all original indexed batch CE values are preserved at the same
+spectral bound. Exact filtering retains every compatible old and new member.
+Nonconstant examples preserve imaginary coefficients and opposite unseen
+answers; no optimizer or new-label guarantee is inferred. After the Lean
+checks, implement the complete three-term extension of the existing monomial
+family and independently probe all original training sets with reduced-buffer
+admission. Freeze before reading those training rows. Keep the task351 producer
+and its queued repeat unchanged; a later full wider-family comparison requires
+its own freeze and all training outcomes sealed before heldout scoring.

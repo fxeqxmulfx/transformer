@@ -19618,3 +19618,48 @@ finite-precision KKT residual from this exact-real minimizer theorem. The
 complex head, ordinary empirical CE and fixed input-family requirements of
 CM64/65 are unchanged; these projection identities add no heldout label or
 benchmark success.
+
+## CM67. Widening a fixed input family preserves the full old model class
+
+Before replacing a finite input-program bank by a larger fixed bank, distinguish
+representational inclusion from a claim about a new fitted model. Write the
+old candidate type as `J` and the added type as `K`, with arbitrary fixed input
+maps into the same latent state type. Enumerate the union as `J + K`, retaining
+the old order followed by the new order. Equal program functions need not be
+deduplicated. Every added compatible candidate has its own full joint block.
+
+Embed an old tensor by keeping every old mass and every raw decoder coordinate,
+including all unknown rows, and setting every new mass and decoder coordinate
+to zero. This is an injective map of the full parameter space. Its total mass
+equals the old total. Nonnegativity, shared row masses, enumeration support and
+every observed anchor hold in the combined domain whenever they held before.
+No condition on the behavior of added programs is needed for this inclusion.
+The exact consistency filter retains an old or new candidate if and only if
+that candidate was retained in its own complete branch. Thus widening and
+CM64's zero-block elimination do not justify dropping any compatible member.
+
+The actual complete complex products at the embedded tensor agree with the
+old logits for every input and every raw class. Consequently every ordinary
+indexed batch CE is identical, with all original record multiplicities and the
+actual batch denominator. The embedded head still satisfies the full-column
+bound `2 * R * card(S)`, charging both real and imaginary coefficients. The
+larger class can therefore attain every old feasible loss value at that same
+bound. The capacity bound is independent of candidate count; expanded storage,
+program evaluation and complex-product work must still be admitted explicitly.
+
+The nonconstant CM64 example is extended by two nonconstant input programs,
+the first input coordinate and the sum of the two coordinates. Its nonzero
+imaginary feature and head entry survive. Both feasible completions at its
+unobserved latent state also survive and still give opposite strict raw answers.
+Examples instantiate every conditional theorem using the four-point complex
+Fourier code, duplicate records and a singleton minibatch tail.
+
+Formalization: `ConvexDepth/FamilyExtension/{Basic,Complex,Witness}.lean`, with
+thirteen direct axiom checks in `scripts/FamilyExtensionAxioms.lean`. These
+results justify a prospective broader fixed family; they do not assert target
+realizability, identification of unseen labels, unchanged floating trajectories,
+or improvement by a finite training schedule. In particular, initializing every
+added candidate with positive mass is not the zero-block embedding. Any wider
+native bank must retain all compatible members, audit every interpreter and
+decoder entry, account for complete memory and work, and undergo a new frozen
+comparison before new heldout accuracy is credited.
