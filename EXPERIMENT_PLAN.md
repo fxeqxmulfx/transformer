@@ -6985,3 +6985,26 @@ report, regenerates all13 case metadata records and checks every full historical
 record. All215 splits are retained, including forced carry probes and random
 payload novelty. Original/repeat24.87s/24.68s, peak7.60GiB under64GiB. This
 completes data preparation only:58 cases measured,107 still unmeasured.
+
+Task341 extends CM56 with joint program masses and coordinate decoders before
+new native model work. CM57 uses six learned coordinates per fixed input-only
+program, two actual Fourier blocks, complete costs (4,4,4,4,4,2), homogeneous
+training anchors and an explicit identity-copy prior. Perspective budgets force
+all coefficients to vanish at zero mass. Observable feature spans plus a
+separate semantic realizability prior identify covered queries and derive
+strict raw-class gaps through the actual normalized complex head. Ordinary
+full/minibatch CE stays convex in every learned coordinate. Two active distinct
+decoders, a rejected constant program, repeated records, unseen class 3 and an
+unobserved copy input have nonzero witnesses; an uncovered role admits opposite
+feasible raw winners. Direct Lean/audit/index checks must pass and the proof
+must land before native joint-program runs. These proof witnesses add no
+benchmark results; measured coverage remains 58/165, with 107 still unmeasured.
+
+Task341's 40 new theorems now build and pass direct standard-axiom checks.
+The full build has 13,946 jobs; global audit retains 36 existing sorry with
+0 rests and 0 extra axioms. The native INDEX has 4,849 modules and 25,427
+theorems, with 0 vacuous and 0 placeholder entries. Task342 implements and
+audits the native joint head, gradients and projection; task343 then measures
+the remaining 13 synthetic cases through a committed frozen driver and an
+independent repeat. The independent-label control remains an explicit negative
+control, and unknown-program realizability remains a separate assumption.

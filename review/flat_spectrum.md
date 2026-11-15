@@ -18948,3 +18948,91 @@ unseen-label recovery or success on the pending frequency benchmarks.
 Formalization: `ConvexDepth/ClassGeometry/{Basic,Head,Witness}.lean`; direct
 standard-axiom audit: `scripts/UnseenClassGeometryAxioms.lean`. Keep generated INDEX
 and run direct Lean/global-axiom/native forbidden checks before landing.
+
+## CM57. Joint program masses and coordinate decoders
+
+CM56 and the reviewed frequency experiment339 identify an affine quantity
+decoder after selecting an input program. A more general convex stage can
+retain a finite, fixed family of input-only programs and learn their masses
+and scaled decoder coefficients together. This does not make discovery of the
+program family convex. Neither target answers nor learned parameters may be
+read when constructing a program's features.
+
+For program p, let h[p,x] have five real coordinates. One intended instance is
+quantity times a quantity indicator, that indicator, two structural-role
+indicators, and a supplied identity-copy coordinate. The theorem allows any
+fixed five-coordinate features. Parameters theta[p,0..4] are the scaled decoder
+coefficients themselves, and gamma[p]=theta[p,5] is the nonnegative mass. The
+actual component score is
+
+`2*e(c)*sum_j(theta[p,j]*h[p,x,j]) - gamma[p]*e(c)^2`.
+
+There is no product of independently learned mass and decoder. A putative
+unscaled decoder beta appears only in a separate semantic realizability
+hypothesis. The supplied injective class coordinates e are prior information,
+as in CM56, rather than a consequence of spectral flatness.
+
+The feasible set imposes homogeneous linear observed-anchor equations,
+`theta[p,4]=gamma[p]` for the explicitly declared identity-copy prior,
+nonnegative masses, a positive lower bound on their total, and complete
+coefficient budgets. With local cost `(4,4,4,4,4,2)`, impose both a global
+weighted absolute budget R and the perspective inequalities
+`charge(theta[p]) <= B[p]*gamma[p]`. All these constraints are convex in the
+actual learned coordinates. Since every cost is positive, zero mass forces
+every coefficient of that program to zero. An incompatible program can
+therefore remain in the bank with zero mass without contributing free logits.
+The conditions do not assert that a given training pool makes the domain
+nonempty, or that an optimizer reaches a desirable point.
+
+The complete complex realization uses two independent four-point Fourier
+blocks per program. Their source rows carry `(h0,h1,h2,h3)` and `(h4,1,0,0)`.
+Normalize the entire signed row over all programs and both blocks by its
+absolute mass or one, whichever is larger. This is one common positive,
+input-only denominator N(x). Blockwise unitary feature bounds and CM51 give
+absolute bound one for every resulting realified feature. This is not a claim
+that repeated training rows or the assembled query Gram matrix are flat.
+Expanding the two blocks and retaining every real and imaginary coefficient
+gives exactly the sum of component scores divided by N(x). For |e(c)|<=1,
+the column costs above charge all sixteen real coefficients per program and
+raw class. CM55 then proves the complete budget and ordinary full-vocabulary
+CE convexity, including batches of record IDs with the actual tail denominator.
+
+Identification is conditional on observable feature-span coverage and the
+semantic prior. Augment each program's observed feature rows with the copy
+basis vector, whose coordinate value is explicitly supplied as one. Suppose
+the query feature is a linear combination of these rows, an unknown beta
+realizes their coordinate labels and the query target, and beta's copy
+coefficient is one. Distributing the learned linear center over that same
+combination identifies it as gamma times the target coordinate. These are
+feature-space and target-realizability premises, not assumptions of correct
+query logits. If this condition holds for every positive-mass program, zero
+mass contributes nothing and the actual complete-head score gap is
+
+`(sum_p gamma[p]) * (e(target)-e(c))^2 / N(x)`.
+
+A positive total and injective e make every wrong raw class strictly worse,
+including a raw class absent from the observations. Mere agreement with
+training anchors does not establish query coverage or realizability. In
+particular, an unconstrained structural-role direction can admit two feasible
+heads with opposite query winners. Such a direction remains uncertified.
+
+The nonconstant witness retains two active programs with different
+quantity coordinates and decoders, a third program rejected by inconsistent
+anchors, a nonzero imaginary coefficient, repeated training records and an
+unseen target class. It also checks a copy direction using the declared prior
+and an uncovered role using opposite feasible completions. These are finite
+proof witnesses, not new benchmark measurements. Native implementation still
+needs a training-only feature bank, an audited projection, complete products
+and costs, forward/full/minibatch comparisons, resource caps and independently
+repeated heldout measurements. No floating-point refinement or optimization
+convergence theorem is asserted here.
+
+Formalization: `ConvexDepth/CoordinatePrograms/{Basic,Head,Identification,Witness,
+Coverage}.lean`; direct standard-axiom audit:
+`scripts/CoordinateProgramAxioms.lean`. The witness uses class coordinates c/4,
+quantity inputs 0, 1/2, 1, two structural roles and a copy input. The active
+quantity representations are q and 2q-1, with different affine decoders.
+Their masses 4 and 2 give full charge 78 within radius 128. Swapping the masses
+to 2 and 4 is another feasible point. The third constant representation is forced
+to zero by the two distinct observed coordinate answers. Both full heads have
+a nonzero imaginary coefficient and identify the unobserved raw class 3.
