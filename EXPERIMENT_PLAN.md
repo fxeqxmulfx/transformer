@@ -7369,3 +7369,16 @@ Four native controls pass, including a real interrupted stream retaining its
 completed fit, later simpler syntax, negative-cache retests and fatal-error
 classification. Freeze and independently repeat the training-only1370-record
 probe next. This changes no frozen347/349 producer and adds no accuracy credit.
+
+### 2026-11-15: task347 complete independent verification
+
+Both frozen13-case runs complete, and the verifier independently rehashes all218
+artifacts with exact agreement. Verification SHA256 is
+`4f40b9f20d216f5d1564ff76683733adfd5e3c08d681b0f44b116c82b95ff002`.
+The first11 cases remain100% raw/exact on every heldout split and all six
+endpoints. Depth3 Coordinates Full reaches98.9415% worst-split raw and92.1875%
+exact; Forward/Mini retain independent-product winner refusals. Categorical
+controls cross raw99 but fail exact99. The random case retains its training-fit
+refusal. Catalog coverage remains77/165 with no new case or regression.
+Original/repeat wall times are1:04:13 and1:04:37; peak RSS stays below4GiB.
+Task349 can now bind this actual verification before its own producer freeze.
