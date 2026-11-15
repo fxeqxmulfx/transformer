@@ -7388,3 +7388,24 @@ are rerun before committing and freezing this complete producer. The subsequent
 13-case/6-endpoint original and independently rebuilt repeat must preserve all
 original training hashes and report raw99 separately from exact99. No corrected
 accuracy result is assumed from the successful input-only numerical diagnosis.
+
+### 2026-11-15: task351 bounded joint latent confidence, Lean first
+
+CM64 extends CM53's fixed total mass to an explicit interval while preserving
+joint decoder coefficients. Its33 proved theorems establish exact elimination
+of inconsistent fixed candidates, bounded-domain feasibility, complete complex
+column bounds, convex ordinary full/minibatch CE, and accepted-query transfer.
+The observed CE is a decreasing function of learned total mass. A nonconstant
+many-to-one witness strictly improves CE at larger confidence while retaining
+two opposite feasible answers at a genuinely unseen state. Structural
+realizability and observed coverage remain separate from flat-spectrum bounds.
+
+The full13968-job Lean build and all33 standard-axiom checks pass. Global audit
+remains36 sorry,0 rests,0 extra axioms; the native generated INDEX reports4871
+modules,25552 theorems,0 vacuous and0 placeholder, and passes its check. Every
+new hypothesis has a concrete example; forbidden and whitespace scans pass.
+The next native extension must fix its input-only candidate family before
+labels and preserve every compatible candidate or prove exact elimination.
+Task348 supplies48 original datasets:22 old controls and26 additional cases,
+including23 nonconstant cases and3 constant power-zero controls. Six cases
+retain unavailable-source refusals. No new model score or catalog pass yet.

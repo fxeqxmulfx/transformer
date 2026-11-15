@@ -19381,3 +19381,104 @@ theorems, with direct audit `scripts/ExactScoringAxioms.lean`. The conditional
 interval theorem has a nonconstant satisfying example. These are exact-real
 results. They do not prove a Rust arithmetic refinement, empirical99% accuracy,
 or that correcting numerical ties repairs the separate program ambiguity.
+
+## CM64. Bounded confidence and exact convex elimination for latent decoders
+
+CM53 learns a possibly many-to-one raw decoder without multiplying learned
+factors. Its shared masses sum to one and its external margin is fixed, so
+ordinary CE on exactly anchored observations is constant. Changing the program
+mixture cannot improve that observed CE or choose unobserved decoder entries.
+Task351 first extends the explicit joint domain to learn confidence. This is a
+generic input-program construction; no arithmetic target formula is assumed.
+
+Fix a finite input-only family `p_j : X -> S`, a declared candidate order, the
+original observed pairs `(x_i,y_i)`, and a unitary source code `U` on `S`.
+The learned coordinates are shared masses `w[j]` and the joint raw tensor
+`gamma[j,s,c]`, with the following explicit constraints:
+
+```
+w >= 0,       delta <= sum_j w[j] <= R,
+gamma >= 0,   sum_c gamma[j,s,c] = w[j] for every j,s,
+w[j] = 0 for programs outside the declared order,
+gamma[j,p_j(x_i),c] = w[j] * 1[c=y_i] for every original sample and raw class.
+```
+
+This domain is convex in all of its actual learned coordinates. The decoder
+tensor is not parameterized by a product of an independently learned routing
+weight and decoder. Every entry lies between zero and its program's mass,
+including states absent from training. Zero program mass forces its entire
+block to zero. If two observed labels conflict at one latent state, that
+program's mass must therefore vanish. Removing exactly these inconsistent
+fixed candidates preserves the entire feasible set, in both directions.
+This is exact elimination of constrained zero blocks. It does not justify
+discarding a compatible candidate, truncating the family, or treating adaptive
+grammar discovery as convex. The input-only family must be fixed beforehand.
+
+For `0 < delta <= R`, the bounded domain is nonempty exactly when CM53's observed
+filter is nonempty. A retained program and its training-learned dictionary
+give a feasible vertex at mass `delta`; an explicit default completes only
+the unobserved states. More generally, scaling any proved CM53 feasible tensor
+by an admitted nonnegative confidence gives one feasible joint point. This is
+a construction within the explicit convex domain, not a factored restriction
+of its learned coordinates.
+
+Reuse CM53's actual complete complex head at external margin one:
+`H_j = U* gamma_j`. Expanding every real and imaginary coefficient gives
+
+```
+z_q(x,c) = sum_j gamma[j,p_j(x),c],
+rho(q) = sum_j w[j],
+complete per-class coefficient budget <= 2 * R * card(S).
+```
+
+The bound follows from the unitary source entry/table bounds and the shared
+mass cap. It is independent of the number of programs, but the complete head
+still has `2 * card(J) * card(S) * card(C)` real coordinates. Search, storage and
+product costs must be accounted for separately. Repeated input states do not
+make the empirical feature matrix flat. The spectral source supplies a capacity
+bound, not an identifying target representation.
+
+All actual logits are linear in the joint variables. Ordinary full-vocabulary
+log-sum-exp CE is convex, as is its average over any finite set of original
+record IDs. Repeated values retain distinct IDs, and a short final minibatch
+uses its actual cardinality. On an observed record the complete logit vector
+is `rho(q)` at its raw label and zero at every other class, so its actual CE is
+
+```
+log(1 + (card(C) - 1) * exp(-rho(q))).
+```
+
+Every nonempty batch of those observed records has the same function of total
+mass. Increasing feasible total mass cannot increase this CE. Thus confidence
+can be learned, but this objective still cannot select unknown decoder entries
+or distinguish compatible target completions. No optimizer convergence claim
+is added here. Native forward-only, full-batch and minibatch trajectories must
+be recorded as executed, including zero updates or budget refusals.
+
+At a query, CM53's executable acceptance test requires nonempty retained
+support, an observed latent state in every retained program, and unanimous raw
+labels. The observed anchor equations and annihilation of zero blocks then
+force the same complete raw logit vector for every bounded feasible tensor.
+A positive lower total mass makes that accepted class a strict winner. To
+identify it with the true target still requires the separately stated prior
+that the unknown target is some enumerated input program composed with an
+unknown deterministic decoder, and that observations are correct. Neither the
+target program nor decoder is a learner input. Uncovered states remain outside
+this conclusion, irrespective of confidence or flatness.
+
+The nonconstant witness reuses CM53's four-state coordinate programs and its
+training-learned two-class many-to-one dictionary. The new input `(3,2)` is
+identified through a covered state. Both confidence two and confidence four
+are feasible inside `[1,8]`, and the latter strictly lowers actual observed CE.
+At the unobserved state three, two feasible heads still give opposite strict
+raw margins while agreeing on every observed complete logit. The actual source
+and head have nonzero imaginary coordinates. Repeated-record and singleton-tail
+examples instantiate the batch theorem.
+
+Formalization: `ConvexDepth/BoundedLatent`, with direct audit
+`scripts/BoundedLatentAxioms.lean`. These are exact-real theorems. They do not
+assert a Rust floating-point refinement, discover an unrestricted program
+family, or establish any additional stress-test accuracy. A native extension
+must freeze its generic input-only family before labels, preserve every
+compatible candidate or justify exact parameter elimination, and keep raw
+scores separate from coverage certificates and structural realizability.

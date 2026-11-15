@@ -31,6 +31,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SelectedAnchors
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent
 
 /-!
 # Nonlinear residual depth with convex joint path training

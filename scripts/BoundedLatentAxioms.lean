@@ -1,0 +1,35 @@
+import Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent
+
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.witnessPoint_mem
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.witness_mass
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.witness_covered
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.witness_ce_improves
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.witness_same_observations
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.witness_unseen_opposite
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.witness_imaginary_coordinates
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.accepted_row
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.forced_logits
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.observed_logits
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.accepted_logits
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.accepted_strict
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.target_logits
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.cone_convex
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.mass_combination
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.domain_convex
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.coefficient_le_mass
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.coefficient_zero
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.nonzero_retained
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.retained_domain_eq
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.cone_smul
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.mass_smul
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.scaled_mem
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.retained_vertex_mem
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.nonempty_retained
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.nonempty_iff
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.examplePoint_mem
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.observed_ce
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.observed_ce_antitone
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.observed_batch_ce
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.head_budget
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.ce_convex
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.batchLoss_convex
