@@ -7256,7 +7256,7 @@ regressions explicitly. Twelve native checks pass, including six-endpoint CE
 reconstruction, true minibatch tails and integer95/99 thresholds. The largest
 composed buffer forecast is47561448432 bytes under56GiB, with the64GiB process
 cap unchanged. A schema-specific JSON bound admits the complete independent
-pair at about96.7GiB disk without removing raw evidence. The first committed
+pair at about97.4GiB disk without removing raw evidence. The first committed
 training-only streaming probe is still running; no new heldout credit is taken.
 
 The ee289380 training-only probe now recovers12 complete observed fits for
@@ -7269,3 +7269,13 @@ The committed snapshot and full JSON/log/resource evidence persist on storage.
 Runtime16:59.56, peak1596700KiB (1.52GiB), no swaps. Heldout generalization and
 the six CE endpoints are not yet measured; frozen full-cohort verification is
 next, with cumulative accuracy credit still77/165.
+
+The full producer1371ae4f is frozen with5408 source paths. A fresh target build
+reproduces executable009df4e6616fe08a516eeac5fc45e9d76122208e7b73f0127b9740b062e89927
+and passes all12 native checks. Repeated Lean/global/index audits remain green
+with the existing36 sorry. The original13-case run is active. A separate audit
+crate now rederives raw decisions, independent complex products, ordinary CE,
+original transitions and complete EOS/limit trajectories from immutable output.
+Its two tests reject rehashed CE tampering and altered counts and preserve
+actual early-EOS, extra-output and categorical unseen-label failures. It does
+not alter the frozen producer; the heldout comparison remains pending.

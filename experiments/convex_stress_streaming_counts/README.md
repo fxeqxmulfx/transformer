@@ -93,7 +93,7 @@ does not add another success. The transformer reference is retained unchanged.
 
 The 13-case forecast admits at most 263010390589440 scalar work units and
 47561448432 buffer bytes per composed case. The complete pair needs about
-96.7GiB of disk including two full raw replays, state allowances and retained
+97.4GiB of disk including two full raw replays, state allowances and retained
 histories. `disk.rs` bounds the unchanged JSON schema using the pinned float
 formatter's 24-byte buffer, actual escaped split names, all vocabulary logits,
 program residuals, original prefixes and result arrays. Serialization tests and
@@ -121,3 +121,15 @@ Rebuild the same producer with a fresh `CARGO_TARGET_DIR`, require identical
 binary hashes, then call `run.sh REBUILT_BINARY FRESH_REPEAT repeat ORIGINAL`.
 Run `REBUILT_BINARY verify ORIGINAL REPEAT FRESH_VERIFIED_JSON` with the verified
 output outside both run directories. Reports are provisional until that passes.
+
+The frozen producer is `1371ae4f7bdd9555ca7c98ec1ccf6492cf89cd0c`, with executable
+SHA256 `009df4e6616fe08a516eeac5fc45e9d76122208e7b73f0127b9740b062e89927`.
+A fresh offline target build passes all 12 tests and clippy and reproduces that
+binary byte for byte. The full Lean review repeats the 13958-job build, all 17
+CM62 axiom checks, and the global 36 sorry / 0 rests / 0 extra-axiom audit.
+The first full comparison is running; no new heldout credit is claimed.
+
+The separate [read-only audit](audit/README.md) independently recounts the raw
+files and their original source rows. Its two fixture tests additionally reject
+altered CE/counts, check EOS/limit failures and preserve categorical unseen-label
+failures. It cannot change the frozen producer or its outputs.
