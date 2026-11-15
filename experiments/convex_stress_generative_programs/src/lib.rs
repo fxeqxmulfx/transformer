@@ -19,6 +19,7 @@ pub mod head;
 pub mod latent;
 #[path = "../../convex_stress_nested_programs/src/model.rs"]
 pub mod model;
+pub mod previous;
 pub mod program;
 pub mod runner;
 #[cfg(test)]

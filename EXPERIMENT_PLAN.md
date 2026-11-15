@@ -6576,3 +6576,16 @@ Unknown states retain explicit diagnostics even with a declared identity-copy
 numerical completion. Nine synthetic checks pass. Freeze and seal all12 states
 before any original scoring; retain36 outcomes and exact326 control states.
 Original35 raw99 remains34/35, and no new catalog pass is claimed yet.
+
+Task328's first frozen run at `3eedd618` completes all36 native stage/score/
+replay jobs: six preserved controls plus four new copy/sort tasks reach100%
+raw/exact on all11 splits in full/mini/forward modes. Two reverse tasks retain
+four compatible programs and refuse scoring at the128B cap; totals remain
+10/12 with two refusals. The running driver was edited prematurely and exits2
+at summary; a separate frozen-binary summary exits0. Both outcomes are retained.
+Report SHA256637fe5c225dda9bbbd9c0cce9b9b303be252976ddfe2060dcff3a72173e2d0d4.
+The reverse dimension-only forecasts are130.65B/131.84B. Before measuring their
+predictions, raise the scoring cap to160B, freeze the revision and require all12
+state hashes and all previously measured endpoints to match exactly. Preserve
+the complete initial report, run the immutable driver, then independently repeat
+every case under64GiB. No model or training change and no new original35 result.

@@ -3,8 +3,10 @@
 Can the convex complex model reach 99% raw-token and exact-sequence accuracy
 on the original copy/reverse/sort cases, including longer sequences? This
 extension preserves all six reviewed retrieval/prefix models and adds a fixed
-input-only bank of positional and order-statistic programs. No original model
-result has been measured yet. Synthetic fixtures are implementation checks.
+input-only bank of positional and order-statistic programs. The first attempt
+reaches100% raw and exact accuracy on four new copy/sort tasks, in every mode
+and split. Both reverse tasks hit the scoring-work limit before evaluation.
+The revised protocol changes that limit and preserves the complete first attempt.
 
 | Cases | Status before this experiment | Change |
 | --- | --- | --- |
@@ -69,18 +71,50 @@ old state hash and result, not merely its pass flag.
 
 Before allocation or loops, component bounds limit the new vocabulary to126,
 prefixes to4096, retained programs to128, search/training work to64B scalar
-operations, and each all-split generation audit to128B. The larger bounds charge
+operations, and each all-split generation audit to160B. The larger bounds charge
 the128-state head and repeated generation products; old families retain their
 original bounds. A conservative factor16 accounts for nested construction and
 replay kernels, and factor2 for scoring/replay. These are kernel-work counts;
 hashing, JSON, data construction and all earlier-family work also remain visible
 in whole-process time, RSS and I/O measurements. Every process has a64GiB cap.
 
-Nine native checks cover independent rank interpretation, nonidentity learned
+Eleven native checks cover independent rank interpretation, nonidentity learned
 decoders, longer own-prefix/EOS generation, unknown-state diagnostics, full
 complex gradients, weighted minibatches, real tails, zero forward updates,
-immutable training boundaries and overflow-safe nested work accounting.
-They use synthetic fixtures, not the six original model evaluations.
+immutable training boundaries, overflow-safe nested work accounting and exact
+preservation of previously measured endpoints. Synthetic model fixtures remain
+separate from original evaluations. A dimension-only original-data fixture
+checks the scoring forecast and proves by mutation that label values cannot
+change it; it constructs and evaluates no model.
+
+The first frozen producer is `3eedd6189475c8def530e2b5f216bf036607d3ad`,
+with504 source inputs. Its complete report SHA256 is
+`637fe5c225dda9bbbd9c0cce9b9b303be252976ddfe2060dcff3a72173e2d0d4`.
+All12 stages,12 scores and12 saved-state replays exit0. The resulting totals
+are10/12 original-success/raw99/exact99/all-heldout99 for each mode, with two
+explicit scoring refusals. Six prior controls retain their complete states
+and measurements. New copy repeat/unique and sort repeat/unique have100%
+raw/exact on every split. Effective CE updates are zero; the new passes come
+from the representation and learned decoders. Copy-repeat also correctly
+generates175 targets whose raw classes are absent from training, using the
+declared identity-copy completion; those predictions have no identification
+certificate.
+
+The original shell driver was edited while running and failed at its final
+summary step with exit2, after all36 native jobs completed. Preserve that failure.
+Running the summary with the same frozen executable completes with exit0;
+the failed driver takes9m02.03s/656.9MiB peak RSS, and manual summary58.49s/
+1469.2MiB. Future runs invoke the immutable frozen driver and never edit it.
+
+Both reverse training states retain four compatible programs; the other new
+tasks retain two. Their unchanged dimension-only scoring forecasts are
+130,654,755,328 and131,838,238,208 operations, above the original128B cap.
+The other four forecasts lie between66.06B and66.52B. Before any reverse
+predictions are measured, v2 raises only this cap to160B. It seals forecasts
+before scoring, checks all12 state hashes against v1, and requires every
+previously evaluated endpoint to match completely. The full v1 report is a
+hash-bound input and its cases, refusals and summary remain in the new report.
+The v2 evaluation and independent repeat are pending; no reverse pass is claimed.
 
 ```sh
 export CARGO_TARGET_DIR=/run/media/misha/storage/transformer-runs/build/generative-programs
@@ -93,14 +127,15 @@ prlimit --as=68719476736:68719476736 -- cargo build --release --offline --locked
 prlimit --as=68719476736:68719476736 -- lake build
 prlimit --as=68719476736:68719476736 -- lake env lean -j 2 scripts/LatentGenerationAxioms.lean
 experiments/convex_stress_generative_programs/freeze.sh FRESH_FREEZE "$CARGO_TARGET_DIR/release/convex-stress-generative-programs"
-experiments/convex_stress_generative_programs/run.sh FRESH_FREEZE/convex-stress-generative-programs ORIGINAL_ROOT original PRODUCER_COMMIT REVIEWED327_INVENTORY
-experiments/convex_stress_generative_programs/run.sh FRESH_FREEZE/convex-stress-generative-programs REPEAT_ROOT repeat ORIGINAL_ROOT
+FRESH_FREEZE/source/experiments/convex_stress_generative_programs/run.sh FRESH_FREEZE/convex-stress-generative-programs ORIGINAL_ROOT original PRODUCER_COMMIT REVIEWED327_INVENTORY V1_REPORT
+FRESH_FREEZE/source/experiments/convex_stress_generative_programs/run.sh FRESH_FREEZE/convex-stress-generative-programs REPEAT_ROOT repeat ORIGINAL_ROOT
 ```
 
 Also run the direct global axiom audit, native INDEX check and forbidden-source
 checks before committing. `prepare-run` requires the clean producer checkout.
-A repeat reuses only the validated frozen inventory/baseline, regenerates all
-dataset identities and reconstructs every state. It copies no model or score.
+A repeat reuses only the validated frozen inventory and baseline inputs,
+including the complete v1 reference, regenerates all dataset identities and
+reconstructs every current state. It copies no current model or score.
 The driver attempts all12 stages, then all12 scores and replays, retaining every
 exit and resource log. Compare every JSON artifact byte-for-byte after a fresh
 repeat. Generated states, reports and logs stay on storage; commit only source,

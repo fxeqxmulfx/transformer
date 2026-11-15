@@ -9,8 +9,8 @@ source=$4
 test ! -e "$root"
 export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1
 if [[ "$mode" == original ]]; then
-    test "$#" -eq 5
-    prlimit --as=68719476736:68719476736 -- "$binary" prepare-run "$root" "$source" "$5"
+    test "$#" -eq 6
+    prlimit --as=68719476736:68719476736 -- "$binary" prepare-run "$root" "$source" "$5" "$6"
 elif [[ "$mode" == repeat ]]; then
     test "$#" -eq 4
     prlimit --as=68719476736:68719476736 -- "$binary" repeat-run "$source" "$root"

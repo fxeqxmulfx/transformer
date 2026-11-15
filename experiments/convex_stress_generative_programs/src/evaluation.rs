@@ -88,25 +88,42 @@ fn inspect(
     ))
 }
 
-pub fn evaluate(
-    model: &Model,
-    input: &Input,
+pub const SCORING_WORK_LIMIT: u64 = 160_000_000_000;
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Forecast {
+    pub scalar_work_forecast: u64,
+    pub maximum_prediction_calls: u64,
+}
+
+/// Dimensions and original prompt/answer lengths only. No label values,
+/// logits, target oracle or parameter fitting enters this admission check.
+pub fn forecast(
+    programs: usize,
+    vocabulary: usize,
     splits: &BTreeMap<String, Vec<data::Example>>,
-) -> Result<Value> {
-    model.validate()?;
-    model.encode(input)?;
-    let observed: BTreeSet<_> = input.observations.iter().map(|o| o.label).collect();
-    let (k, s, c) = (
-        model.programs.len() as u64,
-        STATES as u64,
-        model.head.vocabulary as u64,
-    );
+) -> Result<Forecast> {
+    if !(1..=128).contains(&programs)
+        || !(2..=126).contains(&vocabulary)
+        || splits.is_empty()
+        || splits.len() > 64
+    {
+        return Err("invalid generation forecast dimensions".into());
+    }
+    let (k, s, c) = (programs as u64, STATES as u64, vocabulary as u64);
     let mut calls = 0u64;
-    let mut program_work = 0u64;
+    let mut program_work = 0u128;
     for rows in splits.values() {
-        dataset::input(model.head.vocabulary, rows)?;
+        if rows.is_empty() || rows.len() > 20_000 {
+            return Err("invalid generation forecast rows".into());
+        }
         for e in rows {
-            if e.prompt.is_empty() || e.prompt.len() + e.limit > 4096 || e.limit == 0 {
+            if e.prompt.is_empty()
+                || e.prompt.len() + e.limit > 4096
+                || e.limit == 0
+                || e.answer.is_empty()
+                || e.answer.len() > e.limit
+            {
                 return Err("generative scoring layout or horizon refused".into());
             }
             let horizon = (e.prompt.len() + e.limit) as u64;
@@ -115,12 +132,37 @@ pub fn evaluate(
             // saving is assumed before scoring or candidate selection.
             let count = 2 * (e.answer.len() + e.limit) as u64;
             calls += count;
-            program_work += count * k * (64 * horizon + 16 * horizon * horizon);
+            program_work += u128::from(count)
+                * u128::from(k)
+                * u128::from(64 * horizon + 16 * horizon * horizon);
         }
     }
-    let work = 16 * k * s * s * c + calls * (24 * k * s * c + 128 * c) + program_work;
-    if work > 128_000_000_000 {
-        return Err("all-split generation exceeds128B scalar-work forecast".into());
+    let work = u128::from(16 * k * s * s * c)
+        + u128::from(calls) * u128::from(24 * k * s * c + 128 * c)
+        + program_work;
+    Ok(Forecast {
+        scalar_work_forecast: work.try_into()?,
+        maximum_prediction_calls: calls,
+    })
+}
+
+pub fn evaluate(
+    model: &Model,
+    input: &Input,
+    splits: &BTreeMap<String, Vec<data::Example>>,
+) -> Result<Value> {
+    model.validate()?;
+    model.encode(input)?;
+    for rows in splits.values() {
+        dataset::input(model.head.vocabulary, rows)?;
+    }
+    let observed: BTreeSet<_> = input.observations.iter().map(|o| o.label).collect();
+    let f = forecast(model.programs.len(), model.head.vocabulary, splits)?;
+    let (work, calls) = (f.scalar_work_forecast, f.maximum_prediction_calls);
+    if work > SCORING_WORK_LIMIT {
+        return Err(
+            format!("all-split generation forecast {work} exceeds {SCORING_WORK_LIMIT}").into(),
+        );
     }
     let table = model.head.independent_table();
     let mut out = BTreeMap::new();

@@ -242,3 +242,37 @@ fn training_boundary_excludes_dataset_names_and_heldout_content() -> Result<()> 
     assert_eq!(original.error, changed.error);
     Ok(())
 }
+
+#[test]
+fn original_input_shapes_charge_four_programs_without_reading_label_values() -> Result<()> {
+    for (case, programs) in generative::CASES.into_iter().zip([2, 2, 4, 4, 2, 2]) {
+        // Counts come from sealed training-only discovery in the first run.
+        // This is an input-shape inspection, not a new model evaluation.
+        let mut d = generative::dataset::build(case)?;
+        let before = evaluation::forecast(programs, d.task.vocab, &d.task.splits)?;
+        if programs == 4 {
+            assert!(before.scalar_work_forecast > 128_000_000_000);
+        } else {
+            assert!(before.scalar_work_forecast < 128_000_000_000);
+        }
+        assert!(before.scalar_work_forecast < evaluation::SCORING_WORK_LIMIT);
+        for rows in d.task.splits.values_mut() {
+            for e in rows {
+                e.answer.fill(111);
+                e.targets.fill(112);
+                e.tokens.fill(113);
+                e.prompt.fill(114);
+            }
+        }
+        assert_eq!(
+            before,
+            evaluation::forecast(programs, d.task.vocab, &d.task.splits)?
+        );
+        eprintln!(
+            "{case}: {} scalar operations, {} calls",
+            before.scalar_work_forecast, before.maximum_prediction_calls
+        );
+    }
+    assert!(evaluation::forecast(129, 100, &Default::default()).is_err());
+    Ok(())
+}

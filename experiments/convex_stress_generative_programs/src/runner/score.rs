@@ -69,6 +69,12 @@ fn result(
 ) -> Result<Value> {
     let prior = baseline_case(root, case)?;
     let measured = measurements(stage, data)?;
+    let previous = crate::previous::case(root, case)?;
+    crate::previous::check_case(
+        &previous,
+        &measured,
+        seal["state_sha256"].as_str().ok_or("missing state hash")?,
+    )?;
     let control = if crate::generative::CASES.contains(&case) {
         Value::Null
     } else {
@@ -93,7 +99,7 @@ fn result(
     Ok(
         json!({"training_seal":seal,"resource_accounting":crate::costs::report(stage,&measured)?,
         "results":measured,"control_preservation":control,
-        "prior_baseline":prior}),
+        "prior_baseline":prior,"previous_attempt":previous}),
     )
 }
 pub fn score(root: &Path, case: &str) -> Result<()> {
@@ -137,6 +143,7 @@ pub fn summary(root: &Path) -> Result<Value> {
         let replay: Value = read(&dir.join("replay.json"))?;
         if metrics["training_seal"] != seal
             || metrics["prior_baseline"] != baseline_case(root, &case)?
+            || metrics["previous_attempt"] != crate::previous::case(root, &case)?
             || replay
                 != json!({"case":case,"exact_replay":true,"state_sha256":seal["state_sha256"],
                 "metrics_sha256":digest(&dir.join("metrics.json"))?})
@@ -162,8 +169,14 @@ pub fn summary(root: &Path) -> Result<Value> {
             "test_both99":endpoints.iter().filter(|r| r["test"]["both99"] == true).count(),
             "all_heldout99":endpoints.iter().filter(|r| r["all_heldout99"] == true).count()}));
     }
+    let mut previous = crate::previous::read(root)?;
+    previous
+        .as_object_mut()
+        .ok_or("invalid earlier report")?
+        .remove("cases");
     Ok(
         json!({"inventory":inventory,"cases":rows,"totals":totals,"complete":true,
+        "previous_attempt_summary":previous,"previous_attempt_cases_retained":12,
         "cohort_cases":12,"new_cases":6,"repeated_control_cases":6,
         "remaining_additional_cases":118,"new_original35_evaluations":0,
         "entire165_evaluated":false,"target_realizability_certified":false}),

@@ -33,7 +33,7 @@ fn inputs() -> Result<Vec<Value>> {
         .map(|c| dataset::build(c).map(|d| dataset::metadata(&d)))
         .collect()
 }
-pub fn prepare(root: &Path, producer: &str, baseline: &Path) -> Result<()> {
+pub fn prepare(root: &Path, producer: &str, baseline: &Path, previous: &Path) -> Result<()> {
     if root.exists() || !valid_commit(producer) {
         return Err("fresh root and full commit required".into());
     }
@@ -52,10 +52,14 @@ pub fn prepare(root: &Path, producer: &str, baseline: &Path) -> Result<()> {
     if digest(baseline)? != p["baseline_report_sha256"] {
         return Err("frozen task327 data inventory and baselines differ".into());
     }
+    if digest(previous)? != p["previous_attempt_sha256"] {
+        return Err("complete earlier attempt differs from frozen reference".into());
+    }
+    crate::previous::check_report(&read::<Value>(previous)?)?;
     let inv = json!({"producer_commit":producer,"binary_sha256":binary()?,
         "protocol_sha256":hash(PROTOCOL.as_bytes()),"protocol":p,
         "catalog_sha256":hash(sequences::CATALOG.as_bytes()),"inputs":inputs()?,"cases":cases()?,
-        "baseline_sha256":digest(baseline)?});
+        "baseline_sha256":digest(baseline)?,"previous_attempt_sha256":digest(previous)?});
     let bytes = fs::read(baseline)?;
     fs::create_dir(root)?;
     let mut file = fs::OpenOptions::new()
@@ -65,6 +69,7 @@ pub fn prepare(root: &Path, producer: &str, baseline: &Path) -> Result<()> {
     use std::io::Write;
     file.write_all(&bytes)?;
     file.sync_all()?;
+    fs::copy(previous, root.join("previous-attempt.json"))?;
     write(&root.join("inventory.json"), &inv)
 }
 fn inventory(root: &Path) -> Result<Value> {
@@ -78,6 +83,8 @@ fn inventory(root: &Path) -> Result<Value> {
         || inv["cases"] != json!(cases()?)
         || inv["baseline_sha256"] != protocol()?["baseline_report_sha256"]
         || inv["baseline_sha256"] != digest(&root.join("baseline.json"))?
+        || inv["previous_attempt_sha256"] != protocol()?["previous_attempt_sha256"]
+        || inv["previous_attempt_sha256"] != digest(&root.join("previous-attempt.json"))?
     {
         return Err("source, binary, protocol, baseline or data inventory changed".into());
     }
@@ -92,7 +99,7 @@ pub fn repeat(source: &Path, root: &Path) -> Result<()> {
     }
     inventory(source)?;
     fs::create_dir(root)?;
-    for name in ["inventory.json", "baseline.json"] {
+    for name in ["inventory.json", "baseline.json", "previous-attempt.json"] {
         fs::copy(source.join(name), root.join(name))?;
     }
     inventory(root)?;
@@ -134,7 +141,20 @@ pub fn stage(root: &Path, case: &str) -> Result<()> {
         &dir.join("seal.json"),
         &json!({"state_sha256":digest(&dir.join("state.json"))?,
         "inventory_sha256":digest(&root.join("inventory.json"))?,"heldout_scoring_completed":false}),
-    )
+    )?;
+    write(&dir.join("forecast.json"), &forecasts(&stage, &data)?)
+}
+fn forecasts(stage: &Stage, data: &dataset::Dataset) -> Result<Value> {
+    let Some(report) = stage.model.as_ref().and_then(|r| r.latent.as_ref()) else {
+        return Ok(Value::Null);
+    };
+    report.endpoints.iter().map(|e| {
+        if let Some(training)=&e.training {
+            let f=crate::evaluation::forecast(training.model.programs.len(),training.model.head.vocabulary,&data.task.splits)?;
+            Ok(json!({"mode":e.policy.mode,"admitted":f.scalar_work_forecast<=crate::evaluation::SCORING_WORK_LIMIT,
+                "limit":crate::evaluation::SCORING_WORK_LIMIT,"forecast":f}))
+        } else {Ok(json!({"mode":e.policy.mode,"training_error":e.error}))}
+    }).collect::<Result<Vec<_>>>().map(|v|json!(v))
 }
 fn load(root: &Path, case: &str) -> Result<(dataset::Dataset, Stage, Value)> {
     inventory(root)?;
@@ -154,6 +174,9 @@ fn load(root: &Path, case: &str) -> Result<(dataset::Dataset, Stage, Value)> {
         || stage.model.as_ref().is_some_and(|m| m.input != stage.input)
     {
         return Err("sealed training input or data differs".into());
+    }
+    if read::<Value>(&dir.join("forecast.json"))? != forecasts(&stage, &data)? {
+        return Err("sealed generation dimension forecast differs".into());
     }
     Ok((data, stage, seal))
 }
