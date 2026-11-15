@@ -78,3 +78,24 @@ build into a fresh target directory, require an identical binary, then invoke
 retained JSON files. `check-history HISTORY FRESH_JSON` separately reconstructs
 the full pools and reconciles available original denominators. All commands
 must use `prlimit --as=68719476736:68719476736 --`.
+
+Producer `67863307ff75bdecc54b8c7bcbe865360bcf39eb` now prepares all eight
+cases and45 splits, containing5806712 supervised training positions in total.
+The six language pools contain939244–945936 training targets each; hard recall
+has160000. Noisy parity flips103/512 eligible labels (20.1171875%), while its
+EOS targets remain unchanged. The historical hard-recall denominator agrees.
+
+Original and independently rebuilt runs reproduce all four JSON artifacts
+exactly, including the complete344 and original35 reports. Inventory SHA256 is
+`8c02d2dcfdd2743145c3e1f8d63e5a517c8c29ac13b97426ee7c220383e37fce`;
+the four-file manifest hash is
+`aa3276ad92c335b6df59cf4c0f0d72a3b7c9e6ce15572421f1a37e8cf30f1dcb`.
+The frozen5326-path source closure and independently rebuilt executable match;
+binary SHA256 is
+`a8948e86478d28e10cec25dd7fd916bfaa50df131340e58aac42092a2880e86b`.
+The two runs take27.59/26.67 seconds and peak below0.89GiB RSS. Both fresh
+native suites pass all seven checks and clippy with warnings denied.
+
+Local evidence is under `/run/media/misha/storage/transformer-runs/basis-data/`
+and `freezes/remaining-basis-data-v1/` in the same storage root. These are data
+results only: zero model evaluations and zero new accuracy claims.

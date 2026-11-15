@@ -7110,3 +7110,12 @@ comparison will remain exact separate artifacts. This is data preparation,
 not added accuracy. Task346 must first justify bounded processing of all
 observations in Lean and handle noisy-label constraints explicitly. Task347
 retains the unresolved depth3 search beyond truncated latent banks.
+
+Task345 producer67863307 now independently reproduces all eight data cases
+and45 splits. All5806712 original training targets remain; noisy parity flips
+103/512 content labels and no EOS targets. Four artifacts, including complete344,
+original35 and the full source history, match exactly. Inventory hash8c02d2dc
+and manifestaa3276ad bind the evidence; both seven-check native suites pass.
+Preparation/repeat take27.59/26.67s and peak below0.89GiB. No model is evaluated,
+so this adds no accuracy credit. Task346 can develop exact weighted or streamed
+CE handling from these complete pools while344 finishes its model review.
