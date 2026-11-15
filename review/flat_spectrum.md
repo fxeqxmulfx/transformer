@@ -19320,3 +19320,64 @@ requires checked child costs; it is not a formal Rust heap bound. Native
 indexing still needs padded-bit checks, exhaustive small-bank comparisons in
 both orientations, cache/size counterexamples, explicit work/storage admission,
 independent input interpreters, and a newly frozen complete heldout repeat.
+
+## CM63. Exact complete products and genuine unobserved ties
+
+The frozen347 producer recovers twelve depth3 programs fitting all original
+observations. Its first heldout evaluation exposes two separate problems:
+the two numerical complete-product paths fail their residual/winner check,
+and even successfully measured heads miss some longer sequences. A numerical
+repair must preserve the actual saved coefficient tensor and must not infer
+the correct target from agreement between approximate computations. The347
+producer and its refused or unsuccessful outcomes remain immutable; its full
+independent repeat is still required.
+
+For a fixed signed input row w, source features S and arbitrary complete head
+W, define N_c = sum_k W_kc * sum_i w_i S_ki. Finite distributivity gives
+N_c = sum_i w_i * headLogits(S,W,i,c). The existing signed-context construction
+therefore has actual logits N_c / max(1,sum_i |w_i|). The denominator is common
+to all raw classes and strictly positive. Both strict ordering and exact
+equality of raw logits are precisely those of the unnormalized numerators.
+This holds for every actual stored coefficient, without assuming it equals
+an ideal compact decoder expansion after floating-point construction.
+
+The independent complex contraction is also explicit. For rectangular complex
+source U and complex coefficient tensor H, real features are Re(U) and -Im(U),
+and real coefficients are Re(H) and Im(H). The complete numerator equals
+Re(sum_k (sum_i w_i U_ik) H_kc). Both coordinates and every source/coefficient
+entry participate. A signed four-point Fourier example has nonzero imaginary
+coefficients and distinct complete numerators four and eight.
+
+Subtracting one class's exact numerator before the common division is exactly
+a common shift of the original logits. The underlying coefficient model and
+ordinary full-vocabulary CE are unchanged. The reference class can be chosen
+from the computed scores; the identity holds for every choice and does not
+need a target label. This is a numerical representation of the same objective,
+not a new affine parameterization or an unproved floating-point identity.
+
+Valid lower and upper bounds on the exact numerators certify a unique winner
+only when its lower bound exceeds every competing upper bound. The theorem
+requires the bounds to contain the actual products. Two matching rounded
+argmaxes, or an arbitrary tie tolerance, do not supply that premise. The two
+vectors [epsilon,0] and [0,epsilon] have residual at most epsilon yet opposite
+strict winners for every positive epsilon. A native implementation must
+separately establish conservative bounds or evaluate
+ambiguous products exactly, account for all coefficients and work, preserve
+strict ordering through conversion, and retain any unresolved failure.
+
+Correct arithmetic still does not identify arbitrary unseen labels. A concrete
+CM57 witness has two active programs with different quantity scales, different
+decoder slopes, mass one each, the copy constraint, sufficient weighted charge
+18, local budgets16 and global radius32. Both fit two observed raw labels zero
+and one. On a third input their decoded centers are zero and one, so the two
+actual complete logits tie exactly; the common normalizer is six. Each program
+realizes a different binary target on every input. These target completions
+agree on all observations and disagree at the third input. The complete tensor
+satisfies the original budget. Flat bounded codes and more accurate products
+cannot choose the true completion without an additional identifying premise.
+
+Formalization: `ConvexDepth/ExactScoring/{Basic,Witness}.lean`, eighteen
+theorems, with direct audit `scripts/ExactScoringAxioms.lean`. The conditional
+interval theorem has a nonconstant satisfying example. These are exact-real
+results. They do not prove a Rust arithmetic refinement, empirical99% accuracy,
+or that correcting numerical ties repairs the separate program ambiguity.

@@ -7300,3 +7300,17 @@ oracles retain explicit refusals. The old22 controls match independently, and
 Original/repeat take4.43/5.03 seconds; peak memory stays below11MiB. The manifest
 is30be56ecda6b77edaea1958f91e5e15197c348be551d9b673633a2e55d5492bc.
 These are data results only; the77/165 verified model count is unchanged.
+
+Task349 starts Lean first for the numerical consistency failures exposed by
+the immutable347 original scores. CM63's18 theorems give exact complete
+real/complex contractions before common positive normalization, preservation
+of raw ordering/ties and common-shift ordinary CE, plus an interval winner
+certificate with actual enclosure premises. A feasible two-program witness
+fits nonconstant observations but has an exact unseen tie and two different
+realizable target completions. Arbitrarily small residuals permit opposite
+strict winners. This distinguishes numerical precision from
+program identification. The13961-job full build and all18 direct standard-axiom
+checks pass. Global audit remains36 sorry,0 rests and0 extra axioms. Generated
+INDEX has4864 modules25519 theorems,0 vacuous and0 placeholder; the native
+forbidden scan is empty. A separate native correction follows this proof.
+No347 producer is changed.

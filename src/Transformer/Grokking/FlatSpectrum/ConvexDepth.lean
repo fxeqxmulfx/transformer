@@ -30,6 +30,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.CoordinatePrograms
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SelectedAnchors
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -143,6 +144,10 @@ as a changed objective; contradictory noisy anchors remain a separate problem.
 CM61 separates selected exact anchors from all observed CE records. Identical
 features with conflicting anchors force zero masses; a concrete selection
 restores a nonempty convex domain while retaining noisy labels in ordinary CE.
+CM63 contracts every saved real/imaginary coefficient before common positive
+normalization. Independent exact products, raw ordering and common-shift CE
+agree; valid numerator enclosures can certify a strict winner. A feasible
+two-program witness retains an exact unseen tie and opposite realizable targets.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/
