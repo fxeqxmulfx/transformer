@@ -1,0 +1,20 @@
+[package]
+name = "convex-stress-basis-programs"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+convex-stress-basis-data = { path = "../convex_stress_basis_data" }
+convex-stress-synthetic-programs = { path = "../convex_stress_synthetic_programs" }
+convex-stress-weighted-observations = { path = "../convex_stress_weighted_observations" }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+
+[profile.test]
+opt-level = 2
+
+[profile.release]
+lto = "thin"

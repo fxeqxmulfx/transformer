@@ -7183,3 +7183,18 @@ the policy; the entire proposal is saved and replayed. This allows observed
 training statistics to initialize a noisy decoder without adding pseudo-clean
 anchors or changing ordinary CE. All ten native checks and clippy pass; the
 original mass-only entry points retain their previous behavior.
+
+The complete eight-case Basis producer now uses observed-label moments and a
+bounded, training-only discrete input grammar before fixing the joint convex
+domain. Every original supervised position remains in ordinary CE. Exact fits
+retain all anchors; noisy fits retain only consistently observed structural
+roles, while all noisy labels still contribute to full and minibatch gradients.
+The categorical control uses the same selected program. Six native tests cover
+original masks/IDs, complete noisy pools, true tails, independent interpreters,
+raw readback, tampered CE and failed own-output/EOS trajectories. Training-only
+probes fit all six endpoints on recall-hard, languageL6 and noisy parity. L6
+already saturates at initialization, so its executed gradients are not evidence
+of meaningful parameter learning. The protocol freezes all eight cases before
+heldout scoring; every case is trained/sealed before the first heldout query.
+Complete independently rebuilt comparison remains pending. Coverage is still
+69/165, with no accuracy credit from development probes or the new implementation.

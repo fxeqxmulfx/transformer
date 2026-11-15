@@ -1,0 +1,18 @@
+{
+  "name":"basis-weighted-programs-v1",
+  "data_producer":"67863307ff75bdecc54b8c7bcbe865360bcf39eb",
+  "data_inventory_sha256":"8c02d2dcfdd2743145c3e1f8d63e5a517c8c29ac13b97426ee7c220383e37fce",
+  "baseline344_sha256":"65bf8c53f330d76f254503cfcdc2b7d1b1de3c018bc44cc74a7e430559ce86fb",
+  "original35_sha256":"c9b3c559069fa1e9a4cd68a5cf3ee93123008bcd54753cf3a2485e2c6ad9cef2",
+  "history_sha256":"f31ed0f58f27cc4cf0603b9759c882611cda31e2db8a9fff622a806307d0acaf",
+  "lean_first":["819d4547","822bb5e8"],
+  "priors":"Fixed bounded input program grammar, BOS1/separator18 syntax for generated quantities, injective ordinal raw-class coordinates and identity copy. No task identity, target generator, selected formula, unknown clean labels or heldout labels enter discovery or model execution.",
+  "selection":"All declared candidates use every observed training position unless rejected by undefined output or an identity-copy contradiction. Prefer an exact observed affine fit; otherwise minimize complete weighted training CE at the declared observed-moment initializer. Deterministic bank-order ties. Retain one program. Selection is outside convex CE.",
+  "initialization":"Observed-label coordinate means, a two-variable affine quantity moment estimate, and separate observed role means; copy coefficient one. No estimate becomes an extra exact anchor. The full joint starting tensor is projected, saved and replayed.",
+  "anchors":"Exact fits retain all original anchors. Otherwise retain only observed structural-role groups whose training labels agree; every noisy observation remains in CE. Removing anchors removes their identification guarantee.",
+  "categorical_control":"Same selected input program; frozen observed atom-to-mean-coordinate dictionary, class0 for absent entries, explicit identity copy. All original noisy labels still enter CE.",
+  "fit":{"exact_mass":131072.0,"relaxed_mass":4096.0,"exact_learning_rate":10000000000.0,"relaxed_learning_rate":1.0,"full_epochs":64,"mini_epochs":8,"batch":1021,"radius":1073741824.0,"minimum_mass":1.0,"projection_cycles":20000,"projection_tolerance":1e-10},
+  "goals":{"original_exact":0.99,"raw_token":0.99,"exact_sequence":0.99},
+  "limits":{"original_records":2000000,"groups":4096,"candidates":1024,"process_address_space_bytes":68719476736,"buffer_bytes":60129542144,"complete_scalar_work":600000000000000},
+  "scoring":"Every original split and mask; generative raw/exact scores use own-output rollout. Train-clean is diagnostic only. Training traces reference complete feature groups and retain every original row/position; heldout queries retain complete individual logits and independent complex-product checks. No novel-only score replaces the original metric."
+}
