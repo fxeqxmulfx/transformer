@@ -3,6 +3,10 @@
 New experiments and diagnostics use Rust/Kernite under the 2026-11-07 user
 override in `AGENTS.md`. The Python commands below describe the historical lab.
 
+| Native follow-up | Status | Question |
+| --- | --- | --- |
+| [`convex_stress_prefix_quotients`](convex_stress_prefix_quotients) | Training-only depth2 fit recovered; deeper search caps retained | Do CM58 observed-prefix quotients and CM59 transition constraints preserve useful count programs beyond the old beam? No new heldout score yet. |
+
 A folder per experiment, and its `README.md` says what the runs ask, how
 they differ, and what their archived runs found. A folder with an
 `experiment.py` is written in the language of the
