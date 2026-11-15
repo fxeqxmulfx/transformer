@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_bounded_latent`](convex_stress_bounded_latent) | Full joint CM64 decoder core | Complete complex heads, bounded shared masses, actual full/minibatch CE and audited joint projections. Eleven native controls preserve unknown-state ambiguity. Candidate discovery and48-case scoring remain pending; no new catalog credit. |
 | [`convex_stress_search_continuation`](convex_stress_search_continuation) | Training-only count search | Original and independent reports exactly match:32 retained fits, but minimum size stays56 nodes at the40T cap. Both interpreters agree on all1370 labels. No heldout scores or catalog credit. |
 | [`convex_stress_certified_compare`](convex_stress_certified_compare) | Same13 cases, six endpoints after CM63 | Complete training states must reproduce347; certified numerical evaluation and raw recounts distinguish raw99 from exact99. The final protocol pins the218-artifact independent347 verification before freezing; no new score yet. |
 | [`convex_stress_certified_head`](convex_stress_certified_head) | CM63 numerical evaluation | Lean first:18 scoring and ambiguity results. Independent full real/complex products resolve five old inconsistent winners in74 input-only queries; all diagnostic outputs independently repeat. No target labels or accuracy measurement;77/165 verified coverage unchanged. |

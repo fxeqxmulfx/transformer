@@ -7433,3 +7433,17 @@ witness satisfies the instantiated domain. All36 CM64 axiom checks and the
 Native INDEX generation/check reports4872 modules and25555 theorems. The Rust
 core will retain the full joint variables and explicitly audit its numerical
 projection; these new results do not claim a floating-point projection theorem.
+
+### 2026-11-15: task351 full joint native decoder component
+
+`convex_stress_bounded_latent` implements every shared mass and every latent/raw
+decoder coefficient, after the36 CM64 Lean results. Actual full/minibatch CE
+gradients are checked against complete complex-head finite differences in
+every coordinate. Projection handles nonuniform unknown rows and global mass
+bounds, with independent numerical feasibility/KKT gates. Forward makes zero
+updates. Original duplicate records and the short minibatch tail retain their
+actual weights. Eleven native controls pass, including exact complete-head
+ambiguity evaluation and two indistinguishable observed heads with opposite
+unseen answers. This supplies no projection refinement or target-realizability
+certificate. The fixed generic candidate family and complete48-case original
+cohort remain pending; verified catalog coverage stays77/165.
