@@ -7517,3 +7517,19 @@ summaries and transformer references survive the authorized cleanup with
 explicit provenance. The original/repeat output forecast is60,494,708,126 bytes
 plus reserves; freeze this tested producer, execute every case and independently
 repeat before accepting any additional accuracy or catalog coverage.
+
+### 2026-11-15: task349 certified comparison independently reproduced
+
+Frozene68747ca and its byte-identical independent executable reproduce all221
+complete artifacts. Verification SHA256 is
+719945303ab0f741d6452dbe0090c508d4e1655cd36eb3d39365c9e754588a9b.
+The depth3 numerical refusals disappear in all six endpoints; each uses57
+exact fallback queries with zero genuine ties. Coordinates worst raw accuracy
+is1963/1984 (98.9415%) in forward/full and983/992 (99.0927%) in mini. Worst exact
+sequence accuracy remains92.1875% and93.75%, respectively. Normal test CE is
+0.04732585/0.00342399/0.00319021. The categorical control reaches raw99 in all
+three modes but not exact99 on every heldout split. Every mode retains12/13
+original primary successes, with RandomLM still a fit refusal. No new catalog
+case or regression is credited: coverage stays77/165. Original/repeat finish
+in1:14:11/1:13:54 under64GiB; peak3.86/1.54GiB. Task351's complete bounded
+comparison is now frozen atca6a4977 and running; its results remain pending.
