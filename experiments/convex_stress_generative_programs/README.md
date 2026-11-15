@@ -3,10 +3,11 @@
 Can the convex complex model reach 99% raw-token and exact-sequence accuracy
 on the original copy/reverse/sort cases, including longer sequences? This
 extension preserves all six reviewed retrieval/prefix models and adds a fixed
-input-only bank of positional and order-statistic programs. The first attempt
-reaches100% raw and exact accuracy on four new copy/sort tasks, in every mode
-and split. Both reverse tasks hit the scoring-work limit before evaluation.
-The revised protocol changes that limit and preserves the complete first attempt.
+input-only bank of positional and order-statistic programs. The corrected run
+reaches100% raw and exact accuracy on all12 cases in every mode and split,
+including all six new copy/reverse/sort cases. Every saved-state replay passes.
+An independent fresh repeat is pending. The complete first attempt, including
+two scoring-work refusals, remains a reference in the report.
 
 | Cases | Status before this experiment | Change |
 | --- | --- | --- |
@@ -114,7 +115,46 @@ predictions are measured, v2 raises only this cap to160B. It seals forecasts
 before scoring, checks all12 state hashes against v1, and requires every
 previously evaluated endpoint to match completely. The full v1 report is a
 hash-bound input and its cases, refusals and summary remain in the new report.
-The v2 evaluation and independent repeat are pending; no reverse pass is claimed.
+The v2 evaluation is complete; its independent repeat is pending.
+
+Producer `b3723b828321ee3d42d3e3a2ef12e624f4d3e7a8` is frozen with505 source
+inputs in `generative-programs-v2`. All12 states are byte-identical to v1.
+Every previously scored endpoint remains completely equal, and all six older
+controls reproduce their326 states/data/metrics. All12 stage,12 score and12
+replay jobs, the summary and the immutable driver exit0. Every mode has12/12
+original-success/raw99/exact99/all-heldout99 and zero refusals.
+
+| New case | Test correct / targets | Exact sequences | Minimum raw/exact across all11 splits |
+| --- | --- | --- | --- |
+| Copy repeat | 772/772 | 64/64 | 100% / 100% |
+| Copy unique | 842/842 | 64/64 | 100% / 100% |
+| Reverse repeat | 842/842 | 64/64 | 100% / 100% |
+| Reverse unique | 842/842 | 64/64 | 100% / 100% |
+| Sort repeat | 828/828 | 64/64 | 100% / 100% |
+| Sort unique | 860/860 | 64/64 | 100% / 100% |
+
+These counts hold separately in full, mini and forward mode. Test ordinary
+teacher-forced CE is3.737383735824551e-9 for each new case/mode. The two
+reverse tasks retain all four compatible programs; their trained heads did
+not change. The six new heads have zero effective CE updates, so this gain
+comes from representation/initialization, not a measured gradient benefit.
+Copy-repeat's test includes22 unseen-class targets and reverse-repeat's test
+includes5; all are correct via the explicitly declared copy completion. The
+earlier175 copy-repeat count sums the recorded splits, which can overlap.
+Unknown-state diagnostics and the absence of target identification certificates
+remain explicit despite these correct outputs.
+
+The complete run, including saved-state replay and summary, takes17m58.44s,
+peaks at3,204,864KiB RSS (3.06GiB), and exits0 under64GiB. The complete report
+SHA256 is `c84f3f86b049c476809d13cf96f7b7ab46bab6b44a0c92c7dbed9eb5f7db11cc`;
+76 JSON artifacts retain inventories, forecasts, states, baselines, metrics,
+replays and summaries. Generated evidence lives under
+`/run/media/misha/storage/transformer-runs/generative-programs/original-v2`.
+All historical GPT failures, the full v1 attempt and earlier failed-model
+references remain. This covers12 additional catalog cases, with118 remaining.
+Original35 still has34/35 per-task raw99; these separate cohorts do not establish
+a combined47-case model. Review the landed findings and reproduce all76 JSON
+artifacts before approving task328.
 
 ```sh
 export CARGO_TARGET_DIR=/run/media/misha/storage/transformer-runs/build/generative-programs

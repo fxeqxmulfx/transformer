@@ -6597,3 +6597,12 @@ old observed-CE identities do not apply and will not be claimed. A prospective
 fixed ordinal/quadratic8-state basis will share features on observed and unseen
 inputs, with a new ordinary-CE head and explicit training-only initialization.
 Check the non-Dirac Lean witnesses and axiom audit before native implementation.
+
+Task328 producer `b3723b82` completes all12 cases and36 mode outcomes with100%
+raw/exact on every original short/long split. All12 states and ten earlier
+measured endpoints remain exact; both previously refused reverse tasks now
+score100%. All36 native jobs and the immutable driver/summary exit0. The run
+takes17m58.44s, peaks at3.06GiB, and preserves76 JSON artifacts. Report SHA256
+c84f3f86b049c476809d13cf96f7b7ab46bab6b44a0c92c7dbed9eb5f7db11cc.
+Land authored findings and independently reproduce the complete result before
+approving328. The original35 raw99 count remains34/35;118 catalog cases remain.
