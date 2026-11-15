@@ -45,3 +45,28 @@ Independently rebuild the frozen source and repeat into a fresh file. Compare
 the full JSON reports, preserving work stops as well as fitted candidates.
 Keep generated evidence in persistent ignored storage. A later model comparison
 must freeze its own protocol and retain the full13-case/six-endpoint cohort.
+
+The frozen producer is `f5fb5f43bcb34bc088211950ec132fb51d5473b1`, stored at
+`/run/media/misha/storage/transformer-runs/freezes/search-continuation-v1`.
+Original and independently rebuilt runs both exit zero and produce identical
+complete JSON reports, SHA256
+`07617c92e2814bb9c0e93aad5bda8653ccac675f5609ef5c8fee8f555ec012f5`.
+The reports and measured resources are retained in `search-continuation/` under
+the same persistent storage root. Both runs use a tighter 8 GiB address-space
+cap and peak near 1.52 GiB RSS; wall times are 19:36.52 and 19:58.66.
+
+| Search outcome | Independently repeated finding |
+| --- | --- |
+| Observed fit | All 1370 labels over 883 closed prefixes fit; both interpreters and the separate joint decoder check agree |
+| Successful queries | Five queries offer 60 completed fitting roots; the declared ranking retains 32 distinct ASTs |
+| Smallest program | 56 nodes at first fit and at the final stop; no smaller program was found |
+| Final charged work | 39999999938512, including the 11678318592 reserved final audit, below the unchanged 40T limit |
+| Stop | Work cap reached inside branch 12, with truncated anchors and incomplete remaining search; completed fits are preserved |
+| Heldout evidence | Zero heldout pools read and zero accuracy measurements; no catalog credit |
+
+The independent build passes all four native controls and strict Clippy. Its
+different checkout path changes executable bytes, so only the full behavioral
+report is asserted byte-identical; both executable hashes are preserved in
+task350's review evidence. The enlarged retained set is a candidate for a later
+frozen comparison. This probe does not establish that it improves raw accuracy,
+exact accuracy or cross-entropy.

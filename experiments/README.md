@@ -13,7 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
-| [`convex_stress_search_continuation`](convex_stress_search_continuation) | Training-only count search | Continue beyond the first fitting query, retaining smaller completed ASTs inside the original40T budget and preserving fits on interruption. Reuses CM62 constraints; no heldout scores or catalog credit. |
+| [`convex_stress_search_continuation`](convex_stress_search_continuation) | Training-only count search | Original and independent reports exactly match:32 retained fits, but minimum size stays56 nodes at the40T cap. Both interpreters agree on all1370 labels. No heldout scores or catalog credit. |
 | [`convex_stress_certified_compare`](convex_stress_certified_compare) | Same13 cases, six endpoints after CM63 | Complete training states must reproduce347; certified numerical evaluation and raw recounts distinguish raw99 from exact99. The final protocol pins the218-artifact independent347 verification before freezing; no new score yet. |
 | [`convex_stress_certified_head`](convex_stress_certified_head) | CM63 numerical evaluation | Lean first:18 scoring and ambiguity results. Independent full real/complex products resolve five old inconsistent winners in74 input-only queries; all diagnostic outputs independently repeat. No target labels or accuracy measurement;77/165 verified coverage unchanged. |
 | [`convex_stress_arithmetic_data`](convex_stress_arithmetic_data) | All54 arithmetic catalog cases | All52 artifacts and executable independently reproduce. Historical train/validation fingerprints match48 cases, including26 additions; six missing fixed random-table/set helpers remain explicit refusals. Five native checks, peak11MiB; no new model score. |

@@ -7409,3 +7409,18 @@ labels and preserve every compatible candidate or prove exact elimination.
 Task348 supplies48 original datasets:22 old controls and26 additional cases,
 including23 nonconstant cases and3 constant power-zero controls. Six cases
 retain unavailable-source refusals. No new model score or catalog pass yet.
+
+### 2026-11-15: task350 continuation probe independently reproduced
+
+Frozenf5fb5f43 and a fresh offline source rebuild produce identical full reports,
+SHA25607617c92e2814bb9c0e93aad5bda8653ccac675f5609ef5c8fee8f555ec012f5.
+Five successful queries offer60 completed fitting roots;32 distinct ASTs remain.
+All1370 observed labels fit both interpreters and the joint decoder compatibility
+check. The minimum syntax stays56 nodes: this probe finds no smaller program.
+Search stops inside branch12 at the work cap with completed fits preserved;
+final charged work39999999938512 includes the reserved final audit. Original
+and repeat take19:36.52/19:58.66 with about1.52GiB RSS and an8GiB address cap.
+The fresh build passes four native tests and strict Clippy. Different source
+checkout paths yield different binary bytes, with both hashes retained; the
+complete behavioral reports match exactly. No heldout data or new score was
+used, and the77/165 verified catalog count is unchanged.
