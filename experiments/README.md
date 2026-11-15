@@ -13,6 +13,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_certified_head`](convex_stress_certified_head) | CM63 numerical evaluation | Lean first:18 scoring and ambiguity results. Independent full real/complex products, outward winner enclosures and exact rational fallback preserve genuine ties and ordinary CE. New heldout comparison pending;77/165 verified coverage unchanged. |
 | [`convex_stress_arithmetic_data`](convex_stress_arithmetic_data) | All54 arithmetic catalog cases | All52 artifacts and executable independently reproduce. Historical train/validation fingerprints match48 cases, including26 additions; six missing fixed random-table/set helpers remain explicit refusals. Five native checks, peak11MiB; no new model score. |
 | [`convex_stress_streaming_counts`](convex_stress_streaming_counts) | CM62 streamed depth3 count discovery | The training-only search now finds12 independently checked programs fitting all1370 labels, in16:59.56 at1.52GiB RSS. Frozen13-case heldout repeat pending; verified coverage stays77/165. |
 | [`convex_stress_basis_programs`](convex_stress_basis_programs) | Complete Basis pools with weighted joint CE | Eight new cases reach100% raw/exact on every heldout split in all modes/controls. All71 artifacts independently repeat, retaining5806712 training targets and103 corrupted labels. Peak393MiB; cumulative coverage77/165 on seed1. |

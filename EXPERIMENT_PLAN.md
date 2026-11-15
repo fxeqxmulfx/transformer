@@ -7314,3 +7314,18 @@ checks pass. Global audit remains36 sorry,0 rests and0 extra axioms. Generated
 INDEX has4864 modules25519 theorems,0 vacuous and0 placeholder; the native
 forbidden scan is empty. A separate native correction follows this proof.
 No347 producer is changed.
+
+### 2026-11-15: task349 certified numerical component after CM63
+
+CM63 at18308305 passed the full Lean build,18 theorem axiom checks, the global
+axiom audit and native index regeneration, preserving36 existing sorry statements.
+The separate `convex_stress_certified_head` component evaluates the actual complete
+saved coefficient tensor with outward numerator enclosures and independent exact
+rational real/complex products on ambiguous queries. Common-shift normalization
+preserves ordinary CE; exact ties remain explicit and lost strict float gaps are
+refusals. Nine native component checks and strict Clippy pass, including original
+forward/full/minibatch policies and an unsupported categorical entry. No target
+label or task identity enters inference. The frozen347 producer remains intact;
+its independent13-case repeat is running. No new accuracy credit:77/165 remains
+the independently verified cohort union. Next: freeze the component, diagnose
+numerical failures without target labels, then freeze/repeat the full comparison.
