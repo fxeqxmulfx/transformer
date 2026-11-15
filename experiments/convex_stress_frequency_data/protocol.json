@@ -1,0 +1,126 @@
+{
+  "name": "frequency-generation-data-v1",
+  "catalog_commit": "07a39ac2f3f533c356be86a5db0bca50d6f01903",
+  "source_commit": "5a37c515639f23037d191b0659a5a0853984328d",
+  "historical_model_commit": "01f18f86787511279fe52fe41883495fce0e3105",
+  "history_sha256": "f31ed0f58f27cc4cf0603b9759c882611cda31e2db8a9fff622a806307d0acaf",
+  "definitions": {
+    "suite-histogram-bos": {
+      "task": "histogram",
+      "histogram_bos": true,
+      "symbols": 64,
+      "number_limit": 128,
+      "length": 16,
+      "min_length": 8,
+      "longer_lengths": [
+        32,
+        64
+      ]
+    },
+    "suite-histogram-no-bos": {
+      "task": "histogram",
+      "histogram_bos": false,
+      "symbols": 64,
+      "number_limit": 128,
+      "length": 16,
+      "min_length": 8,
+      "longer_lengths": [
+        32,
+        64
+      ]
+    },
+    "suite-histogram2": {
+      "task": "histogram2",
+      "symbols": 64,
+      "number_limit": 128,
+      "length": 16,
+      "min_length": 8,
+      "longer_lengths": [
+        32,
+        64
+      ]
+    },
+    "suite-mode-none": {
+      "task": "mode",
+      "scratchpad": "none",
+      "symbols": 64,
+      "number_limit": 128,
+      "length": 16,
+      "min_length": 8,
+      "longer_lengths": [
+        32,
+        64
+      ]
+    },
+    "suite-mode-counts": {
+      "task": "mode",
+      "scratchpad": "counts",
+      "symbols": 64,
+      "number_limit": 128,
+      "length": 16,
+      "min_length": 8,
+      "longer_lengths": [
+        32,
+        64
+      ]
+    },
+    "suite-mode-itemized": {
+      "task": "mode",
+      "scratchpad": "itemized",
+      "symbols": 64,
+      "number_limit": 128,
+      "length": 16,
+      "min_length": 8,
+      "longer_lengths": [
+        32,
+        64
+      ]
+    },
+    "suite-most_freq": {
+      "task": "most_freq",
+      "symbols": 64,
+      "length": 16,
+      "min_length": 8,
+      "longer_lengths": [
+        32,
+        64
+      ]
+    }
+  },
+  "sizes": {
+    "train": 128,
+    "validation": 32,
+    "test": 64
+  },
+  "data_seed": 1,
+  "generator_version": 2,
+  "study": {
+    "noise": 0.0,
+    "disjoint": false,
+    "tolerance": 0.02
+  },
+  "rng": "Omit only source format controls from split seeds. Draw one length, then two samples each consuming128 format bits, pool size, sampled symbols and word choices. Mode repairs ties with winner/donor/position draws in first-occurrence order. Reverse the pair with the original random draw.",
+  "selection": "novel validation when nonempty; novelty uses complete raw prompt; retain clean training and every short/32/64 split",
+  "training": "Original causal teacher forcing including BOS where declared, every scratchpad token and EOS. Frequency and mode ordering preserve first occurrence for ties.",
+  "scoring": "Reviewed327 own-output generation and EOS/limit scoring; keep Mode final-token accuracy separate from exact sequence accuracy and teacher-forced CE.",
+  "goals": {
+    "raw_token": 0.99,
+    "exact_sequence": 0.99,
+    "original_exact": 0.95
+  },
+  "limits": {
+    "symbols": 1024,
+    "number_limit": 4096,
+    "examples_per_split": 20000,
+    "positions_per_split": 2000000,
+    "process_address_space_bytes": 68719476736,
+    "word_length": 1024,
+    "explicit_buffer_bytes": 60129542144
+  },
+  "historical_case_fingerprints_available": false,
+  "new_model_evaluations": 0,
+  "baseline334_producer": "2612b05fe0df1fb4612ea09e2eacc61e278d97c7",
+  "baseline334_review": "f6890513",
+  "baseline334_sha256": "9b7c782e20a5a966c542dd023bfefa3fbf9aefb3f7e771e49b2e07aac92998c3",
+  "label_coverage": "Report every heldout target absent from original training outputs; coverage is diagnostic and supplies no model labels."
+}

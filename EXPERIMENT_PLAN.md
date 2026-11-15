@@ -6895,3 +6895,18 @@ search and replay. Sequential phase memory accounting replaces simultaneous
 three-constructor buffers; immutable outcome byte sizes and all old resident
 models remain charged under56GiB buffers/64GiB process caps. Test and freeze
 the adapter before production; no new original heldout result is claimed yet.
+
+Task336 producer3186b9c3 is frozen with1302 source inputs. The independent
+rebuild is byte-identical and all eight native/Lean checks pass. Original and
+independent drivers run from immutable copies, with65.581T complete case work
+forecast and maximum58,600,283,680 buffer bytes, under56GiB/64GiB limits.
+All modes are sealed before scoring. No new heldout result is recorded yet.
+
+Task337 ports seven histogram/mode/frequency cases while336 runs. The native
+port matches all21 historical token/transition denominators; all16 reviewed334
+controls remain embedded. It retains formatting RNG semantics, first-occurrence
+tie order, mode tie repair, own-output generation, EOS and final-versus-exact
+metrics. Longer outputs include raw count labels absent from short training;
+record them as an explicit decoder-coverage gap. Data-only preparation adds no
+pass and leaves114 additional cases unmeasured. Freeze before original/repeat
+inventories under64GiB; source and scoring rules stay outside learned predictors.
