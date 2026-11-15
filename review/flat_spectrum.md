@@ -18884,3 +18884,67 @@ projection implementation, optimizer convergence, discovery of the fixed
 feature/decoder maps, or correctness of any unobserved raw label. Native work
 must audit the real expansion, gradients, projection and complete cost bounds;
 it must retain training-only selection and measure heldout accuracy separately.
+
+## CM56. Identifying unseen raw classes with supplied class coordinates
+
+CM17 and CM53 leave an unseen raw label ambiguous without additional structure.
+Task338 adds an explicit identifying prior: a supplied injective coordinate map
+`e : C → ℝ`, a fixed scalar input feature `f`, and an unknown affine decoder
+`e(target(x)) = a*f(x) + b`. The coordinates and feature family are assumptions;
+flatness does not recover them. In particular, ordinal/numeric label coordinates
+would be declared semantic information, not a generic property of categorical
+IDs. This extension does not claim that the frequency tasks satisfy the prior
+before a native training-only feature-selection experiment establishes evidence.
+
+Two observed pairs at distinct feature values determine `a` and `b`. A shared
+positive margin `g` yields scaled parameters `θ = (g*a, g*b, g)` and scores
+
+`score(c,x) = 2*e(c)*(θ₀*f(x)+θ₁) - θ₂*e(c)^2`.
+
+The two observable anchor constraints are linear in these three coordinates.
+Subtracting the anchor equations identifies the scaled slope and intercept;
+realizability then gives, at every query,
+
+`score(target(x),x) - score(c,x) = θ₂*(e(target(x))-e(c))^2`.
+
+Injectivity and positive margin make every wrong raw class strictly worse,
+including when the correct class never appeared among the observed labels.
+The constructive `fitted` map uses only the two observed pairs, supplied class
+coordinates and chosen margin. The general `identified_prediction` theorem
+covers every feasible head under those anchor constraints; it does not assume
+correct query logits or optimizer convergence. Renaming classes preserves the
+fit and scores when the supplied coordinates are transported with the renaming.
+Keeping arbitrary numeric IDs fixed would not preserve this semantic prior.
+
+The actual complex realization uses the fixed unitary four-point Fourier code
+and signed row `(f(x),1,0,0)`, divided by `max(1, |f(x)|+1)`. CM51 bounds every
+realified feature by one. The complete eight-coordinate head for each class is
+an affine image of all three shared parameters. Its source rows are exactly
+`(2*e(c)*θ₀, 2*e(c)*θ₁ - θ₂*e(c)^2, 0, 0)`, so its real complex product is the
+stated score divided by the same positive, input-only normalizer. Both real
+and imaginary head entries participate; this is not an abstract score proxy.
+
+For `|e(c)| ≤ 1`, the complete per-class expansion costs are bounded by `(4,4,2)`.
+The sufficient budget `4*|θ₀|+4*|θ₁|+2*|θ₂| ≤ R` charges every coefficient.
+Intersecting it with the two linear anchor equations and `θ₂ ≥ δ > 0` remains
+convex. CM55 transfers ordinary full-vocabulary cross-entropy convexity to both
+the weighted domain and this constrained domain. Minibatches preserve repeated
+record identities and their actual denominator, including a short final batch.
+The three-coordinate parameterization avoids multiplying independently learned
+slope and margin variables. Feature/geometry discovery is outside this convex
+stage, and no finite-precision projection or optimization theorem is asserted.
+
+The nonconstant witness uses five raw labels with coordinates `c/4`, features
+`(0,1/2,1)`, and target labels `(1,2,3)`. Training records repeat label1 and also
+observe label2; the query requires the unseen raw label3. Parameters `(2,1,4)`
+and `(1,1/2,2)` are distinct feasible points at radius32 and margin lower bound1.
+A genuinely imaginary coefficient is nonzero, and actual complex logits favor
+label3 over label4. The countertarget `(1,2,4)` agrees at both anchors and
+changes the unseen answer; it cannot satisfy the same affine prior. This is
+why supplied geometry plus realizability resolves a gap that flatness alone
+cannot. The witness is a theorem about this prior, not evidence of general
+unseen-label recovery or success on the pending frequency benchmarks.
+
+Formalization: `ConvexDepth/ClassGeometry/{Basic,Head,Witness}.lean`; direct
+standard-axiom audit: `scripts/UnseenClassGeometryAxioms.lean`. Keep generated INDEX
+and run direct Lean/global-axiom/native forbidden checks before landing.

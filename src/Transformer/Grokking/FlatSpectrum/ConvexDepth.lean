@@ -25,6 +25,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SignedContext
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedPrograms
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ParameterSharing
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ClassGeometry
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -117,6 +118,11 @@ CM55 charges every expanded coefficient of a fixed affine shared-parameter map.
 Its sufficient weighted absolute budget is convex, includes the fixed offset,
 and transfers the existing actual-logit bound and ordinary full/minibatch CE.
 It does not identify a geometry, decoder or unknown target from flatness.
+CM56 supplies a separate identifying class geometry. Two observed scalar
+anchors identify an unknown affine decoder under realizability. Scaled slope,
+intercept and positive margin enter a complete complex head affinely, with
+charged budgets and convex ordinary full/minibatch CE. Transported coordinates
+preserve categorical relabeling; removing the prior restores ambiguity.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/
