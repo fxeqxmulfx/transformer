@@ -6841,3 +6841,16 @@ Task335 producerc09c06bd is frozen with669 source inputs. Original and independe
 six-inspection drivers are running from immutable copies, with step0.1 chosen
 prospectively for the stronger shared-gradient coupling. Task336 remains blocked
 on the component review and has not scored any new original heldout query.
+
+The first335 primary inspection regresses:4494/4704 training labels and
+4512/4704 conditional folds. The best raw result anywhere in its3072-config
+bank is only4513/4704. Its full-batch CE decreases from0.25046 to0.24785,
+so this failure is not an exploding optimizer. A training-only comparison of
+local331 boundaries with input descriptors exposes discontinuities that one
+global affine map cannot represent. Keep both complete six-inspection runs.
+Before any revised native fit, `scripts/PartitionedBoundaryAxioms.lean` audits
+a fixed descriptor partition with multiple blocks sharing each leaf's
+parameters, full coefficient costs and ordinary convex CE. A proposed shallow
+partition is learned only from training boundary diagnostics and then fixed
+during CE. It is not a jointly convex tree-discovery procedure or an unseen-label
+identification theorem. No revised native result exists yet.
