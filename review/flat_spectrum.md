@@ -19124,7 +19124,12 @@ for the CE objective. Every final candidate still needs the original complete
 training-label and independent-interpreter checks. No completeness, search
 convergence, or unseen answer identification follows from these implications.
 
-Formalization: `ObservedPrefixes/Transitions.lean` proves10 theorems, including
+An exact pair index may use `a < b+e+k` iff `a-e-k+1 <= b`, and the false
+comparison iff `b <= a-e-k`. Both integer equivalences are formalized,
+including negative thresholds. Intersecting those count constraints narrows
+candidate pairs without adding training assumptions or dropping matching pairs.
+
+Formalization: `ObservedPrefixes/Transitions.lean` proves12 theorems, including
 the append identities connecting the step to actual prefix counts, threshold
 constraints, and the concrete ambiguity with an extra count. Each conditional
 theorem has a satisfying example. `scripts/ObservedPrefixAxioms.lean` includes

@@ -115,6 +115,18 @@ theorem extra_downward_ambiguity :
       unitStep 0 false true true < 0 := by
   norm_num [unitStep]
 
+/-- Index the admissible right count for a true integer comparison exactly,
+including negative thresholds; no label or program assumption enters (CM59). -/
+theorem comparison_right_lower (a b e k : ℤ) :
+    a < b + e + k ↔ a - e - k + 1 ≤ b := by
+  omega
+
+/-- The false comparison is the complementary upper bound on the right
+count, so an index can intersect both truth constraints exactly (CM59). -/
+theorem comparison_right_upper (a b e k : ℤ) :
+    ¬ a < b + e + k ↔ b ≤ a - e - k := by
+  omega
+
 example : true = true ∧ false = false ∧ false = false ∧
     (0 : ℤ) = 1 - 1 ∧ unitStep 0 true false false = 1 :=
   upward_crossing (by norm_num) (by norm_num [unitStep])
