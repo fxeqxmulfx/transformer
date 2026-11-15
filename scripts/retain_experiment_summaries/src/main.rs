@@ -212,7 +212,9 @@ impl Archive {
             let sha = digest(&bytes);
             self.put(path, "historical_provenance", &bytes, sha, size, mode)?;
         } else if summary(path) {
-            if size > 1024 * 1024 * 1024 {
+            // The largest historical signed-comparison report is 1.14 GB.
+            // Parsing still streams past payloads under the process RAM cap.
+            if size > 2 * 1024 * 1024 * 1024 {
                 return Err(format!("summary source too large: {}", path.display()).into());
             }
             let sha = hash(path)?;

@@ -24,6 +24,8 @@ the completed archive counts and index hash. A successful exit is required
 before cleanup; any unreadable input, oversized source file or hash conflict
 stops retention. Empty or malformed historical JSON reports retain their exact
 hash and parse error with `incomplete_report: true` and no invented score.
+The streaming input limit is 2 GiB per JSON report; this includes the existing
+1.14 GB signed-comparison report. The separate process RAM limit still applies.
 Symlinks are recorded without following them.
 Compiler/dependency caches are excluded.
 
