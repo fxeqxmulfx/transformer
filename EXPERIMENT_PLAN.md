@@ -7247,3 +7247,14 @@ cache retests cheaper equivalents and repeats evicted work. A complete anchor
 is preferred; truncated anchors remain explicitly conditional. No heldout data
 has entered this repair. The training-only depth3 probe and the complete frozen
 13-case repeat remain pending; catalog coverage is unchanged at77/165.
+
+The complete347 driver now preserves all original13 cases, the six CM57 CE
+endpoints, frozen344/346 histories and the original35 reference. All cases seal
+before any heldout query; independent runs must match every raw file, full
+training state and replay. Coverage uses distinct case identities and reports
+regressions explicitly. Twelve native checks pass, including six-endpoint CE
+reconstruction, true minibatch tails and integer95/99 thresholds. The largest
+composed buffer forecast is47561448432 bytes under56GiB, with the64GiB process
+cap unchanged. A schema-specific JSON bound admits the complete independent
+pair at about96.7GiB disk without removing raw evidence. The first committed
+training-only streaming probe is still running; no new heldout credit is taken.

@@ -56,6 +56,56 @@ files, Lean sources and audits, protocol source, binary and compiler hashes.
 Run its saved `discover` with `/usr/bin/time -v` and the address-space cap,
 keeping JSON, logs and resources outside the worktree on the storage disk.
 
-The training-only probe and complete frozen 13-case heldout comparison remain
-pending. Verified catalog coverage stays 77/165, the separately reproduced
-cohort union on seed 1. This implementation alone adds no accuracy credit.
+The training-only probe is running from committed `ee289380` and the snapshot
+`/run/media/misha/storage/transformer-runs/freezes/streaming-counts-training-v1`.
+Its results are kept under `streaming-counts/training-v1` on the same disk.
+The complete frozen 13-case heldout comparison remains pending. Verified
+catalog coverage stays 77/165, the separately reproduced cohort union on seed 1.
+This implementation alone adds no accuracy credit.
+
+The complete driver reuses task344's actual joint complex head, ordinary CE,
+forward-only initializer, full-batch schedule and 127-record minibatches. It
+retains the same categorical control. All 13 original cases and all six
+endpoints must be trained and sealed before the first heldout query. Scoring
+and replay each reconstruct the complete discovery and every CE update.
+Every raw vector, state, score, replay and earlier report enters a manifest;
+the verifier rehashes both independently produced manifests. Original success
+stays at 95% exact sequences; the requested target requires at least 99% raw
+and exact accuracy on every original heldout split in all three modes.
+
+All of task344's history, the independently verified task346 report and manifest,
+the earlier history file, data345 inventory and original35 reference are copied
+whole and checked against fixed hashes. Catalog accounting uses case identities:
+newly passing cases and regressions are both listed. Repeating an earlier case
+does not add another success. The transformer reference is retained unchanged.
+
+The 13-case forecast admits at most 263010390589440 scalar work units and
+47561448432 buffer bytes per composed case. The complete pair needs about
+96.7GiB of disk including two full raw replays, state allowances and retained
+histories. `disk.rs` bounds the unchanged JSON schema using the pinned float
+formatter's 24-byte buffer, actual escaped split names, all vocabulary logits,
+program residuals, original prefixes and result arrays. Serialization tests and
+actual file-size checks enforce this bound. All raw evidence remains stored.
+The native suite now has 12 checks, including complete six-endpoint construction,
+real minibatch tails, exact reconstruction, original rollouts, integer threshold
+boundaries and regression accounting.
+
+After committing the complete producer, use fresh paths:
+
+```sh
+prlimit --as=68719476736:68719476736 -- cargo build --release --bins --offline --locked \
+  --manifest-path experiments/convex_stress_streaming_counts/Cargo.toml
+bash experiments/convex_stress_streaming_counts/freeze.sh \
+  /run/media/misha/storage/transformer-runs/freezes/streaming-count-programs-v1 \
+  experiments/convex_stress_streaming_counts/target/release/convex-stress-streaming-counts
+bash experiments/convex_stress_streaming_counts/run.sh \
+  /run/media/misha/storage/transformer-runs/freezes/streaming-count-programs-v1/convex-stress-streaming-counts \
+  /run/media/misha/storage/transformer-runs/streaming-counts/original-v1 original "$(git rev-parse HEAD)" \
+  /run/media/misha/storage/transformer-runs/basis-programs/original-v1 \
+  /run/media/misha/storage/transformer-runs/basis-programs/verified-v1.json
+```
+
+Rebuild the same producer with a fresh `CARGO_TARGET_DIR`, require identical
+binary hashes, then call `run.sh REBUILT_BINARY FRESH_REPEAT repeat ORIGINAL`.
+Run `REBUILT_BINARY verify ORIGINAL REPEAT FRESH_VERIFIED_JSON` with the verified
+output outside both run directories. Reports are provisional until that passes.
