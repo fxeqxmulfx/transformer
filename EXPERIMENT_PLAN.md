@@ -7279,3 +7279,15 @@ original transitions and complete EOS/limit trajectories from immutable output.
 Its two tests reject rehashed CE tampering and altered counts and preserve
 actual early-EOS, extra-output and categorical unseen-label failures. It does
 not alter the frozen producer; the heldout comparison remains pending.
+
+Task348 prepares the next catalog cohort while347's immutable comparison
+continues. The54 arithmetic cases comprise22 existing cases and32 additions.
+The native port verifies both historical tensor fingerprints for48 cases,
+including26 additions, and independently matches the old22-case oracle.
+Six fixed random-table/set helpers have unavailable source and remain explicit
+data refusals with all old results and hashes retained. Model input is limited
+to vocabulary and ordered raw training rows; formulas are data oracles only.
+Five native checks cover masks, integer/constant semantics, source mutations,
+disjoint splits and rehashed raw-label tampering. The complete frozen data
+generation and independent repeat are next. This adds no model accuracy credit
+and does not change the full producer1371ae4f or verified77/165 coverage.

@@ -1,0 +1,27 @@
+{
+  "name": "all54-arithmetic-data-v1",
+  "source_commit": "5a37c515639f23037d191b0659a5a0853984328d",
+  "input_sha256": {
+    "arithmetic_seed1.json": "1819ba7700d3be9f063c559c99bd16d691f3ca3cd8310e94dbad3b4e8f3a3dc3",
+    "grokking_task_inventory.json": "b00623e96ce1feca467b51c642b1271fb639fb9ce06b25ec86ee152e597d2fff",
+    "plan.json": "d404cd3eb84345b3cea2b38d009402705d2ccfa7fbe45e11221d812b6c0a23e7"
+  },
+  "cases_sha256": "768aefb9451c33ef8eb3712b8fb2313cc708ef4d8afc4d807e3633a41e7ef8ba",
+  "definitions_sha256": "080a7f4838beb4fdb015227da70775107a5f008d676f72b67ecba2b6cae9da65",
+  "original35_sha256": "6d2735e987026959c3cde995fbe866281e4f0b2308cc71be4b9d2edd13840436",
+  "cases": 54,
+  "existing35_cases": 22,
+  "additional_cases": 32,
+  "supported_cases": 48,
+  "unavailable_oracles": ["random", "sum-interval-2", "sum-interval-4", "sum-interval-8", "sum-interval-12", "sum-random-half"],
+  "refusal_reason": "The exact fixed random-table/set helper source is unavailable locally; its recorded historical fingerprints and outcomes remain. No replacement table or guessed seed is allowed.",
+  "data_seed": 1,
+  "supervision": "Only the final answer; tokens[a,b], targets[-100,y], change masks[0,0]. Original row order and every repeated raw label retained.",
+  "split": "Original SplitMix64 shuffle followed by disjoint halves, using all p^2 pairs except div/power-division exclude b=0.",
+  "metrics": {"original_exact": 0.99, "raw_token": 0.99, "exact_sequence": 0.99},
+  "model_boundary": "Oracles are data-only; models receive vocabulary and training rows, never a task name, formula, seed or heldout labels.",
+  "controls": ["arithmetic-random", "power-division-p17-k0", "power-division-p97-k0", "power-division-p193-k0"],
+  "buffer_forecast_bytes": 1073741824,
+  "process_address_space_bytes": 68719476736,
+  "new_model_evaluations": 0
+}
