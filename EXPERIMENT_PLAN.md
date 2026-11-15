@@ -7024,3 +7024,14 @@ direct CM57/global audits, native INDEX and forbidden scans also pass, retaining
 36 existing sorry and 0 rests/extra axioms. Task343 will freeze the full
 data/program driver before heldout measurements. No catalog measurement is
 added here.
+
+Task343 now connects fixed input-only range/radix and nested-count families
+to the reviewed CM57 joint head. The302 numeric programs have a separate
+interpreter; prefix discovery uses a bounded training-only beam and retains
+distinct fitting syntaxes. The coordinate prior is compared with a frozen
+observed-label dictionary on the same retained bank. Seven native checks cover
+unseen-label completion, missing-role uncertainty, label transport, independent
+products and all modes including the true minibatch tail. The complete driver
+and protocol must be committed and frozen before heldout measurement. These
+implementation checks add no benchmark result:58/165 remains the verified
+scope,107 cases remain unmeasured, and the independent-label control may fail.

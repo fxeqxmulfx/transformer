@@ -1,0 +1,19 @@
+[package]
+name = "convex-stress-synthetic-programs"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+convex-stress-coordinate-programs = { path = "../convex_stress_coordinate_programs" }
+convex-stress-remaining-synthetic-data = { path = "../convex_stress_remaining_synthetic_data" }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+
+[profile.test]
+opt-level = 2
+
+[profile.release]
+lto = "thin"
