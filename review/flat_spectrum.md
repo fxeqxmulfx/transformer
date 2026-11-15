@@ -19036,3 +19036,53 @@ Their masses 4 and 2 give full charge 78 within radius 128. Swapping the masses
 to 2 and 4 is another feasible point. The third constant representation is forced
 to zero by the two distinct observed coordinate answers. Both full heads have
 a nonzero imaginary coefficient and identify the unobserved raw class 3.
+
+## CM58. Observed-prefix equivalence for nested-count search
+
+The CM57 head does not make discovery of a useful fixed input program convex.
+The frozen343 experiment fits Count, eight Addition formats and depth1 C-RASP,
+but its bounded beam finds no fitting depth2/3 program. The search uses current
+truth-signature fit as one criterion for retaining children. The follow-up
+investigates a broader search after grouping observed-equivalent children.
+The results below specify when such grouping preserves nested counts; they
+do not establish completeness of the old beam or convergence of a new search.
+
+For a finite collection of symbol words W, form P(W), the union of all
+nonempty prefixes of its words. This construction reads input symbols only;
+BOS framing and targets are absent. Its cardinality is at most the sum of
+the input lengths. P(W) is closed under nonempty prefixes, contains every
+nonempty word in W, is contained in every prefix-closed pool containing W,
+and is unchanged by applying the same closure again.
+
+For a Boolean input program p, its inclusive count on w is
+
+`C[p](w) = sum over 0 <= i < length(w) of 1[p(take(i+1,w))]`.
+
+It lies between zero and length(w), regardless of p's internal depth. If p
+and q agree on a prefix-closed pool S, then their inclusive counts agree on
+S: every summand reads another member of S. Induction then preserves the
+observed truth signature under arbitrary finite contexts built from Boolean
+constants, current-symbol predicates, negation, conjunction, comparisons of
+two counts plus an integer offset, and comparisons with an additional count.
+Subprogram holes can be replaced simultaneously by observed-equivalent
+programs. This permits one representative per complete observed signature
+when the objective is preserving existence of a fit on that observed pool.
+Agreement only on a complete word, without its earlier prefixes, is insufficient.
+
+This is not global semantic equivalence or an unseen-answer certificate.
+On the closed pool containing [true] and [true,false], the predicates
+"current symbol is true" and "this is the first position" agree and are
+nonconstant. At [true,true] they disagree, and their inclusive counts are two
+and one. Nested comparison contexts can distinguish that unseen word too.
+Any search quotient based on observations must retain this limitation; CM57's
+separate target-realizability premise remains necessary. A native search also
+needs complete signatures, explicit candidate/work/storage caps, independent
+interpretation and a newly frozen heldout repeat. The finite closure bound
+does not bound the number of distinct program signatures by a polynomial.
+
+Formalization: `ConvexDepth/ObservedPrefixes/{Basic,Contexts}.lean`; direct
+standard-axiom audit: `scripts/ObservedPrefixAxioms.lean`. The decoded-fit
+theorem permits an arbitrary fixed Boolean-to-raw-label decoder, including
+many-to-one decoders. Concrete witnesses use both observed truth values and
+two distinct raw labels. Neither the symbolic proof nor its examples are new
+heldout benchmark measurements.

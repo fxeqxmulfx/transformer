@@ -1,0 +1,18 @@
+import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes
+
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.closure_positive
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.observed_mem_closure
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.closure_closed
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.closure_minimal
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.closure_card_le
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.closure_idempotent
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.prefixCount_le_length
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.prefixCount_congr
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.toy_observed
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.context_congr
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.representative_preserves_fit
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.toy_context_observed
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.toy_context_values
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.toy_unseen_counts
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.incomplete_pool_counterexample
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.final_word_pool_not_closed

@@ -7066,3 +7066,15 @@ production binary equality survives the separate read-only auditor addition.
 Runs11:12.83/10:52.54 peak at7.62GiB under64GiB; no generated output is committed.
 Task344 must improve training-only deeper count-program discovery while keeping
 the full343 report and every earlier baseline, before freezing a new benchmark.
+
+Task344 starts with CM58 in Lean. Closing observed symbol words under nonempty
+prefixes has cardinality at most their total length and preserves inclusive
+counts when subprogram signatures agree on that closure. Structural induction
+extends this to nested Boolean/count contexts and decoded observed-label fits.
+Nonconstant witnesses show both why missing prefixes invalidate that argument
+and why the resulting observed equivalence still says nothing about a new word.
+All16 theorems pass the direct standard-axiom audit and the full13949-job Lean
+build. The global audit retains36 existing sorry, zero dependent results and
+zero extra axioms; native INDEX reports4852 modules and25443 theorems, with
+zero vacuous or placeholder declarations. Keep the frozen343 producer and its68/165 coverage unchanged;
+new algorithmic progress requires a new frozen independent benchmark repeat.

@@ -27,6 +27,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ParameterSharing
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ClassGeometry
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.CoordinatePrograms
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -128,6 +129,9 @@ CM57 learns program masses and scaled coordinate decoders jointly in one
 affine complete head. Perspective budgets eliminate zero-mass contributions.
 Observed feature spans plus explicit class/copy priors identify covered queries;
 two feasible completions retain ambiguity in an uncovered structural role.
+CM58 closes finite observed words under nonempty prefixes before replacing
+nested-count subprograms by equal truth signatures. This preserves observed
+counts and decoded training fits; unseen words remain uncertified.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
 -/
