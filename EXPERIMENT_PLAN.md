@@ -7047,3 +7047,22 @@ Depth1 C-RASP fits; depth2/3 discovery still refuses, and RandomLM remains an
 explicit negative control. The upcoming frozen benchmark must retain those
 failures and distinguish measured cases from successes. Do not change the
 verified58/165 scope until frozen original and independent repeat evidence exists.
+
+Task343's frozen producer17877185 now completes both full runs. Count, eight
+Addition variants and depth1 C-RASP score100% raw/exact on all182 measured
+splits in every mode; each mode gets63,700/63,700 test tokens and3,456/3,456
+test sequences correct. Coordinate weighted test CE is0.3263473621 forward,
+0.0030031147 full and0.0024034406 mini. The categorical control also reaches
+100%; all896 unseen-label test occurrences use the supplied identity-copy
+prior for hints. Depth2/3 C-RASP and RandomLM remain explicit fit refusals,
+with null measurements and no success credit. All13 attempts stay in the
+denominator. The verified scope is now68/165;97 cases remain unmeasured.
+
+All189 original/repeat artifacts match, manifest56f68a3141418222f652a4796dc35933eda9713443d7603cead3875f962aeb6f.
+The complete report has SHAd7714f2d2d261b9680aa4818b9877501a6c2586b09f5762d4c6c402687b4139d.
+Both independent readback audits authenticate the whole340/339 histories,
+the separate original35 comparison and120 complete raw files per run. Frozen
+production binary equality survives the separate read-only auditor addition.
+Runs11:12.83/10:52.54 peak at7.62GiB under64GiB; no generated output is committed.
+Task344 must improve training-only deeper count-program discovery while keeping
+the full343 report and every earlier baseline, before freezing a new benchmark.

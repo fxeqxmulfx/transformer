@@ -3,8 +3,37 @@
 Task343 asks whether CM57's joint complex head can learn raw output decoders
 for the thirteen reviewed340 synthetic cases. The proof is commit258dd055;
 the native constrained head is commit aee826aa. This crate supplies input-only
-programs and training-only discovery. No new catalog accuracy is measured yet.
-The reviewed scope remains58/165 cases meeting all-heldout99 in all three modes.
+programs and training-only discovery. Frozen producer
+`178771856b7bc93603fe310345e4ad3d3da28cbd` now completes the original run and a
+fresh independently rebuilt repeat. Ten new seed1 cases reach100% raw-label
+and exact-sequence accuracy on every split in forward/full/minibatch modes:
+Count, all eight Addition variants and depth1 C-RASP. The verified catalog
+scope rises from58 to68/165 cases meeting all-heldout99 in all three modes.
+The original35 comparison and complete earlier23-case cohort remain inherited,
+unchanged references; no new transformer training or seed replication is claimed.
+
+| Mode | Coordinate test CE | Categorical test CE | Correct test tokens | Exact test sequences |
+| --- | ---: | ---: | ---: | ---: |
+| Forward | 0.3263473621 | 0.2753128544 | 63,700/63,700 | 3,456/3,456 |
+| Full | 0.0030031147 | 0.0033692898 | 63,700/63,700 | 3,456/3,456 |
+| Mini | 0.0024034406 | 0.0027562013 | 63,700/63,700 | 3,456/3,456 |
+
+Both arms attain100% accuracy on these ten cases. The896 test occurrences of
+unseen raw output labels are copied hints; both arms have the explicit identity
+copy prior. CE is weighted by every supervised token across all54 original test
+splits, including long and hard-carry probes. Each successful endpoint evaluates
+all182 splits of the ten cases, including validation/novel and train diagnostics.
+Forward mode performs training-only discovery and anchor projection, with zero
+gradient steps. Full/minibatch perform640/680 gradient batches across the ten
+fits and visit651,392/81,424 training records, including actual short tail batches.
+
+The other three attempted cases are fit refusals, with null model measurements:
+depth2/3 C-RASP search finds no observed-compatible program, and RandomLM is
+undefined for this supplied program family. Its training pool also contains
+six identical-prefix groups with contradictory labels, incompatible with a
+positive-mass deterministic hard-anchor fit. All refusals remain in the13-case
+denominator. Thus97 catalog cases still lack complete model measurements,
+including these three; task344 addresses deeper training-only count discovery.
 
 | Component | Construction | Limitation |
 | --- | --- | --- |
@@ -128,3 +157,47 @@ Compare every original/repeat JSON and JSONL file, including both complete
 references, state/projection/CE traces, seals, raw vectors, metric replays and
 the complete report. Preserve process exits/resource logs and all failures.
 Do not alter this frozen producer after observing heldout results.
+
+Both complete runs exit0, including all13 stages, score commands and fresh
+replays. All189 JSON/JSONL artifacts are byte-identical; their manifest SHA256
+is `56f68a3141418222f652a4796dc35933eda9713443d7603cead3875f962aeb6f`.
+The complete report SHA256 is
+`d7714f2d2d261b9680aa4818b9877501a6c2586b09f5762d4c6c402687b4139d`.
+Independent compilation yields the same production binary SHA256,
+`3c1079275f6c706d1e4323e2d031bef65269bbe733cf7ea890eb69f10cb28da2`.
+The freeze preserves5,338 source inputs. Original/repeat wall times are
+11:12.83/10:52.54; peak RSS is7,985,260/7,985,272KiB, about7.62GiB. The
+largest preflight buffer bound is13,902,658,560 bytes and scalar-work bound is
+204,699,389,116,416, below the56GiB/600-trillion admission caps. Each process
+runs under64GiB address-space limits.
+
+Every scored query checks the separate program interpreter and complete
+complex multiplication. Maximum product residual is8.73115e-11; rechecking
+every saved projection against original anchors and complete budgets gives
+maximum normalized violation7.40770e-16. These numerical audits supplement the
+real-valued CM57 theorem and leave target realizability explicitly uncertified.
+All ten native checks, formatting, clippy with warnings denied, full Lean,
+direct global/CM57 axiom checks, INDEX and forbidden scans pass. The global
+audit retains36 existing sorry with0 rests and0 extra axioms.
+
+The separate post-run `audit-retained` executable reads each report back,
+authenticates the full nested340 inventory and339 report, rehashes the separate
+original35 reference, checks every case/state/replay binding and all120 raw
+files, and recomputes accuracy thresholds from their stored integer counts.
+Both readbacks match. Adding this read-only auditor leaves the frozen production
+binary unchanged. The complete transformer histories remain inside the exactly
+retained references. Generated evidence stays in
+`synthetic-programs/{original-v1,review-v1}` and `freezes/synthetic-programs-v1`
+on storage. Reproduce the recorded producer at commit17877185; the post-run
+auditor and analysis source are committed separately with these findings.
+
+```sh
+prlimit --as=68719476736:68719476736 -- cargo build --release --offline --locked --manifest-path "$manifest" --bin audit-retained
+for run in original-v1 review-v1; do
+  prlimit --as=68719476736:68719476736 -- "$CARGO_TARGET_DIR/release/audit-retained" \
+    "$store/synthetic-programs/$run" "$freeze/convex-stress-synthetic-programs" \
+    "$(cat "$freeze/producer.commit")"
+  jq -s -f experiments/convex_stress_synthetic_programs/analyze.jq \
+    "$store/synthetic-programs/$run"/*/metrics.json
+done
+```
