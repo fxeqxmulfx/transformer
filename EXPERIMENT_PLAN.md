@@ -7424,3 +7424,12 @@ The fresh build passes four native tests and strict Clippy. Different source
 checkout paths yield different binary bytes, with both hashes retained; the
 complete behavioral reports match exactly. No heldout data or new score was
 used, and the77/165 verified catalog count is unchanged.
+
+Task351's native source code is now justified for arbitrary padded state sizes:
+CM64 adds complete block-diagonal unitarity, replicated four-point Fourier
+unitarity, and its8R-per-block complete column bound. A nonconstant many-to-one
+witness satisfies the instantiated domain. All36 CM64 axiom checks and the
+13969-job full build pass; the global audit remains36 sorry/0 rests/0 extras.
+Native INDEX generation/check reports4872 modules and25555 theorems. The Rust
+core will retain the full joint variables and explicitly audit its numerical
+projection; these new results do not claim a floating-point projection theorem.

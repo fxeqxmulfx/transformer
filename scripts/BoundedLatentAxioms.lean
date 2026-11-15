@@ -1,5 +1,9 @@
 import Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent
 
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.block_unitary
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.blockFourier_unitary
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.block_head_budget
+
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.witnessPoint_mem
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.witness_mass
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.witness_covered

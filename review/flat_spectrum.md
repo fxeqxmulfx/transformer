@@ -19482,3 +19482,12 @@ family, or establish any additional stress-test accuracy. A native extension
 must freeze its generic input-only family before labels, preserve every
 compatible candidate or justify exact parameter elimination, and keep raw
 scores separate from coverage certificates and structural realizability.
+
+For the native variable-size state bank, use block-diagonal copies of the
+four-point Fourier matrix, indexed by `Fin 4 x B`. Complete block composition
+preserves both unitary identities, so this source satisfies the actual unitary
+premise for every finite block type. Its entries are exact zeros or signed
+real/imaginary halves. The complete column bound specializes to
+`8 * R * card(B)`. Zero source entries can be skipped as exact products of zero;
+this does not remove any learned coefficient from storage or its column charge.
+The nonconstant many-to-one witness inhabits this block-source domain as well.

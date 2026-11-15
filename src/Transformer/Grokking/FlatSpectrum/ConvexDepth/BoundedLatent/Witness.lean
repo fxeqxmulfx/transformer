@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.Confidence
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.Code
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.Witness
 
 /-!
